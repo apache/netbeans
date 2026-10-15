@@ -74,7 +74,7 @@ public class NewWebFreeformProjectWizardIterator implements WizardDescriptor.Ins
     }
     
     private WizardDescriptor.Panel[] createPanels () {
-        List<WizardDescriptor.Panel> l = new ArrayList<WizardDescriptor.Panel>();
+        List<WizardDescriptor.Panel> l = new ArrayList<>();
         List<TargetDescriptor> extraTargets = new ArrayList<TargetDescriptor>();
         extraTargets.add(WebProjectNature.getExtraTarget());
         l.add(NewFreeformProjectSupport.createBasicProjectInfoWizardPanel());
@@ -82,7 +82,7 @@ public class NewWebFreeformProjectWizardIterator implements WizardDescriptor.Ins
         l.add(new WebLocationsWizardPanel());
         l.addAll(Arrays.asList(NewJavaFreeformProjectSupport.createJavaPanels()));
         l.add(new WebClasspathWizardPanel());
-        return l.toArray(new WizardDescriptor.Panel[l.size()]);
+        return l.toArray(new WizardDescriptor.Panel[0]);
     }
     
     public Set<FileObject> instantiate () throws IOException {
@@ -108,7 +108,6 @@ public class NewWebFreeformProjectWizardIterator implements WizardDescriptor.Ins
                     if (webModules != null) {
                         // Save the web classpath for the web module
                         String webClasspath = (String)wiz.getProperty(NewWebFreeformProjectWizardIterator.PROP_WEB_CLASSPATH);
-                        Iterator iter = webModules.iterator();
                         for (WebProjectGenerator.WebModule wm : webModules) {
                             wm.classpath = webClasspath;
                         }
@@ -158,13 +157,13 @@ public class NewWebFreeformProjectWizardIterator implements WizardDescriptor.Ins
             JComponent jc = (JComponent)c;
             l.add(jc.getName());
         }
-        String[] steps = l.toArray(new String[l.size()]);
+        String[] steps = l.toArray(new String[0]);
         for (int i = 0; i < panels.length; i++) {
             Component c = panels[i].getComponent();
             assert c instanceof JComponent;
             JComponent jc = (JComponent)c;
             // Step #.
-            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(i)); // NOI18N
+            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i); // NOI18N
             // Step name (actually the whole list for reference).
             jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps); // NOI18N
             // set title
@@ -186,7 +185,7 @@ public class NewWebFreeformProjectWizardIterator implements WizardDescriptor.Ins
     
     public String name() {
         return MessageFormat.format (NbBundle.getMessage(NewWebFreeformProjectWizardIterator.class, "TXT_NewWebFreeformProjectWizardIterator_TitleFormat"), // NOI18N
-            new Object[] {new Integer (index + 1), new Integer (panels.length) });
+            new Object[] {index + 1, panels.length});
     }
     
     public boolean hasNext() {

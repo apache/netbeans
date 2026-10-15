@@ -19,7 +19,7 @@
 package org.openide.nodes;
 
 /**
- * Subclass of {@link Detachable} with lifecycle method invoked when
+ * Subclass of {@link ChildFactory.Detachable} with lifecycle method invoked when
  * nodes created by the factory are no longer needed.
  *
  * @param <T> The key type for this child factory

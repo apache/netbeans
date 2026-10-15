@@ -14,5 +14,8 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-AC97B566699146713B3CF0ABC226B5C08EF7CF33 testng-6.8.1-dist.jar
-AF022CBCACD8CBFCF946816441D1E7568D817745 testng-6.8.1-javadoc.zip
+55B39526598D8EB2E0E75BFFBBD4B683ADB85DCC org.testng:testng:7.12.0
+C6A75D1D1720C69A4CBB5409ADEE506BD5421F38 org.jcommander:jcommander:1.85
+26E5A09DF9563617CBDA97261B3F14FFB983A4CE org.testng:testng-ant:1.0.0
+7FEA9D92BA67E9B3C8F03515FB202B86A1FE44F6 org.slf4j:slf4j-api:2.0.20
+4720EA19E3B09E520C0FA9A52DD1138C7AA2901F org.testng:testng:7.12.0:javadoc

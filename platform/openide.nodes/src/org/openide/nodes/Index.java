@@ -104,7 +104,7 @@ public interface Index extends Node.Cookie {
     /** A support class implementing some methods of the <code>Index</code>
     * cookie.
     */
-    public static abstract class Support implements Index {
+    public abstract static class Support implements Index {
         /** Registered listeners */
         private HashSet<ChangeListener> listeners;
 
@@ -341,7 +341,7 @@ public interface Index extends Node.Cookie {
         public void reorder(final int[] perm) {
             MUTEX.postWriteRequest(new Runnable() {
                 public void run() {
-                    Node[] n = nodes.toArray(new Node[nodes.size()]);
+                    Node[] n = nodes.toArray(new Node[0]);
                     List<Node> l = (List<Node>) nodes;
 
                     for (int i = 0; i < n.length; i++) {
@@ -484,7 +484,7 @@ public interface Index extends Node.Cookie {
                             l.removeAll(KeysChildren.this.nodes);
                         }
 
-                        return l.toArray(new Node[l.size()]);
+                        return l.toArray(new Node[0]);
                     }
 
                     public int getNodesCount() {

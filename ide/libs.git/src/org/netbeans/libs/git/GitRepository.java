@@ -34,7 +34,7 @@ import org.netbeans.libs.git.jgit.JGitSshSessionFactory;
  * still have to provide a local file which indicates where the repository would be created when 
  * {@link GitClient#init(org.netbeans.libs.git.progress.ProgressMonitor) } was called.</p>
  * <p>To get an instance of <code>GitClient</code> to run git commands with, use {@link #createClient() } method. It <strong>always</strong> returns
- * a new instance of the <code>GitClient</code>, it is not shared among the callers.<p>
+ * a new instance of the <code>GitClient</code>, it is not shared among the callers.
  * <p>When done with the client - you finish calling all desired commands and do not
  * plan to use the client's instance any more - {@link GitClient#release() } must be called.
  * When all created clients are released this way, repository metadata are flushed,
@@ -43,7 +43,7 @@ import org.netbeans.libs.git.jgit.JGitSshSessionFactory;
  * <p>Internally the class keeps a map of its instances that are cached under
  * a weak reference to the instance of the local file passed in the {@link #getInstance(java.io.File) } method.
  * Along with the instance it caches also all repository metadata (branches, index, references etc.) 
- * needed to construct the client and operate with the actual Git repository.<br/>
+ * needed to construct the client and operate with the actual Git repository.<br>
  * Every call to the <code>getInstance</code> method with the same instance of the file 
  * will always return the same instance of <code>GitRepository</code>. <strong>It is up to a caller's
  * responsibility</strong> to hold a strong reference to the file so a created client always works with 

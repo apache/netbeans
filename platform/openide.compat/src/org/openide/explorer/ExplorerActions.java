@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.text.MessageFormat;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -250,7 +251,7 @@ public class ExplorerActions {
                 // copy (#13418), cut (#13426). If one node is a parent of another,
                 // assume that the situation is sketchy and prevent it.
                 // For k==1 it is impossible so do not waste time on it.
-                HashMap allNodes = new HashMap(101);
+                Map<Node, Node> allNodes = new HashMap<>(101);
 
                 for (i = 0; i < k; i++) {
                     if (!checkParents(path[i], allNodes)) {
@@ -341,7 +342,7 @@ public class ExplorerActions {
      * @param node the node to check
      * @return false if one of the nodes is parent of another
      */
-    private boolean checkParents(Node node, HashMap set) {
+    private boolean checkParents(Node node, Map set) {
         if (set.get(node) != null) {
             return false;
         }
@@ -482,7 +483,7 @@ public class ExplorerActions {
 
     /** If our clipboard is not found return the default system clipboard. */
     private static Clipboard getClipboard() {
-        Clipboard c = (java.awt.datatransfer.Clipboard) org.openide.util.Lookup.getDefault().lookup(
+        Clipboard c = org.openide.util.Lookup.getDefault().lookup(
                 java.awt.datatransfer.Clipboard.class
             );
 
@@ -552,6 +553,7 @@ public class ExplorerActions {
         OwnPaste() {
         }
 
+        @Override
         public boolean isEnabled() {
             updateActionsState();
 
@@ -577,6 +579,7 @@ public class ExplorerActions {
             }
         }
 
+        @Override
         public Object getValue(String s) {
             updateActionsState();
 
@@ -599,6 +602,7 @@ public class ExplorerActions {
             copyCut = b;
         }
 
+        @Override
         public boolean isEnabled() {
             updateActionsState();
 
@@ -653,6 +657,7 @@ public class ExplorerActions {
         DeleteActionPerformer() {
         }
 
+        @Override
         public boolean isEnabled() {
             updateActionsState();
 
@@ -830,16 +835,19 @@ public class ExplorerActions {
             super(delay, l);
         }
 
+        @Override
         public void restart() {
             super.restart();
             running = true;
         }
 
+        @Override
         public void stop() {
             running = false;
             super.stop();
         }
 
+        @Override
         public boolean isRunning() {
             return running;
         }

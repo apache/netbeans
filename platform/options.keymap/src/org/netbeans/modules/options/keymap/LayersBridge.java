@@ -324,9 +324,10 @@ public class LayersBridge extends KeymapManager implements KeymapManager.WithRev
         Set<String> overrideKeyStrokes = new HashSet<String>();
         Map<String, ShortcutAction> shortcuts = null;
         
-        for (ShortcutAction a : keyMap.keySet()) {
-            overrideKeyStrokes.addAll(keyMap.get(a));
+        for (Set<String> strSet : keyMap.values()) {
+            overrideKeyStrokes.addAll(strSet);
         }
+
         for (Iterator<Map.Entry<ShortcutAction,Set<String>>> it = base.entrySet().iterator();
                 it.hasNext();) {
             Map.Entry<ShortcutAction,Set<String>> en = it.next();
@@ -959,7 +960,7 @@ public class LayersBridge extends KeymapManager implements KeymapManager.WithRev
                 if (name == null) {
                     name = ""; // #185619: not intended for presentation in this dialog
                 }
-                name = name.replaceAll ("&", "").trim (); // NOI18N
+                name = name.replace ("&", "").trim (); // NOI18N
             }
             return name;
         }

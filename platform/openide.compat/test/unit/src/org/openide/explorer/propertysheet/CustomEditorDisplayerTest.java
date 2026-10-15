@@ -393,7 +393,8 @@ public class CustomEditorDisplayerTest extends NbTestCase {
                 }
             }
         }
-        
+
+        @Override
         public void windowOpened(WindowEvent e) {
             shown = true;
             synchronized(this) {
@@ -678,21 +679,25 @@ public class CustomEditorDisplayerTest extends NbTestCase {
         }
         
         // Set that this Editor doesn't support custom Editor
+        @Override
         public boolean supportsCustomEditor() {
             return true;
         }
         
         // Set the Property value threw the Editor
+        @Override
         public void setValue(Object newValue) {
             System.err.println(" BasicEditor.setValue: " + newValue);
             super.setValue(newValue);
         }
-        
+
+        @Override
         public String getAsText() {
             return getValue() == null ? "null" : getValue().toString();
         }
 
         private Component custom;
+        @Override
         public Component getCustomEditor() {
             if (custom == null) {
                 custom = new BasicCustomEditor(this);
@@ -722,7 +727,8 @@ public class CustomEditorDisplayerTest extends NbTestCase {
                 throw pve;
             }
         }
-        
+
+        @Override
         public void setAsText(String s) {
             System.err.println(" BasicEditor.setAsText: " + s);
             if ("invalidValue".equals(s)) {

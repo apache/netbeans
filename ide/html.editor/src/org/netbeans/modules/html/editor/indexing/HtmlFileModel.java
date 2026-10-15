@@ -20,19 +20,22 @@ package org.netbeans.modules.html.editor.indexing;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.html.editor.api.HtmlKit;
 import org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem;
-import org.netbeans.modules.html.editor.api.gsf.HtmlParserResult;
 import org.netbeans.modules.html.editor.completion.AttrValuesCompletion;
+import org.netbeans.modules.html.editor.lib.api.HtmlParsingResult;
 import org.netbeans.modules.html.editor.lib.api.elements.*;
 import org.netbeans.modules.parsing.api.*;
 import org.netbeans.modules.parsing.spi.ParseException;
+import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.web.common.api.LexerUtils;
 import org.netbeans.modules.web.common.api.ValueCompletion;
 import org.netbeans.modules.web.common.api.WebUtils;
@@ -47,9 +50,12 @@ public class HtmlFileModel {
     private static final String STYLE_TAG_NAME = "style"; //NOI18N
     private static final Logger LOGGER = Logger.getLogger(HtmlFileModel.class.getSimpleName());
     private static final boolean LOG = LOGGER.isLoggable(Level.FINE);
-    private List<HtmlLinkEntry> references;
-    private List<OffsetRange> embeddedCssSections;
-    private HtmlParserResult parserResult;
+    private final List<HtmlLinkEntry> references = new ArrayList<>();
+    private final List<OffsetRange> embeddedCssSections = new ArrayList<>();
+    private final Map<String,List<Entry>> cssClasses = new HashMap<>();
+    private final Map<String,Entry> ids = new HashMap<>();
+    private HtmlParsingResult htmlResult;
+    private Parser.Result parserResult;
 
     public HtmlFileModel(Source source) throws ParseException {
         ParserManager.parse(Collections.singletonList(source), new UserTask() {
@@ -57,20 +63,22 @@ public class HtmlFileModel {
             public void run(ResultIterator resultIterator) throws Exception {
                 ResultIterator ri = WebUtils.getResultIterator(resultIterator, HtmlKit.HTML_MIME_TYPE);
                 if (ri != null) {
-                    parserResult = (HtmlParserResult) ri.getParserResult();
+                    parserResult = ri.getParserResult();
+                    htmlResult = (HtmlParsingResult) parserResult;
                     init();
                 }
             }
         });
     }
 
-    public HtmlFileModel(HtmlParserResult parserResult) {
+    public HtmlFileModel(Parser.Result parserResult, HtmlParsingResult htmlResult) {
         this.parserResult = parserResult;
+        this.htmlResult = (HtmlParsingResult)parserResult;
         init();
     }
 
-    public HtmlParserResult getParserResult() {
-        return parserResult;
+    public HtmlParsingResult getParserResult() {
+        return htmlResult;
     }
 
     public Snapshot getSnapshot() {
@@ -82,38 +90,25 @@ public class HtmlFileModel {
     }
 
     public List<HtmlLinkEntry> getReferences() {
-        return references == null ? Collections.<HtmlLinkEntry>emptyList() : references;
+        return Collections.unmodifiableList(references);
     }
 
     public List<OffsetRange> getEmbeddedCssSections() {
-        return embeddedCssSections == null ? Collections.<OffsetRange>emptyList() : embeddedCssSections;
+        return Collections.unmodifiableList(embeddedCssSections);
     }
 
-    /**
-     *
-     * @return true if the model is empty - nothing interesting found in the
-     * page.
-     */
-    public boolean isEmpty() {
-        return null == references;
+    public Map<String,Entry> getIds() {
+        return Collections.unmodifiableMap(ids);
     }
 
-    private List<HtmlLinkEntry> getReferencesCollectionInstance() {
-        if (references == null) {
-            references = new ArrayList<>();
-        }
-        return references;
-    }
-
-    private List<OffsetRange> getEmbeddedCssSectionsCollectionInstance() {
-        if (embeddedCssSections == null) {
-            embeddedCssSections = new ArrayList<>();
-        }
-        return embeddedCssSections;
+    public Map<String,List<Entry>> getCssClasses() {
+        Map<String,List<Entry>> result = new HashMap<>();
+        cssClasses.forEach((k, v) -> result.put(k, Collections.unmodifiableList(v)));
+        return Collections.unmodifiableMap(result);
     }
 
     private void init() {
-        Iterator<Element> elements = parserResult.getSyntaxAnalyzerResult().getElementsIterator();
+        Iterator<Element> elements = htmlResult.getSyntaxAnalyzerResult().getElementsIterator();
         while (elements.hasNext()) {
             Element element = elements.next();
             switch (element.type()) {
@@ -129,6 +124,48 @@ public class HtmlFileModel {
     private void handleOpenTag(OpenTag tnode) {
         handleReference(tnode);
         handleEmbeddedCssSectionStart(tnode);
+        Attribute attr = tnode.getAttribute("id");
+        if(attr != null) {
+            CharSequence unquotedValue = attr.unquotedValue();
+            if (unquotedValue != null && unquotedValue.length() > 0) {
+                String unquotedString = unquotedValue.toString();
+                boolean isQuoted = attr.isValueQuoted();
+                int startOffset = attr.valueOffset() + (isQuoted ? 1 : 0);
+                int endOffset = startOffset + unquotedValue.length();
+                OffsetRange astRange = new OffsetRange(startOffset, endOffset);
+                OffsetRange documentRange = new OffsetRange(
+                        getSnapshot().getOriginalOffset(startOffset),
+                        getSnapshot().getOriginalOffset(endOffset)
+                );
+                if(! ids.containsKey(unquotedString)) {
+                    ids.put(unquotedString, new Entry(unquotedString, astRange, documentRange));
+                }
+            }
+        }
+        attr = tnode.getAttribute("class");
+        if(attr != null) {
+            CharSequence unquotedValue = attr.unquotedValue();
+            if (unquotedValue != null && unquotedValue.length() > 0) {
+                Scanner scanner = new Scanner(unquotedValue.toString());
+                while (scanner.hasNext()) {
+                    String className = scanner.next();
+                    if(className.equals("@@@")) {
+                        continue;
+                    }
+                    boolean isQuoted = attr.isValueQuoted();
+                    int startOffset = attr.valueOffset() + (isQuoted ? 1 : 0) + scanner.match().start();
+                    int endOffset = attr.valueOffset() + (isQuoted ? 1 : 0) + scanner.match().end();
+                    OffsetRange astRange = new OffsetRange(startOffset, endOffset);
+                    OffsetRange documentRange = new OffsetRange(
+                            getSnapshot().getOriginalOffset(startOffset),
+                            getSnapshot().getOriginalOffset(endOffset)
+                    );
+                    Entry e = new Entry(className, astRange, documentRange);
+                    cssClasses.computeIfAbsent(className, (s) -> new ArrayList<>())
+                            .add(e);
+                }
+            }
+        }
     }
 
     private void handleCloseTag(CloseTag closeTag) {
@@ -159,7 +196,7 @@ public class HtmlFileModel {
             dumpIssue212445DebugInfo(embedded_css_section_start);
         }
 
-        getEmbeddedCssSectionsCollectionInstance().add(new OffsetRange(embedded_css_section_start, embedded_css_section_end));
+        embeddedCssSections.add(new OffsetRange(embedded_css_section_start, embedded_css_section_end));
         embedded_css_section_start = -1;
     }
 
@@ -209,7 +246,7 @@ public class HtmlFileModel {
                         boolean isQuoted = attr.isValueQuoted();
                         int offset = attr.valueOffset() + (isQuoted ? 1 : 0);
 
-                        getReferencesCollectionInstance().add(
+                        references.add(
                                 createFileReferenceEntry(unquotedValue.toString(),
                                 new OffsetRange(offset,
                                 offset + unquotedValue.length()),
@@ -225,7 +262,7 @@ public class HtmlFileModel {
     public String toString() {
         StringBuilder buf = new StringBuilder(super.toString());
         buf.append(":"); //NOI18N
-        for (HtmlLinkEntry c : getReferences()) {
+        for (HtmlLinkEntry c : references) {
             buf.append(" references="); //NOI18N
             buf.append(c);
             buf.append(','); //NOI18N

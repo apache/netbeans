@@ -186,6 +186,16 @@ public abstract class SQLCompletionItem implements CompletionItem {
             }
             return leftText;
         }
+        
+        @Override
+        public CharSequence getSortText() {
+            return catalogName;
+        }
+
+        @Override
+        public int getSortPriority() {
+            return 500;
+        }
 
         @Override
         protected String getRightHtmlText() {
@@ -226,6 +236,16 @@ public abstract class SQLCompletionItem implements CompletionItem {
         }
 
         @Override
+        public CharSequence getSortText() {
+            return schemaName;
+        }
+
+        @Override
+        public int getSortPriority() {
+            return 400;
+        }
+
+        @Override
         protected String getRightHtmlText() {
             return null;
         }
@@ -261,6 +281,16 @@ public abstract class SQLCompletionItem implements CompletionItem {
                 leftText = sb.toString();
             }
             return leftText;
+        }
+        
+        @Override
+        public CharSequence getSortText() {
+            return tableName;
+        }
+
+        @Override
+        public int getSortPriority() {
+            return 200;
         }
 
         @Override
@@ -301,6 +331,16 @@ public abstract class SQLCompletionItem implements CompletionItem {
             }
             return leftText;
         }
+        
+        @Override
+        public CharSequence getSortText() {
+            return viewName;
+        }
+
+        @Override
+        public int getSortPriority() {
+            return 300;
+        }
 
         @Override
         protected String getRightHtmlText() {
@@ -334,6 +374,16 @@ public abstract class SQLCompletionItem implements CompletionItem {
         @Override
         protected String getLeftHtmlText() {
             return alias;
+        }
+        
+        @Override
+        public CharSequence getSortText() {
+            return alias;
+        }
+
+        @Override
+        public int getSortPriority() {
+            return 300;
         }
 
         @Override
@@ -384,6 +434,16 @@ public abstract class SQLCompletionItem implements CompletionItem {
         @Override
         protected ImageIcon getImageIcon() {
             return COLUMN_ICON;
+        }
+        
+        @Override
+        public CharSequence getSortText() {
+            return columnName;
+        }
+
+        @Override
+        public int getSortPriority() {
+            return 100;
         }
 
         @Override
@@ -460,6 +520,16 @@ public abstract class SQLCompletionItem implements CompletionItem {
                 leftText = sb.toString();
             }
             return leftText;
+        }
+        
+        @Override
+        public CharSequence getSortText() {
+            return keyword;
+        }
+
+        @Override
+        public int getSortPriority() {
+            return 50;
         }
 
         @Override

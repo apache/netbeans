@@ -129,7 +129,6 @@ public class GenerateJNLPApplicationTest extends TestBase {
 //            "org.openide.options," +
 //            "org.openide.text," +
 //            "org.openide.windows," +
-//            "org.openide.util.enumerations" +
 //            "");
 //        ep.setProperty("jnlp.servlet.jar", someJar.toString());
 //        suite.getHelper().putProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH, ep);
@@ -246,7 +245,6 @@ public class GenerateJNLPApplicationTest extends TestBase {
 //            "org.openide.options," +
 //            "org.openide.text," +
 //            "org.openide.windows," +
-//            "org.openide.util.enumerations" +
 //            "");
 //        suite.getHelper().putProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH, ep);
 //        ProjectManager.getDefault().saveProject(suite);
@@ -447,7 +445,6 @@ public class GenerateJNLPApplicationTest extends TestBase {
 //            "org.openide.options," +
 //            "org.openide.text," +
 //            "org.openide.windows," +
-//            "org.openide.util.enumerations" +
 //            "");
 //        ep.setProperty("jnlp.servlet.jar", someJar.toString());
 //        suite.getHelper().putProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH, ep);
@@ -459,7 +456,7 @@ public class GenerateJNLPApplicationTest extends TestBase {
 //
 //        List l = Arrays.asList(p.getSupportedActions());
 //        assertTrue("We support build-jnlp: " + l, l.contains("build-jnlp"));
-///*
+// /*
 //        WeakReference<?> ref = new WeakReference<Object>(suite);
 //        suite = null;
 //        assertGC("Project can go away", ref);

@@ -21,9 +21,7 @@ package org.netbeans.modules.search.ui;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.util.LinkedList;
 import java.util.List;
@@ -130,24 +128,11 @@ public abstract class AbstractSearchResultsPanel extends javax.swing.JPanel
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
         toolBar = new ToolbarWithOverflow();
         contentPanel = new javax.swing.JPanel();
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
-
         setLayout(new java.awt.BorderLayout());
 
-        toolBar.setFloatable(false);
         toolBar.setOrientation(JToolBar.VERTICAL);
         toolBar.setRollover(true);
         toolBar.setPreferredSize(null);
@@ -160,7 +145,6 @@ public abstract class AbstractSearchResultsPanel extends javax.swing.JPanel
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel contentPanel;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JToolBar toolBar;
     // End of variables declaration//GEN-END:variables
 
@@ -189,14 +173,11 @@ public abstract class AbstractSearchResultsPanel extends javax.swing.JPanel
 
     private void initStopRefreshButton() throws MissingResourceException {
         sizeButton(btnStopRefresh);
-        btnStopRefresh.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (btnStopRefreshInRefreshMode) {
-                    modifyCriteria();
-                } else {
-                    getSearchComposition().terminate();
-                }
+        btnStopRefresh.addActionListener((ActionEvent e) -> {
+            if (btnStopRefreshInRefreshMode) {
+                modifyCriteria();
+            } else {
+                getSearchComposition().terminate();
             }
         });
         btnStopRefresh.setToolTipText(
@@ -224,12 +205,7 @@ public abstract class AbstractSearchResultsPanel extends javax.swing.JPanel
         btnNext.setToolTipText(UiUtils.getText(
                 "TEXT_BUTTON_NEXT_MATCH"));                             //NOI18N
         btnNext.setEnabled(false);
-        btnNext.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                shift(1);
-            }
-        });
+        btnNext.addActionListener((ActionEvent e) -> shift(1));
     }
 
     private void initPrevButton() {
@@ -238,12 +214,7 @@ public abstract class AbstractSearchResultsPanel extends javax.swing.JPanel
         btnPrev.setToolTipText(UiUtils.getText(
                 "TEXT_BUTTON_PREV_MATCH"));                             //NOI18N
         btnPrev.setEnabled(false);
-        btnPrev.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                shift(-1);
-            }
-        });
+        btnPrev.addActionListener((ActionEvent e) -> shift(-1));
     }
 
     protected void sizeButton(AbstractButton button) {
@@ -265,12 +236,7 @@ public abstract class AbstractSearchResultsPanel extends javax.swing.JPanel
     }
 
     public void searchFinished() {
-        Mutex.EVENT.writeAccess(new Runnable() {
-            @Override
-            public void run() {
-                showRefreshButton();
-            }
-        });
+        Mutex.EVENT.writeAccess(this::showRefreshButton);
     }
 
     /**
@@ -398,21 +364,11 @@ public abstract class AbstractSearchResultsPanel extends javax.swing.JPanel
     }
 
     private void initSelectionListeners() {
-        getExplorerManager().addPropertyChangeListener(
-                new PropertyChangeListener() {
-                    @Override
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        if (evt.getPropertyName().equals(
-                                "selectedNodes")) {                     //NOI18N
-                            EventQueue.invokeLater(new Runnable() {    //#218680
-                                @Override
-                                public void run() {
-                                    updateShiftButtons();
-                                }
-                            });
-                        }
-                    }
-                });
+        getExplorerManager().addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            if (evt.getPropertyName().equals("selectedNodes")) { //NOI18N
+                EventQueue.invokeLater(this::updateShiftButtons); //#218680
+            }
+        });
     }
 
     protected void updateShiftButtons() {
@@ -442,12 +398,9 @@ public abstract class AbstractSearchResultsPanel extends javax.swing.JPanel
      * buttons.
      */
     protected void afterMatchingNodeAdded() {
-        Mutex.EVENT.writeAccess(new Runnable() {
-            @Override
-            public void run() {
-                if (btnNext.isVisible() && !btnNext.isEnabled()) {
-                    updateShiftButtons();
-                }
+        Mutex.EVENT.writeAccess(() -> {
+            if (btnNext.isVisible() && !btnNext.isEnabled()) {
+                updateShiftButtons();
             }
         });
     }
@@ -575,7 +528,7 @@ public abstract class AbstractSearchResultsPanel extends javax.swing.JPanel
         if (start == -1) {
             return unsortedChildren;
         }
-        List<Node> children = new LinkedList<Node>();
+        List<Node> children = new LinkedList<>();
         for (int j = start + 1; j < rows; j++) {
             int childModelIndex = outline.convertRowIndexToModel(j);
             if (childModelIndex == -1) {
@@ -590,7 +543,7 @@ public abstract class AbstractSearchResultsPanel extends javax.swing.JPanel
                 break;
             }
         }
-        return children.toArray(new Node[children.size()]);
+        return children.toArray(new Node[0]);
     }
 
     private static int findRowIndexInOutline(Node node, Outline outline,

@@ -25,7 +25,7 @@ import org.openide.util.Exceptions;
 
 public class JavaMailSessionBeanBeanInfo extends SimpleBeanInfo {
 
-    static private String getLabel(String key){
+    private static String getLabel(String key){
         return NbBundle.getMessage(JavaMailSessionBean.class,key);
     }
 

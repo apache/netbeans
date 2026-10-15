@@ -410,11 +410,11 @@ public class InternationalizationResourceBundleBrandingPanel extends AbstractBra
 
         @Override
         protected void removeNotify() {
-            setKeys(Collections.EMPTY_SET);
+            setKeys(Collections.emptySet());
         }
 
         private void refreshList() {
-            List<BundleNode> keys = new ArrayList();
+            List<BundleNode> keys = new ArrayList<>();
             for (BundleNode node : resourceBundleNodes) {
                 keys.add(node);
             }
@@ -533,11 +533,11 @@ public class InternationalizationResourceBundleBrandingPanel extends AbstractBra
 
         @Override
         protected void removeNotify() {
-            setKeys(Collections.EMPTY_SET);
+            setKeys(Collections.emptySet());
         }
 
         private void refreshList() {
-            List keys = new ArrayList();
+            List<Node> keys = new ArrayList<>();
             Node[] origChildren = original.getChildren().getNodes();
             for (Node node : origChildren) {
                 keys.add(node);
@@ -607,7 +607,7 @@ public class InternationalizationResourceBundleBrandingPanel extends AbstractBra
         }
 
         private String escapeTagDefinitions (String text) {
-            return text.replaceAll("<", "&lt;").replaceAll(">", "&gt;"); // NOI18N
+            return text.replace("<", "&lt;").replace(">", "&gt;"); // NOI18N
         }
 
         public void refresh() {

@@ -56,8 +56,8 @@ public class DbNodeLoaderImpl implements DbNodeLoader, ChangeListener {
             providers = Lookups.forPath(NODE_PROVIDER_PATH).lookupAll(NodeProvider.class);    
         }
         
-        for (Iterator i = providers.iterator(); i.hasNext();) {
-            NodeProvider provider = (NodeProvider)i.next();
+        for (Iterator<NodeProvider> i = providers.iterator(); i.hasNext();) {
+            NodeProvider provider = i.next();
             List<Node> nodeList = provider.getNodes();
             if (nodeList != null) {
                 nodes.addAll(nodeList);

@@ -259,6 +259,7 @@
                 <friend>org.netbeans.modules.versioning.system.cvss</friend>
                 <friend>org.netbeans.modules.versioning.ui</friend>
                 <friend>org.netbeans.modules.versioning.util</friend>
+                <friend>org.netbeans.modules.cloud.oracle</friend>
                 <package>org.netbeans.modules.versioning.core.api</package>
                 <package>org.netbeans.modules.versioning.core.filesystems</package>
                 <package>org.netbeans.modules.versioning.core.spi</package>

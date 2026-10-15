@@ -30,6 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.Document;
 import javax.swing.text.SimpleAttributeSet;
@@ -119,10 +120,15 @@ implements TokenHierarchyListener, ChangeListener {
 
     public @Override HighlightsSequence getHighlights(int startOffset, int endOffset) {
         long lVersion = getVersion();
-        if (hierarchy.isActive()) {
-            return new HSImpl(lVersion, hierarchy, startOffset, endOffset);
-        } else {
-            return HighlightsSequence.EMPTY;
+        ((AbstractDocument) document).readLock();
+        try {
+            if (hierarchy.isActive()) {
+                return new HSImpl(lVersion, hierarchy, startOffset, endOffset);
+            } else {
+                return HighlightsSequence.EMPTY;
+            }
+        } finally {
+            ((AbstractDocument) document).readUnlock();
         }
     }
 

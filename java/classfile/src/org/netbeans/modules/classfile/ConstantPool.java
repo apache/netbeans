@@ -87,6 +87,7 @@ public final class ConstantPool {
      * Get the CPEntry at a specific constant pool index.
      *
      * @param index the constant pool index for the entry
+     * @return CPEntry at specified index
      */
     public final CPEntry get(int index) {
         if (index <= 0 || index >= cpEntries.length)
@@ -98,6 +99,7 @@ public final class ConstantPool {
      * Get the CPClassInfo at a specific index.
      *
      * @param index the constant pool index for the entry
+     * @return CPClassinfo at specified index
      */
     public final CPClassInfo getClass(int index) {
         if (index <= 0)

@@ -184,7 +184,7 @@ class RevisionSetupsSupport {
                     setups.add(e.getValue());
                 }
             }
-            return setups.toArray(new Setup[setups.size()]);
+            return setups.toArray(new Setup[0]);
         } catch (SVNClientException ex) {
             SvnClientExceptionHandler.notifyException(ex, true, false);
             return new Setup[0];

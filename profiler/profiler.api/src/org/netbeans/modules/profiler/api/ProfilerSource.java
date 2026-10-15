@@ -27,7 +27,7 @@ import org.openide.util.Lookup;
  * A simple {@linkplain Lookup.Provider} derived from the appropriate {@linkplain MimeLookup} registrations.
  * @author Jaroslav Bachorik
  */
-abstract public class ProfilerSource implements Lookup.Provider {
+public abstract class ProfilerSource implements Lookup.Provider {
     private FileObject file;
     
     protected ProfilerSource(FileObject file) {
@@ -38,12 +38,12 @@ abstract public class ProfilerSource implements Lookup.Provider {
      * The wrapped file
      * @return Returns the {@linkplain FileObject|} representing a particular {@linkplain ProfilerSource}
      */
-    final public FileObject getFile() {
+    public final FileObject getFile() {
         return file;
     }
 
     @Override
-    final public Lookup getLookup() {
+    public final Lookup getLookup() {
         return MimeLookup.getLookup(file.getMIMEType());
     }
     
@@ -51,5 +51,5 @@ abstract public class ProfilerSource implements Lookup.Provider {
      * Indicates whether a source can be run by the IDE or not
      * @return Returns <b>TRUE</b> if the source can be run by the IDE (eg. main class, test etc.), <b>FALSE</b> otherwise
      */
-    abstract public boolean isRunnable();
+    public abstract boolean isRunnable();
 }

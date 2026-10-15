@@ -1581,7 +1581,7 @@ public final class TreeUtilities {
             ( type != TreeAttlistDeclAttributeDef.TYPE_NMTOKENS ) &&
             ( type != TreeAttlistDeclAttributeDef.TYPE_ENUMERATED ) &&
             ( type != TreeAttlistDeclAttributeDef.TYPE_NOTATION ) ) {
-                throw new InvalidArgumentException (new Short (type), Util.THIS.getString ("PROP_invalid_attribute_list_declaration_type"));
+                throw new InvalidArgumentException (type, Util.THIS.getString ("PROP_invalid_attribute_list_declaration_type"));
             }
         }
         
@@ -1603,7 +1603,7 @@ public final class TreeUtilities {
             ( defaultType != TreeAttlistDeclAttributeDef.DEFAULT_TYPE_REQUIRED ) &&
             ( defaultType != TreeAttlistDeclAttributeDef.DEFAULT_TYPE_IMPLIED ) &&
             ( defaultType != TreeAttlistDeclAttributeDef.DEFAULT_TYPE_FIXED ) ) {
-                throw new InvalidArgumentException (new Short (defaultType), Util.THIS.getString ("PROP_invalid_attribute_list_declaration_default_type"));
+                throw new InvalidArgumentException (defaultType, Util.THIS.getString ("PROP_invalid_attribute_list_declaration_default_type"));
             }
         }
         
@@ -1645,13 +1645,13 @@ public final class TreeUtilities {
     static class EncodingUtil {
         
         /** IANA to Java encoding mappings */
-        protected final static Map encodingIANA2JavaMap = new TreeMap ();
+        protected static final Map encodingIANA2JavaMap = new TreeMap ();
         
         /** */
-        protected final static Map encodingIANADescriptionMap = new TreeMap ();
+        protected static final Map encodingIANADescriptionMap = new TreeMap ();
         
         /** */
-        protected final static Map encodingIANAAliasesMap = new TreeMap ();
+        protected static final Map encodingIANAAliasesMap = new TreeMap ();
         
         //
         // Static initialization

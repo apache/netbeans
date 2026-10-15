@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.junit;
 
+import org.netbeans.modules.junit.api.JUnitVersion;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
@@ -119,6 +120,7 @@ final class JUnit4TestGenerator extends AbstractTestGenerator {
                     Collections.<TypeParameterTree>emptyList(),//type params
                     null,                                      //extends
                     Collections.<ExpressionTree>emptyList(),   //implements
+                    Collections.<ExpressionTree>emptyList(),   //permits
                     members);                                  //members
     }
     
@@ -186,6 +188,7 @@ final class JUnit4TestGenerator extends AbstractTestGenerator {
                 tstClass.getTypeParameters(),
                 tstClass.getExtendsClause(),
                 (List<? extends ExpressionTree>) tstClass.getImplementsClause(),
+                (List<? extends ExpressionTree>) tstClass.getPermitsClause(),
                 tstMembers);
         return newClass;
     }
@@ -434,6 +437,7 @@ final class JUnit4TestGenerator extends AbstractTestGenerator {
                 tstClass.getTypeParameters(),
                 tstClass.getExtendsClause(),
                 (List<? extends ExpressionTree>) tstClass.getImplementsClause(),
+                (List<? extends ExpressionTree>) tstClass.getPermitsClause(),
                 tstMembers);
     }
     
@@ -463,7 +467,12 @@ final class JUnit4TestGenerator extends AbstractTestGenerator {
         boolean flagsModified = false;
         
         Set<Modifier> currFlags = modifiers.getFlags();
-        Set<Modifier> flags = currFlags.isEmpty() ? EnumSet.noneOf(Modifier.class) : EnumSet.copyOf(currFlags);
+        Set<Modifier> flags = EnumSet.noneOf(Modifier.class);
+
+        if (!currFlags.isEmpty()) {
+            flags.addAll(currFlags);
+        }
+
         flagsModified |= flags.remove(PRIVATE);
         flagsModified |= flags.remove(PROTECTED);
         flagsModified |= flags.add(PUBLIC);

@@ -127,7 +127,7 @@ public final class NbRepository extends Repository {
 
         Exception exc;
         try {
-            return SessionManager.getDefault().create(u, h, extradirs.toArray(new File[extradirs.size()]));
+            return SessionManager.getDefault().create(u, h, extradirs.toArray(new File[0]));
         } catch (IOException ex) {
             exc = ex;
         } catch (PropertyVetoException ex) {

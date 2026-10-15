@@ -1,0 +1,4 @@
+Code completion result for source line:
+function func1($param = new Fun|) {}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTRUCTO Func()                          [PUBLIC]   Func

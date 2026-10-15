@@ -62,6 +62,7 @@ public class NetworkProxyReloader extends ProxySettings.Reloader {
      * The first it tries to retrieve proxy settings directly from system,
      * if it is unsuccessful it tries fallback (from environment property http_proxy etc.).
      */
+    @SuppressWarnings("fallthrough")
     public static void reloadNetworkProxy() {        
         LOGGER.log(Level.FINE, "System network proxy reloading started."); //NOI18N
         NetworkProxySettings networkProxySettings = NETWORK_PROXY_RESOLVER.getNetworkProxySettings();
@@ -140,6 +141,7 @@ public class NetworkProxyReloader extends ProxySettings.Reloader {
                 break;
             case DIRECT:
                 LOGGER.log(Level.INFO, "System network proxy - mode: direct"); //NOI18N
+
             default:
                 LOGGER.log(Level.INFO, "System network proxy: fell to default (correct if direct mode went before)"); //NOI18N
                 getPreferences().remove(ProxySettings.SYSTEM_PROXY_HTTP_HOST);
@@ -205,12 +207,12 @@ public class NetworkProxyReloader extends ProxySettings.Reloader {
             if (Utilities.isUnix()){
                 String env = System.getProperty(RUNNING_ENV_SYS_PROPERTY);
                 if (env != null) {
-                    if (env.toLowerCase().equals(GNOME)) {
+                    if (env.equalsIgnoreCase(GNOME)) {
                         LOGGER.log(Level.INFO, "System network proxy resolver: Gnome"); //NOI18N
                         return new GnomeNetworkProxy();
                     }
                     
-                    if (env.toLowerCase().equals(KDE)) {
+                    if (env.equalsIgnoreCase(KDE)) {
                         LOGGER.log(Level.INFO, "System network proxy resolver: KDE"); //NOI18N
                         return new KdeNetworkProxy();
                     }

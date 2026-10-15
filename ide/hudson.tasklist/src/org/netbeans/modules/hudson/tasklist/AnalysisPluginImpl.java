@@ -59,7 +59,7 @@ public class AnalysisPluginImpl implements JobScanner {
      * See {@code PluginDescriptor.getPluginName} for syntax.
      * Could also include {@code tasks} but {@code message} is always null, which is not very nice for our purposes.
      */
-    private static final String[] PLUGINS = {"findbugs", "checkstyle", "pmd", "warnings", "dry"};
+    private static final String[] PLUGINS = {"checkstyle", "pmd", "warnings", "dry"};
 
     @Override public void findTasks(Project p, HudsonJob job, int buildNumber, TaskAdder callback) throws IOException {
         List<FileObject> roots = new ArrayList<FileObject>();

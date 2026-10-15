@@ -19,19 +19,18 @@
 
 package org.netbeans.modules.maven.queries;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.maven.api.FileUtilities;
-import org.netbeans.modules.maven.api.NbMavenProject;
+import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.spi.java.queries.MultipleRootsUnitTestForSourceQueryImplementation;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.ErrorManager;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
-import org.openide.util.Utilities;
+import org.openide.filesystems.URLMapper;
 
 /**
  * JUnit tests queries.
@@ -39,8 +38,8 @@ import org.openide.util.Utilities;
  */
 @ProjectServiceProvider(service=MultipleRootsUnitTestForSourceQueryImplementation.class, projectType="org-netbeans-modules-maven")
 public class MavenTestForSourceImpl implements MultipleRootsUnitTestForSourceQueryImplementation {
-    
-                                                          
+
+
     private final Project project;
 
     public MavenTestForSourceImpl(Project proj) {
@@ -51,20 +50,16 @@ public class MavenTestForSourceImpl implements MultipleRootsUnitTestForSourceQue
     @Override
     public URL[] findUnitTests(FileObject fileObject) {
         try {
-            String str = project.getLookup().lookup(NbMavenProject.class).getMavenProject().getBuild().getTestSourceDirectory();
-            if (str != null) {
-                File fl = FileUtilities.convertStringToFile(str);
-                File param = FileUtil.toFile(fileObject);
-                if (fl.equals(param)) {
+            List<URL> urls = new ArrayList<>();
+            for (URI sourceRoot : project.getLookup().lookup(NbMavenProjectImpl.class).getSourceRoots(true)) {
+                URL url = sourceRoot.toURL();
+                FileObject fl = URLMapper.findFileObject(url);
+                if (fileObject == fl) {
                     return null;
                 }
-                URI uri = Utilities.toURI(fl);
-                URL entry = uri.toURL();
-                if  (!entry.toExternalForm().endsWith("/")) { //NOI18N
-                    entry = new URL(entry.toExternalForm() + "/"); //NOI18N
-                }
-                return new URL[] { entry };
+                urls.add(url);
             }
+            return urls.isEmpty() ? null : urls.toArray(new URL[0]);
         } catch (MalformedURLException exc) {
             ErrorManager.getDefault().notify(exc);
         }
@@ -74,25 +69,20 @@ public class MavenTestForSourceImpl implements MultipleRootsUnitTestForSourceQue
     @Override
     public URL[] findSources(FileObject fileObject) {
         try {
-            String str = project.getLookup().lookup(NbMavenProject.class).getMavenProject().getBuild().getSourceDirectory();
-            if (str != null) {
-                File fl = FileUtilities.convertStringToFile(str);
-                File param = FileUtil.toFile(fileObject);
-                if (fl.equals(param)) {
+            List<URL> urls = new ArrayList<>();
+            for (URI sourceRoot : project.getLookup().lookup(NbMavenProjectImpl.class).getSourceRoots(false)) {
+                URL url = sourceRoot.toURL();
+                FileObject fl = URLMapper.findFileObject(url);
+                if (fileObject == fl) {
                     return null;
                 }
-                URI uri = Utilities.toURI(fl);
-                URL entry = uri.toURL();
-                if  (!entry.toExternalForm().endsWith("/")) { //NOI18N
-                    entry = new URL(entry.toExternalForm() + "/"); //NOI18N
-                }
-                
-                return new URL[] { entry };
+                urls.add(url);
             }
+            return urls.isEmpty() ? null : urls.toArray(new URL[0]);
         } catch (MalformedURLException exc) {
             ErrorManager.getDefault().notify(exc);
         }
         return null;
     }
-    
+
 }

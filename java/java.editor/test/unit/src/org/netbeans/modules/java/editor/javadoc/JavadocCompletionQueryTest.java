@@ -23,10 +23,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import javax.swing.event.ChangeListener;
 import org.netbeans.junit.NbTestSuite;
 import org.netbeans.spi.editor.completion.CompletionItem;
 import org.netbeans.spi.editor.completion.CompletionProvider;
 import org.netbeans.modules.java.editor.base.javadoc.JavadocTestSupport;
+import org.netbeans.spi.java.queries.SourceLevelQueryImplementation2;
+import org.openide.filesystems.FileObject;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -45,6 +49,238 @@ public class JavadocCompletionQueryTest extends JavadocTestSupport {
         return suite;
     }
     
+    public void testBlockTagsCompletion() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**\n" +
+                "     * |\n" +
+                "     */\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+        
+        performCompletionTest(code, "@deprecated:", "@exception:", "@hidden:", "@param:", "@return:", "@see:", "@serialData:", "@since:", "@throws:");
+    }
+    
+    public void testBlockTagsCompletion1() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**\n" +
+                "     * This is javadoc for method.\n" +
+                "     * |\n" +
+                "     */\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+        
+        performCompletionTest(code, "@deprecated:", "@exception:", "@hidden:", "@param:", "@return:", "@see:", "@serialData:", "@since:", "@throws:");
+    }
+    
+    public void testBlockTagsCompletion2() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**\n" +
+                "     * @|\n" +
+                "     */\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+        
+        performCompletionTest(code, "@deprecated:", "@exception:", "@hidden:", "@param:", "@return:", "@see:", "@serialData:", "@since:", "@throws:");
+    }
+    
+    public void testBlockTagsCompletion3() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**\n" +
+                "     * This is javadoc for method.\n" +
+                "     * @|\n" +
+                "     */\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+        
+        performCompletionTest(code, "@deprecated:", "@exception:", "@hidden:", "@param:", "@return:", "@see:", "@serialData:", "@since:", "@throws:");
+    }
+    
+    public void testBlockTagsCompletion4() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**\n" +
+                "     * @p|\n" +
+                "     */\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+        
+        performCompletionTest(code, "@param:");
+    }
+    
+    public void testBlockTagsCompletion5() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**\n" +
+                "     * This is javadoc for method.\n" +
+                "     * @p|\n" +
+                "     */\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+        
+        performCompletionTest(code, "@param:");
+    }
+    
+    public void testBlockTagsCompletion6() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**\n" +
+                "     * @p|aram\n" +
+                "     */\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+        
+        performCompletionTest(code, "@param:");
+    }
+    
+    public void testBlockTagsCompletion7() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**\n" +
+                "     * This is javadoc for method.\n" +
+                "     * @p|aram\n" +
+                "     */\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+        
+        performCompletionTest(code, "@param:");
+    }
+    
+    public void testInlineTagsCompletion() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**\n" +
+                "     * {|\n" +
+                "     */\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+        
+        performCompletionTest(code, "@code:", "@docRoot:", "@index:", "@inheritDoc:", "@link:", "@linkplain:", "@literal:", "@snippet:", "@summary:", "@systemProperty:");
+    }
+    
+    public void testInlineTagsCompletion1() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**\n" +
+                "     * This is javadoc for method.\n" +
+                "     * {|\n" +
+                "     */\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+        
+        performCompletionTest(code, "@code:", "@docRoot:", "@index:", "@inheritDoc:", "@link:", "@linkplain:", "@literal:", "@snippet:", "@summary:", "@systemProperty:");
+    }
+
+    public void testInlineTagsCompletion2() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**\n" +
+                "     * {@|\n" +
+                "     */\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+        
+        performCompletionTest(code, "@code:", "@docRoot:", "@index:", "@inheritDoc:", "@link:", "@linkplain:", "@literal:", "@snippet:", "@summary:", "@systemProperty:");
+    }
+    
+    public void testInlineTagsCompletion3() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**\n" +
+                "     * This is javadoc for method.\n" +
+                "     * {@|\n" +
+                "     */\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+        
+        performCompletionTest(code, "@code:", "@docRoot:", "@index:", "@inheritDoc:", "@link:", "@linkplain:", "@literal:", "@snippet:", "@summary:", "@systemProperty:");
+    }
+
+    public void testInlineTagsCompletion4() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**\n" +
+                "     * {@l|\n" +
+                "     */\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+        
+        performCompletionTest(code, "@link:", "@linkplain:", "@literal:");
+    }
+    
+    public void testInlineTagsCompletion5() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**\n" +
+                "     * This is javadoc for method.\n" +
+                "     * {@l|\n" +
+                "     */\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+        
+        performCompletionTest(code, "@link:", "@linkplain:", "@literal:");
+    }
+
+    public void testInlineTagsCompletion6() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**\n" +
+                "     * {@l|ink\n" +
+                "     */\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+        
+        performCompletionTest(code, "@link:", "@linkplain:", "@literal:");
+    }
+    
+    public void testInlineTagsCompletion7() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**\n" +
+                "     * This is javadoc for method.\n" +
+                "     * {@l|ink\n" +
+                "     */\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "}\n";
+        
+        performCompletionTest(code, "@link:", "@linkplain:", "@literal:");
+    }
+
     public void testParamNameCompletionForMethod() throws Exception {
         String code =
                 "package p;\n" +
@@ -117,17 +353,16 @@ public class JavadocCompletionQueryTest extends JavadocTestSupport {
         performCompletionTest(code, "p1:", "p2:");
     }
     
-    public void XtestParamNameCompletionForClass() throws Exception {
-        //XXX: ???
+    public void testParamNameCompletionForClass() throws Exception {
         String code =
                 "package p;\n" +
                 "/**\n" +
-                " * @param P|\n" +
+                " * @param <P|\n" +
                 " */\n" +
                 "class Clazz<P1,P2> {\n" +
                 "}\n";
         
-        performCompletionTest(code, "P1:", "P2:");
+        performCompletionTest(code, "&lt;P1&gt;:", "&lt;P2&gt;:");
     }
     
     public void testLink1() throws Exception {
@@ -261,7 +496,7 @@ public class JavadocCompletionQueryTest extends JavadocTestSupport {
                 "package p;\n" +
                 "class Clazz {\n" +
                 "    /**\n" +
-                "     * {@value Mat|\n" +
+                "     * {@value Math|\n" +
                 "     */\n" +
                 "    Clazz() {\n" +
                 "    }\n" +
@@ -297,7 +532,7 @@ public class JavadocCompletionQueryTest extends JavadocTestSupport {
         
         performCompletionTest(code, "public static final double PI");
     }
-    
+
     public void testThrows1() throws Exception {
         String code =
                 "package p;\n" +
@@ -326,6 +561,289 @@ public class JavadocCompletionQueryTest extends JavadocTestSupport {
         performCompletionTest(code, "ClassCircularityError", "ClassFormatError", "ClassCastException", "ClassNotFoundException");
     }
     
+    public void testSnippet1() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**\n" +
+                "     * {@snippet\n" +
+                "     *  System.err.println(1); //@|\n" +
+                "     */\n" +
+                "    Clazz() {\n" +
+                "    }\n" +
+                "}\n";
+
+        performCompletionTest(code, "end:", "highlight:", "link:", "replace:", "start:");
+    }
+
+    public void testSnippet2() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**\n" +
+                "     * {@snippet\n" +
+                "     * //@e|\n" +
+                "     */\n" +
+                "    Clazz() {\n" +
+                "    }\n" +
+                "}\n";
+
+        performCompletionTest(code, "end:");
+    }
+    
+    public void testSummaryCompletionForMethod() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**\n" +
+                "     * {@sum|\n" +
+                "     */\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "    Clazz() {\n" +
+                "    }\n" +
+                "}\n";
+        performCompletionTest(code, "@summary:");
+    }    
+
+    public void testBlockTagsCompletionInMarkdown() throws Exception {
+        String code =
+                """
+                package p;
+                class Clazz {
+                    ///
+                    /// |
+                    ///
+                    void method(int p1, int p2) {
+                    }
+                }
+                """;
+
+        performCompletionTest(code, "@deprecated:", "@exception:", "@hidden:", "@param:", "@return:", "@see:", "@serialData:", "@since:", "@throws:");
+    }
+
+    public void testBlockTagsCompletionInMarkdown2() throws Exception {
+        String code =
+                """
+                package p;
+                class Clazz {
+                    ///
+                    ///|
+                    ///
+                    void method(int p1, int p2) {
+                    }
+                }
+                """;
+
+        performCompletionTest(code, "@deprecated:", "@exception:", "@hidden:", "@param:", "@return:", "@see:", "@serialData:", "@since:", "@throws:");
+    }
+
+    public void testBlockTagsCompletionInMarkdown3() throws Exception {
+        String code =
+                """
+                package p;
+                class Clazz {
+                    ///
+                    ///|\s
+                    ///
+                    void method(int p1, int p2) {
+                    }
+                }
+                """;
+
+        performCompletionTest(code, "@deprecated:", "@exception:", "@hidden:", "@param:", "@return:", "@see:", "@serialData:", "@since:", "@throws:");
+    }
+
+    public void testBlockTagsCompletionInMarkdownStart() throws Exception {
+        String code =
+                """
+                package p;
+                class Clazz {
+                    ///|
+                    void method(int p1, int p2) {
+                    }
+                }
+                """;
+
+        performCompletionTest(code, "@deprecated:", "@exception:", "@hidden:", "@param:", "@return:", "@see:", "@serialData:", "@since:", "@throws:");
+    }
+
+    public void testSeeMarkdown1() throws Exception {
+        String code =
+                """
+                package p;
+                class Clazz {
+                    ///
+                    /// @see CharSequence#le|
+                    ///
+                    Clazz() {
+                    }
+                }
+                """;
+
+        performCompletionTest(code, "public abstract int length()");
+    }
+
+    public void testSeeMarkdown2() throws Exception {
+        String code =
+                """
+                package p;
+                class Clazz {
+                    ///
+                    /// @see |
+                    ///
+                    Clazz() {
+                    }
+                }
+                """;
+
+        performCompletionTest(code, null, "String", "Clazz");
+    }
+
+    public void testSeeMarkdown3() throws Exception {
+        String code =
+                """
+                package p;
+                class Clazz {
+                    ///@param i i
+                    ///@see |
+                    ///
+                    Clazz(int i) {
+                    }
+                }
+                """;
+
+        performCompletionTest(code, null, "String", "Clazz");
+    }
+
+    public void testParamMarkdown() throws Exception {
+        String code =
+                """
+                package p;
+                class Clazz {
+                    ///
+                    /// @param |
+                    ///
+                    void method(int p1, int p2) {
+                    }
+                }
+                """;
+
+        performCompletionTest(code, "p1:", "p2:");
+    }
+
+    public void testJavadocOldStart1() throws Exception {
+        String code =
+                """
+                package p;
+                class Clazz {
+                    /**| */
+                    void method(int p1, int p2) {
+                    }
+                }
+                """;
+
+        performCompletionTest(code, "@deprecated:", "@exception:", "@hidden:", "@param:", "@return:", "@see:", "@serialData:", "@since:", "@throws:");
+    }
+
+    public void testJavadocOldStart2() throws Exception {
+        String code =
+                """
+                package p;
+                class Clazz {
+                    /**@s| */
+                    void method(int p1, int p2) {
+                    }
+                }
+                """;
+
+        performCompletionTest(code, "@see:", "@serialData:", "@since:");
+    }
+
+    public void testJavadocOldStart3() throws Exception {
+        String code =
+                """
+                package p;
+                class Clazz {
+                    /**@param | */
+                    void method(int p1, int p2) {
+                    }
+                }
+                """;
+
+        performCompletionTest(code, "p1:", "p2:");
+    }
+
+    public void testJavadocOldStart4() throws Exception {
+        String code =
+                """
+                package p;
+                class Clazz {
+                    /**@see | */
+                    void method(int p1, int p2) {
+                    }
+                }
+                """;
+
+        performCompletionTest(code, null, "String", "Clazz");
+    }
+
+    public void testJavadocMarkdownStart1() throws Exception {
+        String code =
+                """
+                package p;
+                class Clazz {
+                    ///|
+                    void method(int p1, int p2) {
+                    }
+                }
+                """;
+
+        performCompletionTest(code, "@deprecated:", "@exception:", "@hidden:", "@param:", "@return:", "@see:", "@serialData:", "@since:", "@throws:");
+    }
+
+    public void testJavadocMarkdownStart2() throws Exception {
+        String code =
+                """
+                package p;
+                class Clazz {
+                    ///@s|
+                    void method(int p1, int p2) {
+                    }
+                }
+                """;
+
+        performCompletionTest(code, "@see:", "@serialData:", "@since:");
+    }
+
+    public void testJavadocMarkdownStart3() throws Exception {
+        String code =
+                """
+                package p;
+                class Clazz {
+                    ///@param |
+                    void method(int p1, int p2) {
+                    }
+                }
+                """;
+
+        performCompletionTest(code, "p1:", "p2:");
+    }
+
+    public void testJavadocMarkdownStart4() throws Exception {
+        String code =
+                """
+                package p;
+                class Clazz {
+                    ///@see |
+                    void method(int p1, int p2) {
+                    }
+                }
+                """;
+
+        performCompletionTest(code, null, "String", "Clazz");
+    }
+
     private static String stripHTML(String from) {
         StringBuilder result = new StringBuilder();
         boolean inHTMLTag = false;
@@ -368,5 +886,31 @@ public class JavadocCompletionQueryTest extends JavadocTestSupport {
             Collections.sort(resultStrings);
             assertEquals(goldenList, resultStrings);
         }
+    }
+
+    @Override
+    protected Object[] additionalServices() {
+        return new Object[] {
+            new SourceLevelQueryImplementation2() {
+
+                @Override
+                public Result getSourceLevel(FileObject javaFile) {
+                    return new Result() {
+                        @Override
+                        public String getSourceLevel() {
+                            return "23";
+                        }
+
+                        @Override
+                        public void addChangeListener(ChangeListener listener) {
+                        }
+
+                        @Override
+                        public void removeChangeListener(ChangeListener listener) {
+                        }
+                    };
+                }
+            }
+        };
     }
 }

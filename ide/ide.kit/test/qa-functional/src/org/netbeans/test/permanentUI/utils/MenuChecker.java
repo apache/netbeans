@@ -360,7 +360,6 @@ public class MenuChecker {
         return collisions;
     }
 
-/////////////////////////////////////////////////////////////////////////////////
     public static int getElementPosition(String element, MenuElement[] array) {
         int p = -1;
         for (int i = 0; i <

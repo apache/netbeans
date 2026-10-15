@@ -23,13 +23,13 @@ package org.openide.filesystems.spi;
  * Creates instance of the desired class based on the file.
  * Module providers may register factories to control creation of instances
  * from files that use only file name or {@code instanceClass} attribute.
- * <p/>
+ * <p>
  * Registered factories are called in the registration order, until one provides
  * a non-null result, which become the file's created instance. If all factories
  * return {@code null}, the FileSystems API will create the instance using the default
  * constructor.
  * 
- * <p/>
+ * <p>
  * Module implementors are encouraged to use the <code>instanceCreate</code> attribute
  * instead.
  * 

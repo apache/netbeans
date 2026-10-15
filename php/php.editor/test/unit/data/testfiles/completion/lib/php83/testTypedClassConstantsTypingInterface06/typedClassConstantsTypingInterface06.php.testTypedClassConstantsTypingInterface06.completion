@@ -1,0 +1,6 @@
+Code completion result for source line:
+public const (A&|)
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      A                               [PUBLIC]   typedClassConstantsTypingInterface06.php
+CLASS      B                               [PUBLIC]   typedClassConstantsTypingInterface06.php
+CLASS      C                               [PUBLIC]   typedClassConstantsTypingInterface06.php

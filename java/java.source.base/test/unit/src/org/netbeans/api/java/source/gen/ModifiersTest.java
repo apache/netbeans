@@ -138,7 +138,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -170,15 +170,15 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
                 // finally, find the correct body and rewrite it.
                 ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
                 ModifiersTree mods = clazz.getModifiers();
-                Set<Modifier> s = new HashSet<Modifier>(mods.getFlags());
-                s.add(Modifier.ABSTRACT);
+                Set<Modifier> s = EnumSet.of(Modifier.ABSTRACT);
+                s.addAll(mods.getFlags());
                 workingCopy.rewrite(mods, make.Modifiers(s));
             }
             
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -227,7 +227,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -276,7 +276,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -325,7 +325,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -374,7 +374,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -423,7 +423,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -472,7 +472,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -530,7 +530,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -589,7 +589,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -637,7 +637,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -687,15 +687,15 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
                 TreeMaker make = workingCopy.getTreeMaker();
                 ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
                 ModifiersTree mods = clazz.getModifiers();
-                Set<Modifier> flags = new HashSet<Modifier>(mods.getFlags());
-                flags.add(Modifier.ABSTRACT);
+                Set<Modifier> flags = EnumSet.of(Modifier.ABSTRACT);
+                flags.addAll(mods.getFlags());
                 workingCopy.rewrite(mods, make.Modifiers(flags, mods.getAnnotations()));
             }
             
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -722,7 +722,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
                 "/**\n" +
                 " *aa\n" +
                 " */\n" +
-                "@Annotation()\n" +
+                "@Annotation\n" +
                 "public class Test {\n" +
                 "}\n";
         JavaSource testSource = JavaSource.forFileObject(FileUtil.toFileObject(testFile));
@@ -741,7 +741,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -790,7 +790,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -839,7 +839,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -889,7 +889,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -939,7 +939,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -991,7 +991,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -1017,7 +1017,8 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
                 TreeMaker make = workingCopy.getTreeMaker();
                 ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
                 ModifiersTree mods = clazz.getModifiers();
-                Set<Modifier> flags = new HashSet<Modifier>(mods.getFlags());
+                Set<Modifier> flags = EnumSet.noneOf(Modifier.class);
+                flags.addAll(mods.getFlags());
                 flags.remove(Modifier.PUBLIC);
                 ModifiersTree modified = make.Modifiers(flags);
                 
@@ -1033,7 +1034,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -1075,7 +1076,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -1119,7 +1120,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -1163,7 +1164,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -1207,7 +1208,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -1230,7 +1231,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
                 "\n" +
                 "import java.io.*;\n" +
                 "\n" +
-                "@Annotation()\n" +
+                "@Annotation\n" +
                 "public class Test {\n" +
                 "    void alois() {\n" +
                 "    }\n" +
@@ -1251,7 +1252,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -1274,7 +1275,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
                 "\n" +
                 "import java.io.*;\n" +
                 "\n" +
-                "@Annotation()\n" +
+                "@Annotation\n" +
                 "public class Test {\n" +
                 "    void alois() {\n" +
                 "    }\n" +
@@ -1297,7 +1298,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -1345,7 +1346,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -1385,7 +1386,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -1419,7 +1420,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -1466,7 +1467,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -1511,7 +1512,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -1549,7 +1550,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     

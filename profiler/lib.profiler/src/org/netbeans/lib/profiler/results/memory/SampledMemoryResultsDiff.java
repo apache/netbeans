@@ -119,9 +119,9 @@ public class SampledMemoryResultsDiff extends SampledMemoryResultsSnapshot {
         s2nClasses = Math.min(s2nClasses, snapshot2.getObjectsSizePerClass().length);
 
         // temporary cache for creating diff
-        HashMap<String, Integer> classNamesIdxMap = new HashMap(s1nClasses);
-        ArrayList<Integer> objCountsArr = new ArrayList(s1nClasses);
-        ArrayList<Long> objSizesArr = new ArrayList(s1nClasses);
+        HashMap<String, Integer> classNamesIdxMap = new HashMap<>(s1nClasses);
+        ArrayList<Integer> objCountsArr = new ArrayList<>(s1nClasses);
+        ArrayList<Long> objSizesArr = new ArrayList<>(s1nClasses);
 
         // fill the cache with negative values from snapshot1
         String[] s1ClassNames = snapshot1.getClassNames();

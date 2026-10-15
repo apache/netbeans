@@ -67,7 +67,7 @@ public class ViewServerLogAction extends NodeAction {
         PayaraInstance server = (PayaraInstance) commonSupport.getInstance();
         String uri = server.getUrl();
         return uri != null && uri.length() > 0
-                && ((!server.isRemote()
+                && (((!server.isRemote() || server.isWSL())
                 && ServerUtils.getServerLogFile(server).canRead())
                 || (commonSupport.isRestfulLogAccessSupported()
                 && server.isRemote() && isRunning(commonSupport)));

@@ -71,15 +71,15 @@ import org.openide.util.NbBundle;
 public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAXWSSupportImpl*/ {
     private WebProject project;
     //servlet name and servlet listener for non-JSR 109 web services
-    private final static String servletClassName = "com.sun.xml.ws.transport.http.servlet.WSServlet"; //NOI18N
-    private final static String servletListener = "com.sun.xml.ws.transport.http.servlet.WSServletContextListener"; //NOI18N
-    
+    private static final String servletClassName = "com.sun.xml.ws.transport.http.servlet.WSServlet"; //NOI18N
+    private static final String servletListener = "com.sun.xml.ws.transport.http.servlet.WSServletContextListener"; //NOI18N
+
     /** Creates a new instance of JAXWSSupport */
     public WebProjectJAXWSSupport(WebProject project, AntProjectHelper antProjectHelper) {
         super(project,antProjectHelper);
         this.project = project;
     }
-    
+
     @Override
     public FileObject getWsdlFolder(boolean create) throws java.io.IOException {
         WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
@@ -95,7 +95,7 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
         }
         return null;
     }
-    
+
     /** Get wsdlLocation information
      * Useful for web service from wsdl
      * @param name service "display" name
@@ -103,7 +103,7 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
     @Override
     public String getWsdlLocation(String serviceName) {
         String localWsdl = serviceName+".wsdl"; //NOI18N
-        JaxWsModel jaxWsModel = (JaxWsModel)project.getLookup().lookup(JaxWsModel.class);
+        JaxWsModel jaxWsModel = project.getLookup().lookup(JaxWsModel.class);
         if (jaxWsModel!=null) {
             Service service = jaxWsModel.findServiceByName(serviceName);
             if (service!=null) {
@@ -114,7 +114,7 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
         String prefix = "WEB-INF/wsdl/"; //NOI18N
         return prefix+serviceName+"/"+localWsdl; //NOI18N
     }
-    
+
     /**
      * This is to support non-JSR 109 containers. In this case, a regular jaxws web service
      * is created and the deployment descriptor is updated with the jaxws-ri servlet and
@@ -123,7 +123,7 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
     private void addServiceEntriesToDD(String serviceName) {
         //add servlet entry to web.xml
         String servletName = serviceName;
-        
+
         WebApp webApp = getWebApp();
         if(webApp != null){
             Servlet servlet;
@@ -133,7 +133,7 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
                 servlet.setLoadOnStartup(new java.math.BigInteger("1"));
                 webApp.addBean("ServletMapping", new String[]{"ServletName","UrlPattern"},
                         new Object[]{servletName, "/" + serviceName}, "ServletName");
-                
+
                 if(!webAppHasListener(webApp, servletListener)){
                     webApp.addBean("Listener", new String[]{"ListenerClass"},
                             new Object[]{servletListener}, "ListenerClass");
@@ -149,7 +149,7 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
             }
         }
     }
-    
+
     @Override
     protected void addServletElement(Project project, String wsName, String serviceImpl) throws IOException {
         WebApp webApp = getWebApp();
@@ -184,7 +184,7 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
                 }
             }
         }
-    }    
+    }
     /**
      * Remove the web.xml entries for the non-JSR 109 web service.
      *
@@ -225,7 +225,7 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
             }
         }
     }
-    
+
     /**
      * Remove the web.xml servlets for the non-JSR 109 web service.
      *
@@ -254,7 +254,7 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
         }
         return changed;
     }
-    
+
     private boolean webAppHasListener(WebApp webApp, String listenerClass){
         Listener[] listeners = webApp.getListener();
         for(int i = 0; i < listeners.length; i++){
@@ -276,7 +276,7 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
         }
         return null;
     }
-    
+
     private WebApp getWebApp() {
         try {
             FileObject deploymentDescriptor = getDeploymentDescriptor();
@@ -288,14 +288,14 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
         }
         return null;
     }
-    
+
     private boolean isProjectOpened() {
         // XXX workaround: OpenProjects.getDefault() can be null
         // when called from ProjectOpenedHook.projectOpened() upon IDE startup
         if (OpenProjects.getDefault() == null) {
             return true;
         }
-        
+
         Project[] projects = OpenProjects.getDefault().getOpenProjects();
         for (int i = 0; i < projects.length; i++) {
             if (projects[i].equals(project)) {
@@ -304,7 +304,7 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
         }
         return false;
     }
-    
+
     private FileObject getDeploymentDescriptor() throws IOException {
         WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
         if (webModule != null) {
@@ -323,10 +323,10 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
             return null;
         }
     }
-    
+
     @Override
     protected void addJaxwsArtifacts(Project project, String wsName, String serviceImpl) throws Exception {
-        
+
         // check if the wsimport class is already present - this means we don't need to add the library
         SourceGroup[] sgs = SourceGroups.getJavaSourceGroups(project);
         if (sgs.length > 0) {
@@ -352,10 +352,10 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
                 }
             }
         }
-        
+
         //Add the servlet and listener entry in web.xml
         addServiceEntriesToDD(wsName);
-        
+
         //create the sun-jaxws deployment descriptor
         FileObject ddFolder = getDeploymentDescriptorFolder();
         if(ddFolder != null){
@@ -363,7 +363,7 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
             if(sunjaxwsFile == null){
                 WSUtils.generateSunJaxwsFile(ddFolder);
             }
-            
+
             sunjaxwsFile = ddFolder.getFileObject("sun-jaxws.xml");
             Endpoints endpoints = EndpointsProvider.getDefault().getEndpoints(sunjaxwsFile);
             Endpoint endpoint = endpoints.newEndpoint();
@@ -394,14 +394,14 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
             DialogDisplayer.getDefault().notify(desc);
         }
     }
-    
+
     /** return root folder for xml artifacts
      */
     @Override
     protected FileObject getXmlArtifactsRoot() {
         return project.getWebModule().getConfDir();
     }
-    
+
     /**
      * Notification when Service (created from java) is removed from jax-ws.xml
      * (JAXWSSupport needs to react when @WebService annotation is removed
@@ -410,9 +410,9 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
      */
     @Override
     public void serviceFromJavaRemoved(String serviceName) {
-        JaxWsModel jaxWsModel = (JaxWsModel)project.getLookup().lookup(JaxWsModel.class);
+        JaxWsModel jaxWsModel = project.getLookup().lookup(JaxWsModel.class);
         Boolean isJsr109 = jaxWsModel.getJsr109();
-        if(isJsr109!=null && !isJsr109.booleanValue()){
+        if(isJsr109!=null && !isJsr109){
             try{
                 removeNonJsr109Entries(serviceName);
             }catch(IOException e){
@@ -423,11 +423,11 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
                 removeJsr109Entries(serviceName);
             }catch(IOException e){
                 Exceptions.printStackTrace(e);
-            }            
+            }
         }
-        
+
     }
-    
+
     /**
      * Removes the servlet entry from web.xml and
      * the endpoint entry from the sun-jaxws.xml file
@@ -443,7 +443,7 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
             if(sunjaxwsFile != null){
                 FileLock lock = null;
                 //if there are no more services, delete the file
-                JaxWsModel jaxWsModel = (JaxWsModel)project.getLookup().lookup(JaxWsModel.class);
+                JaxWsModel jaxWsModel = project.getLookup().lookup(JaxWsModel.class);
                 if(jaxWsModel.getServices().length == 0) {
                     synchronized(this) {
                         try{
@@ -484,18 +484,18 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
             NotifyDescriptor desc = new NotifyDescriptor.Message(mes, NotifyDescriptor.Message.ERROR_MESSAGE);
             DialogDisplayer.getDefault().notify(desc);
         }
-        
+
         //TODO if no more web services, remove the jaxws21 library
     }
-    
+
     /**
      * Removes the servlet entry from web.xml and
      * the endpoint entry from the sun-jaxws.xml file
      */
     public void removeJsr109Entries(String serviceName) throws IOException {
-        WebApp webApp = getWebApp();       
+        WebApp webApp = getWebApp();
         if (webApp != null) {
-            JaxWsModel jaxWsModel = (JaxWsModel)project.getLookup().lookup(JaxWsModel.class);
+            JaxWsModel jaxWsModel = project.getLookup().lookup(JaxWsModel.class);
             if (jaxWsModel != null) {
                 Service service = jaxWsModel.findServiceByName(serviceName);
                 if (service != null) {
@@ -511,7 +511,7 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
             }
         }
     }
- 
+
     /**
      * Remove the web.xml servlets for the non-JSR 109 web service.
      *
@@ -544,9 +544,9 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
         }
         return changed;
     }
- 
+
     @Override
-    public String addService(String name, String serviceImpl, String wsdlUrl, String serviceName, 
+    public String addService(String name, String serviceImpl, String wsdlUrl, String serviceName,
             String portName, String packageName, boolean isJsr109, boolean useProvider) {
         // create jax-ws.xml if necessary
         FileObject fo = WSUtils.findJaxWsFileObject(project);
@@ -594,24 +594,39 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
     @Override
     protected String getProjectJavaEEVersion() {
         WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
-        if (webModule != null) {
-            if (Profile.JAVA_EE_6_WEB.equals(webModule.getJ2eeProfile())) {
-                return JAVA_EE_VERSION_16;
-            } else if (Profile.JAVA_EE_6_FULL.equals(webModule.getJ2eeProfile())) {
-                return JAVA_EE_VERSION_16;
-            } else if (Profile.JAVA_EE_7_WEB.equals(webModule.getJ2eeProfile())) {
-                return JAVA_EE_VERSION_17;
-            } else if (Profile.JAVA_EE_7_FULL.equals(webModule.getJ2eeProfile())) {
-                return JAVA_EE_VERSION_17;
-            } else if (Profile.JAVA_EE_8_WEB.equals(webModule.getJ2eeProfile())) {
-                return JAVA_EE_VERSION_18;
-            } else if (Profile.JAVA_EE_8_FULL.equals(webModule.getJ2eeProfile())) {
-                return JAVA_EE_VERSION_18;
-            } else if (Profile.JAVA_EE_5.equals(webModule.getJ2eeProfile())) {
-                return JAVA_EE_VERSION_15;
+        if (webModule != null && webModule.getJ2eeProfile() != null) {
+            switch (webModule.getJ2eeProfile()) {
+                case JAVA_EE_6_WEB:
+                case JAVA_EE_6_FULL:
+                    return JAVA_EE_VERSION_16;
+                case JAVA_EE_7_WEB:
+                case JAVA_EE_7_FULL:
+                    return JAVA_EE_VERSION_17;
+                case JAVA_EE_8_WEB:
+                case JAVA_EE_8_FULL:
+                    return JAVA_EE_VERSION_18;
+                case JAKARTA_EE_8_WEB:
+                case JAKARTA_EE_8_FULL:
+                    return JAKARTA_EE_VERSION_8;
+                case JAKARTA_EE_9_WEB:
+                case JAKARTA_EE_9_FULL:
+                    return JAKARTA_EE_VERSION_9;
+                case JAKARTA_EE_9_1_WEB:
+                case JAKARTA_EE_9_1_FULL:
+                    return JAKARTA_EE_VERSION_91;
+                case JAKARTA_EE_10_WEB:
+                case JAKARTA_EE_10_FULL:
+                    return JAKARTA_EE_VERSION_10;
+                case JAKARTA_EE_11_WEB:
+                case JAKARTA_EE_11_FULL:
+                    return JAKARTA_EE_VERSION_11;
+                case JAVA_EE_5:
+                    return JAVA_EE_VERSION_15;
+                default:
+                    break;
             }
         }
         return JAVA_EE_VERSION_NONE;
     }
-    
+
 }

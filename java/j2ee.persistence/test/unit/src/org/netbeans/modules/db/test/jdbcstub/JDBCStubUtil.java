@@ -37,7 +37,7 @@ public final class JDBCStubUtil {
     private JDBCStubUtil() {
     }
     
-    public static ResultSet createResultSet(List/*<List<Object>>*/ columns) {
+    public static ResultSet createResultSet(List<Object> columns) {
         return (ResultSet)Stub.create(ResultSet.class, new ResultSetImpl(columns));
     }
     
@@ -203,19 +203,19 @@ public final class JDBCStubUtil {
     
     private static void addAllAsReferenceType(List list, int[] values) {
         for (int i = 0; i < values.length; i++) {
-            list.add(new Integer(values[i]));
+            list.add(values[i]);
         }
     }
     
     private static void addAllAsReferenceType(List list, short[] values) {
         for (int i = 0; i < values.length; i++) {
-            list.add(new Short(values[i]));
+            list.add(values[i]);
         }
     }
     
     private static void addAllAsReferenceType(List list, boolean[] values) {
         for (int i = 0; i < values.length; i++) {
-            list.add(Boolean.valueOf(values[i]));
+            list.add(values[i]);
         }
     }
 }

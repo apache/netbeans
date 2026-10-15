@@ -117,8 +117,7 @@ public final class SearchInfoDefinitionUtils {
         } else {
             List<SearchFilterDefinition> defaults =
                     SearchInfoDefinitionFactory.DEFAULT_FILTER_DEFS;
-            return defaults.toArray(
-                    new SearchFilterDefinition[defaults.size()]);
+            return defaults.toArray(new SearchFilterDefinition[0]);
         }
     }
 

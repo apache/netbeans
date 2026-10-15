@@ -180,6 +180,7 @@ public class ErrorLineConvertor implements LineConvertor {
             path = filePath;
         }
 
+        @Override
         public void outputLineAction(OutputEvent ev) {
             FileObject sourceFile = GlobalPathRegistry.getDefault().findResource(
                     path);
@@ -211,12 +212,6 @@ public class ErrorLineConvertor implements LineConvertor {
                 }
                 errorLine.show(ShowOpenType.OPEN, ShowVisibilityType.NONE);
             }
-        }
-        
-        public void outputLineCleared(OutputEvent ev) {
-        }
-        
-        public void outputLineSelected(OutputEvent ev) {           
         }
         
     }

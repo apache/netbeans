@@ -33,7 +33,7 @@
         <os family="unix"/>
     </condition>
 
-    <property name="test.run.args" value="-Dnetbeans.keyring.no.master=true -client -Xss2m -Xms32m -Xmx512m -XX:PermSize=32m -XX:MaxPermSize=200m -Xverify:none -Dsun.java2d.noddraw=true -Dcom.sun.aas.installRoot=&quot;${j2ee.appserver.path}&quot; -Dtomcat.installRoot=&quot;${tomcat.webserver.path}&quot;"/>
+    <property name="test.run.args" value="-Dnetbeans.keyring.no.master=true -client -Xss2m -Xms32m -Xmx512m-Xverify:none -Dsun.java2d.noddraw=true -Dcom.sun.aas.installRoot=&quot;${j2ee.appserver.path}&quot; -Dtomcat.installRoot=&quot;${tomcat.webserver.path}&quot;"/>
 
     <import file="nbproject/build-impl.xml"/>
 </project>

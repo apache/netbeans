@@ -24,6 +24,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Graphics;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -33,9 +34,13 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableCellRenderer;
 import org.netbeans.core.multitabs.TabDecorator;
+import org.netbeans.core.multitabs.TabbedImpl;
 import org.netbeans.core.windows.view.ui.tabcontrol.Utilities;
 import org.netbeans.swing.tabcontrol.TabData;
 import org.openide.awt.CloseButtonFactory;
@@ -47,6 +52,14 @@ import org.openide.windows.TopComponent;
  * @author S. Aubrecht
  */
 public class TabDataRenderer implements TableCellRenderer {
+
+    private static final Insets tabInsets = UIManager.getInsets("nb.multitabs.tabInsets"); // NOI18N
+    private static final int underlineHeight = UIManager.getInt("nb.multitabs.underlineHeight"); // NOI18N
+    private static final Color underlineColor = UIManager.getColor("nb.multitabs.underlineColor"); // NOI18N
+    private static final Color inactiveUnderlineColor = UIManager.getColor("nb.multitabs.inactiveUnderlineColor"); // NOI18N
+    private static final Color activeBackground = UIManager.getColor("nb.multitabs.activeBackground"); // NOI18N
+    private static final Color hoverBackground = UIManager.getColor("nb.multitabs.hoverBackground"); // NOI18N
+    private static final boolean underlineAtTop = UIManager.getBoolean("EditorTab.underlineAtTop");
 
     private final RendererPanel renderer = new RendererPanel();
     private final List<TabDecorator> decorators = getDecorators();
@@ -62,6 +75,12 @@ public class TabDataRenderer implements TableCellRenderer {
             Icon icon = tab.getIcon();
             Color colBackground = isSelected ? table.getSelectionBackground() : table.getBackground();
             Color colForeground = isSelected ? table.getSelectionForeground() : table.getForeground();
+
+            boolean isActive = (activeBackground != null || underlineColor != null)
+                ? TabbedImpl.isActive(table) : false;
+            if (!isSelected && isActive && activeBackground != null) {
+                colBackground = activeBackground;
+            }
 
             for( TabDecorator td : decorators ) {
                 Color c = td.getBackground( tab, isSelected );
@@ -80,6 +99,10 @@ public class TabDataRenderer implements TableCellRenderer {
                     icon = i;
                 }
             }
+            boolean isHover = (hoverBackground != null && TabTableUI.isHover(table, row, column));
+            if (isHover) {
+                colBackground = hoverBackground;
+            }
             renderer.label.setText( text );
             renderer.label.setIcon( icon );
             renderer.label.setFont( table.getFont() );
@@ -87,6 +110,8 @@ public class TabDataRenderer implements TableCellRenderer {
             renderer.label.setForeground( colForeground );
             renderer.tabData = tab;
             renderer.isSelected = isSelected;
+            renderer.isActive = isActive;
+            renderer.tabsLocation = (table instanceof TabTable) ? ((TabTable)table).getTabsLocation() : JTabbedPane.TOP;
 
             if( table instanceof TabTable ) {
                 TabTable tabTable = ( TabTable ) table;
@@ -141,6 +166,21 @@ public class TabDataRenderer implements TableCellRenderer {
                     icon = i;
                 }
             }
+
+            // On startup, this method is invoked very often if many files are open
+            // (~60000 times for 200 open files).
+            // The text (usually a filename) always starts with "<html>",
+            // but does not contain other HTML tags.
+            // The HTML rendering makes startup slow (and CPU load high).
+            // To workaround this, remove the leading "<html>" if text does not
+            // contain HTML tags or entities.
+            String prefix = "<html>"; // NOI18N
+            if (text.startsWith(prefix)
+                    && text.indexOf('<', prefix.length()) < 0
+                    && text.indexOf('&', prefix.length()) < 0) {
+                text = text.substring(prefix.length());
+            }
+
             renderer.label.setText( text );
             renderer.label.setIcon( icon );
             renderer.tabData = tab;
@@ -155,9 +195,15 @@ public class TabDataRenderer implements TableCellRenderer {
         private final JButton closeButton;
         private TabData tabData;
         private boolean isSelected;
+        private boolean isActive;
+        private int tabsLocation = JTabbedPane.TOP;
 
         public RendererPanel() {
             super( new BorderLayout( 0, 0 ) );
+            if (tabInsets != null) {
+                setBorder(new EmptyBorder(tabInsets));
+            }
+
             label = new JLabel();
             label.setBorder( BorderFactory.createEmptyBorder( 2, 2, 2, 3) );
             add( label, BorderLayout.CENTER );
@@ -172,6 +218,8 @@ public class TabDataRenderer implements TableCellRenderer {
             setOpaque( true );
             tabData = null;
             isSelected = false;
+            isActive = false;
+            tabsLocation = JTabbedPane.TOP;
             closeButton.getModel().setArmed( false );
             closeButton.getModel().setRollover( false );
             closeButton.setVisible( true );
@@ -183,6 +231,37 @@ public class TabDataRenderer implements TableCellRenderer {
             Rectangle rect = getBounds();
             rect.x = 0;
             rect.y = 0;
+
+            // paint underline selection
+            if (isSelected && underlineHeight > 0 && underlineColor != null) {
+                g.setColor(isActive || inactiveUnderlineColor == null
+                        ? underlineColor : inactiveUnderlineColor);
+                switch (tabsLocation) {
+                    default:
+                    case JTabbedPane.TOP:
+                        if (underlineAtTop) {
+                            g.fillRect(0, 0, rect.width, underlineHeight);
+                        } else {
+                            g.fillRect(0, rect.height - underlineHeight, rect.width, underlineHeight);
+                        }
+                        break;
+                    case JTabbedPane.BOTTOM:
+                        if (underlineAtTop) {
+                            g.fillRect(0, rect.height - underlineHeight, rect.width, underlineHeight);
+                        } else {
+                            g.fillRect(0, 0, rect.width, underlineHeight);
+                        }
+                        break;
+                    case JTabbedPane.LEFT:
+                        g.fillRect(rect.width - underlineHeight, 0, underlineHeight, rect.height);
+                        break;
+                    case JTabbedPane.RIGHT:
+                        g.fillRect(0, 0, underlineHeight, rect.height);
+                        break;
+                }
+            }
+
+            // paint tab decorators
             for( TabDecorator td : decorators ) {
                 td.paintAfter( tabData, g, rect, isSelected );
             }
@@ -203,7 +282,8 @@ public class TabDataRenderer implements TableCellRenderer {
 
     static int getPreferredTableRowHeight() {
         JLabel lbl = new JLabel( "ABC" ); //NOI18N
-        return 2+2+Math.max( 16, lbl.getPreferredSize().height );
+        int topBottomInsets = (tabInsets != null) ? tabInsets.top + tabInsets.bottom : 2 + 2;
+        return topBottomInsets + Math.max( 16, lbl.getPreferredSize().height );
     }
 
     private static List<TabDecorator> getDecorators() {

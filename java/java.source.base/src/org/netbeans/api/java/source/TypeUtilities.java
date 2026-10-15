@@ -150,7 +150,7 @@ public final class TypeUtilities {
      * Returns a TypeMirror which can be represented in a source as a type declarator. The returned TypeMirror,
      * if not erroneous, can be used as type of a variable or a method's return type. The method will attempt to
      * infer proper wildcards or bounds.
-     * <p/>
+     * <p>
      * If the type could be represented in source, the method returns a type of {@link TypeKind#ERROR}.
      * 
      * @param type the type to be polished
@@ -424,8 +424,6 @@ public final class TypeUtilities {
                     bound = t.getUpperBound();
                     if (bound != null && bound.getKind() != TypeKind.NULL) {
                         DEFAULT_VALUE.append(" extends "); //NOI18N
-                        if (bound.getKind() == TypeKind.TYPEVAR)
-                            bound = ((TypeVariable)bound).getLowerBound();
                         visit(bound, p);
                     }
                 }

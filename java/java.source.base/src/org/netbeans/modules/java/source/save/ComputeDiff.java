@@ -48,7 +48,7 @@ class ComputeDiff<E> {
     /**
      * The list of differences, as <code>Difference</code> instances.
      */
-    private List<Difference> diffs = new ArrayList<Difference>();
+    private List<Difference> diffs = new ArrayList<>();
     
     /**
      * The pending, uncommitted difference.
@@ -275,22 +275,22 @@ class ComputeDiff<E> {
         int aPrevStart = 0;
         int bPrevStart = 0;
         
-        TreeMap<Integer, Integer> matches = new TreeMap<Integer, Integer>();
+        TreeMap<Integer, Integer> matches = new TreeMap<>();
         int bEndOrig;
         do {
             Map<E, List<Integer>> bMatches = null;
             if (comparator == null) {
                 if (a.length > 0 && a[0] instanceof Comparable) {
                     // this uses the Comparable interface
-                    bMatches = new TreeMap<E, List<Integer>>();
+                    bMatches = new TreeMap<>();
                 } else {
                     // this just uses hashCode()
-                    bMatches = new HashMap<E, List<Integer>>();
+                    bMatches = new HashMap<>();
                 }
             } else {
                 // we don't really want them sorted, but this is the only Map
                 // implementation (as of JDK 1.4) that takes a comparator.
-                bMatches = new TreeMap<E, List<Integer>>(comparator);
+                bMatches = new TreeMap<>(comparator);
             }
             aStart = aPrevStart;
             bStart = bPrevStart;
@@ -304,11 +304,11 @@ class ComputeDiff<E> {
             bEndOrig = bEnd;
 
             while (aStart <= aEnd && bStart <= bEnd && equals(a[aStart], b[bStart])) {
-                matches.put(new Integer(aStart++), new Integer(bStart++));
+                matches.put(aStart++, bStart++);
             }
 
             while (aStart <= aEnd && bStart <= bEnd && equals(a[aEnd], b[bEnd])) {
-                matches.put(new Integer(aEnd--), new Integer(bEnd--));
+                matches.put(aEnd--, bEnd--);
             }
         
 
@@ -317,21 +317,21 @@ class ComputeDiff<E> {
                 E key = element;
                 List<Integer> positions = bMatches.get(key);
                 if (positions == null) {
-                    positions = new ArrayList<Integer>();
+                    positions = new ArrayList<>();
                     bMatches.put(key, positions);
                 }
-                positions.add(new Integer(bi));
+                positions.add(bi);
             }
 
-            thresh = new TreeMap<Integer, Integer>();
-            Map<Integer, Object[]> links = new HashMap<Integer, Object[]>();
+            thresh = new TreeMap<>();
+            Map<Integer, Object[]> links = new HashMap<>();
 
             for (int i = aStart; i <= aEnd; ++i) {
                 E aElement = a[i]; // keygen here.
                 List<Integer> positions = bMatches.get(aElement);
 
                 if (positions != null) {
-                    Integer  k   = new Integer(0);
+                    Integer  k   = 0;
                     ListIterator<Integer> pit = positions.listIterator(positions.size());
                     while (pit.hasPrevious()) {
                         Integer j = pit.previous();
@@ -341,8 +341,8 @@ class ComputeDiff<E> {
                         if (k == null) {
                             // nothing
                         } else {
-                            Object value = k.intValue() > 0 ? links.get(new Integer(k.intValue() - 1)) : null;
-                            links.put(k, new Object[] { value, new Integer(i), j });
+                            Object value = k > 0 ? links.get(k - 1) : null;
+                            links.put(k, new Object[] { value, i, j });
                         }
                     }
                 }
@@ -368,14 +368,14 @@ class ComputeDiff<E> {
      * Converts the map (indexed by java.lang.Integers) into an array.
      */
     protected static Integer[] toArray(TreeMap map) {
-        int       size = map.size() == 0 ? 0 : 1 + ((Integer)map.lastKey()).intValue();
+        int       size = map.isEmpty() ? 0 : 1 + ((Integer)map.lastKey());
         Integer[] ary  = new Integer[size];
         Iterator  it   = map.keySet().iterator();
         
         while (it.hasNext()) {
             Integer idx = (Integer)it.next();
             Integer val = (Integer)map.get(idx);
-            ary[idx.intValue()] = val;
+            ary[idx] = val;
         }
         return ary;
     }
@@ -384,7 +384,7 @@ class ComputeDiff<E> {
      * Returns whether the integer is not zero (including if it is not null).
      */
     protected static boolean isNonzero(Integer i) {
-        return i != null && i.intValue() != 0;
+        return i != null && i != 0;
     }
     
     /**
@@ -418,11 +418,11 @@ class ComputeDiff<E> {
      */
     protected void append(Integer value) {
         Integer addIdx = null;
-        if (thresh.size() == 0) {
-            addIdx = new Integer(0);
+        if (thresh.isEmpty()) {
+            addIdx = 0;
         } else {
             Integer lastKey = thresh.lastKey();
-            addIdx = new Integer(lastKey.intValue() + 1);
+            addIdx = lastKey + 1;
         }
         thresh.put(addIdx, value);
     }
@@ -431,28 +431,28 @@ class ComputeDiff<E> {
      * Inserts the given values into the threshold map.
      */
     protected Integer insert(Integer j, Integer k) {
-        if (isNonzero(k) && isGreaterThan(k, j) && isLessThan(new Integer(k.intValue() - 1), j)) {
+        if (isNonzero(k) && isGreaterThan(k, j) && isLessThan(k - 1, j)) {
             thresh.put(k, j);
         } else {
             int hi = -1;
             
             if (isNonzero(k)) {
-                hi = k.intValue();
+                hi = k;
             } else if (thresh.size() > 0) {
-                hi = (thresh.lastKey()).intValue();
+                hi = (thresh.lastKey());
             }
             
             // off the end?
             if (hi == -1 || j.compareTo(getLastValue()) > 0) {
                 append(j);
-                k = new Integer(hi + 1);
+                k = hi + 1;
             } else {
                 // binary search for insertion point:
                 int lo = 0;
                 
                 while (lo <= hi) {
                     int     index = (hi + lo) / 2;
-                    Integer val   = thresh.get(new Integer(index));
+                    Integer val   = thresh.get(index);
                     int     cmp   = j.compareTo(val);
                     
                     if (cmp == 0) {
@@ -464,11 +464,10 @@ class ComputeDiff<E> {
                     }
                 }
                 
-                thresh.put(new Integer(lo), j);
-                k = new Integer(lo);
+                thresh.put(lo, j);
+                k = lo;
             }
         }
         return k;
     }
-    
 }

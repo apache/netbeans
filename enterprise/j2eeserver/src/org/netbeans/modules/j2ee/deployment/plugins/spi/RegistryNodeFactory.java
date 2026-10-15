@@ -41,6 +41,7 @@ import org.openide.util.Lookup;
  * @author  George Finklang
  * @deprecated use the Common Server SPI for registering nodes
  */
+@Deprecated
 public interface RegistryNodeFactory {
 
      /**

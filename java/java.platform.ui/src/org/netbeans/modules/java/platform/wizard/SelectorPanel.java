@@ -23,10 +23,12 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ItemListener;
+import java.util.Enumeration;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
 import javax.swing.JLabel;
@@ -114,7 +116,7 @@ class SelectorPanel extends javax.swing.JPanel implements ItemListener {
     
     private void readSettings () {
         if (this.group.getSelection()==null) {
-            java.util.Enumeration buttonEnum = this.group.getElements();
+            Enumeration<AbstractButton> buttonEnum = this.group.getElements();
             assert buttonEnum.hasMoreElements();
             ((JRadioButton)buttonEnum.nextElement()).setSelected(true);
         }

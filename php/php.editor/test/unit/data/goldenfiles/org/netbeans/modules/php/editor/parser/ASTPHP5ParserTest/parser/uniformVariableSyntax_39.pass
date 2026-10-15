@@ -1,0 +1,437 @@
+<testresult testFile='uniformVariableSyntax_39.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='814' end='819'>
+            <text>$test</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='819' end='821'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='821' end='822'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='822' end='826'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='826' end='827'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='827' end='832'>
+            <text>&apos;foo&apos;</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='832' end='833'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='833' end='834'>
+            <text>}</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='834' end='836'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='836' end='837'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='837' end='841'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='841' end='842'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='842' end='847'>
+            <text>&apos;bar&apos;</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='847' end='848'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='848' end='849'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='849' end='850'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='851' end='856'>
+            <text>$test</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='856' end='858'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='858' end='859'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='859' end='863'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='863' end='864'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='864' end='869'>
+            <text>&apos;foo&apos;</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='869' end='870'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='870' end='871'>
+            <text>}</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='871' end='872'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='872' end='873'>
+            <text>)</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='873' end='875'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='875' end='876'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='876' end='880'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='880' end='881'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='881' end='886'>
+            <text>&apos;bar&apos;</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='886' end='887'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='887' end='888'>
+            <text>}</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='888' end='889'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='889' end='890'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='890' end='891'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='892' end='896'>
+            <text>Test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='896' end='898'>
+            <text>::</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='898' end='899'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='899' end='903'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='903' end='904'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='904' end='909'>
+            <text>&apos;foo&apos;</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='909' end='910'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='910' end='911'>
+            <text>}</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='911' end='912'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='912' end='913'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='913' end='915'>
+            <text>::</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='915' end='916'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='916' end='920'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='920' end='921'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='921' end='926'>
+            <text>&apos;bar&apos;</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='926' end='927'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='927' end='928'>
+            <text>}</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='928' end='929'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='929' end='930'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='930' end='931'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='932' end='937'>
+            <text>$test</text>
+        </token>
+        <token id='T_OPEN_RECT' start='937' end='938'>
+            <text>[</text>
+        </token>
+        <token id='T_STRING' start='938' end='942'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='942' end='943'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='943' end='948'>
+            <text>&apos;foo&apos;</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='948' end='949'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='949' end='950'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_RECT' start='950' end='951'>
+            <text>[</text>
+        </token>
+        <token id='T_STRING' start='951' end='955'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='955' end='956'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='956' end='961'>
+            <text>&apos;bar&apos;</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='961' end='962'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='962' end='963'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='963' end='964'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='965' end='965'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='965'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='814' end='850'>
+                <FieldAccess start='814' end='849' isNullsafe='false'>
+                    <FieldAccess start='814' end='834' isNullsafe='false'>
+                        <Variable start='814' end='819' isDollared='true'>
+                            <Identifier start='815' end='819' name='test'/>
+                        </Variable>
+                        <Field>
+                            <ReflectionVariable start='821' end='834'>
+                                <FunctionInvocation start='822' end='833'>
+                                    <FucntionName start='822' end='826'>
+                                        <NamespaceName start='822' end='826' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='822' end='826' name='test'/>
+                                        </NamespaceName>
+                                    </FucntionName>
+                                    <Parameters>
+                                        <Scalar start='827' end='832' type='STRING' value='&apos;foo&apos;'/>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </ReflectionVariable>
+                        </Field>
+                    </FieldAccess>
+                    <Field>
+                        <ReflectionVariable start='836' end='849'>
+                            <FunctionInvocation start='837' end='848'>
+                                <FucntionName start='837' end='841'>
+                                    <NamespaceName start='837' end='841' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='837' end='841' name='test'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                    <Scalar start='842' end='847' type='STRING' value='&apos;bar&apos;'/>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </ReflectionVariable>
+                    </Field>
+                </FieldAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='851' end='891'>
+                <MethodInvocation start='851' end='890' isNullsafe='false'>
+                    <MethodInvocation start='851' end='873' isNullsafe='false'>
+                        <Variable start='851' end='856' isDollared='true'>
+                            <Identifier start='852' end='856' name='test'/>
+                        </Variable>
+                        <Method>
+                            <FunctionInvocation start='858' end='873'>
+                                <FucntionName start='858' end='871'>
+                                    <ReflectionVariable start='858' end='871'>
+                                        <FunctionInvocation start='859' end='870'>
+                                            <FucntionName start='859' end='863'>
+                                                <NamespaceName start='859' end='863' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='859' end='863' name='test'/>
+                                                </NamespaceName>
+                                            </FucntionName>
+                                            <Parameters>
+                                                <Scalar start='864' end='869' type='STRING' value='&apos;foo&apos;'/>
+                                            </Parameters>
+                                        </FunctionInvocation>
+                                    </ReflectionVariable>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Method>
+                    </MethodInvocation>
+                    <Method>
+                        <FunctionInvocation start='875' end='890'>
+                            <FucntionName start='875' end='888'>
+                                <ReflectionVariable start='875' end='888'>
+                                    <FunctionInvocation start='876' end='887'>
+                                        <FucntionName start='876' end='880'>
+                                            <NamespaceName start='876' end='880' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='876' end='880' name='test'/>
+                                            </NamespaceName>
+                                        </FucntionName>
+                                        <Parameters>
+                                            <Scalar start='881' end='886' type='STRING' value='&apos;bar&apos;'/>
+                                        </Parameters>
+                                    </FunctionInvocation>
+                                </ReflectionVariable>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Method>
+                </MethodInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='892' end='931'>
+                <StaticMethodInvocation start='892' end='930'>
+                    <StaticMethodInvocation start='892' end='913'>
+                        <NamespaceName start='892' end='896' isCurrent='false' isGlobal='false'>
+                            <Identifier start='892' end='896' name='Test'/>
+                        </NamespaceName>
+                        <Member>
+                            <FunctionInvocation start='898' end='913'>
+                                <FucntionName start='898' end='911'>
+                                    <ReflectionVariable start='898' end='911'>
+                                        <FunctionInvocation start='899' end='910'>
+                                            <FucntionName start='899' end='903'>
+                                                <NamespaceName start='899' end='903' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='899' end='903' name='test'/>
+                                                </NamespaceName>
+                                            </FucntionName>
+                                            <Parameters>
+                                                <Scalar start='904' end='909' type='STRING' value='&apos;foo&apos;'/>
+                                            </Parameters>
+                                        </FunctionInvocation>
+                                    </ReflectionVariable>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Member>
+                        <FunctionInvocation start='898' end='913'>
+                            <FucntionName start='898' end='911'>
+                                <ReflectionVariable start='898' end='911'>
+                                    <FunctionInvocation start='899' end='910'>
+                                        <FucntionName start='899' end='903'>
+                                            <NamespaceName start='899' end='903' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='899' end='903' name='test'/>
+                                            </NamespaceName>
+                                        </FucntionName>
+                                        <Parameters>
+                                            <Scalar start='904' end='909' type='STRING' value='&apos;foo&apos;'/>
+                                        </Parameters>
+                                    </FunctionInvocation>
+                                </ReflectionVariable>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </StaticMethodInvocation>
+                    <Member>
+                        <FunctionInvocation start='915' end='930'>
+                            <FucntionName start='915' end='928'>
+                                <ReflectionVariable start='915' end='928'>
+                                    <FunctionInvocation start='916' end='927'>
+                                        <FucntionName start='916' end='920'>
+                                            <NamespaceName start='916' end='920' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='916' end='920' name='test'/>
+                                            </NamespaceName>
+                                        </FucntionName>
+                                        <Parameters>
+                                            <Scalar start='921' end='926' type='STRING' value='&apos;bar&apos;'/>
+                                        </Parameters>
+                                    </FunctionInvocation>
+                                </ReflectionVariable>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Member>
+                    <FunctionInvocation start='915' end='930'>
+                        <FucntionName start='915' end='928'>
+                            <ReflectionVariable start='915' end='928'>
+                                <FunctionInvocation start='916' end='927'>
+                                    <FucntionName start='916' end='920'>
+                                        <NamespaceName start='916' end='920' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='916' end='920' name='test'/>
+                                        </NamespaceName>
+                                    </FucntionName>
+                                    <Parameters>
+                                        <Scalar start='921' end='926' type='STRING' value='&apos;bar&apos;'/>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </ReflectionVariable>
+                        </FucntionName>
+                        <Parameters>
+                        </Parameters>
+                    </FunctionInvocation>
+                </StaticMethodInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='932' end='964'>
+                <ArrayAccess start='932' end='963' type='VARIABLE_ARRAY' isDollared='false'>
+                    <ArrayDimension start='950' end='963'>
+                        <Index>
+                            <FunctionInvocation start='951' end='962'>
+                                <FucntionName start='951' end='955'>
+                                    <NamespaceName start='951' end='955' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='951' end='955' name='test'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                    <Scalar start='956' end='961' type='STRING' value='&apos;bar&apos;'/>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Index>
+                    </ArrayDimension>
+                    <Name>
+                        <ArrayAccess start='932' end='950' type='VARIABLE_ARRAY' isDollared='false'>
+                            <ArrayDimension start='937' end='950'>
+                                <Index>
+                                    <FunctionInvocation start='938' end='949'>
+                                        <FucntionName start='938' end='942'>
+                                            <NamespaceName start='938' end='942' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='938' end='942' name='test'/>
+                                            </NamespaceName>
+                                        </FucntionName>
+                                        <Parameters>
+                                            <Scalar start='943' end='948' type='STRING' value='&apos;foo&apos;'/>
+                                        </Parameters>
+                                    </FunctionInvocation>
+                                </Index>
+                            </ArrayDimension>
+                            <Name>
+                                <Variable start='932' end='937' isDollared='true'>
+                                    <Identifier start='933' end='937' name='test'/>
+                                </Variable>
+                            </Name>
+                        </ArrayAccess>
+                    </Name>
+                </ArrayAccess>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

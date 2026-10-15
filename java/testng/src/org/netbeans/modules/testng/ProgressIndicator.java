@@ -20,7 +20,6 @@
 package org.netbeans.modules.testng;
 
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.awt.StatusDisplayer;
 import org.openide.util.Cancellable;
 import org.openide.util.NbBundle;
@@ -42,12 +41,12 @@ final class ProgressIndicator implements Cancellable {
     private final ProgressHandle progressHandle;
     private volatile boolean cancelled = false;
 
-    @NbBundle.Messages({"LBL_generator_progress_title=Generating TestNG tests"})
+    @NbBundle.Messages({"LBL_testng_generator_progress_title=Generating TestNG tests"})
     ProgressIndicator() {
 //        String msg = NbBundle.getMessage(ProgressIndicator.class,
 //                                        "LBL_generator_progress_title");//NOI18N
-        String msg = Bundle.LBL_generator_progress_title();
-        progressHandle = ProgressHandleFactory.createHandle(msg);
+        String msg = Bundle.LBL_testng_generator_progress_title();
+        progressHandle = ProgressHandle.createHandle(msg);
     }
 
     public boolean cancel() {

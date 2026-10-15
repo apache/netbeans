@@ -33,6 +33,7 @@ import java.util.prefs.Preferences;
 import javax.swing.text.Document;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.editor.BaseDocument;
@@ -79,13 +80,13 @@ import org.openide.util.WeakListeners;
 public class ExtFormatter extends Formatter implements FormatLayer {
 
     /** List holding the format layers */
-    private List formatLayerList = new ArrayList();
+    private List<FormatLayer> formatLayerList = new ArrayList<>();
 
     /** Use this instead of testing by containsKey() */
     private static final Object NULL_VALUE = new Object();
 
     /** Map that contains the requested [setting-name, setting-value] pairs */
-    private final HashMap settingsMap = new HashMap();
+    private final HashMap<String, Object> settingsMap = new HashMap<>();
 
     private Acceptor indentHotCharsAcceptor;
     private boolean reindentWithTextBefore;
@@ -176,7 +177,7 @@ public class ExtFormatter extends Formatter implements FormatLayer {
     public synchronized boolean replaceFormatLayer(String layerName, FormatLayer layer) {
         int cnt = formatLayerList.size();
         for (int i = 0; i < cnt; i++) {
-            if (layerName.equals(((FormatLayer)formatLayerList.get(i)).getName())) {
+            if (layerName.equals(formatLayerList.get(i).getName())) {
                 formatLayerList.set(i, layer);
                 return true;
             }
@@ -187,9 +188,9 @@ public class ExtFormatter extends Formatter implements FormatLayer {
     /** Remove the first layer which has the same name as the given one.
     */
     public synchronized void removeFormatLayer(String layerName) {
-        Iterator it = formatLayerIterator();
+        Iterator<FormatLayer> it = formatLayerIterator();
         while (it.hasNext()) {
-            if (layerName.equals(((FormatLayer)it.next()).getName())) {
+            if (layerName.equals(it.next().getName())) {
                 it.remove();
                 return;
             }
@@ -219,9 +220,9 @@ public class ExtFormatter extends Formatter implements FormatLayer {
             fw.setChainModified(false);
             fw.setRestartFormat(false);
 
-            Iterator it = formatLayerIterator();
+            Iterator<FormatLayer> it = formatLayerIterator();
             while (it.hasNext()) {
-                ((FormatLayer)it.next()).format(fw);
+                it.next().format(fw);
                 if (fw.isRestartFormat()) {
                     break;
                 }
@@ -331,7 +332,7 @@ public class ExtFormatter extends Formatter implements FormatLayer {
         BaseDocument doc = Utilities.getDocument(target);
         int dotPos = target.getCaret().getDot();
         try {
-            int fnw = Utilities.getRowFirstNonWhite(doc, dotPos);
+            int fnw = LineDocumentUtils.getLineFirstNonWhitespace(doc, dotPos);
             return dotPos != fnw+typedText.length();
         } catch (BadLocationException e) {
             return false;
@@ -354,13 +355,13 @@ public class ExtFormatter extends Formatter implements FormatLayer {
         if (doc instanceof BaseDocument) {
             try {
                 BaseDocument bdoc = (BaseDocument)doc;
-                int lineStart = Utilities.getRowStart(bdoc, offset);
+                int lineStart = LineDocumentUtils.getLineStartOffset(bdoc, offset);
                 int nextLineStart = Utilities.getRowStart(bdoc, offset, 1);
                 if (nextLineStart < 0) { // end of doc
                     nextLineStart = bdoc.getLength();
                 }
                 reformat(bdoc, lineStart, nextLineStart, false);
-                return Utilities.getRowEnd(bdoc, lineStart);
+                return LineDocumentUtils.getLineEndOffset(bdoc, lineStart);
             } catch (GuardedException e) {
                 java.awt.Toolkit.getDefaultToolkit().beep();
 
@@ -379,7 +380,7 @@ public class ExtFormatter extends Formatter implements FormatLayer {
     
     /** Returns offset of EOL for the white line */
     protected int getEOLOffset(BaseDocument bdoc, int offset) throws BadLocationException{
-        return Utilities.getRowEnd(bdoc, offset);
+        return LineDocumentUtils.getLineEndOffset(bdoc, offset);
     }
 
     /** Inserts new line at given position and indents the new line with
@@ -402,14 +403,14 @@ public class ExtFormatter extends Formatter implements FormatLayer {
                         result [0]++;
                         newLineInserted = true;
 
-                        int eolOffset = Utilities.getRowEnd(bdoc, result [0]);
+                        int eolOffset = LineDocumentUtils.getLineEndOffset(bdoc, result [0]);
 
                         // Try to change the indent of the new line
                         // It may fail when inserting '\n' before the guarded block
                         Writer w = reformat(bdoc, result [0], eolOffset, true);
 
                         // Find the caret position
-                        eolOffset = Utilities.getRowFirstNonWhite(bdoc, result [0]);
+                        eolOffset = LineDocumentUtils.getLineFirstNonWhitespace(bdoc, result [0]);
                         if (eolOffset < 0) { // white line
                             eolOffset = getEOLOffset(bdoc, result [0]);
                         }

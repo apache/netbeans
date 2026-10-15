@@ -73,6 +73,7 @@ public class JsfComponentUtils {
      * java.lang.String[])} instead.
      * @see #createMavenDependencyLibrary(java.lang.String, java.lang.String[], java.lang.String[]) 
      */
+    @Deprecated
     public static Library enhanceLibraryWithPomContent(final Library library, final List<URI> poms) throws IOException {
         Parameters.notNull("library", library);     //NOI18N
         Parameters.notNull("poms", poms);           //NOI18N

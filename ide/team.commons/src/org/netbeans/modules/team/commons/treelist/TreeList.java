@@ -198,7 +198,7 @@ public class TreeList extends JList {
      * Determines if popup was called for one of the selected nodes
      */
     private boolean isPopupForSelected(TreeListNode node) {
-        List selectedValues = getSelectedValuesList();
+        List<TreeListNode> selectedValues = getSelectedValuesList();
         for (Object selectedNode : selectedValues) {            
             if (selectedNode != null && // issue #252821 
                 selectedNode.equals(node)) 

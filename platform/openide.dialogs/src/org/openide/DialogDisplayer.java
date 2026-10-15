@@ -34,11 +34,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 import javax.swing.*;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.Lookups;
 
 
 /** Permits dialogs to be displayed.
@@ -76,9 +79,9 @@ public abstract class DialogDisplayer {
     public abstract Object notify(NotifyDescriptor descriptor);
 
     /** Notify the user of something in a message box, possibly with feedback,
-     * this method method may be called
+     * this method may be called
      * from any thread. The thread will return immediately and
-     * the dialog will be shown <q>later</q>, usually when AWT thread
+     * the dialog will be shown <em>later</em>, usually when AWT thread
      * is empty and can handle the request.
      * 
      * <p class="non-normative">
@@ -97,6 +100,56 @@ public abstract class DialogDisplayer {
                 DialogDisplayer.this.notify(descriptor);
             }
         });
+    }
+    
+    /**
+     * Notify the user by a message box. The method may be called from any thread; the method
+     * returns immediately and the UI will be shown later, as in {@link #notifyLater}. Unlike
+     * {@link #notifyLater}, this method returns a {@link CompletableFuture} that will be
+     * completed when the UI closes. The value of the returned {@link CompletableFuture} is
+     * the descriptor itself: it's {@link NotifyDescriptor#getValue()} will be set to the
+     * closing option. If a subclass, like {@link NotifyDescriptor.InputLine} is used, the
+     * task can query other values of NotifyDescriptor, such as the text entered.
+     * Any exception thrown by {@link NotifyDescriptor} processing will be reported through {@link CompletableFuture#completeExceptionally}.
+     * <p>
+     * It is possible to call {@link CompletableFuture#cancel(boolean)} on the returned value.
+     * The implementation may (through it is not guaranteed) abort and hide the UI. If cancel() is 
+     * called, the returned Future always completes exceptionally, with a {@link java.util.concurrent.CancellationException}.
+     * <p>
+     * The thread that will execute the continuation or exception handler is undefined. Use usual
+     * precautions against EDT blocking and use {@link CompletableFuture#thenAcceptAsync(java.util.function.Consumer, java.util.concurrent.Executor)}
+     * or similar to execute in a specific thread. Prefer usage of <a href="@org-openide-util@/org/openide/util/RequestProcessor.html" >RequestProcessor</a> to the
+     * builtin thread pool.
+     * <div class="nonnormative">
+     * The following snippet is an example of chained dialogs (can be any other processing): 
+     * <div>
+     * {@snippet file="org/openide/DialogDisplayerTest.java" region="notifyFuture"}
+     * </div>
+     * </div>
+     * @param <T> actual subclass of {@link NotifyDescriptor} passed as a parameter.
+     * @param descriptor describes the UI / dialog.
+     * @return the descriptor instance.
+     * @since 7.61
+     */
+    public <T extends NotifyDescriptor> CompletableFuture<T> notifyFuture(final T descriptor) {
+        CompletableFuture<T> r = new CompletableFuture<>();
+        // preserve potential context
+        Lookup def = Lookup.getDefault();
+        Mutex.EVENT.postReadRequest(new Runnable() {
+            public void run() {
+                Lookups.executeWith(def, () -> {
+                    try {
+                        DialogDisplayer.this.notify(descriptor);
+                        r.complete(descriptor);
+                    } catch (ThreadDeath td) {
+                        throw td;
+                    } catch (Throwable t) {
+                        r.completeExceptionally(t);
+                    }
+                });
+            }
+        });
+        return r;
     }
 
     /** Get a new standard dialog.
@@ -133,13 +186,19 @@ public abstract class DialogDisplayer {
      * @see "#30031"
      */
     private static final class Trivial extends DialogDisplayer {
+        @Override
         public Object notify(NotifyDescriptor nd) {
+            if (GraphicsEnvironment.isHeadless()) {
+                return NotifyDescriptor.CLOSED_OPTION;
+            }
+
             JDialog dialog = new StandardDialog(nd.getTitle(), true, nd, null, null);
             dialog.setVisible(true);
 
             return (nd.getValue() != null) ? nd.getValue() : NotifyDescriptor.CLOSED_OPTION;
         }
 
+        @Override
         public Dialog createDialog(final DialogDescriptor dd) {
             final StandardDialog dialog = new StandardDialog(
                     dd.getTitle(), dd.isModal(), dd, dd.getClosingOptions(), dd.getButtonListener()
@@ -302,6 +361,7 @@ public abstract class DialogDisplayer {
                 getRootPane().getActionMap().put(actionKey, cancelAction);
                 addWindowListener(
                     new WindowAdapter() {
+                        @Override
                         public void windowClosing(WindowEvent ev) {
                             if (!haveFinalValue) {
                                 StandardDialog.this.nd.setValue(NotifyDescriptor.CLOSED_OPTION);

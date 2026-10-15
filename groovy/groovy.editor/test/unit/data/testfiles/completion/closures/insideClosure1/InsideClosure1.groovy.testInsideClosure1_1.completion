@@ -5,13 +5,12 @@ Code completion result for source line:
 PACKAGE    com                                        null
 PACKAGE    groovy                                     null
 PACKAGE    groovyjarjarantlr                          null
+PACKAGE    groovyjarjarantlr4                         null
 PACKAGE    groovyjarjarasm                            null
-PACKAGE    groovyjarjarcommonscli                     null
 PACKAGE    groovyjarjarpicocli                        null
 PACKAGE    java                                       null
 PACKAGE    javax                                      null
 PACKAGE    jdk                                        null
-PACKAGE    oracle                                     null
 PACKAGE    org                                        null
 PACKAGE    sun                                        null
 CLASS      AbstractCollection                         null
@@ -180,9 +179,11 @@ CLASS      GroovyRuntimeException                     null
 CLASS      GroovyScriptEngine                         null
 CLASS      GroovyShell                                null
 CLASS      GroovySystem                               null
+CLASS      Groovydoc                                  null
 CLASS      HashMap                                    null
 CLASS      HashSet                                    null
 CLASS      Hashtable                                  null
+CLASS      HexFormat                                  null
 CLASS      HttpCookie                                 null
 CLASS      HttpRetryException                         null
 CLASS      HttpURLConnection                          null
@@ -194,6 +195,7 @@ CLASS      IdentityHashMap                            null
 CLASS      IllegalAccessError                         null
 CLASS      IllegalAccessException                     null
 CLASS      IllegalArgumentException                   null
+CLASS      IllegalCallerException                     null
 CLASS      IllegalFormatCodePointExceptio             null
 CLASS      IllegalFormatConversionExcepti             null
 CLASS      IllegalFormatException                     null
@@ -234,6 +236,7 @@ CLASS      InvalidPropertiesFormatExcepti             null
 CLASS      Iterable                                   null
 CLASS      Iterator                                   null
 CLASS      JarURLConnection                           null
+CLASS      LayerInstantiationException                null
 CLASS      Lazy                                       null
 CLASS      LineNumberInputStream                      null
 CLASS      LineNumberReader                           null
@@ -272,6 +275,8 @@ CLASS      MissingMethodException                     null
 CLASS      MissingPropertyException                   null
 CLASS      MissingResourceException                   null
 CLASS      Mixin                                      null
+CLASS      Module                                     null
+CLASS      ModuleLayer                                null
 CLASS      MulticastSocket                            null
 CLASS      MutableMetaClass                           null
 CLASS      NavigableMap                               null
@@ -301,6 +306,7 @@ CLASS      NumberRange                                null
 CLASS      Object                                     null
 CLASS      ObjectGraphBuilder                         null
 CLASS      ObjectInput                                null
+CLASS      ObjectInputFilter                          null
 CLASS      ObjectInputStream                          null
 CLASS      ObjectInputValidation                      null
 CLASS      ObjectOutput                               null
@@ -341,6 +347,7 @@ CLASS      PrintWriter                                null
 CLASS      PriorityQueue                              null
 CLASS      Process                                    null
 CLASS      ProcessBuilder                             null
+CLASS      ProcessHandle                              null
 CLASS      Properties                                 null
 CLASS      PropertyAccessInterceptor                  null
 CLASS      PropertyPermission                         null
@@ -363,6 +370,7 @@ CLASS      Range                                      null
 CLASS      ReadOnlyPropertyException                  null
 CLASS      Readable                                   null
 CLASS      Reader                                     null
+CLASS      Record                                     null
 CLASS      Reference                                  null
 CLASS      ReflectiveOperationException               null
 CLASS      ResourceBundle                             null
@@ -382,6 +390,7 @@ CLASS      SecurityException                          null
 CLASS      SecurityManager                            null
 CLASS      Sequence                                   null
 CLASS      SequenceInputStream                        null
+CLASS      Serial                                     null
 CLASS      Serializable                               null
 CLASS      SerializablePermission                     null
 CLASS      ServerSocket                               null
@@ -411,6 +420,7 @@ CLASS      SpreadMapEvaluatingException               null
 CLASS      Stack                                      null
 CLASS      StackOverflowError                         null
 CLASS      StackTraceElement                          null
+CLASS      StackWalker                                null
 CLASS      StandardProtocolFamily                     null
 CLASS      StandardSocketOptions                      null
 CLASS      StreamCorruptedException                   null
@@ -442,7 +452,15 @@ CLASS      TracingInterceptor                         null
 CLASS      TreeMap                                    null
 CLASS      TreeSet                                    null
 CLASS      Tuple                                      null
+CLASS      Tuple0                                     null
 CLASS      Tuple1                                     null
+CLASS      Tuple10                                    null
+CLASS      Tuple11                                    null
+CLASS      Tuple12                                    null
+CLASS      Tuple13                                    null
+CLASS      Tuple14                                    null
+CLASS      Tuple15                                    null
+CLASS      Tuple16                                    null
 CLASS      Tuple2                                     null
 CLASS      Tuple3                                     null
 CLASS      Tuple4                                     null
@@ -465,6 +483,7 @@ CLASS      URLStreamHandlerFactory                    null
 CLASS      UTFDataFormatException                     null
 CLASS      UUID                                       null
 CLASS      UncheckedIOException                       null
+CLASS      UnixDomainSocketAddress                    null
 CLASS      UnknownError                               null
 CLASS      UnknownFormatConversionExcepti             null
 CLASS      UnknownFormatFlagsException                null
@@ -482,6 +501,92 @@ CLASS      WeakHashMap                                null
 CLASS      Writable                                   null
 CLASS      WriteAbortedException                      null
 CLASS      Writer                                     null
+METHOD     addShutdownHook(Closure)                   void
+METHOD     any()                                      boolean
+METHOD     any(Closure)                               boolean
+METHOD     asBoolean()                                boolean
+METHOD     asType(Class)                              Object
+METHOD     clone()                         [PROTECTE  Object
+METHOD     collect()                                  Collection
+METHOD     collect(Closure)                           List
+METHOD     collect(Collection, Closure)               Collection
+METHOD     dump()                                     String
+METHOD     each(Closure)                              Object
+METHOD     eachWithIndex(Closure)                     Object
+METHOD     equals(Object)                  [PUBLIC]   boolean
+METHOD     evaluate(File)                  [PUBLIC]   Object
+METHOD     evaluate(String)                [PUBLIC]   Object
+METHOD     every()                                    boolean
+METHOD     every(Closure)                             boolean
+METHOD     finalize()                      [PROTECTE  void
+METHOD     find()                                     Object
+METHOD     find(Closure)                              Object
+METHOD     findAll()                                  List
+METHOD     findAll(Closure)                           List
+METHOD     findIndexOf(Closure)                       int
+METHOD     findIndexOf(int, Closure)                  int
+METHOD     findIndexValues(Closure)                   List
+METHOD     findIndexValues(Number, Closur             List
+METHOD     findLastIndexOf(Closure)                   int
+METHOD     findLastIndexOf(int, Closure)              int
+METHOD     findResult(Closure)                        Object
+METHOD     findResult(Object, Closure)                Object
+METHOD     getAt(String)                              Object
+METHOD     getBinding()                    [PUBLIC]   Binding
+METHOD     getClass()                      [PUBLIC]   Class<?>
+METHOD     getMetaClass()                             MetaClass
+METHOD     getMetaPropertyValues()                    List
+METHOD     getProperties()                            Map
+METHOD     getProperty(String)             [PUBLIC]   Object
+METHOD     grep()                                     Collection
+METHOD     grep(Object)                               Collection
+METHOD     hasProperty(String)                        MetaProperty
+METHOD     hashCode()                      [PUBLIC]   int
+METHOD     identity(Closure)                          Object
+METHOD     inject(Closure)                            Object
+METHOD     inject(Object, Closure)                    Object
+METHOD     inspect()                                  String
+METHOD     invokeMethod(String, Object)               Object
+METHOD     is(Object)                                 boolean
+METHOD     isCase(Object)                             boolean
+METHOD     iterator()                                 Iterator
+METHOD     main(String[])                  [STATIC,   void
+METHOD     metaClass(Closure)                         MetaClass
+METHOD     notify()                        [PUBLIC]   void
+METHOD     notifyAll()                     [PUBLIC]   void
+METHOD     print(Object)                              void
+METHOD     print(PrintWriter)                         void
+METHOD     printf(String, Object)                     void
+METHOD     printf(String, Object)                     void
+METHOD     println()                                  void
+METHOD     println(Object)                            void
+METHOD     println(PrintWriter)                       void
+METHOD     putAt(String, Object)                      void
+METHOD     respondsTo(String)                         List
+METHOD     respondsTo(String, Object)                 List
+METHOD     run()                           [PUBLIC]   Object
+METHOD     run(File, String[])             [PUBLIC]   void
+METHOD     setBinding(Binding)             [PUBLIC]   void
+METHOD     setMetaClass(MetaClass)                    void
+METHOD     setProperty(String, Object)     [PUBLIC]   void
+METHOD     sleep(long)                                void
+METHOD     sleep(long, Closure)                       void
+METHOD     split(Closure)                             Collection
+METHOD     sprintf(String, Object)                    String
+METHOD     sprintf(String, Object)                    String
+METHOD     stream()                                   Stream
+METHOD     tap(Closure)                               Object
+METHOD     test()                          [PUBLIC]   boolean
+METHOD     toString()                                 String
+METHOD     use(Class, Closure)                        Object
+METHOD     use(List, Closure)                         Object
+METHOD     use(Object[])                              Object
+METHOD     wait()                          [PUBLIC]   void
+METHOD     wait(long)                      [PUBLIC]   void
+METHOD     wait(long, int)                 [PUBLIC]   void
+METHOD     with(Closure)                              Object
+METHOD     with(boolean, Closure)                     Object
+METHOD     withTraits(Class[])                        Object
 FIELD      binding                         [PUBLIC]   Binding
 FIELD      class                           [PUBLIC]   Class
 FIELD      defaultMetaClass                [PRIVATE]  MetaClass

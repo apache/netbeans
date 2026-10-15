@@ -802,7 +802,8 @@ public class MultiDiffPanel extends javax.swing.JPanel implements ActionListener
     }
 
     private void addToModel (final RepositoryFile newItem, final JComboBox cmbDiffTree) {
-        DefaultComboBoxModel model = (DefaultComboBoxModel) cmbDiffTree.getModel();
+        DefaultComboBoxModel<RepositoryFile> model =
+                (DefaultComboBoxModel<RepositoryFile>) cmbDiffTree.getModel();
         for (int i = 0; i < model.getSize(); ++i) {
             final Object item = model.getElementAt(i);
             if (newItem.toString().equals(item.toString())) {
@@ -984,8 +985,8 @@ public class MultiDiffPanel extends javax.swing.JPanel implements ActionListener
             modelRight.add(REVISION_SELECT_SEP);
             modelRight.add(REVISION_SELECT);
             modelRight.add(REVISION_SELECT_SEP);
-            cmbDiffTreeFirst.setModel(new DefaultComboBoxModel(modelRight.toArray(new Object[modelRight.size()])));
-            cmbDiffTreeSecond.setModel(new DefaultComboBoxModel(modelLeft.toArray(new Object[modelLeft.size()])));
+            cmbDiffTreeFirst.setModel(new DefaultComboBoxModel(modelRight.toArray(new Object[0])));
+            cmbDiffTreeSecond.setModel(new DefaultComboBoxModel(modelLeft.toArray(new Object[0])));
             if (SvnUtils.getActionRoots(context, false) != null) {
                 cmbDiffTreeFirst.setEnabled(true);
                 cmbDiffTreeSecond.setEnabled(true);
@@ -1254,7 +1255,7 @@ public class MultiDiffPanel extends javax.swing.JPanel implements ActionListener
                     }
                 }
             });
-            return canceled[0] ? null : newSetups.toArray(new Setup[newSetups.size()]);
+            return canceled[0] ? null : newSetups.toArray(new Setup[0]);
         }
     }
     

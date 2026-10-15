@@ -83,6 +83,7 @@ import org.openide.cookies.EditorCookie;
 import org.openide.cookies.SaveCookie;
 import org.openide.filesystems.FileUtil;
 import org.openide.nodes.Node;
+import org.openide.util.Utilities;
 
 /**
  * Commit action for mercurial:
@@ -148,7 +149,7 @@ public class CommitAction extends ContextAction {
                     NbBundle.getMessage(CommitAction.class, "MSG_COMMIT_NOT_SUPPORTED_INVIEW_INFO")); // NOI18N
             logger.output(""); // NOI18N
             logger.closeLog();
-            JOptionPane.showMessageDialog(null,
+            JOptionPane.showMessageDialog(Utilities.findDialogParent(),
                     NbBundle.getMessage(CommitAction.class, "MSG_COMMIT_NOT_SUPPORTED_INVIEW"),// NOI18N
                     NbBundle.getMessage(CommitAction.class, "MSG_COMMIT_NOT_SUPPORTED_INVIEW_TITLE"),// NOI18N
                     JOptionPane.INFORMATION_MESSAGE);
@@ -404,7 +405,7 @@ public class CommitAction extends ContextAction {
                     recentUsers.remove(userName);
                     recentUsers.add(0, userName);
                 }
-                final ComboBoxModel<String> model = new DefaultComboBoxModel<String>(recentUsers.toArray(new String[recentUsers.size()]));
+                final ComboBoxModel<String> model = new DefaultComboBoxModel<String>(recentUsers.toArray(new String[0]));
                 EventQueue.invokeLater(new Runnable() {
                     @Override
                     public void run () {
@@ -446,9 +447,10 @@ public class CommitAction extends ContextAction {
 
         boolean enabled = commit.isEnabled();
 
-        for (HgFileNode fileNode : files.keySet()) {
+        for (Entry<HgFileNode, CommitOptions> entry : files.entrySet()) {
 
-            CommitOptions options = files.get(fileNode);
+            HgFileNode fileNode = entry.getKey();
+            CommitOptions options = entry.getValue();
             if (options == CommitOptions.EXCLUDE) {
                 continue;
             }
@@ -576,7 +578,7 @@ public class CommitAction extends ContextAction {
                 for (List<File> values : commitCandidates.values()) {
                     candidates.addAll(values);
                 }
-                hookFiles = candidates.toArray(new File[candidates.size()]);
+                hookFiles = candidates.toArray(new File[0]);
             }
             String originalMessage = message;
             HgHookContext context = new HgHookContext(hookFiles, message, new HgHookContext.LogEntry[] {});
@@ -615,7 +617,7 @@ public class CommitAction extends ContextAction {
         Mercurial.getInstance().getParallelRequestProcessor().post(new Runnable() {
             @Override
             public void run() {
-                FileUtil.refreshFor(files.toArray(new File[files.size()]));
+                FileUtil.refreshFor(files.toArray(new File[0]));
             }
         }, 100);
     }
@@ -730,7 +732,7 @@ public class CommitAction extends ContextAction {
         }
     }
 
-    private static abstract class Cmd {
+    private abstract static class Cmd {
         protected final Map<File, List<File>> m;
         protected final OutputLogger logger;
         protected final String logMsgFormat;
@@ -877,7 +879,7 @@ public class CommitAction extends ContextAction {
                 } finally {
                     refreshFilesPerRepository.put(repository, refreshFiles);
                     if(commitedFiles != null) {
-                        Mercurial.getInstance().getMercurialHistoryProvider().fireHistoryChange(commitedFiles.toArray(new File[commitedFiles.size()]));
+                        Mercurial.getInstance().getMercurialHistoryProvider().fireHistoryChange(commitedFiles.toArray(new File[0]));
                     }
                 }
 

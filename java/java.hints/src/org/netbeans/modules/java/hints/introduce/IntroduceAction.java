@@ -44,7 +44,7 @@ import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.modules.editor.MainMenuAction;
 import org.netbeans.modules.java.editor.overridden.PopupUtil;
 import org.netbeans.modules.java.hints.infrastructure.HintAction;
@@ -115,7 +115,7 @@ public final class IntroduceAction extends HintAction {
         final String[] errorMessage = new String[1];
         final boolean proposeCandidates = span[0] == span[1] && type != IntroduceKind.CREATE_METHOD;
         
-        ProgressUtils.runOffEventDispatchThread(new Runnable() {
+        BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
 
             public void run() {
                 try {
@@ -143,8 +143,8 @@ public final class IntroduceAction extends HintAction {
                                     
                                     Map<IntroduceKind, Fix> fixes = new EnumMap<IntroduceKind, Fix>(IntroduceKind.class);
                                     Map<IntroduceKind, String> errorMessages = new EnumMap<IntroduceKind, String>(IntroduceKind.class);
-                                    int start = (int) parameter.getTrees().getSourcePositions().getStartPosition(parameter.getCompilationUnit(), currentPath.getLeaf());
-                                    int end   = (int) parameter.getTrees().getSourcePositions().getEndPosition(parameter.getCompilationUnit(), currentPath.getLeaf());
+                                    int start = (int) parameter.getTrees().getSourcePositions().getStartPosition(currentPath.getLeaf());
+                                    int end   = (int) parameter.getTrees().getSourcePositions().getEndPosition(currentPath.getLeaf());
 
                                     if (end > start && start != (-1)) {
                                         IntroduceHint.computeError(parameter, start, end, fixes, errorMessages, cancel);

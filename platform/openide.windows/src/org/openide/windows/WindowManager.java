@@ -40,8 +40,8 @@ import org.openide.util.Lookup;
  * Manages window system.
  * Allows the work with window system components, i.e. <code>Mode</code>s, <code>TopComponentGroup</code>s
  * and provides handling of operations provided over <code>TopComponent</code>s.
- * <p><p>
- * <b><font color="red"><em>Important note: Do not provide implementation of this abstract class unless you are window system provider!</em></font></b>
+ * <p>
+ * <b><span style="color:red"><em>Important note: Do not provide implementation of this abstract class unless you are window system provider!</em></span></b>
  *
  * @author Jaroslav Tulach
  */
@@ -610,7 +610,7 @@ public abstract class WindowManager extends Object implements Serializable {
                 openedTcs.add(tc);
             }
         }
-        return openedTcs.toArray(new TopComponent[openedTcs.size()]);
+        return openedTcs.toArray(new TopComponent[0]);
     }
 
     /**
@@ -668,20 +668,18 @@ public abstract class WindowManager extends Object implements Serializable {
      * <li>Load new window layout from the given role.</li>
      * <li>Show the main window.</li>
      * </ol>
-     * The whole operation may take a few seconds to complete.</p>
+     * The whole operation may take a few seconds to complete.
      * <p>Windows that were opened in previous role but are not opened or present 
-     * in the new role will receive <code>TopComponent.componentClosed()</code> notification.</p>
+     * in the new role will receive <code>TopComponent.componentClosed()</code> notification.
      * <p>Note: To keep the main window showing while switching the role, use the following branding:
      * <code>org.netbeans.core.windows.WinSys.Show.Hide.MainWindow.While.Switching.Role=false</code>
-     * </p>
      * <p>Note: Action <code>org.netbeans.core.windows.actions.SwitchRoleKeepDocumentsAction</code>
      * in <code>Actions/Window</code> layer folder can change the role too but it
      * also attempts to keep documents from previous role opened in the new role as well.
      * The new role name is <code>ActionEvent.getActionCommand()</code> argument.
-     * </p>
      * <p>If the window system has been already loaded then the method must be
      * called from EDT thread, otherwise it's safe to set the initial startup
-     * role in e.g. <code>ModuleInstall.restored()</code> method.</p>
+     * role in e.g. <code>ModuleInstall.restored()</code> method.
      * @param roleName Name of the new role to switch to or null to switch
      * to the default window layout.
      * @since 6.43

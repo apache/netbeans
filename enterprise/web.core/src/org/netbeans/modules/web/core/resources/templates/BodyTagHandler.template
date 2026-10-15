@@ -2,16 +2,23 @@
 <#assign licensePrefix = " * ">
 <#assign licenseLast = " */">
 <#include "${project.licensePath}">
- 
+
 <#if package?? && package != "">
 package ${package};
 </#if>
 
 import java.io.IOException;
+<#if jakartaPackages>
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.JspWriter;
+import jakarta.servlet.jsp.tagext.BodyContent;
+import jakarta.servlet.jsp.tagext.BodyTagSupport;
+<#else>
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTagSupport;
+</#if>
 
 /**
  *
@@ -19,14 +26,14 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
  */
 
 public class ${name} extends BodyTagSupport {
-    
-    /** 
-     * Creates new instance of tag handler 
+
+    /**
+     * Creates new instance of tag handler
      */
     public ${name}() {
         super();
     }
-    
+
     ////////////////////////////////////////////////////////////////
     ///                                                          ///
     ///   User methods.                                          ///
@@ -34,7 +41,7 @@ public class ${name} extends BodyTagSupport {
     ///   Modify these methods to customize your tag handler.    ///
     ///                                                          ///
     ////////////////////////////////////////////////////////////////
-    
+
     /**
      * Method called from doStartTag().
      * Fill in this method to perform other operations from doStartTag().
@@ -42,9 +49,9 @@ public class ${name} extends BodyTagSupport {
     private void otherDoStartTagOperations() {
         // TODO: code that performs other operations in doStartTag
         //       should be placed here.
-        //       It will be called after initializing variables, 
-        //       finding the parent, setting IDREFs, etc, and 
-        //       before calling theBodyShouldBeEvaluated(). 
+        //       It will be called after initializing variables,
+        //       finding the parent, setting IDREFs, etc, and
+        //       before calling theBodyShouldBeEvaluated().
         //
         //       For example, to print something out to the JSP, use the following:
         //
@@ -55,7 +62,7 @@ public class ${name} extends BodyTagSupport {
         //       // do something
         //   }
     }
-    
+
     /**
      * Method called from doEndTag()
      * Fill in this method to perform other operations from doEndTag().
@@ -67,7 +74,7 @@ public class ${name} extends BodyTagSupport {
         //       finding the parent, setting IDREFs, etc, and
         //       before calling shouldEvaluateRestOfPageAfterEndTag().
     }
-    
+
     /**
      * Fill in this method to process the body content of the tag.
      * You only need to do this if the tag's BodyContent property
@@ -81,25 +88,25 @@ public class ${name} extends BodyTagSupport {
         //
         // out.println("<strong>" + attribute_1 + "</strong>");
         // out.println("   <blockquote>");
-        
+
         // write the body content (after processing by the JSP engine) on the output Writer
         bodyContent.writeOut(out);
-        
+
         // Or else get the body content as a string and process it, e.g.:
         //     String bodyStr = bodyContent.getString();
         //     String result = yourProcessingMethod(bodyStr);
         //     out.println(result);
-        
+
         // TODO: insert code to write html after writing the body content.
         // e.g.:
         //
         // out.println("   </blockquote>");
-    
-        
+
+
         // clear the body content for the next time through.
         bodyContent.clearBody();
     }
-    
+
     ////////////////////////////////////////////////////////////////
     ///                                                          ///
     ///   Tag Handler interface methods.                         ///
@@ -108,7 +115,7 @@ public class ${name} extends BodyTagSupport {
     ///   methods that they call.                                ///
     ///                                                          ///
     ////////////////////////////////////////////////////////////////
-    
+
     /**
      * This method is called when the JSP engine encounters the start tag,
      * after the attributes are processed.
@@ -122,14 +129,14 @@ public class ${name} extends BodyTagSupport {
 </#if>
     public int doStartTag() throws JspException {
         otherDoStartTagOperations();
-        
+
         if (theBodyShouldBeEvaluated()) {
             return EVAL_BODY_BUFFERED;
         } else {
             return SKIP_BODY;
         }
     }
-    
+
     /**
      * This method is called after the JSP engine finished processing the tag.
      * @return EVAL_PAGE if the JSP engine should continue evaluating the JSP page, otherwise return SKIP_PAGE.
@@ -141,14 +148,14 @@ public class ${name} extends BodyTagSupport {
 </#if>
     public int doEndTag() throws JspException {
         otherDoEndTagOperations();
-        
+
         if (shouldEvaluateRestOfPageAfterEndTag()) {
             return EVAL_PAGE;
         } else {
             return SKIP_PAGE;
         }
     }
-    
+
     /**
      * This method is called after the JSP engine processes the body content of the tag.
      * @return EVAL_BODY_AGAIN if the JSP engine should evaluate the tag body again, otherwise return SKIP_BODY.
@@ -163,19 +170,19 @@ public class ${name} extends BodyTagSupport {
             // This code is generated for tags whose bodyContent is "JSP"
             BodyContent bodyCont = getBodyContent();
             JspWriter out = bodyCont.getEnclosingWriter();
-            
+
             writeTagBodyContent(out, bodyCont);
         } catch (Exception ex) {
             handleBodyContentException(ex);
         }
-        
+
         if (theBodyShouldBeEvaluatedAgain()) {
             return EVAL_BODY_AGAIN;
         } else {
             return SKIP_BODY;
         }
     }
-    
+
     /**
      * Handles exception from processing the body content.
      */
@@ -183,7 +190,7 @@ public class ${name} extends BodyTagSupport {
         // Since the doAfterBody method is guarded, place exception handing code here.
         throw new JspException("Error in ${name} tag", ex);
     }
-    
+
     /**
      * Fill in this method to determine if the rest of the JSP page
      * should be generated after this tag is finished.
@@ -197,7 +204,7 @@ public class ${name} extends BodyTagSupport {
         //
         return true;
     }
-    
+
     /**
      * Fill in this method to determine if the tag body should be evaluated
      * again after evaluating the body.
@@ -213,5 +220,5 @@ public class ${name} extends BodyTagSupport {
         //
         return false;
     }
-    
+
 }

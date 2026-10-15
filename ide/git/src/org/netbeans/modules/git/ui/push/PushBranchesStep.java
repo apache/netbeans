@@ -80,7 +80,7 @@ public class PushBranchesStep extends AbstractWizardPanel implements WizardDescr
         } else if (isDeleteUpdateConflict(localObjects.getSelectedBranches())) {
             setValid(false, new Message(NbBundle.getMessage(PushBranchesStep.class, "MSG_PushBranchesPanel.errorMixedSeletion"), false)); //NOI18N
         } else {
-            String msgDeletedBranches = getDeletedBranchesMessage(localObjects.getSelectedBranches());
+            String msgDeletedBranches = getDestructiveActionMessage(localObjects.getSelectedBranches());
             if (msgDeletedBranches != null) {
                 setValid(true, new Message(msgDeletedBranches, true));
             }
@@ -98,6 +98,12 @@ public class PushBranchesStep extends AbstractWizardPanel implements WizardDescr
         return new HelpCtx(PushBranchesStep.class);
     }
 
+    /**
+     *
+     * @param cfg configuration of the remote repository including URLs of remote
+     * @param branches list of all branches in the remote repo
+     * @param tags list of all tags in the remote repo
+     */
     public void fillRemoteBranches (final GitRemoteConfig cfg, final Map<String, GitBranch> branches,
             final Map<String, String> tags) {
         fillLocalObjects(Collections.<PushMapping>emptyList());
@@ -124,6 +130,7 @@ public class PushBranchesStep extends AbstractWizardPanel implements WizardDescr
                         continue;
                     }
                     if (!branch.isRemote()) {
+                        //get the remote branch that corresponds to local branch
                         GitBranch remoteBranch = branches.get(branch.getName());
                         boolean conflicted = false;
                         boolean updateNeeded = remoteBranch != null && !remoteBranch.getId().equals(branch.getId());
@@ -154,6 +161,8 @@ public class PushBranchesStep extends AbstractWizardPanel implements WizardDescr
                             }
                         }
                         boolean preselected = !conflicted && updateNeeded;
+
+                        //add current branch in the list for update or for adding
                         l.add(new PushMapping.PushBranchMapping(remoteBranch == null ? null : remoteBranch.getName(),
                                 remoteBranch == null ? null : remoteBranch.getId(),
                                 branch, conflicted, preselected, updateNeeded));
@@ -170,13 +179,26 @@ public class PushBranchesStep extends AbstractWizardPanel implements WizardDescr
                         }
                     }
                 }
-                
+
+                //adding a new tag
                 for (GitTag tag : localTags.values()) {
                     String repoTagId = tags.get(tag.getTagName());
                     if (!tag.getTagId().equals(repoTagId)) {
+                        //in the remote there is no such tag, need to add it.
                         l.add(new PushMapping.PushTagMapping(tag, repoTagId == null ? null : tag.getTagName()));
                     }
                 }
+
+                //deletion of a tag
+                for (String tag : tags.keySet()) {
+                    //get the name of a corresponding local tag.
+                    GitTag localTag = localTags.get(tag);
+                    if (localTag == null) {
+                        //in the local repo no such tag. Probably we need to delete in the remote?
+                        l.add(new PushMapping.PushTagMapping(tag));
+                    }
+                }
+
                 EventQueue.invokeLater(new Runnable () {
                     @Override
                     public void run () {
@@ -210,10 +232,10 @@ public class PushBranchesStep extends AbstractWizardPanel implements WizardDescr
         return localObjects.getSelectedBranches();
     }
     
-    public static String getDeletedBranchesMessage (List<PushMapping> selectedObjects) {
+    private static String getDestructiveActionMessage (List<PushMapping> selectedObjects) {
         StringBuilder sb = new StringBuilder(100);
         for (PushMapping m : selectedObjects) {
-            if (m.isDeletion()) {
+            if (m.isDestructive()) {
                 sb.append(m.getInfoMessage()).append("<br>");
             }
         }
@@ -229,7 +251,7 @@ public class PushBranchesStep extends AbstractWizardPanel implements WizardDescr
         Set<String> toDelete = new HashSet<String>(selectedObjects.size());
         Set<String> toUpdate = new HashSet<String>(selectedObjects.size());
         for (PushMapping m : selectedObjects) {
-            if (m.isDeletion()) {
+            if (m.isDestructive() && m.getLocalName() != null) {
                 toDelete.add(m.getRemoteName());
             } else {
                 toUpdate.add(m.getRemoteName());

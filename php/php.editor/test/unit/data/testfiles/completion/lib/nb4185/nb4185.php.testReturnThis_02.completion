@@ -1,0 +1,8 @@
+Code completion result for source line:
+echo $b->returnThis()::|staticTestB() . PHP_EOL; // staticTestB (PHP7)
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     staticReturnSelf()              [STATIC]   A
+METHOD     staticReturnStatic()            [STATIC]   A
+METHOD     staticTestA()                   [STATIC]   A
+METHOD     staticTestB()                   [STATIC]   B
+CONSTANT   class \B                        [PUBLIC]   Magic Constant

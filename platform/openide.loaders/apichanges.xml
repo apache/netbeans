@@ -85,6 +85,58 @@ is the proper place.
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
   <changes>
+      <change id="folder.templating">
+          <api name="loaders"/>
+          <summary>DataFolder createFromTemplate improvements</summary>
+          <version major="7" minor="82"/>
+          <date day="15" month="6" year="2021"/>
+          <author login="jtulach"/>
+          <compatibility addition="yes" binary="compatible" source="compatible"
+                         semantic="incompatible" deletion="no"
+                         modification="yes"/>
+          <description>
+              <code>DataFolder.createFromTemplate</code> honors passed in
+              parameters for all its children, unless special
+              <code>CreateFromTemplateHandler</code> takes over the
+              instantiation process.
+          </description>
+          <class package="org.openide.loaders" name="DataFolder"/>
+      </change>
+      <change id="ask.on.save.close.defaults">
+          <api name="editor"/>
+          <summary>Rebrand defaults for Save/Close Editor Dialogs</summary>
+          <version major="7" minor="80"/>
+          <date day="20" month="1" year="2021"/>
+          <author login="jtulach"/>
+          <compatibility addition="yes" binary="compatible" source="compatible"
+                         semantic="incompatible" deletion="no"
+                         modification="no"/>
+          <description>
+              A branding API to disable showing on close and on save editor dialogs
+              - <a href="architecture-summary.html#group-branding">ASK_OnSaving &amp; ASK_OnClosing</a>.
+          </description>
+          <class package="org.openide.text" name="DataEditorSupport"/>
+      </change>
+      <change id="org.openide.loaders.TemplateWizard.setTargetFolderLazy">
+          <api name="loaders"/>
+          <summary>Support lazy creation of TargetFolder.</summary>
+          <version major="7" minor="76"/>
+          <date day="1" month="3" year="2020"/>
+          <author login="errael"/>
+          <compatibility addition="yes" binary="compatible" source="compatible"
+                         semantic="compatible" deprecation="no" deletion="no"
+                         modification="no"/>
+          <description>
+              <p>
+                  Creation of TargetFolder can be deferred by using
+                  <a href="@org-openide-loaders@/org/openide/loaders/TemplateWizard.html#setTargetFolderLazy(java.util.function.Supplier)">
+                  TemplateWizard.setTargetFolderLazy(Supplier&lt;DataFolder&gt;)
+                  </a>.
+              </p>
+          </description>
+          <class package="org.openide.loaders" name="TemplateWizard"/>
+          <issue number="NETBEANS-3918"/>
+      </change>
       <change id="org.openide.awt.Toolbar.toggle">
           <api name="awt"/>
           <summary>Separate template handling</summary>
@@ -222,7 +274,7 @@ is the proper place.
           <compatibility addition="yes"/>
           <description>
              <p>Layer declaration of a menu can influence what client properties
-                 the actual <a href="@JDK@/javax/swing/JMenu.html">JMenu</a> 
+                 the actual <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JMenu.html">JMenu</a> 
                  instances will have. More 
                  <a href="architecture-summary.html#layer-Menu">details</a>.
               </p>
@@ -329,10 +381,10 @@ is the proper place.
           <description>
               <p>
                   New way to subclass <code>MultiDataObject</code>: override
-                  <a href="@TOP@/org/openide/loaders/MultiDataObject.html#associateLookup--">
+                  <a href="@TOP@/org/openide/loaders/MultiDataObject.html#associateLookup()">
                   int associateLookup()
                   </a> to return <code>1</code>. In constructor call
-                  <a href="@TOP@/org/openide/loaders/MultiDataObject.html#registerEditor-java.lang.String-boolean-">
+                  <a href="@TOP@/org/openide/loaders/MultiDataObject.html#registerEditor(java.lang.String,boolean)">
                   registerEditor("your/mimetype", ...)</a> to get default
                   editor support. No need to override any other methods to get
                   well performing <code>MultiDataObject</code>.
@@ -582,7 +634,7 @@ is the proper place.
         <p>
             There is new method to register new DataObject types without
             the need to write own DataLoader. Use
-            <a href="@TOP@/org/openide/loaders/DataLoaderPool.html#factory-java.lang.Class-java.lang.String-java.awt.Image-">
+            <a href="@TOP@/org/openide/loaders/DataLoaderPool.html#factory(java.lang.Class,java.lang.String,java.awt.Image)">
                 DataLoaderPool.factory</a> method.
         </p>
         </description>
@@ -634,9 +686,9 @@ is the proper place.
         <p>
             When <a href="@TOP@/org/openide/loaders/TemplateWizard.html">TemplateWizard</a> invokes 
             <a href="@TOP@/org/openide/loaders/DataObject.html">DataObject</a>.createFromTemplate,
-            it passes as argument all its <a href="@org-openide-dialogs@/org/openide/WizardDescriptor.html#getProperties--">properties</a>
+            it passes as argument all its <a href="@org-openide-dialogs@/org/openide/WizardDescriptor.html#getProperties()">properties</a>
             to it with <code>wizard.</code> as a prefix. That way they are available to
-            underlying <a href="@TOP@/architecture-summary.html#script">scripting and templating
+            underlying <a href="@TOP@/architecture-summary.html#loaders-script">scripting and templating
             engines</a>.
         </p>
         </description>
@@ -734,7 +786,7 @@ is the proper place.
         that can be processed during instantiation of the template.
         </p>
         <p>
-        This is particallary useful when using <a href="@TOP@/architecture-summary.html#script">scripting and templating
+        This is particallary useful when using <a href="@TOP@/architecture-summary.html#loaders-script">scripting and templating
         languages</a> during create from template operation.
         </p>
         </description>
@@ -755,14 +807,14 @@ is the proper place.
         <p>
             Since now, each DataNode constructed without using own lookup,
             shall have <code>FileObject</code>(s) associated with its
-            <a href="@TOP@/org/openide/loaders/DataObject.html#files--">DataObject</a> 
+            <a href="@TOP@/org/openide/loaders/DataObject.html#files()">DataObject</a> 
             available in its own lookup.
             Also a 
             <a href="@TOP@/org/openide/loaders/DataObject.html">DataObject</a> 
             has been retrofitted to implement a 
             <a href="@org-openide-util-lookup@/org/openide/util/Lookup.Provider.html">Lookup.Provider</a>
             interface and thus have its
-            <a href="@TOP@/org/openide/loaders/DataObject.html#getLookup--">getLookup</a> 
+            <a href="@TOP@/org/openide/loaders/DataObject.html#getLookup()">getLookup</a> 
             method that can be used instead of the old <code>getCookie</code> one.
         </p>
         </description>
@@ -1041,7 +1093,7 @@ is the proper place.
         to be notified when the DataObject is being created, but the notification 
         shall be done when its constructor finishes otherwise magic race 
         conditions can happen, see for example 
-        <a href="http://www.netbeans.org/issues/show_bug.cgi?id=20022">issue 20022</a>.
+        <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=20022">issue 20022</a>.
         The previous solution was to wait 500ms after the start of DataObject's 
         constructor and notifying the creation than, but of course it means 
         that if the constructor takes longer time, we were in the same problem again.
@@ -1127,7 +1179,6 @@ is the proper place.
 -->
     <head>
       <title>Change History for the Loaders API</title>
-      <link rel="stylesheet" href="prose.css" type="text/css"/>
     </head>
     <body>
 

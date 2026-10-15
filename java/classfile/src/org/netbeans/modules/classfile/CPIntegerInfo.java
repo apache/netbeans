@@ -32,7 +32,7 @@ public final class CPIntegerInfo extends CPEntry {
 
     CPIntegerInfo(ConstantPool pool, int v) {
 	super(pool);
-        value = new Integer(v);
+        value = v;
     }
 
     public final int getTag() {

@@ -29,6 +29,7 @@ import org.openide.filesystems.FileObject;
  * @see EjbJarFactory
  * @deprecated implement {@link EjbJarImplementation2}
  */
+@Deprecated
 public interface EjbJarImplementation {
 
     /** J2EE platform version - one of the constants

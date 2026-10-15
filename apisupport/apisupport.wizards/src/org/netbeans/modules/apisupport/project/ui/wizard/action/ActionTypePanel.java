@@ -102,7 +102,7 @@ final class ActionTypePanel extends BasicWizardIterator.Panel {
     }
     
     private static ComboBoxModel createCookieClassModel() {
-        DefaultComboBoxModel cookieClassModel = new DefaultComboBoxModel();
+        DefaultComboBoxModel<String> cookieClassModel = new DefaultComboBoxModel<>();
         for (String fqcn : DataModel.PREDEFINED_COOKIE_CLASSES) {
             String name = DataModel.parseClassName(fqcn);
             cookieClassModel.addElement(name);

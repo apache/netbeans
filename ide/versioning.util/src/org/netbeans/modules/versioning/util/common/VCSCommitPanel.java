@@ -34,7 +34,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import org.netbeans.modules.versioning.util.DialogBoundsPreserver;
-import org.netbeans.modules.versioning.util.VersioningEvent;
 import org.openide.DialogDescriptor;
 import org.openide.util.HelpCtx;
 import java.awt.EventQueue;
@@ -74,8 +73,6 @@ import org.openide.NotifyDescriptor;
 import static java.awt.Component.CENTER_ALIGNMENT;
 import static java.awt.Component.LEFT_ALIGNMENT;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.Action;
@@ -115,13 +112,13 @@ public abstract class VCSCommitPanel<F extends VCSFileNode> extends AutoResizing
     private final JButton commitButton = new JButton();
     private final JButton cancelButton = new JButton();
         
-    private VCSCommitTable commitTable;
+    private final VCSCommitTable commitTable;
     
     private JTabbedPane tabbedPane;
         
     private final Preferences preferences;
     private final VCSCommitParameters parameters;
-    private final Map<String, VCSCommitFilter> filters = new LinkedHashMap<String, VCSCommitFilter>();
+    private final Map<String, VCSCommitFilter> filters = new LinkedHashMap<>();
     private final VCSCommitDiffProvider diffProvider;
     private final VCSCommitPanelModifier modifier;
     private static final String ERROR_COLOR;
@@ -586,25 +583,16 @@ public abstract class VCSCommitPanel<F extends VCSFileNode> extends AutoResizing
         
         final VCSCommitTable table = getCommitTable();
         computeNodes();
-        addVersioningListener(new VersioningListener() {
-            @Override
-            public void versioningEvent(VersioningEvent event) {
-                valuesChanged();
-            }
+        addVersioningListener(e -> {
+            valuesChanged();
         });
-        table.getTableModel().addTableModelListener(new TableModelListener() {
-            @Override
-            public void tableChanged(TableModelEvent e) {
-                valuesChanged();
-            }
+        table.getTableModel().addTableModelListener(e -> {
+            valuesChanged();
         });
 
-        final Dialog dialog = DialogDisplayer.getDefault().createDialog(dd);
-
-        WindowListener windowListener = new DialogBoundsPreserver(preferences, this.getClass().getName());
-        dialog.addWindowListener(windowListener);
+        Dialog dialog = DialogDisplayer.getDefault().createDialog(dd);
         dialog.pack();
-        windowListener.windowOpened(new WindowEvent(dialog, WindowEvent.WINDOW_OPENED));
+        DialogBoundsPreserver.preserveAndRestore(dialog, preferences, this.getClass().getName());
         dialog.setVisible(true);
         
         if (dd.getValue() == DialogDescriptor.CLOSED_OPTION) {

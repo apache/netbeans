@@ -27,18 +27,18 @@ import java.util.List;
 final class NameRef extends WeakReference<FileNaming> {
     /** either reference to NameRef or to Integer as an index to names array */
     private Object next;
-    static final ReferenceQueue<FileNaming> QUEUE = new ReferenceQueue<FileNaming>();
+    static final ReferenceQueue<FileNaming> QUEUE = new ReferenceQueue<>();
 
     public NameRef(FileNaming referent) {
         super(referent, QUEUE);
     }
 
-    public Integer getIndex() {
+    public int getIndex() {
         assert Thread.holdsLock(NamingFactory.class);
         NameRef nr = this;
         while (nr != null) {
-            if (nr.next instanceof Integer) {
-                return (Integer) nr.next;
+            if (nr.next instanceof Integer integer) {
+                return integer;
             }
             nr = nr.next();
         }
@@ -94,7 +94,7 @@ final class NameRef extends WeakReference<FileNaming> {
 
     final Iterable<NameRef> disconnectAll() {
         assert Thread.holdsLock(NamingFactory.class);
-        List<NameRef> all = new ArrayList<NameRef>();
+        List<NameRef> all = new ArrayList<>();
         NameRef nr = this;
         while (nr != null) {
             NameRef nn = nr.next();

@@ -6,7 +6,8 @@
                     ->createQuery('a')
                     ->where('a.date_deleted is null')
                     ->execute(foo(
-                            ^));
+                            ^
+                    ));
             
         }
     }

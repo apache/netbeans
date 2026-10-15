@@ -19,7 +19,6 @@
 
 package org.netbeans.editor.ext;
 
-import org.netbeans.api.editor.StickyWindowSupport;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -35,6 +34,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -60,6 +60,7 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Keymap;
 import javax.swing.text.TextAction;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.BaseKit;
 import org.netbeans.editor.BaseTextUI;
@@ -156,7 +157,11 @@ public class ToolTipSupport {
     private static final String HTML_PREFIX_UPPERCASE = "<HTML"; //NOI18N
 
     private static final String LAST_TOOLTIP_POSITION = "ToolTipSupport.lastToolTipPosition"; //NOI18N
+
+    /// Key for ignored area rectangle stored as client property.
+    /// Allowes the mouse pointer to safely enter the tooltip without the risk of it disapearing.
     private static final String MOUSE_MOVE_IGNORED_AREA = "ToolTipSupport.mouseMoveIgnoredArea"; //NOI18N
+
     private static final String MOUSE_LISTENER = "ToolTipSupport.noOpMouseListener"; //NOI18N
 
     private static final Action NO_ACTION = new TextAction("tooltip-no-action") { //NOI18N
@@ -181,16 +186,16 @@ public class ToolTipSupport {
 
     private static final MouseListener NO_OP_MOUSE_LISTENER = new MouseAdapter() {};
 
-    /** @Since 2.10 */
+    /** @since 2.10 */
     public static final int FLAG_HIDE_ON_MOUSE_MOVE = 1;
-    /** @Since 2.10 */
+    /** @since 2.10 */
     public static final int FLAG_HIDE_ON_TIMER = 2;
-    /** @Since 2.10 */
+    /** @since 2.10 */
     public static final int FLAG_PERMANENT = 4;
 
-    /** @Since 2.10 */
+    /** @since 2.10 */
     public static final int FLAGS_LIGHTWEIGHT_TOOLTIP = FLAG_HIDE_ON_MOUSE_MOVE | FLAG_HIDE_ON_TIMER;
-    /** @Since 2.10 */
+    /** @since 2.10 */
     public static final int FLAGS_HEAVYWEIGHT_TOOLTIP = FLAG_PERMANENT;
 
     private static final String ELIPSIS = "..."; //NOI18N
@@ -297,7 +302,7 @@ public class ToolTipSupport {
     }
     
     /**
-     * @Since 2.10
+     * @since 2.10
      */
     public void setToolTip(
         JComponent toolTip,
@@ -586,7 +591,7 @@ public class ToolTipSupport {
      * tooltips are actively displayed by the code, not initiated by user's mouse hover
      * or gesture. This call should be then followed by a call to {@code setTooltip}
      * to actually set the tooltip's value and position.
-     * <p/>
+     * <p>
      * Use {@link #setToolTipVisible(boolean)} to display a tooltip relevant to the
      * mouse position.
      * 
@@ -667,8 +672,7 @@ public class ToolTipSupport {
         if (this.status != status) {
             int oldStatus = this.status;
             this.status = status;
-            firePropertyChange(PROP_STATUS,
-                new Integer(oldStatus), new Integer(this.status));
+            firePropertyChange(PROP_STATUS, oldStatus, this.status);
         }
     }
 
@@ -799,9 +803,15 @@ public class ToolTipSupport {
                     try {
                         int[] offsets = Utilities.getSelectionOrIdentifierBlock(component, pos);
                         if (offsets != null) {
-                            Rectangle r1 = component.modelToView(offsets[0]);
-                            Rectangle r2 = component.modelToView(offsets[1]);
-                            blockBounds = new Rectangle(r1.x, r1.y, r2.x - r1.x, r1.height);
+                            Rectangle2D r1 = component.modelToView2D(offsets[0]);
+                            Rectangle2D r2 = component.modelToView2D(offsets[1]);
+                            int margin = 6; // additional x-margin for the ignore area, shouldn't be much wider than 1-2 characters
+                            blockBounds = new Rectangle(
+                                    (int) (r1.getX() - margin),
+                                    (int) (r1.getY()),
+                                    (int) (r2.getX() - r1.getX() + margin * 2),
+                                    (int) (r1.getHeight())
+                            );
                         }
                     } catch (BadLocationException ble) {}
                     toolTip.putClientProperty(MOUSE_MOVE_IGNORED_AREA, computeMouseMoveIgnoredArea(
@@ -867,7 +877,7 @@ public class ToolTipSupport {
                 int pos = ui.viewToModel(component, lmePoint);
                 if (pos >= 0) {
                     BaseDocument doc = (BaseDocument)component.getDocument();
-                    int eolPos = Utilities.getRowEnd(doc, pos);
+                    int eolPos = LineDocumentUtils.getLineEndOffset(doc, pos);
                     Rectangle eolRect = ui.modelToView(component, eolPos);
                     int lineHeight = extEditorUI.getLineHeight();
                     if (lmePoint.x <= eolRect.x && lmePoint.y <= eolRect.y + lineHeight) {
@@ -926,7 +936,7 @@ public class ToolTipSupport {
             enterTimer.setDelay(delay);
 
             firePropertyChange(PROP_INITIAL_DELAY,
-                new Integer(oldDelay), new Integer(enterTimer.getDelay()));
+                Integer.valueOf(oldDelay), Integer.valueOf(enterTimer.getDelay()));
         }
     }
 
@@ -948,7 +958,7 @@ public class ToolTipSupport {
             exitTimer.setDelay(delay);
             
             firePropertyChange(PROP_DISMISS_DELAY,
-                new Integer(oldDelay), new Integer(exitTimer.getDelay()));
+                Integer.valueOf(oldDelay), Integer.valueOf(exitTimer.getDelay()));
         }
     }
 
@@ -975,8 +985,7 @@ public class ToolTipSupport {
                     if (parent instanceof JLayeredPane) {
                         parent = parent.getParent();
                     }
-                    if (parent instanceof JViewport) {
-                        JViewport vp = (JViewport)parent;
+                    if (parent instanceof JViewport vp) {
                         p = new Point(vp.getViewPosition().x, p.y);
                     }
                 }

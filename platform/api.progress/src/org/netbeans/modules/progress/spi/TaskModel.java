@@ -38,7 +38,7 @@ import org.netbeans.progress.module.DefaultHandleFactory;
  */
 public final class TaskModel {
     private DefaultListSelectionModel selectionModel;
-    private final DefaultListModel model;
+    private final DefaultListModel<InternalHandle> model;
     private InternalHandle explicit;
     private final LinkedHashSet<ListDataListener> dataListeners;
     private final LinkedHashSet<ListSelectionListener> selectionListeners;
@@ -46,7 +46,7 @@ public final class TaskModel {
     
     TaskModel(Executor eventExecutor) {
         selectionModel = new DefaultListSelectionModel();
-        model = new DefaultListModel();
+        model = new DefaultListModel<>();
         dataListeners = new LinkedHashSet<ListDataListener>();
         selectionListeners = new LinkedHashSet<ListSelectionListener>();
         TaskListener list = new TaskListener();
@@ -193,13 +193,13 @@ public final class TaskModel {
     
     private ListDataListener[] getDataListeners() {
         synchronized (dataListeners) {
-            return dataListeners.toArray(new ListDataListener[dataListeners.size()]);
+            return dataListeners.toArray(new ListDataListener[0]);
         }
     } 
     
     private ListSelectionListener[] getSelectionListeners() {
         synchronized (selectionListeners) {
-            return selectionListeners.toArray(new ListSelectionListener[selectionListeners.size()]);
+            return selectionListeners.toArray(new ListSelectionListener[0]);
         }
     }
      

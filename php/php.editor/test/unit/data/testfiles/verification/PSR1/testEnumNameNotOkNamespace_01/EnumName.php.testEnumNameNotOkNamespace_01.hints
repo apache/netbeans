@@ -1,0 +1,4 @@
+enum EnumName {
+     --------
+HINT:PSR-1 Violation:
+Each type MUST be in a namespace of at least one level: a top-level vendor name.

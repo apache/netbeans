@@ -41,7 +41,8 @@ import org.netbeans.spi.options.OptionsPanelController;
  */
 @OptionsPanelController.KeywordsRegistration({
     @OptionsPanelController.Keywords(keywords = {"#KW_Hints"}, location = OptionsDisplayer.EDITOR, tabTitle="#CTL_Hints_DisplayName"),
-    @OptionsPanelController.Keywords(keywords = {"#KW_Mark"}, location = OptionsDisplayer.EDITOR, tabTitle="#CTL_MarkOccurences_DisplayName")
+    @OptionsPanelController.Keywords(keywords = {"#KW_Mark"}, location = OptionsDisplayer.EDITOR, tabTitle="#CTL_MarkOccurences_DisplayName"),
+    @OptionsPanelController.Keywords(keywords = {"#KW_InlineHints"}, location = OptionsDisplayer.EDITOR, tabTitle="#CTL_InlineHints_DisplayName")
 })
 public final class FolderBasedOptionPanel extends JPanel implements ActionListener {
     
@@ -76,7 +77,7 @@ public final class FolderBasedOptionPanel extends JPanel implements ActionListen
     }
 
     void update () {
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
         for (String mimeType : controller.getMimeTypes()) {
             model.addElement(mimeType);
         }

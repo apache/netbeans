@@ -20,14 +20,10 @@ package org.netbeans.swing.tabcontrol.plaf;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.awt.geom.Line2D;
 import javax.swing.Icon;
 import javax.swing.UIManager;
 import org.openide.util.ImageUtilities;
-import org.openide.util.Lookup;
 
 /**
  * An animated icon to indicate that a tab is 'busy'.
@@ -53,14 +49,9 @@ abstract class BusyIcon implements Icon {
      * If there is an Icon under those keys then the created instance will rotate
      * that Icon to animate it.
      * </p><p>
-     * If there are no Icons in UIManager then there will be an attempt to create
-     * animated Icon based <code>BusyPainter</code> in SwingX library. If swingx.jar
-     * is available on classpath then reflection is used to create BusyPainter
-     * instance and paint icon animations with it.
-     * </p><p>
-     * If SwingX library isn't available then the default image 
-     * <code>"org/netbeans/swing/tabcontrol/resources/busy_icon.png"</code>
-     * will be rotated.
+     * If there are no icons in UIManager then a default "spinner" icon will be drawn. This default
+     * icon looks very similar to the JProgressBar spinner on the Aqua LAF (when used with the
+     * client property JProgressBar.style=circular), and will scale properly on HiDPI screens.
      * </p>
      * 
      * @param selectedTab Boolean to create icon for selected tab state, false
@@ -68,16 +59,12 @@ abstract class BusyIcon implements Icon {
      * @return Animated icon.
      */
     public static BusyIcon create( boolean selectedTab ) {
-        BusyIcon res = null;
         Icon img = UIManager.getIcon( "nb.tabcontrol.busy.icon." + (selectedTab ? "selected" : "normal") ); //NOI18N
         if( null != img ) {
-            res = new ImageBusyIcon( ImageUtilities.icon2Image( img ) );
+            return new ImageBusyIcon( ImageUtilities.icon2Image( img ) );
         } else {
-            res = SwingXBusyIcon.create();
+            return VectorBusyIcon.create();
         }
-        if( null == res )
-            res = new ImageBusyIcon( ImageUtilities.loadImage( "org/netbeans/swing/tabcontrol/resources/busy_icon.png") ); //NOI18N
-        return res;
     }
 
     abstract void tick();
@@ -129,60 +116,53 @@ abstract class BusyIcon implements Icon {
         }
     }
 
-    private static class SwingXBusyIcon extends BusyIcon {
+    private static class VectorBusyIcon extends BusyIcon {
+        private static final float MIN_ALPHA = 0.16f;
+        private static final float MAX_ALPHA = 0.89f;
+        private static final int ARMS = 12;
+        private static final float STROKE_WIDTH = 1.25f;
+        private static final double INNER_RADIUS = 4;
+        private static final double OUTER_RADIUS = 7;
+        private int darkestArm = 0;
 
-        private final Object painter;
-        private final Method setFrameMethod;
-        private final Method paintMethod;
-        private int currentFrame = 0;
-        private static final int POINTS = 8;
-
-        private SwingXBusyIcon( Object painter, Method paint, Method setFrame, int height ) {
-            super( height, height );
-            this.painter = painter;
-            this.setFrameMethod = setFrame;
-            this.paintMethod = paint;
+        private VectorBusyIcon(int height) {
+            super(height, height);
         }
 
         public static BusyIcon create() {
-            Object painter = null;
-            ClassLoader cl = Lookup.getDefault().lookup( ClassLoader.class );
-            try {
-                Class painterClass = cl.loadClass( "org.jdesktop.swingx.painter.BusyPainter" ); //NOI18N
-                Constructor ctor = painterClass.getConstructor( int.class );
-                int height = getBusyIconSize();
-                painter = ctor.newInstance( height );
-                Method setFrame = painterClass.getMethod( "setFrame", int.class ); //NOI18N
-                Method paint = painterClass.getMethod( "paint", Graphics2D.class, Object.class, int.class, int.class ); //NOI18N
-                Method m = painterClass.getMethod( "setPoints", int.class ); //NOI18N
-                m.invoke( painter, POINTS );
-                return new SwingXBusyIcon( painter, paint, setFrame, height );
-            } catch( Exception ex ) {
-                Logger.getLogger( BusyIcon.class.getName() ).log( Level.FINE, null, ex );
-            }
-            return null;
+            return new VectorBusyIcon(getBusyIconSize());
         }
 
         @Override
-        public void tick() {
-            currentFrame = (currentFrame + 1) % POINTS;
-            try {
-                setFrameMethod.invoke( painter, currentFrame );
-            } catch( Exception ex ) {
-            }
+        void tick() {
+            darkestArm = (darkestArm + 1) % ARMS;
         }
 
         @Override
-        public void paintIcon( Component c, Graphics g, int x, int y ) {
-            if( g instanceof Graphics2D ) {
-                Graphics2D g2d = ( Graphics2D ) g;
-                try {
-                    g2d.translate( x, y );
-                    paintMethod.invoke( painter, g, c, x, y );
-                } catch( Exception ex ) {
-                    Logger.getLogger( BusyIcon.class.getName() ).log( Level.FINE, null, ex );
-                }
-                g2d.translate( -x, -y );
+        public void paintIcon(Component c, Graphics g0, int x, int y) {
+            Graphics2D g = (Graphics2D) g0.create();
+            try {
+                g.translate(x, y);
+                paintHelper(g);
+            } finally {
+                g.dispose();
+            }
+        }
+
+        private void paintHelper(Graphics2D g) {
+            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+            g.setStroke(new BasicStroke(STROKE_WIDTH, BasicStroke.CAP_ROUND, BasicStroke.CAP_ROUND));
+            g.translate(getIconWidth() / 2.0, getIconHeight() / 2.0);
+            for (int i = 0; i < ARMS; i++) {
+                g.setColor(new Color(0f, 0f, 0f, MIN_ALPHA + (MAX_ALPHA - MIN_ALPHA) *
+                        (float) Math.pow((((darkestArm + i) % ARMS) / (ARMS - 1.0f)), 3.0)));
+                double angle = -(2 * Math.PI / ARMS) * i;
+                double kY = Math.sin(angle);
+                double kX = Math.cos(angle);
+                g.draw(new Line2D.Double(
+                        INNER_RADIUS * kX, INNER_RADIUS * kY,
+                        OUTER_RADIUS * kX, OUTER_RADIUS * kY));
             }
         }
     }

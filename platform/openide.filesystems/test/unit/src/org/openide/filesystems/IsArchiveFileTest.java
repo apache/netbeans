@@ -108,6 +108,7 @@ public class IsArchiveFileTest extends NbTestCase {
         
         assertFalse (FileUtil.isArchiveFile(new URL("jar:file:/foo.jar!/")));
         assertFalse (FileUtil.isArchiveFile(new URL("file:/foo/")));
+        assertFalse (FileUtil.isArchiveFile(new URL("file:/javafx.base")));
         assertTrue (FileUtil.isArchiveFile(new URL("file:/foo.jar")));
     }
 

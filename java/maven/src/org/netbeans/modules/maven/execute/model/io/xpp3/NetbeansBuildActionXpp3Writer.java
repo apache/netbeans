@@ -179,6 +179,17 @@ public class NetbeansBuildActionXpp3Writer {
                 }
                 serializer.endTag( NAMESPACE, "properties" );
             }
+            if ( netbeansActionMapping.getOptions()!= null && netbeansActionMapping.getOptions().size() > 0 )
+            {
+                serializer.startTag( NAMESPACE, "options" );
+                for ( Iterator iter = netbeansActionMapping.getOptions().keySet().iterator(); iter.hasNext(); )
+                {
+                    String key = (String) iter.next();
+                    String value = (String) netbeansActionMapping.getOptions().get( key );
+                    serializer.startTag( NAMESPACE, "" + key + "" ).text( value ).endTag( NAMESPACE, "" + key + "" );
+                }
+                serializer.endTag( NAMESPACE, "options" );
+            }
             if ( netbeansActionMapping.getActivatedProfiles() != null && netbeansActionMapping.getActivatedProfiles().size() > 0 )
             {
                 serializer.startTag( NAMESPACE, "activatedProfiles" );
@@ -197,6 +208,9 @@ public class NetbeansBuildActionXpp3Writer {
     throws java.io.IOException {
         serializer.startTag( NAMESPACE, tagName);
         serializer.startTag( NAMESPACE, "id" ).text( p.getId()).endTag( NAMESPACE, "id");
+        if (p.getDisplayName() != null) {
+            serializer.startTag(NAMESPACE, "displayName" ).text( p.getId()).endTag( NAMESPACE, "displayName");  // NOI18N
+        }
         serializer.startTag( NAMESPACE, "actions");
         for (NetbeansActionMapping m : p.getActions()) {
             writeNetbeansActionMapping(m, "action", serializer);

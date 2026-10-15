@@ -102,7 +102,7 @@ public class CssAnalyser implements ErrorsProvider {
                     Node valueNode = ctx.getPropertyValue();
 
                     if (propertyNode != null) {
-                        String propertyName = ctx.getPropertyNameImage();
+                        String propertyName = NodeUtil.unescape(ctx.getPropertyNameImage());
 
                         //check non css 2.1 compatible properties and ignore them
                         //values are not checked as well

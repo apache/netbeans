@@ -207,25 +207,25 @@ class SearchThreadJdk12 extends IndexSearchThread {
 
     /* These are constants for the inner class */
     
-    static private final String STR_CLASS = NbBundle.getMessage(SearchThreadJdk12.class, "JDK12_CLASS" );       //NOI18N
-    static private final String STR_INTERFACE = NbBundle.getMessage(SearchThreadJdk12.class, "JDK12_INTERFACE" );   //NOI18N
-    static private final String STR_EXCEPTION = NbBundle.getMessage(SearchThreadJdk12.class, "JDK12_EXCEPTION" );   //NOI18N
-    static private final String STR_CONSTRUCTOR = NbBundle.getMessage(SearchThreadJdk12.class, "JDK12_CONSTRUCTOR" );   //NOI18N
-    static private final String STR_METHOD = NbBundle.getMessage(SearchThreadJdk12.class, "JDK12_METHOD" );   //NOI18N
-    static private final String STR_ERROR = NbBundle.getMessage(SearchThreadJdk12.class, "JDK12_ERROR" );   //NOI18N
-    static private final String STR_VARIABLE = NbBundle.getMessage(SearchThreadJdk12.class, "JDK12_VARIABLE" );   //NOI18N
-    static private final String STR_STATIC = NbBundle.getMessage(SearchThreadJdk12.class, "JDK12_STATIC" );   //NOI18N
-    static private final String STR_DASH = NbBundle.getMessage(SearchThreadJdk12.class, "JDK12_DASH" );   //NOI18N
-    static private final String STR_PACKAGE = NbBundle.getMessage(SearchThreadJdk12.class, "JDK12_PACKAGE" );   //NOI18N
+    private static final String STR_CLASS = NbBundle.getMessage(SearchThreadJdk12.class, "JDK12_CLASS" );       //NOI18N
+    private static final String STR_INTERFACE = NbBundle.getMessage(SearchThreadJdk12.class, "JDK12_INTERFACE" );   //NOI18N
+    private static final String STR_EXCEPTION = NbBundle.getMessage(SearchThreadJdk12.class, "JDK12_EXCEPTION" );   //NOI18N
+    private static final String STR_CONSTRUCTOR = NbBundle.getMessage(SearchThreadJdk12.class, "JDK12_CONSTRUCTOR" );   //NOI18N
+    private static final String STR_METHOD = NbBundle.getMessage(SearchThreadJdk12.class, "JDK12_METHOD" );   //NOI18N
+    private static final String STR_ERROR = NbBundle.getMessage(SearchThreadJdk12.class, "JDK12_ERROR" );   //NOI18N
+    private static final String STR_VARIABLE = NbBundle.getMessage(SearchThreadJdk12.class, "JDK12_VARIABLE" );   //NOI18N
+    private static final String STR_STATIC = NbBundle.getMessage(SearchThreadJdk12.class, "JDK12_STATIC" );   //NOI18N
+    private static final String STR_DASH = NbBundle.getMessage(SearchThreadJdk12.class, "JDK12_DASH" );   //NOI18N
+    private static final String STR_PACKAGE = NbBundle.getMessage(SearchThreadJdk12.class, "JDK12_PACKAGE" );   //NOI18N
     private static final String STR_ENUM = NbBundle.getMessage(SearchThreadJdk12.class, "JDK15_ENUM"); //NOI18N
     private static final String STR_ANNTYPE = NbBundle.getMessage(SearchThreadJdk12.class, "JDK15_ANNOTATION_TYPE"); //NOI18N
 
-    static private final int IN_BALAST = 0;
-    static private final int IN_DT = 1;
-    static private final int IN_AREF = 2;
+    private static final int IN_BALAST = 0;
+    private static final int IN_DT = 1;
+    private static final int IN_AREF = 2;
 //    static private final int IN_B = 3;
-    static private final int IN_DESCRIPTION = 4;
-    static private final int IN_DESCRIPTION_SUFFIX = 5;
+    private static final int IN_DESCRIPTION = 4;
+    private static final int IN_DESCRIPTION_SUFFIX = 5;
     
     /** This inner class parses the JDK 1.2 Documentation index and returns
      *  found indexItems. 
@@ -324,7 +324,7 @@ class SearchThreadJdk12 extends IndexSearchThread {
                 
                 /*
                 // Stop suffering if we are behind the searched words
-                if ( text.substring( 0, Math.min(toFind.length(), text.length()) ).compareTo( toFind ) > 0 ) {
+                if ( text.substring( 0, Math.min(toFind.length()) ).compareTo( toFind ) > 0 ) {
                     try {
                         System.out.println("Stoping suffering");
                         in.close();

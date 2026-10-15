@@ -487,7 +487,7 @@ public class PropertiesTableModel extends AbstractTableModel {
         /** Overrides superclass method. */
         @Override
         public boolean equals(Object obj) {
-            if(obj == null || !(obj instanceof StringPair))
+            if(!(obj instanceof StringPair))
                 return false;
             
             StringPair compared = (StringPair)obj;

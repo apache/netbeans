@@ -28,7 +28,7 @@ import java.util.Map;
 public enum JsDocElementType {
     // special context sensitive type
     CONTEXT_SENSITIVE("contextSensitive", JsDocElement.Category.DESCRIPTION), //NOI18N
-    // unknow type
+    // unknown type
     UNKNOWN("unknown", JsDocElement.Category.UNKNOWN), //NOI18N
     // common jsDoc tags
     ARGUMENT("@argument", JsDocElement.Category.NAMED_PARAMETER), //NOI18N
@@ -99,9 +99,9 @@ public enum JsDocElementType {
      * @param value {@code String} value of the {@code Type}
      * @return {@code Type}
      */
-    public synchronized static JsDocElementType fromString(String value) {
+    public static synchronized JsDocElementType fromString(String value) {
         if (types == null) {
-           types = new HashMap<String, JsDocElementType>();
+           types = new HashMap<>();
            for (JsDocElementType type : JsDocElementType.values()) {
                types.put(type.toString().toLowerCase(Locale.ENGLISH), type);
            }

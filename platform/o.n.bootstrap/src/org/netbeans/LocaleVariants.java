@@ -218,7 +218,7 @@ final class LocaleVariants implements Stamps.Updater {
             while (it.hasNext()) {
                 _suffixes.add(it.next());
             }
-            suffixes = _suffixes.toArray(new String[_suffixes.size()]);
+            suffixes = _suffixes.toArray(new String[0]);
             lastLocale = Locale.getDefault();
             lastBranding = NbBundle.getBranding();
         }

@@ -456,11 +456,11 @@ public class DependencyGraphScene<I extends GraphNodeImplementation> extends Gra
     }
     
     void highlightRelated (GraphNode<I> node) {
-        List<GraphNode> importantNodes = new ArrayList<GraphNode>();
-        List<GraphEdge> otherPathsEdges = new ArrayList<GraphEdge>();
-        List<GraphEdge> primaryPathEdges = new ArrayList<GraphEdge>();
-        List<GraphNode> childrenNodes = new ArrayList<GraphNode>();
-        List<GraphEdge> childrenEdges = new ArrayList<GraphEdge>();
+        List<GraphNode> importantNodes  = new ArrayList<>();
+        List<GraphEdge> otherPathsEdges = new ArrayList<>();
+        List<GraphEdge> primaryPathEdges = new ArrayList<>();
+        List<GraphNode> childrenNodes   = new ArrayList<>();
+        List<GraphEdge> childrenEdges   = new ArrayList<>();
 
         importantNodes.add(node);
 
@@ -482,8 +482,7 @@ public class DependencyGraphScene<I extends GraphNodeImplementation> extends Gra
 
         if(supportsVersions()) {
             // other important paths
-            ArrayList<I> representants = new ArrayList<>(node.getDuplicatesOrConflicts());
-            for (GraphNodeImplementation curRep : representants) {
+            for (GraphNodeImplementation curRep : node.getDuplicatesOrConflicts()) {
                 addPathToRoot(curRep, curRep.getParent(), otherPathsEdges, importantNodes);
             }
         }

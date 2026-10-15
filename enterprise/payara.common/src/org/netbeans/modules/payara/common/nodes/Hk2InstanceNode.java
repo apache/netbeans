@@ -35,6 +35,8 @@ import org.netbeans.modules.payara.common.actions.StartServerAction;
 import org.netbeans.modules.payara.common.actions.StopServerAction;
 import org.netbeans.modules.payara.common.actions.ViewAdminConsoleAction;
 import org.netbeans.modules.payara.common.actions.ViewServerLogAction;
+import org.netbeans.modules.payara.common.actions.OpenDomainDirectoryAction;
+import org.netbeans.modules.payara.common.actions.OpenServerHomeDirectoryAction;
 import org.netbeans.modules.payara.common.nodes.actions.RefreshModulesAction;
 import org.netbeans.modules.payara.common.nodes.actions.RefreshModulesCookie;
 import org.openide.nodes.AbstractNode;
@@ -176,6 +178,8 @@ public class Hk2InstanceNode extends AbstractNode implements ChangeListener { //
             null,
             SystemAction.get(ViewAdminConsoleAction.class),
             SystemAction.get(ViewServerLogAction.class),
+            SystemAction.get(OpenDomainDirectoryAction.class),
+            SystemAction.get(OpenServerHomeDirectoryAction.class),
             null,
             SystemAction.get(PropertiesAction.class)
         };

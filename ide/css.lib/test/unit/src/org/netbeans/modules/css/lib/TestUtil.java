@@ -21,6 +21,7 @@ package org.netbeans.modules.css.lib;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -85,7 +86,7 @@ public class TestUtil {
 
     public static CssParserResult parse(FileObject file) throws ParseException, BadLocationException, IOException {
         //no loader here so we need to create the swing document
-        BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));
         StringBuilder builder = new StringBuilder();
 
         char[] buffer = new char[8096];

@@ -161,7 +161,7 @@ class MavenRefactoringElementImplementation implements RefactoringElementImpleme
                         // Unfortunately it seems M3 does not preserve enough information in the local repo's metadata to find artifacts
                         // associated with one which was previously downloaded: _maven.repositories will remember the repositoryId but not its location.)
                         List<ArtifactRepository> remotes = RepositoryPreferences.getInstance().remoteRepositories(online);
-                        online.resolve(sources, remotes, online.getLocalRepository());
+                        online.resolveArtifact(sources, remotes, online.getLocalRepository());
                         // XXX this does not make ClassDataObject.OpenSourceCookie work immediately; clicking repeatedly seems to fix it
                     } catch (AbstractArtifactResolutionException x) {
                         LOG.log(Level.FINE, null, x);

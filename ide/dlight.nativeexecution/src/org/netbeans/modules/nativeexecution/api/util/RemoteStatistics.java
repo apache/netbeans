@@ -58,7 +58,7 @@ public final class RemoteStatistics implements Callable<Boolean> {
         }
     }
     
-    public static abstract class ActivityID {
+    public abstract static class ActivityID {
         /*package*/ ActivityID() {}
     }
 

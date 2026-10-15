@@ -205,8 +205,8 @@ public class SelectDatabasePanel extends javax.swing.JPanel implements ChangeLis
             public void propertyChange(PropertyChangeEvent evt) {
                 if (DataSourceReferencePanel.IS_VALID.equals(evt.getPropertyName())) {
                     Object newvalue = evt.getNewValue();
-                    if ((newvalue != null) && (newvalue instanceof Boolean)) {
-                        dialogDescriptor.setValid(((Boolean) newvalue).booleanValue());
+                    if (newvalue instanceof Boolean) {
+                        dialogDescriptor.setValid(((Boolean) newvalue));
                     }
                 }
             }

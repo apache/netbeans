@@ -40,11 +40,18 @@ final class EstimatorFactory {
         return new PositionEstimator.ThrowsEstimator(oldL, newL, diffContext);
     }
     
-    static PositionEstimator casePatterns(List<? extends ExpressionTree> oldL, 
-                                          List<? extends ExpressionTree> newL,
+    static PositionEstimator casePatterns(List<? extends Tree> oldL, 
+                                          List<? extends Tree> newL,
                                           DiffContext diffContext)
     {
         return new PositionEstimator.CasePatternEstimator(oldL, newL, diffContext);
+    }
+    
+    static PositionEstimator stringTemplate(List<? extends Tree> oldL,
+                                          List<? extends Tree> newL,
+                                          DiffContext diffContext)
+    {
+        return new PositionEstimator.StringTemaplateEstimator(oldL, newL, diffContext);
     }
     
     static PositionEstimator exportsOpensTo(List<? extends ExpressionTree> oldL, 
@@ -75,6 +82,13 @@ final class EstimatorFactory {
         return new PositionEstimator.ExtendsEstimator(oldL, newL, diffContext);
     }
     
+    static PositionEstimator permits(List<? extends Tree> oldL,
+                                     List<? extends Tree> newL,
+                                     DiffContext diffContext)
+    {
+        return new PositionEstimator.PermitsEstimator(oldL, newL, diffContext);
+    }
+
     static PositionEstimator statements(List<? extends Tree> oldL, 
                                      List<? extends Tree> newL,
                                      DiffContext diffContext)

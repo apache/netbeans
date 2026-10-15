@@ -160,7 +160,8 @@ public class ComboTest extends NbTestCase {
                 }
             }
         }
-        
+
+        @Override
         public void windowOpened(WindowEvent e) {
             shown = true;
             synchronized(this) {
@@ -213,6 +214,7 @@ public class ComboTest extends NbTestCase {
         //uncomment the code below for diagnosing painting problems
         //and seeing which pixel you'return really checking
         JFrame jf = new JFrame("assertPixelFromImage " + count + " (look for the yellow line)") {
+            @Override
             public void paint (Graphics g) {
                 new ImageIcon (bi).paintIcon(this, g, 25, 25);
                 g.setColor (Color.YELLOW);
@@ -269,6 +271,7 @@ public class ComboTest extends NbTestCase {
         //uncomment the code below for diagnosing painting problems
         //and seeing which pixel you'return really checking
         JFrame jf = new JFrame("Assert pixel test " + count + " (look for the yellow line)") {
+            @Override
             public void paint (Graphics g) {
                 new ImageIcon (bi).paintIcon(this, g, 25, 25);
                 g.setColor (Color.YELLOW);
@@ -420,15 +423,18 @@ public class ComboTest extends NbTestCase {
         }
         
         // Set that this Editor doesn't support custom Editor
+        @Override
         public boolean supportsCustomEditor() {
             return false;
         }
         
         // Set the Property value threw the Editor
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
         }
-        
+
+        @Override
         public String getAsText() {
             return getValue() == null ? "null" : getValue().toString();
         }
@@ -440,7 +446,8 @@ public class ComboTest extends NbTestCase {
         
         public TagsEditor() {
         }
-        
+
+        @Override
         public String[] getTags() {
             return new String[] {"a","b","c","d","Value"};
         }
@@ -450,11 +457,13 @@ public class ComboTest extends NbTestCase {
             
             env.getFeatureDescriptor().setValue("canEditAsText", Boolean.TRUE);
         }
-        
+
+        @Override
         public boolean supportsCustomEditor() {
             return false;
         }
-        
+
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
         }
@@ -591,7 +600,8 @@ public class ComboTest extends NbTestCase {
         
         public BadEditor() {
         }
-        
+
+        @Override
         public String[] getTags() {
             //return new String[] {"a","b","c","d","Value"};
             return null;
@@ -601,11 +611,13 @@ public class ComboTest extends NbTestCase {
             this.env = env;
             env.setState(env.STATE_INVALID);
         }
-        
+
+        @Override
         public boolean supportsCustomEditor() {
             return false;
         }
-        
+
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
         }

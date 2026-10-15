@@ -1,0 +1,4 @@
+Code completion result for source line:
+case CASE_C = self::CASE_A|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   CASE_A 100                      [PUBLIC]   EnumCaseInt

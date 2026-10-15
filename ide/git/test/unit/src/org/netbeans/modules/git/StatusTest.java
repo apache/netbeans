@@ -100,7 +100,7 @@ public class StatusTest extends AbstractGitTestCase {
     public void testCacheRefresh () throws Exception {
         setAutomaticRefreshEnabled(false);
         FileStatusCache cache = getCache();
-        File unversionedFile = new File(getWorkDir(), "file");
+        File unversionedFile = new File(testBase, "file");
         unversionedFile.createNewFile();
         // create new files
         Set<File> newFiles = new HashSet<File>();
@@ -183,7 +183,7 @@ public class StatusTest extends AbstractGitTestCase {
         fileC1.createNewFile();
         fileC2.createNewFile();
 
-        StatusRefreshLogHandler handler = new StatusRefreshLogHandler(getWorkDir());
+        StatusRefreshLogHandler handler = new StatusRefreshLogHandler(testBase);
         Git.STATUS_LOG.addHandler(handler);
         handler.setFilesToRefresh(Collections.singleton(folderA));
         FileInformation status = getCache().getStatus(folderA);
@@ -256,7 +256,7 @@ public class StatusTest extends AbstractGitTestCase {
         File ignoreFile = new File(repositoryLocation, ".gitignore");
         write(ignoreFile, "file1");
 
-        StatusRefreshLogHandler handler = new StatusRefreshLogHandler(getWorkDir());
+        StatusRefreshLogHandler handler = new StatusRefreshLogHandler(testBase);
         Git.STATUS_LOG.addHandler(handler);
         handler.setFilesToRefresh(Collections.singleton(fileA1));
         FileInformation status = getCache().getStatus(fileA1);
@@ -337,8 +337,7 @@ public class StatusTest extends AbstractGitTestCase {
         folder.mkdirs();
         file1.createNewFile();
         file2.createNewFile();
-
-        StatusRefreshLogHandler handler = new StatusRefreshLogHandler(getWorkDir());
+        StatusRefreshLogHandler handler = new StatusRefreshLogHandler(testBase);
         Git.STATUS_LOG.addHandler(handler);
         handler.setFilesToRefresh(Collections.singleton(file1));
         FileInformation status = getCache().getStatus(file1);

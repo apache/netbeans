@@ -1,0 +1,95 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='35'>
+  <hasDeclaredFunctions/>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='34'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='a' start='0' end='34'>
+      <hasInit/>
+      <isAssignment/>
+      <isFunctionDeclaration/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='9' end='10'>
+        <name>a</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <FunctionNode name='a' kind='NORMAL' start='0' end='34'>
+        <isDeclared/>
+        <!-- FunctionNode Parameters -->
+        <IdentNode start='11' end='13'>
+          <name>arguments[0]</name>
+          <isDestructuredParameter/>
+        </IdentNode>
+        <IdentNode start='15' end='17'>
+          <name>arguments[1]</name>
+          <isDestructuredParameter/>
+        </IdentNode>
+        <!-- FunctionNode Body -->
+        <Block start='10' end='33'>
+          <isParameterBlock/>
+          <!-- Block Statements -->
+          <ExpressionStatement start='11' end='13'>
+            <BinaryNode type='ASSIGN' start='11' end='13'>
+              <isAssignment/>
+              <!-- BinaryNode lhs -->
+              <ArrayLiteralNode start='11' end='13'>
+              </ArrayLiteralNode>
+              <!-- BinaryNode rhs -->
+              <IdentNode start='11' end='13'>
+                <name>arguments[0]</name>
+                <isDestructuredParameter/>
+              </IdentNode>
+            </BinaryNode>
+          </ExpressionStatement>
+          <ExpressionStatement start='15' end='17'>
+            <BinaryNode type='ASSIGN' start='15' end='17'>
+              <isAssignment/>
+              <!-- BinaryNode lhs -->
+              <ArrayLiteralNode start='15' end='17'>
+              </ArrayLiteralNode>
+              <!-- BinaryNode rhs -->
+              <IdentNode start='15' end='17'>
+                <name>arguments[1]</name>
+                <isDestructuredParameter/>
+              </IdentNode>
+            </BinaryNode>
+          </ExpressionStatement>
+          <BlockStatement start='19' end='33'>
+            <Block start='19' end='33'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+              <ExpressionStatement start='21' end='33'>
+                <StringLiteralNode value='use strict' start='21' end='31'/>
+              </ExpressionStatement>
+            </Block>
+          </BlockStatement>
+        </Block>
+      </FunctionNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

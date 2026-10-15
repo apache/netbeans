@@ -70,7 +70,7 @@ public class BeanListMapping {
 	
 	private void buildDisplayText() {
 		listSize = (theBean != null) ? theBean.size(listPropertyName) : 0;
-		Object [] args = { Integer.valueOf(listSize) };
+		Object [] args = { listSize};
 		displayText = MessageFormat.format(formatPattern, args);
 	}
 	

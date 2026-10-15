@@ -25,9 +25,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import org.netbeans.api.java.source.TestUtilities;
-import static org.junit.Assert.*;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.modules.java.hints.spiimpl.SPIAccessor;
 import org.netbeans.modules.java.hints.providers.spi.HintDescription;
 import org.netbeans.modules.java.hints.providers.spi.HintMetadata;
 import org.openide.filesystems.FileUtil;
@@ -50,7 +48,7 @@ public class DeclarativeHintRegistryTest extends NbTestCase {
 
         HintDescription hd = allHints.iterator().next().iterator().next();
 
-        assertEquals(new HashSet<String>(Arrays.asList("java.lang.String")), hd.getAdditionalConstraints().requiredErasedTypes);
+        assertEquals(new HashSet<>(Arrays.asList("java.lang.String")), hd.getAdditionalConstraints().requiredErasedTypes());
     }
 
     public void testSuppressWarnings() {

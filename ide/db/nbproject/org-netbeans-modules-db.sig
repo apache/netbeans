@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.72.0
+#Version 1.102.0
 
 CLSS public java.beans.FeatureDescriptor
 cons public init()
@@ -20,7 +20,6 @@ meth public void setPreferred(boolean)
 meth public void setShortDescription(java.lang.String)
 meth public void setValue(java.lang.String,java.lang.Object)
 supr java.lang.Object
-hfds TRANSIENT,classRef,displayName,expert,hidden,name,preferred,shortDescription,table
 
 CLSS public abstract interface java.io.Serializable
 
@@ -31,12 +30,12 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -68,8 +67,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.util.EventListener
 
@@ -81,6 +78,7 @@ CLSS public final org.netbeans.api.db.explorer.ConnectionManager
 cons public init()
 meth public boolean connect(org.netbeans.api.db.explorer.DatabaseConnection) throws org.netbeans.api.db.explorer.DatabaseException
 meth public org.netbeans.api.db.explorer.DatabaseConnection getConnection(java.lang.String)
+meth public org.netbeans.api.db.explorer.DatabaseConnection getPreferredConnection(boolean)
 meth public org.netbeans.api.db.explorer.DatabaseConnection showAddConnectionDialogFromEventThread(org.netbeans.api.db.explorer.JDBCDriver)
 meth public org.netbeans.api.db.explorer.DatabaseConnection showAddConnectionDialogFromEventThread(org.netbeans.api.db.explorer.JDBCDriver,java.lang.String)
 meth public org.netbeans.api.db.explorer.DatabaseConnection showAddConnectionDialogFromEventThread(org.netbeans.api.db.explorer.JDBCDriver,java.lang.String,java.lang.String,java.lang.String)
@@ -93,6 +91,7 @@ meth public void refreshConnectionInExplorer(org.netbeans.api.db.explorer.Databa
 meth public void removeConnection(org.netbeans.api.db.explorer.DatabaseConnection) throws org.netbeans.api.db.explorer.DatabaseException
 meth public void removeConnectionListener(org.netbeans.api.db.explorer.ConnectionListener)
 meth public void selectConnectionInExplorer(org.netbeans.api.db.explorer.DatabaseConnection)
+meth public void setPreferredConnection(org.netbeans.api.db.explorer.DatabaseConnection)
 meth public void showAddConnectionDialog(org.netbeans.api.db.explorer.JDBCDriver)
 meth public void showAddConnectionDialog(org.netbeans.api.db.explorer.JDBCDriver,java.lang.String)
 meth public void showAddConnectionDialog(org.netbeans.api.db.explorer.JDBCDriver,java.lang.String,java.lang.String,java.lang.String)
@@ -290,7 +289,7 @@ hfds childNodeFactory,dataLookup,firePropChangeAfterRefresh,layerEntry,nodeProvi
 
 CLSS public org.netbeans.api.db.explorer.node.ChildNodeFactory
 cons public init(org.openide.util.Lookup)
-meth protected boolean createKeys(java.util.List)
+meth protected boolean createKeys(java.util.List<org.openide.util.Lookup>)
 meth public org.openide.nodes.Node[] createNodesForKey(org.openide.util.Lookup)
 meth public void refresh()
 meth public void refreshSync()
@@ -321,15 +320,16 @@ CLSS public abstract interface org.netbeans.api.db.explorer.node.NodeProviderFac
 meth public abstract org.netbeans.api.db.explorer.node.NodeProvider createInstance(org.openide.util.Lookup)
 
 CLSS public final org.netbeans.api.db.explorer.support.DatabaseExplorerUIs
+meth public static org.openide.nodes.Node connectionsNode()
 meth public static void connect(javax.swing.JComboBox,org.netbeans.api.db.explorer.ConnectionManager)
 supr java.lang.Object
-hcls ConnectionComboBoxModel,ConnectionComparator,ConnectionDataComboBoxModel
+hcls ConnChildren,ConnectionComboBoxModel,ConnectionComparator,ConnectionDataComboBoxModel
 
 CLSS public final org.netbeans.api.db.sql.support.SQLIdentifiers
 innr public abstract static Quoter
 meth public static org.netbeans.api.db.sql.support.SQLIdentifiers$Quoter createQuoter(java.sql.DatabaseMetaData)
 supr java.lang.Object
-hcls DatabaseMetaDataQuoter
+hcls DatabaseMetaDataQuoter,FallbackQuoter
 
 CLSS public abstract static org.netbeans.api.db.sql.support.SQLIdentifiers$Quoter
  outer org.netbeans.api.db.sql.support.SQLIdentifiers
@@ -353,15 +353,15 @@ cons public init(org.openide.nodes.Children)
 cons public init(org.openide.nodes.Children,org.openide.util.Lookup)
 fld protected java.text.MessageFormat displayFormat
 fld protected org.openide.util.actions.SystemAction[] systemActions
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected final org.openide.nodes.CookieSet getCookieSet()
 meth protected final org.openide.nodes.Sheet getSheet()
 meth protected final void setCookieSet(org.openide.nodes.CookieSet)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected final void setSheet(org.openide.nodes.Sheet)
 meth protected org.openide.nodes.Sheet createSheet()
 meth protected org.openide.util.actions.SystemAction[] createActions()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected void createPasteTypes(java.awt.datatransfer.Transferable,java.util.List<org.openide.util.datatransfer.PasteType>)
 meth public <%0 extends org.openide.nodes.Node$Cookie> {%%0} getCookie(java.lang.Class<{%%0}>)
 meth public boolean canCopy()
@@ -383,15 +383,15 @@ meth public org.openide.nodes.Node$Handle getHandle()
 meth public org.openide.nodes.Node$PropertySet[] getPropertySets()
 meth public org.openide.util.HelpCtx getHelpCtx()
 meth public org.openide.util.actions.SystemAction getDefaultAction()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.util.actions.SystemAction[] getActions()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.util.datatransfer.NewType[] getNewTypes()
 meth public org.openide.util.datatransfer.PasteType getDropType(java.awt.datatransfer.Transferable,int,int)
 meth public void setDefaultAction(org.openide.util.actions.SystemAction)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setIconBase(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setName(java.lang.String)
 supr org.openide.nodes.Node
 hfds DEFAULT_ICON,DEFAULT_ICON_BASE,DEFAULT_ICON_EXTENSION,ICON_BASE,NO_NEW_TYPES,NO_PASTE_TYPES,OPENED_ICON_BASE,iconBase,iconExtension,icons,lookup,overridesGetDefaultAction,preferredAction,sheet,sheetCookieL
@@ -476,15 +476,15 @@ meth public java.lang.String toString()
 meth public javax.swing.Action getPreferredAction()
 meth public javax.swing.Action[] getActions(boolean)
 meth public org.openide.util.actions.SystemAction getDefaultAction()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.util.actions.SystemAction[] getActions()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.util.actions.SystemAction[] getContextActions()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void destroy() throws java.io.IOException
 meth public void setDisplayName(java.lang.String)
 meth public void setHidden(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setName(java.lang.String)
 meth public void setShortDescription(java.lang.String)
 supr java.beans.FeatureDescriptor
@@ -493,10 +493,10 @@ hcls LookupEventList,PropertyEditorRef
 
 CLSS public final org.openide.util.HelpCtx
 cons public init(java.lang.Class<?>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String)
 cons public init(java.net.URL)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.openide.util.HelpCtx DEFAULT_HELP
 innr public abstract interface static Displayer
 innr public abstract interface static Provider

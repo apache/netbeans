@@ -463,35 +463,36 @@ public class Document extends NodeImpl implements Node, org.w3c.dom.Document {
      *   instantiate.
      * @return A new <code>Element</code> object with the following 
      *   attributes:
-     * <table border='1' cellpadding='3'>
+     * <table>
+     * <caption>Element object attributes</caption>
      * <tr>
      * <th>Attribute</th>
      * <th>Value</th>
      * </tr>
      * <tr>
-     * <td valign='top' rowspan='1' colspan='1'><code>Node.nodeName</code></td>
-     * <td valign='top' rowspan='1' colspan='1'>
+     * <td rowspan='1' colspan='1'><code>Node.nodeName</code></td>
+     * <td rowspan='1' colspan='1'>
      *   <code>qualifiedName</code></td>
      * </tr>
      * <tr>
-     * <td valign='top' rowspan='1' colspan='1'><code>Node.namespaceURI</code></td>
-     * <td valign='top' rowspan='1' colspan='1'>
+     * <td rowspan='1' colspan='1'><code>Node.namespaceURI</code></td>
+     * <td rowspan='1' colspan='1'>
      *   <code>namespaceURI</code></td>
      * </tr>
      * <tr>
-     * <td valign='top' rowspan='1' colspan='1'><code>Node.prefix</code></td>
-     * <td valign='top' rowspan='1' colspan='1'>prefix, extracted 
+     * <td rowspan='1' colspan='1'><code>Node.prefix</code></td>
+     * <td rowspan='1' colspan='1'>prefix, extracted 
      *   from <code>qualifiedName</code>, or <code>null</code> if there is 
      *   no prefix</td>
      * </tr>
      * <tr>
-     * <td valign='top' rowspan='1' colspan='1'><code>Node.localName</code></td>
-     * <td valign='top' rowspan='1' colspan='1'>local name, extracted from 
+     * <td rowspan='1' colspan='1'><code>Node.localName</code></td>
+     * <td rowspan='1' colspan='1'>local name, extracted from 
      *   <code>qualifiedName</code></td>
      * </tr>
      * <tr>
-     * <td valign='top' rowspan='1' colspan='1'><code>Element.tagName</code></td>
-     * <td valign='top' rowspan='1' colspan='1'>
+     * <td rowspan='1' colspan='1'><code>Element.tagName</code></td>
+     * <td rowspan='1' colspan='1'>
      *   <code>qualifiedName</code></td>
      * </tr>
      * </table>
@@ -549,41 +550,42 @@ public class Document extends NodeImpl implements Node, org.w3c.dom.Document {
      * @param qualifiedName The qualified name of the attribute to 
      *   instantiate.
      * @return A new <code>Attr</code> object with the following attributes:
-     * <table border='1' cellpadding='3'>
+     * <table>
+     * <caption>Attr object attributes</caption>
      * <tr>
      * <th>
      *   Attribute</th>
      * <th>Value</th>
      * </tr>
      * <tr>
-     * <td valign='top' rowspan='1' colspan='1'><code>Node.nodeName</code></td>
-     * <td valign='top' rowspan='1' colspan='1'>qualifiedName</td>
+     * <td rowspan='1' colspan='1'><code>Node.nodeName</code></td>
+     * <td rowspan='1' colspan='1'>qualifiedName</td>
      * </tr>
      * <tr>
-     * <td valign='top' rowspan='1' colspan='1'>
+     * <td rowspan='1' colspan='1'>
      *   <code>Node.namespaceURI</code></td>
-     * <td valign='top' rowspan='1' colspan='1'><code>namespaceURI</code></td>
+     * <td rowspan='1' colspan='1'><code>namespaceURI</code></td>
      * </tr>
      * <tr>
-     * <td valign='top' rowspan='1' colspan='1'>
+     * <td rowspan='1' colspan='1'>
      *   <code>Node.prefix</code></td>
-     * <td valign='top' rowspan='1' colspan='1'>prefix, extracted from 
+     * <td rowspan='1' colspan='1'>prefix, extracted from 
      *   <code>qualifiedName</code>, or <code>null</code> if there is no 
      *   prefix</td>
      * </tr>
      * <tr>
-     * <td valign='top' rowspan='1' colspan='1'><code>Node.localName</code></td>
-     * <td valign='top' rowspan='1' colspan='1'>local name, extracted from 
+     * <td rowspan='1' colspan='1'><code>Node.localName</code></td>
+     * <td rowspan='1' colspan='1'>local name, extracted from 
      *   <code>qualifiedName</code></td>
      * </tr>
      * <tr>
-     * <td valign='top' rowspan='1' colspan='1'><code>Attr.name</code></td>
-     * <td valign='top' rowspan='1' colspan='1'>
+     * <td rowspan='1' colspan='1'><code>Attr.name</code></td>
+     * <td rowspan='1' colspan='1'>
      *   <code>qualifiedName</code></td>
      * </tr>
      * <tr>
-     * <td valign='top' rowspan='1' colspan='1'><code>Node.nodeValue</code></td>
-     * <td valign='top' rowspan='1' colspan='1'>the empty 
+     * <td rowspan='1' colspan='1'><code>Node.nodeValue</code></td>
+     * <td rowspan='1' colspan='1'>the empty 
      *   string</td>
      * </tr>
      * </table>

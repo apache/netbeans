@@ -68,7 +68,7 @@ public final class AddDriverDialog extends javax.swing.JPanel {
         return ADD_DRIVER_DIALOG_HELPCTX;
     }
     
-    private DefaultListModel dlm;
+    private DefaultListModel<String> dlm;
     private List<URL> drvs = new LinkedList<URL>();
     private boolean customizer = false;
     private ProgressHandle progressHandle;
@@ -105,7 +105,7 @@ public final class AddDriverDialog extends javax.swing.JPanel {
         // without it, the preferred height is sometimes ignored during resize
         // progressContainerPanel.add(Box.createVerticalStrut(progressContainerPanel.getPreferredSize().height), BorderLayout.EAST);
         initAccessibility();
-        dlm = (DefaultListModel) drvList.getModel();
+        dlm = (DefaultListModel<String>) drvList.getModel();
 
         if (driver != null) {
             setDriver(driver);
@@ -160,6 +160,7 @@ public final class AddDriverDialog extends javax.swing.JPanel {
         String fileName = null;
         dlm.clear();
         drvs.clear();
+        jarClassLoader = null;
         URL[] urls = drv == null ? new URL[0] : drv.getURLs();
         for (int i = 0; i < urls.length; i++) {
             URL url = urls[i];
@@ -379,6 +380,7 @@ public final class AddDriverDialog extends javax.swing.JPanel {
             if (lsm.isSelectedIndex(i)) {
                 dlm.remove(i);
                 drvs.remove(i);
+                jarClassLoader = null;
                 count--;
                 continue;
             }
@@ -431,6 +433,7 @@ public final class AddDriverDialog extends javax.swing.JPanel {
                     dlm.addElement(file.toString());
                     try {
                         drvs.add(file.toURI().toURL());
+                        jarClassLoader = null;
                     } catch (MalformedURLException exc) {
                         LOGGER.log(Level.WARNING,
                                 "Unable to add driver jar file " +
@@ -567,30 +570,25 @@ public final class AddDriverDialog extends javax.swing.JPanel {
                 URLClassLoader jarloader = getJarClassLoader();
 
                 for (int i = 0; i < dlm.size(); i++) {
-                    try {
-                        String file  = (String)dlm.get(i);
-                        JarFile jf = new JarFile(file);
-                        try {
-                            Enumeration entries = jf.entries();
-                            while (entries.hasMoreElements()) {
-                                JarEntry entry = (JarEntry)entries.nextElement();
-                                String className = entry.getName();
-                                if (className.endsWith(".class")) { // NOI18N
-                                    className = className.replace('/', '.');
-                                    className = className.substring(0, className.length() - 6);
-                                    if ( isDriverClass(jarloader, className) ) {
-                                        if (progressHandle != null) {
-                                            addDriverClass(className);
-                                        } else {
-                                            // already stopped
-                                            updateState();
-                                            return;
-                                        }
+                    String file = dlm.get(i);
+                    try (JarFile jf = new JarFile(file)) {
+                        Enumeration<JarEntry> entries = jf.entries();
+                        while (entries.hasMoreElements()) {
+                            JarEntry entry = entries.nextElement();
+                            String className = entry.getName();
+                            if (className.endsWith(".class")) { // NOI18N
+                                className = className.replace('/', '.');
+                                className = className.substring(0, className.length() - 6);
+                                if (isDriverClass(jarloader, className)) {
+                                    if (progressHandle != null) {
+                                        addDriverClass(className);
+                                    } else {
+                                        // already stopped
+                                        updateState();
+                                        return;
                                     }
                                 }
                             }
-                        } finally {
-                            jf.close();
                         }
                     } catch (IOException exc) {
                         //PENDING
@@ -603,12 +601,13 @@ public final class AddDriverDialog extends javax.swing.JPanel {
     }
     
     private URLClassLoader getJarClassLoader() {
-        // This classloader is used to load classes
-        // from the jar files for the driver.  We can then use
-        // introspection to see if a class in one of these jar files
-        // implements java.sql.Driver
+        /* This classloader is used to load classes from the jar files for the driver.  We can then
+        introspection to see if a class in one of these jar files implements java.sql.Driver. (We
+        clear the jarClassLoader whenever drvs is modified, to avoid the AddDriverNotJavaSqlDriver
+        message popping up if a different driver is picked from the dropdown after an unrelated JAR
+        file is added.) */
         jarClassLoader =
-                new URLClassLoader(drvs.toArray(new URL[drvs.size()]),
+                new URLClassLoader(drvs.toArray(new URL[0]),
                 this.getClass().getClassLoader());
         return jarClassLoader;
     }
@@ -622,7 +621,7 @@ public final class AddDriverDialog extends javax.swing.JPanel {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                progressHandle = ProgressHandleFactory.createHandle(null);
+                progressHandle = ProgressHandle.createHandle(null);
                 progressComponent = ProgressHandleFactory.createProgressComponent(progressHandle);
                 progressContainerPanel.add(progressComponent, BorderLayout.CENTER);
                 progressHandle.start();

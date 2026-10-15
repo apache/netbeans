@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test xmlns="urn:foobar">
+    <configurations xmlns="http://www.netbeans.org/ns/gradle-config/data/1">
+        <configuration id="custom2">
+            <property name="spaced">val2</property>
+            <property name="justnull"/>
+            <args>--nospace --evenafter</args>
+        </configuration>
+        <configuration id="custom3"/>
+    </configurations>
+</test>

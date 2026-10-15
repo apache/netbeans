@@ -118,7 +118,7 @@ public class ExecSupport {
     }
     
     /** This thread simply reads from given Reader and writes read chars to given Writer. */
-    static public  class OutputCopier extends Thread {
+    public static  class OutputCopier extends Thread {
         final Writer os;
         final Reader is;
         /** while set to false at streams that writes to the OutputWindow it must be
@@ -282,7 +282,7 @@ public class ExecSupport {
 
         @Override
         public void run() {
-            while (loop) {
+            while (loop && child.isAlive()) {
                 if (isStringFound()) {
                     status = true;
                     break;

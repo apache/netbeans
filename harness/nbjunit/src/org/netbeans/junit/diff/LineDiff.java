@@ -126,7 +126,7 @@ public class LineDiff implements Diff {
             }
             tmp.add(line);
         }
-        passLines = tmp.toArray(new String[tmp.size()]);
+        passLines = tmp.toArray(new String[0]);
         tmp.clear();
         second.close();
         //read ref file
@@ -137,7 +137,7 @@ public class LineDiff implements Diff {
             }
             tmp.add(line);
         }
-        refLines = tmp.toArray(new String[tmp.size()]);
+        refLines = tmp.toArray(new String[0]);
         tmp.clear();
         first.close();
         //collect differences

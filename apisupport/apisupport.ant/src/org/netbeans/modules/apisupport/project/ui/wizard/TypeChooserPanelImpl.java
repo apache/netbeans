@@ -51,33 +51,33 @@ import org.openide.util.WeakListeners;
  */
 public class TypeChooserPanelImpl  extends javax.swing.JPanel implements PropertyChangeListener {
 
-    public final static String IS_STANDALONE_OR_SUITE_COMPONENT 
+    public static final String IS_STANDALONE_OR_SUITE_COMPONENT 
                                                 = "tc_isStandaloneOrSuiteComp"; // NOI18N
 
     /** 
      * Suite root directory.
      * key for String value. 
      */
-    public final static String SUITE_ROOT       = "tc_suiteRoot";               // NOI18N
+    public static final String SUITE_ROOT       = "tc_suiteRoot";               // NOI18N
 
     /** 
      * Active platform ID value to be used as value 
      * for nbplatform.active property in platform.properties file.
      * key for String value. 
      */
-    public final static String ACTIVE_PLATFORM_ID  = "tc_activePlatform_id";          // NOI18N
+    public static final String ACTIVE_PLATFORM_ID  = "tc_activePlatform_id";          // NOI18N
 
     /** 
      * Active platform Object. 
      * key for org.netbeans.modules.apisupport.project.universe.NbPlatform value. 
      */
-    public final static String ACTIVE_NB_PLATFORM  = "tc_activeNBPlatform";  // NOI18N
+    public static final String ACTIVE_NB_PLATFORM  = "tc_activeNBPlatform";  // NOI18N
     
     /** 
      * true if project is created in NetBeans sources.
      * key for Boolean value. 
      */
-    public final static String IS_NETBEANS_ORG = "isNetBeansOrg";            // NOI18N
+    public static final String IS_NETBEANS_ORG = "isNetBeansOrg";            // NOI18N
 
     /** 
      * Is used to provide project's folder to TypeChooserPanel.
@@ -85,7 +85,7 @@ public class TypeChooserPanelImpl  extends javax.swing.JPanel implements Propert
      * is in NetBeans.org repository.
      * key for File value. 
      */
-    public final static String PROJECT_FOLDER = "tc_projectFolderForTypeChooser"; // NOI18N
+    public static final String PROJECT_FOLDER = "tc_projectFolderForTypeChooser"; // NOI18N
 
     private ButtonModel lastSelectedType;
     private static String lastSelectedSuite;
@@ -636,7 +636,7 @@ JFileChooser chooser = ProjectChooser.projectChooser();
         static File getProjectFolder( WizardDescriptor settings) {
             if (settings != null) {
                 Object value = settings.getProperty(PROJECT_FOLDER);
-                if (value != null && value instanceof File) {
+                if (value instanceof File) {
                     return (File) value;
                 }
             }

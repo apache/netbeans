@@ -1,5 +1,9 @@
 <?php
 class |>CLASS:person<| {                                // class name
+    public const |>FIELD,STATIC:MIN_AGE<| = 1;                 // public constant
+    protected const |>FIELD,STATIC:MAX_AGE<| = 150;            // protected constant
+    private const |>FIELD,STATIC:SETTING1<| = 'abc';           // used private constant
+    private const |>FIELD,STATIC,UNUSED:SETTING2<| = 5;               // unused private constant
     private $|>FIELD:name<|;                            // class field declaration
     public $|>FIELD:me<| = "mydefaultname";             // class field declaration
     private $|>FIELD,UNUSED:you<|;                             // unused private class field
@@ -11,6 +15,7 @@ class |>CLASS:person<| {                                // class name
         echo $this->$name."\n";               // $name is on class field
         echo $this->|>FIELD:name<|."\n";                // usage of class field
         person::$|>FIELD,STATIC:count<| = person::$|>FIELD,STATIC:count<| + 1;
+        echo self::|>FIELD,STATIC:SETTING1<|."\n";
     }
 
     private function |>METHOD,UNUSED:yourName<|() {             // unused method

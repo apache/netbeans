@@ -109,7 +109,7 @@ class BranchPicker {
     }
 
     private void initializeItems () {
-        DefaultListModel model = new DefaultListModel();
+        DefaultListModel<String> model = new DefaultListModel<>();
         model.addElement(ITEM_BRANCHES);
         model.addElement(ITEM_LOADING);
         model.addElement(ITEM_SEP);
@@ -141,7 +141,7 @@ class BranchPicker {
 
                             @Override
                             public void run () {
-                                DefaultListModel model = new DefaultListModel();
+                                DefaultListModel<String> model = new DefaultListModel<>();
                                 model.addElement(ITEM_BRANCHES);
                                 for (ISVNDirEntry e : entries.get(PREFIX_BRANCHES)) {
                                     model.addElement(branchesFolderPrefix + PREFIX_BRANCHES + "/" + e.getPath()); //NOI18N

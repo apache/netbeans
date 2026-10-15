@@ -671,7 +671,7 @@ class AntGrammar implements GrammarQuery {
                 it.remove();
             }
         }
-        return choices.toArray(new String[choices.size()]);
+        return choices.toArray(new String[0]);
     }
 
     private static final String[] PROPERTY_NAME_VALUED_PROPERTY_NAMES = {
@@ -791,7 +791,7 @@ class AntGrammar implements GrammarQuery {
 
     // Result classes ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    private static abstract class AbstractResultNode extends AbstractNode implements GrammarResult {
+    private abstract static class AbstractResultNode extends AbstractNode implements GrammarResult {
 
         public @Override Icon getIcon(int kind) {
             return null;

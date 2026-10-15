@@ -39,7 +39,7 @@ package org.openide.windows;
  * of TopComponents at shut-down time in the Windows2Local file system. Note also that 
  * this is not connected with the deprecated notion of {@link Workspace}.
  * 
- * @see http://wiki.apidesign.org/wiki/ExtendingInterfaces
+ * @see <a href="http://wiki.apidesign.org/wiki/ExtendingInterfaces">ExtendingInterfaces</a>
  * 
  * @author Mark Phipps
  * @since 6.82
@@ -55,7 +55,7 @@ public final class ModeUtilities {
      * @param mode the {@link Mode} whose XML configuration is required.
      * @return the XML of the Mode's configuration or {@code null} if not supported.
      */
-    public final static String toXml(Mode mode) {
+    public static final String toXml(Mode mode) {
         return mode instanceof Mode.Xml
                 ? ((Mode.Xml) mode).toXml()
                 : null;

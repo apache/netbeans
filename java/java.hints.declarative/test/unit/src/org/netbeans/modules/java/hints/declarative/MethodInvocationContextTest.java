@@ -60,7 +60,7 @@ public class MethodInvocationContextTest {
 
         mic.ruleUtilities.add(TestConditionClass.class);
 
-        Map<String, ParameterKind> params = new LinkedHashMap<String, ParameterKind>();
+        Map<String, ParameterKind> params = new LinkedHashMap<>();
 
         params.put("$v", ParameterKind.VARIABLE);
         params.put("a", ParameterKind.STRING_LITERAL);
@@ -78,7 +78,7 @@ public class MethodInvocationContextTest {
 
         mic.ruleUtilities.add(TestConditionClass.class);
 
-        Map<String, ParameterKind> params = new LinkedHashMap<String, ParameterKind>();
+        Map<String, ParameterKind> params = new LinkedHashMap<>();
 
         params.put("$v1", ParameterKind.VARIABLE);
         params.put("$v2", ParameterKind.VARIABLE);

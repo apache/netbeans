@@ -21,16 +21,12 @@ package org.netbeans.modules.testng.ui.actions;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
-import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.JavaDataLoader;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
-import org.netbeans.spi.java.classpath.PathResourceImplementation;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -62,7 +58,7 @@ public class RetoucheTestBase extends NbTestCase {
                     return ClassPathSupport.createClassPath(new FileObject[0]);
                 }
                 if (type.equals(ClassPath.BOOT)) {
-                    return createClassPath(System.getProperty("sun.boot.class.path"));
+                    return BootClassPathUtil.getBootClassPath();
                 }
                 return null;
             }
@@ -74,34 +70,10 @@ public class RetoucheTestBase extends NbTestCase {
                 new String[]{},
                 new Object[]{loader, cpp});
         testFO = FileUtil.createFolder(src, "sample/pkg/").createData("Test.java");
-        TestUtilities.copyStringToFile(testFO,
-                "package sample.pkg;\n" +
-                "\n" +
-                "public class Test {\n" +
-                "\n" +
-                "    @Deprecated\n" +
-                "    void method() {\n" +
-                "    }\n" +
-                "\n" +
-                "}\n");
     }
 
     protected FileObject getTestFO() {
         return testFO;
-    }
-
-    private static ClassPath createClassPath(String classpath) {
-        StringTokenizer tokenizer = new StringTokenizer(classpath, File.pathSeparator);
-        List<PathResourceImplementation> list = new ArrayList<PathResourceImplementation>();
-        while (tokenizer.hasMoreTokens()) {
-            String item = tokenizer.nextToken();
-            File f = FileUtil.normalizeFile(new File(item));
-            URL url = getRootURL(f);
-            if (url != null) {
-                list.add(ClassPathSupport.createResource(url));
-            }
-        }
-        return ClassPathSupport.createClassPath(list);
     }
 
     private static URL getRootURL(File f) {

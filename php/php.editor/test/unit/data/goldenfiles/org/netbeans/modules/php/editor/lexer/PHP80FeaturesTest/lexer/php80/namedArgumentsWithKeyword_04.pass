@@ -1,0 +1,726 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n
+token #2 PHP_COMMENT_START /*
+token #3 PHP_COMMENT \n * Licensed to the Apache Software Foundation (ASF) under one\n * or more contributor license agreements.  See the NOTICE file\n * distributed with this work for additional information\n * regarding copyright ownership.  The ASF licenses this file\n * to you under the Apache License, Version 2.0 (the\n * "License"); you may not use this file except in compliance\n * with the License.  You may obtain a copy of the License at\n *\n *   http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing,\n * software distributed under the License is distributed on an\n * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\n * KIND, either express or implied.  See the License for the\n * specific language governing permissions and limitations\n * under the License.\n 
+token #4 PHP_COMMENT_END */
+token #5 WHITESPACE \n\n
+token #6 PHP_STRING testKeywordName
+token #7 PHP_TOKEN (
+token #8 PHP_STRING __CLASS__
+token #9 WHITESPACE \t
+token #10 PHP_TOKEN :
+token #11 WHITESPACE  
+token #12 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #13 PHP_TOKEN )
+token #14 PHP_SEMICOLON ;
+token #15 WHITESPACE \n
+token #16 PHP_STRING testKeywordName
+token #17 PHP_TOKEN (
+token #18 PHP_STRING __DIR__
+token #19 WHITESPACE \t
+token #20 PHP_TOKEN :
+token #21 WHITESPACE  
+token #22 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #23 PHP_TOKEN )
+token #24 PHP_SEMICOLON ;
+token #25 WHITESPACE \n
+token #26 PHP_STRING testKeywordName
+token #27 PHP_TOKEN (
+token #28 PHP_STRING __FILE__
+token #29 WHITESPACE \t
+token #30 PHP_TOKEN :
+token #31 WHITESPACE  
+token #32 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #33 PHP_TOKEN )
+token #34 PHP_SEMICOLON ;
+token #35 WHITESPACE \n
+token #36 PHP_STRING testKeywordName
+token #37 PHP_TOKEN (
+token #38 PHP_STRING __FUNCTION__
+token #39 WHITESPACE \t
+token #40 PHP_TOKEN :
+token #41 WHITESPACE  
+token #42 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #43 PHP_TOKEN )
+token #44 PHP_SEMICOLON ;
+token #45 WHITESPACE \n
+token #46 PHP_STRING testKeywordName
+token #47 PHP_TOKEN (
+token #48 PHP_STRING __LINE__
+token #49 WHITESPACE \t
+token #50 PHP_TOKEN :
+token #51 WHITESPACE  
+token #52 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #53 PHP_TOKEN )
+token #54 PHP_SEMICOLON ;
+token #55 WHITESPACE \n
+token #56 PHP_STRING testKeywordName
+token #57 PHP_TOKEN (
+token #58 PHP_STRING __METHOD__
+token #59 WHITESPACE \t
+token #60 PHP_TOKEN :
+token #61 WHITESPACE  
+token #62 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #63 PHP_TOKEN )
+token #64 PHP_SEMICOLON ;
+token #65 WHITESPACE \n
+token #66 PHP_STRING testKeywordName
+token #67 PHP_TOKEN (
+token #68 PHP_STRING __NAMESPACE__
+token #69 WHITESPACE \t
+token #70 PHP_TOKEN :
+token #71 WHITESPACE  
+token #72 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #73 PHP_TOKEN )
+token #74 PHP_SEMICOLON ;
+token #75 WHITESPACE \n
+token #76 PHP_STRING testKeywordName
+token #77 PHP_TOKEN (
+token #78 PHP_STRING __TRAIT__
+token #79 WHITESPACE \t
+token #80 PHP_TOKEN :
+token #81 WHITESPACE  
+token #82 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #83 PHP_TOKEN )
+token #84 PHP_SEMICOLON ;
+token #85 WHITESPACE \n
+token #86 PHP_STRING testKeywordName
+token #87 PHP_TOKEN (
+token #88 PHP_STRING abstract
+token #89 WHITESPACE \t
+token #90 PHP_TOKEN :
+token #91 WHITESPACE  
+token #92 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #93 PHP_TOKEN )
+token #94 PHP_SEMICOLON ;
+token #95 WHITESPACE \n
+token #96 PHP_STRING testKeywordName
+token #97 PHP_TOKEN (
+token #98 PHP_STRING and
+token #99 WHITESPACE \t
+token #100 PHP_TOKEN :
+token #101 WHITESPACE  
+token #102 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #103 PHP_TOKEN )
+token #104 PHP_SEMICOLON ;
+token #105 WHITESPACE \n
+token #106 PHP_STRING testKeywordName
+token #107 PHP_TOKEN (
+token #108 PHP_STRING array
+token #109 WHITESPACE \t
+token #110 PHP_TOKEN :
+token #111 WHITESPACE  
+token #112 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #113 PHP_TOKEN )
+token #114 PHP_SEMICOLON ;
+token #115 WHITESPACE \n
+token #116 PHP_STRING testKeywordName
+token #117 PHP_TOKEN (
+token #118 PHP_STRING as
+token #119 WHITESPACE \t
+token #120 PHP_TOKEN :
+token #121 WHITESPACE  
+token #122 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #123 PHP_TOKEN )
+token #124 PHP_SEMICOLON ;
+token #125 WHITESPACE \n
+token #126 PHP_STRING testKeywordName
+token #127 PHP_TOKEN (
+token #128 PHP_STRING break
+token #129 WHITESPACE \t
+token #130 PHP_TOKEN :
+token #131 WHITESPACE  
+token #132 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #133 PHP_TOKEN )
+token #134 PHP_SEMICOLON ;
+token #135 WHITESPACE \n
+token #136 PHP_STRING testKeywordName
+token #137 PHP_TOKEN (
+token #138 PHP_STRING callable
+token #139 WHITESPACE \t
+token #140 PHP_TOKEN :
+token #141 WHITESPACE  
+token #142 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #143 PHP_TOKEN )
+token #144 PHP_SEMICOLON ;
+token #145 WHITESPACE \n
+token #146 PHP_STRING testKeywordName
+token #147 PHP_TOKEN (
+token #148 PHP_STRING case
+token #149 WHITESPACE \t
+token #150 PHP_TOKEN :
+token #151 WHITESPACE  
+token #152 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #153 PHP_TOKEN )
+token #154 PHP_SEMICOLON ;
+token #155 WHITESPACE \n
+token #156 PHP_STRING testKeywordName
+token #157 PHP_TOKEN (
+token #158 PHP_STRING catch
+token #159 WHITESPACE \t
+token #160 PHP_TOKEN :
+token #161 WHITESPACE  
+token #162 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #163 PHP_TOKEN )
+token #164 PHP_SEMICOLON ;
+token #165 WHITESPACE \n
+token #166 PHP_STRING testKeywordName
+token #167 PHP_TOKEN (
+token #168 PHP_STRING clone
+token #169 WHITESPACE \t
+token #170 PHP_TOKEN :
+token #171 WHITESPACE  
+token #172 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #173 PHP_TOKEN )
+token #174 PHP_SEMICOLON ;
+token #175 WHITESPACE \n
+token #176 PHP_STRING testKeywordName
+token #177 PHP_TOKEN (
+token #178 PHP_STRING const
+token #179 WHITESPACE \t
+token #180 PHP_TOKEN :
+token #181 WHITESPACE  
+token #182 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #183 PHP_TOKEN )
+token #184 PHP_SEMICOLON ;
+token #185 WHITESPACE \n
+token #186 PHP_STRING testKeywordName
+token #187 PHP_TOKEN (
+token #188 PHP_STRING continue
+token #189 WHITESPACE \t
+token #190 PHP_TOKEN :
+token #191 WHITESPACE  
+token #192 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #193 PHP_TOKEN )
+token #194 PHP_SEMICOLON ;
+token #195 WHITESPACE \n
+token #196 PHP_STRING testKeywordName
+token #197 PHP_TOKEN (
+token #198 PHP_STRING declare
+token #199 WHITESPACE \t
+token #200 PHP_TOKEN :
+token #201 WHITESPACE  
+token #202 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #203 PHP_TOKEN )
+token #204 PHP_SEMICOLON ;
+token #205 WHITESPACE \n
+token #206 PHP_STRING testKeywordName
+token #207 PHP_TOKEN (
+token #208 PHP_STRING default
+token #209 WHITESPACE \t
+token #210 PHP_TOKEN :
+token #211 WHITESPACE  
+token #212 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #213 PHP_TOKEN )
+token #214 PHP_SEMICOLON ;
+token #215 WHITESPACE \n
+token #216 PHP_STRING testKeywordName
+token #217 PHP_TOKEN (
+token #218 PHP_STRING define
+token #219 WHITESPACE \t
+token #220 PHP_TOKEN :
+token #221 WHITESPACE  
+token #222 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #223 PHP_TOKEN )
+token #224 PHP_SEMICOLON ;
+token #225 WHITESPACE \n
+token #226 PHP_STRING testKeywordName
+token #227 PHP_TOKEN (
+token #228 PHP_STRING die
+token #229 WHITESPACE \t
+token #230 PHP_TOKEN :
+token #231 WHITESPACE  
+token #232 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #233 PHP_TOKEN )
+token #234 PHP_SEMICOLON ;
+token #235 WHITESPACE \n
+token #236 PHP_STRING testKeywordName
+token #237 PHP_TOKEN (
+token #238 PHP_STRING do
+token #239 WHITESPACE \t
+token #240 PHP_TOKEN :
+token #241 WHITESPACE  
+token #242 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #243 PHP_TOKEN )
+token #244 PHP_SEMICOLON ;
+token #245 WHITESPACE \n
+token #246 PHP_STRING testKeywordName
+token #247 PHP_TOKEN (
+token #248 PHP_STRING echo
+token #249 WHITESPACE \t
+token #250 PHP_TOKEN :
+token #251 WHITESPACE  
+token #252 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #253 PHP_TOKEN )
+token #254 PHP_SEMICOLON ;
+token #255 WHITESPACE \n
+token #256 PHP_STRING testKeywordName
+token #257 PHP_TOKEN (
+token #258 PHP_STRING else
+token #259 WHITESPACE \t
+token #260 PHP_TOKEN :
+token #261 WHITESPACE  
+token #262 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #263 PHP_TOKEN )
+token #264 PHP_SEMICOLON ;
+token #265 WHITESPACE \n
+token #266 PHP_STRING testKeywordName
+token #267 PHP_TOKEN (
+token #268 PHP_STRING elseif
+token #269 WHITESPACE \t
+token #270 PHP_TOKEN :
+token #271 WHITESPACE  
+token #272 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #273 PHP_TOKEN )
+token #274 PHP_SEMICOLON ;
+token #275 WHITESPACE \n
+token #276 PHP_STRING testKeywordName
+token #277 PHP_TOKEN (
+token #278 PHP_STRING enddeclare
+token #279 WHITESPACE \t
+token #280 PHP_TOKEN :
+token #281 WHITESPACE  
+token #282 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #283 PHP_TOKEN )
+token #284 PHP_SEMICOLON ;
+token #285 WHITESPACE \n
+token #286 PHP_STRING testKeywordName
+token #287 PHP_TOKEN (
+token #288 PHP_STRING endfor
+token #289 WHITESPACE \t
+token #290 PHP_TOKEN :
+token #291 WHITESPACE  
+token #292 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #293 PHP_TOKEN )
+token #294 PHP_SEMICOLON ;
+token #295 WHITESPACE \n
+token #296 PHP_STRING testKeywordName
+token #297 PHP_TOKEN (
+token #298 PHP_STRING endforeach
+token #299 WHITESPACE \t
+token #300 PHP_TOKEN :
+token #301 WHITESPACE  
+token #302 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #303 PHP_TOKEN )
+token #304 PHP_SEMICOLON ;
+token #305 WHITESPACE \n
+token #306 PHP_STRING testKeywordName
+token #307 PHP_TOKEN (
+token #308 PHP_STRING endif
+token #309 WHITESPACE \t
+token #310 PHP_TOKEN :
+token #311 WHITESPACE  
+token #312 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #313 PHP_TOKEN )
+token #314 PHP_SEMICOLON ;
+token #315 WHITESPACE \n
+token #316 PHP_STRING testKeywordName
+token #317 PHP_TOKEN (
+token #318 PHP_STRING endswitch
+token #319 WHITESPACE \t
+token #320 PHP_TOKEN :
+token #321 WHITESPACE  
+token #322 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #323 PHP_TOKEN )
+token #324 PHP_SEMICOLON ;
+token #325 WHITESPACE \n
+token #326 PHP_STRING testKeywordName
+token #327 PHP_TOKEN (
+token #328 PHP_STRING endwhile
+token #329 WHITESPACE \t
+token #330 PHP_TOKEN :
+token #331 WHITESPACE  
+token #332 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #333 PHP_TOKEN )
+token #334 PHP_SEMICOLON ;
+token #335 WHITESPACE \n
+token #336 PHP_STRING testKeywordName
+token #337 PHP_TOKEN (
+token #338 PHP_STRING exit
+token #339 WHITESPACE \t
+token #340 PHP_TOKEN :
+token #341 WHITESPACE  
+token #342 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #343 PHP_TOKEN )
+token #344 PHP_SEMICOLON ;
+token #345 WHITESPACE \n
+token #346 PHP_STRING testKeywordName
+token #347 PHP_TOKEN (
+token #348 PHP_STRING extends
+token #349 WHITESPACE \t
+token #350 PHP_TOKEN :
+token #351 WHITESPACE  
+token #352 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #353 PHP_TOKEN )
+token #354 PHP_SEMICOLON ;
+token #355 WHITESPACE \n
+token #356 PHP_STRING testKeywordName
+token #357 PHP_TOKEN (
+token #358 PHP_STRING final
+token #359 WHITESPACE \t
+token #360 PHP_TOKEN :
+token #361 WHITESPACE  
+token #362 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #363 PHP_TOKEN )
+token #364 PHP_SEMICOLON ;
+token #365 WHITESPACE \n
+token #366 PHP_STRING testKeywordName
+token #367 PHP_TOKEN (
+token #368 PHP_STRING finally
+token #369 WHITESPACE \t
+token #370 PHP_TOKEN :
+token #371 WHITESPACE  
+token #372 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #373 PHP_TOKEN )
+token #374 PHP_SEMICOLON ;
+token #375 WHITESPACE \n
+token #376 PHP_STRING testKeywordName
+token #377 PHP_TOKEN (
+token #378 PHP_STRING for
+token #379 WHITESPACE \t
+token #380 PHP_TOKEN :
+token #381 WHITESPACE  
+token #382 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #383 PHP_TOKEN )
+token #384 PHP_SEMICOLON ;
+token #385 WHITESPACE \n
+token #386 PHP_STRING testKeywordName
+token #387 PHP_TOKEN (
+token #388 PHP_STRING foreach
+token #389 WHITESPACE \t
+token #390 PHP_TOKEN :
+token #391 WHITESPACE  
+token #392 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #393 PHP_TOKEN )
+token #394 PHP_SEMICOLON ;
+token #395 WHITESPACE \n
+token #396 PHP_STRING testKeywordName
+token #397 PHP_TOKEN (
+token #398 PHP_STRING function
+token #399 WHITESPACE \t
+token #400 PHP_TOKEN :
+token #401 WHITESPACE  
+token #402 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #403 PHP_TOKEN )
+token #404 PHP_SEMICOLON ;
+token #405 WHITESPACE \n
+token #406 PHP_STRING testKeywordName
+token #407 PHP_TOKEN (
+token #408 PHP_STRING global
+token #409 WHITESPACE \t
+token #410 PHP_TOKEN :
+token #411 WHITESPACE  
+token #412 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #413 PHP_TOKEN )
+token #414 PHP_SEMICOLON ;
+token #415 WHITESPACE \n
+token #416 PHP_STRING testKeywordName
+token #417 PHP_TOKEN (
+token #418 PHP_STRING goto
+token #419 WHITESPACE \t
+token #420 PHP_TOKEN :
+token #421 WHITESPACE  
+token #422 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #423 PHP_TOKEN )
+token #424 PHP_SEMICOLON ;
+token #425 WHITESPACE \n
+token #426 PHP_STRING testKeywordName
+token #427 PHP_TOKEN (
+token #428 PHP_STRING if
+token #429 WHITESPACE \t
+token #430 PHP_TOKEN :
+token #431 WHITESPACE  
+token #432 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #433 PHP_TOKEN )
+token #434 PHP_SEMICOLON ;
+token #435 WHITESPACE \n
+token #436 PHP_STRING testKeywordName
+token #437 PHP_TOKEN (
+token #438 PHP_STRING implements
+token #439 WHITESPACE \t
+token #440 PHP_TOKEN :
+token #441 WHITESPACE  
+token #442 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #443 PHP_TOKEN )
+token #444 PHP_SEMICOLON ;
+token #445 WHITESPACE \n
+token #446 PHP_STRING testKeywordName
+token #447 PHP_TOKEN (
+token #448 PHP_STRING include
+token #449 WHITESPACE \t
+token #450 PHP_TOKEN :
+token #451 WHITESPACE  
+token #452 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #453 PHP_TOKEN )
+token #454 PHP_SEMICOLON ;
+token #455 WHITESPACE \n
+token #456 PHP_STRING testKeywordName
+token #457 PHP_TOKEN (
+token #458 PHP_STRING include_once
+token #459 WHITESPACE \t
+token #460 PHP_TOKEN :
+token #461 WHITESPACE  
+token #462 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #463 PHP_TOKEN )
+token #464 PHP_SEMICOLON ;
+token #465 WHITESPACE \n
+token #466 PHP_STRING testKeywordName
+token #467 PHP_TOKEN (
+token #468 PHP_STRING instanceof
+token #469 WHITESPACE \t
+token #470 PHP_TOKEN :
+token #471 WHITESPACE  
+token #472 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #473 PHP_TOKEN )
+token #474 PHP_SEMICOLON ;
+token #475 WHITESPACE \n
+token #476 PHP_STRING testKeywordName
+token #477 PHP_TOKEN (
+token #478 PHP_STRING insteadof
+token #479 WHITESPACE \t
+token #480 PHP_TOKEN :
+token #481 WHITESPACE  
+token #482 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #483 PHP_TOKEN )
+token #484 PHP_SEMICOLON ;
+token #485 WHITESPACE \n
+token #486 PHP_STRING testKeywordName
+token #487 PHP_TOKEN (
+token #488 PHP_STRING interface
+token #489 WHITESPACE \t
+token #490 PHP_TOKEN :
+token #491 WHITESPACE  
+token #492 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #493 PHP_TOKEN )
+token #494 PHP_SEMICOLON ;
+token #495 WHITESPACE \n
+token #496 PHP_STRING testKeywordName
+token #497 PHP_TOKEN (
+token #498 PHP_STRING list
+token #499 WHITESPACE \t
+token #500 PHP_TOKEN :
+token #501 WHITESPACE  
+token #502 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #503 PHP_TOKEN )
+token #504 PHP_SEMICOLON ;
+token #505 WHITESPACE \n
+token #506 PHP_STRING testKeywordName
+token #507 PHP_TOKEN (
+token #508 PHP_STRING namespace
+token #509 WHITESPACE \t
+token #510 PHP_TOKEN :
+token #511 WHITESPACE  
+token #512 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #513 PHP_TOKEN )
+token #514 PHP_SEMICOLON ;
+token #515 WHITESPACE \n
+token #516 PHP_STRING testKeywordName
+token #517 PHP_TOKEN (
+token #518 PHP_STRING new
+token #519 WHITESPACE \t
+token #520 PHP_TOKEN :
+token #521 WHITESPACE  
+token #522 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #523 PHP_TOKEN )
+token #524 PHP_SEMICOLON ;
+token #525 WHITESPACE \n
+token #526 PHP_STRING testKeywordName
+token #527 PHP_TOKEN (
+token #528 PHP_STRING or
+token #529 WHITESPACE \t
+token #530 PHP_TOKEN :
+token #531 WHITESPACE  
+token #532 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #533 PHP_TOKEN )
+token #534 PHP_SEMICOLON ;
+token #535 WHITESPACE \n
+token #536 PHP_STRING testKeywordName
+token #537 PHP_TOKEN (
+token #538 PHP_STRING parent
+token #539 WHITESPACE \t
+token #540 PHP_TOKEN :
+token #541 WHITESPACE  
+token #542 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #543 PHP_TOKEN )
+token #544 PHP_SEMICOLON ;
+token #545 WHITESPACE \n
+token #546 PHP_STRING testKeywordName
+token #547 PHP_TOKEN (
+token #548 PHP_STRING print
+token #549 WHITESPACE \t
+token #550 PHP_TOKEN :
+token #551 WHITESPACE  
+token #552 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #553 PHP_TOKEN )
+token #554 PHP_SEMICOLON ;
+token #555 WHITESPACE \n
+token #556 PHP_STRING testKeywordName
+token #557 PHP_TOKEN (
+token #558 PHP_STRING private
+token #559 WHITESPACE \t
+token #560 PHP_TOKEN :
+token #561 WHITESPACE  
+token #562 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #563 PHP_TOKEN )
+token #564 PHP_SEMICOLON ;
+token #565 WHITESPACE \n
+token #566 PHP_STRING testKeywordName
+token #567 PHP_TOKEN (
+token #568 PHP_STRING protected
+token #569 WHITESPACE \t
+token #570 PHP_TOKEN :
+token #571 WHITESPACE  
+token #572 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #573 PHP_TOKEN )
+token #574 PHP_SEMICOLON ;
+token #575 WHITESPACE \n
+token #576 PHP_STRING testKeywordName
+token #577 PHP_TOKEN (
+token #578 PHP_STRING public
+token #579 WHITESPACE \t
+token #580 PHP_TOKEN :
+token #581 WHITESPACE  
+token #582 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #583 PHP_TOKEN )
+token #584 PHP_SEMICOLON ;
+token #585 WHITESPACE \n
+token #586 PHP_STRING testKeywordName
+token #587 PHP_TOKEN (
+token #588 PHP_STRING require
+token #589 WHITESPACE \t
+token #590 PHP_TOKEN :
+token #591 WHITESPACE  
+token #592 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #593 PHP_TOKEN )
+token #594 PHP_SEMICOLON ;
+token #595 WHITESPACE \n
+token #596 PHP_STRING testKeywordName
+token #597 PHP_TOKEN (
+token #598 PHP_STRING require_once
+token #599 WHITESPACE \t
+token #600 PHP_TOKEN :
+token #601 WHITESPACE  
+token #602 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #603 PHP_TOKEN )
+token #604 PHP_SEMICOLON ;
+token #605 WHITESPACE \n
+token #606 PHP_STRING testKeywordName
+token #607 PHP_TOKEN (
+token #608 PHP_STRING return
+token #609 WHITESPACE \t
+token #610 PHP_TOKEN :
+token #611 WHITESPACE  
+token #612 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #613 PHP_TOKEN )
+token #614 PHP_SEMICOLON ;
+token #615 WHITESPACE \n
+token #616 PHP_STRING testKeywordName
+token #617 PHP_TOKEN (
+token #618 PHP_STRING self
+token #619 WHITESPACE \t
+token #620 PHP_TOKEN :
+token #621 WHITESPACE  
+token #622 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #623 PHP_TOKEN )
+token #624 PHP_SEMICOLON ;
+token #625 WHITESPACE \n
+token #626 PHP_STRING testKeywordName
+token #627 PHP_TOKEN (
+token #628 PHP_STRING static
+token #629 WHITESPACE \t
+token #630 PHP_TOKEN :
+token #631 WHITESPACE  
+token #632 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #633 PHP_TOKEN )
+token #634 PHP_SEMICOLON ;
+token #635 WHITESPACE \n
+token #636 PHP_STRING testKeywordName
+token #637 PHP_TOKEN (
+token #638 PHP_STRING switch
+token #639 WHITESPACE \t
+token #640 PHP_TOKEN :
+token #641 WHITESPACE  
+token #642 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #643 PHP_TOKEN )
+token #644 PHP_SEMICOLON ;
+token #645 WHITESPACE \n
+token #646 PHP_STRING testKeywordName
+token #647 PHP_TOKEN (
+token #648 PHP_STRING throw
+token #649 WHITESPACE \t
+token #650 PHP_TOKEN :
+token #651 WHITESPACE  
+token #652 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #653 PHP_TOKEN )
+token #654 PHP_SEMICOLON ;
+token #655 WHITESPACE \n
+token #656 PHP_STRING testKeywordName
+token #657 PHP_TOKEN (
+token #658 PHP_STRING trait
+token #659 WHITESPACE \t
+token #660 PHP_TOKEN :
+token #661 WHITESPACE  
+token #662 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #663 PHP_TOKEN )
+token #664 PHP_SEMICOLON ;
+token #665 WHITESPACE \n
+token #666 PHP_STRING testKeywordName
+token #667 PHP_TOKEN (
+token #668 PHP_STRING try
+token #669 WHITESPACE \t
+token #670 PHP_TOKEN :
+token #671 WHITESPACE  
+token #672 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #673 PHP_TOKEN )
+token #674 PHP_SEMICOLON ;
+token #675 WHITESPACE \n
+token #676 PHP_STRING testKeywordName
+token #677 PHP_TOKEN (
+token #678 PHP_STRING use
+token #679 WHITESPACE \t
+token #680 PHP_TOKEN :
+token #681 WHITESPACE  
+token #682 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #683 PHP_TOKEN )
+token #684 PHP_SEMICOLON ;
+token #685 WHITESPACE \n
+token #686 PHP_STRING testKeywordName
+token #687 PHP_TOKEN (
+token #688 PHP_STRING var
+token #689 WHITESPACE \t
+token #690 PHP_TOKEN :
+token #691 WHITESPACE  
+token #692 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #693 PHP_TOKEN )
+token #694 PHP_SEMICOLON ;
+token #695 WHITESPACE \n
+token #696 PHP_STRING testKeywordName
+token #697 PHP_TOKEN (
+token #698 PHP_STRING while
+token #699 WHITESPACE \t
+token #700 PHP_TOKEN :
+token #701 WHITESPACE  
+token #702 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #703 PHP_TOKEN )
+token #704 PHP_SEMICOLON ;
+token #705 WHITESPACE \n
+token #706 PHP_STRING testKeywordName
+token #707 PHP_TOKEN (
+token #708 PHP_STRING xor
+token #709 WHITESPACE \t
+token #710 PHP_TOKEN :
+token #711 WHITESPACE  
+token #712 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #713 PHP_TOKEN )
+token #714 PHP_SEMICOLON ;
+token #715 WHITESPACE \n
+token #716 PHP_STRING testKeywordName
+token #717 PHP_TOKEN (
+token #718 PHP_STRING yield
+token #719 WHITESPACE \t
+token #720 PHP_TOKEN :
+token #721 WHITESPACE  
+token #722 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #723 PHP_TOKEN )
+token #724 PHP_SEMICOLON ;
+token #725 WHITESPACE \n

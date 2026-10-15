@@ -50,18 +50,18 @@ import org.openide.util.Lookup;
  */
 public class OQLEditor extends JPanel {
 
-    final public static String VALIDITY_PROPERTY = OQLEditorImpl.VALIDITY_PROPERTY;
-    volatile private boolean lexervalid = false;
-    volatile private boolean parserValid = false;
-    volatile private boolean oldValidity = false;
+    public static final String VALIDITY_PROPERTY = OQLEditorImpl.VALIDITY_PROPERTY;
+    private volatile boolean lexervalid = false;
+    private volatile boolean parserValid = false;
+    private volatile boolean oldValidity = false;
     private JEditorPane queryEditor = null;
-    final private OQLEngine engine;
+    private final OQLEngine engine;
 
-    final private Color disabledBgColor = UIUtils.isGTKLookAndFeel() ?
-                  UIManager.getLookAndFeel().getDefaults().getColor("desktop") : // NOI18N
+    private final Color disabledBgColor = UIUtils.isGTKLookAndFeel() ?
+                  UIManager.getLookAndFeelDefaults().getColor("desktop") : // NOI18N
                   UIManager.getColor("TextField.disabledBackground"); // NOI18N
 
-    final private transient Caret nullCaret = new NoCaret();
+    private final transient Caret nullCaret = new NoCaret();
 
     private Color lastBgColor = null;
     private Caret lastCaret = null;
@@ -165,7 +165,7 @@ public class OQLEditor extends JPanel {
         getEditor().requestFocus();
     }
 
-    final private void validateScript() {
+    private final void validateScript() {
         if (lexervalid || !parserValid) {
             // only parse the query if there are no errors from lexer
             try {

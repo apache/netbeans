@@ -30,19 +30,19 @@ import java.util.Properties;
  * <a href="../../spi/settings/package-summary.html">is available</a> in separate document,
  * here is the shortest possible howto:
  * <pre>
- * <code>@</code>ConvertAsProperties(dtd="-//Your Org//Your Setting//EN")
- * <font class="type">public class</font> YourObject {
- *   <font class="type">public</font> YourObject() {} // public constructor is a must
- *   <font class="type">void</font> <font class="function-name">readProperties</font>(java.util.<font class="type">Properties</font> <font class="variable-name">p</font>) {
+ * <code>@</code>ConvertAsProperties(dtd="-//Yosur Org//Your Setting//EN")
+ * <span class="type">public class</span> YourObject {
+ *   <span class="type">public</span> YourObject() {} // public constructor is a must
+ *   <span class="type">void</span> <span class="function-name">readProperties</span>(java.util.<span class="type">Properties</span> <span class="variable-name">p</span>) {
  *     // do the read
  *   }
- *   <font class="type">void</font> <font class="function-name">writeProperties</font>(java.util.<font class="type">Properties</font> <font class="variable-name">p</font>) {
+ *   <span class="type">void</span> <span class="function-name">writeProperties</span>(java.util.<span class="type">Properties</span> <span class="variable-name">p</span>) {
  *     // handle the store
  *   }
  * }
  * </pre>
  *
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  * @since 1.18
  */
 @Retention(RetentionPolicy.SOURCE)

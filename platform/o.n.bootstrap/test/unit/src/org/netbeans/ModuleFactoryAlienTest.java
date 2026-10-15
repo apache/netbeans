@@ -349,8 +349,8 @@ public class ModuleFactoryAlienTest extends SetupHid {
         }
 
         @Override
-        protected synchronized Class loadClass(String name, boolean resolve) throws ClassNotFoundException {
-            Class c = findLoadedClass(name);
+        protected synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+            Class<?> c = findLoadedClass(name);
             if (c != null) {
                 return c;
             }

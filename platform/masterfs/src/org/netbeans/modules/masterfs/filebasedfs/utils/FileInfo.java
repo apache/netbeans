@@ -39,7 +39,7 @@ public final class FileInfo {
     private int isUNC = -1;    
     private int isConvertibleToFileObject = -1;
 
-    private Integer id = null;        
+    private FileNaming.ID id = null;        
     private FileInfo root = null;    
     private final File file;
     
@@ -190,7 +190,7 @@ public final class FileInfo {
         return file;
     }
 
-    public Integer getID() {
+    public FileNaming.ID getID() {
         if (id == null) {
             id = NamingFactory.createID(getFile());
         }        

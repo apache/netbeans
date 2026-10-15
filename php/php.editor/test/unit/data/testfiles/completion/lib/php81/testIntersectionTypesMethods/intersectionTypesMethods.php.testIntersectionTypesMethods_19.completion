@@ -1,0 +1,5 @@
+Code completion result for source line:
+abstract protected function abstractClassMethod(TestClass&\Test1\Intersection1 $param, TestInerface&TestC|lass $object,): TestClass&\Test1\Intersection1;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      TestChildClass                  [PUBLIC]   Test2
+CLASS      TestClass                       [PUBLIC]   Test2

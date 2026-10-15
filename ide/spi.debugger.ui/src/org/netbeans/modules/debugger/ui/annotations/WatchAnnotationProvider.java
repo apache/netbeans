@@ -972,7 +972,7 @@ public class WatchAnnotationProvider implements AnnotationProvider, LazyDebugger
         return tf;
     }
 
-    public static abstract class PinSupportedAccessor {
+    public abstract static class PinSupportedAccessor {
 
         public abstract ValueProvider getValueProvider(EditorPin pin);
         

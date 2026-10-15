@@ -693,7 +693,7 @@ final class ModuleClassPaths {
                         activeProjectSourceRoots = ClasspathInfo.create(
                                 ClassPath.EMPTY,
                                 ClassPath.EMPTY,
-                                org.netbeans.spi.java.classpath.support.ClassPathSupport.createClassPath(newActiveProjectSourceRoots.toArray(new URL[newActiveProjectSourceRoots.size()])));
+                                org.netbeans.spi.java.classpath.support.ClassPathSupport.createClassPath(newActiveProjectSourceRoots.toArray(new URL[0])));
                         activeProjectSourceRoots.getClassIndex().addClassIndexListener(this);
                         LOG.log(
                             Level.FINER,
@@ -870,6 +870,7 @@ final class ModuleClassPaths {
                                     if (myModule != null) {
                                         dependsOnUnnamed = dependsOnUnnamed(myModule, true);
                                         requires.addAll(collectRequiredModules(myModule, myModuleTree, true, false, modulesByName));
+                                        requires.addAll(modulesByName.getOrDefault(myModule.getQualifiedName().toString(), Collections.emptyList()));
                                     } else if (base == systemModules) {
                                         //When module unresolvable add at least java.base to systemModules
                                         Optional.ofNullable(modulesByName.get(MOD_JAVA_BASE))
@@ -1321,7 +1322,7 @@ final class ModuleClassPaths {
         }
     }
 
-    private static abstract class BaseClassPathImplementation implements ClassPathImplementation {
+    private abstract static class BaseClassPathImplementation implements ClassPathImplementation {
 
         private final PropertyChangeSupport listeners;
         //@GuardedBy("this")

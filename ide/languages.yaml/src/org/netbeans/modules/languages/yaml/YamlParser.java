@@ -18,45 +18,34 @@
  */
 package org.netbeans.modules.languages.yaml;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.event.ChangeListener;
-import org.jruby.util.ByteList;
-import org.jvyamlb.Composer;
-import org.jvyamlb.PositioningComposerImpl;
-import org.jvyamlb.PositioningParserImpl;
-import org.jvyamlb.PositioningScannerImpl;
-import org.jvyamlb.ResolverImpl;
-import org.jvyamlb.exceptions.PositionedParserException;
-import org.jvyamlb.exceptions.PositionedScannerException;
-import org.jvyamlb.nodes.Node;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.api.Severity;
+import org.netbeans.modules.csl.api.StructureItem;
 import org.netbeans.modules.csl.spi.DefaultError;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Task;
 import org.netbeans.modules.parsing.spi.ParseException;
-import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.SourceModificationEvent;
 import org.openide.util.NbBundle;
+import org.snakeyaml.engine.v2.exceptions.ParserException;
+import org.snakeyaml.engine.v2.exceptions.ScannerException;
 
 /**
  * Parser for YAML. Delegates to the YAML parser shipped with JRuby (jvyamlb)
  *
  * @author Tor Norbye
  */
-public class YamlParser extends Parser {
+public class YamlParser extends org.netbeans.modules.parsing.spi.Parser {
 
     private static final Logger LOGGER = Logger.getLogger(YamlParser.class.getName());
     /**
@@ -99,7 +88,7 @@ public class YamlParser extends Parser {
     }
 
     private YamlParserResult resultForTooLargeFile(Snapshot snapshot) {
-        YamlParserResult result = new YamlParserResult(Collections.<Node>emptyList(), this, snapshot, false, null, null);
+        YamlParserResult result = new YamlParserResult(snapshot);
         // FIXME this can violate contract of DefaultError (null fo)
         DefaultError error = new DefaultError(null, NbBundle.getMessage(YamlParser.class, "TooLarge"), null,
                 snapshot.getSource().getFileObject(), 0, 0, Severity.WARNING);
@@ -108,40 +97,55 @@ public class YamlParser extends Parser {
     }
 
     // package private for unit tests
-    static String replacePhpFragments(String source) {
-        // this is a hack. The right solution would be to create a toplevel language, which
-        // will have embeded yaml and php.
-        // This code replaces php fragments with space, because jruby parser fails
-        // on this.
-        int startReplace = source.indexOf("<?");
+    static void replaceWithSpaces(StringBuilder source, String startToken, String endToken) {
+        int startReplace = source.indexOf(startToken);
         if (startReplace == -1) {
-            return source;
+            return;
         }
-
-        StringBuilder result = new StringBuilder(source);
-
         while (startReplace > -1) {
-            int endReplace = result.indexOf("?>", startReplace);
-            if (endReplace > -1) {
-                endReplace = endReplace + 1;
-                StringBuilder spaces = new StringBuilder(endReplace - startReplace);
-                for (int i = 0; i <= endReplace - startReplace; i++) {
-                    spaces.append(' ');
+            int endReplace = source.indexOf(endToken, startReplace) + 1;
+            if (endReplace > startReplace) {
+                for (int i = startReplace; i <= endReplace; i++) {
+                    source.setCharAt(i, ' ');
                 }
-                result.replace(startReplace, endReplace + 1, spaces.toString());
-                startReplace = result.indexOf("<?", endReplace);
+                startReplace = source.indexOf(startToken, endReplace);
             } else {
                 startReplace = -1;
             }
         }
-        return result.toString();
+    }
+    
+    static void replacePhpFragments(StringBuilder source) {
+        // this is a hack. The right solution would be to create a toplevel language, which
+        // will have embeded yaml and php.
+        // This code replaces php fragments with space, because jruby parser fails
+        // on this.
+        replaceWithSpaces(source, "<?", "?>");
     }
 
-    private static String replaceCommonSpecialCharacters(String source) {
-        source = source.replace('@', '_'); //NOI18N
-        source = source.replace('?', '_'); //NOI18N
-        source = source.replaceAll("!(?!(omap|!omap))", "_"); //NOI18N
-        return source;
+    static void replaceMustache(StringBuilder source) {
+        // this is a hack. The right solution would be to create a toplevel language, which
+        // will have embeded yaml and something.
+        // This code replaces mouthstache fragments with space.
+        replaceWithSpaces(source, "{{", "}}");
+    }
+
+    static final Pattern[] SPEC_PATTERN_REPLACEMENTS = new Pattern[]{
+        Pattern.compile("@"),
+        Pattern.compile("\\?"),
+        Pattern.compile("!(?!(omap|!omap))"),};
+
+    private static void replaceCommonSpecialCharacters(StringBuilder source) {
+
+        for (int i = 0; i < SPEC_PATTERN_REPLACEMENTS.length; i++) {
+            Pattern pattern = SPEC_PATTERN_REPLACEMENTS[i];
+            Matcher m = pattern.matcher(source);
+            while (m.find()) {
+                for (int idx = m.start(); idx < m.end(); idx++) {
+                    source.setCharAt(idx, '_');
+                }
+            }
+        }
     }
 
     private static String replaceInlineRegexBrackets(String source) {
@@ -158,129 +162,80 @@ public class YamlParser extends Parser {
     }
 
     // for test package private
+    YamlParserResult parse(String src, Snapshot snapshot) {
 
-    YamlParserResult parse(String source, Snapshot snapshot) {
-
-        source = replacePhpFragments(source);
-        source = replaceCommonSpecialCharacters(source);
-        source = replaceInlineRegexBrackets(source);
-
-        try {
-            if (isTooLarge(source)) {
-                return resultForTooLargeFile(snapshot);
-            }
-            ByteList byteList;
-            int[] byteToUtf8 = null;
-            int[] utf8toByte = null;
-
-            byte[] bytes = source.getBytes("UTF-8"); // NOI18N
-            if (bytes.length == source.length()) {
-                // No position translations necessary - this should be fast
-                byteList = new ByteList(bytes);
-            } else {
-                // There's some encoding happening of unicode characters.
-                // I need to produce functions to translate between a byte offset
-                // and a unicode offset.
-                // I couldn't find an API for this in the various Charset functions.
-                // So for now, here is a fantastically lame but functional way to do it:
-                // I'm encoding the string, one character at a time, flushing after
-                // each operation to compute the current byte offset. I then build
-                // up an array of these offsets such that I can do quick translations.
-                ByteArrayOutputStream out = new ByteArrayOutputStream(2 * source.length());
-                OutputStreamWriter writer = new OutputStreamWriter(out, "UTF-8"); // NOI18N
-                utf8toByte = new int[source.length()];
-                int currentPos = 0;
-                for (int i = 0, n = source.length(); i < n; i++) {
-                    writer.write(source.charAt(i));
-                    writer.flush(); // flush because otherwise we don't know the correct offset
-                    utf8toByte[i] = currentPos;
-                    currentPos = out.size();
-                }
-
-                if (currentPos > 0) {
-                    byteToUtf8 = new int[currentPos];
-                    for (int i = 0, n = utf8toByte.length; i < n; i++) {
-                        byteToUtf8[utf8toByte[i]] = i;
-                    }
-                    // Fill in holes - these are the middles of unicode encodings.
-                    int last = 0;
-                    for (int i = 0, n = byteToUtf8.length; i < n; i++) {
-                        int p = byteToUtf8[i];
-                        if (p == 0) {
-                            byteToUtf8[i] = last;
-                        } else {
-                            last = p;
-                        }
-                    }
-                } else {
-                    byteToUtf8 = new int[0];
-                }
-
-                byteList = new ByteList(out.toByteArray());
-            }
-
-            Composer composer = new PositioningComposerImpl(new PositioningParserImpl(new PositioningScannerImpl(byteList)), new ResolverImpl());
-            List<Node> nodes = new ArrayList<Node>();
-            Iterator iterator = composer.eachNode();
-            while (iterator.hasNext()) {
-                Node node = (Node) iterator.next();
-                if (node == null) {
-                    break;
-                }
-                nodes.add(node);
-            }
-
-            //Object yaml = YAML.load(stream);
-            return new YamlParserResult(nodes, this, snapshot, true, byteToUtf8, utf8toByte);
-        } catch (Exception ex) {
-            int pos = 0;
-            if (ex instanceof PositionedParserException) {
-                PositionedParserException ppe = (PositionedParserException) ex;
-                pos = ppe.getPosition().offset;
-            } else if (ex instanceof PositionedScannerException) {
-                PositionedScannerException pse = (PositionedScannerException) ex;
-                pos = pse.getPosition().offset;
-                // The scanner possition is on the next token. We need to reallocate it
-                // on the previous token.
-                TokenHierarchy th = snapshot.getTokenHierarchy();
-                if (th != null) {
-                    TokenSequence ts = th.tokenSequence();
-                    if (ts != null) {
-                        ts.move(pos);
-                        ts.moveNext();
-                        Token token = ts.token();
-                        // don't move the error, when there is more values on the line. See #171633
-                        if (token != null && token.text().toString().indexOf('{') == -1 && ts.movePrevious()) {
-                            pos = ts.offset();
-                        }
-                    }
-                }
-            }
-
-            YamlParserResult result = new YamlParserResult(Collections.<Node>emptyList(), this, snapshot, false, null, null);
-            String message = ex.getMessage();
-            if (message != null && message.length() > 0) {
-                // Strip off useless prefixes to make errors more readable
-                if (message.startsWith("ScannerException null ")) { // NOI18N
-                    message = message.substring(22);
-                } else if (message.startsWith("ParserException ")) { // NOI18N
-                    message = message.substring(16);
-                }
-                // Capitalize sentences
-                char firstChar = message.charAt(0);
-                char upcasedChar = Character.toUpperCase(firstChar);
-                if (firstChar != upcasedChar) {
-                    message = upcasedChar + message.substring(1);
-                }
-
-                // FIXME this can violate contract of DefaultError (null fo)
-                DefaultError error = new DefaultError(null, message, null, snapshot.getSource().getFileObject(),
-                        pos, pos, Severity.ERROR);
-                result.addError(error);
-            }
-
-            return result;
+        if (isTooLarge(src)) {
+            return resultForTooLargeFile(snapshot);
         }
+
+        StringBuilder sb = new StringBuilder(src);
+        replacePhpFragments(sb);
+        replaceMustache(sb);
+        replaceCommonSpecialCharacters(sb);
+//        source = replaceInlineRegexBrackets(source);
+
+        YamlParserResult result = new YamlParserResult(snapshot);
+
+        LinkedList<YamlSection> sources = new LinkedList<>();
+        sources.push(new YamlSection(sb.toString()));
+        int sourceLength = Integer.MAX_VALUE;
+        int stallCounter = 0;
+        while (!sources.isEmpty()) {
+            int len = 0;
+            for (YamlSection source : sources) {
+                len += source.length();
+            }
+            
+            if (len < sourceLength) {
+                sourceLength = len;
+                stallCounter = 0;
+            } else {
+                stallCounter++;
+            }
+            if (stallCounter < 2) {
+                YamlSection section = sources.pop();
+                try {
+                    List<?  extends StructureItem> items = section.collectItems(snapshot);
+                    result.addStructure(items);
+                } catch (ScannerException se) {
+                    result.addError(section.processException(snapshot, se));
+                    for (YamlSection part : section.splitOnException(se)) {
+                        sources.push(part);
+                    }
+                } catch (ParserException pe ){
+                    result.addError(section.processException(snapshot, pe));
+                    for (YamlSection part : section.splitOnException(pe)) {
+                        sources.push(part);
+                    }
+                } catch (Exception ex) {
+                    String message = ex.getMessage();
+                    if (message != null && message.length() > 0) {
+                        result.addError(processError(message, snapshot, 0));
+                    }
+                }
+            } else {
+                sources.clear();
+            }
+        }
+        return result;
+    }    
+
+    private DefaultError processError(String message, Snapshot snapshot, int pos) {
+        // Strip off useless prefixes to make errors more readable
+        if (message.startsWith("ScannerException null ")) { // NOI18N
+            message = message.substring(22);
+        } else if (message.startsWith("ParserException ")) { // NOI18N
+            message = message.substring(16);
+        }
+        // Capitalize sentences
+        char firstChar = message.charAt(0);
+        char upcasedChar = Character.toUpperCase(firstChar);
+        if (firstChar != upcasedChar) {
+            message = upcasedChar + message.substring(1);
+        }
+        // FIXME this can violate contract of DefaultError (null fo)
+        return new DefaultError(null, message, null, snapshot.getSource().getFileObject(),
+                pos, pos, Severity.ERROR);
     }
 
     @Override
@@ -303,7 +258,7 @@ public class YamlParser extends Parser {
 
             // Construct source by removing <% %> tokens etc.
             StringBuilder sb = new StringBuilder();
-            TokenHierarchy hi = TokenHierarchy.create(source, YamlTokenId.language());
+            TokenHierarchy hi = TokenHierarchy.create(source, YamlLanguage.language());
 
             TokenSequence ts = hi.tokenSequence();
 
@@ -341,7 +296,7 @@ public class YamlParser extends Parser {
 
             lastResult = parse(source, snapshot);
         } catch (Exception ioe) {
-            lastResult = new YamlParserResult(Collections.<Node>emptyList(), this, snapshot, false, null, null);
+            lastResult = new YamlParserResult(snapshot);
         }
     }
 }

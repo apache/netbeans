@@ -128,8 +128,10 @@ public class DragAndDropFeedbackVisualizer {
     }
 
     public void update(DragSourceDragEvent e) {
-        if( null != dragWindow )
-            dragWindow.setLocation( e.getLocation().x-dragOffset.x, e.getLocation().y-dragOffset.y );
+        if( null != dragWindow ) {
+            Point location = WindowDnDManager.getLocationWorkaround(e);
+            dragWindow.setLocation( location.x-dragOffset.x, location.y-dragOffset.y );
+        }
     }
 
     public void dispose( boolean dropSuccessful ) {

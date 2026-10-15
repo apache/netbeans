@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.SyncFailedException;
+import java.util.regex.Pattern;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.lang.reflect.Method;
@@ -34,6 +35,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLStreamHandler;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -52,6 +58,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiFunction;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import java.util.logging.Level;
@@ -83,7 +90,7 @@ public final class FileUtil extends Object {
     /** transient attributes which should not be copied
     * of type Set<String>
     */
-    static final Set<String> transientAttributes = new HashSet<String>();
+    static final Set<String> transientAttributes = new HashSet<>();
 
     static {
         transientAttributes.add("templateWizardURL"); // NOI18N
@@ -240,7 +247,7 @@ public final class FileUtil extends Object {
     /**
      * Adds a listener to changes in a given path. It permits you to listen to a file
      * which does not yet exist, or continue listening to it after it is deleted and recreated, etc.
-     * <br/>
+     * <br>
      * When given path represents a file ({@code path.isDirectory() == false})
      * <ul>
      * <li>fileDataCreated event is fired when the file is created</li>
@@ -316,7 +323,7 @@ public final class FileUtil extends Object {
     /** 
      * Adds a listener to changes under given path. It permits you to listen to a file
      * which does not yet exist, or continue listening to it after it is deleted and recreated, etc.
-     * <br/>
+     * <br>
      * When given path represents a file ({@code path.isDirectory() == false}), this
      * code behaves exactly like {@link #addFileChangeListener(org.openide.filesystems.FileChangeListener, java.io.File)}.
      * Usually the path shall represent a folder ({@code path.isDirectory() == true})
@@ -512,28 +519,19 @@ public final class FileUtil extends Object {
     
     /** Copies stream of files.
     * <P>
-    * Please be aware, that this method doesn't close any of passed streams.
+    * Calls {@link InputStream#transferTo(java.io.OutputStream)} which should be now preferred.
     * @param is input stream
     * @param os output stream
+    * @deprecated use {@link InputStream#transferTo(java.io.OutputStream)}
     */
-    public static void copy(InputStream is, OutputStream os)
-    throws IOException {
-        final byte[] BUFFER = new byte[65536];
-        int len;
-
-        for (;;) {
-            len = is.read(BUFFER);
-
-            if (len == -1) {
-                return;
-            }
-
-            os.write(BUFFER, 0, len);
-        }
+    @Deprecated
+    public static void copy(InputStream is, OutputStream os) throws IOException {
+        is.transferTo(os);
     }
 
     /** Copies file to the selected folder.
-     * This implementation simply copies the file by stream content.
+    * This implementation simply copies the file by stream content. Since version
+    * 9.32, the file POSIX permissions are copied as well.
     * @param source source file object
     * @param destFolder destination folder
     * @param newName file name (without extension) of destination file
@@ -547,37 +545,41 @@ public final class FileUtil extends Object {
         FileObject dest = destFolder.createData(newName, newExt);
 
         FileLock lock = null;
-        InputStream bufIn = null;
-        OutputStream bufOut = null;
 
         try {
             lock = dest.lock();
-            bufIn = source.getInputStream();
-
-            if (dest instanceof AbstractFileObject) {
-                /** prevents from firing fileChange*/
-                bufOut = ((AbstractFileObject) dest).getOutputStream(lock, false);
-            } else {
-                bufOut = dest.getOutputStream(lock);
+            try (InputStream bufIn = source.getInputStream()) {
+                OutputStream bufOut;
+                if (dest instanceof AbstractFileObject afo) {
+                    /** prevents from firing fileChange*/
+                    bufOut = afo.getOutputStream(lock, false);
+                } else {
+                    bufOut = dest.getOutputStream(lock);
+                }
+                try (bufOut) {
+                    bufIn.transferTo(bufOut);
+                }
             }
-
-            copy(bufIn, bufOut);
+            copyPosixPerms(source, dest);
             copyAttributes(source, dest);
         } finally {
-            if (bufIn != null) {
-                bufIn.close();
-            }
-
-            if (bufOut != null) {
-                bufOut.close();
-            }
-
             if (lock != null) {
                 lock.releaseLock();
             }
         }
 
         return dest;
+    }
+    
+    static void copyPosixPerms(FileObject source, FileObject dest) throws IOException {
+        Path src = toPath(source);
+        Path dst = toPath(dest);
+        if ((src != null) && (dst != null)) {
+            try {
+                Set<PosixFilePermission> perms = Files.getPosixFilePermissions(src);
+                Files.setPosixFilePermissions(dst, perms);
+            } catch (UnsupportedOperationException ex) {}
+        }
     }
 
     //
@@ -600,7 +602,9 @@ public final class FileUtil extends Object {
     }
 
     /** Copies file to the selected folder.
-    * This implementation simply copies the file by stream content.
+    * This implementation simply copies the file by stream content. Since version
+    * 9.32, the file POSIX permissions are copied as well.
+    *
     * @param source source file object
     * @param destFolder destination folder
     * @param newName file name (without extension) of destination file
@@ -615,7 +619,8 @@ public final class FileUtil extends Object {
     }
 
     /** Copies file to the selected folder.
-    * This implementation simply copies the file by stream content.
+    * This implementation simply copies the file by stream content. Since version
+    * 9.32, the file POSIX permissions are copied as well.
     * Uses the extension of the source file.
     * @param source source file object
     * @param destFolder destination folder
@@ -827,10 +832,22 @@ public final class FileUtil extends Object {
         assert assertNormalized(retVal, BaseUtilities.isMac()); // #240180
         return retVal;
     }
+    
+    /** Finds appropriate java.nio.file.Path to FileObject if possible.
+     * If not possible then null is returned.
+     * This is the inverse operation of {@link #toFileObject}.
+     * @param fo FileObject whose corresponding Path will be looked for
+     * @return java.nio.file.Path or null if no corresponding File exists.
+     * @since 9.32
+     */
+    public static Path toPath(FileObject fo) {
+        File f = toFile(fo);
+        return f != null ? f.toPath() : null;
+    }
 
     /**
      * Converts a disk file to a matching file object.
-     * This is the inverse operation of {@link #toFile}.
+     * This is the inverse operation of {@link #toFile(org.openide.filesystems.FileObject) }.
      * <p class="nonnormative">
      * If you are running with {@code org.netbeans.modules.masterfs} enabled,
      * this method should never return null for a file which exists on disk.
@@ -891,7 +908,24 @@ public final class FileUtil extends Object {
         }
         return retVal;
     }
-        
+    
+    /**
+     * Converts a Path to a FileObject if that is possible. It uses the
+     * {@link #toFileObject(java.io.File)} method with {@code path.toFile()}.
+     * if the conversion is not possible for some reason {@code null} is returned.
+     * 
+     * @param path the {@link Path} to be converted
+     * @return the {@link FileObject} representing the {@code path} or {@code null}
+     * @since 9.32
+     */
+    public static FileObject toFileObject(Path path) {
+        try {
+            return toFileObject(path.toFile());
+        } catch (UnsupportedOperationException ex) {
+            return null;
+        }
+    }
+    
     /** Finds appropriate FileObjects to java.io.File if possible.
      * If not possible then empty array is returned. More FileObjects may
      * correspond to one java.io.File that`s why array is returned.
@@ -922,7 +956,7 @@ public final class FileUtil extends Object {
 
         return retVal;
     }
-
+    
     /** Copies attributes from one file to another.
     * Note: several special attributes will not be copied, as they should
     * semantically be transient. These include attributes used by the
@@ -933,14 +967,48 @@ public final class FileUtil extends Object {
     */
     public static void copyAttributes(FileObject source, FileObject dest)
     throws IOException {
+        copyAttributes(source, dest, defaultAttributesTransformer());
+    }
+    
+    private static final BiFunction<String, Object, Object> DEFAULT_ATTR_TRANSFORMER = (n, v) -> {
+        return transientAttributes.contains(n) ? null : v;
+    };
+
+    /**
+     * Default attribute transformer for {@link #copyAttributes(org.openide.filesystems.FileObject, org.openide.filesystems.FileObject, java.util.function.BiFunction)} that
+     * skips common transient attributes defined or used by the Platform. Custom Attribute Transformers should delegate to this instance.
+     * @return default attribute transformer instance.
+     * @since 9.27
+     */
+    public static BiFunction<String, Object, Object> defaultAttributesTransformer() {
+        return DEFAULT_ATTR_TRANSFORMER;
+    }
+
+    
+    /** Copies attributes from one file to another.
+    * Note: several special attributes will not be copied, as they should
+    * semantically be transient. These include attributes used by the
+    * template wizard (but not the template attribute itself). If {@code attrTransformer} is specified,
+    * it is called for each attribute that is about to be copied. The returned value will be
+    * written to the target. If {@code attrTransformer} returns {@code null}, the attribute will be skipped. 
+    * The Transformer should delegate to {@link #defaultAttributesTransformer()} to conform to the usual transient attribute
+    * conventions - unless it really intends to copy such otherwise transient attributes.
+    * @param source source file object
+    * @param dest destination file object
+    * @param attrTransformer callback to transform or filter attribute values. Can be {@code null}.
+    * @exception IOException if the copying failed
+    * @since 9.27
+    */
+    public static void copyAttributes(FileObject source, FileObject dest, BiFunction<String, Object, Object> attrTransformer) 
+        throws IOException {
         Enumeration<String> attrKeys = source.getAttributes();
+        
+        if (attrTransformer == null) {
+            attrTransformer = defaultAttributesTransformer();
+        }
 
         while (attrKeys.hasMoreElements()) {
             String key = attrKeys.nextElement();
-
-            if (transientAttributes.contains(key)) {
-                continue;
-            }
 
             if (isTransient(source, key)) {
                 continue;
@@ -954,12 +1022,17 @@ public final class FileUtil extends Object {
             // by mistake in code. So it should happen only if you import some
             // settings from old version.
             if (value != null && !(value instanceof MultiFileObject.VoidValue)) {
-                if (isRawValue.get() && value instanceof Method) {
-                    dest.setAttribute("methodvalue:" + key, value); // NOI18N
-                } else if (isRawValue.get() && value instanceof Class) {
-                    dest.setAttribute("newvalue:" + key, value); // NOI18N
-                } else {
-                    dest.setAttribute(key, value);
+                if (attrTransformer != null) {
+                    value = attrTransformer.apply(key, value);
+                }
+                if (value != null) {
+                    if (isRawValue.get() && value instanceof Method) {
+                        dest.setAttribute("methodvalue:" + key, value); // NOI18N
+                    } else if (isRawValue.get() && value instanceof Class) {
+                        dest.setAttribute("newvalue:" + key, value); // NOI18N
+                    } else {
+                        dest.setAttribute(key, value);
+                    }
                 }
             }
         }
@@ -979,7 +1052,7 @@ public final class FileUtil extends Object {
     * @param is input stream of jar file
     * @exception IOException if the extraction fails
     * @deprecated Use of XML filesystem layers generally obsoletes this method.
-    *             For tests, use {@link org.openide.util.test.TestFileUtils#unpackZipFile}.
+    *             For tests, use {@code org.openide.util.test.TestFileUtils#unpackZipFile}.
     */
     @Deprecated
     public static void extractJar(final FileObject fo, final InputStream is)
@@ -1031,12 +1104,8 @@ public final class FileUtil extends Object {
                 FileLock lock = fd.lock();
 
                 try {
-                    OutputStream os = fd.getOutputStream(lock);
-
-                    try {
-                        copy(jis, os);
-                    } finally {
-                        os.close();
+                    try (OutputStream os = fd.getOutputStream(lock)) {
+                        jis.transferTo(os);
                     }
                 } finally {
                     lock.releaseLock();
@@ -1281,7 +1350,7 @@ public final class FileUtil extends Object {
     @Deprecated
     public static String getMIMEType(String ext) {
         assert false : "FileUtil.getMIMEType(String extension) is deprecated. Please, use FileUtil.getMIMEType(FileObject).";  //NOI18N
-        if (ext.toLowerCase().equals("xml")) {  //NOI18N
+        if (ext.equalsIgnoreCase("xml")) {  //NOI18N
             return "text/xml"; // NOI18N
         }
         return null;
@@ -1312,7 +1381,7 @@ public final class FileUtil extends Object {
      * </code>
      * @param fo whose MIME type should be recognized
      * @param withinMIMETypes an array of MIME types. Only resolvers whose
-     * {@link MIMEResolver#getMIMETypes} contain one or more of the requested
+     * {@code MIMEResolver#getMIMETypes()} contain one or more of the requested
      * MIME types will be asked if they recognize the file. It is possible for
      * the resulting MIME type to not be a member of this list.
      * @return the MIME type for the FileObject, or <code>null</code> if
@@ -1666,7 +1735,7 @@ public final class FileUtil extends Object {
     private static File normalizeFileOnUnixAlike(File file) {
         // On Unix, do not want to traverse symlinks.
         // URI.normalize removes ../ and ./ sequences nicely.
-        file = BaseUtilities.toFile(BaseUtilities.toURI(file).normalize()).getAbsoluteFile();
+        file = BaseUtilities.toFile(BaseUtilities.normalizeURI(BaseUtilities.toURI(file))).getAbsoluteFile();
         while (file.getAbsolutePath().startsWith("/../")) { // NOI18N
             file = new File(file.getAbsolutePath().substring(3));
         }
@@ -1680,7 +1749,7 @@ public final class FileUtil extends Object {
     private static File normalizeFileOnMac(final File file) {
         File retVal = file;
 
-        File absoluteFile = BaseUtilities.toFile(BaseUtilities.toURI(file).normalize());
+        File absoluteFile = BaseUtilities.toFile(BaseUtilities.normalizeURI(BaseUtilities.toURI(file)));
         String absolutePath = absoluteFile.getAbsolutePath();
         if (absolutePath.equals("/..")) { // NOI18N
             // Special treatment.
@@ -1968,7 +2037,7 @@ public final class FileUtil extends Object {
      * If the file looks to represent a directory, a <code>file</code> URL will be created.
      * If it looks to represent a ZIP archive, a <code>jar</code> URL will be created.
      * @param entry a file or directory name
-     * @return an appropriate classpath URL which will always end in a slash (<samp>/</samp>),
+     * @return an appropriate classpath URL which will always end in a slash (<code>/</code>),
      *         or null for an existing file which does not look like a valid archive
      * @since org.openide.filesystems 7.8
      */
@@ -2042,12 +2111,12 @@ public final class FileUtil extends Object {
      * @param chooser a file chooser
      * @param currentDirectory if not null, a file to set as the current directory
      *                         using {@link javax.swing.JFileChooser#setCurrentDirectory} without canonicalizing
-     * @see <a href="http://www.netbeans.org/issues/show_bug.cgi?id=46459">Issue #46459</a>
+     * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=46459">Issue #46459</a>
      * @see <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4906607">JRE bug #4906607</a>
      * @since org.openide/1 4.42
      * @deprecated Just use {@link javax.swing.JFileChooser#setCurrentDirectory}. JDK 6 does not have this bug.
      */
-    @Deprecated
+    @Deprecated(forRemoval = true)
     public static void preventFileChooserSymlinkTraversal(javax.swing.JFileChooser chooser, File currentDirectory) {
         chooser.setCurrentDirectory(currentDirectory);
     }
@@ -2068,7 +2137,7 @@ public final class FileUtil extends Object {
      * @throws IllegalArgumentException in case there are duplicates, or nulls, or the files do not have a common parent
      * @since org.openide.filesystems 7.2
      * @see #setOrder
-     * @see <a href="http://wiki.netbeans.org/wiki/view/FolderOrdering103187">Specification</a>
+     * @see <a href="https://netbeans.apache.org/wiki/FolderOrdering103187">Specification</a>
      */
     public static List<FileObject> getOrder(Collection<FileObject> children, boolean logWarnings) throws IllegalArgumentException {
         return Ordering.getOrder(children, logWarnings);
@@ -2106,7 +2175,7 @@ public final class FileUtil extends Object {
      * If you wish to create the file/folder when it does not already exist,
      * start with {@link #getConfigRoot} and use {@link #createData(FileObject, String)}
      * or {@link #createFolder(FileObject, String)} methods.
-     * <p/>
+     * <p>
      * In environment with multiple contextual Lookups, the method may return different FileObject depending
      * on what Lookup serves the executing thread. If the system-wide (user-independent) configuration
      * is required instead, {@link #getSystemConfigFile} should be called instead. If an service instance is created based
@@ -2136,7 +2205,7 @@ public final class FileUtil extends Object {
      * Because default/config filesystem is used both for configuration and services, Lookup or service providers
      * should use this method in preference to {@link #getConfigFile} to produce singleton services even
      * in multiple context environment.
-     * <p/>
+     * <p>
      * With the default Lookup implementation, behaviour of {@code getSystemConfigFile} and {@link #getConfigFile}
      * is identical.
      * 
@@ -2159,9 +2228,9 @@ public final class FileUtil extends Object {
      * Actions/Edit/org-openide-actions-CopyAction.instance
      * Services/Browsers/swing-browser.settings
      * </pre>
-     * <p/>
+     * <p>
      * In multi-user setup, this method returns instance specific for the executing user.
-     * <b>Important<b>: it returns user-specific instance even though the object is configured in
+     * <b>Important</b>: it returns user-specific instance even though the object is configured in
      * a XML layer, or system-wide configuration; still, the instance will be tied to the user-specific
      * file as served by {@link #getConfigFile}.
      * 
@@ -2336,6 +2405,30 @@ public final class FileUtil extends Object {
             archiveRootProviderCache = new LinkedList<>(res.allInstances());
         }
         return archiveRootProviderCache;
+    }
+    
+    /**
+     * Hardcoded offending filename characters. Windows are more picky than Unixes; relying
+     * on just the current host OS will limit file portability when shared through VCS.
+     */
+    private static final Pattern ILLEGAL_FILENAME_CHARACTERS = Pattern.compile("[\\/:\"*?<>|]");
+    
+    /**
+     * Determines whether the string forms a valid filename (without a path component).
+     * @param fileName candidate string
+     * @return true, if the string can be used to name a file.
+     * @since 9.24
+     */
+    public static boolean isValidFileName(String fileName) {
+        if (ILLEGAL_FILENAME_CHARACTERS.matcher(fileName).find()) {
+            return false;
+        }
+        try {
+            Path p = Paths.get(fileName);
+            return p.getNameCount() == 1;
+        } catch (InvalidPathException ex) {
+            return false;
+        }
     }
 
     private static volatile Iterable<? extends ArchiveRootProvider> archiveRootProviderCache;

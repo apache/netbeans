@@ -19,12 +19,9 @@
 package org.netbeans.modules.java.source.parsing;
 
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +29,7 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import org.netbeans.junit.NbTestCase;
-import org.openide.filesystems.FileUtil;
+import org.netbeans.modules.java.source.TestUtil;
 
 /**
  *
@@ -54,6 +51,9 @@ public class FastJarTest extends NbTestCase {
 
     public void testFastJar () throws Exception {
         String prop = System.getProperty("sun.boot.class.path");    //NOI18N
+        if (prop == null) {
+            prop = TestUtil.createRT_JAR(getWorkDir()).getAbsolutePath();
+        }
         assertNotNull(prop);
         String[] paths = prop.split(Pattern.quote(System.getProperty("path.separator")));
         for (String path : paths) {
@@ -66,8 +66,7 @@ public class FastJarTest extends NbTestCase {
             for (FastJar.Entry e : fastEntries) {
                 map.put (e.name,e);
             }
-            ZipFile zf = new ZipFile (f);
-            try {          
+            try (ZipFile zf = new ZipFile (f)) {          
                 Enumeration<? extends ZipEntry> zipEntries = zf.entries();
                 int entryCount = 0;
                 while (zipEntries.hasMoreElements())  {
@@ -78,32 +77,18 @@ public class FastJarTest extends NbTestCase {
                     long zipTime = zipEntry.getTime();
                     long eTime = e.getTime();
                     assertEquals(zipTime, eTime);
-                    InputStream zs = zf.getInputStream(zipEntry);
-                    try {
-                        InputStream fs = FastJar.getInputStream(f, e);                                                    
-                        try {                   
-                            assertEquals(e.name, zs, fs);
-                        } finally {
-                            fs.close();
-                        }
-                    } finally {
-                        zs.close();
+                    try (InputStream zs = zf.getInputStream(zipEntry); InputStream fs = FastJar.getInputStream(f, e)) {                   
+                        assertEquals(e.name, zs, fs);
                     }
                 }                
                 assertEquals (entryCount, map.size());
-            } finally {
-                zf.close();
             }
         }
     }    
     
     private void assertEquals (String file, InputStream a, InputStream b) throws IOException {
-        ByteArrayOutputStream oa = new ByteArrayOutputStream ();
-        ByteArrayOutputStream ob = new ByteArrayOutputStream ();
-        FileUtil.copy(a, oa);
-        FileUtil.copy(b, ob);
-        byte[] aa = oa.toByteArray();
-        byte[] ab = ob.toByteArray();
+        byte[] aa = a.readAllBytes();
+        byte[] ab = b.readAllBytes();
         assertEquals ("file: "+ file ,aa.length,ab.length);
         for (int i=0; i< aa.length; i++) {
             assertEquals("file: "+file+ " offset: "+ i, aa[i], ab[i]);

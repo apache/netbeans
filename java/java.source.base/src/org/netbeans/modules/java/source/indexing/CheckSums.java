@@ -119,6 +119,7 @@ public final class CheckSums {
                     case CLASS:
                     case INTERFACE:
                     case ENUM:
+                    case RECORD:
                     case ANNOTATION_TYPE:
                         if (!e.getModifiers().contains(Modifier.PRIVATE))
                             toHandle.offer((TypeElement) e);

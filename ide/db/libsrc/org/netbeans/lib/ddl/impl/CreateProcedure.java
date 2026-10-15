@@ -118,7 +118,7 @@ public class CreateProcedure extends AbstractCommand implements ProcedureDescrip
                         new String[] {tname}));
                 Class typeclass = Class.forName((String)typemap.get("Class")); // NOI18N
                 String format = (String)typemap.get("Format"); // NOI18N
-                ProcedureArgument arg = (ProcedureArgument)typeclass.newInstance();
+                ProcedureArgument arg = (ProcedureArgument)typeclass.getDeclaredConstructor().newInstance();
                 arg.setName(name);
                 arg.setType(type);
                 arg.setDataType(datatype);

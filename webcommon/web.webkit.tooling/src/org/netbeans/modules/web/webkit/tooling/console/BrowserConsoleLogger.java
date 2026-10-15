@@ -380,7 +380,7 @@ public class BrowserConsoleLogger implements Console.Listener {
         String s1 = line.substring(0, start);
         String s2 = "(" +  // NOI18N
                 getProjectPath(project, file) +
-            line.substring(fileEnd, line.length());
+            line.substring(fileEnd);
         MyListener l = new MyListener(project, file, lineNumber, columnNumber);
         return new Object[]{l,s1,s2};
     }
@@ -425,7 +425,7 @@ public class BrowserConsoleLogger implements Console.Listener {
             return null;
         }
         String s1 = line.substring(0, u1);
-        String s2 = line.substring(u1, line.length());
+        String s2 = line.substring(u1);
         MyListener l = new MyListener(project, file, lineNumber, columnNumber);
         return new Object[]{l,s1,s2};
     }
@@ -504,10 +504,6 @@ public class BrowserConsoleLogger implements Console.Listener {
             this.column = column;
             this.project = project;
         }
-        
-        @Override
-        public void outputLineSelected(OutputEvent ev) {
-        }
 
         @Override
         public void outputLineAction(OutputEvent ev) {
@@ -519,10 +515,6 @@ public class BrowserConsoleLogger implements Console.Listener {
         }
         private Line getLine() {
             return BrowserConsoleLogger.getLine(project, url, line-1);
-        }
-
-        @Override
-        public void outputLineCleared(OutputEvent ev) {
         }
         
         public boolean isValidHyperlink() {

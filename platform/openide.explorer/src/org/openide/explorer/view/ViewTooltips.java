@@ -93,7 +93,7 @@ final class ViewTooltips extends MouseAdapter implements MouseMotionListener {
      * for now) which should show helper tooltips.  Should be called
      * from the component's addNotify() method.
      */
-    synchronized static void register (JComponent comp) {
+    static synchronized void register (JComponent comp) {
         ViewTooltips vtt = (ViewTooltips) comp.getClientProperty(KEY);
         assert vtt == null : "There already is " + vtt + " for " + comp;
         comp.putClientProperty(KEY, vtt = new ViewTooltips());
@@ -105,7 +105,7 @@ final class ViewTooltips extends MouseAdapter implements MouseMotionListener {
      * for now) which should show helper tooltips. Should be called
      * from the component's removeNotify() method.
      */
-    synchronized static void unregister (JComponent comp) {
+    static synchronized void unregister (JComponent comp) {
         ViewTooltips inst = (ViewTooltips) comp.getClientProperty(KEY);
         if (inst == null) {
             return;
@@ -496,8 +496,7 @@ final class ViewTooltips extends MouseAdapter implements MouseMotionListener {
             // get some reasonable limit for the width
             int width = Math.min(dd.width, 2 * currentScreenBounds.width);
             int height = Math.min(dd.height + 2, 2 * currentScreenBounds.height);
-            Image nue = !Utilities.isMac() ? owner.createVolatileImage(width, height) :
-                        new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            Image nue = owner.createVolatileImage(width, height);
             Graphics g = nue.getGraphics();
             g.setColor (bg);
             g.fillRect (0, 0, width, dd.height + 2);

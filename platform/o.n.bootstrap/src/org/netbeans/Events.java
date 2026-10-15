@@ -59,23 +59,23 @@ public abstract class Events {
     public static final String FINISH_DEPLOY_TEST_MODULE = "finishDeployTestModule"; // NOI18N
     /** Module toDelete */
     public static final String DELETE_MODULE = "deleteModule"; // NOI18N
-    /** List<Module> toEnable */
+    /** List&lt;Module&gt; toEnable */
     public static final String START_ENABLE_MODULES = "startEnableModules"; // NOI18N
-    /** List<Module> toEnable */
+    /** List&lt;Module&gt; toEnable */
     public static final String FINISH_ENABLE_MODULES = "finishEnableModules"; // NOI18N
-    /** List<Module> toDisable */
+    /** List&lt;Module&gt; toDisable */
     public static final String START_DISABLE_MODULES = "startDisableModules"; // NOI18N
-    /** List<Module> toDisable */
+    /** List&lt;Module&gt; toDisable */
     public static final String FINISH_DISABLE_MODULES = "finishDisableModules"; // NOI18N
     /** Module prepared */
     public static final String PREPARE = "prepare"; // NOI18N
-    /** List<Module> loaded */
+    /** List&lt;Module&gt; loaded */
     public static final String START_LOAD = "startLoad"; // NOI18N
-    /** List<Module> loaded */
+    /** List&lt;Module&gt; loaded */
     public static final String FINISH_LOAD = "finishLoad"; // NOI18N
-    /** List<Module> unloaded */
+    /** List&lt;Module&gt; unloaded */
     public static final String START_UNLOAD = "startUnload"; // NOI18N
-    /** List<Module> unloaded */
+    /** List&lt;Module&gt; unloaded */
     public static final String FINISH_UNLOAD = "finishUnload"; // NOI18N
     /** Module installed */
     public static final String INSTALL = "install"; // NOI18N
@@ -91,27 +91,27 @@ public abstract class Events {
     public static final String CLOSE = "close"; // NOI18N
     /** no args */
     public static final String START_READ = "startRead"; // NOI18N
-    /** Set<Module> found */
+    /** Set&lt;Module&gt; found */
     public static final String FINISH_READ = "finishRead"; // NOI18N
     /** FileObject */
     public static final String MODULES_FILE_PROCESSED = "modulesFileProcessed"; // NOI18N
     /** Integer */
     public static final String MODULES_FILE_SCANNED = "modulesFileScanned"; // NOI18N
-    /** Set<Module> toInstall */
+    /** Set&lt;Module&gt; toInstall */
     public static final String START_AUTO_RESTORE = "startAutoRestore"; // NOI18N
-    /** Set<Module> toInstall */
+    /** Set&lt;Module&gt; toInstall */
     public static final String FINISH_AUTO_RESTORE = "finishAutoRestore"; // NOI18N
-    /** Set<Module> notInstalled */
+    /** Set&lt;Module&gt; notInstalled */
     public static final String FAILED_INSTALL_NEW = "failedInstallNew"; // NOI18N
     /** Module notInstalled, InvalidException problem */
     public static final String FAILED_INSTALL_NEW_UNEXPECTED = "failedInstallNewUnexpected"; // NOI18N
-    /** Set<Module> modules */
+    /** Set&lt;Module&gt; modules */
     public static final String LOAD_LAYERS = "loadLayers"; // NOI18N
-    /** Set<Module> modules */
+    /** Set&lt;Module&gt; modules */
     public static final String UNLOAD_LAYERS = "unloadLayers"; // NOI18N
     /** Module culprit, Class offending, ClassLoader expected */
     public static final String WRONG_CLASS_LOADER = "wrongClassLoader"; // NOI18N
-    /** File extension, Set<File> owners */
+    /** File extension, Set&lt;File&gt;owners */
     public static final String EXTENSION_MULTIPLY_LOADED = "extensionMultiplyLoaded"; // NOI18N
     /** File nonexistentJar */
     public static final String MISSING_JAR_FILE = "missingJarFile"; // NOI18N

@@ -23,11 +23,8 @@ import org.netbeans.api.project.Project;
 import org.openide.nodes.Node;
 
 /**
- *
+ * SPI for JAXWSView
  * @author mkuchtiak
- */
-
-/** SPI for JAXWSView
  */
 public interface JAXWSViewImpl {
    

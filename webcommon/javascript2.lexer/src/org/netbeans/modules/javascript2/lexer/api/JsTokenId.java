@@ -59,6 +59,7 @@ public enum JsTokenId implements TokenId {
     NUMBER(null, "constant"), // NOI18N
 
     IDENTIFIER(null, "identifier"), // NOI18N
+    PRIVATE_IDENTIFIER(null, "identifier"), // NOI18N
 
     WHITESPACE(null, "whitespace"), // NOI18N
     EOL(null, "whitespace"), // NOI18N
@@ -92,6 +93,7 @@ public enum JsTokenId implements TokenId {
     OPERATOR_SEMICOLON(";", "separator"), // NOI18N
     OPERATOR_COMMA(",", "separator"), // NOI18N
     OPERATOR_DOT(".", "separator"), // NOI18N
+    OPERATOR_OPTIONAL_ACCESS("?.", "separator"), // NOI18N
     OPERATOR_REST("...", "separator"), // NOI18N
     OPERATOR_ASSIGNMENT("=", "operator"), // NOI18N
     OPERATOR_GREATER(">", "operator"), // NOI18N
@@ -134,8 +136,12 @@ public enum JsTokenId implements TokenId {
     OPERATOR_LEFT_SHIFT_ARITHMETIC_ASSIGNMENT("<<=", "operator"), // NOI18N
     OPERATOR_RIGHT_SHIFT_ARITHMETIC_ASSIGNMENT(">>=", "operator"), // NOI18N
     OPERATOR_RIGHT_SHIFT_ASSIGNMENT(">>>=", "operator"), // NOI18N
-    OPERATOR_ARROW("=>", "operator"),
-    OPERATOR_AT("@", "operator"),
+    OPERATOR_ARROW("=>", "operator"), // NOI18N
+    OPERATOR_AT("@", "operator"), // NOI18N
+    OPERATOR_NULLISH("??", "operator"), // NOI18N
+    OPERATOR_ASSIGN_LOG_AND("&&=", "operator"), // NOI18N
+    OPERATOR_ASSIGN_LOG_OR("||=", "operator"), // NOI18N
+    OPERATOR_ASSIGN_NULLISH("??=", "operator"), // NOI18N
 
     KEYWORD_BREAK("break", "keyword"), // NOI18N
     KEYWORD_CASE("case", "keyword"), // NOI18N
@@ -251,8 +257,7 @@ public enum JsTokenId implements TokenId {
 
                 @Override
                 protected Map<String, Collection<JsTokenId>> createTokenCategories() {
-                    Map<String, Collection<JsTokenId>> cats =
-                            new HashMap<String, Collection<JsTokenId>>();
+                    Map<String, Collection<JsTokenId>> cats = new HashMap<>();
                     return cats;
                 }
 
@@ -290,8 +295,7 @@ public enum JsTokenId implements TokenId {
 
                 @Override
                 protected Map<String, Collection<JsTokenId>> createTokenCategories() {
-                    Map<String, Collection<JsTokenId>> cats =
-                            new HashMap<String, Collection<JsTokenId>>();
+                    Map<String, Collection<JsTokenId>> cats = new HashMap<>();
                     return cats;
                 }
 

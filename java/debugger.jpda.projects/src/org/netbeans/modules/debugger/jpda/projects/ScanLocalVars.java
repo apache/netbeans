@@ -153,7 +153,7 @@ final class ScanLocalVars extends ErrorAwareTreePathScanner<Void, Void> {
             if (!hasReturns) {
                 ExpressionTree expression = node.getExpression();
                 TypeMirror type = info.getTrees().getTypeMirror(new TreePath(getCurrentPath(), expression));
-                if (type != null && !TypeKind.ERROR.equals(type.getKind())) {
+                if (type != null && TypeKind.ERROR != type.getKind()) {
                     returnTypes.add(type);
                 }
             }

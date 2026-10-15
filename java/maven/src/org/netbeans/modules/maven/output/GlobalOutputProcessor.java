@@ -18,10 +18,10 @@
  */
 package org.netbeans.modules.maven.output;
 
-import java.awt.Color;
 import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,7 +36,6 @@ import org.netbeans.modules.maven.api.output.OutputVisitor;
 import org.netbeans.modules.maven.execute.CommandLineOutputHandler;
 import org.netbeans.modules.maven.execute.cmd.ExecutionEventObject;
 import org.netbeans.modules.maven.options.MavenOptionController;
-import static org.netbeans.modules.maven.output.Bundle.*;
 import org.netbeans.modules.options.java.api.JavaOptions;
 import org.openide.awt.HtmlBrowser.URLDisplayer;
 import org.openide.cookies.LineCookie;
@@ -50,9 +49,10 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 import org.openide.windows.IOColors;
-import org.openide.windows.InputOutput;
 import org.openide.windows.OutputEvent;
 import org.openide.windows.OutputListener;
+
+import static org.netbeans.modules.maven.output.Bundle.*;
 
 /**
  * processing start, end and steps of build process
@@ -60,7 +60,6 @@ import org.openide.windows.OutputListener;
  */
 public class GlobalOutputProcessor implements OutputProcessor {
     private static final String SECTION_SESSION = "session-execute"; //NOI18N
-    private static final String SECTION_PROJECT = "project-execute"; //NOI18N
     private static final Pattern LOW_MVN = Pattern.compile("(.*)Error resolving version for (.*): Plugin requires Maven version (.*)"); //NOI18N
     private static final Pattern HELP = Pattern.compile("(?:\\[ERROR\\] )?\\[Help \\d+\\] (https?://.+)"); // NOI18N
     /**
@@ -88,18 +87,26 @@ public class GlobalOutputProcessor implements OutputProcessor {
 
     @Messages("TXT_ChangeSettings=NetBeans: Click here to change your settings.")
     @Override public void processLine(String line, OutputVisitor visitor) {
+
         //silly prepend of  [INFO} to reuse the same regexp
-        if (CommandLineOutputHandler.startPatternM3.matcher("[INFO] " + line).matches() || CommandLineOutputHandler.startPatternM2.matcher("[INFO] " + line).matches()) {
+        if (CommandLineOutputHandler.startPatternM3.matcher("[INFO] " + line).matches()) {
             visitor.setOutputType(IOColors.OutputType.LOG_DEBUG);
             return;
-        } 
-        if (line.startsWith("BUILD SUCCESS")) { //NOI18N 3.0.4 has build success, some older versions have build successful
-            visitor.setOutputType(IOColors.OutputType.LOG_SUCCESS);
-            return;
         }
-        
+        if (line.startsWith("BUILD ")) {
+            if (line.startsWith("BUILD SUCCESS")) {
+                visitor.setOutputType(IOColors.OutputType.LOG_SUCCESS);
+                return;
+            } else if (line.startsWith("BUILD FAILURE"))  {
+                visitor.setOutputType(IOColors.OutputType.LOG_FAILURE);
+                return; 
+            }
+        }
+
         //reactor summary processing ---- 
-        if (line.startsWith("Reactor Summary:")) {
+        // example: 'Reactor Summary for Maven 4 API 4.0.0-beta-6-SNAPSHOT:'
+        // see org.apache.maven.cling.event.ExecutionEventLogger#logReactorSummary
+        if (line.startsWith("Reactor Summary") && line.endsWith(":")) {
             processReactorSummary = true;
             CommandLineOutputHandler.ContextImpl context = (CommandLineOutputHandler.ContextImpl) visitor.getContext();
             if (context != null) {
@@ -117,24 +124,9 @@ public class GlobalOutputProcessor implements OutputProcessor {
                 } else if (projectFailed) {
                     //visitor.setColor(Color.RED);
                     visitor.setOutputListener(new OutputListener() {
-
-                        @Override
-                        public void outputLineSelected(OutputEvent ev) {
-                        }
-
-                        @Override
+                        @Override 
                         public void outputLineAction(OutputEvent ev) {
-                            RequestProcessor.getDefault().post(new Runnable() {
-
-                                @Override
-                                public void run() {
-                                    next.getEndOffset().scrollTo();
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void outputLineCleared(OutputEvent ev) {
+                            RequestProcessor.getDefault().post(next.getEndOffset()::scrollTo);
                         }
                     });
                 }
@@ -148,26 +140,22 @@ public class GlobalOutputProcessor implements OutputProcessor {
             visitor.setLine(line + '\n' + TXT_ChangeSettings());
             visitor.setOutputType(IOColors.OutputType.LOG_FAILURE);
             visitor.setOutputListener(new OutputListener() {
-                @Override public void outputLineSelected(OutputEvent ev) {}
                 @Override public void outputLineAction(OutputEvent ev) {
                     OptionsDisplayer.getDefault().open(JavaOptions.JAVA + "/" + MavenOptionController.OPTIONS_SUBPATH); //NOI18N
                 }
-                @Override public void outputLineCleared(OutputEvent ev) {}
             });
             return;
         }
         final Matcher m = HELP.matcher(line);
         if (m.matches()) {
             visitor.setOutputListener(new OutputListener() {
-                public @Override void outputLineAction(OutputEvent ev) {
+                @Override public void outputLineAction(OutputEvent ev) {
                     try {
-                        URLDisplayer.getDefault().showURLExternal(new URL(m.group(1)));
-                    } catch (MalformedURLException x) {
+                        URLDisplayer.getDefault().showURLExternal(new URI(m.group(1)).toURL());
+                    } catch (MalformedURLException | URISyntaxException x) {
                         Exceptions.printStackTrace(x);
                     }
                 }
-                public @Override void outputLineSelected(OutputEvent ev) {}
-                public @Override void outputLineCleared(OutputEvent ev) {}
             });
             return;
         }
@@ -194,10 +182,6 @@ public class GlobalOutputProcessor implements OutputProcessor {
             this.line = line;
             this.column = column;
             this.config = config;
-        }
-
-        @Override
-        public void outputLineSelected(OutputEvent ev) {
         }
 
         @Override
@@ -234,14 +218,9 @@ public class GlobalOutputProcessor implements OutputProcessor {
             }
         }
 
-        @Override
-        public void outputLineCleared(OutputEvent ev) {
-        }
-            
     }
 
-    @Override public void sequenceStart(String sequenceId, OutputVisitor visitor) {
-    }
+    @Override public void sequenceStart(String sequenceId, OutputVisitor visitor) {}
 
     @Override public void sequenceEnd(String sequenceId, OutputVisitor visitor) {}
 

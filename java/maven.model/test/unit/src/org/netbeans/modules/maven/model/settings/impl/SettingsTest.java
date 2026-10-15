@@ -18,10 +18,9 @@
  */
 package org.netbeans.modules.maven.model.settings.impl;
 
-import java.util.Collections;
+import java.util.List;
 import org.junit.Test;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.modules.maven.model.ModelOperation;
 import org.netbeans.modules.maven.model.Utilities;
 import org.netbeans.modules.maven.model.settings.Configuration;
 import org.netbeans.modules.maven.model.settings.Server;
@@ -48,43 +47,46 @@ public class SettingsTest extends NbTestCase {
     @Test
     public void testSomeMethod() throws Exception {
         FileObject settings = TestFileUtils.writeFile(FileUtil.toFileObject(getWorkDir()), "settings.xml",
-                "<settings xmlns=\"http://maven.apache.org/SETTINGS/1.0.0\"\n"
-                + "      xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
-                + "      xsi:schemaLocation=\"http://maven.apache.org/SETTINGS/1.0.0\n"
-                + "                          https://maven.apache.org/xsd/settings-1.0.0.xsd\"></settings>");
-        Utilities.performSettingsModelOperations(settings,
-                Collections.<ModelOperation<SettingsModel>>singletonList(new ModelOperation<SettingsModel>() {
-                    @Override
-                    public void performOperation(SettingsModel model) {
-                        Server server1 = model.getFactory().createServer();
-                        Server server2 = model.getFactory().createServer();
-                        server1.setPassphrase("dummypass");
-                        server1.setPrivateKey("dummykey");
-                        server1.setUsername("dummyname");
-                        Configuration config = model.getFactory().createConfiguration();
-                        config.setSimpleParameter("testparam", "testvalue");
-                        server1.setConfiguration(config);
-                        model.getSettings().addServer(server1);
-                        model.getSettings().addServer(server2);
-
-                    }
+                """
+                <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                                          https://maven.apache.org/xsd/settings-1.0.0.xsd">
+                </settings>
+                """);
+        Utilities.performSettingsModelOperations(
+                settings,
+                List.of((SettingsModel model) -> {
+                    Server server1 = model.getFactory().createServer();
+                    Server server2 = model.getFactory().createServer();
+                    server1.setPassphrase("dummypass");
+                    server1.setPrivateKey("dummykey");
+                    server1.setUsername("dummyname");
+                    Configuration config = model.getFactory().createConfiguration();
+                    config.setSimpleParameter("testparam", "testvalue");
+                    server1.setConfiguration(config);
+                    model.getSettings().addServer(server1);
+                    model.getSettings().addServer(server2);
                 }));
-        assertEquals("<settings xmlns=\"http://maven.apache.org/SETTINGS/1.0.0\"\n"
-                + "      xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
-                + "      xsi:schemaLocation=\"http://maven.apache.org/SETTINGS/1.0.0\n"
-                + "                          https://maven.apache.org/xsd/settings-1.0.0.xsd\">\n"
-                + "    <servers>\n"
-                + "        <server>\n"
-                + "            <passphrase>dummypass</passphrase>\n"
-                + "            <privateKey>dummykey</privateKey>\n"
-                + "            <username>dummyname</username>\n"
-                + "            <configuration>\n"
-                + "                <testparam>testvalue</testparam>\n"
-                + "            </configuration>\n"
-                + "        </server>\n"
-                + "        <server/>\n"
-                + "    </servers>\n"
-                + "</settings>",
+        assertEquals(
+                """
+                <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                                          https://maven.apache.org/xsd/settings-1.0.0.xsd">
+                    <servers>
+                        <server>
+                            <passphrase>dummypass</passphrase>
+                            <privateKey>dummykey</privateKey>
+                            <username>dummyname</username>
+                            <configuration>
+                                <testparam>testvalue</testparam>
+                            </configuration>
+                        </server>
+                        <server/>
+                    </servers>
+                </settings>
+                """,
                 settings.asText().replace("\r\n", "\n"));
 
     }

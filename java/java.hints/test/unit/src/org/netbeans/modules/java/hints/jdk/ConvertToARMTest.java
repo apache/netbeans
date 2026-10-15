@@ -537,7 +537,7 @@ public class ConvertToARMTest extends NbTestCase {
                 .run(ConvertToARM.class)
                 .findWarning("0:173-0:175:verifier:TXT_ConvertToARM")
                 .applyFix("FIX_MergeTryResources")
-                .assertOutput("package test;import java.io.InputStream;import java.io.FileInputStream;import java.io.File;public class Test { public void test() throws Exception { try (InputStream in = new FileInputStream(new File(\"a\"));InputStream in2 = new FileInputStream(new File(\"a\"))){ in.read(); } }}");
+                .assertOutput("package test;import java.io.InputStream;import java.io.FileInputStream;import java.io.File;public class Test { public void test() throws Exception { try (InputStream in = new FileInputStream(new File(\"a\")); InputStream in2 = new FileInputStream(new File(\"a\"))){ in.read(); } }}");
     }
 
     public void testEFNestedInStms() throws Exception {
@@ -559,7 +559,7 @@ public class ConvertToARMTest extends NbTestCase {
                 .run(ConvertToARM.class)
                 .findWarning("0:247-0:249:verifier:TXT_ConvertToARM")
                 .applyFix("FIX_MergeTryResources")
-                .assertOutput("package test;import java.io.InputStream;import java.io.FileInputStream;import java.io.File;public class Test { public void test(InputStream in) throws Exception { try (in;InputStream in2 = new FileInputStream(new File(\"a\"))){ in.read(); } }}");
+                .assertOutput("package test;import java.io.InputStream;import java.io.FileInputStream;import java.io.File;public class Test { public void test(InputStream in) throws Exception { try (in; InputStream in2 = new FileInputStream(new File(\"a\"))){ in.read(); } }}");
     }
 
     public void testEnclosedFinally() throws Exception {
@@ -1553,5 +1553,59 @@ public class ConvertToARMTest extends NbTestCase {
                 fail("Comment #" + i + " is missing");
             }
         }
+    }
+
+    // Case: 
+    public void testGH9046() throws Exception {
+        HintTest
+                .create()
+                .input("""
+                        package test;
+                        import java.io.ByteArrayOutputStream;
+                        import java.io.InputStream;
+
+                        public class Test {
+
+                            public static byte[] test(InputStream input) throws Exception {
+                                ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+                                int len;
+
+                                byte[] buffer = new byte[1024];
+
+                                while ((len = input.read(buffer)) != -1) {
+                                    outStream.write(buffer, 0, len);
+                                }
+                                input.close();
+
+                                return outStream.toByteArray();
+                            }
+                        }
+                        """)
+                .sourceLevel("17")
+                .run(ConvertToARM.class)
+                .findWarning("12:22-12:27:verifier:TXT_ConvertToARM")
+                .applyFix("TXT_ConvertToARM")
+                .assertOutput("""
+                        package test;
+                        import java.io.ByteArrayOutputStream;
+                        import java.io.InputStream;
+
+                        public class Test {
+
+                            public static byte[] test(InputStream input) throws Exception {
+                                ByteArrayOutputStream outStream;
+                                try (input) {
+                                    outStream = new ByteArrayOutputStream();
+                                    int len;
+                                    byte[] buffer = new byte[1024];
+                                    while ((len = input.read(buffer)) != -1) {
+                                        outStream.write(buffer, 0, len);
+                                    }
+                                }
+
+                                return outStream.toByteArray();
+                            }
+                        }
+                        """);
     }
 }

@@ -38,7 +38,7 @@ public final class SearchPropertiesSupport {
     private SearchPropertiesSupport() {
     }
 
-    private synchronized static SearchPropertiesSupport getInstance() {
+    private static synchronized SearchPropertiesSupport getInstance() {
         if (instance == null) {
             instance = new SearchPropertiesSupport();
         }
@@ -49,14 +49,14 @@ public final class SearchPropertiesSupport {
         return prefs;
     }
 
-    public synchronized static SearchProperties getSearchProperties() {
+    public static synchronized SearchProperties getSearchProperties() {
         if (searchProps == null) {
             searchProps = createDefaultSearchProperties();
         }
         return searchProps;
     }
 
-    public synchronized static SearchProperties getReplaceProperties() {
+    public static synchronized SearchProperties getReplaceProperties() {
         if (replaceProps == null) {
             replaceProps = createDefaultReplaceProperties();
         }
@@ -89,8 +89,9 @@ public final class SearchPropertiesSupport {
         }
         
         public synchronized void saveToPrefs() {
-            for (String editorFindSupportProperty : props.keySet()) {
-                Object value = props.get(editorFindSupportProperty);
+            for (Map.Entry<String, Object> entry : props.entrySet()) {
+                String editorFindSupportProperty = entry.getKey();
+                Object value = entry.getValue();
                 if (value != null) {
                     getInstance().getPrefs().put(id + editorFindSupportProperty, value.toString());
                 } else {

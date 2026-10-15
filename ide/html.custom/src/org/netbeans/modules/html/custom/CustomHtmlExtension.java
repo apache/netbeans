@@ -56,7 +56,8 @@ import org.openide.util.Pair;
  * @author marek
  */
 @MimeRegistrations({
-    @MimeRegistration(mimeType = "text/html", service = HtmlExtension.class)
+    @MimeRegistration(mimeType = "text/html", service = HtmlExtension.class),
+    @MimeRegistration(mimeType = "text/x-php5", service = HtmlExtension.class)
 })
 public class CustomHtmlExtension extends HtmlExtension {
 
@@ -76,7 +77,7 @@ public class CustomHtmlExtension extends HtmlExtension {
         if (cache == null) {
             //no cache - create
             FileObject sourceFileObject = source.getSourceFileObject();
-            Project project = sourceFileObject == null ? null : FileOwnerQuery.getOwner(sourceFileObject);  
+            Project project = sourceFileObject == null ? null : FileOwnerQuery.getOwner(sourceFileObject);
             Configuration conf = project == null ? Configuration.EMPTY : Configuration.get(project);
             cache = Pair.of(source, conf);
             return cache.second();

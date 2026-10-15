@@ -29,21 +29,17 @@
         <unzip src="external/Mpdf-7.1.5.zip" dest="test/unit/data/testfiles/parser/performance"/>
     </target>
 
-    <!--taskdef name="jflex"
-        classname="JFlex.anttask.JFlexTask"
-        classpath="/opt/jflex-1.4/lib/JFlex.jar" /-->
-    <!--taskdef name="jflex"
-        classname="jflex.anttask.JFlexTask"
-        classpath="/opt/jflex-1.5/lib/jflex-1.5.1.jar" /-->
-    <!--taskdef name="jflex"
-        classname="jflex.anttask.JFlexTask"
-        classpath="/opt/jflex-1.6/lib/jflex-1.6.1.jar" /-->
+    <taskdef name="jflex"
+             classname="JFlex.anttask.JFlexTask"
+             classpath="external/jflex-1.4.3.jar" />
 
     <!-- for coloring lexer, jflex 1.4 or 1.5 must be used -->
-    <!--target name="gen-lexer">
+    <target name="gen-lexer">
+        <delete file="src/org/netbeans/modules/php/editor/lexer/PHP5ColoringLexer.java" />
         <jflex file="tools/Php5ColoringScanner.flex"
-        destdir="src"
-        skel="tools/skeleton.netbeans"/>
+               destdir="src"
+               skel="tools/skeleton.netbeans"
+               verbose="on"/>
         <replace file="src/org/netbeans/modules/php/editor/lexer/PHP5ColoringLexer.java">
             <replacetoken>      yychar+= zzMarkedPosL-zzStartRead;&#xA;&#xA;</replacetoken>
             <replacevalue></replacevalue>
@@ -80,13 +76,14 @@
                        match="[ ]+$"
                        replace=""
                        byline="true" />
-    </target-->
+    </target>
 
     <!-- for ast scanner, jflex 1.4 must be used! -->
-    <!--target name="gen-astscanner">
+    <target name="gen-astscanner">
+        <delete file="src/org/netbeans/modules/php/editor/parser/ASTPHP5Scanner.java" />
         <jflex file="tools/ASTPHP5Scanner.flex"
-        destdir="src"
-        skel="tools/skeletonParser.netbeans"/>
+               destdir="src"
+               skel="tools/skeletonParser.netbeans"/>
         <replace file="src/org/netbeans/modules/php/editor/parser/ASTPHP5Scanner.java">
             <replacetoken>if (!zzEOFDone) {&#xA;      zzEOFDone = true;&#xA;      yyclose();&#xA;    }</replacetoken>
             <replacevalue>/*if (!zzEOFDone) {&#xA;      zzEOFDone = true;&#xA;      yyclose();&#xA;    }*/</replacevalue>
@@ -95,50 +92,88 @@
                        match="[ ]+$"
                        replace=""
                        byline="true" />
-    </target-->
+    </target>
 
-    <!--target name="gen-docscanner">
+    <target name="gen-docscanner">
+        <delete file="src/org/netbeans/modules/php/editor/lexer/DocumentorColoringScanner.java" />
         <jflex file="tools/DocumentorColoringScanner.flex"
-        destdir="src"
-        skel="tools/skeleton.netbeans"/>
-    </target-->
+               destdir="src"
+               skel="tools/skeleton.netbeans"/>
+        <replace file="src/org/netbeans/modules/php/editor/lexer/DocumentorColoringScanner.java">
+            <replacetoken>      yychar+= zzMarkedPosL-zzStartRead;&#xA;&#xA;</replacetoken>
+            <replacevalue></replacevalue>
+        </replace>
+        <replaceregexp match="[ \t]+$" replace="" byline="true" >
+            <fileset dir="src/org/netbeans/modules/php/editor/lexer">
+                <include name="DocumentorColoringScanner.java"/>
+            </fileset>
+        </replaceregexp>
+        <replace file="src/org/netbeans/modules/php/editor/lexer/DocumentorColoringScanner.java">
+            <replacetoken><![CDATA[
+          if (zzCurrentPosL < zzEndReadL)
+            zzInput = zzBufferL[zzCurrentPosL++];
+          else if (zzAtEOF) {
+            zzInput = YYEOF;
+            break zzForAction;
+          }
+          else {
+            // store back cached positions
+            zzCurrentPos  = zzCurrentPosL;
+            zzMarkedPos   = zzMarkedPosL;
+            boolean eof = zzRefill();
+            // get translated positions and possibly new buffer
+            zzCurrentPosL  = zzCurrentPos;
+            zzMarkedPosL   = zzMarkedPos;
+            zzBufferL      = zzBuffer;
+            zzEndReadL     = zzEndRead;
+            if (eof) {
+              zzInput = YYEOF;
+              break zzForAction;
+            }
+            else {
+              zzInput = zzBufferL[zzCurrentPosL++];
+            }
+          }]]></replacetoken>
+            <replacevalue></replacevalue>
+        </replace>
+    </target>
 
     <!-- add license and @SuppressWarnings for FindBugs in the generated ASTPHP5Parser & ASTPHP5Symbols files -->
-    <!-- parsercutter can be found in misc repository -->
-    <!--target name="gen-astparser">
+    <target name="gen-astparser">
+        <delete file="${basedir}/src/org/netbeans/modules/php/editor/parser/ASTPHP5Parser.java" />
+        <delete file="${basedir}/src/org/netbeans/modules/php/editor/parser/ASTPHP5Symbols.java" />
+        <delete>
+            <fileset dir="${basedir}/src/org/netbeans/modules/php/editor/parser/">
+                <include name="EncodedActionTable*.java"/>
+            </fileset>
+        </delete>
         <taskdef name="javacup"
-            classname="java_cup.anttask.CUPTask"
-            classpath="${nb_all}/php/libs.javacup/external/java-cup-11a.jar" />
-            <javacup srcfile="tools/ASTPHP5Parser.cup"
-            destdir="src"
-            parser="ASTPHP5Parser"
-            symbols="ASTPHP5Symbols"
-            interface="on"/>
+                 classname="java_cup.anttask.CUPTask"
+                 classpath="${nb_all}/php/libs.javacup/external/java-cup-0.11a.jar" />
+        <javacup srcfile="${basedir}/tools/ASTPHP5Parser.cup"
+                 destdir="${basedir}/src"
+                 parser="ASTPHP5Parser"
+                 symbols="ASTPHP5Symbols"
+                 interface="on"/>
         <taskdef name="parsercutter"
-            classname="org.netbeans.modules.php.editor.cup.parser.cutter.ParserCutter"
-            classpath="/opt/parser.cutter/dist/parser.cutter.jar" />
-            <parsercutter parserpath="src/org/netbeans/modules/php/editor/parser/ASTPHP5Parser.java" />
-            <replaceregexp match="[ \t]+$" replace="" byline="true" >
-                <fileset dir="src/org/netbeans/modules/php/editor/parser">
-                    <include name="ASTPHP5Parser.java"/>
-                    <include name="EncodedActionTable*.java"/>
-                </fileset>
-            </replaceregexp>
-            <replace file="src/org/netbeans/modules/php/editor/parser/ASTPHP5Parser.java">
-                <replacetoken>public class ASTPHP5Parser extends java_cup.runtime.lr_parser {</replacetoken>
-                <replacevalue><![CDATA[@org.netbeans.api.annotations.common.SuppressWarnings({"EI_EXPOSE_REP", "MS_PKGPROTECT", "BC_BAD_CAST_TO_CONCRETE_COLLECTION"})
+                 classname="org.netbeans.modules.php.editor.cup.parser.cutter.ParserCutter"
+                 classpath="external/netbeans-php-parser-cutter-1.0.jar" />
+
+        <replace file="src/org/netbeans/modules/php/editor/parser/ASTPHP5Parser.java">
+            <replacetoken>public class ASTPHP5Parser extends java_cup.runtime.lr_parser {</replacetoken>
+            <replacevalue><![CDATA[@org.netbeans.api.annotations.common.SuppressWarnings({"EI_EXPOSE_REP", "MS_PKGPROTECT", "BC_BAD_CAST_TO_CONCRETE_COLLECTION"})
 public class ASTPHP5Parser extends java_cup.runtime.lr_parser {]]></replacevalue>
-            </replace>
-            <replace>
-                <fileset dir="src/org/netbeans/modules/php/editor/parser">
-                    <include name="ASTPHP5Parser.java"/>
-                    <include name="ASTPHP5Symbols.java"/>
-                </fileset>
-                <replacetoken>
+        </replace>
+        <replace>
+            <fileset dir="src/org/netbeans/modules/php/editor/parser">
+                <include name="ASTPHP5Parser.java"/>
+                <include name="ASTPHP5Symbols.java"/>
+            </fileset>
+            <replacetoken>
 //&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;
 // The following code was generated by CUP v0.11a beta 20060608
 </replacetoken>
-                <replacevalue>/*
+            <replacevalue>/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -160,7 +195,15 @@ public class ASTPHP5Parser extends java_cup.runtime.lr_parser {]]></replacevalue
 //&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;
 // The following code was generated by CUP v0.11a beta 20060608
 </replacevalue>
-            </replace>
-    </target-->
+        </replace>
+        <parsercutter parserpath="${basedir}/src/org/netbeans/modules/php/editor/parser/ASTPHP5Parser.java" />
+        <replaceregexp match="[ \t]+$" replace="" byline="true" >
+            <fileset dir="src/org/netbeans/modules/php/editor/parser">
+                <include name="ASTPHP5Parser.java"/>
+                <include name="EncodedActionTable*.java"/>
+            </fileset>
+        </replaceregexp>
+    </target>
 
+    <target name="gen-all-generated-code" depends="gen-lexer, gen-docscanner, gen-astscanner, gen-astparser" />
 </project>

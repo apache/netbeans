@@ -64,7 +64,7 @@ public final class LibrariesNodeFactory implements NodeFactory {
     }
 
     public NodeList createNodes(Project p) {
-        WebProject project = (WebProject)p.getLookup().lookup(WebProject.class);
+        WebProject project = p.getLookup().lookup(WebProject.class);
         assert project != null;
         return new LibrariesNodeList(project);
     }
@@ -85,7 +85,7 @@ public final class LibrariesNodeFactory implements NodeFactory {
         LibrariesNodeList(WebProject proj) {
             project = proj;
             testSources = project.getTestSourceRoots();
-            WebLogicalViewProvider logView = (WebLogicalViewProvider)project.getLookup().lookup(WebLogicalViewProvider.class);
+            WebLogicalViewProvider logView = project.getLookup().lookup(WebLogicalViewProvider.class);
             assert logView != null;
             evaluator = project.evaluator();
             helper = project.getUpdateHelper();

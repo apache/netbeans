@@ -1,0 +1,14 @@
+Code completion result for source line:
+$example = new Example()->returnThis()::|$protectedStaticField;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     privateStaticMethod()           [PRIVATE,  Example
+METHOD     protectedStaticMethod()         [PROTECTE  Example
+METHOD     publicStaticMethod()            [STATIC]   Example
+VARIABLE   string $privateStaticField      [PRIVATE,  Example
+VARIABLE   string $protectedStaticField    [PROTECTE  Example
+VARIABLE   string $publicStaticField       [STATIC]   Example
+CONSTANT   IMPLICIT_PUBLIC_CONST "implici  [PUBLIC]   Example
+CONSTANT   PRIVATE_CONST "private const"   [PRIVATE]  Example
+CONSTANT   PROTECTED_CONST "protected con  [PROTECTE  Example
+CONSTANT   PUBLIC_CONST "public const"     [PUBLIC]   Example
+CONSTANT   class \Example                  [PUBLIC]   Magic Constant

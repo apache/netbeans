@@ -37,7 +37,6 @@ import java.beans.PropertyChangeListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Map;
@@ -67,7 +66,7 @@ import org.openide.util.Utilities;
  * and its properties in table on the right.
  * <p>
  * The main mechanism for setting what properties are displayed is
- * <a href="#setProperties"><code>setProperties (Node.Property[])</code></a>.
+ * {@link #setProperties(org.openide.nodes.Node.Property[])}.
  * Pass this method an
  * array of properties.  These will act as a template, and properties of
  * the displayed nodes which share the same <i>name</i> will be used in
@@ -83,7 +82,8 @@ import org.openide.util.Utilities;
  * should set its custom parameter:
  * <br><code>properties[1].setValue ("InvisibleInTreeTableView", Boolean.TRUE);</code>
  *
- * <TABLE border="1" summary="custom parameter list">
+ * <TABLE>
+ * <caption>custom parameter list</caption>
  *     <TR>
  *         <TH> Parameter name
  *         </TH>
@@ -151,7 +151,7 @@ import org.openide.util.Utilities;
  * </TABLE>
  *
  * <p>
- * This class is a <q>view</q>
+ * This class is a <em>view</em>
  * to use it properly you need to add it into a component which implements
  * {@link Provider}. Good examples of that can be found 
  * in {@link ExplorerUtils}. Then just use 
@@ -159,7 +159,7 @@ import org.openide.util.Utilities;
  * and control its state.
  * </p>
  * <p>
- * There can be multiple <q>views</q> under one container implementing {@link Provider}. Select from
+ * There can be multiple <em>views</em> under one container implementing {@link Provider}. Select from
  * range of predefined ones or write your own:
  * </p>
  * <ul>
@@ -186,7 +186,7 @@ import org.openide.util.Utilities;
  */
 public class TreeTableView extends BeanTreeView {
     // icon of column button
-    private static final String COLUMNS_ICON = "/org/netbeans/modules/openide/explorer/columns.gif"; // NOI18N
+    private static final String COLUMNS_ICON = "org/netbeans/modules/openide/explorer/columns.gif"; // NOI18N
 
     // icons of ascending/descending order in column header
     private static final String SORT_ASC_ICON = "org/netbeans/modules/openide/explorer/columnsSortedAsc.gif"; // NOI18N
@@ -256,8 +256,10 @@ public class TreeTableView extends BeanTreeView {
         scrollPane.setViewportView(treeTable);
         p.add(BorderLayout.CENTER, scrollPane);
 
-        ImageIcon ic = new ImageIcon(TreeTable.class.getResource(COLUMNS_ICON)); // NOI18N
-        colsButton = new javax.swing.JButton(ic);
+        Icon icon = ImageUtilities.image2Icon(ImageUtilities.loadImage(COLUMNS_ICON)); // NOI18N
+        colsButton = new javax.swing.JButton(icon);
+        // For HiDPI support.
+        colsButton.setDisabledIcon(ImageUtilities.createDisabledIcon(icon));
         colsButton.getAccessibleContext().setAccessibleName(NbBundle.getMessage(TreeTableView.class, "ACN_ColumnsSelector")); //NOI18N
         colsButton.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(TreeTableView.class, "ACD_ColumnsSelector")); //NOI18N
         colsButton.addActionListener(
@@ -1510,9 +1512,8 @@ public class TreeTableView extends BeanTreeView {
             private void sortNodes() {
                 Node[] origNodes = original.getChildren().getNodes();
                 if (isSortingActive()) {
-                    Node[] sortedNodes = new Node[origNodes.length];
-                    System.arraycopy(origNodes, 0, sortedNodes, 0, origNodes.length);
-                    Collections.sort(Arrays.asList(sortedNodes), getRowComparator());
+                    Node[] sortedNodes = Arrays.copyOf(origNodes, origNodes.length);
+                    Arrays.sort(sortedNodes, getRowComparator());
                     setKeys(sortedNodes);
                 } else {
                     setKeys(origNodes);
@@ -1810,7 +1811,7 @@ public class TreeTableView extends BeanTreeView {
 
             Object o = p.getValue(NodeTableModel.ATTR_COMPARABLE_COLUMN);
 
-            if ((o != null) && o instanceof Boolean) {
+            if (o instanceof Boolean) {
                 return ((Boolean) o).booleanValue();
             }
 
@@ -1824,7 +1825,7 @@ public class TreeTableView extends BeanTreeView {
 
             Object o = p.getValue(NodeTableModel.ATTR_SORTING_COLUMN);
 
-            if ((o != null) && o instanceof Boolean) {
+            if (o instanceof Boolean) {
                 return ((Boolean) o).booleanValue();
             }
 
@@ -1846,7 +1847,7 @@ public class TreeTableView extends BeanTreeView {
 
             Object o = p.getValue(NodeTableModel.ATTR_DESCENDING_ORDER);
 
-            if ((o != null) && o instanceof Boolean) {
+            if (o instanceof Boolean) {
                 return ((Boolean) o).booleanValue();
             }
 

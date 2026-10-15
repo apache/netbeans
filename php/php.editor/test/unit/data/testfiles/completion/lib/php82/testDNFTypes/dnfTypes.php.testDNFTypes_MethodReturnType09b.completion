@@ -1,0 +1,4 @@
+Code completion result for source line:
+$this->returnType()::publicStaticXMethod()->publicXField|; // (ClassY&ClassZ)|ClassX
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   (ClassY&ClassZ)|ClassX publicX  [PUBLIC]   ClassX

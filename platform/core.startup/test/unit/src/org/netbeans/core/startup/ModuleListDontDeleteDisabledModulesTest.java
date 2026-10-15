@@ -24,6 +24,7 @@ import org.netbeans.ModuleManager;
 import java.util.*;
 import org.openide.modules.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.MockEvents;
 import org.netbeans.MockModuleInstaller;
 import org.netbeans.SetupHid;
@@ -95,7 +96,7 @@ public class ModuleListDontDeleteDisabledModulesTest extends SetupHid {
                 "   <param name='specversion'>1.0</param>\n" +
                 "</module>\n" +
                 "\n";
-        os.write(cfg.getBytes("UTF-8"));
+        os.write(cfg.getBytes(StandardCharsets.UTF_8));
         os.close();
         modulesfolder.refresh();
 

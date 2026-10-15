@@ -143,7 +143,7 @@ public abstract class ProfilingPointFactory {
         ProfilerStorage.loadProjectProperties(properties, project, getProfilingPointsStorage());
 
         int index = 0;
-        List<ProfilingPoint> profilingPoints = new ArrayList();
+        List<ProfilingPoint> profilingPoints = new ArrayList<>();
         while (properties.getProperty(index + "_" + ProfilingPoint.PROPERTY_NAME) != null) { // NOI18N
             ProfilingPoint profilingPoint = loadProfilingPoint(project, properties, index);
 

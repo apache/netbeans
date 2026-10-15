@@ -72,12 +72,12 @@ import org.tigris.subversion.svnclientadapter.SVNUrl;
  */
 public class Repository implements ActionListener, DocumentListener, ItemListener {
     
-    public final static int FLAG_URL_EDITABLE           = 2;
-    public final static int FLAG_URL_ENABLED            = 4;
-    public final static int FLAG_ACCEPT_REVISION        = 8;
-    public final static int FLAG_SHOW_REMOVE            = 16;
-    public final static int FLAG_SHOW_HINTS             = 32;    
-    public final static int FLAG_SHOW_PROXY             = 64;    
+    public static final int FLAG_URL_EDITABLE           = 2;
+    public static final int FLAG_URL_ENABLED            = 4;
+    public static final int FLAG_ACCEPT_REVISION        = 8;
+    public static final int FLAG_SHOW_REMOVE            = 16;
+    public static final int FLAG_SHOW_HINTS             = 32;    
+    public static final int FLAG_SHOW_PROXY             = 64;    
 
     private static final String FILE_PANEL        = "file-panel";       //NOI18N
     private static final String HTTP_PANEL        = "http-panel";       //NOI18N

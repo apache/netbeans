@@ -24,10 +24,10 @@ import org.netbeans.modules.turbo.CacheIndex;
 import org.netbeans.modules.subversion.util.*;
 import org.netbeans.modules.turbo.TurboProvider;
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.netbeans.modules.proxy.Base64Encoder;
 import org.openide.modules.Places;
 import org.openide.util.NbBundle;
 
@@ -85,7 +85,7 @@ class DiskMapTurboProvider implements TurboProvider {
         } else {
             Set<File> merged = new HashSet<>(Arrays.asList(arr2));
             merged.addAll(Arrays.asList(arr1));
-            return merged.toArray(new File[merged.size()]);
+            return merged.toArray(new File[0]);
         }
     }
 
@@ -426,12 +426,12 @@ class DiskMapTurboProvider implements TurboProvider {
      */
     private void logCorruptedCacheFile(File file, int itemIndex, EOFException e) {
         try {
-            File tmpFile = File.createTempFile("svn_", ".bin");
+            File tmpFile = Files.createTempFile("svn_", ".bin").toFile();
             Subversion.LOG.log(Level.INFO, "Corrupted cache file " + file.getAbsolutePath() + " at position " + itemIndex, e);
             FileUtils.copyFile(file, tmpFile);
             byte[] contents = FileUtils.getFileContentsAsByteArray(tmpFile);
             Subversion.LOG.log(Level.INFO, "Corrupted cache file length: {0}", contents.length);
-            String encodedContent = Base64Encoder.encode(contents); // log the file contents
+            String encodedContent = Base64.getEncoder().encodeToString(contents); // log the file contents
             Subversion.LOG.log(Level.INFO, "Corrupted cache file content:\n{0}\n", encodedContent);
             Exception ex = new Exception("Corrupted cache file \"" + file.getAbsolutePath() + "\", please report in subversion module issues and attach "
                     + tmpFile.getAbsolutePath() + " plus the IDE message log", e);

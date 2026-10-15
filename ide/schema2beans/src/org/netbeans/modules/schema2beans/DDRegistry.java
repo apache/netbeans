@@ -601,7 +601,7 @@ public class DDRegistry extends Object {
 	return false;
     }
     
-    static public String createGraphName(String s) {
+    public static String createGraphName(String s) {
 	if (s != null) {
 	    //s = s.trim();
 	    int i = s.indexOf('[');

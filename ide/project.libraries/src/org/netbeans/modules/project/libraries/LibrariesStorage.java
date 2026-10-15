@@ -146,7 +146,7 @@ implements WritableLibraryProvider<LibraryImplementation>, ChangeListener {
                         if (provider == null) {
                             LOG.warning("LibrariesStorage: Can not invoke LibraryTypeProvider.libraryCreated(), the library type provider is unknown.");  //NOI18N
                         }
-                        else if (libraries.keySet().contains(impl.getName())) {
+                        else if (libraries.containsKey(impl.getName())) {
                             LOG.log(
                                 Level.WARNING,
                                 "LibrariesStorage: Library \"{0}\" is already defined, skeeping the definition from: {1}",  //NOI18N
@@ -602,8 +602,9 @@ implements WritableLibraryProvider<LibraryImplementation>, ChangeListener {
         }
 
         synchronized String findPath(final LibraryImplementation library) {
-            for (String key : librariesByPath.keySet()) {
-                LibraryImplementation lib = librariesByPath.get(key);
+            for (Map.Entry<String, LibraryImplementation> entry : librariesByPath.entrySet()) {
+                String key = entry.getKey();
+                LibraryImplementation lib = entry.getValue();
                 if (library.equals (lib)) {
                     return key;
                 }

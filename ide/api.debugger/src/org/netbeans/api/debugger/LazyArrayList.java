@@ -208,7 +208,7 @@ class LazyArrayList<T> extends ArrayList<T> {
     private void shiftLazyEntries(int from, final int by) {
         // Set<Integer> indexes = new TreeSet(lazyEntries.keySet());
         // if (by > 0) indexes = indexes.descendingSet(); - Since JDK 6.
-        TreeSet<Integer> indexes = new TreeSet(new Comparator<Integer>() {
+        Set<Integer> indexes = new TreeSet<>(new Comparator<Integer>() {
             public int compare(Integer o1, Integer o2) {
                 int i1 = o1;
                 int i2 = o2;

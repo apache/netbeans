@@ -18,32 +18,30 @@
  */
 package org.netbeans.lib.nbjavac.services;
 
+import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.parser.JavacParser;
 import com.sun.tools.javac.parser.Lexer;
 import com.sun.tools.javac.parser.ParserFactory;
-import com.sun.tools.javac.parser.Scanner;
 import com.sun.tools.javac.parser.ScannerFactory;
 import com.sun.tools.javac.parser.Tokens.Comment;
-import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import com.sun.tools.javac.tree.JCTree.JCEnhancedForLoop;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
-import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.tree.JCTree.JCModifiers;
+import com.sun.tools.javac.tree.JCTree.JCPackageDecl;
+import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.tree.JCTree.JCTypeParameter;
+import com.sun.tools.javac.tree.JCTree.Tag;
 import com.sun.tools.javac.tree.TreeInfo;
-import com.sun.tools.javac.tree.TreeScanner;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Position;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
-import org.netbeans.lib.nbjavac.services.NBTreeMaker.IndexedClassDecl;
+import java.util.function.Consumer;
 
 /**
  *
@@ -61,42 +59,65 @@ public class NBParserFactory extends ParserFactory {
     }
 
     private final ScannerFactory scannerFactory;
-    private final Names names;
+    private final NBTreeMaker make;
     private final CancelService cancelService;
 
     protected NBParserFactory(Context context) {
         super(context);
         this.scannerFactory = ScannerFactory.instance(context);
-        this.names = Names.instance(context);
+        this.make = (NBTreeMaker) NBTreeMaker.instance(context);
         this.cancelService = CancelService.instance(context);
     }
 
     @Override
-    public JavacParser newParser(CharSequence input, boolean keepDocComments, boolean keepEndPos, boolean keepLineMap, boolean parseModuleInfo) {
+    public JavacParser newParser(CharSequence input, boolean keepDocComments, boolean keepLineMap, boolean parseModuleInfo) {
         Lexer lexer = scannerFactory.newScanner(input, keepDocComments);
-        return new NBJavacParser(this, lexer, keepDocComments, keepLineMap, keepEndPos, parseModuleInfo, cancelService);
+        return new NBJavacParser(this, lexer, keepDocComments, keepLineMap, parseModuleInfo, cancelService);
     }
 
     public static class NBJavacParser extends JavacParser {
 
-        private final Names names;
+        private final NBTreeMaker make;
         private final CancelService cancelService;
 
-        public NBJavacParser(NBParserFactory fac, Lexer S, boolean keepDocComments, boolean keepLineMap, boolean keepEndPos, boolean parseModuleInfo, CancelService cancelService) {
-            super(fac, S, keepDocComments, keepLineMap, keepEndPos, parseModuleInfo);
-            this.names = fac.names;
+        public NBJavacParser(NBParserFactory fac, Lexer S, boolean keepDocComments, boolean keepLineMap, boolean parseModuleInfo, CancelService cancelService) {
+            super(fac, S, keepDocComments, keepLineMap, parseModuleInfo);
+            this.make = fac.make;
             this.cancelService = cancelService;
         }
 
         @Override
-        protected AbstractEndPosTable newEndPosTable(boolean keepEndPositions) {
-            AbstractEndPosTable res = super.newEndPosTable(keepEndPositions);
-            
-            if (keepEndPositions) {
-                return new EndPosTableImpl(S, this, (SimpleEndPosTable) res);
+        public JCCompilationUnit parseCompilationUnit() {
+            JCPackageDecl[] pack = new JCPackageDecl[1];
+            Consumer<JCPackageDecl> prevCallback = make.setPackageCreatedCallback(p -> pack[0] = p);
+            JCCompilationUnit unit;
+
+            try {
+                unit = super.parseCompilationUnit();
+            } finally {
+                make.setPackageCreatedCallback(prevCallback);
             }
-            
-            return res;
+
+            if (!unit.getTypeDecls().isEmpty() && unit.getTypeDecls().get(0).getKind() == Kind.CLASS) {
+                JCClassDecl firstClass = (JCClassDecl) unit.getTypeDecls().get(0);
+                if ((firstClass.mods.flags & Flags.IMPLICIT_CLASS) != 0) {
+                    if (pack[0] != null) {
+                        unit.defs = unit.defs.prepend(pack[0]);
+                    }
+
+                    //workarounds for JDK-8364015:
+                    List<JCTree> defs = unit.defs;
+                    int newPos = 0;
+
+                    while (defs.nonEmpty() && !defs.head.hasTag(Tag.CLASSDEF)) {
+                        newPos = Math.max(newPos, getEndPos(defs.head));
+                        defs = defs.tail;
+                    }
+
+                    firstClass.pos = newPos;
+                }
+            }
+            return unit;
         }
 
         @Override
@@ -124,185 +145,33 @@ public class NBParserFactory extends ParserFactory {
         }
 
         @Override
-        protected JCTree methodDeclaratorRest(int pos, JCModifiers mods, JCExpression type, Name name, List<JCTypeParameter> typarams, boolean isInterface, boolean isVoid, Comment dc) {
+        protected JCTree methodDeclaratorRest(int pos, JCModifiers mods, JCExpression type, Name name, List<JCTypeParameter> typarams, boolean isInterface, boolean isVoid, boolean isRecord, Comment dc) {
             if (cancelService != null) {
                 cancelService.abortIfCanceled();
             }
-            return super.methodDeclaratorRest(pos, mods, type, name, typarams, isInterface, isVoid, dc);
+            return super.methodDeclaratorRest(pos, mods, type, name, typarams, isInterface, isVoid, isRecord, dc);
         }
 
-        @Override
-        public JCCompilationUnit parseCompilationUnit() {
-            JCCompilationUnit toplevel = super.parseCompilationUnit();
-            assignAnonymousClassIndices(names, toplevel, null, -1);
-            return toplevel;
-        }
 
         @Override
         public int getEndPos(JCTree jctree) {
-            return TreeInfo.getEndPos(jctree, endPosTable);
-        }
-
-        public final class EndPosTableImpl extends AbstractEndPosTable {
-            
-            private final Lexer lexer;
-            private final SimpleEndPosTable delegate;
-
-            private EndPosTableImpl(Lexer lexer, JavacParser parser, SimpleEndPosTable delegate) {
-                super(parser);
-                this.lexer = lexer;
-                this.delegate = delegate;
-            }
-            
-            public void resetErrorEndPos() {
-                delegate.errorEndPos = Position.NOPOS;
-                errorEndPos = delegate.errorEndPos;
-            }
-            
-            @Override public void storeEnd(JCTree tree, int endpos) {
-                if (endpos >= 0)
-                    delegate.storeEnd(tree, endpos);
-            }
-
-            @Override
-            public void setErrorEndPos(int errPos) {
-                delegate.setErrorEndPos(errPos);
-                errorEndPos = delegate.errorEndPos;
-            }
-
-            @Override
-            protected <T extends JCTree> T to(T t) {
-                storeEnd(t, parser.token().endPos);
-                return t;
-            }
-
-            @Override
-            protected <T extends JCTree> T toP(T t) {
-                storeEnd(t, lexer.prevToken().endPos);
-                return t;
-            }
-
-            @Override
-            public int getEndPos(JCTree jctree) {
-                return delegate.getEndPos(jctree);
-            }
-
-            @Override
-            public int replaceTree(JCTree jctree, JCTree jctree1) {
-                return delegate.replaceTree(jctree, jctree1);
-            }
-        }
-    }
-
-    public static void assignAnonymousClassIndices(Names names, JCTree tree, Name name, int startNumber) {
-        AssignAnonymousIndices aai = new AssignAnonymousIndices(names);
-
-        if (name != null) {
-            aai.newAnonScope(name, startNumber);
-        }
-
-        aai.scan(tree);
-    }
-
-    private static final class AssignAnonymousIndices extends TreeScanner {
-        private final Names names;
-
-        public AssignAnonymousIndices(Names names) {
-            this.names = names;
-        }
-
-        /**
-         *Represents a scope for anon class number assignment
-         */
-        private static class AnonScope {
-            public boolean localClass;
-            private final Name parentDecl;
-            private int currentNumber;
-            private Map<Name,Integer> localClasses;
-
-            private AnonScope (final Name name, final int startNumber) {
-                assert name != null;
-                this.parentDecl = name;
-                this.currentNumber = startNumber;
-            }
-
-            public int assignNumber () {
-                int ret = this.currentNumber;
-                if (this.currentNumber != -1) {
-                    this.currentNumber++;
-                }
-                return ret;
-            }
-
-            public int assignLocalNumber (final Name name) {
-                if (localClasses == null) {
-                    localClasses = new HashMap<Name,Integer> ();
-                }
-                Integer num = localClasses.get(name);
-                if (num == null) {
-                    num = 1;
-                }
-                else {
-                    num += 1;
-                }
-                localClasses.put(name, num);
-                return num.intValue();
-            }
-
-            @Override
-            public String toString () {
-                return String.format("%s : %d",this.parentDecl.toString(), this.currentNumber);
-            }
-        }
-
-        private final Map<Name, AnonScope> anonScopeMap = new HashMap<Name, AnonScope>();
-        private final Stack<AnonScope> anonScopes = new Stack<AnonScope> ();
-
-        void newAnonScope(final Name name) {
-            newAnonScope(name, 1);
-        }
-
-        public void newAnonScope(final Name name, final int startNumber) {
-            AnonScope parent = anonScopes.isEmpty() ? null : anonScopes.peek();
-            Name fqn = parent != null && parent.parentDecl != names.empty ? parent.parentDecl.append('.', name) : name;
-            AnonScope scope = anonScopeMap.get(fqn);
-            if (scope == null) {
-                scope = new AnonScope(name, startNumber);
-                anonScopeMap.put(fqn, scope);
-            }
-            anonScopes.push(scope);
+            return TreeInfo.getEndPos(jctree);
         }
 
         @Override
-        public void visitClassDef(JCClassDecl tree) {
-            if (tree.name == names.empty) {
-                ((IndexedClassDecl) tree).index = this.anonScopes.peek().assignNumber();
+        public JCStatement parseSimpleStatement() {
+            JCStatement result = super.parseSimpleStatement();
+            //workaround: if the code looks like:
+            //for (name : <collection>) {...}
+            //the "name" will be made a type of a variable with name "<error>", with
+            //no end position. Inject the end position for the variable:
+            if (result instanceof JCEnhancedForLoop) {
+                JCEnhancedForLoop tree = (JCEnhancedForLoop) result;
+                if (getEndPos(tree.var) == Position.NOPOS) {
+                    tree.var.endpos = getEndPos(tree.var.vartype);
+                }
             }
-            newAnonScope(tree.name);
-            try {
-                super.visitClassDef(tree);
-            } finally {
-                this.anonScopes.pop();
-            }
-            if (!this.anonScopes.isEmpty() && this.anonScopes.peek().localClass && tree.name != names.empty) {
-                ((IndexedClassDecl) tree).index = this.anonScopes.peek().assignLocalNumber(tree.name);
-            }
-        }
-        @Override
-        public void visitBlock(JCBlock tree) {
-            final AnonScope as = this.anonScopes.peek();
-            boolean old = as.localClass;
-            as.localClass = true;
-            try {
-                super.visitBlock(tree);
-            } finally {
-                as.localClass = old;
-            }
-        }
-        @Override
-        public void visitApply(JCMethodInvocation tree) {
-            scan(tree.args);
-            scan(tree.meth);
+            return result;
         }
     }
 

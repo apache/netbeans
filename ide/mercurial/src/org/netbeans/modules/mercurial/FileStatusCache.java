@@ -290,7 +290,7 @@ public class FileStatusCache {
                             upToDateAccess = 0;
                             if (LOG_UPTODATE_FILES.isLoggable(Level.FINE)) {
                                 synchronized (upToDateFiles) {
-                                    LOG_UPTODATE_FILES.log(Level.FINE, "Another {0} U2D files added: {1}", new Object[] {new Integer(UTD_NOTIFY_NUMBER), upToDateFiles});
+                                    LOG_UPTODATE_FILES.log(Level.FINE, "Another {0} U2D files added: {1}", new Object[] {Integer.valueOf(UTD_NOTIFY_NUMBER), upToDateFiles});
                                 }
                             }
                         }
@@ -617,7 +617,7 @@ public class FileStatusCache {
      */
     public File [] listFiles (File dir) {
         Set<File> set = getStatus(dir).getModifiedChildren(false);
-        return set.toArray(new File[set.size()]);
+        return set.toArray(new File[0]);
     }
 
 
@@ -684,7 +684,7 @@ public class FileStatusCache {
      */
     public File [] listFiles(VCSContext context, int includeStatus) {
         Set<File> roots = context.getRootFiles();
-        Set<File> set = listFilesIntern(roots.toArray(new File[roots.size()]), includeStatus);
+        Set<File> set = listFilesIntern(roots.toArray(new File[0]), includeStatus);
         for (File excluded : context.getExclusions()) {
             for (Iterator j = set.iterator(); j.hasNext();) {
                 File file = (File) j.next();
@@ -693,7 +693,7 @@ public class FileStatusCache {
                 }
             }
         }
-        return set.toArray(new File[set.size()]);
+        return set.toArray(new File[0]);
     }
 
     /**
@@ -708,7 +708,7 @@ public class FileStatusCache {
      */
     public File [] listFiles(File[] roots, int includeStatus) {
         Set<File> listedFiles = listFilesIntern(roots, includeStatus);
-        return listedFiles.toArray(new File[listedFiles.size()]);
+        return listedFiles.toArray(new File[0]);
     }
 
     private Set<File> listFilesIntern(File[] roots, int includeStatus) {

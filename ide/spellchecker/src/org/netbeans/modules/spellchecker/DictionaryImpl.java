@@ -26,6 +26,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -95,7 +96,7 @@ public class DictionaryImpl implements Dictionary {
         BufferedReader reader = null;
 
         try {
-            reader = new BufferedReader(new InputStreamReader(new FileInputStream(source), "UTF-8"));
+            reader = new BufferedReader(new InputStreamReader(new FileInputStream(source), StandardCharsets.UTF_8));
 
             String line = null;
 
@@ -114,7 +115,7 @@ public class DictionaryImpl implements Dictionary {
             }
         }
         
-        Collections.sort(getDictionary(), dictionaryComparator);
+        getDictionary().sort(dictionaryComparator);
    }
     
     private static final String WORDLIST = "spellchecker-wordlist";
@@ -142,7 +143,7 @@ public class DictionaryImpl implements Dictionary {
             }
         });
         
-        Collections.sort(getDictionary(), dictionaryComparator);
+        getDictionary().sort(dictionaryComparator);
     }
     
     public int findLesser(String word) {
@@ -231,7 +232,7 @@ public class DictionaryImpl implements Dictionary {
         BufferedWriter writer = null;
 
         try {
-            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(source), "UTF-8"));
+            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(source), StandardCharsets.UTF_8));
 
             for (String s : dictionary) {
                 writer.append(s);
@@ -367,7 +368,7 @@ public class DictionaryImpl implements Dictionary {
 //            if (Character.isLowerCase(word.charAt(0)))
 //                return result;
         
-        Collections.sort(proposal, new SimilarComparator());
+        proposal.sort(new SimilarComparator());
         
         Iterator words = proposal.iterator();
         int      proposedCount = 0;

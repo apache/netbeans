@@ -21,8 +21,6 @@ package org.netbeans.modules.palette;
 import java.awt.GraphicsEnvironment;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
 import org.netbeans.junit.NbTestCase;
 import org.openide.util.test.AnnotationProcessorTestUtils;
 

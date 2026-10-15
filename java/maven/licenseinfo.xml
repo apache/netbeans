@@ -79,4 +79,13 @@
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/maven/resources/AppTest.java.template</file>
+        <file>src/org/netbeans/modules/maven/resources/App.java.template</file>
+        <file>src/org/netbeans/modules/maven/execute/proxies.template.xml</file>
+        <file>src/org/netbeans/modules/maven/execute/proxy.template.xml</file>
+        <file>src/org/netbeans/modules/maven/settings.template.xml</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="TEMPLATE_MINIMAL_IP"/>
+    </fileset>
 </licenseinfo>

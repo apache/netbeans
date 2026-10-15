@@ -205,7 +205,12 @@ public final class FileSearchUtility {
         } catch (java.io.IOException ioe) {
             Logger.getLogger("global").log(Level.INFO, null, ioe);
         } finally {
-            try { if (r != null) { r.close(); }} catch (java.io.IOException ioe) { ; // ignore this 
+            try { 
+                if (r != null) {
+                    r.close();
+                }
+            } catch (java.io.IOException ioe) {
+                // ignore this
             }
         }
         // AB: fix for #56160: assume the class is in the default package

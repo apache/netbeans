@@ -136,8 +136,15 @@ public abstract class MainMenuAction implements Presenter.Menu, ChangeListener, 
             KeyStroke itemAccelerator = item.getAccelerator();
             
             if (keys != null && keys.length > 0) {
-                if (itemAccelerator==null || !itemAccelerator.equals(keys[0])){
-                    item.setAccelerator(keys[0]);
+                for (KeyStroke key : keys) {
+                    // filter out synthetic mouse keycodes
+                    if (org.openide.util.Utilities.isMouseKeyCode(key.getKeyCode())) {
+                        continue;
+                    }
+                    if (itemAccelerator==null || !itemAccelerator.equals(key)){
+                        item.setAccelerator(key);
+                        break;
+                    }
                 }
             }else{
                 if (itemAccelerator!=null && kitAction!=null){
@@ -245,7 +252,7 @@ public abstract class MainMenuAction implements Presenter.Menu, ChangeListener, 
         
         presenter.setEnabled(action != null);
         JTextComponent comp = Utilities.getFocusedComponent();
-        if (comp != null && comp instanceof JEditorPane){
+        if (comp instanceof JEditorPane){
             addAccelerators(action, presenter, comp);
         } else {
             presenter.setAccelerator(getDefaultAccelerator());

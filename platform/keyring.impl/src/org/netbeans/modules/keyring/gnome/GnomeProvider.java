@@ -20,14 +20,12 @@
 package org.netbeans.modules.keyring.gnome;
 
 import com.sun.jna.Pointer;
-import java.text.MessageFormat;
-import java.util.MissingResourceException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.annotations.common.SuppressWarnings;
 import static org.netbeans.modules.keyring.gnome.GnomeKeyringLibrary.*;
+import org.netbeans.modules.keyring.impl.KeyringSupport;
 import org.netbeans.spi.keyring.KeyringProvider;
-import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
 @ServiceProvider(service=KeyringProvider.class, position=100)
@@ -41,14 +39,7 @@ public class GnomeProvider implements KeyringProvider {
             LOG.fine("native keyring integration disabled");
             return false;
         }
-        String appName;
-        try {
-            appName = MessageFormat.format(
-                    NbBundle.getBundle("org.netbeans.core.windows.view.ui.Bundle").getString("CTL_MainWindow_Title_No_Project"),
-                    /*System.getProperty("netbeans.buildnumber")*/"…");
-        } catch (MissingResourceException x) {
-            appName = "NetBeans"; // NOI18N
-        }
+        String appName = KeyringSupport.getAppName();
         try {
             // Need to do this somewhere, or we get warnings on console.
             // Also used by confirmation dialogs to give the app access to the login keyring.

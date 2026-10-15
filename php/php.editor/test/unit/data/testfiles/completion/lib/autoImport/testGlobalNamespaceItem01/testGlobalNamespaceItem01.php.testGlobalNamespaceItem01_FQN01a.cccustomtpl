@@ -1,0 +1,14 @@
+Name: GLOBAL_CONST
+\GLOBAL_CONST
+
+Name: globalFunction
+\globalFunction()
+
+Name: GlobalNSClass
+\GlobalNSClass::${cursor}
+
+Name: GlobalNSEnum
+\GlobalNSEnum::${cursor}
+
+Name: GlobalNSInterface
+\GlobalNSInterface::${cursor}

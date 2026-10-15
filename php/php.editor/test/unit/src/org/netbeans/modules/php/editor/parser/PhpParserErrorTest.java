@@ -18,7 +18,12 @@
  */
 package org.netbeans.modules.php.editor.parser;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.modules.php.editor.PHPTestBase;
+import org.netbeans.spi.queries.FileEncodingQueryImplementation;
+import org.openide.filesystems.FileObject;
+import org.openide.util.test.MockLookup;
 
 /**
  *
@@ -33,6 +38,13 @@ public class PhpParserErrorTest extends PHPTestBase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+
+        MockLookup.setInstances(new FileEncodingQueryImplementation() {
+            @Override
+            public Charset getEncoding(FileObject file) {
+                return StandardCharsets.UTF_8;
+            }
+        });
     }
 
     @Override
@@ -49,42 +61,63 @@ public class PhpParserErrorTest extends PHPTestBase {
     }
 
     public void testFieldModificators_01() throws Exception {
+        // no error: parser allows `public static final $field`
+        // final is available as of PHP 8.4
+        // so, handle it in hint error (ModifiersCheckHintError)
         checkErrors("testfiles/parser/fieldModificators_01.php");
     }
 
     public void testFieldModificators_02() throws Exception {
+        // no error: parser allows `abstract $field`
+        // so, handle it in hint error (ModifiersCheckHintError)
         checkErrors("testfiles/parser/fieldModificators_02.php");
     }
 
     public void testFieldModificators_03() throws Exception {
+        // no error: parser allows `public private $field`
+        // so, handle it in hint error (ModifiersCheckHintError)
         checkErrors("testfiles/parser/fieldModificators_03.php");
     }
 
     public void testFieldModificators_04() throws Exception {
+        // no error: parser allows `public protected $field`
+        // so, handle it in hint error (ModifiersCheckHintError)
         checkErrors("testfiles/parser/fieldModificators_04.php");
     }
 
     public void testFieldModificators_05() throws Exception {
+        // no error: parser allows `protected private $field`
+        // so, handle it in hint error (ModifiersCheckHintError)
         checkErrors("testfiles/parser/fieldModificators_05.php");
     }
 
     public void testMethodModificators_01() throws Exception {
+        // no error: parser allows `public protected static function`
+        // so, handle it in hint error (ModifiersCheckHintError)
         checkErrors("testfiles/parser/methodModificators_01.php");
     }
 
     public void testMethodModificators_02() throws Exception {
+        // no error: parser allows `public private static function`
+        // so, handle it in hint error (ModifiersCheckHintError)
         checkErrors("testfiles/parser/methodModificators_02.php");
     }
 
     public void testMethodModificators_03() throws Exception {
+        // no error: parser allows `protected private static function`
+        // so, handle it in hint error (ModifiersCheckHintError)
         checkErrors("testfiles/parser/methodModificators_03.php");
     }
 
     public void testMethodModificators_04() throws Exception {
+        // no error: public final abstract function`
+        // so, handle it in hint error (ModifiersCheckHintError)
         checkErrors("testfiles/parser/methodModificators_04.php");
     }
 
     public void testMethodModificators_05() throws Exception {
+        // no error: parser allows `static final abstract function`
+        // so, handle it in hint error (ModifiersCheckHintError)
         checkErrors("testfiles/parser/methodModificators_05.php");
     }
 
@@ -222,6 +255,14 @@ public class PhpParserErrorTest extends PHPTestBase {
 
     public void testNowDoc_06() throws Exception {
         checkErrors("testfiles/parser/nowdoc_06.php");
+    }
+
+    public void testIssueGH4345_01() throws Exception {
+        checkErrors("testfiles/parser/issueGH4345_01.php");
+    }
+
+    public void testIssueGH4345_02() throws Exception {
+        checkErrors("testfiles/parser/issueGH4345_02.php");
     }
 
     // HEREDOC
@@ -672,6 +713,11 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/uniformVariableSyntax_38.php");
     }
 
+    public void testUniformVariableSyntax_39() throws Exception {
+        // Test::{test('foo')}()::{test('bar')}();
+        checkErrors("testfiles/parser/uniformVariableSyntax_39.php");
+    }
+
     public void testCloneExpression_01() throws Exception {
         checkErrors("testfiles/parser/cloneExpression_01.php");
     }
@@ -1041,4 +1087,531 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php74/arrowFunctionsParseError_04.php");
     }
 
+    // PHP 8.0
+    public void testNonCapturingCatches_01() throws Exception {
+        checkErrors("testfiles/parser/php80/nonCapturingCatches_01.php");
+    }
+
+    public void testAllowTrailinCommaInParameterList_01() throws Exception {
+        checkErrors("testfiles/parser/php80/allowTrailingCommaInParameterList_01.php");
+    }
+
+    public void testThrowExpression_01() throws Exception {
+        checkErrors("testfiles/parser/php80/throwExpression_01.php");
+    }
+
+    public void testClassNameLiteralOnObjects_01() throws Exception {
+        checkErrors("testfiles/parser/php80/classNameLiteralOnObjects_01.php");
+    }
+
+    public void testMatchExpression_01() throws Exception {
+        checkErrors("testfiles/parser/php80/matchExpression_01.php");
+    }
+
+    public void testMatchExpression_02() throws Exception {
+        // nested match
+        checkErrors("testfiles/parser/php80/matchExpression_02.php");
+    }
+
+    public void testMatchExpression_03() throws Exception {
+        // multiple conditions
+        checkErrors("testfiles/parser/php80/matchExpression_03.php");
+    }
+
+    public void testMatchExpression_04() throws Exception {
+        checkErrors("testfiles/parser/php80/matchExpression_04.php");
+    }
+
+    public void testMatchExpression_05() throws Exception {
+        checkErrors("testfiles/parser/php80/matchExpression_05.php");
+    }
+
+    public void testMatchExpressionError_01() throws Exception {
+        checkErrors("testfiles/parser/php80/matchExpressionError_01.php");
+    }
+
+    public void testMatchExpressionError_02() throws Exception {
+        checkErrors("testfiles/parser/php80/matchExpressionError_02.php");
+    }
+
+    public void testMatchExpressionError_03() throws Exception {
+        checkErrors("testfiles/parser/php80/matchExpressionError_03.php");
+    }
+
+    public void testMatchExpressionError_04() throws Exception {
+        checkErrors("testfiles/parser/php80/matchExpressionError_04.php");
+    }
+
+    public void testMatchExpressionError_05() throws Exception {
+        checkErrors("testfiles/parser/php80/matchExpressionError_05.php");
+    }
+
+    public void testMatchExpressionError_06() throws Exception {
+        checkErrors("testfiles/parser/php80/matchExpressionError_06.php");
+    }
+
+    public void testUnionTypesTypes() throws Exception {
+        checkErrors("testfiles/parser/php80/unionTypesTypes.php");
+    }
+
+    public void testUnionTypesFunctions() throws Exception {
+        checkErrors("testfiles/parser/php80/unionTypesFunctions.php");
+    }
+
+    public void testUnionTypesError_01() throws Exception {
+        checkErrors("testfiles/parser/php80/unionTypesError_01.php");
+    }
+
+    public void testUnionTypesError_02() throws Exception {
+        checkErrors("testfiles/parser/php80/unionTypesError_02.php");
+    }
+
+    public void testUnionTypesError_03() throws Exception {
+        checkErrors("testfiles/parser/php80/unionTypesError_03.php");
+    }
+
+    public void testStaticReturnType_01() throws Exception {
+        checkErrors("testfiles/parser/php80/staticReturnType_01.php");
+    }
+
+    public void testStaticReturnTypeErrorWithFieldType_01() throws Exception {
+        // nullable type
+        checkErrors("testfiles/parser/php80/staticReturnTypeErrorWithFieldType_01.php");
+    }
+
+    public void testStaticReturnTypeErrorWithFieldType_02() throws Exception {
+        // union type
+        checkErrors("testfiles/parser/php80/staticReturnTypeErrorWithFieldType_02.php");
+    }
+
+    public void testStaticReturnTypeErrorWithParameterType_01() throws Exception {
+        checkErrors("testfiles/parser/php80/staticReturnTypeErrorWithParameterType_01.php");
+    }
+
+    public void testStaticReturnTypeErrorWithParameterType_02() throws Exception {
+        // nullable type
+        checkErrors("testfiles/parser/php80/staticReturnTypeErrorWithParameterType_02.php");
+    }
+
+    public void testStaticReturnTypeErrorWithParameterType_03() throws Exception {
+        // union type
+        checkErrors("testfiles/parser/php80/staticReturnTypeErrorWithParameterType_03.php");
+    }
+
+    public void testMixedType_01() throws Exception {
+        checkErrors("testfiles/parser/php80/mixedType_01.php");
+    }
+
+    public void testMixedError_01() throws Exception {
+        checkErrors("testfiles/parser/php80/mixedTypeError_01.php");
+    }
+
+    public void testNullsafeOperator_01() throws Exception {
+        checkErrors("testfiles/parser/php80/nullsafeOperator_01.php");
+    }
+
+    public void testNullsafeOperator_02() throws Exception {
+        checkErrors("testfiles/parser/php80/nullsafeOperator_02.php");
+    }
+
+    public void testNullsafeOperator_03() throws Exception {
+        checkErrors("testfiles/parser/php80/nullsafeOperator_03.php");
+    }
+
+    public void testAttributeSyntax_01() throws Exception {
+        checkErrors("testfiles/parser/php80/attributeSyntax_01.php");
+    }
+
+    public void testAttributeSyntax_02() throws Exception {
+        checkErrors("testfiles/parser/php80/attributeSyntax_02.php");
+    }
+
+    // [NETBEANS-6193] attributes of interface constants and methods
+    public void testAttributeSyntax_03() throws Exception {
+        checkErrors("testfiles/parser/php80/attributeSyntax_03.php");
+    }
+
+    public void testAttributeSyntaxError_01() throws Exception {
+        checkErrors("testfiles/parser/php80/attributeSyntaxError_01.php");
+    }
+
+    public void testAttributeSyntaxError_02() throws Exception {
+        checkErrors("testfiles/parser/php80/attributeSyntaxError_02.php");
+    }
+
+    public void testConstructorPropertyPromotion_01() throws Exception {
+        checkErrors("testfiles/parser/php80/constructorPropertyPromotion_01.php");
+    }
+
+    public void testConstructorPropertyPromotion_02() throws Exception {
+        checkErrors("testfiles/parser/php80/constructorPropertyPromotion_02.php");
+    }
+
+    public void testConstructorPropertyPromotionErrorWithStatic() throws Exception {
+        checkErrors("testfiles/parser/php80/constructorPropertyPromotionErrorWithStatic.php");
+    }
+
+    public void testAllowTrailingCommaInClosureUseLists_01() throws Exception {
+        checkErrors("testfiles/parser/php80/allowTrailingCommaInClosureUseLists_01.php");
+    }
+
+    public void testNamedArguments_01() throws Exception {
+        checkErrors("testfiles/parser/php80/namedArguments_01.php");
+    }
+
+    public void testNamedArgumentsWithAttribute_01() throws Exception {
+        checkErrors("testfiles/parser/php80/namedArgumentsWithAttribute_01.php");
+    }
+
+    // [NETBEANS-5599] PHP 8.1
+    public void testFinalClassConstants_01() throws Exception {
+        checkErrors("testfiles/parser/php81/finalClassConstants_01.php");
+    }
+
+    public void testFinalClassConstantsWithAttributes_01() throws Exception {
+        checkErrors("testfiles/parser/php81/finalClassConstantsWithAttributes_01.php");
+    }
+
+    public void testFinalClassMethods_01() throws Exception {
+        checkErrors("testfiles/parser/finalClassMethods_01.php");
+    }
+
+    public void testFinalTraitMethods_01() throws Exception {
+        checkErrors("testfiles/parser/finalTraitMethods_01.php");
+    }
+
+    public void testReadonlyProperties_01() throws Exception {
+        checkErrors("testfiles/parser/php81/readonlyProperties_01.php");
+    }
+
+    public void testReadonlyPropertiesWithConstError() throws Exception {
+        // no error: parser allows readonly const
+        checkErrors("testfiles/parser/php81/readonlyPropertiesWithConstError.php");
+    }
+
+    public void testReadonlyPropertiesWithStaticError() throws Exception {
+        // no error: parser allows static readonly
+        checkErrors("testfiles/parser/php81/readonlyPropertiesWithStaticError.php");
+    }
+
+    public void testNewInInitializers_01() throws Exception {
+        checkErrors("testfiles/parser/php81/newInInitializers_01.php");
+    }
+
+    public void testNewInInitializers_02() throws Exception {
+        checkErrors("testfiles/parser/php81/newInInitializers_02.php");
+    }
+
+    public void testNewInInitializersWithClassConstantError() throws Exception {
+        checkErrors("testfiles/parser/php81/newInInitializersWithClassConstantError.php");
+    }
+
+    public void testNewInInitializersWithPropertyError() throws Exception {
+        checkErrors("testfiles/parser/php81/newInInitializersWithPropertyError.php");
+    }
+
+    public void testPureIntersectionTypes_01() throws Exception {
+        checkErrors("testfiles/parser/php81/pureIntersectionTypes_01.php");
+    }
+
+    public void testPureIntersectionTypesWithUnionTypeError_01() throws Exception {
+        checkErrors("testfiles/parser/php81/pureIntersectionTypesWithUnionTypeError_01.php");
+    }
+
+    public void testPureIntersectionTypesWithUnionTypeError_02() throws Exception {
+        checkErrors("testfiles/parser/php81/pureIntersectionTypesWithUnionTypeError_02.php");
+    }
+
+    public void testPureIntersectionTypesWithUnionTypeError_03() throws Exception {
+        checkErrors("testfiles/parser/php81/pureIntersectionTypesWithUnionTypeError_03.php");
+    }
+
+    public void testEnumerations_01() throws Exception {
+        checkErrors("testfiles/parser/php81/enumerations_01.php");
+    }
+
+    public void testEnumerations_02() throws Exception {
+        checkErrors("testfiles/parser/php81/enumerations_02.php");
+    }
+
+    public void testEnumerations_03() throws Exception {
+        checkErrors("testfiles/parser/php81/enumerations_03.php");
+    }
+
+    public void testEnumAsTypeName() throws Exception {
+        // We can use "enum" as a type name
+        checkErrors("testfiles/parser/php81/enumAsTypeName.php");
+    }
+
+    public void testEnumCasesWithError() throws Exception {
+        checkErrors("testfiles/parser/php81/enumCasesWithError.php");
+    }
+
+    public void testFirstClassCallableSyntax_01() throws Exception {
+        checkErrors("testfiles/parser/php81/firstClassCallableSyntax_01.php");
+    }
+
+    public void testExplicitOctalIntegerLiteralNotation_01() throws Exception {
+        checkErrors("testfiles/parser/php81/explicitOctalIntegerLiteralNotation_01.php");
+    }
+
+    public void testExplicitOctalIntegerLiteralNotationParseError_01() throws Exception {
+        checkErrors("testfiles/parser/php81/explicitOctalIntegerLiteralNotationParseError_01.php");
+    }
+
+    public void testExplicitOctalIntegerLiteralNotationParseError_02() throws Exception {
+        checkErrors("testfiles/parser/php81/explicitOctalIntegerLiteralNotationParseError_02.php");
+    }
+
+    public void testExplicitOctalIntegerLiteralNotationParseError_03() throws Exception {
+        checkErrors("testfiles/parser/php81/explicitOctalIntegerLiteralNotationParseError_03.php");
+    }
+
+    public void testExplicitOctalIntegerLiteralNotationParseError_04() throws Exception {
+        checkErrors("testfiles/parser/php81/explicitOctalIntegerLiteralNotationParseError_04.php");
+    }
+
+    public void testExplicitOctalIntegerLiteralNotationParseError_05() throws Exception {
+        checkErrors("testfiles/parser/php81/explicitOctalIntegerLiteralNotationParseError_05.php");
+    }
+
+    public void testExplicitOctalIntegerLiteralNotationParseError_06() throws Exception {
+        checkErrors("testfiles/parser/php81/explicitOctalIntegerLiteralNotationParseError_06.php");
+    }
+
+    public void testTreatNamespacedNamesAsSingleToken_01a() throws Exception {
+        checkErrors("testfiles/parser/php80/treatNamespacedNamesAsSingleToken_01a.php");
+    }
+
+    public void testTreatNamespacedNamesAsSingleToken_01b() throws Exception {
+        checkErrors("testfiles/parser/php80/treatNamespacedNamesAsSingleToken_01b.php");
+    }
+
+    public void testTreatNamespacedNamesAsSingleToken_02a() throws Exception {
+        checkErrors("testfiles/parser/php80/treatNamespacedNamesAsSingleToken_02a.php");
+    }
+
+    public void testTreatNamespacedNamesAsSingleToken_02b() throws Exception {
+        checkErrors("testfiles/parser/php80/treatNamespacedNamesAsSingleToken_02b.php");
+    }
+
+    public void testTreatNamespacedNamesAsSingleToken_03() throws Exception {
+        checkErrors("testfiles/parser/php80/treatNamespacedNamesAsSingleToken_03.php");
+    }
+
+    public void testTreatNamespacedNamesAsSingleToken_04() throws Exception {
+        checkErrors("testfiles/parser/php80/treatNamespacedNamesAsSingleToken_04.php");
+    }
+
+    public void testTreatNamespacedNamesAsSingleTokenError_01a() throws Exception {
+        checkErrors("testfiles/parser/php80/treatNamespacedNamesAsSingleTokenError_01a.php");
+    }
+
+    public void testTreatNamespacedNamesAsSingleTokenError_01b() throws Exception {
+        checkErrors("testfiles/parser/php80/treatNamespacedNamesAsSingleTokenError_01b.php");
+    }
+
+    public void testTreatNamespacedNamesAsSingleTokenError_02a() throws Exception {
+        checkErrors("testfiles/parser/php80/treatNamespacedNamesAsSingleTokenError_02a.php");
+    }
+
+    public void testTreatNamespacedNamesAsSingleTokenError_02b() throws Exception {
+        checkErrors("testfiles/parser/php80/treatNamespacedNamesAsSingleTokenError_02b.php");
+    }
+
+    public void testTreatNamespacedNamesAsSingleTokenError_03a() throws Exception {
+        checkErrors("testfiles/parser/php80/treatNamespacedNamesAsSingleTokenError_03a.php");
+    }
+
+    public void testTreatNamespacedNamesAsSingleTokenError_03b() throws Exception {
+        checkErrors("testfiles/parser/php80/treatNamespacedNamesAsSingleTokenError_03b.php");
+    }
+
+    public void testGH4684() throws Exception {
+        checkErrors("testfiles/parser/gh4684.php");
+    }
+
+    public void testReadonlyClass_01() throws Exception {
+        checkErrors("testfiles/parser/php82/readonlyClass_01.php");
+    }
+
+    public void testFetchPropertiesInConstExpressions_01() throws Exception {
+        checkErrors("testfiles/parser/php82/fetchPropertiesInConstExpressions_01.php");
+    }
+
+    public void testReadonlyTraitError_01() throws Exception {
+        checkErrors("testfiles/parser/php82/readonlyTraitError_01.php");
+    }
+
+    public void testReadonlyInterfaceError_01() throws Exception {
+        checkErrors("testfiles/parser/php82/readonlyInterfaceError_01.php");
+    }
+
+    public void testReadonlyEnumError_01() throws Exception {
+        checkErrors("testfiles/parser/php82/readonlyEnumError_01.php");
+    }
+
+    public void testConstantsInTraits_01() throws Exception {
+        checkErrors("testfiles/parser/php82/constantsInTraits_01.php");
+    }
+
+    public void testDnfTypes_01() throws Exception {
+        checkErrors("testfiles/parser/php82/dnfTypes_01.php");
+    }
+
+    public void testIssueGH5585_01() throws Exception {
+        checkErrors("testfiles/parser/issueGH5585_01.php");
+    }
+
+    public void testIssueGH5585_02() throws Exception {
+        checkErrors("testfiles/parser/issueGH5585_02.php");
+    }
+
+    public void testIssueGH5933_01() throws Exception {
+        checkErrors("testfiles/parser/issueGH5933_01.php");
+    }
+
+    // PHP 8.3
+    public void testArbitraryStaticVariableInitializers_01() throws Exception {
+        checkErrors("testfiles/parser/php83/arbitraryStaticVariableInitializers_01.php");
+    }
+
+    public void testDynamicClassConstantFetch_01() throws Exception {
+        checkErrors("testfiles/parser/php83/dynamicClassConstantFetch_01.php");
+    }
+
+    public void testTypedClassConstants_01() throws Exception {
+        checkErrors("testfiles/parser/php83/typedClassConstants_01.php");
+    }
+
+    // PHP 8.4
+    public void testNewWithoutParentheses_01() throws Exception {
+        checkErrors("testfiles/parser/php84/newWithoutParentheses_01.php");
+    }
+
+    public void testNewWithoutParentheses_02() throws Exception {
+        checkErrors("testfiles/parser/php84/newWithoutParentheses_02.php");
+    }
+
+    public void testNewWithoutParenthesesError_01() throws Exception {
+        checkErrors("testfiles/parser/php84/newWithoutParenthesesError_01.php");
+    }
+
+    public void testNewWithoutParenthesesError_02() throws Exception {
+        checkErrors("testfiles/parser/php84/newWithoutParenthesesError_02.php");
+    }
+
+    public void testNewWithoutParenthesesError_03() throws Exception {
+        checkErrors("testfiles/parser/php84/newWithoutParenthesesError_03.php");
+    }
+
+    public void testNewWithoutParenthesesError_04() throws Exception {
+        checkErrors("testfiles/parser/php84/newWithoutParenthesesError_04.php");
+    }
+
+    public void testNewWithoutParenthesesError_05() throws Exception {
+        checkErrors("testfiles/parser/php84/newWithoutParenthesesError_05.php");
+    }
+
+    public void testNewWithoutParenthesesError_06() throws Exception {
+        checkErrors("testfiles/parser/php84/newWithoutParenthesesError_06.php");
+    }
+
+    public void testNewWithoutParenthesesError_07() throws Exception {
+        checkErrors("testfiles/parser/php84/newWithoutParenthesesError_07.php");
+    }
+
+    public void testNewWithoutParenthesesError_08() throws Exception {
+        checkErrors("testfiles/parser/php84/newWithoutParenthesesError_08.php");
+    }
+
+    public void testNewWithoutParenthesesError_09() throws Exception {
+        checkErrors("testfiles/parser/php84/newWithoutParenthesesError_09.php");
+    }
+
+    public void testAsymmetricVisibilityClass() throws Exception {
+        checkErrors("testfiles/parser/php84/asymmetricVisibilityClass.php");
+    }
+
+    public void testAsymmetricVisibilityTrait() throws Exception {
+        checkErrors("testfiles/parser/php84/asymmetricVisibilityTrait.php");
+    }
+
+    public void testAsymmetricVisibilityAnonClass() throws Exception {
+        checkErrors("testfiles/parser/php84/asymmetricVisibilityAnonClass.php");
+    }
+
+    public void testAsymmetricVisibilityConstructorPropertyPromotion() throws Exception {
+        checkErrors("testfiles/parser/php84/asymmetricVisibilityConstructorPropertyPromotion.php");
+    }
+
+    public void testFinalFieldsClass() throws Exception {
+        checkErrors("testfiles/parser/php84/finalFieldsClass.php");
+    }
+
+    public void testFinalFieldsTrait() throws Exception {
+        checkErrors("testfiles/parser/php84/finalFieldsTrait.php");
+    }
+
+    public void testFinalFieldsAnonClass() throws Exception {
+        checkErrors("testfiles/parser/php84/finalFieldsAnonClass.php");
+    }
+
+    // the following cases are parse errors as of PHP 8.4: $a{1}, "string"{1}
+    public void testCurlyBracesArrayAccessError01() throws Exception {
+        checkErrors("testfiles/parser/php84/curlyBracesArrayAccessError01.php");
+    }
+
+    public void testCurlyBracesArrayAccessError02() throws Exception {
+        checkErrors("testfiles/parser/php84/curlyBracesArrayAccessError02.php");
+    }
+
+    public void testCurlyBracesArrayAccessError03() throws Exception {
+        checkErrors("testfiles/parser/php84/curlyBracesArrayAccessError03.php");
+    }
+
+    public void testCurlyBracesArrayAccessError04() throws Exception {
+        checkErrors("testfiles/parser/php84/curlyBracesArrayAccessError04.php");
+    }
+
+    public void testCurlyBracesArrayAccessError05() throws Exception {
+        checkErrors("testfiles/parser/php84/curlyBracesArrayAccessError05.php");
+    }
+
+    public void testPropertyHooks() throws Exception {
+        checkErrors("testfiles/parser/php84/propertyHooks.php");
+    }
+
+    public void testPropertyHooksAbstract() throws Exception {
+        checkErrors("testfiles/parser/php84/propertyHooksAbstract.php");
+    }
+
+    public void testPropertyHooksCPP() throws Exception {
+        checkErrors("testfiles/parser/php84/propertyHooksCPP.php");
+    }
+
+    public void testPropertyHooksInterface() throws Exception {
+        checkErrors("testfiles/parser/php84/propertyHooksInterface.php");
+    }
+
+    public void testPropertyHooksInterfaceError_01() throws Exception {
+        checkErrors("testfiles/parser/php84/propertyHooksInterfaceError_01.php");
+    }
+
+    public void testPropertyHooksTrait() throws Exception {
+        checkErrors("testfiles/parser/php84/propertyHooksTrait.php");
+    }
+
+    // PHP 8.5
+    public void testPipeOperator_01() throws Exception {
+        checkErrors("testfiles/parser/php85/pipeOperator_01.php");
+    }
+
+    public void testPipeOperator_02() throws Exception {
+        checkErrors("testfiles/parser/php85/pipeOperator_02.php");
+    }
+
+    public void testPipeOperator_03() throws Exception {
+        checkErrors("testfiles/parser/php85/pipeOperator_03.php");
+    }
 }

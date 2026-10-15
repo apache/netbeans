@@ -233,7 +233,7 @@ final class CatalogNode extends BeanNode implements Refreshable, PropertyChangeL
         }
                 
         /** Contains public ID (String) instances. */
-        private final TreeSet keys = new TreeSet();
+        private final Set<String> keys = new TreeSet<>();
         
         public void addNotify() {            
             catalogListener = new Lis();
@@ -272,12 +272,12 @@ final class CatalogNode extends BeanNode implements Refreshable, PropertyChangeL
         public void reload() {
             //if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug(" Reloading kids of " + peer + "..."); // NOI18N
 
-            Set previous = new HashSet(keys);
+            Set<String> previous = new HashSet<>(keys);
             keys.clear();
-            Iterator it = peer.getPublicIDs();
+            Iterator<String> it = peer.getPublicIDs();
             if (it != null) {
                 while (it.hasNext()) {
-                    String publicID = (String) it.next();
+                    String publicID = it.next();
                     keys.add(publicID);
                     if (previous.contains(publicID)) {
                         refreshKey(publicID);  // recreate node, the systemId may have changed
@@ -351,7 +351,7 @@ final class CatalogNode extends BeanNode implements Refreshable, PropertyChangeL
             for (int i = 0; i<activatedNodes.length; i++) {
                 try {
                     Node me = activatedNodes[i];
-                    CatalogNode self = (CatalogNode) me.getCookie(CatalogNode.class);
+                    CatalogNode self = me.getCookie(CatalogNode.class);
                     self.destroy();
                 } catch (IOException ex) {
                     //Util.THIS.debug("Cannot unmount XML entity catalog!", ex);

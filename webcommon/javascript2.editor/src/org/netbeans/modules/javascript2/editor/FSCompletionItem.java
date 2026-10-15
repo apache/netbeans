@@ -33,6 +33,7 @@ import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -46,19 +47,19 @@ public class FSCompletionItem implements CompletionProposal {
     private final String prefix;
     private final FSElementHandle element;
     private final boolean addExtension;
-    
+
     public FSCompletionItem(final FileObject file, final String prefix, final boolean addExtension, final int anchor) throws IOException {
         this.file = file;
         this.element = new FSElementHandle(file);
         DataObject od = DataObject.find(file);
 
-        icon = new ImageIcon(od.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16));
+        icon = ImageUtilities.icon2ImageIcon(ImageUtilities.image2Icon(od.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16)));
 
         this.anchor = anchor;
         this.addExtension = addExtension;
         this.prefix = prefix;
     }
-    
+
     protected String getText() {
         return prefix + file.getNameExt() + (file.isFolder() ? "/" : "");
     }
@@ -147,19 +148,19 @@ public class FSCompletionItem implements CompletionProposal {
     public FileObject getFile() {
         return file;
     }
-    
+
     public static class FSElementHandle implements ElementHandle {
-        
+
         private final FileObject fo;
         private final Set<FileObject> representedFiles;
 
         public FSElementHandle(FileObject fo) {
             this.fo = fo;
-            this.representedFiles = new HashSet(1);
+            this.representedFiles = new HashSet<>(1);
             representedFiles.add(fo);
         }
 
-        
+
         @Override
         public FileObject getFileObject() {
             return fo;
@@ -187,7 +188,7 @@ public class FSCompletionItem implements CompletionProposal {
 
         @Override
         public Set<Modifier> getModifiers() {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
 
         @Override
@@ -199,7 +200,7 @@ public class FSCompletionItem implements CompletionProposal {
         public OffsetRange getOffsetRange(ParserResult result) {
             return OffsetRange.NONE;
         }
-        
+
         public void addRepresentedFile(FileObject fo) {
             if (!representedFiles.contains(fo)) {
                 representedFiles.add(fo);
@@ -209,9 +210,9 @@ public class FSCompletionItem implements CompletionProposal {
         public Set<FileObject> getRepresentedFiles() {
             return representedFiles;
         }
-        
-        
-        
+
+
+
     }
 
 }

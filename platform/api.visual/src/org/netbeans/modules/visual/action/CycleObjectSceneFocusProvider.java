@@ -38,19 +38,19 @@ public class CycleObjectSceneFocusProvider implements CycleFocusProvider {
         return scene instanceof ObjectScene  &&  switchFocus ((ObjectScene) scene, true);
     }
 
-    @SuppressWarnings ("unchecked")
+    @SuppressWarnings ({"rawtypes", "unchecked"})
     private boolean switchFocus (ObjectScene scene, boolean forwardDirection) {
         Object object = scene.getFocusedObject ();
-        Comparable identityCode = scene.getIdentityCode (object);
+        Comparable identityCode = scene.getIdentityCode(object);
 
         Object bestObject = null;
         Comparable bestIdentityCode = null;
 
         if (identityCode != null) {
             for (Object o : scene.getObjects ()) {
-                Comparable ic = scene.getIdentityCode (o);
+                Comparable ic = scene.getIdentityCode(o);
                 if (forwardDirection) {
-                    if (identityCode.compareTo (ic) < 0) {
+                    if (identityCode.compareTo(ic) < 0) {
                         if (bestIdentityCode == null  ||  bestIdentityCode.compareTo (ic) > 0) {
                             bestObject = o;
                             bestIdentityCode = ic;

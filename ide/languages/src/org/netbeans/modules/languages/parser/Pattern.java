@@ -27,15 +27,14 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import org.netbeans.modules.languages.TokenType;
-import org.netbeans.modules.languages.parser.StringInput;
 
 public class Pattern {
     
-    private static final Character STAR = new Character ((char) 0);
+    private static final Character STAR = (char) 0;
     private static NodeFactory<Integer> nodeFactory = new NodeFactory<Integer> () {
         private int counter = 1;
         public Integer createNode () {
-            return Integer.valueOf (counter++);
+            return counter++;
         }
     };
     
@@ -62,11 +61,9 @@ public class Pattern {
             char up = Character.toUpperCase(c);
             char down = Character.toLowerCase(c);
             if (up != down) {
-                pattern = pattern.append(
-                        new Pattern(new Character(up)).merge(new Pattern(new Character(down)))
-                );
+                pattern = pattern.append(new Pattern(up).merge(new Pattern(down)));
             } else {
-                pattern = pattern.append(new Pattern(new Character(c)));
+                pattern = pattern.append(new Pattern(c));
             }
         }
         return pattern;
@@ -188,7 +185,7 @@ public class Pattern {
                         int length = buf.length();
                         Pattern pat = new Pattern();
                         for (int x = 0; x < length; x++) {
-                            pat = pat.append(new Pattern(new Character(buf.charAt(x))));
+                            pat = pat.append(new Pattern(buf.charAt(x)));
                         }
                         last = last.append(pat);
                     }
@@ -210,7 +207,7 @@ public class Pattern {
                     ch = input.next ();
                     if (ch == '\'' || ch == '"')
                         throw new ParseException ("Unexpected character '" + ch + "'.");
-                    Character edge = new Character (input.next ());
+                    Character edge = input.next();
                     last = new Pattern (true, Collections.<Character>singleton (edge));
                     last = last.star ().append (new Pattern (edge));
                     input.read ();
@@ -222,7 +219,7 @@ public class Pattern {
                         Integer endN = last.dg.getEnds ().iterator ().next ();
                         Integer newE = last.nodeFactory.createNode ();
                         last.dg.addNode (newE);
-                        last.dg.addEdge (endN, newE, new Character (input.next ()));
+                        last.dg.addEdge (endN, newE, input.next());
                         last.dg.setEnds (Collections.singleton (newE));
                         input.read ();
                         ch = input.next ();
@@ -247,7 +244,7 @@ public class Pattern {
                         ch = input.next ();
                         not = true;
                     }
-                    Set<Character> set = new HashSet<Character> ();
+                    Set<Character> set = new HashSet<>();
                     char l = (char) 0;
                     boolean minus = false;
                     ch = input.next ();
@@ -263,7 +260,7 @@ public class Pattern {
                             case '"':
                                 char ol = l;
                                 if (l != 0 && !minus) 
-                                    set.add (new Character (l));
+                                    set.add(l);
                                 input.read ();
                                 ch = input.next ();
                                 if (ch == '\\') {
@@ -343,7 +340,7 @@ public class Pattern {
                     } // while
                     if (minus) throw new ParseException ("Unexpected character '" + ch + "'.");
                     if (l != 0) 
-                        set.add (new Character (l));
+                        set.add(l);
                     input.read ();
                     last = new Pattern (not, set);
                     break;
@@ -406,16 +403,16 @@ public class Pattern {
 //        return ASTToken.create (type, identifier);
 //    }
     
-    private static Set<Character> whitespace = new HashSet<Character> ();
+    private static Set<Character> whitespace = new HashSet<> ();
     static {
-        whitespace.add (new Character (' '));
-        whitespace.add (new Character ('\n'));
-        whitespace.add (new Character ('\r'));
-        whitespace.add (new Character ('\t'));
+        whitespace.add(' ');
+        whitespace.add('\n');
+        whitespace.add('\r');
+        whitespace.add('\t');
     }
     
     private static void skipWhitespaces (CharInput input) {
-        while (whitespace.contains (new Character (input.next ())))
+        while (whitespace.contains(input.next()))
             input.read ();
     }
     
@@ -423,7 +420,7 @@ public class Pattern {
     throws ParseException {
         if (from > to) throw new ParseException ("Invalid interval (" + from + ">" + to + ").");
         do {
-            set.add (new Character (from));
+            set.add(from);
             from++;
         } while (from <= to);
     }
@@ -516,7 +513,7 @@ public class Pattern {
         int i = 0;
         Integer state = dg.getStartNode ();
         while (i < text.length ()) {
-            state = dg.getNode (state, new Character (text.charAt (i++)));
+            state = dg.getNode(state, text.charAt(i++));
             if (state == null) return false;
         }
         return dg.getEnds ().contains (state);
@@ -535,7 +532,7 @@ public class Pattern {
                 lastIndex = input.getIndex ();
             }
             if (input.eof ()) break;
-            Integer newState = dg.getNode (state, new Character (input.next ()));
+            Integer newState = dg.getNode(state, input.next());
             if (newState != null)
                 state = newState;
             else
@@ -566,7 +563,7 @@ public class Pattern {
         TokenType    lastTT = null;
         Integer node = dg.getStartNode ();
         while (!input.eof ()) {
-            Character edge = new Character (input.next ());
+            Character edge = input.next();
             Integer nnode = dg.getNode (node, edge);
             if (nnode == null) {
                 edge = Pattern.STAR;

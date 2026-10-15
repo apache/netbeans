@@ -22,11 +22,15 @@ package org.netbeans.modules.groovy.editor.api.parser;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.ModuleNode;
+import org.codehaus.groovy.control.ClassNodeResolver.LookupResult;
+import org.codehaus.groovy.control.CompilationUnit;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.groovy.editor.api.StructureAnalyzer;
 import org.netbeans.modules.groovy.editor.api.elements.ast.ASTRoot;
 import org.codehaus.groovy.control.ErrorCollector;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.ParserResult;
@@ -48,6 +52,8 @@ public class GroovyParserResult extends ParserResult {
     private StructureAnalyzer.AnalysisResult analysisResult;
     private GroovyParser.Sanitize sanitized;
     private ErrorCollector errorCollector;  // keep track of pending errors (if any)
+    private NbGroovyErrorCollector nbCollector;  // keep track of pending errors (if any)
+    private CompilationUnit unit;
 
     GroovyParserResult(GroovyParser parser, Snapshot snapshot, ModuleNode rootNode,
             ErrorCollector errorCollector) {
@@ -55,6 +61,31 @@ public class GroovyParserResult extends ParserResult {
         this.parser = parser;
         this.rootElement = new ASTRoot(snapshot.getSource().getFileObject(), rootNode);
         this.errorCollector = errorCollector;
+        if (errorCollector instanceof NbGroovyErrorCollector) {
+            nbCollector = (NbGroovyErrorCollector)errorCollector;
+        }
+    }
+
+    void setUnit(CompilationUnit unit) {
+        this.unit = unit;
+    }
+
+    /**
+     * Resolves qualified class name into ClassNode.
+     * @param className fully qualified class name.
+     * @return ClassNode, or {@code null} if the name is not resolvable
+     * @since 1.80
+     */
+    @CheckForNull
+    public ClassNode resolveClassName(@NonNull String className) {
+        if (unit == null) {
+            return null;
+        }
+        LookupResult lr = unit.getClassNodeResolver().resolveName(className, unit);
+        if (lr != null) {
+            return lr.getClassNode();
+        }
+        return null;
     }
 
     // FIXME remove this

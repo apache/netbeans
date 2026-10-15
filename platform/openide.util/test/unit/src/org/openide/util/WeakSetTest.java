@@ -137,6 +137,7 @@ public class WeakSetTest extends NbTestCase {
                     return it.next ();
                 }
 
+                @Override
                 public void remove() {
                     it.remove();
                 }
@@ -145,7 +146,7 @@ public class WeakSetTest extends NbTestCase {
         }
     }
     
-    private final static class TestObj {
+    private static final class TestObj {
         static final Set<TestObj> testObjs = new WeakSet<TestObj>();
         private final String name;
         TestObj(String name) {
@@ -162,7 +163,7 @@ public class WeakSetTest extends NbTestCase {
         
     }
     
-    private final static class GC implements Runnable {
+    private static final class GC implements Runnable {
 
         public void run() {
             try {
@@ -272,7 +273,7 @@ public class WeakSetTest extends NbTestCase {
         set.remove(arr[0]);
         assertFalse(second.equals(set));
         String s = "GCing " + arr[0];
-        Reference<Object> r = new WeakReference(arr[0]);
+        Reference<Object> r = new WeakReference<>(arr[0]);
         arr[0] = null;
         NbTestCase.assertGC(s, r);
         assertEquals(second, set);

@@ -57,7 +57,7 @@ final class Asm {
         // must analyze the extender class, as some annotations there may trigger
         ClassReader clr = new ClassReader(data);
         ClassWriter wr = new ClassWriter(clr, 0);
-        ClassNode theClass = new ClassNode();
+        ClassNode theClass = new ClassNode(Opcodes.ASM9);
         
         clr.accept(theClass, 0);
         
@@ -74,7 +74,7 @@ final class Asm {
                 throw new IOException("Could not find classfile for extender class"); // NOI18N
             }
             ClassReader extenderReader = new ClassReader(istm);
-            ClassNode extenderClass = new ClassNode();
+            ClassNode extenderClass = new ClassNode(Opcodes.ASM9);
             extenderReader.accept(extenderClass, ClassReader.SKIP_FRAMES);
             
             // search for a no-arg ctor, replace all invokespecial calls in ctors
@@ -127,8 +127,8 @@ final class Asm {
      * @param mn method to process
      */
     private static void replaceSuperCtorCalls(final ClassNode theClass, final ClassNode extenderClass, MethodNode mn) {
-        for (Iterator it = mn.instructions.iterator(); it.hasNext(); ) {
-            AbstractInsnNode aIns = (AbstractInsnNode)it.next();
+        for (Iterator<AbstractInsnNode> it = mn.instructions.iterator(); it.hasNext(); ) {
+            AbstractInsnNode aIns = it.next();
             if (aIns.getOpcode() == Opcodes.INVOKESPECIAL) {
                 MethodInsnNode mins = (MethodInsnNode)aIns;
                 if (CONSTRUCTOR_NAME.equals(mins.name) && mins.owner.equals(extenderClass.superName)) {
@@ -145,7 +145,7 @@ final class Asm {
      */
     private static class NullSignVisitor extends SignatureVisitor {
         public NullSignVisitor() {
-            super(Opcodes.ASM5);
+            super(Opcodes.ASM9);
         }
     }
     
@@ -168,13 +168,13 @@ final class Asm {
          * @param firstSelf if true, assumes the first parameter is reference to self and will generate aload_0
          */
         public CallParametersWriter(MethodNode mn, boolean firstSelf) {
-            super(Opcodes.ASM5);
+            super(Opcodes.ASM9);
             this.mn = mn;
             this.paramIndex = firstSelf ? 0 : 1;
         }
         
         public CallParametersWriter(MethodNode mn, int[] indices) {
-            super(Opcodes.ASM5);
+            super(Opcodes.ASM9);
             this.mn = mn;
             this.paramIndices = indices;
         }
@@ -291,20 +291,65 @@ final class Asm {
 
     }
     
+    /**
+     * @@author Svatopluk Dedic
+     */
     private static class CtorDelVisitor extends AnnotationVisitor {
-        int[]   indices;
-       
-        public CtorDelVisitor(int i) {
-            super(i);
+        
+        int[] indices;
+        int pos;
+        int level;
+
+        /**
+         * Constructs a new {@link AnnotationVisitor}.
+         *
+         * @param api the ASM API version implemented by this visitor. Must be one of {@link
+         *     Opcodes#ASM4}, {@link Opcodes#ASM5}, {@link Opcodes#ASM6} or {@link Opcodes#ASM7}.
+         */
+        public CtorDelVisitor(int api) {
+            super(api);
         }
 
         @Override
         public void visit(String string, Object o) {
+            if (level > 0) {
+                if (pos >= indices.length) {
+                    indices = Arrays.copyOf(indices, indices.length * 2);
+                }
+                indices[pos++] = (Integer)o;
+                super.visit(string, o);
+                return;
+            }
             if ("delegateParams".equals(string)) {  // NOI18N
                 indices = (int[])o;
             }
             super.visit(string, o);
         }
+
+        @Override
+        public void visitEnd() {
+            if (level > 0) {
+                if (--level == 0) {
+                    if (pos < indices.length) {
+                        indices = Arrays.copyOf(indices, pos);
+                    }
+                }
+            }
+            super.visitEnd();
+        }
+        
+        @Override
+        public AnnotationVisitor visitArray(String string) {
+            if ("delegateParams".equals(string)) { // NOI18N
+                indices = new int[4];
+                pos = 0;
+                level++;
+                return this;
+            } else {
+                return super.visitArray(string);
+            }
+        }
+
     }
     
     private static String[] splitDescriptor(String desc) {
@@ -334,7 +379,7 @@ final class Asm {
                     break;
             }
         }
-        return arr.toArray(new String[arr.size()]);
+        return arr.toArray(new String[0]);
     }
     
     private static void delegateToFactory(
@@ -342,15 +387,15 @@ final class Asm {
         MethodNode noArgCtor
     ) {
         String desc = targetMethod.desc;
-        CtorDelVisitor v = new CtorDelVisitor(Opcodes.ASM5);
+        CtorDelVisitor v = new CtorDelVisitor(Opcodes.ASM9);
         an.accept(v);
         int nextPos = desc.indexOf(';', 2); // NOI18N
         desc = "(" + desc.substring(nextPos + 1); // NOI18N
-        MethodNode mn = new MethodNode(Opcodes.ASM5, 
+        MethodNode mn = new MethodNode(Opcodes.ASM9, 
                 targetMethod.access & (~Opcodes.ACC_STATIC), CONSTRUCTOR_NAME,
                 desc,
                 targetMethod.signature,
-                (String[])targetMethod.exceptions.toArray(new String[targetMethod.exceptions.size()]));
+                targetMethod.exceptions.toArray(new String[0]));
 
         mn.visibleAnnotations = targetMethod.visibleAnnotations;
         mn.visibleParameterAnnotations = targetMethod.visibleParameterAnnotations;

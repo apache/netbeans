@@ -31,9 +31,10 @@ import org.netbeans.spi.java.hints.Hint;
 import org.netbeans.spi.java.hints.TriggerPattern;
 import org.netbeans.spi.java.hints.TriggerTreeKind;
 import org.netbeans.spi.java.hints.HintContext;
+
 import static org.junit.Assert.*;
+
 import org.netbeans.modules.java.hints.providers.code.CodeHintProviderImpl.WorkerImpl;
-import org.netbeans.modules.java.hints.spiimpl.SPIAccessor;
 import org.netbeans.modules.java.hints.providers.spi.HintDescription;
 import org.netbeans.modules.java.hints.providers.spi.HintMetadata;
 import org.netbeans.spi.editor.hints.ErrorDescription;

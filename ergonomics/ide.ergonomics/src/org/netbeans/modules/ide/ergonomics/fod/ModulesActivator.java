@@ -20,7 +20,6 @@
 package org.netbeans.modules.ide.ergonomics.fod;
 
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.autoupdate.OperationContainer;
@@ -28,7 +27,6 @@ import org.netbeans.api.autoupdate.OperationException;
 import org.netbeans.api.autoupdate.OperationSupport;
 import org.netbeans.api.autoupdate.UpdateElement;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 
@@ -111,10 +109,10 @@ public class ModulesActivator {
         }
         OperationSupport enableSupport = enableContainer.getSupport ();
         if (enableHandle == null) {
-            enableHandle = ProgressHandleFactory.createHandle (
+            enableHandle = ProgressHandle.createHandle (
                     getBundle ("ModulesActivator_Enable",
                     ModulesInstaller.presentUpdateElements(finder.getVisibleUpdateElements (modules4enable))));
-            }
+        }
         progressMonitor.onEnable(enableHandle);
         enableSupport.doOperation (enableHandle);
     }

@@ -35,7 +35,19 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
         super(name);
     }
     
+    public static boolean isJDK14(){
+        try {
+            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_14, skip test
+            return false;
+        }
+        return true;
+    }
+
     public void testSwitch2RuleSwitch() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
         HintTest.create()
                 .input("package test;" +
                        "public class Test {\n" +
@@ -48,8 +60,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
                 .applyFix()
@@ -68,6 +79,8 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
     }
     
     public void testLastNotBreak() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
         HintTest.create()
                 .input("package test;" +
                        "public class Test {\n" +
@@ -78,8 +91,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
                 .applyFix()
@@ -96,6 +108,8 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
     }
     
     public void testMultipleCases() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
         HintTest.create()
                 .input("package test;" +
                        "public class Test {\n" +
@@ -108,8 +122,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
                 .applyFix()
@@ -127,6 +140,8 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
     }
     
     public void testFallThrough() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
         HintTest.create()
                 .input("package test;" +
                        "public class Test {\n" +
@@ -138,13 +153,14 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .assertWarnings();
     }
     
     public void testMissingLastBreak() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
         HintTest.create()
                 .input("package test;" +
                        "public class Test {\n" +
@@ -157,8 +173,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
                 .applyFix()
@@ -176,6 +191,8 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
     }
 
     public void testDefault() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
         HintTest.create()
                 .input("package test;" +
                        "public class Test {\n" +
@@ -187,8 +204,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
                 .applyFix()
@@ -208,6 +224,8 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
     }
 
     public void testVariables1() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
         HintTest.create()
                 .input("package test;" +
                        "public class Test {\n" +
@@ -226,8 +244,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
                 .applyFix()
@@ -253,6 +270,8 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
     }
 
     public void testFallThroughDefault1() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
         HintTest.create()
                 .input("package test;" +
                        "public class Test {\n" +
@@ -265,13 +284,14 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .assertWarnings();
     }
 
     public void testFallThroughDefault2() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
         HintTest.create()
                 .input("package test;" +
                        "public class Test {\n" +
@@ -284,13 +304,14 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .assertWarnings();
     }
 
     public void testTrailingEmptyCase() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
         HintTest.create()
                 .input("package test;" +
                        "public class Test {\n" +
@@ -305,8 +326,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
                 .applyFix()
@@ -327,6 +347,8 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
     }
 
     public void testNeedsPreview() throws Exception {
+        if(ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
         HintTest.create()
                 .input("package test;" +
                        "public class Test {\n" +
@@ -340,12 +362,14 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .assertWarnings();
     }
 
     public void testBreakInside1() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
         HintTest.create()
                 .input("package test;" +
                        "public class Test {\n" +
@@ -357,13 +381,14 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .assertWarnings();
     }
 
     public void testBreakInside2() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
         HintTest.create()
                 .input("package test;\n" +
                        "public class Test {\n" +
@@ -377,8 +402,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("4:9-4:15:verifier:Convert switch to rule switch")
                 .applyFix()
@@ -400,6 +424,8 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
     }
 
     public void testContinueInside1() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
         HintTest.create()
                 .input("package test;\n" +
                        "public class Test {\n" +
@@ -411,13 +437,14 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .assertWarnings();
     }
 
     public void testContinueInside2() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
         HintTest.create()
                 .input("package test;\n" +
                        "public class Test {\n" +
@@ -433,8 +460,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("5:13-5:19:verifier:Convert switch to rule switch")
                 .applyFix()
@@ -460,6 +486,8 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
     //Test cases for switch expression
 
     public void testSwitch2SwitchExpression() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
         HintTest.create()
                 .input("package test;" +
                        "public class Test {\n" +
@@ -473,8 +501,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
                 .applyFix()
@@ -494,6 +521,8 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
     }
 
     public void testSwitch2SwitchExpressionMultiCase() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
         HintTest.create()
                 .input("package test;" +
                        "public class Test {\n" +
@@ -507,8 +536,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "        }\n" +
                        "    }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:8-3:14:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
                 .applyFix()
@@ -527,6 +555,8 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
     }
 
     public void testSwitch2SwitchExpressionMultiCase2() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
         HintTest.create()
                 .input("package test;" +
                        "public class Test {\n" +
@@ -540,8 +570,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "        }\n" +
                        "    }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:8-3:14:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
                 .applyFix()
@@ -560,6 +589,8 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
     }
 
     public void testSwitch2SwitchExpressionOnlyDefault() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
         HintTest.create()
                 .input("package test;" +
                        "public class Test {\n" +
@@ -570,8 +601,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "        }\n" +
                        "    }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:8-3:14:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
                 .applyFix()
@@ -588,6 +618,8 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
     }
 
     public void testSwitch2SwitchExpressionNestedInnerSwitchExpression() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
         HintTest.create()
                 .input("package test;" +
                        "public class Test {\n" +
@@ -604,8 +636,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("4:9-4:15:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
                 .applyFix()
@@ -628,6 +659,8 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
     }
 
     public void testSwitch2SwitchExpressionReturnValue() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
         HintTest.create()
                 .input("package test;" +
                        "public class Test {\n" +
@@ -638,8 +671,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("2:9-2:15:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
                 .applyFix()
@@ -656,6 +688,8 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
     }
 
     public void testSwitch2SwitchExpressionTypeCast() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
         HintTest.create()
                 .input("package test;" +
                        "public class Test {\n" +
@@ -667,8 +701,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
                 .applyFix()
@@ -686,6 +719,8 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
     }
 
     public void testSwitch2SwitchExpressionTypeCastReturn() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
         HintTest.create()
                 .input("package test;" +
                        "public class Test {\n" +
@@ -696,8 +731,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("2:9-2:15:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
                 .applyFix()
@@ -714,6 +748,8 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
     }
 
     public void testSwitch2SwitchExpressionNestedSwitchExpression() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
         HintTest.create()
                 .input("package test;" +
                        "public class Test {\n" +
@@ -728,8 +764,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
                 .applyFix()
@@ -750,6 +785,8 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
     }
 
     public void testSwitch2SwitchExpressionNestedOuterSwitchStatement() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
         HintTest.create()
                 .input("package test;" +
                        "public class Test {\n" +
@@ -769,8 +806,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("4:9-4:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
                 .applyFix()
@@ -794,6 +830,8 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
     }
 
     public void testSwitch2SwitchExpressionNestedInnerSwitchStatement() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
         HintTest.create()
                 .input("package test;" +
                        "public class Test {\n" +
@@ -813,8 +851,7 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                        "         }\n" +
                        "     }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertSwitchToRuleSwitch.class)
                 .findWarning("6:16-6:22:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
                 .applyFix()
@@ -837,6 +874,176 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                               "         }\n" +
                               "     }\n" +
                               "}\n");
+    }
+    
+    public void testSwitchToRuleSwitchFormattingMultiple() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
+        HintTest.create()
+                .input("package test;" +
+                        "public class Test {\n" +
+                        "     private void test(int p) {\n" +
+                        "         String result;\n" +
+                        "         switch (p) {\n" +
+                        "            case 0:\n" +
+                        "            case 1:\n" +
+                        "            case 2:\n" +
+                        "            case 3: result=\"a\"; break;\n" +
+                        "            default: System.err.println(\"No.\"); break;" +
+                        "         }\n" +
+                        "     }\n" +
+                        "}\n")
+                .sourceLevel(SourceVersion.latest().ordinal())
+                .run(ConvertSwitchToRuleSwitch.class)
+                .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
+                .applyFix()
+                .assertCompilable()
+                .assertVerbatimOutput("package test;" +
+                        "public class Test {\n" +
+                        "     private void test(int p) {\n" +
+                        "         String result;\n" +
+                        "         switch (p) {\n" +
+                        "            case 0, 1, 2, 3 -> result=\"a\";\n" +
+                        "            default -> System.err.println(\"No.\");\n" +
+                        "         }\n" +
+                        "     }\n" +
+                        "}\n");
+    }
+    
+    public void testSwitchToRuleSwitchFormattingSimple() throws Exception {
+        if(!ConvertSwitchToRuleSwitchTest.isJDK14())
+            return;
+        HintTest.create()
+                .input("package test;" +
+                        "public class Test {\n" +
+                        "     private void test(int p) {\n" +
+                        "         String result;\n" +
+                        "         switch (p) {\n" +
+                        "            case 0: result = \"a\"; break;\n" +
+                        "            default: System.err.println(\"No.\"); break;\n" +
+                        "         }\n" +
+                        "     }\n" +
+                        "}\n")
+                .sourceLevel(SourceVersion.latest().ordinal())
+                .run(ConvertSwitchToRuleSwitch.class)
+                .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
+                .applyFix()
+                .assertCompilable()
+                .assertVerbatimOutput("package test;" +
+                        "public class Test {\n" +
+                        "     private void test(int p) {\n" +
+                        "         String result;\n" +
+                        "         switch (p) {\n" +
+                        "            case 0 -> result = \"a\";\n" +
+                        "            default -> System.err.println(\"No.\");\n" +
+                        "         }\n" +
+                        "     }\n" +
+                        "}\n");
+    }
+    
+        public void testSwitchToRuleSwitchBindingPattern() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip tests
+            return;
+        }
+        HintTest.create()
+                .input("package test;" +
+                        "public class Test {\n" +
+                        "     private void test(Object p) {\n" +
+                        "         String result;\n" +
+                        "         switch (p) {\n" +
+                        "            case Integer i : result = \"a\"; break;\n" +
+                        "            default : System.err.println(\"No.\"); break;\n" +
+                        "         }\n" +
+                        "     }\n" +
+                        "}\n")
+                .sourceLevel(21)
+                .run(ConvertSwitchToRuleSwitch.class)
+                .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
+                .applyFix()
+                .assertCompilable()
+                .assertVerbatimOutput("package test;" +
+                        "public class Test {\n" +
+                        "     private void test(Object p) {\n" +
+                        "         String result;\n" +
+                        "         switch (p) {\n" +
+                        "            case Integer i -> result = \"a\";\n" +
+                        "            default -> System.err.println(\"No.\");\n" +
+                        "         }\n" +
+                        "     }\n" +
+                        "}\n");
+    }
+    
+    public void testSwitchToRuleSwitchGuardedPattern() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip tests
+            return;
+        }
+        HintTest.create()
+                .input("package test;" +
+                        "public class Test {\n" +
+                        "     private void test(Object p) {\n" +
+                        "         String result;\n" +
+                        "         switch (p) {\n" +
+                        "            case Integer i when (i > 10): result = \"a\"; break;\n" +
+                        "            default: System.err.println(\"No.\"); break;\n" +
+                        "         }\n" +
+                        "     }\n" +
+                        "}\n")
+                .sourceLevel(21)
+                .run(ConvertSwitchToRuleSwitch.class)
+                .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
+                .applyFix()
+                .assertCompilable()
+                .assertVerbatimOutput("package test;" +
+                        "public class Test {\n" +
+                        "     private void test(Object p) {\n" +
+                        "         String result;\n" +
+                        "         switch (p) {\n" +
+                        "            case Integer i when (i > 10) -> result = \"a\";\n" +
+                        "            default -> System.err.println(\"No.\");\n" +
+                        "         }\n" +
+                        "     }\n" +
+                        "}\n");
+    }
+    
+    public void testSwitchExpressionGuardedPattern() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip tests
+            return;
+        }
+        HintTest.create()
+                .input("package test;"
+                        + "class Test {\n"
+                        + "    public String test(Object p, Object o1, Object o2) {\n"
+                        + "        switch (p) {\n"
+                        + "            case Integer i  when (i > 10):\n"
+                        + "               return (String) o1;\n"
+                        + "            default :\n"
+                        + "                return (String) o2;\n"
+                        + "        }\n"
+                        + "    }\n"
+                        + "}")
+                .sourceLevel(21)
+                .run(ConvertSwitchToRuleSwitch.class)
+                .findWarning("2:8-2:14:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
+                .applyFix()
+                .assertCompilable()
+                .assertVerbatimOutput("package test;"
+                            + "class Test {\n"
+                            + "    public String test(Object p, Object o1, Object o2) {\n"
+                            + "        return (String) (switch (p) {\n"
+                            + "            case Integer i when (i > 10) -> o1;\n"
+                            + "            default -> o2;\n"
+                            + "        });\n"
+                            + "    }\n"
+                            + "}");
     }
 
     public static Test suite() {

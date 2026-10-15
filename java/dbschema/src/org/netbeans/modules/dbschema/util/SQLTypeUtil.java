@@ -43,7 +43,7 @@ public class SQLTypeUtil extends Object {
      * @param sqlType the type number from java.sql.Types
      * @return the type name
      */
-    static public String getSqlTypeString(int sqlType) {
+    public static String getSqlTypeString(int sqlType) {
         switch (sqlType) {
             case Types.BIGINT:
                 return "BIGINT"; //NOI18N
@@ -121,7 +121,7 @@ public class SQLTypeUtil extends Object {
      * @param type the type from java.sql.Types
      * @return true if the given type is numeric type; false otherwise
      */
-    static public boolean isNumeric(int type) {
+    public static boolean isNumeric(int type) {
         switch (type) {
             case Types.BIGINT:
             case Types.BIT:
@@ -145,7 +145,7 @@ public class SQLTypeUtil extends Object {
      * @param type the type from java.sql.Types
      * @return true if the given type is character type; false otherwise
      */
-    static public boolean isCharacter(int type) {
+    public static boolean isCharacter(int type) {
         switch (type) {
             case Types.BINARY:
             case Types.CHAR:
@@ -168,7 +168,7 @@ public class SQLTypeUtil extends Object {
      * @param type the type from java.sql.Types return true if the give type is
      * blob type; false otherwise
      */
-    static public boolean isBlob(int type) {
+    public static boolean isBlob(int type) {
         switch (type) {
             case Types.BLOB:
             case Types.CLOB:
@@ -193,7 +193,7 @@ public class SQLTypeUtil extends Object {
      * @param type the type from java.sql.Types return true if the give type is
      * lob type; false otherwise
      */
-    static public boolean isLob(int type) {
+    public static boolean isLob(int type) {
         return (isBlob(type) 
                 || (Types.CLOB == type) 
                 || (Types.LONGVARCHAR == type));
@@ -206,7 +206,7 @@ public class SQLTypeUtil extends Object {
      * @param type2 second type to compare
      * @return true if the types are compatible; false otherwise
      */
-    static public boolean isCompatibleType(int type1, int type2) {
+    public static boolean isCompatibleType(int type1, int type2) {
         return ((type1 == type2)
                 || (isCharacter(type1) && isCharacter(type2))
                 || (isNumeric(type1) && isNumeric(type2))

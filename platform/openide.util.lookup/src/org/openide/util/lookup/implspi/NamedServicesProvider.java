@@ -155,7 +155,7 @@ public abstract class NamedServicesProvider {
     protected abstract Lookup create(String path);
     
     /** Finds a config object under given path. Called from {@link FileUtil#getConfigObject}.
-     * @param filePath path to .instance or .settings file
+     * @param path path to .instance or .settings file
      * @param type the requested type for given object
      * @return either null or instance of requested type
      * @since 8.10 

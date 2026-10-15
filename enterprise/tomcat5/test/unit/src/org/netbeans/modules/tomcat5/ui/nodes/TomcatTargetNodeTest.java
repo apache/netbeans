@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.tomcat5.ui.nodes;
 
-import org.netbeans.modules.tomcat5.ui.nodes.TomcatTargetNode;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import org.netbeans.junit.NbTestCase;
@@ -44,39 +43,32 @@ public class TomcatTargetNodeTest extends NbTestCase {
         final CountDownLatch latch = new CountDownLatch(2);
         final CountDownLatch finish = new CountDownLatch(1);
 
-        Runnable blocking = new Runnable() {
-
-            @Override
-            public void run() {
-                Children.MUTEX.postWriteRequest(new Runnable() {
-                    public void run() { 
-                        latch.countDown();
-                        try {
-                            latch.await();
-                            Thread.sleep(10000);
-                        } catch (InterruptedException ex) {
-                            Exceptions.printStackTrace(ex);
-                        }
+        Runnable blocking = () -> {
+            Children.MUTEX.postWriteRequest(new Runnable() {
+                @Override
+                public void run() {
+                    latch.countDown();
+                    try {
+                        latch.await();
+                        Thread.sleep(10000);
+                    } catch (InterruptedException ex) {
+                        Exceptions.printStackTrace(ex);
                     }
-                });
-            }
+                }
+            });
         };
 
-        Runnable testing = new Runnable() {
-
-            @Override
-            public void run() {
-                latch.countDown();
-                try {
-                    latch.await();
-                } catch (InterruptedException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-                try {
-                    TomcatTargetNode node = new TomcatTargetNode(Lookup.EMPTY);
-                } finally {
-                    finish.countDown();
-                }
+        Runnable testing = () -> {
+            latch.countDown();
+            try {
+                latch.await();
+            } catch (InterruptedException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            try {
+                TomcatTargetNode node = new TomcatTargetNode(Lookup.EMPTY);
+            } finally {
+                finish.countDown();
             }
         };
         

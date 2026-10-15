@@ -175,7 +175,7 @@ public final class SearchInfoDefinitionFactory {
      * Convenience method for creating search info for a list of roots with
      * default filters.
      *
-     * @see #createSearchInfo(.FileObject[], SearchFilterDefinition[])
+     * @see #createSearchInfo(FileObject[], SearchFilterDefinition[])
      */
     public static @NonNull SearchInfoDefinition createSearchInfo(
             @NonNull FileObject[] roots) {
@@ -197,7 +197,7 @@ public final class SearchInfoDefinitionFactory {
      * <p> In case you want to create node children in the node constructor, you
      * can create children in one constructor and pass them to another
      * constructor:</p>
-     * <pre class="nonnormative"">
+     * <pre class="nonnormative">
      * {@code
      * public ExampleNode() {
      *    this(Children.create(someChildrenFactory, true));
@@ -227,7 +227,7 @@ public final class SearchInfoDefinitionFactory {
      */
     private static List<SearchFilterDefinition> createDefaultFilterDefList() {
         List<SearchFilterDefinition> list;
-        list = new ArrayList<SearchFilterDefinition>(2);
+        list = new ArrayList<>(2);
         list.add(SHARABILITY_FILTER);
         list.add(VISIBILITY_FILTER);
         return Collections.unmodifiableList(list);

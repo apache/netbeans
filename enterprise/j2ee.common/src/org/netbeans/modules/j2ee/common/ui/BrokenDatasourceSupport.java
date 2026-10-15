@@ -123,8 +123,7 @@ public class BrokenDatasourceSupport {
      * @return Set<Datasource>  returns a set of data sources that don't have corresponding database connections
      */
     public static Set<Datasource> getBrokenDatasources(Project project) {
-        J2eeModuleProvider jmp =
-                (J2eeModuleProvider)project.getLookup().lookup(J2eeModuleProvider.class);
+        J2eeModuleProvider jmp = project.getLookup().lookup(J2eeModuleProvider.class);
         
         Set<Datasource> dss = null;
         try {
@@ -134,9 +133,9 @@ public class BrokenDatasourceSupport {
         }
         
         Set<Datasource> brokenDatasources = new HashSet<Datasource>();
-        Iterator it = dss.iterator();
+        Iterator<Datasource> it = dss.iterator();
         while (it.hasNext()) {
-            Datasource ds = (Datasource)it.next();
+            Datasource ds = it.next();
             if(!isFound(ds)){
                 brokenDatasources.add(ds);
             }

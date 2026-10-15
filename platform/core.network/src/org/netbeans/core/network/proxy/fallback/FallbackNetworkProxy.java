@@ -35,20 +35,20 @@ import org.openide.util.NbBundle;
  */
 public class FallbackNetworkProxy implements NetworkProxyResolver {
     
-    private final static Logger LOGGER = Logger.getLogger(FallbackNetworkProxy.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(FallbackNetworkProxy.class.getName());
 
-    private final static String AT = "@"; //NOI18N
-    private final static String COMMA = ","; //NOI18N
-    private final static String SLASH = "/"; //NOI18N
-    private final static String PROTOCOL_PREXIF_SEPARATOR = "://"; //NOI18N
-    private final static String EMPTY_STRING = ""; //NOI18N
+    private static final String AT = "@"; //NOI18N
+    private static final String COMMA = ","; //NOI18N
+    private static final String SLASH = "/"; //NOI18N
+    private static final String PROTOCOL_PREXIF_SEPARATOR = "://"; //NOI18N
+    private static final String EMPTY_STRING = ""; //NOI18N
     
-    private final static String HTTP_PROXY_SYS_PROPERTY = "http_proxy"; //NOI18N
-    private final static String HTTPS_PROXY_SYS_PROPERTY = "https_proxy"; //NOI18N
-    private final static String SOCKS_PROXY_SYS_PROPERTY = "socks_proxy"; //NOI18N
-    private final static String NO_PROXY_SYS_PROPERTY = "no_proxy"; //NOI18N
+    private static final String HTTP_PROXY_SYS_PROPERTY = "http_proxy"; //NOI18N
+    private static final String HTTPS_PROXY_SYS_PROPERTY = "https_proxy"; //NOI18N
+    private static final String SOCKS_PROXY_SYS_PROPERTY = "socks_proxy"; //NOI18N
+    private static final String NO_PROXY_SYS_PROPERTY = "no_proxy"; //NOI18N
     
-    private final static String DEFAULT_NO_PROXY_HOSTS = NbBundle.getMessage(FallbackNetworkProxy.class, "DefaulNoProxyHosts");
+    private static final String DEFAULT_NO_PROXY_HOSTS = NbBundle.getMessage(FallbackNetworkProxy.class, "DefaulNoProxyHosts");
 
     @Override
     public NetworkProxySettings getNetworkProxySettings() {

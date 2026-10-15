@@ -39,7 +39,6 @@ import javax.swing.text.html.HTMLEditorKit;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.FontColorNames;
 import org.netbeans.api.editor.settings.FontColorSettings;
-import org.netbeans.editor.EditorUI;
 
 /**
  *  HTML documentation view.
@@ -118,6 +117,7 @@ class HTMLDocView extends JEditorPane {
         });
     }
     
+    @Override
     protected EditorKit createDefaultEditorKit() {
         // it is extremelly slow to init it
         if (htmlKit == null){

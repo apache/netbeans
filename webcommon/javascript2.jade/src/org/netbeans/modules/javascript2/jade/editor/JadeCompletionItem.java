@@ -133,9 +133,9 @@ public class JadeCompletionItem implements CompletionProposal {
     }
     
     protected static class CompletionRequest {
-        final public int anchor;
-        final public String prefix;
-        final public ParserResult parserResult;
+        public final int anchor;
+        public final String prefix;
+        public final ParserResult parserResult;
 
         public CompletionRequest(ParserResult parserResult, int anchor, String prefix) {
             this.anchor = anchor;
@@ -193,7 +193,7 @@ public class JadeCompletionItem implements CompletionProposal {
         @Override
         public ImageIcon getIcon() {
             if (keywordIcon == null) {
-                keywordIcon = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/jade/resources/jade16.png")); //NOI18N
+                keywordIcon = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/jade/resources/jade16.png", false); //NOI18N
             }
             return keywordIcon;
         }

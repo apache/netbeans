@@ -30,28 +30,19 @@ import org.netbeans.modules.payara.tooling.data.PayaraServerStatus;
  */
 public class PayaraStatusEntity implements PayaraServerStatus {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER
             = new Logger(PayaraStatusEntity.class);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Payara server entity. */
     private PayaraServer server;
 
     /** Current Payara server status. */
     private PayaraStatus status;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara server status entity.
      * <p/>
@@ -64,10 +55,7 @@ public class PayaraStatusEntity implements PayaraServerStatus {
         this.status = PayaraStatus.UNKNOWN;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get Payara server entity.
      * <p/>

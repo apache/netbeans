@@ -2,7 +2,7 @@
 
 Document 0
 Searchable Keys:
-  clz : nonsclassname;NoNsClassName;132;;No\Ns;NsInterfaceName|\NsFoo\NsBar\NsInterfaceName;1;;0;<TESTURL>/testGetClassesWithNsInterfaces.php;;
+  clz : nonsclassname;NoNsClassName;132;;No\Ns;NsInterfaceName|\NsFoo\NsBar\NsInterfaceName;1;;0;<TESTURL>/testGetClassesWithNsInterfaces.php;;0;
   superiface : nsinterfacename;NsInterfaceName;NsFoo\NsBar
   top : nonsclassname
 

@@ -22,13 +22,18 @@ package org.netbeans.modules.parsing.spi.indexing.support;
 import java.io.IOException;
 import java.util.logging.Logger;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.modules.parsing.api.Task;
 import org.netbeans.modules.parsing.impl.indexing.ClusteredIndexables;
 import org.netbeans.modules.parsing.impl.indexing.FileObjectIndexable;
 import org.netbeans.modules.parsing.impl.indexing.IndexFactoryImpl;
+import org.netbeans.modules.parsing.impl.indexing.IndexingTask;
 import org.netbeans.modules.parsing.impl.indexing.SPIAccessor;
 import org.netbeans.modules.parsing.lucene.support.DocumentIndexCache;
 import org.netbeans.modules.parsing.lucene.support.Index;
+import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.indexing.Context;
+import org.netbeans.modules.parsing.spi.indexing.CustomIndexer;
+import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexer;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
 import org.netbeans.modules.parsing.spi.indexing.SourceIndexerFactory;
 import org.openide.filesystems.FileObject;
@@ -96,7 +101,7 @@ public final class IndexingSupport {
 
     /**
      * Creates a new {@link IndexDocument}. This method does exactly the same as
-     * {@link #createDocument(org.netbeans.modules.parsing.spi.indexing.Indexable), but you can
+     * {@link #createDocument(org.netbeans.modules.parsing.spi.indexing.Indexable)}, but you can
      * use <code>FileObject</code>s directly. The <code>FileObject</code> passed in
      * as a parameter has to be in the folders hierarchy under the root, which
      * this <code>IndexingSupport</code> instance was created for.
@@ -184,4 +189,14 @@ public final class IndexingSupport {
         return res;
     }
 
+    /**
+     * Identifies parser Tasks that are executed by indexing infrastructure. Use to customize the granularity of a {@link Parser.Result}
+     * provided by e.g. {@link EmbeddingIndexer} or {@link CustomIndexer}.
+     * @param t task to check
+     * @return true, if the task is posted by indexing infra.
+     * @since 9.22
+     */
+    public static boolean isIndexingTask(Task t) {
+        return t instanceof IndexingTask;
+    }
 }

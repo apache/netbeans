@@ -46,7 +46,7 @@ import javax.swing.ActionMap;
  *
         <span class="comment">// following line tells the top component which lookup should be associated with it</span>
         associateLookup (ExplorerUtils.createLookup (manager, map));
-</span>    }
+    }
     <span class="keyword">public</span> <span class="type">ExplorerManager</span> <span class="function-name">getExplorerManager</span>() {
         <span class="keyword">return</span> manager;
     }
@@ -68,7 +68,7 @@ import javax.swing.ActionMap;
 <span class="keyword">implements</span> <span class="type">ExplorerManager.Provider</span>, <span class="type">Lookup.Provider</span> {
     <span class="keyword">private</span> <span class="type">ExplorerManager</span> <span class="variable-name">manager</span>;
     <span class="keyword">private</span> <span class="type">Lookup</span> <span class="variable-name">lookup</span>;
-</span>    <span class="keyword">public</span> <span class="type">YourComponent</span>() {
+    <span class="keyword">public</span> <span class="type">YourComponent</span>() {
         <span class="comment">// same as before...</span>
         manager = <span class="keyword">new</span> <span class="type">ExplorerManager</span>();
         <span class="type">ActionMap</span> <span class="variable-name">map</span> = getActionMap();

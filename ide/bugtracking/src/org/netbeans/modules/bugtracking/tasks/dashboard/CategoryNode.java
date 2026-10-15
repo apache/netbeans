@@ -225,8 +225,8 @@ public class CategoryNode extends TaskContainerNode implements Comparable<Catego
         List<TreeListNode> selectedNodes = DashboardViewer.getInstance().getSelectedNodes();
         List<Action> actions = new ArrayList<Action>(getCategoryActions(selectedNodes));
         actions.add(null);
-        actions.addAll(Actions.getDefaultActions(selectedNodes.toArray(new TreeListNode[selectedNodes.size()])));
-        return actions.toArray(new Action[actions.size()]);
+        actions.addAll(Actions.getDefaultActions(selectedNodes.toArray(new TreeListNode[0])));
+        return actions.toArray(new Action[0]);
     }
 
     public boolean addTaskNode(TaskNode taskNode, boolean isInFilter) {

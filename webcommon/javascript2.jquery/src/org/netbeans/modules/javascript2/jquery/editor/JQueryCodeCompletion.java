@@ -68,7 +68,8 @@ public class JQueryCodeCompletion implements CompletionProvider {
     private static Collection<HtmlTagAttribute> allAttributes;
 
     private int lastTsOffset = 0;
-    
+
+    @SuppressWarnings("fallthrough")
     public List<CompletionProposal> complete(CodeCompletionContext ccContext, CompletionContext jsCompletionContext, String prefix) {
         long start = System.currentTimeMillis();
         List<CompletionProposal> result = new ArrayList<CompletionProposal>();
@@ -164,7 +165,7 @@ public class JQueryCodeCompletion implements CompletionProvider {
 
     @Override
     public String getHelpDocumentation(ParserResult info, ElementHandle element) {
-        if (element != null && element instanceof DocSimpleElement) {
+        if (element instanceof DocSimpleElement) {
             return ((DocSimpleElement)element).getDocumentation();
         }
         if (element != null && element.getKind() == ElementKind.CALL) {
@@ -250,7 +251,7 @@ public class JQueryCodeCompletion implements CompletionProvider {
         }
     }
 
-    private synchronized static Map<String, Collection<PropertyNameDataItem>> getPropertyNameData() {
+    private static synchronized Map<String, Collection<PropertyNameDataItem>> getPropertyNameData() {
         return PropertyNameDataLoader.getData(getPropertyNameDataFile());
     }
     
@@ -385,9 +386,9 @@ public class JQueryCodeCompletion implements CompletionProvider {
 //            } else {
 //                anchorOffsetDelta = 0;
 //            }
-////            if (prefix.isEmpty()) {
-////                anchorOffsetDelta = 1;
-////            }
+// //            if (prefix.isEmpty()) {
+// //                anchorOffsetDelta = 1;
+// //            }
 //
 //
 //        }
@@ -576,7 +577,7 @@ public class JQueryCodeCompletion implements CompletionProvider {
     }
 
     private Collection<HtmlTag> getHtmlTags(String prefix) {
-        Collection<HtmlTag> result = Collections.emptyList();
+        Collection<HtmlTag> result;
         HtmlModel htmlModel = HtmlModelFactory.getModel(HtmlVersion.HTML5);
         Collection<HtmlTag> allTags = htmlModel.getAllTags();
         if (prefix.isEmpty()) {

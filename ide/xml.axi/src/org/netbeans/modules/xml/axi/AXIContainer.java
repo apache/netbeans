@@ -114,7 +114,7 @@ public abstract class AXIContainer extends AXIComponent {
     public void addElement(AbstractElement child) {
         if(this instanceof Element) {
             AXIType type = ((Element)this).getType();
-            if(type != null && type instanceof ContentModel) {
+            if(type instanceof ContentModel) {
                 ((ContentModel)type).addElement(child);
                 return;
             }

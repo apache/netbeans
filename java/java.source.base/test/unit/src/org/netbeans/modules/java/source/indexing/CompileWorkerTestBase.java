@@ -20,10 +20,14 @@ package org.netbeans.modules.java.source.indexing;
 
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import java.io.File;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -53,6 +57,7 @@ import org.netbeans.modules.parsing.impl.indexing.lucene.LuceneIndexFactory;
 import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.netbeans.modules.parsing.spi.indexing.ErrorsCache;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
 import org.netbeans.spi.java.queries.SourceLevelQueryImplementation2;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -81,10 +86,10 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
         
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test1.sig",
-                                                       "cache/s1/java/15/classes/test/Test1a.sig",
-                                                       "cache/s1/java/15/classes/test/Test2.sig",
-                                                       "cache/s1/java/15/classes/test/Test2a.sig")),
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/16/classes/test/Test1.sig",
+                                                       "cache/s1/java/16/classes/test/Test1a.sig",
+                                                       "cache/s1/java/16/classes/test/Test2.sig",
+                                                       "cache/s1/java/16/classes/test/Test2a.sig")),
                      createdFiles);
         assertFalse(ErrorsCache.isInError(getRoot(), true));
     }
@@ -103,7 +108,7 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/16/classes/test/Test.sig")),
                      createdFiles);
         assertFalse(ErrorsCache.isInError(getRoot(), false));
 
@@ -128,6 +133,10 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
     }
 
     protected ParsingOutput runIndexing(List<CompileTuple> files, List<CompileTuple> virtualFiles) throws Exception {
+        return runIndexing(files, virtualFiles, Collections.emptyList());
+    }
+
+    protected ParsingOutput runIndexing(List<CompileTuple> files, List<CompileTuple> virtualFiles, List<CompileTuple> extraSourceFiles) throws Exception {
         TransactionContext txc = TransactionContext.beginStandardTransaction(src.toURL(), true, ()->false, false);
         Factory f = new JavaCustomIndexer.Factory();
         Context ctx = SPIAccessor.getInstance().createContext(CacheFolder.getDataFolder(src.toURL()), src.toURL(), f.getIndexerName(), f.getIndexVersion(), LuceneIndexFactory.getDefault(), false, false, true, SPIAccessor.getInstance().createSuspendStatus(new SuspendStatusImpl() {
@@ -151,8 +160,17 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
         toIndex.addAll(files);
         toIndex.addAll(virtualFiles);
         
+        for (CompileTuple extra : extraSourceFiles) {
+            try (OutputStream out = FileUtil.createData(extraSrc, extra.indexable.getRelativePath()).getOutputStream();
+                 Writer w = new OutputStreamWriter(out)) {
+                w.append(extra.jfo.getCharContent(true));
+            }
+        }
+
         ParsingOutput result = runCompileWorker(ctx, javaContext, toIndex);
         
+        javaContext.finish();
+        javaContext.store();
         txc.commit();
         
         return result;
@@ -162,7 +180,7 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
     
     @Override
     protected void setUp() throws Exception {
-        SourceUtilsTestUtil.prepareTest(new String[0], new Object[] {new SourceLevelQueryImpl()});
+        SourceUtilsTestUtil.prepareTest(new String[0], new Object[] {new SourceLevelQueryImpl(), new CompilerOptionsQueryImpl()});
         
         clearWorkDir();
         File wdFile = getWorkDir();
@@ -171,14 +189,18 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
         FileObject wd = FileUtil.toFileObject(wdFile);
         assertNotNull(wd);
         src = FileUtil.createFolder(wd, "src");
+        extraSrc = FileUtil.createFolder(wd, "extraSrc");
         FileObject buildRoot = FileUtil.createFolder(wd, "build");
         FileObject cache = FileUtil.createFolder(wd, "cache");
+        ClassPath sourcePath = ClassPathSupport.createClassPath(src, extraSrc);
 
-        SourceUtilsTestUtil.prepareTest(src, buildRoot, cache);
+        SourceUtilsTestUtil.prepareTest(sourcePath, buildRoot, cache, new FileObject[0]);
     }
     
     private FileObject src;
+    private FileObject extraSrc;
     private String sourceLevel;
+    private List<String> compilerOptions = Collections.emptyList();
     
     private FileObject createSrcFile(String pathAndName, String content) throws Exception {
         FileObject testFile = FileUtil.createData(src, pathAndName);
@@ -205,6 +227,10 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
         this.sourceLevel = sourceLevel;
     }
 
+    protected void setCompilerOptions(List<String> compilerOptions) {
+        this.compilerOptions = compilerOptions;
+    }
+
     private final class SourceLevelQueryImpl implements SourceLevelQueryImplementation2 {
 
         @Override
@@ -221,6 +247,28 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
                 @Override
                 public void removeChangeListener(ChangeListener l) {}
             };
+        }
+
+    }
+
+    private final class CompilerOptionsQueryImpl implements CompilerOptionsQueryImplementation {
+
+        private final Result result = new Result() {
+            @Override
+            public List<? extends String> getArguments() {
+                return compilerOptions;
+            }
+
+            @Override
+            public void addChangeListener(ChangeListener listener) {}
+
+            @Override
+            public void removeChangeListener(ChangeListener listener) {}
+        };
+
+        @Override
+        public Result getOptions(FileObject file) {
+            return result;
         }
 
     }

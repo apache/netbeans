@@ -50,7 +50,8 @@ public class HtmlBrowser extends Object {
         /** Creates new FactoryEditor */
         public FactoryEditor () {
         }
-        
+
+        @Override
         public String getAsText () {
             try {
                 org.openide.awt.HtmlBrowser.Factory f = (org.openide.awt.HtmlBrowser.Factory)getValue ();
@@ -66,7 +67,8 @@ public class HtmlBrowser extends Object {
             }
             return NbBundle.getMessage (FactoryEditor.class, "CTL_UnspecifiedBrowser"); //NOI18N
         }
-        
+
+        @Override
         public void setAsText (java.lang.String str) throws java.lang.IllegalArgumentException {
             try {
                 if (NbBundle.getMessage (FactoryEditor.class, "CTL_UnspecifiedBrowser").equals (str) //NOI18N
@@ -95,7 +97,8 @@ public class HtmlBrowser extends Object {
             throw iae;
             }
         }
-        
+
+        @Override
         public java.lang.String[] getTags () {
             ArrayList<String> list = new ArrayList<String> (6);
             Lookup.Result<org.openide.awt.HtmlBrowser.Factory> r = Lookup.getDefault().lookupResult(org.openide.awt.HtmlBrowser.Factory.class);

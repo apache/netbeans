@@ -35,7 +35,6 @@ import java.util.concurrent.RunnableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
@@ -193,6 +192,7 @@ public class ImplementOverrideMethodGenerator implements CodeGenerator {
                 }
             }
             
+            @Override
             public void run() {
                 List<ElementHandle<? extends Element>> tmp;
                 if (testOverrideMethodsSelection != null) {

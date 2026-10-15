@@ -37,6 +37,7 @@ import org.openide.filesystems.URLMapper;
 public class JaxRsStackSupportImpl implements JaxRsStackSupportImplementation {
 
     private static final String JAX_RS_APPLICATION_CLASS = "javax.ws.rs.core.Application"; //NOI18N
+    private static final String JAX_RS_APPLICATION_CLASS_JAKARTAEE = "jakarta.ws.rs.core.Application"; //NOI18N
 
     private final TomcatPlatformImpl j2eePlatform;
 
@@ -47,14 +48,14 @@ public class JaxRsStackSupportImpl implements JaxRsStackSupportImplementation {
     @Override
     public boolean addJsr311Api(Project project) {
         // return true (behaves like added) when JAX-RS is on classpath
-        return isBundled(JAX_RS_APPLICATION_CLASS);
+        return isBundled(JAX_RS_APPLICATION_CLASS) || isBundled(JAX_RS_APPLICATION_CLASS_JAKARTAEE);
     }
 
     @Override
     public boolean extendsJerseyProjectClasspath(Project project) {
         // declared as extended when JAX-RS is on classpath
         // suppose that TomEE has its own implementation of JAX-RS
-        return isBundled(JAX_RS_APPLICATION_CLASS);
+        return isBundled(JAX_RS_APPLICATION_CLASS) || isBundled(JAX_RS_APPLICATION_CLASS_JAKARTAEE);
     }
 
     @Override

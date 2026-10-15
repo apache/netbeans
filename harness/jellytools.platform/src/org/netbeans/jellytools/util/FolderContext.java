@@ -23,10 +23,7 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import org.netbeans.jellytools.JellyTestCase;
-import org.netbeans.jellytools.nodes.Node;
 import org.netbeans.jemmy.JemmyException;
-import org.netbeans.jemmy.operators.JTreeOperator;
-import org.openide.ErrorManager;
 import org.openide.filesystems.*;
 import org.openide.filesystems.FileSystem.AtomicAction;
 import org.openide.loaders.DataObject;
@@ -226,20 +223,6 @@ public class FolderContext {
         dataObject.getNodeDelegate().destroy();
     }
     
-    /** Finds Jelly Node.
-     * @param path Jelly Node's relative path separated by '|'
-     * @return Node
-     */
-    /* RepositoryTabOperator removed from jellytools
-    public Node getJellyNode(String path) {
-        Node node = null;
-        String treePath = getTreePath(path) ;
-        JTreeOperator tree = RepositoryTabOperator.invoke().tree();
-        node = new Node(tree, treePath);
-        return node;
-    }
-     */
-    
     /** Returns absolute Tree Path.
      * @param path relative path separated by '|'
      * @return String
@@ -256,7 +239,7 @@ public class FolderContext {
         return tp;
     }
     
-    // LIB /////////////////////////////////////////////////////////////////////
+    // LIB
     
     /** Creates URL from _base context and relative identifier 'spec' */
     private URL makeURL(String spec) {

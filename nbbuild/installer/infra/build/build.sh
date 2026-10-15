@@ -124,6 +124,8 @@ if [ -z "$ANT_OPTS" ] ; then
     ANT_OPTS="-Xmx768m"
 fi
 
+ANT_OPTS="$ANT_OPTS -DIS_NB_INSTALLER=true"
+
 java8output=`"$JAVA_HOME/bin/java" -version 2>&1 | grep 1.8.0`
 
 if [ -n "$java7output" ] ; then

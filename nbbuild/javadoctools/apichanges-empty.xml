@@ -27,7 +27,6 @@
     <htmlcontents>
         <head>
             <title>No Change History</title>
-            <link rel="stylesheet" href="prose.css" type="text/css"/>
         </head>
         <body>
             <p class="overviewlink"><a href="overview-summary.html">Overview</a></p>

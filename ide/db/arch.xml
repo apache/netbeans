@@ -19,8 +19,8 @@
     under the License.
 
 -->
-<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
-  <!ENTITY api-questions SYSTEM "../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
+<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
+  <!ENTITY api-questions SYSTEM "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
 ]>
 
 <api-answers
@@ -189,7 +189,7 @@
   </usecase>
   <usecase id="get-jdbc-driver" name="Get the underlying JDBC Driver instance for a JDBCDriver">
    <p>
-      You can use the <a href="@TOP@org/netbeans/api/db/explorer/JDBCDriver.html#getDriver--">JDBCDriver.getDriver()</a>
+      You can use the <a href="@TOP@org/netbeans/api/db/explorer/JDBCDriver.html#getDriver()">JDBCDriver.getDriver()</a>
       method to obtain a reference to the underlying JDBC Driver instance.  This is useful if you want to use the registered
       drivers but create your own JDBC connections independent of the Database Explorer.
 
@@ -199,7 +199,7 @@
    <p>
     When creating a new connection the JDBC driver which it should use can be specified.
     A list of all the registered JDBC drivers can be retrieved using 
-    <a href="@TOP@org/netbeans/api/db/explorer/JDBCDriverManager.html#getDrivers--">JDBCDriverManager.getDrivers()</a>.
+    <a href="@TOP@org/netbeans/api/db/explorer/JDBCDriverManager.html#getDrivers()">JDBCDriverManager.getDrivers()</a>.
    </p>
   </usecase>
   <usecase id="register-runtimes" name="Registering database runtimes">
@@ -217,9 +217,9 @@
    <p>
     A module can create new database connections (for example to a bundled database).
     New connections can be added by calling 
-    <a href="@TOP@org/netbeans/api/db/explorer/DatabaseConnection.html#create-org.netbeans.api.db.explorer.JDBCDriver-java.lang.String-java.lang.String-java.lang.String-java.lang.String-boolean-">DatabaseConnection.create()</a>
+    <a href="@TOP@org/netbeans/api/db/explorer/DatabaseConnection.html#create(org.netbeans.api.db.explorer.JDBCDriver,java.lang.String,java.lang.String,java.lang.String,java.lang.String,boolean)">DatabaseConnection.create()</a>
     to create a new DatabaseConnection instance and then 
-    <a href="@TOP@org/netbeans/api/db/explorer/ConnectionManager.html#addConnection-org.netbeans.api.db.explorer.DatabaseConnection-">ConnectionManager.addConnection()</a> to
+    <a href="@TOP@org/netbeans/api/db/explorer/ConnectionManager.html#addConnection(org.netbeans.api.db.explorer.DatabaseConnection)">ConnectionManager.addConnection()</a> to
     add the connection to the Database Explorer.
    </p>
    <p>
@@ -265,7 +265,7 @@
     which allows the user to select the database connection which the SQL statement
     will be executed against in a combo box in the editor toolbar. 
     The list of connections can be obtained by calling
-    <a href="@TOP@org/netbeans/api/db/explorer/ConnectionManager.html#getConnections--">ConnectionManager.getConnections()</a>,
+    <a href="@TOP@org/netbeans/api/db/explorer/ConnectionManager.html#getConnections()">ConnectionManager.getConnections()</a>,
     which returns an array of 
     <a href="@TOP@org/netbeans/api/db/explorer/DatabaseConnection.html">DatabaseConnection</a>
     instances.
@@ -273,7 +273,7 @@
    <p>
     The client usually needs to show the display name of the connection. The
     display name can be retrieved using the 
-    <a href="@TOP@org/netbeans/api/db/explorer/DatabaseConnection.html#getDisplayName--">DatabaseConnection.getDisplayName()</a>
+    <a href="@TOP@org/netbeans/api/db/explorer/DatabaseConnection.html#getDisplayName()">DatabaseConnection.getDisplayName()</a>
     method.
    </p>
   </usecase>
@@ -293,28 +293,28 @@
     Usually when displaying a list of connections (usually in a combo box),
     the last item is "New Connection", which displays the standard New Database Connection 
     dialog of the Database Explorer. This can be achieved by calling one of the
-    <a href="@TOP@org/netbeans/api/db/explorer/ConnectionManager.html#showAddConnectionDialog-org.netbeans.api.db.explorer.JDBCDriver-">ConnectionManager.showAddConnectionDialog()</a> methods.
+    <a href="@TOP@org/netbeans/api/db/explorer/ConnectionManager.html#showAddConnectionDialog(org.netbeans.api.db.explorer.JDBCDriver)">ConnectionManager.showAddConnectionDialog()</a> methods.
    </p>
   </usecase>
   <usecase id="remove-connection" name="Remove a database connection">
    <p>
        A user of this API may want to remove a connection from the list of connections
        registered by the Database Explorer.  This is done using 
-       <a href="@TOP@org/netbeans/api/db/explorer/ConnectionManager.html#removeConnection-org.netbeans.api.db.explorer.DatabaseConnection-">ConnectionManager.removeConnection()</a>
+       <a href="@TOP@org/netbeans/api/db/explorer/ConnectionManager.html#removeConnection(org.netbeans.api.db.explorer.DatabaseConnection)">ConnectionManager.removeConnection()</a>
    </p>
   </usecase>
  <usecase id="connect-database" name="Connecting to a database">
    <p>
     A component which provides database functionality (such as the SQL Editor)
     will need to connect to a database. This can be achieved using the
-    <a href="@TOP@org/netbeans/api/db/explorer/ConnectionManager.html#showConnectionDialog-org.netbeans.api.db.explorer.DatabaseConnection-">DatabaseConnection.showConnectionDialog()</a>
+    <a href="@TOP@org/netbeans/api/db/explorer/ConnectionManager.html#showConnectionDialog(org.netbeans.api.db.explorer.DatabaseConnection)">DatabaseConnection.showConnectionDialog()</a>
     method and the <code>java.sql.Connection</code> instance can be retrieved using the 
-    <a href="@TOP@org/netbeans/api/db/explorer/DatabaseConnection.html#getJDBCConnection--">getJDBCConnection()</a>
+    <a href="@TOP@org/netbeans/api/db/explorer/DatabaseConnection.html#getJDBCConnection()">getJDBCConnection()</a>
     method.
    </p>
    <p>
      If you want to connect to the database without showing a dialog or any kind of UI, you can use the
-     <a href="@TOP@org/netbeans/api/db/explorer/ConnectionManager.html#connect-org.netbeans.api.db.explorer.DatabaseConnection-">DatabaseConnection.connect()</a>
+     <a href="@TOP@org/netbeans/api/db/explorer/ConnectionManager.html#connect(org.netbeans.api.db.explorer.DatabaseConnection)">DatabaseConnection.connect()</a>
      method.
    </p>
   </usecase>
@@ -322,7 +322,7 @@
    <p>
     You may want to test to make sure the underlying physical JDBC connection
     obtained from a DatabaseConnection is either valid or null.  This is done using the
-    <a href="@TOP@org/netbeans/api/db/explorer/DatabaseConnection.html#getJDBCConnection-boolean-">
+    <a href="@TOP@org/netbeans/api/db/explorer/DatabaseConnection.html#getJDBCConnection(boolean)">
         DatabaseConnection.getJDBCConnection(boolean test)</a>
     method, which validates the underlying connection before returning it.  If the
     connection is invalid, it marks the DatabaseConnection as disconnected and returns null.
@@ -334,9 +334,9 @@
     or a module providing support for data sources) will need to let the user
     select the a database connection, usually through a combo box.
     This can be achieved using the
-    <a href="@TOP@org/netbeans/api/db/explorer/support/DatabaseExplorerUIs.html#connect-javax.swing.JComboBox-org.netbeans.api.db.explorer.ConnectionManager-">DatabaseExplorerUIs.connect()</a>
+    <a href="@TOP@org/netbeans/api/db/explorer/support/DatabaseExplorerUIs.html#connect(javax.swing.JComboBox,org.netbeans.api.db.explorer.ConnectionManager)">DatabaseExplorerUIs.connect()</a>
     method. The <code>JComboBox</code> passed to the method will be filled with the list of connections as returned by 
-    <a href="@TOP@org/netbeans/api/db/explorer/ConnectionManager.html#getConnections--">ConnectionManager.getConnections()</a>, followed by a separator
+    <a href="@TOP@org/netbeans/api/db/explorer/ConnectionManager.html#getConnections()">ConnectionManager.getConnections()</a>, followed by a separator
     and a <em>New Database Connection</em> item which will display the dialog for adding a new database connection when selected.
    </p>
   </usecase>

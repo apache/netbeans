@@ -1,0 +1,5 @@
+Code completion result for source line:
+$this->publicFiled->publicXMethod()->publicY|Field; // ClassX|(ClassY&ClassZ)
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicYMethod()                 [PUBLIC]   ClassY
+VARIABLE   (ClassY&ClassZ)|ClassX publicY  [PUBLIC]   ClassY

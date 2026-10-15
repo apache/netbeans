@@ -27,16 +27,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.security.ProtectionDomain;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -133,6 +134,9 @@ implements Cloneable, Stamps.Updater {
             if (!startLevel.isEmpty()) {
                 configMap.put("org.osgi.framework.startlevel.beginning", startLevel); // NOI18N
             }
+            // Do not let felix override the URL handler and keep NetBeans handler
+            // by default
+            configMap.put("felix.service.urlhandlers", "false");
             FrameworkFactory frameworkFactory = lkp.lookup(FrameworkFactory.class);
             if (frameworkFactory == null) {
                 throw new IllegalStateException(
@@ -142,6 +146,7 @@ implements Cloneable, Stamps.Updater {
             }
             framework = frameworkFactory.newFramework(configMap);
             try {
+                System.clearProperty("java.security.manager");
                 framework.init();
                 NetigsoServices ns = new NetigsoServices(this, framework);
             } catch (BundleException ex) {
@@ -188,7 +193,7 @@ implements Cloneable, Stamps.Updater {
 
     /** contributed by Alex Bowen (trajar@netbeans.org) */
     private void injectSystemProperties(Map configProps) {
-        for (Enumeration e = System.getProperties().propertyNames(); e.hasMoreElements(); ) {
+        for (Enumeration<?> e = System.getProperties().propertyNames(); e.hasMoreElements(); ) {
             String key = e.nextElement().toString();
             if (key.startsWith("felix.") || key.startsWith("org.osgi.framework.")) { // NOI18N
                 configProps.put(key, System.getProperty(key));
@@ -275,12 +280,12 @@ implements Cloneable, Stamps.Updater {
                 try {
                     SELF_QUERY.set(true);
                     if (findCoveredPkgs(exported)) {
-                        Enumeration en = b.findEntries("", null, true);
+                        Enumeration<URL> en = b.findEntries("", null, true);
                         if (en == null) {
                             LOG.log(Level.INFO, "Bundle {0}: {1} is empty", new Object[] { b.getBundleId(), b.getSymbolicName() });
                         } else {
                             while (en.hasMoreElements()) {
-                                URL url = (URL) en.nextElement();
+                                URL url = en.nextElement();
                                 if (url.getFile().startsWith("/META-INF")) {
                                     pkgs.add(url.getFile().substring(9));
                                     continue;
@@ -290,11 +295,7 @@ implements Cloneable, Stamps.Updater {
                         }
                     }
                     if (exported instanceof String) {
-                        for (String p : exported.toString().split(",")) { // NOI18N
-                            int semic = p.indexOf(';');
-                            if (semic >= 0) {
-                                p = p.substring(0, semic);
-                            }
+                        for (String p : splitExportPackages(exported.toString())) {
                             pkgs.add(p);
                         }
                     }
@@ -327,7 +328,7 @@ implements Cloneable, Stamps.Updater {
                     throw possible;
                 }
                 // Bundle is a fragment, replace it with host in classloader
-                String fragmentHost = b.getHeaders("").get("Fragment-Host");
+                String fragmentHost = extractBundleName(b.getHeaders("").get("Fragment-Host"));
                 Bundle hostBundle = findBundle(fragmentHost);
                 if (hostBundle == null) {
                     LOG.log(Level.WARNING, "Failed to locate fragment host bundle {0} for fragment bundle {1}",
@@ -354,6 +355,17 @@ implements Cloneable, Stamps.Updater {
 
     private static boolean isRealBundle(Bundle b) {
         return b.getHeaders("").get("Fragment-Host") == null; // NOI18N
+    }
+
+    private static String extractBundleName(String fullBundleSpec) {
+        if (fullBundleSpec == null) {
+            return fullBundleSpec;
+        }
+        int semic = fullBundleSpec.indexOf(';');
+        if (semic >= 0) {
+            return fullBundleSpec.substring(0, semic);
+        }
+        return fullBundleSpec;
     }
 
     @Override
@@ -792,4 +804,79 @@ implements Cloneable, Stamps.Updater {
     public final byte[] patchBC(ClassLoader l, String className, ProtectionDomain pd, byte[] arr) {
         return patchByteCode(l, className, pd, arr);
     }
+
+    /**
+     * OSGI-Specification declares:
+     *
+     * <pre>
+     * Export-Package  ::= export ( ',' export)*
+     * export          ::= package-names ( ';' parameter )*
+     * package-names   ::= package-name                // See 1.3.2
+     *                   ( ';' package-name )*
+     * </pre>
+     *
+     * @param exportPkg String formatted according to Export-Package
+     * @return list of package-name entries
+     */
+    // Same implementation is used in org.netbeans.core.netigso.Netigso and
+    // org.netbeans.modules.maven.osgi.OSGiJarAccessibilityQueryImpl copied to
+    // not introduce module dependencies. Tests are in Netigso, when updated,
+    // update both places!
+    static List<String> splitExportPackages(String exportPkg) {
+        List<String> exports = new ArrayList<>();
+        StringBuilder buffer = new StringBuilder();
+        boolean inQuotedString = false;
+        for (int i = 0; i < exportPkg.length(); i++) {
+            char nextChar = exportPkg.charAt(i);
+            switch(nextChar) {
+                case '"' -> {
+                    inQuotedString = ! inQuotedString;
+                    buffer.append(nextChar);
+                }
+                case ',' -> {
+                    if (inQuotedString) {
+                        buffer.append(nextChar);
+                    } else {
+                        exports.add(buffer.toString());
+                        buffer.setLength(0);
+                    }
+                }
+                case '\\' -> {
+                    buffer.append(nextChar);
+                    if (inQuotedString) {
+                        if((i + 1) == exportPkg.length()) {
+                            throw new IllegalStateException("Invalid escape sequence");
+                        }
+                        nextChar = exportPkg.charAt(i + 1);
+                        i++;
+                        if (nextChar == '"' || nextChar == '\\') {
+                            buffer.append(nextChar);
+                        } else {
+                            throw new IllegalStateException("Invalid escape sequence");
+                        }
+                    }
+                }
+                default -> buffer.append(nextChar);
+            }
+        }
+        if(! buffer.isEmpty()){
+            exports.add(buffer.toString());
+        }
+        List<String> packageNames = new ArrayList<>();
+        // Each export statement can hold multiple package names separated by
+        // semicolon, so split on semicolon. package-name and parameter are
+        // discerned based on the presence of a equals character. A package-name
+        // must not contain it, a parameter must.
+        for(String export: exports) {
+            for(String packageCandiate: export.split(";")) {
+                // package-name list ends with first parameter
+                if(packageCandiate.contains("=")) {
+                    break;
+                }
+                packageNames.add(packageCandiate);
+            }
+        }
+        return packageNames;
+    }
+
 }

@@ -1,0 +1,23 @@
+Code completion result for source line:
+public function returnType(): |never { // class
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      TestClass                       [PUBLIC]   neverReturnType.php
+CLASS      TestInterface                   [PUBLIC]   neverReturnType.php
+------------------------------------
+KEYWORD    array                                      null
+KEYWORD    bool                                       null
+KEYWORD    callable                                   null
+KEYWORD    false                                      null
+KEYWORD    float                                      null
+KEYWORD    int                                        null
+KEYWORD    iterable                                   null
+KEYWORD    mixed                                      null
+KEYWORD    never                                      null
+KEYWORD    null                                       null
+KEYWORD    object                                     null
+KEYWORD    parent                                     null
+KEYWORD    self                                       null
+KEYWORD    static                                     null
+KEYWORD    string                                     null
+KEYWORD    true                                       null
+KEYWORD    void                                       null

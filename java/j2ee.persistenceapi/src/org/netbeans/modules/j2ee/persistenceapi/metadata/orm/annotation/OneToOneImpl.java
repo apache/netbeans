@@ -24,6 +24,7 @@ import java.util.Map;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
 import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.AnnotationModelHelper;
 import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.parser.AnnotationParser;
 import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.parser.ArrayValueHandler;
@@ -41,23 +42,38 @@ public class OneToOneImpl implements OneToOne {
 
     public OneToOneImpl(final AnnotationModelHelper helper, final Element element, AnnotationMirror oneToOneAnnotation, String name, Map<String, ? extends AnnotationMirror> annByType) {
         this.name = name;
+
+        String cascadeTypeName;
+        String fetchTypeName;
+        String joinTableName;
+
+        if (((TypeElement) oneToOneAnnotation.getAnnotationType().asElement()).getQualifiedName().toString().startsWith("jakarta.")) {
+            cascadeTypeName = "jakarta.persistence.CascadeType";
+            fetchTypeName = "jakarta.persistence.FetchType";
+            joinTableName = "jakarta.persistence.JoinTable";
+        } else {
+            cascadeTypeName = "javax.persistence.CascadeType";
+            fetchTypeName = "javax.persistence.FetchType";
+            joinTableName = "javax.persistence.JoinTable";
+        }
+
         AnnotationParser parser = AnnotationParser.create(helper);
         parser.expectClass("targetEntity", new DefaultProvider() { // NOI18N
             public Object getDefaultValue() {
                 return EntityMappingsUtilities.getElementTypeName(element);
             }
         });
-        parser.expectEnumConstantArray("cascade", helper.resolveType("javax.persistence.CascadeType"), new ArrayValueHandler() { // NOI18N
+        parser.expectEnumConstantArray("cascade", helper.resolveType(cascadeTypeName), new ArrayValueHandler() { // NOI18N
             public Object handleArray(List<AnnotationValue> arrayMembers) {
                 return new CascadeTypeImpl(arrayMembers);
             }
         }, parser.defaultValue(new CascadeTypeImpl()));
-        parser.expectEnumConstant("fetch", helper.resolveType("javax.persistence.FetchType"), parser.defaultValue("EAGER")); // NOI18N
+        parser.expectEnumConstant("fetch", helper.resolveType(fetchTypeName), parser.defaultValue("EAGER")); // NOI18N
         parser.expectPrimitive("optional", Boolean.class, parser.defaultValue(true)); // NOI18N
         parser.expectString("mappedBy", parser.defaultValue("")); // NOI18N
         parseResult = parser.parse(oneToOneAnnotation);
 
-        joinTable = new JoinTableImpl(helper, annByType.get("javax.persistence.JoinTable")); // NOI18N
+        joinTable = new JoinTableImpl(helper, annByType.get(joinTableName)); // NOI18N
         joinColumnList = EntityMappingsUtilities.getJoinColumns(helper, annByType);
         pkJoinColumnList = EntityMappingsUtilities.getPrimaryKeyJoinColumns(helper, annByType);
     }
@@ -119,7 +135,7 @@ public class OneToOneImpl implements OneToOne {
     }
 
     public PrimaryKeyJoinColumn[] getPrimaryKeyJoinColumn() {
-        return pkJoinColumnList.toArray(new PrimaryKeyJoinColumn[pkJoinColumnList.size()]);
+        return pkJoinColumnList.toArray(new PrimaryKeyJoinColumn[0]);
     }
 
     public int addPrimaryKeyJoinColumn(PrimaryKeyJoinColumn value) {
@@ -151,7 +167,7 @@ public class OneToOneImpl implements OneToOne {
     }
 
     public JoinColumn[] getJoinColumn() {
-        return joinColumnList.toArray(new JoinColumn[joinColumnList.size()]);
+        return joinColumnList.toArray(new JoinColumn[0]);
     }
 
     public int addJoinColumn(JoinColumn value) {

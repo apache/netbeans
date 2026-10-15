@@ -34,7 +34,10 @@ import java.util.jar.Manifest;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Project;
+import org.junit.Rule;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -45,6 +48,19 @@ import org.xml.sax.InputSource;
  * @author Jaroslav Tulach <jtulach@netbeans.org>
  */
 public class AutoUpdateTest extends TestBase {
+
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        System.clearProperty("url");
+        System.clearProperty("dir");
+        System.clearProperty("includes");
+        System.clearProperty("target");
+        System.clearProperty("force");
+    }
 
     public AutoUpdateTest(String name) {
         super(name);
@@ -58,33 +74,30 @@ public class AutoUpdateTest extends TestBase {
 
         File target = new File(getWorkDir(), "target");
         target.mkdirs();
+        System.setProperty("dir", nbm.getParentFile().getAbsolutePath() );
+        System.setProperty("includes", "org.netbeans.api.annotations.common");
+        System.setProperty("target", target.getAbsolutePath());
+        buildRule.configureProject(getBuildFileInClassPath("autoupdate.xml"));
+        buildRule.executeTarget("mirror");
 
-        execute(
-            "autoupdate.xml", "-verbose", "-Ddir=" + nbm.getParent(),
-            "-Dincludes=org.netbeans.api.annotations.common",
-            "-Dtarget=" + target,
-            "mirror"
-        );
-        
         File[] arr = target.listFiles();
-        assertEquals("One item in the array:\n" + getStdOut(), 1, arr.length);
+        assertEquals("One item in the array:\n" + buildRule.getFullLog(), 1, arr.length);
         assertEquals("It is the NBM file", nbm.getName(), arr[0].getName());
         assertEquals("Length is the same", nbm.length(), arr[0].length());
-        
-        execute(
-            "autoupdate.xml", "-verbose", "-Ddir=" + nbm.getParent(),
-            "-Dincludes=org.netbeans.api.annotations.common",
-            "-Dtarget=" + target,
-            "mirror"
-        );
 
-        if (getStdOut().contains("get:org.netbeans.api.annotations.common")) {
-            fail("No download when latest version present:\n" + getStdOut());
+        System.setProperty("dir", nbm.getParentFile().getAbsolutePath() );
+        System.setProperty("includes", "org.netbeans.api.annotations.common");
+        System.setProperty("target", target.getAbsolutePath());
+
+        buildRule.configureProject(getBuildFileInClassPath("autoupdate.xml"));
+        buildRule.executeTarget("mirror");
+        if (buildRule.getFullLog().contains("get:org.netbeans.api.annotations.common")) {
+            fail("No download when latest version present:\n" + buildRule.getFullLog());
         }
-        if (getStdOut().contains("is not present")) {
-            fail("Don't say it is not present:\n" + getStdOut());
+        if (buildRule.getFullLog().contains("is not present")) {
+            fail("Don't say it is not present:\n" + buildRule.getFullLog());
         }
-        
+
     }
     public void testDirectlySpecifiedNBMs() throws Exception {
         File nbm = generateNBM("org-netbeans-api-annotations-common.nbm",
@@ -94,13 +107,11 @@ public class AutoUpdateTest extends TestBase {
 
         File target = new File(getWorkDir(), "target");
         target.mkdirs();
-
-        execute(
-            "autoupdate.xml", "-verbose", "-Ddir=" + nbm.getParent(),
-            "-Dincludes=org.netbeans.api.annotations.common",
-            "-Dtarget=" + target,
-            "all-nbms"
-        );
+        System.setProperty("dir", nbm.getParent());
+        System.setProperty("includes", "org.netbeans.api.annotations.common");
+        System.setProperty("target", target.getAbsolutePath());
+        buildRule.configureProject(getBuildFileInClassPath("autoupdate.xml"));
+        buildRule.executeTarget("all-nbms");
 
         File xml = new File(
             new File(target, "update_tracking"),
@@ -130,11 +141,11 @@ public class AutoUpdateTest extends TestBase {
         File target = new File(getWorkDir(), "target");
         target.mkdirs();
 
-        execute(
-            "autoupdate.xml", "-verbose", "-Durl=" + f.toURI().toURL(),
-            "-Dincludes=org.netbeans.api.annotations.common",
-            "-Dtarget=" + target
-        );
+        System.setProperty("url", f.toURI().toURL().toString());
+        System.setProperty("includes", "org.netbeans.api.annotations.common");
+        System.setProperty("target", target.getAbsolutePath());
+        buildRule.configureProject(getBuildFileInClassPath("autoupdate.xml"));
+        buildRule.executeTarget("all");
 
         File xml = new File(
             new File(new File(target, "platform"), "update_tracking"),
@@ -194,13 +205,13 @@ public class AutoUpdateTest extends TestBase {
         assertTrue(config.isFile());
         assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE module PUBLIC \"-//NetBeans//DTD Module Status 1.0//EN\"\n                        \"http://www.netbeans.org/dtds/module-status-1_0.dtd\">\n<module name=\"org.apache.commons.io\">\n    <param name=\"autoload\">true</param>\n    <param name=\"eager\">false</param>\n    <param name=\"jar\">modules/org-apache-commons-io.jar</param>\n    <param name=\"reloadable\">false</param>\n</module>\n", readFile(config));
     }
-    
+
     public void testDownloadAndExtractExternal() throws Exception {
         File f = new File(getWorkDir(), "org-netbeans-api-annotations-common.xml");
         extractResource(f, "org-netbeans-api-annotations-common.xml");
-        
+
         File ext = extractString("external content");
-        
+
         String extRef =
             "URL: " + ext.toURI().toString() + "\n";
 
@@ -211,12 +222,12 @@ public class AutoUpdateTest extends TestBase {
 
         File target = new File(getWorkDir(), "target");
         target.mkdirs();
+        System.setProperty("url", f.toURI().toURL().toString());
+        System.setProperty("includes", "org.netbeans.api.annotations.common");
+        System.setProperty("target", target.getAbsolutePath());
 
-        execute(
-            "autoupdate.xml", "-verbose", "-Durl=" + f.toURI().toURL(),
-            "-Dincludes=org.netbeans.api.annotations.common",
-            "-Dtarget=" + target
-        );
+        buildRule.configureProject(getBuildFileInClassPath("autoupdate.xml"));
+        buildRule.executeTarget("all");
 
         File xml = new File(
             new File(new File(target, "platform"), "update_tracking"),
@@ -251,7 +262,7 @@ public class AutoUpdateTest extends TestBase {
     public void testDownloadAndExtractExternalWithFirstURLBroken() throws Exception {
         File f = new File(getWorkDir(), "org-netbeans-api-annotations-common.xml");
         extractResource(f, "org-netbeans-api-annotations-common.xml");
-        
+
         File ext = extractString("external content");
         BufferedInputStream bsrc = null;
         CRC32 crc = new CRC32();
@@ -267,8 +278,8 @@ public class AutoUpdateTest extends TestBase {
             if ( bsrc != null )
                 bsrc.close();
         }
-        
-        
+
+
         String extRef =
             "CRC: " + crc.getValue() + "\n" +
             "URL: file:/I/dont/exist/At/All\n" +
@@ -281,12 +292,11 @@ public class AutoUpdateTest extends TestBase {
 
         File target = new File(getWorkDir(), "target");
         target.mkdirs();
-
-        execute(
-            "autoupdate.xml", "-verbose", "-Durl=" + f.toURI().toURL(),
-            "-Dincludes=org.netbeans.api.annotations.common",
-            "-Dtarget=" + target
-        );
+        System.setProperty("url", f.toURI().toURL().toString());
+        System.setProperty("includes", "org.netbeans.api.annotations.common");
+        System.setProperty("target", target.getAbsolutePath());
+        buildRule.configureProject(getBuildFileInClassPath("autoupdate.xml"));
+        buildRule.executeTarget("all");
 
         File xml = new File(
             new File(new File(target, "platform"), "update_tracking"),
@@ -317,9 +327,9 @@ public class AutoUpdateTest extends TestBase {
     public void testFailOnWrongCRCExternal() throws Exception {
         File f = new File(getWorkDir(), "org-netbeans-api-annotations-common.xml");
         extractResource(f, "org-netbeans-api-annotations-common.xml");
-        
+
         File ext = extractString("external content");
-        
+
         String extRef =
             "CRC: 42\n" +
             "URL: " + ext.toURI().toString() + "\n";
@@ -333,24 +343,25 @@ public class AutoUpdateTest extends TestBase {
         target.mkdirs();
 
         try {
-            execute(
-                "autoupdate.xml", "-verbose", "-Durl=" + f.toURI().toURL(),
-                "-Dincludes=org.netbeans.api.annotations.common",
-                "-Dtarget=" + target
-            );
+            System.setProperty("url", f.toURI().toURL().toString());
+            System.setProperty("includes", "org.netbeans.api.annotations.common");
+            System.setProperty("target", target.getAbsolutePath() );
+
+            buildRule.configureProject(getBuildFileInClassPath("autoupdate.xml"));
+            buildRule.executeTarget("all");
             fail("Execution shall fail, as the CRC is wrong");
-        } catch (ExecutionError ok) {
+        } catch (BuildException ok) {
             // OK
         }
     }
-    
+
     public void testDownloadAndExtractExternalWithProperty() throws Exception {
         File f = new File(getWorkDir(), "org-netbeans-api-annotations-common.xml");
         extractResource(f, "org-netbeans-api-annotations-common.xml");
-        
+
         File ext = extractString("external content");
         System.setProperty("my.ref", ext.getParent());
-        
+
         String extRef =
             "URL: file:${my.ref}/" + ext.getName() + "\n";
 
@@ -361,12 +372,11 @@ public class AutoUpdateTest extends TestBase {
 
         File target = new File(getWorkDir(), "target");
         target.mkdirs();
-
-        execute(
-            "autoupdate.xml", "-verbose", "-Durl=" + f.toURI().toURL(),
-            "-Dincludes=org.netbeans.api.annotations.common",
-            "-Dtarget=" + target
-        );
+        System.setProperty("url", f.toURI().toURL().toString());
+        System.setProperty("includes", "org.netbeans.api.annotations.common");
+        System.setProperty("target", target.getAbsolutePath() );
+        buildRule.configureProject(getBuildFileInClassPath("autoupdate.xml"));
+        buildRule.executeTarget("all");
 
         File xml = new File(
             new File(new File(target, "platform"), "update_tracking"),
@@ -421,7 +431,7 @@ public class AutoUpdateTest extends TestBase {
             "org-netbeans-api-annotations-common.xml"
         );
         y.createNewFile();
-        
+
         x.getParentFile().mkdirs();
         String txtx =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
@@ -436,28 +446,25 @@ public class AutoUpdateTest extends TestBase {
         try (FileOutputStream osx = new FileOutputStream(x)) {
             osx.write(txtx.getBytes());
         }
-
-
-        execute(
-            "autoupdate.xml", "-verbose", "-Durl=" + f.toURI().toURL(),
-            "-Dincludes=org.netbeans.api.annotations.common",
-            "-Dtarget=" + target + File.separator + "platformXY", "cluster"
-        );
+        System.setProperty("url", f.toURI().toURL().toString());
+        System.setProperty("includes", "org.netbeans.api.annotations.common");
+        System.setProperty("target", target.getAbsolutePath() + File.separator + "platformXY" );
+        buildRule.configureProject(getBuildFileInClassPath("autoupdate.xml"));
+        buildRule.executeTarget("cluster");
 
         File xml = new File(
             new File(new File(new File(target, "platformXY"), "config"), "Modules"),
             "org-netbeans-api-annotations-common.xml"
         );
-        assertTrue("xml file created:\n" + getStdOut(), xml.exists());
+        assertTrue("xml file created:\n" + buildRule.getFullLog(), xml.exists());
 
         File jar = new File(
             new File(new File(target, "platformXY"), "modules"),
             "org-netbeans-api-annotations-common.jar"
         );
         assertTrue("jar file created", jar.exists());
-
-        if (getStdOut().contains("Writing ")) {
-            fail("No writes, the module is already installed:\n" + getStdOut());
+        if (buildRule.getFullLog().contains("Writing ")) {
+            fail("No writes, the module is already installed:\n" + buildRule.getFullLog());
         }
     }
 
@@ -503,21 +510,20 @@ public class AutoUpdateTest extends TestBase {
         try (FileOutputStream osx = new FileOutputStream(x)) {
             osx.write(txtx.getBytes());
         }
+        System.setProperty("url", f.toURI().toURL().toString());
+        System.setProperty("includes", "org.netbeans.api.annotations.common");
+        System.setProperty("target", target.getAbsolutePath() +File.separator + "platformXY" );
+        System.setProperty("cluster", "non.*existing" );
 
+        buildRule.configureProject(getBuildFileInClassPath("autoupdate.xml"));
+        buildRule.executeTarget("cluster-select");
 
-        execute(
-            "autoupdate.xml", "-verbose", "-Durl=" + f.toURI().toURL(),
-            "-Dincludes=org.netbeans.api.annotations.common",
-            "-Dtarget=" + target + File.separator + "platformXY",
-            "cluster-select",
-            "-Dcluster=non.*existing"
-        );
 
         File xml = new File(
             new File(new File(new File(target, "platformXY"), "config"), "Modules"),
             "org-netbeans-api-annotations-common.xml"
         );
-        assertTrue("xml file created:\n" + getStdOut(), xml.exists());
+        assertTrue("xml file created:\n" + buildRule.getFullLog(), xml.exists());
 
         File jar = new File(
             new File(new File(target, "platformXY"), "modules"),
@@ -525,8 +531,8 @@ public class AutoUpdateTest extends TestBase {
         );
         assertTrue("jar file created", jar.exists());
 
-        if (getStdOut().contains("Writing ")) {
-            fail("No writes, the module is already installed:\n" + getStdOut());
+        if (buildRule.getFullLog().contains("Writing ")) {
+            fail("No writes, the module is already installed:\n" + buildRule.getFullLog());
         }
     }
 
@@ -579,12 +585,11 @@ public class AutoUpdateTest extends TestBase {
         Thread.sleep(1000);
         long last = x.lastModified();
         Thread.sleep(500);
-
-        execute(
-            "autoupdate.xml", "-verbose", "-Durl=" + f.toURI().toURL(),
-            "-Dincludes=org.netbeans.api.annotations.common",
-            "-Dtarget=" + target
-        );
+        System.setProperty("url", f.toURI().toURL().toString());
+        System.setProperty("includes", "org.netbeans.api.annotations.common");
+        System.setProperty("target", target.getAbsolutePath()   );
+        buildRule.configureProject(getBuildFileInClassPath("autoupdate.xml"));
+        buildRule.executeTarget("all");
 
         File xml = new File(
             new File(new File(new File(target, "platform"), "config"), "Modules"),
@@ -598,8 +603,8 @@ public class AutoUpdateTest extends TestBase {
         );
         assertTrue("jar file created", jar.exists());
 
-        if (!getStdOut().contains("Writing ")) {
-            fail("Writes should be there:\n" + getStdOut());
+        if (!buildRule.getFullLog().contains("Writing ")) {
+            fail("Writes should be there:\n" + buildRule.getFullLog());
         }
 
         if (last >= jar.lastModified()) {
@@ -663,13 +668,12 @@ public class AutoUpdateTest extends TestBase {
         Thread.sleep(1000);
         long last = x.lastModified();
         Thread.sleep(500);
-
-        execute(
-            "autoupdate.xml", "-verbose", "-Durl=" + f.toURI().toURL(),
-            "-Dincludes=org.netbeans.api.annotations.common",
-            "-Dtarget=" + target,
-            "-Dforce=true"
-        );
+        System.setProperty("url", f.toURI().toURL().toString());
+        System.setProperty("includes", "org.netbeans.api.annotations.common");
+        System.setProperty("target", target.getAbsolutePath() );
+        System.setProperty("force", "true" );
+        buildRule.configureProject(getBuildFileInClassPath("autoupdate.xml"));
+        buildRule.executeTarget("all");
 
         File xml = new File(
             new File(new File(new File(target, "platform"), "config"), "Modules"),
@@ -683,8 +687,8 @@ public class AutoUpdateTest extends TestBase {
         );
         assertTrue("jar file created", jar.exists());
 
-        if (!getStdOut().contains("Writing ")) {
-            fail("Writes should be there:\n" + getStdOut());
+        if (!buildRule.getFullLog().contains("Writing ")) {
+            fail("Writes should be there:\n" + buildRule.getFullLog());
         }
 
         if (last >= jar.lastModified()) {

@@ -109,7 +109,7 @@ public final class FormatToken {
     void setPrevious(FormatToken previous) {
         this.previous = previous;
     }
-    
+
     public static enum Kind {
         SOURCE_START {
             @Override
@@ -566,7 +566,7 @@ public final class FormatToken {
         // around assignment operator
         BEFORE_ASSIGNMENT_OPERATOR,
         AFTER_ASSIGNMENT_OPERATOR,
-        
+
         // around arrow operator
         BEFORE_ARROW_OPERATOR,
         AFTER_ARROW_OPERATOR,
@@ -642,7 +642,7 @@ public final class FormatToken {
                 return false;
             }
         },
-        
+
         // marks the arrow block
         BEFORE_ARROW_BLOCK {
             @Override
@@ -658,9 +658,9 @@ public final class FormatToken {
                 return false;
             }
         },
-        
+
         BEFORE_ANONYMOUS_FUNCTION_DECLARATION,
-        
+
         BEFORE_FUNCTION_DECLARATION,
 
         BEFORE_FUNCTION_CALL,
@@ -703,7 +703,7 @@ public final class FormatToken {
                 return true;
             }
         },
-        
+
         BEFORE_CLASS_DECLARATION_BRACE {
             @Override
             public boolean isBraceMarker() {

@@ -44,7 +44,7 @@ public abstract class CollectSystemAction extends SystemAction implements Presen
     /** empty array of menu items */
     static JMenuItem[] NONE = new JMenuItem[] {};
 
-    protected final List registeredAction = new ArrayList();
+    protected final List<Object> registeredAction = new ArrayList<>();
 
     /** Which Class should be used for Lookup? */
     protected abstract Class getActionLookClass ();
@@ -60,7 +60,7 @@ public abstract class CollectSystemAction extends SystemAction implements Presen
         return registeredAction;
     }
 
-    abstract protected void addRegisteredAction();
+    protected abstract void addRegisteredAction();
 
     protected void addRegisteredAction(String folderPath) {
         List<String> actionClassNames = new ArrayList<String>();
@@ -90,7 +90,7 @@ public abstract class CollectSystemAction extends SystemAction implements Presen
         if (xmlActionsResult == null) return;
         synchronized (registeredAction) {
             Collection lookupActions = xmlActionsResult.allInstances();
-            Iterator it = lookupActions.iterator();
+            Iterator<?> it = lookupActions.iterator();
             while (it.hasNext()) {
                 Object lookupAction = it.next();
                 String lookupActionClassName = lookupAction.getClass().getName();
@@ -116,11 +116,11 @@ public abstract class CollectSystemAction extends SystemAction implements Presen
         if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug (
             "\n--> CollectSystemAction.createMenu: ( " + coll + " )");
 
-        ArrayList items = new ArrayList ();
+        List<JMenuItem> items = new ArrayList<>();
 
-        Iterator it = coll.iterator();
+        Iterator<SystemAction> it = coll.iterator();
         while (it.hasNext ()) {
-            SystemAction a = (SystemAction) it.next();
+            SystemAction a = it.next();
             
             if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug (
                 "-*- CollectSystemAction.createMenu: next action " + a +

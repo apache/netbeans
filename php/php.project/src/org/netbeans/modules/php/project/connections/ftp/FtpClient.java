@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.UnknownHostException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -158,6 +159,7 @@ public class FtpClient implements RemoteClient {
             if (LOGGER.isLoggable(Level.FINE)) {
                 LOGGER.log(Level.FINE, "Connecting to {0} [timeout: {1} ms]", new Object[] {configuration.getHost(), timeout});
             }
+            ftpClient.setStrictReplyParsing(false);
             ftpClient.setDefaultTimeout(timeout);
             ftpClient.setControlKeepAliveReplyTimeout(keepAliveInterval);
             if (LOGGER.isLoggable(Level.FINE)) {
@@ -228,7 +230,6 @@ public class FtpClient implements RemoteClient {
 
             scheduleKeepAlive();
         } catch (IOException ex) {
-            WindowsJdk7WarningPanel.warn();
             if (ftpClient.isConnected()) {
                 try {
                     ftpClient.disconnect();
@@ -328,7 +329,6 @@ public class FtpClient implements RemoteClient {
         try {
             return printWorkingDirectoryInternal();
         } catch (IOException ex) {
-            WindowsJdk7WarningPanel.warn();
             LOGGER.log(Level.FINE, "Error while pwd", ex);
             throw new RemoteException(NbBundle.getMessage(FtpClient.class, "MSG_FtpCannotPwd", configuration.getHost()), ex, getReplyString());
         }
@@ -346,7 +346,6 @@ public class FtpClient implements RemoteClient {
             scheduleKeepAlive();
             return fileStored;
         } catch (IOException ex) {
-            WindowsJdk7WarningPanel.warn();
             LOGGER.log(Level.FINE, "Error while storing file " + remote, ex);
             throw new RemoteException(NbBundle.getMessage(FtpClient.class, "MSG_FtpCannotStoreFile", remote), ex, getReplyString());
         }
@@ -359,7 +358,6 @@ public class FtpClient implements RemoteClient {
             scheduleKeepAlive();
             return fileDeleted;
         } catch (IOException ex) {
-            WindowsJdk7WarningPanel.warn();
             LOGGER.log(Level.FINE, "Error while deleting file " + pathname, ex);
             throw new RemoteException(NbBundle.getMessage(FtpClient.class, "MSG_FtpCannotDeleteFile", pathname), ex, getReplyString());
         }
@@ -372,7 +370,6 @@ public class FtpClient implements RemoteClient {
             scheduleKeepAlive();
             return directoryDeleted;
         } catch (IOException ex) {
-            WindowsJdk7WarningPanel.warn();
             LOGGER.log(Level.FINE, "Error while deleting file " + pathname, ex);
             throw new RemoteException(NbBundle.getMessage(FtpClient.class, "MSG_FtpCannotDeleteFile", pathname), ex, getReplyString());
         }
@@ -385,7 +382,6 @@ public class FtpClient implements RemoteClient {
             scheduleKeepAlive();
             return fileRenamed;
         } catch (IOException ex) {
-            WindowsJdk7WarningPanel.warn();
             LOGGER.log(Level.FINE, String.format("Error while renaming file %s -> %s", from, to), ex);
             throw new RemoteException(NbBundle.getMessage(FtpClient.class, "MSG_FtpCannotRenameFile", from, to), ex, getReplyString());
         }
@@ -409,7 +405,6 @@ public class FtpClient implements RemoteClient {
                 result.add(new RemoteFileImpl(f, pwd));
             }
         } catch (IOException ex) {
-            WindowsJdk7WarningPanel.warn();
             LOGGER.log(Level.FINE, "Error while listing files for " + pwd, ex);
             throw new RemoteException(NbBundle.getMessage(FtpClient.class, "MSG_FtpCannotListFiles", pwd), ex, getReplyString());
         }
@@ -441,7 +436,6 @@ public class FtpClient implements RemoteClient {
                 }
             }
         } catch (IOException ex) {
-            WindowsJdk7WarningPanel.warn();
             LOGGER.log(Level.FINE, "Error while listing file for " + absolutePath, ex);
             throw new RemoteException(NbBundle.getMessage(FtpClient.class, "MSG_FtpCannotListFile", absolutePath), ex, getReplyString());
         }
@@ -456,7 +450,6 @@ public class FtpClient implements RemoteClient {
             scheduleKeepAlive();
             return fileRetrieved;
         } catch (IOException ex) {
-            WindowsJdk7WarningPanel.warn();
             LOGGER.log(Level.FINE, "Error while retrieving file " + remote, ex);
             throw new RemoteException(NbBundle.getMessage(FtpClient.class, "MSG_FtpCannotStoreFile", remote), ex, getReplyString());
         }
@@ -467,7 +460,6 @@ public class FtpClient implements RemoteClient {
         try {
             return ftpClient.changeWorkingDirectory(pathname);
         } catch (IOException ex) {
-            WindowsJdk7WarningPanel.warn();
             LOGGER.log(Level.FINE, "Error while changing directory " + pathname, ex);
             throw new RemoteException(NbBundle.getMessage(FtpClient.class, "MSG_FtpCannotChangeDirectory", pathname), ex, getReplyString());
         }
@@ -480,7 +472,6 @@ public class FtpClient implements RemoteClient {
             scheduleKeepAlive();
             return directoryMade;
         } catch (IOException ex) {
-            WindowsJdk7WarningPanel.warn();
             LOGGER.log(Level.FINE, "Error while creating directory " + pathname, ex);
             throw new RemoteException(NbBundle.getMessage(FtpClient.class, "MSG_FtpCannotCreateDirectory", pathname), ex, getReplyString());
         }
@@ -492,7 +483,6 @@ public class FtpClient implements RemoteClient {
         try {
             return getPermissions(getFile(path));
         } catch (IOException ex) {
-            WindowsJdk7WarningPanel.warn();
             LOGGER.log(Level.FINE, "Error while getting permissions for " + path, ex);
             throw new RemoteException(NbBundle.getMessage(FtpClient.class, "MSG_FtpCannotGetPermissions", path), ex, getReplyString());
         }
@@ -503,7 +493,6 @@ public class FtpClient implements RemoteClient {
         try {
             return ftpClient.sendSiteCommand("chmod " + permissions + " " + path); // NOI18N
         } catch (IOException ex) {
-            WindowsJdk7WarningPanel.warn();
             LOGGER.log(Level.FINE, "Error while setting permissions for " + path, ex);
             throw new RemoteException(NbBundle.getMessage(FtpClient.class, "MSG_FtpCannotSetPermissions", path), ex, getReplyString());
         }
@@ -523,7 +512,6 @@ public class FtpClient implements RemoteClient {
             scheduleKeepAlive();
             return found;
         } catch (IOException ex) {
-            WindowsJdk7WarningPanel.warn();
             String fullPath = parent + "/" + name; // NOI18N
             LOGGER.log(Level.FINE, "Error while checking existence of " + fullPath, ex);
             throw new RemoteException(NbBundle.getMessage(FtpClient.class, "MSG_FtpCannotCheckFileExistence", fullPath), ex, getReplyString());
@@ -575,7 +563,7 @@ public class FtpClient implements RemoteClient {
         // try to calculate the time difference between remote and local pc
         removeProtocolCommandListener();
         try {
-            File tmpFile = File.createTempFile("netbeans-timestampdiff-", ".txt"); // NOI18N
+            File tmpFile = Files.createTempFile("netbeans-timestampdiff-", ".txt").toFile(); // NOI18N
             long now = tmpFile.lastModified();
 
             final String remotePath = configuration.getInitialDirectory() + "/" + tmpFile.getName(); // NOI18N
@@ -616,7 +604,6 @@ public class FtpClient implements RemoteClient {
             LOGGER.log(Level.FINE, "Keep-alive (NOOP/PWD) error for " + configuration.getHost(), ex);
             keepAliveTask.cancel();
             silentDisconnect(true);
-            WindowsJdk7WarningPanel.warn();
             // #209043 - just inform user in the log, do not show any dialog
             if (io != null) {
                 String message;

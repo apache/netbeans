@@ -31,15 +31,4 @@
         </folder>
     </folder>
 
-    <folder name="Projects">
-        <folder name="org-netbeans-modules-php-project">
-            <folder name="Actions">
-                <file name="sep-composer.instance">
-                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                    <attr name="position" intvalue="1051"/>
-                </file>
-            </folder>
-        </folder>
-    </folder>
-
 </filesystem>

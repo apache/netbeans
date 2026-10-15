@@ -48,6 +48,12 @@
                     </file>
                 </folder>
             </folder>
+            <folder name="x-php-nbdebug-class-exception">
+                <file name="EditorKit.instance">
+                    <attr name="instanceClass"
+                          stringvalue="org.netbeans.modules.php.dbgp.ui.completion.ExceptionClassNbDebugEditorKit"/>
+                </file>
+            </folder>
        </folder>
         <folder name="AnnotationTypes">
             <file name="PHPError.xml" url="PHPError.xml"/>

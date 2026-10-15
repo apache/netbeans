@@ -63,7 +63,7 @@ public class ProfilingPointWizard implements WizardDescriptor.Iterator {
         public HelpCtx getHelp() {
             Component customizer = getComponent();
 
-            if ((customizer == null) || !(customizer instanceof HelpCtx.Provider)) {
+            if (!(customizer instanceof HelpCtx.Provider)) {
                 return null;
             }
 
@@ -122,7 +122,7 @@ public class ProfilingPointWizard implements WizardDescriptor.Iterator {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
         public HelpCtx getHelp() {
-            if ((customizer == null) || !(customizer instanceof HelpCtx.Provider)) {
+            if (!(customizer instanceof HelpCtx.Provider)) {
                 return null;
             }
 
@@ -339,7 +339,7 @@ public class ProfilingPointWizard implements WizardDescriptor.Iterator {
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
     private static class Singleton {
-        final private static ProfilingPointWizard INSTANCE = new ProfilingPointWizard();
+        private static final ProfilingPointWizard INSTANCE = new ProfilingPointWizard();
     }
     
     public static ProfilingPointWizard getDefault() {

@@ -21,7 +21,6 @@ package org.netbeans.modules.j2ee.ejbcore.ejb.wizard.session;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -97,7 +96,7 @@ public final class TimerOptions {
     }
 
     private static String omitNewLines(String string) {
-        return string.replaceAll("\n", ""); //NOI18N
+        return string.replace("\n", ""); //NOI18N
     }
 
     private static String[] splitScheduleSections(String scheduleValue) {
@@ -117,7 +116,7 @@ public final class TimerOptions {
         if (!"".equals(sb.toString())) {
             finalSections.add(sb.toString());
         }
-        return finalSections.toArray(new String[finalSections.size()]);
+        return finalSections.toArray(new String[0]);
     }
 
     private static int getCountOfQuotes(String string) {
@@ -135,7 +134,7 @@ public final class TimerOptions {
             if (row.length != 2) {
                 return false;
             } else {
-                map.put(row[0].trim(), row[1].trim().replaceAll("\"", "")); //NOI18N
+                map.put(row[0].trim(), row[1].trim().replace("\"", "")); //NOI18N
             }
         }
         return true;

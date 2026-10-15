@@ -25,7 +25,6 @@ import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.docker.api.Credentials;
 import org.netbeans.modules.docker.api.DockerTag;
 import org.netbeans.modules.docker.api.DockerAction;
@@ -121,7 +120,7 @@ public class PushTagAction extends NodeAction {
         public void run() {
             String image = tag.getTag();
             final InputOutput io = IOProvider.getDefault().getIO(Bundle.MSG_Pushing(image), false);
-            ProgressHandle handle = ProgressHandleFactory.createHandle(Bundle.MSG_Pushing(image), new AbstractAction() {
+            ProgressHandle handle = ProgressHandle.createHandle(Bundle.MSG_Pushing(image), null, new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     io.select();

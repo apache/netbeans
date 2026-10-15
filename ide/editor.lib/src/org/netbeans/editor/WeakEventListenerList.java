@@ -33,14 +33,14 @@ import javax.swing.event.EventListenerList;
 * Class that can hold the list of event listeners
 * in a "weak" manner. The advantage is that the listener
 * doesn't need to be explicitly removed. Because of the use
-* of the <tt>WeakReference</tt> it gets forgotten
+* of the <code>WeakReference</code> it gets forgotten
 * automatically if it was garbage collected. There must
 * be at least one non-weak reference to the listener
 * (otherwise it would become garbage-collected).
 * One of the ways is to store the listener in some instance
 * variable in the class that adds the listener.
-* Please note that the methods <tt>getListenerCount()</tt>
-* and <tt>getListenerCount(Class t)</tt> give the count
+* Please note that the methods <code>getListenerCount()</code>
+* and <code>getListenerCount(Class t)</code> give the count
 * that doesn't reflect whether some listeners were garbage
 * collected.
 *
@@ -192,7 +192,7 @@ public class WeakEventListenerList extends EventListenerList {
         for (int i = 0; i < listenerSize; i += 2) {
             Class t = (Class)listenerList[i];
             EventListener l = (EventListener)((WeakReference)listenerList[i + 1]).get();
-            if ((l != null) && (l instanceof Serializable)) {
+            if (l instanceof Serializable) {
                 os.writeObject(t.getName());
                 os.writeObject(l);
             }

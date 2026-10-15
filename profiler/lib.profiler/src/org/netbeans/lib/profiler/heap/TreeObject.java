@@ -59,14 +59,14 @@ class TreeObject {
             do {
                 switchBuffers();
                 changed = computeOneLevel();
-//System.out.println("Tree obj.   "+heap.idToOffsetMap.treeObj);
-//if (changed) System.out.println("Next level  "+nextLevelSize);
+//Systems.debug("Tree obj.   "+heap.idToOffsetMap.treeObj);
+//if (changed) Systems.debug("Next level  "+nextLevelSize);
             } while (changed);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Systems.printStackTrace(ex);
         }
         deleteBuffers();
-//System.out.println("Done!");
+//Systems.debug("Done!");
     }
     
     private boolean computeOneLevel() throws IOException {
@@ -109,7 +109,7 @@ class TreeObject {
                 fieldValues = instance.getFieldValues();
             } else {
                 if (instance == null) {
-                    System.err.println("HeapWalker Warning - null instance for " + instanceId); // NOI18N
+                    Systems.debug("HeapWalker Warning - null instance for " + instanceId); // NOI18N
                     continue;
                 }
                 throw new IllegalArgumentException("Illegal type " + instance.getClass()); // NOI18N

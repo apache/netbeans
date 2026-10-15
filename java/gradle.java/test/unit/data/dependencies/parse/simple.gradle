@@ -1,0 +1,32 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = 'test.App'
+
+run {
+    jvmArgs '-Dtest.foo=bar', '-Dtest.bar=foo'
+}
+
+dependencies {
+    antContrib files('ant/antcontrib.jar')
+    @@A@@runtimeOnly group: 'org.springframework', name: 'spring-beans', version: '2.5'@@A@@
+    runtimeOnly @@B@@'org.springframework:spring-core:3.5'@@B@@,
+            @@C@@'org.springframework:spring-aop:3.5'@@C@@
+    runtimeOnly(
+        @@D@@[group: 'org.springframework', name: 'spring-core', version: '2.5']@@D@@,
+        @@E@@[group: 'org.springframework', name: 'spring-aop', version: '2.5']@@E@@
+    )
+    @@F@@runtimeOnly('org.hibernate:hibernate:3.0.3') {
+        transitive = true
+    }@@F@@
+    @@G@@runtimeOnly group: 'org.hibernate', name: 'hibernate', version: '3.0.5', transitive: true@@G@@
+    @@H@@runtimeOnly(group: 'org.hibernate', name: 'hibernate-test', version: '3.0.5') {
+        transitive = true
+    }@@H@@
+    @@I@@implementation project(':utils')@@I@@
+    @@J@@implementation projects.utils@@J@@
+    @@K@@implementation gradleApi()@@K@@
+    @@L@@implementation('org.ow2.asm:asm:7.1') {
+        because 'we require a JDK 9 compatible bytecode generator'
+    }@@L@@
+}    

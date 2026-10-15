@@ -25,7 +25,6 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.core.windows.*;
-import org.openide.util.WeakSet;
 
 
 /**
@@ -42,7 +41,7 @@ class SplitSubModel {
     protected final Model parentModel;
     
     /** Maps modes to nodes of this n-branch tree model. */
-    private final Set<ModeNode> nodes = new WeakSet<ModeNode>(20);
+    private final Set<ModeNode> nodes = Collections.newSetFromMap(new WeakHashMap<>(20));
     
     /** Root <code>Node</code> which represents the split panes structure
      * with modes as leaves. */
@@ -764,7 +763,6 @@ class SplitSubModel {
         return sb;
     }
 
-    ///////////////////////////////
     // Controller updates >>
     
     public ModeImpl getModeForOriginator(ModelElement originator) {
@@ -776,17 +774,13 @@ class SplitSubModel {
     }
     
     // Controller updates <<
-    ///////////////////////////////
-    
     private static void debugLog(String message) {
         Debug.log(SplitSubModel.class, message);
     }
     
-    ////////////////////////////////////////
-    /// Nodes of this tree model
-    ////////////////////////////////////////
+    // Nodes of this tree model
     /** Class representing one node in SplitSubModel.  */
-    protected static abstract class Node implements ModelElement {
+    protected abstract static class Node implements ModelElement {
         /** Reference to parent node. */
         private SplitNode parent;
 
@@ -852,9 +846,6 @@ class SplitSubModel {
             return null;
         }
         
-        //////////////////////////////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////////////////////////
-
         /** Indicates whether component represented by this node is visible or not. */
         public boolean isVisibleInSplit() {
             return false;
@@ -894,6 +885,7 @@ class SplitSubModel {
 
         /** Overrides superclass method. Adds info about dividePos, orientation,
          * first and second sub-nodes. */
+        @Override
         public String toString() {
             StringBuffer sb = new StringBuffer();
             sb.append(super.toString());
@@ -972,7 +964,7 @@ class SplitSubModel {
         }
         
         public void setChildSplitWeight(Node child, double weight) {
-            if(child == null || !child2splitWeight.keySet().contains(child)) {
+            if(child == null || !child2splitWeight.containsKey(child)) {
                 return;
             }
             
@@ -1028,6 +1020,7 @@ class SplitSubModel {
         }
 
         /** Indicates whether component represented by this node is visible or not. */
+        @Override
         public boolean isVisibleInSplit() {
             int count = 0;
             for(Iterator it = index2child.values().iterator(); it.hasNext(); ) {
@@ -1045,6 +1038,7 @@ class SplitSubModel {
         }
 
         /** Indicates whether there is at least one visible descendant. */
+        @Override
         public boolean hasVisibleDescendant() {
             for(Iterator it = index2child.values().iterator(); it.hasNext(); ) {
                 Node node = (Node)it.next();
@@ -1106,6 +1100,7 @@ class SplitSubModel {
             return mode;
         }
 
+        @Override
         public boolean isVisibleInSplit() {
             if(mode.getOpenedTopComponents().isEmpty()) {
                 return false;

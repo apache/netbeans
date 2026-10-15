@@ -105,7 +105,7 @@ public final class TimesCollectorPeer {
         return result;
     }
 
-    synchronized final void fileDeletedSync(FileEvent ev, FileObject fo) {
+    final synchronized void fileDeletedSync(FileEvent ev, FileObject fo) {
         for (Reference<Object> r : files) {
             if (r.get() == fo) {
                 files.remove(r);

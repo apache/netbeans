@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,7 +35,8 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.EditorRegistry;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.lsp.HyperlinkLocation;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.DataLoadersBridge;
 import org.netbeans.modules.csl.api.DeclarationFinder;
@@ -57,6 +59,7 @@ import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
+import org.netbeans.spi.lsp.HyperlinkLocationProvider;
 import org.openide.awt.HtmlBrowser;
 import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
@@ -77,22 +80,29 @@ public class GoToSupport {
     }
 
     public static String getGoToElementTooltip(final Document doc, final int offset) {
-        return perform(doc, offset, true, new AtomicBoolean());
+        return perform(doc, offset, true, null, new AtomicBoolean());
     }
 
     public static void performGoTo(final Document doc, final int offset) {
         final AtomicBoolean cancel = new AtomicBoolean();
         String name = NbBundle.getMessage(GoToSupport.class, "NM_GoToDeclaration");
 
-        ProgressUtils.runOffEventDispatchThread(new Runnable() {
+        BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
 
             public void run() {
-                perform(doc, offset, false, cancel);
+                perform(doc, offset, false, null, cancel);
             }
         }, name, cancel, false);
     }
 
-    private static String perform(final Document doc, final int offset, final boolean tooltip, final AtomicBoolean cancel) {
+    public static CompletableFuture<HyperlinkLocation> getGoToLocation(final Document doc, final int offset) {
+        DeclarationLocation[] location = new DeclarationLocation[1];
+        perform(doc, offset, false, location, new AtomicBoolean());
+        return CompletableFuture.completedFuture(location[0] == null || location[0] == DeclarationLocation.NONE ? 
+                null : HyperlinkLocationProvider.createHyperlinkLocation(location[0].getFileObject(), location[0].getOffset(), location[0].getOffset()));
+    }
+
+    private static String perform(final Document doc, final int offset, final boolean tooltip, final DeclarationLocation[] location, final AtomicBoolean cancel) {
         if (tooltip && PopupUtil.isPopupShowing()) {
             return null;
         }
@@ -116,7 +126,6 @@ public class GoToSupport {
         //returned non-null value. But probably can become false?!?!?!
 
         final String[] result = new String[] { null };
-        final DeclarationLocation[] location = new DeclarationLocation[] { null };
 
         try {
             ParserManager.parse(Collections.singleton(js), new UserTask() {
@@ -145,14 +154,19 @@ public class GoToSupport {
                         return;
                     }
 
-                    location[0] = finder.findDeclaration(info, offset);
+                    DeclarationLocation decl = finder.findDeclaration(info, offset);
+
+                    if (location != null) {
+                        location[0] = decl;
+                        return;
+                    }
 
                     if (cancel.get()) return ;
 
                     if (tooltip) {
                         CodeCompletionHandler completer = language.getCompletionProvider();
-                        if (location[0] != DeclarationLocation.NONE && completer != null) {
-                            ElementHandle element = location[0].getElement();
+                        if (decl != DeclarationLocation.NONE && completer != null) {
+                            ElementHandle element = decl.getElement();
                             if (element != null) {
                                 String documentationContent;
                                 if (completer instanceof CodeCompletionHandler2) {
@@ -176,9 +190,9 @@ public class GoToSupport {
                             }
                         }
 
-                    } else if (location[0] != DeclarationLocation.NONE && location[0] != null) {
-                        final URL url = location[0].getUrl();
-                        final String invalid = location[0].getInvalidMessage();
+                    } else if (decl != DeclarationLocation.NONE && decl != null) {
+                        final URL url = decl.getUrl();
+                        final String invalid = decl.getInvalidMessage();
                         if (url != null) {
                             SwingUtilities.invokeLater(new Runnable() {
                                 public void run() {
@@ -195,18 +209,18 @@ public class GoToSupport {
 
                             });
                         } else {
-                            if (!IM_FEELING_LUCKY && location[0].getAlternativeLocations().size() > 0 &&
+                            if (!IM_FEELING_LUCKY && decl.getAlternativeLocations().size() > 0 &&
                                     !PopupUtil.isPopupShowing()) {
                                 SwingUtilities.invokeLater(new Runnable() {
                                     public void run() {
                                         // Many alternatives - pop up a dialog and make the user choose
-                                        if (!chooseAlternatives(doc, offset, location[0].getAlternativeLocations())) {
-                                            openLocation(location[0]);
+                                        if (!chooseAlternatives(doc, offset, decl.getAlternativeLocations())) {
+                                            openLocation(decl);
                                         }
                                     }
                                 });
                             } else {
-                                openLocation(location[0]);
+                                openLocation(decl);
                             }
                         }
 

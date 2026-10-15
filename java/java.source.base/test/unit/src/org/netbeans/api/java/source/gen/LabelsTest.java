@@ -28,8 +28,6 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import java.io.IOException;
-import org.netbeans.junit.NbTestSuite;
-import junit.textui.TestRunner;
 import org.netbeans.modules.java.source.transform.Transformer;
 
 /**
@@ -43,16 +41,10 @@ public class LabelsTest extends GeneratorTestBase {
         super(name);
     }
     
-    public static NbTestSuite suite() {
-        NbTestSuite suite = new NbTestSuite();
-        suite.addTest(new LabelsTest("testIdentifiers"));
-        return suite;
-    }
-    
     protected void setUp() throws Exception {
         super.setUp();
         testFile = getFile(getSourceDir(), getSourcePckg() + "SetLabelTestClass.java");
-        System.err.println(testFile.getAbsoluteFile().toString());
+        //System.err.println(testFile.getAbsoluteFile().toString());
     }
     
     public void testIdentifiers() throws IOException {
@@ -60,6 +52,8 @@ public class LabelsTest extends GeneratorTestBase {
         assertFiles("testIdentifiers.pass");
     }
     
+    public void testNoop() {}
+
     class LabelVisitor<Void, Object> extends Transformer<Void, Object> {
 
         public Void visitMethod(MethodTree node, Object p) {
@@ -137,10 +131,6 @@ public class LabelsTest extends GeneratorTestBase {
 
     }
 
-    public static void main(String[] args) {
-        TestRunner.run(suite());
-    }
-    
     String getGoldenPckg() {
         return "org/netbeans/jmi/javamodel/codegen/LabelsTest/";
     }

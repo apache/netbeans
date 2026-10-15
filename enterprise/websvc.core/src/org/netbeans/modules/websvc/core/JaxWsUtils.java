@@ -1884,7 +1884,7 @@ public class JaxWsUtils {
                 }
             }
         } catch (CatalogModelException ex) {
-            Logger.global.log(Level.INFO, "", ex);
+            Logger.getGlobal().log(Level.INFO, "", ex);
         }
 
         return false;

@@ -22,20 +22,30 @@ package org.netbeans.modules.php.editor.model.nodes;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.php.editor.api.PhpModifiers;
 import org.netbeans.modules.php.editor.api.QualifiedName;
+import org.netbeans.modules.php.editor.model.impl.VariousUtils;
 import org.netbeans.modules.php.editor.model.nodes.ASTNodeInfo.Kind;
+import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
+import org.netbeans.modules.php.editor.parser.astnodes.ArrayElement;
 import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
 import org.netbeans.modules.php.editor.parser.astnodes.Scalar;
 import org.netbeans.modules.php.editor.parser.astnodes.UnaryOperation;
+import org.netbeans.modules.php.editor.parser.astnodes.UnpackableArrayElement;
+import org.openide.util.NbBundle;
 
 /**
  * @author Radek Matous
  */
 public class ClassConstantDeclarationInfo extends ASTNodeInfo<Identifier> {
+    // Array display is stopped after this length of string is reached.
+    private static final int ARRAY_CUT_LENGTH = 50;
+    private static final String UNKNOWN_VALUE = "?"; //NOI18N
+
     private final String value;
     private final ConstantDeclaration constantDeclaration;
 
@@ -51,18 +61,9 @@ public class ClassConstantDeclarationInfo extends ASTNodeInfo<Identifier> {
         Iterator<Expression> iteratorInitializers = constantDeclaration.getInitializers().iterator();
         Identifier name;
         while (iteratorNames.hasNext()) {
-            String value = null;
             name = iteratorNames.next();
             Expression initializer = iteratorInitializers.next();
-            if (initializer instanceof Scalar) {
-                value = ((Scalar) initializer).getStringValue();
-            } else if (initializer instanceof UnaryOperation) {
-                UnaryOperation unaryOperation = (UnaryOperation) initializer;
-                Expression expression = unaryOperation.getExpression();
-                if (expression instanceof Scalar) {
-                    value = unaryOperation.getOperator() + ((Scalar) expression).getStringValue();
-                }
-            }
+            String value = getConstantValue(initializer);
             retval.add(new ClassConstantDeclarationInfo(name, value, constantDeclaration));
         }
         return retval;
@@ -93,8 +94,77 @@ public class ClassConstantDeclarationInfo extends ASTNodeInfo<Identifier> {
         return value;
     }
 
+    @CheckForNull
+    public String getDeclaredType() {
+        return VariousUtils.getDeclaredType(constantDeclaration.getConstType());
+    }
+
     public PhpModifiers getAccessModifiers() {
         return PhpModifiers.fromBitMask(constantDeclaration.getModifier());
+    }
+
+    public ConstantDeclaration getConstantDeclaration() {
+        return constantDeclaration;
+    }
+
+    @CheckForNull
+    protected static String getConstantValue(Expression expr) {
+        if (expr instanceof Scalar) {
+            return ((Scalar) expr).getStringValue();
+        }
+        if (expr instanceof UnaryOperation) {
+            UnaryOperation up = (UnaryOperation) expr;
+            if (up.getOperator() == UnaryOperation.Operator.MINUS
+                    && up.getExpression() instanceof Scalar) {
+                return "-" + ((Scalar) up.getExpression()).getStringValue(); //NOI18N
+            }
+        }
+        if (expr instanceof ArrayCreation) {
+            return getConstantValue((ArrayCreation) expr);
+        }
+        return null;
+    }
+
+    @NbBundle.Messages({
+        "# {0} - undisplayed size",
+        "MoreElementsDesc={0} more"
+    })
+    private static String getConstantValue(ArrayCreation expr) {
+        StringBuilder sb = new StringBuilder("["); //NOI18N
+        Integer displayedElements = 0;
+        List<ArrayElement> elements = expr.getElements();
+        for (ArrayElement element : elements) {
+            if (displayedElements > 0) {
+                sb.append(", "); //NOI18N
+            }
+            sb.append(getConstantValue(element));
+            displayedElements++;
+            if (sb.length() > ARRAY_CUT_LENGTH) {
+                break;
+            }
+        }
+        if (displayedElements < elements.size()) {
+            sb.append(", ... (").append(Bundle.MoreElementsDesc(elements.size() - displayedElements)).append(")"); //NOI18N
+        }
+        sb.append("]"); //NOI18N
+        return sb.toString();
+    }
+
+    private static String getConstantValue(ArrayElement element) {
+        if (element instanceof UnpackableArrayElement) {
+            String innerContent = getConstantValue(element.getValue());
+            return innerContent != null ? "..." + innerContent : UNKNOWN_VALUE; //NOI18N
+        }
+        StringBuilder sb = new StringBuilder();
+        Expression key = element.getKey();
+        if (key != null) {
+            String convertedKey = getConstantValue(key);
+            sb.append(convertedKey != null ? convertedKey : UNKNOWN_VALUE);
+            sb.append(" => "); //NOI18N
+        }
+        String convertedValue = getConstantValue(element.getValue());
+        sb.append(convertedValue != null ? convertedValue : UNKNOWN_VALUE);
+        return sb.toString();
     }
 
 }

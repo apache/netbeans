@@ -122,7 +122,7 @@ public interface RefactoringElementImplementation {
     
     /**
      * Setter for property status
-     * @param status new value of propery status
+     * @param status new value of property status
      */
     void setStatus(int status);
     
@@ -134,7 +134,7 @@ public interface RefactoringElementImplementation {
     
     /**
      * Shows this element in refactoring preview are
-     * @see org.netbeans.modules.refactoring.api.ui.UI#setComponentForRefactoringPreview
+     * @see org.netbeans.modules.refactoring.spi.ui.UI#setComponentForRefactoringPreview
      */
     void showPreview();
     

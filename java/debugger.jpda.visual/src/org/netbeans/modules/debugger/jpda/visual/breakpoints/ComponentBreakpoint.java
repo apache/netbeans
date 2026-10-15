@@ -21,6 +21,7 @@ package org.netbeans.modules.debugger.jpda.visual.breakpoints;
 import com.sun.jdi.ObjectReference;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 import java.util.WeakHashMap;
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.jpda.JPDABreakpoint;
@@ -33,7 +34,7 @@ import org.netbeans.modules.debugger.jpda.visual.spi.ComponentInfo;
  * @author Martin Entlicher
  * @author Jaroslav Bachorik
  */
-abstract public class ComponentBreakpoint extends Breakpoint {
+public abstract class ComponentBreakpoint extends Breakpoint {
     public static final int TYPE_ADD = 1;
     public static final int TYPE_REMOVE = 2;
     public static final int TYPE_SHOW = 4;
@@ -82,7 +83,7 @@ abstract public class ComponentBreakpoint extends Breakpoint {
         firePropertyChange(PROP_TYPE, oldType, type);
     }
     
-    abstract public int supportedTypes();
+    public abstract int supportedTypes();
     
     /*private void notifyRemoved() {
         DebuggerManager.getDebuggerManager().removeDebuggerListener(serviceBreakpointListenerWeak);
@@ -144,7 +145,7 @@ abstract public class ComponentBreakpoint extends Breakpoint {
     void setPrintText(String printText) {
         String old;
         synchronized (this) {
-            if (printText == this.printText || (printText != null && printText.equals(this.printText))) {
+            if (Objects.equals(printText, this.printText)) {
                 return;
             }
             old = this.printText;

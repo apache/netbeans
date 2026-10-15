@@ -147,7 +147,7 @@ WHITESPACE=[ \t\r\n]+
 D_STRING_START="\""([^"\"""{"])*
 D_STRING_END=([^"\"""$"] | "$}")*"\""
 D_STRING="\""([^"\""])*"\""
-S_STRING="'"([^"'"])*"'"
+S_STRING="'"([^'\\]|("\\"[^]))*"'"
 KEYWORD="true"|"false"|"null"|"and"|"or"|"xor"|"clone"|"new"|"instanceof"|"return"|"continue"|"break"
 CAST="(" ("expand"|"string"|"array"|"int"|"integer"|"float"|"bool"|"boolean"|"object") ")"
 VARIABLE="$"[a-zA-Z0-9_]+
@@ -158,9 +158,9 @@ SYMBOL=[a-zA-Z0-9_]+(\-[a-zA-Z0-9_]+)*
 MACRO="if" | "elseif" | "else" | "ifset" | "elseifset" | "ifCurrent" | "for" | "foreach" | "while" | "first" | "last" | "sep" |
         "capture" | "cache" | "syntax" | "_" | "block" | "form" | "label" | "snippet" | "continueIf" | "breakIf" | "var" | "default" |
         "include" | "use" | "l" | "r" | "contentType" | "status" | "define" | "includeblock" | "layout" | "extends" | "link" | "plink" |
-        "control" | "input" | "dump" | "debugbreak" | "widget"
+        "control" | "input" | "dump" | "debugbreak" | "widget" | "translate"
 END_MACRO="if" | "ifset" | "ifCurrent" | "for" | "foreach" | "while" | "first" | "last" | "sep" | "capture" | "cache" |
-        "syntax" | "_" | "block" | "form" | "label" | "snippet" | "define"
+        "syntax" | "_" | "block" | "form" | "label" | "snippet" | "define" | "translate"
 
 
 %state ST_OTHER

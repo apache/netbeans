@@ -33,6 +33,9 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
+import org.netbeans.modules.web.api.webmodule.WebModule;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.spi.java.project.support.ui.templates.JavaTemplates;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
@@ -50,7 +53,9 @@ import org.openide.util.NbBundle;
 public class FacesComponentIterator implements TemplateWizard.Iterator {
 
     private static final long serialVersionUID = 1L;
-    private static final String DEFAULT_COMPONENT_NS = "http://xmlns.jcp.org/jsf/component"; //NOI18N
+    private static final Set<String> DEFAULT_COMPONENT_NAMESPACES = Set.of(
+            "http://xmlns.jcp.org/jsf/component", //NOI18N
+            "jakarta.faces.component"); //NOI18N
 
     private transient WizardDescriptor.Panel[] panels;
     private int index;
@@ -72,11 +77,23 @@ public class FacesComponentIterator implements TemplateWizard.Iterator {
         if (!tagName.isEmpty() && !tagName.equals(tagNameForClassName(targetName))) {
             templateProperties.put("tagName", tagName); //NOI18N
         }
-        if (!tagNamespace.isEmpty() && !tagNamespace.equals(DEFAULT_COMPONENT_NS)) {
+        if (!tagNamespace.isEmpty() && !DEFAULT_COMPONENT_NAMESPACES.contains(tagNamespace)) {
             templateProperties.put("tagNamespace", tagNamespace); //NOI18N
         }
         if (createSampleCode) {
             templateProperties.put("sampleCode", Boolean.TRUE); //NOI18N
+        }
+        Project project = Templates.getProject(wizard);
+        WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
+        if (webModule != null) {
+            JsfVersion version = JsfVersionUtils.forWebModule(webModule);
+            if (version != null && version.isAtLeast(JsfVersion.JSF_3_0)) {
+                templateProperties.put("jakartaJsfPackages", true); //NOI18N
+            } else {
+                templateProperties.put("jakartaJsfPackages", false); //NOI18N
+            }
+        } else {
+            templateProperties.put("jakartaJsfPackages", true); //NOI18N
         }
         DataObject result = dTemplate.createFromTemplate(dataFolder, targetName, templateProperties);
         return Collections.singleton(result);
@@ -99,7 +116,7 @@ public class FacesComponentIterator implements TemplateWizard.Iterator {
         // Creating steps.
         Object prop = wiz.getProperty(WizardDescriptor.PROP_CONTENT_DATA); // NOI18N
         String[] beforeSteps = null;
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[])prop;
         }
         String[] steps = createSteps(beforeSteps, panels);
@@ -111,7 +128,7 @@ public class FacesComponentIterator implements TemplateWizard.Iterator {
             }
             if (c instanceof JComponent) { // assume Swing components
                 JComponent jc = (JComponent) c;
-                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(i));
+                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i);
                 jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps);
             }
         }
@@ -129,7 +146,7 @@ public class FacesComponentIterator implements TemplateWizard.Iterator {
 
     @Override
     public String name() {
-        return NbBundle.getMessage(TemplateIterator.class, "TITLE_x_of_y", new Integer(index + 1), new Integer(panels.length)); //NOI18N
+        return NbBundle.getMessage(TemplateIterator.class, "TITLE_x_of_y", index + 1, panels.length); //NOI18N
     }
 
     @Override

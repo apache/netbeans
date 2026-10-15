@@ -110,6 +110,15 @@ Registrations in standard Lookup:
 <li><api name="org.netbeans.spi.debugger.ui.BreakpointType.ContextAware.createService" group="lookup" type="import" category="official" url="@org-netbeans-api-debugger@"/> Loads all breakpoint type providers.</li>
 <li><api name="org.netbeans.modules.debugger.ui.registry.ColumnModelContextAware.createService" group="lookup" type="import" category="official" url="@org-netbeans-api-debugger@"/> Loads all column models registered for specific view (according to the path).</li>
 </ul>
+Persistent properties stored through org.netbeans.api.debugger.Properties:
+<ul>
+<li><api name="debugger" group="property" type="export" category="official" url="@org-netbeans-api-debugger@"/>The main namespace for debugger properties.</li>
+<li><api name="debugger.persistence" group="property" type="import" category="official" url="@org-netbeans-api-debugger@"/>The main namespace for debugger persistence settings. Used for configuration of individual services to determine what is to be stored persistently.</li>
+<li><api name="debugger.persistence.watches" group="property" type="import" category="official" url="@org-netbeans-api-debugger@"/>This property may contain a boolean value that determines whether a list of watches should be stored persistently. True when undefined.</li>
+<li><api name="debugger.persistence.breakpoints" group="property" type="import" category="official" url="@org-netbeans-api-debugger@"/>This property may contain a boolean value that determines whether a list of breakpoints should be stored persistently. True when undefined.</li>
+<li><api name="debugger.watches" group="property" type="import" category="private"/>This property contains a list of watches.</li>
+<li><api name="debugger.breakpoints" group="property" type="import" category="official"/>This property contains a list of breakpoints</li>
+</ul>
 
 </answer>
         
@@ -352,7 +361,7 @@ We would like to test 100% of our APIs.
         </question>
 -->
 <answer id="dep-nb">
-    <api name="OpenAPIs" type="import" category="official" url="http://openide.netbeans.org" group="java"/> 
+    <api name="OpenAPIs" type="import" category="official" group="java"/> 
     <api name="ViewModel" type="import" category="official" group="java"/> 
     <api name="DebuggerCoreAPI" type="import" category="official" group="java"/> 
 </answer>

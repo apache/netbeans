@@ -83,7 +83,7 @@ public final class ConnectAction extends AbstractAction {
         if (computeEnabledTask == null) {
             computeEnabledTask = computeEnabledRP.create(new Runnable() {
                 public void run() {
-                    List attachTypes = DebuggerManager.getDebuggerManager ().lookup (
+                    List<?> attachTypes = DebuggerManager.getDebuggerManager().lookup(
                         null, AttachType.class
                     );
                     lastEnabled = attachTypes.size() > 0;

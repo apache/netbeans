@@ -165,7 +165,7 @@ public final class ServerLibraryDependency {
     }
 
     /**
-     * @{@inheritDoc}
+     * {@inheritDoc}
      *
      * Dependencies are equal if they have the same name, specification version,
      * implementation version and exact match flag.
@@ -219,7 +219,7 @@ public final class ServerLibraryDependency {
     }
 
     /**
-     * @{@inheritDoc}
+     * {@inheritDoc}
      * <p>
      * Implementation consistent with {@link #equals(java.lang.Object)}.
      * @see #equals(java.lang.Object)

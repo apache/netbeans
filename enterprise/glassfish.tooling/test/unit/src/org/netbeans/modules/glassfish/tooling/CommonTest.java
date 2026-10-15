@@ -45,10 +45,7 @@ import static org.testng.Assert.fail;
  */
 public abstract class CommonTest {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(CommonTest.class);
 
@@ -145,10 +142,7 @@ public abstract class CommonTest {
     /** GlassFish test server object. */
     private static volatile GlassFishServer glassfishServer;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Retrieve integer value stored as property.
      * <p/>

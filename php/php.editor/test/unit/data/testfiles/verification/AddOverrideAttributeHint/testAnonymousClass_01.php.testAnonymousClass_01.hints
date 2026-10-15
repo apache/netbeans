@@ -1,0 +1,28 @@
+    public function interfaceMethod2(): void { // hints class
+                    ----------------
+HINT:Add "#[\Override]" Attribute
+FIX:Add "#[\Override]" Attribute
+            public function interfaceMethod1(): void { // hints anon1
+                            ----------------
+HINT:Add "#[\Override]" Attribute
+FIX:Add "#[\Override]" Attribute
+            public function interfaceMethod2(): void { // hints anon1
+                            ----------------
+HINT:Add "#[\Override]" Attribute
+FIX:Add "#[\Override]" Attribute
+                    public function interfaceMethod2(): void { // hints anon2
+                                    ----------------
+HINT:Add "#[\Override]" Attribute
+FIX:Add "#[\Override]" Attribute
+                    public function interfaceStaticMethod1(): void { // hints anon2
+                                    ----------------------
+HINT:Add "#[\Override]" Attribute
+FIX:Add "#[\Override]" Attribute
+            public function interfaceStaticMethod1(): void { // hints anon1
+                            ----------------------
+HINT:Add "#[\Override]" Attribute
+FIX:Add "#[\Override]" Attribute
+    public function interfaceStaticMethod1(): void { // hints class
+                    ----------------------
+HINT:Add "#[\Override]" Attribute
+FIX:Add "#[\Override]" Attribute

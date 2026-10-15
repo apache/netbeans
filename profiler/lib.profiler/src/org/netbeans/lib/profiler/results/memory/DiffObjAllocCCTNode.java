@@ -106,7 +106,7 @@ public class DiffObjAllocCCTNode extends PresoObjAllocCCTNode {
     }
     
     private static PresoObjAllocCCTNode[] computeChildren(PresoObjAllocCCTNode[] children1, PresoObjAllocCCTNode[] children2, PresoObjAllocCCTNode parent) {        
-        Map<Handle, PresoObjAllocCCTNode> nodes1 = new HashMap();
+        Map<Handle, PresoObjAllocCCTNode> nodes1 = new HashMap<>();
         for (PresoObjAllocCCTNode node : children1) {
             Handle name = new Handle(node);
             PresoObjAllocCCTNode sameNode = nodes1.get(name);
@@ -114,7 +114,7 @@ public class DiffObjAllocCCTNode extends PresoObjAllocCCTNode {
             else sameNode.merge(node);
         }
         
-        Map<Handle, PresoObjAllocCCTNode> nodes2 = new HashMap();
+        Map<Handle, PresoObjAllocCCTNode> nodes2 = new HashMap<>();
         for (PresoObjAllocCCTNode node : children2) {
             Handle name = new Handle(node);
             PresoObjAllocCCTNode sameNode = nodes2.get(name);
@@ -122,7 +122,7 @@ public class DiffObjAllocCCTNode extends PresoObjAllocCCTNode {
             else sameNode.merge(node); // Merge same-named items
         }
         
-        List<PresoObjAllocCCTNode> children = new ArrayList();
+        List<PresoObjAllocCCTNode> children = new ArrayList<>();
         for (PresoObjAllocCCTNode node1 : nodes1.values()) {
             PresoObjAllocCCTNode node2 = nodes2.get(new Handle(node1));
             if (node2 != null) children.add(new DiffObjAllocCCTNode(node1, node2));

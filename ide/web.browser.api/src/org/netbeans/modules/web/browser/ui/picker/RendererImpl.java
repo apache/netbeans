@@ -30,7 +30,7 @@ import javax.swing.border.Border;
  */
 class RendererImpl extends DefaultListCellRenderer {
 
-    private final static Border emptyBorder = BorderFactory.createEmptyBorder( 5, 5, 5, 5 );
+    private static final Border emptyBorder = BorderFactory.createEmptyBorder( 5, 5, 5, 5 );
 
     public RendererImpl() {
         setIconTextGap( 5 );

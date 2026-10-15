@@ -25,6 +25,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
+import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.spring.beans.completion.CompletionContext.CompletionType;
@@ -48,6 +49,7 @@ import org.w3c.dom.Node;
  * 
  * @author Rohan Ranade (Rohan.Ranade@Sun.COM)
  */
+@MimeRegistration(mimeType = "x-springconfig+xml", service = CompletionProvider.class)
 public class SpringXMLConfigCompletionProvider implements CompletionProvider {
 
     @Override
@@ -178,7 +180,7 @@ public class SpringXMLConfigCompletionProvider implements CompletionProvider {
                 String text = evt.getDocument().getText(offset, length).trim();
                 if (text.startsWith("xmlns:")) {    //NOI18N
                     String namespace = parseNamespace(text);
-                    if (!declaredNamespaces.values().contains(namespace)) {
+                    if (!declaredNamespaces.containsValue(namespace)) {
                         String schemaLocation = findSchemaLocation(doc, namespace);
                         updateSchemaLocation(doc, offset, namespace, schemaLocation);
                     }

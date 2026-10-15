@@ -1,0 +1,2 @@
+enum |>MARK_OCCURRENCES:EnumTest<|: string {
+|>MARK_OCCURRENCES:EnumTe^st<|::{[]};

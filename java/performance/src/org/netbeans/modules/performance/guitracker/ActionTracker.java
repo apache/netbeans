@@ -69,38 +69,38 @@ public class ActionTracker {
     /**
      * Start of a sequence of recorded events.
      */
-    public final static int TRACK_START = 1;
+    public static final int TRACK_START = 1;
 
     /**
      * Painting happened. @see Painter
      */
-    public final static int TRACK_PAINT = 2;
+    public static final int TRACK_PAINT = 2;
 
     /**
      * MOUSE_PRESSED event.
      */
-    public final static int TRACK_MOUSE_PRESS = 10;
+    public static final int TRACK_MOUSE_PRESS = 10;
     /**
      * MOUSE_RELEASED event.
      */
-    public final static int TRACK_MOUSE_RELEASE = 11;
+    public static final int TRACK_MOUSE_RELEASE = 11;
     /**
      * MOUSE_DRAGGED event.
      */
-    public final static int TRACK_MOUSE_DRAGGED = 12;
+    public static final int TRACK_MOUSE_DRAGGED = 12;
     /**
      * MOUSE_MOVED event.
      */
-    public final static int TRACK_MOUSE_MOVED = 13;
+    public static final int TRACK_MOUSE_MOVED = 13;
 
     /**
      * KEY_PRESSED event.
      */
-    public final static int TRACK_KEY_PRESS = 20;
+    public static final int TRACK_KEY_PRESS = 20;
     /**
      * KEY_RELEASED event.
      */
-    public final static int TRACK_KEY_RELEASE = 21;
+    public static final int TRACK_KEY_RELEASE = 21;
 
     private static final int TRACK_FRAME = 1000;
     private static final int TRACK_DIALOG = 2000;
@@ -122,110 +122,110 @@ public class ActionTracker {
     /**
      * COMPONENT_SHOWN event happened on a Dialog or JDialog.
      */
-    public final static int TRACK_DIALOG_SHOW = TRACK_DIALOG + ComponentEvent.COMPONENT_SHOWN;
+    public static final int TRACK_DIALOG_SHOW = TRACK_DIALOG + ComponentEvent.COMPONENT_SHOWN;
     /**
      * COMPONENT_HIDDEN event happened on a Dialog or JDialog.
      */
-    public final static int TRACK_DIALOG_HIDE = TRACK_DIALOG + ComponentEvent.COMPONENT_HIDDEN;
+    public static final int TRACK_DIALOG_HIDE = TRACK_DIALOG + ComponentEvent.COMPONENT_HIDDEN;
     /**
      * COMPONENT_RESIZED event happened on a Dialog or JDialog.
      */
-    public final static int TRACK_DIALOG_RESIZE = TRACK_DIALOG + ComponentEvent.COMPONENT_RESIZED;
+    public static final int TRACK_DIALOG_RESIZE = TRACK_DIALOG + ComponentEvent.COMPONENT_RESIZED;
 
     /**
      * COMPONENT_SHOWN event happened on a Component.
      */
-    public final static int TRACK_COMPONENT_SHOW = TRACK_COMPONENT + ComponentEvent.COMPONENT_SHOWN;
+    public static final int TRACK_COMPONENT_SHOW = TRACK_COMPONENT + ComponentEvent.COMPONENT_SHOWN;
     /**
      * COMPONENT_HIDDEN event happened on a Component.
      */
-    public final static int TRACK_COMPONENT_HIDE = TRACK_COMPONENT + ComponentEvent.COMPONENT_HIDDEN;
+    public static final int TRACK_COMPONENT_HIDE = TRACK_COMPONENT + ComponentEvent.COMPONENT_HIDDEN;
     /**
      * COMPONENT_RESIZED event happened on a Component.
      */
-    public final static int TRACK_COMPONENT_RESIZE = TRACK_COMPONENT + ComponentEvent.COMPONENT_RESIZED;
+    public static final int TRACK_COMPONENT_RESIZE = TRACK_COMPONENT + ComponentEvent.COMPONENT_RESIZED;
 
     /**
      * Any messages the application wants to send.
      */
-    public final static int TRACK_APPLICATION_MESSAGE = 50;
+    public static final int TRACK_APPLICATION_MESSAGE = 50;
 
     /**
      * Any messages the application wants to send.
      */
-    public final static int TRACK_CONFIG_APPLICATION_MESSAGE = 51;
+    public static final int TRACK_CONFIG_APPLICATION_MESSAGE = 51;
 
     /**
      * Before/After messages.
      */
-    public final static int TRACK_TRACE_MESSAGE = 52;
+    public static final int TRACK_TRACE_MESSAGE = 52;
     /**
      * Should be used only for value of MY_START_EVENT or MY_END_EVENT
      */
-    public final static int TRACK_OPEN_BEFORE_TRACE_MESSAGE = TRACK_TRACE_MESSAGE + 1;
+    public static final int TRACK_OPEN_BEFORE_TRACE_MESSAGE = TRACK_TRACE_MESSAGE + 1;
     /**
      * Should be used only for value of MY_START_EVENT or MY_END_EVENT
      */
-    public final static int TRACK_OPEN_AFTER_TRACE_MESSAGE = TRACK_TRACE_MESSAGE + 2;
+    public static final int TRACK_OPEN_AFTER_TRACE_MESSAGE = TRACK_TRACE_MESSAGE + 2;
 
     /**
      * FOCUS_GAINED event
      */
-    public final static int TRACK_FOCUS_GAINED = 80;
+    public static final int TRACK_FOCUS_GAINED = 80;
     /**
      * FOCUS_LOST event
      */
-    public final static int TRACK_FOCUS_LOST = 81;
+    public static final int TRACK_FOCUS_LOST = 81;
     /**
      * unknown event
      */
-    public final static int TRACK_INVOCATION = 82;
+    public static final int TRACK_INVOCATION = 82;
     /**
      * unknown event
      */
-    public final static int TRACK_UNKNOWN = 83;
+    public static final int TRACK_UNKNOWN = 83;
 
     /**
      * The name of the root element in generated XML.
      */
-    public final static String TN_ROOT_ELEMENT = "action-tracking";
+    public static final String TN_ROOT_ELEMENT = "action-tracking";
     /**
      * The name of the event-list element in generated XML.
      */
-    public final static String TN_EVENT_LIST = "event-list";
+    public static final String TN_EVENT_LIST = "event-list";
     /**
      * The name of each event element in generated XML.
      */
-    public final static String TN_EVENT = "event";
+    public static final String TN_EVENT = "event";
     /**
      * The attribute name for start time.
      */
-    public final static String ATTR_START = "start";
+    public static final String ATTR_START = "start";
     /**
      * The attribute name for descriptive phrase.
      */
-    public final static String ATTR_NAME = "name";
+    public static final String ATTR_NAME = "name";
     /**
      * The attribute name for the node-type.
      */
-    public final static String ATTR_TYPE = "type";
+    public static final String ATTR_TYPE = "type";
     /**
      * The attribute name for the timestamp.
      */
-    public final static String ATTR_TIME = "time";
+    public static final String ATTR_TIME = "time";
     /**
      * The attribute name for calculated time difference since the start.
      */
-    public final static String ATTR_TIME_DIFF_START = "diff";
+    public static final String ATTR_TIME_DIFF_START = "diff";
     /**
      * The attribute name for calculated time difference since the last
      * MOUSE_DRAGGED event.
      */
-    public final static String ATTR_TIME_DIFF_DRAG = "diffdrag";
+    public static final String ATTR_TIME_DIFF_DRAG = "diffdrag";
     /**
      * The attribute measured for events we are measuring one start + one stop.
      */
-    public final static String ATTR_MEASURED = "measured";
+    public static final String ATTR_MEASURED = "measured";
 
     // Instance of the ActionTracker
     private static ActionTracker instance = null;
@@ -758,12 +758,11 @@ public class ActionTracker {
     }
 
     private static String getShortenName(String name) {
-        name = name.replaceAll("javax.swing", "j");
-        name = name.replaceAll("org.netbeans.modules", "o.n.m");
-        name = name.replaceAll("org.netbeans", "o.n");
-        name = name.replaceAll("org.openide.awt", "o.o.a");
-        name = name.replaceAll("org.openide", "o.o");
-        return name;
+        return name.replace("javax.swing", "j")
+                   .replace("org.netbeans.modules", "o.n.m")
+                   .replace("org.netbeans", "o.n")
+                   .replace("org.openide.awt", "o.o.a")
+                   .replace("org.openide", "o.o");
     }
 
     /**

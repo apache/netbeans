@@ -1,0 +1,22 @@
+|-#anon#newWithoutParentheses_php#1 [846, 888] : ESCAPED{{}}
+|--CONSTANT [864, 872] : ESCAPED{CONSTANT}ESCAPED{ }<font color="#999999">ESCAPED{'constant'}</font>
+|-#anon#newWithoutParentheses_php#2 [910, 952] : ESCAPED{{}}
+|--CONSTANT [928, 936] : ESCAPED{CONSTANT}ESCAPED{ }<font color="#999999">ESCAPED{'constant'}</font>
+|-#anon#newWithoutParentheses_php#3 [978, 1016] : ESCAPED{{}}
+|--$field [998, 1003] : ESCAPED{$field}
+|-#anon#newWithoutParentheses_php#4 [1035, 1093] : ESCAPED{{}}
+|--$staticField [1062, 1073] : ESCAPED{$staticField}
+|-#anon#newWithoutParentheses_php#5 [1114, 1155] : ESCAPED{{}}
+|--method [1142, 1153] : ESCAPED{method}ESCAPED{(}ESCAPED{)}
+|-#anon#newWithoutParentheses_php#6 [1190, 1231] : ESCAPED{{}}
+|--method [1218, 1229] : ESCAPED{method}ESCAPED{(}ESCAPED{)}
+|-#anon#newWithoutParentheses_php#7 [1248, 1302] : ESCAPED{{}}
+|--staticMethod [1283, 1300] : ESCAPED{staticMethod}ESCAPED{(}ESCAPED{)}
+|-#anon#newWithoutParentheses_php#8 [1325, 1368] : ESCAPED{{}}
+|--__invoke [1353, 1366] : ESCAPED{__invoke}ESCAPED{(}ESCAPED{)}
+|-#anon#newWithoutParentheses_php#9 [1399, 1442] : ESCAPED{{}}
+|--__invoke [1427, 1440] : ESCAPED{__invoke}ESCAPED{(}ESCAPED{)}
+|-#anon#newWithoutParentheses_php#10 [1451, 1486] : ESCAPED{{}}
+|-#anon#newWithoutParentheses_php#11 [1508, 1571] : ESCAPED{{}}
+|--$field [1559, 1564] : ESCAPED{$field}<font color="#999999">:ESCAPED{int}</font>
+|-#anon#newWithoutParentheses_php#12 [1591, 1639] : ESCAPED{{}}

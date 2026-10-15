@@ -118,7 +118,7 @@ public class JavaEvaluator implements Evaluator<JavaExpression> {
         // should be already synchronized on the frame's thread
         if (csf == null)
             throw new InvalidExpressionException
-                    (NbBundle.getMessage(JPDADebuggerImpl.class, "MSG_NoCurrentContext"));
+                    (NbBundle.getMessage(JPDADebuggerImpl.class, "MSG_NoCurrentContextStackFrame"));
 
         // TODO: get imports from the source file
         CallStackFrameImpl csfi = (CallStackFrameImpl) csf;

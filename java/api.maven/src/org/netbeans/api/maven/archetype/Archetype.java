@@ -30,7 +30,7 @@ import org.netbeans.api.annotations.common.NonNull;
  */
 public final class Archetype {
 
-    private org.netbeans.modules.maven.api.archetype.Archetype delegate;
+    private final org.netbeans.modules.maven.api.archetype.Archetype delegate;
 
     /**
      * C'tor 

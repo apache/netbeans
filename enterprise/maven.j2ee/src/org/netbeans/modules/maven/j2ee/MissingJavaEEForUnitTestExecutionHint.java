@@ -75,7 +75,7 @@ public class MissingJavaEEForUnitTestExecutionHint extends AbstractHint {
             return null;
         }
         //Logger.getAnonymousLogger().log(Level.SEVERE, "---"+el+"  "+(treePath.getLeaf() != null ? treePath.getLeaf().getKind() : "no kind"));
-        if (el.asType() == null || !el.asType().getKind().equals(TypeKind.DECLARED)) {
+        if (el.asType() == null || el.asType().getKind() != TypeKind.DECLARED) {
             return null;
         }
         if (!isEEType(info, el.asType())) {
@@ -148,8 +148,8 @@ public class MissingJavaEEForUnitTestExecutionHint extends AbstractHint {
                 getDisplayName(javaeeJar),
                 new ArrayList<Fix>(),
                 info.getFileObject(),
-                (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), t),
-                (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), t)));
+                (int) info.getTrees().getSourcePositions().getStartPosition(t),
+                (int) info.getTrees().getSourcePositions().getEndPosition(t)));
     }
 
     private boolean isEEType(CompilationInfo info, TypeMirror type) {

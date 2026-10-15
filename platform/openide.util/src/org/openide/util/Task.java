@@ -20,6 +20,7 @@ package org.openide.util;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,7 +30,7 @@ import java.util.logging.Logger;
 * to finish.
 * <P>
 * For example:
-* <p><code><PRE>
+* <PRE><code>
 * Runnable r = new Runnable () {
 *   public void run () {
 *     // do something
@@ -37,7 +38,7 @@ import java.util.logging.Logger;
 * };
 * Task task = new Task (r);
 * RequestProcessor.postRequest (task);
-* </PRE></code>
+* </code></PRE>
 * <p>In a different thread one can then test <CODE>task.isFinished ()</CODE>
 * or wait for it with <CODE>task.waitFinished ()</CODE>.
 *
@@ -54,7 +55,7 @@ public class Task extends Object implements Runnable {
 
     /** map of subclasses to booleans whether they override waitFinished() or not
      */
-    private static java.util.WeakHashMap<Class, Boolean> overrides;
+    private static java.util.WeakHashMap<Class<?>, Boolean> overrides;
 
     /** request processor for workarounding compatibility problem with
      * classes that do not override waitFinished (long)
@@ -68,7 +69,7 @@ public class Task extends Object implements Runnable {
     private boolean finished;
 
     /** listeners for the finish of task (TaskListener) */
-    private HashSet<TaskListener> list;
+    private Set<TaskListener> list;
 
     /** Create a new task.
     * The runnable should provide its own error-handling, as
@@ -192,10 +193,10 @@ public class Task extends Object implements Runnable {
     }
 
     /** Notify all waiters that this task has finished.
-    * @see #run
+    * @see #run()
     */
     protected final void notifyFinished() {
-        Iterator it;
+        Iterator<TaskListener> it;
 
         synchronized (this) {
             finished = true;
@@ -207,11 +208,11 @@ public class Task extends Object implements Runnable {
                 return;
             }
 
-            it = ((HashSet) list.clone()).iterator();
+            it = (new HashSet<>(list)).iterator();
         }
 
         while (it.hasNext()) {
-            TaskListener l = (TaskListener) it.next();
+            TaskListener l = it.next();
             l.taskFinished(this);
         }
     }
@@ -224,6 +225,7 @@ public class Task extends Object implements Runnable {
     * <p>Note that this call runs synchronously, but typically the creator
     * of the task will call this method in a separate thread.
     */
+    @Override
     public void run() {
         try {
             notifyRunning();
@@ -246,7 +248,7 @@ public class Task extends Object implements Runnable {
         boolean callNow;
         synchronized (this) {
             if (list == null) {
-                list = new HashSet<TaskListener>();
+                list = new HashSet<>();
             }
             list.add(l);
             
@@ -269,6 +271,7 @@ public class Task extends Object implements Runnable {
         list.remove(l);
     }
 
+    @Override
     public String toString() {
         return "task " + run; // NOI18N
     }
@@ -286,12 +289,12 @@ public class Task extends Object implements Runnable {
             return true;
         }
 
-        java.util.WeakHashMap<Class,Boolean> m;
+        java.util.WeakHashMap<Class<?>, Boolean> m;
         Boolean does;
 
         synchronized (Task.class) {
             if (overrides == null) {
-                overrides = new java.util.WeakHashMap<Class, Boolean>();
+                overrides = new java.util.WeakHashMap<>();
                 RP = new RequestProcessor("Timeout waitFinished compatibility processor", 255); // NOI18N
             }
 
@@ -300,16 +303,16 @@ public class Task extends Object implements Runnable {
             does = m.get(getClass());
 
             if (does != null) {
-                return does.booleanValue();
+                return does;
             }
 
             try {
-                java.lang.reflect.Method method = getClass().getMethod("waitFinished", new Class[] { Long.TYPE }); // NOI18N
-                does = Boolean.valueOf(method.getDeclaringClass() != Task.class);
+                java.lang.reflect.Method method = getClass().getMethod("waitFinished", Long.TYPE); // NOI18N
+                does = method.getDeclaringClass() != Task.class;
                 m.put(getClass(), does);
 
-                return does.booleanValue();
-            } catch (Exception ex) {
+                return does;
+            } catch (NoSuchMethodException ex) {
                 Exceptions.printStackTrace(ex);
 
                 return true;

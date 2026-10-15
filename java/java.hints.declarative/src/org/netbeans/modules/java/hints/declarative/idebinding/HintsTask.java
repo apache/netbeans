@@ -36,6 +36,7 @@ import java.util.Set;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
+import javax.tools.Diagnostic.Kind;
 import javax.tools.JavaFileObject;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
@@ -44,7 +45,6 @@ import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
-import org.netbeans.api.java.source.Task;
 import org.netbeans.modules.java.hints.declarative.Condition;
 import org.netbeans.modules.java.hints.declarative.DeclarativeHintTokenId;
 import org.netbeans.modules.java.hints.declarative.DeclarativeHintsParser;
@@ -79,19 +79,18 @@ public class HintsTask extends ParserResultTask<Result> {
         final DeclarativeHintsParser.Result res = ParserImpl.getResult(result);
         final List<ErrorDescription> errors;
 
+        FileObject fileObject = result.getSnapshot().getSource().getFileObject();
         if (res != null) {
-            errors = computeErrors(res, result.getSnapshot().getText(), result.getSnapshot().getSource().getFileObject());
+            errors = computeErrors(res, result.getSnapshot().getText(), fileObject);
         } else {
             errors = Collections.emptyList();
         }
 
-        HintsController.setErrors(result.getSnapshot().getSource().getFileObject(),
-                                  HintsTask.class.getName(),
-                                  errors);
+        HintsController.setErrors(fileObject, HintsTask.class.getName(), errors);
     }
 
     static List<ErrorDescription> computeErrors(@NonNull final DeclarativeHintsParser.Result res, @NonNull final CharSequence hintCode, @NonNull final FileObject file) {
-        final List<ErrorDescription> errors = new LinkedList<ErrorDescription>();
+        final List<ErrorDescription> errors = new LinkedList<>();
 
         errors.addAll(res.errors);
 
@@ -100,34 +99,42 @@ public class HintsTask extends ParserResultTask<Result> {
         try {
             FileObject scratch = FileUtil.createMemoryFileSystem().getRoot().createData("Scratch.java");
             
-            JavaSource.create(cpInfo, scratch).runUserActionTask(new Task<CompilationController>() {
-                public void run(CompilationController parameter) throws Exception {
-                    parameter.toPhase(Phase.RESOLVED);
-                    String[] importsArray = res.importsBlock != null ? new String[] {hintCode.subSequence(res.importsBlock[0], res.importsBlock[1]).toString()} : new String[0];
-                    for (HintTextDescription hd : res.hints) {
-                        String code = hintCode.subSequence(hd.textStart, hd.textEnd).toString();
-                        Collection<Diagnostic<? extends JavaFileObject>> parsedErrors = new LinkedList<Diagnostic<? extends JavaFileObject>>();
-                        Scope s = Utilities.constructScope(parameter, conditions2Constraints(parameter, hd.conditions), Arrays.asList(importsArray));
-                        Tree parsed = Utilities.parseAndAttribute(parameter, code, s, parsedErrors);
+            JavaSource.create(cpInfo, scratch).runUserActionTask((CompilationController parameter) -> {
 
-                        for (Diagnostic<? extends JavaFileObject> d : parsedErrors) {
-                            errors.add(ErrorDescriptionFactory.createErrorDescription(Severity.ERROR/*XXX*/, d.getMessage(null), file, (int) (hd.textStart + d.getStartPosition()), (int) (hd.textStart + d.getEndPosition())));
-                        }
+                parameter.toPhase(Phase.RESOLVED);
+                String[] importsArray = res.importsBlock != null ?
+                        new String[] {hintCode.subSequence(res.importsBlock[0], res.importsBlock[1]).toString()} : new String[0];
+                
+                for (HintTextDescription hd : res.hints) {
+
+                    String code = hintCode.subSequence(hd.textStart, hd.textEnd).toString();
+                    Collection<Diagnostic<? extends JavaFileObject>> parsedErrors = new LinkedList<>();
+                    Scope s = Utilities.constructScope(parameter, conditions2Constraints(parameter, hd.conditions), Arrays.asList(importsArray));
+                    Tree parsed = Utilities.parseAndAttribute(parameter, code, s, parsedErrors);
+
+                    for (Diagnostic<? extends JavaFileObject> d : parsedErrors) {
+                        errors.add(ErrorDescriptionFactory.createErrorDescription(
+                                        d.getKind() == Kind.ERROR ? Severity.ERROR : Severity.WARNING,
+                                        d.getMessage(null),
+                                        file,
+                                        (int) (hd.textStart + d.getStartPosition()),
+                                        (int) (hd.textStart + d.getEndPosition())));
+                    }
+                    
+                    if (parsed != null && ExpressionTree.class.isAssignableFrom(parsed.getKind().asInterface())) {
+                        TypeMirror type = parameter.getTrees().getTypeMirror(new TreePath(new TreePath(parameter.getCompilationUnit()), parsed));
                         
-                        if (parsed != null && ExpressionTree.class.isAssignableFrom(parsed.getKind().asInterface())) {
-                            TypeMirror type = parameter.getTrees().getTypeMirror(new TreePath(new TreePath(parameter.getCompilationUnit()), parsed));
-                            
-                            if (type != null && !VOID_LIKE.contains(type.getKind())) {
-                                for (FixTextDescription df : hd.fixes) {
-                                    String fixCode = hintCode.subSequence(df.fixSpan[0], df.fixSpan[1]).toString().trim();
-
-                                    if (fixCode.isEmpty()) {
-                                        errors.add(ErrorDescriptionFactory.createErrorDescription(Severity.WARNING,
-                                                                                                  NbBundle.getMessage(HintsTask.class, "ERR_RemoveExpression"),
-                                                                                                  file,
-                                                                                                  hd.textStart,
-                                                                                                  hd.textEnd));
-                                    }
+                        if (type != null && !VOID_LIKE.contains(type.getKind())) {
+                            for (FixTextDescription df : hd.fixes) {
+                                String fixCode = hintCode.subSequence(df.fixSpan[0], df.fixSpan[1]).toString().trim();
+                                
+                                if (fixCode.isEmpty()) {
+                                    errors.add(ErrorDescriptionFactory.createErrorDescription(
+                                                    Severity.WARNING,
+                                                    NbBundle.getMessage(HintsTask.class, "ERR_RemoveExpression"),
+                                                    file,
+                                                    hd.textStart,
+                                                    hd.textEnd));
                                 }
                             }
                         }
@@ -142,7 +149,7 @@ public class HintsTask extends ParserResultTask<Result> {
     }
     
     private static Map<String, TypeMirror> conditions2Constraints(CompilationInfo info, List<Condition> conditions) {
-        Map<String, TypeMirror> constraints = new HashMap<String, TypeMirror>();
+        Map<String, TypeMirror> constraints = new HashMap<>();
 
         for (Entry<String, String> e : org.netbeans.modules.java.hints.declarative.Utilities.conditions2Constraints(conditions).entrySet()) {
             TypeMirror designedType = Hacks.parseFQNType(info, e.getValue());

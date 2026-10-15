@@ -23,7 +23,7 @@ import org.netbeans.tests.xml.XTest;
 import org.openide.util.Utilities;
 
 abstract class AbstractFactoryTest extends XTest {
-    final private static String NOT_EXCEPTION = "The InvalidArgumetException wasn't throwed ";
+    private static final String NOT_EXCEPTION = "The InvalidArgumetException wasn't throwed ";
 
     public AbstractFactoryTest(String testName) {
         super(testName);

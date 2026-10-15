@@ -68,7 +68,7 @@ public class SimpleHandle implements ElementHandle {
 
     @Override
     public Set<Modifier> getModifiers() {
-        return Collections.EMPTY_SET;
+        return Collections.emptySet();
     }
 
     @Override
@@ -81,7 +81,7 @@ public class SimpleHandle implements ElementHandle {
         return OffsetRange.NONE;
     }
     
-    public static abstract class DocumentationHandle extends SimpleHandle {
+    public abstract static class DocumentationHandle extends SimpleHandle {
 
         public DocumentationHandle(String name, ElementKind kind) {
             super(name, kind);

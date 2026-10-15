@@ -38,18 +38,20 @@ import org.openide.util.ImageUtilities;
  *
  * @author Erno Mononen
  */
-final class ELResourceBundleKeyCompletionItem extends DefaultCompletionProposal {
+public final class ELResourceBundleKeyCompletionItem extends DefaultCompletionProposal {
 
     private static final String ICON_PATH = "org/netbeans/modules/web/el/completion/resources/propertiesKey.gif";//NOI18N
 
     private final String key;
     private final String value;
     private final ELElement element;
+    private final FileObject bundleFile;
 
-    public ELResourceBundleKeyCompletionItem(String key, String value, ELElement element) {
+    public ELResourceBundleKeyCompletionItem(String key, String value, ELElement element, FileObject bundleFile) {
         this.key = key;
         this.value = value;
         this.element = element;
+        this.bundleFile = bundleFile;
     }
 
     @Override
@@ -92,6 +94,9 @@ final class ELResourceBundleKeyCompletionItem extends DefaultCompletionProposal 
 
         @Override
         public FileObject getFileObject() {
+            if (bundleFile != null) {
+                return bundleFile;
+            }
             return element.getSnapshot().getSource().getFileObject();
         }
 

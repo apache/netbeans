@@ -231,8 +231,6 @@ public final class TextRegexpUtil {
         assert sp.getSearchExpression() != null;
         assert sp.isRegExp();
 
-        boolean multiline = canBeMultilinePattern(sp.getSearchExpression());
-
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.log(Level.FINEST, " - textPatternExpr = \"{0}{1}",
                     new Object[]{sp.getSearchExpression(), '"'});   //NOI18N
@@ -375,12 +373,12 @@ public final class TextRegexpUtil {
 
     /**
      * Check if multi-line matching should be used for passed regular
-     * expression.
+     * expression or if the expression itself is multi-line.
      */
-    public static boolean canBeMultilinePattern(String expr) {
+    public static boolean isMultilineOrMatchesMultiline(String expr) {
         if (expr == null) {
             return false;
         }
-        return expr.matches(MULTILINE_REGEXP_PATTERN);
+        return expr.contains("\n") || expr.contains("\r") || expr.matches(MULTILINE_REGEXP_PATTERN);
     }
 }

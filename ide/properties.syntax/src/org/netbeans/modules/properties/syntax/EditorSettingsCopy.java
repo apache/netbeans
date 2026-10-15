@@ -230,7 +230,7 @@ public class EditorSettingsCopy extends TableViewSettings {
      * Gets only instance of <code>EditorSettindsCopy</code> that is also
      * registered at layer to access it declaratively.
      */
-    public synchronized static EditorSettingsCopy getLayerInstance() {
+    public static synchronized EditorSettingsCopy getLayerInstance() {
             if(editorSettingsCopy == null) {
                 editorSettingsCopy = new EditorSettingsCopy();
             }

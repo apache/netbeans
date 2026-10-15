@@ -20,11 +20,11 @@
 package org.netbeans.lib.profiler.ui.cpu;
 
 import javax.swing.Icon;
-import javax.swing.UIManager;
 import org.netbeans.lib.profiler.results.cpu.PrestimeCPUCCTNode;
 import org.netbeans.lib.profiler.ui.swing.renderer.JavaNameRenderer;
 import org.netbeans.modules.profiler.api.icons.Icons;
 import org.netbeans.modules.profiler.api.icons.ProfilerIcons;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -33,9 +33,9 @@ import org.netbeans.modules.profiler.api.icons.ProfilerIcons;
 public class CPUJavaNameRenderer extends JavaNameRenderer {
     
     private static final Icon THREAD_ICON = Icons.getIcon(ProfilerIcons.THREAD);
-    private static final Icon THREAD_ICON_DISABLED = UIManager.getLookAndFeel().getDisabledIcon(null, THREAD_ICON);
+    private static final Icon THREAD_ICON_DISABLED = ImageUtilities.createDisabledIcon(THREAD_ICON);
     private static final Icon LEAF_ICON = Icons.getIcon(ProfilerIcons.NODE_LEAF);
-    private static final Icon LEAF_ICON_DISABLED = UIManager.getLookAndFeel().getDisabledIcon(null, LEAF_ICON);
+    private static final Icon LEAF_ICON_DISABLED = ImageUtilities.createDisabledIcon(LEAF_ICON);
     
     private final Icon icon;
     private final Icon iconDisabled;
@@ -46,7 +46,7 @@ public class CPUJavaNameRenderer extends JavaNameRenderer {
     
     public CPUJavaNameRenderer(String iconKey) {
         this.icon = Icons.getIcon(iconKey);
-        this.iconDisabled = UIManager.getLookAndFeel().getDisabledIcon(null, icon);
+        this.iconDisabled = ImageUtilities.createDisabledIcon(icon);
     }
     
     public void setValue(Object value, int row) {

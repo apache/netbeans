@@ -170,7 +170,7 @@ public final class BookmarksNodeTree {
         }
 
         void updateKeys(List<ProjectBookmarks> sortedProjectBookmarks) {
-            updateKeys(sortedProjectBookmarks.toArray(new ProjectBookmarks[sortedProjectBookmarks.size()]));
+            updateKeys(sortedProjectBookmarks.toArray(new ProjectBookmarks[0]));
         }
 
         void updateKeys(ProjectBookmarks[] sortedProjectBookmarks) {

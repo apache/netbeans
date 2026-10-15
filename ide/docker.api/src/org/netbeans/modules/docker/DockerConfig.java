@@ -31,7 +31,7 @@ import java.nio.CharBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
@@ -91,8 +91,8 @@ public final class DockerConfig {
         }
 
         List<Credentials> ret = new ArrayList<>(currentAuths.size());
-        for (Iterator it = currentAuths.entrySet().iterator(); it.hasNext();) {
-            Map.Entry e = (Map.Entry) it.next();
+        for (Iterator<Map.Entry> it = currentAuths.entrySet().iterator(); it.hasNext();) {
+            Map.Entry e = it.next();
             if (!(e.getKey() instanceof String)) {
                 continue;
             }
@@ -138,7 +138,7 @@ public final class DockerConfig {
         StringBuilder sb = new StringBuilder(credentials.getUsername());
         sb.append(':');
         sb.append(credentials.getPassword());
-        String auth = Base64.getEncoder().encodeToString(sb.toString().getBytes("UTF-8")); // NOI18N
+        String auth = Base64.getEncoder().encodeToString(sb.toString().getBytes(StandardCharsets.UTF_8));
 
         JSONObject value = new JSONObject();
         value.put("auth", auth); // NOI18N
@@ -251,8 +251,8 @@ public final class DockerConfig {
                     currentHeaders = new JSONObject();
                 }
                 httpHeaders = new HashMap<>();
-                for (Iterator it = currentHeaders.entrySet().iterator(); it.hasNext(); ) {
-                    Map.Entry e = (Map.Entry) it.next();
+                for (Iterator<Map.Entry> it = currentHeaders.entrySet().iterator(); it.hasNext(); ) {
+                    Map.Entry e = it.next();
                     httpHeaders.put((String) e.getKey(), (String) e.getValue());
                 }
             }
@@ -272,7 +272,7 @@ public final class DockerConfig {
             if (fileDesc.first().isFile()) {
                 try (FileInputStream is = new FileInputStream(fileDesc.first())) {
                     try (FileLock lock = is.getChannel().lock(0, Long.MAX_VALUE, true)) {
-                        Reader r = new InputStreamReader(new BufferedInputStream(is), "UTF-8");
+                        Reader r = new InputStreamReader(new BufferedInputStream(is), StandardCharsets.UTF_8);
                         JSONObject current = null;
                         if (fileDesc.first().length() > 0) {
                             current = (JSONObject) new JSONParser().parse(r);
@@ -296,7 +296,7 @@ public final class DockerConfig {
         }
 
         byte[] auth = Base64.getDecoder().decode((String) value.get("auth")); // NOI18N
-        CharBuffer chars = Charset.forName("UTF-8").newDecoder().decode(ByteBuffer.wrap(auth)); // NOI18N
+        CharBuffer chars = StandardCharsets.UTF_8.newDecoder().decode(ByteBuffer.wrap(auth));
         int index = -1;
         for (int i = 0; i < chars.length(); i++) {
             if (chars.get(i) == ':') {

@@ -160,6 +160,6 @@ public interface FormPropertyContext {
             return theInstance;
         }
 
-        static private EmptyImpl theInstance = null;
+        private static EmptyImpl theInstance = null;
     }
 }

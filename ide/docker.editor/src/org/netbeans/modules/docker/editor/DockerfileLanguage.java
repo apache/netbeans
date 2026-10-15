@@ -19,6 +19,8 @@
 package org.netbeans.modules.docker.editor;
 
 import org.netbeans.api.lexer.Language;
+import org.netbeans.core.spi.multiview.MultiViewElement;
+import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
@@ -26,14 +28,16 @@ import org.netbeans.modules.docker.editor.completion.DockerfileCompletion;
 import org.netbeans.modules.docker.editor.lexer.DockerfileTokenId;
 import org.netbeans.modules.docker.editor.parser.DockerfileParser;
 import org.netbeans.modules.parsing.spi.Parser;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.windows.TopComponent;
 
 /**
  *
  * @author Tomas Zezula
  */
-@LanguageRegistration(mimeType = DockerfileResolver.MIME_TYPE)
-@NbBundle.Messages({"Dockerfile=Docker Build Files"})
+@NbBundle.Messages("Dockerfile=Docker Build Files")
+@LanguageRegistration(mimeType = DockerfileResolver.MIME_TYPE, useMultiview = true)
 public final class DockerfileLanguage extends DefaultLanguageConfig {
 
     @Override
@@ -60,4 +64,18 @@ public final class DockerfileLanguage extends DefaultLanguageConfig {
     public String getLineCommentPrefix() {
         return "#"; //NOI18N
     }
+
+    @NbBundle.Messages("Source=&Source")
+    @MultiViewElement.Registration(
+            displayName = "#Source",
+            iconBase = "org/netbeans/modules/docker/editor/resources/docker_file.png",
+            persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
+            mimeType = DockerfileResolver.MIME_TYPE,
+            preferredID = "dockerfile.source",
+            position = 100
+    )
+    public static MultiViewEditorElement createMultiViewEditorElement(Lookup context) {
+        return new MultiViewEditorElement(context);
+    }
+
 }

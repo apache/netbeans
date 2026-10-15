@@ -25,15 +25,15 @@ import org.graalvm.polyglot.Engine;
 import org.graalvm.polyglot.HostAccess;
 
 /**
- * Integration of <a href="@org-netbeans-api-scripting@/overview-summary.html">NetBeans Scripting</a>
+ * Integration of <a href="@org-netbeans-api-scripting@/index.html">NetBeans Scripting</a>
  * API and GraalVM; see the {@link org.netbeans.libs.graalsdk tutorial} for more details.
  * <h2>Security</h2>
  * <p>
- * By default all the <a href="http://graalvm.org">GraalVM</a> engines
+ * By default all the <a href="https://graalvm.org">GraalVM</a> engines
  * (named <code>GraalVM:something</code>)
  * run in a very restricted, secure sandbox:
  * </p>
- * {@codesnippet org.netbeans.libs.graalsdk.impl.GraalContext#SANDBOX}
+ * {@snippet file="org/netbeans/libs/graalsdk/impl/GraalContext.java" region="SANDBOX"}
  * <p>
  * The languages cannot access local files, ports, etc. They can access <b>public</b>
  * fields and <b>public</b> methods of objects passed into their scripts (but not
@@ -47,7 +47,7 @@ import org.graalvm.polyglot.HostAccess;
  * need to gain wider access. This can be done by setting <code>allowAllAccess</code>
  * attribute to {@code true}:
  * </p>
- * {@codesnippet org.netbeans.libs.graalsdk.ScriptingTutorial#allowAllAccess}
+ * {@snippet file="org/netbeans/libs/graalsdk/ScriptingTutorial.java" region="allowAllAccess"}
  * <p>
  * Once enabled, the {@link HostAccess#ALL} and {@link Builder#allowAllAccess(boolean) allowAllAccess(true)}
  * is then used to construct the engine's environment.
@@ -58,7 +58,7 @@ import org.graalvm.polyglot.HostAccess;
  * {@link org.graalvm.polyglot} package directly. Consult {@link Context} and {@link Engine}
  * classes as a starting points when
  * accessing the Graal SDK directly. Preferably use only if the 
- * <a href="@org-netbeans-api-scripting@/overview-summary.html">NetBeans Scripting</a>
+ * <a href="@org-netbeans-api-scripting@/index.html">NetBeans Scripting</a>
  * API wrapper isn't good enough.
  */
 public final class GraalSDK {

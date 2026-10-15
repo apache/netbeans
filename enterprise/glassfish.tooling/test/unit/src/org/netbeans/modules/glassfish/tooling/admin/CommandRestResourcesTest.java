@@ -41,10 +41,7 @@ public class CommandRestResourcesTest extends CommandRestTest {
     private static final String JDBC_CONNECTION = "jdbc/MyDatasource";
     
 
-    ////////////////////////////////////////////////////////////////////////////
     // Test methods                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-    
     /**
      * Test GlasFissh administration REST command execution.
      */

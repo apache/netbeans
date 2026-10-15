@@ -31,7 +31,7 @@ import org.netbeans.modules.db.dataview.util.ColorHelper;
  */
 public class CellFocusCustomRenderer extends DefaultTableCellRenderer {
 
-    private final static Color selectedCellBackground = ColorHelper.getTablecellFocused();
+    private static final Color selectedCellBackground = ColorHelper.getTablecellFocused();
 
     public CellFocusCustomRenderer() {       
         setOpaque(true);

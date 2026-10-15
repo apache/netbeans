@@ -192,7 +192,7 @@ public class SchemaModelTest extends TestCase {
         ComplexExtension ce = (ComplexExtension)ctd.getChildren().get(0);
         NamedComponentReference<GlobalType> ncr = ce.getBase();
         GlobalType type = ncr.get();
-        assert(type != null && type instanceof GlobalSimpleType);
+        assert(type instanceof GlobalSimpleType);
         GlobalSimpleType gst = (GlobalSimpleType)type;
         assert(gst.getName() != null && gst.getName().equals("anyType"));
     }

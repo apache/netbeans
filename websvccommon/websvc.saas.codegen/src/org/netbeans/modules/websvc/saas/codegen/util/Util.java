@@ -186,11 +186,11 @@ public class Util {
      *  Recursively finds a JLabel that has labelText in comp
      */
     public static JLabel findLabel(JComponent comp, String labelText) {
-        Vector allComponents = new Vector();
+        Vector<Component> allComponents = new Vector<>();
         getAllComponents(comp.getComponents(), allComponents);
-        Iterator iterator = allComponents.iterator();
+        Iterator<Component> iterator = allComponents.iterator();
         while (iterator.hasNext()) {
-            Component c = (Component) iterator.next();
+            Component c = iterator.next();
             if (c instanceof JLabel) {
                 JLabel label = (JLabel) c;
                 if (label.getText().equals(labelText)) {
@@ -457,7 +457,7 @@ public class Util {
         try {
             return loader.loadClass(raw);
         } catch (ClassNotFoundException ex) {
-            Logger.global.log(Level.INFO, "", ex);
+            Logger.getGlobal().log(Level.INFO, "", ex);
             return null;
         }
     }
@@ -536,7 +536,7 @@ public class Util {
                 result.add(p);
             }
         }
-        Project[] projectsArray = result.toArray(new Project[result.size()]);
+        Project[] projectsArray = result.toArray(new Project[0]);
         return projectsArray;
     }
 
@@ -1279,7 +1279,7 @@ public class Util {
             results.add(getParameterName(param, true, true, true));
         }
 
-        return results.toArray(new String[results.size()]);
+        return results.toArray(new String[0]);
     }
 
     public static String[] getParamTypeNames(List<ParameterInfo> params) {
@@ -1289,7 +1289,7 @@ public class Util {
             results.add(param.getTypeName());
         }
 
-        return results.toArray(new String[results.size()]);
+        return results.toArray(new String[0]);
     }
 
     public static Object[] getParamValues(List<ParameterInfo> params) {
@@ -1299,7 +1299,7 @@ public class Util {
             results.add(getParamValue(param));
         }
 
-        return results.toArray(new Object[results.size()]);
+        return results.toArray(new Object[0]);
     }
 
     public static Object getParamValue(ParameterInfo p) {
@@ -1384,13 +1384,13 @@ public class Util {
     public static String[] getGetParamNames(List<ParameterInfo> queryParams) {
         ArrayList<String> params = new ArrayList<String>();
         params.addAll(Arrays.asList(getParamNames(queryParams)));
-        return params.toArray(new String[params.size()]);
+        return params.toArray(new String[0]);
     }
 
     public static String[] getGetParamTypes(List<ParameterInfo> queryParams) {
         ArrayList<String> types = new ArrayList<String>();
         types.addAll(Arrays.asList(getParamTypeNames(queryParams)));
-        return types.toArray(new String[types.size()]);
+        return types.toArray(new String[0]);
     }
     
     public static List<ParameterInfo> getRestClientMethodParameters(RestClientSaasBean bean) {

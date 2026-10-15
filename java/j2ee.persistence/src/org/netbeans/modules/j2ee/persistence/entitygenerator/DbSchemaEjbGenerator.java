@@ -49,13 +49,13 @@ import org.netbeans.modules.j2ee.persistence.entitygenerator.EntityRelation.Coll
 public class DbSchemaEjbGenerator {
     
     private GeneratedTables genTables;
-    private Map beans = new HashMap();
-    private List relations = new ArrayList();
+    private Map<String, EntityClass> beans = new HashMap<>();
+    private List<EntityRelation> relations = new ArrayList<>();
     private SchemaElement schemaElement;
     private Set<String> tablesReferecedByOtherTables;
     private Set<String> primaryKeyIsForeignKeyTables;
     private final CollectionType colectionType;
-    private final static Logger LOGGER = Logger.getLogger(DbSchemaEjbGenerator.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DbSchemaEjbGenerator.class.getName());
     private boolean useColumNamesInRelations = false;
     //private ArrayList<String> warningMessages;
     private final boolean generateUnresolvedRelationships;
@@ -97,7 +97,7 @@ public class DbSchemaEjbGenerator {
      * @return A set of tables that are referenced by at least one another table
      */
     public static Set<String> getTablesReferecedByOtherTables(SchemaElement schemaElement) {
-        Set<String> tableNames = new HashSet<String>();
+        Set<String> tableNames = new HashSet<>();
         TableElement[] allTables = schemaElement.getTables();
         for(int i = 0; i < allTables.length; i ++ ) {
             ForeignKeyElement[] fkElements = allTables[i].getForeignKeys();
@@ -114,7 +114,7 @@ public class DbSchemaEjbGenerator {
      * @return A set of tables that reference another tables with primary key to promary key reference
      */
     public static Set<String> getTablesReferencesOtherTablesWithPrimaryKeyMatch(SchemaElement schemaElement) {
-        Set<String> tableNames = new HashSet<String>();
+        Set<String> tableNames = new HashSet<>();
         TableElement[] allTables = schemaElement.getTables();
         for(int i = 0; i < allTables.length; i ++ ) {
             TableElement table0 = allTables[i];
@@ -129,7 +129,6 @@ public class DbSchemaEjbGenerator {
                     if(pk != null && 1 == pk0.getColumns().length && fk.getLocalColumns().length == 1 && pk.getColumns().length==1){
                         if(fk.getLocalColumns()[0].equals(pk0.getColumns()[0])){
                             tableNames.add(table0.getName().getName());
-                            continue;
                         }
                     }
                 }
@@ -195,16 +194,16 @@ public class DbSchemaEjbGenerator {
     }
     
     public EntityClass[] getBeans() {
-        return (EntityClass[])beans.values().toArray(new EntityClass[beans.size()]);
+        return beans.values().toArray(new EntityClass[beans.size()]);
     }
     
     public EntityRelation[] getRelations() {
-        return (EntityRelation[])relations.toArray(new EntityRelation[relations.size()]);
+        return relations.toArray(new EntityRelation[0]);
     }
     
     
     private EntityClass getBean(String tableName) {
-        return (EntityClass)beans.get(tableName);
+        return beans.get(tableName);
     }
     
     private EntityClass addBean(String tableName) {
@@ -229,7 +228,7 @@ public class DbSchemaEjbGenerator {
     }
     
     private void addAllTables() {
-        List<TableElement> joinTables = new LinkedList<TableElement>();
+        List<TableElement> joinTables = new LinkedList<>();
         for (String tableName : genTables.getTableNames()) {
             TableElement tableElement =
                     schemaElement.getTable(DBIdentifier.create(tableName));
@@ -316,7 +315,7 @@ public class DbSchemaEjbGenerator {
         String roleBCmr = EntityMember.makeRelationshipFieldName(roleAClassName, colectionType, true);
         
         roleACmr = uniqueAlgorithm(getFieldNames(roleAHelper), roleACmr, null);
-        List roleBFieldNames = getFieldNames(roleBHelper);
+        List<String> roleBFieldNames = getFieldNames(roleBHelper);
         if (tableAName.equals(tableBName)) {
             // Handle the special case when both parts of the join table reference
             // the same table -- in that case both roleACmr and roleBCmr
@@ -551,8 +550,8 @@ public class DbSchemaEjbGenerator {
     private void buildCMPSet() {
         reset();
         addAllTables();
-        for (Iterator it = beans.keySet().iterator(); it.hasNext();) {
-            String tableName = it.next().toString();
+        for (Iterator<String> it = beans.keySet().iterator(); it.hasNext();) {
+            String tableName = it.next();
             TableElement table = schemaElement.getTable(DBIdentifier.create(tableName));
             ColumnElement[] cols = table.getColumns();
             UniqueKeyElement pk = getPrimaryOrCandidateKey(table);
@@ -583,13 +582,13 @@ public class DbSchemaEjbGenerator {
     }
     
     private List getFieldNames(EntityClass bean) {
-        List result = new ArrayList();
-        for (Iterator i = bean.getFields().iterator(); i.hasNext();) {
-            EntityMember member = (EntityMember)i.next();
+        List<String> result = new ArrayList<>();
+        for (Iterator<EntityMember> i = bean.getFields().iterator(); i.hasNext();) {
+            EntityMember member = i.next();
             result.add(member.getMemberName());
         }
-        for (Iterator i = bean.getRoles().iterator(); i.hasNext();) {
-            RelationshipRole role = (RelationshipRole)i.next();
+        for (Iterator<RelationshipRole> i = bean.getRoles().iterator(); i.hasNext();) {
+            RelationshipRole role = i.next();
             result.add(role.getFieldName());
         }
         return result;
@@ -600,7 +599,7 @@ public class DbSchemaEjbGenerator {
      */
     private EntityRelation[] makeRelationsUnique() {
         EntityRelation[] r = getRelations();
-        List relationNames = new ArrayList(r.length);
+        List<String> relationNames = new ArrayList<>(r.length);
         for (int i = 0; i < r.length; i++) {
             r[i].makeRoleNamesUnique();
             String baseName = r[i].getRelationName();
@@ -612,7 +611,7 @@ public class DbSchemaEjbGenerator {
     /**
      * return name generated or base name if this was ok
      */
-    private static String uniqueAlgorithm(List names, String baseName, String sep) {
+    private static String uniqueAlgorithm(List<String> names, String baseName, String sep) {
         String newName = baseName;
         int unique = 0;
         while (names.contains(newName)) {
@@ -627,20 +626,21 @@ public class DbSchemaEjbGenerator {
      * may be used for issue 177341 fix later
      */
     private ForeignKeyElement[] removeDuplicateFK(ForeignKeyElement[] fkeys) {
-        if(fkeys==null || fkeys.length==0) return fkeys;
-        HashMap<ComparableFK, ForeignKeyElement> ret = new HashMap<ComparableFK, ForeignKeyElement>();
+        if(fkeys==null || fkeys.length==0) {
+            return fkeys;
+        }
+        HashMap<ComparableFK, ForeignKeyElement> ret = new HashMap<>();
         for(int i=0;i<fkeys.length;i++)
         {
             ForeignKeyElement key=fkeys[i];
             ComparableFK fkc=new ComparableFK(key);
             if(ret.get(fkc)!=null){//we already have the same key
                 LOGGER.log(Level.INFO,key.getName().getFullName()+" key in "+key.getDeclaringTable().getName().getFullName() + " is considered as a duplicate, you may need to verify your schema or database structure.");//NOI18N
-                continue;
             } else {
                 ret.put(fkc, key);
             }
         }
-        return (ForeignKeyElement[]) ret.values().toArray(new ForeignKeyElement[]{});
+        return ret.values().toArray(new ForeignKeyElement[]{});
     }
 
     /**

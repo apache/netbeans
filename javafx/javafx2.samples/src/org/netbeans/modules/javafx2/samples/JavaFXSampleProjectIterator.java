@@ -85,7 +85,7 @@ public class JavaFXSampleProjectIterator implements TemplateWizard.Iterator {
         this.wiz = templateWizard;
         String name = templateWizard.getTemplate().getNodeDelegate().getDisplayName();
         if (name != null) {
-            name = name.replaceAll(" ", ""); //NOI18N
+            name = name.replace(" ", ""); //NOI18N
         }
         templateWizard.putProperty(WizardProperties.NAME, name);
         basicPanel = new PanelConfigureProject(templateWizard.getTemplate().getNodeDelegate().getDisplayName());
@@ -167,7 +167,7 @@ public class JavaFXSampleProjectIterator implements TemplateWizard.Iterator {
             NbBundle.getMessage(PanelConfigureProject.class, "LBL_NWP1_ProjectTitleName"), // NOI18N
         };
         component.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, list); // NOI18N
-        component.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(currentIndex)); // NOI18N
+        component.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, currentIndex); // NOI18N
     }
     
     private void warnIssue204880(final String msg) {

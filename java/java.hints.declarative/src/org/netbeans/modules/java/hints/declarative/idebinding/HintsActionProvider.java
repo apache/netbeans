@@ -24,16 +24,15 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.modules.java.hints.declarative.DeclarativeHintRegistry;
 import org.netbeans.modules.java.hints.declarative.HintDataObject;
-import org.netbeans.modules.java.hints.spiimpl.refactoring.InspectAndRefactorUI;
 import org.netbeans.modules.java.hints.providers.spi.HintDescription;
 import org.netbeans.modules.java.hints.providers.spi.HintMetadata;
+import org.netbeans.modules.java.hints.spiimpl.Utilities;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.awt.StatusDisplayer;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
-import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -43,10 +42,12 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=ActionProvider.class)
 public class HintsActionProvider implements ActionProvider {
 
+    @Override
     public String[] getSupportedActions() {
         return new String[]{ActionProvider.COMMAND_RUN_SINGLE};
     }
 
+    @Override
     public void invokeAction(String command, Lookup context) throws IllegalArgumentException {
         assert ActionProvider.COMMAND_RUN_SINGLE.equals(command);
         
@@ -60,15 +61,13 @@ public class HintsActionProvider implements ActionProvider {
         
         if (doc != null) {
             final String[] spec = new String[1];
-            doc.render(new Runnable() {
-                @Override public void run() {
-                    try {
-                        spec[0] = doc.getText(0, doc.getLength());
-                    } catch (BadLocationException ex) {
-                        //should not happen...
-                        Exceptions.printStackTrace(ex);
-                        spec[0] = "";
-                    }
+            doc.render(() -> {
+                try {
+                    spec[0] = doc.getText(0, doc.getLength());
+                } catch (BadLocationException ex) {
+                    //should not happen...
+                    Exceptions.printStackTrace(ex);
+                    spec[0] = "";
                 }
             });
             hints = DeclarativeHintRegistry.parseHints(hdo.getPrimaryFile(), spec[0]);
@@ -80,11 +79,11 @@ public class HintsActionProvider implements ActionProvider {
             StatusDisplayer.getDefault().setStatusText("No hints specified in " + FileUtil.getFileDisplayName(hdo.getPrimaryFile()));
             return;
         }
-
-        HintMetadata m = hints.entrySet().iterator().next().getKey();
-        InspectAndRefactorUI.openRefactoringUI(Lookups.singleton(new InspectAndRefactorUI.HintWrap(m, DeclarativeHintRegistry.join(hints))));
+        
+        Utilities.openRefactoringUIOrWarn(hints, null);
     }
 
+    @Override
     public boolean isActionEnabled(String command, Lookup context) throws IllegalArgumentException {
         assert ActionProvider.COMMAND_RUN_SINGLE.equals(command);
         return context.lookup(HintDataObject.class) != null;

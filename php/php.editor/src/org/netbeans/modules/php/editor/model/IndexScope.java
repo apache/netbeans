@@ -35,6 +35,7 @@ public interface IndexScope extends Scope {
     List<? extends TraitScope> findTraits(final QualifiedName traitName);
     List<? extends TypeScope> findTypes(final QualifiedName typeName);
     List<? extends ClassScope> findClasses(final QualifiedName className);
+    List<? extends EnumScope> findEnums(final QualifiedName enumName);
     List<? extends FunctionScope> findFunctions(final QualifiedName fncName);
     List<? extends ConstantElement> findConstants(final QualifiedName constName);
     List<? extends VariableName> findVariables(final String varName);
@@ -50,5 +51,30 @@ public interface IndexScope extends Scope {
     List<? extends FieldElement> findFields(ClassScope cls, int... modifiers);
     List<? extends FieldElement> findFields(TraitScope cls, int... modifiers);
     List<? extends FieldElement> findInheritedFields(ClassScope clsScope, String fieldName);
+    List<? extends CaseElement> findEnumCases(TypeScope type);
+    List<? extends CaseElement> findEnumCases(TypeScope type, String enumCaseName);
 
+    public interface PHP84IndexScope extends IndexScope {
+
+        /**
+         * Find fields(properties) for an interface field name.
+         *
+         * @param interfaceScope an interface scope
+         * @param field a field name
+         * @param modifiers modifiers
+         * @return field elements
+         * @since 2.50.0
+         */
+        List<? extends FieldElement> findFields(InterfaceScope interfaceScope, String field, int... modifiers);
+
+        /**
+         * Find fields(properties) for an interface.
+         *
+         * @param interfaceScope an interface scope
+         * @param modifiers modifiers
+         * @return field elements
+         * @since 2.50.0
+         */
+        List<? extends FieldElement> findFields(InterfaceScope interfaceScope, int... modifiers);
+    }
 }

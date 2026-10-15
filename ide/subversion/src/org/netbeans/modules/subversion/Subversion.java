@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.subversion;
 
-import org.netbeans.modules.subversion.kenai.SvnKenaiAccessor;
 import org.netbeans.modules.subversion.config.SvnConfigFiles;
 import org.netbeans.modules.subversion.util.Context;
 import org.netbeans.modules.subversion.client.*;
@@ -32,13 +31,13 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.net.PasswordAuthentication;
 import java.util.ArrayList;
 import org.netbeans.modules.subversion.ui.ignore.IgnoreAction;
 import org.netbeans.modules.versioning.spi.VCSInterceptor;
 import org.netbeans.api.queries.SharabilityQuery;
 import org.netbeans.modules.subversion.config.PasswordFile;
 import org.netbeans.modules.subversion.ui.repository.RepositoryConnection;
+import org.netbeans.modules.versioning.spi.VersioningSupport;
 import org.netbeans.modules.versioning.util.DelayScanRegistry;
 import org.netbeans.modules.versioning.util.VCSHyperlinkProvider;
 import org.openide.filesystems.FileUtil;
@@ -117,22 +116,11 @@ public class Subversion {
         filesystemHandler  = new FilesystemHandler(this);
         refreshHandler = new SvnClientRefreshHandler();
         prepareCache();
-
-        asyncInit();
     }
 
     public void attachListeners(SubversionVCS svcs) {
         fileStatusCache.addVersioningListener(svcs);
         addPropertyChangeListener(svcs);
-    }
-
-    private void asyncInit() {
-        getRequestProcessor().post(new Runnable() {
-            @Override
-            public void run() {
-                SvnKenaiAccessor.getInstance().registerVCSNoficationListener();
-            }
-        }, 500);
     }
 
     RequestProcessor.Task cleanupTask;
@@ -219,26 +207,16 @@ public class Subversion {
         Parameters.notNull("repositoryUrl", repositoryUrl); //NOI18N
         String username = ""; // NOI18N
         char[] password = null;
-
-        SvnKenaiAccessor kenaiSupport = SvnKenaiAccessor.getInstance();
-        if(kenaiSupport.isKenai(repositoryUrl.toString())) {
-            PasswordAuthentication pa = kenaiSupport.getPasswordAuthentication(repositoryUrl.toString(), false);
-            if(pa != null) {
-                username = pa.getUserName();
-                password = pa.getPassword();
-            }
-        } else {
-            RepositoryConnection rc = SvnModuleConfig.getDefault().getRepositoryConnection(repositoryUrl.toString());
-            if(rc != null) {
-                username = rc.getUsername();
-                password = rc.getPassword();
-            } else if(!Utilities.isWindows()) {
-                PasswordFile pf = PasswordFile.findFileForUrl(repositoryUrl);
-                if(pf != null) {
-                    username = pf.getUsername();
-                    String psswdString = pf.getPassword();
-                    password = psswdString != null ? psswdString.toCharArray() : null;
-                }
+        RepositoryConnection rc = SvnModuleConfig.getDefault().getRepositoryConnection(repositoryUrl.toString());
+        if(rc != null) {
+            username = rc.getUsername();
+            password = rc.getPassword();
+        } else if(!Utilities.isWindows()) {
+            PasswordFile pf = PasswordFile.findFileForUrl(repositoryUrl);
+            if(pf != null) {
+                username = pf.getUsername();
+                String psswdString = pf.getPassword();
+                password = psswdString != null ? psswdString.toCharArray() : null;
             }
         }
         return getClient(repositoryUrl, username, password, progressSupport);
@@ -338,7 +316,7 @@ public class Subversion {
 
         ISVNNotifyListener[] listeners = null;
         synchronized(l) {
-            listeners = l.toArray(new ISVNNotifyListener[l.size()]);
+            listeners = l.toArray(new ISVNNotifyListener[0]);
         }
         for(ISVNNotifyListener listener : listeners) {
             client.addNotifyListener(listener);
@@ -501,7 +479,9 @@ public class Subversion {
                 }
                 break;
             }
-            if (org.netbeans.modules.versioning.util.Utils.isScanForbidden(file)) break;
+            if (VersioningSupport.isExcluded(file)) {
+                break;
+            }
             // is the folder a special one where metadata should not be looked for?
             boolean forbiddenFolder = org.netbeans.modules.versioning.util.Utils.isForbiddenFolder(file);
             if (!forbiddenFolder && SvnUtils.hasMetadata(file)) {

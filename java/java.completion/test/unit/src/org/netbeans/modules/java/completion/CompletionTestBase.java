@@ -71,6 +71,7 @@ public class CompletionTestBase extends CompletionTestBaseBase {
         copyToWorkDir(new File(getDataDir(), "org/netbeans/modules/java/completion/data/" + source + ".java"), testSource);
         FileObject testSourceFO = FileUtil.toFileObject(testSource);
         assertNotNull(testSourceFO);
+        afterTestSetup();
         DataObject testSourceDO = DataObject.find(testSourceFO);
         assertNotNull(testSourceDO);
         EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
@@ -96,6 +97,7 @@ public class CompletionTestBase extends CompletionTestBaseBase {
                 if (!(org.openide.util.Utilities.isMac() && itemString.equals("apple") //ignoring 'apple' package
                         || itemString.equals("jdk")        //ignoring 'jdk' package introduced by jdk1.7.0_40
                         || itemString.equals("netscape")   //ignoring 'netscape' package present in some JDK builds
+                        || itemString.equals("nbjavac")   //ignoring 'nbjavac' package from nbjavac
                         || itemString.equals("oracle"))) { //ignoring 'oracle' package present in some JDK builds
                     out.write(itemString);
                     out.write("\n");
@@ -111,7 +113,9 @@ public class CompletionTestBase extends CompletionTestBaseBase {
         LifecycleManager.getDefault().saveAll();
     }
 
-    private static class CIFactory implements JavaCompletionTask.ModuleItemFactory<CI> {
+    protected void afterTestSetup() throws Exception {}
+
+    private static class CIFactory implements JavaCompletionTask.ModuleItemFactory<CI>, JavaCompletionTask.RecordPatternItemFactory<CI> {
 
         private static final int SMART_TYPE = 1000;
         @Override
@@ -212,11 +216,13 @@ public class CompletionTestBase extends CompletionTestBaseBase {
         public CI createVariableItem(CompilationInfo info, VariableElement elem, TypeMirror type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean smartType, int assignToVarOffset) {
             String varName = elem.getSimpleName().toString();
             String typeName = type != null ? info.getTypeUtilities().getTypeName(type).toString() : null;
-            switch (elem.getKind()) {
+            ElementKind ek = elem.getKind();
+            switch (ek) {
                 case LOCAL_VARIABLE:
                 case RESOURCE_VARIABLE:
                 case PARAMETER:
                 case EXCEPTION_PARAMETER:
+                case BINDING_VARIABLE:
                     return new CI((typeName != null ? typeName + " " : "") + varName, smartType ? 200 - SMART_TYPE : 200, varName);
                 case ENUM_CONSTANT:
                 case FIELD:
@@ -240,7 +246,7 @@ public class CompletionTestBase extends CompletionTestBaseBase {
         }
 
         @Override
-        public CI createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef) {
+        public CI createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef, boolean insertTextParams) {
             String simpleName = elem.getKind() == ElementKind.CONSTRUCTOR ? elem.getEnclosingElement().getSimpleName().toString() : elem.getSimpleName().toString();
             StringBuilder sb = new StringBuilder();
             StringBuilder sortParams = new StringBuilder();
@@ -291,7 +297,7 @@ public class CompletionTestBase extends CompletionTestBaseBase {
         }
 
         @Override
-        public CI createThisOrSuperConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, String name) {
+        public CI createThisOrSuperConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, String name, boolean insertTextParams) {
             if (elem.getKind() == ElementKind.CONSTRUCTOR) {
                 StringBuilder sb = new StringBuilder();
                 StringBuilder sortParams = new StringBuilder();
@@ -435,6 +441,34 @@ public class CompletionTestBase extends CompletionTestBaseBase {
             String simpleName = elem.getSimpleName().toString();
             return new CI(simpleName + "()", smartType ? 650 - SMART_TYPE : 650, simpleName + "#0#");
         }
+        
+        @Override
+        public CI createRecordPatternItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew, boolean addTypeVars) {
+            String simpleName = elem.getSimpleName().toString();
+            StringBuilder sb = new StringBuilder();
+            StringBuilder sortParams = new StringBuilder();
+            sb.append(simpleName);
+            sb.append('(');
+            sortParams.append('(');
+            Iterator<? extends RecordComponentElement> it = elem.getRecordComponents().iterator();
+            RecordComponentElement recordComponent;
+            String name;
+            int cnt = 0;
+            while (it.hasNext()) {
+                recordComponent = it.next();
+                name = recordComponent.getAccessor().getReturnType().toString();
+                sortParams.append(name);
+                sb.append(name.substring(name.lastIndexOf(".") + 1));
+                sb.append(" ");
+                sb.append(recordComponent.getSimpleName().toString());
+                if (it.hasNext()) {
+                    sb.append(", "); //NOI18N
+                }
+                cnt++;
+            }
+            sb.append(")");
+            return new CI(sb.toString(), 650, "#" + ((cnt < 10 ? "0" : "") + cnt) + "#" + sortParams.toString());
+        }
 
         @Override
         public CI createParametersItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, int activeParamIndex, String name) {
@@ -491,7 +525,7 @@ public class CompletionTestBase extends CompletionTestBaseBase {
         }
 
         @Override
-        public CI createStaticMemberItem(CompilationInfo info, DeclaredType type, Element memberElem, TypeMirror memberType, boolean multipleVersions, int substitutionOffset, boolean isDeprecated, boolean addSemicolon) {
+        public CI createStaticMemberItem(CompilationInfo info, DeclaredType type, Element memberElem, TypeMirror memberType, boolean multipleVersions, int substitutionOffset, boolean isDeprecated, boolean addSemicolon, boolean smartType) {
             switch (memberElem.getKind()) {
                 case METHOD:
                 case ENUM_CONSTANT:
@@ -543,14 +577,14 @@ public class CompletionTestBase extends CompletionTestBaseBase {
                         sb.append(')');
                         sortParams.append(')');
                     }
-                    return new CI(sb.toString(), (memberElem.getKind().isField() ? 720 : 750) - SMART_TYPE, memberElem.getKind().isField() ? memberName + "#" + typeName : memberName + "#" + ((cnt < 10 ? "0" : "") + cnt) + "#" + sortParams.toString() + "#" + typeName); //NOI18N
+                    return new CI(sb.toString(), (memberElem.getKind().isField() ? 720 : 750) - (smartType ? SMART_TYPE : 0), memberElem.getKind().isField() ? memberName + "#" + typeName : memberName + "#" + ((cnt < 10 ? "0" : "") + cnt) + "#" + sortParams.toString() + "#" + typeName); //NOI18N
                 default:
                     throw new IllegalArgumentException("kind=" + memberElem.getKind());
             }
         }
 
         @Override
-        public CI createStaticMemberItem(ElementHandle<TypeElement> handle, String name, int substitutionOffset, boolean addSemicolon, ReferencesCount referencesCount, Source source) {
+        public CI createStaticMemberItem(ElementHandle<TypeElement> handle, String name, int substitutionOffset, boolean addSemicolon, ReferencesCount referencesCount, Source source, boolean smartType) {
             String fqn = handle.getQualifiedName();
             int weight = 50;
             if (fqn.startsWith("java.lang") || fqn.startsWith("java.util")) { // NOI18N

@@ -36,7 +36,7 @@ public abstract class JsAstRule implements Rule.AstRule {
     public static final String JS_OTHER_HINTS = "js.other.hints"; //NOI18N
 
     abstract void computeHints(JsHintsProvider.JsRuleContext context, List<Hint> hints, int offset, HintsProvider.HintsManager manager) throws BadLocationException;
-    
+
     @Override
     public boolean getDefaultEnabled() {
         return true;
@@ -61,6 +61,6 @@ public abstract class JsAstRule implements Rule.AstRule {
     public HintSeverity getDefaultSeverity() {
         return HintSeverity.WARNING;
     }
-    
-    
+
+
 }

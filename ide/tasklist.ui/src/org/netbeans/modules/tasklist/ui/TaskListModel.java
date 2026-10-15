@@ -20,6 +20,7 @@
 package org.netbeans.modules.tasklist.ui;
 
 import java.awt.EventQueue;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
@@ -37,14 +38,14 @@ import org.openide.util.NbBundle;
 class TaskListModel extends AbstractTableModel implements TaskList.Listener {
     
     protected TaskList taskList;
-    
+
     protected static final int COL_GROUP = 0;
     protected static final int COL_DESCRIPTION = 1;
     protected static final int COL_FILE = 2;
     protected static final int COL_LOCATION = 3;
-    // internal list of tasks - needed to recognize deleted row (deleted tasks aren't in taskList when taskRemoved method "arrive") #204655
+    // listOfTasks holds the list of tasks relevant for the Swing components. It
+    // is a copy of the task held by the TaskList instance
     private List<? extends Task> listOfTasks;
-    private final Object lock = new Object();
 
             
     /** Creates a new instance of TaskListModel */
@@ -58,8 +59,7 @@ class TaskListModel extends AbstractTableModel implements TaskList.Listener {
     
     @Override
     public int getRowCount() {
-        final List<? extends Task> list = taskList.getTasks();
-        return list.size();
+        return listOfTasks.size();
     }
     
     @Override
@@ -115,65 +115,73 @@ class TaskListModel extends AbstractTableModel implements TaskList.Listener {
     }
     
     protected Task getTaskAtRow( int row ) {
-        synchronized (lock) {
-            final List<? extends Task> list = taskList.getTasks();
-            if (list.size() > row) {
-                return list.get(row);
-            } else {
-                return null;
+        if (listOfTasks.size() > row) {
+            return listOfTasks.get(row);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public void tasksAdded(final List<? extends Task> tasks) {
+        if (! tasks.isEmpty()) {
+            fireTasksChanged(true, tasks, listOfTasks, taskList.getTasks());
+        }
+    }
+
+    @Override
+    public void tasksRemoved(final List<? extends Task> tasks) {
+        if (! tasks.isEmpty()) {
+            fireTasksChanged(false, tasks, listOfTasks, taskList.getTasks());
+        }
+    }
+
+    @SuppressWarnings("AssignmentToCollectionOrArrayFieldFromParameter")
+    private void fireTasksChanged(
+            boolean add,
+            List<? extends Task> changedTasks,
+            List<? extends Task> oldList,
+            List<? extends Task> newList
+    ) {
+        EventQueue.invokeLater(() -> {
+            // Get the right list for index identification, for adding the
+            // indices are taken from the new list, for removal from the old
+            // list
+            List<? extends Task> indexTaskList = add ? newList : oldList;
+            // Find the tasks that were added/removed in the old list (these are the
+            // relevant indices.
+            int[] indices = new int[changedTasks.size()];
+            for (int i = 0; i < changedTasks.size(); i++) {
+                indices[i] = indexTaskList.indexOf(changedTasks.get(i));
             }
-        }
-    }
+            // Update the list of tasks to the new list
+            listOfTasks = newList;
 
-    @Override
-    public void tasksAdded( final List<? extends Task> tasks ) {
-        if( tasks.isEmpty() )
-            return;
-        final int startRow;
-        final int endRow;
-        synchronized (lock) {
-            startRow = taskList.getTasks().indexOf(tasks.get(0));
-            endRow = taskList.getTasks().indexOf(tasks.get(tasks.size() - 1));
-            listOfTasks = taskList.getTasks();
-        }
-        if( startRow > -1 && endRow > -1 ) {
-            EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    fireTableRowsInserted(startRow, endRow);
+            // Ensure the indices are sorted ascending
+            Arrays.sort(indices);
+
+            // Check that all tasks are found and that they are consecutive. If
+            // that is the case use fireTableRowsInserted/fireTableRowsDeleted
+            // with range, else indicate all data has changed
+            int lastIdx = indices.length - 1;
+            if (indices[0] < 0 || ((indices[lastIdx] - indices[0]) + 1) != indices.length) {
+                fireTableDataChanged();
+            } else {
+                if(add) {
+                    fireTableRowsInserted(indices[0], indices[lastIdx]);
+                } else {
+                    fireTableRowsDeleted(indices[0], indices[lastIdx]);
                 }
-            });
-        }
-    }
-
-    @Override
-    public void tasksRemoved( final List<? extends Task> tasks ) {
-        if( tasks.isEmpty() )
-            return;
-
-        final int startRow;
-        final int endRow;
-        synchronized (lock) {
-            startRow = listOfTasks.indexOf(tasks.get(0));
-            endRow = listOfTasks.indexOf(tasks.get(tasks.size() - 1));
-            listOfTasks = taskList.getTasks();
-        }
-        if( startRow > -1 && endRow > -1 ) {
-            EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    fireTableRowsDeleted( startRow, endRow );
-                }
-            });
-        }
+            }
+        });
     }
 
     @Override
     public void cleared() {
-        synchronized (lock) {
+        EventQueue.invokeLater(() -> {
             listOfTasks = taskList.getTasks();
-        }
-        fireTableDataChanged();
+            fireTableDataChanged();
+        });
     }
     
     protected int sortingCol = -1;
@@ -210,10 +218,10 @@ class TaskListModel extends AbstractTableModel implements TaskList.Listener {
             comparator = TaskComparator.getDefault();
             break;
         }
+        // This happens on the EDT (mouseClick) so no need to push it to the
+        // EDT explicitly
         taskList.setComparator( comparator );
-        synchronized (lock) {
-            listOfTasks = taskList.getTasks();
-        }
+        listOfTasks = taskList.getTasks();
         Settings.getDefault().setSortingColumn( sortingCol );
         Settings.getDefault().setAscendingSort( ascending );
 

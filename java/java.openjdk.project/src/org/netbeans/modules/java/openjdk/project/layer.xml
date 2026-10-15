@@ -19,6 +19,13 @@
  -->
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
+    <folder name="Actions">
+        <folder name="Project">
+            <file name="select-tool.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.java.openjdk.project.ActionProviderImpl.selectToolAction" />
+            </file>
+        </folder>
+    </folder>
     <folder name="Projects">
         <folder name="org-netbeans-modules-java-openjdk-project-JDKProject">
             <folder name="Actions">
@@ -30,8 +37,8 @@
                     <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                     <attr name="position" intvalue="150"/>
                 </file>
-                <file name="select-tool.instance">
-                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.java.openjdk.project.ActionProviderImpl.selectToolAction" />
+                <file name="select-tool.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/select-tool.instance"/>
                     <attr intvalue="151" name="position"/>
                 </file>
                 <file name="sep-1.instance">

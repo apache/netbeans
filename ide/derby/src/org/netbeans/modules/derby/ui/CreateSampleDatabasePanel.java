@@ -88,11 +88,11 @@ public class CreateSampleDatabasePanel extends javax.swing.JPanel {
         if (databaseName.length() <= 0) { // NOI18N
             warning = NbBundle.getMessage(CreateSampleDatabasePanel.class, "ERR_DatabaseNameEmpty");
         } else if (illegalChar >= 0) {
-            error = NbBundle.getMessage(CreateSampleDatabasePanel.class, "ERR_DatabaseNameIllegalChar", new Character((char)illegalChar));
+            error = NbBundle.getMessage(CreateSampleDatabasePanel.class, "ERR_DatabaseNameIllegalChar", Character.toString((char)illegalChar));
         } else if (databaseName.length() > 0 && new File(derbySystemHome, databaseName).exists()) { // NOI18N
             error = NbBundle.getMessage(CreateSampleDatabasePanel.class, "ERR_DatabaseDirectoryExists", databaseName);
         } else if (unsupportedChar >= 0) {
-            error = NbBundle.getMessage(CreateSampleDatabasePanel.class, "ERR_DatabaseNameUnsupportedChar", new Character((char)unsupportedChar));
+            error = NbBundle.getMessage(CreateSampleDatabasePanel.class, "ERR_DatabaseNameUnsupportedChar", Character.toString((char)unsupportedChar));
         }
         
         if (error != null) {

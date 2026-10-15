@@ -63,7 +63,7 @@ frames, components.
         </question>
 -->
 <answer id="arch-overall">
-<a href="http://core.netbeans.org/windowsystem/index.html">Redesign documents</a>.
+<a href="https://netbeans.apache.org/projects/platform/core/windowsystem">Redesign documents</a>.
 </answer>
 
 
@@ -96,20 +96,20 @@ November 15 2003.
 <answer id="arch-usecases">
     
   <p>
-     <a onclick="target='_blank'" href="https://leanpub.com/nbp4beginners">
+     <a href="https://leanpub.com/nbp4beginners">
      <img src="http://wiki.apidesign.org/images/0/03/NetBeansPlatformForBeginners.jpg"
         style="float: right"
           width="60" height="70" alt="Cover of NetBeans Platform for Beginners book"/>
      </a>
     For general overview of the concepts, 
     together with code samples, see chapter 6, 
-    of <a onclick="target='_blank'" href="https://leanpub.com/nbp4beginners">NetBeans Platform for Beginners</a> 
+    of <a href="https://leanpub.com/nbp4beginners">NetBeans Platform for Beginners</a>
     by Jason Wexbridge and Walter Nyland.
   </p>
     
 <usecase id="windowsystem-general" name="General Usecases">
 General usecases
-can be read in the <a href="http://core.netbeans.org/windowsystem/changes.html#4">design document</a>
+can be read in the <a href="https://netbeans.apache.org/projects/platform/core/windowsystem/changes#s4">design document</a>
 created before work on new window system design started. 
 </usecase>
 
@@ -126,7 +126,7 @@ and cleanup the serialdata section - replace it with proper  "&lt;instance class
 <usecase id="windowsystem-groups" name="How to make a TopComponentGroup?" >
 
 <p></p>
-    <b>Q:</b> I'm trying to make a TopComponentGroup.  I've just read http://ui.netbeans.org/docs/ui/ws/ws_spec.html#3.9
+    <b>Q:</b> I'm trying to make a TopComponentGroup.  I've just read https://netbeans.apache.org/projects/ui/ws/ws_spec#s39
             I want to make a group that uses the first invocation strategy.  
             That is, I want the group to open/close when I activate a certain subclass of TopComponent.  
             Say, for example, I have a FooTopComponent, and when it's active, 
@@ -143,7 +143,7 @@ and cleanup the serialdata section - replace it with proper  "&lt;instance class
 
 <p></p>
     <b>A:</b>Yes it is correct way. You can check
-    <a href="http://www.netbeans.org/source/browse/platform/samples/window-system-groups/">simple test module</a>.
+    <a href="http://source.apidesign.org/hg/netbeans/misc/file/tip/platform/samples/window-system-groups">simple test module</a>.
     First you must get TopComponentGroup instance using find method then call TopComponentGroup.open()/close(). 
     Here is the code in your componentDeactivated method:
     <pre>
@@ -237,11 +237,11 @@ It follows JLF standard for the custom UI components provided by core implementa
 Yes. Module stores its own versioned settings as XML files. In addition
 components are stored in settings file format of core/settings module.
 For description of current (version 2.0) configuration data folders see
-<api group="layer" category="devel" name="NewConfigurationData" type="export" url="http://core.netbeans.org/windowsystem/changes.html#3.4.2" >
+<api group="layer" category="devel" name="NewConfigurationData" type="export" url="https://netbeans.apache.org/projects/platform/core/windowsystem/changes#s342" >
 new configuration data</api> here
 For description of old (version &lt; 2.0) configuration data folders and how they are imported
 to new desktop layout see 
-<api group="layer" category="deprecated" name="OldConfigurationData" type="export" url="http://core.netbeans.org/windowsystem/changes.html#3.4.6" >
+<api group="layer" category="deprecated" name="OldConfigurationData" type="export" url="https://netbeans.apache.org/projects/platform/core/windowsystem/changes#s346" >
 old configuration data </api>
 </answer>
 
@@ -685,7 +685,7 @@ Yes. Component can control its persistence and way how they are displayed in con
          Or use -J-DNB.WinSys.Mode.Closing.Enabled=false command-line switch to override.
     </api>
     
-    <api type="export" group="branding" name="WinSys.Show.Hide.MainWindow.While.Switching.Role" category="stable">
+    <api type="export" group="branding" name="org.netbeans.core.windows.WinSys.Show.Hide.MainWindow.While.Switching.Role" category="stable">
          Name of resource bundle property which controls whether the main IDE
          window may hide temporarily (<code>true</code>) when switching window
          layout role or whether the main window should stay visible when switching
@@ -694,7 +694,7 @@ Yes. Component can control its persistence and way how they are displayed in con
          Or use -J-DNB.WinSys.WinSys.Show.Hide.MainWindow.While.Switching.Role=true command-line switch to override.
     </api>
     
-    <api type="export" group="branding" name="WinSys.Open.New.Editors.Docked" category="stable">
+    <api type="export" group="branding" name="org.netbeans.core.windows.WinSys.Open.New.Editors.Docked" category="stable">
          Name of resource bundle property which when set to <code>true</code> will
          force opening of new editor windows docked into the main IDE window.
          When set to <code>false</code> new editor windows will open tabbed
@@ -704,7 +704,7 @@ Yes. Component can control its persistence and way how they are displayed in con
          Or use -J-DNB.WinSys.WinSys.Open.New.Editors.Docked=true command-line switch to override.
     </api>
 
-    <api type="export" group="branding" name="WinSys.DragAndDrop.Sliding.Enabled" category="stable">
+    <api type="export" group="branding" name="org.netbeans.core.windows.WinSys.DragAndDrop.Sliding.Enabled" category="stable">
          Name of resource bundle property which enables/disables drag and drop
          of TopComponents into sliding Modes. When set to <code>true</code> then user can
          drag a TopComponent and drop it into a sliding bar to minimize it.
@@ -713,7 +713,7 @@ Yes. Component can control its persistence and way how they are displayed in con
          Or use -J-DNB.WinSys.WinSys.DragAndDrop.Sliding.Enabled=true command-line switch to override.
     </api>
 
-    <api type="export" group="branding" name="WinSys.TabControl.SimpleTabs.Enabled" category="stable">
+    <api type="export" group="branding" name="org.netbeans.core.windows.WinSys.TabControl.SimpleTabs.Enabled" category="stable">
          Name of resource bundle property which allows replacing the custom TabbedContainer
          with plain Swing JTabbedPane implementation when the property value is <code>true</code>.
          The default value is <code>false</code>.
@@ -721,7 +721,7 @@ Yes. Component can control its persistence and way how they are displayed in con
          Or use -J-DNB.WinSys.WinSys.TabControl.SimpleTabs.Enabled=true command-line switch to override.
     </api>
 
-    <api type="export" group="branding" name="WinSys.TabControl.SimpleTabs.Placement" category="stable">
+    <api type="export" group="branding" name="org.netbeans.core.windows.WinSys.TabControl.SimpleTabs.Placement" category="stable">
          Name of resource bundle property which defines the placement of window tabs.
          The possible values are <code>top</code> (default), <code>bottom</code>,
          <code>left</code>, <code>right</code>. Branding of this property has no effect when
@@ -729,7 +729,7 @@ Yes. Component can control its persistence and way how they are displayed in con
          The property value can be adjusted by branding of <code>org.netbeans.core.windows</code> module.
     </api>
 
-    <api type="export" group="branding" name="WinSys.TabControl.SimpleTabs.MultiRow" category="stable">
+    <api type="export" group="branding" name="org.netbeans.core.windows.WinSys.TabControl.SimpleTabs.MultiRow" category="stable">
          Name of resource bundle property which defines the tab layout when JTabbedPane
          implementation of tab control is being used. When set to <code>true</code>
          window tabs will be organized into multiple rows, when set to <code>false</code>
@@ -739,7 +739,7 @@ Yes. Component can control its persistence and way how they are displayed in con
          The property value can be adjusted by branding of <code>org.netbeans.core.windows</code> module.
     </api>
 
-    <api type="export" group="branding" name="WinSys.CtrlTabSwitching.In.JTable.Enabled" category="stable">
+    <api type="export" group="branding" name="org.netbeans.core.windows.WinSys.CtrlTabSwitching.In.JTable.Enabled" category="stable">
          Name of resource bundle property which can disable window switching 
          when the input focus is in JTable or JTabbedPane.<br/>
          Ctrl+Tab and Ctrl+Shift+Tab key strokes are hard-coded to switch between
@@ -964,15 +964,15 @@ window system configuration will not be part of project.-->
   <api name="org.netbeans.ui.actions.UI_ACTION_KEY_PRESS" category="friend" group="logger" type="export">
   There is a special support for notifying when an action is invoked by the
   <a href="@TOP@/org/openide/windows/TopComponent.html">TopComponent</a>'s
-  key event handling code. The support is using <a href="@JDK@/java/util/logging/Logger.html">
+  key event handling code. The support is using <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html">
   Logger.getLogger("org.netbeans.ui.actions")
-  </a> and sents a <a href="@JDK@/java/util/logging/LogRecord.html">LogRecord</a>
+  </a> and sents a <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogRecord.html">LogRecord</a>
   with message <code>UI_ACTION_KEY_PRESS</code>, 
-  <code>FINER</code> <a href="@JDK@/java/util/logging/LogRecord.html">level</a>
+  <code>FINER</code> <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogRecord.html">level</a>
   and paramerters:
   <ul>
-      <li>{<b>0</b>} instance of the <a href="@JDK@/javax/swing/KeyStroke.html">KeyStroke</a></li>
-      <li>{<b>1</b>} toString of the <a href="@JDK@/javax/swing/KeyStroke.html">KeyStroke</a></li>
+      <li>{<b>0</b>} instance of the <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/KeyStroke.html">KeyStroke</a></li>
+      <li>{<b>1</b>} toString of the <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/KeyStroke.html">KeyStroke</a></li>
       <li>{<b>2</b>} instance of the action</li>
       <li>{<b>3</b>} class of the action</li>
       <li>{<b>4</b>} display name of the action</li>
@@ -1153,11 +1153,11 @@ Module configuration is stored in XML files.
 <answer id="lookup-lookup">
 Window Manager implementation (from core) registers itself and lookup is used 
 from API part to  get the instance and return as 
-<a href="@TOP@/org/openide/windows/WindowManager.html#getDefault--">WindowManager.getDefault ()</a>
-and also <a href="@TOP@/org/openide/windows/WindowManager.html#componentRegistry--">WindowManager.componentRegistry()</a>.
+<a href="@TOP@/org/openide/windows/WindowManager.html#getDefault()">WindowManager.getDefault ()</a>
+and also <a href="@TOP@/org/openide/windows/WindowManager.html#componentRegistry()">WindowManager.componentRegistry()</a>.
 gets the registered instance of <code>TopComponent.Registry</code>.
-Also there are provided implementations of <a href="@org-openide-dialogs@/org/openide/DialogDisplayer.html#getDefault--">DialogDisplayer.getDefault()</a> 
-and <a href="@org-openide-nodes@/org/openide/nodes/NodeOperation.html#getDefault--">NodeOperation.getDefault()</a> services.
+Also there are provided implementations of <a href="@org-openide-dialogs@/org/openide/DialogDisplayer.html#getDefault()">DialogDisplayer.getDefault()</a> 
+and <a href="@org-openide-nodes@/org/openide/nodes/NodeOperation.html#getDefault()">NodeOperation.getDefault()</a> services.
 <p/>
 There is also provided service which implements <api category="friend" group="java" name="NbTopManager.WindowSystem" type="import">org.netbeans.core.NbTopManager$WindowSystem interface</api>, 
 which is used in core module. It is used for starting window system (loading and show) in startup sequence and finishiing of window system (hiding and saving)
@@ -1195,7 +1195,7 @@ instance by singleton accessor.
         </question>
 -->
 <answer id="lookup-remove">
-Yes. It removes implementation of <a href="@org-openide-nodes@/org/openide/nodes/NodeOperation.html#getDefault--">NodeOperation.getDefault()</a>
+Yes. It removes implementation of <a href="@org-openide-nodes@/org/openide/nodes/NodeOperation.html#getDefault()">NodeOperation.getDefault()</a>
 service provided by openide-explorer module.
 </answer>
 
@@ -1422,9 +1422,9 @@ No.
 -->
 <answer id="resources-read">
 Module reads its own configuration from its layer and eventualy from other module layers
-if provided. Data have following <a href="http://core.netbeans.org/windowsystem/changes.html#3.4.2">folder structure</a>.
-It contains <api group="layer" category="private" type="export" name="ModuleDataStructure" url="http://core.netbeans.org/windowsystem/changes.html#3.4.2">Module folder structure under Windows2 directory </api>
-and <api group="layer" category="private" type="export" name="LocalDataStructure" url="http://core.netbeans.org/windowsystem/changes.html#3.4.2">Local folder structure under Windows2Local directory</api>.
+if provided. Data have following <a href="https://netbeans.apache.org/projects/platform/core/windowsystem/changes#s342">folder structure</a>.
+It contains <api group="layer" category="private" type="export" name="ModuleDataStructure" url="https://netbeans.apache.org/projects/platform/core/windowsystem/changes#s342">Module folder structure under Windows2 directory </api>
+and <api group="layer" category="private" type="export" name="LocalDataStructure" url="https://netbeans.apache.org/projects/platform/core/windowsystem/changes#s342">Local folder structure under Windows2Local directory</api>.
 </answer>
 
 </api-answers>

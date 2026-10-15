@@ -52,9 +52,9 @@ final class SimpleWeakSetTesting {
 
     public static RandomTestContainer createContainer() throws Exception {
         RandomTestContainer container = new RandomTestContainer();
-        container.putProperty(SimpleWeakSet.class, new SimpleWeakSet()); // Weak map
-        container.putProperty(List.class, new ArrayList()); // List of the items (strongly referenced)
-        container.putProperty(REMOVED_LIST, new ArrayList()); // List of items that were removed (reset during check)
+        container.putProperty(SimpleWeakSet.class, new SimpleWeakSet<Object>()); // Weak map
+        container.putProperty(List.class, new ArrayList<Object>()); // List of the items (strongly referenced)
+        container.putProperty(REMOVED_LIST, new ArrayList<Object>()); // List of items that were removed (reset during check)
         container.addOp(new AddOp());
         container.addOp(new AddHash0Op());
         container.addOp(new AddHash1Op());
@@ -101,8 +101,10 @@ final class SimpleWeakSetTesting {
     }
 
     public static void addElement(Context context, Object element) throws Exception {
-        SimpleWeakSet simpleWeakSet = context.getInstance(SimpleWeakSet.class);
-        List list = context.getInstance(List.class);
+        @SuppressWarnings("unchecked")
+        SimpleWeakSet<Object> simpleWeakSet = context.getInstance(SimpleWeakSet.class);
+        @SuppressWarnings("unchecked")
+        List<Object> list = context.getInstance(List.class);
         list.add(element);
         simpleWeakSet.getOrAdd(element, null);
 
@@ -114,9 +116,12 @@ final class SimpleWeakSetTesting {
     }
 
     public static void removeElement(Context context, int listIndex) throws Exception {
-        SimpleWeakSet simpleWeakSet = context.getInstance(SimpleWeakSet.class);
-        List removedList = (List) context.getProperty(REMOVED_LIST);
-        List list = context.getInstance(List.class);
+        @SuppressWarnings("unchecked")
+        SimpleWeakSet<Object> simpleWeakSet = context.getInstance(SimpleWeakSet.class);
+        @SuppressWarnings("unchecked")
+        List<Object> removedList = (List<Object>) context.getProperty(REMOVED_LIST);
+        @SuppressWarnings("unchecked")
+        List<Object> list = context.getInstance(List.class);
         Object element = list.remove(listIndex);
         removedList.add(element);
         Object removedElement = simpleWeakSet.remove(element);
@@ -130,7 +135,8 @@ final class SimpleWeakSetTesting {
     }
 
     public static void forgetElement(Context context, int listIndex) throws Exception {
-        List list = context.getInstance(List.class);
+        @SuppressWarnings("unchecked")
+        List<Object> list = context.getInstance(List.class);
         Object element = list.remove(listIndex);
 
         StringBuilder sb = context.logOpBuilder();
@@ -208,7 +214,8 @@ final class SimpleWeakSetTesting {
 
         @Override
         protected void run(Context context) throws Exception {
-            List list = context.getInstance(List.class);
+            @SuppressWarnings("unchecked")
+            List<Object> list = context.getInstance(List.class);
             if (list.size() > 0) {
                 Random random = context.container().random();
                 int elementIndex = random.nextInt(list.size());
@@ -226,7 +233,8 @@ final class SimpleWeakSetTesting {
 
         @Override
         protected void run(Context context) throws Exception {
-            List list = context.getInstance(List.class);
+            @SuppressWarnings("unchecked")
+            List<Object> list = context.getInstance(List.class);
             if (list.size() > 0) {
                 Random random = context.container().random();
                 int elementIndex = random.nextInt(list.size());
@@ -246,8 +254,10 @@ final class SimpleWeakSetTesting {
         @Override
         protected void run(Context context) throws Exception {
             // Check size of list and set
-            SimpleWeakSet simpleWeakSet = context.getInstance(SimpleWeakSet.class);
-            List list = context.getInstance(List.class);
+            @SuppressWarnings("unchecked")
+            SimpleWeakSet<Object> simpleWeakSet = context.getInstance(SimpleWeakSet.class);
+            @SuppressWarnings("unchecked")
+            List<Object> list = context.getInstance(List.class);
             System.gc();
             Thread.sleep(1);
             int listSize = list.size();
@@ -267,9 +277,12 @@ final class SimpleWeakSetTesting {
 
         @Override
         protected void check(final Context context) throws Exception {
-            SimpleWeakSet simpleWeakSet = context.getInstance(SimpleWeakSet.class);
-            List list = context.getInstance(List.class);
-            List removedList = (List) context.getProperty(REMOVED_LIST);
+            @SuppressWarnings("unchecked")
+            SimpleWeakSet<Object> simpleWeakSet = context.getInstance(SimpleWeakSet.class);
+            @SuppressWarnings("unchecked")
+            List<Object> list = context.getInstance(List.class);
+            @SuppressWarnings("unchecked")
+            List<Object> removedList = (List<Object>) context.getProperty(REMOVED_LIST);
             for (Object e : list) {
                 Object testE;
                 if (!e.equals(testE = simpleWeakSet.getOrAdd(e, null))) {

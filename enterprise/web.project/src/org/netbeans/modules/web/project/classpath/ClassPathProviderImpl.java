@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.modules.java.api.common.SourceRoots;
@@ -101,7 +102,7 @@ public final class ClassPathProviderImpl implements ClassPathProvider, PropertyC
         return ProjectManager.mutex().readAccess(new Mutex.Action<FileObject>() {
             public FileObject run() {
                 synchronized (ClassPathProviderImpl.this) {
-                    FileObject fo = (FileObject) ClassPathProviderImpl.this.dirCache.get (propname);
+                    FileObject fo = ClassPathProviderImpl.this.dirCache.get(propname);
                     if (fo == null ||  !fo.isValid()) {
                         String prop = evaluator.getProperty(propname);
                         if (prop != null) {
@@ -171,7 +172,10 @@ public final class ClassPathProviderImpl implements ClassPathProvider, PropertyC
     private synchronized ClassPath getRunTimeClasspath(FileType type) {
         if (type == FileType.WEB_SOURCE) {
             if (sourceRoots.getRoots().length > 0) {
-               return javaClassPathProvider.findClassPath(sourceRoots.getRoots()[0], ClassPath.EXECUTE);
+               return ClassPathSupport.createProxyClassPath(
+                       javaClassPathProvider.findClassPath(sourceRoots.getRoots()[0], ClassPath.EXECUTE),
+                       javaClassPathProvider.findClassPath(sourceRoots.getRoots()[0], JavaClassPathConstants.MODULE_EXECUTE_CLASS_PATH)
+               );
             } else {
                 ClassPath cp = cache.get(ClassPathCache.WEB_RUNTIME);
                 if (cp == null) {

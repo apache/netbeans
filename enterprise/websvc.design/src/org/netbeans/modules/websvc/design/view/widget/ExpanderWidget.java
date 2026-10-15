@@ -88,7 +88,7 @@ public class ExpanderWidget extends ButtonWidget {
      */
     public static boolean isExpanded(ExpandableWidget expandable, boolean def) {
         Boolean val = expandedCache.get(expandable.hashKey());
-        return val != null ? val.booleanValue() : def;
+        return val != null ? val : def;
     }
 
     /**
@@ -99,7 +99,7 @@ public class ExpanderWidget extends ButtonWidget {
     @Override
     public void setSelected(boolean expanded) {
         // Save the state of the expandable in case it gets recreated later.
-        expandedCache.put(expandable.hashKey(), Boolean.valueOf(expanded));
+        expandedCache.put(expandable.hashKey(), expanded);
         super.setSelected(expanded);
         revalidate(true);
     }

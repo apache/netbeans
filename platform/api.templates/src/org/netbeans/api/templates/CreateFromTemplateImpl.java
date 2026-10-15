@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -37,6 +38,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Stream;
+import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
@@ -54,14 +60,18 @@ import org.openide.util.Parameters;
  * @author sdedic
  */
 final class CreateFromTemplateImpl {
-    private static final String PROP_TEMPLATE = "template"; // NOI18N
+    private static final Logger LOG = Logger.getLogger(CreateFromTemplateImpl.class.getName());
+    
     private static final String NEWLINE = "\n"; // NOI18N
     
     private final FileBuilder builder;
     private final CreateDescriptor desc;
+
     private Map<String, ?> originalParams;
     
     private List<CreateFromTemplateDecorator> decorators;
+    
+    private CreateFromTemplateHandler handler;
     
     private CreateFromTemplateImpl(FileBuilder builder) {
         this.builder = builder;
@@ -70,14 +80,21 @@ final class CreateFromTemplateImpl {
     
     static List<FileObject> build(FileBuilder flb) throws IOException {
         CreateFromTemplateImpl impl = new CreateFromTemplateImpl(flb);
-        return impl.build();
+        AtomicReference<List<FileObject>> fos = new AtomicReference<>();
+        impl.desc.getTarget().getFileSystem().runAtomicAction(() -> {
+            fos.set(
+                    impl.build(impl.prepare())
+            );
+        });
+        return fos.get();
     }
     
     static void collectAttributes(FileBuilder flb) {
         CreateFromTemplateImpl impl = new CreateFromTemplateImpl(flb);
+        computeEffectiveName(impl.desc);
         flb.withParameters(impl.findTemplateParameters());
     }
-    
+
     private void setupDecorators() {
         decorators = new ArrayList<>(Lookup.getDefault().lookupAll(CreateFromTemplateDecorator.class));
         for (Iterator<CreateFromTemplateDecorator> it = decorators.iterator(); it.hasNext(); ) {
@@ -87,38 +104,51 @@ final class CreateFromTemplateImpl {
             }
         }
     }
+
+    // extracted from build for testing purposes; should contain everything
+    // up to the actual main file creation
+    List<FileObject> prepare() throws IOException {
+        FileObject f = desc.getTemplate();
+        FileObject folder = desc.getTarget();
+        FileBuilder.Mode defaultMode = builder.defaultMode;
+        Format frm = builder.format;
+        Parameters.notNull("f", f);
+        Parameters.notNull("folder", folder);
+        assert defaultMode != FileBuilder.Mode.FORMAT || frm != null : "Format must be provided for Mode.FORMAT";
+
+        if (!folder.isFolder()) {
+            throw new IllegalArgumentException("Not a folder: "  + folder);
+        }
+        // also modifies desc.getParameters, result not needed.
+        findTemplateParameters();
+        setupDecorators();
+        computeEffectiveName(desc);
+
+        List<FileObject> initialFiles = callDecorators(true, new ArrayList<>());
+        computeEffectiveName(desc);
+        
+        handler = Stream.concat(
+                // allow potential decorators to supply an override handler, i.e. injecting from a Project
+                desc.getLookup().lookupAll(CreateFromTemplateHandler.class).stream(),
+                Lookup.getDefault().lookupAll(CreateFromTemplateHandler.class).stream()
+            ).filter(h -> h.accept(desc)).
+                findFirst().
+                orElse((CreateFromTemplateHandler)f.getAttribute(FileBuilder.ATTR_TEMPLATE_HANDLER));
+        return initialFiles;
+    }
     
-    List<FileObject> build() throws IOException {
+    List<FileObject> build(List<FileObject> initialFiles) throws IOException {
         // side effects: replaces the map in CreateDescriptor
         try {
-            FileObject f = desc.getTemplate();
-            FileObject folder = desc.getTarget();
-            FileBuilder.Mode defaultMode = builder.defaultMode;
-            Format frm = builder.format;
-            Parameters.notNull("f", f);
-            Parameters.notNull("folder", folder);
-            assert defaultMode != FileBuilder.Mode.FORMAT || frm != null : "Format must be provided for Mode.FORMAT";
 
-            if (!folder.isFolder()) {
-                throw new IllegalArgumentException("Not a folder: "  + folder);
-            }
-            // also modifies desc.getParameters, result not needed.
-            findTemplateParameters();
-            setupDecorators();
-            computeEffectiveName(desc);
-
-            List<FileObject> initialFiles = callDecorators(true, new ArrayList<>());
             List<FileObject> pf = null;
-            for (CreateFromTemplateHandler h : Lookup.getDefault().lookupAll(CreateFromTemplateHandler.class)) {
-                if (h.accept(desc)) {
-                    pf = h.createFromTemplate(desc);
-                    assert pf != null && !pf.isEmpty();
-                    break;
-                }
+            if (handler != null) {
+                pf = handler.createFromTemplate(desc);
+                assert pf != null && !pf.isEmpty();
             }
             // side effects from findTemplateParameters still in effect...
-            if (pf == null && defaultMode != FileBuilder.Mode.FAIL) {
-                pf = Collections.singletonList(defaultCreate());
+            if (pf == null && builder.defaultMode != FileBuilder.Mode.FAIL) {
+                pf = defaultCreate();
             }
             if (pf == null) {
                 return pf;
@@ -146,18 +176,52 @@ final class CreateFromTemplateImpl {
         return result;
     }
     
+    static String interpolateName(ScriptEngine eng, String name, Map<String, ?> values, FileObject template) {
+        if (eng == null) {
+            return CreateFromTemplateHandler.mapParameters(name, values);
+        }
+        Bindings bind = eng.getContext().getBindings(ScriptContext.ENGINE_SCOPE);
+        bind.putAll(values);
+        bind.put("name", name); // NOI18N
+
+        try {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            eng.getContext().setWriter(pw);
+            // Existing ScriptEngines (e.g. Freemarker does) may cache compiled templates, based on FO. Let's introduce another
+            // attribute for "just" filename template to avoid the cache.
+            eng.getContext().setAttribute(FileObject.class.getName() + ".owner", template, ScriptContext.ENGINE_SCOPE);
+            eng.getContext().setAttribute(ScriptEngine.FILENAME, template.getNameExt(), ScriptContext.ENGINE_SCOPE);
+            eng.eval(name);
+            pw.flush();
+            return sw.toString();
+        } catch (ScriptException ex) {
+            LOG.log(Level.SEVERE, "Errors encountered during interpolation of {0}", name);
+            LOG.log(Level.SEVERE, "Cannot interpolate name", ex);
+            return name;
+        }
+    }
+    
     /* package private */ static void computeEffectiveName(CreateDescriptor desc) {
         String name = desc.getName();
         if (name == null) {
             // name is not set - try to check parameters, if some template attribute handler
             // did not supply a suggestion:
             Object o = desc.getParameters().get("name"); // NOi18N
-            if (o instanceof String) {
-                name = (String)o;
+            ScriptEngine scriptEng = ScriptingCreateFromTemplateHandler.engine(desc.getTemplate());
+            String n = o instanceof String ? o.toString() : desc.getTemplate().getName();
+            name = interpolateName(scriptEng, n, desc.getParameters(), desc.getTemplate());
+            boolean merge = 
+                    Boolean.TRUE.equals(desc.getValue(FileBuilder.ATTR_TEMPLATE_MERGE_FOLDERS)) ||
+                    Boolean.TRUE.equals(desc.getTemplate().getAttribute(FileBuilder.ATTR_TEMPLATE_MERGE_FOLDERS));
+
+            if (desc.getTemplate().isFolder() && merge) {
+                // hack, but pass down.
+                desc.parameters.put(FileBuilder.ATTR_TEMPLATE_MERGE_FOLDERS, Boolean.TRUE);
             } else {
                 name = FileUtil.findFreeFileName(
-                           desc.getTarget(), desc.getTemplate().getName (), desc.getTemplate().getExt ()
-                       );
+                       desc.getTarget(), name, desc.getTemplate().getExt ()
+                );
             }
         }
         desc.proposedName = name;
@@ -175,11 +239,7 @@ final class CreateFromTemplateImpl {
      * <li>{@code time} system time : String
      * <li>{@code dateTime} java.util.Date representation of the current system time
      * </ul>
-     * 
-     * @param template
-     * @param folder
-     * @param name
-     * @param param
+     *
      * @return completed parameters
      */
     public Map<String,Object> findTemplateParameters() {
@@ -200,6 +260,9 @@ final class CreateFromTemplateImpl {
             }
         }
         String name = desc.getName();
+        if (name == null) {
+            name = desc.getProposedName();
+        }
         if (!all.containsKey("name") && name != null) { // NOI18N
             String n = name;
             if (desc.hasFreeExtension()) {
@@ -224,28 +287,39 @@ final class CreateFromTemplateImpl {
         return all;
     }
     
+    private List<FileObject> defaultCreateFolder() throws IOException {
+        String tn = desc.getProposedName();
+        FileObject fo = FileUtil.createFolder(desc.getTarget(), tn);
+        
+        CreateFromTemplateHandler.copyAttributesFromTemplate(null, desc.getTemplate(), fo);
+        return CreateFromTemplateHandler.defaultCopyContents(desc, desc.getTemplate(), fo);
+    }
+    
     /**
      * Creates the file using the default algorithm - no handler is willing to participate
      * @return created file
      * @throws IOException 
      */
-    private FileObject defaultCreate() throws IOException {
+    private List<FileObject> defaultCreate() throws IOException {
+        if (desc.getTemplate().isFolder()) {
+            return defaultCreateFolder();
+        }
         Map<String, ?> params = desc.getParameters();
         FileBuilder.Mode defaultMode = builder.defaultMode;
         Format frm = builder.format;
         
         if (defaultMode != FileBuilder.Mode.COPY && frm instanceof MapFormat) {
             MapFormat mf = (MapFormat)frm;
-            Map m = mf.getMap();
+            Map<String, Object> m = mf.getMap();
             Map x = null;
-            for (String s: params.keySet()) {
-                if (m.containsKey(s)) {
+            for (Map.Entry<String, ?> entry : params.entrySet()) {
+                if (m.containsKey(entry.getKey())) {
                     continue;
                 }
                 if (x == null) {
                     x = new HashMap<>(m);
                 }
-                x.put(s, params.get(s));
+                x.put(entry.getKey(), entry.getValue());
             }
             if (x != null) {
                 mf.setMap(x);
@@ -299,10 +373,7 @@ final class CreateFromTemplateImpl {
                     en.eval(new StringReader(sw.toString()));
                 }
             }
-            // copy attributes
-            // hack to overcome package-private modifier in setTemplate(fo, boolean)
-            FileUtil.copyAttributes(f, fo);
-            fo.setAttribute(PROP_TEMPLATE, null);
+            CreateFromTemplateHandler.copyAttributesFromTemplate(null, f, fo);
             success = true;
         } catch (IOException ex) {
             try {
@@ -324,7 +395,7 @@ final class CreateFromTemplateImpl {
             }
             lock.releaseLock();
         }
-        return fo;
+        return Collections.singletonList(fo);
     }
 
 }

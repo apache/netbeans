@@ -20,7 +20,6 @@
 package org.netbeans.test.stub.api;
 
 import java.util.HashMap;
-import org.netbeans.modules.j2ee.persistence.editor.completion.*;
 
 /**
  *

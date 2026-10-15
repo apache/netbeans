@@ -302,14 +302,14 @@ public abstract class NodeTransfer extends Object {
     * into it.
     * <P>
     * Sample example of implementation of {@link Node#getPasteTypes}:
-    * <p><code><PRE>
+    * <PRE>{@code
     *   public PasteType[] getPasteTypes (Transferable t) {
     *     NodeTransfer.Paste p = (NodeTransfer.Paste)t.getTransferData (
     *       NodeTransfer.nodePasteFlavor
     *     );
     *     return p.types (this);
     *   }
-    * </PRE></code>
+    * }</PRE>
     */
     public interface Paste {
         /** Method that checks the type of target node and can

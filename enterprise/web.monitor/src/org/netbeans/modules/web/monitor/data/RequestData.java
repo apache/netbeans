@@ -19,27 +19,42 @@
 
 package org.netbeans.modules.web.monitor.data;
 
-import org.w3c.dom.*;
-import org.netbeans.modules.schema2beans.*;
-import java.beans.*;
-import java.util.*;
-import java.io.*;
+import java.beans.PropertyChangeListener;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
+import java.util.Vector;
+
+import org.netbeans.modules.schema2beans.AttrProp;
+import org.netbeans.modules.schema2beans.BaseBean;
+import org.netbeans.modules.schema2beans.BeanComparator;
+import org.netbeans.modules.schema2beans.BeanProp;
+import org.netbeans.modules.schema2beans.Common;
+import org.netbeans.modules.schema2beans.GraphManager;
+import org.netbeans.modules.schema2beans.Version;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 public class RequestData extends BaseBean {
 
-    static Vector comparators = new Vector();
+    static Vector<BeanComparator> comparators = new Vector<>();
 
-    static public final String PARAM = "Param"; //NOI18N
-    static public final String HEADERS = "Headers"; //NOI18N
-    static public final String REQUESTATTRIBUTESIN =
+    public static final String PARAM = "Param"; //NOI18N
+    public static final String HEADERS = "Headers"; //NOI18N
+    public static final String REQUESTATTRIBUTESIN =
 	"RequestAttributesIn"; //NOI18N
-    static public final String REQUESTATTRIBUTESOUT =
+    public static final String REQUESTATTRIBUTESOUT =
 	"RequestAttributesOut"; //NOI18N
-    static public final String REQUESTDATA = "RequestData"; //NOI18N
+    public static final String REQUESTDATA = "RequestData"; //NOI18N
 
-    public final static String JSESSIONID = "JSESSIONID"; // NOI18N
-    public final static String COOKIE = "cookie"; // NOI18N
-    static private final boolean debug = false;
+    public static final String JSESSIONID = "JSESSIONID"; // NOI18N
+    public static final String COOKIE = "cookie"; // NOI18N
+    private static final boolean debug = false;
     
 
     public RequestData() {
@@ -48,7 +63,7 @@ public class RequestData extends BaseBean {
 
 
     public RequestData(Node doc, int options) {
-	super(RequestData.comparators, new org.netbeans.modules.schema2beans.Version(1, 0, 6));
+	super(RequestData.comparators, new Version(1, 0, 6));
 	if (doc == null) {
 	    doc = GraphManager.createRootElementNode(REQUESTDATA); 
 		
@@ -67,7 +82,7 @@ public class RequestData extends BaseBean {
     }
 
     public RequestData(int options)	{
-	super(RequestData.comparators, new org.netbeans.modules.schema2beans.Version(1, 0, 6));
+	super(RequestData.comparators, new Version(1, 0, 6));
 	// Properties (see root bean comments for the bean graph)
 
 	this.createProperty("Headers", HEADERS, //NOI18N
@@ -226,7 +241,7 @@ public class RequestData extends BaseBean {
     
 	    
 
-    static public String findSessionID(String cookieStr) {
+    public static String findSessionID(String cookieStr) {
 
 	if(cookieStr == null || cookieStr.equals("")) //NOI18N
 	    return ""; //NOI18N
@@ -242,7 +257,7 @@ public class RequestData extends BaseBean {
 			
 		String name = token.substring(0, i).trim();
 		if(name.equals(JSESSIONID)) {
-		    String value = token.substring(i+1, token.length()).trim();
+		    String value = token.substring(i+1).trim();
 		    return value=stripQuote(value);
 		}
 	    }
@@ -263,7 +278,7 @@ public class RequestData extends BaseBean {
 	if(cookieStr == null || cookieStr.equals(""))  //NOI18N
 	    return new Param[0];
 		
-	Vector cookies = new Vector();
+	Vector<Param> cookies = new Vector<>();
 	    
 	StringTokenizer tok = new StringTokenizer(cookieStr,
 						  ";", false); // NOI18N
@@ -276,7 +291,7 @@ public class RequestData extends BaseBean {
 	    if (i > -1) {
 
 		String name = token.substring(0, i).trim();
-		String value = token.substring(i+1, token.length()).trim();
+		String value = token.substring(i+1).trim();
 		value=stripQuote(value);
 		cookies.addElement(new Param(name, value));
 		if(debug) log(name + "=" + value); 
@@ -285,7 +300,7 @@ public class RequestData extends BaseBean {
 	int numCookies = cookies.size();
 	Param[] params = new Param[numCookies]; 
 	for(int k=0; k<numCookies; ++k) 
-	    params[k] = (Param)cookies.elementAt(k);
+	    params[k] = cookies.elementAt(k);
 	
 	return params;
     }
@@ -428,7 +443,7 @@ public class RequestData extends BaseBean {
 		if (j > -1) {
 
 		    String name = token.substring(0, j).trim();
-		    String value = token.substring(j+1, token.length()).trim();
+		    String value = token.substring(j+1).trim();
 		    value=stripQuote(value);
 
 		    if(debug) log("Processing cookie: " + //NOI18N
@@ -496,7 +511,7 @@ public class RequestData extends BaseBean {
 		    else {
 			if(debug) log("Keep this cookie");//NOI18N
 			String value = 
-			    token.substring(j+1, token.length()).trim(); 
+			    token.substring(j+1).trim();
 			value=stripQuote(value);
 			buf.append(name);
 			buf.append("=");//NOI18N
@@ -532,7 +547,37 @@ public class RequestData extends BaseBean {
 	    }
 	}
 	return value;
-    }  
+    }
+    
+    public static Map<String, String[]> parseQueryString(String queryString) {
+        Map<String, List<String>> resultPrep = new HashMap<>();
+        StringTokenizer st = new StringTokenizer(queryString, "&");
+        while (st.hasMoreTokens()) {
+            try {
+                String pair = st.nextToken();
+                int pos = pair.indexOf('=');
+
+                String key;
+                String val;
+                if (pos >= 0) {
+                    key = URLDecoder.decode(pair.substring(0, pos), "UTF-8");
+                    val = URLDecoder.decode(pair.substring(pos + 1, pair.length()), "UTF-8");
+                } else {
+                    key = URLDecoder.decode(pair, "UTF-8");
+                    val = "";
+                }
+                resultPrep.computeIfAbsent(key, k -> new ArrayList<>())
+                          .add(val);
+            } catch (UnsupportedEncodingException ex) {
+                // Ignore - lets assume UTF-8 is supported everywhere
+            }
+        }
+        Map<String, String[]> result = new HashMap<>();
+        for (String key : resultPrep.keySet()) {
+            result.put(key, (String[]) resultPrep.get(key).toArray());
+        }
+        return result;
+    }
 
     // This method verifies that the mandatory properties are set
     public boolean verify()
@@ -541,13 +586,13 @@ public class RequestData extends BaseBean {
     }
 
     //
-    static public void addComparator(BeanComparator c)
+    public static void addComparator(BeanComparator c)
     {
 	RequestData.comparators.add(c);
     }
 
     //
-    static public void removeComparator(BeanComparator c)
+    public static void removeComparator(BeanComparator c)
     {
 	RequestData.comparators.remove(c);
     }

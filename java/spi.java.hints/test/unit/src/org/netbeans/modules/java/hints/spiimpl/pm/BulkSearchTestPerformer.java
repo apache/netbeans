@@ -55,7 +55,6 @@ import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
-import static org.junit.Assert.*;
 import org.netbeans.api.java.source.SourceUtilsTestUtil2;
 import org.netbeans.junit.RandomlyFails;
 
@@ -587,8 +586,8 @@ public abstract class BulkSearchTestPerformer extends NbTestCase {
             for (TreePath tp : e.getValue()) {
                 assertNotNull(TreePathHandle.create(tp, info).resolve(info));
                 
-                int start = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tp.getLeaf());
-                int end   = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tp.getLeaf());
+                int start = (int) info.getTrees().getSourcePositions().getStartPosition(tp.getLeaf());
+                int end   = (int) info.getTrees().getSourcePositions().getEndPosition(tp.getLeaf());
 
                 actual.add(info.getText().substring(start, end));
             }

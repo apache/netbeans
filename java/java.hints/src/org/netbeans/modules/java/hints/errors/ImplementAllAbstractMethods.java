@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.EnumSet;
 import java.util.concurrent.Future;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -80,7 +81,7 @@ import org.openide.util.NbBundle;
 public final class ImplementAllAbstractMethods implements ErrorRule<Object>, OverrideErrorMessage<Object> {
 
     private static final String PREMATURE_EOF_CODE = "compiler.err.premature.eof"; // NOI18N
-    
+    private static final String RECORD = "RECORD"; // NOI18N
     /** Creates a new instance of ImplementAllAbstractMethodsCreator */
     public ImplementAllAbstractMethods() {
     }
@@ -179,11 +180,11 @@ public final class ImplementAllAbstractMethods implements ErrorRule<Object>, Ove
             return null;
         }
         List<Fix> fixes = new ArrayList<>();
-        if (TreeUtilities.CLASS_TREE_KINDS.contains(leaf.getKind())) {
+        if (TreeUtilities.CLASS_TREE_KINDS.contains(leaf.getKind()) || leaf.getKind().toString().equals(RECORD)) {
             CompilationUnitTree cut = info.getCompilationUnit();
             // do not offer for class declarations without body
-            long start = info.getTrees().getSourcePositions().getStartPosition(cut, leaf);
-            long end = info.getTrees().getSourcePositions().getEndPosition(cut, leaf);
+            long start = info.getTrees().getSourcePositions().getStartPosition(leaf);
+            long end = info.getTrees().getSourcePositions().getEndPosition(leaf);
             for (Diagnostic d : info.getDiagnostics()) {
                 long position = d.getPosition();
                 if (d.getCode().equals(PREMATURE_EOF_CODE) && position > start && position < end) {
@@ -282,7 +283,7 @@ public final class ImplementAllAbstractMethods implements ErrorRule<Object>, Ove
         return basic;
     }
     
-    static abstract class ImplementFixBase implements Fix, Task<WorkingCopy>, DebugFix {
+    abstract static class ImplementFixBase extends ModificationResultBasedFix implements Task<WorkingCopy>, DebugFix {
         protected final JavaSource      source;
         protected final TreePathHandle  handle;
         protected final ElementHandle<TypeElement>  implementType;
@@ -425,7 +426,13 @@ public final class ImplementAllAbstractMethods implements ErrorRule<Object>, Ove
         public String getText() {
             return Bundle.LBL_FIX_Impl_Methods_Enum_Values2();
         }
-        
+
+        @Override
+        public ModificationResult getModificationResult() throws IOException {
+            return source.runModificationTask(parameter -> {
+            });
+        }
+
         @Override
         protected boolean executeRound(Element el, int round) throws Exception {
             if (el.getKind() != ElementKind.ENUM) {
@@ -469,7 +476,7 @@ public final class ImplementAllAbstractMethods implements ErrorRule<Object>, Ove
     }
     
     private static boolean generateClassBody2(WorkingCopy copy, TreePath p) throws Exception {
-        int insertOffset = (int) copy.getTrees().getSourcePositions().getEndPosition(copy.getCompilationUnit(), p.getLeaf());
+        int insertOffset = (int) copy.getTrees().getSourcePositions().getEndPosition(p.getLeaf());
         if (insertOffset == -1) {
             return false;
         }
@@ -512,9 +519,10 @@ public final class ImplementAllAbstractMethods implements ErrorRule<Object>, Ove
             }
             ClassTree ct = (ClassTree)ctx.getPath().getLeaf();
             ModifiersTree mt = ct.getModifiers();
-            Set<Modifier> mods = new HashSet<>(mt.getFlags());
+
+            Set<Modifier> mods = EnumSet.of(Modifier.ABSTRACT);
+            mods.addAll(mt.getFlags());
             mods.remove(Modifier.FINAL);
-            mods.add(Modifier.ABSTRACT);
             ModifiersTree newMt = wc.getTreeMaker().Modifiers(mods, mt.getAnnotations());
             wc.rewrite(mt, newMt);
         }
@@ -533,6 +541,37 @@ public final class ImplementAllAbstractMethods implements ErrorRule<Object>, Ove
         @Override
         public String getText() {
             return NbBundle.getMessage(ImplementAbstractMethodsFix.class, "LBL_FIX_Impl_Abstract_Methods"); // MOI18N 
+        }
+
+        @Override
+        public ModificationResult getModificationResult() throws IOException {
+            return source.runModificationTask(parameter -> {
+                this.copy = parameter;
+                parameter.toPhase(Phase.RESOLVED);
+                TreePath tp = handle.resolve(parameter);
+                if (tp != null) {
+                    Element e = parameter.getTrees().getElement(tp);
+                    if (e != null) {
+                        if (e.getKind().isClass() || e.getKind().isInterface()) {
+                            if (implementType.equals(ElementHandle.create(e))) {
+                                generateImplementation(e, tp);
+                            }
+                        }
+                        if (e.getKind() == ElementKind.ENUM_CONSTANT) {
+                            VariableTree var = (VariableTree) tp.getLeaf();
+                            if (var.getInitializer() != null && var.getInitializer().getKind() == Kind.NEW_CLASS) {
+                                NewClassTree nct = (NewClassTree) var.getInitializer();
+                                if (nct.getClassBody() != null) {
+                                    Element el = implementType.resolve(parameter);
+                                    if (el != null) {
+                                        generateImplementation(el, tp);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         @Override
@@ -559,7 +598,7 @@ public final class ImplementAllAbstractMethods implements ErrorRule<Object>, Ove
     // copy from GeneratorUtils, need to change the processing a little.
     public static Map<? extends ExecutableElement, ? extends ExecutableElement> generateAllAbstractMethodImplementations(
             WorkingCopy wc, TreePath path, List<ElementHandle<? extends Element>> toImplementHandles) {
-        assert TreeUtilities.CLASS_TREE_KINDS.contains(path.getLeaf().getKind());
+        assert TreeUtilities.CLASS_TREE_KINDS.contains(path.getLeaf().getKind()) || path.getLeaf().getKind().toString().equals(RECORD);
         TypeElement te = (TypeElement)wc.getTrees().getElement(path);
         if (te == null) {
             return null;

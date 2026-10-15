@@ -1,0 +1,6 @@
+Code completion result for source line:
+base.field|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      fieldInt                        [PRIVATE]  int
+FIELD      fieldString                     [PRIVATE]  String

@@ -30,7 +30,6 @@ import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.api.db.explorer.DatabaseException;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.db.mysql.DatabaseServer;
 import org.netbeans.modules.db.mysql.ui.PropertiesDialog;
 import org.netbeans.modules.db.mysql.ui.PropertiesDialog.Tab;
@@ -121,7 +120,7 @@ public final class StopManager {
         RequestProcessor.getDefault().post(new Runnable() {
             @Override
             public void run() {
-                ProgressHandle handle = ProgressHandleFactory.createHandle(
+                ProgressHandle handle = ProgressHandle.createHandle(
                         NbBundle.getMessage(StopManager.class, "MSG_WaitingForServerToStop"));
                 handle.start();
                 handle.switchToIndeterminate();

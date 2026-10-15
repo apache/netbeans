@@ -37,7 +37,7 @@ import org.netbeans.spi.debugger.DebuggerServiceRegistration;
  * the debugging session for a debug action. A registered implementation of
  * {@link SessionChanger} can decide to change the session in order to perform
  * the given action.
- * <p/>
+ * <p>
  * In the current implementation, step into action of JPDA debugger is suggested
  * for a session change only. The support can be extended according to the future
  * requirements.
@@ -93,7 +93,7 @@ public final class SessionBridge {
      * @param properties Properties describing the current state of the current session before the given action.
      *                   The actual properties are specific for the particular session type.
      * @return <code>true</code> when the session is changed and another session
-     *         decided to perform the given action.<br/>
+     *         decided to perform the given action.<br>
      *         <code>false</code> when no other session would like to perform this action.
      */
     public boolean suggestChange(Session origin, String action, Map<Object, Object> properties) {
@@ -186,7 +186,7 @@ public final class SessionBridge {
          * @param properties Session-specific properties describing the state
          *        right before the given action. These are used by a new session
          *        to complete the given action.
-         * @return A new session, or <code>null<code> when this handler decides
+         * @return A new session, or <code>null</code> when this handler decides
          *         not to change the debug session for this action.
          */
         Session changeSuggested(Session origin, String action, Map<Object, Object> properties);

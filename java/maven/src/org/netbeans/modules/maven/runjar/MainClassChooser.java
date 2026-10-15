@@ -107,7 +107,7 @@ class MainClassChooser extends JPanel {
                         }
                     });                    
                 } else {
-                    final ElementHandle<TypeElement>[] arr = possibleMainClasses.toArray(new ElementHandle[possibleMainClasses.size()]);
+                    final ElementHandle<TypeElement>[] arr = possibleMainClasses.toArray(new ElementHandle[0]);
                     // #46861, sort name of classes
                     Arrays.sort (arr, new MainClassComparator());
                     SwingUtilities.invokeLater(new Runnable () {

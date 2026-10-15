@@ -37,9 +37,13 @@ public final class ElementSearch {
 
     @CheckForNull
     public static TypeElement getClass(Elements elements, String name) {
-        TypeElement typeElement = elements.getTypeElement(name);
+        int index = name.indexOf("<"); //NOI18N
+        if (index > 0) {
+            name = name.substring(0, index);
+        }
+        TypeElement typeElement = getInnerClass(elements, name);
         if (typeElement == null) {
-            typeElement = getInnerClass(elements, name);
+            typeElement = elements.getTypeElement(name);
         }
         return typeElement;
     }

@@ -263,17 +263,16 @@ public final class StorageImpl <K extends Object, V extends Object> {
                         }
 
                         // First remove all entries marked as removed
-                        for(K key : removed) {
-                            map.remove(key);
-                        }
+                        map.keySet().removeAll(removed);
 
                         if (LOG.isLoggable(Level.FINEST)) {
                             LOG.finest("--- Adding '" + storageDescription.getId() + "': " + added); //NOI18N
                         }
 
                         // Then add all new entries
-                        for (K key : added.keySet()) {
-                            V value = added.get(key);
+                        for (Map.Entry<? extends K, ? extends V> entry : added.entrySet()) {
+                            K key = entry.getKey();
+                            V value = entry.getValue();
                             V origValue = map.put(key, value);
                             if (LOG.isLoggable(Level.FINEST) && origValue != null && !origValue.equals(value)) {
                                 LOG.finest("--- Replacing old entry for '" + key + "', orig value = '" + origValue + "', new value = '" + value + "'"); //NOI18N
@@ -440,7 +439,7 @@ public final class StorageImpl <K extends Object, V extends Object> {
                 }
                 
                 Filters filtersForId = filters.get(storageDescriptionId);
-                return filtersForId == null ? Collections.<StorageFilter>emptyList() : filtersForId.filtersForId;
+                return filtersForId == null ? Collections.emptyList() : filtersForId.filtersForId;
             }
         }
 
@@ -484,7 +483,7 @@ public final class StorageImpl <K extends Object, V extends Object> {
         private static boolean rebuilding = false;
         
         private final String storageDescriptionId;
-        private final List<StorageFilter> filtersForId = new ArrayList<StorageFilter>();
+        private final List<StorageFilter> filtersForId = new ArrayList<>();
         
         private static Set<String> rebuild() {
             filters.clear();

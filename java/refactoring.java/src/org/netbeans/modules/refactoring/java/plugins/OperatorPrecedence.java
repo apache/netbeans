@@ -156,15 +156,15 @@ public class OperatorPrecedence {
             case ASSIGNMENT:
                 return false;
         }
-        if(parent.getKind().equals(Tree.Kind.PLUS) && expression.getKind().equals(Tree.Kind.PLUS)) {
-            if (((BinaryTree) expression).getLeftOperand().getKind().equals(Tree.Kind.STRING_LITERAL)
-                    || ((BinaryTree) parent).getLeftOperand().getKind().equals(Tree.Kind.STRING_LITERAL)
-                    || ((BinaryTree) expression).getRightOperand().getKind().equals(Tree.Kind.STRING_LITERAL)
-                    || ((BinaryTree) parent).getRightOperand().getKind().equals(Tree.Kind.STRING_LITERAL)) {
+        if(parent.getKind() == Tree.Kind.PLUS && expression.getKind() == Tree.Kind.PLUS) {
+            if (((BinaryTree) expression).getLeftOperand().getKind() == Tree.Kind.STRING_LITERAL
+                    || ((BinaryTree) parent).getLeftOperand().getKind() == Tree.Kind.STRING_LITERAL
+                    || ((BinaryTree) expression).getRightOperand().getKind() == Tree.Kind.STRING_LITERAL
+                    || ((BinaryTree) parent).getRightOperand().getKind() ==Tree.Kind.STRING_LITERAL) {
                 return true;
             }
         }
-        if(parent.getKind().equals(Tree.Kind.MINUS)) {
+        if(parent.getKind() == Tree.Kind.MINUS) {
             ExpressionTree rightOperand = ((BinaryTree) parent).getRightOperand();
             Element rightElement = trees.getElement(trees.getPath(cut, rightOperand));
             

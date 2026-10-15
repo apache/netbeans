@@ -24,18 +24,23 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import junit.framework.Test;
+import static org.junit.Assume.assumeFalse;
 import org.netbeans.junit.Log;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.NbTestSuite;
@@ -44,6 +49,7 @@ import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 import org.openide.util.BaseUtilities;
+import org.openide.util.Utilities;
 import org.openide.util.test.MockLookup;
 
 /**
@@ -703,4 +709,58 @@ public class FileUtilTest extends NbTestCase {
         assertNotNull(result);
         assertTrue(result.toExternalForm().endsWith("/"));  //NOI18N
     }
+
+    public void testCopyPosixPerms() throws Exception {
+        assumeFalse(Utilities.isWindows());
+
+        LocalFileSystem lfs = new LocalFileSystem();
+        lfs.setRootDirectory(new File("/"));
+        FileObject workDir = lfs.findResource(getWorkDir().getAbsolutePath());
+        clearWorkDir();
+        
+        FileObject source = workDir.createData("original.file");
+        Set<PosixFilePermission> perms = new HashSet<>(Files.getPosixFilePermissions(FileUtil.toPath(source)));
+        assertFalse(perms.contains(PosixFilePermission.OWNER_EXECUTE));
+        perms.add(PosixFilePermission.OWNER_EXECUTE);
+        Files.setPosixFilePermissions(FileUtil.toPath(source), perms);
+                
+        FileObject dest = FileUtil.copyFile(source, workDir, "copied.file");
+        perms = Files.getPosixFilePermissions(FileUtil.toPath(dest));
+        assertTrue(perms.contains(PosixFilePermission.OWNER_EXECUTE));
+    }
+    
+    public void testCopyAttributes() throws Exception {
+        FileObject testRoot = FileUtil.createMemoryFileSystem().getRoot();
+        FileObject aFile = testRoot.createData("a", "file");
+        FileObject aTemplate = testRoot.createData("b", "template");
+        
+        aFile.setAttribute("attr", 1);
+        aFile.setAttribute("SystemFileSystem.icon", "fakeValue");
+        aFile.setAttribute("templateCategory", "fakeValue2");
+        
+        aTemplate.setAttribute("template", Boolean.TRUE);
+        aTemplate.setAttribute("filtered.one", Boolean.TRUE);
+        aTemplate.setAttribute("filtered.two", Boolean.TRUE);
+        
+        FileObject bFile = testRoot.createData("b", "file");
+        FileUtil.copyAttributes(aFile, bFile);
+        assertNull(bFile.getAttribute("SystemFileSystem.icon"));
+        assertNull(bFile.getAttribute("templateCategory"));
+        assertEquals(1, bFile.getAttribute("attr"));
+        
+        FileObject cFile = testRoot.createData("c", "file");
+        FileUtil.copyAttributes(aTemplate, cFile, (n, v) -> {
+            if ("filtered.one".equals(n)) {
+                return null;
+            } else if ("filtered.two".equals(n)) {
+                return 42;
+            } else {
+                return FileUtil.defaultAttributesTransformer().apply(n, v);
+            }
+        });
+        assertEquals(Boolean.TRUE, cFile.getAttribute("template"));
+        assertNull(cFile.getAttribute("filtered.one"));
+        assertEquals(42, cFile.getAttribute("filtered.two"));
+    }
+
 }

@@ -763,7 +763,7 @@ class LayoutFeeder implements LayoutConstants {
     private boolean plainAlignmentChange(IncludeDesc ndesc, IncludeDesc odesc) {
         if (closedSpace != null && odesc.snappedParallel != null) {
             if (restoreDimension()) {
-                LayoutInterval li = dragger.getMovingComponents()[0].getLayoutInterval(dimension);;
+                LayoutInterval li = dragger.getMovingComponents()[0].getLayoutInterval(dimension);
                 while (li.getParent() != null) {
                     if (li.getParent().isParallel()) {
                         layoutModel.setIntervalAlignment(li, ndesc.alignment);
@@ -2985,7 +2985,7 @@ class LayoutFeeder implements LayoutConstants {
 
             // first analyze the interval as a possible sub-group
             if (sub.isParallel() && shouldEnterGroup(sub)) { // group space contains significant edge
-                IncludeDesc[] before = inclusions.isEmpty() ? null : inclusions.toArray(new IncludeDesc[inclusions.size()]);
+                IncludeDesc[] before = inclusions.isEmpty() ? null : inclusions.toArray(new IncludeDesc[0]);
 
                 analyzeParallel(sub, inclusions);
 
@@ -3657,7 +3657,7 @@ class LayoutFeeder implements LayoutConstants {
                 if (!compatibleInclusions(iDesc, best, dimension)) {
                     it.remove();
                 } else if (iDesc.parent == best.parent && iDesc.neighbor == best.neighbor
-                           && (iDesc.neighbor != null || iDesc.index == iDesc.index)) {
+                           && (iDesc.neighbor != null || iDesc.index == best.index)) {
                     it.remove(); // same inclusion twice (detect for better robustness)
                 } else if (iDesc.newSubGroup && LayoutUtils.contentOverlap(iDesc.parent, best.parent, dimension^1)) {
                     it.remove(); // don't try to solve what is already overlapping
@@ -3852,7 +3852,7 @@ class LayoutFeeder implements LayoutConstants {
                         }
                         if (gaps[LEADING] != null && gaps[TRAILING] != null) {
                             if (unifyGaps == null) {
-                                unifyGaps = new ArrayList();
+                                unifyGaps = new ArrayList<>();
                             }
                             unifyGaps.add(gaps);
                         }

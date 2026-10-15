@@ -18,8 +18,8 @@ METHOD     every()                                    boolean
 METHOD     every(Closure)                             boolean
 METHOD     find()                                     Object
 METHOD     find(Closure)                              Object
-METHOD     findAll()                                  Collection
-METHOD     findAll(Closure)                           Collection
+METHOD     findAll()                                  List
+METHOD     findAll(Closure)                           List
 METHOD     findIndexOf(Closure)                       int
 METHOD     findIndexOf(int, Closure)                  int
 METHOD     findIndexValues(Closure)                   List
@@ -31,7 +31,7 @@ METHOD     findResult(Object, Closure)                Object
 METHOD     getAt(String)                              Object
 METHOD     getClass()                      [PUBLIC]   Class<?>
 METHOD     getDelegation()                 [PUBLIC]   Delegation
-METHOD     getMetaClass()                             MetaClass
+METHOD     getMetaClass()                  [PUBLIC]   MetaClass
 METHOD     getMetaPropertyValues()                    List
 METHOD     getProperties()                            Map
 METHOD     getProperty(String)             [PUBLIC]   Object
@@ -62,14 +62,16 @@ METHOD     putAt(String, Object)                      void
 METHOD     respondsTo(String)                         List
 METHOD     respondsTo(String, Object)                 List
 METHOD     setDelegation(Delegation)       [PUBLIC]   void
-METHOD     setMetaClass(MetaClass)                    void
+METHOD     setMetaClass(MetaClass)         [PUBLIC]   void
 METHOD     setProperty(String, Object)     [PUBLIC]   void
-METHOD     showMe()                        [PROTECTE  void
+METHOD     showMe()                        [PUBLIC]   void
 METHOD     sleep(long)                                void
 METHOD     sleep(long, Closure)                       void
 METHOD     split(Closure)                             Collection
 METHOD     sprintf(String, Object)                    String
 METHOD     sprintf(String, Object)                    String
+METHOD     stream()                                   Stream
+METHOD     tap(Closure)                               Object
 METHOD     toString()                      [PUBLIC]   String
 METHOD     use(Class, Closure)                        Object
 METHOD     use(List, Closure)                         Object
@@ -78,5 +80,7 @@ METHOD     wait()                          [PUBLIC]   void
 METHOD     wait(long)                      [PUBLIC]   void
 METHOD     wait(long, int)                 [PUBLIC]   void
 METHOD     with(Closure)                              Object
+METHOD     with(boolean, Closure)                     Object
+METHOD     withTraits(Class[])                        Object
 FIELD      class                           [PUBLIC]   Class
 FIELD      delegation                      [PRIVATE]  Delegation

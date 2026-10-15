@@ -298,7 +298,7 @@ public abstract class TaskContainerNode extends AsynchronousNode<List<IssueImpl>
             List<TaskNode> filteredNodes = filteredTaskNodes;
 
             Comparator<TaskNode> specialComparator = getSpecialComparator();
-            Collections.sort(filteredNodes, specialComparator == null ? TaskSorter.getInstance().getComparator() : specialComparator);
+            filteredNodes.sort(specialComparator == null ? TaskSorter.getInstance().getComparator() : specialComparator);
 
             List<TaskNode> taskNodesToShow;
             boolean addShowNext = false;

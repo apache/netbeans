@@ -1,0 +1,6 @@
+    public function |>MARK_OCCURRENCES:publicM^ethod<|(): void {
+        Simple::CASE1->|>MARK_OCCURRENCES:publicMethod<|();
+        self::CASE1->|>MARK_OCCURRENCES:publicMethod<|();
+        static::CASE1->|>MARK_OCCURRENCES:publicMethod<|();
+Simple::CASE2->|>MARK_OCCURRENCES:publicMethod<|();
+$i->|>MARK_OCCURRENCES:publicMethod<|();

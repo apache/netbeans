@@ -30,21 +30,21 @@ public abstract class PathRecognizer {
 
     /**
      * Returns names under which the source paths are registered in
-     * the {@link GlobalPathRegistry}
+     * the <a href="@org-netbeans-api-java-classpath@/org/netbeans/api/java/classpath/GlobalPathRegistry.html">GlobalPathRegistry</a>.
      * @return set of source path names
      */
     public abstract Set<String> getSourcePathIds ();
 
     /**
      * Returns names under which the library paths are registered in
-     * the {@link GlobalPathRegistry}.
+     * the <a href="@org-netbeans-api-java-classpath@/org/netbeans/api/java/classpath/GlobalPathRegistry.html">GlobalPathRegistry</a>.
      * @return set of library path names
      */
     public abstract Set<String> getLibraryPathIds ();
 
     /**
      * Returns names under which the binary library paths are registered in
-     * the {@link GlobalPathRegistry}.
+     * the <a href="@org-netbeans-api-java-classpath@/org/netbeans/api/java/classpath/GlobalPathRegistry.html">GlobalPathRegistry</a>.
      * @return set of binary library path names
      */
     public abstract Set<String> getBinaryLibraryPathIds ();

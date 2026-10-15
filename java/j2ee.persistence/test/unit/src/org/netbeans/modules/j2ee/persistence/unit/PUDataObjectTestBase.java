@@ -80,6 +80,7 @@ public abstract class PUDataObjectTestBase extends NbTestCase {
      */
     public static final class Pool extends DataLoaderPool {
 
+        @Override
         public Enumeration loaders() {
             return Enumerations.singleton(new PUDataLoader());
         }
@@ -90,6 +91,7 @@ public abstract class PUDataObjectTestBase extends NbTestCase {
      */
     public static final class PUMimeResolver extends MIMEResolver {
 
+        @Override
         public String findMIMEType(FileObject fo) {
             if (fo.getName().startsWith("persistence")){
                 return PUDataLoader.REQUIRED_MIME;
@@ -110,10 +112,12 @@ public abstract class PUDataObjectTestBase extends NbTestCase {
             dummyProject = dummy;
         }
 
+        @Override
         public Project getOwner(URI file) {
             return dummyProject;
         }
 
+        @Override
         public Project getOwner(FileObject file) {
             return dummyProject;
         }

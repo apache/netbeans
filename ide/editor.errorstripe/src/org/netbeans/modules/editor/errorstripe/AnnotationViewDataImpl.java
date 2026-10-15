@@ -80,8 +80,8 @@ final class AnnotationViewDataImpl implements PropertyChangeListener, Annotation
     private List<MarkProvider> markProviders = new ArrayList<MarkProvider>();
     private List<UpToDateStatusProvider> statusProviders = new ArrayList<UpToDateStatusProvider>();
 
-    private List<PropertyChangeListener> markProvidersWeakLs = new ArrayList();
-    private List<PropertyChangeListener> statusProvidersWeakLs = new ArrayList();
+    private List<PropertyChangeListener> markProvidersWeakLs = new ArrayList<>();
+    private List<PropertyChangeListener> statusProvidersWeakLs = new ArrayList<>();
     
     private Collection<Mark> currentMarks = null;
     private SortedMap<Integer, List<Mark>> marksMap = null;

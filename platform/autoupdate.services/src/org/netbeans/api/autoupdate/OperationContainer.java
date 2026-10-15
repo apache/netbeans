@@ -19,6 +19,7 @@
 
 package org.netbeans.api.autoupdate;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -58,7 +59,7 @@ import org.openide.modules.ModuleInfo;
  * OperationSupport support = container.getSupport();
  * support.doOperation(null);
  * </pre>
- * </p>
+ *
  * @param <Support> the type of support for performing chosen operation like 
  * {@link OperationSupport} or {@link InstallSupport}
  * @author Radek Matous, Jiri Rechtacek
@@ -199,11 +200,13 @@ public final class OperationContainer<Support> {
     }
     
     /**
+     * <p>See the difference between {@link #createForInstall} and {@link #createForDirectInstall} for example</p>
+     * 
      * @return either {@link OperationSupport} or {@link InstallSupport} depending on type parameter of <code>OperationContainer&lt;Support&gt;</code> or
      * <code>null</code> if the <code>OperationContainer</code> is empty or contains any invalid elements
      * @see #listAll
      * @see #listInvalid
-     * <br><p>See the difference between {@link #createForInstall} and {@link #createForDirectInstall} for example</p>
+     *
      */                        
     public Support getSupport() {
         if (upToDate != null && upToDate) {
@@ -226,7 +229,7 @@ public final class OperationContainer<Support> {
      * Check if <code>updateElement</code> can be added ({@link #add})
      * @param updateUnit
      * @param updateElement to be inserted.
-     * @return <tt>true</tt> if chosen operation upon <code>updateElement</code> is allowed
+     * @return <code>true</code> if chosen operation upon <code>updateElement</code> is allowed
      */
     public boolean canBeAdded(UpdateUnit updateUnit, UpdateElement updateElement) {
         return impl.isValid(updateUnit, updateElement);
@@ -294,7 +297,7 @@ public final class OperationContainer<Support> {
     /**
      * Removes <code>updateElement</code>
      * @param updateElement
-     * @return <tt>true</tt> if successfully added
+     * @return <code>true</code> if successfully added
      */
     public boolean remove(UpdateElement updateElement) {
         if (upToDate != null) {
@@ -306,7 +309,7 @@ public final class OperationContainer<Support> {
     
     /**
      * @param updateElement
-     * @return <tt>true</tt> if this instance of <code>OperationContainer</code> 
+     * @return <code>true</code> if this instance of <code>OperationContainer</code> 
      * contains the specified <code>updateElement</code>.     
      */
     public boolean contains(UpdateElement updateElement) {
@@ -352,6 +355,17 @@ public final class OperationContainer<Support> {
         impl.removeAll ();
     }
     
+    /** Specifies location of unpack200 executable. {@code unpack200} has been
+     * removed from JDK 14. As such it is not possible to unpack older NBM
+     * files without providing alternative JDK implementation of this file.
+     *
+     * @param executable path to the executable
+     * @since 1.65
+     */
+    public final void setUnpack200(File executable) {
+        this.impl.setUnpack200(executable);
+    }
+
     /**
      * Provides additional information
      * @param <Support> the type of support for performing chosen operation like 
@@ -398,7 +412,7 @@ public final class OperationContainer<Support> {
         this.support = t;
     }
     
-    OperationContainerImpl<Support> impl;
+    final OperationContainerImpl<Support> impl;
     private final Support support;
     private Boolean upToDate = null;
     

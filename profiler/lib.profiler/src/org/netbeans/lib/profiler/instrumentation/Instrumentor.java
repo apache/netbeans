@@ -144,7 +144,7 @@ public class Instrumentor implements CommonConstants {
         RuntimeProfilingPoint[] pps = settings.getRuntimeProfilingPoints();
 
         if ((rootClassNames == null) && (pps.length > 0)) {
-            rootClassNames = new ArrayList();
+            rootClassNames = new ArrayList<>();
         }
 
         for (int i = 0; i < pps.length; i++) {

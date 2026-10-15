@@ -19,8 +19,6 @@
 
 package org.netbeans.modules.groovy.editor.test;
 
-import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,7 +28,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.logging.Level;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.editor.BaseDocument;
@@ -42,10 +39,10 @@ import org.netbeans.modules.groovy.editor.language.GroovyFormatter;
 import org.netbeans.modules.groovy.editor.api.GroovyIndex;
 import org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId;
 import org.netbeans.modules.groovy.editor.api.parser.GroovyLanguage;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Utilities;
 
 /**
  * In order to be able to run tests using java.source on Mac, you need to apply patch
@@ -77,6 +74,14 @@ public class GroovyTestBase extends CslTestBase {
         
         FileObject workDir = FileUtil.toFileObject(getWorkDir());
         testFO = workDir.createData("Test.groovy");
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        if (testFO != null) {
+            testFO.delete();
+        }
+        super.tearDown();
     }
 
     @Override
@@ -138,26 +143,7 @@ public class GroovyTestBase extends CslTestBase {
     }
 
     private static ClassPath createBootClassPath() {
-        String bcp = System.getProperty("sun.boot.class.path");	//NOI18N
-        assertNotNull(bcp);
-        StringTokenizer tk = new StringTokenizer(bcp, File.pathSeparator);
-        List<URL> roots = new ArrayList<URL>();
-        while (tk.hasMoreTokens()) {
-            String token = tk.nextToken();
-            File f = new File(token);
-            try {
-                URL url = Utilities.toURI(f).toURL();
-                if (FileUtil.isArchiveFile(url)) {
-                    url = FileUtil.getArchiveRoot(url);
-                } else if (!f.exists()) {
-                    url = new URL(url.toExternalForm() + '/');
-                }
-                roots.add(url);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-        }
-        return ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
+        return BootClassPathUtil.getBootClassPath();
     }
 
     private static ClassPath createCompilePath() {

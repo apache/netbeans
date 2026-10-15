@@ -209,7 +209,7 @@ public final class PhpConfigurationProvider implements ProjectConfigurationProvi
         calculateConfigs();
         List<Config> l = new ArrayList<>();
         l.addAll(configs.values());
-        Collections.sort(l, new Comparator<Config>() {
+        l.sort(new Comparator<Config>() {
 
             Collator c = Collator.getInstance();
 
@@ -235,7 +235,7 @@ public final class PhpConfigurationProvider implements ProjectConfigurationProvi
 
     @Override
     public void setActiveConfiguration(Config c) throws IOException {
-        if (c != DEFAULT && !configs.values().contains(c)) {
+        if (c != DEFAULT && !configs.containsValue(c)) {
             throw new IllegalArgumentException();
         }
         final String n = c.name;

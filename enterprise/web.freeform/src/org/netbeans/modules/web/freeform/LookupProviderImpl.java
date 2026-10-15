@@ -213,7 +213,7 @@ public class LookupProviderImpl implements LookupProvider {
         
         public void prjOpened() {
             registeredRoots = getWebRoots(aux, project, evaluator);
-            FileObject fos[] = registeredRoots.toArray(new FileObject[registeredRoots.size()]);
+            FileObject fos[] = registeredRoots.toArray(new FileObject[0]);
             ClassPath cp = ClassPathSupport.createClassPath(fos);
             registeredCP = new ClassPath[] { cp };
             GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, registeredCP);
@@ -253,7 +253,7 @@ public class LookupProviderImpl implements LookupProvider {
                 List<FileObject> newRoots = getWebRoots(aux, project, evaluator);
                 if (newRoots != null
                         &&  !newRoots.equals(registeredRoots)) {
-                    FileObject fos[] = newRoots.toArray(new FileObject[newRoots.size()]);
+                    FileObject fos[] = newRoots.toArray(new FileObject[0]);
                     ClassPath cp = ClassPathSupport.createClassPath(fos);
                     GlobalPathRegistry.getDefault().unregister(ClassPath.SOURCE, registeredCP);
                     registeredCP = new ClassPath[] { cp };

@@ -496,7 +496,8 @@ public class FeatureUpdateElementImpl extends UpdateElementImpl {
                     }
                     Module m = Utilities.toModule(cnb, null);
                     if (m != null && ! m.getProblems().isEmpty()) {
-                        dependenciesToModulesOrFeatures.remove(depSpec);
+                        it.remove();
+                        break;
                     }
                 }
             }

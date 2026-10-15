@@ -109,7 +109,7 @@ public class WatcherDeadlockTest extends NbTestCase {
         @Override
         public long refreshRecursively(File dir, long lastTimeStamp, List<? super File> children) {
             fact = FileObjectFactory.getInstance(dir);
-            BaseFileObj obj = fact.getValidFileObject(dir, FileObjectFactory.Caller.Others);
+            BaseFileObj obj = fact.getValidFileObject(dir, FileObjectFactory.Caller.Others, true);
             assertNotNull("Obj found", obj);
             Object prev = STOP.get();
             if (prev == null) try {

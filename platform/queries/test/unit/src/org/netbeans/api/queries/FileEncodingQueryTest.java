@@ -42,6 +42,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.CoderResult;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
@@ -88,7 +89,7 @@ public class FileEncodingQueryTest extends NbTestCase {
     public void setUp () throws IOException {
         clearWorkDir();
         MockServices.setServices (ContentBaseEncodingQuery.class, FileTypeBaseEncodingQuery.class);
-        FileTypeBaseEncodingQuery.setExtMap(Collections.<String,Charset>emptyMap(), Charset.forName("UTF-8"));
+        FileTypeBaseEncodingQuery.setExtMap(Collections.<String,Charset>emptyMap(), StandardCharsets.UTF_8);
     }
     
     
@@ -157,12 +158,8 @@ public class FileEncodingQueryTest extends NbTestCase {
         
         Charset encoding = FileEncodingQuery.getEncoding(fo);
         InputStream ins = fo.getInputStream();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        FileUtil.copy(ins, baos);
+        byte[] arr = ins.readAllBytes();
         ins.close();
-        byte[] arr = baos.toByteArray();
-        baos.close();
-        baos = null;
         
         final Reader in = new InputStreamReader (new ByteArrayInputStream(arr),encoding);
         final ByteArrayOutputStream outbs = new ByteArrayOutputStream();

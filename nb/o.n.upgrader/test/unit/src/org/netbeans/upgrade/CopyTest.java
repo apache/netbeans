@@ -18,23 +18,26 @@
  */
 
 package org.netbeans.upgrade;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.Reader;
 import java.net.URL;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import org.openide.filesystems.FileObject;
-
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.LocalFileSystem;
 import org.openide.filesystems.MultiFileSystem;
 import org.openide.filesystems.XMLFileSystem;
+
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
 
 /** Tests to check that copy of files works.
  *
@@ -45,64 +48,12 @@ public final class CopyTest extends org.netbeans.junit.NbTestCase {
         super (name);
     }
     
+    @Override
     protected void setUp() throws java.lang.Exception {
         super.setUp();
         
         clearWorkDir();
     }    
-   
-    public void testAppendSelectedLines() throws Exception {
-        //setup
-        List expectedLines = new ArrayList();
-        File wDir = getWorkDir();
-        File sFile = new File(wDir,this.getName()+".file");
-        assertTrue(sFile.createNewFile());
-        File tFolder = new File(wDir,this.getName());
-        assertTrue(tFolder.mkdir());
-        File tFile = new File(tFolder,this.getName()+".file");
-        assertTrue(tFile.createNewFile());
-        FileOutputStream fos = new FileOutputStream(tFile);
-        try {
-            String line = "nbplatform.default.harness.dir=${nbplatform.default.netbeans.dest.dir}/harness \n";
-            fos.write(line.getBytes());
-            expectedLines.add(line);                        
-        } finally {
-            fos.close();
-        }
-        
-        fos = new FileOutputStream(sFile);
-        try {
-            String line = "nbplatform.id.netbeans.dest.dir=/work/nball/nbbuild/netbeans \n";
-            fos.write(line.getBytes());
-            expectedLines.add(line);
-            
-            line = "nbplatform.id.netbeans.dest.dir=/work/nbide/netbeans \n";
-            fos.write(line.getBytes());
-            expectedLines.add(line);
-            
-            line = "nbplatform.default.netbeans.dest.dir=/work/nbide/netbeans \n";
-            fos.write(line.getBytes());
-            //lines.add(line); -- should be excluded
-        } finally {
-            fos.close();
-        }
-        String[] regexForSelection = new String[] {
-            "^nbplatform[.](?![dD]efault).+[.](netbeans[.]dest[.]dir|label|harness[.]dir)=.+$"//NOI18N
-        };
-        
-        Copy.appendSelectedLines(sFile, tFolder, regexForSelection);
-        String line = null;
-        List resultLines = new ArrayList();
-        BufferedReader reader = new BufferedReader(new FileReader(tFile));
-        try {
-            while ((line = reader.readLine()) != null) {
-                resultLines.add(line+"\n");
-            }
-        } finally {
-            reader.close();
-        }
-        assertEquals(expectedLines,resultLines);
-    }
     
     public void testCopy () throws Exception {
         copyTest ("path/X.txt");        
@@ -138,7 +89,11 @@ public final class CopyTest extends org.netbeans.junit.NbTestCase {
         assertNotNull("found sample layer", url);
         XMLFileSystem xfs = new XMLFileSystem(url);
         
-        MultiFileSystem mfs = AutoUpgrade.createLayeredSystem(fs, xfs); 
+        MultiFileSystem mfs = new MultiFileSystem(new org.openide.filesystems.FileSystem[]{fs, xfs}) {
+            {
+                setPropagateMasks(true);
+            }
+        };
         
         FileObject fo = mfs.findResource ("root");
         
@@ -152,9 +107,7 @@ public final class CopyTest extends org.netbeans.junit.NbTestCase {
         assertEquals ("X.txt", tg.getChildren()[0].getNameExt());
         
         
-        HashSet set = new HashSet ();
-        set.add ("root/Yes.txt");
-        set.add ("root/X.txt_hidden");
+        Set<String> set = Set.of("root/Yes.txt", "root/X.txt_hidden");
         Copy.copyDeep (fo, tg, set);
         
         assertEquals("After the copy there is still one file", 1, tg.getFileObject("root").getChildren().length);
@@ -164,9 +117,9 @@ public final class CopyTest extends org.netbeans.junit.NbTestCase {
     private static void writeTo (FileSystem fs, String res, String content) throws java.io.IOException {
         FileObject fo = org.openide.filesystems.FileUtil.createData (fs.getRoot (), res);
         org.openide.filesystems.FileLock lock = fo.lock ();
-        java.io.OutputStream os = fo.getOutputStream (lock);
-        os.write (content.getBytes ());
-        os.close ();
+        try (OutputStream os = fo.getOutputStream(lock)) {
+            os.write(content.getBytes());
+        }
         lock.releaseLock ();
     }
     
@@ -197,12 +150,11 @@ public final class CopyTest extends org.netbeans.junit.NbTestCase {
     private void copyTest(boolean testAttribs, String... allPath) throws IOException {
         String atribName = "attribName";
         String testPath = allPath[0];
-        ArrayList<String> fileList = new ArrayList<String>();
+        ArrayList<String> fileList = new ArrayList<>();
         fileList.addAll(Arrays.asList(allPath));
-        fileList.addAll(Arrays.asList(new java.lang.String[]{ 
-        "path/Yes.txt", "path/No.txt", "path/Existing.txt"}));
+        fileList.addAll(Arrays.asList("path/Yes.txt", "path/No.txt", "path/Existing.txt"));
         
-        FileSystem fs = createLocalFileSystem(fileList.toArray(new String[fileList.size()]));
+        FileSystem fs = createLocalFileSystem(fileList.toArray(String[]::new));
 
         
         FileObject path = fs.findResource("path");
@@ -221,7 +173,7 @@ public final class CopyTest extends org.netbeans.junit.NbTestCase {
             toCopyOne.setAttribute (atribName, atribName);
         }
         
-        HashSet set = new HashSet();
+        Set<String> set = new HashSet<>();
         for (String currentPath : allPath) {
             currentPath = currentPath.endsWith("/") ? currentPath.substring(0, currentPath.length()-1) : currentPath;
             set.add(currentPath);
@@ -255,5 +207,75 @@ public final class CopyTest extends org.netbeans.junit.NbTestCase {
         //testDoNotOverwriteFiles
         assertEquals ("The content is kept from project", content, "existing-content");
         
+    }
+
+    public void testDoUpgrade() throws Exception {
+        File wrkDir = getWorkDir();
+        clearWorkDir();
+        File old = new File(wrkDir, "old");
+        old.mkdir();
+        File config = new File(old, "config");
+        config.mkdir();
+        
+        LocalFileSystem lfs = new LocalFileSystem();
+        lfs.setRootDirectory(config);
+        // filesystem must not be empty, otherwise .nbattrs file will be deleted :(
+        lfs.getRoot().createFolder("test");
+        
+        String oldVersion = "foo";
+        
+        URL url = AutoUpgradeTest.class.getResource("layer" + oldVersion + ".xml");
+        XMLFileSystem xmlfs = new XMLFileSystem(url);
+        
+        MultiFileSystem mfs = new MultiFileSystem(
+                new FileSystem[] { lfs, xmlfs }
+        );
+        
+        String fooBar = "/foo/bar";
+        
+        FileObject fooBarFO = mfs.findResource(fooBar);
+        String attrName = "color";
+        String attrValue = "black";
+        fooBarFO.setAttribute(attrName, attrValue);
+        
+        System.setProperty("netbeans.user", new File(wrkDir, "new").getAbsolutePath());
+        
+        doUpgrade(old, oldVersion);
+        
+        FileSystem dfs = FileUtil.getConfigRoot().getFileSystem();
+        
+        MultiFileSystem newmfs = new MultiFileSystem(
+                new FileSystem[] { dfs, xmlfs }
+        );
+        
+        FileObject newFooBarFO = newmfs.findResource(fooBar);
+        assertNotNull(newFooBarFO);
+        assertEquals(attrValue, newFooBarFO.getAttribute(attrName));
+    }
+
+    // method used to be part of AutoUpgrade but isn't used anymore
+    // it improves coverage a bit but could be removed at some point
+    private static void doUpgrade(File source, String oldVersion) throws Exception {        
+
+        Set<String> includeExclude;
+        try (Reader r = new InputStreamReader(AutoUpgradeTest.class.getResourceAsStream("copy" + oldVersion), StandardCharsets.UTF_8)) {
+            includeExclude = IncludeExclude.create(r);
+        }
+
+        LocalFileSystem lfs = new LocalFileSystem();
+        lfs.setRootDirectory(new File(source, "config"));
+
+        XMLFileSystem xmlfs = new XMLFileSystem(AutoUpgradeTest.class.getResource("layer" + oldVersion + ".xml"));
+        FileSystem old = createLayeredSystem(lfs, xmlfs);
+
+        Copy.copyDeep(old.getRoot(), FileUtil.getConfigRoot(), includeExclude, PathTransformation.getInstance(oldVersion));
+    }
+    
+    private static MultiFileSystem createLayeredSystem(final LocalFileSystem lfs, final XMLFileSystem xmlfs) {
+        return new MultiFileSystem(new FileSystem[]{lfs, xmlfs}) {
+            {
+                setPropagateMasks(true);
+            }
+        };
     }
  }

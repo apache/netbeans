@@ -363,7 +363,7 @@ public final class SAXGeneratorSupport implements XMLGenerateCookie {
             }
 
             in = previous.getInputStream();
-            InputSource input = new InputSource(previous.getURL().toExternalForm());
+            InputSource input = new InputSource(previous.toURL().toExternalForm());
             input.setByteStream(in);
 
             SAXBindingsHandlerImpl handler = new SAXBindingsHandlerImpl();
@@ -400,7 +400,7 @@ public final class SAXGeneratorSupport implements XMLGenerateCookie {
         if (obj == null) return;
 
         try {
-            EditorCookie editor = (EditorCookie) obj.getCookie(EditorCookie.class);
+            EditorCookie editor = obj.getCookie(EditorCookie.class);
             Document doc = editor.openDocument();
 
             if (data == null) {
@@ -417,7 +417,7 @@ public final class SAXGeneratorSupport implements XMLGenerateCookie {
             // ignore, there will be missing file header
         }
 
-        SaveCookie cake = (SaveCookie) obj.getCookie(SaveCookie.class);
+        SaveCookie cake = obj.getCookie(SaveCookie.class);
         if (cake != null) cake.save();
     }
 
@@ -494,7 +494,7 @@ public final class SAXGeneratorSupport implements XMLGenerateCookie {
                         ClassTree modifiedClass = genUtils.addImplementsClause(javaClass, interfaceName);
                         
                         //add private class fields
-                        List varTree = new ArrayList();
+                        List<VariableTree> varTree = new ArrayList<>();
                         ModifiersTree mods = make.Modifiers(EnumSet.of(Modifier.PRIVATE));
                         Tree tree = make.Identifier(face);
                         VariableTree var = make.Variable(mods, "handler", tree, null);
@@ -504,7 +504,7 @@ public final class SAXGeneratorSupport implements XMLGenerateCookie {
                         var = make.Variable(mods, "context", etree, null);
                         varTree.add(var);      
                         type =  workingCopy.getElements().getTypeElement("java.lang.StringBuffer");// NOI18N
-                        etree = make.QualIdent(type);;
+                        etree = make.QualIdent(type);
                         var = make.Variable(mods, "buffer", etree, null);
                         varTree.add(var);
                         type =  workingCopy.getElements().getTypeElement("org.xml.sax.EntityResolver");// NOI18N
@@ -531,7 +531,7 @@ public final class SAXGeneratorSupport implements XMLGenerateCookie {
                         sb.append("}");
                         
                         mods = make.Modifiers(EnumSet.of(Modifier.FINAL));
-                        varTree = new ArrayList();
+                        varTree = new ArrayList<>();
                         if (model.hasParslets()) {
                             tree = make.Identifier(face);
                             var = make.Variable(mods, "handler", tree, null);

@@ -658,7 +658,7 @@ public class SunWebAppProxy implements SunWebApp, RootInterfaceImpl {
                 else
                     downgradeWebGraph(document, newVersion, currentVersion);
             } else if(newVersion.equals(SunWebApp.VERSION_2_3_0)){
-                ////This will always be a downgrade
+                //This will always be a downgrade
                 downgradeWebGraph(document, newVersion, currentVersion);
             }
         }
@@ -950,7 +950,7 @@ public class SunWebAppProxy implements SunWebApp, RootInterfaceImpl {
     public void setStatus(int value) {
         if (ddStatus!=value) {
             PropertyChangeEvent evt = new PropertyChangeEvent(
-                    this, PROPERTY_STATUS, Integer.valueOf(ddStatus), Integer.valueOf(value));
+                    this, PROPERTY_STATUS, ddStatus, value);
             ddStatus=value;
             for (int i=0;i<listeners.size();i++) {
                 listeners.get(i).propertyChange(evt);

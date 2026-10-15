@@ -111,7 +111,8 @@ implements PropertyChangeListener {
     
     /** Overriden to share accelerator with 
      * org.netbeans.core.windows.actions.ActionUtils.CloseWindowAction
-     */ 
+     */
+    @Override
     public void putValue(String key, Object newValue) {
         if (Action.ACCELERATOR_KEY.equals(key)) {
             ActionUtils.putSharedAccelerator("CloseWindow", newValue);
@@ -122,7 +123,8 @@ implements PropertyChangeListener {
     
     /** Overriden to share accelerator with 
      * org.netbeans.core.windows.actions.ActionUtils.CloseWindowAction
-     */ 
+     */
+    @Override
     public Object getValue(String key) {
         if (Action.ACCELERATOR_KEY.equals(key)) {
             return ActionUtils.getSharedAccelerator("CloseWindow");

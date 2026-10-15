@@ -27,6 +27,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.MonitorInfo;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
+import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openide.util.Exceptions;
@@ -141,7 +142,7 @@ class Detector implements Runnable {
         PrintStream out;
         File file = null;
         try {
-            file = File.createTempFile("deadlock", ".txt"); // NOI18N
+            file = Files.createTempFile("deadlock", ".txt").toFile(); // NOI18N
             out = new PrintStream(new FileOutputStream(file));
             if (LOG.isLoggable(Level.FINE)) {
                 LOG.log(Level.FINE, "Temporrary file created: {0}" , file); // NOI18N

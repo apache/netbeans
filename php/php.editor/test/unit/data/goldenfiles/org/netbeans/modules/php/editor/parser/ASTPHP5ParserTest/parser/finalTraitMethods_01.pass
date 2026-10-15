@@ -1,0 +1,1662 @@
+<testresult testFile='finalTraitMethods_01.php'>
+    <scanner>
+        <token id='T_TRAIT' start='815' end='820'>
+            <text>trait</text>
+        </token>
+        <token id='T_STRING' start='821' end='832'>
+            <text>FinalMethod</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='833' end='834'>
+            <text>{</text>
+        </token>
+        <token id='T_FINAL' start='840' end='845'>
+            <text>final</text>
+        </token>
+        <token id='T_PRIVATE' start='846' end='853'>
+            <text>private</text>
+        </token>
+        <token id='T_FUNCTION' start='854' end='862'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='863' end='874'>
+            <text>__construct</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='874' end='875'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='875' end='876'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='877' end='878'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='883' end='884'>
+            <text>}</text>
+        </token>
+        <token id='T_FINAL' start='890' end='895'>
+            <text>final</text>
+        </token>
+        <token id='T_FUNCTION' start='896' end='904'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='905' end='916'>
+            <text>finalMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='916' end='917'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='917' end='920'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='921' end='926'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='926' end='927'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='927' end='928'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='929' end='933'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='934' end='935'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='940' end='941'>
+            <text>}</text>
+        </token>
+        <token id='T_FINAL' start='947' end='952'>
+            <text>final</text>
+        </token>
+        <token id='T_PUBLIC' start='953' end='959'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='960' end='968'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='969' end='986'>
+            <text>finalPublicMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='986' end='987'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='987' end='990'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='991' end='996'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='996' end='997'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='997' end='998'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='999' end='1003'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1004' end='1005'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1010' end='1011'>
+            <text>}</text>
+        </token>
+        <token id='T_FINAL' start='1017' end='1022'>
+            <text>final</text>
+        </token>
+        <token id='T_PRIVATE' start='1023' end='1030'>
+            <text>private</text>
+        </token>
+        <token id='T_FUNCTION' start='1031' end='1039'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1040' end='1058'>
+            <text>finalPrivateMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1058' end='1059'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1059' end='1064'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1064' end='1065'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1065' end='1066'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1067' end='1071'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1072' end='1073'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1078' end='1079'>
+            <text>}</text>
+        </token>
+        <token id='T_FINAL' start='1085' end='1090'>
+            <text>final</text>
+        </token>
+        <token id='T_PROTECTED' start='1091' end='1100'>
+            <text>protected</text>
+        </token>
+        <token id='T_FUNCTION' start='1101' end='1109'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1110' end='1130'>
+            <text>finalProtectedMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1130' end='1131'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1131' end='1137'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1138' end='1143'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1143' end='1144'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1144' end='1145'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1146' end='1150'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1151' end='1152'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1157' end='1158'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1164' end='1170'>
+            <text>public</text>
+        </token>
+        <token id='T_FINAL' start='1171' end='1176'>
+            <text>final</text>
+        </token>
+        <token id='T_FUNCTION' start='1177' end='1185'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1186' end='1203'>
+            <text>publicFinalMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1203' end='1204'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1204' end='1207'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1208' end='1213'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1213' end='1214'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1214' end='1215'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1216' end='1220'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1221' end='1222'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1227' end='1228'>
+            <text>}</text>
+        </token>
+        <token id='T_PRIVATE' start='1234' end='1241'>
+            <text>private</text>
+        </token>
+        <token id='T_FINAL' start='1242' end='1247'>
+            <text>final</text>
+        </token>
+        <token id='T_FUNCTION' start='1248' end='1256'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1257' end='1275'>
+            <text>privateFinalMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1275' end='1276'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1276' end='1281'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1281' end='1282'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1282' end='1283'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1284' end='1288'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1289' end='1290'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1295' end='1296'>
+            <text>}</text>
+        </token>
+        <token id='T_PROTECTED' start='1302' end='1311'>
+            <text>protected</text>
+        </token>
+        <token id='T_FINAL' start='1312' end='1317'>
+            <text>final</text>
+        </token>
+        <token id='T_FUNCTION' start='1318' end='1326'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1327' end='1347'>
+            <text>protectedFinalMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1347' end='1348'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1348' end='1354'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1355' end='1360'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1360' end='1361'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1361' end='1362'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1363' end='1367'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1368' end='1369'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1374' end='1375'>
+            <text>}</text>
+        </token>
+        <token id='T_FINAL' start='1381' end='1386'>
+            <text>final</text>
+        </token>
+        <token id='T_STATIC' start='1387' end='1393'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1394' end='1402'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1403' end='1420'>
+            <text>finalStaticMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1420' end='1421'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1421' end='1422'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1422' end='1423'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1424' end='1428'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1429' end='1430'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1435' end='1436'>
+            <text>}</text>
+        </token>
+        <token id='T_FINAL' start='1442' end='1447'>
+            <text>final</text>
+        </token>
+        <token id='T_PUBLIC' start='1448' end='1454'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1455' end='1461'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1462' end='1470'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1471' end='1494'>
+            <text>finalPublicStaticMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1494' end='1495'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1495' end='1498'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1499' end='1504'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1504' end='1505'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1505' end='1506'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1507' end='1511'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1512' end='1513'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1518' end='1519'>
+            <text>}</text>
+        </token>
+        <token id='T_FINAL' start='1525' end='1530'>
+            <text>final</text>
+        </token>
+        <token id='T_PRIVATE' start='1531' end='1538'>
+            <text>private</text>
+        </token>
+        <token id='T_STATIC' start='1539' end='1545'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1546' end='1554'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1555' end='1579'>
+            <text>finalPrivateStaticMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1579' end='1580'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1580' end='1585'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1585' end='1586'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1586' end='1587'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1588' end='1592'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1593' end='1594'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1599' end='1600'>
+            <text>}</text>
+        </token>
+        <token id='T_FINAL' start='1606' end='1611'>
+            <text>final</text>
+        </token>
+        <token id='T_PROTECTED' start='1612' end='1621'>
+            <text>protected</text>
+        </token>
+        <token id='T_STATIC' start='1622' end='1628'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1629' end='1637'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1638' end='1664'>
+            <text>finalProtectedStaticMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1664' end='1665'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1665' end='1671'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1672' end='1677'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1677' end='1678'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1678' end='1679'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1680' end='1684'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1685' end='1686'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1691' end='1692'>
+            <text>}</text>
+        </token>
+        <token id='T_FINAL' start='1698' end='1703'>
+            <text>final</text>
+        </token>
+        <token id='T_STATIC' start='1704' end='1710'>
+            <text>static</text>
+        </token>
+        <token id='T_PUBLIC' start='1711' end='1717'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1718' end='1726'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1727' end='1749'>
+            <text>finalStaticublicMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1749' end='1750'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1750' end='1753'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1754' end='1759'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1759' end='1760'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1760' end='1761'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1762' end='1766'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1767' end='1768'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1773' end='1774'>
+            <text>}</text>
+        </token>
+        <token id='T_FINAL' start='1780' end='1785'>
+            <text>final</text>
+        </token>
+        <token id='T_STATIC' start='1786' end='1792'>
+            <text>static</text>
+        </token>
+        <token id='T_PRIVATE' start='1793' end='1800'>
+            <text>private</text>
+        </token>
+        <token id='T_FUNCTION' start='1801' end='1809'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1810' end='1833'>
+            <text>finalStatiPrivateMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1833' end='1834'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1834' end='1839'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1839' end='1840'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1840' end='1841'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1842' end='1846'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1847' end='1848'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1853' end='1854'>
+            <text>}</text>
+        </token>
+        <token id='T_FINAL' start='1860' end='1865'>
+            <text>final</text>
+        </token>
+        <token id='T_STATIC' start='1866' end='1872'>
+            <text>static</text>
+        </token>
+        <token id='T_PROTECTED' start='1873' end='1882'>
+            <text>protected</text>
+        </token>
+        <token id='T_FUNCTION' start='1883' end='1891'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1892' end='1917'>
+            <text>finalStatiProtectedMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1917' end='1918'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1918' end='1924'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1925' end='1930'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1930' end='1931'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1931' end='1932'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1933' end='1937'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1938' end='1939'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1944' end='1945'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1951' end='1957'>
+            <text>public</text>
+        </token>
+        <token id='T_FINAL' start='1958' end='1963'>
+            <text>final</text>
+        </token>
+        <token id='T_STATIC' start='1964' end='1970'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1971' end='1979'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1980' end='2003'>
+            <text>publicFinalStaticMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2003' end='2004'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='2004' end='2007'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2008' end='2013'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2013' end='2014'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='2014' end='2015'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='2016' end='2020'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2021' end='2022'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2027' end='2028'>
+            <text>}</text>
+        </token>
+        <token id='T_PRIVATE' start='2034' end='2041'>
+            <text>private</text>
+        </token>
+        <token id='T_FINAL' start='2042' end='2047'>
+            <text>final</text>
+        </token>
+        <token id='T_STATIC' start='2048' end='2054'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='2055' end='2063'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='2064' end='2088'>
+            <text>privateFinalStaticMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2088' end='2089'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='2089' end='2094'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2094' end='2095'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='2095' end='2096'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='2097' end='2101'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2102' end='2103'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2108' end='2109'>
+            <text>}</text>
+        </token>
+        <token id='T_PROTECTED' start='2115' end='2124'>
+            <text>protected</text>
+        </token>
+        <token id='T_FINAL' start='2125' end='2130'>
+            <text>final</text>
+        </token>
+        <token id='T_STATIC' start='2131' end='2137'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='2138' end='2146'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='2147' end='2173'>
+            <text>protectedFinalStaticMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2173' end='2174'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='2174' end='2180'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='2181' end='2186'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2186' end='2187'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='2187' end='2188'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='2189' end='2193'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2194' end='2195'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2200' end='2201'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2207' end='2213'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='2214' end='2220'>
+            <text>static</text>
+        </token>
+        <token id='T_FINAL' start='2221' end='2226'>
+            <text>final</text>
+        </token>
+        <token id='T_FUNCTION' start='2227' end='2235'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='2236' end='2259'>
+            <text>publicStaticFinalMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2259' end='2260'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='2260' end='2263'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2264' end='2269'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2269' end='2270'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='2270' end='2271'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='2272' end='2276'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2277' end='2278'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2283' end='2284'>
+            <text>}</text>
+        </token>
+        <token id='T_PRIVATE' start='2290' end='2297'>
+            <text>private</text>
+        </token>
+        <token id='T_STATIC' start='2298' end='2304'>
+            <text>static</text>
+        </token>
+        <token id='T_FINAL' start='2305' end='2310'>
+            <text>final</text>
+        </token>
+        <token id='T_FUNCTION' start='2311' end='2319'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='2320' end='2344'>
+            <text>privateStaticFinalMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2344' end='2345'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='2345' end='2350'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2350' end='2351'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='2351' end='2352'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='2353' end='2357'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2358' end='2359'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2364' end='2365'>
+            <text>}</text>
+        </token>
+        <token id='T_PROTECTED' start='2371' end='2380'>
+            <text>protected</text>
+        </token>
+        <token id='T_STATIC' start='2381' end='2387'>
+            <text>static</text>
+        </token>
+        <token id='T_FINAL' start='2388' end='2393'>
+            <text>final</text>
+        </token>
+        <token id='T_FUNCTION' start='2394' end='2402'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='2403' end='2429'>
+            <text>protectedStaticFinalMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2429' end='2430'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='2430' end='2436'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='2437' end='2442'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2442' end='2443'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='2443' end='2444'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='2445' end='2449'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2450' end='2451'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2456' end='2457'>
+            <text>}</text>
+        </token>
+        <token id='T_STATIC' start='2463' end='2469'>
+            <text>static</text>
+        </token>
+        <token id='T_PUBLIC' start='2470' end='2476'>
+            <text>public</text>
+        </token>
+        <token id='T_FINAL' start='2477' end='2482'>
+            <text>final</text>
+        </token>
+        <token id='T_FUNCTION' start='2483' end='2491'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='2492' end='2515'>
+            <text>staticPublicFinalMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2515' end='2516'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='2516' end='2519'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2520' end='2525'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2525' end='2526'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='2526' end='2527'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='2528' end='2532'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2533' end='2534'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2539' end='2540'>
+            <text>}</text>
+        </token>
+        <token id='T_STATIC' start='2546' end='2552'>
+            <text>static</text>
+        </token>
+        <token id='T_PRIVATE' start='2553' end='2560'>
+            <text>private</text>
+        </token>
+        <token id='T_FINAL' start='2561' end='2566'>
+            <text>final</text>
+        </token>
+        <token id='T_FUNCTION' start='2567' end='2575'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='2576' end='2600'>
+            <text>staticPrivateFinalMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2600' end='2601'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='2601' end='2606'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2606' end='2607'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='2607' end='2608'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='2609' end='2613'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2614' end='2615'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2620' end='2621'>
+            <text>}</text>
+        </token>
+        <token id='T_STATIC' start='2627' end='2633'>
+            <text>static</text>
+        </token>
+        <token id='T_PROTECTED' start='2634' end='2643'>
+            <text>protected</text>
+        </token>
+        <token id='T_FINAL' start='2644' end='2649'>
+            <text>final</text>
+        </token>
+        <token id='T_FUNCTION' start='2650' end='2658'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='2659' end='2685'>
+            <text>staticProtectedFinalMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2685' end='2686'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='2686' end='2692'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='2693' end='2698'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2698' end='2699'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='2699' end='2700'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='2701' end='2705'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2706' end='2707'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2712' end='2713'>
+            <text>}</text>
+        </token>
+        <token id='T_STATIC' start='2719' end='2725'>
+            <text>static</text>
+        </token>
+        <token id='T_FINAL' start='2726' end='2731'>
+            <text>final</text>
+        </token>
+        <token id='T_PUBLIC' start='2732' end='2738'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='2739' end='2747'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='2748' end='2771'>
+            <text>staticFinalPublicMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2771' end='2772'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='2772' end='2775'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2776' end='2781'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2781' end='2782'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='2782' end='2783'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='2784' end='2788'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2789' end='2790'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2795' end='2796'>
+            <text>}</text>
+        </token>
+        <token id='T_STATIC' start='2802' end='2808'>
+            <text>static</text>
+        </token>
+        <token id='T_FINAL' start='2809' end='2814'>
+            <text>final</text>
+        </token>
+        <token id='T_PRIVATE' start='2815' end='2822'>
+            <text>private</text>
+        </token>
+        <token id='T_FUNCTION' start='2823' end='2831'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='2832' end='2856'>
+            <text>staticFinalPrivateMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2856' end='2857'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='2857' end='2862'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2862' end='2863'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='2863' end='2864'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='2865' end='2869'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2870' end='2871'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2876' end='2877'>
+            <text>}</text>
+        </token>
+        <token id='T_STATIC' start='2883' end='2889'>
+            <text>static</text>
+        </token>
+        <token id='T_FINAL' start='2890' end='2895'>
+            <text>final</text>
+        </token>
+        <token id='T_PROTECTED' start='2896' end='2905'>
+            <text>protected</text>
+        </token>
+        <token id='T_FUNCTION' start='2906' end='2914'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='2915' end='2941'>
+            <text>staticFinalProtectedMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2941' end='2942'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='2942' end='2948'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='2949' end='2954'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2954' end='2955'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='2955' end='2956'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='2957' end='2961'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2962' end='2963'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2968' end='2969'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2971' end='2972'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='2973' end='2973'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='2973'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <TraitDeclaration start='815' end='2972'>
+                <TraitName>
+                    <Identifier start='821' end='832' name='FinalMethod'/>
+                </TraitName>
+                <Block start='833' end='2972' isCurly='true'>
+                    <MethodDeclaration start='840' end='884' modifiers='private final'>
+                        <FunctionDeclaration start='854' end='884' isReference='false'>
+                            <Identifier start='863' end='874' name='__construct'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='877' end='884' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='890' end='941' modifiers='public final'>
+                        <FunctionDeclaration start='896' end='941' isReference='false'>
+                            <Identifier start='905' end='916' name='finalMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='917' end='926' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='917' end='920' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='917' end='920' name='int'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='921' end='926' isDollared='true'>
+                                            <Identifier start='922' end='926' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='929' end='933' isCurrent='false' isGlobal='false'>
+                                <Identifier start='929' end='933' name='void'/>
+                            </NamespaceName>
+                            <Block start='934' end='941' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='947' end='1011' modifiers='public final'>
+                        <FunctionDeclaration start='960' end='1011' isReference='false'>
+                            <Identifier start='969' end='986' name='finalPublicMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='987' end='996' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='987' end='990' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='987' end='990' name='int'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='991' end='996' isDollared='true'>
+                                            <Identifier start='992' end='996' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='999' end='1003' isCurrent='false' isGlobal='false'>
+                                <Identifier start='999' end='1003' name='void'/>
+                            </NamespaceName>
+                            <Block start='1004' end='1011' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1017' end='1079' modifiers='private final'>
+                        <FunctionDeclaration start='1031' end='1079' isReference='false'>
+                            <Identifier start='1040' end='1058' name='finalPrivateMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='1059' end='1064' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1059' end='1064' isDollared='true'>
+                                            <Identifier start='1060' end='1064' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='1067' end='1071' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1067' end='1071' name='void'/>
+                            </NamespaceName>
+                            <Block start='1072' end='1079' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1085' end='1158' modifiers='protected final'>
+                        <FunctionDeclaration start='1101' end='1158' isReference='false'>
+                            <Identifier start='1110' end='1130' name='finalProtectedMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='1131' end='1143' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1131' end='1137' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1131' end='1137' name='string'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1138' end='1143' isDollared='true'>
+                                            <Identifier start='1139' end='1143' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='1146' end='1150' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1146' end='1150' name='void'/>
+                            </NamespaceName>
+                            <Block start='1151' end='1158' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1164' end='1228' modifiers='public final'>
+                        <FunctionDeclaration start='1177' end='1228' isReference='false'>
+                            <Identifier start='1186' end='1203' name='publicFinalMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='1204' end='1213' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1204' end='1207' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1204' end='1207' name='int'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1208' end='1213' isDollared='true'>
+                                            <Identifier start='1209' end='1213' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='1216' end='1220' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1216' end='1220' name='void'/>
+                            </NamespaceName>
+                            <Block start='1221' end='1228' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1234' end='1296' modifiers='private final'>
+                        <FunctionDeclaration start='1248' end='1296' isReference='false'>
+                            <Identifier start='1257' end='1275' name='privateFinalMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='1276' end='1281' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1276' end='1281' isDollared='true'>
+                                            <Identifier start='1277' end='1281' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='1284' end='1288' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1284' end='1288' name='void'/>
+                            </NamespaceName>
+                            <Block start='1289' end='1296' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1302' end='1375' modifiers='protected final'>
+                        <FunctionDeclaration start='1318' end='1375' isReference='false'>
+                            <Identifier start='1327' end='1347' name='protectedFinalMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='1348' end='1360' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1348' end='1354' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1348' end='1354' name='string'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1355' end='1360' isDollared='true'>
+                                            <Identifier start='1356' end='1360' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='1363' end='1367' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1363' end='1367' name='void'/>
+                            </NamespaceName>
+                            <Block start='1368' end='1375' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1381' end='1436' modifiers='public static final'>
+                        <FunctionDeclaration start='1394' end='1436' isReference='false'>
+                            <Identifier start='1403' end='1420' name='finalStaticMethod'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <NamespaceName start='1424' end='1428' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1424' end='1428' name='void'/>
+                            </NamespaceName>
+                            <Block start='1429' end='1436' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1442' end='1519' modifiers='public static final'>
+                        <FunctionDeclaration start='1462' end='1519' isReference='false'>
+                            <Identifier start='1471' end='1494' name='finalPublicStaticMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='1495' end='1504' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1495' end='1498' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1495' end='1498' name='int'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1499' end='1504' isDollared='true'>
+                                            <Identifier start='1500' end='1504' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='1507' end='1511' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1507' end='1511' name='void'/>
+                            </NamespaceName>
+                            <Block start='1512' end='1519' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1525' end='1600' modifiers='private static final'>
+                        <FunctionDeclaration start='1546' end='1600' isReference='false'>
+                            <Identifier start='1555' end='1579' name='finalPrivateStaticMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='1580' end='1585' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1580' end='1585' isDollared='true'>
+                                            <Identifier start='1581' end='1585' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='1588' end='1592' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1588' end='1592' name='void'/>
+                            </NamespaceName>
+                            <Block start='1593' end='1600' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1606' end='1692' modifiers='protected static final'>
+                        <FunctionDeclaration start='1629' end='1692' isReference='false'>
+                            <Identifier start='1638' end='1664' name='finalProtectedStaticMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='1665' end='1677' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1665' end='1671' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1665' end='1671' name='string'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1672' end='1677' isDollared='true'>
+                                            <Identifier start='1673' end='1677' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='1680' end='1684' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1680' end='1684' name='void'/>
+                            </NamespaceName>
+                            <Block start='1685' end='1692' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1698' end='1774' modifiers='public static final'>
+                        <FunctionDeclaration start='1718' end='1774' isReference='false'>
+                            <Identifier start='1727' end='1749' name='finalStaticublicMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='1750' end='1759' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1750' end='1753' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1750' end='1753' name='int'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1754' end='1759' isDollared='true'>
+                                            <Identifier start='1755' end='1759' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='1762' end='1766' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1762' end='1766' name='void'/>
+                            </NamespaceName>
+                            <Block start='1767' end='1774' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1780' end='1854' modifiers='private static final'>
+                        <FunctionDeclaration start='1801' end='1854' isReference='false'>
+                            <Identifier start='1810' end='1833' name='finalStatiPrivateMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='1834' end='1839' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1834' end='1839' isDollared='true'>
+                                            <Identifier start='1835' end='1839' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='1842' end='1846' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1842' end='1846' name='void'/>
+                            </NamespaceName>
+                            <Block start='1847' end='1854' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1860' end='1945' modifiers='protected static final'>
+                        <FunctionDeclaration start='1883' end='1945' isReference='false'>
+                            <Identifier start='1892' end='1917' name='finalStatiProtectedMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='1918' end='1930' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1918' end='1924' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1918' end='1924' name='string'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1925' end='1930' isDollared='true'>
+                                            <Identifier start='1926' end='1930' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='1933' end='1937' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1933' end='1937' name='void'/>
+                            </NamespaceName>
+                            <Block start='1938' end='1945' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1951' end='2028' modifiers='public static final'>
+                        <FunctionDeclaration start='1971' end='2028' isReference='false'>
+                            <Identifier start='1980' end='2003' name='publicFinalStaticMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='2004' end='2013' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='2004' end='2007' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='2004' end='2007' name='int'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='2008' end='2013' isDollared='true'>
+                                            <Identifier start='2009' end='2013' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='2016' end='2020' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2016' end='2020' name='void'/>
+                            </NamespaceName>
+                            <Block start='2021' end='2028' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2034' end='2109' modifiers='private static final'>
+                        <FunctionDeclaration start='2055' end='2109' isReference='false'>
+                            <Identifier start='2064' end='2088' name='privateFinalStaticMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='2089' end='2094' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='2089' end='2094' isDollared='true'>
+                                            <Identifier start='2090' end='2094' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='2097' end='2101' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2097' end='2101' name='void'/>
+                            </NamespaceName>
+                            <Block start='2102' end='2109' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2115' end='2201' modifiers='protected static final'>
+                        <FunctionDeclaration start='2138' end='2201' isReference='false'>
+                            <Identifier start='2147' end='2173' name='protectedFinalStaticMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='2174' end='2186' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='2174' end='2180' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='2174' end='2180' name='string'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='2181' end='2186' isDollared='true'>
+                                            <Identifier start='2182' end='2186' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='2189' end='2193' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2189' end='2193' name='void'/>
+                            </NamespaceName>
+                            <Block start='2194' end='2201' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2207' end='2284' modifiers='public static final'>
+                        <FunctionDeclaration start='2227' end='2284' isReference='false'>
+                            <Identifier start='2236' end='2259' name='publicStaticFinalMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='2260' end='2269' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='2260' end='2263' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='2260' end='2263' name='int'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='2264' end='2269' isDollared='true'>
+                                            <Identifier start='2265' end='2269' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='2272' end='2276' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2272' end='2276' name='void'/>
+                            </NamespaceName>
+                            <Block start='2277' end='2284' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2290' end='2365' modifiers='private static final'>
+                        <FunctionDeclaration start='2311' end='2365' isReference='false'>
+                            <Identifier start='2320' end='2344' name='privateStaticFinalMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='2345' end='2350' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='2345' end='2350' isDollared='true'>
+                                            <Identifier start='2346' end='2350' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='2353' end='2357' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2353' end='2357' name='void'/>
+                            </NamespaceName>
+                            <Block start='2358' end='2365' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2371' end='2457' modifiers='protected static final'>
+                        <FunctionDeclaration start='2394' end='2457' isReference='false'>
+                            <Identifier start='2403' end='2429' name='protectedStaticFinalMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='2430' end='2442' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='2430' end='2436' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='2430' end='2436' name='string'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='2437' end='2442' isDollared='true'>
+                                            <Identifier start='2438' end='2442' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='2445' end='2449' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2445' end='2449' name='void'/>
+                            </NamespaceName>
+                            <Block start='2450' end='2457' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2463' end='2540' modifiers='public static final'>
+                        <FunctionDeclaration start='2483' end='2540' isReference='false'>
+                            <Identifier start='2492' end='2515' name='staticPublicFinalMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='2516' end='2525' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='2516' end='2519' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='2516' end='2519' name='int'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='2520' end='2525' isDollared='true'>
+                                            <Identifier start='2521' end='2525' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='2528' end='2532' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2528' end='2532' name='void'/>
+                            </NamespaceName>
+                            <Block start='2533' end='2540' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2546' end='2621' modifiers='private static final'>
+                        <FunctionDeclaration start='2567' end='2621' isReference='false'>
+                            <Identifier start='2576' end='2600' name='staticPrivateFinalMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='2601' end='2606' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='2601' end='2606' isDollared='true'>
+                                            <Identifier start='2602' end='2606' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='2609' end='2613' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2609' end='2613' name='void'/>
+                            </NamespaceName>
+                            <Block start='2614' end='2621' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2627' end='2713' modifiers='protected static final'>
+                        <FunctionDeclaration start='2650' end='2713' isReference='false'>
+                            <Identifier start='2659' end='2685' name='staticProtectedFinalMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='2686' end='2698' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='2686' end='2692' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='2686' end='2692' name='string'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='2693' end='2698' isDollared='true'>
+                                            <Identifier start='2694' end='2698' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='2701' end='2705' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2701' end='2705' name='void'/>
+                            </NamespaceName>
+                            <Block start='2706' end='2713' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2719' end='2796' modifiers='public static final'>
+                        <FunctionDeclaration start='2739' end='2796' isReference='false'>
+                            <Identifier start='2748' end='2771' name='staticFinalPublicMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='2772' end='2781' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='2772' end='2775' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='2772' end='2775' name='int'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='2776' end='2781' isDollared='true'>
+                                            <Identifier start='2777' end='2781' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='2784' end='2788' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2784' end='2788' name='void'/>
+                            </NamespaceName>
+                            <Block start='2789' end='2796' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2802' end='2877' modifiers='private static final'>
+                        <FunctionDeclaration start='2823' end='2877' isReference='false'>
+                            <Identifier start='2832' end='2856' name='staticFinalPrivateMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='2857' end='2862' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='2857' end='2862' isDollared='true'>
+                                            <Identifier start='2858' end='2862' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='2865' end='2869' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2865' end='2869' name='void'/>
+                            </NamespaceName>
+                            <Block start='2870' end='2877' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2883' end='2969' modifiers='protected static final'>
+                        <FunctionDeclaration start='2906' end='2969' isReference='false'>
+                            <Identifier start='2915' end='2941' name='staticFinalProtectedMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='2942' end='2954' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='2942' end='2948' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='2942' end='2948' name='string'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='2949' end='2954' isDollared='true'>
+                                            <Identifier start='2950' end='2954' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='2957' end='2961' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2957' end='2961' name='void'/>
+                            </NamespaceName>
+                            <Block start='2962' end='2969' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </TraitDeclaration>
+        </Statements>
+    </Program>
+</testresult>

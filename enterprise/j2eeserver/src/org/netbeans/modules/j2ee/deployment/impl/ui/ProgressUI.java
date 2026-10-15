@@ -78,7 +78,7 @@ public class ProgressUI implements ProgressListener {
         this.modal = modal;
         this.title = title;
         this.logger = logger;        
-        handle = ProgressHandleFactory.createHandle(title);
+        handle = ProgressHandle.createHandle(title);
     }
     
     public void start() {
@@ -91,7 +91,7 @@ public class ProgressUI implements ProgressListener {
             progressComponent = ProgressHandleFactory.createProgressComponent(handle);
         }
         if (delay != null) {
-            handle.setInitialDelay(delay.intValue());
+            handle.setInitialDelay(delay);
         }        
         handle.start();
     }

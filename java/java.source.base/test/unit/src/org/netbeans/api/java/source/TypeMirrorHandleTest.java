@@ -19,6 +19,7 @@
 
 package org.netbeans.api.java.source;
 
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.VariableTree;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.io.File;
@@ -158,7 +159,8 @@ public class TypeMirrorHandleTest extends NbTestCase {
         }, true);
     }
 
-    public void testTypeMirrorHandle196070() throws Exception {
+    //disabled, because Types.isSameType cannot compare different instances of TypeVars anymore:
+    public void DISABLEDtestTypeMirrorHandle196070() throws Exception {
         prepareTest();
         writeIntoFile(testSource, "package test; public class Test<T extends IA & IB> {} interface IA {} interface IB {}");
         ClassPath empty = ClassPathSupport.createClassPath(new URL[0]);
@@ -197,6 +199,29 @@ public class TypeMirrorHandleTest extends NbTestCase {
                             assertTrue(info.getTypes().isSameType(tm, TypeMirrorHandle.create(tm).resolve(info)));
                         }
                         return super.visitVariable(node, p);
+                    }
+                }.scan(info.getCompilationUnit(), null);
+            }
+        }, true);
+    }
+
+    public void testTypeMirrorHandleErrorType() throws Exception {
+        prepareTest();
+        writeIntoFile(testSource, "package test; public class Test { void t() { new T(); } }");
+        ClassPath empty = ClassPathSupport.createClassPath(new URL[0]);
+        JavaSource js = JavaSource.create(ClasspathInfo.create(ClassPathSupport.createClassPath(SourceUtilsTestUtil.getBootClassPath().toArray(new URL[0])), empty, empty), testSource);
+
+        js.runUserActionTask(new Task<CompilationController>() {
+
+            public void run(final CompilationController info) throws Exception {
+                info.toPhase(Phase.RESOLVED);
+                new ErrorAwareTreePathScanner<Void, Void>() {
+                    @Override
+                    public Void visitNewClass(NewClassTree node, Void p) {
+                        TypeMirror tm = info.getTrees().getTypeMirror(getCurrentPath());
+                        assertEquals(TypeKind.ERROR, tm.getKind());
+                        assertTrue(info.getTypes().isSameType(tm, TypeMirrorHandle.create(tm).resolve(info)));
+                        return super.visitNewClass(node, p);
                     }
                 }.scan(info.getCompilationUnit(), null);
             }

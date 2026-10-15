@@ -76,7 +76,7 @@ public abstract class AbstractRefactoringElement extends SimpleRefactoringElemen
             DataObject dobj = DataObject.find(getParentFile());
             if (dobj != null) {
                 EditorCookie.Observable obs = (EditorCookie.Observable)dobj.getCookie(EditorCookie.Observable.class);
-                if (obs != null && obs instanceof CloneableEditorSupport) {
+                if (obs instanceof CloneableEditorSupport) {
                     CloneableEditorSupport supp = (CloneableEditorSupport)obs;
 
                     if (loc == null) {

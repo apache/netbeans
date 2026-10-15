@@ -50,7 +50,7 @@ public final class PositionRef extends Object implements Serializable, Position 
     private static final Logger LOG = Logger.getLogger(PositionRef.class.getName());
 
     /** Which type of position is currently holded - int X Position */
-    transient private Manager.Kind kind;
+    private transient Manager.Kind kind;
 
     /** Manager for this position */
     private Manager manager;
@@ -219,10 +219,10 @@ public final class PositionRef extends Object implements Serializable, Position 
         private static final RequestProcessor RP = new RequestProcessor(PositionRef.class);
 
         /** support for the editor */
-        transient private CloneableEditorSupport support;
+        private transient CloneableEditorSupport support;
 
         /** the document for this manager or null if the manager is not in memory */
-        transient private Reference<StyledDocument> doc;
+        private transient Reference<StyledDocument> doc;
         
         /**
          * Whether positions were turned into in-memory representation.
@@ -437,7 +437,7 @@ public final class PositionRef extends Object implements Serializable, Position 
          // End of class ChainItem.
 
         /** Base kind with all methods */
-        private static abstract class Kind extends Object {
+        private abstract static class Kind extends Object {
             protected final PositionRef.Manager mgr;
 
             Kind(PositionRef.Manager mgr) {

@@ -1,0 +1,8 @@
+    final private function finalPrivateTraitMethodError(): void {} // warning trait
+                           ----------------------------
+HINT:Private methods cannot be final as they are never overridden by other classes
+FIX:Remove modifier: final
+    final private static function finalPrivateStaticTraitMethodError(): void {} // warning trait
+                                  ----------------------------------
+HINT:Private methods cannot be final as they are never overridden by other classes
+FIX:Remove modifier: final

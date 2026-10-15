@@ -1,0 +1,9 @@
+Code completion result for source line:
+public const TEST3 = self::{self::T|ES . self::T};
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   T 'T'                           [PUBLIC]   Test
+CONSTANT   TES 'TES'                       [PUBLIC]   Test
+CONSTANT   TEST 'test'                     [PUBLIC]   Test
+CONSTANT   TEST1 ?                         [PUBLIC]   Test
+CONSTANT   TEST2 ?                         [PUBLIC]   Test
+CONSTANT   TEST3 ?                         [PUBLIC]   Test

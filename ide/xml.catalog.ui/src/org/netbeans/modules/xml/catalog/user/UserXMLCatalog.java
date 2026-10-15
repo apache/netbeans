@@ -50,8 +50,8 @@ import org.xml.sax.ext.LexicalHandler;
  */
 public class UserXMLCatalog implements CatalogReader, CatalogWriter, CatalogDescriptor2, EntityResolver {
     private static final String PROPERTY_LEX_HANDLER = "http://xml.org/sax/properties/lexical-handler";
-    private Map publicIds;
-    private List catalogListeners;
+    private Map<String, String> publicIds;
+    private List<CatalogListener> catalogListeners;
     private static final String catalogResource = "xml/catalogs/UserXMLCatalog.xml"; // NOI18N
     private static final String URI_PREFIX = "URI:"; // NOI18N
     private static final String PUBLIC_PREFIX = "PUBLIC:"; // NOI18N
@@ -68,7 +68,7 @@ public class UserXMLCatalog implements CatalogReader, CatalogWriter, CatalogDesc
     
     /** Default constructor for use from layer. */
     public UserXMLCatalog() {
-        catalogListeners=new ArrayList();
+        catalogListeners=new ArrayList<>();
     }
 
     public String resolveURI(String name) {
@@ -123,25 +123,25 @@ public class UserXMLCatalog implements CatalogReader, CatalogWriter, CatalogDesc
     }
     
     protected void fireEntryAdded(String publicId) {
-        Iterator it = catalogListeners.iterator();
+        Iterator<CatalogListener> it = catalogListeners.iterator();
         while (it.hasNext()) {
-            CatalogListener listener = (CatalogListener)it.next();
+            CatalogListener listener = it.next();
             listener.notifyNew(publicId);
         }
     }
     
     protected void fireEntryRemoved(String publicId) {
-        Iterator it = catalogListeners.iterator();
+        Iterator<CatalogListener> it = catalogListeners.iterator();
         while (it.hasNext()) {
-            CatalogListener listener = (CatalogListener)it.next();
+            CatalogListener listener = it.next();
             listener.notifyRemoved(publicId);
         }
     }
     
     protected void fireEntryUpdated(String publicId) {
-        Iterator it = catalogListeners.iterator();
+        Iterator<CatalogListener> it = catalogListeners.iterator();
         while (it.hasNext()) {
-            CatalogListener listener = (CatalogListener)it.next();
+            CatalogListener listener = it.next();
             listener.notifyUpdate(publicId);
         }
     }
@@ -151,9 +151,9 @@ public class UserXMLCatalog implements CatalogReader, CatalogWriter, CatalogDesc
     }
 
     public void refresh() {
-        Iterator it = catalogListeners.iterator();
+        Iterator<CatalogListener> it = catalogListeners.iterator();
         while (it.hasNext()) {
-            CatalogListener listener = (CatalogListener)it.next();
+            CatalogListener listener = it.next();
             listener.notifyInvalidate();
         }
         FileObject userCatalog = FileUtil.getConfigFile(catalogResource);
@@ -181,10 +181,10 @@ public class UserXMLCatalog implements CatalogReader, CatalogWriter, CatalogDesc
                 FileObject userCatalog = FileUtil.getConfigFile(catalogResource);
                 publicIds = parse(userCatalog);
             } catch (java.io.IOException ex) {
-                publicIds = new HashMap();
+                publicIds = new HashMap<>();
                 org.openide.ErrorManager.getDefault().notify(ex);
             } catch (SAXException ex) {
-                publicIds = new HashMap();
+                publicIds = new HashMap<>();
                 org.openide.ErrorManager.getDefault().notify(ex);
             }
         } 

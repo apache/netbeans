@@ -23,17 +23,14 @@ import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
-import java.util.List;
-import org.netbeans.api.java.queries.CompilerOptionsQuery;
 import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.modules.java.hints.Feature;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
-import org.netbeans.spi.java.hints.ConstraintVariableType;
 import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
 import org.netbeans.spi.java.hints.Hint;
 import org.netbeans.spi.java.hints.HintContext;
 import org.netbeans.spi.java.hints.JavaFix;
-import org.netbeans.spi.java.hints.TriggerPattern;
 import org.netbeans.spi.java.hints.TriggerTreeKind;
 import org.openide.util.NbBundle.Messages;
 
@@ -48,8 +45,9 @@ public class ConvertToTextBlock {
     @TriggerTreeKind(Kind.PLUS)
     @Messages("ERR_ConvertToTextBlock=Can be converted to text block")
     public static ErrorDescription computeWarning(HintContext ctx) {
-        if (!CompilerOptionsQuery.getOptions(ctx.getInfo().getFileObject()).getArguments().contains("--enable-preview"))
+        if (!Feature.TEXT_BLOCK.isEnabled(ctx.getInfo())) {
             return null;
+        }
         if (ctx.getPath().getParentPath() != null && getTextOrNull(ctx.getPath().getParentPath()) != null) {
             return null;
         }

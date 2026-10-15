@@ -1,0 +1,63 @@
+Code completion result for source line:
+return match (|$state) {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      MatchExpression                 [PUBLIC]   matchExpressionInClass.php
+METHOD     default()                       [STATIC]   MatchExpression
+METHOD     match()                         [PUBLIC]   MatchExpression
+METHOD     matchTest()                     [PUBLIC]   matchExpressionInClass.php
+METHOD     run()                           [PUBLIC]   MatchExpression
+METHOD     stopState()                     [PUBLIC]   MatchExpression
+VARIABLE   ? $start                        [PRIVATE,  MatchExpression
+VARIABLE   ? $state                        [PUBLIC]   matchExpressionInClass.php
+VARIABLE   ? suspend                       [PRIVATE]  MatchExpression
+CONSTANT   MATCH_TEST_CONST "match test c  [PUBLIC]   matchExpressionInClass.php
+CONSTANT   START "start"                   [PUBLIC]   MatchExpression
+CONSTANT   STOP "stop"                     [PUBLIC]   MatchExpression
+CONSTANT   SUSPEND "suspend"               [PUBLIC]   MatchExpression
+CONSTANT   match "match"                   [PRIVATE]  MatchExpression
+KEYWORD    MatchExpression $this->                    null
+KEYWORD    parent::                                   null
+KEYWORD    self::                                     null
+KEYWORD    static::                                   null
+------------------------------------
+VARIABLE   $GLOBALS                                   PHP Platform
+VARIABLE   $HTTP_RAW_POST_DATA                        PHP Platform
+VARIABLE   $_COOKIE                                   PHP Platform
+VARIABLE   $_ENV                                      PHP Platform
+VARIABLE   $_FILES                                    PHP Platform
+VARIABLE   $_GET                                      PHP Platform
+VARIABLE   $_POST                                     PHP Platform
+VARIABLE   $_REQUEST                                  PHP Platform
+VARIABLE   $_SERVER                                   PHP Platform
+VARIABLE   $_SESSION                                  PHP Platform
+VARIABLE   $argc                                      PHP Platform
+VARIABLE   $argv                                      PHP Platform
+VARIABLE   $http_response_header                      PHP Platform
+VARIABLE   $php_errormsg                              PHP Platform
+KEYWORD    and                                        null
+KEYWORD    array                                      null
+KEYWORD    clone                                      null
+KEYWORD    default =>                                 null
+KEYWORD    die()                                      Language Construct
+KEYWORD    echo '';                                   Language Construct
+KEYWORD    empty()                                    Language Construct
+KEYWORD    eval()                                     Language Construct
+KEYWORD    exit()                                     Language Construct
+KEYWORD    fn                                         null
+KEYWORD    function                                   null
+KEYWORD    include '';                                Language Construct
+KEYWORD    include_once '';                           Language Construct
+KEYWORD    instanceof                                 null
+KEYWORD    isset()                                    Language Construct
+KEYWORD    list()                                     Language Construct
+KEYWORD    match                                      null
+KEYWORD    new                                        null
+KEYWORD    or                                         null
+KEYWORD    print '';                                  Language Construct
+KEYWORD    require '';                                Language Construct
+KEYWORD    require_once '';                           Language Construct
+KEYWORD    return ;                                   Language Construct
+KEYWORD    static                                     null
+KEYWORD    throw                                      null
+KEYWORD    unset()                                    Language Construct
+KEYWORD    xor                                        null

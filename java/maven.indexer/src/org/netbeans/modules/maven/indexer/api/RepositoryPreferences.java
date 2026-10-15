@@ -23,6 +23,8 @@
 package org.netbeans.modules.maven.indexer.api;
 
 import java.net.URISyntaxException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -31,10 +33,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
 import javax.swing.event.ChangeListener;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.project.ProjectBuildingRequest;
@@ -53,6 +57,7 @@ import org.openide.util.NbPreferences;
 import org.eclipse.aether.repository.MirrorSelector;
 import org.eclipse.aether.repository.RemoteRepository;
 import org.eclipse.aether.util.repository.DefaultMirrorSelector;
+import org.openide.util.NbBundle;
 
 /**
  * List of Maven repositories of interest.
@@ -70,13 +75,19 @@ public final class RepositoryPreferences {
     /*index settings */
     public static final String PROP_INDEX_FREQ = "indexUpdateFrequency"; //NOI18N
     public static final String PROP_INDEX = "createIndex"; //NOI18N
+    public static final String PROP_DOWNLOAD_INDEX = "downloadIndex"; //NOI18N
     public static final String PROP_LAST_INDEX_UPDATE = "lastIndexUpdate"; //NOI18N
+    private static final String PROP_INDEX_DOWNLOAD_PERMISSIONS = "indexDownloadPermissions"; //NOI18N
+    public static final String PROP_MT_INDEX_EXTRACTION = "indexMultiThreadedExtraction"; //NOI18N
+    public static final String PROP_INDEX_DATE_CUTOFF_FILTER = "indexDateCotoffFilter"; //NOI18N
+    private static final String ALT_CENTRAL_URL = "https://repo1.maven.org/maven2"; //NOI18N
+
     public static final int FREQ_ONCE_WEEK = 0;
     public static final int FREQ_ONCE_DAY = 1;
     public static final int FREQ_STARTUP = 2;
-    public static final int FREQ_NEVER = 3;
-    private final Map<String,RepositoryInfo> infoCache = new HashMap<String,RepositoryInfo>();
-    private final Map<Object,List<RepositoryInfo>> transients = new LinkedHashMap<Object,List<RepositoryInfo>>();
+    private static volatile Instant indexDownloadPauseEnd = Instant.ofEpochMilli(0);
+    private final Map<String,RepositoryInfo> infoCache = new HashMap<>();
+    private final Map<Object,List<RepositoryInfo>> transients = new LinkedHashMap<>();
     private RepositoryInfo local;
     private final RepositoryInfo central;
     private final ChangeSupport cs = new ChangeSupport(this);
@@ -100,7 +111,7 @@ public final class RepositoryPreferences {
         return NbPreferences.root().node("org/netbeans/modules/maven/repositories");
     }
 
-    public synchronized static RepositoryPreferences getInstance() {
+    public static synchronized RepositoryPreferences getInstance() {
         if (instance == null) {
             instance = new RepositoryPreferences();
         }
@@ -166,15 +177,15 @@ public final class RepositoryPreferences {
     }
 
     public List<RepositoryInfo> getRepositoryInfos() {
-        List<RepositoryInfo> toRet = new ArrayList<RepositoryInfo>();
+        List<RepositoryInfo> toRet = new ArrayList<>();
         toRet.add(getLocalRepository());
-        Set<String> ids = new HashSet<String>();
+        Set<String> ids = new HashSet<>();
         ids.add(RepositorySystem.DEFAULT_LOCAL_REPO_ID);
-        Set<String> urls = new HashSet<String>();
+        Set<String> urls = new HashSet<>();
         synchronized (infoCache) {
             Preferences storage = storage();
             try {
-                Set<String> gone = new HashSet<String>(infoCache.keySet());
+                Set<String> gone = new HashSet<>(infoCache.keySet());
                 for (String c : storage.childrenNames()) {
                     RepositoryInfo ri = infoCache.get(c);
                     if (ri == null) {
@@ -200,9 +211,8 @@ public final class RepositoryPreferences {
                     ids.add(ri.getId());
                     urls.add(ri.getRepositoryUrl());
                 }
-                for (String g : gone) {
-                    infoCache.remove(g);
-                }
+                
+                infoCache.keySet().removeAll(gone);
             } catch (BackingStoreException x) {
                 LOG.log(Level.INFO, null, x);
             }
@@ -220,41 +230,41 @@ public final class RepositoryPreferences {
                 }
             }
         }
-            MavenEmbedder embedder2 = EmbedderFactory.getOnlineEmbedder();
-            DefaultMirrorSelector selectorWithGroups = new DefaultMirrorSelector();
-            DefaultMirrorSelector selectorWithoutGroups = new DefaultMirrorSelector();
-            final Settings settings = embedder2.getSettings();
-            for (Mirror mirror : settings.getMirrors()) {
-                String mirrorOf = mirror.getMirrorOf();
-                selectorWithGroups.add(mirror.getId(), mirror.getUrl(), mirror.getLayout(), false, mirrorOf, mirror.getMirrorOfLayouts());
-                if (!mirrorOf.contains("*")) {
-                    selectorWithoutGroups.add(mirror.getId(), mirror.getUrl(), mirror.getLayout(), false, mirrorOf, mirror.getMirrorOfLayouts());
-                }
+        MavenEmbedder embedder2 = EmbedderFactory.getOnlineEmbedder();
+        DefaultMirrorSelector selectorWithGroups = new DefaultMirrorSelector();
+        DefaultMirrorSelector selectorWithoutGroups = new DefaultMirrorSelector();
+        final Settings settings = embedder2.getSettings();
+        for (Mirror mirror : settings.getMirrors()) {
+            String mirrorOf = mirror.getMirrorOf();
+            selectorWithGroups.add(mirror.getId(), mirror.getUrl(), mirror.getLayout(), false, false, mirrorOf, mirror.getMirrorOfLayouts());
+            if (!mirrorOf.contains("*")) {
+                selectorWithoutGroups.add(mirror.getId(), mirror.getUrl(), mirror.getLayout(), false, false, mirrorOf, mirror.getMirrorOfLayouts());
             }
+        }
 
-            List<RepositoryInfo> semiTreed = new ArrayList<RepositoryInfo>();
-            for (RepositoryInfo in: toRet) {
-                if (in.getMirrorStrategy() == RepositoryInfo.MirrorStrategy.ALL || in.getMirrorStrategy() == RepositoryInfo.MirrorStrategy.NON_WILDCARD) {
-                    RepositoryInfo processed = getMirrorInfo(in, in.getMirrorStrategy() == RepositoryInfo.MirrorStrategy.ALL ? selectorWithGroups : selectorWithoutGroups, settings);
-                    boolean isMirror = true;
-                    if (processed == null) {
-                        isMirror = false;
-                        processed = in;
-                    }
-                    int index = semiTreed.indexOf(processed);
-                    if (index > -1) {
-                        processed = semiTreed.get(index);
-                    } else {
-                        semiTreed.add(processed);
-                    }
-                    if (isMirror) {
-                        processed.addMirrorOfRepository(in);
-                    }
-                } else {
-                    semiTreed.add(in);
+        List<RepositoryInfo> semiTreed = new ArrayList<>();
+        for (RepositoryInfo in : toRet) {
+            if (in.getMirrorStrategy() == RepositoryInfo.MirrorStrategy.ALL || in.getMirrorStrategy() == RepositoryInfo.MirrorStrategy.NON_WILDCARD) {
+                RepositoryInfo processed = getMirrorInfo(in, in.getMirrorStrategy() == RepositoryInfo.MirrorStrategy.ALL ? selectorWithGroups : selectorWithoutGroups, settings);
+                boolean isMirror = true;
+                if (processed == null) {
+                    isMirror = false;
+                    processed = in;
                 }
+                int index = semiTreed.indexOf(processed);
+                if (index > -1) {
+                    processed = semiTreed.get(index);
+                } else {
+                    semiTreed.add(processed);
+                }
+                if (isMirror) {
+                    processed.addMirrorOfRepository(in);
+                }
+            } else {
+                semiTreed.add(in);
             }
-            return semiTreed;
+        }
+        return semiTreed;
     }
     
     /**
@@ -334,8 +344,18 @@ public final class RepositoryPreferences {
     }
 
     public static int getIndexUpdateFrequency() {
-        return getPreferences().getInt(PROP_INDEX_FREQ, Boolean.getBoolean("netbeans.full.hack") ? FREQ_NEVER : FREQ_ONCE_WEEK);
+        int freq = getPreferences().getInt(PROP_INDEX_FREQ, getDefaultIndexUpdateFrequency());
+        return freq > 2 ? FREQ_ONCE_WEEK : freq; // reset if out of bounds
     }
+
+    @NbBundle.Messages({
+        "# FREQ_ONCE_WEEK = 0, FREQ_ONCE_DAY = 1, FREQ_STARTUP = 2;",
+        "DEFAULT_UPDATE_FREQ=0"
+    })
+    static int getDefaultIndexUpdateFrequency() throws NumberFormatException {
+        return Integer.parseInt(Bundle.DEFAULT_UPDATE_FREQ());
+    }
+
     /**
      * @since 2.27
      * @param bool 
@@ -349,7 +369,136 @@ public final class RepositoryPreferences {
      * @return 
      */
     public static boolean isIndexRepositories() {
-        return getPreferences().getBoolean(PROP_INDEX, true);
+        return getPreferences().getBoolean(PROP_INDEX, getDefaultIndexRepositories());
+    }
+
+    @NbBundle.Messages({
+        "# true or false:",
+        "DEFAULT_CREATE_INDEX=true"
+    })
+    static boolean getDefaultIndexRepositories() {
+        return Boolean.parseBoolean(Bundle.DEFAULT_CREATE_INDEX());
+    }
+
+    /**
+     * @since 2.60
+     */
+    public static void setIndexDownloadEnabled(boolean enabled) {
+        getPreferences().putBoolean(PROP_DOWNLOAD_INDEX, enabled);
+    }
+
+    /**
+     * @since 2.60
+     */
+    public static boolean isIndexDownloadEnabled() {
+        return getPreferences().getBoolean(PROP_DOWNLOAD_INDEX, getDefaultDownloadIndexEnabled());
+    }
+
+    public static void setMultiThreadedIndexExtractionEnabled(boolean enabled) {
+        getPreferences().putBoolean(PROP_MT_INDEX_EXTRACTION, enabled);
+    }
+
+    public static boolean isMultiThreadedIndexExtractionEnabled() {
+        return getPreferences().getBoolean(PROP_MT_INDEX_EXTRACTION, getDefaultMultiThreadedIndexExtraction());
+    }
+
+    @NbBundle.Messages({
+        "# true or false:",
+        "DEFAULT_MULTI_THREADED_EXTRACTION=false"
+    })
+    static boolean getDefaultMultiThreadedIndexExtraction() {
+        return Boolean.parseBoolean(Bundle.DEFAULT_MULTI_THREADED_EXTRACTION());
+    }
+
+    /**
+     * Downloading the remote index should only happen if indexing in general
+     * and downloading in particular are enabled.
+     *
+     * @since 2.60
+     * @return true if indexing and downloading are both enabled.
+     */
+    public static synchronized boolean isIndexDownloadEnabledEffective() {
+        return isIndexRepositories() && isIndexDownloadEnabled() && !isIndexDownloadPaused();
+    }
+
+    public static int getIndexDateCutoffFilter() {
+        return getPreferences().getInt(PROP_INDEX_DATE_CUTOFF_FILTER, 0);
+    }
+    
+    public static void setIndexDateCutoffFilter(int years) {
+        getPreferences().putInt(PROP_INDEX_DATE_CUTOFF_FILTER, years);
+    }
+
+    public static boolean isIndexDownloadPaused() {
+        return Instant.now().isBefore(indexDownloadPauseEnd);
+    }
+
+    public static void continueIndexDownloads() {
+        indexDownloadPauseEnd = Instant.ofEpochMilli(0);
+    }
+
+    public static void pauseIndexDownloadsFor(long duration, ChronoUnit unit) {
+        indexDownloadPauseEnd = Instant.now().plus(duration, unit);
+    }
+    
+    // cache; lock free read, persistance write-through on write.
+    private static final Map<String, Boolean> permissions = new ConcurrentHashMap<>();
+
+    static {
+        readIndexDownloadPreferences(permissions);
+    }
+    
+    public static boolean isIndexDownloadAllowedFor(RepositoryInfo repo) {
+        return permissions.getOrDefault(repo.getRepositoryUrl(), false);
+    }
+    
+    public static boolean isIndexDownloadDeniedFor(RepositoryInfo repo) {
+        return !permissions.getOrDefault(repo.getRepositoryUrl(), true);
+    }
+
+    public synchronized static void allowIndexDownloadFor(RepositoryInfo repo) {
+        if (permissions.put(repo.getRepositoryUrl(), true) != Boolean.TRUE) {
+            writeIndexDownloadPreferences(permissions);
+        }
+    }
+
+    public synchronized static void denyIndexDownloadFor(RepositoryInfo repo) {
+        if (permissions.put(repo.getRepositoryUrl(), false) != Boolean.FALSE) {
+            writeIndexDownloadPreferences(permissions);
+        }
+    }
+    
+    public synchronized static Map<String, Boolean> getIndexDownloadPermissions() {
+        return new HashMap<>(permissions);
+    }
+    
+    public synchronized static void setIndexDownloadPermissions(Map<String, Boolean> newPermissions) {
+        permissions.clear();
+        permissions.putAll(newPermissions);
+        writeIndexDownloadPreferences(newPermissions);
+    }
+
+    // format: url|boolean;url|boolean;...
+    private static void writeIndexDownloadPreferences(Map<String, Boolean> permissions) {
+        getPreferences().put(PROP_INDEX_DOWNLOAD_PERMISSIONS, permissions.entrySet().stream()
+                .map(e -> e.getKey()+"|"+e.getValue()).sorted().collect(Collectors.joining(";")));
+    }
+
+    private static void readIndexDownloadPreferences(Map<String, Boolean> permissions) {
+        for (String entry : getPreferences().get(PROP_INDEX_DOWNLOAD_PERMISSIONS, "").split(";")) {
+            if (entry.contains("|")) {
+                String[] perm = entry.split("\\|");
+                permissions.put(perm[0], Boolean.valueOf(perm[1]));
+            }
+        }
+    }
+
+    @NbBundle.Messages({
+        "# true or false:",
+        "DEFAULT_DOWNLOAD_INDEX=true"
+    })
+    static boolean getDefaultDownloadIndexEnabled() {
+        return Boolean.parseBoolean(Bundle.DEFAULT_DOWNLOAD_INDEX());
     }
 
     public static Date getLastIndexUpdate(String repoId) {
@@ -397,12 +546,12 @@ public final class RepositoryPreferences {
             //only register repositories we can safely handle.. #227322
             return;
         }
+        if (url.equals(ALT_CENTRAL_URL) || url.equals(ALT_CENTRAL_URL+"/")) {
+            // map to primary URL to avoid duplicates
+            url = RepositorySystem.DEFAULT_REMOTE_REPO_URL;
+        }
         synchronized (infoCache) {
-            List<RepositoryInfo> infos = transients.get(key);
-            if (infos == null) {
-                infos = new ArrayList<RepositoryInfo>();
-                transients.put(key, infos);
-            }
+            List<RepositoryInfo> infos = transients.computeIfAbsent(key, k -> new ArrayList<>());
             RepositoryInfo info = new RepositoryInfo(id, displayName, null, url);
             info.setMirrorStrategy(strategy);
             infos.add(info);
@@ -445,7 +594,7 @@ public final class RepositoryPreferences {
      * @since 2.12
      */
     public List<ArtifactRepository> remoteRepositories(MavenEmbedder embedder) {
-        List<ArtifactRepository> remotes = new ArrayList<ArtifactRepository>();
+        List<ArtifactRepository> remotes = new ArrayList<>();
         for (RepositoryInfo info : getRepositoryInfos()) {
             // XXX should there be a String preferredId parameter to limit the remote repositories used in case we have a "reference" ID somehow?
             if (!info.isLocal()) {

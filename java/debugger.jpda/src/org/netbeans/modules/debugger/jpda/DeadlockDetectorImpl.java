@@ -27,6 +27,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -34,33 +35,39 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.WeakHashMap;
+
 import org.netbeans.api.debugger.jpda.CallStackFrame;
 import org.netbeans.api.debugger.jpda.DeadlockDetector;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.JPDAThread;
 import org.netbeans.api.debugger.jpda.ObjectVariable;
-import org.netbeans.api.debugger.jpda.This;
 import org.netbeans.modules.debugger.jpda.expr.JDIVariable;
 import org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl;
-import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.RequestProcessor.Task;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 
 /**
  *
  * @author martin
  */
+@NbBundle.Messages({
+    "USE_JPDA_DEADLOCK_DETECTOR=true"
+})
 public class DeadlockDetectorImpl extends DeadlockDetector implements PropertyChangeListener {
     
-    private final Set<JPDAThread> suspendedThreads = new WeakSet<JPDAThread>();
+    private final Set<JPDAThread> suspendedThreads = Collections.newSetFromMap(new WeakHashMap<>());
     private final RequestProcessor rp = new RequestProcessor("Deadlock Detector", 1); // NOI18N
     private final Set<Task> unfinishedTasks = new HashSet<Task>();
     
     private Map<Long, Node> monitorToNode;
 
     DeadlockDetectorImpl(JPDADebugger debugger) {
+        if (!Boolean.valueOf(Bundle.USE_JPDA_DEADLOCK_DETECTOR())) {
+            return;
+        }
         debugger.addPropertyChangeListener(this);
         List<JPDAThread> threads = debugger.getThreadsCollector().getAllThreads();
         for (JPDAThread thread : threads) {
@@ -85,24 +92,26 @@ public class DeadlockDetectorImpl extends DeadlockDetector implements PropertyCh
                 final Set<JPDAThread> tempSuspThreads;
                 synchronized(suspendedThreads) {
                     suspendedThreads.add(thread);
-                    tempSuspThreads = new HashSet<JPDAThread>(suspendedThreads);
+                    tempSuspThreads = suspendedThreads.size() > 1 ? new HashSet<JPDAThread>(suspendedThreads) : null;
                 }
-                final Task[] taskPtr = new Task[] { null };
-                synchronized (unfinishedTasks) {
-                    Task task = rp.post(new Runnable() {
-                        public void run() {
-                            Set<Deadlock> deadlocks;
-                            deadlocks = findDeadlockedThreads(tempSuspThreads);
-                            if (deadlocks != null) {
-                                setDeadlocks(deadlocks);
+                if (tempSuspThreads != null) {
+                    final Task[] taskPtr = new Task[] { null };
+                    synchronized (unfinishedTasks) {
+                        Task task = rp.post(new Runnable() {
+                            public void run() {
+                                Set<Deadlock> deadlocks;
+                                deadlocks = findDeadlockedThreads(tempSuspThreads);
+                                if (deadlocks != null) {
+                                    setDeadlocks(deadlocks);
+                                }
+                                synchronized (unfinishedTasks) {
+                                    unfinishedTasks.remove(taskPtr[0]);
+                                }
                             }
-                            synchronized (unfinishedTasks) {
-                                unfinishedTasks.remove(taskPtr[0]);
-                            }
-                        }
-                    });
-                    unfinishedTasks.add(task);
-                    taskPtr[0] = task;
+                        });
+                        unfinishedTasks.add(task);
+                        taskPtr[0] = task;
+                    }
                 }
             } else {
                 synchronized (suspendedThreads) {
@@ -161,7 +170,7 @@ public class DeadlockDetectorImpl extends DeadlockDetector implements PropertyCh
             result = new HashSet<Deadlock>();
             Set<Node> nodesSet = new HashSet<Node>(monitorToNode.values());
             while (!nodesSet.isEmpty()) {
-                Collection<JPDAThread> deadlockedThreads = new ArrayList(nodesSet.size());
+                Collection<JPDAThread> deadlockedThreads = new ArrayList<>(nodesSet.size());
                 Node node = nodesSet.iterator().next();
                 nodesSet.remove(node);
                 do {

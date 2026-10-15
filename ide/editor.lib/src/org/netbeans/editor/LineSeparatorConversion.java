@@ -31,7 +31,7 @@ import org.netbeans.lib.editor.util.CharacterConversions;
  * @version 1.00
  * @deprecated Use {@link org.netbeans.lib.editor.util.CharacterConversions} instead.
  */
-
+@Deprecated
 public class LineSeparatorConversion {
 
     /**

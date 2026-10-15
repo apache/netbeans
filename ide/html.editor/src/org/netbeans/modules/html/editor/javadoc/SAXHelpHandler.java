@@ -109,7 +109,7 @@ class SAXHelpHandler extends DefaultHandler {
                 int offset = 0;
                 if (value != null){
                     try{
-                        offset = (new Integer(value)).intValue();
+                        offset = Integer.parseInt(value);
                     }
                     catch (NumberFormatException e){
                     }
@@ -131,7 +131,7 @@ class SAXHelpHandler extends DefaultHandler {
                 int offset = 0;
                 if (value != null){
                     try{
-                        offset = (new Integer(value)).intValue();
+                        offset = Integer.parseInt(value);
                     }
                     catch (NumberFormatException e){
                     }

@@ -21,7 +21,6 @@ package org.netbeans.modules.java.source.save;
 import com.sun.tools.javac.tree.JCTree;
 import java.util.Comparator;
 import static org.netbeans.modules.java.source.save.Measure.*;
-import static com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.DCTree;
 
 /**

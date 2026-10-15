@@ -61,4 +61,37 @@ public class FlowCCTest extends GroovyCCTestBase {
     public void testCompletionReturnType1_7() throws Exception {
         checkCompletion(BASE + "CompletionReturnType1.groovy", "localC.c^", false);
     }
+    
+    public void testCollectionLiterals1_1() throws Exception {
+        checkCompletion(BASE + "CollectionLiterals1.groovy", "range1.a^", false);
+    }
+
+    public void testCollectionLiterals1_2() throws Exception {
+        checkCompletion(BASE + "CollectionLiterals1.groovy", "list1.listIter^", false);
+    }
+
+    public void testCollectionLiterals1_3() throws Exception {
+        checkCompletion(BASE + "CollectionLiterals1.groovy", "map.ent^", false);
+    }
+    
+    public void testCollectionLiterals2_1() throws Exception {
+        checkCompletion(BASE + "CollectionLiterals2.groovy", "range1.a^", false);
+    }
+
+    public void testCollectionLiterals2_2() throws Exception {
+        checkCompletion(BASE + "CollectionLiterals2.groovy", "list1.listIter^", false);
+    }
+
+    public void testCollectionLiterals2_3() throws Exception {
+        checkCompletion(BASE + "CollectionLiterals2.groovy", "map.ent^", false);
+    }
+    
+    public void testReassignment_1() throws Exception {
+        checkCompletion(BASE + "Reassignment.groovy", "def sub = varA.subs^", false);
+    }
+
+    public void testReassignment_2() throws Exception {
+        checkCompletion(BASE + "Reassignment.groovy", "varA.lis^", false);
+    }
+    
 }

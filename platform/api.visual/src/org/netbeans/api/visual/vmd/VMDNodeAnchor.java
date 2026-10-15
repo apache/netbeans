@@ -173,7 +173,7 @@ public class VMDNodeAnchor extends Anchor {
 
     private Entry[] toArray (final HashMap<Entry, Float> map) {
         Set<Entry> keys = map.keySet ();
-        Entry[] entries = keys.toArray (new Entry[keys.size ()]);
+        Entry[] entries = keys.toArray (new Entry[0]);
         Arrays.sort (entries, new Comparator<Entry>() {
             public int compare (Entry o1, Entry o2) {
                 float f = map.get (o1) - map.get (o2);

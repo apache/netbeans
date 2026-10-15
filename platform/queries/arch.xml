@@ -1012,8 +1012,9 @@ Nothing.
       Clients should not access this preferences directly using preferences API but they should use
       the <code>FileEncodingQuery</code> methods.
   </p>
-  <api group="preferences" name="org.netbeans.api.queries" type="export" category="private" url="">
+  <api group="preferences" name="org.netbeans.api.queries" type="export" category="private" >
       <table>
+          <caption>preferences</caption>
           <tbody>
               <tr>
                   <th>key</th>

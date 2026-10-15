@@ -46,6 +46,7 @@ import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
 import org.netbeans.modules.debugger.jpda.JPDAStepImpl;
 import org.netbeans.modules.debugger.jpda.SourcePath;
 import static org.netbeans.modules.debugger.jpda.actions.StepActionProvider.getTopFrame;
+import org.netbeans.modules.debugger.jpda.impl.StepUtils;
 import org.netbeans.modules.debugger.jpda.jdi.IllegalThreadStateExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.InternalExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.InvalidRequestStateExceptionWrapper;
@@ -85,20 +86,22 @@ public class StepIntoNextMethod implements Executor, PropertyChangeListener {
     private int depth;
     private final JPDADebuggerImpl debugger;
     private final ContextProvider contextProvider;
-    private boolean smartSteppingStepOut;
+    private final boolean smartSteppingStepOut;
     private boolean steppingFromFilteredLocation;
     private boolean steppingFromCompoundFilteredLocation;
+    private SmartSteppingFilterWrapper smartSteppingFilter;
+    private boolean didStepThrough;
     private final Properties p;
 
     public StepIntoNextMethod(ContextProvider contextProvider) {
         this.debugger = (JPDADebuggerImpl) contextProvider.lookupFirst(null, JPDADebugger.class);
         this.contextProvider = contextProvider;
-        getSmartSteppingFilterImpl ().addPropertyChangeListener (this);
+        debugger.getSmartSteppingFilter().addPropertyChangeListener (this);
         SourcePath ec = contextProvider.lookupFirst(null, SourcePath.class);
         ec.addPropertyChangeListener (this);
         Map properties = contextProvider.lookupFirst(null, Map.class);
-        if (properties != null)
-            smartSteppingStepOut = properties.containsKey (StepIntoActionProvider.SS_STEP_OUT);
+        smartSteppingStepOut = (properties != null) ?
+                properties.containsKey (StepIntoActionProvider.SS_STEP_OUT) : false;
         p = Properties.getDefault().getProperties("debugger.options.JPDA"); // NOI18N
     }
 
@@ -124,6 +127,8 @@ public class StepIntoNextMethod implements Executor, PropertyChangeListener {
             smartLogger.finer("Can not step into next method! No current thread!");
             return ;
         }
+        smartSteppingFilter = new SmartSteppingFilterWrapper(debugger.getSmartSteppingFilter());
+        didStepThrough = false;
         boolean locked = lock == null;
         try {
             if (lock == null) {
@@ -151,7 +156,7 @@ public class StepIntoNextMethod implements Executor, PropertyChangeListener {
             if (isSteppingFromFilteredLocation != null) {
                 steppingFromFilteredLocation = isSteppingFromFilteredLocation.booleanValue();
             } else {
-                steppingFromFilteredLocation = !getSmartSteppingFilterImpl ().stopHere(t.getClassName());
+                steppingFromFilteredLocation = !StepActionProvider.stopInClass(t.getClassName(), smartSteppingFilter);
             }
             if (isSteppingFromCompoundFilteredLocation != null) {
                 steppingFromCompoundFilteredLocation = isSteppingFromCompoundFilteredLocation.booleanValue();
@@ -159,10 +164,10 @@ public class StepIntoNextMethod implements Executor, PropertyChangeListener {
                 CallStackFrame topFrame = getTopFrame(t);
                 if (topFrame != null) {
                     steppingFromCompoundFilteredLocation = !getCompoundSmartSteppingListener ().stopAt
-                             (contextProvider, topFrame, getSmartSteppingFilterImpl()).isStop();
+                             (contextProvider, topFrame, smartSteppingFilter).isStop();
                 } else {
                     steppingFromCompoundFilteredLocation = !getCompoundSmartSteppingListener ().stopHere
-                                       (contextProvider, t, getSmartSteppingFilterImpl ());
+                                       (contextProvider, t, smartSteppingFilter);
                 }
             }
 
@@ -298,7 +303,7 @@ public class StepIntoNextMethod implements Executor, PropertyChangeListener {
             boolean useStepFilters = p.getBoolean("UseStepFilters", true);
             boolean stepThrough = useStepFilters && p.getBoolean("StepThroughFilters", false)
                                   && !smartSteppingStepOut;
-            if (!stepThrough && isFilteredClassOnStack(tr, depth)) {
+            if (!stepThrough && !didStepThrough && isFilteredClassOnStack(tr, depth)) {
                 // There's a class that was skipped by step on the stack.
                 // If step through is false, we should step out from here.
                 smartLogger.finer(" stoped with a filtered class on stack and step through is false.");
@@ -347,10 +352,10 @@ public class StepIntoNextMethod implements Executor, PropertyChangeListener {
                 CallStackFrame topFrame = getTopFrame(t);
                 if (topFrame != null) {
                     stop = getCompoundSmartSteppingListener().stopAt
-                                       (contextProvider, topFrame, getSmartSteppingFilterImpl());
+                                       (contextProvider, topFrame, smartSteppingFilter);
                 } else {
                     stop = getCompoundSmartSteppingListener().stopHere
-                                       (contextProvider, t, getSmartSteppingFilterImpl()) ? StopOrStep.stop() : StopOrStep.skip();
+                                       (contextProvider, t, smartSteppingFilter) ? StopOrStep.stop() : StopOrStep.skip();
                 }
             }
             if (stop.isStop()) {
@@ -378,11 +383,14 @@ public class StepIntoNextMethod implements Executor, PropertyChangeListener {
                     stepSize = StepRequest.STEP_LINE;
                 }
                 if (stepDepth == 0) {
-                    if (!stepThrough) {
+                    if (!stepThrough || smartSteppingStepOut) {
                         stepDepth = StepRequest.STEP_OUT;
                     } else {
                         stepDepth = StepRequest.STEP_INTO;
                     }
+                } else if (stepDepth == StepRequest.STEP_INTO) {
+                    // We're stepping through in this case
+                    didStepThrough = true;
                 }
                 StepRequest newSR = setStepRequest(stepDepth);
                 if (newSR == null) {
@@ -456,6 +464,7 @@ public class StepIntoNextMethod implements Executor, PropertyChangeListener {
             synchronized (this) {
                 if (stepIntoRequest != null) {
                     try {
+                        addPatternsToRequest(smartSteppingFilter.getExclusionPatterns(), stepIntoRequest);
                         try {
                             EventRequestWrapper.enable (stepIntoRequest);
                             enabledStepRequest = stepIntoRequest;
@@ -509,6 +518,7 @@ public class StepIntoNextMethod implements Executor, PropertyChangeListener {
                     tr,
                     stepSize,
                     step);
+            StepUtils.markOriginalStepDepth(stepRequest, tr);
             getDebuggerImpl ().getOperator ().register (stepRequest, this);
             suspendPolicy = getDebuggerImpl().getSuspend();
             EventRequestWrapper.setSuspendPolicy (stepRequest, suspendPolicy);
@@ -525,7 +535,7 @@ public class StepIntoNextMethod implements Executor, PropertyChangeListener {
             try {
                 if (!steppingFromFilteredLocation) {
                     addPatternsToRequest (
-                        getSmartSteppingFilterImpl ().getExclusionPatterns (),
+                        smartSteppingFilter.getExclusionPatterns (),
                         stepRequest
                     );
                 }
@@ -560,13 +570,6 @@ public class StepIntoNextMethod implements Executor, PropertyChangeListener {
         return stepRequest;
     }
 
-    private SmartSteppingFilterImpl smartSteppingFilter;
-
-    private SmartSteppingFilterImpl getSmartSteppingFilterImpl () {
-        if (smartSteppingFilter == null)
-            smartSteppingFilter = (SmartSteppingFilterImpl) contextProvider.lookupFirst(null, SmartSteppingFilter.class);
-        return smartSteppingFilter;
-    }
 
     private CompoundSmartSteppingListener compoundSmartSteppingListener;
 
@@ -594,7 +597,7 @@ public class StepIntoNextMethod implements Executor, PropertyChangeListener {
         if (steppingFromFilteredLocation) {
             return false;
         }
-        String[] patterns = getSmartSteppingFilterImpl ().getExclusionPatterns();
+        String[] patterns = smartSteppingFilter.getExclusionPatterns();
         if (patterns.length == 0) return false;
         try {
             int n = ThreadReferenceWrapper.frameCount(tr);

@@ -35,6 +35,7 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -689,7 +690,7 @@ public final class ParseProjectXml extends Task {
         }
         
         private String implementationVersionOf(ModuleListParser modules, String cnb) throws BuildException {
-            File jar = computeClasspathModuleLocation(modules, cnb, null, null, false);
+            File jar = computeClasspathModuleLocation(modules, cnb, null, null, false, Collections.emptyList());
             try {
                 try (JarFile jarFile = new JarFile(jar, false)) {
                     return jarFile.getManifest().getMainAttributes().getValue("OpenIDE-Module-Implementation-Version");
@@ -970,12 +971,14 @@ public final class ParseProjectXml extends Task {
                 continue;
             }
             String cnb = dep.codenamebase;
-            File depJar = computeClasspathModuleLocation(modules, cnb, clusterPath, excludedModules, runtime);
+            List<String> path = new ArrayList<>();
+            path.add(myCNB);
+            File depJar = computeClasspathModuleLocation(modules, cnb, clusterPath, excludedModules, runtime, path);
 
             List<File> additions = new ArrayList<>();
             additions.add(depJar);
             if (recursive) {
-                addRecursiveDeps(additions, modules, cnb, clusterPath, excludedModules, new HashSet<>(), runtime);
+                addRecursiveDeps(additions, modules, cnb, clusterPath, excludedModules, new HashSet<>(), runtime, path);
             }
             
             // #52354: look for <class-path-extension>s in dependent modules.
@@ -1041,7 +1044,7 @@ public final class ParseProjectXml extends Task {
     }
     
     private void addRecursiveDeps(List<File> additions, ModuleListParser modules, String cnb, 
-            Set<File> clusterPath, Set<String> excludedModules, Set<String> skipCnb, boolean runtime) {
+            Set<File> clusterPath, Set<String> excludedModules, Set<String> skipCnb, boolean runtime, List<String> path) {
         if (!skipCnb.add(cnb)) {
             return;
         }
@@ -1067,19 +1070,21 @@ public final class ParseProjectXml extends Task {
                 additions.add(f);
             }
         }
+        List<String> inPath = new ArrayList<>(path);
+        inPath.add(cnb);
         for (String nextModule : deps) {
             log("  Added dep " + nextModule + " due to " + cnb, Project.MSG_DEBUG);
-            File depJar = computeClasspathModuleLocation(modules, nextModule, clusterPath, excludedModules, true);
+            File depJar = computeClasspathModuleLocation(modules, nextModule, clusterPath, excludedModules, true, inPath);
             if (!additions.contains(depJar)) {
                 additions.add(depJar);
             }
-            addRecursiveDeps(additions, modules, nextModule, clusterPath, excludedModules, skipCnb, runtime);
+            addRecursiveDeps(additions, modules, nextModule, clusterPath, excludedModules, skipCnb, runtime, inPath);
         }
     }
 
     static final String DO_NOT_RECURSE = "do.not.recurse";
     private File computeClasspathModuleLocation(ModuleListParser modules, String cnb,
-            Set<File> clusterPath, Set<String> excludedModules, boolean runtime) throws BuildException {
+            Set<File> clusterPath, Set<String> excludedModules, boolean runtime, List<String> path) throws BuildException {
         ModuleListParser.Entry module = modules.findByCodeNameBase(cnb);
         if (module == null && cnb.contains("-")) {
             final String alternativeCnb = cnb.replace('-', '_');
@@ -1109,7 +1114,7 @@ public final class ParseProjectXml extends Task {
             throw new BuildException(msg, getLocation());
         }
         if (excludedModules != null && excludedModules.contains(cnb)) { // again #68716
-            throw new BuildException("Module " + cnb + " excluded from the target platform", getLocation());
+            throw new BuildException("Module " + cnb + " excluded from the target platform; the path is: " + path.toString(), getLocation());
         }
         if (!jar.isFile()) {
             File srcdir = module.getSourceLocation();
@@ -1271,14 +1276,14 @@ public final class ParseProjectXml extends Task {
        if ( missingEntries != null) {
            StringBuilder builder = new StringBuilder();
            if (missingEntries.contains("org.netbeans.libs.junit4")) {
-               File junitJar = new File(System.getProperty("user.home"), ".m2/repository/junit/junit/4.8.2/junit-4.8.2.jar");
+               File junitJar = new File(System.getProperty("user.home"), ".m2/repository/junit/junit/4.13.2/junit-4.13.2.jar");
                if (junitJar.isFile()) {
                    builder.append(File.pathSeparatorChar).append(junitJar);
                    missingEntries.remove("org.netbeans.libs.junit4");
                } else {
                    builder.append("\nYou need to download and install org-netbeans-libs-junit4.nbm into the platform to run tests.");
                    builder.append("\nIf you have Maven and agree to http://www.opensource.org/licenses/cpl1.0.txt it suffices to run:");
-                   builder.append("\nmvn dependency:get -Dartifact=junit:junit:4.8.2 -DrepoUrl=http://repo1.maven.org/maven2/");
+                   builder.append("\nmvn dependency:get -Dartifact=junit:junit:4.13.2 -DrepoUrl=https://repo.maven.apache.org/maven2/");
                }
            }
            if (!missingEntries.isEmpty()) {

@@ -40,6 +40,7 @@ import org.netbeans.modules.javascript2.requirejs.RequireJsPreferences;
 import org.netbeans.modules.javascript2.requirejs.editor.index.RequireJsIndex;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Exceptions;
 import org.openide.util.Utilities;
 
@@ -49,7 +50,7 @@ import org.openide.util.Utilities;
  */
 public class FSCompletionUtils {
 
-    final static String GO_UP = "../"; //NOI18N
+    static final String GO_UP = "../"; //NOI18N
     private static final String SLASH = "/"; //NOI18N
     private static final String FILE = "file"; // URI scheme
     
@@ -65,7 +66,7 @@ public class FSCompletionUtils {
 
         assert relativeTo != null;
 
-        List<CompletionProposal> result = new LinkedList();
+        List<CompletionProposal> result = new LinkedList<>();
 
         int lastSlash = prefix.lastIndexOf('/');
         String pathPrefix;
@@ -79,7 +80,7 @@ public class FSCompletionUtils {
             filePrefix = prefix;
         }
 
-        Set<FileObject> directories = new HashSet();
+        Set<FileObject> directories = new HashSet<>();
         File prefixFile = null;
         if (pathPrefix != null && !pathPrefix.startsWith(".")) { //NOI18N
             if (pathPrefix.length() == 0 && prefix.startsWith(SLASH)) {
@@ -104,7 +105,7 @@ public class FSCompletionUtils {
                     if (toFile != null) {
                         URI resolve = null;
                         try {
-                            resolve = Utilities.toURI(toFile).resolve(pathPrefix).normalize();
+                            resolve = BaseUtilities.normalizeURI(Utilities.toURI(toFile).resolve(pathPrefix));
                         } catch (IllegalArgumentException ex) {
                             resolve = null;
                         }
@@ -232,8 +233,8 @@ public class FSCompletionUtils {
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
-            Collection<String> basePaths = new ArrayList();
-            Map<String, String> configPaths = new HashMap();
+            Collection<String> basePaths = new ArrayList<>();
+            Map<String, String> configPaths = new HashMap<>();
 
             if (rIndex != null) {
                 basePaths = rIndex.getBasePaths();
@@ -352,7 +353,7 @@ public class FSCompletionUtils {
             if (!packages.isEmpty()) {
                 String requiredPath = path;
                 if (path.startsWith("./")) { //NOI18N
-                    requiredPath = path.substring(2, path.length());
+                    requiredPath = path.substring(2);
                 }
                 if (requiredPath.contains("/")) { //NOI18N
                     final int slashIndex = requiredPath.indexOf("/"); // NOI18N
@@ -360,7 +361,7 @@ public class FSCompletionUtils {
                     if (packages.get(pkgName) != null) {
                         requiredPath = packages.get(pkgName)
                                 + File.separator
-                                + requiredPath.substring(slashIndex + 1, requiredPath.length());
+                                + requiredPath.substring(slashIndex + 1);
                     }
                 }
                 if (!basePaths.isEmpty() && !requiredPath.startsWith("/")) { //NOI18N

@@ -37,7 +37,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -68,9 +68,7 @@ import org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider;
 import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.websvc.rest.MiscPrivateUtilities;
 import org.netbeans.modules.websvc.rest.WebXmlUpdater;
-import static org.netbeans.modules.websvc.rest.WebXmlUpdater.getRestServletAdaptorByName;
 import org.netbeans.modules.websvc.rest.model.api.RestConstants;
-import static org.netbeans.modules.websvc.rest.spi.RestSupport.REST_SERVLET_ADAPTOR;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileLock;
@@ -79,6 +77,9 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
+import static org.netbeans.modules.websvc.rest.WebXmlUpdater.getRestServletAdaptorByName;
+import static org.netbeans.modules.websvc.rest.spi.RestSupport.REST_SERVLET_ADAPTOR;
+
 /**
  * The purpose of this class is to trim down RestSupport and WebRestSupport down and
  * as such it contains bunch of random static utility methods which previously
@@ -86,7 +87,7 @@ import org.openide.util.NbBundle;
  * moved to right places.
  */
 public class MiscUtilities {
-    
+
     public static FileObject findSourceRoot(Project project) {
         SourceGroup[] sourceGroups = ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
         if (sourceGroups != null && sourceGroups.length > 0) {
@@ -142,9 +143,9 @@ public class MiscUtilities {
         try {
             lock = fo.lock();
             OutputStream os = fo.getOutputStream(lock);
-            writer = new BufferedWriter(new OutputStreamWriter(os, Charset.forName("UTF-8")));
+            writer = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
             InputStream is = RestSupport.class.getResourceAsStream("resources/" + name);
-            reader = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+            reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
             String line;
             String lineSep = "\n";
             if (File.separatorChar == '\\') {
@@ -185,7 +186,7 @@ public class MiscUtilities {
         try {
             writer = new BufferedWriter(content);
             InputStream is = fo.getInputStream();
-            reader = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+            reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
             String line;
             String lineSep = "\n";
             if (File.separatorChar == '\\') {
@@ -209,7 +210,7 @@ public class MiscUtilities {
             FileLock lock = fo.lock();
             try {
                 OutputStream outputStream = fo.getOutputStream(lock);
-                writer = new BufferedWriter(new OutputStreamWriter(outputStream, Charset.forName("UTF-8")));
+                writer = new BufferedWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
                 writer.write(buffer.toString());
             } finally {
                 if (lock != null) {
@@ -224,8 +225,7 @@ public class MiscUtilities {
     }
 
     public static FileObject getApplicationContextXml(Project project) {
-        J2eeModuleProvider provider = (J2eeModuleProvider) project.getLookup().
-            lookup(J2eeModuleProvider.class);
+        J2eeModuleProvider provider = project.getLookup().lookup(J2eeModuleProvider.class);
         FileObject[] fobjs = provider.getSourceRoots();
 
         if (fobjs.length > 0) {
@@ -333,7 +333,7 @@ public class MiscUtilities {
     }
 
     /** Add servlet(3.0) element to web.xml, representing JAX-RS Application with CORS filter
-     * 
+     *
      * @param restSupport RestSupport instance
      * @param applicationClassName application class name
      * @param corsFilterName corse filter name
@@ -347,7 +347,7 @@ public class MiscUtilities {
             if (ddFO == null || webApp == null) {
                 return;
             }
-            
+
             boolean changed = false;
             Servlet applicationConfigServlet = getRestServletAdaptorByName(webApp,
                     applicationClassName);
@@ -359,7 +359,7 @@ public class MiscUtilities {
                     webApp.addServlet(applicationConfigServlet);
                     changed = true;
                 } catch (ClassNotFoundException ex) {}
-                
+
             }
             if (applicationConfigServlet != null) {
                 InitParam initParam = (InitParam) applicationConfigServlet.findBeanByName(
@@ -422,7 +422,7 @@ public class MiscUtilities {
 
 
     public static Datasource getDatasource(Project p, String jndiName) {
-        J2eeModuleProvider provider = (J2eeModuleProvider) p.getLookup().lookup(J2eeModuleProvider.class);
+        J2eeModuleProvider provider = p.getLookup().lookup(J2eeModuleProvider.class);
 
         try {
             return provider.getConfigSupport().findDatasource(jndiName);
@@ -432,11 +432,11 @@ public class MiscUtilities {
 
         return null;
     }
-    
+
     /** Creates body for javax.ws.rs.core.Application subclass getClasses method
-     * 
+     *
      * @param restSupport
-     * @return 
+     * @return
      */
     public static String createBodyForGetClassesMethod(RestSupport restSupport) {
         StringBuilder builder = new StringBuilder();
@@ -455,14 +455,14 @@ public class MiscUtilities {
     }
 
     /** creates addResourceClasses method
-     * 
+     *
      * @param maker tree maker
      * @param classTree class tree
      * @param controller compilation controller
      * @param methodBody method body
      * @param addComment add comment or not
      * @return modified class tree
-     * @throws IOException 
+     * @throws IOException
      */
     public static ClassTree createAddResourceClasses(TreeMaker maker,
             ClassTree classTree, CompilationController controller,
@@ -497,7 +497,7 @@ public class MiscUtilities {
         }
         return maker.addClassMember(classTree, methodTree);
     }
-    
+
     /**
      * Is source level of a given project 1.7 or higher?
      *
@@ -513,9 +513,9 @@ public class MiscUtilities {
             return false;
         }
     }
-    
+
     /** Check if project is of Java EE 6 project type or higher
-     * 
+     *
      * @param project project instance
      * @return true or false
      */
@@ -523,13 +523,7 @@ public class MiscUtilities {
         WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
         if (webModule != null) {
             Profile profile = webModule.getJ2eeProfile();
-            if (Profile.JAVA_EE_6_WEB == profile || 
-                    Profile.JAVA_EE_6_FULL == profile ||
-                        Profile.JAVA_EE_7_WEB == profile ||
-                                Profile.JAVA_EE_7_FULL == profile ||
-                                    Profile.JAVA_EE_8_WEB == profile ||
-                                            Profile.JAVA_EE_8_FULL == profile )
-            {
+            if (profile.isAtLeast(Profile.JAVA_EE_6_WEB)) {
                 return true;
             }
         }

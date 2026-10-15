@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.netbeans.modules.nativeexecution.api.util.Shell.ShellType;
-import org.netbeans.modules.nativeexecution.spi.support.NativeExecutionUserNotification;;
+import org.netbeans.modules.nativeexecution.spi.support.NativeExecutionUserNotification;
 //import org.netbeans.modules.dlight.nativeexecution.ui.ShellValidationStatusPanel;
 //import org.openide.DialogDescriptor;
 //import org.openide.DialogDisplayer;
@@ -40,8 +40,8 @@ import org.openide.util.NbPreferences;
  */
 public final class ShellValidationSupport {
     
-    protected final static ShellValidationStatus NOSHELL = new ShellValidationStatus(null, Arrays.asList("No shell"), null); // NOI18N
-    protected final static ShellValidationStatus VALID = new ShellValidationStatus(null, null, null);
+    protected static final ShellValidationStatus NOSHELL = new ShellValidationStatus(null, Arrays.asList("No shell"), null); // NOI18N
+    protected static final ShellValidationStatus VALID = new ShellValidationStatus(null, null, null);
 
     private ShellValidationSupport() {
     }

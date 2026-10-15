@@ -65,7 +65,7 @@ public class LiveEngine implements ObjectMap, Visitor {
     }
     
     public String getID(Object o) {
-        objects.put(o, null);; // mark as known
+        objects.put(o, null); // mark as known
         return null; // null - if somebody really uses it, fails quickly
     }
 
@@ -126,7 +126,7 @@ public class LiveEngine implements ObjectMap, Visitor {
         objects.put(to, entry);
     }
 
-    private Iterator/*<Object>*/ getIncomingRefs(Object to) {
+    private Iterator<Object> getIncomingRefs(Object to) {
         Object oo = objects.get(to);
         if (oo instanceof Object[]) {
             return Arrays.asList((Object[])oo).iterator();
@@ -181,7 +181,7 @@ public class LiveEngine implements ObjectMap, Visitor {
         int base = objExpected;
         int step = found > 0 ? objExpected/9/found : 0;
         
-        for (Iterator it = objs.iterator(); it.hasNext(); ) {
+        for (Iterator<Object> it = objs.iterator(); it.hasNext(); ) {
             Object obj = it.next();
             if (rest.containsKey(obj)) continue; // not found
             Path toObj = findRoots(obj, s.keySet());
@@ -212,7 +212,7 @@ public class LiveEngine implements ObjectMap, Visitor {
             }
 
             // follow incomming
-            Iterator it = getIncomingRefs(item);
+            Iterator<Object> it = getIncomingRefs(item);
             while(it.hasNext()) {
                 Object o = it.next();
                 Path prev = Utils.createPath(o, act);

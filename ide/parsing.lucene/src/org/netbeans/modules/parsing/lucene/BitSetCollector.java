@@ -19,16 +19,17 @@
 
 package org.netbeans.modules.parsing.lucene;
 
+import java.io.IOException;
 import java.util.BitSet;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.search.Collector;
-import org.apache.lucene.search.Scorer;
+import org.apache.lucene.index.LeafReaderContext;
+import org.apache.lucene.search.ScoreMode;
+import org.apache.lucene.search.SimpleCollector;
 
 /**
  *
  * @author Tomas Zezula
  */
-class BitSetCollector extends Collector {
+class BitSetCollector extends SimpleCollector {
 
     private int docBase;
     public final BitSet bits;
@@ -40,14 +41,10 @@ class BitSetCollector extends Collector {
 
     // ignore scorer
     @Override
-    public void setScorer(Scorer scorer) {
+    public ScoreMode scoreMode() {
+        return ScoreMode.COMPLETE_NO_SCORES;
     }
 
-    // accept docs out of order (for a BitSet it doesn't matter)
-    @Override
-    public boolean acceptsDocsOutOfOrder() {
-      return true;
-    }
 
     @Override
     public void collect(int doc) {
@@ -55,8 +52,9 @@ class BitSetCollector extends Collector {
     }
 
     @Override
-    public void setNextReader(IndexReader reader, int docBase) {
-      this.docBase = docBase;
+    protected void doSetNextReader(LeafReaderContext context) throws IOException {
+        super.doSetNextReader(context);
+        this.docBase = context.docBase;
     }
 
 }

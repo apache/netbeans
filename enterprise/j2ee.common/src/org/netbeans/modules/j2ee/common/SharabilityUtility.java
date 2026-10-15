@@ -82,7 +82,7 @@ public final class SharabilityUtility {
                     List<URL> roots = lib.getContent("classpath"); // NOI18N
                     // CopyFiles.class was not present in NB 6.1
                     boolean version61 = org.netbeans.spi.java.classpath.support.ClassPathSupport.
-                            createClassPath(roots.toArray(new URL[roots.size()])).
+                            createClassPath(roots.toArray(new URL[0])).
                             findResource("org/netbeans/modules/java/j2seproject/copylibstask/CopyFiles.class") == null; // NOI18N
                     if (!version61) {
                         return;

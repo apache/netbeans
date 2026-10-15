@@ -326,12 +326,12 @@ public class CharsetMapping implements Comparable {
 	 */
 	
 	public static final String CHARSET_DISPLAY_TYPE = "CharsetDisplayType";
-	public static final Integer CHARSET_CANONICAL = new Integer(0);
-	public static final Integer CHARSET_ALIAS_ASIDE = new Integer(1);
-	public static final Integer CHARSET_ALIAS_SELECTION = new Integer(2);
+	public static final Integer CHARSET_CANONICAL = 0;
+	public static final Integer CHARSET_ALIAS_ASIDE = 1;
+	public static final Integer CHARSET_ALIAS_SELECTION = 2;
 
 	private static Integer displayOption = CHARSET_ALIAS_ASIDE;
-	private static java.beans.PropertyChangeSupport propSupport = new PropertyChangeSupport(CharsetMapping.class);;
+	private static java.beans.PropertyChangeSupport propSupport = new PropertyChangeSupport(CharsetMapping.class);
 	
 	public static void addPropertyChangeListener(PropertyChangeListener listener) {
 		propSupport.addPropertyChangeListener(listener);

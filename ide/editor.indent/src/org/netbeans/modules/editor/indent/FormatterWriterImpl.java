@@ -28,7 +28,7 @@ import org.openide.util.Exceptions;
 
 /**
  * Implementation of the reformatting writer for the indent SPI.
- * <br/>
+ * <br>
  * It inserts the formatted text into document first then reformats it
  * and then removes it from the document upon or Writer.close().
  *

@@ -82,7 +82,7 @@ public class OpenJAXBCustomizerAction extends NodeAction  {
                     value = xo.getValue();
                     boolVal = Boolean.FALSE;
                     if ((value != null) 
-                            && ("true".equals(value.toLowerCase()))){ //NOI18N
+                            && ("true".equalsIgnoreCase(value))){ //NOI18N
                         boolVal = Boolean.TRUE;
                     }
                     options.put(key, boolVal);

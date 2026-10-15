@@ -30,7 +30,8 @@ import org.netbeans.swing.plaf.LFCustoms;
  * @since 1.30
  */
 class EditorToolbarBorder extends AbstractBorder {
-    private static final Insets insets = new Insets(1, 0, 1, 0);
+    // Add two pixels of left padding here, to give some space around the "Source" button.
+    private static final Insets insets = new Insets(1, 2, 1, 0);
 
     @Override
     public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {

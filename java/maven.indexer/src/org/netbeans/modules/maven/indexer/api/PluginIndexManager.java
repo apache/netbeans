@@ -24,7 +24,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -62,7 +61,7 @@ public class PluginIndexManager {
      * @return e.g. {@code [..., dependency:copy, ..., release:perform, ...]}
      */
     public static Set<String> getPluginGoalNames(Set<String> groups) throws Exception {
-        Set<String> result = new TreeSet<String>();
+        Set<String> result = new TreeSet<>();
         // XXX rather use ArtifactInfo.PLUGIN_GOALS
         for (String groupId : groups) {
             for (String artifactId : RepositoryQueries.filterPluginArtifactIdsResult(groupId, "", null).getResults()) {
@@ -131,7 +130,7 @@ public class PluginIndexManager {
                 LOG.log(Level.WARNING, "no mojos in {0}", jar);
                 continue;
             }
-            Set<String> goals = new TreeSet<String>();
+            Set<String> goals = new TreeSet<>();
             for (Element mojo : XMLUtil.findSubElements(mojos)) {
                 if (!mojo.getTagName().equals("mojo")) {
                     continue;
@@ -174,12 +173,8 @@ public class PluginIndexManager {
                 LOG.log(Level.WARNING, "no mojos in {0}", jar);
                 continue;
             }
-            Set<ParameterDetail> params = new TreeSet<ParameterDetail>(new Comparator<ParameterDetail>() {
-                @Override public int compare(ParameterDetail o1, ParameterDetail o2) {
-                    return o1.getName().compareTo(o2.getName());
-                }
-            });
-            Map<String, ParameterDetail> details = new HashMap<String, ParameterDetail>();
+            Set<ParameterDetail> params = new TreeSet<>((ParameterDetail o1, ParameterDetail o2) -> o1.getName().compareTo(o2.getName()));
+            Map<String, ParameterDetail> details = new HashMap<>();
             for (Element mojoEl : XMLUtil.findSubElements(mojos)) {
                 if (!mojoEl.getTagName().equals("mojo")) {
                     continue;
@@ -262,14 +257,14 @@ public class PluginIndexManager {
      */
     public static Set<String> getPluginsForGoalPrefix(String prefix) throws Exception {
         assert prefix != null;
-        Set<String> result = new TreeSet<String>();
+        Set<String> result = new TreeSet<>();
         // Note that this will not work reliably for remote indices created prior to a fix for MINDEXER-34:
         QueryField qf = new QueryField();
         qf.setField(ArtifactInfo.PLUGIN_PREFIX);
         qf.setValue(prefix);
         qf.setOccur(QueryField.OCCUR_MUST);
         qf.setMatch(QueryField.MATCH_EXACT);
-        for (NBVersionInfo v : RepositoryQueries.findResult(Collections.singletonList(qf), null).getResults()) {
+        for (NBVersionInfo v : RepositoryQueries.findResult(List.of(qf), null).getResults()) {
             result.add(v.getGroupId() + '|' + v.getArtifactId() + '|' + v.getVersion());
         }
         // This is more complete but much too slow:
@@ -323,7 +318,7 @@ public class PluginIndexManager {
             String[] gav = extensionPlugin.split(":", 3);
             MavenEmbedder online = EmbedderFactory.getOnlineEmbedder();
             Artifact art = online.createArtifact(gav[0], gav[1], gav[2], "maven-plugin");
-            online.resolve(art, Collections.<ArtifactRepository>emptyList(), online.getLocalRepository());
+            online.resolveArtifact(art, Collections.<ArtifactRepository>emptyList(), online.getLocalRepository());
             File jar = art.getFile();
             if (jar.isFile()) {
                 Map<String, List<String>> phases = parsePhases("jar:" + BaseUtilities.toURI(jar) + "!/META-INF/plexus/components.xml", packaging);
@@ -335,7 +330,7 @@ public class PluginIndexManager {
         return Collections.emptyMap();
     }
     private static Map<String,List<String>> parsePhases(String u, String packaging) throws Exception {
-        Document doc = XMLUtil.parse(new InputSource(u), false, false, XMLUtil.defaultErrorHandler(), null);
+        Document doc = XMLUtil.parse(new InputSource(u), false, false, true, XMLUtil.defaultErrorHandler(), null);
         for (Element componentsEl : XMLUtil.findSubElements(doc.getDocumentElement())) {
             for (Element componentEl : XMLUtil.findSubElements(componentsEl)) {
                 if (XMLUtil.findText(XMLUtil.findElement(componentEl, "role", null)).trim().equals("org.apache.maven.lifecycle.mapping.LifecycleMapping")
@@ -360,9 +355,9 @@ public class PluginIndexManager {
                             }
                         }
                         if (phases != null) {
-                            Map<String,List<String>> result = new LinkedHashMap<String,List<String>>();
+                            Map<String,List<String>> result = new LinkedHashMap<>();
                             for (Element phase : XMLUtil.findSubElements(phases)) {
-                                List<String> plugins = new ArrayList<String>();
+                                List<String> plugins = new ArrayList<>();
                                 for (String plugin : XMLUtil.findText(phase).split(",")) {
                                     String[] gavMojo = plugin.trim().split(":", 4);
                                     plugins.add(gavMojo[0] + ':' + gavMojo[1] + ':' + (gavMojo.length == 4 ? gavMojo[3] : gavMojo[2])); // version is not used here
@@ -384,8 +379,8 @@ public class PluginIndexManager {
             return null;
         }
         LOG.log(Level.FINER, "parsing plugin.xml from {0}", jar);
-            try {
-            return XMLUtil.parse(new InputSource("jar:" + BaseUtilities.toURI(jar) + "!/META-INF/maven/plugin.xml"), false, false, XMLUtil.defaultErrorHandler(), null);
+        try {
+            return XMLUtil.parse(new InputSource("jar:" + BaseUtilities.toURI(jar) + "!/META-INF/maven/plugin.xml"), false, false, true, XMLUtil.defaultErrorHandler(), null);
         } catch (Exception x) {
             LOG.log(Level.FINE, "could not parse " + jar, x.toString());
             return null;
@@ -396,12 +391,12 @@ public class PluginIndexManager {
      * Detailed information about a given parameter
      */
     public static class ParameterDetail {
-        private String name;
-        private @NullAllowed String expression;
-        private @NullAllowed String defaultValue;
-        private boolean required;
-        private String description;
-        private SortedSet<String> mojos = new TreeSet<String>();
+        private final String name;
+        private final @NullAllowed String expression;
+        private final @NullAllowed String defaultValue;
+        private final boolean required;
+        private final String description;
+        private final SortedSet<String> mojos = new TreeSet<>();
 
         private ParameterDetail(String name, @NullAllowed String expression, @NullAllowed String defaultValue, boolean required, String description) {
             this.name = name;
@@ -445,7 +440,7 @@ public class PluginIndexManager {
         }
 
         public String getHtmlDetails(boolean includeName) {
-            String m = mojos.size() > 0 ? Arrays.toString(mojos.toArray()) : null;
+            String m = !mojos.isEmpty() ? Arrays.toString(mojos.toArray()) : null;
             if (m != null) {
                 m = m.substring(1, m.length() - 1);
             }

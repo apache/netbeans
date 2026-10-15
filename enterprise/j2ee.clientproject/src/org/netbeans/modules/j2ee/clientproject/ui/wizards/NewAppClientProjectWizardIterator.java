@@ -198,7 +198,7 @@ public class NewAppClientProjectWizardIterator implements WizardDescriptor.Progr
             if (c instanceof JComponent) { // assume Swing components
                 JComponent jc = (JComponent)c;
                 // Step #.
-                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(i)); // NOI18N
+                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i); // NOI18N
                 // Step name (actually the whole list for reference).
                 jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps); // NOI18N
             }
@@ -220,7 +220,7 @@ public class NewAppClientProjectWizardIterator implements WizardDescriptor.Progr
     
     public String name() {
         return MessageFormat.format(NbBundle.getMessage(NewAppClientProjectWizardIterator.class,"LAB_IteratorName"),
-                new Object[] {new Integer(index + 1), new Integer(panels.length) });
+                new Object[] {index + 1, panels.length});
     }
     
     public boolean hasNext() {

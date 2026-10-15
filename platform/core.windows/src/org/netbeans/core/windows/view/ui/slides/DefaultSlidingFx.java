@@ -59,11 +59,11 @@ public class DefaultSlidingFx  implements SlidingFx {
 //            current = newRect;
 //        }
 //        gr2d.setColor(original);
-////        try {
-////            Thread.sleep(5000);
-////        } catch (Throwable th) {
-////            
-////        }
+// //        try {
+// //            Thread.sleep(5000);
+// //        } catch (Throwable th) {
+// //            
+// //        }
         
     }
      

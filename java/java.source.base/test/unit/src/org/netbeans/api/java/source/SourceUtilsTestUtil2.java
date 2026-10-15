@@ -79,4 +79,13 @@ public final class SourceUtilsTestUtil2 {
             //ignore
         }
     }
+
+    public static void disableMultiFileSourceRoots() {
+        try {
+            Class multiSourceRootProvider = Class.forName("org.netbeans.modules.java.file.launcher.queries.MultiSourceRootProvider");
+            multiSourceRootProvider.getField("DISABLE_MULTI_SOURCE_ROOT").set(null, true);
+        } catch (Exception ex) {
+            //ignore
+        }
+    }
 }

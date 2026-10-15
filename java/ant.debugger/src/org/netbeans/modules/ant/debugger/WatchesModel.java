@@ -42,11 +42,11 @@ public class WatchesModel implements NodeModelFilter, TableModel {
     "org/netbeans/modules/debugger/resources/watchesView/Watch";
 
     private AntDebugger debugger;
-    private Vector listeners = new Vector ();
+    private Vector<ModelListener> listeners = new Vector<>();
     
     
     public WatchesModel (ContextProvider contextProvider) {
-        debugger = (AntDebugger) contextProvider.lookupFirst 
+        debugger = contextProvider.lookupFirst 
             (null, AntDebugger.class);
         debugger.setWatchesModel(this);
     }
@@ -212,12 +212,10 @@ public class WatchesModel implements NodeModelFilter, TableModel {
     // other mothods ...........................................................
 
     void fireChanges () {
-        Vector v = (Vector) listeners.clone ();
+        Vector<ModelListener> v = new Vector<>(listeners);
         int i, k = v.size ();
         for (i = 0; i < k; i++)
-            ((ModelListener) v.get (i)).modelChanged (
-                new ModelEvent.TreeChanged (this)
-            );
+            v.get(i).modelChanged(new ModelEvent.TreeChanged(this));
     }
     
 }

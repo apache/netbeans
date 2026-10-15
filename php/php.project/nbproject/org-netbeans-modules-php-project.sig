@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.142
+#Version 2.177
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -12,25 +12,29 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="18")
 meth public final boolean equals(java.lang.Object)
 meth public final int compareTo({java.lang.Enum%0})
 meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -40,6 +44,9 @@ meth public final void wait(long) throws java.lang.InterruptedException
 meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public abstract interface java.util.EventListener
 
@@ -85,6 +92,7 @@ CLSS public final org.netbeans.modules.php.project.api.PhpOptions
 fld public final static java.lang.String PROP_PHP_DEBUGGER_MAX_CHILDREN = "propPhpDebuggerMaxChildren"
 fld public final static java.lang.String PROP_PHP_DEBUGGER_MAX_STRUCTURES_DEPTH = "propPhpDebuggerMaxStructuresDepth"
 fld public final static java.lang.String PROP_PHP_DEBUGGER_PORT = "propPhpDebuggerPort"
+fld public final static java.lang.String PROP_PHP_DEBUGGER_RESOLVE_BREAKPOINTS = "propPhpDebuggerResolveBreakpoints"
 fld public final static java.lang.String PROP_PHP_DEBUGGER_SESSION_ID = "propPhpDebuggerSessionId"
 fld public final static java.lang.String PROP_PHP_DEBUGGER_SHOW_CONSOLE = "propPhpDebuggerShowConsole"
 fld public final static java.lang.String PROP_PHP_DEBUGGER_SHOW_URLS = "propPhpDebuggerShowUrls"
@@ -92,6 +100,7 @@ fld public final static java.lang.String PROP_PHP_DEBUGGER_STOP_AT_FIRST_LINE = 
 fld public final static java.lang.String PROP_PHP_DEBUGGER_WATCHES_AND_EVAL = "propPhpDebuggerWatchesAndEval"
 fld public final static java.lang.String PROP_PHP_GLOBAL_INCLUDE_PATH = "propPhpGlobalIncludePath"
 fld public final static java.lang.String PROP_PHP_INTERPRETER = "propPhpInterpreter"
+meth public boolean isDebuggerResolveBreakpoints()
 meth public boolean isDebuggerShowDebuggerConsole()
 meth public boolean isDebuggerShowRequestedUrls()
 meth public boolean isDebuggerStoppedAtTheFirstLine()

@@ -492,11 +492,8 @@ abstract class ClientGenerationStrategy {
                     commentBuffer.append("<LI>"+otherParam+" [OPTIONAL]\n"); //NOI18N
                 }
                 // add default params
-                Map<String,String> defaultParams = httpParams.getDefaultQueryParams();
-                for (String key : defaultParams.keySet()) {
-                    commentBuffer.append("<LI>"+key+" [OPTIONAL, DEFAULT VALUE: \""+
-                            defaultParams.get(key)+"\"]\n"); //NOI18N
-                }
+                Map<String, String> defaultParams = httpParams.getDefaultQueryParams();
+                defaultParams.forEach((k, v) -> commentBuffer.append("<LI>" + k + " [OPTIONAL, DEFAULT VALUE: \"" + v + "\"]\n")); //NOI18N
                 buildQParams(queryP); 
             }
         }
@@ -518,8 +515,9 @@ abstract class ClientGenerationStrategy {
                 queryP.append(".header(\""+headerParam+"\","+javaIdentifier+")"); //NOI18N
             }
             Map<String, String> fixedHeaderParams = httpParams.getFixedHeaderParams();
-            for (String paramName : fixedHeaderParams.keySet()) {
-                String paramValue = fixedHeaderParams.get(paramName);
+            for (Entry<String, String> entry : fixedHeaderParams.entrySet()) {
+                String paramName = entry.getKey();
+                String paramValue = entry.getValue();
                 queryP.append(".header(\""+paramName+"\",\""+paramValue+"\")"); //NOI18N
             }
         }
@@ -552,7 +550,7 @@ abstract class ClientGenerationStrategy {
         }
 
         pathFormat.setPattern(buf.toString().trim());
-        pathFormat.setArguments(arguments.toArray(new String[arguments.size()]));
+        pathFormat.setArguments(arguments.toArray(new String[0]));
         return pathFormat;
     }
     

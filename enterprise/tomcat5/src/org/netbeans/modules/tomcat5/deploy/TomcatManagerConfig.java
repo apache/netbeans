@@ -71,7 +71,7 @@ public class TomcatManagerConfig {
                 loggerPrefix = host.getAttributeValue(SContext.LOGGER, "prefix"); // NOI18N
                 loggerSuffix = host.getAttributeValue(SContext.LOGGER, "suffix"); // NOI18N
                 String timestamp = host.getAttributeValue(SContext.LOGGER, "timestamp"); // NOI18N
-                loggerTimestamp = Boolean.valueOf(timestamp).booleanValue();
+                loggerTimestamp = Boolean.valueOf(timestamp);
             } else {
                 Engine engine = getEngineElement();
                 if  (engine != null && engine.isLogger()) {
@@ -81,7 +81,7 @@ public class TomcatManagerConfig {
                     loggerPrefix = engine.getAttributeValue(SContext.LOGGER, "prefix"); // NOI18N
                     loggerSuffix = engine.getAttributeValue(SContext.LOGGER, "suffix"); // NOI18N
                     String timestamp = engine.getAttributeValue(SContext.LOGGER, "timestamp"); // NOI18N
-                    loggerTimestamp = Boolean.valueOf(timestamp).booleanValue();
+                    loggerTimestamp = Boolean.valueOf(timestamp);
                 } else {
                     hasLogger = false;
                 }
@@ -107,10 +107,8 @@ public class TomcatManagerConfig {
     public Server getServerElement() {
         try {
             return Server.createGraph(serverXml);
-        } catch (IOException ioe) {
+        } catch (IOException | RuntimeException ioe) {
             Logger.getLogger(TomcatManagerConfig.class.getName()).log(Level.INFO, null, ioe);
-        } catch (RuntimeException e) {
-            Logger.getLogger(TomcatManagerConfig.class.getName()).log(Level.INFO, null, e);
         }
         return null;
     }
@@ -122,7 +120,9 @@ public class TomcatManagerConfig {
      */
     public Engine getEngineElement() {
         Server server = getServerElement();
-        if (server == null) return null;
+        if (server == null) {
+            return null;
+        }
         Service[] service = server.getService();
         if (service.length > 0) {
             return service[0].getEngine();

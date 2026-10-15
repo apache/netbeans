@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,13 +32,11 @@ import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.jar.JarFile;
-import static junit.framework.Assert.*;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.netbeans.SetupHid;
 import org.netbeans.nbbuild.MakeOSGi;
-import org.openide.filesystems.FileUtil;
 import org.openide.modules.Dependency;
 import org.openide.util.Utilities;
 import org.openide.util.test.TestFileUtils;
@@ -47,6 +44,8 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.Constants;
 import org.osgi.framework.launch.Framework;
 import org.osgi.framework.launch.FrameworkFactory;
+
+import static org.junit.Assert.assertTrue;
 
 class OSGiProcess {
 
@@ -185,22 +184,15 @@ class OSGiProcess {
                 if (!dir.isDirectory() && !dir.mkdirs()) {
                     throw new IOException("could not make dir " + dir);
                 }
-                OutputStream os = new FileOutputStream(f);
-                try {
-                    InputStream is = OSGiProcess.class.getClassLoader().getResourceAsStream(clazz.getName().replace('.', '/') + ".class");
-                    try {
-                        FileUtil.copy(is, os);
-                    } finally {
-                        is.close();
-                    }
-                } finally {
-                    os.close();
+                try (InputStream is = OSGiProcess.class.getClassLoader().getResourceAsStream(clazz.getName().replace('.', '/') + ".class");
+                     OutputStream os = new FileOutputStream(f)) {
+                    is.transferTo(os);
                 }
             }
             if (newModule.manifest != null) {
                 TestFileUtils.writeFile(new File(workDir, "custom" + newModule.counter + ".mf"), newModule.manifest);
             }
-            SetupHid.createTestJAR(workDir, extra, "custom" + newModule.counter, null, cp.toArray(new File[cp.size()]));
+            SetupHid.createTestJAR(workDir, extra, "custom" + newModule.counter, null, cp.toArray(new File[0]));
             File jar = new File(extra, "custom" + newModule.counter + ".jar");
             cp.add(jar); // for use in subsequent modules
             makeosgi.add(new FileResource(jar));
@@ -223,7 +215,7 @@ class OSGiProcess {
         for (File bundle : bundles.listFiles()) {
             installed.add(f.getBundleContext().installBundle(Utilities.toURI(bundle).toString()));
         }
-        Collections.sort(installed, new Comparator<Bundle>() {
+        installed.sort(new Comparator<Bundle>() {
             public @Override int compare(Bundle b1, Bundle b2) {
                 return b1.getSymbolicName().compareTo(b2.getSymbolicName()) * backwards;
             }

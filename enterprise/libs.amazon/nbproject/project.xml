@@ -32,6 +32,15 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.libs.jackson</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>2.12.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.apache.commons.logging</code-name-base>
                     <run-dependency/>
                 </dependency>
@@ -49,10 +58,6 @@
                 <package>com.amazonaws.services.s3.model</package>
             </friend-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/aws-sdk/jackson-databind-2.6.7.2.jar</runtime-relative-path>
-                <binary-origin>external/jackson-databind-2.6.7.2.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
                 <runtime-relative-path>ext/aws-sdk/jmespath-java-1.11.569.jar</runtime-relative-path>
                 <binary-origin>external/jmespath-java-1.11.569.jar</binary-origin>
             </class-path-extension>
@@ -61,44 +66,32 @@
                 <binary-origin>external/ion-java-1.0.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/aws-sdk/httpcore-4.4.9.jar</runtime-relative-path>
-                <binary-origin>external/httpcore-4.4.9.jar</binary-origin>
+                <runtime-relative-path>ext/aws-sdk/httpclient-4.5.5.jar</runtime-relative-path>
+                <binary-origin>external/httpclient-4.5.5.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/aws-sdk/jackson-annotations-2.6.0.jar</runtime-relative-path>
-                <binary-origin>external/jackson-annotations-2.6.0.jar</binary-origin>
+                <runtime-relative-path>ext/aws-sdk/httpcore-4.4.9.jar</runtime-relative-path>
+                <binary-origin>external/httpcore-4.4.9.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/aws-sdk/joda-time-2.8.1.jar</runtime-relative-path>
                 <binary-origin>external/joda-time-2.8.1.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/aws-sdk/aws-java-sdk-elasticbeanstalk-1.11.569.jar</runtime-relative-path>
-                <binary-origin>external/aws-java-sdk-elasticbeanstalk-1.11.569.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/aws-sdk/aws-java-sdk-kms-1.11.569.jar</runtime-relative-path>
-                <binary-origin>external/aws-java-sdk-kms-1.11.569.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/aws-sdk/httpclient-4.5.5.jar</runtime-relative-path>
-                <binary-origin>external/httpclient-4.5.5.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/aws-sdk/jackson-dataformat-cbor-2.6.7.jar</runtime-relative-path>
-                <binary-origin>external/jackson-dataformat-cbor-2.6.7.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/aws-sdk/jackson-core-2.6.7.jar</runtime-relative-path>
-                <binary-origin>external/jackson-core-2.6.7.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
                 <runtime-relative-path>ext/aws-sdk/aws-java-sdk-core-1.11.569.jar</runtime-relative-path>
                 <binary-origin>external/aws-java-sdk-core-1.11.569.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
+                <runtime-relative-path>ext/aws-sdk/aws-java-sdk-elasticbeanstalk-1.11.569.jar</runtime-relative-path>
+                <binary-origin>external/aws-java-sdk-elasticbeanstalk-1.11.569.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
                 <runtime-relative-path>ext/aws-sdk/aws-java-sdk-s3-1.11.569.jar</runtime-relative-path>
                 <binary-origin>external/aws-java-sdk-s3-1.11.569.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/aws-sdk/aws-java-sdk-kms-1.11.569.jar</runtime-relative-path>
+                <binary-origin>external/aws-java-sdk-kms-1.11.569.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

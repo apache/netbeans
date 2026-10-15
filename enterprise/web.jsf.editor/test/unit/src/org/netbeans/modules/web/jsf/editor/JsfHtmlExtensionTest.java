@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -138,14 +139,14 @@ public class JsfHtmlExtensionTest extends TestBaseForTestProject {
     }
 
     public static void copyStringToFile(String string, File path) throws IOException {
-        try (InputStream inputStream = new ByteArrayInputStream(string.getBytes("UTF-8"))) {
+        try (InputStream inputStream = new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8))) {
             copyStreamToFile(inputStream, path);
         }
     }
 
     private static void copyStreamToFile(InputStream inputStream, File path) throws IOException {
         try (FileOutputStream outputStream = new FileOutputStream(path, false)) {
-            FileUtil.copy(inputStream, outputStream);
+            inputStream.transferTo(outputStream);
         }
     }
     

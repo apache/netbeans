@@ -33,6 +33,8 @@ import com.sun.jdi.ThreadReference;
 import com.sun.jdi.Value;
 import com.sun.jdi.VirtualMachine;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.util.Arrays;
@@ -63,7 +65,8 @@ import org.netbeans.modules.debugger.jpda.jdi.VirtualMachineWrapper;
 import org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
 import static org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess.BASIC_CLASS_NAME;
-import org.netbeans.modules.debugger.jpda.truffle.breakpoints.TruffleBreakpointsHandler;
+import org.netbeans.modules.debugger.jpda.truffle.breakpoints.impl.TruffleBreakpointsHandler;
+import org.netbeans.modules.debugger.jpda.truffle.options.TruffleOptions;
 import org.netbeans.modules.javascript2.debug.breakpoints.JSLineBreakpoint;
 import org.openide.util.Exceptions;
 
@@ -78,8 +81,10 @@ final class DebugManagerHandler {
     private static final String ACCESSOR_LOOP_RUNNING_FIELD = "accessLoopRunning";  // NOI18N
     private static final String ACCESSOR_SET_UP_DEBUG_MANAGER_FOR = "setUpDebugManagerFor"; // NOI18N
     private static final String ACCESSOR_SET_UP_DEBUG_MANAGER_FOR_SGN =
-            "(L"+Object.class.getName().replace('.', '/')+";Z)"+                // NOI18N
+            "(L"+Object.class.getName().replace('.', '/')+";ZZ)"+                // NOI18N
             "Lorg/netbeans/modules/debugger/jpda/backend/truffle/JPDATruffleDebugManager;"; // NOI18N
+    private static final String ACCESSOR_SET_INCLUDE_INTERNAL = "setIncludeInternal"; // NOI18N
+    private static final String ACCESSOR_SET_INCLUDE_INTERNAL_SGN = "(Z)V"; // NOI18N
     
     private static final Map<JPDADebugger, Boolean> dbgStepInto = Collections.synchronizedMap(new WeakHashMap<JPDADebugger, Boolean>());
 
@@ -90,10 +95,12 @@ final class DebugManagerHandler {
     private final Object accessorClassLock = new Object();
     //private ObjectReference debugManager;
     private final TruffleBreakpointsHandler breakpointsHandler;
+    private final PropertyChangeListener optionsChangeListener = new OptionsChangeListener();
     
     public DebugManagerHandler(JPDADebugger debugger) {
         this.debugger = debugger;
         this.breakpointsHandler = new TruffleBreakpointsHandler(debugger);
+        TruffleOptions.onLanguageDeveloperModeChange(optionsChangeListener);
     }
     
     static void execStepInto(JPDADebugger debugger, boolean doStepInto) {
@@ -111,9 +118,7 @@ final class DebugManagerHandler {
     
     void newPolyglotEngineInstance(ObjectReference engine, JPDAThreadImpl thread) {
         LOG.log(Level.FINE, "Engine created breakpoint hit: engine = {0} in thread = {1}", new Object[] { engine, thread.getThreadReference()});
-        if (inited.compareAndSet(false, true)) {
-            initDebuggerRemoteService(thread);
-        }
+        assert inited.get(): "The remote services should have been initialized already from a Truffle class.";
         if (accessorClass == null) {
             // No accessor
             return ;
@@ -127,13 +132,14 @@ final class DebugManagerHandler {
             if (vm == null) {
                 return ;
             }
+            BooleanValue includeInternal = vm.mirrorOf(TruffleOptions.isLanguageDeveloperMode());
             BooleanValue doStepInto = vm.mirrorOf(isStepInto());
             Method debugManagerMethod = ClassTypeWrapper.concreteMethodByName(
                     accessorClass,
                     ACCESSOR_SET_UP_DEBUG_MANAGER_FOR,
                     ACCESSOR_SET_UP_DEBUG_MANAGER_FOR_SGN);
             ThreadReference tr = thread.getThreadReference();
-            List<Value> dmArgs = Arrays.asList(engine, doStepInto);
+            List<Value> dmArgs = Arrays.asList(engine, includeInternal, doStepInto);
             LOG.log(Level.FINE, "Setting engine and step into = {0}", isStepInto());
             Object ret = ClassTypeWrapper.invokeMethod(accessorClass, tr, debugManagerMethod, dmArgs, ObjectReference.INVOKE_SINGLE_THREADED);
             if (ret instanceof ObjectReference) {   // Can be null when an existing debug manager is reused.
@@ -155,7 +161,13 @@ final class DebugManagerHandler {
         }
     }
 
-    private void initDebuggerRemoteService(JPDAThread thread) {
+    void initDebuggerRemoteService(JPDAThread thread) {
+        if (inited.compareAndSet(false, true)) {
+            doInitDebuggerRemoteService(thread);
+        }
+    }
+
+    private void doInitDebuggerRemoteService(JPDAThread thread) {
         if (LOG.isLoggable(Level.FINE)) {
             LOG.log(Level.FINE, "initDebuggerRemoteService({0})", thread);
         }
@@ -285,5 +297,48 @@ final class DebugManagerHandler {
 
     void breakpointRemoved(JSLineBreakpoint jsLineBreakpoint) {
         breakpointsHandler.breakpointRemoved(jsLineBreakpoint);
+    }
+
+    private final class OptionsChangeListener implements PropertyChangeListener {
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (accessorClass == null) {
+                // No accessor
+                return ;
+            }
+            if (TruffleOptions.PROPERTY_LANG_DEV_MODE.equals(evt.getPropertyName())) {
+                JPDADebuggerImpl debuggerImpl = (JPDADebuggerImpl) debugger;
+                debuggerImpl.getRequestProcessor().post(() -> {
+                    VirtualMachine vm = debuggerImpl.getVirtualMachine();
+                    if (vm == null) {
+                        return ;
+                    }
+                    BooleanValue includeInternal = vm.mirrorOf(TruffleOptions.isLanguageDeveloperMode());
+                    try {
+                        Method debugManagerMethod = ClassTypeWrapper.concreteMethodByName(
+                                accessorClass,
+                                ACCESSOR_SET_INCLUDE_INTERNAL,
+                                ACCESSOR_SET_INCLUDE_INTERNAL_SGN);
+                        TruffleAccess.methodCallingAccess(debugger, new TruffleAccess.MethodCallsAccess() {
+                            @Override
+                            public void callMethods(JPDAThread thread) throws InvocationException {
+                                ThreadReference tr = ((JPDAThreadImpl) thread).getThreadReference();
+                                List<Value> dmArgs = Arrays.asList(includeInternal);
+                                LOG.log(Level.FINE, "Setting includeInternal to {0}", includeInternal.value());
+                                try {
+                                    ClassTypeWrapper.invokeMethod(accessorClass, tr, debugManagerMethod, dmArgs, ObjectReference.INVOKE_SINGLE_THREADED);
+                                } catch (Exception ex) {
+                                    Exceptions.printStackTrace(ex);
+                                }
+                            }
+                        });
+                    } catch (ClassNotPreparedExceptionWrapper | InternalExceptionWrapper | VMDisconnectedExceptionWrapper ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                });
+            }
+        }
+        
     }
 }

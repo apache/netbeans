@@ -16,6 +16,9 @@ class ClassName {
     function __invoke() {}
     function __set_state() {}
     function __clone() {}
+    function __debugInfo() {}
+    function __serialize() {}
+    function __unserialize() {}
 
 }
 

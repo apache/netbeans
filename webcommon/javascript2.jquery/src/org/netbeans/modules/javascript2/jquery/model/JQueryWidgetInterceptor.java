@@ -37,7 +37,7 @@ import org.netbeans.modules.parsing.api.Snapshot;
 @FunctionInterceptor.Registration(priority = 50)
 public class JQueryWidgetInterceptor implements FunctionInterceptor {
 
-    private final static Pattern PATTERN = Pattern.compile("(\\$|jQuery)\\.widget");  //NOI18N
+    private static final Pattern PATTERN = Pattern.compile("(\\$|jQuery)\\.widget");  //NOI18N
 
     @Override
     public Pattern getNamePattern() {

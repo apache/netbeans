@@ -115,7 +115,7 @@ public class PHP72UnhandledError extends UnhandledErrorRule {
                     if (ts == null) {
                         return;
                     }
-                    lastUseStatementParts.forEach((lastUseStatementPart) -> {
+                    for (SingleUseStatementPart lastUseStatementPart: lastUseStatementParts) {
                         if (CancelSupport.getDefault().isCancelled()) {
                             return;
                         }
@@ -129,7 +129,7 @@ public class PHP72UnhandledError extends UnhandledErrorRule {
                                 createError(lastUseStatementPart);
                             }
                         }
-                    });
+                    }
                 } finally {
                     document.readUnlock();
                     lastUseStatementParts.clear();

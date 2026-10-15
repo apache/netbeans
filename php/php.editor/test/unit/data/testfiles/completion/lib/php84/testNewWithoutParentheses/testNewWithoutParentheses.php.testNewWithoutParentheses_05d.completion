@@ -1,0 +1,4 @@
+Code completion result for source line:
+$example = new Example()->returnThis()?->privateF|ield;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   int privateField                [PRIVATE]  Example

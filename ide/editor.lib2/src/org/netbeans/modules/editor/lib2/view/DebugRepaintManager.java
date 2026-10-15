@@ -20,12 +20,13 @@
 package org.netbeans.modules.editor.lib2.view;
 
 import java.awt.Rectangle;
+import java.util.Collections;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import javax.swing.JComponent;
 import javax.swing.RepaintManager;
 import javax.swing.SwingUtilities;
-import org.openide.util.WeakSet;
 
 /**
  * Repaint manager showing repaints in a particular component.
@@ -44,7 +45,7 @@ final class DebugRepaintManager extends RepaintManager {
         INSTANCE.addLogComponent(component);
     }
 
-    private final Set<JComponent> logComponents = new WeakSet<JComponent>();
+    private final Set<JComponent> logComponents = Collections.newSetFromMap(new WeakHashMap<>());
     
 
     private DebugRepaintManager() {

@@ -175,7 +175,7 @@ public abstract class SyntaxElement extends Object {
         }
     }
     
-    public static abstract class TagLikeElement extends SyntaxElement {
+    public abstract static class TagLikeElement extends SyntaxElement {
         String name;
 
         public TagLikeElement(JspSyntaxSupport support, int from, int to, String name) {
@@ -209,7 +209,7 @@ public abstract class SyntaxElement extends Object {
     }
     
 
-    public static abstract class TagDirective extends TagLikeElement {
+    public abstract static class TagDirective extends TagLikeElement {
         Map attribs;
 
         public TagDirective( JspSyntaxSupport support, int from, int to, String name, Map attribs ) {

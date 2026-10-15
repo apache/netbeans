@@ -1,0 +1,114 @@
+    private First|First $union;
+                  -----
+HINT:Type "First" is duplicated.
+    private First&First $intersection;
+                  -----
+HINT:Type "First" is duplicated.
+    private First|Second|First|Second $twoUnions;
+                               ------
+HINT:Type "First" is duplicated.
+HINT:Type "Second" is duplicated.
+    private First&Second&First&Second $twoIntersections;
+                               ------
+HINT:Type "First" is duplicated.
+HINT:Type "Second" is duplicated.
+    private bool|true|bool $unionBoolAndTrue;
+                      ----
+HINT:Type "bool" is duplicated.
+HINT:Type "true" is duplicated.
+    private bool|false|bool $unionBoolAndFalse;
+                       ----
+HINT:Type "bool" is duplicated.
+HINT:Type "false" is duplicated.
+    private bool|true|First|First $unionAfterBoolAndTrue;
+                            -----
+HINT:Type "First" is duplicated.
+HINT:Type "true" is duplicated.
+    private bool|false|First|First $unionAfterBoolAndFalse;
+                             -----
+HINT:Type "First" is duplicated.
+HINT:Type "false" is duplicated.
+    private true|bool|First|First $unionAfterTrueAndBool;
+                            -----
+HINT:Type "First" is duplicated.
+HINT:Type "bool" is duplicated.
+    private false|bool|First|First $unionAfterFalseAndBool;
+                             -----
+HINT:Type "First" is duplicated.
+HINT:Type "bool" is duplicated.
+    public function returnUnion(): First|First {
+                                         -----
+HINT:Type "First" is duplicated.
+    public function returnIntersection(): First&First {
+                                                -----
+HINT:Type "First" is duplicated.
+    public function returnTwoUnions(): First|Second|First|Second {
+                                                          ------
+HINT:Type "First" is duplicated.
+HINT:Type "Second" is duplicated.
+    public function returnTwoIntersections(): First&Second&First&Second {
+                                                                 ------
+HINT:Type "First" is duplicated.
+HINT:Type "Second" is duplicated.
+    public function returnUnionBoolAndTrue(): bool|true|bool {
+                                                        ----
+HINT:Type "bool" is duplicated.
+HINT:Type "true" is duplicated.
+    public function returnUnionBoolAndFalse(): bool|false|bool {
+                                                          ----
+HINT:Type "bool" is duplicated.
+HINT:Type "false" is duplicated.
+    public function returnUnionAfterBoolAndTrue(): bool|true|First|First {
+                                                                   -----
+HINT:Type "First" is duplicated.
+HINT:Type "true" is duplicated.
+    public function returnUnionAfterBoolAndFalse(): bool|false|First|First {
+                                                                     -----
+HINT:Type "First" is duplicated.
+HINT:Type "false" is duplicated.
+    public function returnUnionAfterTrueAndBool(): true|bool|First|First {
+                                                                   -----
+HINT:Type "First" is duplicated.
+HINT:Type "bool" is duplicated.
+    public function returnUnionAfterFalseAndBool(): false|bool|First|First {
+                                                                     -----
+HINT:Type "First" is duplicated.
+HINT:Type "bool" is duplicated.
+    public function parameterUnion(First|First $union) {
+                                         -----
+HINT:Type "First" is duplicated.
+    public function parameterIntersection(First&First $intersection) {
+                                                -----
+HINT:Type "First" is duplicated.
+    public function parameterTwoUnions(First|Second|First|Second $twoUnions) {
+                                                          ------
+HINT:Type "First" is duplicated.
+HINT:Type "Second" is duplicated.
+    public function parameterTwoIntersections(First&Second&First&Second $twoIntersections) {
+                                                                 ------
+HINT:Type "First" is duplicated.
+HINT:Type "Second" is duplicated.
+    public function parameterUnionBoolAndTrue(bool|true|bool $union) {
+                                                        ----
+HINT:Type "bool" is duplicated.
+HINT:Type "true" is duplicated.
+    public function parameterUnionBoolAndFalse(bool|false|bool $union) {
+                                                          ----
+HINT:Type "bool" is duplicated.
+HINT:Type "false" is duplicated.
+    public function parameterUnionAfterBoolAndTrue(bool|true|First|First $union) {
+                                                                   -----
+HINT:Type "First" is duplicated.
+HINT:Type "true" is duplicated.
+    public function parameterUnionAfterBoolAndFalse(bool|false|First|First $union) {
+                                                                     -----
+HINT:Type "First" is duplicated.
+HINT:Type "false" is duplicated.
+    public function parameterUnionAfterTrueAndBool(true|bool|First|First $union) {
+                                                                   -----
+HINT:Type "First" is duplicated.
+HINT:Type "bool" is duplicated.
+    public function parameterUnionAfterFalseAndBool(false|bool|First|First $union) {
+                                                                     -----
+HINT:Type "First" is duplicated.
+HINT:Type "bool" is duplicated.

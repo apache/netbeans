@@ -26,7 +26,7 @@ import org.netbeans.modules.web.webkit.debugging.api.WebKitDebugging;
 /**
  *
  */
-abstract public class AbstractObject {
+public abstract class AbstractObject {
     
     private JSONObject object;
     private WebKitDebugging webkit;

@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.10.1
+Created-By: 1.8.0_151-8u151-b12-0ubuntu0.17.10.2-b12 (Oracle Corporati
+ on)
+OpenIDE-Module-Public-Packages: -
+OpenIDE-Module-Java-Dependencies: Java > 1.7
+OpenIDE-Module-Implementation-Version: 171123
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: org.yourorghere.executable.permissions
+OpenIDE-Module-Localizing-Bundle: org/yourorghere/executable/permissio
+ ns/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Requires: org.openide.modules.ModuleFormat1
+

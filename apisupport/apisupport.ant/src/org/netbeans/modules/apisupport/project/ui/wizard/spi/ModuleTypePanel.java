@@ -47,35 +47,35 @@ public class ModuleTypePanel{
      * Key for module type property.
      * key for Boolean value. use 
      */
-    private final static String IS_STANDALONE_OR_SUITE_COMPONENT 
+    private static final String IS_STANDALONE_OR_SUITE_COMPONENT 
                         = TypeChooserPanelImpl.IS_STANDALONE_OR_SUITE_COMPONENT;
 
     /** 
      * Suite root directory.
      * key for String value. 
      */
-    private final static String SUITE_ROOT = TypeChooserPanelImpl.SUITE_ROOT;
+    private static final String SUITE_ROOT = TypeChooserPanelImpl.SUITE_ROOT;
 
     /** 
      * Active platform ID value to be used as value 
      * for nbplatform.active property in platform.properties file.
      * key for String value. 
      */
-    private final static String ACTIVE_PLATFORM_ID 
+    private static final String ACTIVE_PLATFORM_ID 
                         = TypeChooserPanelImpl.ACTIVE_PLATFORM_ID;
 
     /** 
      * Active platform Object. 
      * key for org.netbeans.modules.apisupport.project.universe.NbPlatform value. 
      */
-    private final static String ACTIVE_NB_PLATFORM  
+    private static final String ACTIVE_NB_PLATFORM  
                         = TypeChooserPanelImpl.ACTIVE_NB_PLATFORM;
     
     /** 
      * true if project is created in NetBeans sources.
      * key for Boolean value. 
      */
-    private final static String IS_NETBEANS_ORG 
+    private static final String IS_NETBEANS_ORG 
                         = TypeChooserPanelImpl.IS_NETBEANS_ORG;
 
     /** 
@@ -84,7 +84,7 @@ public class ModuleTypePanel{
      * is in NetBeans.org repository.
      * key for File value. 
      */
-    private final static String PROJECT_FOLDER 
+    private static final String PROJECT_FOLDER 
                         = TypeChooserPanelImpl.PROJECT_FOLDER;
 
     /**
@@ -214,21 +214,21 @@ public class ModuleTypePanel{
     
     private static NbPlatform getActiveNbPlatform(WizardDescriptor wizard){
         Object value = wizard.getProperty(ACTIVE_NB_PLATFORM);
-        if (value != null && value instanceof NbPlatform){
+        if (value instanceof NbPlatform){
             return (NbPlatform)value;
         }
         return null;
     }
     
     private static boolean extractBoolean(Object value, boolean defaultValue){
-        if (value != null && value instanceof Boolean){
+        if (value instanceof Boolean){
             return (Boolean)value;
         }
         return defaultValue;
     }
     
     private static String extractString(Object value, String defaultValue){
-        if (value != null && value instanceof String){
+        if (value instanceof String){
             return (String)value;
         }
         return defaultValue;

@@ -271,7 +271,7 @@ public abstract class TwoWaySupport<DM, UMD, DMD> {
      * to pass to {@link TwoWayEvent.Derived}, which may be useful for subclasses
      * firing changes.
      */
-    protected final static class DerivationResult<DM, DMD> {
+    protected static final class DerivationResult<DM, DMD> {
         final DM newValue;
         final DMD derivedDelta;
         /**

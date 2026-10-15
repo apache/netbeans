@@ -66,7 +66,7 @@ public final class PositionBounds extends Object implements Serializable {
     }
 
     /** Replaces the text contained in this range.
-    * This replacement is done atomically, and so is preferable to manual inserts & removes.
+    * This replacement is done atomically, and so is preferable to manual inserts &amp; removes.
     * <p>If you are running this from user-oriented code, you may want to wrap it in {@link NbDocument#runAtomicAsUser}.
     * @param text new text to insert over existing text
     * @exception IOException if any problem occurred during document loading (if that was necessary)

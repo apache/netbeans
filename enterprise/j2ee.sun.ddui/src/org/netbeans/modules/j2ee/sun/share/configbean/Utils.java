@@ -30,7 +30,7 @@ import org.openide.ErrorManager;
 /**
  *
  * @author vkraemer
- * @auther Peter Williams
+ * @author Peter Williams
  */
 public class Utils implements org.netbeans.modules.j2ee.sun.share.Constants {
 

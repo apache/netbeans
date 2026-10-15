@@ -29,10 +29,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URI;
+import java.nio.file.Files;
 import javax.swing.text.Document;
 import org.netbeans.modules.xml.wsdl.model.WSDLModel;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.FileLock;
 
 /**
@@ -99,7 +99,7 @@ public class TestUtil {
     }
     
     public static File dumpToTempFile(Document doc) throws Exception {
-        File f = File.createTempFile("xsm", "xsd");
+        File f = Files.createTempFile("xsm", "xsd").toFile();
         dumpToFile(doc, f);
         return f;
     }
@@ -138,13 +138,11 @@ public class TestUtil {
             dest = destFolder.createData(filename);
         }
         FileLock lock = dest.lock();
-        OutputStream out = dest.getOutputStream(lock);
-        InputStream in = TestUtil.class.getResourceAsStream(path);
         try {
-            FileUtil.copy(in, out);
+            try (InputStream in = TestUtil.class.getResourceAsStream(path); OutputStream out = dest.getOutputStream(lock)) {
+                in.transferTo(out);
+            }
         } finally {
-            out.close();
-            in.close();
             if (lock != null) lock.releaseLock();
         }
         return dest;

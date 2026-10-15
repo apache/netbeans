@@ -35,6 +35,7 @@ import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 
 import com.sun.source.tree.*;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
@@ -43,6 +44,8 @@ import javax.lang.model.element.Name;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.*;
 import org.netbeans.api.java.source.support.ReferencesCount;
+import org.netbeans.api.lexer.PartType;
+import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.UserTask;
@@ -131,7 +134,7 @@ abstract class BaseTask extends UserTask {
             return null; //TODO: member reference???
         }
         for (ExpressionTree e : args) {
-            int pos = (int) sourcePositions.getEndPosition(root, e);
+            int pos = (int) sourcePositions.getEndPosition(e);
             if (pos != Diagnostic.NOPOS && (position > pos || !strict && position == pos)) {
                 startPos = pos;
                 ret.add(e);
@@ -173,6 +176,7 @@ abstract class BaseTask extends UserTask {
                 case LINE_COMMENT:
                 case BLOCK_COMMENT:
                 case JAVADOC_COMMENT:
+                case JAVADOC_COMMENT_LINE_RUN:
                     break;
                 default:
                     return ts;
@@ -182,7 +186,7 @@ abstract class BaseTask extends UserTask {
     }
 
     TokenSequence<JavaTokenId> findLastNonWhitespaceToken(Env env, Tree tree, int position) {
-        int startPos = (int) env.getSourcePositions().getStartPosition(env.getRoot(), tree);
+        int startPos = (int) env.getSourcePositions().getStartPosition(tree);
         return findLastNonWhitespaceToken(env, startPos, position);
     }
 
@@ -203,6 +207,7 @@ abstract class BaseTask extends UserTask {
                 case LINE_COMMENT:
                 case BLOCK_COMMENT:
                 case JAVADOC_COMMENT:
+                case JAVADOC_COMMENT_LINE_RUN:
                     break;
                 default:
                     return ts;
@@ -232,8 +237,11 @@ abstract class BaseTask extends UserTask {
                             ts.token().id().primaryCategory().startsWith("string") || //NOI18N
                             ts.token().id().primaryCategory().equals("literal")) //NOI18N
                     { //TODO: Use isKeyword(...) when available
-                        prefix = ts.token().text().toString().substring(0, len);
-                        offset = ts.offset();
+                        String prefixInToken = ts.token().text().toString().substring(0, len);
+                        if (!ts.token().id().primaryCategory().startsWith("string") || !prefixInToken.endsWith("\\{")) {
+                            prefix = prefixInToken;
+                            offset = ts.offset();
+                        }
                     } else if ((ts.token().id() == JavaTokenId.DOUBLE_LITERAL
                             || ts.token().id() == JavaTokenId.FLOAT_LITERAL
                             || ts.token().id() == JavaTokenId.FLOAT_LITERAL_INVALID
@@ -254,6 +262,8 @@ abstract class BaseTask extends UserTask {
                         && (ts.token().id() == JavaTokenId.IDENTIFIER
                         || ts.token().id().primaryCategory().startsWith("keyword") || //NOI18N
                         ts.token().id().primaryCategory().startsWith("string") || //NOI18N
+                        ts.token().id().primaryCategory().equals("number") || //NOI18N
+                        ts.token().id().primaryCategory().equals("character") || //NOI18N
                         ts.token().id().primaryCategory().equals("literal"))) { //NOI18N
                     offset++;
                 }
@@ -273,6 +283,10 @@ abstract class BaseTask extends UserTask {
                 treePath = treePath.getParentPath();
             }
         } else {
+            TreePath newClassPath = findNewClassForConstructorName(path);
+            if (newClassPath != null) {
+                path = newClassPath;
+            }
             if (JavaSource.Phase.RESOLVED.compareTo(controller.getPhase()) > 0) {
                 LinkedList<TreePath> reversePath = new LinkedList<>();
                 TreePath treePath = path;
@@ -293,6 +307,34 @@ abstract class BaseTask extends UserTask {
         return new Env(offset, prefix, controller, path, controller.getTrees().getSourcePositions(), null);
     }
 
+    private TreePath findNewClassForConstructorName(TreePath tp) {
+        if (tp == null) {
+            return null;
+        }
+
+        TreePath parentPath = tp.getParentPath();
+
+        while (parentPath != null) {
+            boolean goUp = false;
+            goUp = goUp || (parentPath.getLeaf().getKind() == Kind.PARAMETERIZED_TYPE &&
+                            ((ParameterizedTypeTree) parentPath.getLeaf()).getType() == tp.getLeaf());
+            goUp = goUp || (parentPath.getLeaf().getKind() == Kind.ANNOTATED_TYPE &&
+                            ((AnnotatedTypeTree) parentPath.getLeaf()).getUnderlyingType() == tp.getLeaf());
+            if (goUp) {
+                tp = parentPath;
+                parentPath = parentPath.getParentPath();
+            } else {
+                break;
+            }
+        }
+
+        if (parentPath != null && parentPath.getLeaf().getKind() == Kind.NEW_CLASS && ((NewClassTree) parentPath.getLeaf()).getIdentifier() == tp.getLeaf()) {
+            return parentPath;
+        }
+
+        return null;
+    }
+
     private Env getEnvImpl(CompilationController controller, TreePath orig, TreePath path, TreePath pPath, TreePath gpPath, int offset, String prefix, boolean upToOffset) throws IOException {
         Tree tree = path != null ? path.getLeaf() : null;
         Tree parent = pPath != null ? pPath.getLeaf() : null;
@@ -306,8 +348,8 @@ abstract class BaseTask extends UserTask {
         } else if (parent != null && tree.getKind() == Tree.Kind.BLOCK
                 && (parent.getKind() == Tree.Kind.METHOD || TreeUtilities.CLASS_TREE_KINDS.contains(parent.getKind()))) {
             controller.toPhase(withinAnonymousOrLocalClass(tu, path) ? JavaSource.Phase.RESOLVED : JavaSource.Phase.ELEMENTS_RESOLVED);
-            int blockPos = (int) sourcePositions.getStartPosition(root, tree);
-            String blockText = controller.getText().substring(blockPos, upToOffset ? offset : (int) sourcePositions.getEndPosition(root, tree));
+            int blockPos = (int) sourcePositions.getStartPosition(tree);
+            String blockText = fixStringTemplates(path, controller.getText().substring(blockPos, upToOffset ? offset : (int) sourcePositions.getEndPosition(tree)));
             final SourcePositions[] sp = new SourcePositions[1];
             final StatementTree block = (((BlockTree) tree).isStatic() ? tu.parseStaticBlock(blockText, sp) : tu.parseStatement(blockText, sp));
             if (block == null) {
@@ -339,15 +381,44 @@ abstract class BaseTask extends UserTask {
                         }
                         if (lastCase != null) {
                             stmts = lastCase.getStatements();
+                            if (stmts == null || stmts.isEmpty()) {
+                                Tree body = lastCase.getBody();
+                                if (body != null) {
+                                    last = body;
+                                } else {
+                                    Tree guard = lastCase.getGuard();
+                                    if (guard != null) {
+                                        last = guard;
+                                    }
+                                }
+                            }
                         }
                         break;
                     case CASE:
                         stmts = ((CaseTree) path.getLeaf()).getStatements();
+                        if (stmts == null || stmts.isEmpty()) {
+                            Tree body = ((CaseTree) path.getLeaf()).getBody();
+                            if (body != null) {
+                                last = body;
+                            } else {
+                                Tree guard = ((CaseTree) path.getLeaf()).getGuard();
+                                if (guard != null) {
+                                    last = guard;
+                                }
+                            }
+                        }
+                        break;
+                    case CONDITIONAL_AND: case CONDITIONAL_OR:
+                        BinaryTree bt = (BinaryTree) last;
+                        if (sourcePositions.getStartPosition(bt.getRightOperand()) == offset &&
+                            bt.getRightOperand().getKind() == Kind.ERRONEOUS) {
+                            last = bt.getRightOperand();
+                        }
                         break;
                 }
                 if (stmts != null) {
                     for (StatementTree st : stmts) {
-                        if (sourcePositions.getEndPosition(root, st) <= offset) {
+                        if (sourcePositions.getEndPosition(st) <= offset) {
                             last = st;
                         }
                     }
@@ -367,10 +438,10 @@ abstract class BaseTask extends UserTask {
                 if (blockPath.getLeaf().getKind() == Tree.Kind.BLOCK) {
                     if (blockPath.getParentPath().getLeaf().getKind() == Tree.Kind.METHOD
                             || TreeUtilities.CLASS_TREE_KINDS.contains(blockPath.getParentPath().getLeaf().getKind())) {
-                        final int blockPos = (int) sourcePositions.getStartPosition(root, blockPath.getLeaf());
+                        final int blockPos = (int) sourcePositions.getStartPosition(blockPath.getLeaf());
                         final String blockText = upToOffset && getCaretInSnapshot() > offset
-                                ? controller.getText().substring(blockPos, offset) + whitespaceString(getCaretInSnapshot() - offset) + controller.getText().substring(getCaretInSnapshot(), (int) sourcePositions.getEndPosition(root, blockPath.getLeaf()))
-                                : controller.getText().substring(blockPos, (int) sourcePositions.getEndPosition(root, blockPath.getLeaf()));
+                                ? controller.getText().substring(blockPos, offset) + whitespaceString(getCaretInSnapshot() - offset) + controller.getText().substring(getCaretInSnapshot(), (int) sourcePositions.getEndPosition(blockPath.getLeaf()))
+                                : controller.getText().substring(blockPos, (int) sourcePositions.getEndPosition(blockPath.getLeaf()));
                         final SourcePositions[] sp = new SourcePositions[1];
                         final StatementTree block = (((BlockTree) blockPath.getLeaf()).isStatic() ? tu.parseStaticBlock(blockText, sp) : tu.parseStatement(blockText, sp));
                         if (block == null) {
@@ -378,8 +449,11 @@ abstract class BaseTask extends UserTask {
                         }
                         sourcePositions = new SourcePositionsImpl(block, sourcePositions, sp[0], blockPos, -1);
                         path = tu.getPathElementOfKind(Tree.Kind.LAMBDA_EXPRESSION, tu.pathFor(new TreePath(blockPath.getParentPath(), block), offset, sourcePositions));
+                        if (path == null) {
+                            return null;
+                        }
                         lambdaBody = ((LambdaExpressionTree) path.getLeaf()).getBody();
-                        bodyPos = (int) sourcePositions.getStartPosition(root, lambdaBody);
+                        bodyPos = (int) sourcePositions.getStartPosition(lambdaBody);
                         if (bodyPos >= offset) {
                             TokenSequence<JavaTokenId> ts = controller.getTokenHierarchy().tokenSequence(JavaTokenId.language());
                             ts.move(offset);
@@ -389,6 +463,7 @@ abstract class BaseTask extends UserTask {
                                     case LINE_COMMENT:
                                     case BLOCK_COMMENT:
                                     case JAVADOC_COMMENT:
+                                    case JAVADOC_COMMENT_LINE_RUN:
                                         break;
                                     case ARROW:
                                         scope = controller.getTrees().getScope(blockPath);
@@ -408,7 +483,7 @@ abstract class BaseTask extends UserTask {
             }
             if (scope == null) {
                 scope = controller.getTrees().getScope(new TreePath(path, lambdaBody));
-                bodyPos = (int) sourcePositions.getStartPosition(root, lambdaBody);
+                bodyPos = (int) sourcePositions.getStartPosition(lambdaBody);
                 if (bodyPos >= offset) {
                     TokenSequence<JavaTokenId> ts = controller.getTokenHierarchy().tokenSequence(JavaTokenId.language());
                     ts.move(offset);
@@ -418,6 +493,7 @@ abstract class BaseTask extends UserTask {
                             case LINE_COMMENT:
                             case BLOCK_COMMENT:
                             case JAVADOC_COMMENT:
+                            case JAVADOC_COMMENT_LINE_RUN:
                                 break;
                             case ARROW:
                                 return new Env(offset, prefix, controller, path, sourcePositions, scope);
@@ -427,7 +503,7 @@ abstract class BaseTask extends UserTask {
                     }
                 }
             }
-            String bodyText = controller.getText().substring(bodyPos, upToOffset ? offset : (int) sourcePositions.getEndPosition(root, lambdaBody));
+            String bodyText = controller.getText().substring(bodyPos, upToOffset ? offset : (int) sourcePositions.getEndPosition(lambdaBody));
             final SourcePositions[] sp = new SourcePositions[1];
             final Tree body = bodyText.charAt(0) == '{' ? tu.parseStatement(bodyText, sp) : tu.parseExpression(bodyText, sp);
             final Tree fake = body instanceof ExpressionTree ? new ExpressionStatementTree() {
@@ -471,15 +547,37 @@ abstract class BaseTask extends UserTask {
                         }
                         if (lastCase != null) {
                             stmts = lastCase.getStatements();
+                            if (stmts == null || stmts.isEmpty()) {
+                                Tree caseBody = lastCase.getBody();
+                                if (caseBody != null) {
+                                    last = caseBody;
+                                } else {
+                                    Tree guard = lastCase.getGuard();
+                                    if (guard != null) {
+                                        last = guard;
+                                    }
+                                }
+                            }
                         }
                         break;
                     case CASE:
                         stmts = ((CaseTree) path.getLeaf()).getStatements();
+                        if (stmts == null || stmts.isEmpty()) {
+                            Tree caseBody = ((CaseTree) path.getLeaf()).getBody();
+                            if (caseBody != null) {
+                                last = caseBody;
+                            } else {
+                                Tree guard = ((CaseTree) path.getLeaf()).getGuard();
+                                if (guard != null) {
+                                    last = guard;
+                                }
+                            }
+                        }
                         break;
                 }
                 if (stmts != null) {
                     for (StatementTree st : stmts) {
-                        if (sourcePositions.getEndPosition(root, st) <= offset) {
+                        if (sourcePositions.getEndPosition(st) <= offset) {
                             last = st;
                         }
                     }
@@ -497,8 +595,8 @@ abstract class BaseTask extends UserTask {
             }
             controller.toPhase(withinAnonymousOrLocalClass(tu, path) ? JavaSource.Phase.RESOLVED : JavaSource.Phase.ELEMENTS_RESOLVED);
             Scope scope = controller.getTrees().getScope(path);
-            final int initPos = (int) sourcePositions.getStartPosition(root, tree);
-            String initText = controller.getText().substring(initPos, upToOffset ? offset : (int) sourcePositions.getEndPosition(root, tree));
+            final int initPos = (int) sourcePositions.getStartPosition(tree);
+            String initText = controller.getText().substring(initPos, upToOffset ? offset : (int) sourcePositions.getEndPosition(tree));
             if (initText.length() > 0) {
                 final SourcePositions[] sp = new SourcePositions[1];
                 final ExpressionTree init = tu.parseVariableInitializer(initText, sp);
@@ -520,7 +618,7 @@ abstract class BaseTask extends UserTask {
                 };
                 sourcePositions = new SourcePositionsImpl(fake, sourcePositions, sp[0], initPos, upToOffset ? offset : -1);
                 path = tu.pathFor(new TreePath(pPath, fake), offset, sourcePositions);
-                if (upToOffset && sp[0].getEndPosition(root, init) + initPos > offset) {
+                if (upToOffset && sp[0].getEndPosition(init) + initPos > offset) {
                     scope = tu.reattributeTreeTo(init, scope, path.getLeaf());
                 } else {
                     tu.reattributeTree(init, scope);
@@ -529,12 +627,12 @@ abstract class BaseTask extends UserTask {
             return new Env(offset, prefix, controller, path, sourcePositions, scope);
         } else if (parent != null && TreeUtilities.CLASS_TREE_KINDS.contains(parent.getKind()) && tree.getKind() == Tree.Kind.VARIABLE
                 && ((VariableTree) tree).getInitializer() != null && orig == path
-                && sourcePositions.getStartPosition(root, ((VariableTree) tree).getInitializer()) >= 0
-                && sourcePositions.getStartPosition(root, ((VariableTree) tree).getInitializer()) <= offset) {
+                && sourcePositions.getStartPosition(((VariableTree) tree).getInitializer()) >= 0
+                && sourcePositions.getStartPosition(((VariableTree) tree).getInitializer()) <= offset) {
             controller.toPhase(withinAnonymousOrLocalClass(tu, path) ? JavaSource.Phase.RESOLVED : JavaSource.Phase.ELEMENTS_RESOLVED);
             tree = ((VariableTree) tree).getInitializer();
             Scope scope = controller.getTrees().getScope(new TreePath(path, tree));
-            final int initPos = (int) sourcePositions.getStartPosition(root, tree);
+            final int initPos = (int) sourcePositions.getStartPosition(tree);
             String initText = controller.getText().substring(initPos, offset);
             if (initText.length() > 0) {
                 final SourcePositions[] sp = new SourcePositions[1];
@@ -563,7 +661,34 @@ abstract class BaseTask extends UserTask {
         }
         return null;
     }
-    
+
+    private static String fixStringTemplates(TreePath tp, String blockText) {
+        if (!blockText.contains("\\{")) {
+            return blockText;
+        }
+
+        TokenHierarchy<String> th = TokenHierarchy.create(blockText, JavaTokenId.language());
+        TokenSequence<JavaTokenId> ts = th.tokenSequence(JavaTokenId.language());
+        StringBuilder augmented = new StringBuilder();
+
+        augmented.append(blockText);
+        ts.moveEnd();
+
+        while (ts.movePrevious()) {
+            if ((ts.token().id() == JavaTokenId.STRING_LITERAL ||
+                 ts.token().id() == JavaTokenId.MULTILINE_STRING_LITERAL) &&
+                ts.token().partType() == PartType.START) {
+                if (ts.token().id() == JavaTokenId.STRING_LITERAL) {
+                    augmented.append("}\"");
+                } else {
+                    augmented.append("}\"\"\"");
+                }
+            }
+        }
+
+        return augmented.toString();
+    }
+
     private static String whitespaceString(int length) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < length; i++) {
@@ -591,23 +716,23 @@ abstract class BaseTask extends UserTask {
         }
 
         @Override
-        public long getStartPosition(CompilationUnitTree compilationUnitTree, Tree tree) {
+        public long getStartPosition(Tree tree) {
             if (tree == root) {
                 return startOffset;
             }
             found = false;
             scan(root, tree);
-            return found ? modified.getStartPosition(compilationUnitTree, tree) + startOffset : original.getStartPosition(compilationUnitTree, tree);
+            return found ? modified.getStartPosition(tree) + startOffset : original.getStartPosition(tree);
         }
 
         @Override
-        public long getEndPosition(CompilationUnitTree compilationUnitTree, Tree tree) {
+        public long getEndPosition(Tree tree) {
             if (tree == root) {
                 return endOffset;
             }
             found = false;
             scan(root, tree);
-            return found ? modified.getEndPosition(compilationUnitTree, tree) + startOffset : original.getEndPosition(compilationUnitTree, tree);
+            return found ? modified.getEndPosition(tree) + startOffset : original.getEndPosition(tree);
         }
 
         @Override
@@ -619,6 +744,7 @@ abstract class BaseTask extends UserTask {
             }
             return null;
         }
+
 
     }
 
@@ -853,7 +979,7 @@ abstract class BaseTask extends UserTask {
                     tp = tp.getParentPath();
                 }
                 if (tp.getLeaf().getKind() == Tree.Kind.EXPRESSION_STATEMENT) {
-                    assignToVarPos = getController().getSnapshot().getOriginalOffset((int) getSourcePositions().getStartPosition(getRoot(), tree));
+                    assignToVarPos = getController().getSnapshot().getOriginalOffset((int) getSourcePositions().getStartPosition(tree));
                 } else if (tp.getLeaf().getKind() == Tree.Kind.BLOCK) {
                     assignToVarPos = getController().getSnapshot().getOriginalOffset(offset);
                 } else {

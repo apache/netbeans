@@ -60,7 +60,7 @@ public final class TeamAccessorUtils {
     public static TeamAccessor[] getTeamAccessors() {
         if (teamAccessors == null) {
             Collection<? extends TeamAccessor> coll = Lookup.getDefault().lookupAll(TeamAccessor.class);
-            teamAccessors = coll.toArray(new TeamAccessor[coll.size()]);
+            teamAccessors = coll.toArray(new TeamAccessor[0]);
         }
         return teamAccessors;
     }
@@ -143,7 +143,7 @@ public final class TeamAccessorUtils {
                 Logger.getLogger(TeamAccessorUtils.class.getName()).log(Level.WARNING, null, ex);
             }
         }
-        return Collections.EMPTY_LIST;
+        return Collections.<RepositoryUser>emptyList();
     }    
     
     /**
@@ -268,7 +268,7 @@ public final class TeamAccessorUtils {
         for (TeamAccessor ka : getTeamAccessors()) {
             projs.addAll(Arrays.asList(ka.getDashboardProjects(onlyOpened)));
         }
-        return projs.toArray(new TeamProject[projs.size()]);
+        return projs.toArray(new TeamProject[0]);
     }    
     
     public static String getChatLink(String id) {

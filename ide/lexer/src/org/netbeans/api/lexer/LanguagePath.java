@@ -28,10 +28,10 @@ import java.util.WeakHashMap;
  * Language path describes a complete embedding
  * of the languages starting from the root (top-level) language
  * till the most embedded language.
- * <br/>
+ * <br>
  * Language path consists of one root language
  * and zero or more embedded languages.
- * <br/>
+ * <br>
  * E.g. for javadoc embedded in java that is embedded in jsp
  * then the language path <code>lp</code> would return the following:<pre>
  *  lp.size() == 3
@@ -79,12 +79,12 @@ public final class LanguagePath {
     /**
      * Get language path corresponding to the language embedded in the given context
      * language path.
-     * <br/>
+     * <br>
      * This method has the same effect like using {@link #embedded(Language)}.
-     * <br/>
+     * <br>
      * For example for java scriplet embedded in jsp the prefix would 
      * be a language-path for jsp language and language would be java language.
-     * <br/>
+     * <br>
      * By using this method language paths with arbitrary depth can be created.
      *
      *
@@ -149,7 +149,7 @@ public final class LanguagePath {
      * <br>
      * Index zero corresponds to the root language.
      *
-     * @param index >=0 && < {@link #size()}.
+     * @param index >=0 &amp;&amp; &lt; {@link #size()}.
      * @return non-null language at the given index.
      * @throws IndexOutOfBoundsException in case the index is not within
      *   required bounds.
@@ -160,13 +160,13 @@ public final class LanguagePath {
     
     /**
      * Get embedded path of this language path.
-     * <br/>
+     * <br>
      * This method has the same effect like using {@link #get(LanguagePath,Language)}
      * but this one is usually preferred as it supports more readable code.
-     * <br/>
+     * <br>
      * For example for java scriplet embedded in jsp the prefix would 
      * be a language-path for jsp language and language would be java language.
-     * <br/>
+     * <br>
      * By using this method language paths with arbitrary depth can be created.
      *
      * @param language non-null language.
@@ -224,7 +224,7 @@ public final class LanguagePath {
     /**
      * Returns language path consisting of <code>&lt;0, size() - 1&gt;</code>
      * languages (i.e. the inner language is cut out).
-     * <code>
+     * <br>
      * If {@link #size()} == 1 then <code>null</code> is returned.
      */
     public LanguagePath parent() {
@@ -233,7 +233,7 @@ public final class LanguagePath {
 
     /**
      * Return the top-level language of this language path.
-     * <br/>
+     * <br>
      * It's equivalent to <code>language(0)</code>.
      *
      * @see #language(int)
@@ -244,7 +244,7 @@ public final class LanguagePath {
     
     /**
      * Return the most inner language of this path.
-     * <br/>
+     * <br>
      * It's equivalent to <code>language(size() - 1)</code>.
      *
      * @see #language(int)
@@ -255,7 +255,7 @@ public final class LanguagePath {
     
     /**
      * Check whether this language path ends with the given language path.
-     * <br/>
+     * <br>
      * This may be useful for checking whether a given input contains certain language
      * (or language path) that may possibly be embedded somewhere in the input.
      *

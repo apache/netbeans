@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.text.MessageFormat;
 
-import org.netbeans.modules.j2ee.sun.validation.constraints.ConstraintFailure;
 import org.netbeans.modules.j2ee.sun.validation.util.BundleReader;
 
 /**
@@ -127,7 +126,7 @@ public class IntegerGreaterThanConstraint extends ConstraintUtils
      * @param value the value represented by this object.
      */
     public void setValue(Integer value){
-        this.value = value.intValue();
+        this.value = value;
     }
 
 

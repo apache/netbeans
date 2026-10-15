@@ -36,7 +36,7 @@ import org.openide.util.Utilities;
  */
 final class EventLock implements RWLock {
 
-    public final static RWLock DEFAULT = new EventLock();
+    public static final RWLock DEFAULT = new EventLock();
 
     private EventLock() {}
 

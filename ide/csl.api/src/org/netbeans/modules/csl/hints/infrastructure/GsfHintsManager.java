@@ -304,7 +304,7 @@ public class GsfHintsManager extends HintsProvider.HintsManager {
                 }
             }
         }
-        Collections.sort(rules, new Comparator<Pair<Rule,FileObject>>() {
+        rules.sort(new Comparator<Pair<Rule,FileObject>>() {
             @Override
             public int compare(Pair<Rule,FileObject> p1, Pair<Rule,FileObject> p2) {
                 return p1.first().getDisplayName().compareTo(p2.first().getDisplayName());
@@ -381,9 +381,8 @@ public class GsfHintsManager extends HintsProvider.HintsManager {
                 Object nonGuiObject = fo.getAttribute(NON_GUI);
                 boolean toGui = true;
                 
-                if ( nonGuiObject != null && 
-                     nonGuiObject instanceof Boolean &&
-                     ((Boolean)nonGuiObject).booleanValue() ) {
+                if (nonGuiObject instanceof Boolean &&
+                    ((Boolean) nonGuiObject).booleanValue()) {
                     toGui = false;
                 }
                 

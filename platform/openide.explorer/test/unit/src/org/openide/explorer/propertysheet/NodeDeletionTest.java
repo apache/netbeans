@@ -267,14 +267,17 @@ public class NodeDeletionTest extends NbTestCase {
         }
         
         // Set that this Editor doesn't support custom Editor
+        @Override
         public boolean supportsCustomEditor() {
             return false;
         }
-        
+
+        @Override
         public void addPropertyChangeListener(PropertyChangeListener l) {
             super.addPropertyChangeListener(l);
         }
-        
+
+        @Override
         public void removePropertyChangeListener(PropertyChangeListener l) {
             super.removePropertyChangeListener(l);
         }
@@ -282,10 +285,12 @@ public class NodeDeletionTest extends NbTestCase {
         
         
         // Set the Property value threw the Editor
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
         }
-        
+
+        @Override
         public void firePropertyChange() {
             super.firePropertyChange();
         }

@@ -31,6 +31,8 @@ import java.util.concurrent.TimeUnit;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.swing.event.ChangeListener;
+import javax.tools.JavaFileObject;
+import javax.tools.ToolProvider;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.java.platform.JavaPlatformManager;
@@ -41,6 +43,7 @@ import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.NbTestSuite;
 import org.netbeans.junit.RandomlyFails;
+import org.netbeans.modules.java.file.launcher.queries.MultiSourceRootProvider;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.usages.ClassIndexManager;
 import org.netbeans.modules.java.source.usages.ClassIndexManagerEvent;
@@ -88,9 +91,10 @@ public class ClassIndexTest extends NbTestCase {
         suite.addTest(new ClassIndexTest("testholdsWriteLock"));    //NOI18N
         suite.addTest(new ClassIndexTest("testGetElementsScopes"));    //NOI18N
         suite.addTest(new ClassIndexTest("testGetDeclaredTypesScopes"));    //NOI18N
-        suite.addTest(new ClassIndexTest("testPackageUdages"));    //NOI18N
+        suite.addTest(new ClassIndexTest("testPackageUsages"));    //NOI18N
         suite.addTest(new ClassIndexTest("testNullRootPassedToClassIndexEvent"));    //NOI18N
         suite.addTest(new ClassIndexTest("testFindSymbols"));    //NOI18N
+        suite.addTest(new ClassIndexTest("testQueryIndexRefreshQueryAgain"));    //NOI18N
         return suite;
     }
 
@@ -454,7 +458,8 @@ public class ClassIndexTest extends NbTestCase {
         assertElementHandles(new String[]{}, r);
     }
 
-    public void testPackageUdages() throws Exception {
+    @RandomlyFails
+    public void testPackageUsages() throws Exception {
         final FileObject wd = FileUtil.toFileObject(getWorkDir());
         final FileObject root = FileUtil.createFolder(wd,"src");    //NOI18N
         sourcePath = ClassPathSupport.createClassPath(root);
@@ -574,6 +579,58 @@ public class ClassIndexTest extends NbTestCase {
         assertEquals(new HashSet<String>(Arrays.asList("test.foo:[foo]", "test.Test:[foo]")), actualResult);
     }
     
+    public void testQueryIndexRefreshQueryAgain() throws Exception {
+        final FileObject wd = FileUtil.toFileObject(getWorkDir());
+        final FileObject root = FileUtil.createFolder(wd,"src");    //NOI18N
+        final FileObject classes = FileUtil.createFolder(wd,"classes");    //NOI18N
+        sourcePath = ClassPathSupport.createClassPath(root);
+        final FileObject t1 = createJavaFile(
+                root,
+                "org.me.test",                                          //NOI18N
+                "T1",                                                   //NOI18N
+                "package org.me.test;\n"+                               //NOI18N
+                "public class T1 extends java.util.ArrayList {}");      //NOI18N
+        //compile binary dependency:
+        JavaFileObject libraryJFO =
+                FileObjects.memoryFileObject("lib",
+                                             "TestLib.java",
+                                             """
+                                             package lib;
+                                             public class TestLib {}
+                                             """);
+        ToolProvider.getSystemJavaCompiler()
+                    .getTask(null,
+                             null,
+                             null,
+                             List.of("-d",
+                                     FileUtil.toFile(classes).getAbsolutePath()),
+                             null,
+                             List.of(libraryJFO))
+                    .call();
+
+        compilePath = ClassPathSupport.createClassPath(classes);
+        bootPath = JavaPlatformManager.getDefault().getDefaultPlatform().getBootstrapLibraries();
+
+        final ClassIndex ci = ClasspathInfo.create(bootPath, compilePath, sourcePath).getClassIndex();
+        Set<ElementHandle<TypeElement>> result;
+        result = ci.getDeclaredTypes("TestLib", NameKind.PREFIX, Set.of(ClassIndex.SearchScope.DEPENDENCIES));
+        assertElementHandles(new String[] {}, result);
+
+        GlobalPathRegistry.getDefault().register(ClassPath.BOOT, new ClassPath[] {bootPath});
+        GlobalPathRegistry.getDefault().register(ClassPath.COMPILE, new ClassPath[] {compilePath});
+        GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, new ClassPath[] {sourcePath});
+
+        System.out.println("## 1 before wait: " +SourceUtils.isScanInProgress());
+        SourceUtils.waitScanFinished();
+        System.out.println("## 2 after wait: " +SourceUtils.isScanInProgress());
+        IndexingManager.getDefault().refreshAllIndices(true, true, root);
+        System.out.println("## 3 after refresh: " +SourceUtils.isScanInProgress());
+        
+        result = ci.getDeclaredTypes("TestLib", NameKind.PREFIX, Set.of(ClassIndex.SearchScope.DEPENDENCIES));
+        assertNotNull(result);
+        assertElementHandles(new String[] {"lib.TestLib"}, result);
+    }
+
     private FileObject createJavaFile (
             final FileObject root,
             final String pkg,
@@ -599,7 +656,7 @@ public class ClassIndexTest extends NbTestCase {
     }
 
     private void assertElementHandles(final String[] expected, final Set<ElementHandle<TypeElement>> result) {
-        final Set<String> expSet = new HashSet(Arrays.asList(expected));
+        final Set<String> expSet = new HashSet<>(Arrays.asList(expected));
         for (ElementHandle<TypeElement> handle : result) {
             if (!expSet.remove(handle.getQualifiedName())) {
                 throw new AssertionError("Expected: " + Arrays.toString(expected) +" Result: " + result);
@@ -666,6 +723,10 @@ public class ClassIndexTest extends NbTestCase {
         }
     }
        
+
+    static {
+        MultiSourceRootProvider.DISABLE_MULTI_SOURCE_ROOT = true;
+    }
 
     public static class ClassPathProviderImpl implements ClassPathProvider {
 

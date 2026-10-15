@@ -118,7 +118,7 @@ public class ScriptWatchEvaluating extends AbstractModelNode implements ModelNod
         }
         int end = Math.min(to, list.size());
         list = list.subList(from, end);
-        return list.toArray(new VariableNode[list.size()]);
+        return list.toArray(new VariableNode[0]);
     }
 
     @Override

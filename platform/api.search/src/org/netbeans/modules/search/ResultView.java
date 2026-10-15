@@ -129,12 +129,7 @@ public final class ResultView extends TopComponent {
         singlePanel.setLayout(new BoxLayout(singlePanel, BoxLayout.PAGE_AXIS));
         emptyPanel.setOpaque(true);
         tabs = TabbedPaneFactory.createCloseButtonTabbedPane();
-        tabs.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                updateLookup();
-            }
-        });
+        tabs.addChangeListener((ChangeEvent e) -> updateLookup());
         tabs.setMinimumSize(new Dimension(0, 0));
         tabs.addMouseListener(popL);
         tabs.addPropertyChangeListener(closeL);
@@ -156,7 +151,7 @@ public final class ResultView extends TopComponent {
     }
 
     @Deprecated
-    final public static class ResolvableHelper implements java.io.Serializable {
+    public static final class ResolvableHelper implements java.io.Serializable {
         static final long serialVersionUID = 7398708142639457544L;
         public Object readResolve() {
             return null;
@@ -369,9 +364,9 @@ public final class ResultView extends TopComponent {
     }
 
     private Map<SearchTask, ResultViewPanel> searchToViewMap =
-            new HashMap<SearchTask, ResultViewPanel>();
+            new HashMap<>();
     private Map<ResultViewPanel, SearchTask> viewToSearchMap =
-            new HashMap<ResultViewPanel, SearchTask>();
+            new HashMap<>();
 
     void addSearchPair(ResultViewPanel panel, SearchTask task){
         if ((task != null) && (panel != null)){
@@ -385,20 +380,21 @@ public final class ResultView extends TopComponent {
     }
 
     private Map<ReplaceTask, SearchTask> replaceToSearchMap =
-            new HashMap<ReplaceTask, SearchTask>();
+            new HashMap<>();
     private Map<SearchTask, ReplaceTask> searchToReplaceMap =
-            new HashMap<SearchTask, ReplaceTask>();
+            new HashMap<>();
 
     private void closeAll(boolean butCurrent) {
         if (tabs.getTabCount() > 0) {
             Component current = tabs.getSelectedComponent();
             Component[] c =  tabs.getComponents();
-            for (int i = 0; i< c.length; i++) {
-                if (butCurrent && c[i]==current) {
+            for (Component c1 : c) {
+                if (butCurrent && c1 == current) {
                     continue;
                 }
-                if(c[i] instanceof ResultViewPanel) { // #172546
-                    removePanel((ResultViewPanel) c[i]);
+                if (c1 instanceof ResultViewPanel) {
+                    // #172546
+                    removePanel((ResultViewPanel) c1);
                 }
             }
         } else if (singlePanel.getComponents().length > 0) {
@@ -535,7 +531,7 @@ public final class ResultView extends TopComponent {
             ResultViewPanel resultViewPanel) {
         tabToReuse = resultViewPanel == null
                 ? null
-                : new WeakReference<ResultViewPanel>(resultViewPanel);
+                : new WeakReference<>(resultViewPanel);
     }
 
     private synchronized ResultViewPanel getTabToReuse() {
@@ -575,8 +571,8 @@ public final class ResultView extends TopComponent {
             appendTabToToolTip(singlePanel.getComponent(0), sb);
         } else if (tabs.getComponents().length > 0) {
             Component[] comps = tabs.getComponents();
-            for (int i = 0; i < comps.length; i++) {
-                appendTabToToolTip(comps[i], sb);
+            for (Component comp : comps) {
+                appendTabToToolTip(comp, sb);
             }
         }
         sb.append("</html>");                                           //NOI18N

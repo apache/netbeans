@@ -65,9 +65,7 @@ public class ContentParserTest extends NbTestCase {
     }
     
     private JShell createJShell() throws Exception {
-        File jarFile = new File(JShell.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-        assertTrue(jarFile.exists() && jarFile.isFile());
-        return JShell.builder().remoteVMOptions("-classpath", jarFile.toPath().toString()).build();
+        return JShell.builder().build();
     }
     
     private void parseOutput() throws Exception {

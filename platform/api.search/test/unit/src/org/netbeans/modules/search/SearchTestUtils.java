@@ -63,7 +63,7 @@ public final class SearchTestUtils {
         for (int i = 0; i < 10; i++) {
             FileObject fo = root.createData(i + ".txt");                //NOI18N
             DataObject dob = DataObject.find(fo);
-            List<TextDetail> details = new ArrayList<TextDetail>(i);
+            List<TextDetail> details = new ArrayList<>(i);
             for (int j = 0; j < i + 1; j++) {
                 TextDetail td = new TextDetail(dob, sp);
                 details.add(td);

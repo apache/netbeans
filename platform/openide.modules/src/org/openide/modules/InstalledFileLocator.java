@@ -98,7 +98,7 @@ public abstract class InstalledFileLocator {
      * this path will be relative to the installation directory (or user directory,
      * for a locally installed module). Other possible installation mechanisms, such
      * as JNLP (Java WebStart), might arrange the physical files differently, but
-     * generally the path indicated by a module's normal NBM file (beneath <samp>netbeans/</samp>
+     * generally the path indicated by a module's normal NBM file (beneath <code>netbeans/</code>
      * in the NBM) should be interpreted by the locator implementation to point to the actual
      * location of the file, so the module need not be aware of such details. Some
      * locator implementations may perform the search more accurately or quickly
@@ -109,7 +109,7 @@ public abstract class InstalledFileLocator {
      * should attempt to find that directory in the installation. Note that only one
      * file may be located from a given path, so generally this method will not be
      * useful where a directory can contain many items that may be merged between e.g.
-     * the installation and user directories. For example, the <samp>docs</samp> folder
+     * the installation and user directories. For example, the <code>docs</code> folder
      * (used e.g. for Javadoc) might contain several ZIP files in both the installation and
      * user areas. Use {@link #locateAll} if you need all results. The module may assume
      * that all contained files are in the same relative structure in the directory as in
@@ -121,8 +121,8 @@ public abstract class InstalledFileLocator {
      * </div>
      * <p>
      * Localized and branded lookups should follow the normal naming conventions,
-     * e.g. <samp>docs/OpenAPIs_ja.zip</samp> would be used for Japanese Javadoc
-     * and <samp>locate("docs/OpenAPIs.zip",&nbsp;&#8230;,&nbsp;true)</samp>
+     * e.g. <code>docs/OpenAPIs_ja.zip</code> would be used for Japanese Javadoc
+     * and <code>locate("docs/OpenAPIs.zip",&nbsp;&#8230;,&nbsp;true)</code>
      * would find it when running in Japanese locale.
      * </p>
      * <div class="nonnormative">
@@ -139,7 +139,7 @@ public abstract class InstalledFileLocator {
      * </pre>
      * <p>
      * When running from a JAR file, this will typically give e.g.
-     * <samp>file:/path/to/archive.jar</samp>. This information may be useful,
+     * <code>file:/path/to/archive.jar</code>. This information may be useful,
      * but it is not conclusive, since there is no guarantee what the URL protocol
      * will be, nor that the returned URL uniquely identifies a JAR shipped with
      * the module in its canonical NBM format. <code>InstalledFileLocator</code>
@@ -151,7 +151,7 @@ public abstract class InstalledFileLocator {
      * <p>
      * This class should <em>not</em> be used just to find resources on the system
      * filesystem, which in the normal NetBeans installation structure means the
-     * result of merging <samp>${netbeans.home}/system/</samp> with <samp>${netbeans.user}/system/</samp>
+     * result of merging <code>${netbeans.home}/system/</code> with <code>${netbeans.user}/system/</code>
      * as well as module layers and perhaps project-specific storage. To find data in
      * the system filesystem, use the Filesystems API, e.g. in your layer you can predefine:
      * </p>
@@ -174,10 +174,10 @@ public abstract class InstalledFileLocator {
      </span>}
      </pre>
      * </div>
-     * @param relativePath path from install root, e.g. <samp>docs/OpenAPIs.zip</samp>
-     *                     or <samp>modules/ext/somelib.jar</samp>
-     *                     (always using <samp>/</samp> as a separator, regardless of platform)
-     * @param codeNameBase name of the supplying module, e.g. <samp>org.netbeans.modules.foo</samp>;
+     * @param relativePath path from install root, e.g. <code>docs/OpenAPIs.zip</code>
+     *                     or <code>modules/ext/somelib.jar</code>
+     *                     (always using <code>/</code> as a separator, regardless of platform)
+     * @param codeNameBase name of the supplying module, e.g. <code>org.netbeans.modules.foo</code>;
      *                     may be <code>null</code> if unknown
      * @param localized true to perform a localized and branded lookup (useful for documentation etc.)
      * @return the requested <code>File</code>, if it can be found, else <code>null</code>
@@ -238,7 +238,7 @@ public abstract class InstalledFileLocator {
         
         Collection<? extends InstalledFileLocator> c = _result.allInstances();
         synchronized (LOCK) {
-            return instances = c.toArray(new InstalledFileLocator[c.size()]);
+            return instances = c.toArray(new InstalledFileLocator[0]);
         }
     }
     

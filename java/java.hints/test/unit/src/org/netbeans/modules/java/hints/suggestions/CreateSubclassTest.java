@@ -20,6 +20,7 @@
 package org.netbeans.modules.java.hints.suggestions;
 
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import org.junit.Test;
 import org.netbeans.modules.java.hints.test.api.HintTest;
 import org.openide.filesystems.FileUtil;
@@ -38,7 +39,7 @@ public class CreateSubclassTest {
         };
         HintTest test = HintTest.create();
         try (OutputStream out = FileUtil.createData(FileUtil.getConfigRoot(), "Templates/Classes/Class.java").getOutputStream()) {
-            out.write("public class New {}\n".getBytes("UTF-8"));
+            out.write("public class New {}\n".getBytes(StandardCharsets.UTF_8));
         }
         test.setCaretMarker('^')
             .input("package test;\n" +
@@ -60,7 +61,7 @@ public class CreateSubclassTest {
         };
         HintTest test = HintTest.create();
         try (OutputStream out = FileUtil.createData(FileUtil.getConfigRoot(), "Templates/Classes/Class.java").getOutputStream()) {
-            out.write("public class New {}\n".getBytes("UTF-8"));
+            out.write("public class New {}\n".getBytes(StandardCharsets.UTF_8));
         }
         test.setCaretMarker('^')
             .input("package test;\n" +
@@ -82,7 +83,7 @@ public class CreateSubclassTest {
         };
         HintTest test = HintTest.create();
         try (OutputStream out = FileUtil.createData(FileUtil.getConfigRoot(), "Templates/Classes/Class.java").getOutputStream()) {
-            out.write("public class New {}\n".getBytes("UTF-8"));
+            out.write("public class New {}\n".getBytes(StandardCharsets.UTF_8));
         }
         test.setCaretMarker('^')
             .input("package test;\n" +

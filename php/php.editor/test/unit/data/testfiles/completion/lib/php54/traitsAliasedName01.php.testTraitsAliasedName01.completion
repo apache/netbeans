@@ -1,0 +1,5 @@
+Code completion result for source line:
+use Alias|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    AliasedNameTest                 [PUBLIC]   null
+CLASS      AliasedTrait                    [PUBLIC]   AliasedNameTest

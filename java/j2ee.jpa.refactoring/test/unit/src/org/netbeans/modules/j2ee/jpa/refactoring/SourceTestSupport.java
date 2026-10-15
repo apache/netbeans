@@ -19,13 +19,12 @@
 package org.netbeans.modules.j2ee.jpa.refactoring;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.JavaDataLoader;
@@ -118,13 +117,9 @@ public abstract class SourceTestSupport extends NbTestCase{
     }
     
     protected FileObject copyStringToFileObject(FileObject fo, String content) throws Exception {
-        OutputStream os = fo.getOutputStream();
-        try {
-            InputStream is = new ByteArrayInputStream(content.getBytes("UTF-8"));
-            FileUtil.copy(is, os);
+        try (OutputStream os = fo.getOutputStream()) {
+            os.write(content.getBytes(StandardCharsets.UTF_8));
             return fo;
-        } finally {
-            os.close();
         }
     }
     
@@ -144,7 +139,7 @@ public abstract class SourceTestSupport extends NbTestCase{
         
     }
 
-    static private class JavaFileResolver extends MIMEResolver
+    private static class JavaFileResolver extends MIMEResolver
     {
 
         public JavaFileResolver() {

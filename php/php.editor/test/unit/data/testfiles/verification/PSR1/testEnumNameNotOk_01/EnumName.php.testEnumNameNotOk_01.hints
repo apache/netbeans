@@ -1,0 +1,4 @@
+enum Enum_Name {
+     ---------
+HINT:PSR-1 Violation:
+Type names MUST be declared in StudlyCaps.

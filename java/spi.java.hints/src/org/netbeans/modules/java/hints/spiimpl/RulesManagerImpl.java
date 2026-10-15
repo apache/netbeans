@@ -24,7 +24,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.WeakHashMap;
@@ -52,7 +51,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=RulesManager.class)
 public class RulesManagerImpl extends RulesManager {
 
-    private final Map<HintMetadata, Collection<HintDescription>> globalHints = new HashMap<HintMetadata, Collection<HintDescription>>();
+    private final Map<HintMetadata, Collection<HintDescription>> globalHints = new HashMap<>();
 
     public RulesManagerImpl() {
         reload();
@@ -67,7 +66,7 @@ public class RulesManagerImpl extends RulesManager {
 
             if (pHints != null) {
                 for (Entry<HintMetadata, ? extends Collection<? extends HintDescription>> e : pHints.entrySet()) {
-                    globalHints.put(e.getKey(), new ArrayList<HintDescription>(e.getValue()));
+                    globalHints.put(e.getKey(), new ArrayList<>(e.getValue()));
                 }
             }
         }
@@ -76,7 +75,7 @@ public class RulesManagerImpl extends RulesManager {
     private final Map<ClasspathInfo, Reference<Holder>> compoundPathCache = new WeakHashMap<>();
     
     /**
-     * Holds a refernce to a composite CP created from the ClasspathInfo. Attaches as listener
+     * Holds a reference to a composite CP created from the ClasspathInfo. Attaches as listener
      * to the ClasspathInfo, so it should live at least as so long as the original ClasspathInfo.
      * Does not reference CPInfo, so it may be stored as a WHM value - but it references CPInfo components.
      * GC may free Holders together with their original CPInfos.
@@ -86,11 +85,12 @@ public class RulesManagerImpl extends RulesManager {
         
         public Holder(ClasspathInfo cpInfo) {
             cpInfo.addChangeListener(this);
-            LinkedList<ClassPath> cps = new LinkedList<ClassPath>();
-            cps.add(cpInfo.getClassPath(PathKind.BOOT));
-            cps.add(cpInfo.getClassPath(PathKind.COMPILE));
-            cps.add(cpInfo.getClassPath(PathKind.SOURCE));
-            compound = ClassPathSupport.createProxyClassPath(cps.toArray(new ClassPath[0]));
+            ClassPath[] cps = new ClassPath[] {
+                cpInfo.getClassPath(PathKind.BOOT),
+                cpInfo.getClassPath(PathKind.COMPILE),
+                cpInfo.getClassPath(PathKind.SOURCE)
+            };
+            compound = ClassPathSupport.createProxyClassPath(cps);
         }
 
         @Override
@@ -101,7 +101,7 @@ public class RulesManagerImpl extends RulesManager {
 
     @Override
     public Map<HintMetadata, ? extends Collection<? extends HintDescription>> readHints(CompilationInfo info, Collection<? extends ClassPath> from, AtomicBoolean cancel) {
-        Map<HintMetadata, Collection<HintDescription>> result = new HashMap<HintMetadata, Collection<HintDescription>>(globalHints);
+        Map<HintMetadata, Collection<HintDescription>> result = new HashMap<>(globalHints);
 
         if (info != null) {
             for (ElementBasedHintProvider provider : Lookup.getDefault().lookupAll(ElementBasedHintProvider.class)) {
@@ -113,7 +113,7 @@ public class RulesManagerImpl extends RulesManager {
         
         if (from != null) {
             // not cached, probably not invoked that much
-            compound = ClassPathSupport.createProxyClassPath(from.toArray(new ClassPath[0]));
+            compound = ClassPathSupport.createProxyClassPath(from.toArray(ClassPath[]::new));
         } else {
             OK: if (info != null) {
                 synchronized (compoundPathCache) {
@@ -148,13 +148,8 @@ public class RulesManagerImpl extends RulesManager {
 
     public static void sortByMetadata(Collection<? extends HintDescription> listedHints, Map<HintMetadata, Collection<HintDescription>> into) {
         for (HintDescription hd : listedHints) {
-            Collection<HintDescription> h = into.get(hd.getMetadata());
-
-            if (h == null) {
-                into.put(hd.getMetadata(), h = new ArrayList<HintDescription>());
-            }
-
-            h.add(hd);
+            into.computeIfAbsent(hd.getMetadata(), k -> new ArrayList<>())
+                .add(hd);
         }
     }
 

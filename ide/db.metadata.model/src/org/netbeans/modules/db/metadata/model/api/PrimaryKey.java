@@ -39,12 +39,12 @@ public class PrimaryKey extends MetadataElement {
         return impl.getParent();
     }
 
-    @Override
     /**
      * Get the name for this primary key.  May be null.
      *
      * @return the name for this primary key
      */
+    @Override
     public String getName() {
         return impl.getName();
     }

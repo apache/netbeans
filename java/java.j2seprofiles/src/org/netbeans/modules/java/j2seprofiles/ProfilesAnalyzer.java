@@ -523,7 +523,7 @@ nextCpE:for (ClassPath.Entry e : cp.entries()) {
                 }
             }
         }
-        return fos.toArray(new FileObject[fos.size()]);
+        return fos.toArray(new FileObject[0]);
     }
 
     private static boolean shouldProcessViolationsInSource(
@@ -702,8 +702,8 @@ nextCpE:for (ClassPath.Entry e : cp.entries()) {
                     final ProfileSupport.Violation v = violationsByBinNames.get(binName.toString());
                     if (v != null) {
                         final SourcePositions sp = trees.getSourcePositions();
-                        final int start = (int) sp.getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
-                        final int end = (int) sp.getEndPosition(tp.getCompilationUnit(), tp.getLeaf());
+                        final int start = (int) sp.getStartPosition(tp.getLeaf());
+                        final int end = (int) sp.getEndPosition(tp.getLeaf());
                         final SourceLevelQuery.Profile requiredProfile = v.getRequiredProfile();
                         assert requiredProfile != null;
                         errors.reportError(ErrorDescriptionFactory.createErrorDescription(

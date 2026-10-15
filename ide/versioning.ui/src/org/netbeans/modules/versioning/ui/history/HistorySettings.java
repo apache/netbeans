@@ -94,7 +94,7 @@ public class HistorySettings {
     }
     
     public boolean getLoadAll() {
-        return getPreferences().getBoolean(PROP_LOAD_ALL, false);
+        return getPreferences().getBoolean(PROP_LOAD_ALL, true);
 }
 
     public void setLoadAll(boolean loadAll) {

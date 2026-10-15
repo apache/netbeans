@@ -29,6 +29,7 @@ import org.openide.util.Enumerations;
 // Copied from org.netbeans.modules.j2ee.common.source
 public class FakeJavaDataLoaderPool extends DataLoaderPool {
     
+    @Override
     public Enumeration<? extends DataLoader> loaders() {
         return Enumerations.singleton(new JavaDataLoader());
     }

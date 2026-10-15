@@ -129,7 +129,7 @@ public class ElementVisitor extends ElementScanner6<Void,PrintStream> {
             return new long[]{-1,-1};
         }        
         SourcePositions sourcePositions = trees.getSourcePositions();        
-        return new long[] {sourcePositions.getStartPosition(cut, t),sourcePositions.getEndPosition(cut, t)};
+        return new long[] {sourcePositions.getStartPosition(t),sourcePositions.getEndPosition(t)};
     }
                
 }

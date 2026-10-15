@@ -30,7 +30,7 @@ libraries that may be needed for some optional tasks shipped with Ant.</p>
 {@link org.apache.tools.ant.module.spi.AntEvent}, and {@link org.apache.tools.ant.module.spi.TaskStructure}, provides a powerful way of controlling
 the appearance of Ant process output.</p>
 
-<h2><a name="register-defs">Registering Tasks and Types</a></h2>
+<h2 id="register-defs">Registering Tasks and Types</h2>
 
 <p>The Ant module provides a way for other modules to register custom Ant
 tasks and types that will automatically be available to any scripts running
@@ -63,7 +63,7 @@ Create a JAR file containing the task class(es), named
 <samp>org-netbeans-modules-foo.jar</samp>.
 Create an entry in that JAR <samp>org/netbeans/modules/foo/antlib.xml</samp>
 listing tasks (or types, macrodefs, etc.) you wish to define, in the
-<a href="http://ant.apache.org/manual/CoreTypes/antlib.html">standard Antlib format</a>.
+<a href="https://ant.apache.org/manual/Types/antlib.html">standard Antlib format</a>.
 For example:</p>
 
 <pre>
@@ -131,7 +131,7 @@ there is no possibility of name clashes with unrelated tasks:</p>
 </pre>
 
 <p>Complete working example of task registration:
-<a href="http://www.netbeans.org/source/browse/ant/browsetask/"><samp>ant/browsetask</samp>
+<a href="https://github.com/apache/netbeans/tree/master/java/ant.browsetask"><samp>java/ant.browsetask</samp>
 module</a></p>
 
 </body>

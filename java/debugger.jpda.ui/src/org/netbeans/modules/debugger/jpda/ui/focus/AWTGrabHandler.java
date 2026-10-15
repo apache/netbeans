@@ -309,7 +309,7 @@ class AWTGrabHandler {
                 logger.info("Unable to release X grab, method ungrabInput not found in target VM "+VirtualMachineWrapper.description(vm));
                 return false;
             }
-            XBaseWindowClass.invokeMethod(tr, ungrabInput, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+            XBaseWindowClass.invokeMethod(tr, ungrabInput, Collections.<Value>emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
         } catch (VMDisconnectedExceptionWrapper vmdex) {
             return true; // Disconnected, all is good.
         } catch (Exception ex) {
@@ -338,7 +338,7 @@ class AWTGrabHandler {
                 logger.info("Unable to release FX X grab, no impl_getWindows() method in "+WindowClass);
                 return true; // We do not know whether there was any grab
             }
-            ObjectReference windowsIterator = (ObjectReference) WindowClass.invokeMethod(tr, getWindowsMethod, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+            ObjectReference windowsIterator = (ObjectReference) WindowClass.invokeMethod(tr, getWindowsMethod, Collections.<Value>emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
             if (windowsIterator == null) {
                 return true; // We do not know whether there was any grab
             }
@@ -359,12 +359,12 @@ class AWTGrabHandler {
     }
     
     private boolean hasNext(Method hasNext, ThreadReference tr, ObjectReference iterator) throws Exception {
-        Value v = iterator.invokeMethod(tr, hasNext, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+        Value v = iterator.invokeMethod(tr, hasNext, Collections.<Value>emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
         return (v instanceof BooleanValue) && ((BooleanValue) v).booleanValue();
     }
     
     private ObjectReference next(Method next, ThreadReference tr, ObjectReference iterator) throws Exception {
-        return (ObjectReference) iterator.invokeMethod(tr, next, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+        return (ObjectReference) iterator.invokeMethod(tr, next, Collections.<Value>emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
     }
     
     private void ungrabWindowFX(ClassType WindowClass, ObjectReference w, ThreadReference tr) throws Exception {
@@ -400,7 +400,7 @@ class AWTGrabHandler {
             }
             InterfaceType TKStageClass = (InterfaceType) w.virtualMachine().classesByName("com.sun.javafx.tk.TKStage").get(0);
             Method ungrabFocusMethod = TKStageClass.methodsByName("ungrabFocus", "()V").get(0);
-            impl_peer.invokeMethod(tr, ungrabFocusMethod, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+            impl_peer.invokeMethod(tr, ungrabFocusMethod, Collections.<Value>emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
             if (logger.isLoggable(Level.FINE)) {
                 logger.fine("FX Window "+w+" was successfully ungrabbed.");
             }
@@ -547,7 +547,7 @@ class AWTGrabHandler {
             //writeLock.lock();
             ClassType ToolkitClass = (ClassType) toolkitClassesByName.get(0);
             Method getDefaultToolkit = ClassTypeWrapper.concreteMethodByName(ToolkitClass, "getDefaultToolkit", "()Ljava/awt/Toolkit;");
-            ObjectReference toolkit = (ObjectReference) ToolkitClass.invokeMethod(tr, getDefaultToolkit, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+            ObjectReference toolkit = (ObjectReference) ToolkitClass.invokeMethod(tr, getDefaultToolkit, Collections.<Value>emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
             
             ClassType XToolkitClass;
             switch (tkt) {
@@ -583,7 +583,7 @@ class AWTGrabHandler {
                 if (getSunAwtDisableGrab == null) {
                     logger.fine("XToolkit.getSunAwtDisableGrab() method not found in target VM "+VirtualMachineWrapper.description(virtualMachine));
                 } else {
-                    BooleanValue sunAwtDisableGrab = (BooleanValue) XToolkitClass.invokeMethod(tr, getSunAwtDisableGrab, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                    BooleanValue sunAwtDisableGrab = (BooleanValue) XToolkitClass.invokeMethod(tr, getSunAwtDisableGrab, Collections.<Value>emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                     if (logger.isLoggable(Level.FINE)) {
                         logger.fine("sunAwtDisableGrab = "+sunAwtDisableGrab.value());
                     }
@@ -601,7 +601,7 @@ class AWTGrabHandler {
                 logger.fine("XToolkit.getDefaultRootWindow() method does not exist in the target VM "+VirtualMachineWrapper.description(virtualMachine));
                 return false;
             }
-            LongValue defaultRootWindowValue = (LongValue) XToolkitClass.invokeMethod(tr, getDefaultRootWindow, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+            LongValue defaultRootWindowValue = (LongValue) XToolkitClass.invokeMethod(tr, getDefaultRootWindow, Collections.<Value>emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
             
             // XAtom xa = new XAtom(grabCheckStr, true);
             List<ReferenceType> xatomClassesByName = VirtualMachineWrapper.classesByName(virtualMachine, "sun.awt.X11.XAtom");

@@ -106,7 +106,7 @@ public class BaseDocumentUnitTestCase extends NbTestCase {
      *
      * @return caret instance.
      */
-    protected synchronized final Caret getCaret () {
+    protected final synchronized Caret getCaret () {
         if (caret == null) {
             caret = new CaretImpl(getDocument(), loadCaretOffset);
         }
@@ -248,8 +248,12 @@ public class BaseDocumentUnitTestCase extends NbTestCase {
         return editorKit;
     }
     
+    protected BaseDocument createDocument() {
+        return (BaseDocument)getEditorKit().createDefaultDocument();
+    }
+
     private BaseDocument createAndLoadDocument() {
-        BaseDocument bd = (BaseDocument)getEditorKit().createDefaultDocument();
+        BaseDocument bd = createDocument();
 
         if (loadDocumentText != null) {
             try {

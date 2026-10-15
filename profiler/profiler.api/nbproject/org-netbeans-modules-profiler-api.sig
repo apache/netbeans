@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.56
+#Version 1.83
 
 CLSS public abstract interface java.io.Serializable
 
@@ -21,7 +21,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
@@ -51,7 +50,6 @@ fld public final static javax.swing.KeyStroke NO_KEYSTROKE
 meth public static java.lang.String keyAcceleratorString(javax.swing.KeyStroke)
 meth public static javax.swing.KeyStroke registerAction(java.lang.String,javax.swing.Action,javax.swing.ActionMap,javax.swing.InputMap)
 supr java.lang.Object
-hfds ACC_DELIMITER
 
 CLSS public final org.netbeans.modules.profiler.api.EditorContext
 cons public init(javax.swing.text.JTextComponent,javax.swing.text.Document,org.openide.filesystems.FileObject)

@@ -362,7 +362,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         processValidPath(menu, paths, paginationTemplatePath, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "PersistenceClientSetupPanelVisual.paginationTemplate"));
         processValidPath(menu, paths, utilTemplatePath, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "PersistenceClientSetupPanelVisual.utilTemplate"));
         processValidPath(menu, paths, bundleTemplatePath, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "PersistenceClientSetupPanelVisual.bundleTemplate"));
-        menu.insert(new OpenTemplateAction(this, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "PersistenceClientSetupPanelVisual.allTemplates"), paths.toArray(new String[paths.size()])), 0);
+        menu.insert(new OpenTemplateAction(this, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "PersistenceClientSetupPanelVisual.allTemplates"), paths.toArray(new String[0])), 0);
         menu.show(customizeTemplatesLabel, evt.getX(), evt.getY());
     }//GEN-LAST:event_customizeTemplatesLabelMouseClicked
 
@@ -439,8 +439,12 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                     Class.forName("javax.transaction.UserTransaction", false, cl);
                 }
                 catch (ClassNotFoundException cnfe) {
-                    wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "ERR_UserTransactionUnavailable"));
-                    return false;
+                    try {
+                        Class.forName("jakarta.transaction.UserTransaction", false, cl);
+                    } catch (ClassNotFoundException cnfe2) {
+                        wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "ERR_UserTransactionUnavailable"));
+                        return false;
+                    }
                 }
                 catch (UnsupportedClassVersionError ucve) {
                     Logger.getLogger(PersistenceClientSetupPanelVisual.class.getName()).log(Level.WARNING, ucve.toString());
@@ -566,7 +570,7 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
         String jsfPkg = getJsfPackage();
         settings.putProperty(WizardProperties.JPA_CLASSES_PACKAGE, jpaPkg);
         settings.putProperty(WizardProperties.JSF_CLASSES_PACKAGE, jsfPkg);
-        settings.putProperty(WizardProperties.AJAXIFY_JSF_CRUD, Boolean.valueOf(ajaxifyCheckbox.isSelected()));
+        settings.putProperty(WizardProperties.AJAXIFY_JSF_CRUD, ajaxifyCheckbox.isSelected());
         settings.putProperty(WizardProperties.JAVA_PACKAGE_ROOT_FILE_OBJECT, getLocationValue().getRootFolder());
         settings.putProperty(WizardProperties.LOCALIZATION_BUNDLE_NAME, localizationBundleTextField.getText());
         settings.putProperty(WizardProperties.TEMPLATE_STYLE, getTemplatesStyle());

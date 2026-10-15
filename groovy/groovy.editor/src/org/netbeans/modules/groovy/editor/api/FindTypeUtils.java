@@ -93,7 +93,12 @@ public final class FindTypeUtils {
             return getCurrentModuleNode(path).getPackage();
         }
 
-        if (leaf instanceof ClassNode) {
+        if (leaf instanceof AnnotationNode) {
+            AnnotationNode annotation = (AnnotationNode) leaf;
+            if (isCaretOnAnnotation(annotation, doc, caret)) {
+                return annotation.getClassNode();
+            }
+        } else if (leaf instanceof ClassNode) {
             ClassNode classNode = ((ClassNode) leaf);
             if (isCaretOnClassNode(classNode, doc, caret)) {
                 return classNode;
@@ -107,20 +112,8 @@ public final class FindTypeUtils {
                     return interfaceNode;
                 }
             }
-            for (AnnotationNode annotation : classNode.getAnnotations()) {
-                if (isCaretOnAnnotation(annotation, doc, caret)) {
-                    return annotation.getClassNode();
-                }
-            }
         } else if (leaf instanceof FieldNode) {
             FieldNode field = (FieldNode) leaf;
-
-            for (AnnotationNode annotation : field.getAnnotations()) {
-                if (isCaretOnAnnotation(annotation, doc, caret)) {
-                    return annotation.getClassNode();
-                }
-            }
-
             if (isCaretOnFieldType(field, doc, caret)) {
                 return ElementUtils.getType(leaf);
             } else if (isCaretOnGenericType(field.getType(), doc, caret)) {
@@ -129,13 +122,6 @@ public final class FindTypeUtils {
         } else if (leaf instanceof PropertyNode) {
             PropertyNode property = (PropertyNode) leaf;
             FieldNode field = property.getField();
-
-            for (AnnotationNode annotation : field.getAnnotations()) {
-                if (isCaretOnAnnotation(annotation, doc, caret)) {
-                    return annotation.getClassNode();
-                }
-            }
-
             if (isCaretOnFieldType(field, doc, caret)) {
                 return ElementUtils.getType(leaf);
             } else if (isCaretOnGenericType(field.getType(), doc, caret)) {
@@ -143,13 +129,6 @@ public final class FindTypeUtils {
             }
         } else if (leaf instanceof MethodNode) {
             MethodNode method = ((MethodNode) leaf);
-
-            for (AnnotationNode annotation : method.getAnnotations()) {
-                if (isCaretOnAnnotation(annotation, doc, caret)) {
-                    return annotation.getClassNode();
-                }
-            }
-
             if (isCaretOnReturnType(method, doc, caret)) {
                 return ElementUtils.getType(leaf);
             } else if (isCaretOnGenericType(method.getReturnType(), doc, caret)) {
@@ -232,6 +211,9 @@ public final class FindTypeUtils {
             moduleNode = (ModuleNode) leaf;
         } else if (leaf instanceof ClassNode) {
             moduleNode = ((ClassNode) leaf).getModule();
+        } else if (leaf instanceof ImportNode &&
+                   leafParent instanceof ClassNode) {
+            moduleNode = ((ClassNode) leafParent).getModule();
         } else if (leaf instanceof BlockStatement &&
                    leafParent instanceof MethodNode &&
                    path.root() instanceof ModuleNode) {

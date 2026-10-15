@@ -40,7 +40,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class DocumentViewPanelProvider implements CssStylesPanelProvider {
 
     private static String DOCUMENT_PANEL_ID = "static_document";
-    private static Collection<String> MIME_TYPES = new HashSet(Arrays.asList(new String[]{"text/css", "text/html", "text/xhtml"}));
+    private static Collection<String> MIME_TYPES = new HashSet<>(Arrays.asList(new String[]{"text/css", "text/html", "text/xhtml"}));
     private DocumentViewPanel panel;
     
     @Override

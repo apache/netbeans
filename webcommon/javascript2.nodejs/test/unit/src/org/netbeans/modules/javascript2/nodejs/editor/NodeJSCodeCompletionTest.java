@@ -22,20 +22,20 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.netbeans.api.java.classpath.ClassPath;
-import org.netbeans.api.project.Project;
 import org.netbeans.modules.javascript2.editor.JsCodeCompletionBase;
-import static org.netbeans.modules.javascript2.editor.JsTestBase.JS_SOURCE_ID;
 import org.netbeans.modules.javascript2.nodejs.TestProjectSupport;
+import org.netbeans.modules.javascript2.nodejs.TestProjectSupport.TestProject;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.modules.Places;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.Lookups;
 import org.openide.util.test.MockLookup;
 
+import static org.netbeans.modules.javascript2.editor.JsTestBase.JS_SOURCE_ID;
 /**
  *
  * @author Petr Pisl
@@ -46,24 +46,31 @@ public class NodeJSCodeCompletionTest extends JsCodeCompletionBase {
         super(testName);
     }
 
-    static private boolean isSetup = false;
+    private static boolean isSetup = false;
 
     @Override
     protected void setUp() throws Exception {
-//        super.setUp(); //To change body of generated methods, choose Tools | Templates.
         if (!isSetup) {
             // only for the first run index all sources
             super.setUp();
             isSetup = true;
         }
-        
+
         FileObject folder = getTestFile("TestNavigation");
-        Project testProject = new TestProjectSupport.TestProject(folder, null);
-        List lookupAll = new ArrayList();
+        TestProject testProject = new TestProjectSupport.TestProject(folder, null);
+
+        // NodeJsDataProvider downloads the node js api documentation. The
+        // golden files assume a fixed version, so simulate that for the test
+        // project.
+        Lookup projectLookup = Lookups.fixed(new FixedVersionMockJsSupport("24.14.0"));
+
+        testProject.setLookup(projectLookup);
+
+        List<Object> lookupAll = new ArrayList<>();
         lookupAll.addAll(MockLookup.getDefault().lookupAll(Object.class));
         lookupAll.add(new TestProjectSupport.FileOwnerQueryImpl(testProject));
+        lookupAll.add(new FixedProjectFileOwnerQueryImplementation(testProject));
         MockLookup.setInstances(lookupAll.toArray());
-
     }
 
     public void testBasicExport01() throws Exception {
@@ -301,13 +308,12 @@ public class NodeJSCodeCompletionTest extends JsCodeCompletionBase {
     
     @Override
     protected Map<String, ClassPath> createClassPathsForTest() {
-        List<FileObject> cpRoots = new LinkedList<FileObject>();
-
+        List<FileObject> cpRoots = new ArrayList<>(2);
         cpRoots.add(FileUtil.toFileObject(new File(getDataDir(), "/TestNavigation/public_html/")));
         cpRoots.add(FileUtil.toFileObject(new File(getDataDir(), "/NodeJsRuntime/")));
         return Collections.singletonMap(
                 JS_SOURCE_ID,
-                ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[cpRoots.size()]))
+                ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[0]))
         );
     }
 

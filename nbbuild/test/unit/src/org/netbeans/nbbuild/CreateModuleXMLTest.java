@@ -24,6 +24,9 @@ import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.io.File;
 import java.io.IOException;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Rule;
 
 
 /** Check behaviour of ModuleSelector.
@@ -31,7 +34,9 @@ import java.io.IOException;
  * @author Jaroslav Tulach
  */
 public class CreateModuleXMLTest extends TestBase {
-    
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+
     public CreateModuleXMLTest(String testName) {
         super(testName);
     }
@@ -40,15 +45,15 @@ public class CreateModuleXMLTest extends TestBase {
         Manifest m = createManifest ();
         m.getMainAttributes().putValue("OpenIDE-Module", "org.my.module");
         File aModule = generateJar(new String[0], m);
-        
+
         File output = new File(getWorkDir(), "output");
-        
+
         java.io.File f = extractString (
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
             "<project name=\"Test Arch\" basedir=\".\" default=\"all\" >" +
             "  <taskdef name=\"createmodulexml\" classname=\"org.netbeans.nbbuild.CreateModuleXML\" classpath=\"${nbantext.jar}\"/>" +
             "<target name=\"all\" >" +
-            "  <mkdir dir='" + output + "' />" + 
+            "  <mkdir dir='" + output + "' />" +
             "  <createmodulexml xmldir='" + output + "' >" +
             "    <hidden dir='" + aModule.getParent() + "' >" +
             "      <include name='" + aModule.getName() + "' />" +
@@ -57,15 +62,15 @@ public class CreateModuleXMLTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
-        
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         assertTrue ("Output exists", output.exists ());
         assertTrue ("Output directory created", output.isDirectory());
-        
+
         String[] files = output.list();
         assertEquals("It one file", 1, files.length);
         assertEquals("Its name reflects the code name of the module", "org-my-module.xml_hidden", files[0]);
-        
+
     }
 
     public void testGeneratesDataForDisabledModule() throws Exception {
@@ -89,8 +94,8 @@ public class CreateModuleXMLTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
-
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         assertTrue ("Output exists", output.exists ());
         assertTrue ("Output directory created", output.isDirectory());
 
@@ -99,7 +104,7 @@ public class CreateModuleXMLTest extends TestBase {
         assertEquals("Its name reflects the code name of the module", "org-my-module.xml", files[0]);
 
     }
-    
+
     public void testStartLevelFailsForNormalModules() throws Exception {
         Manifest m = createManifest ();
         m.getMainAttributes().putValue("OpenIDE-Module", "org.my.module");
@@ -122,8 +127,9 @@ public class CreateModuleXMLTest extends TestBase {
             "</project>"
         );
         try {
-            execute(f, new String[] { "-verbose" });
-        } catch (ExecutionError ex) {
+            buildRule.configureProject(f.getAbsolutePath());
+            buildRule.executeTarget("all");
+        } catch (BuildException ex) {
             // OK
             return;
         }
@@ -151,7 +157,9 @@ public class CreateModuleXMLTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
 
         assertTrue ("Output exists", output.exists ());
         assertTrue ("Output directory created", output.isDirectory());
@@ -159,11 +167,11 @@ public class CreateModuleXMLTest extends TestBase {
         File[] files = output.listFiles();
         assertEquals("It one file", 1, files.length);
         assertEquals("Its name reflects the code name of the module", "org-my-module.xml", files[0].getName());
-        
+
         String content = readFile(files[0]);
         assertFalse("startlevel tag is not there: " + content, content.contains("\"startlevel\""));
     }
-    
+
     public void testStartLevelOKForBundles() throws Exception {
         Manifest m = createManifest ();
         m.getMainAttributes().putValue("Bundle-SymbolicName", "org.my.module");
@@ -185,15 +193,15 @@ public class CreateModuleXMLTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
-
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         assertTrue ("Output exists", output.exists ());
         assertTrue ("Output directory created", output.isDirectory());
 
         File[] files = output.listFiles();
         assertEquals("It one file", 1, files.length);
         assertEquals("Its name reflects the code name of the module", "org-my-module.xml", files[0].getName());
-        
+
         String content = readFile(files[0]);
         assertTrue("startlevel tag expected: " + content, content.contains("\"startlevel\""));
 
@@ -219,8 +227,8 @@ public class CreateModuleXMLTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
-
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         assertTrue ("Output exists", output.exists ());
         assertTrue ("Output directory created", output.isDirectory());
 
@@ -253,7 +261,10 @@ public class CreateModuleXMLTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+
+
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
 
         assertTrue ("Output exists", output.exists ());
         assertTrue ("Output directory created", output.isDirectory());
@@ -287,12 +298,12 @@ public class CreateModuleXMLTest extends TestBase {
             }
         }
     }
-    
-    
+
+
     private File createNewJarFile() throws IOException {
         File dir = new File(this.getWorkDir(), "modules");
         dir.mkdirs();
-        
+
         int i = 0;
         for (;;) {
             File f = new File (dir, i++ + ".jar");
@@ -301,25 +312,25 @@ public class CreateModuleXMLTest extends TestBase {
             }
         }
     }
-    
+
     protected final File generateJar (String[] content, Manifest manifest) throws IOException {
         File f = createNewJarFile ();
-        
+
         JarOutputStream os;
         if (manifest != null) {
             os = new JarOutputStream (new FileOutputStream (f), manifest);
         } else {
             os = new JarOutputStream (new FileOutputStream (f));
         }
-        
+
         for (int i = 0; i < content.length; i++) {
             os.putNextEntry(new JarEntry (content[i]));
             os.closeEntry();
         }
         os.closeEntry ();
         os.close();
-        
+
         return f;
     }
-    
+
 }

@@ -48,7 +48,7 @@ public abstract class VCSVisibilityQuery {
     /**
      * Notify a visibility change
      * 
-     * @param File[] the files with a changed visibility
+     * @param files the files with a changed visibility
      * @since 1.37
      */
     protected final void fireVisibilityChanged(File... files) {

@@ -47,3 +47,4 @@ class Test {
     }
 }
 
+const test2 = 7;

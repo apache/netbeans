@@ -1,0 +1,6 @@
+Code completion result for source line:
+echo ExampleTrait::|IMPLICIT_PUBLIC_TRAIT . PHP_EOL; // fatal error
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicStaticTraritMethod()      [STATIC]   ExampleTrait
+VARIABLE   ? $publicStaticFieldTrait       [STATIC]   ExampleTrait
+CONSTANT   class \ExampleTrait             [PUBLIC]   Magic Constant

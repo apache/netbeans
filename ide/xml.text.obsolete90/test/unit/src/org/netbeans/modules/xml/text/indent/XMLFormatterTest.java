@@ -37,7 +37,7 @@ public class XMLFormatterTest extends NbTestCase {
     /**
      * Used for testing dynamic indentation ("smart enter")
      */
-    public final static String LINE_BREAK_METATAG = "|";
+    public static final String LINE_BREAK_METATAG = "|";
     
     public XMLFormatterTest(String testName) {
         super(testName);

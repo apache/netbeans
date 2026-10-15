@@ -30,19 +30,21 @@ import java.io.Writer;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import javax.swing.ImageIcon;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.html.editor.lib.api.HtmlSource;
 import org.netbeans.modules.html.editor.lib.api.SyntaxAnalyzer;
 import org.netbeans.modules.html.editor.lib.api.elements.Element;
-import static org.netbeans.modules.html.editor.lib.api.elements.ElementType.CLOSE_TAG;
-import static org.netbeans.modules.html.editor.lib.api.elements.ElementType.OPEN_TAG;
 import org.netbeans.modules.html.editor.lib.api.elements.OpenTag;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.web.common.api.LexerUtils;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
+
+import static org.netbeans.modules.html.editor.lib.api.elements.ElementType.CLOSE_TAG;
+import static org.netbeans.modules.html.editor.lib.api.elements.ElementType.OPEN_TAG;
 
 /**
  *
@@ -112,7 +114,7 @@ public class KOUtils {
     }
     
     public static String getFileContent(File file) throws IOException {
-        Reader r = new InputStreamReader(new FileInputStream(file), "UTF-8"); // NOI18N
+        Reader r = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
         StringBuilder sb = new StringBuilder();
         try {
             char[] buf = new char[2048];

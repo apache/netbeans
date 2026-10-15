@@ -1,0 +1,2 @@
+    public const int |>MARK_OCCURRENCES:INT<| = 1;
+var_dump(ClassTest::|>MARK_OCCURRENCES:I^NT<|);

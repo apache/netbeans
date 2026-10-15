@@ -31,17 +31,11 @@ import org.xml.sax.SAXException;
  */
 public class ConfigReaderJavaEE extends ConfigReaderJava {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** <code>javaee</code> XML element name. */
     static final String NODE = "javaee";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** <code>profile</code> XML element reader. */
     private final JavaEEProfileReader profileReader;
 
@@ -54,10 +48,7 @@ public class ConfigReaderJavaEE extends ConfigReaderJava {
     /** JavaEE set for GlassFish features configuration read from XML. */
     JavaEESet javaEE;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of Java EE configuration XML element reader.
      * <p/>
@@ -72,10 +63,7 @@ public class ConfigReaderJavaEE extends ConfigReaderJava {
         javaEE = null;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // XML reader methods                                                     //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Provide paths to listen on.
      * <p/>
@@ -126,10 +114,7 @@ public class ConfigReaderJavaEE extends ConfigReaderJava {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get profiles retrieved from XML elements.
      * <p/>
@@ -157,10 +142,7 @@ public class ConfigReaderJavaEE extends ConfigReaderJava {
         return checkReader.getChecks();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Reset this XML element reader.
      */

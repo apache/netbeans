@@ -74,7 +74,7 @@ public abstract class BreakpointType {
     public abstract JComponent getCustomizer ();
 
     /**
-     * Return the implementation of {@link Controller} interface.<br/>
+     * Return the implementation of {@link Controller} interface.<br>
      * It's not desired to implement the {@link Controller} interface
      * by JComponent returned from {@link #getCustomizer()} method, because
      * of the clash of {@link Controller#isValid()} method with
@@ -201,9 +201,9 @@ public abstract class BreakpointType {
          * @param attrs attributes loaded from layer.xml
          * @return new <code>ContextAwareService</code> instance
          */
-        static ContextAwareService createService(Map attrs) throws ClassNotFoundException {
-            String serviceName = (String) attrs.get(DebuggerProcessor.SERVICE_NAME);
-            String displayName = (String) attrs.get("displayName");
+        static ContextAwareService<BreakpointType> createService(Map<?, String> attrs) throws ClassNotFoundException {
+            String serviceName = attrs.get(DebuggerProcessor.SERVICE_NAME);
+            String displayName = attrs.get("displayName");
             return new BreakpointType.ContextAware(serviceName, displayName);
         }
 

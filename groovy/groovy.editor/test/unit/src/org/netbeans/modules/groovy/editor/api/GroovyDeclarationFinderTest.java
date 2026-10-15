@@ -20,13 +20,9 @@
 package org.netbeans.modules.groovy.editor.api;
 
 import java.util.Collections;
-import java.util.Map;
-import org.netbeans.api.java.classpath.ClassPath;
+import java.util.Set;
 import org.netbeans.modules.csl.api.DeclarationFinder.DeclarationLocation;
 import org.netbeans.modules.groovy.editor.test.GroovyTestBase;
-import org.netbeans.spi.java.classpath.support.ClassPathSupport;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 
 /**
  *
@@ -40,13 +36,9 @@ public class GroovyDeclarationFinderTest extends GroovyTestBase {
         super(testName);
     }
 
-    protected @Override Map<String, ClassPath> createClassPathsForTest() {
-        return Collections.singletonMap(
-            ClassPath.SOURCE,
-            ClassPathSupport.createClassPath(new FileObject[] {
-                FileUtil.toFileObject(getDataFile("/testfiles/declarationfinder"))
-            })
-        );
+    @Override
+    protected Set<String> additionalSourceClassPath() {
+        return Collections.singleton("/testfiles/declarationfinder");
     }
 
     // this test is for variables defined and used in the same CU.
@@ -68,6 +60,15 @@ public class GroovyDeclarationFinderTest extends GroovyTestBase {
     public void testMethod2() throws Exception {
         checkDeclaration(TEST_BASE + "Methods2.groovy", "println get^Name()", "^def getName() {");
     }
+    
+    public void testJavaMethod1() throws Exception {
+        checkDeclaration(TEST_BASE + "a/Declaration4.groovy", "        def builder = new TestBuil^der()", "TestBuilder.java", 25);
+    }
+    
+    public void testJavaMethod2() throws Exception {
+        checkDeclaration(TEST_BASE + "a/Declaration4.groovy", "        def clon = builder.clo^ne(builder)", "TestBuilder.java", 63);
+    }
+
 
     public void testGroovyClass1() throws Exception {
         checkDeclaration(TEST_BASE + "a/Declaration2.groovy", "    private Decla^ration1 x", "Declaration1.groovy", 17);
@@ -117,32 +118,81 @@ public class GroovyDeclarationFinderTest extends GroovyTestBase {
 
     public void testExtendsImplements2() throws Exception {
         checkDeclaration(TEST_BASE + "a/Declaration2.groovy",
-                "class Declaration2 extends Declaration1 implements Interfa^ce1, Interface2 {", "Interface1.java", 12);
+                "class Declaration2 extends Declaration1 implements Interfa^ce1, Interface2 {", "Interface1.java", 29);
     }
 
     public void testExtendsImplements3() throws Exception {
         checkDeclaration(TEST_BASE + "a/Declaration2.groovy",
-                "class Declaration2 extends Declaration1 implements Interface1, Int^erface2 {", "Interface2.java", 12);
+                "class Declaration2 extends Declaration1 implements Interface1, Int^erface2 {", "Interface2.java", 29);
     }
 
     public void testInnerClasses1() throws Exception {
         checkDeclaration(TEST_BASE + "a/Declaration3.groovy",
-                "        return Inner^Classes.Type.DUMMY_1;", "InnerClasses.java", 12);
+                "        return Inner^Classes.Type.DUMMY_1;", "InnerClasses.java", 25);
     }
 
-    // TESTFAIL wrongly parsed source by groovy
-//    public void testInnerClasses2() throws Exception {
-//        checkDeclaration(TEST_BASE + "a/Declaration3.groovy",
-//                "        return InnerClasses.Ty^pe.DUMMY_1;", "InnerClasses.java", 45);
-//    }
-//
-//    public void testInnerClasses3() throws Exception {
-//        checkDeclaration(TEST_BASE + "a/Declaration3.groovy",
-//                "        InnerClasses.Type.ca^ll()", "InnerClasses.java", 45);
-//    }
-//
-//    public void testInnerClasses4() throws Exception {
-//        checkDeclaration(TEST_BASE + "a/Declaration3.groovy",
-//                "        return InnerClasses.Type.DU^MMY_1;", "InnerClasses.java", 80);
-//    }
+    public void testInnerClasses2() throws Exception {
+        checkDeclaration(TEST_BASE + "a/Declaration3.groovy",
+                "        return InnerClasses.Ty^pe.DUMMY_1;", "InnerClasses.java", 64);
+    }
+
+    public void testInnerClasses3() throws Exception {
+        checkDeclaration(TEST_BASE + "a/Declaration3.groovy",
+                "        InnerClasses.Type.ca^ll()", "InnerClasses.java", 133);
+    }
+
+    public void testInnerClasses4() throws Exception {
+        checkDeclaration(TEST_BASE + "a/Declaration3.groovy",
+                "        return InnerClasses.Type.DU^MMY_1;", "InnerClasses.java", 79);
+    }
+
+    public void testImports1() throws Exception {
+        checkDeclaration(TEST_BASE + "Imports.groovy",
+                "import a.Interfa^ce1", "Interface1.java", 29);
+    }
+
+    public void testImports2() throws Exception {
+        checkDeclaration(TEST_BASE + "Imports.groovy",
+                "class Imports implements Interfa^ce1 {", "Interface1.java", 29);
+    }
+
+    public void testAnnotations1() throws Exception {
+        checkDeclaration(TEST_BASE + "Annotations.groovy",
+                "@Annot^ation class AnnotationOccurrencesTester {", "Annotation.java", 30);
+    }
+
+    public void testAnnotations2() throws Exception {
+        checkDeclaration(TEST_BASE + "Annotations.groovy",
+                "    @Annot^ation protected String field", "Annotation.java", 30);
+    }
+
+    public void testAnnotations3() throws Exception {
+        checkDeclaration(TEST_BASE + "Annotations.groovy",
+                "    @Annot^ation String property", "Annotation.java", 30);
+    }
+
+    public void testAnnotations4() throws Exception {
+        checkDeclaration(TEST_BASE + "Annotations.groovy",
+                "    @Annot^ation AnnotationOccurrencesTester() {}", "Annotation.java", 30);
+    }
+
+    public void testAnnotations5() throws Exception {
+        checkDeclaration(TEST_BASE + "Annotations.groovy",
+                "    @Annot^ation public String method() {}", "Annotation.java", 30);
+    }
+
+    public void testGroovyClassInner1() throws Exception {
+        checkDeclaration(TEST_BASE + "ClassWithInner.groovy",
+                "            this.^x = null", "ClassWithInner.groovy", 96);
+    }
+
+    public void testGroovyClassInner2() throws Exception {
+        checkDeclaration(TEST_BASE + "ClassWithInner.groovy",
+                "            ^y.isEmpty()", "ClassWithInner.groovy", 54);
+    }
+
+    public void testGroovyClassInner3() throws Exception {
+        checkDeclaration(TEST_BASE + "ClassWithInner.groovy",
+                "        this.^x.isNumber()", "ClassWithInner.groovy", 35);
+    }
 }

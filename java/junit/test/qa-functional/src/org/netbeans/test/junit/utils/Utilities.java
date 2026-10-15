@@ -19,7 +19,6 @@
 
 package org.netbeans.test.junit.utils;
 
-import com.sun.org.apache.bcel.internal.generic.IFEQ;
 import java.io.File;
 import java.io.IOException;
 import org.netbeans.jellytools.Bundle;
@@ -87,7 +86,7 @@ public class Utilities {
     
     /**
      * Deletes a file
-     * @param the file to be deleted
+     * @param file the file to be deleted
      */
     public static void delete(File file) {
         try {
@@ -136,7 +135,7 @@ public class Utilities {
     
     /**
      * Opens a file from TEST_PROJECT_NAME
-     * @param Filename the file to be opened
+     * @param path the file to be opened
      */
     public static Node openFile(String path) {
         Node pn = new ProjectsTabOperator().getProjectRootNode(

@@ -308,7 +308,7 @@ public class ColumnNode extends BaseNode implements SchemaNameProvider, ColumnNa
             LOG.log(Level.INFO, e.getMessage(), e);
         }
 
-        setValue(BaseFilterNode.REFRESH_ANCESTOR_DISTANCE, new Integer(1));
+        setValue(BaseFilterNode.REFRESH_ANCESTOR_DISTANCE, Integer.valueOf(1));
     }
 
     @Override

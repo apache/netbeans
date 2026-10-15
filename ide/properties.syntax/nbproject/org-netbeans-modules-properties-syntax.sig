@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.56
+#Version 1.83
 
 CLSS public abstract interface java.io.Externalizable
 intf java.io.Serializable
@@ -20,6 +20,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -129,8 +130,6 @@ meth public void read(java.io.Reader,javax.swing.text.Document,int) throws java.
 meth public void write(java.io.OutputStream,javax.swing.text.Document,int,int) throws java.io.IOException,javax.swing.text.BadLocationException
 meth public void write(java.io.Writer,javax.swing.text.Document,int,int) throws java.io.IOException,javax.swing.text.BadLocationException
 supr javax.swing.text.EditorKit
-hfds defaultActions,selectionPageDownAction,selectionPageLeftAction,selectionPageRightAction,selectionPageUpAction,toggleComponentOrientationAction,unselectAction
-hcls BeginAction,BeginLineAction,BeginParagraphAction,BeginWordAction,DeleteNextCharAction,DeletePrevCharAction,DeleteWordAction,DumpModelAction,EndAction,EndLineAction,EndParagraphAction,EndWordAction,NextVisualPositionAction,NextWordAction,PageAction,PreviousWordAction,ReadOnlyAction,SelectAllAction,SelectLineAction,SelectParagraphAction,SelectWordAction,ToggleComponentOrientationAction,UnselectAction,VerticalPageAction,WritableAction
 
 CLSS public abstract javax.swing.text.EditorKit
 cons public init()
@@ -260,9 +259,11 @@ meth protected javax.swing.Action[] createActions()
 meth protected javax.swing.Action[] getCustomActions()
 meth protected javax.swing.Action[] getDeclaredActions()
 meth protected javax.swing.Action[] getMacroActions()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected org.netbeans.editor.BaseTextUI createTextUI()
 meth protected org.netbeans.editor.EditorUI createEditorUI()
 meth protected org.netbeans.editor.EditorUI createPrintEditorUI(org.netbeans.editor.BaseDocument)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected org.netbeans.editor.EditorUI createPrintEditorUI(org.netbeans.editor.BaseDocument,boolean,boolean)
 meth protected void executeDeinstallActions(javax.swing.JEditorPane)
 meth protected void executeInstallActions(javax.swing.JEditorPane)
@@ -277,10 +278,14 @@ meth public javax.swing.text.Document createDefaultDocument()
 meth public javax.swing.text.ViewFactory getViewFactory()
 meth public org.netbeans.editor.MultiKeymap getKeymap()
 meth public org.netbeans.editor.Syntax createFormatSyntax(javax.swing.text.Document)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.netbeans.editor.Syntax createSyntax(javax.swing.text.Document)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.netbeans.editor.SyntaxSupport createSyntaxSupport(org.netbeans.editor.BaseDocument)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static javax.swing.Action[] mapToActions(java.util.Map)
 meth public static org.netbeans.editor.BaseKit getKit(java.lang.Class)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void addActionsToMap(java.util.Map<java.lang.String,javax.swing.Action>,javax.swing.Action[],java.lang.String)
 meth public void deinstall(javax.swing.JEditorPane)
 meth public void install(javax.swing.JEditorPane)
@@ -350,12 +355,15 @@ fld public final static java.lang.String allCompletionShowAction = "all-completi
 fld public final static java.lang.String buildPopupMenuAction = "build-popup-menu"
 fld public final static java.lang.String buildToolTipAction = "build-tool-tip"
 fld public final static java.lang.String codeSelectAction = "code-select"
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String commentAction = "comment"
 fld public final static java.lang.String completionShowAction = "completion-show"
 fld public final static java.lang.String completionTooltipShowAction = "tooltip-show"
 fld public final static java.lang.String documentationShowAction = "documentation-show"
 fld public final static java.lang.String escapeAction = "escape"
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String findAction = "find"
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String gotoAction = "goto"
 fld public final static java.lang.String gotoDeclarationAction = "goto-declaration"
 fld public final static java.lang.String gotoHelpAction = "goto-help"
@@ -527,11 +535,11 @@ meth protected boolean clearSharedData()
 meth public boolean closing()
 meth public void close()
 meth public void installed()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void restored()
 meth public void uninstalled()
 meth public void updated(int,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void validate()
 supr org.openide.util.SharedClassObject
 hfds serialVersionUID

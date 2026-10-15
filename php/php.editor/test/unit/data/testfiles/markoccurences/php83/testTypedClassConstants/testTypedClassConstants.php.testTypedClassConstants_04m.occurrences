@@ -1,0 +1,16 @@
+class |>MARK_OCCURRENCES:ClassTest<| {
+var_dump(|>MARK_OCCURRENCES:ClassTest<|::WITHOUT_TYPE);
+var_dump(|>MARK_OCCURRENCES:ClassTest<|::NULLABLE);
+var_dump(|>MARK_OCCURRENCES:ClassTest<|::UNION);
+var_dump(|>MARK_OCCURRENCES:ClassTest<|::INTERSECTION);
+var_dump(|>MARK_OCCURRENCES:ClassTest<|::DNF);
+var_dump(|>MARK_OCCURRENCES:ClassTest<|::STRING);
+var_dump(|>MARK_OCCURRENCES:ClassTest<|::INT);
+var_dump(|>MARK_OCCURRENCES:ClassTest<|::FLOAT);
+var_dump(|>MARK_OCCURRENCES:ClassTest<|::BOOL);
+var_dump(|>MARK_OCCURRENCES:ClassTest<|::ARRAY);
+var_dump(|>MARK_OCCURRENCES:ClassTest<|::ITERABLE);
+var_dump(|>MARK_OCCURRENCES:Clas^sTest<|::MIXED);
+var_dump(|>MARK_OCCURRENCES:ClassTest<|::OBJECT);
+var_dump(|>MARK_OCCURRENCES:ClassTest<|::UNION2);
+var_dump(|>MARK_OCCURRENCES:ClassTest<|::UNION3);

@@ -213,10 +213,10 @@ public final class MethodModelSupport {
                     annotationTree = genUtils.createAnnotation(annotation.getType());
                 } else {
                     List<ExpressionTree> annotationArgs = new ArrayList<ExpressionTree>();
-                    Iterator it = annotation.getArguments().entrySet().iterator();
+                    Iterator<Map.Entry<String, Object>> it = annotation.getArguments().entrySet().iterator();
                     while (it.hasNext()) {
-                        Map.Entry pairs = (Map.Entry)it.next();
-                        annotationArgs.add(genUtils.createAnnotationArgument((String) pairs.getKey(),pairs.getValue()));
+                        Map.Entry<String, Object> pairs = it.next();
+                        annotationArgs.add(genUtils.createAnnotationArgument(pairs.getKey(), pairs.getValue()));
                     }
                     annotationTree = genUtils.createAnnotation(annotation.getType(), annotationArgs);
                 }
@@ -228,7 +228,7 @@ public final class MethodModelSupport {
             }
         }
 
-        return (MethodTree) GeneratorUtilities.get(workingCopy).importFQNs(result);
+        return GeneratorUtilities.get(workingCopy).importFQNs(result);
     }
     
     /**

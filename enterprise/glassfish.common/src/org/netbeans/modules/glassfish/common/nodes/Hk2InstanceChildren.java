@@ -75,8 +75,8 @@ public class Hk2InstanceChildren extends Children.Keys<Node> implements Refresha
                         Hk2ItemNode.WS_FOLDER));
             }
             List<Node> pluggableNodes = getExtensionNodes();
-            for (Iterator itr = pluggableNodes.iterator(); itr.hasNext();) {
-                keys.add((Node)itr.next());
+            for (Iterator<Node> itr = pluggableNodes.iterator(); itr.hasNext();) {
+                keys.add(itr.next());
             }
         }
         setKeys(keys);

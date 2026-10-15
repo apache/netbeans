@@ -81,7 +81,7 @@ public class BuiltInDiffProvider extends DiffProvider implements java.io.Seriali
         while ((line = br.readLine()) != null) {
             lines.add(line);
         }
-        return lines.toArray(new String[lines.size()]);
+        return lines.toArray(new String[0]);
     }
 
 

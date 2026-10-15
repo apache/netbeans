@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
+import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.openide.util.Parameters;
 
@@ -202,6 +203,60 @@ public final class StringUtils {
     public static String decapitalize(String input) {
         Parameters.notEmpty("input", input); //NOI18N
         return input.substring(0, 1).toLowerCase() + input.substring(1);
+    }
+
+    /**
+     * Truncates the string with specific width. The trancated string contains
+     * the marker's length.
+     *
+     * <p>
+     * Example:<br>
+     * "0123456789", start:1, width:5, marker: "..." -&gt; "12..."<br>
+     * "0123456789", start:1, width:-4, marker: "..." -&gt; "12..."<br>
+     * "0123456789", start:-9, width:5, marker: "..." -&gt; "12..."<br>
+     * "0123456789", start:-9, width:-4, marker: "..." -&gt; "12..."<br>
+     * "0123456789", start:-7, width:6, marker: "..." -&gt; "345..."<br>
+     * "0123456789", start:0, width:-4, marker: "..." -&gt; "012..."<br>
+     * "0123456789", start:4, width:6, marker: "..." -&gt; "456789"<br>
+     *
+     * @param string text to be truncated, never {@code null}
+     * @param start the start position. if it's negative, the position from the
+     * end of the string
+     * @param width the width of the truncated string. it contains the marker's
+     * length. if it's negative, truncates the width from the end of the string
+     * @param marker the marker, can be null, if it's {@code null}, "..." is
+     * used
+     * @return the truncated string with specific width and the marker
+     * @since 2.83
+     */
+    public static String truncate(@NonNull String string, int start, int width, @NullAllowed String marker) {
+        Parameters.notNull("input", string); // NOI18N
+        String trimMarker = "..."; // NOI18N
+        if (marker != null) {
+            trimMarker = marker;
+        }
+        int trimStart = start;
+        if (trimStart < 0) {
+            trimStart += string.length();
+        }
+        int trimWidth = width;
+        if (trimWidth < 0) {
+            trimWidth = string.length() + trimWidth - trimStart;
+        }
+        if (trimStart < 0
+                || trimWidth < 0
+                || string.length() < trimStart
+                || trimWidth < trimMarker.length()) {
+            // invalid range
+            return string;
+        }
+        boolean addMarker = trimStart + trimWidth < string.length();
+        int trimEnd = !addMarker ? string.length() : trimStart + trimWidth;
+        String trimedString = string.substring(trimStart, trimEnd);
+        if (addMarker) {
+            trimedString = trimedString.substring(0, trimedString.length() - trimMarker.length()) + trimMarker;
+        }
+        return trimedString;
     }
 
     private static Pattern getPattern0(String text, String prefix, String suffix) {

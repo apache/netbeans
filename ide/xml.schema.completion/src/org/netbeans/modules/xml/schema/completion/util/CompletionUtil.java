@@ -182,8 +182,9 @@ public class CompletionUtil {
             CompletionContextImpl context, String namespace) {
         List<String> list = new ArrayList<String>();
         
-        for(String key : context.getDeclaredNamespaces().keySet()) {
-            String ns = context.getDeclaredNamespaces().get(key);
+        for(Map.Entry<String, String> entry : context.getDeclaredNamespaces().entrySet()) {
+            String key = entry.getKey();
+            String ns = entry.getValue();
             if(ns.equals(namespace))
                 list.add(getPrefixFromXMLNS(key));
         }
@@ -198,7 +199,7 @@ public class CompletionUtil {
      */
     public static void loadSchemaURIs(String schemaLocation, List<URI> uris, Map<String, String> schemaLocationMap) {
         StringTokenizer st = new StringTokenizer(
-                schemaLocation.replaceAll("\n", " "), " "); //NOI18N
+                schemaLocation.replace("\n", " "), " "); //NOI18N
         while(st.hasMoreTokens()) {
             URI uri = null;
             try {
@@ -308,8 +309,8 @@ public class CompletionUtil {
         if(element == null)
             return null;
         AXIType type = element.getType();
-        if( type == null || !(type instanceof Datatype) ||
-            ((Datatype)type).getEnumerations() == null)
+        if(!(type instanceof Datatype) ||
+           ((Datatype) type).getEnumerations() == null)
             return null;
         for(Object value: ((Datatype)type).getEnumerations()) {
             if(context.getTypedChars() == null || context.getTypedChars().equals("")) {
@@ -344,8 +345,8 @@ public class CompletionUtil {
         if(attr == null)
             return null;
         AXIType type = attr.getType();
-        if(type == null || !(type instanceof Datatype) ||
-           ((Datatype)type).getEnumerations() == null)
+        if(!(type instanceof Datatype) ||
+           ((Datatype) type).getEnumerations() == null)
             return null;                
         for(Object value: ((Datatype)type).getEnumerations()) {
             String str = (value != null) ? value.toString() : null;
@@ -588,7 +589,7 @@ public class CompletionUtil {
             parent = child;
         }
         
-        if(child != null && (child instanceof Element))
+        if((child instanceof Element))
             return (Element)child;
         
         return null;
@@ -864,7 +865,7 @@ public class CompletionUtil {
                 if(nextToken.id() == XMLTokenId.TAG) {
                     String tagName = nextToken.text().toString();
                     if(name == null && tagName.startsWith("<"))
-                        name = tagName.substring(1, tagName.length());
+                        name = tagName.substring(1);
                     String lastAttrName = null;
                     while(ts.moveNext() ) {
                         Token t = ts.token();

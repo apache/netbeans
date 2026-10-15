@@ -28,7 +28,7 @@ import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 
 // registered separately in j2se and web modules, otherwise could use @LookupProvider.Registration
-final public class UpgradableProjectLookupProvider implements LookupProvider {
+public final class UpgradableProjectLookupProvider implements LookupProvider {
 
     public Lookup createAdditionalLookup(Lookup baseContext) {
         Project p = baseContext.lookup(Project.class);

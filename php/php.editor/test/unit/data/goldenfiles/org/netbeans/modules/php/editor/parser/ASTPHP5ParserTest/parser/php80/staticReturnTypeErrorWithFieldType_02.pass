@@ -1,0 +1,68 @@
+<testresult testFile='staticReturnTypeErrorWithFieldType_02.php'>
+    <scanner>
+        <token id='T_CLASS' start='815' end='820'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='821' end='837'>
+            <text>StaticReturnType</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='838' end='839'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='844' end='850'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='851' end='857'>
+            <text>static</text>
+        </token>
+        <token id='T_STRING' start='858' end='862'>
+            <text>slef</text>
+        </token>
+        <token id='T_OR' start='862' end='863'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='863' end='866'>
+            <text>int</text>
+        </token>
+        <token id='T_OR' start='866' end='867'>
+            <text>|</text>
+        </token>
+        <token id='T_STATIC' start='867' end='873'>
+            <text>static</text>
+        </token>
+        <token id='T_VARIABLE' start='874' end='880'>
+            <text>$field</text>
+        </token>
+        <token id='T_SEMICOLON' start='880' end='881'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='882' end='883'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='884' end='884'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='884'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ASTError start='815' end='867'/>
+            <StaticStatement start='867' end='881'>
+                <Variables>
+                    <Variable start='874' end='880' isDollared='true'>
+                        <Identifier start='875' end='880' name='field'/>
+                    </Variable>
+                </Variables>
+                <Expressions>
+                    <Variable start='874' end='880' isDollared='true'>
+                        <Identifier start='875' end='880' name='field'/>
+                    </Variable>
+                </Expressions>
+            </StaticStatement>
+            <ASTError start='0' end='881'/>
+        </Statements>
+    </Program>
+</testresult>

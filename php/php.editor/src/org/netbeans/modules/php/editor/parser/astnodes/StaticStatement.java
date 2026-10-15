@@ -20,17 +20,22 @@ package org.netbeans.modules.php.editor.parser.astnodes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Represents the static statement
- * <pre>e.g.<pre> static $a
+ * Represents the static statement.
+ *
+ * e.g.
+ * <pre>
+ * static $a
  * static $a, $b=5;
+ * </pre>
  */
 public class StaticStatement extends Statement {
 
-    private ArrayList<Expression> expressions = new ArrayList<>();
+    private final ArrayList<Expression> expressions = new ArrayList<>();
 
     private StaticStatement(int start, int end, Expression[] expressions) {
         super(start, end);
@@ -41,7 +46,7 @@ public class StaticStatement extends Statement {
     }
 
     public StaticStatement(int start, int end, List<Exception> expressions) {
-        this(start, end, expressions == null ? null : (Expression[]) expressions.toArray(new Expression[expressions.size()]));
+        this(start, end, expressions == null ? null : expressions.toArray(new Expression[0]));
     }
 
     /**
@@ -58,14 +63,14 @@ public class StaticStatement extends Statement {
                 vars.add((Variable) ass.getLeftHandSide());
             }
         }
-        return (Variable[]) vars.toArray(new Variable[vars.size()]);
+        return vars.toArray(new Variable[0]);
     }
 
     /**
      * @return expression list of the static statement
      */
     public List<Expression> getExpressions() {
-        return this.expressions;
+        return Collections.unmodifiableList(this.expressions);
     }
 
     @Override

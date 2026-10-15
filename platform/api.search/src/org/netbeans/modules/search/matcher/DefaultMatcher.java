@@ -46,7 +46,7 @@ public class DefaultMatcher extends AbstractMatcher {
     private static final Collection<String> searchableExtensions;
 
     static {
-        searchableXMimeTypes = new HashSet<String>(17);
+        searchableXMimeTypes = new HashSet<>(17);
         searchableXMimeTypes.add("csh");                                //NOI18N
         searchableXMimeTypes.add("httpd-eruby");                        //NOI18N
         searchableXMimeTypes.add("httpd-php");                          //NOI18N
@@ -60,7 +60,7 @@ public class DefaultMatcher extends AbstractMatcher {
         searchableXMimeTypes.add("texinfo");                            //NOI18N
         searchableXMimeTypes.add("troff");                              //NOI18N
 
-        searchableExtensions = new HashSet<String>(); //TODO make configurable
+        searchableExtensions = new HashSet<>(); //TODO make configurable
         searchableExtensions.add("txt");                                //NOI18N
         searchableExtensions.add("log");                                //NOI18N
     }
@@ -73,7 +73,7 @@ public class DefaultMatcher extends AbstractMatcher {
         if (trivial) {
             realMatcher = new TrivialFileMatcher();
         } else {
-            boolean multiline = TextRegexpUtil.canBeMultilinePattern(
+            boolean multiline = TextRegexpUtil.isMultilineOrMatchesMultiline(
                     searchPattern.getSearchExpression());
 
             realMatcher = multiline
@@ -165,31 +165,26 @@ public class DefaultMatcher extends AbstractMatcher {
         byte[] bytes = new byte[1024]; // check the first kB of the file
         byte fe = (byte) 0xFE, ff = (byte) 0xFF, oo = (byte) 0x00,
                 ef = (byte) 0xEF, bf = (byte) 0xBF, bb = (byte) 0xBB;
-        try {
-            InputStream is = fo.getInputStream();
-            try {
-                int read = is.read(bytes);
-                if (read > 2 && bytes[0] == ef && bytes[1] == bb
-                        && bytes[2] == bf) {
-                    return true; //UTF-8 BOM
-                } else if (read > 1 && ((bytes[0] == ff) && bytes[1] == fe
-                        || (bytes[0] == fe && bytes[1] == ff))) {
-                    return true; // UTF-16
-                } else if (read > 3 && ((bytes[0] == oo && bytes[1] == oo
-                        && bytes[2] == fe && bytes[3] == ff)
-                        || (bytes[0] == ff && bytes[1] == fe
-                        && bytes[2] == oo && bytes[3] == oo))) {
-                    return true; //UTF-32
-                } else {
-                    for (int i = 0; i < read; i++) {
-                        if (bytes[i] == oo) {
-                            return false; // zero-byte found
-                        }
+        try (InputStream is = fo.getInputStream()) {
+            int read = is.read(bytes);
+            if (read > 2 && bytes[0] == ef && bytes[1] == bb
+                    && bytes[2] == bf) {
+                return true; //UTF-8 BOM
+            } else if (read > 1 && ((bytes[0] == ff) && bytes[1] == fe
+                    || (bytes[0] == fe && bytes[1] == ff))) {
+                return true; // UTF-16
+            } else if (read > 3 && ((bytes[0] == oo && bytes[1] == oo
+                    && bytes[2] == fe && bytes[3] == ff)
+                    || (bytes[0] == ff && bytes[1] == fe
+                    && bytes[2] == oo && bytes[3] == oo))) {
+                return true; //UTF-32
+            } else {
+                for (int i = 0; i < read; i++) {
+                    if (bytes[i] == oo) {
+                        return false; // zero-byte found
                     }
-                    return true; // no zero-byte found
                 }
-            } finally {
-                is.close();
+                return true; // no zero-byte found
             }
         } catch (Exception e) {
             return false;

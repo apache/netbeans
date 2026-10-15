@@ -4,11 +4,15 @@
         border-bottom: lime dashed;
     }
 }
-@media Screen { h1{
-                    background: aqua;
-                    border-bottom: lime dashed;    }
-                h2 {
-                    background: red;} }
+@media Screen {
+    h1{
+        background: aqua;
+        border-bottom: lime dashed;
+    }
+    h2 {
+        background: red;
+    }
+}
 h3 {
     background:blue;
 }

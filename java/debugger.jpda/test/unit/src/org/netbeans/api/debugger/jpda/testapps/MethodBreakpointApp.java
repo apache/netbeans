@@ -99,7 +99,7 @@ public class MethodBreakpointApp {
         }
     }
     
-    private static abstract class AbstractInner {
+    private abstract static class AbstractInner {
         
         public abstract double compute();
         

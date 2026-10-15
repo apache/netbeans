@@ -235,7 +235,7 @@ public class AttrSupports {
     }
     
     
-    public static abstract class GetSetPropertyProperty extends AttributeValueSupport.Default {
+    public abstract static class GetSetPropertyProperty extends AttributeValueSupport.Default {
         
         public GetSetPropertyProperty(boolean tag, String longName, String attrName) {
             super(tag, longName, attrName);
@@ -278,7 +278,7 @@ public class AttrSupports {
                         //do nothing
                     } finally {
                         // avoids JAR locking
-                        if (cld != null && (cld instanceof Closeable)) {
+                        if (cld instanceof Closeable) {
                             try {
                                 ((Closeable) cld).close();
                             } catch (IOException ex) {

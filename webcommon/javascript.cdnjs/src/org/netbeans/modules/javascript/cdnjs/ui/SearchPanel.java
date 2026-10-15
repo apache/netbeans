@@ -23,9 +23,6 @@ import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -42,12 +39,14 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.ListModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.View;
 import org.netbeans.modules.javascript.cdnjs.Library;
 import org.netbeans.modules.javascript.cdnjs.LibraryProvider;
 import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
 
 /**
  * Panel for searching CDNJS libraries.
@@ -57,10 +56,10 @@ import org.openide.util.NbBundle;
 class SearchPanel extends javax.swing.JPanel {
     /** Minimum length of the text to be searched. */
     private static final int MIN_SEARCH_TEXT_LENGTH = 2;
-    /** Data listener for CDNJS provider. */
-    private final Listener listener = new Listener();
+    private static final RequestProcessor RP = new RequestProcessor(SearchPanel.class.getName(), 3);
     /** The last search term. */
     private String lastSearchTerm;
+
 
     /**
      * Creates a new {@code SearchPanel}.
@@ -73,22 +72,6 @@ class SearchPanel extends javax.swing.JPanel {
         versionComboBox.setRenderer(new LibraryVersionRenderer());
         updateLibraries(new Library[0]);
         librarySelected(null);
-    }
-
-    /**
-     * Activates this panel (i.e. registers all necessary listeners).
-     * This method should be called before the panel is shown to the user.
-     */
-    final void activate() {
-        LibraryProvider.getInstance().addPropertyChangeListener(listener);
-    }
-
-    /**
-     * Deactivates this panel (i.e. unregisters the listeners). This method
-     * should be called when the panel is no longer shown to the user.
-     */
-    final void deactivate() {
-        LibraryProvider.getInstance().removePropertyChangeListener(listener);
     }
 
     private void initDocumentListener() {
@@ -159,13 +142,12 @@ class SearchPanel extends javax.swing.JPanel {
         }
         librarySelected(null);
         lastSearchTerm = searchTerm;
-        Library[] libraries = LibraryProvider.getInstance().findLibraries(lastSearchTerm, Thread.MAX_PRIORITY);
-        if (libraries == null) {
-            messageLabel.setText(Bundle.SearchPanel_message_searching(lastSearchTerm));
-            showComponent(messageLabel);
-        } else {
-            updateLibraries(libraries);
-        }
+        messageLabel.setText(Bundle.SearchPanel_message_searching(lastSearchTerm));
+        showComponent(messageLabel);
+        RP.execute(() ->  {
+            Library[] libraries = LibraryProvider.getInstance().findLibraries(searchTerm);
+            SwingUtilities.invokeLater(() -> updateLibraries(libraries));
+        });
     }
 
     /**
@@ -200,9 +182,9 @@ class SearchPanel extends javax.swing.JPanel {
      */
     private void preSelectSearchedLibrary(Library[] libraries) {
         int index = 0;
-        String term = lastSearchTerm == null ? "" : lastSearchTerm.toLowerCase(); // NOI18N
+        String term = lastSearchTerm == null ? "" : lastSearchTerm; // NOI18N
         for (int i=0; i<libraries.length; i++) {
-            if (libraries[i].getName().toLowerCase().equals(term)) {
+            if (libraries[i].getName().equalsIgnoreCase(term)) {
                 index = i;
                 break;
             }
@@ -554,8 +536,15 @@ class SearchPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void librariesListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_librariesListValueChanged
-        Library library = librariesList.getSelectedValue();
-        librarySelected(library);
+        final Library library = librariesList.getSelectedValue();
+        if(library != null && (library.getVersions() == null || library.getVersions().length == 0)) {
+            RP.execute(() -> {
+                LibraryProvider.getInstance().updateLibraryVersions(library);
+                SwingUtilities.invokeLater(() -> librarySelected(library));
+            });
+        } else {
+            librarySelected(library);
+        }
     }//GEN-LAST:event_librariesListValueChanged
 
     private void searchFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchFieldActionPerformed
@@ -610,26 +599,6 @@ class SearchPanel extends javax.swing.JPanel {
     private javax.swing.JLabel versionLabel;
     // End of variables declaration//GEN-END:variables
 
-    /**
-     * Data listener for CDNJS provider.
-     */
-    class Listener implements PropertyChangeListener {
-
-        @Override
-        public void propertyChange(final PropertyChangeEvent evt) {
-            EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    String searchTerm = evt.getPropertyName();
-                    if (searchTerm.equals(lastSearchTerm)) {
-                        Library[] libraries = (Library[])evt.getNewValue();
-                        updateLibraries(libraries);
-                    }
-                }
-            });
-        }
-        
-    }
 
     /**
      * Renderer of {@code Library} objects.

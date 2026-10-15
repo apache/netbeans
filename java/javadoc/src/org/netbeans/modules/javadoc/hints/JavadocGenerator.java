@@ -21,13 +21,19 @@ package org.netbeans.modules.javadoc.hints;
 
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.doctree.DocTree;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
+import com.sun.source.util.TreePathScanner;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -40,6 +46,8 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Elements.DocCommentKind;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.TreeMaker;
 import org.openide.filesystems.FileObject;
@@ -221,7 +229,7 @@ public final class JavadocGenerator {
 
                 if (SourceVersion.RELEASE_5.compareTo(srcVersion) <= 0) {
                     for (TypeParameterElement param : clazz.getTypeParameters()) {
-                        tags.add(make.Param(true, make.DocIdentifier(param.getSimpleName()), Collections.EMPTY_LIST));
+                        tags.add(make.Param(true, make.DocIdentifier(param.getSimpleName()), Collections.emptyList()));
                     }
                 }
                 break;
@@ -229,15 +237,15 @@ public final class JavadocGenerator {
             case METHOD:
                 ExecutableElement method = (ExecutableElement) elm;
                 for (TypeParameterElement param : method.getTypeParameters()) {
-                    tags.add(make.Param(true, make.DocIdentifier(param.getSimpleName()), Collections.EMPTY_LIST));
+                    tags.add(make.Param(true, make.DocIdentifier(param.getSimpleName()), Collections.emptyList()));
                 }
 
                 for (VariableElement param : method.getParameters()) {
-                    tags.add(make.Param(false, make.DocIdentifier(param.getSimpleName()), Collections.EMPTY_LIST));
+                    tags.add(make.Param(false, make.DocIdentifier(param.getSimpleName()), Collections.emptyList()));
                 }
 
                 if (method.getReturnType().getKind() != TypeKind.VOID) {
-                    tags.add(make.DocReturn(Collections.EMPTY_LIST));
+                    tags.add(make.DocReturn(Collections.emptyList()));
                 }
                 for (TypeMirror exceptionType : method.getThrownTypes()) {
                     Element exception;
@@ -250,7 +258,7 @@ public final class JavadocGenerator {
                         throw new IllegalStateException("Illegal kind: " + exceptionType.getKind()); // NOI18N
                     }
                     ExpressionTree ident = make.QualIdent(exception);
-                    tags.add(make.Throws(make.Reference(ident, null, null), Collections.EMPTY_LIST));
+                    tags.add(make.Throws(make.Reference(ident, null, null), Collections.emptyList()));
                 }
                 break;
             case FIELD:
@@ -262,9 +270,56 @@ public final class JavadocGenerator {
         }
         if (SourceVersion.RELEASE_5.compareTo(srcVersion) <= 0
                 && JavadocUtilities.isDeprecated(javac, elm)) {
-            tags.add(make.Deprecated(Collections.EMPTY_LIST));
+            tags.add(make.Deprecated(Collections.emptyList()));
         }
-        return make.DocComment(firstSentence, body, tags);
+
+        boolean[] useMarkdown = new boolean[1];
+        TreePath tp = javac.getTrees().getPath(elm);
+
+        if (tp != null) {
+            new TreePathScanner<Void, Void>() {
+                private boolean seenJavadoc;
+                @Override
+                public Void scan(Tree tree, Void p) {
+                    if (seenJavadoc) {
+                        return null;
+                    }
+
+                    return super.scan(tree, p);
+                }
+
+                @Override
+                public Void visitVariable(VariableTree node, Void p) {
+                    checkJavadoc();
+                    return super.visitVariable(node, p);
+                }
+
+                @Override
+                public Void visitMethod(MethodTree node, Void p) {
+                    checkJavadoc();
+                    return super.visitMethod(node, p);
+                }
+
+                @Override
+                public Void visitClass(ClassTree node, Void p) {
+                    checkJavadoc();
+                    return super.visitClass(node, p);
+                }
+                private void checkJavadoc() {
+                    DocCommentKind kind = javac.getDocTrees().getDocCommentKind(getCurrentPath());
+                    if (kind != null) {
+                        useMarkdown[0] = kind == DocCommentKind.END_OF_LINE;
+                        seenJavadoc |= useMarkdown[0];
+                    }
+                }
+            }.scan(tp.getCompilationUnit(), null);
+        }
+
+        if (useMarkdown[0]) {
+            return make.MarkdownDocComment(firstSentence, body, tags);
+        } else {
+            return make.DocComment(firstSentence, body, tags);
+        }
     }
     
     /**

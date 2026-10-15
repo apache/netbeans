@@ -30,7 +30,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * A SPI for attaching source roots and javadoc roots to binary roots.
- * The implementations of this interface are registered in global {@link Lookup}
+ * The implementations of this interface are registered in global {@link Lookup}.
  * @see ServiceProvider
  * @author Tomas Zezula
  * @since 1.35
@@ -40,7 +40,7 @@ public interface SourceJavadocAttacherImplementation {
     /**
      * Attaches a source root provided by this SPI to given binary root.
      * @param root the binary root to attach sources to
-     * @param a listener notified about result when attaching is done
+     * @param listener a listener notified about result when attaching is done
      * @throws IOException in case of error
      */
     boolean attachSources(
@@ -50,7 +50,7 @@ public interface SourceJavadocAttacherImplementation {
     /**
      * Attaches a javadoc root provided by this SPI to given binary root.
      * @param root the binary root to attach javadoc to
-     * @param a listener notified about result when attaching is done
+     * @param listener a listener notified about result when attaching is done
      * @throws IOException in case of error
      */
     boolean attachJavadoc(
@@ -59,7 +59,8 @@ public interface SourceJavadocAttacherImplementation {
 
     /**
      * Extension into the default {@link SourceJavadocAttacherImplementation} allowing to download or find sources and javadoc for given binary.
-     * The extension implementation is registered in the global {@link org.openide.util.Lookup}.
+     * The extension implementation is registered in the global {@link org.openide.util.Lookup}. Multiple Definers can be defined. Consider to implement
+     * {@link Definer2} to indicate the Definer is willing to handle the root.
      * @since 1.49
      */
     interface Definer {
@@ -96,5 +97,20 @@ public interface SourceJavadocAttacherImplementation {
          */
         @NonNull
         List<? extends URL> getJavadoc(@NonNull URL root, @NonNull Callable<Boolean> cancel);
+    }
+    
+    /**
+     * Extends the {@link Definer} interface to work better if several providers are defined.
+     * The Definer can indicate if it is willing to handle the artifact. For example, Maven may 
+     * reject artifacts that are outside of M2 local repository.
+     * @since 1.78
+     */
+    interface Definer2 extends Definer {
+        /**
+         * Determines if the binary root is acceptable for the Definer. Definers that use
+         * binary filename, path or some database to gather coordinates or location for download
+         * may reject roots that cannot be processed.
+         */
+        public boolean accepts(@NonNull URL root);
     }
 }

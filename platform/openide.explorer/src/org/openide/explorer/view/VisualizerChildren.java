@@ -285,7 +285,7 @@ final class VisualizerChildren extends Object {
 
         int[] indxs = ev.getArray();
         final List<VisualizerNode> vn = getVisNodes(true);
-        VisualizerNode[] old = vn.toArray(new VisualizerNode[vn.size()]);
+        VisualizerNode[] old = vn.toArray(new VisualizerNode[0]);
         VisualizerNode[] arr = new VisualizerNode[old.length];
         int s = indxs.length;
         try {

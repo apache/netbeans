@@ -143,7 +143,7 @@ public final class PushDownRefactoringPlugin extends JavaRefactoringPlugin {
     public Problem prepare(RefactoringElementsBag refactoringElements) {
         Set<FileObject> a = getRelevantFiles(treePathHandle);
         fireProgressListenerStart(AbstractRefactoring.PREPARE, a.size());
-        PushDownTransformer pdt = new PushDownTransformer(refactoring.getMembers()); 
+        PushDownTransformer pdt = new PushDownTransformer(treePathHandle.getFileObject(), refactoring.getMembers()); 
         Problem prob = createAndAddElements(a, new TransformTask(pdt, treePathHandle), refactoringElements, refactoring);
         fireProgressListenerStop();
         return prob != null ? prob : pdt.getProblem();

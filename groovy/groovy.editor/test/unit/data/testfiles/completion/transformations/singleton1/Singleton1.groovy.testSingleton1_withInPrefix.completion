@@ -7,3 +7,5 @@ METHOD     inject(Object, Closure)                    Object
 METHOD     inspect()                                  String
 METHOD     invokeMethod(String, Object)               Object
 FIELD      instance                        [STATIC,   Singleton1
+FIELD      interface                       [PUBLIC]   boolean
+FIELD      interfaces                      [PUBLIC]   Class[]

@@ -110,7 +110,7 @@ public class ApplicationSubclassGenerator {
         RestApplicationModel restAppModel = restSupport.getRestApplicationsModel();
         RestServicesModel model = restSupport.getRestServicesModel();
         String clazz = null;
-        Collection<String> classNames = Collections.EMPTY_LIST;
+        Collection<String> classNames = Collections.emptyList();
         try {
             clazz = restAppModel.runReadAction(
                     new MetadataModelAction<RestApplications, String>() {
@@ -182,7 +182,7 @@ public class ApplicationSubclassGenerator {
                         ClassTree classTree = (ClassTree) typeDeclaration;
                         List<? extends Tree> members = classTree.getMembers();
                         for (Tree member : members) {
-                            if ( member.getKind().equals(Tree.Kind.METHOD)){
+                            if ( member.getKind() == Tree.Kind.METHOD) {
                                 MethodTree method = (MethodTree)member;
                                 String name = method.getName().toString();
                                 if ( name.equals(RestConstants.GET_CLASSES)){

@@ -301,7 +301,7 @@ public class MergeDialogComponent extends TopComponent implements ChangeListener
     
     public MergePanel getSelectedMergePanel() {
         Component selected = mergeTabbedPane.getSelectedComponent();
-        if (selected == null || !(selected instanceof MergePanel)) return null;
+        if (!(selected instanceof MergePanel)) return null;
         return ((MergePanel) selected);
     }
     
@@ -404,14 +404,14 @@ public class MergeDialogComponent extends TopComponent implements ChangeListener
         } else if (unsavedPanelNames.size() > 1) {
             ret = DialogDisplayer.getDefault().notify(
                 new NotifyDescriptor.Confirmation(warning
-                    ? NbBundle.getMessage(MergeDialogComponent.class,"SaveFilesWarningQuestion",new Integer(unsavedPanelNames.size()))
-                    : NbBundle.getMessage(MergeDialogComponent.class,"SaveFilesQuestion",new Integer(unsavedPanelNames.size())),
+                    ? NbBundle.getMessage(MergeDialogComponent.class,"SaveFilesWarningQuestion",Integer.valueOf(unsavedPanelNames.size()))
+                    : NbBundle.getMessage(MergeDialogComponent.class,"SaveFilesQuestion",Integer.valueOf(unsavedPanelNames.size())),
                       NotifyDescriptor.YES_NO_CANCEL_OPTION));
         } else {
             if (warning) {
                 ret = DialogDisplayer.getDefault().notify(
                 new NotifyDescriptor.Confirmation(
-                      NbBundle.getMessage(MergeDialogComponent.class,"WarningQuestion",new Integer(unsavedPanelNames.size())),
+                      NbBundle.getMessage(MergeDialogComponent.class,"WarningQuestion",Integer.valueOf(unsavedPanelNames.size())),
                       NotifyDescriptor.OK_CANCEL_OPTION));
             } else {
                 ret = NotifyDescriptor.YES_OPTION;

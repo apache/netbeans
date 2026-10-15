@@ -128,7 +128,7 @@ public abstract class JavaSourceAccessor {
         final Collection<Source> sources = getSources(js);
         assert sources.size() == 1;
         final int pp = translatePriority(priority);
-        if (tasks.keySet().contains(task)) {
+        if (tasks.containsKey(task)) {
             throw new IllegalArgumentException(String.format("Task: %s is already scheduled", task.toString()));   //NOI18N
         }
         final ParserResultTask<?> hanz = new CancelableTaskWrapper(task, pp, phase, js, taskIndexingMode);

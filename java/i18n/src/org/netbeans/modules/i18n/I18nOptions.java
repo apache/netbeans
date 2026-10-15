@@ -203,7 +203,7 @@ public class I18nOptions {
                 }
             }
         }        
-        return retval.toArray(new FileSystem[retval.size()]);
+        return retval.toArray(new FileSystem[0]);
     }
     
     @Deprecated

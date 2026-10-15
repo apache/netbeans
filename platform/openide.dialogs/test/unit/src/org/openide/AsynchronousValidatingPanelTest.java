@@ -24,7 +24,6 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.JLabel;
 import javax.swing.event.ChangeListener;
-import static junit.framework.Assert.assertTrue;
 import org.netbeans.junit.RandomlyFails;
 import org.openide.util.*;
 import org.openide.util.HelpCtx;

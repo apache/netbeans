@@ -99,6 +99,8 @@ public class NotifyExceptionTest extends NbTestCase {
      * until the MainWindow is visible.
      */
     public void testNoModalErrorDialog() throws Exception {
+    
+    public void testNoErrorDialog() throws Exception {
         Frame mainWindow = WindowManager.getDefault().getMainWindow();
         final JDialog modalDialog = new HiddenDialog( mainWindow, true );
         DD.toReturn = modalDialog;
@@ -124,6 +126,7 @@ public class NotifyExceptionTest extends NbTestCase {
             Exceptions.printStackTrace(npe);
 
             waitEQ();
+            assertNull("No dialogs shown", DD.lastDescriptor);
             return null;
         });
         assertNotNull("We are going to display a warning", DD.lastDescriptor);

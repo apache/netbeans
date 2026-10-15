@@ -76,6 +76,7 @@ public class CreateFieldTest extends ErrorHintsTestBase {
     }
 
     public void test177201() throws Exception {
+        doRunIndexing = true;
         performFixTest("test/Test.java",
                 "package test;import javax.swing.JFrame;import javax.swing.JOptionPane;public class Test {public boolean isOk() {JFrame frame = null;JOptionPane.showMessageDialog(frame,X.whan|tAutoGenerateThisVariableInXClass,\"Error\",JOptionPane.ERROR_MESSAGE );return true;}} class X {}",
                 "CreateFieldFix:whantAutoGenerateThisVariableInXClass:test.X:java.lang.Object:[static]",

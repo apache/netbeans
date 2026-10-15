@@ -97,7 +97,7 @@ public abstract class UnitCategoryTableModel extends AbstractTableModel {
     }
 
     public static boolean isMarkedAsDefault(Type type) {
-        return (type.equals(Type.LOCAL) || type.equals(Type.UPDATE)) ? true : false;
+        return type == Type.LOCAL || type == Type.UPDATE;
     }
     
     protected final boolean isMarkedAsDefault() {
@@ -203,7 +203,7 @@ public abstract class UnitCategoryTableModel extends AbstractTableModel {
             assert unitData != null;
         }
         if (unitCmp != null) {
-            Collections.sort(unitData,unitCmp);
+            unitData.sort(unitCmp);
         }
         this.fireTableDataChanged();
     }
@@ -378,7 +378,7 @@ public abstract class UnitCategoryTableModel extends AbstractTableModel {
             featuretData = new ArrayList<Unit> (unitData);
             featuretData.removeAll(getStandAloneModules());
             if (unitCmp != null) {
-                Collections.sort(featuretData,unitCmp);
+                featuretData.sort(unitCmp);
             }            
         }
         return featuretData;
@@ -393,8 +393,7 @@ public abstract class UnitCategoryTableModel extends AbstractTableModel {
     }
             
     public static boolean isExpandableType (Type type) {
-        return type.equals(UnitCategoryTableModel.Type.AVAILABLE) || 
-                type.equals(UnitCategoryTableModel.Type.UPDATE);
+        return type == UnitCategoryTableModel.Type.AVAILABLE || type == UnitCategoryTableModel.Type.UPDATE;
     }
             
     @Override

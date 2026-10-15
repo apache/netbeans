@@ -1,0 +1,6 @@
+Code completion result for source line:
+public static function testReturnUnionType(): self|\Foo\Bar|stat|ic|null {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      StaticReturnType                [PUBLIC]   staticReturnTypeInReturnType.php
+------------------------------------
+KEYWORD    static                                     null

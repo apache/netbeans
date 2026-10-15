@@ -1,0 +1,72 @@
+function invalidNeverReturnType1(): ?never { // invalidNeverReturnType1 func
+                                     -----
+HINT:"never" cannot be used with "?"
+function invalidNeverReturnType2(): ?never { // invalidNeverReturnType2 func
+                                     -----
+HINT:"never" cannot be used with "?"
+    return;
+    -------
+HINT:Return statement must be filled with the value
+    return;
+    -------
+HINT:"never" cannot return anything
+    return true; // neverReturnType3 func
+    ------------
+HINT:"never" cannot return anything
+    return $foo; // neverReturnType4 func
+    ------------
+HINT:"never" cannot return anything
+    return new NeverReturnTypeHint(); // neverReturnType5 func
+    ---------------------------------
+HINT:"never" cannot return anything
+            return;
+            -------
+HINT:"never" cannot return anything
+        return;
+        -------
+HINT:"never" cannot return anything
+        return new NeverReturnTypeHint(); // neverReturnType3 class
+        ---------------------------------
+HINT:"never" cannot return anything
+            return new NeverReturnTypeHint(); // neverReturnType4 class
+            ---------------------------------
+HINT:"never" cannot return anything
+            return;
+            -------
+HINT:"never" cannot return anything
+            return "anon"; // anon3 class
+            --------------
+HINT:"never" cannot return anything
+            return "anon"; // anon4 class
+            --------------
+HINT:"never" cannot return anything
+        return new NeverReturnTypeHint(); // anon4 class
+        ---------------------------------
+HINT:"never" cannot return anything
+        return;
+        -------
+HINT:"never" cannot return anything
+                return;
+                -------
+HINT:"never" cannot return anything
+        return new NeverReturnTypeHint(); // neverReturnType4 trait
+        ---------------------------------
+HINT:"never" cannot return anything
+            return "test"; // neverReturnType5 trait
+            --------------
+HINT:"never" cannot return anything
+        return 1; // neverReturnType5 trait
+        ---------
+HINT:"never" cannot return anything
+        $anon = function(): ?never { // anon1 trait
+                             -----
+HINT:"never" cannot be used with "?"
+        $anon = function(): ?never { // anon2 trait
+                             -----
+HINT:"never" cannot be used with "?"
+            return;
+            -------
+HINT:Return statement must be filled with the value
+    public function neverReturnType2(): ?never; // neverReturnType2 interface
+                                         -----
+HINT:"never" cannot be used with "?"

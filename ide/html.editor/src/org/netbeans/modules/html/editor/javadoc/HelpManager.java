@@ -59,7 +59,7 @@ public class HelpManager {
         lastURL = null;
     }
     
-    static public HelpManager getDefault(){
+    public static HelpManager getDefault(){
         if (manager == null){
             manager = new HelpManager();
         }

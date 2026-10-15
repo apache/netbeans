@@ -1,0 +1,98 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
+   "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<!--
+
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+-->
+<!-- =================================================================== -->
+<!-- A dummy document used to preload classes.                           -->
+<!-- =================================================================== -->
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100" height="100" viewBox="0 0 100 100">
+
+    <defs>
+        <g id="batik">
+                <path id="Batik_B" d="M50.037,12.141l0.463,3.236c0,1.465-0.039,2.484-0.115,3.063s-0.344,1.213-0.803,1.906l-1.834,3.234l-2.521,3.814c4.395,6.24,7.326,10.824,8.791,13.75l3.008,6.355l1.967,6.701c0.848,3.16,1.271,6.279,1.271,9.361
+                        c0,5.008-0.869,9.57-2.604,13.691s-4.145,7.453-7.229,9.996c-3.086,2.543-6.998,4.449-11.74,5.719s-9.543,1.906-14.4,1.906c-3.855,0-7.096-0.27-9.717-0.809c-3.238-0.461-5.688-1.193-7.346-2.195c-1.658-1-3.123-2.195-4.395-3.582
+                        C1.561,86.902,0.617,85.055,0,82.742c0-5.082,1.117-10.436,3.355-16.061l6.709-17.68c2.234-6.086,3.354-11.748,3.354-16.986c-0.232-2.156-0.617-4.197-1.156-6.123l-1.852-6.471c-0.695-2.311-2.121-5.008-4.279-8.09l-0.115-0.924V9.715
+                        c0-3.158,1.309-5.238,3.928-6.24c4.775-1.232,9.859-1.85,15.252-1.85c6.316,0,11.746,0.828,16.291,2.484s7.395,4.334,8.551,8.031z M29.518,12.625c-0.846,0.461-1.268,1.189-1.268,2.186c0,0.691,0.326,1.668,0.979,2.934s1.096,2.434,1.326,3.506
+                        c1.074-0.383,1.938-1.148,2.59-2.299s0.98-2.416,0.98-3.797c-0.23-0.842-0.787-1.512-1.67-2.012s-1.863-0.672-2.938-0.518z M30.537,33.979L29.496,45.66c0,0.617,0.203,1.119,0.609,1.504l1.826,0.463l2.193-0.463c0.645-0.23,1.363-1.039,2.152-2.428
+                        c0.645-1.387,0.969-3.045,0.969-4.975V38.49c0-0.539-0.078-1.041-0.232-1.504c0-0.617-0.502-1.389-1.504-2.314c-1.004-0.77-1.967-1.156-2.891-1.156c-0.771,0-1.465,0.154-2.082,0.463z"/>
+        </g>
+
+        <filter id="shadow" filterRes="200" x="-.2" y="-.1">
+            <feGaussianBlur stdDeviation="3 3" />
+            <feOffset dx="-10" dy="10" />
+            <feComponentTransfer result="shadow">
+               <feFuncA type="linear" slope=".5" intercept="0" />
+            </feComponentTransfer>
+            <feComposite in="SourceGraphic" in2="shadow" />
+        </filter>
+
+            <path id="Outer_Ellipse" style="stroke:none;" d="M453.747,104.22C333.581-15.897,157.944-35.015,61.45,61.516c-96.493,96.533-77.301,272.161,42.866,392.278C224.48,573.911,400.117,593.031,496.61,496.498c96.493-96.533,77.302-272.161-42.863-392.278z
+                         M461.486,454.618c-74.193,74.224-222.251,46.516-330.696-61.886C22.343,284.329-5.426,136.283,68.766,62.059c74.193-74.222,222.251-46.516,330.698,61.887c108.445,108.402,136.214,256.449,62.021,330.672z"/>
+
+      <clipPath id="textClip">
+       <text x="0" y="0" text-anchor="middle" font-size="80%" font-family="Serif" id="text">batik <tspan dx="10 20 30" dy="10 20 30" style="stroke:#CC4">SVG</tspan></text>
+      </clipPath>
+       <g id="words">
+         <use xlink:href="#text"/>
+         <g clip-path="url(#textClip)">
+             <use xlink:href="#text" transform="scale(0.9) rotate(20) translate(-20,-15)" filter="url(#shadow)" fill="black"/>
+         </g>
+       </g>
+        <g transform="translate(225, 250) rotate(-260)" id="rotatedText">
+        <g  transform="scale(0.9) rotate(20)" opacity="0.9">
+        <use xlink:href="#words"/>
+        </g></g>
+            <path id="Inner_Ellipse" style="stroke:none;" d="M399.464,123.946C291.018,15.543,142.959-12.163,68.766,62.059c-74.192,74.224-46.423,222.27,62.023,330.672c108.445,108.402,256.503,136.11,330.696,61.886c74.192-74.223,46.424-222.27-62.021-330.672z
+                         M410.417,397.331c-58.115,58.14-179.371,31.157-270.832-60.267C48.124,245.64,21.092,124.396,79.207,66.256c58.116-58.139,179.372-31.157,270.833,60.267c91.46,91.424,118.493,212.668,60.377,270.808z"/>
+        </defs>
+
+    <rect x="0" y="0" width="100%" height="100%" fill="rgb(13, 97, 160)" />
+    <g fill="rgb(255, 255, 20)">
+        <circle cx="50" cy="50" r="50"/>
+    </g>
+
+    <g filter="url(#shadow)">
+        <use xlink:href="#Outer_Ellipse" fill-opacity="1"/>
+    </g>
+
+    <use xlink:href="#Outer_Ellipse" fill="rgb(13, 97, 160)" fill-opacity=".75"/>
+    <use xlink:href="#Inner_Ellipse" fill="rgb(255, 255, 20)" fill-opacity=".75" />
+
+    <g transform="translate(50, 154) scale(1.5, 1.5)">
+    <use x="0" y="0" xlink:href="#batik"
+         fill="black" filter="url(#shadow)"/>
+
+    <use x="0" y="0" xlink:href="#batik"
+         fill="none" stroke-width="8" stroke="rgb(13, 97, 160)"/>
+
+    <use x="0" y="0" xlink:href="#batik"
+         fill="rgb(255, 255, 20)" stroke="rgb(204, 102, 53)" stroke-width="1"/>
+    </g>
+
+        <use xlink:href="#rotatedText" fill="white" stroke-width="2" stroke="black"/>
+        <g  transform="translate(50, 50) scale(0.254) rotate(30)">
+        <use xlink:href="#text" fill="black" filter="url(#shadow)"
+             transform="translate(-10, 8)"/>
+        <use xlink:href="#text" stroke="black" stroke-width="16" fill="none"/>
+        <use xlink:href="#text" stroke="none" fill="white"/>
+        </g>
+</svg>

@@ -44,9 +44,14 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -72,7 +77,6 @@ import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.debugger.jpda.EditorContextBridge;
 import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
-import org.netbeans.modules.debugger.jpda.SourcePath;
 import org.netbeans.modules.debugger.jpda.expr.JDIVariable;
 import org.netbeans.modules.debugger.jpda.jdi.ClassNotPreparedExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.InternalExceptionWrapper;
@@ -92,6 +96,13 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.minBy;
 
 
 
@@ -107,6 +118,7 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
     
     private int                 lineNumber;
     private int                 breakpointLineNumber;
+    private int[]               lambdaIndex;
     private int                 lineNumberForUpdate = -1;
     private final Object        lineLock = new Object();
     private BreakpointsReader   reader;
@@ -135,9 +147,11 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
                 lb,
                 getDebugger());
         int lbln = lb.getLineNumber();
+        int[] li = lb.getLambdaIndexes();
         synchronized (lineLock) {
             breakpointLineNumber = lbln;
             lineNumber = theLineNumber;
+            lambdaIndex = li;
         }
    }
 
@@ -236,7 +250,7 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
         if (!isInSources) {
             String relativePath = EditorContextBridge.getRelativePath(className);
             String classURL = getDebugger().getEngineContext().getURL(relativePath, true);
-            if (classURL != null && !classURL.equals(breakpoint.getURL())) {
+            if (classURL != null && !areURLEqual(classURL, breakpoint.getURL())) {
                 // Silently ignore breakpoints from other sources that resolve to a different URL.
                 logger.log(Level.FINE,
                        "LineBreakpoint {0} NOT submitted, because it's URL ''{1}'' differes from class ''{2}'' URL ''{3}''.",
@@ -287,6 +301,17 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
         }
     }
 
+    private static boolean areURLEqual(String url1, String url2) {
+        if (url1.equals(url2)) {
+            return true;
+        }
+        try {
+            return new URI(url1).equals(new URI(url2));
+        } catch (URISyntaxException ex) {
+            return false;
+        }
+    }
+
     private void setInvalid(String reason) {
         logger.warning(
                 "Unable to submit line breakpoint to "+getBreakpoint().getURL()+
@@ -304,11 +329,13 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
         String failReason = null;
         ReferenceType noLocRefType = null;
         int lineNumberToSet;
+        int[] lambdaIndexToSet;
         final int origBreakpointLineNumber;
         int newBreakpointLineNumber;
         synchronized (lineLock) {
             lineNumberToSet = lineNumber;
             newBreakpointLineNumber = origBreakpointLineNumber = breakpointLineNumber;
+            lambdaIndexToSet = lambdaIndex;
         }
         String currFailReason = null;
 
@@ -329,6 +356,10 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
                 if (logger.isLoggable(Level.FINE)) {
                     logger.fine("Locations in "+referenceType+" are: "+locations+", reason = '"+reason[0]);//+"', HAVE PARENT = "+haveParent);
                 }
+                locations = filterLocationsByLambdaIndexes(locations, lambdaIndexToSet);
+                if (logger.isLoggable(Level.FINE)) {
+                    logger.fine("Filtered Locations in "+referenceType+" are: "+locations+", reason = '"+reason[0]);//+"', HAVE PARENT = "+haveParent);
+                }
                 if (locations.isEmpty()) {
                     failReason = reason[0];
                     if (isNoLocReason[0]) {
@@ -337,24 +368,27 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
                     continue;
                 }
                 // Submit the breakpoint for the lowest location on the line only:
-                Location location = locations.get(0);
-                com.sun.jdi.Method m0 = location.method();
-                for (int li = 1; li < locations.size(); li++) {
-                    Location l = locations.get(li);
-                    if (l.codeIndex() < location.codeIndex()) {
-                        if (l.method().equals(m0)) {
-                            // Assure that we're still in the same method
-                            location = l;
-                        }
-                    }
-                }
+                /* If location contains multiple event breakpoint for the same line 
+                (e.g lambda expression along with any function calling 
+                map(n -> foo(
+                        boo(n)))) 
+                then take the lowest location from each type of event*/
+                Collection<Location> lowestLocationList = locations
+                        .stream()
+                        .collect(groupingBy(loc->loc.method().toString(),
+                                LinkedHashMap::new,
+                                collectingAndThen(minBy(Comparator.comparingLong(Location::codeIndex)), 
+                                        Optional::get))).values();
+                
                 try {
-                    BreakpointRequest br = EventRequestManagerWrapper.
-                        createBreakpointRequest (getEventRequestManager (), location);
-                    setFilters(br);
-                    addEventRequest (br);
-                    submitted = true;
-                    //System.out.println("Breakpoint " + br + location + "created");
+                    for (Iterator it = lowestLocationList.iterator(); it.hasNext();) {
+                        Location loc = (Location) it.next();
+                        BreakpointRequest brl = EventRequestManagerWrapper.
+                                createBreakpointRequest(getEventRequestManager(), loc);
+                        setFilters(brl);
+                        addEventRequest(brl);
+                        submitted = true;
+                    }
                 } catch (VMDisconnectedExceptionWrapper e) {
                 } catch (InternalExceptionWrapper e) {
                 } catch (ObjectCollectedExceptionWrapper e) {
@@ -362,7 +396,7 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
                     Exceptions.printStackTrace(irse);
                 } catch (RequestNotSupportedException rnsex) {
                     setValidity(Breakpoint.VALIDITY.INVALID, NbBundle.getMessage(ClassBasedBreakpoint.class, "MSG_RequestNotSupported"));
-                    return ;
+                    return;
                 }
             } // for
             if (counter == 0) {
@@ -591,7 +625,7 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
             // We should indicate somehow that the breakpoint is invalid...
             reason[0] = iex.getLocalizedMessage();
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
     
     private static List<Location> locationsOfLineInClass(
@@ -675,6 +709,72 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
       return path;
     }
 
+    private List<Location> filterLocationsByLambdaIndexes(List<Location> locations, int[] lambdaIndexes) {
+        if (lambdaIndexes.length == 0) {
+            return locations;
+        } else {
+            //heuristics based on lambda method names (and ordering)
+            //if the Java compiler produces a classfile not matching the heuristics,
+            //the lambda breakpoints may misbehave:
+            Map<String, List<Location>> lambda2Locations = new LinkedHashMap<>();
+            List<Location> outsideOfLambda = new ArrayList<>();
+
+            for (Location l : locations) {
+                if (l.method().name().startsWith("lambda$")) {
+                    lambda2Locations.computeIfAbsent(l.method().name(), k -> new ArrayList<>()).add(l);
+                } else {
+                    outsideOfLambda.add(l);
+                }
+            }
+
+            List<String> lambdas = new ArrayList<>(lambda2Locations.keySet());
+
+            if (lambdaMethodsInReverseOrder(lambdas)) {
+                Collections.reverse(lambdas);
+            }
+
+            List<Location> result = new ArrayList<>();
+
+            for (int index : lambdaIndexes) {
+                if (index == LineBreakpoint.LAMBDA_INDEX_STOP_OUTSIDE) {
+                    result.addAll(outsideOfLambda);
+                } else if (index >= 0 && index < lambdas.size()) {
+                    result.addAll(lambda2Locations.get(lambdas.get(index)));
+                }
+            }
+
+            return result;
+        }
+    }
+
+    private boolean lambdaMethodsInReverseOrder(List<String> lambdaMethodNames) {
+        //some compilers (javac) produce the lambda methods in reverse order.
+        //try to detect that situation:
+        if (lambdaMethodNames.size() < 2) {
+            //when there are less than two methods, reversing does not matter
+            return false;
+        }
+        int m0Index = lambdaIndex(lambdaMethodNames.get(0));
+        int m1Index = lambdaIndex(lambdaMethodNames.get(1));
+        if (m0Index == (-1) || m1Index == (-1)) {
+            //one of the lambdas is probably a serializable lambda in javac desugaring
+            //reverse:
+            return true;
+        }
+        //javac produces the lambdas in reverse order:
+        return m0Index > m1Index;
+    }
+
+    private int lambdaIndex(String lambdaMethodName) {
+        int dollar = lambdaMethodName.lastIndexOf('$');
+        String index = lambdaMethodName.substring(dollar + 1);
+        try {
+            return Integer.parseInt(index);
+        } catch (NumberFormatException ex) {
+            return -1;
+        }
+    }
+
     private int findBreakableLine(String url, final int lineNumber) {
         FileObject fileObj = null;
         try {
@@ -715,7 +815,7 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
                     if (kind == Tree.Kind.ERRONEOUS) {
                         return ;
                     }
-                    int startOffs = (int)positions.getStartPosition(compUnit, tree);
+                    int startOffs = (int)positions.getStartPosition(tree);
                     int outerLineNumber = LineDocumentUtils.getLineIndex(doc, startOffs) + 1;
                     if (outerLineNumber == lineNumber) return;
                     if (kind == Tree.Kind.COMPILATION_UNIT || TreeUtilities.CLASS_TREE_KINDS.contains(kind)) return;
@@ -724,7 +824,7 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
                         Tree previousTree = null;
                         int previousTreeEndOffset = -1;
                         for (StatementTree sTree : blockTree.getStatements()) {
-                            int end = (int)positions.getStartPosition(compUnit, sTree);
+                            int end = (int)positions.getStartPosition(sTree);
                             if (end <= rowStartOffset && end > previousTreeEndOffset) {
                                 previousTree = sTree;
                                 previousTreeEndOffset = end;
@@ -741,7 +841,7 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
                                 return;
                             }
                         }
-                        startOffs = (int)positions.getStartPosition(compUnit, previousTree);
+                        startOffs = (int)positions.getStartPosition(previousTree);
                         outerLineNumber = LineDocumentUtils.getLineIndex(doc, startOffs) + 1;
                     } // if
                     result[0] = outerLineNumber;

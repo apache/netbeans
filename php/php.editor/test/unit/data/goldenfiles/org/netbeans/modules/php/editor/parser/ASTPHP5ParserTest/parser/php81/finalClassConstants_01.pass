@@ -1,0 +1,639 @@
+<testresult testFile='finalClassConstants_01.php'>
+    <scanner>
+        <token id='T_CLASS' start='815' end='820'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='821' end='841'>
+            <text>FinalPrivateConstant</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='842' end='843'>
+            <text>{</text>
+        </token>
+        <token id='T_FINAL' start='848' end='853'>
+            <text>final</text>
+        </token>
+        <token id='T_CONST' start='854' end='859'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='860' end='881'>
+            <text>IMPLICIT_PUBLIC_CONST</text>
+        </token>
+        <token id='T_EQUAL' start='882' end='883'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='884' end='889'>
+            <text>"foo"</text>
+        </token>
+        <token id='T_SEMICOLON' start='889' end='890'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='895' end='900'>
+            <text>final</text>
+        </token>
+        <token id='T_PUBLIC' start='901' end='907'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='908' end='913'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='914' end='926'>
+            <text>PUBLIC_CONST</text>
+        </token>
+        <token id='T_EQUAL' start='927' end='928'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='929' end='934'>
+            <text>"foo"</text>
+        </token>
+        <token id='T_SEMICOLON' start='934' end='935'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='940' end='945'>
+            <text>final</text>
+        </token>
+        <token id='T_PRIVATE' start='946' end='953'>
+            <text>private</text>
+        </token>
+        <token id='T_CONST' start='954' end='959'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='960' end='973'>
+            <text>PRIVATE_CONST</text>
+        </token>
+        <token id='T_EQUAL' start='974' end='975'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='976' end='981'>
+            <text>"foo"</text>
+        </token>
+        <token id='T_SEMICOLON' start='981' end='982'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='987' end='992'>
+            <text>final</text>
+        </token>
+        <token id='T_PROTECTED' start='993' end='1002'>
+            <text>protected</text>
+        </token>
+        <token id='T_CONST' start='1003' end='1008'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1009' end='1024'>
+            <text>PROTECTED_CONST</text>
+        </token>
+        <token id='T_EQUAL' start='1025' end='1026'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1027' end='1032'>
+            <text>"foo"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1032' end='1033'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1039' end='1045'>
+            <text>public</text>
+        </token>
+        <token id='T_FINAL' start='1046' end='1051'>
+            <text>final</text>
+        </token>
+        <token id='T_CONST' start='1052' end='1057'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1058' end='1071'>
+            <text>PUBLIC_CONST2</text>
+        </token>
+        <token id='T_EQUAL' start='1072' end='1073'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1074' end='1079'>
+            <text>"foo"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1079' end='1080'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='1085' end='1092'>
+            <text>private</text>
+        </token>
+        <token id='T_FINAL' start='1093' end='1098'>
+            <text>final</text>
+        </token>
+        <token id='T_CONST' start='1099' end='1104'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1105' end='1119'>
+            <text>PRIVATE_CONST2</text>
+        </token>
+        <token id='T_EQUAL' start='1120' end='1121'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1122' end='1127'>
+            <text>"foo"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1127' end='1128'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED' start='1133' end='1142'>
+            <text>protected</text>
+        </token>
+        <token id='T_FINAL' start='1143' end='1148'>
+            <text>final</text>
+        </token>
+        <token id='T_CONST' start='1149' end='1154'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1155' end='1171'>
+            <text>PROTECTED_CONST2</text>
+        </token>
+        <token id='T_EQUAL' start='1172' end='1173'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1174' end='1179'>
+            <text>"foo"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1179' end='1180'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='1186' end='1191'>
+            <text>final</text>
+        </token>
+        <token id='T_CONST' start='1192' end='1197'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1198' end='1220'>
+            <text>IMPLICIT_PUBLIC_CONST2</text>
+        </token>
+        <token id='T_EQUAL' start='1221' end='1222'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1223' end='1228'>
+            <text>"foo"</text>
+        </token>
+        <token id='T_COMMA' start='1228' end='1229'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='1230' end='1252'>
+            <text>IMPLICIT_PUBLIC_CONST3</text>
+        </token>
+        <token id='T_EQUAL' start='1253' end='1254'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1255' end='1260'>
+            <text>"foo"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1260' end='1261'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='1266' end='1271'>
+            <text>final</text>
+        </token>
+        <token id='T_PUBLIC' start='1272' end='1278'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='1279' end='1284'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1285' end='1298'>
+            <text>PUBLIC_CONST3</text>
+        </token>
+        <token id='T_EQUAL' start='1299' end='1300'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1301' end='1306'>
+            <text>"foo"</text>
+        </token>
+        <token id='T_COMMA' start='1306' end='1307'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='1308' end='1321'>
+            <text>PUBLIC_CONST4</text>
+        </token>
+        <token id='T_EQUAL' start='1322' end='1323'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1324' end='1329'>
+            <text>"foo"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1329' end='1330'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='1335' end='1340'>
+            <text>final</text>
+        </token>
+        <token id='T_PRIVATE' start='1341' end='1348'>
+            <text>private</text>
+        </token>
+        <token id='T_CONST' start='1349' end='1354'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1355' end='1369'>
+            <text>PRIVATE_CONST3</text>
+        </token>
+        <token id='T_EQUAL' start='1370' end='1371'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1372' end='1377'>
+            <text>"foo"</text>
+        </token>
+        <token id='T_COMMA' start='1377' end='1378'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='1379' end='1393'>
+            <text>PRIVATE_CONST4</text>
+        </token>
+        <token id='T_EQUAL' start='1394' end='1395'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1396' end='1401'>
+            <text>"foo"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1401' end='1402'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='1407' end='1412'>
+            <text>final</text>
+        </token>
+        <token id='T_PROTECTED' start='1413' end='1422'>
+            <text>protected</text>
+        </token>
+        <token id='T_CONST' start='1423' end='1428'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1429' end='1445'>
+            <text>PROTECTED_CONST3</text>
+        </token>
+        <token id='T_EQUAL' start='1446' end='1447'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1448' end='1453'>
+            <text>"foo"</text>
+        </token>
+        <token id='T_COMMA' start='1453' end='1454'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='1455' end='1471'>
+            <text>PROTECTED_CONST4</text>
+        </token>
+        <token id='T_EQUAL' start='1472' end='1473'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1474' end='1479'>
+            <text>"foo"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1479' end='1480'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1486' end='1492'>
+            <text>public</text>
+        </token>
+        <token id='T_FINAL' start='1493' end='1498'>
+            <text>final</text>
+        </token>
+        <token id='T_CONST' start='1499' end='1504'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1505' end='1518'>
+            <text>PUBLIC_CONST5</text>
+        </token>
+        <token id='T_EQUAL' start='1519' end='1520'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1521' end='1526'>
+            <text>"foo"</text>
+        </token>
+        <token id='T_COMMA' start='1526' end='1527'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='1528' end='1541'>
+            <text>PUBLIC_CONST6</text>
+        </token>
+        <token id='T_EQUAL' start='1542' end='1543'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1544' end='1549'>
+            <text>"foo"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1549' end='1550'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='1555' end='1562'>
+            <text>private</text>
+        </token>
+        <token id='T_FINAL' start='1563' end='1568'>
+            <text>final</text>
+        </token>
+        <token id='T_CONST' start='1569' end='1574'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1575' end='1589'>
+            <text>PRIVATE_CONST5</text>
+        </token>
+        <token id='T_EQUAL' start='1590' end='1591'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1592' end='1597'>
+            <text>"foo"</text>
+        </token>
+        <token id='T_COMMA' start='1597' end='1598'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='1599' end='1613'>
+            <text>PRIVATE_CONST6</text>
+        </token>
+        <token id='T_EQUAL' start='1614' end='1615'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1616' end='1621'>
+            <text>"foo"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1621' end='1622'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED' start='1627' end='1636'>
+            <text>protected</text>
+        </token>
+        <token id='T_FINAL' start='1637' end='1642'>
+            <text>final</text>
+        </token>
+        <token id='T_CONST' start='1643' end='1648'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1649' end='1665'>
+            <text>PROTECTED_CONST5</text>
+        </token>
+        <token id='T_EQUAL' start='1666' end='1667'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1668' end='1673'>
+            <text>"foo"</text>
+        </token>
+        <token id='T_COMMA' start='1673' end='1674'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='1675' end='1691'>
+            <text>PROTECTED_CONST6</text>
+        </token>
+        <token id='T_EQUAL' start='1692' end='1693'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1694' end='1699'>
+            <text>"foo"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1699' end='1700'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1701' end='1702'>
+            <text>}</text>
+        </token>
+        <token id='T_INTERFACE' start='1704' end='1713'>
+            <text>interface</text>
+        </token>
+        <token id='T_STRING' start='1714' end='1715'>
+            <text>I</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1716' end='1717'>
+            <text>{</text>
+        </token>
+        <token id='T_FINAL' start='1722' end='1727'>
+            <text>final</text>
+        </token>
+        <token id='T_CONST' start='1728' end='1733'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1734' end='1748'>
+            <text>IMPLICIT_CONST</text>
+        </token>
+        <token id='T_EQUAL' start='1749' end='1750'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1751' end='1754'>
+            <text>"i"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1754' end='1755'>
+            <text>;</text>
+        </token>
+        <token id='T_FINAL' start='1760' end='1765'>
+            <text>final</text>
+        </token>
+        <token id='T_PUBLIC' start='1766' end='1772'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='1773' end='1778'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1779' end='1792'>
+            <text>PUBLIC_CONST1</text>
+        </token>
+        <token id='T_EQUAL' start='1793' end='1794'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1795' end='1798'>
+            <text>"i"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1798' end='1799'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1804' end='1810'>
+            <text>public</text>
+        </token>
+        <token id='T_FINAL' start='1811' end='1816'>
+            <text>final</text>
+        </token>
+        <token id='T_CONST' start='1817' end='1822'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1823' end='1836'>
+            <text>PUBLIC_CONST2</text>
+        </token>
+        <token id='T_EQUAL' start='1837' end='1838'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1839' end='1842'>
+            <text>"i"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1842' end='1843'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1844' end='1845'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='1846' end='1846'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1846'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='815' end='1702' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='821' end='841' name='FinalPrivateConstant'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='842' end='1702' isCurly='true'>
+                    <ClassConstantDeclaration start='848' end='890' modifier='final'>
+                        <Names>
+                            <Identifier start='860' end='881' name='IMPLICIT_PUBLIC_CONST'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='884' end='889' type='STRING' value='"foo"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='895' end='935' modifier='public final'>
+                        <Names>
+                            <Identifier start='914' end='926' name='PUBLIC_CONST'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='929' end='934' type='STRING' value='"foo"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='940' end='982' modifier='private final'>
+                        <Names>
+                            <Identifier start='960' end='973' name='PRIVATE_CONST'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='976' end='981' type='STRING' value='"foo"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='987' end='1033' modifier='protected final'>
+                        <Names>
+                            <Identifier start='1009' end='1024' name='PROTECTED_CONST'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1027' end='1032' type='STRING' value='"foo"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1039' end='1080' modifier='public final'>
+                        <Names>
+                            <Identifier start='1058' end='1071' name='PUBLIC_CONST2'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1074' end='1079' type='STRING' value='"foo"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1085' end='1128' modifier='private final'>
+                        <Names>
+                            <Identifier start='1105' end='1119' name='PRIVATE_CONST2'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1122' end='1127' type='STRING' value='"foo"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1133' end='1180' modifier='protected final'>
+                        <Names>
+                            <Identifier start='1155' end='1171' name='PROTECTED_CONST2'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1174' end='1179' type='STRING' value='"foo"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1186' end='1261' modifier='final'>
+                        <Names>
+                            <Identifier start='1198' end='1220' name='IMPLICIT_PUBLIC_CONST2'/>
+                            <Identifier start='1230' end='1252' name='IMPLICIT_PUBLIC_CONST3'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1223' end='1228' type='STRING' value='"foo"'/>
+                            <Scalar start='1255' end='1260' type='STRING' value='"foo"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1266' end='1330' modifier='public final'>
+                        <Names>
+                            <Identifier start='1285' end='1298' name='PUBLIC_CONST3'/>
+                            <Identifier start='1308' end='1321' name='PUBLIC_CONST4'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1301' end='1306' type='STRING' value='"foo"'/>
+                            <Scalar start='1324' end='1329' type='STRING' value='"foo"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1335' end='1402' modifier='private final'>
+                        <Names>
+                            <Identifier start='1355' end='1369' name='PRIVATE_CONST3'/>
+                            <Identifier start='1379' end='1393' name='PRIVATE_CONST4'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1372' end='1377' type='STRING' value='"foo"'/>
+                            <Scalar start='1396' end='1401' type='STRING' value='"foo"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1407' end='1480' modifier='protected final'>
+                        <Names>
+                            <Identifier start='1429' end='1445' name='PROTECTED_CONST3'/>
+                            <Identifier start='1455' end='1471' name='PROTECTED_CONST4'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1448' end='1453' type='STRING' value='"foo"'/>
+                            <Scalar start='1474' end='1479' type='STRING' value='"foo"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1486' end='1550' modifier='public final'>
+                        <Names>
+                            <Identifier start='1505' end='1518' name='PUBLIC_CONST5'/>
+                            <Identifier start='1528' end='1541' name='PUBLIC_CONST6'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1521' end='1526' type='STRING' value='"foo"'/>
+                            <Scalar start='1544' end='1549' type='STRING' value='"foo"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1555' end='1622' modifier='private final'>
+                        <Names>
+                            <Identifier start='1575' end='1589' name='PRIVATE_CONST5'/>
+                            <Identifier start='1599' end='1613' name='PRIVATE_CONST6'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1592' end='1597' type='STRING' value='"foo"'/>
+                            <Scalar start='1616' end='1621' type='STRING' value='"foo"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1627' end='1700' modifier='protected final'>
+                        <Names>
+                            <Identifier start='1649' end='1665' name='PROTECTED_CONST5'/>
+                            <Identifier start='1675' end='1691' name='PROTECTED_CONST6'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1668' end='1673' type='STRING' value='"foo"'/>
+                            <Scalar start='1694' end='1699' type='STRING' value='"foo"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <InterfaceDeclaration start='1704' end='1845'>
+                <Name>
+                    <Identifier start='1714' end='1715' name='I'/>
+                </Name>
+                <Block start='1716' end='1845' isCurly='true'>
+                    <ClassConstantDeclaration start='1722' end='1755' modifier='final'>
+                        <Names>
+                            <Identifier start='1734' end='1748' name='IMPLICIT_CONST'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1751' end='1754' type='STRING' value='"i"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1760' end='1799' modifier='public final'>
+                        <Names>
+                            <Identifier start='1779' end='1792' name='PUBLIC_CONST1'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1795' end='1798' type='STRING' value='"i"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1804' end='1843' modifier='public final'>
+                        <Names>
+                            <Identifier start='1823' end='1836' name='PUBLIC_CONST2'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1839' end='1842' type='STRING' value='"i"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                </Block>
+            </InterfaceDeclaration>
+        </Statements>
+    </Program>
+</testresult>

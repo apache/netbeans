@@ -20,24 +20,24 @@ package org.netbeans.modules.lsp.client.bindings;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import javax.swing.text.BadLocationException;
+import javax.swing.Icon;
+import javax.swing.SwingUtilities;
 import javax.swing.text.Document;
-import javax.swing.text.StyledDocument;
 import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.ApplyWorkspaceEditResponse;
 import org.eclipse.lsp4j.CodeAction;
@@ -49,17 +49,24 @@ import org.eclipse.lsp4j.ConfigurationItem;
 import org.eclipse.lsp4j.ConfigurationParams;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DiagnosticSeverity;
-import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.MessageType;
+import org.eclipse.lsp4j.ProgressParams;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
-import org.eclipse.lsp4j.TextEdit;
-import org.eclipse.lsp4j.WorkspaceEdit;
+import org.eclipse.lsp4j.WorkDoneProgressBegin;
+import org.eclipse.lsp4j.WorkDoneProgressCreateParams;
+import org.eclipse.lsp4j.WorkDoneProgressEnd;
+import org.eclipse.lsp4j.WorkDoneProgressNotification;
+import org.eclipse.lsp4j.WorkDoneProgressReport;
+import org.eclipse.lsp4j.jsonrpc.Endpoint;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.services.LanguageClient;
+import org.netbeans.api.annotations.common.StaticResource;
+import org.netbeans.api.progress.*;
 import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.modules.lsp.client.Utils;
 import org.netbeans.spi.editor.hints.ChangeInfo;
@@ -69,21 +76,33 @@ import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.editor.hints.HintsController;
 import org.netbeans.spi.editor.hints.LazyFixList;
 import org.netbeans.spi.editor.hints.Severity;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
+import org.openide.NotifyDescriptor.QuickPick.Item;
+import org.openide.awt.NotificationDisplayer;
+import org.openide.awt.NotificationDisplayer.Category;
+import org.openide.awt.NotificationDisplayer.Priority;
+import org.openide.awt.StatusDisplayer;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
-import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 import org.openide.util.RequestProcessor;
 
 /**
  *
  * @author lahvac
  */
-public class LanguageClientImpl implements LanguageClient {
+public class LanguageClientImpl implements LanguageClient, Endpoint {
 
     private static final Logger LOG = Logger.getLogger(LanguageClientImpl.class.getName());
     private static final RequestProcessor WORKER = new RequestProcessor(LanguageClientImpl.class.getName(), 1, false, false);
+
+    @StaticResource
+    private static final String ERROR_ICON = "org/netbeans/modules/lsp/client/resources/error_16.png";
+    @StaticResource
+    private static final String WARNING_ICON = "org/netbeans/modules/lsp/client/resources/warning_16.png";
 
     private LSPBindings bindings;
     private boolean allowCodeActions;
@@ -101,21 +120,73 @@ public class LanguageClientImpl implements LanguageClient {
     }
 
     @Override
-    public void publishDiagnostics(PublishDiagnosticsParams pdp) {
-        try {
-            FileObject file = URLMapper.findFileObject(new URI(pdp.getUri()).toURL());
-            EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
-            Document doc = ec != null ? ec.getDocument() : null;
-            if (doc == null)
-                return ; //ignore...
-            List<ErrorDescription> diags = pdp.getDiagnostics().stream().map(d -> {
-                LazyFixList fixList = allowCodeActions ? new DiagnosticFixList(pdp.getUri(), d) : ErrorDescriptionFactory.lazyListForFixes(Collections.emptyList());
-                return ErrorDescriptionFactory.createErrorDescription(severityMap.get(d.getSeverity()), d.getMessage(), fixList, file, Utils.getOffset(doc, d.getRange().getStart()), Utils.getOffset(doc, d.getRange().getEnd()));
-            }).collect(Collectors.toList());
-            HintsController.setErrors(doc, LanguageClientImpl.class.getName(), diags);
-        } catch (URISyntaxException | MalformedURLException ex) {
-            LOG.log(Level.FINE, null, ex);
+    public CompletableFuture<Void> createProgress(WorkDoneProgressCreateParams params) {
+        return CompletableFuture.completedFuture(null);
+    }
+
+    private final Map<Object, ProgressHandle> key2Progress = new HashMap<>();
+
+    @Override
+    public void notifyProgress(ProgressParams params) {
+        Either<WorkDoneProgressNotification, Object> value = params.getValue();
+        if (value.isRight()) {
+            return ;
         }
+        WorkDoneProgressNotification n = value.getLeft();
+        SwingUtilities.invokeLater(() -> {
+            switch (n.getKind()) {
+                case begin: {
+                    WorkDoneProgressBegin progress = (WorkDoneProgressBegin) n;
+                    ProgressHandle handle = ProgressHandle.createHandle(progress.getTitle());
+                    key2Progress.put(params.getToken().get(), handle);
+                    handle.start();
+                    handle.progress(progress.getMessage());
+                    break;
+                }
+                case report: {
+                    WorkDoneProgressReport progress = (WorkDoneProgressReport) n;
+                    ProgressHandle handle = key2Progress.get(params.getToken().get());
+                    if (progress.getPercentage() != null) {
+                        handle.switchToDeterminate(100);
+                        handle.progress(progress.getPercentage());
+                    } else {
+                        handle.switchToIndeterminate();
+                    }
+                    if (progress.getMessage() != null) {
+                        handle.progress(progress.getMessage());
+                    }
+                    break;
+                }
+                case end: {
+                    WorkDoneProgressEnd progress = (WorkDoneProgressEnd) n;
+                    ProgressHandle handle = key2Progress.get(params.getToken().get());
+                    handle.finish();
+                    break;
+                }
+            }
+        });
+    }
+
+   @Override
+    public void publishDiagnostics(PublishDiagnosticsParams pdp) {
+        WORKER.execute(() -> {
+            try {
+                FileObject file = URLMapper.findFileObject(new URI(pdp.getUri()).toURL());
+                EditorCookie ec = file != null ? file.getLookup().lookup(EditorCookie.class) : null;
+                Document doc = ec != null ? ec.getDocument() : null;
+                if (doc == null) {
+                    return; //ignore...
+                }
+                assert file != null;
+                List<ErrorDescription> diags = pdp.getDiagnostics().stream().map(d -> {
+                    LazyFixList fixList = allowCodeActions ? new DiagnosticFixList(doc, pdp.getUri(), d) : ErrorDescriptionFactory.lazyListForFixes(Collections.emptyList());
+                    return ErrorDescriptionFactory.createErrorDescription(severityMap.get(d.getSeverity()), d.getMessage(), fixList, file, Utils.getOffset(doc, d.getRange().getStart()), Utils.getOffset(doc, d.getRange().getEnd()));
+                }).collect(Collectors.toList());
+                HintsController.setErrors(doc, LanguageClientImpl.class.getName(), diags);
+            } catch (URISyntaxException | MalformedURLException ex) {
+                LOG.log(Level.FINE, null, ex);
+            }
+        });
     }
 
     private static final Map<DiagnosticSeverity, Severity> severityMap = new EnumMap<>(DiagnosticSeverity.class);
@@ -134,19 +205,88 @@ public class LanguageClientImpl implements LanguageClient {
     }
 
     @Override
-    public void showMessage(MessageParams arg0) {
-        System.err.println("showMessage: " + arg0);
+    public void showMessage(MessageParams params) {
+        MessageType type = Optional.ofNullable(params.getType()).orElse(MessageType.Log);
+        Icon icon;
+        Category category;
+
+        switch (type) {
+            default:
+            case Log:
+                LOG.log(Level.FINE, params.getMessage());
+                return ;
+            case Info:
+                StatusDisplayer.getDefault().setStatusText(params.getMessage());
+                return ;
+            case Warning:
+                icon = ImageUtilities.loadImageIcon(WARNING_ICON, false);
+                category = Category.WARNING;
+                break;
+            case Error:
+                icon = ImageUtilities.loadImageIcon(ERROR_ICON, false);
+                category = Category.ERROR;
+                break;
+        }
+
+        NotificationDisplayer.getDefault().notify(params.getMessage(), icon, params.getMessage(), null, Priority.NORMAL, category);
     }
 
     @Override
     public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-        System.err.println("showMessageRequest");
-        return null; //???
+        int messageType;
+
+        switch (Optional.ofNullable(arg0.getType()).orElse(MessageType.Log)) {
+            default:
+            case Log:
+            case Info:
+                messageType = NotifyDescriptor.INFORMATION_MESSAGE;
+                break;
+            case Warning:
+                messageType = NotifyDescriptor.WARNING_MESSAGE;
+                break;
+            case Error:
+                messageType = NotifyDescriptor.ERROR_MESSAGE;
+                break;
+        }
+
+        NotifyDescriptor.QuickPick nd = new NotifyDescriptor.QuickPick(
+                arg0.getMessage(),
+                "Please select",
+                arg0.getActions().stream()
+                        .map(mai -> new Item(mai.getTitle(), mai.getTitle()))
+                        .collect(Collectors.toList())
+                ,
+                false
+        );
+
+        nd.setMessageType(messageType);
+
+        return DialogDisplayer.getDefault()
+                .notifyFuture(nd)
+                .thenApply(nd2 -> {
+                    return new MessageActionItem(
+                            nd2.getItems().stream()
+                                    .filter(i -> i.isSelected())
+                                    .findFirst()
+                                    .map(i -> i.getLabel())
+                                    .orElse(""));
+                });
     }
 
     @Override
     public void logMessage(MessageParams arg0) {
-        System.err.println("logMessage: " + arg0);
+        switch (Optional.ofNullable(arg0.getType()).orElse(MessageType.Log)) {
+            case Log:
+            case Info:
+                LOG.info(arg0.getMessage());
+                break;
+            case Warning:
+                LOG.warning(arg0.getMessage());
+                break;
+            case Error:
+                LOG.severe(arg0.getMessage());
+                break;
+        }
     }
 
     @Override
@@ -162,16 +302,35 @@ public class LanguageClientImpl implements LanguageClient {
         return result;
     }
 
+    @Override
+    public CompletableFuture<?> request(String method, Object parameter) {
+        LOG.log(Level.WARNING, "Received unhandled request: {0}: {1}", new Object[] {method, parameter});
+        return CompletableFuture.completedFuture(null);
+    }
+
+    @Override
+    public void notify(String method, Object parameter) {
+        LOG.log(Level.WARNING, "Received unhandled notification: {0}: {1}", new Object[] {method, parameter});
+    }
+
+    @Override
+    public CompletableFuture<Void> refreshDiagnostics() {
+        bindings.getOpenedFiles().forEach(LSPBindings::scheduleBackgroundTasks);
+        return CompletableFuture.completedFuture(null);
+    }
+
     private final class DiagnosticFixList implements LazyFixList {
 
         private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
         private final String fileUri;
+        private final Document doc;
         private final Diagnostic diagnostic;
         private List<Fix> fixes;
         private boolean computing;
         private boolean computed;
 
-        public DiagnosticFixList(String fileUri, Diagnostic diagnostic) {
+        public DiagnosticFixList(Document doc, String fileUri, Diagnostic diagnostic) {
+            this.doc = doc;
             this.fileUri = fileUri;
             this.diagnostic = diagnostic;
         }
@@ -192,27 +351,36 @@ public class LanguageClientImpl implements LanguageClient {
         }
 
         @Override
+        @SuppressWarnings("ReturnOfCollectionOrArrayField")
         public synchronized List<Fix> getFixes() {
             if (!computing && !computed) {
                 computing = true;
                 bindings.runOnBackground(() -> {
                     try {
-                        List<Either<Command, CodeAction>> commands =
-                                bindings.getTextDocumentService().codeAction(new CodeActionParams(new TextDocumentIdentifier(fileUri),
-                                        diagnostic.getRange(),
-                                        new CodeActionContext(Collections.singletonList(diagnostic)))).get();
-                        List<Fix> fixes = commands.stream()
-                                                  .map(cmd -> new CommandBasedFix(cmd))
-                                                  .collect(Collectors.toList());
+                        List<Fix> newFixes = Collections.emptyList();
+
+                        if (Utils.getOffset(doc, diagnostic.getRange().getEnd()) < doc.getEndPosition().getOffset()) {
+                            List<Either<Command, CodeAction>> commands
+                                    = bindings.getTextDocumentService().codeAction(new CodeActionParams(new TextDocumentIdentifier(fileUri),
+                                            diagnostic.getRange(),
+                                            new CodeActionContext(Collections.singletonList(diagnostic)))).get();
+
+                            if (commands != null) {
+                                newFixes = commands.stream()
+                                        .map(cmd -> new CommandBasedFix(cmd))
+                                        .collect(Collectors.toList());
+                            }
+                        }
+
                         synchronized (this) {
-                            this.fixes = Collections.unmodifiableList(fixes);
+                            this.fixes = Collections.unmodifiableList(newFixes);
                             this.computed = true;
                             this.computing = false;
                         }
                         pcs.firePropertyChange(PROP_COMPUTED, null, null);
                         pcs.firePropertyChange(PROP_FIXES, null, null);
                     } catch (InterruptedException | ExecutionException ex) {
-                        Exceptions.printStackTrace(ex);
+                        LOG.log(Level.INFO, "Failure fetching DiagnosticFixList (at least typescript server has known problems)", ex);
                     }
                 });
             }

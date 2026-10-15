@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexResult;
+import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.api.ElementQuery;
 import org.netbeans.modules.php.editor.api.NameKind;
 import org.netbeans.modules.php.editor.api.PhpElementKind;
@@ -43,7 +44,7 @@ import org.openide.util.Parameters;
  */
 public final class TraitElementImpl extends TypeElementImpl implements TraitElement {
     public static final String IDX_FIELD = PHPIndexer.FIELD_TRAIT;
-    private Collection<QualifiedName> usedTraits;
+    private final Collection<QualifiedName> usedTraits;
 
     private TraitElementImpl(
             final QualifiedName qualifiedName,
@@ -86,7 +87,7 @@ public final class TraitElementImpl extends TypeElementImpl implements TraitElem
 
     public static Set<TraitElement> fromSignature(final NameKind query, final IndexQueryImpl indexScopeQuery, final IndexResult indexResult) {
         String[] values = indexResult.getValues(IDX_FIELD);
-        Set<TraitElement> retval = values.length > 0 ? new HashSet<TraitElement>() : Collections.<TraitElement>emptySet();
+        Set<TraitElement> retval = values.length > 0 ? new HashSet<>() : Collections.<TraitElement>emptySet();
         for (String val : values) {
             final TraitElement trait = fromSignature(query, indexScopeQuery, Signature.get(val));
             if (trait != null) {
@@ -161,7 +162,7 @@ public final class TraitElementImpl extends TypeElementImpl implements TraitElem
 
     @Override
     public Collection<QualifiedName> getUsedTraits() {
-        return usedTraits;
+        return Collections.unmodifiableCollection(usedTraits);
     }
 
     private static class TraitSignatureParser {
@@ -183,9 +184,13 @@ public final class TraitElementImpl extends TypeElementImpl implements TraitElem
         private Collection<QualifiedName> getUsedTraits() {
             Collection<QualifiedName> retval = new HashSet<>();
             String traits = signature.string(4);
-            final String[] traitNames = traits.split(Separator.COMMA.toString());
+            final String[] traitNames = CodeUtils.COMMA_PATTERN.split(traits);
             for (String trait : traitNames) {
-                retval.add(QualifiedName.create(trait));
+                if (!trait.isEmpty()) {
+                    // GH-6634
+                    // avoid getting traits from the index with an empty string
+                    retval.add(QualifiedName.create(trait));
+                }
             }
             return retval;
         }

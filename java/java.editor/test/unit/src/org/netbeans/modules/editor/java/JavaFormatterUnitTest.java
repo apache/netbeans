@@ -19,10 +19,18 @@
 
 package org.netbeans.modules.editor.java;
 
+import java.io.IOException;
 import java.util.prefs.Preferences;
+import javax.swing.text.Document;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
+import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CodeStyle;
+import org.netbeans.api.lexer.Language;
+import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.java.ui.FmtOptions;
+import org.openide.cookies.EditorCookie;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.modules.ModuleInfo;
 import org.openide.util.Lookup;
 
@@ -30,7 +38,7 @@ import org.openide.util.Lookup;
 /**
  * Java formatter tests.
  *
- * @autor Miloslav Metelka
+ * @author Miloslav Metelka
  */
 public class JavaFormatterUnitTest extends JavaFormatterUnitTestCase {
 
@@ -42,6 +50,10 @@ public class JavaFormatterUnitTest extends JavaFormatterUnitTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         Lookup.getDefault().lookup(ModuleInfo.class);
+        Preferences prefs = MimeLookup.getLookup(JavaKit.JAVA_MIME_TYPE).lookup(Preferences.class);
+        prefs.putInt(FmtOptions.blankLinesBeforeClass, 0);
+        prefs.putInt(FmtOptions.blankLinesBeforeMethods, 0);
+        prefs.putInt(FmtOptions.blankLinesAfterClassHeader, 0);
     }
 
     // indent new line tests
@@ -56,7 +68,7 @@ public class JavaFormatterUnitTest extends JavaFormatterUnitTestCase {
         assertDocumentTextAndCaret("Incorrect new-line indent",
                 "/**\n"
                 + " * text\n"
-                + " *|\n"
+                + " * |\n"
                 + " */\n"
                 );
         
@@ -94,12 +106,14 @@ public class JavaFormatterUnitTest extends JavaFormatterUnitTestCase {
     
     public void testEnterInMultiLineSystemOutPrintln() {
         setLoadDocumentText(
+                "public class Test {\n" +
                 "void m() {\n"
                 + "    System.out.println(|\n"
                 + "\n"
                 );
         indentNewLine();
         assertDocumentTextAndCaret("Incorrect new-line indent",
+                "public class Test {\n" +
                 "void m() {\n"
                 + "    System.out.println(\n"
                 + "            |\n"
@@ -110,6 +124,7 @@ public class JavaFormatterUnitTest extends JavaFormatterUnitTestCase {
     
     public void testEnterInMultiLineSystemOutPrintlnLineThree() {
         setLoadDocumentText(
+                "public class Test {\n" +
                 "void m() {\n"
                 + "    System.out.println(\n"
                 + "            \"haf\"|\n"
@@ -117,6 +132,7 @@ public class JavaFormatterUnitTest extends JavaFormatterUnitTestCase {
                 );
         indentNewLine();
         assertDocumentTextAndCaret("Incorrect new-line indent",
+                "public class Test {\n" +
                 "void m() {\n"
                 + "    System.out.println(\n"
                 + "            \"haf\"\n"
@@ -128,6 +144,7 @@ public class JavaFormatterUnitTest extends JavaFormatterUnitTestCase {
     
     public void testEnterInMultiLineSystemOutPrintlnAfterSemiColon() {
         setLoadDocumentText(
+                "public class Test {\n" +
                 "void m() {\n"
                 + "    System.out.println(\n"
                 + "            \"haf\");|\n"
@@ -135,6 +152,7 @@ public class JavaFormatterUnitTest extends JavaFormatterUnitTestCase {
                 );
         indentNewLine();
         assertDocumentTextAndCaret("Incorrect new-line indent",
+                "public class Test {\n" +
                 "void m() {\n"
                 + "    System.out.println(\n"
                 + "            \"haf\");\n"
@@ -147,15 +165,15 @@ public class JavaFormatterUnitTest extends JavaFormatterUnitTestCase {
     public void testEnterInMultiLineClassDeclaration() {
         setLoadDocumentText(
                 "public class C\n"
-                + "        implements Runnable\n"
-                + "        throws Exception {|\n"
+                + "        extends Exception\n"
+                + "        implements Runnable {|\n"
                 + "}\n"
                 );
         indentNewLine();
         assertDocumentTextAndCaret("Incorrect new-line indent",
                 "public class C\n"
-                + "        implements Runnable\n"
-                + "        throws Exception {\n"
+                + "        extends Exception\n"
+                + "        implements Runnable {\n"
                 + "    |\n"
                 + "}\n"
                 );
@@ -164,113 +182,149 @@ public class JavaFormatterUnitTest extends JavaFormatterUnitTestCase {
     
     public void testEnterAfterIf() {
         setLoadDocumentText(
+                "public class Test {\n" +
+                "    void test() {\n" +
                 "if (true)|\n"
                 );
         indentNewLine();
         assertDocumentTextAndCaret("Incorrect new-line indent",
-                "if (true)\n"
-                + "    |\n"
+                "public class Test {\n" +
+                "    void test() {\n" +
+                "if (true)\n" +
+                "    |\n"
                 );
     }
     
     public void testEnterAfterFor() {
         setLoadDocumentText(
-                "if (int i = 0; i < 10; i++)|\n"
+                "public class Test {\n" +
+                "    void test() {\n" +
+                "for (int i = 0; i < 10; i++)|\n"
                 );
         indentNewLine();
         assertDocumentTextAndCaret("Incorrect new-line indent",
-                "if (int i = 0; i < 10; i++)\n"
-                + "    |\n"
+                "public class Test {\n" +
+                "    void test() {\n" +
+                "for (int i = 0; i < 10; i++)\n" +
+                "    |\n"
                 );
     }
     
     public void testEnterAfterWhile() {
         setLoadDocumentText(
+                "public class Test {\n" +
+                "    void test() {\n" +
                 "while (true)|\n"
                 );
         indentNewLine();
         assertDocumentTextAndCaret("Incorrect new-line indent",
-                "while (true)\n"
-                + "    |\n"
+                "public class Test {\n" +
+                "    void test() {\n" +
+                "while (true)\n" +
+                "    |\n"
                 );
     }
     
     public void testEnterAfterDo() {
         setLoadDocumentText(
-                "do|\n"
+                "public class Test {\n" +
+                "    void test() {\n" +
+                "        do|\n"
                 );
         indentNewLine();
         assertDocumentTextAndCaret("Incorrect new-line indent",
-                "do\n"
-                + "    |\n"
+                "public class Test {\n" +
+                "    void test() {\n" +
+                "        do\n" +
+                "            |\n"
                 );
     }
     
     
     public void testEnterAfterIfStmt() {
         setLoadDocumentText(
-                "if (true)\n"
-                + "    stmt;|\n"
+                "public class Test {\n" +
+                "    void test() {\n" +
+                "        if (true)\n" +
+                "            stmt;|\n"
                 );
         indentNewLine();
         assertDocumentTextAndCaret("Incorrect new-line indent",
-                "if (true)\n"
-                + "    stmt;\n"
-                + "|\n"
+                "public class Test {\n" +
+                "    void test() {\n" +
+                "        if (true)\n" +
+                "            stmt;\n" +
+                "        |\n"
                 );
     }
     
     public void testEnterAfterIfElse() {
         setLoadDocumentText(
-                "if (true)\n"
-                + "    stmt;\n"
-                + "else|\n"
+                "public class Test {\n" +
+                "    void test() {\n" +
+                "        if (true)\n" +
+                "            stmt;\n" +
+                "        else|\n"
                 );
         indentNewLine();
         assertDocumentTextAndCaret("Incorrect new-line indent",
-                "if (true)\n"
-                + "    stmt;\n"
-                + "else\n"
-                + "    |\n"
+                "public class Test {\n" +
+                "    void test() {\n" +
+                "        if (true)\n" +
+                "            stmt;\n" +
+                "        else\n" +
+                "            |\n"
                 );
     }
     
     public void testEnterAfterIfElseStmt() {
         setLoadDocumentText(
-                "if (true)\n"
-                + "    stmt;\n"
-                + "else\n"
-                + "    stmt;|\n"
+                "public class Test {\n" +
+                "    void test() {\n" +
+                "        if (true)\n" +
+                "            stmt;\n" +
+                "        else\n" +
+                "            stmt;|\n"
                 );
         indentNewLine();
         assertDocumentTextAndCaret("Incorrect new-line indent",
-                "if (true)\n"
-                + "    stmt;\n"
-                + "else\n"
-                + "    stmt;\n"
-                + "|\n"
+                "public class Test {\n" +
+                "    void test() {\n" +
+                "        if (true)\n" +
+                "            stmt;\n" +
+                "        else\n" +
+                "            stmt;\n" +
+                "        |\n"
                 );
     }
     
     public void testEnterAfterIfMultiLine() {
         setLoadDocumentText(
+                "public class Test {\n" +
+                "    void test() {\n" +
                 "if (1 < 5|\n"
                 );
         indentNewLine();
         assertDocumentTextAndCaret("Incorrect new-line indent",
-                "if (1 < 5\n"
-                + "        |\n"
+                "public class Test {\n" +
+                "    void test() {\n" +
+                "if (1 < 5\n" +
+                "        |\n"
                 );
     }
     
     public void testEnterAfterIfMultiLine2() {
         setLoadDocumentText(
+                "public class Test {\n" +
+                "    void test() {\n" +
                 "if (1 < 5|)\n"
                 );
         indentNewLine();
         assertDocumentTextAndCaret("Incorrect new-line indent",
-                "if (1 < 5\n"
-                + "        |)\n"
+                "public class Test {\n" +
+                "    void test() {\n" +
+                "if (1 < 5\n" +
+                "        |)\n"
                 );
     }
     
@@ -278,16 +332,20 @@ public class JavaFormatterUnitTest extends JavaFormatterUnitTestCase {
     
     public void testReformatMultiLineSystemOutPrintln() {
         setLoadDocumentText(
+                "public class Test {\n" +
                 "void m() {\n"
                 + "    System.out.println(\n"
                 + "    \"haf\");\n"
                 + "}\n"
+                + "}\n"
                 );
         reformat();
         assertDocumentText("Incorrect new-line indent",
-                "void m() {\n"
-                + "    System.out.println(\n"
-                + "            \"haf\");\n"
+                "public class Test {\n" +
+                "    void m() {\n"
+                + "        System.out.println(\n"
+                + "                \"haf\");\n"
+                + "    }\n"
                 + "}\n"
                 );
         
@@ -296,17 +354,19 @@ public class JavaFormatterUnitTest extends JavaFormatterUnitTestCase {
     public void testReformatMultiLineClassDeclaration() {
         setLoadDocumentText(
                 "public class C\n"
-                + "implements Runnable\n"
-                + "throws Exception {|\n"
-                + "System.out.println(\"haf\");\n"
+                + "extends Exception\n"
+                + "implements Runnable {|\n"
+                + "{ System.out.println(\"haf\"); }\n"
                 + "}\n"
                 );
         reformat();
         assertDocumentText("Incorrect new-line indent",
                 "public class C\n"
-                + "        implements Runnable\n"
-                + "        throws Exception {\n"
-                + "    System.out.println(\"haf\");\n"
+                + "        extends Exception\n"
+                + "        implements Runnable {\n"
+                + "    {\n"
+                + "        System.out.println(\"haf\");\n"
+                + "    }\n"
                 + "}\n"
                 );
         
@@ -320,12 +380,20 @@ public class JavaFormatterUnitTest extends JavaFormatterUnitTestCase {
      */
     public void testReformatNewOnTwoLines() {
         setLoadDocumentText(
+                "public class Test {\n" +
+                "    void test() {\n" +
                 "javax.swing.JPanel =\n" +
-                "new java.swing.JPanel();");
+                "new javax.swing.JPanel();\n" +
+                "    }\n" +
+                "}\n");
         reformat();
         assertDocumentText("Incorrect new on two lines reformating",
-                "javax.swing.JPanel =\n" +
-                "        new java.swing.JPanel();");
+                "public class Test {\n" +
+                "    void test() {\n" +
+                "        javax.swing.JPanel\n" +
+                "                = new javax.swing.JPanel();\n" +
+                "    }\n" +
+                "}\n");
     }
     
     /**
@@ -334,14 +402,22 @@ public class JavaFormatterUnitTest extends JavaFormatterUnitTestCase {
      */
     public void testReformatTernaryConditionalOperator() {
         setLoadDocumentText(
+                "public class Test {\n" +
+                "    void test() {\n" +
                 "something = (someComplicatedExpression != null) ?\n" +
                 "(aComplexCalculation) :\n" +
-                "(anotherComplexCalculation);");
+                "(anotherComplexCalculation);\n" +
+                "    }\n" +
+                "}\n");
         reformat();
         assertDocumentText("Incorrect ternary conditional operator reformatting",
-                "something = (someComplicatedExpression != null) ?\n" +
-                "    (aComplexCalculation) :\n" +
-                "    (anotherComplexCalculation);");
+                "public class Test {\n" +
+                "    void test() {\n" +
+                "        something = (someComplicatedExpression != null)\n" +
+                "                ? (aComplexCalculation)\n" +
+                "                : (anotherComplexCalculation);\n" +
+                "    }\n" +
+                "}\n");
     }
     
     
@@ -350,17 +426,28 @@ public class JavaFormatterUnitTest extends JavaFormatterUnitTestCase {
      * @see http://www.netbeans.org/issues/show_bug.cgi?id=47069
      */
     public void testReformatArrayInitializerWithNewline() {
-//        Settings.setValue(JavaKit.class, JavaSettingsNames.JAVA_FORMAT_NEWLINE_BEFORE_BRACE, Boolean.TRUE);
         Preferences prefs = MimeLookup.getLookup(JavaKit.JAVA_MIME_TYPE).lookup(Preferences.class);
-        String originalPlacement = prefs.get(FmtOptions.methodDeclBracePlacement, CodeStyle.BracePlacement.SAME_LINE.toString());
+        String originalPlacement = prefs.get(FmtOptions.methodDeclBracePlacement, FmtOptions.getDefaultAsString(FmtOptions.methodDeclBracePlacement));
         assertTrue(!originalPlacement.equals(CodeStyle.BracePlacement.NEW_LINE.toString()));
         prefs.put(FmtOptions.methodDeclBracePlacement, CodeStyle.BracePlacement.NEW_LINE.toString());
+        boolean originalSpaceBeforeInit = prefs.getBoolean(FmtOptions.spaceBeforeArrayInitLeftBrace, FmtOptions.getDefaultAsBoolean(FmtOptions.spaceBeforeArrayInitLeftBrace));
+        prefs.putBoolean(FmtOptions.spaceBeforeArrayInitLeftBrace, true);
         setLoadDocumentText(
-                "int[] foo = new int[] {1, 2, 3};");
+                "public class Test {\n" +
+                "    void test() {\n" +
+                "int[] foo = new int[] {1, 2, 3};\n" +
+                "    }\n" +
+                "}\n");
         reformat();
         assertDocumentText("Incorrect array initializer with newline reformatting",
-                "int[] foo = new int[] {1, 2, 3};");
+                "public class Test {\n" +
+                "    void test()\n" +
+                "    {\n" +
+                "        int[] foo = new int[] {1, 2, 3};\n" +
+                "    }\n" +
+                "}\n");
         prefs.put(FmtOptions.methodDeclBracePlacement, originalPlacement);
+        prefs.putBoolean(FmtOptions.spaceBeforeArrayInitLeftBrace, originalSpaceBeforeInit);
     }
     
     /**
@@ -369,6 +456,8 @@ public class JavaFormatterUnitTest extends JavaFormatterUnitTestCase {
      */
     public void testReformatNewlineBracesToNormalOnes() {
         setLoadDocumentText(
+                "public class Test {\n" +
+                "    void test() {\n" +
                 "try\n" +
                 "{\n" +
                 "System.out.println(\"test\");\n" +
@@ -376,14 +465,20 @@ public class JavaFormatterUnitTest extends JavaFormatterUnitTestCase {
                 "catch (ClassCastException e)\n" +
                 "{\n" +
                 "System.err.println(\"exception\");\n" +
-                "}");
+                "}\n" +
+                "    }\n" +
+                "}\n");
         reformat();
         assertDocumentText("Incorrect array initializer with newline reformatting",
-                "try {\n" +
-                "    System.out.println(\"test\");\n" +
-                "} catch (ClassCastException e) {\n" +
-                "    System.err.println(\"exception\");\n" +
-                "}");
+                "public class Test {\n" +
+                "    void test() {\n" +
+                "        try {\n" +
+                "            System.out.println(\"test\");\n" +
+                "        } catch (ClassCastException e) {\n" +
+                "            System.err.println(\"exception\");\n" +
+                "        }\n" +
+                "    }\n" +
+                "}\n");
     }
     
     /**
@@ -409,7 +504,7 @@ public class JavaFormatterUnitTest extends JavaFormatterUnitTestCase {
                 "            int four) {\n" +
                 "        this.one = one;\n" +
                 "    }\n" +
-                "}");
+                "}\n");
     }
     
     /**
@@ -418,16 +513,37 @@ public class JavaFormatterUnitTest extends JavaFormatterUnitTestCase {
      */
     public void testReformatIfElseWithoutBrackets() {
         setLoadDocumentText(
+                "public class Test {\n" +
+                "    void test() {\n" +
                 "if (count == 0)\n" +
                 "return 0.0f;\n" +
                 "else\n" +
-                "return performanceSum / getCount()");
+                "return performanceSum / getCount();\n" +
+                "    }\n" +
+                "}\n");
         reformat();
         assertDocumentText("Incorrect reformatting of if-else without brackets",
-                "if (count == 0)\n" +
-                "    return 0.0f;\n" +
-                "else\n" +
-                "    return performanceSum / getCount()");
+                "public class Test {\n" +
+                "    void test() {\n" +
+                "        if (count == 0) {\n" +
+                "            return 0.0f;\n" +
+                "        } else {\n" +
+                "            return performanceSum / getCount();\n" +
+                "        }\n" +
+                "    }\n" +
+                "}\n");
     }
-    
+
+    @Override
+    protected BaseDocument createDocument() {
+        try {
+            FileObject file = FileUtil.createMemoryFileSystem().getRoot().createData("Test", "java");
+            EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+            Document doc = ec.openDocument();
+            doc.putProperty(Language.class, JavaTokenId.language());
+            return (BaseDocument) doc;
+        } catch (IOException ex) {
+            throw new AssertionError("Unexpected: ", ex);
+        }
+    }
 }

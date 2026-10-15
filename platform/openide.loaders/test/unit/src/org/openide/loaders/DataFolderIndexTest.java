@@ -195,7 +195,7 @@ public class DataFolderIndexTest extends NbTestCase {
         public static DataLoader extra;
         
         
-        protected java.util.Enumeration loaders () {
+        protected java.util.Enumeration<? extends DataLoader> loaders () {
             if (extra == null) {
                 return org.openide.util.Enumerations.empty ();
             } else {

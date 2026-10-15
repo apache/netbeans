@@ -18,20 +18,16 @@
  */
 package org.netbeans.modules.css.prep.editor.refactoring;
 
-import org.netbeans.modules.css.prep.editor.refactoring.RefactoringElement;
-import org.netbeans.modules.css.prep.editor.refactoring.CPWhereUsedQueryPlugin;
-import org.netbeans.modules.css.prep.editor.refactoring.RefactoringElementContext;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.text.BadLocationException;
-import static junit.framework.Assert.assertNotNull;
 import org.netbeans.modules.csl.api.OffsetRange;
+import org.netbeans.modules.css.editor.ProjectTestBase;
 import org.netbeans.modules.css.lib.TestUtil;
 import org.netbeans.modules.css.lib.api.CssParserResult;
-import org.netbeans.modules.css.prep.editor.ProjectTestBase;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;

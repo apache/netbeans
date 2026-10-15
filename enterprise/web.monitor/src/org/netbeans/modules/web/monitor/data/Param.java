@@ -19,14 +19,18 @@
 
 package org.netbeans.modules.web.monitor.data;
 
-import org.w3c.dom.*;
-import org.netbeans.modules.schema2beans.*;
-import java.beans.*;
-import java.util.*;
+import java.beans.PropertyChangeListener;
+import java.util.Vector;
+
+import org.netbeans.modules.schema2beans.BaseBean;
+import org.netbeans.modules.schema2beans.BeanComparator;
+import org.netbeans.modules.schema2beans.BeanProp;
+import org.netbeans.modules.schema2beans.Common;
+import org.netbeans.modules.schema2beans.Version;
 
 public class Param extends BaseBean {
 
-    static Vector comparators = new Vector();
+    static Vector<BeanComparator> comparators = new Vector<>();
 
 
     public Param() {
@@ -34,13 +38,13 @@ public class Param extends BaseBean {
     }
 
     public Param(String name, String value) {
-	super(Param.comparators, new org.netbeans.modules.schema2beans.Version(1, 0, 6));
+	super(Param.comparators, new Version(1, 0, 6));
 	setAttributeValue("name", name); //NOI18N
 	setAttributeValue("value", value); //NOI18N
     }
 
     public Param(int options) {
-	super(Param.comparators, new org.netbeans.modules.schema2beans.Version(1, 0, 6));
+	super(Param.comparators, new Version(1, 0, 6));
 	// Properties (see root bean comments for the bean graph)
 	this.initialize(options);
     }
@@ -72,12 +76,12 @@ public class Param extends BaseBean {
     }
 
     //
-    static public void addComparator(BeanComparator c) {
+    public static void addComparator(BeanComparator c) {
 	Param.comparators.add(c);
     }
 
     //
-    static public void removeComparator(BeanComparator c) {
+    public static void removeComparator(BeanComparator c) {
 	Param.comparators.remove(c);
     }
     //

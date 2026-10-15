@@ -27,10 +27,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.WeakHashMap;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.api.project.Project;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.spi.project.ProjectFactory;
@@ -43,6 +44,7 @@ import org.openide.filesystems.Repository;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.ProxyLookup;
+import org.openide.util.test.TestFileUtils;
 
 /**
  * Help set up org.netbeans.api.project.*Test.
@@ -92,18 +94,7 @@ public final class TestUtil extends ProxyLookup {
      * Delete a file and all subfiles.
      */
     public static void deleteRec(File f) throws IOException {
-        if (f.isDirectory()) {
-            File[] kids = f.listFiles();
-            if (kids == null) {
-                throw new IOException("List " + f);
-            }
-            for (int i = 0; i < kids.length; i++) {
-                deleteRec(kids[i]);
-            }
-        }
-        if (!f.delete()) {
-            throw new IOException("Delete " + f);
-        }
+        TestFileUtils.deleteFile(f);
     }
     
     /**
@@ -134,7 +125,7 @@ public final class TestUtil extends ProxyLookup {
     public static int projectLoadCount(FileObject dir) {
         Integer i = loadCount.get(dir);
         if (i != null) {
-            return i.intValue();
+            return i;
         } else {
             return 0;
         }
@@ -236,9 +227,9 @@ public final class TestUtil extends ProxyLookup {
         public Project loadProject(FileObject projectDirectory, ProjectState state) throws IOException {
             Integer i = loadCount.get(projectDirectory);
             if (i == null) {
-                i = new Integer(1);
+                i = 1;
             } else {
-                i = new Integer(i.intValue() + 1);
+                i = i + 1;
             }
             loadCount.put(projectDirectory, i);
             FileObject testproject = projectDirectory.getFileObject("testproject");

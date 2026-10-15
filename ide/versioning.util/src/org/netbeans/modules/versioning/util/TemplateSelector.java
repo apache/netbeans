@@ -49,14 +49,6 @@ public class TemplateSelector implements ActionListener {
         this.preferences = preferences;
     }
 
-    /**
-     * @deprecated use {@link #show(java.lang.String) } instead
-     */
-    @Deprecated
-    public boolean show() {
-        return show(TemplatesPanel.class.getName());
-    }
-
     public boolean show (String helpCtxId) {
         getPanel().autoFillInCheckBox.setSelected(isAutofill());
         getPanel().templateTextArea.setText(getTemplate());

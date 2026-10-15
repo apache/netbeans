@@ -28,7 +28,7 @@ import org.netbeans.modules.profiler.attach.providers.TargetPlatformEnum;
  *
  * @author Jaroslav Bachorik
  */
-abstract public class AbstractRemotePackExporter {
+public abstract class AbstractRemotePackExporter {
     private static final Map<String, String> scriptMapper = new HashMap<String, String>() {
         {
             put(IntegrationUtils.PLATFORM_LINUX_AMD64_OS, "linuxamd64"); //NOI18N
@@ -38,7 +38,6 @@ abstract public class AbstractRemotePackExporter {
             put(IntegrationUtils.PLATFORM_MAC_OS, "mac"); //NOI18N
             put(IntegrationUtils.PLATFORM_SOLARIS_AMD64_OS, "solamd64"); //NOI18N
             put(IntegrationUtils.PLATFORM_SOLARIS_INTEL_OS, "solx86"); //NOI18N
-            put(IntegrationUtils.PLATFORM_SOLARIS_SPARC_OS, "solsparc"); //NOI18N
             put(IntegrationUtils.PLATFORM_SOLARIS_SPARC64_OS, "solsparcv9"); //NOI18N
             put(IntegrationUtils.PLATFORM_WINDOWS_AMD64_OS, "winamd64"); //NOI18N
             put(IntegrationUtils.PLATFORM_WINDOWS_OS, "win"); //NOI18N
@@ -57,14 +56,14 @@ abstract public class AbstractRemotePackExporter {
         }
     };
     
-    final protected String getPlatformShort(String hostOS) {
+    protected final String getPlatformShort(String hostOS) {
         return scriptMapper.get(hostOS);
     }
     
-    final protected String getJVMShort(String jvm) {
+    protected final String getJVMShort(String jvm) {
         return jdkMapper.get(jvm);
     }
     
-    abstract public String export(String exportPath, String hostOS, String jvm) throws IOException;
-    abstract public String getRemotePackPath(String exportPath, String hostOS);
+    public abstract String export(String exportPath, String hostOS, String jvm) throws IOException;
+    public abstract String getRemotePackPath(String exportPath, String hostOS);
 }

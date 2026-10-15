@@ -596,4 +596,40 @@ public class OccurrencesFinderImplPHP74Test extends OccurrencesFinderImplTestBas
         checkOccurrences(getTestPath(), "    return fn(...$args) => !$f(...$ar^gs);", true);
     }
 
+    public void testArrowFunctions_GH4209_01a() throws Exception {
+        checkOccurrences(getTestPath(), "$gh^4209a = 0;", true);
+    }
+
+    public void testArrowFunctions_GH4209_01b() throws Exception {
+        checkOccurrences(getTestPath(), "$gh4209b = fn() => $gh420^9a > 0 ? $gh4209a + 1 : 2;", true);
+    }
+
+    public void testArrowFunctions_GH4209_01c() throws Exception {
+        checkOccurrences(getTestPath(), "$gh4209b = fn() => $gh4209a > 0 ? $gh^4209a + 1 : 2;", true);
+    }
+
+    public void testArrowFunctions_GH4209_01d() throws Exception {
+        checkOccurrences(getTestPath(), "$gh4209b = fn($gh4209c) => $gh42^09a > 0 ? $gh4209a + 1 : $gh4209c + 2;", true);
+    }
+
+    public void testArrowFunctions_GH4209_01e() throws Exception {
+        checkOccurrences(getTestPath(), "$gh4209b = fn($gh4209c) => $gh4209a > 0 ? $gh4^209a + 1 : $gh4209c + 2;", true);
+    }
+
+    public void testArrowFunctions_GH4209_02a() throws Exception {
+        checkOccurrences(getTestPath(), "$gh4^209b = fn() => $gh4209a > 0 ? $gh4209a + 1 : 2;", true);
+    }
+
+    public void testArrowFunctions_GH4209_02b() throws Exception {
+        checkOccurrences(getTestPath(), "$gh42^09b = fn($gh4209c) => $gh4209a > 0 ? $gh4209a + 1 : $gh4209c + 2;", true);
+    }
+
+    public void testArrowFunctions_GH4209_03a() throws Exception {
+        checkOccurrences(getTestPath(), "$gh4209b = fn($gh^4209c) => $gh4209a > 0 ? $gh4209a + 1 : $gh4209c + 2;", true);
+    }
+
+    public void testArrowFunctions_GH4209_03b() throws Exception {
+        checkOccurrences(getTestPath(), "$gh4209b = fn($gh4209c) => $gh4209a > 0 ? $gh4209a + 1 : $gh42^09c + 2;", true);
+    }
+
 }

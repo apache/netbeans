@@ -34,6 +34,7 @@ import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTree;
+import javax.swing.UIManager;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import javax.swing.event.TreeSelectionEvent;
@@ -65,22 +66,30 @@ public final class PathsCustomizer extends javax.swing.JPanel {
      */
     public PathsCustomizer() {
         initComponents();
-        mpTree.setUI(new BasicTreeUI() {
-            @Override
-            protected void paintHorizontalLine(Graphics g, JComponent c, int y, int left, int right) {
-            }
-            @Override
-            protected void paintVerticalLine(Graphics g, JComponent c, int x, int top, int bottom) {
-            }
-        });
-        cpTree.setUI(new javax.swing.plaf.basic.BasicTreeUI() {
-            @Override
-            protected void paintHorizontalLine(Graphics g, JComponent c, int y, int left, int right) {
-            }
-            @Override
-            protected void paintVerticalLine(Graphics g, JComponent c, int x, int top, int bottom) {
-            }
-        });
+
+        // Disable tree line painting if enabled in current look and feel.
+        // Do not use BasicTreeUI for all look and feels because this would
+        // break selection painting in FlatLaf and Nimbus.
+        // https://issues.apache.org/jira/browse/NETBEANS-4030
+        if (UIManager.getBoolean("Tree.paintLines")) {
+            mpTree.setUI(new BasicTreeUI() {
+                @Override
+                protected void paintHorizontalLine(Graphics g, JComponent c, int y, int left, int right) {
+                }
+                @Override
+                protected void paintVerticalLine(Graphics g, JComponent c, int x, int top, int bottom) {
+                }
+            });
+            cpTree.setUI(new javax.swing.plaf.basic.BasicTreeUI() {
+                @Override
+                protected void paintHorizontalLine(Graphics g, JComponent c, int y, int left, int right) {
+                }
+                @Override
+                protected void paintVerticalLine(Graphics g, JComponent c, int x, int top, int bottom) {
+                }
+            });
+        }
+
         setBackground(mpTree.getBackground());
         Mnemonics.setLocalizedText(addProject, NbBundle.getMessage(PathsCustomizer.class, "LBL_CustomizeLibraries_AddProject_JButton"));
         Mnemonics.setLocalizedText(addLibrary, NbBundle.getMessage(PathsCustomizer.class, "LBL_CustomizeLibraries_AddLibary_JButton"));
@@ -215,7 +224,7 @@ public final class PathsCustomizer extends javax.swing.JPanel {
             if (treePaths.length > 0 && paths.isEmpty()) {
                 paths.addAll(Arrays.asList(getSelectionPaths()));
             }
-            super.setSelectionPaths(paths.toArray(new TreePath[paths.size()]));
+            super.setSelectionPaths(paths.toArray(new TreePath[0]));
         }        
     }
     
@@ -602,9 +611,9 @@ public final class PathsCustomizer extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cpTree, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(mpTree, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cpTree, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(mpTree, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cpAddButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(mpAddButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))

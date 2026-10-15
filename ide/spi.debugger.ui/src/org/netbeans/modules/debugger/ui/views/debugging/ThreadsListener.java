@@ -46,7 +46,7 @@ public class ThreadsListener extends DebuggerManagerAdapter {
     private static PropertyChangeSupport pchs = new PropertyChangeSupport(ThreadsListener.class);
     private static final ThreadsPropertyChangeListener tpchl = new ThreadsPropertyChangeListener();
     
-    final LinkedList<DVThread> currentThreadsHistory = new LinkedList();
+    final LinkedList<DVThread> currentThreadsHistory = new LinkedList<>();
     final BreakpointHits hits = new BreakpointHits();
     private Map<DVSupport, DebuggerListener> debuggerToListener = new WeakHashMap<DVSupport, DebuggerListener>();
     private DVSupport currentDebugger = null;

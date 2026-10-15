@@ -20,7 +20,6 @@
 package org.netbeans.modules.apisupport.project.layers;
 
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.beans.BeanInfo;
 import java.io.IOException;
 import java.io.InputStream;
@@ -64,6 +63,7 @@ import org.openide.filesystems.URLMapper;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.InstanceDataObject;
 import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 import org.openide.util.NbCollections;
@@ -212,7 +212,7 @@ final class BadgingSupport implements SynchronousStatus, FileChangeListener {
             }
             if (fo.hasExt("shadow")) { // NOI18N
                 Object originalFile = fo.getAttribute("originalFile"); // NOI18N
-                if (originalFile != null && originalFile instanceof String) {
+                if (originalFile instanceof String) {
                     FileObject orig;
                     try {
                         orig = fo.getFileSystem().findResource((String) originalFile);
@@ -373,7 +373,7 @@ final class BadgingSupport implements SynchronousStatus, FileChangeListener {
                         ufo.removeFileChangeListener(fileChangeListener);
                         ufo.addFileChangeListener(fileChangeListener);
                     }
-                    return Toolkit.getDefaultToolkit().getImage(u[0]);
+                    return ImageUtilities.loadImage(u[0].toURI());
                 } catch (Exception e) {
                     LOG.log(Level.INFO, "For " + value + " on " + fo.getPath(), e);
                 }
@@ -451,7 +451,7 @@ final class BadgingSupport implements SynchronousStatus, FileChangeListener {
                         LOG.log(Level.WARNING, "could not find locale variants of {0}", jar);
                     }
                     LOG.log(Level.FINE, "from {0} getting {1}", new Object[] {layer, roots});
-                    return ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
+                    return ClassPathSupport.createClassPath(roots.toArray(new URL[0]));
                 }
                 Project p;
                 try {

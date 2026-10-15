@@ -48,12 +48,7 @@ class CheckRenderer extends JPanel implements TreeCellRenderer {
         this.settings = settings;
         setLayout(null);
         add(check = new JCheckBox());
-        Color c = UIManager.getColor("Tree.textBackground"); //NOI18N
-        if (c == null) {
-            //May be null on GTK L&F
-            c = Color.WHITE;
-        }
-        check.setBackground(c); // NOI18N
+        check.setOpaque(false);
         Dimension dim = check.getPreferredSize();
         check.setPreferredSize(checkDim);
     }

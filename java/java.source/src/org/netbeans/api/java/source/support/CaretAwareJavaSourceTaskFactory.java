@@ -41,7 +41,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.util.Parameters;
 import org.openide.util.RequestProcessor;
 
-/**A {@link JavaSourceTaskFactorySupport} that registers tasks to all files that are
+/**A {@link JavaSourceTaskFactory} that registers tasks to all files that are
  * opened in the editor and are visible. This factory also listens on the caret on
  * opened and visible JTextComponents and reschedules the tasks as necessary.
  *
@@ -106,7 +106,7 @@ public abstract class CaretAwareJavaSourceTaskFactory extends JavaSourceTaskFact
         this.supportedMimeTypes = supportedMimeTypes.length > 0 ? supportedMimeTypes.clone() : null;
     }
     
-    /**@inheritDoc*/
+    /**{@inheritDoc}*/
     public List<FileObject> getFileObjects() {
         List<FileObject> files = OpenedEditors.filterSupportedMIMETypes(OpenedEditors.getDefault().getVisibleEditorsFiles(), supportedMimeTypes);
 
@@ -121,7 +121,7 @@ public abstract class CaretAwareJavaSourceTaskFactory extends JavaSourceTaskFact
      * @param file file from which the position should be found
      * @return caret position in the current {@link JTextComponent} for a given file.
      */
-    public synchronized static int getLastPosition(FileObject file) {
+    public static synchronized int getLastPosition(FileObject file) {
         if (file == null) {
             throw new NullPointerException("Cannot pass null file!");
         }
@@ -136,7 +136,7 @@ public abstract class CaretAwareJavaSourceTaskFactory extends JavaSourceTaskFact
         return position;    
     }
     
-    synchronized static void setLastPosition(FileObject file, int position) {
+    static synchronized void setLastPosition(FileObject file, int position) {
        file2LastPosition.put(file, position);
     }
     

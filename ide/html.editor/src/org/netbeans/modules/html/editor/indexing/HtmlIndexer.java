@@ -20,16 +20,16 @@ package org.netbeans.modules.html.editor.indexing;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.html.editor.api.HtmlKit;
-import org.netbeans.modules.html.editor.api.gsf.HtmlParserResult;
 import org.netbeans.modules.html.editor.api.index.HtmlIndex;
+import org.netbeans.modules.html.editor.lib.api.HtmlParsingResult;
 import org.netbeans.modules.parsing.api.Snapshot;
-import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexer;
@@ -53,8 +53,6 @@ public class HtmlIndexer extends EmbeddingIndexer {
     private static final Logger LOGGER = Logger.getLogger(HtmlIndexer.class.getSimpleName());
     private static final boolean LOG = LOGGER.isLoggable(Level.FINE);
 
-    public static final String REFERS_KEY = "imports"; //NOI18N
-    
     private static RequestProcessor RP = new RequestProcessor();
 
     @Override
@@ -65,12 +63,12 @@ public class HtmlIndexer extends EmbeddingIndexer {
                 LOGGER.log(Level.FINE, "indexing {0}", fo.getPath()); //NOI18N
             }
 
-            HtmlFileModel model = new HtmlFileModel((HtmlParserResult)parserResult);
+            HtmlFileModel model = new HtmlFileModel(parserResult, (HtmlParsingResult)parserResult);
 
             IndexingSupport support = IndexingSupport.getInstance(context);
             IndexDocument document = support.createDocument(indexable);
 
-            storeEntries(model.getReferences(), document, REFERS_KEY);
+            storeEntries(model.getReferences(), document, HtmlIndex.REFERS_KEY);
 
             support.addDocument(document);
 
@@ -89,7 +87,7 @@ public class HtmlIndexer extends EmbeddingIndexer {
         });
     }
     
-    static private void fireChangeImpl(FileObject fo) {
+    private static void fireChangeImpl(FileObject fo) {
         Project p = FileOwnerQuery.getOwner(fo);
         if (p == null) {
             // no project to notify
@@ -104,26 +102,20 @@ public class HtmlIndexer extends EmbeddingIndexer {
             Exceptions.printStackTrace(ex);
         }
     }
-    
+
     private void storeEntries(Collection<? extends Entry> entries, IndexDocument doc, String key) {
-        if (!entries.isEmpty()) {
-            StringBuilder sb = new StringBuilder();
-            Iterator<? extends Entry> i = entries.iterator();
-            while (i.hasNext()) {
-                sb.append(i.next().getName());
-                if (i.hasNext()) {
-                    sb.append(','); //NOI18N
-                }
-            }
-            sb.append(';'); //end of string
-            doc.addPair(key, sb.toString(), true, true);
+        Set<String> names = new HashSet<>();
+        entries.forEach(e -> names.add(e.getName()));
+        storeEntries(names, doc, key);
+    }
+
+    private void storeEntries(Set<String> entries, IndexDocument doc, String key) {
+        for(String entry: entries) {
+            doc.addPair(key, entry, true, true);
         }
     }
 
     public static class Factory extends EmbeddingIndexerFactory {
-
-        public static final String NAME = "html"; //NOI18N
-        public static final int VERSION = 2;
 
         @Override
         public EmbeddingIndexer createIndexer(Indexable indexable, Snapshot snapshot) {
@@ -166,12 +158,12 @@ public class HtmlIndexer extends EmbeddingIndexer {
 
         @Override
         public String getIndexerName() {
-            return NAME;
+            return HtmlIndex.NAME;
         }
 
         @Override
         public int getIndexVersion() {
-            return VERSION;
+            return HtmlIndex.VERSION;
         }
 
         private boolean isIndexable(Snapshot snapshot) {

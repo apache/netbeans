@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.10
+#Version 1.39
 
 CLSS public abstract com.oracle.js.parser.ir.visitor.NodeVisitor<%0 extends com.oracle.js.parser.ir.LexicalContext>
 cons public init({com.oracle.js.parser.ir.visitor.NodeVisitor%0})
@@ -14,6 +14,7 @@ meth public boolean enterBreakNode(com.oracle.js.parser.ir.BreakNode)
 meth public boolean enterCallNode(com.oracle.js.parser.ir.CallNode)
 meth public boolean enterCaseNode(com.oracle.js.parser.ir.CaseNode)
 meth public boolean enterCatchNode(com.oracle.js.parser.ir.CatchNode)
+meth public boolean enterClassElement(com.oracle.js.parser.ir.ClassElement)
 meth public boolean enterClassNode(com.oracle.js.parser.ir.ClassNode)
 meth public boolean enterContinueNode(com.oracle.js.parser.ir.ContinueNode)
 meth public boolean enterDebuggerNode(com.oracle.js.parser.ir.DebuggerNode)
@@ -59,6 +60,7 @@ meth public com.oracle.js.parser.ir.Node leaveBreakNode(com.oracle.js.parser.ir.
 meth public com.oracle.js.parser.ir.Node leaveCallNode(com.oracle.js.parser.ir.CallNode)
 meth public com.oracle.js.parser.ir.Node leaveCaseNode(com.oracle.js.parser.ir.CaseNode)
 meth public com.oracle.js.parser.ir.Node leaveCatchNode(com.oracle.js.parser.ir.CatchNode)
+meth public com.oracle.js.parser.ir.Node leaveClassElement(com.oracle.js.parser.ir.ClassElement)
 meth public com.oracle.js.parser.ir.Node leaveClassNode(com.oracle.js.parser.ir.ClassNode)
 meth public com.oracle.js.parser.ir.Node leaveContinueNode(com.oracle.js.parser.ir.ContinueNode)
 meth public com.oracle.js.parser.ir.Node leaveDebuggerNode(com.oracle.js.parser.ir.DebuggerNode)
@@ -106,8 +108,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -116,15 +120,16 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -160,6 +165,9 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public abstract interface org.netbeans.modules.csl.api.ElementHandle
 innr public static UrlHandle
@@ -201,7 +209,7 @@ meth public java.util.Collection<org.netbeans.modules.javascript2.model.api.Inde
 meth public static org.netbeans.modules.javascript2.model.api.Index get(java.util.Collection<org.openide.filesystems.FileObject>)
 meth public static org.netbeans.modules.javascript2.model.api.Index get(org.openide.filesystems.FileObject)
 supr java.lang.Object
-hfds AVERAGE_BASIC_INFO_SIZE,CACHE_INDEX_RESULT_LARGE,CACHE_INDEX_RESULT_SMALL,INDEX_CACHE,INVALIDATE_LISTENER,LOCK,LOG,MAX_CACHE_VALUE_SIZE,MAX_ENTRIES_CACHE_INDEX_RESULT,MAX_FIND_PROPERTIES_RECURSION,PROPERTIES_PATTERN,QUERY_STATS,READ_LOCK,WRITE_LOCK,cacheHit,cacheMiss,querySupport,updateCache
+hfds AVERAGE_BASIC_INFO_SIZE,CACHE_INDEX_RESULT_LARGE,CACHE_INDEX_RESULT_SMALL,INDEX_CACHE,INVALIDATE_LISTENER,LOCK,LOG,MAX_CACHE_VALUE_SIZE,MAX_ENTRIES_CACHE_INDEX_RESULT,MAX_FIND_PROPERTIES_RECURSION,QUERY_STATS,READ_LOCK,WRITE_LOCK,cacheHit,cacheMiss,querySupport,updateCache
 hcls CacheKey,CacheValue,StatsKey,StatsValue
 
 CLSS public org.netbeans.modules.javascript2.model.api.IndexedElement
@@ -249,7 +257,7 @@ meth public static int getFlag(org.netbeans.modules.javascript2.model.api.JsObje
 meth public static java.util.Set<org.netbeans.modules.csl.api.Modifier> getModifiers(int)
 meth public static org.netbeans.modules.javascript2.model.api.JsElement$Kind getJsKind(int)
 supr java.lang.Object
-hfds ANONYMOUS,ANONYMOUS_OBJECT,CALLBACK,CONSTANT,CONSTRUCTOR,DECLARED,DEPRICATED,FIELD,FILE,FUNCTION,GENERATOR,GLOBAL,METHOD,OBJECT,OBJECT_LITERAL,PARAMETER,PLATFORM,PRIVATE,PRIVILAGE,PROPERTY,PROPERTY_GETTER,PROPERTY_SETTER,PUBLIC,STATIC,VARIABLE
+hfds ANONYMOUS,ANONYMOUS_OBJECT,ARROW_FUNCTION,CALLBACK,CONSTANT,CONSTRUCTOR,DECLARED,DEPRICATED,FIELD,FILE,FUNCTION,GENERATOR,GLOBAL,METHOD,OBJECT,OBJECT_LITERAL,PARAMETER,PLATFORM,PRIVATE,PRIVILAGE,PROPERTY,PROPERTY_GETTER,PROPERTY_SETTER,PUBLIC,STATIC,VARIABLE
 
 CLSS public static org.netbeans.modules.javascript2.model.api.IndexedElement$FunctionIndexedElement
  outer org.netbeans.modules.javascript2.model.api.IndexedElement
@@ -276,6 +284,7 @@ meth public abstract org.netbeans.modules.javascript2.model.api.JsElement$Kind g
 CLSS public final static !enum org.netbeans.modules.javascript2.model.api.JsElement$Kind
  outer org.netbeans.modules.javascript2.model.api.JsElement
 fld public final static org.netbeans.modules.javascript2.model.api.JsElement$Kind ANONYMOUS_OBJECT
+fld public final static org.netbeans.modules.javascript2.model.api.JsElement$Kind ARROW_FUNCTION
 fld public final static org.netbeans.modules.javascript2.model.api.JsElement$Kind BLOCK
 fld public final static org.netbeans.modules.javascript2.model.api.JsElement$Kind CALLBACK
 fld public final static org.netbeans.modules.javascript2.model.api.JsElement$Kind CATCH_BLOCK
@@ -423,7 +432,7 @@ meth public static void changeDeclarationScope(org.netbeans.modules.javascript2.
 meth public static void copyOccurrences(org.netbeans.modules.javascript2.model.api.JsObject,org.netbeans.modules.javascript2.model.api.JsObject)
 meth public static void moveProperty(org.netbeans.modules.javascript2.model.api.JsObject,org.netbeans.modules.javascript2.model.api.JsObject)
 supr java.lang.Object
-hfds CTX_DELIMITERS,GENERATED_ANONYM_PREFIX,GENERATED_FUNCTION_PREFIX,GLOBAL_DIRECTIVE,KNOWN_TYPES,LOG,MAX_RECURSION_DEEP_RESOLVING_ASSIGNMENTS,deepRA,knownGlobalObjects
+hfds GENERATED_ANONYM_PREFIX,GENERATED_FUNCTION_PREFIX,GLOBAL_DIRECTIVE,KNOWN_TYPES,LOG,MAX_RECURSION_DEEP_RESOLVING_ASSIGNMENTS,deepRA,knownGlobalObjects
 hcls State
 
 CLSS public final org.netbeans.modules.javascript2.model.api.Occurrence
@@ -531,6 +540,7 @@ meth public boolean enterBreakNode(com.oracle.js.parser.ir.BreakNode)
 meth public boolean enterCallNode(com.oracle.js.parser.ir.CallNode)
 meth public boolean enterCaseNode(com.oracle.js.parser.ir.CaseNode)
 meth public boolean enterCatchNode(com.oracle.js.parser.ir.CatchNode)
+meth public boolean enterClassElement(com.oracle.js.parser.ir.ClassElement)
 meth public boolean enterClassNode(com.oracle.js.parser.ir.ClassNode)
 meth public boolean enterContinueNode(com.oracle.js.parser.ir.ContinueNode)
 meth public boolean enterDebuggerNode(com.oracle.js.parser.ir.DebuggerNode)
@@ -575,6 +585,7 @@ meth public com.oracle.js.parser.ir.Node leaveBreakNode(com.oracle.js.parser.ir.
 meth public com.oracle.js.parser.ir.Node leaveCallNode(com.oracle.js.parser.ir.CallNode)
 meth public com.oracle.js.parser.ir.Node leaveCaseNode(com.oracle.js.parser.ir.CaseNode)
 meth public com.oracle.js.parser.ir.Node leaveCatchNode(com.oracle.js.parser.ir.CatchNode)
+meth public com.oracle.js.parser.ir.Node leaveClassElement(com.oracle.js.parser.ir.ClassElement)
 meth public com.oracle.js.parser.ir.Node leaveClassNode(com.oracle.js.parser.ir.ClassNode)
 meth public com.oracle.js.parser.ir.Node leaveContinueNode(com.oracle.js.parser.ir.ContinueNode)
 meth public com.oracle.js.parser.ir.Node leaveDebuggerNode(com.oracle.js.parser.ir.DebuggerNode)

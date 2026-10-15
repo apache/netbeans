@@ -81,7 +81,8 @@ class AutoUpdateCatalogParser extends DefaultHandler {
     
     private static enum ELEMENTS {
         module_updates, module_group, notification, module, description,
-        module_notification, external_package, manifest, l10n, license, UNKNOWN;
+        module_notification, external_package, manifest, l10n, license,
+        message_digest, UNKNOWN;
 
         private static ELEMENTS valueOfOrUnknown(String qName) {
             try {
@@ -129,7 +130,10 @@ class AutoUpdateCatalogParser extends DefaultHandler {
 
     private static Map<String, ModuleItem> cache;
     private static URI cacheURI;
-    synchronized static Map<String, ModuleItem> getUpdateItems (URL url, URL provider, Task task) throws IOException {
+    static synchronized Map<String, ModuleItem> getUpdateItems (URL url, URL provider, Task task) throws IOException {
+        return getUpdateItems(url, null, provider, task);
+    }
+    static synchronized Map<String, ModuleItem> getUpdateItems (URL url, InputStream data, URL provider, Task task) throws IOException {
 
         Map<String, ModuleItem> items = new HashMap<> ();
         URI base;
@@ -149,7 +153,7 @@ class AutoUpdateCatalogParser extends DefaultHandler {
                 SAXParserFactory factory = SAXParserFactory.newInstance();
                 factory.setValidating(false);
                 SAXParser saxParser = factory.newSAXParser();
-                is = getInputSource(url, provider, base);
+                is = getInputSource(url, data, provider, base);
                 saxParser.parse(is, new AutoUpdateCatalogParser(items, provider, base));
                 cacheURI = base;
                 cache = items;
@@ -182,8 +186,10 @@ class AutoUpdateCatalogParser extends DefaultHandler {
         return res;
     }
     
-    private static InputSource getInputSource(URL toParse, URL p, URI base) throws IOException {
-        InputStream is = toParse.openStream ();
+    private static InputSource getInputSource(URL toParse, InputStream is, URL p, URI base) throws IOException {
+        if (is == null) {
+            is = toParse.openStream();
+        }
         if (isGzip (p)) {
             try {
                 is = new GZIPInputStream(is);
@@ -234,6 +240,8 @@ class AutoUpdateCatalogParser extends DefaultHandler {
             case l10n :
                 break;
             case manifest :
+                break;
+            case message_digest:
                 break;
             case description :
                 ERR.info ("Not supported yet.");
@@ -342,6 +350,8 @@ class AutoUpdateCatalogParser extends DefaultHandler {
                 // put module into UpdateItems
                 items.put (desc.getId (), m);
                 
+                break;
+            case message_digest:
                 break;
             case description :
                 ERR.info ("Not supported yet.");

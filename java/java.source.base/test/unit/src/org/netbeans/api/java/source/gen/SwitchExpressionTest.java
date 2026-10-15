@@ -25,9 +25,13 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.tree.YieldTree;
+import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.tree.JCTree;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,6 +39,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.swing.event.ChangeListener;
 import static junit.framework.TestCase.assertEquals;
@@ -45,7 +50,6 @@ import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.junit.NbTestSuite;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
 import org.openide.filesystems.FileObject;
@@ -56,8 +60,6 @@ import org.openide.util.lookup.ServiceProvider;
  *
  */
 public class SwitchExpressionTest extends TreeRewriteTestBase {
-
-    private static final List<String> EXTRA_OPTIONS = new ArrayList<>();
 
     public SwitchExpressionTest(String testName) {
         super(testName);
@@ -72,9 +74,8 @@ public class SwitchExpressionTest extends TreeRewriteTestBase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        sourceLevel = "1.13";
+        sourceLevel = "17";
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        EXTRA_OPTIONS.add("--enable-preview");
     }
 
     @Override
@@ -84,31 +85,7 @@ public class SwitchExpressionTest extends TreeRewriteTestBase {
 
     }
 
-    @ServiceProvider(service = CompilerOptionsQueryImplementation.class, position = 100)
-    public static class TestCompilerOptionsQueryImplementation implements CompilerOptionsQueryImplementation {
-
-        @Override
-        public CompilerOptionsQueryImplementation.Result getOptions(FileObject file) {
-            return new CompilerOptionsQueryImplementation.Result() {
-                @Override
-                public List<? extends String> getArguments() {
-                    return EXTRA_OPTIONS;
-                }
-
-                @Override
-                public void addChangeListener(ChangeListener listener) {
-                }
-
-                @Override
-                public void removeChangeListener(ChangeListener listener) {
-                }
-            };
-        }
-
-    }
-
     public void testSwitchExpression() throws Exception {
-
         String code = "package test; \n"
                 + "public class Test {\n"
                 + "     private void test(int p) {\n"
@@ -140,7 +117,7 @@ public class SwitchExpressionTest extends TreeRewriteTestBase {
 
         rewriteSwitchExpression();
         String res = TestUtilities.copyFileToString(getTestFile());
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
 
     }
@@ -167,16 +144,19 @@ public class SwitchExpressionTest extends TreeRewriteTestBase {
                 VariableTree switcExpression = (VariableTree) ((BlockTree) method.getBody()).getStatements().get(0);
                 Tree switchBlock = switcExpression.getInitializer();
                 List<? extends CaseTree> cases;
+                ExpressionTree selExpr;
                 List<ExpressionTree> patterns = new ArrayList<>();
-                boolean switchExpressionFlag = switchBlock.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION);
+                boolean switchExpressionFlag = switchBlock.getKind() == Kind.SWITCH_EXPRESSION;
                 if (switchExpressionFlag) {
-                    cases = TreeShims.getCases(switchBlock);
+                    selExpr = ((SwitchExpressionTree) switchBlock).getExpression();
+                    cases = ((SwitchExpressionTree) switchBlock).getCases();
                 } else {
+                    selExpr = ((SwitchTree) switchBlock).getExpression();
                     cases = ((SwitchTree) switchBlock).getCases();
                 }
                 for (Iterator<? extends CaseTree> it = cases.iterator(); it.hasNext();) {
                     CaseTree ct = it.next();
-                    patterns.addAll(TreeShims.getExpressions(ct));
+                    patterns.addAll(ct.getExpressions());
                     List<StatementTree> statements;
                     if (ct.getStatements() == null) {
                         statements = new ArrayList<>(((JCTree.JCCase) ct).stats);
@@ -203,12 +183,67 @@ public class SwitchExpressionTest extends TreeRewriteTestBase {
                         patterns = new ArrayList<>();
                     }
                 }
-                workingCopy.rewrite(switchBlock, make.SwitchExpression(TreeShims.getExpressions(switchBlock).get(0), newCases));
+                workingCopy.rewrite(switchBlock, make.SwitchExpression(selExpr, newCases));
             }
 
         };
 
         js.runModificationTask(task).commit();
+    }
+
+    public void testYield1() throws Exception {
+        String code = """
+                      package test;
+                      public class Test {
+                           private int test(String str) {
+                               return switch (str) {
+                                   case "":
+                                       yield "Hello";
+                                   default -> "";
+                               }
+                           }
+                      }
+                      """;
+        String golden = """
+                        package test;
+                        public class Test {
+                             private int test(String str) {
+                                 return switch (str) {
+                                     case "":
+                                         yield str;
+                                     default -> "";
+                                 }
+                             }
+                        }
+                        """;
+
+        prepareTest("Test", code);
+
+        JavaSource js = getJavaSource();
+        assertNotNull(js);
+
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(JavaSource.Phase.RESOLVED);
+                CompilationUnitTree cut = workingCopy.getCompilationUnit();
+                TreeMaker make = workingCopy.getTreeMaker();
+                new TreePathScanner<Void, Void>() {
+                    @Override
+                    public Void visitYield(YieldTree node, Void p) {
+                        workingCopy.rewrite(node.getValue(), make.Identifier("str"));
+                        return super.visitYield(node, p);
+                    }
+                }.scan(cut, null);
+            }
+        };
+
+        js.runModificationTask(task).commit();
+
+        String res = TestUtilities.copyFileToString(getTestFile());
+        //System.err.println(res);
+        assertEquals(golden, res);
+
     }
 
 }

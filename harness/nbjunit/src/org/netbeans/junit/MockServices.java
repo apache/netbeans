@@ -30,6 +30,7 @@ import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -37,16 +38,14 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import junit.framework.Assert;
-import junit.framework.AssertionFailedError;
 
 /**
  * Lets you register mock implementations of global services.
- * You might for example do this in {@link junit.framework.TestCase#setUp}.
+ * You might for example do this in {@link junit.framework.TestCase#setUp()}.
  * <p>If you need to register individual instances, and are using the <code>Lookup</code>
  * framework, try <code>org.openide.util.test.MockLookup</code>.
- * @see <a href="http://www.netbeans.org/download/dev/javadoc/org-openide-util/org/openide/util/Lookup.html"><code>Lookup</code></a>
- * @see <a href="http://download.java.net/jdk6/docs/api/java/util/ServiceLoader.html"><code>ServiceLoader</code></a>
+ * @see <a href="https://github.com/apache/netbeans/tree/master/platform/openide.util.lookup/src/org/openide/util/Lookup.java"><code>Lookup</code></a>
+ * @see java.util.ServiceLoader
  * @since org.netbeans.modules.nbjunit/1 1.30
  * @author Jesse Glick, Jaroslav Tulach
  */
@@ -161,7 +160,10 @@ public class MockServices {
             for (Class<?> c : services) {
                 try {
                     if (test) {
-                        Assert.assertEquals(c, getParent().loadClass(c.getName()));
+                        final Class<?> real = getParent().loadClass(c.getName());
+                        if (!c.equals(real)) {
+                            throw new AssertionError("Service " + c + " isn't " + real);
+                        }
                     }
                     int mods = c.getModifiers();
                     if (!Modifier.isPublic(mods) || Modifier.isAbstract(mods)) {
@@ -173,7 +175,7 @@ public class MockServices {
                 } catch (NoSuchMethodException x) {
                     throw (IllegalArgumentException) new IllegalArgumentException("Class " + c.getName() + " has no public no-arg constructor").initCause(x);
                 } catch (Exception x) {
-                    throw (AssertionFailedError) new AssertionFailedError(x.toString()).initCause(x);
+                    throw new AssertionError(x.toString(), x);
                 }
             }
             this.services = services;
@@ -208,7 +210,7 @@ public class MockServices {
                     }
                     if (!impls.isEmpty()) {
                         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        PrintWriter pw = new PrintWriter(new OutputStreamWriter(baos, "UTF-8"));
+                        PrintWriter pw = new PrintWriter(new OutputStreamWriter(baos, StandardCharsets.UTF_8));
                         for (String impl : impls) {
                             pw.println(impl);
                             pw.println("#position=100");

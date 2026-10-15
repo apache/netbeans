@@ -23,7 +23,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import java.util.logging.Level;
@@ -111,7 +110,7 @@ public final class ContextAwareSupport {
                 }
             }
             if (o == null)
-                o = cls.newInstance ();
+                o = cls.getDeclaredConstructor().newInstance();
             if (Logger.getLogger(ContextAwareSupport.class.getName()).isLoggable(Level.FINE)) {
                 Logger.getLogger(ContextAwareSupport.class.getName()).fine("instance "+o+" created.");
             }
@@ -121,7 +120,7 @@ public final class ContextAwareSupport {
                     Exceptions.attachMessage(
                         e,
                         "The service "+service+" not found."));
-        } catch (InstantiationException e) {
+        } catch (InstantiationException | NoSuchMethodException e) {
             Exceptions.printStackTrace(
                     Exceptions.attachMessage(
                     e,
@@ -177,7 +176,7 @@ public final class ContextAwareSupport {
                 Proxy.newProxyInstance(
                     cl,
                     classes,
-                    new ContextAwareServiceHandler(serviceName, classes, Collections.EMPTY_MAP));
+                    new ContextAwareServiceHandler(serviceName, classes, Collections.emptyMap()));
     }
 
     private static String[] splitClasses(String classes) {

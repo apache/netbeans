@@ -466,7 +466,7 @@ public class AddTableColumnDialog extends JPanel {
             if (text == null || text.length() == 0) {
                 text = "0";
             }
-            return new Integer(text);
+            return Integer.valueOf(text);
         } catch (NumberFormatException nfe) {
             return null;
         }

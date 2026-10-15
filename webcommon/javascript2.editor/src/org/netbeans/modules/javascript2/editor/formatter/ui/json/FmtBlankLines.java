@@ -18,12 +18,10 @@
  */
 package org.netbeans.modules.javascript2.editor.formatter.ui.json;
 
-import org.netbeans.modules.javascript2.editor.formatter.ui.*;
 import java.io.IOException;
 import org.netbeans.modules.javascript2.editor.formatter.FmtOptions;
 import static org.netbeans.modules.javascript2.editor.formatter.FmtOptions.CategorySupport.OPTION_ID;
 import static org.netbeans.modules.javascript2.editor.formatter.FmtOptions.maxPreservedArrayLines;
-import static org.netbeans.modules.javascript2.editor.formatter.FmtOptions.maxPreservedClassLines;
 import org.netbeans.modules.javascript2.editor.formatter.Utils;
 import org.netbeans.modules.javascript2.lexer.api.JsTokenId;
 import org.netbeans.modules.options.editor.spi.PreferencesCustomizer;
@@ -41,17 +39,17 @@ public class FmtBlankLines extends javax.swing.JPanel {
      */
     public FmtBlankLines() {
         initComponents();
-        
+
         scrollPane.getViewport().setBackground(java.awt.SystemColor.controlLtHighlight);
-        
+
         maxObjectTextField.putClientProperty(OPTION_ID, maxPreservedObjectLines);
         maxArrayTextField.putClientProperty(OPTION_ID, maxPreservedArrayLines);
-        
+
         NumericKeyListener listener = new NumericKeyListener();
         maxObjectTextField.addKeyListener(listener);
         maxArrayTextField.addKeyListener(listener);
     }
-    
+
     public static PreferencesCustomizer.Factory getController() {
         String preview = "";
         try {

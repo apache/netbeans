@@ -35,6 +35,7 @@ public class LoweredBorder extends AbstractBorder {
     private Color darker = getLabelBackgroundColor().darker ().darker ();
     private Color brighter = getLabelBackgroundColor().brighter ().brighter ();
 
+    @Override
     public void paintBorder (
         Component c,
         Graphics g,
@@ -52,11 +53,13 @@ public class LoweredBorder extends AbstractBorder {
         g.setColor (oldColor);
     }
 
+    @Override
     public Insets getBorderInsets (Component c) {
 	return new Insets (1, 1, 1, 1);
     }
 
-    public boolean isBorderOpaque () { 
+    @Override
+    public boolean isBorderOpaque () {
         return true; 
     }
     

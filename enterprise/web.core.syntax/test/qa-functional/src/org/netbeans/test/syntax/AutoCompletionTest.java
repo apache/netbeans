@@ -25,6 +25,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Caret;
 import junit.framework.Test;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.Utilities;
 import org.netbeans.jellytools.EditorOperator;
 import org.netbeans.editor.BaseDocument;
@@ -114,8 +115,8 @@ public class AutoCompletionTest extends CompletionTest {
             }
             waitTypingFinished(doc);
             waitTypingFinished(doc);
-            int rowStart = Utilities.getRowStart(doc, step.getOffset() + 1);
-            int rowEnd = Utilities.getRowEnd(doc, step.getOffset() + 1);
+            int rowStart = LineDocumentUtils.getLineStartOffset(doc, step.getOffset() + 1);
+            int rowEnd = LineDocumentUtils.getLineEndOffset(doc, step.getOffset() + 1);
             String result = doc.getText(new int[]{rowStart, rowEnd}).trim();
             if (!result.equals(step.getResult())) {
                 ref("EE: unexpected CC result:\n< " + result + "\n> " + step.getResult());

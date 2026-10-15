@@ -24,9 +24,9 @@ import javax.swing.ListModel;
  * GoToPanel interface for UnitTest mocks.
  * @author Tomas Zezula
  */
-interface GoToPanel {
+interface GoToPanel<T> {
     boolean isCaseSensitive();
-    boolean setModel(ListModel model, boolean finished);
+    boolean setModel(ListModel<T> model, boolean finished);
     boolean revalidateModel(boolean finished);
     void setWarning(String warningMessage);
     long getStartTime();

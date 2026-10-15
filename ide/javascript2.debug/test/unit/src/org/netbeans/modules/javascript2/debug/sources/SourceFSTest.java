@@ -20,9 +20,11 @@
 package org.netbeans.modules.javascript2.debug.sources;
 
 import java.io.IOException;
-import static junit.framework.Assert.*;
 import org.junit.Test;
 import org.openide.filesystems.FileObject;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  *

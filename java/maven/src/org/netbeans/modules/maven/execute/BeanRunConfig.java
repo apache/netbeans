@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.PlexusContainerException;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.project.Project;
@@ -39,6 +38,7 @@ import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.netbeans.modules.maven.options.MavenSettings;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 
 
 
@@ -54,6 +54,7 @@ public class BeanRunConfig implements RunConfig {
     private List<String> goals;
     private String executionName;
     private Map<String,String> properties;
+    private Map<String,String> options;
     private Map<String,Object> internalProperties;
     //for these delegate to default options for defaults.
     private boolean showDebug = MavenSettings.getDefault().isShowDebug();
@@ -70,11 +71,17 @@ public class BeanRunConfig implements RunConfig {
     private MavenProject mp;
     private RunConfig preexecution;
     private ReactorStyle reactor = ReactorStyle.NONE;
+    private Lookup actionContext = Lookup.EMPTY;
     
     /** Creates a new instance of BeanRunConfig */
     public BeanRunConfig() {
     }
 
+    @Override
+    public Lookup getActionContext() {
+        return actionContext;
+    }
+    
     /**
      * create a new instance that wraps around the parent instance, allowing
      * to change values while delegating to originals if not changed.
@@ -90,7 +97,13 @@ public class BeanRunConfig implements RunConfig {
         setShowError(parent.isShowError());
         setUpdateSnapshots(parent.isUpdateSnapshots());
         setReactorStyle(parent.getReactorStyle());
+        setActionContext(parent.getActionContext());
     }
+    
+    public void setActionContext(Lookup actionContext) {
+        this.actionContext = actionContext;
+    }
+    
     //#243897 MavenCommoandLineExecutor needs to reuse the maven project from the parent config to prevent repoading MP many times during one execution..
     public void reassignMavenProjectFromParent() {
         if (parent instanceof BeanRunConfig) {
@@ -384,6 +397,40 @@ public class BeanRunConfig implements RunConfig {
 
     public final void setReactorStyle(ReactorStyle style) {
         reactor = style;
+    }
+
+    @Override
+    public Map<? extends String, ? extends String> getOptions() {
+        if (options == null) {
+            return parent != null ? parent.getOptions(): Collections.<String,String>emptyMap();
+        }
+        return Collections.unmodifiableMap(new LinkedHashMap<String,String>(options));
+    }
+
+    @Override
+    public void setOption(String key, String value) {
+        if (options == null) {
+            options = new LinkedHashMap<String,String>();
+            if (parent != null) {
+                options.putAll(parent.getOptions());
+            }
+        }
+        if (value != null) {
+            options.put(key, value);
+        } else {
+            options.remove(key);
+        }
+    }
+
+    @Override
+    public void addOptions(Map<String, String> args) {
+         if (options == null) {
+            options = new LinkedHashMap<String,String>();
+            if (parent != null) {
+                options.putAll(parent.getOptions());
+            }
+        }
+        options.putAll(args);
     }
 }
 

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        opacity: .67;
+      }
+
+      .st0, .st1 {
+        fill: #fff;
+      }
+
+      .st2 {
+        fill: #303030;
+      }
+
+      .st3 {
+        fill: #ffc36d;
+      }
+
+      .st4 {
+        fill: #3eadff;
+      }
+
+      .st5 {
+        opacity: .33;
+      }
+
+      .st6 {
+        opacity: .25;
+      }
+
+      .st7 {
+        opacity: .15;
+      }
+    </style>
+  </defs>
+  <g>
+    <rect class="st1" y="1" width="13" height="14"/>
+    <g class="st6">
+      <path d="M12,2v12H1V2h11M13,1H0v14h13V1h0Z"/>
+    </g>
+  </g>
+  <rect class="st1" x="4" width="12" height="10"/>
+  <g class="st5">
+    <path d="M15,1v8H5V1h10M16,0H4v10h12V0h0Z"/>
+  </g>
+  <rect class="st4" x="4" width="12" height="3"/>
+  <rect class="st0" x="14" y="1" width="1" height="1"/>
+  <rect class="st0" x="12" y="1" width="1" height="1"/>
+  <rect class="st7" x="5" y="10" width="8" height="1"/>
+  <rect class="st2" x="6" y="4" width="2" height=".5"/>
+  <rect class="st2" x="9" y="4" width="4" height=".5"/>
+  <rect class="st2" x="6" y="6" width="5" height=".5"/>
+  <g>
+    <polygon class="st3" points="2.761 14.549 .45 12.239 3.685 9.004 1.375 6.693 2.068 6 9 6 9 12.932 8.307 13.625 5.996 11.315 2.761 14.549"/>
+    <g class="st5">
+      <path d="M8,7v4.904s-1.297-1.297-1.297-1.297l-.707-.707-.707.707-2.528,2.528-.896-.896,2.528-2.528.707-.707-.707-.707-1.297-1.297h4.904M9,6H2.068l-.693.693,2.311,2.311L.451,12.239l2.311,2.311,3.235-3.235,2.311,2.311.693-.693v-6.932h0Z"/>
+    </g>
+  </g>
+
+</svg>

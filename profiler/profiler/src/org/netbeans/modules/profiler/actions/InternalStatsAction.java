@@ -49,7 +49,7 @@ import org.openide.util.HelpCtx;
 //@ActionRegistration(displayName="#LBL_InternalStatsAction")
 //@ActionReference(path="Menu/Profile/Advanced", position=300, separatorAfter=400)
 public final class InternalStatsAction extends ProfilingAwareAction {
-    final private static int[] enabledStates = new int[]{Profiler.PROFILING_RUNNING};
+    private static final int[] enabledStates = new int[]{Profiler.PROFILING_RUNNING};
             
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 

@@ -114,6 +114,6 @@ public class DomOperator extends TopComponentOperator {
         } while ((node = node.getParent()) != null);
 
         Collections.reverse(nodes);
-        return new TreePath(nodes.toArray(new Object[nodes.size()]));
+        return new TreePath(nodes.toArray(new Object[0]));
     }
 }

@@ -174,10 +174,10 @@ public abstract class BaseUtilities {
      * In order to provide useful support for this problem, this queue has been
      * provided.
      * <P>
-     * If you have a reference that needs cleanup, make it implement <link>Runnable</link>
+     * If you have a reference that needs cleanup, make it implement {@link Runnable}
      * and register it with the queue:
      * <PRE>
-     * class MyReference extends WeakReference<Thing> implements Runnable {
+     * class MyReference extends WeakReference&lt;Thing&gt; implements Runnable {
      *     private final OtherInfo dataToCleanUp;
      *     public MyReference(Thing ref, OtherInfo data) {
      *         super(ref, Utilities.queue());
@@ -200,6 +200,7 @@ public abstract class BaseUtilities {
      * <p>
      * Be sure to call this method anew for each reference.
      * Do not attempt to cache the return value.
+     * @return reference queue
      * @since 3.11
      */
     public static ReferenceQueue<Object> activeReferenceQueue() {
@@ -460,7 +461,7 @@ widthcheck:  {
         final int index = fullName.indexOf('$');
 
         if ((index >= 0) && (index < fullName.length())) {
-            return fullName.substring(index + 1, fullName.length());
+            return fullName.substring(index + 1);
         }
 
         return fullName;
@@ -1014,9 +1015,9 @@ widthcheck:  {
     * <li>Include command names with embedded spaces, such as <code>c:\Program Files\jdk\bin\javac</code>.
     * <li>Include extra command arguments, such as <code>-Dname=value</code>.
     * <li>Do anything else which might require unusual characters or processing. For example:
-    * <p><code><pre>
+    * <p><code>
     * "c:\program files\jdk\bin\java" -Dmessage="Hello /\\/\\ there!" -Xmx128m
-    * </pre></code>
+    * </code>
     * <p>This example would create the following executable name and arguments:
     * <ol>
     * <li> <code>c:\program files\jdk\bin\java</code>
@@ -1036,12 +1037,11 @@ widthcheck:  {
     * @return an array of parameters
     */
     public static String[] parseParameters(String s) {
-        int NULL = 0x0; // STICK + whitespace or NULL + non_"
-        int INPARAM = 0x1; // NULL + " or STICK + " or INPARAMPENDING + "\ // NOI18N
-        int INPARAMPENDING = 0x2; // INPARAM + \
-        int STICK = 0x4; // INPARAM + " or STICK + non_" // NOI18N
-        int STICKPENDING = 0x8; // STICK + \
-        ArrayList<String> params = new ArrayList<String>(5);
+        final int NULL = 0x0;
+        final int IN_PARAM = 0x1;
+        final int IN_DOUBLE_QUOTE = 0x2;
+        final int IN_SINGLE_QUOTE = 0x3;
+        ArrayList<String> params = new ArrayList<>(5);
         char c;
 
         int state = NULL;
@@ -1050,120 +1050,77 @@ widthcheck:  {
 
         for (int i = 0; i < slength; i++) {
             c = s.charAt(i);
-
-            if (Character.isWhitespace(c)) {
-                if (state == NULL) {
-                    if (buff.length() > 0) {
-                        params.add(buff.toString());
-                        buff.setLength(0);
+            switch (state) {
+                case NULL:
+                    switch (c) {
+                        case '\'':
+                            state = IN_SINGLE_QUOTE;
+                            break;
+                        case '"':
+                            state = IN_DOUBLE_QUOTE;
+                            break;
+                        default:
+                            if (!Character.isWhitespace(c)) {
+                                buff.append(c);
+                                state = IN_PARAM;
+                            }
                     }
-                } else if (state == STICK) {
-                    params.add(buff.toString());
-                    buff.setLength(0);
-                    state = NULL;
-                } else if (state == STICKPENDING) {
-                    buff.append('\\');
-                    params.add(buff.toString());
-                    buff.setLength(0);
-                    state = NULL;
-                } else if (state == INPARAMPENDING) {
-                    state = INPARAM;
-                    buff.append('\\');
-                    buff.append(c);
-                } else { // INPARAM
-                    buff.append(c);
-                }
-
-                continue;
-            }
-
-            if (c == '\\') {
-                if (state == NULL) {
-                    ++i;
-
-                    if (i < slength) {
-                        char cc = s.charAt(i);
-
-                        if ((cc == '"') || (cc == '\\')) {
-                            buff.append(cc);
-                        } else if (Character.isWhitespace(cc)) {
-                            buff.append(c);
-                            --i;
-                        } else {
-                            buff.append(c);
-                            buff.append(cc);
-                        }
+                    break;
+                case IN_SINGLE_QUOTE:
+                    if (c != '\'') {
+                        buff.append(c);
                     } else {
-                        buff.append('\\');
-
-                        break;
+                        state = IN_PARAM;
                     }
-
-                    continue;
-                } else if (state == INPARAM) {
-                    state = INPARAMPENDING;
-                } else if (state == INPARAMPENDING) {
-                    buff.append('\\');
-                    state = INPARAM;
-                } else if (state == STICK) {
-                    state = STICKPENDING;
-                } else if (state == STICKPENDING) {
-                    buff.append('\\');
-                    state = STICK;
-                }
-
-                continue;
-            }
-
-            if (c == '"') {
-                if (state == NULL) {
-                    state = INPARAM;
-                } else if (state == INPARAM) {
-                    state = STICK;
-                } else if (state == STICK) {
-                    state = INPARAM;
-                } else if (state == STICKPENDING) {
-                    buff.append('"');
-                    state = STICK;
-                } else { // INPARAMPENDING
-                    buff.append('"');
-                    state = INPARAM;
-                }
-
-                continue;
-            }
-
-            if (state == INPARAMPENDING) {
-                buff.append('\\');
-                state = INPARAM;
-            } else if (state == STICKPENDING) {
-                buff.append('\\');
-                state = STICK;
-            }
-
-            buff.append(c);
-        }
-
-        // collect
-        if (state == INPARAM) {
-            params.add(buff.toString());
-        } else if ((state & (INPARAMPENDING | STICKPENDING)) != 0) {
-            buff.append('\\');
-            params.add(buff.toString());
-        } else { // NULL or STICK
-
-            if (buff.length() != 0) {
-                params.add(buff.toString());
+                    break;
+                case IN_DOUBLE_QUOTE:
+                    switch (c) {
+                        case '\\':
+                            char peek = (i < slength - 1) ? s.charAt(i+1) : Character.MIN_VALUE;
+                            if (peek == '"' || peek =='\\') {
+                                buff.append(peek);
+                                i++;
+                            } else {
+                                buff.append(c);
+                            }
+                            break;
+                        case '"':
+                            state = IN_PARAM;
+                            break;
+                        default:
+                            buff.append(c);
+                    }
+                    break;
+                case IN_PARAM:
+                    switch (c) {
+                        case '\'':
+                            state = IN_SINGLE_QUOTE;
+                            break;
+                        case '"':
+                            state = IN_DOUBLE_QUOTE;
+                            break;
+                        default:
+                          if (Character.isWhitespace(c)) {
+                              params.add(buff.toString());
+                              buff.setLength(0);
+                              state = NULL;
+                          } else {
+                              buff.append(c);
+                          }
+                    }
+                    break;
             }
         }
+        if (buff.length() > 0) {
+            params.add(buff.toString());
+        }
 
-        String[] ret = new String[params.size()];
-        params.toArray(ret);
-
-        return ret;
+        return params.toArray(new String[0]);
     }
 
     /** Complementary method to parseParameters
+     * @param params set of parameters
+     * @return escaped parameters
      * @see #parseParameters
      */
     public static String escapeParameters(String[] params) {
@@ -1245,6 +1202,7 @@ widthcheck:  {
      * order as the incoming elements. However if some elements need to be rearranged,
      * it is <em>not</em> guaranteed that others will not also be rearranged, even
      * if they did not strictly speaking need to be.
+     * @param <T> tyupe of element
      * @param c a collection of objects to be topologically sorted
      * @param edges constraints among those objects, of type <code>Map&lt;Object,Collection&gt;</code>;
      *              if an object is a key in this map, the resulting order will
@@ -1253,7 +1211,7 @@ widthcheck:  {
      * @exception TopologicalSortException if the sort cannot succeed due to cycles in the graph, the
      *   exception contains additional information to describe and possibly recover from the error
      * @since 3.30
-     * @see <a href="http://www.netbeans.org/issues/show_bug.cgi?id=27286">Issue #27286</a>
+     * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=27286">Issue #27286</a>
      */
     public static <T> List<T> topologicalSort(Collection<? extends T> c, Map<? super T, ? extends Collection<? extends T>> edges)
     throws TopologicalSortException {
@@ -1390,24 +1348,24 @@ widthcheck:  {
      * Btw. one can use spaces instead of <code>=</code> sign.
      * For a real world example
      * check the
-     * <a href="http://www.netbeans.org/source/browse/xml/text-edit/compat/src/META-INF/netbeans/">
+     * <a href="https://github.com/apache/netbeans/tree/master/ide/xml">
      * xml module</a>.
      *
      * <P>
-     * For purposes of <link>org.openide.util.io.NbObjectInputStream</link> there is
+     * For purposes of {@link org.openide.util.io.NbObjectInputStream} there is
      * a following special convention:
      * If the
      * className is not listed as one that is to be renamed, the returned
      * string == className, if the className is registered to be renamed
      * than the className != returned value, even in a case when className.equals (retValue)
-     * <p/>
+     * <p>
      * Similar behaviour applies to <b>filenames</b> provided by layers (system filesystem). Filenames
      * can be also translated to adapt to location changes e.g. in action registrations. Note that 
      * <b>no spaces or special characters</b> are allowed in both translated filenames or translation 
      * results. Filenames must conform to regexp {@code ^[/a-zA-Z0-9$_.+-]+$}. Keys and values are treated
      * as paths from fs root.
      * 
-     * <p/>
+     * <p>
      * Example of file path translation (action registration file has moved):
      * <pre>
      * # registration ID has changed
@@ -1438,7 +1396,6 @@ widthcheck:  {
     }
 
     /** Loads all resources that contain renaming information.
-     * @param l classloader to load packages from
      */
     private static void checkMapping() {
         // test if we run in test mode
@@ -1572,7 +1529,8 @@ widthcheck:  {
 
     /**
      * Load single translation file.
-     * @param resource URL identifiing transaction table
+     * @param re interface for communication between Utilities.translate and regular expression impl.
+     * @param reader source of data
      * @param results will be filled with String[2]
      */
     private static void loadTranslationFile(RE re, BufferedReader reader, Set<String[]> results)
@@ -1606,7 +1564,7 @@ widthcheck:  {
      * and {@link URI#resolve(URI)}.
      * @param f a file
      * @return a {@code file}-protocol URI which may use the host field
-     * @see java.nio.file.Path.toUri
+     * @see java.nio.file.Path#toUri()
      * @since 8.25
      */
     public static URI toURI(File f) {
@@ -1657,6 +1615,29 @@ widthcheck:  {
             return new File("\\\\" + host + u.getPath().replace('/', '\\'));
         }
         return new File(u);    
+    }
+
+    /**
+     * Normalizes the given {@code URI}. Like {@link URI#normalize()}, but does
+     * not break certain special {@code URI}s, so should be preferred over
+     * {@linkplain URI#normalize()}.
+     *
+     * @param uri the {@code URI} to normalize
+     * @return the normalized URI
+     */
+    public static URI normalizeURI(URI uri) {
+        @SuppressWarnings("URI.normalize")
+        URI normalized = uri.normalize();
+
+        if (uri.getAuthority() == null && "file".equals(uri.getScheme()) && uri.getPath().startsWith("//")) {
+            try {
+                normalized = new URI(normalized.getScheme(), null, "///" + normalized.getPath(), normalized.getQuery(), normalized.getFragment());
+            } catch (URISyntaxException ex) {
+                throw new IllegalStateException(ex); //unexpected
+            }
+        }
+
+        return normalized;
     }
 
     /** Interfaces for communication between Utilities.translate and regular

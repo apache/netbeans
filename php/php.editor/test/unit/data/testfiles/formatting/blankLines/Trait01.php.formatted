@@ -10,7 +10,6 @@ trait BaseTrait {
     public function moreTesting() {
         echo "BaseTrait::moreTesting() called\n";
     }
-
 }
 
 trait ChildTrait {
@@ -21,13 +20,11 @@ trait ChildTrait {
     public function method1() {
         
     }
-
 }
 
 trait ChildTrait2 {
 
     public $field2 = 22;
-
 }
 
 ?>

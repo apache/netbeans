@@ -28,6 +28,7 @@ import java.io.OutputStream;
 import java.nio.file.NoSuchFileException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +46,6 @@ import javax.tools.Diagnostic.Kind;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 import org.openide.filesystems.XMLFileSystem;
-import org.openide.util.WeakSet;
 import org.openide.xml.XMLUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.ls.DOMImplementationLS;
@@ -182,7 +182,7 @@ public abstract class LayerGeneratingProcessor extends AbstractProcessor {
      * The regular body of {@link #process}.
      * In the last round, one of the layer-generating processors will write out generated-layer.xml.
      * <p>Do not attempt to read or write the layer file directly; just use {@link #layer}.
-     * You may however wish to create other resource files yourself: see {@link LayerBuilder.File#url} for syntax.
+     * You may however wish to create other resource files yourself: see {@link LayerBuilder.File#url(String)} for syntax.
      * @param annotations as in {@link #process}
      * @param roundEnv as in {@link #process}
      * @return as in {@link #process}
@@ -209,7 +209,7 @@ public abstract class LayerGeneratingProcessor extends AbstractProcessor {
         Filer filer = processingEnv.getFiler();
         Collection<Element> originatingElementsL = originatingElementsByProcessor.get(filer);
         if (originatingElementsL == null) {
-            originatingElementsL = new WeakSet<Element>();
+            originatingElementsL = Collections.newSetFromMap(new WeakHashMap<>());
             originatingElementsByProcessor.put(filer, originatingElementsL);
         }
         originatingElementsL.addAll(Arrays.asList(originatingElements));

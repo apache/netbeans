@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -148,7 +149,7 @@ class JaxWsPoliciesSupportImpl implements JaxWsPoliciesSupportImplementation {
         }
         List<URL> urls = new LinkedList<URL>(archive2Url.values());
         try {
-            ProjectClassPathModifier.addRoots(urls.toArray(new URL[urls.size()]), sourceRoot, ClassPath.COMPILE);
+            ProjectClassPathModifier.addRoots(urls.toArray(new URL[0]), sourceRoot, ClassPath.COMPILE);
         } catch (IOException ex) {
             Logger.getLogger(getClass().getName()).log(Level.INFO, "Couldn't extends compile classpath with required jars " + "for WL policy support", ex); // NOI18N
         }
@@ -243,8 +244,7 @@ class JaxWsPoliciesSupportImpl implements JaxWsPoliciesSupportImplementation {
             BufferedReader reader = null;
             try {
                 InputStream stream = fileObject.getInputStream();
-                reader = new BufferedReader(  
-                        new InputStreamReader(stream, "UTF-8")); // NOI18N
+                reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
                 String line;
                 while( (line = reader.readLine()) != null ){
                     builder.append( line );

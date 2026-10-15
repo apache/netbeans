@@ -32,6 +32,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
@@ -294,7 +295,7 @@ public class JarFileSystemHidden extends NbTestCase {
         try {
             BufferedInputStream bis = new BufferedInputStream(fis);
             try {
-                InputStreamReader isr = new InputStreamReader(bis, "UTF-8");
+                InputStreamReader isr = new InputStreamReader(bis, StandardCharsets.UTF_8);
                 try {
                     char[] buffer = new char[1024];
                     int read;

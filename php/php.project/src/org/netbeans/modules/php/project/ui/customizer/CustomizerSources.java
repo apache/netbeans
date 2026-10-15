@@ -232,7 +232,7 @@ public final class CustomizerSources extends JPanel implements SourcesFolderProv
             LocalServer ls = new LocalServer(root.getDocumentRoot());
             localServers.add(ls);
         }
-        copyFilesVisual.setLocalServerModel(new LocalServer.ComboBoxModel(localServers.toArray(new LocalServer[localServers.size()])));
+        copyFilesVisual.setLocalServerModel(new LocalServer.ComboBoxModel(localServers.toArray(new LocalServer[0])));
         copyFilesVisual.selectLocalServer(initialLocalServer);
         copyFilesVisual.setState(true);
         validateFields();

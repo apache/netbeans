@@ -23,14 +23,14 @@ import org.apache.jasper.JasperException;
 
 import org.xml.sax.Attributes;
 import java.util.*;
+import jakarta.servlet.jsp.tagext.TagAttributeInfo;
 
 
 // Note: this needs to live in the org.apache.jasper.compiler package.
 class NodeConverterVisitor extends Node.Visitor {
-	    // walk the nodes, convert them, then new Nodes(List).
-	    // (tomorrow)
-    org.netbeans.modules.web.jsps.parserapi.Node parentNode;
-    List convertedNodeList = null;
+    private final org.netbeans.modules.web.jsps.parserapi.Node parentNode;
+    private List<org.netbeans.modules.web.jsps.parserapi.Node> convertedNodeList = null;
+
     public NodeConverterVisitor(org.netbeans.modules.web.jsps.parserapi.Node parentNode) {
 	this.parentNode = parentNode;
     }
@@ -46,14 +46,12 @@ class NodeConverterVisitor extends Node.Visitor {
 	return serra.convertNodesList(jasperNodes);
     }
     
+    @SuppressWarnings("UseOfObsoleteCollectionType")
     protected org.netbeans.modules.web.jsps.parserapi.Node.Nodes
            convertNodesList(Node.Nodes jasperNodes) throws JasperException {
-	convertedNodeList = new Vector();
-        int numChildNodes = jasperNodes.size();
+	convertedNodeList = new Vector<>();
         jasperNodes.visit(this);
-        org.netbeans.modules.web.jsps.parserapi.Node.Nodes nbNodes = 
-            new org.netbeans.modules.web.jsps.parserapi.Node.Nodes(convertedNodeList);
-         return nbNodes;
+        return new org.netbeans.modules.web.jsps.parserapi.Node.Nodes(convertedNodeList);
     }
     
     public void convertBody(Node jn, org.netbeans.modules.web.jsps.parserapi.Node parentNode) 
@@ -80,6 +78,7 @@ class NodeConverterVisitor extends Node.Visitor {
         }
     }
 
+    @Override
     public void visit(Node.PageDirective n) {
 	org.netbeans.modules.web.jsps.parserapi.Node cn =
 	    new org.netbeans.modules.web.jsps.parserapi.Node.PageDirective(n.getAttributes(),
@@ -87,7 +86,8 @@ class NodeConverterVisitor extends Node.Visitor {
 									      parentNode);
 	convertedNodeList.add(cn);
     }
-    
+
+    @Override
     public void visit(Node.TaglibDirective n) {
 	org.netbeans.modules.web.jsps.parserapi.Node cn =
 	    new org.netbeans.modules.web.jsps.parserapi.Node.TaglibDirective(n.getAttributes(),
@@ -95,7 +95,8 @@ class NodeConverterVisitor extends Node.Visitor {
 										parentNode);
 	convertedNodeList.add(cn);
     }
-    
+
+    @Override
     public void visit(Node.AttributeDirective n) throws JasperException {
 	org.netbeans.modules.web.jsps.parserapi.Node.AttributeDirective cn =
 		new org.netbeans.modules.web.jsps.parserapi.Node.AttributeDirective(n.getAttributes(), 
@@ -105,6 +106,7 @@ class NodeConverterVisitor extends Node.Visitor {
 	convertedNodeList.add(cn);
     }
 
+    @Override
     public void visit(Node.VariableDirective n) throws JasperException {
 	org.netbeans.modules.web.jsps.parserapi.Node.VariableDirective cn =
 		new org.netbeans.modules.web.jsps.parserapi.Node.VariableDirective(n.getAttributes(), 
@@ -114,6 +116,7 @@ class NodeConverterVisitor extends Node.Visitor {
 	convertedNodeList.add(cn);
     }
 
+    @Override
     public void visit(Node.IncludeDirective n) throws JasperException {
 	org.netbeans.modules.web.jsps.parserapi.Node.IncludeDirective cn =
 	    new org.netbeans.modules.web.jsps.parserapi.Node.IncludeDirective(n.getAttributes(),
@@ -122,7 +125,8 @@ class NodeConverterVisitor extends Node.Visitor {
 	convertBody(n, cn);
 	convertedNodeList.add(cn);
     }
-    
+
+    @Override
     public void visit(Node.Comment n) {
 	org.netbeans.modules.web.jsps.parserapi.Node cn =
 	    new org.netbeans.modules.web.jsps.parserapi.Node.Comment(n.getText(),
@@ -130,7 +134,8 @@ class NodeConverterVisitor extends Node.Visitor {
 									parentNode);
 	convertedNodeList.add(cn);
     }
-    
+
+    @Override
     public void visit(Node.Declaration n) {
 	org.netbeans.modules.web.jsps.parserapi.Node cn =
 	    new org.netbeans.modules.web.jsps.parserapi.Node.Declaration(n.getText(),
@@ -138,7 +143,8 @@ class NodeConverterVisitor extends Node.Visitor {
 									    parentNode);
 	convertedNodeList.add(cn);
     }
-    
+
+    @Override
     public void visit(Node.Expression n) {
 	org.netbeans.modules.web.jsps.parserapi.Node cn =
 	    new org.netbeans.modules.web.jsps.parserapi.Node.Expression(n.getText(),
@@ -146,7 +152,8 @@ class NodeConverterVisitor extends Node.Visitor {
 									   parentNode);
 	convertedNodeList.add(cn);
     }
-    
+
+    @Override
     public void visit(Node.Scriptlet n) {
 	org.netbeans.modules.web.jsps.parserapi.Node cn =
 	    new org.netbeans.modules.web.jsps.parserapi.Node.Scriptlet(n.getText(),
@@ -154,7 +161,8 @@ class NodeConverterVisitor extends Node.Visitor {
 									  parentNode);
 	convertedNodeList.add(cn);
     }
-    
+
+    @Override
     public void visit(Node.IncludeAction n) throws JasperException {
 	org.netbeans.modules.web.jsps.parserapi.Node.IncludeAction cn =
 	    new org.netbeans.modules.web.jsps.parserapi.Node.IncludeAction(n.getAttributes(),
@@ -163,7 +171,8 @@ class NodeConverterVisitor extends Node.Visitor {
 	convertBody(n, cn);
 	convertedNodeList.add(cn);
     }
-    
+
+    @Override
     public void visit(Node.DoBodyAction n) throws JasperException {
 	org.netbeans.modules.web.jsps.parserapi.Node.DoBodyAction cn =
 	    new org.netbeans.modules.web.jsps.parserapi.Node.DoBodyAction(n.getAttributes(),
@@ -173,7 +182,7 @@ class NodeConverterVisitor extends Node.Visitor {
 	convertedNodeList.add(cn);
     }
     
-    
+    @Override
     public void visit(Node.ForwardAction n) throws JasperException {
 	org.netbeans.modules.web.jsps.parserapi.Node.ForwardAction cn =
 	    new org.netbeans.modules.web.jsps.parserapi.Node.ForwardAction(n.getAttributes(),
@@ -182,7 +191,8 @@ class NodeConverterVisitor extends Node.Visitor {
 	convertBody(n, cn);
 	convertedNodeList.add(cn);
     }
-    
+
+    @Override
     public void visit(Node.GetProperty n) {
 	org.netbeans.modules.web.jsps.parserapi.Node cn =
 	    new org.netbeans.modules.web.jsps.parserapi.Node.GetProperty(n.getAttributes(),
@@ -190,7 +200,8 @@ class NodeConverterVisitor extends Node.Visitor {
 									    parentNode);
 	convertedNodeList.add(cn);
     }
-    
+
+    @Override
     public void visit(Node.SetProperty n) throws JasperException {
 	org.netbeans.modules.web.jsps.parserapi.Node.SetProperty cn =
 	    new org.netbeans.modules.web.jsps.parserapi.Node.SetProperty(n.getAttributes(),
@@ -199,7 +210,8 @@ class NodeConverterVisitor extends Node.Visitor {
 	convertBody(n, cn);
 	convertedNodeList.add(cn);
     }
-    
+
+    @Override
     public void visit(Node.UseBean n) throws JasperException {
 	org.netbeans.modules.web.jsps.parserapi.Node.UseBean cn =
 	    new org.netbeans.modules.web.jsps.parserapi.Node.UseBean(n.getAttributes(),
@@ -208,7 +220,8 @@ class NodeConverterVisitor extends Node.Visitor {
 	convertBody(n, cn);
 	convertedNodeList.add(cn);
     }
-    
+
+    @Override
     public void visit(Node.PlugIn n) throws JasperException {
 	org.netbeans.modules.web.jsps.parserapi.Node.PlugIn cn =
 	    new org.netbeans.modules.web.jsps.parserapi.Node.PlugIn(n.getAttributes(),
@@ -217,7 +230,8 @@ class NodeConverterVisitor extends Node.Visitor {
 	convertBody(n, cn);
 	convertedNodeList.add(cn);
     }
-    
+
+    @Override
     public void visit(Node.ParamsAction n) throws JasperException {
 	org.netbeans.modules.web.jsps.parserapi.Node.ParamsAction cn =
 	    new org.netbeans.modules.web.jsps.parserapi.Node.ParamsAction(convertMark(n.getStart()),
@@ -225,7 +239,8 @@ class NodeConverterVisitor extends Node.Visitor {
 	convertBody(n, cn);
 	convertedNodeList.add(cn);
     }
-    
+
+    @Override
     public void visit(Node.ParamAction n) throws JasperException {
 	org.netbeans.modules.web.jsps.parserapi.Node.ParamAction cn =
 	    new org.netbeans.modules.web.jsps.parserapi.Node.ParamAction(n.getAttributes(),
@@ -234,7 +249,8 @@ class NodeConverterVisitor extends Node.Visitor {
 	convertBody(n, cn);
 	convertedNodeList.add(cn);
     }
-    
+
+    @Override
     public void visit(Node.InvokeAction n) {
 	org.netbeans.modules.web.jsps.parserapi.Node cn =
 	    new org.netbeans.modules.web.jsps.parserapi.Node.InvokeAction(n.getAttributes(),
@@ -242,7 +258,8 @@ class NodeConverterVisitor extends Node.Visitor {
 									  parentNode);
 	convertedNodeList.add(cn);
     }		
-    
+
+    @Override
     public void visit(Node.NamedAttribute n) throws JasperException {
 	org.netbeans.modules.web.jsps.parserapi.Node.NamedAttribute cn =
 	    new org.netbeans.modules.web.jsps.parserapi.Node.NamedAttribute(n.getAttributes(),
@@ -251,7 +268,8 @@ class NodeConverterVisitor extends Node.Visitor {
 	convertBody(n, cn);
 	convertedNodeList.add(cn);
     }
-    
+
+    @Override
     public void visit(Node.JspBody n) throws JasperException {
 	org.netbeans.modules.web.jsps.parserapi.Node.JspBody cn =
 	    new org.netbeans.modules.web.jsps.parserapi.Node.JspBody(convertMark(n.getStart()),
@@ -259,7 +277,8 @@ class NodeConverterVisitor extends Node.Visitor {
 	convertBody(n, cn);
 	convertedNodeList.add(cn);
     }
-    
+
+    @Override
     public void visit(Node.ELExpression n) {
 	org.netbeans.modules.web.jsps.parserapi.Node cn =
 	    new org.netbeans.modules.web.jsps.parserapi.Node.ELExpression(n.getText(),
@@ -267,38 +286,46 @@ class NodeConverterVisitor extends Node.Visitor {
 									     parentNode);
 	convertedNodeList.add(cn);
     }
-    
+
+    @Override
     public void visit(Node.CustomTag n) throws JasperException {
-	org.netbeans.modules.web.jsps.parserapi.Node.CustomTag cn = null;
+        org.netbeans.modules.web.jsps.parserapi.Node.CustomTag cn;
         if (n.getTagFileInfo() == null) {
             // no tag file
             cn = new org.netbeans.modules.web.jsps.parserapi.Node.CustomTag(n.getQName(),
-                                                                            n.getPrefix(),
-                                                                            n.getLocalName(),
-                                                                            n.getURI(),
-                                                                            n.getAttributes(),
-                                                                            convertMark(n.getStart()),
-                                                                            parentNode,
-                                                                            n.getTagInfo(),
-                                                                            n.getTagHandlerClass()
+                    n.getPrefix(),
+                    n.getLocalName(),
+                    n.getURI(),
+                    n.getAttributes(),
+                    convertMark(n.getStart()),
+                    parentNode,
+                    n.getTagHandlerClass()
             );
-        }
-        else {
+        } else {
             // we do have a tag file
+            Set<String> fragmentAttributes = new HashSet<>();
+            for (TagAttributeInfo tai : n.getTagFileInfo().getTagInfo().getAttributes()) {
+                if (tai.isFragment()) {
+                    fragmentAttributes.add(tai.getName());
+                }
+            }
             cn = new org.netbeans.modules.web.jsps.parserapi.Node.CustomTag(n.getQName(),
-                                                                            n.getPrefix(),
-                                                                            n.getLocalName(),
-                                                                            n.getURI(),
-                                                                            n.getAttributes(),
-                                                                            convertMark(n.getStart()),
-                                                                            parentNode,
-                                                                            n.getTagFileInfo()
+                    n.getPrefix(),
+                    n.getLocalName(),
+                    n.getURI(),
+                    n.getAttributes(),
+                    convertMark(n.getStart()),
+                    parentNode,
+                    true,
+                    n.getTagFileInfo().getTagInfo().hasDynamicAttributes(),
+                    fragmentAttributes
             );
         }
-	convertBody(n, cn);
-	convertedNodeList.add(cn);
+        convertBody(n, cn);
+        convertedNodeList.add(cn);
     }
-    
+
+    @Override
     public void visit(Node.UninterpretedTag n) throws JasperException {
 	Attributes nonTaglibXmlnsAttrs = null; // ??
 	Attributes taglibAttrs = null; // ??
@@ -313,15 +340,15 @@ class NodeConverterVisitor extends Node.Visitor {
 	convertBody(n, cn);
 	convertedNodeList.add(cn);
     }
-    
+
+    @Override
     public void visit(Node.TemplateText n) {
 	org.netbeans.modules.web.jsps.parserapi.Node cn =
 	    new org.netbeans.modules.web.jsps.parserapi.Node.TemplateText(n.getText(),
 									  convertMark(n.getStart()),
 									  parentNode);
 	convertedNodeList.add(cn);
-    }		
-    
-    
+    }
+
 }
 

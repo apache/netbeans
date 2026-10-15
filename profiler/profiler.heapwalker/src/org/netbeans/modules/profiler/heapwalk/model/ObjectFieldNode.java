@@ -40,7 +40,7 @@ public class ObjectFieldNode extends ObjectNode implements HeapWalkerFieldNode {
     }
 
     public ObjectFieldNode(ObjectFieldValue fieldValue, HeapWalkerNode parent, int mode) {
-        super((mode == HeapWalkerNode.MODE_FIELDS) ? fieldValue.getInstance() : fieldValue.getDefiningInstance(),
+        super((mode != HeapWalkerNode.MODE_REFERENCES) ? fieldValue.getInstance() : fieldValue.getDefiningInstance(),
               fieldValue.getField().getName(), parent, mode);
         this.fieldValue = fieldValue;
 
@@ -77,7 +77,7 @@ public class ObjectFieldNode extends ObjectNode implements HeapWalkerFieldNode {
         JavaClass declaringClass = fieldValue.getField().getDeclaringClass();
         HeapWalkerNode parent = getParent();
 
-        while ((parent != null) && parent instanceof HeapWalkerInstanceNode) {
+        while (parent instanceof HeapWalkerInstanceNode) {
             if (parent instanceof HeapWalkerFieldNode) {
                 HeapWalkerFieldNode parentF = (HeapWalkerFieldNode) parent;
 

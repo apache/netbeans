@@ -23,7 +23,6 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
@@ -37,6 +36,7 @@ import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.editor.indent.api.Indent;
 import org.netbeans.modules.html.editor.api.HtmlKit;
 import org.netbeans.modules.html.editor.api.gsf.HtmlParserResult;
+import org.netbeans.modules.html.editor.lib.api.HtmlParsingResult;
 import org.netbeans.modules.html.editor.lib.api.elements.CloseTag;
 import org.netbeans.modules.html.editor.lib.api.elements.Element;
 import org.netbeans.modules.html.editor.lib.api.elements.ElementType;
@@ -52,6 +52,7 @@ import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.web.common.api.WebUtils;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.api.Library;
 import org.netbeans.modules.web.jsfapi.spi.LibraryUtils;
 import org.netbeans.spi.editor.codegen.CodeGenerator;
@@ -152,7 +153,7 @@ public class InjectCompositeComponent {
             public void run(ResultIterator resultIterator) throws Exception {
                 ResultIterator ri = WebUtils.getResultIterator(resultIterator, HtmlKit.HTML_MIME_TYPE);
                 if (ri != null) {
-                    HtmlParserResult result = (HtmlParserResult) ri.getParserResult();
+                    HtmlParsingResult result = (HtmlParsingResult) ri.getParserResult();
                     if (result != null) {
                         declaredPrefixes.set(result.getNamespaces());
                     }
@@ -208,14 +209,14 @@ public class InjectCompositeComponent {
             //but since the library has just been created by adding an xhtml file
             //to the resources/xxx/ folder we need to wait until the files
             //get indexed and the library is created
-            final String compositeLibURL = LibraryUtils.getCompositeLibraryURL(compFolder, jsfs.isJsf22Plus());
+            final String compositeLibURL = LibraryUtils.getCompositeLibraryURL(compFolder, jsfs.getJsfVersion());
             Source documentSource = Source.create(document);
             ParserManager.parseWhenScanFinished(Collections.singletonList(documentSource), new UserTask() { //NOI18N
                 @Override
                 public void run(ResultIterator resultIterator) throws Exception {
                     Library lib = jsfs.getLibrary(compositeLibURL);
                     if (lib != null) {
-                        if (!LibraryUtils.importLibrary(document, lib, prefix, jsfs.isJsf22Plus())) { //XXX: fix the damned static prefix !!!
+                        if (!LibraryUtils.importLibrary(document, lib, prefix)) { //XXX: fix the damned static prefix !!!
                             logger.log(Level.WARNING, "Cannot import composite components library {0}", compositeLibURL); //NOI18N
                         }
                     } else {
@@ -233,8 +234,9 @@ public class InjectCompositeComponent {
                 @Override
                 public void run(ResultIterator resultIterator) throws Exception {
                     final Map<Library, String> importsMap = new LinkedHashMap<>();
-                    for (String uri : context.getDeclarations().keySet()) {
-                        String prefix = context.getDeclarations().get(uri);
+                    for (Map.Entry<String, String> entry : context.getDeclarations().entrySet()) {
+                        String uri = entry.getKey();
+                        String prefix = entry.getValue();
                         Library lib = jsfs.getLibrary(uri);
                         if (lib != null) {
                             importsMap.put(lib, prefix);
@@ -247,7 +249,7 @@ public class InjectCompositeComponent {
                             ((BaseDocument) templateInstanceDoc).runAtomic(new Runnable() {
                                 @Override
                                 public void run() {
-                                    LibraryUtils.importLibrary(templateInstanceDoc, importsMap, jsfs.isJsf22Plus());
+                                    LibraryUtils.importLibrary(templateInstanceDoc, importsMap);
                                 }
                             });
                             try {

@@ -77,7 +77,7 @@ public class JDBCMetadataMySQLTest extends JDBCMetadataTestBase {
     @Override
     public boolean canRun() {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             return super.canRun();
         } catch (ClassNotFoundException e) {
             LOG.warning(String.format("Test %s in %s disabled, %s not available", this.getName(), this.getClass().getName(), e.getMessage()));
@@ -93,7 +93,7 @@ public class JDBCMetadataMySQLTest extends JDBCMetadataTestBase {
         mysqlUser = System.getProperty("mysql.user", "test");
         mysqlPassword = System.getProperty("mysql.password", "test");
         clearWorkDir();
-        Class.forName("com.mysql.jdbc.Driver");
+        Class.forName("com.mysql.cj.jdbc.Driver");
         conn = DriverManager.getConnection("jdbc:mysql://" + mysqlHost + ":" + mysqlPort, mysqlUser, mysqlPassword);
         stmt = conn.createStatement();
         stmt.executeUpdate("DROP DATABASE IF EXISTS test");

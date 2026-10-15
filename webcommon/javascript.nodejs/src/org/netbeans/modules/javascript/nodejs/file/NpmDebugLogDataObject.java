@@ -33,7 +33,7 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "LBL_NpmDebugLog_LOADER=npm-debug.log"
 })
-@MIMEResolver.Registration(displayName = "npm-debug.log", resource = "../resources/npm-resolver.xml", position = 127)
+@MIMEResolver.Registration(displayName = "npm-debug.log", resource = "../resources/npm-resolver.xml", position = 144)
 @Registration(displayName = "#LBL_NpmDebugLog_LOADER", iconBase = "org/netbeans/modules/javascript/nodejs/ui/resources/npm.png", mimeType = "text/npm-log")
 @ActionReferences({
     @ActionReference(

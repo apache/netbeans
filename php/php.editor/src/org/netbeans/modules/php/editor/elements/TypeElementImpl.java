@@ -16,10 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.php.editor.elements;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 import org.netbeans.modules.php.editor.api.ElementQuery;
 import org.netbeans.modules.php.editor.api.PhpElementKind;
@@ -27,17 +27,20 @@ import org.netbeans.modules.php.editor.api.PhpModifiers;
 import org.netbeans.modules.php.editor.api.QualifiedName;
 import org.netbeans.modules.php.editor.api.elements.TypeElement;
 
-
 /**
  * @author Radek Matous
  */
 public abstract class TypeElementImpl extends FullyQualifiedElementImpl implements TypeElement {
+
     private final PhpModifiers modifiers;
     private final Set<QualifiedName> superInterfaces;
     private final Collection<QualifiedName> fqSuperInterfaces;
+
     /**
-     * @param constants might be null which means not initialized (so will be loaded later)
-     * @param constants might be null which means not initialized (so will be loaded later)
+     * @param constants might be null which means not initialized (so will be
+     * loaded later)
+     * @param constants might be null which means not initialized (so will be
+     * loaded later)
      */
     protected TypeElementImpl(
             final QualifiedName qualifiedName,
@@ -59,15 +62,14 @@ public abstract class TypeElementImpl extends FullyQualifiedElementImpl implemen
         return modifiers;
     }
 
-
     @Override
     public final Set<QualifiedName> getSuperInterfaces() {
-        return superInterfaces;
+        return Collections.unmodifiableSet(superInterfaces);
     }
 
     @Override
     public Collection<QualifiedName> getFQSuperInterfaceNames() {
-        return fqSuperInterfaces;
+        return Collections.unmodifiableCollection(fqSuperInterfaces);
     }
 
     @Override
@@ -87,6 +89,14 @@ public abstract class TypeElementImpl extends FullyQualifiedElementImpl implemen
 
     @Override
     public boolean isTraited() {
-        return getPhpElementKind().equals(PhpElementKind.TRAIT) || getPhpElementKind().equals(PhpElementKind.CLASS);
+        return getPhpElementKind().equals(PhpElementKind.TRAIT)
+                || getPhpElementKind().equals(PhpElementKind.CLASS)
+                || getPhpElementKind().equals(PhpElementKind.ENUM);
     }
+
+    @Override
+    public boolean isEnum() {
+        return getPhpElementKind() == PhpElementKind.ENUM;
+    }
+
 }

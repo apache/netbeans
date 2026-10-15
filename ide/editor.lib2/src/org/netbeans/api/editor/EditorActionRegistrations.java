@@ -29,9 +29,9 @@ import java.lang.annotation.Target;
  * {@link EditorActionRegistration} annotations.
  * <br>
  * Example:
- * <pre>
- * @EditorActionRegistrations({ @EditorActionRegistration(name = "name1", ...),
- *                              @EditorActionRegistration(name = "name2", ...)
+ * <pre>{@code
+ * &#64;EditorActionRegistrations({ &#64;EditorActionRegistration(name = "name1", ...),
+ *                              &#64;EditorActionRegistration(name = "name2", ...)
  *                            })
  * public class MultiAction extends BaseAction {
  *
@@ -43,8 +43,8 @@ import java.lang.annotation.Target;
  *         }
  *     }
  *
- * ]
- * </pre>
+ * }
+ * }</pre>
  *
  * @since 1.10
  * @author Miloslav Metelka

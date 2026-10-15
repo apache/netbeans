@@ -87,13 +87,13 @@ public final class CollocationQuery {
      * @since 1.27
      */
     public static boolean areCollocated(URI file1, URI file2) {
-        if (!file1.equals(file1.normalize())) {
+        if (!file1.equals(BaseUtilities.normalizeURI(file1))) {
             throw new IllegalArgumentException("Parameter file1 was not "+  // NOI18N
-                "normalized. Was "+file1+" instead of "+file1.normalize());  // NOI18N
+                "normalized. Was "+file1+" instead of "+BaseUtilities.normalizeURI(file1));  // NOI18N
         }
-        if (!file2.equals(file2.normalize())) {
+        if (!file2.equals(BaseUtilities.normalizeURI(file2))) {
             throw new IllegalArgumentException("Parameter file2 was not "+  // NOI18N
-                "normalized. Was "+file2+" instead of "+file2.normalize());  // NOI18N
+                "normalized. Was "+file2+" instead of "+BaseUtilities.normalizeURI(file2));  // NOI18N
         }
         for (CollocationQueryImplementation2 cqi : implementations2.allInstances()) {
             if (cqi.areCollocated(file1, file2)) {
@@ -148,9 +148,9 @@ public final class CollocationQuery {
      * @since 1.27
      */
     public static URI findRoot(URI file) {
-        if (!file.equals(file.normalize())) {
+        if (!file.equals(BaseUtilities.normalizeURI(file))) {
             throw new IllegalArgumentException("Parameter file was not "+  // NOI18N
-                "normalized. Was "+file+" instead of "+file.normalize());  // NOI18N
+                "normalized. Was "+file+" instead of "+BaseUtilities.normalizeURI(file));  // NOI18N
         }
         for (CollocationQueryImplementation2 cqi : implementations2.allInstances()) {
             URI root = cqi.findRoot(file);

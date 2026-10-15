@@ -23,11 +23,8 @@ import java.lang.reflect.InvocationTargetException;
 import org.openide.nodes.PropertySupport.ReadOnly;
 
 /**
- *
- * @author Tomas Stupka
- */
-/**
  * Describes a particular column in the queries table
+ * @author Tomas Stupka
  */
 public class ColumnDescriptor<T> extends ReadOnly<T> {
     private int width;

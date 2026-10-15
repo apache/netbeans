@@ -34,10 +34,7 @@ import org.netbeans.modules.glassfish.tooling.data.IdeContext;
  */
 public class ServerAdmin {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Set global password authenticator for GlassFish servers.
      * <p/>
@@ -62,6 +59,7 @@ public class ServerAdmin {
      * @param ide IDE Context object (not used).
      * @deprecated {@link IdeContext} class will be removed.
      */
+    @Deprecated
     public static <E extends Result> Future<E> exec(
             final GlassFishServer srv, final Command cmd,
             final IdeContext ide) {
@@ -82,6 +80,7 @@ public class ServerAdmin {
      * @param listeners Listeners that are called when command execution status changes.
      * @deprecated {@link IdeContext} class will be removed.
      */
+    @Deprecated
     public static <E extends Result> Future<E> exec(
             final GlassFishServer srv, final Command cmd, final IdeContext ide,
             final TaskStateListener... listeners) {
@@ -115,6 +114,7 @@ public class ServerAdmin {
      * @param ide      IDE Context object (not used).
      * @deprecated {@link IdeContext} class will be removed.
      */
+    @Deprecated
     public static <E extends Result> Future<E> exec(
             final ExecutorService executor, final GlassFishServer srv,
             final Command cmd, final IdeContext ide) {
@@ -133,6 +133,7 @@ public class ServerAdmin {
      * @param listeners Listeners that are called when command execution status changes.
      * @deprecated {@link IdeContext} class will be removed.
      */
+    @Deprecated
     public static <E extends Result> Future<E> exec(
             final ExecutorService executor, final GlassFishServer srv, 
             final Command cmd, final IdeContext ide,

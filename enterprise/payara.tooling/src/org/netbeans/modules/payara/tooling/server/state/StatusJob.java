@@ -56,10 +56,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraStatusTask;
  */
 public class StatusJob {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Common server status check command execution state listener.
      */
@@ -638,10 +635,7 @@ public class StatusJob {
          
      }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(StatusJob.class);
 
@@ -675,10 +669,7 @@ public class StatusJob {
         {      SHUTDOWN, SHUTDOWN_PORT }  // SHUTDOWN_PORT
     };
    
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Evaluate check result depending on running tasks and their result.
      * <p/>
@@ -765,10 +756,7 @@ public class StatusJob {
         job.notifyCurrStatusListeners(job.status.getStatus(), task);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Payara server status entity. */
     private final PayaraStatusEntity status;
 
@@ -793,10 +781,7 @@ public class StatusJob {
     /** Listeners to be notified about every server status check error. */
     private final LinkedList<PayaraStatusListener> errorListeners;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara server status check internal data.
      * <p/>
@@ -817,10 +802,7 @@ public class StatusJob {
         errorListeners = new LinkedList<>();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * get Payara server status entity.
      * <p/>
@@ -875,10 +857,7 @@ public class StatusJob {
         return version;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Attempts to restart job switching it into <code>UNKNOWN_PORT</code> state
      * to restart status checking with fastest possible check.

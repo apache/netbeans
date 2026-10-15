@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Position.Bias;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -136,16 +137,16 @@ public class WhereUsedElement extends SimpleRefactoringElementImplementation {
                 // for for example find subclasses (using a singly dummy FileInfo) I need
                 // to read it here instead
                 String content = bdoc.getText(0, bdoc.getLength());
-                int sta = Utilities.getRowFirstNonWhite(bdoc, start);
+                int sta = LineDocumentUtils.getLineFirstNonWhitespace(bdoc, start);
 
                 if (sta == -1) {
-                    sta = Utilities.getRowStart(bdoc, start);
+                    sta = LineDocumentUtils.getLineStartOffset(bdoc, start);
                 }
 
-                int en = Utilities.getRowLastNonWhite(bdoc, start);
+                int en = LineDocumentUtils.getLineLastNonWhitespace(bdoc, start);
 
                 if (en == -1) {
-                    en = Utilities.getRowEnd(bdoc, start);
+                    en = LineDocumentUtils.getLineEndOffset(bdoc, start);
                 } else {
                     // Last nonwhite - left side of the last char, not inclusive
                     en++;

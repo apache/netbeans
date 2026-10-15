@@ -1,0 +1,4 @@
+Code completion result for source line:
+public private(set) readonly T|// test
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Test                            [PUBLIC]   testAsymmetricVisibilityClassPromotedTyping07.php

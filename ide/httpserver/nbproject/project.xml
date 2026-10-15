@@ -26,11 +26,21 @@
             <code-name-base>org.netbeans.modules.httpserver</code-name-base>
             <module-dependencies>
                 <dependency>
-                    <code-name-base>org.netbeans.modules.servletapi</code-name-base>
+                    <code-name-base>org.netbeans.core.ide</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
+                        <specification-version>1.61</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.servletapi</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>2.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -153,7 +163,11 @@
             <public-packages/>
             <class-path-extension>
                 <runtime-relative-path>ext/webserver.jar</runtime-relative-path>
-                <binary-origin>external/webserver-3.2.4.jar</binary-origin>
+                <binary-origin>external/tomcat-embed-core-11.0.26.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/webserver-annotations.jar</runtime-relative-path>
+                <binary-origin>external/tomcat-annotations-api-11.0.26.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

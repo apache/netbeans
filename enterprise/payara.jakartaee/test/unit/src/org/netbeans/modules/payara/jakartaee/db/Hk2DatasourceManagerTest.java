@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.payara.jakartaee.db;
 
-import org.netbeans.modules.payara.jakartaee.db.Hk2DatasourceManager;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -31,10 +30,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.j2ee.deployment.common.api.Datasource;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule;
 import org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleFactory;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersion;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
@@ -96,7 +96,7 @@ public class Hk2DatasourceManagerTest extends NbTestCase {
             throw new Error(x);
         }
         Set<Datasource> result = Hk2DatasourceManager.getDatasources(
-                j2eeModule, PayaraVersion.PF_4_1_144);
+                j2eeModule, PayaraPlatformVersion.getLatestVersion());
 //        assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         assert null != result : "null result";

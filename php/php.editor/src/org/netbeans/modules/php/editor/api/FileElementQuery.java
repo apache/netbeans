@@ -28,6 +28,8 @@ import java.util.Set;
 import org.netbeans.modules.php.editor.api.ElementQuery.QueryScope;
 import org.netbeans.modules.php.editor.api.elements.ClassElement;
 import org.netbeans.modules.php.editor.api.elements.ConstantElement;
+import org.netbeans.modules.php.editor.api.elements.EnumCaseElement;
+import org.netbeans.modules.php.editor.api.elements.EnumElement;
 import org.netbeans.modules.php.editor.api.elements.FieldElement;
 import org.netbeans.modules.php.editor.api.elements.FunctionElement;
 import org.netbeans.modules.php.editor.api.elements.InterfaceElement;
@@ -39,8 +41,10 @@ import org.netbeans.modules.php.editor.api.elements.TypeConstantElement;
 import org.netbeans.modules.php.editor.api.elements.TypeElement;
 import org.netbeans.modules.php.editor.api.elements.TypeResolver;
 import org.netbeans.modules.php.editor.api.elements.VariableElement;
+import org.netbeans.modules.php.editor.elements.CaseElementImpl;
 import org.netbeans.modules.php.editor.elements.ClassElementImpl;
 import org.netbeans.modules.php.editor.elements.ConstantElementImpl;
+import org.netbeans.modules.php.editor.elements.EnumElementImpl;
 import org.netbeans.modules.php.editor.elements.FieldElementImpl;
 import org.netbeans.modules.php.editor.elements.FunctionElementImpl;
 import org.netbeans.modules.php.editor.elements.InterfaceElementImpl;
@@ -55,8 +59,10 @@ import org.netbeans.modules.php.editor.model.VariableScope;
 import org.netbeans.modules.php.editor.model.impl.VariousUtils;
 import org.netbeans.modules.php.editor.model.nodes.ASTNodeInfo;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
+import org.netbeans.modules.php.editor.parser.astnodes.CaseDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.EnumDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
@@ -106,6 +112,8 @@ public final class FileElementQuery extends AbstractElementQuery implements Elem
             retval = create(namespace, (InterfaceDeclaration) node);
         } else if (node instanceof TraitDeclaration) {
             retval = create(namespace, (TraitDeclaration) node);
+        } else if (node instanceof EnumDeclaration) {
+            retval = create(namespace, (EnumDeclaration) node);
         }
         addElement(retval);
         return retval;
@@ -128,6 +136,13 @@ public final class FileElementQuery extends AbstractElementQuery implements Elem
     public TraitElement create(final NamespaceElement namespace, final TraitDeclaration node) {
         Parameters.notNull("node", node); //NOI18N
         final TraitElement retval = TraitElementImpl.fromNode(namespace, node, this);
+        addElement(retval);
+        return retval;
+    }
+
+    public EnumElement create(final NamespaceElement namespace, final EnumDeclaration node) {
+        Parameters.notNull("node", node); // NOI18N
+        final EnumElement retval = EnumElementImpl.fromNode(namespace, node, this);
         addElement(retval);
         return retval;
     }
@@ -219,6 +234,14 @@ public final class FileElementQuery extends AbstractElementQuery implements Elem
         Parameters.notNull("node", node); //NOI18N
         final Set<TypeConstantElement> retval = TypeConstantElementImpl.fromNode(type, node, this);
         addElements(retval);
+        return retval;
+    }
+
+    public EnumCaseElement createEnumCase(final TypeElement type, final CaseDeclaration node) {
+        Parameters.notNull("type", type); // NOI18N
+        Parameters.notNull("node", node); // NOI18N
+        final EnumCaseElement retval = CaseElementImpl.fromNode(type, node, this);
+        addElement(retval);
         return retval;
     }
 

@@ -23,8 +23,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
 import org.junit.Test;
@@ -40,8 +42,11 @@ import org.netbeans.modules.php.editor.api.NameKind;
 import org.netbeans.modules.php.editor.api.NameKind.Exact;
 import org.netbeans.modules.php.editor.api.PhpElementKind;
 import org.netbeans.modules.php.editor.api.QuerySupportFactory;
+import org.netbeans.modules.php.editor.api.elements.AliasedElement;
 import org.netbeans.modules.php.editor.api.elements.ClassElement;
 import org.netbeans.modules.php.editor.api.elements.ElementFilter;
+import org.netbeans.modules.php.editor.api.elements.EnumCaseElement;
+import org.netbeans.modules.php.editor.api.elements.EnumElement;
 import org.netbeans.modules.php.editor.api.elements.FunctionElement;
 import org.netbeans.modules.php.editor.api.elements.InterfaceElement;
 import org.netbeans.modules.php.editor.api.elements.MethodElement;
@@ -152,7 +157,7 @@ public class PHPIndexTest extends PHPNavTestBase {
     public void testGetClasses_preferred() throws Exception {
         Collection<TypeElement> ccClasses = new ArrayList<TypeElement>(index.getClasses(NameKind.exact("CCC")));
         assertEquals(2, ccClasses.size());
-        TypeElement[] classesArray = ccClasses.toArray(new TypeElement[ccClasses.size()]);
+        TypeElement[] classesArray = ccClasses.toArray(new TypeElement[0]);
         final TypeElement firstCC = classesArray[0];
         final TypeElement secondCC = classesArray[1];
         assertNotNull(firstCC);
@@ -257,7 +262,7 @@ public class PHPIndexTest extends PHPNavTestBase {
     public void testGetInterfaces_preferred() throws Exception {
         Collection<TypeElement> ccInterfaces = new ArrayList<TypeElement>(index.getInterfaces(NameKind.exact("CCC")));
         assertEquals(2, ccInterfaces.size());
-        TypeElement[] interfacesArray = ccInterfaces.toArray(new TypeElement[ccInterfaces.size()]);
+        TypeElement[] interfacesArray = ccInterfaces.toArray(new TypeElement[0]);
         TypeElement firstCC = interfacesArray[0];
         TypeElement secondCC = interfacesArray[1];
         assertNotNull(firstCC);
@@ -284,6 +289,148 @@ public class PHPIndexTest extends PHPNavTestBase {
                 ElementFilter.forFiles(preffered.getFileObject()).prefer(index.getInterfaces(NameKind.exact("AAA")));
         assertEquals(1, aaInterfaces.size());
         assertSame(getFirst(aaInterfaces).getFileObject(), preffered.getFileObject());
+    }
+
+    // NETBEANS-5599 PHP 8.1 Support
+    public void testGetEnums() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
+    public void testGetEnums_all() throws Exception {
+        Collection<String> enumNames = Arrays.asList(
+                "Simple1", "Simple1", "Simple2", "BackedCaseInt1", "BackedCaseInt2", "BackedCaseString1", "BackedCaseString2",
+                "Impl", "Attributes", "WithTrait"
+        );
+        Collection<TypeElement> allTypes = new ArrayList<>(index.getEnums(NameKind.empty()));
+        assertEquals(enumNames.size(), allTypes.size());
+        for (TypeElement indexedEnum : allTypes) {
+            assertTrue(enumNames.contains(indexedEnum.getName()));
+            assertEquals(indexedEnum, indexedEnum);
+            assertEquals(PhpElementKind.ENUM, indexedEnum.getPhpElementKind());
+        }
+
+        for (TypeElement indexedEnum : allTypes) {
+            Collection<EnumCaseElement> declaredEnumCases = new ArrayList<>(index.getDeclaredEnumCases(indexedEnum));
+            switch (indexedEnum.getName()) {
+                case "Simple1":
+                    assertTrue(declaredEnumCases.isEmpty());
+                    Set<EnumCaseElement> enumCases = index.getEnumCases(NameKind.exact(indexedEnum.getName()), NameKind.empty());
+                    assertTrue(enumCases.isEmpty());
+                    enumCases = index.getEnumCases(NameKind.exact(indexedEnum.getName()), NameKind.exact("A"));
+                    assertTrue(enumCases.isEmpty());
+                    break;
+
+                case "Simple2":
+                    assertTrue(declaredEnumCases.size() == 5);
+                    enumCases = index.getEnumCases(NameKind.exact(indexedEnum.getName()), NameKind.empty());
+                    assertTrue(enumCases.size() == 5);
+                    enumCases = index.getEnumCases(NameKind.exact(indexedEnum.getName()), NameKind.exact("A"));
+                    assertTrue(enumCases.size() == 1);
+                    enumCases = index.getEnumCases(NameKind.exact(indexedEnum.getName()), NameKind.prefix("A"));
+                    assertTrue(enumCases.size() == 2);
+                    break;
+                case "BackedCaseInt1":
+                    assertTrue(declaredEnumCases.isEmpty());
+                    enumCases = index.getEnumCases(NameKind.exact(indexedEnum.getName()), NameKind.empty());
+                    assertTrue(enumCases.isEmpty());
+                    break;
+                case "BackedCaseInt2":
+                    assertTrue(declaredEnumCases.size() == 6);
+                    enumCases = index.getEnumCases(NameKind.exact(indexedEnum.getName()), NameKind.empty());
+                    assertTrue(enumCases.size() == 6);
+                    break;
+                case "BackedCaseString1":
+                    assertTrue(declaredEnumCases.isEmpty());
+                    enumCases = index.getEnumCases(NameKind.exact(indexedEnum.getName()), NameKind.empty());
+                    assertTrue(enumCases.isEmpty());
+                    break;
+                case "BackedCaseString2":
+                    assertTrue(declaredEnumCases.size() == 7);
+                    enumCases = index.getEnumCases(NameKind.exact(indexedEnum.getName()), NameKind.empty());
+                    assertTrue(enumCases.size() == 7);
+                    break;
+                case "Impl":
+                    assertTrue(declaredEnumCases.size() == 3);
+                    enumCases = index.getEnumCases(NameKind.exact(indexedEnum.getName()), NameKind.empty());
+                    assertTrue(enumCases.size() == 3);
+                    break;
+                case "Attributes":
+                    assertTrue(declaredEnumCases.size() == 2);
+                    enumCases = index.getEnumCases(NameKind.exact(indexedEnum.getName()), NameKind.empty());
+                    assertTrue(enumCases.size() == 2);
+                    break;
+                case "WithTrait":
+                    assertTrue(declaredEnumCases.size() == 2);
+                    enumCases = index.getEnumCases(NameKind.exact(indexedEnum.getName()), NameKind.empty());
+                    assertTrue(enumCases.size() == 2);
+                    break;
+                default:
+                    assert false : indexedEnum.getName();
+            }
+        }
+        Set<EnumCaseElement> enumCases = index.getEnumCases(NameKind.empty());
+        assertTrue(enumCases.size() == 5 + 6 + 7 + 3 + 2 + 2);
+    }
+
+    public void testGetEnums_exact() throws Exception {
+        Collection<String> enumNames = Arrays.asList(
+                "Simple1", "Simple1", "Simple2", "BackedCaseInt1", "BackedCaseInt2", "BackedCaseString1", "BackedCaseString2",
+                "Impl", "Attributes", "WithTrait"
+        );
+        Collection<TypeElement> allTypes = new ArrayList<>(index.getEnums(NameKind.empty()));
+        assertEquals(enumNames.size(), allTypes.size());
+        for (String enumName : enumNames) {
+            Collection<EnumElement> enums = index.getEnums(NameKind.exact(enumName));
+            assertTrue(!enums.isEmpty());
+            for (EnumElement indexedEnum : enums) {
+                assertEquals(enumName, indexedEnum.getName());
+                assertTrue(enumNames.contains(indexedEnum.getName()));
+                assertTrue(allTypes.contains(indexedEnum));
+            }
+        }
+    }
+
+    public void testGetEnums_prefix() throws Exception {
+        Collection<String> enumNames = Arrays.asList(
+                "Simple1", "Simple1", "Simple2", "BackedCaseInt1", "BackedCaseInt2", "BackedCaseString1", "BackedCaseString2",
+                "Impl", "Attributes", "WithTrait"
+        );
+        Collection<TypeElement> allTypes = new ArrayList<>(index.getEnums(NameKind.empty()));
+        assertEquals(enumNames.size(), allTypes.size());
+        for (String enumName : enumNames) {
+            Collection<EnumElement> enums = index.getEnums(NameKind.prefix(enumName.substring(0, 1)));
+            assertTrue(!enums.isEmpty());
+            for (EnumElement indexedEnum : enums) {
+                assertTrue(enumNames.contains(indexedEnum.getName()));
+                assertTrue(allTypes.contains(indexedEnum));
+            }
+        }
+    }
+
+    public void testGetEnums_preferred() throws Exception {
+        Collection<TypeElement> enums1 = new ArrayList<>(index.getEnums(NameKind.exact("Simple1")));
+        assertEquals(2, enums1.size());
+        TypeElement[] enumsArray = enums1.toArray(new TypeElement[0]);
+        final TypeElement first = enumsArray[0];
+        final TypeElement second = enumsArray[1];
+        assertNotNull(first);
+        assertNotNull(second);
+        assertNotSame(second, first);
+        assertNotNull(first.getFileObject());
+        assertNotNull(second.getFileObject());
+        assertNotSame(second.getFileObject(), first.getFileObject());
+        TypeElement testingCC = "testGetEnums_1.php".equals(first.getFileObject().getNameExt()) ? first : second;
+        final Collection<EnumElement> preferredClasses
+                = ElementFilter.forFiles(testingCC.getFileObject()).prefer(index.getEnums(NameKind.exact("Simple1")));
+        assertEquals(1, preferredClasses.size());
+        final EnumElement preffered = getFirst(preferredClasses);
+        assertEquals(testingCC, preffered);
+        assertEquals(testingCC.getFileObject(), preffered.getFileObject());
+
+        final Collection<EnumElement> emuns2
+                = ElementFilter.forFiles(preffered.getFileObject()).prefer(index.getEnums(NameKind.exact("BackedCaseString1")));
+        assertEquals(1, emuns2.size());
+        assertNotSame(getFirst(emuns2).getFileObject(), preffered.getFileObject());
     }
 
     /**
@@ -586,6 +733,115 @@ public class PHPIndexTest extends PHPNavTestBase {
 
     // #241740
     public void testMixin() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
+    // NETBEANS-4443 PHP 8.0
+    public void testPHP80UnionTypesFunctions() throws Exception {
+        // function, lambda function, arrow function
+        checkIndexer(getTestPath());
+    }
+
+    public void testPHP80UnionTypesTypes() throws Exception {
+        // class, abstract class, interface, trait
+        checkIndexer(getTestPath());
+    }
+
+    public void testPHP80MixedReturnType() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
+    public void testPHP80ConstructorPropertyPromotion() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
+    public void testPHP80AttributeClasses() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
+    public void testGetAttributeClasses_all() throws Exception {
+        Collection<String> classNames = Arrays.asList(new String[]{
+            "AttrGlobal1",
+            "AttrGlobal2",
+            "AttrA1",
+            "AttrA2",
+            "AttrB1",
+            "AttrB2",
+            "AttrB3",
+        });
+        Collection<TypeElement> allTypes = new ArrayList<>(index.getAttributeClasses(NameKind.empty(), Collections.emptySet(), AliasedElement.Trait.ALIAS));
+        assertEquals(classNames.size(), allTypes.size());
+        for (TypeElement indexedClass : allTypes) {
+            assertTrue(classNames.contains(indexedClass.getName()));
+            assertEquals(PhpElementKind.CLASS, indexedClass.getPhpElementKind());
+        }
+    }
+
+    public void testGetAttributeClasses_prefix() throws Exception {
+        HashMap<String, List<String>> map = new HashMap<>();
+        map.put("Global", Arrays.asList("AttrGlobal1", "AttrGlobal2"));
+        map.put("A", Arrays.asList("AttrA1", "AttrA2"));
+        map.put("B", Arrays.asList("AttrB1", "AttrB2", "AttrB3"));
+        for (Map.Entry<String, List<String>> entry : map.entrySet()) {
+            String key = entry.getKey();
+            List<String> values = entry.getValue();
+            Collection<TypeElement> types = new ArrayList<>(index.getAttributeClasses(NameKind.prefix("Attr" + key), Collections.emptySet(), AliasedElement.Trait.ALIAS));
+            assertEquals(values.size(), types.size());
+            for (TypeElement type : types) {
+                assertTrue(values.contains(type.getName()));
+                assertEquals(PhpElementKind.CLASS, type.getPhpElementKind());
+            }
+        }
+        Collection<TypeElement> types = new ArrayList<>(index.getAttributeClasses(NameKind.prefix("NotAttr"), Collections.emptySet(), AliasedElement.Trait.ALIAS));
+        assertTrue(types.isEmpty());
+    }
+
+    public void testPHP81PureIntersectionTypes() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
+    public void testPHP82ReadonlyClasses() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
+    public void testPHP82ConstantsInTraits() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
+    public void testPHP82DNFReturnTypes() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
+    public void testPHP82DNFParameterTypes() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
+    public void testPhpDocParameterTypes() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
+    public void testPHP83TypedClassConstants() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
+    // PHP 8.4
+    public void testPHP84PropertyHooks() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
+    public void testPHP84PropertyHooksAbstract() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
+    public void testPHP84PropertyHooksCPP() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
+    public void testPHP84PropertyHooksInterface() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
+    public void testPHP84PropertyHooksTrait() throws Exception {
         checkIndexer(getTestPath());
     }
 

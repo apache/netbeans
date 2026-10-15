@@ -96,8 +96,10 @@
     <bind actionName="jump-list-last-edit" key="D-Q"/>
     <bind actionName="jump-list-next" key="O-RIGHT"/>
     <bind actionName="jump-list-next" key="O-KP_RIGHT"/>
+    <bind actionName="jump-list-next" key="MOUSE_BUTTON5"/>
     <bind actionName="jump-list-prev" key="O-LEFT"/>
     <bind actionName="jump-list-prev" key="O-KP_LEFT"/>
+    <bind actionName="jump-list-prev" key="MOUSE_BUTTON4"/>
     <bind actionName="page-down" key="PAGE_DOWN"/>
     <bind actionName="page-up" key="PAGE_UP"/>
     <bind actionName="paste-formated" key="DS-V"/>
@@ -173,6 +175,7 @@
     <bind actionName="toggle-highlight-search" key="OS-H"/>
     <bind actionName="toggle-rectangular-selection" key="DS-R"/>
     <bind actionName="toggle-typing-mode" key="INSERT"/>
+    <bind actionName="toggle-inline-hints" key="O-I"/>
     <bind actionName="tooltip-show" key="D-P"/>
     <bind actionName="transpose-letters" key="D-T"/>
     <bind actionName="undo" key="UNDO"/>

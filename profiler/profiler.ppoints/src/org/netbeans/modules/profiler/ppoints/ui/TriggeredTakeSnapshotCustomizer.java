@@ -349,9 +349,9 @@ public class TriggeredTakeSnapshotCustomizer extends ValidityAwarePanel implemen
     public static void main(String[] args) {
         //    try {
         //      UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel"); //NOI18N
-        ////      UIManager.setLookAndFeel("plaf.metal.MetalLookAndFeel"); //NOI18N
-        ////      UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel"); //NOI18N
-        ////      UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel"); //NOI18N
+        // //      UIManager.setLookAndFeel("plaf.metal.MetalLookAndFeel"); //NOI18N
+        // //      UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel"); //NOI18N
+        // //      UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel"); //NOI18N
         //    } catch (Exception e){};
         //    
         //    TriggeredTakeSnapshotCustomizer main = new TriggeredTakeSnapshotCustomizer();

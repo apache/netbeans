@@ -42,7 +42,7 @@ public class Target implements SDK {
     private static final Logger LOG = Logger.getLogger(Target.class.getName());
 
     private Target() {
-        this.props = new HashMap();
+        this.props = new HashMap<>();
     }
     
     public static Collection<SDK> parse(String output) throws IOException {

@@ -226,13 +226,13 @@ public class EntityAssociationResolver {
                     }
                     List<IdentifierTree> identifiers = new ArrayList<IdentifierTree>();
                     boolean field = false;
-                    if (element.getKind().equals(ElementKind.FIELD)){
+                    if (element.getKind() == ElementKind.FIELD) {
                         field = true;
                         if (Tree.Kind.VARIABLE == propertyTree.getKind()){
                             VariableTree vt = (VariableTree) propertyTree;
                             identifiers = getIdentifier(vt.getType());
                         }
-                    } else if (element.getKind().equals(ElementKind.METHOD)){
+                    } else if (element.getKind() == ElementKind.METHOD){
                         MethodTree mt = (MethodTree) propertyTree;
                         identifiers = getIdentifier(mt.getReturnType());
                     }

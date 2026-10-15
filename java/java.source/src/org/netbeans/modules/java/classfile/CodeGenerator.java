@@ -46,7 +46,6 @@ import com.sun.tools.javap.ConstantWriter;
 import com.sun.tools.javap.Context;
 import com.sun.tools.javap.Messages;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,7 +54,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
 import java.security.MessageDigest;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -88,7 +86,8 @@ import javax.lang.model.util.AbstractElementVisitor9;
 import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
 
-import com.sun.tools.classfile.ConstantPool.CPInfo;
+import com.sun.tools.classfile.SourceFile_attribute;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ClasspathInfo.PathKind;
@@ -127,20 +126,21 @@ public class CodeGenerator {
     private static final String DISABLE_ERRORS = "disable-java-errors"; //NOI18N
     static final String CLASSFILE_ROOT = "classfile-root";              //NOI18N
     static final String CLASSFILE_BINNAME = "classfile-binaryName";     //NOI18N
+    static final String CLASSFILE_SOURCEFILE = "classfile-sourcefile";    //NOI18N
 
     public static FileObject generateCode(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> toOpenHandle) {
-	if (UNUSABLE_KINDS.contains(toOpenHandle.getKind())) {
-	    return null;
-	}
+      return generateCode(cpInfo, toOpenHandle, null);
+    }
+
+    public static FileObject generateCode(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> toOpenHandle, boolean[] trySourceAttr) {
+        if (UNUSABLE_KINDS.contains(toOpenHandle.getKind())) {
+          return null;
+        }
 
         try {
             FileObject file = FileUtil.createMemoryFileSystem().getRoot().createData(toOpenHandle.getKind() == ElementKind.MODULE ? "module-info.java" : "test.java");  //NOI18N
-            OutputStream out = file.getOutputStream();
-
-            try {
-                FileUtil.copy(new ByteArrayInputStream("".getBytes("UTF-8")), out); //NOI18N
-            } finally {
-                out.close();
+            try (OutputStream out = file.getOutputStream()) {
+                out.write("".getBytes(StandardCharsets.UTF_8)); 
             }
 
             JavaSource js = JavaSource.create(cpInfo, file);
@@ -169,11 +169,23 @@ public class CodeGenerator {
                         }
                         root = resource.getParent();
                     } else {
+
                         final ClassPath cp = ClassPathSupport.createProxyClassPath(
                                 cpInfo.getClassPath(PathKind.BOOT),
                                 cpInfo.getClassPath(PathKind.COMPILE),
                                 cpInfo.getClassPath(PathKind.SOURCE));
                         final TypeElement te = toOpen != null ? wc.getElementUtilities().outermostTypeElement(toOpen) : null;
+                        if (trySourceAttr != null) {
+                            String name = SourceUtils.findSourceFileName(toOpen);
+                            if (name != null) {
+                                FileObject found = SourceUtils.getFile(toOpenHandle, cpInfo, name);
+                                if (found != null) {
+                                    result[0] = found;
+                                    trySourceAttr[0] = true;
+                                    return;
+                                }
+                            }
+                        }
 
                         if (te == null) {
                             LOG.info("Cannot resolve element: " + toOpenHandle.toString() + " on classpath: " + cp.toString()); //NOI18N
@@ -223,13 +235,14 @@ public class CodeGenerator {
                         result[0] = source;
 
                         String existingHash = (String) source.getAttribute(HASH_ATTRIBUTE_NAME);
-                        
+
                         if (hash.equals(existingHash)) {
                             LOG.fine(FileUtil.getFileDisplayName(source) + " is up to date, reusing from cache.");  //NOI18N
                             return;
                         }
                     }
-                    final CompilationUnitTree cut = generateCode(wc, toOpen);
+                    final String[] betterName = { null };
+                    final CompilationUnitTree cut = generateCode(wc, toOpen, betterName);
                     wc.rewrite(wc.getCompilationUnit(), cut);
                     if (source == null) {
                         result[0] = FileUtil.createData(sourceRootFO, path);
@@ -239,7 +252,10 @@ public class CodeGenerator {
                     }
 
                     result[0].setAttribute(HASH_ATTRIBUTE_NAME, hash);
-                    
+                    if (betterName[0] != null) {
+                        result[0].setAttribute(CLASSFILE_SOURCEFILE, betterName[0]);
+                    }
+
                     sourceGenerated[0] = true;
                 }
             });
@@ -249,11 +265,8 @@ public class CodeGenerator {
                 if (resultFile != null && !resultFile.canWrite()) {
                     resultFile.setWritable(true);
                 }
-                out = result[0].getOutputStream();
-                try {
-                    FileUtil.copy(new ByteArrayInputStream(r.getResultingSource(file).getBytes("UTF-8")), out);
-                } finally {
-                    out.close();
+                try (OutputStream out = result[0].getOutputStream()) {
+                    out.write(r.getResultingSource(file).getBytes(StandardCharsets.UTF_8));
                 }
                 if (resultFile != null) {
                     resultFile.setReadOnly();
@@ -270,15 +283,17 @@ public class CodeGenerator {
         }
     }
 
-    static CompilationUnitTree generateCode(WorkingCopy wc, Element te) {
+    static CompilationUnitTree generateCode(WorkingCopy wc, Element te, String[] name) {
         TreeMaker make = wc.getTreeMaker();
-        Tree clazz = new TreeBuilder(make, wc).visit(te);
+        final TreeBuilder b = new TreeBuilder(make, wc);
+        Tree clazz = b.visit(te);
         CompilationUnitTree cut = make.CompilationUnit(
                 te.getKind() == ElementKind.MODULE ? null : make.Identifier(((PackageElement) te.getEnclosingElement()).getQualifiedName()),
                 Collections.<ImportTree>emptyList(),
                 Collections.singletonList(clazz),
                 wc.getCompilationUnit().getSourceFile());
 
+        name[0] = b.sourceFileName;
         return cut;
     }
 
@@ -288,6 +303,7 @@ public class CodeGenerator {
         private final WorkingCopy wc;
         private ClassFile cf;
         private Map<String, Method> sig2Method;
+        String sourceFileName;
 
         public TreeBuilder(TreeMaker make, WorkingCopy wc) {
             this.make = make;
@@ -345,9 +361,14 @@ public class CodeGenerator {
 
                     if (classfile != null && classfile.getKind() == Kind.CLASS) {
                         InputStream in = classfile.openInputStream();
-                        
+
                         try {
                             cf = ClassFile.read(in);
+                            Attribute sfaRaw = cf.getAttribute(Attribute.SourceFile);
+                            if (sfaRaw instanceof SourceFile_attribute) {
+                                SourceFile_attribute sfa = (SourceFile_attribute) sfaRaw;
+                                sourceFileName = sfa.getSourceFile(cf.constant_pool);
+                            }
                             for (Method m : cf.methods) {
                                 sig2Method.put(cf.constant_pool.getUTF8Value(m.name_index) + ":" + cf.constant_pool.getUTF8Value(m.descriptor.index), m);
                             }
@@ -364,6 +385,9 @@ public class CodeGenerator {
                 List<Tree> members = new LinkedList<Tree>();
 
                 for (Element m : e.getEnclosedElements()) {
+                    if (m.getKind() == ElementKind.RECORD_COMPONENT) {
+                        continue; // TODO update to 'extend AbstractElementVisitor14'; visiting record components causes UnknownElementException
+                    }
                     Tree member = visit(m);
 
                     if (member != null)
@@ -374,11 +398,15 @@ public class CodeGenerator {
 
                 switch (e.getKind()) {
                     case CLASS:
-                        return addDeprecated(e, make.Class(mods, e.getSimpleName(), constructTypeParams(e.getTypeParameters()), computeSuper(e.getSuperclass()), computeSuper(e.getInterfaces()), members));
+                        return addDeprecated(e, make.Class(mods, e.getSimpleName(), constructTypeParams(e.getTypeParameters()), computeSuper(e.getSuperclass()), computeSuper(e.getInterfaces()), computeSuper(e.getPermittedSubclasses()), members));
                     case INTERFACE:
-                        return addDeprecated(e, make.Interface(mods, e.getSimpleName(), constructTypeParams(e.getTypeParameters()), computeSuper(e.getInterfaces()), members));
+                        return addDeprecated(e, make.Interface(mods, e.getSimpleName(), constructTypeParams(e.getTypeParameters()), computeSuper(e.getInterfaces()), computeSuper(e.getPermittedSubclasses()), members));
                     case ENUM:
                         return addDeprecated(e, make.Enum(mods, e.getSimpleName(), computeSuper(e.getInterfaces()), members));
+                    case RECORD:
+                        // TODO generates final class atm
+                        return addDeprecated(e, make.Class(mods, e.getSimpleName(), constructTypeParams(e.getTypeParameters()), null, computeSuper(e.getInterfaces()), List.of(), members));
+//                        return addDeprecated(e, make.Record(mods, e.getSimpleName(), computeSuper(e.getInterfaces()), members));
                     case ANNOTATION_TYPE:
                         return addDeprecated(e, make.AnnotationType(mods, e.getSimpleName(), members));
                     default:
@@ -593,7 +621,7 @@ public class CodeGenerator {
                         ctx.put(CodeWriter.class, new ConvenientCodeWriter(ctx));
 
                         CodeWriter codeWriter = CodeWriter.instance(ctx);
-                        
+
                         codeWriter.writeInstrs((Code_attribute) code);
                         codeWriter.writeExceptionTable((Code_attribute) code);
 
@@ -609,7 +637,7 @@ public class CodeGenerator {
                 if (!set.hasComments()) {
                     set.addComment(RelativePosition.INNER, Comment.create(Style.LINE, "compiled code"));
                 }
-                
+
                 return addDeprecated(e, method);
             }
         }
@@ -709,7 +737,7 @@ public class CodeGenerator {
                             LOG.log(Level.WARNING, "Cannot create annotation for: {0}", v);
                             continue;
                         }
-                        
+
                         values.add(val);
                     }
 
@@ -724,35 +752,37 @@ public class CodeGenerator {
         }
 
     }
-    
+
     private static final class ConvenientCodeWriter extends CodeWriter {
 
         private final ConstantWriter constantWriter;
-        
+
         public ConvenientCodeWriter(Context context) {
             super(context);
             constantWriter = ConstantWriter.instance(context);
         }
 
-        private static final Set<Opcode> INSTRUCTION_WITH_REFERENCE = 
+        private static final Set<Opcode> INSTRUCTION_WITH_REFERENCE =
                 EnumSet.of(Opcode.LDC, Opcode.LDC_W, Opcode.LDC2_W,
                            Opcode.GETSTATIC, Opcode.PUTSTATIC, Opcode.GETFIELD,
                            Opcode.PUTFIELD, Opcode.INVOKEVIRTUAL, Opcode.INVOKESPECIAL,
                            Opcode.INVOKESTATIC, Opcode.INVOKEINTERFACE, Opcode.NEW,
                            Opcode.ANEWARRAY, Opcode.CHECKCAST, Opcode.INSTANCEOF);
-        
+
         @Override
         public void writeInstr(Instruction instr) {
             super.writeInstr(instr);
         }
     }
-    
+
     private static final Map<List<ElementKind>, Set<Modifier>> IMPLICIT_MODIFIERS;
 
     static {
         IMPLICIT_MODIFIERS = new HashMap<List<ElementKind>, Set<Modifier>>();
 
         IMPLICIT_MODIFIERS.put(Arrays.asList(ElementKind.ENUM), EnumSet.of(Modifier.STATIC, Modifier.ABSTRACT, Modifier.FINAL));
+        // TODO implement record support
+//        IMPLICIT_MODIFIERS.put(Arrays.asList(ElementKind.RECORD), EnumSet.of(Modifier.STATIC, Modifier.ABSTRACT, Modifier.FINAL));
         IMPLICIT_MODIFIERS.put(Arrays.asList(ElementKind.ANNOTATION_TYPE), EnumSet.of(Modifier.STATIC, Modifier.ABSTRACT));
         IMPLICIT_MODIFIERS.put(Arrays.asList(ElementKind.METHOD, ElementKind.ANNOTATION_TYPE), EnumSet.of(Modifier.ABSTRACT));
         IMPLICIT_MODIFIERS.put(Arrays.asList(ElementKind.METHOD, ElementKind.INTERFACE), EnumSet.of(Modifier.ABSTRACT));

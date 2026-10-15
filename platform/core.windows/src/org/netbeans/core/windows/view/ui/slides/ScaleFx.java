@@ -325,6 +325,7 @@ System.out.println("Rendering using comp renderer...");
             targetSize = null;
         }
 
+        @Override
         public void paint(Graphics g) {
             Rectangle bounds = getBounds();
             

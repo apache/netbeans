@@ -23,6 +23,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
@@ -36,6 +37,7 @@ import java.util.logging.Level;
 import org.netbeans.modules.glassfish.tooling.data.GlassFishServer;
 import org.netbeans.modules.glassfish.tooling.logging.Logger;
 import org.netbeans.modules.glassfish.tooling.utils.OsUtils;
+
 import static org.netbeans.modules.glassfish.tooling.utils.ServerUtils.GF_DOMAIN_CONFIG_DIR_NAME;
 
 /**
@@ -99,10 +101,7 @@ import static org.netbeans.modules.glassfish.tooling.utils.ServerUtils.GF_DOMAIN
  */
 public class PasswordFile {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(PasswordFile.class);
 
@@ -137,10 +136,7 @@ public class PasswordFile {
     /** New administrator password to be set (optional). */
     private static final String AS_ADMIN_NEWPASSWORD = "AS_ADMIN_NEWPASSWORD";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     public static Path buildPasswordFilePath(final GlassFishServer server) {
         final String METHOD = "buildPasswordFilePath";
         String domainsFolder = server.getDomainsFolder();
@@ -152,10 +148,7 @@ public class PasswordFile {
                 GF_DOMAIN_CONFIG_DIR_NAME, PASSWORD_FILE_NAME);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Password file path. */
     Path file;
 
@@ -168,10 +161,7 @@ public class PasswordFile {
     /** New administrator password to be set (optional). */
     private String adminNewPassword;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Support for <code>asadmin</code>
      * <code>--passwordfile</code> file format.
@@ -188,10 +178,7 @@ public class PasswordFile {
         adminNewPassword = null;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get password file path as {@link String}.
      */
@@ -253,10 +240,7 @@ public class PasswordFile {
         this.adminNewPassword = adminNewPassword;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Build password file content to be written into file.
      * <p/>
@@ -352,7 +336,7 @@ public class PasswordFile {
         Writer out = null;
         createFilePosix();
         try {
-            out = new OutputStreamWriter(new FileOutputStream(file.toFile()), "UTF-8");
+            out = new OutputStreamWriter(new FileOutputStream(file.toFile()), StandardCharsets.UTF_8);
             out.write(dataToWrite());
         } catch (IOException ioe) {
             success = false;

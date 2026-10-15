@@ -48,13 +48,14 @@ import org.openide.util.Exceptions;
  * {@link org.netbeans.api.debugger.Watch}es.
  *  
  *
- * <p><br><table border="1" cellpadding="3" cellspacing="0" width="100%">
- * <tbody><tr bgcolor="#ccccff">
- * <td colspan="2"><font size="+2"><b>Description </b></font></td>
- * </tr><tr><td align="left" valign="top" width="1%"><font size="+1">
- * <b>Functionality</b></font></td><td> 
+ * <table>
+ * <caption>Description of DebuggerManager</caption>
+ * <tbody><tr>
+ * <td colspan="2" style="background-color:#4D7A97"><b>Description </b></td>
+ * </tr><tr><td>
+ * <b>Functionality</b></td><td> 
  *
- * <b>Start & finish debugging:</b>
+ * <b>Start &amp; finish debugging:</b>
  *    DebuggerManager manages a process of starting a new debugging (
  *    {@link #startDebugging}). It cooperates with all installed
  *    {@link org.netbeans.spi.debugger.DebuggerEngineProvider}s to create a new 
@@ -89,7 +90,7 @@ import org.openide.util.Exceptions;
  * <br><br>
  * <b>Watches management:</b>
  *    DebuggerManager keeps list of all shared watches ({@link #getWatches}).
- *    Watch can be created & added ({@link #createWatch}).
+ *    Watch can be created &amp; added ({@link #createWatch}).
  *
  * <br><br>
  * <b>Support for listening:</b>
@@ -98,22 +99,22 @@ import org.openide.util.Exceptions;
  *    {@link org.netbeans.api.debugger.DebuggerManagerListener}.
  *
  * <br>
- * </td></tr><tr><td align="left" valign="top" width="1%"><font size="+1">
- * <b>Clinents / Providers</b></font></td><td> 
+ * </td></tr><tr><td>
+ * <b>Clinents / Providers</b></td><td> 
  *
  * DebuggerCore module should be the only one provider of this abstract class.
  * This class should be called from debugger plug-in modules and from debugger
  * UI modules. 
  * 
  * <br>
- * </td></tr><tr><td align="left" valign="top" width="1%"><font size="+1">
- * <b>Lifecycle</b></font></td><td> 
+ * </td></tr><tr><td>
+ * <b>Lifecycle</b></td><td> 
  *
  * The only one instance of DebuggerManager should exist, and it should be 
  * created in {@link #getDebuggerManager} method.
  * 
- * </td></tr><tr><td align="left" valign="top" width="1%"><font size="+1">
- * <b>Evolution</b></font></td><td>
+ * </td></tr><tr><td>
+ * <b>Evolution</b></td><td>
  *
  * No method should be removed from this class, but some functionality can 
  * be added.
@@ -158,17 +159,17 @@ public final class DebuggerManager implements ContextProvider {
     private static DebuggerManager            debuggerManager;
     private Session                           currentSession;
     private DebuggerEngine                    currentEngine;
-    private final List                        sessions = new ArrayList();
+    private final List<Session>               sessions = new ArrayList<>();
     private final Set                         engines = new HashSet ();
-    private final Vector                      breakpoints = new Vector ();
+    private final Vector<Breakpoint>          breakpoints = new Vector<>();
     private boolean                           breakpointsInitializing = false;
     private boolean                           breakpointsInitialized = false;
-    private final Vector                      watches = new Vector ();
+    private final Vector<Watch>               watches = new Vector<>();
     private boolean                           watchesInitialized = false;
     private ThreadLocal<Boolean>              watchesInitializing = new ThreadLocal<Boolean>();
     private SessionListener                   sessionListener = new SessionListener ();
-    private Vector                            listeners = new Vector ();
-    private final HashMap                     listenersMap = new HashMap ();
+    private Vector<DebuggerManagerListener>   listeners = new Vector<>();
+    private final Map<String, Vector<DebuggerManagerListener>>                     listenersMap = new HashMap<>();
     private ActionsManager                    actionsManager = null;
     
     private Lookup                            lookup = new Lookup.MetaInf (null);
@@ -227,7 +228,7 @@ public final class DebuggerManager implements ContextProvider {
     /**
      * Join two lookups together.
      * The result will merge the lookups.
-     * The result of its {@link #lookup} method will additionally implement {@link Customizer}.
+     * The result of its {@link #lookup(String,Class)} method will additionally implement {@link Customizer}.
      * @param cp1 first lookup
      * @param cp2 second lookup
      * @return a merger of the two
@@ -265,8 +266,8 @@ public final class DebuggerManager implements ContextProvider {
         //S ystem.out.println("@StartDebugging info: " + info);
         
         // init sessions
-        List sessionProviders = new ArrayList();
-        List<DebuggerEngine> engines = new ArrayList<DebuggerEngine>();
+        List sessionProviders = new ArrayList<>();
+        List<DebuggerEngine> engines = new ArrayList<>();
         Lookup l = info.getLookup ();
         Lookup l2 = info.getLookup ();
         synchronized (l) {
@@ -315,7 +316,7 @@ public final class DebuggerManager implements ContextProvider {
             }
             
             // init DebuggerEngines
-            ArrayList engineProviders = new ArrayList ();
+            List<Object> engineProviders = new ArrayList<>();
             synchronized (l2) {
                 engineProviders.addAll (
                     l2.lookup (null, DebuggerEngineProvider.class)
@@ -486,7 +487,7 @@ public final class DebuggerManager implements ContextProvider {
      */
     public DebuggerEngine[] getDebuggerEngines () {
         synchronized (engines) {
-            return (DebuggerEngine[]) engines.toArray (new DebuggerEngine [engines.size ()]);
+            return (DebuggerEngine[]) engines.toArray (new DebuggerEngine [0]);
         }
     }
     
@@ -507,13 +508,11 @@ public final class DebuggerManager implements ContextProvider {
      *
      * @param breakpoint a new breakpoint
      */
-    public void addBreakpoint (
-        Breakpoint breakpoint
-    ) {
+    public void addBreakpoint (Breakpoint breakpoint) {
         if (initBreakpoints (breakpoint)) {
             // do not add one breakpoint more than once.
             if (registerBreakpoint(breakpoint)) {
-                breakpoints.addElement (breakpoint);
+                breakpoints.addElement(breakpoint);
                 fireBreakpointCreated (breakpoint, null);
             }
         }
@@ -626,7 +625,7 @@ public final class DebuggerManager implements ContextProvider {
      *    a variable name).
      * @return the new watch
      * @throws ArrayIndexOutOfBoundsException if the index is out of range
-     *         <code>(index < 0 || index > getWatches().length)</code>
+     *         <code>(index &lt; 0 || index &gt; getWatches().length)</code>
      * @since 1.22
      */
     public Watch createWatch (int index, String expr) {
@@ -706,7 +705,7 @@ public final class DebuggerManager implements ContextProvider {
                 throw new IllegalArgumentException("Permutation of length "+permutation.length+", but have "+watches.size()+" watches.");
             }
             checkPermutation(permutation);
-            Vector v = (Vector) watches.clone ();
+            Vector<Watch> v = new Vector<>(watches);
             for (int i = 0; i < v.size(); i++) {
                 watches.set(permutation[i], v.get(i));
             }
@@ -806,15 +805,12 @@ public final class DebuggerManager implements ContextProvider {
      * @param propertyName a name of property to listen on
      * @param l the debuggerManager listener to add
      */
-    public void addDebuggerListener (
-        String propertyName, 
-        DebuggerManagerListener l
-    ) {
+    public void addDebuggerListener(String propertyName, DebuggerManagerListener l) {
         synchronized (listenersMap) {
-            Vector listeners = (Vector) listenersMap.get (propertyName);
+            Vector<DebuggerManagerListener> listeners = (Vector<DebuggerManagerListener>)listenersMap.get(propertyName);
             if (listeners == null) {
-                listeners = new Vector ();
-                listenersMap.put (propertyName, listeners);
+                listeners = new Vector<>();
+                listenersMap.put(propertyName, listeners);
             }
             listeners.addElement (l);
         }
@@ -991,8 +987,8 @@ public final class DebuggerManager implements ContextProvider {
             try {
                 initDebuggerManagerListeners ();
 
-                createdBreakpoints = new ArrayList();
-                originatingListeners = new HashMap();
+                createdBreakpoints = new ArrayList<>();
+                originatingListeners = new HashMap<>();
 
                 Vector l = (Vector) listeners.clone ();
                 int i, k = l.size ();
@@ -1647,9 +1643,9 @@ public final class DebuggerManager implements ContextProvider {
         DebuggerEngine[] ne;
         synchronized (engines) {
             if (engines.contains (engine)) return;
-            old = (DebuggerEngine[]) engines.toArray (new DebuggerEngine [engines.size ()]);
+            old = (DebuggerEngine[]) engines.toArray (new DebuggerEngine [0]);
             engines.add (engine);
-            ne = (DebuggerEngine[]) engines.toArray (new DebuggerEngine [engines.size ()]);
+            ne = (DebuggerEngine[]) engines.toArray (new DebuggerEngine [0]);
         }
         fireEngineAdded (engine, old, ne);
     }
@@ -1659,9 +1655,9 @@ public final class DebuggerManager implements ContextProvider {
         DebuggerEngine[] ne;
         synchronized (engines) {
             if (!engines.contains (engine)) return;
-            old = (DebuggerEngine[]) engines.toArray (new DebuggerEngine [engines.size ()]);
+            old = (DebuggerEngine[]) engines.toArray (new DebuggerEngine [0]);
             engines.remove (engine);
-            ne = (DebuggerEngine[]) engines.toArray (new DebuggerEngine [engines.size ()]);
+            ne = (DebuggerEngine[]) engines.toArray (new DebuggerEngine [0]);
         }
         fireEngineRemoved (engine, old, ne);
     }
@@ -1704,52 +1700,5 @@ public final class DebuggerManager implements ContextProvider {
             }
         }
     }
-    
-    /*
-    private class ModuleUnloadListeners {
-        
-        private Map<ClassLoader, ModuleChangeListener> moduleChangeListeners
-                = new HashMap<ClassLoader, ModuleChangeListener>();
-        
-        public void listenOn(ClassLoader cl) {
-            /*
-            org.openide.util.Lookup.Result<ModuleInfo> moduleLookupResult =
-                    org.openide.util.Lookup.getDefault ().lookup(
-                        new org.openide.util.Lookup.Template<ModuleInfo>(ModuleInfo.class));
-            synchronized(moduleChangeListeners) {
-                if (!moduleChangeListeners.containsKey(cl)) {
-                    for (ModuleInfo mi : moduleLookupResult.allInstances()) {
-                        if (mi.isEnabled() && mi.getClassLoader() == cl) {
-                            ModuleChangeListener l = new ModuleChangeListener(cl);
-                            mi.addPropertyChangeListener(WeakListeners.propertyChange(l, mi));
-                            moduleChangeListeners.put(cl, l);
-                        }
-                    }
-                }
-            }
-             *//*
-        }
-        
-        private final class ModuleChangeListener implements PropertyChangeListener {
-            
-            private ClassLoader cl;
-
-            public ModuleChangeListener(ClassLoader cl) {
-                this.cl = cl;
-            }
-
-            public void propertyChange(PropertyChangeEvent evt) {
-                ModuleInfo mi = (ModuleInfo) evt.getSource();
-                if (!mi.isEnabled()) {
-                    synchronized (moduleChangeListeners) {
-                        moduleChangeListeners.remove(cl);
-                    }
-                    moduleUnloaded(cl);
-                }
-            }
-
-        }
-    }
-                */
 }
 

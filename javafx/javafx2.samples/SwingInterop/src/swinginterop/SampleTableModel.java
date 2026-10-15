@@ -35,12 +35,13 @@ public class SampleTableModel extends AbstractTableModel {
     private static ObservableList<BarChart.Series> bcData;
     
     private final String[] names = {"2007", "2008", "2009"};
- 
+
+    // TOOD - helpful if these constants had a descriptive constant name 
     private Object[][] data = {
-            {new Double(567), new Double(956), new Double(1154)},
-            {new Double(1292), new Double(1665), new Double(1927)},
-            {new Double(1292), new Double(2559), new Double(2774)}
-        };
+            {567D,  956D,  1154D},
+            {1292D, 1665D, 1927D},
+            {1292D, 2559D, 2774D}
+    };
 
     public double getTickUnit() {
         return 1000;

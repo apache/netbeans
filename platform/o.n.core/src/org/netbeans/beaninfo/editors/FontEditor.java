@@ -30,6 +30,7 @@ import org.netbeans.core.UIExceptions;
 import org.openide.DialogDisplayer;
 
 import org.openide.NotifyDescriptor;
+import org.openide.awt.GraphicsUtils;
 import org.openide.awt.Mnemonics;
 import org.openide.explorer.propertysheet.editors.XMLPropertyEditor;
 import org.openide.util.Exceptions;
@@ -42,11 +43,6 @@ import org.openide.util.Utilities;
 * @author Ian Formanek
 */
 public class FontEditor implements PropertyEditor, XMLPropertyEditor {
-
-    static final boolean antialias = Boolean.getBoolean("nb.cellrenderer.antialiasing") // NOI18N
-         ||Boolean.getBoolean("swing.aatext") // NOI18N
-         ||(isGTK() && gtkShouldAntialias()) // NOI18N
-         || isAqua();
 
     // static .....................................................................................
 
@@ -140,10 +136,7 @@ public class FontEditor implements PropertyEditor, XMLPropertyEditor {
     }
 
     private void paintText (Graphics g, Rectangle rectangle, String text) {
-        if( antialias && g instanceof Graphics2D ) {
-            ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-            ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        }
+        GraphicsUtils.configureDefaultRenderingHints(g);
         Font originalFont = g.getFont ();
         
         // Fix of 21713, set default value
@@ -197,8 +190,8 @@ public class FontEditor implements PropertyEditor, XMLPropertyEditor {
             else return NbBundle.getMessage(FontEditor.class, "CTL_Plain");
     }
     
-    static private String[] fonts;
-    static private String [] getFonts () {
+    private static String[] fonts;
+    private static String [] getFonts () {
         if (fonts == null) {
             try {
                 fonts = GraphicsEnvironment.getLocalGraphicsEnvironment ().getAvailableFontFamilyNames();
@@ -535,23 +528,5 @@ public class FontEditor implements PropertyEditor, XMLPropertyEditor {
         el.setAttribute (ATTR_STYLE, Integer.toString (font.getStyle ()));
         el.setAttribute (ATTR_SIZE, Integer.toString (font.getSize ()));
         return el;
-    }
-
-    private static boolean isAqua () {
-        return "Aqua".equals(UIManager.getLookAndFeel().getID());
-    }
-    
-    private static boolean isGTK () {
-        return "GTK".equals(UIManager.getLookAndFeel().getID());
-    }
-
-    private static Boolean gtkAA;
-    private static boolean gtkShouldAntialias() {
-        if (gtkAA == null) {
-            Object o = Toolkit.getDefaultToolkit().getDesktopProperty("gnome.Xft/Antialias"); //NOI18N
-            gtkAA = new Integer(1).equals(o) ? Boolean.TRUE : Boolean.FALSE;
-        }
-
-        return gtkAA.booleanValue();
     }
 }

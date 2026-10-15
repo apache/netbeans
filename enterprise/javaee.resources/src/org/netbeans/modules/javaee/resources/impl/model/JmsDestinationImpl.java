@@ -126,7 +126,10 @@ public final class JmsDestinationImpl extends PersistentObject implements JmsDes
     }
 
     private static AnnotationMirror getSpecificAnnotationMirror(Map<String, ? extends AnnotationMirror> types) {
-        AnnotationMirror annotationMirror = types.get(JndiResourcesDefinition.ANN_JMS_DESTINATION);
+        AnnotationMirror annotationMirror = types.get(JndiResourcesDefinition.ANN_JMS_DESTINATION_JAKARTA);
+        if (annotationMirror == null) {
+            annotationMirror = types.get(JndiResourcesDefinition.ANN_JMS_DESTINATION);
+        }
         return annotationMirror;
     }
 

@@ -30,10 +30,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Properties;
-import java.util.logging.Filter;
-import java.util.logging.Handler;
 import java.util.logging.Level;
-import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
@@ -53,7 +50,7 @@ import org.openide.nodes.Node;
 
 /**
  * This class is a useful base test class that provides initial setup
- * to get a connecxtion and also a number of utility routines
+ * to get a connection and also a number of utility routines
  * 
  * @author <a href="mailto:david@vancouvering.com">David Van Couvering</a>
  */
@@ -176,7 +173,7 @@ public abstract class DBTestBase extends TestBase {
                 // DatabaseNodeInfo.printChildren("tables", tables);
 
                 for (Node table : tables) {
-                    if (tablename.toLowerCase().equals(table.getDisplayName().toLowerCase())) {
+                    if (tablename.equalsIgnoreCase(table.getDisplayName())) {
                         return (TableNode)table;
                     }
                 }
@@ -189,7 +186,7 @@ public abstract class DBTestBase extends TestBase {
                         // DatabaseNodeInfo.printChildren("tables", tables);
 
                         for (Node table : tables) {
-                            if (tablename.toLowerCase().equals(table.getDisplayName().toLowerCase())) {
+                            if (tablename.equalsIgnoreCase(table.getDisplayName())) {
                                 return (TableNode)table;
                             }
                         }
@@ -224,7 +221,7 @@ public abstract class DBTestBase extends TestBase {
                 // DatabaseNodeInfo.printChildren("tables", tables);
 
                 for (Node view : views) {
-                    if (viewname.toLowerCase().equals(view.getDisplayName().toLowerCase())) {
+                    if (viewname.equalsIgnoreCase(view.getDisplayName())) {
                         return (ViewNode)view;
                     }
                 }
@@ -237,7 +234,7 @@ public abstract class DBTestBase extends TestBase {
                         // DatabaseNodeInfo.printChildren("tables", tables);
 
                         for (Node view : views) {
-                            if (viewname.toLowerCase().equals(view.getDisplayName().toLowerCase())) {
+                            if (viewname.equalsIgnoreCase(view.getDisplayName())) {
                                 return (ViewNode)view;
                             }
                         }
@@ -679,7 +676,7 @@ public abstract class DBTestBase extends TestBase {
         }
         username = System.getProperty(USERNAME_PROPERTY, "DBTESTS");
         password = System.getProperty(PASSWORD_PROPERTY, "DBTESTS");
-        driverJar = System.getProperty(DRIVER_JARPATH_PROPERTY, "nball:///ide/db/external/derby-10.2.2.0.jar");
+        driverJar = System.getProperty(DRIVER_JARPATH_PROPERTY, "nball:///ide/db/external/derby-10.14.2.0.jar");
 
         driverJar = convertPath(driverJar);
     }
@@ -697,7 +694,7 @@ public abstract class DBTestBase extends TestBase {
     private Driver getDriver() throws Exception {
         if (driver == null) {
             URLClassLoader driverLoader = new URLClassLoader(new URL[]{new URL(driverJar)});
-            driver = (Driver)driverLoader.loadClass(driverClassName).newInstance();
+            driver = (Driver)driverLoader.loadClass(driverClassName).getDeclaredConstructor().newInstance();
         }
 
         return driver;

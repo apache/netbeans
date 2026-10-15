@@ -31,6 +31,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Collection;
 import javax.swing.text.Document;
 import org.netbeans.modules.xml.schema.model.GlobalSimpleType;
@@ -81,7 +83,7 @@ public class Util {
     
     public static String getResourceAsString(String path) throws Exception {
         InputStream in = Util.class.getResourceAsStream(path);
-        BufferedReader br = new BufferedReader(new InputStreamReader(in,"UTF-8"));
+        BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
         StringBuffer sbuf = new StringBuffer();
         try {
             String line = null;
@@ -152,7 +154,7 @@ public class Util {
     }
     
     public static File dumpToTempFile(Document doc) throws Exception {
-        File f = File.createTempFile("xsm", "xsd");
+        File f = Files.createTempFile("xsm", "xsd").toFile();
         dumpToFile(doc, f);
         return f;
     }
@@ -228,13 +230,11 @@ public class Util {
             dest = destFolder.createData(filename);
         }
         FileLock lock = dest.lock();
-        OutputStream out = dest.getOutputStream(lock);
-        InputStream in = Util.class.getResourceAsStream(path);
         try {
-            FileUtil.copy(in, out);
+            try (InputStream in = Util.class.getResourceAsStream(path); OutputStream out = dest.getOutputStream(lock)) {
+                in.transferTo(out);
+            }
         } finally {
-            out.close();
-            in.close();
             if (lock != null) lock.releaseLock();
         }
         return dest;

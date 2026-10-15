@@ -26,6 +26,53 @@
 <apidef name="awt">AWT API</apidef>
 </apidefs>
 <changes>
+    <change id="add-actions-keyStrokeToString">
+        <api name="awt"/>
+        <summary>Add Actions.keyStrokeToString utility method.</summary>
+        <version major="7" minor="88"/>
+        <date day="25" month="3" year="2023"/>
+        <author login="ebakke"/>
+        <compatibility binary="compatible" semantic="compatible" source="compatible" addition="yes" deprecation="no" deletion="no"/>
+        <description>
+            <p>The Actions.keyStrokeToString method has been added as a public API, to avoid
+               duplication of the same logic in the editor.lib module. This method has identical
+               semantics to the existing org.netbeans.editor.Utilities.Actions.keyStrokeToString
+               method (which now delegates to the new Actions.keyStrokeToString), but is available
+               without depending on the editor infrastructure.
+            </p>
+        </description>
+        <class name="Actions" package="org.openide.awt"/>
+    </change>
+    <change id="configureDefaultRenderingHints">
+        <api name="awt"/>
+        <summary>Added GraphicsUtils.configureDefaultRenderingHints(Graphics).</summary>
+        <version major="7" minor="82"/>
+        <date day="28" month="9" year="2021"/>
+        <author login="ebakke"/>
+        <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
+        <description>
+        Add the GraphicsUtils.configureDefaultRenderingHints(Graphics) method (with a new
+        GraphicsUtils class), to allow configuration of standard anti-aliasing settings from custom
+        JComponent.paint(Graphics) implementations. These standard incantations were previously
+        duplicated extensively throughout the NetBeans codebase.
+        </description>
+        <class package="org.openide.awt" name="GraphicsUtils"/>
+        <issue number="NETBEANS-5931"/>
+    </change>
+    <change id="getArrowIcon">
+        <api name="awt"/>
+        <summary>Added DropDownButtonFactory.getArrowIcon method.</summary>
+        <version major="7" minor="75"/>
+        <date day="13" month="12" year="2019"/>
+        <author login="ebakke"/>
+        <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
+        <description>
+        Add the DropDownButtonFactory.getArrowIcon method, to expose the HiDPI-enabled dropdown
+        arrow icon for use by other modules.
+        </description>
+        <class package="org.openide.awt" name="DropDownButtonFactory"/>
+        <issue number="NETBEANS-3581"/>
+    </change>
     <change id="ToggleActions">
         <api name="awt"/>
         <summary>Support model-based enabled and check state of actions</summary>
@@ -243,7 +290,7 @@
         <description>
             <p>
                 New branding key for applications built on top of NetBeans
-                Platform to <a href="@TOP@architecture-summary.html#branding-USE_MNEMONICS">
+                Platform to <a href="@TOP@architecture-summary.html#branding-org.openide.awt.USE_MNEMONICS">
                 turn mnemonics in popup menus on</a>. 
             </p>
         </description>
@@ -260,7 +307,7 @@
             <p>
                 New attributes (popupText, menuText) in @ActionRegistration annotation to provide 
                 text for menu items or popup menu items according to the
-                <a href="@TOP@/org/openide/awt/Actions.html#connect-javax.swing.JMenuItem-javax.swing.Action-boolean-">Actions.connect</a>
+                <a href="@org-openide-awt@/org/openide/awt/Actions.html#connect(javax.swing.JMenuItem,javax.swing.Action,boolean)">Actions.connect</a>
                 method. 
             </p>
         </description>
@@ -311,7 +358,7 @@
         <compatibility addition="yes" binary="compatible" deletion="no" semantic="compatible"/>
         <description>
             <p>
-                <a href="@org-openide-awt@/org/openide/awt/Actions.html#context-java.lang.Class-boolean-boolean-org.openide.util.ContextAwareAction-java.lang.String-java.lang.String-java.lang.String-boolean-">
+                <a href="@org-openide-awt@/org/openide/awt/Actions.html#context(java.lang.Class,boolean,boolean,org.openide.util.ContextAwareAction,java.lang.String,java.lang.String,java.lang.String,boolean)">
                 Action.context</a>, when used from layer accepts <code>"context"</code>
                 attribute.
             </p>
@@ -344,7 +391,7 @@
         <compatibility addition="yes" binary="compatible" deletion="no" semantic="compatible"/>
         <description>
             <p>Instead of registering actions in layer as advocated by various
-            <a href="@TOP@/org/openide/awt/Actions.html#alwaysEnabled-java.awt.event.ActionListener-java.lang.String-java.lang.String-boolean-">
+            <a href="@TOP@/org/openide/awt/Actions.html#alwaysEnabled(java.awt.event.ActionListener,java.lang.String,java.lang.String,boolean)">
                 action factory methods</a> one can use newly created 
                 <a href="@TOP@/org/openide/awt/ActionRegistration.html">annotations</a>.
             </p>
@@ -414,7 +461,7 @@
         <author login="mmetelka"/>
         <compatibility addition="yes" binary="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
         <description>
-            <a href="@TOP@/org/openide/awt/Actions.html#checkbox-java.lang.String-java.lang.String-java.lang.String-java.lang.String-boolean-">
+            <a href="@TOP@/org/openide/awt/Actions.html#checkbox(java.lang.String,java.lang.String,java.lang.String,java.lang.String,boolean)">
                 checkbox</a>
             added to create an action that represents a key in Preferences.
         </description>
@@ -429,7 +476,7 @@
         <author login="mmetelka"/>
         <compatibility addition="yes" binary="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
         <description>
-            <a href="@TOP@/org/openide/awt/Actions.html#alwaysEnabled-java.awt.event.ActionListener-java.lang.String-java.lang.String-boolean-">
+            <a href="@TOP@/org/openide/awt/Actions.html#alwaysEnabled(java.awt.event.ActionListener,java.lang.String,java.lang.String,boolean)">
                 alwaysEnabledAction</a>
             was enhanced to understand
             <code>&lt;attr name="PreferencesKey" stringvalue="boolean-key-name"/&gt;</code>
@@ -494,13 +541,13 @@
         <compatibility addition="yes" binary="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
         <description>
             The layer definition used by factory methods for
-            <a href="@TOP@/org/openide/awt/Actions.html#context-java.lang.Class-boolean-boolean-org.openide.util.ContextAwareAction-java.lang.String-java.lang.String-java.lang.String-boolean-">
+            <a href="@TOP@/org/openide/awt/Actions.html#context(java.lang.Class,boolean,boolean,org.openide.util.ContextAwareAction,java.lang.String,java.lang.String,java.lang.String,boolean)">
             context</a>
             and
-            <a href="@TOP@/org/openide/awt/Actions.html#callback-java.lang.String-javax.swing.Action-boolean-java.lang.String-java.lang.String-boolean-">
+            <a href="@TOP@/org/openide/awt/Actions.html#callback(java.lang.String,javax.swing.Action,boolean,java.lang.String,java.lang.String,boolean)">
             callback</a>
             and
-            <a href="@TOP@/org/openide/awt/Actions.html#alwaysEnabled-java.awt.event.ActionListener-java.lang.String-java.lang.String-boolean-">
+            <a href="@TOP@/org/openide/awt/Actions.html#alwaysEnabled(java.awt.event.ActionListener,java.lang.String,java.lang.String,boolean)">
                 alwaysEnabledAction</a>
             were enhanced to understand <code>&lt;attr name="asynchronous" boolvalue="true"/&gt;</code>
             attribute. This extends these new factories with capabilities
@@ -537,10 +584,10 @@
         <description>
             <p>
             Two new factory methods for creating
-            <a href="@TOP@/org/openide/awt/Actions.html#context-java.lang.Class-boolean-boolean-org.openide.util.ContextAwareAction-java.lang.String-java.lang.String-java.lang.String-boolean-">
+            <a href="@TOP@/org/openide/awt/Actions.html#context(java.lang.Class,boolean,boolean,org.openide.util.ContextAwareAction,java.lang.String,java.lang.String,java.lang.String,boolean)">
             context</a>
             and
-            <a href="@TOP@/org/openide/awt/Actions.html#callback-java.lang.String-javax.swing.Action-boolean-java.lang.String-java.lang.String-boolean-">
+            <a href="@TOP@/org/openide/awt/Actions.html#callback(java.lang.String,javax.swing.Action,boolean,java.lang.String,java.lang.String,boolean)">
             callback</a>
             actions and bunch of
             <a href="@TOP@/org/netbeans/api/actions/package-summary.html">
@@ -653,7 +700,7 @@
         <author login="jtulach"/>
         <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="yes" deletion="no" modification="no"/>
         <description>
-        In order to allow dynamic names of actions, the <a href="@TOP@/org/openide/awt/Actions.html#connect-javax.swing.JMenuItem-javax.swing.Action-boolean-">Actions.connect</a>
+        In order to allow dynamic names of actions, the <a href="@TOP@/org/openide/awt/Actions.html#connect(javax.swing.JMenuItem,javax.swing.Action,boolean)">Actions.connect</a>
         method now understands additional properties that influence the text 
         of menu items or popup menu items build for this action.
         </description>
@@ -670,7 +717,7 @@
         SpinButton used to have a field <code>rt</code>. The type of the field was a package private class. 
         As such the field was inaccessible to API users. Because this is not 
         checked as an error with our new 
-        <a href="http://wiki.netbeans.org/wiki/view/SignatureTest">signature test infrastructure</a>,
+        <a href="https://netbeans.apache.org/wiki/SignatureTest">signature test infrastructure</a>,
         we made the type of the field visible.
         </description>
         <class package="org.openide.awt" name="SpinButton"/>
@@ -1025,7 +1072,6 @@
 <htmlcontents>
 <head>
 <title>Change History for the Actions API</title>
-<link rel="stylesheet" href="prose.css" type="text/css"/>
 </head>
 <body>
 <p class="overviewlink">

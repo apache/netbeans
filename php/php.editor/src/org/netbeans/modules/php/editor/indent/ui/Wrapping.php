@@ -15,6 +15,10 @@ class Example extends Foo implements Bar, Baz {
 	$result = $a < $b ? $a : $b;
     }
 
+    public function coalescingOperatorExample(?string $a): string {
+        return $a ?? 'default value';
+    }
+
 public function forExample() {
     for ($i = 1; $i <= 10; $i++) echo 'Item: ';
 }
@@ -42,5 +46,26 @@ public function rest() {
     $this->foo($bar, $baz, $bat);
 }
 
+}
+
+// if there is no newline within "()", don't wrap
+function example(string $pram1,int $param2): string {
+    echo "Example";
+}
+
+function example2(
+string $pram1,
+int $param2): string {
+    echo "Example";
+}
+
+// if there is no new line within "()", don't wrap
+foreach ($array as $key => $value) {
+    echo $key . "=>" . $value . PHP_EOL;
+}
+
+foreach (
+        $array as $key => $value) {
+    echo $key . "=>" . $value . PHP_EOL;
 }
 ?>

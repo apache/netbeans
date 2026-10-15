@@ -189,10 +189,13 @@ public class PropertyEditorPanel extends javax.swing.JPanel {
             }
         });
         propertyTable.setColumnSelectionAllowed(true);
+        propertyTable.setShowGrid(true);
         propertyScrollPane.setViewportView(propertyTable);
         propertyTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        propertyTable.getColumnModel().getColumn(0).setHeaderValue(org.openide.util.NbBundle.getMessage(PropertyEditorPanel.class, "PropertyEditorPanel.propertyTable.columnModel.title0")); // NOI18N
-        propertyTable.getColumnModel().getColumn(1).setHeaderValue(org.openide.util.NbBundle.getMessage(PropertyEditorPanel.class, "PropertyEditorPanel.propertyTable.columnModel.title1")); // NOI18N
+        if (propertyTable.getColumnModel().getColumnCount() > 0) {
+            propertyTable.getColumnModel().getColumn(0).setHeaderValue(org.openide.util.NbBundle.getMessage(PropertyEditorPanel.class, "PropertyEditorPanel.propertyTable.columnModel.title0")); // NOI18N
+            propertyTable.getColumnModel().getColumn(1).setHeaderValue(org.openide.util.NbBundle.getMessage(PropertyEditorPanel.class, "PropertyEditorPanel.propertyTable.columnModel.title1")); // NOI18N
+        }
 
         add(propertyScrollPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents

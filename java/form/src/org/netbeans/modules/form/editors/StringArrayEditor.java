@@ -141,7 +141,7 @@ public class StringArrayEditor implements XMLPropertyEditor,
             String s = tok.nextToken();
             list.add(s.trim());
         }
-        String [] a = list.toArray(new String[list.size()]);
+        String [] a = list.toArray(new String[0]);
         setValue(a);
     }
 

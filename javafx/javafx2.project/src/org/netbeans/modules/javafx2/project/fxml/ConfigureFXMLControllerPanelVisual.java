@@ -22,6 +22,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
@@ -31,6 +32,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+
+import org.netbeans.modules.javafx2.project.JFXProjectUtils;
 import org.netbeans.spi.java.project.support.ui.PackageView;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
@@ -672,6 +675,11 @@ public class ConfigureFXMLControllerPanelVisual extends JPanel implements Action
             if (component.isControllerEnabled()) {
                 if (!FXMLTemplateWizardIterator.isValidPackageName(component.getPackageName())) {
                     FXMLTemplateWizardIterator.setErrorMessage("WARN_ConfigureFXMLPanel_Provide_Package_Name", settings); // NOI18N
+                    return false;
+                }
+
+                if (JFXProjectUtils.hasModuleInfo(support) && component.getPackageName().isEmpty()) {
+                    FXMLTemplateWizardIterator.setErrorMessage("WARN_ConfigureFXMLPanel_Default_Package_Invalid", settings); // NOI18N
                     return false;
                 }
 

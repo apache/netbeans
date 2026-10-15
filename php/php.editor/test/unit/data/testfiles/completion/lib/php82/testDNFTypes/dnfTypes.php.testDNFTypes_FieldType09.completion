@@ -1,0 +1,13 @@
+Code completion result for source line:
+static::$privateStaticField::|IMPLICIT_Y_CONSTANT; // ClassZ|(ClassZ&ClassY)
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicStaticYMethod()           [STATIC]   ClassY
+METHOD     publicStaticZMethod()           [STATIC]   ClassZ
+VARIABLE   (ClassY&ClassZ)|ClassX $public  [STATIC]   ClassY
+VARIABLE   (ClassY&ClassZ)|ClassX $public  [STATIC]   ClassZ
+CONSTANT   IMPLICIT_Y_CONSTANT "implicit   [PUBLIC]   ClassY
+CONSTANT   IMPLICIT_Z_CONSTANT "implicit   [PUBLIC]   ClassZ
+CONSTANT   PUBLIC_Y_CONSTANT "public cons  [PUBLIC]   ClassY
+CONSTANT   PUBLIC_Z_CONSTANT "public cons  [PUBLIC]   ClassZ
+CONSTANT   class \ClassY                   [PUBLIC]   Magic Constant
+CONSTANT   class \ClassZ                   [PUBLIC]   Magic Constant

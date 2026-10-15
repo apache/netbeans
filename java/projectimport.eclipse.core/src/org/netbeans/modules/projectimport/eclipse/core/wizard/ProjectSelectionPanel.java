@@ -380,7 +380,7 @@ public final class ProjectSelectionPanel extends JPanel {
             return;
         }
         Set<EclipseProject> wsPrjs = new TreeSet<EclipseProject>(workspace.getProjects());
-        projects = wsPrjs.toArray(new EclipseProject[wsPrjs.size()]);
+        projects = wsPrjs.toArray(new EclipseProject[0]);
         selectedProjects = new HashSet<EclipseProject>();
         requiredProjects = new HashSet<EclipseProject>();
         if (projects.length == 0) {

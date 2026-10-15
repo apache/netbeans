@@ -43,10 +43,10 @@ import org.openide.util.NbBundle;
 public class ConstraintPanelVisual extends javax.swing.JPanel implements DocumentListener{
 
     private TemplateWizard wizard;
-    private final static String VALIDATOR = "Validator";    //NOI18N
-    private final static String METHOD = "METHOD";   //NOI18N
-    private final static String FIELD = "FIELD";    //NOI18N
-    private final static String ANNOTATION_TYPE = "ANNOTATION_TYPE";    //NOI18N
+    private static final String VALIDATOR = "Validator";    //NOI18N
+    private static final String METHOD = "METHOD";   //NOI18N
+    private static final String FIELD = "FIELD";    //NOI18N
+    private static final String ANNOTATION_TYPE = "ANNOTATION_TYPE";    //NOI18N
     private final List<String> targetElements = new ArrayList<String>();
 
     /** Creates new form ConstraintPanelVisual */

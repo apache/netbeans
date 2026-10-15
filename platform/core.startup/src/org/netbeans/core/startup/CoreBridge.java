@@ -21,6 +21,7 @@ package org.netbeans.core.startup;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.Collection;
 import org.openide.util.Lookup;
 import org.openide.util.BaseUtilities;
@@ -68,7 +69,7 @@ public abstract class CoreBridge {
     public abstract void setStatusText (String status);
     
     public abstract void initializePlaf (Class uiClass, int uiFontSize, java.net.URL themeURL);
-
+    
     public abstract int cli(
         String[] string, 
         InputStream inputStream, 
@@ -164,6 +165,8 @@ public abstract class CoreBridge {
         if (isJavaFX(new File(System.getProperty("java.home")))) {
             provides.add("org.openide.modules.jre.JavaFX"); // NOI18N
         }
+
+        provides.add("org.openide.modules.arch." + System.getProperty("os.arch"));
     }
 
     static boolean isJavaFX(File javaHome) {

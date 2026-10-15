@@ -35,7 +35,7 @@ import org.openide.util.NbBundle;
  *
  */
 class WebSocketPanel implements Panel<WizardDescriptor> {
-    
+
     static final String URI = "websocket.uri";      // NOI18N
 
     WebSocketPanel( WizardDescriptor wizard ) {
@@ -78,17 +78,13 @@ class WebSocketPanel implements Panel<WizardDescriptor> {
         WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
         if (webModule != null) {
             Profile profile = webModule.getJ2eeProfile();
-            if ( !Profile.JAVA_EE_7_FULL.equals(profile) && 
-                    !Profile.JAVA_EE_7_WEB.equals(profile) &&
-                    !Profile.JAVA_EE_8_FULL.equals(profile) &&
-                            !Profile.JAVA_EE_8_WEB.equals(profile))
-            {
-                setErrorMessage(NbBundle.getMessage(WebSocketPanel.class, 
+            if (profile != null && profile.isAtMost(Profile.JAVA_EE_6_FULL)) {
+                setErrorMessage(NbBundle.getMessage(WebSocketPanel.class,
                         "MSG_NoJEE7Profile"));          // NOI18N
                 return false;
             }
         }
-        
+
         String msg = getComponent().getError();
         setErrorMessage(msg);
         return msg==null;
@@ -117,11 +113,11 @@ class WebSocketPanel implements Panel<WizardDescriptor> {
     public void storeSettings( WizardDescriptor descriptor ) {
         getComponent().storeSettings(descriptor);
     }
-    
+
     private void setErrorMessage(String message) {
         myDescriptor.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, message);
     }
-    
+
     private WebSocketVisual myComponent;
     private WizardDescriptor myDescriptor;
 

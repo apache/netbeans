@@ -23,13 +23,13 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import org.netbeans.modules.tasklist.impl.*;
 import javax.swing.Action;
-import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import org.netbeans.spi.tasklist.Task;
 import org.netbeans.spi.tasklist.TaskScanningScope;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 
 /**
@@ -118,7 +118,7 @@ class Util {
     private static class SwitchScopeAction extends AbstractAction {
         private TaskScanningScope scope;
         public SwitchScopeAction( TaskScanningScope scope ) {
-            super( Accessor.getDisplayName( scope ), new ImageIcon( Accessor.getIcon( scope ) ) );
+            super( Accessor.getDisplayName( scope ), ImageUtilities.image2Icon( Accessor.getIcon( scope ) ) );
             this.scope = scope;
         }
     

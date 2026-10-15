@@ -1,0 +1,544 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+package org.netbeans.modules.gradle.spi;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.WeakHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.netbeans.api.annotations.common.NonNull;
+import org.openide.filesystems.FileUtil;
+import org.openide.util.Utilities;
+
+/**
+ * Collection of notable files used in a Gradle project.
+ *
+ * @author Laszlo Kishalmi
+ */
+public final class GradleFiles implements Serializable {
+
+    public enum Kind {
+
+        BUILD_SCRIPT,
+        ROOT_SCRIPT,
+        SETTINGS_SCRIPT,
+        USER_PROPERTIES,
+        PROJECT_PROPERTIES,
+        ROOT_PROPERTIES,
+        /** @since 2.4 */
+        BUILD_SRC,
+        /** @since 2.25 */
+        VERSION_CATALOG;
+
+        public static final Set<Kind> SCRIPTS = EnumSet.of(ROOT_SCRIPT, BUILD_SCRIPT, SETTINGS_SCRIPT, BUILD_SRC);
+        public static final Set<Kind> PROPERTIES = EnumSet.of(USER_PROPERTIES, PROJECT_PROPERTIES, ROOT_PROPERTIES);
+        public static final Set<Kind> PROJECT_FILES = EnumSet.of(ROOT_SCRIPT, BUILD_SCRIPT, SETTINGS_SCRIPT, VERSION_CATALOG, PROJECT_PROPERTIES, ROOT_PROPERTIES);
+    }
+
+    private static final Logger LOG = Logger.getLogger(GradleFiles.class.getName());
+    
+    public static final String SETTINGS_FILE_NAME     = "settings.gradle"; //NOI18N
+    public static final String SETTINGS_FILE_NAME_KTS = "settings.gradle.kts"; //NOI18N
+    public static final String BUILD_FILE_NAME        = "build.gradle"; //NOI18N
+    public static final String BUILD_FILE_NAME_KTS    = "build.gradle.kts"; //NOI18N
+    public static final String GRADLE_PROPERTIES_NAME = "gradle.properties"; //NOI18N
+    public static final String WRAPPER_PROPERTIES     = "gradle/wrapper/gradle-wrapper.properties"; //NOI18N
+    /** @since 2.25 */
+    public static final String VERSION_CATALOG        = "gradle/libs.versions.toml"; //NOI18N
+
+    final File projectDir;
+    final boolean knownProject;
+    File rootDir;
+    File buildScript;
+    File parentScript;
+    File settingsScript;
+    File gradlew;
+    File wrapperProperties;
+
+    public GradleFiles(File dir) {
+        this(dir, false);
+    }
+    
+    public GradleFiles(File dir, boolean knownProject) {
+        LOG.log(Level.FINE, "Gradle Files for: {0}", dir.getAbsolutePath());
+        this.knownProject = knownProject;
+        try {
+            dir = dir.getCanonicalFile();
+        } catch (IOException ex) {
+            dir = FileUtil.normalizeFile(dir);
+        }
+        projectDir = dir;
+        rootDir = projectDir;
+        searchBuildScripts();
+        searchWrapper();
+    }
+
+    private List<File> searchPropertyFiles() {
+        List<File> ret = new ArrayList<>(3);
+        for (Kind kind:Kind.PROPERTIES){
+            File f = getFile(kind);
+            if ((f != null) && f.exists()){
+                ret.add(f);
+            }
+        }
+        return Collections.unmodifiableList(ret);
+    }
+
+    private void searchBuildScripts() {
+        buildScript = Searcher.searchPath(projectDir, BUILD_FILE_NAME_KTS, BUILD_FILE_NAME, projectDir.getName() + ".gradle.kts", projectDir.getName() + ".gradle");   //NOI18N
+        settingsScript = Searcher.searchPathUp(projectDir, SETTINGS_FILE_NAME_KTS, SETTINGS_FILE_NAME);
+        File settingsDir = settingsScript != null ? settingsScript.getParentFile() : null;
+        if (settingsDir != null) {
+            //Guessing subprojects
+            rootDir = settingsDir;
+            File rootScript = Searcher.searchPath(settingsDir, BUILD_FILE_NAME_KTS, BUILD_FILE_NAME);
+            if (rootScript != null && !rootScript.equals(buildScript)) {
+                parentScript = rootScript;
+            }
+        } else {
+            if (buildScript != null) {
+                rootDir = buildScript.getParentFile();
+            } else {
+                // TODO: NotSupportedLayout
+            }
+        }
+    }
+
+    private void searchWrapper() {
+        File w = new File(rootDir, WRAPPER_PROPERTIES);
+        if (w.isFile()) {
+            gradlew = new File(rootDir, Utilities.isWindows() ? "gradlew.bat" : "gradlew"); //NOI18N
+            wrapperProperties = w;
+        }
+    }
+
+    public File getBuildScript() {
+        return buildScript;
+    }
+
+    public File getParentScript() {
+        return parentScript;
+    }
+
+    public File getSettingsScript() {
+        return settingsScript;
+    }
+
+    /**
+     * The list of the existing property files in the current project in
+     * the order of: user, root, and project properties.
+     *
+     * @return the list of existing project property files.
+     */
+    public List<File> getPropertyFiles() {
+        return searchPropertyFiles();
+    }
+
+    public File getProjectDir() {
+        return isProject() ? projectDir : null;
+    }
+
+    public File getRootDir() {
+        return rootDir;
+    }
+
+    public File getGradlew() {
+        return gradlew;
+    }
+
+    public File getWrapperProperties() {
+        return wrapperProperties;
+    }
+
+    public boolean hasWrapper() {
+        return wrapperProperties != null;
+    }
+
+    /**
+     * Returns true if these files may represent a <code>buildSrc</code> project.
+     * @return true if the project folder is under root and it is in the folder
+     *         <code>buildSrc</code>
+     * @since 2.4
+     */
+    public boolean isBuildSrcProject() {
+        return "buildSrc".equals(projectDir.getName()) && rootDir.equals(projectDir.getParentFile());
+    }
+
+    public boolean isRootProject() {
+        return isProject() && rootDir.equals(projectDir);
+    }
+
+    public boolean isSubProject() {
+        return isProject() && !isRootProject();
+    }
+
+    public boolean isScriptlessSubProject() {
+        return (buildScript == null) && isSubProject();
+    }
+
+    public boolean isProject() {
+        if (knownProject || buildScript != null) {
+            return true;
+        }
+        if (settingsScript != null) {
+            if (projectDir.equals(settingsScript.getParentFile())) {
+                return true;
+            }
+            Set<File> parsed = SettingsFile.getSubProjects(settingsScript);
+            return parsed.contains(projectDir); 
+        }
+        return false;
+    }
+
+    /**
+     * Returns the main suspected build scripts available for this project. This includes the project build script (if
+     * has any). The root build script and the settings script as well.
+     *
+     * @return The set of the existing scripts. En empty set if this GradleFiles doesn't look like an ordinary Gradle
+     * project.
+     */
+    public Set<File> getProjectFiles() {
+        if (isProject()) {
+            Set<File> ret = new HashSet<>();
+            if (parentScript != null) {
+                ret.add(parentScript);
+            }
+            if (buildScript != null) {
+                ret.add(buildScript);
+            }
+            if (settingsScript != null) {
+                ret.add(settingsScript);
+            }
+            return ret;
+        } else {
+            return Collections.emptySet();
+        }
+    }
+
+    /**
+     * Returns the possible file names for a Gradle project file, or
+     * {@code null} if that kind is not accepted in the project context.
+     *
+     * @param kind The role of the project file.
+     * @return a possible project file or {@code null}
+     */
+    public File getFile(Kind kind) {
+        if (isBuildSrcProject()) {
+            switch (kind) {
+                case BUILD_SCRIPT:
+                    return buildScript != null ? buildScript : new File(projectDir, BUILD_FILE_NAME);
+                case PROJECT_PROPERTIES:
+                    return new File(projectDir, GRADLE_PROPERTIES_NAME);
+                case USER_PROPERTIES: {
+                    File guh = GradleSettings.getDefault().getGradleUserHome();
+                    return new File(guh, GRADLE_PROPERTIES_NAME);
+                }
+                default:
+                    return null;
+            }
+        } else {
+            switch (kind) {
+                case BUILD_SCRIPT:
+                    return buildScript != null ? buildScript : new File(projectDir, BUILD_FILE_NAME);
+                case ROOT_SCRIPT:
+                    return parentScript != null ? parentScript : new File(rootDir, BUILD_FILE_NAME);
+                case SETTINGS_SCRIPT:
+                    return settingsScript != null ? settingsScript : new File(rootDir, SETTINGS_FILE_NAME);
+
+                case PROJECT_PROPERTIES:
+                    return new File(projectDir, GRADLE_PROPERTIES_NAME);
+                case ROOT_PROPERTIES:
+                    return new File(rootDir, GRADLE_PROPERTIES_NAME);
+                case USER_PROPERTIES: 
+                    File guh = GradleSettings.getDefault().getGradleUserHome();
+                    return new File(guh, GRADLE_PROPERTIES_NAME);
+                case VERSION_CATALOG:
+                    return new File(rootDir, VERSION_CATALOG);
+                case BUILD_SRC:
+                    return new File(rootDir, "buildSrc"); //NOI18N
+                default:
+                    return null;
+            }
+        }
+    }
+
+    public long lastChanged() {
+        long time = (buildScript != null) ? buildScript.lastModified() : 0;
+        if (settingsScript != null) {
+            time = Math.max(settingsScript.lastModified(), time);
+        }
+        if (parentScript != null) {
+            time = Math.max(parentScript.lastModified(), time);
+        }
+        return time;
+    }
+
+    @Override
+    public int hashCode() {
+        return  Objects.hashCode(this.projectDir) * 83;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final GradleFiles other = (GradleFiles) obj;
+        return Objects.equals(this.projectDir, other.projectDir);
+    }
+
+    @Override
+    public String toString() {
+        return "GradleFiles[projectDir=" + projectDir + ", rootDir=" + rootDir + "]"; //NOI18N
+    }
+
+    public static class SettingsFile {
+
+        private static final Pattern SET_PROJECTDIR_PATTERN
+                = Pattern.compile(".*['\\\"](.+)['\\\"].*\\.projectDir.*=.*['\\\"](.+)['\\\"].*"); //NOI18N
+        private static final Map<File, SettingsFile> CACHE = new WeakHashMap<>();
+
+        final Set<File> subProjects;
+
+        final long time;
+
+        public SettingsFile(File f) {
+            time = f.lastModified();
+            subProjects = Collections.unmodifiableSet(parse(f));
+        }
+
+        private static Set<File> parse(File f) {
+            Map<String, String> projectPaths = new HashMap<>();
+            String rootDir = f.getParentFile().getAbsolutePath();
+            try {
+                List<String> lines = Files.readAllLines(f.toPath(), StandardCharsets.UTF_8);
+                for (String line : lines) {
+                    line = line.trim();
+                    if (!line.startsWith("//")) { //NOI18N
+
+                        String[] split = line.split("[\\s'\",\\(\\)]+"); //NOI18N
+                        if ((split.length > 1) && "include".equals(split[0])) { //NOI18N
+                            for (int i = 1; i < split.length; i++) {
+                                String s = split[i];
+                                projectPaths.put(s, rootDir + "/" + s.replace(':', '/')); //NOI18N
+                            }
+                        }
+                        Matcher matcher = SET_PROJECTDIR_PATTERN.matcher(line);
+                        if (matcher.matches()) {
+                            String project = matcher.group(1);
+                            String dir = matcher.group(2);
+                            dir = dir.replace("$rootDir", rootDir); //NOI18N
+                            dir = dir.replace("${rootDir}", rootDir); //NOI18N
+                            projectPaths.put(project, dir);
+                        }
+                    }
+                }
+            } catch (IOException ex) {
+                // Can't read the settings file for some reason.
+                // It is ok for now simply return an emty list.
+            }
+            Set<File> subProjects = new HashSet<>();
+            File root = f.getParentFile();
+            for (Map.Entry<String, String> entry : projectPaths.entrySet()) {
+                subProjects.add(guessDir(entry.getKey(), root, new File(entry.getValue())));
+            }
+            return subProjects;
+        }
+
+        private static File guessDir(String projectName, File rootDir, File firstGuess) {
+            if (firstGuess.isDirectory()) {
+                return firstGuess;
+            }
+            for (String subdirName : Arrays.asList("subProjects", "modules")) { //NOI18N
+                File subdir = new File(rootDir, subdirName);
+                if (subdir.isDirectory()) {
+                    if (new File(subdir, projectName).isDirectory()) {
+                        return new File(subdir, projectName);
+                    }
+                    String gradleStyle = projectName.replaceAll("\\p{Upper}", "-$0").toLowerCase(); //NOI18N
+                    if (new File(subdir, gradleStyle).isDirectory()) {
+                        return new File(subdir, gradleStyle);
+                    }
+                }
+            }
+            return firstGuess;
+        }
+
+        public static Set<File> getSubProjects(File f) {
+            SettingsFile sf = CACHE.get(f);
+            if ((sf == null) || (sf.time < f.lastModified())) {
+                sf = new SettingsFile(f);
+                CACHE.put(f, sf);
+            }
+            return sf.subProjects;
+        }
+    }
+
+    /**
+     * Gradle sub-project directories may not be easily identifiable and require
+     * scanning up the directory hierarchy up to the filesystem root for the
+     * settings file.
+     *
+     * Although some conventions for the {@code buildSrc} directory for shared
+     * modules exists, it is not generally applicable to sub-projects.
+     * See <a href="https://docs.gradle.org/current/userguide/organizing_gradle_projects.html">
+     * Gradle Docs: Organizing Gradle Projects</a>
+     *
+     * This Searcher allows for safely scanning up the directory hierarchy up to
+     * the globally configured scan root limits ({@code -Dproject.limitScanRoot}),
+     * if any;
+     * and mindful of forbidden folders ({@code -Dproject.forbiddenFolders}
+     * or {@code -Dversioning.forbiddenFolders}), if any.
+     *
+     * @implNote
+     * The logic and most of the code of scanning with limits is shared with
+     * {@code org.netbeans.modules.projectapi.SimpleFileOwnerQueryImplementation};
+     * with the replacement of handling paths from {@code FileObject} instances
+     * to handling paths from {@code File} instances here, instead.
+     * If any logical changes are made here, they should also
+     * be kept in sync with {@code SimpleFileOwnerQueryImplementation}.
+     */
+    public static class Searcher {
+        private static final Set<String> forbiddenFolders;
+        private static final Set<String> projectScanRoots;
+
+        static {
+            Set<String> folders = null;
+            Set<String> roots = null;
+            try {
+                roots = separatePaths(System.getProperty("project.limitScanRoot"), File.pathSeparator); //NOI18N
+                folders = separatePaths(System.getProperty("project.forbiddenFolders", System.getProperty("versioning.forbiddenFolders")), ";"); //NOI18N
+            } catch (Exception e) {
+                LOG.log(Level.INFO, e.getMessage(), e);
+            }
+            forbiddenFolders = folders == null ? Collections.emptySet() : folders;
+            projectScanRoots = roots;
+        }
+
+        public static File searchPath(@NonNull File baseDir, String... names) {
+            return resolvePathWithAlternatives(false, baseDir, names);
+        }
+
+        public static File searchPathUp(@NonNull File baseDir, String... names) {
+            return resolvePathWithAlternatives(true, baseDir, names);
+        }
+
+        private static File resolvePathWithAlternatives(boolean recursive, @NonNull File baseDir, String... names) {
+            File dir = baseDir;
+            if (names.length == 0) {
+                return null;
+            }
+            for (String name : names) {
+                Objects.requireNonNull(name);
+            }
+            while (dir != null) {
+                String path = dir.getAbsolutePath();
+                if (notWithinProjectScanRoots(path))
+                    break;
+                if (!forbiddenFolders.contains(path)) {
+                    for (String name : names) {
+                        File f = new File(dir, name);
+                        if (f.canRead()) {
+                            return f;
+                        }
+                    }
+                }
+                dir = recursive ? dir.getParentFile() : null;
+            }
+            return null;
+        }
+
+        private static boolean notWithinProjectScanRoots(String path) {
+            if (projectScanRoots == null)
+                return false;
+            for (String scanRoot : projectScanRoots) {
+                if (path.startsWith(scanRoot)
+                        && (path.length() == scanRoot.length()
+                        || path.charAt(scanRoot.length()) == File.separatorChar))
+                    return false;
+            }
+            return true;
+        }
+
+        private static Set<String> separatePaths(String joinedPaths, String pathSeparator) {
+            if (joinedPaths == null || joinedPaths.isEmpty())
+                return null;
+
+            Set<String> paths = null;
+            for (String split : joinedPaths.split(pathSeparator)) {
+                if (split.isBlank()) continue;
+
+                // Ensure that variations in terms of ".." or "." or windows drive-letter case differences are removed.
+                // File.getCanonicalFile() will additionally resolve symlinks, which is not required.
+                File file = FileUtil.normalizeFile(new File(split));
+
+                // Store both File.getAbsolutePath() and File.getCanonicalPath(),
+                // since File paths will be compared in this class.
+                String path = file.getAbsolutePath();
+                if (path == null || path.isEmpty()) continue;
+
+                String canonicalPath;
+                try {
+                    canonicalPath = file.getCanonicalPath();
+                } catch (IOException ioe) {
+                    canonicalPath = null;
+                }
+                // This conversion may get rid of invalid paths.
+                if (canonicalPath == null || canonicalPath.isEmpty()) continue;
+
+                if (paths == null && canonicalPath.equals(path)) {
+                    paths = Collections.singleton(path);    // more performant in usage when only a single element is present.
+                } else {
+                    if (paths == null) {
+                        paths = new LinkedHashSet<>(2);
+                    } else if (paths.size() == 1) {
+                        paths = new LinkedHashSet<>(paths); // more performant in iteration
+                    }
+                    paths.add(path);
+                    paths.add(canonicalPath);
+                }
+            }
+            return paths;
+        }
+    }
+}

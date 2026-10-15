@@ -1,0 +1,6 @@
+Code completion result for source line:
+new Helper().builder|Property.inheritIO()
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      builderPrivate                  [PRIVATE]  File
+FIELD      builderProperty                 [PRIVATE]  ProcessBuilder

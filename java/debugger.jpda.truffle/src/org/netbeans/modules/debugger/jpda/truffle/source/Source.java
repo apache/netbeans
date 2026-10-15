@@ -20,6 +20,7 @@
 package org.netbeans.modules.debugger.jpda.truffle.source;
 
 import com.sun.jdi.StringReference;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -49,34 +50,52 @@ public final class Source {
 
     private final StringReference codeRef;
     private final String name;
+    private final String hostMethodName;
+    private final String path;
     private final URI uri;          // The original source URI
     private final URL url;          // The source
+    private final String mimeType;
     private final long hash;
     private String content;
     
-    private Source(JPDADebugger jpda, String name, URI uri, long hash, StringReference codeRef) {
+    private Source(JPDADebugger jpda, String name, String hostMethodName, String path, URI uri, String mimeType, long hash, StringReference codeRef) {
         this.name = name;
+        this.hostMethodName = hostMethodName;
+        this.path = path;
         this.codeRef = codeRef;
         URL url = null;
-        if (uri == null || !"file".equalsIgnoreCase(uri.getScheme())) {
-            try {
-                url = SourceFilesCache.get(jpda).getSourceFile(name, hash, uri, getContent());
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
+        if (hostMethodName == null) {
+            if (uri == null || !"file".equalsIgnoreCase(uri.getScheme()) || !fileIsReadable(uri)) { // NOI18N
+                try {
+                    url = SourceFilesCache.get(jpda).getSourceFile(name, hash, uri, getContent());
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            } else {
+                uri = SourceBinaryTranslator.binary2Source(uri);
             }
-        }
-        if (url == null) {
-            try {
-                url = uri.toURL();
-            } catch (MalformedURLException muex) {
-                Exceptions.printStackTrace(muex);
+            if (url == null) {
+                try {
+                    url = uri.toURL();
+                } catch (MalformedURLException muex) {
+                    Exceptions.printStackTrace(muex);
+                }
             }
         }
         this.url = url;
         this.uri = uri;
+        this.mimeType = mimeType;
         this.hash = hash;
     }
-    
+
+    private static boolean fileIsReadable(URI uri) {
+        try {
+            return new File(uri).canRead();
+        } catch (IllegalArgumentException | SecurityException ex) {
+            return false;
+        }
+    }
+
     public static Source getExistingSource(JPDADebugger debugger, long id) {
         synchronized (KNOWN_SOURCES) {
             Map<Long, Source> dbgSources = KNOWN_SOURCES.get(debugger);
@@ -117,6 +136,28 @@ public final class Source {
                                    String path,
                                    URI uri,
                                    StringReference codeRef) {
+        return getSource(debugger, id, name, path, uri, null, codeRef);
+    }
+
+    public static Source getSource(JPDADebugger debugger, long id,
+                                   String name,
+                                   String path,
+                                   URI uri,
+                                   String mimeType,
+                                   StringReference codeRef) {
+        return getSource(debugger, id, name, null, path, uri, null, codeRef);
+    }
+
+    public static Source getSource(JPDADebugger debugger, long id,
+                                   String name,
+                                   String hostMethodName,
+                                   String path,
+                                   URI uri,
+                                   String mimeType,
+                                   StringReference codeRef) {
+        if (uri == null && codeRef == null) {
+            return null;
+        }
         synchronized (KNOWN_SOURCES) {
             Map<Long, Source> dbgSources = KNOWN_SOURCES.get(debugger);
             if (dbgSources != null) {
@@ -126,29 +167,41 @@ public final class Source {
                 }
             }
         }
-        return getTheSource(debugger, id, name, path, uri, codeRef);
+        return getTheSource(debugger, id, name, hostMethodName, path, uri, mimeType, codeRef);
     }
     
     private static Source getTheSource(JPDADebugger debugger, long id,
                                        String name,
+                                       String hostMethodName,
                                        String path,
                                        URI uri,
+                                       String mimeType,
                                        StringReference codeRef) {
         
-        Source src = new Source(debugger, name, uri, id, codeRef);
-        synchronized (KNOWN_SOURCES) {
-            Map<Long, Source> dbgSources = KNOWN_SOURCES.get(debugger);
-            if (dbgSources == null) {
-                dbgSources = new HashMap<>();
-                KNOWN_SOURCES.put(debugger, dbgSources);
+        Source src = new Source(debugger, name, hostMethodName, path, uri, mimeType, id, codeRef);
+        if (id >= 0) {
+            synchronized (KNOWN_SOURCES) {
+                Map<Long, Source> dbgSources = KNOWN_SOURCES.get(debugger);
+                if (dbgSources == null) {
+                    dbgSources = new HashMap<>();
+                    KNOWN_SOURCES.put(debugger, dbgSources);
+                }
+                dbgSources.put(id, src);
             }
-            dbgSources.put(id, src);
         }
         return src;
     }
     
     public String getName() {
         return name;
+    }
+
+    public String getHostMethodName() {
+        return hostMethodName;
+    }
+
+    public String getPath() {
+        return path;
     }
 
     public URL getUrl() {
@@ -159,11 +212,18 @@ public final class Source {
         return uri;
     }
     
+    public String getMimeType() {
+        return mimeType;
+    }
+    
     public long getHash() {
         return hash;
     }
 
     public String getContent() {
+        if (codeRef == null) {
+            return null;
+        }
         synchronized (this) {
             if (content == null) {
                 try {

@@ -10,11 +10,20 @@ package ${package};
 <#if sampleCode??>
 import java.io.IOException;
 </#if>
+<#if jakartaJsfPackages?? && jakartaJsfPackages==true>
+import jakarta.faces.component.FacesComponent;
+import jakarta.faces.component.UIComponentBase;
+<#if sampleCode??>
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.context.ResponseWriter;
+</#if>
+<#else>
 import javax.faces.component.FacesComponent;
 import javax.faces.component.UIComponentBase;
 <#if sampleCode??>
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+</#if>
 </#if>
 
 /**

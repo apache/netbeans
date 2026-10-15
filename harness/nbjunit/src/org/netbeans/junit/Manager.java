@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -111,7 +112,7 @@ public class Manager extends Object {
             return path;
         } else {
             throw new IOException("Cannot determine NbJUnit home. Please make sure you have "+NBJUNIT_HOME
-                        +" propery set in your "+JUNIT_PROPERTIES_FILENAME+" file.");
+                        +" property set in your "+JUNIT_PROPERTIES_FILENAME+" file.");
         }
 
     }    
@@ -139,7 +140,7 @@ public class Manager extends Object {
             
             // instantiate the diff class
             clazz = Class.forName(diffImplName);
-            diffImpl = clazz.newInstance();
+            diffImpl = clazz.getDeclaredConstructor().newInstance();
 
             if (diffImpl instanceof Diff) {
                 impl = (Diff) diffImpl;
@@ -222,7 +223,9 @@ public class Manager extends Object {
                 }
             } else {
                 // On Unix, do not want to traverse symlinks.
-                file = new File(file.toURI().normalize()).getAbsoluteFile();
+                @SuppressWarnings("URI.normalize")
+                URI normalized = file.toURI().normalize();
+                file = new File(normalized).getAbsoluteFile();
             }
             return file;
         } finally {

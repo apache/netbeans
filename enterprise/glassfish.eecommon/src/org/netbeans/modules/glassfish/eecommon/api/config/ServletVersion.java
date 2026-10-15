@@ -54,16 +54,40 @@ public final class ServletVersion extends J2EEBaseVersion {
         "6.0", 6000	// NOI18N
         );
     
+    /** Represents servlet version 3.1
+     */
+    public static final ServletVersion SERVLET_3_1 = new ServletVersion(
+        "3.1", 3100,	// NOI18N
+        "7.0", 7000	// NOI18N
+        );
+    
     /** Represents servlet version 4.0
      */
     public static final ServletVersion SERVLET_4_0 = new ServletVersion(
-        "4.0", 3000,	// NOI18N
-        "6.0", 6000	// NOI18N
+        "4.0", 4000,	// NOI18N
+        "8.0", 8000	// NOI18N
         );
-
-    /** -----------------------------------------------------------------------
-     *  Implementation
+    
+    /** Represents servlet version 5.0
      */
+    public static final ServletVersion SERVLET_5_0 = new ServletVersion(
+        "5.0", 5000,	// NOI18N
+        "9.0", 9000	// NOI18N
+        );
+    
+    /** Represents servlet version 6.0
+     */
+    public static final ServletVersion SERVLET_6_0 = new ServletVersion(
+        "6.0", 6000,	// NOI18N
+        "10.0", 10000	// NOI18N
+        );
+    
+    /** Represents servlet version 6.1
+     */
+    public static final ServletVersion SERVLET_6_1 = new ServletVersion(
+        "6.1", 6100,	// NOI18N
+        "11.0", 11000	// NOI18N
+        );
 
     /** Creates a new instance of ServletVersion 
      */
@@ -78,6 +102,7 @@ public final class ServletVersion extends J2EEBaseVersion {
      *     than the version passed in as an argument.
      *  @throws ClassCastException if obj is not a ServletVersion object.
      */
+    @Override
     public int compareTo(Object obj) {
         ServletVersion target = (ServletVersion) obj;
         return numericCompare(target);
@@ -94,8 +119,16 @@ public final class ServletVersion extends J2EEBaseVersion {
             result = SERVLET_2_5;
         } else if(SERVLET_3_0.toString().equals(version)) {
             result = SERVLET_3_0;
+        } else if(SERVLET_3_1.toString().equals(version)) {
+            result = SERVLET_3_1;
         } else if(SERVLET_4_0.toString().equals(version)) {
             result = SERVLET_4_0;
+        } else if(SERVLET_5_0.toString().equals(version)) {
+            result = SERVLET_5_0;
+        } else if(SERVLET_6_0.toString().equals(version)) {
+            result = SERVLET_6_0;
+        } else if(SERVLET_6_1.toString().equals(version)) {
+            result = SERVLET_6_1;
         }
 
         return result;

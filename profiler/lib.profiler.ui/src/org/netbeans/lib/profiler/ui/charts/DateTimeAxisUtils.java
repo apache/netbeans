@@ -87,11 +87,11 @@ public class DateTimeAxisUtils {
                                                      TIME_FORMAT_HOURS, TIME_FORMAT_DAYS, TIME_FORMAT_DAYS, TIME_FORMAT_DAYS,
                                                      TIME_FORMAT_DAYS
                                                  };
-    private static final HashMap timeUnitsToIndex = new HashMap();
+    private static final HashMap<Long, Integer> timeUnitsToIndex = new HashMap<>();
 
     static {
         for (int i = 0; i < timeUnitsGrid.length; i++) {
-            timeUnitsToIndex.put(new Long(timeUnitsGrid[i]), Integer.valueOf(i));
+            timeUnitsToIndex.put(Long.valueOf(timeUnitsGrid[i]), i);
         }
     }
 
@@ -201,12 +201,12 @@ public class DateTimeAxisUtils {
     }
 
     private static int getUnitsIndex(long optimalUnits) {
-        Object oTimeUnitsFormatIndex = timeUnitsToIndex.get(new Long(optimalUnits));
+        Integer oTimeUnitsFormatIndex = timeUnitsToIndex.get(optimalUnits);
 
         if (oTimeUnitsFormatIndex == null) {
             return -1;
         }
 
-        return ((Integer) oTimeUnitsFormatIndex).intValue();
+        return oTimeUnitsFormatIndex;
     }
 }

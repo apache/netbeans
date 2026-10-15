@@ -161,4 +161,30 @@ public class OneToOneLineParserTest extends NbTestCase {
         assertEquals("Customer", type2);
     }
 
+    public void testValidUseCase_09() throws Exception {
+        AnnotationParsedLine parsedLine = parser.parse("\\Foo\\Bar\\onetoone(targetEntity=\"Customer::class\")  \t");
+        assertEquals("OneToOne", parsedLine.getName());
+        assertEquals("(targetEntity=\"Customer::class\")", parsedLine.getDescription());
+        Map<OffsetRange, String> types = parsedLine.getTypes();
+        assertNotNull(types);
+        assertEquals(2, types.size());
+        String type1 = types.get(new OffsetRange(0, 17));
+        assertEquals("\\Foo\\Bar\\onetoone", type1);
+        String type2 = types.get(new OffsetRange(32, 40));
+        assertEquals("Customer", type2);
+    }
+
+    public void testValidUseCase_10() throws Exception {
+        AnnotationParsedLine parsedLine = parser.parse("\\Foo\\Bar\\onetoone(targetEntity=Customer::class)  \t");
+        assertEquals("OneToOne", parsedLine.getName());
+        assertEquals("(targetEntity=Customer::class)", parsedLine.getDescription());
+        Map<OffsetRange, String> types = parsedLine.getTypes();
+        assertNotNull(types);
+        assertEquals(2, types.size());
+        String type1 = types.get(new OffsetRange(0, 17));
+        assertEquals("\\Foo\\Bar\\onetoone", type1);
+        String type2 = types.get(new OffsetRange(31, 39));
+        assertEquals("Customer", type2);
+    }
+
 }

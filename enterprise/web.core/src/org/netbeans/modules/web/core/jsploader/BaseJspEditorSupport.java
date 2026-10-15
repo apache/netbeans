@@ -28,6 +28,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
+import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.Collections;
 import java.util.HashSet;
@@ -91,7 +92,7 @@ class BaseJspEditorSupport extends DataEditorSupport implements EditCookie, Edit
     public BaseJspEditorSupport(JspDataObject obj) {
         super(obj, null, new BaseJspEnv(obj));
         DataObject data = getDataObject();
-        if ((data != null) && (data instanceof JspDataObject)) {
+        if (data instanceof JspDataObject) {
             setMIMEType(JspLoader.getMimeType((JspDataObject) data));
         }
 
@@ -408,7 +409,7 @@ class BaseJspEditorSupport extends DataEditorSupport implements EditCookie, Edit
 
         String foundEncoding = (String) doc.getProperty(DOCUMENT_SAVE_ENCODING);
         String encoding = foundEncoding != null ? foundEncoding : defaulEncoding;
-        Charset charset = Charset.forName("UTF-8"); //NOI18N
+        Charset charset = StandardCharsets.UTF_8;
         try {
             charset = Charset.forName(encoding);
         } catch (IllegalCharsetNameException | UnsupportedCharsetException e) {

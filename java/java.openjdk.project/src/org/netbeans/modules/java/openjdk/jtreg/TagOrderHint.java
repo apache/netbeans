@@ -19,7 +19,6 @@
  package org.netbeans.modules.java.openjdk.jtreg;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -60,7 +59,7 @@ public class TagOrderHint {
 
     private static List<Tag> sortTags(Result tags) {
         List<Tag> sorted = new ArrayList<>(tags.getTags());
-        Collections.sort(sorted, new Comparator<Tag>() {
+        sorted.sort(new Comparator<Tag>() {
             @Override public int compare(Tag o1, Tag o2) {
                 int pos1 = TagParser.RECOMMENDED_TAGS_ORDER.indexOf(o1.getName());
                 int pos2 = TagParser.RECOMMENDED_TAGS_ORDER.indexOf(o2.getName());

@@ -19,7 +19,7 @@
 
 package org.netbeans.modules.php.project.connections.sync;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
@@ -149,7 +149,7 @@ public final class TimeStamps {
         private String getHash(String input) {
             try {
                 MessageDigest md = MessageDigest.getInstance("MD5"); // NOI18N
-                byte[] hash = md.digest(input.getBytes("UTF-8")); // NOI18N
+                byte[] hash = md.digest(input.getBytes(StandardCharsets.UTF_8));
                 StringBuilder sb = new StringBuilder();
                 for (byte b : hash) {
                     sb.append(Integer.toHexString((int) (b & 0xff)));
@@ -157,7 +157,7 @@ public final class TimeStamps {
                 String result = sb.toString();
                 LOGGER.log(Level.FINE, "Hashing \"{0}\" to \"{1}\"", new Object[] {input, result});
                 return result;
-            } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
+            } catch (NoSuchAlgorithmException ex) {
                 LOGGER.log(Level.INFO, null, ex);
             }
             LOGGER.log(Level.FINE, "No hashing for \"{0}\"", input);

@@ -118,7 +118,7 @@ public final class AggregateProgressHandle implements AutoCloseable {
      * allows to set a custom initial delay for the progress task to appear in the
      * status bar. This delay marks the time between starting of the progress handle
      * and it's appearance in the status bar. If it finishes earlier, it's not shown at all.
-     * There is a default < 1s value for this. If you want to to appear earlier or later, 
+     * There is a default &lt; 1s value for this. If you want to to appear earlier or later, 
      * call this method with the value you prefer before starting the handle.
      * <p> Progress bars that are placed in custom dialogs do always appear right away without a delay.
      * @param millis amount of miliseconds that shall pass before the progress appears in status bar.
@@ -174,6 +174,7 @@ public final class AggregateProgressHandle implements AutoCloseable {
     /**
      * @deprecated do, not use, for tests only
      */
+    @Deprecated
     int getCurrentProgress() {
         return current;
     }

@@ -20,7 +20,6 @@
 package org.netbeans.modules.junit.ui.wizards;
 
 import org.openide.filesystems.FileObject;
-import org.openide.loaders.DataObject;
 import org.openide.nodes.Children;
 import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;

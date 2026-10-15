@@ -84,8 +84,8 @@ public class TestSingleMethodSupport {
             TestClassInfoTask task = new TestClassInfoTask(cursor);
             try {
                 Future<Void> f = js.runWhenScanFinished(task, true);
-                if (f.isDone() && task.getFileObject() != null && task.getMethodName() != null){
-                    sm = new SingleMethod(task.getFileObject(), task.getMethodName());
+                if (f.isDone() && task.getSingleMethod() != null){
+                    sm = task.getSingleMethod();
                 }
             } catch (IOException ex) {
                 LOGGER.log(Level.WARNING, null, ex);
@@ -108,7 +108,7 @@ public class TestSingleMethodSupport {
 		if (pane != null) {
 		    String text = pane.getText();
                     if (text != null) {  //NOI18N
-                        text = text.replaceAll("\n", "").replaceAll(" ", "");
+                        text = text.replace("\n", "").replace(" ", "");
 			if ((text.contains("@RunWith") || text.contains("@org.junit.runner.RunWith")) //NOI18N
 			    && text.contains("Parameterized.class)")) {  //NOI18N
 			    return false;

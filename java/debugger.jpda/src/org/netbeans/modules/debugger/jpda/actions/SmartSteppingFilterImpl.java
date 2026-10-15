@@ -21,10 +21,8 @@ package org.netbeans.modules.debugger.jpda.actions;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 import org.netbeans.api.debugger.Properties;
 import org.netbeans.api.debugger.jpda.SmartSteppingFilter;
@@ -40,9 +38,6 @@ import org.openide.util.WeakListeners;
 public class SmartSteppingFilterImpl implements SmartSteppingFilter {
 
     private final HashSet<String> filter = new HashSet<String>();
-    private final ArrayList<String> exact = new ArrayList<String>();
-    private final ArrayList<String> start = new ArrayList<String>();
-    private final ArrayList<String> end = new ArrayList<String>();
     private final PropertyChangeSupport pcs;
     {pcs = new PropertyChangeSupport (this);}
     private final Properties options = Properties.getDefault().
@@ -70,18 +65,13 @@ public class SmartSteppingFilterImpl implements SmartSteppingFilter {
         Set<String> patterns;
         if (options.getBoolean("UseStepFilters", true)) {
             patterns = (Set<String>) classFiltersProperties.getCollection (
-                    "enabled",
-                    Collections.EMPTY_SET);
+                    "enabled", Collections.emptySet());
         } else {
-            patterns = Collections.EMPTY_SET;
+            patterns = Collections.emptySet();
         }
         synchronized (filter) {
             filter.clear();
-            exact.clear();
-            start.clear();
-            end.clear();
             filter.addAll (patterns);
-            refreshFilters (patterns);
         }
         pcs.firePropertyChange (PROP_EXCLUSION_PATTERNS, null, patterns);
     }
@@ -103,7 +93,6 @@ public class SmartSteppingFilterImpl implements SmartSteppingFilter {
 
         synchronized (filter) {
             filter.addAll (reallyNew);
-            refreshFilters (reallyNew);
         }
 
         pcs.firePropertyChange (PROP_EXCLUSION_PATTERNS, null, reallyNew);
@@ -118,10 +107,6 @@ public class SmartSteppingFilterImpl implements SmartSteppingFilter {
     public void removeExclusionPatterns (Set<String> patterns) {
         synchronized (filter) {
             filter.removeAll (patterns);
-            exact.clear();
-            start.clear();
-            end.clear();
-            refreshFilters (filter);
         }
 
         pcs.firePropertyChange (PROP_EXCLUSION_PATTERNS, patterns, null);
@@ -139,21 +124,8 @@ public class SmartSteppingFilterImpl implements SmartSteppingFilter {
     }
 
     public boolean stopHere (String className) {
-        synchronized (filter) {
-            int i, k = exact.size ();
-            for (i = 0; i < k; i++) {
-                if (exact.get (i).equals (className)) return false;
-            }
-            k = start.size ();
-            for (i = 0; i < k; i++) {
-                if (className.startsWith (start.get (i))) return false;
-            }
-            k = end.size ();
-            for (i = 0; i < k; i++) {
-                if (className.endsWith (end.get (i))) return false;
-            }
-        }
-        return true;
+        // Retained for compatibility
+        return StepActionProvider.stopInClass(className, this);
     }
     
     /**
@@ -178,20 +150,4 @@ public class SmartSteppingFilterImpl implements SmartSteppingFilter {
         pcs.removePropertyChangeListener (l);
     }
 
-    /**
-     * Updates exact, start and end filter lists.
-     */
-    private void refreshFilters (Set<String> newFilters) {
-        Iterator<String> i = newFilters.iterator ();
-        while (i.hasNext ()) {
-            String p = i.next ();
-            if (p.startsWith ("*"))
-                end.add (p.substring (1));
-            else
-            if (p.endsWith ("*"))
-                start.add (p.substring (0, p.length () - 1));
-            else
-                exact.add (p);
-        }
-    }
 }

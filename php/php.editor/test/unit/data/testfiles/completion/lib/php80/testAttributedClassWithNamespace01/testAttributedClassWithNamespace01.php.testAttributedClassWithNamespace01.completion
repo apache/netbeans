@@ -1,0 +1,9 @@
+Code completion result for source line:
+#[|]
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTRUCTO Attr1                           [PUBLIC]   Attributes\Test1
+CONSTRUCTO Attr1(int $int, string $string  [PUBLIC]   Attributes\Test1
+PACKAGE    Attributes                      [PUBLIC]   null
+------------------------------------
+PACKAGE    Test1                           [PUBLIC]   Attributes
+PACKAGE    Test2                           [PUBLIC]   Attributes

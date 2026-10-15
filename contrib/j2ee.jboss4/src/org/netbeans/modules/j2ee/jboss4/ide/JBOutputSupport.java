@@ -86,7 +86,7 @@ public final class JBOutputSupport {
         this.props = props;
     }
 
-    public synchronized static JBOutputSupport getInstance(InstanceProperties props, boolean create) {
+    public static synchronized JBOutputSupport getInstance(InstanceProperties props, boolean create) {
         JBOutputSupport instance = INSTANCE_CACHE.get(props);
         if (instance == null && create) {
             instance = new JBOutputSupport(props);

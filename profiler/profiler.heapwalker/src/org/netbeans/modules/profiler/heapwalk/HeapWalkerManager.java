@@ -53,11 +53,10 @@ import org.openide.filesystems.FileUtil;
 public class HeapWalkerManager {
     //~ Instance fields ----------------------------------------------------------------------------------------------------------
 
-    private Set dumpsBeingDeleted = new HashSet();
-    private List<File> heapDumps = new ArrayList();
-    private List<HeapWalker> heapWalkers = new ArrayList();
+    private Set dumpsBeingDeleted = new HashSet<>();
+    private List<HeapWalker> heapWalkers = new ArrayList<>();
 
-    final private RequestProcessor heapwalkerRp = new RequestProcessor(HeapWalkerManager.class);
+    private final RequestProcessor heapwalkerRp = new RequestProcessor(HeapWalkerManager.class);
 
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 
@@ -67,7 +66,7 @@ public class HeapWalkerManager {
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
     private static class Singleton {
-        final private static HeapWalkerManager INSTANCE = new HeapWalkerManager();
+        private static final HeapWalkerManager INSTANCE = new HeapWalkerManager();
     }
     
     public static HeapWalkerManager getDefault() {
@@ -75,7 +74,7 @@ public class HeapWalkerManager {
     }
 
     public boolean isHeapWalkerOpened(File file) {
-        return getHeapWalker(file) != null;
+        return getHeapWalker(file, 0) != null;
     }
 
     public void closeAllHeapWalkers() {
@@ -109,7 +108,7 @@ public class HeapWalkerManager {
     }
 
     public void deleteHeapDump(final File file) {
-        HeapWalker hw = getHeapWalker(file);
+        HeapWalker hw = getHeapWalker(file, 0);
 
         if (hw != null) {
             dumpsBeingDeleted.add(file);
@@ -128,7 +127,6 @@ public class HeapWalkerManager {
         }
 
         final File file = hw.getHeapDumpFile();
-        heapDumps.remove(file);
         heapWalkers.remove(hw);
 
         if (dumpsBeingDeleted.remove(file)) {
@@ -142,6 +140,10 @@ public class HeapWalkerManager {
     }
 
     public void openHeapWalker(final File heapDump) {
+        openHeapWalker(heapDump, 0);
+    }
+
+    public void openHeapWalker(final File heapDump, int segment) {
         String heapDumpPath;
         
         try {
@@ -151,11 +153,11 @@ public class HeapWalkerManager {
             return;
         }
         synchronized (heapDumpPath.intern()) {
-            HeapWalker hw = getHeapWalker(heapDump);
+            HeapWalker hw = getHeapWalker(heapDump, segment);
 
             if (hw == null) {
                 try {
-                    hw = new HeapWalker(heapDump);
+                    hw = new HeapWalker(heapDump, segment);
                 } catch (IOException e) {
                     ProfilerDialogs.displayError(Bundle.HeapWalkerManager_CannotOpenHeapWalkerMsg(), null, e.getLocalizedMessage());
                 } catch (Exception e) {
@@ -173,7 +175,6 @@ public class HeapWalkerManager {
 
     public synchronized void openHeapWalker(final HeapWalker hw) {
         if (!heapWalkers.contains(hw)) {
-            heapDumps.add(hw.getHeapDumpFile());
             heapWalkers.add(hw);
         }
         SwingUtilities.invokeLater(new Runnable() {
@@ -204,10 +205,13 @@ public class HeapWalkerManager {
         }
     }
 
-    private synchronized HeapWalker getHeapWalker(File heapDump) {
-        int hdIndex = heapDumps.indexOf(heapDump);
-
-        return (hdIndex == -1) ? null : heapWalkers.get(hdIndex);
+    private synchronized HeapWalker getHeapWalker(File heapDump, int segment) {
+        for (HeapWalker hw : heapWalkers) {
+            if (hw.getHeapDumpFile().equals(heapDump) && hw.getHeapDumpSegment() == segment) {
+                return hw;
+            }
+        }
+        return null;
     }
 
     private TopComponent getTopComponent(HeapWalker hw) {

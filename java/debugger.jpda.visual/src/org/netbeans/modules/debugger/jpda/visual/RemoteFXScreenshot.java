@@ -111,7 +111,7 @@ public class RemoteFXScreenshot {
         final Method fromFXImage = (utilsClass != null) ? utilsClass.concreteMethodByName("fromFXImage", "(Ljavafx/scene/image/Image;Ljava/awt/image/BufferedImage;)Ljava/awt/image/BufferedImage;") : null;
         final Method snapshot = sceneClass.concreteMethodByName("snapshot", "(Ljavafx/scene/image/WritableImage;)Ljavafx/scene/image/WritableImage;");
 
-        ObjectReference scene = (ObjectReference) window.invokeMethod(tr, getScene, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+        ObjectReference scene = (ObjectReference) window.invokeMethod(tr, getScene, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
 
         FloatValue factor = vm.mirrorOf(1.0f);
         BooleanValue syncNeeded = vm.mirrorOf(false);
@@ -134,15 +134,15 @@ public class RemoteFXScreenshot {
         }
 
         Method getData = ((ClassType)bufImage.referenceType()).concreteMethodByName("getData", "()Ljava/awt/image/Raster;");
-        ObjectReference rasterRef = (ObjectReference) bufImage.invokeMethod(tr, getData, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+        ObjectReference rasterRef = (ObjectReference) bufImage.invokeMethod(tr, getData, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
 
         ClassType rasterType = (ClassType)rasterRef.referenceType();
         Method getWidth = rasterType.concreteMethodByName("getWidth", "()I");
         Method getHeight = rasterType.concreteMethodByName("getHeight", "()I");
         Method getDataElements = rasterType.concreteMethodByName("getDataElements", "(IIIILjava/lang/Object;)Ljava/lang/Object;");
         IntegerValue zero = vm.mirrorOf(0);
-        IntegerValue width = (IntegerValue)rasterRef.invokeMethod(tr, getWidth, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
-        IntegerValue height = (IntegerValue)rasterRef.invokeMethod(tr, getHeight, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+        IntegerValue width = (IntegerValue)rasterRef.invokeMethod(tr, getWidth, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
+        IntegerValue height = (IntegerValue)rasterRef.invokeMethod(tr, getHeight, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
         ArrayReference data = (ArrayReference) rasterRef.invokeMethod(tr, getDataElements, Arrays.asList(zero, zero, width, height, null), ObjectReference.INVOKE_SINGLE_THREADED);
 
         logger.log(Level.FINE, "Image data length = {0}", data.length());
@@ -251,18 +251,18 @@ public class RemoteFXScreenshot {
             Method getWindows = windowClass.concreteMethodByName("impl_getWindows", "()Ljava/util/Iterator;");
             Method windowName = windowClass.concreteMethodByName("impl_getMXWindowType", "()Ljava/lang/String;");
 
-            ObjectReference iterator = (ObjectReference)windowClass.invokeMethod(tr, getWindows, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+            ObjectReference iterator = (ObjectReference)windowClass.invokeMethod(tr, getWindows, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
             ClassType iteratorClass = (ClassType)iterator.referenceType();
             Method hasNext = iteratorClass.concreteMethodByName("hasNext", "()Z");
             Method next = iteratorClass.concreteMethodByName("next", "()Ljava/lang/Object;");
             
             boolean nextFlag = false;
             do {
-                BooleanValue bv = (BooleanValue)iterator.invokeMethod(tr, hasNext, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                BooleanValue bv = (BooleanValue)iterator.invokeMethod(tr, hasNext, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                 nextFlag = bv.booleanValue();
                 if (nextFlag) {
-                    ObjectReference window = (ObjectReference)iterator.invokeMethod(tr, next, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
-                    StringReference name = (StringReference)window.invokeMethod(tr, windowName, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                    ObjectReference window = (ObjectReference)iterator.invokeMethod(tr, next, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
+                    StringReference name = (StringReference)window.invokeMethod(tr, windowName, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                     SGComponentInfo windowInfo = new SGComponentInfo(t, window);
                     
                     screenshots.add(createRemoteFXScreenshot(engine, vm, tr, name.value(), window, windowInfo));
@@ -296,8 +296,8 @@ public class RemoteFXScreenshot {
         }
         
         try {
-            ObjectReference tk = (ObjectReference)toolkitClass.invokeMethod(tr, getDefaultTk, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
-            tk.invokeMethod(tr, pauseScenes, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+            ObjectReference tk = (ObjectReference)toolkitClass.invokeMethod(tr, getDefaultTk, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
+            tk.invokeMethod(tr, pauseScenes, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
             
             pauseMedia(tr, vm);
             return true;
@@ -337,8 +337,8 @@ public class RemoteFXScreenshot {
         }
         
         try {
-            ObjectReference tk = (ObjectReference)toolkitClass.invokeMethod(tr, getDefaultTk, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
-            tk.invokeMethod(tr, resumeScenes, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+            ObjectReference tk = (ObjectReference)toolkitClass.invokeMethod(tr, getDefaultTk, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
+            tk.invokeMethod(tr, resumeScenes, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
             
             resumeMedia(tr, vm);
             return true;
@@ -363,18 +363,18 @@ public class RemoteFXScreenshot {
         
         if (audioClipClass != null) {
             Method stopAllClips = audioClipClass.concreteMethodByName("stopAllClips", "()V");
-            audioClipClass.invokeMethod(tr, stopAllClips, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+            audioClipClass.invokeMethod(tr, stopAllClips, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
         }
         
         if (mediaManagerClass != null && mediaPlayerClass != null && playerStateEnum != null) {
             Method getAllPlayers = mediaManagerClass.concreteMethodByName("getAllMediaPlayers", "()Ljava/util/List;");
 
-            ObjectReference plList = (ObjectReference)mediaManagerClass.invokeMethod(tr, getAllPlayers, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+            ObjectReference plList = (ObjectReference)mediaManagerClass.invokeMethod(tr, getAllPlayers, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
 
             if (plList != null) {
                 ClassType listType = (ClassType)plList.referenceType();
                 Method iterator = listType.concreteMethodByName("iterator", "()Ljava/util/Iterator;");
-                ObjectReference plIter = (ObjectReference)plList.invokeMethod(tr, iterator, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                ObjectReference plIter = (ObjectReference)plList.invokeMethod(tr, iterator, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
 
                 ClassType iterType = (ClassType)plIter.referenceType();
                 Method hasNext = iterType.concreteMethodByName("hasNext", "()Z");
@@ -387,13 +387,13 @@ public class RemoteFXScreenshot {
                 Method pausePlayer = mediaPlayerClass.methodsByName("pause", "()V").get(0);
                 boolean hasNextFlag = false;
                 do {
-                    BooleanValue v = (BooleanValue)plIter.invokeMethod(tr, hasNext, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                    BooleanValue v = (BooleanValue)plIter.invokeMethod(tr, hasNext, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                     hasNextFlag = v.booleanValue();
                     if (hasNextFlag) {
-                        ObjectReference player = (ObjectReference)plIter.invokeMethod(tr, next, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
-                        ObjectReference curState = (ObjectReference)player.invokeMethod(tr, getState, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                        ObjectReference player = (ObjectReference)plIter.invokeMethod(tr, next, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
+                        ObjectReference curState = (ObjectReference)player.invokeMethod(tr, getState, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                         if (playingState.equals(curState)) {
-                            player.invokeMethod(tr, pausePlayer, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                            player.invokeMethod(tr, pausePlayer, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                             pausedPlayers.add(player);
                         }
                     }
@@ -411,7 +411,7 @@ public class RemoteFXScreenshot {
             }
             Method p = play.iterator().next();
             for(ObjectReference pR : pausedPlayers) {
-                pR.invokeMethod(tr, p, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                pR.invokeMethod(tr, p, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
             }
         }
     }
@@ -493,20 +493,20 @@ public class RemoteFXScreenshot {
                     compClass.name().equals("javafx.stage.Stage")) {
                     Method getTitle = compClass.concreteMethodByName("getTitle", "()Ljava/lang/String;");
                     if (getTitle != null) {
-                        StringReference nameR = (StringReference)getComponent().invokeMethod(tr, getTitle, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                        StringReference nameR = (StringReference)getComponent().invokeMethod(tr, getTitle, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                         setName(nameR != null ? nameR.value() : "");
                     }
                     Method getScene = compClass.concreteMethodByName("getScene", "()Ljavafx/scene/Scene;");
-                    ObjectReference scene = (ObjectReference)getComponent().invokeMethod(tr, getScene, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                    ObjectReference scene = (ObjectReference)getComponent().invokeMethod(tr, getScene, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                     ClassType sceneClass = (ClassType)scene.referenceType();
                     Method getX = sceneClass.concreteMethodByName("getX", "()D");
                     Method getY = sceneClass.concreteMethodByName("getY", "()D");
                     Method getWidth = sceneClass.concreteMethodByName("getWidth", "()D");
                     Method getHeight = sceneClass.concreteMethodByName("getHeight", "()D");
-                    DoubleValue x = (DoubleValue) scene.invokeMethod(tr, getX, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
-                    DoubleValue y = (DoubleValue) scene.invokeMethod(tr, getY, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
-                    DoubleValue width = (DoubleValue) scene.invokeMethod(tr, getWidth, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
-                    DoubleValue height = (DoubleValue) scene.invokeMethod(tr, getHeight, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                    DoubleValue x = (DoubleValue) scene.invokeMethod(tr, getX, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
+                    DoubleValue y = (DoubleValue) scene.invokeMethod(tr, getY, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
+                    DoubleValue width = (DoubleValue) scene.invokeMethod(tr, getWidth, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
+                    DoubleValue height = (DoubleValue) scene.invokeMethod(tr, getHeight, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                     Rectangle b = new Rectangle(x.intValue(), y.intValue(), width.intValue(), height.intValue());
                     b.x = 0;
                     b.y = 0;
@@ -514,7 +514,7 @@ public class RemoteFXScreenshot {
                     setBounds(b);
                     
                     Method getRoot = sceneClass.concreteMethodByName("getRoot", "()Ljavafx/scene/Parent;");
-                    ObjectReference root = (ObjectReference)scene.invokeMethod(tr, getRoot, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                    ObjectReference root = (ObjectReference)scene.invokeMethod(tr, getRoot, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                     SGComponentInfo rootInfo = new SGComponentInfo(getThread(), root);
                     
                     setSubComponents(new JavaComponentInfo[]{
@@ -523,15 +523,15 @@ public class RemoteFXScreenshot {
                 } else {
                     Method getId = compClass.concreteMethodByName("getId", "()Ljava/lang/String;");
                     if (getId != null) {
-                        StringReference id = (StringReference)getComponent().invokeMethod(tr, getId, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                        StringReference id = (StringReference)getComponent().invokeMethod(tr, getId, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                         setName(id != null ? id.value() : ""); // NOI18N
                     }
 //                    Method getRelBounds = compClass.concreteMethodByName("getBoundsInParent", "()Ljavafx/geometry/Bounds;");
                     Method getLocalBounds = compClass.concreteMethodByName("getBoundsInLocal", "()Ljavafx/geometry/Bounds;");
                     Method local2scene = compClass.concreteMethodByName("localToScene", "(Ljavafx/geometry/Bounds;)Ljavafx/geometry/Bounds;");
                     Method local2parent = compClass.concreteMethodByName("localToParent", "(Ljavafx/geometry/Bounds;)Ljavafx/geometry/Bounds;");
-//                    ObjectReference relBounds = (ObjectReference)getComponent().invokeMethod(tr, getRelBounds, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
-                    ObjectReference locBounds = (ObjectReference)getComponent().invokeMethod(tr, getLocalBounds, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+//                    ObjectReference relBounds = (ObjectReference)getComponent().invokeMethod(tr, getRelBounds, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
+                    ObjectReference locBounds = (ObjectReference)getComponent().invokeMethod(tr, getLocalBounds, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                     ObjectReference relBounds = (ObjectReference)getComponent().invokeMethod(tr, local2parent, Arrays.asList(locBounds), ObjectReference.INVOKE_SINGLE_THREADED);
                     ObjectReference absBounds = (ObjectReference)getComponent().invokeMethod(tr, local2scene, Arrays.asList(locBounds), ObjectReference.INVOKE_SINGLE_THREADED);
                     
@@ -544,7 +544,7 @@ public class RemoteFXScreenshot {
                         ClassType listClass = (ClassType)childrenList.referenceType();
                         Method size = listClass.concreteMethodByName("size", "()I");
                         Method get = listClass.concreteMethodByName("get", "(I)Ljava/lang/Object;");
-                        int cnt = ((IntegerValue)childrenList.invokeMethod(tr, size, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED)).intValue();
+                        int cnt = ((IntegerValue)childrenList.invokeMethod(tr, size, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED)).intValue();
                         JavaComponentInfo[] cs = new JavaComponentInfo[cnt];
                         for(int i=0;i<cnt;i++) {
                             ObjectReference sub = (ObjectReference)childrenList.invokeMethod(tr, get, Arrays.asList(vm.mirrorOf(i)), ObjectReference.INVOKE_SINGLE_THREADED);

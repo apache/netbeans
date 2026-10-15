@@ -250,7 +250,7 @@ public class GrailsArtifactWizardIterator implements WizardDescriptor.ProgressIn
         // Make sure list of steps is accurate.
         String[] beforeSteps = null;
         Object prop = wiz.getProperty(WizardDescriptor.PROP_CONTENT_DATA);
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[]) prop;
         }
         String[] steps = createSteps(beforeSteps, panels);
@@ -265,7 +265,7 @@ public class GrailsArtifactWizardIterator implements WizardDescriptor.ProgressIn
             if (c instanceof JComponent) { // assume Swing components
                 JComponent jc = (JComponent) c;
                 // Step #.
-                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(i));
+                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i);
                 // Step name (actually the whole list for reference).
                 jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps);
             }
@@ -335,7 +335,7 @@ public class GrailsArtifactWizardIterator implements WizardDescriptor.ProgressIn
             packageName = FileUtil.getRelativePath(groups.get(i).getRootFolder(), targetFolder);
         }
         if (packageName != null) {
-            packageName = packageName.replaceAll("/", "."); // NOI18N
+            packageName = packageName.replace("/", "."); // NOI18N
         }
         return packageName;
     }

@@ -254,8 +254,8 @@ public class WebServiceTypePanel extends javax.swing.JPanel implements HelpCtx.P
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getPropertyName().equals(EjbChooser.IS_VALID)) {
                     Object newvalue = evt.getNewValue();
-                    if ((newvalue != null) && (newvalue instanceof Boolean)) {
-                        dd.setValid(((Boolean) newvalue).booleanValue());
+                    if (newvalue instanceof Boolean) {
+                        dd.setValid(((Boolean) newvalue));
                     }
                 }
             }
@@ -296,10 +296,10 @@ public class WebServiceTypePanel extends javax.swing.JPanel implements HelpCtx.P
     }  
     
     void store(WizardDescriptor d) {
-        d.putProperty(WizardProperties.WEB_SERVICE_TYPE, Integer.valueOf(getServiceType()));
+        d.putProperty(WizardProperties.WEB_SERVICE_TYPE, getServiceType());
         if (getServiceType() == WizardProperties.ENCAPSULATE_SESSION_BEAN)
             d.putProperty(WizardProperties.DELEGATE_TO_SESSION_BEAN, sessionBeanNodes);
-        d.putProperty(WizardProperties.IS_STATELESS_BEAN, Boolean.valueOf(sessionBeanCB.isSelected()));
+        d.putProperty(WizardProperties.IS_STATELESS_BEAN, sessionBeanCB.isSelected());
     }
     
     void read(WizardDescriptor wizardDescriptor) {

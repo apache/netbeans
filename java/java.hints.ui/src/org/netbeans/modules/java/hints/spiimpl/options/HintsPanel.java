@@ -35,20 +35,13 @@ import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
@@ -117,7 +110,7 @@ public final class HintsPanel extends javax.swing.JPanel   {
     private static final String DECLARATIVE_HINT_TEMPLATE_LOCATION = "org-netbeans-modules-java-hints/templates/Inspection.hint";
             static final String[] EXTRA_NODE_KEYWORDS = new String[] {"CTL_DepScanning", "CTL_Scope_Desc", "CTL_Scope_Label"};
 
-    private final static RequestProcessor WORKER = new RequestProcessor(HintsPanel.class.getName(), 1, false, false);
+    private static final RequestProcessor WORKER = new RequestProcessor(HintsPanel.class.getName(), 1, false, false);
 
     private HintsPanelLogic logic;
     private DefaultTreeModel errorTreeModel;
@@ -310,7 +303,7 @@ public final class HintsPanel extends javax.swing.JPanel   {
         errorTreeModel = constructTM(hints, !batchOnly && !filterSuggestions);
 
         if (filter != null) {
-             ((OptionsFilter) filter).installFilteringModel(errorTree, errorTreeModel, new AcceptorImpl());
+             filter.installFilteringModel(errorTree, errorTreeModel, new AcceptorImpl());
         } else {
             setModel(errorTreeModel);
         }
@@ -336,7 +329,6 @@ public final class HintsPanel extends javax.swing.JPanel   {
         okButton.setVisible(showOkCancel);
         cancelButton.setVisible(showOkCancel);
         validate();
-        jSplitPane1.setDividerLocation(getDividerLocation());
     }
     
     private void updateEnabledState() {
@@ -351,11 +343,6 @@ public final class HintsPanel extends javax.swing.JPanel   {
                 enableDisableRecursively(c, enable);
             }
         }
-    }
-
-    private int getDividerLocation() {
-        final int location = (int) ((jSplitPane1.getWidth() - jSplitPane1.getDividerSize()) * 0.4f);
-        return Math.min(320, location);
     }
     
     /** This method is called from within the constructor to
@@ -405,8 +392,7 @@ public final class HintsPanel extends javax.swing.JPanel   {
         setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 8, 8, 8));
         setLayout(new java.awt.GridBagLayout());
 
-        jSplitPane1.setBorder(null);
-        jSplitPane1.setDividerLocation(320);
+        jSplitPane1.setDividerLocation(260);
 
         treePanel.setOpaque(false);
         treePanel.setLayout(new java.awt.BorderLayout());
@@ -487,6 +473,7 @@ public final class HintsPanel extends javax.swing.JPanel   {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         descriptionPanel.add(descriptionLabel, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(saveButton, org.openide.util.NbBundle.getMessage(HintsPanel.class, "HintsPanel.saveButton.text")); // NOI18N
@@ -516,7 +503,7 @@ public final class HintsPanel extends javax.swing.JPanel   {
             editingButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, editingButtonsLayout.createSequentialGroup()
                 .addComponent(openInEditor)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 198, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 272, Short.MAX_VALUE)
                 .addComponent(saveButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cancelEdit))
@@ -560,9 +547,9 @@ public final class HintsPanel extends javax.swing.JPanel   {
         detailsPanelLayout.setVerticalGroup(
             detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(detailsPanelLayout.createSequentialGroup()
-                .addComponent(optionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
-                .addGap(12, 12, 12)
-                .addComponent(descriptionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE))
+                .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(descriptionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE))
         );
 
         jSplitPane1.setRightComponent(detailsPanel);
@@ -618,7 +605,7 @@ public final class HintsPanel extends javax.swing.JPanel   {
                 .addComponent(importButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(exportButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 329, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 292, Short.MAX_VALUE)
                 .addComponent(editScriptButton)
                 .addGap(35, 35, 35)
                 .addComponent(okButton)
@@ -660,7 +647,7 @@ public final class HintsPanel extends javax.swing.JPanel   {
             .addGroup(configurationsPanelLayout.createSequentialGroup()
                 .addComponent(configLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(configCombo, 0, 642, Short.MAX_VALUE))
+                .addComponent(configCombo, 0, 719, Short.MAX_VALUE))
         );
         configurationsPanelLayout.setVerticalGroup(
             configurationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -684,7 +671,7 @@ public final class HintsPanel extends javax.swing.JPanel   {
             searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, searchPanelLayout.createSequentialGroup()
                 .addComponent(refactoringsLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 493, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 576, Short.MAX_VALUE)
                 .addComponent(searchLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1221,7 +1208,7 @@ public final class HintsPanel extends javax.swing.JPanel   {
             TreePath currentPath = category2Node.get(cat);
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) currentPath.getLastPathComponent();
             
-            Collections.sort(cat.subCategories, new Comparator<HintCategory>() {
+            cat.subCategories.sort(new Comparator<HintCategory>() {
                 @Override public int compare(HintCategory o1, HintCategory o2) {
                     return HintsPanel.compare(o1.displayName, o2.displayName);
                 }
@@ -1236,7 +1223,7 @@ public final class HintsPanel extends javax.swing.JPanel   {
             
             hints.addAll(cat.subCategories);
             
-            Collections.sort(cat.hints, new Comparator<HintMetadata>() {
+            cat.hints.sort(new Comparator<HintMetadata>() {
                 @Override public int compare(HintMetadata o1, HintMetadata o2) {
                     return o1.displayName.compareTo(o2.displayName);
                 }

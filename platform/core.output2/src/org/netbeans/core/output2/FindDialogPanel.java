@@ -41,7 +41,7 @@ class FindDialogPanel extends javax.swing.JPanel {
 
     private static Reference<FindDialogPanel> panel = null;
     private JButton acceptButton;
-    private static Vector<Object> history = new Vector<Object>();
+    private static Vector<String> history = new Vector<>();
     
     /** Initializes the Form */
     FindDialogPanel() {
@@ -57,7 +57,7 @@ class FindDialogPanel extends javax.swing.JPanel {
         findWhat.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FindDialogPanel.class, "ACSD_Find_What"));
         acceptButton.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FindDialogPanel.class, "ACSD_FindBTN"));
 
-        findWhat.setModel(new DefaultComboBoxModel(history));
+        findWhat.setModel(new DefaultComboBoxModel<>(history));
         findWhat.getEditor().addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -112,7 +112,7 @@ class FindDialogPanel extends javax.swing.JPanel {
         java.awt.GridBagConstraints gridBagConstraints;
 
         findWhatLabel = new javax.swing.JLabel();
-        findWhat = new javax.swing.JComboBox();
+        findWhat = new javax.swing.JComboBox<>();
         chbRegExp = new javax.swing.JCheckBox();
         chbMatchCase = new javax.swing.JCheckBox();
 
@@ -159,7 +159,7 @@ class FindDialogPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox chbMatchCase;
     private javax.swing.JCheckBox chbRegExp;
-    protected javax.swing.JComboBox findWhat;
+    protected javax.swing.JComboBox<String> findWhat;
     protected javax.swing.JLabel findWhatLabel;
     // End of variables declaration//GEN-END:variables
 
@@ -169,7 +169,7 @@ class FindDialogPanel extends javax.swing.JPanel {
     }
 
     private void updateHistory() {
-        Object pattern = findWhat.getEditor().getItem();
+        String pattern = (String) findWhat.getEditor().getItem();
 
         history.add( 0, pattern );
         for ( int i = history.size() - 1; i > 0; i-- ) {

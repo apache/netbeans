@@ -86,7 +86,7 @@ public final class TokenHierarchyEvent extends java.util.EventObject {
     /**
      * Get end offset of the area that was affected by the attached
      * token change(s).
-     * <br/>
+     * <br>
      * If there was a text modification the offsets are related
      * to the state after the modification.
      */
@@ -109,7 +109,7 @@ public final class TokenHierarchyEvent extends java.util.EventObject {
      * that caused this token change.
      *
      * @return number of inserted characters by the modification.
-     *  <br/>
+     *  <br>
      *  Returns 0 
      *  if this event's type is not {@link TokenHierarchyEventType#MODIFICATION}.
      */
@@ -122,7 +122,7 @@ public final class TokenHierarchyEvent extends java.util.EventObject {
      * that caused this token change.
      *
      * @return number of inserted characters by the modification.
-     *  <br/>
+     *  <br>
      *  Returns 0 
      *  if this event's type is not {@link TokenHierarchyEventType#MODIFICATION}.
      */

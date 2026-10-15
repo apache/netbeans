@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.php.project.ui.options;
 
 import javax.swing.JComponent;
@@ -30,11 +29,11 @@ import org.openide.util.NbBundle;
  * Controller for {@link PhpDebuggerPanel}.
  */
 @OptionsPanelController.SubRegistration(
-    displayName="#LBL_DebuggerOptions",
-//    toolTip="#LBL_DebuggerOptionsTooltip",
-    id=PhpDebuggerPanelController.ID,
-    location=UiUtils.OPTIONS_PATH,
-    position=130
+        displayName = "#LBL_DebuggerOptions",
+        //    toolTip="#LBL_DebuggerOptionsTooltip",
+        id = PhpDebuggerPanelController.ID,
+        location = UiUtils.OPTIONS_PATH,
+        position = 130
 )
 public class PhpDebuggerPanelController extends BaseOptionsPanelController {
 
@@ -53,6 +52,7 @@ public class PhpDebuggerPanelController extends BaseOptionsPanelController {
         debuggerPanel.setMaxChildren(getPhpOptions().getDebuggerMaxChildren());
         debuggerPanel.setShowUrls(getPhpOptions().isDebuggerShowUrls());
         debuggerPanel.setShowConsole(getPhpOptions().isDebuggerShowConsole());
+        debuggerPanel.setResolveBreakpoints(getPhpOptions().isDebuggerResolveBreakpoints());
     }
 
     @Override
@@ -66,11 +66,12 @@ public class PhpDebuggerPanelController extends BaseOptionsPanelController {
         getPhpOptions().setDebuggerMaxChildren(parseInteger(debuggerPanel.getMaxChildren()));
         getPhpOptions().setDebuggerShowUrls(debuggerPanel.isShowUrls());
         getPhpOptions().setDebuggerShowConsole(debuggerPanel.isShowConsole());
+        getPhpOptions().setDebuggerResolveBreakpoints(debuggerPanel.isResolveBreakpoints());
     }
-    
+
     @Override
     protected boolean areOptionsChanged() {
-        if(parseInteger(debuggerPanel.getPort()) == null || parseInteger(debuggerPanel.getMaxDataLength()) == null
+        if (parseInteger(debuggerPanel.getPort()) == null || parseInteger(debuggerPanel.getMaxDataLength()) == null
                 || parseInteger(debuggerPanel.getMaxStructuresDepth()) == null || parseInteger(debuggerPanel.getMaxChildren()) == null) {
             return false;
         }
@@ -82,12 +83,13 @@ public class PhpDebuggerPanelController extends BaseOptionsPanelController {
                 || getPhpOptions().getDebuggerMaxChildren() != parseInteger(debuggerPanel.getMaxChildren())
                 || getPhpOptions().isDebuggerShowUrls() != debuggerPanel.isShowUrls()
                 || getPhpOptions().isDebuggerShowConsole() != debuggerPanel.isShowConsole()
+                || getPhpOptions().isDebuggerResolveBreakpoints() != debuggerPanel.isResolveBreakpoints()
                 || getPhpOptions().isDebuggerWatchesAndEval() != debuggerPanel.isWatchesAndEval();
     }
 
     @Override
     public JComponent getComponent(Lookup masterLookup) {
-         if (debuggerPanel == null) {
+        if (debuggerPanel == null) {
             debuggerPanel = new PhpDebuggerPanel();
             debuggerPanel.addChangeListener(this);
         }

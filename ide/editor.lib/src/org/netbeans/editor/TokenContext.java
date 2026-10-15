@@ -28,7 +28,7 @@ import java.util.ArrayList;
 /**
 * Token context defines the environment in which only a limited set
 * of tokens can be used. This set can be retrieved by calling
-* the <tt>getTokenIDs()</tt> method. The context can contain other
+* the <code>getTokenIDs()</code> method. The context can contain other
 * contexts which means that the context can possibly switch
 * into one of its children contexts during lexing.
 * The child context can also have other children that can
@@ -36,7 +36,7 @@ import java.util.ArrayList;
 * In this way context-paths can be created. They describe
 * the way how was the token lexically recognized.
 * The context can be retrieved when the syntax-class is known
-* using the <tt>get</tt> method.
+* using the <code>get</code> method.
 * 
 *
 * @author Miloslav Metelka
@@ -114,7 +114,7 @@ public class TokenContext {
     }
 
     /** Add all static-final token-id fields declared
-    * in this token-context using <tt>Class.getDeclaredFields()</tt> call.
+    * in this token-context using <code>Class.getDeclaredFields()</code> call.
     */
     protected void addDeclaredTokenIDs() throws IllegalAccessException, SecurityException {
         Field[] fields = this.getClass().getDeclaredFields();
@@ -134,7 +134,7 @@ public class TokenContext {
     public TokenID[] getTokenIDs() {
         if (tokenIDs == null) {
             synchronized (tokenIDList) {
-                tokenIDs = (TokenID[])tokenIDList.toArray(new TokenID[tokenIDList.size()]);
+                tokenIDs = (TokenID[])tokenIDList.toArray(new TokenID[0]);
             }
         }
 
@@ -147,8 +147,7 @@ public class TokenContext {
     public TokenCategory[] getTokenCategories() {
         if (tokenCategories == null) {
             synchronized (tokenCategoryList) {
-                tokenCategories = (TokenCategory[])tokenCategoryList.toArray(
-                                      new TokenCategory[tokenCategoryList.size()]);
+                tokenCategories = (TokenCategory[])tokenCategoryList.toArray(new TokenCategory[0]);
             }
         }
 

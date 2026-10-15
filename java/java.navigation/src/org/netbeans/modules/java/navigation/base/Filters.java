@@ -103,7 +103,7 @@ public abstract class Filters<T> {
         return fm.getComponent(buttons);
     }
 
-    public synchronized final FiltersManager getFiltersManager() {
+    public final synchronized FiltersManager getFiltersManager() {
         if (filtersManager == null) {
             filtersManager = createFilters();
         }

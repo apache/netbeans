@@ -109,7 +109,7 @@ public abstract class GitClassFactory {
 
     public abstract GitTransportUpdate createTransportUpdate (URIish urI, TrackingRefUpdate update);
 
-    public abstract GitTransportUpdate createTransportUpdate (URIish urI, RemoteRefUpdate update, Map<String, GitBranch> remoteBranches);
+    public abstract GitTransportUpdate createTransportUpdate(URIish urI, RemoteRefUpdate update, Map<String, GitBranch> remoteBranches, Map<String, String> remoteTags);
 
     public abstract GitUser createUser (PersonIdent personIdent);
 

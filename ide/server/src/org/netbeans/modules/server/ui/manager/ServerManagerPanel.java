@@ -32,7 +32,6 @@ import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
@@ -42,7 +41,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.server.ServerInstance;
 import org.netbeans.modules.server.ServerRegistry;
-import org.netbeans.modules.server.ui.node.RootNode;
 import org.netbeans.modules.server.ui.wizard.AddServerInstanceWizard;
 import org.netbeans.spi.server.ServerInstanceProvider;
 import org.openide.awt.Mnemonics;
@@ -550,7 +548,7 @@ public class ServerManagerPanel extends javax.swing.JPanel implements PropertyCh
                 }
             }
 
-            Collections.sort(fresh, COMPARATOR);
+            fresh.sort(COMPARATOR);
 
             toPopulate.addAll(fresh);
             return true;

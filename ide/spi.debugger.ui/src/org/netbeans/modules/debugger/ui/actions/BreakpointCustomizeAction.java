@@ -166,7 +166,7 @@ public class BreakpointCustomizeAction extends SystemAction implements ContextAw
             Class cc = getCustomizerClass(b);
             if (cc == null) return null;
             try {
-                Customizer c = (Customizer) cc.newInstance();
+                Customizer c = (Customizer) cc.getDeclaredConstructor().newInstance();
                 c.setObject(b);
                 return c;
             } catch (Exception ex) {

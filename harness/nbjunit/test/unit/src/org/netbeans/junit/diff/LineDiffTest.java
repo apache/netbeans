@@ -44,7 +44,7 @@ public class LineDiffTest extends NbTestCase {
     }
     
     private void doOutputToFile(File f, String content) throws IOException {
-        content = content.replaceAll("\n", System.getProperty("line.separator"));
+        content = content.replace("\n", System.getProperty("line.separator"));
         Writer w = new FileWriter(f);
         try {
             w.write(content);

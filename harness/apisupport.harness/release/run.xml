@@ -54,8 +54,11 @@
         </delete>
         
         <!-- architecture of jvm on which app will run -->
-        <condition property="jvm.arch.string" value="64" else="">
-            <available file="${run.jdkhome}\jre\lib\amd64" />
+        <condition property="jvm.arch.string" value="" else="64">
+            <or>
+                <available file="${run.jdkhome}\bin\javaaccessbridge-32.dll" />      <!-- 32-bit Java 9+ -->
+                <available file="${run.jdkhome}\jre\bin\JavaAccessBridge-32.dll" />  <!-- 32-bit Java 8 -->
+            </or>
         </condition>  
         
         <!-- use nb.exe if exists (old platform), netbeans.exe otherwise -->

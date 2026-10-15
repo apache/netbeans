@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.foo.host
 OpenIDE-Module-Name: Fragment Host module
-
+OpenIDE-Module-Public-Packages: -

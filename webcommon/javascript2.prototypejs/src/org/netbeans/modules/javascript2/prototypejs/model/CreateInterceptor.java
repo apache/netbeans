@@ -49,9 +49,9 @@ import org.openide.filesystems.FileObject;
 @FunctionInterceptor.Registration(priority = 360)
 public class CreateInterceptor implements FunctionInterceptor {
 
-    private final static Pattern PATTERN = Pattern.compile("Class\\.create");  //NOI18N
-    private final static String CLASS = "Class";    //NOI18N
-    private final static String INITIALIZE_METHOD_NAME = "initialize"; //NOI18N
+    private static final Pattern PATTERN = Pattern.compile("Class\\.create");  //NOI18N
+    private static final String CLASS = "Class";    //NOI18N
+    private static final String INITIALIZE_METHOD_NAME = "initialize"; //NOI18N
 
     @Override
     public Pattern getNamePattern() {
@@ -74,7 +74,7 @@ public class CreateInterceptor implements FunctionInterceptor {
                 JsObject newObject = ((JsObject) scope).getProperty(objectName);
                 if (newObject != null) {
                     JsObject constructor = configObject.getProperty(INITIALIZE_METHOD_NAME);
-                    if (constructor != null && constructor instanceof JsFunction) {
+                    if (constructor instanceof JsFunction) {
                         // we need to replace the original object with this constructor
                         List<Identifier> paramNames = new ArrayList<>();
                         for (JsObject param : ((JsFunction) constructor).getParameters()) {

@@ -441,11 +441,11 @@ public class DBReadWriteHelper {
                     }
                         
                 case Types.DOUBLE:
-                    return valueObj instanceof Double ? valueObj : new Double(valueObj.toString());
+                    return valueObj instanceof Double ? valueObj : Double.valueOf(valueObj.toString());
 
                 case Types.FLOAT:
                 case Types.REAL:
-                    return valueObj instanceof Float ? valueObj : new Float(valueObj.toString());
+                    return valueObj instanceof Float ? valueObj : Float.valueOf(valueObj.toString());
 
                 case Types.DECIMAL:
                 case Types.NUMERIC:
@@ -453,10 +453,10 @@ public class DBReadWriteHelper {
 
                 case Types.INTEGER: {
                     long ldata = Long.parseLong(valueObj.toString());
-                        if(ldata >= ((long) Integer.MIN_VALUE) && ldata <= ((long) Integer.MAX_VALUE)) {
-                        return new Integer((int) ldata);
-                        } else if ( ldata < maxUnsignedInt ) {
-                        return new Long(ldata);
+                    if (ldata >= ((long) Integer.MIN_VALUE) && ldata <= ((long) Integer.MAX_VALUE)) {
+                        return (int) ldata;
+                    } else if (ldata < maxUnsignedInt) {
+                        return ldata;
                     } else {
                         throw new NumberFormatException("Illegal value for java.sql.Type.Integer");
                     }
@@ -464,9 +464,9 @@ public class DBReadWriteHelper {
 
                 case Types.SMALLINT: {
                     int idata = Integer.parseInt(valueObj.toString());
-                        if(idata >= ((int) Short.MIN_VALUE) && idata <= ((int) Short.MAX_VALUE)) {
+                    if (idata >= ((int) Short.MIN_VALUE) && idata <= ((int) Short.MAX_VALUE)) {
                         return (short) idata;
-                        } else if ( idata < maxUnsignedShort ) {
+                    } else if ( idata < maxUnsignedShort ) {
                         return idata;
                     } else {
                         throw new NumberFormatException("Illegal value for java.sql.Type.SMALLINT");

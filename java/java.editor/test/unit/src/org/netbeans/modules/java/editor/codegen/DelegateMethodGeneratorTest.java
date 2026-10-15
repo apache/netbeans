@@ -22,11 +22,8 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.util.TreePath;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -67,6 +64,7 @@ public class DelegateMethodGeneratorTest extends NbTestCase {
         super(testName);
     }
 
+    @Override
     protected void setUp() throws Exception {
         SourceUtilsTestUtil2.disableConfinementTest();
     }
@@ -160,7 +158,7 @@ public class DelegateMethodGeneratorTest extends NbTestCase {
         }, true);
 
         String version = System.getProperty("java.specification.version") + "/";
-        compareReferenceFiles(this.getName()+".ref",version+this.getName()+".pass",this.getName()+".diff");
+        compareReferenceFiles(this.getName()+".ref", findGoldenFile(), this.getName()+".diff");
     }
      
     private void performMethodProposalsTest(final String name) throws Exception {
@@ -183,7 +181,7 @@ public class DelegateMethodGeneratorTest extends NbTestCase {
                 assertNotNull(variable);
 
                 ClassTree ct = info.getTrees().getTree(clazz);
-                int offset = (int) (info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), ct) - 1);
+                int offset = (int) (info.getTrees().getSourcePositions().getEndPosition(ct) - 1);
                 compareMethodProposals(info, DelegateMethodGenerator.getAvailableMethods(info, offset,
                         ElementHandle.create(clazz), ElementHandle.create(variable)));
             }
@@ -191,8 +189,8 @@ public class DelegateMethodGeneratorTest extends NbTestCase {
     }
      
     private void compareMethodProposals(CompilationInfo info, ElementNode.Description proposal) {
-        List<ElementNode.Description> proposals = new LinkedList<ElementNode.Description>();
-        Queue<ElementNode.Description> q = new LinkedList<ElementNode.Description>();
+        List<ElementNode.Description> proposals = new LinkedList<>();
+        Queue<ElementNode.Description> q = new LinkedList<>();
         
         q.offer(proposal);
         
@@ -216,7 +214,7 @@ public class DelegateMethodGeneratorTest extends NbTestCase {
             }
         }
         
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         
         for (ElementNode.Description d : proposals) {
             ExecutableElement resolved = (ExecutableElement) d.getElementHandle().resolve(info);
@@ -229,8 +227,7 @@ public class DelegateMethodGeneratorTest extends NbTestCase {
             ref(s);
         }
         
-        String version = System.getProperty("java.specification.version") + "/";
-        compareReferenceFiles(this.getName()+".ref",version+this.getName()+".pass",this.getName()+".diff");
+        compareReferenceFiles(this.getName()+".ref", findGoldenFile(), this.getName()+".diff");
     }
     
     private String dump(ExecutableElement ee) {
@@ -241,29 +238,38 @@ public class DelegateMethodGeneratorTest extends NbTestCase {
             result.append(' ');
         }
         
-        result.append(ee.getReturnType().toString() + " " + ee.toString());
+        result.append(ee.getReturnType().toString()).append(" ").append(ee.toString());
         
         return result.toString();
+    }
+
+    public String findGoldenFile() {
+        String version = System.getProperty("java.specification.version");
+        for (String variant : computeVersionVariantsFor(version)) {
+            String path = variant + "/" + this.getName() + ".pass";
+            File goldenFile = new File(getDataDir()+"/goldenfiles/"+ getClass().getName().replace(".", "/") + "/" + path);
+            if (goldenFile.exists())
+                return path;
+        }
+        throw new AssertionError();
+    }
+
+    private List<String> computeVersionVariantsFor(String version) {
+        int dot = version.indexOf('.');
+        version = version.substring(dot + 1);
+        int versionNum = Integer.parseInt(version);
+        List<String> versions = new ArrayList<>();
+
+        for (int v = versionNum; v >= 8; v--) {
+            versions.add(v != 8 ? "" + v : "1." + v);
+        }
+
+        return versions;
     }
 
     private FileObject testSourceFO;
     private JavaSource source;
     
-    private void copyToWorkDir(File resource, File toFile) throws IOException {
-        //TODO: finally:
-        InputStream is = new FileInputStream(resource);
-        OutputStream outs = new FileOutputStream(toFile);
-        
-        int read;
-        
-        while ((read = is.read()) != (-1)) {
-            outs.write(read);
-        }
-        
-        outs.close();
-        
-        is.close();
-    }
     
     private void prepareTest(String fileName) throws Exception {
         SourceUtilsTestUtil.prepareTest(new String[0], new Object[0]);
@@ -279,7 +285,7 @@ public class DelegateMethodGeneratorTest extends NbTestCase {
         File dataFolder = new File(getDataDir(), "org/netbeans/modules/java/editor/codegen/data/");
         
         for (File f : dataFolder.listFiles()) {
-            copyToWorkDir(f, new File(wd, "test/" + f.getName()));
+            Files.copy(f.toPath(), new File(wd, "test/" + f.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
         
         testSourceFO = FileUtil.toFileObject(testSource);

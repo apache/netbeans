@@ -26,20 +26,20 @@ import org.openide.util.Parameters;
 
 /**
  * Base class for {@link SourceForBinaryQueryImplementation2} which need to delegate
- * to other {@link SourceForBinaryQueryImplementation}.
+ * to other {@link org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation}.
  * @since 1.16
  * @author Tomas Zezula
  */
 public abstract class SourceForBinaryQueryImpl2Base implements SourceForBinaryQueryImplementation2 {
 
     /**
-     * Creates a wrapper for {@link SourceForBinaryQuery.Result}. This method
+     * Creates a wrapper for {@link org.netbeans.api.java.queries.SourceForBinaryQuery.Result}. This method
      * should be used by delegating {@link SourceForBinaryQueryImplementation2}
-     * which need to delegate to {@link SourceForBinaryQueryImplementation}. 
-     * @param result returned by {@link SourceForBinaryQueryImplementation},
-     * When result is already instanceof {@link SourceForBinaryQueryImplementation2.Result}
+     * which need to delegate to {@link org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation}. 
+     * @param result returned by {@link org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation},
+     * When result is already instanceof {@link org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation2.Result}
      * it's returned without wrapping.
-     * @return a {@link SourceForBinaryQueryImplementation2.Result}.
+     * @return a {@link org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation2.Result}.
      */
     protected final Result asResult (SourceForBinaryQuery.Result result) {
         Parameters.notNull("result", result);   //NOI18N

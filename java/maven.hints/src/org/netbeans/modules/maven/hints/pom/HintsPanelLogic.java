@@ -99,16 +99,16 @@ class HintsPanelLogic implements MouseListener, KeyListener, TreeSelectionListen
         this.tasklistCheckBox = tasklistCheckBox;
         this.customizerPanel = customizerPanel;
         this.descriptionTextArea = descriptionTextArea;        
-        
-        valueChanged( null );
-        
+
         errorTree.addKeyListener(this);
         errorTree.addMouseListener(this);
         errorTree.getSelectionModel().addTreeSelectionListener(this);
             
         severityComboBox.addActionListener(this);
         tasklistCheckBox.addChangeListener(this);
-        
+
+        valueChanged(null);
+
     }
     
     void disconnect() {
@@ -122,16 +122,21 @@ class HintsPanelLogic implements MouseListener, KeyListener, TreeSelectionListen
                 
         componentsSetEnabled( false );
         for (POMErrorFixBase hint : changes.keySet()) {
-            if(hint instanceof POMErrorFixProvider) {
+            if (hint instanceof POMErrorFixProvider) {
                 ((POMErrorFixProvider) hint).cancel();
+            }
+            Configuration config = hint.getConfiguration();
+            if (config != null) {
+                config.resetSavedValues();
             }
         }
         changes.clear();
     }
     
     synchronized void applyChanges() {
-        for (POMErrorFixBase hint : changes.keySet()) {
-            ModifiedPreferences mn = changes.get(hint);
+        for (Map.Entry<POMErrorFixBase, ModifiedPreferences> entry : changes.entrySet()) {
+            POMErrorFixBase hint = entry.getKey();
+            ModifiedPreferences mn = entry.getValue();
             mn.store(hint.getConfiguration().getPreferences());
         }
     }
@@ -140,8 +145,9 @@ class HintsPanelLogic implements MouseListener, KeyListener, TreeSelectionListen
      */
     boolean isChanged() {
         boolean isChanged = false;
-        for (POMErrorFixBase hint : changes.keySet()) {
-            Preferences prefs = changes.get(hint);
+        for (Map.Entry<POMErrorFixBase, ModifiedPreferences> entry : changes.entrySet()) {
+            POMErrorFixBase hint = entry.getKey();
+            Preferences prefs = entry.getValue();
             try {
                 for (String key : prefs.keys()) {
                     String current = prefs.get(key, null);

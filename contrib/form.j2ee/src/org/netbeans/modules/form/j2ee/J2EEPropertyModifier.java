@@ -600,7 +600,7 @@ public class J2EEPropertyModifier implements PropertyModifier {
             tags.addAll(Arrays.asList(superTags));
             String none = noneString();
             tags.remove(none);
-            return tags.toArray(new String[tags.size()]);
+            return tags.toArray(new String[0]);
         }
     }
 

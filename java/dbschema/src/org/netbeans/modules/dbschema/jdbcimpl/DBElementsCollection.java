@@ -28,19 +28,23 @@ import org.netbeans.modules.dbschema.*;
  */
 public class DBElementsCollection implements DBElementProperties {
 
-    /** Object to fire info about changes to */
+    /**
+     * Object to fire info about changes to
+     */
     DBElementImpl owner;
-
     DBElement[] _elms;
 
-    /** Array template for typed returns */
+    /**
+     * Array template for typed returns
+     */
     private Object[] _template;
 
-    //workaround for bug #4396371
-    //http://andorra.eng:8080/cgi-bin/ws.exe/bugtraq/bug.hts?where=bugid_value%3D4396371
-    protected static transient HashSet instances = new HashSet();
-    
-	public DBElementsCollection () {
+    // NOTE - After doing research, not sure this comment still applys? Remove it?
+    // workaround for bug #4396371
+    // http://andorra.eng:8080/cgi-bin/ws.exe/bugtraq/bug.hts?where=bugid_value%3D4396371
+    protected static transient Set<String> instances = new HashSet<>();
+
+    public DBElementsCollection() {
         this(null, null);
     }
 
@@ -56,7 +60,7 @@ public class DBElementsCollection implements DBElementProperties {
         if (_elms != null)
             return _elms;
         else
-            return (DBElement[]) Arrays.asList(_template).toArray(new DBElement[_template.length]);
+            return Arrays.asList(_template).toArray(new DBElement[_template.length]);
 
     }
     
@@ -69,12 +73,12 @@ public class DBElementsCollection implements DBElementProperties {
         DBElement[] oldElements = getElements();
         int oldLength = (oldElements == null) ? 0 : oldElements.length;
         int newLength = (elems == null) ? 0 : elems.size();
-        List list = null;
+        List<DBElement> list = null;
             
         switch (action) {
             case DBElement.Impl.ADD:
                 if (newLength > 0) {
-                    list = ((oldLength == 0) ? new ArrayList() : new ArrayList(Arrays.asList(oldElements)));
+                    list = ((oldLength == 0) ? new ArrayList<DBElement>() : new ArrayList<DBElement>(Arrays.asList(oldElements)));
                     list.addAll(elems);
                     changed = true;
                 }

@@ -19,7 +19,6 @@
 
 package org.netbeans.insane.impl;
 
-import java.lang.reflect.*;
 import java.util.*;
 
 import org.netbeans.insane.scanner.*;
@@ -125,7 +124,7 @@ class SmallObjectMap2 implements ObjectMap {
         table[bucket] = o;
 
         // add the wrapping info
-        if (wrap) wrappers.put(o, new Integer(nextFreeId()));
+        if (wrap) wrappers.put(o, Integer.valueOf(nextFreeId()));
         return wrap;
     }
 

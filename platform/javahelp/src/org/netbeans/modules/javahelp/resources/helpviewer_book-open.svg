@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: url(#linear-gradient1);
+      }
+
+      .st1 {
+        fill: url(#linear-gradient);
+      }
+
+      .st2 {
+        fill: #5b738d;
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="4" y1=".5" x2="4" y2="13.496" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f0f8ff"/>
+      <stop offset=".396" stop-color="#edf6fe"/>
+      <stop offset=".686" stop-color="#e3f0fa"/>
+      <stop offset=".941" stop-color="#d3e6f5"/>
+      <stop offset="1" stop-color="#cfe3f4"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient1" x1="11" x2="11" xlink:href="#linear-gradient"/>
+  </defs>
+  <g>
+    <path class="st1" d="M7.5,13.496c-2.129-.038-2.686-.322-3.272-.622-.664-.339-1.349-.689-3.728-.732V.765c.774-.178,1.44-.265,2.027-.265,1.633,0,2.343.671,3.241,1.521.478.452,1.013.958,1.731,1.373v10.102Z"/>
+    <path class="st2" d="M2.528,1c1.434,0,2.016.551,2.897,1.384.443.419.933.882,1.575,1.291v9.305c-1.595-.067-2.059-.304-2.545-.553-.783-.4-1.525-.7-3.455-.773V1.169c.573-.113,1.084-.169,1.528-.169M2.528,0C1.842,0,1.019.111,0,.371v12.266c5.333,0,2.667,1.363,8,1.363V3.097C5.843,1.995,5.43,0,2.528,0h0Z"/>
+  </g>
+  <g>
+    <path class="st0" d="M7.5,3.394c.719-.416,1.254-.921,1.731-1.373.898-.85,1.608-1.521,3.241-1.521.587,0,1.253.087,2.027.265v11.377c-2.379.042-3.063.393-3.728.732-.587.3-1.144.584-3.272.622V3.394Z"/>
+    <path class="st2" d="M12.473,1h0c.443,0,.955.057,1.527.169v10.485c-1.93.074-2.672.373-3.455.773-.486.248-.95.485-2.545.553V3.676c.642-.409,1.132-.872,1.575-1.291.882-.834,1.464-1.384,2.898-1.385M12.472,0c-2.902,0-3.315,1.995-5.472,3.097v10.903c5.333,0,2.667-1.363,8-1.363V.371C13.981.111,13.158,0,12.472,0h0Z"/>
+  </g>
+  <description>Apache NetBeans Logo
+  </description>
+</svg>

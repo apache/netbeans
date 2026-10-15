@@ -1017,7 +1017,7 @@ public class DebuggingNodeModel implements ExtendedNodeModel {
         
     }
 
-    private final static class ListenerDetaching {
+    private static final class ListenerDetaching {
 
         private String propertyName;
         private Session session;
@@ -1032,7 +1032,7 @@ public class DebuggingNodeModel implements ExtendedNodeModel {
         }
     }
     
-    private final static class FrameUIInfo {
+    private static final class FrameUIInfo {
         String sourcePath;
         String className;
         String url;

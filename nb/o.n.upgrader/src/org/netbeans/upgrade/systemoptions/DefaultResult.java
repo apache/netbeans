@@ -23,21 +23,24 @@ import java.util.Map;
 
 
 class DefaultResult implements Result {
-    private Map<String, String> m;
-    private String instanceName;
+    private final Map<String, String> m;
+    private final String instanceName;
     private String moduleName;    
     DefaultResult(String instanceName, Map<String, String> m) {
         this.instanceName = instanceName;
         this.m = m;
     }
+    @Override
     public String getProperty(final String propName) {
         return m.get(propName);
     }
     
+    @Override
     public String[] getPropertyNames() {
         return m.keySet().toArray(new String[m.size()]);
     }
     
+    @Override
     public String getInstanceName() {
         return instanceName;
     }

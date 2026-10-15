@@ -25,7 +25,7 @@ import java.io.InputStream;
  * <p>
  * @author Tomas Kraus, Peter Benedikovic
  */
-abstract public class RestResponseParser implements ResponseParser {
+public abstract class RestResponseParser implements ResponseParser {
 
     @Override
     public abstract RestActionReport parse(InputStream in);

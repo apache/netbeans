@@ -50,7 +50,7 @@ import org.openide.windows.TopComponent;
  * Corresponds to core.io.ui...IOWindow.
  * @author ivan
  */
-final public class TerminalContainerTabbed extends TerminalContainerCommon {
+public final class TerminalContainerTabbed extends TerminalContainerCommon {
 
     private JTabbedPane tabbedPane;
     private JComponent soleComponent;
@@ -127,7 +127,7 @@ final public class TerminalContainerTabbed extends TerminalContainerCommon {
     }
 
     @Override
-    final protected void addTabWork(JComponent comp) {
+    protected final void addTabWork(JComponent comp) {
 	if (soleComponent != null) {
 	    // only single tab, remove it from TopComp. and add it to tabbed pane
 	    assert tabbedPane.getParent() == null;
@@ -169,7 +169,7 @@ final public class TerminalContainerTabbed extends TerminalContainerCommon {
     }
 
     @Override
-    final protected void removeTabWork(final JComponent comp) {
+    protected final void removeTabWork(final JComponent comp) {
 	if (soleComponent != null) {
 	    // removing the last one
 	    assert soleComponent == comp;
@@ -268,8 +268,18 @@ final public class TerminalContainerTabbed extends TerminalContainerCommon {
 
 	@Override
 	protected void showPopup(MouseEvent e) {
-	    Terminal selected = (Terminal) getSelected();
-	    
+            Terminal selected = null;
+            if (e.getSource() == tabbedPane) {
+                int tabIndex = tabbedPane.indexAtLocation(e.getX(), e.getY());
+                if(tabIndex >= 0) {
+                    selected = (Terminal) tabbedPane.getComponentAt(tabIndex);
+                }
+            }
+
+            if (selected == null) {
+                selected = (Terminal) getSelected();
+            }
+
 	    Action close = ActionFactory.forID(ActionFactory.CLOSE_ACTION_ID);
 	    Action setTitle = ActionFactory.forID(ActionFactory.SET_TITLE_ACTION_ID);
 	    Action pin = ActionFactory.forID(ActionFactory.PIN_TAB_ACTION_ID);
@@ -285,7 +295,7 @@ final public class TerminalContainerTabbed extends TerminalContainerCommon {
 			null,
 			setTitle,
 			pin
-		    }, Lookups.fixed(getSelected())
+		    }, Lookups.fixed(selected)
 	    );
 	    menu.show(TerminalContainerTabbed.this, e.getX(), e.getY());
 	}

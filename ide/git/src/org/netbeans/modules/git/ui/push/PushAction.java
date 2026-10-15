@@ -159,8 +159,11 @@ public class PushAction extends SingleRepositoryAction {
         "# {0} - branch name", "MSG_PushAction.branchDeleted=Branch {0} deleted in the local repository.",
         "# {0} - branch name", "# {1} - branch head id", "# {2} - result of the update",
         "MSG_PushAction.updates.deleteBranch=Branch Delete : {0}\n"
-            + "Id            : {1}\n"
-            + "Result        : {2}\n",
+        + "Id            : {1}\n"
+        + "Result        : {2}\n",
+        "MSG_PushAction.updates.deleteTag=Tag Delete    : {0}\n"
+        + "Id            : {1}\n"
+        + "Result        : {2}\n",
         "# {0} - branch name", "# {1} - branch head id", "# {2} - result of the update",
         "MSG_PushAction.updates.addBranch=Branch Add : {0}\n"
             + "Id         : {1}\n"
@@ -187,6 +190,8 @@ public class PushAction extends SingleRepositoryAction {
         "CTL_PushAction.report.outputButton.desc=Opens output with more information",
         "CTL_PushAction.report.pullButton.text=&Pull Changes",
         "CTL_PushAction.report.pullButton.desc=Fetch and merge remote changes.",
+        "CTL_PushAction.report.forceButton.text=&Force push",
+        "CTL_PushAction.report.forceButton.desc=Force push local branch to remote.",
         "LBL_PushAction.report.error.title=Git Push Failed",
         "MSG_PushAction.pullingChanges=Waiting for pull to finish",
         "LBL_PushAction.pullingChanges.finished=Remote Changes Pulled",
@@ -341,10 +346,20 @@ public class PushAction extends SingleRepositoryAction {
                                 }
                             }
                         } else {
-                            logger.outputLine(NbBundle.getMessage(PushAction.class, "MSG_PushAction.updates.updateTag", new Object[] { //NOI18N
-                                update.getLocalName(), 
-                                update.getResult(),
-                            }));
+                            //tag deleting or updating
+                            if (update.getNewObjectId() == null && update.getOldObjectId() != null) {
+                                //deleting tag from remote
+                                logger.outputLine(NbBundle.getMessage(PushAction.class, "MSG_PushAction.updates.deleteTag", new Object[]{ //NOI18N
+                                    update.getRemoteName(),
+                                    update.getOldObjectId(),
+                                    update.getResult(),}));
+                            } else {
+                                //updating or adding tag to the remote
+                                logger.outputLine(NbBundle.getMessage(PushAction.class, "MSG_PushAction.updates.updateTag", new Object[]{ //NOI18N
+                                    update.getLocalName(),
+                                    update.getResult(),}));
+                            }
+
                         }
                     }
                 }
@@ -441,7 +456,7 @@ public class PushAction extends SingleRepositoryAction {
                             message.getRevision(),
                             new Date(message.getCommitTime())));
                 }
-                GitHookContext context = new GitHookContext(new File[] { getRepositoryRoot() }, null, entries.toArray(new GitHookContext.LogEntry[entries.size()]));
+                GitHookContext context = new GitHookContext(new File[] { getRepositoryRoot() }, null, entries.toArray(new GitHookContext.LogEntry[0]));
                 return context;
             }
 

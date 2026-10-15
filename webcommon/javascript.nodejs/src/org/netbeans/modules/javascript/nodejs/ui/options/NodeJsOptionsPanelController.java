@@ -21,12 +21,13 @@ package org.netbeans.modules.javascript.nodejs.ui.options;
 import java.awt.EventQueue;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Objects;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.netbeans.modules.javascript.nodejs.api.DebuggerOptions;
 import org.netbeans.modules.javascript.nodejs.options.NodeJsOptions;
 import org.netbeans.modules.javascript.nodejs.options.NodeJsOptionsValidator;
-import org.netbeans.modules.javascript.v8debug.api.DebuggerOptions;
 import org.netbeans.modules.web.common.api.ValidationResult;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
@@ -66,6 +67,7 @@ public final class NodeJsOptionsPanelController extends OptionsPanelController i
             getPanel().setNpm(getNodeJsOptions().getNpm());
             getPanel().setNpmIgnoreNodeModules(getNodeJsOptions().isNpmIgnoreNodeModules());
             getPanel().setExpress(getNodeJsOptions().getExpress());
+            getPanel().setDebugProtocol(getDebuggerOptions().getDebuggerProtocol());
         }
         changed = false;
     }
@@ -82,6 +84,7 @@ public final class NodeJsOptionsPanelController extends OptionsPanelController i
                 getNodeJsOptions().setNpm(getPanel().getNpm());
                 getNodeJsOptions().setNpmIgnoreNodeModules(getPanel().isNpmIgnoreNodeModules());
                 getNodeJsOptions().setExpress(getPanel().getExpress());
+                getDebuggerOptions().setDebuggerProtocol(getPanel().getDebugProtocol());
                 changed = false;
             }
         });
@@ -140,6 +143,9 @@ public final class NodeJsOptionsPanelController extends OptionsPanelController i
             return true;
         }
         if (getDebuggerOptions().isLiveEdit() != getPanel().isLiveEdit()) {
+            return true;
+        }
+        if(! Objects.equals(getDebuggerOptions().getDebuggerProtocol(), getPanel().getDebugProtocol())) {
             return true;
         }
         saved = getNodeJsOptions().getNpm();

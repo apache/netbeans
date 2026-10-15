@@ -31,7 +31,7 @@ import org.netbeans.modules.project.spi.intern.ProjectIDEServices;
  *
  * @author Tomas Stupka
  */
-public class ResultImpl<T> implements ResultImplementation {
+public class ResultImpl<T> implements ResultImplementation<T> {
     private final List<RepositoryInfo> skipped = new ArrayList<>();
     private final List<T> results = new ArrayList<>();
     private final Redo<T> redoAction;

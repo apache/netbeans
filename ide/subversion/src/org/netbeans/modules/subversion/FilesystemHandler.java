@@ -290,7 +290,7 @@ class FilesystemHandler extends VCSInterceptor {
         File[] files;
         synchronized(movedFiles) {
             movedFiles.add(from);
-            files = movedFiles.toArray(new File[movedFiles.size()]);
+            files = movedFiles.toArray(new File[0]);
             movedFiles.clear();
         }
         cache.refreshAsync(true, to);  // refresh the whole target tree
@@ -346,7 +346,7 @@ class FilesystemHandler extends VCSInterceptor {
         File[] files;
         synchronized(copiedFiles) {
             copiedFiles.add(from);
-            files = copiedFiles.toArray(new File[copiedFiles.size()]);
+            files = copiedFiles.toArray(new File[0]);
             copiedFiles.clear();
         }
         cache.refreshAsync(true, to);  // refresh the whole target tree
@@ -761,7 +761,7 @@ class FilesystemHandler extends VCSInterceptor {
                         client.revert(parent, false);
                     }
                     if (!deletedParents.isEmpty()) {
-                        Subversion.getInstance().getStatusCache().refreshAsync(deletedParents.toArray(new File[deletedParents.size()]));
+                        Subversion.getInstance().getStatusCache().refreshAsync(deletedParents.toArray(new File[0]));
                     }
                 }
 

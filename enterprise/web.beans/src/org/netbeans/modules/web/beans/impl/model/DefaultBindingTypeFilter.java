@@ -77,10 +77,10 @@ class DefaultBindingTypeFilter<T extends Element> extends Filter<T> {
                 }
                 String annotationName = annotationElement.getQualifiedName()
                     .toString();
-                if ( WebBeansModelProviderImpl.ANY_QUALIFIER_ANNOTATION.equals(
-                        annotationName) || 
-                        WebBeansModelProviderImpl.NAMED_QUALIFIER_ANNOTATION.equals(
-                                annotationName))
+                if ( WebBeansModelProviderImpl.ANY_QUALIFIER_ANNOTATION.equals(annotationName)
+                        || WebBeansModelProviderImpl.NAMED_QUALIFIER_ANNOTATION.equals(annotationName)
+                        || WebBeansModelProviderImpl.ANY_QUALIFIER_ANNOTATION_JAKARTA.equals(annotationName)
+                        || WebBeansModelProviderImpl.NAMED_QUALIFIER_ANNOTATION_JAKARTA.equals(annotationName))
                 {
                     continue;
                 }
@@ -88,23 +88,30 @@ class DefaultBindingTypeFilter<T extends Element> extends Filter<T> {
                     qualifierNames.add(annotationName);
                 }
             }
-            if ( qualifierNames.contains(
-                    WebBeansModelProviderImpl.DEFAULT_QUALIFIER_ANNOTATION))
+            if (
+                    qualifierNames.contains(WebBeansModelProviderImpl.DEFAULT_QUALIFIER_ANNOTATION)
+                    || qualifierNames.contains(WebBeansModelProviderImpl.DEFAULT_QUALIFIER_ANNOTATION_JAKARTA)
+            )
             {
                 continue;
             }
-            if ( (element instanceof TypeElement) && (
-                AnnotationObjectProvider.checkSuper((TypeElement)element, 
-                        WebBeansModelProviderImpl.DEFAULT_QUALIFIER_ANNOTATION, 
-                        getImplementation().getHelper())!=null ))
+            if ((element instanceof TypeElement) 
+                    && (AnnotationObjectProvider.checkSuper((TypeElement) element, WebBeansModelProviderImpl.DEFAULT_QUALIFIER_ANNOTATION, getImplementation().getHelper()) != null
+                    || AnnotationObjectProvider.checkSuper((TypeElement) element, WebBeansModelProviderImpl.DEFAULT_QUALIFIER_ANNOTATION_JAKARTA, getImplementation().getHelper()) != null))
             {
                     continue;
             }
             else if ( element instanceof ExecutableElement ){
-                Element specialized = 
-                    MemberCheckerFilter.getSpecialized( (ExecutableElement)element, 
-                            getImplementation(), 
-                            WebBeansModelProviderImpl.DEFAULT_QUALIFIER_ANNOTATION);
+                Element specialized
+                        = MemberCheckerFilter.getSpecialized((ExecutableElement) element,
+                                getImplementation(),
+                                WebBeansModelProviderImpl.DEFAULT_QUALIFIER_ANNOTATION_JAKARTA);
+                if (specialized == null) {
+                    specialized
+                            = MemberCheckerFilter.getSpecialized((ExecutableElement) element,
+                                    getImplementation(),
+                                    WebBeansModelProviderImpl.DEFAULT_QUALIFIER_ANNOTATION);
+                }
                 if ( specialized!= null){
                     continue;
                 }

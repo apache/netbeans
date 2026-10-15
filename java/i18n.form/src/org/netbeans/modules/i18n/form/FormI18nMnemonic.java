@@ -54,7 +54,7 @@ public class FormI18nMnemonic extends FormI18nString {
     public Object getDesignValue() {
         Object designValue = super.getDesignValue();
         if(designValue != FormDesignValue.IGNORED_VALUE)
-            return new Character(((String)designValue).charAt(0));
+            return ((String)designValue).charAt(0);
         else
             return designValue;        
     }

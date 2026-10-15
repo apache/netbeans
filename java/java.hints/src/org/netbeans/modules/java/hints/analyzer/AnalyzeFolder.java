@@ -111,7 +111,7 @@ public final class AnalyzeFolder extends AbstractAction implements ContextAwareA
         return new AnalyzeFolder(actionContext);
     }
     
-    public final static class ToolsAction extends SystemAction implements ContextAwareAction {
+    public static final class ToolsAction extends SystemAction implements ContextAwareAction {
 
         private Action delegate;
         

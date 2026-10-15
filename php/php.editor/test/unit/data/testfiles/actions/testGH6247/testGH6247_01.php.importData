@@ -1,0 +1,12 @@
+Caret position: 980
+Should show uses panel: true
+Defaults:
+ \NS1\GH6247
+
+Names:
+ GH6247
+
+Variants:
+ \NS1\GH6247
+ Don't import.
+

@@ -172,7 +172,7 @@ public class ShortcutsFinderImpl implements ShortcutsFinder {
         if (shortcuts == null) {
             return new String [0];
         }
-        return shortcuts.toArray (new String [shortcuts.size ()]);
+        return shortcuts.toArray (new String [0]);
     }
     
     protected void clearShortcuts(String profile) {
@@ -196,7 +196,7 @@ public class ShortcutsFinderImpl implements ShortcutsFinder {
             synchronized (this) {
                 res = shortcutsCache.get(profile);
                 if (res == null) {
-                    Map m = new HashMap(shortcutsCache);
+                    Map<String, Map<ShortcutAction, Set<String>>> m = new HashMap<>(shortcutsCache);
                     m.put(profile, profileMap);
                     shortcutsCache = m;
                     res = profileMap;

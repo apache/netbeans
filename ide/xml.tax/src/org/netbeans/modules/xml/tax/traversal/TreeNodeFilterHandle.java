@@ -36,7 +36,7 @@ public final class TreeNodeFilterHandle implements Serializable {
     private short acceptPolicy;
 
     /** */
-    transient private TreeNodeFilter nodeFilter;
+    private transient TreeNodeFilter nodeFilter;
 
 
     //

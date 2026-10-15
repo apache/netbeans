@@ -635,8 +635,9 @@ import org.openide.util.BaseUtilities;
             if (ri.allResCount > -1) {
                 this.allResCount = ri.allResCount;
             }
-            for (String id : ri.rootIndexerTime.keySet()) {
-                Long spent = ri.rootIndexerTime.get(id);
+            for (Map.Entry<String, Long> entry : ri.rootIndexerTime.entrySet()) {
+                String id = entry.getKey();
+                Long spent = entry.getValue();
                 Long my = rootIndexerTime.get(id);
                 if (my == null) {
                     my = spent;
@@ -1000,10 +1001,10 @@ import org.openide.util.BaseUtilities;
         } else {
             sb.append("\nNOT executed");
         }
-        sb.append("\nScanned roots: ").append(scannedSourceRoots.values().toString().replaceAll(",", "\n\t")).
+        sb.append("\nScanned roots: ").append(scannedSourceRoots.values().toString().replace(",", "\n\t")).
                 append("\n, total time: ").append(totalScanningTime);
         
-        sb.append("\nCurrent root(s): ").append(frozenCurrentRoots.values().toString().replaceAll(",", "\n\t"));
+        sb.append("\nCurrent root(s): ").append(frozenCurrentRoots.values().toString().replace(",", "\n\t"));
         sb.append("\nCurrent indexer(s): ");
         for (RootInfo ri : frozenCurrentRoots.values()) {
             sb.append("\n\t").append(ri.url);
@@ -1321,7 +1322,7 @@ import org.openide.util.BaseUtilities;
         /**
          * For each possible event, one ring-buffer of LogContexts.
          */
-        private Map<EventType, RingTimeBuffer>  history = new HashMap<EventType, RingTimeBuffer>(7);
+        private Map<EventType, RingTimeBuffer>  history = new EnumMap<>(EventType.class);
         
         /**
          * For each root, one ring-buffer per event type. Items are removed using least recently accessed strategy. Once an
@@ -1344,8 +1345,8 @@ import org.openide.util.BaseUtilities;
         private void expireRoots() {
             long l = System.currentTimeMillis();
             
-            for (Iterator mapIt = rootHistory.values().iterator(); mapIt.hasNext(); ) {
-                Map<EventType, RingTimeBuffer> map = (Map<EventType, RingTimeBuffer>)mapIt.next();
+            for (Iterator<Map<EventType, RingTimeBuffer>> mapIt = rootHistory.values().iterator(); mapIt.hasNext(); ) {
+                Map<EventType, RingTimeBuffer> map = mapIt.next();
                 for (Iterator<Map.Entry<EventType, RingTimeBuffer>> it = map.entrySet().iterator(); it.hasNext(); ) {
                     Map.Entry<EventType, RingTimeBuffer> entry = it.next();
                     EventType et = entry.getKey();

@@ -144,7 +144,7 @@ public class DeveloperToolbar {
         panel.add( bar );
 
         //ZOOM combo box
-        DefaultComboBoxModel zoomModel = new DefaultComboBoxModel();
+        DefaultComboBoxModel<String> zoomModel = new DefaultComboBoxModel<>();
         zoomModel.addElement( "200%" ); //NOI18N
         zoomModel.addElement( "150%" ); //NOI18N
         zoomModel.addElement( "100%" ); //NOI18N

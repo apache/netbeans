@@ -61,7 +61,7 @@ import org.openide.util.NbBundle;
 public class ManagerUtil {
     public static final int BUFFER_SIZE = 4096;
     public static final String xsdNamespace = "xsd";
-    final static public String WSDL_FILE_EXTENSION = "wsdl";
+    public static final String WSDL_FILE_EXTENSION = "wsdl";
     public static final String LOCALIZING_BUNDLE = "SystemFileSystem.localizingBundle";
     
 
@@ -589,7 +589,7 @@ public class ManagerUtil {
         return null;
     }
     
-    public final static String PATH_IN_WAR_LIB = "WEB-INF/lib"; //NOI18N
+    public static final String PATH_IN_WAR_LIB = "WEB-INF/lib"; //NOI18N
 
     /**
      * Add an array of library references to a project, qualified for both the design-time classpath or deployed with the application

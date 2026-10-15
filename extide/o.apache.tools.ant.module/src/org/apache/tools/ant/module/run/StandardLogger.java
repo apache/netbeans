@@ -231,7 +231,7 @@ public final class StandardLogger extends AntLogger {
             for (String target : session.getOriginatingTargets()) {
                 cmd.add(target);
             }
-            String msg = Utilities.escapeParameters(cmd.toArray(new String[cmd.size()]));
+            String msg = Utilities.escapeParameters(cmd.toArray(new String[0]));
             InputOutput io = session.getIO();
             if (IOColorLines.isSupported(io)) {
                 try {

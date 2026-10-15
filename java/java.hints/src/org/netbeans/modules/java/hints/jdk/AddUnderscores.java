@@ -21,8 +21,6 @@ package org.netbeans.modules.java.hints.jdk;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import java.util.prefs.Preferences;
-import java.util.regex.Pattern;
-import javax.lang.model.SourceVersion;
 import javax.swing.JComponent;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.WorkingCopy;
@@ -51,8 +49,8 @@ public class AddUnderscores {
     @TriggerTreeKind({Kind.INT_LITERAL, Kind.LONG_LITERAL})
     public static ErrorDescription hint(HintContext ctx) {
         TreePath tp = ctx.getPath();
-        int end = (int) ctx.getInfo().getTrees().getSourcePositions().getEndPosition(tp.getCompilationUnit(), tp.getLeaf());
-        int start = (int) ctx.getInfo().getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
+        int end = (int) ctx.getInfo().getTrees().getSourcePositions().getEndPosition(tp.getLeaf());
+        int start = (int) ctx.getInfo().getTrees().getSourcePositions().getStartPosition(tp.getLeaf());
         TokenSequence<?> ts = ctx.getInfo().getTokenHierarchy().tokenSequence();
         ts.move(end);
         if (!ts.movePrevious()) return null;
@@ -68,10 +66,12 @@ public class AddUnderscores {
                 break;
             }
         }
-        if (!isReplaceLiteralsWithUnderscores(ctx.getPreferences()) && literal.contains("_")) return null;
+        if (literal.contains("_") && !isReplaceLiteralsWithUnderscores(ctx.getPreferences())) {
+            return null;
+        }
         RadixInfo info = radixInfo(literal);
         if (info.radix == 8) return null;//octals ignored for now
-        String normalized = info.constant.replaceAll(Pattern.quote("_"), "");
+        String normalized = info.constant.replace("_", "");
         int separateCount = getSizeForRadix(ctx.getPreferences(), info.radix);
         StringBuilder split = new StringBuilder();
         int count = separateCount + 1;

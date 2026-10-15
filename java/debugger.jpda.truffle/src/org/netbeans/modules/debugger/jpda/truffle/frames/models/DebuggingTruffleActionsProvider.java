@@ -19,15 +19,28 @@
 
 package org.netbeans.modules.debugger.jpda.truffle.frames.models;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.io.File;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
+import java.util.WeakHashMap;
 import javax.swing.Action;
 import javax.swing.SwingUtilities;
+import org.netbeans.api.debugger.jpda.CallStackFrame;
+import org.netbeans.api.debugger.jpda.JPDADebugger;
+import org.netbeans.api.debugger.jpda.JPDAThread;
 
 import org.netbeans.modules.debugger.jpda.EditorContextBridge;
+import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
+import org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl;
 import org.netbeans.modules.debugger.jpda.truffle.access.CurrentPCInfo;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
 import org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackFrame;
 import org.netbeans.modules.debugger.jpda.truffle.options.TruffleOptions;
 import org.netbeans.modules.debugger.jpda.truffle.source.SourcePosition;
+import org.netbeans.modules.debugger.jpda.util.WeakCacheMap;
 
 import org.netbeans.spi.debugger.ContextProvider;
 import org.netbeans.spi.debugger.DebuggerServiceRegistration;
@@ -39,6 +52,7 @@ import org.netbeans.spi.viewmodel.UnknownTypeException;
 
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
+import org.openide.util.WeakListeners;
 
 @DebuggerServiceRegistration(path="netbeans-JPDASession/DebuggingView",
                              types=NodeActionsProviderFilter.class,
@@ -50,26 +64,44 @@ public class DebuggingTruffleActionsProvider implements NodeActionsProviderFilte
     private final Action POP_TO_HERE_ACTION;
     private final Action SHOW_INTERNAL_ACTION;
     private final Action HIDE_INTERNAL_ACTION;
+    private final Action SHOW_HOST_ACTION;
+    private final Action HIDE_HOST_ACTION;
+    private final JPDADebuggerImpl debugger;
+    private final RequestProcessor requestProcessor;
+
+    private static final Map<DebuggingView.DVThread, Boolean> SHOWING_ALL_HOST_FRAMES = Collections.synchronizedMap(new WeakHashMap<>());
+    private static final PropertyChangeSupport SHOWING_ALL_HOST_FRAMES_CHANGE = new PropertyChangeSupport(new Object());
     
     public DebuggingTruffleActionsProvider(ContextProvider lookupProvider) {
-        RequestProcessor requestProcessor = lookupProvider.lookupFirst(null, RequestProcessor.class);
+        debugger = (JPDADebuggerImpl) lookupProvider.lookupFirst(null, JPDADebugger.class);
+        requestProcessor = lookupProvider.lookupFirst(null, RequestProcessor.class);
         MAKE_CURRENT_ACTION = createMAKE_CURRENT_ACTION(requestProcessor);
         GO_TO_SOURCE_ACTION = createGO_TO_SOURCE_ACTION(requestProcessor);
         POP_TO_HERE_ACTION = createPOP_TO_HERE_ACTION(requestProcessor);
         SHOW_INTERNAL_ACTION = createSHOW_INTERNAL_ACTION();
         HIDE_INTERNAL_ACTION = createHIDE_INTERNAL_ACTION();
+        SHOW_HOST_ACTION = createSHOW_HOST_ACTION();
+        HIDE_HOST_ACTION = createHIDE_HOST_ACTION();
     }
 
     @Override
     public void performDefaultAction(NodeActionsProvider original, Object node) throws UnknownTypeException {
         if (node instanceof TruffleStackFrame) {
-            TruffleStackFrame f = (TruffleStackFrame) node;
-            CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentPCInfo(f.getThread());
+            requestProcessor.post(() ->{
+                TruffleStackFrame f = (TruffleStackFrame) node;
+                JPDAThread thread = f.getThread();
+                debugger.setCurrentThread(thread);
+                CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentPCInfo(thread);
+                if (currentPCInfo != null) {
+                    currentPCInfo.setSelectedStackFrame(f);
+                    goToSource(f);
+                }
+            });
+        } else if (node instanceof CallStackFrame) {
+            CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentPCInfo(((CallStackFrame) node).getThread());
             if (currentPCInfo != null) {
-                currentPCInfo.setSelectedStackFrame(f);
-                goToSource(f);
+                currentPCInfo.setSelectedStackFrame(null);
             }
-        } else {
             original.performDefaultAction(node);
         }
     }
@@ -96,20 +128,63 @@ public class DebuggingTruffleActionsProvider implements NodeActionsProviderFilte
             }
             return actions;*/
         } else {
-            return original.getActions(node);
+            Action[] actions = original.getActions(node);
+            if (node instanceof DebuggingView.DVThread && hasGuestInfo(node)) {
+                Action showAction;
+                if (!isShowAllHostFrames((DebuggingView.DVThread) node)) {
+                    showAction = SHOW_HOST_ACTION;
+                } else {
+                    showAction = HIDE_HOST_ACTION;
+                }
+                int pos = actions.length;
+                actions = Arrays.copyOf(actions, pos + 2);
+                actions[pos++] = null;
+                actions[pos] = showAction;
+            }
+            return actions;
         }
+    }
+    
+    private static boolean hasGuestInfo(Object node) {
+        JPDAThread thread = ((WeakCacheMap.KeyedValue<JPDAThread>) node).getKey();
+        return TruffleAccess.getCurrentPCInfo(thread) != null;
+    }
+    
+    static boolean isShowAllHostFrames(DebuggingView.DVThread thread) {
+        Boolean is = SHOWING_ALL_HOST_FRAMES.get(thread);
+        return Boolean.TRUE.equals(is);
+    }
+    
+    static void onShowAllHostFramesChange(PropertyChangeListener listener) {
+        SHOWING_ALL_HOST_FRAMES_CHANGE.addPropertyChangeListener(WeakListeners.propertyChange(listener, SHOWING_ALL_HOST_FRAMES_CHANGE));
     }
     
     private static void goToSource(final TruffleStackFrame f) {
         final SourcePosition sourcePosition = f.getSourcePosition();
+        if (sourcePosition == null) {
+            return ;
+        }
         SwingUtilities.invokeLater (new Runnable () {
             @Override
             public void run () {
-                EditorContextBridge.getContext().showSource (
-                    sourcePosition.getSource().getUrl().toExternalForm(),
-                    sourcePosition.getLine(),
-                    f.getDebugger()
-                );
+                if (sourcePosition.getSource().getHostMethodName() == null) {
+                    EditorContextBridge.getContext().showSource (
+                        sourcePosition.getSource().getUrl().toExternalForm(),
+                        sourcePosition.getStartLine(),
+                        f.getDebugger()
+                    );
+                } else {
+                    String path = sourcePosition.getSource().getPath();
+                    if (path != null) {
+                        path = path.replace (File.separatorChar, '/');
+                        String url = ((JPDADebuggerImpl) f.getDebugger()).getEngineContext().getURL(path, true);
+                        EditorContextBridge.getContext().showSource (
+                            url,
+                            sourcePosition.getStartLine(),
+                            f.getDebugger()
+                        );
+                    }
+                }
             }
         });
     }
@@ -123,14 +198,13 @@ public class DebuggingTruffleActionsProvider implements NodeActionsProviderFilte
             public boolean isEnabled (Object node) {
                 if (node instanceof TruffleStackFrame) {
                     TruffleStackFrame f = (TruffleStackFrame) node;
+                    JPDAThread thread = f.getThread();
+                    if (thread != debugger.getCurrentThread()) {
+                        return true;
+                    }
                     CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentPCInfo(f.getThread());
                     if (currentPCInfo != null) {
-                        TruffleStackFrame topFrame = currentPCInfo.getTopFrame();
-                        if (topFrame == null) {
-                            return f.getDepth() > 0;
-                        } else {
-                            return f != topFrame;
-                        }
+                        return f != currentPCInfo.getSelectedStackFrame();
                     }
                 }
                 return false;
@@ -141,7 +215,9 @@ public class DebuggingTruffleActionsProvider implements NodeActionsProviderFilte
                 if (nodes.length == 0) return ;
                 if (nodes[0] instanceof TruffleStackFrame) {
                     TruffleStackFrame f = (TruffleStackFrame) nodes[0];
-                    CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentPCInfo(f.getThread());
+                    JPDAThread thread = f.getThread();
+                    debugger.setCurrentThread(thread);
+                    CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentPCInfo(thread);
                     if (currentPCInfo != null) {
                         currentPCInfo.setSelectedStackFrame(f);
                     }
@@ -166,7 +242,7 @@ public class DebuggingTruffleActionsProvider implements NodeActionsProviderFilte
                         return false;
                     }
                     //return isGoToSourceSupported ((TruffleStackFrame) node);
-                    return true;
+                    return ((TruffleStackFrame) node).getSourcePosition() != null;
                 }
 
                 @Override
@@ -230,6 +306,56 @@ public class DebuggingTruffleActionsProvider implements NodeActionsProviderFilte
         );
     }
 
+    @NbBundle.Messages("CTL_StackFrameAction_ShowHost_Label=Show All Host Frames")
+    static final Action createSHOW_HOST_ACTION() {
+        return Models.createAction (
+            Bundle.CTL_StackFrameAction_ShowHost_Label(),
+            new Models.ActionPerformer () {
+                @Override
+                public boolean isEnabled (Object node) {
+                    if (!(node instanceof DebuggingView.DVThread)) {
+                        return false;
+                    }
+                    return !isShowAllHostFrames((DebuggingView.DVThread) node);
+                }
+
+                @Override
+                public void perform (final Object[] nodes) {
+                    for (Object node : nodes) {
+                        SHOWING_ALL_HOST_FRAMES.put((DebuggingView.DVThread) node, Boolean.TRUE);
+                    }
+                    SHOWING_ALL_HOST_FRAMES_CHANGE.firePropertyChange("allHostFrames", false, true);
+                }
+            },
+            Models.MULTISELECTION_TYPE_ALL
+        );
+    }
+
+    @NbBundle.Messages("CTL_StackFrameAction_HideHost_Label=Show Graal Guest Frames")
+    static final Action createHIDE_HOST_ACTION() {
+        return Models.createAction (
+            Bundle.CTL_StackFrameAction_HideHost_Label(),
+            new Models.ActionPerformer () {
+                @Override
+                public boolean isEnabled (Object node) {
+                    if (!(node instanceof DebuggingView.DVThread)) {
+                        return false;
+                    }
+                    return isShowAllHostFrames((DebuggingView.DVThread) node);
+                }
+
+                @Override
+                public void perform (final Object[] nodes) {
+                    for (Object node : nodes) {
+                        SHOWING_ALL_HOST_FRAMES.remove((DebuggingView.DVThread) node);
+                    }
+                    SHOWING_ALL_HOST_FRAMES_CHANGE.firePropertyChange("allHostFrames", true, false);
+                }
+            },
+            Models.MULTISELECTION_TYPE_ALL
+        );
+    }
+
     @NbBundle.Messages("CTL_StackFrameAction_PopToHere_Label=Pop To Here")
     private Action createPOP_TO_HERE_ACTION(RequestProcessor requestProcessor) {
         return Models.createAction (
@@ -257,7 +383,7 @@ public class DebuggingTruffleActionsProvider implements NodeActionsProviderFilte
         );
     }
 
-    static abstract class LazyActionPerformer implements Models.ActionPerformer {
+    abstract static class LazyActionPerformer implements Models.ActionPerformer {
 
         private final RequestProcessor rp;
 

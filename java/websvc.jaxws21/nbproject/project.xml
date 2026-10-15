@@ -52,34 +52,14 @@
             <friend-packages>
                 <friend>org.netbeans.modules.websvc.jaxwsmodel</friend>
                 <friend>org.netbeans.modules.websvc.manager</friend>
-                <package>com.sun.tools.ws.processor</package>
-                <package>com.sun.tools.ws.processor.generator</package>
                 <package>com.sun.tools.ws.processor.model</package>
-                <package>com.sun.tools.ws.processor.model.exporter</package>
                 <package>com.sun.tools.ws.processor.model.java</package>
-                <package>com.sun.tools.ws.processor.model.jaxb</package>
                 <package>com.sun.tools.ws.processor.modeler</package>
-                <package>com.sun.tools.ws.processor.modeler.annotation</package>
                 <package>com.sun.tools.ws.processor.modeler.wsdl</package>
-                <package>com.sun.tools.ws.processor.util</package>
-                <package>com.sun.tools.ws.util.xml</package>
                 <package>com.sun.tools.ws.wscompile</package>
                 <package>com.sun.tools.ws.wsdl.document.soap</package>
                 <package>com.sun.tools.ws.wsdl.parser</package>
-                <package>com.sun.xml.messaging.saaj.soap</package>
-                <package>com.sun.xml.ws</package>
-                <package>com.sun.xml.ws.api</package>
-                <package>com.sun.xml.ws.api.addressing</package>
-                <package>com.sun.xml.ws.api.message</package>
-                <package>com.sun.xml.ws.developer</package>
-                <package>com.sun.xml.ws.encoding.soap</package>
-                <package>com.sun.xml.ws.encoding.soap.streaming</package>
-                <package>com.sun.xml.ws.policy.sourcemodel.wspolicy</package>
-                <package>com.sun.xml.ws.spi</package>
                 <package>com.sun.xml.ws.util</package>
-                <package>com.sun.xml.ws.util.exception</package>
-                <package>com.sun.xml.ws.util.localization</package>
-                <package>com.sun.xml.ws.util.xml</package>
             </friend-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/jaxws22/FastInfoset.jar</runtime-relative-path>
@@ -91,7 +71,7 @@
                 <runtime-relative-path>ext/jaxws22/ha-api.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jaxws22/javax.mail_1.4.jar</runtime-relative-path>
+                <runtime-relative-path>ext/jaxws22/jakarta.mail.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/jaxws22/jaxws-rt.jar</runtime-relative-path>
@@ -119,6 +99,9 @@
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/jaxws22/streambuffer.jar</runtime-relative-path>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jaxws22/woodstox-core.jar</runtime-relative-path>
             </class-path-extension>
         </data>
     </configuration>

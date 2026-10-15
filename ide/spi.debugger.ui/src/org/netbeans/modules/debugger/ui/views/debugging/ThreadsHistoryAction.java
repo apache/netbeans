@@ -28,7 +28,6 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -36,10 +35,7 @@ import java.util.List;
 import java.util.Set;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
-import org.netbeans.api.debugger.DebuggerManager;
-import org.netbeans.api.debugger.Session;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVSupport;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVThread;
 import org.netbeans.spi.debugger.ui.DebuggingView.Deadlock;
@@ -193,19 +189,16 @@ public final class ThreadsHistoryAction extends AbstractAction {
     }
     
     private static class ThreadStatusIcon implements Icon {
-        
-        private Image image;
-        private ImageIcon iconBase;
+        private Icon iconBase;
         private boolean isCurrent;
         private boolean isAtBreakpoint;
         private boolean isInDeadlock;
 
         ThreadStatusIcon(Image image, boolean isCurrent, boolean isAtBreakpoint, boolean isInDeadlock) {
-            this.image = image;
             this.isCurrent = isCurrent;
             this.isAtBreakpoint = isAtBreakpoint;
             this.isInDeadlock = isInDeadlock;
-            iconBase = new ImageIcon(image);
+            this.iconBase = ImageUtilities.image2Icon(image);
         }
         
         @Override
@@ -228,7 +221,7 @@ public final class ThreadsHistoryAction extends AbstractAction {
             Color originalColor = g.getColor();
             g.setColor(c.getBackground());
             g.fillRect(x, y, width, height);
-            g.drawImage(image, x + width, y, iconBase.getImageObserver());
+            iconBase.paintIcon(c, g, x + width, y);
             if (primaryColor != null) {
                 g.setColor(primaryColor);
                 g.fillRect(x, y, DebuggingViewComponent.BAR_WIDTH, height);

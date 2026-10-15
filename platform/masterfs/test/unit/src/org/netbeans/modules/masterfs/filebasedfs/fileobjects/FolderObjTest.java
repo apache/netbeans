@@ -35,6 +35,7 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+import org.junit.Assume;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.masterfs.filebasedfs.Statistics;
 import org.netbeans.modules.masterfs.filebasedfs.FileBasedFileSystem;
@@ -84,7 +85,7 @@ public class FolderObjTest extends NbTestCase {
             Level.FINEST : Level.OFF;
     }
 
-    static abstract class IntrusiveLogHandler extends Handler {
+    abstract static class IntrusiveLogHandler extends Handler {
         private String message;
         IntrusiveLogHandler(final String message) {
             this.message = message;
@@ -96,7 +97,7 @@ public class FolderObjTest extends NbTestCase {
             }
         }
 
-        abstract protected void processLogRecord(final LogRecord record);
+        protected abstract void processLogRecord(final LogRecord record);
         public void flush() {}
         public void close() { flush(); }
     }
@@ -1779,6 +1780,15 @@ public class FolderObjTest extends NbTestCase {
             t1.join();
             t2.join();
         }
+    }
+
+    public void testVirtualFOs() throws IOException {
+        Assume.assumeFalse(Utilities.isWindows()); // TODO fails on win
+        final FileObject wd = FileBasedFileSystem.getFileObject(getWorkDir());
+        FileObject nonExisting = wd.getFileObject("non-existing-folder/non-existing-folder/non-existing-child.xyz", false);
+        assertFalse(nonExisting.isValid());
+        assertFalse(nonExisting.getParent().isValid());
+        assertFalse(nonExisting.getParent().getParent().isValid());
     }
 
     private class EventsEvaluator extends FileChangeAdapter {

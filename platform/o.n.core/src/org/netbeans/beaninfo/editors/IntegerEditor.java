@@ -19,9 +19,6 @@
 
 package org.netbeans.beaninfo.editors;
 
-import java.beans.*;
-import org.openide.explorer.propertysheet.PropertyEnv;
-import org.openide.explorer.propertysheet.ExPropertyEditor;
 
 /**
  * Editor for property of type java.lang.Integer
@@ -31,13 +28,15 @@ import org.openide.explorer.propertysheet.ExPropertyEditor;
 public class IntegerEditor extends WrappersEditor {
 
     public IntegerEditor() {
-        super(java.lang.Integer.TYPE);
+        super(Integer.TYPE);
     }
 
+    @Override
     public String getJavaInitializationString() {
-    	return "new java.lang.Integer(" + pe.getJavaInitializationString() + ")"; // NOI18N
+    	return "Integer.valueOf(" + pe.getJavaInitializationString() + ")"; // NOI18N
     }
 
+    @Override
     public void setAsText(String text) throws IllegalArgumentException {
         super.setAsText (text.trim());
     }    

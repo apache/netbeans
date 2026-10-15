@@ -43,41 +43,41 @@ import java.util.regex.Pattern;
  * The format is based on Ant patterns. Some details:
  * </p>
  * <ul>
- * <li>A file path to be matched must be a <samp>/</samp>-separated
+ * <li>A file path to be matched must be a <em>/</em>-separated
  * relative path from an unspecified base directory. A path representing
- * a folder must end in <samp>/</samp>, except for the path representing
+ * a folder must end in <em>/</em>, except for the path representing
  * the root folder, which is the empty string. Thus, the full path to a file
  * is always the simple concatenation of the path to its containing folder,
  * and the file's basename.
  * <li>An include or exclude list, if not null, is a list of nonempty patterns separated
  * by spaces and/or commas. It may be an empty list; this is equivalent to null in the
  * case of excludes, but in the case of includes means that nothing matches.
- * <li>A pattern may use either <samp>/</samp> or <samp>\</samp> as a path separator
+ * <li>A pattern may use either <em>/</em> or <em>\</em> as a path separator
  * interchangeably.
  * <li>Most characters in a pattern match literally, and match a complete file path.
- * A folder path ends in <samp>/</samp>, so the pattern <samp>foo</samp> will <em>not</em>
- * match a folder named <samp>foo</samp>.
- * <li><samp>*</samp> in a pattern matches zero or more characters within a path component
- * (i.e. not including <samp>/</samp>).
- * <li><samp>**</samp> matches zero or more complete path components. It must be preceded
+ * A folder path ends in <em>/</em>, so the pattern <em>foo</em> will <em>not</em>
+ * match a folder named <em>foo</em>.
+ * <li><em>*</em> in a pattern matches zero or more characters within a path component
+ * (i.e. not including <em>/</em>).
+ * <li><em>**</em> matches zero or more complete path components. It must be preceded
  * by a slash (or be at the beginning of the pattern) and be followed by a slash (or be at
  * the end of the pattern).
- * <li><samp>foo/</samp> is treated the same as <samp>foo/**</samp> and matches the whole
- * tree rooted at the folder <samp>foo</samp>.
- * <li><samp>/**<!---->/</samp> can match just a single <samp>/</samp>. <samp>**<!---->/</samp>
- * and <samp>/**</samp> can match the empty string at path boundaries.
+ * <li><em>foo/</em> is treated the same as <em>foo/**</em> and matches the whole
+ * tree rooted at the folder <em>foo</em>.
+ * <li><em>/**<!---->/</em> can match just a single <em>/</em>. <em>**<!---->/</em>
+ * and <em>/**</em> can match the empty string at path boundaries.
  * </ul>
  * <p>
  * Some example patterns:
  * </p>
  * <dl>
- * <dt><samp>foo/bar/</samp>
- * <dd>The folder <samp>foo/bar</samp> and anything inside it.
- * <dt><samp>foo/bar/baz</samp>
- * <dd>The file <samp>foo/bar/baz</samp>.
- * <dt><samp>**<!---->/foo/</samp>
- * <dd>Any folder named <samp>foo</samp> and anything inside it.
- * <dt><samp>**<!---->/*.java</samp>
+ * <dt><em>foo/bar/</em>
+ * <dd>The folder <em>foo/bar</em> and anything inside it.
+ * <dt><em>foo/bar/baz</em>
+ * <dd>The file <em>foo/bar/baz</em>.
+ * <dt><em>**<!---->/foo/</em>
+ * <dd>Any folder named <em>foo</em> and anything inside it.
+ * <dt><em>**<!---->/*.java</em>
  * <dd>Any Java source file (even in the default package).
  * </dl>
  * @since org.netbeans.modules.project.ant/1 1.15
@@ -184,8 +184,8 @@ public final class PathMatcher {
      * Find folders which match although their parent folders do not; or folders
      * which do not match but which contain files which do.
      * <ul>
-     * <li>Wildcard-free folder include paths, such as <samp>foo/bar/</samp> (or the
-     * equivalent <samp>foo/bar/**</samp>), are returned directly if they are not excluded.
+     * <li>Wildcard-free folder include paths, such as <em>foo/bar/</em> (or the
+     * equivalent <em>foo/bar/**</em>), are returned directly if they are not excluded.
      * <li>Wildcard-using paths trigger a scan of the provided root directory.
      * Any actual files or folders found beneath that root which {@link #matches match}
      * are noted, and their minimal paths are returned.

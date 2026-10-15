@@ -25,14 +25,14 @@
       <element>
         <OBJECT REFERENCE="org.netbeans.modules.dbschema.SchemaElement-729775034"/>
       </element>
-      <_databaseProductVersion>10.2.1.7 - (453926)</_databaseProductVersion>
+      <_databaseProductVersion>10.14.2.0</_databaseProductVersion>
       <_username>app</_username>
       <_name>
         <OBJECT CLASS="com.sun.forte4j.modules.dbmodel.DBIdentifier" ID="org.netbeans.modules.dbschema.DBIdentifier23081943">
           <name>APP_JavaApplication15_1</name>
         </OBJECT>
       </_name>
-      <_driverVersion>10.2.1.7 - (453926)</_driverVersion>
+      <_driverVersion>10.14.2.0</_driverVersion>
       <_databaseProductName>Apache Derby</_databaseProductName>
       <tables>
         <OBJECT CLASS="com.sun.forte4j.modules.dbmodel.jdbcimpl.DBElementsCollection" ID="org.netbeans.modules.dbschema.jdbcimpl.DBElementsCollection29520102">

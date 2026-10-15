@@ -25,19 +25,17 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
-
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.netbeans.lib.jshell.agent.RemoteCodes.*;
-
 import java.util.Map;
 import java.util.TreeMap;
+
+import static org.netbeans.lib.jshell.agent.RemoteCodes.*;
 
 /**
  * The remote agent runs in the execution process (separate from the main JShell
@@ -288,12 +286,8 @@ class RemoteAgent {
         private final OutputStream delegate;
 
         public MultiplexingOutputStream(String name, OutputStream delegate) {
-            try {
-                this.name = name.getBytes("UTF-8");
-                this.delegate = delegate;
-            } catch (UnsupportedEncodingException ex) {
-                throw new IllegalStateException(ex); //should not happen
-            }
+            this.name = name.getBytes(StandardCharsets.UTF_8);
+            this.delegate = delegate;
         }
 
         @Override

@@ -22,6 +22,7 @@ package org.netbeans.modules.php.editor.model.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.php.editor.api.QualifiedName;
@@ -35,11 +36,16 @@ import org.openide.util.Exceptions;
 public class ParameterImpl implements Parameter {
     private final String name;
     private final String defaultValue;
+    private final String declaredType;
+    private final String phpdocType;
     private final List<QualifiedName> types;
     private final OffsetRange range;
     private final boolean isRawType;
     private final boolean isReference;
     private final boolean isVariadic;
+    private final boolean isUnionType;
+    private final boolean isIntersectionType;
+    private final int modifier;
 
     public ParameterImpl(
             String name,
@@ -48,9 +54,17 @@ public class ParameterImpl implements Parameter {
             boolean isRawType,
             OffsetRange range,
             boolean isReference,
-            boolean isVariadic) {
+            boolean isVariadic,
+            boolean isUnionType,
+            int modifier,
+            boolean isIntersectionType,
+            String declaredType,
+            String phpdocType
+    ) {
         this.name = name;
         this.defaultValue = defaultValue;
+        this.declaredType = declaredType;
+        this.phpdocType = phpdocType;
         if (types == null) {
             this.types = Collections.emptyList();
         } else {
@@ -60,6 +74,9 @@ public class ParameterImpl implements Parameter {
         this.isRawType = isRawType;
         this.isReference = isReference;
         this.isVariadic = isVariadic;
+        this.isUnionType = isUnionType;
+        this.modifier = modifier;
+        this.isIntersectionType = isIntersectionType;
     }
 
     @NonNull
@@ -72,6 +89,18 @@ public class ParameterImpl implements Parameter {
     @Override
     public String getDefaultValue() {
         return defaultValue;
+    }
+
+    @CheckForNull
+    @Override
+    public String getDeclaredType() {
+        return declaredType;
+    }
+
+    @CheckForNull
+    @Override
+    public String getPhpdocType() {
+        return phpdocType;
     }
 
     @Override
@@ -87,6 +116,21 @@ public class ParameterImpl implements Parameter {
     @Override
     public boolean isVariadic() {
         return isVariadic;
+    }
+
+    @Override
+    public boolean isUnionType() {
+        return isUnionType;
+    }
+
+    @Override
+    public boolean isIntersectionType() {
+        return isIntersectionType;
+    }
+
+    @Override
+    public int getModifier() {
+        return modifier;
     }
 
     @Override
@@ -106,7 +150,7 @@ public class ParameterImpl implements Parameter {
         List<QualifiedName> qNames = getTypes();
         for (int idx = 0; idx < qNames.size(); idx++) {
             if (idx > 0) {
-                sb.append('|'); //NOI18N
+                sb.append(Type.getTypeSeparator(isIntersectionType));
             }
             QualifiedName qualifiedName = qNames.get(idx);
             sb.append(qualifiedName.toString());
@@ -120,6 +164,16 @@ public class ParameterImpl implements Parameter {
         sb.append(isReference ? 1 : 0);
         sb.append(":"); //NOI18N
         sb.append(isVariadic ? 1 : 0);
+        sb.append(":"); //NOI18N
+        sb.append(isUnionType ? 1 : 0);
+        sb.append(":"); //NOI18N
+        sb.append(modifier);
+        sb.append(":"); //NOI18N
+        sb.append(isIntersectionType ? 1 : 0);
+        sb.append(":"); //NOI18N
+        sb.append(declaredType);
+        sb.append(":"); //NOI18N
+        sb.append(phpdocType);
         return sb.toString();
     }
 
@@ -140,9 +194,14 @@ public class ParameterImpl implements Parameter {
                         }
                     }
                     boolean isRawType = Integer.parseInt(parts[2]) > 0;
-                    String defValue = (parts.length > 3) ? parts[3] : "";
+                    String defValue = (parts.length > 3) ? parts[3] : ""; // NOI18N
                     boolean isReference = Integer.parseInt(parts[4]) > 0;
                     boolean isVariadic = Integer.parseInt(parts[5]) > 0;
+                    boolean isUnionType = Integer.parseInt(parts[6]) > 0;
+                    int modifier = Integer.parseInt(parts[7]);
+                    boolean isIntersectionType = Integer.parseInt(parts[8]) > 0;
+                    String declType = (parts.length > 9) ? parts[9] : null;
+                    String docType = (parts.length > 10) ? parts[10] : null;
                     parameters.add(new ParameterImpl(
                             paramName,
                             (defValue.length() != 0) ? decode(defValue) : null,
@@ -150,7 +209,13 @@ public class ParameterImpl implements Parameter {
                             isRawType,
                             OffsetRange.NONE,
                             isReference,
-                            isVariadic));
+                            isVariadic,
+                            isUnionType,
+                            modifier,
+                            isIntersectionType,
+                            declType,
+                            docType
+                    ));
                 }
             }
         }

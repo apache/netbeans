@@ -116,7 +116,7 @@ public class RestServicesImpl implements RestServices {
 
     public RestServiceDescription[] getRestServiceDescription() {
         Collection<RestServiceDescriptionImpl> restServices = restServiceManager.getObjects();
-        return restServices.toArray(new RestServiceDescriptionImpl[restServices.size()]);
+        return restServices.toArray(new RestServiceDescriptionImpl[0]);
     }
     
     public RestServiceDescription getRestServiceDescription(String name) {
@@ -159,10 +159,15 @@ public class RestServicesImpl implements RestServices {
                     new HashMap<TypeElement, RestServiceDescriptionImpl>();
             
             findAnnotation(RestConstants.PATH, EnumSet.of(ElementKind.CLASS), result);
+            findAnnotation(RestConstants.PATH_JAKARTA, EnumSet.of(ElementKind.CLASS), result);
             findAnnotation(RestConstants.GET, EnumSet.of(ElementKind.METHOD), result);
+            findAnnotation(RestConstants.GET_JAKARTA, EnumSet.of(ElementKind.METHOD), result);
             findAnnotation(RestConstants.POST, EnumSet.of(ElementKind.METHOD), result);
+            findAnnotation(RestConstants.POST_JAKARTA, EnumSet.of(ElementKind.METHOD), result);
             findAnnotation(RestConstants.PUT, EnumSet.of(ElementKind.METHOD), result);
+            findAnnotation(RestConstants.PUT_JAKARTA, EnumSet.of(ElementKind.METHOD), result);
             findAnnotation(RestConstants.DELETE, EnumSet.of(ElementKind.METHOD), result);
+            findAnnotation(RestConstants.DELETE_JAKARTA, EnumSet.of(ElementKind.METHOD), result);
             
             return new ArrayList<RestServiceDescriptionImpl>(result.values());
         }
@@ -231,6 +236,7 @@ public class RestServicesImpl implements RestServices {
         public List<RestProviderDescriptionImpl> createInitialObjects() throws InterruptedException {
             final Map<TypeElement, RestProviderDescriptionImpl> result =
                     new HashMap<TypeElement, RestProviderDescriptionImpl>();
+            findAnnotation(RestConstants.PROVIDER_ANNOTATION_JAKARTA, EnumSet.of(ElementKind.CLASS), result);
             findAnnotation(RestConstants.PROVIDER_ANNOTATION, EnumSet.of(ElementKind.CLASS), result);
             return new ArrayList<RestProviderDescriptionImpl>(result.values());
         }

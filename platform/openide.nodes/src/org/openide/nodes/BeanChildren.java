@@ -48,8 +48,8 @@ public class BeanChildren extends Children.Keys {
      * and child, resp.
      * See #7925.
      */
-    private static final java.util.Map<Node,Reference[]> nodes2Beans = 
-            new WeakHashMap<Node,Reference[]>(); // Map<Node,Reference<Object>[2]>
+    private static final java.util.Map<Node, Reference<?>[]> nodes2Beans
+            = new WeakHashMap<>(); // Map<Node,Reference<Object>[2]>
 
     /** bean context to work on */
     private BeanContext bean;
@@ -105,7 +105,7 @@ public class BeanChildren extends Children.Keys {
 
             // #7925: deleting from BeanChildren has no effect
             synchronized (nodes2Beans) {
-                nodes2Beans.put(n, new Reference[] { new WeakReference<BeanContext>(bean), new WeakReference<Object>(subbean) });
+                nodes2Beans.put(n, new Reference<?>[] { new WeakReference<BeanContext>(bean), new WeakReference<Object>(subbean) });
             }
 
             n.addNodeListener(contextL);
@@ -205,7 +205,7 @@ public class BeanChildren extends Children.Keys {
 
         public void nodeDestroyed(NodeEvent ev) {
             Node n = ev.getNode();
-            Reference[] refs;
+            Reference<?>[] refs;
 
             synchronized (nodes2Beans) {
                 refs = nodes2Beans.get(n);

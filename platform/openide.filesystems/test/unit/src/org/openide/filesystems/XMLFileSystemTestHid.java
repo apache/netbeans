@@ -29,6 +29,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -790,7 +791,7 @@ public class XMLFileSystemTestHid extends TestBaseHid {
             for (JEntry entry : entries) {
                 JarEntry jarEntry = new JarEntry(entry.name);
                 jarOut.putNextEntry(jarEntry);
-                jarOut.write(entry.content.getBytes("UTF-8"));
+                jarOut.write(entry.content.getBytes(StandardCharsets.UTF_8));
                 jarOut.closeEntry();
             }
         }
@@ -1240,7 +1241,7 @@ public class XMLFileSystemTestHid extends TestBaseHid {
     private static String getObjectViaMethodValue1 () {
         return "";
     }
-///
+
     private static String getObjectViaMethodValue2 (String testName, FileObject fo) {
         return testName+fo.getPath();
     }
@@ -1256,7 +1257,7 @@ public class XMLFileSystemTestHid extends TestBaseHid {
     private static String getObjectViaMethodValue2 () {
         return "";
     }
-///
+
     private static String getObjectViaMethodValue3 (FileObject fo) {
         return fo.getPath();
     }
@@ -1268,7 +1269,7 @@ public class XMLFileSystemTestHid extends TestBaseHid {
     private static String getObjectViaMethodValue3 () {
         return "";
     }
-///
+
     private static String getObjectViaMethodValue4 (String testName) {
         return testName;
     }
@@ -1276,7 +1277,7 @@ public class XMLFileSystemTestHid extends TestBaseHid {
     private static String getObjectViaMethodValue4 () {
         return "";
     }
-///
+
     private static String getObjectViaMethodValue5 () {
         return "";
     }

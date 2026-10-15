@@ -24,6 +24,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -43,6 +44,7 @@ import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.JavaDataLoader;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
 import org.netbeans.modules.java.source.usages.ClassIndexManager;
 import org.netbeans.modules.java.source.usages.DocumentUtil;
@@ -180,7 +182,7 @@ public class ReferencesCountTest extends NbTestCase {
         final FileObject file = FileUtil.createData(root, fqn.replace('.', '/')+"."+JavaDataLoader.JAVA_EXTENSION);   //NOI18N
         final FileLock lck = file.lock();
         try {
-            final PrintWriter out = new PrintWriter(new OutputStreamWriter(file.getOutputStream(lck),"UTF-8"));    //NOI18N
+            final PrintWriter out = new PrintWriter(new OutputStreamWriter(file.getOutputStream(lck), StandardCharsets.UTF_8));
             try {
                 out.print(content);
             } finally {
@@ -200,7 +202,7 @@ public class ReferencesCountTest extends NbTestCase {
         @Override
         public Charset getEncoding(FileObject file) {
             if (file == interestedIn || FileUtil.isParentOf(interestedIn, file)) {
-                return Charset.forName("UTF-8"); //NOI18N
+                return StandardCharsets.UTF_8;
             }
             return null;
         }
@@ -288,7 +290,7 @@ public class ReferencesCountTest extends NbTestCase {
         private ClassPath getBootPath() {
             ClassPath res =  bootPath.get();
             if (res == null) {
-                res = ClassPathSupport.createClassPath(System.getProperty("sun.boot.class.path"));  //NOI18N
+                res = BootClassPathUtil.getBootClassPath();  //NOI18N
                 if (!bootPath.compareAndSet(null, res)) {
                     res = bootPath.get();
                 }

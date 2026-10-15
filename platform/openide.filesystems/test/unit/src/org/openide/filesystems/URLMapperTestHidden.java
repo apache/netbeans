@@ -165,7 +165,7 @@ public class URLMapperTestHidden extends TestBaseHid {
         assertNotNull(urlFromMapper);
 
         FileObject[] all = URLMapper.findFileObjects(urlFromMapper);
-        List/*<FileObject>*/ allList = Arrays.asList(all);
+        List<FileObject> allList = Arrays.asList(all);
         assertTrue("found " + fo + " in " + allList + " from " + urlFromMapper, allList.contains(fo));
         assertEquals("findFileObject works too", fo, URLMapper.findFileObject(urlFromMapper));
     }

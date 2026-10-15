@@ -68,12 +68,8 @@ public class Lib {
 
         Object o;
         try {
-            o = clazz.newInstance ();
-        } catch (InstantiationException e) {
-            if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("Lib::getCustomizer: exception = " + e); // NOI18N
-
-            return null;
-        } catch (IllegalAccessException e) {
+            o = clazz.getDeclaredConstructor().newInstance();
+        } catch (ReflectiveOperationException e) {
             if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("Lib::getCustomizer: exception = " + e); // NOI18N
 
             return null;
@@ -141,12 +137,8 @@ public class Lib {
         }
         Object peo;
         try {
-            peo = clazz.newInstance ();
-        } catch (InstantiationException e) {
-            if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("Lib::getCustomizer: exception = " + e); // NOI18N
-
-            return null;
-        } catch (IllegalAccessException e) {
+            peo = clazz.getDeclaredConstructor().newInstance();
+        } catch (ReflectiveOperationException e) {
             if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("Lib::getCustomizer: exception = " + e); // NOI18N
 
             return null;

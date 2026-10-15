@@ -28,9 +28,8 @@ import com.dd.plist.XMLPropertyListParser;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -191,7 +190,7 @@ public abstract class IOSDebugTransport extends MobileDebugTransport implements 
             return "\"" + ((NSString) o).toString() + "\"";             //NOI18N
         } else if (o instanceof NSData) {
             NSData data = (NSData) o;
-            String asStr = new String(data.bytes(), Charset.forName("UTF-8"));
+            String asStr = new String(data.bytes(), StandardCharsets.UTF_8);
             return "Data: " + asStr;
         } else if (o != null) {
             return o.toString();
@@ -284,13 +283,8 @@ public abstract class IOSDebugTransport extends MobileDebugTransport implements 
     }
 
     protected static InputStream fromString(String str) {
-        try {
-            byte[] bytes = str.getBytes("UTF-8"); // NOI18N
-            return new ByteArrayInputStream(bytes);
-        } catch (UnsupportedEncodingException ex) {
-            Exceptions.printStackTrace(ex);
-            return null;
-        }
+        byte[] bytes = str.getBytes(StandardCharsets.UTF_8);
+        return new ByteArrayInputStream(bytes);
     }
 
     protected void stop() {
@@ -356,7 +350,7 @@ public abstract class IOSDebugTransport extends MobileDebugTransport implements 
 
     private class Tabs {
 
-        private HashMap<String, TabDescriptor> map = new HashMap();
+        private HashMap<String, TabDescriptor> map = new HashMap<>();
         private Object monitor = new Object();
         private boolean inited = false;
 
@@ -371,7 +365,7 @@ public abstract class IOSDebugTransport extends MobileDebugTransport implements 
             }
             boolean wasEmpty = map.isEmpty();
             boolean connectionUrlFound = false;
-            HashMap<String, TabDescriptor> currentMap = new HashMap();
+            HashMap<String, TabDescriptor> currentMap = new HashMap<>();
             for (String s : listing.allKeys()) {
                 NSDictionary o = (NSDictionary) listing.objectForKey(s);
                 NSObject identifier = o.objectForKey("WIRPageIdentifierKey"); // NOI18N
@@ -445,7 +439,7 @@ public abstract class IOSDebugTransport extends MobileDebugTransport implements 
             if (normUrl.endsWith("/")) { // NOI18N
                 normUrl = normUrl.substring(0, normUrl.length() - 1);
             }
-            return getConnectionURL().toString().equals(normUrl.replaceAll("file:///", "file:/"));
+            return getConnectionURL().toString().equals(normUrl.replace("file:///", "file:/"));
         }
 
         private String getTabForUrl() {

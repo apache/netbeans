@@ -44,7 +44,7 @@ public class BreakpointModel implements NodeModel {
     public static final String      DISABLED_LINE_BREAKPOINT =
         "org/netbeans/modules/debugger/resources/editor/DisabledBreakpoint";
     
-    private Vector                  listeners = new Vector ();
+    private Vector<ModelListener>   listeners = new Vector<>();
     
     
     // NodeModel implementation ................................................
@@ -62,8 +62,7 @@ public class BreakpointModel implements NodeModel {
     public String getDisplayName (Object node) throws UnknownTypeException {
         if (node instanceof AntBreakpoint) {
             AntBreakpoint breakpoint = (AntBreakpoint) node;
-            FileObject fileObject = (FileObject) breakpoint.getLine ().
-                getLookup ().lookup (FileObject.class);
+            FileObject fileObject = breakpoint.getLine().getLookup().lookup(FileObject.class);
             return fileObject.getNameExt () + ":" + 
                 (breakpoint.getLine ().getLineNumber () + 1);
         }
@@ -139,12 +138,10 @@ public class BreakpointModel implements NodeModel {
         
      
     public void fireChanges () {
-        Vector v = (Vector) listeners.clone ();
+        Vector<ModelListener> v = new Vector<>(listeners);
         int i, k = v.size ();
         for (i = 0; i < k; i++)
-            ((ModelListener) v.get (i)).modelChanged (
-                new ModelEvent.TreeChanged (this)
-            );
+            v.get(i).modelChanged(new ModelEvent.TreeChanged(this));
     }
     
     private static AntDebugger getDebugger () {

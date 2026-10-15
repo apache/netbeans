@@ -187,7 +187,7 @@ final class BinaryCacheManager extends ParsingLayerCacheManager {
         }
     }
 
-    private final static String[] ATTR_TYPES = {
+    private static final String[] ATTR_TYPES = {
         "bytevalue", // NOI18N
         "shortvalue", // NOI18N
         "intvalue", // NOI18N
@@ -404,7 +404,7 @@ final class BinaryCacheManager extends ParsingLayerCacheManager {
                     return o2.getValue()[0] - o1.getValue()[0];
                 }
             }
-            Collections.sort(lst, new C());
+            lst.sort(new C());
             List<String> res = new ArrayList<String>();
             for (Entry<String, int[]> entry : lst) {
                 res.add(entry.getKey());

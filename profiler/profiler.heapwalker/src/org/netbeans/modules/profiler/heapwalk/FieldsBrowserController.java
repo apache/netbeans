@@ -42,6 +42,8 @@ import javax.swing.tree.TreePath;
     "FieldsBrowserController_NoneString=<none>"
 })
 public class FieldsBrowserController extends AbstractController {
+
+    private final boolean showClassLoaders;
     //~ Inner Interfaces ---------------------------------------------------------------------------------------------------------
 
     public static interface Handler {
@@ -136,11 +138,11 @@ public class FieldsBrowserController extends AbstractController {
         protected String computeValue() {
             return Bundle.FieldsBrowserController_NoneString();
         }
-        
+
         protected String computeSize() {
             return ""; // NOI18N
         }
-        
+
         protected String computeRetainedSize() {
             return ""; // NOI18N
         }
@@ -165,8 +167,13 @@ public class FieldsBrowserController extends AbstractController {
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 
     public FieldsBrowserController(Handler instancesControllerHandler, int rootMode) {
+        this(instancesControllerHandler, rootMode, true);
+    }
+
+    public FieldsBrowserController(Handler instancesControllerHandler, int rootMode, boolean showClassLoaders) {
         this.instancesControllerHandler = instancesControllerHandler;
         this.rootMode = rootMode;
+        this.showClassLoaders = showClassLoaders;
     }
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
@@ -244,15 +251,15 @@ public class FieldsBrowserController extends AbstractController {
     protected AbstractButton createControllerPresenter() {
         return ((FieldsBrowserControllerUI) getPanel()).getPresenter();
     }
-    
-    public List getExpandedPaths() {
+
+    public List<TreePath> getExpandedPaths() {
         return ((FieldsBrowserControllerUI)getPanel()).getExpandedPaths();
     }
-    
+
     public TreePath getSelectedRow() {
         return ((FieldsBrowserControllerUI)getPanel()).getSelectedRow();
     }
-    
+
     public void restoreState(List expanded, TreePath selected) {
         ((FieldsBrowserControllerUI)getPanel()).restoreState(expanded, selected);
     }
@@ -263,10 +270,12 @@ public class FieldsBrowserController extends AbstractController {
     }
 
     private HeapWalkerNode getFields(final Instance instance) {
+        int fieldsMode = showClassLoaders ? HeapWalkerNode.MODE_FIELDS : HeapWalkerNode.MODE_FIELDS_NO_CLASSLOADER;
+
         return HeapWalkerNodeFactory.createRootInstanceNode(instance, "this",   // NOI18N
                 new Runnable() { public void run() { ((FieldsBrowserControllerUI) getPanel()).refreshView(); } },
                 new Runnable() { public void run() { getPanel().repaint(); } },
-                HeapWalkerNode.MODE_FIELDS, instancesControllerHandler.getHeapFragmentWalker().getHeapFragment());
+                fieldsMode, instancesControllerHandler.getHeapFragmentWalker().getHeapFragment());
     }
 
     private HeapWalkerNode getFields(final JavaClass javaClass) {
@@ -278,13 +287,13 @@ public class FieldsBrowserController extends AbstractController {
 
     private HeapWalkerNode getFilteredFields(HeapWalkerNode fields, String filterValue) {
         //    ArrayList filteredFields = new ArrayList();
-        //    
+        //
         //    Iterator fieldsIterator = fields.iterator();
         //    while (fieldsIterator.hasNext()) {
         //      FieldValue field = (FieldValue)fieldsIterator.next();
         //      if (matchesFilter(field)) filteredFields.add(field);
         //    }
-        //    
+        //
         //    return filteredFields;
         return fields;
     }

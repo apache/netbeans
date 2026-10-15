@@ -54,7 +54,7 @@ public enum ConfigVersion {
         return NbBundle.getMessage(ConfigVersion.class, this.name());
     }
     
-    public final static ConfigVersion getDefault() {
+    public static final ConfigVersion getDefault() {
         return CONFIG_2_0;
     }
 

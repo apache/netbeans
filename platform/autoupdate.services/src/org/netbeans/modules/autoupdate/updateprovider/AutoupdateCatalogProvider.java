@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.autoupdate.UpdateUnitProvider.CATEGORY;
+import org.netbeans.modules.autoupdate.services.Trampoline;
 import org.netbeans.spi.autoupdate.UpdateItem;
 import org.netbeans.spi.autoupdate.UpdateProvider;
 import org.openide.util.Parameters;
@@ -45,6 +46,7 @@ public class AutoupdateCatalogProvider implements UpdateProvider {
     private ProviderCategory category;
     private String contentDescription;
     private boolean contentDescriptionInitialized;
+    private boolean trusted;
 
     public AutoupdateCatalogProvider (String name, String displayName, URL updateCenter) {
         this(name, displayName, updateCenter, ProviderCategory.forValue(CATEGORY.COMMUNITY));
@@ -117,6 +119,9 @@ public class AutoupdateCatalogProvider implements UpdateProvider {
             synchronized(cache.getLock(toParse)) {
                 map = AutoupdateCatalogParser.getUpdateItems (toParse, this);
             }
+            for(UpdateItem ui: map.values()) {
+                UpdateItemImpl impl = Trampoline.SPI.impl(ui);
+            }
             descriptionInitialized = true;
             return map;        
     }
@@ -157,5 +162,13 @@ public class AutoupdateCatalogProvider implements UpdateProvider {
     
     public ProviderCategory getProviderCategory() {
         return category;
+    }
+
+    public boolean isTrusted() {
+        return trusted;
+    }
+
+    public void setTrusted(boolean trusted) {
+        this.trusted = trusted;
     }
 }

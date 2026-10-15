@@ -32,28 +32,19 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
 @RunnerRestClass(runner=RunnerRestGetProperty.class)
 public class CommandGetProperty extends Command {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(CommandGetProperty.class);
 
     /** Command string for create-cluster command. */
     private static final String COMMAND = "get";
     
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-    
     /** Pattern that defines properties to retrieve. */
     String propertyPattern;
     
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Retrieve properties from server.
      * <p/>
@@ -113,10 +104,7 @@ public class CommandGetProperty extends Command {
 
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara server get property command entity.
      * <p/>

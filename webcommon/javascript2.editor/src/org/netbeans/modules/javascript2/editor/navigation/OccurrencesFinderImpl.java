@@ -30,7 +30,7 @@ import org.netbeans.modules.csl.api.ColoringAttributes;
 import org.netbeans.modules.csl.api.Modifier;
 import org.netbeans.modules.csl.api.OccurrencesFinder;
 import org.netbeans.modules.csl.api.OffsetRange;
-import org.netbeans.modules.javascript2.model.api.JsElement;
+import org.netbeans.modules.javascript2.editor.options.ui.MarkOccurencesSettings;
 import org.netbeans.modules.javascript2.model.api.JsElement.Kind;
 import org.netbeans.modules.javascript2.model.api.JsObject;
 import org.netbeans.modules.javascript2.model.api.JsReference;
@@ -52,7 +52,7 @@ public class OccurrencesFinderImpl extends OccurrencesFinder<JsParserResult> {
     private Map<OffsetRange, ColoringAttributes> range2Attribs;
     private int caretPosition;
     private volatile boolean cancelled;
-    
+
     @Override
     public void setCaretPosition(int position) {
         this.caretPosition = position;
@@ -60,7 +60,9 @@ public class OccurrencesFinderImpl extends OccurrencesFinder<JsParserResult> {
 
     @Override
     public Map<OffsetRange, ColoringAttributes> getOccurrences() {
-        return range2Attribs;
+        return range2Attribs != null
+                ? Collections.unmodifiableMap(range2Attribs)
+                : Collections.emptyMap();
     }
 
     @Override
@@ -74,7 +76,7 @@ public class OccurrencesFinderImpl extends OccurrencesFinder<JsParserResult> {
         }
         int offset = result.getSnapshot().getEmbeddedOffset(caretPosition);
         Set<OffsetRange> ranges = findOccurrenceRanges(result, offset);
-        range2Attribs = new HashMap<OffsetRange, ColoringAttributes>();
+        range2Attribs = new HashMap<>();
         if(cancelled) {
             cancelled = false;
             return ;
@@ -98,13 +100,27 @@ public class OccurrencesFinderImpl extends OccurrencesFinder<JsParserResult> {
     public void cancel() {
         cancelled = true;
     }
-    
+
+    @Override
+    public boolean isKeepMarks() {
+        return MarkOccurencesSettings
+                .getCurrentNode()
+                .getBoolean(MarkOccurencesSettings.KEEP_MARKS, true);
+    }
+
+    @Override
+    public boolean isMarkOccurrencesEnabled() {
+        return MarkOccurencesSettings
+                .getCurrentNode()
+                .getBoolean(MarkOccurencesSettings.ON_OFF, true);
+    }
+
     private static List<OffsetRange> findMemberUsage(JsObject object, String fqnType, String property, int offset, Set<String> processedObjects) {
-        List<OffsetRange> result = new ArrayList<OffsetRange>();
+        List<OffsetRange> result = new ArrayList<>();
         if (ModelUtils.wasProcessed(object, processedObjects)) {
             return Collections.emptyList();
         }
-        
+
         String fqn = fqnType;
         if (fqn.endsWith(".prototype")) { // NOI18N
             fqn = fqn.substring(0, fqn.length() - 10);
@@ -133,7 +149,7 @@ public class OccurrencesFinderImpl extends OccurrencesFinder<JsParserResult> {
     }
 
     public static Set<OffsetRange> findOccurrenceRanges(JsParserResult result, int caretPosition) {
-        Set<OffsetRange> offsets = new HashSet<OffsetRange>();
+        Set<OffsetRange> offsets = new HashSet<>();
         Model model = Model.getModel(result, false);
         OccurrencesSupport os = new OccurrencesSupport(model);
         Occurrence occurrence = os.getOccurrence(caretPosition);
@@ -171,7 +187,7 @@ public class OccurrencesFinderImpl extends OccurrencesFinder<JsParserResult> {
                         }
                     }
                     if (types.isEmpty()) {
-                        List<OffsetRange> usages = findMemberUsage(Model.getModel(result, false).getGlobalObject(), parent.getFullyQualifiedName(), object.getName(), caretPosition, new HashSet<String>());
+                        List<OffsetRange> usages = findMemberUsage(Model.getModel(result, false).getGlobalObject(), parent.getFullyQualifiedName(), object.getName(), caretPosition, new HashSet<>());
                         for (OffsetRange range : usages) {
                             offsets.add(range);
                         }

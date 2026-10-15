@@ -127,7 +127,7 @@ public abstract class IOFolding {
     /**
      * An SPI for creating custom FoldHandle implementations.
      */
-    protected static abstract class FoldHandleDefinition {
+    protected abstract static class FoldHandleDefinition {
 
         /**
          * Finish the fold at the current last line. Ensure that nested folds

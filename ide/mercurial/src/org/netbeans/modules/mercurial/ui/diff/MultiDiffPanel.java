@@ -1051,8 +1051,8 @@ public class MultiDiffPanel extends javax.swing.JPanel implements ActionListener
                 newSetups.add(setup);
             }
         }
-        Collections.sort(newSetups, new SetupsComparator());
-        return newSetups.toArray(new Setup[newSetups.size()]);
+        newSetups.sort(new SetupsComparator());
+        return newSetups.toArray(new Setup[0]);
     }
 
     @Override
@@ -1130,7 +1130,7 @@ public class MultiDiffPanel extends javax.swing.JPanel implements ActionListener
                         newSetups.add(setup);
                     }
                 }
-                return newSetups.toArray(new Setup[newSetups.size()]);
+                return newSetups.toArray(new Setup[0]);
             }
         } catch (HgException.HgCommandCanceledException ex) {
         } catch (HgException ex) {
@@ -1236,8 +1236,8 @@ public class MultiDiffPanel extends javax.swing.JPanel implements ActionListener
                     modelRight.add(REVISION_SELECT_SEP);
                     modelRight.add(REVISION_SELECT);
                     modelRight.add(REVISION_SELECT_SEP);
-                    cmbDiffTreeFirst.setModel(new DefaultComboBoxModel(modelRight.toArray(new Object[modelRight.size()])));
-                    cmbDiffTreeSecond.setModel(new DefaultComboBoxModel(modelLeft.toArray(new Object[modelLeft.size()])));
+                    cmbDiffTreeFirst.setModel(new DefaultComboBoxModel(modelRight.toArray(new Object[0])));
+                    cmbDiffTreeSecond.setModel(new DefaultComboBoxModel(modelLeft.toArray(new Object[0])));
                     cmbDiffTreeFirst.setEnabled(true);
                     cmbDiffTreeSecond.setEnabled(true);
                 }

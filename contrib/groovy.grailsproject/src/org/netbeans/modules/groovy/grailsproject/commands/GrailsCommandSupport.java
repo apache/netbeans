@@ -186,7 +186,7 @@ public final class GrailsCommandSupport {
         if (real.size() == 1) {
             return real.get(0);
         }
-        return new ProxyInputProcessorFactory(real.toArray(new InputProcessorFactory[real.size()]));
+        return new ProxyInputProcessorFactory(real.toArray(new InputProcessorFactory[0]));
     }
 
     public void refreshGrailsCommands() {

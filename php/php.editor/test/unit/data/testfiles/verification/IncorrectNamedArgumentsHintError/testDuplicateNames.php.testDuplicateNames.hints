@@ -1,0 +1,33 @@
+test(name: 1, name: 2);
+              -------
+HINT:Duplicate argument name: "name" already exists.
+    name: 2,
+    -------
+HINT:Duplicate argument name: "name" already exists.
+    name: 3
+    -------
+HINT:Duplicate argument name: "name" already exists.
+        $this->test(name: 1, name: 2);
+                             -------
+HINT:Duplicate argument name: "name" already exists.
+            name: 2,
+            -------
+HINT:Duplicate argument name: "name" already exists.
+            name: 3
+            -------
+HINT:Duplicate argument name: "name" already exists.
+        self::staticTest(name: 1, name: 2);
+                                  -------
+HINT:Duplicate argument name: "name" already exists.
+            name: 2,
+            -------
+HINT:Duplicate argument name: "name" already exists.
+            name: 3
+            -------
+HINT:Duplicate argument name: "name" already exists.
+$date = new \DateTime(datetime: "now", datetime: "now");
+                                       ---------------
+HINT:Duplicate argument name: "datetime" already exists.
+$anon = new class (test: 1, test: 1) {
+                            -------
+HINT:Duplicate argument name: "test" already exists.

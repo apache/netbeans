@@ -65,7 +65,7 @@ class ProjectShellEnv extends JShellEnvironment {
         }
         List<String> addReads = new ArrayList<>();
         addReads.add("--add-reads:java.jshell=ALL-UNNAMED");
-        return b.remoteVMOptions(addReads.toArray(new String[addReads.size()]));
+        return b.remoteVMOptions(addReads.toArray(String[]::new));
     }
     
     

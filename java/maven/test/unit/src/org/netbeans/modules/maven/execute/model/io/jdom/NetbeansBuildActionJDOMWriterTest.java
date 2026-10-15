@@ -19,9 +19,9 @@
 
 package org.netbeans.modules.maven.execute.model.io.jdom;
 
-import org.jdom.Element;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
+import org.jdom2.Element;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 import org.netbeans.junit.NbTestCase;
 
 public class NetbeansBuildActionJDOMWriterTest extends NbTestCase {

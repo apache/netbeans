@@ -21,6 +21,7 @@ package org.netbeans.modules.debugger.jpda.ui.models;
 
 import java.awt.Color;
 import java.util.Map;
+import java.util.Objects;
 import java.util.WeakHashMap;
 import javax.swing.JTable;
 import javax.swing.UIManager;
@@ -59,9 +60,9 @@ import org.netbeans.spi.viewmodel.UnknownTypeException;
 public class BoldVariablesTableModelFilter implements TableHTMLModelFilter,
 Constants {
     
-    private Map variableToValueType = new WeakHashMap ();
-    private Map variableToValueValue = new WeakHashMap ();
-    private Map variableToValueToString = new WeakHashMap ();
+    private Map<Object, String> variableToValueType = new WeakHashMap<>();
+    private Map<Object, String> variableToValueValue = new WeakHashMap<>();
+    private Map<Object, String> variableToValueToString = new WeakHashMap<>();
     
     
     
@@ -180,12 +181,10 @@ Constants {
     public void removeModelListener (ModelListener l) {
     }
     
-    private String bold (Object variable, String value, Map map) {
+    private String bold (Object variable, String value, Map<Object, String> map) {
         if (map.containsKey (variable)) {
             String oldValue = (String) map.get (variable);
-            if (oldValue == value ||
-                oldValue != null && oldValue.equals (value)) {
-                
+            if (Objects.equals(oldValue, value)) {
                 return toHTML (value, false, false, null);
             }
             map.put (variable, value);
@@ -220,9 +219,9 @@ Constants {
         }
         sb.append(hexColor);
         sb.append ("\">");
-        text = text.replaceAll ("&", "&amp;");
-        text = text.replaceAll ("<", "&lt;");
-        text = text.replaceAll (">", "&gt;");
+        text = text.replace ("&", "&amp;");
+        text = text.replace ("<", "&lt;");
+        text = text.replace (">", "&gt;");
         sb.append (text);
         sb.append ("</font>");
         if (italics) sb.append ("</i>");

@@ -289,7 +289,7 @@ public final class NbPlatformCustomizerSources extends JPanel {
         return NbBundle.getMessage(NbPlatformCustomizerSources.class, key);
     }
     
-    static abstract class ListListener implements ListDataListener, ListSelectionListener {
+    abstract static class ListListener implements ListDataListener, ListSelectionListener {
         
         public void intervalAdded(final ListDataEvent e) {
             listChanged();

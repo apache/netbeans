@@ -107,7 +107,7 @@ public final class PhpUnitCoverageLogParser extends DefaultHandler {
     }
 
     private void processFile(Attributes attributes) {
-        assert content.equals(Content.COVERAGE);
+        assert content == Content.COVERAGE;
         assert file == null;
         content = Content.FILE;
         file = new FileImpl(getPath(attributes));
@@ -115,7 +115,7 @@ public final class PhpUnitCoverageLogParser extends DefaultHandler {
     }
 
     private void processClass(Attributes attributes) {
-        assert content.equals(Content.FILE);
+        assert content == Content.FILE;
         assert file != null;
         assert clazz == null;
         content = Content.CLASS;
@@ -182,14 +182,14 @@ public final class PhpUnitCoverageLogParser extends DefaultHandler {
     }
 
     private void endFile() {
-        assert content.equals(Content.FILE);
+        assert content == Content.FILE;
         assert file != null;
         file = null;
         content = Content.COVERAGE;
     }
 
     private void endClass() {
-        assert content.equals(Content.CLASS);
+        assert content == Content.CLASS;
         assert clazz != null;
         clazz = null;
         content = Content.FILE;

@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -66,35 +67,43 @@ import org.openide.filesystems.FileObject;
  * @author Petr Pisl
  */
 public class ModelUtils {
-      
+
     public static final String PROTOTYPE = "prototype"; //NOI18N
-    
+
     public static final String CONSTRUCTOR = "constructor"; //NOI18N
-    
+
     public static final String THIS = "this"; //NOI18N
 
     public static final String ARGUMENTS = "arguments"; //NOI18N
 
     private static final String GENERATED_FUNCTION_PREFIX = "L#"; //NOI18N
-    
+
     private static final String GENERATED_ANONYM_PREFIX = "Anonym#"; //NOI18N
-    
+
     private static final List<String> KNOWN_TYPES = Arrays.asList(Type.ARRAY, Type.STRING, Type.BOOLEAN, Type.NUMBER, Type.UNDEFINED);
-    
+
     private static final int MAX_RECURSION_DEEP_RESOLVING_ASSIGNMENTS = 10;
-    
-    private static String GLOBAL_DIRECTIVE = "global"; //NOI18N
-    
+
+    private static final String GLOBAL_DIRECTIVE = "global"; //NOI18N
+
     private static final Logger LOG = Logger.getLogger(ModelUtils.class.getName());
-    
+
+    @SuppressWarnings("AssignmentToMethodParameter")
     public static JsObjectImpl getJsObject (ModelBuilder builder, List<Identifier> fqName, boolean isLHS) {
         if (fqName == null || fqName.isEmpty()) {
             return null;
         }
         JsObject result = builder.getCurrentObject();
-        JsObject tmpObject = null;
         String firstName = fqName.get(0).getName();
-        
+        JsObject tmpObject;
+
+        if (THIS.equals(firstName)) {
+            tmpObject = resolveThis(result);
+            fqName = fqName.subList(1, fqName.size());
+        } else {
+            tmpObject = null;
+        }
+
         while (tmpObject == null && result != null && result.getParent() != null) {
             if (result instanceof JsFunctionImpl) {
                 tmpObject = ((JsFunctionImpl)result).getParameter(firstName);
@@ -142,7 +151,7 @@ public class ModelUtils {
             }
             tmpObject = result;
         }
-        return (JsObjectImpl)result;        
+        return (JsObjectImpl)result;
     }
 
     public static boolean isGlobal(JsObject object) {
@@ -156,19 +165,18 @@ public class ModelUtils {
         }
         return parent != null;
     }
-    
+
     public static JsObject findJsObject(Model model, int offset) {
-        JsObject result = null;
         JsObject global = model.getGlobalObject();
-        result = findJsObject(global, offset);
+        JsObject result = findJsObject(global, offset);
         if (result == null) {
             result = global;
         }
         return result;
     }
-    
+
     public static JsObject findJsObject(JsObject object, int offset) {
-        HashSet<String> visited = new HashSet<String>();
+        HashSet<String> visited = new HashSet<>();
         return findJsObject(object, offset, visited);
     }
 
@@ -177,7 +185,7 @@ public class ModelUtils {
             to.addOccurrence(oc.getOffsetRange());
         }
     }
-    
+
     public static JsObject findJsObject(JsObject object, int offset, Set<String> visited) {
         JsObjectImpl jsObject = (JsObjectImpl)object;
         visited.add(jsObject.getFullyQualifiedName());
@@ -189,7 +197,7 @@ public class ModelUtils {
                 JsElement.Kind kind = property.getJSKind();
                 if (kind == JsElement.Kind.OBJECT || kind == JsElement.Kind.ANONYMOUS_OBJECT || kind == JsElement.Kind.OBJECT_LITERAL
                         || kind == JsElement.Kind.FUNCTION || kind == JsElement.Kind.METHOD || kind == JsElement.Kind.CONSTRUCTOR
-                        || kind == JsElement.Kind.WITH_OBJECT) {
+                        || kind == JsElement.Kind.WITH_OBJECT || kind == JsElement.Kind.ARROW_FUNCTION) {
                     if (!visited.contains(property.getFullyQualifiedName())) {
                         tmpObject = findJsObject(property, offset, visited);
                     }
@@ -219,7 +227,7 @@ public class ModelUtils {
                             DeclarationScope scope = getDeclarationScope(array);
                             for (JsObject property : ((JsObject)scope).getProperties().values()) {
                                 JsElement.Kind kind = property.getJSKind();
-                                if (kind == JsElement.Kind.ANONYMOUS_OBJECT && !visited.contains(property.getFullyQualifiedName())) { 
+                                if (kind == JsElement.Kind.ANONYMOUS_OBJECT && !visited.contains(property.getFullyQualifiedName())) {
                                     tmpObject = findJsObject(property, offset, visited);
                                 }
                                 if (tmpObject != null) {
@@ -227,20 +235,19 @@ public class ModelUtils {
                                     break;
                                 }
                             }
-                        }   
+                        }
                     }
                 }
             }
         }
         return result;
     }
-    
+
     public static JsObject findJsObjectByName(JsObject global, String fqName) {
         JsObject result = global;
-        JsObject property = result;
         for (StringTokenizer stringTokenizer = new StringTokenizer(fqName, "."); stringTokenizer.hasMoreTokens() && result != null;) {
             String token = stringTokenizer.nextToken();
-            property = result.getProperty(token);
+            JsObject property = result.getProperty(token);
             if (property == null) {
                 result = (result instanceof JsFunction)
                         ? ((JsFunction)result).getParameter(token)
@@ -254,11 +261,11 @@ public class ModelUtils {
         }
         return result;
     }
-    
+
     public static JsObject findJsObjectByName(Model model, String fqName) {
         return findJsObjectByName(model.getGlobalObject(), fqName);
     }
-    
+
     public static JsObject getGlobalObject(JsObject jsObject) {
         JsObject result = jsObject;
         while(result.getParent() != null) {
@@ -274,9 +281,9 @@ public class ModelUtils {
         while (result.getParent() != null && !(result.getParent() instanceof DeclarationScope)) {
             result = result.getParent();
         }
-        if (result.getParent() != null && result.getParent() instanceof DeclarationScope) {
+        if (result.getParent() instanceof DeclarationScope) {
             result = result.getParent();
-        } 
+        }
         if (!(result instanceof DeclarationScope)) {
             // this shouldn't happened, basically it means that the model is broken and has an object without parent
             result = getGlobalObject(object);
@@ -285,19 +292,18 @@ public class ModelUtils {
     }
 
     public static DeclarationScope getDeclarationScope(Model model, int offset) {
-        DeclarationScope result = null;
         JsObject global = model.getGlobalObject();
-        result = getDeclarationScope((DeclarationScope)global, offset);
+        DeclarationScope result = getDeclarationScope((DeclarationScope)global, offset);
         if (result == null) {
             result = (DeclarationScope)global;
         }
         return result;
     }
-    
+
     public static DeclarationScope getDeclarationScope(DeclarationScope scope, int offset) {
-        
+
         DeclarationScopeImpl dScope = (DeclarationScopeImpl)scope;
-        DeclarationScope result = null; 
+        DeclarationScope result = null;
         if (result == null) {
             if (dScope.getOffsetRange().containsInclusive(offset)) {
                 result = dScope;
@@ -311,14 +317,14 @@ public class ModelUtils {
                             deep = true;
                             break;
                         }
-                        
+
                     }
                 }
             }
         }
         return result;
     }
-    
+
     public static OffsetRange documentOffsetRange(ParserResult result, int start, int end) {
         int lStart = LexUtilities.getLexerOffset(result, start);
         int lEnd = LexUtilities.getLexerOffset(result, end);
@@ -332,14 +338,14 @@ public class ModelUtils {
         }
         return new OffsetRange(lStart, lEnd);
     }
-    
+
     /**
      * Returns all variables that are available in the scope
      * @param inScope
-     * @return 
+     * @return
      */
     public static Collection<? extends JsObject> getVariables(DeclarationScope inScope) {
-        HashMap<String, JsObject> result = new HashMap<String, JsObject>();
+        HashMap<String, JsObject> result = new HashMap<>();
         while (inScope != null) {
             for (JsObject object : ((JsObject)inScope).getProperties().values()) {
                 if (!result.containsKey(object.getName()) && object.getModifiers().contains(Modifier.PRIVATE)) {
@@ -365,27 +371,27 @@ public class ModelUtils {
         }
         return result.values();
     }
-    
+
     public static JsObject getScopeVariable(DeclarationScope inScope, String name) {
         for( DeclarationScope curScope = inScope; curScope != null; curScope = curScope.getParentScope()) {
             JsObject prop = ((JsObject)curScope).getProperty(name);
-            
+
             if( prop != null && prop.getModifiers().contains(Modifier.PRIVATE) )
                 return prop;
-            
+
             if( curScope instanceof JsFunction ) {
                 JsObject param = ((JsFunction)curScope).getParameter(name);
                 if( param != null )
                     return param;
             }
-            
+
             if( prop != null )
                 return prop;
-            
+
             if( name.equals(((JsObject)inScope).getName()) )
                 return (JsObject)inScope;
         }
-        
+
         return null;
     }
 
@@ -393,7 +399,7 @@ public class ModelUtils {
         DeclarationScope scope = ModelUtils.getDeclarationScope(model, offset);
         return  getVariables(scope);
     }
-    
+
     public static JsObject getJsObjectByName(DeclarationScope inScope, String simpleName) {
         Collection<? extends JsObject> variables = ModelUtils.getVariables(inScope);
         for (JsObject jsObject : variables) {
@@ -403,9 +409,6 @@ public class ModelUtils {
         }
         return null;
     }
-    private static final Collection<JsTokenId> CTX_DELIMITERS = Arrays.asList(
-            JsTokenId.BRACKET_LEFT_CURLY, JsTokenId.BRACKET_RIGHT_CURLY,
-            JsTokenId.OPERATOR_SEMICOLON);
 
     private static Collection<TypeUsage> tryResolveWindowProperty(Model model, Index jsIndex, String name) {
         // since issue #215863
@@ -428,30 +431,30 @@ public class ModelUtils {
             }
         }
         if (fqn != null) {
-            List<TypeUsage> fromAssignment = new ArrayList<TypeUsage>();
+            List<TypeUsage> fromAssignment = new ArrayList<>();
             resolveAssignments(model, jsIndex, fqn, offset, fromAssignment);
             if (fromAssignment.isEmpty()) {
                 fromAssignment.add(new TypeUsage(fqn));
-            } 
+            }
             return fromAssignment;
         }
         return null;
     }
-    
+
     private enum State {
         INIT
     }
 
     public static Collection<TypeUsage> resolveSemiTypeOfExpression(ModelBuilder builder, Node expression) {
-        Collection<TypeUsage> result = new HashSet<TypeUsage>();
+        Collection<TypeUsage> result = new HashSet<>();
         SemiTypeResolverVisitor visitor = new SemiTypeResolverVisitor();
         if (expression != null) {
             result = visitor.getSemiTypes(expression, builder);
         }
         if (builder.getCurrentWith()!= null) {
-            Collection<TypeUsage> withResult = new HashSet<TypeUsage>();
+            Collection<TypeUsage> withResult = new HashSet<>();
             String withSemi = SemiTypeResolverVisitor.ST_WITH + builder.getCurrentWith().getFullyQualifiedName();
-            
+
             for(TypeUsage type : result) {
                 if (!KNOWN_TYPES.contains(type.getType())) {
                     withResult.add(new TypeUsage(withSemi + type.getType(), type.getOffset(), type.isResolved()));
@@ -463,9 +466,9 @@ public class ModelUtils {
         }
         return result;
     }
-    
+
     public static Collection<TypeUsage> resolveTypeFromSemiType(JsObject object, TypeUsage type) {
-        Set<TypeUsage> result = new HashSet<TypeUsage>();
+        Set<TypeUsage> result = new HashSet<>();
         if (type.isResolved()) {
             result.add(type);
         } else if (Type.UNDEFINED.equals(type.getType())) {
@@ -505,8 +508,8 @@ public class ModelUtils {
                                 // creates reference to the original function
                                 object.getParent().addProperty(object.getName(), new JsFunctionReference(
                                         object.getParent(), object.getDeclarationName(), function, true, null));
-                            } 
-                        } 
+                            }
+                        }
                     }
                     result.addAll(locally);
                 }
@@ -535,7 +538,7 @@ public class ModelUtils {
                     result.add(new TypeUsage(byOffset.getFullyQualifiedName(), byOffset.getOffset(), true));
                 } else {
                     String newType= SemiTypeResolverVisitor.ST_EXP + byOffset.getFullyQualifiedName().replace(".", SemiTypeResolverVisitor.ST_PRO);
-                    newType = newType + rest;
+                    newType += rest;
                     result.add(new TypeUsage(newType, byOffset.getOffset(), false));
                 }
             }
@@ -544,19 +547,19 @@ public class ModelUtils {
 //                    result.add(new TypeUsage(ModelUtils.createFQN(children), children.getOffset(), true));
 //                    break;
 //                }
-//                
+//
 //            }
         } else if(type.getType().startsWith(SemiTypeResolverVisitor.ST_VAR)){
             String name = type.getType().substring(5);
             DeclarationScope declarationScope = object instanceof DeclarationScope ? (DeclarationScope)object : getDeclarationScope(object);
-            List<JsObject> variables = new ArrayList(ModelUtils.getVariables(declarationScope));
+            List<JsObject> variables = new ArrayList<>(ModelUtils.getVariables(declarationScope));
             if (!(object instanceof DeclarationScope) && object.getParent() != null && !(object.getParent() instanceof DeclarationScope)) {
                 variables.addAll(object.getParent().getProperties().values());
             }
             if (declarationScope != null) {
                 boolean resolved = false;
                 for (JsObject variable : variables) {
-                    if (variable.getName().equals(name)) {
+                    if (Objects.equals(variable.getName(), name)) {
                         String newVarType;
                         if (!variable.getAssignments().isEmpty()) {
                              newVarType= SemiTypeResolverVisitor.ST_EXP + variable.getFullyQualifiedName().replace(".", SemiTypeResolverVisitor.ST_PRO);
@@ -573,7 +576,7 @@ public class ModelUtils {
                                         newProperty.addOccurrence(occurrence.getOffsetRange());
                                     }
                                     object.getParent().addProperty(object.getName(), newProperty);
-                                    
+
                                 } else {
                                     newVarType = variable.getFullyQualifiedName();
                                     result.add(new TypeUsage(newVarType, type.getOffset(), false));
@@ -622,9 +625,9 @@ public class ModelUtils {
         }
         return result;
     }
-    
+
     private static JsObject resolveThis(JsObject object) {
-        JsObject parent = null;
+        JsObject parent;
         if (object.getJSKind() == JsElement.Kind.CONSTRUCTOR) {
             parent = object;
         } else {
@@ -634,10 +637,11 @@ public class ModelUtils {
                 parent = object;
             }
         }
+        // @todo: Handle Arrow Function
         if (parent != null && (parent.getJSKind() == JsElement.Kind.FUNCTION || parent.getJSKind() == JsElement.Kind.METHOD)) {
             if (parent.getParent().getJSKind() != JsElement.Kind.FILE) {
                 JsObject grandParent = parent.getParent();
-                if (grandParent != null 
+                if (grandParent != null
                         && (grandParent.getJSKind() == JsElement.Kind.OBJECT_LITERAL || PROTOTYPE.equals(grandParent.getName()))) {
                     parent = grandParent;
                     if (PROTOTYPE.equals(parent.getName()) && parent.getParent() != null) {
@@ -652,9 +656,9 @@ public class ModelUtils {
         }
         return parent;
     }
-    
+
     private static Collection<TypeUsage> resolveSemiTypeCallChain(JsObject object, TypeUsage type) {
-        Set<TypeUsage> result = new HashSet<TypeUsage>();
+        Set<TypeUsage> result = new HashSet<>();
         DeclarationScope declarationScope = ModelUtils.getDeclarationScope(object);
         JsObject function = null;
         boolean calledNew = false;
@@ -675,7 +679,7 @@ public class ModelUtils {
             Collection<? extends JsObject> variables = ModelUtils.getVariables(declarationScope);
             dotIndex = name.indexOf('.');
             String firstSpace = dotIndex == -1 ? name : name.substring(0, name.indexOf('.'));
-            
+
             for (JsObject variable : variables) {
                 if (variable.getName().equals(firstSpace)) {
                     function = variable;
@@ -709,15 +713,15 @@ public class ModelUtils {
         }
         return result;
     }
-    
+
     /**
-     * 
+     *
      * @param object
      * @param chain
-     * @return 
+     * @return
      */
     private static Collection<TypeUsage> resolveSemiTypeChain(JsObject object, String chain) {
-        Collection<TypeUsage> result = new HashSet<TypeUsage>();
+        Collection<TypeUsage> result = new HashSet<>();
         if (chain.isEmpty()) {
             return result;
         }
@@ -771,12 +775,12 @@ public class ModelUtils {
         }
         return result;
     }
-    
+
     public static Collection<TypeUsage> resolveTypeFromExpression (Model model, @NullAllowed Index jsIndex, List<String> exp, int offset, boolean includeAllPossible) {
-        List<JsObject> localObjects = new ArrayList<JsObject>();
-        List<JsObject> lastResolvedObjects = new ArrayList<JsObject>();
-        List<TypeUsage> lastResolvedTypes = new ArrayList<TypeUsage>();
-        
+        List<JsObject> localObjects = new ArrayList<>();
+        List<JsObject> lastResolvedObjects = new ArrayList<>();
+        List<TypeUsage> lastResolvedTypes = new ArrayList<>();
+
             for (int i = exp.size() - 1; i > -1; i--) {
                 String kind = exp.get(i);
                 String name = exp.get(--i);
@@ -806,7 +810,7 @@ public class ModelUtils {
                 if (i == (exp.size() - 2)) {
                     JsObject localObject = null;
                     // resolving the first part of expression
-                    // find possible variables from local context, index contains only 
+                    // find possible variables from local context, index contains only
                     // public definition, we are interested in the private here as well
                     int index = name.lastIndexOf('.');
                     // needs to look, whether the expression is in a with statement
@@ -830,7 +834,7 @@ public class ModelUtils {
                         }
                         name = changedName;
                     }
-                    
+
                     if (index > -1) { // the first part is a fqn
                         localObject = ModelUtils.findJsObjectByName(model, name);
                         if (localObject != null) {
@@ -884,7 +888,7 @@ public class ModelUtils {
 //                                    }
 //                        }
 //                    }
-                        List<TypeUsage> fromAssignments = new ArrayList<TypeUsage>();
+                        List<TypeUsage> fromAssignments = new ArrayList<>();
 //                        if (localObject != null) {
 //                            //make it only for the right offset
 //                            for(TypeUsage type: localObject.getAssignmentForOffset(offset)) {
@@ -893,18 +897,18 @@ public class ModelUtils {
 //                        } else {
                         if ("@pro".equals(kind) && jsIndex != null) { //NOI18N
                             resolveAssignments(model, jsIndex, name, -1,  fromAssignments);
-                        } 
+                        }
 //                        }
                         lastResolvedTypes.addAll(fromAssignments);
                         if (!typeFromWith.isEmpty()) {
 //                            Collection<TypeUsage> resolveTypes = ModelUtils.resolveTypes(typeFromWith, parserRestult);
-                            
+
                             for (TypeUsage typeUsage : typeFromWith) {
                                 String sType = typeUsage.getType();
                                 if (sType.startsWith("@exp;")) {
                                     sType = sType.substring(5);
                                     sType = sType.replace("@pro;", ".");
-                                }   
+                                }
                                 ModelUtils.resolveAssignments(model, jsIndex, sType, typeUsage.getOffset(), fromAssignments);
                                 for (TypeUsage typeUsage1 : fromAssignments) {
                                     String localFqn = localObject != null ? localObject.getFullyQualifiedName() : null;
@@ -918,11 +922,11 @@ public class ModelUtils {
                                         }
                                     }
                                 }
-                                
+
                             }
                         }
                     }
-                    
+
                     if(!localObjects.isEmpty()){
                         for(JsObject lObject : localObjects) {
                             if(lObject.getAssignmentForOffset(offset).isEmpty()) {
@@ -982,12 +986,12 @@ public class ModelUtils {
                                 }
                             }
                         }
-                    } 
+                    }
                     // now we should have collected possible local objects
                     // also objects from index, that fits the first part of the expression
                 } else {
-                    List<JsObject> newResolvedObjects = new ArrayList<JsObject>();
-                    List<TypeUsage> newResolvedTypes = new ArrayList<TypeUsage>();
+                    List<JsObject> newResolvedObjects = new ArrayList<>();
+                    List<TypeUsage> newResolvedTypes = new ArrayList<>();
                     for (JsObject localObject : lastResolvedObjects) {
                         // go through the loca object and try find the method / property from the next expression part
                         JsObject property = ((JsObject) localObject).getProperty(name);
@@ -1015,13 +1019,13 @@ public class ModelUtils {
                             }
                         }
                     }
-                    
-                    
-                    
+
+
+
                     for (TypeUsage typeUsage : lastResolvedTypes) {
                         if (jsIndex != null) {
                             // for the type build the prototype chain.
-                            Collection<String> prototypeChain = new ArrayList<String>();
+                            Collection<String> prototypeChain = new ArrayList<>();
                             String typeName = typeUsage.getType();
                             if (typeName.contains(SemiTypeResolverVisitor.ST_EXP)) {
                                 typeName = typeName.substring(typeName.indexOf(SemiTypeResolverVisitor.ST_EXP) + SemiTypeResolverVisitor.ST_EXP.length());
@@ -1039,7 +1043,7 @@ public class ModelUtils {
                                 propertyToCheck = fqn + "." + name;
                                 indexResults = jsIndex.findByFqn(propertyToCheck,
                                         Index.FIELD_FLAG, Index.FIELD_RETURN_TYPES, Index.FIELD_ARRAY_TYPES, Index.FIELD_ASSIGNMENTS); //NOI18N
-                                
+
                                 if (indexResults.isEmpty() && !fqn.endsWith(".prototype")) {
                                     // if the property was not found, try to look at the prototype of the object
                                     propertyToCheck = fqn + ".prototype." + name;
@@ -1073,7 +1077,7 @@ public class ModelUtils {
                             }
                             if (checkProperty) {
                                 String propertyFQN = propertyToCheck != null ? propertyToCheck : typeName + "." + name;
-                                List<TypeUsage> fromAssignment = new ArrayList<TypeUsage>();
+                                List<TypeUsage> fromAssignment = new ArrayList<>();
                                 resolveAssignments(model, jsIndex, propertyFQN, -1, fromAssignment);
                                 if (fromAssignment.isEmpty()) {
                                     ModelUtils.addUniqueType(newResolvedTypes, new TypeUsage(propertyFQN));
@@ -1105,8 +1109,8 @@ public class ModelUtils {
                     lastResolvedTypes = newResolvedTypes;
                 }
             }
-            
-            HashMap<String, TypeUsage> resultTypes  = new HashMap<String, TypeUsage> ();
+
+            HashMap<String, TypeUsage> resultTypes  = new HashMap<> ();
             for (TypeUsage typeUsage : lastResolvedTypes) {
                 if(!resultTypes.containsKey(typeUsage.getType())) {
                     resultTypes.put(typeUsage.getType(), typeUsage);
@@ -1127,29 +1131,29 @@ public class ModelUtils {
 
     public static boolean hasDeclaredProperty(JsObject jsObject) {
         boolean result =  false;
-        
+
         Iterator<? extends JsObject> it = jsObject.getProperties().values().iterator();
         while (!result && it.hasNext()) {
             JsObject property = it.next();
             result = property.isDeclared();
             if (!result) {
                 result = hasDeclaredProperty(property);
-            } 
+            }
         }
 
         return result;
     }
-    
+
     public static List<String> expressionFromType(TypeUsage type) {
         String sexp = type.getType();
         if ((sexp.startsWith("@exp;") || sexp.startsWith("@new;") || sexp.startsWith("@arr;") || sexp.contains("@pro;")
                 || sexp.startsWith("@call;") || sexp.startsWith(SemiTypeResolverVisitor.ST_WITH)) && (sexp.length() > 5)) {
-            
+
             if (sexp.charAt(0) == '@') {
                 int start = sexp.startsWith("@call;") || sexp.startsWith("@arr;") || sexp.startsWith(SemiTypeResolverVisitor.ST_WITH) ? 1 : sexp.charAt(5) == '@' ? 6 : 5;
                 sexp = sexp.substring(start);
             }
-            List<String> nExp = new ArrayList<String>();
+            List<String> nExp = new ArrayList<>();
             String[] split = sexp.split("@");
             for (int i = split.length - 1; i > -1; i--) {
                 nExp.add(split[i].substring(split[i].indexOf(';') + 1));
@@ -1179,11 +1183,11 @@ public class ModelUtils {
     public static TypeUsage createResolvedType(JsObject parent, TypeUsage typeHere) {
         int invokeCount = 0;
         String fqn = getFQNFromType(typeHere);
-        List<TypeUsage> alreadyResolved = new ArrayList<>(); 
+        List<TypeUsage> alreadyResolved = new ArrayList<>();
         return resolveTypes(parent, fqn, typeHere.getOffset(), alreadyResolved, invokeCount);
     }
 
-    /* @return TypeUsage with generated typename string 
+    /* @return TypeUsage with generated typename string
      */
     private static TypeUsage resolveTypes(JsObject parent, String fqn, int offset, List<TypeUsage> alreadyResolved, int invokeCount) {
 
@@ -1200,7 +1204,7 @@ public class ModelUtils {
         resolveAssignments(parent, name, offset, localResolved, props);
 
         List<TypeUsage> diff = localResolved.stream().filter(type -> !alreadyResolved.contains(type)).collect(Collectors.toList());
-        if (diff.size() > 0) {
+        if (!diff.isEmpty()) {
             alreadyResolved.addAll(diff);
             boolean typeResolved = false;
             for (TypeUsage type : localResolved) {
@@ -1248,7 +1252,7 @@ public class ModelUtils {
     private static void resolveAssignments(JsObject jsObject, String fqn, int offset, List<TypeUsage> resolved, StringBuilder nestedProperties) {
 
         int invokeCount = 0;
-        Set<String> alreadyProcessed = new HashSet<String>();
+        Set<String> alreadyProcessed = new HashSet<>();
         for (TypeUsage type : resolved) {
             alreadyProcessed.add(type.getType());
         }
@@ -1279,7 +1283,7 @@ public class ModelUtils {
                 fqnCorrected = fqnCorrected.substring(0, index);
             }
             if (!fqnCorrected.startsWith("@")) {
-                List<TypeUsage> toProcess = new ArrayList<TypeUsage>();
+                List<TypeUsage> toProcess = new ArrayList<>();
                 JsObject object = ModelUtils.searchJsObjectByName(parent, fqnCorrected);
 
                 if ((object != null) && (((JsObjectImpl) object).getAssignmentCount() > 0)) {
@@ -1323,10 +1327,10 @@ public class ModelUtils {
         }
         return object;
     }
-    
+
     public static Collection<TypeUsage> resolveTypes(Collection<? extends TypeUsage> unresolved, Model model, Index jsIndex, boolean includeAllPossible) {
         //assert !SwingUtilities.isEventDispatchThread() : "Type resolution may block AWT due to index search";
-        Collection<TypeUsage> types = new ArrayList<TypeUsage>(unresolved);
+        Collection<TypeUsage> types = new ArrayList<>(unresolved);
         if (types.size() == 1 && types.iterator().next().isResolved()) {
             return types;
         }
@@ -1336,11 +1340,11 @@ public class ModelUtils {
         while (!resolvedAll && cycle < 10) {
             cycle++;
             resolvedAll = true;
-            Collection<TypeUsage> resolved = new ArrayList<TypeUsage>();
+            Collection<TypeUsage> resolved = new ArrayList<>();
             for (TypeUsage typeUsage : types) {
                 if (!typeUsage.isResolved()) {
                     if (original == null) {
-                        original = new HashSet<String>(unresolved.size());
+                        original = new HashSet<>(unresolved.size());
                         for (TypeUsage t : unresolved) {
                             original.add(t.getType());
                         }
@@ -1359,11 +1363,11 @@ public class ModelUtils {
                 }
             }
             types.clear();
-            types = new ArrayList<TypeUsage>(resolved);
+            types = new ArrayList<>(resolved);
         }
         return types;
     }
-    
+
     private static void resolveAssignments(Model model, JsObject jsObject, int offset, List<JsObject> resolvedObjects, List<TypeUsage> resolvedTypes) {
         Collection<? extends TypeUsage> assignments = jsObject.getAssignmentForOffset(offset);
         for (TypeUsage typeName : assignments) {
@@ -1388,7 +1392,7 @@ public class ModelUtils {
                     resolvedTypes.add(new TypeUsage(SemiTypeResolverVisitor.ST_EXP + typeWith.getType() + sb.toString(), typeName.getOffset(), false));
                 }
                 resolvedTypes.add(new TypeUsage(sb.toString(), typeName.getOffset(), false));
-                
+
             } else {
                 JsObject byOffset = findObjectForOffset(typeName.getType(), offset, model);
                 if (byOffset != null) {
@@ -1402,17 +1406,17 @@ public class ModelUtils {
             }
         }
     }
-    
+
     private static int deepRA = 0;
     private static void resolveAssignments(Model model, Index jsIndex, String fqn, int offset, List<TypeUsage> resolved) {
-        Set<String> alreadyProcessed = new HashSet<String>();
+        Set<String> alreadyProcessed = new HashSet<>();
         deepRA = 0;
         for(TypeUsage type : resolved) {
             alreadyProcessed.add(type.getType());
         }
         resolveAssignments(model, jsIndex, fqn, offset, resolved, alreadyProcessed);
     }
-    
+
     private static void resolveAssignments(Model model, Index jsIndex, String fqn, int offset,  List<TypeUsage> resolved, Set<String> alreadyProcessed) {
         if (!alreadyProcessed.contains(fqn)) {
             alreadyProcessed.add(fqn);
@@ -1448,7 +1452,7 @@ public class ModelUtils {
                             Collection<? extends TypeUsage> assignments = found.getAssignments();
                             if (!assignments.isEmpty()) {
                                 hasAssignments = true;
-                                List<TypeUsage> toProcess = new ArrayList<TypeUsage>();
+                                List<TypeUsage> toProcess = new ArrayList<>();
                                 for (TypeUsage type : assignments) {
                                     if (!type.isResolved()) {
                                         for (TypeUsage resolvedType : resolveTypeFromSemiType(found, type)) {
@@ -1485,7 +1489,7 @@ public class ModelUtils {
             }
         }
     }
-    
+
     public static JsObject findObjectForOffset(String name, int offset, Model model) {
         for (JsObject object : model.getVariables(offset)) {
             if (object.getName().equals(name)) {
@@ -1496,7 +1500,7 @@ public class ModelUtils {
     }
 
     public static Collection<String> findPrototypeChain(String fqn, Index jsIndex) {
-        Collection<String> chain = findPrototypeChain(fqn, jsIndex, new HashSet<String>());
+        Collection<String> chain = findPrototypeChain(fqn, jsIndex, new HashSet<>());
         return chain;
     }
 
@@ -1514,15 +1518,15 @@ public class ModelUtils {
                     result.addAll(findPrototypeChain(typeUsage.getType(), jsIndex, alreadyCheck));
                 }
             }
-        } 
+        }
         if (result.isEmpty()) {
             result.add("Object"); //NOI18N
         }
         return result;
     }
-    
+
     /**
-     * 
+     *
      * @param model
      * @param offset
      * @return types from with expressions. The collection has the order of items from most inner with to
@@ -1543,7 +1547,7 @@ public class ModelUtils {
             jsObject = jsObject.getParent();
         }
         if (jsObject != null && jsObject.getJSKind() == JsElement.Kind.WITH_OBJECT) {
-            List<TypeUsage> types = new ArrayList<TypeUsage>();
+            List<TypeUsage> types = new ArrayList<>();
             JsWith wObject = (JsWith)jsObject;
             Collection<? extends TypeUsage> withTypes = wObject.getTypes();
             types.addAll(withTypes);
@@ -1558,7 +1562,7 @@ public class ModelUtils {
     }
 
     public static Collection<Identifier> getDefinedGlobal(final Snapshot snapshot, final int offset) {
-        ArrayList<Identifier> names = new ArrayList<Identifier>();
+        ArrayList<Identifier> names = new ArrayList<>();
         List<JsTokenId> findToken = Arrays.asList(JsTokenId.BLOCK_COMMENT);
         TokenSequence<? extends JsTokenId> ts = LexUtilities.getJsTokenSequence(snapshot, offset);
         if (ts == null) {
@@ -1608,11 +1612,11 @@ public class ModelUtils {
         }
         return names;
     }
-    
+
     public static List<? extends JsObject> getExtendingGlobalObjects(FileObject fo) {
         return ModelExtender.getDefault().getExtendingGlobalObjects(fo);
     }
-    
+
     public static void addUniqueType(Collection <TypeUsage> where, Set<String> forbidden, TypeUsage type) {
         String typeName = type.getType();
         if (forbidden.contains(typeName)) {
@@ -1639,9 +1643,9 @@ public class ModelUtils {
     public static void addUniqueType(Collection <TypeUsage> where, Collection <TypeUsage> what) {
         addUniqueType(where, Collections.<String>emptySet(), what);
     }
-    
-    
-    
+
+
+
     public static void addDocTypesOccurence(JsObject jsObject, JsDocumentationHolder docHolder) {
         if (docHolder.getOccurencesMap().containsKey(jsObject.getFullyQualifiedName())) {
             for (OffsetRange offsetRange : docHolder.getOccurencesMap().get(jsObject.getFullyQualifiedName())) {
@@ -1649,7 +1653,7 @@ public class ModelUtils {
             }
         }
     }
-    
+
     public static String getDisplayName(String typeName) {
         String displayName = typeName;
         if (displayName.startsWith("@param;") || displayName.contains(ModelBuilder.WITH_OBJECT_NAME_START)
@@ -1665,7 +1669,7 @@ public class ModelUtils {
         }
         return displayName;
     }
-    
+
     public static String getDisplayName(Type type) {
         List<TypeNameConvertor> convertors = ModelExtender.getDefault().getTypeNameConvertors();
         String displayName = null;
@@ -1682,11 +1686,11 @@ public class ModelUtils {
     }
 
     /**
-     * 
+     *
      * @param fqn fully qualified name of the type
      * @param generated the generated prefix
      * @return the fully qualified name without the generated part or empty string if the generated name is the last one.
-     * 
+     *
      */
     private static String removeGeneratedFromFQN(String fqn, String generated) {
         String[] parts = fqn.split("\\."); //NOI18N
@@ -1722,25 +1726,25 @@ public class ModelUtils {
         }
         return sb.toString();
     }
-    
-    private static List<String> knownGlobalObjects = Arrays.asList("window", "document", "console",
+
+    private static final List<String> knownGlobalObjects = Arrays.asList("window", "document", "console",
             "clearInterval", "clearTimeout", "event", "frames", "history",
             "Image", "location", "name", "navigator", "Option", "parent", "screen", "setInterval", "setTimeout",
             "XMLHttpRequest", "JSON", "Date", Type.UNDEFINED, "Math",  //NOI18N
             Type.ARRAY, Type.OBJECT, Type.BOOLEAN, Type.NULL, Type.NUMBER, Type.REGEXP, Type.STRING, Type.UNDEFINED, Type.UNRESOLVED,
             Type.NAN, Type.INFINITY);
-    
+
     public static boolean isKnownGLobalType(String type) {
         return knownGlobalObjects.contains(type);
     }
-    
+
     /**
-     * 
+     *
      * @param snapshot
      * @param offset offset where the expression should be resolved
      * @param lookBefore if yes, looks for the beginning of the expression before the offset,
      *                  if no, it can be in a middle of expression
-     * @return 
+     * @return
      */
     public static List<String> resolveExpressionChain(Snapshot snapshot, int offset, boolean lookBefore) {
         TokenHierarchy<?> th = snapshot.getTokenHierarchy();
@@ -1751,7 +1755,7 @@ public class ModelUtils {
 
         ts.move(offset);
         if (ts.movePrevious() && (ts.moveNext() || ((ts.offset() + ts.token().length()) == snapshot.getText().length()))) {
-            if (!lookBefore && ts.token().id() != JsTokenId.OPERATOR_DOT) {
+            if (!lookBefore && ts.token().id() != JsTokenId.OPERATOR_DOT && ts.token().id() != JsTokenId.OPERATOR_OPTIONAL_ACCESS) {
                 ts.movePrevious();
             }
             Token<? extends JsTokenId> token = lookBefore ? LexUtilities.findPrevious(ts, Arrays.asList(JsTokenId.WHITESPACE, JsTokenId.BLOCK_COMMENT, JsTokenId.EOL)) : ts.token();
@@ -1760,23 +1764,24 @@ public class ModelUtils {
             int partType = 0;
             boolean wasLastDot = lookBefore;
             int offsetFirstRightParen = -1;
-            List<String> exp = new ArrayList();
+            List<String> exp = new ArrayList<>();
 
             while (token.id() != JsTokenId.OPERATOR_SEMICOLON
                     && token.id() != JsTokenId.BRACKET_RIGHT_CURLY && token.id() != JsTokenId.BRACKET_LEFT_CURLY
                     && token.id() != JsTokenId.BRACKET_LEFT_PAREN
-                    && token.id() != JsTokenId.BLOCK_COMMENT
-                    && token.id() != JsTokenId.LINE_COMMENT
                     && token.id() != JsTokenId.OPERATOR_ASSIGNMENT
                     && token.id() != JsTokenId.OPERATOR_PLUS) {
-                
+
                 if (token.id() == JsTokenId.WHITESPACE) {
                     // we need to find out, whether this is a continual expression on the new line
                     int helpOffset = ts.offset();
                     if (ts.movePrevious()) {
                         token = LexUtilities.findPrevious(ts, Arrays.asList(JsTokenId.WHITESPACE, JsTokenId.BLOCK_COMMENT, JsTokenId.LINE_COMMENT, JsTokenId.EOL));
-                        if (token.id() != JsTokenId.BRACKET_RIGHT_PAREN && token.id() != JsTokenId.IDENTIFIER
-                                && token.id() != JsTokenId.OPERATOR_DOT) {
+                        if (token.id() != JsTokenId.BRACKET_RIGHT_PAREN
+                                && token.id() != JsTokenId.IDENTIFIER
+                                && token.id() != JsTokenId.PRIVATE_IDENTIFIER
+                                && token.id() != JsTokenId.OPERATOR_DOT
+                                && token.id() != JsTokenId.OPERATOR_OPTIONAL_ACCESS) {
                             ts.move(helpOffset);
                             ts.moveNext();
                             token = ts.token();
@@ -1784,8 +1789,8 @@ public class ModelUtils {
                         }
                     }
                 }
-                if (token.id() != JsTokenId.EOL) {
-                    if (token.id() != JsTokenId.OPERATOR_DOT) {
+                if (token.id() != JsTokenId.WHITESPACE && token.id() != JsTokenId.EOL && token.id() != JsTokenId.BLOCK_COMMENT && token.id() != JsTokenId.LINE_COMMENT) {
+                    if (token.id() != JsTokenId.OPERATOR_DOT && token.id() != JsTokenId.OPERATOR_OPTIONAL_ACCESS) {
                         if (token.id() == JsTokenId.BRACKET_RIGHT_PAREN) {
                             parenBalancer++;
                             partType = 1;
@@ -1840,10 +1845,10 @@ public class ModelUtils {
                         wasLastDot = true;
                     }
                 } else {
-                    if (!wasLastDot && ts.movePrevious()) {
+                    if (token.id() != JsTokenId.BLOCK_COMMENT && token.id() != JsTokenId.LINE_COMMENT && !wasLastDot && ts.movePrevious()) {
                         // check whether it's continuatino of previous line
                         token = LexUtilities.findPrevious(ts, Arrays.asList(JsTokenId.WHITESPACE, JsTokenId.BLOCK_COMMENT, JsTokenId.LINE_COMMENT));
-                        if (token.id() != JsTokenId.OPERATOR_DOT) {
+                        if (token.id() != JsTokenId.OPERATOR_DOT && token.id() != JsTokenId.OPERATOR_OPTIONAL_ACCESS) {
                             // the dot was not found => it's not continuation of expression
                             break;
                         }
@@ -1887,7 +1892,7 @@ public class ModelUtils {
         }
         return Collections.<String>emptyList();
     }
-    
+
     public static void moveProperty (JsObject newParent, JsObject property) {
         JsObject newProperty = newParent.getProperty(property.getName());
         if (property.getParent() != null) {
@@ -1908,26 +1913,26 @@ public class ModelUtils {
             for (Occurrence occurrence : property.getOccurrences()) {
                 newProperty.addOccurrence(occurrence.getOffsetRange());
             }
-            List<JsObject>propertiesToMove = new ArrayList(property.getProperties().values());
+            List<JsObject>propertiesToMove = new ArrayList<>(property.getProperties().values());
             for (JsObject propOfProperty: propertiesToMove) {
                 moveProperty(newProperty, propOfProperty);
             }
         }
     }
-    
+
     /**
-     * It change the declaration scope of the input object to the new scope. 
+     * It change the declaration scope of the input object to the new scope.
      * If the where object is not a function (Declaration Scope), then it's all the properties are
      * scanned recursively to change the declaration scope to the new one. It doesn't change the parents
      * of the objects, just the declaration scope. Usually is used, when you need wrap the object to the
-     * new virtual function. 
-     * @param where the object which is moved from one declaration scope to another one. 
-     * @param newScope new declaration scope 
+     * new virtual function.
+     * @param where the object which is moved from one declaration scope to another one.
+     * @param newScope new declaration scope
      */
     public static void changeDeclarationScope(JsObject where, DeclarationScope newScope) {
-        changeDeclarationScope(where, newScope, new HashSet<String>());
+        changeDeclarationScope(where, newScope, new HashSet<>());
     }
-    
+
     private static void changeDeclarationScope(JsObject where, DeclarationScope newScope, Set<String> done) {
         if (!done.contains(where.getFullyQualifiedName())) {
             done.add(where.getFullyQualifiedName());
@@ -1939,7 +1944,7 @@ public class ModelUtils {
                         oldScope.getChildrenScopes().remove(scope);
                         if (scope instanceof DeclarationScopeImpl) {
                             ((DeclarationScopeImpl)scope).setParentScope(newScope);
-                        }  
+                        }
                     }
                     newScope.addDeclaredScope(scope);
                 }
@@ -1950,13 +1955,13 @@ public class ModelUtils {
             }
         }
     }
-    
+
     /**
      * This method is useful, when you need to go through the model and be sure that
      * the algorithm will not run into endless cycle. In the model there can be references
      * to an object that can caused endless cycle. This method check whether the object has an reference or
      * the original of the reference object was already processed. Also adds the fully qualified names of the object
-     * and the references to the list of processed objects. 
+     * and the references to the list of processed objects.
      * @param object object that should be processed
      * @param processedObjects list of already processed object
      * @return true if the object full qualified name or his reference full qualified name is in the processedObjects list.
@@ -1991,7 +1996,7 @@ public class ModelUtils {
         }
         return false;
     }
-    
+
     public static String getFQNFromType(Type type) {
         String fqn = type.getType();
         if (fqn.startsWith(SemiTypeResolverVisitor.ST_EXP)) {

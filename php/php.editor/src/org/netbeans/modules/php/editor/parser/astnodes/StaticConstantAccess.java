@@ -19,17 +19,29 @@
 package org.netbeans.modules.php.editor.parser.astnodes;
 
 /**
- * Represents a constant class access
- * <pre>e.g.<pre> MyClass::CONST
- * MyClass::CONSTANT[0]
+ * Represents a constant class access.
+ *
+ * e.g.
+ * <pre>
+ * MyClass::CONST;
+ * MyClass::CONSTANT[0];
+ * MyClass::{$expr}; // PHP 8.3 Dynamic class constant fetch
+ * $myClass::{$expr}; // PHP 8.3 Dynamic class constant fetch
+ * </pre>
  */
 public class StaticConstantAccess extends StaticDispatch {
 
-    private Expression constant;
+    private final Expression constant;
+    private final boolean isDynamicName;
 
-    public StaticConstantAccess(int start, int end, Expression className, Expression constant) {
+    public StaticConstantAccess(int start, int end, Expression className, Expression constant, boolean isDynamicName) {
         super(start, end, className);
         this.constant = constant;
+        this.isDynamicName = isDynamicName;
+    }
+
+    public StaticConstantAccess(int start, int end, Expression className, Expression constant) {
+        this(start, end, className, constant, false);
     }
 
     public StaticConstantAccess(int start, int end, Identifier name) {
@@ -50,8 +62,22 @@ public class StaticConstantAccess extends StaticDispatch {
         while (expression instanceof ExpressionArrayAccess) {
             expression = ((ExpressionArrayAccess) expression).getExpression();
         }
-        assert expression instanceof Identifier;
+        // can use dynamic constant names since PHP 8.3
+        // e.g. Foo::{$bar};
+        assert expression != null;
+        if (isDynamicName) {
+            // create an identifier to avoid NPE (can improve this?)
+            if (expression instanceof ReflectionVariable) {
+                expression = ((ReflectionVariable) expression).getName();
+            }
+            expression = new Identifier(constant.getStartOffset(), constant.getEndOffset(), "{" + expression.toString() + "}"); // NOI18N
+        }
+        assert expression instanceof Identifier : "Expected Identifier but got: " + expression.getClass().getName(); // NOI18N
         return (Identifier) expression;
+    }
+
+    public boolean isDynamicName() {
+        return isDynamicName;
     }
 
     @Override

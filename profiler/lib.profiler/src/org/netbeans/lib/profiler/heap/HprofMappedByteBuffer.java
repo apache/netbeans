@@ -19,11 +19,8 @@
 
 package org.netbeans.lib.profiler.heap;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
+import java.nio.ByteBuffer;
 
 
 /**
@@ -33,16 +30,17 @@ import java.nio.channels.FileChannel;
 class HprofMappedByteBuffer extends HprofByteBuffer {
     //~ Instance fields ----------------------------------------------------------------------------------------------------------
 
-    private MappedByteBuffer dumpBuffer;
+    private final ByteBuffer dumpBuffer;
 
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 
     HprofMappedByteBuffer(File dumpFile) throws IOException {
-        FileInputStream fis = new FileInputStream(dumpFile);
-        FileChannel channel = fis.getChannel();
-        length = channel.size();
-        dumpBuffer = channel.map(FileChannel.MapMode.READ_ONLY, 0, length);
-        channel.close();
+        this(dumpFile.mmapReadOnly());
+    }
+
+    HprofMappedByteBuffer(ByteBuffer buffer) throws IOException {
+        this.dumpBuffer = buffer;
+        this.length = buffer.capacity();
         readHeader();
     }
 

@@ -1,0 +1,7 @@
+Code completion result for source line:
+public static function publicMethod3(): Enu|m1&Enum2 {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    EnumTestNamespace               [PUBLIC]   null
+CLASS      Enum1                           [PUBLIC]   EnumTestNamespace
+CLASS      Enum2                           [PUBLIC]   EnumTestNamespace
+CLASS      EnumTest                        [PUBLIC]   EnumTestNamespace

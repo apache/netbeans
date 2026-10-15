@@ -1,0 +1,12 @@
+    case A;
+         -
+HINT:Constant "A" has already been declared
+    const A = 1;
+          -
+HINT:Constant "A" has already been declared
+    case B = 2;
+         -
+HINT:Constant "B" has already been declared
+    const B = 1;
+          -
+HINT:Constant "B" has already been declared

@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.j2ee.ejbcore.api.codegeneration;
 
-import org.netbeans.modules.j2ee.ejbcore.api.codegeneration.CallEjbGenerator;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import java.io.IOException;
@@ -138,7 +137,7 @@ public class CallEjbGeneratorTest extends TestBase {
         assertNull(erc.getLocalReferencingClass());
 
         final String generatedHome =
-                "@EJB()" + newline +
+                "@EJB" + newline +
                 "private StatelessLRLocalHome2 statelessLRLocalHome2";
         
         final String generatedComponent =
@@ -148,7 +147,7 @@ public class CallEjbGeneratorTest extends TestBase {
         
         final String generatedMethod =
                 newline +
-                "@PostConstruct()" + newline +
+                "@PostConstruct" + newline +
                 "private void initialize() {" + newline +
                 "    try {" + newline +
                 "        statelessLRBean2 = statelessLRLocalHome2.create();" + newline +

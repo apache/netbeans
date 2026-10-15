@@ -35,7 +35,7 @@
     <properties>
         <property>
             <name>maven-dependencies</name>
-            <value>org.glassfish:javax.faces:2.2.7:jar</value>
+            <value>org.glassfish:javax.faces:2.3.9:jar</value>
         </property>
-    </properties>    
+    </properties>
 </library>

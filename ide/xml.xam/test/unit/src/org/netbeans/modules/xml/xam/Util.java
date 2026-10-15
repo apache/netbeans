@@ -39,6 +39,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URI;
+import java.nio.file.Files;
 import javax.swing.text.Document;
 import org.netbeans.modules.xml.xam.dom.DocumentModel;
 import org.netbeans.modules.xml.xam.dom.ReadOnlyAccess;
@@ -83,7 +84,7 @@ public class Util {
     }
     
     public static File dumpToTempFile(Document doc) throws Exception {
-        File f = File.createTempFile("xsm", "xsd");
+        File f = Files.createTempFile("xsm", "xsd").toFile();
         dumpToFile(doc, f);
         return f;
     }

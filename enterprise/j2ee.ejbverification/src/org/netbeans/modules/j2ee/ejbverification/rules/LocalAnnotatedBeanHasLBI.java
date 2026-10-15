@@ -61,7 +61,8 @@ public final class LocalAnnotatedBeanHasLBI {
         final List<ErrorDescription> problems = new ArrayList<>();
         final EJBProblemContext ctx = HintsUtils.getOrCacheContext(hintContext);
         if (ctx != null && ctx.getEjb() instanceof Session) {
-            if (JavaUtils.hasAnnotation(ctx.getClazz(), EJBAPIAnnotations.LOCAL)) {
+            if (JavaUtils.hasAnnotation(ctx.getClazz(), EJBAPIAnnotations.LOCAL)
+                    || JavaUtils.hasAnnotation(ctx.getClazz(), EJBAPIAnnotations.LOCAL_JAKARTA)) {
                 if (ctx.getEjbData().getBusinessLocal().length == 0) {
                     ErrorDescription err = HintsUtils.createProblem(
                             ctx.getClazz(),

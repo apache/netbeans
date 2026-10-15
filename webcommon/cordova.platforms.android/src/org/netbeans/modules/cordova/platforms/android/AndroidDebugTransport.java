@@ -27,6 +27,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.channels.SelectionKey;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -82,7 +83,7 @@ public class AndroidDebugTransport extends MobileDebugTransport implements WebSo
     @Override
     public void read(SelectionKey key, byte[] message, Integer dataType) {
         final String string;
-        string = new String(message, Charset.forName("UTF-8")).trim(); //NOI18N
+        string = new String(message, StandardCharsets.UTF_8).trim();
         try {
             final Object parse = JSONValue.parseWithException(string);
             if (callBack == null) {
@@ -117,7 +118,7 @@ public class AndroidDebugTransport extends MobileDebugTransport implements WebSo
     public boolean attach() {
         try {
             String s = ProcessUtilities.callProcess(
-                    ((AndroidPlatform) AndroidPlatform.getDefault()).getAdbCommand(), 
+                    AndroidPlatform.getDefault().getAdbCommand(), 
                     true, 
                     AndroidPlatform.DEFAULT_TIMEOUT, 
                     "forward", // NOI18N

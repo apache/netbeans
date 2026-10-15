@@ -65,17 +65,21 @@ public class AttachSourcePanel extends javax.swing.JPanel {
     private final URL root;
     private final URL file;
     private final String binaryName;
+    private final String sourceFile;
 
     public AttachSourcePanel(
             @NonNull final URL root,
             @NonNull final URL file,
-            @NonNull final String binaryName) {
+            @NonNull final String binaryName,
+            @NonNull final String sourceFile
+    ) {
         assert root != null;
         assert file != null;
         assert binaryName != null;
         this.root = root;
         this.file = file;
         this.binaryName = binaryName;
+        this.sourceFile = sourceFile;
         initComponents();
     }
 
@@ -91,7 +95,7 @@ public class AttachSourcePanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
 
-        jLabel1.setText(org.openide.util.NbBundle.getMessage(AttachSourcePanel.class, "AttachSourcePanel.jLabel1.text")); // NOI18N
+        jLabel1.setText(org.openide.util.NbBundle.getMessage(AttachSourcePanel.class, "AttachSourcePanel.jLabel1.text", sourceFile));
 
         jButton1.setText(org.openide.util.NbBundle.getMessage(AttachSourcePanel.class, "AttachSourcePanel.jButton1.text")); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -250,6 +254,7 @@ private void attachSources(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_at
             case PACKAGE:
             case CLASS:
             case INTERFACE:
+            case RECORD:
             case ENUM:
             case ANNOTATION_TYPE:
             case METHOD:

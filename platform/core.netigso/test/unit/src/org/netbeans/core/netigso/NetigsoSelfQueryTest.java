@@ -283,15 +283,15 @@ public class NetigsoSelfQueryTest extends NetigsoHid {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
-        public Class loadClass(String string) throws ClassNotFoundException {
+        public Class<?> loadClass(String string) throws ClassNotFoundException {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
-        public Enumeration getResources(String string) throws IOException {
+        public Enumeration<?> getResources(String string) throws IOException {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
-        public Enumeration getEntryPaths(String string) {
+        public Enumeration<?> getEntryPaths(String string) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
@@ -303,7 +303,7 @@ public class NetigsoSelfQueryTest extends NetigsoHid {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
-        public Enumeration findEntries(String string, String string1, boolean bln) {
+        public Enumeration<URL> findEntries(String string, String string1, boolean bln) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
@@ -311,7 +311,7 @@ public class NetigsoSelfQueryTest extends NetigsoHid {
             return handler.get();
         }
 
-        public Map getSignerCertificates(int i) {
+        public Map<?, ?> getSignerCertificates(int i) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
@@ -513,15 +513,15 @@ public class NetigsoSelfQueryTest extends NetigsoHid {
             return "org.test";
         }
 
-        public Class loadClass(String string) throws ClassNotFoundException {
+        public Class<?> loadClass(String string) throws ClassNotFoundException {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
-        public Enumeration getResources(String string) throws IOException {
+        public Enumeration<?> getResources(String string) throws IOException {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
-        public Enumeration getEntryPaths(String string) {
+        public Enumeration<?> getEntryPaths(String string) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
@@ -533,7 +533,7 @@ public class NetigsoSelfQueryTest extends NetigsoHid {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
-        public Enumeration findEntries(String string, String string1, boolean bln) {
+        public Enumeration<URL> findEntries(String string, String string1, boolean bln) {
             Set<URL> set = new HashSet<URL>();
             try {
                 if (archive.fromArchive("org/test/pkg/MyClass.class") != null) {

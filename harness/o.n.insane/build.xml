@@ -24,4 +24,19 @@
 
     <import file="../../nbbuild/templates/projectized.xml"/>
 
+    <target name="nblib" depends="init">
+        <mkdir dir="build/hookclasses"/>
+        <javac srcdir="hook" destdir="build/hookclasses" source="1.8" target="1.8" debug="true" deprecation="true">
+        </javac>
+        <copy todir="build/hookclasses">
+            <fileset dir="hook" excludes="${jar-excludes}"/>
+        </copy>
+        <mkdir dir="${cluster}/modules/ext"/>
+        <nb-ext-jar jarfile="${cluster}/modules/ext/${code.name.base.dashes}-hook.jar" compress="false">
+            <fileset dir="build/hookclasses"/>
+        </nb-ext-jar>
+    </target>
+
+    <target name="compile" depends="nblib,projectized-common.compile"/>
+
 </project>

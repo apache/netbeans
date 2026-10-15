@@ -27,15 +27,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiFunction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.Action;
 import org.openide.util.Lookup;
 import org.openide.util.Lookup.Item;
 import org.openide.util.Lookup.Provider;
@@ -45,7 +46,6 @@ import org.openide.util.LookupListener;
 import org.openide.util.Mutex;
 import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
@@ -143,8 +143,6 @@ class ContextManager extends Object {
             if (e) {
                 List<? extends T> all = listFromResult(result);
                 e = enabler.enabled(all, new LkpAE(all, type));
-            } else if (enabler != null) {
-                enabler.detach();
             }
         }
         
@@ -415,9 +413,9 @@ class ContextManager extends Object {
     /** Special set, that is weakly holding its actions, but also
      * listens on changes in lookup.
      */
-    static final class LSet<T> extends WeakSet<ContextAction> 
-    implements LookupListener, Runnable {
+    static final class LSet<T> implements Set<ContextAction>, LookupListener, Runnable {
         final Lookup.Result<T> result;
+        private final Set<ContextAction> delegate = Collections.newSetFromMap(new WeakHashMap<>());
         
         public LSet(Lookup.Result<T> context, Class<T> type) {
             this.result = context;
@@ -429,7 +427,7 @@ class ContextManager extends Object {
         @Override
         public boolean add(ContextAction e) {
             assert e != null;
-            return super.add(e);
+            return delegate.add(e);
         }
 
         @Override
@@ -462,6 +460,66 @@ class ContextManager extends Object {
 
         private void cleanup() {
             this.result.removeLookupListener(this);
+        }
+
+        @Override
+        public int size() {
+            return delegate.size();
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return delegate.isEmpty();
+        }
+
+        @Override
+        public boolean contains(Object o) {
+            return delegate.contains(o);
+        }
+
+        @Override
+        public Iterator<ContextAction> iterator() {
+            return delegate.iterator();
+        }
+
+        @Override
+        public Object[] toArray() {
+            return delegate.toArray();
+        }
+
+        @Override
+        public <T> T[] toArray(T[] a) {
+            return delegate.toArray(a);
+        }
+
+        @Override
+        public boolean remove(Object o) {
+            return delegate.remove(o);
+        }
+
+        @Override
+        public boolean containsAll(Collection<?> c) {
+            return delegate.containsAll(c);
+        }
+
+        @Override
+        public boolean addAll(Collection<? extends ContextAction> c) {
+            return delegate.addAll(c);
+        }
+
+        @Override
+        public boolean retainAll(Collection<?> c) {
+            return delegate.retainAll(c);
+        }
+
+        @Override
+        public boolean removeAll(Collection<?> c) {
+            return delegate.removeAll(c);
+        }
+
+        @Override
+        public void clear() {
+            delegate.clear();
         }
     }
 

@@ -119,7 +119,7 @@ public class MavenFileLocator implements LineConvertors.FileLocator {
         if (platform != null) {
             roots.addAll(Arrays.asList(platform.getSourceFolders().getRoots()));
         }
-        result = ClassPathSupport.createClassPath(roots.toArray(new FileObject[roots.size()]));
+        result = ClassPathSupport.createClassPath(roots.toArray(new FileObject[0]));
         return result;
     }
 }

@@ -275,7 +275,7 @@ class CategoryButton extends JCheckBox implements Autoscroll {
                 policy = kfm.getDefaultFocusTraversalPolicy();
             Component next = moveDown ? policy.getComponentAfter( container, CategoryButton.this )
                                       : policy.getComponentBefore( container, CategoryButton.this );
-            if( null != next && next instanceof CategoryList ) {
+            if(next instanceof CategoryList) {
                 if( ((CategoryList)next).getModel().getSize() != 0 ) {
                     ((CategoryList)next).takeFocusFrom( CategoryButton.this );
                     return;
@@ -284,7 +284,7 @@ class CategoryButton extends JCheckBox implements Autoscroll {
                                     : policy.getComponentBefore( container, next );
                 }
             }
-            if( null != next && next instanceof CategoryButton ) {
+            if(next instanceof CategoryButton) {
                 next.requestFocus();
             }
         }

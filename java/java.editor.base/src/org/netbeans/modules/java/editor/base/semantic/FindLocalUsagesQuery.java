@@ -18,8 +18,6 @@
  */
 package org.netbeans.modules.java.editor.base.semantic;
 
-import org.netbeans.modules.java.editor.base.semantic.Utilities;
-
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ImportTree;
@@ -70,7 +68,7 @@ public class FindLocalUsagesQuery extends CancellableTreePathScanner<Void, Stack
     
     public Set<Token> findUsages(Element element, CompilationInfo info, Document doc) {
         this.info = info;
-        this.usages = new HashSet<Token>();
+        this.usages = new HashSet<>();
         this.toFind = element;
         this.doc = doc;
         
@@ -133,7 +131,7 @@ public class FindLocalUsagesQuery extends CancellableTreePathScanner<Void, Stack
         super.visitVariable(tree, d);
         return null;
     }
-    
+
     @Override
     public Void visitClass(ClassTree tree, Stack<Tree> d) {
         handlePotentialVariable(getCurrentPath());
@@ -191,4 +189,14 @@ public class FindLocalUsagesQuery extends CancellableTreePathScanner<Void, Stack
         }
         return super.visitImport(node, p);
     }
+
+    @Override
+    public Void scan(Tree tree, Stack<Tree> p) {
+        if (tree != null && "BINDING_PATTERN".equals(tree.getKind().name())) {
+            handlePotentialVariable(new TreePath(getCurrentPath(), tree));
+        }
+        return super.scan(tree, p);
+    }
+    
+    
 }

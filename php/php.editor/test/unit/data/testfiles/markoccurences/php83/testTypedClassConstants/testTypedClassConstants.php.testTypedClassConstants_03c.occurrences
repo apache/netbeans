@@ -1,0 +1,6 @@
+class |>MARK_OCCURRENCES:C<| extends A {}
+    public const (A&B)||>MARK_OCCURRENCES:C<| DNF = C;
+    public const (A&B)|^|>MARK_OCCURRENCES:C<| DNF = C; // interface
+    public const (A&B)||>MARK_OCCURRENCES:C<| DNF = C; // trait
+    public const (A&B)|(A&|>MARK_OCCURRENCES:C<|) DNF = C; // enum
+define("C", new |>MARK_OCCURRENCES:C<|());

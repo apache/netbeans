@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -54,7 +55,7 @@ public class ConflictDescriptionParserTest extends NbTestCase {
         File dataDir = getDataDir();
         File dataFile = new File(dataDir, "treeConflictsParser");
         assert dataFile.exists();
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dataFile), "UTF-8"));
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dataFile), StandardCharsets.UTF_8));
         for (String line = br.readLine(); line != null; line = br.readLine()) {
             testConflicts(line);
         }
@@ -68,7 +69,7 @@ public class ConflictDescriptionParserTest extends NbTestCase {
         File dataDir = getDataDir();
         File dataFile = new File(dataDir, "treeConflictsParserCorrupted");
         assert dataFile.exists();
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dataFile), "UTF-8"));
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dataFile), StandardCharsets.UTF_8));
         for (String line = br.readLine(); line != null; line = br.readLine()) {
             ParserLogHandler handler = new ParserLogHandler();
             attachHandler(handler);

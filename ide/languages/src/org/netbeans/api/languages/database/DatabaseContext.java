@@ -176,7 +176,7 @@ public class DatabaseContext extends DatabaseItem {
     public DatabaseItem getDatabaseItem (int offset) {
         if (definitions != null) {
             if (!definitionsSorted) {
-                Collections.sort (definitions, new ItemsComparator());
+                definitions.sort(new ItemsComparator());
                 definitionsSorted = true;
             }
             int low = 0;
@@ -196,7 +196,7 @@ public class DatabaseContext extends DatabaseItem {
         
         if (usages != null) {
             if (!usagesSorted) {
-                Collections.sort (usages, new ItemsComparator());
+                usages.sort(new ItemsComparator());
                 usagesSorted = true;
             }
             int low = 0;
@@ -216,7 +216,7 @@ public class DatabaseContext extends DatabaseItem {
         
         if (contexts != null) {
             if (!contextsSorted) {
-                Collections.sort (contexts, new ItemsComparator());
+                contexts.sort(new ItemsComparator());
                 contextsSorted = true;
             }
             int low = 0;
@@ -240,7 +240,7 @@ public class DatabaseContext extends DatabaseItem {
         if (contexts == null || contexts.isEmpty()) return this;
         
         if (!contextsSorted)
-            Collections.sort (contexts, new ItemsComparator ());
+            contexts.sort(new ItemsComparator ());
         contextsSorted = true;
         
 	int low = 0;
@@ -269,7 +269,7 @@ public class DatabaseContext extends DatabaseItem {
     public DatabaseDefinition getDefinition (String name, int offset) {
         if (definitions != null) {
             if (!definitionsSorted)
-                Collections.sort (definitions, new ItemsComparator ());
+                definitions.sort(new ItemsComparator());
             definitionsSorted = true;
             Iterator<DatabaseDefinition> it = definitions.iterator ();
             while (it.hasNext ()) {

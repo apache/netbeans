@@ -17,7 +17,7 @@
  * under the License.
  */
 
-/**
+/*
  * MonitorAction.java
  *
  *
@@ -108,8 +108,5 @@ public class MonitorAction extends CallableSystemAction {
         tv.requestActive();        
     }
 
-    public static void log(String s) {
-	log("MonitorAction::" + s); //NOI18N
-    }
 }
 

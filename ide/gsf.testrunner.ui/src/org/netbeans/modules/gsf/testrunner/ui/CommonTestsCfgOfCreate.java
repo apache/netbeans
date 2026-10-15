@@ -511,7 +511,7 @@ public class CommonTestsCfgOfCreate extends SelfResizingPanel implements ChangeL
         setSelectedTestingFramework();
         Collection<? extends GuiUtilsProvider> providers = Lookup.getDefault().lookupAll(GuiUtilsProvider.class);
         for (GuiUtilsProvider provider : providers) {
-            if(selectedTestingFramework != null && selectedTestingFramework.equals(provider.getJunitFramework())) {
+            if(selectedTestingFramework != null && selectedTestingFramework.startsWith(provider.getJunitFramework())) {
                 chkIntegrationTests.setEnabled(true);
             } else {
                 chkIntegrationTests.setEnabled(false);
@@ -1173,8 +1173,8 @@ public class CommonTestsCfgOfCreate extends SelfResizingPanel implements ChangeL
     private void fireStateChange() {
         if (changeListeners != null) {
             ChangeEvent e = new ChangeEvent(this);
-            for (Iterator i = changeListeners.iterator(); i.hasNext(); ) {
-                ((ChangeListener) i.next()).stateChanged(e);
+            for (Iterator<ChangeListener> i = changeListeners.iterator(); i.hasNext(); ) {
+                i.next().stateChanged(e);
             }
         }
     }

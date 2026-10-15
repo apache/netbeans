@@ -40,7 +40,7 @@ public abstract class AntOutputStream extends OutputStream {
     private boolean hadFirst = false;
 
     @Override
-    final public void close() throws IOException {
+    public final void close() throws IOException {
         flush ();
         handleClose();
     }
@@ -55,24 +55,24 @@ public abstract class AntOutputStream extends OutputStream {
     }
 
     @Override
-    final public void flush() throws IOException {
+    public final void flush() throws IOException {
         flushLines (true);
     }
 
     @Override
-    final public void write(byte[] b) throws IOException {
+    public final void write(byte[] b) throws IOException {
         write (b, 0, b.length);
     }
 
     @Override
-    final public void write(byte[] b, int offset, int length) throws IOException {
+    public final void write(byte[] b, int offset, int length) throws IOException {
         buffer.append (new String (b, offset, length));
         // Will usually contain at least one newline:
         flushLines (false);
     }
 
     @Override
-    final public void write(int b) throws IOException {
+    public final void write(int b) throws IOException {
         buffer.append ((char) b);
         if ((char) b == '\n') {
             flushLines (false);
@@ -102,7 +102,7 @@ public abstract class AntOutputStream extends OutputStream {
             break MAIN;
         }
         if (flushEverything) {
-            flushLine(buffer.substring (0, buffer.length()));
+            flushLine(buffer.substring(0));
             buffer.delete(0, buffer.length());
         }
     }
@@ -157,7 +157,7 @@ public abstract class AntOutputStream extends OutputStream {
 
     /** Write one line of text which was not parsed.
      */
-    abstract protected void writeLine(String line) throws IOException;
+    protected abstract void writeLine(String line) throws IOException;
     
     /** Create well formated message from the parsed information.
      * @deprecated No longer used since org.apache.tools.ant.module/3 3.8.

@@ -90,7 +90,6 @@ public class ResourceTable
 //        propertySupport = new PropertyChangeSupport(this);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
     // Data Management
     
     public void setParentTable(ResourceTable parent)
@@ -165,7 +164,6 @@ public class ResourceTable
 //        fontProperties.clear();
     }
     
-    ///////////////////////////////////////////////////////////////////////////
     // Resource Management methods
     
     public Object getProperty(String name)
@@ -329,12 +327,10 @@ public class ResourceTable
 //        return (Set<String>)Collections.unmodifiableSet(fontProperties.keySet());
 //    }
     
-    public Set<String> getLocalPropertyNames()
-    {
-        return (Set<String>)Collections.unmodifiableSet(properties.keySet());
+    public Set<String> getLocalPropertyNames() {
+        return Collections.unmodifiableSet(properties.keySet());
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Listener Management
     
     /**
@@ -352,12 +348,11 @@ public class ResourceTable
         {
             PropertyChangeListenerProxy proxy = (PropertyChangeListenerProxy) listener;
             addPropertyChangeListener(proxy.getPropertyName(),
-                                      (PropertyChangeListener)proxy.getListener());
-            
+                                      proxy.getListener());
         }
         else
         {
-            listeners.add(new WeakReference<PropertyChangeListener>(listener));
+            listeners.add(new WeakReference<>(listener));
         }
     }
     

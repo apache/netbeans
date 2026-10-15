@@ -43,9 +43,9 @@ public class AsmTest extends NbTestCase {
 
     public static class C {
         static final long x = 123L; // test CONSTANT_Long, tricky!
-        private C(boolean _) {}
+        private C(boolean b) {}
         @PatchedPublic
-        private C(int _) {}
+        private C(int i) {}
         private void m1() {}
         @PatchedPublic
         private void m2() {}

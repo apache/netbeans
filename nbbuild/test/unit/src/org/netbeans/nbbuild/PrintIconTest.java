@@ -24,6 +24,8 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Rule;
 
 /**
  * @author Jaroslav Tulach
@@ -33,7 +35,9 @@ public class PrintIconTest extends TestBase {
     public PrintIconTest(String testName) {
         super(testName);
     }
-
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+    
     // For some reason, TestBase.extractResource does not work in this test:
     private File extractCountedResource(String resource) throws Exception {
         File f;
@@ -77,7 +81,8 @@ public class PrintIconTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         assertTrue("Exists: " + out, out.canRead());
         
@@ -125,7 +130,8 @@ public class PrintIconTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         assertTrue("Exists: " + out, out.canRead());
         
@@ -179,7 +185,8 @@ public class PrintIconTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         assertTrue("Exists: " + out, out.canRead());
         
@@ -228,7 +235,8 @@ public class PrintIconTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         assertTrue("Exists: " + out, out.canRead());
         

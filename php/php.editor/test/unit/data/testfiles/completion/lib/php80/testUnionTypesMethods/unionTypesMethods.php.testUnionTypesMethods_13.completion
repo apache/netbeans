@@ -1,0 +1,5 @@
+Code completion result for source line:
+): \Test1\UnionTypes2|se|lf|null {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    self                                       null

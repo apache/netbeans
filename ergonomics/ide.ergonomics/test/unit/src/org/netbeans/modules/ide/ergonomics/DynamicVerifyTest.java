@@ -21,6 +21,7 @@ package org.netbeans.modules.ide.ergonomics;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import junit.framework.Test;
@@ -30,6 +31,7 @@ import org.netbeans.junit.NbTestSuite;
 import org.netbeans.modules.autoupdate.services.Trampoline;
 import org.netbeans.modules.autoupdate.updateprovider.FeatureItem;
 import org.netbeans.modules.autoupdate.updateprovider.UpdateItemImpl;
+import org.netbeans.modules.ide.ergonomics.fod.FeatureInfo;
 import org.netbeans.modules.ide.ergonomics.fod.FeatureManager;
 import org.netbeans.modules.ide.ergonomics.fod.FoDUpdateUnitProvider;
 import org.netbeans.spi.autoupdate.UpdateItem;
@@ -124,8 +126,11 @@ public class DynamicVerifyTest extends NbTestCase {
         // from a base installation:
         moduleNames.removeAll(Arrays.asList(
             "org.netbeans.libs.javafx.linux",
+            "org.netbeans.libs.javafx.linux.aarch64",
             "org.netbeans.libs.javafx.macosx",
-            "org.netbeans.libs.javafx.win"));
+            "org.netbeans.libs.javafx.macosx.aarch64",
+            "org.netbeans.libs.javafx.win",
+            "org.netbeans.libs.jsobject"));
 
         System.out.println(featureItem.getModuleCodeNames());
         assertTrue(
@@ -143,6 +148,24 @@ public class DynamicVerifyTest extends NbTestCase {
         all.put("Fine", "org.netbeans.modules.project.ant.AntBasedProjectFactorySingleton");
         all.put("FineToo", "org.netbeans.modules.project.ui.convertor.ProjectConvertorFactory");
         all.put("MostlyOK", "org.netbeans.modules.java.openjdk.project.FilterStandardProjects");
+        all.put("NoProjectFileAvailable", "org.netbeans.modules.cpplite.project.CPPLiteProject$FactoryImpl");
+
+        /*
+         * The "rust" cluster is not included in all cluster configurations in nbbuild/cluster.properties.
+         * At the time of this writing, "rust" is in "cluster.config=full" but not in "cluster.config=release".
+         * If we add "RustProjectFactory" to the list of project factories to test, then this test will
+         * fail in the "release" configuration, but will pass in the "full" configuration.
+         * In order to avoid this, let's add the RustProjectFactory if and only if "rust" is included in the
+         * current build configuration, this is, if the rust feature is in "FeatureManager.features()".
+        */
+        for (FeatureInfo feature : FeatureManager.features()) {
+            String clusterName = feature.getClusterName();
+            if (clusterName.equals("rust")) {
+                System.out.println("testGetAllProjectFactories: we are testing org.netbeans.modules.rust.project.RustProjectFactory");
+                all.put("NoProjectFileAvailable-rust", "org.netbeans.modules.rust.project.RustProjectFactory");
+                break;
+            }
+        }
 
         iterateRegistrations(sb, ProjectFactory.class, null, all);
         
@@ -185,12 +208,13 @@ public class DynamicVerifyTest extends NbTestCase {
             if (f.getClass().getPackage().getName().equals("org.netbeans.modules.ide.ergonomics.fod")) {
                 continue;
             }
-            sb.append(f.getClass().getName());
+            final String cname = f.getClass().getName();
+            sb.append(cname);
             if (info != null) {
                 Object more = info.invoke(f);
                 sb.append(" info: ").append(more);
                 Object value = all.get(more);
-                if (f.getClass().getName().equals(value)) {
+                if (cname.equals(value)) {
                     sb.append(" OK");
                     all.remove(more);
                 } else {
@@ -198,10 +222,10 @@ public class DynamicVerifyTest extends NbTestCase {
                     all.put("FAIL", more.toString());
                 }
             } else {
-                if (all.values().remove(f.getClass().getName())) {
+                if (removeAllValues(all, cname)) {
                     sb.append(" OK");
                 } else {
-                    all.put("FAIL", f.getClass().getName());
+                    all.put("FAIL", cname);
                     sb.append(" not present");
                 }
             }
@@ -215,6 +239,19 @@ public class DynamicVerifyTest extends NbTestCase {
         for (Map.Entry<String, String> entry : all.entrySet()) {
             sb.append("\nNot processed: ").append(entry.getKey()).append(" = ").append(entry.getValue());
         }
+    }
+
+    private static boolean removeAllValues(Map<String, String> all, final String cname) {
+        boolean found = false;
+        Iterator<Map.Entry<String, String>> it = all.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String, String> en = it.next();
+            if (cname.equals(en.getValue())) {
+                it.remove();
+                found = true;
+            }
+        }
+        return found;
     }
 
 }

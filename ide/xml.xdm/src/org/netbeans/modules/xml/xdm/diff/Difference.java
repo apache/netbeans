@@ -51,7 +51,7 @@ public abstract class Difference {
     }
     
     /**
-     * @returns info on removed node.
+     * @return info on removed node.
      */
     public NodeInfo getOldNodeInfo() {
         return oldNodeInfo;
@@ -73,10 +73,7 @@ public abstract class Difference {
     
     public abstract Node getNewParent();
     
-    ////////////////////////////////////////////////////////////////////////////////
     // Member variables
-    ////////////////////////////////////////////////////////////////////////////////
-    
     private NodeInfo.NodeType nodeType;
     
     private NodeInfo oldNodeInfo;

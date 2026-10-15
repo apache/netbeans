@@ -19,22 +19,19 @@
 
 package org.netbeans.api.java.source;
 
-import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.spi.FileSystemProvider;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.ServiceLoader;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -54,7 +51,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.SpecificationVersion;
 import org.openide.util.BaseUtilities;
-import org.openide.util.Utilities;
 
 /**
  * Utilities to aid unit testing java.source module.
@@ -132,35 +128,12 @@ public final class TestUtilities {
     }
     
     /**
-     * Creates boot {@link ClassPath} for platform the test is running on,
-     * it uses the sun.boot.class.path property to find out the boot path roots.
-     * @return ClassPath
-     * @throws java.io.IOException when boot path property contains non valid path
-     */
-    public static ClassPath createBootClassPath () throws IOException {
-        String bootPath = System.getProperty ("sun.boot.class.path");
-        String[] paths = bootPath.split(File.pathSeparator);
-        List<URL>roots = new ArrayList<URL> (paths.length);
-        for (String path : paths) {
-            File f = new File (path);            
-            if (!f.exists()) {
-                continue;
-            }
-            URL url = Utilities.toURI(f).toURL();
-            if (FileUtil.isArchiveFile(url)) {
-                url = FileUtil.getArchiveRoot(url);
-            }
-            roots.add (url);
-        }
-        return ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
-    }
-    /**
      * Returns a string which contains the contents of a file.
      *
      * @param f the file to be read
      * @return the contents of the file(s).
      */
-    public final static String copyFileToString (java.io.File f) throws java.io.IOException {
+    public static final String copyFileToString (java.io.File f) throws java.io.IOException {
         int s = (int)f.length ();
         byte[] data = new byte[s];
         int len = new FileInputStream (f).read (data);
@@ -175,7 +148,7 @@ public final class TestUtilities {
      * @param f the file to be read
      * @return the contents of the file(s).
      */
-    public final static String copyGZipFileToString (java.io.File f) throws java.io.IOException {
+    public static final String copyGZipFileToString (java.io.File f) throws java.io.IOException {
         GZIPInputStream is = new GZIPInputStream(new FileInputStream(f));
         byte[] arr = new byte[256 * 256];
         int first = 0;
@@ -194,13 +167,10 @@ public final class TestUtilities {
      * @param content the contents of the returned file.
      * @return the created file
      */
-    public final static File copyStringToFile (File f, String content) throws Exception {
-        FileOutputStream os = new FileOutputStream(f);
-        InputStream is = new ByteArrayInputStream(content.getBytes("UTF-8"));
-        FileUtil.copy(is, os);
-        os.close ();
-        is.close();
-            
+    public static final File copyStringToFile (File f, String content) throws Exception {
+        try (FileOutputStream os = new FileOutputStream(f)) {
+            os.write(content.getBytes(StandardCharsets.UTF_8));
+        }
         return f;
     }
     
@@ -211,13 +181,10 @@ public final class TestUtilities {
      * @param content the contents of the returned file.
      * @return the created file
      */
-    public final static FileObject copyStringToFile (FileObject f, String content) throws Exception {
-        OutputStream os = f.getOutputStream();
-        InputStream is = new ByteArrayInputStream(content.getBytes("UTF-8"));
-        FileUtil.copy(is, os);
-        os.close ();
-        is.close();
-            
+    public static final FileObject copyStringToFile (FileObject f, String content) throws Exception {
+        try (OutputStream os = f.getOutputStream()) {
+            os.write(content.getBytes(StandardCharsets.UTF_8));
+        }
         return f;
     }   
 
@@ -228,7 +195,7 @@ public final class TestUtilities {
      * 
      * @param urls to analyze
      */
-    public final static void analyzeBinaries(final Collection<URL> urls) throws IOException {
+    public static final void analyzeBinaries(final Collection<URL> urls) throws IOException {
         final ClasspathInfo cpInfo = ClasspathInfo.create(EMPTY, EMPTY, EMPTY);
         final ClassIndexManager mgr  = ClassIndexManager.getDefault();
         final JavaSource js = JavaSource.create(cpInfo);
@@ -326,4 +293,15 @@ public final class TestUtilities {
         return null;
     }
     
+    public static TestInput splitCodeAndPos(String input) {
+        int pos = input.indexOf('|');
+
+        if (pos == (-1)) {
+            throw new IllegalArgumentException("Does not specify a caret position: " + input);
+        }
+
+        return new TestInput(input.substring(0, pos) + input.substring(pos + 1), pos);
+    }
+
+    public record TestInput(String code, int pos) {}
 }

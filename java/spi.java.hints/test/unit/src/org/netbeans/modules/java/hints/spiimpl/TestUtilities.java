@@ -18,7 +18,7 @@
  */
 package org.netbeans.modules.java.hints.spiimpl;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 /**
  *

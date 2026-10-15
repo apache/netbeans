@@ -30,7 +30,7 @@ public interface ExtensionManagerAccessor {
 
     BrowserExtensionManager getManager();
     
-    public static abstract class AbstractBrowserExtensionManager 
+    public abstract static class AbstractBrowserExtensionManager 
         implements BrowserExtensionManager 
     {
         protected static final String PLUGIN_MODULE_NAME = 

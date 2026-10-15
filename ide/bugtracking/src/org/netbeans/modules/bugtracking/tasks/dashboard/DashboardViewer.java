@@ -659,7 +659,7 @@ public final class DashboardViewer implements PropertyChangeListener {
                     }
                 }
             }
-            removeTask(finished.toArray(new TaskNode[finished.size()]));
+            removeTask(finished.toArray(new TaskNode[0]));
         }
     }
 

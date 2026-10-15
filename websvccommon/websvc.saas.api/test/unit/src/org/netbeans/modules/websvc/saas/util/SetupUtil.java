@@ -51,7 +51,7 @@ import org.openide.util.NbCollections;
  */
 public class SetupUtil {
     
-    private static final String ENDORSED_REF = "modules/ext/jaxws22/api/jaxws-api.jar";
+    private static final String ENDORSED_REF = "modules/ext/jaxws22/api/jakarta.xml.ws-api.jar";
     private static final String JAXWS_LIB_PROPERTY = "libs.jaxws21.classpath";
     
     public static void commonSetUp(File workingDir) throws Exception {
@@ -157,7 +157,7 @@ public class SetupUtil {
                         is.close();
                     }
                 }
-                layers.setXmlUrls(layerUrls.toArray(new URL[layerUrls.size()]));
+                layers.setXmlUrls(layerUrls.toArray(new URL[0]));
             } catch (Exception x) {
             }
             resultChanged(null); // run after add listener - see PN1 in #26338

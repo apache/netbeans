@@ -37,7 +37,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
     public AssignResultToVariableTest(String testName) {
         super(testName);
     }
-    
+
     public void testDoNothingForVoidReturnType() throws Exception {
         performAnalysisTest("test/Test.java", "package test; public class Test {public void t() {get();} public void get() {}}", 51);
     }
@@ -271,7 +271,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
                              "    }\n" +
                              "}").replaceAll("\\s+", " "));
     }
-    
+
     public void test235716NewVariable() throws Exception {
         performFixTest("test/Test.java",
             "package test;\n" +
@@ -292,7 +292,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
              "    }\n" +
              "}").replaceAll("\\s+", " "));
     }
-    
+
     public void testInferBounds258167() throws Exception {
         performFixTest("test/Test.java",
             "package test;\n" +
@@ -314,6 +314,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
                 + "}").replaceAll("\\s+", " "));
     }
 
+    @Override
     protected List<ErrorDescription> computeErrors(CompilationInfo info, TreePath path, int offset) {
         while (path != null && !new AssignResultToVariable().getTreeKinds().contains(path.getLeaf().getKind()))
             path = path.getParentPath();

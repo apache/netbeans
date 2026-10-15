@@ -19,29 +19,33 @@
 
 package org.netbeans.modules.java.hints.perf;
 
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.NewArrayTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
+import com.sun.source.util.Trees;
 import java.util.Collection;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.EnumMap;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
-import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.java.hints.errors.CreateElementUtilities;
 import org.netbeans.modules.java.hints.errors.Utilities;
@@ -61,6 +65,10 @@ import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
 import org.netbeans.spi.java.hints.JavaFix.TransformationContext;
 import org.netbeans.spi.java.hints.JavaFixUtilities;
 import org.openide.util.NbBundle;
+
+import static com.sun.source.tree.Tree.Kind.METHOD_INVOCATION;
+import static com.sun.source.tree.Tree.Kind.NEW_CLASS;
+import static javax.lang.model.type.TypeKind.EXECUTABLE;
 
 /**
  *
@@ -159,30 +167,39 @@ public class Tiny {
             return null;
         }
 
-        int start = (int) ctx.getInfo().getTrees().getSourcePositions().getStartPosition(ctx.getInfo().getCompilationUnit(), toSearch.getLeaf());
-        int end   = (int) ctx.getInfo().getTrees().getSourcePositions().getEndPosition(ctx.getInfo().getCompilationUnit(), toSearch.getLeaf());
+        int start = (int) ctx.getInfo().getTrees().getSourcePositions().getStartPosition(toSearch.getLeaf());
+        int end   = (int) ctx.getInfo().getTrees().getSourcePositions().getEndPosition(toSearch.getLeaf());
         final String literal = ctx.getInfo().getText().substring(start, end);
 
         Fix f = new JavaFix(ctx.getInfo(), toSearch) {
-@Override protected String getText() {
-return NbBundle.getMessage(Tiny.class, "FIX_LengthOneStringIndexOf");
-}
-@Override protected void performRewrite(TransformationContext ctx) {
-WorkingCopy wc = ctx.getWorkingCopy();
-TreePath tp = ctx.getPath();
-String content;
+            @Override
+            protected String getText() {
+                return NbBundle.getMessage(Tiny.class, "FIX_LengthOneStringIndexOf");
+            }
 
-if ("'".equals(data)) content = "\\'";
-else if ("\"".equals(data)) content = "\"";
-else {
-content = literal;
-if (content.length() > 0 && content.charAt(0) == '"') content = content.substring(1);
-if (content.length() > 0 && content.charAt(content.length() - 1) == '"') content = content.substring(0, content.length() - 1);
-}
+            @Override
+            protected void performRewrite(TransformationContext ctx) {
+                WorkingCopy wc = ctx.getWorkingCopy();
+                TreePath tp = ctx.getPath();
+                String content;
 
-wc.rewrite(tp.getLeaf(), wc.getTreeMaker().Identifier("'" + content + "'"));
-}
-}.toEditorFix();
+                if ("'".equals(data)) {
+                    content = "\\'";
+                } else if ("\"".equals(data)) {
+                    content = "\"";
+                } else {
+                    content = literal;
+                    if (content.length() > 0 && content.charAt(0) == '"') {
+                        content = content.substring(1);
+                    }
+                    if (content.length() > 0 && content.charAt(content.length() - 1) == '"') {
+                        content = content.substring(0, content.length() - 1);
+                    }
+                }
+
+                wc.rewrite(tp.getLeaf(), wc.getTreeMaker().Identifier("'" + content + "'"));
+            }
+        }.toEditorFix();
         
         String displayName = NbBundle.getMessage(Tiny.class, "ERR_LengthOneStringIndexOf", literal);
         
@@ -298,7 +315,7 @@ wc.rewrite(tp.getLeaf(), wc.getTreeMaker().Identifier("'" + content + "'"));
                 return null;
             }
             
-            List<? extends TypeMirror> assignedTo = CreateElementUtilities.resolveType(EnumSet.noneOf(ElementKind.class), ctx.getInfo(), ctx.getPath().getParentPath(), ctx.getPath().getLeaf(), (int) ctx.getInfo().getTrees().getSourcePositions().getEndPosition(ctx.getPath().getCompilationUnit(), ctx.getPath().getLeaf()), new TypeMirror[1], new int[1]);
+            List<? extends TypeMirror> assignedTo = CreateElementUtilities.resolveType(EnumSet.noneOf(ElementKind.class), ctx.getInfo(), ctx.getPath().getParentPath(), ctx.getPath().getLeaf(), (int) ctx.getInfo().getTrees().getSourcePositions().getEndPosition(ctx.getPath().getLeaf()), new TypeMirror[1], new int[1]);
             
             if (assignedTo != null && assignedTo.size() == 1) {
                 if (t.isSubtype(t.erasure(assignedTo.get(0)), t.erasure(coll.asType())))
@@ -314,15 +331,22 @@ wc.rewrite(tp.getLeaf(), wc.getTreeMaker().Identifier("'" + content + "'"));
     @Hint(displayName = "#DN_org.netbeans.modules.java.hints.perf.Tiny.collectionsToArray",
           description = "#DESC_org.netbeans.modules.java.hints.perf.Tiny.collectionsToArray",
           category="performance",
-          enabled=false,
+          enabled=true,
           suppressWarnings="CollectionsToArray")
-    @TriggerPattern(value = "$collection.toArray(new $clazz[0])",
-                    constraints=@ConstraintVariableType(variable="$collection",
-                                                        type="java.util.Collection"))
+    @TriggerPatterns({
+        @TriggerPattern(value = "$collection.toArray(new $clazz[$collection.size()])",
+                        constraints = @ConstraintVariableType(variable="$collection", type="java.util.Collection")),
+        @TriggerPattern(value = "$collection.toArray(new $clazz[0])",
+                        constraints = @ConstraintVariableType(variable="$collection", type="java.util.Collection")),
+        @TriggerPattern(value = "$collection.toArray(new $clazz[]{})",
+                        constraints = @ConstraintVariableType(variable="$collection", type="java.util.Collection"))
+    })
     public static ErrorDescription collectionsToArray(HintContext ctx) {
+
         boolean pureMemberSelect = true;
         TreePath tp = ctx.getVariables().get("$collection");
         if (tp == null) return null;
+
         Tree msTest = tp.getLeaf();
         OUTER: while (true) {
             switch (msTest.getKind()) {
@@ -337,11 +361,24 @@ wc.rewrite(tp.getLeaf(), wc.getTreeMaker().Identifier("'" + content + "'"));
         Fix[] fixes;
 
         if (pureMemberSelect) {
-            String fixDisplayName = NbBundle.getMessage(Tiny.class, "FIX_Tiny_collectionsToArray");
 
-            fixes = new Fix[] {
-                JavaFixUtilities.rewriteFix(ctx, fixDisplayName, ctx.getPath(), "$collection.toArray(new $clazz[$collection.size()])")
-            };
+            SourceVersion version = ctx.getInfo().getSourceVersion();
+            TreePath type = ctx.getVariables().get("$clazz");
+            String typeName = type.getLeaf().toString();
+            
+            if (version.compareTo(SourceVersion.RELEASE_11) >= 0) {
+                String byRef = NbBundle.getMessage(Tiny.class, "FIX_Tiny_collectionsToArrayByMethodRef", typeName);
+                fixes = new Fix[] {
+                    JavaFixUtilities.rewriteFix(ctx, byRef, ctx.getPath(), "$collection.toArray($clazz[]::new)"),
+                };
+            } else if (isNewArrayWithSize(type)) {
+                String byZero = NbBundle.getMessage(Tiny.class, "FIX_Tiny_collectionsToArrayByZeroArray", typeName);
+                fixes = new Fix[] {
+                    JavaFixUtilities.rewriteFix(ctx, byZero, ctx.getPath(), "$collection.toArray(new $clazz[0])")
+                };
+            } else {
+                return null; // new T[0] or new T[]{} and version < 11 -> nothing to do
+            }
         } else {
             fixes = new Fix[0];
         }
@@ -349,6 +386,15 @@ wc.rewrite(tp.getLeaf(), wc.getTreeMaker().Identifier("'" + content + "'"));
         String displayName = NbBundle.getMessage(Tiny.class, "ERR_Tiny_collectionsToArray");
 
         return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), displayName, fixes);
+    }
+
+    private static boolean isNewArrayWithSize(TreePath type) {
+        Tree parent = type.getParentPath().getLeaf();
+        if (parent instanceof NewArrayTree newArrayTree) {
+            List<? extends ExpressionTree> dim = newArrayTree.getDimensions();
+            return dim.isEmpty() ? false : dim.get(0).getKind() == Kind.METHOD_INVOCATION; // size()
+        }
+        return false;
     }
     
     @NbBundle.Messages({
@@ -369,7 +415,7 @@ wc.rewrite(tp.getLeaf(), wc.getTreeMaker().Identifier("'" + content + "'"));
                 JavaFixUtilities.rewriteFix(ctx, Bundle.FIX_RedundantToString(), ctx.getPath(), "$v"));
     }
     
-    private static final Map<TypeKind, String[]> PARSE_METHODS = new HashMap<TypeKind, String[]>(7);
+    private static final Map<TypeKind, String[]> PARSE_METHODS = new EnumMap<>(TypeKind.class);
     static {
         PARSE_METHODS.put(TypeKind.BOOLEAN, new String[] { "Boolean", "parseBoolean" }); // NOI18N
         PARSE_METHODS.put(TypeKind.BYTE, new String[] { "Byte", "parseByte"}); // NOI18N
@@ -381,22 +427,32 @@ wc.rewrite(tp.getLeaf(), wc.getTreeMaker().Identifier("'" + content + "'"));
     }
     
     @TriggerPatterns({
-        @TriggerPattern(value = "new java.lang.Byte($v).byteValue()", constraints = @ConstraintVariableType(variable = "$v", type = "java.lang.String")),
-        @TriggerPattern(value = "new java.lang.Double($v).doubleValue()", constraints = @ConstraintVariableType(variable = "$v", type = "java.lang.String")),
-        @TriggerPattern(value = "new java.lang.Float($v).floatValue()", constraints = @ConstraintVariableType(variable = "$v", type = "java.lang.String")),
-        @TriggerPattern(value = "new java.lang.Integer($v).intValue()", constraints = @ConstraintVariableType(variable = "$v", type = "java.lang.String")),
-        @TriggerPattern(value = "new java.lang.Long($v).longValue()", constraints = @ConstraintVariableType(variable = "$v", type = "java.lang.String")),
-        @TriggerPattern(value = "new java.lang.Short($v).shortValue()", constraints = @ConstraintVariableType(variable = "$v", type = "java.lang.String")),
-        @TriggerPattern(value = "new java.lang.Boolean($v).booleanValue()", constraints = @ConstraintVariableType(variable = "$v", type = "java.lang.String")),
-        
-        
-        @TriggerPattern(value = "java.lang.Byte.valueOf($v).byteValue()", constraints = @ConstraintVariableType(variable = "$v", type = "java.lang.String")),
-        @TriggerPattern(value = "java.lang.Double.valueOf($v).doubleValue()", constraints = @ConstraintVariableType(variable = "$v", type = "java.lang.String")),
-        @TriggerPattern(value = "java.lang.Float.valueOf($v).floatValue()", constraints = @ConstraintVariableType(variable = "$v", type = "java.lang.String")),
-        @TriggerPattern(value = "java.lang.Integer.valueOf($v).intValue()", constraints = @ConstraintVariableType(variable = "$v", type = "java.lang.String")),
-        @TriggerPattern(value = "java.lang.Long.valueOf($v).longValue()", constraints = @ConstraintVariableType(variable = "$v", type = "java.lang.String")),
-        @TriggerPattern(value = "java.lang.Short.valueOf($v).shortValue()", constraints = @ConstraintVariableType(variable = "$v", type = "java.lang.String")),
-        @TriggerPattern(value = "java.lang.Boolean.valueOf($v).booleanValue()", constraints = @ConstraintVariableType(variable = "$v", type = "java.lang.String")),
+        @TriggerPattern(value = "java.lang.Integer.parseInt($v)", constraints = @ConstraintVariableType(variable = "$v", type = "java.lang.String")),
+        @TriggerPattern(value = "java.lang.Byte.parseByte($v)", constraints = @ConstraintVariableType(variable = "$v", type = "java.lang.String")),
+        @TriggerPattern(value = "java.lang.Short.parseShort($v)", constraints = @ConstraintVariableType(variable = "$v", type = "java.lang.String")),
+        @TriggerPattern(value = "java.lang.Long.parseLong($v)", constraints = @ConstraintVariableType(variable = "$v", type = "java.lang.String")),
+        @TriggerPattern(value = "java.lang.Float.parseFloat($v)", constraints = @ConstraintVariableType(variable = "$v", type = "java.lang.String")),
+        @TriggerPattern(value = "java.lang.Double.parseDouble($v)", constraints = @ConstraintVariableType(variable = "$v", type = "java.lang.String")),
+        @TriggerPattern(value = "java.lang.Boolean.parseBoolean($v)", constraints = @ConstraintVariableType(variable = "$v", type = "java.lang.String")),
+
+        @TriggerPattern(value = "java.lang.Integer.parseInt($s, $r)", constraints = {@ConstraintVariableType(variable = "$s", type = "java.lang.String"), @ConstraintVariableType(variable = "$r", type = "int")}),
+        @TriggerPattern(value = "java.lang.Byte.parseByte($s, $r)", constraints = {@ConstraintVariableType(variable = "$s", type = "java.lang.String"), @ConstraintVariableType(variable = "$r", type = "int")}),
+        @TriggerPattern(value = "java.lang.Short.parseShort($s, $r)", constraints = {@ConstraintVariableType(variable = "$s", type = "java.lang.String"), @ConstraintVariableType(variable = "$r", type = "int")}),
+        @TriggerPattern(value = "java.lang.Long.parseLong($s, $r)", constraints = {@ConstraintVariableType(variable = "$s", type = "java.lang.String"), @ConstraintVariableType(variable = "$r", type = "int")}),
+
+
+        @TriggerPattern(value = "java.lang.Byte.valueOf($v)", constraints = @ConstraintVariableType(variable = "$v", type = "java.lang.String")),
+        @TriggerPattern(value = "java.lang.Double.valueOf($v)", constraints = @ConstraintVariableType(variable = "$v", type = "java.lang.String")),
+        @TriggerPattern(value = "java.lang.Float.valueOf($v)", constraints = @ConstraintVariableType(variable = "$v", type = "java.lang.String")),
+        @TriggerPattern(value = "java.lang.Integer.valueOf($v)", constraints = @ConstraintVariableType(variable = "$v", type = "java.lang.String")),
+        @TriggerPattern(value = "java.lang.Long.valueOf($v)", constraints = @ConstraintVariableType(variable = "$v", type = "java.lang.String")),
+        @TriggerPattern(value = "java.lang.Short.valueOf($v)", constraints = @ConstraintVariableType(variable = "$v", type = "java.lang.String")),
+        @TriggerPattern(value = "java.lang.Boolean.valueOf($v)", constraints = @ConstraintVariableType(variable = "$v", type = "java.lang.String")),
+
+        @TriggerPattern(value = "java.lang.Byte.valueOf($v, $r)", constraints = {@ConstraintVariableType(variable = "$v", type = "java.lang.String"), @ConstraintVariableType(variable = "$r", type = "int")}),
+        @TriggerPattern(value = "java.lang.Integer.valueOf($v, $r)", constraints = {@ConstraintVariableType(variable = "$v", type = "java.lang.String"), @ConstraintVariableType(variable = "$r", type = "int")}),
+        @TriggerPattern(value = "java.lang.Long.valueOf($v, $r)", constraints = {@ConstraintVariableType(variable = "$v", type = "java.lang.String"), @ConstraintVariableType(variable = "$r", type = "int")}),
+        @TriggerPattern(value = "java.lang.Short.valueOf($v, $r)", constraints = {@ConstraintVariableType(variable = "$v", type = "java.lang.String"), @ConstraintVariableType(variable = "$r", type = "int")}),
     })
     @NbBundle.Messages({
         "TEXT_UnnecessaryTempFromString=Unnecessary temporary when converting from String",
@@ -412,36 +468,79 @@ wc.rewrite(tp.getLeaf(), wc.getTreeMaker().Identifier("'" + content + "'"));
         suppressWarnings = "UnnecessaryTemporaryOnConversionFromString" 
     )
     public static ErrorDescription unnecessaryTempFromString(HintContext ctx) {
-        TypeMirror resType = ctx.getInfo().getTrees().getTypeMirror(ctx.getPath());
-        if (resType == null) {
+
+        String type;
+        String method;
+
+        // determine if the destination is primitive
+        TypeMirror destType = getDestinationType(ctx, ctx.getPath());
+        TypeMirror srcType = ctx.getInfo().getTrees().getTypeMirror(ctx.getPath());
+
+        if (srcType == null || destType == null) {
             return null;
+        } else if (destType.getKind().isPrimitive() && !srcType.getKind().isPrimitive()) {
+            srcType = ctx.getInfo().getTypes().unboxedType(srcType);
+            String[] replacement = PARSE_METHODS.get(srcType.getKind());
+            type = replacement[0];
+            method = replacement[1];
+        } else if (!destType.getKind().isPrimitive() && srcType.getKind().isPrimitive()) {
+            type = PARSE_METHODS.get(srcType.getKind())[0];
+            method = "valueOf";  // NOI18N
+        } else {
+            return null;  // nothing to do, a different rule handles .intValue() boxing problems
         }
-        if (resType.getKind() == TypeKind.BOOLEAN) {
-            if (ctx.getInfo().getSourceVersion().compareTo(SourceVersion.RELEASE_5) < 0) {
-                // might alter new Boolean($v) to Boolean.valueOf($v), but that's all we can do. JDK < 5 has no 
-                // primitive-valued pasre* method for booleans.
-                return null;
+
+        if (srcType.getKind() == TypeKind.BOOLEAN && ctx.getInfo().getSourceVersion().compareTo(SourceVersion.RELEASE_5) < 0) {
+            return null;  // JDK < 5 has no primitive-valued pasre* method for booleans.
+        }
+
+        Fix fix = JavaFixUtilities.rewriteFix(ctx, Bundle.FIX_UnnecessaryTempFromString1(type, method), ctx.getPath(), type + "." + method + "($v)"); // NOI18N
+        return ErrorDescriptionFactory.forTree(ctx, ctx.getPath(), Bundle.TEXT_UnnecessaryTempFromString(), fix); // NOI18N
+    }
+
+    private static TypeMirror getDestinationType(HintContext ctx, TreePath path) {
+
+        TreePath parent = path.getParentPath();
+        Tree parentLeaf = parent.getLeaf();
+        Tree leaf = path.getLeaf();
+
+        Trees trees = ctx.getInfo().getTrees();
+
+        if (parentLeaf.getKind() == METHOD_INVOCATION) {
+
+            MethodInvocationTree met = (MethodInvocationTree) parentLeaf;
+            int index = met.getArguments().indexOf(leaf);
+            return paramTypeOfExecutable(trees.getTypeMirror(new TreePath(path, met.getMethodSelect())), index);
+        } else if (parentLeaf.getKind() == NEW_CLASS) {
+
+            NewClassTree nct = (NewClassTree) parentLeaf;
+            int index = nct.getArguments().indexOf(leaf);
+            return paramTypeOfExecutable(trees.getElement(new TreePath(path, nct)).asType(), index);
+        } else {
+
+            int pos = (int) trees.getSourcePositions().getStartPosition(leaf);
+            List<? extends TypeMirror> type = CreateElementUtilities.resolveType(
+                    EnumSet.noneOf(ElementKind.class), ctx.getInfo(), parent, leaf, pos, new TypeMirror[1], new int[1]);
+
+            if ((type != null) && !type.isEmpty()) {
+                return type.get(0);
             }
         }
-        String[] arr = PARSE_METHODS.get(resType.getKind());
-        if (arr == null) {
-            return null; // just in case
+
+        return null;
+    }
+
+    private static TypeMirror paramTypeOfExecutable(TypeMirror executable, int index) {
+        if (index != -1 && executable != null && executable.getKind() == EXECUTABLE) {
+            List<? extends TypeMirror> paramTypes = ((ExecutableType) executable).getParameterTypes();
+            if (paramTypes.size() > index) {
+                return paramTypes.get(index);
+            }
         }
-        return ErrorDescriptionFactory.forTree(ctx, ctx.getPath(), Bundle.TEXT_UnnecessaryTempFromString(),
-                JavaFixUtilities.rewriteFix(ctx, Bundle.FIX_UnnecessaryTempFromString1(arr[0], arr[1]), ctx.getPath(),
-                arr[0] + "." + arr[1] + "($v)")); // NOI18N
+        return null;
     }
     
     @TriggerPatterns({
-        @TriggerPattern(value = "new java.lang.Byte($v).toString()", constraints = @ConstraintVariableType(variable = "$v", type = "int")),
-        @TriggerPattern(value = "new java.lang.Double($v).toString()", constraints = @ConstraintVariableType(variable = "$v", type = "double")),
-        @TriggerPattern(value = "new java.lang.Float($v).toString()", constraints = @ConstraintVariableType(variable = "$v", type = "float")),
-        @TriggerPattern(value = "new java.lang.Integer($v).toString()", constraints = @ConstraintVariableType(variable = "$v", type = "int")),
-        @TriggerPattern(value = "new java.lang.Long($v).toString()", constraints = @ConstraintVariableType(variable = "$v", type = "long")),
-        @TriggerPattern(value = "new java.lang.Short($v).toString()", constraints = @ConstraintVariableType(variable = "$v", type = "int")),
-        @TriggerPattern(value = "new java.lang.Boolean($v).toString()", constraints = @ConstraintVariableType(variable = "$v", type = "boolean")),
-        
-        
         @TriggerPattern(value = "java.lang.Byte.valueOf($v).toString()", constraints = @ConstraintVariableType(variable = "$v", type = "int")),
         @TriggerPattern(value = "java.lang.Double.valueOf($v).toString()", constraints = @ConstraintVariableType(variable = "$v", type = "double")),
         @TriggerPattern(value = "java.lang.Float.valueOf($v).toString()", constraints = @ConstraintVariableType(variable = "$v", type = "float")),
@@ -473,7 +572,37 @@ wc.rewrite(tp.getLeaf(), wc.getTreeMaker().Identifier("'" + content + "'"));
             return null; // just in case
         }
         return ErrorDescriptionFactory.forTree(ctx, ctx.getPath(), Bundle.TEXT_UnnecessaryTempFromString(),
-                JavaFixUtilities.rewriteFix(ctx, Bundle.FIX_UnnecessaryTempToString(arr[0]), ctx.getPath(),
-                arr[0] + ".toString($v)")); // NOI18N
+                JavaFixUtilities.rewriteFix(ctx, Bundle.FIX_UnnecessaryTempToString(arr[0]), ctx.getPath(), arr[0] + ".toString($v)")); // NOI18N
+    }
+
+    // TODO move to jdk package?
+    @TriggerPatterns({
+        @TriggerPattern(value = "new java.lang.Byte($v)"),
+        @TriggerPattern(value = "new java.lang.Double($v)"),
+        @TriggerPattern(value = "new java.lang.Float($v)"),
+        @TriggerPattern(value = "new java.lang.Integer($v)"),
+        @TriggerPattern(value = "new java.lang.Long($v)"),
+        @TriggerPattern(value = "new java.lang.Short($v)"),
+        @TriggerPattern(value = "new java.lang.Boolean($v)"),
+    })
+    @NbBundle.Messages({
+        "TEXT_BoxedPrimitiveConstruction=Replace usage of deprecated boxed primitive constructors with factory methods.",
+        "# {0} - wrapper type simple name",
+        "FIX_BoxedPrimitiveConstruction=Replace with {0}.valueOf()",
+    })
+    @Hint(
+        displayName = "#DN_BoxedPrimitiveConstruction",
+        description = "#DESC_BoxedPrimitiveConstruction",
+        enabled = true,
+        category = "rules15",
+        suppressWarnings = "BoxedPrimitiveConstruction"
+    )
+    public static ErrorDescription boxedPrimitiveConstruction(HintContext ctx) {
+        TypeMirror resType = ctx.getInfo().getTrees().getTypeMirror(ctx.getPath());
+        if (resType == null) {
+            return null;
+        }
+        return ErrorDescriptionFactory.forTree(ctx, ctx.getPath(), Bundle.TEXT_BoxedPrimitiveConstruction(),
+                JavaFixUtilities.rewriteFix(ctx, Bundle.FIX_BoxedPrimitiveConstruction(resType), ctx.getPath(), resType + ".valueOf($v)")); // NOI18N
     }
 }

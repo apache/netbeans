@@ -147,7 +147,7 @@ public class XMLDataObject extends MultiDataObject {
     /** 
      * Create new XMLDataObject. It is usually called by a loader.
      * A user can get existing XMLDataObject by calling {@link DataObject#find(FileObject) 
-     * <code>DataObject.find(FileObject f)</code>} instead.
+     * DataObject.find(FileObject f)} instead.
      *
      * @param fo the primary file object, never <code>null</code>
      * @param loader loader of this data object, never <code>null</code>
@@ -525,7 +525,7 @@ public class XMLDataObject extends MultiDataObject {
     */
     final Document parsePrimaryFile () throws IOException, SAXException {
         if (ERR.isLoggable(Level.FINE)) ERR.fine("parsePrimaryFile" + " for " + this);
-        String loc = getPrimaryFile().getURL().toExternalForm();
+        String loc = getPrimaryFile().toURL().toExternalForm();
         try {
             return XMLUtil.parse(new InputSource(loc), false, /* #36295 */true, errorHandler, getSystemResolver());
         } catch (IOException e) {
@@ -653,13 +653,13 @@ public class XMLDataObject extends MultiDataObject {
      *             It directly violates DOM's root element reference read-only status.
      *             If you can not move to XMLUtil for compatabilty reasons please
      *             replace with following workaround:
-     * <pre>
+     * <pre>{@code
      * String templ = "<myroot/>";
      * InputSource in = new InputSource(new StringReader(templ));
      * in.setSystemId("StringReader");  //workaround
      * DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
      * Document doc = builder.parse(in);
-     * </pre>
+     * }</pre>
      */
     @Deprecated
     public static Document createDocument() {
@@ -1242,7 +1242,7 @@ public class XMLDataObject extends MultiDataObject {
                     if (Processor.class.isAssignableFrom (next)) {
                         // the class implements Processor interface, so use
                         // default constructor to construct instance
-                        obj = next.newInstance ();
+                        obj = next.getDeclaredConstructor().newInstance ();
                         Processor proc = (Processor) obj;
                         proc.attachTo (xmlDataObject);
                         return obj;
@@ -1268,11 +1268,7 @@ public class XMLDataObject extends MultiDataObject {
                         }
                     }
                     throw new InternalError ("XMLDataObject processor class " + next + " invalid"); // NOI18N
-                } catch (InvocationTargetException e) {
-                    xmlDataObject.notifyEx (e);
-                } catch (InstantiationException e) {
-                    xmlDataObject.notifyEx(e);
-                } catch (IllegalAccessException e) {
+                } catch (ReflectiveOperationException e) {
                     xmlDataObject.notifyEx(e);
                 }
                 

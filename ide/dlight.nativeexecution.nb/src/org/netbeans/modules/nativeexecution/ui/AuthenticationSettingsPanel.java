@@ -147,7 +147,7 @@ public class AuthenticationSettingsPanel extends ValidateablePanel {
                 if (index != -1) {
                     Rectangle checkBounds = ((AuthentificationCheckboxListRenderer)list.getCellRenderer()).check.getBounds();
                     if (event.getPoint().x <= checkBounds.width) {
-                        AuthenticationCheckboxListItem item = (AuthenticationCheckboxListItem) list.getModel().getElementAt(index);
+                        AuthenticationCheckboxListItem item = list.getModel().getElementAt(index);
                         item.setSelected(!item.isSelected());
                         list.repaint(list.getCellBounds(index, index));
                     }

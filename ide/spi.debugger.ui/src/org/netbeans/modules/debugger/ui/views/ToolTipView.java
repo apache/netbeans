@@ -116,7 +116,7 @@ public final class ToolTipView extends JComponent implements org.openide.util.He
 
         private JButton expButton;
         private JButton pinButton;
-        private JComponent textToolTip;
+        private final JComponent textToolTip;
         private boolean widthCheck = true;
         private boolean sizeSet = false;
 
@@ -243,6 +243,23 @@ public final class ToolTipView extends JComponent implements org.openide.util.He
             JTextArea ta = new TextToolTip(wrapLines);
             ta.setText(toolTipText);
             return ta;
+        }
+
+        /**
+         * Adjusts the tooltip location to position the pin button above the cursor.
+         * 
+         * Helps to keep the mouse pointer within the mouse motion ignore area of ext.ToolTipSupport
+         * with the purpose of preventing the tooltip from disappearing while the mouse is moving towards it.
+         */
+        public int getXOffset() {
+            double offset = 0;
+            if (pinButton != null) {
+                offset += pinButton.getPreferredSize().getWidth();
+            }
+            if (expButton != null) {
+                offset += expButton.getPreferredSize().getWidth();
+            }
+            return - (int) (offset / 2 + 2);
         }
 
         private static class TextToolTip extends JTextArea {

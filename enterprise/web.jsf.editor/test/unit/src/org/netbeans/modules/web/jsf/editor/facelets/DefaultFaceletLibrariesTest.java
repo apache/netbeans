@@ -21,10 +21,11 @@ package org.netbeans.modules.web.jsf.editor.facelets;
 
 import java.util.EnumSet;
 import java.util.Map;
+
 import org.netbeans.modules.web.jsf.editor.TestBaseForTestProject;
-import org.netbeans.modules.web.jsf.impl.facesmodel.DefaultLocaleImpl;
 import org.netbeans.modules.web.jsfapi.api.Attribute;
 import org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo;
+import org.netbeans.modules.web.jsfapi.api.LibraryInfo;
 import org.netbeans.modules.web.jsfapi.api.Tag;
 
 /**
@@ -61,11 +62,21 @@ public class DefaultFaceletLibrariesTest extends TestBaseForTestProject {
                 DefaultLibraryInfo.JSF,
                 DefaultLibraryInfo.PASSTHROUGH,
                 DefaultLibraryInfo.PRIMEFACES,
-                DefaultLibraryInfo.PRIMEFACES_MOBILE))) {
+                DefaultLibraryInfo.PRIMEFACES_EXTENSIONS,
+                DefaultLibraryInfo.PRIMEFACES_MOBILE,
+                DefaultLibraryInfo.OMNIFACES))) {
             FaceletsLibraryDescriptor descr = descriptors.get(dli.getNamespace());
-            assertNotNull(descr);
+            if (descr == null) {
+                for (String ns : dli.getValidNamespaces()) {
+                    descr = descriptors.get(ns);
+                    if (descr != null) {
+                        break;
+                    }
+                }
+            }
+            assertNotNull("Cannot find FaceletsLibraryDescriptor for namespace " + dli.getNamespace(), descr);
 
-            assertEquals(dli.getNamespace(), descr.getNamespace());
+            assertTrue(dli.getValidNamespaces().contains(descr.getNamespace()));
 
             assertNotNull(descr.getDefinitionFile());
 
@@ -76,7 +87,14 @@ public class DefaultFaceletLibrariesTest extends TestBaseForTestProject {
     }
 
     public void testHtmlOutputStylesheet() {
-        FaceletsLibraryDescriptor htmlLibDescriptor = DefaultFaceletLibraries.getInstance().getLibrariesDescriptors().get(DefaultLibraryInfo.HTML.getNamespace());
+        DefaultFaceletLibraries instance = DefaultFaceletLibraries.getInstance();
+        FaceletsLibraryDescriptor htmlLibDescriptor = null;
+        for (String namespace : DefaultLibraryInfo.HTML.getValidNamespaces()) {
+            htmlLibDescriptor = instance.getLibrariesDescriptors().get(namespace);
+            if (htmlLibDescriptor != null) {
+                break;
+            }
+        }
         assertNotNull(htmlLibDescriptor);
 
         Map<String, Tag> tags = htmlLibDescriptor.getTags();

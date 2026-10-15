@@ -43,7 +43,6 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -55,6 +54,7 @@ import javax.lang.model.element.Name;
 import javax.tools.Diagnostic;
 
 import com.sun.source.tree.ModifiersTree;
+import javax.lang.model.element.TypeElement;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.lexer.Token;
@@ -111,11 +111,11 @@ public class Utilities {
     }
     
     private static Token<JavaTokenId> findIdentifierSpanImpl(CompilationInfo info, Tree decl, Tree lastLeft, List<? extends Tree> firstRight, String name, CompilationUnitTree cu, SourcePositions positions) {
-        int declStart = (int) positions.getStartPosition(cu, decl);
+        int declStart = (int) positions.getStartPosition(decl);
         
         lastLeft = normalizeLastLeftTree(lastLeft);
         
-        int start = lastLeft != null ? (int)positions.getEndPosition(cu, lastLeft) : declStart;
+        int start = lastLeft != null ? (int)positions.getEndPosition(lastLeft) : declStart;
         
         if (start == (-1)) {
             start = declStart;
@@ -124,13 +124,13 @@ public class Utilities {
             }
         }
         
-        int end = (int)positions.getEndPosition(cu, decl);
+        int end = (int)positions.getEndPosition(decl);
 
         for (Tree t : firstRight) {
             if (t == null)
                 continue;
 
-            int proposedEnd = (int)positions.getStartPosition(cu, t);
+            int proposedEnd = (int)positions.getStartPosition(t);
 
             if (proposedEnd != (-1) && proposedEnd < end)
                 end = proposedEnd;
@@ -145,15 +145,20 @@ public class Utilities {
             //public static String s() [] {}
             //(meaning: method returning array of Strings)
             //use a conservative start value:
-            start = (int) positions.getStartPosition(cu, decl);
+            start = (int) positions.getStartPosition(decl);
+        }
+
+        if (start == end) {
+            //may happen for enum constants, would use an empty tokensequence
+            end = start + 1;
         }
 
         return findTokenWithText(info, name, start, end);
     }
     
     private static Token<JavaTokenId> findIdentifierSpanImpl(CompilationInfo info, MemberSelectTree tree, CompilationUnitTree cu, SourcePositions positions) {
-        int start = (int)positions.getStartPosition(cu, tree);
-        int endPosition = (int)positions.getEndPosition(cu, tree);
+        int start = (int)positions.getStartPosition(tree);
+        int endPosition = (int)positions.getEndPosition(tree);
         
         if (start == (-1) || endPosition == (-1))
             return null;
@@ -183,8 +188,8 @@ public class Utilities {
     }
     
     private static Token<JavaTokenId> findIdentifierSpanImpl(CompilationInfo info, MemberReferenceTree tree, CompilationUnitTree cu, SourcePositions positions) {
-        int start = (int)positions.getStartPosition(cu, tree);
-        int endPosition = (int)positions.getEndPosition(cu, tree);
+        int start = (int)positions.getStartPosition(tree);
+        int endPosition = (int)positions.getEndPosition(tree);
         
         if (start == (-1) || endPosition == (-1))
             return null;
@@ -214,8 +219,8 @@ public class Utilities {
     }
     
     private static Token<JavaTokenId> findIdentifierSpanImpl(CompilationInfo info, IdentifierTree tree, CompilationUnitTree cu, SourcePositions positions) {
-        int start = (int)positions.getStartPosition(cu, tree);
-        int endPosition = (int)positions.getEndPosition(cu, tree);
+        int start = (int)positions.getStartPosition(tree);
+        int endPosition = (int)positions.getEndPosition(tree);
         
         if (start == (-1) || endPosition == (-1))
             return null;
@@ -237,20 +242,13 @@ public class Utilities {
         return null;
     }
 
-    private static final Map<Class, List<Kind>> class2Kind;
+    private static final Map<Class<?>, List<Kind>> class2Kind;
     
     static {
-        class2Kind = new HashMap<Class, List<Kind>>();
-        
-        for (Kind k : Kind.values()) {
-            Class c = k.asInterface();
-            List<Kind> kinds = class2Kind.get(c);
-            
-            if (kinds == null) {
-                class2Kind.put(c, kinds = new ArrayList<Kind>());
-            }
-            
-            kinds.add(k);
+        class2Kind = new HashMap<>();
+        for (Kind kind : Kind.values()) {
+            class2Kind.computeIfAbsent(kind.asInterface(), k -> new ArrayList<>())
+                      .add(kind);
         }
     }
     
@@ -262,16 +260,24 @@ public class Utilities {
         
         if (class2Kind.get(MethodTree.class).contains(leaf.getKind())) {
             MethodTree method = (MethodTree) leaf;
-            List<Tree> rightTrees = new ArrayList<Tree>();
+            TreePath parentPath = decl.getParentPath();
+            List<Tree> rightTrees = new ArrayList<>();
 
-            rightTrees.addAll(method.getParameters());
+            boolean ignoreParameters = parentPath.getLeaf().getKind() == Kind.RECORD &&
+                                       !method.getParameters().isEmpty() &&
+                                       info.getTreeUtilities().isSynthetic(new TreePath(decl, method.getParameters().get(0)));
+
+            if (!ignoreParameters) {
+                rightTrees.addAll(method.getParameters());
+            }
+
             rightTrees.addAll(method.getThrows());
             rightTrees.add(method.getBody());
 
             Name name = method.getName();
             
             if (method.getReturnType() == null)
-                name = ((ClassTree) decl.getParentPath().getLeaf()).getSimpleName();
+                name = ((ClassTree) parentPath.getLeaf()).getSimpleName();
             
             return findIdentifierSpanImpl(info, leaf, method.getReturnType(), rightTrees, name.toString(), info.getCompilationUnit(), info.getTrees().getSourcePositions());
         }
@@ -279,9 +285,15 @@ public class Utilities {
             VariableTree var = (VariableTree) leaf;
             // see #240912 - lambda implicit-typed parameter has synthetic type, shouldn't be searched.
             boolean typeSynthetic = var.getType() == null || info.getTreeUtilities().isSynthetic(new TreePath(decl, var.getType()));
-            return findIdentifierSpanImpl(info, leaf, 
+            return findIdentifierSpanImpl(
+                    info,
+                    leaf, 
                     typeSynthetic ? null : var.getType(), 
-                    Collections.singletonList(var.getInitializer()), var.getName().toString(), info.getCompilationUnit(), info.getTrees().getSourcePositions());
+                    Collections.singletonList(var.getInitializer()), // No List.of(), may be null
+                    var.getName().toString(),
+                    info.getCompilationUnit(),
+                    info.getTrees().getSourcePositions()
+            );
         }
         if (class2Kind.get(MemberSelectTree.class).contains(leaf.getKind())) {
             return findIdentifierSpanImpl(info, (MemberSelectTree) leaf, info.getCompilationUnit(), info.getTrees().getSourcePositions());
@@ -292,17 +304,17 @@ public class Utilities {
         if (class2Kind.get(ClassTree.class).contains(leaf.getKind())) {
             String name = ((ClassTree) leaf).getSimpleName().toString();
             
-            if (name.length() == 0)
+            if (name.isEmpty())
                 return null;
             
             SourcePositions positions = info.getTrees().getSourcePositions();
             CompilationUnitTree cu = info.getCompilationUnit();
             ModifiersTree mods = ((ClassTree) leaf).getModifiers();
             
-            int start = mods != null ? (int)positions.getEndPosition(cu, mods) : -1;
+            int start = mods != null ? (int)positions.getEndPosition(mods) : -1;
             if (start == (-1))
-                start = (int)positions.getStartPosition(cu, leaf);
-            int end = (int)positions.getEndPosition(cu, leaf);
+                start = (int)positions.getStartPosition(leaf);
+            int end = (int)positions.getEndPosition(leaf);
 
             if (start == (-1) || end == (-1)) {
                 return null;
@@ -327,8 +339,8 @@ public class Utilities {
             
             SourcePositions positions = info.getTrees().getSourcePositions();
             CompilationUnitTree cu = info.getCompilationUnit();
-            int start = (int)positions.getStartPosition(cu, leaf);
-            int end   = (int)positions.getEndPosition(cu, leaf);
+            int start = (int)positions.getStartPosition(leaf);
+            int end   = (int)positions.getEndPosition(leaf);
             
             if (start == (-1) || end == (-1)) {
                 return null;
@@ -344,8 +356,8 @@ public class Utilities {
             
             SourcePositions positions = info.getTrees().getSourcePositions();
             CompilationUnitTree cu = info.getCompilationUnit();
-            int start = (int)positions.getStartPosition(cu, leaf);
-            int end   = (int)positions.getEndPosition(cu, leaf);
+            int start = (int)positions.getStartPosition(leaf);
+            int end   = (int)positions.getEndPosition(leaf);
             
             if (start == (-1) || end == (-1)) {
                 return null;
@@ -361,8 +373,8 @@ public class Utilities {
             
             SourcePositions positions = info.getTrees().getSourcePositions();
             CompilationUnitTree cu = info.getCompilationUnit();
-            int start = (int)positions.getStartPosition(cu, leaf);
-            int end   = (int)positions.getStartPosition(cu, ((LabeledStatementTree) leaf).getStatement());
+            int start = (int)positions.getStartPosition(leaf);
+            int end   = (int)positions.getStartPosition(((LabeledStatementTree) leaf).getStatement());
             
             if (start == (-1) || end == (-1)) {
                 return null;
@@ -370,18 +382,16 @@ public class Utilities {
             
            return findTokenWithText(info, name.toString(), start, end);
         }
-        throw new IllegalArgumentException("Only MethodDecl, VariableDecl, MemberSelectTree, IdentifierTree, ParameterizedTypeTree, AnnotatedTypeTree, ClassDecl, BreakTree, ContinueTree, and LabeledStatementTree are accepted by this method. Got: " + leaf.getKind());
+        throw new IllegalArgumentException("Only MethodDecl, VariableDecl, MemberSelectTree, IdentifierTree, ParameterizedTypeTree, AnnotatedTypeTree, ClassDecl, BreakTree, ContinueTree, LabeledStatementTree and BindingPatternTree are accepted by this method. Got: " + leaf.getKind());
     }
 
     public static int[] findIdentifierSpan( final TreePath decl, final CompilationInfo info, final Document doc) {
         final int[] result = new int[] {-1, -1};
-        Runnable r = new Runnable() {
-            public void run() {
-                Token<JavaTokenId> t = findIdentifierSpan(info, doc, decl);
-                if (t != null) {
-                    result[0] = t.offset(null);
-                    result[1] = t.offset(null) + t.length();
-                }
+        Runnable r = () -> {
+            Token<JavaTokenId> t = findIdentifierSpan(info, doc, decl);
+            if (t != null) {
+                result[0] = t.offset(null);
+                result[1] = t.offset(null) + t.length();
             }
         };
         if (doc != null) {
@@ -395,10 +405,8 @@ public class Utilities {
     public static Token<JavaTokenId> findIdentifierSpan(final CompilationInfo info, final Document doc, final TreePath decl) {
         @SuppressWarnings("unchecked")
         final Token<JavaTokenId>[] result = new Token[1];
-        Runnable r = new Runnable() {
-            public void run() {
-                result[0] = findIdentifierSpanImpl(info, decl);
-            }
+        Runnable r = () -> {
+            result[0] = findIdentifierSpanImpl(info, decl);
         };
         if (doc != null) {
             doc.render(r);
@@ -425,8 +433,8 @@ public class Utilities {
             if (o == null) {
                 continue;
             }
-            if (o instanceof Tree) {
-                int offset = (int)pos.getEndPosition(cu, (Tree)o);
+            if (o instanceof Tree tree) {
+                int offset = (int)pos.getEndPosition(tree);
                 if (offset >= 0) {
                     return offset;
                 }
@@ -435,7 +443,7 @@ public class Utilities {
                 if (!set.isEmpty()) {
                     // assume that the compiler will fake a single item in otherwise empty list; it should not add a fake item after some real Tree items.
                     Tree t = set.get(set.size() - 1);
-                    int offset = (int)pos.getEndPosition(cu, t);
+                    int offset = (int)pos.getEndPosition(t);
                     if (offset >= 0) {
                         return offset;
                     }
@@ -446,15 +454,15 @@ public class Utilities {
     }
     
     private static int findBodyStartImpl(CompilationInfo info, Tree cltree, CompilationUnitTree cu, SourcePositions positions, Document doc) {
-        int start = (int)positions.getStartPosition(cu, cltree);
-        int end   = (int)positions.getEndPosition(cu, cltree);
+        int start = (int)positions.getStartPosition(cltree);
+        int end   = (int)positions.getEndPosition(cltree);
         
         if (start == (-1) || end == (-1)) {
             return -1;
         }
         int startPos = -1;
         switch (cltree.getKind()) {
-            case CLASS: case INTERFACE: case ENUM: {
+            case CLASS, INTERFACE, ENUM -> {
                 ClassTree ct = (ClassTree)cltree;
                 startPos = findSubtreeEnd(cu, positions,
                         ct.getImplementsClause(),
@@ -462,14 +470,11 @@ public class Utilities {
                         ct.getTypeParameters(),
                         ct.getModifiers()
                 );
-                break;
             }
-                
-            case METHOD:  {
+            case METHOD -> {
                 // if the method contains some parameters, skip to the end of the parameter list
                 MethodTree mt = (MethodTree)cltree;
                 startPos = findSubtreeEnd(cu, positions, mt.getDefaultValue(), mt.getThrows(), mt.getParameters(), mt.getModifiers());
-                break;
             }
         }
         if (startPos > start) {
@@ -500,22 +505,21 @@ public class Utilities {
     
     public static int findBodyStart(final CompilationInfo info, final Tree cltree, final CompilationUnitTree cu, final SourcePositions positions, final Document doc) {
         Kind kind = cltree.getKind();
-        if (!TreeUtilities.CLASS_TREE_KINDS.contains(kind) && kind != Kind.METHOD)
+        if (!TreeUtilities.CLASS_TREE_KINDS.contains(kind) && kind != Kind.METHOD) {
             throw new IllegalArgumentException("Unsupported kind: "+ kind);
+        }
         final int[] result = new int[1];
         
-        doc.render(new Runnable() {
-            public void run() {
-                result[0] = findBodyStartImpl(info, cltree, cu, positions, doc);
-            }
+        doc.render(() -> {
+            result[0] = findBodyStartImpl(info, cltree, cu, positions, doc);
         });
         
         return result[0];
     }
     
     private static int findLastBracketImpl(Tree tree, CompilationUnitTree cu, SourcePositions positions, Document doc) {
-        int start = (int)positions.getStartPosition(cu, tree);
-        int end   = (int)positions.getEndPosition(cu, tree);
+        int start = (int)positions.getStartPosition(tree);
+        int end   = (int)positions.getEndPosition(tree);
         
         if (start == (-1) || end == (-1)) {
             return -1;
@@ -548,10 +552,8 @@ public class Utilities {
     public static int findLastBracket(final Tree tree, final CompilationUnitTree cu, final SourcePositions positions, final Document doc) {
         final int[] result = new int[1];
         
-        doc.render(new Runnable() {
-            public void run() {
-                result[0] = findLastBracketImpl(tree, cu, positions, doc);
-            }
+        doc.render(() -> {
+            result[0] = findLastBracketImpl(tree, cu, positions, doc);
         });
         
         return result[0];
@@ -564,12 +566,13 @@ public class Utilities {
         
         //XXX: do not use instanceof:
         if (leaf instanceof MethodTree || leaf instanceof VariableTree || leaf instanceof ClassTree
-                || leaf instanceof MemberSelectTree || leaf instanceof AnnotatedTypeTree || leaf instanceof MemberReferenceTree) {
+                || leaf instanceof MemberSelectTree || leaf instanceof AnnotatedTypeTree || leaf instanceof MemberReferenceTree
+                || leaf.getKind() == Kind.BINDING_PATTERN) {
             return findIdentifierSpan(info, doc, tree);
         }
         
-        int start = (int) positions.getStartPosition(cu, leaf);
-        int end = (int) positions.getEndPosition(cu, leaf);
+        int start = (int) positions.getStartPosition(leaf);
+        int end = (int) positions.getEndPosition(leaf);
         
         if (start == Diagnostic.NOPOS || end == Diagnostic.NOPOS) {
             return null;
@@ -602,34 +605,16 @@ public class Utilities {
         @SuppressWarnings("unchecked")
         final Token<JavaTokenId>[] result = new Token[1];
         
-        doc.render(new Runnable() {
-            public void run() {
-                result[0] = createHighlightImpl(info, doc, tree);
-            }
+        doc.render(() -> {
+            result[0] = createHighlightImpl(info, doc, tree);
         });
         
         return result[0];
     }
     
-    private static final Set<String> keywords;
-    private static final Set<String> nonCtorKeywords;
-    
-    static {
-        keywords = new HashSet<String>();
-        
-        keywords.add("true");
-        keywords.add("false");
-        keywords.add("null");
-        keywords.add("this");
-        keywords.add("super");
-        keywords.add("class");
+    private static final Set<String> keywords = Set.of("true", "false", "null", "this", "super", "class");
+    private static final Set<String> nonCtorKeywords = Set.of("true", "false", "null", "class");
 
-        nonCtorKeywords = new HashSet<String>(keywords);
-        nonCtorKeywords.remove("this");
-        nonCtorKeywords.remove("super");
-
-    }
-    
     public static boolean isKeyword(Tree tree) {
         if (tree.getKind() == Kind.IDENTIFIER) {
             return keywords.contains(((IdentifierTree) tree).getName().toString());
@@ -652,11 +637,27 @@ public class Utilities {
         return false;
     }
 
-    private static final Set<ElementKind> LOCAL_ELEMENT_KINDS = EnumSet.of(ElementKind.PARAMETER, ElementKind.LOCAL_VARIABLE, ElementKind.EXCEPTION_PARAMETER, ElementKind.RESOURCE_VARIABLE);
-
+    private static final Set<ElementKind> LOCAL_ELEMENT_KINDS = EnumSet.of(ElementKind.PARAMETER, ElementKind.LOCAL_VARIABLE, ElementKind.EXCEPTION_PARAMETER, ElementKind.RESOURCE_VARIABLE, ElementKind.BINDING_VARIABLE);
+    
     public static boolean isPrivateElement(Element el) {
         return LOCAL_ELEMENT_KINDS.contains(el.getKind()) || el.getModifiers().contains(Modifier.PRIVATE);
     }
 
+    public static Element toRecordComponent(Element el) {
+        if (el == null || el.getKind() != ElementKind.FIELD) {
+            return el;
+        }
+        TypeElement owner = (TypeElement) el.getEnclosingElement();
+        if (!ElementKind.RECORD.equals(owner.getKind())) {
+            return el;
+        }
+        for (Element encl : owner.getEnclosedElements()) {
+            if (encl.getKind() == ElementKind.RECORD_COMPONENT &&
+                encl.getSimpleName().equals(el.getSimpleName())) {
+                return encl;
+            }
+        }
+        return el;
+    }
 
 }

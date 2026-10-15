@@ -20,15 +20,19 @@
 package org.netbeans.modules.web.el;
 
 import com.sun.el.parser.Node;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import javax.el.ELException;
+
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.Severity;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.parsing.api.Snapshot;
+import org.netbeans.modules.web.el.spi.ResolverContext;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -41,6 +45,8 @@ public final class ELParserResult extends ParserResult {
     private final List<ELElement> elements = new ArrayList<>();
 
     private final FileObject file;
+
+    private final ResolverContext context = new ResolverContext();
 
     public ELParserResult(Snapshot snapshot) {
         super(snapshot);
@@ -130,6 +136,10 @@ public final class ELParserResult extends ParserResult {
             }
         }
         return result;
+    }
+
+    public ResolverContext getContext() {
+        return context;
     }
 
     private static class ELError implements Error.Badging {

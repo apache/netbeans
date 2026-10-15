@@ -128,21 +128,6 @@ public final class CharBuffer {
         for (int i = 0; i < len; i++) append0(s.charAt(i));
     }
     public void append(CharBuffer cb) { append(cb.chars, 0, cb.used); }
-    public void appendUtf8(byte[] src, int i, int len) {
-	    int limit = i + len;
-	    while (i < limit) {
-		int b = src[i++] & 0xFF;
-		if (b >= 0xE0) {
-		    b = (b & 0x0F) << 12;
-		    b = b | (src[i++] & 0x3F) << 6;
-		    b = b | (src[i++] & 0x3F);
-		} else if (b >= 0xC0) {
-		    b = (b & 0x1F) << 6;
-		    b = b | (src[i++] & 0x3F);
-		}
-		append((char) b);
-	    }
-    }
     public char[] toCharArray() {
         char[] nm = new char[used];
         System.arraycopy(chars, 0, nm, 0, used);

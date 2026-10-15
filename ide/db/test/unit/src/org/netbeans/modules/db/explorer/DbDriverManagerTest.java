@@ -206,7 +206,7 @@ public class DbDriverManagerTest extends TestBase {
     public void testNoJDBCDriverLeaks() throws Exception {
         JDBCDriver drv = createJDBCDriver();
         Driver driver = DbDriverManager.getDefault().getDriver(DriverImpl.DEFAULT_URL, drv);
-        Reference drvRef = new WeakReference(drv);
+        Reference<JDBCDriver> drvRef = new WeakReference<>(drv);
         drv = null;
 
         assertGC("Should be possible to GC the driver", drvRef);

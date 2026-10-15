@@ -1,0 +1,4 @@
+interface |>MARK_OCCURRENCES:ExampleInter^face1<| {}
+use Enum1\|>MARK_OCCURRENCES:ExampleInterface1<|;
+enum EnumImpl1 implements |>MARK_OCCURRENCES:ExampleInterface1<| {
+enum EnumImpl2 implements |>MARK_OCCURRENCES:ExampleInterface1<|, ExampleInterface2 {

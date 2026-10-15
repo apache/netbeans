@@ -25,6 +25,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -120,7 +121,7 @@ public class TrieDictionaryTest extends NbTestCase {
         clearWorkDir();
 
         File sourceFile = new File(getWorkDir(), "source");
-        Writer w = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(sourceFile), "UTF-8"));
+        Writer w = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(sourceFile), StandardCharsets.UTF_8));
 
         for (String d : data) {
             w.write(d);

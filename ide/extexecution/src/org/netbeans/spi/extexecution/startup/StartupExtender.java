@@ -27,8 +27,20 @@ import org.netbeans.modules.extexecution.startup.ProxyStartupExtender;
  */
 final class StartupExtender {
 
+    /**
+     * Legacy layer factory that is still used by binaries compiled against &lt 1.62
+     * @param map
+     * @return 
+     */
     static StartupExtenderImplementation createProxy(Map<String,?> map) {
         return new ProxyStartupExtender(map);
+    }
+
+    /**
+     * New layer factory, allows to declare quoting/escaping policy
+     */
+    static StartupExtenderImplementation createProxy2(Map<String,?> map) {
+        return new ProxyStartupExtender.V2(map);
     }
 
     private StartupExtender() {}

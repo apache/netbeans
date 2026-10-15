@@ -1,0 +1,27 @@
+<settings>
+    <proxies>
+        <proxy>
+            <id>netbeans-default-proxy</id>
+            <active>false</active>
+            <protocol>http</protocol>
+            <host>proxy1.acme.com</host>
+            <port>80</port>
+        </proxy>
+        <proxy>
+            <id>cafebabe</id>
+            <active>true</active>
+            <protocol>http</protocol>
+            <host>cafebabe-proxy.acme.com</host>
+            <port>80</port>
+            <nonProxyHosts>*.acme.com</nonProxyHosts>
+        </proxy>
+    </proxies>
+    <profiles>  
+        <profile>
+            <id>graalvm</id>
+            <properties>
+                <graalvm>/space/java/graalvm-0.22</graalvm>
+            </properties>
+        </profile>
+    </profiles>
+</settings>

@@ -17,3 +17,5 @@ METHOD     asList()                                   List
 METHOD     asSynchronized()                           Set
 METHOD     asType(Class)                              Object
 METHOD     asUnmodifiable()                           Set
+METHOD     average()                                  Object
+METHOD     average(Closure)                           Object

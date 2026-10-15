@@ -291,7 +291,37 @@ public class MethodBreakpointImpl extends ClassBasedBreakpoint {
         }
         return super.exec (event);
     }
-    
+    private static final String CONSTRUCTOR = "<init>";
+    static String checkForConstructor(String typeName, String methodName) {
+        String constructorName = typeName;
+        final int lastDot = constructorName.lastIndexOf('.');
+        if (methodName.equals(typeName.substring(lastDot + 1))) {
+            return CONSTRUCTOR;
+        }
+        int index = Math.max(lastDot,
+                constructorName.lastIndexOf('$'));
+        if (index > 0) {
+            constructorName = constructorName.substring(index + 1);
+            if (typeName.charAt(index) == '$') {
+                // test for: ...$<digits only>$<name>
+                int i = index - 1;
+                while (i > 0 && Character.isDigit(typeName.charAt(i))) {
+                    i--;
+                }
+                if (typeName.charAt(i) == '$') {
+                    if (constructorName.equals(typeName.substring(i + 1, index) + methodName)) {
+                        methodName = constructorName; // Constructor
+                    }
+                }
+            }
+        }
+        if (methodName.equals(constructorName)) {
+            return CONSTRUCTOR; // Constructor
+        } else {
+            return methodName;
+        }
+    }
+
     @Override
     protected void classLoaded (List<ReferenceType> referenceTypes) {
         boolean submitted = false;
@@ -320,29 +350,10 @@ public class MethodBreakpointImpl extends ClassBasedBreakpoint {
             Set<String> entryMethodNames = null;
             Set<String> exitMethodNames = null;
             boolean locationEntry = false;
-            String methodName = breakpoint.getMethodName();
             String typeName = referenceType.name();
+            String methodName = checkForConstructor(typeName, breakpoint.getMethodName());
             String outerArgsSignature = null;   // Signature of arguments from outer classes
-            String constructorName = typeName;
-            int index = Math.max(constructorName.lastIndexOf('.'),
-                                 constructorName.lastIndexOf('$'));
-            if (index > 0) {
-                constructorName = constructorName.substring(index + 1);
-                if (typeName.charAt(index) == '$') {
-                    // test for: ...$<digits only>$<name>
-                    int i = index - 1;
-                    while (i > 0 && Character.isDigit(typeName.charAt(i))) {
-                        i--;
-                    }
-                    if (typeName.charAt(i) == '$') {
-                        if (constructorName.equals(typeName.substring(i+1, index) + methodName)) {
-                            methodName = constructorName; // Constructor
-                        }
-                    }
-                }
-            }
-            if (methodName.equals(constructorName)) {
-                methodName = "<init>"; // Constructor
+            if (methodName.equals(CONSTRUCTOR)) {
                 if (!ReferenceTypeWrapper.isStatic0(referenceType)) {
                     outerArgsSignature = findOuterArgsSignature(typeName, referenceType);
                 }

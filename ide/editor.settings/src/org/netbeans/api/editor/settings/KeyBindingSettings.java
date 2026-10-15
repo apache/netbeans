@@ -26,7 +26,7 @@ package org.netbeans.api.editor.settings;
  * 
  * <p>Instances of this class should be retrieved from <code>MimeLookup</code>.
  * 
- * <p><font color="red">This class must NOT be extended by any API clients.</font>
+ * <p><span style="color:red">This class must NOT be extended by any API clients.</span>
  *
  * @author Martin Roskanin
  */

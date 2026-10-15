@@ -30,7 +30,6 @@ import java.util.jar.Manifest;
 import java.util.regex.Pattern;
 import org.netbeans.api.annotations.common.SuppressWarnings;
 import org.netbeans.modules.maven.api.NbMavenProject;
-import org.codehaus.plexus.util.IOUtil;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.java.queries.AccessibilityQueryImplementation;
 import org.netbeans.spi.project.ProjectServiceProvider;
@@ -166,17 +165,13 @@ public class AccessQueryImpl implements AccessibilityQueryImplementation {
         } else {
             FileObject obj = project.getProjectDirectory().getFileObject(MANIFEST_PATH);
             if (obj != null) {
-                InputStream in = null;
-                try {
-                    in = obj.getInputStream();
+                try (InputStream in = obj.getInputStream()) {
                     Manifest man = new Manifest();
                     man.read(in);
                     String value = man.getMainAttributes().getValue(ATTR_PUBLIC_PACKAGE);
                     toRet = prepareManifestPublicPackagesPatterns(value);
                 } catch (Exception ex) {
                     Exceptions.printStackTrace(ex);
-                } finally {
-                    IOUtil.close(in);
                 }
             }
         }

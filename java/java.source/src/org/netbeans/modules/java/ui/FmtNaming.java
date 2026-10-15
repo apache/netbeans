@@ -28,6 +28,7 @@ import javax.lang.model.element.Modifier;
 import javax.swing.JPanel;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.Tree;
@@ -58,8 +59,6 @@ public class FmtNaming extends javax.swing.JPanel implements Runnable {
      */
     public FmtNaming() {
         initComponents();
-        preferLongerNamesCheckBox.putClientProperty(OPTION_ID, preferLongerNames);
-        preferLongerNamesCheckBox.setVisible(false);
         fieldPrefixField.putClientProperty(OPTION_ID, fieldNamePrefix);
         fieldSuffixField.putClientProperty(OPTION_ID, fieldNameSuffix);
         staticFieldPrefixField.putClientProperty(OPTION_ID, staticFieldNamePrefix);
@@ -71,12 +70,10 @@ public class FmtNaming extends javax.swing.JPanel implements Runnable {
     }
 
     public static PreferencesCustomizer.Factory getController() {
-        return new PreferencesCustomizer.Factory() {
-            public PreferencesCustomizer create(Preferences preferences) {
-                NamingCategorySupport support = new NamingCategorySupport(preferences, new FmtNaming());
-                ((Runnable) support.panel).run();
-                return support;
-            }
+        return (Preferences preferences) -> {
+            NamingCategorySupport support = new NamingCategorySupport(preferences, new FmtNaming());
+            ((Runnable) support.panel).run();
+            return support;
         };
     }
 
@@ -90,7 +87,6 @@ public class FmtNaming extends javax.swing.JPanel implements Runnable {
         java.awt.GridBagConstraints gridBagConstraints;
 
         namingConventionsLabel = new javax.swing.JLabel();
-        preferLongerNamesCheckBox = new javax.swing.JCheckBox();
         jPanel1 = new javax.swing.JPanel();
         prefixLabel = new javax.swing.JLabel();
         suffixLabel = new javax.swing.JLabel();
@@ -111,11 +107,6 @@ public class FmtNaming extends javax.swing.JPanel implements Runnable {
         setOpaque(false);
 
         org.openide.awt.Mnemonics.setLocalizedText(namingConventionsLabel, org.openide.util.NbBundle.getMessage(FmtNaming.class, "LBL_gen_Naming")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(preferLongerNamesCheckBox, org.openide.util.NbBundle.getMessage(FmtNaming.class, "LBL_gen_PreferLongerNames")); // NOI18N
-        preferLongerNamesCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        preferLongerNamesCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        preferLongerNamesCheckBox.setOpaque(false);
 
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
@@ -219,7 +210,6 @@ public class FmtNaming extends javax.swing.JPanel implements Runnable {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(4, 0, 0, 0);
         jPanel1.add(localVarLabel, gridBagConstraints);
 
         localVarSuffixField.setColumns(5);
@@ -249,9 +239,7 @@ public class FmtNaming extends javax.swing.JPanel implements Runnable {
                     .addComponent(namingConventionsLabel)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(preferLongerNamesCheckBox)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -259,9 +247,7 @@ public class FmtNaming extends javax.swing.JPanel implements Runnable {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(namingConventionsLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(preferLongerNamesCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -277,7 +263,6 @@ public class FmtNaming extends javax.swing.JPanel implements Runnable {
     private javax.swing.JLabel parameterLabel;
     private javax.swing.JTextField parameterPrefixField;
     private javax.swing.JTextField parameterSuffixField;
-    private javax.swing.JCheckBox preferLongerNamesCheckBox;
     private javax.swing.JLabel prefixLabel;
     private javax.swing.JLabel staticFieldLabel;
     private javax.swing.JTextField staticFieldPrefixField;
@@ -297,6 +282,7 @@ public class FmtNaming extends javax.swing.JPanel implements Runnable {
                   new String[]{FmtOptions.blankLinesBeforeFields, "1"}); //NOI18N
         }
 
+        @Override
         protected void doModification(ResultIterator resultIterator) throws Exception {
             final CodeStyle codeStyle = codeStyleProducer.create(previewPrefs);
             WorkingCopy copy = WorkingCopy.get(resultIterator.getParserResult());
@@ -305,7 +291,7 @@ public class FmtNaming extends javax.swing.JPanel implements Runnable {
             GeneratorUtilities gu = GeneratorUtilities.get(copy);
             CompilationUnitTree cut = copy.getCompilationUnit();
             ClassTree ct = (ClassTree) cut.getTypeDecls().get(0);
-            List<Tree> members = new ArrayList<Tree>();
+            List<Tree> members = new ArrayList<>();
             String name = CodeStyleUtils.addPrefixSuffix("name",
                     codeStyle.getFieldNamePrefix(),
                     codeStyle.getFieldNameSuffix());
@@ -322,7 +308,7 @@ public class FmtNaming extends javax.swing.JPanel implements Runnable {
             members.add(gu.createGetter(booleanField));
             members.add(gu.createSetter(ct, booleanField));
             ModifiersTree mods = tm.Modifiers(EnumSet.of(Modifier.PRIVATE, Modifier.STATIC));
-            ClassTree nested = tm.Class(mods, "Nested", Collections.<TypeParameterTree>emptyList(), null, Collections.<Tree>emptyList(), Collections.<Tree>emptyList()); //NOI18N
+            ClassTree nested = tm.Class(mods, "Nested", Collections.<TypeParameterTree>emptyList(), null, Collections.<Tree>emptyList(), Collections.<ExpressionTree>emptyList(), Collections.<Tree>emptyList()); //NOI18N
             members.add(nested);
             IdentifierTree nestedId = tm.Identifier("Nested"); //NOI18N
             String instance = CodeStyleUtils.addPrefixSuffix("instance",

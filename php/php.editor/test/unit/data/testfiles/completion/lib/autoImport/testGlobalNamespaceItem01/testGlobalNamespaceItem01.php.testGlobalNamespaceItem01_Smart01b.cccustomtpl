@@ -1,0 +1,14 @@
+Name: GLOBAL_CONST
+GLOBAL_CONST${php-auto-import default="" fqName=GLOBAL_CONST aliasName="" useType=const editable=false}
+
+Name: globalFunction
+globalFunction${php-auto-import default="" fqName=globalFunction aliasName="" useType=function editable=false}()
+
+Name: GlobalNSClass
+GlobalNSClass${php-auto-import default="" fqName=GlobalNSClass aliasName="" useType=type editable=false}::${cursor}
+
+Name: GlobalNSEnum
+GlobalNSEnum${php-auto-import default="" fqName=GlobalNSEnum aliasName="" useType=type editable=false}::${cursor}
+
+Name: GlobalNSInterface
+GlobalNSInterface${php-auto-import default="" fqName=GlobalNSInterface aliasName="" useType=type editable=false}::${cursor}

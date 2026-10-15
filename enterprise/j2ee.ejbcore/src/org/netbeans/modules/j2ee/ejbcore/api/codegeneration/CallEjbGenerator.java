@@ -383,7 +383,7 @@ public class CallEjbGenerator {
                         '{' + MessageFormat.format(JNDI_LOOKUP_EJB3_JAVAEE5, new Object[] { name, homeFieldName }) + '}',
                         null
                         );
-                methodTree = (MethodTree) GeneratorUtilities.get(workingCopy).importFQNs(methodTree);
+                methodTree = GeneratorUtilities.get(workingCopy).importFQNs(methodTree);
                 newClassTree = treeMaker.insertClassMember(newClassTree, 3, methodTree);
                 
                 workingCopy.rewrite(classTree, newClassTree);
@@ -436,10 +436,10 @@ public class CallEjbGenerator {
             }
         }
         if (!throwCheckedExceptions) {
-            Iterator exIt = exceptions.iterator();
+            Iterator<String> exIt = exceptions.iterator();
             StringBuffer catchBody = new StringBuffer("try {\n" + body + "}\n"); // NOI18N
             while (exIt.hasNext()) {
-                String exceptionName = (String) exIt.next();
+                String exceptionName = exIt.next();
                 catchBody.append("catch("); // NOI18N
                 catchBody.append(exceptionName);
                 catchBody.append(' ');  //NOI18N
@@ -517,10 +517,10 @@ public class CallEjbGenerator {
             body = sls.genLocalEjbStringLookup(refName, homeName, referencingFO, referencingClassName, genCreate);
         }
         if (!throwCheckedExceptions) {
-            Iterator exIt = exceptions.iterator();
+            Iterator<String> exIt = exceptions.iterator();
             StringBuffer catchBody = new StringBuffer("try {\n" + body + "\n}"); // NOI18N
             while (exIt.hasNext()) {
-                String exceptionName = (String) exIt.next();
+                String exceptionName = exIt.next();
                 catchBody.append(" catch("); // NOI18N
                 catchBody.append(exceptionName);
                 catchBody.append(' ');  //NOI18N

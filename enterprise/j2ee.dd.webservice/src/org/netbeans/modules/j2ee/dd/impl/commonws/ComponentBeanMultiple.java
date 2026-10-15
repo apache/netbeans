@@ -16,18 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.netbeans.modules.j2ee.dd.impl.commonws;
+
+import java.util.Iterator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.netbeans.modules.schema2beans.Version;
+import org.netbeans.modules.j2ee.dd.api.common.*;
+import org.netbeans.modules.j2ee.dd.api.common.Icon;
+import org.openide.ErrorManager;
+
 
 /**
  * Superclass that implements DisplayNameInterface and IconInterface for Servlet2.4 beans.
  *
  * @author  Milan Kuchtiak
  */
-package org.netbeans.modules.j2ee.dd.impl.commonws;
-
-import org.netbeans.modules.schema2beans.Version;
-import org.netbeans.modules.j2ee.dd.api.common.*;
-import org.openide.ErrorManager;
-
 public abstract class ComponentBeanMultiple extends DescriptionBeanMultiple implements DisplayNameInterface, IconInterface {
     
     public ComponentBeanMultiple(java.util.Vector comps, Version version) {
@@ -83,10 +88,10 @@ public abstract class ComponentBeanMultiple extends DescriptionBeanMultiple impl
     public void setAllDisplayNames(java.util.Map displayNames) throws VersionNotSupportedException {
         removeAllDisplayNames();
         if (displayNames!=null) {
-            java.util.Iterator keys = displayNames.keySet().iterator();
+            Iterator<String> keys = displayNames.keySet().iterator();
             int i=0;
             while (keys.hasNext()) {
-                String key = (String) keys.next();
+                String key = keys.next();
                 addDisplayName((String)displayNames.get(key));
                 setDisplayNameXmlLang(i++, key);
             }
@@ -107,8 +112,8 @@ public abstract class ComponentBeanMultiple extends DescriptionBeanMultiple impl
             return getDisplayName(null);
         } catch (VersionNotSupportedException ex){return null;}
     }
-    public java.util.Map getAllDisplayNames() {
-        java.util.Map map =new java.util.HashMap();
+    public Map getAllDisplayNames() {
+        Map<String, String> map =new HashMap<>();
         for (int i=0;i<sizeDisplayName();i++) {
             String desc=getDisplayName(i);
             String loc=getDisplayNameXmlLang(i);
@@ -118,7 +123,7 @@ public abstract class ComponentBeanMultiple extends DescriptionBeanMultiple impl
     }
     
     public void removeDisplayNameForLocale(String locale) throws VersionNotSupportedException {
-        java.util.Map map = new java.util.HashMap();
+        Map<String, String> map = new HashMap<>();
         for (int i=0;i<sizeDisplayName();i++) {
             String desc=getDisplayName(i);
             String loc=getDisplayNameXmlLang(i);
@@ -220,8 +225,8 @@ public abstract class ComponentBeanMultiple extends DescriptionBeanMultiple impl
         }
         return null;
     }
-    public java.util.Map getAllIcons() {
-        java.util.Map map =new java.util.HashMap();
+    public Map getAllIcons() {
+        Map<String, String[]> map =new HashMap<>();
         org.netbeans.modules.j2ee.dd.api.common.Icon[] icons = getIcon();
         for (int i=0;i<icons.length;i++) {
             String[] iconPair = new String[] {icons[i].getSmallIcon(),icons[i].getLargeIcon()};
@@ -317,8 +322,8 @@ public abstract class ComponentBeanMultiple extends DescriptionBeanMultiple impl
     }
     
     public void removeIcon(String locale, boolean isSmall) throws VersionNotSupportedException  {
-        org.netbeans.modules.j2ee.dd.api.common.Icon[] icons = getIcon();
-        java.util.List iconList = new java.util.ArrayList();
+        Icon[] icons = getIcon();
+        List<Icon> iconList = new java.util.ArrayList<>();
         for (int i=0;i<icons.length;i++) {
             String loc=icons[i].getXmlLang();
             if ((locale==null && loc==null) || (locale!=null && locale.equalsIgnoreCase(loc))) {
@@ -331,7 +336,7 @@ public abstract class ComponentBeanMultiple extends DescriptionBeanMultiple impl
                 }
             }
         }
-        java.util.Iterator it = iconList.iterator();
-        while(it.hasNext()) removeIcon((org.netbeans.modules.j2ee.dd.api.common.Icon)it.next());
+        Iterator<Icon> it = iconList.iterator();
+        while(it.hasNext()) removeIcon(it.next());
     }
 }

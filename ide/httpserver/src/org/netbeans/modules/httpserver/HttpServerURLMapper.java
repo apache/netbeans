@@ -33,22 +33,31 @@ import org.openide.filesystems.URLMapper;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
-/** Implementation of a URLMapper which creates http URLs for fileobjects in the IDE.
- * Directs the requests for URLs to WrapperServlet.
+/**
+ * Implementation of a URLMapper which creates http URLs for fileobjects in the
+ * IDE.
+ * <p>Directs the requests for URLs to WrapperServlet.</p>
+ *
+ * <p>This URL Mapper encodes an URL, so that it can be accessed using a webserver
+ * the IDE provides. The intention is, that relative paths can be resolved, so
+ * the URL is encoded in a way, that the path structure is retained.</p>
+ *
+ * @see #encodeURL(java.net.URL) 
  *
  * @author Petr Jiricka, David Konecny
  */
 @org.openide.util.lookup.ServiceProvider(service=org.openide.filesystems.URLMapper.class)
 public class HttpServerURLMapper extends URLMapper {
-    
+
     /** Creates a new instance of HttpServerURLMapper */
     public HttpServerURLMapper() {
     }
-    
+
     /** Get an array of FileObjects for this url
      * @param url to wanted FileObjects
      * @return a suitable array of FileObjects, or null
      */
+    @Override
     public FileObject[] getFileObjects(URL url) {
         String path = url.getPath();
 
@@ -57,7 +66,7 @@ public class HttpServerURLMapper extends URLMapper {
         if (path == null || !path.startsWith(wrapper))
             return null;
         path = path.substring(wrapper.length());
-        
+
         // resource name
         if (path.startsWith ("/")) path = path.substring (1); // NOI18N
         if (path.length() == 0) {
@@ -70,7 +79,8 @@ public class HttpServerURLMapper extends URLMapper {
         }
         return URLMapper.findFileObjects(u);
     }
-    
+
+    @SuppressWarnings("ThrowableResultIgnored")
     private URL decodeURL(String path) {
         StringTokenizer slashTok = new StringTokenizer(path, "/", true); // NOI18N
         StringBuffer newPath = new StringBuffer();
@@ -80,14 +90,19 @@ public class HttpServerURLMapper extends URLMapper {
                 newPath.append(tok);
             } else {
                 try {
-                    newPath.append(URLDecoder.decode(tok, "UTF-8")); // NOI18N
+                    String decodedToken = URLDecoder.decode(tok, "UTF-8"); // NOI18N
+                    if(decodedToken.startsWith("/") && decodedToken.endsWith("/")) { // NOI18N
+                        newPath.append(decodedToken, 1, decodedToken.length() - 1);
+                    } else {
+                        newPath.append(tok);
+                    }
                 } catch (UnsupportedEncodingException e) {
                     assert false : e;
                     return null;
                 }
             }
         }
-        
+
         try {
             return new URL(newPath.toString());
         } catch (MalformedURLException ex) {
@@ -96,23 +111,26 @@ public class HttpServerURLMapper extends URLMapper {
             return null;
         }
     }
-    
-    /** Get a good URL for this file object which works according to type:
-     * -inside this VM
+
+    /**
+     * Get a good URL for this file object which works according to type:
+     * - inside this VM
      * - inside this machine
-     * - from networked machines 
+     * - from networked machines
+     *
      * @return a suitable URL, or null
-     */            
+     */
+    @Override
     public URL getURL(FileObject fileObject, int type) {
-        
+
         // only do external and network URLs
         if (type != URLMapper.NETWORK)
             return null;
-        
+
         // fileObject must not be null
         if (fileObject == null)
             return null;
-        
+
         // It should be OK to call URLMapper here because we call
         // it with different then NETWORK type.
         URL u = URLMapper.findURL(fileObject, URLMapper.EXTERNAL);
@@ -137,18 +155,38 @@ public class HttpServerURLMapper extends URLMapper {
             return null;
         }
     }
-    
+
+    /**
+     * {@code encodeUrl} encodes the supplied URL, so that it can be appended
+     * to another URL as a path.
+     *
+     * <p>The supplied URL is encoded to its external form and then split at the
+     * slashed (/). Each resulting component is checked if it is identical to
+     * its URL escaped form. If not the URL encoded form is appended.</p>
+     *
+     * <p>To make it possible to detect the encoded parts, slashes are wrapped
+     * around the individual components before the encoding. The assumption is,
+     * that in normal operation encoded slashes are not part of the URL and
+     * even then not as pairs at front and end.</p>
+     *
+     * @param u URL to be encoded
+     * @return encoded form
+     */
     private String encodeURL(URL u) {
         String orig = u.toExternalForm();
         StringTokenizer slashTok = new StringTokenizer(orig, "/", true); // NOI18N
-        StringBuffer path = new StringBuffer();
+        StringBuilder path = new StringBuilder();
         while (slashTok.hasMoreTokens()) {
             String tok = slashTok.nextToken();
             if (tok.startsWith("/")) { // NOI18N
                 path.append(tok);
             } else {
                 try {
-                    path.append(URLEncoder.encode(tok, "UTF-8")); // NOI18N
+                    if(! URLEncoder.encode(tok, "UTF-8").equals(tok)) {  // NOI18N;
+                        path.append(URLEncoder.encode("/" + tok + "/", "UTF-8"));  // NOI18N;
+                    } else {
+                        path.append(tok);
+                    }
                 } catch (UnsupportedEncodingException e) {
                     assert false : e;
                     return null;
@@ -157,7 +195,7 @@ public class HttpServerURLMapper extends URLMapper {
         }
         return path.toString();
     }
-    
+
     /** Returns string for localhost */
     private static String getLocalHost() {
         try {
@@ -167,11 +205,11 @@ public class HttpServerURLMapper extends URLMapper {
         }
     }
 
-    /** 
+    /**
      * Obtains settings of this module
      */
     static HttpServerSettings httpserverSettings () {
         return HttpServerSettings.getDefault();
     }
-    
+
 }

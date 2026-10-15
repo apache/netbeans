@@ -50,9 +50,9 @@ public final class SelectedTables {
     enum Problem { NO_JAVA_IDENTIFIER, JPA_QL_IDENTIFIER, ALREADY_EXISTS };
 
     private final PersistenceGenerator persistenceGen;
-    private final Map<Table, String> table2ClassName = new HashMap<Table, String>();
-    private final Map<Table, Set<Problem>> table2Problems = new TreeMap<Table, Set<Problem>>();
-    private final Map<Table, UpdateType> table2UpdateType = new HashMap<Table, UpdateType>();
+    private final Map<Table, String> table2ClassName = new HashMap<>();
+    private final Map<Table, Set<Problem>> table2Problems = new TreeMap<>();
+    private final Map<Table, UpdateType> table2UpdateType = new HashMap<>();
 
     private final ChangeListener tableClosureListener = new TableClosureListener();
     private final ChangeSupport changeSupport = new ChangeSupport(this);
@@ -158,15 +158,14 @@ public final class SelectedTables {
     }
 
     private void validateTables() {
-        Set<Table> addedTables = new HashSet<Table>(tableClosure.getSelectedTables());
+        Set<Table> addedTables = new HashSet<>(tableClosure.getSelectedTables());
         addedTables.removeAll(validatedTables);
 
-        Set<Table> removedTables = new HashSet<Table>(validatedTables);
+        Set<Table> removedTables = new HashSet<>(validatedTables);
         removedTables.removeAll(tableClosure.getSelectedTables());
 
-        for (Table table : removedTables) {
-            table2Problems.remove(table);
-        }
+        table2Problems.keySet().removeAll(removedTables);
+
         for (Table table : addedTables) {
             putProblems(table, validateClassName(getClassName(table)));
         }
@@ -180,7 +179,7 @@ public final class SelectedTables {
      * tables as {@link TableClosure#getSelectedTables}.
      */
     public List<Table> getTables() {
-        List<Table> result = new ArrayList<Table>(tableClosure.getSelectedTables());
+        List<Table> result = new ArrayList<>(tableClosure.getSelectedTables());
         Collections.sort(result);
         return result;
     }
@@ -194,9 +193,11 @@ public final class SelectedTables {
         String className = table2ClassName.get(table);
         if (className == null) {
             String exClassName = persistenceGen.getFQClassName(table.getName());
-            if(exClassName != null) {
+            if (exClassName != null) {
                 int i = exClassName.lastIndexOf('.');
-                if(i>-1)exClassName = exClassName.substring(i+1);
+                if (i > -1) {
+                    exClassName = exClassName.substring(i + 1);
+                }
                 className = persistenceGen.generateEntityName(exClassName);
             } else {
                 className = EntityMember.makeClassName(table.getName());
@@ -359,6 +360,7 @@ public final class SelectedTables {
 
     private final class TableClosureListener implements ChangeListener {
 
+        @Override
         public void stateChanged(ChangeEvent event) {
             validateTables();
         }

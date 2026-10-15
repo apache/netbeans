@@ -79,12 +79,12 @@
             </test-dependencies>
             <public-packages/>
             <class-path-extension>
-                <runtime-relative-path>ext/svnClientAdapter-javahl.jar</runtime-relative-path>
-                <binary-origin>external/svnClientAdapter-javahl-1.10.12.jar</binary-origin>
+                <runtime-relative-path>ext/adapter-javahl.jar</runtime-relative-path>
+                <binary-origin>external/adapter-javahl-1.14.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/svnjavahl.jar</runtime-relative-path>
-                <binary-origin>external/svnjavahl-1.9.3.jar</binary-origin>
+                <runtime-relative-path>ext/javahl.jar</runtime-relative-path>
+                <binary-origin>external/javahl-1.14.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

@@ -205,14 +205,14 @@ public class LivenessMemoryResultsDiff extends LivenessMemoryResultsSnapshot {
         int s2nClasses = snapshot2.getNTrackedItems();
 
         // temporary cache for creating diff
-        HashMap<String, Integer> classNamesIdxMap = new HashMap(s1nClasses);
-        ArrayList<Long> nTrackedAllocObjectsArr = new ArrayList(s1nClasses);
-        ArrayList<Long> objectsSizePerClassArr = new ArrayList(s1nClasses);
-        ArrayList<Integer> nTrackedLiveObjectsArr = new ArrayList(s1nClasses);
-        ArrayList<Integer> maxSurvGenArr = new ArrayList(s1nClasses);
-        ArrayList<Float> avgObjectAgeArr = new ArrayList(s1nClasses);
-        ArrayList<Long> trackedLiveObjectsSizeArr = new ArrayList(s1nClasses);
-        ArrayList<Integer> nTotalAllocObjectsArr = new ArrayList(s1nClasses);
+        HashMap<String, Integer> classNamesIdxMap = new HashMap<>(s1nClasses);
+        ArrayList<Long> nTrackedAllocObjectsArr = new ArrayList<>(s1nClasses);
+        ArrayList<Long> objectsSizePerClassArr = new ArrayList<>(s1nClasses);
+        ArrayList<Integer> nTrackedLiveObjectsArr = new ArrayList<>(s1nClasses);
+        ArrayList<Integer> maxSurvGenArr = new ArrayList<>(s1nClasses);
+        ArrayList<Float> avgObjectAgeArr = new ArrayList<>(s1nClasses);
+        ArrayList<Long> trackedLiveObjectsSizeArr = new ArrayList<>(s1nClasses);
+        ArrayList<Integer> nTotalAllocObjectsArr = new ArrayList<>(s1nClasses);
 
         // fill the cache with negative values from snapshot1
         String[] s1ClassNames = snapshot1.getClassNames();

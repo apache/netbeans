@@ -1,10 +1,35 @@
 #Signature file v4.1
-#Version 2.79
+#Version 2.107
+
+CLSS public abstract interface java.io.Serializable
+
+CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
+meth public abstract int compareTo({java.lang.Comparable%0})
+
+CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
+cons protected init(java.lang.String,int)
+innr public final static EnumDesc
+intf java.io.Serializable
+intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
+meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
+meth protected final void finalize()
+meth public final boolean equals(java.lang.Object)
+meth public final int compareTo({java.lang.Enum%0})
+meth public final int hashCode()
+meth public final int ordinal()
+meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
+meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
+meth public java.lang.String toString()
+meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
+supr java.lang.Object
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -14,6 +39,9 @@ meth public final void wait(long) throws java.lang.InterruptedException
 meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public org.netbeans.modules.gsf.testrunner.api.TestSuite
 cons public init(java.lang.String)
@@ -188,6 +216,7 @@ meth public static java.lang.String getTestClassName(java.lang.String)
 meth public static java.util.List<java.lang.String> getJavaFileNames(org.openide.filesystems.FileObject,org.netbeans.api.java.source.ClasspathInfo)
 meth public static org.netbeans.modules.junit.plugin.JUnitPlugin getITPluginForProject(org.netbeans.api.project.Project)
 meth public static org.netbeans.modules.junit.plugin.JUnitPlugin getPluginForProject(org.netbeans.api.project.Project)
+meth public static org.netbeans.modules.junit.plugin.JUnitPlugin getPluginForProject(org.netbeans.api.project.Project,org.netbeans.modules.junit.api.JUnitVersion)
 meth public static org.openide.filesystems.FileObject[] createTests(org.netbeans.modules.junit.plugin.JUnitPlugin,org.openide.filesystems.FileObject[],org.openide.filesystems.FileObject,java.util.Map<org.netbeans.modules.gsf.testrunner.plugin.CommonPlugin$CreateTestParam,java.lang.Object>)
 meth public static void notifyUser(java.lang.String)
 meth public static void notifyUser(java.lang.String,int)
@@ -221,6 +250,14 @@ meth public static org.openide.loaders.DataObject createSuiteTest(org.openide.fi
 meth public static void logJUnitUsage(java.net.URI)
 supr java.lang.Object
 hfds foldersToSourceGroupsMap,javaSourceGroups,project,sourceGroupsOnly,sourcesToTestsMap
+
+CLSS public final !enum org.netbeans.modules.junit.api.JUnitVersion
+fld public final static org.netbeans.modules.junit.api.JUnitVersion JUNIT3
+fld public final static org.netbeans.modules.junit.api.JUnitVersion JUNIT4
+fld public final static org.netbeans.modules.junit.api.JUnitVersion JUNIT5
+meth public static org.netbeans.modules.junit.api.JUnitVersion valueOf(java.lang.String)
+meth public static org.netbeans.modules.junit.api.JUnitVersion[] values()
+supr java.lang.Enum<org.netbeans.modules.junit.api.JUnitVersion>
 
 CLSS public abstract org.netbeans.modules.junit.plugin.JUnitPlugin
 cons public init()

@@ -60,7 +60,6 @@ public class LabelWidgetOperator extends WidgetOperator {
     /** Waits for LabelWidget with specified label under given parent.
      * @param parentWidgetOper parent WidgetOperator
      * @param label label of widget
-     * @param index index of widget to be found
      */
     public LabelWidgetOperator(WidgetOperator parentWidgetOper, String label) {
         this(parentWidgetOper, label, 0);

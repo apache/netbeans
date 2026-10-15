@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.foo.javafx.client
+OpenIDE-Module-Name: Foo JavaFX client
+OpenIDE-Module-Public-Packages: -
+OpenIDE-Module-Module-Dependencies: org.foo.javafx

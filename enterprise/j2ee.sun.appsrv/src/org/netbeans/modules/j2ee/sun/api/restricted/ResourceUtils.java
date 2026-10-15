@@ -1285,7 +1285,7 @@ public class ResourceUtils implements WizardConstants{
 
     public static void createSampleDataSource(J2eeModuleProvider provider){
         DeploymentManager dm = getDeploymentManager(provider);
-        if ((dm != null) && (dm instanceof SunDeploymentManagerInterface)) {
+        if (dm instanceof SunDeploymentManagerInterface) {
             SunDeploymentManagerInterface eightDM = (SunDeploymentManagerInterface) dm;
             try {
                 ObjectName configObjName = new ObjectName(MAP_RESOURCES);
@@ -1833,6 +1833,7 @@ public class ResourceUtils implements WizardConstants{
      * @param baseName     Resources file base name.
      * @deprecated Use {@link #createFile(ResourceConfigData, Resources, String)}
      */
+    @Deprecated
     public static void createFile(
             final File targetFolder, final Resources res, final String baseName
     ) {
@@ -1847,6 +1848,7 @@ public class ResourceUtils implements WizardConstants{
      * @param baseName     Resources file base name.
      * @deprecated Use {@link #createFile(ResourceConfigData, Resources, String)}
      */
+    @Deprecated
     public static void createFile (
             final FileObject targetFolder, final Resources res, final String baseName
     ) {
@@ -2100,9 +2102,9 @@ public class ResourceUtils implements WizardConstants{
         }
     }
 
-    private final static char BLANK = ' ';
-    private final static char DOT   = '.';
-    private final static char REPLACEMENT_CHAR = '_';
-    private final static char[]	ILLEGAL_FILENAME_CHARS	= {'/', '\\', ':', '*', '?', '"', '<', '>', '|', ',' };
-    private final static char[]	ILLEGAL_RESOURCE_NAME_CHARS	= {':', '*', '?', '"', '<', '>', '|', ',' };
+    private static final char BLANK = ' ';
+    private static final char DOT   = '.';
+    private static final char REPLACEMENT_CHAR = '_';
+    private static final char[]	ILLEGAL_FILENAME_CHARS	= {'/', '\\', ':', '*', '?', '"', '<', '>', '|', ',' };
+    private static final char[]	ILLEGAL_RESOURCE_NAME_CHARS	= {':', '*', '?', '"', '<', '>', '|', ',' };
 }

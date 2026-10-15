@@ -1,0 +1,4 @@
+Code completion result for source line:
+$example = new Example()?->returnThis()::PRIVATE_CON|ST;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   PRIVATE_CONST "private const"   [PRIVATE]  Example

@@ -1,0 +1,76 @@
+Name: testAbstractPrivateStaticTraitMethod
+#[\Override]
+private  static function testAbstractPrivateStaticTraitMethod(): int {
+${cursor};
+}
+
+Name: testAbstractPrivateTraitMethod
+#[\Override]
+private function testAbstractPrivateTraitMethod(): string {
+${cursor};
+}
+
+Name: testAbstractProtectedClassMethod
+#[\Override]
+protected function testAbstractProtectedClassMethod(): string {
+${cursor};
+}
+
+Name: testAbstractProtectedStaticClassMethod
+#[\Override]
+protected  static function testAbstractProtectedStaticClassMethod(): int {
+${cursor};
+}
+
+Name: testAbstractProtectedStaticTraitMethod
+#[\Override]
+protected  static function testAbstractProtectedStaticTraitMethod(): int {
+${cursor};
+}
+
+Name: testAbstractProtectedTraitMethod
+#[\Override]
+protected function testAbstractProtectedTraitMethod(): string {
+${cursor};
+}
+
+Name: testAbstractPublicClassMethod
+#[\Override]
+public function testAbstractPublicClassMethod(): void {
+${cursor};
+}
+
+Name: testAbstractPublicStaticClassMethod
+#[\Override]
+public  static function testAbstractPublicStaticClassMethod(): int {
+${cursor};
+}
+
+Name: testAbstractPublicStaticTraitMethod
+#[\Override]
+public  static function testAbstractPublicStaticTraitMethod(): int {
+${cursor};
+}
+
+Name: testAbstractPublicTraitMethod
+#[\Override]
+public function testAbstractPublicTraitMethod(): void {
+${cursor};
+}
+
+Name: testClassMethod
+#[\Override]
+public function testClassMethod(): void {
+${cursor};
+}
+
+Name: testInterfaceMethod
+#[\Override]
+public function testInterfaceMethod(): void {
+${cursor};
+}
+
+Name: testTraitMethod
+public function testTraitMethod(): void {
+${cursor};
+}

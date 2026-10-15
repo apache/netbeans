@@ -56,8 +56,8 @@ abstract class WebBeansComponentImpl extends
     }
     
     protected static Element createNewElement(String name, WebBeansModelImpl model){
-        String ns = WebBeansComponent.WEB_BEANS_NAMESPACE;
-        if( model.getRootComponent()!=null && model.getRootComponent() instanceof AbstractDocumentComponent) {
+        String ns = WebBeansComponent.WEB_BEANS_NAMESPACE_JAKARTA;
+        if(model.getRootComponent() instanceof AbstractDocumentComponent) {
             ns = ((AbstractDocumentComponent)model.getRootComponent()).getQName().getNamespaceURI();
         }
         return model.getDocument().createElementNS( ns, name );
@@ -73,8 +73,7 @@ abstract class WebBeansComponentImpl extends
             for (int i = 0; i < nl.getLength(); i++) {
                 Node n = nl.item(i);
                 if (n instanceof Element) {
-                    WebBeansComponent comp = (WebBeansComponent) getModel().getFactory()
-                            .createComponent((Element) n, this);
+                    WebBeansComponent comp = getModel().getFactory().createComponent((Element) n, this);
                     if (comp != null) {
                         children.add(comp);
                     }

@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.ArrayList;
@@ -39,7 +40,6 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import org.openide.util.Parameters;
 
 // XXX: consider adding getInitialComment() and setInitialComment() methods
 // (useful e.g. for GeneratedFilesHelper)
@@ -47,7 +47,7 @@ import org.openide.util.Parameters;
 /**
  * Similar to {@link java.util.Properties} but designed to retain additional
  * information needed for safe hand-editing.
- * Useful for various <samp>*.properties</samp> in a project:
+ * Useful for various <code>*.properties</code> in a project:
  * <ol>
  * <li>Can associate comments with particular entries.
  * <li>Order of entries preserved during modifications whenever possible.
@@ -142,7 +142,7 @@ public final class EditableProperties extends AbstractMap<String,String> impleme
      */
     public void load(InputStream stream) throws IOException {
         int parseState = WAITING_FOR_KEY_VALUE;
-        BufferedReader input = new BufferedReader(new InputStreamReader(stream, "ISO-8859-1"));
+        BufferedReader input = new BufferedReader(new InputStreamReader(stream, StandardCharsets.ISO_8859_1));
         List<String> tempList = new LinkedList<String>();
         String line;
         int commentLinesCount = 0;
@@ -189,7 +189,7 @@ public final class EditableProperties extends AbstractMap<String,String> impleme
      */
     public void store(OutputStream stream) throws IOException {
         boolean previousLineWasEmpty = true;
-        BufferedWriter output = new BufferedWriter(new OutputStreamWriter(stream, "ISO-8859-1"));
+        BufferedWriter output = new BufferedWriter(new OutputStreamWriter(stream, StandardCharsets.ISO_8859_1));
         for (Item item : state.items) {
             if (item.isSeparate() && !previousLineWasEmpty) {
                 output.newLine();
@@ -260,7 +260,7 @@ public final class EditableProperties extends AbstractMap<String,String> impleme
      * Same behavior as {@link #setProperty(String,String)} with the difference that each item
      * will be stored on its own line of text. {@link #getProperty} will simply concatenate
      * all the items into one string, so generally separators
-     * (such as <samp>:</samp> for path-like properties) must be included in
+     * (such as <code>:</code> for path-like properties) must be included in
      * the items (for example, at the end of all but the last item).
      * @param key a property name; cannot be null nor empty
      * @param value the desired value; cannot be null; can be empty array
@@ -859,7 +859,8 @@ public final class EditableProperties extends AbstractMap<String,String> impleme
             delegate.next();
             return new MapEntryImpl(item);
         }
-        
+
+        @Override
         public void remove() {
             delegate.previous();
             Item item = findNext();

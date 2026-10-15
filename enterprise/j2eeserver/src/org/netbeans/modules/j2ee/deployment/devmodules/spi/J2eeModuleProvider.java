@@ -198,6 +198,7 @@ public abstract class J2eeModuleProvider {
      * @deprecated use {@link ConfigSupport#getDatasources()}
      *             on {@link #getConfigSupport()} result
      */
+    @Deprecated
     public Set<Datasource> getModuleDatasources() throws ConfigurationException {
         Set<Datasource> projectDS = getConfigSupport().getDatasources();
         return projectDS;
@@ -264,6 +265,7 @@ public abstract class J2eeModuleProvider {
      * @since 1.15
      * @deprecated Nobody should use this method. Being an API is a mistake.
      */
+    @Deprecated
     public void deployDatasources() throws ConfigurationException, DatasourceAlreadyExistsException {
         ServerInstance si = ServerRegistry.getInstance ().getServerInstance (getServerInstanceID ());
         if (si != null) {
@@ -514,7 +516,7 @@ public abstract class J2eeModuleProvider {
          * Removes the listener listening for deploy on save.
          * 
          * @param listener listener to remove
-         * @see #addDeployOnSaveListener(org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider.DeployOnSaveListener)
+         * @see #addDeployOnSaveListener(DeployOnSaveListener)
          * @since 1.97
          */
         public void removeDeployOnSaveListener( DeployOnSaveListener listener );

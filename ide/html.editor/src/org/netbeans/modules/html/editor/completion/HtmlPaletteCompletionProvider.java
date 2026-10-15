@@ -42,9 +42,9 @@ import org.netbeans.api.html.lexer.HTMLTokenId;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.DataLoadersBridge;
 import org.netbeans.modules.editor.NbEditorUtilities;
+import org.netbeans.modules.html.editor.HtmlPreferences;
 import org.netbeans.spi.editor.completion.*;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionQuery;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
@@ -54,6 +54,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 import org.openide.windows.TopComponent;
 
 /**
@@ -68,7 +69,8 @@ public class HtmlPaletteCompletionProvider implements CompletionProvider {
 
     @Override
     public CompletionTask createTask(int queryType, JTextComponent component) {
-        if ((queryType & COMPLETION_QUERY_TYPE & COMPLETION_ALL_QUERY_TYPE) != 0) {
+        if (HtmlPreferences.isPaletteCompletionEnabled() // NETBEANS-5970
+                && (queryType & COMPLETION_QUERY_TYPE & COMPLETION_ALL_QUERY_TYPE) != 0) {
             return new AsyncCompletionTask(new CCQuery(),
                     component);
         }
@@ -134,7 +136,7 @@ public class HtmlPaletteCompletionProvider implements CompletionProvider {
                             }
                         }
                         if (i > 0) {
-                            prefix = prefix.substring(i, prefix.length());
+                            prefix = prefix.substring(i);
                         }
 
                         completionExpressionStartOffset = offset - prefix.length();
@@ -273,14 +275,14 @@ public class HtmlPaletteCompletionProvider implements CompletionProvider {
         protected Action action;
         protected String category;
         protected String item;
-        protected Image icon;
+        protected ImageIcon icon;
         protected int completionExpressionStartOffset;
 
         public PaletteCompletionItem(Action action, int completionExpressionStartOffset, String category, String item, Image icon) {
             this.action = action;
             this.category = category;
             this.item = item;
-            this.icon = icon;
+            this.icon = ImageUtilities.icon2ImageIcon(ImageUtilities.image2Icon(icon));
             this.completionExpressionStartOffset = completionExpressionStartOffset;
         }
 
@@ -297,7 +299,7 @@ public class HtmlPaletteCompletionProvider implements CompletionProvider {
         }
 
         public ImageIcon getIcon() {
-            return new ImageIcon(icon);
+            return icon;
         }
 
         @Override

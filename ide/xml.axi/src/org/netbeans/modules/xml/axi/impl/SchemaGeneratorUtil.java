@@ -1613,10 +1613,10 @@ public class SchemaGeneratorUtil {
         for(int i=0;i<lrges.size();i++) {
             Element e = lrges.get(i);
             if(refges.contains(e.getPeer())) {
-                removeList.add(new Integer(i));
+                removeList.add(Integer.valueOf(i));
             } else if(!SchemaGeneratorUtil.fromSameSchemaModel(
                     e.getPeer(), am.getSchemaModel()))
-                removeList.add(new Integer(i));
+                removeList.add(Integer.valueOf(i));
         }
         //finally remove unnecessary global elements from visit list
         for(int i=removeList.size()-1;i>=0;i--) {

@@ -18,15 +18,12 @@
  */
 package org.netbeans.modules.javascript2.editor.hints;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.javascript2.lexer.api.JsTokenId;
 import org.netbeans.modules.javascript2.lexer.api.LexUtilities;
 import org.netbeans.modules.javascript2.model.api.ModelUtils;
@@ -39,7 +36,7 @@ import org.netbeans.modules.parsing.api.Snapshot;
  */
 public class JSHintSupport {
 
-    private static String GLOBAL_DIRECTIVE = "global"; //NOI18N
+    private static final String GLOBAL_DIRECTIVE = "global"; //NOI18N
 
     public static void addGlobalInline(Snapshot snapshot, int offset, String name) throws BadLocationException {
         Document document = snapshot.getSource().getDocument(false);

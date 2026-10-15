@@ -721,7 +721,7 @@ CaretListener, KeyListener, FocusListener, ListSelectionListener, PropertyChange
                 // true as providers are registered using classnames.
                 int lastSlash = id.lastIndexOf('/'); // NOI18N
                 if (lastSlash > 0) {
-                    String fname = id.substring(lastSlash + 1, id.length());
+                    String fname = id.substring(lastSlash + 1);
                     if (!seenProviders.add(fname)) {
                         // the provider has been already seen in this list; do not add it.
                         continue;
@@ -732,7 +732,7 @@ CaretListener, KeyListener, FocusListener, ListSelectionListener, PropertyChange
         }
         currentMimePath = mimePathString;
         CompletionProvider[] ret;
-        providersCache.put(mimePathString, ret = allProviders.toArray(new CompletionProvider[allProviders.size()]));
+        providersCache.put(mimePathString, ret = allProviders.toArray(new CompletionProvider[0]));
         return ret;
     }
     
@@ -1093,7 +1093,7 @@ outer:      for (Iterator it = localCompletionResult.getResultSets().iterator();
         final ArrayList<CompletionItem> sortedResultItems = new ArrayList<CompletionItem>(size = resultItems.size());
         if (size > 0) {
             try {
-                Collections.sort(resultItems, CompletionItemComparator.get(getSortType()));
+                resultItems.sort(CompletionItemComparator.get(getSortType()));
             } catch (IllegalArgumentException iae) {
                 LOG.warning("Unable to sort: " + resultItems); //NOI18N
             }

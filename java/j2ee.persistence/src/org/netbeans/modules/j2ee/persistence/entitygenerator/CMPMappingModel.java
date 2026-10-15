@@ -41,7 +41,7 @@ public class CMPMappingModel {
         cmpFieldMapping = new HashMap<String, String>();
         cmrFieldMapping = new HashMap<String, ColumnData[]>();
         cmrJoinMapping = new HashMap<String, String>();
-        joinTableColumnMappings = new HashMap();
+        joinTableColumnMappings = new HashMap<>();
     }
     
     public void setTableName(String tableName) {
@@ -101,11 +101,7 @@ public class CMPMappingModel {
 
             ColumnData other = (ColumnData) o;
             
-            if(this.columnName.equals(other.columnName)) {
-                return true;
-            } else {
-                return false;
-            }
+            return this.columnName.equals(other.columnName);
         }
 
         @Override
@@ -178,14 +174,14 @@ public class CMPMappingModel {
             return false;
         }
         
-        Iterator keyIt = cmrFieldMapping.keySet().iterator();
+        Iterator<String> keyIt = cmrFieldMapping.keySet().iterator();
         while (keyIt.hasNext()) {
-            String key = (String) keyIt.next();
-            ColumnData[] value = (ColumnData[]) cmrFieldMapping.get(key);
-            List l = Arrays.asList(value);
+            String key = keyIt.next();
+            ColumnData[] value = cmrFieldMapping.get(key);
+            List<ColumnData> l = Arrays.asList(value);
             Object otherValue = other.cmrFieldMapping.get(key);
             if (otherValue == null || 
-                !l.equals(Arrays.asList((ColumnData[])other.cmrFieldMapping.get(key)))) {
+                !l.equals(Arrays.asList(other.cmrFieldMapping.get(key)))) {
                 return false;
             }
         }

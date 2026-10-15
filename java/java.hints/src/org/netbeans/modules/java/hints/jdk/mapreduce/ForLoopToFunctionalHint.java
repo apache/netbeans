@@ -26,10 +26,10 @@ import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
-import javax.lang.model.SourceVersion;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
+import org.netbeans.spi.editor.hints.Severity;
 import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
 import org.netbeans.spi.java.hints.Hint;
 import org.netbeans.spi.java.hints.HintContext;
@@ -37,8 +37,7 @@ import org.netbeans.spi.java.hints.JavaFix;
 import org.netbeans.spi.java.hints.TriggerTreeKind;
 import org.openide.util.NbBundle.Messages;
 
-@Hint(displayName = "#DN_ForLoopToFunctionalHint", description = "#DESC_ForLoopToFunctionalHint", category = "general",
-        minSourceVersion = "8")
+@Hint(displayName = "#DN_ForLoopToFunctionalHint", description = "#DESC_ForLoopToFunctionalHint", category = "general", severity = Severity.HINT, minSourceVersion = "8")
 @Messages({
     "DN_ForLoopToFunctionalHint=Use Functional Operations",
     "DESC_ForLoopToFunctionalHint=Use functional operations instead of imperative style loop."

@@ -31,13 +31,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.core.startup.InstalledFileLocatorImpl;
 import org.openide.modules.Places;
 import org.openide.util.Exceptions;
@@ -109,7 +110,7 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
 
         @Override
         public int hashCode() {
-            return this.hashCode();
+            return Objects.hashCode(this);
         }
 
         @Override
@@ -167,7 +168,7 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
             try {
                 ClassLoader l = Thread.currentThread().getContextClassLoader();
                 Class<?> manClass = Class.forName("org.netbeans.TopSecurityManager", false, l);
-                man = (SecurityManager) manClass.newInstance();
+                man = (SecurityManager) manClass.getDeclaredConstructor().newInstance();
             } catch (Exception ex) {
                 throw new IllegalStateException(ex);
             }
@@ -193,6 +194,11 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
             String dirs = System.getProperty("netbeans.dirs");
             if (dirs == null && !acceptAll) {
                 // not initialized yet
+                return;
+            }
+
+            if (file.endsWith("org-netbeans-insane-hook.jar")) {
+                // only used in tests
                 return;
             }
 

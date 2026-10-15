@@ -158,7 +158,7 @@ public class ClassPathTest extends NbTestCase {
         assertTrue (cp.findResource("org/me/None.txt")==null);
         
         //findAllResources
-        List res = cp.findAllResources ("org/me/Foo.txt");
+        List<FileObject> res = cp.findAllResources ("org/me/Foo.txt");
         assertTrue (res.size() == 2);
         assertTrue (res.contains(testFo_1));
         assertTrue (res.contains(testFo_2));
@@ -339,8 +339,8 @@ public class ClassPathTest extends NbTestCase {
         }
 
         public synchronized void removeResource (URL resource) {
-            for (Iterator it = this.resources.iterator(); it.hasNext();) {
-                PathResourceImplementation pr = (PathResourceImplementation) it.next ();
+            for (Iterator<PathResourceImplementation> it = this.resources.iterator(); it.hasNext();) {
+                PathResourceImplementation pr = it.next ();
                 if (Arrays.asList(pr.getRoots()).contains (resource)) {
                     this.resources.remove (pr);
                     this.support.firePropertyChange (ClassPathImplementation.PROP_RESOURCES,null,null);
@@ -622,7 +622,7 @@ public class ClassPathTest extends NbTestCase {
                 roots.add(Utilities.toURI(f).toURL());
             }
         }
-        final ClassLoader bootLoader = new URLClassLoader(roots.toArray(new URL[roots.size()]), null);
+        final ClassLoader bootLoader = new URLClassLoader(roots.toArray(new URL[0]), null);
         
         final String classPathProp = System.getProperty("java.class.path");     //NOI18N
         roots = new ArrayList<URL> ();
@@ -642,10 +642,10 @@ public class ClassPathTest extends NbTestCase {
             roots.add(url);
         }
         
-        final ClassPath cp = ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
+        final ClassPath cp = ClassPathSupport.createClassPath(roots.toArray(new URL[0]));
 //        final ClassLoader loader = ClassLoaderSupport.create(cp,bootLoader);
 //        final ClassLoader loader = new URLClassLoader(roots.toArray(new URL[roots.size()]),bootLoader);
-        final ClassLoader loader = new URLClassLoader(roots2.toArray(new URL[roots2.size()]),bootLoader);
+        final ClassLoader loader = new URLClassLoader(roots2.toArray(new URL[0]),bootLoader);
         
         final Set<String> classNames = getClassNames (cp);
         int noLoaded = 0;

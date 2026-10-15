@@ -104,7 +104,7 @@ public class DDChangesPanel extends JPanel {
     synchronized void setChanges (List changes) {
         listModel.clear ();
         if (changes != null) {
-            Iterator it = changes.iterator ();
+            Iterator<?> it = changes.iterator ();
             while (it.hasNext ())
                 listModel.addElement (it.next ());
         }

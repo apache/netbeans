@@ -33,12 +33,24 @@ import org.netbeans.modules.versioning.core.util.Utils;
  */
 class HistoryEntry {
     private final VCSHistoryProvider.HistoryEntry entry;
+
+    /// Position within the log used for UI sorting. "Oldest" has position 0.
+    private int pos;
     private final boolean local;
     private Map<VCSFileProxy, HistoryEntry> parents;
 
-    HistoryEntry(VCSHistoryProvider.HistoryEntry entry, boolean local) {
+    private HistoryEntry(VCSHistoryProvider.HistoryEntry entry, int pos, boolean local) {
         this.entry = entry;
+        this.pos = pos;
         this.local = local;
+    }
+
+    static HistoryEntry createLocalEntry(VCSHistoryProvider.HistoryEntry entry) {
+        return new HistoryEntry(entry, 0, true);
+    }
+
+    static HistoryEntry createVCSEntry(VCSHistoryProvider.HistoryEntry entry, int pos) {
+        return new HistoryEntry(entry, pos, false);
     }
 
     public Object[] getLookupObjects() {
@@ -51,6 +63,14 @@ class HistoryEntry {
             ret[delegates.length] = entry;
             return ret;
         }
+    }
+
+    public int getPos() {
+        return pos;
+    }
+    
+    public void setPos(int pos) {
+        this.pos = pos;
     }
     
     public String getUsernameShort() {
@@ -99,18 +119,13 @@ class HistoryEntry {
     }
     
     public synchronized HistoryEntry getParent(VCSFileProxy file) {
-        HistoryEntry parent = null;
-        if(parents == null) {
-            parents = new HashMap<VCSFileProxy, HistoryEntry>();
-        } else {
-            parent = parents.get(file);
+        if (parents == null) {
+            parents = new HashMap<>();
         }
-        if(parent == null) {
-            VCSHistoryProvider.HistoryEntry vcsParent = entry.getParentEntry(file);
-            parent = vcsParent != null ? new HistoryEntry(vcsParent, local) : null;
-            parents.put(file, parent);
-        }
-        return parent;
+        return parents.computeIfAbsent(file, k -> {
+            VCSHistoryProvider.HistoryEntry vcsParent = entry.getParentEntry(k);
+            return vcsParent != null ? new HistoryEntry(vcsParent, 0, local) : null;
+        });
     }
     
     public boolean isLocalHistory() {

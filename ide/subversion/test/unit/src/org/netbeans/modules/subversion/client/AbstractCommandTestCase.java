@@ -414,10 +414,10 @@ public abstract class AbstractCommandTestCase extends AbstractSvnTestCase {
     }
     
 //    protected ISVNClientAdapter getReferenceClient() throws Exception {
-////        ISVNClientAdapter c = SVNClientAdapterFactory.createSVNClient(CmdLineClientAdapterFactory.COMMANDLINE_CLIENT);
-////        fileNotifyListener = new FileNotifyListener();
-////        c.addNotifyListener(fileNotifyListener);
-////        return c;
+// //        ISVNClientAdapter c = SVNClientAdapterFactory.createSVNClient(CmdLineClientAdapterFactory.COMMANDLINE_CLIENT);
+// //        fileNotifyListener = new FileNotifyListener();
+// //        c.addNotifyListener(fileNotifyListener);
+// //        return c;
 //        return getFullWorkingClient();
 //    }
 

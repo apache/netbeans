@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.viewmodel;
 
-import java.awt.Component;
 import java.awt.Image;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
@@ -37,8 +36,6 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -50,13 +47,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
-
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import org.netbeans.spi.viewmodel.AsynchronousModelFilter;
@@ -81,7 +75,6 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.RequestProcessor.Task;
-import org.openide.util.actions.CallableSystemAction;
 import org.openide.util.datatransfer.PasteType;
 import org.openide.util.lookup.Lookups;
 
@@ -1042,30 +1035,29 @@ public class TreeModelNode extends AbstractNode {
         if (!(text.length() > 6 && text.substring(0, 6).equalsIgnoreCase(HTML_START_TAG))) {
             return text;
         }
-        text = text.replaceAll ("<i>", "");
-        text = text.replaceAll ("</i>", "");
-        text = text.replaceAll ("<b>", "");
-        text = text.replaceAll ("</b>", "");
-        text = text.replaceAll (HTML_START_TAG, "");
-        text = text.replaceAll (HTML_END_TAG, "");
-        text = text.replaceAll ("</font>", "");
+        text = text.replace ("<i>", "")
+                   .replace ("</i>", "")
+                   .replace ("<b>", "")
+                   .replace ("</b>", "")
+                   .replace (HTML_START_TAG, "")
+                   .replace (HTML_END_TAG, "")
+                   .replace ("</font>", "");
         int i = text.indexOf ("<font");
         while (i >= 0) {
             int j = text.indexOf (">", i);
             text = text.substring (0, i) + text.substring (j + 1);
             i = text.indexOf ("<font");
         }
-        text = text.replaceAll ("&lt;", "<");
-        text = text.replaceAll ("&gt;", ">");
-        text = text.replaceAll ("&amp;", "&");
-        return text;
+        return text.replace ("&lt;", "<")
+                   .replace ("&gt;", ">")
+                   .replace ("&amp;", "&");
     }
     
     /** Adjusts HTML text so that it's rendered correctly.
      * In particular, this assures that white characters are visible.
      */
     private static String adjustHTML(String text) {
-        text = text.replaceAll(java.util.regex.Matcher.quoteReplacement("\\"), "\\\\\\\\");
+        text = text.replace("\\", "\\\\");
         StringBuffer sb = null;
         int j = 0;
         for (int i = 0; i < text.length(); i++) {
@@ -1223,7 +1215,7 @@ public class TreeModelNode extends AbstractNode {
         } else {
             int d = 1;
             while ((p = p.getParentNode()) != null) d++;
-            depth = new Integer(d);
+            depth = Integer.valueOf(d);
             return depth;
         }
     }
@@ -1620,7 +1612,7 @@ public class TreeModelNode extends AbstractNode {
             } else {
                 int d = 1;
                 while ((p = p.getParentNode()) != null) d++;
-                depth = new Integer(d);
+                depth = Integer.valueOf(d);
                 return depth;
             }
         }

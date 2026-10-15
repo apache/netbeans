@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.61
+#Version 2.89
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -18,8 +18,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -28,10 +30,10 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -43,6 +45,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -79,6 +82,9 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
 
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
+
 CLSS public abstract interface java.util.EventListener
 
 CLSS public abstract interface java.util.concurrent.Callable<%0 extends java.lang.Object>
@@ -105,7 +111,6 @@ meth public void putValue(java.lang.String,java.lang.Object)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void setEnabled(boolean)
 supr java.lang.Object
-hfds RECONFIGURE_ON_NULL,arrayTable
 
 CLSS public abstract interface javax.swing.Action
 fld public final static java.lang.String ACCELERATOR_KEY = "AcceleratorKey"
@@ -126,6 +131,7 @@ meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeLis
 meth public abstract void putValue(java.lang.String,java.lang.Object)
 meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public abstract void setEnabled(boolean)
+meth public boolean accept(java.lang.Object)
 
 CLSS public javax.swing.text.DefaultEditorKit
 cons public init()
@@ -196,8 +202,6 @@ meth public void read(java.io.Reader,javax.swing.text.Document,int) throws java.
 meth public void write(java.io.OutputStream,javax.swing.text.Document,int,int) throws java.io.IOException,javax.swing.text.BadLocationException
 meth public void write(java.io.Writer,javax.swing.text.Document,int,int) throws java.io.IOException,javax.swing.text.BadLocationException
 supr javax.swing.text.EditorKit
-hfds defaultActions,selectionPageDownAction,selectionPageLeftAction,selectionPageRightAction,selectionPageUpAction,toggleComponentOrientationAction,unselectAction
-hcls BeginAction,BeginLineAction,BeginParagraphAction,BeginWordAction,DeleteNextCharAction,DeletePrevCharAction,DeleteWordAction,DumpModelAction,EndAction,EndLineAction,EndParagraphAction,EndWordAction,NextVisualPositionAction,NextWordAction,PageAction,PreviousWordAction,ReadOnlyAction,SelectAllAction,SelectLineAction,SelectParagraphAction,SelectWordAction,ToggleComponentOrientationAction,UnselectAction,VerticalPageAction,WritableAction
 
 CLSS public abstract javax.swing.text.EditorKit
 cons public init()
@@ -327,9 +331,11 @@ meth protected javax.swing.Action[] createActions()
 meth protected javax.swing.Action[] getCustomActions()
 meth protected javax.swing.Action[] getDeclaredActions()
 meth protected javax.swing.Action[] getMacroActions()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected org.netbeans.editor.BaseTextUI createTextUI()
 meth protected org.netbeans.editor.EditorUI createEditorUI()
 meth protected org.netbeans.editor.EditorUI createPrintEditorUI(org.netbeans.editor.BaseDocument)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected org.netbeans.editor.EditorUI createPrintEditorUI(org.netbeans.editor.BaseDocument,boolean,boolean)
 meth protected void executeDeinstallActions(javax.swing.JEditorPane)
 meth protected void executeInstallActions(javax.swing.JEditorPane)
@@ -344,10 +350,14 @@ meth public javax.swing.text.Document createDefaultDocument()
 meth public javax.swing.text.ViewFactory getViewFactory()
 meth public org.netbeans.editor.MultiKeymap getKeymap()
 meth public org.netbeans.editor.Syntax createFormatSyntax(javax.swing.text.Document)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.netbeans.editor.Syntax createSyntax(javax.swing.text.Document)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.netbeans.editor.SyntaxSupport createSyntaxSupport(org.netbeans.editor.BaseDocument)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static javax.swing.Action[] mapToActions(java.util.Map)
 meth public static org.netbeans.editor.BaseKit getKit(java.lang.Class)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void addActionsToMap(java.util.Map<java.lang.String,javax.swing.Action>,javax.swing.Action[],java.lang.String)
 meth public void deinstall(javax.swing.JEditorPane)
 meth public void install(javax.swing.JEditorPane)
@@ -364,12 +374,15 @@ fld public final static java.lang.String allCompletionShowAction = "all-completi
 fld public final static java.lang.String buildPopupMenuAction = "build-popup-menu"
 fld public final static java.lang.String buildToolTipAction = "build-tool-tip"
 fld public final static java.lang.String codeSelectAction = "code-select"
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String commentAction = "comment"
 fld public final static java.lang.String completionShowAction = "completion-show"
 fld public final static java.lang.String completionTooltipShowAction = "tooltip-show"
 fld public final static java.lang.String documentationShowAction = "documentation-show"
 fld public final static java.lang.String escapeAction = "escape"
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String findAction = "find"
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String gotoAction = "goto"
 fld public final static java.lang.String gotoDeclarationAction = "goto-declaration"
 fld public final static java.lang.String gotoHelpAction = "goto-help"
@@ -480,6 +493,7 @@ hfds contentType,serialVersionUID
 CLSS public org.netbeans.modules.html.editor.api.Utils
 cons public init()
 meth public static java.lang.String getWebPageMimeType(org.netbeans.modules.html.editor.lib.api.SyntaxAnalyzerResult)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.netbeans.api.lexer.Token<org.netbeans.api.html.lexer.HTMLTokenId> findTagOpenToken(org.netbeans.api.lexer.TokenSequence)
 meth public static org.netbeans.api.lexer.TokenSequence<org.netbeans.api.html.lexer.HTMLTokenId> getJoinedHtmlSequence(javax.swing.text.Document,int)
 meth public static org.netbeans.api.lexer.TokenSequence<org.netbeans.api.html.lexer.HTMLTokenId> getJoinedHtmlSequence(org.netbeans.api.lexer.TokenHierarchy,int)
@@ -533,6 +547,7 @@ innr public static CharRefItem
 innr public static EndTag
 innr public static FileAttributeValue
 innr public static GoUpFileAttributeValue
+innr public static HtmlCssValueCompletionItem
 innr public static Tag
 intf org.netbeans.spi.editor.completion.CompletionItem
 meth protected boolean substituteText(javax.swing.text.JTextComponent,int)
@@ -555,6 +570,7 @@ meth public java.lang.CharSequence getSortText()
 meth public java.lang.String getHelp()
 meth public java.lang.String getHelpId()
 meth public java.lang.String getItemText()
+meth public java.lang.String toString()
 meth public java.net.URL getHelpURL()
 meth public org.netbeans.modules.html.editor.lib.api.HelpItem getHelpItem()
 meth public org.netbeans.spi.editor.completion.CompletionTask createDocumentationTask()
@@ -563,9 +579,11 @@ meth public static java.lang.String hexColorCode(java.awt.Color)
 meth public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem createAttribute(org.netbeans.modules.html.editor.lib.api.model.HtmlTagAttribute,java.lang.String,int,boolean,java.lang.String)
 meth public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem createAttributeValue(java.lang.String,int)
 meth public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem createAttributeValue(java.lang.String,int,boolean)
+meth public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem createAttributeValue(java.lang.String,int,boolean,int)
 meth public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem createAutocompleteEndTag(java.lang.String,int)
 meth public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem createBooleanAttribute(java.lang.String,int,boolean,java.lang.String)
 meth public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem createCharacterReference(java.lang.String,char,int,java.lang.String)
+meth public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem createCssValue(java.lang.String,int,boolean)
 meth public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem createEndTag(java.lang.String,int,java.lang.String,int,org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem$EndTag$Type)
 meth public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem createEndTag(org.netbeans.modules.html.editor.lib.api.model.HtmlTag,java.lang.String,int,java.lang.String,int,org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem$EndTag$Type)
 meth public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem createFileCompletionItem(org.openide.filesystems.FileObject,int)
@@ -577,6 +595,7 @@ meth public void prepareHelp()
 meth public void processKeyEvent(java.awt.event.KeyEvent)
 meth public void render(java.awt.Graphics,java.awt.Font,java.awt.Color,java.awt.Color,int,int,boolean)
 supr java.lang.Object
+hfds END_FONT
 
 CLSS public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem$Attribute
  outer org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem
@@ -596,9 +615,11 @@ hfds attr,autocompleteQuotes,required
 CLSS public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem$AttributeValue
  outer org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem
 cons public init(java.lang.String,int,boolean)
+cons public init(java.lang.String,int,boolean,int)
 meth protected java.lang.String getSubstituteText()
+meth public int getSortPriority()
 supr org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem
-hfds addQuotation
+hfds addQuotation,sortPriority
 
 CLSS public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem$AutocompleteEndTag
  outer org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem
@@ -661,6 +682,14 @@ CLSS public static org.netbeans.modules.html.editor.api.completion.HtmlCompletio
  outer org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem
 meth public int getSortPriority()
 supr org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem$FileAttributeValue
+
+CLSS public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem$HtmlCssValueCompletionItem
+ outer org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem
+meth protected java.lang.String getLeftHtmlText()
+meth protected javax.swing.ImageIcon getIcon()
+meth public int getSortPriority()
+supr org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem
+hfds GRAY_COLOR_CODE,ICON,RELATED_SELECTOR_COLOR,related
 
 CLSS public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem$Tag
  outer org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem
@@ -755,9 +784,12 @@ meth public org.netbeans.modules.html.editor.lib.api.elements.Node rootOfUndecla
 meth public static org.netbeans.modules.html.editor.lib.api.elements.Node getBoundNode(org.netbeans.modules.csl.api.Error)
 supr org.netbeans.modules.csl.spi.ParserResult
 hfds errors,isValid,result
-hcls Accessor
+hcls Accessor,Lkp
 
 CLSS public org.netbeans.modules.html.editor.api.index.HtmlIndex
+fld public final static int VERSION = 3
+fld public final static java.lang.String NAME = "html"
+fld public final static java.lang.String REFERS_KEY = "imports"
 innr public static AllDependenciesMaps
 meth public java.util.Collection<org.openide.filesystems.FileObject> find(java.lang.String,java.lang.String)
 meth public java.util.List<java.net.URL> getAllRemoteDependencies() throws java.io.IOException
@@ -769,7 +801,7 @@ meth public void addChangeListener(javax.swing.event.ChangeListener)
 meth public void notifyChange()
 meth public void removeChangeListener(javax.swing.event.ChangeListener)
 supr java.lang.Object
-hfds INDEXES,LOG,LOGGER,changeSupport,querySupport
+hfds INDEXES,changeSupport,querySupport
 
 CLSS public static org.netbeans.modules.html.editor.api.index.HtmlIndex$AllDependenciesMaps
  outer org.netbeans.modules.html.editor.api.index.HtmlIndex
@@ -823,7 +855,7 @@ meth public abstract void addChangeListener(javax.swing.event.ChangeListener)
 meth public abstract void parse(org.netbeans.modules.parsing.api.Snapshot,org.netbeans.modules.parsing.api.Task,org.netbeans.modules.parsing.spi.SourceModificationEvent) throws org.netbeans.modules.parsing.spi.ParseException
 meth public abstract void removeChangeListener(javax.swing.event.ChangeListener)
 meth public void cancel()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void cancel(org.netbeans.modules.parsing.spi.Parser$CancelReason,org.netbeans.modules.parsing.spi.SourceModificationEvent)
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NullAllowed()
@@ -834,6 +866,7 @@ CLSS public abstract static org.netbeans.modules.parsing.spi.Parser$Result
  outer org.netbeans.modules.parsing.spi.Parser
 cons protected init(org.netbeans.modules.parsing.api.Snapshot)
 meth protected abstract void invalidate()
+meth protected boolean processingFinished()
 meth public org.netbeans.modules.parsing.api.Snapshot getSnapshot()
 supr java.lang.Object
 hfds snapshot
@@ -849,6 +882,7 @@ meth public abstract org.netbeans.spi.editor.completion.CompletionTask createToo
 meth public abstract void defaultAction(javax.swing.text.JTextComponent)
 meth public abstract void processKeyEvent(java.awt.event.KeyEvent)
 meth public abstract void render(java.awt.Graphics,java.awt.Font,java.awt.Color,java.awt.Color,int,int,boolean)
+meth public boolean shouldSingleClickInvokeDefaultAction()
 
 CLSS public abstract interface org.netbeans.spi.editor.completion.LazyCompletionItem
 intf org.netbeans.spi.editor.completion.CompletionItem
@@ -856,10 +890,10 @@ meth public abstract boolean accept()
 
 CLSS public final org.openide.util.HelpCtx
 cons public init(java.lang.Class<?>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String)
 cons public init(java.net.URL)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.openide.util.HelpCtx DEFAULT_HELP
 innr public abstract interface static Displayer
 innr public abstract interface static Provider

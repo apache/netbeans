@@ -38,7 +38,10 @@ public class PHPCodeCompletion201870Test extends PHPCodeCompletionTestBase {
     }
 
     public void testUseCase1() throws Exception {
-        checkCompletion("testfiles/completion/lib/test201870/test201870.php", "$object->get^", false);
+        // @method tag syntax is `@method [[static] return type] [name]([[type] [parameter]<, ...>]) [<description>]`
+        // see: https://docs.phpdoc.org/3.0/guide/references/phpdoc/tags/method.html#method
+        // so, `@method int getBar getBar ($culture = null) Run "bar"` is incorrect syntax
+        // checkCompletion("testfiles/completion/lib/test201870/test201870.php", "$object->get^", false);
     }
 
     @Override

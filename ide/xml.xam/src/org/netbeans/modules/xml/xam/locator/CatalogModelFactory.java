@@ -33,7 +33,7 @@ public abstract class CatalogModelFactory {
      * Given a ModelSource this method will return a Locator object specific to the it.
      * If there are initialization errors, CatalogModelException will be thrown.
      * @param modelSource a not null model source for which catalog model is requested.
-     * @throws org.netbeans.modules.xml.xam.locator.api.CatalogModelException
+     * @throws CatalogModelException
      */
     public abstract CatalogModel getCatalogModel(ModelSource modelSource) throws CatalogModelException;
     

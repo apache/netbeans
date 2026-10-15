@@ -25,7 +25,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import javax.swing.DefaultListCellRenderer;
@@ -51,7 +50,7 @@ public class IsOverriddenPopup extends JPanel implements FocusListener {
         this.caption = caption;
         this.declarations = declarations;
 
-        Collections.sort(declarations, new Comparator<OverrideDescription>() {
+        declarations.sort(new Comparator<OverrideDescription>() {
             public int compare(OverrideDescription o1, OverrideDescription o2) {
                 if (o1.isOverridden() == o2.isOverridden()) {
                     return o1.location.getDisplayHtml(new GsfHtmlFormatter()).compareTo(o2.location.getDisplayHtml(new GsfHtmlFormatter()));

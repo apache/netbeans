@@ -39,7 +39,7 @@ public final class FileUIUtils {
     /**
      * Gets an ImageDecorator for the filesystem. Returns non-null dummy instance
      * if the FileSystem's decorator does not support {@link ImageDecorator} interface.
-     * <p/>
+     * <p>
      * This utility should be used in place of former {@code fileSystem.getStatus().annotateIcon(...)}.
      * @param f the FileSystem
      * @return decorator instance.

@@ -45,7 +45,7 @@ import org.openide.util.NbBundle;
 /**
  * Wizard to create a new TestNG file.
  */
-@TemplateRegistration(folder = "UnitTests", position = 1000,
+@TemplateRegistration(folder = "UnitTests", position = 1100,
         content = "../resources/EmptyTestNGTest.java.template",
         scriptEngine = "freemarker",
         displayName = "#EmptyTestNGTest_displayName",
@@ -162,7 +162,7 @@ public final class NewTestWizardIterator implements WizardDescriptor.Instantiati
         // Make sure list of steps is accurate.
         String[] beforeSteps = null;
         Object prop = wiz.getProperty("WizardPanel_contentData"); // NOI18N
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[]) prop;
         }
         String[] steps = createSteps(beforeSteps, panels);
@@ -252,7 +252,7 @@ public final class NewTestWizardIterator implements WizardDescriptor.Instantiati
             packageName = FileUtil.getRelativePath(groups[i].getRootFolder(), targetFolder);
         }
         if (packageName != null) {
-            packageName = packageName.replaceAll("/", "."); // NOI18N
+            packageName = packageName.replace("/", "."); // NOI18N
         }
         return packageName;
     }
@@ -271,6 +271,6 @@ public final class NewTestWizardIterator implements WizardDescriptor.Instantiati
                 result.add(sg);
             }            
         }
-        return result.toArray(new SourceGroup[result.size()]);
+        return result.toArray(new SourceGroup[0]);
     }
 }

@@ -19,8 +19,6 @@
 
 package org.netbeans.api.java.source;
 
-import com.sun.tools.javac.api.JavacTaskImpl;
-import com.sun.tools.javac.util.Log;
 
 import java.io.*;
 import java.lang.ref.WeakReference;
@@ -118,8 +116,6 @@ public final class ModificationResult {
                     } finally {
                         WorkingCopy.instance = null;
                     }
-                    final JavacTaskImpl jt = copy.impl.getJavacTask();
-                    Log.instance(jt.getContext()).nerrors = 0;
                     final List<ModificationResult.Difference> diffs = copy.getChanges(result.tag2Span);
                     if (diffs != null && diffs.size() > 0)
                         result.diffs.put(copy.getFileObject(), diffs);
@@ -236,7 +232,7 @@ public final class ModificationResult {
                     }
                 });
                 if (exceptions [0] != null) {
-                    LOG.log(Level.INFO, "ModificationResult commit failed with an exception: ", exceptions[0]);
+                    LOG.log(Level.INFO, "Cannot commit changes into " + fo, exceptions[0]);
                     int s = lastCommitted.size();
                     for (Throwable t : lastCommitted) {
                         LOG.log(Level.INFO, "Previous commit number " + s--, t);
@@ -400,11 +396,14 @@ public final class ModificationResult {
                 // first insert the new content, THEN remove the old one. In situations where the content AFTER the
                 // change is not writable this ordering allows to replace the content, but if we first delete, 
                 // replacement cannot be inserted into the nonwritable area.
-                int delta = diff.getNewText().length();
                 int offs = diff.getStartPosition().getOffset();
                 int removeLen = diff.getEndPosition().getOffset() - offs;
                 
+                // [NETBEANS-4270] Can't use "delta = diff.getNewText().length()".
+                // doc.insertString may filter chars, e.g. '\r', and change length.
+                int initialLength = doc.getLength();
                 doc.insertString(offs, diff.getNewText(), null);
+                int delta = doc.getLength() - initialLength;
                 doc.remove(delta + offs, removeLen);
                 break;
             }
@@ -437,7 +436,7 @@ public final class ModificationResult {
      * Returned string represents preview of resulting source. No difference
      * really is applied. Respects {@code isExcluded()} flag of difference.
      * 
-     * @param   there can be more resulting source, user has to specify
+     * @param fileObject there can be more resulting source, user has to specify
      *          which wants to preview.
      * @return  if changes are applied source looks like return string
      * @throws  IllegalArgumentException if the provided {@link FileObject} is not
@@ -553,7 +552,7 @@ public final class ModificationResult {
          * Gets flag if it is possible to write to guarded sections.
          * @return {@code true} in case the difference may be written even into
          *          guarded sections.
-         * @see #guards(boolean)
+         * @see #setCommitToGuards(boolean)
          * @since 0.33
          */
         public boolean isCommitToGuards() {

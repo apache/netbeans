@@ -7,7 +7,7 @@ public class ConstructorUsedBySuper1 {
     }
     
     public static class Subclass extends ConstructorUsedBySuper1 {
-        private Subclass() {
+        public Subclass() {
             
         }
         

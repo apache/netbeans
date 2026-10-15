@@ -33,20 +33,14 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
 @RunnerRestClass(runner=RunnerRestAddResources.class)
 public class CommandAddResources extends CommandTarget {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(CommandAddResources.class);
 
     /** Command string for create-cluster command. */
     private static final String COMMAND = "add-resources";
     
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Add resource to target server.
      * <p/>
@@ -105,17 +99,11 @@ public class CommandAddResources extends CommandTarget {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-    
     /** File object pointing to xml file that contains resources to be added. */
     File xmlResFile;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara server add-resources command entity.
      * <p/>

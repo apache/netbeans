@@ -81,8 +81,8 @@ public abstract class BulkSearch {
 
     @CheckForNull
     public final BulkPattern create(CompilationInfo info, AtomicBoolean cancel, Collection<? extends String> code) {
-        List<Tree> patterns = new LinkedList<Tree>();
-        List<AdditionalQueryConstraints> additionalConstraints = new LinkedList<AdditionalQueryConstraints>();
+        List<Tree> patterns = new LinkedList<>();
+        List<AdditionalQueryConstraints> additionalConstraints = new LinkedList<>();
 
         for (String c : code) {
             patterns.add(Utilities.parseAndAttribute(info, c, null));
@@ -95,7 +95,7 @@ public abstract class BulkSearch {
     @CheckForNull
     public abstract BulkPattern create(Collection<? extends String> code, Collection<? extends Tree> patterns, Collection<? extends AdditionalQueryConstraints> additionalConstraints, AtomicBoolean cancel);
 
-    public static abstract class BulkPattern {
+    public abstract static class BulkPattern {
 
         private final List<? extends String> patterns;
         private final List<? extends Set<? extends String>> identifiers;

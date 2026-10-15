@@ -328,7 +328,7 @@ class LicenseHeadersPanel extends javax.swing.JPanel {
     
     private void loadGlobalLicenses() {
         FileObject root = FileUtil.getConfigFile("Templates/Licenses");
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        DefaultComboBoxModel<GlobalItem> model = new DefaultComboBoxModel<>();
         for (FileObject fo : root.getChildren()) {
             if (fo.getAttribute("template") == null) {
                 continue;

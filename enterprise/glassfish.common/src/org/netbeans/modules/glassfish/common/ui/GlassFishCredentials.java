@@ -35,18 +35,12 @@ import org.openide.util.NbBundle;
  */
 public class GlassFishCredentials extends CommonPasswordPanel {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = GlassFishLogger.get(GlassFishCredentials.class);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Display GlassFish credentials panel to get GlassFish credentials.
      * <p/>
@@ -102,10 +96,7 @@ public class GlassFishCredentials extends CommonPasswordPanel {
         return setCredentials(instance, message);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates new GlassFish credentials panel.
      * <p/>
@@ -122,10 +113,7 @@ public class GlassFishCredentials extends CommonPasswordPanel {
         initFileds(true);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // GUI Getters and Setters                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get password value from form.
      * <p/>
@@ -144,10 +132,7 @@ public class GlassFishCredentials extends CommonPasswordPanel {
         return userText.getText();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Clear form fields.
      */

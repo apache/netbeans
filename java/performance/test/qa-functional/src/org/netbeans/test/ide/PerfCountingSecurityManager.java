@@ -40,7 +40,7 @@ import java.util.TreeSet;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.openide.util.Utilities;
 import sun.security.util.SecurityConstants;
 
@@ -161,7 +161,7 @@ final class PerfCountingSecurityManager extends SecurityManager implements Calla
             try {
                 ClassLoader l = Thread.currentThread().getContextClassLoader();
                 Class<?> manClass = Class.forName("org.netbeans.TopSecurityManager", false, l);
-                man = (SecurityManager) manClass.newInstance();
+                man = (SecurityManager) manClass.getDeclaredConstructor().newInstance();
             } catch (Exception ex) {
                 throw new IllegalStateException(ex);
             }

@@ -28,10 +28,7 @@ import java.util.List;
  */
 public class ConfigReaderSources extends ConfigReader {
 
-    ////////////////////////////////////////////////////////////////////////////
     // XML reader methods                                                     //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Provide paths to listen on.
      * <p/>

@@ -1,0 +1,14 @@
+Display text: private function <b>privateMethod</b>(): void
+File name: index.php
+Name: privateMethod
+Position: BEGIN: 899 END: 912
+
+Display text: $this-><b>privateMethod</b>();
+File name: index.php
+Name: privateMethod
+Position: BEGIN: 1026 END: 1039
+
+Display text: $this-><b>privateMethod</b>();
+File name: nb6087.php
+Name: privateMethod
+Position: BEGIN: 958 END: 971

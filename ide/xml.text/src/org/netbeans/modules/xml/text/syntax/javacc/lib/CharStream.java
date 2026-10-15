@@ -40,45 +40,47 @@ public interface CharStream {
      * of selecting the input is the responsibility of the class
      * implementing this interface.  Can throw any java.io.IOException.
      */
-    abstract public char readChar() throws java.io.IOException;
+    public abstract char readChar() throws java.io.IOException;
 
     /**
      * Returns the column position of the character last read.
      * @deprecated 
      * @see #getEndColumn
      */
-    abstract public int getColumn();
+    @Deprecated
+    public abstract int getColumn();
 
     /**
      * Returns the line number of the character last read.
      * @deprecated 
      * @see #getEndLine
      */
-    abstract public int getLine();
+    @Deprecated
+    public abstract int getLine();
 
     /**
      * Returns the column number of the last character for current token (being
      * matched after the last call to BeginTOken).
      */
-    abstract public int getEndColumn();
+    public abstract int getEndColumn();
 
     /**
      * Returns the line number of the last character for current token (being
      * matched after the last call to BeginTOken).
      */
-    abstract public int getEndLine();
+    public abstract int getEndLine();
 
     /**
      * Returns the column number of the first character for current token (being
      * matched after the last call to BeginTOken).
      */
-    abstract public int getBeginColumn();
+    public abstract int getBeginColumn();
 
     /**
      * Returns the line number of the first character for current token (being
      * matched after the last call to BeginTOken).
      */
-    abstract public int getBeginLine();
+    public abstract int getBeginLine();
 
     /**
      * Backs up the input stream by amount steps. Lexer calls this method if it
@@ -86,14 +88,14 @@ public interface CharStream {
      * (longer) token. So, they will be used again as the prefix of the next
      * token and it is the implemetation's responsibility to do this right.
      */
-    abstract public void backup(int amount);
+    public abstract void backup(int amount);
 
     /**
      * Returns the next character that marks the beginning of the next token.
      * All characters must remain in the buffer between two successive calls
      * to this method to implement backup correctly.
      */
-    abstract public char BeginToken() throws java.io.IOException;
+    public abstract char BeginToken() throws java.io.IOException;
 
     /**
      * Returns a string made up of characters from the marked token beginning 
@@ -101,7 +103,7 @@ public interface CharStream {
      * anything that they want to. For example, for efficiency, one might decide
      * to just return null, which is a valid implementation.
      */
-    abstract public String GetImage();
+    public abstract String GetImage();
 
     /**
      * Returns an array of characters that make up the suffix of length 'len' for
@@ -111,10 +113,10 @@ public interface CharStream {
      *
      *   {
      *      String t = GetImage();
-     *      return t.substring(t.length() - len, t.length()).toCharArray();
+     *      return t.substring(t.length() - len).toCharArray();
      *   }
      */
-    abstract public char[] GetSuffix(int len);
+    public abstract char[] GetSuffix(int len);
 
     /**
      * The lexer calls this function to indicate that it is done with the stream
@@ -122,6 +124,6 @@ public interface CharStream {
      * Again, the body of this function can be just empty and it will not
      * affect the lexer's operation.
      */
-    abstract public void Done();
+    public abstract void Done();
 
 }

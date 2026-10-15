@@ -24,7 +24,6 @@ import java.awt.EventQueue;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
-import java.lang.String;
 import java.lang.ref.WeakReference;
 import javax.swing.SwingUtilities;
 import org.netbeans.modules.web.jsf.api.ConfigurationUtils;
@@ -51,7 +50,7 @@ import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.web.jsf.api.facesmodel.JSFConfigComponent;
 import org.openide.DialogDescriptor;
@@ -120,7 +119,7 @@ public class PageFlowController {
             // with the page flow editor, and this is probably not the best place for this code.
             // but in any case this should be a pretty safe fix).
             AtomicBoolean canceled = new AtomicBoolean();
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
 
                 @Override
                 public void run() {
@@ -580,7 +579,7 @@ public class PageFlowController {
             List<NavigationCase> navCases = rule.getNavigationCases();
 
             /* this is for ALL_FACES_CONFIG scope*/
-            boolean isModifableEdge = editableRules.contains(rule) ? true : false;
+            boolean isModifableEdge = editableRules.contains(rule);
 
             for (NavigationCase navCase : navCases) {
 

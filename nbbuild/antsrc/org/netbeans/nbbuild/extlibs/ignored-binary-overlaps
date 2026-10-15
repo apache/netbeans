@@ -26,10 +26,6 @@ enterprise*/modules/ext/rest/jdom-1.0.jar mobility*/modules/ext/jdom-1.0.jar
 enterprise*/modules/ext/rest/jdom-1.0.jar java*/modules/ext/maven/jdom-1.0.jar
 java*/modules/ext/maven/jdom-1.0.jar mobility*/modules/ext/jdom-1.0.jar
 
-# Struts framework needs to bundle the official Struts release together
-# for well maintained and assure the compatibility issue. 
-enterprise*/modules/ext/struts/oro-2.0.8.jar ide*/modules/ext/jakarta-oro-2.0.8.jar
-
 # Hibernate needs cglib internally
 java*/modules/ext/cglib-2.2.jar java*/modules/ext/hibernate4/cglib-2.2.jar
 
@@ -43,7 +39,6 @@ extra/ */
 python*/jython-*/javalib/ */
 
 # Libraries from the bundled Java Card SDK which are also used by the IDE
-javacard/JCDK3.0.2_ConnectedEdition/lib/commons-codec-1.3.jar ide/modules/ext/apache-commons-codec-1.3.jar
 javacard/JCDK3.0.2_ConnectedEdition/lib/commons-logging-1.1.jar ide/modules/ext/commons-logging-1.1.jar
 javacard/JCDK3.0.2_ConnectedEdition/lib/ant-contrib-1.0b3.jar mobility/modules/ext/ant-contrib-1.0b3.jar
 javacard/JCDK3.0.2_ConnectedEdition/lib/commons-httpclient-3.0.jar mobility/modules/ext/commons-httpclient-3.0.jar
@@ -52,9 +47,7 @@ javacard/JCDK3.0.2_ConnectedEdition/lib/commons-httpclient-3.0.jar mobility/modu
 enterprise/modules/ext/aws-sdk/commons-logging-1.1.1.jar ide/modules/ext/commons-logging-1.1.1.jar
 enterprise/modules/ext/aws-sdk/commons-codec-1.3.jar javacard/JCDK3.0.2_ConnectedEdition/lib/commons-codec-1.3.jar
 
-# Java EE 7 endorsed API library defined to be used by user contains those jars
-enterprise/modules/ext/javaee7-endorsed/jaxws-api.jar java/modules/ext/jaxws22/api/jaxws-api.jar
-enterprise/modules/ext/javaee7-endorsed/jsr181-api.jar java/modules/ext/jaxws22/api/jsr181-api.jar
-
 # maven needs commons-lang internally
 ide/modules/org-apache-commons-lang.jar java/maven/lib/commons-lang-2.6.jar
+
+

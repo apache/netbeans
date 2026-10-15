@@ -50,7 +50,7 @@ public abstract class WebServiceAccessor {
     
     public abstract WebService createWebService(WebServiceImplementation serviceImpl);
 
-    public static abstract class DescriptorAccessor {
+    public abstract static class DescriptorAccessor {
         public static DescriptorAccessor DEFAULT;
 
         public static DescriptorAccessor getDefault() {

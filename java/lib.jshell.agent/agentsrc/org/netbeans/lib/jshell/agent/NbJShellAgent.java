@@ -69,7 +69,7 @@ public class NbJShellAgent implements Runnable, ClassFileTransformer {
      * This field will be initialized at startup. The IDE will grab the value
      * using JDI to associate a debugger Session with the appropriate incoming socket.
      */
-    public volatile static String debuggerKey = ""; // NOI18N
+    public static volatile String debuggerKey = ""; // NOI18N
     
     private static final Logger LOG = Logger.getLogger(NbJShellAgent.class.getName());
     
@@ -175,7 +175,7 @@ public class NbJShellAgent implements Runnable, ClassFileTransformer {
             }
         }
         ClassLoader agentClassLoader = new URLClassLoader(
-                urls.toArray(new URL[urls.size()]), 
+                urls.toArray(new URL[0]), 
                 getClass().getClassLoader());
         try {
             agentClassLoader.loadClass("org.netbeans.lib.jshell.agent.AgentWorker"); // NOI18N
@@ -321,7 +321,7 @@ public class NbJShellAgent implements Runnable, ClassFileTransformer {
         }
     }
     
-    ////////////////////// INSTRUMENTATION PART ///////////////////////////////////
+    // INSTRUMENTATION PART
     private static final String CLASS_INIT_NAME = "<clinit>"; // NOI18N
     private static final String CLASS_INIT_DESC = "()V"; // NOI18N
     private static final String JAVA_LANG_CLASS = "java/lang/Class"; // NOI18N
@@ -377,7 +377,7 @@ public class NbJShellAgent implements Runnable, ClassFileTransformer {
      */
     private void insertClassInit(String className, ClassNode target) {
         // method void static clinit()
-        MethodNode clinit = new MethodNode(Opcodes.ASM5,
+        MethodNode clinit = new MethodNode(Opcodes.ASM9,
             Opcodes.ACC_STATIC | Opcodes.ACC_SYNTHETIC,
             CLASS_INIT_NAME,
             CLASS_INIT_DESC,
@@ -400,7 +400,7 @@ public class NbJShellAgent implements Runnable, ClassFileTransformer {
             istm = new ByteArrayInputStream(classfileBuffer);
             ClassReader reader = new ClassReader(istm);
             ClassWriter wr = new ClassWriter(reader, 0);
-            ClassNode clazz = new ClassNode();
+            ClassNode clazz = new ClassNode(Opcodes.ASM9);
             reader.accept(clazz, 0);
             
             boolean found = false;

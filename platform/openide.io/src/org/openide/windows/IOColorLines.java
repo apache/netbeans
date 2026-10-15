@@ -102,5 +102,5 @@ public abstract class IOColorLines {
      *        or highlight the hyperlink.
      * @param color a color for the line of text (null allowed). If null is passed default color (see {@link IOColors}) is used.
      */
-    abstract protected void println(CharSequence text, OutputListener listener, boolean important, Color color) throws IOException;
+    protected abstract void println(CharSequence text, OutputListener listener, boolean important, Color color) throws IOException;
 }

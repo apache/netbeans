@@ -36,12 +36,13 @@ import org.openide.util.Parameters;
 /**
  * <p>Class that allows to execute given file(s). API clients can check whether given
  * command is support, by calling
- * {@link #isSupported(String)} and execute the command by calling
+ * {@link #isSupported(String, Map)} and execute the command by calling
  * {@link #execute(String, Map)}. Please consult documentation of particular
  * commands for the list of supported properties.</p>
  *
  * The following "standard" properties are supported by most commands (unless stated otherwise):
  * <table>
+ * <caption>properties list</caption>
  * <tr><td>{@link #PROP_EXECUTE_FILE}      </td> <td>file to be executed (optional)</td> <td>{@link String} (absolute path) or {@link FileObject}</td></tr>
  * <tr><td>{@link #PROP_WORK_DIR}          </td> <td> working directory, project directory of execute.file will be used if missing </td> <td> {@link String} or {@link FileObject} or {@link java.io.File}</td></tr>
  * <tr><td>{@link #PROP_CLASSNAME}         </td> <td> class to execute, will be autodetected from execute.file if missing </td> <td> {@link String}</td></tr>
@@ -190,7 +191,7 @@ public final class JavaRunner {
     public static final String PROP_WORK_DIR = "work.dir";
 
     /** JVM arguments to be used for the execution. Should be an {@link Iterable} of {@link String}s.
-     * <p>Arguments may also be contributed by {@link org.netbeans.api.extexecution.startup.StartupExtender}s;
+     * <p>Arguments may also be contributed by <a href="@org-netbeans-modules-extexecution@/org/netbeans/api/extexecution/startup/StartupExtender.html" >StartupExtender</a>s;
      * the {@link JavaPlatform} (see {@link #PROP_PLATFORM}) will be in the context,
      * as will a {@link Project} if available from {@link #PROP_EXECUTE_FILE} or {@link #PROP_WORK_DIR}.
      * @since 1.22
@@ -259,7 +260,7 @@ public final class JavaRunner {
      * Check whether the given command is supported.
      *
      * @param command command name
-     * @param toRun either the file that would be executed, or the project folder
+     * @param properties properties
      * @return true if and only if the given command is supported for given file/folder
      *
      * @since 1.22
@@ -282,8 +283,7 @@ public final class JavaRunner {
      * of the given command for supported properties.
      *
      * @param command command to execute
-     * @param props properties
-     * @param toRun file to run
+     * @param properties properties
      * @throws java.io.IOException if execution fails
      * @throws java.lang.UnsupportedOperationException if the given command is not supported
      *

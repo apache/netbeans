@@ -383,7 +383,7 @@ public final class UIUtils {
     public static boolean isWindowsModernLookAndFeel() {
         if (!isWindowsXPLookAndFeel()) return false;
         String osName = System.getProperty("os.name"); // NOI18N
-        return osName != null && (osName.contains("Windows 8") || osName.contains("Windows 10")); // NOI18N
+        return osName != null && (osName.contains("Windows 8") || osName.contains("Windows 10") || osName.contains("Windows 11")); // NOI18N
     }
     
     public static boolean isOracleLookAndFeel() {

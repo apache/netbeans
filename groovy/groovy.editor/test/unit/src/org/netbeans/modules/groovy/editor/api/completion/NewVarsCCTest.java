@@ -21,9 +21,7 @@ package org.netbeans.modules.groovy.editor.api.completion;
 
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.netbeans.api.java.classpath.ClassPath;
-import org.netbeans.modules.groovy.editor.test.GroovyTestBase;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -32,14 +30,18 @@ import org.openide.filesystems.FileUtil;
  *
  * @author schmidtm
  */
-public class NewVarsCCTest extends GroovyTestBase {
+public class NewVarsCCTest extends GroovyCCTestBase {
 
     String TEST_BASE = "testfiles/completion/";
     String BASE = TEST_BASE + "newvars/";
 
     public NewVarsCCTest(String testName) {
         super(testName);
-        Logger.getLogger(CompletionHandler.class.getName()).setLevel(Level.FINEST);
+    }
+
+    @Override
+    protected String getTestType() {
+        return ".";
     }
 
     // uncomment this to have logging from GroovyLexer

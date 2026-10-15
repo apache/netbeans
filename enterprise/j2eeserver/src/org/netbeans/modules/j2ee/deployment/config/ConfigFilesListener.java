@@ -60,7 +60,7 @@ public class ConfigFilesListener extends AbstractFilesListener {
                     result.add(f);
             }
         }
-        return (File[]) result.toArray(new File[result.size()]);
+        return (File[]) result.toArray(new File[0]);
     }
 
     protected void targetDeleted(FileObject deleted) {

@@ -258,7 +258,7 @@ public class FixActionProvider extends ActionsProviderSupport {
                 } catch (DataObjectNotFoundException ex) {}
             }
         }
-        return Lookups.fixed ((Object[]) l.toArray (new DataObject [l.size ()]));
+        return Lookups.fixed ((Object[]) l.toArray (new DataObject [0]));
     }
     
     static void notifyError(String error) {

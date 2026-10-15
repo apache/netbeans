@@ -47,10 +47,10 @@ public class J2SEAntProjectSupportProvider extends AntProjectSupportProvider.Abs
     @Override
     public void configurePropertiesForProfiling(final Map<String, String> props, final FileObject profiledClassFile) {
         if (profiledClassFile == null) {
-////            if (mainClassSetManually != null) {
-////                props.put("main.class", mainClassSetManually); // NOI18N
-////                mainClassSetManually = null;
-////            }
+//            if (mainClassSetManually != null) {
+//                props.put("main.class", mainClassSetManually); // NOI18N
+//                mainClassSetManually = null;
+//            }
         } else {
             // In case the class to profile is explicitely selected (profile-single)
             // 1. specify profiled class name

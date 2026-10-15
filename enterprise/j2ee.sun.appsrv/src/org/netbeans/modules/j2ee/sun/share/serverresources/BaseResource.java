@@ -44,7 +44,7 @@ public class BaseResource extends Object implements java.io.Serializable {
     protected String description;
     protected NameValuePair[] extraParams;
     
-    transient protected PropertyChangeSupport propertySupport;
+    protected transient PropertyChangeSupport propertySupport;
     
     /** Creates a new instance of BaseResource */
     public BaseResource() {

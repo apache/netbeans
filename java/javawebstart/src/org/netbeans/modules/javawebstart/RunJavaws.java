@@ -54,7 +54,7 @@ public class RunJavaws implements ActionProvider {
         try {
             final Process p =
             new ProcessBuilder(FileUtil.toFile(JavaPlatform.getDefault().findTool("javaws")).getAbsolutePath(),
-                    context.lookup(DataObject.class).getPrimaryFile().getURL().toString()).start();
+                    context.lookup(DataObject.class).getPrimaryFile().toURL().toString()).start();
             RP.post(new Runnable() {
                 @Override public void run() {
                     try {

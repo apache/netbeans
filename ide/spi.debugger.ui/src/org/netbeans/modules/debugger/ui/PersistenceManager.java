@@ -44,7 +44,16 @@ public class PersistenceManager implements LazyDebuggerManagerListener {
         return new Breakpoint [0];
     }
     
+    private boolean areWatchesPersisted() {
+        Properties p = Properties.getDefault ().getProperties ("debugger");
+        p = p.getProperties("persistence");
+        return p.getBoolean("watches", true);
+    }
+    
     public void initWatches () {
+        if (!areWatchesPersisted()) {
+            return ;
+        }
         // As a side-effect, creates the watches. WatchesReader is triggered.
         Properties p = Properties.getDefault ().getProperties ("debugger");
         Watch[] watches = (Watch[]) p.getArray (
@@ -74,6 +83,9 @@ public class PersistenceManager implements LazyDebuggerManagerListener {
     }
     
     public void watchAdded (Watch watch) {
+        if (!areWatchesPersisted()) {
+            return ;
+        }
         Properties p = Properties.getDefault ().getProperties ("debugger");
         p.setArray (
             DebuggerManager.PROP_WATCHES, 
@@ -87,6 +99,9 @@ public class PersistenceManager implements LazyDebuggerManagerListener {
     }
     
     public void watchRemoved (Watch watch) {
+        if (!areWatchesPersisted()) {
+            return ;
+        }
         Properties p = Properties.getDefault ().getProperties ("debugger");
         p.setArray (
             DebuggerManager.PROP_WATCHES, 

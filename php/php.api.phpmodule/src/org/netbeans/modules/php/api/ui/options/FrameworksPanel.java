@@ -25,7 +25,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -93,7 +92,7 @@ final class FrameworksPanel extends JPanel {
 
     private void sortOptions(List<AdvancedOption> options) {
         final Collator collator = Collator.getInstance();
-        Collections.sort(options, new Comparator<AdvancedOption>() {
+        options.sort(new Comparator<AdvancedOption>() {
             @Override
             public int compare(AdvancedOption o1, AdvancedOption o2) {
                 return collator.compare(o1.getDisplayName(), o2.getDisplayName());

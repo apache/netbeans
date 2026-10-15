@@ -96,7 +96,7 @@ public final class HudsonJobCreator extends JPanel implements ProjectHudsonJobCr
 
     @NbBundle.Messages({
         "HudsonJobCreator.error.noTests=The project does not have any tests.",
-        "HudsonJobCreator.error.invalidHudsonOptions=PHP Hudson options are invalid.",
+        "HudsonJobCreator.error.invalidHudsonOptions=PHP Jenkins options are invalid.",
         "# {0} - file name",
         "HudsonJobCreator.warning.fileExists=Existing project file {0} will be used.",
     })
@@ -172,8 +172,8 @@ public final class HudsonJobCreator extends JPanel implements ProjectHudsonJobCr
     }
 
     @NbBundle.Messages({
-        "HudsonJobCreator.button.labelWithMnemonics=&Hudson Options...",
-        "HudsonJobCreator.button.a11y=Open Hudson PHP options."
+        "HudsonJobCreator.button.labelWithMnemonics=&Jenkins Options...",
+        "HudsonJobCreator.button.a11y=Open Jenkins PHP options."
     })
     private JButton getOpenHudsonOptionsButton() {
         JButton button = new JButton();

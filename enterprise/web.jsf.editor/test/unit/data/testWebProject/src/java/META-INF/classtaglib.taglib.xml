@@ -20,4 +20,18 @@
             <type>java.lang.String</type>
         </attribute>
     </tag>
+    <tag>
+        <tag-name>mycomponent</tag-name>
+        <component>
+            <component-type>javax.faces.Output</component-type>
+        </component>
+        <attribute>
+            <name>myattr</name>
+            <description>
+                nice small attribute
+            </description>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
 </facelet-taglib>

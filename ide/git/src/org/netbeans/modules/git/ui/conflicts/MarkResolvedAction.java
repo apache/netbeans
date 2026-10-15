@@ -74,10 +74,10 @@ public class MarkResolvedAction extends SingleRepositoryAction {
                         client = getClient();
                         client.addNotificationListener(new DefaultFileListener(roots));
                         if (!toAdd.isEmpty()) {
-                            client.add(toAdd.toArray(new File[toAdd.size()]), getProgressMonitor());
+                            client.add(toAdd.toArray(new File[0]), getProgressMonitor());
                         }
                         if (!toRemove.isEmpty()) {
-                            client.remove(toRemove.toArray(new File[toRemove.size()]), true, getProgressMonitor());
+                            client.remove(toRemove.toArray(new File[0]), true, getProgressMonitor());
                         }
                     } catch (GitException ex) {
                         LOG.log(Level.WARNING, null, ex);

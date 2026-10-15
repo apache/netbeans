@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 import org.netbeans.modules.php.api.PhpVersion;
+import org.netbeans.modules.php.api.util.StringUtils;
+import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.actions.FixUsesAction.Options;
 import org.netbeans.modules.php.editor.actions.ImportData.DataItem;
 import org.netbeans.modules.php.editor.actions.ImportData.ItemVariant;
@@ -38,6 +40,7 @@ import org.netbeans.modules.php.editor.api.QualifiedName;
 import org.netbeans.modules.php.editor.api.elements.AliasedElement;
 import org.netbeans.modules.php.editor.api.elements.ClassElement;
 import org.netbeans.modules.php.editor.api.elements.ConstantElement;
+import org.netbeans.modules.php.editor.api.elements.EnumElement;
 import org.netbeans.modules.php.editor.api.elements.FullyQualifiedElement;
 import org.netbeans.modules.php.editor.api.elements.FunctionElement;
 import org.netbeans.modules.php.editor.api.elements.InterfaceElement;
@@ -49,7 +52,7 @@ import org.openide.util.NbBundle;
  *
  * @author Ondrej Brejla <obrejla@netbeans.org>
  */
-@NbBundle.Messages("DoNotUseType=Don't use type.")
+@NbBundle.Messages("DoNotUseType=Don't import.")
 public class ImportDataCreator {
     public static final String NS_SEPARATOR = "\\"; //NOI18N
     private final Map<String, List<UsedNamespaceName>> usedNames;
@@ -61,7 +64,7 @@ public class ImportDataCreator {
 
     private static Collection<FullyQualifiedElement> sortFQElements(final Collection<FullyQualifiedElement> filteredFQElements) {
         final List<FullyQualifiedElement> sortedFQElements = new ArrayList<>(filteredFQElements);
-        Collections.sort(sortedFQElements, new FQElementsComparator());
+        sortedFQElements.sort(new FQElementsComparator());
         return sortedFQElements;
     }
 
@@ -85,25 +88,31 @@ public class ImportDataCreator {
     }
 
     private void processFQElementName(final String fqElementName) {
-        Collection<FullyQualifiedElement> possibleFQElements = fetchPossibleFQElements(fqElementName);
+        // GH-6039: avoid getting all types
+        if (!StringUtils.hasText(fqElementName)) {
+            return;
+        }
+        // GH-6075
+        String fqeName = CodeUtils.removeNullableTypePrefix(fqElementName);
+        Collection<FullyQualifiedElement> possibleFQElements = fetchPossibleFQElements(fqeName);
         Collection<FullyQualifiedElement> filteredPlatformConstsAndFunctions = filterPlatformConstsAndFunctions(possibleFQElements);
         Collection<FullyQualifiedElement> filteredDuplicates = filterDuplicates(filteredPlatformConstsAndFunctions);
-        Collection<FullyQualifiedElement> filteredExactUnqualifiedNames = filterExactUnqualifiedName(filteredDuplicates, fqElementName);
+        Collection<FullyQualifiedElement> filteredExactUnqualifiedNames = filterExactUnqualifiedName(filteredDuplicates, fqeName);
         if (filteredExactUnqualifiedNames.isEmpty()) {
             if (options.getPhpVersion().compareTo(PhpVersion.PHP_56) >= 0) {
-                possibleItems.add(new EmptyItem(fqElementName));
+                possibleItems.add(new EmptyItem(fqeName));
             } else {
-                if (!isConstOrFunction(fqElementName)) {
-                    possibleItems.add(new EmptyItem(fqElementName));
+                if (!isConstOrFunction(fqeName)) {
+                    possibleItems.add(new EmptyItem(fqeName));
                 }
             }
         } else {
             Collection<FullyQualifiedElement> filteredFQElements = filterFQElementsFromCurrentNamespace(filteredExactUnqualifiedNames);
             if (filteredFQElements.isEmpty()) {
-                possibleItems.add(new ReplaceItem(fqElementName, filteredExactUnqualifiedNames));
+                possibleItems.add(new ReplaceItem(fqeName, filteredExactUnqualifiedNames));
             } else {
                 possibleItems.add(new ValidItem(
-                        fqElementName,
+                        fqeName,
                         filteredFQElements,
                         filteredFQElements.size() != filteredExactUnqualifiedNames.size()));
             }
@@ -136,6 +145,9 @@ public class ImportDataCreator {
             possibleTypes.addAll(phpIndex.getFunctions(nameKind));
             possibleTypes.addAll(phpIndex.getConstants(nameKind));
         }
+        if (options.getPhpVersion().compareTo(PhpVersion.PHP_81) >= 0) {
+            possibleTypes.addAll(phpIndex.getEnums(nameKind));
+        }
         return possibleTypes;
     }
 
@@ -157,7 +169,8 @@ public class ImportDataCreator {
         for (FullyQualifiedElement fqElement : possibleFQElements) {
             if (fqElement instanceof ClassElement
                     || fqElement instanceof InterfaceElement
-                    || fqElement instanceof TraitElement) {
+                    || fqElement instanceof TraitElement
+                    || fqElement instanceof EnumElement) {
                 result.add(fqElement);
             } else if (!fqElement.isPlatform()) {
                 result.add(fqElement);
@@ -169,7 +182,28 @@ public class ImportDataCreator {
     private Collection<FullyQualifiedElement> filterExactUnqualifiedName(final Collection<FullyQualifiedElement> possibleFQElements, final String typeName) {
         Collection<FullyQualifiedElement> result = new HashSet<>();
         for (FullyQualifiedElement fqElement : possibleFQElements) {
-            if (fqElement.getFullyQualifiedName().toString().endsWith(typeName)) {
+            // type name: e.g. Foo, Name\Space\Foo, \Name\Space\Foo
+            // GH-7546 if an element name has the same prefix and suffix(e.g. Foo2Foo),
+            // the following check is incorrect
+            // `fqElement.getFullyQualifiedName().toString().endsWith(typeName)`
+            // so, compare the segments, instead
+            QualifiedName qualifiedTypeName = QualifiedName.create(typeName);
+            List<String> segments = qualifiedTypeName.getSegments();
+            Collections.reverse(segments);
+            List<String> elementSegments = fqElement.getFullyQualifiedName().getSegments();
+            Collections.reverse(elementSegments);
+            boolean exactUnqualifiedName = true;
+            if (!segments.isEmpty() && segments.size() <= elementSegments.size()) {
+                for (int i = 0; i < segments.size(); i++) {
+                    if (!segments.get(i).equals(elementSegments.get(i))) {
+                        exactUnqualifiedName = false;
+                        break;
+                    }
+                }
+            } else {
+                exactUnqualifiedName = false;
+            }
+            if (exactUnqualifiedName) {
                 result.add(fqElement);
             }
         }
@@ -236,6 +270,7 @@ public class ImportDataCreator {
                     ? fqElement.getFullyQualifiedName().toString()
                     : fqElement.getName();
             ItemVariant replaceItemVariant = new ItemVariant(itemVariantReplaceName, ItemVariant.UsagePolicy.CAN_BE_USED);
+            assert usedNames.get(fqName) != null : "fqName: " + fqName; // NOI18N
             data.addJustToReplace(new DataItem(fqName, Collections.singletonList(replaceItemVariant), replaceItemVariant, usedNames.get(fqName)));
         }
 
@@ -301,6 +336,7 @@ public class ImportDataCreator {
                 }
             }
             Collections.sort(variants);
+            assert usedNames.get(typeName) != null : "typeName: " + typeName; // NOI18N
             data.add(new DataItem(typeName, variants, defaultValue, usedNames.get(typeName)));
         }
 

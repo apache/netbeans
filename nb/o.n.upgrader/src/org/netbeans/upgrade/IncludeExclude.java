@@ -22,6 +22,7 @@ package org.netbeans.upgrade;
 import java.io.*;
 import java.util.*;
 import java.util.regex.*;
+import java.util.stream.Stream;
 import org.openide.util.Union2;
 
 
@@ -30,10 +31,10 @@ import org.openide.util.Union2;
  *
  * @author Jaroslav Tulach
  */
-final class IncludeExclude extends AbstractSet {
+final class IncludeExclude extends AbstractSet<String> {
     /** List<Boolean and Pattern>
      */
-    private List<Union2<Boolean, Pattern>> patterns = new ArrayList<Union2<Boolean, Pattern>> ();
+    private final List<Union2<Boolean, Pattern>> patterns = new ArrayList<>();
 
     private IncludeExclude () {
     }
@@ -78,12 +79,19 @@ final class IncludeExclude extends AbstractSet {
     }
     
     
-    public Iterator iterator () {
-        return null;
+    @Override
+    public Iterator<String> iterator() {
+        throw new UnsupportedOperationException("not implemented");
+    }
+
+    @Override
+    public Stream<String> stream() {
+        throw new UnsupportedOperationException("not implemented");
     }
     
-    public int size () {
-        return 0;
+    @Override
+    public int size() {
+        throw new UnsupportedOperationException("not implemented");
     }
     
     @Override
@@ -99,7 +107,7 @@ final class IncludeExclude extends AbstractSet {
             
             Matcher m = p.matcher (s);
             if (m.matches ()) {
-                yes = include.booleanValue ();
+                yes = include;
                 if (!yes) {
                     // exclude matches => immediately return
                     return false;

@@ -55,6 +55,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.modules.java.file.launcher.api.SourceLauncher;
 import org.netbeans.modules.refactoring.java.plugins.LocalVarScanner;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.cookies.EditorCookie;
@@ -156,7 +157,7 @@ public class RefactoringUtils {
      */
     @Deprecated
     public static Collection<ExecutableElement> getOverridingMethods(ExecutableElement e, CompilationInfo info, AtomicBoolean cancel) {
-        Collection<ExecutableElement> result = new ArrayList();
+        Collection<ExecutableElement> result = new ArrayList<>();
         TypeElement parentType = (TypeElement) e.getEnclosingElement();
         Set<ElementHandle<TypeElement>> subTypes = getImplementorsAsHandles(info.getClasspathInfo().getClassIndex(), info.getClasspathInfo(), parentType, cancel);
         for (ElementHandle<TypeElement> subTypeHandle : subTypes) {
@@ -288,7 +289,7 @@ public class RefactoringUtils {
         }
         Project p = FileOwnerQuery.getOwner(file);
         if (p == null) {
-            return false;
+            return SourceLauncher.isSourceLauncherFile(file);
         }
         return isOpenProject(p);
     }
@@ -304,7 +305,7 @@ public class RefactoringUtils {
     public static boolean isOnSourceClasspath(FileObject fo) {
         Project pr = FileOwnerQuery.getOwner(fo);
         if (pr == null) {
-            return false;
+            return isIndexedSourceLauncherFile(fo);
         }
 
         //workaround for 143542
@@ -318,6 +319,11 @@ public class RefactoringUtils {
         return false;
         //end of workaround
         //return ClassPath.getClassPath(fo, ClassPath.SOURCE)!=null;
+    }
+
+    public static boolean isIndexedSourceLauncherFile(FileObject fo) {
+        // TODO: don't call from this module
+        return SourceLauncher.isIndexedSourceLauncherFile(fo);
     }
 
     /**
@@ -509,7 +515,7 @@ public class RefactoringUtils {
     }
 
     private static Collection<TypeElement> typesToElements(Collection<? extends TypeMirror> types, CompilationInfo info) {
-        Collection<TypeElement> result = new HashSet();
+        Collection<TypeElement> result = new HashSet<>();
         for (TypeMirror tm : types) {
             result.add(typeToElement(tm, info));
         }
@@ -517,7 +523,7 @@ public class RefactoringUtils {
     }
 
     public static Collection<FileObject> elementsToFile(Collection<? extends Element> elements, ClasspathInfo cpInfo) {
-        Collection<FileObject> result = new HashSet();
+        Collection<FileObject> result = new HashSet<>();
         for (Element handle : elements) {
             result.add(SourceUtils.getFile(handle, cpInfo));
         }
@@ -526,7 +532,7 @@ public class RefactoringUtils {
 
     public static boolean elementExistsIn(TypeElement target, Element member, CompilationInfo info) {
         for (Element currentMember : target.getEnclosedElements()) {
-            if (currentMember.getKind().equals(member.getKind())
+            if (currentMember.getKind() == member.getKind()
                     && currentMember.getSimpleName().equals(member.getSimpleName())) {
                 if (currentMember.getKind() == ElementKind.METHOD) {
                     ExecutableElement exMethod = (ExecutableElement) currentMember;
@@ -593,17 +599,18 @@ public class RefactoringUtils {
      * @param files
      * @return
      */
-    @SuppressWarnings("CollectionContainsUrl")
     public static ClasspathInfo getClasspathInfoFor(boolean dependencies, boolean backSource, FileObject... files) {
         assert files.length > 0;
-        Set<URL> dependentSourceRoots = new HashSet();
-        Set<URL> dependentCompileRoots = new HashSet();
-        ClassPath nullPath = ClassPathSupport.createClassPath(new FileObject[0]);
-        ClassPath boot = null;
-        ClassPath moduleBoot = null;
-        ClassPath compile = null;
-        ClassPath moduleCompile = null;
-        ClassPath moduleClass = null;        
+        Set<URL> dependentSourceRoots = new HashSet<>();
+        Set<URL> dependentCompileRoots = new HashSet<>();
+        ClassPath nullPath = ClassPath.EMPTY;
+
+        List<ClassPath> bootCPs = new ArrayList<>();
+        List<ClassPath> moduleBootCPs = new ArrayList<>();
+        List<ClassPath> compileCPs = new ArrayList<>();
+        List<ClassPath> moduleCompileCPs = new ArrayList<>();
+        List<ClassPath> moduleClassCPs = new ArrayList<>();
+
         for (FileObject fo : files) {
             ClassPath cp = null;
             FileObject ownerRoot = null;
@@ -615,29 +622,29 @@ public class RefactoringUtils {
             }
             if (cp != null && ownerRoot != null && FileUtil.getArchiveFile(ownerRoot) == null) {
                 for (FileObject src : cp.getRoots()) { // Keep all source roots from cp. Needed if project has multiple source roots.
-                URL sourceRoot = URLMapper.findURL(src, URLMapper.INTERNAL);
-                if (dependencies) {
-                    Set<URL> urls = SourceUtils.getDependentRoots(sourceRoot, false);
-                    Set<ClassPath> cps = GlobalPathRegistry.getDefault().getPaths(ClassPath.SOURCE);
-                    Set<URL> toRetain = new HashSet<URL>();
-                    for (ClassPath path : cps) {
-                        for (ClassPath.Entry e : path.entries()) {
-                            toRetain.add(e.getURL());
+                    URL sourceRoot = URLMapper.findURL(src, URLMapper.INTERNAL);
+                    if (dependencies) {
+                        Set<URL> urls = SourceUtils.getDependentRoots(sourceRoot, false);
+                        Set<ClassPath> cps = GlobalPathRegistry.getDefault().getPaths(ClassPath.SOURCE);
+                        Set<URL> toRetain = new HashSet<>();
+                        for (ClassPath path : cps) {
+                            for (ClassPath.Entry e : path.entries()) {
+                                toRetain.add(e.getURL());
+                            }
+                        }
+                        Set<URL> compileUrls = new HashSet<>(urls);
+                        urls.retainAll(toRetain);
+                        compileUrls.removeAll(toRetain);
+                        dependentSourceRoots.addAll(urls);
+                        dependentCompileRoots.addAll(compileUrls);
+                    } else {
+                        dependentSourceRoots.add(sourceRoot);
+                    }
+                    if (FileOwnerQuery.getOwner(fo) != null) {
+                        for (FileObject f : cp.getRoots()) {
+                            dependentCompileRoots.add(URLMapper.findURL(f, URLMapper.INTERNAL));
                         }
                     }
-                    Set<URL> compileUrls = new HashSet<URL>(urls);
-                    urls.retainAll(toRetain);
-                    compileUrls.removeAll(toRetain);
-                    dependentSourceRoots.addAll(urls);
-                    dependentCompileRoots.addAll(compileUrls);
-                } else {
-                    dependentSourceRoots.add(sourceRoot);
-                }
-                if (FileOwnerQuery.getOwner(fo) != null) {
-                    for (FileObject f : cp.getRoots()) {
-                        dependentCompileRoots.add(URLMapper.findURL(f, URLMapper.INTERNAL));
-                    }
-                }
                 }
             } else {
                 for (ClassPath scp : GlobalPathRegistry.getDefault().getPaths(ClassPath.SOURCE)) {
@@ -663,20 +670,19 @@ public class RefactoringUtils {
                 if (fcompile == null) {
                     LOG.log(Level.WARNING, "No classpath for: {0} {1}", new Object[]{FileUtil.getFileDisplayName(fo), FileOwnerQuery.getOwner(fo)}); //NOI18N
                 } else {
-                    compile = compile != null ? merge(compile, fcompile) : fcompile;
+                    compileCPs.add(fcompile);
                 }
-                
                 if (fboot != null) {
-                    boot = boot != null ? merge(boot, fboot) : fboot;
+                    bootCPs.add(fboot);
                 }
                 if (fmoduleboot != null) {
-                    moduleBoot = moduleBoot != null ? merge(moduleBoot, fmoduleboot) : fmoduleboot;
+                    moduleBootCPs.add(fmoduleboot);
                 }
                 if (fmodulecompile != null) {
-                    moduleCompile = moduleCompile != null ? merge(moduleCompile, fmodulecompile) : fmodulecompile;
+                    moduleCompileCPs.add(fmodulecompile);
                 }
                 if (fmoduleclass != null) {
-                    moduleClass = moduleClass != null ? merge(moduleClass, fmoduleclass) : fmoduleclass;
+                    moduleClassCPs.add(fmoduleclass);
                 }
             }
         }
@@ -694,12 +700,18 @@ public class RefactoringUtils {
                 }
             }
         }
-
-        ClassPath rcp = ClassPathSupport.createClassPath(dependentSourceRoots.toArray(new URL[dependentSourceRoots.size()]));
+        
+        ClassPath compile = !compileCPs.isEmpty() ? merge(compileCPs) : null;
+        ClassPath boot = !bootCPs.isEmpty() ? merge(bootCPs) : null;
+        ClassPath moduleBoot = !moduleBootCPs.isEmpty() ? merge(moduleBootCPs) : null;
+        ClassPath moduleCompile = !moduleCompileCPs.isEmpty() ? merge(moduleCompileCPs) : null;
+        ClassPath moduleClass = !moduleClassCPs.isEmpty() ? merge(moduleClassCPs) : null;
+        
+        ClassPath rcp = ClassPathSupport.createClassPath(dependentSourceRoots.toArray(URL[]::new));
         if (compile == null) {
             compile = nullPath;
         }
-        compile = merge(compile, ClassPathSupport.createClassPath(dependentCompileRoots.toArray(new URL[dependentCompileRoots.size()])));
+        compile = merge(compile, ClassPathSupport.createClassPath(dependentCompileRoots.toArray(URL[]::new)));
         if (boot == null) {
             boot = JavaPlatform.getDefault().getBootstrapLibraries();
         }
@@ -943,8 +955,8 @@ public class RefactoringUtils {
         if (oldMods.getFlags().contains(Modifier.ABSTRACT)) {
             return oldMods;
         }
-        Set<Modifier> flags = new HashSet<Modifier>(oldMods.getFlags());
-        flags.add(Modifier.ABSTRACT);
+        Set<Modifier> flags = EnumSet.of(Modifier.ABSTRACT);
+        flags.addAll(oldMods.getFlags());
         flags.remove(Modifier.FINAL);
         return make.Modifiers(flags, oldMods.getAnnotations());
     }
@@ -1079,20 +1091,23 @@ public class RefactoringUtils {
         return result;
     }
 
-    @SuppressWarnings("CollectionContainsUrl")
-    public static ClassPath merge(final ClassPath... cps) {
-        final Set<URL> roots = new LinkedHashSet<URL>(cps.length);
-        for (final ClassPath cp : cps) {
+    public static ClassPath merge(ClassPath... cps) {
+        return merge(Arrays.asList(cps));
+    }
+
+    public static ClassPath merge(List<ClassPath> cps) {
+        Set<URL> roots = new LinkedHashSet<>((int) Math.ceil(cps.size() / 0.75));
+        for (ClassPath cp : cps) {
             if (cp != null) {
-                for (final ClassPath.Entry entry : cp.entries()) {
-                    final URL root = entry.getURL();
+                for (ClassPath.Entry entry : cp.entries()) {
+                    URL root = entry.getURL();
                     if (!roots.contains(root)) {
                         roots.add(root);
                     }
                 }
             }
         }
-        return ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
+        return ClassPathSupport.createClassPath(roots.toArray(URL[]::new));
     }
 
     public static boolean isFromEditor(EditorCookie ec) {

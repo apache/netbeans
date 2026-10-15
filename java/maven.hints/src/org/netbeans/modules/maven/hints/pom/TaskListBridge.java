@@ -62,7 +62,7 @@ public class TaskListBridge extends FileTaskScanner {
                 ModelSource ms = Utilities.createModelSource(resource);
                 POMModel model = POMModelFactory.getDefault().getModel(ms);
                 model.setAutoSyncActive(false);
-                List<ErrorDescription> errs = StatusProvider.StatusProviderImpl.findHints(model, prj, -1, -1, -1);
+                List<ErrorDescription> errs = PomModelUtils.findHints(model, prj);
                 List<Task> tasks = new ArrayList<Task>();
 
                 for (ErrorDescription error : errs) {

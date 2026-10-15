@@ -25,7 +25,7 @@ import org.netbeans.modules.payara.tooling.CommonTest;
 import org.netbeans.modules.payara.tooling.admin.CommandHttpTest;
 import org.netbeans.modules.payara.tooling.admin.CommandRestTest;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import static org.testng.Assert.*;
 import org.testng.annotations.Test;
 
@@ -38,19 +38,19 @@ import org.testng.annotations.Test;
 public class ServerUtilTest extends CommonTest {
 
     /**
-     * Helper method to test <code>ServerUtils.getServerVersion</code>
+     * Helper method to test <code>ServerUtils.getPlatformVersion</code>
      * functionality.
      * <p/>
      * @param server Payara server instance to be tested.
      */
     public void doTestGetServerVersion(final PayaraServer server) {
-        PayaraVersion version = ServerUtils.getServerVersion(
+        PayaraPlatformVersionAPI version = ServerUtils.getPlatformVersion(
                 server.getServerHome());
         assertNotNull(version);
     }
 
     /**
-     * Test <code>ServerUtils.getServerVersion</code> functionality
+     * Test <code>ServerUtils.getPlatformVersion</code> functionality
      * on Payara.
      */
     @Test
@@ -59,7 +59,7 @@ public class ServerUtilTest extends CommonTest {
     }
 
     /**
-     * Test <code>ServerUtils.getServerVersion</code> functionality
+     * Test <code>ServerUtils.getPlatformVersion</code> functionality
      * on Payara.
      */
     @Test

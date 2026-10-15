@@ -17,21 +17,6 @@
  * under the License.
  */
 
-/**
- * @author Ana von Klopp
- */
-
-/*
- * TO DO FOR THIS CLASS:
- *
- * For PUT requests, the only option on the data panel should be to
- * upload a file.
- *
- * For POST requests, the user should be able to choose between
- * uploading a file or editing parameters.
- *
- */
-
 package org.netbeans.modules.web.monitor.client;
 
 import java.awt.Dialog;
@@ -60,6 +45,20 @@ import org.netbeans.modules.web.monitor.data.*;
 import org.openide.awt.Mnemonics;
 
 
+/*
+ * TO DO FOR THIS CLASS:
+ *
+ * For PUT requests, the only option on the data panel should be to
+ * upload a file.
+ *
+ * For POST requests, the user should be able to choose between
+ * uploading a file or editing parameters.
+ *
+ */
+
+/**
+ * @author Ana von Klopp
+ */
 class EditPanel extends javax.swing.JPanel implements
     ActionListener, ChangeListener {
 
@@ -108,10 +107,10 @@ class EditPanel extends javax.swing.JPanel implements
     //private JToggleButton browserCookieButton, savedCookieButton; 
     //private static boolean useBrowserCookie = true;
     
-    final static String METHOD = "method"; //NOI18N
-    final static String GET = "GET";       //NOI18N
-    final static String POST = "POST";     //NOI18N
-    final static String PUT = "PUT";       //NOI18N
+    static final String METHOD = "method"; //NOI18N
+    static final String GET = "GET";       //NOI18N
+    static final String POST = "POST";     //NOI18N
+    static final String PUT = "PUT";       //NOI18N
 
     private static EditPanel instance = null; 
 
@@ -119,7 +118,7 @@ class EditPanel extends javax.swing.JPanel implements
 	MonitorData md = null;	    
         // We retrieve the data from the file system, not from the 
         // cache
-        md = Controller.getInstance().getMonitorData((TransactionNode)node, 
+        md = Controller.getInstance().getMonitorData(node, 
                                                      false,  // from file
                                                      false); // don't cache
         if (md == null) {

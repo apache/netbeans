@@ -35,6 +35,7 @@ import org.openide.windows.OutputWriter;
  * @deprecated use {@link org.netbeans.api.extexecution.base.input.InputProcessors}
  *             and {@link org.netbeans.api.extexecution.print.InputProcessors}
  */
+@Deprecated
 public final class InputProcessors {
 
     private InputProcessors() {
@@ -150,7 +151,7 @@ public final class InputProcessors {
 
     /**
      * Returns the processor that strips any
-     * <a href="http://en.wikipedia.org/wiki/ANSI_escape_code">ANSI escape sequences</a>
+     * <a href="https://en.wikipedia.org/wiki/ANSI_escape_code">ANSI escape sequences</a>
      * and passes the result to the delegate.
      * <p>
      * Reset and close methods on the returned processor invokes

@@ -59,6 +59,17 @@ public class TestChecker implements PrerequisitesChecker {
                     config.setProperty("test", test + '#' + method);
                 }
         }
+        if (ActionProviderImpl.COMMAND_INTEGRATION_TEST_SINGLE.equals(action) ||
+            ActionProviderImpl.COMMAND_DEBUG_INTEGRATION_TEST_SINGLE.equals(action) ||
+            "profile-tests".equals(action)) //NOI18N - profile-tests is not really nice but well. 
+        {
+                String test = config.getProperties().get("it.test"); //NOI18N
+                String method = config.getProperties().get(DefaultReplaceTokenProvider.METHOD_NAME);
+                if (test != null && method != null) {
+                    config.setProperty(DefaultReplaceTokenProvider.METHOD_NAME, null);
+                    config.setProperty("it.test", test + '#' + method); //NOI18N
+                }
+        }
         if (MavenSettings.getDefault().isSkipTests()) {
             if (!String.valueOf(config.getGoals()).contains("test")) { // incl. integration-test
                 if (config.getProperties().get(PROP_SKIP_TEST) == null) {
@@ -67,9 +78,17 @@ public class TestChecker implements PrerequisitesChecker {
             }
         }
         if (ActionProvider.COMMAND_TEST_SINGLE.equals(action) ||
+            ActionProviderImpl.COMMAND_INTEGRATION_TEST_SINGLE.equals(action) ||
             ActionProvider.COMMAND_DEBUG_TEST_SINGLE.equals(action) ||
+            ActionProviderImpl.COMMAND_DEBUG_INTEGRATION_TEST_SINGLE.equals(action) ||
             ActionProvider.COMMAND_PROFILE_TEST_SINGLE.equals(action)) {
-            String test = config.getProperties().get("test");
+            String test;
+            if (ActionProviderImpl.COMMAND_INTEGRATION_TEST_SINGLE.equals(action) ||
+                ActionProviderImpl.COMMAND_DEBUG_INTEGRATION_TEST_SINGLE.equals(action)) {
+                test = config.getProperties().get("it.test"); //NOI18N
+            } else {
+                test = config.getProperties().get("test"); //NOI18N
+            }
             if (test != null) {
                 //#213783  when running tests validate that the test file exists
                 FileObject origFile = config.getSelectedFileObject();

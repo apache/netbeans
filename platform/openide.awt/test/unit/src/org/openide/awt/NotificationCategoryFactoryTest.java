@@ -26,12 +26,6 @@ import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 import java.util.Enumeration;
 import java.util.List;
-import junit.framework.Assert;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.fail;
 import org.netbeans.junit.Manager;
 import org.netbeans.junit.NbTestCase;
 import org.openide.awt.NotificationDisplayer.Category;
@@ -72,7 +66,7 @@ public class NotificationCategoryFactoryTest extends NbTestCase {
 
     public void testGetCategory() {
         NotificationCategoryFactory factory = NotificationCategoryFactory.getInstance();
-
+        
         List<? extends Category> categories = factory.getCategories();
         categories.removeAll(Category.getDefaultCategories());
         assertEquals(2, categories.size());
@@ -121,17 +115,17 @@ public class NotificationCategoryFactoryTest extends NbTestCase {
 
     public static class IDEInitializer extends ProxyLookup {
 
-        public static IDEInitializer DEFAULT_LOOKUP = null;
+        private static IDEInitializer DEFAULT_LOOKUP = null;
         private static FileSystem lfs;
 
         static {
             IDEInitializer.class.getClassLoader().setDefaultAssertionStatus(true);
             System.setProperty("org.openide.util.Lookup", IDEInitializer.class.getName());
-            Assert.assertEquals(IDEInitializer.class, Lookup.getDefault().getClass());
+            assertEquals(IDEInitializer.class, Lookup.getDefault().getClass());
         }
 
         public IDEInitializer() {
-            Assert.assertNull(DEFAULT_LOOKUP);
+            assertNull(DEFAULT_LOOKUP);
             DEFAULT_LOOKUP = this;
             URL.setURLStreamHandlerFactory(new MyURLHandlerFactory());
         }
@@ -158,8 +152,8 @@ public class NotificationCategoryFactoryTest extends NbTestCase {
             lfs = FileUtil.createMemoryFileSystem();
             try {
                 systemFS.setXmlUrls(urls);
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            } catch (PropertyVetoException | IOException ex) {
+                throw new RuntimeException(ex);
             }
             MyFileSystem myFileSystem = new MyFileSystem(
                     new FileSystem[]{lfs, systemFS});
@@ -173,17 +167,17 @@ public class NotificationCategoryFactoryTest extends NbTestCase {
                 Lookups.fixed(lookupContent),
                 Lookups.metaInfServices(classLoader),
                 Lookups.singleton(classLoader),});
-            Assert.assertTrue(myFileSystem.isDefault());
+            assertTrue(myFileSystem.isDefault());
         }
 
         public static void cleanWorkDir() {
             try {
-                Enumeration en = lfs.getRoot().getChildren(false);
+                Enumeration<? extends FileObject> en = lfs.getRoot().getChildren(false);
                 while (en.hasMoreElements()) {
-                    ((FileObject) en.nextElement()).delete();
+                    en.nextElement().delete();
                 }
             } catch (IOException ex) {
-                ex.printStackTrace();
+                throw new RuntimeException(ex);
             }
         }
 
@@ -194,13 +188,14 @@ public class NotificationCategoryFactoryTest extends NbTestCase {
                 try {
                     setSystemName("TestFS");
                 } catch (PropertyVetoException ex) {
-                    ex.printStackTrace();
+                    throw new RuntimeException(ex);
                 }
             }
         }
 
         private static class MyURLHandlerFactory implements URLStreamHandlerFactory {
 
+            @Override
             public URLStreamHandler createURLStreamHandler(String protocol) {
                 if (protocol.equals("nbfs")) {
                     return FileUtil.nbfsURLStreamHandler();

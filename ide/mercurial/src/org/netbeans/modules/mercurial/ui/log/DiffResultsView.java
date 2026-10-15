@@ -237,7 +237,7 @@ class DiffResultsView implements AncestorListener, PropertyChangeListener, DiffS
     public Collection<Setup> getSetups() {
         Node [] nodes = TopComponent.getRegistry().getActivatedNodes();
         if (nodes.length == 0) {
-            return parent.getSetups(results.toArray(new RepositoryRevision[results.size()]), new RepositoryRevision.Event[0]);
+            return parent.getSetups(results.toArray(new RepositoryRevision[0]), new RepositoryRevision.Event[0]);
         }
         
         Set<RepositoryRevision.Event> events = new HashSet<RepositoryRevision.Event>();
@@ -250,7 +250,7 @@ class DiffResultsView implements AncestorListener, PropertyChangeListener, DiffS
                 revisions.add(node.getContainer());
             }
         }
-        return parent.getSetups(revisions.toArray(new RepositoryRevision[revisions.size()]), events.toArray(new RepositoryRevision.Event[events.size()]));
+        return parent.getSetups(revisions.toArray(new RepositoryRevision[0]), events.toArray(new RepositoryRevision.Event[0]));
     }
 
     @Override

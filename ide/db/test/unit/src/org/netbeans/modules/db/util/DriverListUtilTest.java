@@ -26,7 +26,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import static junit.framework.Assert.assertEquals;
 import junit.framework.TestCase;
 import org.netbeans.api.db.explorer.JDBCDriver;
 import org.openide.util.NbBundle;
@@ -45,6 +44,7 @@ public class DriverListUtilTest extends TestCase {
     private static final String INSTANCE = "instancename";
     private static final String SID = "mysid";
     private static final String DSN = "mydsn";
+    private static final String FILE = "C:\\Users\\John\\foobar.db";
     private static final String TNSNAME = "mytns";
     
     private static final HashMap<String, String> ALLPROPS = new HashMap<>();
@@ -58,6 +58,7 @@ public class DriverListUtilTest extends TestCase {
         ALLPROPS.put(JdbcUrl.TOKEN_SERVERNAME, SERVERNAME);
         ALLPROPS.put(JdbcUrl.TOKEN_ADDITIONAL, ADDITIONAL);
         ALLPROPS.put(JdbcUrl.TOKEN_DSN, DSN);
+        ALLPROPS.put(JdbcUrl.TOKEN_FILE, FILE);
         ALLPROPS.put(JdbcUrl.TOKEN_SERVICENAME, SERVICENAME);
         ALLPROPS.put(JdbcUrl.TOKEN_SID, SID);
         ALLPROPS.put(JdbcUrl.TOKEN_TNSNAME, TNSNAME);
@@ -227,6 +228,146 @@ public class DriverListUtilTest extends TestCase {
         propValues.remove(JdbcUrl.TOKEN_HOST);
         testUrlString(url, propValues, "jdbc:mariadb:///" + DB);
     }
+
+    public void testAmazonAthenaStandard() throws Exception {
+        ArrayList<String> supportedProps = new ArrayList<>();
+        supportedProps.add(JdbcUrl.TOKEN_ADDITIONAL);
+        ArrayList<String> requiredProps = new ArrayList<String>();
+
+        JdbcUrl url = checkUrl(getDriverName("DRIVERNAME_Athena"), getType("TYPE_Standard"), "com.simba.athena.jdbc.Driver",
+                "jdbc:awsathena://[<ADDITIONAL>]",
+                supportedProps, requiredProps);
+
+        HashMap<String, String> propValues = buildPropValues(supportedProps);
+
+        testUrlString(url, propValues, "jdbc:awsathena://" + ADDITIONAL);
+
+        propValues.remove(JdbcUrl.TOKEN_ADDITIONAL);
+        testUrlString(url, propValues, "jdbc:awsathena://");
+    }
+
+    public void testAmazonAthenaEndpoint() throws Exception {
+        ArrayList<String> supportedProps = new ArrayList<>();
+        supportedProps.add(JdbcUrl.TOKEN_HOST);
+        supportedProps.add(JdbcUrl.TOKEN_PORT);
+        supportedProps.add(JdbcUrl.TOKEN_ADDITIONAL);
+        ArrayList<String> requiredProps = new ArrayList<String>();
+        requiredProps.add(JdbcUrl.TOKEN_HOST);
+
+        JdbcUrl url = checkUrl(getDriverName("DRIVERNAME_Athena"), getType("TYPE_Endpoint"), "com.simba.athena.jdbc.Driver",
+                "jdbc:awsathena://<HOST>[:<PORT>][;<ADDITIONAL>]",
+                supportedProps, requiredProps);
+
+        HashMap<String, String> propValues = buildPropValues(supportedProps);
+
+        testUrlString(url, propValues, "jdbc:awsathena://" + HOST + ":" + PORT + ";" + ADDITIONAL);
+
+        propValues.remove(JdbcUrl.TOKEN_ADDITIONAL);
+        testUrlString(url, propValues, "jdbc:awsathena://" + HOST + ":" + PORT);
+
+        propValues.remove(JdbcUrl.TOKEN_PORT);
+        testUrlString(url, propValues, "jdbc:awsathena://" + HOST);
+    }
+
+    public void testAmazonRedshiftUserName() throws Exception {
+        ArrayList<String> requiredProps = new ArrayList<String>();
+        JdbcUrl url = checkUrl(getDriverName("DRIVERNAME_Redshift"), getType("TYPE_UserName"), "com.amazon.redshift.jdbc.Driver",
+                "jdbc:redshift://[<HOST>[:<PORT>]][/<DB>][;<ADDITIONAL>]",
+                STD_SUPPORTED_PROPS, requiredProps);
+
+        HashMap<String, String> propValues = buildPropValues(STD_SUPPORTED_PROPS);
+
+        testUrlString(url, propValues, "jdbc:redshift://" + HOST + ":" + PORT + "/" + DB + ";" + ADDITIONAL);
+
+        propValues.remove(JdbcUrl.TOKEN_ADDITIONAL);
+        testUrlString(url, propValues, "jdbc:redshift://" + HOST + ":" + PORT + "/" + DB);
+
+        propValues.remove(JdbcUrl.TOKEN_PORT);
+        testUrlString(url, propValues, "jdbc:redshift://" + HOST + "/" + DB);
+
+        propValues.remove(JdbcUrl.TOKEN_HOST);
+        testUrlString(url, propValues, "jdbc:redshift:///" + DB);
+    }
+
+    public void testAmazonRedshiftIAM() throws Exception {
+        ArrayList<String> requiredProps = new ArrayList<String>();
+        JdbcUrl url = checkUrl(getDriverName("DRIVERNAME_Redshift"), getType("TYPE_IAM"), "com.amazon.redshift.jdbc.Driver",
+                "jdbc:redshift:iam://[<HOST>[:<PORT>]][/<DB>][;<ADDITIONAL>]",
+                STD_SUPPORTED_PROPS, requiredProps);
+
+        HashMap<String, String> propValues = buildPropValues(STD_SUPPORTED_PROPS);
+
+        testUrlString(url, propValues, "jdbc:redshift:iam://" + HOST + ":" + PORT + "/" + DB + ";" + ADDITIONAL);
+
+        propValues.remove(JdbcUrl.TOKEN_ADDITIONAL);
+        testUrlString(url, propValues, "jdbc:redshift:iam://" + HOST + ":" + PORT + "/" + DB);
+
+        propValues.remove(JdbcUrl.TOKEN_PORT);
+        testUrlString(url, propValues, "jdbc:redshift:iam://" + HOST + "/" + DB);
+
+        propValues.remove(JdbcUrl.TOKEN_HOST);
+        testUrlString(url, propValues, "jdbc:redshift:iam:///" + DB);
+    }
+
+    public void testSQLite() throws Exception {
+        ArrayList<String> supportedProps = new ArrayList<>();
+        supportedProps.add(JdbcUrl.TOKEN_FILE);
+        ArrayList<String> requiredProps = new ArrayList<>();
+        requiredProps.add(JdbcUrl.TOKEN_FILE);
+        JdbcUrl url = checkUrl("SQLite", null, "org.sqlite.JDBC",
+                "jdbc:sqlite:<FILE>",
+                supportedProps, requiredProps);
+        HashMap<String, String> propValues = buildPropValues(supportedProps);
+        testUrlString(url, propValues, "jdbc:sqlite:" + FILE);
+    }
+
+    public void testDuckDB() throws Exception {
+        ArrayList<String> supportedProps = new ArrayList<>();
+        supportedProps.add(JdbcUrl.TOKEN_FILE);
+        ArrayList<String> requiredProps = new ArrayList<>();
+        JdbcUrl url = checkUrl("DuckDB", null, "org.duckdb.DuckDBDriver",
+                "jdbc:duckdb:[<FILE>]",
+                supportedProps, requiredProps);
+        HashMap<String, String> propValues = buildPropValues(supportedProps);
+        testUrlString(url, propValues, "jdbc:duckdb:" + FILE);
+        propValues.remove(JdbcUrl.TOKEN_FILE);
+        testUrlString(url, propValues, "jdbc:duckdb:");
+    }
+
+    public void testSnowflake() throws Exception {
+        ArrayList<String> supportedProps = new ArrayList<>();
+        supportedProps.add(JdbcUrl.TOKEN_HOST);
+        supportedProps.add(JdbcUrl.TOKEN_ADDITIONAL);
+        ArrayList<String> requiredProps = new ArrayList<>();
+        requiredProps.add(JdbcUrl.TOKEN_HOST);
+        JdbcUrl url = checkUrl("Snowflake", null, "net.snowflake.client.jdbc.SnowflakeDriver",
+                "jdbc:snowflake://<HOST>/[?<ADDITIONAL>]",
+                supportedProps, requiredProps);
+        HashMap<String, String> propValues = buildPropValues(supportedProps);
+        testUrlString(url, propValues, "jdbc:snowflake://" + HOST + "/?" + ADDITIONAL);
+        propValues = buildPropValues(requiredProps);
+        testUrlString(url, propValues, "jdbc:snowflake://" + HOST + "/");
+    }
+
+    public void testBigQuery() throws Exception {
+        ArrayList<String> supportedProps = new ArrayList<>();
+        supportedProps.add(JdbcUrl.TOKEN_HOST);
+        supportedProps.add(JdbcUrl.TOKEN_PORT);
+        supportedProps.add(JdbcUrl.TOKEN_INSTANCE);
+        supportedProps.add(JdbcUrl.TOKEN_ADDITIONAL);
+        ArrayList<String> requiredProps = new ArrayList<>();
+        requiredProps.add(JdbcUrl.TOKEN_HOST);
+        requiredProps.add(JdbcUrl.TOKEN_PORT);
+        requiredProps.add(JdbcUrl.TOKEN_INSTANCE);
+        requiredProps.add(JdbcUrl.TOKEN_ADDITIONAL);
+        JdbcUrl url = checkUrl("Google BigQuery", null, "com.simba.googlebigquery.jdbc.Driver",
+                "jdbc:bigquery://https://<HOST>/bigquery/v2:<PORT>;ProjectId=<INSTANCE>;<ADDITIONAL>",
+                supportedProps, requiredProps);
+        HashMap<String, String> propValues = buildPropValues(supportedProps);
+        testUrlString(url, propValues, "jdbc:bigquery://https://" + HOST + "/bigquery/v2:" + PORT + ";ProjectId=" + INSTANCE + ";" + ADDITIONAL);
+        propValues = buildPropValues(requiredProps);
+        testUrlString(url, propValues, "jdbc:bigquery://https://" + HOST + "/bigquery/v2:" + PORT + ";ProjectId=" + INSTANCE + ";" + ADDITIONAL);
+    }
     
     enum DB2Types { DB2, IDS, CLOUDSCAPE };
     
@@ -350,7 +491,7 @@ public class DriverListUtilTest extends TestCase {
     
     public void testMSSQL2005() throws Exception {
         /*
-                add(getMessage("DRIVERNAME_MSSQL2005"),
+                add(getMessage("DRIVERNAME_MSSQL"),
         "com.microsoft.sqlserver.jdbc.SQLServerDriver",
         "jdbc:sqlserver://[<HOST>[\\<INSTANCE>][:<PORT>]][;databaseName=<DB>][;<ADDITIONAL>]", true);
         */
@@ -359,7 +500,7 @@ public class DriverListUtilTest extends TestCase {
         supportedProps.add(JdbcUrl.TOKEN_INSTANCE);
         
         ArrayList<String> requiredProps = new ArrayList<String>();
-        JdbcUrl url = checkUrl(getDriverName("DRIVERNAME_MSSQL2005"), null, 
+        JdbcUrl url = checkUrl(getDriverName("DRIVERNAME_MSSQL"), null,
                 "com.microsoft.sqlserver.jdbc.SQLServerDriver", 
                 "jdbc:sqlserver://[<HOST>[\\<INSTANCE>][:<PORT>]][;databaseName=<DB>][;<ADDITIONAL>]", 
                 supportedProps, requiredProps);
@@ -597,6 +738,7 @@ public class DriverListUtilTest extends TestCase {
         
         JdbcUrl other = new JdbcUrl(url.getName(), url.getName(), url.getClassName(),
                 url.getType(), url.getUrlTemplate(), url.isParseUrl());
+        other.setUsernamePasswordDisplayed(url.isUsernamePasswordDisplayed());
         
         assertEquals(url, other);
 

@@ -22,6 +22,7 @@ import com.sun.jdi.ObjectReference;
 import java.beans.PropertyChangeEvent;
 import java.util.Collections;
 import java.util.Set;
+import java.util.WeakHashMap;
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.api.debugger.DebuggerManager;
@@ -31,7 +32,6 @@ import org.netbeans.api.debugger.Session;
 import org.netbeans.api.debugger.Watch;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.debugger.jpda.visual.JavaComponentInfo;
 import org.netbeans.modules.debugger.jpda.visual.RemoteAWTScreenshot;
 import org.netbeans.modules.debugger.jpda.visual.RemoteFXScreenshot;
@@ -49,7 +49,6 @@ import org.openide.NotifyDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 
 /**
  * Grabs screenshot of remote application.
@@ -137,7 +136,7 @@ public class TakeScreenshotActionProvider extends ActionsProviderSupport {
     }
 
     private ProgressHandle createProgress() {
-        ProgressHandle ph = ProgressHandleFactory.createHandle(NbBundle.getMessage(TakeScreenshotActionProvider.class, "MSG_TakingApplicationScreenshot"));
+        ProgressHandle ph = ProgressHandle.createHandle(NbBundle.getMessage(TakeScreenshotActionProvider.class, "MSG_TakingApplicationScreenshot"));
         ph.setInitialDelay(500);
         ph.start();
         return ph;
@@ -166,7 +165,7 @@ public class TakeScreenshotActionProvider extends ActionsProviderSupport {
     
     private class BPListener implements DebuggerManagerListener {
         
-        private final Set<RemoteScreenshot> screenshots = new WeakSet<RemoteScreenshot>();
+        private final Set<RemoteScreenshot> screenshots = Collections.newSetFromMap(new WeakHashMap<>());
         
         void addScreenshot(RemoteScreenshot screenshot) {
             synchronized (screenshots) {

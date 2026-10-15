@@ -56,19 +56,29 @@ public class HeapWalker {
     private TopComponent heapWalkerUI;
     private Lookup.Provider heapDumpProject;
     private String heapWalkerName;
+    private final int segment;
 
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 
     // --- Constructors ----------------------------------------------------------
     public HeapWalker(Heap heap) {
+        this(heap, 0);
+    }
+    
+    private HeapWalker(Heap heap, int segment) {
+        this.segment = segment;
         heapWalkerName = Bundle.ClassesListController_HeapWalkerDefaultName();
-        createMainFragment(heap);
+        createMainFragment(heap, segment);
         
 //        computeRetainedSizes();
     }
 
     public HeapWalker(File heapFile) throws FileNotFoundException, IOException {
-        this(createHeap(heapFile));
+        this(heapFile, 0);
+    }
+
+    HeapWalker(File heapFile, int segment) throws FileNotFoundException, IOException {
+        this(createHeap(heapFile, segment), segment);
 
         heapDumpFile = heapFile;
         heapDumpProject = computeHeapDumpProject(heapDumpFile);
@@ -84,6 +94,10 @@ public class HeapWalker {
 
     public File getHeapDumpFile() {
         return heapDumpFile;
+    }
+
+    public int getHeapDumpSegment() {
+        return segment;
     }
 
     public Lookup.Provider getHeapDumpProject() {
@@ -104,7 +118,7 @@ public class HeapWalker {
         //    SwingUtilities.invokeLater(new Runnable() {
         //      public void run() {
         //        getTopComponent().open();
-        ////        getTopComponent().requestActive(); // For some reason steals focus from Dump Heap button in ProfilerControlPanel2 and causes http://www.netbeans.org/issues/show_bug.cgi?id=92425
+        // //        getTopComponent().requestActive(); // For some reason steals focus from Dump Heap button in ProfilerControlPanel2 and causes http://www.netbeans.org/issues/show_bug.cgi?id=92425
         //        getTopComponent().requestVisible(); // Workaround for the above problem
         //      }
         //    });
@@ -119,8 +133,8 @@ public class HeapWalker {
         return heapWalkerUI;
     }
 
-    void createMainFragment(Heap heap) {
-        mainHeapWalker = new HeapFragmentWalker(heap, this, true);
+    void createMainFragment(Heap heap, int segment) {
+        mainHeapWalker = new HeapFragmentWalker(heap, segment, this, true);
     }
 
     void createReachableFragment(Instance instance) {
@@ -170,7 +184,7 @@ public class HeapWalker {
         return ProfilerStorage.getProjectFromFolder(heapDumpDirObj);
     }
 
-    private static Heap createHeap(File heapFile) throws FileNotFoundException, IOException {
+    private static Heap createHeap(File heapFile, int segment) throws FileNotFoundException, IOException {
         ProgressHandle pHandle = null;
 
         try {
@@ -179,7 +193,7 @@ public class HeapWalker {
             pHandle.start(HeapProgress.PROGRESS_MAX*2);
             
             setProgress(pHandle,0);
-            Heap heap = HeapFactory.createHeap(heapFile);
+            Heap heap = HeapFactory.createHeap(heapFile, segment);
             setProgress(pHandle,HeapProgress.PROGRESS_MAX);
             heap.getSummary(); // Precompute HeapSummary within progress
 

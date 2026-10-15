@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+@SuppressWarnings("deprecation") // test file
 public enum test91098 {
     A(1);
     private test91098(@Deprecated int x) {}

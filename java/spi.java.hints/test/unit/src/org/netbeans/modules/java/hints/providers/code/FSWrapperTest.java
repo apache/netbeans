@@ -57,7 +57,7 @@ public class FSWrapperTest {
 
     @Test
     public void testWrappedClasses() throws Exception {
-        Class[] classes = new Class[] {TestClass.class};
+        Class<?>[] classes = new Class<?>[] {TestClass.class};
         Iterable<? extends ClassWrapper> wrapped = FSWrapper.listClasses();
 
         OUTER: for (Class<?> c : classes) {

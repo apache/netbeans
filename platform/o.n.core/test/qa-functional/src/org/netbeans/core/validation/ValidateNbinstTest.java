@@ -192,6 +192,10 @@ public class ValidateNbinstTest extends NbTestCase {
             if (schema3 != null) {
                 schemas.add(schema3);
             }
+            if (schema2 == null && schema3 == null) {
+                // no library implementation, perhaps testing on just platform (not IDE) cluster.
+                return;
+            }
 next:       for (FileObject lib : libs.getChildren()) {
                 SAXException lastException = null;
                 for (FileObject schema : schemas) {

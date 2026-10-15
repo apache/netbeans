@@ -64,7 +64,6 @@ trait Example
             echo 'Caught exception: ' . $e->getMessage() . "\n";
         }
     }
-
 }
 
 ?>

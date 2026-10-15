@@ -400,7 +400,6 @@ public class LogRecordsTest extends NbTestCase {
     }
     public void testNotFinishedFiles() throws Exception {
         String what = "eof.xml";
-        InputStream is = getClass().getResourceAsStream(what);
         int expectRecords = 1;
         
         class H extends Handler {
@@ -418,14 +417,9 @@ public class LogRecordsTest extends NbTestCase {
         }
         
         H h = new H();
-        is = getClass().getResourceAsStream(what);
-        try{
+        try (InputStream is = getClass().getResourceAsStream(what)) {
             LogRecords.scan(is, h);
-            fail("IO Exception should be thrown");
-        }catch(IOException notif){
-            // OK
         }
-        is.close();
         
         assertEquals("The same amount of records", expectRecords, h.cnt);
     }

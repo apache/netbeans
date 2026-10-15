@@ -69,7 +69,7 @@ import org.openide.util.NbBundle.Messages;
  */
 public final class UseDatabaseGenerator {
 
-    private final static Logger LOGGER = Logger.getLogger(UseDatabaseGenerator.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(UseDatabaseGenerator.class.getName());
 
     public UseDatabaseGenerator() {
     }
@@ -218,7 +218,7 @@ public final class UseDatabaseGenerator {
                         Collections.singleton(Modifier.PRIVATE)
                         );
                 MethodTree methodTree = MethodModelSupport.createMethodTree(workingCopy, methodModel);
-                methodTree = (MethodTree) GeneratorUtilities.get(workingCopy).importFQNs(methodTree);
+                methodTree = GeneratorUtilities.get(workingCopy).importFQNs(methodTree);
                 ClassTree classTree = workingCopy.getTrees().getTree(typeElement);
                 ClassTree modifiedClassTree = workingCopy.getTreeMaker().addClassMember(classTree, methodTree);
                 workingCopy.rewrite(classTree, modifiedClassTree);

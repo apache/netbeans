@@ -275,7 +275,6 @@ public class JFXIconsPanel extends javax.swing.JPanel {
 
     private void wsIconButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wsIconButtonActionPerformed
         JFileChooser chooser = new JFileChooser();
-        chooser.setCurrentDirectory(null);
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         chooser.setMultiSelectionEnabled(false);
         chooser.setFileFilter(new IconFileFilter(true));
@@ -300,7 +299,6 @@ public class JFXIconsPanel extends javax.swing.JPanel {
 
     private void splashButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_splashButtonActionPerformed
         JFileChooser chooser = new JFileChooser();
-        chooser.setCurrentDirectory(null);
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         chooser.setMultiSelectionEnabled(false);
         chooser.setFileFilter(new IconFileFilter(false));
@@ -325,7 +323,6 @@ public class JFXIconsPanel extends javax.swing.JPanel {
 
     private void nativeIconButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nativeIconButtonActionPerformed
         JFileChooser chooser = new JFileChooser();
-        chooser.setCurrentDirectory(null);
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         chooser.setMultiSelectionEnabled(false);
         chooser.setFileFilter(new IconFileFilter(false));

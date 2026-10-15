@@ -61,7 +61,7 @@ public final class SearchDisplayer {
                                              "TITLE_SEARCH_RESULTS");   //NOI18N
         InputOutput searchIO = IOProvider.getDefault().getIO(tabName, false);
         ow = searchIO.getOut();
-        owRef = new WeakReference<OutputWriter>(ow);
+        owRef = new WeakReference<>(ow);
         
         searchIO.select();
     }
@@ -103,21 +103,19 @@ public final class SearchDisplayer {
 
         /* Print the output lines: */
         try {
-            EventQueue.invokeAndWait(new Runnable() {
-                public void run() {
-                    try {
-                        for (int i = 0; i < outputLines.length; i++) {
-                            OutputListener listener = listeners[i];
-                            if (listener != null) {
-                                ow.println(outputLines[i], listener);
-                            } else {
-                                ow.println(outputLines[i]);
-                            }
+            EventQueue.invokeAndWait(() -> {
+                try {
+                    for (int i = 0; i < outputLines.length; i++) {
+                        OutputListener listener = listeners[i];
+                        if (listener != null) {
+                            ow.println(outputLines[i], listener);
+                        } else {
+                            ow.println(outputLines[i]);
                         }
-                    } catch (Exception ex) {
-                        ErrorManager.getDefault()
-                        .notify(ErrorManager.EXCEPTION, ex);
                     }
+                } catch (Exception ex) {
+                    ErrorManager.getDefault()
+                            .notify(ErrorManager.EXCEPTION, ex);
                 }
             });
         } catch (Exception ex) {

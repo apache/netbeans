@@ -22,4 +22,18 @@
 <project basedir="." default="build" name="ide/mercurial">
     <description>Builds, tests, and runs the project org.netbeans.modules.mercurial</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
+    
+    <target name="do-qa-functional-test-build" depends="projectized.do-qa-functional-test-build" unless="${disable.qa-functional.tests}">
+        <mkdir dir="${build.test.qa-functional.dir}/data/files" />
+        <zip destfile="${build.test.qa-functional.dir}/data/files/pp.zip">
+            <zipfileset dir="${build.test.qa-functional.dir}/data/files" includes="pp.TIFF"/>
+        </zip>
+        <zip destfile="${build.test.qa-functional.dir}/data/JavaApp_repo.zip">
+            <mappedresources>
+                <fileset dir="${build.test.qa-functional.dir}/data/JavaApp_repo" includes="**" />
+                <globmapper from="*" to=".*"/>
+            </mappedresources>
+        </zip>
+        
+    </target>
 </project>

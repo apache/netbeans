@@ -41,6 +41,34 @@ public class DeprecatedFunctionsSemanticAnalysisTest extends DeprecatedSemanticA
         checkSemantic("testfiles/semantic/deprecatedFunctions/deprecatedFunction.php");
     }
 
+    public void testDeprecatedAttributeInGlobal() throws Exception {
+        checkSemantic("testfiles/semantic/deprecatedFunctions/deprecatedAttributeInGlobal.php");
+    }
+
+    public void testDeprecatedAttributeInNamespace01() throws Exception {
+        checkSemantic("testfiles/semantic/deprecatedFunctions/deprecatedAttributeInNamespace01.php");
+    }
+
+    public void testDeprecatedAttributeInNamespace02() throws Exception {
+        checkSemantic("testfiles/semantic/deprecatedFunctions/deprecatedAttributeInNamespace02.php");
+    }
+
+    public void testDeprecatedAttributeInNamespace03() throws Exception {
+        checkSemantic("testfiles/semantic/deprecatedFunctions/deprecatedAttributeInNamespace03.php");
+    }
+
+    public void testDeprecatedAttributeInNamespaceWithUse01() throws Exception {
+        checkSemantic("testfiles/semantic/deprecatedFunctions/deprecatedAttributeInNamespaceWithUse01.php");
+    }
+
+    public void testDeprecatedAttributeInNamespaceWithUse02() throws Exception {
+        checkSemantic("testfiles/semantic/deprecatedFunctions/deprecatedAttributeInNamespaceWithUse02.php");
+    }
+
+    public void testDeprecatedAttributeInNamespaceWithUse03() throws Exception {
+        checkSemantic("testfiles/semantic/deprecatedFunctions/deprecatedAttributeInNamespaceWithUse03.php");
+    }
+
     @Override
     protected Map<String, ClassPath> createClassPathsForTest() {
         return Collections.singletonMap(

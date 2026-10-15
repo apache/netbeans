@@ -47,10 +47,7 @@ import org.netbeans.modules.glassfish.common.GlassFishLogger;
  */
 public class AdminKeyFile {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Parse content of <code>admin-keyfile</code>.
      * <p/>
@@ -322,7 +319,7 @@ public class AdminKeyFile {
          * Get value of user <code>String</code> read
          * from <code>admin-keyfile</code>.
          * <p/>
-         * @rerurn Value of user <code>String</code>.
+         * @return Value of user <code>String</code>.
          */
         private String getUser() {
             return user.toString();
@@ -332,7 +329,7 @@ public class AdminKeyFile {
          * Get value of password hash <code>String</code> read
          * from <code>admin-keyfile</code>.
          * <p/>
-         * @rerurn Value of password hash <code>String</code>.
+         * @return Value of password hash <code>String</code>.
          */
         private String getPasswordHash() {
             return hash.toString();
@@ -342,7 +339,7 @@ public class AdminKeyFile {
          * Get value of tool <code>String</code> read
          * from <code>admin-keyfile</code>.
          * <p/>
-         * @rerurn Value of tool <code>String</code>.
+         * @return Value of tool <code>String</code>.
          */
         private String getTool() {
             return tool.toString();
@@ -350,10 +347,7 @@ public class AdminKeyFile {
 
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local GlassFish module logger. */
     private static final Logger LOGGER
             = GlassFishLogger.get(AdminKeyFile.class);
@@ -422,10 +416,7 @@ public class AdminKeyFile {
     /** Minimal password size. Keep this value at least 3. */
     private static final int MIN_PW_SIZE = 3;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Build <code>admin-keyfile</code> path for provided server instance.
      * <p/>
@@ -475,10 +466,7 @@ public class AdminKeyFile {
         }
         return pw.toString();
     }
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish <code>admin-keyfile</code> path. */
     private final String adminKeyFile;
 
@@ -497,10 +485,7 @@ public class AdminKeyFile {
      *  <code>String</code>. */
     private boolean reset;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of GlassFish <code>admin-keyfile</code>.
      * <p/>
@@ -517,10 +502,7 @@ public class AdminKeyFile {
         reset = false;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Read GlassFish <code>admin-keyfile</code> file and store it into
      * this instance if read successfully.

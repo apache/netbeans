@@ -897,7 +897,7 @@ public final class NavigatorController implements LookupListener, PropertyChange
 
         void setNodes(Node[] nodes) {
             if (nodes != null && nodes.length > 0) {
-                List<Lookup> l = new LinkedList();
+                List<Lookup> l = new LinkedList<>();
                 l.add(panelLookup);
                 for (Node n : nodes) {
                     if (!panelLookup.lookupResult(Object.class).allInstances().containsAll(
@@ -905,7 +905,7 @@ public final class NavigatorController implements LookupListener, PropertyChange
                         l.add(n.getLookup());
                     }
                 }
-                Lookup[] lookups = l.toArray(new Lookup[l.size()]);
+                Lookup[] lookups = l.toArray(new Lookup[0]);
                 setLookups(lookups);
             } else {
                 setLookups(panelLookup);

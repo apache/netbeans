@@ -304,10 +304,10 @@ public class EncodingHelper extends Object {
     /**
      * IANA to Java encoding mappings
      */
-    final static Map<String, String> encodingIANA2JavaMap = new TreeMap<String, String>();
-    final static Map<String, String> encodingIANADescriptionMap = new TreeMap<String, String>();
-    final static Map<String, String> encodingIANAAliasesMap = new TreeMap<String, String>();
-    final static Map<String, String> encodingJava2IANAMap = new TreeMap<String, String>();
+    static final Map<String, String> encodingIANA2JavaMap = new TreeMap<String, String>();
+    static final Map<String, String> encodingIANADescriptionMap = new TreeMap<String, String>();
+    static final Map<String, String> encodingIANAAliasesMap = new TreeMap<String, String>();
+    static final Map<String, String> encodingJava2IANAMap = new TreeMap<String, String>();
 
     /**
      * Static initialization

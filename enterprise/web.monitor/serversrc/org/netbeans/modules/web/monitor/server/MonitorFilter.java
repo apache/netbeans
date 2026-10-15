@@ -20,14 +20,11 @@
 package org.netbeans.modules.web.monitor.server;
 
 import java.io.IOException;
-import java.io.PrintStream;
-import java.io.PrintWriter;
 
 import java.net.MalformedURLException;
 
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.ResourceBundle;
 import java.util.Stack;
 import java.util.StringTokenizer;
@@ -38,7 +35,6 @@ import java.text.DateFormat;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -56,22 +52,22 @@ import org.netbeans.modules.web.monitor.data.*;
 public class MonitorFilter extends Logger implements Filter {
 
     // REPLAY strings - must be coordinated with client.Controller
-    public final static String REPLAY = "netbeans.replay"; //NOI18N
-    public final static String PORT = "netbeans.replay.port"; //NOI18N
-    public final static String REPLAYSTATUS = "netbeans.replay.status"; //NOI18N
-    public final static String REPLAYSESSION = "netbeans.replay.session"; //NOI18N
+    public static final String REPLAY = "netbeans.replay"; //NOI18N
+    public static final String PORT = "netbeans.replay.port"; //NOI18N
+    public static final String REPLAYSTATUS = "netbeans.replay.status"; //NOI18N
+    public static final String REPLAYSESSION = "netbeans.replay.session"; //NOI18N
 
     // The request attribute name under which we store a reference to
     // ourself. 
     private String attribute = null;
-    public final static String PREFIX = "netbeans.monitor"; //NOI18N
-    private final static String attNameRequest =
+    public static final String PREFIX = "netbeans.monitor"; //NOI18N
+    private static final String attNameRequest =
 	"netbeans.monitor.request"; //NOI18N
-    private final static String attNameResponse =
+    private static final String attNameResponse =
 	"netbeans.monitor.response"; //NOI18N
-    private final static String attNameFilter =
+    private static final String attNameFilter =
 	"netbeans.monitor.filter"; //NOI18N
-    private final static String attNameMonData =
+    private static final String attNameMonData =
 	"netbeans.monitor.monData"; //NOI18N
     //private final static String attNameExecTime =
     //"netbeans.monitor.execTime"; //NOI18N
@@ -86,7 +82,7 @@ public class MonitorFilter extends Logger implements Filter {
     // configured. 
     private FilterConfig filterConfig = null;
 
-    private final static String className = 
+    private static final String className = 
 	"org.netbeans.modules.web.monitor.server.Monitor"; //NOI18N
     
     private static ResourceBundle statusmsgs = 
@@ -113,7 +109,7 @@ public class MonitorFilter extends Logger implements Filter {
                 "/netbeans-tomcat-status-test"; //NOI18N
 
     // debugging 
-    private final static boolean debug = false;
+    private static final boolean debug = false;
 
     public MonitorFilter() { 
     } 
@@ -634,7 +630,7 @@ public class MonitorFilter extends Logger implements Filter {
 	if(debug) log ("handleDispatchBefore: start");//NOI18N
 
 	Object w  = req.getAttribute(attNameRequest); 
-	if(w == null || !(w instanceof MonitorRequestWrapper)) { 
+	if(!(w instanceof MonitorRequestWrapper)) {
 	    return; 
 	} 
 	// get the dispatch data 
@@ -668,7 +664,7 @@ public class MonitorFilter extends Logger implements Filter {
 	if(debug) log ("handleDispatchedAfter()");//NOI18N
 
 	Object w  = req.getAttribute(attNameRequest); 
-	if(w == null || !(w instanceof MonitorRequestWrapper)) { 
+	if(!(w instanceof MonitorRequestWrapper)) {
 	    return; 
 	} 
 
@@ -940,7 +936,7 @@ public class MonitorFilter extends Logger implements Filter {
 	if(debug) log(" found incoming cookies"); //NOI18N
 	CookieIn[] theCookies = new CookieIn[cks.length];
 	for (int i = 0; i < theCookies.length; i++) {
-	    theCookies[i] = new CookieIn(cks[i]);
+	    theCookies[i] = new CookieIn(cks[i].getName(), cks[i].getValue());
 	    if(debug) log("cookie: " + //NOI18N
 			  theCookies[i].toString());
 	}
@@ -972,7 +968,17 @@ public class MonitorFilter extends Logger implements Filter {
 	try {
 	    theCookies = new CookieOut[numCookies];
 	    for (int i = 0; i < theCookies.length; i++) {
-		theCookies[i] = new CookieOut((Cookie)e.nextElement()); 
+                Cookie c = (Cookie) e.nextElement();
+                theCookies[i] = new CookieOut(
+                        c.getName(),
+                        c.getValue(),
+                        c.getMaxAge(),
+                        c.getVersion(),
+                        c.getDomain(),
+                        c.getPath(),
+                        c.getComment(),
+                        c.getSecure()
+                );
 		if(debug) log("cookie: " + //NOI18N
 			      theCookies[i].toString());
 	    }

@@ -25,14 +25,15 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
-import javax.swing.SwingUtilities;
 import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.Session;
@@ -40,8 +41,10 @@ import org.netbeans.api.debugger.jpda.CallStackFrame;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.JPDAThread;
 import org.netbeans.api.debugger.jpda.JPDAThreadGroup;
+import org.netbeans.api.debugger.jpda.MethodBreakpoint;
 import org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl;
 import org.netbeans.modules.debugger.jpda.ui.SourcePath;
+import org.netbeans.modules.debugger.jpda.ui.breakpoints.MethodBreakpointPanel;
 import org.netbeans.modules.debugger.jpda.ui.debugging.JPDADVThread;
 import org.netbeans.modules.debugger.jpda.ui.debugging.JPDADVThreadGroup;
 import org.netbeans.spi.debugger.ContextProvider;
@@ -52,10 +55,14 @@ import org.netbeans.spi.viewmodel.Models;
 import org.netbeans.spi.viewmodel.NodeActionsProvider;
 import org.netbeans.spi.viewmodel.TreeModel;
 import org.netbeans.spi.viewmodel.UnknownTypeException;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.awt.Mnemonics;
+import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.actions.Presenter;
+import static org.netbeans.modules.debugger.jpda.ui.models.Bundle.*;
 
 
 /**
@@ -69,14 +76,15 @@ public class DebuggingActionsProvider implements NodeActionsProvider {
     private JPDADebugger debugger;
     private Session session;
     private RequestProcessor requestProcessor;
-    private Action POP_TO_HERE_ACTION;
-    private Action MAKE_CURRENT_ACTION;
-    private Action SUSPEND_ACTION;
-    private Action RESUME_ACTION;
-    private Action INTERRUPT_ACTION;
-    private Action COPY_TO_CLBD_ACTION;
-    private Action LANGUAGE_SELECTION;
-    private Action GO_TO_SOURCE_ACTION;
+    private final Action POP_TO_HERE_ACTION;
+    private final Action MAKE_CURRENT_ACTION;
+    private final Action SUSPEND_ACTION;
+    private final Action RESUME_ACTION;
+    private final Action INTERRUPT_ACTION;
+    private final Action COPY_TO_CLBD_ACTION;
+    private final Action LANGUAGE_SELECTION;
+    private final Action GO_TO_SOURCE_ACTION;
+    private final Action ADD_BREAKPOINT_ACTION;
 
 
     public DebuggingActionsProvider (ContextProvider lookupProvider) {
@@ -91,6 +99,7 @@ public class DebuggingActionsProvider implements NodeActionsProvider {
         POP_TO_HERE_ACTION = createPOP_TO_HERE_ACTION(requestProcessor);
         LANGUAGE_SELECTION = new LanguageSelection(session);
         GO_TO_SOURCE_ACTION = createGO_TO_SOURCE_ACTION(requestProcessor);
+        ADD_BREAKPOINT_ACTION = createBREAKPOINT(requestProcessor);
     }
     
 
@@ -197,6 +206,55 @@ public class DebuggingActionsProvider implements NodeActionsProvider {
         );
     }
 
+    @NbBundle.Messages({
+        "CTL_CallstackAction_Breakpoint_Label=Add &Breakpoint...",
+        "CTL_CallstackAction_Breakpoint_Title=Add a breakpoint",
+    })
+    static final Action createBREAKPOINT(final RequestProcessor async) {
+        return Models.createAction (CTL_CallstackAction_Breakpoint_Label(),
+            new Models.ActionPerformer () {
+                @Override
+                public boolean isEnabled (Object node) {
+                    return node instanceof CallStackFrame;
+                }
+
+                @Override
+                public void perform (final Object[] nodes) {
+                    if (nodes.length == 1 && nodes[0] instanceof CallStackFrame) {
+                        final CompletableFuture<MethodBreakpoint> prepareBreakpoint = CompletableFuture.completedFuture((CallStackFrame) nodes[0]).thenApplyAsync((csf) -> {
+                            final MethodBreakpoint mb = MethodBreakpoint.create(csf.getClassName(), csf.getMethodName());
+                            mb.setMethodName(csf.getMethodName());
+                            mb.setBreakpointType(MethodBreakpoint.TYPE_METHOD_ENTRY | MethodBreakpoint.TYPE_METHOD_EXIT);
+                            return mb;
+                        }, async);
+                        final CompletableFuture<NotifyDescriptor> prepareDialog = prepareBreakpoint.thenComposeAsync((mb) -> {
+                            final MethodBreakpointPanel p = new MethodBreakpointPanel(mb);
+                            final NotifyDescriptor nd = new NotifyDescriptor(p,
+                                    Bundle.CTL_CallstackAction_Breakpoint_Title(),
+                                    NotifyDescriptor.OK_CANCEL_OPTION,
+                                    NotifyDescriptor.QUESTION_MESSAGE,
+                                    null, null
+                            );
+                            return DialogDisplayer.getDefault().notifyFuture(nd);
+                        }, Mutex.EVENT::writeAccess);
+                        prepareDialog.thenAcceptBoth(prepareBreakpoint, (NotifyDescriptor nd, MethodBreakpoint mb) -> {
+                            final MethodBreakpointPanel p = (MethodBreakpointPanel) nd.getMessage();
+                            if (nd.getValue() == NotifyDescriptor.OK_OPTION) {
+                                if (p.ok()) {
+                                    DebuggerManager.getDebuggerManager ().addBreakpoint (mb);
+                                }
+                            } else {
+                                p.cancel();
+                            }
+                        });
+                    }
+                }
+            },
+            Models.MULTISELECTION_TYPE_EXACTLY_ONE
+
+        );
+    }
+
     static final Action createPOP_TO_HERE_ACTION(final RequestProcessor requestProcessor) {
         return Models.createAction (
             NbBundle.getBundle(ThreadsActionsProvider.class).getString("CTL_CallstackAction_PopToHere_Label"),
@@ -222,7 +280,7 @@ public class DebuggingActionsProvider implements NodeActionsProvider {
         );
     }
 
-    static abstract class LazyActionPerformer implements Models.ActionPerformer {
+    abstract static class LazyActionPerformer implements Models.ActionPerformer {
 
         private RequestProcessor rp;
 
@@ -422,12 +480,14 @@ public class DebuggingActionsProvider implements NodeActionsProvider {
                 return new Action [] {
                     MAKE_CURRENT_ACTION,
                     POP_TO_HERE_ACTION,
+                    ADD_BREAKPOINT_ACTION,
                     GO_TO_SOURCE_ACTION,
                     COPY_TO_CLBD_ACTION,
                 };
             } else {
                 return new Action [] {
                     MAKE_CURRENT_ACTION,
+                    ADD_BREAKPOINT_ACTION,
                     GO_TO_SOURCE_ACTION,
                     COPY_TO_CLBD_ACTION,
                 };

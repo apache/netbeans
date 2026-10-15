@@ -284,7 +284,6 @@ public final class EditMediator implements ActionListener, ListSelectionListener
                             }
                             chooser.enableVariableBasedSelection(true);
                             chooser.setFileHidingEnabled(false);
-                            FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
                             chooser.setFileSelectionMode(fileSelectionMode);
                             chooser.setMultiSelectionEnabled( true );
                             chooser.setDialogTitle( NbBundle.getMessage( EditMediator.class, "LBL_AddJar_DialogTitle" ) ); // NOI18N
@@ -337,7 +336,7 @@ public final class EditMediator implements ActionListener, ListSelectionListener
                                         }
                                     newPaths.add (path);
                                 }
-                                filePaths = newPaths.toArray (new String [newPaths.size ()]);
+                                filePaths = newPaths.toArray (new String [0]);
 
                                 // value of PATH_IN_DEPLOYMENT depends on whether file or folder is being added.
                                 // do not override value set by callback.initAdditionalProperties if includeNewFilesInDeployment
@@ -385,7 +384,7 @@ public final class EditMediator implements ActionListener, ListSelectionListener
                             if (added != null) {
                                 final Set<Library> includedLibraries = getIncludedLibraries(listModel);
                                int[] newSelection = ClassPathUiSupport.addLibraries(listModel, list.getSelectedIndices(), 
-                                       added.toArray(new Library[added.size()]), includedLibraries, callback);
+                                       added.toArray(new Library[0]), includedLibraries, callback);
                                list.setSelectedIndices( newSelection );
                             }
                         }

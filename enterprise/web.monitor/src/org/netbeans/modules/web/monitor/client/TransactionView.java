@@ -61,6 +61,7 @@ import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.netbeans.modules.web.monitor.data.DataRecord;
+import org.openide.util.ImageUtilities;
 
 /**
  * Update title does not work like it should. Maybe there is a getName
@@ -70,8 +71,8 @@ class TransactionView extends TopComponent implements ExplorerManager.Provider,
 				     PropertyChangeListener, ChangeListener {
 
     // Handles all the files etc. 
-    private transient static TransactionView instance = null; 
-    private transient static Controller controller = null;
+    private static transient TransactionView instance = null; 
+    private static transient Controller controller = null;
 
     // Misc
     private transient JToggleButton timeAButton, 	timeDButton,
@@ -85,7 +86,7 @@ class TransactionView extends TopComponent implements ExplorerManager.Provider,
     private transient  Dimension tabD = new Dimension(500,472);
     
     // Display stuff 
-    private transient static ExplorerManager mgr = null;
+    private static transient ExplorerManager mgr = null;
     private transient JPanel logPanel = null; 
     private transient JPanel dataPanel = null; 
     private transient JSplitPane splitPanel = null; 
@@ -127,8 +128,7 @@ class TransactionView extends TopComponent implements ExplorerManager.Provider,
      * retrieve any data until the Monitor is opened.
      */
     private TransactionView() {
-        setIcon(new ImageIcon(TransactionView.class.getResource
-        ("/org/netbeans/modules/web/monitor/client/icons/menuitem.gif")).getImage());
+        setIcon(ImageUtilities.loadImage("org/netbeans/modules/web/monitor/client/icons/menuitem.gif"));
         setToolTipText(NbBundle.getMessage(TransactionView.class, "MON_Window_Tooltip"));
 	controller = Controller.getInstance();
 	initialize();
@@ -285,16 +285,16 @@ class TransactionView extends TopComponent implements ExplorerManager.Provider,
 				    ));
 	buttonPanel.setFloatable (false);
 
-	JButton updateButton = new JButton(new ImageIcon(TransactionView.class.getResource
-        ("/org/netbeans/modules/web/monitor/client/icons/update.gif")));; // NOI18N
+	JButton updateButton = new JButton(ImageUtilities.loadIcon(
+                "org/netbeans/modules/web/monitor/client/icons/update.gif")); // NOI18N
 	updateButton.setToolTipText(NbBundle.getBundle(TransactionView.class).getString("MON_Reload_all_17"));
 	updateButton.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 		    controller.getTransactions();
 		}});
 
-	timeAButton = new JToggleButton(new ImageIcon(
-                TransactionView.class.getResource("/org/netbeans/modules/web/monitor/client/icons/timesortA.gif")), false);
+	timeAButton = new JToggleButton(ImageUtilities.loadIcon(
+                "org/netbeans/modules/web/monitor/client/icons/timesortA.gif"), false);
 	timeAButton.setToolTipText(NbBundle.getBundle(TransactionView.class).getString("MON_Order_transactions_15"));
 
 	timeAButton.addActionListener(new ActionListener() {
@@ -310,8 +310,8 @@ class TransactionView extends TopComponent implements ExplorerManager.Provider,
 		    }
 		}});
 
-	timeDButton = new JToggleButton(new ImageIcon(
-                TransactionView.class.getResource("/org/netbeans/modules/web/monitor/client/icons/timesortB.gif")), true);
+	timeDButton = new JToggleButton(ImageUtilities.loadIcon(
+                "org/netbeans/modules/web/monitor/client/icons/timesortB.gif"), true);
 	timeDButton.setToolTipText(NbBundle.getBundle(TransactionView.class).getString("MON_Order_transactions_16"));
 	timeDButton.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
@@ -327,8 +327,8 @@ class TransactionView extends TopComponent implements ExplorerManager.Provider,
 
 		}});
 
-	alphaButton = new JToggleButton(new ImageIcon(
-                TransactionView.class.getResource("/org/netbeans/modules/web/monitor/client/icons/a2z.gif")), false);
+	alphaButton = new JToggleButton(ImageUtilities.loadIcon(
+                "org/netbeans/modules/web/monitor/client/icons/a2z.gif"), false);
 	alphaButton.setToolTipText(NbBundle.getBundle(TransactionView.class).getString("MON_Order_transactions_14"));
 	alphaButton.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
@@ -345,10 +345,9 @@ class TransactionView extends TopComponent implements ExplorerManager.Provider,
 		}});
 
 
-	timestampButton = new
-	    JToggleButton(new ImageIcon(
-            TransactionView.class.getResource("/org/netbeans/modules/web/monitor/client/icons/timestamp.gif")),
-				TransactionNode.showTimeStamp());
+	timestampButton = new JToggleButton(
+            ImageUtilities.loadIcon("org/netbeans/modules/web/monitor/client/icons/timestamp.gif"),
+            TransactionNode.showTimeStamp());
 	timestampButton.setToolTipText(NbBundle.getBundle(TransactionView.class).getString("MON_Show_time_25"));
 	timestampButton.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
@@ -587,7 +586,7 @@ class TransactionView extends TopComponent implements ExplorerManager.Provider,
 	splitPanel.setDividerLocation((int)(logD.getWidth()));
 
 	try { 
-	    Container o = (Container)this.getParent(); 
+	    Container o = this.getParent(); 
 	    while(true) { 
 		if(o instanceof JFrame) { 
 		    JFrame parent = (JFrame)o; 

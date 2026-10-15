@@ -1,0 +1,10 @@
+Code completion result for source line:
+#[AnAttribute(|)]
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Foo                             [PUBLIC]   newInInitializersAttributeTyping01.php
+CLASS      Test                            [PUBLIC]   newInInitializersAttributeTyping01.php
+KEYWORD    parent::                                   null
+KEYWORD    self::                                     null
+------------------------------------
+KEYWORD    array                                      null
+KEYWORD    new                                        null

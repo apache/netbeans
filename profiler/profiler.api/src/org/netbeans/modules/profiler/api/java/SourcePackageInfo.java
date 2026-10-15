@@ -24,7 +24,7 @@ import java.util.Collection;
  * A java package wrapper
  * @author Jaroslav Bachorik
  */
-abstract public class SourcePackageInfo {
+public abstract class SourcePackageInfo {
     public static enum Scope {
         SOURCE, DEPENDENCIES
     }
@@ -51,6 +51,6 @@ abstract public class SourcePackageInfo {
         return scope;
     }
     
-    abstract public Collection<SourcePackageInfo> getSubpackages();
-    abstract public Collection<SourceClassInfo> getClasses();
+    public abstract Collection<SourcePackageInfo> getSubpackages();
+    public abstract Collection<SourceClassInfo> getClasses();
 }

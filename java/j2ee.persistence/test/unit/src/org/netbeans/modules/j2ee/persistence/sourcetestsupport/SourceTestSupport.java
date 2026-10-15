@@ -102,13 +102,13 @@ public abstract class SourceTestSupport extends NbTestCase {
     }
     
     protected void print(File file) throws IOException {
-        BufferedReader in = new BufferedReader(new FileReader(file));
-        PrintStream out = System.out;
-        String str;
-        while ((str = in.readLine()) != null) {
-            out.println(str);
+        try (BufferedReader in = new BufferedReader(new FileReader(file))) {
+            PrintStream out = System.out;
+            String str;
+            while ((str = in.readLine()) != null) {
+                out.println(str);
+            }
         }
-        in.close();
     }
     
     private static void setLookups(Object... instances) {
@@ -127,7 +127,7 @@ public abstract class SourceTestSupport extends NbTestCase {
         
     }
     
-    static private class JavaFileResolver extends MIMEResolver
+    private static class JavaFileResolver extends MIMEResolver
     {
 
         public JavaFileResolver() {
@@ -137,8 +137,11 @@ public abstract class SourceTestSupport extends NbTestCase {
 
         @Override
         public String findMIMEType(FileObject fo) {
-            if(JavaDataLoader.JAVA_EXTENSION.equals(fo.getExt()))return JavaDataLoader.JAVA_MIME_TYPE;
-            else return null;
+            if(JavaDataLoader.JAVA_EXTENSION.equals(fo.getExt())) {
+                return JavaDataLoader.JAVA_MIME_TYPE;
+            } else {
+                return null;
+            }
         }
 
     }

@@ -114,7 +114,7 @@ public class ClassMemberPanelUI extends javax.swing.JPanel
     private static final String CMD_HISTORY = "history";    //NOI18N
     private static final int MIN_HISTORY_WIDTH = 50;
     private static final int HISTORY_HEIGHT = 20;
-    private static final ThreadLocal<Boolean> ignoreJavaDoc = new ThreadLocal();
+    private static final ThreadLocal<Boolean> ignoreJavaDoc = new ThreadLocal<>();
 
     private final ExplorerManager manager = new ExplorerManager();
     private final MyBeanTreeView elementView;
@@ -173,7 +173,7 @@ public class ClassMemberPanelUI extends javax.swing.JPanel
         manager.addPropertyChangeListener(this);
         
         // Tree view of the elements
-        elementView = createBeanTreeView();        
+        elementView = createBeanTreeView();
         add(elementView, BorderLayout.CENTER);
                
         // filters
@@ -323,7 +323,7 @@ public class ClassMemberPanelUI extends javax.swing.JPanel
         }
         final ElementNode node = root.stream()
                 .filter((n)-> {
-                    final Description d = n.getDescritption();
+                    final Description d = n.getDescription();
                     boolean match = true;
                     if (pattern.first() != null) {
                         match &= pattern.first().equals(d.getElementHandle());
@@ -370,7 +370,7 @@ public class ClassMemberPanelUI extends javax.swing.JPanel
             public void run() {
                 ElementNode rootNode = getRootNode();
                 if (rootNode != null) {
-                    final FileObject fo = rootNode.getDescritption().fileObject;
+                    final FileObject fo = rootNode.getDescription().fileObject;
                     if (fo != null) {
                         final JavaSource js = JavaSource.forFileObject(fo);
                         if (js != null) {
@@ -398,7 +398,7 @@ public class ClassMemberPanelUI extends javax.swing.JPanel
         auto = !userAction;
         final ElementNode rootNode = getRootNode();
         
-        if ( rootNode != null && rootNode.getDescritption().fileObject.equals( description.fileObject) ) {
+        if ( rootNode != null && rootNode.getDescription().fileObject.equals( description.fileObject) ) {
             // update
             //System.out.println("UPDATE ======" + description.fileObject.getName() );
             jdocTask.cancel();
@@ -424,9 +424,7 @@ public class ClassMemberPanelUI extends javax.swing.JPanel
                     done();
                     boolean scrollOnExpand = getScrollOnExpand();
                     setScrollOnExpand( false );
-                    elementView.setAutoWaitCursor(false);
                     elementView.expandAll();
-                    elementView.setAutoWaitCursor(true);
                     setScrollOnExpand( scrollOnExpand );
 
                     if (PERF_LOG.isLoggable(Level.FINE)) {
@@ -470,7 +468,7 @@ public class ClassMemberPanelUI extends javax.swing.JPanel
     public FileObject getFileObject() {
         final ElementNode root = getRootNode();
         if (root != null) {
-            return root.getDescritption().fileObject;
+            return root.getDescription().fileObject;
         }
         else {
             return null;
@@ -525,7 +523,9 @@ public class ClassMemberPanelUI extends javax.swing.JPanel
     }
     
     private MyBeanTreeView createBeanTreeView() {
-        return new MyBeanTreeView();
+        MyBeanTreeView ret = new MyBeanTreeView();
+        ret.setAutoWaitCursor(false);
+        return ret;
     }
 
     private void scheduleJavadocRefresh(final int time) {
@@ -553,11 +553,11 @@ public class ClassMemberPanelUI extends javax.swing.JPanel
         if ( root == null ) {
             return null;
         }
-        final ElementHandle<? extends Element> eh = node.getDescritption().getElementHandle();
+        final ElementHandle<? extends Element> eh = node.getDescription().getElementHandle();
         if (eh == null) {
             return null;
         }
-        final JavaSource js = JavaSource.forFileObject( root.getDescritption().fileObject );
+        final JavaSource js = JavaSource.forFileObject( root.getDescription().fileObject );
         if (js == null) {
             return null;
         }
@@ -634,7 +634,7 @@ public class ClassMemberPanelUI extends javax.swing.JPanel
                 return null;
             }
             final ElementNode enode = (ElementNode) node;
-            final ElementNode.Description desc = enode.getDescritption();
+            final ElementNode.Description desc = enode.getDescription();
             //Other and module do not have javadoc
             return desc.kind != ElementKind.OTHER
                 && desc.kind != ElementKind.MODULE ?
@@ -734,7 +734,7 @@ public class ClassMemberPanelUI extends javax.swing.JPanel
                         if (node != null) {
                             final ElementJavadoc doc = getDocumentation(node);
                             final ElementNode root = getRootNode();
-                            final FileObject owner = root == null ? null : root.getDescritption().fileObject;
+                            final FileObject owner = root == null ? null : root.getDescription().fileObject;
                             JavadocTopComponent tc = JavadocTopComponent.findInstance();
                             if( null != tc ) {
                                 tc.open();
@@ -785,21 +785,18 @@ public class ClassMemberPanelUI extends javax.swing.JPanel
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         if (ExplorerManager.PROP_SELECTED_NODES.equals(evt.getPropertyName())) {
+            final Node[] oldNodes = (Node[]) evt.getOldValue();
+            final Node[] newNodes = (Node[]) evt.getNewValue();
+            for (Node n : oldNodes) {
+                selectedNodes.remove(n);
+            }
+            for (Node n : newNodes) {
+                selectedNodes.add(n);
+            }
             final boolean javadocDone = ignoreJavaDoc.get() == Boolean.TRUE;
-            RP.execute(new Runnable() {
-                @Override
-                public void run() {
-                    final Node[] oldNodes = (Node[]) evt.getOldValue();
-                    final Node[] newNodes = (Node[]) evt.getNewValue();
-                    for (Node n : oldNodes) {
-                        selectedNodes.remove(n);
-                    }
-                    for (Node n : newNodes) {
-                        selectedNodes.add(n);
-                    }
-                    if (newNodes.length > 0 && !javadocDone && JavadocTopComponent.shouldUpdate()) {
-                        scheduleJavadocRefresh(JDOC_TIME);
-                    }
+            RP.execute(() -> {
+                if (newNodes.length > 0 && !javadocDone && JavadocTopComponent.shouldUpdate()) {
+                    scheduleJavadocRefresh(JDOC_TIME);
                 }
             });
         } else if (TapPanel.EXPANDED_PROPERTY.equals(evt.getPropertyName())) {

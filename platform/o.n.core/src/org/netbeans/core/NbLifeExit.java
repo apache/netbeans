@@ -18,6 +18,7 @@
  */
 package org.netbeans.core;
 
+import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
@@ -25,7 +26,7 @@ import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.CLIHandler;
-import org.netbeans.TopSecurityManager;
+import org.netbeans.NbExit;
 import org.netbeans.core.startup.CLIOptions;
 import org.netbeans.core.startup.Main;
 import org.netbeans.core.startup.layers.SessionManager;
@@ -95,7 +96,7 @@ final class NbLifeExit implements Runnable {
                     final boolean doExit = !Boolean.getBoolean("netbeans.close.no.exit"); // NOI18N
                     NbLifecycleManager.LOG.log(Level.FINE, "Calling exit: {0}", doExit); // NOI18N
                     if (doExit) {
-                        TopSecurityManager.exit(status);
+                        NbExit.exit(status);
                     }
                 } finally {
                     NbLifecycleManager.LOG.log(Level.FINE, "After exit!"); // NOI18N
@@ -110,7 +111,9 @@ final class NbLifeExit implements Runnable {
     private void doExit(int status) {
         // save all open files
         Future<Boolean> res;
-        if (System.getProperty("netbeans.close") != null || ExitDialog.showDialog()) { // NOI18N
+        boolean noDialog = GraphicsEnvironment.isHeadless() 
+            || System.getProperty("netbeans.close") != null; // NOI18N
+        if (noDialog || ExitDialog.showDialog()) {
             res = Main.getModuleSystem().shutDownAsync(new NbLifeExit(1, status, null, onExit));
         } else {
             res = null;
@@ -129,7 +132,7 @@ final class NbLifeExit implements Runnable {
         if (Boolean.getBoolean("netbeans.close.when.invisible")) { // NOI18N
             // hook to permit perf testing of time to *apparently* shut down
             try {
-                TopSecurityManager.exit(status);
+                NbExit.exit(status);
             } finally {
                 onExit.countDown();
             }

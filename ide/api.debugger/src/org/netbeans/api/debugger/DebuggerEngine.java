@@ -30,11 +30,12 @@ import org.netbeans.spi.debugger.ContextProvider;
  * It provides root of threads hierarchy (call stacks, locals)
  * and manages debugger actions.
  *
- * <p><br><table border="1" cellpadding="3" cellspacing="0" width="100%">
- * <tbody><tr bgcolor="#ccccff">
- * <td colspan="2"><font size="+2"><b>Description </b></font></td>
- * </tr><tr><td align="left" valign="top" width="1%"><font size="+1">
- * <b>Functionality</b></font></td><td>
+ * <table>
+ * <caption>Description of DebuggerEngine</caption>
+ * <tbody><tr>
+ * <td colspan="2" style="background-color:#4D7A97"><b>Description </b></td>
+ * </tr><tr><td>
+ * <b>Functionality</b></td><td>
  *
  * <b>Support for actions:</b>
  *    DebuggerEngine manages list of actions ({@link #getActionsManager}). 
@@ -52,8 +53,8 @@ import org.netbeans.spi.debugger.ContextProvider;
  * <br>
  * <b>Support for aditional services:</b>
  *    DebuggerEngine is final class. That is why the standard method how to 
- *    extend its functionality is using lookup methods ({@link #lookup} and 
- *    {@link #lookupFirst}).
+ *    extend its functionality is using lookup methods ({@link #lookup(String,Class)} and 
+ *    {@link #lookupFirst(String,Class)}).
  *    There are two ways how to register some service provider for some
  *    type of DebuggerEngine:
  *    <ul>
@@ -73,15 +74,15 @@ import org.netbeans.spi.debugger.ContextProvider;
  *    {@link ActionsManagerListener}.
  *
  * <br>
- * </td></tr><tr><td align="left" valign="top" width="1%"><font size="+1">
- * <b>Clinents / Providers</b></font></td><td>
+ * </td></tr><tr><td>
+ * <b>Clinents / Providers</b></td><td>
  *
  * This class is final, so it does not have any external provider.
  * Debugger Plug-ins and UI modules are clients of this class.
  *
  * <br>
- * </td></tr><tr><td align="left" valign="top" width="1%"><font size="+1">
- * <b>Lifecycle</b></font></td><td>
+ * </td></tr><tr><td>
+ * <b>Lifecycle</b></td><td>
  *
  * A new instance(s) of DebuggerEngine class are created in Debugger Core 
  * module only, during the process of starting of debugging (see
@@ -90,8 +91,8 @@ import org.netbeans.spi.debugger.ContextProvider;
  * DebuggerEngine is removed automatically from {@link DebuggerManager} when the 
  * the last action is ({@link ActionsManager#ACTION_KILL}).
  *
- * </td></tr><tr><td align="left" valign="top" width="1%"><font size="+1">
- * <b>Evolution</b></font></td><td>
+ * </td></tr><tr><td>
+ * <b>Evolution</b></td><td>
  *
  * No method should be removed from this class, but some functionality can
  * be added in future.

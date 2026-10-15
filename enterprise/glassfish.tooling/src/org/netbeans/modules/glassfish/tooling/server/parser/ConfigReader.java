@@ -28,10 +28,7 @@ import java.util.Map;
  */
 public abstract class ConfigReader implements XMLReader {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** <code>fileset</code> XML element reader. */
     final FilesetReader filesetReader = new FilesetReader();
 
@@ -39,10 +36,7 @@ public abstract class ConfigReader implements XMLReader {
     final PathReader pathReader
             = new PathReader("/server/library/classpath");
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get file sets retrieved from XML elements.
      * <p/>
@@ -61,10 +55,7 @@ public abstract class ConfigReader implements XMLReader {
         return pathReader.getPaths();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Reset this XML element reader.
      */

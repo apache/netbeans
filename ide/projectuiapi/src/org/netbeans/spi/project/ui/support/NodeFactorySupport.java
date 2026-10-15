@@ -174,7 +174,7 @@ public class NodeFactorySupport {
                             NodeList<?> lst = factory.createNodes(project);
                             assert lst != null : "Factory " + factory.getClass() + " has broken the NodeFactory contract."; //NOI18N
                             lst.addNotify();
-                            List objects = lst.keys();
+                            List<?> objects = lst.keys();
                             synchronized (keys) {
                                 nodeLists.add(lst);
                                 addKeys(lst, objects);
@@ -264,7 +264,7 @@ public class NodeFactorySupport {
         //to be called under lock.
         private void addKeys(NodeList list, List objects) {
             assert Thread.holdsLock(keys);
-            List<NodeListKeyWrapper> wrps = new ArrayList<NodeListKeyWrapper>();
+            List<NodeListKeyWrapper> wrps = new ArrayList<>();
             for (Object key : objects) {
                 wrps.add(new NodeListKeyWrapper(key, list));
             }

@@ -81,7 +81,7 @@ public final class TapPanel extends javax.swing.JPanel {
     private static Adap getAdapter () {
         Adap result = null;
         if ( adapRef != null ) {
-            result = (Adap) adapRef.get ();
+            result = adapRef.get ();
         }
         if ( result == null ) {
             result = new Adap ();
@@ -278,7 +278,7 @@ public final class TapPanel extends javax.swing.JPanel {
 
     }
     
-    final static class TrivialLayout implements LayoutManager {
+    static final class TrivialLayout implements LayoutManager {
         
         public void addLayoutComponent (String name, Component comp) {
             //do nothing
@@ -314,7 +314,7 @@ public final class TapPanel extends javax.swing.JPanel {
             if ( c.length > 0 ) {
                 Dimension d2 = c[ 0 ].getPreferredSize ();
                 if ( tp.isExpanded () ) {
-                    int top = tp.getOrientation () == tp.UP ? 0 : tp.getMinimumHeight ();
+                    int top = tp.getOrientation () == TapPanel.UP ? 0 : tp.getMinimumHeight ();
                     int height = Math.min ( tp.getHeight () - tp.getMinimumHeight (), d2.height );
                     c[ 0 ].setBounds ( 0, top, tp.getWidth (), height );
                 } else {

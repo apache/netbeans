@@ -102,11 +102,9 @@ public class CheckLicense extends Task {
                         while ((line = br.readLine ()) != null) {
                             if (line.indexOf (fragment) != -1) {
                                 // Found it.
-                                if (fail != null && "whenpresent".equals(fail.getValue())) {
-                                    if (failMsg != null) {
-                                        log(failMsg, Project.MSG_ERR);
-                                    }
+                                if (fail != null && "whenpresent".equals(fail.getValue())) {                                    
                                     failMsg = "License found in " + f;
+                                    log(failMsg, Project.MSG_ERR);
                                 }
                                 break;
                             }

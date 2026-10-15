@@ -21,6 +21,7 @@ package org.netbeans.modules.ide.ergonomics.fod;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import junit.framework.Test;
 import org.netbeans.junit.NbModuleSuite;
@@ -48,7 +49,7 @@ public class FoDURLStreamHandlerFactoryTest extends NbTestCase {
 
         byte[] arr = new byte[1024];
         int len = is.read(arr);
-        String s = new String(arr, 0, len, "UTF-8");
+        String s = new String(arr, 0, len, StandardCharsets.UTF_8);
         assertTrue("contains body: " + s, s.contains("<body>"));
         assertTrue("contains msg: " + s, s.contains("This feature is not yet enabled"));
     }
@@ -60,7 +61,7 @@ public class FoDURLStreamHandlerFactoryTest extends NbTestCase {
 
         byte[] arr = new byte[1024];
         int len = is.read(arr);
-        String s = new String(arr, 0, len, "UTF-8");
+        String s = new String(arr, 0, len, StandardCharsets.UTF_8);
         assertTrue("contains body: " + s, s.contains("<body>"));
         assertFalse("does not contain msg: " + s, s.contains("This feature is not yet enabled"));
     }

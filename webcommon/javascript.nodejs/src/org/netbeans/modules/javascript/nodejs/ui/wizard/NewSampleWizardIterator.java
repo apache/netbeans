@@ -236,15 +236,13 @@ public final class NewSampleWizardIterator extends BaseWizardIterator {
 
     private static void writeFile(ZipInputStream str, FileObject fo) throws IOException {
         try (OutputStream out = fo.getOutputStream()) {
-            FileUtil.copy(str, out);
+            str.transferTo(out);
         }
     }
 
     private static void filterProjectXml(FileObject fo, ZipInputStream str, String name) throws IOException {
         try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            FileUtil.copy(str, baos);
-            Document doc = XMLUtil.parse(new InputSource(new ByteArrayInputStream(baos.toByteArray())), false, false, null, null);
+            Document doc = XMLUtil.parse(new InputSource(new ByteArrayInputStream(str.readAllBytes())), false, false, null, null);
             NodeList nl = doc.getDocumentElement().getElementsByTagName("name"); // NOI18N
             if (nl != null) {
                 for (int i = 0; i < nl.getLength(); i++) {

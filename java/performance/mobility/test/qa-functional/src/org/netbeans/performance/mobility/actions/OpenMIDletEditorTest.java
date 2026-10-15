@@ -45,7 +45,7 @@ public class OpenMIDletEditorTest extends PerformanceTestCase {
     private String targetProject;
     private String midletName;
     private ProjectsTabOperator pto;
-    public final static long EXPECTED_TIME = 10000;
+    public static final long EXPECTED_TIME = 10000;
     protected static String OPEN = org.netbeans.jellytools.Bundle.getStringTrimmed("org.openide.actions.Bundle", "Open");
 
     /**

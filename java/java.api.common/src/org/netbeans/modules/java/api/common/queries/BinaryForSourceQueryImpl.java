@@ -157,7 +157,7 @@ final class BinaryForSourceQueryImpl implements BinaryForSourceQueryImplementati
                     }
                 }
             }
-            return urls.toArray(new URL[urls.size()]);
+            return urls.toArray(new URL[0]);
         }
 
         @Override

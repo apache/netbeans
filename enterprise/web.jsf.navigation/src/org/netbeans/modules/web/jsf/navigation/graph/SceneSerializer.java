@@ -159,15 +159,16 @@ public class SceneSerializer {
     /**
      * @param Should be either SCENE_PROJECT_SCOPR or SCENE_FACES_SCOPE
      **/
-    private final static Node createScopeElement( Document document, PageFlowSceneData sceneData, XmlScope scopeXml ){
+    private static final Node createScopeElement( Document document, PageFlowSceneData sceneData, XmlScope scopeXml ){
         Node sceneScopeElement =  null;
         Map<String,PageFlowSceneData.PageData> facesConfigScopeMap = sceneData.getScopeData(scopeXml.getScope());
         if( facesConfigScopeMap != null ){
             sceneScopeElement = document.createElement(SCENE_SCOPE_ELEMENT);
             setAttribute(document, sceneScopeElement, SCENE_SCOPE_ATTR, scopeXml.toString());
 
-            for( String key : facesConfigScopeMap.keySet()){
-                PageFlowSceneData.PageData data = facesConfigScopeMap.get(key);
+            for( Map.Entry<String, PageFlowSceneData.PageData> entry : facesConfigScopeMap.entrySet()){
+                String key = entry.getKey();
+                PageFlowSceneData.PageData data = entry.getValue();
                 if ( data != null ) {
                     Element nodeElement = document.createElement(NODE_ELEMENT);
                     setAttribute(document, nodeElement, NODE_ID_ATTR, key);
@@ -208,7 +209,7 @@ public class SceneSerializer {
     }
 
 
-    private final static Logger LOG = Logger.getLogger("org.netbeans.modules.web.jsf.navigation");
+    private static final Logger LOG = Logger.getLogger("org.netbeans.modules.web.jsf.navigation");
     // call in AWT to deserialize scene
     public static void deserializeV1(PageFlowSceneData sceneData, FileObject file) {
         LOG.entering("SceneSerializer", "deserializeV1(PageFlowSceneData sceneData, File file)");

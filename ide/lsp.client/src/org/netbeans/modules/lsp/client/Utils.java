@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,15 +16,31 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.netbeans.modules.lsp.client;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
@@ -34,29 +50,39 @@ import org.eclipse.lsp4j.CreateFile;
 import org.eclipse.lsp4j.DeleteFile;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.Position;
+import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.RenameFile;
 import org.eclipse.lsp4j.ResourceOperation;
 import org.eclipse.lsp4j.ResourceOperationKind;
+import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
+import org.netbeans.lib.editor.util.swing.DocumentUtilities;
+import org.netbeans.modules.editor.indent.api.IndentUtils;
 import org.openide.cookies.EditorCookie;
+import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
+import org.openide.text.Line;
 import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
+import org.openide.util.Pair;
 
 /**
  *
  * @author lahvac
  */
 public class Utils {
+
+    private static final Logger LOG = Logger.getLogger(Utils.class.getName());
 
     public static String toURI(FileObject file) {
         return file.toURI().toString().replace("file:/", "file:///");
@@ -69,6 +95,16 @@ public class Utils {
 
     public static int getOffset(Document doc, Position pos) {
         return LineDocumentUtils.getLineStartFromIndex((LineDocument) doc, pos.getLine()) + pos.getCharacter();
+    }
+    
+    public static int getEndCharacter(Document doc, int line) {
+        int start = LineDocumentUtils.getLineStartFromIndex((LineDocument) doc, line);
+        try {
+            return LineDocumentUtils.getLineEndOffset((LineDocument) doc, start) - start;
+        } catch (BadLocationException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return 0;
     }
 
     public static void applyWorkspaceEdit(WorkspaceEdit edit) {
@@ -124,24 +160,52 @@ public class Utils {
                 return ;
             }
             NbDocument.runAtomic((StyledDocument) doc, () -> {
-                edits
-                 .stream()
-                 .sorted((te1, te2) -> te1.getRange().getEnd().getLine() == te2.getRange().getEnd().getLine() ? te1.getRange().getEnd().getCharacter() - te2.getRange().getEnd().getCharacter() : te1.getRange().getEnd().getLine() - te2.getRange().getEnd().getLine())
-                 .forEach(te -> {
-                    try {
-                        int start = Utils.getOffset(doc, te.getRange().getStart());
-                        int end = Utils.getOffset(doc, te.getRange().getEnd());
-                        doc.remove(start, end - start);
-                        doc.insertString(start, te.getNewText(), null);
-                    } catch (BadLocationException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                 });
+                applyEditsNoLock(doc, edits);
             });
         } catch (URISyntaxException | IOException ex) {
             Exceptions.printStackTrace(ex);
         }
     }
+
+    public static void applyEditsNoLock(Document doc, List<? extends TextEdit> edits) {
+        applyEditsNoLock(doc, edits, null, null);
+    }
+
+    /**
+     * Apply edits to the document. The edits can be filtered to only cover
+     * parts of the documents.
+     *
+     * @param doc        {@link Document} the edits shall be applied to
+     * @param edits      list {@link TextEdit} to apply
+     * @param startLimit if not {@code null} only edits with a {@code start}
+     *                   larger than or equals to this offset are considered.
+     *                   The offset is expected to be apply to the original
+     *                   state of the document.
+     * @param endLimit   if not {@code null} only edits with an {@code end}
+     *                   lower than this offset are considered. The offset is
+     *                   expected to be apply to the original state of the
+     *                   document.
+     */
+    public static void applyEditsNoLock(Document doc, List<? extends TextEdit> edits, Integer startLimit, Integer endLimit) {
+        List<TextEdit> sorted = new ArrayList<>(edits);
+        Collections.sort(sorted, rangeSort);
+        Collections.reverse(sorted);
+        sorted
+         .forEach(te -> {
+            try {
+                int start = Utils.getOffset(doc, te.getRange().getStart());
+                int end = Utils.getOffset(doc, te.getRange().getEnd());
+                if ((startLimit == null || start >= startLimit)
+                    && (endLimit == null || end < endLimit)) {
+                    doc.remove(start, end - start);
+                    doc.insertString(start, te.getNewText(), null);
+                }
+            } catch (BadLocationException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+         });
+    }
+
     public static void applyCodeAction(LSPBindings server, Either<Command, CodeAction> cmd) {
         try {
             Command command;
@@ -149,8 +213,21 @@ public class Utils {
             if (cmd.isLeft()) {
                 command = cmd.getLeft();
             } else {
-                Utils.applyWorkspaceEdit(cmd.getRight().getEdit());
-                command = cmd.getRight().getCommand();
+                CodeAction action = cmd.getRight();
+
+                if (action.getEdit() == null) {
+                    //attempt to resolve:
+                    try {
+                        action = server.getTextDocumentService().resolveCodeAction(action).get();
+                    } catch (InterruptedException | ExecutionException ex) {
+                        //ignore(?)
+                        LOG.log(Level.FINE, null, ex);
+                    }
+                }
+                if (action.getEdit() != null) {
+                    Utils.applyWorkspaceEdit(action.getEdit());
+                }
+                command = action.getCommand();
             }
             if (command != null) {
                 server.getWorkspaceService().executeCommand(new ExecuteCommandParams(command.getCommand(), command.getArguments())).get();
@@ -158,5 +235,206 @@ public class Utils {
         } catch (InterruptedException | ExecutionException ex) {
             Exceptions.printStackTrace(ex);
         }
+    }
+
+    public static Position computeEndPositionForRemovedText(Position startPos, String removedText) {
+        int endLine = startPos.getLine();
+        int endChar = startPos.getCharacter();
+        for (char c : removedText.toCharArray()) {
+            if (c == '\n') {
+                endLine++;
+                endChar = 0;
+            } else {
+                endChar++;
+            }
+        }
+        return new Position(endLine, endChar);
+    }
+
+    public static List<TextEdit> computeDefaultOnTypeIndent(Document doc, int changeStart, Position startPos, String newText) {
+        List<TextEdit> edits = new ArrayList<>();
+        try {
+            int indentLevel = IndentUtils.indentLevelSize(doc);
+            int lineStart = IndentUtils.lineStartOffset(doc, changeStart);
+            int indent = IndentUtils.lineIndent(doc, lineStart);
+            if (newText.equals("}") && indent == changeStart - lineStart) {
+                CharSequence cs = DocumentUtilities.getText(doc);
+                int balance = 1;
+                int idx = changeStart - 1;
+                while (idx >= 0 && balance > 0) {
+                    switch (cs.charAt(idx)) {
+                        case '{': balance--; break;
+                        case '}': balance++; break;
+                    }
+                    idx--;
+                }
+                int newIndent;
+                if (balance == 0) {
+                    newIndent = IndentUtils.lineIndent(doc, IndentUtils.lineStartOffset(doc, idx));
+                } else {
+                    newIndent = 0;
+                }
+                edits.add(new TextEdit(new Range(new Position(startPos.getLine(), 0), new Position(startPos.getLine(), indent)), IndentUtils.createIndentString(doc, newIndent)));
+            } else if (newText.equals("\n")) {
+                Position insertPos = new Position(startPos.getLine() + 1, 0);
+                int newIndent = indent;
+                if (changeStart > 0 && DocumentUtilities.getText(doc, changeStart - 1, 1).charAt(0) == '{') {
+                    newIndent += indentLevel;
+                }
+                edits.add(new TextEdit(new Range(insertPos, insertPos), IndentUtils.createIndentString(doc, newIndent)));
+            }
+        } catch (BadLocationException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return edits;
+    }
+
+    public static FileObject fromURI(String targetUri) {
+        try {
+            URI target = URI.create(targetUri);
+            return URLMapper.findFileObject(target.toURL());
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
+            return null;
+        }
+    }
+
+    public static void open(String targetUri, Range targetRange) {
+        FileObject targetFile = fromURI(targetUri);
+
+        if (targetFile != null) {
+            LineCookie lc = targetFile.getLookup().lookup(LineCookie.class);
+
+            //TODO: expecting lc != null!
+
+            Line line = lc.getLineSet().getCurrent(targetRange.getStart().getLine());
+
+            SwingUtilities.invokeLater(() ->
+                line.show(Line.ShowOpenType.OPEN, Line.ShowVisibilityType.FOCUS, targetRange.getStart().getCharacter())
+            );
+        } else {
+            //TODO: beep
+        }
+    }
+
+    private static final Comparator<TextEdit> rangeSort = (s1, s2) -> {
+        int l1 = s1.getRange().getEnd().getLine();
+        int l2 = s2.getRange().getEnd().getLine();
+        int c1 = s1.getRange().getEnd().getCharacter();
+        int c2 = s2.getRange().getEnd().getCharacter();
+        if (l1 != l2) {
+            return l1 - l2;
+        } else {
+            return c1 - c2;
+        }
+    };
+
+    public static boolean isTrue(Boolean b) {
+        return b != null && b;
+    }
+
+    public static @NonNull ServerCapabilities getCapabilities(LSPBindings server) {
+        if (server.getInitResult() != null && server.getInitResult().getCapabilities() != null) {
+            return server.getInitResult().getCapabilities();
+        } else {
+            return new ServerCapabilities();
+        }
+    }
+
+    public static boolean isEnabled(Either<Boolean, ?> settings) {
+        return settings != null && (settings.isLeft() ? isTrue(settings.getLeft())
+                                                       : settings.getRight() != null);
+    }
+
+    public static <P, V> void handleBindings(List<LSPBindings> servers,
+                                             Predicate<ServerCapabilities> filter,
+                                             CreateParameters<P> createParameter,
+                                             BiFunction<LSPBindings, P, CompletableFuture<V>> runTask,
+                                             BiConsumer<LSPBindings, V> handler) {
+        handleBindings(servers, filter, createParameter, runTask, handler, Environment.NOOP);
+    }
+
+    public static <P, V> void handleBindings(List<LSPBindings> servers,
+                                             Predicate<ServerCapabilities> filter,
+                                             CreateParameters<P> createParameter,
+                                             BiFunction<LSPBindings, P, CompletableFuture<V>> runTask,
+                                             BiConsumer<LSPBindings, V> handler,
+                                             Environment env) {
+        if (servers.isEmpty()) {
+            return ;
+        }
+
+        List<Pair<LSPBindings, CompletableFuture<V>>> pending = new ArrayList<>();
+        P p = null;
+
+        for (LSPBindings server : servers) {
+            if (env.isCanceled()) {
+                return ;
+            }
+
+            if (!filter.test(getCapabilities(server))) {
+                continue;
+            }
+
+            if (p == null) {
+                try {
+                    p = createParameter.createParameters();
+                } catch (BadLocationException ex) {
+                    Exceptions.printStackTrace(ex);
+                    return ;
+                }
+            }
+
+            CompletableFuture<V> cf = runTask.apply(server, p);
+
+            env.registerCancelCallback(() -> cf.cancel(true));
+
+            if (env.isCanceled()) {
+                return ;
+            }
+
+            pending.add(Pair.of(server, cf));
+        }
+
+        for (Pair<LSPBindings, CompletableFuture<V>> current : pending) {
+            if (env.isCanceled()) {
+                return ;
+            }
+
+            try {
+                V value = current.second().get();
+
+                handler.accept(current.first(), value);
+            } catch (CancellationException ex) {
+                env.handleCancellationException(ex);
+            } catch (InterruptedException | ExecutionException ex) {
+                env.handleException(ex);
+            }
+        }
+    }
+
+    public interface CreateParameters<P> {
+        public P createParameters() throws BadLocationException;
+    }
+
+    public interface Environment {
+        public static final Environment NOOP = new Environment() {
+            @Override public boolean isCanceled() {
+                return false;
+            }
+            @Override public void registerCancelCallback(Runnable callback) {
+            }
+            @Override public void handleCancellationException(CancellationException ex) {
+                handleException(ex);
+            }
+            @Override public void handleException(Exception ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        };
+
+        public boolean isCanceled();
+        public void registerCancelCallback(Runnable callback);
+        public void handleCancellationException(CancellationException ex);
+        public void handleException(Exception ex);
     }
 }

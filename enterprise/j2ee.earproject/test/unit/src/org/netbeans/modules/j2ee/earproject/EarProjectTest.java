@@ -30,8 +30,6 @@ import java.lang.ref.WeakReference;
 import java.net.URL;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import junit.framework.Assert;
-import static junit.framework.Assert.assertEquals;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
@@ -296,9 +294,9 @@ public class EarProjectTest extends EarTestCase {
     }
 
     public static void validate(FileObject ddFO) throws Exception {
-        Assert.assertNotNull(ddFO);
+        assertNotNull(ddFO);
         File ddF = FileUtil.toFile(ddFO);
-        Assert.assertNotNull(ddF);
+        assertNotNull(ddF);
         validate(ddF);
     }
 

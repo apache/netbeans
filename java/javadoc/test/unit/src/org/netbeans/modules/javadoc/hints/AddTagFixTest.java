@@ -159,7 +159,7 @@ public class AddTagFixTest extends NbTestCase {
                 + "}\n");
     }
 
-    public void testAddReturnTagFixInEmpty1LineJavadoc() throws Exception {
+    public void DISABLE_testAddReturnTagFixInEmpty1LineJavadoc() throws Exception { //JDK-8312093
         HintTest.create()
                 .input(
                 "package test;\n"
@@ -641,6 +641,32 @@ public class AddTagFixTest extends NbTestCase {
                 + "}\n");
     }
 
+    public void testAddThrowsTagFix_NETBEANS_1615() throws Exception {
+        // issue NETBEANS-1615
+        HintTest.create()
+                .input(
+                "package test;\n"
+                + "interface Zima {\n"
+                + "    /**\n"
+                + "     */\n"
+                + "    <X extends Exception> void leden() throws X;\n"
+                + "}\n")
+                .preference(AVAILABILITY_KEY + true, true)
+                .preference(SCOPE_KEY, "private")
+                .run(JavadocHint.class)
+                .findWarning("4:46-4:47:warning:Missing @throws tag for X")
+                .applyFix("Add @throws X tag")
+                .assertCompilable()
+                .assertOutput(
+                "package test;\n"
+                + "interface Zima {\n"
+                + "    /**\n"
+                + "     * @throws X\n"
+                + "     */\n"
+                + "    <X extends Exception> void leden() throws X;\n"
+                + "}\n");
+    }
+
     public void testAddThrowsTagFix_NestedClass_160414() throws Exception {
         // issue 160414
         HintTest.create()
@@ -671,5 +697,36 @@ public class AddTagFixTest extends NbTestCase {
                 + "    }\n"
                 + "    public static class MEx extends Exception {}\n"
                 + "}\n");
+    }
+
+    public void testAddTagMarkdown() throws Exception {
+        // issue 160414
+        HintTest.create()
+                .input("""
+                       package test;
+                       public class Test {
+                           ///
+                           /// @param p1 param1
+                           ///
+                           public void leden(int p1, int p2) {
+                           }
+                       }
+                       """)
+                .sourceLevel("23")
+                .run(JavadocHint.class)
+                .findWarning("5:30-5:36:warning:Missing @param tag for p2") //TODO: test branding
+                .applyFix("Add @param p2 tag")
+                .assertCompilable()
+                .assertOutput("""
+                              package test;
+                              public class Test {
+                                  ///
+                                  /// @param p1 param1
+                                  /// @param p2
+                                  ///
+                                  public void leden(int p1, int p2) {
+                                  }
+                              }
+                              """);
     }
 }

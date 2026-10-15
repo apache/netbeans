@@ -48,5 +48,6 @@ public abstract class ParserAccessor {
     }
     
     public abstract void invalidate (Parser.Result result);    
+    public abstract boolean processingFinished (Parser.Result result);
 
 }

@@ -27,15 +27,15 @@ import java.io.Writer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.netbeans.modules.db.mysql.impl.MySQLDatabaseServer;
+import org.openide.windows.InputOutput;
+
+
 /**
  * Provides utility for rerouting process output to an output window
  * 
  * @author  ludo, David Van Couvering
  */
-
-import org.netbeans.modules.db.mysql.impl.MySQLDatabaseServer;
-import org.openide.windows.InputOutput;
-
 public class ExecSupport {
     private static final Logger LOGGER = Logger.getLogger(ExecSupport.class.getName());
 
@@ -102,7 +102,7 @@ public class ExecSupport {
     
     
     /** This thread simply reads from given Reader and writes read chars to given Writer. */
-    static public  class OutputCopier extends Thread {
+    public static  class OutputCopier extends Thread {
         final Writer os;
         final Reader is;
         /** while set to false at streams that writes to the OutputWindow it must be

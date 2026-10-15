@@ -147,7 +147,7 @@ public class LanguagesManager extends org.netbeans.api.languages.LanguagesManage
     
     private void languageChanged (String mimeType) {
         Language language = mimeTypeToLanguage.get (mimeType);
-        if (language != null && language instanceof LanguageImpl) {
+        if (language instanceof LanguageImpl) {
             try {
                 FileSystem fs = Repository.getDefault ().getDefaultFileSystem ();
                 FileObject fo = fs.findResource ("Editors/" + mimeType + "/language.nbs");
@@ -230,17 +230,11 @@ public class LanguagesManager extends org.netbeans.api.languages.LanguagesManage
                             FileUtil.createData(toolbarDefault, "uncomment").setAttribute("position", 32000);
 
                             if (root.getFileObject("Keybindings/NetBeans/Defaults/keybindings.xml") == null) {
-                                InputStream is = getClass().getClassLoader().getResourceAsStream("org/netbeans/modules/languages/resources/DefaultKeyBindings.xml");
-                                try {
+                                try (InputStream is = getClass().getClassLoader().getResourceAsStream("org/netbeans/modules/languages/resources/DefaultKeyBindings.xml")) {
                                     FileObject bindings = FileUtil.createData(root, "Keybindings/NetBeans/Defaults/keybindings.xml");
-                                    OutputStream os = bindings.getOutputStream();
-                                    try {
-                                        FileUtil.copy(is, os);
-                                    } finally {
-                                        os.close();
+                                    try (OutputStream os = bindings.getOutputStream()) {
+                                        is.transferTo(os);
                                     }
-                                } finally {
-                                    is.close();
                                 }
                             }
                         }

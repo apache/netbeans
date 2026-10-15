@@ -85,7 +85,7 @@ class JBStopRunnable implements Runnable {
             // the shutdown script should not wait for a key press
             envp.add("NOPAUSE=true"); // NOI18N
         }
-        return (String[]) envp.toArray(new String[envp.size()]);
+        return (String[]) envp.toArray(new String[0]);
     }
     
     public void run() {

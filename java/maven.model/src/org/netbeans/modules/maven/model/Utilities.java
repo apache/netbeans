@@ -22,6 +22,7 @@ package org.netbeans.modules.maven.model;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -163,6 +164,13 @@ public class Utilities {
 
     }
     
+    public static ModelSource createModelSource(final FileObject thisFileObj, final Document document) {
+        if (!(document instanceof BaseDocument)) {
+            throw new IllegalArgumentException();
+        }
+        return createModelSource(thisFileObj, null, (BaseDocument)document);
+    }
+    
     public static ModelSource createModelSource(final FileObject thisFileObj, final DataObject dobject, final BaseDocument document) {
         assert thisFileObj != null : "Null file object.";
         final File fl = FileUtil.toFile(thisFileObj);
@@ -235,11 +243,8 @@ public class Utilities {
                         if (fo == null) {
                             fo = fParentFo.createData(file.getName());
                         }
-                        OutputStream os = fo.getOutputStream();
-                        try {
-                            os.write(text.getBytes("UTF-8"));
-                        } finally {
-                            os.close();
+                        try (OutputStream os = fo.getOutputStream()) {
+                            os.write(text.getBytes(StandardCharsets.UTF_8));
                         }
                     }
                 });

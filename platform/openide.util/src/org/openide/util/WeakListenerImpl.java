@@ -171,7 +171,6 @@ abstract class WeakListenerImpl implements java.util.EventListener {
         }
         
         /** Constructor.
-        * @param clazz required class
         * @param l listener to delegate to
         * @param propertyName the associated property name
         */
@@ -294,7 +293,7 @@ abstract class WeakListenerImpl implements java.util.EventListener {
         }
 
         /** Getter for the target listener.
-        * @param event the event the we want to distribute
+        * @param ev the event the we want to distribute
         * @return null if there is no listener because it has been finalized
         */
         private DocumentListener docGet(DocumentEvent ev) {

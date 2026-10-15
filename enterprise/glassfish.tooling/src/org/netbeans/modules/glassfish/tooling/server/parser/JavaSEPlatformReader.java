@@ -31,27 +31,18 @@ import org.xml.sax.SAXException;
  */
 public class JavaSEPlatformReader extends AbstractReader {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** <code>platform</code> XML element name. */
     private static final String NODE = "platform";
 
     /** <code>type</code> XML element attribute name. */
     private static final String VERSION_ATTR = "version";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Platforms retrieved from XML elements. */
     private List<String> platforms;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of <code>platform</code> Java EE configuration
      * XML element reader.
@@ -64,10 +55,7 @@ public class JavaSEPlatformReader extends AbstractReader {
         platforms = new LinkedList<>();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Tree parser methods                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Process attributes from current XML element.
      * <p/>
@@ -81,10 +69,7 @@ public class JavaSEPlatformReader extends AbstractReader {
         platforms.add(attributes.getValue(VERSION_ATTR));
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get platforms retrieved from XML elements.
      * <p/>
@@ -94,10 +79,7 @@ public class JavaSEPlatformReader extends AbstractReader {
         return platforms;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Reset this XML element reader.
      */

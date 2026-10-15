@@ -44,9 +44,9 @@ public class LookupTest  extends DebuggerApiTestBase {
     public void testCompoundLookup() throws Exception {
 
         Object stringInstance = "stringInstace";
-        HashMap hashMapInstance = new HashMap();
+        HashMap<?, ?> hashMapInstance = new HashMap<>();
         Socket socketInstance = new Socket();
-        TreeMap treeMapInstance = new TreeMap();
+        TreeMap<?, ?> treeMapInstance = new TreeMap<>();
         StringBuffer sbInstance = new StringBuffer();
         Object [] instances = new Object [] {
             stringInstance,
@@ -57,9 +57,9 @@ public class LookupTest  extends DebuggerApiTestBase {
         };
 
         Object stringInstance2 = "stringInstace";
-        HashMap hashMapInstance2 = new HashMap();
+        HashMap<?, ?> hashMapInstance2 = new HashMap<>();
         Socket socketInstance2 = new Socket();
-        TreeMap treeMapInstance2 = new TreeMap();
+        TreeMap<?, ?> treeMapInstance2 = new TreeMap<>();
         StringBuffer sbInstance2 = new StringBuffer();
         Object [] instances2 = new Object [] {
             stringInstance2,
@@ -139,9 +139,9 @@ public class LookupTest  extends DebuggerApiTestBase {
     public void testInstanceLookup() throws Exception {
 
         Object stringInstance = "stringInstace";
-        HashMap hashMapInstance = new HashMap();
+        HashMap<?, ?> hashMapInstance = new HashMap<>();
         Socket socketInstance = new Socket();
-        TreeMap treeMapInstance = new TreeMap();
+        TreeMap<?, ?> treeMapInstance = new TreeMap<>();
         StringBuffer sbInstance = new StringBuffer();
 
         Object [] instances = new Object [] {

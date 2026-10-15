@@ -29,6 +29,7 @@ import javax.swing.SwingUtilities;
  */
 public final class UpdaterDispatcher implements Runnable {
     private Boolean disable = null;
+    private Boolean enable = null;
     private Boolean install = null;
     private Boolean uninstall = null;
     
@@ -60,7 +61,12 @@ public final class UpdaterDispatcher implements Runnable {
 
             // then disable
             if (isDisableScheduled ()) {
-                new ModuleDeactivator(context).disable();
+                new ModuleDeactivator(context).enableDisable(false);
+            }
+
+            // then disable
+            if (isEnableScheduled()) {
+                new ModuleDeactivator(context).enableDisable(true);
             }
 
             // finally install/update
@@ -87,6 +93,13 @@ public final class UpdaterDispatcher implements Runnable {
         return disable;
     }
     
+    private boolean isEnableScheduled () {
+        if (enable == null) {
+            exploreUpdateDir ();
+        }
+        return enable;
+    }
+
     private boolean isUninstallScheduled () {
         if (uninstall == null) {
             exploreUpdateDir ();
@@ -106,6 +119,7 @@ public final class UpdaterDispatcher implements Runnable {
         install = false;
         uninstall = false;
         disable = false;
+        enable = false;
         
         // go over all clusters
         for (File cluster : UpdateTracking.clusters (true)) {
@@ -122,6 +136,10 @@ public final class UpdaterDispatcher implements Runnable {
                 // disable
                 if (disable == null || ! disable) {
                     disable = ModuleDeactivator.hasModulesForDisable (updateDir);
+                }
+                // enable
+                if (enable == null || ! enable) {
+                    enable = ModuleDeactivator.hasModulesForEnable (updateDir);
                 }
             }
         }

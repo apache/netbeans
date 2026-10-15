@@ -28,10 +28,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -45,6 +45,7 @@ import javax.tools.JavaCompiler;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 import org.netbeans.junit.NbTestCase;
+import org.openide.util.test.TestFileUtils;
 
 /** Some infrastructure for module system tests.
  * @author Jesse Glick
@@ -80,14 +81,7 @@ public abstract class SetupHid extends NbTestCase {
     }
 
     protected static void deleteRec(File f) throws IOException {
-        if (f.isDirectory()) {
-            File[] kids = f.listFiles();
-            if (kids == null) throw new IOException("Could not list: " + f);
-            for (int i = 0; i < kids.length; i++) {
-                deleteRec(kids[i]);
-            }
-        }
-        if (! f.delete()) throw new IOException("Could not delete: " + f);
+        TestFileUtils.deleteFile(f);
     }
 
     /** same as FileUtil.copy */
@@ -129,11 +123,9 @@ public abstract class SetupHid extends NbTestCase {
         OutputStream os = new FileOutputStream(jar);
         try {
             JarOutputStream jos = new JarOutputStream(os, m);
-            Iterator it = contents.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry entry = (Map.Entry) it.next();
-                String path = (String) entry.getKey();
-                byte[] data = ((String) entry.getValue()).getBytes("UTF-8");
+            for (Map.Entry<String, String> entry : contents.entrySet()) {
+                String path = entry.getKey();
+                byte[] data = entry.getValue().getBytes(StandardCharsets.UTF_8);
                 JarEntry je = new JarEntry(path);
                 je.setSize(data.length);
                 CRC32 crc = new CRC32();

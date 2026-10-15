@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -93,7 +94,7 @@ public final class DataExport {
                 Writer writer = null;
                 TracerProgressObject progress = null;
                 try {
-                    writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8"); // NOI18N
+                    writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
                     ExportBatch batch = null;
 
                     if (filter == XML_FILTER)
@@ -247,7 +248,7 @@ public final class DataExport {
     }
 
     
-    private static abstract class Filter extends FileFilter {
+    private abstract static class Filter extends FileFilter {
 
         abstract String getExt();
 

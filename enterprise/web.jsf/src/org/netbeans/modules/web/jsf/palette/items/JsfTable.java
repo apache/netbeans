@@ -74,10 +74,10 @@ public final class JsfTable extends EntityClass implements ActiveEditorDrop, Pal
             stringBuffer.append(PaletteUtils.createViewTag(jsfLibrariesSupport, target, false)).append("\n"); // NOI18N
         }
         stringBuffer.append(MessageFormat.format(
-                BEGIN[formType].replaceAll("__HTML__", jsfLibrariesSupport.getLibraryPrefix(DefaultLibraryInfo.HTML)), //NOI18N,
+                BEGIN[formType].replace("__HTML__", jsfLibrariesSupport.getLibraryPrefix(DefaultLibraryInfo.HTML)), //NOI18N
                 new Object [] {variable, "item"})); //NOI18N
         
-        stringBuffer.append(END[formType].replaceAll("__HTML__", jsfLibrariesSupport.getLibraryPrefix(DefaultLibraryInfo.HTML))); //NOI18N
+        stringBuffer.append(END[formType].replace("__HTML__", jsfLibrariesSupport.getLibraryPrefix(DefaultLibraryInfo.HTML))); //NOI18N
         if (surroundWithFView) {
             stringBuffer.append(PaletteUtils.createViewTag(jsfLibrariesSupport, target, true)).append("\n"); // NOI18N
         }

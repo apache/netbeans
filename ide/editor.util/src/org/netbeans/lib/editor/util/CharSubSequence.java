@@ -36,6 +36,7 @@ public class CharSubSequence extends AbstractCharSequence {
      *  of the given text.
      * @deprecated use {@link CharSequenceUtilities#checkIndexesValid(CharSequence, int, int)}
      */
+    @Deprecated
     public static void checkIndexesValid(CharSequence text, int start, int end) {
         CharSequenceUtilities.checkIndexesValid(text, start, end);
     }

@@ -56,14 +56,14 @@ import org.tigris.subversion.svnclientadapter.SVNUrl;
  */
 public class SvnSearch implements ActionListener, DocumentListener {
     
-    public final static String SEACRH_HELP_ID_CHECKOUT = "org.netbeans.modules.subversion.ui.search.checkout"; 
-    public final static String SEACRH_HELP_ID_SWITCH = "org.netbeans.modules.subversion.ui.search.switch"; 
-    public final static String SEACRH_HELP_ID_COPY = "org.netbeans.modules.subversion.ui.search.copy"; 
-    public final static String SEACRH_HELP_ID_URL_PATTERN = "org.netbeans.modules.subversion.ui.search.urlpattern"; 
-    public final static String SEACRH_HELP_ID_MERGE = "org.netbeans.modules.subversion.ui.search.merge"; 
-    public final static String SEACRH_HELP_ID_REVERT = "org.netbeans.modules.subversion.ui.search.revert";     
-    public final static String SEARCH_HELP_ID_UPDATE = "org.netbeans.modules.subversion.ui.search.update"; 
-    public final static String SEARCH_HELP_ID_SELECT_DIFF_TREE = "org.netbeans.modules.subversion.ui.search.selectdifftree"; //NOI18N
+    public static final String SEACRH_HELP_ID_CHECKOUT = "org.netbeans.modules.subversion.ui.search.checkout"; 
+    public static final String SEACRH_HELP_ID_SWITCH = "org.netbeans.modules.subversion.ui.search.switch"; 
+    public static final String SEACRH_HELP_ID_COPY = "org.netbeans.modules.subversion.ui.search.copy"; 
+    public static final String SEACRH_HELP_ID_URL_PATTERN = "org.netbeans.modules.subversion.ui.search.urlpattern"; 
+    public static final String SEACRH_HELP_ID_MERGE = "org.netbeans.modules.subversion.ui.search.merge"; 
+    public static final String SEACRH_HELP_ID_REVERT = "org.netbeans.modules.subversion.ui.search.revert";     
+    public static final String SEARCH_HELP_ID_UPDATE = "org.netbeans.modules.subversion.ui.search.update"; 
+    public static final String SEARCH_HELP_ID_SELECT_DIFF_TREE = "org.netbeans.modules.subversion.ui.search.selectdifftree"; //NOI18N
     
     private static final String DATE_FROM = "svnSearch.dateFrom";    // NOI18N
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd"); // NOI18N
@@ -195,7 +195,7 @@ public class SvnSearch implements ActionListener, DocumentListener {
                     public void run() {
                         panel.listPanel.setVisible(true);
                         panel.noContentPanel.setVisible(false);                     
-                        searchView.setResults(messages.toArray(new ISVNLogMessage[messages.size()]));      
+                        searchView.setResults(messages.toArray(new ISVNLogMessage[0]));      
                     }
                 });
             }                        

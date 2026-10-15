@@ -92,8 +92,9 @@ public abstract class PHPFormatterTestBase extends PHPTestBase {
         }
         options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
         Preferences prefs = CodeStylePreferences.get(doc).getPreferences();
-        for (String option : options.keySet()) {
-            Object value = options.get(option);
+        for (Map.Entry<String, Object> entry : options.entrySet()) {
+            String option = entry.getKey();
+            Object value = entry.getValue();
             if (value instanceof Integer) {
                 prefs.putInt(option, ((Integer) value).intValue());
             } else if (value instanceof String) {
@@ -118,14 +119,18 @@ public abstract class PHPFormatterTestBase extends PHPTestBase {
     }
 
     protected void reformatFileContents(String file, Map<String, Object> options, boolean isTemplate) throws Exception {
-        reformatFileContents(file, options, isTemplate, new IndentPrefs(4, 4));
+        reformatFileContents(file, options, isTemplate, false, new IndentPrefs(4, 4));
     }
 
-    private void reformatFileContents(String file, Map<String, Object> options, boolean isTemplate, IndentPrefs indentPrefs) throws Exception {
+    protected void reformatFileContents(String file, Map<String, Object> options, boolean isTemplate, boolean includeTestName) throws Exception {
+        reformatFileContents(file, options, isTemplate, includeTestName, new IndentPrefs(4, 4));
+    }
+
+    private void reformatFileContents(String file, Map<String, Object> options, boolean isTemplate, boolean includeTestName, IndentPrefs indentPrefs) throws Exception {
         FileObject fo = getTestFile(file);
         assertNotNull(fo);
 
-        String text = read(fo);
+        String text = readFile(fo);
 
         int formatStart = 0;
         int formatEnd = text.length();
@@ -175,8 +180,9 @@ public abstract class PHPFormatterTestBase extends PHPTestBase {
         setupDocumentIndentation(doc, indentPrefs);
 
         Preferences prefs = CodeStylePreferences.get(doc).getPreferences();
-        for (String option : options.keySet()) {
-            Object value = options.get(option);
+        for (Map.Entry<String, Object> entry : options.entrySet()) {
+            String option = entry.getKey();
+            Object value = entry.getValue();
             if (value instanceof Integer) {
                 prefs.putInt(option, ((Integer) value).intValue());
             } else if (value instanceof String) {
@@ -192,7 +198,7 @@ public abstract class PHPFormatterTestBase extends PHPTestBase {
 
         format(doc, formatter, formatStart, formatEnd, false);
         String after = doc.getText(0, doc.getLength());
-        assertDescriptionMatches(file, after, false, ".formatted");
+        assertDescriptionMatches(file, after, includeTestName, ".formatted");
         GSFPHPParserTestUtil.setUnitTestCaretPosition(-1);
     }
 }

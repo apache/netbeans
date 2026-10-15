@@ -25,11 +25,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-import org.netbeans.modules.j2ee.sun.validation.Constants;
 import org.netbeans.modules.j2ee.sun.validation.constraints.Constraint;
 import org.netbeans.modules.j2ee.sun.validation.util.BundleReader;
 import org.netbeans.modules.j2ee.sun.validation.util.Utils;
-import org.netbeans.modules.j2ee.sun.validation.Validatee;
 
 /**
  * Validator  is an <code>Object</code> that knows how to validate its
@@ -163,11 +161,11 @@ class Validator {
         if(constraintList != null) {
             failures.addAll(validate(property, constraintList, fieldName));
         } else {
-            ///String format = 
-            ///    BundleReader.getValue("MSG_No_definition_for");      //NOI18N
-            ///    Object[] arguments = 
-            ///        new Object[]{"Constraints", absoluteDtdName};    //NOI18N
-            ///System.out.println(MessageFormat.format(format, arguments));
+            //String format = 
+            //    BundleReader.getValue("MSG_No_definition_for");      //NOI18N
+            //    Object[] arguments = 
+            //        new Object[]{"Constraints", absoluteDtdName};    //NOI18N
+            //System.out.println(MessageFormat.format(format, arguments));
         }
         return failures;
     }
@@ -200,10 +198,10 @@ class Validator {
             String property = (String)validatee.getElement(elementName);
             failures.addAll(validate(property, constraintList, name));
         } else {
-            ///String format = 
-            ///    BundleReader.getValue("MSG_No_definition_for");      //NOI18N
-            ///    Object[] arguments = new Object[]{"Constraints", name}; //NOI18N
-            ///System.out.println(MessageFormat.format(format, arguments));
+            //String format = 
+            //    BundleReader.getValue("MSG_No_definition_for");      //NOI18N
+            //    Object[] arguments = new Object[]{"Constraints", name}; //NOI18N
+            //System.out.println(MessageFormat.format(format, arguments));
         }
         return failures;
     }
@@ -228,7 +226,7 @@ class Validator {
         String sizeMethodName =  utils.methodNameFromBeanName(
             elementName, SIZE_PREFIX);
         Method sizeMethod = validatee.getMethod(sizeMethodName);
-        noOfElements = ((Integer)validatee.invoke(sizeMethod)).intValue();
+        noOfElements = ((Integer)validatee.invoke(sizeMethod));
         
         ArrayList constraintList =
             (ArrayList)elementToConstraints.get(elementDtdName);
@@ -241,11 +239,11 @@ class Validator {
                 failures.addAll(validate(property, constraintList, name));
             }
         } else {
-            ///String format = 
-            ///    BundleReader.getValue("MSG_No_definition_for");      //NOI18N
-            ///    Object[] arguments = 
-            ///        new Object[]{"Constraints", elementName};        //NOI18N
-            ///System.out.println(MessageFormat.format(format, arguments));
+            //String format = 
+            //    BundleReader.getValue("MSG_No_definition_for");      //NOI18N
+            //    Object[] arguments = 
+            //        new Object[]{"Constraints", elementName};        //NOI18N
+            //System.out.println(MessageFormat.format(format, arguments));
         }
         return failures;
     }

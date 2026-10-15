@@ -20,6 +20,7 @@ package org.netbeans.modules.java.j2semodule.ui.wizards;
 
 import java.awt.Component;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 import javax.swing.event.ChangeEvent;
@@ -121,6 +122,10 @@ public class ModuleTargetChooserPanel implements WizardDescriptor.Panel<WizardDe
             setErrorMessage("ERR_ModuleTargetChooser_InvalidFolder"); // NOI18N
             return false;
         }
+        if(isModuleNameAlreadyExists(gui.getRootFolder(), gui.getTargetName())){
+            setErrorMessage("ERR_ModuleTargetChooser_AlreadyExistModule"); // NOI18N
+            return false;
+        }
         return true;
     }
 
@@ -137,7 +142,7 @@ public class ModuleTargetChooserPanel implements WizardDescriptor.Panel<WizardDe
     private void fireChange() {
         ChangeListener[] ls;
         synchronized (listeners) {
-            ls = listeners.toArray(new ChangeListener[listeners.size()]);
+            ls = listeners.toArray(new ChangeListener[0]);
         }
         ChangeEvent ev = new ChangeEvent(this);
         for (ChangeListener l : ls) {
@@ -184,6 +189,10 @@ public class ModuleTargetChooserPanel implements WizardDescriptor.Panel<WizardDe
             }
         }
         return true;
+    }
+    
+    private boolean isModuleNameAlreadyExists(FileObject root, final String newModuleName){
+         return Arrays.stream(root.getChildren()).anyMatch(module -> module.getName().equalsIgnoreCase(newModuleName));
     }
 
     private void setErrorMessage(String key) {

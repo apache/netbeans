@@ -126,11 +126,11 @@ public class ClientView extends SectionView {
                     nodes.add(advancedConfigNode);
                 }
                 
-                bindingChildren.add(nodes.toArray(new Node[nodes.size()]));
+                bindingChildren.add(nodes.toArray(new Node[0]));
                 addSection(bindingCont, false);
                 bindingNodes.add(bindingNodeContainer);
             }
-            rootChildren.add(bindingNodes.toArray(new Node[bindingNodes.size()]));
+            rootChildren.add(bindingNodes.toArray(new Node[0]));
         } else {
             if (bindings.size() > 0) {
                 Binding binding = (Binding) bindings.toArray()[0];
@@ -165,7 +165,7 @@ public class ClientView extends SectionView {
                     addSection(advancedConfigPanel);
                     nodes.add(advancedConfigNode);
                 }
-                rootChildren.add(nodes.toArray(new Node[nodes.size()]));
+                rootChildren.add(nodes.toArray(new Node[0]));
             }
         }
         setRoot(root);

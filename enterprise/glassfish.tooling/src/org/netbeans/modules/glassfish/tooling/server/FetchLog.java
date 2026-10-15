@@ -31,17 +31,11 @@ import org.netbeans.modules.glassfish.tooling.logging.Logger;
  */
 public abstract class FetchLog {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(FetchLog.class);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish server for fetching server log. */
     GlassFishServer server;
 
@@ -51,10 +45,7 @@ public abstract class FetchLog {
     /** Request to skip to the end of log. */
     final boolean skip;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Abstract methods                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructor callback which will initialize log <code>InputStream</code>.
      * <p/>
@@ -63,10 +54,7 @@ public abstract class FetchLog {
      */
     abstract InputStream initInputStream();
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an empty instance of GlassFish server log fetcher using
      * provided input stream.
@@ -99,10 +87,7 @@ public abstract class FetchLog {
         this.skip = skip;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get input stream for reading lines from server log file.
      * <p/>
@@ -112,10 +97,7 @@ public abstract class FetchLog {
         return this.in;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Close input stream used to access log lines received from server.
      * <p/>

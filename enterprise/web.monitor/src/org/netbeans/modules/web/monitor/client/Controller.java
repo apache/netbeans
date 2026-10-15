@@ -17,7 +17,7 @@
  * under the License.
  */
 
-/**
+/*
  * @author Ana von Klopp
  */
 
@@ -66,17 +66,17 @@ import org.netbeans.modules.web.monitor.data.*;
 class Controller  {
 
     // REPLAY strings - must be coordinated with server.MonitorFilter
-    final static String REPLAY="netbeans.replay"; //NOI18N
-    final static String PORT="netbeans.replay.port"; //NOI18N
-    final static String REPLAYSTATUS="netbeans.replay.status"; //NOI18N
-    final static String REPLAYSESSION="netbeans.replay.session"; //NOI18N
+    static final String REPLAY="netbeans.replay"; //NOI18N
+    static final String PORT="netbeans.replay.port"; //NOI18N
+    static final String REPLAYSTATUS="netbeans.replay.status"; //NOI18N
+    static final String REPLAYSESSION="netbeans.replay.session"; //NOI18N
     static final boolean debug = false;
     //private transient static boolean starting = true;
 
     // Test server location and port
     // Should use InetAddress.getLocalhost() instead
-    private transient static String server = "localhost"; //NOI18N
-    private transient static int port = 8080;
+    private static transient String server = "localhost"; //NOI18N
+    private static transient int port = 8080;
 
     // Location of the files
     private static FileObject monDir = null;
@@ -84,10 +84,10 @@ class Controller  {
     private static FileObject saveDir = null;
     private static FileObject replayDir = null;
 
-    final static String monDirStr = "HTTPMonitor"; // NOI18N
-    final static String currDirStr = "current"; // NOI18N
-    final static String saveDirStr = "save"; // NOI18N
-    final static String replayDirStr = "replay"; // NOI18N
+    static final String monDirStr = "HTTPMonitor"; // NOI18N
+    static final String currDirStr = "current"; // NOI18N
+    static final String saveDirStr = "save"; // NOI18N
+    static final String replayDirStr = "replay"; // NOI18N
 
     // Constant nodes etc we need to know about
     private transient  NavigateNode root = null;
@@ -871,7 +871,7 @@ class Controller  {
                 int oldValue = -1;
                 int i = 0;
                 
-                for(Enumeration e = directory.getData(false); e.hasMoreElements(); ++i) {
+                for(Enumeration<? extends FileObject> e = directory.getData(false); e.hasMoreElements(); ++i) {
                     FileObject fo = (FileObject) e.nextElement();
                     FileLock lock = null;
                     try {
@@ -926,8 +926,8 @@ class Controller  {
 	    return;
 	}
 
-	Enumeration e = null;
-	Vector nodes = new Vector(); 
+	Enumeration<? extends FileObject> e = null;
+	Vector<TransactionNode> nodes = new Vector<>(); 
 	int numtns = 0;
 	TransactionNode[] tns = null;
 	FileObject fo = null;
@@ -938,7 +938,7 @@ class Controller  {
 	if(debug) log("getTransactions removed old nodes"); //NOI18N 
 
 	e = currDir.getData(false);
-        final List fileObjectsToDelete = new ArrayList();
+        final List<FileObject> fileObjectsToDelete = new ArrayList<>();
 	while(e.hasMoreElements()) {
 
 	    fo = (FileObject)e.nextElement();
@@ -959,9 +959,9 @@ class Controller  {
 	}
         RequestProcessor.getDefault().post(new Runnable () {
             public void run() {
-                for (Iterator it = fileObjectsToDelete.iterator(); it.hasNext(); ) {
+                for (Iterator<FileObject> it = fileObjectsToDelete.iterator(); it.hasNext(); ) {
                     try {
-                        ((FileObject) it.next()).delete();
+                        it.next().delete();
                     } catch (IOException e) {
                         Logger.getLogger("global").log(Level.INFO, null, e);
                     }
@@ -972,12 +972,12 @@ class Controller  {
 	numtns = nodes.size();
  	tns = new TransactionNode[numtns]; 
 	for(int i=0;i<numtns;++i) 
-	    tns[i] = (TransactionNode)nodes.elementAt(i);
+	    tns[i] = nodes.elementAt(i);
 	currTrans.add(tns);
 
 
 	savedTrans.remove(savedTrans.getNodes());
-	nodes = new Vector();
+	nodes = new Vector<>();
 	e = saveDir.getData(false);
 	while(e.hasMoreElements()) {
 
@@ -995,7 +995,7 @@ class Controller  {
 	numtns = nodes.size();
 	tns = new TransactionNode[numtns]; 
 	for(int i=0;i<numtns;++i) {
-	    tns[i] = (TransactionNode)nodes.elementAt(i);
+	    tns[i] = nodes.elementAt(i);
 	    if(debug) 
 		log("Adding saved node" + tns[i].toString()); //NOI18N 
 		    
@@ -1014,7 +1014,7 @@ class Controller  {
             int idx = statusCode.indexOf(':');
             if (idx != -1) {
                 statusCode = statusCode.substring(0, idx);
-                statusCodeNum = Integer.valueOf(statusCode).intValue();
+                statusCodeNum = Integer.valueOf(statusCode);
             }
         } catch(NumberFormatException nfe) {
             // ignore
@@ -1551,7 +1551,7 @@ class Controller  {
 		    log(n1.getID());
 		    log(n2.getID());
 		}
-		catch(Exception ex) {};
+		catch(Exception ex) {}
 	    }
 
 	    int result;
@@ -1606,7 +1606,7 @@ class Controller  {
 		    log(n1.getID());
 		    log(n2.getID());
 		}
-		catch(Exception ex) {};
+		catch(Exception ex) {}
 	    }
 	    int diff = n1.getName().compareTo(n2.getName());
 	    if(diff == 0)

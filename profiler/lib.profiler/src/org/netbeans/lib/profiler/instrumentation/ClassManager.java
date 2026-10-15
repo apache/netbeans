@@ -121,7 +121,7 @@ public class ClassManager implements JavaClassConstants, CommonConstants {
         if (newPoints == null) {
             return EMPTY_PROFILEPOINT_ARRAY;
         } else if (newPoints.size() > 1) {
-            Collections.sort(newPoints, ByBciComparator);
+            newPoints.sort(ByBciComparator);
         }
 
         return (RuntimeProfilingPoint[]) newPoints.toArray(new RuntimeProfilingPoint[0]);
@@ -159,7 +159,7 @@ public class ClassManager implements JavaClassConstants, CommonConstants {
         if (newPoints == null) {
             return EMPTY_PROFILEPOINT_ARRAY;
         } else if (newPoints.size() > 1) {
-            Collections.sort(newPoints, ByBciComparator);
+            newPoints.sort(ByBciComparator);
         }
 
         return (RuntimeProfilingPoint[]) newPoints.toArray(new RuntimeProfilingPoint[0]);

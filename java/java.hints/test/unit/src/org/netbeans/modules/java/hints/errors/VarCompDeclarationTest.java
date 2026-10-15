@@ -43,7 +43,7 @@ public class VarCompDeclarationTest extends ErrorHintsTestBase {
         sourceLevel = "1.10";
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
     }
-    
+
     public void testCase1() throws Exception {
         performFixTest("test/Test.java",
                        "package test; \n" +
@@ -62,7 +62,7 @@ public class VarCompDeclarationTest extends ErrorHintsTestBase {
                        "    } \n" +
                        "}").replaceAll("[\\s]+", " "));
     }
-    
+
     public void testCase2() throws Exception {        
         performFixTest("test/Test.java",
                        "package test; \n" +
@@ -82,7 +82,7 @@ public class VarCompDeclarationTest extends ErrorHintsTestBase {
                        "    } \n" +
                        "}").replaceAll("[\\s]+", " "));
     }
-    
+
     public void testCase3() throws Exception {
         performFixTest("test/Test.java",
                        "package test; \n" +
@@ -101,7 +101,7 @@ public class VarCompDeclarationTest extends ErrorHintsTestBase {
                        "    } \n" +
                        "}").replaceAll("[\\s]+", " "));
     }
-    
+
     public void testCase4() throws Exception {
         performFixTest("test/Test.java",
                        "package test; \n" +
@@ -121,7 +121,7 @@ public class VarCompDeclarationTest extends ErrorHintsTestBase {
                        "    } \n" +
                        "}").replaceAll("[\\s]+", " "));
     }
-    
+
     public void testCase5() throws Exception {
         performFixTest("test/Test.java",
                        "package test; \n" +
@@ -150,7 +150,7 @@ public class VarCompDeclarationTest extends ErrorHintsTestBase {
                        "    } \n" +
                        "}").replaceAll("[\\s]+", " "));       
     }
-    
+
     public void testCase6() throws Exception {
         performFixTest("test/Test.java",
                        "package test; \n" +
@@ -168,7 +168,7 @@ public class VarCompDeclarationTest extends ErrorHintsTestBase {
                        "        var v1 = 11;} \n" +
                        "}").replaceAll("[\\s]+", " "));       
     }
-    
+
     public void testCase7() throws Exception {
         performFixTest("test/Test.java",
                        "package test; \n" +
@@ -186,7 +186,7 @@ public class VarCompDeclarationTest extends ErrorHintsTestBase {
                        "        @DA final var y = 11;} \n" +
                        "}").replaceAll("[\\s]+", " "));       
     }
-    
+
     public void testCase8() throws Exception {
         performFixTest("test/Test.java",
                        "package test; \n" +
@@ -259,7 +259,7 @@ public class VarCompDeclarationTest extends ErrorHintsTestBase {
                        "    } \n" +
                        "}").replaceAll("[\\s]+", " "));
     }
-    
+
     public void testCase11() throws Exception {
         performFixTest("test/Test.java",
                        "package test; \n" +

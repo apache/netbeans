@@ -33,7 +33,7 @@ import org.openide.util.Exceptions;
  */
 public class ServerSelection extends javax.swing.JPanel {
 
-    private final DefaultComboBoxModel serversModel = new DefaultComboBoxModel();
+    private final DefaultComboBoxModel<ServerInstanceWrapper> serversModel = new DefaultComboBoxModel<>();
     private ServerSelectionWizardPanel wp;
     
     /** Creates new form ServerSelection */

@@ -132,7 +132,7 @@ public class J2eeMavenSourcesImpl implements Sources, OtherSourcesExclude {
                 if (webResourceRoots == null) {
                     webResourceRoots = getWebSourceGroups();
                 }
-                return webResourceRoots.toArray(new SourceGroup[webResourceRoots.size()]);
+                return webResourceRoots.toArray(new SourceGroup[0]);
             }
         }
         return new SourceGroup[0];

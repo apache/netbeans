@@ -61,7 +61,7 @@ public class WidthEstimator extends JCTree.Visitor {
 	if (ownPrec < contextPrec)
 	    width += 2;
     }
-    private void width(Name n) { width += n.getByteLength(); }
+    private void width(Name n) { width += n.length(); }
     private void width(String n) { width += n.length(); }
     private void width(JCTree n) { if(width<maxwidth) n.accept(this); }
     private void width(List<? extends JCTree> n, int pad) {
@@ -210,7 +210,7 @@ System.err.println("Need width calc for "+tree);
 	open(prec, TreeInfo.ordPrec);
 	width += 12;
 	width(tree.expr, TreeInfo.ordPrec);
-	width(tree.clazz);
+	width(tree.pattern);
     }
 
     public void visitIndexed(JCArrayAccess tree) {

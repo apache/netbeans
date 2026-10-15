@@ -627,7 +627,7 @@ public class JPDAStart extends Task implements Runnable {
     }
 
     private ExceptionBreakpoint createCompilationErrorBreakpoint() {
-        ExceptionBreakpoint b = ExceptionBreakpoint.create("java.lang.RuntimeException", ExceptionBreakpoint.TYPE_EXCEPTION_UNCATCHED);
+        ExceptionBreakpoint b = ExceptionBreakpoint.create("java.lang.RuntimeException", ExceptionBreakpoint.TYPE_EXCEPTION_UNCAUGHT);
         b.setHidden (true);
         b.addJPDABreakpointListener(new JPDABreakpointListener() {
             @Override
@@ -768,7 +768,7 @@ public class JPDAStart extends Task implements Runnable {
             if (url == null) continue;
             l.add (url);
         }
-        URL[] urls = (URL[]) l.toArray (new URL [l.size ()]);
+        URL[] urls = (URL[]) l.toArray (new URL [0]);
         return ClassPathSupport.createClassPath (urls);
     }
 

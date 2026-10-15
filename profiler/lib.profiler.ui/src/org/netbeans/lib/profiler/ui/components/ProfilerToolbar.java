@@ -80,7 +80,7 @@ public abstract class ProfilerToolbar {
     protected ProfilerToolbar() {}
     
     
-    public static abstract class Provider {
+    public abstract static class Provider {
         
         public abstract ProfilerToolbar create(boolean showSeparator);
         
@@ -243,7 +243,7 @@ public abstract class ProfilerToolbar {
         }
 
         protected List<Component> components(Container aContainer) {
-            List<Component> l = new ArrayList();
+            List<Component> l = new ArrayList<>();
 
             for (int i = 0; i < aContainer.getComponentCount(); i++) {
                 Component c = aContainer.getComponent(i);

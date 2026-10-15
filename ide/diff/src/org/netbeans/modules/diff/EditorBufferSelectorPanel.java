@@ -97,7 +97,7 @@ class EditorBufferSelectorPanel extends JPanel implements ListSelectionListener,
             }
         }
 
-        elementsList.setListData(elements.toArray(new EditorListElement[elements.size()]));
+        elementsList.setListData(elements.toArray(new EditorListElement[0]));
         elementsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         elementsList.addListSelectionListener(this);
         elementsList.setCellRenderer(new DefaultListCellRenderer() {
@@ -113,10 +113,9 @@ class EditorBufferSelectorPanel extends JPanel implements ListSelectionListener,
                 if (null == htmlText) {
                     return null;
                 }
-                String res = htmlText.replaceAll("<[^>]*>", ""); // NOI18N // NOI18N
-                res = res.replaceAll("&nbsp;", " "); // NOI18N // NOI18N
-                res = res.trim();
-                return res;
+                return htmlText.replaceAll( "<[^>]*>", "" ) // NOI18N
+                               .replace( "&nbsp;", " " ) // NOI18N
+                               .trim();
             }
         });
 

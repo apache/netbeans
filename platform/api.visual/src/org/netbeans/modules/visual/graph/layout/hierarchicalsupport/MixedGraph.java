@@ -33,23 +33,23 @@ import org.netbeans.api.visual.graph.layout.UniversalGraph;
 public class MixedGraph<N, E> {
 
     private Collection<N> nodes;
-    private Map<N, Vertex> vertexMap;
-    private GraphScene scene;
+    private Map<N, Vertex<N>> vertexMap;
+    private GraphScene<N, E> scene;
     private UniversalGraph<N, E> uGraph;
     private Collection<E> edges;
 
     /** Creates a new instance of UndirectedGraph */
-    private MixedGraph(UniversalGraph<N, E> uGraph, GraphScene scene) {
+    private MixedGraph(UniversalGraph<N, E> uGraph, GraphScene<N, E> scene) {
         this.uGraph = uGraph;
         this.scene = scene;
         this.nodes = uGraph.getNodes();
         this.edges = uGraph.getEdges() ;
 
-        vertexMap = new HashMap<N, Vertex>();
+        vertexMap = new HashMap<>();
     }
 
-    public static <N, E> MixedGraph createGraph(UniversalGraph<N, E> uGraph, GraphScene scene) {
-        MixedGraph<N, E> graph = new MixedGraph<N, E>(uGraph, scene);
+    public static <N, E> MixedGraph<N, E> createGraph(UniversalGraph<N, E> uGraph, GraphScene<N, E> scene) {
+        MixedGraph<N, E> graph = new MixedGraph<>(uGraph, scene);
         graph.createGraph();
         //graph.printGraph();
         return graph;
@@ -89,8 +89,8 @@ public class MixedGraph<N, E> {
             N source = uGraph.getEdgeSource(e) ;
             N target = uGraph.getEdgeTarget(e) ;
             
-            Vertex sourceVertex = getVertex(source);
-            Vertex targetVertex = getVertex(target);
+            Vertex<N> sourceVertex = getVertex(source);
+            Vertex<N> targetVertex = getVertex(target);
             
             sourceVertex.addUpperNeighbor(targetVertex);
             targetVertex.addLowerNeighbor(sourceVertex);
@@ -99,7 +99,7 @@ public class MixedGraph<N, E> {
         }
         
         for (N node : nodes) {
-            Vertex vertex = getVertex(node);
+            Vertex<N> vertex = getVertex(node);
         }
         
 
@@ -110,7 +110,7 @@ public class MixedGraph<N, E> {
      *
      *
      */
-    public Collection<Vertex> getVertices() {
+    public Collection<Vertex<N>> getVertices() {
         return vertexMap.values();
     }
 
@@ -118,11 +118,11 @@ public class MixedGraph<N, E> {
      *
      *
      */
-    private Vertex getVertex(N node) {
-        Vertex vertex = vertexMap.get(node);
+    private Vertex<N> getVertex(N node) {
+        Vertex<N> vertex = vertexMap.get(node);
 
         if (vertex == null) {
-            vertex = new Vertex(node);
+            vertex = new Vertex<>(node);
             vertexMap.put(node, vertex);
         }
 
@@ -134,10 +134,10 @@ public class MixedGraph<N, E> {
      *
      */
     private void printGraph() {
-        for (Vertex v : getVertices()) {
+        for (Vertex<?> v : getVertices()) {
             System.out.println("vertex = " + v);
-            Collection<Vertex> vertices = v.getNeighbors() ;
-            for (Vertex nv : vertices) {
+            Collection<Vertex<?>> vertices = v.getNeighbors() ;
+            for (Vertex<?> nv : vertices) {
                 System.out.println("\tneighbor = " + nv);
             }
         }
@@ -147,56 +147,56 @@ public class MixedGraph<N, E> {
      *
      *
      */
-    public static class Vertex <N> {
+    public static class Vertex<N> {
 
         private N node;
-        private ArrayList<Vertex> upperNeighbors;
-        private ArrayList<Vertex> lowerNeighbors;
-        private ArrayList<Vertex> neighbors;
+        private ArrayList<Vertex<?>> upperNeighbors;
+        private ArrayList<Vertex<?>> lowerNeighbors;
+        private ArrayList<Vertex<?>> neighbors;
         private Object vertexData;
 
         public Vertex(N node) {
             this.node = node;
-            neighbors = new ArrayList<Vertex>();
+            neighbors = new ArrayList<>();
         }
 
-        public void addNeighbor(Vertex vertex) {
+        public void addNeighbor(Vertex<?> vertex) {
             neighbors.add(vertex);
         }
 
-        public void removeNeighbor(Vertex vertex) {
+        public void removeNeighbor(Vertex<?> vertex) {
             neighbors.remove(vertex);
         }
 
-        public void addLowerNeighbor(Vertex vertex) {
+        public void addLowerNeighbor(Vertex<?> vertex) {
             if (!lowerNeighbors.contains(vertex)) {
                 lowerNeighbors.add(vertex);
             }
         }
 
-        public void removeLowerNeighbor(Vertex vertex) {
+        public void removeLowerNeighbor(Vertex<?> vertex) {
             lowerNeighbors.remove(vertex);
         }
 
-        public Collection<Vertex> getLowerNeighbors() {
+        public Collection<Vertex<?>> getLowerNeighbors() {
             return Collections.unmodifiableCollection(lowerNeighbors);
         }
 
-        public void addUpperNeighbor(Vertex vertex) {
+        public void addUpperNeighbor(Vertex<?> vertex) {
             if (!upperNeighbors.contains(vertex)) {
                 upperNeighbors.add(vertex);
             }
         }
 
-        public void removeUpperNeighbor(Vertex vertex) {
+        public void removeUpperNeighbor(Vertex<?> vertex) {
             upperNeighbors.remove(vertex);
         }
 
-        public Collection<Vertex> getUpperNeighbors() {
+        public Collection<Vertex<?>> getUpperNeighbors() {
             return Collections.unmodifiableCollection(upperNeighbors);
         }
 
-        public Collection<Vertex> getNeighbors() {
+        public Collection<Vertex<?>> getNeighbors() {
             return neighbors;
         }
 

@@ -30,7 +30,7 @@ import org.openide.util.RequestProcessor;
 public class PropertiesRequestProcessor {
 
      /** the static {@link org.openide.util.RequestProcessor} instance */
-    private final static RequestProcessor requestProcessor =
+    private static final RequestProcessor requestProcessor =
         new RequestProcessor ("org.netbeans.modules.properties.PropertiesRequestProcessor");
 
     /** Creates a new instance of PropertiesResourceProcessor */

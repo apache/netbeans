@@ -362,7 +362,7 @@ public final class LayoutDesigner implements LayoutConstants {
      * @return List of Ids of components that can be dragged together
      */
     public List<String> getDraggableComponents(List<String> componentIds) {
-        List<LayoutComponent> components = new ArrayList(componentIds.size());
+        List<LayoutComponent> components = new ArrayList<>(componentIds.size());
         for (String compId : componentIds) {
             LayoutComponent comp = layoutModel.getLayoutComponent(compId);
             if (comp != null) {
@@ -437,8 +437,8 @@ public final class LayoutDesigner implements LayoutConstants {
             LayoutTestUtils.writeLayoutComponentArray(testCode, "comps", "lc");				    //NOI18N
             LayoutTestUtils.writeRectangleArray(testCode, "bounds", bounds);				    //NOI18N
             LayoutTestUtils.writeString(testCode, "defaultContId", defaultContId);			    //NOI18N         
-            testCode.add("Point hotspot = new Point(" + new Double(hotspot.getX()).intValue() + "," +	    //NOI18N
-			    new Double(hotspot.getY()).intValue() + ");");				    //NOI18N
+            testCode.add("Point hotspot = new Point(" + (int)(hotspot.getX()) + "," +			    //NOI18N
+			    (int)(hotspot.getY()) + ");");						    //NOI18N
             testCode.add("ld.startAdding(comps, bounds, hotspot, defaultContId);");			    //NOI18N
             testCode.add("}");										    //NOI18N
         }
@@ -463,12 +463,12 @@ public final class LayoutDesigner implements LayoutConstants {
 
         if (logTestCode()) {
             testCode.add("{"); //NOI18N
-            LayoutTestUtils.writeStringArray(testCode, "compIds", compIds); //NOI18N
-            LayoutTestUtils.writeRectangleArray(testCode, "bounds", bounds); //NOI18N
-            testCode.add("Point hotspot = new Point(" + new Double(hotspot.getX()).intValue() + "," +  //NOI18N
-		    new Double(hotspot.getY()).intValue() + ");"); //NOI18N
-            testCode.add("ld.startMoving(compIds, bounds, hotspot);"); //NOI18N
-            testCode.add("}"); //NOI18N
+            LayoutTestUtils.writeStringArray(testCode, "compIds", compIds);		//NOI18N
+            LayoutTestUtils.writeRectangleArray(testCode, "bounds", bounds);		//NOI18N
+            testCode.add("Point hotspot = new Point(" + (int)(hotspot.getX()) + "," +   //NOI18N
+		    (int)(hotspot.getY()) + ");");					//NOI18N
+            testCode.add("ld.startMoving(compIds, bounds, hotspot);");			//NOI18N
+            testCode.add("}");								//NOI18N
         }
         
         setDragTarget(comps[0].getParent(), comps, false);
@@ -517,14 +517,14 @@ public final class LayoutDesigner implements LayoutConstants {
 
         if (logTestCode()) {
             testCode.add("{"); //NOI18N
-            LayoutTestUtils.writeStringArray(testCode, "compIds", compIds); //NOI18N
-            LayoutTestUtils.writeRectangleArray(testCode, "bounds", bounds); //NOI18N
-            testCode.add("Point hotspot = new Point(" + new Double(hotspot.getX()).intValue() + "," +  //NOI18N
-		    new Double(hotspot.getY()).intValue() + ");"); //NOI18N
-            LayoutTestUtils.writeIntArray(testCode, "resizeEdges", resizeEdges); //NOI18N
-            testCode.add("boolean inLayout = " + inLayout + ";"); // NOI18N
+            LayoutTestUtils.writeStringArray(testCode, "compIds", compIds);		//NOI18N
+            LayoutTestUtils.writeRectangleArray(testCode, "bounds", bounds);		//NOI18N
+            testCode.add("Point hotspot = new Point(" + (int)(hotspot.getX()) + "," +   //NOI18N
+		    (int)(hotspot.getY()) + ");");					//NOI18N
+            LayoutTestUtils.writeIntArray(testCode, "resizeEdges", resizeEdges);	//NOI18N
+            testCode.add("boolean inLayout = " + inLayout + ";");			// NOI18N
             testCode.add("ld.startResizing(compIds, bounds, hotspot, resizeEdges, inLayout);"); //NOI18N
-            testCode.add("}"); //NOI18N
+            testCode.add("}");								//NOI18N
         }
 
         if (inLayout) {
@@ -1038,8 +1038,8 @@ public final class LayoutDesigner implements LayoutConstants {
                         // to copy them.
                         temp.add(subCopy);
                         temp.add(copy);
-                        temp.add(new Integer(subCopy.getRawAlignment()));
-                        temp.add(new Integer(copy.getSubIntervalCount() + compCount));
+                        temp.add(subCopy.getRawAlignment());
+                        temp.add(copy.getSubIntervalCount() + compCount);
                         compCount++;
                     } else {
                         layoutModel.addInterval(subCopy, copy, -1);
@@ -1634,8 +1634,8 @@ public final class LayoutDesigner implements LayoutConstants {
                     }
                 }
                 eg.canHaveDefaultValue = true;
-                eg.possiblePaddingTypes = padList.toArray(new PaddingType[padList.size()]);
-                eg.paddingDisplayNames = nameList.toArray(new String[nameList.size()]);
+                eg.possiblePaddingTypes = padList.toArray(new PaddingType[0]);
+                eg.paddingDisplayNames = nameList.toArray(new String[0]);
             }
         }
     }
@@ -2754,7 +2754,7 @@ public final class LayoutDesigner implements LayoutConstants {
             LayoutComponent comp = interval.getComponent();
             dimension = (interval == comp.getLayoutInterval(HORIZONTAL)) ? HORIZONTAL : VERTICAL;
             if (comp.isLinkSized(dimension)) {
-                Collection linked = (Collection)layoutModel.getLinkSizeGroups(dimension).get(new Integer(comp.getLinkSizeId(dimension)));
+                Collection linked = (Collection)layoutModel.getLinkSizeGroups(dimension).get(comp.getLinkSizeId(dimension));
                 Iterator iter = linked.iterator();
                 int prefSize = 0;
                 while (iter.hasNext()) {
@@ -2821,7 +2821,7 @@ public final class LayoutDesigner implements LayoutConstants {
         
         // Unset the same-size if we are making the component resizable
         if (resizing && comp.isLinkSized(dimension)) {
-            Collection linked = (Collection)layoutModel.getLinkSizeGroups(dimension).get(new Integer(comp.getLinkSizeId(dimension)));
+            Collection linked = (Collection)layoutModel.getLinkSizeGroups(dimension).get(comp.getLinkSizeId(dimension));
             Collection toChange;
             if (linked.size() == 2) { // The second component will be unlinked, too.
                 toChange = linked;
@@ -3821,7 +3821,7 @@ public final class LayoutDesigner implements LayoutConstants {
     }
 
     private void removeComponents(LayoutComponent[] components, boolean fromModel) {
-        Set<LayoutComponent> conts = new HashSet();
+        Set<LayoutComponent> conts = new HashSet<>();
         for (LayoutComponent comp : components) {
             if (comp != null) {
                 if (logTestCode() && fromModel) {

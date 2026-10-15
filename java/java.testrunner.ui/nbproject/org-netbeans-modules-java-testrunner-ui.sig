@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.10
+#Version 1.37
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -13,6 +13,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -71,7 +72,6 @@ meth public void putValue(java.lang.String,java.lang.Object)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void setEnabled(boolean)
 supr java.lang.Object
-hfds RECONFIGURE_ON_NULL,arrayTable
 
 CLSS public abstract interface javax.swing.Action
 fld public final static java.lang.String ACCELERATOR_KEY = "AcceleratorKey"
@@ -92,6 +92,7 @@ meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeLis
 meth public abstract void putValue(java.lang.String,java.lang.Object)
 meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public abstract void setEnabled(boolean)
+meth public boolean accept(java.lang.Object)
 
 CLSS public abstract org.netbeans.modules.gsf.testrunner.api.CoreManager
 cons public init()
@@ -156,4 +157,13 @@ meth public static void openTestsuite(org.netbeans.modules.gsf.testrunner.ui.api
 meth public static void searchAllMethods(org.netbeans.modules.gsf.testrunner.ui.api.TestMethodNode,org.openide.filesystems.FileObject[],long[],org.netbeans.api.java.source.CompilationController,javax.lang.model.element.Element)
 supr java.lang.Object
 hfds LOGGER,NO_ACTIONS
+
+CLSS public abstract interface org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods
+innr public abstract interface static Factory
+meth public abstract java.util.List<org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController$TestMethod> computeTestMethods(org.netbeans.api.java.source.CompilationInfo)
+meth public abstract void cancel()
+
+CLSS public abstract interface static org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods$Factory
+ outer org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods
+meth public abstract org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods create()
 

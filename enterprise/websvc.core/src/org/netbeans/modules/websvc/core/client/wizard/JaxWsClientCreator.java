@@ -32,7 +32,6 @@ import java.util.Set;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.queries.UnitTestForSourceQuery;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
@@ -83,7 +82,7 @@ public class JaxWsClientCreator implements ClientCreator {
         //final boolean isJWSDPSupported = isJWSDPSupported();
         
         // Use Progress API to display generator messages.
-        final ProgressHandle handle = ProgressHandleFactory.createHandle(NbBundle.getMessage(JaxWsClientCreator.class, "MSG_WizCreateClient")); //NOI18N
+        final ProgressHandle handle = ProgressHandle.createHandle(NbBundle.getMessage(JaxWsClientCreator.class, "MSG_WizCreateClient")); //NOI18N
         
         task = new Task(new Runnable() {
             public void run() {
@@ -125,7 +124,7 @@ public class JaxWsClientCreator implements ClientCreator {
         Boolean useDispatch = (Boolean) wiz.getProperty(ClientWizardProperties.USEDISPATCH);
         //if (wsdlUrl==null) wsdlUrl = "file:"+(filePath.startsWith("/")?filePath:"/"+filePath); //NOI18N
         if(wsdlUrl == null){
-            wsdlUrl = FileUtil.toFileObject(FileUtil.normalizeFile(new File(filePath))).getURL().toExternalForm();
+            wsdlUrl = FileUtil.toFileObject(FileUtil.normalizeFile(new File(filePath))).toURL().toExternalForm();
         }
         String packageName = (String)wiz.getProperty(ClientWizardProperties.WSDL_PACKAGE_NAME);
         if (packageName!=null && packageName.length()==0) packageName=null;

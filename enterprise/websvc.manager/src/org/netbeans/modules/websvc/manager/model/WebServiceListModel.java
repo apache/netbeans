@@ -53,7 +53,8 @@ public class WebServiceListModel {
     private static Random serviceRandom = new Random(System.currentTimeMillis());
     private static Random serviceGroupRandom = new Random(System.currentTimeMillis());
     public boolean isDirty = false;
-    Set<WebServiceListModelListener> listeners = new HashSet<WebServiceListModelListener>();
+    Set<WebServiceListModelListener> listeners = new HashSet<>();
+
     /**
      * Fix for Bug#: 5039378
      * Netbeans can potentially use multiple threads to maintain a Node's data model.
@@ -62,7 +63,7 @@ public class WebServiceListModel {
     private List<WebServiceData> webServices = Collections.synchronizedList(new ArrayList<WebServiceData>());
     private List<WebServiceGroup> webServiceGroups = Collections.synchronizedList(new ArrayList<WebServiceGroup>());
     // To maintain the display names for the webservice/port
-    private Set uniqueDisplayNames = Collections.synchronizedSet(new HashSet());
+    private Set<String> uniqueDisplayNames = Collections.synchronizedSet(new HashSet<String>());
     private List<String> partnerServices = new ArrayList<String>();
     private static WebServiceListModel websvcNodeModel = new WebServiceListModel();
     private boolean initialized = false;
@@ -94,7 +95,7 @@ public class WebServiceListModel {
         return partnerServices;
     }
 
-    private static boolean containsKey(List list, String key) {
+    private static boolean containsKey(List<?> list, String key) {
         synchronized (list) {
             for (Object o : list) {
                 if (o instanceof WebServiceData) {
@@ -231,15 +232,15 @@ public class WebServiceListModel {
              * it and the set is modified.
              * - David Botterill 5/6/2004.
              */
-            String[] webserviceIds = (String[]) getWebServiceGroup(groupId).getWebServiceIds().toArray(new String[0]);
+            String[] webserviceIds = getWebServiceGroup(groupId).getWebServiceIds().toArray(new String[0]);
             for (int ii = 0; null != webserviceIds && ii < webserviceIds.length; ii++) {
                 WebServiceManager.getInstance().removeWebService(getWebService(webserviceIds[ii]));
             }
             webServiceGroups.remove(group);
-            Iterator iter = listeners.iterator();
+            Iterator<WebServiceListModelListener> iter = listeners.iterator();
             while (iter.hasNext()) {
                 WebServiceListModelEvent evt = new WebServiceListModelEvent(groupId);
-                ((WebServiceListModelListener) iter.next()).webServiceGroupRemoved(evt);
+                iter.next().webServiceGroupRemoved(evt);
             }
         }
     }
@@ -304,7 +305,7 @@ public class WebServiceListModel {
                     try {
                         WebServiceManager.getInstance().addWebService(target, true);
                     } catch (IOException ex) {
-                        Logger.global.log(Level.INFO, ex.getLocalizedMessage(), ex);
+                        Logger.getGlobal().log(Level.INFO, ex.getLocalizedMessage(), ex);
                     }
                 }
             };

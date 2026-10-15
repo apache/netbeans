@@ -255,9 +255,7 @@ public class EvaluationContext {
 
     public void popBlock() {
         Map<String, ScriptVariable> map = stack.pop();
-        for (String name : map.keySet()) {
-            scriptLocalVariables.remove(name);
-        }
+        scriptLocalVariables.keySet().removeAll(map.keySet());
     }
 
     public void disableCollectionOf(ObjectReference or) {
@@ -374,7 +372,7 @@ public class EvaluationContext {
 
     }
 
-    public static abstract class VariableInfo {
+    public abstract static class VariableInfo {
 
         public abstract void setValue(Value value) throws IllegalStateException;
 

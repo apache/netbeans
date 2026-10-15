@@ -22,18 +22,30 @@ package org.netbeans.modules.debugger.jpda.truffle.access;
 import com.sun.jdi.AbsentInformationException;
 import com.sun.jdi.ClassType;
 import com.sun.jdi.InvocationException;
+import com.sun.jdi.Method;
+import com.sun.jdi.ObjectReference;
 import com.sun.jdi.StringReference;
+import com.sun.jdi.ThreadReference;
+import com.sun.jdi.Value;
+import com.sun.jdi.event.ClassPrepareEvent;
+import com.sun.jdi.event.Event;
+import com.sun.jdi.event.EventSet;
+import com.sun.jdi.event.LocatableEvent;
+import com.sun.jdi.request.EventRequest;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.io.InvalidObjectException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.locks.Lock;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,28 +58,48 @@ import org.netbeans.api.debugger.jpda.JPDABreakpoint;
 import org.netbeans.api.debugger.jpda.JPDAClassType;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.JPDAThread;
+import org.netbeans.api.debugger.jpda.LineBreakpoint;
 import org.netbeans.api.debugger.jpda.LocalVariable;
 import org.netbeans.api.debugger.jpda.MethodBreakpoint;
 import org.netbeans.api.debugger.jpda.ObjectVariable;
 import org.netbeans.api.debugger.jpda.Variable;
 import org.netbeans.api.debugger.jpda.event.JPDABreakpointEvent;
 import org.netbeans.api.debugger.jpda.event.JPDABreakpointListener;
+import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
 
 import org.netbeans.modules.debugger.jpda.expr.InvocationExceptionTranslated;
 import org.netbeans.modules.debugger.jpda.expr.JDIVariable;
+import org.netbeans.modules.debugger.jpda.jdi.ClassTypeWrapper;
+import org.netbeans.modules.debugger.jpda.jdi.IllegalThreadStateExceptionWrapper;
+import org.netbeans.modules.debugger.jpda.jdi.InternalExceptionWrapper;
+import org.netbeans.modules.debugger.jpda.jdi.LocatableWrapper;
+import org.netbeans.modules.debugger.jpda.jdi.LocationWrapper;
+import org.netbeans.modules.debugger.jpda.jdi.ObjectCollectedExceptionWrapper;
+import org.netbeans.modules.debugger.jpda.jdi.ThreadReferenceWrapper;
+import org.netbeans.modules.debugger.jpda.jdi.VMDisconnectedExceptionWrapper;
+import org.netbeans.modules.debugger.jpda.jdi.event.ClassPrepareEventWrapper;
+import org.netbeans.modules.debugger.jpda.jdi.event.EventSetWrapper;
+import org.netbeans.modules.debugger.jpda.jdi.event.EventWrapper;
+import org.netbeans.modules.debugger.jpda.jdi.event.LocatableEventWrapper;
+import org.netbeans.modules.debugger.jpda.jdi.request.EventRequestWrapper;
 import org.netbeans.modules.debugger.jpda.models.JPDAClassTypeImpl;
 import org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl;
+import org.netbeans.modules.debugger.jpda.truffle.LanguageName;
 import org.netbeans.modules.debugger.jpda.truffle.RemoteServices;
 import org.netbeans.modules.debugger.jpda.truffle.TruffleDebugManager;
+import org.netbeans.modules.debugger.jpda.truffle.Utils;
 import org.netbeans.modules.debugger.jpda.truffle.actions.StepActionProvider;
 import org.netbeans.modules.debugger.jpda.truffle.ast.TruffleNode;
+import org.netbeans.modules.debugger.jpda.truffle.breakpoints.impl.HitBreakpointInfo;
+import org.netbeans.modules.debugger.jpda.truffle.breakpoints.impl.TruffleBreakpointOutput;
 import org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackFrame;
 import org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackInfo;
 import org.netbeans.modules.debugger.jpda.truffle.source.Source;
 import org.netbeans.modules.debugger.jpda.truffle.source.SourcePosition;
-import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleScope;
-import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleStackVariable;
+import org.netbeans.modules.debugger.jpda.truffle.vars.impl.TruffleScope;
+import org.netbeans.modules.debugger.jpda.truffle.vars.impl.TruffleStackVariable;
 import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleVariable;
+import org.netbeans.modules.debugger.jpda.util.Executor;
 import org.netbeans.modules.debugger.jpda.util.WeakHashMapActive;
 import org.openide.util.Exceptions;
 
@@ -88,9 +120,11 @@ public class TruffleAccess implements JPDABreakpointListener {
     private static final String VAR_FRAME = "frame";                            // NOI18N
     private static final String VAR_SRC_ID = "id";                              // NOI18N
     private static final String VAR_SRC_URI = "uri";                            // NOI18N
+    private static final String VAR_SRC_MIMETYPE = "mimeType";                  // NOI18N
     private static final String VAR_SRC_NAME = "name";                          // NOI18N
+    private static final String VAR_SRC_HOST_METHOD = "hostMethodName";         // NOI18N
     private static final String VAR_SRC_PATH = "path";                          // NOI18N
-    private static final String VAR_SRC_LINE = "line";                          // NOI18N
+    private static final String VAR_SRC_SOURCESECTION = "sourceSection";        // NOI18N
     private static final String VAR_SRC_CODE = "code";
     private static final String VAR_STACK_TRACE = "stackTrace";
     private static final String VAR_TOP_FRAME = "topFrame";                     // NOI18N
@@ -101,12 +135,15 @@ public class TruffleAccess implements JPDABreakpointListener {
     private static final String METHOD_GET_VARIABLES_SGN = "(Lcom/oracle/truffle/api/debug/DebugStackFrame;)[Ljava/lang/Object;";  // NOI18N
     private static final String METHOD_GET_SCOPE_VARIABLES = "getScopeVariables";// NOI18N
     private static final String METHOD_GET_SCOPE_VARIABLES_SGN = "(Lcom/oracle/truffle/api/debug/DebugScope;)[Ljava/lang/Object;"; // NOI18N
+    private static final String METHOD_SUSPEND_HERE = "suspendHere";            // NOI18N
+    private static final String METHOD_SUSPEND_HERE_SGN = "()[Ljava/lang/Object;";// NOI18N
     private static final String METHOD_SET_UNWIND = "setUnwind";// NOI18N
     private static final String METHOD_SET_UNWIND_SGN = "(I)Z"; // NOI18N
     private static final String METHOD_GET_AST = "getTruffleAST";               // NOI18N
     private static final String METHOD_GET_AST_SGN = "(I)[Ljava/lang/Object;";
     
     private static final Map<JPDAThread, ThreadInfo> currentPCInfos = new WeakHashMap<>();
+    private static final Map<JPDAThread, ThreadInfo> suspendHerePCInfos = new WeakHashMap<>();
     private static final PropertyChangeListener threadResumeListener = new ThreadResumeListener();
     
     private static final TruffleAccess DEFAULT = new TruffleAccess();
@@ -146,6 +183,14 @@ public class TruffleAccess implements JPDABreakpointListener {
     }
     
     public static CurrentPCInfo getCurrentPCInfo(JPDAThread thread) {
+        CurrentPCInfo cpi = getCurrentGuestPCInfo(thread);
+        if (cpi == null) {
+            cpi = getCurrentSuspendHereInfo(thread);
+        }
+        return cpi;
+    }
+
+    public static CurrentPCInfo getCurrentGuestPCInfo(JPDAThread thread) {
         ThreadInfo info;
         synchronized (currentPCInfos) {
             info = currentPCInfos.get(thread);
@@ -171,18 +216,171 @@ public class TruffleAccess implements JPDABreakpointListener {
         return null;
     }
 
+    public static CurrentPCInfo getCurrentSuspendHereInfo(JPDAThread thread) {
+        synchronized (suspendHerePCInfos) {
+            ThreadInfo info = suspendHerePCInfos.get(thread);
+            if (info != null) {
+                return info.cpi;
+            }
+        }
+        return null;
+    }
+
+    public static CurrentPCInfo getSuspendHere(JPDAThread thread) {
+        if (getCurrentGuestPCInfo(thread) != null) {
+            // Suspended in the guest language already.
+            return null;
+        }
+        ThreadInfo info;
+        synchronized (suspendHerePCInfos) {
+            info = suspendHerePCInfos.get(thread);
+            if (info != null) {
+                if (info.cpi != null) {
+                    return info.cpi;
+                } else if (info.noCpi) {
+                    return null;
+                }
+            }
+            if (info == null) {
+                ((JPDAThreadImpl) thread).addPropertyChangeListener(JPDAThreadImpl.PROP_SUSPENDED, threadResumeListener);
+                info = new ThreadInfo();
+                suspendHerePCInfos.put(thread, info);
+            }
+        }
+        synchronized (info) {
+            if (info.cpi != null) {
+                return info.cpi;
+            }
+            if (info.noCpi) {
+                return null;
+            }
+            JPDADebugger debugger = ((JPDAThreadImpl) thread).getDebugger();
+            ClassType debugAccessorClass = TruffleDebugManager.getDebugAccessorClass(debugger);
+            if (debugAccessorClass == null) {
+                info.noCpi = true;
+                return null;
+            }
+            ObjectVariable haltInfo = invokeSuspendHere(debugAccessorClass, thread);
+            if (haltInfo == null) {
+                info.noCpi = true;
+                return null;
+            }
+            CurrentPCInfo cpi = getCurrentPosition(debugger, thread, ((ObjectVariable) haltInfo).getFields(0, Integer.MAX_VALUE));
+            cpi.setSelectedStackFrame(null);
+            info.cpi = cpi;
+            return cpi;
+        }
+    }
+
+    private static ObjectVariable invokeSuspendHere(ClassType debugAccessorClass, JPDAThread thread) {
+        JPDAThreadImpl threadImpl = (JPDAThreadImpl) thread;
+        ThreadReference tr = threadImpl.getThreadReference();
+        try {
+            Method suspendHereMethod = ClassTypeWrapper.concreteMethodByName(debugAccessorClass, METHOD_SUSPEND_HERE, METHOD_SUSPEND_HERE_SGN);
+            JPDADebuggerImpl debugger = threadImpl.getDebugger();
+            Value haltInfo;
+            threadImpl.notifyMethodInvoking();
+            Runnable cleanup = null;
+            try {
+                cleanup = skipSuspendedEventClearLeakingReferences(debugger, thread);
+                haltInfo = ClassTypeWrapper.invokeMethod(debugAccessorClass, tr, suspendHereMethod, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
+            } finally {
+                try {
+                    cleanup.run();
+                } finally {
+                    threadImpl.notifyMethodInvokeDone();
+                }
+            }
+            if (haltInfo instanceof ObjectReference) {
+                return (ObjectVariable) debugger.getVariable(haltInfo);
+            }
+        } catch (InvocationException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (Exception ex) {
+            LOG.log(Level.CONFIG, "Invoking " + METHOD_SUSPEND_HERE, ex);
+        }
+        return null;
+    }
+
+    private static final String CLEAR_REFERENCES_CLASS = "com.oracle.truffle.api.debug.SuspendedEvent";
+    private static final String CLEAR_REFERENCES_METHOD = "clearLeakingReferences";
+
+    private static Runnable skipSuspendedEventClearLeakingReferences(JPDADebugger debugger, JPDAThread thread) {
+        ThreadReference tr = ((JPDAThreadImpl) thread).getThreadReference();
+        MethodBreakpoint clearLeakingReferencesBreakpoint = MethodBreakpoint.create(CLEAR_REFERENCES_CLASS, CLEAR_REFERENCES_METHOD);
+        clearLeakingReferencesBreakpoint.setBreakpointType(MethodBreakpoint.TYPE_METHOD_ENTRY);
+        clearLeakingReferencesBreakpoint.setThreadFilters(debugger, new JPDAThread[] { thread });
+        clearLeakingReferencesBreakpoint.setHidden(true);
+        Function<EventSet, Boolean> breakpointEventInterceptor = eventSet -> {
+            try {
+                ThreadReference etr = null;
+                Method method = null;
+                for (Event e: eventSet) {
+                    if (e instanceof ClassPrepareEvent) {
+                        etr = ClassPrepareEventWrapper.thread((ClassPrepareEvent) e);
+                    } else if (e instanceof LocatableEvent) {
+                        etr = LocatableEventWrapper.thread((LocatableEvent) e);
+                        method = LocationWrapper.method(LocatableWrapper.location((LocatableEvent) e));
+                    }
+                }
+                if (tr.equals(etr) && method != null && CLEAR_REFERENCES_METHOD.equals(method.name()) && CLEAR_REFERENCES_CLASS.equals(method.declaringType().name())) {
+                    boolean resume = true;
+                    for (Event e: eventSet) {
+                        EventRequest r = EventWrapper.request(e);
+                        Executor exec = (r != null) ? (Executor) EventRequestWrapper.getProperty (r, "executor") : null;
+                        resume = resume & exec.exec(e);
+                    }
+                    if (resume) {
+                        try {
+                            EventSetWrapper.resume(eventSet);
+                        } catch (IllegalThreadStateExceptionWrapper | ObjectCollectedExceptionWrapper ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (InternalExceptionWrapper | VMDisconnectedExceptionWrapper ex) {
+                return false;
+            }
+        };
+        clearLeakingReferencesBreakpoint.addJPDABreakpointListener(event -> {
+            DebuggerManager.getDebuggerManager().removeBreakpoint(clearLeakingReferencesBreakpoint);
+            try {
+                ThreadReferenceWrapper.forceEarlyReturn(tr, tr.virtualMachine().mirrorOfVoid());
+            } catch (Exception ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            event.resume();
+            ((JPDADebuggerImpl) debugger).getOperator().removeEventInterceptor(breakpointEventInterceptor);
+        });
+        ((JPDADebuggerImpl) debugger).getOperator().addEventInterceptor(breakpointEventInterceptor);
+        DebuggerManager.getDebuggerManager().addBreakpoint(clearLeakingReferencesBreakpoint);
+        return () -> { // Cleanup
+            ((JPDADebuggerImpl) debugger).getOperator().removeEventInterceptor(breakpointEventInterceptor);
+            DebuggerManager.getDebuggerManager().removeBreakpoint(clearLeakingReferencesBreakpoint);
+        };
+    }
+
     @Override
     public void breakpointReached(JPDABreakpointEvent event) {
         Object bp = event.getSource();
         JPDADebugger debugger = event.getDebugger();
         if (execHaltedBP.get(debugger) == bp) {
             LOG.log(Level.FINE, "TruffleAccessBreakpoints.breakpointReached({0}), exec halted.", event);
-            StepActionProvider.killJavaStep(debugger);
-            setCurrentPosition(debugger, event.getThread());
+            if (!setCurrentPosition(debugger, event.getThread())) {
+                event.resume();
+            } else {
+                StepActionProvider.killJavaStep(debugger);
+            }
         } else if (execStepIntoBP.get(debugger) == bp) {
             LOG.log(Level.FINE, "TruffleAccessBreakpoints.breakpointReached({0}), exec step into.", event);
-            StepActionProvider.killJavaStep(debugger);
-            setCurrentPosition(debugger, event.getThread());
+            if (!setCurrentPosition(debugger, event.getThread())) {
+                event.resume();
+            } else {
+                StepActionProvider.killJavaStep(debugger);
+            }
         } else if (dbgAccessBP.get(debugger) == bp) {
             LOG.log(Level.FINE, "TruffleAccessBreakpoints.breakpointReached({0}), debugger access.", event);
             try {
@@ -199,8 +397,11 @@ public class TruffleAccess implements JPDABreakpointListener {
         }
     }
     
-    private void setCurrentPosition(JPDADebugger debugger, JPDAThread thread) {
+    private boolean setCurrentPosition(JPDADebugger debugger, JPDAThread thread) {
         CurrentPCInfo cpci = getCurrentPosition(debugger, thread);
+        if (cpci == null) {
+            return false;
+        }
         synchronized (currentPCInfos) {
             ThreadInfo info = currentPCInfos.get(thread);
             if (info == null) {
@@ -210,14 +411,23 @@ public class TruffleAccess implements JPDABreakpointListener {
             }
             info.cpi = cpci;
         }
+        return true;
     }
 
-    private CurrentPCInfo getCurrentPosition(JPDADebugger debugger, JPDAThread thread) {
+    private static CurrentPCInfo getCurrentPosition(JPDADebugger debugger, JPDAThread thread) {
         try {
             CallStackFrame csf = thread.getCallStack(0, 1)[0];
             LocalVariable[] localVariables = csf.getLocalVariables();
-            ExecutionHaltedInfo haltedInfo = ExecutionHaltedInfo.get(localVariables);
-            //JPDAClassType debugAccessor = TruffleDebugManager.getDebugAccessorJPDAClass(debugger);
+            return getCurrentPosition(debugger, thread, localVariables);
+        } catch (AbsentInformationException | IllegalStateException ex) {
+            Exceptions.printStackTrace(ex);
+            return null;
+        }
+    }
+
+    private static CurrentPCInfo getCurrentPosition(JPDADebugger debugger, JPDAThread thread, Variable[] haltVars) {
+        try {
+            ExecutionHaltedInfo haltedInfo = ExecutionHaltedInfo.get(haltVars);
             ObjectVariable sourcePositionVar = haltedInfo.sourcePositions;
             SourcePosition sp = getSourcePosition(debugger, sourcePositionVar);
             
@@ -229,17 +439,43 @@ public class TruffleAccess implements JPDABreakpointListener {
             String topFrameDescription = (String) frameInfoVar.getField(VAR_TOP_FRAME).createMirrorObject();
             ObjectVariable thisObject = null;// TODO: (ObjectVariable) frameInfoVar.getField("thisObject");
             TruffleStackFrame topFrame = new TruffleStackFrame(debugger, thread, 0, frame, topFrameDescription, null/*code*/, scopes, thisObject, true);
-            TruffleStackInfo stack = new TruffleStackInfo(debugger, thread, stackTrace);
-            return new CurrentPCInfo(haltedInfo.stepCmd, thread, sp, scopes, topFrame, stack, depth -> {
-                return getTruffleAST(debugger, (JPDAThreadImpl) thread, depth, sp.getLine(), stack);
+            TruffleStackInfo stack = new TruffleStackInfo(debugger, thread, stackTrace, haltedInfo.supportsJavaFrames);
+            HitBreakpointInfo[] breakpointInfos = getBreakpointInfos(haltedInfo, thread);
+            CurrentPCInfo cpi = new CurrentPCInfo(haltedInfo.stepCmd, thread, sp, scopes, topFrame,stack, depth -> {
+                return getTruffleAST(debugger, (JPDAThreadImpl) thread, depth, sp, stack);
             });
-        } catch (AbsentInformationException | IllegalStateException ex) {
+            if (breakpointInfos != null) {
+                TruffleBreakpointOutput.breakpointsHit(breakpointInfos, cpi);
+            }
+            return cpi;
+        } catch (IllegalStateException ex) {
             Exceptions.printStackTrace(ex);
             return null;
         }
     }
 
-    private static TruffleNode getTruffleAST(JPDADebugger debugger, JPDAThreadImpl thread, int depth, int topLine, TruffleStackInfo stack) {
+    private static HitBreakpointInfo[] getBreakpointInfos(ExecutionHaltedInfo haltedInfo, JPDAThread thread) {
+        ObjectVariable[] breakpointsHit = haltedInfo.breakpointsHit;
+        ObjectVariable[] breakpointConditionExceptions = haltedInfo.breakpointConditionExceptions;
+        int n = (breakpointsHit != null) ? breakpointsHit.length : 0;
+        HitBreakpointInfo[] breakpointInfos = null;
+        for (int i = 0; i < n; i++) {
+            ObjectVariable exception = (breakpointConditionExceptions != null) ? breakpointConditionExceptions[i] : null;
+            HitBreakpointInfo breakpointInfo = HitBreakpointInfo.create(breakpointsHit[i], exception);
+            if (breakpointInfo != null) {
+                if (breakpointInfos == null) {
+                    breakpointInfos = new HitBreakpointInfo[] { breakpointInfo };
+                } else {
+                    // There will rarely be more than one breakpoint hit
+                    breakpointInfos = Arrays.copyOf(breakpointInfos, breakpointInfos.length + 1);
+                    breakpointInfos[breakpointInfos.length - 1] = breakpointInfo;
+                }
+            }
+        }
+        return breakpointInfos;
+    }
+
+    private static TruffleNode getTruffleAST(JPDADebugger debugger, JPDAThreadImpl thread, int depth, SourcePosition topPosition, TruffleStackInfo stack) {
         JPDAClassType debugAccessor = TruffleDebugManager.getDebugAccessorJPDAClass(debugger);
         Lock lock = thread.accessLock.writeLock();
         lock.lock();
@@ -273,8 +509,17 @@ public class TruffleAccess implements JPDABreakpointListener {
                                                       METHOD_GET_AST_SGN,
                                                       new Variable[] { debugger.createMirrorVar(depth, true) });
             Variable[] astInfo = ((ObjectVariable) ast).getFields(0, Integer.MAX_VALUE);
-            int line = (depth == 0) ? topLine : stack.getStackFrames(true)[depth].getSourcePosition().getLine();
-            return TruffleNode.newBuilder().nodes((String) astInfo[0].createMirrorObject()).currentLine(line).build();
+            SourcePosition position;
+            if (depth == 0) {
+                position = topPosition;
+            } else {
+                TruffleStackFrame[] stackFrames = stack.getStackFrames(true);
+                if (depth >= stackFrames.length) {
+                    return null;
+                }
+                position = stackFrames[depth].getSourcePosition();
+            }
+            return TruffleNode.newBuilder().nodes((String) astInfo[0].createMirrorObject()).currentPosition(position).build();
         } catch (InvalidExpressionException | InvalidObjectException | NoSuchMethodException ex) {
             Exceptions.printStackTrace(ex);
             return null;
@@ -292,16 +537,23 @@ public class TruffleAccess implements JPDABreakpointListener {
             return null;
         }
         long id = (Long) varSrcId.createMirrorObject();
-        int line = (Integer) sourcePositionVar.getField(VAR_SRC_LINE).createMirrorObject();
+        Field varSourceSection = sourcePositionVar.getField(VAR_SRC_SOURCESECTION);
+        String sourceSection = (String) varSourceSection.createMirrorObject();
+        if (sourceSection == null) {
+            // No source section information
+            return null;
+        }
         Source src = Source.getExistingSource(debugger, id);
         if (src == null) {
             String name = (String) sourcePositionVar.getField(VAR_SRC_NAME).createMirrorObject();
+            String hostMethodName = (String) sourcePositionVar.getField(VAR_SRC_HOST_METHOD).createMirrorObject();
             String path = (String) sourcePositionVar.getField(VAR_SRC_PATH).createMirrorObject();
             URI uri = (URI) sourcePositionVar.getField(VAR_SRC_URI).createMirrorObject();
+            String mimeType = (String) sourcePositionVar.getField(VAR_SRC_MIMETYPE).createMirrorObject();
             StringReference codeRef = (StringReference) ((JDIVariable) sourcePositionVar.getField(VAR_SRC_CODE)).getJDIValue();
-            src = Source.getSource(debugger, id, name, path, uri, codeRef);
+            src = Source.getSource(debugger, id, name, hostMethodName, path, uri, mimeType, codeRef);
         }
-        return new SourcePosition(debugger, id, src, line);
+        return new SourcePosition(debugger, id, src, sourceSection);
     }
     
     private static TruffleScope[] createScopes(JPDADebugger debugger, ObjectVariable varsArrVar) {
@@ -309,73 +561,44 @@ public class TruffleAccess implements JPDABreakpointListener {
         List<TruffleScope> scopes = new LinkedList<>();
         int n = varsArr.length;
         int i = 0;
-        if (i < n) {
-            String scopeName = (String) varsArr[i++].createMirrorObject();
-            boolean scopeFunction = (Boolean) varsArr[i++].createMirrorObject();
-            int numArgs = (Integer) varsArr[i++].createMirrorObject();
-            int numVars = (Integer) varsArr[i++].createMirrorObject();
-            TruffleVariable[] arguments = new TruffleVariable[numArgs];
-            i = fillVars(debugger, arguments, varsArr, i);
-            TruffleVariable[] variables = new TruffleVariable[numVars];
-            i = fillVars(debugger, variables, varsArr, i);
-            scopes.add(new TruffleScope(scopeName, scopeFunction, arguments, variables));
-        }
         while (i < n) {
-            // There are further scopes, retrieved lazily
             String scopeName = (String) varsArr[i++].createMirrorObject();
-            boolean scopeFunction = (Boolean) varsArr[i++].createMirrorObject();
-            boolean hasArgs = (Boolean) varsArr[i++].createMirrorObject();
-            boolean hasVars = (Boolean) varsArr[i++].createMirrorObject();
-            ObjectVariable scope = (ObjectVariable) varsArr[i++];
-            scopes.add(new TruffleScope(scopeName, scopeFunction, hasArgs, hasVars, debugger, scope));
+            boolean hasReceiver = (Boolean) varsArr[i++].createMirrorObject();
+            int numVars = (Integer) varsArr[i++].createMirrorObject();
+            TruffleVariable[] variables = new TruffleVariable[numVars];
+            i = fillVars(debugger, variables, varsArr, hasReceiver, i);
+            scopes.add(new TruffleScope(scopeName, variables));
         }
-        return scopes.toArray(new TruffleScope[scopes.size()]);
+        return scopes.toArray(new TruffleScope[0]);
     }
     
-    private static int fillVars(JPDADebugger debugger, TruffleVariable[] vars, Field[] varsArr, int i) {
+    private static int fillVars(JPDADebugger debugger, TruffleVariable[] vars, Field[] varsArr, boolean hasReceiver, int i) {
         for (int vi = 0; vi < vars.length; vi++) {
             String name = (String) varsArr[i++].createMirrorObject();
+            LanguageName language = LanguageName.parse((String) varsArr[i++].createMirrorObject());
             String type = (String) varsArr[i++].createMirrorObject();
             boolean readable = (Boolean) varsArr[i++].createMirrorObject();
             boolean writable = (Boolean) varsArr[i++].createMirrorObject();
             boolean internal = (Boolean) varsArr[i++].createMirrorObject();
             String valueStr = (String) varsArr[i++].createMirrorObject();
+            ObjectVariable valueSourceDef = (ObjectVariable) varsArr[i++];
             Supplier<SourcePosition> valueSource = parseSourceLazy(debugger,
-                                                                   varsArr[i++],
+                                                                   valueSourceDef,
                                                                    (JDIVariable) varsArr[i++]);
+            ObjectVariable typeSourceDef = (ObjectVariable) varsArr[i++];
             Supplier<SourcePosition> typeSource = parseSourceLazy(debugger,
-                                                                  varsArr[i++],
+                                                                  typeSourceDef,
                                                                   (JDIVariable) varsArr[i++]);
             ObjectVariable value = (ObjectVariable) varsArr[i++];
-            vars[vi] = new TruffleStackVariable(debugger, name, type, readable,
+            vars[vi] = new TruffleStackVariable(debugger, name, language, type, readable,
                                                 writable, internal, valueStr,
-                                                valueSource, typeSource, value);
+                                                valueSourceDef.getUniqueID() != 0L,
+                                                valueSource,
+                                                typeSourceDef.getUniqueID() != 0L,
+                                                typeSource, hasReceiver, value);
+            hasReceiver = false;
         }
         return i;
-    }
-
-    public static TruffleVariable[][] getScopeArgsAndVars(JPDADebugger debugger, ObjectVariable debugScope) {
-        JPDAClassType debugAccessor = TruffleDebugManager.getDebugAccessorJPDAClass(debugger);
-        try {
-            Variable scopeVars = debugAccessor.invokeMethod(METHOD_GET_SCOPE_VARIABLES,
-                                                            METHOD_GET_SCOPE_VARIABLES_SGN,
-                                                            new Variable[] { debugScope });
-            Field[] varsArr = ((ObjectVariable) scopeVars).getFields(0, Integer.MAX_VALUE);
-            int n = varsArr.length;
-            int i = 0;
-            if (i < n) {
-                int numArgs = (Integer) varsArr[i++].createMirrorObject();
-                int numVars = (Integer) varsArr[i++].createMirrorObject();
-                TruffleVariable[] arguments = new TruffleVariable[numArgs];
-                i = fillVars(debugger, arguments, varsArr, i);
-                TruffleVariable[] variables = new TruffleVariable[numVars];
-                i = fillVars(debugger, variables, varsArr, i);
-                return new TruffleVariable[][] { arguments, variables };
-            }
-        } catch (InvalidExpressionException | NoSuchMethodException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        return new TruffleVariable[][] { new TruffleVariable[] {}, new TruffleVariable[] {} };
     }
 
     private static Supplier<SourcePosition> parseSourceLazy(JPDADebugger debugger, Variable sourceDefVar, JDIVariable codeRefVar) {
@@ -390,9 +613,11 @@ public class TruffleAccess implements JPDABreakpointListener {
         }
         int sourceId;
         String sourceName;
+        String hostMethodName;
         String sourcePath;
         URI sourceURI;
-        int sourceLine;
+        String mimeType;
+        String sourceSection;
         try {
             int i1 = 0;
             int i2 = sourceDef.indexOf('\n', i1);
@@ -402,21 +627,37 @@ public class TruffleAccess implements JPDABreakpointListener {
             sourceName = sourceDef.substring(i1, i2);
             i1 = i2 + 1;
             i2 = sourceDef.indexOf('\n', i1);
+            hostMethodName = Utils.stringOrNull(sourceDef.substring(i1, i2));
+            i1 = i2 + 1;
+            i2 = sourceDef.indexOf('\n', i1);
             sourcePath = sourceDef.substring(i1, i2);
             i1 = i2 + 1;
             i2 = sourceDef.indexOf('\n', i1);
-            try {
-                sourceURI = new URI(sourceDef.substring(i1, i2));
-            } catch (URISyntaxException usex) {
-                throw new IllegalStateException("Bad URI: "+sourceDef.substring(i1, i2), usex);
+            String uriStr = Utils.stringOrNull(sourceDef.substring(i1, i2));
+            if (uriStr != null) {
+                try {
+                    sourceURI = new URI(uriStr);
+                } catch (URISyntaxException usex) {
+                    Exceptions.printStackTrace(new IllegalStateException("Bad URI: "+sourceDef.substring(i1, i2), usex));
+                    sourceURI = null;
+                }
+            } else {
+                sourceURI = null;
             }
             i1 = i2 + 1;
-            sourceLine = Integer.parseInt(sourceDef.substring(i1));
+            i2 = sourceDef.indexOf('\n', i1);
+            mimeType = Utils.stringOrNull(sourceDef.substring(i1, i2));
+            i1 = i2 + 1;
+            i2 = sourceDef.indexOf('\n', i1);
+            if (i2 < 0) {
+                i2 = sourceDef.length();
+            }
+            sourceSection = sourceDef.substring(i1, i2);
         } catch (IndexOutOfBoundsException ioob) {
             throw new IllegalStateException("var source definition='"+sourceDef+"'", ioob);
         }
-        Source src = Source.getSource(debugger, sourceId, sourceName, sourcePath, sourceURI, codeRef);
-        return new SourcePosition(debugger, sourceId, src, sourceLine);
+        Source src = Source.getSource(debugger, sourceId, sourceName, hostMethodName, sourcePath, sourceURI, mimeType, codeRef);
+        return new SourcePosition(debugger, sourceId, src, sourceSection);
     }
     
     public static TruffleScope[] createFrameScopes(final JPDADebugger debugger,
@@ -536,6 +777,7 @@ public class TruffleAccess implements JPDABreakpointListener {
 
     private static final class ThreadInfo {
         volatile CurrentPCInfo cpi;
+        volatile boolean noCpi;
     }
 
     private static final class ThreadResumeListener implements PropertyChangeListener {
@@ -545,13 +787,19 @@ public class TruffleAccess implements JPDABreakpointListener {
             JPDAThreadImpl t = (JPDAThreadImpl) evt.getSource();
             if (!(Boolean) evt.getNewValue() && !t.isMethodInvoking()) { // not suspended, resumed
                 synchronized (currentPCInfos) {
-                    ThreadInfo info = currentPCInfos.get(t);
-                    if (info != null) {
-                        info.cpi = null;
-                    }
+                    clear(currentPCInfos.get(t));
+                }
+                synchronized (suspendHerePCInfos) {
+                    clear(suspendHerePCInfos.get(t));
                 }
             }
         }
 
+        private void clear(ThreadInfo info) {
+            if (info != null) {
+                info.cpi = null;
+                info.noCpi = false;
+            }
+        }
     }
 }

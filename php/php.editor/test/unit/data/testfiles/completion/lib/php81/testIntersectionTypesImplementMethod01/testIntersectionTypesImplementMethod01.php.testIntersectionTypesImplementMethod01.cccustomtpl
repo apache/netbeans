@@ -1,0 +1,4 @@
+Name: testMethod
+public function testMethod(Foo&Bar&Baz $param): Foo&Bar {
+${cursor};
+}

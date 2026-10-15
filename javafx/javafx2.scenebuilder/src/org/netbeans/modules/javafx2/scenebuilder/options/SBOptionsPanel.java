@@ -80,8 +80,8 @@ final class SBOptionsPanel extends javax.swing.JPanel {
         }
     }
     
-    final private List<HomeDef> userDefinedSBHomes = new ArrayList<HomeDef>();
-    final private List<HomeDef> predefinedSBHomes = new ArrayList<HomeDef>();
+    private final List<HomeDef> userDefinedSBHomes = new ArrayList<HomeDef>();
+    private final List<HomeDef> predefinedSBHomes = new ArrayList<HomeDef>();
     
     @NbBundle.Messages({
         "MSG_InvalidHome=Please, select a valid Scene Builder home...",

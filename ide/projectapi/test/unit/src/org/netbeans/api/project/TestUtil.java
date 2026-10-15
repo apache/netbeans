@@ -30,9 +30,8 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.WeakHashMap;
-import java.util.logging.Logger;
 import javax.swing.Icon;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectFactory2;
@@ -42,6 +41,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Lookup;
 import org.openide.util.test.MockLookup;
+import org.openide.util.test.TestFileUtils;
 
 /**
  * Help set up org.netbeans.api.project.*Test.
@@ -77,18 +77,7 @@ public final class TestUtil {
      * Delete a file and all subfiles.
      */
     public static void deleteRec(File f) throws IOException {
-        if (f.isDirectory()) {
-            File[] kids = f.listFiles();
-            if (kids == null) {
-                throw new IOException("List " + f);
-            }
-            for (File kid : kids) {
-                deleteRec(kid);
-            }
-        }
-        if (!f.delete()) {
-            throw new IOException("Delete " + f);
-        }
+        TestFileUtils.deleteFile(f);
     }
     
     /**
@@ -331,18 +320,12 @@ public final class TestUtil {
         }
         assert fo.isData();
         if (content != null || touch) {
-            OutputStream os = fo.getOutputStream();
-            try {
+            try (OutputStream os = fo.getOutputStream()) {
                 if (content != null) {
-                    InputStream is = content.openStream();
-                    try {
-                        FileUtil.copy(is, os);
-                    } finally {
-                        is.close();
+                    try (InputStream is = content.openStream()) {
+                        is.transferTo(os);
                     }
                 }
-            } finally {
-                os.close();
             }
         }
         return fo;

@@ -51,7 +51,7 @@ public class PaletteSwitchTest extends AbstractPaletteTestHid {
     private static final String MIME_TYPE_NAME = "text/x-paletteswitchtest";
     
     private FileObject dummyDocumentFile;
-    private final static String DUMMY_DOCUMENT_FILE_EXTENSION = "junitPaletteSwitchTest";
+    private static final String DUMMY_DOCUMENT_FILE_EXTENSION = "junitPaletteSwitchTest";
     
     static {
         String[] layers = new String[] {"org/netbeans/spi/palette/mf-layer.xml"};//NOI18N

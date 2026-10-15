@@ -47,7 +47,7 @@ class DDTable extends JTable implements KeyListener {
     private String titleKey;
     private Editable editable;
     private String[] headers;
-    private final static int margin = 6;
+    private static final int margin = 6;
     private Color darkerColor;
 
     // Handle resizing for larger fonts

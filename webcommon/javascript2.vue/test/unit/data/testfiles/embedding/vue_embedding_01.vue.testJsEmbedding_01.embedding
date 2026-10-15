@@ -1,0 +1,8 @@
+
+import { ref } from 'vue'
+
+const message = ref('Test embedding!');
+
+function test() {
+  alert('prevent action');
+}

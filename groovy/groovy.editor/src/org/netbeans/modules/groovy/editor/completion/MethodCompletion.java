@@ -31,6 +31,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
+import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.modules.csl.api.CompletionProposal;
@@ -45,10 +46,12 @@ import org.netbeans.modules.groovy.editor.utils.GroovyUtils;
 import org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext;
 import org.netbeans.modules.groovy.editor.api.elements.common.MethodElement.MethodParameter;
 import org.netbeans.modules.groovy.editor.api.elements.index.IndexedClass;
-import org.netbeans.modules.groovy.editor.api.elements.index.IndexedField;
 import org.netbeans.modules.groovy.editor.api.elements.index.IndexedMethod;
+import org.netbeans.modules.groovy.editor.completion.provider.CompletionAccessor;
 import org.netbeans.modules.groovy.editor.imports.ImportUtils;
+import org.netbeans.modules.groovy.editor.java.JavaElementHandle;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
+import org.openide.filesystems.FileObject;
 
 /**
  * Complete the methods invokable on a class.
@@ -58,7 +61,7 @@ import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
 public class MethodCompletion extends BaseCompletion {
 
     // There attributes should be initiated after each complete() method call
-    private List<CompletionProposal> proposals;
+    private Map<Object, CompletionProposal> proposals;
     private CompletionContext context;
     private int anchor;
 
@@ -68,7 +71,7 @@ public class MethodCompletion extends BaseCompletion {
 
 
     @Override
-    public boolean complete(final List<CompletionProposal> proposals, final CompletionContext context, final int anchor) {
+    public boolean complete(final Map<Object, CompletionProposal> proposals, final CompletionContext context, final int anchor) {
         LOG.log(Level.FINEST, "-> completeMethods"); // NOI18N
 
         this.proposals = proposals;
@@ -99,7 +102,7 @@ public class MethodCompletion extends BaseCompletion {
         }
 
         // 2.2  static/instance method on class or object
-        if (!context.isBehindDot() && context.context.before1 != null) {
+        if (!context.isBehindDot() && context.context.before1 != null && context.location != CaretLocation.INSIDE_METHOD) {
             return false;
         }
 
@@ -133,8 +136,9 @@ public class MethodCompletion extends BaseCompletion {
         }
 
         Map<MethodSignature, CompletionItem> result = new CompleteElementHandler(context).getMethods();
-        proposals.addAll(result.values());
-
+        for (Map.Entry<MethodSignature, CompletionItem> e :result.entrySet()) {
+            proposals.putIfAbsent(e.getKey(), e.getValue());
+        }
         return true;
     }
 
@@ -155,18 +159,18 @@ public class MethodCompletion extends BaseCompletion {
             try {
                 javaSource.runUserActionTask(new Task<CompilationController>() {
                     @Override
-                    public void run(CompilationController info) {
-
+                    public void run(CompilationController info) throws IOException {
+                        info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                         List<Element> typelist = new ArrayList<>();
                         for (String importName : getAllImports()) {
                             typelist.addAll(getElementListFor(info.getElements(), importName));
                         }
                         LOG.log(Level.FINEST, "Number of types found:  {0}", typelist.size());
-
+                        
                         if (exactConstructorExists(typelist, context.getPrefix())) {
                             // if we are in situation like "String s = new String|" we want to
                             // show only String constructors (not StringBuffer constructors etc.)
-                            addExactProposals(typelist);
+                            addExactProposals(context.getSourceFile(), typelist);
                         }
                         addConstructorProposalsForDeclaredClasses();
                     }
@@ -188,15 +192,14 @@ public class MethodCompletion extends BaseCompletion {
                 List<MethodParameter> parameters = indexedMethod.getParameters();
 
                 ConstructorItem constructor = new ConstructorItem(name, parameters, anchor, false);
-                if (!proposals.contains(constructor)) {
-                    proposals.add(constructor);
-                }
+                MethodSignature ms = new MethodSignature("<init>", param2FQN(parameters)); // NOI18N
+                proposals.putIfAbsent(ms, constructor);
             }
 
             // If we didn't find any proposal, it means the instatiate class does not have any constructor
             // explicitely declared - in such case add defaultly generated no-parameter constructor
             if (proposals.isEmpty()) {
-                proposals.add(new ConstructorItem(name, Collections.<MethodParameter>emptyList(), anchor, false));
+                proposals.putIfAbsent(new MethodSignature("<init>", new String[0]), new ConstructorItem(name, Collections.<MethodParameter>emptyList(), anchor, false)); // NOI18N
             }
         }
 
@@ -273,39 +276,53 @@ public class MethodCompletion extends BaseCompletion {
      */
     private boolean exactConstructorExists(List<? extends Element> typelist, String prefix) {
         for (Element element : typelist) {
-            if (prefix.toUpperCase().equals(element.getSimpleName().toString().toUpperCase())) {
+            if (prefix.equalsIgnoreCase(element.getSimpleName().toString())) {
                 return true;
             }
         }
         return false;
     }
 
-    private void addExactProposals(List<? extends Element> typelist) {
+    private void addExactProposals(FileObject source, List<? extends Element> typelist) {
         for (Element element : typelist) {
             // only look for classes rather than enums or interfaces
             if (element.getKind() == ElementKind.CLASS) {
+                TypeElement tel = (TypeElement)element;
                 for (Element encl : element.getEnclosedElements()) {
                     if (encl.getKind() == ElementKind.CONSTRUCTOR) {
                         // we gotta get the constructors name from the type itself, since
                         // all the constructors are named <init>.
                         String constructorName = element.getSimpleName().toString();
 
-                        if (constructorName.toUpperCase().equals(context.getPrefix().toUpperCase())) {
-                            addConstructorProposal(constructorName, (ExecutableElement) encl);
+                        if (constructorName.equalsIgnoreCase(context.getPrefix())) {
+                            addConstructorProposal(tel.getQualifiedName().toString(), (ExecutableElement) encl);
                         }
                     }
                 }
             }
         }
     }
-
-    private void addConstructorProposal(String constructorName, ExecutableElement encl) {
-        List<MethodParameter> paramList = getParameterList(encl);
-        
-        ConstructorItem constructor = new ConstructorItem(constructorName, paramList, anchor, false);
-        if (!proposals.contains(constructor)) {
-            proposals.add(constructor);
+    
+    private String[] param2FQN(List<MethodParameter> params) {
+        String[] res = new String[params.size()];
+        int i = 0;
+        for (MethodParameter mp : params) {
+            res[i++] = mp.getFqnType();
         }
+        return res;
+    }
+
+    private void addConstructorProposal(String classFqn, ExecutableElement encl) {
+        List<MethodParameter> paramList = getParameterList(encl);
+        String[] sig = new String[paramList.size()];
+        int i = 0;
+        for (MethodParameter p : paramList) {
+            sig[i++] = p.getFqnType();
+        }
+        JavaElementHandle h = new JavaElementHandle(encl.getEnclosingElement().getSimpleName().toString(), classFqn, ElementHandle.create(encl), Arrays.asList(sig), Collections.emptySet());
+        CompletionItem constructor = CompletionAccessor.instance().
+                createConstructor(h, paramList, anchor, false);
+        proposals.putIfAbsent(new MethodSignature("<init>", sig), constructor);
     }
 
     private void addConstructorProposalsForDeclaredClasses() {
@@ -322,7 +339,8 @@ public class MethodCompletion extends BaseCompletion {
                 Parameter[] parameters = constructor.getParameters();
                 List<MethodParameter> paramList = getParameterListForMethod(parameters);
 
-                proposals.add(new ConstructorItem(constructorName, paramList, anchor, false));
+                proposals.putIfAbsent(new MethodSignature("<init>",  // NOI18N
+                        param2FQN(paramList)), new ConstructorItem(constructorName, paramList, anchor, false));
             }
         }
     }
@@ -443,7 +461,7 @@ public class MethodCompletion extends BaseCompletion {
      */
     private List<MethodParameter> getParameterListForMethod(Parameter[] parameters) {
         if (parameters.length == 0) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
 
         List<MethodParameter> paramDescriptors = new ArrayList<>();

@@ -58,7 +58,7 @@ public class ArrayTypeTreeNode extends AbstractParameterTreeNode {
         
         // Update the parent node
         DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) this.getParent();
-        if (parentNode != null && parentNode instanceof ParameterTreeNode) {
+        if (parentNode instanceof ParameterTreeNode) {
             ((ParameterTreeNode)parentNode).updateValueFromChildren(data);
         }
     }

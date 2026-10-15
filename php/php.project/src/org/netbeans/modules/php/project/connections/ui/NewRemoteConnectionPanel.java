@@ -22,8 +22,7 @@ package org.netbeans.modules.php.project.connections.ui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigInteger;
-import java.nio.charset.Charset;
-import java.nio.charset.UnsupportedCharsetException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Vector;
@@ -59,23 +58,9 @@ public final class NewRemoteConnectionPanel extends JPanel {
 
     private static final Logger LOGGER = Logger.getLogger(NewRemoteConnectionPanel.class.getName());
 
-    private static final Charset DIGEST_CHARSET;
-
     private final ConfigManager configManager;
     private DialogDescriptor descriptor;
     private NotificationLineSupport notificationLineSupport;
-
-    static {
-        Charset charset;
-        try {
-            charset = Charset.forName("UTF-8"); // NOI18N
-        } catch (UnsupportedCharsetException ex) {
-            // fallback
-            LOGGER.log(Level.WARNING, null, ex);
-            charset = Charset.defaultCharset();
-        }
-        DIGEST_CHARSET = charset;
-    }
 
     public NewRemoteConnectionPanel(ConfigManager configManager) {
         this.configManager = configManager;
@@ -120,11 +105,11 @@ public final class NewRemoteConnectionPanel extends JPanel {
             return getOldConfigName();
         }
 
-        md.update(getConnectionName().getBytes(DIGEST_CHARSET));
+        md.update(getConnectionName().getBytes(StandardCharsets.UTF_8));
         byte[] digest = md.digest();
         BigInteger hash = new BigInteger(1, digest);
         String hashWord = hash.toString(16);
-        String postfix = hashWord.substring(hashWord.length() - 6, hashWord.length());
+        String postfix = hashWord.substring(hashWord.length() - 6);
 
         return getOldConfigName() + "-" + postfix; // NOI18N
     }

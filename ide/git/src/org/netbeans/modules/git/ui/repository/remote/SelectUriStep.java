@@ -129,7 +129,7 @@ public class SelectUriStep extends AbstractWizardPanel implements ActionListener
                 }
             }
         }
-        RemoteUri[] uris = list.toArray(new RemoteUri[list.size()]);
+        RemoteUri[] uris = list.toArray(new RemoteUri[0]);
         Arrays.sort(uris);
         panel.cmbConfiguredRepositories.removeAllItems();
         panel.cmbConfiguredRepositories.setModel(new DefaultComboBoxModel(uris));

@@ -1,0 +1,5 @@
+Code completion result for source line:
+someFile.absoluteFile.parent|File.mkdirs()
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      parentFile                      [PUBLIC]   File

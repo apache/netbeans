@@ -44,13 +44,13 @@ public class AddNavigationCaseDialog extends javax.swing.JPanel implements Valid
         this.config = config;
         FacesConfig facesConfig = ConfigurationUtils.getConfigModel(config.getPrimaryFile(), true).getRootComponent();
         
-        DefaultComboBoxModel modelF = (DefaultComboBoxModel)jComboBoxFromView.getModel();
-        DefaultComboBoxModel modelT = (DefaultComboBoxModel)jComboBoxToView.getModel();
+        DefaultComboBoxModel<String> modelF = (DefaultComboBoxModel<String>)jComboBoxFromView.getModel();
+        DefaultComboBoxModel<String> modelT = (DefaultComboBoxModel<String>)jComboBoxToView.getModel();
         modelF.addElement("");
         modelT.addElement("");
-        Iterator iter = facesConfig.getNavigationRules().iterator();
+        Iterator<NavigationRule> iter = facesConfig.getNavigationRules().iterator();
         while (iter.hasNext()) {
-            String fromViewID=((NavigationRule)iter.next()).getFromViewId();
+            String fromViewID=iter.next().getFromViewId();
             if (fromViewID != null && fromViewID.trim().length() > 0){
                 modelF.addElement(fromViewID);
                 modelT.addElement(fromViewID);

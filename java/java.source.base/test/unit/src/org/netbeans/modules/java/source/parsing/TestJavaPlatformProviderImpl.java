@@ -20,13 +20,10 @@ package org.netbeans.modules.java.source.parsing;
 
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.modules.java.platform.implspi.JavaPlatformProvider;
@@ -34,10 +31,8 @@ import org.netbeans.api.java.platform.Specification;
 import org.netbeans.modules.java.source.TestUtil;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileStateInvalidException;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.SpecificationVersion;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -124,7 +119,16 @@ public class TestJavaPlatformProviderImpl implements JavaPlatformProvider {
         }
 
         public FileObject findTool(String toolName) {
-            return null;//no tools supported.
+            File home = new File(System.getProperty("java.home"));
+            if (home.getName().equals("jre")) {
+                home = home.getParentFile();
+            }
+            File bin = new File(home, "bin");
+            File tool = new File(bin, toolName);
+            if (!tool.exists()) {
+                tool = new File(bin, toolName + ".exe");
+            }
+            return FileUtil.toFileObject(tool);
         }
 
         public ClassPath getSourceFolders() {

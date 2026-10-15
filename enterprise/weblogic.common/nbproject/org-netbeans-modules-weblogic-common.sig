@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.20
+#Version 1.47
 
 CLSS public abstract interface java.io.Serializable
 
@@ -21,7 +21,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
@@ -168,7 +167,7 @@ meth public static org.netbeans.modules.weblogic.common.api.WebLogicConfiguratio
 meth public static org.netbeans.modules.weblogic.common.api.WebLogicConfiguration forRemoteDomain(java.io.File,java.lang.String,int,boolean,org.netbeans.modules.weblogic.common.api.WebLogicConfiguration$Credentials)
  anno 0 org.netbeans.api.annotations.common.NonNull()
 supr java.lang.Object
-hfds INSTANCES,config,credentials,domainHome,host,id,layout,port,remote,secured,serverHome
+hfds config,credentials,domainHome,host,id,layout,port,remote,secured,serverHome
 
 CLSS public abstract interface static org.netbeans.modules.weblogic.common.api.WebLogicConfiguration$Credentials
  outer org.netbeans.modules.weblogic.common.api.WebLogicConfiguration

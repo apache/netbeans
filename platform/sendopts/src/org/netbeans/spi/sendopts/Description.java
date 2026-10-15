@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  * Can be attached to public non-static fields that are also annotated 
  * by {@code @}{@link Arg}.
  *
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  * @since 2.20
  */
 @Target({ElementType.FIELD})

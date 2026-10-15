@@ -57,20 +57,22 @@ public class UseEntityManagerCodeGenerator implements CodeGenerator {
 
         @Override
         public List<? extends CodeGenerator> create(Lookup context) {
-            ArrayList<CodeGenerator> ret = new ArrayList<CodeGenerator>();
+            ArrayList<CodeGenerator> ret = new ArrayList<>();
             JTextComponent component = context.lookup(JTextComponent.class);
             CompilationController controller = context.lookup(CompilationController.class);
             TreePath path = context.lookup(TreePath.class);
             path = path != null ? getPathElementOfKind(TreeUtilities.CLASS_TREE_KINDS, path) : null;
-            if (component == null || controller == null || path == null)
+            if (component == null || controller == null || path == null) {
                 return ret;
+            }
             try {
                 controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                 Element elem = controller.getTrees().getElement(path);
                 if (elem != null) {
                     UseEntityManagerCodeGenerator gen = createUseEntityManagerCodeGenerator(component, controller, elem);
-                    if (gen != null)
+                    if (gen != null) {
                         ret.add(gen);
+                    }
                 }
             } catch (IOException ioe) {
             }
@@ -80,8 +82,9 @@ public class UseEntityManagerCodeGenerator implements CodeGenerator {
     }
 
     static UseEntityManagerCodeGenerator createUseEntityManagerCodeGenerator(JTextComponent component, CompilationController cc, Element el) throws IOException {
-        if (el.getKind() != ElementKind.CLASS)
+        if (el.getKind() != ElementKind.CLASS) {
             return null;
+        }
         TypeElement typeElement = (TypeElement)el;
         if (!isEnable(cc.getFileObject(), typeElement)) {
             return null;
@@ -119,7 +122,9 @@ public class UseEntityManagerCodeGenerator implements CodeGenerator {
         if (project == null) {
             return false;
         }
-        if(ElementKind.INTERFACE == typeElement.getKind())return false;
+        if(ElementKind.INTERFACE == typeElement.getKind()) {
+            return false;
+        }
         DataObject dObj = null;
         try {
             dObj = DataObject.find(fileObject);
@@ -144,12 +149,7 @@ public class UseEntityManagerCodeGenerator implements CodeGenerator {
         }
 
         FileObject entityMgrRes = cp.findResource("javax/persistence/EntityManager.class"); // NOI18N
-
-        if (entityMgrRes != null) {
-            return true;
-        } else {
-            return false;
-        }
+        return entityMgrRes != null;
     }
     
     public static TreePath getPathElementOfKind(Tree.Kind kind, TreePath path) {
@@ -158,8 +158,9 @@ public class UseEntityManagerCodeGenerator implements CodeGenerator {
 
     public static TreePath getPathElementOfKind(Set<Tree.Kind> kinds, TreePath path) {
         while (path != null) {
-            if (kinds.contains(path.getLeaf().getKind()))
+            if (kinds.contains(path.getLeaf().getKind())) {
                 return path;
+            }
             path = path.getParentPath();
         }
         return null;

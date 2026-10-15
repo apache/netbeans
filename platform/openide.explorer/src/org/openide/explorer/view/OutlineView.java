@@ -135,8 +135,8 @@ import org.openide.util.WeakListeners;
  * 
  * <p>Related documentation:
  * <ul>
- * <li><a href="http://weblogs.java.net/blog/timboudreau/archive/2008/06/egads_an_actual.html">Egads! An actual Swing Tree-Table!</a>
- * <li><a href="http://blogs.oracle.com/geertjan/entry/swing_outline_component">Swing Outline Component</a>
+ * <li><a href="https://netbeans.apache.org/blogs/timboudreau/egads_an_actual.html">Egads! An actual Swing Tree-Table!</a>
+ * <li><a href="https://netbeans.apache.org/blogs/geertjan/swing_outline_component.html">Swing Outline Component</a>
  * </ul>
  * 
  * 
@@ -184,8 +184,8 @@ public class OutlineView extends JScrollPane {
     transient boolean dropTargetPopupAllowed = true;
 
     // default DnD actions
-    transient private int allowedDragActions = DnDConstants.ACTION_COPY_OR_MOVE | DnDConstants.ACTION_REFERENCE;
-    transient private int allowedDropActions = DnDConstants.ACTION_COPY_OR_MOVE | DnDConstants.ACTION_REFERENCE;
+    private transient int allowedDragActions = DnDConstants.ACTION_COPY_OR_MOVE | DnDConstants.ACTION_REFERENCE;
+    private transient int allowedDropActions = DnDConstants.ACTION_COPY_OR_MOVE | DnDConstants.ACTION_REFERENCE;
 
     /** Listener on keystroke to invoke default action */
     private ActionListener defaultTreeActionListener;
@@ -269,24 +269,28 @@ public class OutlineView extends JScrollPane {
             defaultTreeActionListener, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), JComponent.WHEN_FOCUSED
         );
 
-        final Color focusSelectionBackground = outline.getSelectionBackground();
-        final Color focusSelectionForeground = outline.getSelectionForeground();
-        outline.addFocusListener(new java.awt.event.FocusListener(){
-            @Override
-            public void focusGained(java.awt.event.FocusEvent ev) {
-                outline.setSelectionBackground(focusSelectionBackground);
-                outline.setSelectionForeground(focusSelectionForeground);
-            }
+        // toggle selection colors depending on whether table is focused or not
+        if (!UIManager.getLookAndFeel().getID().startsWith("FlatLaf")) {
+            final Color focusSelectionBackground = outline.getSelectionBackground();
+            final Color focusSelectionForeground = outline.getSelectionForeground();
+            outline.addFocusListener(new java.awt.event.FocusListener(){
+                @Override
+                public void focusGained(java.awt.event.FocusEvent ev) {
+                    outline.setSelectionBackground(focusSelectionBackground);
+                    outline.setSelectionForeground(focusSelectionForeground);
+                }
 
-            @Override
-            public void focusLost(java.awt.event.FocusEvent ev) {
-                outline.setSelectionBackground(SheetCell.getNoFocusSelectionBackground());
-                outline.setSelectionForeground(SheetCell.getNoFocusSelectionForeground());
-            }
+                @Override
+                public void focusLost(java.awt.event.FocusEvent ev) {
+                    outline.setSelectionBackground(SheetCell.getNoFocusSelectionBackground());
+                    outline.setSelectionForeground(SheetCell.getNoFocusSelectionForeground());
+                }
 
-        });
-        outline.setSelectionBackground(SheetCell.getNoFocusSelectionBackground());
-        outline.setSelectionForeground(SheetCell.getNoFocusSelectionForeground());
+            });
+            outline.setSelectionBackground(SheetCell.getNoFocusSelectionBackground());
+            outline.setSelectionForeground(SheetCell.getNoFocusSelectionForeground());
+        }
+
         TableColumnSelector tcs = Lookup.getDefault ().lookup (TableColumnSelector.class);
         if (tcs != null) {
             outline.setColumnSelector(tcs);
@@ -419,13 +423,14 @@ public class OutlineView extends JScrollPane {
      * @see #getTreeHorizontalScrollBarPolicy
      * @since 6.30
      *
-     * @beaninfo
+     * <pre> beaninfo taglet
      *   preferred: true
      *       bound: true
      * description: The tree column scrollbar policy
      *        enum: HORIZONTAL_SCROLLBAR_AS_NEEDED ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
      *              HORIZONTAL_SCROLLBAR_NEVER ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
      *              HORIZONTAL_SCROLLBAR_ALWAYS ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS
+     * </pre>
      */
     public void setTreeHorizontalScrollBarPolicy(int policy) {
         if (policy == treeHorizontalScrollBarPolicy) {
@@ -687,7 +692,7 @@ public class OutlineView extends JScrollPane {
      * Enable/disable double click to invoke default action.
      * If the default action is not enabled, double click expand/collapse node.
      * @param defaultActionAllowed Provide <code>true</code> to enable
-     * @see {@link #isDefaultActionAllowed()}
+     * @see #isDefaultActionAllowed()
      * @since 6.32
      */
     public void setDefaultActionAllowed(boolean defaultActionAllowed) {
@@ -697,7 +702,7 @@ public class OutlineView extends JScrollPane {
     /**
      * Tells if double click invokes default action.
      * @return <code>true</code> if the default action is invoked, or <code>false</code> when it's not.
-     * @see {@link #setDefaultActionAllowed(boolean)}
+     * @see #setDefaultActionAllowed(boolean)
      * @since 6.32
      */
     public boolean isDefaultActionAllowed() {
@@ -855,6 +860,10 @@ public class OutlineView extends JScrollPane {
         invalidate();
         validate();
         Node[] arr = manager.getSelectedNodes ();
+        
+        // [NETBEANS-4857]: prevent property change events during synchronization  
+        outline.getSelectionModel().setValueIsAdjusting(true);
+        
         outline.getSelectionModel().clearSelection();
         int size = outline.getRowCount();
         int firstSelection = -1;
@@ -872,6 +881,9 @@ public class OutlineView extends JScrollPane {
                 }
             }
         }
+        // [NETBEANS-4857]: re-activate property change events
+        outline.getSelectionModel().setValueIsAdjusting(false);
+        
 //        System.err.println("\nOutlineView.synchronizeSelectedNodes("+java.util.Arrays.toString(arr)+"): "+
 //                           "columnModel = "+outline.getColumnModel()+", column selection model = "+outline.getColumnModel().getSelectionModel()+
 //                           ", column lead selection index = "+outline.getColumnModel().getSelectionModel().getLeadSelectionIndex()+"\n");
@@ -1030,7 +1042,7 @@ public class OutlineView extends JScrollPane {
                 al.add(n);
             }
         }
-        Node[] arr = al.toArray (new Node[al.size ()]);
+        Node[] arr = al.toArray (new Node[0]);
         if (arr.length == 0) {
             if (manager.getRootContext() != null) {
                 // display the context menu of the root node
@@ -1074,12 +1086,14 @@ public class OutlineView extends JScrollPane {
         Rectangle rect = outline.getCellRect(i, j, true);
         if (rect == null) return null;
 
-        Point p = new Point(rect.x + rect.width / 3,
-                rect.y + rect.height / 2);
+        Point p = new Point(
+            rect.x + Math.min(350, 5 + rect.width),
+            rect.y - 15);
         
         // bugfix #36984, convert point by TableView.this
         p =  SwingUtilities.convertPoint (outline, p, OutlineView.this);
 
+        p.x = Math.min(p.x, OutlineView.this.getWidth());
         return p;
     }
 
@@ -1397,7 +1411,7 @@ public class OutlineView extends JScrollPane {
                 }
             }
             //System.err.println("  => selectedNodes = "+selectedNodes);
-            callSelectionChanged(selectedNodes.toArray (new Node[selectedNodes.size ()]));
+            callSelectionChanged(selectedNodes.toArray (new Node[0]));
         }
 
         @Override
@@ -2464,8 +2478,8 @@ public class OutlineView extends JScrollPane {
 
         @Override
         public boolean equals(Object o) {
-            return o != null && o instanceof Property &&
-                    getName().equals(((Property)o).getName());
+            return o instanceof Property &&
+                   getName().equals(((Property) o).getName());
         }
 
         @Override

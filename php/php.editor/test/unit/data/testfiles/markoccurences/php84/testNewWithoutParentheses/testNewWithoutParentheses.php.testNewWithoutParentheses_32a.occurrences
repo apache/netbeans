@@ -1,0 +1,2 @@
+    public static function |>MARK_OCCURRENCES:publicStatic^Method<|(): self {} // anon6
+}::|>MARK_OCCURRENCES:publicStaticMethod<|()->publicMethod()->publicField;

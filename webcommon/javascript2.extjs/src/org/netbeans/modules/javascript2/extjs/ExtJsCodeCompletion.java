@@ -59,31 +59,31 @@ public class ExtJsCodeCompletion implements CompletionProvider {
     
     private static HashMap<String, Collection<ExtJsDataItem>> ccData = null;
        
-    private synchronized static Map<String, Collection<ExtJsDataItem>> getData() {
+    private static synchronized Map<String, Collection<ExtJsDataItem>> getData() {
         return DataLoader.getData(getDataFile());
     }
     
     @Override
     public List<CompletionProposal> complete(CodeCompletionContext ccContext, CompletionContext jsCompletionContext, String prefix) {
         if (jsCompletionContext != CompletionContext.OBJECT_PROPERTY_NAME) {
-            return Collections.EMPTY_LIST;
+            return Collections.<CompletionProposal>emptyList();
         }
         // find the object that can be configured
         TokenHierarchy<?> th = ccContext.getParserResult().getSnapshot().getTokenHierarchy();
         if (th == null) {
-            return Collections.EMPTY_LIST;
+            return Collections.<CompletionProposal>emptyList();
         }
         int carretOffset  = ccContext.getCaretOffset();
         int eOffset = ccContext.getParserResult().getSnapshot().getEmbeddedOffset(carretOffset);
         TokenSequence<? extends JsTokenId> ts = LexUtilities.getJsTokenSequence(th, eOffset);
         if (ts == null) {
-            return Collections.EMPTY_LIST;
+            return Collections.<CompletionProposal>emptyList();
         }
         
         ts.move(eOffset);
         
         if (!ts.moveNext() && !ts.movePrevious()){
-            return Collections.EMPTY_LIST;
+            return Collections.<CompletionProposal>emptyList();
         }
         
         Token<? extends JsTokenId> token = null;
@@ -100,7 +100,7 @@ public class ExtJsCodeCompletion implements CompletionProvider {
             }
         }
         if (token == null || balance != 0) {
-            return Collections.EMPTY_LIST;
+            return Collections.<CompletionProposal>emptyList();
         }
         
         // now we should be at the beginning of the object literal. 
@@ -129,12 +129,12 @@ public class ExtJsCodeCompletion implements CompletionProvider {
             }
             return result;
         }
-        return Collections.EMPTY_LIST;
+        return Collections.<CompletionProposal>emptyList();
     }
 
     @Override
     public String getHelpDocumentation(ParserResult info, ElementHandle element) {
-        if (element != null && element instanceof ExtJsElement) {
+        if (element instanceof ExtJsElement) {
             return ((ExtJsElement)element).getDocumentation();
         }
         return null;

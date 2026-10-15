@@ -23,6 +23,7 @@ import com.sun.jdi.ArrayReference;
 import com.sun.jdi.ArrayType;
 import com.sun.jdi.BooleanValue;
 import com.sun.jdi.ByteValue;
+import com.sun.jdi.ClassLoaderReference;
 import com.sun.jdi.ClassNotLoadedException;
 import com.sun.jdi.ClassObjectReference;
 import com.sun.jdi.ClassType;
@@ -43,6 +44,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -84,7 +86,6 @@ import org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl;
 
 import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
-import org.openide.util.WeakSet;
 
 /**
  * Upload backend classed to the JVM.
@@ -93,14 +94,23 @@ public final class RemoteServices {
     
     private static final Logger logger = Logger.getLogger(RemoteServices.class.getName());
     
-    static final String REMOTE_CLASSES_ZIPFILE = "/org/netbeans/modules/debugger/jpda/truffle/resources/JPDATruffleBackend.jar";
+    static final String REMOTE_CLASSES_ZIPFILE = "/org/netbeans/modules/debugger/jpda/truffle/resources/JPDATruffleBackend.jar";    // NOI18N
+
+    private static final String TRUFFLE_CLASS = "com.oracle.truffle.api.Truffle";       // NOI18N
+    private static final String[] TRUFFLE_PACKAGES = {
+            "com.oracle.truffle.api",           // NOI18N
+            "com.oracle.truffle.api.debug",     // NOI18N
+            "com.oracle.truffle.api.frame",     // NOI18N
+            "com.oracle.truffle.api.instrumentation",   // NOI18N
+            "com.oracle.truffle.api.nodes",     // NOI18N
+            "com.oracle.truffle.api.source" };  // NOI18N
     
     private static final Map<JPDADebugger, ClassObjectReference> remoteServiceClasses = new WeakHashMap<>();
     private static final Map<JPDADebugger, ThreadReference> remoteServiceAccess = new WeakHashMap<>();
     
-    private static final RequestProcessor AUTORESUME_AFTER_SUSPEND_RP = new RequestProcessor("Autoresume after suspend", 1);
+    private static final RequestProcessor AUTORESUME_AFTER_SUSPEND_RP = new RequestProcessor("Autoresume after suspend", 1);    // NOI18N
     
-    private static final Set<PropertyChangeListener> serviceListeners = new WeakSet<>();
+    private static final Set<PropertyChangeListener> serviceListeners = Collections.newSetFromMap(new WeakHashMap<>());
 
     private RemoteServices() {}
     
@@ -125,7 +135,7 @@ public final class RemoteServices {
         /* Use:
            com.oracle.truffle.api.impl.TruffleLocator.class.getClassLoader()
         */
-        ClassType truffleLocatorClass = getClass(vm, "com.oracle.truffle.api.impl.TruffleLocator");
+        ClassType truffleLocatorClass = getClass(vm, TRUFFLE_CLASS);
         return truffleLocatorClass.classLoader();
     }
     
@@ -167,6 +177,11 @@ public final class RemoteServices {
         return cl;
     }
     
+    private static int getTargetMajorVersion(VirtualMachine vm) throws InternalExceptionWrapper, VMDisconnectedExceptionWrapper {
+        String version = VirtualMachineWrapper.version(vm);
+        return Runtime.Version.parse(version).feature();
+    }
+
     public static ClassObjectReference uploadBasicClasses(JPDAThreadImpl t, String basicClassName) throws InvalidTypeException, ClassNotLoadedException, IncompatibleThreadStateException, InvocationException, IOException, PropertyVetoException, InternalExceptionWrapper, VMDisconnectedExceptionWrapper, ObjectCollectedExceptionWrapper, UnsupportedOperationExceptionWrapper, ClassNotPreparedExceptionWrapper {
         ThreadReference tawt = t.getThreadReference();
         VirtualMachine vm = tawt.virtualMachine();
@@ -189,59 +204,7 @@ public final class RemoteServices {
                 }
                 // Suppose that when there's the basic class loaded, there are all.
                 if (basicClass == null) {  // Load the classes only if there's not the basic one.
-                    ObjectReference cl;
-                    cl = getTruffleClassLoader(tawt, vm);
-                    if (cl == null) {
-                        cl = getBootstrapClassLoader(tawt, vm);
-                    }
-                    if (cl == null) {
-                        cl = getContextClassLoader(tawt, vm);
-                    }
-                    ClassType classLoaderClass = (ClassType) ObjectReferenceWrapper.referenceType(cl);
-
-                    ByteValue[] mirrorBytesCache = new ByteValue[256];
-                    for (RemoteClass rc : remoteClasses) {
-                        String className = rc.name;
-                        ClassObjectReference theUploadedClass;
-                        ArrayReference byteArray = createTargetBytes(vm, rc.bytes, mirrorBytesCache);
-                        StringReference nameMirror = null;
-                        try {
-                            Method defineClass = ClassTypeWrapper.concreteMethodByName(classLoaderClass, "defineClass", "(Ljava/lang/String;[BII)Ljava/lang/Class;");
-                            boolean uploaded = false;
-                            while (!uploaded) {
-                                nameMirror = VirtualMachineWrapper.mirrorOf(vm, className);
-                                try {
-                                    ObjectReferenceWrapper.disableCollection(nameMirror);
-                                    uploaded = true;
-                                } catch (ObjectCollectedExceptionWrapper ocex) {
-                                    // Just collected, try again...
-                                }
-                            }
-                            uploaded = false;
-                            while (!uploaded) {
-                                theUploadedClass = (ClassObjectReference) ObjectReferenceWrapper.invokeMethod(cl, tawt, defineClass, Arrays.asList(nameMirror, byteArray, vm.mirrorOf(0), vm.mirrorOf(rc.bytes.length)), ObjectReference.INVOKE_SINGLE_THREADED);
-                                if (basicClass == null && rc.name.indexOf('$') < 0 && rc.name.endsWith("Accessor")) {
-                                    try {
-                                        // Disable collection only of the basic class
-                                        ObjectReferenceWrapper.disableCollection(theUploadedClass);
-                                        basicClass = theUploadedClass;
-                                        uploaded = true;
-                                    } catch (ObjectCollectedExceptionWrapper ocex) {
-                                        // Just collected, try again...
-                                    }
-                                } else {
-                                    uploaded = true;
-                                }
-                            }
-                        } finally {
-                            ObjectReferenceWrapper.enableCollection(byteArray); // We can dispose it now
-                            if (nameMirror != null) {
-                                ObjectReferenceWrapper.enableCollection(nameMirror);
-                            }
-                        }
-                        //Method resolveClass = classLoaderClass.concreteMethodByName("resolveClass", "(Ljava/lang/Class;)V");
-                        //systemClassLoader.invokeMethod(tawt, resolveClass, Arrays.asList(theUploadedClass), ObjectReference.INVOKE_SINGLE_THREADED);
-                    }
+                    basicClass = doUpload(vm, tawt, remoteClasses);
                 }
                 if (basicClass != null) {
                     // Initialize the class:
@@ -266,6 +229,95 @@ public final class RemoteServices {
         }
     }
     
+    private static ClassObjectReference doUpload(VirtualMachine vm, ThreadReference tawt, List<RemoteClass> remoteClasses) throws InvalidTypeException, ClassNotLoadedException, IncompatibleThreadStateException, InvocationException, IOException, PropertyVetoException, InternalExceptionWrapper, VMDisconnectedExceptionWrapper, ObjectCollectedExceptionWrapper, UnsupportedOperationExceptionWrapper, ClassNotPreparedExceptionWrapper {
+        String agentClassLoaderName = "AgentClassLoader";
+        PersistentValues values = new PersistentValues(vm);
+        ByteValue[] mirrorBytesCache = new ByteValue[256];
+        ClassLoaderReference classLoader;
+        try {
+            if (getTargetMajorVersion(vm) > 8) { // Module system is in place
+                RemoteClass agent = null;
+                for (RemoteClass rc : remoteClasses) {
+                    if (rc.name.endsWith(agentClassLoaderName)) {
+                        agent = rc;
+                        break;
+                    }
+                }
+                if (agent == null) {
+                    throw new IllegalStateException("The " + agentClassLoaderName + " class is missing.");
+                }
+                // Upload the class loader first, using the Truffle's class loader:
+                ClassType truffleLocatorClass = getClass(vm, TRUFFLE_CLASS);
+                ClassLoaderReference truffleClassLoader = truffleLocatorClass.classLoader();
+                ClassType classLoaderClass = (ClassType) ObjectReferenceWrapper.referenceType(truffleClassLoader);
+                // Define the class loader's code:
+                Method defineClass = ClassTypeWrapper.concreteMethodByName(classLoaderClass, "defineClass", "(Ljava/lang/String;[BII)Ljava/lang/Class;");
+                ArrayReference byteArray = createTargetBytes(vm, agent.bytes, mirrorBytesCache, values);
+                StringReference nameMirror = values.mirrorOf(agent.name);
+                ClassObjectReference theUploadedClassLoader = (ClassObjectReference) ObjectReferenceWrapper.invokeMethod(truffleClassLoader, tawt, defineClass, Arrays.asList(nameMirror, byteArray, vm.mirrorOf(0), vm.mirrorOf(agent.bytes.length)), ObjectReference.INVOKE_SINGLE_THREADED);
+                // We have the class loader's class. Create it's instance now.
+                // Find the constructor and call newInstance on it:
+                ClassType theClass = getClass(vm, Class.class.getName());
+                Method getDeclaredConstructors = ClassTypeWrapper.concreteMethodByName(theClass, "getDeclaredConstructors", "()[Ljava/lang/reflect/Constructor;");
+                ArrayReference constructors = (ArrayReference) ObjectReferenceWrapper.invokeMethod(theUploadedClassLoader, tawt, getDeclaredConstructors, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
+                ObjectReference constructor = (ObjectReference) constructors.getValue(0);
+                ClassType constructorClass = getClass(vm, Constructor.class.getName());
+                Method newInstance = ClassTypeWrapper.concreteMethodByName(constructorClass, "newInstance", "([Ljava/lang/Object;)Ljava/lang/Object;");
+                ClassLoaderReference newInstanceOfClassLoader = values.invokeOf(() -> (ClassLoaderReference) constructor.invokeMethod(tawt, newInstance, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED));
+                classLoader = (ClassLoaderReference) newInstanceOfClassLoader;
+
+                // We have an agent class loader that we'll use to define Truffle backend debugging classes.
+                // We need to export the agent class loader to Truffle so that we can upload classes that access Truffle APIs.
+                // We need to export packages from Truffle to our unnamed module.
+                // We must call the Modeule.addExports() method from the Truffle module, we must be suspended in a Truffle class.
+                Method getModule = ClassTypeWrapper.concreteMethodByName(theClass, "getModule", "()Ljava/lang/Module;");
+                // truffleModule = Truffle.class.getModule()
+                ObjectReference truffleModule = (ObjectReference) ObjectReferenceWrapper.invokeMethod(ReferenceTypeWrapper.classObject(truffleLocatorClass), tawt, getModule, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
+                ClassType newClassLoaderClass = (ClassType) ObjectReferenceWrapper.referenceType(classLoader);
+                Method getUnnamedModule = ClassTypeWrapper.concreteMethodByName(newClassLoaderClass, "getUnnamedModule", "()Ljava/lang/Module;");
+                // unnamedModule = newInstanceOfClassLoader.getUnnamedModule()
+                ObjectReference unnamedModule = (ObjectReference) ObjectReferenceWrapper.invokeMethod(classLoader, tawt, getUnnamedModule, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
+                Method addExports = ClassTypeWrapper.concreteMethodByName((ClassType) ObjectReferenceWrapper.referenceType(truffleModule), "addExports", "(Ljava/lang/String;Ljava/lang/Module;)Ljava/lang/Module;");
+                for (String tPackage : TRUFFLE_PACKAGES) {
+                    // Add exports: truffleModule.addExports(package, unnamedModule)
+                    ObjectReferenceWrapper.invokeMethod(truffleModule, tawt, addExports, Arrays.asList(values.mirrorOf(tPackage), unnamedModule), ObjectReference.INVOKE_SINGLE_THREADED);
+                }
+            } else {
+                ObjectReference cl;
+                cl = getTruffleClassLoader(tawt, vm);
+                if (cl == null) {
+                    cl = getBootstrapClassLoader(tawt, vm);
+                }
+                if (cl == null) {
+                    cl = getContextClassLoader(tawt, vm);
+                }
+                classLoader = (ClassLoaderReference) cl;
+            }
+
+            ClassType classLoaderClass = (ClassType) ObjectReferenceWrapper.referenceType(classLoader);
+            ClassObjectReference basicClass = null;
+            for (RemoteClass rc : remoteClasses) {
+                String className = rc.name;
+                if (className.endsWith(agentClassLoaderName)) {
+                    continue;
+                }
+                ClassObjectReference theUploadedClass;
+                ArrayReference byteArray = createTargetBytes(vm, rc.bytes, mirrorBytesCache, values);
+                Method defineClass = ClassTypeWrapper.concreteMethodByName(classLoaderClass, "defineClass", "(Ljava/lang/String;[BII)Ljava/lang/Class;");
+                StringReference nameMirror = values.mirrorOf(className);
+                theUploadedClass = values.invokeOf(() -> (ClassObjectReference) ObjectReferenceWrapper.invokeMethod(classLoader, tawt, defineClass, Arrays.asList(nameMirror, byteArray, vm.mirrorOf(0), vm.mirrorOf(rc.bytes.length)), ObjectReference.INVOKE_SINGLE_THREADED));
+                if (basicClass == null && rc.name.indexOf('$') < 0 && rc.name.endsWith("Accessor")) {
+                    // Disable collection only of the basic class
+                    ObjectReferenceWrapper.disableCollection(theUploadedClass);
+                    basicClass = theUploadedClass;
+                }
+            }
+            return basicClass;
+        } finally {
+            values.collect();
+        }
+    }
+
     private static void runOnBreakpoint(final JPDAThread awtThread, String bpClass, String bpMethod, final Runnable runnable, final CountDownLatch latch) {
         final MethodBreakpoint mb = MethodBreakpoint.create(bpClass, bpMethod);
         final JPDADebugger dbg = ((JPDAThreadImpl)awtThread).getDebugger();
@@ -616,25 +668,16 @@ public final class RemoteServices {
     }
     
     private static ArrayReference createTargetBytes(VirtualMachine vm, byte[] bytes,
-                                                    ByteValue[] mirrorBytesCache) throws InvalidTypeException,
+                                                    ByteValue[] mirrorBytesCache,
+                                                    PersistentValues persistValues) throws InvalidTypeException,
                                                                                          ClassNotLoadedException,
                                                                                          InternalExceptionWrapper,
                                                                                          VMDisconnectedExceptionWrapper,
                                                                                          ObjectCollectedExceptionWrapper,
                                                                                          UnsupportedOperationExceptionWrapper {
         ArrayType bytesArrayClass = getArrayClass(vm, "byte[]");
-        ArrayReference array = null;
-        boolean disabledCollection = false;
-        while (!disabledCollection) {
-            array = ArrayTypeWrapper.newInstance(bytesArrayClass, bytes.length);
-            try {
-                ObjectReferenceWrapper.disableCollection(array);
-                disabledCollection = true;
-            } catch (ObjectCollectedExceptionWrapper ocex) {
-                // Collected too soon, try again...
-            }
-        }
-        List<Value> values = new ArrayList<Value>(bytes.length);
+        ArrayReference array = persistValues.valueOf(() -> ArrayTypeWrapper.newInstance(bytesArrayClass, bytes.length));
+        List<Value> values = new ArrayList<>(bytes.length);
         for (int i = 0; i < bytes.length; i++) {
             byte b = bytes[i];
             ByteValue mb = mirrorBytesCache[128 + b];

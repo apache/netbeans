@@ -56,21 +56,21 @@ import org.tigris.subversion.svnclientadapter.SVNUrl;
  */
 public final class Browser implements VetoableChangeListener, BrowserClient, TreeExpansionListener {
 
-    public final static int BROWSER_SHOW_FILES                  = 1;
-    public final static int BROWSER_SINGLE_SELECTION_ONLY       = 2;
-    public final static int BROWSER_FILES_SELECTION_ONLY        = 4;
-    public final static int BROWSER_FOLDERS_SELECTION_ONLY      = 8;
-    public final static int BROWSER_SELECT_ANYTHING = BROWSER_FOLDERS_SELECTION_ONLY | BROWSER_FILES_SELECTION_ONLY;
+    public static final int BROWSER_SHOW_FILES                  = 1;
+    public static final int BROWSER_SINGLE_SELECTION_ONLY       = 2;
+    public static final int BROWSER_FILES_SELECTION_ONLY        = 4;
+    public static final int BROWSER_FOLDERS_SELECTION_ONLY      = 8;
+    public static final int BROWSER_SELECT_ANYTHING = BROWSER_FOLDERS_SELECTION_ONLY | BROWSER_FILES_SELECTION_ONLY;
 
-    public final static String BROWSER_HELP_ID_SEARCH_HISTORY   = "org.netbeans.modules.subversion.ui.browser.searchhistory"; // NOI18N
-    public final static String BROWSER_HELP_ID_CHECKOUT         = "org.netbeans.modules.subversion.ui.browser.checkout";      // NOI18N
-    public final static String BROWSER_HELP_ID_URL_PATTERN      = "org.netbeans.modules.subversion.ui.browser.urlpattern";    // NOI18N
-    public final static String BROWSER_HELP_ID_MERGE            = "org.netbeans.modules.subversion.ui.browser.merge";         // NOI18N
-    public final static String BROWSER_HELP_ID_MERGE_TAG        = "org.netbeans.modules.subversion.ui.browser.mergetag";      // NOI18N
-    public final static String BROWSER_HELP_ID_SWITCH_TO        = "org.netbeans.modules.subversion.ui.browser.switchto";      // NOI18N
-    public final static String BROWSER_HELP_ID_COPY             = "org.netbeans.modules.subversion.ui.browser.copy";          // NOI18N
-    public final static String BROWSER_HELP_ID_IMPORT           = "org.netbeans.modules.subversion.ui.browser.import";        // NOI18N
-    public final static String BROWSER_HELP_ID_SELECT_DIFF_TREE = "org.netbeans.modules.subversion.ui.browser.selectdifftree"; // NOI18N
+    public static final String BROWSER_HELP_ID_SEARCH_HISTORY   = "org.netbeans.modules.subversion.ui.browser.searchhistory"; // NOI18N
+    public static final String BROWSER_HELP_ID_CHECKOUT         = "org.netbeans.modules.subversion.ui.browser.checkout";      // NOI18N
+    public static final String BROWSER_HELP_ID_URL_PATTERN      = "org.netbeans.modules.subversion.ui.browser.urlpattern";    // NOI18N
+    public static final String BROWSER_HELP_ID_MERGE            = "org.netbeans.modules.subversion.ui.browser.merge";         // NOI18N
+    public static final String BROWSER_HELP_ID_MERGE_TAG        = "org.netbeans.modules.subversion.ui.browser.mergetag";      // NOI18N
+    public static final String BROWSER_HELP_ID_SWITCH_TO        = "org.netbeans.modules.subversion.ui.browser.switchto";      // NOI18N
+    public static final String BROWSER_HELP_ID_COPY             = "org.netbeans.modules.subversion.ui.browser.copy";          // NOI18N
+    public static final String BROWSER_HELP_ID_IMPORT           = "org.netbeans.modules.subversion.ui.browser.import";        // NOI18N
+    public static final String BROWSER_HELP_ID_SELECT_DIFF_TREE = "org.netbeans.modules.subversion.ui.browser.selectdifftree"; // NOI18N
 
     private final int mode;
 
@@ -198,7 +198,7 @@ public final class Browser implements VetoableChangeListener, BrowserClient, Tre
                 ret.add(((RepositoryPathNode) node).getEntry().getRepositoryFile());
             }
         }
-        return ret.toArray(new RepositoryFile[ret.size()]);
+        return ret.toArray(new RepositoryFile[0]);
     }
 
     private boolean show() {
@@ -248,7 +248,7 @@ public final class Browser implements VetoableChangeListener, BrowserClient, Tre
             }
             nodesToSelect.add(segmentParentNode);
         }
-        return nodesToSelect.toArray(new Node[nodesToSelect.size()]);
+        return nodesToSelect.toArray(new Node[0]);
     }
 
     /**
@@ -258,7 +258,7 @@ public final class Browser implements VetoableChangeListener, BrowserClient, Tre
         SvnProgressSupport[] progressSupports;
         synchronized(supportList) {
             cancelled = true;
-            progressSupports = supportList.toArray(new SvnProgressSupport[supportList.size()]);
+            progressSupports = supportList.toArray(new SvnProgressSupport[0]);
             supportList.clear();
         }
 

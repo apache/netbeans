@@ -106,7 +106,7 @@ public class PUCompletionProvider implements CompletionProvider {
 
         @Override
         protected void query(CompletionResultSet resultSet, Document doc, int caretOffset) {
-            List<JPACompletionItem> completionItems = new ArrayList<JPACompletionItem>();
+            List<JPACompletionItem> completionItems = new ArrayList<>();
 
             int anchorOffset = getCompletionItems(doc, caretOffset, completionItems);
             resultSet.addAllItems(completionItems);

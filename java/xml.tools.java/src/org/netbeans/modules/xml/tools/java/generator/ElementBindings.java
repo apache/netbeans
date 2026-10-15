@@ -104,9 +104,9 @@ public class ElementBindings extends HashMap {
         
         if (name == null) return false;
         
-        Iterator it = values().iterator();
+        Iterator<Entry> it = values().iterator();
         while (it.hasNext()) {
-            Entry next = (Entry) it.next();
+            Entry next = it.next();
             if (name.equals(next.parslet)) return true;
         }
         
@@ -118,10 +118,10 @@ public class ElementBindings extends HashMap {
      */
     public int getParsletUsageCount(String parslet) {
         int toret = 0;
-        Iterator it = values().iterator();
+        Iterator<Entry> it = values().iterator();
         
         while (it.hasNext()) {
-            Entry next = (Entry) it.next();
+            Entry next = it.next();
             if (parslet != null && parslet.equals(next.parslet)) {            
                 toret++;
             }
@@ -143,9 +143,9 @@ public class ElementBindings extends HashMap {
      */
     public final Entry getEntry(final int index) {
         int myindex = index;
-        Iterator it = values().iterator();
+        Iterator<Entry> it = values().iterator();
         while (it.hasNext()) {
-            Entry next = (Entry) it.next();
+            Entry next = it.next();
             if (myindex-- == 0) 
                 return next;
         }
@@ -153,7 +153,7 @@ public class ElementBindings extends HashMap {
     }
     
     public String toString() {
-        Iterator it = values().iterator();
+        Iterator<String> it = values().iterator();
         StringBuffer sb = new StringBuffer();
         sb.append("{"); // NOI18N
         while (it.hasNext()) {
@@ -283,7 +283,7 @@ public class ElementBindings extends HashMap {
          * Return suitable types (Vector<Strings>) for given element.
          */
         public static final Vector displayTypesFor(ElementDeclarations.Entry entry) {
-            Vector list = new Vector(4);
+            Vector<String> list = new Vector<>(4);
             list.add(IGNORE_HANDLING);
             if ((entry.getType() & ElementDeclarations.Entry.DATA) == 1) 
                 list.add(DATA_HANDLING);

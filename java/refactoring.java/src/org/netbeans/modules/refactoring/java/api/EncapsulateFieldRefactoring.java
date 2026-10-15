@@ -19,6 +19,7 @@
 package org.netbeans.modules.refactoring.java.api;
 
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 import javax.lang.model.element.Modifier;
@@ -114,8 +115,9 @@ public final class EncapsulateFieldRefactoring extends AbstractRefactoring {
      * @param methodModifiers New value of methodModifiers
      */
     public void setMethodModifiers(Set<Modifier> methodModifiers) {
-        this.methodModifiers = Collections.unmodifiableSet(
-                new HashSet<Modifier>(methodModifiers));
+        EnumSet<Modifier> modifiers = EnumSet.noneOf(Modifier.class);
+        modifiers.addAll(methodModifiers);
+        this.methodModifiers = Collections.unmodifiableSet(modifiers);
     }
 
     /**
@@ -123,8 +125,9 @@ public final class EncapsulateFieldRefactoring extends AbstractRefactoring {
      * @param fieldModifiers New value of fieldModifiers
      */
     public void setFieldModifiers(Set<Modifier> fieldModifiers) {
-        this.fieldModifiers = Collections.unmodifiableSet(
-                new HashSet<Modifier>(fieldModifiers));
+        EnumSet<Modifier> modifiers = EnumSet.noneOf(Modifier.class);
+        modifiers.addAll(fieldModifiers);
+        this.fieldModifiers = Collections.unmodifiableSet(modifiers);
     }
 
     /**

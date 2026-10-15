@@ -557,7 +557,7 @@ public class RegexpUtilsTest extends TestCase {
             assertFalse("should not match: " + string,
                         pattern.matcher(string).matches());
             assertTrue("should match: " + string,
-                        pattern.matcher(string.replaceAll("\n", "")).matches());
+                        pattern.matcher(string.replace("\n", "")).matches());
         }
     }
     

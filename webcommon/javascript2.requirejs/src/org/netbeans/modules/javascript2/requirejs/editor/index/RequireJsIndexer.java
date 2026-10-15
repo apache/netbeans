@@ -55,12 +55,12 @@ public class RequireJsIndexer extends EmbeddingIndexer {
     public static final String FIELD_PACKAGES = "pk"; //NOI18N
     public static final String FIELD_SOURCE_ROOT = "sr"; //NOI18N
 
-    private static final ThreadLocal<Map<URI, Collection<? extends TypeUsage>>> exposedTypes = new ThreadLocal();
-    private static final ThreadLocal<Map<URI, Map<String, String>>> pathsMapping = new ThreadLocal();
-    private static final ThreadLocal<Map<URI, String>> basePath = new ThreadLocal();
-    private static final ThreadLocal<Map<URI, Collection<String>>> usedPlugins = new ThreadLocal();
-    private static final ThreadLocal<Map<URI, Map<String, String>>> packageLocations = new ThreadLocal();
-    private static final ThreadLocal<Map<URI, String>> sourceRoot = new ThreadLocal();
+    private static final ThreadLocal<Map<URI, Collection<? extends TypeUsage>>> exposedTypes = new ThreadLocal<>();
+    private static final ThreadLocal<Map<URI, Map<String, String>>> pathsMapping = new ThreadLocal<>();
+    private static final ThreadLocal<Map<URI, String>> basePath = new ThreadLocal<>();
+    private static final ThreadLocal<Map<URI, Collection<String>>> usedPlugins = new ThreadLocal<>();
+    private static final ThreadLocal<Map<URI, Map<String, String>>> packageLocations = new ThreadLocal<>();
+    private static final ThreadLocal<Map<URI, String>> sourceRoot = new ThreadLocal<>();
 
     @Override
     protected void index(Indexable indexable, Parser.Result parserResult, Context context) {

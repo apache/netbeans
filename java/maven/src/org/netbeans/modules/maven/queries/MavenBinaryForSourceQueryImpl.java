@@ -168,7 +168,7 @@ public class MavenBinaryForSourceQueryImpl implements BinaryForSourceQueryImplem
                     result.add(artUrl);
                 }
             }
-            return result.toArray(new URL[result.size()]);
+            return result.toArray(new URL[0]);
         }   
 
         public @Override void addChangeListener(ChangeListener changeListener) {

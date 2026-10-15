@@ -23,9 +23,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import static junit.framework.Assert.*;
+import java.nio.charset.StandardCharsets;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Common utility methods for massaging and inspecting files from tests.
@@ -50,7 +52,7 @@ public class TestFileUtils {
         FileObject existing = root.getFileObject(path);
         OutputStream os = existing != null ? existing.getOutputStream() : root.createAndOpen(path);
         try {
-            PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
+            PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
             pw.print(body);
             pw.flush();
         } finally {

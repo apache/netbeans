@@ -29,7 +29,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
-import static junit.framework.Assert.assertEquals;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.platform.JavaPlatform;
@@ -125,7 +124,7 @@ public class J2SEProjectPlatformTest extends NbTestCase {
 
 
 
-    private final static class MockJavaPlatformProvider implements JavaPlatformProvider {
+    private static final class MockJavaPlatformProvider implements JavaPlatformProvider {
 
         private static final MockJavaPlatformProvider INSTANCE = new MockJavaPlatformProvider();
 

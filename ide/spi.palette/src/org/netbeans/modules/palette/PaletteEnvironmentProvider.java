@@ -144,7 +144,7 @@ public class PaletteEnvironmentProvider implements Environment.Provider {
             try {
                 XMLReader reader = getXMLReader();
                 FileObject fo = xmlDataObject.getPrimaryFile();
-                String urlString = fo.getURL().toExternalForm();
+                String urlString = fo.toURL().toExternalForm();
                 InputSource is = new InputSource(fo.getInputStream());
                 is.setSystemId(urlString);
                 reader.setContentHandler(handler);

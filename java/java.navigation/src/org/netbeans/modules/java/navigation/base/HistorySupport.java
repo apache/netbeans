@@ -60,7 +60,7 @@ public class HistorySupport {
     private static final int HISTORY_LENGTH = 25;
 
     //@GuardedBy("HistorySupport.class")
-    private static Map<Class<?>,HistorySupport> instances = new HashMap<Class<?>, HistorySupport>();;
+    private static Map<Class<?>,HistorySupport> instances = new HashMap<Class<?>, HistorySupport>();
 
     private final PropertyChangeSupport suppot;
     //@GuardedBy("this")

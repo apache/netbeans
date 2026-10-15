@@ -1,0 +1,5 @@
+Code completion result for source line:
+const NAME_NULLSAFE = E::Case?->nam|e;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+VARIABLE   string name                                \E

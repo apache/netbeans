@@ -282,7 +282,7 @@ public class CompletionContext {
     public List<String> getExistingAttributes() {
         if (existingAttributes == null) {
             try {
-                existingAttributes = (List<String>)support.runWithSequence(
+                existingAttributes = support.runWithSequence(
                         documentContext.getCurrentTokenOffset(),
                         this::getExistingAttributesLocked
                 );

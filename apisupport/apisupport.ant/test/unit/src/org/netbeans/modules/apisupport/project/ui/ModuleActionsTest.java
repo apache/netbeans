@@ -45,11 +45,11 @@ public class ModuleActionsTest extends TestBase {
     
     public void testDebugFix() throws Exception {
         // Track down #47012.
-        Project freeform = ProjectManager.getDefault().findProject(FileUtil.toFileObject(file("ant.freeform")));
+        Project freeform = ProjectManager.getDefault().findProject(FileUtil.toFileObject(file("java/ant.freeform")));
         assertNotNull("have project in ant/freeform", freeform);
         ActionProvider ap = freeform.getLookup().lookup(ActionProvider.class);
         assertNotNull("have ActionProvider", ap);
-        FileObject actionsJava = FileUtil.toFileObject(file("ant.freeform/src/org/netbeans/modules/ant/freeform/Actions.java"));
+        FileObject actionsJava = FileUtil.toFileObject(file("java/ant.freeform/src/org/netbeans/modules/ant/freeform/Actions.java"));
         assertNotNull("have Actions.java", actionsJava);
         assertTrue("Fix enabled on it", ap.isActionEnabled(JavaProjectConstants.COMMAND_DEBUG_FIX, Lookups.singleton(DataObject.find(actionsJava))));
     }

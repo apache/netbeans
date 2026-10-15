@@ -25,5 +25,14 @@
 /* The rest is the default stylesheet produced by Javadoc 1.4.2: */
 @import "javadoc-generic.css";
 /* Timestamp information for all HTML files in the footer */
+
+/* color from Apache NetBeans Webpage */ 
+:root {
+    --navbar-background-color: #a1c535;
+    --selected-background-color: #1b6ac6;
+    --selected-text-color: #ffffff;
+}
+
+
 .footnote:before { content: "@CSS_TIMESTAMP@"; }
 

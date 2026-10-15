@@ -19,8 +19,6 @@
 
 package org.netbeans.beaninfo.editors;
 
-import java.beans.*;
-
 /**
  * Editor for property of type java.lang.Short
  *
@@ -29,12 +27,8 @@ import java.beans.*;
 public class ShortEditor extends WrappersEditor {
 
     public ShortEditor() {
-        super(java.lang.Short.TYPE);
+        super(Short.TYPE);
     }
-
-
-    //----------------------------------------------------------------------
-
 
     /**
      * This method is intended for use when generating Java code to set
@@ -47,8 +41,9 @@ public class ShortEditor extends WrappersEditor {
      * @return A fragment of Java code representing an initializer for the
      *   	current value.
      */
+    @Override
     public String getJavaInitializationString() {
-	return "new java.lang.Short((short)" + getAsText() + ")"; // NOI18N
+	return "Short.valueOf((short)" + getAsText() + ")"; // NOI18N
     }
 
 }

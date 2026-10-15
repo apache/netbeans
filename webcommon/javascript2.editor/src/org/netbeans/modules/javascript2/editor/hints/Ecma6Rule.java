@@ -20,6 +20,7 @@ package org.netbeans.modules.javascript2.editor.hints;
 
 import com.oracle.js.parser.Token;
 import com.oracle.js.parser.TokenType;
+import com.oracle.js.parser.ir.ClassElement;
 import com.oracle.js.parser.ir.ClassNode;
 import com.oracle.js.parser.ir.FunctionNode;
 import com.oracle.js.parser.ir.IdentNode;
@@ -33,21 +34,18 @@ import java.util.List;
 import java.util.Set;
 import javax.swing.text.BadLocationException;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.api.project.FileOwnerQuery;
-import org.netbeans.api.project.Project;
 import org.netbeans.modules.csl.api.Hint;
-import org.netbeans.modules.csl.api.HintFix;
 import org.netbeans.modules.csl.api.HintsProvider;
 import org.netbeans.modules.csl.api.OffsetRange;
-import org.netbeans.modules.javascript2.editor.JsPreferences;
-import org.netbeans.modules.javascript2.editor.JsVersion;
-import static org.netbeans.modules.javascript2.editor.hints.EcmaLevelRule.refresh;
+
+import static org.netbeans.modules.javascript2.editor.JsVersion.ECMA6;
+import static org.netbeans.modules.javascript2.editor.hints.EcmaLevelRule.ecmaEditionProjectBelow;
+
 import org.netbeans.modules.javascript2.lexer.api.JsTokenId;
 import org.netbeans.modules.javascript2.lexer.api.LexUtilities;
 import org.netbeans.modules.javascript2.model.api.ModelUtils;
 import org.netbeans.modules.javascript2.model.spi.PathNodeVisitor;
 import org.netbeans.modules.parsing.api.Snapshot;
-import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 
 public class Ecma6Rule extends EcmaLevelRule {
@@ -64,7 +62,7 @@ public class Ecma6Rule extends EcmaLevelRule {
 
     @Override
     void computeHints(JsHintsProvider.JsRuleContext context, List<Hint> hints, int offset, HintsProvider.HintsManager manager) throws BadLocationException {
-        if (JsPreferences.isPreECMAScript6(FileOwnerQuery.getOwner(context.getJsParserResult().getSnapshot().getSource().getFileObject()))) {
+        if (ecmaEditionProjectBelow(context, ECMA6)) {
             Snapshot snapshot = context.getJsParserResult().getSnapshot();
             TokenSequence<? extends JsTokenId> ts = LexUtilities.getJsTokenSequence(snapshot, context.lexOffset);
             OffsetRange returnOffsetRange;
@@ -77,7 +75,7 @@ public class Ecma6Rule extends EcmaLevelRule {
                     }
                 }
             }
-            
+
             Ecma6Visitor visitor = new Ecma6Visitor();
             visitor.process(context, hints);
         }
@@ -92,7 +90,7 @@ public class Ecma6Rule extends EcmaLevelRule {
         hints.add(new Hint(this, Bundle.Ecma6Desc(),
                 context.getJsParserResult().getSnapshot().getSource().getFileObject(),
                 range, Collections.singletonList(
-                        new Ecma6Rule.SwitchToEcma6Fix(context.getJsParserResult().getSnapshot())), 600));
+                        new SwitchToEcmaXFix(context.getJsParserResult().getSnapshot(), ECMA6)), 600));
     }
 
     @Override
@@ -184,6 +182,14 @@ public class Ecma6Rule extends EcmaLevelRule {
         }
 
         @Override
+        public boolean enterClassElement(ClassElement classElement) {
+            if (classElement.isComputed()) {
+                addHint(context, hints, new OffsetRange(classElement.getStart(), classElement.getFinish()));
+            }
+            return super.enterClassElement(classElement);
+        }
+
+        @Override
         public boolean enterUnaryNode(UnaryNode unaryNode) {
             if (unaryNode.isTokenType(TokenType.AWAIT) || unaryNode.isTokenType(TokenType.YIELD)) {
                 long token = unaryNode.getToken();
@@ -212,45 +218,6 @@ public class Ecma6Rule extends EcmaLevelRule {
                 }
             }
             return -1;
-        }
-    }
-    
-    private static final class SwitchToEcma6Fix implements HintFix {
-
-        private final FileObject fo;
-
-        public SwitchToEcma6Fix(Snapshot snapshot) {
-            this.fo = snapshot.getSource().getFileObject();
-        }
-
-        @NbBundle.Messages("MSG_SwitchToEcma6=Switch project to ECMA6")
-        @Override
-        public String getDescription() {
-            return Bundle.MSG_SwitchToEcma6();
-        }
-
-        @Override
-        public void implement() throws Exception {
-            if (fo == null) {
-                return;
-            }
-
-            Project p = FileOwnerQuery.getOwner(fo);
-            if (p != null) {
-                JsPreferences.putECMAScriptVersion(p, JsVersion.ECMA6);
-            }
-
-            refresh(fo);
-        }
-
-        @Override
-        public boolean isSafe() {
-            return true;
-        }
-
-        @Override
-        public boolean isInteractive() {
-            return false;
         }
     }
 }

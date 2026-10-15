@@ -31,7 +31,6 @@ import org.netbeans.modules.web.jsfapi.api.Library;
 public class ImportData {
 
     public volatile boolean shouldShowNamespacesPanel;
-    public volatile boolean isJsf22;
 
     private final List<DataItem> dataItems = new ArrayList<>();
     private final List<DataItem> dataItemsToReplace = new ArrayList<>();

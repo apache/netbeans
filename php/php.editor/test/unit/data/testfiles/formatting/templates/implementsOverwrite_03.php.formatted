@@ -21,7 +21,6 @@ public function getName()
     {
     
     }
-
 }
 
 function functionName($param) {

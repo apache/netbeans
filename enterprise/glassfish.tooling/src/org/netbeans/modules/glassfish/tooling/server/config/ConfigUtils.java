@@ -30,6 +30,7 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import org.netbeans.modules.glassfish.tooling.data.GlassFishLibrary;
 import org.netbeans.modules.glassfish.tooling.logging.Logger;
+import org.openide.util.BaseUtilities;
 
 /**
  *
@@ -57,7 +58,7 @@ public class ConfigUtils {
      */
     static URL fileToURL(File file) {
         try {
-            return file != null ? file.toURI().normalize().toURL() : null;
+            return file != null ? BaseUtilities.normalizeURI(file.toURI()).toURL() : null;
         } catch (MalformedURLException ex) {
             Logger.log(Level.WARNING, "Unable to convert file "
                     + file.getAbsolutePath() + " to URL", ex);
@@ -101,8 +102,8 @@ public class ConfigUtils {
         List<String> paths = fileset.getPaths();
         ArrayList<File> result = new ArrayList<>();
 
-        for (String dir : filesets.keySet()) {
-            File d = new File(dir);
+        for (Map.Entry<String, List<String>> it : filesets.entrySet()) {
+            File d = new File(it.getKey());
             String dirPrefix;
             if (!d.isAbsolute()) {
                 dirPrefix = new File(rootDir, d.getPath()).getAbsolutePath();
@@ -110,7 +111,7 @@ public class ConfigUtils {
                 dirPrefix = d.getAbsolutePath();
             }
             
-            List<Pattern> patterns = compilePatterns(filesets.get(dir));
+            List<Pattern> patterns = compilePatterns(it.getValue());
             File[] fileArray = new File(dirPrefix).listFiles(createFilter(
                     patterns));
             if (fileArray != null) {

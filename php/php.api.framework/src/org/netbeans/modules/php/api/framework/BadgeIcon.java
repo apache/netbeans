@@ -21,7 +21,8 @@ package org.netbeans.modules.php.api.framework;
 
 import java.awt.Image;
 import java.net.URL;
-import javax.swing.ImageIcon;
+import javax.swing.Icon;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Parameters;
 
 /**
@@ -37,7 +38,7 @@ public final class BadgeIcon {
      * Creates a new badge icon. Image has to have 8x8 dimensions.
      * @param image image of icon
      * @param url URL of icon
-     * @thows IllegalArgumentException if the width or height is not 8 pixels (under assertions only)
+     * @throws IllegalArgumentException if the width or height is not 8 pixels (under assertions only)
      */
     public BadgeIcon(Image image, URL url) {
         Parameters.notNull("image", image); // NOI18N
@@ -46,7 +47,7 @@ public final class BadgeIcon {
         boolean assertions = false;
         assert assertions = true;
         if (assertions) {
-            ImageIcon imageIcon = new ImageIcon(image);
+            Icon imageIcon = ImageUtilities.image2Icon(image);
             if (imageIcon.getIconWidth() != 8) {
                 throw new IllegalArgumentException("The width of an image must be 8 px");
             }

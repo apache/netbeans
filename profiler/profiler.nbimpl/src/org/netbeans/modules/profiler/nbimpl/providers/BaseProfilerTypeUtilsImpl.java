@@ -40,10 +40,10 @@ import org.netbeans.modules.profiler.spi.java.ProfilerTypeUtilsProvider;
  *
  * @author Jaroslav Bachorik
  */
-abstract public class BaseProfilerTypeUtilsImpl extends ProfilerTypeUtilsProvider {
+public abstract class BaseProfilerTypeUtilsImpl extends ProfilerTypeUtilsProvider {
     private static final Logger LOG = Logger.getLogger(BaseProfilerTypeUtilsImpl.class.getName());
     @Override
-    final public Collection<SourcePackageInfo> getPackages(boolean subprojects, final Scope scope) {
+    public final Collection<SourcePackageInfo> getPackages(boolean subprojects, final Scope scope) {
         final Collection<SourcePackageInfo> pkgs = new ArrayList<SourcePackageInfo>();
 
         final ClasspathInfo cpInfo = getClasspathInfo(subprojects, scope == SourcePackageInfo.Scope.SOURCE, scope == SourcePackageInfo.Scope.DEPENDENCIES);
@@ -65,7 +65,7 @@ abstract public class BaseProfilerTypeUtilsImpl extends ProfilerTypeUtilsProvide
     }
 
     @Override
-    final public SourceClassInfo resolveClass(final String className) {
+    public final SourceClassInfo resolveClass(final String className) {
         final ClasspathInfo cpInfo = getClasspathInfo();
         if (cpInfo != null) {
             ElementHandle<TypeElement> eh = ElementUtilitiesEx.resolveClassByName(className, cpInfo, false);
@@ -92,8 +92,8 @@ abstract public class BaseProfilerTypeUtilsImpl extends ProfilerTypeUtilsProvide
         return clzs;
     }
     
-    abstract protected ClasspathInfo getClasspathInfo();
-    abstract protected ClasspathInfo getClasspathInfo(boolean subprojects, boolean source, boolean deps);
+    protected abstract ClasspathInfo getClasspathInfo();
+    protected abstract ClasspathInfo getClasspathInfo(boolean subprojects, boolean source, boolean deps);
     
     private Set<ClassIndex.SearchScope> toSearchScope(Set<Scope> scope) {
         Set<ClassIndex.SearchScope> sScope = EnumSet.noneOf(ClassIndex.SearchScope.class);

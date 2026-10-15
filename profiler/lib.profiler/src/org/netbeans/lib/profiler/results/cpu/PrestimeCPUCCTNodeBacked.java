@@ -163,7 +163,7 @@ public class PrestimeCPUCCTNodeBacked extends PrestimeCPUCCTNode {
             return children;
         }
         
-        List<PrestimeCPUCCTNodeBacked> childrenL = new ArrayList();
+        List<PrestimeCPUCCTNodeBacked> childrenL = new ArrayList<>();
 //        PrestimeCPUCCTNodeBacked filtered = null;
         
 //        FilterSortSupport.Configuration config = container.getCPUResSnapshot().getFilterSortInfo(this);

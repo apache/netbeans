@@ -430,8 +430,8 @@ public class JsDocModelTest extends JsDocumentationTestBase {
     }
 
     private static void assertElementsEquality(List<JsDocElement> expectedTags, List<? extends JsDocElement> elements) {
-        Collections.sort(expectedTags, elementComparator);
-        Collections.sort(elements, elementComparator);
+        expectedTags.sort(elementComparator);
+        elements.sort(elementComparator);
 
         assertEquals(expectedTags.size(), elements.size());
 

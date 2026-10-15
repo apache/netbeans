@@ -544,8 +544,8 @@ public final class Codecept {
         DialogDisplayer.getDefault().notify(message);
     }
 
-    public static Set<String> getSuiteNames(PhpModule phpMoudle) {
-        List<FileObject> testDirectories = phpMoudle.getTestDirectories();
+    public static Set<String> getSuiteNames(PhpModule phpModule) {
+        List<FileObject> testDirectories = phpModule.getTestDirectories();
         Set<String> suites = new TreeSet<>();
         for (FileObject testDirectory : testDirectories) {
             for (FileObject child : testDirectory.getChildren()) {

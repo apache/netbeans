@@ -882,9 +882,8 @@ public class JWSProjectProperties /*implements TableModelListener*/ {
             }
         }
         // remove all props with the prefix first
-        for (String key2Remove : keys2Remove) {
-            editableProps.remove(key2Remove);
-        }
+        editableProps.keySet().removeAll(keys2Remove);
+
         // and now save passed list
         for (Map<String,String> map : newProps) {
             // if all values in the map are empty do not store
@@ -1010,7 +1009,7 @@ public class JWSProjectProperties /*implements TableModelListener*/ {
 
     private static ComboBoxModel createMixedCodeModel (final PropertyEvaluator eval) {
         assert eval != null;
-        final DefaultComboBoxModel model = new DefaultComboBoxModel();
+        final DefaultComboBoxModel<MixedCodeOptions> model = new DefaultComboBoxModel<>();
         for (MixedCodeOptions option : MixedCodeOptions.values()) {
             model.addElement(option);
         }

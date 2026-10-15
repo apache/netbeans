@@ -1,10 +1,8 @@
 [[864,865]-Syntax error
  unexpected:	{
- after:	END_HEREDOC
- expected:	instanceof, as, =>, }, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', ], ), :, ??] 864-865:Syntax error
+ expected:	instanceof, as, =>, }, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', ], ), :, **, ??, &] 864-865:Syntax error
  unexpected:	{
- after:	END_HEREDOC
- expected:	instanceof, as, =>, }, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', ], ), :, ??
+ expected:	instanceof, as, =>, }, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', ], ), :, **, ??, &
 [[870,871]-POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	}] 870-871:POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	}

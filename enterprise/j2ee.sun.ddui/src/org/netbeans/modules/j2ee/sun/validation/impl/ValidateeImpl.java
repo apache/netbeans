@@ -58,14 +58,14 @@ public class ValidateeImpl implements Validatee {
         int size = baseProperty.length;
         for(int i=0; i<size; i++){
             elements.add(baseProperty[i].getName());
-            ///String format = 
-            ///    BundleReader.getValue("Name_Value_Pair_Format");     //NOI18N
-            ///Object[] arguments = new Object[]{"Name",                //NOI18N
-            ///    baseProperty[i].getName()};
-            ///System.out.println(MessageFormat.format(format, arguments));
-            ///arguments = 
-            ///    new Object[]{"FullName", baseProperty[i].getFullName()};//NOI18N
-            ///System.out.println(MessageFormat.format(format, arguments));
+            //String format = 
+            //    BundleReader.getValue("Name_Value_Pair_Format");     //NOI18N
+            //Object[] arguments = new Object[]{"Name",                //NOI18N
+            //    baseProperty[i].getName()};
+            //System.out.println(MessageFormat.format(format, arguments));
+            //arguments = 
+            //    new Object[]{"FullName", baseProperty[i].getFullName()};//NOI18N
+            //System.out.println(MessageFormat.format(format, arguments));
          }
         return elements;
     }
@@ -77,11 +77,11 @@ public class ValidateeImpl implements Validatee {
         int size = baseProperty.length;
         for(int i=0; i<size; i++){
             elements.add(baseProperty[i].getDtdName());
-            ///String format = 
-            ///    BundleReader.getValue("Name_Value_Pair_Format");     //NOI18N
-            ///Object[] arguments = new Object[]{"Dtd Name",            //NOI18N
-            ///    baseProperty[i].getDtdName()};
-            ///System.out.println(MessageFormat.format(format, arguments));         
+            //String format = 
+            //    BundleReader.getValue("Name_Value_Pair_Format");     //NOI18N
+            //Object[] arguments = new Object[]{"Dtd Name",            //NOI18N
+            //    baseProperty[i].getDtdName()};
+            //System.out.println(MessageFormat.format(format, arguments));         
         }
         return elements;
     }
@@ -147,23 +147,23 @@ public class ValidateeImpl implements Validatee {
 
 
     public String getXPath(){
-        ///String format = BundleReader.getValue("Name_Value_Pair_Format");//NOI18N
-        ///Object[] arguments = new Object[]{"Name", baseBean.name()};  //NOI18N
-        ///System.out.println(MessageFormat.format(format, arguments));
-        ///arguments = new Object[]{"FullName", baseBean.fullName()};   //NOI18N
-        ///System.out.println(MessageFormat.format(format, arguments));
+        //String format = BundleReader.getValue("Name_Value_Pair_Format");//NOI18N
+        //Object[] arguments = new Object[]{"Name", baseBean.name()};  //NOI18N
+        //System.out.println(MessageFormat.format(format, arguments));
+        //arguments = new Object[]{"FullName", baseBean.fullName()};   //NOI18N
+        //System.out.println(MessageFormat.format(format, arguments));
 
         BaseBean bean =  baseBean;
         BaseBean parentBean = null;
         String xpath = bean.dtdName();
-        ///boolean root =  bean.isRoot();
+        //boolean root =  bean.isRoot();
         boolean root = isRootElement(bean);
         parentBean = bean.parent();
         while(!root){
             xpath = parentBean.dtdName() + Constants.XPATH_DELIMITER + xpath;
             bean = parentBean;
             parentBean = bean.parent();
-            ///root = bean.isRoot();
+            //root = bean.isRoot();
             root = isRootElement(bean);
         }
         xpath = Constants.XPATH_DELIMITER + xpath;

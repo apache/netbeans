@@ -29,17 +29,17 @@ import org.netbeans.modules.profiler.oql.engine.api.impl.Snapshot;
  *
  * @author J. Bachorik
  */
-final public class OQLEngine {
-    final private static Logger LOGGER = Logger.getLogger(OQLEngine.class.getName());
-    final private OQLEngineImpl delegate;
-    final private Heap heap;
+public final class OQLEngine {
+    private static final Logger LOGGER = Logger.getLogger(OQLEngine.class.getName());
+    private final OQLEngineImpl delegate;
+    private final Heap heap;
     
     /**
      * This represents a parsed OQL query
      *
      * @author A. Sundararajan
      */
-    public static abstract class OQLQuery {
+    public abstract static class OQLQuery {
 
     }
 

@@ -127,7 +127,7 @@ final class ProjectClassPathImplementation implements ClassPathImplementation, P
                                 res = ClassPathSupport.createResource(entry);
                             } catch (IllegalArgumentException e) {
                                 //Try to recover from non normalized file having unbalanced path, do UNIX like normalization /../../Foo -> /Foo
-                                f = BaseUtilities.toFile(BaseUtilities.toURI(f).normalize());
+                                f = BaseUtilities.toFile(BaseUtilities.normalizeURI(BaseUtilities.toURI(f)));
                                 if (f != null) {
                                     String parentPattern = File.separatorChar + ".." + File.separatorChar;
                                     while (f.getAbsolutePath().startsWith(parentPattern)) {

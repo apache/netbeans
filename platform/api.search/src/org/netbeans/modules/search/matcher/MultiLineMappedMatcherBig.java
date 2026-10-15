@@ -111,7 +111,7 @@ public class MultiLineMappedMatcherBig extends AbstractMatcher {
 
         while (textMatcher.find()) {
             if (textDetails == null) {
-                textDetails = new LinkedList<TextDetail>();
+                textDetails = new LinkedList<>();
                 dataObject = DataObject.find(fo);
                 fileMatches++;
             }
@@ -177,7 +177,7 @@ public class MultiLineMappedMatcherBig extends AbstractMatcher {
          * Number of already decoded bytes;
          */
         private long decodedBytes = 0;
-        /**
+        /*
          * Some variables for internal statistics. Usefull when debugging.
          */
         /**

@@ -1,0 +1,4 @@
+Code completion result for source line:
+Attr2(string: CONST_ATTRIBUTES_TEST1, bool: Attr2::CONST_AT|TR2),
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   CONST_ATTR2 true                [PUBLIC]   \Attributes\Test1\Attr2

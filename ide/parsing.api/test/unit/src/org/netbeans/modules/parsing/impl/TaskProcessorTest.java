@@ -756,7 +756,7 @@ public class TaskProcessorTest extends IndexingAwareTestCase {
                 }
                 filteredStackTrace.add(e);
             }
-            caller = Utilities.findCaller(filteredStackTrace.toArray(new StackTraceElement[filteredStackTrace.size()]));
+            caller = Utilities.findCaller(filteredStackTrace.toArray(new StackTraceElement[0]));
         }
     }
 

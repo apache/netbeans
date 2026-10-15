@@ -76,7 +76,7 @@ class First {
                 l = new ArrayList<Integer> ();
                 ntToIndexes.put (nt, l);
             }
-            l.add (new Integer (i));
+            l.add(i);
             language.getNTID (nt);
         }
 //        follow = new Fl [language.getNTCount ()];

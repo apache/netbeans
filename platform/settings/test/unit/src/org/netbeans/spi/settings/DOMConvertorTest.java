@@ -86,7 +86,7 @@ public class DOMConvertorTest extends NbTestCase {
             assertEquals(cs2.b1, cs2.b2);
         } catch (IOException e) {
             System.err.println("File contents:\n");
-            FileUtil.copy(fo.getInputStream(), System.err);
+            fo.getInputStream().transferTo(System.err);
             throw e;
         }
         } catch (Exception ex) {
@@ -119,7 +119,7 @@ public class DOMConvertorTest extends NbTestCase {
             assertEquals(cs2.b1, cs2.b2);
         } catch (IOException e) {
             System.err.println("File contents:\n");
-            FileUtil.copy(fo.getInputStream(), System.err);
+            fo.getInputStream().transferTo(System.err);
             throw e;
         }
         } catch (Exception ex) {
@@ -135,9 +135,9 @@ public class DOMConvertorTest extends NbTestCase {
     }
     
     public static class ComposedSettingConvertor extends DOMConvertor {
-        private final static String PUBLIC_ID = "-//NetBeans org.netbeans.modules.settings.xtest//DTD ComposedSetting 1.0//EN"; // NOI18N
-        private final static String SYSTEM_ID = "nbres:/org/netbeans/modules/settings/convertors/data/composedsetting-1_0.dtd"; // NOI18N
-        private final static String ELM_COMPOSED_SETTING = "composedsetting"; // NOI18N
+        private static final String PUBLIC_ID = "-//NetBeans org.netbeans.modules.settings.xtest//DTD ComposedSetting 1.0//EN"; // NOI18N
+        private static final String SYSTEM_ID = "nbres:/org/netbeans/modules/settings/convertors/data/composedsetting-1_0.dtd"; // NOI18N
+        private static final String ELM_COMPOSED_SETTING = "composedsetting"; // NOI18N
         
         public ComposedSettingConvertor() {
             super(PUBLIC_ID, SYSTEM_ID, ELM_COMPOSED_SETTING);

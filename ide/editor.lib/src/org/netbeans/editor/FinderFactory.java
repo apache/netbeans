@@ -33,7 +33,7 @@ public class FinderFactory {
     /** Abstract finder implementation. The only <CODE>find()</CODE>
     * method must be redefined.
     */
-    public static abstract class AbstractFinder implements Finder {
+    public abstract static class AbstractFinder implements Finder {
 
         /** Was the string found? */
         protected boolean found;
@@ -209,7 +209,7 @@ public class FinderFactory {
     }
 
     /** Generic forward finder that simplifies the search process. */
-    public static abstract class GenericFwdFinder extends AbstractFinder {
+    public abstract static class GenericFwdFinder extends AbstractFinder {
 
         public final int find(int bufferStartPos, char buffer[],
                               int offset1, int offset2, int reqPos, int limitPos) {
@@ -242,7 +242,7 @@ public class FinderFactory {
     }
 
     /** Generic backward finder that simplifies the search process. */
-    public static abstract class GenericBwdFinder extends AbstractFinder {
+    public abstract static class GenericBwdFinder extends AbstractFinder {
 
         public final int find(int bufferStartPos, char buffer[],
                               int offset1, int offset2, int reqPos, int limitPos) {
@@ -274,7 +274,7 @@ public class FinderFactory {
 
     }
 
-    public static abstract class GenericFinder extends AbstractFinder {
+    public abstract static class GenericFinder extends AbstractFinder {
 
         /** Flag that determines whether the search is in the forward direction */
         protected boolean forward;
@@ -1004,7 +1004,7 @@ public class FinderFactory {
     }
 
     /** Support for creating blocks finders. */
-    public static abstract class AbstractBlocksFinder extends AbstractFinder
+    public abstract static class AbstractBlocksFinder extends AbstractFinder
         implements BlocksFinder {
 
         private static int[] EMPTY_INT_ARRAY = new int[0];

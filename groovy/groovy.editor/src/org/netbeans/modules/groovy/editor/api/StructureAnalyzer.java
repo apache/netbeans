@@ -52,6 +52,7 @@ import org.codehaus.groovy.ast.AnnotatedNode;
 import org.codehaus.groovy.ast.ConstructorNode;
 import org.codehaus.groovy.ast.PropertyNode;
 import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.HtmlFormatter;
@@ -73,6 +74,7 @@ public class StructureAnalyzer implements StructureScanner {
     private Map<ASTClass, Set<FieldNode>> fields;
     private Map<ASTClass, Set<PropertyNode>> properties;
     private List<ASTMethod> methods;
+    private Map<String, ASTClass> classes = new HashMap<>();
     
     private static final Logger LOG = Logger.getLogger(StructureAnalyzer.class.getName());
 
@@ -120,8 +122,9 @@ public class StructureAnalyzer implements StructureScanner {
         // Process fields
         Map<String, FieldNode> names = new HashMap<>();
 
-        for (ASTClass clz : fields.keySet()) {
-            Set<FieldNode> assignments = fields.get(clz);
+        for (Map.Entry<ASTClass, Set<FieldNode>> entry : fields.entrySet()) {
+            ASTClass clz = entry.getKey();
+            Set<FieldNode> assignments = entry.getValue();
 
             // Find unique variables
             if (assignments != null) {
@@ -170,7 +173,10 @@ public class StructureAnalyzer implements StructureScanner {
             if (node instanceof ClassNode) {
                 ClassNode classNode = (ClassNode) node;
                 ASTClass co = new ASTClass(classNode, classNode.getName());
-
+                classes.put(co.getFqn(), co);
+                if (parent == null && classNode.getOuterClass() != null) {
+                    parent = classes.get(classNode.getOuterClass().getName());
+                }
                 if (parent != null) {
                     parent.addChild(co);
                 } else {
@@ -215,7 +221,9 @@ public class StructureAnalyzer implements StructureScanner {
 
         @SuppressWarnings("unchecked")
         List<ASTNode> list = ASTUtils.children(node);
-
+        
+        // classes are collected from the whole source, but the toplevel classes come
+        // first/earlier than inners.
         for (ASTNode child : list) {
             path.descend(child);
             scan(result, child, path, in, includes, parent);
@@ -277,7 +285,7 @@ public class StructureAnalyzer implements StructureScanner {
                     }
                 }
                 try {
-                    importEnd = Utilities.getRowEnd(doc, importEnd);
+                    importEnd = LineDocumentUtils.getLineEndOffset(doc, importEnd);
                     importsRange[0]  = new OffsetRange(importStart, importEnd);
                 } catch (BadLocationException ble) {
                     Exceptions.printStackTrace(ble);
@@ -320,11 +328,11 @@ public class StructureAnalyzer implements StructureScanner {
                         || (kind == ElementKind.FIELD
                             && ((FieldNode) node).getInitialExpression() instanceof ClosureExpression)
                         // Only make nested classes/modules foldable, similar to what the java editor is doing
-                        || (range.getStart() > Utilities.getRowStart(doc, range.getStart())) && kind != ElementKind.FIELD) {
+                        || (range.getStart() > LineDocumentUtils.getLineStartOffset(doc, range.getStart())) && kind != ElementKind.FIELD) {
 
                     int start = range.getStart();
                     // Start the fold at the END of the line behind last non-whitespace, remove curly brace, if any
-                    start = Utilities.getRowLastNonWhite(doc, start);
+                    start = LineDocumentUtils.getLineLastNonWhitespace(doc, start);
                     if (start >= 0 && doc.getChars(start, 1)[0] != '{') {
                         start++;
                     }

@@ -563,8 +563,9 @@ public class SyntaxAnalyzerResult {
     public Map<String, String> getDeclaredNamespaces() {
         Map<String, Collection<String>> all = new HashMap<>(getAllDeclaredNamespaces());
         Map<String, String> firstPrefixOnly = new HashMap<>();
-        for (String namespace : all.keySet()) {
-            Collection<String> prefixes = all.get(namespace);
+        for (Map.Entry<String, Collection<String>> entry : all.entrySet()) {
+            String namespace = entry.getKey();
+            Collection<String> prefixes = entry.getValue();
             if (prefixes != null && prefixes.size() > 0) {
                 firstPrefixOnly.put(namespace, prefixes.iterator().next());
             }

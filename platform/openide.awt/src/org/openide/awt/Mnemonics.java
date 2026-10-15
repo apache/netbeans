@@ -36,7 +36,7 @@ import javax.swing.UIManager;
  * Support class for setting button, menu, and label text strings with mnemonics.
  * @author Maxym Mykhalchuk
  * @since 3.37
- * @see <a href="http://www.netbeans.org/issues/show_bug.cgi?id=26640">Issue #26640</a>
+ * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=26640">Issue #26640</a>
  */
 public final class Mnemonics extends Object {
     /** Private constructor in order that this class is never instantiated. */
@@ -106,11 +106,12 @@ public final class Mnemonics extends Object {
     /**
      * Sets the text for a menu item or other subclass of AbstractButton.
      * <p>Examples:</p>
-     * <table cellspacing="2" cellpadding="3" border="1">
+     * <table>
+     *  <caption>example</caption>
      *   <tr><th>Input String</th>                                   <th>View under JDK 1.4 or later</th></tr>
-     *   <tr><td><code>Save &amp;As<code></td>                       <td>Save <u>A</u>s</td></tr>
-     *   <tr><td><code>Rock &amp; Roll<code></td>                    <td>Rock &amp; Roll</td></tr>
-     *   <tr><td><code>Drag &amp; &amp;Drop<code></td>               <td>Drag &amp; <u>D</u>rop</td></tr>
+     *   <tr><td><code>Save &amp;As</code></td>                       <td>Save <u>A</u>s</td></tr>
+     *   <tr><td><code>Rock &amp; Roll</code></td>                    <td>Rock &amp; Roll</td></tr>
+     *   <tr><td><code>Drag &amp; &amp;Drop</code></td>               <td>Drag &amp; <u>D</u>rop</td></tr>
      *   <tr><td><code>&amp;&#1060;&#1072;&#1081;&#1083;</code></td> <td><u>&#1060;</u>&#1072;&#1081;&#1083;</td></tr>
      * </table>
      * @param item a button whose text will be changed
@@ -134,11 +135,11 @@ public final class Mnemonics extends Object {
      * Searches for an ampersand in a string which indicates a mnemonic.
      * Recognizes the following cases:
      * <ul>
-     * <li>"Drag & Drop", "Ampersand ('&')" - don't have mnemonic ampersand.
-     *      "&" is not found before " " (space), or if enclosed in "'"
+     * <li>"Drag &amp; Drop", "Ampersand ('&amp;')" - don't have mnemonic ampersand.
+     *      "&amp;" is not found before " " (space), or if enclosed in "'"
      *     (single quotation marks).
-     * <li>"&File", "Save &As..." - do have mnemonic ampersand.
-     * <li>"Rock & Ro&ll", "Underline the '&' &character" - also do have
+     * <li>"&amp;File", "Save &amp;As..." - do have mnemonic ampersand.
+     * <li>"Rock &amp; Ro&amp;ll", "Underline the '&amp;' &amp;character" - also do have
      *      mnemonic ampersand, but the second one.
      * <li>"&lt;html&gt;&lt;b&gt;R&amp;amp;D&lt;/b&gt; departmen&amp;t" - has mnemonic 
      *      ampersand before "t".

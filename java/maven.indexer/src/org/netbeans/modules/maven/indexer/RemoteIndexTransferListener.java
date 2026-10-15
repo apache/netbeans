@@ -38,7 +38,7 @@ import org.netbeans.modules.maven.indexer.api.RepositoryInfo;
 import org.openide.util.Cancellable;
 import org.openide.util.NbBundle.Messages;
 
-public class RemoteIndexTransferListener implements TransferListener, Cancellable {
+public class RemoteIndexTransferListener implements TransferListener, Cancellable, AutoCloseable {
 
     private static final Logger LOG = Logger.getLogger(RemoteIndexTransferListener.class.getName());
 
@@ -51,7 +51,7 @@ public class RemoteIndexTransferListener implements TransferListener, Cancellabl
     private final AtomicBoolean canceled = new AtomicBoolean();
     private final AtomicBoolean unpacking = new AtomicBoolean();
 
-    private static Map<Thread, Integer> transfers = new HashMap<Thread, Integer>();
+    private static final Map<Thread, Integer> transfers = new HashMap<>();
     private static final Object TRANSFERS_LOCK = new Object();
 
     @SuppressWarnings("LeakingThisInConstructor")
@@ -131,7 +131,7 @@ public class RemoteIndexTransferListener implements TransferListener, Cancellabl
             if (count == null) {
                 count = 1;
             } else {
-                count = count + 1;
+                count++;
             }
             transfers.put(t, count);
         }
@@ -146,7 +146,7 @@ public class RemoteIndexTransferListener implements TransferListener, Cancellabl
             if (count <= 1) {
                 transfers.remove(t);
             } else {
-                count = count - 1;
+                count--;
                 transfers.put(t, count);
             }
         }
@@ -167,7 +167,8 @@ public class RemoteIndexTransferListener implements TransferListener, Cancellabl
         handle.progress(label);
     }
 
-    void close() {
+    @Override
+    public void close() {
         handle.finish();
     }
 

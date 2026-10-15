@@ -100,7 +100,7 @@ public final class XMLSyntaxSupport {
     /** Holds last character user have typed. */
     private final DocumentMonitor documentMonitor;
     private final BaseDocument document;
-    private final static Map<BaseDocument, Reference<XMLSyntaxSupport>> supportMap =
+    private static final Map<BaseDocument, Reference<XMLSyntaxSupport>> supportMap =
             new WeakHashMap<>();
     
     /** Creates new XMLSyntaxSupport */

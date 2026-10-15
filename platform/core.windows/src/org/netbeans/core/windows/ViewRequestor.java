@@ -190,7 +190,6 @@ class ViewRequestor {
     }
     
     
-    ///////////////////////////////////////////
     // !! AWT thread only >>
     
     private void processRequest() {
@@ -330,8 +329,6 @@ class ViewRequestor {
         return new ViewEvent(source, type, oldValue, newValue);
     }
     // !! AWT thread only <<
-    ///////////////////////////////////////////
-
     private static void debugLog(String message) {
         Debug.log(ViewRequestor.class, message);
     }

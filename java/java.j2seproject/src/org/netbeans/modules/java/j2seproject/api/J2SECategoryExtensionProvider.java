@@ -44,7 +44,7 @@ public interface J2SECategoryExtensionProvider {
     /**
      * Provides identifier of category whose panel should be extended by this component provider
      * 
-     * @returns identifier of the category to be extended
+     * @return identifier of the category to be extended
      */
     ExtensibleCategory getCategory();
     
@@ -54,7 +54,7 @@ public interface J2SECategoryExtensionProvider {
      * 
      * @param proj project to create the customizer component for
      * @param listener listener to be notified when properties should be updated
-     * @returns extension panel to be added to the specified category
+     * @return extension panel to be added to the specified category
      */
     JComponent createComponent(Project proj, ConfigChangeListener listener);
     

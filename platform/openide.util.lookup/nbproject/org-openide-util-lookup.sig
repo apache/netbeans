@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 8.39
+#Version 8.67
 
 CLSS public abstract interface java.io.Serializable
 
@@ -7,6 +7,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -52,7 +53,6 @@ intf java.io.Serializable
 meth public java.lang.Object getSource()
 meth public java.lang.String toString()
 supr java.lang.Object
-hfds serialVersionUID
 
 CLSS public abstract javax.annotation.processing.AbstractProcessor
 cons protected init()
@@ -66,7 +66,6 @@ meth public java.util.Set<java.lang.String> getSupportedOptions()
 meth public javax.lang.model.SourceVersion getSupportedSourceVersion()
 meth public void init(javax.annotation.processing.ProcessingEnvironment)
 supr java.lang.Object
-hfds initialized
 
 CLSS public abstract interface javax.annotation.processing.Processor
 meth public abstract boolean process(java.util.Set<? extends javax.lang.model.element.TypeElement>,javax.annotation.processing.RoundEnvironment)
@@ -120,7 +119,7 @@ supr java.lang.Object
 CLSS public final static org.openide.util.Lookup$Template<%0 extends java.lang.Object>
  outer org.openide.util.Lookup
 cons public init()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.Class<{org.openide.util.Lookup$Template%0}>)
 cons public init(java.lang.Class<{org.openide.util.Lookup$Template%0}>,java.lang.String,{org.openide.util.Lookup$Template%0})
 meth public boolean equals(java.lang.Object)
@@ -226,6 +225,8 @@ meth public abstract java.lang.String path()
 CLSS public org.openide.util.lookup.ProxyLookup
 cons protected init()
 cons public !varargs init(org.openide.util.Lookup[])
+cons public init(org.openide.util.lookup.ProxyLookup$Controller)
+innr public final static Controller
 meth protected !varargs final void setLookups(java.util.concurrent.Executor,org.openide.util.Lookup[])
 meth protected !varargs final void setLookups(org.openide.util.Lookup[])
 meth protected final org.openide.util.Lookup[] getLookups()
@@ -237,6 +238,14 @@ meth public java.lang.String toString()
 supr org.openide.util.Lookup
 hfds data
 hcls EmptyInternalData,ImmutableInternalData,LazyCollection,LazyList,LazySet,R,RealInternalData,SingleInternalData,WeakRef,WeakResult
+
+CLSS public final static org.openide.util.lookup.ProxyLookup$Controller
+ outer org.openide.util.lookup.ProxyLookup
+cons public init()
+meth public !varargs void setLookups(java.util.concurrent.Executor,org.openide.util.Lookup[])
+meth public !varargs void setLookups(org.openide.util.Lookup[])
+supr java.lang.Object
+hfds consumer
 
 CLSS public abstract interface !annotation org.openide.util.lookup.ServiceProvider
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=SOURCE)
@@ -259,8 +268,9 @@ meth protected !varargs final void register(javax.lang.model.element.Element,jav
 meth protected abstract boolean handleProcess(java.util.Set<? extends javax.lang.model.element.TypeElement>,javax.annotation.processing.RoundEnvironment)
 meth protected final void register(javax.lang.model.element.Element,java.lang.String)
 meth protected final void register(javax.lang.model.element.TypeElement,java.lang.Class<? extends java.lang.annotation.Annotation>,javax.lang.model.type.TypeMirror,java.lang.String,int,java.lang.String[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final boolean process(java.util.Set<? extends javax.lang.model.element.TypeElement>,javax.annotation.processing.RoundEnvironment)
+meth public javax.lang.model.SourceVersion getSupportedSourceVersion()
 supr javax.annotation.processing.AbstractProcessor
 hfds originatingElementsByProcessor,outputFilesByProcessor,verifiedClasses
 

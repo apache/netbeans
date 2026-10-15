@@ -52,12 +52,12 @@ import org.netbeans.modules.tomcat5.util.TomcatUsers;
  */
 public class AddInstanceIterator implements WizardDescriptor.InstantiatingIterator {
     
-    public final static String PROP_ERROR_MESSAGE = WizardDescriptor.PROP_ERROR_MESSAGE; // NOI18N    
-    private final static String PROP_CONTENT_DATA = WizardDescriptor.PROP_CONTENT_DATA;  // NOI18N
-    private final static String PROP_CONTENT_SELECTED_INDEX = WizardDescriptor.PROP_CONTENT_SELECTED_INDEX; // NOI18N
-    private final static String PROP_DISPLAY_NAME = "ServInstWizard_displayName"; // NOI18N
+    public static final String PROP_ERROR_MESSAGE = WizardDescriptor.PROP_ERROR_MESSAGE; // NOI18N    
+    private static final String PROP_CONTENT_DATA = WizardDescriptor.PROP_CONTENT_DATA;  // NOI18N
+    private static final String PROP_CONTENT_SELECTED_INDEX = WizardDescriptor.PROP_CONTENT_SELECTED_INDEX; // NOI18N
+    private static final String PROP_DISPLAY_NAME = "ServInstWizard_displayName"; // NOI18N
     
-    private final static String[] CONTENT_DATA = new String[] { 
+    private static final String[] CONTENT_DATA = new String[] { 
         NbBundle.getMessage(AddInstanceIterator.class, "LBL_InstallationAndLoginDetails") };
 
     private WizardDescriptor wizard;
@@ -67,31 +67,39 @@ public class AddInstanceIterator implements WizardDescriptor.InstantiatingIterat
         super();
     }
 
+    @Override
     public void removeChangeListener(javax.swing.event.ChangeListener l) {
     }
 
+    @Override
     public void addChangeListener(javax.swing.event.ChangeListener l) {
     }
 
+    @Override
     public void uninitialize(WizardDescriptor wizard) {
     }
 
+    @Override
     public void initialize(WizardDescriptor wizard) {
         this.wizard = wizard;
     }
 
+    @Override
     public void previousPanel() {
         throw new NoSuchElementException();
     }
 
+    @Override
     public void nextPanel() {
         throw new NoSuchElementException();
     }
 
+    @Override
     public String name() {
         return null;
     }
 
+    @Override
     public Set instantiate() throws java.io.IOException {
         Set result = new HashSet();
         String displayName = getDisplayName();
@@ -134,14 +142,17 @@ public class AddInstanceIterator implements WizardDescriptor.InstantiatingIterat
         return result;
     }
 
+    @Override
     public boolean hasPrevious() {
         return false;
     }
 
+    @Override
     public boolean hasNext() {
         return false;
     }
 
+    @Override
     public WizardDescriptor.Panel current() {
         if (panel == null) {
             panel = new InstallPanel();
@@ -159,7 +170,7 @@ public class AddInstanceIterator implements WizardDescriptor.InstantiatingIterat
 
     private void setContentSelectedIndex(JComponent component) {
         if (component.getClientProperty(PROP_CONTENT_SELECTED_INDEX) == null) {
-            component.putClientProperty(PROP_CONTENT_SELECTED_INDEX, Integer.valueOf(0));
+            component.putClientProperty(PROP_CONTENT_SELECTED_INDEX, 0);
         }
     }
 

@@ -89,7 +89,7 @@ public class SchemaElement extends DBElement implements Node.Cookie {
     }
 
     /** Cache for read schemas. */
-    protected static Map schemaCache = new HashMap();
+    protected static Map<String, SchemaElement> schemaCache = new HashMap<>();
     
     /** Last used schema. */
     private static SchemaElement lastSchema;
@@ -172,7 +172,7 @@ public class SchemaElement extends DBElement implements Node.Cookie {
             return se;
         else
             synchronized (schemaCache) {
-                se = (SchemaElement) schemaCache.get(name);
+                se = schemaCache.get(name);
                 if (se != null)
                     return se;
                 

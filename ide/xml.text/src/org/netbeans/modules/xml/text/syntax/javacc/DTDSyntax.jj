@@ -54,14 +54,13 @@
 options {
 //      USER_CHAR_STREAM = true;
     UNICODE_INPUT = true;  // generate unicode aware code
-    OPTIMIZE_TOKEN_MANAGER = true;
     BUILD_PARSER = false;
     STATIC = false;
 }
 
 
 PARSER_BEGIN(DTDSyntax)
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information

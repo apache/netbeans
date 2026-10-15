@@ -25,6 +25,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -41,7 +42,6 @@ import org.openide.util.Enumerations;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
-import org.openide.util.WeakSet;
 
 /**
  * A more or less <em>deprecated</em> system of managing, annotating, and classifying errors
@@ -63,7 +63,6 @@ import org.openide.util.WeakSet;
  * <li>INFORMATIONAL
  * <li>UNKNOWN (lowest value)
  * </ul>
- * </p>
  *
  * <div class="nonnormative">
  * <p>How to...</p>
@@ -188,7 +187,7 @@ import org.openide.util.WeakSet;
  *     throw all;
  * }
  * </pre>
- * <dd>
+ *
  *
  * <dt>Logging a warning message just simply uses the JDK's logging API</dt>
  * <dd>
@@ -405,7 +404,7 @@ public abstract class ErrorManager extends Object {
      * the logging level for error managers of different names. For example, in the basic
      * NetBeans core implementation, you can define a system property with the same name
      * as the future error manager (or a package prefix of it) whose value is the numeric
-     * logging level (e.g. <samp>-J-Dorg.netbeans.modules.mymodule.ComplicatedParser=0</samp>
+     * logging level (e.g. <code>-J-Dorg.netbeans.modules.mymodule.ComplicatedParser=0</code>
      * to log everything). Other implementations may have quite different ways of configuring
      * the error managers.
      * @param name the desired identifying name
@@ -532,7 +531,7 @@ public abstract class ErrorManager extends Object {
          * A set that has to be updated when the list of delegates
          * changes. All instances created by getInstance are held here.
          */
-        private WeakSet<DelegatingErrorManager> createdByMe = new WeakSet<DelegatingErrorManager>();
+        private Set<DelegatingErrorManager> createdByMe = Collections.newSetFromMap(new WeakHashMap<>());
 
         /** If we are the "central" delagate this is not null and
          * we listen on the result. On newly created delegates this
@@ -711,6 +710,7 @@ public abstract class ErrorManager extends Object {
         }
 
         /** Calls all delegates. */
+        @Override
         public boolean isLoggable(int severity) {
             if (severity == UNKNOWN) {
                 throw new IllegalArgumentException("ErrorManager.isLoggable(UNKNOWN) is not permitted"); // NOI18N
@@ -730,6 +730,7 @@ public abstract class ErrorManager extends Object {
         }
 
         /** Calls all delegates. */
+        @Override
         public boolean isNotifiable(int severity) {
             if (severity == UNKNOWN) {
                 throw new IllegalArgumentException("ErrorManager.isNotifiable(UNKNOWN) is not permitted"); // NOI18N
@@ -767,8 +768,8 @@ public abstract class ErrorManager extends Object {
         /**
          * Takes all our delegates, asks them for an instance identified by
          * name and adds those results as new delegates for dem.
-         * @param String name
-         * @param DelagatingErrorManager d the instance to which we will attach
+         * @param dem the instance to which we will attach
+         * @param name name
          */
         private void attachNewDelegates(DelegatingErrorManager dem, String name) {
             Set<ErrorManager> newDelegatesForDem = new HashSet<ErrorManager>();
@@ -818,6 +819,7 @@ public abstract class ErrorManager extends Object {
         /** additional mapping from throwables that refuse initCause call */
         private static Map<Throwable, AnnException> extras = new WeakHashMap<Throwable, AnnException>();
 
+        @Override
         public String getMessage() {
             StringBuilder sb = new StringBuilder();
             String sep = "";
@@ -880,16 +882,19 @@ public abstract class ErrorManager extends Object {
             return r == null ? empty : r.toArray(empty);
         }
 
+        @Override
         public void printStackTrace(PrintStream s) {
             super.printStackTrace(s);
             logRecords(s);
         }
 
+        @Override
         public void printStackTrace(PrintWriter s) {
             super.printStackTrace(s);
             logRecords(s);
         }
 
+        @Override
         public void printStackTrace() {
             printStackTrace(System.err);
         }
@@ -903,7 +908,7 @@ public abstract class ErrorManager extends Object {
 
                 for (LogRecord log : r) {
                     if (log.getMessage() != null) {
-                        a.append(log.getMessage()).append("\n");;
+                        a.append(log.getMessage()).append("\n");
                     }
                     if (log.getThrown() != null) {
                         StringWriter w = new StringWriter();

@@ -84,6 +84,7 @@ import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation;
 import org.netbeans.spi.java.queries.SourceLevelQueryImplementation2;
+import org.openide.explorer.ExplorerManager;
 
 
 import org.openide.filesystems.FileLock;
@@ -252,9 +253,9 @@ public class DefaultClassPathProviderTest extends NbTestCase {
     public void testCycle () throws Exception {
         GlobalPathRegistry regs = GlobalPathRegistry.getDefault();
         Set<ClassPath> toCleanUp = regs.getPaths(ClassPath.COMPILE);        
-        regs.unregister(ClassPath.COMPILE, toCleanUp.toArray(new ClassPath[toCleanUp.size()]));
+        regs.unregister(ClassPath.COMPILE, toCleanUp.toArray(new ClassPath[0]));
         toCleanUp = regs.getPaths(ClassPath.EXECUTE);        
-        regs.unregister(ClassPath.EXECUTE, toCleanUp.toArray(new ClassPath[toCleanUp.size()]));
+        regs.unregister(ClassPath.EXECUTE, toCleanUp.toArray(new ClassPath[0]));
         File wdf = getWorkDir();
         FileObject wd = FileUtil.toFileObject(wdf);
         FileObject root1 = wd.createFolder("root1");
@@ -683,6 +684,17 @@ public class DefaultClassPathProviderTest extends NbTestCase {
         @Override
         public void removeProjectGroupChangeListenerAPI(ProjectGroupChangeListener listener) {
         }
+
+        @Override
+        public ExplorerManager createLogicalView() {
+            return new ExplorerManager();
+        }
+
+        @Override
+        public ExplorerManager createPhysicalView() {
+            return new ExplorerManager();
+        }
+
     }
 
     private static class Listener implements PropertyChangeListener {

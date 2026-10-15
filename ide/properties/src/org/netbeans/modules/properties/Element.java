@@ -127,7 +127,7 @@ public abstract class Element implements Serializable {
 
     
     /** General class for basic elements, which contain value directly. */
-    public static abstract class Basic extends Element {
+    public abstract static class Basic extends Element {
 
         private static final String hexaDigitChars
                                     = "0123456789abcdefABCDEF";         //NOI18N
@@ -599,7 +599,7 @@ public abstract class Element implements Serializable {
 
         /** Checks for equality of two ItemElem-s */
         public boolean equals(Object item) {
-            if (item == null || !(item instanceof ItemElem))
+            if (!(item instanceof ItemElem))
                 return false;
             ItemElem ie = (ItemElem)item;
             return isKeyEqual(ie) && isValueEqual(ie) && isCommentEqual(ie);

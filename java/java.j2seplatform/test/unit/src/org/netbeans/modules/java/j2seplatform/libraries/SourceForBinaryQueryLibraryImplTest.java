@@ -32,7 +32,6 @@ import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.core.startup.layers.ArchiveURLMapper;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.j2seplatform.platformdefinition.JavaPlatformProviderImpl;
-import org.netbeans.modules.project.libraries.DefaultLibraryImplementation;
 import org.netbeans.spi.project.libraries.LibraryImplementation;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -126,27 +125,7 @@ public class SourceForBinaryQueryLibraryImplTest extends NbTestCase {
     }
     
     private void registerLibrary(final String libName, final File cp, final File src) throws Exception {
-        DefaultLibraryImplementation lib;
-        lib = new DefaultLibraryImplementation("j2se", new String[]{"classpath", "src"});
-        lib.setName(libName);
-        List<URL> l = new ArrayList<URL>();
-        URL u = Utilities.toURI(cp).toURL();
-        if (cp.getPath().endsWith(".jar")) {
-            u = FileUtil.getArchiveRoot(u);
-        }
-        l.add(u);
-        lib.setContent("classpath", l);
-        if (src != null) {
-            l = new ArrayList<URL>();
-            u = Utilities.toURI(src).toURL();
-            if (src.getPath().endsWith(".jar")) {
-                u = FileUtil.getArchiveRoot(u);
-            }
-            l.add(u);
-            lib.setContent("src", l);
-        }
-        TestLibraryProviderImpl prov = TestLibraryProviderImpl.getDefault();
-        prov.addLibrary(lib);
+        LibraryTestUtils.registerLibrary(libName, cp, src, null);
     }
     
     private LibraryImplementation getLibrary (String name) {
@@ -229,7 +208,7 @@ public class SourceForBinaryQueryLibraryImplTest extends NbTestCase {
         }
         
         public ChangeEvent[] getEvents () {
-            return queue.toArray(new ChangeEvent[queue.size()]);
+            return queue.toArray(new ChangeEvent[0]);
         }                                    
     }
     

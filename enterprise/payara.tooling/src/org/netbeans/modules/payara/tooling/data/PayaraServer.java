@@ -27,10 +27,7 @@ package org.netbeans.modules.payara.tooling.data;
  */
 public interface PayaraServer {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Interface Methods                                                      //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get Payara server name.
      * <p/>
@@ -74,6 +71,36 @@ public interface PayaraServer {
     public String getAdminPassword();
 
     /**
+     * Get information if this Payara server instance is running in docker container.
+     * <p/>
+     * @return Value of <code>true</code> when this Payara server instance
+     *         is docker instance or <code>false</code> otherwise.
+     */
+    public boolean isDocker();
+
+    /**
+     * Get information if this Payara server instance is running in WSL container.
+     * <p/>
+     * @return Value of <code>true</code> when this Payara server instance
+     *         is WSL instance or <code>false</code> otherwise.
+     */
+    public boolean isWSL();
+
+    /**
+     * Get the docker host path.
+     * <p/>
+     * @return The dcoker volume host path.
+     */
+    public String getHostPath();
+
+    /**
+     * Get the docker container path.
+     * <p/>
+     * @return The dcoker volume container path.
+     */
+    public String getContainerPath();
+
+    /**
      * Get Payara server domains folder.
      * <p/>
      * @return Domains folder.
@@ -113,7 +140,15 @@ public interface PayaraServer {
      * <p/>
      * @return The version
      */
+    @Deprecated
     public PayaraVersion getVersion();
+
+    /**
+     * Get Payara Platform version.
+     * <p/>
+     * @return The platformVersion.
+     */
+    PayaraPlatformVersionAPI getPlatformVersion();
 
     /**
      * Get Payara server administration interface type.

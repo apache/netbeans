@@ -62,7 +62,7 @@ public class FeaturesView extends JPanel {
     private JLabel hintLabel;
     private final Color hintColor;
     
-    private final Set<ChangeListener> listeners = new HashSet();
+    private final Set<ChangeListener> listeners = new HashSet<>();
     
     
     public FeaturesView(Component defaultView, String buttonString) {

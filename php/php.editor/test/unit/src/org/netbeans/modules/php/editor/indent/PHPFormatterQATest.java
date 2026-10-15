@@ -38,8 +38,8 @@ import org.openide.filesystems.FileObject;
  */
 public class PHPFormatterQATest extends PHPFormatterTestBase {
 
-    private String FORMAT_START_MARK = "/*FORMAT_START*/"; //NOI18N
-    private String FORMAT_END_MARK = "/*FORMAT_END*/"; //NOI18N
+    private final String FORMAT_START_MARK = "/*FORMAT_START*/"; //NOI18N
+    private final String FORMAT_END_MARK = "/*FORMAT_END*/"; //NOI18N
 
     public PHPFormatterQATest(String testName) {
         super(testName);
@@ -87,7 +87,18 @@ public class PHPFormatterQATest extends PHPFormatterTestBase {
     }
 
     public void test176224_stableFixed() throws Exception {
-        reformatFileContents("testfiles/formatting/qa/issues/stable_fixedIssues/176224.php");
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/qa/issues/stable_fixedIssues/176224.php", options);
+    }
+
+    // NETBEANS-3391
+    public void test176224_stableFixed_psr12() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/qa/issues/stable_fixedIssues/176224_psr12.php", options);
     }
 
     public void test173354_1_stableFixed() throws Exception {
@@ -533,8 +544,9 @@ public class PHPFormatterQATest extends PHPFormatterTestBase {
         setupDocumentIndentation(doc, preferences);
 
         Preferences prefs = CodeStylePreferences.get(doc).getPreferences();
-        for (String option : options.keySet()) {
-            Object value = options.get(option);
+        for (Map.Entry<String, Object> entry : options.entrySet()) {
+            String option = entry.getKey();
+            Object value = entry.getValue();
             if (value instanceof Integer) {
                 prefs.putInt(option, ((Integer)value).intValue());
             }

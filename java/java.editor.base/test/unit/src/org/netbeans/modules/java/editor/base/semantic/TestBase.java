@@ -34,13 +34,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.CountDownLatch;
+import java.util.prefs.Preferences;
 import javax.lang.model.SourceVersion;
 import javax.swing.event.ChangeListener;
 import java.util.stream.Collectors;
@@ -63,6 +63,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.MIMEResolver;
 import org.openide.loaders.DataObject;
+import org.openide.util.NbPreferences;
 import org.openide.util.Pair;
 
 /**
@@ -168,26 +169,7 @@ public abstract class TestBase extends NbTestCase {
     protected void performTest(Input input, final Performer performer, boolean doCompileRecursively, Validator validator) throws Exception {
         SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/java/editor/resources/layer.xml"}, new Object[] {
             new MIMEResolverImpl(),
-            new CompilerOptionsQueryImplementation() {
-                @Override
-                public CompilerOptionsQueryImplementation.Result getOptions(FileObject file) {
-                    if (testSourceFO == file) {
-                        return new CompilerOptionsQueryImplementation.Result() {
-                            @Override
-                            public List<? extends String> getArguments() {
-                                return extraOptions;
-                            }
-
-                            @Override
-                            public void addChangeListener(ChangeListener listener) {}
-
-                            @Override
-                            public void removeChangeListener(ChangeListener listener) {}
-                        };
-                    }
-                    return null;
-                }
-            }
+            new CompilerOptionsQueryImplementationImpl()
         });
         
 	FileObject scratch = SourceUtilsTestUtil.makeScratchDir(this);
@@ -264,7 +246,10 @@ public abstract class TestBase extends NbTestCase {
     }
 
     protected void performTest(String fileName, String code, Performer performer, boolean doCompileRecursively, String... expected) throws Exception {
-        SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/java/editor/resources/layer.xml"}, new Object[] {new MIMEResolverImpl()});
+        SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/java/editor/resources/layer.xml"}, new Object[] {
+            new MIMEResolverImpl(),
+            new CompilerOptionsQueryImplementationImpl()
+        });
 
 	FileObject scratch = SourceUtilsTestUtil.makeScratchDir(this);
 	FileObject cache   = scratch.createFolder("cache");
@@ -323,7 +308,11 @@ public abstract class TestBase extends NbTestCase {
 
         l.await();
 
-        assertEquals(Arrays.asList(expected),
+        assertEquals(highlights.stream()
+                               .map(h -> h.getHighlightTestData())
+                               .map(e -> "\"" + e + "\",")
+                               .collect(Collectors.joining("\n")),
+                     Arrays.asList(expected),
                      highlights.stream()
                                .map(h -> h.getHighlightTestData())
                                .collect(Collectors.toList()));
@@ -381,6 +370,13 @@ public abstract class TestBase extends NbTestCase {
         this.showPrependedText = showPrependedText;
     }
 
+    protected final void setInlineHints(boolean parameterNames, boolean chainedTypes, boolean varType) {
+        Preferences preferences = NbPreferences.root().node("/org/netbeans/modules/java/editor/InlineHints/default");
+        preferences.putBoolean(SemanticHighlighterBase.JAVA_INLINE_HINT_PARAMETER_NAME, parameterNames);
+        preferences.putBoolean(SemanticHighlighterBase.JAVA_INLINE_HINT_CHAINED_TYPES, chainedTypes);
+        preferences.putBoolean(SemanticHighlighterBase.JAVA_INLINE_HINT_VAR_TYPE, varType);
+    }
+
     final class ErrorDescriptionSetterImpl implements SemanticHighlighterBase.ErrorDescriptionSetter {
         private final Set<HighlightImpl> highlights = new TreeSet<HighlightImpl>(new Comparator<HighlightImpl>() {
             public int compare(HighlightImpl o1, HighlightImpl o2) {
@@ -426,5 +422,27 @@ public abstract class TestBase extends NbTestCase {
 
     protected interface Validator {
         public void validate(String actual) throws Exception;
+    }
+
+    private class CompilerOptionsQueryImplementationImpl implements CompilerOptionsQueryImplementation {
+
+        @Override
+        public CompilerOptionsQueryImplementation.Result getOptions(FileObject file) {
+            if (testSourceFO == file || testSourceFO.getParent() == file) {
+                return new CompilerOptionsQueryImplementation.Result() {
+                    @Override
+                    public List<? extends String> getArguments() {
+                        return extraOptions;
+                    }
+
+                    @Override
+                    public void addChangeListener(ChangeListener listener) {}
+
+                    @Override
+                    public void removeChangeListener(ChangeListener listener) {}
+                };
+            }
+            return null;
+        }
     }
 }

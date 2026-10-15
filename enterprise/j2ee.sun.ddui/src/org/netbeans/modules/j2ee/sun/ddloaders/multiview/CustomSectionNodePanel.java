@@ -41,8 +41,7 @@ public class CustomSectionNodePanel extends SectionNodePanel {
     }
     
     public void setTitleIcon(String iconBase) {
-        Image iconImage = ImageUtilities.loadImage(iconBase, true);
-        getTitleButton().setIcon(iconImage != null ? new ImageIcon(iconImage) : null);
+        getTitleButton().setIcon(ImageUtilities.loadImageIcon(iconBase, true));
     }
 
 //    @Override

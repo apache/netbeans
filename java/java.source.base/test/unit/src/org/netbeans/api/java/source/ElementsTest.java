@@ -24,6 +24,7 @@ import com.sun.source.util.TreePath;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
@@ -50,7 +51,7 @@ public class ElementsTest extends NbTestCase {
             @Override
             public Charset getEncoding(FileObject file) {
                 if (file.equals(testFO))
-                    return Charset.forName("UTF-8");
+                    return StandardCharsets.UTF_8;
                 else
                     return null;
             }
@@ -120,6 +121,7 @@ public class ElementsTest extends NbTestCase {
         JavaSource javaSource = JavaSource.forFileObject(testFO);
         javaSource.runUserActionTask(new Task<CompilationController>() {
             public void run(CompilationController controller) throws IOException {
+                SourceUtils.forceSource(controller, otherFO);
                 controller.toPhase(JavaSource.Phase.RESOLVED);
                 TypeElement typeElement = controller.getElements().getTypeElement("test.A");
                 assertNotNull(typeElement);

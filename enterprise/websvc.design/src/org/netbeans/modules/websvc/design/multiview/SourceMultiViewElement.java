@@ -120,7 +120,7 @@ public class SourceMultiViewElement extends CloneableEditor
                             SourcePositions srcPos = workingCopy.getTrees().getSourcePositions();
                             int position = -1;
                             // use visitor approach later
-                            if(ElementKind.METHOD.equals(element.getKind())) {
+                            if(ElementKind.METHOD == element.getKind()) {
                                 Element webServiceMethod = workingCopy.
                                 getElementUtilities().getImplementationOf(
                                         (ExecutableElement)element, webSvc);
@@ -132,7 +132,7 @@ public class SourceMultiViewElement extends CloneableEditor
                                 Tree tree = methodBody;
                                 if(!methodBody.getStatements().isEmpty())
                                     tree = methodBody.getStatements().get(0);
-                                position = (int) srcPos.getStartPosition(workingCopy.getCompilationUnit(), tree);
+                                position = (int) srcPos.getStartPosition(tree);
                             }
                             if(position>0) {
                                 getEditorPane().setCaretPosition(position);

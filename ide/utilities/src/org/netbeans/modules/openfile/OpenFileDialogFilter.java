@@ -242,7 +242,7 @@ public abstract class OpenFileDialogFilter extends FileFilter {
      * parameter {@code showInFileChooser}.
      */
     @Deprecated
-    public static abstract class ExtensionFilter extends OpenFileDialogFilter {
+    public abstract static class ExtensionFilter extends OpenFileDialogFilter {
 
         private static final char EXTENSION_SEPARATOR = '.';
 
@@ -271,7 +271,7 @@ public abstract class OpenFileDialogFilter extends FileFilter {
 
         @Override
         public String[] getSuffixes() {
-            ArrayList<String> suffixList = new ArrayList();
+            ArrayList<String> suffixList = new ArrayList<>();
             for(String extension : getFilter().getExtensions()) {
                 suffixList.add(EXTENSION_SEPARATOR + extension);
             }

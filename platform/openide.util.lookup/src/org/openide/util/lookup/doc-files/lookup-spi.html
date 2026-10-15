@@ -22,7 +22,6 @@
 <HTML>
 <HEAD>
 <TITLE>Lookup Library SPI</TITLE>
-<link rel="Stylesheet" href="@TOP@/prose.css" type="text/css" title="NetBeans Open APIs Style">
 </HEAD>
 <BODY>
 <H1>Lookup library SPI</H1>
@@ -39,14 +38,10 @@ the SPI has its own package <em>org.openide.util.lookup.*</EM>.
 Let us start with the simplest case. You have decided that your newly created
 object will provide an API in the form of a getLookup() method. You have to
 return a functional lookup from this call. You can use static methods in class
-<a href="@TOP@org/openide/util/lookup/Lookups.html">
-<code>Lookups</code></A> to create a lookup for you. If you want only one
-object to be returned, just call 
-<a href="@TOP@org/openide/util/lookup/Lookups.html#singleton-java.lang.Object-">
-<code>Lookups.singleton(x)</code></A> where x is the object to be 
-returned by the lookup. Or if you want to supply more objects, use a call to the method
-<a href="@TOP@org/openide/util/lookup/Lookups.html#fixed-java.lang.Object...-">
-<code>fixed(Object []x)</CODE></A>.
+{@link org.openide.util.lookup.Lookups Lookups} to create a lookup for you. If you want only one
+object to be returned, just call {@link org.openide.util.lookup.Lookups#singleton(java.lang.Object) Lookups.singleton(x)} 
+where x is the object to be returned by the lookup. Or if you want to supply more objects, use a call to the method
+{@link org.openide.util.lookup.Lookups#fixed(java.lang.Object...) fixed(Object []x) }.
 <EM> Note: </EM> The lookups returned from methods <code>singleton(...)</code> and
 <code>fixed(...)</code> do <EM>
 not </EM> support dynamic changes and attaching listeners. Their content is
@@ -60,13 +55,13 @@ your own results. Here the class ProxyLookup comes into the play.
 You simply create a new lookup like this:
 
 <pre>
-    <font class="keyword">import</FONT> org.openide.util.Lookup;
-    <font class="keyword">import</FONT> org.openide.util.lookup.*;
+    <span class="keyword">import</span> org.openide.util.Lookup;
+    <span class="keyword">import</span> org.openide.util.lookup.*;
 
-    <font class="type">Lookup</font> <font class="variable-name">lookup1</font> = ...;
+    <span class="type">Lookup</span> <span class="variable-name">lookup1</span> = ...;
 
-    <font class="type">Lookup</font> <font class="variable-name">lookup2</font> = Lookups.singleton(MyService.<font class="keyword">class</font>);
-    <font class="keyword">return</font> <font class="keyword">new</font> <font class="type">ProxyLookup</font>(<font class="keyword">new</font> <font class="type">Lookup</font>[] { lookup, lookup2 });
+    <span class="type">Lookup</span> <span class="variable-name">lookup2</span> = Lookups.singleton(MyService.<span class="keyword">class</span>);
+    <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">ProxyLookup</span>(<span class="keyword">new</span> <span class="type">Lookup</span>[] { lookup, lookup2 });
 </pre>
 
 <H2> AbstractLookup </H2>
@@ -76,44 +71,38 @@ You simply create a new lookup like this:
 
 <p>The most powerful way to provide a lookup is to directly define
 what instances and items it should provide, by subclassing. For this,
-
-<a href="@TOP@org/openide/util/lookup/AbstractLookup.html"><code>AbstractLookup</code></a>
-
+{@link org.openide.util.lookup.AbstractLookup AbstractLookup }
 is recommended as it is easiest to use.
 
 <p>The simplest way to use <code>AbstractLookup</code> is to use its
 public constructor (in which case you need not subclass it). Here you
 provide an
-
-<a href="@TOP@org/openide/util/lookup/AbstractLookup.Content.html"><code>AbstractLookup.Content</code></a>
-
+{@link org.openide.util.lookup.AbstractLookup.Content AbstractLookup.Content }
 object which you have created and hold on to privately, and which
 keeps track of instances and permits them to be registered and
 deregistered. Often
 
-<a href="@TOP@org/openide/util/lookup/InstanceContent.html"><code>InstanceContent</code></a>
+{@link org.openide.util.lookup.InstanceContent InstanceContent }
 
 is used as the content implementation. To add something to the lookup,
 simply use
-
-<a href="@TOP@org/openide/util/lookup/InstanceContent.html#add-java.lang.Object-"><code>add(Object)</code></a>
+{@link org.openide.util.lookup.InstanceContent#add(java.lang.Object) add(Object) }
 
 (and <code>remove(Object)</code> for the reverse). These may be called
 at any time and will update the set of registered instances (firing
 result changes as needed).
 
 <pre>
-    <font class="keyword">import</FONT> org.openide.util.lookup.*;
-    <font class="type">InstanceContent</font> <font class="variable-name">ic</font> = <font class="keyword">new</font> <font class="type">InstanceContent</font> ();
+    <span class="keyword">import</span> org.openide.util.lookup.*;
+    <span class="type">InstanceContent</span> <span class="variable-name">ic</span> = <span class="keyword">new</span> <span class="type">InstanceContent</span> ();
     ic.add(firstObject);
-    <font class="keyword">return</font> <font class="keyword">new</font> <font class="type">AbstractLookup</font> (ic);
+    <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">AbstractLookup</span> (ic);
 </pre>
 
 <p>In case it is expensive to actually compute the object in the
 lookup, but there is some cheap "key" which can easily generate it,
 you may instead register the key by passing in an
-
-<a href="@TOP@org/openide/util/lookup/InstanceContent.Convertor.html"><code>InstanceContent.Convertor</code></a>.
+{@link org.openide.util.lookup.InstanceContent.Convertor InstanceContent.Convertor }.
 
 This convertor translates the key to the real instance that the lookup
 client sees, if and when needed. For example, if you have a long list

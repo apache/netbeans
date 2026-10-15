@@ -29,7 +29,7 @@ import org.openide.util.Lookup;
  * to create instances of this interface rather than implementing it 
  * directly.
  *
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  * @since 7.33
  */
 public interface Savable {

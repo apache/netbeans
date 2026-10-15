@@ -19,8 +19,11 @@
 package org.netbeans.modules.java.source.parsing;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.jar.JarOutputStream;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -29,6 +32,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.NbTestSuite;
+import org.netbeans.modules.java.source.TestUtil;
 
 /**
  *
@@ -44,26 +48,14 @@ public class CachingArchiveTest extends NbTestCase {
         TestSuite suite = new NbTestSuite ();
         suite.addTest(new CachingArchiveTest("testPutName"));
         suite.addTest(new CachingArchiveTest("testJoin"));
+        suite.addTest(new CachingArchiveTest("testGetDirectory"));
         return suite;
     }
 
     public void testPutName() throws Exception {
-        File archive = null;
-        
-        String cp = System.getProperty("sun.boot.class.path");
-        String[] paths = cp.split(Pattern.quote(System.getProperty("path.separator")));
-        
-        for (String path : paths) {
-            File f = new File(path);
-            
-            if (!f.canRead())
-                continue;
-            
-            if (f.getName().endsWith("jar") || f.getName().endsWith("zip")) {
-                archive = f;
-                break;
-            }
-        }
+        clearWorkDir();
+
+        File archive = TestUtil.createRT_JAR(getWorkDir());
         
         assertNotNull(archive);
         
@@ -142,5 +134,22 @@ public class CachingArchiveTest extends NbTestCase {
                 zf.close();
             }                        
         }
+    }
+
+    public void testGetDirectory() throws Exception {
+        clearWorkDir();
+
+        File archive = new File(getWorkDir(), "rt.jar");
+
+        try (OutputStream binOut = new FileOutputStream(archive);
+             JarOutputStream out = new JarOutputStream(binOut)) {
+            out.putNextEntry(new ZipEntry(("dir1/a/")));
+            out.putNextEntry(new ZipEntry(("dir2/a/test.txt")));
+        }
+
+        Archive a = new CachingArchive(archive, false);
+
+        assertEquals("jar:" + archive.toURI().toString() + "!/dir1/a", a.getDirectory("dir1/a").toString());
+        assertEquals("jar:" + archive.toURI().toString() + "!/dir2/a", a.getDirectory("dir2/a").toString());
     }
 }

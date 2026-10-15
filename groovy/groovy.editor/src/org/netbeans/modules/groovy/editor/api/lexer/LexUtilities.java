@@ -26,6 +26,8 @@ import java.util.Set;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.editor.document.LineDocument;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenId;
@@ -163,12 +165,16 @@ public final class LexUtilities {
     /** Find the Groovy token sequence (in case it's embedded in something else at the top level. */
     @SuppressWarnings("unchecked")
     public static TokenSequence<GroovyTokenId> getGroovyTokenSequence(Document doc, int offset) {
-        final BaseDocument baseDocument = (BaseDocument) doc;
+        final BaseDocument baseDocument = doc instanceof BaseDocument ? (BaseDocument) doc : null;
         try {
-            baseDocument.readLock();
+            if (baseDocument != null) {
+                baseDocument.readLock();
+            }
             return getGroovyTokenSequence(TokenHierarchy.get(doc), offset);
         } finally {
-            baseDocument.readUnlock();
+            if (baseDocument != null) {
+                baseDocument.readUnlock();
+            }
         }
     }
 
@@ -236,6 +242,10 @@ public final class LexUtilities {
         return getPositionedSequence(doc, offset, true);
     }
 
+    public static TokenSequence<GroovyTokenId> getPositionedSequence(LineDocument doc, int offset) {
+        return getPositionedSequence(doc, offset, true);
+    }
+
     public static TokenSequence<GroovyTokenId> getPositionedSequence(BaseDocument doc, int offset, boolean lookBack) {
         TokenSequence<GroovyTokenId> ts = getGroovyTokenSequence(doc, offset);
 
@@ -264,7 +274,63 @@ public final class LexUtilities {
         return null;
     }
 
+    public static TokenSequence<GroovyTokenId> getPositionedSequence(LineDocument doc, int offset, boolean lookBack) {
+        TokenSequence<GroovyTokenId> ts = getGroovyTokenSequence(doc, offset);
+
+        if (ts != null) {
+            try {
+                ts.move(offset);
+            } catch (AssertionError e) {
+                DataObject dobj = (DataObject) doc.getProperty(Document.StreamDescriptionProperty);
+
+                if (dobj != null) {
+                    Exceptions.attachMessage(e, FileUtil.getFileDisplayName(dobj.getPrimaryFile()));
+                }
+
+                throw e;
+            }
+
+            if (!lookBack && !ts.moveNext()) {
+                return null;
+            } else if (lookBack && !ts.moveNext() && !ts.movePrevious()) {
+                return null;
+            }
+
+            return ts;
+        }
+
+        return null;
+    }
+
     public static Token<GroovyTokenId> getToken(BaseDocument doc, int offset) {
+        TokenSequence<GroovyTokenId> ts = getGroovyTokenSequence(doc, offset);
+
+        if (ts != null) {
+            try {
+                ts.move(offset);
+            } catch (AssertionError e) {
+                DataObject dobj = (DataObject) doc.getProperty(Document.StreamDescriptionProperty);
+
+                if (dobj != null) {
+                    Exceptions.attachMessage(e, FileUtil.getFileDisplayName(dobj.getPrimaryFile()));
+                }
+
+                throw e;
+            }
+
+            if (!ts.moveNext() && !ts.movePrevious()) {
+                return null;
+            }
+
+            Token<GroovyTokenId> token = ts.token();
+
+            return token;
+        }
+
+        return null;
+    }
+
+    public static Token<GroovyTokenId> getToken(LineDocument doc, int offset) {
         TokenSequence<GroovyTokenId> ts = getGroovyTokenSequence(doc, offset);
 
         if (ts != null) {
@@ -420,7 +486,7 @@ public final class LexUtilities {
 
         // Look at the first token of the current line
         try {
-            int first = Utilities.getRowFirstNonWhite(doc, offset);
+            int first = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
             if (first != -1) {
                 Token<GroovyTokenId> token = getToken(doc, first);
                 if (token != null) {
@@ -451,7 +517,25 @@ public final class LexUtilities {
      * with a corresponding "end" token, such as "begin", "def", "module",
      * etc.
      */
+    public static boolean isBeginToken(TokenId id, LineDocument doc, int offset) {
+        return END_PAIRS.contains(id);
+    }
+
+    /**
+     * Return true iff the given token is a token that should be matched
+     * with a corresponding "end" token, such as "begin", "def", "module",
+     * etc.
+     */
     public static boolean isBeginToken(TokenId id, BaseDocument doc, TokenSequence<GroovyTokenId> ts) {
+        return END_PAIRS.contains(id);
+    }
+
+    /**
+     * Return true iff the given token is a token that should be matched
+     * with a corresponding "end" token, such as "begin", "def", "module",
+     * etc.
+     */
+    public static boolean isBeginToken(TokenId id, LineDocument doc, TokenSequence<GroovyTokenId> ts) {
         return END_PAIRS.contains(id);
     }
 
@@ -471,8 +555,8 @@ public final class LexUtilities {
      */
     public static int getBeginEndLineBalance(BaseDocument doc, int offset, boolean upToOffset) {
         try {
-            int begin = Utilities.getRowStart(doc, offset);
-            int end = upToOffset ? offset : Utilities.getRowEnd(doc, offset);
+            int begin = LineDocumentUtils.getLineStartOffset(doc, offset);
+            int end = upToOffset ? offset : LineDocumentUtils.getLineEndOffset(doc, offset);
 
             TokenSequence<GroovyTokenId> ts = LexUtilities.getGroovyTokenSequence(doc, begin);
             if (ts == null) {
@@ -509,8 +593,8 @@ public final class LexUtilities {
     /** Compute the balance of begin/end tokens on the line. */
     public static int getLineBalance(BaseDocument doc, int offset, TokenId up, TokenId down) {
         try {
-            int begin = Utilities.getRowStart(doc, offset);
-            int end = Utilities.getRowEnd(doc, offset);
+            int begin = LineDocumentUtils.getLineStartOffset(doc, offset);
+            int end = LineDocumentUtils.getLineEndOffset(doc, offset);
 
             TokenSequence<GroovyTokenId> ts = LexUtilities.getGroovyTokenSequence(doc, begin);
             if (ts == null) {
@@ -586,7 +670,7 @@ public final class LexUtilities {
      */
     public static boolean isCommentOnlyLine(BaseDocument doc, int offset)
         throws BadLocationException {
-        int begin = Utilities.getRowFirstNonWhite(doc, offset);
+        int begin = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
 
         if (begin == -1) {
             return false; // whitespace only
@@ -659,16 +743,16 @@ public final class LexUtilities {
 
             if ((token != null) && (token.id() == GroovyTokenId.LINE_COMMENT)) {
                 // First add a range for the current line
-                int begin = Utilities.getRowStart(doc, caretOffset);
-                int end = Utilities.getRowEnd(doc, caretOffset);
+                int begin = LineDocumentUtils.getLineStartOffset(doc, caretOffset);
+                int end = LineDocumentUtils.getLineEndOffset(doc, caretOffset);
 
                 if (LexUtilities.isCommentOnlyLine(doc, caretOffset)) {
 
                     while (begin > 0) {
-                        int newBegin = Utilities.getRowStart(doc, begin - 1);
+                        int newBegin = LineDocumentUtils.getLineStartOffset(doc, begin - 1);
 
                         if ((newBegin < 0) || !LexUtilities.isCommentOnlyLine(doc, newBegin)) {
-                            begin = Utilities.getRowFirstNonWhite(doc, begin);
+                            begin = LineDocumentUtils.getLineFirstNonWhitespace(doc, begin);
                             break;
                         }
 
@@ -678,10 +762,10 @@ public final class LexUtilities {
                     int length = doc.getLength();
 
                     while (true) {
-                        int newEnd = Utilities.getRowEnd(doc, end + 1);
+                        int newEnd = LineDocumentUtils.getLineEndOffset(doc, end + 1);
 
                         if ((newEnd >= length) || !LexUtilities.isCommentOnlyLine(doc, newEnd)) {
-                            end = Utilities.getRowLastNonWhite(doc, end) + 1;
+                            end = LineDocumentUtils.getLineLastNonWhitespace(doc, end) + 1;
                             break;
                         }
 
@@ -718,10 +802,10 @@ public final class LexUtilities {
         boolean allowPrevLine = false;
         int lineStart;
         try {
-            lineStart = Utilities.getRowStart(doc, Math.min(lexOffset, doc.getLength()));
+            lineStart = LineDocumentUtils.getLineStartOffset(doc, Math.min(lexOffset, doc.getLength()));
             int prevLast = lineStart - 1;
             if (lineStart > 0) {
-                prevLast = Utilities.getRowLastNonWhite(doc, lineStart - 1);
+                prevLast = LineDocumentUtils.getLineLastNonWhitespace(doc, lineStart - 1);
                 if (prevLast != -1) {
                     char c = doc.getText(prevLast, 1).charAt(0);
                     if (c == ',') {
@@ -731,13 +815,13 @@ public final class LexUtilities {
                 }
             }
             if (!allowPrevLine) {
-                int firstNonWhite = Utilities.getRowFirstNonWhite(doc, lineStart);
+                int firstNonWhite = LineDocumentUtils.getLineFirstNonWhitespace(doc, lineStart);
                 if (lexOffset <= firstNonWhite || firstNonWhite == -1) {
                     return lexOffset;
                 }
             } else {
                 // Make lineStart so small that Math.max won't cause any problems
-                int firstNonWhite = Utilities.getRowFirstNonWhite(doc, lineStart);
+                int firstNonWhite = LineDocumentUtils.getLineFirstNonWhitespace(doc, lineStart);
                 if (prevLast >= 0 && (lexOffset <= firstNonWhite || firstNonWhite == -1)) {
                     return prevLast + 1;
                 }

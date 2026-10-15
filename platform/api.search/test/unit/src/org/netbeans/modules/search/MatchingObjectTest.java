@@ -26,6 +26,7 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -134,12 +135,9 @@ public class MatchingObjectTest extends NbTestCase {
 
         MatchingObject mo = prepareMatchingObject(1);
         final AtomicBoolean removed = new AtomicBoolean(false);
-        mo.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (MatchingObject.PROP_REMOVED.equals(evt.getPropertyName())) {
-                    removed.set(true);
-                }
+        mo.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            if (MatchingObject.PROP_REMOVED.equals(evt.getPropertyName())) {
+                removed.set(true);
             }
         });
         mo.removeDetail(mo.getTextDetails().get(0));
@@ -150,13 +148,10 @@ public class MatchingObjectTest extends NbTestCase {
 
         MatchingObject mo = prepareMatchingObject(2);
         final AtomicBoolean childRemoved = new AtomicBoolean(false);
-        mo.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (MatchingObject.PROP_CHILD_REMOVED.equals(
-                        evt.getPropertyName())) {
-                    childRemoved.set(true);
-                }
+        mo.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            if (MatchingObject.PROP_CHILD_REMOVED.equals(
+                    evt.getPropertyName())) {
+                childRemoved.set(true);
             }
         });
         mo.removeDetail(mo.getTextDetails().get(0));
@@ -169,7 +164,7 @@ public class MatchingObjectTest extends NbTestCase {
                 new BasicSearchCriteria(), null, null);
         FileObject fo = FileUtil.createMemoryFileSystem().getRoot()
                 .createData("test.tst");
-        List<TextDetail> details = new LinkedList<TextDetail>();
+        List<TextDetail> details = new LinkedList<>();
         for (int i = 0; i < numTextDetails; i++) {
             TextDetail td = new TextDetail(DataObject.find(fo),
                     SearchPattern.create("test", false, false, false));
@@ -203,13 +198,10 @@ public class MatchingObjectTest extends NbTestCase {
                 new BasicComposition(si,
                 new DefaultMatcher(bsc.getSearchPattern()),
                 bsc, null);
-        EventQueue.invokeAndWait(new Runnable() {
-            @Override
-            public void run() {
-                sc.getSearchResultsDisplayer().getVisualComponent(); // initialize model
-                final SearchTask st = new SearchTask(sc, true);
-                st.run();
-            }
+        EventQueue.invokeAndWait(() -> {
+            sc.getSearchResultsDisplayer().getVisualComponent(); // initialize model
+            final SearchTask st = new SearchTask(sc, true);
+            st.run();
         });
 
         ReplaceTask rt = new ReplaceTask(
@@ -292,7 +284,7 @@ public class MatchingObjectTest extends NbTestCase {
     public void testCheckFileLines() throws IOException {
 
         FileSystem fs = FileUtil.createMemoryFileSystem();
-        Charset chs = Charset.forName("UTF-8");
+        Charset chs = StandardCharsets.UTF_8;
         OutputStream os = fs.getRoot().createAndOpen("find.txt");
         try {
             OutputStreamWriter osw = new OutputStreamWriter(os,
@@ -349,17 +341,10 @@ public class MatchingObjectTest extends NbTestCase {
         FileObject root = FileUtil.createMemoryFileSystem().getRoot();
         FileObject fo = root.createData(TEST_FILE_NAME);
 
-        OutputStream os = fo.getOutputStream();
-        try {
-            OutputStreamWriter osw = new OutputStreamWriter(os, TEST_FILE_ENC);
-            try {
-                osw.write(content);
-            } finally {
-                osw.flush();
-                osw.close();
-            }
-        } finally {
-            os.close();
+        try (OutputStream os = fo.getOutputStream();
+                OutputStreamWriter osw = new OutputStreamWriter(os, TEST_FILE_ENC)) {
+            osw.write(content);
+            osw.flush();
         }
         return fo;
     }
@@ -388,7 +373,7 @@ public class MatchingObjectTest extends NbTestCase {
         @Override
         public Charset getEncoding(FileObject file) {
             if (file.getName().equals("utf8file")) {
-                return Charset.forName("UTF-8");
+                return StandardCharsets.UTF_8;
             } else {
                 return null;
             }

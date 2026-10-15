@@ -39,10 +39,7 @@ import org.openide.util.Lookup;
  */
 public class GlassFishPropertiesCustomizer extends JTabbedPane {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * GlassFish server properties customizer events handler.
      */
@@ -108,25 +105,16 @@ public class GlassFishPropertiesCustomizer extends JTabbedPane {
         
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = GlassFishLogger.get(GlassFishPropertiesCustomizer.class);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Customizer events listener. */
     private final CustomizerListener customizerListener;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of GlassFish server properties customizer.
      * <p/>

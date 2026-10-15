@@ -84,7 +84,7 @@ public class CustomMethodNode extends AbstractNode {
         List<Action> actions = SaasNode.getActions(getLookup());
         //TODO maybe ???
         //actions.add(SystemAction.get(TestMethodAction.class));
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     @Override

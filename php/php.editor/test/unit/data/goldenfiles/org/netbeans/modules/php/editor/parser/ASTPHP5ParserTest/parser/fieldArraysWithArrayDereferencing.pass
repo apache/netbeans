@@ -43,7 +43,7 @@
         <Statements>
             <ExpressionStatement start='7' end='48'>
                 <Assignment start='7' end='47' operator='EQUAL'>
-                    <FieldAccess start='7' end='42'>
+                    <FieldAccess start='7' end='42' isNullsafe='false'>
                         <Variable start='7' end='14' isDollared='true'>
                             <Identifier start='8' end='14' name='object'/>
                         </Variable>

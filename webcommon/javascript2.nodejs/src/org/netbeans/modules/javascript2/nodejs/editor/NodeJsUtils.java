@@ -65,7 +65,7 @@ public class NodeJsUtils {
     
     public static ImageIcon getNodeJsIcon () {
         if (NODEJS_ICON == null) {
-            NODEJS_ICON = new ImageIcon(ImageUtilities.loadImage(NODEJS_ICON_PATH)); //NOI18N
+            NODEJS_ICON = ImageUtilities.loadImageIcon(NODEJS_ICON_PATH, false); //NOI18N
         }
         return NODEJS_ICON;
     }
@@ -202,7 +202,7 @@ public class NodeJsUtils {
             JSONObject root = (JSONObject) JSONValue.parse(content);
             if (root != null) {
                 Object main = root.get(MAIN_FIELD);
-                if (main != null && main instanceof String) {
+                if (main instanceof String) {
                     value = (String)main;
                 }
             }
@@ -219,8 +219,8 @@ public class NodeJsUtils {
                 return null;
             }
             final StyledDocument document = ec.openDocument();
-            final AtomicReference<String> docContentRef = new AtomicReference();
-            final AtomicReference<BadLocationException> bleRef = new AtomicReference();
+            final AtomicReference<String> docContentRef = new AtomicReference<>();
+            final AtomicReference<BadLocationException> bleRef = new AtomicReference<>();
             document.render(new Runnable() {
 
                 @Override

@@ -26,6 +26,7 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.Timer;
+import javax.swing.UIManager;
 import org.netbeans.core.multitabs.impl.TabListPopupAction;
 import org.netbeans.swing.tabcontrol.TabbedContainer;
 import org.netbeans.swing.tabcontrol.event.TabActionEvent;
@@ -47,7 +48,11 @@ public final class ButtonFactory {
      */
     public static JButton createDropDownButton( Controller controller ) {
         final JButton btn = new JButton( new TabListPopupAction(controller) );
-        btn.setIcon( ImageUtilities.loadImageIcon( "org/netbeans/core/multitabs/resources/down.png", true) ); //NOI18N
+        Icon icon = UIManager.getIcon("nb.multitabs.button.dropdown.icon");
+        if (icon == null) {
+            icon = ImageUtilities.loadImageIcon( "org/netbeans/core/multitabs/resources/down.png", true ); //NOI18N
+        }
+        btn.setIcon( icon );
         btn.setActionCommand( "pressed"); //NOI18N
         btn.setFocusable( false );
         btn.setToolTipText( NbBundle.getMessage(ButtonFactory.class, "Hint_DocumentList") );
@@ -61,7 +66,11 @@ public final class ButtonFactory {
      */
     public static JButton createMaximizeButton( final Controller controller ) {
         final JButton btn = new JButton();
-        btn.setIcon( ImageUtilities.loadImageIcon( "org/netbeans/core/multitabs/resources/maximize.png", true) ); //NOI18N
+        Icon icon = UIManager.getIcon("nb.multitabs.button.maximize.icon");
+        if (icon == null) {
+            icon = ImageUtilities.loadImageIcon( "org/netbeans/core/multitabs/resources/maximize.png", true ); //NOI18N
+        }
+        btn.setIcon( icon );
         btn.setToolTipText( NbBundle.getMessage(ButtonFactory.class, "Hint_MaximizeRestore") );
         btn.addActionListener( new ActionListener() {
 
@@ -83,7 +92,10 @@ public final class ButtonFactory {
      */
     public static JButton createScrollLeftButton( Action scrollAction ) {
         JButton btn = new TimerButton( scrollAction );
-        Icon icon = ImageUtilities.loadImageIcon( "org/netbeans/core/multitabs/resources/left.png", true); //NOI18N
+        Icon icon = UIManager.getIcon("nb.multitabs.button.left.icon");
+        if (icon == null) {
+            icon = ImageUtilities.loadImageIcon( "org/netbeans/core/multitabs/resources/left.png", true ); //NOI18N
+        }
         btn.setIcon( icon );
         btn.setToolTipText( NbBundle.getMessage(ButtonFactory.class, "Hint_ScrollLeft") );
         return btn;
@@ -98,7 +110,10 @@ public final class ButtonFactory {
      */
     public static JButton createScrollRightButton( Action scrollAction ) {
         JButton btn = new TimerButton( scrollAction );
-        Icon icon = ImageUtilities.loadImageIcon( "org/netbeans/core/multitabs/resources/right.png", true); //NOI18N
+        Icon icon = UIManager.getIcon("nb.multitabs.button.right.icon");
+        if (icon == null) {
+            icon = ImageUtilities.loadImageIcon( "org/netbeans/core/multitabs/resources/right.png", true ); //NOI18N
+        }
         btn.setIcon( icon );
         btn.setToolTipText( NbBundle.getMessage(ButtonFactory.class, "Hint_ScrollRight") );
         return btn;

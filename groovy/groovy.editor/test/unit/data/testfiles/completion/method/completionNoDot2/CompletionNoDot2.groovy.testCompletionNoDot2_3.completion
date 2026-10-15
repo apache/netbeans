@@ -1,0 +1,8 @@
+Code completion result for source line:
+return cas|e1()
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     case1()                         [PRIVATE]  String
+METHOD     case2()                         [PRIVATE]  String
+METHOD     case3()                         [PRIVATE]  String
+METHOD     case4()                         [PRIVATE]  void

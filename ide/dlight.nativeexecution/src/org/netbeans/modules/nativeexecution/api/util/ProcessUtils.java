@@ -55,7 +55,7 @@ public final class ProcessUtils {
 
     private ProcessUtils() {
     }
-    private final static String remoteCharSet = System.getProperty("cnd.remote.charset", "UTF-8"); // NOI18N
+    private static final String remoteCharSet = System.getProperty("cnd.remote.charset", "UTF-8"); // NOI18N
 
     public static String getRemoteCharSet() {
         return remoteCharSet;

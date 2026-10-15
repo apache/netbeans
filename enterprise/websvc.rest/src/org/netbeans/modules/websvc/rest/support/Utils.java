@@ -37,7 +37,7 @@ import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import org.apache.tools.ant.module.api.support.ActionUtils;
 import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
@@ -105,13 +105,13 @@ public class Utils {
             
             // Force a save to make sure to make sure the line position in
             // the editor is in sync with the java source.
-            SaveCookie sc = (SaveCookie) dataObj.getCookie(SaveCookie.class);
+            SaveCookie sc = dataObj.getCookie(SaveCookie.class);
      
             if (sc != null) {
                 sc.save();
             }
             
-            LineCookie lc = (LineCookie) dataObj.getCookie(LineCookie.class);
+            LineCookie lc = dataObj.getCookie(LineCookie.class);
             
             if (lc != null) {
                 final long[] position = JavaSourceHelper.getPosition(javaSource, methodName);
@@ -166,7 +166,7 @@ public class Utils {
                 result.add( p );
             }
         }
-        Project[] projectsArray = result.toArray(new Project[result.size()]);
+        Project[] projectsArray = result.toArray(new Project[0]);
         return projectsArray;
     }
 
@@ -210,7 +210,7 @@ public class Utils {
             if ( SwingUtilities.isEventDispatchThread() ){
                 final FileObject[] testFO = new FileObject[1];
                 AtomicBoolean cancel = new AtomicBoolean(false);
-                ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
 
                     @Override
                     public void run() {
@@ -275,7 +275,7 @@ public class Utils {
                 if ( SwingUtilities.isEventDispatchThread() ){
                     final Properties props[] = new Properties[1];
                     AtomicBoolean cancel = new AtomicBoolean(false);
-                    ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                    BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
 
                         @Override
                         public void run() {
@@ -327,7 +327,7 @@ public class Utils {
                     if ( SwingUtilities.isEventDispatchThread() ){
                         final FileObject[] testFO = new FileObject[1];
                         AtomicBoolean cancel = new AtomicBoolean(false);
-                        ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                        BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
 
                             @Override
                             public void run() {

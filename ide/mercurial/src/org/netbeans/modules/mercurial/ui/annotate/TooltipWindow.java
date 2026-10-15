@@ -59,11 +59,9 @@ import javax.swing.text.StyledDocument;
 import org.netbeans.modules.mercurial.Mercurial;
 import org.netbeans.modules.mercurial.ui.log.LogAction;
 import org.netbeans.modules.versioning.util.VCSHyperlinkSupport;
-import org.netbeans.modules.versioning.util.VCSHyperlinkSupport.AuthorLinker;
 import org.netbeans.modules.versioning.util.VCSHyperlinkSupport.IssueLinker;
 import org.netbeans.modules.versioning.util.VCSHyperlinkSupport.StyledDocumentHyperlink;
 import org.netbeans.modules.versioning.util.VCSHyperlinkProvider;
-import org.netbeans.modules.versioning.util.VCSKenaiAccessor.KenaiUser;
 import org.openide.util.Exceptions;
 
 /**
@@ -255,29 +253,8 @@ class TooltipWindow implements AWTEventListener, MouseMotionListener, MouseListe
                 }
 
                 // author
-                {
-                    String author = annotateLine.getAuthor();
-                    StyledDocumentHyperlink l = linkerSupport.getLinker(AuthorLinker.class, 0);
-                    if (master.isKenai()) {
-                        KenaiUser kenaiUser = master.getKenaiUser(author);
-                        if (kenaiUser != null) {
-                            l = new AuthorLinker(
-                                    kenaiUser,
-                                    authorStyle,
-                                    doc,
-                                    author,
-                                    KenaiUser.getChatLink(
-                                    master.getCurrentFileObject(),
-                                    annotateLine.getLineNum()));
-                            linkerSupport.add(l, 0);
-                        }
-                    }
-                    if (l != null) {
-                        l.insertString(doc, authorStyle);
-                    } else {
-                        doc.insertString(doc.getLength(), author, normalStyle);
-                    }
-                }
+                String author = annotateLine.getAuthor();
+                doc.insertString(doc.getLength(), author, normalStyle);
 
                 // date
                 doc.insertString(doc.getLength(), " ", normalStyle);

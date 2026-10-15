@@ -19,6 +19,7 @@
 package org.netbeans.libs.git.jgit.commands;
 
 import java.io.IOException;
+import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RefUpdate;
 import org.eclipse.jgit.lib.RefUpdate.Result;
@@ -35,23 +36,21 @@ import org.netbeans.libs.git.progress.ProgressMonitor;
  */
 public class DeleteTagCommand extends GitCommand {
     private final String tagName;
-    private GitRefUpdateResult result;
 
-    public DeleteTagCommand (Repository repository, GitClassFactory gitFactory, String tagName, ProgressMonitor monitor) {
+    public DeleteTagCommand(Repository repository, GitClassFactory gitFactory, String tagName, ProgressMonitor monitor) {
         super(repository, gitFactory, monitor);
         this.tagName = tagName;
     }
 
     @Override
-    protected void run () throws GitException {
+    protected void run() throws GitException {
         Repository repository = getRepository();
-        Ref currentRef = repository.getTags().get(tagName);
-        if (currentRef == null) {
-            throw new GitException.MissingObjectException(tagName, GitObjectType.TAG);
-        }
-        String fullName = currentRef.getName();
         try {
-            RefUpdate update = repository.updateRef(fullName);
+            Ref currentRef = repository.exactRef(Constants.R_TAGS + tagName);
+            if (currentRef == null) {
+                throw new GitException.MissingObjectException(tagName, GitObjectType.TAG);
+            }
+            RefUpdate update = repository.updateRef(currentRef.getName());
             update.setRefLogMessage("tag deleted", false);
             update.setForceUpdate(true);
             Result deleteResult = update.delete();
@@ -69,7 +68,7 @@ public class DeleteTagCommand extends GitCommand {
     }
 
     @Override
-    protected String getCommandDescription () {
+    protected String getCommandDescription() {
         return "git tag -d " + tagName;
     }
 }

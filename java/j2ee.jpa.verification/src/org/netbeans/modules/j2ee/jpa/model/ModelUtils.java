@@ -194,7 +194,7 @@ public class ModelUtils {
             }
         }
 
-        return methods.toArray(new ExecutableElement[methods.size()]);
+        return methods.toArray(new ExecutableElement[0]);
     }
 
     public static String getAccesorName(String fieldName) {

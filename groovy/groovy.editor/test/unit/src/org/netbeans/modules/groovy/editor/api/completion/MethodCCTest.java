@@ -141,6 +141,31 @@ public class MethodCCTest extends GroovyCCTestBase {
     public void testCompletionNoDot1_3() throws Exception {
         checkCompletion(BASE + "CompletionNoDot1.groovy", "        n^", false);
     }
+    
+    public void testCompletionNoDot2_1() throws Exception {
+        checkCompletion(BASE + "CompletionNoDot2.groovy", "String a = meth^", false);
+    }
+    
+    public void testCompletionNoDot2_2() throws Exception {
+        checkCompletion(BASE + "CompletionNoDot2.groovy", "String a = this.meth^od1()", false);
+    }
+    
+    public void testCompletionNoDot2_3() throws Exception {
+        checkCompletion(BASE + "CompletionNoDot2.groovy", " return cas^e1()", false);
+    }
+    
+    public void testCompletionNoDot2_4() throws Exception {
+        checkCompletion(BASE + "CompletionNoDot2.groovy", "return case2() + cas^e1();", false);
+    }
+    
+    public void testCompletionNoDot2_5() throws Exception {
+        checkCompletion(BASE + "CompletionNoDot2.groovy", "if(cas^e1()) {", false);
+    }
+    
+    public void testCompletionNoDot2_6() throws Exception {
+        checkCompletion(BASE + "CompletionNoDot2.groovy", "cas^e3();", false);
+    }
+    
 
     public void testCompletionNoPrefixString1() throws Exception {
         checkCompletion(BASE + "CompletionNoPrefixString1.groovy", "println \"Hello $name!\".^", false);
@@ -148,6 +173,92 @@ public class MethodCCTest extends GroovyCCTestBase {
 
     public void testCompletionNoPrefixString2() throws Exception {
         checkCompletion(BASE + "CompletionNoPrefixString2.groovy", "def name='Petr'.^", false);
+    }
+    
+    /**
+     * Checks that the completion contains methods from inner interfaces and their
+     * superinterfaces.
+     */
+    public void testMethods4() throws Exception {
+        checkCompletion(BASE + "Methods4.groovy", "iface.meth^", false);
+    }
+    
+    /**
+     * Checks method completion on direct reference to a variable
+     */
+    public void testMethods5_chain1() throws Exception {
+        checkCompletion(BASE + "Methods5.groovy", " someFile.getP^arentFile()", true);
+    }
+
+    /**
+     * Checks method completion on 2nd reference in the chain, filtering for "m"
+     */
+    public void testMethods5_chain2() throws Exception {
+        checkCompletion(BASE + "Methods5.groovy", " someFile.getParentFile().mk^dirs()", true);
+    }
+
+    /**
+     * Checks method completion on 2nd reference in the chain, without any filter (so with
+     * fields as well)
+     */
+    public void testMethods5_chain2a() throws Exception {
+        checkCompletion(BASE + "Methods5.groovy", " someFile.getParentFile().^mkdirs()", true);
+    }
+
+    /**
+     * Checks completion in even higher in the hierarchy.
+     */
+    public void testMethods5_chain3() throws Exception {
+        checkCompletion(BASE + "Methods5.groovy", " someFile.getAbsoluteFile().getParentFile().mk^dirs()", true);
+    }
+
+    /**
+     * Checks completion after a parenthesis (not represented in AST)
+     */
+    public void testMethods5_chain4() throws Exception {
+        checkCompletion(BASE + "Methods5.groovy", " (someFile.getCanonicalFile().getParentFile()).mk^dirs()", true);
+    }
+    
+    /**
+     * Checks that overload does not damage the completion
+     */
+    public void testMethods5_overload1() throws Exception {
+        checkCompletion(BASE + "Methods5.groovy", " b.command(\"good\").i^nheritIO().command()", true);
+    }
+
+    /**
+     * Checks that overload does not damage the completion
+     */
+    public void testMethods5_overload2() throws Exception {
+        checkCompletion(BASE + "Methods5.groovy", " b.command(Arrays.asList(\"good\", \"bad\")).inh^eritIO().command()", true);
+    }
+    
+    /**
+     * Checks that correct overload is selected for type context
+     */
+    public void testMethods5_overload3() throws Exception {
+        checkCompletion(BASE + "Methods5.groovy", "new Helper().overload(\"hello\").get^AbsoluteFile", true);
+    }
+    
+    /**
+     * Checks that correct overload is selected for type context
+     */
+    public void testMethods5_overload4() throws Exception {
+        checkCompletion(BASE + "Methods5.groovy", "new Helper().overload(Arrays.asList(\"hi\")).su^bstring(1)", true);
+    }
+
+    /**
+     * Checks that private mod is respected
+     */
+    public void testMethods5_modifier() throws Exception {
+        checkCompletion(BASE + "Methods5.groovy", "new Helper().ov^erload(Arrays.asList(\"hi\")).substring(1)", true);
+    }
+
+    /**
+     * Checks that private mod is respected
+     */
+    public void testMethods5_noparens() throws Exception {
+        checkCompletion(BASE + "Methods5.groovy", "aa.command \"bye\".su^bstring(1)", true);
     }
 }
 

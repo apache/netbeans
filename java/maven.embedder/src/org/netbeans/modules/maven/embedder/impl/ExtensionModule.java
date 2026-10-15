@@ -20,8 +20,12 @@ package org.netbeans.modules.maven.embedder.impl;
 
 import com.google.inject.Binder;
 import com.google.inject.Module;
+import com.google.inject.Scopes;
 import org.apache.maven.model.building.ModelBuilder;
 import org.apache.maven.plugin.internal.PluginDependenciesResolver;
+import org.eclipse.aether.impl.ArtifactDescriptorReader;
+import org.eclipse.aether.impl.VersionRangeResolver;
+import org.eclipse.aether.impl.VersionResolver;
 import org.eclipse.aether.internal.impl.SimpleLocalRepositoryManagerFactory;
 import org.eclipse.aether.spi.connector.RepositoryConnectorFactory;
 import org.eclipse.aether.spi.localrepo.LocalRepositoryManagerFactory;
@@ -48,6 +52,12 @@ public class ExtensionModule implements Module {
         //exxperimental only.
 //        binder.bind(InheritanceAssembler.class).to(NbInheritanceAssembler.class);
         binder.bind(ModelBuilder.class).to(NBModelBuilder.class);
+        
+        // This allows to capture origin for version and artifact queries, so that ArtifactFixer can determine
+        // if a pom was really requested, or some other artifact's classifier/type was
+        binder.bind(VersionResolver.class).to(NbVersionResolver2.class).in(Scopes.SINGLETON);
+        binder.bind(VersionRangeResolver.class).to(NbVersionResolver2.class).in(Scopes.SINGLETON);
+        binder.bind(ArtifactDescriptorReader.class).to(NbVersionResolver2.class).in(Scopes.SINGLETON);
     }
     
 }

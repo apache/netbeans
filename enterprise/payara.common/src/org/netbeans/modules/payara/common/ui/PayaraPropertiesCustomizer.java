@@ -39,10 +39,7 @@ import org.openide.util.Lookup;
  */
 public class PayaraPropertiesCustomizer extends JTabbedPane {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Payara server properties customizer events handler.
      */
@@ -108,25 +105,16 @@ public class PayaraPropertiesCustomizer extends JTabbedPane {
         
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = PayaraLogger.get(PayaraPropertiesCustomizer.class);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Customizer events listener. */
     private final CustomizerListener customizerListener;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of Payara server properties customizer.
      * <p/>

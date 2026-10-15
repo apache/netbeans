@@ -354,6 +354,7 @@ public class ClassFile {
 
     /**
      * Returns true if this class is an annotation type.
+     * @return true if this class is an annotation type 
      */
     public final boolean isAnnotation() {
 	return (classAccess & Access.ANNOTATION) == Access.ANNOTATION;
@@ -361,6 +362,7 @@ public class ClassFile {
             
     /**
      * Returns true if this class defines an enum type.
+     * @return true if this class defines an enum type
      */
     public final boolean isEnum() {
 	return (classAccess & Access.ENUM) == Access.ENUM;
@@ -368,6 +370,7 @@ public class ClassFile {
     
     /**
      * Returns true if this class defines a module.
+     * @return true if this class defines a module
      * @since 1.51
      */
     public final boolean isModule() {
@@ -378,7 +381,7 @@ public class ClassFile {
      * Returns a map of the raw attributes for this classfile.  
      * Field attributes are
      * not returned in this map.
-     *
+     * @return a map of attribute for this classfile
      * @see org.netbeans.modules.classfile.Field#getAttributes
      */
     public final AttributeMap getAttributes(){
@@ -404,7 +407,7 @@ public class ClassFile {
     
     /**Return the content of the <code>BootstrapMethods</code> attribute.
      * 
-     * @return 
+     * @return the {@link List} of BootstrapMethod
      * @since 1.40
      */
     public final List<BootstrapMethod> getBootstrapMethods(){
@@ -451,7 +454,7 @@ public class ClassFile {
 
     /**
        Returns the content of the <code>ModulePackages</code> attribute.
-     * @return the {@link List> of packages or null when there is no <code>ModulePackages</code> attribute.
+     * @return the {@link List} of packages or null when there is no <code>ModulePackages</code> attribute.
      * @since 1.53
      */
     public final List<String> getModulePackages() {
@@ -525,6 +528,7 @@ public class ClassFile {
 
     /**
      * Returns the major version number of this classfile.
+     * @return the major version number of this classfile
      */
     public int getMajorVersion() {
 	return majorVersion;
@@ -532,6 +536,7 @@ public class ClassFile {
 
     /**
      * Returns the minor version number of this classfile.
+     * @return the minor version number of this classfile
      */
     public int getMinorVersion() {
 	return minorVersion;
@@ -541,6 +546,7 @@ public class ClassFile {
      * Returns the generic type information associated with this class.  
      * If this class does not have generic type information, then null 
      * is returned.
+     * @return the generic type information associated with this class
      */
     public String getTypeSignature() {
 	if (typeSignature == null) {
@@ -565,6 +571,7 @@ public class ClassFile {
      * class, and has been compiled with a compiler target level of 1.5 
      * or above.  If no such attribute is present in the classfile, then
      * null is returned.
+     * @return enclosing method
      */
     public EnclosingMethod getEnclosingMethod() {
 	if (enclosingMethod == null) {
@@ -623,6 +630,7 @@ public class ClassFile {
     /**
      * Returns all runtime annotations defined for this class.  Inherited
      * annotations are not included in this collection.
+     * @return all runtine annotation
      */
     public final Collection<Annotation> getAnnotations() {
 	loadAnnotations();
@@ -632,6 +640,8 @@ public class ClassFile {
     /**
      * Returns the annotation for a specified annotation type, or null if
      * no annotation of that type exists for this class.
+     * @param annotationClass type of annotation
+     * @return annotation
      */
     public final Annotation getAnnotation(final ClassName annotationClass) {
 	loadAnnotations();
@@ -641,6 +651,8 @@ public class ClassFile {
     /**
      * Returns true if an annotation of the specified type is defined for
      * this class.
+     * @param annotationClass type of annotation
+     * @return true if annotation is present
      */
     public final boolean isAnnotationPresent(final ClassName annotationClass) {
 	loadAnnotations();

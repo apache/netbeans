@@ -1056,8 +1056,9 @@ public class JSONWriter {
     private static JSONArray storeProperties(Map<String, V8Object.Property> properties, V8Object.Array array) {
         JSONArray arrObj = new JSONArray();
         if (properties != null) {
-            for (String propName : properties.keySet()) {
-                V8Object.Property prop = properties.get(propName);
+            for (Map.Entry<String, V8Object.Property> entry : properties.entrySet()) {
+                String propName = entry.getKey();
+                V8Object.Property prop = entry.getValue();
                 JSONObject propObj = newJSONObject();
                 propObj.put(NAME, propName);
                 if (prop.getAttributes() != 0) {

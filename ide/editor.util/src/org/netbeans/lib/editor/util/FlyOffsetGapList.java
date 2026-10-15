@@ -50,7 +50,7 @@ public abstract class FlyOffsetGapList<E> extends GapList<E> {
      *
      * @param elem element currently stored in the list.
      * @return raw offset of the element. It needs to be preprocessed
-     * by {@link #raw2RelOffset(int)} to become the real offset.
+     * by {@code #raw2RelOffset(int)} to become the real offset.
      */
     protected abstract int elementRawOffset(E elem);
 
@@ -86,10 +86,10 @@ public abstract class FlyOffsetGapList<E> extends GapList<E> {
      * Return base starting offset to which all the tokens contained in this list
      * are related. The absolute token's offset is a sum of this start offset plus
      * token's offset.
-     * <br/>
+     * <br>
      * There may be just flyweight element(s) at the begining of the list
      * so the start offset gives the necessary basing.
-     * <br/>
+     * <br>
      * By default it's zero.
      */
     protected int startOffset() {
@@ -357,7 +357,7 @@ public abstract class FlyOffsetGapList<E> extends GapList<E> {
     /**
      * This method updates element's offset (shifts it above offset gap if necessary)
      * before adding the element to the list.
-     * <bt/>
+     * <br>
      * This method should be called before (or after) the element is physically added
      * to the list. If the element is added below the offset gap
      * then calling of this method is not necessary.
@@ -372,11 +372,11 @@ public abstract class FlyOffsetGapList<E> extends GapList<E> {
     /**
      * This method updates element's offset (shifts it below offset gap if necessary)
      * before (or after) the element gets removed from the list.
-     * <br/>
+     * <br>
      * This method should be called after the element is physically removed
      * from the list and it's desired that it retains its natural offset
      * (not possibly shifted by the offset gap length).
-     * <br/>
+     * <br>
      * If the element was located below the offset gap prior removal
      * then calling of this method is not necessary.
      */

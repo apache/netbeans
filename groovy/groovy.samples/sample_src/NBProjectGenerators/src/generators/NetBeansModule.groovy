@@ -94,7 +94,7 @@ nbplatform.active=default
 
 """
 def project_properties = """\
-javac.source=1.5
+javac.source=1.8
 javac.compilerargs=-Xlint -Xlint:-serial
 
 """

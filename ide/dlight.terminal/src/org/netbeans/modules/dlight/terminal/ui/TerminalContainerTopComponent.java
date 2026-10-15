@@ -64,7 +64,7 @@ public final class TerminalContainerTopComponent extends TopComponent {
     /** path to the icon used by the component and its open action */
     private static final String ICON_PATH = "org/netbeans/modules/dlight/terminal/ui/term.png";// NOI18N
     private static final String PREFERRED_ID = "TerminalContainerTopComponent";// NOI18N
-    public final static String AUTO_OPEN_LOCAL_PROPERTY = "AutoOpenLocalTerminal"; // NOI18N
+    public static final String AUTO_OPEN_LOCAL_PROPERTY = "AutoOpenLocalTerminal"; // NOI18N
     private final TerminalContainer tc;
 
     public TerminalContainerTopComponent() {
@@ -120,10 +120,10 @@ public final class TerminalContainerTopComponent extends TopComponent {
     }
     private static Action[] actions;
 
-    private synchronized static Action[] getToolbarActions() {
+    private static synchronized Action[] getToolbarActions() {
         if (actions == null) {
             List<? extends Action> termActions = Utilities.actionsForPath(TerminalAction.TERMINAL_ACTIONS_PATH);// NOI18N
-            actions = termActions.toArray(new Action[termActions.size()]);
+            actions = termActions.toArray(new Action[0]);
         }
         return actions;
     }

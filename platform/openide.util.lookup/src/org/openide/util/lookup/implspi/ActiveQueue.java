@@ -57,21 +57,28 @@ public final class ActiveQueue {
         }
 
         @Override
-        public Reference<Object> remove(long timeout) throws IllegalArgumentException, InterruptedException {
-            throw new InterruptedException();
+        public Reference<? extends Object> remove(long timeout) throws IllegalArgumentException, InterruptedException {
+            if (timeout < 0) {
+                throw new IllegalArgumentException("Negative timeout value");
+            } else if (Thread.currentThread() != Daemon.running) {
+                throw new InterruptedException();
+            }
+
+            return super.remove(timeout);
         }
 
         @Override
-        public Reference<Object> remove() throws InterruptedException {
-            throw new InterruptedException();
-        }
-        
-        final Reference<? extends Object> removeSuper() throws InterruptedException {
-            return super.remove(0);
+        public Reference<? extends Object> remove() throws InterruptedException {
+            if (Thread.currentThread() != Daemon.running) {
+                throw new InterruptedException();
+            }
+
+            return super.remove();
         }
     }
 
     private static final class Daemon extends Thread {
+        private static boolean initialized;
         private static Daemon running;
         
         public Daemon() {
@@ -79,13 +86,19 @@ public final class ActiveQueue {
         }
         
         static synchronized void ping() {
-            if (running == null) {
-                Daemon t = new Daemon();
-                t.setPriority(Thread.MIN_PRIORITY);
-                t.setDaemon(true);
-                t.start();
-                LOGGER.fine("starting thread");
-                running = t;
+            if (!initialized) {
+                try {
+                    Daemon t = new Daemon();
+                    t.setPriority(Thread.MIN_PRIORITY);
+                    t.setDaemon(true);
+                    t.start();
+                    LOGGER.fine("starting thread");
+                    running = t;
+                } catch (SecurityException ex) {
+                    LOGGER.log(Level.FINE, "cannot start thread", ex);
+                } finally {
+                    initialized = true;
+                }
             }
         }
         
@@ -105,7 +118,7 @@ public final class ActiveQueue {
                     if (impl == null) {
                         return;
                     }
-                    Reference<?> ref = impl.removeSuper();
+                    Reference<?> ref = impl.remove();
                     LOGGER.log(Level.FINE, "Got dequeued reference {0}", new Object[] { ref });
                     if (!(ref instanceof Runnable)) {
                         LOGGER.log(Level.WARNING, "A reference not implementing runnable has been added to the Utilities.activeReferenceQueue(): {0}", ref.getClass());
@@ -124,9 +137,8 @@ public final class ActiveQueue {
                         // to allow GC
                         ref = null;
                     }
-                } catch (InterruptedException ex) {
-                    // Can happen during VM shutdown, it seems. Ignore.
-                    continue;
+                } catch (InterruptedException ignored) {
+                    // Can happen during VM shutdown, it seems.
                 }
             }
         }

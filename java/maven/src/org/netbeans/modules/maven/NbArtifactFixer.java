@@ -22,11 +22,14 @@ package org.netbeans.modules.maven;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.maven.artifact.DefaultArtifact;
@@ -99,12 +102,44 @@ public class NbArtifactFixer implements ArtifactFixer {
         } else {
             LOG.log(Level.INFO, "Cycle in NbArtifactFixer resolution (issue #234586): {0}", Arrays.toString(gavSet.toArray()));
         }
-        
+        // NOTE: this catches metadata request for all artifacts not locally cached, but all will be repored as POMs.
         try {
             File f = createFallbackPOM(artifact.getGroupId(), artifact.getArtifactId(), artifact.getVersion());
             //instead of workarounds down the road, we set the artifact's file here.
             // some stacktraces to maven/aether do set it after querying our code, but some don't for reasons unknown to me.
             artifact.setFile(f);
+            Set<Artifact> s = CAPTURE_PLACEHOLDER_ARTIFACTS.get();
+            if (s != null) {
+                String c = artifact.getProperty("nbResolvingArtifact.classifier", null);
+                String e = artifact.getProperty("nbResolvingArtifact.extension", null);
+
+                if ("".equals(c)) {
+                    c = null;
+                }
+                // If it really resolves a POM dependency, add to missing artifacts.
+                if ((c == null && e == null) ||
+                    (Objects.equals(c, artifact.getClassifier()) && Objects.equals(e, artifact.getExtension()))) {
+                    s.add(artifact);
+                } else {
+                    if (local.getLayout() != null) { // #189807: for unknown reasons, there is no layout when running inside MavenCommandLineExecutor.run
+
+                        //the special snapshot handling is important in case of SNAPSHOT or x-SNAPSHOT versions, for some reason aether has slightly different
+                        //handling of baseversion compared to maven artifact. we need to manually set the baseversion here..
+                        boolean isSnapshot = artifact.isSnapshot();
+                        DefaultArtifact art = new DefaultArtifact(artifact.getGroupId(), artifact.getArtifactId(), artifact.getVersion(), null, e, c, new DefaultArtifactHandler(e));
+                        if (isSnapshot) {
+                            art.setBaseVersion(artifact.getBaseVersion());
+                        }
+                        String path = local.pathOf(art);
+                        File af = new File(local.getBasedir(), path);
+                        art.setFile(af);
+                        org.eclipse.aether.artifact.DefaultArtifact da = new org.eclipse.aether.artifact.DefaultArtifact(
+                                art.getGroupId(), art.getArtifactId(), art.getClassifier(), art.getType(), 
+                                art.getVersion(), artifact.getProperties(), af);
+                        s.add(da);
+                    }
+                }
+            }
             return f;
         } catch (IOException x) {
             Exceptions.printStackTrace(x);
@@ -128,7 +163,7 @@ public class NbArtifactFixer implements ArtifactFixer {
         String k = groupId + ':' + artifactId + ':' + version;
         File fallbackPOM = fallbackPOMs.get(k);
         if (fallbackPOM == null) {
-            fallbackPOM = File.createTempFile("fallback", ".netbeans.pom");
+            fallbackPOM = Files.createTempFile("fallback", ".netbeans.pom").toFile();
             fallbackPOM.deleteOnExit();
             PrintWriter w = new PrintWriter(fallbackPOM);
             try {
@@ -149,4 +184,48 @@ public class NbArtifactFixer implements ArtifactFixer {
         return fallbackPOM;
     }
 
+    public interface ExceptionCallable<T, E extends Throwable> {
+        public T call() throws E;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Throwable> void sneakyThrow(Throwable exception) throws T {
+        throw (T) exception;
+    }        
+    
+    /**
+     * Collects placeholder artifacts, which would be otherwise hidden in maven infrastructure. The value is only valid during {@link #collectPlaceholderArtifacts}, which
+     * can be invoked recursively.
+     */
+    private static final ThreadLocal<Set<Artifact>> CAPTURE_PLACEHOLDER_ARTIFACTS = new ThreadLocal<Set<Artifact>>();
+
+    /**
+     * Performs an operation and collects forged artifacts created during that operation. The invocation can be nested; each invocation gets only artifacts from its own 'level',
+     * not those from possible nested invocations. The function passes on all runtime exceptions and checked exception thrown by the operation.
+     * 
+     * @param <T> value produced by the executed operation
+     * @param <E> exception thrown from the operation
+     * @param code the operation to call and monitor
+     * @param collector callback that will get collected artifacts.
+     * @return
+     * @throws E 
+     */
+    public static <T, E extends Throwable> T collectPlaceholderArtifacts(ExceptionCallable<T, E> code, Consumer<Set<Artifact>> collector) throws E {
+        Set<Artifact> save = CAPTURE_PLACEHOLDER_ARTIFACTS.get();
+        try {
+            CAPTURE_PLACEHOLDER_ARTIFACTS.set(new HashSet<>());
+            return code.call();
+        } catch (Error | RuntimeException r) {
+            throw r;
+        } catch (Exception ex) {
+            sneakyThrow(ex);
+            // unreachable
+            throw new Error(); 
+        } finally {
+            if (collector != null) {
+                collector.accept(CAPTURE_PLACEHOLDER_ARTIFACTS.get());
+            }
+            CAPTURE_PLACEHOLDER_ARTIFACTS.set(save);
+        }
+    }
 }

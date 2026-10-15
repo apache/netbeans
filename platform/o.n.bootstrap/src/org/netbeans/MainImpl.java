@@ -60,7 +60,7 @@ final class MainImpl extends Object {
         int res = execute (args, System.in, System.out, System.err, m);
         if (res == -1) {
             // Connected to another running NB instance and succeeded in making a call.
-            return;
+            System.exit(CLIHandler.Status.CONNECTED);
         } else if (res != 0) {
             // Some CLIHandler refused the invocation
             if (res == Integer.MIN_VALUE) {
@@ -119,6 +119,19 @@ final class MainImpl extends Object {
         }
         // #34069: need to do the same for nbdirs.
         String nbdirs = System.getProperty("netbeans.dirs"); // NOI18N
+        String extNbDirs = System.getProperty("netbeans.extra.dirs"); // NOI18N
+        if (extNbDirs != null) {
+            // support for potential spaces in the cluster path:
+            if (extNbDirs.startsWith("\"")) {
+                extNbDirs = extNbDirs.substring(1, extNbDirs.lastIndexOf('"'));
+            }
+            if (nbdirs == null) {
+                nbdirs = extNbDirs;
+            } else {
+                nbdirs = nbdirs + File.pathSeparator + extNbDirs;
+            }
+            System.setProperty("netbeans.dirs", nbdirs); // NOI18N
+        }
         if (nbdirs != null) {
             StringTokenizer tok = new StringTokenizer(nbdirs, File.pathSeparator);
             while (tok.hasMoreTokens()) {
@@ -233,7 +246,7 @@ final class MainImpl extends Object {
             if (r == Integer.MIN_VALUE) {
                 r = 0;
             }
-            TopSecurityManager.exit(r);
+            NbExit.exit(r);
         }
     }
 

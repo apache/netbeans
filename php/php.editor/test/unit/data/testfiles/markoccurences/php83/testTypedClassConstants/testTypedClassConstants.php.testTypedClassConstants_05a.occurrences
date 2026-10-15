@@ -1,0 +1,2 @@
+    public const string|array UNION2 = 'a' . |>MARK_OCCURRENCES:Inter^faceTest<|::STRING;
+interface |>MARK_OCCURRENCES:InterfaceTest<| {

@@ -146,7 +146,7 @@ public class ProxyURLStreamHandlerFactory implements URLStreamHandlerFactory, Lo
     public void resultChanged(LookupEvent ev) {
         Collection<? extends URLStreamHandlerFactory> c = r.allInstances();
         synchronized (this) {
-            handlers = c.toArray(new URLStreamHandlerFactory[c.size()]);
+            handlers = c.toArray(new URLStreamHandlerFactory[0]);
         }
     }
 }

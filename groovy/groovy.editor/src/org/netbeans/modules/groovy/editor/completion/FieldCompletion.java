@@ -19,14 +19,15 @@
 
 package org.netbeans.modules.groovy.editor.completion;
 
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+import org.codehaus.groovy.ast.ClassNode;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.modules.csl.api.CompletionProposal;
 import org.netbeans.modules.groovy.editor.api.completion.CaretLocation;
 import org.netbeans.modules.groovy.editor.api.completion.CompletionItem;
 import org.netbeans.modules.groovy.editor.api.completion.FieldSignature;
+import org.netbeans.modules.groovy.editor.api.completion.MethodSignature;
 import org.netbeans.modules.groovy.editor.api.completion.util.ContextHelper;
 import org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId;
 import org.netbeans.modules.groovy.editor.completion.provider.CompleteElementHandler;
@@ -43,7 +44,7 @@ import org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext;
 public class FieldCompletion extends BaseCompletion {
 
     @Override
-    public boolean complete(List<CompletionProposal> proposals, CompletionContext context, int anchor) {
+    public boolean complete(Map<Object, CompletionProposal> proposals, CompletionContext context, int anchor) {
         LOG.log(Level.FINEST, "-> completeFields"); // NOI18N
 
         if (context.location == CaretLocation.INSIDE_PARAMETERS && context.isBehindDot() == false) {
@@ -79,7 +80,7 @@ public class FieldCompletion extends BaseCompletion {
                 }
             }
         } else {
-            context.declaringClass = ContextHelper.getSurroundingClassNode(context);
+            context.setDeclaringClass(ContextHelper.getSurroundingClassNode(context), context.isStaticMembers());
         }
 
         // If we are dealing with GStrings, the prefix is prefixed ;-)
@@ -92,10 +93,10 @@ public class FieldCompletion extends BaseCompletion {
         Map<FieldSignature, CompletionItem> result = new CompleteElementHandler(context).getFields();
         
         FieldSignature prefixFieldSignature = new FieldSignature(context.getPrefix());
-        if (result.containsKey(prefixFieldSignature)) {
-            result.remove(prefixFieldSignature);
+        result.remove(prefixFieldSignature);
+        for (Map.Entry<FieldSignature, CompletionItem> e :result.entrySet()) {
+            proposals.putIfAbsent(e.getKey(), e.getValue());
         }
-        proposals.addAll(result.values());
 
         return true;
     }

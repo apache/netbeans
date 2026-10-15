@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.117.0
+#Version 1.144.0
 
 CLSS public java.io.IOException
 cons public init()
@@ -7,7 +7,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public abstract interface java.io.Serializable
 
@@ -35,7 +34,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -44,7 +42,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public java.lang.Object
 cons public init()
@@ -81,8 +78,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -302,29 +297,39 @@ innr public final static !enum Mode
 innr public final static DeploymentException
 meth public boolean canFileDeploy(java.lang.String,org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule)
 meth public boolean isRunning(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public final void addInstanceListener(org.netbeans.modules.j2ee.deployment.devmodules.spi.InstanceListener)
 meth public final void removeInstanceListener(org.netbeans.modules.j2ee.deployment.devmodules.spi.InstanceListener)
 meth public java.lang.String deploy(org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider,boolean,java.lang.String,java.lang.String,boolean) throws org.netbeans.modules.j2ee.deployment.devmodules.api.Deployment$DeploymentException
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String deploy(org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider,boolean,java.lang.String,java.lang.String,boolean,org.netbeans.modules.j2ee.deployment.devmodules.api.Deployment$Logger) throws org.netbeans.modules.j2ee.deployment.devmodules.api.Deployment$DeploymentException
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String deploy(org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider,org.netbeans.modules.j2ee.deployment.devmodules.api.Deployment$Mode,java.lang.String,java.lang.String,boolean) throws org.netbeans.modules.j2ee.deployment.devmodules.api.Deployment$DeploymentException
 meth public java.lang.String deploy(org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider,org.netbeans.modules.j2ee.deployment.devmodules.api.Deployment$Mode,java.lang.String,java.lang.String,boolean,org.netbeans.modules.j2ee.deployment.devmodules.api.Deployment$Logger) throws org.netbeans.modules.j2ee.deployment.devmodules.api.Deployment$DeploymentException
 meth public java.lang.String deploy(org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider,org.netbeans.modules.j2ee.deployment.devmodules.api.Deployment$Mode,java.lang.String,java.lang.String,boolean,org.netbeans.modules.j2ee.deployment.devmodules.api.Deployment$Logger,java.util.concurrent.Callable<java.lang.Void>) throws org.netbeans.modules.j2ee.deployment.devmodules.api.Deployment$DeploymentException
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
  anno 7 org.netbeans.api.annotations.common.NullAllowed()
 meth public java.lang.String getDefaultServerInstanceID()
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String getServerDisplayName(java.lang.String)
 meth public java.lang.String getServerID(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String getServerInstanceDisplayName(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String[] getInstancesOfServer(java.lang.String)
 meth public java.lang.String[] getServerIDs()
 meth public java.lang.String[] getServerInstanceIDs()
 meth public java.lang.String[] getServerInstanceIDs(java.lang.Object[])
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String[] getServerInstanceIDs(java.lang.Object[],java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String[] getServerInstanceIDs(java.lang.Object[],java.lang.String,java.lang.String[])
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String[] getServerInstanceIDs(java.util.Collection<org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule$Type>)
 meth public java.lang.String[] getServerInstanceIDs(java.util.Collection<org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule$Type>,org.netbeans.api.j2ee.core.Profile)
 meth public java.lang.String[] getServerInstanceIDs(java.util.Collection<org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule$Type>,org.netbeans.api.j2ee.core.Profile,java.lang.String[])
 meth public org.netbeans.modules.j2ee.deployment.devmodules.api.J2eePlatform getJ2eePlatform(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public org.netbeans.modules.j2ee.deployment.devmodules.api.ServerInstance getServerInstance(java.lang.String)
 meth public static org.netbeans.modules.j2ee.deployment.devmodules.api.Deployment getDefault()
 meth public void disableCompileOnSaveSupport(org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider)
@@ -368,18 +373,26 @@ hfds impl,impl2
 
 CLSS public org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule
 fld public final static java.lang.Object CLIENT
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.Object CONN
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.Object EAR
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.Object EJB
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.Object WAR
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String APP_XML = "META-INF/application.xml"
 fld public final static java.lang.String CLIENT_XML = "META-INF/application-client.xml"
 fld public final static java.lang.String CONNECTOR_XML = "META-INF/ra.xml"
 fld public final static java.lang.String EJBJAR_XML = "META-INF/ejb-jar.xml"
 fld public final static java.lang.String EJBSERVICES_XML = "META-INF/webservices.xml"
 fld public final static java.lang.String J2EE_13 = "1.3"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String J2EE_14 = "1.4"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String JAVA_EE_5 = "1.5"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String MIME_J2EE_MODULE_TARGET = "MIME-org-nb-j2eeserver-J2eeModule-BuildTarget"
 fld public final static java.lang.String PROP_MODULE_VERSION = "moduleVersion"
 fld public final static java.lang.String PROP_RESOURCE_DIRECTORY = "resourceDir"
@@ -391,6 +404,7 @@ meth public <%0 extends java.lang.Object> org.netbeans.modules.j2ee.metadata.mod
 meth public java.io.File getDeploymentConfigurationFile(java.lang.String)
 meth public java.io.File getResourceDirectory()
 meth public java.lang.Object getModuleType()
+ anno 0 java.lang.Deprecated()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public java.lang.String getModuleVersion()
  anno 0 org.netbeans.api.annotations.common.NonNull()
@@ -447,6 +461,7 @@ fld public final static java.lang.String TOOL_WSIT = "wsit"
 intf org.openide.util.Lookup$Provider
 meth public boolean equals(java.lang.Object)
 meth public boolean isToolSupported(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public boolean supportsProfiling()
 meth public int hashCode()
 meth public java.awt.Image getIcon()
@@ -461,14 +476,19 @@ meth public java.io.File[] getClasspathEntries()
 meth public java.io.File[] getClasspathEntries(java.util.Set<org.netbeans.modules.j2ee.deployment.plugins.api.ServerLibraryDependency>)
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public java.io.File[] getPlatformRoots()
+ anno 0 java.lang.Deprecated()
 meth public java.io.File[] getToolClasspathEntries(java.lang.String)
 meth public java.lang.String getDisplayName()
 meth public java.lang.String getToolProperty(java.lang.String,java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String toString()
 meth public java.util.Set getSupportedJavaPlatformVersions()
 meth public java.util.Set getSupportedModuleTypes()
+ anno 0 java.lang.Deprecated()
 meth public java.util.Set getSupportedSpecVersions()
+ anno 0 java.lang.Deprecated()
 meth public java.util.Set<java.lang.String> getSupportedSpecVersions(java.lang.Object)
+ anno 0 java.lang.Deprecated()
 meth public java.util.Set<org.netbeans.api.j2ee.core.Profile> getSupportedProfiles()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public java.util.Set<org.netbeans.api.j2ee.core.Profile> getSupportedProfiles(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule$Type)
@@ -559,6 +579,7 @@ CLSS public final org.netbeans.modules.j2ee.deployment.devmodules.api.ServerMana
 meth public static java.lang.String showAddServerInstanceWizard()
 meth public static java.lang.String showAddServerInstanceWizard(java.util.Map<java.lang.String,java.lang.String>)
 meth public static void showCustomizer(java.lang.String)
+ anno 0 java.lang.Deprecated()
 supr java.lang.Object
 
 CLSS public abstract interface org.netbeans.modules.j2ee.deployment.devmodules.spi.ArtifactListener
@@ -595,6 +616,7 @@ meth public abstract void instanceAdded(java.lang.String)
 meth public abstract void instanceRemoved(java.lang.String)
 
 CLSS public abstract interface org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeApplicationImplementation
+ anno 0 java.lang.Deprecated()
 intf org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleImplementation
 meth public abstract org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule[] getModules()
 meth public abstract void addModuleListener(org.netbeans.modules.j2ee.deployment.devmodules.api.ModuleListener)
@@ -628,12 +650,15 @@ meth public abstract void removePropertyChangeListener(java.beans.PropertyChange
 
 CLSS public org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleFactory
 meth public static org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeApplication createJ2eeApplication(org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeApplicationImplementation)
+ anno 0 java.lang.Deprecated()
 meth public static org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeApplication createJ2eeApplication(org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeApplicationImplementation2)
 meth public static org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule createJ2eeModule(org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleImplementation)
+ anno 0 java.lang.Deprecated()
 meth public static org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule createJ2eeModule(org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleImplementation2)
 supr java.lang.Object
 
 CLSS public abstract interface org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleImplementation
+ anno 0 java.lang.Deprecated()
 intf org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleBase
 meth public abstract java.lang.Object getModuleType()
 
@@ -667,6 +692,7 @@ meth public final void removeInstanceListener(org.netbeans.modules.j2ee.deployme
 meth public java.io.File[] getRequiredLibraries()
 meth public java.lang.String getDeploymentName()
 meth public java.util.Set<org.netbeans.modules.j2ee.deployment.common.api.Datasource> getModuleDatasources() throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+ anno 0 java.lang.Deprecated()
 meth public java.util.Set<org.netbeans.modules.j2ee.deployment.common.api.Datasource> getServerDatasources() throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
 meth public org.netbeans.modules.j2ee.deployment.common.api.SourceFileMap getSourceFileMap()
 meth public org.netbeans.modules.j2ee.deployment.devmodules.api.ResourceChangeReporter getResourceChangeReporter()
@@ -676,6 +702,7 @@ meth public org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvid
 meth public org.netbeans.modules.j2ee.deployment.plugins.api.InstanceProperties getInstanceProperties()
 meth public org.openide.filesystems.FileObject[] getSourceRoots()
 meth public void deployDatasources() throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException,org.netbeans.modules.j2ee.deployment.common.api.DatasourceAlreadyExistsException
+ anno 0 java.lang.Deprecated()
 meth public void verify(org.openide.filesystems.FileObject,java.io.OutputStream) throws org.netbeans.modules.j2ee.deployment.common.api.ValidationException
 supr java.lang.Object
 hfds LOGGER,configFilesListener,configSupportImpl,configSupportImplLock,listeners
@@ -771,6 +798,7 @@ meth public boolean manifestChanged()
 meth public boolean serverDescriptorChanged()
 meth public boolean serverResourcesChanged()
 meth public java.io.File[] getChangedFiles()
+meth public java.io.File[] getRemovedFiles()
 meth public java.lang.String toString()
 meth public java.lang.String[] getChangedEjbs()
 supr java.lang.Object
@@ -800,11 +828,13 @@ meth protected void firePropertyChange(java.beans.PropertyChangeEvent)
 meth public abstract java.lang.String getProperty(java.lang.String)
 meth public abstract java.util.Enumeration propertyNames()
 meth public abstract javax.enterprise.deploy.spi.DeploymentManager getDeploymentManager()
+ anno 0 java.lang.Deprecated()
 meth public abstract void refreshServerInstance()
 meth public abstract void setProperties(java.util.Properties)
 meth public abstract void setProperty(java.lang.String,java.lang.String)
 meth public static java.lang.String[] getInstanceList()
 meth public static org.netbeans.modules.j2ee.deployment.plugins.api.InstanceProperties createInstanceProperties(java.lang.String,java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.plugins.api.InstanceCreationException
+ anno 0 java.lang.Deprecated()
 meth public static org.netbeans.modules.j2ee.deployment.plugins.api.InstanceProperties createInstanceProperties(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.plugins.api.InstanceCreationException
 meth public static org.netbeans.modules.j2ee.deployment.plugins.api.InstanceProperties createInstanceProperties(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.util.Map<java.lang.String,java.lang.String>) throws org.netbeans.modules.j2ee.deployment.plugins.api.InstanceCreationException
 meth public static org.netbeans.modules.j2ee.deployment.plugins.api.InstanceProperties createInstancePropertiesNonPersistent(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.util.Map<java.lang.String,java.lang.String>) throws org.netbeans.modules.j2ee.deployment.plugins.api.InstanceCreationException
@@ -821,6 +851,7 @@ meth public abstract boolean descriptorChanged()
 meth public abstract boolean manifestChanged()
 meth public abstract boolean serverDescriptorChanged()
 meth public abstract java.io.File[] getChangedFiles()
+meth public abstract java.io.File[] getRemovedFiles()
 
 CLSS public org.netbeans.modules.j2ee.deployment.plugins.api.ServerDebugInfo
 cons public init(java.lang.String,int)
@@ -999,6 +1030,7 @@ fld public final static java.lang.String PROP_DISPLAY_NAME = "displayName"
 fld public final static java.lang.String PROP_LIBRARIES = "libraries"
 fld public final static java.lang.String PROP_SERVER_LIBRARIES = "serverLibraries"
 meth public abstract boolean isToolSupported(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public abstract java.awt.Image getIcon()
 meth public abstract java.io.File[] getPlatformRoots()
 meth public abstract java.io.File[] getToolClasspathEntries(java.lang.String)
@@ -1010,9 +1042,13 @@ meth public final void addPropertyChangeListener(java.beans.PropertyChangeListen
 meth public final void firePropertyChange(java.lang.String,java.lang.Object,java.lang.Object)
 meth public final void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public java.lang.String getToolProperty(java.lang.String,java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public java.util.Set getSupportedModuleTypes()
+ anno 0 java.lang.Deprecated()
 meth public java.util.Set<java.lang.String> getSupportedSpecVersions()
+ anno 0 java.lang.Deprecated()
 meth public java.util.Set<java.lang.String> getSupportedSpecVersions(java.lang.Object)
+ anno 0 java.lang.Deprecated()
 meth public java.util.Set<org.netbeans.api.j2ee.core.Profile> getSupportedProfiles()
 meth public java.util.Set<org.netbeans.api.j2ee.core.Profile> getSupportedProfiles(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule$Type)
 meth public java.util.Set<org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule$Type> getSupportedTypes()
@@ -1091,6 +1127,7 @@ meth public void finishServerInitialization() throws org.netbeans.modules.j2ee.d
 supr java.lang.Object
 
 CLSS public abstract interface org.netbeans.modules.j2ee.deployment.plugins.spi.RegistryNodeFactory
+ anno 0 java.lang.Deprecated()
 meth public abstract org.openide.nodes.Node getManagerNode(org.openide.util.Lookup)
 meth public abstract org.openide.nodes.Node getTargetNode(org.openide.util.Lookup)
 

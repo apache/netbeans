@@ -1,0 +1,9 @@
+Code completion result for source line:
+$publicPromotedFiled->|publicYMethod(); // ClassZ|(ClassZ&ClassY)
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicStaticYMethod()           [STATIC]   ClassY
+METHOD     publicStaticZMethod()           [STATIC]   ClassZ
+METHOD     publicYMethod()                 [PUBLIC]   ClassY
+METHOD     publicZMethod()                 [PUBLIC]   ClassZ
+VARIABLE   (ClassY&ClassZ)|ClassX publicY  [PUBLIC]   ClassY
+VARIABLE   (ClassY&ClassZ)|ClassX publicZ  [PUBLIC]   ClassZ

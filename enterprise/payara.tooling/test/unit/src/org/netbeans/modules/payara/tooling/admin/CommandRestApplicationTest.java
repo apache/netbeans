@@ -36,10 +36,7 @@ import static org.netbeans.modules.payara.tooling.admin.CommandRestTest.payaraSe
  */
 public class CommandRestApplicationTest extends CommandRestTest {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Test methods                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Test GlasFish start cluster command via REST.
      */
@@ -47,7 +44,10 @@ public class CommandRestApplicationTest extends CommandRestTest {
     public void deployAppTest() {
         PayaraServer server = payaraServer();
         System.err.println(server.getHost() + server.getAdminPort());
-        CommandDeploy command = new CommandDeploy("Test", null, new File("target/test/simpleWeb.war"), "simpleWeb", null, null);
+        CommandDeploy command = new CommandDeploy(
+                "Test", null, new File("target/test/simpleWeb.war"),
+                "simpleWeb", null, null, false
+        );
         try {
             Future<ResultString> future =
                     ServerAdmin.<ResultString>exec(server, command);

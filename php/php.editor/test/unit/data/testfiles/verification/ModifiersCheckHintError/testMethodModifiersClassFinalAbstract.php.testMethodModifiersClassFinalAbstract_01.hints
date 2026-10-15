@@ -1,0 +1,20 @@
+    final abstract function finalAbstractClassMethod(): void {}
+                            ------------------------
+HINT:Method "finalAbstractClassMethod" cannot be declared abstract and final
+FIX:Remove modifier: abstract
+FIX:Remove modifier: final
+    final abstract public function finalAbstractPublicClassMethod(): void {}
+                                   ------------------------------
+HINT:Method "finalAbstractPublicClassMethod" cannot be declared abstract and final
+FIX:Remove modifier: abstract
+FIX:Remove modifier: final
+    final abstract protected function finalAbstractProtectedClassMethod(): void {}
+                                      ---------------------------------
+HINT:Method "finalAbstractProtectedClassMethod" cannot be declared abstract and final
+FIX:Remove modifier: abstract
+FIX:Remove modifier: final
+    final abstract private function finalAbstractPrivateClassMethod(): void {}
+                                    -------------------------------
+HINT:Method "finalAbstractPrivateClassMethod" cannot be declared abstract and final
+FIX:Remove modifier: abstract
+FIX:Remove modifier: final

@@ -42,7 +42,7 @@ public abstract class ElementFilter {
     }
 
     public static ElementFilter allOf(final Collection<ElementFilter> filters) {
-        return ElementFilter.allOf(filters.toArray(new ElementFilter[filters.size()]));
+        return ElementFilter.allOf(filters.toArray(new ElementFilter[0]));
     }
 
     public static ElementFilter allOf(final ElementFilter... filters) {
@@ -61,7 +61,7 @@ public abstract class ElementFilter {
     }
 
     public static ElementFilter anyOf(final Collection<ElementFilter> filters) {
-        return ElementFilter.anyOf(filters.toArray(new ElementFilter[filters.size()]));
+        return ElementFilter.anyOf(filters.toArray(new ElementFilter[0]));
     }
 
     public static ElementFilter anyOf(final ElementFilter... filters) {
@@ -223,7 +223,7 @@ public abstract class ElementFilter {
         for (final QualifiedName qualifiedName : supeIfaceNameQueries) {
             filters.add(forSuperInterfaceName(qualifiedName));
         }
-        return ElementFilter.allOf(filters.toArray(new ElementFilter[filters.size()]));
+        return ElementFilter.allOf(filters.toArray(new ElementFilter[0]));
     }
 
     public static ElementFilter forSuperInterfaceName(final QualifiedName supeIfaceNameQuery) {

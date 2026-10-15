@@ -26,6 +26,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.openide.ErrorManager;
 import org.openide.filesystems.FileObject;
@@ -82,7 +83,7 @@ public class Utility {
         try {
             OutputStream os = fileObject.getOutputStream();
             try {
-                PrintWriter writer = new PrintWriter(new OutputStreamWriter(os, "UTF-8")); // NOI18N
+                PrintWriter writer = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
                 writer.print(content);
                 writer.flush();
             } finally {
@@ -98,7 +99,7 @@ public class Utility {
         String content = null;
         try {
             StringWriter writer =new StringWriter();
-            reader = new BufferedReader(new InputStreamReader(fileObject.getInputStream(), "UTF-8")); // NOI18N
+            reader = new BufferedReader(new InputStreamReader(fileObject.getInputStream(), StandardCharsets.UTF_8));
             int chr = reader.read();
             while (chr != -1) {
                 writer.write(chr);

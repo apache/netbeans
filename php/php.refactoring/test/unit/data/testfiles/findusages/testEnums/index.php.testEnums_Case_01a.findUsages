@@ -1,0 +1,9 @@
+Display text: case <b>Case1</b>;
+File name: index.php
+Name: Case1
+Position: BEGIN: 886 END: 891
+
+Display text: case C = EnumA::<b>Case1</b>;
+File name: index.php
+Name: Case1
+Position: BEGIN: 1435 END: 1440

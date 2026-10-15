@@ -438,7 +438,7 @@ public class DiffPresenter extends javax.swing.JPanel {
     /**
      * This class contains informations about the differences.
      */
-    public static abstract class Info extends Object {
+    public abstract static class Info extends Object {
         
         private String name1;
         private String name2;

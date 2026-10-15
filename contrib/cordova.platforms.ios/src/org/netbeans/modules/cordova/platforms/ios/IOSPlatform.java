@@ -54,7 +54,7 @@ public class IOSPlatform implements MobilePlatform {
     
     private boolean isReady = false;
     
-    private transient final java.beans.PropertyChangeSupport propertyChangeSupport = new java.beans.PropertyChangeSupport(this);
+    private final transient java.beans.PropertyChangeSupport propertyChangeSupport = new java.beans.PropertyChangeSupport(this);
     private String sdkLocation;
     private SDK DEFAULT = new IOSSDK("Simulator - iOS 6.0", "iphonesimulator6.0"); // NOI18N
     

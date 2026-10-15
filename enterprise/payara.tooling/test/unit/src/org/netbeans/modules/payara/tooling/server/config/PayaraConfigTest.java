@@ -40,15 +40,15 @@ public class PayaraConfigTest extends CommonTest {
     public void testPayaraConfigXMLTools() {
         // Payara configured for HTTP (v3)
         PayaraConfig config = PayaraConfigManager.getConfig(
-                ConfigBuilderProvider.getBuilderConfig(
-                serverHttp.getVersion()));
+                ConfigBuilderProvider.getPlatformBuilderConfig(
+                serverHttp.getPlatformVersion()));
         ToolsConfig toolsConfig = config.getTools();
         assertNotNull(toolsConfig);
         assertNotNull(toolsConfig.getAsadmin());
         // Payara configured for REST (v4)
         config = PayaraConfigManager.getConfig(
-                ConfigBuilderProvider.getBuilderConfig(
-                serverRest.getVersion()));
+                ConfigBuilderProvider.getPlatformBuilderConfig(
+                serverRest.getPlatformVersion()));
         toolsConfig = config.getTools();
         assertNotNull(toolsConfig);
         assertNotNull(toolsConfig.getAsadmin());

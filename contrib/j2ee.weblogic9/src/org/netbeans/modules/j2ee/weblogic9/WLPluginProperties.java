@@ -26,6 +26,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -256,7 +257,7 @@ public final class WLPluginProperties {
         if (result.isEmpty()) {
             result.addAll(getDomainsFromNodeManager(serverRoot));
         }
-        return result.toArray(new String[result.size()]);
+        return result.toArray(new String[0]);
     }
     
     @CheckForNull
@@ -293,7 +294,7 @@ public final class WLPluginProperties {
                 javaHomeVendors.put("", getDefaultPlatformHome());
                 return properties;
             }
-            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
             try {
                 String line;
                 String vendorName = null;
@@ -445,8 +446,8 @@ public final class WLPluginProperties {
             WLProductProperties prodProps = manager.getProductProperties();
             String mwHome = prodProps.getMiddlewareHome();
             if (mwHome != null) {
-                File serverModuleFile = FileUtil.normalizeFile(new File(new File(mwHome),
-                        serverModulesJar.replaceAll("/", Matcher.quoteReplacement(File.separator)))); // NOI18N
+                File serverModuleFile = FileUtil.normalizeFile(
+                        new File(new File(mwHome), serverModulesJar.replace("/", File.separator))); // NOI18N
                 return new File[] {weblogicJar, serverModuleFile};
             }
         }
@@ -515,8 +516,7 @@ public final class WLPluginProperties {
         }
 
         // init the input stream for the file and the w3c document object
-        File file = new File(serverRoot + File.separator
-                + DOMAIN_LIST.replaceAll("/", Matcher.quoteReplacement(File.separator)));
+        File file = new File(serverRoot + File.separator + DOMAIN_LIST.replace("/", File.separator));
         if (!file.exists() || !file.canRead()) {
             return Collections.emptyList();
         }
@@ -527,7 +527,7 @@ public final class WLPluginProperties {
         // read the list file line by line fetching out the domain paths
         try {
             // create a new reader for the FileInputStream
-            lnr = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8")); // NOI18N
+            lnr = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
 
             // read the lines
             String line;

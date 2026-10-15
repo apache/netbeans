@@ -27,20 +27,14 @@ import org.netbeans.modules.glassfish.tooling.logging.Logger;
  */
 public class GlassFishToolsConfig {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(GlassFishToolsConfig.class);
 
     /** Proxy settings usage for loopback addresses. */
     private static volatile boolean proxyForLoopback = true;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Do not use proxy settings for loopback addresses.
      */

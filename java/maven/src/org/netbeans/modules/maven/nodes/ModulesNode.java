@@ -63,6 +63,7 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
+import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
 
 /**
@@ -202,7 +203,7 @@ public class ModulesNode extends AbstractNode {
             lst.add(OpenPOMAction.instance());
             lst.add(new RemoveModuleAction(parent, project));
 //            lst.addAll(Arrays.asList(super.getActions(b)));
-            return lst.toArray(new Action[lst.size()]);
+            return lst.toArray(new Action[0]);
         }
 
         @Override
@@ -297,7 +298,7 @@ public class ModulesNode extends AbstractNode {
             JFileChooser c = ProjectChooser.projectChooser();
             File basedir = FileUtil.toFile(proj.getProjectDirectory());
             c.setCurrentDirectory(basedir);
-            if (c.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) {
+            if (c.showOpenDialog(Utilities.findDialogParent()) != JFileChooser.APPROVE_OPTION) {
                 return;
             }
             final List<String> mods = new ArrayList<String>();

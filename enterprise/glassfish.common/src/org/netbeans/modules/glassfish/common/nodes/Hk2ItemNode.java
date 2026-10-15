@@ -47,10 +47,7 @@ import org.openide.util.actions.SystemAction;
 public class Hk2ItemNode extends AbstractNode {
 
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Resources icon. */
     private static final String RESOURCES_ICON = 
             "org/netbeans/modules/glassfish/common/resources/resources.gif";
@@ -165,10 +162,7 @@ public class Hk2ItemNode extends AbstractNode {
     /** Node decorator. */
     protected final Decorator decorator;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of extensible node without setting node display name.
      * <p/>
@@ -213,10 +207,7 @@ public class Hk2ItemNode extends AbstractNode {
         setDisplayName(name);
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Find an icon for this node (in the closed state).
      * <p/>
@@ -303,13 +294,10 @@ public class Hk2ItemNode extends AbstractNode {
         if (decorator.canEditDetails()) {
             actions.add(SystemAction.get(EditDetailsAction.class));
         }
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(Action[]::new);
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates and returns the instance of the node representing the status
      * 'WAIT' of the node.

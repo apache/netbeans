@@ -116,13 +116,18 @@
     <taskdef name="subant-junit" classname="org.netbeans.nbbuild.SubAntJUnitReport" classpath="${nbantext.jar}"/>
     <taskdef name="resolvelist" classname="org.netbeans.nbbuild.ResolveList" classpath="${nbantext.jar}"/>
     <taskdef name="checkmoduleconfigs" classname="org.netbeans.nbbuild.CheckModuleConfigs" classpath="${nbantext.jar}"/>
+    <taskdef name="sysproperty"
+             classname="org.netbeans.nbbuild.SysProperty"
+             classpath="${nbantext.jar}"/>
     <property name="tasks-already-set" value="true"/>
   </target>
 
   <target name="init" depends="init-tasks,-define-cluster-path">
     <!-- Gets the module name -->
     <getmodulename name="module.name" id="module.id" root="${nb_all}"/>
-    
+
+    <property name="javac.default.target" value="1.8"/>
+
     <property name="cluster.dir.fallback" value="extra" />
     <setcluster name="cluster.dir" module="${module.name}" defaultLocation="${cluster.dir.fallback}" clusterName="module.cluster.name"/>
     <property name="cluster.dir" value="${cluster.dir.fallback}"/>
@@ -154,7 +159,7 @@
     <path id="cluster.path.id" path="${cluster.path.evaluated}"/>
     <property name="cluster.path.final" refid="cluster.path.id"/>
   </target>
-  
+
   <target name="-do-set-buildnumber" depends="init-tasks" unless="buildnumber">
     <tstamp>
     	<format property="buildstamp" pattern="yyyyMMdd"/>
@@ -179,9 +184,72 @@
     <property name="buildnumber" value="${buildstamp}-${hg.id}"/>
     <echo message="Build number : ${buildnumber}" />
   </target>
+
   <target name="set-buildnumber" depends="-do-set-buildnumber">
     <!-- Overridable. Note: need not necessarily be a number at all): -->
     <property name="buildnum" value="dev-${buildnumber}"/>
   </target>
 
+  <target name="-load-module-flags">
+      <dirname property="default.basedir" file="${ant.file.default}"/>
+      <loadfile property="jms-base.flags" srcFile="${default.basedir}/jms-config/base.flags">
+          <filterchain>
+              <tokenfilter>
+                  <replaceregex pattern="--" replace=" -J--" />
+              </tokenfilter>
+              <striplinebreaks/>
+          </filterchain>
+      </loadfile>
+      <loadfile property="jms-desktop.flags" srcFile="${default.basedir}/jms-config/desktop.flags">
+          <filterchain>
+              <tokenfilter>
+                  <replaceregex pattern="--" replace=" -J--" />
+              </tokenfilter>
+              <striplinebreaks/>
+          </filterchain>
+      </loadfile>
+      <loadfile property="jms-compiler.flags" srcFile="${default.basedir}/jms-config/compiler.flags">
+          <filterchain>
+              <tokenfilter>
+                  <replaceregex pattern="--" replace=" -J--" />
+              </tokenfilter>
+              <striplinebreaks/>
+          </filterchain>
+      </loadfile>
+      <loadfile property="jms-tools.flags" srcFile="${default.basedir}/jms-config/tools.flags">
+          <filterchain>
+              <tokenfilter>
+                  <replaceregex pattern="--" replace=" -J--" />
+              </tokenfilter>
+              <striplinebreaks/>
+          </filterchain>
+      </loadfile>
+      <loadfile property="jms-base.flags.jvm" srcFile="${default.basedir}/jms-config/base.flags">
+          <filterchain>
+              <suffixlines suffix=" "/>
+              <striplinebreaks/>
+          </filterchain>
+      </loadfile>
+      <loadfile property="jms-desktop.flags.jvm" srcFile="${default.basedir}/jms-config/desktop.flags">
+          <filterchain>
+              <suffixlines suffix=" "/>
+              <striplinebreaks/>
+          </filterchain>
+      </loadfile>
+      <loadfile property="jms-compiler.flags.jvm" srcFile="${default.basedir}/jms-config/compiler.flags">
+          <filterchain>
+              <suffixlines suffix=" "/>
+              <striplinebreaks/>
+          </filterchain>
+      </loadfile>
+      <loadfile property="jms-tools.flags.jvm" srcFile="${default.basedir}/jms-config/tools.flags">
+          <filterchain>
+              <suffixlines suffix=" "/>
+              <striplinebreaks/>
+          </filterchain>
+      </loadfile>
+      <property name="metabuild.jms-flags" value="${jms-base.flags}${jms-desktop.flags}${jms-compiler.flags}${jms-tools.flags}"/>
+      <!-- Excluding jms-tools.flags, as nbjavac usually overlaps with tools dependencies -->
+      <property name="metabuild.jms-flags.jvm" value="${jms-base.flags.jvm}${jms-desktop.flags.jvm}${jms-compiler.flags.jvm}"/>
+  </target>
 </project>

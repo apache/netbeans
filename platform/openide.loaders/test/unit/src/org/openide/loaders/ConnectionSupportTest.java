@@ -156,7 +156,7 @@ public class ConnectionSupportTest extends TestCase {
         public Pool () {
         }
 
-        public Enumeration loaders () {
+        public Enumeration<? extends DataLoader> loaders() {
             if (loaders == null) {
                 return Enumerations.empty ();
             }

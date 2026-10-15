@@ -1,0 +1,26 @@
+    public function methodFoo(): (Foo&Bar)|(Bar&|>MARK_OCCURRENCES:Baz<|) {}
+    public (Foo&Bar)|(|>MARK_OCCURRENCES:Baz<|&Foo) $fieldBar;
+    public function methodBar(): (Foo&Bar)||>MARK_OCCURRENCES:Baz<| {}
+class |>MARK_OCCURRENCES:Baz<| {
+    public (Foo&Bar)|(|>MARK_OCCURRENCES:Baz<|&Foo) $fieldBaz;
+    public function methodBaz(): Foo|(Bar&|>MARK_OCCURRENCES:Baz<|) {}
+function paramType((Foo&Bar)||>MARK_OCCURRENCES:Baz<| $param1, |>MARK_OCCURRENCES:B^az<||(Foo&Bar) $param2, (Foo&Bar)|(Bar&|>MARK_OCCURRENCES:Baz<|) $param3): void {
+function returnType1(): (Foo&Bar)||>MARK_OCCURRENCES:Baz<| {}
+function returnType2(): |>MARK_OCCURRENCES:Baz<||(Foo&Bar) {}
+function returnType3(): |>MARK_OCCURRENCES:Baz<||(Foo&Bar)|Foo {}
+function returnType4(): (Foo&Bar)|(Foo&|>MARK_OCCURRENCES:Baz<|) {}
+ * @method (Foo&Bar)|(Bar&|>MARK_OCCURRENCES:Baz<|) methodTag((Foo&Bar)|Bar $param1, Foo|(Bar&|>MARK_OCCURRENCES:Baz<|) $param2) Description
+ * @method static (Foo&Bar)||>MARK_OCCURRENCES:Baz<| staticMethodTag(Bar|(Foo&Bar) $param1, (Foo&Bar)|(Bar&|>MARK_OCCURRENCES:Baz<|) $param2) Description
+ * @property Foo|(Bar&|>MARK_OCCURRENCES:Baz<|) $propertyTag Description
+    private (Foo&Bar)||>MARK_OCCURRENCES:Baz<| $fieldClass; // class
+    private static Bar|(Bar&|>MARK_OCCURRENCES:Baz<|) $staticFieldClass; // class
+    public function paramType((Foo&|>MARK_OCCURRENCES:Baz<|)|(Foo&Bar)||>MARK_OCCURRENCES:Baz<| $test): void { // class
+    public function returnType(): (Foo&Bar)||>MARK_OCCURRENCES:Baz<| { // class
+    private (Foo&Bar)||>MARK_OCCURRENCES:Baz<| $test; // trait
+    public function paramType((Foo&Bar)|(Bar&|>MARK_OCCURRENCES:Baz<|) $test1, Foo|(Foo&Bar) $test2): void { // trait
+    public function returnType(): (Foo&Bar)|(Bar&|>MARK_OCCURRENCES:Baz<|);
+$closure = function(Foo|(Foo&Bar)|(Bar&|>MARK_OCCURRENCES:Baz<|) $test1, $test2): void {};
+/** @var (Foo&Bar)|Foo|(Bar&|>MARK_OCCURRENCES:Baz<|&Foo) $vardoc1 */
+/* @var $vardoc2 (Foo&Bar)||>MARK_OCCURRENCES:Baz<| */
+/** @var Bar||>MARK_OCCURRENCES:Baz<||Foo $unionType */
+/** @var Bar&|>MARK_OCCURRENCES:Baz<|&Foo $intersectionType */

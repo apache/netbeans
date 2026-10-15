@@ -14,4 +14,5 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-89BC047153217F5254506F4C622A771A78883CBC ValidationAPI-b26b94cc001a41ab9138496b11e2ae256a159ffd.jar
+B9503419D8C0894B686FF9B5A9E75DF250CA4F4B com.mastfrog:simplevalidation:1.14.1
+2190474615D65226604933A16CA783D4475F7332 com.mastfrog:simplevalidation-swing:1.14.1

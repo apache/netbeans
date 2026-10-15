@@ -179,7 +179,7 @@ public class WLInstantiatingIterator  implements WizardDescriptor.InstantiatingI
         if (message.toUpperCase(Locale.ENGLISH).startsWith("<HTML>")) {
             return message;
         }
-        return "<html>" + message.replaceAll("<",  "&lt;").replaceAll(">",  "&gt;") + "</html>"; // NIO18N
+        return "<html>" + message.replace("<",  "&lt;").replace(">",  "&gt;") + "</html>"; // NIO18N
     }
     // the main and additional instance properties
     private String serverRoot;
@@ -358,9 +358,7 @@ public class WLInstantiatingIterator  implements WizardDescriptor.InstantiatingI
         this.serverVersion = serverVersion;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Panels section
-    ////////////////////////////////////////////////////////////////////////////
     /**
      * The steps names for the wizard: Server Location & Instance properties
      */
@@ -486,9 +484,7 @@ public class WLInstantiatingIterator  implements WizardDescriptor.InstantiatingI
     }
 
 
-    ////////////////////////////////////////////////////////////////////////////
     // Listeners section
-    ////////////////////////////////////////////////////////////////////////////
     /**
      * The registered listeners
      */

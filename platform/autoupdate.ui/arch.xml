@@ -49,12 +49,12 @@
 -->
  <answer id="arch-overall">
   <p>
-   The AutoUpdate UI module contains user visible elements (actions in menu, 
-   dialogs), that allow any users to download new, or existing modules from
-   a pre-registered or manually registered update centers. In addition 
-   the module also provides an API to allow other modules to 
-   invoke pieces of the user related work flow (dialogs, wizards) directly
-   at moments independent on the rest of the provided UI.
+      The <api category="stable" group="java" name="AutoUpdateUI" type="export"></api> module contains user visible elements (actions in menu, 
+      dialogs), that allow any users to download new, or existing modules from 
+      a pre-registered or manually registered update centers. In addition 
+      the module also provides an API to allow other modules to 
+      invoke pieces of the user related work flow (dialogs, wizards) directly 
+      at moments independent on the rest of the provided UI.
   </p>
  </answer>
 
@@ -142,11 +142,9 @@
 -->
  <answer id="arch-what">
   <p>
-   <api category="stable" group="java" name="AutoUpdateUI" type="export">
-       this module exposes bits of its UI and user related workflow actions
+       This module exposes bits of its UI and user related workflow actions
        (related to installing, upgrading, etc.) by providing an API calls
        for other modules to invoke bits of here-in available functionality.
-   </api>
   </p>
  </answer>
 

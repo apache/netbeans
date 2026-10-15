@@ -474,20 +474,30 @@ public class LambdaTest {
                 .input("package test;\n" +
                        "import java.util.*;\n" +
                        "public class Test {\n" +
-                       "    public void main(List<String> list) {\n" +
-                       "        Collections.sort(list, String:^:compareTo);\n" +
+                       "    public void main(List<Wrapper> list) {\n" +
+                       "        Collections.sort(list, Wrapper:^:compareTo);\n" +
+                       "    }\n" +
+                       "    public static class Wrapper {\n" +
+                       "        public int compareTo(Wrapper other) {\n" +
+                       "            return 0;\n" +
+                       "        }\n" +
                        "    }\n" +
                        "}\n")
                 .sourceLevel("1.8")
                 .run(Lambda.class)
-                .findWarning("4:38-4:38:verifier:" + Bundle.ERR_memberReference2Lambda())
+                .findWarning("4:39-4:39:verifier:" + Bundle.ERR_memberReference2Lambda())
                 .applyFix()
                 .assertCompilable()
                 .assertVerbatimOutput("package test;\n" +
                                       "import java.util.*;\n" +
                                       "public class Test {\n" +
-                                      "    public void main(List<String> list) {\n" +
-                                      "        Collections.sort(list, (string, string1) -> string.compareTo(string1));\n" +
+                                      "    public void main(List<Wrapper> list) {\n" +
+                                      "        Collections.sort(list, (wrapper, other) -> wrapper.compareTo(other));\n" +
+                                      "    }\n" +
+                                      "    public static class Wrapper {\n" +
+                                      "        public int compareTo(Wrapper other) {\n" +
+                                      "            return 0;\n" +
+                                      "        }\n" +
                                       "    }\n" +
                                       "}\n");
     }
@@ -499,30 +509,38 @@ public class LambdaTest {
                 .input("package test;\n" +
                        "import java.util.*;\n" +
                        "public class Test {\n" +
-                       "    public void main(List<String> list) {\n" +
-                       "        filter(list, \"a\":^:equalsIgnoreCase);\n" +
+                       "    public void main(List<Wrapper> list) {\n" +
+                       "        filter(list, Wrapper.INSTANCE:^:check);\n" +
                        "    }\n" +
-                       "    public static void filter(List<String> list, Predicate p) {\n" +
+                       "    public static void filter(List<Wrapper> list, Predicate p) {\n" +
                        "    }\n" +
                        "    public interface Predicate {\n" +
-                       "        public boolean accept(String str);\n" +
+                       "        public boolean accept(Wrapper value);\n" +
+                       "    }\n" +
+                       "    public static class Wrapper {\n" +
+                       "        public static final Wrapper INSTANCE = new Wrapper();\n" +
+                       "        public boolean check(Wrapper other) { return false; }\n" +
                        "    }\n" +
                        "}\n")
                 .sourceLevel("1.8")
                 .run(Lambda.class)
-                .findWarning("4:25-4:25:verifier:" + Bundle.ERR_memberReference2Lambda())
+                .findWarning("4:38-4:38:verifier:" + Bundle.ERR_memberReference2Lambda())
                 .applyFix()
                 .assertCompilable()
                 .assertVerbatimOutput("package test;\n" +
                                       "import java.util.*;\n" +
                                       "public class Test {\n" +
-                                      "    public void main(List<String> list) {\n" +
-                                      "        filter(list, (string) -> \"a\".equalsIgnoreCase(string));\n" +
+                                      "    public void main(List<Wrapper> list) {\n" +
+                                      "        filter(list, other -> Wrapper.INSTANCE.check(other));\n" +
                                       "    }\n" +
-                                      "    public static void filter(List<String> list, Predicate p) {\n" +
+                                      "    public static void filter(List<Wrapper> list, Predicate p) {\n" +
                                       "    }\n" +
                                       "    public interface Predicate {\n" +
-                                      "        public boolean accept(String str);\n" +
+                                      "        public boolean accept(Wrapper value);\n" +
+                                      "    }\n" +
+                                      "    public static class Wrapper {\n" +
+                                      "        public static final Wrapper INSTANCE = new Wrapper();\n" +
+                                      "        public boolean check(Wrapper other) { return false; }\n" +
                                       "    }\n" +
                                       "}\n");
     }

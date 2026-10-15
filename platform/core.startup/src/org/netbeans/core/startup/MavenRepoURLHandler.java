@@ -32,7 +32,7 @@ public final class MavenRepoURLHandler extends URLStreamHandler {
     private static final URI CENTRAL_REPO_URI;
     static {
         try {
-            CENTRAL_REPO_URI = new URI("https://repo1.maven.org/maven2/");
+            CENTRAL_REPO_URI = new URI("https://repo.maven.apache.org/maven2/");
         } catch (URISyntaxException ex) {
             throw new IllegalStateException(ex);
         }

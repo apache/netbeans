@@ -76,7 +76,7 @@ public final class SimpleSearchInfoDefinition extends SearchInfoDefinition {
     /**
      * Creates a new instance of SimpleSearchInfo
      *
-     * @param folder <!-- PENDING -->
+     * @param rootFile <!-- PENDING -->
      * @param filters <!-- PENDING, accepts null -->
      * @exception java.lang.IllegalArgumentException if the
      * <code>folder</code> argument is
@@ -162,17 +162,17 @@ public final class SimpleSearchInfoDefinition extends SearchInfoDefinition {
     private boolean checkFolderAgainstFilters(final FileObject folder) {
 
         if (folder.isFolder()) {
-            for (int i = 0; i < filters.length; i++) {
-                if (!isSuppressableFilter(filters[i])
-                        && filters[i].traverseFolder(folder)
+            for (SearchFilterDefinition filter : filters) {
+                if (!isSuppressableFilter(filter)
+                        && filter.traverseFolder(folder)
                         == FolderResult.DO_NOT_TRAVERSE) {
                     return false;
                 }
             }
         } else {
-            for (int i = 0; i < filters.length; i++) {
-                if (!isSuppressableFilter(filters[i])
-                        && !filters[i].searchFile(folder)) {
+            for (SearchFilterDefinition filter : filters) {
+                if (!isSuppressableFilter(filter)
+                        && !filter.searchFile(folder)) {
                     return false;
                 }
             }

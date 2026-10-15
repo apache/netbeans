@@ -193,9 +193,10 @@ public class IndexerTransactionTest extends NbTestCase {
         logHandler.beforeFinishCallback = null;
         parserBlocker.release(1000);
 
-        for(String id : registeredClasspaths.keySet()) {
-            Set<ClassPath> classpaths = registeredClasspaths.get(id);
-            GlobalPathRegistry.getDefault().unregister(id, classpaths.toArray(new ClassPath[classpaths.size()]));
+        for(Map.Entry<String, Set<ClassPath>> entry : registeredClasspaths.entrySet()) {
+            String id = entry.getKey();
+            Set<ClassPath> classpaths = entry.getValue();
+            GlobalPathRegistry.getDefault().unregister(id, classpaths.toArray(new ClassPath[0]));
         }
         registeredClasspaths.clear();
         RepositoryUpdater.getDefault().waitUntilFinished(-1);
@@ -640,8 +641,8 @@ public class IndexerTransactionTest extends NbTestCase {
 
     public static class SFBQImpl implements SourceForBinaryQueryImplementation {
 
-        final static Map<URL,FileObject> map = new HashMap<URL,FileObject> ();
-        final static Map<URL,Result> results = new HashMap<URL,Result> ();
+        static final Map<URL,FileObject> map = new HashMap<URL,FileObject> ();
+        static final Map<URL,Result> results = new HashMap<URL,Result> ();
 
         public SFBQImpl () {
 
@@ -718,7 +719,7 @@ public class IndexerTransactionTest extends NbTestCase {
             private void fireChange () {
                 ChangeListener[] _listeners;
                 synchronized (this) {
-                    _listeners = this.listeners.toArray(new ChangeListener[this.listeners.size()]);
+                    _listeners = this.listeners.toArray(new ChangeListener[0]);
                 }
                 ChangeEvent event = new ChangeEvent (this);
                 for (ChangeListener l : _listeners) {

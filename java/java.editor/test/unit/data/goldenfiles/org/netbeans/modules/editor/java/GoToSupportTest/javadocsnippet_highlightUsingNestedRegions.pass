@@ -1,0 +1,15 @@
+<html><body><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>public void <b>highlightUsingNestedRegions</b>()</pre><p><div id="snippet1" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet1">Copy</a></div>
+<pre><code>   public static void \bmain\b(String... args) {
+ 
+       for (var <b><i>a</i></b><b><i>r</i></b><b><i>g</i></b> : <b><i>a</i></b><b><i>r</i></b><b><i>g</i></b>s) {
+           if (!<b>a</b><b>r</b><b>g</b>.isBl<b>a</b><b>r</b><b>g</b>k()) {
+               System.<b><b>a</b></b><b><b>r</b></b><b><b>g</b></b>.println("<b><b>a</b></b><b><b>r</b></b><b><b>g</b></b>");
+                System.arg.println("arg");
+                System.arg.println("<span style="background-color:yellow;">t</span><span style="background-color:yellow;">e</span><span style="background-color:yellow;">s</span><span style="background-color:yellow;">t</span><span style="background-color:yellow;">s</span>");
+               System.out.println("<b>\</b><b>b</b><b>a</b><b>r</b><b>g</b><b>\</b><b>b</b>"); 
+               System.out.println("\barg\b"); // to-do
+ }
+ }
+ }
+ 
+</code></pre></div><p>

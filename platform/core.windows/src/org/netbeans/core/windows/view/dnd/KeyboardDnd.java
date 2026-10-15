@@ -29,7 +29,6 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -95,7 +94,7 @@ final class KeyboardDnd implements AWTEventListener, PropertyChangeListener {
             if( droppable.supportsKind( draggable ) )
                 targets.add( droppable );
         }
-        Collections.sort( targets, new Comparator<TopComponentDroppable>() {
+        targets.sort(new Comparator<TopComponentDroppable>() {
             @Override
             public int compare( TopComponentDroppable d1, TopComponentDroppable d2 ) {
                 boolean floating1 = isDroppableFloating(d1);

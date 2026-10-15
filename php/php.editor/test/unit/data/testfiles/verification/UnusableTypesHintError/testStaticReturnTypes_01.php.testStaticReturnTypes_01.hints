@@ -1,0 +1,15 @@
+function test(): static {
+                 ------
+HINT:"static" cannot be used as a return type.
+    public function testStatic(): object|int|string|array|callable|null|bool|float|static {
+                                                                                   ------
+HINT:Redundant combination: "object|int|string|array|callable|null|bool|float|static" contains both "object" and "static".
+    public function testSelf(): object|int|string|array|callable|null|bool|float|self {
+                                                                                 ----
+HINT:Redundant combination: "object|int|string|array|callable|null|bool|float|self" contains both "object" and "self".
+    public function testParent(): object|int|string|array|callable|null|bool|float|parent {
+                                                                                   ------
+HINT:Redundant combination: "object|int|string|array|callable|null|bool|float|parent" contains both "object" and "parent".
+    public function testNamespaceName(): object|int|string|array|callable|null|bool|float|\Foo\Bar {
+                                                                                          --------
+HINT:Redundant combination: "object|int|string|array|callable|null|bool|float|\Foo\Bar" contains both "object" and "\Foo\Bar".

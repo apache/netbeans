@@ -87,7 +87,7 @@ public class MessageSecurityTableModel extends AbstractTableModel {
     }
 
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return (columnIndex > 0) ? true : false;
+        return (columnIndex > 0);
     }
 
     private String getFieldByColumn(MessageSecurity row, int columnIndex) {

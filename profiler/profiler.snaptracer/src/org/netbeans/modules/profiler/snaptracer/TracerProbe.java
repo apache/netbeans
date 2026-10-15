@@ -94,7 +94,7 @@ public abstract class TracerProbe {
      * An abstract adapter class for receiving Tracer session state notifications.
      * See ProbeStateHandler for details.
      */
-    public static abstract class SessionAware extends TracerProbe {
+    public abstract static class SessionAware extends TracerProbe {
 
         private ProbeStateHandler stateHandler;
 
@@ -114,7 +114,7 @@ public abstract class TracerProbe {
          *
          * @return predefined ProbeStateHandler which obtains status notifications
          */
-        public synchronized final ProbeStateHandler getStateHandler() {
+        public final synchronized ProbeStateHandler getStateHandler() {
             if (stateHandler == null) stateHandler = new ProbeStateHandler() {
                 public void probeAdded(IdeSnapshot snapshot) {
                     SessionAware.this.probeAdded(snapshot);

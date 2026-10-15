@@ -26,7 +26,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import static java.util.function.Predicate.not;
 import org.netbeans.lib.editor.util.CharSequenceUtilities;
 import org.netbeans.modules.html.editor.api.gsf.HtmlParserResult;
 import org.netbeans.modules.html.editor.lib.api.elements.Attribute;
@@ -43,8 +45,9 @@ import org.netbeans.modules.web.common.api.LexerUtils;
 import org.netbeans.modules.web.jsf.editor.JsfSupportImpl;
 import org.netbeans.modules.web.jsf.editor.JsfUtils;
 import org.netbeans.modules.web.jsf.editor.actions.ImportData.VariantItem;
+import org.netbeans.modules.web.jsf.editor.facelets.JsfNamespaceComparator;
 import org.netbeans.modules.web.jsf.editor.hints.LibraryDeclarationChecker;
-import org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo;
+import org.netbeans.modules.web.jsfapi.api.JsfSupport;
 import org.netbeans.modules.web.jsfapi.api.Library;
 import org.netbeans.modules.web.jsfapi.api.NamespaceUtils;
 
@@ -57,7 +60,7 @@ class NamespaceProcessor {
 
     private final HtmlParserResult parserResult;
     private final Snapshot snapshot;
-    private final JsfSupportImpl jsfSupport;
+    private final JsfSupport jsfSupport;
     private final ResultCollector resultCollector;
     private final Map<String, Library> supportedLibraries = new HashMap<>();
     private final List<Library> declaredLibraries;
@@ -77,9 +80,6 @@ class NamespaceProcessor {
     ImportData computeImportData() {
         final ImportData importData = new ImportData();
 
-        // use JSF 2.2 namespaces?
-        importData.isJsf22 = jsfSupport == null ? false : jsfSupport.isJsf22Plus();
-
         // unused declarations
         for (Attribute namespaceAttribute : resultCollector.getUnusedNamespaces()) {
             importData.addToRemove(namespaceAttribute);
@@ -97,19 +97,6 @@ class NamespaceProcessor {
         return importData;
     }
 
-    private static Node getTopRoot(HtmlParserResult parserResult) {
-        Node root = parserResult.root();
-        if (root.children().isEmpty()) {
-            Node faceletsRoot = parserResult.root(DefaultLibraryInfo.FACELETS.getLegacyNamespace());
-            if (!faceletsRoot.children().isEmpty()) {
-                return faceletsRoot;
-            } else {
-                return parserResult.root(DefaultLibraryInfo.FACELETS.getNamespace());
-            }
-        }
-        return root;
-    }
-
     private List<Library> getDeclaredLibraries() {
         List<Library> result = new ArrayList<>();
         for (String namespace : parserResult.getNamespaces().keySet()) {
@@ -122,33 +109,29 @@ class NamespaceProcessor {
     }
 
     private List<VariantItem> getSortedVariants(String prefix) {
-        List<VariantItem> result = new ArrayList<>();
+        List<VariantItem> items = new ArrayList<>();
+
+        // Add variant matching the used prefix
+        Set<String> namespacesForPrefix = Collections.emptySet();
+        Optional<Library> libraryForPrefix = supportedLibraries.values().stream()
+                .filter(entry -> entry.getDefaultPrefix().equals(prefix))
+                .findFirst();
+        if (libraryForPrefix.isPresent()) {
+            Library library = libraryForPrefix.get();
+            namespacesForPrefix = library.getValidNamespaces();
+            
+            namespacesForPrefix.forEach(namespace -> items.add(new VariantItem(prefix, namespace, library)));
+        }
+
+        // Add all other variants
         List<String> sortedList = new ArrayList<>(supportedLibraries.keySet());
-        Collections.sort(sortedList);
+        sortedList.sort(JsfNamespaceComparator.getInstance());
 
-        // add namespaces of the same default prefix
-        for (Iterator<String> it = sortedList.iterator(); it.hasNext();) {
-            String ns = it.next();
-            Library library = supportedLibraries.get(ns);
-            if (prefix.equals(library.getDefaultPrefix())) {
-                if (jsfSupport != null && jsfSupport.isJsf22Plus()) {
-                    ns = library.getNamespace();
-                }
-                result.add(new VariantItem(prefix, ns, library));
-                it.remove();
-            }
-        }
+        sortedList.stream()
+                .filter(not(namespacesForPrefix::contains))
+                .forEach(additionalNamespaces -> items.add(new VariantItem(prefix, additionalNamespaces, supportedLibraries.get(additionalNamespaces))));
 
-        // complete the remaining items
-        for (String remainingNs : sortedList) {
-            Library library = supportedLibraries.get(remainingNs);
-            if (jsfSupport != null && jsfSupport.isJsf22Plus()) {
-                    remainingNs = library.getNamespace();
-                }
-            result.add(new VariantItem(prefix, remainingNs, library));
-        }
-
-        return result;
+        return items;
     }
 
     private class ResultCollector {

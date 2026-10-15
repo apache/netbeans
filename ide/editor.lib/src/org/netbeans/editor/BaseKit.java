@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Collections;
 import java.util.prefs.PreferenceChangeEvent;
 import javax.swing.Action;
 import javax.swing.InputMap;
@@ -64,19 +64,17 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.TextUI;
 import javax.swing.text.AbstractDocument;
+
 import static javax.swing.text.DefaultEditorKit.selectionBackwardAction;
 import static javax.swing.text.DefaultEditorKit.selectionBeginLineAction;
 import static javax.swing.text.DefaultEditorKit.selectionDownAction;
 import static javax.swing.text.DefaultEditorKit.selectionEndLineAction;
 import static javax.swing.text.DefaultEditorKit.selectionForwardAction;
 import static javax.swing.text.DefaultEditorKit.selectionUpAction;
+
 import javax.swing.text.EditorKit;
 import javax.swing.text.Position;
 import javax.swing.text.View;
-import javax.swing.undo.AbstractUndoableEdit;
-import javax.swing.undo.CannotRedoException;
-import javax.swing.undo.CannotUndoException;
-import javax.swing.undo.UndoableEdit;
 import org.netbeans.api.editor.caret.CaretInfo;
 import org.netbeans.api.editor.EditorActionRegistration;
 import org.netbeans.api.editor.EditorActionRegistrations;
@@ -99,10 +97,10 @@ import org.netbeans.modules.editor.lib.KitsTracker;
 import org.netbeans.api.editor.NavigationHistory;
 import org.netbeans.api.editor.caret.CaretMoveContext;
 import org.netbeans.api.editor.caret.MoveCaretsOrigin;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.spi.editor.caret.CaretMoveHandler;
 import org.netbeans.lib.editor.util.swing.PositionRegion;
 import org.netbeans.modules.editor.lib.SettingsConversions;
-import org.netbeans.modules.editor.lib2.CaretUndo;
 import org.netbeans.modules.editor.lib2.RectangularSelectionCaretAccessor;
 import org.netbeans.modules.editor.lib2.RectangularSelectionUtils;
 import org.netbeans.modules.editor.lib2.actions.KeyBindingsUpdater;
@@ -116,9 +114,7 @@ import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
-import org.openide.util.Pair;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 
 /**
 * Editor kit implementation for base document
@@ -449,6 +445,7 @@ public class BaseKit extends DefaultEditorKit {
      * <code>MimeLookup</code> instead to find <code>EditorKit</code> for a mime
      * type.
      */
+    @Deprecated
     public static BaseKit getKit(Class kitClass) {
         if (kitClass != null && BaseKit.class.isAssignableFrom(kitClass) && BaseKit.class != kitClass) {
             String mimeType = KitsTracker.getInstance().findMimeType(kitClass);
@@ -468,14 +465,13 @@ public class BaseKit extends DefaultEditorKit {
                 BaseKit kit = (BaseKit)kits.get(classToTry);
                 if (kit == null) {
                     try {
-                        kit = (BaseKit)classToTry.newInstance();
+                        kit = (BaseKit)classToTry.getDeclaredConstructor().newInstance();
                         kits.put(classToTry, kit);
                         return kit;
-                    } catch (IllegalAccessException e) {
-                        LOG.log(Level.WARNING, "Can't instantiate editor kit from: " + classToTry, e); //NOI18N
-                    } catch (InstantiationException e) {
+                    } catch (ReflectiveOperationException e) {
                         LOG.log(Level.WARNING, "Can't instantiate editor kit from: " + classToTry, e); //NOI18N
                     }
+                    //NOI18N
                     
                     if (classToTry != BaseKit.class) {
                         classToTry = BaseKit.class;
@@ -554,8 +550,9 @@ public class BaseKit extends DefaultEditorKit {
      *   creation is not related to the particular document
      * 
      * @deprecated Please use Lexer instead, for details see
-     *   <a href="@org-netbeans-modules-lexer@/overview-summary.html">Lexer</a>.
+     *   <a href="@org-netbeans-modules-lexer@/index.html">Lexer</a>.
      */
+    @Deprecated
     public Syntax createSyntax(Document doc) {
         return new DefaultSyntax();
     }
@@ -564,8 +561,9 @@ public class BaseKit extends DefaultEditorKit {
      * Create the syntax used for formatting.
      * 
      * @deprecated Please use Editor Indentation API instead, for details see
-     *   <a href="@org-netbeans-modules-editor-indent@/overview-summary.html">Editor Indentation</a>.
+     *   <a href="@org-netbeans-modules-editor-indent@/index.html">Editor Indentation</a>.
      */
+    @Deprecated
     public Syntax createFormatSyntax(Document doc) {
         return createSyntax(doc);
     }
@@ -574,8 +572,9 @@ public class BaseKit extends DefaultEditorKit {
      * Create syntax support
      * 
      * @deprecated Please use Lexer instead, for details see
-     *   <a href="@org-netbeans-modules-lexer@/overview-summary.html">Lexer</a>.
+     *   <a href="@org-netbeans-modules-lexer@/index.html">Lexer</a>.
      */
+    @Deprecated
     public SyntaxSupport createSyntaxSupport(BaseDocument doc) {
         return new SyntaxSupport(doc);
     }
@@ -584,7 +583,7 @@ public class BaseKit extends DefaultEditorKit {
 //    /**
 //     * Create the formatter appropriate for this kit
 //     * @deprecated Please use Editor Indentation API instead, for details see
-//     *   <a href="@org-netbeans-modules-editor-indent@/overview-summary.html">Editor Indentation</a>.
+//     *   <a href="@org-netbeans-modules-editor-indent@/index.html">Editor Indentation</a>.
 //     */
 //    public Formatter createFormatter() {
 //        return new Formatter(this.getClass());
@@ -606,6 +605,7 @@ public class BaseKit extends DefaultEditorKit {
      *  {@link #createPrintEditorUI(BaseDocument, boolean, boolean)} is being
      *  called instead.
      */
+    @Deprecated
     protected EditorUI createPrintEditorUI(BaseDocument doc) {
         return new EditorUI(doc);
     }
@@ -642,12 +642,12 @@ public class BaseKit extends DefaultEditorKit {
                 
                 for(org.netbeans.api.editor.settings.MultiKeyBinding mkb : mkbList) {
                     List<KeyStroke> keyStrokes = mkb.getKeyStrokeList();
-                    MultiKeyBinding editorMkb = new MultiKeyBinding(keyStrokes.toArray(new KeyStroke[keyStrokes.size()]), mkb.getActionName());
+                    MultiKeyBinding editorMkb = new MultiKeyBinding(keyStrokes.toArray(new KeyStroke[0]), mkb.getActionName());
                     editorMkbList.add(editorMkb);
                 }
                 
                 // go through all levels and collect key bindings
-                km.load(editorMkbList.toArray(new JTextComponent.KeyBinding[editorMkbList.size()]), getActionMap());
+                km.load(editorMkbList.toArray(new JTextComponent.KeyBinding[0]), getActionMap());
                 km.setDefaultAction(getActionMap().get(defaultKeyTypedAction));
 
                 kitKeymaps.put(mimePath, km);
@@ -908,12 +908,13 @@ public class BaseKit extends DefaultEditorKit {
             LOG.fine("} End of " + EditorPreferencesKeys.CUSTOM_ACTION_LIST + " for '" + getContentType() + "'"); //NOI18N
         }
         
-        return customActions == null ? null : customActions.toArray(new Action[customActions.size()]);
+        return customActions == null ? null : customActions.toArray(new Action[0]);
     }
     
     /**
      * @deprecated Without any replacement. 
      */
+    @Deprecated
     protected Action[] getMacroActions() {
         return new Action[0];
     }                               
@@ -1046,9 +1047,10 @@ public class BaseKit extends DefaultEditorKit {
      * Default typed action
      *
      * @deprecated Please do not subclass this class. Use Typing Hooks instead, for details see
-     *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
+     *   <a href="@org-netbeans-modules-editor-lib2@/index.html">Editor Library 2</a>.
      */
 //    @EditorActionRegistration(name = defaultKeyTypedAction)
+    @Deprecated
     public static class DefaultKeyTypedAction extends LocalBaseAction {
 
         static final long serialVersionUID = 3069164318144463899L;
@@ -1309,7 +1311,7 @@ public class BaseKit extends DefaultEditorKit {
          * to intercept inserted characters.
          *
          * @deprecated Please use Typing Hooks instead, for details see
-         *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
+         *   <a href="@org-netbeans-modules-editor-lib2@/index.html">Editor Library 2</a>.
          */
         protected void insertString(BaseDocument doc,
 				  int dotPos, 
@@ -1331,7 +1333,7 @@ public class BaseKit extends DefaultEditorKit {
          * to intercept inserted characters.
          *
          * @deprecated Please use Typing Hooks instead, for details see
-         *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
+         *   <a href="@org-netbeans-modules-editor-lib2@/index.html">Editor Library 2</a>.
          */
         protected void replaceSelection(
                 JTextComponent target,
@@ -1347,9 +1349,9 @@ public class BaseKit extends DefaultEditorKit {
          * Check whether there was any important character typed
          * so that the line should be possibly reformatted.
          *
-         * @deprecated Please use <a href="@org-netbeans-modules-editor-indent@/org/netbeans/modules/editor/indent/spi/AutomatedIndenting.html">AutomatedIndentig</a>
+         * @deprecated Please use <a href="@org-netbeans-modules-editor-indent-support@/org/netbeans/modules/editor/indent/spi/support/AutomatedIndenting.html">AutomatedIndentig</a>
          *   or Typing Hooks instead, for details see
-         *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
+         *   <a href="@org-netbeans-modules-editor-lib2@/index.html">Editor Library 2</a>.
          */
         protected void checkIndent(JTextComponent target, String typedText) {
         }
@@ -1434,8 +1436,9 @@ public class BaseKit extends DefaultEditorKit {
 
     /** 
      * @deprecated Please do not subclass this class. Use Typing Hooks instead, for details see
-     *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
+     *   <a href="@org-netbeans-modules-editor-lib2@/index.html">Editor Library 2</a>.
      */
+    @Deprecated
     public static class InsertBreakAction extends LocalBaseAction {
 
         static final long serialVersionUID =7966576342334158659L;
@@ -1559,7 +1562,7 @@ public class BaseKit extends DefaultEditorKit {
          * returned is passed intact to the other hook.
          * 
          * @deprecated Please use Typing Hooks instead, for details see
-         *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
+         *   <a href="@org-netbeans-modules-editor-lib2@/index.html">Editor Library 2</a>.
          */
         protected Object beforeBreak(JTextComponent target, BaseDocument doc, Caret caret) {
             return null;
@@ -1574,7 +1577,7 @@ public class BaseKit extends DefaultEditorKit {
          * By default <code>null</code>.
          * 
          * @deprecated Please use Typing Hooks instead, for details see
-         *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
+         *   <a href="@org-netbeans-modules-editor-lib2@/index.html">Editor Library 2</a>.
          */
         protected void afterBreak(JTextComponent target, BaseDocument doc, Caret caret, Object data) {
         }
@@ -1746,11 +1749,11 @@ public class BaseKit extends DefaultEditorKit {
                                                             doc.remove(start, end - start);
                                                             insertTabString(doc, start);
                                                         } else {
-                                                            boolean selectionAtLineStart = Utilities.getRowStart(doc, start) == start;
+                                                            boolean selectionAtLineStart = LineDocumentUtils.getLineStartOffset(doc, start) == start;
                                                             changeBlockIndent(doc, start, end, +1);
                                                             if (selectionAtLineStart) {
                                                                 int newSelectionStartOffset = start;
-                                                                int lineStartOffset = Utilities.getRowStart(doc, start);
+                                                                int lineStartOffset = LineDocumentUtils.getLineStartOffset(doc, start);
                                                                 if (lineStartOffset != newSelectionStartOffset) {
                                                                     context.setDotAndMark(caretInfo,
                                                                         doc.createPosition(lineStartOffset), Position.Bias.Forward,
@@ -1786,7 +1789,7 @@ public class BaseKit extends DefaultEditorKit {
                                                                 changeRowIndent(doc, dotOffset, upperCol > nextTabCol ? upperCol : nextTabCol);
                                                                 // Fix of #32240
                                                                 dotOffset = caretInfo.getDot();
-                                                                Position newDotPos = doc.createPosition(Utilities.getRowEnd(doc, dotOffset));
+                                                                Position newDotPos = doc.createPosition(LineDocumentUtils.getLineEndOffset(doc, dotOffset));
                                                                 context.setDot(caretInfo, newDotPos, Position.Bias.Forward);
                                                             }
                                                         } else { // already chars on the line
@@ -1811,11 +1814,11 @@ public class BaseKit extends DefaultEditorKit {
                                             doc.remove(target.getSelectionStart(), target.getSelectionEnd() - target.getSelectionStart());
                                             insertTabString(doc, target.getSelectionStart());
                                         } else {
-                                            boolean selectionAtLineStart = Utilities.getRowStart(doc, target.getSelectionStart()) == target.getSelectionStart();
+                                            boolean selectionAtLineStart = LineDocumentUtils.getLineStartOffset(doc, target.getSelectionStart()) == target.getSelectionStart();
                                             changeBlockIndent(doc, target.getSelectionStart(), target.getSelectionEnd(), +1);
                                             if (selectionAtLineStart) {
                                                 int newSelectionStartOffset = target.getSelectionStart();
-                                                int lineStartOffset = Utilities.getRowStart(doc, newSelectionStartOffset);
+                                                int lineStartOffset = LineDocumentUtils.getLineStartOffset(doc, newSelectionStartOffset);
                                                 if (lineStartOffset != newSelectionStartOffset)
                                                 target.select(lineStartOffset, target.getSelectionEnd());
                                             }
@@ -1848,7 +1851,7 @@ public class BaseKit extends DefaultEditorKit {
                                                 changeRowIndent(doc, dotPos, upperCol > nextTabCol ? upperCol : nextTabCol);
                                                 // Fix of #32240
                                                 dotPos = caret.getDot();
-                                                caret.setDot(Utilities.getRowEnd(doc, dotPos));
+                                                caret.setDot(LineDocumentUtils.getLineEndOffset(doc, dotPos));
                                             }
                                         } else { // already chars on the line
                                             insertTabString(doc, dotPos);
@@ -2017,8 +2020,9 @@ public class BaseKit extends DefaultEditorKit {
 
     /** 
      * @deprecated Please do not subclass this class. Use Typing Hooks instead, for details see
-     *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
+     *   <a href="@org-netbeans-modules-editor-lib2@/index.html">Editor Library 2</a>.
      */
+    @Deprecated
     public static class DeleteCharAction extends LocalBaseAction {
 
         protected boolean nextChar;
@@ -2215,14 +2219,14 @@ public class BaseKit extends DefaultEditorKit {
 
         /**
          * @deprecated Please use Typing Hooks instead, for details see
-         *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
+         *   <a href="@org-netbeans-modules-editor-lib2@/index.html">Editor Library 2</a>.
          */
         protected void charBackspaced(BaseDocument doc, int dotPos, Caret caret, char ch) throws BadLocationException {
         }
 
         /**
          * @deprecated Please use Typing Hooks instead, for details see
-         *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
+         *   <a href="@org-netbeans-modules-editor-lib2@/index.html">Editor Library 2</a>.
          */
         protected void charDeleted(BaseDocument doc, int dotPos, Caret caret, char ch) throws BadLocationException {
         }
@@ -2370,7 +2374,7 @@ public class BaseKit extends DefaultEditorKit {
                         if (emptySelection && !disableNoSelectionCopy) {
                             Element elem = ((AbstractDocument) target.getDocument()).getParagraphElement(
                                     caretPosition);
-                            if (!Utilities.isRowWhite((BaseDocument) target.getDocument(), elem.getStartOffset())) {
+                            if (!LineDocumentUtils.isLineWhitespace((BaseDocument) target.getDocument(), elem.getStartOffset())) {
                                 target.select(elem.getStartOffset(), elem.getEndOffset());
                             }
                         }
@@ -2497,7 +2501,7 @@ public class BaseKit extends DefaultEditorKit {
 //	    p0 = p+1;
 //	  }
 //	}
-//	if (p0 < str.length()) v.add(str.substring(p0, str.length())); else v.add("");
+//	if (p0 < str.length()) v.add(str.substring(p0)); else v.add("");
 //
 //	return (String [])v.toArray(new String [0]);
 //      }
@@ -3409,7 +3413,7 @@ public class BaseKit extends DefaultEditorKit {
                                                     dot = lineStartPos;
                                                 } else { // either to line start or text start
                                                     BaseDocument doc = (BaseDocument) target.getDocument();
-                                                    int textStartPos = Utilities.getRowFirstNonWhite(doc, lineStartPos);
+                                                    int textStartPos = LineDocumentUtils.getLineFirstNonWhitespace(doc, lineStartPos);
                                                     if (textStartPos < 0) { // no text on the line
                                                         textStartPos = Utilities.getRowEnd(target, lineStartPos);
                                                     } else if (textStartPos < lineStartPos) {
@@ -3480,7 +3484,7 @@ public class BaseKit extends DefaultEditorKit {
                             if (homeKeyColumnOne) { // to first column
                                 dot = lineStartPos;
                             } else { // either to line start or text start
-                                int textStartPos = Utilities.getRowFirstNonWhite(((BaseDocument)doc), lineStartPos);
+                                int textStartPos = LineDocumentUtils.getLineFirstNonWhitespace(((BaseDocument)doc), lineStartPos);
                                 if (textStartPos < 0) { // no text on the line
                                     textStartPos = Utilities.getRowEnd(target, lineStartPos);
                                 } else if (textStartPos < lineStartPos) {
@@ -3705,6 +3709,7 @@ public class BaseKit extends DefaultEditorKit {
     /**
      * @deprecated use {@link CamelCaseInterceptor} instead
      */
+    @Deprecated
     public static class NextWordAction extends LocalBaseAction {
 
         static final long serialVersionUID =-5909906947175434032L;
@@ -3747,6 +3752,7 @@ public class BaseKit extends DefaultEditorKit {
     /**
      * @deprecated use {@link CamelCaseInterceptor} instead
      */
+    @Deprecated
     public static class PreviousWordAction extends LocalBaseAction {
 
         static final long serialVersionUID =-5465143382669785799L;
@@ -4046,7 +4052,7 @@ public class BaseKit extends DefaultEditorKit {
         private final String mimeType;
         private final Lookup.Result<KeyBindingSettings> lookupResult;
         private final Preferences prefs;
-        private final Set<JTextComponent> components = new WeakSet<JTextComponent>();
+        private final Set<JTextComponent> components = Collections.newSetFromMap(new WeakHashMap<>());
         
         public KeybindingsAndPreferencesTracker(String mimeType) {
             this.mimeType = mimeType;
@@ -4101,8 +4107,8 @@ public class BaseKit extends DefaultEditorKit {
                 LOG.fine("BaseKit.KeymapTracker('" + mimeType + "') refreshing keymap " + (refreshActions ? "and actions" : "")); //NOI18N
             }
             
-            MultiKeymap keymap;
-            JTextComponent [] arr;
+            final MultiKeymap keymap;
+            final JTextComponent [] arr;
             
             synchronized (KEYMAPS_AND_ACTIONS_LOCK) {
                 MimePath mimePath = MimePath.parse(mimeType);
@@ -4117,16 +4123,23 @@ public class BaseKit extends DefaultEditorKit {
                 kitKeymaps.remove(mimePath);
                 
                 keymap = getKeymap();
-                arr = components.toArray(new JTextComponent[components.size()]);
+                arr = components.toArray(new JTextComponent[0]);
             }
             
-            for(JTextComponent c : arr) {
-                if (c != null) {
-                    c.setKeymap(keymap);
+            Runnable pushKeymapChange = () -> {
+                for(JTextComponent c : arr) {
+                    if (c != null) {
+                        c.setKeymap(keymap);
+                    }
                 }
+                
+                searchableKit.fireActionsChange();
+            };
+            if(SwingUtilities.isEventDispatchThread()) {
+                pushKeymapChange.run();
+            } else {
+                SwingUtilities.invokeLater(pushKeymapChange);
             }
-
-            searchableKit.fireActionsChange();
         }
         
     } // End of KeymapTracker class
@@ -4175,8 +4188,8 @@ public class BaseKit extends DefaultEditorKit {
             public void run () {
                 try {
                     // Determine first white char before dotPos
-                    int rsPos = Utilities.getRowStart(doc, dotPos);
-                    int startPos = Utilities.getFirstNonWhiteBwd(doc, dotPos, rsPos);
+                    int rsPos = LineDocumentUtils.getLineStartOffset(doc, dotPos);
+                    int startPos = LineDocumentUtils.getPreviousNonWhitespace(doc, dotPos, rsPos);
                     startPos = (startPos >= 0) ? (startPos + 1) : rsPos;
 
                     int startCol = Utilities.getVisualColumn(doc, startPos);
@@ -4215,11 +4228,11 @@ public class BaseKit extends DefaultEditorKit {
             public void run () {
                 try {
                     int indent = newIndent < 0 ? 0 : newIndent;
-                    int firstNW = Utilities.getRowFirstNonWhite(doc, pos);
+                    int firstNW = LineDocumentUtils.getLineFirstNonWhitespace(doc, pos);
                     if (firstNW == -1) { // valid first non-blank
-                        firstNW = Utilities.getRowEnd(doc, pos);
+                        firstNW = LineDocumentUtils.getLineEndOffset(doc, pos);
                     }
-                    int replacePos = Utilities.getRowStart(doc, pos);
+                    int replacePos = LineDocumentUtils.getLineStartOffset(doc, pos);
                     int removeLen = firstNW - replacePos;
                     CharSequence removeText = DocumentUtilities.getText(doc, replacePos, removeLen);
                     String newIndentText = IndentUtils.createIndentString(doc, indent);
@@ -4266,7 +4279,7 @@ public class BaseKit extends DefaultEditorKit {
 
     /** Increase/decrease indentation of the block of the code. Document
     * is atomically locked during the operation.
-    * <br/>
+    * <br>
     * If indent is in between multiplies of shiftwidth it jumps to multiplies of shiftwidth.
     * 
     * @param doc document to operate on
@@ -4297,11 +4310,11 @@ public class BaseKit extends DefaultEditorKit {
                         return;
                     }
                     int indentDelta = shiftCnt * shiftWidth;
-                    int end = (endPos > 0 && Utilities.getRowStart(doc, endPos) == endPos) ?
+                    int end = (endPos > 0 && LineDocumentUtils.getLineStartOffset(doc, endPos) == endPos) ?
                         endPos - 1 : endPos;
 
-                    int lineStartOffset = Utilities.getRowStart(doc, startPos );
-                    int lineCount = Utilities.getRowCount(doc, startPos, end);
+                    int lineStartOffset = LineDocumentUtils.getLineStartOffset(doc, startPos );
+                    int lineCount = LineDocumentUtils.getLineCount(doc, startPos, end);
                     Integer delta = null;
                     for (int i = lineCount - 1; i >= 0; i--) {
                         int indent = Utilities.getRowIndent(doc, lineStartOffset);
@@ -4330,7 +4343,7 @@ public class BaseKit extends DefaultEditorKit {
             ind = -ind;
         }
 
-        if (Utilities.isRowWhite(doc, dotPos)) {
+        if (LineDocumentUtils.isLineWhitespace(doc, dotPos)) {
             ind += Utilities.getVisualColumn(doc, dotPos);
         } else {
             ind += Utilities.getRowIndent(doc, dotPos);
@@ -4362,11 +4375,11 @@ public class BaseKit extends DefaultEditorKit {
                         return;
                     }
                     int indentDelta = right ? shiftWidth : -shiftWidth;
-                    int end = (endPos > 0 && Utilities.getRowStart(doc, endPos) == endPos) ?
+                    int end = (endPos > 0 && LineDocumentUtils.getLineStartOffset(doc, endPos) == endPos) ?
                         endPos - 1 : endPos;
 
-                    int lineStartOffset = Utilities.getRowStart(doc, startPos );
-                    int lineCount = Utilities.getRowCount(doc, startPos, end);
+                    int lineStartOffset = LineDocumentUtils.getLineStartOffset(doc, startPos );
+                    int lineCount = LineDocumentUtils.getLineCount(doc, startPos, end);
                     for (int i = lineCount - 1; i >= 0; i--) {
                         int indent = Utilities.getRowIndent(doc, lineStartOffset);
                         int newIndent = (indent == -1) ? 0 : // Zero indent if row is white

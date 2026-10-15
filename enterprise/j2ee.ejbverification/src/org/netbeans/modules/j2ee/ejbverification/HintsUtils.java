@@ -119,7 +119,8 @@ public class HintsUtils {
     public static boolean isEjb30Plus(String ejbVersion) {
         return org.netbeans.modules.j2ee.dd.api.ejb.EjbJar.VERSION_3_0.equals(ejbVersion)
                 || org.netbeans.modules.j2ee.dd.api.ejb.EjbJar.VERSION_3_1.equals(ejbVersion)
-                || org.netbeans.modules.j2ee.dd.api.ejb.EjbJar.VERSION_3_2.equals(ejbVersion);
+                || org.netbeans.modules.j2ee.dd.api.ejb.EjbJar.VERSION_3_2.equals(ejbVersion)
+                || org.netbeans.modules.j2ee.dd.api.ejb.EjbJar.VERSION_4_0.equals(ejbVersion);
     }
 
     /**
@@ -129,8 +130,8 @@ public class HintsUtils {
     public static TextSpan getUnderlineSpan(CompilationInfo info, Tree tree) {
         SourcePositions srcPos = info.getTrees().getSourcePositions();
 
-        int startOffset = (int) srcPos.getStartPosition(info.getCompilationUnit(), tree);
-        int endOffset = (int) srcPos.getEndPosition(info.getCompilationUnit(), tree);
+        int startOffset = (int) srcPos.getStartPosition(tree);
+        int endOffset = (int) srcPos.getEndPosition(tree);
 
         Tree startSearchingForNameIndentifierBehindThisTree = null;
 
@@ -144,8 +145,7 @@ public class HintsUtils {
         }
 
         if (startSearchingForNameIndentifierBehindThisTree != null) {
-            int searchStart = (int) srcPos.getEndPosition(info.getCompilationUnit(),
-                    startSearchingForNameIndentifierBehindThisTree);
+            int searchStart = (int) srcPos.getEndPosition(startSearchingForNameIndentifierBehindThisTree);
 
             TokenSequence tokenSequence = info.getTreeUtilities().tokensFor(tree);
 

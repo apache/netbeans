@@ -139,10 +139,10 @@ public class CreateJob implements ActionListener {
         "CreateJob.failure=Could not create job. Please check your server's log for details.",
         "# UI logging of creating new build job",
         "# {0} - project type",
-        "UI_HUDSON_JOB_CREATED=New Hudson build job created [project type: {0}]",
+        "UI_HUDSON_JOB_CREATED=New Jenkins build job created [project type: {0}]",
         "# Usage Logging",
         "# {0} - project type",
-        "USG_HUDSON_JOB_CREATED=New Hudson build job created [project type: {0}]"
+        "USG_HUDSON_JOB_CREATED=New Jenkins build job created [project type: {0}]"
     })
     private void finalizeJob(HudsonInstance instance, ProjectHudsonJobCreator creator, String name, Project project) {
         try {

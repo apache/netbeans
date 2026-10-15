@@ -1,0 +1,2 @@
+    case |>MARK_OCCURRENCES:TE^S<| = 'TES';
+    case TEST3 = self::{self::|>MARK_OCCURRENCES:TES<| . self::T};

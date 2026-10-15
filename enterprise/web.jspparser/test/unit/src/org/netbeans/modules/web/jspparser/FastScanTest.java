@@ -47,17 +47,13 @@ public class FastScanTest extends NbTestCase {
     public void testPage1() throws Exception {
         doFastScanTest("jspparser-data/wmroot", "subdir/Page1.jsp", new JspParserAPI.JspOpenInfo(false, "ISO-8859-1"));
     }
-    
-    public void testXMLFromExamples1() throws Exception {
-        doFastScanTest("project3/web", "xml/xml.jsp", new JspParserAPI.JspOpenInfo(true, "UTF-8"));
-    }
-    
-    public void testXMLFromExamples2() throws Exception {
-        doFastScanTest("project3/web", "jsp2/jspx/basic.jspx", new JspParserAPI.JspOpenInfo(true, "UTF-8"));
-    }
-    
+
     public void testEncodingBug198637() throws Exception {
         doFastScanTest("project2/web", "encoding198637.jsp", new JspParserAPI.JspOpenInfo(false, "utf-8"));
+    }
+
+    public void testEncodingBug198637Jakarta() throws Exception {
+        doFastScanTest("project2_jakarta/web", "encoding198637.jsp", new JspParserAPI.JspOpenInfo(false, "utf-8"));
     }
     
     public void doFastScanTest(String wmRootPath, String path, JspParserAPI.JspOpenInfo correctInfo) throws Exception {

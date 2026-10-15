@@ -147,7 +147,7 @@ final class DragDropUtilities extends Object {
 
     /* Invokes the stored runnable if it is there and than set to null.
      */
-    static private void invokePostDropRun() {
+    private static void invokePostDropRun() {
         if (postDropRun != null) {
             SwingUtilities.invokeLater(postDropRun);
             postDropRun = null;
@@ -192,7 +192,7 @@ final class DragDropUtilities extends Object {
                 }
             }
 
-            return diff.toArray(new Node[diff.size()]);
+            return diff.toArray(new Node[0]);
 
             /*Clipboard clipboard = T opManager.getDefault().getClipboard();
             if (trans != null) {

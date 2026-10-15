@@ -28,12 +28,12 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.logging.Level;
@@ -57,6 +57,7 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
+import org.netbeans.modules.java.source.builder.ElementsService;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.OutputFileManager;
@@ -147,7 +148,7 @@ public final class SourceAnalyzerFactory {
                         javax.tools.FileObject fo = manager.getFileForOutput(StandardLocation.CLASS_OUTPUT, "", FileObjects.stripExtension(relativePath) + '.' + ext, tuple.jfo);
                         assert fo != null;
                         try {
-                            BufferedReader in = new BufferedReader ( new InputStreamReader (fo.openInputStream(), "UTF-8"));
+                            BufferedReader in = new BufferedReader ( new InputStreamReader (fo.openInputStream(), StandardCharsets.UTF_8));
                             try {
                                 String line;
                                 while ((line = in.readLine())!=null) {
@@ -163,7 +164,7 @@ public final class SourceAnalyzerFactory {
                             //workarond: use manager.getFileForOutput() which may return non existing javac FileObject and
                             //cahch FileNotFoundException when it doens't exist, there is nothing to add into rsList
                         }
-                        PrintWriter rsOut = new PrintWriter( new OutputStreamWriter (fo.openOutputStream(), "UTF-8"));
+                        PrintWriter rsOut = new PrintWriter( new OutputStreamWriter (fo.openOutputStream(), StandardCharsets.UTF_8));
                         try {
                             for (String sig : uv.rsList) {
                                 rsOut.println(sig);
@@ -280,6 +281,7 @@ public final class SourceAnalyzerFactory {
         private final Stack<Pair<BinaryName,String>> activeClass;
         private final Names names;
         private final Trees trees;
+        private final ElementsService elementsService;
         private final CompilationUnitTree cu;
         private final URL siblingUrl;
         private final String sourceName;
@@ -364,6 +366,7 @@ public final class SourceAnalyzerFactory {
             this.packageAnnotations = new HashSet<>();
             this.names = Names.instance(jt.getContext());
             this.trees = Trees.instance(jt);
+            this.elementsService = ElementsService.instance(jt.getContext());
             this.state = State.OTHER;
             this.cu = cu;
             this.signatureFiles = sigFiles;
@@ -400,6 +403,7 @@ public final class SourceAnalyzerFactory {
                 state=oldState;
             }
             scan(node.getTypeDecls(),p);
+            scan(cu.getModule(),p);
 
             Pair<BinaryName,String> name = null;
             if (!imports.isEmpty() ||
@@ -645,7 +649,7 @@ public final class SourceAnalyzerFactory {
                             resourceName = activeClass.peek().second();
                         }
                         name = Pair.<BinaryName,String>of(
-                                BinaryName.create(className, sym.getKind(), sym.isLocal(), simpleNameStart),
+                                BinaryName.create(className, sym.getKind(), elementsService.isLocal(sym), simpleNameStart),
                                 resourceName);
                         nameFrom = 2;
                     } else {
@@ -713,6 +717,7 @@ public final class SourceAnalyzerFactory {
                     state = errorInDecl ? State.OTHER : State.IMPLEMENTS;
                     scan(node.getImplementsClause(), p);
                     state = State.OTHER;
+                    scan(node.getPermitsClause(), p);
                     scan(node.getMembers(), p);
                     activeClass.pop();
                 } finally {

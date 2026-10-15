@@ -33,7 +33,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.junit.NbTestCase;
@@ -45,6 +45,7 @@ import org.netbeans.spi.project.support.ant.PropertyUtils;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
+import org.openide.util.Utilities;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
@@ -104,8 +105,6 @@ public final class TestUtil extends ProxyLookup {
     static void setup(NbTestCase test) throws Exception {
         test.clearWorkDir();
         Logger.getLogger("org.netbeans.modules.web.jspparser_ext").setLevel(Level.FINE);
-        // unzip test project
-        TestUtil.getProject(test, "project3");
         TestUtil.initParserJARs();
     }
 
@@ -212,20 +211,22 @@ public final class TestUtil extends ProxyLookup {
     
     public static void initParserJARs() throws MalformedURLException {
         List<URL> list = getJARs("jsp.parser.jars");
-        JspParserImpl.setParserJARs(list.toArray(new URL[list.size()]));
+        List<URL> listJakarta = getJARs("jsp.parser.jars-jakarta");
+
+        JspParserImpl.setParserJARs(list.toArray(new URL[0]), listJakarta.toArray(new URL[0]));
     }
 
     public static List<URL> getJARs(String propertyName) throws MalformedURLException {
         String path = System.getProperty(propertyName);
         String[] paths = PropertyUtils.tokenizePath(path);
-        List<URL> list = new ArrayList();
+        List<URL> list = new ArrayList<>();
         for (int i = 0; i< paths.length; i++) {
             String token = paths[i];
             File f = new File(token);
             if (!f.exists()) {
                 throw new RuntimeException("cannot find file "+token);
             }
-            list.add(f.toURI().toURL());
+            list.add(Utilities.toURI(f).toURL());
         }
         return list;
     }

@@ -20,6 +20,7 @@
 package org.netbeans.core.netigso;
 
 import java.io.File;
+import java.net.URL;
 import java.util.logging.Level;
 import junit.framework.Test;
 import org.netbeans.Module;
@@ -88,6 +89,10 @@ public class EnabledAutoloadTest extends NbTestCase {
 
             Module compat = mgr.get("org.openide.compat");
             assertTrue("Compat module is turned on too", compat.isEnabled());
+            
+            // OSGi installs URLStreamHandlers, check http(s) protocol parsing
+            new URL("http://localhost:10000");
+            new URL("https://localhost:10000");
         } finally {
             mgr.mutexPrivileged().exitWriteAccess();
         }
@@ -131,7 +136,7 @@ public class EnabledAutoloadTest extends NbTestCase {
             fail("m2 is turned on as module and listed on its own");
         }
     }
-
+    
     private void assertAsynchronousMessage(CharSequence log, String text) throws InterruptedException {
         for (int i = 0; i < 50; i++) {
             if (log.toString().contains(text)) {

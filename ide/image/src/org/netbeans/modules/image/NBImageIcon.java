@@ -39,7 +39,7 @@ class NBImageIcon extends ImageIcon implements Serializable {
     static final long serialVersionUID = -1730253055388017036L;
 
     /** Appropriate image data object */
-    ImageDataObject obj;
+    private final ImageDataObject obj;
 
     /**
      * Loads an image from an <code>ImageDataObject</code>.
@@ -58,7 +58,7 @@ class NBImageIcon extends ImageIcon implements Serializable {
         Image image = obj.getImage();
         return (image != null) ? new NBImageIcon(obj, image) : null;
     }
-    
+
     /** Construct a new icon.
      * @param obj the data object to represent the image in
      */
@@ -67,23 +67,23 @@ class NBImageIcon extends ImageIcon implements Serializable {
         super(image);  //mw
         this.obj = obj;
     }
-    
-    
+
+
     /** Get an object to be written to the stream instead of this object. */
     public Object writeReplace() {
         return new ResolvableHelper(obj);
     }
 
-    
+
     /** Helper class for serialization. */
-    static class ResolvableHelper implements Serializable {
-        
+    private static class ResolvableHelper implements Serializable {
+
         /** generated Serialized Version UID. */
         static final long serialVersionUID = -1120520132882774882L;
-        
+
         /** serializable data object. */
         ImageDataObject obj;
-        
+
         /** Constructs ResolvableHelper object for given ImageDataObject. */
         ResolvableHelper(ImageDataObject obj) {
             this.obj = obj;

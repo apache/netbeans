@@ -128,24 +128,24 @@ public abstract class Annotation extends Object {
     /** Gets annotatable object to which this annotation is attached.
      * @return null if annotation is not attached or reference to annotatable object.
      * @since 1.27 */
-    final public Annotatable getAttachedAnnotatable() {
+    public final Annotatable getAttachedAnnotatable() {
         return attached;
     }
 
     /** Add listeners on changes of annotation properties
      * @param l  change listener*/
-    final public void addPropertyChangeListener(java.beans.PropertyChangeListener l) {
+    public final void addPropertyChangeListener(java.beans.PropertyChangeListener l) {
         support.addPropertyChangeListener(l);
     }
 
     /** Remove listeners on changes of annotation properties
      * @param l  change listener*/
-    final public void removePropertyChangeListener(java.beans.PropertyChangeListener l) {
+    public final void removePropertyChangeListener(java.beans.PropertyChangeListener l) {
         support.removePropertyChangeListener(l);
     }
 
     /** Fire property change to registered listeners. */
-    final protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
+    protected final void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
         support.firePropertyChange(propertyName, oldValue, newValue);
     }
 
@@ -154,7 +154,7 @@ public abstract class Annotation extends Object {
      * property on which editors must listen and do the fronting of the annotation. Whether the annotation
      * is visible in editor or not is not guaranteed by this method - use Line.show instead.
      * @since 1.27 */
-    final public void moveToFront() {
+    public final void moveToFront() {
         support.firePropertyChange(PROP_MOVE_TO_FRONT, null, null);
     }
 

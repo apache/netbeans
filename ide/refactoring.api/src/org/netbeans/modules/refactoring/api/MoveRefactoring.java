@@ -41,12 +41,13 @@ public final class MoveRefactoring extends AbstractRefactoring {
     /**
      * Public constructor takes Lookup containing objects to refactor as parameter.
      * Move Refactoring implementations currently understand following types:
-     * <table border="1">
+     * <table>
+     *   <caption>MoveRefactoring types supported</caption>
      *   <tr><th>Module</th><th>Types the Module Understands</th><th>Implementation</th></tr>
      *   <tr><td>Refactoring API (Default impl.)</td><td>{@link org.openide.filesystems.FileObject}(s)</td><td>Does file(s) move</td></tr>
      *   <tr><td>Java Refactoring</td><td>{@link org.openide.filesystems.FileObject}(s) with content type text/x-java</td><td>Does refactoring inside .java files</td></tr>
-     *   <tr><td></td><td>{@link org.netbeans.api.java.source.TreePathHandle}(s)</td><td>Does refactoring of members in .java files</td></tr>
-     *   <tr><td></td><td>{@link org.netbeans.api.java.source.TreePathHandle} of class</td><td>Does refactoring of class in .java files</td></tr>
+     *   <tr><td></td><td><a href="@org-netbeans-modules-java-source-base@/org/netbeans/api/java/source/TreePathHandle.html">org.netbeans.api.java.source.TreePathHandle</a>(s)</td><td>Does refactoring of members in .java files</td></tr>
+     *   <tr><td></td><td><a href="@org-netbeans-modules-java-source-base@/org/netbeans/api/java/source/TreePathHandle.html">org.netbeans.api.java.source.TreePathHandle</a> of class</td><td>Does refactoring of class in .java files</td></tr>
      * </table>
      * @param objectsToMove store your objects into Lookup
      */
@@ -57,13 +58,14 @@ public final class MoveRefactoring extends AbstractRefactoring {
     /**
      * Target for moving.
      * Move Refactoring implementations currently understand following types:
-     * <table border="1">
+     * <table>
+     * <caption>MoveRefactoring types supported</caption>
      *   <tr><th>Module</th><th>Types the Module Understands</th><th>Implementation</th></tr>
      *   <tr><td>Refactoring API (Default impl.)</td><td>{@link java.net.URL}</td>
      *        <td>Creates directory corresponding to specified {@link java.net.URL} if does not 
      *            exist and moves all FileObjects into this folder.</td></tr>
      *   <tr><td>Java Refactoring</td><td>{@link java.net.URL}</td><td>Does move refactoring inside .java files</td></tr>
-     *   <tr><td></td><td>{@link org.netbeans.api.java.source.TreePathHandle}</td><td>Does refactoring of members in .java files</td></tr>
+     *   <tr><td></td><td><a href="@org-netbeans-modules-java-source-base@/org/netbeans/api/java/source/TreePathHandle.html">org.netbeans.api.java.source.TreePathHandle</a></td><td>Does refactoring of members in .java files</td></tr>
      * </table>
      * @param target
      */

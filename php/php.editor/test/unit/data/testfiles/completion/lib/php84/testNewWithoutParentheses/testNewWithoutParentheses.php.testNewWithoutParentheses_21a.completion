@@ -1,0 +1,6 @@
+Code completion result for source line:
+}->|publicField2;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicMethod2()                 [PUBLIC]   {}
+METHOD     publicStaticMethod2()           [STATIC]   {}
+VARIABLE   int publicField2                [PUBLIC]   {}

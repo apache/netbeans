@@ -206,7 +206,7 @@ public class ProfileSupport {
      */
     public interface ViolationCollectorFactory {
         /**
-         * Creates a new {@lni ViolationCollector} for given root.
+         * Creates a new {@link ViolationCollector} for given root.
          * @param root the root to be validated
          * @return a new {@link ViolationCollector}
          */
@@ -377,7 +377,7 @@ public class ProfileSupport {
 
     }
 
-    private static abstract class Validator implements Runnable {
+    private abstract static class Validator implements Runnable {
 
         protected final Context context;
         protected final URL root;
@@ -475,7 +475,7 @@ public class ProfileSupport {
             return new BinaryValidator(root, context);
         }
 
-        private final static class BinaryValidator extends Validator {
+        private static final class BinaryValidator extends Validator {
 
             private BinaryValidator(
                 @NonNull final URL root,
@@ -552,7 +552,7 @@ public class ProfileSupport {
 
         }
 
-        private final static class SourceValidator extends Validator {
+        private static final class SourceValidator extends Validator {
 
             private final File cacheRoot;
             private final ClasspathInfo resolveCps;
@@ -805,11 +805,7 @@ public class ProfileSupport {
         @CheckForNull
         Profile profileForType(@NonNull final ClassName className) {
             final String binName = className.getInternalName();
-            Object res = cache.get(binName);
-            if (res == null) {
-                res = findProfile(binName);
-                cache.put(binName, res);
-            }
+            Object res = cache.computeIfAbsent(binName, k -> findProfile(binName));
             return res == UNKNOWN ? null : (Profile) res;
         }
 

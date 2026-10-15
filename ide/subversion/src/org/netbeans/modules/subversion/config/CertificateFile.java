@@ -22,7 +22,7 @@ package org.netbeans.modules.subversion.config;
 import java.io.File;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
-import org.netbeans.modules.proxy.Base64Encoder;
+import java.util.Base64;
 import org.netbeans.modules.subversion.config.KVFile.Key;
 import org.openide.filesystems.FileUtil;
 
@@ -33,9 +33,9 @@ import org.openide.filesystems.FileUtil;
  */
 public class CertificateFile extends SVNCredentialFile {
 
-    private final static Key CERT = new Key(0, "ascii_cert"); // NOI18N
-    private final static Key FAILURES = new Key(1, "failures"); // NOI18N
-    private final static Key REALMSTRING = new Key(2, "svn:realmstring"); // NOI18N
+    private static final Key CERT = new Key(0, "ascii_cert"); // NOI18N
+    private static final Key FAILURES = new Key(1, "failures"); // NOI18N
+    private static final Key REALMSTRING = new Key(2, "svn:realmstring"); // NOI18N
 
     private static final String NEWLINE = System.getProperty("line.separator"); // NOI18N
     
@@ -50,7 +50,7 @@ public class CertificateFile extends SVNCredentialFile {
     }
 
     private void setCert(X509Certificate cert) throws CertificateEncodingException {
-        String encodedCert = Base64Encoder.encode(cert.getEncoded());                
+        String encodedCert = Base64.getEncoder().encodeToString(cert.getEncoded());                
         setValue(getCertKey(), encodedCert.getBytes());
     }
         

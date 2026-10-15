@@ -209,7 +209,7 @@ public class MoveMethodTest extends MoveBase {
                 + "}\n"));
     }
     
-    public void test232604() throws Exception {
+    public void DISABLEDtest232604() throws Exception { //requires that error parameter types are stored in classfiles.
         writeFilesAndWaitForScan(src,
                 new File("t/A.java", "package t;\n"
                 + "public class A {\n"

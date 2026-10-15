@@ -81,7 +81,7 @@ public class MonitorSupport {
     public static boolean getMonitorFlag(String managerURL) {
         InstanceProperties ip = InstanceProperties.getInstanceProperties(managerURL);
         String prop = ip.getProperty(MONITOR_ENABLED_PROPERTY_NAME);
-        return (prop == null) ? true : Boolean.valueOf(prop).booleanValue();
+        return (prop == null) ? true : Boolean.valueOf(prop);
     }
     
     public static void setMonitorFlag(TomcatManager tm, boolean enable) {
@@ -125,12 +125,8 @@ public class MonitorSupport {
             needsSave = needsSave || result; 
         }
         if (needsSave) {
-            OutputStream os = new FileOutputStream(webXML);
-            try {
+            try (OutputStream os = new FileOutputStream(webXML)) {
                 webApp.write(os);
-            }
-            finally {
-                os.close();
             }
         }
     }
@@ -138,17 +134,24 @@ public class MonitorSupport {
     private static File getDefaultWebXML(TomcatManager tm) {
         File cb = tm.getTomcatProperties().getCatalinaDir();
         File webXML = new File(cb, "conf" + File.separator + "web.xml");
-        if (webXML.exists())
+        if (webXML.exists()) {
             return webXML;
+        }
         return null;
     }
     
     private static void addMonitorJars(TomcatManager tm) throws IOException {
         // getting Tomcat4.0 Directory
         File instDir = tm.getTomcatProperties().getCatalinaHome();
-        if (instDir==null) return;
+        if (instDir==null) {
+            return;
+        }
         File libFolder = tm.getTomcatProperties().getMonitorLibFolder();
-        copyFromIDEInstToDir("modules/ext/org-netbeans-modules-web-httpmonitor.jar", new File(libFolder, "org-netbeans-modules-web-httpmonitor.jar"));  // NOI18N
+        if(tm.getTomcatVersion().isAtLeast(TomcatManager.TomcatVersion.TOMCAT_100)) {
+            copyFromIDEInstToDir("modules/ext/org-netbeans-modules-web-httpmonitor-jakarta.jar", new File(libFolder, "org-netbeans-modules-web-httpmonitor.jar"));  // NOI18N
+        } else {
+            copyFromIDEInstToDir("modules/ext/org-netbeans-modules-web-httpmonitor.jar", new File(libFolder, "org-netbeans-modules-web-httpmonitor.jar"));  // NOI18N
+        }
         copyFromIDEInstToDir("modules/org-netbeans-modules-schema2beans.jar", new File(libFolder, "org-netbeans-modules-schema2beans.jar")); // NOI18N
         
         //copyFromIDEInstToDir("modules/ext/monitor-valve.jar", instDir, "server/lib/monitor-valve.jar"); // NOI18N
@@ -255,12 +258,13 @@ public class MonitorSupport {
     }
     
     private static void copy(File file1, File file2) throws IOException {
-        BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file1));
-        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file2));
-        int b;
-        while((b=bis.read())!=-1)bos.write(b);
-        bis.close();
-        bos.close();
+        try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file1));
+                BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file2))) {
+            int b;
+            while((b=bis.read())!=-1) {
+                bos.write(b);
+            }
+        }
     }
     
     /** Inserts or and updates in the Monitor Filter element the parameter
@@ -279,8 +283,9 @@ public class MonitorSupport {
             }
         }
         // see if we found it
-        if (myFilter == null)
+        if (myFilter == null) {
             return false;
+        }
         
         // look for the parameter
         InitParam[] params = myFilter.getInitParam();
@@ -474,9 +479,10 @@ public class MonitorSupport {
             this.spy=spy;
         }
         
+        @Override
         public void propertyChange(java.beans.PropertyChangeEvent evt) {
             if (evt.getPropertyName().equals("enabled")){ // NOI18N
-                spy.setEnabled(((Boolean)evt.getNewValue()).booleanValue());
+                spy.setEnabled(((Boolean)evt.getNewValue()));
             }            
         }  
     }
@@ -490,6 +496,7 @@ public class MonitorSupport {
             this.httpMonitorInfo=httpMonitorInfo;
         }
         
+        @Override
         public void resultChanged(LookupEvent lookupEvent) {
             java.util.Iterator it = res.allInstances ().iterator ();
             boolean moduleFound=false;

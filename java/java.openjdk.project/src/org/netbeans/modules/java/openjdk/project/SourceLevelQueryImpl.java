@@ -19,12 +19,10 @@
 package org.netbeans.modules.java.openjdk.project;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
@@ -41,21 +39,27 @@ public class SourceLevelQueryImpl implements SourceLevelQueryImplementation  {
 
     private static final Logger LOG = Logger.getLogger(SourceLevelQueryImpl.class.getName());
     private static final int DEFAULT_SOURCE_LEVEL = 11;
-    private static final Pattern JDK_PATTERN = Pattern.compile("jdk([0-9]+)");
+    private static final String[] SOURCE_VERSION_LOCATIONS = new String[] {
+        "src/java.compiler/share/classes/javax/lang/model/SourceVersion.java",
+        "open/src/java.compiler/share/classes/javax/lang/model/SourceVersion.java",
+        "langtools/src/java.compiler/share/classes/javax/lang/model/SourceVersion.java"
+    };
 
     private final String sourceLevel;
 
     public SourceLevelQueryImpl(FileObject jdkRoot) {
-        FileObject sourceVersion = BuildUtils.getFileObject(jdkRoot, "src/java.compiler/share/classes/javax/lang/model/SourceVersion.java");
+        Optional<FileObject> sourceVersionCandidate =
+                Arrays.stream(SOURCE_VERSION_LOCATIONS)
+                      .map(location -> BuildUtils.getFileObject(jdkRoot, location))
+                      .filter(file -> file != null)
+                      .findFirst();
+
         int sl = DEFAULT_SOURCE_LEVEL;
 
-        if (sourceVersion == null) {
-            sourceVersion = BuildUtils.getFileObject(jdkRoot, "langtools/src/java.compiler/share/classes/javax/lang/model/SourceVersion.java");
-        }
-        if (sourceVersion != null) {
+        if (sourceVersionCandidate.isPresent()) {
             try {
                 TokenHierarchy<String> th =
-                        TokenHierarchy.create(sourceVersion.asText(), JavaTokenId.language());
+                        TokenHierarchy.create(sourceVersionCandidate.get().asText(), JavaTokenId.language());
                 TokenSequence<?> seq = th.tokenSequence();
 
                 while (seq.moveNext()) {

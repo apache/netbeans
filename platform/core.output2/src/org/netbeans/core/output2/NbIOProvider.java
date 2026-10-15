@@ -25,6 +25,7 @@ import java.io.Reader;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.logging.Level;
 import javax.swing.Action;
 import org.netbeans.api.io.Hyperlink;
 import org.netbeans.api.io.OutputColor;
@@ -214,7 +215,14 @@ public final class NbIOProvider extends IOProvider implements
     @Override
     public void resetIO(InputOutput io) {
         if (io instanceof NbIO) {
-            ((NbIO) io).reset();
+            try {
+                // ((NbWriter)io.getOut).reset() does OutWriter fixup,
+                // then NbWriter invokes ((NbIO) io).reset()
+                io.getOut().reset();
+            } catch (IOException ex) {
+                Exceptions.attachSeverity(ex, Level.WARNING);
+                Exceptions.printStackTrace(ex);
+            }
         } else {
             throw new IllegalArgumentException();
         }

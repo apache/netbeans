@@ -119,7 +119,8 @@ public class CallbackSystemActionTest extends NbTestCase {
         class MyAction extends AbstractAction {
             public int cntEnabled;
             public int cntPerformed;
-            
+
+            @Override
             public boolean isEnabled() {
                 cntEnabled++;
                 return true;
@@ -242,7 +243,8 @@ public class CallbackSystemActionTest extends NbTestCase {
         class MyAction extends AbstractAction {
             public int cntEnabled;
             public int cntPerformed;
-            
+
+            @Override
             public boolean isEnabled() {
                 cntEnabled++;
                 return true;
@@ -273,7 +275,8 @@ public class CallbackSystemActionTest extends NbTestCase {
         class CounterAction extends AbstractAction {
             public int cntEnabled;
             public int cntPerformed;
-            
+
+            @Override
             public boolean isEnabled() {
                 cntEnabled++;
                 return true;

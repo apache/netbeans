@@ -61,16 +61,14 @@ public final class SearchHistoryTest extends NbTestCase {
         assertTrue(SearchHistory.getDefault().getSearchPatterns().size() == 10);
     }
     
+    @SuppressWarnings("deprecation") // tests deprecated APIs
     public void testLastSelectedListener() throws Exception{
         final boolean fired[] = new boolean[1];
         fired[0] = false;
-        PropertyChangeListener pcl = new PropertyChangeListener(){
-            @Override
-                public void propertyChange(PropertyChangeEvent evt){
-                    if (evt!=null && SearchHistory.LAST_SELECTED.equals(evt.getPropertyName())){
-                        fired[0] = true;
-                    }
-                }
+        PropertyChangeListener pcl = (PropertyChangeEvent evt) -> {
+            if (evt != null && SearchHistory.LAST_SELECTED.equals(evt.getPropertyName())) {
+                fired[0] = true;
+            }
         };
         SearchHistory.getDefault().add(SearchPattern.create("init",true,true,false));
         SearchHistory.getDefault().addPropertyChangeListener(pcl);
@@ -81,15 +79,12 @@ public final class SearchHistoryTest extends NbTestCase {
     
     public void testAddToSearchHistoryListener() throws Exception{
         final boolean fired[] = new boolean[2];
-        PropertyChangeListener pcl = new PropertyChangeListener(){
-            @Override
-                public void propertyChange(PropertyChangeEvent evt){
-                    if (evt!=null && SearchHistory.ADD_TO_HISTORY.equals(evt.getPropertyName())){
-                        fired[0] = true;
-                    }else{
-                        fired[1] = true;
-                    }
-                }
+        PropertyChangeListener pcl = (PropertyChangeEvent evt) -> {
+            if (evt != null && SearchHistory.ADD_TO_HISTORY.equals(evt.getPropertyName())) {
+                fired[0] = true;
+            } else {
+                fired[1] = true;
+            }
         };
         SearchHistory.getDefault().addPropertyChangeListener(pcl);
         SearchHistory.getDefault().add(SearchPattern.create("searchtext",true,true,false));
@@ -101,15 +96,12 @@ public final class SearchHistoryTest extends NbTestCase {
     public void testAddIncorrectItemToSearchHistoryListener() throws Exception{
         final boolean fired[] = new boolean[2];
         
-        PropertyChangeListener pcl = new PropertyChangeListener(){
-            @Override
-                public void propertyChange(PropertyChangeEvent evt){
-                    if (evt!=null && SearchHistory.ADD_TO_HISTORY.equals(evt.getPropertyName())){
-                        fired[0] = true;
-                    } else {
-                        fired[1] = true;
-                    }
-                }
+        PropertyChangeListener pcl = (PropertyChangeEvent evt) -> {
+            if (evt != null && SearchHistory.ADD_TO_HISTORY.equals(evt.getPropertyName())) {
+                fired[0] = true;
+            } else {
+                fired[1] = true;
+            }
         };
         SearchHistory.getDefault().addPropertyChangeListener(pcl);
 

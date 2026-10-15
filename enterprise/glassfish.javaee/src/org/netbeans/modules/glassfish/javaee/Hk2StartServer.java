@@ -58,7 +58,7 @@ import org.openide.util.NbBundle;
 /**
  *
  * @author Ludovic Champenois
- * @auther Peter Williams
+ * @author Peter Williams
  * @author vince kraemer
  */
 public class Hk2StartServer extends StartServer implements ProgressObject {

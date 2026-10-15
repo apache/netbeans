@@ -82,7 +82,7 @@ public class ElementNode extends AbstractNode implements OffsetProvider {
                 public void run(CompilationController parameter) throws Exception {
                     Tree tree = info.getTrees().getTree(element);
                     if (tree != null) {
-                        result[0] = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
+                        result[0] = (int) info.getTrees().getSourcePositions().getStartPosition(tree);
                     }
                 }
             }, true);
@@ -101,7 +101,7 @@ public class ElementNode extends AbstractNode implements OffsetProvider {
                 public void run(CompilationController parameter) throws Exception {
                     Tree tree = info.getTrees().getTree(element);
                     if (tree != null) {
-                        result[0] = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree);
+                        result[0] = (int) info.getTrees().getSourcePositions().getEndPosition(tree);
                     }
                 }
             }, true);

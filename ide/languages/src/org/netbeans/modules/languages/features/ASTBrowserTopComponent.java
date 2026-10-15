@@ -244,7 +244,7 @@ final class ASTBrowserTopComponent extends TopComponent {
             lastPane = pane;
         }
         Document document = editorCookie.getDocument ();
-        if (document == null || !(document instanceof NbEditorDocument)) return null;
+        if (!(document instanceof NbEditorDocument)) return null;
         return ParserManagerImpl.getImpl (document).getAST ();
     }
 
@@ -388,7 +388,7 @@ final class ASTBrowserTopComponent extends TopComponent {
         }
     }
     
-    final static class ResolvableHelper implements Serializable {
+    static final class ResolvableHelper implements Serializable {
         private static final long serialVersionUID = 1L;
         public Object readResolve () {
             return ASTBrowserTopComponent.getDefault ();

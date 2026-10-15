@@ -143,7 +143,7 @@ public class SceneElementComparator implements Comparator<SceneElement> {
 
         PageFlowSceneElement nextElement = null;
         if (!sortedElements.isEmpty()) {
-            Collections.sort(sortedElements, new SceneElementComparator(scene));
+            sortedElements.sort(new SceneElementComparator(scene));
             if (reverse) {
                 Collections.reverse(sortedElements);
             }

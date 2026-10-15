@@ -30,7 +30,7 @@ import org.netbeans.CLIHandler;
 @org.openide.util.lookup.ServiceProvider(service=org.netbeans.CLIHandler.class)
 public class FakeHandler extends CLIHandler {
     public static Runnable toRun;
-    public static Map chained;
+    public static Map<CLIHandler.Args, Integer> chained;
 
     /** Creates a new instance of FakeHandler */
     public FakeHandler() {
@@ -46,7 +46,7 @@ public class FakeHandler extends CLIHandler {
 
     protected int cli(CLIHandler.Args args) {
         if (chained != null) {
-            Integer i = (Integer)chained.get(args);
+            Integer i = chained.get(args);
             return i.intValue();
         }
         return 0;

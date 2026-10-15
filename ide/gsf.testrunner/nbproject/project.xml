@@ -68,51 +68,10 @@
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-            <friend-packages>
-                <friend>com.sun.tools.tuxedo.testrunner</friend>
-                <friend>org.netbeans.gradle.project</friend>
-                <friend>org.netbeans.modules.gradle.test</friend>
-                <friend>org.netbeans.modules.android.testrunner</friend>
-                <friend>org.netbeans.modules.cnd.cncppunit</friend>
-                <friend>org.netbeans.modules.cnd.testrunner</friend>
-                <friend>org.netbeans.modules.gototest</friend>
-                <friend>org.netbeans.modules.groovy.support</friend>
-                <friend>org.netbeans.modules.gsf.testrunner.ui</friend>
-                <friend>org.netbeans.modules.hudson.ui</friend>
-                <friend>org.netbeans.modules.java.testrunner</friend>
-                <friend>org.netbeans.modules.java.testrunner.ant</friend>
-                <friend>org.netbeans.modules.java.testrunner.ui</friend>
-                <friend>org.netbeans.modules.javascript.jstestdriver</friend>
-                <friend>org.netbeans.modules.javascript.karma</friend>
-                <friend>org.netbeans.modules.junit</friend>
-                <friend>org.netbeans.modules.junit.ant</friend>
-                <friend>org.netbeans.modules.junit.ant.ui</friend>
-                <friend>org.netbeans.modules.junit.ui</friend>
-                <friend>org.netbeans.modules.maven.junit</friend>
-                <friend>org.netbeans.modules.maven.junit.ui</friend>
-                <friend>org.netbeans.modules.mobility.j2meunit</friend>
-                <friend>org.netbeans.modules.mobility.project</friend>
-                <friend>org.netbeans.modules.php.atoum</friend>
-                <friend>org.netbeans.modules.php.codeception</friend>
-                <friend>org.netbeans.modules.php.nette.tester</friend>
-                <friend>org.netbeans.modules.php.phpunit</friend>
-                <friend>org.netbeans.modules.php.project</friend>
-                <friend>org.netbeans.modules.python.testrunner</friend>
-                <friend>org.netbeans.modules.ruby.testrunner</friend>
-                <friend>org.netbeans.modules.selenium2</friend>
-                <friend>org.netbeans.modules.selenium2.java</friend>
-                <friend>org.netbeans.modules.selenium2.maven</friend>
-                <friend>org.netbeans.modules.selenium2.php</friend>
-                <friend>org.netbeans.modules.selenium2.webclient</friend>
-                <friend>org.netbeans.modules.selenium2.webclient.mocha</friend>
-                <friend>org.netbeans.modules.selenium2.webclient.protractor</friend>
-                <friend>org.netbeans.modules.testng</friend>
-                <friend>org.netbeans.modules.testng.ant</friend>
-                <friend>org.netbeans.modules.testng.ui</friend>
-                <friend>org.netbeans.modules.web.clientproject.api</friend>
+            <public-packages>
                 <package>org.netbeans.modules.gsf.testrunner.api</package>
                 <package>org.netbeans.modules.gsf.testrunner.plugin</package>
-            </friend-packages>
+            </public-packages>
         </data>
     </configuration>
 </project>

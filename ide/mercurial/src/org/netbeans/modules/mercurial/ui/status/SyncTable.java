@@ -282,7 +282,7 @@ class SyncTable implements MouseListener, ListSelectionListener, AncestorListene
                 }
             }
         }
-        return selectedNodes.toArray(new SyncFileNode[selectedNodes.size()]);
+        return selectedNodes.toArray(new SyncFileNode[0]);
     }
 
     private Collection<File> getSelectedFiles () {

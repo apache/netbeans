@@ -20,6 +20,7 @@
 package org.netbeans.updater;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.zip.CRC32;
@@ -206,7 +207,7 @@ public final class UpdateTracking {
         
         String dirs = System.getProperty("netbeans.dirs"); // NOI18N
         if (dirs != null) {
-            Enumeration en = new StringTokenizer (dirs, File.pathSeparator);
+            Enumeration<Object> en = new StringTokenizer (dirs, File.pathSeparator);
             while (en.hasMoreElements ()) {
                 File f = new File ((String)en.nextElement ());
                 // this prevents autoupdate from accessing this 
@@ -854,10 +855,10 @@ public final class UpdateTracking {
             config.getParentFile().mkdirs();
             Boolean isAutoload = null;
             Boolean isEager = null;
-            java.util.Iterator it = newVersion.getFiles().iterator();
+            Iterator<ModuleFile> it = newVersion.getFiles().iterator();
             boolean needToWrite = false;
             while (it.hasNext()) {
-                ModuleFile f = (ModuleFile) it.next ();
+                ModuleFile f = it.next();
                 String n = f.getName();
                 String parentDir;
                 {
@@ -925,7 +926,7 @@ public final class UpdateTracking {
             OutputStream os;
             try {
                 os = context.createOS(config);
-                PrintWriter pw = new PrintWriter(new java.io.OutputStreamWriter(os, "UTF-8"));
+                PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
                 // Please make sure formatting matches what the IDE actually spits
                 // out; it could matter.
                 pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");

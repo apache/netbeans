@@ -228,7 +228,7 @@ abstract class WSITRefactoringPlugin<T extends AbstractRefactoring> extends Java
         }
     }
 
-    protected static abstract class AbstractRefactoringElement extends SimpleRefactoringElementImplementation {
+    protected abstract static class AbstractRefactoringElement extends SimpleRefactoringElementImplementation {
         protected final WSDLModel model;
         protected final FileObject file;
 

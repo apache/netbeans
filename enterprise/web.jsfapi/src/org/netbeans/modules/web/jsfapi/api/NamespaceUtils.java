@@ -20,9 +20,8 @@ package org.netbeans.modules.web.jsfapi.api;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
+import java.util.Objects;
 import org.netbeans.api.annotations.common.CheckForNull;
 
 /**
@@ -32,6 +31,9 @@ import org.netbeans.api.annotations.common.CheckForNull;
  */
 public final class NamespaceUtils {
 
+    /** Location of namespaces since JSF 4.0. */
+    public static final String JAKARTA_ORG_LOCATION = "jakarta.faces"; //NOI18N
+    
     /** Location of namespaces since JSF 2.2. */
     public static final String JCP_ORG_LOCATION = "http://xmlns.jcp.org"; //NOI18N
     
@@ -39,7 +41,7 @@ public final class NamespaceUtils {
     public static final String SUN_COM_LOCATION = "http://java.sun.com";  //NOI18N
 
     /** Mapping of the new namespace to the legacy one. */
-    public static final Map<String, String> NS_MAPPING = new HashMap<String, String>(8);
+    public static final Map<String, String> NS_MAPPING = new HashMap<>(16);
 
     static {
         NS_MAPPING.put("http://xmlns.jcp.org/jsf/html", "http://java.sun.com/jsf/html");                     //NOI18N
@@ -51,6 +53,22 @@ public final class NamespaceUtils {
         NS_MAPPING.put("http://xmlns.jcp.org/jsf", "http://java.sun.com/jsf");                               //NOI18N
         NS_MAPPING.put("http://xmlns.jcp.org/jsf/passthrough", "http://java.sun.com/jsf/passthrough");       //NOI18N
     }
+    
+    /** Mapping of the new Jakarta EE namespace to the JCP. */
+    public static final Map<String, String> JAKARTA_NS_MAPPING = new HashMap<>(16);
+
+    static {
+        JAKARTA_NS_MAPPING.put("jakarta.faces.html", "http://xmlns.jcp.org/jsf/html");                     //NOI18N
+        JAKARTA_NS_MAPPING.put("jakarta.faces.core", "http://xmlns.jcp.org/jsf/core");                     //NOI18N
+        JAKARTA_NS_MAPPING.put("jakarta.tags.core", "http://xmlns.jcp.org/jsp/jstl/core");           //NOI18N
+        JAKARTA_NS_MAPPING.put("jakarta.tags.fmt", "http://xmlns.jcp.org/jsp/jstl/fmt"); //NOI18N
+        JAKARTA_NS_MAPPING.put("jakarta.tags.functions", "http://xmlns.jcp.org/jsp/jstl/functions"); //NOI18N
+        JAKARTA_NS_MAPPING.put("jakarta.faces.facelets", "http://xmlns.jcp.org/jsf/facelets");             //NOI18N
+        JAKARTA_NS_MAPPING.put("jakarta.faces.composite", "http://xmlns.jcp.org/jsf/composite");           //NOI18N
+        JAKARTA_NS_MAPPING.put("jakarta.faces", "http://xmlns.jcp.org/jsf");                               //NOI18N
+        JAKARTA_NS_MAPPING.put("jakarta.faces.passthrough", "http://xmlns.jcp.org/jsf/passthrough");       //NOI18N
+        JAKARTA_NS_MAPPING.put("jakarta.faces.component", "http://xmlns.jcp.org/jsf/component");       //NOI18N
+    }
 
     /**
      * Takes map of libraries and namespace and return library for the namespace or its legacy version.
@@ -60,29 +78,27 @@ public final class NamespaceUtils {
      */
     @CheckForNull
     public static <T> T getForNs(Map<String, T> map, String ns) {
-        T result = checkMapForNs(map, ns);
-
-        // try out shortened URL without ending slash if available - issue #226002
-        if (result == null) {
-            if (ns.endsWith("/")) { //NOI18N
-                ns = ns.substring(0, ns.length() - 1);
-                return checkMapForNs(map, ns);
-            }
+        if (map.containsKey(ns)) {
+            return map.get(ns);
         }
 
-        return result;
-    }
-
-    private static <T> T checkMapForNs(Map<String, T> map, String ns) {
-        T result = map.get(ns);
-        if (result == null) {
-            if (NS_MAPPING.containsKey(ns)) {
-                result = map.get(NS_MAPPING.get(ns));
-            } else if (ns.startsWith(DefaultLibraryInfo.COMPOSITE.getLegacyNamespace())) {
-                result = map.get(ns.replace(DefaultLibraryInfo.COMPOSITE.getLegacyNamespace(), DefaultLibraryInfo.COMPOSITE.getNamespace()));
+        LibraryInfo libraryInfo = DefaultLibraryInfo.forNamespace(ns);
+        if (libraryInfo == null) {
+            ns = DefaultLibraryInfo.COMPOSITE.getValidNamespaces().stream()
+                    .filter(ns::startsWith)
+                    .findFirst()
+                    .orElse(null);
+            if (ns == null) {
+                return null;
             }
+            libraryInfo = DefaultLibraryInfo.forNamespace(ns);
         }
-        return result;
+
+        return libraryInfo.getValidNamespaces().stream()
+                .map(map::get)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(null);
     }
 
     /**
@@ -92,31 +108,6 @@ public final class NamespaceUtils {
      * @return {@code true} if the collection contains new or legacy library namespace, {@code false} otherwise
      */
     public static boolean containsNsOf(Collection<String> collection, DefaultLibraryInfo library) {
-        if (collection.contains(library.getNamespace())) {
-            return true;
-        }
-        if (library.getLegacyNamespace() != null) {
-            return collection.contains(library.getLegacyNamespace());
-        }
-        return false;
+        return library.getValidNamespaces().stream().anyMatch(collection::contains);
     }
-
-    public static Set<String> getAvailableNss(Map<String, ? extends Library> libraries, boolean jsf22plus) {
-        Set<String> nss = new HashSet<String>();
-        for (Map.Entry<String, ? extends Library> entry : libraries.entrySet()) {
-            // library well known namespace
-            nss.add(entry.getKey());
-
-            // in case of JSF 2.2 add also its legacy namespaces
-            if (jsf22plus) {
-                Library library = entry.getValue();
-                nss.add(library.getNamespace());
-                if (NS_MAPPING.containsKey(library.getNamespace())) {
-                    nss.add(NS_MAPPING.get(library.getNamespace()));
-                }
-            }
-        }
-        return nss;
-    }
-
 }

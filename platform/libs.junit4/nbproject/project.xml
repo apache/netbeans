@@ -26,11 +26,22 @@
             <code-name-base>org.netbeans.libs.junit4</code-name-base>
             <module-dependencies/>
             <public-packages>
+                <package>org.hamcrest</package>
+                <package>org.hamcrest.core</package>
                 <package>junit.extensions</package>
                 <package>junit.framework</package>
                 <package>junit.runner</package>
                 <package>junit.textui</package>
                 <package>org.junit</package>
+                <package>org.junit.experimental</package>
+                <package>org.junit.experimental.categories</package>
+                <package>org.junit.experimental.max</package>
+                <package>org.junit.experimental.results</package>
+                <package>org.junit.experimental.runners</package>
+                <package>org.junit.experimental.theories</package>
+                <package>org.junit.experimental.theories.suppliers</package>
+                <package>org.junit.function</package>
+                <package>org.junit.internal</package>
                 <package>org.junit.matchers</package>
                 <package>org.junit.rules</package>
                 <package>org.junit.runner</package>
@@ -38,10 +49,12 @@
                 <package>org.junit.runner.notification</package>
                 <package>org.junit.runners</package>
                 <package>org.junit.runners.model</package>
+                <package>org.junit.runners.parameterized</package>
+                <package>org.junit.validator</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/junit-4.12.jar</runtime-relative-path>
-                <binary-origin>external/junit-4.12.jar</binary-origin>
+                <runtime-relative-path>ext/junit-4.13.2.jar</runtime-relative-path>
+                <binary-origin>external/junit-4.13.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/hamcrest-core-1.3.jar</runtime-relative-path>

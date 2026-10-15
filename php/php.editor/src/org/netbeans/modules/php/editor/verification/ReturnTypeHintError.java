@@ -39,17 +39,19 @@ import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
 import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
 import org.netbeans.modules.php.editor.parser.astnodes.ReturnStatement;
+import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 
 /**
- * Check "void" return type.
- *
+ * Check "void" and "never" return type.
+ * Checks if the return statement has a value if a return type is specified for the function.
  */
 public class ReturnTypeHintError extends HintErrorRule {
 
@@ -91,7 +93,7 @@ public class ReturnTypeHintError extends HintErrorRule {
         return getPhpVersion(file).compareTo(PhpVersion.PHP_71) >= 0;
     }
 
-    // support only "void"
+    // support only "void" and "never"
     // XXX support types?
     private void checkReturnType(Map<ASTNode, Set<ReturnStatement>> returnStatements, List<Hint> hints) {
         for (Entry<ASTNode, Set<ReturnStatement>> entry : returnStatements.entrySet()) {
@@ -110,48 +112,85 @@ public class ReturnTypeHintError extends HintErrorRule {
                 continue;
             }
             Set<ReturnStatement> statements = entry.getValue();
+            // void type can never be part of a union type
+            // handle that in UnusableTypesUnhandledError
             if (returnType instanceof NamespaceName) {
                 NamespaceName namespaceName = (NamespaceName) returnType;
                 String name = CodeUtils.extractUnqualifiedName(namespaceName);
-                checkVoidReturnStatements(statements, name, hints);
+                checkVoidAndNeverReturnStatements(statements, name, hints);
+                checkReturnStatementsWithoutValue(statements, name, hints);
             } else if (returnType instanceof NullableType) {
                 Expression type = ((NullableType) returnType).getType();
                 if (type instanceof NamespaceName) {
                     NamespaceName namespaceName = (NamespaceName) type;
                     String name = CodeUtils.extractUnqualifiedName(namespaceName);
-                    checkInvalidVoidReturnType(type, name, hints);
+                    checkInvalidVoidAndNeverReturnType(type, name, hints);
                 }
+                checkReturnStatementsWithoutValue(statements, "", hints); // NOI18N
+            } else if (returnType instanceof UnionType
+                    || returnType instanceof IntersectionType) {
+                checkReturnStatementsWithoutValue(statements, "", hints); // NOI18N
             }
 
         }
     }
 
     @NbBundle.Messages({
-        "ReturnTypeHintErrorVoidDesc=\"void\" cannot return anything"
+        "# {0} - type",
+        "ReturnTypeHintErrorVoidDesc=\"{0}\" cannot return anything"
     })
-    private void checkVoidReturnStatements(Set<ReturnStatement> statements, String name, List<Hint> hints) {
-        if (Type.VOID.equals(name)) {
+    private void checkVoidAndNeverReturnStatements(Set<ReturnStatement> statements, String name, List<Hint> hints) {
+        if (isVoidType(name) || isNeverType(name)) {
             // check empty return statement
-            statements.forEach((statement) -> {
+            for (ReturnStatement statement: statements) {
                 if (CancelSupport.getDefault().isCancelled()) {
                     return;
                 }
                 Expression expression = statement.getExpression();
-                if (expression != null) {
-                    addHint(statement, Bundle.ReturnTypeHintErrorVoidDesc(), hints);
+                if (expression != null || isNeverType(name)) {
+                    addHint(statement, Bundle.ReturnTypeHintErrorVoidDesc(name), hints);
                 }
-            });
+            }
         }
     }
 
     @NbBundle.Messages({
-        "ReturnTypeHintErrorInvalidVoidDesc=\"void\" cannot be used with \"?\""
+        "# {0} - type",
+        "ReturnTypeHintErrorInvalidVoidDesc=\"{0}\" cannot be used with \"?\""
     })
-    private void checkInvalidVoidReturnType(Expression returnType, String name, List<Hint> hints) {
-        if (Type.VOID.equals(name)) {
-            addHint(returnType, Bundle.ReturnTypeHintErrorInvalidVoidDesc(), hints);
+    private void checkInvalidVoidAndNeverReturnType(Expression returnType, String name, List<Hint> hints) {
+        if (isVoidType(name) || isNeverType(name)) {
+            addHint(returnType, Bundle.ReturnTypeHintErrorInvalidVoidDesc(name), hints);
         }
     }
+
+    @NbBundle.Messages({
+        "ReturnStatementWithoutValueHintErrorDesc=Return statement must be filled with the value"
+    })
+    private void checkReturnStatementsWithoutValue(Set<ReturnStatement> statements, String name, List<Hint> hints) {
+        if (!isVoidType(name) && !isNeverType(name)) {
+            // check empty return statement
+            for (ReturnStatement statement: statements) {
+                if (CancelSupport.getDefault().isCancelled()) {
+                    return;
+                }
+                Expression expression = statement.getExpression();
+                if (expression == null) {
+                    addHint(statement, Bundle.ReturnStatementWithoutValueHintErrorDesc(), hints);
+                }
+            }
+        }
+    }
+
+    private boolean isNeverType(String name) {
+        return Type.NEVER.equals(name)
+                && getPhpVersion(fileObject).hasNeverType();
+    }
+
+   private boolean isVoidType(String name) {
+        return Type.VOID.equals(name)
+                && getPhpVersion(fileObject).hasVoidReturnType();
+    }    
 
     private void addHint(ASTNode node, String description, List<Hint> hints) {
         hints.add(new Hint(this,
@@ -211,15 +250,11 @@ public class ReturnTypeHintError extends HintErrorRule {
             if (node != null) {
                 Set<ReturnStatement> returns = returnStatements.get(node);
                 if (returns == null) {
-                    HashSet<ReturnStatement> statements = new HashSet<>();
-                    if (returnStatement != null) {
-                        statements.add(returnStatement);
-                    }
-                    returnStatements.put(node, statements);
-                } else {
-                    if (returnStatement != null) {
-                        returns.add(returnStatement);
-                    }
+                    returns = new HashSet<>();
+                    returnStatements.put(node, returns);
+                }
+                if (returnStatement != null) {
+                    returns.add(returnStatement);
                 }
             }
         }

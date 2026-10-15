@@ -23,6 +23,7 @@ import java.io.FileReader;
 import org.netbeans.modules.websvc.saas.codegen.*;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -458,7 +459,7 @@ public class SaasClientPhpAuthenticationGenerator extends SaasClientAuthenticati
                 }
                 sb.append(line+"\n");
             }
-            OutputStreamWriter writer = new OutputStreamWriter(fO.getOutputStream(lock), "UTF-8");
+            OutputStreamWriter writer = new OutputStreamWriter(fO.getOutputStream(lock), StandardCharsets.UTF_8);
             try {
                 writer.write(sb.toString());
             } finally {

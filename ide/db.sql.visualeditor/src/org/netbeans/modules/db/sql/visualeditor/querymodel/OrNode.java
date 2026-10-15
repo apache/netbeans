@@ -19,6 +19,7 @@
 package org.netbeans.modules.db.sql.visualeditor.querymodel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.netbeans.api.db.sql.support.SQLIdentifiers;
 
@@ -31,7 +32,7 @@ public class OrNode extends BooleanExpressionList implements Or {
     //
     // Constructors
     //
-    public OrNode(ArrayList expressions) {
+    public OrNode(List expressions) {
        _expressions = new ArrayList();
        BooleanExpressionList.flattenExpression(expressions, OrNode.class, _expressions);
     }

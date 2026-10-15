@@ -121,7 +121,8 @@ public abstract class ComponentMethodModel extends Children.Keys<MethodModel> {
                                         TypeElement parent = elementUtilities.enclosingTypeElement(e);
                                         boolean isInInterface = ElementKind.INTERFACE == parent.getKind();
                                         boolean isFromJavaxEjb = parent.getQualifiedName().toString().startsWith("javax.ejb."); // NOI18N
-                                        return isInInterface && !isFromJavaxEjb && ElementKind.METHOD == e.getKind();
+                                        boolean isFromJakartaEjb = parent.getQualifiedName().toString().startsWith("jakarta.ejb."); // NOI18N
+                                        return isInInterface && !isFromJavaxEjb && !isFromJakartaEjb && ElementKind.METHOD == e.getKind();
                                     }
                                 });
                                 for (Element method : methods) {
@@ -164,7 +165,8 @@ public abstract class ComponentMethodModel extends Children.Keys<MethodModel> {
                                 String ifaceFqn = typeMirror.toString();
                                 if (!ifaceFqn.equals("java.io.Serializable") //NOI18N
                                         && !ifaceFqn.equals("java.io.Externalizable") //NOI18N
-                                        && !ifaceFqn.startsWith("javax.ejb.")) { //NOI18N
+                                        && !ifaceFqn.startsWith("javax.ejb.")  //NOI18N
+                                        && !ifaceFqn.startsWith("jakarta.ejb.")) { //NOI18N
                                     return false;
                                 }
                             }

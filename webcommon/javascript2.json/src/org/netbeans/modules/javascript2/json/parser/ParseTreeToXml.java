@@ -20,6 +20,7 @@ package org.netbeans.modules.javascript2.json.parser;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -35,7 +36,7 @@ import org.w3c.dom.Element;
  *
  * @author Tomas Zezula
  */
-public class ParseTreeToXml extends JsonBaseVisitor<Document> {
+public class ParseTreeToXml extends JsonParserBaseVisitor<Document> {
     private final JsonLexer lexer;
     private final JsonParser parser;
     private Document doc;
@@ -133,7 +134,7 @@ public class ParseTreeToXml extends JsonBaseVisitor<Document> {
     public static String stringify(@NonNull final Document doc) throws IOException {
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
         XMLUtil.write(doc, out, "UTF-8");   //NOI18N
-        return new String(out.toByteArray(),"UTF-8");   //NOI18N
+        return new String(out.toByteArray(), StandardCharsets.UTF_8);
     }
 
 

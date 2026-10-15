@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #ffff7c;
+      }
+
+      .st1 {
+        opacity: .3;
+      }
+
+      .st1, .st2 {
+        fill: #897329;
+      }
+
+      .st3 {
+        fill: #fff;
+      }
+
+      .st4 {
+        fill: #e9e9e9;
+      }
+
+      .st5 {
+        opacity: .5;
+      }
+
+      .st6 {
+        fill: #8d8d8d;
+      }
+    </style>
+  </defs>
+  <g>
+    <rect class="st4" x="6.5" y="8.5" width="4" height="6" rx="1" ry="1"/>
+    <path class="st6" d="M9.5,9c.271,0,.5.229.5.5v4c0,.271-.229.5-.5.5h-2c-.271,0-.5-.229-.5-.5v-4c0-.271.229-.5.5-.5h2M9.5,8h-2c-.825,0-1.5.675-1.5,1.5v4c0,.825.675,1.5,1.5,1.5h2c.825,0,1.5-.675,1.5-1.5v-4c0-.825-.675-1.5-1.5-1.5h0Z"/>
+  </g>
+  <g class="st5">
+    <rect class="st4" x="7" y="12" width="3" height=".5"/>
+    <polygon class="st6" points="10 12 7 12 7 12.5 10 12.5 10 12 10 12"/>
+  </g>
+  <g class="st5">
+    <rect class="st4" x="7" y="13" width="3" height=".5"/>
+    <polygon class="st6" points="10 13 7 13 7 13.5 10 13.5 10 13 10 13"/>
+  </g>
+  <g>
+    <path class="st0" d="M6.365,11c-.142-.407-.345-.908-.409-1.059-.09-.253-.137-.386-1.052-1.912-.309-.516-.442-.699-.54-.834-.123-.169-.179-.246-.593-1.086-.34-.689-.359-1.54-.057-2.53.46-1.514,2.375-3.08,4.781-3.08s4.329,1.565,4.789,3.079c.303.99.283,1.841-.057,2.53-.414.84-.47.917-.593,1.086-.098.135-.231.318-.54.834-.915,1.525-.962,1.658-1.025,1.842-.084.202-.292.717-.436,1.128h-4.27Z"/>
+    <path class="st2" d="M8.505,1c2.174,0,3.895,1.385,4.302,2.725.267.877.258,1.585-.027,2.163-.395.802-.447.873-.549,1.014-.104.143-.247.34-.565.87-.901,1.503-.982,1.688-1.082,1.972-.038.089-.17.91-.3,1.255h-3.568c-.132-.35-.268-1.183-.314-1.293-.086-.247-.167-.432-1.068-1.935-.318-.531-.461-.727-.565-.87-.103-.141-.154-.212-.549-1.014-.285-.579-.294-1.286-.027-2.163.408-1.34,2.129-2.725,4.308-2.725h.004M8.496,0C5.945,0,3.786,1.627,3.236,3.434c-.154.505-.485,1.737.087,2.897.724,1.469.418.73,1.153,1.956,1.074,1.791.914,1.604,1.02,1.851.098.228.414,1.02.504,1.362h5c.09-.343.406-1.134.504-1.362.106-.247-.054-.06,1.02-1.851.735-1.226.429-.487,1.153-1.956.572-1.16.241-2.392.087-2.897-.55-1.806-2.709-3.434-5.259-3.434h-.009Z"/>
+  </g>
+  <circle class="st3" cx="8.5" cy="4.75" r="2.25"/>
+  <polygon class="st1" points="10.495 6.168 10.124 5.832 8.501 7.626 6.896 5.833 6.522 6.167 8.26 8.106 8.26 11 8.76 11 8.76 8.085 10.495 6.168"/>
+
+</svg>

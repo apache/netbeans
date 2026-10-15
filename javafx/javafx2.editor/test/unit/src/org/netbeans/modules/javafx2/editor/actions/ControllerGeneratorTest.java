@@ -84,7 +84,7 @@ public class ControllerGeneratorTest  extends FXMLCompletionTestBase {
                     public void run(WorkingCopy wcp) throws Exception {
                         wcp.toPhase(JavaSource.Phase.RESOLVED);
                         ClassTree clazz =wcp.getTreeMaker().Class(
-                                wcp.getTreeMaker().Modifiers(Collections.<Modifier>emptySet()), 
+                                wcp.getTreeMaker().Modifiers(Collections.<Modifier>emptySet()),
                                 "FieldsWithTypeParams2", Collections.<TypeParameterTree>emptyList(), null, Collections.<Tree>emptyList(),
                                 Collections.<Tree>emptyList());
                         
@@ -106,7 +106,7 @@ public class ControllerGeneratorTest  extends FXMLCompletionTestBase {
                             // add to the generated class a field, with the simplename derived from the class:
                             
                             VariableTree v = wcp.getTreeMaker().Variable(
-                                    wcp.getTreeMaker().Modifiers(Collections.<Modifier>emptySet()), 
+                                    wcp.getTreeMaker().Modifiers(Collections.<Modifier>emptySet()),
                                     "f" + e.getSimpleName(), 
                                     wcp.getTreeMaker().Type(erased), null);
                             

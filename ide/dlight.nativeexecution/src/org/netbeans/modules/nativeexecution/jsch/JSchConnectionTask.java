@@ -274,7 +274,7 @@ public final class JSchConnectionTask implements Cancellable {
         CONNECTION_TIMEOUT,
     }
 
-    private final static class Result {
+    private static final class Result {
 
         public final JSchChannelsSupport cs;
         public final Problem problem;

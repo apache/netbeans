@@ -31,10 +31,7 @@ import org.xml.sax.SAXException;
  */
 public class JavaEEProfileReader extends AbstractReader {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Java EE profile values from XML element. */
     public class Profile {
 
@@ -88,10 +85,7 @@ public class JavaEEProfileReader extends AbstractReader {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** <code>javaee</code> XML element name. */
     private static final String NODE = "profile";
 
@@ -104,18 +98,12 @@ public class JavaEEProfileReader extends AbstractReader {
     /** <code>check</code> XML element attribute name. */
     private static final String CHECK_ATTR = "check";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Profiles retrieved from XML elements. */
     private List<Profile> profiles;
 
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of <code>profile</code> Java EE configuration
      * XML element reader.
@@ -128,10 +116,7 @@ public class JavaEEProfileReader extends AbstractReader {
         profiles = new LinkedList<>();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Tree parser methods                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Process attributes from current XML element.
      * <p/>
@@ -147,10 +132,7 @@ public class JavaEEProfileReader extends AbstractReader {
                 attributes.getValue(CHECK_ATTR)));
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get profiles retrieved from XML elements.
      * <p/>
@@ -160,10 +142,7 @@ public class JavaEEProfileReader extends AbstractReader {
         return profiles;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Reset this XML element reader.
      */

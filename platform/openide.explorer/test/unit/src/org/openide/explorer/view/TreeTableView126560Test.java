@@ -97,7 +97,7 @@ public class TreeTableView126560Test extends NbTestCase {
 
         class AwtBlock implements Runnable {
             
-            synchronized public void run() {
+            public synchronized void run() {
                 notifyAll();
                 doWait();
             }

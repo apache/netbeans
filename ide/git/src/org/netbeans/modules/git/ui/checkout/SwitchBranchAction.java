@@ -25,7 +25,7 @@ import java.io.File;
 import java.util.AbstractMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.AbstractAction;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.libs.git.GitBranch;
 import org.netbeans.modules.git.ui.repository.RepositoryInfo;
 import org.netbeans.modules.git.ui.repository.RevisionDialogController;
@@ -46,6 +46,17 @@ import org.openide.util.actions.SystemAction;
 @ActionID(id = "org.netbeans.modules.git.ui.checkout.SwitchBranchAction", category = "Git")
 @ActionRegistration(displayName = "#LBL_SwitchBranchAction_Name")
 public class SwitchBranchAction extends AbstractCheckoutAction {
+
+    private static final String ICON_RESOURCE = "org/netbeans/modules/git/resources/icons/active_branch.png"; //NOI18N
+
+    public SwitchBranchAction() {
+        super(ICON_RESOURCE);
+    }
+
+    @Override
+    protected String iconResource() {
+        return ICON_RESOURCE;
+    }
 
     @Override
     protected void performAction (File repository, File[] roots, VCSContext context) {
@@ -118,7 +129,7 @@ public class SwitchBranchAction extends AbstractCheckoutAction {
                         }
                     }
                 };
-                ProgressUtils.runOffEventDispatchThread(run, Bundle.MSG_GitAction_savingFiles_progress(), canceled, false);
+                BaseProgressUtils.runOffEventDispatchThread(run, Bundle.MSG_GitAction_savingFiles_progress(), canceled, false);
             }
         }
     }

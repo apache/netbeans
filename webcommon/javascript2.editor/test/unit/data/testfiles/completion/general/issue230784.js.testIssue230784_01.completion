@@ -3,7 +3,7 @@ var myObject10 = (new myObject()).p|roperty1.toLocaleString().fontsize().toPreci
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 CLASS      prototype                       [PUBLIC]   JS Platform
-METHOD     preventExtensions(obj: Object)  [PUBLIC,   JS Platform
-METHOD     propertyIsEnumerable(prop: Str  [PUBLIC]   JS Platform
+METHOD     preventExtensions(o: Object):   [PUBLIC,   JS Platform
+METHOD     propertyIsEnumerable(v: Number  [PUBLIC]   JS Platform
 FIELD      property1: Number               [PUBLIC]   issue230784.js
 FIELD      property2: String               [PUBLIC]   issue230784.js

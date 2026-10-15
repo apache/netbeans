@@ -157,7 +157,7 @@ public class ProjectXMLCatalogReader implements CatalogReader, CatalogDescriptor
                 }
                 SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
                 try {
-                    LAST_USED_SCHEMA = schemaFactory.newSchema(sources.toArray(new Source[sources.size()]));
+                    LAST_USED_SCHEMA = schemaFactory.newSchema(sources.toArray(new Source[0]));
                     LAST_USED_SCHEMA_HASH = hash;
                 } catch (SAXException x) {
                     // Try to determine the culprit and report appropriately.

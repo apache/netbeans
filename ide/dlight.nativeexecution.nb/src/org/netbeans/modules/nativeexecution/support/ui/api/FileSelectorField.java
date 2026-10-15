@@ -44,7 +44,7 @@ import org.openide.util.RequestProcessor;
 public final class FileSelectorField extends JTextField
         implements PopupMenuListener {
 
-    private final static RequestProcessor rp = new RequestProcessor("FileSelectorField", 3); // NOI18N
+    private static final RequestProcessor rp = new RequestProcessor("FileSelectorField", 3); // NOI18N
     private final AtomicReference<CompletionTask> currentTask;
     private boolean listenersInactive = false;
     private AutocompletionProvider provider;

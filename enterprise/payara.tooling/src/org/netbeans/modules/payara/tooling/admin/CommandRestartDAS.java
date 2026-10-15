@@ -35,20 +35,14 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
 @RunnerRestClass(command="restart")
 public class CommandRestartDAS extends Command {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command string for version command. */
     private static final String COMMAND = "restart-domain";
 
     /** Error message for administration command execution exception .*/
     private static final String ERROR_MESSAGE = "DAS restart failed.";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Restarts running DAS server.
      * <p/>
@@ -71,17 +65,11 @@ public class CommandRestartDAS extends Command {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Specifies whether the domain is restarted with JPDA. */
     final boolean debug;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara server version command entity.
      * <p/>

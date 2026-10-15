@@ -1,10 +1,11 @@
 #Signature file v4.1
-#Version 1.33
+#Version 1.60
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -29,6 +30,7 @@ meth public boolean addResult(java.lang.Runnable,java.lang.String)
  anno 0 org.netbeans.api.annotations.common.CheckReturnValue()
 meth public boolean addResult(java.lang.Runnable,java.lang.String,java.lang.String,java.util.List<? extends javax.swing.KeyStroke>)
  anno 0 org.netbeans.api.annotations.common.CheckReturnValue()
+meth public boolean isObsolete()
 supr java.lang.Object
 hfds catResult,sRequest
 

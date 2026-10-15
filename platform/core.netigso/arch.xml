@@ -118,12 +118,10 @@
         </question>
 -->
  <answer id="arch-usecases">
-  <p>
    <usecase id="archive" name="Share NetBeans Resource Cache">The only supported usecase right now is to
    allow any framework to obtain access to internal cache and load classes
    from it. See <a href="@TOP@/org/netbeans/core/netigso/spi/NetigsoArchive.html">NetigsoArchive</a>.
    </usecase>
-  </p>
  </answer>
 
 

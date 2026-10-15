@@ -47,10 +47,7 @@ import org.openide.util.Parameters;
  */
 public class JavaUtils {
     
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = PayaraLogger.get(JavaUtils.class);
@@ -67,10 +64,7 @@ public class JavaUtils {
     public static final String
             JAVA_SE_SPECIFICATION_NAME = "j2se";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get installed Java SE platforms.
      * <p/>
@@ -98,7 +92,7 @@ public class JavaUtils {
         // Java SE platfofms supported by Payara .
         PayaraJavaSEConfig javaSEConfig
                 = ConfigBuilderProvider.getBuilder(instance)
-                .getJavaSEConfig(instance.getVersion());
+                .getPlatformJavaSEConfig(instance.getPlatformVersion());
         Set<JavaSEPlatform> supportedPlatforms = javaSEConfig.getPlatforms();
         // Try to find Java SE home in installed Java SE platformsList first.
         // It's much faster than external platform version check.
@@ -204,7 +198,7 @@ public class JavaUtils {
         JavaPlatform[] allPlatforms = getInstalledJavaSEPlatforms();
         PayaraJavaSEConfig javaSEConfig
                 = ConfigBuilderProvider.getBuilder(instance)
-                .getJavaSEConfig(instance.getVersion());
+                .getPlatformJavaSEConfig(instance.getPlatformVersion());
         Set<JavaSEPlatform> supportedPlatforms = javaSEConfig.getPlatforms();
         // Finish quickly for empty set.
         if (supportedPlatforms == null || supportedPlatforms.isEmpty()) {

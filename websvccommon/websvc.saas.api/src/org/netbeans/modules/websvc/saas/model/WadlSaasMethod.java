@@ -168,7 +168,7 @@ public class WadlSaasMethod extends SaasMethod {
                     }
                 }
             }
-            path = result.toArray(new Resource[result.size()]);
+            path = result.toArray(new Resource[0]);
         }
         return path;
     }

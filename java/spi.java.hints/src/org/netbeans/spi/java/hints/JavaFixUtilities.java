@@ -31,6 +31,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.DoWhileLoopTree;
+import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -56,8 +57,8 @@ import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.UnionTypeTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
-import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
+import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
@@ -72,12 +73,15 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -117,7 +121,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
-import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.modules.SpecificationVersion;
 import org.openide.text.PositionBounds;
 import org.openide.util.Exceptions;
@@ -146,9 +149,10 @@ public class JavaFixUtilities {
         return rewriteFix(ctx.getInfo(), displayName, what, to, ctx.getVariables(), ctx.getMultiVariables(), ctx.getVariableNames(), ctx.getConstraints(), Collections.<String, String>emptyMap());
     }
 
+    @SuppressWarnings("AssignmentToMethodParameter")
     static Fix rewriteFix(CompilationInfo info, String displayName, TreePath what, final String to, Map<String, TreePath> parameters, Map<String, Collection<? extends TreePath>> parametersMulti, final Map<String, String> parameterNames, Map<String, TypeMirror> constraints, Map<String, String> options, String... imports) {
-        final Map<String, TreePathHandle> params = new HashMap<String, TreePathHandle>();
-        final Map<String, Object> extraParamsData = new HashMap<String, Object>();
+        final Map<String, TreePathHandle> params = new HashMap<>();
+        final Map<String, Object> extraParamsData = new HashMap<>();
         final Map<String, ElementHandle<?>> implicitThis = new HashMap<>();
 
         for (Entry<String, TreePath> e : parameters.entrySet()) {
@@ -161,19 +165,19 @@ public class JavaFixUtilities {
                 }
             }
             params.put(e.getKey(), TreePathHandle.create(e.getValue(), info));
-            if (e.getValue() instanceof Callable) {
+            if (e.getValue() instanceof Callable callable) {
                 try {
-                    extraParamsData.put(e.getKey(), ((Callable) e.getValue()).call());
+                    extraParamsData.put(e.getKey(), callable.call());
                 } catch (Exception ex) {
                     Exceptions.printStackTrace(ex);
                 }
             }
         }
 
-        final Map<String, Collection<TreePathHandle>> paramsMulti = new HashMap<String, Collection<TreePathHandle>>();
+        final Map<String, Collection<TreePathHandle>> paramsMulti = new HashMap<>();
 
         for (Entry<String, Collection<? extends TreePath>> e : parametersMulti.entrySet()) {
-            Collection<TreePathHandle> tph = new LinkedList<TreePathHandle>();
+            Collection<TreePathHandle> tph = new LinkedList<>();
 
             for (TreePath tp : e.getValue()) {
                 TreePathHandle x = TreePathHandle.create(tp, info);
@@ -187,17 +191,28 @@ public class JavaFixUtilities {
             paramsMulti.put(e.getKey(), tph);
         }
 
-        final Map<String, TypeMirrorHandle<?>> constraintsHandles = new HashMap<String, TypeMirrorHandle<?>>();
+        final Map<String, TypeMirrorHandle<?>> constraintsHandles = new HashMap<>();
 
         for (Entry<String, TypeMirror> c : constraints.entrySet()) {
             constraintsHandles.put(c.getKey(), TypeMirrorHandle.create(c.getValue()));
         }
 
+        Supplier<String> lazyNamer;
         if (displayName == null) {
-            displayName = defaultFixDisplayName(info, parameters, to);
+            lazyNamer = new Supplier<String>() {
+                private String dn = null;
+                @Override public String get() {
+                    if(dn == null) {
+                        dn = defaultFixDisplayName(parameters, parametersMulti, to);
+                    }
+                    return dn;
+                }
+            };
+        } else {
+            lazyNamer = () -> displayName;
         }
 
-        return new JavaFixRealImpl(info, what, options, displayName, to, params, extraParamsData, implicitThis, paramsMulti, parameterNames, constraintsHandles, Arrays.asList(imports)).toEditorFix();
+        return new JavaFixRealImpl(info, what, options, lazyNamer, to, params, extraParamsData, implicitThis, paramsMulti, parameterNames, constraintsHandles, Arrays.asList(imports)).toEditorFix();
     }
 
     private static Set<Tree> immediateChildren(Tree t) {
@@ -224,24 +239,49 @@ public class JavaFixUtilities {
      * @return an editor fix that removes the give tree from the source code
      */
     public static Fix removeFromParent(HintContext ctx, String displayName, TreePath what) {
-        return new RemoveFromParent(displayName, ctx.getInfo(), what).toEditorFix();
+        return new RemoveFromParent(displayName, ctx.getInfo(), what, false).toEditorFix();
     }
 
-    private static String defaultFixDisplayName(CompilationInfo info, Map<String, TreePath> variables, String replaceTarget) {
-        Map<String, String> stringsForVariables = new HashMap<String, String>();
+    /**Creates a fix that removes the given code corresponding to the given tree
+     * node together with all its usages from the source code
+     * 
+     * @param ctx basic context for which the fix should be created
+     * @param displayName the display name of the fix
+     * @param what the tree node that should be removed
+     * @return an editor fix that removes the give tree from the source code
+     * 
+     * @since 1.48
+     */
+    public static Fix safelyRemoveFromParent(HintContext ctx, String displayName, TreePath what) {
+        return RemoveFromParent.canSafelyRemove(ctx.getInfo(), what) ? new RemoveFromParent(displayName, ctx.getInfo(), what, true).toEditorFix() : null;
+    }
 
-        for (Entry<String, TreePath> e : variables.entrySet()) {
-            Tree t = e.getValue().getLeaf();
-            SourcePositions sp = info.getTrees().getSourcePositions();
-            int startPos = (int) sp.getStartPosition(info.getCompilationUnit(), t);
-            int endPos = (int) sp.getEndPosition(info.getCompilationUnit(), t);
+    @SuppressWarnings("AssignmentToMethodParameter")
+    private static String defaultFixDisplayName(Map<String, TreePath> variables, Map<String, Collection<? extends TreePath>> parametersMulti, String replaceTarget) {
+        Map<String, String> stringsForVariables = new LinkedHashMap<>();
 
-            if (startPos >= 0 && endPos >= 0) {
-                stringsForVariables.put(e.getKey(), info.getText().substring(startPos, endPos));
-            } else {
+        // replace multi vars first
+        for (Entry<String, Collection<? extends TreePath>> e : parametersMulti.entrySet()) {
+            if (e.getKey().startsWith("$$")) {
+                continue;
+            }
+            if (e.getValue().isEmpty()) {
+                stringsForVariables.put(e.getKey()+";", "");    // could be a statement
+                stringsForVariables.put(", "+e.getKey(), "");   // or parameter
                 stringsForVariables.put(e.getKey(), "");
+            } else if (e.getValue().size() == 1) {
+                String text = treePathToString(e.getValue().iterator().next(), false, e.getKey());
+                stringsForVariables.put(e.getKey(), text);
+            } else {
+                // keep the variable in the text for more complex cases, but we have to escape it somehow
+                stringsForVariables.put(e.getKey(), e.getKey().replace("$", "♦"));
             }
         }
+
+        // regular vars next, longest first in case a var is a prefix of another var
+        variables.entrySet().stream()
+                            .sorted((e1, e2) -> e2.getKey().length() - e1.getKey().length())
+                            .forEach(e -> stringsForVariables.put(e.getKey(), treePathToString(e.getValue(), true, e.getKey())));
 
         if (!stringsForVariables.containsKey("$this")) {
             //XXX: is this correct?
@@ -249,12 +289,24 @@ public class JavaFixUtilities {
         }
 
         for (Entry<String, String> e : stringsForVariables.entrySet()) {
-            String quotedVariable = java.util.regex.Pattern.quote(e.getKey());
-            String quotedTarget = Matcher.quoteReplacement(e.getValue());
-            replaceTarget = replaceTarget.replaceAll(quotedVariable, quotedTarget);
+            replaceTarget = replaceTarget.replace(e.getKey(), e.getValue());
         }
 
-        return "Rewrite to " + replaceTarget;
+        // cleanup and escape java code for html renderer
+        return "Rewrite to " + replaceTarget.replace("♦", "$")
+                                            .replace(";;", ";")
+                                            .replace("\n", " ")
+                                            .replaceAll("\\s{2,}", " ")
+                                            .replace("<", "&lt;");
+    }
+
+    private static String treePathToString(TreePath tp, boolean preferVarName, String fallback) {
+        Tree leaf = tp.getLeaf();
+        if (preferVarName && leaf.getKind() == Kind.VARIABLE) {
+            return ((VariableTree) leaf).getName().toString();
+        }
+        String str = leaf.toString();
+        return str.equals("(ERROR)") ? fallback : str;
     }
 
     private static void checkDependency(CompilationInfo copy, Element e, boolean canShowUI) {
@@ -300,7 +352,7 @@ public class JavaFixUtilities {
         }
     }
 
-    private static java.util.regex.Pattern SPEC_VERSION = java.util.regex.Pattern.compile("[0-9]+(\\.[0-9]+)+");
+    private static final java.util.regex.Pattern SPEC_VERSION = java.util.regex.Pattern.compile("[0-9]+(\\.[0-9]+)+");
 
     static SpecificationVersion computeSpecVersion(CompilationInfo info, Element el) {
         if (!Utilities.isJavadocSupported(info)) return null;
@@ -387,7 +439,7 @@ public class JavaFixUtilities {
     }
     
     private static class JavaFixRealImpl extends JavaFix {
-        private final String displayName;
+        private final Supplier<String> displayName;
         private final Map<String, TreePathHandle> params;
         private final Map<String, Object> extraParamsData;
         private final Map<String, ElementHandle<?>> implicitThis;
@@ -397,7 +449,7 @@ public class JavaFixUtilities {
         private final Iterable<? extends String> imports;
         private final String to;
 
-        public JavaFixRealImpl(CompilationInfo info, TreePath what, Map<String, String> options, String displayName, String to, Map<String, TreePathHandle> params, Map<String, Object> extraParamsData, Map<String, ElementHandle<?>> implicitThis, Map<String, Collection<TreePathHandle>> paramsMulti, final Map<String, String> parameterNames, Map<String, TypeMirrorHandle<?>> constraintsHandles, Iterable<? extends String> imports) {
+        public JavaFixRealImpl(CompilationInfo info, TreePath what, Map<String, String> options, Supplier<String> displayName, String to, Map<String, TreePathHandle> params, Map<String, Object> extraParamsData, Map<String, ElementHandle<?>> implicitThis, Map<String, Collection<TreePathHandle>> paramsMulti, final Map<String, String> parameterNames, Map<String, TypeMirrorHandle<?>> constraintsHandles, Iterable<? extends String> imports) {
             super(info, what, options);
 
             this.displayName = displayName;
@@ -413,17 +465,18 @@ public class JavaFixUtilities {
 
         @Override
         protected String getText() {
-            return displayName;
+            return displayName.get();
         }
 
         @Override
+        @SuppressWarnings("NestedAssignment")
         protected void performRewrite(TransformationContext ctx) {
             final WorkingCopy wc = ctx.getWorkingCopy();
             TreePath tp = ctx.getPath();
             
             final GeneratorUtilities gen = GeneratorUtilities.get(wc);
             tp = new TreePath(tp.getParentPath(), gen.importComments(tp.getLeaf(), tp.getCompilationUnit()));
-            final Map<String, TreePath> parameters = new HashMap<String, TreePath>();
+            final Map<String, TreePath> parameters = new HashMap<>();
 
             for (Entry<String, TreePathHandle> e : params.entrySet()) {
                 TreePath p = e.getValue().resolve(wc);
@@ -448,10 +501,10 @@ public class JavaFixUtilities {
                 implicitThis.put(e.getKey(), clazz);
             }
 
-            final Map<String, Collection<TreePath>> parametersMulti = new HashMap<String, Collection<TreePath>>();
+            final Map<String, Collection<TreePath>> parametersMulti = new HashMap<>();
 
             for (Entry<String, Collection<TreePathHandle>> e : paramsMulti.entrySet()) {
-                Collection<TreePath> tps = new LinkedList<TreePath>();
+                Collection<TreePath> tps = new LinkedList<>();
 
                 for (TreePathHandle tph : e.getValue()) {
                     TreePath p = tph.resolve(wc);
@@ -466,7 +519,7 @@ public class JavaFixUtilities {
                 parametersMulti.put(e.getKey(), tps);
             }
 
-            Map<String, TypeMirror> constraints = new HashMap<String, TypeMirror>();
+            Map<String, TypeMirror> constraints = new HashMap<>();
 
             for (Entry<String, TypeMirrorHandle<?>> c : constraintsHandles.entrySet()) {
                 constraints.put(c.getKey(), c.getValue().resolve(wc));
@@ -482,8 +535,8 @@ public class JavaFixUtilities {
                 parsed = ((ExpressionStatementTree) parsed).getExpression();
             }
             
-            Map<Tree, Tree> rewriteFromTo = new IdentityHashMap<Tree, Tree>();
-            List<Tree> order = new ArrayList<Tree>(7);
+            Map<Tree, Tree> rewriteFromTo = new IdentityHashMap<>();
+            List<Tree> order = new ArrayList<>(7);
             Tree original;
 
             if (Utilities.isFakeBlock(parsed)) {
@@ -497,7 +550,7 @@ public class JavaFixUtilities {
                     statements = statements.subList(1, statements.size() - 1);
 
                     if (parent.getLeaf().getKind() == Kind.BLOCK) {
-                        List<StatementTree> newStatements = new LinkedList<StatementTree>();
+                        List<StatementTree> newStatements = new LinkedList<>();
 
                         for (StatementTree st : ((BlockTree) parent.getLeaf()).getStatements()) {
                             if (st == tp.getLeaf()) {
@@ -520,7 +573,7 @@ public class JavaFixUtilities {
 
                 assert parent.getLeaf().getKind() == Kind.CLASS;
 
-                List<Tree> newMembers = new LinkedList<Tree>();
+                List<Tree> newMembers = new LinkedList<>();
 
                 ClassTree ct = (ClassTree) parent.getLeaf();
 
@@ -532,9 +585,9 @@ public class JavaFixUtilities {
                     }
                 }
 
-                rewriteFromTo.put(original = parent.getLeaf(), wc.getTreeMaker().Class(ct.getModifiers(), ct.getSimpleName(), ct.getTypeParameters(), ct.getExtendsClause(), ct.getImplementsClause(), newMembers));
+                rewriteFromTo.put(original = parent.getLeaf(), wc.getTreeMaker().Class(ct.getModifiers(), ct.getSimpleName(), ct.getTypeParameters(), ct.getExtendsClause(), ct.getImplementsClause(), ct.getPermitsClause(), newMembers));
             } else if (tp.getLeaf().getKind() == Kind.BLOCK && parametersMulti.containsKey("$$1$") && parsed.getKind() != Kind.BLOCK && StatementTree.class.isAssignableFrom(parsed.getKind().asInterface())) {
-                List<StatementTree> newStatements = new LinkedList<StatementTree>();
+                List<StatementTree> newStatements = new LinkedList<>();
 
                 newStatements.add(wc.getTreeMaker().ExpressionStatement(wc.getTreeMaker().Identifier("$$1$")));
                 newStatements.add((StatementTree) parsed);
@@ -567,7 +620,7 @@ public class JavaFixUtilities {
                 w = w.getParentPath();
             }
 
-            final Set<Tree> originalTrees = Collections.newSetFromMap(new IdentityHashMap<Tree, Boolean>());
+            final Set<Tree> originalTrees = Collections.newSetFromMap(new IdentityHashMap<>());
             
             new ErrorAwareTreeScanner<Void, Void>() {
                 @Override public Void scan(Tree tree, Void p) {
@@ -579,7 +632,7 @@ public class JavaFixUtilities {
             new ReplaceParameters(wc, ctx.isCanShowUI(), inImport, parameters, extraParamsData, implicitThis, parametersMulti, parameterNames, rewriteFromTo, order, originalTrees).scan(new TreePath(tp.getParentPath(), rewriteFromTo.get(original)), null);
 
             if (inPackage) {
-                String newPackage = wc.getTreeUtilities().translate(wc.getCompilationUnit().getPackageName(), new IdentityHashMap<Tree, Tree>(rewriteFromTo))./*XXX: not correct*/toString();
+                String newPackage = wc.getTreeUtilities().translate(wc.getCompilationUnit().getPackageName(), new IdentityHashMap<>(rewriteFromTo))./*XXX: not correct*/toString();
 
                 ClassPath source = wc.getClasspathInfo().getClassPath(PathKind.SOURCE);
                 FileObject ownerRoot = source.findOwnerRoot(wc.getFileObject());
@@ -719,8 +772,7 @@ public class JavaFixUtilities {
             TreePath tp = parameters.get(name);
 
             if (tp != null) {
-                if (tp.getLeaf() instanceof Hacks.RenameTree) {
-                    Hacks.RenameTree rt = (Hacks.RenameTree) tp.getLeaf();
+                if (tp.getLeaf() instanceof Hacks.RenameTree rt) {
                     return make.setLabel(rt.originalTree, rt.newName);
                 }
                 if (!parameterNames.containsKey(name)) {
@@ -905,9 +957,10 @@ public class JavaFixUtilities {
 
             List<? extends TypeParameterTree> typeParams = resolveMultiParameters(node.getTypeParameters());
             List<? extends Tree> implementsClauses = resolveMultiParameters(node.getImplementsClause());
+            List<? extends Tree> permitsClauses = resolveMultiParameters(node.getPermitsClause());
             List<? extends Tree> members = resolveMultiParameters(Utilities.filterHidden(getCurrentPath(), node.getMembers()));
             Tree extend = resolveOptionalValue(node.getExtendsClause());
-            ClassTree nue = make.Class(node.getModifiers(), newName, typeParams, extend, implementsClauses, members);
+            ClassTree nue = make.Class(node.getModifiers(), newName, typeParams, extend, implementsClauses, permitsClauses, members);
             
             rewrite(node, nue);
             
@@ -940,10 +993,9 @@ public class JavaFixUtilities {
 
         @Override
         public Number visitLiteral(LiteralTree node, Void p) {
-            if (node.getValue() instanceof Number) {
-                return (Number) node.getValue();
+            if (node.getValue() instanceof Number number) {
+                return number;
             }
-
             return super.visitLiteral(node, p);
         }
 
@@ -953,138 +1005,128 @@ public class JavaFixUtilities {
             Number right = scan(node.getRightOperand(), p);
 
             if (left != null && right != null) {
-                Number result = null;
-                switch (node.getKind()) {
-                    case MULTIPLY:
-                            if (left instanceof Double || right instanceof Double) {
-                                result = left.doubleValue() * right.doubleValue();
-                            } else if (left instanceof Float || right instanceof Float) {
-                                result = left.floatValue() * right.floatValue();
-                            } else if (left instanceof Long || right instanceof Long) {
-                                result = left.longValue() * right.longValue();
-                            } else if (left instanceof Integer || right instanceof Integer) {
-                                result = left.intValue() * right.intValue();
-                            } else {
-                                throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
-                            }
-                            break;
-
-                    case DIVIDE:
-                            if (left instanceof Double || right instanceof Double) {
-                                result = left.doubleValue() / right.doubleValue();
-                            } else if (left instanceof Float || right instanceof Float) {
-                                result = left.floatValue() / right.floatValue();
-                            } else if (left instanceof Long || right instanceof Long) {
-                                result = left.longValue() / right.longValue();
-                            } else if (left instanceof Integer || right instanceof Integer) {
-                                result = left.intValue() / right.intValue();
-                            } else {
-                                throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
-                            }
-                            break;
-
-                    case REMAINDER:
-                            if (left instanceof Double || right instanceof Double) {
-                                result = left.doubleValue() % right.doubleValue();
-                            } else if (left instanceof Float || right instanceof Float) {
-                                result = left.floatValue() % right.floatValue();
-                            } else if (left instanceof Long || right instanceof Long) {
-                                result = left.longValue() % right.longValue();
-                            } else if (left instanceof Integer || right instanceof Integer) {
-                                result = left.intValue() % right.intValue();
-                            } else {
-                                throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
-                            }
-                            break;
-
-                    case PLUS:
-                            if (left instanceof Double || right instanceof Double) {
-                                result = left.doubleValue() + right.doubleValue();
-                            } else if (left instanceof Float || right instanceof Float) {
-                                result = left.floatValue() + right.floatValue();
-                            } else if (left instanceof Long || right instanceof Long) {
-                                result = left.longValue() + right.longValue();
-                            } else if (left instanceof Integer || right instanceof Integer) {
-                                result = left.intValue() + right.intValue();
-                            } else {
-                                throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
-                            }
-                            break;
-
-                    case MINUS:
-                            if (left instanceof Double || right instanceof Double) {
-                                result = left.doubleValue() - right.doubleValue();
-                            } else if (left instanceof Float || right instanceof Float) {
-                                result = left.floatValue() - right.floatValue();
-                            } else if (left instanceof Long || right instanceof Long) {
-                                result = left.longValue() - right.longValue();
-                            } else if (left instanceof Integer || right instanceof Integer) {
-                                result = left.intValue() - right.intValue();
-                            } else {
-                                throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
-                            }
-                            break;
-
-                    case LEFT_SHIFT:
-                            if (left instanceof Long || right instanceof Long) {
-                                result = left.longValue() << right.longValue();
-                            } else if (left instanceof Integer || right instanceof Integer) {
-                                result = left.intValue() << right.intValue();
-                            } else {
-                                throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
-                            }
-                            break;
-
-                    case RIGHT_SHIFT:
-                            if (left instanceof Long || right instanceof Long) {
-                                result = left.longValue() >> right.longValue();
-                            } else if (left instanceof Integer || right instanceof Integer) {
-                                result = left.intValue() >> right.intValue();
-                            } else {
-                                throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
-                            }
-                            break;
-
-                    case UNSIGNED_RIGHT_SHIFT:
-                            if (left instanceof Long || right instanceof Long) {
-                                result = left.longValue() >>> right.longValue();
-                            } else if (left instanceof Integer || right instanceof Integer) {
-                                result = left.intValue() >>> right.intValue();
-                            } else {
-                                throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
-                            }
-                            break;
-
-                    case AND:
-                            if (left instanceof Long || right instanceof Long) {
-                                result = left.longValue() & right.longValue();
-                            } else if (left instanceof Integer || right instanceof Integer) {
-                                result = left.intValue() & right.intValue();
-                            } else {
-                                throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
-                            }
-                            break;
-
-                    case XOR:
-                            if (left instanceof Long || right instanceof Long) {
-                                result = left.longValue() ^ right.longValue();
-                            } else if (left instanceof Integer || right instanceof Integer) {
-                                result = left.intValue() ^ right.intValue();
-                            } else {
-                                throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
-                            }
-                            break;
-
-                    case OR:
-                            if (left instanceof Long || right instanceof Long) {
-                                result = left.longValue() | right.longValue();
-                            } else if (left instanceof Integer || right instanceof Integer) {
-                                result = left.intValue() | right.intValue();
-                            } else {
-                                throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
-                            }
-                            break;
-                }
+                Number result = switch (node.getKind()) {
+                    case MULTIPLY -> {
+                        if (left instanceof Double || right instanceof Double) {
+                            yield left.doubleValue() * right.doubleValue();
+                        } else if (left instanceof Float || right instanceof Float) {
+                            yield left.floatValue() * right.floatValue();
+                        } else if (left instanceof Long || right instanceof Long) {
+                            yield left.longValue() * right.longValue();
+                        } else if (left instanceof Integer || right instanceof Integer) {
+                            yield left.intValue() * right.intValue();
+                        } else {
+                            throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
+                        }
+                    }
+                    case DIVIDE -> {
+                        if (left instanceof Double || right instanceof Double) {
+                            yield left.doubleValue() / right.doubleValue();
+                        } else if (left instanceof Float || right instanceof Float) {
+                            yield left.floatValue() / right.floatValue();
+                        } else if (left instanceof Long || right instanceof Long) {
+                            yield left.longValue() / right.longValue();
+                        } else if (left instanceof Integer || right instanceof Integer) {
+                            yield left.intValue() / right.intValue();
+                        } else {
+                            throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
+                        }
+                    }
+                    case REMAINDER -> {
+                        if (left instanceof Double || right instanceof Double) {
+                            yield left.doubleValue() % right.doubleValue();
+                        } else if (left instanceof Float || right instanceof Float) {
+                            yield left.floatValue() % right.floatValue();
+                        } else if (left instanceof Long || right instanceof Long) {
+                            yield left.longValue() % right.longValue();
+                        } else if (left instanceof Integer || right instanceof Integer) {
+                            yield left.intValue() % right.intValue();
+                        } else {
+                            throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
+                        }
+                    }
+                    case PLUS -> {
+                        if (left instanceof Double || right instanceof Double) {
+                            yield left.doubleValue() + right.doubleValue();
+                        } else if (left instanceof Float || right instanceof Float) {
+                            yield left.floatValue() + right.floatValue();
+                        } else if (left instanceof Long || right instanceof Long) {
+                            yield left.longValue() + right.longValue();
+                        } else if (left instanceof Integer || right instanceof Integer) {
+                            yield left.intValue() + right.intValue();
+                        } else {
+                            throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
+                        }
+                    }
+                    case MINUS -> {
+                        if (left instanceof Double || right instanceof Double) {
+                            yield left.doubleValue() - right.doubleValue();
+                        } else if (left instanceof Float || right instanceof Float) {
+                            yield left.floatValue() - right.floatValue();
+                        } else if (left instanceof Long || right instanceof Long) {
+                            yield left.longValue() - right.longValue();
+                        } else if (left instanceof Integer || right instanceof Integer) {
+                            yield left.intValue() - right.intValue();
+                        } else {
+                            throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
+                        }
+                    }
+                    case LEFT_SHIFT -> {
+                        if (left instanceof Long || right instanceof Long) {
+                            yield left.longValue() << right.longValue();
+                        } else if (left instanceof Integer || right instanceof Integer) {
+                            yield left.intValue() << right.intValue();
+                        } else {
+                            throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
+                        }
+                    }
+                    case RIGHT_SHIFT -> {
+                        if (left instanceof Long || right instanceof Long) {
+                            yield left.longValue() >> right.longValue();
+                        } else if (left instanceof Integer || right instanceof Integer) {
+                            yield left.intValue() >> right.intValue();
+                        } else {
+                            throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
+                        }
+                    }
+                    case UNSIGNED_RIGHT_SHIFT -> {
+                        if (left instanceof Long || right instanceof Long) {
+                            yield left.longValue() >>> right.longValue();
+                        } else if (left instanceof Integer || right instanceof Integer) {
+                            yield left.intValue() >>> right.intValue();
+                        } else {
+                            throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
+                        }
+                    }
+                    case AND -> {
+                        if (left instanceof Long || right instanceof Long) {
+                            yield left.longValue() & right.longValue();
+                        } else if (left instanceof Integer || right instanceof Integer) {
+                            yield left.intValue() & right.intValue();
+                        } else {
+                            throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
+                        }
+                    }
+                    case XOR -> {
+                        if (left instanceof Long || right instanceof Long) {
+                            yield left.longValue() ^ right.longValue();
+                        } else if (left instanceof Integer || right instanceof Integer) {
+                            yield left.intValue() ^ right.intValue();
+                        } else {
+                            throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
+                        }
+                    }
+                    case OR -> {
+                        if (left instanceof Long || right instanceof Long) {
+                            yield left.longValue() | right.longValue();
+                        } else if (left instanceof Integer || right instanceof Integer) {
+                            yield left.intValue() | right.intValue();
+                        } else {
+                            throw new IllegalStateException("left=" + left.getClass() + ", right=" + right.getClass());
+                        }
+                    }
+                    default -> null;
+                };
 
                 if (result != null) {
                     rewrite(node, make.Literal(result));
@@ -1101,25 +1143,23 @@ public class JavaFixUtilities {
             Number op  = scan(node.getExpression(), p);
 
             if (op != null) {
-                Number result = null;
-                switch (node.getKind()) {
-                    case UNARY_MINUS:
-                            if (op instanceof Double) {
-                                result = -op.doubleValue();
-                            } else if (op instanceof Float) {
-                                result = -op.floatValue();
-                            } else if (op instanceof Long) {
-                                result = -op.longValue();
-                            } else if (op instanceof Integer) {
-                                result = -op.intValue();
-                            } else {
-                                throw new IllegalStateException("op=" + op.getClass());
-                            }
-                            break;
-                    case UNARY_PLUS:
-                        result = op;
-                        break;
-                }
+                Number result = switch (node.getKind()) {
+                    case UNARY_MINUS -> {
+                        if (op instanceof Double) {
+                            yield -op.doubleValue();
+                        } else if (op instanceof Float) {
+                            yield -op.floatValue();
+                        } else if (op instanceof Long) {
+                            yield -op.longValue();
+                        } else if (op instanceof Integer) {
+                            yield -op.intValue();
+                        } else {
+                            throw new IllegalStateException("op=" + op.getClass());
+                        }
+                    }
+                    case UNARY_PLUS -> op;
+                    default -> null;
+                };
 
                 if (result != null) {
                     rewrite(node, make.Literal(result));
@@ -1151,6 +1191,7 @@ public class JavaFixUtilities {
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public Number visitMethodInvocation(MethodInvocationTree node, Void p) {
             List<? extends ExpressionTree> typeArgs = (List<? extends ExpressionTree>) resolveMultiParameters(node.getTypeArguments());
             List<? extends ExpressionTree> args = resolveMultiParameters(node.getArguments());
@@ -1162,6 +1203,7 @@ public class JavaFixUtilities {
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public Number visitNewClass(NewClassTree node, Void p) {
             List<? extends ExpressionTree> typeArgs = (List<? extends ExpressionTree>) resolveMultiParameters(node.getTypeArguments());
             List<? extends ExpressionTree> args = resolveMultiParameters(node.getArguments());
@@ -1172,6 +1214,7 @@ public class JavaFixUtilities {
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public Number visitParameterizedType(ParameterizedTypeTree node, Void p) {
             List<? extends ExpressionTree> typeArgs = (List<? extends ExpressionTree>) resolveMultiParameters(node.getTypeArguments());
             ParameterizedTypeTree nue = make.ParameterizedType(node.getType(), typeArgs);
@@ -1201,7 +1244,7 @@ public class JavaFixUtilities {
 
         @Override
         public Number visitModifiers(ModifiersTree node, Void p) {
-            List<AnnotationTree> annotations = new ArrayList<AnnotationTree>(node.getAnnotations());
+            List<AnnotationTree> annotations = new ArrayList<>(node.getAnnotations());
             IdentifierTree ident = !annotations.isEmpty() && annotations.get(0).getAnnotationType().getKind() == Kind.IDENTIFIER ? (IdentifierTree) annotations.get(0).getAnnotationType() : null;
 
             if (ident != null) {
@@ -1217,12 +1260,12 @@ public class JavaFixUtilities {
                     Set<Modifier> actualFlags = EnumSet.noneOf(Modifier.class);
                     boolean[] actualAnnotationsMask = new boolean[0];
                     
-                    if (actualContent instanceof Object[] && ((Object[]) actualContent)[0] instanceof Set) {
-                        actualFlags.addAll(NbCollections.checkedSetByFilter((Set) ((Object[]) actualContent)[0], Modifier.class, false));
+                    if (actualContent instanceof Object[] objects && objects[0] instanceof Set set) {
+                        actualFlags.addAll(NbCollections.checkedSetByFilter(set, Modifier.class, false));
                     }
                     
-                    if (actualContent instanceof Object[] && ((Object[]) actualContent)[1] instanceof boolean[]) {
-                        actualAnnotationsMask = (boolean[]) ((Object[]) actualContent)[1];
+                    if (actualContent instanceof Object[] objects && objects[1] instanceof boolean[] booleans) {
+                        actualAnnotationsMask = booleans;
                     }
                     
                     nue = origMods;
@@ -1239,10 +1282,15 @@ public class JavaFixUtilities {
                     int ai = 0;
                     
                     OUTER: for (AnnotationTree a : origMods.getAnnotations()) {
-                        if (actualAnnotationsMask.length <= ai || actualAnnotationsMask[ai++]) continue;
+                        if (actualAnnotationsMask.length <= ai || actualAnnotationsMask[ai++]) {
+                            continue;
+                        }
                         for (Iterator<AnnotationTree> it = annotations.iterator(); it.hasNext();) {
                             AnnotationTree toCheck = it.next();
-                            Collection<? extends Occurrence> match = org.netbeans.api.java.source.matching.Matcher.create(info).setTreeTopSearch().setSearchRoot(new TreePath(getCurrentPath(), a)).match(Pattern.createSimplePattern(new TreePath(getCurrentPath(), toCheck)));
+                            Collection<? extends Occurrence> match = org.netbeans.api.java.source.matching.Matcher.create(info)
+                                    .setTreeTopSearch()
+                                    .setSearchRoot(new TreePath(getCurrentPath(), a))
+                                    .match(Pattern.createSimplePattern(new TreePath(getCurrentPath(), toCheck)));
                             
                             if (!match.isEmpty()) {
                                 //should be kept:
@@ -1285,6 +1333,8 @@ public class JavaFixUtilities {
             List<? extends VariableTree> args = resolveMultiParameters(node.getParameters());
             LambdaExpressionTree nue = make.LambdaExpression(args, node.getBody());
 
+            Hacks.copyLambdaKind(node, nue);
+
             rewrite(node, nue);
 
             return super.visitLambdaExpression(node, p);
@@ -1300,11 +1350,12 @@ public class JavaFixUtilities {
             return super.visitAnnotation(node, p);
         }
 
+        @SuppressWarnings("unchecked")
         private <T extends Tree> List<T> resolveMultiParameters(List<T> list) {
             if (list == null) return null;
             if (!Utilities.containsMultistatementTrees(list)) return list;
 
-            List<T> result = new LinkedList<T>();
+            List<T> result = new LinkedList<>();
 
             for (T t : list) {
                 if (Utilities.isMultistatementWildcardTree(t)) {
@@ -1325,6 +1376,7 @@ public class JavaFixUtilities {
             return result;
         }
         
+        @SuppressWarnings("unchecked")
         private <T extends Tree> T resolveOptionalValue(T in) {
             if (in != null && Utilities.isMultistatementWildcardTree(in)) {
                 TreePath out = parameters.get(Utilities.getWildcardTreeName(in).toString());
@@ -1338,7 +1390,7 @@ public class JavaFixUtilities {
         private ExpressionTree negate(ExpressionTree original, Tree parent, boolean nullOnPlainNeg) {
             ExpressionTree newTree;
             switch (original.getKind()) {
-                case PARENTHESIZED:
+                case PARENTHESIZED -> {
                     ExpressionTree expr = ((ParenthesizedTree) original).getExpression();
                     ExpressionTree negatedOrNull = negate(expr, original, nullOnPlainNeg);
                     if (negatedOrNull != null) {
@@ -1354,47 +1406,30 @@ public class JavaFixUtilities {
                         return make.Unary(Kind.LOGICAL_COMPLEMENT, original);
                     }
                     */
-                    
-                case INSTANCE_OF:
+                }
+                case INSTANCE_OF -> {
                     return make.Unary(Kind.LOGICAL_COMPLEMENT, make.Parenthesized(original));
-                    
-                case LOGICAL_COMPLEMENT:
+                }
+                case LOGICAL_COMPLEMENT -> {
                     newTree = ((UnaryTree) original).getExpression();
                     while (newTree.getKind() == Kind.PARENTHESIZED && !JavaFixUtilities.requiresParenthesis(((ParenthesizedTree) newTree).getExpression(), original, parent)) {
                         newTree = ((ParenthesizedTree) newTree).getExpression();
                     }
-                    break;
-                case NOT_EQUAL_TO:
-                    newTree = negateBinaryOperator(original, Kind.EQUAL_TO, false);
-                    break;
-                case EQUAL_TO:
-                    newTree = negateBinaryOperator(original, Kind.NOT_EQUAL_TO, false);
-                    break;
-                case BOOLEAN_LITERAL:
-                    newTree = make.Literal(!(Boolean) ((LiteralTree) original).getValue());
-                    break;
-                case CONDITIONAL_AND:
-                    newTree = negateBinaryOperator(original, Kind.CONDITIONAL_OR, true);
-                    break;
-                case CONDITIONAL_OR:
-                    newTree = negateBinaryOperator(original, Kind.CONDITIONAL_AND, true);
-                    break;
-                case LESS_THAN:
-                    newTree = negateBinaryOperator(original, Kind.GREATER_THAN_EQUAL, false);
-                    break;
-                case LESS_THAN_EQUAL:
-                    newTree = negateBinaryOperator(original, Kind.GREATER_THAN, false);
-                    break;
-                case GREATER_THAN:
-                    newTree = negateBinaryOperator(original, Kind.LESS_THAN_EQUAL, false);
-                    break;
-                case GREATER_THAN_EQUAL:
-                    newTree = negateBinaryOperator(original, Kind.LESS_THAN, false);
-                    break;
-                default:
+                }
+                case NOT_EQUAL_TO -> newTree = negateBinaryOperator(original, Kind.EQUAL_TO, false);
+                case EQUAL_TO -> newTree = negateBinaryOperator(original, Kind.NOT_EQUAL_TO, false);
+                case BOOLEAN_LITERAL -> newTree = make.Literal(!(Boolean) ((LiteralTree) original).getValue());
+                case CONDITIONAL_AND -> newTree = negateBinaryOperator(original, Kind.CONDITIONAL_OR, true);
+                case CONDITIONAL_OR -> newTree = negateBinaryOperator(original, Kind.CONDITIONAL_AND, true);
+                case LESS_THAN -> newTree = negateBinaryOperator(original, Kind.GREATER_THAN_EQUAL, false);
+                case LESS_THAN_EQUAL -> newTree = negateBinaryOperator(original, Kind.GREATER_THAN, false);
+                case GREATER_THAN -> newTree = negateBinaryOperator(original, Kind.LESS_THAN_EQUAL, false);
+                case GREATER_THAN_EQUAL -> newTree = negateBinaryOperator(original, Kind.LESS_THAN, false);
+                default -> {
                     if (nullOnPlainNeg)
                         return null;
                     newTree = make.Unary(Kind.LOGICAL_COMPLEMENT, original);
+                }
             }
          
             if (JavaFixUtilities.requiresParenthesis(newTree, original, parent)) {
@@ -1429,7 +1464,7 @@ public class JavaFixUtilities {
     private static final Map<Kind, Integer> OPERATOR_PRIORITIES;
     
     static {
-        OPERATOR_PRIORITIES = new EnumMap<Kind, Integer>(Kind.class);
+        OPERATOR_PRIORITIES = new EnumMap<>(Kind.class);
 
         OPERATOR_PRIORITIES.put(Kind.IDENTIFIER, 0);
 
@@ -1527,18 +1562,12 @@ public class JavaFixUtilities {
     public static boolean requiresParenthesis(Tree inner, Tree original, Tree outter) {
         if (!ExpressionTree.class.isAssignableFrom(inner.getKind().asInterface()) || outter == null) return false;
         if (!ExpressionTree.class.isAssignableFrom(outter.getKind().asInterface())) {
-            boolean condition = false;
-            switch (outter.getKind()) {
-                case IF:
-                    condition = original == ((IfTree)outter).getCondition();
-                    break;
-                case WHILE_LOOP:
-                    condition = original == ((WhileLoopTree)outter).getCondition();
-                    break;
-                case DO_WHILE_LOOP:
-                    condition = original == ((DoWhileLoopTree)outter).getCondition();
-                    break;
-            }
+            boolean condition = switch (outter.getKind()) {
+                case IF -> original == ((IfTree)outter).getCondition();
+                case WHILE_LOOP -> original == ((WhileLoopTree)outter).getCondition();
+                case DO_WHILE_LOOP -> original == ((DoWhileLoopTree)outter).getCondition();
+                default -> false;
+            };
             return condition && inner.getKind() != Tree.Kind.PARENTHESIZED;
         }
 
@@ -1605,10 +1634,12 @@ public class JavaFixUtilities {
     private static final class RemoveFromParent extends JavaFix {
 
         private final String displayName;
+        private final boolean safely;
 
-        public RemoveFromParent(String displayName, CompilationInfo info, TreePath toRemove) {
+        public RemoveFromParent(String displayName, CompilationInfo info, TreePath toRemove, boolean safely) {
             super(info, toRemove);
             this.displayName = displayName;
+            this.safely = safely;
         }
 
         @Override
@@ -1622,6 +1653,24 @@ public class JavaFixUtilities {
             TreePath tp = ctx.getPath();
             
             doRemoveFromParent(wc, tp);
+            if (safely) {
+                Element el = wc.getTrees().getElement(tp);
+                if (el != null) {
+                    new TreePathScanner<Void, Void>() {
+                        @Override
+                        public Void scan(Tree tree, Void p) {
+                            if (tree != null && tree != tp.getLeaf()) {
+                                TreePath treePath = new TreePath(getCurrentPath(), tree);
+                                Element e = wc.getTrees().getElement(treePath);
+                                if (el == e) {
+                                    doRemoveFromParent(wc, treePath);
+                                }
+                            }
+                            return super.scan(tree, p);
+                        }
+                    }.scan(new TreePath(wc.getCompilationUnit()), null);
+                }
+            }
         }
         
         private void doRemoveFromParent(WorkingCopy wc, TreePath what) {
@@ -1630,32 +1679,27 @@ public class JavaFixUtilities {
             Tree parentLeaf = what.getParentPath().getLeaf();
 
             switch (parentLeaf.getKind()) {
-                case ANNOTATION:
+                case ANNOTATION -> {
                     AnnotationTree at = (AnnotationTree) parentLeaf;
-                    AnnotationTree newAnnot;
-
-                    newAnnot = make.removeAnnotationAttrValue(at, (ExpressionTree) leaf);
-
+                    AnnotationTree newAnnot = make.removeAnnotationAttrValue(at, (ExpressionTree) leaf);
                     wc.rewrite(at, newAnnot);
-                    break;
-                case BLOCK:
+                }
+                case BLOCK -> {
                     BlockTree bt = (BlockTree) parentLeaf;
-
                     wc.rewrite(bt, make.removeBlockStatement(bt, (StatementTree) leaf));
-                    break;
-                case CASE:
+                }
+                case CASE -> {
                     CaseTree caseTree = (CaseTree) parentLeaf;
-
                     wc.rewrite(caseTree, make.removeCaseStatement(caseTree, (StatementTree) leaf));
-                    break;
-                case CLASS:
+                }
+                case CLASS -> {
                     ClassTree classTree = (ClassTree) parentLeaf;
                     ClassTree nueClassTree;
 
                     if (classTree.getTypeParameters().contains(leaf)) {
                         nueClassTree = make.removeClassTypeParameter(classTree, (TypeParameterTree) leaf);
                     } else if (classTree.getExtendsClause() == leaf) {
-                        nueClassTree = make.Class(classTree.getModifiers(), classTree.getSimpleName(), classTree.getTypeParameters(), null, classTree.getImplementsClause(), classTree.getMembers());
+                        nueClassTree = make.setExtends(classTree, null);
                     } else if (classTree.getImplementsClause().contains(leaf)) {
                         nueClassTree = make.removeClassImplementsClause(classTree, leaf);
                     } else if (classTree.getMembers().contains(leaf)) {
@@ -1665,16 +1709,16 @@ public class JavaFixUtilities {
                     }
 
                     wc.rewrite(classTree, nueClassTree);
-                    break;
-                case UNION_TYPE:
+                }
+                case UNION_TYPE -> {
                     UnionTypeTree disjunct = (UnionTypeTree) parentLeaf;
                     List<? extends Tree> alternatives = new LinkedList<Tree>(disjunct.getTypeAlternatives());
 
                     alternatives.remove(leaf);
 
                     wc.rewrite(disjunct, make.UnionType(alternatives));
-                    break;
-                case METHOD:
+                }
+                case METHOD -> {
                     MethodTree mTree = (MethodTree) parentLeaf;
                     MethodTree newMethod;
 
@@ -1689,8 +1733,8 @@ public class JavaFixUtilities {
                     }
 
                     wc.rewrite(mTree, newMethod);
-                    break;
-                case METHOD_INVOCATION:
+                }
+                case METHOD_INVOCATION -> {
                     MethodInvocationTree iTree = (MethodInvocationTree) parentLeaf;
                     MethodInvocationTree newInvocation;
 
@@ -1703,13 +1747,12 @@ public class JavaFixUtilities {
                     }
 
                     wc.rewrite(iTree, newInvocation);
-                    break;
-                case MODIFIERS:
+                }
+                case MODIFIERS -> {
                     ModifiersTree modsTree = (ModifiersTree) parentLeaf;
-
                     wc.rewrite(modsTree, make.removeModifiersAnnotation(modsTree, (AnnotationTree) leaf));
-                    break;
-                case NEW_CLASS:
+                }
+                case NEW_CLASS -> {
                     NewClassTree newCTree = (NewClassTree) parentLeaf;
                     NewClassTree newNCT;
 
@@ -1722,13 +1765,12 @@ public class JavaFixUtilities {
                     }
 
                     wc.rewrite(newCTree, newNCT);
-                    break;
-                case PARAMETERIZED_TYPE:
+                }
+                case PARAMETERIZED_TYPE -> {
                     ParameterizedTypeTree parTree = (ParameterizedTypeTree) parentLeaf;
-
                     wc.rewrite(parTree, make.removeParameterizedTypeTypeArgument(parTree, (ExpressionTree) leaf));
-                    break;
-                case SWITCH:
+                }
+                case SWITCH -> {
                     SwitchTree switchTree = (SwitchTree) parentLeaf;
                     SwitchTree newSwitch;
 
@@ -1739,13 +1781,13 @@ public class JavaFixUtilities {
                     }
 
                     wc.rewrite(switchTree, newSwitch);
-                    break;
-                case TRY:
+                }
+                case TRY -> {
                     TryTree tryTree = (TryTree) parentLeaf;
                     TryTree newTry;
 
                     if (tryTree.getResources().contains(leaf)) {
-                        LinkedList<Tree> resources = new LinkedList<Tree>(tryTree.getResources());
+                        LinkedList<Tree> resources = new LinkedList<>(tryTree.getResources());
 
                         resources.remove(leaf);
 
@@ -1757,16 +1799,129 @@ public class JavaFixUtilities {
                     }
 
                     wc.rewrite(tryTree, newTry);
-                    break;
-                case EXPRESSION_STATEMENT:
+                }
+                case EXPRESSION_STATEMENT -> {
                     doRemoveFromParent(wc, what.getParentPath());
-                    break;
-                default:
+                }
+                case ASSIGNMENT -> {
+                    AssignmentTree assignmentTree = (AssignmentTree) parentLeaf;
+                    if (leaf == assignmentTree.getVariable()) {
+                        if (wc.getTreeUtilities().isExpressionStatement(assignmentTree.getExpression())) {
+                            wc.rewrite(parentLeaf, assignmentTree.getExpression());
+                        } else {
+                            doRemoveFromParent(wc, what.getParentPath());
+                        }
+                    } else {
+                        throw new UnsupportedOperationException();
+                    }
+                }
+                case AND_ASSIGNMENT, DIVIDE_ASSIGNMENT, LEFT_SHIFT_ASSIGNMENT, MINUS_ASSIGNMENT,
+                     MULTIPLY_ASSIGNMENT, OR_ASSIGNMENT, PLUS_ASSIGNMENT, REMAINDER_ASSIGNMENT,
+                     RIGHT_SHIFT_ASSIGNMENT, UNSIGNED_RIGHT_SHIFT_ASSIGNMENT, XOR_ASSIGNMENT -> {
+                    CompoundAssignmentTree compoundAssignmentTree = (CompoundAssignmentTree) parentLeaf;
+                    if (leaf == compoundAssignmentTree.getVariable()) {
+                        if (wc.getTreeUtilities().isExpressionStatement(compoundAssignmentTree.getExpression())) {
+                            wc.rewrite(parentLeaf, compoundAssignmentTree.getExpression());
+                        } else {
+                            doRemoveFromParent(wc, what.getParentPath());
+                        }
+                    } else {
+                        throw new UnsupportedOperationException();
+                    }
+                }
+                default -> {
                     wc.rewrite(what.getLeaf(), make.Block(Collections.<StatementTree>emptyList(), false));
-                    break;
+                }
             }
         }
 
+        private static boolean canSafelyRemove(CompilationInfo info, TreePath tp) {
+            if (tp.getParentPath() != null) {
+                //cannot remove from some parent trees:
+                switch (tp.getParentPath().getLeaf().getKind()) {
+                    case BINDING_PATTERN -> {
+                        return false;
+                    }
+                    case ENHANCED_FOR_LOOP -> {
+                        EnhancedForLoopTree loop = (EnhancedForLoopTree) tp.getParentPath().getLeaf();
+
+                        if (loop.getVariable() == tp.getLeaf()) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            AtomicBoolean ret = new AtomicBoolean(true);
+            Element el = info.getTrees().getElement(tp);
+            if (el != null) {
+                new TreePathScanner<Void, Void>() {
+                    @Override
+                    public Void scan(Tree tree, Void p) {
+                        if (tree != null && tree != tp.getLeaf()) {
+                            TreePath treePath = new TreePath(getCurrentPath(), tree);
+                            Element e = info.getTrees().getElement(treePath);
+                            if (el == e) {
+                                Tree parentLeaf = treePath.getParentPath().getLeaf();
+                                switch (parentLeaf.getKind()) {
+                                    case ASSIGNMENT -> {
+                                        AssignmentTree assignmentTree = (AssignmentTree) parentLeaf;
+                                        if (tree == assignmentTree.getVariable()) {
+                                            if (!info.getTreeUtilities().isExpressionStatement(assignmentTree.getExpression()) && canHaveSideEffects(assignmentTree.getExpression())) {
+                                                ret.set(false);
+                                                return null;
+                                            }
+                                        } else {
+                                            ret.set(false);
+                                            return null;
+                                        }
+                                    }
+                                    case AND_ASSIGNMENT, DIVIDE_ASSIGNMENT, LEFT_SHIFT_ASSIGNMENT, MINUS_ASSIGNMENT,
+                                         MULTIPLY_ASSIGNMENT, OR_ASSIGNMENT, PLUS_ASSIGNMENT, REMAINDER_ASSIGNMENT,
+                                         RIGHT_SHIFT_ASSIGNMENT, UNSIGNED_RIGHT_SHIFT_ASSIGNMENT, XOR_ASSIGNMENT -> {
+                                        CompoundAssignmentTree compoundAssignmentTree = (CompoundAssignmentTree) parentLeaf;
+                                        if (tree == compoundAssignmentTree.getVariable()) {
+                                            if (!info.getTreeUtilities().isExpressionStatement(compoundAssignmentTree.getExpression()) && canHaveSideEffects(compoundAssignmentTree.getExpression())) {
+                                                ret.set(false);
+                                                return null;
+                                            }
+                                        } else {
+                                            ret.set(false);
+                                            return null;
+                                        }
+                                    }
+                                    default -> {
+                                        ret.set(false);
+                                        return null;
+                                    }
+                                }
+                            }
+                        }
+                        return super.scan(tree, p);
+                    }
+                }.scan(new TreePath(info.getCompilationUnit()), null);
+            }
+            return ret.get();
+        }
+        
+        private static boolean canHaveSideEffects(Tree tree) {
+            AtomicBoolean ret = new AtomicBoolean();
+            new TreeScanner<Void, Void>() {
+                @Override
+                public Void scan(Tree tree, Void p) {
+                    if (tree != null) {
+                        switch (tree.getKind()) {
+                            case METHOD_INVOCATION, NEW_CLASS, POSTFIX_DECREMENT, POSTFIX_INCREMENT,
+                                 PREFIX_DECREMENT, PREFIX_INCREMENT -> {
+                                ret.set(true);
+                                return null;
+                            }
+                        }
+                    }
+                    return super.scan(tree, p);
+                }
+            }.scan(tree, null);
+            return ret.get();
+        }
     }
 
     //TODO: from FileMovePlugin
@@ -1812,8 +1967,6 @@ public class JavaFixUtilities {
                 source = DataObject.find(toMove);
                 sourceFolder = source.getFolder();
                 source.move(targetFolder);
-            } catch (DataObjectNotFoundException ex) {
-                ex.printStackTrace();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -1823,8 +1976,6 @@ public class JavaFixUtilities {
         public void undoChange() {
             try {
                 source.move(sourceFolder);
-            } catch (DataObjectNotFoundException ex) {
-                ex.printStackTrace();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

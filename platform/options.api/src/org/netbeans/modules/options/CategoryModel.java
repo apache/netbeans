@@ -162,7 +162,7 @@ public final class CategoryModel implements LookupListener {
     public String[] getCategoryIDs() {
         categoryTask.waitFinished();
         Set<String> keys = id2Category.keySet();
-        return keys.toArray(new String[keys.size()]);
+        return keys.toArray(new String[0]);
     }
 
     Category getCurrent() {
@@ -426,7 +426,7 @@ public final class CategoryModel implements LookupListener {
 
     private class MasterLookup extends ProxyLookup {
         private void setLookups(List<Lookup> lookups) {
-            setLookups(lookups.toArray(new Lookup[lookups.size()]));
+            setLookups(lookups.toArray(new Lookup[0]));
         }
         @Override
         protected void beforeLookup(Lookup.Template template) {

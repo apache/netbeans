@@ -1,0 +1,6 @@
+Code completion result for source line:
+iface.meth|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     methodA()                       [PUBLIC]   Object
+METHOD     methodSuper()                   [PUBLIC]   Object

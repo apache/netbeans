@@ -25,6 +25,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -70,7 +71,7 @@ public final class CodingStandardsFixerReportParser extends DefaultHandler {
     @CheckForNull
     public static List<Result> parse(File resultFile, FileObject root) {
         try {
-            try (Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(resultFile), "UTF-8"))) { // NOI18N
+            try (Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(resultFile), StandardCharsets.UTF_8))) {
                 return create(reader, root).getResults();
             }
         } catch (IOException | SAXException ex) {

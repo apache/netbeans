@@ -28,8 +28,8 @@ import org.openide.filesystems.FileObject;
 
 public class RefreshOnSaveListenerImpl implements RefreshOnSaveListener {
 
-    final private BrowserSupport support;
-    final private Project project;
+    private final BrowserSupport support;
+    private final Project project;
     private ClientProjectEnhancedBrowserImplementation cfg;
 
     public RefreshOnSaveListenerImpl(Project project, BrowserSupport support, ClientProjectEnhancedBrowserImplementation cfg) {

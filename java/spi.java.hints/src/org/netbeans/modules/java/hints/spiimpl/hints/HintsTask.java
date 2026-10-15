@@ -30,7 +30,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Position;
-import org.netbeans.api.editor.document.EditorDocumentUtils;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.source.CancellableTask;
@@ -41,8 +41,6 @@ import org.netbeans.api.java.source.JavaSourceTaskFactory;
 import org.netbeans.api.java.source.support.CaretAwareJavaSourceTaskFactory;
 import org.netbeans.api.java.source.support.EditorAwareJavaSourceTaskFactory;
 import org.netbeans.editor.BaseDocument;
-import org.netbeans.editor.Utilities;
-import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.java.hints.providers.spi.PositionRefresherHelper;
 import org.netbeans.modules.java.hints.providers.spi.PositionRefresherHelper.DocumentVersion;
 import org.netbeans.modules.java.hints.spiimpl.options.HintsSettings;
@@ -54,7 +52,6 @@ import org.netbeans.spi.editor.hints.HintsController;
 import org.netbeans.spi.editor.hints.Severity;
 import org.netbeans.spi.editor.hints.settings.FileHintPreferences;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -79,6 +76,7 @@ public class HintsTask implements CancellableTask<CompilationInfo> {
         this.caretAware = caretAware;
     }
     
+    @Override
     public void run(CompilationInfo info) {
         cancel.set(false);
 
@@ -105,7 +103,6 @@ public class HintsTask implements CancellableTask<CompilationInfo> {
                 return;
             }
         }
-        long version = doc != null ? DocumentUtilities.getDocumentVersion(doc) : 0;
         long startTime = System.currentTimeMillis();
 
         int caret = CaretAwareJavaSourceTaskFactory.getLastPosition(info.getFileObject());
@@ -127,15 +124,16 @@ public class HintsTask implements CancellableTask<CompilationInfo> {
 
         long endTime = System.currentTimeMillis();
         
-        TIMER.log(Level.FINE, "Jackpot 3.0 Hints Task" + (caretAware ? " - Caret Aware" : ""), new Object[] {info.getFileObject(), endTime - startTime});
+        TIMER.log(Level.FINE, "{1}ms Hints Task: " + (caretAware ? " - Caret Aware" : "") + " {0}", new Object[] {info.getFileObject(), endTime - startTime});
 
         Logger l = caretAware ? TIMER_CARET : TIMER_EDITOR;
 
         for (Entry<String, Long> e : inv.getTimeLog().entrySet()) {
-            l.log(Level.FINE, e.getKey(), new Object[] {info.getFileObject(), e.getValue()});
+            l.log(Level.FINE, "{1}ms {0}", new Object[] {e.getKey(), e.getValue()});
         }
     }
 
+    @Override
     public void cancel() {
         cancel.set(true);
     }
@@ -199,16 +197,16 @@ public class HintsTask implements CancellableTask<CompilationInfo> {
 
         @Override
         public List<ErrorDescription> getErrorDescriptionsAt(CompilationInfo info, Context context, Document doc) throws BadLocationException {
-            int rowStart = Utilities.getRowStart((BaseDocument) doc, context.getPosition());
-            int rowEnd = Utilities.getRowEnd((BaseDocument) doc, context.getPosition());
+            int rowStart = LineDocumentUtils.getLineStartOffset((BaseDocument) doc, context.getPosition());
+            int rowEnd = LineDocumentUtils.getLineEndOffset((BaseDocument) doc, context.getPosition());
 
             return new HintsInvoker(HintsSettings.getSettingsFor(info.getFileObject()), rowStart, rowEnd, context.getCancel()).computeHints(info);
         }
 
         private static void setVersion(Document doc) {
-            for (PositionRefresherHelper h : MimeLookup.getLookup("text/x-java").lookupAll(PositionRefresherHelper.class)) {
-                if (h instanceof HintPositionRefresherHelper) {
-                    ((HintPositionRefresherHelper) h).setVersion(doc, new DocumentVersion(doc));
+            for (PositionRefresherHelper<?> h : MimeLookup.getLookup("text/x-java").lookupAll(PositionRefresherHelper.class)) {
+                if (h instanceof HintPositionRefresherHelper hp) {
+                    hp.setVersion(doc, new DocumentVersion(doc));
                 }
             }
         }
@@ -233,9 +231,9 @@ public class HintsTask implements CancellableTask<CompilationInfo> {
         }
 
         private static void setVersion(Document doc, int caret) {
-            for (PositionRefresherHelper h : MimeLookup.getLookup("text/x-java").lookupAll(PositionRefresherHelper.class)) {
-                if (h instanceof SuggestionsPositionRefresherHelper) {
-                    ((SuggestionsPositionRefresherHelper) h).setVersion(doc, new SuggestionsDocumentVersion(doc, caret));
+            for (PositionRefresherHelper<?> h : MimeLookup.getLookup("text/x-java").lookupAll(PositionRefresherHelper.class)) {
+                if (h instanceof SuggestionsPositionRefresherHelper sp) {
+                    sp.setVersion(doc, new SuggestionsDocumentVersion(doc, caret));
                 }
             }
         }

@@ -19,17 +19,14 @@
 
 package org.netbeans.core.execution;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.Lookups;
 import org.openide.windows.InputOutput;
 
 /** Simple class for executing tasks in extra threads */
 final class RunClassThread extends Thread implements IOThreadIfc {
-
+    private final Lookup originalLookup;
     /** InputOutput that is to be used */
     private InputOutput io;
     /** name */
@@ -61,6 +58,7 @@ final class RunClassThread extends Thread implements IOThreadIfc {
                     InputOutput io,
                     org.netbeans.core.execution.ExecutionEngine engine,
                     ExecutorTaskImpl task,
+                    Lookup originalLookup,
                     Runnable run) {
         super(base, "exec_" + name + "_" + number); // NOI18N
         mygroup = base;
@@ -70,14 +68,19 @@ final class RunClassThread extends Thread implements IOThreadIfc {
         this.engine = engine;
         this.task = task;
         this.run = run;
+        this.originalLookup = originalLookup;
         // #33789 - this thread must not be daemon otherwise it is immediately destroyed
         setDaemon(false);
-        this.start();
     }
 
     /** runs the thread
     */
+    @Override
     public void run() {
+        Lookups.executeWith(originalLookup, this::doRun);
+    }
+    
+    private void doRun() {
         mygroup.setFinalizable(); // mark it finalizable - after the completetion of the current thread it will be finalized
 
         boolean fire = true;
@@ -162,6 +165,7 @@ final class RunClassThread extends Thread implements IOThreadIfc {
         }
     } // run method
 
+    @Override
     public InputOutput getInputOutput() {
         return io;
     }
@@ -175,53 +179,6 @@ final class RunClassThread extends Thread implements IOThreadIfc {
     static String generateName() {
         return NbBundle.getMessage(RunClassThread.class, "CTL_GeneratedName", number++);
     }
-    
-    /**
-     * Workaround for a JRE bug that unstarted threads are not GC'd.
-     * @see http://www.netbeans.org/issues/show_bug.cgi?id=36395
-     * @see http://developer.java.sun.com/developer/bugParade/bugs/4533087.html
-     * /
-    private static void cleanUpHack(ThreadGroup tg) {
-        try {
-            Field f = ThreadGroup.class.getDeclaredField("threads"); // NOI18N
-            f.setAccessible(true);
-            Method m = ThreadGroup.class.getDeclaredMethod("remove", new Class[] {Thread.class}); // NOI18N
-            m.setAccessible(true);
-            Set stillborn = new HashSet(); // Set<Thread>
-            synchronized (tg) {
-                Thread[] ts = (Thread[])f.get(tg);
-                if (ts == null) {
-                    return;
-                }
-                for (int j = 0; j < ts.length; j++) {
-                    Thread t = ts[j];
-                    if (t == null) {
-                        continue;
-                    }
-                    if (!t.isAlive()) {
-                        stillborn.add(t);
-                    }
-                }
-            }
-            Iterator it = stillborn.iterator();
-            while (it.hasNext()) {
-                Thread t = (Thread)it.next();
-                m.invoke(tg, new Object[] {t});
-            }
-            // Handle child thread groups, too:
-            ThreadGroup[] kids = new ThreadGroup[tg.activeGroupCount()];
-            tg.enumerate(kids);
-            for (int i = 0; i < kids.length; i++) {
-                if (kids[i] != null) {
-                    cleanUpHack(kids[i]);
-                }
-            }
-        } catch (Exception e) {
-            // Oh well.
-            e.printStackTrace();
-        }
-    }
-    */
-    
+
 }
 

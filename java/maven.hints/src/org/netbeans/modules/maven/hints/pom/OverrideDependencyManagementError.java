@@ -90,7 +90,7 @@ public class OverrideDependencyManagementError implements POMErrorFixProvider {
                     String art = dep.getArtifactId();
                     String gr = dep.getGroupId();
                     String key = gr + ":" + art; //NOI18N
-                    if (managed.keySet().contains(key)) {
+                    if (managed.containsKey(key)) {
                         final String managedver = managed.get(key);
                         Document doc = model.getBaseDocument();
                         final Line[] line = new Line[1];

@@ -1,0 +1,24 @@
+public  function setDnf1((Foo&Bar)|Baz $$dnf1): void {
+$$this->dnf1 = $dnf1;
+}
+
+public  function setDnf2(Baz|(Foo&Bar&Baz) $$dnf2): void {
+$$this->dnf2 = $dnf2;
+}
+
+public  function setDnf3((Foo&Bar)|(Bar&Baz) $$dnf3): void {
+$$this->dnf3 = $dnf3;
+}
+
+public  function setDnf4((Foo&Bar)|Foo|(Bar&Baz) $$dnf4): void {
+$$this->dnf4 = $dnf4;
+}
+
+public  function setDnf5(Foo|(Foo&Bar)|Baz $$dnf5): void {
+$$this->dnf5 = $dnf5;
+}
+
+public static function setStaticdnf((Foo&Bar)|Baz $$staticdnf): void {
+self::$$staticdnf = $staticdnf;
+}
+

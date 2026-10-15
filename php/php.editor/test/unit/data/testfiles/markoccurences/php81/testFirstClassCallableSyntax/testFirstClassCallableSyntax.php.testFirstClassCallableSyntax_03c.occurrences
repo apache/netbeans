@@ -1,0 +1,4 @@
+    public static function |>MARK_OCCURRENCES:publicStaticMethod<|(): void {
+$fn = $test->|>MARK_OCCURRENCES:publicStaticMethod<|(...);
+$fn = $test::|>MARK_OCCURRENCES:publicStatic^Method<|(...);
+$fn = Test::|>MARK_OCCURRENCES:publicStaticMethod<|(...);

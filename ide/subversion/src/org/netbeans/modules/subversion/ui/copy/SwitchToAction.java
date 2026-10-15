@@ -213,7 +213,7 @@ public class SwitchToAction extends ContextAction {
             client.switchToUrl(root, toRepositoryFile.getFileUrl(), toRepositoryFile.getRevision(), recursive);
             // the client doesn't notify as there is no output rom the cli. Lets emulate onNotify as from the client
             List<File> switchedFiles = SvnUtils.listManagedRecursively(root);
-            File[] fileArray = switchedFiles.toArray(new File[switchedFiles.size()]);
+            File[] fileArray = switchedFiles.toArray(new File[0]);
             // the cache fires status change events to trigger the annotation refresh
             // unfortunatelly - we have to call the refresh explicitly for each file also
             // from this place as the branch label was changed evern if the files status didn't

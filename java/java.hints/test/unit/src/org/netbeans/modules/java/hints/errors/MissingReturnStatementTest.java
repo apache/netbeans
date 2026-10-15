@@ -120,12 +120,12 @@ public class MissingReturnStatementTest extends ErrorHintsTestBase {
                        "import java.util.concurrent.Callable;\n" +
                        "public class Test {\n" +
                        "    public static void test() {\n" +
-                       "        Callable<String> c = |() -> {" +
+                       "        Callable<String> c = |() -> {\n" +
                        "        };\n" +
                        "    }\n" +
                        "}\n",
                        "FIX_AddReturnStatement",
-                       "package test; import java.util.Collection; import java.util.concurrent.Callable; public class Test { public static void test() { Callable<String> c = () -> {return null; }; } } ");
+                       "package test; import java.util.Collection; import java.util.concurrent.Callable; public class Test { public static void test() { Callable<String> c = () -> { return null; }; } } ");
     }
     
     private String diagKey = "compiler.err.missing.ret.stmt"; // NOI18N

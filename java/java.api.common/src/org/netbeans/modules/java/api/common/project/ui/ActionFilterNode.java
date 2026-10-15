@@ -376,7 +376,7 @@ final class ActionFilterNode extends FilterNode implements NodeListener {
                     result.add (SystemAction.get(EditRootAction.class));
                 }
             }            
-            actionCache = result.toArray(new Action[result.size()]);
+            actionCache = result.toArray(new Action[0]);
         }
         return actionCache;
     }
@@ -534,8 +534,8 @@ final class ActionFilterNode extends FilterNode implements NodeListener {
            // and ensures the project will be saved.
             boolean found = false;
             final List<ClassPathSupport.Item> resources = getClassPathItems();
-            for (Iterator i = resources.iterator(); i.hasNext();) {
-                ClassPathSupport.Item item = (ClassPathSupport.Item)i.next();
+            for (Iterator<ClassPathSupport.Item> i = resources.iterator(); i.hasNext();) {
+                ClassPathSupport.Item item = i.next();
                 if (entryId.equals(CommonProjectUtils.getAntPropertyName(item.getReference()))) {
                     lastRef.set(item.getReference());
                     i.remove();

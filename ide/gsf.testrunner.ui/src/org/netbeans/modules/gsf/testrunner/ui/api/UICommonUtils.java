@@ -59,7 +59,7 @@ public class UICommonUtils {
                 fos.add(fo);
             }
         }
-        return fos.isEmpty() ? null : fos.toArray(new FileObject[fos.size()]);
+        return fos.isEmpty() ? null : fos.toArray(new FileObject[0]);
     }
 
     private static boolean hasParentAmongNodes(final Node[] nodes,

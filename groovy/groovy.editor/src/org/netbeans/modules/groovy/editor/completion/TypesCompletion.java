@@ -40,6 +40,7 @@ import org.netbeans.api.java.source.Task;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.modules.csl.api.CompletionProposal;
 import org.netbeans.modules.groovy.editor.api.GroovyIndex;
+import org.netbeans.modules.groovy.editor.api.completion.CaretLocation;
 import org.netbeans.modules.groovy.editor.api.completion.CompletionItem;
 import org.netbeans.modules.groovy.editor.completion.util.CamelCaseUtil;
 import org.netbeans.modules.groovy.editor.api.completion.util.ContextHelper;
@@ -47,7 +48,9 @@ import org.netbeans.modules.groovy.editor.api.elements.index.IndexedClass;
 import org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId;
 import org.netbeans.modules.groovy.editor.utils.GroovyUtils;
 import org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext;
+import org.netbeans.modules.groovy.editor.completion.provider.CompletionAccessor;
 import org.netbeans.modules.groovy.editor.imports.ImportUtils;
+import org.netbeans.modules.groovy.editor.java.JavaElementHandle;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
 import org.openide.filesystems.FileObject;
 
@@ -81,14 +84,14 @@ import org.openide.filesystems.FileObject;
 public class TypesCompletion extends BaseCompletion {
 
     // There attributes should be initiated for each complete() method call
-    private List<CompletionProposal> proposals;
+    private Map<Object, CompletionProposal> proposals;
     private CompletionContext request;
     private int anchor;
     private boolean constructorCompletion;
 
     
     @Override
-    public boolean complete(List<CompletionProposal> proposals, CompletionContext request, int anchor) {
+    public boolean complete(Map<Object, CompletionProposal> proposals, CompletionContext request, int anchor) {
         LOG.log(Level.FINEST, "-> completeTypes"); // NOI18N
 
         this.proposals = proposals;
@@ -301,30 +304,40 @@ public class TypesCompletion extends BaseCompletion {
         if ((onlyInterfaces && (type.getKind() != ElementKind.INTERFACE)) || alreadyPresent.contains(type)) {
             return;
         }
-
+        
         String fqnTypeName = type.getName();
         String typeName = GroovyUtils.stripPackage(fqnTypeName);
 
         // If we are in situation: "String s = new String|" we don't want to show
         // String type as a option - we want to show String constructors + types
         // prefixed with String (e.g. StringBuffer)
-        if (constructorCompletion && typeName.toUpperCase().equals(request.getPrefix().toUpperCase())) {
+        if (constructorCompletion && typeName.equalsIgnoreCase(request.getPrefix())) {
+            return;
+        }
+        
+        if (type.getHandle() != null
+                &&!(type.getHandle().getKind().isClass() || type.getHandle().getKind().isInterface())
+                && request.location != CaretLocation.INSIDE_IMPORT) {
             return;
         }
 
+        String ownerFQN = GroovyUtils.getPackageName(fqnTypeName);
+        
         // We are dealing with prefix for some class type
+        JavaElementHandle jh = null;
+        if (type.getHandle() != null) {
+            jh = new JavaElementHandle(typeName, ownerFQN, type.getHandle(), Collections.emptyList(), Collections.emptySet());
+        }
+        
         if (isPrefixed(request, typeName)) {
             alreadyPresent.add(type);
-            proposals.add(new CompletionItem.TypeItem(fqnTypeName, typeName, anchor, type.getKind()));
+            proposals.putIfAbsent(fqnTypeName, CompletionAccessor.instance().createType(jh, fqnTypeName, typeName, anchor, type.getKind()));
         }
 
         // We are dealing with CamelCase completion for some class type
         if (CamelCaseUtil.compareCamelCase(typeName, request.getPrefix())) {
-            CompletionItem.TypeItem camelCaseProposal = new CompletionItem.TypeItem(fqnTypeName, typeName, anchor, ElementKind.CLASS);
-            
-            if (!proposals.contains(camelCaseProposal)) {
-                proposals.add(camelCaseProposal);
-            }
+            CompletionItem.TypeItem camelCaseProposal = CompletionAccessor.instance().createType(jh, fqnTypeName, typeName, anchor, ElementKind.CLASS);
+            proposals.putIfAbsent(fqnTypeName, camelCaseProposal);
         }
     }
 
@@ -339,9 +352,9 @@ public class TypesCompletion extends BaseCompletion {
             try {
                 javaSource.runUserActionTask(new Task<CompilationController>() {
                     @Override
-                    public void run(CompilationController info) {
+                    public void run(CompilationController info) throws IOException {
                         Elements elements = info.getElements();
-
+                        info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                         addPackageElements(elements.getPackageElement(pkg));
                         addTypeElements(elements.getTypeElement(pkg));
                     }
@@ -356,8 +369,8 @@ public class TypesCompletion extends BaseCompletion {
                                 if (modifiers.contains(Modifier.PUBLIC)
                                     || samePackage && (modifiers.contains(Modifier.PROTECTED)
                                     || (!modifiers.contains(Modifier.PUBLIC) && !modifiers.contains(Modifier.PRIVATE)))) {
-
-                                    result.add(new TypeHolder(element.toString(), element.getKind()));
+                                    
+                                    result.add(new TypeHolder(element.toString(), org.netbeans.api.java.source.ElementHandle.create(element)));
                                 }
                             }
                         }
@@ -373,8 +386,8 @@ public class TypesCompletion extends BaseCompletion {
                                 if (modifiers.contains(Modifier.PUBLIC)
                                     || samePackage && (modifiers.contains(Modifier.PROTECTED)
                                     || (!modifiers.contains(Modifier.PUBLIC) && !modifiers.contains(Modifier.PRIVATE)))) {
-
-                                    result.add(new TypeHolder(element.toString(), element.getKind()));
+                                    
+                                        result.add(new TypeHolder(pkg + "." + element.getSimpleName().toString(), org.netbeans.api.java.source.ElementHandle.create(element)));
                                 }
                             }
                         }
@@ -392,6 +405,7 @@ public class TypesCompletion extends BaseCompletion {
 
         private final String name;
         private final ElementKind kind;
+        private final org.netbeans.api.java.source.ElementHandle handle;
 
         public TypeHolder(IndexedClass indexedClass) {
             this.name = indexedClass.getFqn();
@@ -401,11 +415,23 @@ public class TypesCompletion extends BaseCompletion {
             } else {
                 this.kind = ElementKind.INTERFACE;
             }
+            this.handle = null;
         }
         
         public TypeHolder(String name, ElementKind kind) {
             this.name = name;
             this.kind = kind;
+            this.handle = null;
+        }
+        
+        public TypeHolder(String name, org.netbeans.api.java.source.ElementHandle handle) {
+            this.name = name;
+            this.handle = handle;
+            this.kind = handle.getKind();
+        }
+
+        public org.netbeans.api.java.source.ElementHandle getHandle() {
+            return handle;
         }
 
         public ElementKind getKind() {

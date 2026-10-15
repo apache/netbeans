@@ -83,16 +83,10 @@ public class LibraryCustomizer implements ProjectCustomizer.CompositeCategoryPro
         String libraryFolder = LibraryUtils.getLibraryFolder(project);
         final SelectionPanel customizer = new SelectionPanel(project, libraries, webRoot, libraryFolder);
         category.setStoreListener(new StoreListener(project, webRoot, customizer));
-        category.setCloseListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                customizer.dispose();
-            }
-        });
         return customizer;
     }
 
-    static class StoreListener implements ActionListener, Runnable {
+    private static class StoreListener implements ActionListener, Runnable {
 
         static final Logger LOGGER = Logger.getLogger(StoreListener.class.getName());
 
@@ -315,10 +309,6 @@ public class LibraryCustomizer implements ProjectCustomizer.CompositeCategoryPro
                                 fileFolder = FileUtil.createFolder(fileFolder, pathElements[j]);
                             }
                             String fileName = pathElements[pathElements.length-1];
-                            int index = fileName.lastIndexOf('.');
-                            if (index != -1) {
-                                fileName = fileName.substring(0,index);
-                            }
                             fob = FileUtil.moveFile(fob, fileFolder, fileName);
                             localFiles[i] = PropertyUtils.relativizeFile(projectDir, FileUtil.toFile(fob));
                             removeFile(file.getParentFile());
@@ -395,10 +385,6 @@ public class LibraryCustomizer implements ProjectCustomizer.CompositeCategoryPro
                         File file = libraryProvider.downloadLibraryFile(newVersion, fileIndex);
                         FileObject tmpFob = FileUtil.toFileObject(file);
                         String fileName = pathElements[pathElements.length-1];
-                        int index = fileName.lastIndexOf('.');
-                        if (index != -1) {
-                            fileName = fileName.substring(0,index);
-                        }
                         FileObject fob = FileUtil.copyFile(tmpFob, fileFolder, fileName);
                         if (!file.delete()) {
                             LOGGER.log(Level.INFO, "Cannot delete file {0}", file);
@@ -424,10 +410,7 @@ public class LibraryCustomizer implements ProjectCustomizer.CompositeCategoryPro
             }
 
             Library.Version versionToStore = newVersion.filterVersion(Collections.emptySet());
-            versionToStore.setFileInfo(
-                    fileList.toArray(new String[fileList.size()]),
-                    localFileList.toArray(new String[localFileList.size()])
-            );
+            versionToStore.setFileInfo(fileList.toArray(String[]::new), localFileList.toArray(String[]::new));
             return versionToStore;
         }
 
@@ -446,13 +429,14 @@ public class LibraryCustomizer implements ProjectCustomizer.CompositeCategoryPro
         }
 
         private void removeFile(File file) {
-            while (!webRoot.equals(file)) {
-                File parent = file.getParentFile();
-                if (!file.delete()) {
+            File targetFile = file;
+            while (!webRoot.equals(targetFile)) {
+                File parent = targetFile.getParentFile();
+                if (!targetFile.delete()) {
                     // We have reached a parent directory that is not empty
                     break;
                 }
-                file = parent;
+                targetFile = parent;
             }
         }
 
@@ -486,10 +470,6 @@ public class LibraryCustomizer implements ProjectCustomizer.CompositeCategoryPro
             for (int i=0; i<fileNames.length; i++) {
                 FileObject tmpFob = FileUtil.toFileObject(libraryFiles[i]);
                 String fileName = fileNames[i];
-                int index = fileName.lastIndexOf('.');
-                if (index != -1) {
-                    fileName = fileName.substring(0, index);
-                }
                 String[] path = fileName.split("/"); // NOI18N
                 FileObject fileFolder = libraryFob;
                 for (int j=0; j<path.length-1; j++) {

@@ -21,7 +21,10 @@ package org.netbeans.modules.debugger.jpda.truffle.vars;
 
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.ObjectVariable;
+import org.netbeans.api.debugger.jpda.Variable;
+import org.netbeans.modules.debugger.jpda.truffle.LanguageName;
 import org.netbeans.modules.debugger.jpda.truffle.source.SourcePosition;
+import org.netbeans.modules.debugger.jpda.truffle.vars.impl.TruffleVariableImpl;
 
 /**
  * Representation of <code>DebugValue</code>.
@@ -29,7 +32,9 @@ import org.netbeans.modules.debugger.jpda.truffle.source.SourcePosition;
 public interface TruffleVariable {
     
     String getName();
-    
+
+    LanguageName getLanguage();
+
     String getType();
 
     boolean isReadable();
@@ -40,7 +45,13 @@ public interface TruffleVariable {
     
     Object getValue();
     
+    String getDisplayValue();
+    
+    boolean hasValueSource();
+    
     SourcePosition getValueSource();
+    
+    boolean hasTypeSource();
     
     SourcePosition getTypeSource();
     
@@ -49,4 +60,12 @@ public interface TruffleVariable {
     Object[] getChildren();
 
     ObjectVariable setValue(JPDADebugger debugger, String newExpression);
+
+    default boolean isReceiver() {
+        return false;
+    }
+
+    public static TruffleVariable get(Variable var) {
+        return TruffleVariableImpl.get(var);
+    }
 }

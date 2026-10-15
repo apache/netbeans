@@ -385,10 +385,10 @@ public class MultiDataObject extends DataObject {
      */
     private void removeAllInvalid () {
         ERR.log(Level.FINE, "removeAllInvalid, started {0}", this); // NOI18N
-        Iterator it = checkSecondary ().entrySet ().iterator ();
+        Iterator<Map.Entry<FileObject, MultiDataObject.Entry>> it = checkSecondary().entrySet().iterator();
         boolean fire = false;
         while (it.hasNext ()) {
-            Map.Entry e = (Map.Entry)it.next ();
+            Map.Entry e = it.next();
             FileObject fo = (FileObject)e.getKey ();
             if (fo == null || !fo.isValid ()) {
                 it.remove ();
@@ -838,6 +838,13 @@ public class MultiDataObject extends DataObject {
     protected DataObject handleCreateFromTemplate (
         DataFolder df, String name
     ) throws IOException {
+        return this.handleCreateFromTemplate(df, name, new int[1]);
+    }
+
+    final DataObject handleCreateFromTemplate (
+        DataFolder df, String name, int[] fileBuilderUsed
+    ) throws IOException {
+        assert fileBuilderUsed != null;
         if (name == null) {
             name = FileUtil.findFreeFileName(
                        df.getPrimaryFile (), getPrimaryFile ().getName (), getPrimaryFile ().getExt ()
@@ -854,6 +861,8 @@ public class MultiDataObject extends DataObject {
         if (pf == null) {
             // do the regular creation
             pf = getPrimaryEntry().createFromTemplate (df.getPrimaryFile (), name);
+        } else {
+            fileBuilderUsed[0]++;
         }
         
         
@@ -864,6 +873,8 @@ public class MultiDataObject extends DataObject {
             FileObject fo = FileBuilder.createFromTemplate(current, df.getPrimaryFile(), name, params, FileBuilder.Mode.FAIL);
             if (fo == null) {
                 entry.createFromTemplate (df.getPrimaryFile (), name);
+            } else {
+                fileBuilderUsed[0]++;
             }
         }
         
@@ -1218,7 +1229,7 @@ public class MultiDataObject extends DataObject {
         }
     }
     
-    final static class Pair {
+    static final class Pair {
         MultiDataObject.Entry entry;
         FileObject file;
 

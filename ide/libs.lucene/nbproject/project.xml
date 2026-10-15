@@ -26,11 +26,19 @@
             <code-name-base>org.netbeans.libs.lucene</code-name-base>
             <module-dependencies/>
             <public-packages>
-                <subpackages>org</subpackages>
+                <subpackages>org.apache.lucene</subpackages>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/lucene-core-3.5.0.jar</runtime-relative-path>
-                <binary-origin>external/lucene-core-3.5.0.jar</binary-origin>
+                <runtime-relative-path>ext/lucene-core-10.5.1.jar</runtime-relative-path>
+                <binary-origin>external/lucene-core-10.5.1.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/lucene-analysis-common-10.5.1.jar</runtime-relative-path>
+                <binary-origin>external/lucene-analysis-common-10.5.1.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/lucene-backward-codecs-10.5.1.jar</runtime-relative-path>
+                <binary-origin>external/lucene-backward-codecs-10.5.1.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

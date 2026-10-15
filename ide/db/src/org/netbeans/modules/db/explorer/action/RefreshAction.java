@@ -25,6 +25,11 @@ import org.netbeans.modules.db.metadata.model.api.Action;
 import org.netbeans.modules.db.metadata.model.api.Metadata;
 import org.netbeans.modules.db.metadata.model.api.MetadataModel;
 import org.netbeans.modules.db.metadata.model.api.MetadataModelException;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
+import org.openide.awt.ActionRegistration;
+import org.openide.awt.ActionState;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
@@ -35,6 +40,25 @@ import org.openide.util.RequestProcessor;
  *
  * @author Rob
  */
+@ActionRegistration(
+        displayName = "#Refresh", 
+        lazy = false,
+        enabledOn = @ActionState(type = DatabaseConnection.class, useActionInstance = true)
+)
+@ActionID(category = "Database", id = "netbeans.db.explorer.action.Refresh")
+@ActionReferences(value = {
+    @ActionReference(path = "Databases/Explorer/Connection/Actions", position = 350),
+    @ActionReference(path = "Databases/Explorer/Catalog/Actions", position = 350),
+    @ActionReference(path = "Databases/Explorer/Schema/Actions", position = 350),
+    @ActionReference(path = "Databases/Explorer/TableList/Actions", position = 350),
+    @ActionReference(path = "Databases/Explorer/SystemTableList/Actions", position = 350),
+    @ActionReference(path = "Databases/Explorer/Table/Actions", position = 250),
+    @ActionReference(path = "Databases/Explorer/ViewList/Actions", position = 350),
+    @ActionReference(path = "Databases/Explorer/ProcedureList/Actions", position = 350),
+    @ActionReference(path = "Databases/Explorer/Index/Actions", position = 350),
+    @ActionReference(path = "Databases/Explorer/ForeignKeyList/Actions", position = 300),
+    @ActionReference(path = "Databases/Explorer/ForeignKey/Actions", position = 350),
+})
 public class RefreshAction extends BaseAction {
     private static final RequestProcessor RP = new RequestProcessor(RefreshAction.class);
     @Override

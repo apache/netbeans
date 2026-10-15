@@ -32,20 +32,14 @@ import org.xml.sax.SAXException;
  */
 public class ConfigReaderTools extends AbstractReader implements XMLReader {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** <code>tools</code> XML element name. */
     static final String NODE = "tools";
 
     /** <code>lib</code> XML element attribute name. */
     private static final String LIB_ATTR = "lib";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Tools library directory (relative under GlassFish home). */
     private String lib;
 
@@ -55,10 +49,7 @@ public class ConfigReaderTools extends AbstractReader implements XMLReader {
     /** Tools configuration read from XML. */
     Tools tools;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of <code>tools</code> configuration
      * XML element reader.
@@ -73,10 +64,7 @@ public class ConfigReaderTools extends AbstractReader implements XMLReader {
         tools = null;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // XML reader methods                                                     //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Provide paths to listen on.
      * <p/>
@@ -93,10 +81,7 @@ public class ConfigReaderTools extends AbstractReader implements XMLReader {
         return paths;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Tree parser methods                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Process attributes from current XML element.
      * <p/>
@@ -129,10 +114,7 @@ public class ConfigReaderTools extends AbstractReader implements XMLReader {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get tools library directory (relative under GlassFish home).
      * <p/>
@@ -152,10 +134,7 @@ public class ConfigReaderTools extends AbstractReader implements XMLReader {
     }
 
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Reset this XML element reader.
      */

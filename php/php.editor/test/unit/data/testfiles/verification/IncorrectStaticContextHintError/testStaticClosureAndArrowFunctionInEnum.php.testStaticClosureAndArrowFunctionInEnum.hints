@@ -1,0 +1,54 @@
+            echo $this->name; // error
+                 -----
+HINT:Cannot use "$this" in static context.
+            echo $this->name; // error
+                 -----
+HINT:Cannot use "$this" in static context.
+                        $this->test; // error
+                        -----
+HINT:Cannot use "$this" in static context.
+                            $this->test; // error
+                            -----
+HINT:Cannot use "$this" in static context.
+                    $this->method(); // error
+                    -----
+HINT:Cannot use "$this" in static context.
+        $arrowFunction = fn() => $this; // error
+                                 -----
+HINT:Cannot use "$this" in static context.
+        $staticArrowFunction = static fn() => $this; // error
+                                              -----
+HINT:Cannot use "$this" in static context.
+                $this->name; // error
+                -----
+HINT:Cannot use "$this" in static context.
+            echo $this->name; // error
+                 -----
+HINT:Cannot use "$this" in static context.
+                $this->name; // error
+                -----
+HINT:Cannot use "$this" in static context.
+                        $this->test; // error
+                        -----
+HINT:Cannot use "$this" in static context.
+                            $this->test; // error
+                            -----
+HINT:Cannot use "$this" in static context.
+                    $this->method(); // error
+                    -----
+HINT:Cannot use "$this" in static context.
+            $nestedArrow = fn() => $this; // error
+                                   -----
+HINT:Cannot use "$this" in static context.
+        $staticArrowFunction = static fn() => $this; // error
+                                              -----
+HINT:Cannot use "$this" in static context.
+                    $this->test; // error
+                    -----
+HINT:Cannot use "$this" in static context.
+                        $this->test; // error
+                        -----
+HINT:Cannot use "$this" in static context.
+                $this->method(); // error
+                -----
+HINT:Cannot use "$this" in static context.

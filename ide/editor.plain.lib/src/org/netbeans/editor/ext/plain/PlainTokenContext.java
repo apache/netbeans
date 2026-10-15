@@ -32,6 +32,7 @@ import org.netbeans.editor.Utilities;
  * @deprecated If you need this class you are doing something wrong, 
  *   please ask on nbdev@netbeans.org.
  */
+@Deprecated
 public class PlainTokenContext extends TokenContext {
 
     // Numeric-ids for token-ids

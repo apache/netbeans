@@ -401,12 +401,12 @@ public final class MatchingObject implements Comparable<MatchingObject>,
             return null;
         }
 
-        List<Node> detailNodes = new ArrayList<Node>(textDetails.size());
+        List<Node> detailNodes = new ArrayList<>(textDetails.size());
         for (TextDetail txtDetail : textDetails) {
             detailNodes.add(new TextDetail.DetailNode(txtDetail, false, this));
         }
 
-        return detailNodes.toArray(new Node[detailNodes.size()]);
+        return detailNodes.toArray(new Node[0]);
     }
 
     public Children getDetailsChildren(boolean replacing) {
@@ -433,28 +433,17 @@ public final class MatchingObject implements Comparable<MatchingObject>,
                 text = new StringBuilder(getFileObject().asText());
             } else {
                 text = new StringBuilder();
-                InputStream istm = getFileObject().getInputStream();
-                try {
-                    CharsetDecoder decoder = charset.newDecoder();
-                    InputStreamReader isr = new InputStreamReader(istm,
-                            decoder);
-                    try {
+                CharsetDecoder decoder = charset.newDecoder();
+                try (InputStream istm = getFileObject().getInputStream();
+                        InputStreamReader isr = new InputStreamReader(istm,
+                                decoder);
                         BufferedReader br = new BufferedReader(isr,
-                                FILE_READ_BUFFER_SIZE);
-                        try {
-                            int read;
-                            char[] chars = new char[FILE_READ_BUFFER_SIZE];
-                            while ((read = br.read(chars)) != -1) {
-                                text.append(chars, 0, read);
-                            }
-                        } finally {
-                            br.close();
-                        }
-                    } finally {
-                        isr.close();
+                                FILE_READ_BUFFER_SIZE)) {
+                    int read;
+                    char[] chars = new char[FILE_READ_BUFFER_SIZE];
+                    while ((read = br.read(chars)) != -1) {
+                        text.append(chars, 0, read);
                     }
-                } finally {
-                    istm.close();
                 }
             }
         }      
@@ -767,16 +756,10 @@ public final class MatchingObject implements Comparable<MatchingObject>,
         }
         
         if (REALLY_WRITE) {            
-            Writer writer = null;
-            try {
-                writer = new OutputStreamWriter(
+            try (Writer writer = new OutputStreamWriter(
                         fileObject.getOutputStream(fileLock),
-                        charset);
+                        charset)) {
                 writer.write(makeStringToWrite());
-            } finally {
-                if (writer != null) {
-                    writer.close();
-                }
             }
         } else {
             System.err.println("Would write to " + getFileObject().getPath());//NOI18N
@@ -907,27 +890,23 @@ public final class MatchingObject implements Comparable<MatchingObject>,
         }
         nodeDelegate = dataObject.getNodeDelegate();
 
-        Mutex.EVENT.writeAccess(new Runnable() {
-
-            @Override
-            public void run() {
-                int origSelectedMatches = selectedMatchesCount;
-                selectedMatchesCount = 0;
-                if (textDetails != null && !textDetails.isEmpty()) {
-                    adjustTextDetails();
-                }
-
-                changeSupport.firePropertyChange(PROP_MATCHES_SELECTED,
-                        origSelectedMatches, selectedMatchesCount);
-                if (matchesCount > 0) {
-                    setSelected(true);
-                }
-                InvalidityStatus origInvStat = invalidityStatus;
-                invalidityStatus = null;
-                changeSupport.firePropertyChange(PROP_INVALIDITY_STATUS,
-                        origInvStat,
-                        invalidityStatus);
+        Mutex.EVENT.writeAccess(() -> {
+            int origSelectedMatches = selectedMatchesCount;
+            selectedMatchesCount = 0;
+            if (textDetails != null && !textDetails.isEmpty()) {
+                adjustTextDetails();
             }
+            
+            changeSupport.firePropertyChange(PROP_MATCHES_SELECTED,
+                    origSelectedMatches, selectedMatchesCount);
+            if (matchesCount > 0) {
+                setSelected(true);
+            }
+            InvalidityStatus origInvStat = invalidityStatus;
+            invalidityStatus = null;
+            changeSupport.firePropertyChange(PROP_INVALIDITY_STATUS,
+                    origInvStat,
+                    invalidityStatus);
         });
     }
 
@@ -984,12 +963,7 @@ public final class MatchingObject implements Comparable<MatchingObject>,
             setKeys(getTextDetails());
 
             MatchingObject.this.addPropertyChangeListener(PROP_CHILD_REMOVED,
-                    new PropertyChangeListener() {
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    update();
-                }
-            });
+                    (PropertyChangeEvent evt) -> update());
         }
 
         @Override

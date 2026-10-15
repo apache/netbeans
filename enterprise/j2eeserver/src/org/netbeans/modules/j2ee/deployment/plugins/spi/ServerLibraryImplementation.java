@@ -35,7 +35,6 @@ public interface ServerLibraryImplementation {
     /**
      * Returns the specification title of the library. May return
      * <code>null</code>.
-     * <p>
      * <div class="nonnormative">
      * For example specification title for JSF would be JavaServer Faces.
      * </div>
@@ -48,7 +47,6 @@ public interface ServerLibraryImplementation {
     /**
      * Returns the implementation title of the library. May return
      * <code>null</code>.
-     * <p>
      * <div class="nonnormative">
      * For example specification title for MyFaces implementation of JSF
      * this would be something like MyFaces.

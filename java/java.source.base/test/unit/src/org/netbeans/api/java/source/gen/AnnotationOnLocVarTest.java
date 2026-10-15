@@ -86,7 +86,7 @@ public class AnnotationOnLocVarTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         File g = getFile(getGoldenDir(), getGoldenPckg() + "testAddAnnToLocVar_AnnotationOnLocVarTest.pass");
         String gold = TestUtilities.copyFileToString(g);
         assertEquals(res, gold);
@@ -130,7 +130,7 @@ public class AnnotationOnLocVarTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         File g = getFile(getGoldenDir(), getGoldenPckg() + "testAddLocVarWithAnn_AnnotationOnLocVarTest.pass");
         String gold = TestUtilities.copyFileToString(g);
         assertEquals(res, gold);

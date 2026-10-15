@@ -58,7 +58,7 @@ public class SetupUtil {
     private static final String CATALOG_FILE = "uszip-asmx-catalog/catalog.xml";
     private static final String WSDL_FILE = "uszip-asmx-catalog/www.webservicemart.com/uszip.asmx.wsdl";
     
-    private static final String ENDORSED_REF = "modules/ext/jaxws21/api/jaxws-api.jar";
+    private static final String ENDORSED_REF = "modules/ext/jaxws22/api/jakarta.xml.ws-api.jar";
     private static final String JAXWS_LIB_PROPERTY = "libs.jaxws21.classpath";
     
     public static SetupData commonSetUp(File workingDir) throws Exception {
@@ -229,7 +229,7 @@ public class SetupUtil {
                         is.close();
                     }
                 }
-                layers.setXmlUrls(layerUrls.toArray(new URL[layerUrls.size()]));
+                layers.setXmlUrls(layerUrls.toArray(new URL[0]));
             } catch (Exception x) {
             }
             resultChanged(null); // run after add listener - see PN1 in #26338

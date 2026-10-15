@@ -34,8 +34,6 @@
                 </dependency>
             </module-dependencies>
             <public-packages>
-                <package>javax.annotation</package>
-                <package>javax.annotation.security</package>
                 <package>javax.jws</package>
                 <package>javax.jws.soap</package>
                 <package>javax.xml.soap</package>
@@ -45,19 +43,17 @@
                 <package>javax.xml.ws.http</package>
                 <package>javax.xml.ws.soap</package>
                 <package>javax.xml.ws.spi</package>
+                <package>javax.xml.ws.spi.http</package>
                 <package>javax.xml.ws.wsaddressing</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/jaxws22/api/jaxws-api.jar</runtime-relative-path>
+                <runtime-relative-path>ext/jaxws22/api/jakarta.jws-api.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jaxws22/api/jsr181-api.jar</runtime-relative-path>
+                <runtime-relative-path>ext/jaxws22/api/jakarta.xml.soap-api.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jaxws22/api/javax.annotation.jar</runtime-relative-path>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/jaxws22/api/saaj-api.jar</runtime-relative-path>
+                <runtime-relative-path>ext/jaxws22/api/jakarta.xml.ws-api.jar</runtime-relative-path>
             </class-path-extension>
         </data>
     </configuration>

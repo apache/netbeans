@@ -82,7 +82,7 @@ public class CustomClientSaasBean extends SaasBean {
             findSaasMediaType(mimeTypes, out.getMedia());
 
             if(mimeTypes.size() > 0)
-                setMimeTypes(mimeTypes.toArray(new MimeType[mimeTypes.size()]));
+                setMimeTypes(mimeTypes.toArray(new MimeType[0]));
         } catch (Exception ex) {
             throw new IOException(ex.getMessage());
         } 

@@ -1,0 +1,14 @@
+.t.e.s.t. Mustache
+TEXT            "  image: ", la=2, st=0
+MUSTACHE_DELIMITER  "{{", st=13
+MUSTACHE        " .Values.image ", la=2, st=13
+MUSTACHE_DELIMITER  "}}", st=0
+TEXT            "\n  out: ", la=2, st=0
+MUSTACHE_DELIMITER  "{{", st=13
+MUSTACHE        " '{{' and '}}' ", la=2, st=13
+MUSTACHE_DELIMITER  "}}", st=0
+----- EOF -----
+
+<Unnamed test>
+----- EOF -----
+

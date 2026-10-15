@@ -188,7 +188,7 @@ public final class DDProvider {
         }
     }
     
-    final private Map<Object, RootInterface> ddMap = new WeakHashMap<Object, RootInterface>();
+    private final Map<Object, RootInterface> ddMap = new WeakHashMap<Object, RootInterface>();
     private Map<FileObject, DDProviderDataObject> dObjMap = new WeakHashMap<FileObject, DDProviderDataObject>();
 
     /** This method retrieves the root of the XML DOM for a sun-*
@@ -338,12 +338,12 @@ public final class DDProvider {
         }
     }
     
-    final private static Map<Class, Map<String, VersionInfo>> apiToVersionMap = new HashMap<Class, Map<String, VersionInfo>>(11);
-    final private static Map<String, VersionInfo> sunWebAppVersionMap = new HashMap<String, VersionInfo>(11);
-    final private static Map<String, VersionInfo> sunEjbJarVersionMap = new HashMap<String, VersionInfo>(11);
-    final private static Map<String, VersionInfo> sunApplicationVersionMap = new HashMap<String, VersionInfo>(11);
-    final private static Map<String, VersionInfo> sunAppClientVersionMap = new HashMap<String, VersionInfo>(11);
-    final private static Map<String, VersionInfo> sunResourcesVersionMap = new HashMap<String, VersionInfo>(11);
+    private static final Map<Class, Map<String, VersionInfo>> apiToVersionMap = new HashMap<Class, Map<String, VersionInfo>>(11);
+    private static final Map<String, VersionInfo> sunWebAppVersionMap = new HashMap<String, VersionInfo>(11);
+    private static final Map<String, VersionInfo> sunEjbJarVersionMap = new HashMap<String, VersionInfo>(11);
+    private static final Map<String, VersionInfo> sunApplicationVersionMap = new HashMap<String, VersionInfo>(11);
+    private static final Map<String, VersionInfo> sunAppClientVersionMap = new HashMap<String, VersionInfo>(11);
+    private static final Map<String, VersionInfo> sunResourcesVersionMap = new HashMap<String, VersionInfo>(11);
     
     static {
         sunWebAppVersionMap.put(SunWebApp.VERSION_2_3_0, new VersionInfo(
@@ -472,7 +472,7 @@ public final class DDProvider {
                 try {
                     // Formerly invoked static 'createGraph()' method, but that is merely a wrapper 
                     // for the default constructor so we'll call it directly.
-                    graphRoot = (SunBaseBean) vInfo.getImplClass().newInstance();
+                    graphRoot = (SunBaseBean) vInfo.getImplClass().getDeclaredConstructor().newInstance();
                     graphRoot.graphManager().setDoctype(vInfo.getPublicId(), vInfo.getSystemId());
                     
                     Class proxyClass = vInfo.getProxyClass();
@@ -745,6 +745,7 @@ public final class DDProvider {
      * @return ASDDVersion for the current graph or null if it cannot be determined.
      * @deprecated
      */
+    @Deprecated
     public static ASDDVersion getASDDVersion(RootInterface rootDD) {
         return getASDDVersion(rootDD, null);
     }
@@ -1009,7 +1010,7 @@ public final class DDProvider {
     
     /* Maps DOCTYPE to { version, proxy class, impl class, dtd path } info.
      */
-    final private static Map<String, DocTypeInfo> publicIdToInfoMap = new HashMap<String, DocTypeInfo>(37);
+    private static final Map<String, DocTypeInfo> publicIdToInfoMap = new HashMap<String, DocTypeInfo>(37);
     
     static {
         publicIdToInfoMap.put(DTDRegistry.SUN_EJBJAR_211_DTD_PUBLIC_ID, new DocTypeInfo(

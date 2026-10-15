@@ -40,7 +40,7 @@ final class MultiTabsPanel extends TabsPanel {
         if( null == tabsPanel )
             tabsPanel = new InnerTabsPanel( ( MultiTabsOptionsPanelController ) controller);
         panel.removeAll();
-        panel.setLayout( new BorderLayout() );
+        panel.setLayout( new BorderLayout(0, 0) );
         panel.add( tabsPanel, BorderLayout.CENTER );
     }
 

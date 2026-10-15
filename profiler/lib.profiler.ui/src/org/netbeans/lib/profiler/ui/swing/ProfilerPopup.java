@@ -237,7 +237,7 @@ public final class ProfilerPopup {
     }
     
     
-    public static abstract class Listener {
+    public abstract static class Listener {
         
         protected void popupShown() {}
         
@@ -625,7 +625,7 @@ public final class ProfilerPopup {
         }
 
         private static List<Component> components(Container aContainer) {
-            List<Component> l = new ArrayList();
+            List<Component> l = new ArrayList<>();
 
             for (int i = 0; i < aContainer.getComponentCount(); i++) {
                 Component c = aContainer.getComponent(i);

@@ -49,7 +49,7 @@ public abstract class VerificationTypeInfo {
     public static final int ITEM_Null = 5;
     /** Verification type <code>uninitializedThis</code>. */
     public static final int ITEM_UninitializedThis = 6;
-    /** Verification type <code>object</object>. */
+    /** Verification type <code>object</code>. */
     public static final int ITEM_Object = 7;
     /** Verification type <code>uninitialized</code>. */
     public static final int ITEM_Uninitialized = 8;
@@ -88,6 +88,7 @@ public abstract class VerificationTypeInfo {
      * value between 0 and 8, as defined by the <code>ITEM_*</code> constants
      * in this class.  (When Java 5 is the minimum JVM for NetBeans, these
      * constants can be replaced with an enum.)
+     * @return structure tag
      */
     public int getTag() {
         return tag;
@@ -176,6 +177,7 @@ public abstract class VerificationTypeInfo {
         
         /**
          * Returns the constant pool entry which initializes this variables.
+         * @return the constant poll entry which initializes this variables
          */
         public CPEntry getConstantPoolEntry() {
             return cpEntry;
@@ -196,6 +198,8 @@ public abstract class VerificationTypeInfo {
         /**
          * Returns  the offset of the new instruction that created 
          * the object being stored in the location.
+         * @return the offset of the new instruction that created the object 
+         * being stored in the location
          */
         public int getOffset() {
             return offset;

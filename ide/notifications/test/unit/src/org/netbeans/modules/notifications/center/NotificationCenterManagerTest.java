@@ -21,8 +21,6 @@ package org.netbeans.modules.notifications.center;
 import java.util.logging.Level;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.notifications.NotificationDisplayerImpl;
 import org.netbeans.modules.notifications.NotificationImpl;
@@ -38,7 +36,7 @@ import org.openide.util.ImageUtilities;
  */
 public class NotificationCenterManagerTest extends NbTestCase {
 
-    NotificationCenterManager manager;
+    private NotificationCenterManager manager;
 
     public NotificationCenterManagerTest(String arg0) {
         super(arg0);
@@ -143,7 +141,7 @@ public class NotificationCenterManagerTest extends NbTestCase {
     private Notification createNotification(Category category, String title) {
         String dummyText = "<html>The Netbeans IDE has detected that your system is using most of your available system resources. We recommend shutting down other applications and windows.</html>";
         return NotificationDisplayerImpl.getInstance().notify(title,
-                new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/notifications/resources/filter.png")),
+                ImageUtilities.loadIcon("org/netbeans/modules/notifications/resources/filter.png"),
                 new JLabel(dummyText), new JLabel(dummyText),
                 NotificationDisplayer.Priority.NORMAL,
                 category);

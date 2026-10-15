@@ -41,6 +41,7 @@ import org.netbeans.spi.extexecution.base.ProcessesImplementation;
  * @since 1.16
  * @deprecated use {@link ProcessesImplementation} and {@link Processes}
  */
+@Deprecated
 public interface ProcessDestroyPerformer {
 
     /**

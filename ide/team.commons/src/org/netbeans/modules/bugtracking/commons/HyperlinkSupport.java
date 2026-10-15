@@ -51,10 +51,10 @@ public final class HyperlinkSupport {
     
     private static final HyperlinkSupport instance = new HyperlinkSupport();
 
-    final static String STACKTRACE_ATTRIBUTE = "attribute.stacktrace.link";     // NOI18N
-    final static String TYPE_ATTRIBUTE = "attribute.type.link";                 // NOI18N
-    final static String URL_ATTRIBUTE = "attribute.url.link";                   // NOI18N
-    public final static String LINK_ATTRIBUTE = "attribute.simple.link";        // NOI18N
+    static final String STACKTRACE_ATTRIBUTE = "attribute.stacktrace.link";     // NOI18N
+    static final String TYPE_ATTRIBUTE = "attribute.type.link";                 // NOI18N
+    static final String URL_ATTRIBUTE = "attribute.url.link";                   // NOI18N
+    public static final String LINK_ATTRIBUTE = "attribute.simple.link";        // NOI18N
     private final MotionListener motionListener;
     private final java.awt.event.MouseListener mouseListener;
     private final RequestProcessor rp = new RequestProcessor("Bugtracking hyperlinks", 50); // NOI18N

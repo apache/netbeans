@@ -37,10 +37,7 @@ import org.openide.util.NbBundle;
 public class JavaPlatformsComboBox
         extends JComboBox<JavaPlatformsComboBox.Platform> {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Encapsulate {@see JavaPlatform} object and provide human readable
      * <code>toString()</code> output for combo box.
@@ -115,10 +112,7 @@ public class JavaPlatformsComboBox
         
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Exception message for disabled constructors. */
     private static final String CONSTRUCTOR_EXCEPTION_MSG =
             "Data model for a combo box shall not be supplied in constructor.";
@@ -133,10 +127,7 @@ public class JavaPlatformsComboBox
     private static final PlatformComparator platformComparator
             = new PlatformComparator();
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Convert array of {@see JavaPlatform} objects to array of {@see Platform}
      * objects.
@@ -155,14 +146,8 @@ public class JavaPlatformsComboBox
         return platformsOut;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Default {@see JComboBox} constructor is disabled because it's content
      * is retrieved from an array of {@see JavaPlatform}.
@@ -230,10 +215,7 @@ public class JavaPlatformsComboBox
         super(new DefaultComboBoxModel(toPlatform(platforms)));
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Update content of data model to contain all Java SE platforms currently
      * registered in NetBeans

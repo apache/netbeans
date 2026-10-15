@@ -498,8 +498,8 @@ public class DefaultClassPathProvider implements ClassPathProvider, PropertyChan
         private boolean inString = false;
         private boolean backslashLast = false;
         private boolean separatorLast = false;
-        static private final char separators[] = {'.'}; // dot is enough here...
-        static private final char whitespaces[] = {' ', '\t', '\r', '\n'};
+        private static final char separators[] = {'.'}; // dot is enough here...
+        private static final char whitespaces[] = {' ', '\t', '\r', '\n'};
         
         public SourceReader(InputStream in) {
             super(in);
@@ -638,7 +638,7 @@ public class DefaultClassPathProvider implements ClassPathProvider, PropertyChan
             return (cc == -1) ? -1 : 0;
         }
 
-        static private boolean isSeparator(int c) {
+        private static boolean isSeparator(int c) {
             for (int i=0; i < separators.length; i++) {
                 if (c == separators[i]) {
                     return true;
@@ -647,7 +647,7 @@ public class DefaultClassPathProvider implements ClassPathProvider, PropertyChan
             return false;
         }
 
-        static private boolean isWhitespace(int c) {
+        private static boolean isWhitespace(int c) {
             for (int i=0; i < whitespaces.length; i++) {
                 if (c == whitespaces[i]) {
                     return true;

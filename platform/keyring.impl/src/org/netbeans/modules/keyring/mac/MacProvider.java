@@ -20,18 +20,27 @@
 package org.netbeans.modules.keyring.mac;
 
 import com.sun.jna.Pointer;
-import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.modules.keyring.impl.KeyringSupport;
 import org.netbeans.spi.keyring.KeyringProvider;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.ServiceProvider;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 @ServiceProvider(service=KeyringProvider.class, position=200)
 public class MacProvider implements KeyringProvider {
 
     private static final Logger LOG = Logger.getLogger(MacProvider.class.getName());
 
+    private final byte[] appName;
+
+    public MacProvider() {
+        appName = KeyringSupport.getAppNameMac().getBytes(UTF_8);
+    }
+
+    @Override
     public boolean enabled() {
         if (Boolean.getBoolean("netbeans.keyring.no.native")) {
             LOG.fine("native keyring integration disabled");
@@ -40,60 +49,50 @@ public class MacProvider implements KeyringProvider {
         return Utilities.isMac();
     }
 
+    @Override
     public char[] read(String key) {
-        try {
-            byte[] serviceName = key.getBytes("UTF-8");
-            byte[] accountName = "NetBeans".getBytes("UTF-8");
-            int[] dataLength = new int[1];
-            Pointer[] data = new Pointer[1];
-            error("find", SecurityLibrary.LIBRARY.SecKeychainFindGenericPassword(null, serviceName.length, serviceName,
-                    accountName.length, accountName, dataLength, data, null));
-            if (data[0] == null) {
-                return null;
-            }
-            byte[] value = data[0].getByteArray(0, dataLength[0]); // XXX ought to call SecKeychainItemFreeContent
-            return new String(value, "UTF-8").toCharArray();
-        } catch (UnsupportedEncodingException x) {
-            LOG.log(Level.WARNING, null, x);
+        byte[] serviceName = key.getBytes(UTF_8);
+        byte[] accountName = appName;
+        int[] dataLength = new int[1];
+        Pointer[] data = new Pointer[1];
+        error("find", SecurityLibrary.LIBRARY.SecKeychainFindGenericPassword(null, serviceName.length, serviceName,
+                accountName.length, accountName, dataLength, data, null));
+        if (data[0] == null) {
             return null;
         }
+        byte[] value = data[0].getByteArray(0, dataLength[0]); // XXX ought to call SecKeychainItemFreeContent
+        return new String(value, UTF_8).toCharArray();
     }
 
+    @Override
     public void save(String key, char[] password, String description) {
-        try {
-            byte[] serviceName = key.getBytes("UTF-8");
-            byte[] accountName = "NetBeans".getBytes("UTF-8");
-            // Keychain Access seems to expect UTF-8, so do not use Utils.chars2Bytes:
-            byte[] data = new String(password).getBytes("UTF-8");
-            Pointer[] itemRef = new Pointer[1];
-            error("find (for save)", SecurityLibrary.LIBRARY.SecKeychainFindGenericPassword(null, serviceName.length, serviceName,
-                    accountName.length, accountName, null, null, itemRef));
-            if (itemRef[0] != null) {
-                error("save (update)", SecurityLibrary.LIBRARY.SecKeychainItemModifyContent(itemRef[0], null, data.length, data));
-                SecurityLibrary.LIBRARY.CFRelease(itemRef[0]);
-            } else {
-                error("save (new)", SecurityLibrary.LIBRARY.SecKeychainAddGenericPassword(null, serviceName.length, serviceName,
-                        accountName.length, accountName, data.length, data, null));
-            }
-        } catch (UnsupportedEncodingException x) {
-            LOG.log(Level.WARNING, null, x);
+        byte[] serviceName = key.getBytes(UTF_8);
+        byte[] accountName = appName;
+        // Keychain Access seems to expect UTF-8, so do not use Utils.chars2Bytes:
+        byte[] data = new String(password).getBytes(UTF_8);
+        Pointer[] itemRef = new Pointer[1];
+        error("find (for save)", SecurityLibrary.LIBRARY.SecKeychainFindGenericPassword(null, serviceName.length, serviceName,
+                accountName.length, accountName, null, null, itemRef));
+        if (itemRef[0] != null) {
+            error("save (update)", SecurityLibrary.LIBRARY.SecKeychainItemModifyContent(itemRef[0], null, data.length, data));
+            SecurityLibrary.LIBRARY.CFRelease(itemRef[0]);
+        } else {
+            error("save (new)", SecurityLibrary.LIBRARY.SecKeychainAddGenericPassword(null, serviceName.length, serviceName,
+                    accountName.length, accountName, data.length, data, null));
         }
         // XXX use description somehow... better to use SecItemAdd with kSecAttrDescription
     }
 
+    @Override
     public void delete(String key) {
-        try {
-            byte[] serviceName = key.getBytes("UTF-8");
-            byte[] accountName = "NetBeans".getBytes("UTF-8");
-            Pointer[] itemRef = new Pointer[1];
-            error("find (for delete)", SecurityLibrary.LIBRARY.SecKeychainFindGenericPassword(null, serviceName.length, serviceName,
-                    accountName.length, accountName, null, null, itemRef));
-            if (itemRef[0] != null) {
-                error("delete", SecurityLibrary.LIBRARY.SecKeychainItemDelete(itemRef[0]));
-                SecurityLibrary.LIBRARY.CFRelease(itemRef[0]);
-            }
-        } catch (UnsupportedEncodingException x) {
-            LOG.log(Level.WARNING, null, x);
+        byte[] serviceName = key.getBytes(UTF_8);
+        byte[] accountName = appName;
+        Pointer[] itemRef = new Pointer[1];
+        error("find (for delete)", SecurityLibrary.LIBRARY.SecKeychainFindGenericPassword(null, serviceName.length, serviceName,
+                accountName.length, accountName, null, null, itemRef));
+        if (itemRef[0] != null) {
+            error("delete", SecurityLibrary.LIBRARY.SecKeychainItemDelete(itemRef[0]));
+            SecurityLibrary.LIBRARY.CFRelease(itemRef[0]);
         }
     }
 

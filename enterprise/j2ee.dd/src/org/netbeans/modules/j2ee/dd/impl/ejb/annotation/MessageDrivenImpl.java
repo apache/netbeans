@@ -82,7 +82,12 @@ public class MessageDrivenImpl extends PersistentObject implements MessageDriven
     
     boolean refresh(TypeElement typeElement) {
         Map<String, ? extends AnnotationMirror> annByType = getHelper().getAnnotationsByType(typeElement.getAnnotationMirrors());
-        AnnotationMirror annotationMirror = annByType.get("javax.ejb.MessageDriven"); // NOI18N
+        AnnotationMirror annotationMirror = annByType.get("jakarta.ejb.MessageDriven"); // NOI18N
+        String activationConfigClass = "jakarta.ejb.ActivationConfigProperty";
+        if (annotationMirror == null) {
+            annotationMirror = annByType.get("javax.ejb.MessageDriven"); // NOI18N
+            activationConfigClass = "javax.ejb.ActivationConfigProperty";
+        }
         if (annotationMirror == null) {
             return false;
         }
@@ -92,7 +97,7 @@ public class MessageDrivenImpl extends PersistentObject implements MessageDriven
         parser.expectString("mappedName", null); // NOI18N
 
         activationConfig = new ActivationConfigImpl();
-        TypeMirror acpType = getHelper().resolveType("javax.ejb.ActivationConfigProperty");
+        TypeMirror acpType = getHelper().resolveType(activationConfigClass);
         ActivationConfigPropertyHandler handler = new ActivationConfigPropertyHandler(getHelper(), activationConfig);
         if (acpType != null) {
             parser.expectAnnotationArray("activationConfig", acpType, handler, null); //NOI18N
@@ -150,8 +155,8 @@ public class MessageDrivenImpl extends PersistentObject implements MessageDriven
 
         EjbRefHelper.setEjbRefsForClass(getHelper(), getTypeElement(), resultEjbRefs, resultEjbLocalRefs);
 
-        ejbRefs = resultEjbRefs.toArray(new EjbRef[resultEjbRefs.size()]);
-        ejbLocalRefs = resultEjbLocalRefs.toArray(new EjbLocalRef[resultEjbLocalRefs.size()]);
+        ejbRefs = resultEjbRefs.toArray(new EjbRef[0]);
+        ejbLocalRefs = resultEjbLocalRefs.toArray(new EjbLocalRef[0]);
     }
 
     // <editor-fold desc="Model implementation">

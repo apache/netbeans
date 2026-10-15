@@ -466,7 +466,7 @@ public final class Tester {
             if (diff == null) {
                 diff = TestCase.Diff.NOT_KNOWN;
             }
-            testCase.setFailureInfo(message, stackTrace.toArray(new String[stackTrace.size()]), isError(kase.getStatus()), diff);
+            testCase.setFailureInfo(message, stackTrace.toArray(new String[0]), isError(kase.getStatus()), diff);
         }
 
         private boolean isPass(TestCase.Status status) {

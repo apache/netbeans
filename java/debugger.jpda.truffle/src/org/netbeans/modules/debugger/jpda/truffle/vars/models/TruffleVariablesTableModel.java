@@ -19,16 +19,22 @@
 
 package org.netbeans.modules.debugger.jpda.truffle.vars.models;
 
+import java.awt.Color;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import javax.swing.JTable;
+import javax.swing.UIManager;
 
 import org.netbeans.api.debugger.jpda.JPDADebugger;
-import org.netbeans.api.debugger.jpda.JPDAWatch;
 import org.netbeans.api.debugger.jpda.Variable;
+import org.netbeans.modules.debugger.jpda.truffle.LanguageName;
+import org.netbeans.modules.debugger.jpda.truffle.access.CurrentPCInfo;
+import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleStrataProvider;
-import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleScope;
+import org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackFrame;
+import org.netbeans.modules.debugger.jpda.truffle.vars.impl.TruffleScope;
 import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleVariable;
-import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleVariableImpl;
+import org.netbeans.modules.debugger.jpda.truffle.vars.impl.TruffleVariableImpl;
 import org.netbeans.spi.debugger.ContextProvider;
 import org.netbeans.spi.debugger.DebuggerServiceRegistration;
 import org.netbeans.spi.debugger.DebuggerServiceRegistrations;
@@ -47,10 +53,10 @@ import org.netbeans.spi.viewmodel.TableModelFilter;
 import org.netbeans.spi.viewmodel.UnknownTypeException;
 
 @DebuggerServiceRegistrations({
-    @DebuggerServiceRegistration(path="netbeans-JPDASession/"+TruffleStrataProvider.TRUFFLE_STRATUM+"/LocalsView",  types = TableModelFilter.class),
-    @DebuggerServiceRegistration(path="netbeans-JPDASession/"+TruffleStrataProvider.TRUFFLE_STRATUM+"/ResultsView", types = TableModelFilter.class),
-    @DebuggerServiceRegistration(path="netbeans-JPDASession/"+TruffleStrataProvider.TRUFFLE_STRATUM+"/ToolTipView", types = TableModelFilter.class),
-    @DebuggerServiceRegistration(path="netbeans-JPDASession/"+TruffleStrataProvider.TRUFFLE_STRATUM+"/WatchesView", types = TableModelFilter.class)
+    @DebuggerServiceRegistration(path="netbeans-JPDASession/"+TruffleStrataProvider.TRUFFLE_STRATUM+"/LocalsView",  types = {TableModelFilter.class, TableHTMLModelFilter.class}),
+    @DebuggerServiceRegistration(path="netbeans-JPDASession/"+TruffleStrataProvider.TRUFFLE_STRATUM+"/ResultsView", types = {TableModelFilter.class, TableHTMLModelFilter.class}),
+    @DebuggerServiceRegistration(path="netbeans-JPDASession/"+TruffleStrataProvider.TRUFFLE_STRATUM+"/ToolTipView", types = {TableModelFilter.class, TableHTMLModelFilter.class}),
+    @DebuggerServiceRegistration(path="netbeans-JPDASession/"+TruffleStrataProvider.TRUFFLE_STRATUM+"/WatchesView", types = {TableModelFilter.class, TableHTMLModelFilter.class})
 })
 public class TruffleVariablesTableModel implements TableModelFilter, TableHTMLModelFilter {
     
@@ -61,23 +67,22 @@ public class TruffleVariablesTableModel implements TableModelFilter, TableHTMLMo
         debugger = contextProvider.lookupFirst(null, JPDADebugger.class);
     }
 
+    private static TruffleVariable getTruffleVariable(Object node) {
+        if (node instanceof Variable) {
+            return TruffleVariableImpl.get((Variable) node);
+        } else if (node instanceof TruffleVariable) {
+            return (TruffleVariable) node;
+        } else {
+            return null;
+        }
+    }
+
     @Override
     public Object getValueAt(TableModel original, Object node, String columnID) throws UnknownTypeException {
         if (node instanceof TruffleScope) {
             return "";
         }
-        TruffleVariable tv = null;
-        if (node instanceof JPDAWatch) {// && !isEnabled((JPDAWatch) node)) {
-            Object orig = original.getValueAt(node, columnID); // Call in any case because of error displaying
-            if (node instanceof Variable) {
-                tv = TruffleVariableImpl.get((Variable) node);
-            }
-            if (tv == null) {
-                return orig;
-            }
-        } else if (node instanceof TruffleVariable) {
-            tv = (TruffleVariable) node;
-        }
+        TruffleVariable tv = getTruffleVariable(node);
         if (tv != null) {
             switch (columnID) {
                 case LOCALS_TYPE_COLUMN_ID:
@@ -128,13 +133,34 @@ public class TruffleVariablesTableModel implements TableModelFilter, TableHTMLMo
     @Override
     public boolean hasHTMLValueAt(TableHTMLModel original, Object node, String columnID) throws UnknownTypeException {
         if (node instanceof TruffleVariable) {
-            return false;
+            switch (columnID) {
+                case LOCALS_TYPE_COLUMN_ID:
+                case WATCH_TYPE_COLUMN_ID:
+                    return true;
+            }
         }
         return original.hasHTMLValueAt(node, columnID);
     }
 
     @Override
     public String getHTMLValueAt(TableHTMLModel original, Object node, String columnID) throws UnknownTypeException {
+            switch (columnID) {
+                case LOCALS_TYPE_COLUMN_ID:
+                case WATCH_TYPE_COLUMN_ID:
+                    TruffleVariable tv = getTruffleVariable(node);
+                    if (tv != null) {
+                        LanguageName frameLanguage = LanguageName.NONE;
+                        CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentPCInfo(debugger.getCurrentThread());
+                        if (currentPCInfo != null) {
+                            TruffleStackFrame selectedStackFrame = currentPCInfo.getSelectedStackFrame();
+                            frameLanguage = selectedStackFrame != null ? selectedStackFrame.getLanguage() : LanguageName.NONE;
+                        }
+                        LanguageName valueLanguage = tv.getLanguage();
+                        if (!LanguageName.NONE.equals(valueLanguage) && !frameLanguage.equals(valueLanguage)) {
+                            return toHTML(valueLanguage.getName(), tv.getType());
+                        }
+                    }
+        }
         return original.getHTMLValueAt(node, columnID);
     }
 
@@ -148,4 +174,32 @@ public class TruffleVariablesTableModel implements TableModelFilter, TableHTMLMo
         listeners.remove(l);
     }
 
+    public static String toHTML(String id, String text) {
+        if (text == null) return null;
+        StringBuilder sb = new StringBuilder ();
+        sb.append("<html>");
+        Color color = UIManager.getColor("Table.foreground");
+        if (color == null) {
+            color = new JTable().getForeground();
+        }
+        sb.append("<font color=\"#");
+        String hexColor = Integer.toHexString ((color.getRGB () & 0xffffff));
+        for (int i = hexColor.length(); i < 6; i++) {
+            sb.append("0"); // Prepend zeros to length of 6
+        }
+        sb.append(hexColor);
+        sb.append("\">");
+        
+        sb.append("<font color=\"#808080\">[");
+        sb.append(id);
+        sb.append("]</font> ");
+        
+        text = text.replace("&", "&amp;");
+        text = text.replace("<", "&lt;");
+        text = text.replace(">", "&gt;");
+        sb.append(text);
+        sb.append("</font>");
+        sb.append("</html>");
+        return sb.toString ();
+    }
 }

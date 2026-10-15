@@ -1,0 +1,4 @@
+Code completion result for source line:
+#[Attr1(int: CONST_ATTRIBUTES_TE|ST1, string: Attr1::CONST_ATTR1)]
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   CONST_ATTRIBUTES_TEST1 1        [PUBLIC]   Attributes\Test1

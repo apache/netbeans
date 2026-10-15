@@ -134,7 +134,7 @@ public final class IndexingBridge {
                         public void run() {
                             long t = System.currentTimeMillis();
                             try {
-                                FileUtil.refreshFor(parents.toArray(new File[parents.size()]));
+                                FileUtil.refreshFor(parents.toArray(new File[0]));
                             } finally {                                
                                 LOG.fine(" refreshing " + parents.size() + " parents took " + (System.currentTimeMillis() - t) + " millis.");
                             }

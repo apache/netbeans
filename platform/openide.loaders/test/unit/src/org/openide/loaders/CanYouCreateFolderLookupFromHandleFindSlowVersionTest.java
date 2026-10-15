@@ -124,8 +124,8 @@ public class CanYouCreateFolderLookupFromHandleFindSlowVersionTest extends Loggi
         public Pool() {
         }
         
-        public Enumeration loaders() {
-            return Enumerations.singleton(DataLoader.getLoader(MyLoader.class));
+        public Enumeration<DataLoader> loaders() {
+            return Enumerations.<DataLoader>singleton(DataLoader.getLoader(MyLoader.class));
         }
     }
     

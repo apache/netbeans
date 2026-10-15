@@ -19,15 +19,29 @@
 package org.netbeans.libs.freemarker;
 
 
-import javax.script.*;
-import java.io.*;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Properties;
 import java.util.Set;
-import freemarker.template.*;
-import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
+import javax.script.AbstractScriptEngine;
+import javax.script.Bindings;
+import javax.script.ScriptContext;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineFactory;
+import javax.script.ScriptException;
+import javax.script.SimpleBindings;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
@@ -35,7 +49,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
-import org.openide.util.Utilities;
 
 /* Taken from A. Sundararajan and adopted by Jaroslav Tulach 
  * for NetBeans needs.
@@ -52,7 +65,7 @@ class FreemarkerEngine extends AbstractScriptEngine {
     private static final String FREEMARKER_EXCEPTION_HANDLER = "org.netbeans.libs.freemarker.exceptionHandler";
     
     private static Map<FileObject,Template> templates = Collections.synchronizedMap(
-        new WeakHashMap<FileObject, Template>()
+        new WeakHashMap<>()
     );
 
     // my factory, may be null
@@ -78,11 +91,13 @@ class FreemarkerEngine extends AbstractScriptEngine {
     }
 	
     // ScriptEngine methods
+    @Override
     public Object eval(String str, ScriptContext ctx) 
                        throws ScriptException {	
         return eval(new StringReader(str), ctx);
     }
 
+    @Override
     public Object eval(Reader reader, ScriptContext ctx)
                        throws ScriptException { 
         ctx.setAttribute("context", ctx, ScriptContext.ENGINE_SCOPE);
@@ -105,8 +120,8 @@ class FreemarkerEngine extends AbstractScriptEngine {
             if (template == null) {
                 template = new MyTemplate(fo, fileName, reader, conf);
                 Object exceptionHandler = ctx.getAttribute(FREEMARKER_EXCEPTION_HANDLER);
-                if (exceptionHandler instanceof TemplateExceptionHandler) {
-                    template.setTemplateExceptionHandler((TemplateExceptionHandler) exceptionHandler);
+                if (exceptionHandler instanceof TemplateExceptionHandler templateEH) {
+                    template.setTemplateExceptionHandler(templateEH);
                 }
             } else {
                 ((MyTemplate)template).conf = conf;
@@ -122,6 +137,7 @@ class FreemarkerEngine extends AbstractScriptEngine {
         return outputAsString? out.toString() : null;
     }
 
+    @Override
     public ScriptEngineFactory getFactory() {
         synchronized (this) {
             if (factory == null) {
@@ -131,6 +147,7 @@ class FreemarkerEngine extends AbstractScriptEngine {
         return factory;
     }
 
+    @Override
     public Bindings createBindings() {
         return new SimpleBindings();
     }
@@ -138,8 +155,8 @@ class FreemarkerEngine extends AbstractScriptEngine {
     // internals only below this point  
     private static String getFilename(ScriptContext ctx) {
         Object tfo = ctx.getAttribute(FREEMARKER_TEMPLATE);
-        if (tfo instanceof FileObject) {
-            return ((FileObject)tfo).getPath();
+        if (tfo instanceof FileObject fo) {
+            return fo.getPath();
         }
         Object fileName = ctx.getAttribute(ScriptEngine.FILENAME);
         if (fileName != null) {
@@ -150,11 +167,7 @@ class FreemarkerEngine extends AbstractScriptEngine {
 
     private static boolean isStringOutputMode(ScriptContext ctx) {
         Object flag = ctx.getAttribute(STRING_OUTPUT_MODE);
-        if (flag != null) {
-            return flag.equals(Boolean.TRUE);
-        } else {
-            return false;
-        }
+        return flag != null ? flag.equals(Boolean.TRUE) : false;
     }
 
     private void initFreeMarkerConfiguration(ScriptContext ctx) {
@@ -163,9 +176,9 @@ class FreemarkerEngine extends AbstractScriptEngine {
                 if (conf != null) {
                     return;
                 }
-                Object cfg = ctx.getAttribute(FREEMARKER_CONFIG);
-                if (cfg instanceof Configuration) {
-                    conf = (Configuration) cfg;
+                Object obj = ctx.getAttribute(FREEMARKER_CONFIG);
+                if (obj instanceof Configuration configuration) {
+                    conf = configuration;
                     return;
                 }
 
@@ -198,11 +211,8 @@ class FreemarkerEngine extends AbstractScriptEngine {
                     File propsFile = new File(propsName);
                     if (propsFile.exists() && propsFile.canRead()) {
                         props = new Properties();
-                        FileInputStream fis = new FileInputStream(propsFile);
-                        try {
+                        try (FileInputStream fis = new FileInputStream(propsFile)) {
                             props.load(fis);
-                        } finally {
-                            fis.close();
                         }
                     }               
                 }
@@ -211,8 +221,8 @@ class FreemarkerEngine extends AbstractScriptEngine {
                 Set<Object> keys = props.keySet();
                 for (Object obj : keys) {
                     String key;
-                    if (obj instanceof String) {
-                        key = (String) obj;
+                    if (obj instanceof String str) {
+                        key = str;
                     } else {
                         continue;
                     }
@@ -268,21 +278,27 @@ class FreemarkerEngine extends AbstractScriptEngine {
             return conf == null ? super.getConfiguration() : conf;
         }
         
+        @Override
         public void fileFolderCreated(FileEvent fe) {
             clear();
         }
+        @Override
         public void fileDataCreated(FileEvent fe) {
             clear();
         }
+        @Override
         public void fileChanged(FileEvent fe) {
             clear();
         }
+        @Override
         public void fileDeleted(FileEvent fe) {
             clear();
         }
+        @Override
         public void fileRenamed(FileRenameEvent fe) {
             clear();
         }
+        @Override
         public void fileAttributeChanged(FileAttributeEvent fe) {
             clear();
         }

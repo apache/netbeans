@@ -123,7 +123,7 @@ public class EnumerationsTest extends NbTestCase {
     //
     
     public void testEmptyIsEmpty() {
-        Enumeration e = empty();
+        Enumeration<?> e = empty();
         assertFalse(e.hasMoreElements());
         try {
             e.nextElement();
@@ -134,7 +134,7 @@ public class EnumerationsTest extends NbTestCase {
     }
     
     public void testSingleIsSingle() {
-        Enumeration e = singleton(this);
+        Enumeration<EnumerationsTest> e = singleton(this);
         assertTrue(e.hasMoreElements());
         assertEquals("Returns me", this, e.nextElement());
         assertFalse("Now it is empty", e.hasMoreElements());
@@ -220,7 +220,7 @@ public class EnumerationsTest extends NbTestCase {
         }
         
         WeakEnum weak = new WeakEnum();
-        Enumeration en = removeDuplicates(weak);
+        Enumeration<Object> en = removeDuplicates(weak);
         
         assertTrue("Has some elements", en.hasMoreElements());
         assertEquals("And the first one is get", weak.i1, en.nextElement());
@@ -256,7 +256,7 @@ public class EnumerationsTest extends NbTestCase {
         }
         Pr p = new Pr();
         
-        Enumeration en = queue(
+        Enumeration<Integer> en = queue(
                 Collections.nCopies(1, 0), p
                 );
         

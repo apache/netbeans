@@ -19,6 +19,7 @@
 package org.netbeans.modules.refactoring.api.impl;
 
 import java.util.Collection;
+import java.util.List;
 import org.netbeans.modules.refactoring.api.AbstractRefactoring;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.api.ProblemDetails;
@@ -26,7 +27,9 @@ import org.netbeans.modules.refactoring.api.RefactoringElement;
 import org.netbeans.modules.refactoring.api.RefactoringSession;
 import org.netbeans.modules.refactoring.spi.GuardedBlockHandler;
 import org.netbeans.modules.refactoring.spi.ProblemDetailsImplementation;
+import org.netbeans.modules.refactoring.spi.RefactoringCommit;
 import org.netbeans.modules.refactoring.spi.RefactoringElementImplementation;
+import org.netbeans.modules.refactoring.spi.Transaction;
 import org.netbeans.modules.refactoring.spi.ui.FiltersDescription;
 
 /**
@@ -56,5 +59,7 @@ public abstract class APIAccessor {
     public abstract FiltersDescription getFiltersDescription(AbstractRefactoring refactoring);
     public abstract void resetFiltersDescription(AbstractRefactoring refactoring);
     public abstract boolean isFinished(RefactoringSession session);
+    public abstract List<Transaction> getCommits(RefactoringSession session);
+    public abstract List<RefactoringElementImplementation> getFileChanges(RefactoringSession session);
 
 }

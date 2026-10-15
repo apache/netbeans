@@ -34,11 +34,10 @@ import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.csl.api.OffsetRange;
-import org.netbeans.modules.javascript2.json.parser.JsonBaseVisitor;
 import org.netbeans.modules.javascript2.json.parser.JsonLexer;
 import org.netbeans.modules.javascript2.json.parser.JsonParser;
+import org.netbeans.modules.javascript2.json.parser.JsonParserBaseVisitor;
 import org.netbeans.modules.javascript2.json.parser.ParseTreeToXml;
-import org.netbeans.modules.javascript2.model.ModelBuilder;
 import org.netbeans.modules.javascript2.model.api.JsElement;
 import org.netbeans.modules.javascript2.model.api.JsObject;
 import org.netbeans.modules.javascript2.model.spi.ModelElementFactory;
@@ -56,14 +55,14 @@ import org.w3c.dom.Document;
  *
  * @author Tomas Zezula
  */
-public final class JsonModelResolver extends JsonBaseVisitor<Boolean> implements ModelResolver {
+public final class JsonModelResolver extends JsonParserBaseVisitor<Boolean> implements ModelResolver {
 
     private static final Logger LOG = Logger.getLogger(JsonModelResolver.class.getName());
+
     private final ParserResult parserResult;
-    private final OccurrenceBuilder occurrenceBuilder;
     private final ModelBuilder modelBuilder;
     private final Deque<Pair<ParserRuleContext,JsObject>> path = new ArrayDeque<>();
-    boolean importantTerminalExpected;
+    private boolean importantTerminalExpected;
 
     private JsonModelResolver(
         @NonNull final ParserResult parserResult,
@@ -71,7 +70,6 @@ public final class JsonModelResolver extends JsonBaseVisitor<Boolean> implements
         Parameters.notNull("parserResult", parserResult);   //NOI18N
         Parameters.notNull("occurrenceBuilder", occurrenceBuilder); //NOI18N
         this.parserResult = parserResult;
-        this.occurrenceBuilder = occurrenceBuilder;
         final FileObject fileObject = parserResult.getSnapshot().getSource().getFileObject();
         this.modelBuilder = new ModelBuilder(JsFunctionImpl.createGlobal(
                 fileObject,
@@ -87,7 +85,7 @@ public final class JsonModelResolver extends JsonBaseVisitor<Boolean> implements
             if (parseTree != null) {
                 try {
                     final JsonLexer l = new JsonLexer(new ANTLRInputStream());
-                    JsonBaseVisitor<Document> visitor = new ParseTreeToXml(
+                    JsonParserBaseVisitor<Document> visitor = new ParseTreeToXml(
                             l,
                             new JsonParser(new CommonTokenStream(l)));
                     LOG.log(Level.FINEST,

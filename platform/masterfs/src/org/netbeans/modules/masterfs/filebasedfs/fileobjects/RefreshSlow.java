@@ -31,7 +31,7 @@ final class RefreshSlow extends AtomicBoolean implements Runnable {
     private BaseFileObj preferrable;
     private int size;
     private int index;
-    private boolean ignoreRecursiveListener;
+    private final boolean ignoreRecursiveListener;
 
     public RefreshSlow() {
         super();
@@ -80,16 +80,16 @@ final class RefreshSlow extends AtomicBoolean implements Runnable {
                 arr[4] = preferrable.getExistingParent();
             }
             ref.setSource(arr);
-            if (arr[4] instanceof BaseFileObj) {
-                preferrable = (BaseFileObj)arr[4];
+            if (arr[4] instanceof BaseFileObj baseFileObj) {
+                preferrable = baseFileObj;
             }
         }
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof ActionEvent) {
-            this.ref = (ActionEvent)obj;
+        if (obj instanceof ActionEvent actionEvent) {
+            this.ref = actionEvent;
         }
         return super.equals(obj);
     }

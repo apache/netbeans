@@ -22,8 +22,7 @@ import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.charset.IllegalCharsetNameException;
-import java.nio.charset.UnsupportedCharsetException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -258,7 +257,7 @@ public final class ClientSideProjectUtilities {
         res.addAll(Arrays.asList(sources.getSourceGroups(WebClientProjectConstants.SOURCES_TYPE_HTML5_SITE_ROOT)));
         res.addAll(Arrays.asList(sources.getSourceGroups(WebClientProjectConstants.SOURCES_TYPE_HTML5_TEST)));
         res.addAll(Arrays.asList(sources.getSourceGroups(WebClientProjectConstants.SOURCES_TYPE_HTML5_TEST_SELENIUM)));
-        return res.toArray(new SourceGroup[res.size()]);
+        return res.toArray(new SourceGroup[0]);
     }
 
     public static SourceGroup[] getSourceGroups(Project project, String type) {
@@ -278,16 +277,7 @@ public final class ClientSideProjectUtilities {
 
     // #217970
     private static Charset getDefaultProjectCharset() {
-        try {
-            return Charset.forName("UTF-8"); // NOI18N
-        } catch (IllegalCharsetNameException exception) {
-            // fallback
-            LOGGER.log(Level.INFO, "UTF-8 charset not supported, falling back to the default charset.", exception);
-        } catch (UnsupportedCharsetException exception) {
-            // fallback
-            LOGGER.log(Level.INFO, "UTF-8 charset not supported, falling back to the default charset.", exception);
-        }
-        return Charset.defaultCharset();
+        return StandardCharsets.UTF_8;
     }
 
     /**

@@ -15,27 +15,27 @@
 # specific language governing permissions and limitations
 # under the License.
 
-61F0983EB190954CCDEDE31E786A9E0BD9767C4A javax.ws.rs:javax.ws.rs-api:2.0
-479C1E06DB31C432330183F5CAE684163F186146 javax.annotation:javax.annotation-api:1.2
-DCF7821B776944201D6284EBBD8BE4BC2A318A1F org.glassfish.hk2.external:asm-all-repackaged:2.2.0-b21
-C8CA25FE0B285C7ACF1A2240B2953DD054CE7DA1 org.glassfish.hk2.external:cglib:2.2.0-b21
-69E12F4C6AEAC392555F1EA86FAB82B5E5E31AD4 com.google.guava:guava:14.0.1
-AED44E9B4EFB3979564A0D383986CC8E7CD0CCBD org.glassfish.hk2:hk2-api:2.2.0-b21
-484DC6B6D5ECB977B208AD1256B25C424D5FC049 org.glassfish.hk2:hk2-locator:2.2.0-b21
-EFBAB185D37C32210303A814265B900C927A1226 org.glassfish.hk2:hk2-utils:2.2.0-b21
-D742D605BC663895B04F4116591B699D4201370C org.glassfish.hk2.external:javax.inject:2.2.0-b21
-6BF0EBB7EFD993E222FC1112377B5E92A13B38DD javax.servlet:javax.servlet-api:3.0.1
-2F51C4BB4724EA408096EE9100FF2827E07E5B7C javax.xml.bind:jaxb-api:2.2.7
-141944FE9F453199209B43E7592C0B420E3028CC org.glassfish.jersey.ext:jersey-entity-filtering:2.5.1
-A37F7B739D87424D45A8525CBE87BEA145E106EF org.glassfish.jersey.media:jersey-media-moxy:2.5.1
-66AB449FF3AA5C4ADFC82C89025CC983B422EB95 org.osgi:org.osgi.core:4.2.0
-4ED2B2D4738AED5786CFA64CBA5A332779C4C708 org.glassfish.hk2:osgi-resource-locator:1.0.1
-5725F57873E05E068803E2BF9D5A8EA3740FFEC5 javax.persistence:persistence-api:1.0
-8613AE82954779D518631E05DAA73A6A954817D5 javax.validation:validation-api:1.1.0.Final
-765D78B586F87388A0F5D06348DB7FFDB77C0AC1 org.glassfish.jersey.core:jersey-client:2.5.1
-45E026ABFEDF7099E6BA9B36E4E9D72044308B54 org.glassfish.jersey.core:jersey-common:2.5.1
-FC5F22BE9BC3AE7AD79E4A4239539988884D467F org.glassfish.jersey.containers:jersey-container-servlet-core:2.5.1
-E61C7B8F86A70611177E1551137C3BF4F341B8B1 org.glassfish.jersey.containers:jersey-container-servlet:2.5.1
-C3F29F237C9D7139A9EFFC2A60195503A6F6C3D7 org.glassfish.jersey.core:jersey-server:2.5.1
-
-
+934C04D3CFEF185A8008E7BF34331B79730A9D43 javax.annotation:javax.annotation-api:1.3.2
+562A587FACE36EC7EFF2DB7F2FC95425C6602BC1 jakarta.activation:jakarta.activation-api:1.2.1
+48B9BDA22B091B1F48B13AF03FE36DB3BE6E1AE3 jakarta.annotation:jakarta.annotation-api:2.1.1
+8F6EA5DAEDC614F07A3654A455660145286F024E jakarta.persistence:jakarta.persistence-api:2.2.3
+B8A1142E04838FE54194049C6E7A18DAE8F9B960 jakarta.servlet:jakarta.servlet-api:4.0.4
+5EACC6522521F7EACB081F95CEE1E231648461E7 jakarta.validation:jakarta.validation-api:2.0.2
+1DCB770BCE80A490DFF49729B99C7A60E9ECB122 jakarta.ws.rs:jakarta.ws.rs-api:2.1.6
+48E3B9CFC10752FBA3521D6511F4165BEA951801 jakarta.xml.bind:jakarta.xml.bind-api:2.3.3
+114BD7AFB4A1BD9993527F52A08A252B5D2ACAC5 org.glassfish.hk2:hk2-api:2.6.1
+9DEDF9D2022E38EC0743ED44C1AC94AD6149ACDD org.glassfish.hk2:hk2-locator:2.6.1
+396513AA96C1D5A10AA4F75C4DCBF259A698D62D org.glassfish.hk2:hk2-utils:2.6.1
+B2EB0A83BCBB44CC5D25F8B18F23BE116313A638 org.glassfish.hk2.external:aopalliance-repackaged:2.6.1
+DE3B21279DF7E755E38275137539BE5E2C80DD58 org.glassfish.hk2:osgi-resource-locator:1.0.3
+EA92BE0DD34D0B298930A7514E715783F4EABA97 org.glassfish.jersey.core:jersey-client:2.35
+2F15EC1B3A3598D6B12D4B0C6FF6F0905F5E5B4C org.glassfish.jersey.core:jersey-common:2.35
+C6EFC2EE82D2550E6385A7F7B1C08651F71AFB7A org.glassfish.jersey.core:jersey-server:2.35
+B09CFD6D2E645F1D8DB538BA93201B2D69B8403D org.glassfish.jersey.connectors:jersey-apache-connector:2.35
+898EF84B72E75788811DD709FE7C7051F61A943E org.glassfish.jersey.containers:jersey-container-servlet:2.35
+7CC48F2529B921F25A020C821DDE23753F6E60BB org.glassfish.jersey.containers:jersey-container-servlet-core:2.35
+2FBE9E89F6597E10976D1431DDE64B282A761AEB org.glassfish.jersey.ext:jersey-entity-filtering:2.35
+2BE6D2227081028566E8E2B0FC6A1ABBAECF56F7 org.glassfish.jersey.inject:jersey-hk2:2.35
+6383927E15ECB4BAEEF2CF0D3373B1FF1795C062 org.glassfish.jersey.media:jersey-media-json-jackson:2.35
+9B27FC01599CAB6AF757F0F0799D451A09F57E14 org.glassfish.jersey.media:jersey-media-moxy:2.35
+DAA42A0E96C3B881E8C330A413813983E92D2426 org.osgi:osgi.core:8.0.0

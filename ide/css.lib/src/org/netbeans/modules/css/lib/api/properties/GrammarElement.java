@@ -128,7 +128,7 @@ public abstract class GrammarElement {
         return null;
     }
 
-    public synchronized String path() {
+    public String path() {
         if (path == null) {
             StringBuilder sb = new StringBuilder();
             if (parent() != null) {
@@ -161,15 +161,4 @@ public abstract class GrammarElement {
         }
     }
 
-    public String toString2(int level) {
-        return indentString(level) + toString();
-    }
-
-    protected String indentString(int level) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < level; i++) {
-            sb.append('\t');
-        }
-        return sb.toString();
-    }
 }

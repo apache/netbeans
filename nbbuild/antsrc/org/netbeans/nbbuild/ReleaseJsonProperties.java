@@ -28,8 +28,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.json.simple.JSONObject;
@@ -44,6 +46,9 @@ import org.w3c.dom.Element;
  * @author skygo
  */
 public class ReleaseJsonProperties extends Task {
+
+    // how many previous versions to suggest importing configuration from
+    private static final int PREVIOUS_VERSIONS_LIMIT = 5;
 
     /**
      * current branch we works with
@@ -114,6 +119,7 @@ public class ReleaseJsonProperties extends Task {
         } catch (ParseException | IOException ex) {
             throw new BuildException(ex);
         }
+
         // sort all information
         Collections.sort(ri);
         // build a sorted xml
@@ -133,14 +139,18 @@ public class ReleaseJsonProperties extends Task {
         }
 
         if (requiredbranchinfo == null) {
-            throw new BuildException("No Release Information found for branch '" + branch + "', update json file section");
+            throw new BuildException("No Release Information found for branch '" + branch + "', update json file section with ant -Dneedjsondownload=true");
         }
-        List<String> updateValues = new ArrayList<>();
-        for (ReleaseInfo releaseInfo : ri) {
-            if (releaseInfo.position < requiredbranchinfo.position) {
-                updateValues.add(releaseInfo.version);
-            }
-        }
+
+        int reqBranchPosition = requiredbranchinfo.position;
+        List<String> updateValues = ri.stream()
+                .sorted(Comparator.reverseOrder())
+                .filter(r -> r.position < reqBranchPosition)
+                .filter(r -> r.publishapi) // not unpublished / VSCode-only releases
+                .limit(PREVIOUS_VERSIONS_LIMIT)
+                .map(r -> r.version)
+                .collect(Collectors.toList());
+
 // populate properties for api changes
         getProject().setProperty("previous.release.year", Integer.toString(requiredbranchinfo.previousReleaseDate.getYear()));
         getProject().setProperty("previous.release.month", String.format("%02d", requiredbranchinfo.previousReleaseDate.getMonthValue()));
@@ -191,7 +201,7 @@ public class ReleaseJsonProperties extends Task {
             throw new BuildException("Properties File for release cannot be created");
         }
 
-        log("Writing releasinfo file " + xmlFile);
+        log("Writing release info file " + xmlFile);
 
         xmlFile.getParentFile().mkdirs();
         try (OutputStream config = new FileOutputStream(xmlFile)) {
@@ -218,6 +228,7 @@ public class ReleaseJsonProperties extends Task {
         releasesxml.setAttribute("position", Integer.toString(releaseInfo.position));
         releasesxml.setAttribute("version", releaseInfo.version);
         releasesxml.setAttribute("apidocurl", releaseInfo.apidocurl);
+        releasesxml.setAttribute("pubapidoc", Boolean.toString(releaseInfo.publishapi));
     }
 
     private ReleaseInfo manageRelease(String key, Object arelease) {
@@ -246,6 +257,8 @@ public class ReleaseJsonProperties extends Task {
         ri.setJavaApiDocurl((String) getJSONInfo(jsonrelease, "jdk_apidoc", "Apidoc: javadoc for java jdk"));
         ri.setUpdateUrl((String) getJSONInfo(jsonrelease, "update_url", "Update catalog"));
         ri.setPluginsUrl((String) getJSONInfo(jsonrelease, "plugin_url", "Plugin URL"));
+        //
+        ri.setPublishApi(Boolean.parseBoolean((String) getJSONInfo(jsonrelease, "publish_apidoc", "Should we publish this Apidoc")));
         // optional section
         JSONObject milestone = (JSONObject) jsonrelease.get("milestones");
         if (milestone != null) {
@@ -281,7 +294,6 @@ public class ReleaseJsonProperties extends Task {
 
     private Object getJSONInfo(JSONObject json, String key, String info) {
         Object result = json.get(key);
-        //log("Retriving " + key);
         if (result == null) {
             throw new BuildException("Cannot retrieve key " + key + ", this is for" + info);
         }
@@ -338,6 +350,7 @@ public class ReleaseJsonProperties extends Task {
         private String javaapidocurl;
         private String updateurl;
         private String pluginsurl;
+        private boolean publishapi;
         private List<MileStone> milestones;
 
         public ReleaseInfo(String key) {
@@ -406,6 +419,10 @@ public class ReleaseJsonProperties extends Task {
 
         private void addMileStone(MileStone milestone) {
             this.milestones.add(milestone);
+        }
+
+        private void setPublishApi(boolean publishok) {
+            this.publishapi = publishok;
         }
 
     }

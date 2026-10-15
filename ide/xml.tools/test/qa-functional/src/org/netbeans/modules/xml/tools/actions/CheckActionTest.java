@@ -30,7 +30,7 @@ public class CheckActionTest extends AbstractCheckTest {
         super(testName);
     }
 
-    // TESTS ///////////////////////////////////////////////////////////////////
+    // TESTS
 
     // *** Not  well-formed ***
 
@@ -68,7 +68,7 @@ public class CheckActionTest extends AbstractCheckTest {
         performAction("DistributedDTD.xml", 0);
     }
     
-    // LIBS ////////////////////////////////////////////////////////////////////
+    // LIBS
     
     /** Check all selected nodes. */
     protected QaIOReporter performAction(Node[] nodes) {
@@ -78,13 +78,13 @@ public class CheckActionTest extends AbstractCheckTest {
         QaIOReporter reporter = new QaIOReporter();
         for (int i = 0; i<nodes.length; i++) {
             CheckXMLCookie cake = (CheckXMLCookie) nodes[i].getCookie(CheckXMLCookie.class);
-            if (cake == null) fail("Cannot get 'ValidateXMLCookie'.");;
+            if (cake == null) fail("Cannot get 'ValidateXMLCookie'.");
             cake.checkXML(reporter);
         }
         return reporter;
     }
     
-    // MAIN ////////////////////////////////////////////////////////////////////
+    // MAIN
     
     /**
      * Performs this testsuite.

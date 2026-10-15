@@ -84,8 +84,10 @@ public class RestrictedTypedFilter extends Filter<TypeElement> {
                 element.getAnnotationMirrors();
         Map<String, ? extends AnnotationMirror> annotations = 
             implementation.getHelper().getAnnotationsByType( annotationMirrors );
-        AnnotationMirror typedAnnotation = annotations.get( 
-                WebBeansModelProviderImpl.TYPED_RESTRICTION );
+        AnnotationMirror typedAnnotation = annotations.get( WebBeansModelProviderImpl.TYPED_RESTRICTION_JAKARTA );
+        if (typedAnnotation == null) {
+            typedAnnotation = annotations.get(WebBeansModelProviderImpl.TYPED_RESTRICTION);
+        }
         if ( typedAnnotation == null ){
             return null;
         }

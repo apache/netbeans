@@ -1,0 +1,116 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='165'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='165'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='x' start='4' end='165'>
+      <hasInit/>
+      <isAssignment/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='4' end='5'>
+        <name>x</name>
+        <isDeclaredHere/>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <ObjectNode start='8' end='165'>
+        <!-- ObjectNode Elements -->
+        <PropertyNode name='prop1' start='14' end='24'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='14' end='19'>
+            <name>prop1</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <NumberLiteralNode value='10' start='22' end='24'/>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <PropertyNode name='prop2' start='30' end='45'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='30' end='35'>
+            <name>prop2</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <StringLiteralNode value='string' start='39' end='45'/>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <PropertyNode name='method1' start='52' end='90'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='52' end='59'>
+            <name>method1</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <FunctionNode name='method1' kind='NORMAL' start='62' end='90'>
+            <isAnonymous/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='74' end='75'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <PropertyNode name='config' start='96' end='163'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='96' end='102'>
+            <name>config</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <ObjectNode start='105' end='163'>
+            <!-- ObjectNode Elements -->
+            <PropertyNode name='configProp1' start='115' end='131'>
+              <!-- PropertyNode Key -->
+              <IdentNode start='115' end='126'>
+                <name>configProp1</name>
+                <isPropertyName/>
+              </IdentNode>
+              <!-- PropertyNode Value -->
+              <ArrayLiteralNode start='129' end='131'>
+              </ArrayLiteralNode>
+              <!-- PropertyNode Decorators -->
+            </PropertyNode>
+            <PropertyNode name='configProp2' start='141' end='157'>
+              <!-- PropertyNode Key -->
+              <IdentNode start='141' end='152'>
+                <name>configProp2</name>
+                <isPropertyName/>
+              </IdentNode>
+              <!-- PropertyNode Value -->
+              <NumberLiteralNode value='20' start='155' end='157'/>
+              <!-- PropertyNode Decorators -->
+            </PropertyNode>
+          </ObjectNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+      </ObjectNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

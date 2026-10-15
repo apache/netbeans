@@ -20,11 +20,9 @@ package org.netbeans.modules.docker.editor.util;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
-import java.util.Collection;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,10 +37,11 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.modules.csl.api.Documentation;
 import org.netbeans.modules.docker.editor.parser.Command;
-import static org.netbeans.modules.docker.editor.parser.Command.forName;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
+
+import static org.netbeans.modules.docker.editor.parser.Command.forName;
 
 /**
  *
@@ -66,11 +65,11 @@ public class DocDownloader {
             try {
                 final ByteArrayOutputStream out = new ByteArrayOutputStream();
                 try(BufferedInputStream in = new BufferedInputStream(url.openStream())) {
-                    FileUtil.copy(in, out);
+                    in.transferTo(out);
                 }
                 return cancel.call() ?
                         ""  //NOI18N
-                        : new String(out.toByteArray(),"UTF-8");  //NOI18N
+                        : new String(out.toByteArray(), StandardCharsets.UTF_8);
             } finally {
                 handle.finish();
             }

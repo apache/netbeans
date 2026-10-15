@@ -296,11 +296,11 @@ final class PlatformNode extends AbstractNode implements ChangeListener {
         private static URL[]  getJavadocRoots(JavaPlatform platform) {
             Set<URL> result = new HashSet<URL>();
             List<ClassPath.Entry> l = platform.getBootstrapLibraries().entries();
-            for (Iterator it = l.iterator(); it.hasNext();) {
-                ClassPath.Entry e = (ClassPath.Entry) it.next();
+            for (Iterator<ClassPath.Entry> it = l.iterator(); it.hasNext();) {
+                ClassPath.Entry e = it.next();
                 result.addAll(Arrays.asList(JavadocForBinaryQuery.findJavadoc(e.getURL()).getRoots()));
             }
-            return result.toArray(new URL[result.size()]);
+            return result.toArray(new URL[0]);
         }
         
     }

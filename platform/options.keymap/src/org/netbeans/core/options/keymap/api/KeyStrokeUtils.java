@@ -192,7 +192,7 @@ public class KeyStrokeUtils {
             }
         }
 
-        return result.toArray(new KeyStroke[result.size()]);
+        return result.toArray(new KeyStroke[0]);
     }
 
     /**
@@ -206,7 +206,7 @@ public class KeyStrokeUtils {
      * @param actionId ID of action.
      * @param defaultKeyStroke Default key stroke, used in case no key stroke is
      * found for the action. Can be null.
-     * @return Array of key strokes, or an empty array if no key stroke is
+     * @return List of key strokes, or an empty array if no key stroke is
      * available.
      */
     public static List<KeyStroke[]> getKeyStrokesForAction(@NonNull String actionId,

@@ -89,7 +89,7 @@ public class MatchedRulesNode extends AbstractNode {
                 }
             }
         }
-        children.add(nodes.toArray(new MatchedRuleNode[nodes.size()]));
+        children.add(nodes.toArray(new MatchedRuleNode[0]));
     }
 
     /**

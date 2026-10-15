@@ -39,7 +39,7 @@ public interface Node {
 
     public CharSequence image();
 
-    static abstract class AbstractNode implements Node {
+    abstract static class AbstractNode implements Node {
 
         @Override
         public void accept(NodeVisitor visitor) {

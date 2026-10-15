@@ -382,7 +382,8 @@ public final class HtmlLexer implements Lexer<HTMLTokenId> {
 
     private boolean isAttributeName( int character ) {
         return (! Character.isWhitespace(character)) && character != '/'
-            && character != '>' && character != '=' && character != 0;
+            && character != '>' && character != '<' && character != '='
+            && character != 0;
     }
 
     /**
@@ -606,7 +607,7 @@ public final class HtmlLexer implements Lexer<HTMLTokenId> {
                         if(input.readLength() > closeDelimiter.length()) {
                             input.backup(closeDelimiter.length());
                             //save the provider's index in the token's property so we can set the corresponding embdding in HTMLTokenId.language()
-                            return token(HTMLTokenId.EL_CONTENT, new HtmlTokenPropertyProvider(EL_CONTENT_PROVIDER_INDEX, new Byte((byte)(customELIndex - 1))));
+                            return token(HTMLTokenId.EL_CONTENT, new HtmlTokenPropertyProvider(EL_CONTENT_PROVIDER_INDEX, (byte)(customELIndex - 1)));
                         } else {
                             //return the open symbol token and switch to "in el" state
                             lexerState = INIT;
@@ -791,14 +792,14 @@ public final class HtmlLexer implements Lexer<HTMLTokenId> {
 
                 case ISP_TAG_X_ERROR:
                     if(isWS(actChar)) {
-                        lexerState = ISP_TAG_X;
+                        lexerState = tag == null ? INIT : ISP_TAG_X;
                         input.backup(1); //backup the WS
                         return token(HTMLTokenId.ERROR);
                     }
                     switch(actChar) {
                         case '/':
                         case '>':
-                            lexerState = ISP_TAG_X;
+                            lexerState = tag == null ? INIT : ISP_TAG_X;
                             input.backup(1); //lets reread the token again
                             return token(HTMLTokenId.ERROR);
                     }
@@ -821,7 +822,7 @@ public final class HtmlLexer implements Lexer<HTMLTokenId> {
                             lexerState = INIT;
                             return token(HTMLTokenId.TAG_CLOSE_SYMBOL);
                         default:
-                            lexerState = ISP_TAG_X;
+                            lexerState = tag == null ? INIT : ISP_TAG_X;
                             input.backup(1);
                             return token(HTMLTokenId.ERROR);
                     }
@@ -1088,7 +1089,7 @@ public final class HtmlLexer implements Lexer<HTMLTokenId> {
                         if(input.readLength() > closeDelimiter.length()) {
                             input.backup(closeDelimiter.length());
                             //save the provider's index in the token's property so we can set the corresponding embdding in HTMLTokenId.language()
-                            return token(HTMLTokenId.EL_CONTENT, new HtmlTokenPropertyProvider(EL_CONTENT_PROVIDER_INDEX, new Byte((byte)(customELIndex - 1))));
+                            return token(HTMLTokenId.EL_CONTENT, new HtmlTokenPropertyProvider(EL_CONTENT_PROVIDER_INDEX, (byte)(customELIndex - 1)));
                         } else {
                             //return the close symbol token and switch to "in value" state
                             lexerState = ISI_VAL_QUOT;
@@ -1416,7 +1417,7 @@ public final class HtmlLexer implements Lexer<HTMLTokenId> {
 
             case ISI_EL:
             case ISI_VAL_QUOT_EL:
-                return token(HTMLTokenId.EL_CONTENT, new HtmlTokenPropertyProvider(EL_CONTENT_PROVIDER_INDEX, new Byte((byte)(customELIndex - 1))));
+                return token(HTMLTokenId.EL_CONTENT, new HtmlTokenPropertyProvider(EL_CONTENT_PROVIDER_INDEX, (byte)(customELIndex - 1)));
 
 
         }

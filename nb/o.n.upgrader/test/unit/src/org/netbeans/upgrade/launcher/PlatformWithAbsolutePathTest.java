@@ -21,9 +21,8 @@ package org.netbeans.upgrade.launcher;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.RandomAccessFile;
 import java.net.URL;
-import java.nio.channels.FileChannel;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -61,23 +60,17 @@ public class PlatformWithAbsolutePathTest extends NbTestCase {
         newEtc.mkdirs();
         File[] binFiles = bin.listFiles();
         for (File f : binFiles) {
-            File newFile = new File(newBin,f.getName());
-            FileChannel newChannel = new RandomAccessFile(newFile,"rw").getChannel();
-            new RandomAccessFile(f,"r").getChannel().transferTo(0,f.length(),newChannel);
-            newChannel.close();
+            File newFile = new File(newBin, f.getName());
+            Files.copy(f.toPath(), newFile.toPath());
         }
-        RandomAccessFile netbeansCluster = new RandomAccessFile(new File(newEtc,"netbeans.clusters"),"rw");
-        netbeansCluster.writeBytes(utilFile.getParentFile().getParent()+"\n");
-        netbeansCluster.close();
+        Files.writeString(new File(newEtc, "netbeans.clusters").toPath(), utilFile.getParentFile().getParent()+"\n");
         String str = "1 * * * *";
         run(wd, str);
         
         String[] args = MainCallback.getArgs(getWorkDir());
         assertNotNull("args passed in", args);
         List<String> a = Arrays.asList(args);
-        if (!a.contains(str)) {
-            fail(str + " should be there: " + a);
-        }
+        assertTrue(str + " should be there: " + a, a.contains(str));
     }
     
     
@@ -90,7 +83,7 @@ public class PlatformWithAbsolutePathTest extends NbTestCase {
         File testf = new File(tu.toURI());
         assertTrue("file found: " + testf, testf.exists());
         
-        LinkedList<String> allArgs = new LinkedList<String>(Arrays.asList(args));
+        LinkedList<String> allArgs = new LinkedList<>(Arrays.asList(args));
         allArgs.addFirst("-J-Dnetbeans.mainclass=" + MainCallback.class.getName());
         allArgs.addFirst(System.getProperty("java.home"));
         allArgs.addFirst("--jdkhome");
@@ -108,7 +101,7 @@ public class PlatformWithAbsolutePathTest extends NbTestCase {
         }
         
         StringBuffer sb = new StringBuffer();
-        Process p = Runtime.getRuntime().exec(allArgs.toArray(new String[0]), null, workDir);
+        Process p = Runtime.getRuntime().exec(allArgs.toArray(String[]::new), null, workDir);
         int res = readOutput(sb, p);
         
         String output = sb.toString();
@@ -118,7 +111,7 @@ public class PlatformWithAbsolutePathTest extends NbTestCase {
     
     private static int readOutput(final StringBuffer sb, Process p) throws Exception {
         class Read extends Thread {
-            private InputStream is;
+            private final InputStream is;
 
             public Read(String name, InputStream is) {
                 super(name);

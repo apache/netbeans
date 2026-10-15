@@ -20,10 +20,13 @@
 package org.netbeans;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.openide.util.*;
 import org.openide.modules.*;
 
@@ -57,7 +60,7 @@ public final class Util {
         if (prefix.length() < 3) prefix += '.';
         if (prefix.length() < 3) prefix += '.';
         String suffix = "-test.jar"; // NOI18N
-        File physicalModuleFile = File.createTempFile(prefix, suffix);
+        File physicalModuleFile = Files.createTempFile(prefix, suffix).toFile();
         physicalModuleFile.deleteOnExit();
         InputStream is = new FileInputStream(moduleFile);
         try {
@@ -139,9 +142,10 @@ public final class Util {
                 sampleName = packageName + '.' + sampleName;
             }
         }
+        Class<?> sampleClass = null;
         if (sampleName != null) {
             try {
-                cl.loadClass(sampleName);
+                sampleClass = cl.loadClass(sampleName);
             } catch (ClassNotFoundException cnfe) {
                 if (packageName == null) {
                     // This was all we were relying on, so it is an error.
@@ -169,6 +173,9 @@ public final class Util {
                 pkg = ((ProxyClassLoader) cl).getPackage(packageName);
             } else {
                 pkg = Package.getPackage(packageName);
+            }
+            if (pkg == null && sampleClass != null) {
+                pkg = sampleClass.getPackage();
             }
             if (pkg == null) {
                 err.fine("No package with the name " + packageName + " found");
@@ -214,6 +221,12 @@ public final class Util {
         }
     }
 
+    static List<Class<?>> getStack() {
+        return StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(
+                stream -> stream.map(frame -> frame.getDeclaringClass())
+                                .collect(Collectors.toList()));
+    }
+
     /** 
      * Interface for a classloader to declare that it comes from a module. 
      * @since 2.1
@@ -228,7 +241,7 @@ public final class Util {
      * list of modules (suitable for disabling; reverse for enabling).
      * @param modules some modules
      * @param modulesByName map from module cnbs to modules (may contain unrelated modules)
-     * @param providersOf map from tokens to sets of modules providing them (may mention unrelated modules)
+     * @param _providersOf map from tokens to sets of modules providing them (may mention unrelated modules)
      * @return a map from modules to lists of modules they depend on
      * @see Utilities#topologicalSort
      * JST-PENDING needed from tests
@@ -257,7 +270,7 @@ public final class Util {
             for (Dependency dep : m1.getDependenciesArray()) {
                 if (dep.getType() == Dependency.TYPE_REQUIRES) {
                     List<Module> providers = providersOf.get(dep.getName());
-
+                    
                     if (providers != null) {
                         l = fillMapSlot(m, m1);
                         l.addAll(providers);
@@ -280,15 +293,18 @@ public final class Util {
             if (frags != null && !frags.isEmpty()) {
                 frags = new HashSet<>(frags);
                 frags.retainAll(modules);
-            
+                
                 for (Module f : frags) {
                     List<Module> fragmentDep = fillMapSlot(m, f);
+                    // move fragment after its host module in the sort order
                     fragmentDep.add(m1);
                     for (Dependency dep : f.getDependenciesArray()) {
                         if (dep.getType() == Dependency.TYPE_REQUIRES) {
-                            List<Module> providers = providersOf.get(dep.getName());
-
+                            Collection<Module> providers = providersOf.get(dep.getName());
                             if (providers != null) {
+                                if (providers.contains(m1)) {
+                                    providers = new ArrayList<>(providers);
+                                }
                                 l = fillMapSlot(m, m1);
                                 l.addAll(providers);
                             }
@@ -297,7 +313,7 @@ public final class Util {
                             String cnb = (String) parseCodeName(dep.getName())[0];
                             Module m2 = modulesByName.get(cnb);
 
-                            if (m2 != null && modulesSet.contains(m2)) {
+                            if (m2 != null && m2 != m1 && modulesSet.contains(m2)) {
                                 l = fillMapSlot(m, m1);
                                 l.add(m2);
                             }
@@ -306,12 +322,15 @@ public final class Util {
                 }
                 if (l != null) {
                     l.remove(m1);
+                    // remove fragments for m1 from m1's dependencies
+                    l.removeAll(frags);
                 }
             }
             if (l != null) {
                 m.put(m1, l);
             }
         }
+
         return m;
     }
 
@@ -438,7 +457,7 @@ public final class Util {
     static final class ModuleLookup extends Lookup {
         ModuleLookup() {}
         private final Set<Module> modules = new HashSet<Module>(100);
-        private final Set<ModuleResult> results = new WeakSet<ModuleResult>(10);
+        private final Set<ModuleResult> results = Collections.newSetFromMap(new WeakHashMap<>(10));
         /** Add a module to the set. */
         public void add(Module m) {
             synchronized (modules) {
@@ -454,9 +473,8 @@ public final class Util {
         /** Fire changes to all result listeners. */
         public void changed() {
             synchronized (results) {
-                Iterator it = results.iterator();
-                while (it.hasNext()) {
-                    ((ModuleResult)it.next()).changed();
+                for (ModuleResult moduleResult : results) {
+                    moduleResult.changed();
                 }
             }
         }
@@ -511,7 +529,7 @@ public final class Util {
                     if (listeners.isEmpty()) {
                         return;
                     }
-                    _listeners = listeners.toArray(new LookupListener[listeners.size()]);
+                    _listeners = listeners.toArray(new LookupListener[0]);
                 }
                 LookupEvent ev = new LookupEvent(this);
                 for (int i = 0; i < _listeners.length; i++) {

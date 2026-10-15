@@ -16,29 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.php.editor.model.nodes;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.php.editor.api.PhpModifiers;
 import org.netbeans.modules.php.editor.api.QualifiedName;
 import org.netbeans.modules.php.editor.model.nodes.ASTNodeInfo.Kind;
+import org.netbeans.modules.php.editor.parser.astnodes.Attribute;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration.Modifier;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
-import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatementPart;
-import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 
 /**
  * @author Radek Matous
  */
 public class ClassDeclarationInfo extends ASTNodeInfo<ClassDeclaration> {
+
     ClassDeclarationInfo(ClassDeclaration node) {
         super(node);
     }
@@ -63,7 +62,6 @@ public class ClassDeclarationInfo extends ASTNodeInfo<ClassDeclaration> {
         return QualifiedName.create(getOriginalNode().getName());
     }
 
-
     @Override
     public OffsetRange getRange() {
         ClassDeclaration classDeclaration = getOriginalNode();
@@ -81,12 +79,12 @@ public class ClassDeclarationInfo extends ASTNodeInfo<ClassDeclaration> {
     }
 
     public List<? extends Expression> getInterfaces() {
-        return getOriginalNode().getInterfaes();
+        return getOriginalNode().getInterfaces();
     }
 
     public Set<QualifiedName> getInterfaceNames() {
         final Set<QualifiedName> retval = new HashSet<>();
-        final List<Expression> interfaes = getOriginalNode().getInterfaes();
+        final List<Expression> interfaes = getOriginalNode().getInterfaces();
         for (Expression iface : interfaes) {
             QualifiedName ifaceName = QualifiedName.create(iface);
             if (ifaceName != null) {
@@ -97,14 +95,28 @@ public class ClassDeclarationInfo extends ASTNodeInfo<ClassDeclaration> {
     }
 
     public PhpModifiers getAccessModifiers() {
-        Modifier modifier = getOriginalNode().getModifier();
-
-        if (modifier.equals(Modifier.ABSTRACT)) {
-            return PhpModifiers.fromBitMask(PhpModifiers.PUBLIC, PhpModifiers.ABSTRACT);
-        } else if (modifier.equals(Modifier.FINAL)) {
-            return PhpModifiers.fromBitMask(PhpModifiers.PUBLIC, PhpModifiers.FINAL);
+        List<Integer> phpModifiers = new ArrayList<>(getOriginalNode().getModifiers().keySet().size());
+        phpModifiers.add(PhpModifiers.PUBLIC);
+        for (Modifier modifier : getOriginalNode().getModifiers().keySet()) {
+            switch (modifier) {
+                case ABSTRACT:
+                    phpModifiers.add(PhpModifiers.ABSTRACT);
+                    break;
+                case FINAL:
+                    phpModifiers.add(PhpModifiers.FINAL);
+                    break;
+                case READONLY:
+                    phpModifiers.add(PhpModifiers.READONLY);
+                    break;
+                case NONE:
+                    // no-op
+                    break;
+                default:
+                    assert false : "Handle " + modifier + " modifier"; // NOI18N
+                    break;
+            }
         }
-        return PhpModifiers.fromBitMask(PhpModifiers.PUBLIC);
+        return PhpModifiers.fromBitMask(phpModifiers.stream().mapToInt(i->i).toArray());
     }
 
     public Collection<QualifiedName> getUsedTraits() {
@@ -113,22 +125,8 @@ public class ClassDeclarationInfo extends ASTNodeInfo<ClassDeclaration> {
         return visitor.getUsedTraits();
     }
 
-    private static class UsedTraitsVisitor extends DefaultVisitor {
-        private final List<UseTraitStatementPart> useParts = new LinkedList<>();
-
-        @Override
-        public void visit(UseTraitStatementPart node) {
-            useParts.add(node);
-        }
-
-        public Collection<QualifiedName> getUsedTraits() {
-            Collection<QualifiedName> retval = new HashSet<>();
-            for (UseTraitStatementPart useTraitStatementPart : useParts) {
-                retval.add(QualifiedName.create(useTraitStatementPart.getName()));
-            }
-            return retval;
-        }
-
+    public List<Attribute> getAttributes() {
+        return getOriginalNode().getAttributes();
     }
 
 }

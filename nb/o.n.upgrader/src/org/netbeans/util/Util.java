@@ -178,7 +178,7 @@ public class Util {
                         (event.getPropertyName().equals(JOptionPane.VALUE_PROPERTY)) &&
                         event.getNewValue() != null &&
                         event.getNewValue() != JOptionPane.UNINITIALIZED_VALUE) {
-		    if (new Integer(JOptionPane.YES_OPTION).equals(pane.getValue())) {
+		    if (Integer.valueOf(JOptionPane.YES_OPTION).equals(pane.getValue())) {
                         // IOException from CopyFiles constructor created this error dialog
                         // most probably because netbeans.import could not be located,
                         // so discard the error dialog, stop the importing task and return
@@ -203,9 +203,9 @@ public class Util {
     
     private static class OptionsListener implements ActionListener {
 
-	private JOptionPane pane;
-	private JButton bYES;
-	private JButton bNO;
+	private final JOptionPane pane;
+	private final JButton bYES;
+	private final JButton bNO;
 
 	OptionsListener(JOptionPane pane, JButton bYES, JButton bNO) {
 	    this.pane = pane;

@@ -21,5 +21,5 @@
 -->
 <project name="ide/o.eclipse.jgit" default="build" basedir=".">
     <import file="../../nbbuild/templates/projectized.xml"/>
-    <target name="jar" depends="release"/>
+    <target name="jar" />
 </project>

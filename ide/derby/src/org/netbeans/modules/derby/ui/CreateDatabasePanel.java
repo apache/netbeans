@@ -119,11 +119,11 @@ public class CreateDatabasePanel extends javax.swing.JPanel {
         if (databaseName.length() <= 0) { // NOI18N
             warning = NbBundle.getMessage(CreateDatabasePanel.class, "ERR_DatabaseNameEmpty");
         } else if (illegalChar >= 0) {
-            error = NbBundle.getMessage(CreateDatabasePanel.class, "ERR_DatabaseNameIllegalChar", new Character((char)illegalChar));
+            error = NbBundle.getMessage(CreateDatabasePanel.class, "ERR_DatabaseNameIllegalChar", Character.toString((char)illegalChar));
         } else if (databaseName.length() > 0 && new File(derbySystemHome, databaseName).exists()) { // NOI18N
             error = NbBundle.getMessage(CreateDatabasePanel.class, "ERR_DatabaseDirectoryExists", databaseName);
         } else if (unsupportedChar >= 0) {
-            error = NbBundle.getMessage(CreateDatabasePanel.class, "ERR_DatabaseNameUnsupportedChar", new Character((char)unsupportedChar));
+            error = NbBundle.getMessage(CreateDatabasePanel.class, "ERR_DatabaseNameUnsupportedChar", Character.toString((char)unsupportedChar));
         } else if (user != null && !isSql92Identifier(user)) { // NOI18N
             error = NbBundle.getMessage(CreateDatabasePanel.class, "ERR_UserNameNotSqlIdentifier", user); // NOI18N
         } else if (user != null && SQLKeywords.isSQL99ReservedKeyword(user)) {

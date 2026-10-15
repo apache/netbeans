@@ -126,7 +126,7 @@ public class JspBreakpointActionsProvider implements NodeActionsProviderFilter {
         });
         HelpCtx helpCtx = HelpCtx.findHelp (c);
         if (helpCtx == null)
-            helpCtx = new HelpCtx ("debug.add.breakpoint");;
+            helpCtx = new HelpCtx ("debug.add.breakpoint");
         descriptor.setHelpCtx (helpCtx);
         bOk.getAccessibleContext ().setAccessibleDescription (
             NbBundle.getMessage (

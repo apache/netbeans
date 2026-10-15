@@ -33,10 +33,7 @@ import org.netbeans.modules.glassfish.tooling.utils.ServerUtils;
  */
 public class RunnerHttpListComponents extends RunnerHttpTarget {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * GlassFish administration command result containing server components.
      * <p/>
@@ -48,10 +45,7 @@ public class RunnerHttpListComponents extends RunnerHttpTarget {
     @SuppressWarnings("FieldNameHidesFieldInSuperclass")
     ResultMap<String, List<String>> result;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of administration command executor using
      * HTTP interface.
@@ -64,10 +58,7 @@ public class RunnerHttpListComponents extends RunnerHttpTarget {
         super(server, command);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Implemented Abstract Methods                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Create <code>ResultList</code> object corresponding
      * to server log command execution value to be returned.

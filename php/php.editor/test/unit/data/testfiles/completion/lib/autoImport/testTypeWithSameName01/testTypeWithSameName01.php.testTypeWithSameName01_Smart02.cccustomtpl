@@ -1,0 +1,8 @@
+Name: ExampleClass
+\AutoImport\ExampleClass::${cursor}
+
+Name: ExampleEnum
+\AutoImport\ExampleEnum::${cursor}
+
+Name: ExampleInterface
+\AutoImport\ExampleInterface::${cursor}

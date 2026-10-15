@@ -66,7 +66,7 @@ public class ProfileTest extends NbTestCase {
 
         for (ConfigVersion cfgV : ConfigVersion.values()) {
             String cfgStr = ConfigVersion.CONFIG_1_0.equals(cfgV) ? "10-" : "13-";
-            ArrayList<String> profiles = new ArrayList();
+            ArrayList<String> profiles = new ArrayList<>();
             PolicyModelHelper.setConfigVersion(b, cfgV, null);
             for (SecurityProfile sP : secProfiles) {
                 if (sP.isProfileSupported(null, b, false)) {
@@ -75,7 +75,7 @@ public class ProfileTest extends NbTestCase {
             }
             for (int i=1; i<profiles.size(); i++) {
                 String profile = profiles.get(i);
-                String profFileName = profile.replaceAll(" ", "");
+                String profFileName = profile.replace(" ", "");
 
                 //default profile set
                 ProfilesModelHelper.getInstance(cfgV).setSecurityProfile(b, profile, false);

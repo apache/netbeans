@@ -165,7 +165,7 @@ implements java.io.Serializable {
     /** Add a listener for operations on data objects.
      * @param l the listener
      */
-    public synchronized final void addOperationListener (OperationListener l) {
+    public final synchronized void addOperationListener (OperationListener l) {
         if (listeners == null) listeners = new EventListenerList();
         listeners.add( OperationListener.class, l);
     }
@@ -173,7 +173,7 @@ implements java.io.Serializable {
     /** Remove a listener for operations on data objects.
      * @param l the listener
      */
-    public synchronized final void removeOperationListener (OperationListener l) {
+    public final synchronized void removeOperationListener (OperationListener l) {
         if (listeners != null) {
             listeners.remove( OperationListener.class, l);
         }
@@ -570,10 +570,10 @@ implements java.io.Serializable {
                 // [PENDING] in the future a more efficient API may be introduced
                 // (actually currently you can look up with a template giving the name
                 // as part of the lookup item ID but this is not an official API)
-                Iterator modules = Lookup.getDefault().lookupAll(ModuleInfo.class).iterator();
+                Iterator<? extends ModuleInfo> modules = Lookup.getDefault().lookupAll(ModuleInfo.class).iterator();
                 boolean ok = false;
                 while (modules.hasNext()) {
-                    ModuleInfo module = (ModuleInfo)modules.next();
+                    ModuleInfo module = modules.next();
                     if (module.getCodeNameBase().equals(modulename)) {
                         if (module.isEnabled()) {
                             // Carry on.
@@ -620,7 +620,7 @@ implements java.io.Serializable {
      *   &lt;attr name="iconBase" stringvalue="org/your/pkg/YourDataObject.png"/&gt;
      * &lt;/file&gt;
      * </pre>
-     * @param clazz the class of the data object to create. Must have appropriate
+     * @param dataObjectClass the class of the data object to create. Must have appropriate
      *    constructor.
      * @param mimeType the mime type associated with the object, used for 
      *    example to create the right actions for the object's node

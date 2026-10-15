@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -36,7 +35,6 @@ import java.util.logging.Logger;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.TypeElement;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.FieldSelector;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -107,7 +105,7 @@ public abstract class ClassIndexImpl {
             @NonNull String name,
             @NonNull ClassIndex.NameKind kind,
             @NonNull Set<? extends ClassIndex.SearchScopeType> scope,
-            @NonNull FieldSelector selector,
+            @NonNull Set<String> selector,
             @NonNull Convertor<? super Document, T> convertor,
             @NonNull Collection<? super T> result) throws IOException, InterruptedException;
 
@@ -176,7 +174,7 @@ public abstract class ClassIndexImpl {
             @NullAllowed final ClassIndexImplEvent changed) {
         WeakReference<ClassIndexImplListener>[] _listeners;
         synchronized (this.listeners) {
-            _listeners = this.listeners.toArray(new WeakReference[this.listeners.size()]);
+            _listeners = this.listeners.toArray(new WeakReference[0]);
         }
         for (WeakReference<ClassIndexImplListener> lr : _listeners) {
             ClassIndexImplListener l = lr.get();

@@ -112,9 +112,10 @@ public class IndexerVersionsTest extends IndexingTestBase {
 
     @Override
     protected void tearDown() throws Exception {
-        for(String id : registeredClasspaths.keySet()) {
-            Set<ClassPath> classpaths = registeredClasspaths.get(id);
-            GlobalPathRegistry.getDefault().unregister(id, classpaths.toArray(new ClassPath[classpaths.size()]));
+        for(Map.Entry<String, Set<ClassPath>> entry : registeredClasspaths.entrySet()) {
+            String id = entry.getKey();
+            Set<ClassPath> classpaths = entry.getValue();
+            GlobalPathRegistry.getDefault().unregister(id, classpaths.toArray(new ClassPath[0]));
         }
 
         super.tearDown();

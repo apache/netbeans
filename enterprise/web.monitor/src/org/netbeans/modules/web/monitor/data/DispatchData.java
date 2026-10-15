@@ -19,35 +19,37 @@
 
 package org.netbeans.modules.web.monitor.data;
 
-import org.w3c.dom.*;
-import org.xml.sax.InputSource;
-import org.netbeans.modules.schema2beans.*;
-import java.beans.*;
-import java.util.*;
-import java.io.*;
-import org.netbeans.modules.web.monitor.client.TransactionNode;
+import java.beans.PropertyChangeListener;
+import java.util.Vector;
+
+import org.netbeans.modules.schema2beans.AttrProp;
+import org.netbeans.modules.schema2beans.BaseBean;
+import org.netbeans.modules.schema2beans.BeanComparator;
+import org.netbeans.modules.schema2beans.BeanProp;
+import org.netbeans.modules.schema2beans.Common;
+import org.netbeans.modules.schema2beans.Version;
 
 public class DispatchData extends BaseBean implements DataRecord {
 
-    private final static boolean debug = false;
+    private static final boolean debug = false;
 
-    static Vector comparators = new Vector();
+    static Vector<BeanComparator> comparators = new Vector<>();
 
-    static public final String CLIENTDATA = "ClientData";   // NOI18N
-    static public final String SESSIONDATA = "SessionData"; // NOI18N
-    static public final String COOKIESDATA = "CookiesData"; // NOI18N
-    static public final String REQUESTDATA = "RequestData"; // NOI18N
-    static public final String SERVLETDATA = "ServletData"; // NOI18N
-    static public final String CONTEXTDATA = "ContextData"; // NOI18N
-    static public final String ENGINEDATA = "EngineData"; // NOI18N
-    static public final String DISPATCHES = "Dispatches"; // NOI18N
+    public static final String CLIENTDATA = "ClientData";   // NOI18N
+    public static final String SESSIONDATA = "SessionData"; // NOI18N
+    public static final String COOKIESDATA = "CookiesData"; // NOI18N
+    public static final String REQUESTDATA = "RequestData"; // NOI18N
+    public static final String SERVLETDATA = "ServletData"; // NOI18N
+    public static final String CONTEXTDATA = "ContextData"; // NOI18N
+    public static final String ENGINEDATA = "EngineData"; // NOI18N
+    public static final String DISPATCHES = "Dispatches"; // NOI18N
 
     public DispatchData() {
 	this(Common.USE_DEFAULT_VALUES);
     }
     
     public DispatchData(int options) {
-	super(comparators, new org.netbeans.modules.schema2beans.Version(1, 0, 6));
+	super(comparators, new Version(1, 0, 6));
 	this.createProperty("ClientData", CLIENTDATA,  // NOI18N
 			    Common.TYPE_1 | Common.TYPE_BEAN | Common.TYPE_KEY, 
 			    ClientData.class);
@@ -420,12 +422,12 @@ public class DispatchData extends BaseBean implements DataRecord {
     
 
     //
-    static public void addComparator(BeanComparator c) {
+    public static void addComparator(BeanComparator c) {
 	MonitorData.comparators.add(c);
     }
 
     //
-    static public void removeComparator(BeanComparator c) {
+    public static void removeComparator(BeanComparator c) {
 	MonitorData.comparators.remove(c);
     }
     //

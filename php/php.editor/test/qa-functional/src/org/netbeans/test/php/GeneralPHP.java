@@ -57,7 +57,7 @@ public class GeneralPHP extends JellyTestCase {
     static final String PROJECT_RentSymfony = "Rent a Flat - Symfony Framework Sample Application";
     static final String PROJECT_RentZend = "Rent a Flat - Zend Framework Sample Application";
     static final String PROJECT_TodoList = "TodoList - PHP Sample Application";
-    static protected final int COMPLETION_LIST_THRESHOLD = 5000;
+    protected static final int COMPLETION_LIST_THRESHOLD = 5000;
     protected static final String PHP_EXTENSION = ".php";
 
     public class CFulltextStringComparator implements Operator.StringComparator {

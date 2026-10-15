@@ -1,0 +1,8 @@
+Code completion result for source line:
+publ|ic(set) Foo $publicSet; // prop
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    public                                     null
+KEYWORD    public private(set)                        null
+KEYWORD    public protected(set)                      null
+KEYWORD    public(set)                                null

@@ -22,7 +22,6 @@ package org.netbeans.modules.profiler.heapwalk.model;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -194,11 +193,11 @@ public class BrowserUtils {
         return new TreePath(p.toArray());
     }
     
-    public static void restoreState(final JTreeTable ttable, List paths, TreePath selected) {
+    public static void restoreState(final JTreeTable ttable, List<TreePath> paths, TreePath selected) {
         if (paths != null) {
             JTree tree = ttable.getTree();
             HeapWalkerNode root = (HeapWalkerNode)tree.getModel().getRoot();
-            for (Object path : paths) ensurePathComputed(root, (TreePath)path, new HashSet());
+            for (TreePath path : paths) ensurePathComputed(root, (TreePath)path, new HashSet());
             ttable.setup(paths, selected);
         }
     }
@@ -250,15 +249,15 @@ public class BrowserUtils {
     }
 
     public static ImageIcon createGCRootIcon(ImageIcon icon) {
-        return new ImageIcon(ImageUtilities.mergeImages(icon.getImage(), ICON_GCROOT.getImage(), 0, 0));
+        return ImageUtilities.icon2ImageIcon(ImageUtilities.mergeIcons(icon, ICON_GCROOT, 0, 0));
     }
 
     public static ImageIcon createLoopIcon(ImageIcon icon) {
-        return new ImageIcon(ImageUtilities.mergeImages(icon.getImage(), ICON_LOOP.getImage(), 0, 0));
+        return ImageUtilities.icon2ImageIcon(ImageUtilities.mergeIcons(icon, ICON_LOOP, 0, 0));
     }
 
     public static ImageIcon createStaticIcon(ImageIcon icon) {
-        return new ImageIcon(ImageUtilities.mergeImages(icon.getImage(), ICON_STATIC.getImage(), 0, 0));
+        return ImageUtilities.icon2ImageIcon(ImageUtilities.mergeIcons(icon, ICON_STATIC, 0, 0));
     }
 
     public static HeapWalkerNode[] lazilyCreateChildren(final HeapWalkerNode parent, final ChildrenComputer childrenComputer) {
@@ -307,13 +306,13 @@ public class BrowserUtils {
     }
     
     private static String pathFromRoot(TreePath path) {
-        int m = ((HeapWalkerNode)path.getLastPathComponent()).getMode();
+        final HeapWalkerNode last = (HeapWalkerNode)path.getLastPathComponent();
         Object[] nodes = path.getPath();
         StringBuilder b = new StringBuilder();
         int s = nodes.length;
         for (int i = 0; i < s; i++) {
             HeapWalkerNode n = (HeapWalkerNode)nodes[i];
-            if (m == HeapWalkerNode.MODE_FIELDS) fieldFromRoot(n, b, i, s);
+            if (last.isModeFields()) fieldFromRoot(n, b, i, s);
             else referenceFromRoot(n, b, i, s);
             b.append("\n"); // NOI18N
         }

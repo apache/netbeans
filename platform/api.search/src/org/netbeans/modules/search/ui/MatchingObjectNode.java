@@ -125,7 +125,7 @@ public class MatchingObjectNode extends AbstractNode implements Removable {
         // It could be reasonable, but current solution is simpler and thus
         // should perform better.
 
-        ArrayList<Object> items = new ArrayList<Object>();
+        ArrayList<Object> items = new ArrayList<>();
         items.add(mo);
         items.add(checkableNode);
         items.add(mo.getFileObject());
@@ -366,12 +366,7 @@ public class MatchingObjectNode extends AbstractNode implements Removable {
                 matchingObject.updateDataObject(reloaded);
                 valid = reloaded.isValid();
                 if (valid) {
-                    EventQueue.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            resetValidOriginal();
-                        }
-                    });
+                    EventQueue.invokeLater(this::resetValidOriginal);
                 }
             } catch (DataObjectNotFoundException ex) {
                 // still invalid, the file was probably really deleted
@@ -432,22 +427,13 @@ public class MatchingObjectNode extends AbstractNode implements Removable {
 
         @Override
         public void nodeDestroyed(NodeEvent ev) {
-            EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    setInvalidOriginal();
-                    /**
-                     * Check if the object is valid again. It can happen when a
-                     * module with real data loader is enabled.
-                     */
-                    RP.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            checkFileObjectValid();
-                        }
-                    }, 2500);
-                }
+            EventQueue.invokeLater(() -> {
+                setInvalidOriginal();
+                /**
+                 * Check if the object is valid again. It can happen when a
+                 * module with real data loader is enabled.
+                 */
+                RP.post(() -> checkFileObjectValid(), 2500);
             });
         }
 
@@ -499,15 +485,12 @@ public class MatchingObjectNode extends AbstractNode implements Removable {
 
         @Override
         public void propertyChange(PropertyChangeEvent e) {
-            EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    if (matchingObject.getInvalidityStatus() == null) {
-                        resetValidOriginal();
-                        setChildren(matchingObject.getDetailsChildren(true));
-                    } else {
-                        setInvalidOriginal();
-                    }
+            EventQueue.invokeLater(() -> {
+                if (matchingObject.getInvalidityStatus() == null) {
+                    resetValidOriginal();
+                    setChildren(matchingObject.getDetailsChildren(true));
+                } else {
+                    setInvalidOriginal();
                 }
             });
         }

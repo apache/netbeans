@@ -44,6 +44,24 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.maven.embedder</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>2.54</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.maven.indexer</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>2.52</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.xml.jaxb.api</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -57,7 +75,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>9.7</specification-version>
+                        <specification-version>9.20</specification-version>
                     </run-dependency>
                 </dependency>
             </module-dependencies>
@@ -71,7 +89,7 @@
                 </test-type>
             </test-dependencies>
             <friend-packages>
-                <friend>org.netbeans.modules.payara.cloud</friend>
+                <friend>org.netbeans.modules.payara.micro</friend>
                 <friend>org.netbeans.modules.payara.common</friend>
                 <friend>org.netbeans.modules.payara.eecommon</friend>
                 <friend>org.netbeans.modules.payara.jakartaee</friend>

@@ -216,10 +216,10 @@ public class AnnotationScanner {
             Set<ElementKind> kinds) throws InterruptedException
     {
         Set<TypeElement> result = new HashSet<TypeElement>();
-        result.add( (TypeElement) typeElement );
+        result.add(typeElement);
         
         Set<TypeElement> toProcess = new HashSet<TypeElement>();
-        toProcess.add((TypeElement) typeElement );
+        toProcess.add(typeElement);
         while ( toProcess.size() >0 ){
             TypeElement element = toProcess.iterator().next();
             toProcess.remove( element );

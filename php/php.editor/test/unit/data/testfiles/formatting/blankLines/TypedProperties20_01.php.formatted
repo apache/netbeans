@@ -22,5 +22,4 @@
 class Simple {
 
     public int $field1 = 22;
-
 }

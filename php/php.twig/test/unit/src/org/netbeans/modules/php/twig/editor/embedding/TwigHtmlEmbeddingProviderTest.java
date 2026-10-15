@@ -19,7 +19,6 @@
 package org.netbeans.modules.php.twig.editor.embedding;
 
 import java.util.List;
-import static junit.framework.Assert.assertNotNull;
 import org.netbeans.modules.parsing.api.Embedding;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.spi.EmbeddingProvider;

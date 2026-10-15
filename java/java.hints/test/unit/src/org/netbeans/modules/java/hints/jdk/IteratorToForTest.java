@@ -186,6 +186,31 @@ public class IteratorToForTest {
                 + "}\n");
     }
 
+    @Test public void whileWithGenericIterator() throws Exception {
+        HintTest.create().input("package test;\n"
+                + "import java.util.*;"
+                + "public class Test {\n"
+                + "    void m(List<String> strings) {\n"
+                + "        Iterator<String> it = strings.iterator();\n"
+                + "        while (it.hasNext()) {\n"
+                + "            String str = it.next();\n"
+                + "            System.out.println(str);\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n").run(IteratorToFor.class).findWarning("4:8-4:13:verifier:" + Bundle.ERR_IteratorToFor()).
+                applyFix().
+                assertCompilable().
+                assertOutput("package test;\n"
+                + "import java.util.*;"
+                + "public class Test {\n"
+                + "    void m(List<String> strings) {\n"
+                + "        for (String str : strings) {\n"
+                + "            System.out.println(str);\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n");
+    }
+
     @Test public void whileNotSubtype() throws Exception {
         HintTest.create().input("package test;\n"
                 + "import java.util.*;"

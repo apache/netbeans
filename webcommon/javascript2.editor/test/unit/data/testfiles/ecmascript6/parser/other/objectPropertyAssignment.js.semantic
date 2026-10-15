@@ -1,0 +1,29 @@
+var |>GLOBAL:target<| = {}
+var |>GLOBAL:mix1<| = {|>FIELD:property1<|: 10, |>FIELD:property2<|: "Hello"};
+var |>GLOBAL:mix2<| = {|>FIELD:property1<|: 7,
+    |>METHOD:method1<|: function () {
+        return "Was run";
+    }
+};
+
+|>GLOBAL:Object<|.assign(|>GLOBAL:target<|, |>GLOBAL:mix1<|);
+|>GLOBAL:console<|.log(|>GLOBAL:target<|.property1);
+|>GLOBAL:console<|.log(|>GLOBAL:target<|.|>FIELD:property2<|);
+
+|>GLOBAL:Object<|.assign(|>GLOBAL:target<|, |>GLOBAL:mix2<|);
+|>GLOBAL:console<|.log(|>GLOBAL:target<|.|>FIELD:property1<|);
+|>GLOBAL:console<|.log(|>GLOBAL:target<|.|>FIELD:property2<|);
+|>GLOBAL:console<|.log(|>GLOBAL:target<|.method1());
+
+|>GLOBAL:mix1<|.|>FIELD:property1<| = 22;
+|>GLOBAL:console<|.log(|>GLOBAL:target<|.|>FIELD:property1<|);
+
+|>GLOBAL:mix2<|.|>FIELD:property1<| = 33;
+|>GLOBAL:console<|.log(|>GLOBAL:target<|.|>FIELD:property1<|);
+
+|>GLOBAL:target<|.|>FIELD:property1<| = 11;
+|>GLOBAL:console<|.log(|>GLOBAL:target<|.|>FIELD:property1<|);
+|>GLOBAL:console<|.log(|>GLOBAL:mix1<|.|>FIELD:property1<|);
+|>GLOBAL:console<|.log(|>GLOBAL:mix2<|.|>FIELD:property1<|);
+
+ 

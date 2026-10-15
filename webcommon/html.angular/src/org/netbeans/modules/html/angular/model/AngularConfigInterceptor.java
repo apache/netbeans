@@ -47,7 +47,7 @@ import org.openide.filesystems.FileObject;
 @FunctionInterceptor.Registration(priority = 17)
 public class AngularConfigInterceptor implements FunctionInterceptor {
 
-    private final static Pattern PATTERN = Pattern.compile("(.)*\\.config");  //NOI18N
+    private static final Pattern PATTERN = Pattern.compile("(.)*\\.config");  //NOI18N
     public static final String COMPONENT_PROP = "component"; //NOI18N
     public static final String COMPONENTS_PROP = "components"; //NOI18N
     public static final String CONTROLLER_SUFFIX = "Controller"; //NOI18N

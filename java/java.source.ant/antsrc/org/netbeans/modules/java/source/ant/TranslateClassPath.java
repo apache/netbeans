@@ -167,7 +167,7 @@ public class TranslateClassPath extends Task {
                 if (appendEntry) {
                     translated.add(entryFile);
                 }
-                return translated.toArray(new File[translated.size()]);
+                return translated.toArray(new File[0]);
             } else {
                 return new File[] {entryFile};
             }

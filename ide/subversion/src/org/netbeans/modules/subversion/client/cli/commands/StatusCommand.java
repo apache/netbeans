@@ -336,7 +336,7 @@ public class StatusCommand extends SvnCommand {
         }
 
         public Status[] getStatusValues() {            
-            return statusValues != null ? statusValues.toArray(new Status[statusValues.size()]) : new Status[] {} ;
+            return statusValues != null ? statusValues.toArray(new Status[0]) : new Status[] {} ;
         }
 
         private boolean getBoolean(String value) {

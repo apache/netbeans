@@ -62,7 +62,7 @@ public abstract class JavadocSearchType {
                 ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, e);
             }
         }
-        overviewLabelFilters = ll.toArray(new Pattern[ll.size()]);
+        overviewLabelFilters = ll.toArray(new Pattern[0]);
     }
     
     /**

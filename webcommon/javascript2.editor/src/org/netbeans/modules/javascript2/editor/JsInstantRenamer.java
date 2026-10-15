@@ -47,18 +47,17 @@ public class JsInstantRenamer implements InstantRenamer {
 
     @Override
     public Set<OffsetRange> getRenameRegions(ParserResult info, int caretOffset) {
-        if (info instanceof JsParserResult) {
-            JsParserResult pResult = (JsParserResult)info;
+        if (info instanceof JsParserResult pResult) {
             Set<OffsetRange> findOccurrenceRanges = OccurrencesFinderImpl.findOccurrenceRanges(pResult, info.getSnapshot().getEmbeddedOffset(caretOffset));
-            HashSet<OffsetRange> sourceRanges = new HashSet(findOccurrenceRanges.size());
+            HashSet<OffsetRange> sourceRanges = new HashSet<>(findOccurrenceRanges.size());
             for (OffsetRange range : findOccurrenceRanges) {
                 sourceRanges.add(LexUtilities.getLexerOffsets(pResult, range));
             }
             return sourceRanges;
         } else {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
 
     }
-    
+
 }

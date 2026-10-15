@@ -44,20 +44,20 @@ public interface TokenItem {
 
     /** Get next token-item in the text. It returns null
     * if there's no more next tokens in the text. It can throw
-    * <tt>IllegalStateException</tt> in case the document
+    * <code>IllegalStateException</code> in case the document
     * was changed so the token-item chain becomes invalid.
     */
     public TokenItem getNext();
 
     /** Get previous token-item in the text. It returns null
     * if there's no more previous tokens in the text. It can throw
-    * <tt>IllegalStateException</tt> in case the document
+    * <code>IllegalStateException</code> in case the document
     * was changed so the token-item chain becomes invalid.
     */
     public TokenItem getPrevious();
 
     /** Abstract implementation that doesn't contain chaining methods. */
-    public static abstract class AbstractItem implements TokenItem {
+    public abstract static class AbstractItem implements TokenItem {
 
         private TokenID tokenID;
 

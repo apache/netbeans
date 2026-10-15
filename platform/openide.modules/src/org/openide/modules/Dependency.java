@@ -24,10 +24,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
-import org.openide.util.BaseUtilities;
 
 /** A dependency a module can have. Since version 7.10 this class is
  * {@link Serializable}.
@@ -39,32 +39,32 @@ public final class Dependency implements Serializable {
     static final long serialVersionUID = 9548259318L;
 
     /** Dependency on another module. */
-    public final static int TYPE_MODULE = 1;
+    public static final int TYPE_MODULE = 1;
 
     /** Dependency on a package. */
-    public final static int TYPE_PACKAGE = 2;
+    public static final int TYPE_PACKAGE = 2;
 
     /** Dependency on Java. */
-    public final static int TYPE_JAVA = 3;
+    public static final int TYPE_JAVA = 3;
 
     /**
      * Dependency on the IDE.
      * @deprecated This type of dependency should no longer be used.
      */
     @Deprecated
-    public final static int TYPE_IDE = 4;
+    public static final int TYPE_IDE = 4;
 
     /** Dependency on a token.
      * @see ModuleInfo#getProvides
      * @since 2.3
      */
-    public final static int TYPE_REQUIRES = 5;
+    public static final int TYPE_REQUIRES = 5;
 
     /** Dependency on a token, but without need to have token provider be initialised sooner.
      * @see ModuleInfo#getProvides
      * @since 7.1
      */
-    public final static int TYPE_NEEDS = 6;
+    public static final int TYPE_NEEDS = 6;
 
     /** An advisory dependency on a token. If at least one provider of such token is 
      * available, it is enabled. If there is no such provider, then nothing is done
@@ -73,16 +73,16 @@ public final class Dependency implements Serializable {
      * @see ModuleInfo#getProvides
      * @since 7.1
      */
-    public final static int TYPE_RECOMMENDS = 7;
+    public static final int TYPE_RECOMMENDS = 7;
 
     /** Comparison by specification version. */
-    public final static int COMPARE_SPEC = 1;
+    public static final int COMPARE_SPEC = 1;
 
     /** Comparison by implementation version. */
-    public final static int COMPARE_IMPL = 2;
+    public static final int COMPARE_IMPL = 2;
 
     /** No comparison, just require the dependency to be present. */
-    public final static int COMPARE_ANY = 3;
+    public static final int COMPARE_ANY = 3;
 
     /** @deprecated request dependencies on direct modules */
     @Deprecated
@@ -115,6 +115,7 @@ public final class Dependency implements Serializable {
 
     /** Implementation version of the Java VM. */
     public static final String VM_IMPL = System.getProperty("java.vm.version"); // NOI18N
+
     private final int type;
     private final int comparison;
     private final String name;
@@ -179,7 +180,13 @@ public final class Dependency implements Serializable {
     private static final Pattern FQN = Pattern.compile(
         "(?:\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)(?:[.]\\p{javaJavaIdentifierPart}+)*" // NOI18N
     ); 
-    
+
+    // internally used via reflection. See org.netbeans.DepUtil
+    @SuppressWarnings("unused")
+    static Dependency create(String name, String version, int type, int comparison) {
+        return new Dependency(type, name, comparison, version);
+    }
+
     /** Parse dependencies from tags. Since version 7.32 it can parse
     * code names that contain numbers like 
     * <code>org.apache.servicemix.specs.jsr303_api_1.0.0</code>.
@@ -390,8 +397,7 @@ public final class Dependency implements Serializable {
 
         Dependency d = (Dependency) o;
 
-        return (type == d.type) && (comparison == d.comparison) && name.equals(d.name) &&
-        BaseUtilities.compareObjects(version, d.version);
+        return (type == d.type) && (comparison == d.comparison) && name.equals(d.name) && Objects.equals(version, d.version);
     }
 
     /** Overridden to hash by contents. */
@@ -522,15 +528,18 @@ public final class Dependency implements Serializable {
             //System.err.println("Key for " + d + " is " + this);
         }
 
+        @Override
         public int hashCode() {
             return name.hashCode();
         }
 
+        @Override
         public boolean equals(Object o) {
             return (o instanceof DependencyKey) && ((DependencyKey) o).name.equals(name) &&
             (((DependencyKey) o).type == type);
         }
 
+        @Override
         public String toString() {
             return "DependencyKey[" + name + "," + type + "]"; // NOI18N
         }

@@ -80,27 +80,25 @@
                                   <Component id="bFieldsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="bMethodsField" min="-2" pref="26" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="aClassHeaderField" alignment="0" pref="0" max="32767" attributes="0"/>
-                                      <Component id="aClassField" alignment="0" pref="0" max="32767" attributes="0"/>
-                                      <Component id="bClassField" alignment="0" pref="0" max="32767" attributes="0"/>
-                                      <Component id="aImportsField" alignment="0" pref="0" max="32767" attributes="0"/>
-                                      <Component id="bImportsField" alignment="0" pref="0" max="32767" attributes="0"/>
-                                      <Component id="aPackageField" alignment="0" pref="0" max="32767" attributes="0"/>
-                                      <Component id="bPackageField" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="inCodeField" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="inDeclarationsField" max="32767" attributes="0"/>
-                                      <Component id="anAnonymousClassHeaderField" max="32767" attributes="0"/>
-                                      <Component id="anEnumHeaderField" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="aClassFooterField" pref="0" max="32767" attributes="0"/>
-                                      <Component id="anAnonymousClassFooterField" max="32767" attributes="0"/>
-                                      <Component id="anEnumFooterField" max="32767" attributes="0"/>
-                                      <Component id="bFieldsField" pref="0" max="32767" attributes="0"/>
-                                      <Component id="aFieldsField" pref="0" max="32767" attributes="0"/>
-                                  </Group>
-                                  <Component id="aMethodsField" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="aClassHeaderField" alignment="0" pref="0" max="32767" attributes="0"/>
+                                  <Component id="aClassField" alignment="0" pref="0" max="32767" attributes="0"/>
+                                  <Component id="bClassField" alignment="0" pref="0" max="32767" attributes="0"/>
+                                  <Component id="aImportsField" alignment="0" pref="0" max="32767" attributes="0"/>
+                                  <Component id="bImportsField" alignment="0" pref="0" max="32767" attributes="0"/>
+                                  <Component id="aPackageField" alignment="0" pref="0" max="32767" attributes="0"/>
+                                  <Component id="bPackageField" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="inCodeField" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="inDeclarationsField" max="32767" attributes="0"/>
+                                  <Component id="anAnonymousClassHeaderField" max="32767" attributes="0"/>
+                                  <Component id="anEnumHeaderField" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="aClassFooterField" pref="0" max="32767" attributes="0"/>
+                                  <Component id="anAnonymousClassFooterField" max="32767" attributes="0"/>
+                                  <Component id="anEnumFooterField" max="32767" attributes="0"/>
+                                  <Component id="bFieldsField" pref="0" max="32767" attributes="0"/>
+                                  <Component id="aFieldsField" pref="0" max="32767" attributes="0"/>
+                                  <Component id="bMethodsField" alignment="0" pref="0" max="32767" attributes="0"/>
+                                  <Component id="aMethodsField" alignment="0" pref="0" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -242,9 +240,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="inDeclarationsField">
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inDeclarationsFieldActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="inCodeLabel">
       <Properties>

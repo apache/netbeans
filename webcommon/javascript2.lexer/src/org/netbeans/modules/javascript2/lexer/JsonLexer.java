@@ -49,7 +49,7 @@ public class JsonLexer implements Lexer<JsTokenId> {
         FileObject fo = (FileObject) info.getAttributeValue(FileObject.class);
         boolean allowComments = fo != null ? JsonOptionsQuery.getOptions(fo).isCommentSupported() : false;
         scanner = new org.netbeans.modules.javascript2.json.parser.JsonLexer(charStream, allowComments, true);
-        if (info.state() != null && info.state() instanceof LexerState) {
+        if (info.state() instanceof LexerState) {
             scanner.setLexerState((LexerState) info.state());
         }
     }
@@ -64,7 +64,7 @@ public class JsonLexer implements Lexer<JsTokenId> {
     public Token<JsTokenId> nextToken() {
         org.antlr.v4.runtime.Token nextToken = scanner.nextToken();
         Token<JsTokenId> token = null;
-        if (nextToken.getType() != scanner.EOF) {            
+        if (nextToken.getType() != org.netbeans.modules.javascript2.json.parser.JsonLexer.EOF) {            
             token = tokenFactory.createToken(tokenId(nextToken.getType()));
             LOGGER.log(Level.FINEST, "Lexed token is {0}", token.id());
             return token;

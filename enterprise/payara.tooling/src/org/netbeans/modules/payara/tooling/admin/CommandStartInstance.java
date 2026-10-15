@@ -35,20 +35,14 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
 @RunnerRestClass(runner=RunnerRestStartInstance.class)
 public class CommandStartInstance extends CommandTarget {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command string for start-instance command. */
     private static final String COMMAND = "start-instance";
 
     /** Error message for administration command execution exception .*/
     private static final String ERROR_MESSAGE = "Instance start failed.";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Starts server instance.
      * <p/>
@@ -71,10 +65,7 @@ public class CommandStartInstance extends CommandTarget {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara server start-instance command entity.
      * <p/>

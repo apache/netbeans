@@ -1,4 +1,4 @@
 Code completion result for source line:
 ConstantClass::NU|LL;
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
-CONSTANT   NULL ?                          [PUBLIC]   ConstantClass
+CONSTANT   NULL null                       [PUBLIC]   ConstantClass

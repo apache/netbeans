@@ -594,7 +594,7 @@ abstract class SheetCell extends AbstractCellEditor implements TableModelListene
             g.setColor(old);
         }
         
-        ////////////////// Accessibility support ///////////////////////////////
+        // Accessibility support
 
         @Override
         public AccessibleContext getAccessibleContext() {

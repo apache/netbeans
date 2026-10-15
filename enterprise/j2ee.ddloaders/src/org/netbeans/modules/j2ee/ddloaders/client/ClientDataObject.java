@@ -88,7 +88,7 @@ public class ClientDataObject extends  DDMultiViewDataObject
     private transient FileObject srcRoots[];
     
     /** List of updates to servlets that should be processed */
-    private Vector updates;
+    private Vector<DDChangeEvent> updates;
     
     private transient RequestProcessor.Task updateTask;
     
@@ -119,7 +119,7 @@ public class ClientDataObject extends  DDMultiViewDataObject
     }
     
     private void refreshSourceFolders() {
-        ArrayList srcRootList = new ArrayList();
+        List<FileObject> srcRootList = new ArrayList<>();
         
         Project project = FileOwnerQuery.getOwner(getPrimaryFile());
         if (project != null) {
@@ -133,7 +133,7 @@ public class ClientDataObject extends  DDMultiViewDataObject
                 }
             }
         }
-        srcRoots = (FileObject []) srcRootList.toArray(new FileObject [srcRootList.size()]);
+        srcRoots = srcRootList.toArray(new FileObject[0]);
     }
 
     @Override
@@ -162,7 +162,7 @@ public class ClientDataObject extends  DDMultiViewDataObject
     public void deploymentChange(DDChangeEvent evt) {
         synchronized (this) {
             if (updates == null) {
-                updates = new Vector();
+                updates = new Vector<>();
             }
             updates.addElement(evt);
         }
@@ -171,7 +171,7 @@ public class ClientDataObject extends  DDMultiViewDataObject
         if (updateTask == null) {
             updateTask = RequestProcessor.getDefault().post(new Runnable() {
                 public void run() {
-                    java.util.List changes = null;
+                    List<DDChangeEvent> changes = null;
                     synchronized (ClientDataObject.this) {
                         if (!ClientDataObject.this.isValid()) {
                             return;
@@ -277,7 +277,7 @@ public class ClientDataObject extends  DDMultiViewDataObject
     }
 
     
-    private void showDDChangesDialog(List changes) {
+    private void showDDChangesDialog(List<DDChangeEvent> changes) {
         final JButton processButton;
         final JButton processAllButton;
         final JButton closeButton;
@@ -343,9 +343,9 @@ public class ClientDataObject extends  DDMultiViewDataObject
                         processButton.setEnabled(false);
                     }
                 } else if (options[1].equals(e.getSource())) {
-                    Enumeration en = connectionPanel.listModel.elements();
+                    Enumeration<DDChangeEvent> en = connectionPanel.listModel.elements();
                     while (en.hasMoreElements()) {
-                        processDDChangeEvent((DDChangeEvent)en.nextElement());
+                        processDDChangeEvent(en.nextElement());
                     }
                     confirmChangesDialog[0].setVisible(false);
                     connectionPanel.setChanges(null);

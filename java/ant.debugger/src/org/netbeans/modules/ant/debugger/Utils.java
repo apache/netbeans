@@ -355,7 +355,7 @@ public class Utils {
         if (line [0] == 0) return null;
 
         int ln = line [0] - 1;
-        List annotatables = new ArrayList ();
+        List<Annotatable> annotatables = new ArrayList<>();
         if (nextTargetName != null) {
             Line fLine = lineCookie.getLineSet ().getCurrent (ln);
             int inx = findIndexOf(fLine.getText (), nextTargetName);
@@ -371,7 +371,7 @@ public class Utils {
                 Line l = lineCookie.getLineSet ().getCurrent (ln);
                 annotatables.add (l);
             }
-        return annotatables.toArray (new Annotatable [annotatables.size ()]);
+        return annotatables.toArray (new Annotatable [0]);
     }
     
     private static int findIndexOf(String text, String target) {

@@ -1,0 +1,5 @@
+Code completion result for source line:
+protected readonly string|in|t $protectedReadonly;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    int                                        null

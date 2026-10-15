@@ -46,9 +46,9 @@ import org.netbeans.modules.db.dataview.util.TimestampType;
  */
 public class ResultSetCellRenderer extends DefaultTableCellRenderer {
 
-    protected final static FormatStringValue DATETIME_TO_STRING = new FormatStringValue(new SimpleDateFormat (TimestampType.DEFAULT_FORMAT_PATTERN));
-    protected final static FormatStringValue TIME_TO_STRING = new FormatStringValue(new SimpleDateFormat (TimeType.DEFAULT_FOMAT_PATTERN));
-    protected final static FormatStringValue Date_TO_STRING = new FormatStringValue(new SimpleDateFormat (DateType.DEFAULT_FOMAT_PATTERN));
+    protected static final FormatStringValue DATETIME_TO_STRING = new FormatStringValue(new SimpleDateFormat (TimestampType.DEFAULT_FORMAT_PATTERN));
+    protected static final FormatStringValue TIME_TO_STRING = new FormatStringValue(new SimpleDateFormat (TimeType.DEFAULT_FOMAT_PATTERN));
+    protected static final FormatStringValue Date_TO_STRING = new FormatStringValue(new SimpleDateFormat (DateType.DEFAULT_FOMAT_PATTERN));
     
     private final TableCellRenderer NULL_RENDERER = new NullObjectCellRenderer();
     private final TableCellRenderer DEFAULT_RENDERER = new SQLConstantsCellRenderer();

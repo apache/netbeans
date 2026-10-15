@@ -33,7 +33,7 @@ import java.util.StringTokenizer;
 import java.util.WeakHashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.api.project.Project;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.spi.project.ProjectFactory;
@@ -48,6 +48,7 @@ import org.openide.filesystems.Repository;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Lookup;
 import org.openide.util.test.MockLookup;
+import org.openide.util.test.TestFileUtils;
 
 /**
  * Help set up org.netbeans.api.project.*Test.
@@ -168,18 +169,7 @@ public final class TestUtil {
      * Delete a file and all subfiles.
      */
     public static void deleteRec(File f) throws IOException {
-        if (f.isDirectory()) {
-            File[] kids = f.listFiles();
-            if (kids == null) {
-                throw new IOException("List " + f);
-            }
-            for (int i = 0; i < kids.length; i++) {
-                deleteRec(kids[i]);
-            }
-        }
-        if (!f.delete()) {
-            throw new IOException("Delete " + f);
-        }
+        TestFileUtils.deleteFile(f);
     }
     
     /**
@@ -210,7 +200,7 @@ public final class TestUtil {
     public static int projectLoadCount(FileObject dir) {
         Integer i = loadCount.get(dir);
         if (i != null) {
-            return i.intValue();
+            return i;
         } else {
             return 0;
         }

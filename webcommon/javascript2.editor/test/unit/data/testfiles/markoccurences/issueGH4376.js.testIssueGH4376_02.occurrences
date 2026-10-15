@@ -1,0 +1,3 @@
+	|>MARK_OCCURRENCES:bar<| = {}; //Line 2
+		this.|>MARK_OCCURRENCES:bar<| = {};  //Line 5
+			this.|>MARK_OCCURRENCES:ba^r<|[val] = 1;  //Line 7

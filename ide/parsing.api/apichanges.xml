@@ -87,6 +87,37 @@ is the proper place.
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
   <changes>
+      <change id="ResultProcessor">
+          <api name="ParsingAPI"/>
+          <summary>Adding ResultProcessor Functional Interface</summary>
+          <version major="9" minor="31"/>
+          <date day="25" month="2" year="2024"/>
+          <author login="lkishalmi"/>
+          <compatibility source="compatible" binary="compatible" addition="yes"/>
+          <description>
+              <p>
+                  Adding a new functionale interface <code>ResultProcessor</code>, that
+                  can be added to new <code>ParserManager.parse()</code> calls, allowing
+                  remove of common boilerplate code needed for creating <code>new UserTask() {...}</code>.
+              </p>
+          </description>
+          <class package="org.netbeans.modules.parsing.api" name="ResultProcessor"/>
+      </change>
+      <change id="Parser.Result.processingFinished">
+          <api name="ParsingAPI"/>
+          <summary>Adding Parser.Result.processingFinished</summary>
+          <version major="9" minor="20"/>
+          <date day="12" month="9" year="2021"/>
+          <author login="jlahoda"/>
+          <compatibility source="compatible" binary="compatible" addition="yes"/>
+          <description>
+              <p>
+                  Adding a new method, Parser.Result.processingFinished, used to
+                  mark a result as completely finished, or not completely finished.
+              </p>
+          </description>
+          <class package="org.netbeans.modules.parsing.spi" name="Parser"/>
+      </change>
       <change id="Source.Context.Lookup">
           <api name="ParsingAPI"/>
           <summary>Source provides access to Lookup</summary>
@@ -789,7 +820,6 @@ is the proper place.
 -->
     <head>
         <title>Change History for the Parsing &amp; Indexing API</title>
-        <link rel="stylesheet" href="prose.css" type="text/css"/>
         <meta name="CATEGORY" content="OtherDevelopmentDoc"/>
         <meta name="DESCRIPTION" content="A cross-indexed list of all changes made to the Parsing &amp; Indexing API."/>
     </head>

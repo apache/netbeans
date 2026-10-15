@@ -75,7 +75,7 @@ public class Hk2MessageDestinationManager implements  MessageDestinationDeployme
             // TODO : need to account for a remote domain here?
             return readMessageDestinations(domainXml, "/domain/", null);
         } else {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
     }
 

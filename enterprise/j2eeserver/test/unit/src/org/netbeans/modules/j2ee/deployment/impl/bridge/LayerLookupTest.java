@@ -55,9 +55,9 @@ public class LayerLookupTest extends NbTestCase {
 
         Map<Class<?>, Object> lookups = new HashMap<Class<?>, Object>();
         lookups.put(String.class, "Test"); // NOI18N
-        lookups.put(Integer.class, Integer.valueOf(0));
-        lookups.put(Character.class, Character.valueOf('a')); // NOI18N
-        lookups.put(Double.class, Double.valueOf(0.0));
+        lookups.put(Integer.class, 0);
+        lookups.put(Character.class, 'a'); // NOI18N
+        lookups.put(Double.class, 0.0);
 
         TestLookup lookupInstance = new TestLookup(lookups);
 

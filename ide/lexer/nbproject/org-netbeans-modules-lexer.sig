@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.69.0
+#Version 1.96.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -8,8 +8,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -18,15 +20,16 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -37,6 +40,9 @@ meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
 
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
+
 CLSS public abstract interface java.util.EventListener
 
 CLSS public java.util.EventObject
@@ -46,7 +52,6 @@ intf java.io.Serializable
 meth public java.lang.Object getSource()
 meth public java.lang.String toString()
 supr java.lang.Object
-hfds serialVersionUID
 
 CLSS public final org.netbeans.api.lexer.InputAttributes
 cons public init()
@@ -333,8 +338,10 @@ hfds thc
 
 CLSS public final org.netbeans.spi.lexer.TokenFactory<%0 extends org.netbeans.api.lexer.TokenId>
 fld public final static org.netbeans.api.lexer.Token SKIP_TOKEN
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isSkipToken(org.netbeans.api.lexer.Token<{org.netbeans.spi.lexer.TokenFactory%0}>)
 meth public org.netbeans.api.lexer.Token<{org.netbeans.spi.lexer.TokenFactory%0}> createCustomTextToken({org.netbeans.spi.lexer.TokenFactory%0},java.lang.CharSequence,int,org.netbeans.api.lexer.PartType)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.netbeans.api.lexer.Token<{org.netbeans.spi.lexer.TokenFactory%0}> createPropertyToken({org.netbeans.spi.lexer.TokenFactory%0},int,org.netbeans.spi.lexer.TokenPropertyProvider<{org.netbeans.spi.lexer.TokenFactory%0}>)
 meth public org.netbeans.api.lexer.Token<{org.netbeans.spi.lexer.TokenFactory%0}> createPropertyToken({org.netbeans.spi.lexer.TokenFactory%0},int,org.netbeans.spi.lexer.TokenPropertyProvider<{org.netbeans.spi.lexer.TokenFactory%0}>,org.netbeans.api.lexer.PartType)
 meth public org.netbeans.api.lexer.Token<{org.netbeans.spi.lexer.TokenFactory%0}> createToken({org.netbeans.spi.lexer.TokenFactory%0})

@@ -40,7 +40,7 @@ public class Hk2TargetModuleID implements TargetModuleID {
     private final String location;
     private TargetModuleID parent;
     private final Vector<TargetModuleID> children;
-    final static private Map<String,Hk2TargetModuleID> knownModules =
+    private static final Map<String,Hk2TargetModuleID> knownModules =
             new HashMap<String,Hk2TargetModuleID>();
     
     private Hk2TargetModuleID(Hk2Target target, String docBaseURI, String contextPath, String location) {
@@ -93,9 +93,9 @@ public class Hk2TargetModuleID implements TargetModuleID {
         // !PW FIXME path ought to be URL encoded by the time we get here.
         if (null != contextPath) {
             if(!contextPath.startsWith("/")) {
-                return target.getServerUri() + "/" + contextPath.replaceAll(" ", "%20");
+                return target.getServerUri() + "/" + contextPath.replace(" ", "%20");
             } else {
-                return target.getServerUri() + contextPath.replaceAll(" ", "%20");
+                return target.getServerUri() + contextPath.replace(" ", "%20");
             }
         }
         return null;
@@ -111,7 +111,7 @@ public class Hk2TargetModuleID implements TargetModuleID {
     }
     
     public TargetModuleID [] getChildTargetModuleID() {
-        return children.toArray(new TargetModuleID[children.size()]);
+        return children.toArray(TargetModuleID[]::new);
     }
     
     public void setParent(Hk2TargetModuleID parent) {

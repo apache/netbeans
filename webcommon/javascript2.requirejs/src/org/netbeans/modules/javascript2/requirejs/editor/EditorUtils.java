@@ -50,7 +50,7 @@ public class EditorUtils {
     
     public static ImageIcon getRequireJsIcon () {
         if (REQUIREJS_ICON == null) {
-            REQUIREJS_ICON = new ImageIcon(ImageUtilities.loadImage(REQUIRE_JS_ICON_PATH)); //NOI18N
+            REQUIREJS_ICON = ImageUtilities.loadImageIcon(REQUIRE_JS_ICON_PATH, false); //NOI18N
         }
         return REQUIREJS_ICON;
     }

@@ -169,7 +169,7 @@ public class WebModuleExtenderBridge extends WebModuleExtender {
      * An empty framework configuration panel to which WebModuleExtenderBridge will delegate
      * when the framework doesn't have a framework configuration panel.
      */
-    private final static class EmptyConfigPanel extends EmptyPanel implements FrameworkConfigurationPanel {
+    private static final class EmptyConfigPanel extends EmptyPanel implements FrameworkConfigurationPanel {
 
         @Override
         public Component getComponent() {

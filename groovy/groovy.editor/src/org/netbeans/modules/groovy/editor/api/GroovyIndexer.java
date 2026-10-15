@@ -42,10 +42,15 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 import org.codehaus.groovy.ast.FieldNode;
 import org.netbeans.modules.csl.api.Modifier;
+import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.groovy.editor.api.lexer.LexUtilities;
 import org.netbeans.modules.groovy.editor.api.elements.ast.ASTField;
 import org.netbeans.modules.groovy.editor.api.elements.ast.ASTMethod;
+import org.netbeans.modules.groovy.editor.api.elements.common.MethodElement;
 import org.netbeans.modules.groovy.editor.compiler.ClassNodeCache;
+import org.netbeans.modules.groovy.editor.compiler.PerfData;
+import org.netbeans.modules.groovy.editor.utils.GroovyUtils;
+
 import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexer;
 import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexerFactory;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexDocument;
@@ -64,6 +69,7 @@ public class GroovyIndexer extends EmbeddingIndexer {
     static final String CASE_INSENSITIVE_CLASS_NAME = "class-ig"; //NOI18N
     // not indexed
     static final String IN = "in"; //NOI18N
+    static final String CLASS_OFFSET = "class-range"; //NOI18N
     /** Attributes: hh;nnnn where hh is a hex representing flags in IndexedClass, and nnnn is the documentation length */
     static final String CLASS_ATTRS = "attrs"; //NOI18N
 
@@ -88,16 +94,29 @@ public class GroovyIndexer extends EmbeddingIndexer {
     private static long filesIndexed = 0;
 
     private static final Logger LOG = Logger.getLogger(GroovyIndexer.class.getName());
-
+    
+    /**
+     * Disables completely Groovy indexing. Temporary options only for 12.5 release, will be hopefully
+     * removed after Groovy performance improves. Currently used reflectively from java.lsp.server module only.
+     * DO NOT expose as an API.
+     * @param enabled 
+     */
+    static void setIndexingEnabled(boolean enabled) {
+        GroovyUtils.setIndexingEnabled(enabled);
+    }
+    
     @Override
     protected void index(Indexable indexable, Result parserResult, Context context) {
+        if (!GroovyUtils.isIndexingEnabled()) {
+            return;
+        }
         long indexerThisStartTime = System.currentTimeMillis();
 
         if (indexerFirstRun == 0) {
             indexerFirstRun = indexerThisStartTime;
         }
 
-        GroovyParserResult r = (GroovyParserResult) ASTUtils.getParseResult(parserResult);
+        GroovyParserResult r = ASTUtils.getParseResult(parserResult);
         ASTNode root = ASTUtils.getRoot(r);
 
         if (root == null) {
@@ -123,6 +142,8 @@ public class GroovyIndexer extends EmbeddingIndexer {
         long indexerThisStopTime = System.currentTimeMillis();
         long indexerThisRunTime = indexerThisStopTime - indexerThisStartTime;
         indexerRunTime += indexerThisRunTime;
+        
+        PerfData.global.addPerfCounter("Indexer time", indexerThisRunTime);
 
         LOG.log(Level.FINEST, "Indexed File                : {0}", r.getSnapshot().getSource().getFileObject());
         LOG.log(Level.FINEST, "Indexing time (ms)          : {0}", indexerThisRunTime);
@@ -141,10 +162,13 @@ public class GroovyIndexer extends EmbeddingIndexer {
     public static final class Factory extends EmbeddingIndexerFactory {
 
         public static final String NAME = "groovy"; // NOI18N
-        public static final int VERSION = 8;
+        public static final int VERSION = 9;
 
         @Override
         public EmbeddingIndexer createIndexer(Indexable indexable, Snapshot snapshot) {
+            if (!GroovyUtils.isIndexingEnabled()) {
+                return null;
+            }
             if (isIndexable(indexable, snapshot)) {
                 return new GroovyIndexer();
             } else {
@@ -163,6 +187,9 @@ public class GroovyIndexer extends EmbeddingIndexer {
         }
 
         private boolean isIndexable(Indexable indexable, Snapshot snapshot) {
+            if (!GroovyUtils.isIndexingEnabled()) {
+                return false;
+            }
             String extension = snapshot.getSource().getFileObject().getExt();
 
             if (extension.equals("groovy")) { // NOI18N
@@ -202,12 +229,18 @@ public class GroovyIndexer extends EmbeddingIndexer {
 
         @Override
         public boolean scanStarted(Context context) {
+            if (!GroovyUtils.isIndexingEnabled()) {
+                return false;
+            }
             ClassNodeCache.createThreadLocalInstance();
+            PerfData.global.clear();
             return super.scanStarted(context);
         }
 
         @Override
-        public void scanFinished(Context context) {            
+        public void scanFinished(Context context) {
+            PerfData.LOG.finer("***** Indexing statistics");
+            PerfData.global.dumpStatsAndMerge();
             ClassNodeCache.clearThreadLocalInstance();
             super.scanFinished(context);
         }
@@ -252,6 +285,7 @@ public class GroovyIndexer extends EmbeddingIndexer {
 
             for (ASTElement child : children) {
                 switch (child.getKind()) {
+                    case INTERFACE:
                     case CLASS:
                         analyzeClass((ASTClass) child);
                         break;
@@ -276,6 +310,10 @@ public class GroovyIndexer extends EmbeddingIndexer {
                     case FIELD:
                         indexField((ASTField) child, document);
                         break;
+                    case INTERFACE:
+                    case CLASS:
+                        analyzeClass((ASTClass) child);
+                        break;
                 }
             }
         }
@@ -285,6 +323,9 @@ public class GroovyIndexer extends EmbeddingIndexer {
             document.addPair(FQN_NAME, element.getFqn(), true, true);
             document.addPair(CLASS_NAME, name, true, true);
             document.addPair(CASE_INSENSITIVE_CLASS_NAME, name.toLowerCase(), true, true);
+            StringBuilder sb = new StringBuilder();
+            appendOffsetRange(sb, element.getNode(), doc);
+            document.addPair(CLASS_OFFSET, sb.toString(), false, true);
         }
 
         private void indexField(ASTField child, IndexDocument document) {
@@ -295,17 +336,21 @@ public class GroovyIndexer extends EmbeddingIndexer {
             sb.append(';').append(org.netbeans.modules.groovy.editor.java.Utilities.translateClassLoaderTypeName(
                     node.getType().getName()));
 
-            int flags = getFieldModifiersFlag(child.getModifiers());
+            // maintain index compatibility; althogh
+            int flags = getFieldModifiersFlag(child.isProperty(), child.getModifiers());
+            sb.append(';');
             if (flags != 0 || child.isProperty()) {
-                sb.append(';');
                 sb.append(IndexedElement.flagToFirstChar(flags));
                 sb.append(IndexedElement.flagToSecondChar(flags));
             }
 
+            sb.append(';');
             if (child.isProperty()) {
-                sb.append(';');
                 sb.append(child.isProperty());
             }
+
+            sb.append(';');
+            appendOffsetRange(sb, node, doc);
 
             // TODO - gather documentation on fields? naeh
             document.addPair(FIELD_NAME, sb.toString(), true, true);
@@ -316,26 +361,29 @@ public class GroovyIndexer extends EmbeddingIndexer {
             sb.append(constructor.getName());
             sb.append(';');
 
-            List<String> params = constructor.getParameterTypes();
-            if (!params.isEmpty()) {
-                for (String paramName : params) {
-                    sb.append(paramName);
+            List<MethodElement.MethodParameter> params = constructor.getParameters();
+            if (params != null && !params.isEmpty()) {
+                for (MethodElement.MethodParameter param : params) {
+                    sb.append(param.getFqnType());
                     sb.append(",");
                 }
 
                 // Removing last ","
                 sb.deleteCharAt(sb.length() - 1);
             }
-
+            
             Set<Modifier> modifiers = constructor.getModifiers();
 
             int flags = getMethodModifiersFlag(modifiers);
+            sb.append(';');
             if (flags != 0) {
-                sb.append(';');
                 sb.append(IndexedElement.flagToFirstChar(flags));
                 sb.append(IndexedElement.flagToSecondChar(flags));
             }
-
+            
+            sb.append(';');
+            appendOffsetRange(sb, constructor.getNode(), doc);
+            
             document.addPair(CONSTRUCTOR, sb.toString(), true, true);
         }
 
@@ -350,26 +398,37 @@ public class GroovyIndexer extends EmbeddingIndexer {
             Set<Modifier> modifiers = child.getModifiers();
 
             int flags = getMethodModifiersFlag(modifiers);
-
+            
+            sb.append(';');
             if (flags != 0) {
-                sb.append(';');
                 sb.append(IndexedElement.flagToFirstChar(flags));
                 sb.append(IndexedElement.flagToSecondChar(flags));
             }
 
+            sb.append(';');
+            appendOffsetRange(sb, childNode, doc);
+            
             document.addPair(METHOD_NAME, sb.toString(), true, true);
+        }
+        
+        private static void appendOffsetRange(StringBuilder sb, ASTNode node, BaseDocument document) {
+            OffsetRange range = ASTUtils.getRange(node, document);
+            sb.append('[').append(range.getStart()).append(',').append(range.getEnd()).append(']');
         }
 
     }
 
-    // note that default field modifier is private
-    private static int getFieldModifiersFlag(Set<Modifier> modifiers) {
+    // note that no modifiers for field means it is a property, but that's
+    // declared with .isProperty that is indexed separately.
+    private static int getFieldModifiersFlag(boolean property, Set<Modifier> modifiers) {
         int flags = modifiers.contains(Modifier.STATIC) ? Opcodes.ACC_STATIC : 0;
         if (modifiers.contains(Modifier.PUBLIC)) {
             flags |= Opcodes.ACC_PUBLIC;
         } else if (modifiers.contains(Modifier.PROTECTED)) {
             flags |= Opcodes.ACC_PROTECTED;
-        }
+        } else if (!property && modifiers.contains(Modifier.PRIVATE)) {
+            flags |= Opcodes.ACC_PRIVATE;
+        }   
 
         return flags;
     }
@@ -381,6 +440,8 @@ public class GroovyIndexer extends EmbeddingIndexer {
             flags |= Opcodes.ACC_PRIVATE;
         } else if (modifiers.contains(Modifier.PROTECTED)) {
             flags |= Opcodes.ACC_PROTECTED;
+        } else if (modifiers.contains(Modifier.PUBLIC)) {
+            flags |= Opcodes.ACC_PUBLIC;
         }
 
         return flags;

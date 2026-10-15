@@ -19,18 +19,22 @@
 package org.netbeans.modules.groovy.editor.completion.provider;
 
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.FieldNode;
 import org.codehaus.groovy.ast.MethodNode;
+import org.codehaus.groovy.ast.Parameter;
 import org.netbeans.modules.groovy.editor.api.GroovyIndex;
 import org.netbeans.modules.groovy.editor.api.completion.CompletionItem;
 import org.netbeans.modules.groovy.editor.api.completion.CompletionItem.FieldItem;
 import org.netbeans.modules.groovy.editor.api.completion.FieldSignature;
 import org.netbeans.modules.groovy.editor.api.completion.MethodSignature;
+import org.netbeans.modules.groovy.editor.api.elements.common.MethodElement.MethodParameter;
 import org.netbeans.modules.groovy.editor.java.Utilities;
 
 /**
@@ -114,10 +118,10 @@ public final class TransformationHandler {
             
             if (SINGLETON_ANNOTATION.equals(annotationName)) {
                 final MethodSignature signature = new MethodSignature(SINGLETON_METHOD_NAME, new String[0]);
-                final CompletionItem proposal = CompletionItem.forJavaMethod(
+                final CompletionItem proposal = CompletionAccessor.instance().createJavaMethod(
                         typeNode.getNameWithoutPackage(),
                         SINGLETON_METHOD_NAME,
-                        Collections.<String>emptyList(),
+                        Collections.emptyList(),
                         typeNode.getNameWithoutPackage(),
                         Utilities.reflectionModifiersToModel(Modifier.STATIC),
                         anchorOffset,
@@ -165,17 +169,18 @@ public final class TransformationHandler {
             final int anchorOffset) {
         
         final String methodName = method.getName();
-        final String[] methodParams = getMethodParams(method);
+        final List<MethodParameter> methodParams = getMethodParams(method);
         final String returnType = method.getReturnType().getName();
-
-        return CompletionItem.forDynamicMethod(anchorOffset, methodName, methodParams, returnType, prefixed);
+        
+        return CompletionAccessor.instance().createDynamicMethod(anchorOffset, methodName, methodParams, returnType, prefixed);
     }
     
-    private static String[] getMethodParams(MethodNode method) {
-        String[] parameters = new String[method.getParameters().length];
-        for (int i = 0; i < parameters.length; i++) {
-            parameters[i] = method.getParameters()[i].getName();
+    private static List<MethodParameter> getMethodParams(MethodNode method) {
+        List<MethodParameter> result = new ArrayList<>(method.getParameters().length);
+        Parameter[] mps = method.getParameters();
+        for (Parameter p : mps) {
+            result.add(new MethodParameter(p.getType().getName(), p.getType().getNameWithoutPackage(), p.getName()));
         }
-        return parameters;
+        return result;
     }
 }

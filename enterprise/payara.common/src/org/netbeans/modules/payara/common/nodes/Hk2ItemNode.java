@@ -26,8 +26,6 @@ import java.util.List;
 import javax.swing.Action;
 import org.netbeans.modules.payara.common.nodes.actions.DisableModulesAction;
 import org.netbeans.modules.payara.common.nodes.actions.EditDetailsAction;
-import org.netbeans.modules.payara.common.nodes.actions.EnableCDIProbeModeAction;
-import org.netbeans.modules.payara.common.nodes.actions.DisableCDIProbeModeAction;
 import org.netbeans.modules.payara.common.nodes.actions.EnableModulesAction;
 import org.netbeans.modules.payara.common.nodes.actions.OpenTestURLAction;
 import org.netbeans.modules.payara.common.nodes.actions.OpenURLAction;
@@ -56,10 +54,7 @@ import org.openide.util.actions.SystemAction;
 public class Hk2ItemNode extends AbstractNode {
 
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Resources icon. */
     private static final String RESOURCES_ICON = 
             "org/netbeans/modules/payara/common/resources/resources.gif";
@@ -174,10 +169,7 @@ public class Hk2ItemNode extends AbstractNode {
     /** Node decorator. */
     protected final Decorator decorator;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of extensible node without setting node display name.
      * <p/>
@@ -206,12 +198,6 @@ public class Hk2ItemNode extends AbstractNode {
         if(decorator.canDisable()) {
             getCookieSet().add(new Hk2Cookie.Disable(lookup, name));
         }
-        if(decorator.canCDIProbeEnable()) {
-            getCookieSet().add(new Hk2Cookie.EnableCDIProbeMode(lookup, name));
-        }
-        if(decorator.canCDIProbeDisable()) {
-            getCookieSet().add(new Hk2Cookie.DisableCDIProbeMode(lookup, name));
-        }
     }
         
     /**
@@ -228,10 +214,7 @@ public class Hk2ItemNode extends AbstractNode {
         setDisplayName(name);
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Find an icon for this node (in the closed state).
      * <p/>
@@ -303,12 +286,6 @@ public class Hk2ItemNode extends AbstractNode {
         if(decorator.canDisable()) {
             actions.add(SystemAction.get(DisableModulesAction.class));
         }
-        if(decorator.canCDIProbeEnable()) {
-            actions.add(SystemAction.get(EnableCDIProbeModeAction.class));
-        }
-        if(decorator.canCDIProbeDisable()) {
-            actions.add(SystemAction.get(DisableCDIProbeModeAction.class));
-        }
         if(decorator.canUnregister()) {
             actions.add(SystemAction.get(UnregisterResourceAction.class));
         }
@@ -324,13 +301,10 @@ public class Hk2ItemNode extends AbstractNode {
         if (decorator.canEditDetails()) {
             actions.add(SystemAction.get(EditDetailsAction.class));
         }
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates and returns the instance of the node representing the status
      * 'WAIT' of the node.

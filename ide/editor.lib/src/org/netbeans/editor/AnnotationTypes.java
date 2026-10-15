@@ -171,7 +171,7 @@ public class AnnotationTypes {
         loadSettings();
         
         if (getProp(PROP_BACKGROUND_GLYPH_ALPHA) == null)
-            return new Integer(40);
+            return Integer.valueOf(40);
         return (Integer)getProp(PROP_BACKGROUND_GLYPH_ALPHA);
     }
 
@@ -181,7 +181,7 @@ public class AnnotationTypes {
         if (alpha < 0 || alpha > 100) {
             return;
         }
-        Integer i = new Integer(alpha);
+        Integer i = Integer.valueOf(alpha);
         putProp(PROP_BACKGROUND_GLYPH_ALPHA, i);
         firePropertyChange(PROP_BACKGROUND_GLYPH_ALPHA, null, null);
         
@@ -251,18 +251,18 @@ public class AnnotationTypes {
     
     /** Add listeners on changes of annotation type properties
      * @param l  change listener*/
-    final public void addPropertyChangeListener(java.beans.PropertyChangeListener l) {
+    public final void addPropertyChangeListener(java.beans.PropertyChangeListener l) {
         support.addPropertyChangeListener (l);
     }
     
     /** Remove listeners on changes of annotation type properties
      * @param l  change listener*/
-    final public void removePropertyChangeListener(java.beans.PropertyChangeListener l) {
+    public final void removePropertyChangeListener(java.beans.PropertyChangeListener l) {
         support.removePropertyChangeListener (l);
     }
 
     /** Fire property change to registered listeners. */
-    final protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
+    protected final void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
         support.firePropertyChange(this, propertyName, oldValue, newValue);
     }
 

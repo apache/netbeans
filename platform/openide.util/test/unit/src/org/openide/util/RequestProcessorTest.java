@@ -1628,8 +1628,8 @@ class R extends Object implements Runnable {
         }
     }
 
-    private static void doGc (int count, Reference toClear) {
-        java.util.ArrayList<byte[]> l = new java.util.ArrayList<byte[]> (count);
+    private static void doGc(int count, Reference<?> toClear) {
+        java.util.ArrayList<byte[]> l = new java.util.ArrayList<> (count);
         while (count-- > 0) {
             if (toClear != null && toClear.get () == null) break;
             

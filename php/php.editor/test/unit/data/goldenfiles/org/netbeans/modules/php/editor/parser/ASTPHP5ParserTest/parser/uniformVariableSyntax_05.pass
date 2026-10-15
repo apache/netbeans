@@ -69,10 +69,10 @@
         </Comments>
         <Statements>
             <ExpressionStatement start='7' end='52'>
-                <MethodInvocation start='7' end='51'>
+                <MethodInvocation start='7' end='51' isNullsafe='false'>
                     <StaticFieldAccess start='7' end='39'>
-                        <MethodInvocation start='7' end='33'>
-                            <FieldAccess start='7' end='26'>
+                        <MethodInvocation start='7' end='33' isNullsafe='false'>
+                            <FieldAccess start='7' end='26' isNullsafe='false'>
                                 <ArrayAccess start='7' end='18' type='VARIABLE_ARRAY' isDollared='false'>
                                     <ArrayDimension start='11' end='18'>
                                         <Index>

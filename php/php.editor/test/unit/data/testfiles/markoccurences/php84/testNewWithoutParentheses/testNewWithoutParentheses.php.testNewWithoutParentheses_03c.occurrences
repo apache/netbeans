@@ -1,0 +1,3 @@
+    public static string $|>MARK_OCCURRENCES:publicStaticTestField<| = "public static test field";
+        $example = new Example()->test::$|>MARK_OCCURRENCES:publicStaticTestField<|;
+new Example()->test::$|>MARK_OCCURRENCES:publicStati^cTestField<|; // test

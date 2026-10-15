@@ -27,17 +27,11 @@ import org.netbeans.modules.glassfish.tooling.data.ToolsConfig;
  */
 public class Tools implements ToolsConfig {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Asadmin tool. */
     private final AsadminTool asadmin;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of GlassFish tools.
      * <p/>
@@ -47,10 +41,7 @@ public class Tools implements ToolsConfig {
         this.asadmin = asadmin;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get asadmin tool.
      * <p/>

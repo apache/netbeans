@@ -19,23 +19,99 @@
 package org.netbeans.modules.maven.execute.cmd;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
+import java.util.Properties;
+import java.util.jar.Attributes;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
+import java.util.jar.Manifest;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.maven.options.MavenSettings;
 import org.openide.util.Utilities;
 
+import static org.junit.Assert.*;
 /**
  *
- * 
+ *
  */
-public class ShellConstructorTest extends NbTestCase {
+public class ShellConstructorTest {
 
-    public ShellConstructorTest(String name) throws FileNotFoundException, IOException {
-        super(name);
+    private static final File MAVENMOCK_DIR = new File(System.getProperty("xtest.data"), "mavenmock");
+
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+        // Prepare mock maven directories
+        createMock("2.2", "2.2.1");
+        createMock("3.0.5", "3.0.5");
+        createMock("3.3.1", "3.3.1");
+        createMock("4.0.0", "4.0.0");
+    }
+
+    @AfterClass
+    public static void tearDownAfterClass() throws Exception {
+        Files.walkFileTree(MAVENMOCK_DIR.toPath(), new FileVisitor<Path>() {
+            @Override
+            public FileVisitResult preVisitDirectory(Path t, BasicFileAttributes bfa) throws IOException {
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path t, BasicFileAttributes bfa) throws IOException {
+                Files.delete(t);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFileFailed(Path t, IOException ioe) throws IOException {
+                throw ioe;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path t, IOException ioe) throws IOException {
+                Files.delete(t);
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        resetOs();
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        resetOs();
+    }
+
+    private static void createMock(String dirName, String version) throws IOException {
+        File mockDir = new File(new File(MAVENMOCK_DIR, dirName), "lib");
+        mockDir.mkdirs();
+        Properties properties = new Properties();
+        properties.setProperty("version", version);
+        properties.setProperty("groupId", "org.apache.maven");
+        properties.setProperty("artifactId", "maven.core");
+        Manifest manifest = new Manifest();
+        manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
+        manifest.getMainAttributes().putValue("Ant-Version", "Apache Ant 1.9.4");
+        manifest.getMainAttributes().putValue("Created-By", "1.8.0_40-b25 (Oracle Corporation)");
+        try (FileOutputStream fos = new FileOutputStream(new File(mockDir, "fake" + version.replaceAll("\\D", "") + ".jar"));
+                JarOutputStream jf = new JarOutputStream(fos, manifest)) {
+            jf.putNextEntry(new JarEntry("META-INF/maven/org.apache.maven/maven-core/pom.properties"));
+            properties.store(jf, "Maven mock properties");
+        }
     }
 
     private void resetOs() throws Exception {
@@ -53,7 +129,6 @@ public class ShellConstructorTest extends NbTestCase {
      */
     @Test
     public void testShellConstructoronLinux() throws Exception {
-        resetOs();
         String previous = System.getProperty("os.name");
         System.getProperties().put("os.name", "Linux");
         assertFalse("Must be linux", Utilities.isWindows());
@@ -64,13 +139,10 @@ public class ShellConstructorTest extends NbTestCase {
         assertTrue("3.3.1 linux", getCLI("3.3.1", "3.3.1", "mvn"));
         assertTrue("4.0.0 linux", getCLI("4.0.0", "4.0.0", "mvn"));
         System.getProperties().put("os.name", previous);
-        resetOs();
-
     }
 
     @Test
     public void testShellconstructoronWindows() throws Exception {
-        resetOs();
         String previous = System.getProperty("os.name");
         System.getProperties().put("os.name", "Windows ");
         assertTrue("Must be windows", Utilities.isWindows());
@@ -81,11 +153,10 @@ public class ShellConstructorTest extends NbTestCase {
         assertTrue("4.0.0 windows", getCLI("4.0.0", "4.0.0", "mvn.cmd"));
         
         System.getProperties().put("os.name", previous);
-        resetOs();
     }
 
     private boolean getCLI(String folder, String requestedversion, String mvn) {
-        File sourceJar = new File(this.getDataDir(), "mavenmock/" + folder + "/");
+        File sourceJar = new File(MAVENMOCK_DIR, folder + "/");
         String version = MavenSettings.getCommandLineMavenVersion(sourceJar);
         assertEquals(requestedversion, version);
         ShellConstructor shellConstructor = new ShellConstructor(sourceJar);

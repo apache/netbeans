@@ -29,9 +29,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
-import org.netbeans.modules.xml.retriever.*;
 import org.netbeans.modules.xml.retriever.DocumentTypeParser;
-import org.netbeans.modules.xml.retriever.impl.IConstants;
 import org.netbeans.modules.xml.retriever.catalog.Utilities.DocumentTypesEnum;
 import org.netbeans.modules.xml.retriever.catalog.Utilities.HashNamespaceResolver;
 import org.openide.filesystems.FileObject;
@@ -49,6 +47,7 @@ public class DocumentTypeSchemaWsdlParser implements DocumentTypeParser{
     public DocumentTypeSchemaWsdlParser() {
     }
     
+    @Override
     public boolean accept(String mimeType) {
         if(mimeType != null && mimeType.equalsIgnoreCase(DocumentTypesEnum.schema.toString()))  //noi18n
             return true;
@@ -58,6 +57,7 @@ public class DocumentTypeSchemaWsdlParser implements DocumentTypeParser{
     }
     
     
+    @Override
     public List<String> getAllLocationOfReferencedEntities(FileObject fob) throws Exception{
         return getAllLocationOfReferencedEntities(FileUtil.toFile(fob));
     }
@@ -79,8 +79,8 @@ public class DocumentTypeSchemaWsdlParser implements DocumentTypeParser{
         }
     }
     
-    private Map<String, String> namespaces = new HashMap<String,String>();
-    private Map<String, String> prefixes = new HashMap<String,String>();
+    private final Map<String, String> namespaces = new HashMap<>();
+    private final Map<String, String> prefixes = new HashMap<>();
     
     private NamespaceContext getNamespaceContext() {
         namespaces.put("xsd","http://www.w3.org/2001/XMLSchema"); //NOI18N
@@ -91,16 +91,17 @@ public class DocumentTypeSchemaWsdlParser implements DocumentTypeParser{
     }
     
     private Node getDOMTree(File parsedFile) throws Exception{
-        DocumentBuilderFactory dbfact = DocumentBuilderFactory.newInstance();
+        DocumentBuilderFactory dbfact = Util.createEntityIgnoringDBF();
         dbfact.setNamespaceAware(true);
+
         FileObject parsedFileObject = FileUtil.toFileObject(FileUtil.normalizeFile(parsedFile));
         Node node = dbfact.newDocumentBuilder().parse(parsedFileObject.getInputStream());
         return node;
     }
     
-    
+    @Override
     public List<String> getAllLocationOfReferencedEntities(File parsedFile) throws Exception{
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         initXpath();
         Node documentNode = getDOMTree(parsedFile);
         
@@ -150,7 +151,6 @@ public class DocumentTypeSchemaWsdlParser implements DocumentTypeParser{
     
     
     public String getFileExtensionByParsing(File parsedFile) throws Exception{
-        String result = null;
         initXpath();
         Node documentNode = getDOMTree(parsedFile);
         

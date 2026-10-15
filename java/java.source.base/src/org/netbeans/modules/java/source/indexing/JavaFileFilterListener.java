@@ -56,7 +56,7 @@ final class JavaFileFilterListener implements ChangeListener {
         assert root != null;
         boolean result = true;
         try {
-            final URL rootURL = root.getURL();
+            final URL rootURL = root.toURL();
             synchronized (listensOn) {
                 JavaFileFilterImplementation filter = listensOn.get(rootURL);
                 if (filter == null) {
@@ -123,7 +123,7 @@ final class JavaFileFilterListener implements ChangeListener {
         }
         return result;
     }
-    synchronized static JavaFileFilterListener getDefault() {
+    static synchronized JavaFileFilterListener getDefault() {
         if (instance == null) {
             instance = new JavaFileFilterListener();
         }

@@ -70,19 +70,19 @@ public final class Manager {
     
     private static final Manager instance = new Manager();
 
-    private final List<Runnable> pendingTasks = new LinkedList<Runnable>();
+    private final List<Runnable> pendingTasks = new LinkedList<>();
     
     private TaskListener taskListener;
     
-    private final List<Runnable> currentTasks = new LinkedList<Runnable>();
+    private final List<Runnable> currentTasks = new LinkedList<>();
 
-    private final List<Runnable> stoppingTasks = new LinkedList<Runnable>();
+    private final List<Runnable> stoppingTasks = new LinkedList<>();
 
     private boolean searchWindowOpen = false;
     
     private Reference<OutputWriter> outputWriterRef;
 
-    private Map<Task, Runnable> tasksMap = new HashMap<Task, Runnable>();
+    private Map<Task, Runnable> tasksMap = new HashMap<>();
 
     private static final RequestProcessor RP =
             new RequestProcessor(Manager.class.getName()); // #186445
@@ -198,8 +198,8 @@ public final class Manager {
     /**
      * Notifies the result window of a search task's state change.
      *
-     * @param
-     * @param  changeType  constant describing what happened
+     * @param task
+     * @param changeType  constant describing what happened
      *                     - one of the EVENT_xxx constants
      */
     private void notifySearchTaskStateChange(final SearchTask task, final int changeType) {
@@ -213,7 +213,7 @@ public final class Manager {
             throw new IllegalStateException(ex);
         }
 
-        callOnWindowFromAWT(theMethod, new Object[]{task ,new Integer(changeType)});
+        callOnWindowFromAWT(theMethod, new Object[]{task, changeType});
     }
 
     /**
@@ -231,7 +231,7 @@ public final class Manager {
         } catch (NoSuchMethodException ex) {
             throw new IllegalStateException(ex);
         }
-        callOnWindowFromAWT(theMethod, new Object[]{sTask, new Integer(blockingTask)});
+        callOnWindowFromAWT(theMethod, new Object[]{sTask, blockingTask});
     }
     
     /**
@@ -280,12 +280,7 @@ public final class Manager {
              * to the EventQueue thread, we use invokeLater(...) and not
              * invokeAndWait(...).
              */
-            Mutex.EVENT.writeAccess(new Runnable() {
-                @Override
-                public void run() {
-                    task.getPanel().rescan();
-                }
-            });
+            Mutex.EVENT.writeAccess(task.getPanel()::rescan);
         }
     }
     
@@ -328,7 +323,7 @@ public final class Manager {
             throw new IllegalStateException(ex);
         }
         callOnWindowFromAWT(theMethod,
-                            new Object[] {task, title, task.getProblems(), Boolean.valueOf(att)},
+                            new Object[] {task, title, task.getProblems(), att},
                             false);
     }
     
@@ -367,15 +362,12 @@ public final class Manager {
     private void callOnWindowFromAWT(final Method method,
                                      final Object[] params,
                                      final boolean wait) {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                final ResultView resultViewInstance = ResultView.getInstance();
-                try {
-                    method.invoke(resultViewInstance, params);
-                } catch (Exception ex) {
-                    ErrorManager.getDefault().notify(ex);
-                }
+        Runnable runnable = () -> {
+            final ResultView resultViewInstance = ResultView.getInstance();
+            try {
+                method.invoke(resultViewInstance, params);
+            } catch (Exception ex) {
+                ErrorManager.getDefault().notify(ex);
             }
         };
         if (EventQueue.isDispatchThread()) {
@@ -407,10 +399,10 @@ public final class Manager {
         assert EventQueue.isDispatchThread();
         
         searchWindowOpen = false;
-        Runnable[] tasks = currentTasks.toArray(new Runnable[currentTasks.size()]);
-        for(int i=0;i < tasks.length;i++){
-            if (tasks[i] instanceof SearchTask){
-                SearchTask sTask = (SearchTask)tasks[i];
+        Runnable[] tasks = currentTasks.toArray(new Runnable[0]);
+        for (Runnable task : tasks) {
+            if (task instanceof SearchTask) {
+                SearchTask sTask = (SearchTask) task;
                 sTask.stop(true);
                 if (sTask.getDisplayer() instanceof ResultDisplayer) {
                     ResultDisplayer disp =
@@ -424,36 +416,36 @@ public final class Manager {
     /**
      */
     private synchronized void processNextPendingTask() {
-        Runnable[] pTasks = pendingTasks.toArray(new Runnable[pendingTasks.size()]);
-        for(int i=0; i<pTasks.length ;i++){
+        Runnable[] pTasks = pendingTasks.toArray(new Runnable[0]);
+        for (Runnable pTask : pTasks) {
             boolean haveReplaceRunning = haveRunningReplaceTask();
-            if (pTasks[i] instanceof SearchTask){
-                if (!stoppingTasks.isEmpty()){
-                    notifySearchPending((SearchTask)pTasks[i], SEARCHING);
+            if (pTask instanceof SearchTask) {
+                if (!stoppingTasks.isEmpty()) {
+                    notifySearchPending((SearchTask) pTask, SEARCHING);
                 } else if (haveReplaceRunning) {
-                    notifySearchPending((SearchTask)pTasks[i], REPLACING);
+                    notifySearchPending((SearchTask) pTask, REPLACING);
                 } else {
-                    if(pendingTasks.remove(pTasks[i])){
-                        startSearching((SearchTask)pTasks[i]);
+                    if (pendingTasks.remove(pTask)) {
+                        startSearching((SearchTask) pTask);
                     }
                 }
-            }else if (pTasks[i] instanceof ReplaceTask){
+            } else if (pTask instanceof ReplaceTask) {
                 if (!haveReplaceRunning && !haveRunningSearchTask()) {
-                    if(pendingTasks.remove(pTasks[i])){
-                        startReplacing((ReplaceTask)pTasks[i]);
+                    if (pendingTasks.remove(pTask)) {
+                        startReplacing((ReplaceTask) pTask);
                     }
                 }
-            }else if (pTasks[i] instanceof PrintDetailsTask){
-                if(pendingTasks.remove(pTasks[i])){
-                    startPrintingDetails((PrintDetailsTask)pTasks[i]);
+            } else if (pTask instanceof PrintDetailsTask) {
+                if (pendingTasks.remove(pTask)) {
+                    startPrintingDetails((PrintDetailsTask) pTask);
                 }
-            }else if (pTasks[i] instanceof CleanTask){
-                if(pendingTasks.remove(pTasks[i])){
-                    startCleaning((CleanTask)pTasks[i]);
+            } else if (pTask instanceof CleanTask) {
+                if (pendingTasks.remove(pTask)) {
+                    startCleaning((CleanTask) pTask);
                 }
-            }else{
+            } else {
                 //only 4 task types described above can be here
-                assert false : "Unexpected task: " + pTasks[i]; // #184603
+                assert false : "Unexpected task: " + pTask; // #184603
             }
         }
     }

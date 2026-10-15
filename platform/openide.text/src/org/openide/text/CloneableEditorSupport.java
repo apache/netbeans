@@ -59,7 +59,6 @@ import java.util.*;
 
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -67,10 +66,11 @@ import javax.swing.text.*;
 import javax.swing.undo.UndoableEdit;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
+import org.netbeans.modules.openide.text.AskEditorQuestions;
 import org.openide.util.Exceptions;
+import org.openide.util.Mutex;
 import org.openide.util.Parameters;
 import org.openide.util.UserCancelException;
-import org.openide.util.WeakSet;
 
 
 /** Support for associating an editor and a Swing {@link Document}.
@@ -141,10 +141,6 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
     /** Non default MIME type used to editing */
     private String mimeType;
 
-    /** Actions to show in toolbar */
-
-    //    private SystemAction[] actions;
-
     /** Listener to the document changes and all other changes */
     private Listener listener;
 
@@ -168,7 +164,7 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
     private Set<ChangeListener> listeners;
 
     /** last selected editor pane. */
-    private transient Reference<Pane> lastSelected[] = new Reference[] { null };
+    private transient Reference<Pane> lastSelected = null;
 
     /** The time of the last save to determine the real external modifications */
     private long lastSaveTime;
@@ -212,11 +208,12 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
     private boolean annotationsLoaded;
     
     private DocFilter docFilter;
+    private DocumentOpenClose.DocumentRef filteredDocRef;
     
     private final Object checkModificationLock = new Object();
 
     /** Classes that have been warned about overriding asynchronousOpen() */
-    private static final Set<Class<?>> warnedClasses = new WeakSet<Class<?>>();
+    private static final Set<Class<?>> warnedClasses = Collections.newSetFromMap(new WeakHashMap<>());
     
     /** Creates new CloneableEditorSupport attached to given environment.
     *
@@ -492,16 +489,20 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
         if (Boolean.TRUE.equals(d.getProperty("supportsModificationListener"))) { // NOI18N
             d.putProperty("modificationListener", getListener()); // NOI18N
         }
-
-        if (d instanceof AbstractDocument) {
-            AbstractDocument aDoc = (AbstractDocument) d;
-            DocumentFilter origFilter = aDoc.getDocumentFilter();
-            docFilter = new DocFilter(origFilter);
-            aDoc.setDocumentFilter(docFilter);
-        } else { // Put property for non-AD
-            DocumentFilter origFilter = (DocumentFilter) d.getProperty(DocumentFilter.class);
-            docFilter = new DocFilter(origFilter);
-            d.putProperty(DocumentFilter.class, docFilter);
+        DocFilter df = docFilter;
+        if (df == null || df.origDocument != openClose.docRef) {
+            if (d instanceof AbstractDocument) {
+                AbstractDocument aDoc = (AbstractDocument) d;
+                DocumentFilter origFilter = aDoc.getDocumentFilter();
+                docFilter = new DocFilter(origFilter, openClose.docRef);
+                aDoc.setDocumentFilter(docFilter);
+            } else { // Put property for non-AD
+                DocumentFilter origFilter = (DocumentFilter) d.getProperty(DocumentFilter.class);
+                docFilter = new DocFilter(origFilter, openClose.docRef);
+                d.putProperty(DocumentFilter.class, docFilter);
+            }
+        } else {
+            df.docFilterDisabled = false;
         }
         d.addDocumentListener(getListener());
     }
@@ -510,15 +511,9 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
         if (Boolean.TRUE.equals(d.getProperty("supportsModificationListener"))) { // NOI18N
             d.putProperty("modificationListener", null); // NOI18N
         }
-
-        if (docFilter != null) {
-            if (d instanceof AbstractDocument) {
-                AbstractDocument aDoc = (AbstractDocument) d;
-                aDoc.setDocumentFilter(docFilter.origFilter);
-            } else { // Put property for non-AD
-                d.putProperty(DocumentFilter.class, docFilter.origFilter);
-            }
-            docFilter = null;
+        DocFilter df = docFilter;
+        if (df != null) {
+            df.docFilterDisabled = true;
         }
         d.removeDocumentListener(getListener());
     }
@@ -659,6 +654,7 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
                 super(size);
             }
 
+            @Override
             public void writeTo(OutputStream os) throws IOException {
                 os.write(buf, 0, count);
             }
@@ -803,7 +799,7 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
      */
     public JEditorPane[] getOpenedPanes() {
         // expected in AWT only
-        assert SwingUtilities.isEventDispatchThread()
+        assert Mutex.EVENT.isReadAccess()
                 : "CloneableEditorSupport.getOpenedPanes() must be called from AWT thread only"; // NOI18N
         CloneableEditorSupport redirect = CloneableEditorSupportRedirector.findRedirect(this);
         if (redirect != null) {
@@ -832,8 +828,8 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
                 }
                 
                 if ((last == ed) ||
-                    ((last != null) && (last instanceof Component) && (ed instanceof Container)
-                    && ((Container) ed).isAncestorOf((Component) last))) {
+                    ((last instanceof Component) && (ed instanceof Container)
+                     && ((Container) ed).isAncestorOf((Component) last))) {
                     ll.addFirst(p);
                 } else {
                     ll.add(p);
@@ -843,7 +839,7 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
             }
         }
 
-        return ll.isEmpty() ? null : ll.toArray(new JEditorPane[ll.size()]);
+        return ll.isEmpty() ? null : ll.toArray(new JEditorPane[0]);
     }
 
     /**
@@ -856,7 +852,7 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
      */
     JEditorPane getRecentPane () {
         // expected in AWT only
-        assert SwingUtilities.isEventDispatchThread()
+        assert Mutex.EVENT.isReadAccess()
                 : "CloneableEditorSupport.getRecentPane must be called from AWT thread only"; // NOI18N
         CloneableEditorSupport redirect = CloneableEditorSupportRedirector.findRedirect(this);
         if (redirect != null) {
@@ -877,8 +873,8 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
             if (ed != null) {
                 JEditorPane p = null;
                 if ((last == ed) ||
-                    ((last != null) && (last instanceof Component) && (ed instanceof Container)
-                    && ((Container) ed).isAncestorOf((Component) last))) {
+                    ((last instanceof Component) && (ed instanceof Container)
+                     && ((Container) ed).isAncestorOf((Component) last))) {
                     if (ed instanceof CloneableEditor) {
                         if (((CloneableEditor) ed).isEditorPaneReady()) {
                             p = ed.getEditorPane();
@@ -921,13 +917,11 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
     /** Returns the lastly selected Pane or null
      */
     final Pane getLastSelected() {
-        Reference<Pane> r = lastSelected[0];
-
-        return (r == null) ? null : r.get();
+        return (lastSelected == null) ? null : lastSelected.get();
     }
 
     final void setLastSelected(Pane lastSelected) {
-        this.lastSelected[0] = new WeakReference<Pane>(lastSelected);
+        this.lastSelected = new WeakReference<>(lastSelected);
     }
 
     //
@@ -1123,10 +1117,11 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
 			
 			
 			SafeAWTAccess safe = new SafeAWTAccess();
-            if (SwingUtilities.isEventDispatchThread()) {
+            if (Mutex.EVENT.isReadAccess()) {
                 safe.run(); 
             } else {
-                SwingUtilities.invokeLater(safe); 
+                // safe.run only blocks for a certain time, unlike Mutex.EVENT.readAccess().
+                Mutex.EVENT.postReadRequest(safe::run);
                 try {
                     safe.waitForResult();
                 } catch (InterruptedException ex) {
@@ -1711,14 +1706,10 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
                     d.getProperty(javax.swing.text.Document.TitleProperty)
                 );
 
-            NotifyDescriptor nd = new NotifyDescriptor.Confirmation(msg, NotifyDescriptor.YES_NO_OPTION);
-
             reloadDialogOpened = true;
 
             try {
-                Object ret = DialogDisplayer.getDefault().notify(nd);
-
-                if (NotifyDescriptor.YES_OPTION.equals(ret)) {
+                if (AskEditorQuestions.askReloadDocument(msg)) {
                     doReload = true;
                 }
             } finally {
@@ -1762,7 +1753,7 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
             ChangeListener[] ls;
 
             synchronized (this) {
-                ls = listeners.toArray(new ChangeListener[listeners.size()]);
+                ls = listeners.toArray(new ChangeListener[0]);
             }
 
             for (ChangeListener l : ls) {
@@ -1939,7 +1930,7 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
             private boolean documentLocked = false;
 
             public void taskFinished(org.openide.util.Task t2) {
-                javax.swing.SwingUtilities.invokeLater(this);
+                Mutex.EVENT.postReadRequest(this);
                 t2.removeTaskListener(this);
             }
 
@@ -2252,7 +2243,7 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
                     // - post in AWT event thread because of possible dialog popup
                     // - acquire the write access before checking, so there is no
                     //   clash in-between and we're safe for potential reload.
-                    SwingUtilities.invokeLater(
+                    Mutex.EVENT.postReadRequest(
                         new Runnable() {
                             private boolean inRunAtomic;
                             
@@ -2328,14 +2319,17 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
     private final class DocFilter extends DocumentFilter {
         
         final DocumentFilter origFilter;
+        final Reference origDocument;
+        boolean docFilterDisabled;
         
-        DocFilter(DocumentFilter origFilter) {
+        DocFilter(DocumentFilter origFilter, Reference origDocument) {
             this.origFilter = origFilter;
+            this.origDocument = origDocument;
         }
 
         @Override
         public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
-            boolean origModified = checkModificationAllowed(offset);
+            boolean origModified = docFilterDisabled || checkModificationAllowed(offset);
             boolean success = false;
             try {
                 if (origFilter != null) {
@@ -2355,7 +2349,7 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
 
         @Override
         public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
-            boolean origModified = checkModificationAllowed(offset);
+            boolean origModified = docFilterDisabled || checkModificationAllowed(offset);
             boolean success = false;
             try {
                 if (origFilter != null) {
@@ -2375,7 +2369,7 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
 
         @Override
         public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
-            boolean origModified = checkModificationAllowed(offset);
+            boolean origModified = docFilterDisabled || checkModificationAllowed(offset);
             boolean success = false;
             try {
                 if (origFilter != null) {

@@ -84,8 +84,8 @@ public class IncorrectReturnStatement extends JsAstRule {
     }
 
     @NbBundle.Messages({
-        "JsIncorrectReturnStatementDesc=Incorrect return statemnt.",
-        "JsIncorrectReturnStatementHintDesc=Incorrect return statment"})
+        "JsIncorrectReturnStatementDesc=Incorrect return statement.",
+        "JsIncorrectReturnStatementHintDesc=Incorrect return statement"})
     @Override
     public String getDescription() {
         return Bundle.JsIncorrectReturnStatementDesc();

@@ -157,7 +157,7 @@ public class RunSeleniumAction extends AbstractAction implements ContextAwareAct
                 return null;
             }
         }
-        return fileObjects.toArray(new FileObject[fileObjects.size()]);
+        return fileObjects.toArray(new FileObject[0]);
     }
 
 }

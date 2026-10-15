@@ -281,7 +281,7 @@ public class Templates {
          * By default, the file extension is fixed to be the same as that of the template:
          * whatever is entered for the filename is taken to be a base name only.
          * In this mode, the GUI makes it possible to use an alternate extension: it
-         * simply checks for a file name containing a period (<samp>.</samp>) and
+         * simply checks for a file name containing a period (<em>.</em>) and
          * suppresses the automatic appending of the template's extension,
          * taking the entered filename as complete.
          * @return this builder

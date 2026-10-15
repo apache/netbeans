@@ -57,7 +57,7 @@
         </Comments>
         <Statements>
             <ExpressionStatement start='7' end='56'>
-                <StaticConstantAccess start='7' end='55'>
+                <StaticConstantAccess start='7' end='55' isDynamicName='false'>
                     <StaticMethodInvocation start='7' end='50'>
                         <StaticMethodInvocation start='7' end='37'>
                             <StaticMethodInvocation start='7' end='24'>

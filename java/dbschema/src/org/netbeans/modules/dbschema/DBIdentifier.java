@@ -24,7 +24,7 @@ package org.netbeans.modules.dbschema;
 */
 public final class DBIdentifier {
     private String name;
-    transient private String fullName = null;
+    private transient String fullName = null;
 
     /** Default constructor
      */

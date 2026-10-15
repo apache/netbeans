@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.io.InterruptedIOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -57,8 +58,8 @@ import org.openide.util.Utilities;
  */
 public final class TerminalLocalNativeProcess extends AbstractNativeProcess {
 
-    private final static java.util.logging.Logger log = Logger.getInstance();
-    private final static File dorunScript;
+    private static final java.util.logging.Logger log = Logger.getInstance();
+    private static final File dorunScript;
     private ExternalTerminal terminal;
     private File resultFile;
     private final OSFamily osFamily;
@@ -106,7 +107,7 @@ public final class TerminalLocalNativeProcess extends AbstractNativeProcess {
 
             final File workingDirectory = (wDir == null) ? new File(".") : new File(wDir); // NOI18N
 
-            pidFileFile = File.createTempFile("dlight", "termexec", hostInfo.getTempDirFile()).getAbsoluteFile(); // NOI18N
+            pidFileFile = Files.createTempFile(hostInfo.getTempDirFile().toPath(), "dlight", "termexec").toFile().getAbsoluteFile(); // NOI18N
             shFileFile = new File(pidFileFile.getPath() + ".sh"); // NOI18N
             resultFile = new File(shFileFile.getPath() + ".res"); // NOI18N
 

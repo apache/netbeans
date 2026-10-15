@@ -32,9 +32,13 @@ public class ProgressHandleWrapperTest extends NbTestCase {
 
     public void testNoProgress() {
         ProgressHandleWrapper w = new ProgressHandleWrapper(new ProgressHandleWrapper.ProgressHandleAbstraction() {
+            @Override
             public void start(int totalWork) {}
+            @Override
             public void progress(int currentWorkDone) {}
+            @Override
             public void progress(String message) {}
+            @Override
             public void finish() {}
         }, 1);
         

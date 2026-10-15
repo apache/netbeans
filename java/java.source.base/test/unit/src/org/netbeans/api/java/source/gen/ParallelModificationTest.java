@@ -126,7 +126,7 @@ public class ParallelModificationTest extends GeneratorTestBase {
             src.runModificationTask(task).commit();
             /*
             String res = TestUtilities.copyFileToString(testFile);
-            System.err.println(res);
+            //System.err.println(res);
             assertEquals(golden, res);
             */
             fail("Exception expected");

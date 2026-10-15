@@ -38,6 +38,7 @@ public final class NestedElementValue extends ElementValue {
 
     /**
      * Returns the value of this component, which is an Annotation.
+     * @return the value of this component, which is an Annotation
      */
     public final Annotation getNestedValue() {
 	return value;

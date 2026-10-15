@@ -120,7 +120,7 @@ final class PropertyDialogManager implements VetoableChangeListener, ActionListe
         if (env != null) {
             Object helpID = env.getFeatureDescriptor().getValue(ExPropertyEditor.PROPERTY_HELP_ID);
 
-            if ((helpID != null) && helpID instanceof String && (component != null) && component instanceof JComponent) {
+            if (helpID instanceof String && component instanceof JComponent) {
                 HelpCtx.setHelpIDString((JComponent) component, (String) helpID);
                 helpCtx = new HelpCtx((String) helpID);
             }

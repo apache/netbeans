@@ -105,7 +105,7 @@ public class SelectorUtils {
    * @param prj the project to select from
    * @return DataObject representing the selected bundle file or null
    */
-  static public DataObject selectBundle(Project prj, FileObject file) {
+  public static DataObject selectBundle(Project prj, FileObject file) {
     try {
       Node root = bundlesNode(prj, file, true);
 
@@ -150,7 +150,7 @@ public class SelectorUtils {
      * @param includeFiles specifies whether to show jar files or just folders
      * @return root <code>Node</code> 
      */
-    static public Node bundlesNode(Project prj, FileObject file, boolean includeFiles) {
+    public static Node bundlesNode(Project prj, FileObject file, boolean includeFiles) {
         List<Node> nodes = new LinkedList<Node>();
         if (prj == null) {
             prj = FileOwnerQuery.getOwner(file);
@@ -246,7 +246,7 @@ public class SelectorUtils {
    * @return root Node of source files from <code>prj</code> filtered
    * by <code>filter</code>
    **/
-  static public Node sourcesNode(Project prj, FilteredNode.NodeFilter filter) {
+  public static Node sourcesNode(Project prj, FilteredNode.NodeFilter filter) {
       Sources src = ProjectUtils.getSources(prj);
       SourceGroup[] srcgrps = src.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
       java.util.List<Node> nodes = new ArrayList<Node>();      
@@ -404,7 +404,7 @@ public class SelectorUtils {
 
     /** Setter for <code>text</code>. */
     public void setText (String s) {
-      setText(s);
+      text.setText(s);
     }
   } // End of nested class ObjectNameInputPanel
     

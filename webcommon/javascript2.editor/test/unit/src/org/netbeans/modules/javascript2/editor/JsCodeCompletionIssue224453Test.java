@@ -19,8 +19,8 @@
 package org.netbeans.modules.javascript2.editor;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -34,15 +34,15 @@ import org.openide.filesystems.FileUtil;
  * @author Petr Pisl
  */
 public class JsCodeCompletionIssue224453Test extends JsCodeCompletionBase {
-    
+
     public JsCodeCompletionIssue224453Test(String testName) {
         super(testName);
     }
-    
+
     public void testIssue224453_01() throws Exception {
         checkCompletion("testfiles/completion/issue224453/issue224453.js", "    $scope.v^", false);
     }
-    
+
     public void testIssue224453_02() throws Exception {
         checkCompletion("testfiles/completion/issue224453/issue224453.js", "                $scope.s^pecification.id + \"/v/\" + view);", false);
     }
@@ -50,19 +50,20 @@ public class JsCodeCompletionIssue224453Test extends JsCodeCompletionBase {
     public void testIssue224453_03() throws Exception {
         checkCompletion("testfiles/completion/issue224453/issue224453.js", "                $scope.specification.i^d + \"/v/\" + view);", false);
     }
-    
+
     public void testIssue224453_04() throws Exception {
         checkCompletion("testfiles/completion/issue224453/issue224453.js", "issue224453A.getTy^pe();", false);
     }
-    
-    
+
+
     @Override
     protected Map<String, ClassPath> createClassPathsForTest() {
-        List<FileObject> cpRoots = new LinkedList<FileObject>(ClasspathProviderImplAccessor.getJsStubs());
+        List<FileObject> cpRoots = new ArrayList<>(2);
+        cpRoots.add(ClasspathProviderImplAccessor.getJsStubs().get(0)); // Only use core stubs in unittests
         cpRoots.add(FileUtil.toFileObject(new File(getDataDir(), "/testfiles/completion/issue224453")));
         return Collections.singletonMap(
             JS_SOURCE_ID,
-            ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[cpRoots.size()]))
+            ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[0]))
         );
     }
 

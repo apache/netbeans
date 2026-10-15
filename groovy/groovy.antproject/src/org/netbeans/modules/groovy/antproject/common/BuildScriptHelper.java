@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.groovy.support.api.GroovyExtender;
@@ -80,7 +81,7 @@ public class BuildScriptHelper {
         URL xml65 = BuildScriptHelper.class.getClassLoader().getResource(resource);
         URLConnection connection = xml65.openConnection();
         connection.setUseCaches(false);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8")); // NOI18N
+        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
         try {
             List<String> lines65 = fo.asLines("UTF-8"); // NOI18N
             for (String line65 : lines65) {

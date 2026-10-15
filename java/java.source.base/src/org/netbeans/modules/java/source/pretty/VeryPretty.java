@@ -54,6 +54,7 @@ import com.sun.source.doctree.LinkTree;
 import com.sun.source.doctree.LiteralTree;
 import com.sun.source.doctree.ParamTree;
 import com.sun.source.doctree.ProvidesTree;
+import com.sun.source.doctree.RawTextTree;
 import com.sun.source.doctree.ReferenceTree;
 import com.sun.source.doctree.ReturnTree;
 import com.sun.source.doctree.SeeTree;
@@ -70,14 +71,16 @@ import com.sun.source.doctree.UsesTree;
 import com.sun.source.doctree.ValueTree;
 import com.sun.source.doctree.VersionTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.YieldTree;
 
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.*;
 import static com.sun.tools.javac.code.Flags.*;
 import com.sun.tools.javac.comp.Operators;
-import com.sun.tools.javac.main.JavaCompiler;
+import com.sun.tools.javac.parser.Tokens;
 import com.sun.tools.javac.tree.DCTree;
+import com.sun.tools.javac.tree.DCTree.DCDocComment;
 import com.sun.tools.javac.tree.DCTree.DCReference;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.*;
@@ -89,7 +92,6 @@ import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
@@ -105,7 +107,6 @@ import org.netbeans.api.java.source.Comment;
 import org.netbeans.api.java.source.Comment.Style;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.builder.CommentHandlerService;
 import org.netbeans.modules.java.source.query.CommentHandler;
 import org.netbeans.modules.java.source.query.CommentSet;
@@ -150,6 +151,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     private int fromOffset = -1;
     private int toOffset = -1;
     private boolean insideAnnotation = false;
+    private JavaTokenId docCommentKind;
 
     private final Map<Tree, ?> tree2Tag;
     private final Map<Tree, DocCommentTree> tree2Doc;
@@ -188,7 +190,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         out.addTrimObserver(this);
         this.indentSize = cs.getIndentSize();
         this.tree2Tag = tree2Tag;
-        this.tree2Doc = tree2Doc == null ? Collections.EMPTY_MAP : tree2Doc;
+        this.tree2Doc = tree2Doc == null ? Collections.<Tree, DocCommentTree>emptyMap(): tree2Doc;
         this.tag2Span = (Map<Object, int[]>) tag2Span;//XXX
         this.origText = origText;
         this.comments = CommentHandlerService.instance(context);
@@ -264,7 +266,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     public final void print(Name n) {
         if (n == null)
             return;
-	out.appendUtf8(n.getByteArray(), n.getByteOffset(), n.getByteLength());
+	out.append(n.toString());
     }
     
     private void print(javax.lang.model.element.Name n) {
@@ -305,7 +307,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         return TreeInfo.getStartPos(oldT);
     }
     public int endPos(JCTree t) {
-        return TreeInfo.getEndPos(t, diffContext.origUnit.endPositions);
+        return TreeInfo.getEndPos(t);
     }
     
     private java.util.List<? extends StatementTree> getStatements(Tree tree) {
@@ -408,15 +410,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             } else {
                 boolean saveComments = this.commentsEnabled;
                 this.commentsEnabled = printComments;
-                if (t.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
-                    visitSwitchExpression(t);
-                } 
-                else if (t.getKind().toString().equals(TreeShims.YIELD)) {
-                    visitYield(t);
-                }
-                else {
-                    t.accept(this);
-                }
+                t.accept(this);
                 this.commentsEnabled = saveComments;
             }
 
@@ -852,6 +846,13 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     }
 
     @Override
+    public void visitModuleImport(JCModuleImport tree) {
+        print("import module ");
+        print(tree.module);
+        print(';');
+    }
+
+    @Override
     public void visitClassDef(JCClassDecl tree) {
         JCClassDecl enclClassPrev = enclClass;
 	enclClass = tree;
@@ -1078,7 +1079,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     public void printVarInit(final JCVariableDecl tree) {
         int col = out.col;
         if (!ERROR.contentEquals(tree.name))
-            col -= tree.name.getByteLength();
+            col -= tree.name.length();
         wrapAssignOpTree("=", col, new Runnable() {
             @Override public void run() {
                 printNoParenExpr(tree.init);
@@ -1209,7 +1210,12 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 
     @Override
     public void visitLambda(JCLambda tree) {
-        print(cs.spaceWithinLambdaParens() && tree.params.nonEmpty() ? "( " : "(");
+        boolean useParens = cs.parensAroundSingularLambdaParam() ||
+                            tree.params.size() != 1 ||
+                            tree.paramKind != JCLambda.ParameterKind.IMPLICIT;
+        if (useParens) {
+            print(cs.spaceWithinLambdaParens() && tree.params.nonEmpty() ? "( " : "(");
+        }
         boolean oldPrintingMethodParams = printingMethodParams;
         printingMethodParams = true;
         suppressVariableType = tree.paramKind == JCLambda.ParameterKind.IMPLICIT;
@@ -1218,9 +1224,11 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
                   true);
         suppressVariableType = false;
         printingMethodParams = oldPrintingMethodParams;
-        if (cs.spaceWithinLambdaParens() && tree.params.nonEmpty())
-            needSpace();
-        print(')');
+        if (useParens) {
+            if (cs.spaceWithinLambdaParens() && tree.params.nonEmpty())
+                needSpace();
+            print(')');
+        }
         print(cs.spaceAroundLambdaArrow() ? " ->" : "->");
         if (tree.getBodyKind() == BodyKind.STATEMENT) {
             printBlock(tree.body, cs.getOtherBracePlacement(), cs.spaceAroundLambdaArrow());
@@ -1282,13 +1290,14 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 	print('}');
     }
 
-    public void visitSwitchExpression(Tree tree) {
+    @Override
+    public void visitSwitchExpression(JCSwitchExpression tree) {
         print("switch");
         print(cs.spaceBeforeSwitchParen() ? " (" : "(");
         if (cs.spaceWithinSwitchParens()) {
             print(' ');
         }
-        printNoParenExpr((JCTree) TreeShims.getExpressions(tree).get(0));
+        printNoParenExpr(tree.selector);
         print(cs.spaceWithinSwitchParens() ? " )" : ")");
         int bcol = out.leftMargin;
         switch (cs.getOtherBracePlacement()) {
@@ -1311,10 +1320,10 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             needSpace();
         }
         print('{');
-        if (!TreeShims.getCases(tree).isEmpty()) {
+        if (!tree.getCases().isEmpty()) {
             newline();
             ListBuffer<JCTree.JCCase> newTcases = new ListBuffer<JCTree.JCCase>();
-            for (CaseTree t : TreeShims.getCases(tree)) {
+            for (CaseTree t : tree.getCases()) {
                 newTcases.append((JCTree.JCCase) t);
             }
             printStats(newTcases.toList());
@@ -1327,20 +1336,24 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     public void visitCase(JCCase tree) {
         int old = cs.indentCasesFromSwitch() ? indent() : out.leftMargin;
         toLeftMargin();
-        java.util.List<JCExpression> patterns = CasualDiff.getCasePatterns(tree);
-	if (patterns.isEmpty()) {
-	    print("default");
-	} else {
-	    print("case ");
+        java.util.List<JCCaseLabel> labels = tree.labels;
+        if (labels.size() == 1 && labels.get(0).hasTag(Tag.DEFAULTCASELABEL)) {
+            print("default");
+        } else {
+            print("case ");
             String sep = "";
-            for (JCExpression pat : patterns) {
+            for (JCTree lab : labels) {
                 print(sep);
-                printNoParenExpr(pat);
+                printNoParenExpr(lab);
                 sep = ", "; //TODO: space or not should be a configuration setting
             }
-	}
-        Object caseKind = CasualDiff.getCaseKind(tree);
-        if (caseKind == null || !String.valueOf(caseKind).equals("RULE")) {
+            if (tree.getGuard() != null) {
+                needSpace();
+                print("when ");
+                print(tree.getGuard());
+            }
+        }
+        if (tree.getCaseKind() != CaseTree.CaseKind.RULE) {
             print(':');
             newline();
             indent();
@@ -1348,7 +1361,12 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             undent(old);
         } else {
             print(" -> "); //TODO: configure spaces!
-            printStat(tree.stats.head);
+            if (tree.stats.head.getKind() == Kind.YIELD) {
+                print((JCTree) ((YieldTree) tree.stats.head).getValue());
+                print(";");
+            } else {
+                printStat(tree.stats.head);
+            }
             undent(old);
         }
     }
@@ -1492,19 +1510,16 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     @Override
     public void visitBreak(JCBreak tree) {
         print("break");
-        if (TreeShims.getValue(tree) != null) {
-            needSpace();
-            print((JCTree) TreeShims.getValue(tree));
-        } else if (tree.getLabel() != null) {
+        if (tree.getLabel() != null) {
             needSpace();
             print(tree.getLabel());
         }
         print(';');
     }
 
-    public void visitYield(Tree tree) {
+    public void visitYield(JCYield tree) {
         print("yield");
-        ExpressionTree expr = TreeShims.getYieldValue(tree);
+        ExpressionTree expr = tree.getValue();
         if (expr != null) {
             needSpace();
             print((JCTree) expr);
@@ -1805,7 +1820,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             needSpace();
         if (diffContext.origUnit != null && TreePath.getPath(diffContext.origUnit, tree.expr) != null) {
             int a = TreeInfo.getStartPos(tree.expr);
-            int b = TreeInfo.getEndPos(tree.expr, diffContext.origUnit.endPositions);
+            int b = TreeInfo.getEndPos(tree.expr);
             print(diffContext.origText.substring(a, b));
             return;
         }
@@ -1830,7 +1845,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     public void visitTypeTest(JCInstanceOf tree) {
 	printExpr(tree.expr, TreeInfo.ordPrec);
 	print(" instanceof ");
-	print(tree.clazz);
+	print(CasualDiff.getPattern(tree));
     }
 
     @Override
@@ -1858,16 +1873,18 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         long start, end;
         if (   diffContext != null
             && diffContext.origUnit != null
-            && (start = diffContext.trees.getSourcePositions().getStartPosition(diffContext.origUnit, tree)) >= 0 //#137564
-            && (end = diffContext.trees.getSourcePositions().getEndPosition(diffContext.origUnit, tree)) >= 0
+            && (start = diffContext.trees.getSourcePositions().getStartPosition(tree)) >= 0 //#137564
+            && (end = diffContext.getEndPosition(diffContext.origUnit, tree)) >= 0
+            && diffContext.isPartOfCompilationUnit(diffContext.origUnit, tree)
             && origText != null) {
             print(origText.substring((int) start, (int) end));
             return ;
         }
         if (   diffContext != null
             && diffContext.mainUnit != null
-            && (start = diffContext.trees.getSourcePositions().getStartPosition(diffContext.mainUnit, tree)) >= 0 //#137564
-            && (end = diffContext.trees.getSourcePositions().getEndPosition(diffContext.mainUnit, tree)) >= 0
+            && (start = diffContext.trees.getSourcePositions().getStartPosition(tree)) >= 0 //#137564
+            && (end = diffContext.getEndPosition(diffContext.mainUnit, tree)) >= 0
+            && diffContext.isPartOfCompilationUnit(diffContext.mainUnit, tree)
             && diffContext.mainCode != null) {
             print(diffContext.mainCode.substring((int) start, (int) end));
             return ;
@@ -1888,12 +1905,14 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 	  case CHAR:
 	    print("\'" +
 		  quote(
-		  String.valueOf((char) ((Number) tree.value).intValue()), '"') +
+		  String.valueOf((char) ((Number) tree.value).intValue()), '"', true) +
 		  "\'");
 	    break;
 	   case CLASS:
              if (tree.value instanceof String) {
-                 print("\"" + quote((String) tree.value, '\'') + "\"");
+                 print("\"");
+                 print(quote((String) tree.value, '\'', false));
+                 print("\"");
              } else if (tree.value instanceof String[]) {
                  int indent = out.col;
                  print("\"\"\"");
@@ -1907,7 +1926,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
                              print('\\');
                              print('"');
                          } else if (line.charAt(c) != '\'' && line.charAt(c) != '"') {
-                             print(Convert.quote(line.charAt(c)));
+                             print(Convert.quote(line.charAt(c), false));
                          } else {
                              print(line.charAt(c));
                          }
@@ -1932,12 +1951,12 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 	}
     }
 
-    private static String quote(String val, char keep) {
+    private static String quote(String val, char keep, boolean charContext) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < val.length(); i++) {
             char c = val.charAt(i);
             if (c != keep) {
-                sb.append(Convert.quote(c));
+                sb.append(Convert.quote(c, charContext));
             } else {
                 sb.append(c);
             }
@@ -2054,6 +2073,23 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     }
 
     @Override
+    public void visitBindingPattern(JCBindingPattern tree) {
+        print((JCTree) tree.var.vartype);
+        print(' ');
+        print((Name) tree.var.name);
+    }
+
+    @Override
+    public void visitDefaultCaseLabel(JCDefaultCaseLabel tree) {
+        print("default");
+    }
+
+    @Override
+    public void visitConstantCaseLabel(JCConstantCaseLabel tree) {
+        printExpr(tree.expr);
+    }
+
+    @Override
     public void visitLetExpr(LetExpr tree) {
 	print("(let " + tree.defs + " in " + tree.expr + ")");
     }
@@ -2065,8 +2101,28 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 
     @Override
     public void visitTree(JCTree tree) {
-	print("(UNKNOWN: " + tree + ")");
-	newline();
+        print("(UNKNOWN: " + tree + ")");
+        newline();
+    }
+
+    @Override
+    public void visitPatternCaseLabel(JCPatternCaseLabel tree) {
+        print(tree.pat);
+    }
+
+    @Override
+    public void visitRecordPattern(JCRecordPattern tree) {
+        print(tree.deconstructor);
+        print("(");
+        Iterator<JCPattern> it = tree.nested.iterator();
+        while (it.hasNext()) {
+            JCPattern pattern = it.next();
+            doAccept(pattern, true);
+            if (it.hasNext()) {
+                print(", ");
+            }
+        }
+        print(")");
     }
 
     /**************************************************************************
@@ -2199,7 +2255,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
                 if(before) {
                     newline();
                     toLeftMargin();
-                    print(" * ");
+                    printDocCommentLineStartText();
                 }
                 break;
             case DOC_COMMENT:
@@ -2285,10 +2341,20 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 
     @Override
     public Void visitDocComment(DocCommentTree node, Void p) {
-        print("/**");
-        newline();
-        toLeftMargin();
-        print(" * ");
+        boolean hasMarkdown =
+                node instanceof DCDocComment c &&
+                c.comment.getStyle() == Tokens.Comment.CommentStyle.JAVADOC_LINE;
+
+        if (!hasMarkdown) {
+            print("/**");
+            newline();
+            toLeftMargin();
+            docCommentKind = JavaTokenId.JAVADOC_COMMENT;
+        } else {
+            docCommentKind = JavaTokenId.JAVADOC_COMMENT_LINE_RUN;
+        }
+
+        printDocCommentLineStartText();
         for (DocTree docTree : node.getFirstSentence()) {
             doAccept((DCTree)docTree);
         }
@@ -2298,12 +2364,16 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         for (DocTree docTree : node.getBlockTags()) {
             newline();
             toLeftMargin();
-            print(" * ");
+            printDocCommentLineStartText();
             doAccept((DCTree)docTree);
         }
-        newline();
-        toLeftMargin();
-        print(" */");
+
+        if (!hasMarkdown) {
+            newline();
+            toLeftMargin();
+            print(" */");
+        }
+
         return null;
     }
 
@@ -2565,6 +2635,12 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     }
 
     @Override
+    public Void visitRawText(RawTextTree node, Void p) {
+        print(node.getContent());
+        return null;
+    }
+
+    @Override
     public Void visitThrows(ThrowsTree node, Void p) {
         printTagName(node);
         needSpace();
@@ -2645,6 +2721,18 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         return null;
     }
 
+    public void printDocCommentLineStartText() {
+        if (docCommentKind == JavaTokenId.JAVADOC_COMMENT_LINE_RUN) {
+            print("/// ");
+        } else {
+            print(" * ");
+        }
+    }
+
+    public void setDocCommentKind(JavaTokenId docCommentKind) {
+        this.docCommentKind = docCommentKind;
+    }
+
     private final class Linearize extends ErrorAwareTreeScanner<Boolean, java.util.List<Tree>> {
         @Override
         public Boolean scan(Tree node, java.util.List<Tree> p) {
@@ -2672,7 +2760,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             }
             Object tag = tree2Tag.get(p.remove(0));
             if (tag != null) {
-                tag2Span.put(tag, new int[] {out.length() + initialOffset + (int) sp.getStartPosition(fake, node), out.length() + initialOffset + (int) sp.getEndPosition(fake, node)});
+                tag2Span.put(tag, new int[] {out.length() + initialOffset + (int) sp.getStartPosition(node), out.length() + initialOffset + (int) sp.getEndPosition(node)});
             }
             return super.scan(node, p);
         }
@@ -2692,7 +2780,6 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             ClasspathInfo cpInfo = ClasspathInfo.create(JavaPlatformManager.getDefault().getDefaultPlatform().getBootstrapLibraries(), empty, empty);
             JavacTaskImpl javacTask = JavacParser.createJavacTask(cpInfo, null, null, null, null, null, null, null, Arrays.asList(FileObjects.memoryFileObject("", "Scratch.java", code)));
             com.sun.tools.javac.util.Context ctx = javacTask.getContext();
-            JavaCompiler.instance(ctx).genEndPos = true;
             CompilationUnitTree tree = javacTask.parse().iterator().next(); //NOI18N
             SourcePositions sp = JavacTrees.instance(ctx).getSourcePositions();
             ClassTree clazz = (ClassTree) tree.getTypeDecls().get(0);
@@ -2726,7 +2813,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         
         str = Reformatter.reformat(str + " class A{}", cs, cs.getRightMargin() - col);
 
-        str = str.trim().replaceAll("\n", "\n" + whitespace(col));
+        str = str.trim().replace("\n", "\n" + whitespace(col));
 
         try {
             adjustSpans(annotations, str);
@@ -2743,37 +2830,41 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     private void printAnnotations(List<JCAnnotation> annotations) {
         if (annotations.isEmpty()) return ;
 
-        if (printAnnotationsFormatted(annotations)) {
-            if (!printingMethodParams)
-                toColExactly(out.leftMargin);
-            else
-                out.needSpace();
+        if (!printingMethodParams && printAnnotationsFormatted(annotations)) {
+            toColExactly(out.leftMargin);
             return ;
         }
         
         while (annotations.nonEmpty()) {
 	    printNoParenExpr(annotations.head);
             if (annotations.tail != null && annotations.tail.nonEmpty()) {
-                switch(cs.wrapAnnotations()) {
-                case WRAP_IF_LONG:
-                    int rm = cs.getRightMargin();
-                    if (widthEstimator.estimateWidth(annotations.tail.head, rm - out.col) + out.col + 1 <= rm) {
+                if (printingMethodParams) {
+                    print(' ');
+                } else {
+                    switch(cs.wrapAnnotations()) {
+                    case WRAP_IF_LONG:
+                        int rm = cs.getRightMargin();
+                        if (widthEstimator.estimateWidth(annotations.tail.head, rm - out.col) + out.col + 1 <= rm) {
+                            print(' ');
+                            break;
+                        }
+                    case WRAP_ALWAYS:
+                        newline();
+                        toColExactly(out.leftMargin);
+                        break;
+                    case WRAP_NEVER:
                         print(' ');
                         break;
                     }
-                case WRAP_ALWAYS:
-                    newline();
-                    toColExactly(out.leftMargin);
-                    break;
-                case WRAP_NEVER:
-                    print(' ');
-                    break;
                 }
             } else {
                 if (!printingMethodParams)
                     toColExactly(out.leftMargin);
             }
             annotations = annotations.tail;
+        }
+        if (printingMethodParams) {
+            out.needSpace();
         }
     }
 
@@ -2794,22 +2885,14 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 
     public void printFlags(long flags, boolean addSpace) {
 	print(flagNames(flags & ~INTERFACE & ~ANNOTATION & ~ENUM));
-        if ((flags & StandardFlags) != 0) {
+        if ((flags & (StandardFlags | Flags.SEALED | Flags.NON_SEALED)) != 0) {
             if (cs.placeNewLineAfterModifiers())
                 toColExactly(out.leftMargin);
             else if (addSpace)
 	        needSpace();
         }
     }
-    
-    private static final String[] flagLowerCaseNames = new String[Flag.values().length];
-    
-    static {
-        for (Flag flag : Flag.values()) {
-            flagLowerCaseNames[flag.ordinal()] = flag.name().toLowerCase(Locale.ENGLISH);
-        }
-    }
-    
+
     /**
      * Workaround for defect #239258. Prints flag names converted to lowercase in ENGLISH locale to 
      * avoid weird Turkish I > i-without-dot-above conversion.
@@ -2821,9 +2904,10 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         flags = flags & Flags.ExtendedStandardFlags;
         StringBuilder buf = new StringBuilder();
         String sep = ""; // NOI18N
-        for (Flag flag : Flags.asFlagSet(flags)) {
+        for (FlagsEnum flag : Flags.asFlagSet(flags)) {
             buf.append(sep);
-            String fname = flagLowerCaseNames[flag.ordinal()];
+            // Since JDK26 javac FlagsEnum#toString is usable for printing
+            String fname = flag.toString();
             buf.append(fname);
             sep = " "; // NOI18N
         }
@@ -2864,8 +2948,13 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         int lastGroup = -1;
         for (JCTree importStat : imports) {
             if (importGroups != null) {
-                Name name = fullName(((JCImport)importStat).qualid);
-                int group = name != null ? importGroups.getGroupId(name.toString(), ((JCImport)importStat).staticImport) : -1;
+                int group;
+                if (importStat instanceof JCImport imp) {
+                    Name name = fullName(imp.qualid);
+                    group = name != null ? importGroups.getGroupId(name.toString(), imp.staticImport) : -1;
+                } else {
+                    group = -1;
+                }
                 if (lastGroup >= 0 && lastGroup != group)
                     blankline();
                 lastGroup = group;
@@ -2968,7 +3057,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     }
 
     private void printIndentedStat(JCTree tree, BracesGenerationStyle redundantBraces, boolean spaceBeforeLeftBrace, WrapStyle wrapStat) {
-        if (fromOffset >= 0 && toOffset >= 0 && (TreeInfo.getStartPos(tree) < fromOffset || TreeInfo.getEndPos(tree, diffContext.origUnit.endPositions) > toOffset))
+        if (fromOffset >= 0 && toOffset >= 0 && (TreeInfo.getStartPos(tree) < fromOffset || TreeInfo.getEndPos(tree) > toOffset))
             redundantBraces = BracesGenerationStyle.LEAVE_ALONE;
 	switch(redundantBraces) {
         case GENERATE:
@@ -3296,7 +3385,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
                     print("/**");
                     newline();
                     toLeftMargin();
-                    print(" * ");
+                    printDocCommentLineStartText();
             }
         }
         if (!lines.isEmpty())
@@ -3306,7 +3395,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             toLeftMargin();
             CommentLine line = lines.removeFirst();
             if (rawBody)
-                print(" * ");
+                printDocCommentLineStartText();
             else if (line.body.charAt(line.startPos) == '*')
                 print(' ');
             line.print(out.col);
@@ -3460,7 +3549,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 	case SELECT:
             JCFieldAccess sel = (JCFieldAccess)tree;
 	    Name sname = fullName(sel.selected);
-	    return sname != null && sname.getByteLength() > 0 ? sname.append('.', sel.name) : sel.name;
+	    return sname != null && !sname.isEmpty() ? sname.append('.', sel.name) : sel.name;
 	default:
 	    return null;
 	}

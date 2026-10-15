@@ -60,7 +60,7 @@ public final class CustomFoldManager implements FoldManager, Runnable {
     private int minUpdateMarkOffset = Integer.MAX_VALUE;
     private int maxUpdateMarkOffset = -1;
     private List removedFoldList;
-    private HashMap customFoldId = new HashMap();
+    private HashMap<String, Boolean> customFoldId = new HashMap<>();
 
     private static final RequestProcessor RP = new RequestProcessor(CustomFoldManager.class.getName(),
             1, false, false);
@@ -188,7 +188,7 @@ public final class CustomFoldManager implements FoldManager, Runnable {
                 Fold removedFold = (Fold)removedFoldList.get(i);
                 FoldMarkInfo startMark = (FoldMarkInfo)getOperation().getExtraInfo(removedFold);
                 if (startMark.getId() != null)
-                    customFoldId.put(startMark.getId(), Boolean.valueOf(removedFold.isCollapsed())); // remember the last fold's state before remove
+                    customFoldId.put(startMark.getId(), removedFold.isCollapsed()); // remember the last fold's state before remove
                 FoldMarkInfo endMark = startMark.getPairMark(); // get prior releasing
                 if (getOperation().isStartDamaged(removedFold)) { // start mark area was damaged
                     startMark.release(true, transaction); // forced remove
@@ -481,9 +481,9 @@ public final class CustomFoldManager implements FoldManager, Runnable {
                     if (matcher.group(2) != null) { // fold's id exists
                         Boolean collapsed = (Boolean)customFoldId.get(matcher.group(2));
                         if (collapsed != null)
-                            state = collapsed.booleanValue(); // fold's state is already known from the past
+                            state = collapsed; // fold's state is already known from the past
                         else
-                            customFoldId.put(matcher.group(2), Boolean.valueOf(state));
+                            customFoldId.put(matcher.group(2), state);
                     }
                     return new FoldMarkInfo(true, token.offset(null), matcher.end(0), matcher.group(2), state, matcher.group(4)); // NOI18N
                 } else { // fold's end mark found

@@ -40,9 +40,10 @@ import org.netbeans.modules.j2ee.dd.api.web.WebApp;
 import org.netbeans.modules.j2ee.metadata.model.api.MetadataModel;
 import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.web.jsf.api.ConfigurationUtils;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
 import org.netbeans.modules.web.jsf.api.metamodel.JsfModel;
 import org.netbeans.modules.web.jsf.api.metamodel.JsfModelProvider;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.api.NamespaceUtils;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.ErrorManager;
@@ -67,6 +68,9 @@ public class JSFUtils {
     public static final String DEFAULT_JSF_1_1_NAME = "jsf1102";  //NOI18N
     public static final String DEFAULT_JSF_1_2_NAME = "jsf12";    //NOI18N
     public static final String DEFAULT_JSF_2_0_NAME = "jsf20";    //NOI18N
+    public static final String DEFAULT_JSF_3_0_NAME = "jsf30";    //NOI18N
+    public static final String DEFAULT_JSF_4_0_NAME = "jsf40";    //NOI18N
+    public static final String DEFAULT_JSF_4_1_NAME = "jsf41";    //NOI18N
 
     // the name of jstl library
     public static final String DEFAULT_JSTL_1_1_NAME = "jstl11";  //NOI18N
@@ -74,18 +78,28 @@ public class JSFUtils {
     // fully qualified name of Java classes from the JavaEE API
     public static final String EJB_STATELESS = "javax.ejb.Stateless"; //NOI18N
     public static final String FACES_EXCEPTION = "javax.faces.FacesException"; //NOI18N
+    public static final String JAKARTAEE_EJB_STATELESS = "jakarta.ejb.Stateless"; //NOI18N
+    public static final String JAKARTAEE_FACES_EXCEPTION = "jakarta.faces.FacesException"; //NOI18N
     public static final String JSF_1_2__API_SPECIFIC_CLASS = "javax.faces.application.StateManagerWrapper"; //NOI18N
     public static final String JSF_2_0__API_SPECIFIC_CLASS = "javax.faces.application.ProjectStage"; //NOI18N
     public static final String JSF_2_1__API_SPECIFIC_CLASS = "javax.faces.component.TransientStateHelper"; //NOI18N
     public static final String JSF_2_2__API_SPECIFIC_CLASS = "javax.faces.flow.Flow"; //NOI18N
     public static final String JSF_2_3__API_SPECIFIC_CLASS = "javax.faces.push.PushContext"; //NOI18N
+    public static final String JSF_3_0__API_SPECIFIC_CLASS = "jakarta.faces.push.PushContext"; //NOI18N
+    public static final String JSF_4_0__API_SPECIFIC_CLASS = "jakarta.faces.lifecycle.ClientWindowScoped"; //NOI18N
+    public static final String JSF_4_1__API_SPECIFIC_CLASS = "jakarta.faces.convert.UUIDConverter"; //NOI18N
     public static final String MYFACES_SPECIFIC_CLASS = "org.apache.myfaces.webapp.StartupServletContextListener"; //NOI18N
 
-    //constants for web.xml
+    //constants for web.xml (Java EE)
     protected static final String FACELETS_SKIPCOMMNETS = "javax.faces.FACELETS_SKIP_COMMENTS";
     protected static final String FACELETS_DEVELOPMENT = "facelets.DEVELOPMENT";
     protected static final String FACELETS_DEFAULT_SUFFIX = "javax.faces.DEFAULT_SUFFIX";
     public static final String FACES_PROJECT_STAGE = "javax.faces.PROJECT_STAGE";
+    
+    //constants for web.xml (Jakarta EE)
+    protected static final String FACELETS_SKIPCOMMNETS_JAKARTAEE = "jakarta.faces.FACELETS_SKIP_COMMENTS";
+    protected static final String FACELETS_DEFAULT_SUFFIX_JAKARTAEE = "jakarta.faces.DEFAULT_SUFFIX";
+    public static final String FACES_PROJECT_STAGE_JAKARTAEE = "jakarta.faces.PROJECT_STAGE";
 
     // usages logger
     private static final Logger USG_LOGGER = Logger.getLogger("org.netbeans.ui.metrics.web.jsf"); // NOI18N
@@ -177,7 +191,7 @@ public class JSFUtils {
         }
 
         // create new library and regist in the Library Manager.
-        Map<String, List<URL>> content = new HashMap<String, List<URL>>();
+        Map<String, List<URL>> content = new HashMap<>();
         content.put("classpath", urls); //NOI18N
         LibraryManager.getDefault().createLibrary("j2se", libraryName, libraryName, libraryName, content); //NOI18N
         return true;
@@ -236,7 +250,7 @@ public class JSFUtils {
     }
 
     /**
-     * Use {@link JSFVersion#get(org.netbeans.modules.web.api.webmodule.WebModule, boolean) } instead.
+     * Use {@link JsfVersionUtils#get(org.netbeans.modules.web.api.webmodule.WebModule, boolean) } instead.
      */
     @Deprecated
     public static boolean isJSF12Plus(WebModule webModule, boolean includingPlatformCP) {
@@ -244,7 +258,7 @@ public class JSFUtils {
     }
 
     /**
-     * Use {@link JSFVersion#get(org.netbeans.modules.web.api.webmodule.WebModule, boolean) } instead.
+     * Use {@link JsfVersionUtils#get(org.netbeans.modules.web.api.webmodule.WebModule, boolean) } instead.
      */
     @Deprecated
     public static boolean isJSF20Plus(WebModule webModule, boolean includingPlatformCP) {
@@ -252,7 +266,7 @@ public class JSFUtils {
     }
 
     /**
-     * Use {@link JSFVersion#get(org.netbeans.modules.web.api.webmodule.WebModule, boolean) } instead.
+     * Use {@link JsfVersionUtils#get(org.netbeans.modules.web.api.webmodule.WebModule, boolean) } instead.
      */
     @Deprecated
     public static boolean isJSF21Plus(WebModule webModule, boolean includingPlatformCP) {
@@ -260,7 +274,7 @@ public class JSFUtils {
     }
 
     /**
-     * Use {@link JSFVersion#get(org.netbeans.modules.web.api.webmodule.WebModule, boolean) } instead.
+     * Use {@link JsfVersionUtils#get(org.netbeans.modules.web.api.webmodule.WebModule, boolean) } instead.
      */
     @Deprecated
     public static boolean isJSF22Plus(WebModule webModule, boolean includingPlatformCP) {
@@ -268,7 +282,7 @@ public class JSFUtils {
     }
 
     /**
-     * Use {@link JSFVersion#get(org.netbeans.modules.web.api.webmodule.WebModule, boolean) } instead.
+     * Use {@link JsfVersionUtils#get(org.netbeans.modules.web.api.webmodule.WebModule, boolean) } instead.
      */
     @Deprecated
     private static boolean isJSFPlus(WebModule webModule, boolean includingPlatformCP, String versionSpecificClass) {
@@ -311,6 +325,16 @@ public class JSFUtils {
         if (wm != null) {
             Profile profile = wm.getJ2eeProfile();
             return (profile == Profile.JAVA_EE_5);
+        }
+        return false;
+    }
+    
+    public static boolean isJakartaEE9Plus(TemplateWizard wizard) {
+        Project project = Templates.getProject(wizard);
+        WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
+        if (wm != null) {
+            Profile profile = wm.getJ2eeProfile();
+            return profile.isAtLeast(Profile.JAKARTA_EE_9_WEB);
         }
         return false;
     }
@@ -384,7 +408,8 @@ public class JSFUtils {
         return cp.findResource(JSFUtils.MYFACES_SPECIFIC_CLASS.replace('.', '/') + ".class") != null || //NOI18N
                 cp.findResource("com/sun/facelets/Facelet.class") != null || //NOI18N
                 cp.findResource("com/sun/faces/facelets/Facelet.class") != null || // NOI18N
-                cp.findResource("javax/faces/view/facelets/FaceletContext.class") != null; //NOI18N
+                cp.findResource("javax/faces/view/facelets/FaceletContext.class") != null || //NOI18N
+                cp.findResource("jakarta/faces/view/facelets/FaceletContext.class") != null; //NOI18N
     }
 
     /**
@@ -407,9 +432,11 @@ public class JSFUtils {
      *         {@link NamespaceUtils#JCP_ORG_LOCATION} otherwise
      */
     public static String getNamespaceDomain(WebModule webModule) {
-        JSFVersion version = webModule != null ? JSFVersion.forWebModule(webModule) : null;
+        JsfVersion version = webModule != null ? JsfVersionUtils.forWebModule(webModule) : null;
         String nsLocation = NamespaceUtils.SUN_COM_LOCATION;
-        if (version != null && version.isAtLeast(JSFVersion.JSF_2_2)) {
+        if (version != null && version.isAtLeast(JsfVersion.JSF_4_0)) {
+            nsLocation = NamespaceUtils.JAKARTA_ORG_LOCATION;
+        } else if (version != null && version.isAtLeast(JsfVersion.JSF_2_2)) {
             nsLocation = NamespaceUtils.JCP_ORG_LOCATION;
         }
         return nsLocation;

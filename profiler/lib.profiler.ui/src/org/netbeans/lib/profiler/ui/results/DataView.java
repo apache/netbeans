@@ -72,7 +72,7 @@ public abstract class DataView extends JPanel {
         Collection<? extends PopupCustomizer> customizers = Lookup.getDefault().lookupAll(PopupCustomizer.class);
         if (customizers.isEmpty()) return null;
         
-        List<JMenuItem> menuItems = new ArrayList(customizers.size());
+        List<JMenuItem> menuItems = new ArrayList<>(customizers.size());
         for (PopupCustomizer customizer : customizers) {
             JMenuItem[] items = customizer.getMenuItems(invoker, this, value, userValue);
             if (items != null) Collections.addAll(menuItems, items);
@@ -285,7 +285,7 @@ public abstract class DataView extends JPanel {
     }
     
     
-    public static abstract class PopupCustomizer {
+    public abstract static class PopupCustomizer {
         
         public abstract JMenuItem[] getMenuItems(JComponent invoker, DataView source, Object value, ClientUtils.SourceCodeSelection userValue);
         

@@ -71,7 +71,7 @@ public abstract class ParserManager {
     /**
      * Returns state of parser.
      * 
-     * @retrun a state of parser
+     * @return a state of parser
      */
     public abstract State getState ();
     
@@ -79,7 +79,7 @@ public abstract class ParserManager {
      * Returns AST tree root node.
      * 
      * @throws in the case of errors in document
-     * @retrun AST tree root node
+     * @return AST tree root node
      */
     public abstract ASTNode getAST () throws ParseException;
     

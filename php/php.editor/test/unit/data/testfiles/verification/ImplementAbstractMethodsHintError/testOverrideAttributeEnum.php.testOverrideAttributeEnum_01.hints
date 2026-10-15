@@ -1,0 +1,4 @@
+enum Enum1 implements TestInterface {
+     -----
+HINT:\Test\Override\Attribute\Enum1\Enum1 is not abstract and does not override abstract method  abstractPrivateStaticTraitMethod() in \Test\Override\Attribute\Enum1\AbstractTrait
+FIX:Implement All Abstract Methods

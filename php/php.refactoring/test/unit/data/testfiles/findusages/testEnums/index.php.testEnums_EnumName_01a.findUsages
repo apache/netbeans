@@ -1,0 +1,19 @@
+Display text: enum <b>EnumA</b> {
+File name: index.php
+Name: EnumA
+Position: BEGIN: 834 END: 839
+
+Display text: use A\<b>EnumA</b>;
+File name: index.php
+Name: EnumA
+Position: BEGIN: 1251 END: 1256
+
+Display text: public const CONSTANT_B = <b>EnumA</b>::CONSTANT_A;
+File name: index.php
+Name: EnumA
+Position: BEGIN: 1359 END: 1364
+
+Display text: case C = <b>EnumA</b>::Case1;
+File name: index.php
+Name: EnumA
+Position: BEGIN: 1428 END: 1433

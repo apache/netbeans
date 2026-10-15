@@ -1,0 +1,921 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n
+token #2 PHP_COMMENT_START /*
+token #3 PHP_COMMENT \n * Licensed to the Apache Software Foundation (ASF) under one\n * or more contributor license agreements.  See the NOTICE file\n * distributed with this work for additional information\n * regarding copyright ownership.  The ASF licenses this file\n * to you under the Apache License, Version 2.0 (the\n * "License"); you may not use this file except in compliance\n * with the License.  You may obtain a copy of the License at\n *\n *   http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing,\n * software distributed under the License is distributed on an\n * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\n * KIND, either express or implied.  See the License for the\n * specific language governing permissions and limitations\n * under the License.\n 
+token #4 PHP_COMMENT_END */
+token #5 WHITESPACE \n\n
+token #6 PHP_CLASS class
+token #7 WHITESPACE  
+token #8 PHP_STRING FinalFieldsClass
+token #9 WHITESPACE  
+token #10 PHP_CURLY_OPEN {
+token #11 WHITESPACE \n    
+token #12 PHP_LINE_COMMENT //
+token #13 PHP_LINE_COMMENT  final\n
+token #14 WHITESPACE     
+token #15 PHP_FINAL final
+token #16 WHITESPACE  
+token #17 PHP_TYPE_STRING string
+token #18 WHITESPACE  
+token #19 PHP_VARIABLE $final
+token #20 WHITESPACE  
+token #21 PHP_OPERATOR =
+token #22 WHITESPACE  
+token #23 PHP_CONSTANT_ENCAPSED_STRING "final"
+token #24 PHP_SEMICOLON ;
+token #25 WHITESPACE \n\n    
+token #26 PHP_LINE_COMMENT //
+token #27 PHP_LINE_COMMENT  final, static\n
+token #28 WHITESPACE     
+token #29 PHP_FINAL final
+token #30 WHITESPACE  
+token #31 PHP_STATIC static
+token #32 WHITESPACE  
+token #33 PHP_TYPE_STRING string
+token #34 WHITESPACE  
+token #35 PHP_VARIABLE $finalStatic
+token #36 WHITESPACE  
+token #37 PHP_OPERATOR =
+token #38 WHITESPACE  
+token #39 PHP_CONSTANT_ENCAPSED_STRING "final static"
+token #40 PHP_SEMICOLON ;
+token #41 WHITESPACE \n    
+token #42 PHP_STATIC static
+token #43 WHITESPACE  
+token #44 PHP_FINAL final
+token #45 WHITESPACE  
+token #46 PHP_TYPE_STRING string
+token #47 WHITESPACE  
+token #48 PHP_VARIABLE $staticFinal
+token #49 WHITESPACE  
+token #50 PHP_OPERATOR =
+token #51 WHITESPACE  
+token #52 PHP_CONSTANT_ENCAPSED_STRING "final static"
+token #53 PHP_SEMICOLON ;
+token #54 WHITESPACE \n\n    
+token #55 PHP_LINE_COMMENT //
+token #56 PHP_LINE_COMMENT  final, abstract\n
+token #57 WHITESPACE     
+token #58 PHP_FINAL final
+token #59 WHITESPACE  
+token #60 PHP_ABSTRACT abstract
+token #61 WHITESPACE  
+token #62 PHP_TYPE_STRING string
+token #63 WHITESPACE  
+token #64 PHP_VARIABLE $finalAbstract
+token #65 WHITESPACE  
+token #66 PHP_OPERATOR =
+token #67 WHITESPACE  
+token #68 PHP_CONSTANT_ENCAPSED_STRING "final static"
+token #69 PHP_SEMICOLON ;
+token #70 WHITESPACE  
+token #71 PHP_LINE_COMMENT //
+token #72 PHP_LINE_COMMENT  error PHP Fatal error:  Only hooked properties may be declared abstract\n
+token #73 WHITESPACE     
+token #74 PHP_ABSTRACT abstract
+token #75 WHITESPACE  
+token #76 PHP_FINAL final
+token #77 WHITESPACE  
+token #78 PHP_TYPE_STRING string
+token #79 WHITESPACE  
+token #80 PHP_VARIABLE $abstractFinal
+token #81 WHITESPACE  
+token #82 PHP_OPERATOR =
+token #83 WHITESPACE  
+token #84 PHP_CONSTANT_ENCAPSED_STRING "final static"
+token #85 PHP_SEMICOLON ;
+token #86 WHITESPACE  
+token #87 PHP_LINE_COMMENT //
+token #88 PHP_LINE_COMMENT  error\n
+token #89 WHITESPACE \n    
+token #90 PHP_LINE_COMMENT //
+token #91 PHP_LINE_COMMENT  final, readonly\n
+token #92 WHITESPACE     
+token #93 PHP_FINAL final
+token #94 WHITESPACE  
+token #95 PHP_READONLY readonly
+token #96 WHITESPACE  
+token #97 PHP_TYPE_STRING string
+token #98 WHITESPACE  
+token #99 PHP_VARIABLE $finalReadonly
+token #100 PHP_SEMICOLON ;
+token #101 WHITESPACE \n    
+token #102 PHP_READONLY readonly
+token #103 WHITESPACE  
+token #104 PHP_FINAL final
+token #105 WHITESPACE  
+token #106 PHP_TYPE_STRING string
+token #107 WHITESPACE  
+token #108 PHP_VARIABLE $readonlyFinal
+token #109 PHP_SEMICOLON ;
+token #110 WHITESPACE \n    
+token #111 PHP_READONLY readonly
+token #112 WHITESPACE  
+token #113 PHP_FINAL final
+token #114 WHITESPACE  
+token #115 PHP_VARIABLE $readonlyFinal2
+token #116 PHP_SEMICOLON ;
+token #117 WHITESPACE  
+token #118 PHP_LINE_COMMENT //
+token #119 PHP_LINE_COMMENT  error\n
+token #120 WHITESPACE \n    
+token #121 PHP_LINE_COMMENT //
+token #122 PHP_LINE_COMMENT  final, visibility\n
+token #123 WHITESPACE     
+token #124 PHP_FINAL final
+token #125 WHITESPACE  
+token #126 PHP_PUBLIC public
+token #127 WHITESPACE  
+token #128 PHP_VARIABLE $finalPublic
+token #129 WHITESPACE  
+token #130 PHP_OPERATOR =
+token #131 WHITESPACE  
+token #132 PHP_CONSTANT_ENCAPSED_STRING "final visibility"
+token #133 PHP_SEMICOLON ;
+token #134 WHITESPACE \n    
+token #135 PHP_FINAL final
+token #136 WHITESPACE  
+token #137 PHP_PUBLIC public
+token #138 WHITESPACE  
+token #139 PHP_TYPE_STRING string
+token #140 WHITESPACE  
+token #141 PHP_VARIABLE $finalPublic2
+token #142 WHITESPACE  
+token #143 PHP_OPERATOR =
+token #144 WHITESPACE  
+token #145 PHP_CONSTANT_ENCAPSED_STRING "final visibility"
+token #146 PHP_SEMICOLON ;
+token #147 WHITESPACE \n    
+token #148 PHP_PUBLIC public
+token #149 WHITESPACE  
+token #150 PHP_FINAL final
+token #151 WHITESPACE  
+token #152 PHP_TYPE_STRING string
+token #153 WHITESPACE  
+token #154 PHP_VARIABLE $publicFinal
+token #155 WHITESPACE  
+token #156 PHP_OPERATOR =
+token #157 WHITESPACE  
+token #158 PHP_CONSTANT_ENCAPSED_STRING "final visibility"
+token #159 PHP_SEMICOLON ;
+token #160 WHITESPACE \n    
+token #161 PHP_FINAL final
+token #162 WHITESPACE  
+token #163 PHP_PRIVATE private
+token #164 WHITESPACE  
+token #165 PHP_TYPE_STRING string
+token #166 WHITESPACE  
+token #167 PHP_VARIABLE $finalPrivate
+token #168 WHITESPACE  
+token #169 PHP_OPERATOR =
+token #170 WHITESPACE  
+token #171 PHP_CONSTANT_ENCAPSED_STRING "final visibility"
+token #172 PHP_SEMICOLON ;
+token #173 WHITESPACE  
+token #174 PHP_LINE_COMMENT //
+token #175 PHP_LINE_COMMENT  error\n
+token #176 WHITESPACE     
+token #177 PHP_PRIVATE private
+token #178 WHITESPACE  
+token #179 PHP_FINAL final
+token #180 WHITESPACE  
+token #181 PHP_TYPE_STRING string
+token #182 WHITESPACE  
+token #183 PHP_VARIABLE $privateFinal
+token #184 WHITESPACE  
+token #185 PHP_OPERATOR =
+token #186 WHITESPACE  
+token #187 PHP_CONSTANT_ENCAPSED_STRING "final visibility"
+token #188 PHP_SEMICOLON ;
+token #189 WHITESPACE  
+token #190 PHP_LINE_COMMENT //
+token #191 PHP_LINE_COMMENT  error\n
+token #192 WHITESPACE     
+token #193 PHP_FINAL final
+token #194 WHITESPACE  
+token #195 PHP_PROTECTED protected
+token #196 WHITESPACE  
+token #197 PHP_TYPE_STRING string
+token #198 WHITESPACE  
+token #199 PHP_VARIABLE $finalProtected
+token #200 WHITESPACE  
+token #201 PHP_OPERATOR =
+token #202 WHITESPACE  
+token #203 PHP_CONSTANT_ENCAPSED_STRING "final visibility"
+token #204 PHP_SEMICOLON ;
+token #205 WHITESPACE \n    
+token #206 PHP_PROTECTED protected
+token #207 WHITESPACE  
+token #208 PHP_FINAL final
+token #209 WHITESPACE  
+token #210 PHP_TYPE_STRING string
+token #211 WHITESPACE  
+token #212 PHP_VARIABLE $protectedFinal
+token #213 WHITESPACE  
+token #214 PHP_OPERATOR =
+token #215 WHITESPACE  
+token #216 PHP_CONSTANT_ENCAPSED_STRING "final visibility"
+token #217 PHP_SEMICOLON ;
+token #218 WHITESPACE \n\n    
+token #219 PHP_LINE_COMMENT //
+token #220 PHP_LINE_COMMENT  final, set visibility\n
+token #221 WHITESPACE     
+token #222 PHP_FINAL final
+token #223 WHITESPACE  
+token #224 PHP_PUBLIC_SET public(set)
+token #225 WHITESPACE  
+token #226 PHP_TYPE_STRING string
+token #227 WHITESPACE  
+token #228 PHP_VARIABLE $finalPublicSet
+token #229 WHITESPACE  
+token #230 PHP_OPERATOR =
+token #231 WHITESPACE  
+token #232 PHP_CONSTANT_ENCAPSED_STRING "final set visibility"
+token #233 PHP_SEMICOLON ;
+token #234 WHITESPACE \n    
+token #235 PHP_PUBLIC_SET public(set)
+token #236 WHITESPACE  
+token #237 PHP_FINAL final
+token #238 WHITESPACE  
+token #239 PHP_TYPE_STRING string
+token #240 WHITESPACE  
+token #241 PHP_VARIABLE $finalPublicSet2
+token #242 WHITESPACE  
+token #243 PHP_OPERATOR =
+token #244 WHITESPACE  
+token #245 PHP_CONSTANT_ENCAPSED_STRING "final set visibility"
+token #246 PHP_SEMICOLON ;
+token #247 WHITESPACE \n    
+token #248 PHP_FINAL final
+token #249 WHITESPACE  
+token #250 PHP_PUBLIC_SET public(set)
+token #251 WHITESPACE  
+token #252 PHP_VARIABLE $finalPublicSet3
+token #253 WHITESPACE  
+token #254 PHP_OPERATOR =
+token #255 WHITESPACE  
+token #256 PHP_CONSTANT_ENCAPSED_STRING "final set visibility"
+token #257 PHP_SEMICOLON ;
+token #258 WHITESPACE  
+token #259 PHP_LINE_COMMENT //
+token #260 PHP_LINE_COMMENT  error PHP Fatal error:  Property with asymmetric visibility FinalFieldsClass::$finalPublicSet3 must have type\n
+token #261 WHITESPACE     
+token #262 PHP_FINAL final
+token #263 WHITESPACE  
+token #264 PHP_PRIVATE_SET private(set)
+token #265 WHITESPACE  
+token #266 PHP_TYPE_STRING string
+token #267 WHITESPACE  
+token #268 PHP_VARIABLE $finalPrivateSet
+token #269 WHITESPACE  
+token #270 PHP_OPERATOR =
+token #271 WHITESPACE  
+token #272 PHP_CONSTANT_ENCAPSED_STRING "final set visibility"
+token #273 PHP_SEMICOLON ;
+token #274 WHITESPACE \n    
+token #275 PHP_PRIVATE_SET private(set)
+token #276 WHITESPACE  
+token #277 PHP_FINAL final
+token #278 WHITESPACE  
+token #279 PHP_TYPE_STRING string
+token #280 WHITESPACE  
+token #281 PHP_VARIABLE $finalPrivateSet2
+token #282 WHITESPACE  
+token #283 PHP_OPERATOR =
+token #284 WHITESPACE  
+token #285 PHP_CONSTANT_ENCAPSED_STRING "final set visibility"
+token #286 PHP_SEMICOLON ;
+token #287 WHITESPACE \n    
+token #288 PHP_FINAL final
+token #289 WHITESPACE  
+token #290 PHP_PROTECTED_SET protected(set)
+token #291 WHITESPACE  
+token #292 PHP_TYPE_STRING string
+token #293 WHITESPACE  
+token #294 PHP_VARIABLE $finalProtectedSet
+token #295 WHITESPACE  
+token #296 PHP_OPERATOR =
+token #297 WHITESPACE  
+token #298 PHP_CONSTANT_ENCAPSED_STRING "final set visibility"
+token #299 PHP_SEMICOLON ;
+token #300 WHITESPACE \n    
+token #301 PHP_PROTECTED_SET protected(set)
+token #302 WHITESPACE  
+token #303 PHP_FINAL final
+token #304 WHITESPACE  
+token #305 PHP_TYPE_STRING string
+token #306 WHITESPACE  
+token #307 PHP_VARIABLE $finalProtectedSet2
+token #308 WHITESPACE  
+token #309 PHP_OPERATOR =
+token #310 WHITESPACE  
+token #311 PHP_CONSTANT_ENCAPSED_STRING "final set visibility"
+token #312 PHP_SEMICOLON ;
+token #313 WHITESPACE \n\n    
+token #314 PHP_LINE_COMMENT //
+token #315 PHP_LINE_COMMENT  final, static, readonly\n
+token #316 WHITESPACE     
+token #317 PHP_FINAL final
+token #318 WHITESPACE  
+token #319 PHP_STATIC static
+token #320 WHITESPACE  
+token #321 PHP_READONLY readonly
+token #322 WHITESPACE  
+token #323 PHP_VARIABLE $finalStaticReadonly1
+token #324 PHP_SEMICOLON ;
+token #325 WHITESPACE  
+token #326 PHP_LINE_COMMENT //
+token #327 PHP_LINE_COMMENT  error\n
+token #328 WHITESPACE     
+token #329 PHP_FINAL final
+token #330 WHITESPACE  
+token #331 PHP_STATIC static
+token #332 WHITESPACE  
+token #333 PHP_READONLY readonly
+token #334 WHITESPACE  
+token #335 PHP_TYPE_STRING string
+token #336 WHITESPACE  
+token #337 PHP_VARIABLE $finalStaticReadonly2
+token #338 PHP_SEMICOLON ;
+token #339 WHITESPACE  
+token #340 PHP_LINE_COMMENT //
+token #341 PHP_LINE_COMMENT  error\n
+token #342 WHITESPACE \n    
+token #343 PHP_LINE_COMMENT //
+token #344 PHP_LINE_COMMENT  final, static, abstract\n
+token #345 WHITESPACE     
+token #346 PHP_FINAL final
+token #347 WHITESPACE  
+token #348 PHP_ABSTRACT abstract
+token #349 WHITESPACE  
+token #350 PHP_STATIC static
+token #351 WHITESPACE  
+token #352 PHP_VARIABLE $finalAbstractStatic1
+token #353 PHP_SEMICOLON ;
+token #354 WHITESPACE  
+token #355 PHP_LINE_COMMENT //
+token #356 PHP_LINE_COMMENT  error\n
+token #357 WHITESPACE     
+token #358 PHP_FINAL final
+token #359 WHITESPACE  
+token #360 PHP_ABSTRACT abstract
+token #361 WHITESPACE  
+token #362 PHP_STATIC static
+token #363 WHITESPACE  
+token #364 PHP_TYPE_INT int
+token #365 WHITESPACE  
+token #366 PHP_VARIABLE $finalAbstractStatic2
+token #367 PHP_SEMICOLON ;
+token #368 WHITESPACE  
+token #369 PHP_LINE_COMMENT //
+token #370 PHP_LINE_COMMENT  error\n
+token #371 WHITESPACE \n    
+token #372 PHP_LINE_COMMENT //
+token #373 PHP_LINE_COMMENT  final, static, visibility\n
+token #374 WHITESPACE     
+token #375 PHP_FINAL final
+token #376 WHITESPACE  
+token #377 PHP_STATIC static
+token #378 WHITESPACE  
+token #379 PHP_PUBLIC public
+token #380 WHITESPACE  
+token #381 PHP_VARIABLE $finalStaticPublic1
+token #382 PHP_SEMICOLON ;
+token #383 WHITESPACE \n    
+token #384 PHP_FINAL final
+token #385 WHITESPACE  
+token #386 PHP_STATIC static
+token #387 WHITESPACE  
+token #388 PHP_PUBLIC public
+token #389 WHITESPACE  
+token #390 PHP_TYPE_STRING string
+token #391 WHITESPACE  
+token #392 PHP_VARIABLE $finalStaticPublic2
+token #393 PHP_SEMICOLON ;
+token #394 WHITESPACE \n\n    
+token #395 PHP_LINE_COMMENT //
+token #396 PHP_LINE_COMMENT  final, static, set visibility\n
+token #397 WHITESPACE     
+token #398 PHP_FINAL final
+token #399 WHITESPACE  
+token #400 PHP_STATIC static
+token #401 WHITESPACE  
+token #402 PHP_PUBLIC_SET public(set)
+token #403 WHITESPACE  
+token #404 PHP_VARIABLE $finalStaticPublicSet1
+token #405 PHP_SEMICOLON ;
+token #406 WHITESPACE  
+token #407 PHP_LINE_COMMENT //
+token #408 PHP_LINE_COMMENT  error\n
+token #409 WHITESPACE     
+token #410 PHP_FINAL final
+token #411 WHITESPACE  
+token #412 PHP_STATIC static
+token #413 WHITESPACE  
+token #414 PHP_PUBLIC_SET public(set)
+token #415 WHITESPACE  
+token #416 PHP_TYPE_STRING string
+token #417 WHITESPACE  
+token #418 PHP_VARIABLE $finalStaticPublicSet2
+token #419 PHP_SEMICOLON ;
+token #420 WHITESPACE  
+token #421 PHP_LINE_COMMENT //
+token #422 PHP_LINE_COMMENT  error\n
+token #423 WHITESPACE \n      
+token #424 PHP_LINE_COMMENT //
+token #425 PHP_LINE_COMMENT  final, abstract, readonly\n
+token #426 WHITESPACE     
+token #427 PHP_FINAL final
+token #428 WHITESPACE  
+token #429 PHP_ABSTRACT abstract
+token #430 WHITESPACE  
+token #431 PHP_READONLY readonly
+token #432 WHITESPACE  
+token #433 PHP_VARIABLE $finalAbstractReadonly1
+token #434 PHP_SEMICOLON ;
+token #435 WHITESPACE  
+token #436 PHP_LINE_COMMENT //
+token #437 PHP_LINE_COMMENT  error\n
+token #438 WHITESPACE     
+token #439 PHP_FINAL final
+token #440 WHITESPACE  
+token #441 PHP_ABSTRACT abstract
+token #442 WHITESPACE  
+token #443 PHP_READONLY readonly
+token #444 WHITESPACE  
+token #445 PHP_TYPE_INT int
+token #446 WHITESPACE  
+token #447 PHP_VARIABLE $finalAbstractReadonly2
+token #448 PHP_SEMICOLON ;
+token #449 WHITESPACE  
+token #450 PHP_LINE_COMMENT //
+token #451 PHP_LINE_COMMENT  error\n
+token #452 WHITESPACE \n    
+token #453 PHP_LINE_COMMENT //
+token #454 PHP_LINE_COMMENT  final, visibility, set visibility\n
+token #455 WHITESPACE     
+token #456 PHP_FINAL final
+token #457 WHITESPACE  
+token #458 PHP_PUBLIC public
+token #459 WHITESPACE  
+token #460 PHP_PUBLIC_SET public(set)
+token #461 WHITESPACE  
+token #462 PHP_VARIABLE $finalPublicPublicSet
+token #463 PHP_SEMICOLON ;
+token #464 WHITESPACE  
+token #465 PHP_LINE_COMMENT //
+token #466 PHP_LINE_COMMENT  error: must have type\n
+token #467 WHITESPACE     
+token #468 PHP_FINAL final
+token #469 WHITESPACE  
+token #470 PHP_PUBLIC public
+token #471 WHITESPACE  
+token #472 PHP_PUBLIC_SET public(set)
+token #473 WHITESPACE  
+token #474 PHP_TYPE_STRING string
+token #475 PHP_OPERATOR |
+token #476 PHP_TYPE_INT int
+token #477 WHITESPACE  
+token #478 PHP_VARIABLE $finalPublicPublicSet1
+token #479 PHP_SEMICOLON ;
+token #480 WHITESPACE \n    
+token #481 PHP_FINAL final
+token #482 WHITESPACE  
+token #483 PHP_PUBLIC public
+token #484 WHITESPACE  
+token #485 PHP_PUBLIC_SET public(set)
+token #486 WHITESPACE  
+token #487 PHP_VARIABLE $finalPublicPublicSet2
+token #488 PHP_SEMICOLON ;
+token #489 WHITESPACE  
+token #490 PHP_LINE_COMMENT //
+token #491 PHP_LINE_COMMENT  error\n
+token #492 WHITESPACE     
+token #493 PHP_FINAL final
+token #494 WHITESPACE  
+token #495 PHP_PUBLIC public
+token #496 WHITESPACE  
+token #497 PHP_PRIVATE_SET private(set)
+token #498 WHITESPACE  
+token #499 PHP_TYPE_STRING string
+token #500 PHP_OPERATOR |
+token #501 PHP_TYPE_INT int
+token #502 WHITESPACE  
+token #503 PHP_VARIABLE $finalPublicPrivateSet1
+token #504 PHP_SEMICOLON ;
+token #505 WHITESPACE \n    
+token #506 PHP_FINAL final
+token #507 WHITESPACE  
+token #508 PHP_PUBLIC public
+token #509 WHITESPACE  
+token #510 PHP_PROTECTED_SET protected(set)
+token #511 WHITESPACE  
+token #512 PHP_TYPE_STRING string
+token #513 PHP_OPERATOR |
+token #514 PHP_TYPE_INT int
+token #515 WHITESPACE  
+token #516 PHP_VARIABLE $finalPublicProtectedSet1
+token #517 PHP_SEMICOLON ;
+token #518 WHITESPACE \n    
+token #519 PHP_FINAL final
+token #520 WHITESPACE  
+token #521 PHP_PRIVATE private
+token #522 WHITESPACE  
+token #523 PHP_PUBLIC_SET public(set)
+token #524 WHITESPACE  
+token #525 PHP_TYPE_STRING string
+token #526 PHP_OPERATOR |
+token #527 PHP_TYPE_INT int
+token #528 WHITESPACE  
+token #529 PHP_VARIABLE $finalPrivatePublicSet1
+token #530 PHP_SEMICOLON ;
+token #531 WHITESPACE  
+token #532 PHP_LINE_COMMENT //
+token #533 PHP_LINE_COMMENT  error PHP Fatal error:  Property cannot be both final and private\n
+token #534 WHITESPACE     
+token #535 PHP_FINAL final
+token #536 WHITESPACE  
+token #537 PHP_PRIVATE private
+token #538 WHITESPACE  
+token #539 PHP_PRIVATE_SET private(set)
+token #540 WHITESPACE  
+token #541 PHP_TYPE_STRING string
+token #542 PHP_OPERATOR |
+token #543 PHP_TYPE_INT int
+token #544 WHITESPACE  
+token #545 PHP_VARIABLE $finalPrivatePrivateSet1
+token #546 PHP_SEMICOLON ;
+token #547 WHITESPACE  
+token #548 PHP_LINE_COMMENT //
+token #549 PHP_LINE_COMMENT  error\n
+token #550 WHITESPACE     
+token #551 PHP_FINAL final
+token #552 WHITESPACE  
+token #553 PHP_PRIVATE private
+token #554 WHITESPACE  
+token #555 PHP_PROTECTED_SET protected(set)
+token #556 WHITESPACE  
+token #557 PHP_TYPE_STRING string
+token #558 PHP_OPERATOR |
+token #559 PHP_TYPE_INT int
+token #560 WHITESPACE  
+token #561 PHP_VARIABLE $finalPrivateProtectedSet1
+token #562 PHP_SEMICOLON ;
+token #563 WHITESPACE  
+token #564 PHP_LINE_COMMENT //
+token #565 PHP_LINE_COMMENT  error\n
+token #566 WHITESPACE     
+token #567 PHP_FINAL final
+token #568 WHITESPACE  
+token #569 PHP_PROTECTED protected
+token #570 WHITESPACE  
+token #571 PHP_PUBLIC_SET public(set)
+token #572 WHITESPACE  
+token #573 PHP_TYPE_STRING string
+token #574 PHP_OPERATOR |
+token #575 PHP_TYPE_INT int
+token #576 WHITESPACE  
+token #577 PHP_VARIABLE $finalProtectedPublicSet1
+token #578 PHP_SEMICOLON ;
+token #579 WHITESPACE  
+token #580 PHP_LINE_COMMENT //
+token #581 PHP_LINE_COMMENT  error\n
+token #582 WHITESPACE     
+token #583 PHP_FINAL final
+token #584 WHITESPACE  
+token #585 PHP_PROTECTED protected
+token #586 WHITESPACE  
+token #587 PHP_PRIVATE_SET private(set)
+token #588 WHITESPACE  
+token #589 PHP_TYPE_STRING string
+token #590 PHP_OPERATOR |
+token #591 PHP_TYPE_INT int
+token #592 WHITESPACE  
+token #593 PHP_VARIABLE $finalProtectedPrivateSet1
+token #594 WHITESPACE  
+token #595 PHP_OPERATOR =
+token #596 WHITESPACE  
+token #597 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #598 PHP_SEMICOLON ;
+token #599 WHITESPACE \n    
+token #600 PHP_FINAL final
+token #601 WHITESPACE  
+token #602 PHP_PROTECTED protected
+token #603 WHITESPACE  
+token #604 PHP_PROTECTED_SET protected(set)
+token #605 WHITESPACE  
+token #606 PHP_TYPE_STRING string
+token #607 PHP_OPERATOR |
+token #608 PHP_TYPE_INT int
+token #609 WHITESPACE  
+token #610 PHP_VARIABLE $finalProtectedProtectedSet1
+token #611 PHP_SEMICOLON ;
+token #612 WHITESPACE \n\n    
+token #613 PHP_FINAL final
+token #614 WHITESPACE  
+token #615 PHP_PUBLIC_SET public(set)
+token #616 WHITESPACE  
+token #617 PHP_PUBLIC public
+token #618 WHITESPACE  
+token #619 PHP_TYPE_STRING string
+token #620 PHP_OPERATOR |
+token #621 PHP_TYPE_INT int
+token #622 WHITESPACE  
+token #623 PHP_VARIABLE $finalPublicSetPublic1
+token #624 PHP_SEMICOLON ;
+token #625 WHITESPACE \n    
+token #626 PHP_FINAL final
+token #627 WHITESPACE  
+token #628 PHP_PUBLIC_SET public(set)
+token #629 WHITESPACE  
+token #630 PHP_PUBLIC public
+token #631 WHITESPACE  
+token #632 PHP_VARIABLE $finalPublicSetPublic2
+token #633 PHP_SEMICOLON ;
+token #634 WHITESPACE  
+token #635 PHP_LINE_COMMENT //
+token #636 PHP_LINE_COMMENT  error\n
+token #637 WHITESPACE     
+token #638 PHP_FINAL final
+token #639 WHITESPACE  
+token #640 PHP_PUBLIC_SET public(set)
+token #641 WHITESPACE  
+token #642 PHP_PRIVATE private
+token #643 WHITESPACE  
+token #644 PHP_TYPE_STRING string
+token #645 PHP_OPERATOR |
+token #646 PHP_TYPE_INT int
+token #647 WHITESPACE  
+token #648 PHP_VARIABLE $finalPublicSetPrivate1
+token #649 PHP_SEMICOLON ;
+token #650 WHITESPACE  
+token #651 PHP_LINE_COMMENT //
+token #652 PHP_LINE_COMMENT  error\n
+token #653 WHITESPACE     
+token #654 PHP_FINAL final
+token #655 WHITESPACE  
+token #656 PHP_PUBLIC_SET public(set)
+token #657 WHITESPACE  
+token #658 PHP_PROTECTED protected
+token #659 WHITESPACE  
+token #660 PHP_TYPE_STRING string
+token #661 PHP_OPERATOR |
+token #662 PHP_TYPE_INT int
+token #663 WHITESPACE  
+token #664 PHP_VARIABLE $finalPublicSetProtected1
+token #665 PHP_SEMICOLON ;
+token #666 WHITESPACE  
+token #667 PHP_LINE_COMMENT //
+token #668 PHP_LINE_COMMENT  error\n
+token #669 WHITESPACE     
+token #670 PHP_FINAL final
+token #671 WHITESPACE  
+token #672 PHP_PRIVATE_SET private(set)
+token #673 WHITESPACE  
+token #674 PHP_PUBLIC public
+token #675 WHITESPACE  
+token #676 PHP_TYPE_STRING string
+token #677 PHP_OPERATOR |
+token #678 PHP_TYPE_INT int
+token #679 WHITESPACE  
+token #680 PHP_VARIABLE $finalPrivateSetPublic1
+token #681 PHP_SEMICOLON ;
+token #682 WHITESPACE \n    
+token #683 PHP_FINAL final
+token #684 WHITESPACE  
+token #685 PHP_PRIVATE_SET private(set)
+token #686 WHITESPACE  
+token #687 PHP_PRIVATE private
+token #688 WHITESPACE  
+token #689 PHP_TYPE_STRING string
+token #690 PHP_OPERATOR |
+token #691 PHP_TYPE_INT int
+token #692 WHITESPACE  
+token #693 PHP_VARIABLE $finalPrivateSetPrivate1
+token #694 PHP_SEMICOLON ;
+token #695 WHITESPACE  
+token #696 PHP_LINE_COMMENT //
+token #697 PHP_LINE_COMMENT  error\n
+token #698 WHITESPACE     
+token #699 PHP_FINAL final
+token #700 WHITESPACE  
+token #701 PHP_PRIVATE_SET private(set)
+token #702 WHITESPACE  
+token #703 PHP_PROTECTED protected
+token #704 WHITESPACE  
+token #705 PHP_TYPE_STRING string
+token #706 PHP_OPERATOR |
+token #707 PHP_TYPE_INT int
+token #708 WHITESPACE  
+token #709 PHP_VARIABLE $finalPrivateSetProtected1
+token #710 PHP_SEMICOLON ;
+token #711 WHITESPACE \n    
+token #712 PHP_FINAL final
+token #713 WHITESPACE  
+token #714 PHP_PROTECTED_SET protected(set)
+token #715 WHITESPACE  
+token #716 PHP_PUBLIC public
+token #717 WHITESPACE  
+token #718 PHP_TYPE_STRING string
+token #719 PHP_OPERATOR |
+token #720 PHP_TYPE_INT int
+token #721 WHITESPACE  
+token #722 PHP_VARIABLE $finalProtectedSetPublic1
+token #723 PHP_SEMICOLON ;
+token #724 WHITESPACE \n    
+token #725 PHP_FINAL final
+token #726 WHITESPACE  
+token #727 PHP_PROTECTED_SET protected(set)
+token #728 WHITESPACE  
+token #729 PHP_PRIVATE private
+token #730 WHITESPACE  
+token #731 PHP_TYPE_STRING string
+token #732 PHP_OPERATOR |
+token #733 PHP_TYPE_INT int
+token #734 WHITESPACE  
+token #735 PHP_VARIABLE $finalProtectedSetPrivate1
+token #736 PHP_SEMICOLON ;
+token #737 WHITESPACE  
+token #738 PHP_LINE_COMMENT //
+token #739 PHP_LINE_COMMENT  error\n
+token #740 WHITESPACE     
+token #741 PHP_FINAL final
+token #742 WHITESPACE  
+token #743 PHP_PROTECTED_SET protected(set)
+token #744 WHITESPACE  
+token #745 PHP_PROTECTED protected
+token #746 WHITESPACE  
+token #747 PHP_TYPE_STRING string
+token #748 PHP_OPERATOR |
+token #749 PHP_TYPE_INT int
+token #750 WHITESPACE  
+token #751 PHP_VARIABLE $finalProtectedSetProtected1
+token #752 WHITESPACE  
+token #753 PHP_OPERATOR =
+token #754 WHITESPACE  
+token #755 PHP_NUMBER 1
+token #756 PHP_SEMICOLON ;
+token #757 WHITESPACE \n\n    
+token #758 PHP_LINE_COMMENT //
+token #759 PHP_LINE_COMMENT  final, visibility, set visibility readonly\n
+token #760 WHITESPACE     
+token #761 PHP_FINAL final
+token #762 WHITESPACE  
+token #763 PHP_PUBLIC public
+token #764 WHITESPACE  
+token #765 PHP_PUBLIC_SET public(set)
+token #766 WHITESPACE  
+token #767 PHP_READONLY readonly
+token #768 WHITESPACE  
+token #769 PHP_VARIABLE $finalPublicPublicSetReadonlyError
+token #770 PHP_SEMICOLON ;
+token #771 WHITESPACE  
+token #772 PHP_LINE_COMMENT //
+token #773 PHP_LINE_COMMENT  error\n
+token #774 WHITESPACE     
+token #775 PHP_FINAL final
+token #776 WHITESPACE  
+token #777 PHP_PUBLIC public
+token #778 WHITESPACE  
+token #779 PHP_PUBLIC_SET public(set)
+token #780 WHITESPACE  
+token #781 PHP_READONLY readonly
+token #782 WHITESPACE  
+token #783 PHP_TYPE_STRING string
+token #784 PHP_OPERATOR |
+token #785 PHP_TYPE_INT int
+token #786 WHITESPACE  
+token #787 PHP_VARIABLE $finalPublicPublicSetReadonly
+token #788 PHP_SEMICOLON ;
+token #789 WHITESPACE \n    
+token #790 PHP_FINAL final
+token #791 WHITESPACE  
+token #792 PHP_PUBLIC public
+token #793 WHITESPACE  
+token #794 PHP_PROTECTED_SET protected(set)
+token #795 WHITESPACE  
+token #796 PHP_READONLY readonly
+token #797 WHITESPACE  
+token #798 PHP_TYPE_STRING string
+token #799 PHP_OPERATOR |
+token #800 PHP_TYPE_INT int
+token #801 WHITESPACE  
+token #802 PHP_VARIABLE $finalPublicProtectedSetReadonly
+token #803 PHP_SEMICOLON ;
+token #804 WHITESPACE \n    
+token #805 PHP_FINAL final
+token #806 WHITESPACE  
+token #807 PHP_PUBLIC public
+token #808 WHITESPACE  
+token #809 PHP_PRIVATE_SET private(set)
+token #810 WHITESPACE  
+token #811 PHP_READONLY readonly
+token #812 WHITESPACE  
+token #813 PHP_TYPE_STRING string
+token #814 PHP_OPERATOR |
+token #815 PHP_TYPE_INT int
+token #816 WHITESPACE  
+token #817 PHP_VARIABLE $finalPublicPrivateSetReadonly
+token #818 PHP_SEMICOLON ;
+token #819 WHITESPACE \n    
+token #820 PHP_FINAL final
+token #821 WHITESPACE  
+token #822 PHP_PROTECTED protected
+token #823 WHITESPACE  
+token #824 PHP_PUBLIC_SET public(set)
+token #825 WHITESPACE  
+token #826 PHP_READONLY readonly
+token #827 WHITESPACE  
+token #828 PHP_TYPE_STRING string
+token #829 PHP_OPERATOR |
+token #830 PHP_TYPE_INT int
+token #831 WHITESPACE  
+token #832 PHP_VARIABLE $finalProtectedPublicSetReadonly
+token #833 PHP_SEMICOLON ;
+token #834 WHITESPACE  
+token #835 PHP_LINE_COMMENT //
+token #836 PHP_LINE_COMMENT  error\n
+token #837 WHITESPACE     
+token #838 PHP_FINAL final
+token #839 WHITESPACE  
+token #840 PHP_PROTECTED protected
+token #841 WHITESPACE  
+token #842 PHP_PROTECTED_SET protected(set)
+token #843 WHITESPACE  
+token #844 PHP_READONLY readonly
+token #845 WHITESPACE  
+token #846 PHP_TYPE_STRING string
+token #847 PHP_OPERATOR |
+token #848 PHP_TYPE_INT int
+token #849 WHITESPACE  
+token #850 PHP_VARIABLE $finalProtectedProtectedSetReadonly
+token #851 PHP_SEMICOLON ;
+token #852 WHITESPACE \n    
+token #853 PHP_FINAL final
+token #854 WHITESPACE  
+token #855 PHP_PROTECTED protected
+token #856 WHITESPACE  
+token #857 PHP_PRIVATE_SET private(set)
+token #858 WHITESPACE  
+token #859 PHP_READONLY readonly
+token #860 WHITESPACE  
+token #861 PHP_TYPE_STRING string
+token #862 PHP_OPERATOR |
+token #863 PHP_TYPE_INT int
+token #864 WHITESPACE  
+token #865 PHP_VARIABLE $finalProtectedPrivateSetReadonly
+token #866 PHP_SEMICOLON ;
+token #867 WHITESPACE \n    
+token #868 PHP_FINAL final
+token #869 WHITESPACE  
+token #870 PHP_PRIVATE private
+token #871 WHITESPACE  
+token #872 PHP_PUBLIC_SET public(set)
+token #873 WHITESPACE  
+token #874 PHP_READONLY readonly
+token #875 WHITESPACE  
+token #876 PHP_TYPE_STRING string
+token #877 PHP_OPERATOR |
+token #878 PHP_TYPE_INT int
+token #879 WHITESPACE  
+token #880 PHP_VARIABLE $finalPrivatePublicSetReadonly
+token #881 PHP_SEMICOLON ;
+token #882 WHITESPACE  
+token #883 PHP_LINE_COMMENT //
+token #884 PHP_LINE_COMMENT  error\n
+token #885 WHITESPACE     
+token #886 PHP_FINAL final
+token #887 WHITESPACE  
+token #888 PHP_PRIVATE private
+token #889 WHITESPACE  
+token #890 PHP_PROTECTED_SET protected(set)
+token #891 WHITESPACE  
+token #892 PHP_READONLY readonly
+token #893 WHITESPACE  
+token #894 PHP_TYPE_STRING string
+token #895 PHP_OPERATOR |
+token #896 PHP_TYPE_INT int
+token #897 WHITESPACE  
+token #898 PHP_VARIABLE $finalPrivateProtectedSetReadonly
+token #899 PHP_SEMICOLON ;
+token #900 WHITESPACE  
+token #901 PHP_LINE_COMMENT //
+token #902 PHP_LINE_COMMENT  error\n
+token #903 WHITESPACE     
+token #904 PHP_FINAL final
+token #905 WHITESPACE  
+token #906 PHP_PRIVATE private
+token #907 WHITESPACE  
+token #908 PHP_PRIVATE_SET private(set)
+token #909 WHITESPACE  
+token #910 PHP_READONLY readonly
+token #911 WHITESPACE  
+token #912 PHP_TYPE_STRING string
+token #913 PHP_OPERATOR |
+token #914 PHP_TYPE_INT int
+token #915 WHITESPACE  
+token #916 PHP_VARIABLE $finalPrivatePrivateSetReadonly
+token #917 PHP_SEMICOLON ;
+token #918 WHITESPACE \n
+token #919 PHP_CURLY_CLOSE }
+token #920 WHITESPACE \n

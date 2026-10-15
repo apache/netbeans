@@ -22,7 +22,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import org.netbeans.modules.payara.tooling.data.PayaraAdminInterface;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.tooling.logging.Logger;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
 
@@ -37,17 +37,11 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
  */
 public abstract class AdminFactory {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(AdminFactory.class);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates specific <code>AdminFactory</code> child class instance
      * to build Payara server administration command runner and data objects
@@ -56,34 +50,12 @@ public abstract class AdminFactory {
      * @param version Payara server version.
      * @return Child factory class instance to work with given Payara server.
      */
-    static AdminFactory getInstance(final PayaraVersion version)
+    static AdminFactory getInstance(final PayaraPlatformVersionAPI version)
             throws CommandException {
-        switch (version) {
-            // Use HTTP interface for older than 3.
-
-            // Use REST interface for Payara 4.
-            case PF_4_1_144:
-            case PF_4_1_151:
-            case PF_4_1_153:
-            case PF_4_1_1_154:
-            case PF_4_1_1_161:
-            case PF_4_1_1_162:
-            case PF_4_1_1_163:
-            case PF_4_1_1_171:
-            case PF_4_1_2_172:
-            case PF_4_1_2_173:
-            case PF_4_1_2_174:
-            case PF_4_1_2_181:
-            case PF_5_181:
-            case PF_5_182:
-            case PF_5_183:
-            case PF_5_184:
-            case PF_5_191:
-            case PF_5_192:
-            case PF_5_193:
+        if(version.isMinimumSupportedVersion()) {
                 return AdminFactoryRest.getInstance();
+        } else {
             // Anything else is not unknown.
-            default:
                 throw new CommandException(CommandException.UNKNOWN_VERSION);
         }
     }
@@ -108,10 +80,7 @@ public abstract class AdminFactory {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Abstract methods                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Build runner for command interface execution and connect it with
      * provided <code>Command</code> instance.
@@ -123,10 +92,7 @@ public abstract class AdminFactory {
     public abstract Runner getRunner(
             final PayaraServer srv, final Command cmd);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of selected <code>Runner</code> child class.
      * <p/>

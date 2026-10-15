@@ -87,9 +87,6 @@ public class OpenProjectListSetMainTest extends NbTestCase {
         OpenProjectListSettings.getInstance().setOpenProjectsURLs(list);
         OpenProjectListSettings.getInstance().setOpenProjectsDisplayNames(names);
         OpenProjectListSettings.getInstance().setOpenProjectsIcons(icons);
-        
-         //compute project root node children in sync mode
-        System.setProperty("test.projectnode.sync", "true");
     }
 
     @RandomlyFails // NB-Core-Build #1058
@@ -98,12 +95,12 @@ public class OpenProjectListSetMainTest extends NbTestCase {
         L listener = new L();
         logicalView.addNodeListener(listener);
         
-        assertEquals("30 children", 30, logicalView.getChildren().getNodesCount());
+        assertEquals("30 children", 30, logicalView.getChildren().getNodesCount(true));
         listener.assertEvents("None", 0);
         assertEquals("No project opened yet", 0, TestProjectOpenedHookImpl.opened);
         
         Node main = null;
-        for (Node n : logicalView.getChildren().getNodes()) {
+        for (Node n : logicalView.getChildren().getNodes(true)) {
             TestSupport.TestProject p = n.getLookup().lookup(TestSupport.TestProject.class);
             assertNull("No project of this type, yet", p);
 
@@ -127,7 +124,7 @@ public class OpenProjectListSetMainTest extends NbTestCase {
         
         OpenProjectList.waitProjectsFullyOpen();
 
-        for (Node n : logicalView.getChildren().getNodes()) {
+        for (Node n : logicalView.getChildren().getNodes(true)) {
             TestSupport.TestProject p = n.getLookup().lookup(TestSupport.TestProject.class);
             assertNotNull("Nodes have correct project of this type", p);
         }

@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author pfiala
@@ -119,8 +120,8 @@ public class EntityHelper extends EntityAndSessionHelper {
     
     public class CmpFields implements PropertyChangeSource {
         
-        private List listeners = new LinkedList();
-        private HashMap cmpFieldHelperMap = new HashMap();
+        private List<PropertyChangeListener> listeners = new LinkedList<>();
+        private Map<CmpField, CmpFieldHelper> cmpFieldHelperMap = new HashMap<>();
         private CmpFieldsTableModel cmpFieldsTableModel = new CmpFieldsTableModel(this);
         
         public int getCmpFieldCount() {
@@ -129,7 +130,7 @@ public class EntityHelper extends EntityAndSessionHelper {
         
         public CmpFieldHelper getCmpFieldHelper(int row) {
             CmpField field = getCmpField(row);
-            CmpFieldHelper cmpFieldHelper = (CmpFieldHelper) cmpFieldHelperMap.get(field);
+            CmpFieldHelper cmpFieldHelper = cmpFieldHelperMap.get(field);
             if (cmpFieldHelper == null) {
                 cmpFieldHelper = createCmpFieldHelper(field);
             }
@@ -137,7 +138,7 @@ public class EntityHelper extends EntityAndSessionHelper {
         }
         
         private CmpFieldHelper getCmpFieldHelper(String fieldName) {
-            CmpFieldHelper cmpFieldHelper = (CmpFieldHelper) cmpFieldHelperMap.get(fieldName);
+            CmpFieldHelper cmpFieldHelper = cmpFieldHelperMap.get(fieldName);
             if (cmpFieldHelper == null) {
                 CmpField[] cmpFields = entity.getCmpField();
                 for (int i = 0; i < cmpFields.length; i++) {
@@ -195,8 +196,8 @@ public class EntityHelper extends EntityAndSessionHelper {
         }
         
         protected void firePropertyChange(PropertyChangeEvent evt) {
-            for (Iterator iterator = listeners.iterator(); iterator.hasNext();) {
-                ((PropertyChangeListener) iterator.next()).propertyChange(evt);
+            for (Iterator<PropertyChangeListener> iterator = listeners.iterator(); iterator.hasNext();) {
+                iterator.next().propertyChange(evt);
             }
         }
         
@@ -220,8 +221,8 @@ public class EntityHelper extends EntityAndSessionHelper {
     }
     
     public class Queries implements PropertyChangeSource {
-        private List listeners = new LinkedList();
-        private HashMap queryMethodHelperMap = new HashMap();
+        private List<PropertyChangeListener> listeners = new LinkedList<>();
+        private Map<Query, QueryMethodHelper> queryMethodHelperMap = new HashMap<>();
         private Query[] selectMethods;
         private Query[] finderMethods;
         public static final String SELECT_PREFIX = "ejbSelect"; //NOI18N
@@ -251,19 +252,19 @@ public class EntityHelper extends EntityAndSessionHelper {
         }
         
         private Query[] getQueries(String s) {
-            List list = new LinkedList();
+            List<Query> list = new LinkedList<>();
             Query[] queries = entity.getQuery();
             for (int i = 0; i < queries.length; i++) {
                 Query query = queries[i];
                 if (query.getQueryMethod().getMethodName().startsWith(s)) {
                     list.add(query);
-                    final QueryMethodHelper helper = (QueryMethodHelper) queryMethodHelperMap.get(query);
+                    final QueryMethodHelper helper = queryMethodHelperMap.get(query);
                     if (helper != null) {
                         helper.init();
                     }
                 }
             }
-            return (Query[]) list.toArray(new Query[0]);
+            return list.toArray(new Query[0]);
         }
         
         public int getFinderMethodCount() {
@@ -301,8 +302,8 @@ public class EntityHelper extends EntityAndSessionHelper {
         }
         
         protected void firePropertyChange(PropertyChangeEvent evt) {
-            for (Iterator iterator = listeners.iterator(); iterator.hasNext();) {
-                ((PropertyChangeListener) iterator.next()).propertyChange(evt);
+            for (Iterator<PropertyChangeListener> iterator = listeners.iterator(); iterator.hasNext();) {
+                iterator.next().propertyChange(evt);
             }
         }
         

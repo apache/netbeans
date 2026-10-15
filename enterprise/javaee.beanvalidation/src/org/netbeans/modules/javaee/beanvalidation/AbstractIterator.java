@@ -77,7 +77,7 @@ public abstract class AbstractIterator implements TemplateWizard.Iterator{
         // Creating steps.
         Object prop = wizard.getProperty(WizardDescriptor.PROP_CONTENT_DATA); // NOI18N
         String[] beforeSteps = null;
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[]) prop;
         }
         String[] steps = createSteps(beforeSteps, panels);
@@ -87,7 +87,7 @@ public abstract class AbstractIterator implements TemplateWizard.Iterator{
             if (steps[i] == null) {
                 steps[i] = jc.getName();
             }
-            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer (i)); // NOI18N
+            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i); // NOI18N
             jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps); // NOI18N
         }
 

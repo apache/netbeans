@@ -28,8 +28,6 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.PreferenceChangeEvent;
-import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
 import javax.swing.text.*;
 import javax.swing.event.DocumentListener;
@@ -47,7 +45,6 @@ import org.netbeans.api.editor.settings.SimpleValueNames;
 import org.netbeans.modules.editor.lib2.EditorApiPackageAccessor;
 import org.netbeans.editor.view.spi.LockView;
 import org.netbeans.lib.editor.view.GapDocumentView;
-import org.netbeans.modules.editor.lib2.EditorPreferencesDefaults;
 import org.netbeans.modules.editor.lib2.EditorPreferencesKeys;
 import org.netbeans.modules.editor.lib.SettingsConversions;
 import org.netbeans.modules.editor.lib.drawing.DrawEngineDocView;
@@ -55,7 +52,6 @@ import org.netbeans.modules.editor.lib.drawing.DrawEngineLineView;
 import org.netbeans.modules.editor.lib2.view.LockedViewHierarchy;
 import org.netbeans.modules.editor.lib2.view.ViewHierarchy;
 import org.netbeans.spi.lexer.MutableTextInput;
-import org.openide.util.WeakListeners;
 
 /**
 * Text UI implementation
@@ -604,6 +600,7 @@ public class BaseTextUI extends BasicTextUI implements
             this.uiClass = uiClass;
         }
         
+        @Override
         public void propertyChange(PropertyChangeEvent evt) {
             Object newValue = evt.getNewValue();
             if ("UI".equals(evt.getPropertyName())) {
@@ -617,7 +614,7 @@ public class BaseTextUI extends BasicTextUI implements
                     if (kit instanceof BaseKit) {
                         // BaseKit but not BaseTextUI -> restore BaseTextUI
                         try {
-                            BaseTextUI newUI = (BaseTextUI) uiClass.newInstance();
+                            BaseTextUI newUI = (BaseTextUI) uiClass.getDeclaredConstructor().newInstance();
                             c.setUI(newUI);
                             if (evt.getOldValue() instanceof BaseTextUI) {
                                 BaseTextUI oldUI = (BaseTextUI) evt.getOldValue();
@@ -633,9 +630,7 @@ public class BaseTextUI extends BasicTextUI implements
                                 }
                             }
 
-                        } catch (InstantiationException e) {
-                        } catch (IllegalAccessException e) {
-                        }
+                        } catch (ReflectiveOperationException ignored) {}
                     }
                 }
             }

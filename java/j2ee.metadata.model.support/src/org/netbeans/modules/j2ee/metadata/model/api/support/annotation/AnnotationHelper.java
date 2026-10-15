@@ -90,9 +90,9 @@ public class AnnotationHelper {
 
     public TypeElement getSuperclass(TypeElement type) {
         TypeMirror supertype = type.getSuperclass();
-        if (TypeKind.DECLARED.equals(supertype.getKind())) {
+        if (TypeKind.DECLARED == supertype.getKind()) {
             Element element = ((DeclaredType)supertype).asElement();
-            if (ElementKind.CLASS.equals(element.getKind())) {
+            if (ElementKind.CLASS == element.getKind()) {
                 TypeElement superclass = (TypeElement)element;
                 if (!superclass.getQualifiedName().contentEquals(
                         Object.class.getCanonicalName())) { 
@@ -148,11 +148,11 @@ public class AnnotationHelper {
      *         was not an annotation type.
      */
     public String getAnnotationTypeName(DeclaredType typeMirror) {
-        if (!TypeKind.DECLARED.equals(typeMirror.getKind())) {
+        if (TypeKind.DECLARED != typeMirror.getKind()) {
             return null;
         }
         Element element = typeMirror.asElement();
-        if (!ElementKind.ANNOTATION_TYPE.equals(element.getKind())) {
+        if (ElementKind.ANNOTATION_TYPE != element.getKind()) {
             return null;
         }
         return ((TypeElement)element).getQualifiedName().toString();

@@ -30,7 +30,7 @@ import org.openide.util.Lookup;
 public final class ProjectIDEServices {
     private static ProjectIDEServicesImplementation impl;
 
-    private synchronized static ProjectIDEServicesImplementation getImpl() {
+    private static synchronized ProjectIDEServicesImplementation getImpl() {
         if(impl == null) {
             impl = Lookup.getDefault().lookup(ProjectIDEServicesImplementation.class);
         }

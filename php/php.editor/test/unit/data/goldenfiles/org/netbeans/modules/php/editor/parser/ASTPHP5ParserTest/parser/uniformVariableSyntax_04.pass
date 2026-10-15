@@ -57,7 +57,7 @@
         </Comments>
         <Statements>
             <ExpressionStatement start='7' end='36'>
-                <StaticConstantAccess start='7' end='35'>
+                <StaticConstantAccess start='7' end='35' isDynamicName='false'>
                     <StaticFieldAccess start='7' end='30'>
                         <DereferencedArrayAccess start='7' end='24'>
                             <ArrayDimension start='19' end='24'>

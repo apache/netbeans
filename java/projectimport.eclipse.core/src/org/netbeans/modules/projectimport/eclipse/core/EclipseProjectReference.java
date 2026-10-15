@@ -58,8 +58,8 @@ public class EclipseProjectReference {
     private EclipseProject eclipseProject;
     private ProjectImportModel importModel;
     
-    private final static String PROJECT_PREFIX = "project-"; //NOI18N
-    private final static String WORKSPACE_PREFIX = "workspace-"; //NOI18N
+    private static final String PROJECT_PREFIX = "project-"; //NOI18N
+    private static final String WORKSPACE_PREFIX = "workspace-"; //NOI18N
     
     public EclipseProjectReference(Project project, String eclipseProjectLocation, String eclipseWorkspaceLocation, long timestamp, String key) {
         this.eclipseProjectLocation = PropertyUtils.resolveFile(FileUtil.toFile(project.getProjectDirectory()), eclipseProjectLocation);

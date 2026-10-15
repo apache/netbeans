@@ -74,6 +74,7 @@ import org.netbeans.modules.java.hints.errors.Utilities;
     "TEXT_ToStringCalledOnArray=toString() called on array instance",
     "TEXT_ArrayPrintedOnStream=Array instance printed on PrintStream",
     "TEXT_ArrayPrintedOnWriter=Array instance printed on PrintWriter",
+    "TEXT_ArrayPrintedWithIO=Array instance printed with java.lang.IO",
     "TEXT_ArrayFormatParameter=Array instance passed as parameter to a formatter function",
     "TEXT_ArrayConcatenatedToString=Array concatenated with String",
     "FIX_WrapUsingArraysAsList=Wrap array using Arrays.toString",
@@ -365,6 +366,131 @@ public class ArrayStringConversions {
             return null;
         }
         return printPrintStream(ctx);
+    }
+    
+    @TriggerPatterns({
+        @TriggerPattern(
+                value="java.lang.IO.print($v)",
+                constraints = {
+                    @ConstraintVariableType(type = "java.lang.Object[]", variable = "$v")
+                }
+        ),
+        @TriggerPattern(
+                value="java.lang.IO.print($v)",
+                constraints = {
+                    @ConstraintVariableType(type = "int[]", variable = "$v")
+                }
+        ),
+        @TriggerPattern(
+                value="java.lang.IO.print($v)",
+                constraints = {
+                    @ConstraintVariableType(type = "char[]", variable = "$v")
+                }
+        ),
+        @TriggerPattern(
+                value="java.lang.IO.print($v)",
+                constraints = {
+                    @ConstraintVariableType(type = "short[]", variable = "$v")
+                }
+        ),
+        @TriggerPattern(
+                value="java.lang.IO.print($v)",
+                constraints = {
+                    @ConstraintVariableType(type = "byte[]", variable = "$v")
+                }
+        ),
+        @TriggerPattern(
+                value="java.lang.IO.print($v)",
+                constraints = {
+                    @ConstraintVariableType(type = "long[]", variable = "$v")
+                }
+        ),
+        @TriggerPattern(
+                value="java.lang.IO.print($v)",
+                constraints = {
+                    @ConstraintVariableType(type = "float[]", variable = "$v")
+                }
+        ),
+        @TriggerPattern(
+                value="java.lang.IO.print($v)",
+                constraints = {
+                    @ConstraintVariableType(type = "double[]", variable = "$v")
+                }
+        ),
+        @TriggerPattern(
+                value="java.lang.IO.print($v)",
+                constraints = {
+                    @ConstraintVariableType(type = "boolean[]", variable = "$v")
+                }
+        )
+    })
+    public static ErrorDescription printIO(HintContext ctx) {
+        return printStreamWriter(ctx, TEXT_ArrayPrintedWithIO());
+    }
+    
+    @TriggerPatterns({
+        @TriggerPattern(
+                value="java.lang.IO.println($v)",
+                constraints = {
+                    @ConstraintVariableType(type = "java.lang.Object[]", variable = "$v")
+                }
+        ),
+        @TriggerPattern(
+                value="java.lang.IO.println($v)",
+                constraints = {
+                    @ConstraintVariableType(type = "int[]", variable = "$v")
+                }
+        ),
+        @TriggerPattern(
+                value="java.lang.IO.println($v)",
+                constraints = {
+                    @ConstraintVariableType(type = "char[]", variable = "$v")
+                }
+        ),
+        @TriggerPattern(
+                value="java.lang.IO.println($v)",
+                constraints = {
+                    @ConstraintVariableType(type = "short[]", variable = "$v")
+                }
+        ),
+        @TriggerPattern(
+                value="java.lang.IO.println($v)",
+                constraints = {
+                    @ConstraintVariableType(type = "byte[]", variable = "$v")
+                }
+        ),
+        @TriggerPattern(
+                value="java.lang.IO.println($v)",
+                constraints = {
+                    @ConstraintVariableType(type = "long[]", variable = "$v")
+                }
+        ),
+        @TriggerPattern(
+                value="java.lang.IO.println($v)",
+                constraints = {
+                    @ConstraintVariableType(type = "float[]", variable = "$v")
+                }
+        ),
+        @TriggerPattern(
+                value="java.lang.IO.println($v)",
+                constraints = {
+                    @ConstraintVariableType(type = "double[]", variable = "$v")
+                }
+        ),
+        @TriggerPattern(
+                value="java.lang.IO.println($v)",
+                constraints = {
+                    @ConstraintVariableType(type = "boolean[]", variable = "$v")
+                }
+        )
+    })
+    public static ErrorDescription printlnIO(HintContext ctx) {
+        TreePath arrayRef = ctx.getVariables().get("$v");
+        TypeMirror m = ctx.getInfo().getTrees().getTypeMirror(arrayRef);
+        if (!Utilities.isValidType(m) || m.getKind() == TypeKind.NULL) {
+            return null;
+        }
+        return printIO(ctx);
     }
 
     @TriggerPatterns({

@@ -29,6 +29,8 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
+import org.netbeans.api.db.explorer.ConnectionListener;
+import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseException;
 import org.netbeans.api.db.explorer.DatabaseMetaDataTransfer;
 import org.netbeans.api.db.explorer.node.BaseNode;
@@ -47,6 +49,7 @@ import org.netbeans.modules.db.metadata.model.api.MetadataModels;
 import org.netbeans.modules.db.util.PropertiesEditor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.awt.Actions;
 import org.openide.nodes.Sheet;
 import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
@@ -60,7 +63,7 @@ import org.openide.util.datatransfer.ExTransferable;
  *
  * @author Rob Englander
  */
-public class ConnectionNode extends BaseNode implements PropertyChangeListener {
+public class ConnectionNode extends BaseNode implements PropertyChangeListener, ConnectionListener {
 
     private static final Logger LOG = Logger.getLogger(ConnectionNode.class.getName());
     
@@ -101,6 +104,7 @@ public class ConnectionNode extends BaseNode implements PropertyChangeListener {
         super(new ChildNodeFactory(lookup), lookup, FOLDER, provider);
         connection = getLookup().lookup(DatabaseConnection.class);
         lookup.add(DatabaseConnectionAccessor.DEFAULT.createDatabaseConnection(connection));
+        ConnectionManager.getDefault().addConnectionListener(WeakListeners.create(ConnectionListener.class, this, ConnectionManager.getDefault()));
     }
 
     @Override
@@ -109,6 +113,40 @@ public class ConnectionNode extends BaseNode implements PropertyChangeListener {
         connection.addPropertyChangeListener(WeakListeners.propertyChange(this, connection));
         updateModel();
     }
+    
+    private boolean preferred;
+
+    @Override
+    public void connectionsChanged() {
+        if (preferred || 
+            connection.getDatabaseConnection() == ConnectionManager.getDefault().getPreferredConnection(true)) {
+            update();
+        }
+    }
+
+    @Override
+    protected void updateProperties() {
+        boolean iAmPreferred = connection.getDatabaseConnection() == ConnectionManager.getDefault().getPreferredConnection(true);
+        super.updateProperties();
+        if (preferred != iAmPreferred) {
+            this.preferred = iAmPreferred;
+            fireDisplayNameChange(null, null);
+        }
+    }
+
+    @Override
+    public String getHtmlDisplayName() {
+        String s = super.getHtmlDisplayName();
+        if (s == null) {
+            s = getName();
+        }
+        if (preferred) {
+            s = "<b>" + s + "</b>";
+        }
+        return s;
+    }
+    
+    
 
     private final RequestProcessor.Task UPDATE = RP.create(
             new Runnable() { //#203127 - asynchronous update
@@ -467,7 +505,7 @@ public class ConnectionNode extends BaseNode implements PropertyChangeListener {
     public Action getPreferredAction() {
         boolean disconnected = ! connection.isVitalConnection();
         if (disconnected) {
-            return SystemAction.get(ConnectAction.class);
+            return Actions.forID("Database", "netbeans.db.explorer.action.Connect"); // NOI18N
         } else {
             return null;
         }

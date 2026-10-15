@@ -37,10 +37,7 @@ import org.netbeans.modules.glassfish.tooling.logging.Logger;
  */
 class RunnerTask extends AbstractTask {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Command execution listener.
      * <p/>
@@ -83,10 +80,7 @@ class RunnerTask extends AbstractTask {
         
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(RunnerTask.class);
     
@@ -110,10 +104,7 @@ class RunnerTask extends AbstractTask {
         this.result = null;
     }
 
-    ////////////////////////////////////////////////////////////////////////
     // Runnable run() method                                              //
-    ////////////////////////////////////////////////////////////////////////
-
     /**
      * Thread main method to be executed.
      * <p/>

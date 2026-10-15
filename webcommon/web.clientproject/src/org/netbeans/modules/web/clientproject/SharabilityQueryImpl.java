@@ -74,7 +74,7 @@ public final class SharabilityQueryImpl implements SharabilityQueryImplementatio
         for (String src : sourceRootProperties) {
             props.add("${" + src + "}"); // NOI18N
         }
-        return helper.createSharabilityQuery2(evaluator, props.toArray(new String[props.size()]), new String[0]);
+        return helper.createSharabilityQuery2(evaluator, props.toArray(new String[0]), new String[0]);
     }
 
     private void addSourceRootsListener() {

@@ -597,7 +597,7 @@ public class ClientSideProject implements Project {
 
         @Override
         public Icon getIcon() {
-            return new ImageIcon(ImageUtilities.loadImage(ClientSideProject.HTML5_PROJECT_ICON));
+            return ImageUtilities.loadIcon(ClientSideProject.HTML5_PROJECT_ICON);
         }
 
         @Override
@@ -808,7 +808,7 @@ public class ClientSideProject implements Project {
     private static class SiteRootFolderListener implements FileChangeListener {
 
         private final ClientSideProject p;
-        private final FileObject siteRootFolder;;
+        private final FileObject siteRootFolder;
 
         SiteRootFolderListener(ClientSideProject p) {
             this.p = p;
@@ -961,7 +961,7 @@ public class ClientSideProject implements Project {
             FileObject projectDir = project.getProjectDirectory();
             roots.add(projectDir);
             addRoots(roots, projectDir, project.getSourcesFolder(), project.getSiteRootFolder(), project.getTestsFolder(false), project.getTestsSeleniumFolder(false));
-            return roots.toArray(new FileObject[roots.size()]);
+            return roots.toArray(new FileObject[0]);
         }
 
         /**

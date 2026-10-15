@@ -1,0 +1,18 @@
+Code completion result for source line:
+const CONSTANT2 = self::|CASE2;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     privateStaticEnumMethod()       [PRIVATE,  \Enum1\Simple
+METHOD     privateStaticTraitMethod()      [PRIVATE,  \Enum1\TestTrait
+METHOD     protectedStaticEnumMethod()     [PROTECTE  \Enum1\Simple
+METHOD     protectedStaticTraitMethod()    [PROTECTE  \Enum1\TestTrait
+METHOD     publicStaticEnumMethod()        [STATIC]   \Enum1\Simple
+METHOD     publicStaticTraitMethod()       [STATIC]   \Enum1\TestTrait
+METHOD     testStaticEnum()                [STATIC]   \Enum1\Simple
+CONSTANT   CASE1                           [PUBLIC]   \Enum1\Simple
+CONSTANT   CASE2                           [PUBLIC]   \Enum1\Simple
+CONSTANT   CONSTANT1 "CONSTANT1"           [PUBLIC]   \Enum1\Simple
+CONSTANT   CONSTANT2 ?                     [PUBLIC]   \Enum1\Simple
+CONSTANT   PRIVATE_CONST "private"         [PRIVATE]  \Enum1\Simple
+CONSTANT   PROTECTED_CONST "protected"     [PROTECTE  \Enum1\Simple
+CONSTANT   PUBLIC_CONST "public"           [PUBLIC]   \Enum1\Simple
+CONSTANT   class \Enum1\Simple             [PUBLIC]   Magic Constant

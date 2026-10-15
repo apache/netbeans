@@ -432,7 +432,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
         } else if (testMethods.isEmpty()) {
             members = Collections.singletonList(abstractClassImpl);
         } else {
-            members = new ArrayList<Tree>(testMethods.size() + 1);
+            members = new ArrayList<>(testMethods.size() + 1);
             ((List<Tree>) members).addAll(testMethods);
             ((List<Tree>) members).add(abstractClassImpl);
         }
@@ -475,7 +475,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
                                                    workingCopy));
             }
         } else {
-            members = new ArrayList(membersCount);
+            members = new ArrayList<>(membersCount);
             if (constructor != null) {
                 members.add(constructor);
             }
@@ -500,6 +500,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
                     Collections.<TypeParameterTree>emptyList(),   //type params
                     null,                                         //extends
                     implemetnts,                                  //implements
+                    Collections.<TypeParameterTree>emptyList(),   //permits
                     members);                                     //members
             default: // should be never happen. We'll generate a class anyway.
             case CLASS:
@@ -510,6 +511,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
                     Collections.<TypeParameterTree>emptyList(),   //type params
                     maker.QualIdent(srcClass),                    //extends
                     Collections.<ExpressionTree>emptyList(),      //implements
+                    Collections.<TypeParameterTree>emptyList(),   //permits
                     members);                                     //members
         }
     }
@@ -550,7 +552,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
         final TreeMaker maker = workingCopy.getTreeMaker();
 
         List<? extends VariableElement> defaultCtorParams
-                = new ArrayList(superCtorParams);
+                = new ArrayList<>(superCtorParams);
 
         List<ExpressionTree> throwsList =
                 (superConstructor != null)
@@ -590,7 +592,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
             return Collections.emptyList();
         }
 
-        List<ExpressionTree> result = new ArrayList(params.size());
+        List<ExpressionTree> result = new ArrayList<>(params.size());
         for (VariableElement param : params) {
             result.add(getDefaultValue(maker, param.asType()));
         }
@@ -696,7 +698,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
             return Collections.singletonList(makeCopy(typeParams.get(0), maker));
         }
 
-        List<TypeParameterTree> result = new ArrayList(size);
+        List<TypeParameterTree> result = new ArrayList<>(size);
         for (TypeParameterElement typeParam : typeParams) {
             result.add(makeCopy(typeParam, maker));
         }
@@ -715,7 +717,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
             return Collections.singletonList(makeCopy(params.get(0), maker));
         }
 
-        List<VariableTree> result = new ArrayList(size);
+        List<VariableTree> result = new ArrayList<>(size);
         for (VariableElement param : params) {
             result.add(makeCopy(param, maker));
         }
@@ -753,7 +755,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
                    ? Collections.<ExpressionTree>emptyList()
                    : Collections.singletonList((ExpressionTree) maker.Type(bound));
         } else {
-            List<ExpressionTree> result = new ArrayList(size);
+            List<ExpressionTree> result = new ArrayList<>(size);
             for (DeclaredType type : typeList) {
                 result.add((ExpressionTree) maker.Type(type));
             }
@@ -814,7 +816,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
             Set<Modifier> modifiers = method.getModifiers();
             if (modifiers.contains(ABSTRACT) && !modifiers.contains(STATIC)) {
                 if (result == null) {
-                    result = new ArrayList(remainingCount);
+                    result = new ArrayList<>(remainingCount);
                 }
                 result.add(method);
             }
@@ -918,7 +920,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
                                             trees);
 
         List<? extends Tree> tstMembersOrig = tstClass.getMembers();
-        List<Tree> tstMembers = new ArrayList<Tree>(tstMembersOrig.size() + 4);
+        List<Tree> tstMembers = new ArrayList<>(tstMembersOrig.size() + 4);
         tstMembers.addAll(tstMembersOrig);
 
         if (generateMissingInitMembers) {
@@ -1001,6 +1003,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
                 tstClass.getTypeParameters(),
                 tstClass.getExtendsClause(),
                 (List<? extends ExpressionTree>) tstClass.getImplementsClause(),
+                (List<? extends ExpressionTree>) tstClass.getPermitsClause(),
                 tstMembers);
         return newClass;
     }
@@ -1041,7 +1044,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
         Iterator<ExecutableElement> srcMethodsIt = srcMethods.iterator();
         Iterator<String> tstMethodNamesIt = testMethodNames.iterator();
 
-        List<MethodTree> testMethods = new ArrayList<MethodTree>(srcMethods.size());
+        List<MethodTree> testMethods = new ArrayList<>(srcMethods.size());
         while (srcMethodsIt.hasNext()) {
             assert tstMethodNamesIt.hasNext();
 
@@ -1134,6 +1137,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
                 tstClass.getTypeParameters(),
                 tstClass.getExtendsClause(),
                 (List<? extends ExpressionTree>) tstClass.getImplementsClause(),
+                (List<? extends ExpressionTree>) tstClass.getPermitsClause(),
                 tstMembers);
         return newClass;
     }
@@ -1174,8 +1178,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
                                             List<ExpressionTree> throwsList,
                                             WorkingCopy workingCopy);
 
-    /**
-     */
+
 //    private ClassTree generateMissingSuiteClassMembers(
 //                                            ClassTree tstClass,
 //                                            TreePath tstClassTreePath,
@@ -1208,8 +1211,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
 //                                workingCopy);
 //    }
     
-    /**
-     */
+
 //    protected abstract ClassTree finishSuiteClass(
 //                                        ClassTree tstClass,
 //                                        TreePath tstClassTreePath,
@@ -1465,7 +1467,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
                     comparisonArgs.add(maker.Identifier(actualValue.getName().toString()));
                     comparisonArgs.add(maker.Identifier(expectedValue.getName().toString()));
                     if ((retTypeKind == TypeKind.DOUBLE) || (retTypeKind == TypeKind.FLOAT)){
-                        comparisonArgs.add(maker.Identifier(new Double(0).toString()));
+                        comparisonArgs.add(maker.Identifier(Double.toString(0)));
                     }
 
                     MethodInvocationTree comparison = maker.MethodInvocation(
@@ -1551,7 +1553,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
         }
 
         Set<Modifier> noModifiers = Collections.<Modifier>emptySet();
-        List<VariableTree> paramVariables = new ArrayList<VariableTree>(params.size());
+        List<VariableTree> paramVariables = new ArrayList<>(params.size());
         int index = 0;
         for (TypeMirror param : params) {
             if (param.getKind() == TypeKind.TYPEVAR){
@@ -1685,29 +1687,29 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
                     defValue = maker.Literal(Boolean.FALSE);
                     break;
                 case CHAR:
-                    defValue = maker.Literal(new Character(' '));
+                    defValue = maker.Literal(' ');
                     break;
                 case BYTE:
-                    defValue = maker.Literal(new Byte((byte) 0));
+                    defValue = maker.Literal((byte) 0);
                     break;
                 case SHORT:
-                    defValue = maker.Literal(new Short((short) 0));
+                    defValue = maker.Literal((short) 0);
                     break;
                 case INT:
-                    defValue = maker.Literal(new Integer(0));
+                    defValue = maker.Literal(0);
                     break;
                 case FLOAT:
-                    defValue = maker.Literal(new Float(0.0F));
+                    defValue = maker.Literal(0.0F);
                     break;
                 case LONG:
-                    defValue = maker.Literal(new Long(0L));
+                    defValue = maker.Literal(0L);
                     break;
                 case DOUBLE:
-                    defValue = maker.Literal(new Double(0.0));
+                    defValue = maker.Literal(0.0D);
                     break;
                 default:
                     assert false : "unknown primitive type";            //NOI18N
-                    defValue = maker.Literal(new Integer(0));
+                    defValue = maker.Literal(0);
                     break;
             }
         } else if ((typeKind == TypeKind.DECLARED)
@@ -2156,7 +2158,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
 
     private List<VariableTree> generateEJBLookupCode(TreeMaker maker, TypeElement srcClass, ExecutableElement srcMethod) {
         final String ejbContainerPackage = "javax.ejb.embeddable.EJBContainer"; // NOI18N
-        List<VariableTree> trees = new ArrayList<VariableTree>();
+        List<VariableTree> trees = new ArrayList<>();
 
         // TODO: there are probably better ways how to generate code below:
         IdentifierTree container = maker.Identifier(ejbContainerPackage); 

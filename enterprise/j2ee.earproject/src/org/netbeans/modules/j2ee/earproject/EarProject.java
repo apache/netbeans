@@ -428,7 +428,7 @@ public final class EarProject implements Project, AntProjectListener {
         protected void projectOpened() {
             helper.getStandardPropertyEvaluator().addPropertyChangeListener(EarProject.this.appModule);
 
-            J2eeArchiveLogicalViewProvider logicalViewProvider = (J2eeArchiveLogicalViewProvider) EarProject.this.getLookup().lookup (J2eeArchiveLogicalViewProvider.class);
+            J2eeArchiveLogicalViewProvider logicalViewProvider = EarProject.this.getLookup().lookup(J2eeArchiveLogicalViewProvider.class);
             if (logicalViewProvider != null) {
                 logicalViewProvider.initialize();
             }

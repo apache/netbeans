@@ -107,7 +107,7 @@ public final class FallbackDefaultJavaPlatform extends JavaPlatform {
             }
             roots.add(u);
         }
-        return ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
+        return ClassPathSupport.createClassPath(roots.toArray(new URL[0]));
     }
 
     private static ClassPath sampleClass2CP(Class prototype) {

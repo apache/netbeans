@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.project.ui;
 
+import java.awt.Color;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -35,7 +36,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -45,6 +45,7 @@ import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.UIManager;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -85,10 +86,8 @@ import org.openide.util.LookupListener;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
-import org.openide.util.Union2;
 import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 import org.openide.util.lookup.ServiceProvider;
@@ -99,7 +98,7 @@ import org.openide.xml.XMLUtil;
 public class ProjectsRootNode extends AbstractNode {
 
     private static final Logger LOG = Logger.getLogger(ProjectsRootNode.class.getName());
-    private static final Set<ProjectsRootNode> all = new WeakSet<ProjectsRootNode>();
+    private static final Set<ProjectsRootNode> all = Collections.newSetFromMap(new WeakHashMap<>());
     private static final RequestProcessor RP = new RequestProcessor(ProjectsRootNode.class);
 
     static final int PHYSICAL_VIEW = 0;
@@ -150,7 +149,7 @@ public class ProjectsRootNode extends AbstractNode {
             return new Action[0];
         } else {
             List<? extends Action> actions = Utilities.actionsForPath(type == PHYSICAL_VIEW ? ACTIONS_FOLDER_PHYSICAL : ACTIONS_FOLDER);
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
     }
     
@@ -161,7 +160,7 @@ public class ProjectsRootNode extends AbstractNode {
 
         ProjectChildren ch = (ProjectChildren)getChildren();
 
-        assert ((ch.type == LOGICAL_VIEW) || (ch.type == PHYSICAL_VIEW));
+        assert ((ch.type() == LOGICAL_VIEW) || (ch.type() == PHYSICAL_VIEW));
         // Speed up search in case we have an owner project - look in its node first.
         Project ownerProject = findProject(target);
         final SelectInProjectFileOwnerQueryImpl foq = SelectInProjectFileOwnerQueryImpl.getInstance();
@@ -184,7 +183,7 @@ public class ProjectsRootNode extends AbstractNode {
                         // ...but it is not clear who has implemented findPath to assume FileObject!
                         n = lvp.findPath(node, target);
                     }
-                    if (n == null && ch.type == PHYSICAL_VIEW) {
+                    if (n == null && ch.type() == PHYSICAL_VIEW) {
                         PhysicalView.PathFinder pf = node.getLookup().lookup(PhysicalView.PathFinder.class);
                         if ( pf != null ) {
                             n = pf.findPath(node, target);
@@ -258,35 +257,47 @@ public class ProjectsRootNode extends AbstractNode {
        
     
     // However project rename is currently disabled so it is not a big deal
-    static class ProjectChildren extends Children.Keys<ProjectChildren.Pair> implements ChangeListener, PropertyChangeListener, NodeListener {
+    static class ProjectChildren extends Children.Keys<ProjectsRootKeys.PrjInfo> implements ChangeListener, PropertyChangeListener, NodeListener {
 
         static final RequestProcessor RP = new RequestProcessor(ProjectChildren.class);
 
         private final java.util.Map <Sources,Reference<Project>> sources2projects = new WeakHashMap<Sources,Reference<Project>>();
-        //@GuardedBy("projects2Pairs")
-        private final java.util.Map <Project,Reference<Pair>> projects2Pairs = Collections.synchronizedMap(new WeakHashMap<>());
-        
-        final int type;
+        private final ProjectsRootKeys rootKeys;
         
         public ProjectChildren( int type ) {
-            this.type = type;            
+            this.rootKeys = new ProjectsRootKeys(type) {
+                @Override
+                Project[] listProjects() {
+                    return OpenProjectList.getDefault().getOpenProjects();
+                }
+
+                @Override
+                void depthUpdated(PrjInfo info) {
+                    for (var n : getNodes()) {
+                        if (n instanceof BadgingNode bn && bn.pair.equals(info)) {
+                            bn.fireDisplayNameChange();
+                        }
+                    }
+                }
+            };
+        }
+
+        /** Constructors for running unit tests in isolation */
+        ProjectChildren(ProjectsRootKeys keys) {
+            this.rootKeys = keys;
         }
         
         // Children.Keys impl --------------------------------------------------
         
         @Override
-        public void addNotify() {   
+        public void addNotify() {
             OpenProjectList.getDefault().addPropertyChangeListener(this);              
-            if (Boolean.getBoolean("test.projectnode.sync")) {
-                setKeys( getKeys());
-            } else {
-                RP.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        setKeys( getKeys() );
-                    }
-                });
-            }
+            RP.post(new Runnable() {
+                @Override
+                public void run() {
+                    setKeys( getKeys() );
+                }
+            });
         }
 
         @Override
@@ -296,8 +307,7 @@ public class ProjectsRootNode extends AbstractNode {
                 sources.removeChangeListener( this );                
             }
             sources2projects.clear();
-            projects2Pairs.clear();
-            setKeys(Collections.<Pair>emptySet());
+            setKeys(rootKeys.clear());
         }
 
         @Override
@@ -308,19 +318,25 @@ public class ProjectsRootNode extends AbstractNode {
             return super.getNodesCount(optimalResult);
         }
 
-
+        @Override
+        public Node[] getNodes(boolean optimalResult) {
+            if (optimalResult) {
+                setKeys(getKeys());
+            }
+            return super.getNodes(optimalResult);
+        }
         
         @Override
-        protected Node[] createNodes(Pair p) {
-            Project project = p.project;
+        protected Node[] createNodes(ProjectsRootKeys.PrjInfo info) {
+            Project project = info.project();
             
             Node origNodes[] = null;
             boolean[] projectInLookup = new boolean[1];
             projectInLookup[0] = true;
                         
-            if (type == PHYSICAL_VIEW) {
-                final Sources sources = p.data.second().first();
-                final SourceGroup[] groups = p.data.second().second();
+            if (type() == PHYSICAL_VIEW) {
+                final Sources sources = info.getSources();
+                final SourceGroup[] groups = info.getSourceGroups();
                 sources.removeChangeListener( this );
                 sources.addChangeListener( this );
                 sources2projects.put( sources, new WeakReference<Project>( project ) );
@@ -331,29 +347,29 @@ public class ProjectsRootNode extends AbstractNode {
                         nodes.add(n);
                     }
                 }
-                origNodes = nodes.toArray(new Node[nodes.size()]);
+                origNodes = nodes.toArray(new Node[0]);
             } else {
-                assert type == LOGICAL_VIEW;
+                assert type() == LOGICAL_VIEW;
                 origNodes = new Node[] {
                     logicalViewForProject(
                             project,
-                            p.data,
+                            info,
                             projectInLookup)
                 };
             }
 
             Node[] badgedNodes = new Node[ origNodes.length ];
             for( int i = 0; i < origNodes.length; i++ ) {
-                if ( type == PHYSICAL_VIEW && !PhysicalView.isProjectDirNode( origNodes[i] ) ) {
+                if ( type() == PHYSICAL_VIEW && !PhysicalView.isProjectDirNode( origNodes[i] ) ) {
                     // Don't badge external sources
                     badgedNodes[i] = origNodes[i];
                 }
                 else {
                     badgedNodes[i] = new BadgingNode(
                         this,
-                        p,
+                        info,
                         origNodes[i],
-                        type == LOGICAL_VIEW
+                        type() == LOGICAL_VIEW
                     );
                 }
             }
@@ -364,19 +380,20 @@ public class ProjectsRootNode extends AbstractNode {
         @NonNull
         final Node logicalViewForProject(
                 @NonNull final Project project,
-                final Union2<LogicalViewProvider,org.openide.util.Pair<Sources,SourceGroup[]>> data,
+                final ProjectsRootKeys.PrjInfo p,
                 final boolean[] projectInLookup) {
-            Node node;            
-            if (!data.hasFirst()) {
+            Node node;
+            var lvp = p.getLocalViewProvider();
+            if (lvp == null) {
                 LOG.log(
                         Level.WARNING,
-                        "Warning - project of {0} in {1} failed to supply a LogicalViewProvider in its lookup",  // NOI18N
+                        "Warning - project of {0} in {1} doesn't supply a LogicalViewProvider in its lookup",  // NOI18N
                         new Object[]{
                             project.getClass(),
                             FileUtil.getFileDisplayName(project.getProjectDirectory())
                         });
-                final Sources sources = data.second().first();
-                final SourceGroup[] groups = data.second().second();
+                final Sources sources = p.getSources();
+                final SourceGroup[] groups = p.getSourceGroups();
                 sources.removeChangeListener(this);
                 sources.addChangeListener(this);
                 if (groups.length > 0) {
@@ -385,7 +402,6 @@ public class ProjectsRootNode extends AbstractNode {
                     node = Node.EMPTY;
                 }
             } else {
-                final LogicalViewProvider lvp = data.first();
                 node = lvp.createLogicalView();
                 if (!project.equals(node.getLookup().lookup(Project.class))) {
                     // Various actions, badging, etc. are not going to work.
@@ -413,19 +429,16 @@ public class ProjectsRootNode extends AbstractNode {
         // PropertyChangeListener & NodeListener impl -----------------------------------------
         
         @Override
-        public void propertyChange( PropertyChangeEvent e ) {
-            if ( OpenProjectList.PROPERTY_OPEN_PROJECTS.equals( e.getPropertyName() ) ) {
-                RP.post(new Runnable() {
-                    public @Override void run() {
-                        setKeys(getKeys());
-                    }
-                });
-            } else if( PROP_DISPLAY_NAME.equals(e.getPropertyName()) ) {
-                RP.schedule(new Runnable() {
-                    public @Override void run() {
-                        setKeys( getKeys() );
-                    }
-                }, 500, TimeUnit.MILLISECONDS);
+        public void propertyChange(PropertyChangeEvent e) {
+            String prop = e.getPropertyName();
+            if (prop == null) {
+                return;
+            }
+            switch (prop) {
+                case OpenProjectList.PROPERTY_OPEN_PROJECTS -> 
+                    RP.post(() -> setKeys(getKeys()));
+                case PROP_DISPLAY_NAME -> 
+                    RP.schedule(() -> setKeys(getKeys()), 500, TimeUnit.MILLISECONDS);
             }
         }
         
@@ -448,108 +461,25 @@ public class ProjectsRootNode extends AbstractNode {
             // Fix for 50259, callers sometimes hold locks
             RP.post(new Runnable() {
                 public @Override void run() {
-                    Optional.ofNullable(projects2Pairs.get(project))
-                            .map((ref) -> ref.get())
-                            .ifPresent((p) -> p.update(project));
+                    rootKeys.update(project);
                     refresh(project);
                 }
             } );
         }
         
         final void refresh(Project p) {
-            refreshKey(new Pair(p, type));
+            refreshKey(rootKeys.createInfo(p, type() == LOGICAL_VIEW));
         }
                                 
         // Own methods ---------------------------------------------------------
         
-        public Collection<Pair> getKeys() {
-            List<Project> projects = Arrays.asList( OpenProjectList.getDefault().getOpenProjects() );
-            Collections.sort(projects, OpenProjectList.projectByDisplayName());
-            
-            final List<Pair> dirs = new ArrayList<>(projects.size());
-            final java.util.Map<Project,Pair> snapshot = new HashMap<>();
-            for (Project project : projects) {
-                final Pair p = new Pair(project, type);
-                dirs.add(p);
-                snapshot.put(project, p);
-            }
-            synchronized (projects2Pairs) {
-                projects2Pairs.clear();
-                snapshot.entrySet()
-                        .forEach((e) -> projects2Pairs.put(
-                                e.getKey(),
-                                new WeakReference<>(e.getValue())));
-                
-            }
-            return dirs;
+        public Collection<ProjectsRootKeys.PrjInfo> getKeys() {
+            return this.rootKeys.getKeys();
         }
-        
-        /** Object that comparers two projects just by their directory.
-         * This allows to replace a LazyProject with real one without discarding
-         * the nodes.
-         */
-        static final class Pair extends Object {
-            Project project;
-            final FileObject fo;
-            private final int type;
-            private Union2<LogicalViewProvider,org.openide.util.Pair<Sources,SourceGroup[]>> data;
 
-            public Pair(
-                    final Project project,
-                    final int type) {
-                this.project = project;
-                this.fo = project.getProjectDirectory();
-                this.type = type;
-                this.data = createData(project, type);
-            }
-
-            @Override
-            public boolean equals(Object obj) {
-                if (obj == null) {
-                    return false;
-                }
-                if (getClass() != obj.getClass()) {
-                    return false;
-                }
-                final Pair other = (Pair) obj;
-                if (this.fo != other.fo && (this.fo == null || !this.fo.equals(other.fo))) {
-                    return false;
-                }
-                return true;
-            }
-
-            @Override
-            public int hashCode() {
-                int hash = 7;
-                hash = 53 * hash + (this.fo != null ? this.fo.hashCode() : 0);
-                return hash;
-            }
-
-            private void update(@NonNull final Project project) {
-                assert project != null;
-                this.project = project;
-                this.data = createData(project, type);
-            }
-
-            private static Union2<LogicalViewProvider,org.openide.util.Pair<Sources,SourceGroup[]>> createData(
-                    final Project p,
-                    final int type) {
-                switch (type) {
-                    case LOGICAL_VIEW:
-                        final LogicalViewProvider lvp = p.getLookup().lookup(LogicalViewProvider.class);
-                        if (lvp != null) {
-                            return Union2.createFirst(lvp);
-                        }
-                    case PHYSICAL_VIEW:
-                        final Sources s = ProjectUtils.getSources(p);
-                        final SourceGroup[] groups = s.getSourceGroups(Sources.TYPE_GENERIC);                
-                        return Union2.createSecond(org.openide.util.Pair.of(s, groups));
-                    default:
-                        throw new IllegalArgumentException(Integer.toString(type));
-                }
-            }
+        private int type() {
+            return rootKeys.type();
         }
-                                                
     }
 
     static final class BadgingNode extends FilterNode implements ChangeListener, PropertyChangeListener, Runnable, FileStatusListener {
@@ -565,8 +495,8 @@ public class ProjectsRootNode extends AbstractNode {
         private volatile Boolean mainCache;
         private final ProjectChildren ch;
         private final boolean logicalView;
-        private final ProjectChildren.Pair pair;
-        private final Set<FileObject> projectDirsListenedTo = new WeakSet<FileObject>();
+        final ProjectsRootKeys.PrjInfo pair;
+        private final Set<FileObject> projectDirsListenedTo = Collections.newSetFromMap(new WeakHashMap<>());
         private static final int DELAY = 50;
         private final FileChangeListener newSubDirListener = new FileChangeAdapter() {
             public @Override void fileDataCreated(FileEvent fe) {
@@ -592,7 +522,7 @@ public class ProjectsRootNode extends AbstractNode {
         private final Lookup.Result<ProjectIconAnnotator> result = Lookup.getDefault().lookupResult(ProjectIconAnnotator.class);
         
         static class AnnotationListener implements LookupListener, ChangeListener {
-            private final Set<ProjectIconAnnotator> annotators = new WeakSet<ProjectIconAnnotator>();
+            private final Set<ProjectIconAnnotator> annotators = Collections.newSetFromMap(new WeakHashMap<>());
             private final Reference<BadgingNode> node;
             
             public AnnotationListener(BadgingNode node) {
@@ -623,15 +553,19 @@ public class ProjectsRootNode extends AbstractNode {
             }
         }
 
-        public BadgingNode(ProjectChildren ch, ProjectChildren.Pair p, Node n, boolean logicalView) {
+        public BadgingNode(ProjectChildren ch, ProjectsRootKeys.PrjInfo p, Node n, boolean logicalView) {
             super(n, null, badgingLookup(n));
             this.ch = ch;
             this.pair = p;
             this.logicalView = logicalView;
-            OpenProjectList.log(Level.FINER, "BadgingNode init {0}", toStringForLog()); // NOI18N
+            if (LOG.isLoggable(Level.FINER)) {
+                LOG.log(Level.FINER, "BadgingNode init {0}", toStringForLog()); // NOI18N
+            }
             OpenProjectList.getDefault().addPropertyChangeListener(WeakListeners.propertyChange(this, OpenProjectList.getDefault()));
             setProjectFilesAsynch();
-            OpenProjectList.log(Level.FINER, "BadgingNode finished {0}", toStringForLog()); // NOI18N
+            if (LOG.isLoggable(Level.FINER)) {
+                LOG.log(Level.FINER, "BadgingNode finished {0}", toStringForLog()); // NOI18N
+            }
             AnnotationListener annotationListener = new AnnotationListener(this);
             annotationListener.init();
             result.addLookupListener(annotationListener);
@@ -653,21 +587,28 @@ public class ProjectsRootNode extends AbstractNode {
             if (newProj == null) {
                 try {
                     newProj = ProjectManager.getDefault().findProject(pair.fo);
-                    if (newProj == pair.project) {
+                    if (newProj == pair.project()) {
                         return;
                     }
-                } catch (IOException ex) {
-                    OpenProjectList.log(Level.INFO, "No project for " + pair.fo, ex); // NOI18N
-                } catch (IllegalArgumentException ex) {
-                    OpenProjectList.log(Level.INFO, "No project for " + pair.fo, ex); // NOI18N
+                } catch (IOException | IllegalArgumentException ex) {
+                    OpenProjectList.LOGGER.log(Level.INFO, "No project for " + pair.fo, ex); // NOI18N
                 }
-
             }
-            
-            OpenProjectList.log(Level.FINER, "replacing for {0}", toStringForLog());
+
+            // fast path before lookup. This method can be hot during startup.
+            if (newProj != null && !pair.fo.equals(newProj.getProjectDirectory())) {
+                return;
+            }
+
+            if (OpenProjectList.LOGGER.isLoggable(Level.FINER)) {
+                OpenProjectList.log(Level.FINER, "replacing for {0}", toStringForLog());
+            }
+
             Project p = getLookup().lookup(Project.class);
             if (p == null) {
-                OpenProjectList.log(Level.FINE, "no project in lookup {0}", toStringForLog());
+                if (OpenProjectList.LOGGER.isLoggable(Level.FINE)) {
+                    OpenProjectList.log(Level.FINE, "no project in lookup {0}", toStringForLog());
+                }
                 return;
             }
             FileObject fo = p.getProjectDirectory();
@@ -676,9 +617,7 @@ public class ProjectsRootNode extends AbstractNode {
                 if (logicalView) {
                     n = ch.logicalViewForProject(
                             newProj,
-                            ProjectChildren.Pair.createData(
-                                    newProj,
-                                    logicalView ? LOGICAL_VIEW : PHYSICAL_VIEW),
+                            ch.rootKeys.createInfo(newProj, logicalView),
                             null);
                     OpenProjectList.log(Level.FINER, "logical view {0}", n);
                 } else {
@@ -697,33 +636,35 @@ public class ProjectsRootNode extends AbstractNode {
                         n = Node.EMPTY;
                     }
                 }
-                OpenProjectList.log(Level.FINER, "change original: {0}", n);
-                OpenProjectList.log(Level.FINER, "children before change original: {0}", getChildren());
-                OpenProjectList.log(Level.FINER, "delegate children before change original: {0}", getOriginal().getChildren());
+                if (OpenProjectList.LOGGER.isLoggable(Level.FINER)) {
+                    OpenProjectList.log(Level.FINER, "change original: {0}", n);
+                    OpenProjectList.log(Level.FINER, "children before change original: {0}", getChildren());
+                    OpenProjectList.log(Level.FINER, "delegate children before change original: {0}", getOriginal().getChildren());
+                }
                 changeOriginal(n, true);
-                OpenProjectList.log(Level.FINER, "delegate after change original: {0}", getOriginal());
-                OpenProjectList.log(Level.FINER, "name after change original: {0}", getName());
-                OpenProjectList.log(Level.FINER, "children after change original: {0}", getChildren());
-                OpenProjectList.log(Level.FINER, "delegate children after change original: {0}", getOriginal().getChildren());
+                if (OpenProjectList.LOGGER.isLoggable(Level.FINER)) {
+                    OpenProjectList.log(Level.FINER, "delegate after change original: {0}", getOriginal());
+                    OpenProjectList.log(Level.FINER, "name after change original: {0}", getName());
+                    OpenProjectList.log(Level.FINER, "children after change original: {0}", getChildren());
+                    OpenProjectList.log(Level.FINER, "delegate children after change original: {0}", getOriginal().getChildren());
+                }
                 BadgingLookup bl = (BadgingLookup) getLookup();
                 bl.setMyLookups(n.getLookup());
-                OpenProjectList.log(Level.FINER, "done {0}", toStringForLog());
+                if (OpenProjectList.LOGGER.isLoggable(Level.FINER)) {
+                    OpenProjectList.log(Level.FINER, "done {0}", toStringForLog());
+                }
                 setProjectFilesAsynch();
             } else {
-                FileObject newDir;
-                if (newProj != null) {
-                    newDir = newProj.getProjectDirectory();
-                } else {
-                    newDir = null;
+                if (newProj == null) {
                     //#228790 use RP instead of EventQueue.invokeLater, job can block on project write mutex
-                    RP.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            OpenProjectList.getDefault().close(new Project[] { pair.project }, false);
-                        }
+                    RP.post(() -> {
+                        OpenProjectList.getDefault().close(new Project[] { pair.project() }, false);
                     });
                 }
-                OpenProjectList.log(Level.FINER, "wrong directories. current: " + fo + " new " + newDir);
+                if (OpenProjectList.LOGGER.isLoggable(Level.FINER)) {
+                    OpenProjectList.log(Level.FINER, "wrong directories. current: " + fo
+                            + " new " + (newProj != null ? newProj.getProjectDirectory() : null));
+                }
             }
         }
 
@@ -814,8 +755,12 @@ public class ProjectsRootNode extends AbstractNode {
                 fireOpenedIconChange();
             }
             if (fireName) {
-                fireDisplayNameChange(null, null);
+                fireDisplayNameChange();
             }
+        }
+
+        private void fireDisplayNameChange() {
+            fireDisplayNameChange(null, null);
         }
 
         @Override
@@ -847,7 +792,8 @@ public class ProjectsRootNode extends AbstractNode {
                     LOG.log(Level.INFO, null, e);
                 }
             }
-            return original;
+            String indentText = ProjectsLaF.indentationPrefix(false, pair.depth());
+            return indentText + original;
         }
 
         /** Get display name used for logging as original display name can cause deadlock issue #160512 */
@@ -892,8 +838,10 @@ public class ProjectsRootNode extends AbstractNode {
                 } catch (FileStateInvalidException e) {
                     LOG.log(Level.INFO, null, e);
                 }
-            }      
-            return isMainAsync()? "<b>" + htmlName + "</b>" : htmlName;
+            }
+            String html = isMainAsync()? "<b>" + htmlName + "</b>" : htmlName;
+            String indentText = ProjectsLaF.indentationPrefix(true, pair.depth());
+            return indentText + html;
         }
 
         public @Override Image getIcon(int type) {
@@ -926,16 +874,18 @@ public class ProjectsRootNode extends AbstractNode {
         }
 
         @Override
-        public void propertyChange( PropertyChangeEvent e ) {
-            if ( OpenProjectList.PROPERTY_MAIN_PROJECT.equals( e.getPropertyName() ) ) {
-                mainCache = null;
-                fireDisplayNameChange( null, null );
+        public void propertyChange(PropertyChangeEvent e) {
+            String prop = e.getPropertyName();
+            if (prop == null) {
+                return;
             }
-            if ( OpenProjectList.PROPERTY_REPLACE.equals(e.getPropertyName())) {
-                replaceProject((Project)e.getNewValue());
-            }
-            if (SourceGroup.PROP_CONTAINERSHIP.equals(e.getPropertyName())) {
-                setProjectFilesAsynch();
+            switch (prop) {
+                case OpenProjectList.PROPERTY_MAIN_PROJECT -> {
+                    mainCache = null;
+                    fireDisplayNameChange();
+                }
+                case OpenProjectList.PROPERTY_REPLACE -> replaceProject((Project)e.getNewValue());
+                case SourceGroup.PROP_CONTAINERSHIP -> setProjectFilesAsynch();
             }
         }
 
@@ -948,7 +898,7 @@ public class ProjectsRootNode extends AbstractNode {
                 @Override
                 public void run() {                    
                     mainCache = isMain();
-                    fireDisplayNameChange( null, null );
+                    fireDisplayNameChange( );
                 }
             });
             return false;

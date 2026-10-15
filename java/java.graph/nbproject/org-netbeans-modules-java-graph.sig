@@ -1,10 +1,11 @@
 #Signature file v4.1
-#Version 1.6
+#Version 1.34
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -312,6 +313,7 @@ meth public java.lang.String getName()
 meth public java.lang.String getTooltipText()
 meth public java.util.Set<{org.netbeans.modules.java.graph.GraphNode%0}> getDuplicatesOrConflicts()
 meth public void addDuplicateOrConflict({org.netbeans.modules.java.graph.GraphNode%0})
+meth public void removeDuplicateOrConflict({org.netbeans.modules.java.graph.GraphNode%0})
 meth public void setImpl({org.netbeans.modules.java.graph.GraphNode%0})
 meth public void setManagedState(int)
 meth public void setParent({org.netbeans.modules.java.graph.GraphNode%0})

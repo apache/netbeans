@@ -30,14 +30,14 @@ import org.netbeans.modules.visual.graph.layout.orthogonalsupport.MGraph.Vertex;
  *
  * @author ptliu
  */
-public class DualGraph {
+public class DualGraph<N, E> {
 
-    private EmbeddedPlanarGraph originalGraph;
+    private EmbeddedPlanarGraph<N, E> originalGraph;
     private Map<Face, FaceVertex> vertexMap;
     private Collection<FaceVertex> vertices;
-    private Map<Edge, FaceEdge> edgeMap;
+    private Map<Edge<?>, FaceEdge> edgeMap;
     private Collection<FaceEdge> edges;
-    private Collection<Edge> edgesToIgnore;
+    private Collection<Edge<?>> edgesToIgnore;
     private Collection<Face> facesToIgnore;
 
     /**
@@ -47,10 +47,10 @@ public class DualGraph {
      * @param edgesToIgnore
      * @return
      */
-    public static DualGraph createGraph(EmbeddedPlanarGraph graph,
+    public static <N, E> DualGraph<N, E> createGraph(EmbeddedPlanarGraph<N, E> graph,
             Collection<Face> facesToIgnore,
-            Collection<Edge> edgesToIgnore) {
-        DualGraph dualGraph = new DualGraph(graph, facesToIgnore, edgesToIgnore);
+            Collection<Edge<?>> edgesToIgnore) {
+        DualGraph<N, E> dualGraph = new DualGraph<>(graph, facesToIgnore, edgesToIgnore);
         dualGraph.createGraph();
 
         return dualGraph;
@@ -62,16 +62,16 @@ public class DualGraph {
      * @param facesToIgnore
      * @param edgesToIgnore
      */
-    private DualGraph(EmbeddedPlanarGraph graph, Collection<Face> facesToIgnore,
-            Collection<Edge> edgesToIgnore) {
+    private DualGraph(EmbeddedPlanarGraph<N, E> graph, Collection<Face> facesToIgnore,
+            Collection<Edge<?>> edgesToIgnore) {
         this.originalGraph = graph;
         this.facesToIgnore = facesToIgnore;
         this.edgesToIgnore = edgesToIgnore;
 
-        vertexMap = new HashMap<Face, FaceVertex>();
-        vertices = new ArrayList<FaceVertex>();
-        edgeMap = new HashMap<Edge, FaceEdge>();
-        edges = new ArrayList<FaceEdge>();
+        vertexMap = new HashMap<>();
+        vertices = new ArrayList<>();
+        edgeMap = new HashMap<>();
+        edges = new ArrayList<>();
     }
 
     /**
@@ -103,7 +103,7 @@ public class DualGraph {
                 if (fv == gv) {
                     continue;
                 }
-                for (Edge e : fv.getFace().getEdges()) {
+                for (Edge<?> e : fv.getFace().getEdges()) {
                     if (edgesToIgnore.contains(e)) {
                         continue;
                     }
@@ -150,7 +150,7 @@ public class DualGraph {
      * 
      * @return
      */
-    public EmbeddedPlanarGraph getOriginalGraph() {
+    public EmbeddedPlanarGraph<N, E> getOriginalGraph() {
         return originalGraph;
     }
 
@@ -194,7 +194,7 @@ public class DualGraph {
      * @param e
      * @return
      */
-    private FaceEdge getEdge(FaceVertex f, FaceVertex g, Edge e) {
+    private FaceEdge getEdge(FaceVertex f, FaceVertex g, Edge<?> e) {
         FaceEdge edge = edgeMap.get(e);
 
         if (edge == null) {
@@ -211,8 +211,8 @@ public class DualGraph {
      * @param e
      * @return
      */
-    public Collection<FaceVertex> getVerticesBorderingEdge(Edge e) {
-        Collection<FaceVertex> result = new ArrayList<FaceVertex>();
+    public Collection<FaceVertex> getVerticesBorderingEdge(Edge<?> e) {
+        Collection<FaceVertex> result = new ArrayList<>();
 
         for (FaceVertex v : getVertices()) {
             if (v.getFace().containsEdge(e)) {
@@ -223,10 +223,7 @@ public class DualGraph {
         return result;
     }
 
-    /**
-     * 
-     * @return
-     */
+    @Override
     public String toString() {
         String s = "DualGraph:\n";
 
@@ -246,7 +243,7 @@ public class DualGraph {
     /**
      * 
      */
-    public class FaceVertex {
+    public static class FaceVertex {
 
         private Face face;
         private Collection<FaceEdge> edges;
@@ -286,10 +283,7 @@ public class DualGraph {
             }
         }
 
-        /**
-         * 
-         * @return
-         */
+        @Override
         public String toString() {
             return "FaceVertex: " + face.toString();
         }
@@ -298,11 +292,11 @@ public class DualGraph {
     /**
      * 
      */
-    public class FaceEdge {
+    public static class FaceEdge {
 
         private FaceVertex f;
         private FaceVertex g;
-        private Edge edge;
+        private Edge<?> edge;
 
         /**
          * 
@@ -310,7 +304,7 @@ public class DualGraph {
          * @param g
          * @param e
          */
-        public FaceEdge(FaceVertex f, FaceVertex g, Edge e) {
+        public FaceEdge(FaceVertex f, FaceVertex g, Edge<?> e) {
             this.f = f;
             this.g = g;
             this.edge = e;
@@ -336,7 +330,7 @@ public class DualGraph {
          * 
          * @return
          */
-        public Edge getEdge() {
+        public Edge<?> getEdge() {
             return edge;
         }
 
@@ -369,7 +363,7 @@ public class DualGraph {
          * @param v
          * @return
          */
-        public FaceVertex getVertex(Vertex v) {
+        public FaceVertex getVertex(Vertex<?> v) {
             if (f.face.containsVertex(v)) {
                 return f;
             }
@@ -379,10 +373,6 @@ public class DualGraph {
             return null;
         }
 
-        /**
-         * 
-         * @return
-         */
         @Override
         public String toString() {
             String s = "FaceEdge:\n";

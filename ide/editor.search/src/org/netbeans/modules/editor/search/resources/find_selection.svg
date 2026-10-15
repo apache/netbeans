@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #cee1fb;
+      }
+
+      .st1 {
+        fill: #db9d36;
+      }
+
+      .st2 {
+        opacity: .33;
+      }
+
+      .st3 {
+        fill: #4c80c7;
+      }
+
+      .st4 {
+        fill: #f5c47a;
+      }
+    </style>
+  </defs>
+  <g>
+    <rect class="st4" width="12" height="7"/>
+    <g class="st2">
+      <path d="M11,1v5H1V1h10M12,0H0v7h12V0h0Z"/>
+    </g>
+  </g>
+  <g>
+    <path class="st1" d="M15.561,12.439l-6.364-6.364-2.121,2.121,6.364,6.364c.586.586,1.536.586,2.121,0,.586-.586.586-1.536,0-2.121Z"/>
+    <g class="st2">
+      <path d="M9.197,7.136l5.834,5.834c.292.292.292.768,0,1.061-.142.142-.33.22-.53.22s-.389-.078-.53-.22l-5.834-5.834,1.061-1.061M9.197,6.075l-2.121,2.121,6.364,6.364c.293.293.677.439,1.061.439s.768-.146,1.061-.439c.586-.586.586-1.536,0-2.121l-6.364-6.364h0Z"/>
+    </g>
+  </g>
+  <circle class="st0" cx="8" cy="7" r="5"/>
+  <path class="st3" d="M8,3c2.206,0,4,1.794,4,4s-1.794,4-4,4-4-1.794-4-4,1.794-4,4-4M8,2c-2.761,0-5,2.239-5,5s2.239,5,5,5,5-2.239,5-5-2.239-5-5-5h0Z"/>
+</svg>

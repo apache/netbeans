@@ -21,7 +21,7 @@ package org.netbeans.modules.j2ee.dd.api.common;
 /**
  * Super interface for all DD elements having the display-name property/properties.
  *
- *<p><b><font color="red"><em>Important note: Do not provide an implementation of this interface unless you are a DD API provider!</em></font></b>
+ *<p><b><span style="color:red"><em>Important note: Do not provide an implementation of this interface unless you are a DD API provider!</em></span></b>
  *</p>
  *
  * @author Milan Kuchtiak
@@ -69,7 +69,7 @@ public interface DisplayNameInterface {
     public String getDefaultDisplayName();
     
     /**
-     * Returns all display-name elements in the form of <@link java.util.Map>. 
+     * Returns all display-name elements in the form of {@link java.util.Map}. 
      *
      * @return map of all display-names in the form of [locale:display-name]
      */

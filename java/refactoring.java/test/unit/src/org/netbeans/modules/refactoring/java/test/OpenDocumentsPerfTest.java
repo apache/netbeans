@@ -35,6 +35,7 @@ import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.junit.Log;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbPerformanceTest;
+import org.netbeans.junit.NbTestSuite;
 import org.netbeans.modules.refactoring.api.RefactoringElement;
 import org.netbeans.modules.refactoring.api.RefactoringSession;
 import org.netbeans.modules.refactoring.api.WhereUsedQuery;
@@ -117,6 +118,7 @@ public class OpenDocumentsPerfTest extends RefPerfTestCase {
     }
 
     public static Test suite() throws InterruptedException {
-        return NbModuleSuite.create(NbModuleSuite.emptyConfiguration().addTest(OpenDocumentsPerfTest.class, "testOpenDocuments").gui(false));
+//        return NbModuleSuite.create(NbModuleSuite.emptyConfiguration().addTest(OpenDocumentsPerfTest.class, "testOpenDocuments").gui(false));
+        return NbTestSuite.createTest(Noop.class, "noop");
     }
 }

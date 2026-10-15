@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
@@ -91,7 +92,7 @@ final class GeneralOptionsPanel extends javax.swing.JPanel implements ActionList
     private void fillDisconnectedFolders () {
         if (cmbVersioningSystems.getSelectedItem() instanceof VersioningSystem) {
             String[] disconnected = Utils.getDisconnectedRoots(((VersioningSystem) cmbVersioningSystems.getSelectedItem()));
-            DefaultListModel model = new DefaultListModel();
+            DefaultListModel<String> model = new DefaultListModel<>();
             for (String f : disconnected) {
                 model.addElement(f);
             }
@@ -202,7 +203,7 @@ final class GeneralOptionsPanel extends javax.swing.JPanel implements ActionList
 
     void load () {
         fillVersioningSystems();
-        originalLabels = VersioningSupport.getPreferences().getBoolean(VersioningSupport.PREF_BOOLEAN_TEXT_ANNOTATIONS_VISIBLE, false);
+        originalLabels = VersioningSupport.isTextAnnotationVisible();
         cbShowLabels.setSelected(originalLabels);
         cmbVersioningSystems.setSelectedIndex(selectedIndex);
         for (int i = 0; i < cmbVersioningSystems.getItemCount(); i++) {
@@ -222,8 +223,9 @@ final class GeneralOptionsPanel extends javax.swing.JPanel implements ActionList
     }
     
     void cancel() {
-        for(VersioningSystem vs : savedDisconnectedFolders.keySet()) {
-            List<String> saved = savedDisconnectedFolders.get(vs);
+        for(Map.Entry<VersioningSystem, List<String>> entry : savedDisconnectedFolders.entrySet()) {
+            VersioningSystem vs = entry.getKey();
+            List<String> saved = entry.getValue();
             List<String> current = Arrays.asList(Utils.getDisconnectedRoots(vs));
             for (String folder : saved) {
                 if (!current.contains(folder)) {
@@ -265,7 +267,7 @@ final class GeneralOptionsPanel extends javax.swing.JPanel implements ActionList
         for (VersioningSystem system : Lookup.getDefault().lookupAll(VersioningSystem.class)) {
             systems.add(system);
         }
-        cmbVersioningSystems.setModel(new DefaultComboBoxModel(systems.toArray(new VersioningSystem[systems.size()])));
+        cmbVersioningSystems.setModel(new DefaultComboBoxModel(systems.toArray(new VersioningSystem[0])));
     }
 
     @Override

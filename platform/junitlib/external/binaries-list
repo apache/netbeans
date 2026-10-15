@@ -14,11 +14,13 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-A6C32B40BF3D76ECA54E3C601E5D1470C86FCDFA junit:junit:4.12:sources
-941A8BE4506C65F0A9001C08812FB7DA1E505E21 junit:junit:4.12:javadoc
-B03F607C0822A283C972E37EAEACB00DC3A3C2E7 org.junit.jupiter:junit-jupiter-api:5.3.1:sources
-0E681A5388FC994AC6723CD47D39A56434B83033 org.junit.jupiter:junit-jupiter-api:5.3.1:javadoc
-BC4EB2EF307286FCD45551D4DA397518C2E15394 org.junit.jupiter:junit-jupiter-params:5.3.1:sources
-BEEF0CAAD29594979FE211DC52FAE71D8C1FAB4F org.junit.jupiter:junit-jupiter-params:5.3.1:javadoc
-C769957170B2240854D6DA6C6706DCC2A281542F org.junit.jupiter:junit-jupiter-engine:5.3.1:sources
-C76435286A702682BEAC767CE5148D8EE59DF8B7 org.junit.jupiter:junit-jupiter-engine:5.3.1:javadoc
+33987872A811FE4D4001ED494B07854822257F42 junit:junit:4.13.2:sources
+F2F3F384DACD2ADE2DDF7AA7E0F4360DFEE38672 junit:junit:4.13.2:javadoc
+AE705475A58186E56D17DDE0CC4FE469D5F4394E org.junit.jupiter:junit-jupiter-api:5.14.4:sources
+991CE811AAEF70DC11EEBDBE903E67FF7FA26FB9 org.junit.jupiter:junit-jupiter-api:5.14.4:javadoc
+11ADF96451FFEEB44487825149DB2D83CF705953 org.junit.jupiter:junit-jupiter-params:5.14.4:sources
+1237DC390316B3F7B97A6F77951F89C955B725B9 org.junit.jupiter:junit-jupiter-params:5.14.4:javadoc
+7204D9BFAC8D4333EBE4E1655587B7D5D168E74C org.junit.jupiter:junit-jupiter-engine:5.14.4:sources
+5C1631A1AAE2FDBAF0E42C06CCB0123FD4390EFF org.junit.jupiter:junit-jupiter-engine:5.14.4:javadoc
+AFB8FF23CFFB021C56F333953AEBFE6E8818568E org.opentest4j:opentest4j:1.3.0:sources
+268A5A3F089341F0755F304337D733E70671884D org.opentest4j:opentest4j:1.3.0:javadoc

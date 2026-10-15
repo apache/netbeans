@@ -44,7 +44,7 @@ public class EditorTokenInput extends TokenInput {
 
     private TokenSequence   tokenSequence;
     private Language        language;
-    private List            tokens = new ArrayList ();
+    private List<ASTToken>  tokens = new ArrayList<>();
     private int             index = 0;
     private Set<Integer>    filter;
     private StyledDocument  doc;

@@ -163,7 +163,7 @@ public class CreateTrigger extends AbstractCommand implements CreateTriggerComma
                         new String[] {tname}));
                 Class typeclass = Class.forName((String)typemap.get("Class")); // NOI18N
                 String format = (String)typemap.get("Format"); // NOI18N
-                TriggerEvent evt = (TriggerEvent)typeclass.newInstance();
+                TriggerEvent evt = (TriggerEvent)typeclass.getDeclaredConstructor().newInstance();
                 Map temap = (Map)props.get("TriggerEventMap"); // NOI18N
                 evt.setName(TriggerEvent.getName(when));
                 evt.setColumn(columnname);

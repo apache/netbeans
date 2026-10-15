@@ -51,9 +51,9 @@ public final class Utils {
         }
         sb.append(hexColor);
         sb.append ("\">");
-        text = text.replaceAll ("&", "&amp;");
-        text = text.replaceAll ("<", "&lt;");
-        text = text.replaceAll (">", "&gt;");
+        text = text.replace ("&", "&amp;");
+        text = text.replace ("<", "&lt;");
+        text = text.replace (">", "&gt;");
         sb.append (text);
         sb.append ("</font>");
         if (italics) sb.append ("</i>");
@@ -61,4 +61,13 @@ public final class Utils {
         sb.append ("</html>");
         return sb.toString ();
     }
+
+    public static String stringOrNull(String str) {
+        if ("null".equals(str)) {
+            return null;
+        } else {
+            return str;
+        }
+    }
+    
 }

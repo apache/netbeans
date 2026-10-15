@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.ListModel;
-import org.netbeans.modules.jumpto.EntityComparator;
 import org.netbeans.modules.jumpto.symbol.SymbolComparator;
 import org.netbeans.modules.jumpto.symbol.SymbolProviderAccessor;
 import org.netbeans.modules.jumpto.common.Models;
@@ -128,7 +127,7 @@ public class GoToSymbolWorker implements Runnable {
         }
         if (!isCanceled) {
             //time = System.currentTimeMillis();
-            Collections.sort(items, SymbolComparator.create(GoToSettings.SortingType.LEXICOGRAPHIC, text, false, true));
+            items.sort(SymbolComparator.create(GoToSettings.SortingType.LEXICOGRAPHIC, text, false, true));
             //panel.setWarning(message[0]);
             //sort += System.currentTimeMillis() - time;
             //LOGGER.fine("PERF - " + " GSS:  " + gss + " GSB " + gsb + " CP: " + cp + " SFB: " + sfb + " GTN: " + gtn + "  ADD: " + add + "  SORT: " + sort );

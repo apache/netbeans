@@ -56,7 +56,7 @@ class ReadLineBuffer {
      * Get buffered lines, in order of their addition to the buffer.
      */
     List<Line> getLines() {
-        List<Line> l = new ArrayList<Line>(size);
+        List<Line> l = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
             l.add(lines[(currentIndex - size + i + capacity) % capacity]);
         }

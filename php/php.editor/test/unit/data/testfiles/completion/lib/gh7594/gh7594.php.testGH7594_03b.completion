@@ -1,0 +1,5 @@
+Code completion result for source line:
+} catch(\TypeE|) {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      TypeError                       [PUBLIC]   stub.php

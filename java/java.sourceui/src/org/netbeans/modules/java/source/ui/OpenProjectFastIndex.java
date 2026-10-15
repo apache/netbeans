@@ -129,7 +129,7 @@ class OpenProjectFastIndex implements ClassIndexManagerListener {
      * will be released. The collection is shared between all scheduled Watchers.
      */
     // @GuardedBy(self)
-    private Reference<Set<FileObject>> removedRoots;
+    private Reference<Collection<FileObject>> removedRoots;
     
     /**
      * Cached project information. Added at the first request for project icon or name,
@@ -254,7 +254,7 @@ class OpenProjectFastIndex implements ClassIndexManagerListener {
     }
 
     private Collection<FileObject>  getFileRoots(Iterable<? extends URL> roots) {
-        Collection c = new ArrayList<FileObject>(5);
+        Collection<FileObject> c = new ArrayList<>(5);
         for (Iterator<? extends URL> it = roots.iterator(); it.hasNext(); ) {
             URL rootURL = it.next();
             FileObject fo = URLMapper.findFileObject(rootURL);
@@ -287,9 +287,11 @@ class OpenProjectFastIndex implements ClassIndexManagerListener {
         if (watcher != null) {
             return watcher;
         }
-        Collection removed = removedRoots == null ? null : removedRoots.get();
+
+        Collection<FileObject> removed = removedRoots == null ? null : removedRoots.get();
+
         if (removed == null) {
-            removedRoots = new WeakReference(removed = new HashSet<FileObject>());
+            removedRoots = new WeakReference<Collection<FileObject>>(removed = new HashSet<>());
         }
         watcher = new ProjectOpenWatcher(f, removed);
         watchCount++;
@@ -550,16 +552,16 @@ class OpenProjectFastIndex implements ClassIndexManagerListener {
         private final int         size;
         private final Project     project;
         
-        NameIndex(Project p, FileObject root, String files, ArrayList indices) {
+        NameIndex(Project p, FileObject root, String files, List<Object[]> indices) {
             this.project = p;
-            this.root = new WeakReference(root);
+            this.root = new WeakReference<>(root);
             this.size = indices.size();
             this.fileNames = files;
             
             this.dirStartPositions = new int[size * 2];
             this.dirNames = new String[size];
             for (int i = size - 1; i >= 0; i--) {
-                Object[] data = (Object[])indices.get(i);
+                Object[] data = indices.get(i);
                 dirStartPositions[i] = (Integer)data[1];
                 dirStartPositions[i + size] = (Integer)data[2];
                 dirNames[i] = (String)data[0];
@@ -615,7 +617,7 @@ class OpenProjectFastIndex implements ClassIndexManagerListener {
         private Project             project;
         
         private Map<FileObject, NameIndex>  nameIndexes = new HashMap<FileObject, NameIndex>();
-        private ArrayList          dirPositions;
+        private List<Object[]>     dirPositions;
         private int                charPtr;
 
         public IndexBuilder(Project project, Collection<FileObject> rootsToScan, Collection<FileObject> removedRoots) {
@@ -626,7 +628,7 @@ class OpenProjectFastIndex implements ClassIndexManagerListener {
         
         private void reset() {
             filenames = new StringBuilder();
-            dirPositions = new ArrayList();
+            dirPositions = new ArrayList<>();
             charPtr = 0;
         }
         

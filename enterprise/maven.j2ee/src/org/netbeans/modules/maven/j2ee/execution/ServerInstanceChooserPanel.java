@@ -53,7 +53,7 @@ public class ServerInstanceChooserPanel extends javax.swing.JPanel {
 
         public ServerInstanceItem(String instanceID) throws InstanceRemovedException {
             this.instanceID = instanceID;
-            this.displayName = Deployment.getDefault().getServerInstance(instanceID).getDisplayName();;
+            this.displayName = Deployment.getDefault().getServerInstance(instanceID).getDisplayName();
         }
 
         @Override

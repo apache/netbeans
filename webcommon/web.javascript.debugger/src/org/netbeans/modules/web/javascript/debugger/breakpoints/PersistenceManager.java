@@ -65,7 +65,7 @@ public class PersistenceManager extends  DebuggerManagerAdapter implements Runna
                 LOGGER.warning("null stored in the array obtained from \"" + JAVASCRIPT + "\" property"); // TODO: why?
             }
         }
-        return validBreakpoints.toArray(new Breakpoint[validBreakpoints.size()]);
+        return validBreakpoints.toArray(new Breakpoint[0]);
     }
 
     @Override
@@ -133,7 +133,7 @@ public class PersistenceManager extends  DebuggerManagerAdapter implements Runna
                     result.add( breakpoint );
                 }
             }
-            return result.toArray( new Breakpoint [result.size()] );
+            return result.toArray(new Breakpoint [0] );
         }
 
     }

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.1
+#Version 2.28
 
 CLSS public java.lang.Object
 cons public init()
@@ -19,6 +19,7 @@ CLSS public abstract interface org.netbeans.modules.fish.payara.micro.plugin.Con
 fld public final static java.lang.String ARCHETYPE_ARTIFACT_ID = "payara-micro-maven-archetype"
 fld public final static java.lang.String ARCHETYPE_GROUP_ID = "fish.payara.maven.archetypes"
 fld public final static java.lang.String ARCHETYPE_REPOSITORY = "https://oss.sonatype.org/content/repositories/snapshots"
+fld public final static java.lang.String AUTO_DEPLOY = "autoDeploy"
 fld public final static java.lang.String BUILD_ICON = "org/netbeans/modules/fish/payara/micro/project/resources/payara-micro-build.png"
 fld public final static java.lang.String CLEAN_ICON = "org/netbeans/modules/fish/payara/micro/project/resources/payara-micro-clean.png"
 fld public final static java.lang.String COMMAND_EXPLODE = "explode"
@@ -27,8 +28,14 @@ fld public final static java.lang.String COMPILE_GOAL = "compiler:compile"
 fld public final static java.lang.String DEBUG_ACTION = "debug"
 fld public final static java.lang.String DEBUG_ICON = "org/netbeans/modules/fish/payara/micro/project/resources/payara-micro-debug.png"
 fld public final static java.lang.String DEBUG_SINGLE_ACTION = "debug.single.deploy"
+fld public final static java.lang.String DEPLOY_WAR = "deployWar"
+fld public final static java.lang.String DEV_MODE = "devMode"
+fld public final static java.lang.String EXPLODED = "exploded"
 fld public final static java.lang.String EXPLODED_GOAL = "war:exploded"
 fld public final static java.lang.String EXPLODE_ACTION = "micro-explode"
+fld public final static java.lang.String HOT_DEPLOY = "hotDeploy"
+fld public final static java.lang.String KEEP_STATE = "keepState"
+fld public final static java.lang.String LIVE_RELOAD = "liveReload"
 fld public final static java.lang.String MAVEN_WAR_PROJECT_TYPE = "org-netbeans-modules-maven/war"
 fld public final static java.lang.String PAYARA_MICRO_MAVEN_PLUGIN = "fish.payara.maven.plugins:payara-micro-maven-plugin"
 fld public final static java.lang.String POM_TEMPLATE = "org/netbeans/modules/fish/payara/micro/plugin/resources/pom.xml.ftl"
@@ -41,8 +48,12 @@ fld public final static java.lang.String PROP_AUTO_BIND_HTTP = "autoBindHttp"
 fld public final static java.lang.String PROP_CONTEXT_ROOT = "contextRoot"
 fld public final static java.lang.String PROP_GROUP_ID = "groupId"
 fld public final static java.lang.String PROP_JAVA_EE_VERSION = "javaeeVersion"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String PROP_PACKAGE = "package"
 fld public final static java.lang.String PROP_PAYARA_MICRO_VERSION = "payaraMicroVersion"
+fld public final static java.lang.String PROP_PAYARA_VERSION = "payaraVersion"
+fld public final static java.lang.String PROP_PLATFORM = "platform"
+fld public final static java.lang.String PROP_PLATFORM_MICRO_VALUE = "micro"
 fld public final static java.lang.String PROP_VERSION = "version"
 fld public final static java.lang.String REBUILD_ICON = "org/netbeans/modules/fish/payara/micro/project/resources/payara-micro-clean-build.png"
 fld public final static java.lang.String RELOAD_FILE = ".reload"
@@ -51,10 +62,13 @@ fld public final static java.lang.String RESOURCES_GOAL = "resources:resources"
 fld public final static java.lang.String RESTART_ICON = "org/netbeans/modules/fish/payara/micro/project/resources/payara-micro-restart.png"
 fld public final static java.lang.String RUN_ACTION = "run"
 fld public final static java.lang.String RUN_SINGLE_ACTION = "run.single.deploy"
+fld public final static java.lang.String STARTER_ARCHETYPE_ARTIFACT_ID = "payara-starter-archetype"
+fld public final static java.lang.String STARTER_ARCHETYPE_GROUP_ID = "fish.payara.starter"
 fld public final static java.lang.String START_GOAL = "payara-micro:start"
 fld public final static java.lang.String START_ICON = "org/netbeans/modules/fish/payara/micro/project/resources/payara-micro-start.png"
 fld public final static java.lang.String STOP_ACTION = "micro-stop"
 fld public final static java.lang.String STOP_GOAL = "payara-micro:stop"
+fld public final static java.lang.String TRIM_LOG = "trimLog"
 fld public final static java.lang.String VERSION = "version"
 fld public final static java.lang.String WAR_GOAL = "war:war"
 fld public final static java.lang.String WAR_PACKAGING = "war"
@@ -171,7 +185,10 @@ fld public final static java.lang.String PROP_TITLE = "title"
 fld public final static java.lang.String PROP_VALID = "valid"
 fld public final static java.lang.String PROP_VALUE = "value"
 fld public final static java.lang.String PROP_WARNING_NOTIFICATION = "warningNotification"
+innr public final static ComposedInput
 innr public final static Exception
+innr public final static PasswordLine
+innr public final static QuickPick
 innr public static Confirmation
 innr public static InputLine
 innr public static Message

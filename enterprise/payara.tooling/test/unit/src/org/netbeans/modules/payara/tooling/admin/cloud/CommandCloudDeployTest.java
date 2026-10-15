@@ -38,10 +38,7 @@ import org.testng.annotations.Test;
  */
 public class CommandCloudDeployTest extends CommandRestTest {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Test methods                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Test GlasFish start cluster command via REST.
      */

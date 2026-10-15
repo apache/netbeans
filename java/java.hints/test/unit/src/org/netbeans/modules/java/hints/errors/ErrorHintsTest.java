@@ -46,12 +46,13 @@ public class ErrorHintsTest extends HintsTestBase {
 //        suite.addTest(new JavaHintsTest("testImplementAbstractMethodsHint9"));
 //        suite.addTest(new JavaHintsTest("testImplementAbstractMethodsHint10"));
 //        suite.addTest(new JavaHintsTest("testImplementAbstractMethodsHint11"));
-////        suite.addTest(new JavaHintsTest("testMakeClassAbstract3"));
+// //        suite.addTest(new JavaHintsTest("testMakeClassAbstract3"));
 //        
 //        return suite;
 //    }
         
 //
+
     public void testImplementAbstractMethodsHint1() throws Exception {
         performTest("ImplementAbstractMethods1", "LBL_FIX_Impl_Abstract_Methods", 16, 60);
     }
@@ -83,7 +84,7 @@ public class ErrorHintsTest extends HintsTestBase {
     public void testImplementAbstractMethodsHint8() throws Exception {
         performTest("ImplementAbstractMethods8", "LBL_FIX_Impl_Abstract_Methods", 12, 43);
     }
-    
+
     public void testImplementAbstractMethodsHint9() throws Exception {
         performTestDoNotPerform("ImplementAbstractMethods9", 8, 15);
     }
@@ -91,13 +92,13 @@ public class ErrorHintsTest extends HintsTestBase {
     public void testImplementAbstractMethodsHint10() throws Exception {
         performTestDoNotPerform("ImplementAbstractMethods10", 8, 15);
     }
-    
+
     public void testImplementAbstractMethodsHint11() throws Exception {
         performTest("ImplementAbstractMethods11", "LBL_FIX_Impl_Abstract_Methods", 8, 15);
     }
     
     private List<ElementHandle<? extends Element>> findElementHandles(CompilationInfo info, String... specs) {
-        List<ElementHandle<? extends Element>> result = new ArrayList(specs.length);
+        List<ElementHandle<? extends Element>> result = new ArrayList<>(specs.length);
         for (String spec : specs) {
             Element el = info.getElementUtilities().findElement(spec);
             if (el != null) {
@@ -106,7 +107,7 @@ public class ErrorHintsTest extends HintsTestBase {
         }
         return result;
     }
-    
+
     public void testImplementDefaultMethods1() throws Exception {
         ImplementGeneratorAccessor.setOverrideSelection((info, type) -> 
                 findElementHandles(info,
@@ -116,7 +117,7 @@ public class ErrorHintsTest extends HintsTestBase {
         );
         performTest("ImplementDefaultMethods1", "ImplementDefaultMethods1", "LBL_FIX_Impl_Abstract_Methods", 7, 15, true, "1.8");
     }
-    
+
     public void testImplementDefaultMethods2() throws Exception {
         ImplementGeneratorAccessor.setOverrideSelection((info, type) ->  {
                 assertEquals("Wrong number of default overridable methods", 
@@ -129,7 +130,7 @@ public class ErrorHintsTest extends HintsTestBase {
         });
         performTest("ImplementDefaultMethods2", "ImplementDefaultMethods2", "LBL_FIX_Impl_Abstract_Methods", 7, 15, true, "1.8");
     }
-    
+
     public void testImplementEnumMethods() throws Exception {
         performTest("ImplementEnumMethods", "ImplementEnumMethods", "LBL_FIX_Impl_Methods_Enum_Values2", 8, 11, true, "1.8");
     }
@@ -138,49 +139,50 @@ public class ErrorHintsTest extends HintsTestBase {
 //        performTest("org.netbeans.test.java.hints.AddSemicolon", "semicolon", 17, 15);
 //    }
 //
+
     public void testAddCastHint1() throws Exception {
         performTest("org.netbeans.test.java.hints.AddCast1", "Cast", 18, 15);
     }
-    
+
     public void testAddCastHint2() throws Exception {
         performTest("org.netbeans.test.java.hints.AddCast2", "Cast", 20, 13);
     }
-    
+
     public void testAddCastHint3() throws Exception {
         performTest("org.netbeans.test.java.hints.AddCast3", "Cast", 20, 20);
     }
-    
+
     public void testAddCastHint4() throws Exception {
         performTest("org.netbeans.test.java.hints.AddCast4", "Cast", 22, 10);
     }
-    
+
     public void testAddCastHint5() throws Exception {
         performTest("org.netbeans.test.java.hints.AddCast5", "Cast", 12, 1);
     }
-    
+
     public void testAddCastHint6() throws Exception {
         performTest("org.netbeans.test.java.hints.AddCast6", "Cast", 13, 23);
     }
-    
+
     public void testAddCastHint7() throws Exception {
         performTest("org.netbeans.test.java.hints.AddCast7", "Cast", 12, 18);
     }
-    
+
     public void testAddCastHint8() throws Exception {
         performTest("org.netbeans.test.java.hints.AddCast8", "Cast", 13, 18);
     }
-    
+
     public void testAddCastHint9() throws Exception {
         //should not cause exception
         //also tests Create field hint, which should not be proposed in this case:
         performTestDoNotPerform("org.netbeans.test.java.hints.AddCast9", 11, 18);
     }
-    
+
     public void testAddCastHint10() throws Exception {
         //should not cause exception
         performTest("org.netbeans.test.java.hints.AddCast10", "Cast", 13, 18);
     }
-    
+
     public void testAddCastHint11() throws Exception {
         performTestDoNotPerform("org.netbeans.test.java.hints.AddCast11", 12, 18);
     }
@@ -191,30 +193,31 @@ public class ErrorHintsTest extends HintsTestBase {
 //        performTestDoNotPerform("org.netbeans.test.java.hints.AddCast12", 14, 18);
 //        performTestDoNotPerform("org.netbeans.test.java.hints.AddCast12", 16, 18);
 //    }
-    
+
     public void testAddCastHintDoNotPropose() throws Exception {
         //should not propose "cast to ..." hint if the actual problem is an undefined method
         performTestDoNotPerform("org.netbeans.test.java.hints.AddCastDoNotPropose", 9, 18);
     }
-    
+
     public void testAddThrowsClauseHint1() throws Exception {
         performTest("org.netbeans.test.java.hints.AddThrowsClause1", "throws", 19, 30);
     }
-    
+
     public void testAddThrowsClauseHint2() throws Exception {
         performTest("org.netbeans.test.java.hints.AddThrowsClause2", "throws", 22, 30);
     }
-    
+
     public void testAddThrowsClauseHint3() throws Exception {
         performTest("org.netbeans.test.java.hints.AddThrowsClause3", "throws", 11, 30);
     }
-    
+
     public void testAddThrowsClauseHint4() throws Exception {
         performTest("org.netbeans.test.java.hints.AddThrowsClause4", "throws", 11, 30);
     }
     
     /**tests only if an exception is thrown during hints creation of errors for this file
      */
+ 
     public void testCreateElementException() throws Exception {
         performTestDoNotPerform("org.netbeans.test.java.hints.CreateElementException", 10, 27);
     }
@@ -229,19 +232,19 @@ public class ErrorHintsTest extends HintsTestBase {
 //    public void testCreateFieldException2() throws Exception {
 //        performTestDoNotPerform("org.netbeans.test.java.hints.CreateFieldException2", 8, 15);
 //    }
-    
+
     public void testCreateFieldException3() throws Exception {
         performTestDoNotPerform("org.netbeans.test.java.hints.CreateFieldException3", 9, 15);
     }
-    
+
     public void testCreateField1() throws Exception {
         performTest("org.netbeans.test.java.hints.CreateField1", "Field", 23, 18);
     }
-    
+
     public void testCreateField2() throws Exception {
         performTest("org.netbeans.test.java.hints.CreateField2", "Field", 23, 20);
     }
-    
+
     public void testCreateField3() throws Exception {
         performTest("org.netbeans.test.java.hints.CreateField3", "Field", 23, 20);
     }
@@ -249,15 +252,15 @@ public class ErrorHintsTest extends HintsTestBase {
 //    public void testCreateField4() throws Exception {
 //        performTest("org.netbeans.test.java.hints.CreateField4", "Field", 23, 20);
 //    }
-    
+
     public void testCreateField5() throws Exception {
         performTest("org.netbeans.test.java.hints.CreateField5", "Field", 23, 18);
     }
-    
+
     public void testCreateField6() throws Exception {
         performTest("org.netbeans.test.java.hints.CreateField6", "Field", 25, 18);
     }
-    
+
     public void testCreateField7() throws Exception {
         performTestDoNotPerform("org.netbeans.test.java.hints.CreateField7", 9, 18);
     }
@@ -266,11 +269,11 @@ public class ErrorHintsTest extends HintsTestBase {
 //    public void testCreateField8() throws Exception {
 //        performTest("org.netbeans.test.java.hints.CreateField8", "Field", 6, 18);
 //    }
-    
+
     public void testCreateField10() throws Exception {
         performTest("org.netbeans.test.java.hints.CreateField10", "Field", 9, 10);
     }
-    
+
     public void testCreateFieldPrimitive() throws Exception {
         performTest("org.netbeans.test.java.hints.CreateFieldPrimitive", "Field", 23, 13);
     }
@@ -278,7 +281,7 @@ public class ErrorHintsTest extends HintsTestBase {
 //    public void testCreateFieldMethod1() throws Exception {
 //        performTest("org.netbeans.test.java.hints.CreateFieldMethod1", "Field", 23, 13);
 //    }
-    
+
     public void testCreateFieldMethod2() throws Exception {
         performTest("org.netbeans.test.java.hints.CreateFieldMethod2", "Field", 23, 13);
     }
@@ -287,6 +290,7 @@ public class ErrorHintsTest extends HintsTestBase {
 //        performTestDoNotPerform("org.netbeans.test.java.hints.DoNotProposeCreateField1",9, 18);
 //    }
 //
+
     public void testDoNotProposeCreateField2() throws Exception {
         performTestDoNotPerform("org.netbeans.test.java.hints.DoNotProposeCreateField2", 7, 10);
     }
@@ -323,14 +327,14 @@ public class ErrorHintsTest extends HintsTestBase {
 //        performTestDoNotPerform("org.netbeans.test.java.hints.LocalVarParam57990a", 23, 20);
 //    }
 //
-////    public void testLocalAndParamIncorrect57990b() throws Exception {
-////        performTestDoNotPerform("org.netbeans.test.java.hints.LocalVarParam57990b", 23, 20);
-////    }
+// //    public void testLocalAndParamIncorrect57990b() throws Exception {
+// //        performTestDoNotPerform("org.netbeans.test.java.hints.LocalVarParam57990b", 23, 20);
+// //    }
 //
 //    public void testLocalAndParamIncorrect57990c() throws Exception {
 //        performTestDoNotPerform("org.netbeans.test.java.hints.LocalVarParam57990c", 23, 20);
 //    }
-    
+
     public void testCreateLocalVariable1() throws Exception {
         performTest("org.netbeans.test.java.hints.CreateLocalVariable1", "Local Variable", 23, 15);
     }
@@ -338,55 +342,55 @@ public class ErrorHintsTest extends HintsTestBase {
 //    public void testCreateLocalVariable2() throws Exception {
 //        performTest("org.netbeans.test.java.hints.CreateLocalVariable2", "Local", 19, 20);
 //    }
-    
+
     public void testCreateLocalVariable3() throws Exception {
         performTest("org.netbeans.test.java.hints.CreateLocalVariable3", "Local Variable ", 20, 20);
     }
-    
+
     public void testCreateLocalVariable4() throws Exception {
         performTest("org.netbeans.test.java.hints.CreateLocalVariable4", "Local Variable", 8, 18);
     }
-    
+
     public void testCreateLocalVariable5() throws Exception {
         performTest("org.netbeans.test.java.hints.CreateLocalVariable5", "Local Variable", 8, 18);
     }
-    
+
     public void testCreateLocalVariable6() throws Exception {
         performTest("org.netbeans.test.java.hints.CreateLocalVariable6", "Local Variable", 8, 18);
     }
-    
+
     public void testCreateLocalVariable7() throws Exception {
         performTest("org.netbeans.test.java.hints.CreateLocalVariable7", "Local Variable", 10, 18);
     }
-    
+
     public void testCreateLocalVariable8() throws Exception {
         performTest("org.netbeans.test.java.hints.CreateLocalVariable8", "Local Variable", 9, 18);
     }
-    
+
     public void testCreateLocalVariable9() throws Exception {
         performTest("org.netbeans.test.java.hints.CreateLocalVariable9", "Local Variable", 11, 18);
     }
-    
+
     public void testCreateLocalVariable10() throws Exception {
         performTest("org.netbeans.test.java.hints.CreateLocalVariable10", "Local Variable", 10, 18);
     }
-    
+
     public void testCreateParam1() throws Exception {
         performTest("org.netbeans.test.java.hints.CreateParam1", "Parameter", 23, 15);
     }
-    
+
     public void testCreateParam2() throws Exception {
         performTest("org.netbeans.test.java.hints.CreateParam2", "Parameter", 20, 15);
     }
-    
+
     public void testCreateParam3() throws Exception {
         performTest("org.netbeans.test.java.hints.CreateParam3", "Parameter", 20, 15);
     }
-    
+
     public void testCreateParam4() throws Exception {
         performTest("org.netbeans.test.java.hints.CreateParam4", "Parameter", 9, 15);
     }
-    
+
     public void testCreateParam5() throws Exception {
         performTest("org.netbeans.test.java.hints.CreateParam5", "Parameter", 10, 15);
     }
@@ -466,19 +470,19 @@ public class ErrorHintsTest extends HintsTestBase {
 //    public void testInitializeVariable3() throws Exception {
 //        performTest("org.netbeans.test.java.hints.InitializeVariable3", "Initialize", 10, 1);
 //    }
-    
+
     public void testNonAbstractClass85806() throws Exception {
         performTestDoNotPerform("org.netbeans.test.java.hints.AbstractClass4", 8, 1);
     }
-    
+
     public void testMakeClassAbstract1() throws Exception {
         performTest("org.netbeans.test.java.hints.MakeClassAbstract1", "LBL_FIX_Make_Class_Abstract", 3, 1);
     }
-    
+
     public void testMakeClassAbstract2() throws Exception {
         performTest("org.netbeans.test.java.hints.MakeClassAbstract2", "LBL_FIX_Make_Class_Abstract", 3, 1);
     }
-    
+
     public void testMakeClassAbstract3() throws Exception {
         performTest("org.netbeans.test.java.hints.MakeClassAbstract3", "LBL_FIX_Make_Class_Abstract", 3, 1);
     }

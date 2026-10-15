@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.modules.java.source.indexing.JavaIndex;
 import org.openide.util.Exceptions;
-import org.openide.util.WeakSet;
 
 /**
  *
@@ -105,7 +105,7 @@ public class ExecutableFilesIndex {
         Set<ChangeListener> ls = file2Listener.get(ext);
         
         if (ls == null) {
-            file2Listener.put(ext, ls = new WeakSet<ChangeListener>());
+            file2Listener.put(ext, ls = Collections.newSetFromMap(new WeakHashMap<>()));
         }
         
         ls.add(l);
@@ -146,10 +146,8 @@ public class ExecutableFilesIndex {
         Set<String> result = new HashSet<String>();
 
         for (String file : executableFiles) {
-            file = file.replaceAll("\\\\d", ":"); //NOI18N
-            file = file.replaceAll("\\\\\\\\", "\\\\"); //NOI18N
-
-            result.add(file);
+            result.add(file.replace("\\d", ":") //NOI18N
+                           .replace("\\\\", "\\")); //NOI18N
         }
         
         return result;
@@ -159,15 +157,12 @@ public class ExecutableFilesIndex {
         StringBuilder attribute = new StringBuilder();
         boolean first = true;
 
-        for (String s : values) {
+        for (String value : values) {
             if (!first) {
                 attribute.append("::"); //NOI18N
             }
-            s = s.replaceAll("\\\\", "\\\\\\\\"); //NOI18N
-            s = s.replaceAll(":", "\\\\d"); //NOI18N
-
-            attribute.append(s);
-
+            attribute.append(value.replace("\\", "\\\\") //NOI18N
+                                  .replace(":", "\\d")); //NOI18N
             first = false;
         }
         

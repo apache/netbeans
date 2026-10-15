@@ -19,9 +19,11 @@
 package org.netbeans.modules.bugtracking.tasks.actions;
 
 import java.util.Arrays;
+import java.util.Set;
+import java.util.Collections;
+import java.util.WeakHashMap;
 import javax.swing.AbstractAction;
 import org.netbeans.modules.bugtracking.tasks.dashboard.QueryNode;
-import org.openide.util.WeakSet;
 
 /**
  *
@@ -29,14 +31,16 @@ import org.openide.util.WeakSet;
  */
 public abstract class QueryAction extends AbstractAction {
 
-    private WeakSet<QueryNode> queryNodes;
+    private final Set<QueryNode> queryNodes;
 
     public QueryAction(String name, QueryNode... queryNodes) {
         super(name);
-        this.queryNodes = new WeakSet<QueryNode>(Arrays.asList(queryNodes));
+        Set<QueryNode> set = Collections.newSetFromMap(new WeakHashMap<>());
+        set.addAll(Arrays.asList(queryNodes));
+        this.queryNodes = set;
     }
 
     public QueryNode[] getQueryNodes() {
-        return queryNodes.toArray(new QueryNode[queryNodes.size()]);
+        return queryNodes.toArray(new QueryNode[0]);
     }
 }

@@ -28,7 +28,9 @@ import java.lang.ref.*;
 import java.io.*;
 import java.util.*;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
+import org.junit.Assume;
 import org.openide.util.Lookup.Result;
 
 /**
@@ -37,12 +39,12 @@ import org.openide.util.Lookup.Result;
  */
 public class FileObjectTestHid extends TestBaseHid {
 
-    private final static String FOLDER_CHILD_NAME= "testFolder";
-    private final static String FOLDER_CHILD= "/"+FOLDER_CHILD_NAME;
+    private static final String FOLDER_CHILD_NAME= "testFolder";
+    private static final String FOLDER_CHILD= "/"+FOLDER_CHILD_NAME;
 
-    private final static String FILE_CHILD_NAME= "test";
-    private final static String FILE_CHILD_EXT= "txt";
-    private final static String FILE_CHILD= "/"+FILE_CHILD_NAME+"." +FILE_CHILD_EXT;
+    private static final String FILE_CHILD_NAME= "test";
+    private static final String FILE_CHILD_EXT= "txt";
+    private static final String FILE_CHILD= "/"+FILE_CHILD_NAME+"." +FILE_CHILD_EXT;
     
     /**Should be deleted and testedFS renamed to fs*/
     private FileSystem fs;
@@ -1204,7 +1206,53 @@ public class FileObjectTestHid extends TestBaseHid {
         
         fsAssert("getNameExt problem",fo1.getNameExt().equals(fo1.getName() + "." +fo1.getExt()));
     }
-    
+
+    public void testManualRecreateOfInvalidFileObject() throws IOException {
+        checkSetUp();
+        FileObject fold1 = getTestFolder1(root);
+
+        if (fold1.getFileSystem().isReadOnly()) {
+            return;
+        }
+
+        FileObject ch = fold1.createData("a-child");
+        ch.delete();
+        assertFalse("Not valid", ch.isValid());
+
+        FileObject newCh = ch.getParent().createData(ch.getNameExt());
+        assertEquals("Same path", ch.getPath(), newCh.getPath());
+
+        try (OutputStream os = newCh.getOutputStream()) {
+            os.write("Ahoj".getBytes(StandardCharsets.UTF_8));
+        }
+        assertEquals("Ahoj", newCh.asText("UTF-8"));
+        assertEquals("Parents are same", ch.getParent(), newCh.getParent());
+    }
+
+    public void testRecreateOfInvalidFileObjectViaGetOutputStream() throws IOException {
+        checkSetUp();
+        FileObject fold1 = getTestFolder1(root);
+
+        if (fold1.getFileSystem().isReadOnly()) {
+            return;
+        }
+
+        FileObject ch = fold1.createData("a-child");
+        ch.delete();
+        assertFalse("Not valid", ch.isValid());
+
+        try (OutputStream os = ch.getOutputStream()) {
+            os.write("Ahoj".getBytes(StandardCharsets.UTF_8));
+        }
+
+        if (!ch.isValid()) {
+            ch = ch.getFileSystem().findResource(ch.getPath());
+        }
+
+        assertEquals("Ahoj", ch.asText("UTF-8"));
+        assertEquals("Parents are same", ch.getParent(), ch.getParent());
+    }
+
     /** Test of existsExt method, of class org.openide.filesystems.FileObject. */
     public void  testExistsExt() {
         checkSetUp();
@@ -1805,7 +1853,7 @@ public class FileObjectTestHid extends TestBaseHid {
         
         InputStream is = getClass ().getResourceAsStream(getClass().getName().substring(getClass().getName().lastIndexOf('.')+1)+".class");
         OutputStream os = fo.getOutputStream (lock);
-        FileUtil.copy (is, os);
+        is.transferTo (os);
         is.close ();
         os.close ();
         lock.releaseLock ();
@@ -2043,7 +2091,6 @@ public class FileObjectTestHid extends TestBaseHid {
         assertEquals(file2, fold2.getFileObject(FileUtil.getRelativePath(fold2, file2)));
     }
     
-    //////////////////////////    
     /** Test of getFileSystem method, of class org.openide.filesystems.FileObject. */
     public void testGetFileSystem() throws FileStateInvalidException {
         checkSetUp();
@@ -2555,10 +2602,10 @@ public class FileObjectTestHid extends TestBaseHid {
         try {
             for (int i = 0; i < names.length; i++) 
                 file1.setAttribute(names[i],"value");
-                        
-             Enumeration en = file1.getAttributes();
+
+            Enumeration<String> en = file1.getAttributes();
              while (en.hasMoreElements()) {
-                String name = (String)en.nextElement();
+                String name = en.nextElement();
                 fsAssert ("Expected getAttributes return this key: "+ name,namesList.contains(name));
                 compareList.add (name);
              }            
@@ -2724,12 +2771,12 @@ public class FileObjectTestHid extends TestBaseHid {
         try {
             OutputStream os = fo1.getOutputStream();
             String txt = "Ahoj\nJak\nSe\nMas";
-            os.write(txt.getBytes("UTF-8"));
+            os.write(txt.getBytes(StandardCharsets.UTF_8));
             os.close();
             byte[] arr = fo1.asBytes();
             assertNotNull("Arrays is read", arr);
             assertEquals("Right length bytes", txt.length(), arr.length);
-            assertEquals(txt, new String(arr, "UTF-8"));
+            assertEquals(txt, new String(arr, StandardCharsets.UTF_8));
             assertEquals(txt, fo1.asText("UTF-8"));
 
             ArrayList<String> all = new ArrayList<String>();
@@ -2778,7 +2825,7 @@ public class FileObjectTestHid extends TestBaseHid {
 
             OutputStream os = fo1.getOutputStream();
             for (int i = 0; i < 10; i++) {
-                os.write(sb.toString().getBytes("UTF-8"));
+                os.write(sb.toString().getBytes(StandardCharsets.UTF_8));
             }
             os.close();
             if (64 * 1024 > fo1.getSize()) {
@@ -3465,7 +3512,63 @@ public class FileObjectTestHid extends TestBaseHid {
             // OK
         }
     }
- 
+
+    public void testNonExistingFileObject() throws Exception {
+        nonExistingFileObject("non-existing-child.xyz", 0);
+    }
+
+    public void testNonExistingFileObjectInFolder() throws Exception {
+        nonExistingFileObject("non-existing-folder/non-existing-child.xyz", 1);
+    }
+
+    public void testNonExistingDoubleFileObjectInFolder() throws Exception {
+        Assume.assumeFalse(Utilities.isWindows()); // TODO fails on win
+        nonExistingFileObject("non-existing-folder/non-existing-folder/non-existing-child.xyz", 2);
+    }
+
+    private void nonExistingFileObject(String childName, int depth) throws Exception {
+        checkSetUp();
+        final FileObject fold = getTestFolder1(root);
+
+        FileObject ch1 = fold.getFileObject(childName);
+        assertNull("Not existing child", ch1);
+
+        FileObject ch2 = fold.getFileObject(childName, false);
+        assertNotNull("Non existing child created", ch2);
+        assertEquals("non-existing-child.xyz", ch2.getNameExt());
+        assertFalse("It is not valid to begin with", ch2.isValid());
+
+        {
+            FileObject p = ch2.getParent();
+            while (depth-- > 0) {
+                assertFalse("Parent isn't valid either", p.isValid());
+                p = p.getParent();
+            }
+        }
+
+        URI foldUri = fold.toURI();
+        URI ch2Uri = ch2.toURI();
+
+        if (!ch2Uri.toString().startsWith(foldUri.toString())) {
+            fail("Expecting the child url:\n" + ch2Uri + "\nto begin with folder URL:\n" + foldUri);
+        }
+
+        if (!ch2.getFileSystem().isReadOnly()) {
+            try (Writer os = new OutputStreamWriter(ch2.getOutputStream())) {
+                os.write("Ahoj");
+            }
+            FileObject ch3;
+            if (ch2.isValid()) {
+                ch3 = ch2;
+            } else {
+                ch3 = ch2.getFileSystem().findResource(ch2.getPath());
+                assertNotNull("Found recreated file object for " + ch2, ch3);
+            }
+            assertEquals("Ahoj", ch3.asText("UTF-8"));
+            assertTrue("This file object is valid", ch3.isValid());
+        }
+    }
+
     /*#46885: File not refreshed in editor if modified externally the first time after an internal modification*/
     public void testExternalChange () throws Exception {        
         checkSetUp();
@@ -3511,7 +3614,7 @@ public class FileObjectTestHid extends TestBaseHid {
             
             OutputStream os = fo1.getOutputStream();
             String txt = "Ahoj\nJak\nSe\nMas";
-            os.write(txt.getBytes("UTF-8"));
+            os.write(txt.getBytes(StandardCharsets.UTF_8));
             os.close();
 
             

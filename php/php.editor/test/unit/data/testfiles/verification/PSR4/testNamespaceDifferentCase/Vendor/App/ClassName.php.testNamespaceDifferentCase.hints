@@ -1,0 +1,4 @@
+namespace Vendor\app;
+          ----------
+HINT:PSR-4 Violation:
+Namespace declaration name doesn't correspond to current directory structure.

@@ -34,7 +34,6 @@ import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.AbstractArtifactResolutionException;
 import org.apache.maven.project.MavenProject;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.apisupport.project.spi.PlatformJarProvider;
 import org.netbeans.modules.maven.api.NbMavenProject;
@@ -113,7 +112,7 @@ public class MavenPlatformJarProvider implements PlatformJarProvider {
         if (!toDownload.isEmpty()) {
             int cnt = 0;
             final AtomicBoolean canceled = new AtomicBoolean();
-            ProgressHandle h = ProgressHandleFactory.createHandle(Bundle.MavenPlatformJarProvider_downloading(), new Cancellable() {
+            ProgressHandle h = ProgressHandle.createHandle(Bundle.MavenPlatformJarProvider_downloading(), new Cancellable() {
                 @Override public boolean cancel() {
                     canceled.set(true);
                     return true;
@@ -126,7 +125,7 @@ public class MavenPlatformJarProvider implements PlatformJarProvider {
                         throw new IOException("download canceled");
                     }
                     try {
-                        online.resolve(art, remoteRepos, online.getLocalRepository());
+                        online.resolveArtifact(art, remoteRepos, online.getLocalRepository());
                     } catch (ThreadDeath td) {
                     } catch (IllegalStateException ise) { //download interrupted in dependent thread. #213812
                         if (!(ise.getCause() instanceof ThreadDeath)) {

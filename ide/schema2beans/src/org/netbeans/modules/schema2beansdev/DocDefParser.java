@@ -39,16 +39,16 @@ public class DocDefParser extends GeneralParser implements SchemaParser {
         }
     }
     
-    static private final int WORD_NO_CONTEXT	= 0;
-    static private final int WORD_CHECK		= 1;
-    static private final int WORD_COMMENT	= 2;
-    static private final int WORD_ELEMENT1	= 3;
-    static private final int WORD_ELEMENT	= 4;
-    static private final int WORD_ATTLIST1	= 5;
-    static private final int WORD_ATTLIST	= 6;
-    static private final int WORD_PI		= 7;
-    static private final int WORD_ENTITY1	= 10;
-    static private final int WORD_ENTITY	= 11;
+    private static final int WORD_NO_CONTEXT	= 0;
+    private static final int WORD_CHECK		= 1;
+    private static final int WORD_COMMENT	= 2;
+    private static final int WORD_ELEMENT1	= 3;
+    private static final int WORD_ELEMENT	= 4;
+    private static final int WORD_ATTLIST1	= 5;
+    private static final int WORD_ATTLIST	= 6;
+    private static final int WORD_PI		= 7;
+    private static final int WORD_ENTITY1	= 10;
+    private static final int WORD_ENTITY	= 11;
     
     static String errHeader = "DTD parsing failed: ";	// NOI18N
     

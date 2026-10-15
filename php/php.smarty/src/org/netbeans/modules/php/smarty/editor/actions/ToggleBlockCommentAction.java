@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseAction;
 import org.netbeans.editor.BaseDocument;
@@ -44,8 +45,8 @@ import org.openide.util.Exceptions;
 public class ToggleBlockCommentAction extends BaseAction {
 
     static final long serialVersionUID = -1L;
-    static final private String FORCE_COMMENT = "force-comment"; //NOI18N
-    static final private String FORCE_UNCOMMENT = "force-uncomment"; //NOI18N
+    private static final String FORCE_COMMENT = "force-comment"; //NOI18N
+    private static final String FORCE_UNCOMMENT = "force-uncomment"; //NOI18N
 
     public ToggleBlockCommentAction() {
         super(ExtKit.toggleCommentAction);
@@ -65,7 +66,7 @@ public class ToggleBlockCommentAction extends BaseAction {
                 @Override
                 public void run() {
                     final AtomicBoolean commentIt = new AtomicBoolean(true);
-                    final TokenSequence<TplTopTokenId> ts = (TokenSequence<TplTopTokenId>) LexerUtils.getTplTopTokenSequence(doc, caretOffset);
+                    final TokenSequence<TplTopTokenId> ts = LexerUtils.getTplTopTokenSequence(doc, caretOffset);
                     final TplMetaData tplMetaData = TplUtils.getProjectPropertiesForFileObject(Source.create(doc).getFileObject());
 
                     // XXX - clean up needed
@@ -77,10 +78,10 @@ public class ToggleBlockCommentAction extends BaseAction {
                             commentIt.set(false);
                         } else {
                             try {
-                                ts.move(Utilities.getRowStart(doc, caretOffset) + tplMetaData.getCloseDelimiter().length() + 1);
+                                ts.move(LineDocumentUtils.getLineStartOffset(doc, caretOffset) + tplMetaData.getCloseDelimiter().length() + 1);
                                 ts.moveNext();
                                 if (ts.token() != null && ts.token().id() == TplTopTokenId.T_COMMENT
-                                        && Utilities.getRowEnd(doc, caretOffset) == caretOffset) {
+                                        && LineDocumentUtils.getLineEndOffset(doc, caretOffset) == caretOffset) {
                                     commentIt.set(false);
                                 }
                             } catch (BadLocationException ex) {
@@ -158,8 +159,8 @@ public class ToggleBlockCommentAction extends BaseAction {
                 positions[0] = caretOffset;
                 positions[1] = target.getSelectionEnd();
             } else {
-                positions[0] = Utilities.getRowStart((BaseDocument) target.getDocument(), caretOffset);
-                positions[1] = Utilities.getRowEnd((BaseDocument) target.getDocument(), caretOffset);
+                positions[0] = LineDocumentUtils.getLineStartOffset((BaseDocument) target.getDocument(), caretOffset);
+                positions[1] = LineDocumentUtils.getLineEndOffset((BaseDocument) target.getDocument(), caretOffset);
             }
         } else {
             while (ts.movePrevious() && ts.token().id() != TplTopTokenId.T_SMARTY_OPEN_DELIMITER) {

@@ -20,6 +20,7 @@
 package org.netbeans.modules.j2ee.dd.impl.web;
 
 import org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException;
+import org.netbeans.modules.j2ee.dd.api.web.AbsoluteOrdering;
 import org.netbeans.modules.j2ee.dd.api.web.JspConfig;
 import org.netbeans.modules.j2ee.dd.api.web.WebApp;
 import org.netbeans.modules.j2ee.dd.impl.common.DDProviderDataObject;
@@ -27,8 +28,12 @@ import org.netbeans.modules.schema2beans.Schema2BeansUtil;
 import org.netbeans.modules.schema2beans.BaseBean;
 import org.openide.loaders.DataObject;
 import org.openide.filesystems.FileLock;
+
+import java.beans.PropertyChangeListener;
+
 import java.io.OutputStream;
-import org.netbeans.modules.j2ee.dd.api.web.AbsoluteOrdering;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author  mk115033
@@ -36,7 +41,7 @@ import org.netbeans.modules.j2ee.dd.api.web.AbsoluteOrdering;
 public class WebAppProxy implements WebApp {
     private WebApp webApp;
     private String version;
-    private java.util.List listeners;
+    private final List<PropertyChangeListener> listeners;
     public boolean writing=false;
     private org.xml.sax.SAXParseException error;
     private int ddStatus;
@@ -46,15 +51,14 @@ public class WebAppProxy implements WebApp {
     public WebAppProxy(WebApp webApp, String version) {
         this.webApp=webApp;
         this.version = version;
-        listeners = new java.util.ArrayList();
+        listeners = new ArrayList<>();
         addPropertyChangeListener(reindentationListener);
     }
 
     public void setOriginal(WebApp webApp) {
         if (this.webApp!=webApp) {
             for (int i=0;i<listeners.size();i++) {
-                java.beans.PropertyChangeListener pcl =
-                    (java.beans.PropertyChangeListener)listeners.get(i);
+                java.beans.PropertyChangeListener pcl = listeners.get(i);
                 if (this.webApp!=null) this.webApp.removePropertyChangeListener(pcl);
                 if (webApp!=null) webApp.addPropertyChangeListener(pcl);
 
@@ -75,7 +79,7 @@ public class WebAppProxy implements WebApp {
                 new java.beans.PropertyChangeEvent(this, PROPERTY_VERSION, version, value);
             version=value;
             for (int i=0;i<listeners.size();i++) {
-                ((java.beans.PropertyChangeListener)listeners.get(i)).propertyChange(evt);
+                listeners.get(i).propertyChange(evt);
             }
         }
     }
@@ -98,10 +102,10 @@ public class WebAppProxy implements WebApp {
     public void setStatus(int value) {
         if (ddStatus!=value) {
             java.beans.PropertyChangeEvent evt =
-                new java.beans.PropertyChangeEvent(this, PROPERTY_STATUS, new Integer(ddStatus), new Integer(value));
+                new java.beans.PropertyChangeEvent(this, PROPERTY_STATUS, ddStatus, value);
             ddStatus=value;
             for (int i=0;i<listeners.size();i++) {
-                ((java.beans.PropertyChangeListener)listeners.get(i)).propertyChange(evt);
+                listeners.get(i).propertyChange(evt);
             }
         }
     }
@@ -918,17 +922,10 @@ public class WebAppProxy implements WebApp {
             if (dataObject instanceof DDProviderDataObject) {
                 ((DDProviderDataObject) dataObject).writeModel(webApp);
             } else {
-                FileLock lock = fo.lock();
-                try {
-                    OutputStream os = fo.getOutputStream(lock);
-                    try {
-                        writing = true;
-                        write(os);
-                    } finally {
-                        os.close();
-                    }
-                } finally {
-                    lock.releaseLock();
+                try (FileLock lock = fo.lock();
+                        OutputStream os = fo.getOutputStream(lock)) {
+                    writing = true;
+                    write(os);
                 }
             }
         }
@@ -957,6 +954,15 @@ public class WebAppProxy implements WebApp {
             } else if (WebApp.VERSION_4_0.equals(version)) {
                 ((org.netbeans.modules.j2ee.dd.impl.web.model_4_0.WebApp)clonedWebApp)._setSchemaLocation
                     ("http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd");
+            } else if (WebApp.VERSION_5_0.equals(version)) {
+                ((org.netbeans.modules.j2ee.dd.impl.web.model_5_0.WebApp)clonedWebApp)._setSchemaLocation
+                    ("https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd");
+            } else if (WebApp.VERSION_6_0.equals(version)) {
+                ((org.netbeans.modules.j2ee.dd.impl.web.model_6_0.WebApp)clonedWebApp)._setSchemaLocation
+                    ("https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd");
+            } else if (WebApp.VERSION_6_1.equals(version)) {
+                ((org.netbeans.modules.j2ee.dd.impl.web.model_6_1.WebApp)clonedWebApp)._setSchemaLocation
+                    ("https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_1.xsd");
             }
         }
         proxy.setError(error);

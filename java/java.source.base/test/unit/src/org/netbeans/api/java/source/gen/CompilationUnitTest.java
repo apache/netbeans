@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Map;
@@ -139,7 +140,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden1, res);
     }
 
@@ -155,14 +156,14 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         FileObject classJava = FileUtil.createData(FileUtil.getConfigRoot(), "Templates/Classes/Class.java");
         classJava.setAttribute("template", Boolean.TRUE);
         classJava.setAttribute("verbatim-create-from-template", Boolean.TRUE);
-        Writer w = new OutputStreamWriter(classJava.getOutputStream(), "UTF-8");
+        Writer w = new OutputStreamWriter(classJava.getOutputStream(), StandardCharsets.UTF_8);
         w.write("/*\n * License\n */\npackage zoo;\n\n/**\n * trida\n */\npublic class Template {\n}");
         w.close();
 
         FileObject packageJava = FileUtil.createData(FileUtil.getConfigRoot(), "Templates/Classes/package-info.java");
         packageJava.setAttribute("template", Boolean.TRUE);
         packageJava.setAttribute("verbatim-create-from-template", Boolean.TRUE);
-        Writer w2 = new OutputStreamWriter(packageJava.getOutputStream(), "UTF-8");
+        Writer w2 = new OutputStreamWriter(packageJava.getOutputStream(), StandardCharsets.UTF_8);
         w2.write("/*\n * License\n */\npackage zoo;\n");
         w2.close();
 
@@ -355,7 +356,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(new File(getDataDir().getAbsolutePath() + "/zoo/Krtek.java"));
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(res, golden);
     }
 
@@ -429,7 +430,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(new File(getDataDir().getAbsolutePath() + "/Krtek.java"));
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(res, golden);
     }
 
@@ -512,10 +513,10 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(new File(getDataDir().getAbsolutePath() + "/zoo/Krtek.java"));
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(res, golden1);
         res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(res, golden2);
     }
      
@@ -603,10 +604,10 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(new File(getDataDir().getAbsolutePath() + "/zoo/Krtek.java"));
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(res, golden1);
         res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(res, golden2);
     }
      
@@ -692,10 +693,10 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(new File(getDataDir().getAbsolutePath() + "/zoo/Krtek.java"));
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(res, golden1);
         res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(res, golden2);
     }
      
@@ -751,7 +752,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         }).commit();
         
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(res, golden);
     }
      
@@ -801,7 +802,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(new File(getDataDir().getAbsolutePath() + "/zoo/package-info.java"));
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -841,7 +842,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -878,7 +879,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -953,7 +954,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(new File(getDataDir().getAbsolutePath() + "/zoo/Krtek.java"));
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(res, golden);
     }
     
@@ -998,7 +999,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(new File(getDataDir().getAbsolutePath() + "/zoo/package-info.java"));
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -1015,7 +1016,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         emptyJava.setAttribute("template", Boolean.TRUE);
         FileObject classJava = FileUtil.createData(FileUtil.getConfigRoot(), "Templates/Classes/Class.java");
         classJava.setAttribute("template", Boolean.TRUE);
-        Writer w = new OutputStreamWriter(classJava.getOutputStream(), "UTF-8");
+        Writer w = new OutputStreamWriter(classJava.getOutputStream(), StandardCharsets.UTF_8);
         w.write("package zoo;\npublic class Template {\n    public Template() {}\n}");
         w.close();
         FileObject testSourceFO = FileUtil.toFileObject(testFile);
@@ -1064,7 +1065,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(new File(getDataDir().getAbsolutePath() + "/zoo/Krtek.java"));
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(res, golden1);
     }
 
@@ -1130,7 +1131,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(new File(getDataDir().getAbsolutePath() + "/zoo/Krtek.java"));
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden1, res);
     }
 
@@ -1152,7 +1153,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         classJava.setAttribute("template", Boolean.TRUE);
         classJava.setAttribute("verbatim-create-from-template", Boolean.TRUE);
         template = "/*\r\ninitial\r\ncomment\r\n*/\r\npackage zoo;\r\npublic class Template {\r\n    public Template() {}\r\n}\r\n";
-        Writer w = new OutputStreamWriter(classJava.getOutputStream(), "UTF-8");
+        Writer w = new OutputStreamWriter(classJava.getOutputStream(), StandardCharsets.UTF_8);
         w.write(template);
         w.close();
     }
@@ -1209,7 +1210,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(new File(getDataDir().getAbsolutePath() + "/zoo/Krtek.java"));
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(res, golden1);
     }
 
@@ -1255,7 +1256,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         emptyJava.setAttribute("template", Boolean.TRUE);
         FileObject classJava = FileUtil.createData(FileUtil.getConfigRoot(), "Templates/Classes/Class.java");
         classJava.setAttribute("template", Boolean.TRUE);
-        Writer w = new OutputStreamWriter(classJava.getOutputStream(), "UTF-8");
+        Writer w = new OutputStreamWriter(classJava.getOutputStream(), StandardCharsets.UTF_8);
         w.write("package zoo;\npublic class Template {\n  \n}");
         w.close();
         FileObject testSourceFO = FileUtil.toFileObject(testFile);
@@ -1308,7 +1309,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(new File(getDataDir().getAbsolutePath() + "/zoo/I.java"));
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(res, golden1);
     }
     

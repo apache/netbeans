@@ -294,7 +294,7 @@ public class ProjectFactorySupport {
                 entry.setImportSuccessful(Boolean.FALSE);
                 return false;
             } else {
-                ProjectClassPathModifier.addAntArtifacts(artifact, elements.toArray(new URI[elements.size()]), sourceRoot, ClassPath.COMPILE);
+                ProjectClassPathModifier.addAntArtifacts(artifact, elements.toArray(new URI[0]), sourceRoot, ClassPath.COMPILE);
             }
             EclipseProjectReference ref = EclipseProjectReference.read(requiredProject);
             if (ref != null) {
@@ -382,7 +382,7 @@ public class ProjectFactorySupport {
                         for (AntArtifact art : artifact) {
                             elements.addAll(Arrays.asList(art.getArtifactLocations()));
                         }
-                        boolean b = ProjectClassPathModifier.removeAntArtifacts(artifact, elements.toArray(new URI[elements.size()]), sourceRoot, ClassPath.COMPILE);
+                        boolean b = ProjectClassPathModifier.removeAntArtifacts(artifact, elements.toArray(new URI[0]), sourceRoot, ClassPath.COMPILE);
                         if (!b) {
                             importProblems.add(org.openide.util.NbBundle.getMessage(EclipseProject.class, "MSG_CannotRemoveReference", encodedValue));
                             return false;

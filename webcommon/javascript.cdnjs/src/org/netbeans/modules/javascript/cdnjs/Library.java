@@ -119,7 +119,7 @@ public final class Library {
     /**
      * Library version.
      */
-    public final static class Version {
+    public static final class Version {
         /** Owning library. */
         private final Library library;
         /** Whether this version is already part of the project. */
@@ -228,7 +228,7 @@ public final class Library {
                     fileList.add(file);
                 }
             }
-            clone.setFileInfo(fileList.toArray(new String[fileList.size()]), null);
+            clone.setFileInfo(fileList.toArray(new String[0]), null);
             return clone;
         }
 

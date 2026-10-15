@@ -1,0 +1,13 @@
+<?php
+
+class |>CLASS:Foo<| {
+
+    public const |>FIELD,STATIC:PUBLIC_CONST<| = 1;
+    protected const |>FIELD,STATIC:PROTECTED_CONST<| = 2;
+    private const |>FIELD,STATIC:USED_PRIVATE<| = 3;
+    private const |>FIELD,STATIC,UNUSED:UNUSED_PRIVATE<| = 4;
+
+    function |>METHOD:bar<|() {
+        return self::|>FIELD,STATIC:USED_PRIVATE<|;
+    }
+}

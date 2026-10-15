@@ -56,8 +56,8 @@ public class SvnClientFactory {
 
     /** indicates that something went terribly wrong with javahl init during the previous nb session */
     private static boolean javahlCrash = false;
-    private final static int JAVAHL_INIT_NOCRASH = 1;
-    private final static int JAVAHL_INIT_STOP_REPORTING = 2;
+    private static final int JAVAHL_INIT_NOCRASH = 1;
+    private static final int JAVAHL_INIT_STOP_REPORTING = 2;
 
     private static final Logger LOG = Logger.getLogger("org.netbeans.modules.subversion.client.SvnClientFactory");
     public static final String FACTORY_TYPE_COMMANDLINE = "commandline"; //NOI18N
@@ -81,7 +81,7 @@ public class SvnClientFactory {
      *
      * @return the SvnClientFactory instance
      */
-    public synchronized static SvnClientFactory getInstance() {
+    public static synchronized SvnClientFactory getInstance() {
         init();
         return instance;
     }
@@ -89,7 +89,7 @@ public class SvnClientFactory {
     /**
      * Initializes the SvnClientFactory instance
      */
-    public synchronized static void init() {
+    public static synchronized void init() {
         if(instance == null) {
             SvnClientFactory fac = new SvnClientFactory();
             fac.setup();
@@ -101,7 +101,7 @@ public class SvnClientFactory {
      * Resets the SvnClientFactory instance.
      * Call this method if user's preferences regarding used client change.
      */
-    public synchronized static void resetClient() {
+    public static synchronized void resetClient() {
         instance = null;
         SvnConfigFiles.getInstance().reset();
     }
@@ -510,10 +510,10 @@ public class SvnClientFactory {
 
     private abstract class ClientAdapterFactory {
 
-        abstract protected ISVNClientAdapter createAdapter();
-        abstract protected SvnClientInvocationHandler getInvocationHandler(ISVNClientAdapter adapter, SvnClientDescriptor desc, SvnProgressSupport support, int handledExceptions);
-        abstract protected ISVNPromptUserPassword createCallback(SVNUrl repositoryUrl, int handledExceptions);
-        abstract protected ConnectionType connectionType();
+        protected abstract ISVNClientAdapter createAdapter();
+        protected abstract SvnClientInvocationHandler getInvocationHandler(ISVNClientAdapter adapter, SvnClientDescriptor desc, SvnProgressSupport support, int handledExceptions);
+        protected abstract ISVNPromptUserPassword createCallback(SVNUrl repositoryUrl, int handledExceptions);
+        protected abstract ConnectionType connectionType();
 
         SvnClient createSvnClient() {
             SvnClientInvocationHandler handler = getInvocationHandler(createAdapter(), createDescriptor(null), null, -1);

@@ -169,6 +169,20 @@ public class ExpressionStepTest extends NbTestCase {
                 "intValue",
                 new Object[] {"497916032", "684193024", "248958016", "933151070"}
             );
+            stepCheck (
+                ActionsManager.ACTION_STEP_OPERATION, 
+                "org.netbeans.api.debugger.jpda.testapps.ExpressionStepApp", 
+                line+7, 25,
+                "m2",
+                new Object[] {"497916032", "684193024","248958016","933151070","933151070"}
+            );
+            stepCheck (
+                ActionsManager.ACTION_STEP_OPERATION, 
+                "org.netbeans.api.debugger.jpda.testapps.ExpressionStepApp", 
+                line+6, 17,
+                "m1",
+                new Object[] {"1483152216"}
+            );
             
             support.doContinue ();
             support.waitState (JPDADebugger.STATE_DISCONNECTED);

@@ -19,7 +19,8 @@
 
 package org.netbeans.api.java.source;
 
-import java.io.ByteArrayInputStream;
+import com.sun.source.tree.Tree;
+import com.sun.source.util.TreePath;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -34,19 +35,28 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.TypeVariable;
+import javax.lang.model.type.WildcardType;
 import javax.lang.model.util.ElementFilter;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.java.queries.SourceForBinaryQuery.Result;
 import org.netbeans.api.java.source.ClasspathInfo.PathKind;
+import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.modules.java.source.ClassIndexTestCase;
 import org.netbeans.modules.java.source.TestUtil;
+import org.netbeans.modules.java.source.parsing.ClassParser;
 import org.netbeans.modules.java.source.parsing.ParameterNameProviderImpl;
 import org.netbeans.modules.java.source.usages.ClasspathInfoAccessor;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
@@ -63,7 +73,7 @@ import org.openide.filesystems.FileUtil;
  *
  * @author Jan Lahoda
  */
-public class SourceUtilsTest extends ClassIndexTestCase {       
+public class SourceUtilsTest extends ClassIndexTestCase {
 
     private JavaSource js;
     private CompilationInfo info;
@@ -71,11 +81,12 @@ public class SourceUtilsTest extends ClassIndexTestCase {
     static {
         System.setProperty("org.openide.util.Lookup", SourceUtilsTestUtil.class.getName());
     }
-    
+
     public SourceUtilsTest(String testName) {
         super(testName);
     }
 
+    @Override
     protected void setUp() throws Exception {
         clearWorkDir();
         SourceUtilsTestUtil.prepareTest(
@@ -85,26 +96,28 @@ public class SourceUtilsTest extends ClassIndexTestCase {
                     CPProvider.getDefault()
                 });
     }
-        
+
     public void testGetEnclosingTypeElement() throws Exception {
         //only a scatch of the test, add testcases as needed:
         prepareTest();
-        
+
         TypeElement test = info.getElements().getTypeElement("sourceutils.TestGetEnclosingTypeElement");
-        
+
+        assertEquals("TestGetEnclosingTypeElement.java", SourceUtils.findSourceFileName(test));
+
         assertNotNull(test);
-        
+
         ExecutableElement testMethod = ElementFilter.methodsIn(test.getEnclosedElements()).get(0);
 //        TypeElement classInMethod = ElementFilter.typesIn(testMethod.getEnclosedElements()).get(0);
-//        ExecutableElement classInMethodMethod = ElementFilter.methodsIn(classInMethod.getEnclosedElements()).get(0);;
-//        VariableElement classInMethodField = ElementFilter.fieldsIn(classInMethod.getEnclosedElements()).get(0);;
+//        ExecutableElement classInMethodMethod = ElementFilter.methodsIn(classInMethod.getEnclosedElements()).get(0);
+//        VariableElement classInMethodField = ElementFilter.fieldsIn(classInMethod.getEnclosedElements()).get(0);
 //        TypeElement classInMethodNestedClass = ElementFilter.typesIn(classInMethod.getEnclosedElements()).get(0);
         VariableElement testField = ElementFilter.fieldsIn(test.getEnclosedElements()).get(0);
         TypeElement nestedClass = ElementFilter.typesIn(test.getEnclosedElements()).get(0);
         ExecutableElement nestedClassMethod = ElementFilter.methodsIn(nestedClass.getEnclosedElements()).get(0);
         VariableElement nestedClassField = ElementFilter.fieldsIn(nestedClass.getEnclosedElements()).get(0);
         TypeElement nestedClassNestedClass = ElementFilter.typesIn(nestedClass.getEnclosedElements()).get(0);
-        
+
         assertEquals("TestGetEnclosingTypeElement", test.getSimpleName().toString());
         assertEquals("testMethod", testMethod.getSimpleName().toString());
 //        assertEquals("classInMethod", classInMethod.getSimpleName().toString());
@@ -116,7 +129,7 @@ public class SourceUtilsTest extends ClassIndexTestCase {
         assertEquals("nestedClassMethod", nestedClassMethod.getSimpleName().toString());
         assertEquals("nestedClassField", nestedClassField.getSimpleName().toString());
         assertEquals("NestedClassNestedClass", nestedClassNestedClass.getSimpleName().toString());
-        
+
         assertEquals(null, SourceUtils.getEnclosingTypeElement(test));
         assertEquals(test, SourceUtils.getEnclosingTypeElement(testMethod));
         assertEquals(test, SourceUtils.getEnclosingTypeElement(testField));
@@ -124,7 +137,7 @@ public class SourceUtilsTest extends ClassIndexTestCase {
         assertEquals(nestedClass, SourceUtils.getEnclosingTypeElement(nestedClassMethod));
         assertEquals(nestedClass, SourceUtils.getEnclosingTypeElement(nestedClassField));
         assertEquals(nestedClass, SourceUtils.getEnclosingTypeElement(nestedClassNestedClass));
-        
+
         try {
             SourceUtils.getEnclosingTypeElement(test.getEnclosingElement());
             fail();
@@ -132,21 +145,21 @@ public class SourceUtilsTest extends ClassIndexTestCase {
             //good.
         }
     }
-    
+
     public void testIsDeprecated1() throws Exception {
         prepareTest();
-        
+
         TypeElement test = info.getElements().getTypeElement("sourceutils.TestIsDeprecated1");
-        
+
         assertNotNull(test);
-        
+
         ExecutableElement methodDeprecated = findElementBySimpleName("methodDeprecated", ElementFilter.methodsIn(test.getEnclosedElements()));
         ExecutableElement methodNotDeprecated = findElementBySimpleName("methodNotDeprecated", ElementFilter.methodsIn(test.getEnclosedElements()));
         VariableElement fieldDeprecated = findElementBySimpleName("fieldDeprecated", ElementFilter.fieldsIn(test.getEnclosedElements()));
         VariableElement fieldNotDeprecated = findElementBySimpleName("fieldNotDeprecated", ElementFilter.fieldsIn(test.getEnclosedElements()));
         TypeElement classDeprecated = findElementBySimpleName("classDeprecated", ElementFilter.typesIn(test.getEnclosedElements()));
         TypeElement classNotDeprecated = findElementBySimpleName("classNotDeprecated", ElementFilter.typesIn(test.getEnclosedElements()));
-        
+
         assertFalse(info.getElements().isDeprecated(methodNotDeprecated));
         assertFalse(info.getElements().isDeprecated(fieldNotDeprecated));
         assertFalse(info.getElements().isDeprecated(classNotDeprecated));
@@ -155,21 +168,21 @@ public class SourceUtilsTest extends ClassIndexTestCase {
         assertTrue(info.getElements().isDeprecated(fieldDeprecated));
         assertTrue(info.getElements().isDeprecated(classDeprecated));
     }
-    
+
     public void testIsDeprecated2() throws Exception {
         prepareTest();
-        
+
         TypeElement test = info.getElements().getTypeElement("sourceutils.TestIsDeprecated2");
-        
+
         assertNotNull(test);
-        
+
         ExecutableElement methodDeprecated = findElementBySimpleName("methodDeprecated", ElementFilter.methodsIn(test.getEnclosedElements()));
         ExecutableElement methodNotDeprecated = findElementBySimpleName("methodNotDeprecated", ElementFilter.methodsIn(test.getEnclosedElements()));
         VariableElement fieldDeprecated = findElementBySimpleName("fieldDeprecated", ElementFilter.fieldsIn(test.getEnclosedElements()));
         VariableElement fieldNotDeprecated = findElementBySimpleName("fieldNotDeprecated", ElementFilter.fieldsIn(test.getEnclosedElements()));
         TypeElement classDeprecated = findElementBySimpleName("classDeprecated", ElementFilter.typesIn(test.getEnclosedElements()));
         TypeElement classNotDeprecated = findElementBySimpleName("classNotDeprecated", ElementFilter.typesIn(test.getEnclosedElements()));
-        
+
         assertFalse(info.getElements().isDeprecated(methodNotDeprecated));
         assertFalse(info.getElements().isDeprecated(fieldNotDeprecated));
         assertFalse(info.getElements().isDeprecated(classNotDeprecated));
@@ -178,25 +191,25 @@ public class SourceUtilsTest extends ClassIndexTestCase {
         assertTrue(info.getElements().isDeprecated(fieldDeprecated));
         assertTrue(info.getElements().isDeprecated(classDeprecated));
     }
-    
+
     public void testGetOutermostEnclosingTypeElement () throws Exception {
 	prepareTest();
-	TypeElement test = info.getElements().getTypeElement("sourceutils.TestGetOutermostEnclosingTypeElement");        
+	TypeElement test = info.getElements().getTypeElement("sourceutils.TestGetOutermostEnclosingTypeElement");
         assertNotNull(test);
 	assertEquals("TestGetOutermostEnclosingTypeElement", test.getSimpleName().toString());
-	
+
 	ExecutableElement testMethod = ElementFilter.methodsIn(test.getEnclosedElements()).get(0);
 //        TypeElement classInMethod = ElementFilter.typesIn(testMethod.getEnclosedElements()).get(0);
-//        ExecutableElement classInMethodMethod = ElementFilter.methodsIn(classInMethod.getEnclosedElements()).get(0);;
-//        VariableElement classInMethodField = ElementFilter.fieldsIn(classInMethod.getEnclosedElements()).get(0);;
+//        ExecutableElement classInMethodMethod = ElementFilter.methodsIn(classInMethod.getEnclosedElements()).get(0);
+//        VariableElement classInMethodField = ElementFilter.fieldsIn(classInMethod.getEnclosedElements()).get(0);
 //        TypeElement classInMethodNestedClass = ElementFilter.typesIn(classInMethod.getEnclosedElements()).get(0);
         VariableElement testField = ElementFilter.fieldsIn(test.getEnclosedElements()).get(0);
         TypeElement nestedClass = ElementFilter.typesIn(test.getEnclosedElements()).get(0);
         ExecutableElement nestedClassMethod = ElementFilter.methodsIn(nestedClass.getEnclosedElements()).get(0);
         VariableElement nestedClassField = ElementFilter.fieldsIn(nestedClass.getEnclosedElements()).get(0);
         TypeElement nestedClassNestedClass = ElementFilter.typesIn(nestedClass.getEnclosedElements()).get(0);
-        
-        
+
+
         assertEquals("testMethod", testMethod.getSimpleName().toString());
 //        assertEquals("classInMethod", classInMethod.getSimpleName().toString());
 //        assertEquals("classInMethodMethod", classInMethodMethod.getSimpleName().toString());
@@ -207,7 +220,7 @@ public class SourceUtilsTest extends ClassIndexTestCase {
         assertEquals("nestedClassMethod", nestedClassMethod.getSimpleName().toString());
         assertEquals("nestedClassField", nestedClassField.getSimpleName().toString());
         assertEquals("NestedClassNestedClass", nestedClassNestedClass.getSimpleName().toString());
-        
+
         assertEquals(test, SourceUtils.getOutermostEnclosingTypeElement(test));
         assertEquals(test, SourceUtils.getOutermostEnclosingTypeElement(testMethod));
         assertEquals(test, SourceUtils.getOutermostEnclosingTypeElement(testField));
@@ -215,16 +228,16 @@ public class SourceUtilsTest extends ClassIndexTestCase {
         assertEquals(test, SourceUtils.getOutermostEnclosingTypeElement(nestedClassMethod));
         assertEquals(test, SourceUtils.getOutermostEnclosingTypeElement(nestedClassField));
         assertEquals(test, SourceUtils.getOutermostEnclosingTypeElement(nestedClassNestedClass));
-        
+
         try {
             SourceUtils.getOutermostEnclosingTypeElement(test.getEnclosingElement());
             fail();
         } catch (IllegalArgumentException e) {
             //good.
-        }	
+        }
     }
-    
-    
+
+
     public void testGetDependentRoots () throws Exception {
         final FileObject wd = FileUtil.toFileObject(getWorkDir());
         final FileObject url0 = FileUtil.createFolder(wd,"url0");  //NOI18N
@@ -271,7 +284,7 @@ public class SourceUtilsTest extends ClassIndexTestCase {
         CPProvider.getDefault().register(url4, ClassPath.SOURCE, cp4);
         CPProvider.getDefault().register(url5, ClassPath.COMPILE, compile5);
         CPProvider.getDefault().register(url5, ClassPath.SOURCE, cp5);
-        
+
         GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, cps);
         final Future<Void> f = RunWhenScanFinishedSupport.runWhenScanFinished(() -> null, Collections.emptySet());
         f.get();    //Wait for scan to finish
@@ -298,8 +311,8 @@ public class SourceUtilsTest extends ClassIndexTestCase {
         result = SourceUtils.getDependentRoots(url1.toURL(), true);
         assertEquals (new URL[] {url1.toURL(), url3.toURL(), url5.toURL()}, result);
     }
-    
-                    
+
+
     public void testGetFile () throws Exception {
         File workDir = getWorkDir();
         FileObject workFo = FileUtil.toFileObject(workDir);
@@ -307,12 +320,13 @@ public class SourceUtilsTest extends ClassIndexTestCase {
         FileObject src = workFo.createFolder("src");
         FileObject userDir = workFo.createFolder("ud");
         CacheFolder.setCacheFolder(userDir);
-        
+
         ensureRootValid(src.getURL());
-        
+
         FileObject srcInDefPkg = src.createData("Foo","java");
         assertNotNull(srcInDefPkg);
         FileObject sourceFile = src.createFolder("org").createFolder("me").createData("Test", "java");
+        src.getFileObject("org/me").createFolder("Test"); // https://github.com/apache/netbeans/issues/5738
         assertNotNull(sourceFile);
         ClasspathInfo cpInfo = ClasspathInfo.create(ClassPathSupport.createClassPath(new FileObject[0]), ClassPathSupport.createClassPath(new FileObject[0]),
             ClassPathSupport.createClassPath(new FileObject[]{src}));
@@ -324,21 +338,21 @@ public class SourceUtilsTest extends ClassIndexTestCase {
         FileObject classFile = classPkg.createData("Test", "class");
         assertNotNull(classFile);
         FileObject classFileInnder = classPkg.createData("Test$Inner", "class");
-        assertNotNull(classFileInnder);        
+        assertNotNull(classFileInnder);
         SFBQImpl.getDefault().register(cls, src);
         ElementHandle<? extends Element> handle = ElementHandle.createTypeElementHandle(ElementKind.CLASS, "org.me.Test");
-        assertNotNull (handle);        
+        assertNotNull (handle);
         FileObject result = SourceUtils.getFile(handle, cpInfo);
-        assertNotNull(result);
+        assertEquals(sourceFile, result);
         handle = ElementHandle.createTypeElementHandle(ElementKind.CLASS, "org.me.Test$Inner");
         result = SourceUtils.getFile(handle,cpInfo);
-        assertNotNull(result);
+        assertEquals(sourceFile, result);
         handle = ElementHandle.createPackageElementHandle("org.me");
         result = SourceUtils.getFile(handle,cpInfo);
-        assertNotNull(result);
+        assertEquals(sourceFile.getParent(), result);
         handle = ElementHandle.createTypeElementHandle(ElementKind.CLASS, "Foo");
         result = SourceUtils.getFile(handle,cpInfo);
-        assertNotNull(result);
+        assertEquals(srcInDefPkg, result);
     }
 
     public void testGetMainClasses() throws Exception {
@@ -381,7 +395,16 @@ public class SourceUtilsTest extends ClassIndexTestCase {
         final FileObject inhMain = createFile(src, "D1.java","class D1 { public static void main (String... args){}} class D1X extends D1 {}");
         assertMain(new String[] {"D1","D1X"}, SourceUtils.getMainClasses(inhMain));
     }
-    
+
+    public void testIsClassFile() throws Exception {
+        final File wd = getWorkDir();
+        final FileObject src = FileUtil.createFolder(new File (wd,"src"));
+        final FileObject emptyJava = createFile(src, "C1.java","class C1 {}");
+        assertFalse(SourceUtils.isClassFile(emptyJava));
+        final FileObject emptyClass = createFile(src, "C1.class","");
+        assertTrue(SourceUtils.isClassFile(emptyClass));
+    }
+
     public void testGenerateReadableParameterName() throws Exception {
         System.out.println("testGenerateReadableParameterName");
         Match m = new Match("java.lang.Object", "o");
@@ -410,32 +433,204 @@ public class SourceUtilsTest extends ClassIndexTestCase {
         .match("com.foo.ClassWithAnAnnoyinglyLongNameThatGoesOnForever", "c");
         m.assertMatch();
     }
-    
+
     /**
      * Checks that a toplevel class that contains $ in its name is found in the
      * dollar file. Checks that inner classes of such a old-style class are also found correctly.
-     * @throws Exception 
+     * @throws Exception
      */
     public void testDollarSourceName() throws Exception {
         prepareTest();
         TypeElement test = info.getElements().getTypeElement("sourceutils.TestDollarSourceName$dollar");
         assertNotNull(test);
-        FileObject f = SourceUtils.getFile(ElementHandle.create(test), info.getClasspathInfo());
-        assertEquals("TestDollarSourceName.java", f.getNameExt());
-        
-        test = info.getElements().getTypeElement("sourceutils.TestDollarSourceName$dollar.InnerClass");
-        f = SourceUtils.getFile(ElementHandle.create(test), info.getClasspathInfo());
-        assertEquals("TestDollarSourceName.java", f.getNameExt());
+        FileObject outerFile = SourceUtils.getFile(ElementHandle.create(test), info.getClasspathInfo());
+        assertEquals("TestDollarSourceName.java", outerFile.getNameExt());
+        assertEquals("TestDollarSourceName.java", SourceUtils.findSourceFileName(test));
+
+        TypeElement inner = info.getElements().getTypeElement("sourceutils.TestDollarSourceName$dollar.InnerClass");
+        FileObject innerFile = SourceUtils.getFile(ElementHandle.create(inner), info.getClasspathInfo());
+        assertEquals("TestDollarSourceName.java", innerFile.getNameExt());
+        assertEquals("TestDollarSourceName.java", SourceUtils.findSourceFileName(inner));
+    }
+
+    public void testGetBound() throws Exception {
+        //only a scatch of the test, add testcases as needed:
+        prepareTest();
+
+        TypeElement test = info.getElements().getTypeElement("sourceutils.TestGetBound");
+
+        assertNotNull(test);
+
+        TypeParameterElement typeParam = test.getTypeParameters().get(0);
+        TypeMirror outerBound = ((TypeVariable) typeParam.asType()).getUpperBound();
+
+        TypeMirror bound = SourceUtils.getBound((WildcardType) ((DeclaredType) outerBound).getTypeArguments().get(0));
+        assertEquals("java.lang.CharSequence", String.valueOf(bound));
+    }
+
+    public void testNameForAClassFile() throws Exception {
+        // compiled as Hello.java
+        // package my.hello; public class Hello {}
+        byte[] classFile = new byte[] {
+            -54, -2, -70, -66, 0, 0, 0, 50, 0, 13, 10, 0, 3, 0, 10, 7, 0, 11,
+            7, 0, 12, 1, 0, 6, 60, 105, 110, 105, 116, 62, 1, 0, 3, 40, 41,
+            86, 1, 0, 4, 67, 111, 100, 101, 1, 0, 15, 76, 105, 110, 101, 78,
+            117, 109, 98, 101, 114, 84, 97, 98, 108, 101, 1, 0, 10, 83, 111,
+            117, 114, 99, 101, 70, 105, 108, 101, 1, 0, 10, 72, 101, 108, 108,
+            111, 46, 106, 97, 118, 97, 12, 0, 4, 0, 5, 1, 0, 14, 109, 121, 47,
+            104, 101, 108, 108, 111, 47, 72, 101, 108, 108, 111, 1, 0, 16, 106,
+            97, 118, 97, 47, 108, 97, 110, 103, 47, 79, 98, 106, 101, 99, 116,
+            0, 33, 0, 2, 0, 3, 0, 0, 0, 0, 0, 1, 0, 1, 0, 4, 0, 5, 0, 1, 0, 6,
+            0, 0, 0, 29, 0, 1, 0, 1, 0, 0, 0, 5, 42, -73, 0, 1, -79, 0, 0, 0,
+            1, 0, 7, 0, 0, 0, 6, 0, 1, 0, 0, 0, 1, 0, 1, 0, 8, 0, 0, 0, 2, 0, 9
+        };
+
+        File work = getWorkDir();
+        FileObject workFO = FileUtil.toFileObject(work);
+
+        assertNotNull(workFO);
+
+        FileObject target = FileUtil.createFolder(workFO, "target");
+        JavaSourceTest.SourceLevelQueryImpl.sourceLevel = "1.8";
+        FileObject clazz = FileUtil.createData(target, "my/hello/Hello.class");
+        try (OutputStream os = clazz.getOutputStream()) {
+            os.write(classFile);
+        }
+        FileUtil.setMIMEType("class", ClassParser.MIME_TYPE);
+        assertEquals(ClassParser.MIME_TYPE, clazz.getMIMEType());
+        js = JavaSource.forFileObject(clazz);
+        assertNotNull("JavaSource found", js);
+        info = SourceUtilsTestUtil.getCompilationInfo(js, JavaSource.Phase.RESOLVED);
+        assertNotNull("info found", info);
+        int count  = 0;
+        for (TypeElement test : info.getTopLevelElements()) {
+            assertNotNull("type element found", test);
+            assertEquals("Hello.java", SourceUtils.findSourceFileName(test));
+            count++;
+        }
+        assertEquals("One element found", 1, count);
+    }
+
+    public void testNewMainMethod() throws Exception {
+        class TestCase {
+            public final String code;
+            public final String mainMethod;
+
+            public TestCase(String code, String mainMethod) {
+                this.code = code;
+                this.mainMethod = mainMethod;
+            }
+        }
+        TestCase[] testCases = new TestCase[] {
+            new TestCase("public class Test {\n" +
+                         "    static void main(String... args) {}\n" +
+                         "    static void main() {}\n" +
+                         "}\n",
+                         "Test:main:([Ljava/lang/String;)V"),
+            new TestCase("public class Test {\n" +
+                         "    static void main(String... args) {}\n" +
+                         "    void main() {}\n" +
+                         "}\n",
+                         "Test:main:([Ljava/lang/String;)V"),
+            new TestCase("public class Test {\n" +
+                         "    static void main() {}\n" +
+                         "    void main(String... args) {}\n" +
+                         "}\n",
+                         "Test:main:()V"),
+            new TestCase("public class Test {\n" +
+                         "    void main(String... args) {}\n" +
+                         "    void main() {}\n" +
+                         "}\n",
+                         "Test:main:([Ljava/lang/String;)V"),
+            new TestCase("public class Test {\n" +
+                         "    public static void plain(String... args) {}\n" +
+                         "    void main() {}\n" +
+                         "}\n",
+                         "Test:main:()V"),
+            new TestCase("public class Test {\n" +
+                         "    void main() {}\n" +
+                         "    public static void plain(String... args) {}\n" +
+                         "}\n",
+                         "Test:main:()V"),
+        };
+        File work = getWorkDir();
+        FileObject workFO = FileUtil.toFileObject(work);
+
+        assertNotNull(workFO);
+
+        FileObject src = FileUtil.createFolder(workFO, "src");
+        FileObject build = FileUtil.createFolder(workFO, "build");
+        FileObject cache = FileUtil.createFolder(workFO, "cache");
+        FileObject testFile = FileUtil.createData(src, "Test.java");
+        SourceUtilsTestUtil.setSourceLevel(testFile, Integer.toString(SourceVersion.latest().ordinal()));
+        SourceUtilsTestUtil.setCompilerOptions(src, Arrays.asList("--enable-preview"));
+        SourceUtilsTestUtil.prepareTest(src, build, cache);
+
+        for (TestCase tc : testCases) {
+            TestUtilities.copyStringToFile(testFile, tc.code);
+            js = JavaSource.forFileObject(testFile);
+            assertNotNull("JavaSource found", js);
+            info = SourceUtilsTestUtil.getCompilationInfo(js, JavaSource.Phase.RESOLVED);
+            assertNotNull("info found", info);
+            ExecutableElement mainMethod = null;
+            for (TypeElement test : info.getTopLevelElements()) {
+                if (test.getSimpleName().contentEquals("Test")) {
+                    for (ExecutableElement el : ElementFilter.methodsIn(test.getEnclosedElements())) {
+                        if (SourceUtils.isMainMethod(el)) {
+                            assertNull(mainMethod);
+                            mainMethod = el;
+                        }
+                    }
+                }
+            }
+            String mainMethodSignature = 
+                    Arrays.stream(SourceUtils.getJVMSignature(ElementHandle.create(mainMethod)))
+                          .collect(Collectors.joining(":"));
+            assertEquals(tc.mainMethod, mainMethodSignature);
+        }
+    }
+
+    public void testResolveImportWithModuleImport() throws Exception {
+        File work = getWorkDir();
+        FileObject workFO = FileUtil.toFileObject(work);
+
+        assertNotNull(workFO);
+
+        FileObject src = FileUtil.createFolder(workFO, "src");
+        FileObject build = FileUtil.createFolder(workFO, "build");
+        FileObject cache = FileUtil.createFolder(workFO, "cache");
+        FileObject testFile = FileUtil.createData(src, "Test.java");
+        SourceUtilsTestUtil.setSourceLevel(testFile, Integer.toString(SourceVersion.latest().ordinal()));
+        SourceUtilsTestUtil.setCompilerOptions(src, Arrays.asList("--enable-preview"));
+        SourceUtilsTestUtil.prepareTest(src, build, cache);
+
+        TestUtilities.copyStringToFile(testFile,
+                                       """
+                                       import module java.base;
+                                       public class Test {
+                                       }
+                                       """);
+        js = JavaSource.forFileObject(testFile);
+        assertNotNull("JavaSource found", js);
+        String[] toInsert = new String[1];
+        Set<? extends FileObject> modified = js.runModificationTask(copy -> {
+            copy.toPhase(Phase.RESOLVED);
+            Tree clazz = copy.getCompilationUnit().getTypeDecls().get(0);
+            TreePath clazzTP = TreePath.getPath(copy.getCompilationUnit(), clazz);
+            toInsert[0] = SourceUtils.resolveImport(copy, clazzTP, "java.util.List");
+        }).getModifiedFileObjects();
+        assertEquals("List", toInsert[0]);
+        assertTrue(modified.isEmpty());
     }
 
     //<editor-fold defaultstate="collapsed" desc="Helper methods & Mock services">
-    
+
     private void prepareTest() throws Exception {
         File work = getWorkDir();
         FileObject workFO = FileUtil.toFileObject(work);
-        
+
         assertNotNull(workFO);
-        
+
         FileObject sourceRoot = workFO.getFileObject("src");
         if (sourceRoot == null) {
             sourceRoot = workFO.createFolder("src");
@@ -446,27 +641,27 @@ public class SourceUtilsTest extends ClassIndexTestCase {
         if (packageRoot == null) {
             packageRoot = sourceRoot.createFolder("sourceutils");
         }
-        
+
         SourceUtilsTestUtil.prepareTest(sourceRoot, buildRoot, cache);
-        
+
         String capitalizedName = "T" + getName().substring(1);
-        
+
         TestUtil.copyFiles(FileUtil.toFile(sourceRoot), "sourceutils/" + capitalizedName + ".java");
-        
+
         packageRoot.refresh();
-        
+
         FileObject testSource = packageRoot.getFileObject(capitalizedName + ".java");
-        
+
         assertNotNull(testSource);
 
         SourceUtilsTestUtil.compileRecursively(sourceRoot);
-        
+
         js = JavaSource.forFileObject(testSource);
-        
+
         assertNotNull(js);
-        
+
         info = SourceUtilsTestUtil.getCompilationInfo(js, JavaSource.Phase.RESOLVED);
-        
+
         assertNotNull(info);
     }
 
@@ -502,11 +697,8 @@ public class SourceUtilsTest extends ClassIndexTestCase {
         final FileObject fo = FileUtil.createData(folder, name);
         final FileLock lock = fo.lock();
         try {
-            final OutputStream out = fo.getOutputStream(lock);
-            try {
-                FileUtil.copy(new ByteArrayInputStream(content.getBytes()), out);
-            } finally {
-                out.close();
+            try (OutputStream out = fo.getOutputStream(lock)) {
+                out.write(content.getBytes());
             }
         } finally {
             lock.releaseLock();
@@ -554,21 +746,21 @@ public class SourceUtilsTest extends ClassIndexTestCase {
         }
 
     }
-    
+
     private static class SFBQImpl implements SourceForBinaryQueryImplementation {
-        
+
         private static SFBQImpl instance;
-        
+
         private final Map<URL, FileObject> map = new HashMap<URL, FileObject> ();
-        
+
         private SFBQImpl () {
-            
+
         }
-        
+
         public void register (FileObject bin, FileObject src) throws IOException {
             map.put(bin.toURL(), src);
         }
-            
+
         public Result findSourceRoots(URL binaryRoot) {
             final FileObject src = map.get (binaryRoot);
             if (src != null) {
@@ -578,16 +770,16 @@ public class SourceUtilsTest extends ClassIndexTestCase {
                         return new FileObject[] {src};
                     }
 
-                    public void addChangeListener(ChangeListener l) {                        
+                    public void addChangeListener(ChangeListener l) {
                     }
 
-                    public void removeChangeListener(ChangeListener l) {                        
+                    public void removeChangeListener(ChangeListener l) {
                     }
                 };
             }
             return null;
         }
-        
+
         public static synchronized SFBQImpl getDefault () {
             if (instance == null) {
                 instance = new SFBQImpl ();
@@ -595,7 +787,7 @@ public class SourceUtilsTest extends ClassIndexTestCase {
             return instance;
         }
     }
-    
+
     private static final class Match {
         private String[] fqns;
         private String[] names;

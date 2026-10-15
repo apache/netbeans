@@ -1,0 +1,21 @@
+    final public public(set) readonly $finalPublicPublicSetReadonlyError; // error1
+                                       ---------------------------------
+HINT:Readonly property "$finalPublicPublicSetReadonlyError" must have type
+    final protected public(set) readonly string|int $finalProtectedPublicSetReadonly; // error2
+                                                     -------------------------------
+HINT:Visibility(protected) of property "$finalProtectedPublicSetReadonly" must not be weaker than set visibility(public(set))
+    final private public(set) readonly string|int $finalPrivatePublicSetReadonly; // error3 fix1
+                                                   -----------------------------
+HINT:Private field cannot be final.
+FIX:Remove modifier: final
+FIX:Remove modifier: private
+    final private protected(set) readonly string|int $finalPrivateProtectedSetReadonly; // error4 fix2
+                                                      --------------------------------
+HINT:Private field cannot be final.
+FIX:Remove modifier: final
+FIX:Remove modifier: private
+    final private private(set) readonly string|int $finalPrivatePrivateSetReadonly; // error5 fix3
+                                                    ------------------------------
+HINT:Private field cannot be final.
+FIX:Remove modifier: final
+FIX:Remove modifier: private

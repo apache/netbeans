@@ -23,5 +23,11 @@
 <project name="nb/o.n.upgrader" default="build" basedir=".">
 
     <import file="../../nbbuild/templates/projectized.xml"/>
-
+    
+    <target name="compile" depends="projectized-common.compile,-branding"/>
+    <target name="-branding">
+        <replace file="${build.dir}/classes/org/netbeans/upgrade/Bundle.properties" value="defaultvalue" propertyFile="${nb_all}/nbbuild/build/netbeansrelease.properties">
+            <replacefilter token="@@metabuild.apachepreviousversion@@" property="metabuild.apachepreviousversion"/>
+        </replace>
+    </target>
 </project>

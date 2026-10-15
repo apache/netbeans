@@ -55,34 +55,42 @@ public class Status implements DeploymentStatus {
         this.state = state;
     }
     
+    @Override
     public ActionType getAction () {
         return at;
     }
     
+    @Override
     public CommandType getCommand () {
         return ct;
     }
     
+    @Override
     public String getMessage () {
         return msg;
     }
     
+    @Override
     public StateType getState () {
         return state;
     }
     
+    @Override
     public boolean isCompleted () {
         return StateType.COMPLETED.equals (state);
     }
     
+    @Override
     public boolean isFailed () {
         return StateType.FAILED.equals (state);
     }
     
+    @Override
     public boolean isRunning () {
         return StateType.RUNNING.equals (state);
     }
     
+    @Override
     public String toString () {
         return "A="+getAction ()+" S="+getState ()+" "+getMessage ();   // NOI18N
     }

@@ -68,9 +68,7 @@ public final class ModeImpl implements Mode.Xml {
     }
     
     
-    ///////////////////////////////////////////////////////////////////
     // Start of org.openide.windows.Mode interface implementation.
-    ///////////////////////////////////////////////////////////////////
     /** Gets the programmatic name of this mode.
      * This name should be unique, as it is used to find modes etc.
      * Implements <code>Mode</code> interface method.
@@ -102,26 +100,28 @@ public final class ModeImpl implements Mode.Xml {
         
         getCentral().addModeOtherName(this, modeOtherName);
     }
-    
+
     /** Gets display name of this mode.
      ** Implements <code>Mode</code> interface method.
      * @return Human presentable name of this mode implementation
      * @deprecated It is not used anymore. This impl delegated to {@link #getName} method.  */
+    @Deprecated
     @Override
     public String getDisplayName () {
         WindowManagerImpl.warnIfNotInEDT();
-        
+
         return getName();
     }
 
     /** Gets icon for this mode.
-     * Implements <code>Mode</code> interface method. 
+     * Implements <code>Mode</code> interface method.
      * @return null
      * @deprecated It is not used anymore. */
+    @Deprecated
     @Override
     public Image getIcon () {
         WindowManagerImpl.warnIfNotInEDT();
-        
+
         return null;
     }
 
@@ -178,6 +178,7 @@ public final class ModeImpl implements Mode.Xml {
      * @return The workspace instance to which is this mode asociated.
      * @deprecated XXX Don't use anymore.
      */
+    @Deprecated
     @Override
     public Workspace getWorkspace () {
         WindowManagerImpl.warnIfNotInEDT();
@@ -212,11 +213,7 @@ public final class ModeImpl implements Mode.Xml {
     public void removePropertyChangeListener (PropertyChangeListener pchl) {
         changeSupport.removePropertyChangeListener(pchl);
     }
-    ///////////////////////////////////////////////////////////////////
     // End of org.openide.windows.Mode interface implementation.
-    ///////////////////////////////////////////////////////////////////
-
-    
     /** Actually performs the docking operation.
      * @param tc top component to dock into this mode
      * @param orderWeight weight for ordering. Smaller weight number means
@@ -521,7 +518,6 @@ public final class ModeImpl implements Mode.Xml {
     }
     
     
-    ////////////////////
     // Utility methods>>
     /*private*/ static String getUnusedModeName() {
         String base = MODE_ANONYMOUS_NAME;
@@ -542,8 +538,6 @@ public final class ModeImpl implements Mode.Xml {
         return result;
     }
     // Utility methods<<
-    ////////////////////
-
     public void setModeName(String text) {
         getCentral().setModeName(this, text);
     }

@@ -141,6 +141,14 @@ public final class NodeJsOptionsPanel extends JPanel implements ChangeListener {
         nodePanel.setNodeSources(nodeSources);
     }
 
+    public String getDebugProtocol() {
+        return nodePanel.getDebugProtocol();
+    }
+
+    public void setDebugProtocol(String debugProtocolId) {
+        nodePanel.setDebugProtocol(debugProtocolId);
+    }
+
     public boolean isStopAtFirstLine() {
         return stopAtFirstLineCheckBox.isSelected();
     }
@@ -280,11 +288,11 @@ public final class NodeJsOptionsPanel extends JPanel implements ChangeListener {
 
         Mnemonics.setLocalizedText(expressInstallLabel, NbBundle.getMessage(NodeJsOptionsPanel.class, "NodeJsOptionsPanel.expressInstallLabel.text")); // NOI18N
         expressInstallLabel.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent evt) {
-                expressInstallLabelMousePressed(evt);
-            }
             public void mouseEntered(MouseEvent evt) {
                 expressInstallLabelMouseEntered(evt);
+            }
+            public void mousePressed(MouseEvent evt) {
+                expressInstallLabelMousePressed(evt);
             }
         });
 
@@ -293,6 +301,11 @@ public final class NodeJsOptionsPanel extends JPanel implements ChangeListener {
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(nodePanelHolder, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(debuggingLabel)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(debuggingSeparator))
             .addGroup(layout.createSequentialGroup()
                 .addComponent(npmLabel)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -328,14 +341,8 @@ public final class NodeJsOptionsPanel extends JPanel implements ChangeListener {
                 .addComponent(npmHeaderLabel)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(npmSeparator))
-            .addComponent(nodePanelHolder, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(debuggingLabel)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(debuggingSeparator))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(errorLabel)
                     .addComponent(liveEditCheckBox)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(21, 21, 21)
@@ -343,8 +350,9 @@ public final class NodeJsOptionsPanel extends JPanel implements ChangeListener {
                             .addComponent(liveEditInfo2Label)
                             .addComponent(liveEditInfo1Label)))
                     .addComponent(stopAtFirstLineCheckBox)
+                    .addComponent(errorLabel)
                     .addComponent(npmIgnoreNodeModulesCheckBox))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 151, Short.MAX_VALUE))
         );
 
         layout.linkSize(SwingConstants.HORIZONTAL, new Component[] {npmBrowseButton, npmSearchButton});
@@ -364,7 +372,7 @@ public final class NodeJsOptionsPanel extends JPanel implements ChangeListener {
                 .addComponent(liveEditInfo1Label)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(liveEditInfo2Label)
-                .addGap(18, 18, 18)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                     .addComponent(npmHeaderLabel)
                     .addComponent(npmSeparator, GroupLayout.PREFERRED_SIZE, 8, GroupLayout.PREFERRED_SIZE))
@@ -393,7 +401,8 @@ public final class NodeJsOptionsPanel extends JPanel implements ChangeListener {
                     .addComponent(expressHintLabel)
                     .addComponent(expressInstallLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(errorLabel))
+                .addComponent(errorLabel)
+                .addGap(28, 28, 28))
         );
     }// </editor-fold>//GEN-END:initComponents
 

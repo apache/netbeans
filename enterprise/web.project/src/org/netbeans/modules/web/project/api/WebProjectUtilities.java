@@ -54,6 +54,7 @@ import org.w3c.dom.Element;
 
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -290,7 +291,7 @@ public class WebProjectUtilities {
                   false);
 
         WebProject p = (WebProject)ProjectManager.getDefault().findProject(h.getProjectDirectory());
-        UpdateHelper updateHelper = ((WebProject) p).getUpdateHelper();
+        UpdateHelper updateHelper = p.getUpdateHelper();
         
         // #119052
         if (sourceLevel == null) {
@@ -314,7 +315,7 @@ public class WebProjectUtilities {
             Exceptions.printStackTrace(ex.getException());
         }
         
-        ProjectWebModule pwm = (ProjectWebModule) p.getLookup().lookup(ProjectWebModule.class);
+        ProjectWebModule pwm = p.getLookup().lookup(ProjectWebModule.class);
         if (pwm != null) { //should not be null
             pwm.setContextPath(contextPath);
         }
@@ -567,7 +568,7 @@ public class WebProjectUtilities {
                         libs.add(URLMapper.findURL(FileUtil.getArchiveRoot(children[i]), URLMapper.EXTERNAL));
                     }
                 }
-                p.getClassPathModifier().getClassPathModifier().addRoots(libs.toArray(new URL[libs.size()]), ProjectProperties.JAVAC_CLASSPATH);
+                p.getClassPathModifier().getClassPathModifier().addRoots(libs.toArray(new URL[0]), ProjectProperties.JAVAC_CLASSPATH);
                 //do we really need to add the listener? commenting it out
                 //libFolder.addFileChangeListener(p);
             }
@@ -620,7 +621,7 @@ public class WebProjectUtilities {
         
         ep.setProperty(WebProjectProperties.JAVA_SOURCE_BASED,javaSourceBased+"");
         
-        UpdateHelper updateHelper = ((WebProject) p).getUpdateHelper();
+        UpdateHelper updateHelper = p.getUpdateHelper();
         
 // this enforcement is valid only for Web project for EE 6; non-EE6 containers may support JDK 7
 //        // #181215: JDK 6 should be the default source/binary format for Java EE 6 projects
@@ -699,7 +700,7 @@ public class WebProjectUtilities {
             boolean skipTests) throws IOException {
 
         Utils.logUI(NbBundle.getBundle(WebProjectUtilities.class), "UI_WEB_PROJECT_CREATE_SHARABILITY", // NOI18N
-                new Object[]{Boolean.valueOf(librariesDefinition != null), Boolean.FALSE});
+                new Object[]{librariesDefinition != null, Boolean.FALSE});
 
         AntProjectHelper h = ProjectGenerator.createProject(dirFO, WebProjectType.TYPE, librariesDefinition);
         Element data = h.getPrimaryConfigurationData(true);
@@ -834,8 +835,8 @@ public class WebProjectUtilities {
     }
 
     public static void upgradeJ2EEProfile(WebProject project){
-        if (Profile.JAVA_EE_6_WEB.equals(project.getAPIEjbJar().getJ2eeProfile()) ||
-                Profile.JAVA_EE_7_WEB.equals(project.getAPIEjbJar().getJ2eeProfile())){
+        Profile profile = project.getAPIEjbJar().getJ2eeProfile();
+        if (profile != null && profile.isWebProfile() && profile.isAtLeast(Profile.JAVA_EE_6_WEB)) {
             //check the J2EE 6/7 Full profile specific functionality
             Boolean isFullRequired = Boolean.FALSE;
             try{
@@ -867,7 +868,7 @@ public class WebProjectUtilities {
             //change profile if required
             if (isFullRequired){
                 boolean ee7 = false;
-                if (Profile.JAVA_EE_7_WEB.equals(project.getAPIEjbJar().getJ2eeProfile())) {
+                if (Profile.JAVA_EE_7_WEB.equals(profile)) {
                     ee7 = true;
                 }
                 if ((ee7 && ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_7_FULL)) ||
@@ -893,7 +894,7 @@ public class WebProjectUtilities {
         // read the config from resource first
         StringBuilder sb = new StringBuilder();
         String lineSep = System.getProperty("line.separator"); // NOI18N
-        BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+        BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
         try {
             String line = br.readLine();
             while (line != null) {

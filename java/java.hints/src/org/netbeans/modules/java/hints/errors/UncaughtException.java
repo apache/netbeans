@@ -30,7 +30,6 @@ import com.sun.source.tree.ThrowTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TryTree;
-import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 
 import java.io.IOException;
@@ -60,11 +59,8 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.UnionType;
 import javax.swing.text.StyledDocument;
 
-import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
-import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TreeUtilities;
@@ -76,8 +72,8 @@ import org.netbeans.modules.java.editor.overridden.ComputeOverriding;
 import org.netbeans.modules.java.editor.overridden.ElementDescription;
 import static org.netbeans.modules.java.hints.errors.Utilities.isValidType;
 import org.netbeans.modules.java.hints.spi.ErrorRule;
-import org.netbeans.spi.editor.hints.ChangeInfo;
 import org.netbeans.spi.editor.hints.Fix;
+import org.netbeans.spi.java.hints.JavaFix;
 import org.openide.text.NbDocument;
 import org.openide.util.NbBundle;
 
@@ -375,7 +371,7 @@ public final class UncaughtException implements ErrorRule<Void> {
                         }
                         
                         if (tm.getKind() != TypeKind.ERROR) {
-                            result.add(new AddThrowsClauseHintImpl(info.getJavaSource(), Utilities.getTypeName(info, tm, true).toString(), TypeMirrorHandle.create(tm), ElementHandle.create(method)));
+                            result.add(new AddThrowsClauseHintImpl(info, path, Utilities.getTypeName(info, tm, true).toString(), TypeMirrorHandle.create(tm), ElementHandle.create(method)).toEditorFix());
                         }
                     }
                 }
@@ -398,7 +394,8 @@ public final class UncaughtException implements ErrorRule<Void> {
                         result.add(new AddCatchFix(info, tryTree, thandles).toEditorFix());
                     }
                     if (!inResourceSection) {
-                        result.add(new OrigSurroundWithTryCatchFix(info.getJavaSource(), thandles, TreePathHandle.create(path, info), fqns));
+                        TreePathHandle tph = TreePathHandle.create(path, info);
+                        result.add(new OrigSurroundWithTryCatchFix(tph, thandles, fqns).toEditorFix());
                         //#134408: "Surround Block with try-catch" is redundant when the block contains just a single statement
                         TreePath tp = findBlock(path);
                         boolean magic = tryTree == null || allowMagicSurround;
@@ -406,7 +403,7 @@ public final class UncaughtException implements ErrorRule<Void> {
                             magic &= ((BlockTree) tp.getLeaf()).getStatements().size() != 1;
                         }
                         if(magic)
-                            result.add(new MagicSurroundWithTryCatchFix(info.getJavaSource(), thandles, offset, method != null ? ElementHandle.create(method) : null, fqns));
+                            result.add(new MagicSurroundWithTryCatchFix(tph, thandles, offset, method != null ? ElementHandle.create(method) : null, fqns).toEditorFix());
                     }
                 }
             }
@@ -472,15 +469,14 @@ public final class UncaughtException implements ErrorRule<Void> {
     
     private static final Set<ElementKind> EXECUTABLE_ELEMENTS = EnumSet.of(ElementKind.CONSTRUCTOR, ElementKind. METHOD);
     
-    private static final class AddThrowsClauseHintImpl implements Fix {
+    private static final class AddThrowsClauseHintImpl extends JavaFix {
 
-        private JavaSource js;
         private String fqn;
         private TypeMirrorHandle thandle;
         private ElementHandle<ExecutableElement> method;
         
-        public AddThrowsClauseHintImpl(JavaSource js, String fqn, TypeMirrorHandle thandle, ElementHandle<ExecutableElement> method) {
-            this.js = js;
+        public AddThrowsClauseHintImpl(CompilationInfo info, TreePath tp, String fqn, TypeMirrorHandle thandle, ElementHandle<ExecutableElement> method) {
+            super(info, tp);
             this.fqn = fqn;
             this.thandle = thandle;
             this.method = method;
@@ -489,27 +485,23 @@ public final class UncaughtException implements ErrorRule<Void> {
         public String getText() {
             return NbBundle.getMessage(UncaughtException.class, "FIX_AddThrowsClause", new Object[]{String.valueOf(fqn)});
         }
-        
-        public ChangeInfo implement() throws IOException {
-            js.runModificationTask(new Task<WorkingCopy>() {
-                public void run(WorkingCopy wc) throws Exception {
-                    wc.toPhase(Phase.RESOLVED);
-                    Tree tree = wc.getTrees().getTree(method.resolve(wc));
 
-                    if (tree == null) {
-                        Logger.getLogger(UncaughtException.class.getName()).log(Level.WARNING, "Cannot resolve Handle." +
-                                "fqn: " + fqn +
-                                "method: " + Arrays.asList(SourceUtils.getJVMSignature(method)).toString());
-                        return;
-                    }
-                    assert tree.getKind() == Kind.METHOD;
+        @Override
+        protected void performRewrite(TransformationContext ctx) throws Exception {
+            WorkingCopy wc = ctx.getWorkingCopy();
+            Tree tree = wc.getTrees().getTree(method.resolve(wc));
 
-                    MethodTree nue = wc.getTreeMaker().addMethodThrows((MethodTree) tree, (ExpressionTree) wc.getTreeMaker().Type(thandle.resolve(wc)));
+            if (tree == null) {
+                Logger.getLogger(UncaughtException.class.getName()).log(Level.WARNING, "Cannot resolve Handle." +
+                        "fqn: " + fqn +
+                        "method: " + Arrays.asList(SourceUtils.getJVMSignature(method)).toString());
+                return;
+            }
+            assert tree.getKind() == Kind.METHOD;
 
-                    wc.rewrite(tree, nue);
-                }
-            }).commit();
-            return null;
+            MethodTree nue = wc.getTreeMaker().addMethodThrows((MethodTree) tree, (ExpressionTree) wc.getTreeMaker().Type(thandle.resolve(wc)));
+
+            wc.rewrite(tree, nue);
         }
         
         @Override
@@ -521,9 +513,6 @@ public final class UncaughtException implements ErrorRule<Void> {
                 return false;
             }
             final AddThrowsClauseHintImpl other = (AddThrowsClauseHintImpl) obj;
-            if (this.js != other.js && (this.js == null || !this.js.equals(other.js))) {
-                return false;
-            }
             if (this.fqn == null || !this.fqn.equals(other.fqn)) {
                 return false;
             }

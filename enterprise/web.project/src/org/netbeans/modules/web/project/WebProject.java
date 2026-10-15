@@ -861,7 +861,7 @@ public final class WebProject implements Project {
                 GeneratedFilesHelper.BUILD_IMPL_XML_PATH,
                 WebProject.class.getResource("resources/build-impl.xsl"));
             final Boolean projectPropertiesSave = WebProject.this.projectPropertiesSave.get();
-            if ((projectPropertiesSave.booleanValue() && (state & GeneratedFilesHelper.FLAG_MODIFIED) == GeneratedFilesHelper.FLAG_MODIFIED) ||
+            if ((projectPropertiesSave && (state & GeneratedFilesHelper.FLAG_MODIFIED) == GeneratedFilesHelper.FLAG_MODIFIED) ||
                 state == (GeneratedFilesHelper.FLAG_UNKNOWN | GeneratedFilesHelper.FLAG_MODIFIED |
                     GeneratedFilesHelper.FLAG_OLD_PROJECT_XML | GeneratedFilesHelper.FLAG_OLD_STYLESHEET)) {  //missing genfiles.properties
                 try {
@@ -895,7 +895,7 @@ public final class WebProject implements Project {
         protected void projectOpened() {
             evaluator().addPropertyChangeListener(WebProject.this.webModule);
 
-            WebLogicalViewProvider logicalViewProvider = (WebLogicalViewProvider) WebProject.this.getLookup().lookup (WebLogicalViewProvider.class);
+            WebLogicalViewProvider logicalViewProvider = WebProject.this.getLookup().lookup(WebLogicalViewProvider.class);
             if (logicalViewProvider != null) {
                 logicalViewProvider.initialize();
             }
@@ -1519,24 +1519,26 @@ public final class WebProject implements Project {
         private boolean isArchive = false;
         private boolean isEE5 = false;
         private boolean serverSupportsEJB31 = false;
+        private boolean serverSupportsEJB40 = false;
 
         @Override
         public String[] getRecommendedTypes() {
             checkEnvironment();
             if (isArchive) {
                 return TYPES_ARCHIVE;
-            } else if (projectCap.isEjb31LiteSupported()) {
-                Set<String> set = new HashSet(Arrays.asList(TYPES));
-                if (projectCap.isEjb31Supported() || serverSupportsEJB31) {
+            } else if (projectCap.isEjb31LiteSupported() || projectCap.isEjb40LiteSupported()) {
+                Set<String> set = new HashSet<>(Arrays.asList(TYPES));
+                if (projectCap.isEjb31Supported() || projectCap.isEjb40Supported() 
+                        || serverSupportsEJB31 || serverSupportsEJB40) {
                     set.addAll(Arrays.asList(TYPES_EJB31));
                 }
 
-                if (projectCap.isEjb32LiteSupported()) {
+                if (projectCap.isEjb32LiteSupported() || projectCap.isEjb40LiteSupported()) {
                     set.addAll(Arrays.asList(TYPES_EJB32_LITE));
                 } else {
                     set.addAll(Arrays.asList(TYPES_EJB31_LITE));
                 }
-                return set.toArray(new String[set.size()]);
+                return set.toArray(new String[0]);
             } else {
                 return TYPES;
             }
@@ -1551,11 +1553,12 @@ public final class WebProject implements Project {
                 Set<String> set = new HashSet<String>();
                 if (projectCap.isEjb31LiteSupported()) {
                     set.addAll(getPrivilegedTemplatesEE5());
-                    if (projectCap.isEjb31Supported() || serverSupportsEJB31) {
+                    if (projectCap.isEjb31Supported() || projectCap.isEjb40Supported() 
+                            || serverSupportsEJB31 || serverSupportsEJB40) {
                         set.addAll(Arrays.asList(PRIVILEGED_NAMES_EE6_FULL));
                     }
 
-                    if (projectCap.isEjb32LiteSupported()) {
+                    if (projectCap.isEjb32LiteSupported() || projectCap.isEjb40LiteSupported()) {
                         set.addAll(Arrays.asList(PRIVILEGED_NAMES_EE7_WEB));
                     } else {
                         set.addAll(Arrays.asList(PRIVILEGED_NAMES_EE6_WEB));
@@ -1565,7 +1568,7 @@ public final class WebProject implements Project {
                 } else {
                     set.addAll(WebProject.this.getPrivilegedTemplates());
                 }
-                return set.toArray(new String[set.size()]);
+                return set.toArray(new String[0]);
             }
         }
 
@@ -1578,9 +1581,19 @@ public final class WebProject implements Project {
                 }
                 projectCap = J2eeProjectCapabilities.forProject(project);
                 Profile profile = Profile.fromPropertiesString(eval.getProperty(WebProjectProperties.J2EE_PLATFORM));
-                isEE5 = profile == Profile.JAVA_EE_5;
-                serverSupportsEJB31 = ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_6_FULL) ||
-                        ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_7_FULL);
+                isEE5 = (profile == Profile.JAVA_EE_5);
+                
+                for (Profile _profile : ProjectUtil.getSupportedProfiles(project)) {
+                    if (_profile.isFullProfile()) {
+                        if (_profile.isAtLeast(Profile.JAKARTA_EE_9_FULL)) {
+                            serverSupportsEJB40 = true;
+                            break;
+                        } else if (_profile.isAtLeast(Profile.JAVA_EE_6_FULL)) {
+                            serverSupportsEJB31 = true;
+                            break;
+                        }
+                    }
+                }
                 checked = true;
             }
         }
@@ -2425,15 +2438,20 @@ public final class WebProject implements Project {
             List<Lookup> lookups = new ArrayList<>();
             lookups.add(base);
             Profile profile = Profile.fromPropertiesString(project.evaluator().getProperty(WebProjectProperties.J2EE_PLATFORM));
-            if (Profile.JAVA_EE_6_FULL.equals(profile) || Profile.JAVA_EE_6_WEB.equals(profile) ||
-                    Profile.JAVA_EE_7_FULL.equals(profile) || Profile.JAVA_EE_7_WEB.equals(profile) ||
-                    Profile.JAVA_EE_8_FULL.equals(profile) || Profile.JAVA_EE_8_WEB.equals(profile)){
+            if (Profile.JAVA_EE_6_FULL.equals(profile) || Profile.JAVA_EE_6_WEB.equals(profile)
+                    || Profile.JAVA_EE_7_FULL.equals(profile) || Profile.JAVA_EE_7_WEB.equals(profile)
+                    || Profile.JAVA_EE_8_FULL.equals(profile) || Profile.JAVA_EE_8_WEB.equals(profile)
+                    || Profile.JAKARTA_EE_8_FULL.equals(profile) || Profile.JAKARTA_EE_8_WEB.equals(profile)
+                    || Profile.JAKARTA_EE_9_FULL.equals(profile) || Profile.JAKARTA_EE_9_WEB.equals(profile)
+                    || Profile.JAKARTA_EE_9_1_FULL.equals(profile) || Profile.JAKARTA_EE_9_1_WEB.equals(profile)
+                    || Profile.JAKARTA_EE_10_FULL.equals(profile) || Profile.JAKARTA_EE_10_WEB.equals(profile)
+                    || Profile.JAKARTA_EE_11_FULL.equals(profile) || Profile.JAKARTA_EE_11_WEB.equals(profile)) {
                 lookups.add(ee6);
             }
             if ("true".equals(project.evaluator().getProperty(WebProjectProperties.DISPLAY_BROWSER))) {
                 lookups.add(Lookups.singleton(browserProvider));
             }
-            setLookups(lookups.toArray(new Lookup[lookups.size()]));
+            setLookups(lookups.toArray(new Lookup[0]));
         }
 
         public void propertyChange(PropertyChangeEvent evt) {

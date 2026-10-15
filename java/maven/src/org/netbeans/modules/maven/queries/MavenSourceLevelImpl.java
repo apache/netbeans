@@ -61,12 +61,12 @@ public class MavenSourceLevelImpl implements SourceLevelQueryImplementation2 {
     
     static final Pattern PROFILE = Pattern.compile("-profile (compact1|compact2|compact3){1}?");
 
-    private static final List<Pair<String, String>> SOURCE_PROPERTIES_AND_PARAM = Arrays.asList(
+    private static final List<Pair<String, String>> SOURCE_PROPERTIES_AND_PARAM = List.of(
         Pair.of("maven.compiler.release", Constants.RELEASE_PARAM), //NOI18N
         Pair.of("maven.compiler.source", Constants.SOURCE_PARAM)   //NOI18N
     );
 
-    private static final List<Pair<String, String>> TEST_PROPERTIES_AND_PARAM = Arrays.asList(
+    private static final List<Pair<String, String>> TEST_PROPERTIES_AND_PARAM = List.of(
         Pair.of("maven.compiler.testRelease", "testRelease"),       //NOI18N
         Pair.of("maven.compiler.release", Constants.RELEASE_PARAM), //NOI18N
         Pair.of("maven.compiler.testSource", "testSource"),        //NOI18N
@@ -90,26 +90,34 @@ public class MavenSourceLevelImpl implements SourceLevelQueryImplementation2 {
         assert "file".equals(uri.getScheme());
         String goal = "compile"; //NOI18N
         List<Pair<String, String>> propertiesAndParams = SOURCE_PROPERTIES_AND_PARAM;
+
         NbMavenProjectImpl nbprj = project.getLookup().lookup(NbMavenProjectImpl.class);
         for (URI testuri : nbprj.getSourceRoots(true)) {
             if (uri.getPath().startsWith(testuri.getPath())) {
                 goal = "testCompile"; //NOI18N
                 propertiesAndParams = TEST_PROPERTIES_AND_PARAM;
+                break;
             }
         }
-        for (URI testuri : nbprj.getGeneratedSourceRoots(true)) {
-            if (uri.getPath().startsWith(testuri.getPath())) {
-                goal = "testCompile"; //NOI18N
-                propertiesAndParams = TEST_PROPERTIES_AND_PARAM;
+        if (propertiesAndParams != TEST_PROPERTIES_AND_PARAM) {
+            for (URI testuri : nbprj.getGeneratedSourceRoots(true)) {
+                if (uri.getPath().startsWith(testuri.getPath())) {
+                    goal = "testCompile"; //NOI18N
+                    propertiesAndParams = TEST_PROPERTIES_AND_PARAM;
+                    break;
+                }
             }
         }
 
         for (Pair<String, String> propertyAndParam : propertiesAndParams) {
-            String sourceLevel = PluginPropertyUtils.getPluginProperty(project, Constants.GROUP_APACHE_PLUGINS,  //NOI18N
-                                                                  Constants.PLUGIN_COMPILER,  //NOI18N
-                                                                  propertyAndParam.second(),
-                                                                  goal,
-                                                                  propertyAndParam.first());
+            String sourceLevel = PluginPropertyUtils.getPluginProperty(
+                    project,
+                    Constants.GROUP_APACHE_PLUGINS,
+                    Constants.PLUGIN_COMPILER,
+                    propertyAndParam.second(),
+                    goal,
+                    propertyAndParam.first()
+            );
             if (sourceLevel != null) {
                 return sourceLevel;
             }
@@ -117,8 +125,20 @@ public class MavenSourceLevelImpl implements SourceLevelQueryImplementation2 {
         
         String version = PluginPropertyUtils.getPluginVersion(
                 nbprj.getOriginalMavenProject(),
-                Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER);
-        if (version == null || new DefaultArtifactVersion(version).compareTo(new DefaultArtifactVersion("2.3")) >= 0) {
+                Constants.GROUP_APACHE_PLUGINS,
+                Constants.PLUGIN_COMPILER
+        );
+
+        // TODO after a converstation with the maven team: v4 will likely simplify this to work like javac, JDK version = bytecode version
+        if (version == null) {
+            return "1.8";
+        } else if (new DefaultArtifactVersion(version).compareTo(new DefaultArtifactVersion("3.11.0")) >= 0) {
+            return "1.8";
+        } else if (new DefaultArtifactVersion(version).compareTo(new DefaultArtifactVersion("3.9.0")) >= 0) {
+            return "1.7";
+        } else if (new DefaultArtifactVersion(version).compareTo(new DefaultArtifactVersion("3.8.0")) >= 0) {
+            return "1.6";
+        } else if (new DefaultArtifactVersion(version).compareTo(new DefaultArtifactVersion("2.3")) >= 0) {
             return "1.5";
         } else {
             return "1.3";
@@ -134,24 +154,33 @@ public class MavenSourceLevelImpl implements SourceLevelQueryImplementation2 {
         URI uri = Utilities.toURI(file);
         assert "file".equals(uri.getScheme());
         String goal = "compile"; //NOI18N
+
         NbMavenProjectImpl nbprj = project.getLookup().lookup(NbMavenProjectImpl.class);
         for (URI testuri : nbprj.getSourceRoots(true)) {
             if (uri.getPath().startsWith(testuri.getPath())) {
                 goal = "testCompile"; //NOI18N
+                break;
             }
         }
-        for (URI testuri : nbprj.getGeneratedSourceRoots(true)) {
-            if (uri.getPath().startsWith(testuri.getPath())) {
-                goal = "testCompile"; //NOI18N
+        if (!goal.equals("testCompile")) { //NOI18N
+            for (URI testuri : nbprj.getGeneratedSourceRoots(true)) {
+                if (uri.getPath().startsWith(testuri.getPath())) {
+                    goal = "testCompile"; //NOI18N
+                    break;
+                }
             }
         }
+
         //compilerArguments vs compilerArgument vs compilerArgs - all of them get eventually merged in compiler mojo..
         //--> all need to be checked.
-        String args = PluginPropertyUtils.getPluginProperty(project, Constants.GROUP_APACHE_PLUGINS,  //NOI18N
-                                                              Constants.PLUGIN_COMPILER,  //NOI18N
-                                                              "compilerArgument",  //NOI18N
-                                                              goal,
-                                                              null);
+        String args = PluginPropertyUtils.getPluginProperty(
+                project,
+                Constants.GROUP_APACHE_PLUGINS,
+                Constants.PLUGIN_COMPILER,
+                "compilerArgument",  //NOI18N
+                goal,
+                null
+        );
         if (args != null) {
             Matcher match = PROFILE.matcher(args);
             if (match.find()) {
@@ -161,20 +190,26 @@ public class MavenSourceLevelImpl implements SourceLevelQueryImplementation2 {
             }
         }
         
-        
-        String compilerArgumentsProfile = PluginPropertyUtils.getPluginPropertyBuildable(project, 
+        String compilerArgumentsProfile = PluginPropertyUtils.getPluginPropertyBuildable(
+                project, 
                 Constants.GROUP_APACHE_PLUGINS,
-                Constants.PLUGIN_COMPILER, //NOI18N
+                Constants.PLUGIN_COMPILER,
                 goal,
-                new ConfigBuilder());
+                new ConfigBuilder()
+        );
                
         if (compilerArgumentsProfile != null) {
             SourceLevelQuery.Profile toRet = SourceLevelQuery.Profile.forName(compilerArgumentsProfile);
             return toRet != null ? toRet : SourceLevelQuery.Profile.DEFAULT;
         }
-        String[] compilerArgs = PluginPropertyUtils.getPluginPropertyList(project, Constants.GROUP_APACHE_PLUGINS,
-                         Constants.PLUGIN_COMPILER, //NOI18N
-                         "compilerArgs", "arg", goal);
+        String[] compilerArgs = PluginPropertyUtils.getPluginPropertyList(
+                project,
+                Constants.GROUP_APACHE_PLUGINS,
+                Constants.PLUGIN_COMPILER,
+                "compilerArgs", // NOI18N
+                "arg", // NOI18N
+                goal
+        );
         if (compilerArgs != null) {
             Iterator<String> it = Arrays.asList(compilerArgs).iterator();
             while (it.hasNext()) {

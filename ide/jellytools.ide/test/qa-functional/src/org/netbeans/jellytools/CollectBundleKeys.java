@@ -47,14 +47,12 @@ public class CollectBundleKeys {
         StringBuffer sb = new StringBuffer();
         byte b[] = new byte[1000];
         int i;
-        ArrayList dirs = new ArrayList();
+        ArrayList<File> dirs = new ArrayList<>();
         File sub[];
         dirs.add(new File(args[0]));
-        TreeMap bundles = new TreeMap();
-        String bundle, key;
-        TreeSet keys;
+        TreeMap<String, TreeSet<String>> bundles = new TreeMap<>();
         while (dirs.size() > 0) {
-            sub = ((File) dirs.remove(0)).listFiles();
+            sub = dirs.remove(0).listFiles();
             for (int j = 0; sub != null && j < sub.length; j++) {
                 if (sub[j].isDirectory()) {
                     dirs.add(sub[j]);
@@ -66,12 +64,12 @@ public class CollectBundleKeys {
                     in.close();
                     Matcher m = pat.matcher(sb);
                     while (m.find()) {
-                        bundle = m.group(2);
-                        key = m.group(3);
+                        String bundle = m.group(2);
+                        String key = m.group(3);
                         if (bundles.containsKey(bundle)) {
-                            ((TreeSet) bundles.get(bundle)).add(key);
+                            bundles.get(bundle).add(key);
                         } else {
-                            keys = new TreeSet();
+                            TreeSet<String> keys = new TreeSet<>();
                             keys.add(key);
                             bundles.put(bundle, keys);
                         }
@@ -79,19 +77,16 @@ public class CollectBundleKeys {
                 }
             }
         }
-        Iterator bi = bundles.keySet().iterator();
-        Iterator ki;
         int bs = 0, ks = 0;
         PrintStream out = new PrintStream(new FileOutputStream(args[1]));
-        while (bi.hasNext()) {
+        for (String bundle : bundles.keySet()) {
             bs++;
-            bundle = (String) bi.next();
-            ki = ((TreeSet) bundles.get(bundle)).iterator();
+            Iterator<String> ki = bundles.get(bundle).iterator();
             out.print(bundle + "=");
-            out.print((String) ki.next());
+            out.print(ki.next());
             ks++;
             while (ki.hasNext()) {
-                out.print("," + (String) ki.next());
+                out.print("," + ki.next());
                 ks++;
             }
             out.println();

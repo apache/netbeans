@@ -125,10 +125,10 @@ public final class JspServletDataObject extends MultiDataObject {
             EditorCookie newCurrent = computeCurrentEditorCookie();
             if (currentEditor != newCurrent) {
                 // re-register a property change listener to the new editor
-                if ((currentEditor != null) && (currentEditor instanceof EditorCookie.Observable)) {
+                if (currentEditor instanceof EditorCookie.Observable) {
                     ((EditorCookie.Observable)currentEditor).removePropertyChangeListener(this);
                 }
-                if ((newCurrent != null) && (newCurrent instanceof EditorCookie.Observable)) {
+                if (newCurrent instanceof EditorCookie.Observable) {
                     ((EditorCookie.Observable)newCurrent).addPropertyChangeListener(this);
                 }
                 // remember the new editor
@@ -139,7 +139,7 @@ public final class JspServletDataObject extends MultiDataObject {
         
         private EditorCookie computeCurrentEditorCookie() {
             DataObject jsp = servlet.getSourceJspPage();
-            if ((jsp != null) && (jsp instanceof JspDataObject)) {
+            if (jsp instanceof JspDataObject) {
                 if (((JspDataObject)jsp).getServletDataObject() == servlet) {
                     EditorCookie newCookie = ((JspDataObject) jsp).getServletEditor();
                     if (newCookie != null)

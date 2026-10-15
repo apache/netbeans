@@ -65,9 +65,8 @@ final class AllLFCustoms extends LFCustoms {
                         
             EDITOR_ERRORSTRIPE_SCROLLBAR_INSETS, new Insets(0, 0, 0, 0),
 
-            SPLIT_PANE_DIVIDER_SIZE_VERTICAL, new Integer(4),
-            SPLIT_PANE_DIVIDER_SIZE_HORIZONTAL, new Integer(4)
-        }; //NOI18N
+            SPLIT_PANE_DIVIDER_SIZE_VERTICAL, 4,
+            SPLIT_PANE_DIVIDER_SIZE_HORIZONTAL, 4}; //NOI18N
         return uiDefaults;
     }
 
@@ -94,7 +93,7 @@ final class AllLFCustoms extends LFCustoms {
             "controlFont", new GuaranteedValue ("controlFont",
                 new Font ("Dialog", Font.PLAIN, fontsize)),
             
-            DEFAULT_FONT_SIZE, new Integer(11),
+            DEFAULT_FONT_SIZE, 11,
             ERROR_FOREGROUND, new GuaranteedValue(ERROR_FOREGROUND, errorColor),
 
             WARNING_FOREGROUND, new GuaranteedValue(WARNING_FOREGROUND, warningColor ),
@@ -112,7 +111,7 @@ final class AllLFCustoms extends LFCustoms {
         
         Map<Font, Font> fontTranslation = new HashMap<Font, Font>(5);
         
-        if( "Nimbus".equals( UIManager.getLookAndFeel().getID() ) ) { //NOI18N
+        if( UIManager.getFont("defaultFont") != null ) { //NOI18N
             switchFont("defaultFont", fontTranslation, uiFontSize, nbDialogPlain); // NOI18N
         }
         switchFont("controlFont", fontTranslation, uiFontSize, nbDialogPlain); // NOI18N
@@ -154,6 +153,7 @@ final class AllLFCustoms extends LFCustoms {
         switchFont("windowTitleFont", fontTranslation, uiFontSize, nbDialogBold); // NOI18N
         switchFont("Spinner.font", fontTranslation, uiFontSize, nbDialogPlain); // NOI18N
         switchFont("FormattedTextField.font", fontTranslation, uiFontSize, nbDialogPlain); // NOI18N
+        switchFont("Slider.font", fontTranslation, uiFontSize, nbDialogPlain); // NOI18N
     }
 
     //#144402

@@ -97,7 +97,7 @@ final class FreeformEvaluator implements PropertyEvaluator, AntProjectListener, 
                     String fname = XMLUtil.findText(e);
                     if (fname.contains("${")) { // NOI18N
                         // Tricky (#48230): need to listen to changes in the location of the file as well as its contents.
-                        PropertyEvaluator intermediate = PropertyUtils.sequentialPropertyEvaluator(preprovider, defs.toArray(new PropertyProvider[defs.size()]));
+                        PropertyEvaluator intermediate = PropertyUtils.sequentialPropertyEvaluator(preprovider, defs.toArray(new PropertyProvider[0]));
                         fname = intermediate.evaluate(fname);
                         if (fname == null) {
                             continue;
@@ -110,7 +110,7 @@ final class FreeformEvaluator implements PropertyEvaluator, AntProjectListener, 
                 }
             }
         }
-        return PropertyUtils.sequentialPropertyEvaluator(preprovider, defs.toArray(new PropertyProvider[defs.size()]));
+        return PropertyUtils.sequentialPropertyEvaluator(preprovider, defs.toArray(new PropertyProvider[0]));
     }
     
     public String getProperty(String prop) {

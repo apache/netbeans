@@ -31,7 +31,7 @@ import org.openide.util.Lookup.Item;
  * and provides methods for registration of instances and lazy instances.
  * <PRE>
  * {@link InstanceContent} ic = new {@link InstanceContent#InstanceContent() InstanceContent()};
- * {@link Lookup} lookup = new {@link AbstractLookup#AbstractLookup(org.openide.util.lookup.AbstractLookup.Content) AbstractLookup(ic)};
+ * {@link org.openide.util.Lookup} lookup = new {@link AbstractLookup#AbstractLookup(org.openide.util.lookup.AbstractLookup.Content) AbstractLookup(ic)};
  *
  * ic.{@link #add(java.lang.Object) add(new Object ())};
  * ic.{@link #add(java.lang.Object) add(new Dimension (...))};
@@ -81,7 +81,9 @@ public final class InstanceContent extends AbstractLookup.Content {
      * <p>
      * To remove registered object from lookup use {@link #remove(java.lang.Object, org.openide.util.lookup.InstanceContent.Convertor)}
      * with the same arguments.
-     *
+     * 
+     * @param <T> type of instance
+     * @param <R> type to convert instance to
      * @param inst instance
      * @param conv convertor which postponing an instantiation,
      * if <code>conv==null</code> then the instance is registered directly.
@@ -98,6 +100,8 @@ public final class InstanceContent extends AbstractLookup.Content {
     }
 
     /** Remove instance added with a convertor.
+     * @param <T> type of instance
+     * @param <R> type to convert instance to
      * @param inst instance
      * @param conv convertor, if <code>conv==null</code> it is same like
      * remove(Object)
@@ -108,6 +112,8 @@ public final class InstanceContent extends AbstractLookup.Content {
 
     /** Changes all pairs in the lookup to new values. Converts collection of
      * instances to collection of pairs.
+     * @param <T> type of instance
+     * @param <R> type to convert instance to
      * @param col the collection of (Item) objects
      * @param conv the convertor to use or null
      */
@@ -168,7 +174,7 @@ public final class InstanceContent extends AbstractLookup.Content {
 
     /** Instance of one item representing an object.
      */
-    final static class SimpleItem<T> extends Pair<T> {
+    static final class SimpleItem<T> extends Pair<T> {
         private T obj;
 
         /** Create an item.
@@ -249,7 +255,7 @@ public final class InstanceContent extends AbstractLookup.Content {
 
     /** Instance of one item registered in the map.
      */
-    final static class ConvertingItem<T,R> extends Pair<R> {
+    static final class ConvertingItem<T,R> extends Pair<R> {
         /** registered object */
         private T obj;
 

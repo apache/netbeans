@@ -22,7 +22,7 @@ package org.netbeans.api.lexer;
 /**
  * Whether {@link Token} represents a complete token
  * or just a part of a complete token.
- * <br/>
+ * <br>
  * A complete token may consist of one start token, zero or more middle tokens
  * and zero or more end tokens (there may be incomplete token
  * at the end of input e.g. an incomplete block comment so there is just a start

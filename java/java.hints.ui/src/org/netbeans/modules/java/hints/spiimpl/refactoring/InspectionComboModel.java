@@ -31,6 +31,7 @@ import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
 import org.netbeans.modules.java.hints.providers.spi.HintMetadata;
 import org.netbeans.modules.java.hints.providers.spi.HintMetadata.Options;
 import org.netbeans.modules.java.hints.spiimpl.options.HintsPanelLogic.HintCategory;
@@ -45,7 +46,7 @@ public final class InspectionComboModel extends AbstractListModel implements Com
 
     public InspectionComboModel(Collection<? extends HintMetadata> hints) {
         DefaultMutableTreeNode root = (DefaultMutableTreeNode) constructTM(hints, false).getRoot();
-        Enumeration enumeration = root.preorderEnumeration();
+        Enumeration<TreeNode> enumeration = root.preorderEnumeration();
         
         hintsList = new ArrayList<Object>();
         while (enumeration.hasMoreElements()) {

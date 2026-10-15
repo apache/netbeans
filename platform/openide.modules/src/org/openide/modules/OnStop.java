@@ -34,7 +34,7 @@ import org.openide.util.lookup.NamedServiceDefinition;
  * with the shutdown:
  * <pre>
  * {@code @OnStop}
- * <b>public class</b> AskTheUser <b>implements</b> Callable<Boolean> {
+ * <b>public class</b> AskTheUser <b>implements</b> Callable&lt;Boolean&gt; {
  *   <b>public</b> Boolean call() {
  *     <b>return</b> isItOKToShutdown() ? Boolean.TRUE : Boolean.FALSE;
  *   }
@@ -54,7 +54,7 @@ import org.openide.util.lookup.NamedServiceDefinition;
  * </pre>
  *
  * @since 7.29
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  */
 @NamedServiceDefinition(
     path="Modules/Stop", serviceType={ Runnable.class, Callable.class }

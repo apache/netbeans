@@ -56,7 +56,7 @@ public abstract class Line extends Annotatable implements Serializable {
      * and {@link ShowVisibilityType#NONE} instead.
      */
     @Deprecated
-    public final static int SHOW_TRY_SHOW = 0;
+    public static final int SHOW_TRY_SHOW = 0;
 
     /** Opens the editor if necessary and shows the line.
      * @see #show(int) <code>show</code>
@@ -64,7 +64,7 @@ public abstract class Line extends Annotatable implements Serializable {
      * and {@link ShowVisibilityType#NONE} instead.
      */
     @Deprecated
-    public final static int SHOW_SHOW = 1;
+    public static final int SHOW_SHOW = 1;
 
     /** Opens the editor if necessary, shows the line, and takes the focus.
      * @see #show(int) <code>show</code>
@@ -72,7 +72,7 @@ public abstract class Line extends Annotatable implements Serializable {
      * and {@link ShowVisibilityType#FOCUS} instead.
      */
     @Deprecated
-    public final static int SHOW_GOTO = 2;
+    public static final int SHOW_GOTO = 2;
 
     /** Same as SHOW_GOTO except that the Window Manager attempts to front the
      * editor window (i.e. make it the top most window).
@@ -83,7 +83,7 @@ public abstract class Line extends Annotatable implements Serializable {
      * and {@link ShowVisibilityType#FRONT} instead.
      */
     @Deprecated
-    public final static int SHOW_TOFRONT = 3;
+    public static final int SHOW_TOFRONT = 3;
 
     /** Takes the focus in case the editor is already opened and shows the line.
      * Replaces (closes) the last editor opened using SHOW_REUSE in case 
@@ -96,7 +96,7 @@ public abstract class Line extends Annotatable implements Serializable {
      * and {@link ShowVisibilityType#FOCUS} instead.
      */
     @Deprecated
-    public final static int SHOW_REUSE = 4;
+    public static final int SHOW_REUSE = 4;
 
     /** Focuses or opens given editor, marking it as reusable editor if it
      * was not opened before. Similar to {@link #SHOW_REUSE} but ignores
@@ -107,7 +107,7 @@ public abstract class Line extends Annotatable implements Serializable {
      * and {@link ShowVisibilityType#FOCUS} instead.
      */
     @Deprecated
-    public final static int SHOW_REUSE_NEW = 5;
+    public static final int SHOW_REUSE_NEW = 5;
 
     /** ShowOpenType and ShowVisibilityType is replacement for constants SHOW_TRY_SHOW, SHOW_SHOW,
      * SHOW_GOTO, SHOW_TOFRONT, SHOW_REUSE, SHOW_REUSE_NEW. It is to provide full control
@@ -155,7 +155,7 @@ public abstract class Line extends Annotatable implements Serializable {
     };
 
     /** Instance of null implementation of Line.Part */
-    static final private Line.Part nullPart = new Line.NullPart();
+    private static final Line.Part nullPart = new Line.NullPart();
 
     /** context of this line */
     private org.openide.util.Lookup dataObject;
@@ -218,12 +218,12 @@ public abstract class Line extends Annotatable implements Serializable {
 
     /** Get the line number. The last condition in following should
     * always be true:
-    * <PRE>
+    * <PRE>{@code 
     *   Line.Set lineSet = <line set>
     *   Line l = <some line from line set lineSet>
     *
     *   l.equals (lineSet.getCurrent (l.getLineNumber ()))
-    * </PRE>
+    * }</PRE>
     *
     * @return current line number (may change as text is edited) (starting at 0)
     */
@@ -383,7 +383,7 @@ public abstract class Line extends Annotatable implements Serializable {
      * part never cross the end of the line.
      * @since 1.20
      */
-    public static abstract class Part extends Annotatable {
+    public abstract static class Part extends Annotatable {
         /** Property name for the line attribute */
         public static final String PROP_LINE = "line"; // NOI18N
 
@@ -412,7 +412,7 @@ public abstract class Line extends Annotatable implements Serializable {
     }
 
     /** Implementation of Line.Part which is presenting empty part */
-    static final private class NullPart extends Part {
+    private static final class NullPart extends Part {
         NullPart() {
         }
 
@@ -445,7 +445,7 @@ public abstract class Line extends Annotatable implements Serializable {
     * and the compiler module asks for the 25th line (because the compiler reports an error at line 25 in the saved file) via the line set, the 26th line
     * of the current document will be marked as being in error.
     */
-    public static abstract class Set extends Object {
+    public abstract static class Set extends Object {
         /** date when the object has been created */
         private Date date;
 
@@ -519,7 +519,8 @@ public abstract class Line extends Annotatable implements Serializable {
         }
 
         /** Registers the line to this <code>Line.Set</code>.
-         * @param line <code>Line</code> to register
+         * @param lineIndex line index
+         * @param lineCreator <code>Line</code> to register
          * @return registered <code>Line</code>. <em>Note:</em> the retruned
          * <code>Line</code> could be different (identityHashCode not equal)
          * from the one passed in */

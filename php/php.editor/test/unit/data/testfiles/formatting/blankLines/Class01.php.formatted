@@ -10,7 +10,6 @@ class BaseClass {
     final public function moreTesting() {
         echo "BaseClass::moreTesting() called\n";
     }
-
 }
 
 final class ChildClass extends BaseClass {
@@ -21,13 +20,11 @@ final class ChildClass extends BaseClass {
     public function method1() {
         
     }
-
 }
 
 final class ChildClass2 extends BaseClass {
 
     public $field2 = 22;
-
 }
 
 ?>

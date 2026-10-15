@@ -375,7 +375,7 @@ public class ResourceBundleBrandingPanel extends AbstractBrandingPanel
 
         @Override
         protected void removeNotify() {
-            setKeys(Collections.EMPTY_SET);
+            setKeys(Collections.emptySet());
         }
 
         private void refreshList() {
@@ -498,11 +498,11 @@ public class ResourceBundleBrandingPanel extends AbstractBrandingPanel
 
         @Override
         protected void removeNotify() {
-            setKeys(Collections.EMPTY_SET);
+            setKeys(Collections.emptySet());
         }
 
         private void refreshList() {
-            List keys = new ArrayList();
+            List<Node> keys = new ArrayList<>();
             Node[] origChildren = original.getChildren().getNodes();
             for (Node node : origChildren) {
                 keys.add(node);
@@ -572,7 +572,7 @@ public class ResourceBundleBrandingPanel extends AbstractBrandingPanel
         }
 
         private String escapeTagDefinitions (String text) {
-            return text.replaceAll("<", "&lt;").replaceAll(">", "&gt;"); // NOI18N
+            return text.replace("<", "&lt;").replace(">", "&gt;"); // NOI18N
         }
 
         public void refresh() {

@@ -37,7 +37,7 @@ import org.netbeans.modules.bugtracking.spi.*;
  */
 public class BugtrackingUtilTest {
 
-    private final static String[] VALID_HOSTS = new String [] {
+    private static final String[] VALID_HOSTS = new String [] {
         "netbeans.org/bugzilla",
         "123.netbeans.org/bugzilla",
         "netbeans123.org/bugzilla",
@@ -48,7 +48,7 @@ public class BugtrackingUtilTest {
         "netbeans.org/eventhis",
     };
 
-    private final static String[] INVALID_HOSTS = new String [] {
+    private static final String[] INVALID_HOSTS = new String [] {
         "n123etbeans.org/bugzilla",
         "netbeans.aorg/bugzilla",
         "netbeans.123org/bugzilla",

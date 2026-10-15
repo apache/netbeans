@@ -73,6 +73,7 @@ public class RestApplicationsImpl implements RestApplications {
         public List<RestApplicationImpl> createInitialObjects() throws InterruptedException {
             final Map<TypeElement, RestApplicationImpl> result =
                     new HashMap<TypeElement, RestApplicationImpl>();
+            findAnnotations(RestConstants.APPLICATION_PATH_JAKARTA, EnumSet.of(ElementKind.CLASS), result);
             findAnnotations(RestConstants.APPLICATION_PATH, EnumSet.of(ElementKind.CLASS), result);
             return new ArrayList<RestApplicationImpl>(result.values());
         }

@@ -85,7 +85,7 @@ public class WebLocationsPanel extends javax.swing.JPanel implements HelpCtx.Pro
             if (wm.webInf != null)
                 webInf = getLocationDisplayName(projectEvaluator, nbProjectFolder, wm.webInf);
             else
-                ////NetBeans 5.x and older projects (WEB-INF is placed under Web Pages)
+                //NetBeans 5.x and older projects (WEB-INF is placed under Web Pages)
                 webInf = docroot + "/WEB-INF"; //NOI18N
             classpath = wm.classpath;
             jTextFieldWeb.setText(docroot);
@@ -320,7 +320,7 @@ private void jButtonWebInfActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private static JFileChooser createChooser(File webPagesLoc, WizardDescriptor wizardDescriptor) {
 	String path = webPagesLoc.getAbsolutePath();
         JFileChooser chooser = new JFileChooser();
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, new File(path));
+        chooser.setCurrentDirectory(new File(path));
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         chooser.setAcceptAllFileFilterUsed(false);
         

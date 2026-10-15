@@ -200,9 +200,9 @@ public final class MultiTargetChooserPanel implements WizardDescriptor.Panel, Ch
 
     private void fireChange() {
         ChangeEvent e = new ChangeEvent(this);
-        Iterator it = listeners.iterator();
+        Iterator<ChangeListener> it = listeners.iterator();
         while (it.hasNext()) {
-            ((ChangeListener)it.next()).stateChanged(e);
+            it.next().stateChanged(e);
         }
     }
 
@@ -361,7 +361,7 @@ public final class MultiTargetChooserPanel implements WizardDescriptor.Panel, Ch
      * @param extension extension of created file
      * @return localized error message or null if all right
      */    
-    final public static String canUseFileName (FileObject targetFolder, String folderName, String newObjectName, String extension) {
+    public static final String canUseFileName (FileObject targetFolder, String folderName, String newObjectName, String extension) {
         String newObjectNameToDisplay = newObjectName;
         if (newObjectName != null) {
             newObjectName = newObjectName.replace ('.', '/'); // NOI18N

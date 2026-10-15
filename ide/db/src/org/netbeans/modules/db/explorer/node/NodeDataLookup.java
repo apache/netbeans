@@ -36,7 +36,7 @@ import org.openide.util.lookup.InstanceContent;
 public class NodeDataLookup extends AbstractLookup {
 
     /** the data instances held in the lookup */
-    private final Set dataInstances = Collections.synchronizedSet(new HashSet());
+    private final Set<Object> dataInstances = Collections.synchronizedSet(new HashSet<Object>());
 
     /** the content of the underlying AbstractLookup */
     private final InstanceContent content;

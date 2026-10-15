@@ -19,12 +19,12 @@
 
 package org.netbeans.modules.j2ee.core.api.support.java;
 
-import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.modules.java.source.usages.IndexUtil;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -41,13 +41,9 @@ public class TestUtilities {
     }
 
     public static final FileObject copyStringToFileObject(FileObject fo, String content) throws IOException {
-        OutputStream os = fo.getOutputStream();
-        try {
-            InputStream is = new ByteArrayInputStream(content.getBytes("UTF-8"));
-            FileUtil.copy(is, os);
+        try (OutputStream os = fo.getOutputStream()) {
+            os.write(content.getBytes(StandardCharsets.UTF_8));
             return fo;
-        } finally {
-            os.close();
         }
     }
 

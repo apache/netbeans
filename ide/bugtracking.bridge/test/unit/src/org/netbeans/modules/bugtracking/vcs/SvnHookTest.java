@@ -24,7 +24,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -32,14 +31,10 @@ import java.util.Date;
 import java.util.logging.Level;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
-import org.eclipse.core.runtime.CoreException;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.RandomlyFails;
-import org.netbeans.modules.bugtracking.IssueImpl;
 import org.netbeans.modules.bugtracking.TestKit;
-import org.netbeans.modules.bugtracking.api.IssueQuickSearch;
 import org.netbeans.modules.bugtracking.api.Repository;
-import org.netbeans.modules.bugtracking.ui.search.QuickSearchComboBar;
 import org.netbeans.modules.bugtracking.ui.search.QuickSearchPanel;
 import org.netbeans.modules.bugtracking.vcs.VCSHooksConfig.HookType;
 import org.netbeans.modules.versioning.hooks.SvnHook;
@@ -68,7 +63,7 @@ public class SvnHookTest extends NbTestCase {
     }
 
     @RandomlyFails
-    public void testPanel() throws MalformedURLException, CoreException, IOException, InterruptedException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public void testPanel() throws MalformedURLException, IOException, InterruptedException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         SvnHookImpl hook = getHook();
 
         VCSHooksConfig.getInstance(HookType.SVN).setLink(true);
@@ -98,7 +93,7 @@ public class SvnHookTest extends NbTestCase {
         assertFalse(panel.resolveCheckBox.isSelected());
     }
 
-    public void testBeforeCommitNoLink() throws MalformedURLException, CoreException, IOException, InterruptedException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public void testBeforeCommitNoLink() throws MalformedURLException, IOException, InterruptedException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         SvnHookImpl hook = getHook();
 
         VCSHooksConfig.getInstance(HookType.SVN).setLink(false);
@@ -111,7 +106,7 @@ public class SvnHookTest extends NbTestCase {
         assertNull(ctx);
     }
 
-    public void testBeforeCommitWithLink() throws MalformedURLException, CoreException, IOException, InterruptedException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public void testBeforeCommitWithLink() throws MalformedURLException, IOException, InterruptedException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         SvnHookImpl hook = getHook();
 
         VCSHooksConfig.getInstance(HookType.SVN).setLink(true);
@@ -127,7 +122,7 @@ public class SvnHookTest extends NbTestCase {
         assertNotSame(msg, ctx.getMessage()); // issue info was added
     }
 
-    public void testAfterCommitLink() throws MalformedURLException, CoreException, IOException, InterruptedException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public void testAfterCommitLink() throws MalformedURLException, IOException, InterruptedException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         SvnHookImpl hook = getHook();
 
         VCSHooksConfig.getInstance(HookType.SVN).setLink(true);
@@ -147,7 +142,7 @@ public class SvnHookTest extends NbTestCase {
         assertFalse(HookIssue.getInstance().closed);
     }
 
-    public void testAfterCommitResolve() throws MalformedURLException, CoreException, IOException, InterruptedException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public void testAfterCommitResolve() throws MalformedURLException, IOException, InterruptedException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         SvnHookImpl hook = getHook();
 
         VCSHooksConfig.getInstance(HookType.SVN).setLink(false);
@@ -166,7 +161,7 @@ public class SvnHookTest extends NbTestCase {
         assertTrue(HookIssue.getInstance().closed);
     }
 
-    public void testAfterCommitLinkResolve() throws MalformedURLException, CoreException, IOException, InterruptedException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public void testAfterCommitLinkResolve() throws MalformedURLException, IOException, InterruptedException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         SvnHookImpl hook = getHook();
 
         VCSHooksConfig.getInstance(HookType.SVN).setLink(true);

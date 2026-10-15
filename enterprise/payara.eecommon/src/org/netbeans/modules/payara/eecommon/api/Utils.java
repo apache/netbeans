@@ -80,7 +80,7 @@ public final class Utils {
         return result;
     }
 
-    public final static int strCompareTo(String one, String two) {
+    public static final int strCompareTo(String one, String two) {
         int result;
 
         if(one == null) {

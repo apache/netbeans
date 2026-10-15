@@ -21,6 +21,7 @@ package org.netbeans.modules.java.stackanalyzer;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.DefaultListModel;
 import org.junit.Test;
 import org.netbeans.junit.NbTestCase;
@@ -46,6 +47,44 @@ public class StackLineAnalyserTest extends NbTestCase {
         assertTrue(StackLineAnalyser.matches("at javaapplication8.Main$1.run(Main.java:32)"));
         assertTrue(StackLineAnalyser.matches("at javaapplication8.Main$Inner.go(Main.java:40)"));
         assertTrue(StackLineAnalyser.matches("             [exec]     at org.openide.filesystems.FileUtil.normalizeFileOnMac(FileUtil.java:1714)"));
+        assertTrue(StackLineAnalyser.matches("at java.base/java.lang.String.lastIndexOf(String.java:1627)"));
+        assertTrue(StackLineAnalyser.matches(" at java.base/java.lang.String.lastIndexOf(String.java:1627)"));
+        // surefire + module info in src and test sources
+        assertTrue(StackLineAnalyser.matches("	at Mavenproject1/dev.mbien.mavenproject1.Mavenproject1.foo(Mavenproject1.java:15)"));
+        // surefire + module info in src but _no_ module info for test sources
+        assertTrue(StackLineAnalyser.matches("	at Mavenproject1@0.1-SNAPSHOT/dev.mbien.mavenproject1.Mavenproject1.foo(Mavenproject1.java:11)"));
+        // some loggers (e.g. MavenSimpleLogger until MNG-7970/#1342 which is maven's default logger) seem to add a space before the '('
+        assertTrue(StackLineAnalyser.matches("    at java.util.zip.ZipFile$CleanableResource.<init> (ZipFile.java:742)"));
+    }
+
+    @Test
+    public void testMatchesScalaLines() throws Exception {
+        String line = "at org.enso.compiler.core.ir.MetadataStorage.$anonfun$getUnsafe$1(MetadataStorage.scala:80)";
+        assertTrue(StackLineAnalyser.matches(line));
+        StackLineAnalyser.Link l = StackLineAnalyser.analyse(line);
+        assertEquals(3, l.getStartOffset());
+        assertEquals(91, l.getEndOffset());
+        assertEquals(".scala", l.getExtension());
+    }
+
+    @Test
+    public void testMatchesUnknownFileLines() throws Exception {
+        String line = "at org.Unknown(Unknown:80)";
+        assertTrue(StackLineAnalyser.matches(line));
+        StackLineAnalyser.Link l = StackLineAnalyser.analyse(line);
+        assertEquals(3, l.getStartOffset());
+        assertEquals(26, l.getEndOffset());
+        assertEquals(null, l.getExtension());
+    }
+
+    @Test
+    public void testMatchesWithNoPackage() throws Exception {
+        String line = "\tat NewClass.main(NewClass.java:12)";
+        assertTrue(StackLineAnalyser.matches(line));
+        StackLineAnalyser.Link l = StackLineAnalyser.analyse(line);
+        assertEquals(4, l.getStartOffset());
+        assertEquals(35, l.getEndOffset());
+        assertEquals(".java", l.getExtension());
     }
 
     @Test
@@ -68,6 +107,15 @@ public class StackLineAnalyserTest extends NbTestCase {
         l = StackLineAnalyser.analyse("at java.lang.String.lastIndexOf(String.java:1627) dfasdf");
         assertEquals(3, l.getStartOffset());
         assertEquals(49, l.getEndOffset());
+        l = StackLineAnalyser.analyse("at java.base/java.lang.String.lastIndexOf(String.java:1627)");
+        assertEquals(3, l.getStartOffset());
+        assertEquals(59, l.getEndOffset());
+        l = StackLineAnalyser.analyse(" at java.base/java.lang.String.lastIndexOf(String.java:1627)");
+        assertEquals(4, l.getStartOffset());
+        assertEquals(60, l.getEndOffset());
+        l = StackLineAnalyser.analyse("    at java.util.zip.ZipFile$CleanableResource.<init> (ZipFile.java:742)");
+        assertEquals(7, l.getStartOffset());
+        assertEquals(72, l.getEndOffset());
     }
 
     @Test
@@ -175,5 +223,53 @@ public class StackLineAnalyserTest extends NbTestCase {
                       "at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:907)",
                       "at java.lang.Thread.run(Thread.java:637)"
         });
+    }
+
+    @Test
+    public void testMultiLanguageStackFromEnso() throws Exception {
+        var stack = """
+        Execution finished with an error: java.lang.IllegalStateException: No persistance for java.time.LocalDate
+                at <java> org.enso.jvm.interop.OtherJvmMessage$ThrowException.value(OtherJvmMessage.java:54)
+                at <java> org.enso.jvm.interop.OtherJvmObject.send(OtherJvmObject.java:63)
+                at <java> org.enso.jvm.interop.OtherJvmObjectGen$ReflectionLibraryExports$Cached.send(OtherJvmObjectGen.java:65)
+                at <java> org.graalvm.truffle/com.oracle.truffle.api.interop.InteropLibraryGen$Proxy.invokeMember(InteropLibraryGen.java:2899)
+                at <java> org.graalvm.truffle/com.oracle.truffle.api.interop.InteropLibraryGen$CachedDispatch.invokeMember(InteropLibraryGen.java:8497)
+                at <java> org.enso.interpreter.node.callable.resolver.HostMethodCallNode.resolveHostMethod(HostMethodCallNode.java:223)
+                at <java> org.enso.interpreter.node.callable.resolver.HostMethodCallNodeGen.executeAndSpecialize(HostMethodCallNodeGen.java:152)
+                at <java> org.enso.interpreter.node.callable.resolver.HostMethodCallNodeGen.execute(HostMethodCallNodeGen.java:114)
+                at <java> org.enso.interpreter.node.callable.InvokeMethodNode.doPolyglot(InvokeMethodNode.java:562)
+                at <java> org.enso.interpreter.node.callable.InvokeMethodNodeGen.executeAndSpecialize(InvokeMethodNodeGen.java:868)
+                at <java> org.enso.interpreter.node.callable.InvokeMethodNodeGen.execute(InvokeMethodNodeGen.java:525)
+                at <java> org.enso.interpreter.node.callable.InvokeCallableNode.invokeDynamicSymbol(InvokeCallableNode.java:286)
+                at <java> org.enso.interpreter.node.callable.InvokeCallableNodeGen.executeAndSpecialize(InvokeCallableNodeGen.java:274)
+                at <java> org.enso.interpreter.node.callable.InvokeCallableNodeGen.execute(InvokeCallableNodeGen.java:226)
+                at <java> org.enso.interpreter.node.callable.ApplicationNode.executeGeneric(ApplicationNode.java:97)
+                at <java> org.enso.interpreter.node.callable.function.BlockNode.executeGeneric(BlockNode.java:78)
+                at <java> org.enso.interpreter.node.ClosureRootNode.execute(ClosureRootNode.java:85)
+                at <enso> Date_Time_Formatter.format_date_time<arg-1>(Internal)
+                at <enso> Panic.catch(Internal)
+                at <enso> Date_Time_Formatter.handle_java_errors(Date_Time_Formatter.enso:304-306)
+                at <enso> Date_Time_Formatter.format_date_time(Date_Time_Formatter.enso:328-329)
+                at <enso> Date_Time.format(Date_Time.enso:968:9-36)
+                at <enso> H2_JDBC_Config.with_database<arg-1>(src/H2_Spec.enso:24:51-92)
+                at <enso> H2_JDBC_Config.with_database<arg-1>(src/H2_Spec.enso:24:37-93)
+        """;
+
+        var count = new AtomicInteger();
+        stack.lines().forEach((line) -> {
+            if (line.contains("<java>")) {
+                assertTrue("Line " + line + " matches", StackLineAnalyser.matches(line));
+                var link = StackLineAnalyser.analyse(line);
+                assertNotNull("Link constructed for " + line, link);
+                count.incrementAndGet();
+
+                assertTrue("line ends with )", line.endsWith(")"));
+                var lastColon = line.lastIndexOf(':');
+                var lineNumber = Integer.parseInt(line.substring(lastColon + 1, line.length() - 1));
+
+                assertEquals(lineNumber, link.getLineNumber());
+            }
+        });
+        assertEquals("Few lines found", 17, count.get());
     }
 }

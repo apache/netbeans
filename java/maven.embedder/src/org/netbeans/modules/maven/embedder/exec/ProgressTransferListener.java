@@ -21,7 +21,7 @@ package org.netbeans.modules.maven.embedder.exec;
 
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.netbeans.api.progress.aggregate.AggregateProgressFactory;
+import org.netbeans.api.progress.aggregate.BasicAggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.AggregateProgressHandle;
 import org.netbeans.api.progress.aggregate.ProgressContributor;
 import static org.netbeans.modules.maven.embedder.exec.Bundle.*;
@@ -56,7 +56,7 @@ public class ProgressTransferListener implements TransferListener {
     public static void setAggregateHandle(AggregateProgressHandle hndl) {
         ProgressTransferListener ptl = activeListener();
         ptl.handle = hndl;
-        ProgressContributor pc = AggregateProgressFactory.createProgressContributor("Pom files");
+        ProgressContributor pc = BasicAggregateProgressFactory.createProgressContributor("Pom files");
         hndl.addContributor(pc);
         pc.start(POM_MAX);
         ptl.pomcontrib = pc;
@@ -119,7 +119,7 @@ public class ProgressTransferListener implements TransferListener {
                 String name = (te.getRequestType() == TransferEvent.RequestType.GET
                         ? TXT_Download(resName)
                         : TXT_Uploading(resName));
-                pc = AggregateProgressFactory.createProgressContributor(name);
+                pc = BasicAggregateProgressFactory.createProgressContributor(name);
                 handle.addContributor(pc);
             }
             contrib = pc;
@@ -127,7 +127,7 @@ public class ProgressTransferListener implements TransferListener {
             String name = (te.getRequestType() == TransferEvent.RequestType.GET
                     ? TXT_Download(resName)
                     : TXT_Uploading(resName));
-            ProgressContributor pc = AggregateProgressFactory.createProgressContributor(name);
+            ProgressContributor pc = BasicAggregateProgressFactory.createProgressContributor(name);
             contribStack.add(pc);
             handle.addContributor(pc);
             if (pomCount < POM_MAX - 1) {

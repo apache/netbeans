@@ -36,10 +36,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
  */
 public class RunnerHttpDeleteInstance extends RunnerHttpTarget {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of administration command executor using
      * HTTP interface.
@@ -52,10 +49,7 @@ public class RunnerHttpDeleteInstance extends RunnerHttpTarget {
         super(server, command);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Implemented Abstract Methods                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Extracts result value from internal <code>Manifest</code> object.
      * Value of <i>message</i> attribute in <code>Manifest</code> object is

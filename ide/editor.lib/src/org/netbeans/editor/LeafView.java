@@ -29,6 +29,7 @@ import javax.swing.text.Position;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.event.DocumentEvent;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.modules.editor.lib.drawing.DrawContext;
 import org.netbeans.modules.editor.lib.drawing.DrawEngine;
 import org.netbeans.modules.editor.lib.drawing.DrawGraphics;
@@ -152,7 +153,7 @@ public class LeafView extends BaseView {
                 BaseDocument doc = (BaseDocument)getDocument();
                 try {
                     int pos = getPosFromY(clipY + clipHeight - 1);
-                    int endPos = Utilities.getRowEnd(doc, pos);
+                    int endPos = LineDocumentUtils.getLineEndOffset(doc, pos);
                     int baseY = getYFromPos(startPos);
                     DrawEngine.getDrawEngine().draw(
                         new DrawGraphics.GraphicsDG(g),
@@ -193,8 +194,7 @@ public class LeafView extends BaseView {
     * it returns start position. If it's beyond the end of view it returns
     * end position.
     * @param y y-coord to inspect
-    *   always returns startOffset for y < start of main area
-    * @param eol means to return end of specified line instead of begining
+    *   always returns startOffset for y &lt; start of main area
     * @return position in the document
     */
     protected int getPosFromY(int y) {
@@ -219,7 +219,7 @@ public class LeafView extends BaseView {
 
         int startOffset = getStartOffset();
         int pos;
-        pos = Utilities.getRowStartFromLineOffset(((BaseDocument)getDocument()), line);
+        pos = LineDocumentUtils.getLineStartFromIndex(((BaseDocument)getDocument()), line);
         if (pos == -1) {
             pos = startOffset;
         }
@@ -285,7 +285,7 @@ public class LeafView extends BaseView {
     protected int getYFromPos(int pos) throws BadLocationException {
         int relLine = 0;
         try {
-            relLine = Utilities.getLineOffset(((BaseDocument)getDocument()), pos)
+            relLine = LineDocumentUtils.getLineIndex(((BaseDocument)getDocument()), pos)
                       - ((BaseElement)getElement()).getStartMark().getLine();
         } catch (InvalidMarkException e) {
             Utilities.annotateLoggable(e);
@@ -373,7 +373,7 @@ public class LeafView extends BaseView {
             int pos = getPosFromY(intY); // first get BOL of target line
             EditorUI editorUI = getEditorUI();
             try {
-                int eolPos = Utilities.getRowEnd((BaseDocument)getDocument(), pos);
+                int eolPos = LineDocumentUtils.getLineEndOffset((BaseDocument)getDocument(), pos);
                 synchronized (viewToModelDG) {
                     viewToModelDG.setTargetX(intX);
                     viewToModelDG.setEOLOffset(eolPos);
@@ -391,7 +391,7 @@ public class LeafView extends BaseView {
     /** Gives notification that something was inserted into the document
     * in a location that this view is responsible for.
     *
-    * @param e the change information from the associated document
+    * @param evt the change information from the associated document
     * @param a the current allocation of the view
     * @param f the factory to use to rebuild if the view has children
     */
@@ -427,7 +427,7 @@ public class LeafView extends BaseView {
     /** Gives notification from the document that attributes were removed
     * in a location that this view is responsible for.
     *
-    * @param e the change information from the associated document
+    * @param evt the change information from the associated document
     * @param a the current allocation of the view
     * @param f the factory to use to rebuild if the view has children
     */
@@ -460,7 +460,7 @@ public class LeafView extends BaseView {
     }
 
     /** Attributes were changed in the are this view is responsible for.
-    * @param e the change information from the associated document
+    * @param evt the change information from the associated document
     * @param a the current allocation of the view
     * @param f the factory to use to rebuild if the view has children
     */

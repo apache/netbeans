@@ -37,10 +37,10 @@ import javax.swing.event.PopupMenuListener;
  */
 public class GrowingComboBox extends javax.swing.JPanel {
     private static final String SEPARATOR = "---";
-    final public static class GrowingListModel<T> implements ComboBoxModel {
-        final private Set<ListDataListener> listeners = new CopyOnWriteArraySet<ListDataListener>();
-        final private List<T> predefinedList = new ArrayList<T>();
-        final private List<T> userList = new ArrayList<T>();
+    public static final class GrowingListModel<T> implements ComboBoxModel<Object> {
+        private final Set<ListDataListener> listeners = new CopyOnWriteArraySet<ListDataListener>();
+        private final List<T> predefinedList = new ArrayList<T>();
+        private final List<T> userList = new ArrayList<T>();
         
         private T selected = null;
         private Action growAction;
@@ -64,13 +64,13 @@ public class GrowingComboBox extends javax.swing.JPanel {
         }
         
         @Override
-        final public Object getSelectedItem() {
+        public final Object getSelectedItem() {
             return selected;
         }
 
         @Override
         @SuppressWarnings("unchecked")
-        final public void setSelectedItem(final Object anItem) {
+        public final void setSelectedItem(final Object anItem) {
             if (anItem != null) {
                 if (anItem.equals(SEPARATOR)) return;
                 if (anItem instanceof Action) {
@@ -89,12 +89,12 @@ public class GrowingComboBox extends javax.swing.JPanel {
         }
 
         @Override
-        final public void addListDataListener(ListDataListener l) {
+        public final void addListDataListener(ListDataListener l) {
             listeners.add(l);
         }
 
         @Override
-        final public Object getElementAt(int index) {
+        public final Object getElementAt(int index) {
             int sep1 = getSep1Pos();
             int sep2 = getSep2Pos();
             
@@ -112,24 +112,24 @@ public class GrowingComboBox extends javax.swing.JPanel {
         }
 
         @Override
-        final public int getSize() {
+        public final int getSize() {
             return getActionPos() + 1;
         }
 
         @Override
-        final public void removeListDataListener(ListDataListener l) {
+        public final void removeListDataListener(ListDataListener l) {
             listeners.remove(l);
         }
         
-        final public List<T> getPredefined() {
+        public final List<T> getPredefined() {
             return Collections.unmodifiableList(predefinedList);
         }
         
-        final public List<T> getUserDefined() {
+        public final List<T> getUserDefined() {
             return Collections.unmodifiableList(userList);
         }
         
-        final public void setPredefined(List<T> predefined) {
+        public final void setPredefined(List<T> predefined) {
             int stop = getSep1Pos();
             predefinedList.clear();
             if (stop > 0) {
@@ -141,7 +141,7 @@ public class GrowingComboBox extends javax.swing.JPanel {
             fireDataAdded(0, stop > 0 ? stop : 0);
         }
         
-        final public void setUserDefined(List<T> user) {
+        public final void setUserDefined(List<T> user) {
             int stop = getSep2Pos();
             userList.clear();
             if (stop > 0) {
@@ -153,7 +153,7 @@ public class GrowingComboBox extends javax.swing.JPanel {
             fireDataAdded(getUserListStartPos(), stop);
         }
         
-        final public void addPredefined(T ... predefined) {
+        public final void addPredefined(T ... predefined) {
             int stop1 = getSep1Pos();
             predefinedList.addAll(Arrays.asList(predefined));
             int stop2 = getSep1Pos();
@@ -161,7 +161,7 @@ public class GrowingComboBox extends javax.swing.JPanel {
             fireDataAdded(stop1 > -1 ? stop1 : 0, stop2);
         }
         
-        final public void addUserDefined(T ... userdefined)  {
+        public final void addUserDefined(T ... userdefined)  {
             int stop1 = getSep2Pos();
             userList.addAll(Arrays.asList(userdefined));
             int stop2 = getSep2Pos();
@@ -244,7 +244,7 @@ public class GrowingComboBox extends javax.swing.JPanel {
                 return super.getListCellRendererComponent(list, s, index, isSelected, cellHasFocus);
             }
         });
-        combo.setModel(new GrowingListModel());
+        combo.setModel(new GrowingListModel<Object>());
     }
 
     /**

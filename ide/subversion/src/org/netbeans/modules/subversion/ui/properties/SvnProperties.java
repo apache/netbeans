@@ -112,7 +112,7 @@ public final class SvnProperties implements ActionListener {
         panel.setForDirectory(!folders.isEmpty());
         if (folders.isEmpty()) {
             panel.setIllegalPropertyNames(
-                    DIR_ONLY_PROPERTIES.toArray(new String[DIR_ONLY_PROPERTIES.size()]),
+                    DIR_ONLY_PROPERTIES.toArray(new String[0]),
                     "PropertiesPanel.errInvalidPropertyForFile");       //NOI18N
         } else {
             panel.setRecursiveProperties(FILE_ONLY_PROPERTIES);
@@ -168,8 +168,8 @@ public final class SvnProperties implements ActionListener {
     protected void initPropertyNameCbx() {
         if (panel.comboName.isEditable()) {
             panel.setPredefinedPropertyNames(folders.isEmpty()
-                                             ? FILE_ONLY_PROPERTIES.toArray(new String[FILE_ONLY_PROPERTIES.size()])
-                                             : MIXED_PROPERTIES.toArray(new String[MIXED_PROPERTIES.size()]));
+                                             ? FILE_ONLY_PROPERTIES.toArray(new String[0])
+                                             : MIXED_PROPERTIES.toArray(new String[0]));
         }
     }
 
@@ -385,7 +385,7 @@ public final class SvnProperties implements ActionListener {
                         SvnClientExceptionHandler.notifyException(ex, true, true);
                         return;
                     } finally {
-                        Subversion.getInstance().getStatusCache().refreshAsync(recursively, toRefresh.toArray(new File[toRefresh.size()]));
+                        Subversion.getInstance().getStatusCache().refreshAsync(recursively, toRefresh.toArray(new File[0]));
                     }
                     EventQueue.invokeLater(new Runnable() {
                         @Override
@@ -412,7 +412,7 @@ public final class SvnProperties implements ActionListener {
                 fileList.add(root);
             }
         }
-        return fileList.toArray(new File[fileList.size()]);
+        return fileList.toArray(new File[0]);
     }
 
     private File[] getFilesWithProperty (String propertyName) {
@@ -421,7 +421,7 @@ public final class SvnProperties implements ActionListener {
         if (filesWithProperty != null) {
             fileList.addAll(filesWithProperty);
         }
-        return fileList.toArray(new File[fileList.size()]);
+        return fileList.toArray(new File[0]);
     }
 
     private void addFile(SvnClient client, File file, boolean recursively) throws SVNClientException {
@@ -511,7 +511,7 @@ public final class SvnProperties implements ActionListener {
                     } catch (SVNClientException ex) {
                         SvnClientExceptionHandler.notifyException(ex, true, true);
                     } finally {
-                        Subversion.getInstance().getStatusCache().refreshAsync(recursively, toRefresh.toArray(new File[toRefresh.size()]));
+                        Subversion.getInstance().getStatusCache().refreshAsync(recursively, toRefresh.toArray(new File[0]));
                     }
                 }
 

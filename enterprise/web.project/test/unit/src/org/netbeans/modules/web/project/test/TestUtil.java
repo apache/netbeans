@@ -36,7 +36,7 @@ import java.util.StringTokenizer;
 import java.util.WeakHashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.project.Project;
 import org.netbeans.junit.NbTestCase;
@@ -47,7 +47,6 @@ import org.netbeans.modules.java.source.parsing.JavacParserFactory;
 import org.netbeans.spi.editor.mimelookup.MimeDataProvider;
 import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectState;
-import org.netbeans.spi.project.support.ant.AntBasedProjectType;
 import org.netbeans.spi.project.support.ant.AntProjectHelper;
 import org.netbeans.spi.project.support.ant.EditableProperties;
 import org.openide.filesystems.FileLock;
@@ -65,6 +64,7 @@ import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.util.test.MockLookup;
+import org.openide.util.test.TestFileUtils;
 import org.xml.sax.SAXException;
 
 /**
@@ -120,18 +120,7 @@ public final class TestUtil extends ProxyLookup {
      * Delete a file and all subfiles.
      */
     public static void deleteRec(File f) throws IOException {
-        if (f.isDirectory()) {
-            File[] kids = f.listFiles();
-            if (kids == null) {
-                throw new IOException("List " + f);
-            }
-            for (int i = 0; i < kids.length; i++) {
-                deleteRec(kids[i]);
-            }
-        }
-        if (!f.delete()) {
-            throw new IOException("Delete " + f);
-        }
+        TestFileUtils.deleteFile(f);
     }
     
     /**
@@ -153,16 +142,16 @@ public final class TestUtil extends ProxyLookup {
         System.gc();
     }
     
-    private static final Map<FileObject,Integer> loadCount = new WeakHashMap();
+    private static final Map<FileObject,Integer> loadCount = new WeakHashMap<>();
     
     /**
      * Check how many times {@link ProjectFactory#loadProject} has been called
      * (with any outcome) on a given project directory.
      */
     public static int projectLoadCount(FileObject dir) {
-        Integer i = (Integer)loadCount.get(dir);
+        Integer i = loadCount.get(dir);
         if (i != null) {
-            return i.intValue();
+            return i;
         } else {
             return 0;
         }
@@ -559,7 +548,7 @@ public final class TestUtil extends ProxyLookup {
             // get layer for the AS/GlassFish
 //            addLayer(layers, "org/netbeans/modules/j2ee/sun/ide/j2ee/layer.xml");
 //            addLayer(layers, "org/netbeans/modules/tomcat5/resources/layer.xml");
-            MultiFileSystem mfs = new MultiFileSystem((FileSystem[]) layers.toArray(new FileSystem[layers.size()]));
+            MultiFileSystem mfs = new MultiFileSystem((FileSystem[]) layers.toArray(new FileSystem[0]));
             return mfs;
         }
         

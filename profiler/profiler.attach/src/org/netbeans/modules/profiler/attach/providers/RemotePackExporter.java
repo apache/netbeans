@@ -31,7 +31,7 @@ import org.openide.util.NbBundle;
 @NbBundle.Messages({
     "RemotePackExporter_GeneratingRemotePack=Generating Remote Pack to {0}" // NOI18N
 })
-final public class RemotePackExporter {
+public final class RemotePackExporter {
 
     private static final class Singleton {
 

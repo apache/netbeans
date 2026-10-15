@@ -76,9 +76,8 @@ abstract class TaskProperty {
     public Class getValueClass() { return valueClass;}
     
     
-    ///////
     private String id;
-    transient private String name;
+    private transient String name;
     private Class valueClass;
 }
 

@@ -81,7 +81,7 @@ public class GenerateDocumentHandlerAction extends XMLGenerateAction implements 
         if (node.length == 0) {
             return false;
         }
-        DataObject dobj = (DataObject) node[0].getLookup().lookup(DataObject.class);
+        DataObject dobj = node[0].getLookup().lookup(DataObject.class);
         if (dobj == null) {
             return false;
         }

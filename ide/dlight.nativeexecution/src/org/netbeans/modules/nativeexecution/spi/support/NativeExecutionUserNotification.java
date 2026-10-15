@@ -25,7 +25,7 @@ import org.openide.util.Lookup;
  *
  * @author masha
  */
-abstract public class NativeExecutionUserNotification {
+public abstract class NativeExecutionUserNotification {
 
     private static NativeExecutionUserNotification INSTANCE = null;
 
@@ -46,19 +46,19 @@ abstract public class NativeExecutionUserNotification {
         return INSTANCE;
     }
 
-    abstract public void notify(String message, Descriptor type);
+    public abstract void notify(String message, Descriptor type);
 
-    abstract public void notify(String message);
+    public abstract void notify(String message);
     
-    abstract public void notifyStatus(String message);
+    public abstract void notifyStatus(String message);
 
-    abstract public void showErrorNotification(String title, String shortMessage, String longMesage);
+    public abstract void showErrorNotification(String title, String shortMessage, String longMesage);
 
-    abstract public void showInfoNotification(String title, String shortMessage, String longMesage);
+    public abstract void showInfoNotification(String title, String shortMessage, String longMesage);
 
-    abstract public boolean confirmShellStatusValiation(String title, final String header, final String footer, final Shell shell);
+    public abstract boolean confirmShellStatusValiation(String title, final String header, final String footer, final Shell shell);
     
-    abstract public boolean showYesNoQuestion(String title, String text);
+    public abstract boolean showYesNoQuestion(String title, String text);
     
 
     private static class Trivial extends NativeExecutionUserNotification {

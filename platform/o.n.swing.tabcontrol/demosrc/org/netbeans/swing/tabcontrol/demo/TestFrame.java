@@ -50,23 +50,6 @@ public class TestFrame extends javax.swing.JFrame {
     public TestFrame() {
         setDefaultCloseOperation (javax.swing.WindowConstants.EXIT_ON_CLOSE);
         initComponents();
-        /*
-        try {
-            
-            System.setProperty("os.version", new Float(3.5).toString());
-            Method m = Toolkit.class.getDeclaredMethod("setDesktopProperty",
-            new Class[] {String.class, Object.class});
-            m.setAccessible(true);
-            m.invoke(java.awt.Toolkit.getDefaultToolkit(),
-            new Object[]  {"win.xpstyle.themeActive", Boolean.FALSE });
- 
-            
-            UIManager.setLookAndFeel(new PseudoWin());
-//            UIManager.setLookAndFeel(new javax.swing.plaf.metal.MetalLookAndFeel());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-         */
         
         try {
 //            UIManager.setLookAndFeel(new javax.swing.plaf.metal.MetalLookAndFeel());
@@ -206,7 +189,6 @@ public class TestFrame extends javax.swing.JFrame {
         
         jb9.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                int[] idxs = new int [] { 1, 3, 6, 8};
                 TabData[] td = new TabData[] {
                     new TabData(new JButton("inserted c 1"), myIcon, "Ic-1", "tip"),
                     new TabData(new JButton("inserted c 2"), myIcon, "Ic-2", "tip"),
@@ -368,6 +350,7 @@ public class TestFrame extends javax.swing.JFrame {
     private void initComponents() {//GEN-BEGIN:initComponents
 
         addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 exitForm(evt);
             }
@@ -437,12 +420,14 @@ public class TestFrame extends javax.swing.JFrame {
             this.r = r;
         }
 
+        @Override
         public synchronized void addInvalidComponent(
                 JComponent invalidComponent) {
             System.err.println("AddInvalidComponent " + invalidComponent);
             super.addInvalidComponent(invalidComponent);
         }
 
+        @Override
         public synchronized void addDirtyRegion(JComponent c, int x, int y,
                                                 int w, int h) {
             System.err.println("addDirtyRegion " + x + "," + y + "," + w + ","
@@ -452,11 +437,13 @@ public class TestFrame extends javax.swing.JFrame {
 //            Thread.dumpStack();
         }
 
+        @Override
         public void markCompletelyDirty(JComponent aComponent) {
             System.err.println("MarkCompletelyDirty " + aComponent);
             super.markCompletelyDirty(aComponent);
         }
 
+        @Override
         public void markCompletelyClean(JComponent aComponent) {
             super.markCompletelyClean(aComponent);
         }

@@ -37,6 +37,7 @@ import org.netbeans.modules.php.analysis.ui.analyzer.CodeSnifferCustomizerPanel;
 import org.netbeans.modules.php.analysis.util.AnalysisUtils;
 import org.netbeans.modules.php.analysis.util.Mappers;
 import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
+import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.api.validation.ValidationResult;
 import org.netbeans.modules.refactoring.api.Scope;
 import org.netbeans.spi.editor.hints.ErrorDescription;
@@ -160,7 +161,15 @@ public class CodeSnifferAnalyzerImpl implements Analyzer {
 
     @CheckForNull
     private CodeSniffer getValidCodeSniffer() {
+        Preferences settings = context.getSettings();
+        String codeSnifferPath = null;
+        if (settings != null) {
+            codeSnifferPath = settings.get(CodeSnifferCustomizerPanel.PATH, null);
+        }
         try {
+            if (StringUtils.hasText(codeSnifferPath)) {
+                return CodeSniffer.getCustom(codeSnifferPath);
+            }
             return CodeSniffer.getDefault();
         } catch (InvalidPhpExecutableException ex) {
             LOGGER.log(Level.INFO, null, ex);

@@ -30,7 +30,7 @@ import java.lang.reflect.Modifier;
 public class SourceMethodInfo {
     private String className, name, signature, vmName;
     private boolean execFlag;
-    final private int modifiers;
+    private final int modifiers;
 
     public SourceMethodInfo(String className, String name, String signature, String vmName, boolean execFlag, int modifiers) {
         this.className = className;
@@ -75,7 +75,7 @@ public class SourceMethodInfo {
      *
      * @return Returns the containing class FQN
      */
-    final public String getClassName() {
+    public final String getClassName() {
         return className;
     }
 
@@ -83,7 +83,7 @@ public class SourceMethodInfo {
      *
      * @return Returns the method name
      */
-    final public String getName() {
+    public final String getName() {
         return name;
     }
 
@@ -91,7 +91,7 @@ public class SourceMethodInfo {
      *
      * @return Returns the method signature
      */
-    final public String getSignature() {
+    public final String getSignature() {
         return signature;
     }
 
@@ -99,7 +99,7 @@ public class SourceMethodInfo {
      *
      * @return Returns the VM internal method name
      */
-    final public String getVMName() {
+    public final String getVMName() {
         return vmName;
     }
 
@@ -107,7 +107,7 @@ public class SourceMethodInfo {
      *
      * @return Returns TRUE if the method is executable (eg. main(String[]) or JSP main method)
      */
-    final public boolean isExecutable() {
+    public final boolean isExecutable() {
         return execFlag;
     }
     
@@ -115,7 +115,7 @@ public class SourceMethodInfo {
      * 
      * @return Returns method's modifiers in the {@linkplain Modifier} format
      */
-    final public int getModifiers() {
+    public final int getModifiers() {
         return modifiers;
     }
     

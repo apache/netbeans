@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -50,6 +51,8 @@ import org.openide.util.Utilities;
  * inside the Wizard.
  */
 public final class NewJ2SEPlatform extends J2SEPlatformImpl implements Runnable {
+
+    public static final String DISPLAY_NAME_FILE_ATTR = "J2SEPlatform.displayName";
 
     private static final Logger LOGGER = Logger.getLogger(NewJ2SEPlatform.class.getName());
 
@@ -100,7 +103,7 @@ public final class NewJ2SEPlatform extends J2SEPlatformImpl implements Runnable 
                 return;
             }
             String javacpath = javacFile.getAbsolutePath();
-            String filePath = File.createTempFile("nb-platformdetect", "properties").getAbsolutePath(); //NOI18N
+            String filePath = Files.createTempFile("nb-platformdetect", "properties").toFile().getAbsolutePath(); //NOI18N
             final String probePath = getSDKProperties(javapath, javacpath, filePath);
             File f = new File(filePath);
             Properties p = new Properties();

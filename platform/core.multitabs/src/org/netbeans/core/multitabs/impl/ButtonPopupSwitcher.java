@@ -28,6 +28,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
@@ -85,8 +87,8 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
     
     private final DocumentSwitcherTable pTable;
     
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
 
     private boolean isDragging = true;
 
@@ -176,12 +178,9 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
         if (popup != null) {
             popup.removePopupMenuListener( this );
             final JPopupMenu popupToHide = popup;
-            SwingUtilities.invokeLater( new Runnable() {
-                @Override
-                public void run() {
-                    if( popupToHide.isVisible() )
-                        popupToHide.setVisible( false );
-                }
+            SwingUtilities.invokeLater(() -> {
+                if( popupToHide.isVisible() )
+                    popupToHide.setVisible( false );
             });
             popup.setVisible( false );
             popup = null;
@@ -206,8 +205,7 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
     
     @Override
     public void mousePressed(MouseEvent e) {
-        int tabCount = controller.getTabModel().size();
-        if( pTable.onMouseEvent(e) && tabCount == 1 ) {
+        if( pTable.onMouseEvent(e) ) {
             hideCurrentPopup();
         }
         e.consume();
@@ -231,8 +229,8 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
         p = SwingUtilities.convertPoint((Component) e.getSource(), p, pTable);
         if (pTable.contains(p)) {
             if( !pTable.onMouseEvent(e) ) {
-                final SwitcherTableItem item = pTable.getSelectedItem();
-                if (item != null) {
+                final DocumentSwitcherTable.Item item = pTable.getSelectedItem();
+                if (item != null && !item.isSeparator()) {
                     hideCurrentPopup();
                     item.activate();
                 }
@@ -275,20 +273,6 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
         } else {
             pTable.clearSelection();
         }
-    }
-    
-    /**
-     * Was mouse upon the popup table when mouse action had been taken.
-     */
-    private boolean onSwitcherTable(MouseEvent e) {
-        Point p = e.getPoint();
-        //#118828
-        if (! (e.getSource() instanceof Component)) {
-            return false;
-        }
-        
-        p = SwingUtilities.convertPoint((Component) e.getSource(), p, pTable);
-        return pTable.contains(p);
     }
     
     @Override
@@ -357,24 +341,23 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
                 }
                 break;
             case KeyEvent.VK_DELETE: {
-                final Item item = ( Item ) pTable.getSelectedItem();
-                if (item != null && TabDataRenderer.isClosable( item.getTabData() )) {
+                final Item item = pTable.getSelectedItem();
+                if (item != null) {
                     TabData tab = item.getTabData();
                     int tabIndex = controller.getTabModel().indexOf( tab );
                     if( tabIndex >= 0 ) {
                         if( controller.getTabModel().size() == 1 ) {
-                            SwingUtilities.invokeLater( new Runnable() {
-                                @Override
-                                public void run() {
-                                    hideCurrentPopup();
-                                }
-                            });
+                            SwingUtilities.invokeLater(this::hideCurrentPopup);
                         }
                         TabActionEvent tae = new TabActionEvent( this, TabbedContainer.COMMAND_CLOSE, tabIndex );
                         controller.postActionEvent( tae );
                         selRow = Math.min( pTable.getModel().getRowCount()-1, selRow );
                         selCol = Math.min( pTable.getModel().getColumnCount()-1, selCol );
                         switched = true;
+                    } else if ( item.isSeparator() ){
+                        if( pTable.closeSelectedDocumentList() ) {
+                            SwingUtilities.invokeLater(this::hideCurrentPopup);
+                        }
                     }
                 }
                 break;
@@ -461,14 +444,25 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
     }
 
     private Item[] createSwitcherItems(final Controller controller) {
+
         ProjectSupport projectSupport = ProjectSupport.getDefault();
-        final boolean sortByProject = Settings.getDefault().isSortDocumentListByProject()
-                && projectSupport.isEnabled();
-        java.util.List<TabData> tabs = controller.getTabModel().getTabs();
-        ArrayList<Item> items = new ArrayList<Item>(tabs.size());
+        boolean sortByProject = Settings.getDefault().isSortDocumentListByProject() && projectSupport.isEnabled();
+
+        List<TabData> tabs = controller.getTabModel().getTabs();
+        Map<TabData, ProjectProxy> tab2ProjectMap = Collections.emptyMap();
+
+        if (sortByProject) {
+            tab2ProjectMap = projectSupport.tryGetProjectsForTabs(tabs);
+            if (tab2ProjectMap.isEmpty()) {
+                sortByProject = false;
+            }
+        }
+
+        ArrayList<Item> items = new ArrayList<>(tabs.size());
         int selIdx = controller.getSelectedIndex();
         TabData selectedTab = selIdx >= 0 && selIdx < controller.getTabModel().size() ? controller.getTabModel().getTab(selIdx) : null;
         boolean hasProjectInfo = false;
+
         for (TabData tab : tabs) {
             String name;
             String htmlName;
@@ -487,8 +481,8 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
                 name = htmlName = tab.getText();
             }
             ProjectProxy project = null;
-            if( sortByProject ) {
-                project = projectSupport.getProjectForTab( tab );
+            if (sortByProject) {
+                project = tab2ProjectMap.get(tab);
                 hasProjectInfo |= null != project;
             }
             items.add( new Item(
@@ -499,6 +493,7 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
                     tab == selectedTab,
                     project));
         }
+
         Collections.sort( items );
         if( sortByProject && hasProjectInfo ) {
             //add project headers
@@ -514,11 +509,11 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
                 currentProject = p;
             }
         }
-        return items.toArray( new Item[items.size()] );
+        return items.toArray( new Item[0] );
     }
 
     private class ActivatableTab implements SwitcherTableItem.Activatable {
-        private TabData tab;
+        private final TabData tab;
 
         private ActivatableTab(TabData tab) {
             this.tab = tab;

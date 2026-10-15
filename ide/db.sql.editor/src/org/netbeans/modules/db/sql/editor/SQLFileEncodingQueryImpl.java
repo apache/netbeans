@@ -21,6 +21,7 @@ package org.netbeans.modules.db.sql.editor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.spi.queries.FileEncodingQueryImplementation;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -57,7 +58,7 @@ public class SQLFileEncodingQueryImpl extends FileEncodingQueryImplementation {
                 }
             }
             if (bytesRead == 4 && isUTF16(buff)) {
-                return Charset.forName("UTF-16");  //NOI18N
+                return StandardCharsets.UTF_16;
             }
         }
         return null;

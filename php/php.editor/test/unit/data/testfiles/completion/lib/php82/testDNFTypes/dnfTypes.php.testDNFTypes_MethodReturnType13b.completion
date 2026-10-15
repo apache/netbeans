@@ -1,0 +1,4 @@
+Code completion result for source line:
+self::publicStaticMethod()::publicStaticXMethod()::publicStaticYM|ethod(); // (ClassY&ClassZ)|ClassX
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicStaticYMethod()           [STATIC]   ClassY

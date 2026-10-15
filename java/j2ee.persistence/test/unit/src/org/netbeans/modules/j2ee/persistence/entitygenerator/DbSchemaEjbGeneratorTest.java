@@ -88,26 +88,32 @@ public class DbSchemaEjbGeneratorTest extends NbTestCase {
             this.tableNames = tableNames;
         }
 
+        @Override
         public Set<String> getTableNames() {
             return tableNames;
         }
 
+        @Override
         public FileObject getRootFolder(String tableName) {
             return null;
         }
 
+        @Override
         public String getPackageName(String tableName) {
             return null;
         }
 
+        @Override
         public String getClassName(String tableName) {
             return tableName;
         }
 
+        @Override
         public String getSchema() {
             return null;
         }
 
+        @Override
         public String getCatalog() {
             return null;
         }
@@ -124,10 +130,12 @@ public class DbSchemaEjbGeneratorTest extends NbTestCase {
              return false;
         }
 
+        @Override
         public UpdateType getUpdateType(String tableName) {
             return UpdateType.NEW;
         }
 
+        @Override
         public Set<List<String>> getUniqueConstraints(String tableName) {
             return null;
         }

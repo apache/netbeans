@@ -31,7 +31,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
@@ -58,7 +57,6 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.editor.JumpList;
-import org.netbeans.modules.jumpto.EntityComparator;
 import org.netbeans.modules.jumpto.common.AbstractModelFilter;
 import org.netbeans.modules.jumpto.common.ItemRenderer;
 import org.netbeans.modules.jumpto.common.Models;
@@ -95,22 +93,18 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
     /* package */ static final String CAMEL_CASE_SEPARATOR = "\\p{javaUpperCase}|-|_|\\.";    //NOI18N
     /* package */ static final String CAMEL_CASE_PART_CASE_SENSITIVE = "\\p{javaLowerCase}|\\p{Digit}|\\$";         //NOI18N
     /* package */ static final String CAMEL_CASE_PART_CASE_INSENSITIVE = "\\p{javaLowerCase}|\\p{Digit}|\\p{javaUpperCase}|\\$";         //NOI18N
-    /* package */ static final Map<String,Object> SEARCH_OPTIONS_CASE_SENSITIVE;
-    /* package */ static final Map<String,Object> SEARCH_OPTIONS_CASE_INSENSITIVE;
-    static {
-        Map<String,Object> m = new HashMap<>();
-        m.put(Queries.OPTION_CAMEL_CASE_SEPARATOR, CAMEL_CASE_SEPARATOR);
-        m.put(Queries.OPTION_CAMEL_CASE_PART, CAMEL_CASE_PART_CASE_SENSITIVE);
-        SEARCH_OPTIONS_CASE_SENSITIVE = Collections.unmodifiableMap(m);
-        m = new HashMap<>();
-        m.put(Queries.OPTION_CAMEL_CASE_SEPARATOR, CAMEL_CASE_SEPARATOR);
-        m.put(Queries.OPTION_CAMEL_CASE_PART, CAMEL_CASE_PART_CASE_INSENSITIVE);
-        SEARCH_OPTIONS_CASE_INSENSITIVE = Collections.unmodifiableMap(m);
-    }
+    /* package */ static final Map<String, Object> SEARCH_OPTIONS_CASE_SENSITIVE = Map.of(
+            Queries.OPTION_CAMEL_CASE_SEPARATOR, CAMEL_CASE_SEPARATOR,
+            Queries.OPTION_CAMEL_CASE_PART, CAMEL_CASE_PART_CASE_SENSITIVE
+    );
+    /* package */ static final Map<String, Object> SEARCH_OPTIONS_CASE_INSENSITIVE = Map.of(
+            Queries.OPTION_CAMEL_CASE_SEPARATOR, CAMEL_CASE_SEPARATOR,
+            Queries.OPTION_CAMEL_CASE_PART, CAMEL_CASE_PART_CASE_INSENSITIVE
+    );
     private static final char LINE_NUMBER_SEPARATOR = ':';    //NOI18N
     private static final Pattern PATTERN_WITH_LINE_NUMBER = Pattern.compile("(.*)"+LINE_NUMBER_SEPARATOR+"(\\d*)");    //NOI18N
 
-    private static final ListModel EMPTY_LIST_MODEL = new DefaultListModel();
+    private static final ListModel<FileDescriptor> EMPTY_LIST_MODEL = new DefaultListModel<>();
     private static final RequestProcessor slidingRp = new RequestProcessor("FileSearchAction-sliding",1);
     //Threading: Throughput 1 required due to inherent sequential code in Work.Request.exclude
     private static final RequestProcessor rp = new RequestProcessor ("FileSearchAction-worker",1);
@@ -159,10 +153,11 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
     @Override
     @NonNull
     public ListCellRenderer getListCellRenderer(
-            @NonNull final JList list,
+            @NonNull final JList<FileDescriptor> list,
             @NonNull final Document nameDocument,
             @NonNull final ButtonModel caseSensitive,
-            @NonNull final ButtonModel colorPrefered) {
+            @NonNull final ButtonModel colorPrefered,
+            @NonNull final ButtonModel searchFolders) {
         Parameters.notNull("list", list);   //NOI18N
         Parameters.notNull("nameDocument", nameDocument);   //NOI18N
         Parameters.notNull("caseSensitive", caseSensitive); //NOI18N
@@ -172,6 +167,7 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
                     new FileDescriptorConvertor(nameDocument)).
                 setCamelCaseSeparator(CAMEL_CASE_SEPARATOR).
                 setColorPreferedProject(colorPrefered).
+                setSearchFolders(searchFolders).
                 build();
     }
 
@@ -188,8 +184,8 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
             return false;
         }
         boolean exact = text.endsWith(" "); // NOI18N
-        text = text.trim();
-        if ( text.length() == 0 || !Utils.isValidInput(text)) {
+        text = text.strip();
+        if (text.isEmpty() || !Utils.isValidInput(text)) {
             currentSearch.filter(
                     SearchType.EXACT_NAME,
                     text,
@@ -215,11 +211,17 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
 
         // Compute in other thread
         synchronized(this) {
-            final SearchType searchType = Utils.toSearchType(nameKind);
-            if (currentSearch.isNarrowing(searchType, text, null, true)) {
+            SearchType searchType = Utils.toSearchType(nameKind);
+            // todo: QuerySupport.Kind has no case insensitive exact mode
+            if (!panel.isCaseSensitive() && searchType == SearchType.EXACT_NAME) {
+                searchType = SearchType.CASE_INSENSITIVE_EXACT_NAME;
+            }
+            if (currentSearch.isNarrowing(searchType, text, getSearchScope(panel), true)) {
                 itemsComparator.setUsePreferred(panel.isPreferedProject());
+                itemsComparator.setPrefereOpenProjects(panel.isPrefereOpenProjects());
                 itemsComparator.setText(text);
                 filterFactory.setLineNumber(lineNr);
+                filterFactory.setSearchByFolders(panel.isSearchByFolders());
                 currentSearch.filter(
                         searchType,
                         text,
@@ -271,6 +273,7 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
             searchText,
             slidingTaskData.kind,
             panel.getCurrentProject(),
+            panel.isSearchByFolders(),
             slidingTaskData.lineNo);
         final Worker.Collector collector = Worker.newCollector(
                 baseListModel,
@@ -280,7 +283,7 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
                         enableOK(baseListModel.getSize() > 0);
                     });},
                 () -> {
-                    currentSearch.searchCompleted(slidingTaskData.type, searchText, null);
+                    currentSearch.searchCompleted(slidingTaskData.type, searchText, getSearchScope(panel));
                     SwingUtilities.invokeLater(() -> {
                         panel.searchCompleted(true);
                     });
@@ -304,6 +307,11 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
                 "Worker posted after {0} ms.",  //NOI18N
                 System.currentTimeMillis() - panel.time );
         }
+    }
+
+    private static String getSearchScope(final FileSearchPanel panel) {
+        //the string constant doesn't really matter, just that they are different values
+        return panel.isSearchByFolders() ? "folders-scope" : null;
     }
 
     private void enableOK(final boolean enable) {
@@ -471,7 +479,7 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
     // Private classes ---------------------------------------------------------
     private class DialogButtonListener implements ActionListener {
 
-        private FileSearchPanel panel;
+        private final FileSearchPanel panel;
 
         public DialogButtonListener(FileSearchPanel panel) {
             this.panel = panel;
@@ -583,12 +591,7 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
         @Override
         public void run() {
             icon = delegate.getIcon();
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    refreshCallback.run();
-                }
-            });
+            SwingUtilities.invokeLater(refreshCallback::run);
         }
 
     }
@@ -664,6 +667,11 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
     //@NotThreadSafe
     private static final class FilterFactory implements Callable<Models.Filter<FileDescriptor>> {
         private int currentLineNo;
+        private boolean searchByFolders = false;
+
+        void setSearchByFolders(boolean searchByFolders) {
+            this.searchByFolders = searchByFolders;
+        }
 
         void setLineNumber(final int lineNo) {
             this.currentLineNo = lineNo;
@@ -672,10 +680,9 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
         @Override
         public Models.Filter<FileDescriptor> call() throws Exception {
             return new AbstractModelFilter<FileDescriptor>() {
-                @NonNull
                 @Override
                 protected String getItemValue(@NonNull final FileDescriptor item) {
-                    return item.getFileName();
+                    return searchByFolders ? item.getOwnerPath() : item.getFileName();
                 }
                 @Override
                 protected void update(@NonNull final FileDescriptor item) {

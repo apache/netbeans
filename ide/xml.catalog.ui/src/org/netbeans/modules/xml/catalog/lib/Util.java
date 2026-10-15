@@ -57,14 +57,8 @@ public class Util {
         try {
             Class customizer =
                 Introspector.getBeanInfo(clazz).getBeanDescriptor().getCustomizerClass();
-            
-            return (Customizer) customizer.newInstance();
-            
-        } catch (InstantiationException ex) {
-            return null;
-        } catch (IntrospectionException ex) {
-            return null;
-        } catch (IllegalAccessException ex) {
+            return (Customizer) customizer.getDeclaredConstructor().newInstance();
+        } catch (ReflectiveOperationException | IntrospectionException ex) {
             return null;
         }
     }
@@ -75,10 +69,8 @@ public class Util {
      */
     public static Object createProvider(Class clazz) {
         try {
-            return clazz.newInstance();
-        } catch (InstantiationException ex) {
-            return null;
-        } catch (IllegalAccessException ex) {
+            return clazz.getDeclaredConstructor().newInstance();
+        } catch (ReflectiveOperationException ex) {
             return null;
         }
     }

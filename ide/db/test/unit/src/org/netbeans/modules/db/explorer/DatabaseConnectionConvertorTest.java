@@ -22,6 +22,7 @@ package org.netbeans.modules.db.explorer;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.CharacterCodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.concurrent.CountDownLatch;
 import org.netbeans.api.keyring.Keyring;
@@ -188,18 +189,28 @@ public class DatabaseConnectionConvertorTest extends TestBase {
     public void testDecodePassword() throws Exception {
         assertNotNull(DatabaseConnectionConvertor.decodePassword(new byte[0]));
         assertTrue(DatabaseConnectionConvertor.decodePassword(new byte[0]).isEmpty());
-        assertEquals("password", DatabaseConnectionConvertor.decodePassword("password".getBytes("UTF-8")));
+        assertEquals("password", DatabaseConnectionConvertor.decodePassword("password".getBytes(StandardCharsets.UTF_8)));
         try {
             DatabaseConnectionConvertor.decodePassword(new byte[] { (byte)0xff, (byte)0xff, (byte)0xff });
             fail();
         } catch (CharacterCodingException e) {}
     }
     
+    public void testDecodeBase64() {
+        final byte[] data = "P4ssw\u00f8rd".getBytes(StandardCharsets.UTF_8);
+        final String encoded = "UDRzc3fDuHJk";
+        final byte[] result = DatabaseConnectionConvertor.decodeBase64(encoded);
+        assertEquals(data.length, result.length);
+        for (int i = 0; i < data.length; i++) {
+            assertEquals(data[i], result[i]);
+        }
+    }
+
     private static FileObject createConnectionFile(String name, FileObject folder) throws Exception {
         FileObject fo = folder.createData(name);
         FileLock lock = fo.lock();
         try {
-            OutputStreamWriter writer = new OutputStreamWriter(fo.getOutputStream(lock), "UTF-8");
+            OutputStreamWriter writer = new OutputStreamWriter(fo.getOutputStream(lock), StandardCharsets.UTF_8);
             try {
                 writer.write("<?xml version='1.0' encoding='UTF-8'?>");
                 writer.write("<!DOCTYPE connection PUBLIC '-//NetBeans//DTD Database Connection 1.0//EN' 'http://www.netbeans.org/dtds/connection-1_0.dtd'>");

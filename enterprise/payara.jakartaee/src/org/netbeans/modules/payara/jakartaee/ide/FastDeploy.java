@@ -21,10 +21,14 @@ package org.netbeans.modules.payara.jakartaee.ide;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import static java.util.stream.Collectors.toList;
 import javax.enterprise.deploy.shared.CommandType;
 import javax.enterprise.deploy.spi.Target;
 import javax.enterprise.deploy.spi.TargetModuleID;
@@ -56,6 +60,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
 import org.xml.sax.SAXException;
 
 /**
@@ -190,10 +195,13 @@ public class FastDeploy extends IncrementalDeployment implements IncrementalDepl
             (PayaraModule2)commonSupport : null);
         boolean restart = false;
         try {
-            restart = HttpMonitorHelper.synchronizeMonitor(commonSupport.getInstanceProperties().get(PayaraModule.DOMAINS_FOLDER_ATTR),
+            restart = HttpMonitorHelper.synchronizeMonitor(
+                    commonSupport.getInstanceProperties().get(PayaraModule.DOMAINS_FOLDER_ATTR),
                     commonSupport.getInstanceProperties().get(PayaraModule.DOMAIN_NAME_ATTR),
                     Boolean.parseBoolean(commonSupport.getInstanceProperties().get(PayaraModule.HTTP_MONITOR_FLAG)),
-                    "modules/org-netbeans-modules-schema2beans.jar");
+                    commonSupport.getInstance().getPlatformVersion().getMajor() > 5,
+                    "modules/org-netbeans-modules-schema2beans.jar"
+            );
         } catch (IOException | SAXException ex) {
             Logger.getLogger("payara-jakartaee").log(Level.WARNING, "http monitor state", ex);
         }
@@ -281,8 +289,9 @@ public class FastDeploy extends IncrementalDeployment implements IncrementalDepl
     }
 
     private ProgressObject incrementalDeploy(final TargetModuleID targetModuleID, AppChangeDescriptor appChangeDescriptor, final File[] requiredLibraries) {
-        final MonitorProgressObject progressObject = new MonitorProgressObject(dm,
-                (Hk2TargetModuleID) targetModuleID, CommandType.REDEPLOY);
+        final Hk2TargetModuleID hk2TargetModuleID = (Hk2TargetModuleID) targetModuleID;
+        final MonitorProgressObject progressObject = new MonitorProgressObject(
+                dm, hk2TargetModuleID, CommandType.REDEPLOY);
         // prevent issues by protecting against triggering
         //   http://java.net/jira/browse/GLASSFISH-15690
         for (File f : appChangeDescriptor.getChangedFiles()) {
@@ -293,11 +302,11 @@ public class FastDeploy extends IncrementalDeployment implements IncrementalDepl
                 return progressObject;
             }
         }
-        MonitorProgressObject restartObject = new MonitorProgressObject(dm, (Hk2TargetModuleID) targetModuleID,
+        MonitorProgressObject restartObject = new MonitorProgressObject(dm, hk2TargetModuleID,
                 CommandType.REDEPLOY);
         final MonitorProgressObject updateCRObject = new MonitorProgressObject(dm,
-                (Hk2TargetModuleID) targetModuleID, CommandType.REDEPLOY);
-        progressObject.addProgressListener(new UpdateContextRoot(updateCRObject,(Hk2TargetModuleID) targetModuleID, dm.getServerInstance(), ! (null == targetModuleID.getWebURL())));
+                hk2TargetModuleID, CommandType.REDEPLOY);
+        progressObject.addProgressListener(new UpdateContextRoot(updateCRObject,hk2TargetModuleID, dm.getServerInstance(), ! (null == targetModuleID.getWebURL())));
         final PayaraModule commonSupport = dm.getCommonServerSupport();
         final PayaraModule2 commonSupport2 = (commonSupport instanceof PayaraModule2 ?
             (PayaraModule2)commonSupport : null);
@@ -307,6 +316,7 @@ public class FastDeploy extends IncrementalDeployment implements IncrementalDepl
                     commonSupport.getInstanceProperties().get(PayaraModule.DOMAINS_FOLDER_ATTR),
                     commonSupport.getInstanceProperties().get(PayaraModule.DOMAIN_NAME_ATTR),
                     Boolean.parseBoolean(commonSupport.getInstanceProperties().get(PayaraModule.HTTP_MONITOR_FLAG)),
+                    commonSupport.getInstance().getPlatformVersion().getMajor() > 5,
                     "modules/org-netbeans-modules-schema2beans.jar");
         } catch (IOException | SAXException ex) {
             Logger.getLogger("payara-jakartaee").log(Level.WARNING,"http monitor state",
@@ -314,12 +324,15 @@ public class FastDeploy extends IncrementalDeployment implements IncrementalDepl
         }
         long currentTime = System.currentTimeMillis();
         long sinceLast = currentTime - lastDeployHack;
-        final boolean resourcesChanged = containsFileWithName("glassfish-resources.xml",appChangeDescriptor.getChangedFiles()); // NOI18N
+        final boolean resourcesChanged = containsFileWithName("payara-resources.xml",appChangeDescriptor.getChangedFiles()) // NOI18N
+                || containsFileWithName("glassfish-resources.xml",appChangeDescriptor.getChangedFiles()); // NOI18N
+
         final boolean hasChanges = appChangeDescriptor.classesChanged() ||
                 appChangeDescriptor.descriptorChanged() ||
                 appChangeDescriptor.ejbsChanged() ||
                 appChangeDescriptor.manifestChanged() ||
                 appChangeDescriptor.serverDescriptorChanged() ||
+                appChangeDescriptor.getRemovedFiles().length > 0 ||
                 resourcesChanged ||
                 // 
                 // this accounts for a feature/bug of Payara.
@@ -333,36 +346,59 @@ public class FastDeploy extends IncrementalDeployment implements IncrementalDepl
                 //
                 sinceLast < 5000;
 
+        final boolean metadataChanged
+                = appChangeDescriptor.descriptorChanged()
+                || appChangeDescriptor.serverDescriptorChanged()
+                || appChangeDescriptor.manifestChanged()
+                || appChangeDescriptor.getRemovedFiles().length > 0
+                || resourcesChanged;
+
+        File targetDir = getDirectoryForModule(targetModuleID);
+        URI targetURI = Utilities.toURI(targetDir);
+        final List<String> sourcesChanged = Arrays.stream(appChangeDescriptor.getChangedFiles())
+                .map(Utilities::toURI)
+                .map(targetURI::relativize)
+                .map(URI::getPath)
+                .collect(toList());
+
         lastDeployHack = currentTime;
 
         if(appChangeDescriptor instanceof DeploymentChangeDescriptor) {
             DeploymentChangeDescriptor dcd = (DeploymentChangeDescriptor)appChangeDescriptor;
             if (dcd.serverResourcesChanged()) {
-                File dir = getDirectoryForModule(targetModuleID);
-                if (null != dir) {
-                    ResourceRegistrationHelper.deployResources(dir, dm);
-                }
+                ResourceRegistrationHelper.deployResources(targetDir, dm);
             }
         }
-                
-        if (restart) {
-            restartObject.addProgressListener(new ProgressListener() {
 
-                @Override
-                public void handleProgressEvent(ProgressEvent event) {
-                    if (event.getDeploymentStatus().isCompleted()) {
-                        if (hasChanges) {
-                            if (commonSupport2 != null && requiredLibraries.length > 0) {
-                                commonSupport2.redeploy(progressObject, targetModuleID.getModuleID(), null, requiredLibraries,resourcesChanged);
-                            } else {
-                                commonSupport.redeploy(progressObject, targetModuleID.getModuleID(),resourcesChanged);
-                            }
+        if (restart) {
+            restartObject.addProgressListener(event -> {
+                if (event.getDeploymentStatus().isCompleted()) {
+                    if (hasChanges) {
+                        if (commonSupport2 != null && requiredLibraries.length > 0) {
+                            commonSupport2.redeploy(
+                                    progressObject,
+                                    hk2TargetModuleID.getModuleID(),
+                                    hk2TargetModuleID.getContextRoot(),
+                                    requiredLibraries,
+                                    resourcesChanged,
+                                    metadataChanged,
+                                    sourcesChanged
+                            );
                         } else {
-                            progressObject.fireHandleProgressEvent(event.getDeploymentStatus());
+                            commonSupport.redeploy(
+                                    progressObject,
+                                    hk2TargetModuleID.getModuleID(),
+                                    hk2TargetModuleID.getContextRoot(),
+                                    resourcesChanged,
+                                    metadataChanged,
+                                    sourcesChanged
+                            );
                         }
                     } else {
                         progressObject.fireHandleProgressEvent(event.getDeploymentStatus());
                     }
+                } else {
+                    progressObject.fireHandleProgressEvent(event.getDeploymentStatus());
                 }
             });
             commonSupport.restartServer(restartObject);
@@ -370,9 +406,24 @@ public class FastDeploy extends IncrementalDeployment implements IncrementalDepl
         } else {
             if (hasChanges) {
                 if (commonSupport2 != null && requiredLibraries.length > 0) {
-                    commonSupport2.redeploy(progressObject, targetModuleID.getModuleID(), null, requiredLibraries, resourcesChanged);
+                    commonSupport2.redeploy(
+                            progressObject,
+                            hk2TargetModuleID.getModuleID(),
+                            hk2TargetModuleID.getContextRoot(),
+                            requiredLibraries,
+                            resourcesChanged,
+                            metadataChanged,
+                            sourcesChanged
+                    );
                 } else {
-                    commonSupport.redeploy(progressObject, targetModuleID.getModuleID(), resourcesChanged);
+                    commonSupport.redeploy(
+                            progressObject,
+                            hk2TargetModuleID.getModuleID(),
+                            hk2TargetModuleID.getContextRoot(),
+                            resourcesChanged,
+                            metadataChanged,
+                            sourcesChanged
+                    );
                 }
             } else {
                 progressObject.operationStateChanged(TaskState.COMPLETED, TaskEvent.CMD_COMPLETED,

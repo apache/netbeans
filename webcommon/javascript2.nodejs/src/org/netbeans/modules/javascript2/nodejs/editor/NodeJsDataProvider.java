@@ -32,6 +32,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -50,7 +51,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.csl.api.Documentation;
@@ -345,12 +345,12 @@ public class NodeJsDataProvider {
         if (modules != null) {
             for (int i = 0; i < modules.size(); i++) {
                 jsonValue = modules.get(i);
-                if (jsonValue != null && jsonValue instanceof JSONObject) {
+                if (jsonValue instanceof JSONObject) {
                     JSONObject jsonModule = (JSONObject) jsonValue;
                     jsonValue = jsonModule.get(NAME);
-                    if (jsonValue != null && jsonValue instanceof String && moduleName.equals(((String) jsonValue).toLowerCase())) {
+                    if (jsonValue instanceof String && moduleName.equalsIgnoreCase(((String) jsonValue))) {
                         jsonValue = jsonModule.get(DESCRIPTION);
-                        if (jsonValue != null && jsonValue instanceof String) {
+                        if (jsonValue instanceof String) {
                             return (String) jsonValue;
                         }
                     }
@@ -453,7 +453,9 @@ public class NodeJsDataProvider {
                                 }
                             }
                             JsObject object = factory.newFunction(scope, toObject, methodName, paramNames, NodeJsUtils.NODEJS_NAME);
-                            object.setDocumentation(Documentation.create(doc, getDocumentationURL(methodName, paramNames)));
+                            if(doc != null) {
+                                object.setDocumentation(Documentation.create(doc, getDocumentationURL(methodName, paramNames)));
+                            }
                             toObject.addProperty(object.getName(), object);
                             addProperties(factory, object, (DeclarationScope) object, method);
                             addMethods(factory, object, (DeclarationScope) object, method);
@@ -470,7 +472,9 @@ public class NodeJsDataProvider {
             JsObject object = factory.newObject(parent, propertyName, OffsetRange.NONE, true, NodeJsUtils.NODEJS_NAME);
             parent.addProperty(object.getName(), object);
             String doc = getJSONStringProperty(jsonObject, DESCRIPTION);
-            object.setDocumentation(Documentation.create(doc, getDocumentationURL(propertyName)));
+            if(doc != null) {
+                object.setDocumentation(Documentation.create(doc, getDocumentationURL(propertyName)));
+            }
             return object;
         }
         return null;
@@ -494,7 +498,7 @@ public class NodeJsDataProvider {
 
     private String getJSONStringProperty(final JSONObject object, final String property) {
         Object value = object.get(property);
-        if (value != null && value instanceof String) {
+        if (value instanceof String) {
             return (String) value;
         }
         return null;
@@ -502,7 +506,7 @@ public class NodeJsDataProvider {
 
     private JSONArray getJSONArrayProperty(final JSONObject object, final String property) {
         Object value = object.get(property);
-        if (value != null && value instanceof JSONArray) {
+        if (value instanceof JSONArray) {
             return (JSONArray) value;
         }
         return null;
@@ -549,7 +553,7 @@ public class NodeJsDataProvider {
             JSONObject root = (JSONObject) JSONValue.parse(content);
             if (root != null) {
                 Object jsonValue = root.get(MODULES);
-                if (jsonValue != null && jsonValue instanceof JSONArray) {
+                if (jsonValue instanceof JSONArray) {
                     return (JSONArray) jsonValue;
                 }
             }
@@ -575,7 +579,7 @@ public class NodeJsDataProvider {
     }
 
     private String getFileContent(File file) throws IOException {
-        Reader r = new InputStreamReader(new FileInputStream(file), "UTF-8"); // NOI18N
+        Reader r = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
         StringBuilder sb = new StringBuilder();
         try {
             char[] buf = new char[2048];
@@ -634,7 +638,7 @@ public class NodeJsDataProvider {
     private void startLoading() {
         LOG.fine("start loading doc"); //NOI18N
         loadingStarted = true;
-        progress = ProgressHandleFactory.createHandle(Bundle.doc_building());
+        progress = ProgressHandle.createHandle(Bundle.doc_building());
         progress.start(1);
     }
     
@@ -653,8 +657,8 @@ public class NodeJsDataProvider {
         synchronized (cacheFile) {
             String tmpFileName = cacheFile.getAbsolutePath() + ".tmp";  //NOI18N
             File tmpFile = new File(tmpFileName);
-            try (Writer writer = new OutputStreamWriter(new FileOutputStream(tmpFile), "UTF-8")) { // NOI18N
-                loadURL(url, writer, Charset.forName("UTF-8")); //NOI18N
+            try (Writer writer = new OutputStreamWriter(new FileOutputStream(tmpFile), StandardCharsets.UTF_8)) {
+                loadURL(url, writer, StandardCharsets.UTF_8);
                 writer.close();
                 tmpFile.renameTo(cacheFile);
             } finally {

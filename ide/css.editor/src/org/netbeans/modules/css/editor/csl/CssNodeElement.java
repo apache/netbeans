@@ -37,7 +37,7 @@ public class CssNodeElement extends CssElement {
     }
     
     CssNodeElement(FileObject file, Node node) {
-        super(file, node.image());
+        super(file, node.unescapedImage());
         this.from = node.from();
         this.to = node.to();
     }

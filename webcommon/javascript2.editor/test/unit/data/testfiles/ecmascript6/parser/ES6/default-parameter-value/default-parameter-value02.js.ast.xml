@@ -1,0 +1,97 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='20'>
+  <hasDeclaredFunctions/>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='20'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <VarNode name='f' start='0' end='20'>
+      <hasInit/>
+      <isAssignment/>
+      <isFunctionDeclaration/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='9' end='10'>
+        <name>f</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <FunctionNode name='f' kind='NORMAL' start='0' end='20'>
+        <isDeclared/>
+        <!-- FunctionNode Parameters -->
+        <IdentNode start='11' end='12'>
+          <name>a</name>
+          <isDefaultParameter/>
+        </IdentNode>
+        <!-- FunctionNode Body -->
+        <Block start='10' end='19'>
+          <isParameterBlock/>
+          <!-- Block Statements -->
+          <ExpressionStatement start='11' end='12'>
+            <BinaryNode type='ASSIGN' start='11' end='12'>
+              <isAssignment/>
+              <!-- BinaryNode lhs -->
+              <IdentNode start='11' end='12'>
+                <name>a</name>
+                <isDefaultParameter/>
+              </IdentNode>
+              <!-- BinaryNode rhs -->
+              <TernaryNode start='11' end='12'>
+                <BinaryNode type='EQ_STRICT' start='11' end='16'>
+                  <isComparison/>
+                  <!-- BinaryNode lhs -->
+                  <IdentNode start='11' end='12'>
+                    <name>a</name>
+                    <isDefaultParameter/>
+                  </IdentNode>
+                  <!-- BinaryNode rhs -->
+                  <UnaryNode type='VOID' start='11' end='16'>
+                    <!-- UnaryNode Expression -->
+                    <NumberLiteralNode value='0' start='11' end='16'/>
+                  </UnaryNode>
+                </BinaryNode>
+                <JoinPredecessorExpression start='15' end='16'>
+                  <NumberLiteralNode value='1' start='15' end='16'/>
+                </JoinPredecessorExpression>
+                <JoinPredecessorExpression start='11' end='12'>
+                  <IdentNode start='11' end='12'>
+                    <name>a</name>
+                    <isDefaultParameter/>
+                  </IdentNode>
+                </JoinPredecessorExpression>
+              </TernaryNode>
+            </BinaryNode>
+          </ExpressionStatement>
+          <BlockStatement start='18' end='19'>
+            <Block start='18' end='19'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+            </Block>
+          </BlockStatement>
+        </Block>
+      </FunctionNode>
+    </VarNode>
+  </Block>
+</FunctionNode>

@@ -59,7 +59,7 @@ import org.openide.util.RequestProcessor;
  */
 public class WebServicesHintsProvider {
     
-    private final static Object singleInstanceLock = new Object();
+    private static final Object singleInstanceLock = new Object();
     private static WebServicesHintsProvider runningInstance = null;
     
     private FileObject file;

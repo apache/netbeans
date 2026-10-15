@@ -199,7 +199,7 @@ public class FileEntry extends MultiDataObject.Entry {
     * <P>
     * Useful for representing useless files.
     */
-    public final static class Numb extends MultiDataObject.Entry {
+    public static final class Numb extends MultiDataObject.Entry {
         /** generated Serialized Version UID */
         static final long serialVersionUID = -6572157492885890612L;
 
@@ -290,7 +290,7 @@ public class FileEntry extends MultiDataObject.Entry {
      * using this entry.
      * @since 1.13
      */
-    public final static class Folder extends MultiDataObject.Entry {
+    public static final class Folder extends MultiDataObject.Entry {
 
         /** Creates new FolderEntry */
         public Folder (MultiDataObject obj, FileObject fo) {
@@ -337,9 +337,7 @@ public class FileEntry extends MultiDataObject.Entry {
             }
             FileObject fo = FileUtil.createFolder (f, name);
 
-            FileUtil.copyAttributes (getFile (), fo);
-            DataObject.setTemplate (fo, false);
-
+            FileUtil.copyAttributes (getFile (), fo, (n, v) -> DataObject.PROP_TEMPLATE.equals(n) ? null : FileUtil.defaultAttributesTransformer().apply(n, v));
             return fo;
         }
 
@@ -362,7 +360,7 @@ public class FileEntry extends MultiDataObject.Entry {
 
         /** Deletes folder associated with entry. Although filesystems delete
          * folders recursively, it is better to delete children DataObjects before
-         * the {@link #FileEntry.Folder} entry is deleted.
+         * the {@link FileEntry.Folder} entry is deleted.
          * @exception IOException when the operation fails
          */
         public void delete () throws IOException {

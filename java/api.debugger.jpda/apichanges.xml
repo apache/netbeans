@@ -21,7 +21,7 @@
 -->
 
 <?xml-stylesheet href="../../nbbuild/javadoctools/apichanges.xsl" type="text/xsl"?>
-<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.1//EN" "../../nbbuild/javadoctools/apichanges-1.1.dtd">
 
 <!-- INFO FOR PEOPLE ADDING CHANGES:
 [most of contents snipped - see openide's apichanges for how-to instructions]
@@ -51,6 +51,22 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>ObjectInfoProvider, JPDABreakpointEvent, JPDADebugger enhancements</summary>
+        <version major="3" minor="45"/>
+        <date day="16" month="10" year="2026"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes"/>
+        <description>
+            New service provider interface <code>ObjectInfoProvider</code>.
+            Added <code>JPDABreakpointEvent.isThreadDeath()</code> method.
+            Added new overload of <code>evaluate</code> method in <code>JPDADebugger</code>.
+        </description>
+        <class name="JPDABreakpointEvent" package="org.netbeans.api.debugger.jpda.event"/>
+        <class name="JPDADebugger" package="org.netbeans.api.debugger.jpda"/>
+        <class name="ObjectInfoProvider" package="org.netbeans.spi.debugger.jpda"/>
+    </change>
     <change>
         <api name="JPDADebuggerAPI"/>
         <summary>Randomly select listening port</summary>
@@ -945,6 +961,50 @@ These are mainly class and thread filters and hit counts.
         <class package="org.netbeans.api.debugger.jpda" name="InvalidExpressionException" />
         <issue number="268011"/>
     </change>
+
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>Grammatically incorrect constants deprecated.</summary>
+        <version major="3" minor="18"/>
+        <date day="9" month="10" year="2020"/>
+        <author login="mentlicher"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+            The grammatically incorrect constants in <code>ExceptionBreakpoint</code>
+            class are deprecated and replaced with grammatically correct names.
+        </description>
+        <class package="org.netbeans.api.debugger.jpda" name="ExceptionBreakpoint" />
+    </change>
+
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>JPDAStep enhanced with stepping filters and JPDADebugger.getSession() added.</summary>
+        <version major="3" minor="19"/>
+        <date day="9" month="10" year="2020"/>
+        <author login="mentlicher"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+            <code>JPDAStep</code> enhanced with stepping filters for better control.
+            <code>JPDADebugger.getSession()</code> added to be able to easily retrieve the session
+            this JPDA debugger belongs into.
+        </description>
+        <class package="org.netbeans.api.debugger.jpda" name="JPDAStep" />
+        <class package="org.netbeans.api.debugger.jpda" name="JPDADebugger" />
+    </change>
+
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>BreakpointStratifier interface added.</summary>
+        <version major="3" minor="27"/>
+        <date day="26" month="5" year="2022"/>
+        <author login="mentlicher"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+            <code>BreakpointStratifier</code> interface added to be able to adjust breakpoint properties
+            of newly created breakpoints according to the strata it belongs to.
+        </description>
+        <class package="org.netbeans.spi.debugger.jpda" name="BreakpointStratifier" />
+    </change>
 </changes>
 
   <!-- Now the surrounding HTML text and document structure: -->
@@ -963,7 +1023,6 @@ These are mainly class and thread filters and hit counts.
 -->
     <head>
       <title>Debugger JPDA API changes by date</title>
-      <link rel="stylesheet" href="prose.css" type="text/css"/>
     </head>
     <body>
 

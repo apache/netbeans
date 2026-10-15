@@ -47,6 +47,12 @@
                 <package>org.netbeans.insane.model</package>
                 <package>org.netbeans.insane.scanner</package>
             </friend-packages>
+            <extra-compilation-unit>
+                <package-root>hook</package-root>
+                <classpath></classpath>
+                <built-to>build/hookclasses</built-to>
+                <built-to>${cluster}/modules/ext/${code.name.base.dashes}-hook.jar</built-to>
+            </extra-compilation-unit>
         </data>
     </configuration>
 </project>

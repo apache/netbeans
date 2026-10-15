@@ -1,0 +1,2 @@
+    public const string|array UNION2 = 'a' . InterfaceTest::|>MARK_OCCURRENCES:STRING<|;
+    const string |>MARK_OCCURRENCES:STR^ING<| = "string"; // interface

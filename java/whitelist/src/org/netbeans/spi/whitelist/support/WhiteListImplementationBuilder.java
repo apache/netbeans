@@ -18,7 +18,7 @@
  */
 package org.netbeans.spi.whitelist.support;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -354,12 +354,8 @@ final class WhiteListImplementationBuilder {
 
         private Model() {
                 try {
-                    names  = (Names) Class.forName(System.getProperty("WhiteListBuilder.names", DEF_NAMES)).newInstance();  //NOI18N
-                } catch (InstantiationException ex) {
-                    throw new IllegalStateException("Cannot instantiate names", ex);    //NOI18N
-                } catch (IllegalAccessException ex) {
-                    throw new IllegalStateException("Cannot instantiate names", ex);    //NOI18N
-                } catch (ClassNotFoundException ex) {
+                    names  = (Names) Class.forName(System.getProperty("WhiteListBuilder.names", DEF_NAMES)).getDeclaredConstructor().newInstance();  //NOI18N
+                } catch (ReflectiveOperationException ex) {
                     throw new IllegalStateException("Cannot instantiate names", ex);    //NOI18N
                 }
                 checkedPkgs = Union2.<StringBuilder,Pattern>createFirst(new StringBuilder());
@@ -719,11 +715,7 @@ final class WhiteListImplementationBuilder {
         }
 
         private byte[] decode(String str) {
-            try {
-                return str.getBytes("UTF-8");   //NOI18N
-            } catch (UnsupportedEncodingException e) {
-                throw new IllegalStateException("No UTF-8 supported");  //Should never happen
-            }
+            return str.getBytes(StandardCharsets.UTF_8);
         }
 
         private static class Entry {

@@ -102,7 +102,7 @@ public abstract class ProfilerSession {
     private Lookup context;
     
     
-    protected synchronized final Lookup getContext() { return context; }
+    protected final synchronized Lookup getContext() { return context; }
     
     private final void setContext(Lookup _context) {
         synchronized(this) { context = _context; }
@@ -162,7 +162,7 @@ public abstract class ProfilerSession {
     }
     
     // Set when configuring profiling session, not a persistent storage!
-    public synchronized final boolean isAttach() { return isAttach; }
+    public final synchronized boolean isAttach() { return isAttach; }
     
     
     public final Profiler getProfiler() { return profiler; }    
@@ -192,7 +192,7 @@ public abstract class ProfilerSession {
     
     // --- Profiler API bridge -------------------------------------------------
     
-    private final Set<ProfilingStateListener> profilingStateListeners = new HashSet();
+    private final Set<ProfilingStateListener> profilingStateListeners = new HashSet<>();
     
     
     public final int getState() {
@@ -357,7 +357,7 @@ public abstract class ProfilerSession {
     
     // --- Provider ------------------------------------------------------------
     
-    public static abstract class Provider {
+    public abstract static class Provider {
         
         public abstract ProfilerSession createSession(Lookup context);
         

@@ -1,0 +1,6 @@
+Code completion result for source line:
+ne|w.target;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      new                             [PUBLIC]   metaproperties.js
+KEYWORD    new                                        null

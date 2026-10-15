@@ -1,0 +1,16 @@
+    readonly function readonlyImplicitPublicMethodError(): void;
+                      ---------------------------------
+HINT:Interface method "readonlyImplicitPublicMethodError" can not be declared readonly
+FIX:Remove modifier: readonly
+    readonly static function readonlyImplicitPublicStaticMethodError(): void;
+                             ---------------------------------------
+HINT:Interface method "readonlyImplicitPublicStaticMethodError" can not be declared readonly
+FIX:Remove modifier: readonly
+    readonly public function readonlyPublicMethodError(): void;
+                             -------------------------
+HINT:Interface method "readonlyPublicMethodError" can not be declared readonly
+FIX:Remove modifier: readonly
+    readonly public static function readonlyPublicStaticMethodError(): void;
+                                    -------------------------------
+HINT:Interface method "readonlyPublicStaticMethodError" can not be declared readonly
+FIX:Remove modifier: readonly

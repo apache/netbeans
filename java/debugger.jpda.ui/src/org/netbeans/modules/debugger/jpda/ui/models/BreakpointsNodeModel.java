@@ -19,9 +19,11 @@
 
 package org.netbeans.modules.debugger.jpda.ui.models;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Vector;
 import java.util.WeakHashMap;
+import java.util.stream.Collectors;
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.Breakpoint.VALIDITY;
 import org.netbeans.api.debugger.DebuggerManager;
@@ -107,12 +109,26 @@ public class BreakpointsNodeModel implements NodeModel {
             }
             return bold (
                 b,
-                NbBundle.getMessage (
-                        BreakpointsNodeModel.class,
-                        "CTL_Line_Breakpoint",
-                        EditorContextBridge.getFileName (b),
-                        line
-                    )
+                b.getLambdaIndexes().length > 0 ?
+                    NbBundle.getMessage (
+                            BreakpointsNodeModel.class,
+                            "CTL_Line_Lambda_Breakpoint",
+                            EditorContextBridge.getFileName (b),
+                            line,
+                            Arrays.stream(b.getLambdaIndexes())
+                                  .mapToObj(i -> switch (i) {
+                                      case LineBreakpoint.LAMBDA_INDEX_STOP_OUTSIDE -> NbBundle.getMessage(BreakpointsNodeModel.class, "CTL_Line_Lambda_Breakpoint_Outside");
+                                      default -> NbBundle.getMessage(BreakpointsNodeModel.class, "CTL_Line_Lambda_Breakpoint_OnLambda", i + 1);
+                                  })
+                                  .collect(Collectors.joining(", "))
+                        )
+                :
+                    NbBundle.getMessage (
+                            BreakpointsNodeModel.class,
+                            "CTL_Line_Breakpoint",
+                            EditorContextBridge.getFileName (b),
+                            line
+                        )
             );
         } else
         if (o instanceof ThreadBreakpoint) {
@@ -225,7 +241,7 @@ public class BreakpointsNodeModel implements NodeModel {
         } else
         if (o instanceof ExceptionBreakpoint) {
             ExceptionBreakpoint b = (ExceptionBreakpoint) o;
-            if (b.getCatchType () == b.TYPE_EXCEPTION_CATCHED)
+            if (b.getCatchType () == b.TYPE_EXCEPTION_CAUGHT)
                 return bold (b,
                     NbBundle.getMessage (
                         BreakpointsNodeModel.class,
@@ -234,7 +250,7 @@ public class BreakpointsNodeModel implements NodeModel {
                     )
                 );
             else
-            if (b.getCatchType () == b.TYPE_EXCEPTION_UNCATCHED)
+            if (b.getCatchType () == b.TYPE_EXCEPTION_UNCAUGHT)
                 return bold (b,
                     NbBundle.getMessage (
                         BreakpointsNodeModel.class,
@@ -391,7 +407,7 @@ public class BreakpointsNodeModel implements NodeModel {
         } else
         if (o instanceof ExceptionBreakpoint) {
             ExceptionBreakpoint b = (ExceptionBreakpoint) o;
-            if (b.getCatchType () == b.TYPE_EXCEPTION_CATCHED)
+            if (b.getCatchType () == b.TYPE_EXCEPTION_CAUGHT)
                 description = 
                     NbBundle.getMessage (
                         BreakpointsNodeModel.class,
@@ -399,7 +415,7 @@ public class BreakpointsNodeModel implements NodeModel {
                         b.getExceptionClassName ()
                     );
             else
-            if (b.getCatchType () == b.TYPE_EXCEPTION_UNCATCHED)
+            if (b.getCatchType () == b.TYPE_EXCEPTION_UNCAUGHT)
                 description = 
                     NbBundle.getMessage (
                         BreakpointsNodeModel.class,

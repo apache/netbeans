@@ -27,6 +27,7 @@ import org.netbeans.lib.profiler.global.CommonConstants;
 import org.netbeans.lib.profiler.global.Platform;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
 
 
 /**
@@ -123,7 +124,7 @@ public class EventBufferManager implements CommonConstants {
 
         try {
             bufFileSent = false;
-            bufFile = File.createTempFile("jfluidbuf", null); // NOI18N
+            bufFile = Files.createTempFile("jfluidbuf", null).toFile(); // NOI18N
             bufFileName = bufFile.getCanonicalPath();
 
             // Bugfix: http://profiler.netbeans.org/issues/show_bug.cgi?id=59166

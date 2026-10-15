@@ -36,6 +36,7 @@ import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.php.api.editor.PhpBaseElement;
 import org.netbeans.modules.php.api.editor.PhpType;
 import org.netbeans.modules.php.api.editor.PhpVariable;
+import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.editor.Cache;
 import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.NavUtils;
@@ -56,6 +57,7 @@ import org.netbeans.modules.php.editor.model.ModelElement;
 import org.netbeans.modules.php.editor.model.ModelUtils;
 import org.netbeans.modules.php.editor.model.NamespaceScope;
 import org.netbeans.modules.php.editor.model.Occurence;
+import org.netbeans.modules.php.editor.model.PropertyHookScope;
 import org.netbeans.modules.php.editor.model.Scope;
 import org.netbeans.modules.php.editor.model.TraitScope;
 import org.netbeans.modules.php.editor.model.TypeScope;
@@ -68,6 +70,7 @@ import org.netbeans.modules.php.editor.model.nodes.ConstantDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.GroupUseStatementPartInfo;
 import org.netbeans.modules.php.editor.model.nodes.PhpDocTypeTagInfo;
 import org.netbeans.modules.php.editor.model.nodes.SingleUseStatementPartInfo;
+import static org.netbeans.modules.php.editor.model.impl.Type.SEPARATOR;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.api.Utils;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
@@ -76,7 +79,9 @@ import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayElement;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
+import org.netbeans.modules.php.editor.parser.astnodes.AttributeDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
+import org.netbeans.modules.php.editor.parser.astnodes.CaseDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.CatchClause;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
@@ -84,6 +89,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ClassName;
 import org.netbeans.modules.php.editor.parser.astnodes.Comment;
 import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.DoStatement;
+import org.netbeans.modules.php.editor.parser.astnodes.EnumDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.ExpressionArrayAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldAccess;
@@ -103,6 +109,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.IfStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.Include;
 import org.netbeans.modules.php.editor.parser.astnodes.InstanceOfExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.InterfaceDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
@@ -116,6 +123,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.PHPDocTypeTag;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocVarTypeTag;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPVarComment;
 import org.netbeans.modules.php.editor.parser.astnodes.Program;
+import org.netbeans.modules.php.editor.parser.astnodes.PropertyHookDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Reference;
 import org.netbeans.modules.php.editor.parser.astnodes.ReflectionVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ReturnStatement;
@@ -131,6 +139,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.TraitConflictResolutionDe
 import org.netbeans.modules.php.editor.parser.astnodes.TraitDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TraitMethodAliasDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TryStatement;
+import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 import org.netbeans.modules.php.editor.parser.astnodes.UseStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
@@ -170,7 +179,7 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
     private volatile Scope previousScope;
     private volatile List<String> currentLexicalVariables = new LinkedList<>();
     private volatile boolean isReturnType = false;
-    private volatile boolean isLexialVariable = false;
+    private volatile boolean isLexicalVariable = false;
 
     public ModelVisitor(final PHPParseResult info) {
         this.fileScope = new FileScopeImpl(info);
@@ -305,10 +314,10 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
                         }
                     }
                 }
-            } else if (expression instanceof Scalar) {
+            } else if (expression instanceof Scalar || expression instanceof ArrayCreation) {
                 typeName = VariousUtils.extractVariableTypeFromExpression(expression, null);
             }
-            if (typeName != null) {
+            if (!StringUtils.isEmpty(typeName)) {
                 functionScope.addReturnType(QualifiedName.create(typeName).toString());
             }
         }
@@ -316,6 +325,7 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
 
     private static final Set<String> recursionDetection = new HashSet<>(); //#168868
 
+    @CheckForNull
     private String resolveVariableType(String varName, FunctionScopeImpl varScope, ReturnStatement node) {
         try {
             if (varName != null && recursionDetection.add(varName)) {
@@ -421,24 +431,74 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
             occurencesBuilder.prepare(Kind.FUNCTION, namespaceName, fileScope);
         } else if (parent instanceof Program
                 || parent instanceof Block
-                || parent instanceof FieldsDeclaration
                 || isReturnType) {
             // return type
             Kind[] kinds = {Kind.CLASS, Kind.IFACE};
             occurencesBuilder.prepare(kinds, namespaceName, modelBuilder.getCurrentScope());
+        } else if (parent instanceof ConstantDeclaration
+                || parent instanceof FieldsDeclaration) {
+            if (!isDeclaredType(parent, namespaceName)) {
+                // e.g.
+                // const C = "example";
+                // class C {}
+                // class Example {
+                //     const string|C CONSTANNT = C;
+                //                  ^type         ^const
+                //     private string|C $field = C;
+                //                    ^type      ^const
+                // }
+                occurencesBuilder.prepare(Kind.CONSTANT, namespaceName, fileScope);
+                // don't invoke the following to avoid being marked as a type name
+                // occurencesBuilder.prepare(namespaceName, modelBuilder.getCurrentScope());
+                return;
+            }
         } else if (parent instanceof ClassInstanceCreation) {
             if (((ClassInstanceCreation) parent).isAnonymous()) {
                 // superclass, ifaces
                 Kind[] kinds = {Kind.CLASS, Kind.IFACE};
                 occurencesBuilder.prepare(kinds, namespaceName, fileScope);
             }
-        } else if (!(parent instanceof ClassDeclaration) && !(parent instanceof InterfaceDeclaration)
+        } else if (parent instanceof AttributeDeclaration) {
+            AttributeDeclaration attributeDeclaration = (AttributeDeclaration) parent;
+            List<Expression> parameters = attributeDeclaration.getParameters();
+            if (attributeDeclaration.getAttributeName() != namespaceName
+                    && parameters != null
+                    && !parameters.isEmpty()) {
+                AttributeParametersVisitor attributeParametersVisitor = new AttributeParametersVisitor();
+                attributeParametersVisitor.scan(parameters);
+                // #[Attr(ClassName::CONSTANT, new ClassName)] these are type names
+                if (attributeParametersVisitor.isGlobalConstant(namespaceName)) {
+                    // e.g. #[Attr(\GLOBAL\CONSTANT)] this is a constant name
+                    occurencesBuilder.prepare(Kind.CONSTANT, namespaceName, fileScope);
+                }
+            }
+        } else if (!(parent instanceof ClassDeclaration) && !(parent instanceof EnumDeclaration) && !(parent instanceof InterfaceDeclaration)
                 && !(parent instanceof FormalParameter) && !(parent instanceof InstanceOfExpression)
                 && !(parent instanceof UseTraitStatementPart) && !(parent instanceof TraitConflictResolutionDeclaration)
-                && !(parent instanceof TraitMethodAliasDeclaration)) {
+                && !(parent instanceof TraitMethodAliasDeclaration) && !(parent instanceof IntersectionType)) {
             occurencesBuilder.prepare(Kind.CONSTANT, namespaceName, fileScope);
         }
-        occurencesBuilder.prepare(namespaceName, modelBuilder.getCurrentScope());
+        if (!(parent instanceof FunctionName)) {
+            occurencesBuilder.prepare(namespaceName, modelBuilder.getCurrentScope());
+        }
+    }
+
+    private boolean isDeclaredType(ASTNode node, NamespaceName namespaceName) {
+        boolean isDeclaredType = false;
+        Expression declaredType = null;
+        if (node instanceof ConstantDeclaration) {
+            ConstantDeclaration constantDeclaration = (ConstantDeclaration) node;
+            declaredType = constantDeclaration.getConstType();
+        } else if (node instanceof FieldsDeclaration) {
+            FieldsDeclaration fieldsDeclaration = (FieldsDeclaration) node;
+            declaredType = fieldsDeclaration.getFieldType();
+        }
+        if (declaredType != null
+                && declaredType.getStartOffset() <= namespaceName.getStartOffset()
+                && namespaceName.getStartOffset() <= declaredType.getEndOffset()) {
+            isDeclaredType = true;
+        }
+        return isDeclaredType;
     }
 
     @Override
@@ -527,10 +587,32 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
     }
 
     @Override
+    public void visit(EnumDeclaration node) {
+        modelBuilder.build(node, occurencesBuilder);
+        checkComments(node);
+        try {
+            super.visit(node);
+        } finally {
+            modelBuilder.reset();
+        }
+    }
+
+    @Override
     public void visit(MethodDeclaration node) {
         if (lazyScan) {
+            if (CodeUtils.isConstructor(node)) {
+                // [NETBEANS-4443] PHP 8.0 Constructor Property Promotion
+                for (FormalParameter formalParameter : node.getFunction().getFormalParameters()) {
+                    // scan promoted parameters as fields
+                    FieldsDeclaration fieldsDeclaration = FieldsDeclaration.create(formalParameter);
+                    if (fieldsDeclaration != null) {
+                        scan(fieldsDeclaration);
+                    }
+                }
+            }
             modelBuilder.build(node, occurencesBuilder, this);
             markerBuilder.prepare(node, modelBuilder.getCurrentScope());
+            scan(node.getAttributes());
             scan(node.getFunction().getReturnType());
             checkComments(node);
             // scan all anonymous classes
@@ -561,6 +643,13 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         modelBuilder.build(node, occurencesBuilder);
         checkComments(node);
         super.visit(node);
+    }
+
+    @Override
+    public void visit(PropertyHookDeclaration node) {
+        modelBuilder.build(node, occurencesBuilder);
+        super.visit(node);
+        modelBuilder.reset();
     }
 
     @Override
@@ -694,7 +783,7 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         occurencesBuilder.prepare(node, scope);
         Expression dispatcher = node.getDispatcher();
         if (dispatcher instanceof NamespaceName) {
-            Kind[] kinds = {Kind.CLASS, Kind.IFACE};
+            Kind[] kinds = {Kind.CLASS, Kind.IFACE, Kind.ENUM};
             occurencesBuilder.prepare(kinds, (NamespaceName) dispatcher, scope);
         } else {
             scan(dispatcher);
@@ -709,19 +798,31 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
                 scan(access1.getDimension());
                 name = access1.getExpression();
             }
+        } else if (constant instanceof ReflectionVariable) {
+            // PHP 8.3: Dynamic class constant fetch
+            // e.g. Example::{$example};
+            scan(constant);
         }
+    }
+
+    @Override
+    public void visit(CaseDeclaration node) {
+        modelBuilder.build(node, occurencesBuilder);
+        super.visit(node);
     }
 
     @Override
     public void visit(ConstantDeclaration node) {
         Scope scope = modelBuilder.getCurrentScope();
         if (scope instanceof NamespaceScope) {
+            // global constants
             List<? extends ConstantDeclarationInfo> constantDeclarationInfos = ConstantDeclarationInfo.create(node);
             for (ConstantDeclarationInfo nodeInfo : constantDeclarationInfos) {
                 ConstantElementImpl createElement = modelBuilder.getCurrentNameSpace().createElement(nodeInfo);
                 occurencesBuilder.prepare(nodeInfo, createElement);
             }
         } else {
+            // class constants
             modelBuilder.build(node, occurencesBuilder);
         }
         super.visit(node);
@@ -730,6 +831,10 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
     @Override
     public void visit(SingleFieldDeclaration node) {
         scan(node.getValue());
+        scan(node.getPropertyHooks());
+        if (node.isHooked()) {
+            modelBuilder.reset();
+        }
     }
 
     @Override
@@ -779,9 +884,14 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         if (scope instanceof VariableNameFactory) {
             if (scope instanceof MethodScope && "$this".equals(varInfo.getName())) { //NOI18N
                 scope = scope.getInScope();
+            } else if (scope instanceof PropertyHookScope && "$this".equals(varInfo.getName())) { // NOI18N
+                scope = scope.getInScope();
+                if (scope instanceof FieldElementImpl) {
+                    scope = scope.getInScope();
+                }
             }
-            if (scope instanceof VariableNameFactory) {
-                createVariable((VariableNameFactory) scope, node);
+            if (scope instanceof VariableNameFactory variableNameFactory) {
+                createVariable(variableNameFactory, node);
             }
         } else {
             assert scope instanceof TypeScope : scope;
@@ -830,9 +940,11 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
                 && ((FunctionScope)inScope).isAnonymous()) {
             FunctionScope functionScope = (FunctionScope) inScope;
             Collection<? extends VariableName> declaredVariables = functionScope.getDeclaredVariables();
+            List<? extends String> parameterNames = functionScope.getParameterNames();
             for (VariableName declaredVariable : declaredVariables) {
                 if (declaredVariable.getName().equals(CodeUtils.extractVariableName(node))) {
-                    if (isLexicalVariable(node)) {
+                    if (isLexicalVariable(node)
+                            || (functionScope instanceof ArrowFunctionScope) && !parameterNames.contains(declaredVariable.getName())) { // GH-4209
                         occurencesBuilder.prepare(node, inScope.getInScope());
                     } else {
                         occurencesBuilder.prepare(node, inScope);
@@ -1069,47 +1181,63 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         }
     }
 
-
     @Override
     public void visit(FormalParameter node) {
         Expression parameterName = node.getParameterName();
         Expression parameterType = node.getParameterType();
         Scope scp = modelBuilder.getCurrentScope();
-        if (scp instanceof FunctionScopeImpl) {
-            FunctionScopeImpl fncScope = (FunctionScopeImpl) scp;
+        if (scp instanceof FunctionScopeImpl
+                || scp instanceof PropertyHookScopeImpl) {
             // func(&...$variable), func(...$variable): Reference -> Variadic -> Variable
-            if (parameterName instanceof Reference) {
-                parameterName = ((Reference) parameterName).getExpression();
+            if (parameterName instanceof Reference reference) {
+                parameterName = reference.getExpression();
             }
-            if (parameterName instanceof Variadic) {
-                parameterName = ((Variadic) parameterName).getExpression();
+            if (parameterName instanceof Variadic variadic) {
+                parameterName = variadic.getExpression();
             }
-            if (parameterName instanceof Variable) {
-                List<? extends ParameterElement> parameters = fncScope.getParameters();
+            if (parameterName instanceof Variable variable) {
+                List<? extends ParameterElement> parameters = getParameters(scp);
                 for (ParameterElement parameter : parameters) {
                     Set<TypeResolver> types = parameter.getTypes();
+                    StringBuilder sb = new StringBuilder();
                     String typeName = null;
                     for (TypeResolver typeResolver : types) {
+                        if (sb.length() > 0) {
+                            sb.append(SEPARATOR);
+                        }
                         if (typeResolver.isResolved()) {
                             QualifiedName typeQualifiedName = typeResolver.getTypeName(false);
                             if (typeQualifiedName != null) {
-                                typeName = typeResolver.isNullableType()
-                                        ? CodeUtils.NULLABLE_TYPE_PREFIX + typeQualifiedName.toString()
-                                        : typeQualifiedName.toString();
+                                if (typeResolver.isNullableType()) {
+                                    sb.append(CodeUtils.NULLABLE_TYPE_PREFIX);
+                                }
+                                sb.append(typeQualifiedName.toString());
                             }
                         }
                     }
-                    VariableNameImpl var = createParameter(fncScope, parameter);
+                    if (sb.length() > 0) {
+                        typeName = sb.toString();
+                    }
+                    VariableNameImpl var = createParameter((ScopeImpl) scp, parameter);
                     if (!types.isEmpty() && var != null) {
-                        VarAssignmentImpl varAssignment = var.createAssignment(fncScope, false, fncScope.getBlockRange(), parameter.getOffsetRange(), typeName);
+                        VarAssignmentImpl varAssignment = var.createAssignment(scp, false, scp.getBlockRange(), parameter.getOffsetRange(), typeName);
                         var.addElement(varAssignment);
                     }
                 }
-                prepareType(parameterType, fncScope);
-                prepareVariable((Variable) parameterName, fncScope);
+                prepareType(parameterType, scp);
+                prepareVariable(variable, scp);
             }
             super.visit(node);
         }
+    }
+
+    private List<? extends ParameterElement> getParameters(Scope scope) {
+        if (scope instanceof FunctionScopeImpl fncScope) {
+            return fncScope.getParameters();
+        } else if (scope instanceof PropertyHookScopeImpl propHookScope) {
+            return propHookScope.getParameters();
+        }
+        return List.of();
     }
 
     @Override
@@ -1117,7 +1245,7 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         Variable variable = node.getVariable();
         Scope scope = modelBuilder.getCurrentScope();
         List<Expression> classNames = node.getClassNames();
-        if (scope instanceof VariableNameFactory) {
+        if (variable != null && scope instanceof VariableNameFactory) {
             // add variable assignments
             VariableNameImpl varNameImpl = createVariable((VariableNameFactory) scope, variable);
             if (varNameImpl != null) {
@@ -1150,6 +1278,7 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         ScopeImpl scope = modelBuilder.getCurrentScope();
         FunctionScopeImpl fncScope = FunctionScopeImpl.createElement(scope, node);
         modelBuilder.setCurrentScope(fncScope);
+        scan(node.getAttributes());
         scan(node.getFormalParameters());
         isReturnType = true;
         scan(node.getReturnType());
@@ -1162,10 +1291,22 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
     public void visit(LambdaFunctionDeclaration node) {
         ScopeImpl scope = modelBuilder.getCurrentScope();
         FunctionScopeImpl fncScope = FunctionScopeImpl.createElement(scope, node);
+        scan(node.getAttributes());
         List<Expression> lexicalVariables = node.getLexicalVariables();
-        isLexialVariable = true;
+        isLexicalVariable = true;
         scan(lexicalVariables);
-        isLexialVariable = false;
+        isLexicalVariable = false;
+        List<String> previousLexicalVariables = new ArrayList<>();
+        if (!currentLexicalVariables.isEmpty()) {
+            // GH-7348 keep lexical variables for nested lambda functions
+            // e.g.
+            // $closure = function() use ($lexical) {
+            //     $nestedClosure = function() {};
+            //     $lexical();
+            //     $nestedClosure();
+            // };
+            previousLexicalVariables.addAll(currentLexicalVariables);
+        }
         for (Expression expression : lexicalVariables) {
             Expression expr = expression;
             // #269672 also check the reference: &$variable
@@ -1184,10 +1325,19 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         isReturnType = true;
         scan(node.getReturnType());
         isReturnType = false;
+        Scope previousScopeHolder = null;
+        if (previousScope != null) {
+            // GH-7348 keep scope for nested lambda functions
+            previousScopeHolder = previousScope;
+        }
         previousScope = scope;
         scan(node.getBody());
-        previousScope = null;
+        previousScope = previousScopeHolder;
         currentLexicalVariables.clear();
+        if (!previousLexicalVariables.isEmpty()) {
+            // GH-7348 for nested lambda functions
+            currentLexicalVariables.addAll(previousLexicalVariables);
+        }
         modelBuilder.reset();
     }
 
@@ -1203,6 +1353,7 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         occurencesBuilder.prepare(node, fncScope);
         markerBuilder.prepare(node, fncScope);
         checkComments(node);
+        scan(node.getAttributes());
         scan(node.getFormalParameters());
         scan(node.getReturnType());
         scan(node.getBody());
@@ -1222,7 +1373,16 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         } else {
             occurencesBuilder.prepare(node, scope);
             if (functionName instanceof NamespaceName) {
-                occurencesBuilder.prepare((NamespaceName) functionName, scope);
+                NamespaceName namespaceName = (NamespaceName) functionName;
+                QualifiedName qualifiedName = QualifiedName.create(CodeUtils.extractQualifiedName(namespaceName));
+                if (!VariousUtils.isSpecialClassName(qualifiedName.toString())
+                        && VariousUtils.isAliased(qualifiedName, namespaceName.getStartOffset(), scope)) {
+                    // avoid adding normal function names to classIds, and so on
+                    // e.g. avoid highlighting both "Test"(class name) and "test"(function name) in the following case
+                    // class Test {}
+                    // test();
+                    occurencesBuilder.prepare(namespaceName, scope);
+                }
             }
         }
         ASTNodeInfo<FunctionInvocation> nodeInfo = ASTNodeInfo.create(node);
@@ -1310,26 +1470,20 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
     @Override
     public void visit(PHPDocVarTypeTag node) {
         Scope currentScope = modelBuilder.getCurrentScope();
-        StringBuilder sb = new StringBuilder();
-        StringBuilder fqNames = new StringBuilder();
+        String defaultType = null;
+        String fqType = null;
+        if (isPropertyTag(node)) {
+            defaultType = getDefaultType(node);
+            if (defaultType != null) {
+                fqType = getFqName(defaultType, node, currentScope);
+            }
+        }
         List<? extends PhpDocTypeTagInfo> tagInfos = PhpDocTypeTagInfo.create(node, currentScope);
         for (Iterator<? extends PhpDocTypeTagInfo> it = tagInfos.iterator(); it.hasNext();) {
             PhpDocTypeTagInfo phpDocTypeTagInfo = it.next();
             if (phpDocTypeTagInfo.getKind().equals(Kind.FIELD) && !phpDocTypeTagInfo.getName().isEmpty()) {
-                String typeName = phpDocTypeTagInfo.getTypeName();
-                if (typeName != null) {
-                    if (sb.length() > 0) {
-                        sb.append("|"); //NOI18N
-                    }
-                    if (fqNames.length() > 0) {
-                        fqNames.append("|"); //NOI18N
-                    }
-                    String qualifiedTypeNames = VariousUtils.qualifyTypeNames(typeName, node.getStartOffset(), currentScope);
-                    fqNames.append(qualifiedTypeNames);
-                    sb.append(typeName);
-                }
                 if ((currentScope instanceof ClassScope || currentScope instanceof TraitScope) && !it.hasNext()) {
-                    new FieldElementImpl(currentScope, sb.length() > 0 ? sb.toString() : null, fqNames.length() > 0 ? fqNames.toString() : null, phpDocTypeTagInfo, true);
+                    new FieldElementImpl(currentScope, defaultType, fqType, phpDocTypeTagInfo, true);
                 }
             } else if (node.getKind().equals(PHPDocTag.Type.GLOBAL) && phpDocTypeTagInfo.getKind().equals(Kind.VARIABLE)) {
                 final String typeName = phpDocTypeTagInfo.getTypeName();
@@ -1352,6 +1506,57 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
 
         occurencesBuilder.prepare(node, currentScope);
         super.visit(node);
+    }
+
+    private static boolean isPropertyTag(PHPDocVarTypeTag node) {
+        return node.getKind() == PHPDocTag.Type.PROPERTY
+                || node.getKind() == PHPDocTag.Type.PROPERTY_READ
+                || node.getKind() == PHPDocTag.Type.PROPERTY_WRITE
+                || node.getKind() == PHPDocTag.Type.PARAM;
+    }
+
+    private String getDefaultType(PHPDocVarTypeTag node) {
+        // e.g. @property (X&Y)|Z $prop description
+        String[] values = node.getValue().trim().split(" ", 2); // NOI18N
+        if (values[0].startsWith("$") || values.length < 2) { // NOI18N
+            return null;
+        }
+        // e.g. string[]
+        String defaultType = values[0].replace("[]", ""); // NOI18N
+        return defaultType;
+    }
+
+    private String getFqName(String defaultType, PHPDocVarTypeTag node, Scope currentScope) {
+        int typeStart = 0;
+        String fqType = null;
+        StringBuilder fqNames = new StringBuilder();
+        for (int i = 0; i < defaultType.length(); i++) {
+            switch (defaultType.charAt(i)) {
+                case '(': // no break
+                case ')': // no break
+                case '|': // no break
+                case '&': // no break
+                case '?':
+                    String type = defaultType.substring(typeStart, i);
+                    if (!type.isEmpty()) {
+                        fqNames.append(VariousUtils.qualifyTypeNames(type, node.getStartOffset(), currentScope));
+                    }
+                    fqNames.append(defaultType.charAt(i));
+                    typeStart = i + 1;
+                    break;
+                default:
+                    // noop
+                    break;
+            }
+            if (i == defaultType.length() - 1) {
+                String type = defaultType.substring(typeStart, defaultType.length());
+                if (!type.isEmpty()) {
+                    fqNames.append(VariousUtils.qualifyTypeNames(type, node.getStartOffset(), currentScope));
+                }
+                fqType = fqNames.length() > 0 ? fqNames.toString() : null;
+            }
+        }
+        return fqType;
     }
 
     public FileScope getFileScope() {
@@ -1422,8 +1627,9 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         return varName != null ? findVariable(scope, varName) : null;
     }
 
-    private VariableNameImpl createParameter(FunctionScopeImpl fncScope, ParameterElement parameter) {
-        VariableNameFactory varContainer = (VariableNameFactory) fncScope;
+    private VariableNameImpl createParameter(ScopeImpl scope, ParameterElement parameter) {
+        assert scope instanceof VariableNameFactory;
+        VariableNameFactory varContainer = (VariableNameFactory) scope;
         Map<String, VariableNameImpl> map = vars.get(varContainer);
         if (map == null) {
             map = new HashMap<>();
@@ -1433,8 +1639,8 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         VariableNameImpl varInstance = map.get(name);
         if (varInstance == null) {
             if (ModelUtils.filter(varContainer.getDeclaredVariables(), name).isEmpty()) {
-                varInstance = new VariableNameImpl(fncScope, name, fncScope.getFile(), parameter.getOffsetRange(), false);
-                fncScope.addElement(varInstance);
+                varInstance = new VariableNameImpl(scope, name, scope.getFile(), parameter.getOffsetRange(), false);
+                scope.addElement(varInstance);
                 map.put(name, varInstance);
             }
         }
@@ -1452,7 +1658,7 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         if (retval == null) {
             if (ModelUtils.filter(varContainer.getDeclaredVariables(), name).isEmpty()) {
                 retval = varContainer.createElement(node);
-                if (isLexialVariable) {
+                if (isLexicalVariable) {
                     retval.setGloballyVisible(true);
                 }
                 map.put(name, retval);
@@ -1630,9 +1836,17 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
             if (nullableType.getType() instanceof NamespaceName) {
                 namespaceName = (NamespaceName) nullableType.getType();
             }
+        } else if (namespaceName instanceof UnionType) {
+            // NETBEANS-4443 PHP 8.0
+            UnionType unionType = (UnionType) namespaceName;
+            unionType.getTypes().forEach(t -> prepareType(t, scope));
+        } else if (namespaceName instanceof IntersectionType) {
+            // NETBEANS-5599 PHP 8.1
+            IntersectionType intersectionType = (IntersectionType) namespaceName;
+            intersectionType.getTypes().forEach(t -> prepareType(t, scope));
         }
         if (namespaceName instanceof NamespaceName) {
-            Kind[] kinds = {Kind.CLASS, Kind.IFACE};
+            Kind[] kinds = {Kind.CLASS, Kind.IFACE, Kind.ENUM};
             occurencesBuilder.prepare(kinds, (NamespaceName) namespaceName, scope);
         }
     }
@@ -1674,6 +1888,7 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
                 occurencesBuilder.prepare(Kind.CLASS, name, currentScope);
                 occurencesBuilder.prepare(Kind.IFACE, name, currentScope);
                 occurencesBuilder.prepare(Kind.TRAIT, name, currentScope);
+                occurencesBuilder.prepare(Kind.ENUM, name, currentScope);
                 break;
             default:
                 assert false : "Unknown type: " + realType;
@@ -1704,4 +1919,32 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
 
     }
 
+    private static final class AttributeParametersVisitor extends DefaultVisitor {
+
+        private final Set<ASTNode> typeNameNodes = new HashSet<>();
+
+        @Override
+        public void visit(ClassInstanceCreation node) {
+            if (!node.isAnonymous()) {
+                typeNameNodes.add(node);
+            }
+            super.visit(node);
+        }
+
+        @Override
+        public void visit(StaticConstantAccess node) {
+            typeNameNodes.add(node);
+            super.visit(node);
+        }
+
+        public boolean isGlobalConstant(NamespaceName namespaceName) {
+            for (ASTNode typeNameNode : typeNameNodes) {
+                if (typeNameNode.getStartOffset() <= namespaceName.getStartOffset()
+                        && namespaceName.getEndOffset() <= typeNameNode.getEndOffset()) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
 }

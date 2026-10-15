@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #5b7b95;
+      }
+
+      .st1 {
+        opacity: .66;
+      }
+
+      .st2 {
+        opacity: .33;
+      }
+
+      .st3 {
+        fill: #ebf6fd;
+      }
+
+      .st4 {
+        fill: #f5c47a;
+      }
+    </style>
+  </defs>
+  <rect class="st3" width="14" height="14"/>
+  <polygon class="st0" points="14 1 14 0 0 0 0 14 14 14 14 7.5 13 7.5 13 13 1 13 1 1 14 1"/>
+  <g>
+    <polygon class="st4" points="16 8 16 1 14.5 1 13 5 11 5 11 3 9 3 5 7.5 9 12 11 12 11 10 16 10.003 16 8"/>
+    <g class="st2">
+      <path d="M15.5,1.5l-.5,7.5h-5s0,2,0,2h-.551l-3.111-3.5,3.111-3.5h.551v2h3.5l1.5-4.5h.5ZM16,1h-1.5l-1.5,4h-2v-2h-2l-4,4.5,4,4.5h2v-2l5,.003V1h0Z"/>
+    </g>
+  </g>
+  <g class="st1">
+    <rect x="3" y="2.5" width="1" height="9"/>
+    <rect x="2" y="2" width="1" height="1"/>
+    <rect x="4" y="2" width="1" height="1"/>
+    <rect x="2" y="11" width="1" height="1"/>
+    <rect x="4" y="11" width="1" height="1"/>
+  </g>
+</svg>

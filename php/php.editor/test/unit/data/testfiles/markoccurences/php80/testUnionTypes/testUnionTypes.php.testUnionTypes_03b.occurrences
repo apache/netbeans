@@ -1,0 +1,5 @@
+use Union\Types2\|>MARK_OCCURRENCES:TestClass1<|;
+    private static \Union\Types2\|>MARK_OCCURRENCES:TestClass1<||TestClass2 $staticField;
+    public static function testStaticMethod(|>MARK_OCCURRENCES:Te^stClass1<||\Union\Types2\TestClass2|null $param1, ChildClass|null $param2): TestClass2|ParentClass|null {
+class |>MARK_OCCURRENCES:TestClass1<|
+    public function traitMethod(|>MARK_OCCURRENCES:TestClass1<||TestClass2 $param): |>MARK_OCCURRENCES:TestClass1<||TestClass2|null {

@@ -1,0 +1,3 @@
+Code completion result for source line:
+self::fn()->|test;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)

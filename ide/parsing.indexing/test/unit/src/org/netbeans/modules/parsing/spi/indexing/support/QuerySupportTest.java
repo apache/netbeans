@@ -82,7 +82,7 @@ public class QuerySupportTest extends IndexingTestBase {
     protected void tearDown() throws Exception {        
         for(String id : registeredClasspaths.keySet()) {
             final Set<ClassPath> classpaths = registeredClasspaths.get(id);
-            GlobalPathRegistry.getDefault().unregister(id, classpaths.toArray(new ClassPath[classpaths.size()]));
+            GlobalPathRegistry.getDefault().unregister(id, classpaths.toArray(new ClassPath[0]));
         }
         registeredClasspaths.clear();
         ClassPathProviderImpl.register(Collections.<FileObject,Map<String,ClassPath>>emptyMap());

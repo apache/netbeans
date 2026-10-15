@@ -42,7 +42,7 @@ public interface ConnectionCookie extends Node.Cookie {
     * @param type the type of event, must be supported by the cookie
     * @param listener the node that should be notified
     *
-    * @exception InvalidObjectException if the type is not supported by the cookie
+    * @exception java.io.InvalidObjectException if the type is not supported by the cookie
     * @exception IOException if the type is persistent and the listener does not
     *    have serializable handle (listener.getHandle () is null or its serialization
     *    throws an exception)

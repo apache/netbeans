@@ -1,0 +1,177 @@
+<?php
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+class |>CLASS:DeprecatedClassMethod<| {
+    #[Attr]
+    public function |>METHOD:publicMethod<|():void {}
+    private function |>METHOD,UNUSED:privateMethod<|():void {}
+    protected function |>METHOD:protectedMethod<|():void {}
+    public static function |>METHOD,STATIC:publicStaticMethod<|():void {}
+    private static function |>METHOD,STATIC,UNUSED:privateStaticMethod<|():void {}
+    protected static function |>METHOD,STATIC:protectedStaticMethod<|():void {}
+    #[Deprecated]
+    public function |>DEPRECATED,METHOD:publicDeprecatedMethod<|():void {}
+    #[Deprecated]
+    private function |>DEPRECATED,METHOD,UNUSED:privateDeprecatedMethod<|():void {}
+    #[Deprecated]
+    protected function |>DEPRECATED,METHOD:protectedDeprecatedMethod<|():void {}
+    #[Deprecated]
+    public static function |>DEPRECATED,METHOD,STATIC:publicDeprecatedStaticMethod<|():void {}
+    #[Deprecated]
+    private static function |>DEPRECATED,METHOD,STATIC,UNUSED:privateDeprecatedStaticMethod<|():void {}
+    #[Deprecated]
+    protected static function |>DEPRECATED,METHOD,STATIC:protectedDeprecatedStaticMethod<|():void {}
+    #[\Deprecated]
+    public function |>DEPRECATED,METHOD:publicDeprecatedMethod02<|():void {}
+    #[\Deprecated]
+    private function |>DEPRECATED,METHOD,UNUSED:privateDeprecatedMethod02<|():void {}
+    #[\Deprecated]
+    protected function |>DEPRECATED,METHOD:protectedDeprecatedMethod02<|():void {}
+    #[\Deprecated]
+    public static function |>DEPRECATED,METHOD,STATIC:publicDeprecatedStaticMethod02<|():void {}
+    #[\Deprecated]
+    private static function |>DEPRECATED,METHOD,STATIC,UNUSED:privateDeprecatedStaticMethod02<|():void {}
+    #[\Deprecated]
+    protected static function |>DEPRECATED,METHOD,STATIC:protectedDeprecatedStaticMethod02<|():void {}
+}
+
+interface |>CLASS:DeprecatedInterfaceMethod<| {
+    public function |>METHOD:publicMethod<|():void;
+    #[\Attr]
+    public static function |>METHOD,STATIC:publicStaticMethod<|():void;
+    #[Deprecated]
+    public function |>DEPRECATED,METHOD:publicDeprecatedMethod<|():void;
+    #[Deprecated]
+    public static function |>DEPRECATED,METHOD,STATIC:publicDeprecatedStaticMethod<|():void;
+    #[\Deprecated]
+    public function |>DEPRECATED,METHOD:publicDeprecatedMethod02<|():void;
+    #[\Deprecated]
+    public static function |>DEPRECATED,METHOD,STATIC:publicDeprecatedStaticMethod02<|():void;
+}
+
+trait |>CLASS:DeprecatedTraitMethod<| {
+    public function |>METHOD:publicTraitMethod<|():void {}
+    private function |>METHOD:privateTraitMethod<|():void {}
+    protected function |>METHOD:protectedTraitMethod<|():void {}
+    public static function |>METHOD,STATIC:publicStaticTraitMethod<|():void {}
+    private static function |>METHOD,STATIC:privateStaticTraitMethod<|():void {}
+    protected static function |>METHOD,STATIC:protectedStaticTraitMethod<|():void {}
+    #[Deprecated]
+    public function |>DEPRECATED,METHOD:publicDeprecatedTraitMethod<|():void {}
+    #[Deprecated]
+    private function |>DEPRECATED,METHOD:privateDeprecatedTraitMethod<|():void {}
+    #[Deprecated]
+    protected function |>DEPRECATED,METHOD:protectedDeprecatedTraitMethod<|():void {}
+    #[Attr1]
+    #[Attr2, Deprecated]
+    public static function |>DEPRECATED,METHOD,STATIC:publicDeprecatedStaticTraitMethod<|():void {}
+    #[Deprecated]
+    private static function |>DEPRECATED,METHOD,STATIC:privateDeprecatedStaticTraitMethod<|():void {}
+    #[Deprecated]
+    protected static function |>DEPRECATED,METHOD,STATIC:protectedDeprecatedStaticTraitMethod<|():void {}
+    /**
+     * @deprecated since 1.0
+     * @return void
+     */
+    #[\Deprecated]
+    public function |>DEPRECATED,METHOD:publicDeprecatedTraitMethod02<|():void {}
+    #[\Deprecated]
+    private function |>DEPRECATED,METHOD:privateDeprecatedTraitMethod02<|():void {}
+    #[\Deprecated]
+    /**
+     * @return void
+     */
+    protected function |>DEPRECATED,METHOD:protectedDeprecatedTraitMethod02<|():void {}
+    #[\Deprecated]
+    public static function |>DEPRECATED,METHOD,STATIC:publicDeprecatedStaticTraitMethod02<|():void {}
+    #[\Deprecated]
+    private static function |>DEPRECATED,METHOD,STATIC:privateDeprecatedStaticTraitMethod02<|():void {}
+    #[\Attr]
+    #[\Deprecated]
+    protected static function |>DEPRECATED,METHOD,STATIC:protectedDeprecatedStaticTraitMethod02<|():void {}
+}
+
+enum |>CLASS:DeprecatedEnumMethod<| {
+    public function |>METHOD:publicEnumMethod<|():void {}
+    private function |>METHOD,UNUSED:privateEnumMethod<|():void {}
+    protected function |>METHOD:protectedEnumMethod<|():void {}
+    public static function |>METHOD,STATIC:publicStaticEnumMethod<|():void {}
+    private static function |>METHOD,STATIC,UNUSED:privateStaticEnumMethod<|():void {}
+    protected static function |>METHOD,STATIC:protectedStaticEnumMethod<|():void {}
+    #[Deprecated, Attr1]
+    public function |>DEPRECATED,METHOD:publicDeprecatedEnumMethod<|():void {}
+    #[Deprecated]
+    #[Attr2]
+    private function |>DEPRECATED,METHOD,UNUSED:privateDeprecatedEnumMethod<|():void {}
+    #[Deprecated]
+    protected function |>DEPRECATED,METHOD:protectedDeprecatedEnumMethod<|():void {}
+    #[Deprecated]
+    public static function |>DEPRECATED,METHOD,STATIC:publicDeprecatedStaticEnumMethod<|():void {}
+    #[Deprecated]
+    private static function |>DEPRECATED,METHOD,STATIC,UNUSED:privateDeprecatedStaticEnumMethod<|():void {}
+    #[Deprecated]
+    protected static function |>DEPRECATED,METHOD,STATIC:protectedDeprecatedStaticEnumMethod<|():void {}
+    #[\Deprecated]
+    public function |>DEPRECATED,METHOD:publicDeprecatedEnumMethod02<|():void {}
+    #[\Deprecated]
+    private function |>DEPRECATED,METHOD,UNUSED:privateDeprecatedEnumMethod02<|():void {}
+    #[\Deprecated]
+    protected function |>DEPRECATED,METHOD:protectedDeprecatedEnumMethod02<|():void {}
+    #[\Deprecated]
+    public static function |>DEPRECATED,METHOD,STATIC:publicDeprecatedStaticEnumMethod02<|():void {}
+    #[\Deprecated]
+    private static function |>DEPRECATED,METHOD,STATIC,UNUSED:privateDeprecatedStaticEnumMethod02<|():void {}
+    #[\Deprecated]
+    protected static function |>DEPRECATED,METHOD,STATIC:protectedDeprecatedStaticEnumMethod02<|():void {}
+}
+
+$anon = new class() {
+    #[Attr]
+    public function |>METHOD:publicMethod<|():void {}
+    private function |>METHOD,UNUSED:privateMethod<|():void {}
+    protected function |>METHOD:protectedMethod<|():void {}
+    public static function |>METHOD,STATIC:publicStaticMethod<|():void {}
+    private static function |>METHOD,STATIC,UNUSED:privateStaticMethod<|():void {}
+    protected static function |>METHOD,STATIC:protectedStaticMethod<|():void {}
+    #[Deprecated]
+    public function |>DEPRECATED,METHOD:publicDeprecatedMethod<|():void {}
+    #[Deprecated]
+    private function |>DEPRECATED,METHOD,UNUSED:privateDeprecatedMethod<|():void {}
+    #[Deprecated]
+    protected function |>DEPRECATED,METHOD:protectedDeprecatedMethod<|():void {}
+    #[Deprecated]
+    public static function |>DEPRECATED,METHOD,STATIC:publicDeprecatedStaticMethod<|():void {}
+    #[Deprecated]
+    private static function |>DEPRECATED,METHOD,STATIC,UNUSED:privateDeprecatedStaticMethod<|():void {}
+    #[Deprecated]
+    protected static function |>DEPRECATED,METHOD,STATIC:protectedDeprecatedStaticMethod<|():void {}
+    #[\Deprecated]
+    public function |>DEPRECATED,METHOD:publicDeprecatedMethod02<|():void {}
+    #[\Deprecated]
+    private function |>DEPRECATED,METHOD,UNUSED:privateDeprecatedMethod02<|():void {}
+    #[\Deprecated]
+    protected function |>DEPRECATED,METHOD:protectedDeprecatedMethod02<|():void {}
+    #[\Deprecated]
+    public static function |>DEPRECATED,METHOD,STATIC:publicDeprecatedStaticMethod02<|():void {}
+    #[\Deprecated]
+    private static function |>DEPRECATED,METHOD,STATIC,UNUSED:privateDeprecatedStaticMethod02<|():void {}
+    #[\Deprecated]
+    protected static function |>DEPRECATED,METHOD,STATIC:protectedDeprecatedStaticMethod02<|():void {}
+};

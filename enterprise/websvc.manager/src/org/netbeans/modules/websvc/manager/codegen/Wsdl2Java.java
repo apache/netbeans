@@ -42,7 +42,8 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.ProxySelector;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.websvc.manager.util.ManagerUtil;
@@ -74,7 +75,7 @@ public class Wsdl2Java {
     
     // TODO generate this dynamically instead of using a hardcoded value
     private static final String JAXB_ENDORSED_REF = "modules/ext/jaxb/api/jaxb-api.jar";
-    private static final String JAXWS_ENDORSED_REF = "modules/ext/jaxws22/api/jaxws-api.jar";
+    private static final String JAXWS_ENDORSED_REF = "modules/ext/jaxws22/api/jakarta.xml.ws-api.jar";
     
     private final String userDir = System.getProperty("netbeans.user");
     
@@ -299,7 +300,7 @@ public class Wsdl2Java {
     
     private void createJaxrpcConfigFile(String wsdlFileName, Properties properties){
         try {
-            File cf = File.createTempFile("jaxrpcconfigfile", ".xml"); // NOI81N
+            File cf = Files.createTempFile("jaxrpcconfigfile", ".xml").toFile(); // NOI81N
             cf.deleteOnExit();
             OutputStream out = new FileOutputStream(cf);
             String packageName = webServiceData.getEffectivePackageName();
@@ -310,8 +311,7 @@ public class Wsdl2Java {
             final String wsdlConfigEntry = "\t<wsdl location=\"" + wsdlFileName +
                     "\" packageName=\"" + packageName + "\"/>"; // NOI81N
             
-            PrintWriter configWriter = new PrintWriter( new OutputStreamWriter(
-                    out, Charset.forName("UTF-8")));            // NOI18N
+            PrintWriter configWriter = new PrintWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8));
             
             try {
                 configWriter.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"); // NOI18N

@@ -25,7 +25,6 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import static java.lang.Thread.NORM_PRIORITY;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -53,6 +52,7 @@ import org.openide.NotifyDescriptor;
 import org.openide.explorer.ExplorerManager;
 import org.openide.filesystems.FileObject;
 import org.openide.nodes.Node;
+import org.openide.text.CloneableEditorSupport;
 import org.openide.text.NbDocument;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
@@ -120,7 +120,7 @@ public final class ContextView extends JPanel {
 
     /** Map of approved/rejected files. */
     private final Map<FileObject, Boolean> APPROVED_FILES =
-            new WeakHashMap<FileObject, Boolean>();
+            new WeakHashMap<>();
 
     /**
      * 
@@ -164,12 +164,9 @@ public final class ContextView extends JPanel {
         setResultModel(resultModel);
 
         this.explorerManager = explorerManager;
-        explorerManager.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getPropertyName().equals("selectedNodes")) {
-                    updateForSelection();
-                }
+        explorerManager.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            if (evt.getPropertyName().equals("selectedNodes")) {
+                updateForSelection();
             }
         });
     }
@@ -453,8 +450,8 @@ public final class ContextView extends JPanel {
              * (in this case, MIME-type only) must be set _before_ the text
              * is set.
              */
-            if ((editorMimeType == null) || !editorMimeType.equals(mimeType)) {
-                editorPane.setContentType(mimeType);
+            if (editorMimeType == null || !editorMimeType.equals(mimeType)) {
+                editorPane.setEditorKit(CloneableEditorSupport.getEditorKit(mimeType));
                 editorMimeType = mimeType;
             }
             editorPane.setText(text);
@@ -479,6 +476,7 @@ public final class ContextView extends JPanel {
          * @author  Tim Boudreau
          * @author  Marian Petras
          */
+        @Override
         public void run() {
             assert EventQueue.isDispatchThread();
             
@@ -490,12 +488,8 @@ public final class ContextView extends JPanel {
                 
                 if (location != null) {
                     final Document document = editorPane.getDocument();
-                    if (document instanceof StyledDocument) {
-                        StyledDocument styledDocument
-                                = (StyledDocument) document;
-                        int cursorOffset = getCursorOffset(
-                                                    (StyledDocument) document,
-                                                    location.getLine() - 1);
+                    if (document instanceof StyledDocument sd) {
+                        int cursorOffset = getCursorOffset(sd, location.getLine() - 1);
                         int startOff = cursorOffset + location.getColumn() - 1;
                         int endOff = startOff + location.getMarkLength();
                         editorPane.setSelectionStart(startOff);

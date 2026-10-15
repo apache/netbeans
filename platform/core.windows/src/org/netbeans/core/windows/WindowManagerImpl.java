@@ -153,10 +153,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
         }
     }
 
-    /////////////////////////
     // API impelementation >>
-    /////////////////////////
-    
     // PENDING revise this method, it is dangerous to expose the GUI.
     /** Provides access to the MainWindow of the IDE.
      * Implements <code>WindowManager</code> abstract method.
@@ -182,6 +179,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
      * @param c the component
      * @return the manager that handles opening, closing and selecting a component
      * @deprecated Don't use this. */
+    @Deprecated
     @Override
     protected synchronized WindowManager.Component createTopComponentManager(TopComponent c) {
         warnIfNotInEDT();
@@ -193,6 +191,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
      * Implements <code>WindowManager</code> abstract method.
      * @return fake implementation of only workspace
      * @deprecated Doesn't have a sense now. Workspaces aren't supported anymore. */
+    @Deprecated
     @Override
     public Workspace createWorkspace(String name, String displayName) {
         warnIfNotInEDT();
@@ -204,6 +203,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
     /** Finds workspace given its name.
      * @return fake implementation of only workspace
      * @deprecated Doesn't have a sense now. Workspaces aren't supported anymore. */
+    @Deprecated
     @Override
     public Workspace findWorkspace(String name) {
         warnIfNotInEDT();
@@ -216,6 +216,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
      * Implements <code>WindowManager</code> abstract method. 
      * @return array with only one (fake) workspace impl
      * @deprecated Doesn't have a sense now. Workspaces aren't supported anymore. */
+    @Deprecated
     @Override
     public Workspace[] getWorkspaces() {
         warnIfNotInEDT();
@@ -227,6 +228,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
      * Implements <code>WindowManager</code> abstract method.
      * @param workspaces array of new workspaces
      * @deprecated Doesn't have a sense now. Workspaces aren't supported anymore. */
+    @Deprecated
     @Override
     public void setWorkspaces(Workspace[] workspaces) {
         warnIfNotInEDT();
@@ -236,6 +238,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
      * Implements <code>WindowManager</code> abstract method.
      * @return fake implementation of only workspace
      * @deprecated Doesn't have a sense now. Workspaces aren't supported anymore. */
+    @Deprecated
     @Override
     public Workspace getCurrentWorkspace() {
         warnIfNotInEDT();
@@ -284,10 +287,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
         changeSupport.removePropertyChangeListener(l);
     }
 
-    ////////////////////////
     // API implementation <<
-    ////////////////////////
-
 //    /** Activates <code>TopComponent</code>, if it is opened. */
 //    private boolean activateTopComponent(TopComponent tc) {
 //        if(tc != null) {
@@ -320,14 +320,12 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
 
     // XXX For backward compatibility (Workspace class), this is the only (fake) workspace.
     // There are not supported workspaces any more.
-    ///////////////////////////////////////
     // Start of  Workspace implementation>>
-    ///////////////////////////////////////
-    
     /** Gets the programmatic unique name of this workspace.
      * Implements <code>Workspace</code> interface method.
      * @return the programmatic name of only workspace impl
      * @deprecated Doesn't have a sense now. Workspaces aren't supported anymore. */
+    @Deprecated
     @Override
     public String getName () {
         return "FakeWorkspace"; // NOI18N
@@ -337,6 +335,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
      * Implements <code>Workspace</code> interface method.
      * @return the diplay name of the workspace
      * @deprecated Doesn't have a sense now. Workspaces aren't supported anymore. */
+    @Deprecated
     @Override
     public String getDisplayName () {
         return NbBundle.getMessage(WindowManagerImpl.class, "LBL_FakeWorkspace");
@@ -362,6 +361,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
 
     /** Activates this workspace to be current one.
      * @deprecated Doesn't have a sense now. Workspaces aren't supported anymore. */
+    @Deprecated
     @Override
     public void activate () {
     }
@@ -624,14 +624,11 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
     /** Clears this workspace and removes this workspace from window manager.
      * Implements <code>Workspace</code> interface method.
      * @deprecated Doesn't have a sense now. Workspaces aren't supported anymore. */
+    @Deprecated
     @Override
     public void remove () {
     }
-    ////////////////////////////////////
     // End of Workspace implementation<<
-    ////////////////////////////////////
-
-    //////////////////////////////
     // TopComponentGroup>>
     public void addTopComponentGroup(TopComponentGroupImpl tcGroup) {
         central.addTopComponentGroup(tcGroup);
@@ -645,12 +642,8 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
         return central.getTopComponentGroups();
     }
     // TopComponentGroup<<
-    //////////////////////////////
+    // Copy from older WorkspaceImpl>>
 
-    
-    /// Copy from older WorkspaceImpl>>
-
-    ////////////////////////////////////////////////////////
     // PENDING some of the next methods could make inner API
     /** Creates new mode.
      * @param name a unique programmatic name of the mode 
@@ -1163,16 +1156,9 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
         // PENDING When #37529 finished, then uncomment the next row and move the
         // checks of AWT thread away.
         //  WindowManagerImpl.assertEventDispatchThread();
-        if(SwingUtilities.isEventDispatchThread()) {
-            changeSupport.firePropertyChange(propName, oldValue, newValue);
-        } else {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    changeSupport.firePropertyChange(propName, oldValue, newValue);
-                }
-            });
-        }
+        Mutex.EVENT.readAccess(() ->  
+            changeSupport.firePropertyChange(propName, oldValue, newValue)
+        );
     }
 
     // PENDING used in persistence only, revise how to restrict its usage only there.
@@ -1182,7 +1168,6 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
     }
 
     
-    /////////////////////////
     // Notifications>>
     public void notifyTopComponentOpened(TopComponent tc) {
         // Inform component instance.
@@ -1198,25 +1183,15 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
         notifyRegistryTopComponentClosed(tc);
     }
     // Notifications<<
-    /////////////////////////
-
-    /////////////////////////////
     // Registry notifications
     static void notifyRegistryTopComponentActivated(final TopComponent tc) {
         ((RegistryImpl)getDefault().getRegistry()).topComponentActivated(tc);
 
         
         // #37457 It is needed to ensure the activation calls are in AWT thread.
-        if(SwingUtilities.isEventDispatchThread()) {
-            WindowManagerImpl.getInstance().activateComponent(tc);
-        } else {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    WindowManagerImpl.getInstance().activateComponent(tc);
-                }
-            });
-        }
+        Mutex.EVENT.readAccess(() -> 
+            WindowManagerImpl.getInstance().activateComponent(tc)
+        );
     }
     
     private static void notifyRegistryTopComponentOpened(TopComponent tc) {
@@ -1231,8 +1206,6 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
         ((RegistryImpl)getDefault().getRegistry()).selectedNodesChanged(tc, nodes);
     }
     // Registry notifications
-    /////////////////////////////
-
     /** Overrides superclass method, to enhance access modifier. */
     @Override
     public void componentShowing(TopComponent tc) {
@@ -1361,14 +1334,28 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
                 central.switchMaximizedMode( null );
                 topComponentClose( tc );
             } else {
-                TopComponent recentTc = null;
+                ModeImpl activateMode = null;
+                TopComponent activateTC = null;
                 if( mode.getKind() == Constants.MODE_KIND_EDITOR && !inCloseAll ) {
                     //an editor document is being closed so let's find the most recent editor to select
-                    recentTc = central.getRecentTopComponent( mode, tc );
+                    activateTC = central.getRecentTopComponent( mode, tc );
+                    if (activateTC != null) {
+                        activateMode = mode;
+                    } else {
+                        /* The closed TopComponent may have been the last one in its mode. Find the
+                        most recent TopComponent in the "editor" mode instead, if present. */
+                        Mode editorMode = findMode("editor");
+                        if (editorMode instanceof ModeImpl && mode != editorMode) {
+                          activateMode = (ModeImpl) editorMode;
+                          activateTC = central.getRecentTopComponent( activateMode, tc );
+                        }
+                    }
                 }
                 mode.close(tc);
-                if( !tc.isOpened() && null != recentTc )
-                    mode.setSelectedTopComponent(recentTc);
+                if( !tc.isOpened() && null != activateTC && null != activateMode ) {
+                    activateTC.requestActive();
+                    activateMode.setSelectedTopComponent(activateTC);
+                }
             }
         }
     }
@@ -1534,8 +1521,8 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
                     FloatingWindowTransparencyManager.getDefault().start();
                 }
             });
-
-            SwingUtilities.invokeLater(getExclusive());
+            
+            Mutex.EVENT.postReadRequest(getExclusive());
         }
     }
 
@@ -1587,7 +1574,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
          */
         public synchronized void register(Runnable r) {
             arr.add(r);
-            SwingUtilities.invokeLater(this);
+            Mutex.EVENT.postReadRequest(this);
         }
 
         @Override
@@ -1606,7 +1593,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
                 }
                 
                 final Runnable toRun = arr.remove(0);
-                SwingUtilities.invokeLater(new Runnable() {
+                Mutex.EVENT.postReadRequest(new Runnable() {
                     @Override
                     public void run() {
                         Logger perf = Logger.getLogger("org.netbeans.log.startup"); // NOI18N
@@ -1618,7 +1605,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
                             Logger.getLogger(WindowManagerImpl.class.getName()).log(
                                     Level.WARNING, null, ex);
                         }
-                        SwingUtilities.invokeLater(Exclusive.this);
+                        Mutex.EVENT.postReadRequest(Exclusive.this);
                     }
                 });
             }
@@ -1783,7 +1770,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
         + "http://core.netbeans.org/proposals/threading/"; // NOI18N
     
     static void assertEventDispatchThread() {
-        assert SwingUtilities.isEventDispatchThread() : ASSERTION_ERROR_MESSAGE;
+        assert Mutex.EVENT.isReadAccess() : ASSERTION_ERROR_MESSAGE;
     }
 
     static {
@@ -1839,7 +1826,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
                 continue;
             editors.add( tc );
         }
-        return editors.toArray( new TopComponent[editors.size()] );
+        return editors.toArray(new TopComponent[0] );
     }
 
     /**
@@ -1899,7 +1886,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
     public TopComponent[] getOpenedTopComponents(Mode mode) {
         if( mode instanceof ModeImpl ) {
             java.util.List<TopComponent> openedTcs = ((ModeImpl)mode).getOpenedTopComponents();
-            return openedTcs.toArray(new TopComponent[openedTcs.size()]);
+            return openedTcs.toArray(new TopComponent[0]);
         }
         return super.getOpenedTopComponents(mode);
     }
@@ -2029,7 +2016,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
         if( null != editorToActivate )
             editorToActivate.requestActive();
         
-        SwingUtilities.invokeLater( new Runnable() {
+        Mutex.EVENT.postReadRequest(new Runnable() {
             @Override
             public void run() {
                 Frame mainWindow = getMainWindow();

@@ -1,0 +1,4 @@
+    public const C = self::{self::BA . self::^R};
+                                       -------
+HINT:Introduce Hint
+FIX:Create Constant "R" in Class "Test" (testDynamicClassConstantFetch.php)

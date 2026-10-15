@@ -8,5 +8,4 @@ class Simple {
     // comment 3
 
     public $field2;
-
 }

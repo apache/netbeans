@@ -1,0 +1,3 @@
+$^|>MARK_OCCURRENCES:e<| = 'e';
+Test::{$variable . $|>MARK_OCCURRENCES:e<|};
+$test::{$variable . $|>MARK_OCCURRENCES:e<|};

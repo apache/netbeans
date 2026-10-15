@@ -14,5 +14,5 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-B4066214637F88A3778314AECADF0539C43855F4 org.apache.derby:derbytools:10.14.1.0
-3BCD8B1AF3F8CD022D54D331E00064776BE04F9C org.apache.derby:derby:10.14.1.0
+338D5A54B4089C80414FE0ECB3899D521DA69B26 org.apache.derby:derbytools:10.14.2.0
+7EFAD40EF52FBB1F08142F07A83B42D29E47D8CE org.apache.derby:derby:10.14.2.0

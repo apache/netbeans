@@ -21,7 +21,6 @@ package org.netbeans.upgrade.systemoptions;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -32,15 +31,14 @@ class ListProcessor extends PropertyProcessor {
         super("java.util.ArrayList");//NOI18N
     }
 
+    @Override
     void processPropertyImpl(String propertyName, Object value) {
         if ("openProjectsURLs".equals(propertyName) 
          || "recentProjectsURLs".equals(propertyName)
          || "recentTemplates".equals(propertyName)) {//NOI18N
             int s = 0;
-            List l = ((SerParser.ObjectWrapper)value).data;
-            for (Iterator it = l.iterator(); it.hasNext();) {
+            for (Object elem : ((SerParser.ObjectWrapper)value).data) {
                 String prop = null;
-                Object elem = (Object) it.next();
                 if (elem instanceof SerParser.ObjectWrapper) {
                     List list2 = ((SerParser.ObjectWrapper)elem).data;
                     try {

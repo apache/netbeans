@@ -177,8 +177,8 @@ public final class Snapshot {
             null,
             source,
             newMimePath,
-            newCurrentToOriginal.toArray (new int [newCurrentToOriginal.size ()][]),
-            newOriginalToCurrent.toArray (new int [newOriginalToCurrent.size ()][])
+            newCurrentToOriginal.toArray (new int [0][]),
+            newOriginalToCurrent.toArray (new int [0][])
         );
         return new Embedding (
             snapshot, 

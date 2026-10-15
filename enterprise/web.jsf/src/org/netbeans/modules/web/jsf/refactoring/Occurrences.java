@@ -55,7 +55,7 @@ public class Occurrences {
     
     private static final Logger LOGGER = Logger.getLogger(Occurrences.class.getName());
     
-    public static abstract class OccurrenceItem {
+    public abstract static class OccurrenceItem {
         // the faces configuration file
         protected FileObject config;
         

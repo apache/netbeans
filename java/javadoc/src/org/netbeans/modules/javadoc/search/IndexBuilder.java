@@ -34,6 +34,7 @@ import java.util.StringTokenizer;
 import java.util.WeakHashMap;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.netbeans.lib.editor.util.StringEscapeUtils;
 import org.openide.ErrorManager;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
@@ -70,12 +71,12 @@ public class IndexBuilder implements Runnable, ChangeListener {
         /**
          * Display name / title of the helpset
          */
-        String      title;
+        String title;
 
         /**
          * Name of the index/overview file
          */
-        String      indexFileName;
+        String indexFileName;
     }
 
     @SuppressWarnings("LeakingThisInConstructor")
@@ -91,7 +92,7 @@ public class IndexBuilder implements Runnable, ChangeListener {
      * Get the default index builder instance.
      * It will start parsing asynch.
      */
-    public synchronized static IndexBuilder getDefault() {
+    public static synchronized IndexBuilder getDefault() {
         if (INSTANCE != null) {
             return INSTANCE;
         }
@@ -157,8 +158,8 @@ public class IndexBuilder implements Runnable, ChangeListener {
         }
         URL[] docRoots = jdocRegs.getDocRoots();
         // XXX needs to be able to listen to result; when it changes, call scheduleTask()
-        Map<URL,Info> m = new WeakHashMap<URL,Info>();
-//        long startTime = System.nanoTime();
+        Map<URL,Info> m = new WeakHashMap<>();
+        // long startTime = System.nanoTime();
 
         for ( int ifCount = 0; ifCount < docRoots.length; ifCount++ ) {
             URL fo = docRoots[ifCount];
@@ -177,11 +178,10 @@ public class IndexBuilder implements Runnable, ChangeListener {
                 // [PENDING] Display name is not ideal, e.g. "org.openide.windows (NetBeans Input/Output API)"
                 // where simply "NetBeans Input/Output API" is preferable... but standard title filter
                 // regexps are not so powerful (to avoid matching e.g. "Servlets (Main Documentation)").
-                InputStream is = URLUtils.open(fo, "package-list"); // NOI18N
-                if (is != null) {
-                    try {
-                        try {
-                            BufferedReader r = new BufferedReader(new InputStreamReader(is));
+                try (InputStream is = URLUtils.open(fo, "package-list");
+                        InputStream is2 = URLUtils.open(fo, "element-list")) { // NOI18N
+                    if (is != null || is2 != null) {
+                        try (BufferedReader r = new BufferedReader(new InputStreamReader( is != null ? is : is2 ))) {
                             String line = r.readLine();
                             if (line != null && r.readLine() == null) {
                                 // Good, exactly one line as expected. A package name.
@@ -192,13 +192,12 @@ public class IndexBuilder implements Runnable, ChangeListener {
                                 }
                                 // else fall back to index.html if available
                             }
-                        } finally {
-                            is.close();
                         }
-                    } catch (IOException ioe) {
-                            // Oh well, skip this one.
-                        ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, ioe);
                     }
+                }
+                catch (IOException ioe) {
+                    // Oh well, skip this one.
+                    ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, ioe);
                 }
             }
             if (index != null) {
@@ -216,7 +215,7 @@ public class IndexBuilder implements Runnable, ChangeListener {
                     if (filename.length() > 54) {
                         // trim to display 54 chars
                         filename = filename.substring(0, 10) + "[...]" // NOI18N
-                                + filename.substring(filename.length() - 40, filename.length());
+                                + filename.substring(filename.length() - 40);
                     }
                     title = NbBundle.getMessage(IndexBuilder.class,
                             "FMT_NoOverviewTitle", new Object[] { filename }); // NOI18N
@@ -230,7 +229,7 @@ public class IndexBuilder implements Runnable, ChangeListener {
                 this.filesystemInfo = m;
             }
         }
-        List<Index> data = new ArrayList<Index>();
+        List<Index> data = new ArrayList<>();
         for (Map.Entry<URL,Info> entry : filesystemInfo.entrySet()) {
             Info info = entry.getValue();
             URL fo = URLUtils.findOpenable(entry.getKey(), info.indexFileName);
@@ -242,8 +241,8 @@ public class IndexBuilder implements Runnable, ChangeListener {
         Collections.sort(data);
         cachedData = data;
 
-//        long elapsedTime = System.nanoTime() - startTime;
-//        System.out.println("\nElapsed time[nano]: " + elapsedTime);
+        // long elapsedTime = System.nanoTime() - startTime;
+        // System.out.println("\nElapsed time[nano]: " + elapsedTime);
     }
     
     /**
@@ -252,27 +251,22 @@ public class IndexBuilder implements Runnable, ChangeListener {
      */
     private String parseTitle(URL html) {
         String title = null;
-        try {
+        try (InputStream is = new BufferedInputStream(URLUtils.openStream(html), 1024)) {
             // #71979: html parser used again to fix encoding issues.
             // I have measured no difference if the parser or plain file reading
             // is used (#32551).
             // In case the parser is stopped as soon as it finds the title it is
             // even faster than the previous fix.
-            InputStream is = new BufferedInputStream(URLUtils.openStream(html), 1024);
             SimpleTitleParser tp = new SimpleTitleParser(is);
-            try {
-                tp.parse();
-                title = tp.getTitle();
-            } finally {
-                is.close();
-            }
+            tp.parse();
+            title = tp.getTitle();
         } catch (IOException ioe) {
             ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, ioe);
         }
         return title != null? title.trim(): title;
     }
 
-    private synchronized static void scheduleTask() {
+    private static synchronized void scheduleTask() {
         if (task == null) {
             task = new RequestProcessor(IndexBuilder.class).create(getDefault()); // NOI18N
         }
@@ -408,7 +402,7 @@ public class IndexBuilder implements Runnable, ChangeListener {
                     case (char) -1:  // EOF
                         return;
                     case '>': // </title>
-                        if ("</title".equals(new String(buf, offset - 7, 7).toLowerCase())) {
+                        if ("</title".equalsIgnoreCase(new String(buf, offset - 7, 7))) {
                             // title is ready
                             // XXX maybe we should also resolve entities like &gt;
                             state = State.EXIT;
@@ -417,6 +411,11 @@ public class IndexBuilder implements Runnable, ChangeListener {
                             } else {
                                 title = new String(buf, 0, offset - 7, charset).trim();
                             }
+                            
+                            // Unescape the title, done for JDK 11.
+                            // JDK 11 title contains &amp; (NETBEANS-4176)
+                            title = StringEscapeUtils.unescapeHtml(title);
+                            
                             return;
                         }
                     default:

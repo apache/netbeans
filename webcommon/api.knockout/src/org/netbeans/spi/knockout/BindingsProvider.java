@@ -25,12 +25,12 @@ import org.openide.util.lookup.ServiceProvider;
  * A provider that knows more about structure of Knockout bindings in an HTML
  * page. Providers should be registered by {@link ServiceProvider} annotation so
  * they can be found for a particular HTML file. Their
- * {@link #findBindings(org.openide.filesystems.FileObject, org.netbeans.spi.knockout.BindingsProvider.Response) findBindings}
+ * {@link #findBindings(org.openide.filesystems.FileObject) findBindings}
  * method is called when a knockout code completion is about to be shown in the
  * HTML editor and then can generate a JSON like description of the structure of
  * knockout context via {@link Bindings} methods.
  *
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  */
 public interface BindingsProvider {
 
@@ -44,7 +44,7 @@ public interface BindingsProvider {
 
     /**
      * Methods for {@link BindingsProvider}s to provide a response when
-     * {@link BindingsProvider#findBindings(org.openide.filesystems.FileObject, org.netbeans.spi.knockout.BindingsProvider.Response) queries}
+     * {@link BindingsProvider#findBindings(org.openide.filesystems.FileObject) queries}
      * about a particular HTML file.
      */
     public static final class Response {

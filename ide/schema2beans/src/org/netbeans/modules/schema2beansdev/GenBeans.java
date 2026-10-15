@@ -49,7 +49,7 @@ public class GenBeans {
      * writing of the generated files.
      * The caller of getStream will eventually run .close on the OutputStream
      */
-    static public interface OutputStreamProvider {
+    public static interface OutputStreamProvider {
         public OutputStream getStream(String dir, String name,
                                       String extension)
             throws java.io.IOException;
@@ -62,7 +62,7 @@ public class GenBeans {
                                    long time) throws java.io.IOException;
     }
     
-    static public class DefaultOutputStreamProvider implements OutputStreamProvider {
+    public static class DefaultOutputStreamProvider implements OutputStreamProvider {
         private Config config;
         private List generatedFiles;
         
@@ -99,7 +99,7 @@ public class GenBeans {
         }
     }
 
-    static public class Config extends S2bConfig {
+    public static class Config extends S2bConfig {
         // What kind of schema is it coming in
         public static final int XML_SCHEMA = 0;
         public static final int DTD = 1;
@@ -441,6 +441,7 @@ public class GenBeans {
         /**
          * @deprecated  use setMddIn instead
          */
+        @Deprecated
         public void setMDDIn(java.io.InputStream value) {
             setMddIn(value);
         }
@@ -448,6 +449,7 @@ public class GenBeans {
         /**
          * @deprecated  use setFileIn instead
          */
+        @Deprecated
         public void setDTDIn(java.io.InputStream value) {
             setFileIn(value);
         }

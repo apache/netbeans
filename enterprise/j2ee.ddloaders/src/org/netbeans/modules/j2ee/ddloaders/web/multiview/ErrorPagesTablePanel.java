@@ -91,7 +91,7 @@ public class ErrorPagesTablePanel extends DefaultTablePanel {
                 Integer val = (Integer)model.getValueAt(row,1);
                 String[] initValues = new String[] {
                     (String)model.getValueAt(row,0),
-                    val==null?"":((Integer)val).toString(),
+                    val==null?"":(val).toString(),
                     (String)model.getValueAt(row,2)
                 };
                 descriptor.setInitValues(initValues);
@@ -137,7 +137,7 @@ public class ErrorPagesTablePanel extends DefaultTablePanel {
                     } else if (code.length()>0)  {
                         Integer c = null;
                         try {
-                            c = new Integer(code); 
+                            c = Integer.valueOf(code); 
                         } catch (NumberFormatException ex) {
                             LOG.log(Level.FINE, "ignored exception", ex); //NOI18N
                         }
@@ -193,9 +193,9 @@ public class ErrorPagesTablePanel extends DefaultTablePanel {
                 String code = values[1].trim();
                 String exc = values[2].trim();
                 if (add)
-                    model.addRow(new Object[]{page,(code.length()==0?null:new Integer(code)),(exc.length()==0?null:exc)});
+                    model.addRow(new Object[]{page,(code.length()==0?null:Integer.valueOf(code)),(exc.length()==0?null:exc)});
                 else 
-                    model.editRow(row,new Object[]{page,(code.length()==0?null:new Integer(code)),(exc.length()==0?null:exc)});
+                    model.editRow(row,new Object[]{page,(code.length()==0?null:Integer.valueOf(code)),(exc.length()==0?null:exc)});
                 dObj.setChangedFromUI(false);
             }
         }

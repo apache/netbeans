@@ -219,9 +219,9 @@ public final class JavaTargetChooserPanel implements WizardDescriptor.Panel<Wiza
 
     private void fireChange() {
         ChangeEvent e = new ChangeEvent(this);
-        Iterator it = listeners.iterator();
+        Iterator<ChangeListener> it = listeners.iterator();
         while (it.hasNext()) {
-            ((ChangeListener)it.next()).stateChanged(e);
+            it.next().stateChanged(e);
         }
     }
 
@@ -353,6 +353,8 @@ public final class JavaTargetChooserPanel implements WizardDescriptor.Panel<Wiza
             String token = tukac.nextToken();
             if ("".equals(token))
                 return false;
+            if("snippet-files".equals(token) && !tukac.hasMoreTokens())
+                return true;
             if (!Utilities.isJavaIdentifier(token))
                 return false;
         }

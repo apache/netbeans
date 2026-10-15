@@ -17,7 +17,7 @@
  * under the License.
  */
 
-/**
+/*
  * EditPanelHeaders.java
  *
  *
@@ -26,10 +26,6 @@
  * @author Ana von Klopp
  * @author Simran Gleason
  * @version
- */
-
-/**
- * Contains the Request sub-panel for the EditPanel
  */
 
 package org.netbeans.modules.web.monitor.client;
@@ -52,9 +48,13 @@ import org.openide.NotifyDescriptor;
 import org.netbeans.modules.web.monitor.data.*;
 import org.openide.awt.Mnemonics;
 
+
+/**
+ * Contains the Request sub-panel for the EditPanel
+ */
 class EditPanelHeaders extends DataDisplay {
 
-    private final static boolean debug = false;
+    private static final boolean debug = false;
     
     private DisplayTable headerTable = null;    
     private MonitorData monitorData = null;

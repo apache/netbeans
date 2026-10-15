@@ -77,7 +77,7 @@ import org.openide.util.lookup.Lookups;
 public final class RelationshipMappingRename extends JavaRefactoringPlugin {
     
     private final RenameRefactoring rename;
-    private final static Logger LOG = Logger.getLogger(RelationshipMappingRename.class.getName());
+    private static final Logger LOG = Logger.getLogger(RelationshipMappingRename.class.getName());
     
     public RelationshipMappingRename(RenameRefactoring rename) {
         this.rename = rename;
@@ -203,8 +203,8 @@ public final class RelationshipMappingRename extends JavaRefactoringPlugin {
                                                             }
                                                         }
                                                         SourcePositions sp = ci.getTrees().getSourcePositions();
-                                                        sp.getStartPosition(unit, t);
-                                                        refactoringElementsBag.add(rename, new RelationshipAnnotationRenameRefactoringElement(fo, field, at0, an, var.getSimpleName().toString(), (int) sp.getStartPosition(unit, t), (int) sp.getEndPosition(unit, t)));
+                                                        sp.getStartPosition(t);
+                                                        refactoringElementsBag.add(rename, new RelationshipAnnotationRenameRefactoringElement(fo, field, at0, an, var.getSimpleName().toString(), (int) sp.getStartPosition(t), (int) sp.getEndPosition(t)));
                                                     }
                                                 }
                                             }
@@ -320,8 +320,8 @@ public final class RelationshipMappingRename extends JavaRefactoringPlugin {
             try {
                 DataObject dobj = DataObject.find(getParentFile());
                 if (dobj != null) {
-                    EditorCookie.Observable obs = (EditorCookie.Observable)dobj.getLookup().lookup(EditorCookie.Observable.class);
-                    if (obs != null && obs instanceof CloneableEditorSupport) {
+                    EditorCookie.Observable obs = dobj.getLookup().lookup(EditorCookie.Observable.class);
+                    if (obs instanceof CloneableEditorSupport) {
                         CloneableEditorSupport supp = (CloneableEditorSupport)obs;
 
                     PositionBounds bounds = new PositionBounds(

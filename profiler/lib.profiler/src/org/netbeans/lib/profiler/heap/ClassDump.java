@@ -40,9 +40,6 @@ import java.util.Set;
  * @author Tomas Hurka
  */
 class ClassDump extends HprofObject implements JavaClass {
-    //~ Static fields/initializers -----------------------------------------------------------------------------------------------
-    
-    private static final boolean DEBUG = false;
     private static final Set CANNOT_CONTAIN_ITSELF = new HashSet(Arrays.asList(new String[] {
         "java.lang.String",         // NOI18N
         "java.lang.StringBuffer",   // NOI18N
@@ -178,8 +175,8 @@ class ClassDump extends HprofObject implements JavaClass {
             }
         }
 
-        if (DEBUG) {
-            System.out.println("Class " + getName() + " Col " + instancesList.size() + " instances " + getInstancesCount()); // NOI18N
+        if (Systems.DEBUG) {
+            Systems.debug("Class " + getName() + " Col " + instancesList.size() + " instances " + getInstancesCount()); // NOI18N
         }
 
         return instancesList;
@@ -429,8 +426,8 @@ class ClassDump extends HprofObject implements JavaClass {
         instances++;
         if (firstInstanceOffset == 0) {
             firstInstanceOffset = offset;
-            if (DEBUG) {
-                System.out.println("First instance :"+getName()+" "+offset/1024/1024); // NOI18N
+            if (Systems.DEBUG) {
+                Systems.debug("First instance :"+getName()+" "+offset/1024/1024); // NOI18N
             }
         }
     }
@@ -451,8 +448,8 @@ class ClassDump extends HprofObject implements JavaClass {
                 }
             }
         }
-        if (DEBUG) {
-            if (instances>10) System.out.println(getName()+" cannot contain itself "+instances);    // NOI18N
+        if (Systems.DEBUG) {
+            if (instances>10) Systems.debug(getName()+" cannot contain itself "+instances);    // NOI18N
         }
         return false;
     }

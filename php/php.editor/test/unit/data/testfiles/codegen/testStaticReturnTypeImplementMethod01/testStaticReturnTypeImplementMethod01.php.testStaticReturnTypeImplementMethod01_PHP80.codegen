@@ -1,0 +1,6 @@
+public function testNullableType(): ?static{
+}
+public function testSimple(): static{
+}
+public function testUnionType(): static|string|null{
+}

@@ -27,6 +27,4 @@ Services/org-netbeans-modules-httpserver-HttpServerSettings.settings
 Services/formsettings.settings
 Services/org-openide-text-PrintSettings.settings
 Services/org-netbeans-modules-profiler-ProfilerIDESettings.settings
-Services/Hidden/org-netbeans-modules-versioning-system-cvss-settings-CvsModuleConfig.settings
-Services/Hidden/org-netbeans-modules-versioning-system-cvss-settings-CvsRootSettings.settings
 Services/Hidden/org-netbeans-modules-subversion-settings-SvnModuleConfig.settings

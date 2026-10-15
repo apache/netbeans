@@ -67,7 +67,7 @@ public final class InnerClass {
 
     /** Returns the name of this class, including its package (if any).
      * If the compiler didn't define this value, the string 
-     * "<not defined>" is returned.
+     * "&lt;not defined&gt;" is returned.
      * @return the name of this class.
      */    
     public final ClassName getName() {
@@ -93,6 +93,7 @@ public final class InnerClass {
 
     /**
      * Returns the access flags of this class.
+     * @return access flags of this class 
      */
     public final int getAccess() {
         return access;

@@ -22,7 +22,7 @@ import org.netbeans.modules.j2ee.dd.api.common.*;
 /**
  * Generated interface for WebResourceCollection element.
  *
- *<p><b><font color="red"><em>Important note: Do not provide an implementation of this interface unless you are a DD API provider!</em></font></b>
+ *<p><b><span style="color:red"><em>Important note: Do not provide an implementation of this interface unless you are a DD API provider!</em></span></b>
  *</p>
  */
 public interface WebResourceCollection extends CommonDDBean, DescriptionInterface {
@@ -45,7 +45,6 @@ public interface WebResourceCollection extends CommonDDBean, DescriptionInterfac
          */
 	public java.lang.String getUrlPattern(int index);
         /** Setter for url-pattern property.
-         * @param index position in the array of url-patterns
          * @param value array of url-pattern properties
          */
 	public void setUrlPattern(java.lang.String[] value);
@@ -78,7 +77,6 @@ public interface WebResourceCollection extends CommonDDBean, DescriptionInterfac
          */
 	public java.lang.String getHttpMethod(int index);
         /** Setter for http-method property.
-         * @param index position in the array of http-methods
          * @param value array of http-method properties
          */
 	public void setHttpMethod(java.lang.String[] value);

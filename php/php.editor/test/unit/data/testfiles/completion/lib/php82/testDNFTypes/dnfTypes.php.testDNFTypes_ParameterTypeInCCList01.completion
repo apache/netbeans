@@ -1,0 +1,5 @@
+Code completion result for source line:
+$this->param|(null);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     param(X|(X&Y)|(Y&Z) $param)     [PUBLIC]   TestClass
+METHOD     paramType(ClassX|(ClassY&Class  [PUBLIC]   TestClass

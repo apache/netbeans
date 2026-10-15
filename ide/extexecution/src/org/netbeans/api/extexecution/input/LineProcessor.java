@@ -34,6 +34,7 @@ import org.netbeans.api.annotations.common.NonNull;
  * @see InputReader
  * @deprecated use {@link org.netbeans.api.extexecution.base.input.LineProcessor}
  */
+@Deprecated
 public interface LineProcessor extends Closeable {
 
     /**

@@ -33,7 +33,7 @@ public class ProjectEjbJarProvider implements EjbJarProvider {
     public org.netbeans.modules.j2ee.api.ejbjar.EjbJar findEjbJar (org.openide.filesystems.FileObject file) {
         Project project = FileOwnerQuery.getOwner (file);
         if (project != null) {
-            EjbJarProvider provider = (EjbJarProvider) project.getLookup ().lookup (EjbJarProvider.class);
+            EjbJarProvider provider = project.getLookup().lookup(EjbJarProvider.class);
             if (provider != null) {
                 return provider.findEjbJar (file);
             }

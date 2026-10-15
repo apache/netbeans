@@ -63,7 +63,7 @@ import org.openide.util.MutexException;
 public final class NewSpringXMLConfigWizardIterator implements WizardDescriptor.AsynchronousInstantiatingIterator {
 
     private static final Logger LOG = Logger.getLogger(NewSpringXMLConfigWizardIterator.class.getName());
-    private static final String DEFAULT_SPRING_VERSION = "3.2.3";
+    private static final String DEFAULT_SPRING_VERSION = "3.2.18";
     private int index;
     private WizardDescriptor wizard;
     private WizardDescriptor.Panel[] panels;
@@ -97,7 +97,7 @@ public final class NewSpringXMLConfigWizardIterator implements WizardDescriptor.
                 if (c instanceof JComponent) { // assume Swing components
                     JComponent jc = (JComponent) c;
                     // Sets step number of a component
-                    jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(i)); // NOI18N
+                    jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i); // NOI18N
                     // Sets steps names for a panel
                     jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps); // NOI18N
                     // Turn on subtitle creation on each step
@@ -321,7 +321,7 @@ public final class NewSpringXMLConfigWizardIterator implements WizardDescriptor.
     private String[] createSteps() {
         String[] beforeSteps = null;
         Object prop = wizard.getProperty(WizardDescriptor.PROP_CONTENT_DATA); // NOI18N
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[]) prop;
         }
 

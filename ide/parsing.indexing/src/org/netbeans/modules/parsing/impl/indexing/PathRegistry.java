@@ -68,7 +68,9 @@ import org.openide.util.WeakListeners;
 public final class PathRegistry implements Runnable {
 
     private static final boolean FIRE_UNKNOWN_ALWAYS = false;
-    /*test*/ static final int FIRER_EVT_COLLAPSE_WINDOW = 500;
+
+    // property set/field used in tests
+    static final int FIRER_EVT_COLLAPSE_WINDOW = Integer.getInteger(PathRegistry.class.getName()+".FIRER_EVT_COLLAPSE_WINDOW", 500);
 
     private static PathRegistry instance;
     private static final RequestProcessor firer = new RequestProcessor ("Path Registry Request Processor"); //NOI18N
@@ -744,7 +746,7 @@ public final class PathRegistry implements Runnable {
                         libraryResult.addAll(srcRoots);
                         updateTranslatedPathIds(srcRoots, tcp, pathIdsResult, pathIdToRootsResult);
                     }
-                    translatedRoots.put(binRoot, cacheURLs.toArray(new URL[cacheURLs.size()]));
+                    translatedRoots.put(binRoot, cacheURLs.toArray(new URL[0]));
                     if (LOGGER.isLoggable(Level.FINE)) {
                         LOGGER.log(Level.FINE, "T: {0} -> {1}", new Object[]{binRoot, cacheURLs}); //NOI18N
                     }

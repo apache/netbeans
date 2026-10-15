@@ -75,7 +75,7 @@ public class ShowHistoryAction extends NodeAction {
         VCSContext ctx = VCSContext.forNodes(activatedNodes);
         final Set<VCSFileProxy> rootSet = ctx.getRootFiles();                    
 
-        final VCSFileProxy[] files = rootSet.toArray(new VCSFileProxy[rootSet.size()]);                
+        final VCSFileProxy[] files = rootSet.toArray(new VCSFileProxy[0]);                
         if(!files[0].isFile()) {
             return;
         }

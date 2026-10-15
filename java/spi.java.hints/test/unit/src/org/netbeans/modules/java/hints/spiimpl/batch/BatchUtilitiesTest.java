@@ -22,6 +22,7 @@ import org.netbeans.modules.java.hints.spiimpl.batch.TestUtils.File;
 import org.netbeans.modules.java.hints.spiimpl.MessageImpl;
 import org.netbeans.modules.java.hints.spiimpl.batch.BatchSearchTest.ClassPathProviderImpl;
 import org.netbeans.modules.java.hints.providers.spi.HintDescription;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,7 +37,6 @@ import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
-import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.lexer.InputAttributes;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.LanguagePath;
@@ -52,16 +52,16 @@ import org.netbeans.spi.editor.mimelookup.MimeDataProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.lexer.LanguageEmbedding;
 import org.netbeans.spi.lexer.LanguageProvider;
-import org.openide.LifecycleManager;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
-import org.openide.loaders.DataObject;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ServiceProvider;
+
 import static org.netbeans.modules.java.hints.spiimpl.batch.TestUtils.writeFilesAndWaitForScan;
 import static org.netbeans.modules.java.hints.spiimpl.batch.TestUtils.prepareHints;
+
 import org.netbeans.modules.parsing.impl.indexing.MimeTypes;
 
 /**
@@ -125,6 +125,20 @@ public class BatchUtilitiesTest extends NbTestCase {
         assertTrue(file2New.toString(), file2New.isEmpty());
     }
 
+    public void testMultipleWithErrors() throws Exception {
+        writeFilesAndWaitForScan(src1,
+                                 new File("test/Test1.java", "package test; public class Test1 { public class A1 extends Test2.A2 { public int t(Unknown u) { return this.doesNotExist(u); } } public class B1 {} private void x(java.io.File f) { boolean b = f.isDirectory(); } }"),
+                                 new File("test/Test2.java", "package test; public class Test2 { public class A2 {} public class B2 extends Test1.B1 { public int t(Unknown u) { return this.doesNotExist(u); } } private void x(java.io.File f) { boolean b = f.isDirectory(); } }"));
+
+        Iterable<? extends HintDescription> hints = prepareHints("$1.isDirectory() => !$1.isDirectory()", "$1", "java.io.File");
+        BatchResult result = BatchSearch.findOccurrences(hints, Scopes.specifiedFoldersScope(Folder.convert(src1, src3, empty)));
+        List<MessageImpl> problems = new LinkedList<MessageImpl>();
+
+        BatchUtilities.applyFixes(result, new ProgressHandleWrapper(100), new AtomicBoolean(), new ArrayList<>(), new HashMap<>(), problems);
+
+        assertTrue(problems.toString(), problems.isEmpty());
+    }
+
 //    public void testRemoveUnusedImports() throws Exception {
 //        writeFilesAndWaitForScan(src1,
 //                                 new File("test/Test1.java", "package test;\n import java.util.List;\n public class Test1 { }"));
@@ -168,6 +182,7 @@ public class BatchUtilitiesTest extends NbTestCase {
 
         private Lookup javaLookup = Lookups.fixed(JavaTokenId.language());
 
+        @Override
         public Lookup getLookup(MimePath mimePath) {
             if (mimePath.getPath().endsWith(JavacParser.MIME_TYPE)) {
                 return javaLookup;

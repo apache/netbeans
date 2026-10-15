@@ -1,0 +1,146 @@
+<testresult testFile='matchExpressionError_01.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='815' end='822'>
+            <text>$result</text>
+        </token>
+        <token id='T_EQUAL' start='823' end='824'>
+            <text>=</text>
+        </token>
+        <token id='T_MATCH' start='825' end='830'>
+            <text>match</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='831' end='832'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='832' end='834'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='834' end='835'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='836' end='837'>
+            <text>{</text>
+        </token>
+        <token id='T_LNUMBER' start='842' end='843'>
+            <text>1</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='844' end='846'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='847' end='850'>
+            <text>&apos;1&apos;</text>
+        </token>
+        <token id='T_COMMA' start='850' end='851'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='856' end='857'>
+            <text>2</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='858' end='860'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='861' end='864'>
+            <text>&apos;2&apos;</text>
+        </token>
+        <token id='T_COMMA' start='864' end='865'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='870' end='871'>
+            <text>5</text>
+        </token>
+        <token id='T_COMMA' start='871' end='872'>
+            <text>,</text>
+        </token>
+        <token id='T_DEFAULT' start='873' end='880'>
+            <text>default</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='881' end='883'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_LNUMBER' start='884' end='886'>
+            <text>10</text>
+        </token>
+        <token id='T_COMMA' start='886' end='887'>
+            <text>,</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='888' end='889'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='889' end='890'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='892' end='900'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='900' end='901'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='901' end='908'>
+            <text>$result</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='908' end='909'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='909' end='910'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='911' end='911'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='911'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='815' end='890'>
+                <Assignment start='815' end='889' operator='EQUAL'>
+                    <Variable start='815' end='822' isDollared='true'>
+                        <Identifier start='816' end='822' name='result'/>
+                    </Variable>
+                    <MatchExpression start='825' end='889'>
+                        <Variable start='832' end='834' isDollared='true'>
+                            <Identifier start='833' end='834' name='x'/>
+                        </Variable>
+                        <MatchArms>
+                            <MatchArm start='842' end='850' isDefault='false'>
+                                <Conditions>
+                                    <Scalar start='842' end='843' type='INT' value='1'/>
+                                </Conditions>
+                                <Scalar start='847' end='850' type='STRING' value='&apos;1&apos;'/>
+                            </MatchArm>
+                            <MatchArm start='856' end='864' isDefault='false'>
+                                <Conditions>
+                                    <Scalar start='856' end='857' type='INT' value='2'/>
+                                </Conditions>
+                                <Scalar start='861' end='864' type='STRING' value='&apos;2&apos;'/>
+                            </MatchArm>
+                            <MatchArm start='870' end='886' isDefault='false'>
+                                <Conditions>
+                                    <Scalar start='870' end='871' type='INT' value='5'/>
+                                    <ASTErrorExpression start='871' end='872'/>
+                                </Conditions>
+                                <Scalar start='884' end='886' type='INT' value='10'/>
+                            </MatchArm>
+                        </MatchArms>
+                    </MatchExpression>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='892' end='910'>
+                <FunctionInvocation start='892' end='909'>
+                    <FucntionName start='892' end='900'>
+                        <NamespaceName start='892' end='900' isCurrent='false' isGlobal='false'>
+                            <Identifier start='892' end='900' name='var_dump'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Variable start='901' end='908' isDollared='true'>
+                            <Identifier start='902' end='908' name='result'/>
+                        </Variable>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

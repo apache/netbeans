@@ -29,7 +29,7 @@ import org.netbeans.spi.project.ui.RecommendedTemplates;
  */
 @ProjectServiceProvider(service={RecommendedTemplates.class, PrivilegedTemplates.class}, projectType="org-netbeans-modules-maven/" + NbMavenProject.TYPE_OSGI)
 public class OSGIRecoPrivTemplates implements RecommendedTemplates, PrivilegedTemplates {
-    
+
         private static final String[] OSGI_PRIVILEGED_NAMES = new String[] {
             "Templates/Classes/Class.java", // NOI18N
             "Templates/Classes/Package", // NOI18N
@@ -49,14 +49,14 @@ public class OSGIRecoPrivTemplates implements RecommendedTemplates, PrivilegedTe
             "junit",                // NOI18N
             "simple-files"         // NOI18N
         };
-        
-    
+
+
     public @Override String[] getRecommendedTypes() {
         return OSGI_TYPES;
     }
-    
+
     public @Override String[] getPrivilegedTemplates() {
         return OSGI_PRIVILEGED_NAMES;
     }
-    
+
 }

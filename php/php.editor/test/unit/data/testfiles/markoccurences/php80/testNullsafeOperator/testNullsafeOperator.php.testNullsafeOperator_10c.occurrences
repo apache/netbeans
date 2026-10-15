@@ -1,0 +1,4 @@
+    private ?Address $|>MARK_OCCURRENCES:address<|;
+        $this->|>MARK_OCCURRENCES:address<| = new Address();
+        $test = $this?->|>MARK_OCCURRENCES:addre^ss<|?->country;
+        return $this?->|>MARK_OCCURRENCES:address<|;

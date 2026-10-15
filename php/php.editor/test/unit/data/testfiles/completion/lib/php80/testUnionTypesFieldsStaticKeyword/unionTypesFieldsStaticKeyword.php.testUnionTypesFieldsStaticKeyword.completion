@@ -1,0 +1,5 @@
+Code completion result for source line:
+private stat|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    static                                     null

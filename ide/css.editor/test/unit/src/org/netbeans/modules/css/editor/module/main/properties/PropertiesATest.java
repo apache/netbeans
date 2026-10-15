@@ -2713,4 +2713,77 @@ public class PropertiesATest extends CssModuleTestBase {
                 + "}";
         assertCssCode(code);
     }
+
+    public void testUnicodeRange() throws ParseException {
+        String code = "xxx {\n"
+            + "    unicode-range: U+0D01, U+0A01-00ff, U+0A??;\n"
+            + "}";
+        assertCssCode(code);
+    }
+
+    public void testDisplay() throws ParseException {
+        assertCssCode(".demo {display: block}");
+        assertCssCode(".demo {display: inline-block}");
+        assertCssCode(".demo {display: inline flow}");
+        assertCssCode(".demo {display: block table}");
+        assertCssCode(".demo {display: block flex}");
+        assertCssCode(".demo {display: block flow list-item}");
+        assertCssCode(".demo {display: flow list-item}");
+        assertCssCode(".demo {display: list-item flow}");
+    }
+
+    public void testGrid() throws ParseException {
+        assertCssCode(".demo {grid-template-columns: 150px 1fr;}");
+        assertCssCode(".demo {grid-template-columns: 150px [item1-start] 1fr [item1-end];}");
+        assertCssCode(".demo {grid-template-rows: [item1-start] 50px 1fr 50px [item1-end]}");
+        assertCssCode(".demo {grid-template-rows: 1fr minmax(min-content, 1fr)}");
+        assertCssCode(".demo {grid-template-areas: \"head head\"\n\"nav main\"}");
+        assertCssCode(".demo {grid-template: auto 1fr / auto 1fr auto;}");
+        assertCssCode(".demo {grid-template: [header-top] \"a   a   a\"     [header-bottom]\n"
+            + "[main-top] \"b   b   b\" 1fr [main-bottom]\n"
+            + "/ auto 1fr auto;}");
+        assertCssCode(".demo {grid-column-start: 4}");
+        assertCssCode(".demo {grid-column-end: auto}");
+        assertCssCode(".demo {grid-row-start: C}");
+        assertCssCode(".demo {grid-row-start: -4}");
+        assertCssCode(".demo {grid-row-end: B -1}");
+        assertCssCode(".demo {grid-row: A / C}");
+        assertCssCode(".demo {grid-column: 1 / 3}");
+        assertCssCode(".demo {grid-row: B}");
+        assertCssCode(".demo {grid-column: 4}");
+        assertCssCode(".demo {grid-auto-columns: 20px min-content fit-content(30px)}");
+        assertCssCode(".demo {grid-auto-rows: 40px minmax(max-content, auto)}");
+        assertCssCode(".demo {grid-auto-flow: row dense;}");
+        assertCssCode(".demo {grid-area: dummy-area}");
+        assertCssCode(".demo {grid-area: auto}");
+        assertCssCode(".demo {grid-area: 2 / 4}");
+        assertCssCode(".demo {grid-area: 1 / 3 / -1}");
+        assertCssCode(".demo {grid-area: header-start / sidebar-start / footer-end / sidebar-start}");
+        assertCssCode(".demo {grid: auto-flow 1fr / 100px;}");
+        assertCssCode(".demo {grid: \"H  H\"\n"
+            + "\" A B\"\n"
+            + "\" F F\" 30px\n"
+            + "/ auto 1fr\n"
+            + "}");
+        assertCssCode(".demo {grid: repeat(auto-fill, 5em) / auto-flow 1fr;}");
+        assertCssCode(".demo {grid: auto-flow 1fr / repeat(auto-fill, 5em);}");
+        assertCssCode(".demo {grid: auto 1fr auto / repeat(5, 1fr);}");
+    }
+
+    public void testCaseSensitivity() throws Exception {
+        assertCssCode("h1 { border-style: dashed; border-width: 1rem; }");
+        assertCssCode("h1 { border-style: dAsHeD; border-width: 1ReM; }");
+        assertCssCode("h1 { BORDER-STYLE: dashed }");
+        assertCssCode("h1 { bOrDeR-sTyLe: dashed }");
+    }
+
+    public void testContainProperties() throws Exception {
+        assertCssCode("main {container-type: normal}");
+        assertCssCode("main {container-type: size}");
+        assertCssCode("main {container-type: inline-size}");
+        assertCssCode("main {container-name: demo}");
+        assertCssCode("main {container: demo}");
+        assertCssCode("main {container: demo / size}");
+        assertCssCode("main {container: demo / inline-size}");
+    }
 }

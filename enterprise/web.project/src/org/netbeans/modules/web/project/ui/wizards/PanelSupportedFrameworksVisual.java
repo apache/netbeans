@@ -236,7 +236,7 @@ public class PanelSupportedFrameworksVisual extends JPanel implements HelpCtx.Pr
     boolean valid(WizardDescriptor wizardDescriptor) {
         setErrorMessage(wizardDescriptor, null);
         for (int i = 0; i < model.getRowCount(); i++) {
-            if (model.getItem(i).isSelected().booleanValue()) {
+            if (model.getItem(i).isSelected()) {
                 FrameworkModelItem item = model.getItem(i);
                 WebModuleExtender extender = (WebModuleExtender) extenders.get(item.getFramework());
                 if (extender != null && !extender.isValid()) {
@@ -401,8 +401,8 @@ public class PanelSupportedFrameworksVisual extends JPanel implements HelpCtx.Pr
             JComponent panelComponent = ((WebModuleExtender) extenders.get(framework)).getComponent();
             jPanelConfig.add(panelComponent, gridBagConstraints);
             
-            jLabelConfig.setEnabled(item.isSelected().booleanValue());
-            enableComponents(panelComponent, item.isSelected().booleanValue());
+            jLabelConfig.setEnabled(item.isSelected());
+            enableComponents(panelComponent, item.isSelected());
             ((WebModuleExtender) extenders.get(framework)).update();
             jPanelConfig.revalidate();
             jPanelConfig.repaint();
@@ -462,10 +462,10 @@ public class PanelSupportedFrameworksVisual extends JPanel implements HelpCtx.Pr
      * Implements a TableModel.
      */
     public static final class FrameworksTableModel extends AbstractTableModel {
-        private DefaultListModel model;
+        private DefaultListModel<FrameworkModelItem> model;
         
         public FrameworksTableModel() {
-            model = new DefaultListModel();
+            model = new DefaultListModel<>();
         }
         
         public int getColumnCount() {

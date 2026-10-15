@@ -24,6 +24,7 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -36,12 +37,14 @@ import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
+import org.netbeans.spi.debugger.jpda.BreakpointStratifier;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.URLMapper;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
 
@@ -65,6 +68,8 @@ public class LineBreakpoint extends JPDABreakpoint {
     /** Property name constant */
     public static final String          PROP_LINE_NUMBER = "lineNumber"; // NOI18N
     /** Property name constant */
+    public static final String          PROP_LAMBDA_INDEXES = "lambdaIndexes"; // NOI18N
+    /** Property name constant */
     public static final String          PROP_URL = "url"; // NOI18N
     /** Property name constant. */
     public static final String          PROP_CONDITION = "condition"; // NOI18N
@@ -81,6 +86,9 @@ public class LineBreakpoint extends JPDABreakpoint {
     /** Property name constant */
     public static final String          PROP_THREAD_FILTERS = "threadFilters"; // NOI18N
     
+    /**Lambda index value meaning the debugger should stop at locations outside of any lambda.*/
+    public static final int             LAMBDA_INDEX_STOP_OUTSIDE = -1;
+
     private static final Logger LOG = Logger.getLogger(LineBreakpoint.class.getName());
 
     private String                      url = ""; // NOI18N
@@ -92,6 +100,7 @@ public class LineBreakpoint extends JPDABreakpoint {
     private String                      className = null;
     private Map<JPDADebugger,ObjectVariable[]> instanceFilters;
     private Map<JPDADebugger,JPDAThread[]> threadFilters;
+    private int[]                       lambdaIndexes = new int[0];
 
     
     private LineBreakpoint (String url) {
@@ -111,6 +120,12 @@ public class LineBreakpoint extends JPDABreakpoint {
     ) {
         LineBreakpoint b = new LineBreakpointImpl (url);
         b.setLineNumber (lineNumber);
+        if (url != null && !url.isEmpty()) {
+            Collection<? extends BreakpointStratifier> stratifiers = Lookup.getDefault().lookupAll(BreakpointStratifier.class);
+            for (BreakpointStratifier stratifier : stratifiers) {
+                stratifier.stratify(b);
+            }
+        }
         return b;
     }
 
@@ -172,6 +187,28 @@ public class LineBreakpoint extends JPDABreakpoint {
             PROP_LINE_NUMBER,
             Integer.valueOf(old),
             Integer.valueOf(ln)
+        );
+    }
+
+    public int[] getLambdaIndexes() {
+        return lambdaIndexes.clone();
+    }
+
+    public void setLambdaIndexes(int[] li) {
+        int[] old;
+
+        li = li.clone();
+
+        synchronized (this) {
+            if (li == lambdaIndexes) {
+                return;
+            }
+            old = lambdaIndexes;
+            lambdaIndexes = li;
+        }
+        firePropertyChange (PROP_LAMBDA_INDEXES,
+            old,
+            li
         );
     }
     
@@ -389,7 +426,7 @@ public class LineBreakpoint extends JPDABreakpoint {
     
     /**
      * Gets the binary class name that is used to submit the breakpoint.
-     * @return The binary class name, if previously set by {@link setPreferedClassName}
+     * @return The binary class name, if previously set by {@link #setPreferredClassName}
      * method, or <code>null</code> if the class name should be retrieved
      * automatically from the URL and line number.
      * @since 2.8
@@ -415,7 +452,7 @@ public class LineBreakpoint extends JPDABreakpoint {
         if (fileName == null) {
             fileName = url;
         }
-        return "LineBreakpoint " + fileName + " : " + lineNumber;
+        return "LineBreakpoint " + fileName + " : " + lineNumber + (lambdaIndexes.length > 0 ? " lambda indices: " + Arrays.toString(lambdaIndexes) : "");
     }
     
     private static class LineBreakpointImpl extends LineBreakpoint 

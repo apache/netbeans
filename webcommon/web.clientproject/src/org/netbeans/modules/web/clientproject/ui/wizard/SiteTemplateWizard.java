@@ -440,9 +440,9 @@ public class SiteTemplateWizard extends JPanel {
         RP.post(new Runnable() {
             @Override
             public void run() {
-                Enumeration templates = onlineTemplatesListModel.elements();
+                Enumeration<SiteTemplateImplementation> templates = onlineTemplatesListModel.elements();
                 while (templates.hasMoreElements()) {
-                    SiteTemplateImplementation template = (SiteTemplateImplementation) templates.nextElement();
+                    SiteTemplateImplementation template = templates.nextElement();
                     try {
                         template.cleanup();
                     } catch (IOException exc) {

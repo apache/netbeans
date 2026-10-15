@@ -61,7 +61,7 @@ public abstract class SearchType extends ServiceType implements Cloneable {
      * object types to create <code>SearchGroup</code>. 
      * <em>Note: </em> the order of classes declares also priority.
      */
-    public synchronized final Class[] getSearchTypeClasses() {
+    public final synchronized Class[] getSearchTypeClasses() {
         if (searchTypeClasses == null) {
             searchTypeClasses = createSearchTypeClasses();
         }

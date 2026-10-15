@@ -26,9 +26,9 @@ package org.netbeans.editor;
 * The common place where the tokens should be defined is
 * the appropriate token-context for which they are being
 * created.
-* The fact that <tt>TokenID</tt> extends <tt>TokenCategory</tt>
+* The fact that <code>TokenID</code> extends <code>TokenCategory</code>
 * helps to treat the colorings more easily by working with
-* <tt>TokenCategory</tt> only (it can be <tt>TokenID</tt> too).
+* <code>TokenCategory</code> only (it can be <code>TokenID</code> too).
 *
 * @author Miloslav Metelka
 * @version 1.00

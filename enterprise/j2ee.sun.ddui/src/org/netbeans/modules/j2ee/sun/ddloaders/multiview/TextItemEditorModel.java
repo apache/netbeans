@@ -22,6 +22,8 @@ package org.netbeans.modules.j2ee.sun.ddloaders.multiview;
 import org.netbeans.modules.xml.multiview.ItemEditorHelper;
 import org.netbeans.modules.xml.multiview.XmlMultiViewDataSynchronizer;
 
+import java.util.Objects;
+
 /**
  * @author pfiala,pcw
  */
@@ -60,7 +62,7 @@ public abstract class TextItemEditorModel extends ItemEditorHelper.ItemEditorMod
         }
         if (validate(value)) {
             String currentValue = getValue();
-            if (!(value == currentValue || value != null && value.equals(currentValue))) {
+            if (!Objects.equals(value, currentValue)) {
                 setValue(value);
                 synchronizer.requestUpdateData();
             }

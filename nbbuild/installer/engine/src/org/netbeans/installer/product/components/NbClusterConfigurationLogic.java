@@ -45,12 +45,10 @@ import org.netbeans.installer.wizard.components.actions.SetInstallationLocationA
  
  */
 public abstract class NbClusterConfigurationLogic extends ProductConfigurationLogic {
-    /////////////////////////////////////////////////////////////////////////////////
     // Constants
     public static final String BASE_IDE_UID =
             "nb-all"; // NOI18N
     
-    /////////////////////////////////////////////////////////////////////////////////
     // Instance
     private String[] clusterNames;
     private String productId;
@@ -108,7 +106,7 @@ public abstract class NbClusterConfigurationLogic extends ProductConfigurationLo
         // pick the first one and integrate with it
         final File nbLocation = sources.get(0).getInstallationLocation();
         
-        // add the cluster to the active clusters list //////////////////////////////
+        // add the cluster to the active clusters list
         for (String clusterName: clusterNames) {
             try {
                 progress.setDetail(ResourceUtils.getString(
@@ -130,7 +128,7 @@ public abstract class NbClusterConfigurationLogic extends ProductConfigurationLo
             }
         }
 
-        // update the update_tracking files information //////////////////////////////
+        // update the update_tracking files information
         for (String clusterName: clusterNames) {
             try {
                 progress.setDetail(ResourceUtils.getString(
@@ -148,7 +146,7 @@ public abstract class NbClusterConfigurationLogic extends ProductConfigurationLo
             }
         }
         
-        // add the product id to the productid file /////////////////////////////////
+        // add the product id to the productid file
         try {
 	    if(productId!=null) {
             progress.setDetail(ResourceUtils.getString(
@@ -166,7 +164,7 @@ public abstract class NbClusterConfigurationLogic extends ProductConfigurationLo
                     e);
         }
         
-        // remove files that are not suited for the current platform ////////////////
+        // remove files that are not suited for the current platform
         //for (String clusterName: clusterNames) {
         //    final File cluster = new File(installLocation, clusterName);
         //    
@@ -184,7 +182,7 @@ public abstract class NbClusterConfigurationLogic extends ProductConfigurationLo
         //    }
         //}
         
-        // corrent permisions on executable files ///////////////////////////////////
+        // corrent permisions on executable files
         //for (String clusterName: clusterNames) {
         //    final File cluster = new File(installLocation, clusterName);
         //
@@ -227,7 +225,7 @@ public abstract class NbClusterConfigurationLogic extends ProductConfigurationLo
         // pick the first one and assume that we're integrated with it
         final File nbLocation = sources.get(0).getInstallationLocation();
         
-        // remove the product id from the productid file ////////////////////////////
+        // remove the product id from the productid file
         try {
             if(productId!=null) {
             progress.setDetail(ResourceUtils.getString(
@@ -245,7 +243,7 @@ public abstract class NbClusterConfigurationLogic extends ProductConfigurationLo
                     e);
         }
         
-        // remove the cluster from the active clusters list ///////////////////////// 
+        // remove the cluster from the active clusters list
         for (String clusterName: clusterNames) {
             try {
                 progress.setDetail(ResourceUtils.getString(

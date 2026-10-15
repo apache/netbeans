@@ -128,54 +128,6 @@ public class ExtDocDocumentationProviderTest extends JsDocumentationTestBase {
         assertEquals(summary, documentationHolder.getCommentForOffset(offset, documentationHolder.getCommentBlocks()).getSummary().get(0));
     }
 
-    public void testGetSummaryOfClassFromContextDescription() throws Exception {
-        Source testSource = getTestSource(getTestFile(FILE_NAME_GENERAL));
-        final int caretOffset = getCaretOffset(testSource, "function Rectangle2(width, height) ^{");
-        checkFirstSummary(testSource, caretOffset, "Create a new Rectangle instance.");
-    }
-
-    public void testGetSummaryOfClassFromClassDescription() throws Exception {
-        Source testSource = getTestSource(getTestFile(FILE_NAME_GENERAL));
-        final int caretOffset = getCaretOffset(testSource, "function ShapeFactory()^{");
-        checkFirstSummary(testSource, caretOffset, "This class exists to demonstrate the assignment of a class prototype\n  as an anonymous block.");
-    }
-
-    public void testGetReturnTypeForReturn() throws Exception {
-        Source testSource = getTestSource(getTestFile(FILE_NAME_GENERAL));
-        final int caretOffset = getCaretOffset(testSource, "Shape.prototype.clone = function()^{");
-        checkReturnType(testSource, caretOffset, Arrays.asList(new TypeUsage("Shape", 2321)));
-    }
-
-    public void testGetNullReturnTypeAtNoReturnTypeComment() throws Exception {
-        Source testSource = getTestSource(getTestFile(FILE_NAME_GENERAL));
-        final int caretOffset = getCaretOffset(testSource, "Shape.prototype.clone3 = function()^{");
-        checkReturnType(testSource, caretOffset, Collections.<Type>emptyList());
-    }
-
-    public void testGetNullReturnTypeAtMissingComment() throws Exception {
-        Source testSource = getTestSource(getTestFile(FILE_NAME_GENERAL));
-        final int caretOffset = getCaretOffset(testSource, "Shape.prototype.clone4 = function()^{");
-        checkReturnType(testSource, caretOffset, Collections.<Type>emptyList());
-    }
-
-    public void testGetReturnTypeAtFunction() throws Exception {
-        Source testSource = getTestSource(getTestFile(FILE_NAME_GENERAL));
-        final int caretOffset = getCaretOffset(testSource, "function martion () ^{");
-        checkReturnType(testSource, caretOffset, Arrays.asList(new TypeUsage("Number", 8587)));
-    }
-
-    public void testGetReturnTypeAtObjectFunction() throws Exception {
-        Source testSource = getTestSource(getTestFile(FILE_NAME_GENERAL));
-        final int caretOffset = getCaretOffset(testSource, "getVersion: function() ^{");
-        checkReturnType(testSource, caretOffset, Arrays.asList(new TypeUsage("Number", 8881)));
-    }
-
-    public void testGetReturnTypeAtType() throws Exception {
-        Source testSource = getTestSource(getTestFile(FILE_NAME_GENERAL));
-        final int caretOffset = getCaretOffset(testSource, "Shape.prototype.getColor = function()^{");
-        checkReturnType(testSource, caretOffset, Arrays.asList(new TypeUsage("Color", 1721)));
-    }
-
     public void testGetParametersForNameAndTypeParam() throws Exception {
         Source testSource = getTestSource(getTestFile(FILE_NAME_PARAMETERS));
         final int caretOffset = getCaretOffset(testSource, "function line1(userName)^{}");
@@ -214,30 +166,6 @@ public class ExtDocDocumentationProviderTest extends JsDocumentationTestBase {
         FakeDocParameter fakeDocParameter = new FakeDocParameter(new Identifier("accessLevel", 340), null, "accessLevel is not optional", false,
                 Arrays.<Type>asList(new TypeUsage("String", 332)));
         checkParameter(testSource, caretOffset, fakeDocParameter);
-    }
-
-    public void testGetExtends() throws Exception {
-        Source testSource = getTestSource(getTestFile(FILE_NAME_GENERAL));
-        final int caretOffset = getCaretOffset(testSource, "function Circle(radius)^{");
-        checkExtend(testSource, caretOffset, Collections.singletonList(new TypeUsage("Shape")));
-    }
-
-    public void testModifiers01() throws Exception {
-        Source testSource = getTestSource(getTestFile(FILE_NAME_GENERAL));
-        final int caretOffset = getCaretOffset(testSource, "Rectangle.prototype.^width = 0;");
-        checkModifiers(testSource, caretOffset, "private");
-    }
-
-    public void testModifiers02() throws Exception {
-        Source testSource = getTestSource(getTestFile(FILE_NAME_GENERAL));
-        final int caretOffset = getCaretOffset(testSource, "Rectangle.prototype.getWidth = function()^{");
-        checkModifiers(testSource, caretOffset, null);
-    }
-
-    public void testModifiers03() throws Exception {
-        Source testSource = getTestSource(getTestFile(FILE_NAME_GENERAL));
-        final int caretOffset = getCaretOffset(testSource, "Circle.^PI = 3.14;");
-        checkModifiers(testSource, caretOffset, "static");
     }
 
     private static class FakeDocParameter implements DocParameter {

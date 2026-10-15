@@ -33,6 +33,7 @@ import javax.swing.text.*;
 
 import org.netbeans.api.editor.EditorActionNames;
 import org.netbeans.api.editor.EditorActionRegistration;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.fold.FoldHierarchy;
 import org.netbeans.api.editor.fold.FoldUtilities;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
@@ -44,15 +45,14 @@ import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.lexer.InputAttributes;
 import org.netbeans.editor.*;
 import org.netbeans.editor.Utilities;
-import org.netbeans.editor.ext.java.*;
 import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.editor.ext.ExtKit;
-import org.netbeans.lib.editor.codetemplates.api.CodeTemplateManager;
 import org.netbeans.modules.editor.MainMenuAction;
 import org.netbeans.modules.editor.NbEditorKit;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.editor.indent.api.Indent;
 import org.netbeans.modules.java.editor.codegen.InsertSemicolonAction;
+import org.netbeans.modules.java.editor.fold.JavaElementFoldManager;
 import org.netbeans.modules.java.editor.imports.ClipboardHandler;
 import org.netbeans.modules.java.editor.imports.FastImportAction;
 import org.netbeans.modules.java.editor.imports.JavaFixAllImports;
@@ -67,7 +67,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 
 /**
 * Java editor kit with appropriate document
@@ -118,6 +117,10 @@ public class JavaKit extends NbEditorKit {
 //        return new JavaFormatter(this.getClass());
 //    }
 
+    /** Comment with the '//' prefix */
+    public static final BaseTokenID LINE_COMMENT
+        = new BaseTokenID("line-comment", 7 /* magic constant from java.editor.lib */); // NOI18N
+
     protected void initDocument(BaseDocument doc) {
 //        doc.addLayer(new JavaDrawLayerFactory.JavaLayer(),
 //                JavaDrawLayerFactory.JAVA_LAYER_VISIBILITY);
@@ -135,7 +138,8 @@ public class JavaKit extends NbEditorKit {
                   }
       
                   public void syntaxUpdateToken(TokenID id, TokenContextPath contextPath, int offset, int length) {
-                      if (JavaTokenContext.LINE_COMMENT == id) {
+                      // PENDING: this whole init code ought to be factored out to java.editor.lib probably.
+                      if (id != null && id.getNumericID() == LINE_COMMENT.getNumericID()) {
                           tokenList.add(new TokenInfo(id, contextPath, offset, length));
                       }
                   }
@@ -223,9 +227,9 @@ public class JavaKit extends NbEditorKit {
 //        for (BaseAction a : createActionsForLayer()) {
 //            name2Action.put((String) a.getValue(Action.NAME), a);
 //
-////            System.err.println("<file name=\"" + (String) a.getValue(Action.NAME) + ".instance\">");
-////            System.err.println("    <attr name=\"instanceCreate\" methodvalue=\"org.netbeans.modules.editor.java.JavaKit.create\" />");
-////            System.err.println("</file>");
+// //            System.err.println("<file name=\"" + (String) a.getValue(Action.NAME) + ".instance\">");
+// //            System.err.println("    <attr name=\"instanceCreate\" methodvalue=\"org.netbeans.modules.editor.java.JavaKit.create\" />");
+// //            System.err.println("</file>");
 //        }
 //    }
 
@@ -267,7 +271,7 @@ public class JavaKit extends NbEditorKit {
                 value.add(action);
             }
         }
-        return value.toArray(new Action[value.size()]);
+        return value.toArray(new Action[0]);
     }
 
     @Override
@@ -319,7 +323,7 @@ public class JavaKit extends NbEditorKit {
                         addAcceleretors(a, item, target);
                         item.setEnabled(a.isEnabled());
                         Object helpID = a.getValue ("helpID"); // NOI18N
-                        if (helpID != null && (helpID instanceof String))
+                        if (helpID instanceof String)
                             item.putClientProperty ("HelpID", helpID); // NOI18N
                     }else{
                         if (ExtKit.gotoSourceAction.equals(actionName)){
@@ -394,7 +398,7 @@ public class JavaKit extends NbEditorKit {
                     sb.append(':');
                 }
                 try {
-                    sb.append(Utilities.getLineOffset(doc, target.getCaret().getDot()) + 1);
+                    sb.append(LineDocumentUtils.getLineIndex(doc, target.getCaret().getDot()) + 1);
                 } catch (BadLocationException e) {
                 }
                 sb.append(' ');
@@ -428,7 +432,7 @@ public class JavaKit extends NbEditorKit {
         public void insert(MutableContext context) throws BadLocationException {
             int dotPos = context.getCaretOffset();
             Document doc = context.getDocument();
-            
+            if(TypingCompletion.posWithinTextBlock(doc, dotPos))return;
             if (TypingCompletion.posWithinString(doc, dotPos)) {
                 if (CodeStyle.getDefault(doc).wrapAfterBinaryOps()) {
                     context.setText("\" +\n \"", 3, 6); // NOI18N
@@ -455,6 +459,7 @@ public class JavaKit extends NbEditorKit {
                 if (isJavadocTouched) {
                     blockCommentComplete(doc, dotPos, context);
                 }
+                TypingCompletion.javadocLineRunCompletion(context);
             }
         }
 
@@ -558,11 +563,13 @@ public class JavaKit extends NbEditorKit {
             switch(insertedChar) {
                 case '(':
                 case '[':
+                case '{':
                     if (TypingCompletion.isCompletionSettingEnabled())
                         TypingCompletion.completeOpeningBracket(context);
                     break;
                 case ')':
                 case ']':
+                case '}':
                     if (TypingCompletion.isCompletionSettingEnabled())
                         caretPosition = TypingCompletion.skipClosingBracket(context);
                     break;
@@ -618,7 +625,7 @@ public class JavaKit extends NbEditorKit {
         public void actionPerformed(ActionEvent evt, JTextComponent target) {
             FoldHierarchy hierarchy = FoldHierarchy.get(target);
             // Hierarchy locking done in the utility method
-            FoldUtilities.expand(hierarchy, JavaFoldManager.JAVADOC_FOLD_TYPE);
+            FoldUtilities.expand(hierarchy, JavaElementFoldManager.JAVADOC_FOLD_TYPE);
         }
     }
 
@@ -635,7 +642,7 @@ public class JavaKit extends NbEditorKit {
         public void actionPerformed(ActionEvent evt, JTextComponent target) {
             FoldHierarchy hierarchy = FoldHierarchy.get(target);
             // Hierarchy locking done in the utility method
-            FoldUtilities.collapse(hierarchy, JavaFoldManager.JAVADOC_FOLD_TYPE);
+            FoldUtilities.collapse(hierarchy, JavaElementFoldManager.JAVADOC_FOLD_TYPE);
         }
     }
 
@@ -654,8 +661,8 @@ public class JavaKit extends NbEditorKit {
             FoldHierarchy hierarchy = FoldHierarchy.get(target);
             // Hierarchy locking done in the utility method
             List types = new ArrayList();
-            types.add(JavaFoldManager.CODE_BLOCK_FOLD_TYPE);
-            types.add(JavaFoldManager.IMPORTS_FOLD_TYPE);
+            types.add(JavaElementFoldManager.CODE_BLOCK_FOLD_TYPE);
+            types.add(JavaElementFoldManager.IMPORTS_FOLD_TYPE);
             FoldUtilities.expand(hierarchy, types);
         }
     }
@@ -674,8 +681,8 @@ public class JavaKit extends NbEditorKit {
             FoldHierarchy hierarchy = FoldHierarchy.get(target);
             // Hierarchy locking done in the utility method
             List types = new ArrayList();
-            types.add(JavaFoldManager.CODE_BLOCK_FOLD_TYPE);
-            types.add(JavaFoldManager.IMPORTS_FOLD_TYPE);
+            types.add(JavaElementFoldManager.CODE_BLOCK_FOLD_TYPE);
+            types.add(JavaElementFoldManager.IMPORTS_FOLD_TYPE);
             FoldUtilities.collapse(hierarchy, types);
         }
     }

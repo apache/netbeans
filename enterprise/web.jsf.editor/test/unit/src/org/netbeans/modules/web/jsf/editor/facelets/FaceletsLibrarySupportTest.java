@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
-import static junit.framework.Assert.assertNotNull;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.netbeans.modules.web.jsf.editor.JsfSupportImpl;
@@ -67,7 +66,7 @@ public class FaceletsLibrarySupportTest extends TestBaseForTestProject {
     public void testCompositeComponentLibraryWithoutDescriptor() {
         JsfSupportImpl instance = getJsfSupportImpl();
 
-        String ezCompLibraryNS = LibraryUtils.getCompositeLibraryURL("ezcomp", instance.isJsf22Plus());
+        String ezCompLibraryNS = LibraryUtils.getCompositeLibraryURL("ezcomp", instance.getJsfVersion());
 
         Library ezcompLib = instance.getLibrary(ezCompLibraryNS);
         assertNotNull(String.format("Library %s not found!", ezCompLibraryNS), ezcompLib);
@@ -94,11 +93,16 @@ public class FaceletsLibrarySupportTest extends TestBaseForTestProject {
         assertEquals("test", comp.getName());
         Tag t2 = comp.getTag();
         assertNotNull(t2);
+        assertTrue(t2.hasNonGenenericAttributes());
 
         Attribute a2 = t2.getAttribute("testAttr");
         assertNotNull(a2);
         assertEquals("testAttr", a2.getName());
 
+        // verify CC has both UIComponent and CC default attributes
+        assertNotNull(t2.getAttribute("binding"));
+        assertNotNull(t2.getAttribute("rendered"));
+        assertNotNull(t2.getAttribute("transient"));
     }
 
     public void testCompositeComponentLibraryWithDescriptor() {
@@ -116,7 +120,7 @@ public class FaceletsLibrarySupportTest extends TestBaseForTestProject {
         assertEquals("ezcomp2", ezcompLib.getDefaultPrefix());
         assertSame(LibraryType.COMPOSITE, ezcompLib.getType());
 
-        String ezCompLibraryDefaultNS = LibraryUtils.getCompositeLibraryURL("ezcomp2", instance.isJsf22Plus());
+        String ezCompLibraryDefaultNS = LibraryUtils.getCompositeLibraryURL("ezcomp2", instance.getJsfVersion());
         assertEquals(ezCompLibraryDefaultNS, ezcompLib.getDefaultNamespace());
         assertEquals(ezCompLibraryNS, ezcompLib.getNamespace());
         Tag t = cclib.getLibraryDescriptor().getTags().get("test");
@@ -127,6 +131,10 @@ public class FaceletsLibrarySupportTest extends TestBaseForTestProject {
         assertNotNull(a);
         assertEquals("testAttr", a.getName());
 
+        // verify CC has both UIComponent and CC default attributes
+        assertNotNull(t.getAttribute("binding"));
+        assertNotNull(t.getAttribute("rendered"));
+        assertNotNull(t.getAttribute("transient"));
     }
 
     public void testClassBaseLibraryWithinCurrentProject() {
@@ -165,7 +173,18 @@ public class FaceletsLibrarySupportTest extends TestBaseForTestProject {
         Attribute a2 = t2.getAttribute("myattr");
         assertNotNull(a2);
         assertEquals("myattr", a2.getName());
-
+        
+        // TagHandlers must NOT have UIComponent default attributes
+        assertNull(t2.getAttribute("rendered"));
+        assertNull(t2.getAttribute("transient"));
+        
+        // mycomponent must have UIComponent default attributes
+        LibraryComponent uiComp = lib.getComponent("mycomponent");
+        assertNotNull(uiComp);
+        Tag uiTag = uiComp.getTag();
+        assertNotNull(uiTag.getAttribute("myattr"));
+        assertNotNull(uiTag.getAttribute("rendered"));
+        assertNotNull(uiTag.getAttribute("transient"));
     }
 
     public void testClassBaseLibraryFromLibraryProject() {
@@ -202,7 +221,7 @@ public class FaceletsLibrarySupportTest extends TestBaseForTestProject {
 
 //        debugLibraries(instance);
 
-        String libNs = LibraryUtils.getCompositeLibraryURL("cclib", instance.isJsf22Plus());
+        String libNs = LibraryUtils.getCompositeLibraryURL("cclib", instance.getJsfVersion());
 
         Library lib = instance.getLibrary(libNs);
         assertNotNull(String.format("Library %s not found!", libNs), lib);
@@ -241,7 +260,7 @@ public class FaceletsLibrarySupportTest extends TestBaseForTestProject {
         assertEquals("cclib2", lib.getDefaultPrefix());
         assertSame(LibraryType.COMPOSITE, lib.getType());
 
-        String ezCompLibraryDefaultNS = LibraryUtils.getCompositeLibraryURL("cclib2", instance.isJsf22Plus());
+        String ezCompLibraryDefaultNS = LibraryUtils.getCompositeLibraryURL("cclib2", instance.getJsfVersion());
         assertEquals(ezCompLibraryDefaultNS, lib.getDefaultNamespace());
         assertEquals(libNs, lib.getNamespace());
         Tag t = cclib.getLibraryDescriptor().getTags().get("cc2");

@@ -121,7 +121,7 @@ public final class RefactoringElement {
     
     /**
      * Shows this element in refactoring preview are
-     * @see org.netbeans.modules.refactoring.api.ui.UI#setComponentForRefactoringPreview
+     * @see org.netbeans.modules.refactoring.spi.ui.UI#setComponentForRefactoringPreview
      */
     public void showPreview() {
         impl.showPreview();

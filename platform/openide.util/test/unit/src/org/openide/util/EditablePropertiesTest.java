@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -290,7 +291,7 @@ public class EditablePropertiesTest extends NbTestCase {
                 + "k3=whatever\n"
                 + "k5=Label\\:\n";
         EditableProperties p = new EditableProperties(true);
-        p.load(new ByteArrayInputStream(text.getBytes("ISO-8859-1")));
+        p.load(new ByteArrayInputStream(text.getBytes(StandardCharsets.ISO_8859_1)));
         assertEquals("A long line. Broken into pieces.", p.get("k1"));
         assertEquals("whatever", p.get("k3"));
         assertEquals("Label:", p.get("k5"));
@@ -351,7 +352,7 @@ public class EditablePropertiesTest extends NbTestCase {
         String expected = "# \\u0158ekni koment teda!" + lsep + "k=v" + lsep;
         assertEquals("Storing non-Latin chars in comments works", expected, getAsString(p));
         p = new EditableProperties(false);
-        p.load(new ByteArrayInputStream(expected.getBytes("ISO-8859-1")));
+        p.load(new ByteArrayInputStream(expected.getBytes(StandardCharsets.ISO_8859_1)));
         assertEquals("Reading non-Latin chars in comments works", Collections.singletonList("# \u0158ekni koment teda!"), Arrays.asList(p.getComment("k")));
         p.setProperty("k", "v2");
         expected = "# \\u0158ekni koment teda!" + lsep + "k=v2" + lsep;

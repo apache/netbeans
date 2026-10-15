@@ -266,11 +266,11 @@ public final class BIEditorSupport extends DataEditorSupport
     }
     
     private static void detachStatusListeners() {
-        Iterator iter = fsToStatusListener.entrySet().iterator();
+        Iterator<Map.Entry<FileSystem, FileStatusListener>> iter = fsToStatusListener.entrySet().iterator();
         while (iter.hasNext()) {
-            Map.Entry entry = (Map.Entry)iter.next();
-            FileSystem fs = (FileSystem)entry.getKey();
-            FileStatusListener fsl = (FileStatusListener)entry.getValue();
+            Map.Entry<FileSystem, FileStatusListener> entry = iter.next();
+            FileSystem fs = entry.getKey();
+            FileStatusListener fsl = entry.getValue();
             fs.removeFileStatusListener(fsl);
         }
         fsToStatusListener.clear();
@@ -312,7 +312,7 @@ public final class BIEditorSupport extends DataEditorSupport
             return false;
         
         boolean oneOrLess = true;
-        Enumeration en = ((CloneableTopComponent)tc).getReference().getComponents();
+        Enumeration<CloneableTopComponent> en = ((CloneableTopComponent)tc).getReference().getComponents();
         if (en.hasMoreElements()) {
             en.nextElement();
             if (en.hasMoreElements())
@@ -666,11 +666,11 @@ public final class BIEditorSupport extends DataEditorSupport
                 for (TopComponent o : closed) {
                     if (o instanceof CloneableTopComponent) {
                         final CloneableTopComponent topComponent = (CloneableTopComponent) o;
-                        Enumeration en = topComponent.getReference().getComponents();
+                        Enumeration<CloneableTopComponent> en = topComponent.getReference().getComponents();
                         if (multiviewTC == topComponent) {
                             if (en.hasMoreElements()) {
                                 // Remember next cloned top component
-                                multiviewTC = (CloneableTopComponent) en.nextElement();
+                                multiviewTC = en.nextElement();
                             } else {
                                 // All cloned top components are closed
                                 notifyClosed();

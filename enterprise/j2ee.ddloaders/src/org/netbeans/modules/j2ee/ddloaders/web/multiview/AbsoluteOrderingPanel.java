@@ -254,7 +254,7 @@ public class AbsoluteOrderingPanel extends SectionInnerPanel implements java.awt
             dObj.modelUpdatedFromUI();
         }
         catch (VersionNotSupportedException e) {
-            Logger.global.log(Level.SEVERE, "refresh of DD model failed", e);
+            Logger.getGlobal().log(Level.SEVERE, "refresh of DD model failed", e);
         }
     }
     

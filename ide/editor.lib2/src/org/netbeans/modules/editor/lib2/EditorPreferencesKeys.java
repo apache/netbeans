@@ -94,6 +94,7 @@ public final class EditorPreferencesKeys {
      * 
      * @deprecated Use Editor Settings and Editor Settings Storage APIs instead.
      */
+    @Deprecated
     public static final String ABBREV_MAP = "abbrev-map"; // NOI18N
 
     /** Map of macro definitions. The second string (value) contains
@@ -106,6 +107,7 @@ public final class EditorPreferencesKeys {
      * @deprecated Not supported anymore. There is no public API for accessing
      *   editor macros.
      */
+    @Deprecated
     public static final String MACRO_MAP = "macro-map"; // NOI18N
 
     /** Map of the action abbreviations. The second string (value) is
@@ -121,6 +123,7 @@ public final class EditorPreferencesKeys {
      * @deprecated Not supported anymore. For code templates use
      *   Editor Settings, Editor Settings Storage and Editor Code Templates APIs.
      */
+    @Deprecated
     public static final String ABBREV_ACTION_MAP = "abbrev-action-map"; // NOI18N
 
     /** Acceptor checking whether abbreviation should be attempted
@@ -170,6 +173,7 @@ public final class EditorPreferencesKeys {
      *   or org.netbeans.editor.MultiKeyBinding instances
      * @deprecated Use Editor Settings and Editor Settings Storage APIs instead.
      */
+    @Deprecated
     public static final String KEY_BINDING_LIST = "key-bindings"; // NOI18N
 
     /** Whether the input-methods should be enabled.
@@ -309,6 +313,7 @@ public final class EditorPreferencesKeys {
     * Values: java.lang.Boolean
     * @deprecated As of 05/09/2001
     */
+    @Deprecated
     public static final String HOME_KEY_COLUMN_ONE = "home-key-column-one"; // NOI18N
 
     /** Finder for finding the next word. If it's not set,
@@ -427,81 +432,89 @@ public final class EditorPreferencesKeys {
      * Values: java.util.List instances
      * @deprecated Use Editor Settings and Editor Settings Storage APIs instead.
      */
+    @Deprecated
     public static final String COLORING_NAME_LIST = "coloring-name-list"; // NOI18N
-
-    /** The list of the token contexts that the kit can use.
-    * The editor-ui uses this setting to determine all the token-ids
-    * and token-categories for the colorings.
-    */
-    public static final String TOKEN_CONTEXT_LIST = "token-context-list"; // NOI18N
 
     /** Suffix added to the coloring settings. The resulting name is used
      * as the name of the setting.
      * @deprecated Use Editor Settings and Editor Settings Storage APIs instead.
      */
+    @Deprecated
     public static final String COLORING_NAME_SUFFIX = "-coloring"; // NOI18N
 
     /** Suffix added to the print coloring settings. The resulting name is used
      * as the name of the setting.
      * @deprecated Use Editor Settings and Editor Settings Storage APIs instead.
      */
+    @Deprecated
     public static final String COLORING_NAME_PRINT_SUFFIX = "-print-coloring"; // NOI18N
 
 
     /** Default coloring for the drawing. 
      * @deprecated Use {@link org.netbeans.api.editor.settings.FontColorNames} instead.
      */
+    @Deprecated
     public static final String DEFAULT_COLORING = "default"; // NOI18N
 
     /** Coloring that will be used for line numbers displayed on the left
      * side on the screen.
      * @deprecated Use {@link org.netbeans.api.editor.settings.FontColorNames} instead.
      */
+    @Deprecated
     public static final String LINE_NUMBER_COLORING = "line-number"; // NOI18N
     
     /** Coloring used for guarded blocks 
      * @deprecated Use {@link org.netbeans.api.editor.settings.FontColorNames} instead.
      */
+    @Deprecated
     public static final String GUARDED_COLORING = "guarded"; // NOI18N
 
     /** Coloring that will be used for code folding icons displayed in editor
      * @deprecated Use {@link org.netbeans.api.editor.settings.FontColorNames} instead.
      */
+    @Deprecated
     public static final String CODE_FOLDING_COLORING = "code-folding"; // NOI18N
 
     /** Coloring that will be used for code folding side bar
      * @deprecated Use {@link org.netbeans.api.editor.settings.FontColorNames} instead.
      */
+    @Deprecated
     public static final String CODE_FOLDING_BAR_COLORING = "code-folding-bar"; // NOI18N
     
     /** Coloring used for selection 
      * @deprecated Use {@link org.netbeans.api.editor.settings.FontColorNames} instead.
      */
+    @Deprecated
     public static final String SELECTION_COLORING = "selection"; // NOI18N
 
     /** Coloring used for highlight search 
      * @deprecated Use {@link org.netbeans.api.editor.settings.FontColorNames} instead.
      */
+    @Deprecated
     public static final String HIGHLIGHT_SEARCH_COLORING = "highlight-search"; // NOI18N
 
     /** Coloring used for incremental search 
      * @deprecated Use {@link org.netbeans.api.editor.settings.FontColorNames} instead.
      */
+    @Deprecated
     public static final String INC_SEARCH_COLORING = "inc-search"; // NOI18N
 
     /** Coloring used for block search
      * @deprecated Use {@link org.netbeans.api.editor.settings.FontColorNames} instead.
      */
+    @Deprecated
     public static final String BLOCK_SEARCH_COLORING = "block-search"; // NOI18N
     
     /** Coloring used for the status bar 
      * @deprecated Use {@link org.netbeans.api.editor.settings.FontColorNames} instead.
      */
+    @Deprecated
     public static final String STATUS_BAR_COLORING = "status-bar"; // NOI18N
 
     /** Coloring used to mark important text in the status bar 
      * @deprecated Use {@link org.netbeans.api.editor.settings.FontColorNames} instead.
      */
+    @Deprecated
     public static final String STATUS_BAR_BOLD_COLORING = "status-bar-bold"; // NOI18N
 
     
@@ -524,7 +537,13 @@ public final class EditorPreferencesKeys {
     public static final String JAVADOC_PREFERRED_SIZE = SimpleValueNames.JAVADOC_PREFERRED_SIZE;
     public static final String POPUP_MENU_ENABLED = SimpleValueNames.POPUP_MENU_ENABLED;
     public static final String SHOW_DEPRECATED_MEMBERS = SimpleValueNames.SHOW_DEPRECATED_MEMBERS;
-    
+
+    /**
+     * Whether the code completion should insert text for the parameters of executable items.
+     * Values: java.lang.Boolean
+     */
+    public static final String COMPLETION_INSERT_TEXT_PARAMETERS = "completion-insert-text-parameters"; // NOI18N
+
     /** List of the action names that should be shown in the popup menu.
     * Null name means separator.
     * Values: java.util.List containing java.lang.String instances
@@ -542,12 +561,14 @@ public final class EditorPreferencesKeys {
      * Coloring used to highlight the row where the caret resides
      * @deprecated Without any replacement.
      */
+    @Deprecated
     public static final String HIGHLIGHT_CARET_ROW_COLORING = "highlight-caret-row"; // NOI18N
 
     /** 
      * Coloring used to highlight the matching brace
      * @deprecated Without any replacement.
      */
+    @Deprecated
     public static final String HIGHLIGHT_MATCH_BRACE_COLORING = "highlight-match-brace"; // NOI18N
 
     /** Delay (milliseconds) after which the matching brace
@@ -555,6 +576,7 @@ public final class EditorPreferencesKeys {
      * if the user holds the arrow key pressed.
      * @deprecated Without any replacement.
      */
+    @Deprecated
     public static final String HIGHLIGHT_MATCH_BRACE_DELAY = "highlight-match-brace-delay"; // NOI18N
 
     /** Whether the fast and simple matching should be used for higlighting
@@ -562,6 +584,7 @@ public final class EditorPreferencesKeys {
      * and string and character constants in the search.
      * @deprecated Without any replacement.
      */
+    @Deprecated
     public static final String CARET_SIMPLE_MATCH_BRACE = "caret-simple-match-brace"; // NOI18N
 
     /** The delay after which the completion window is refreshed.
@@ -589,17 +612,20 @@ public final class EditorPreferencesKeys {
      * Values: java.lang.Boolean
      * @deprecated replaced by FAST_IMPORT_SELECTION
      */
+    @Deprecated
     public static final String FAST_IMPORT_PACKAGE = "fast-import-package"; // NOI18N
     
     /**
      * The Code Completion DB is always updated after mounting a new filesystem.
      * @deprecated Without any replacement.
      */
+    @Deprecated
     public static final String ALWAYS = "pd_always";//NOI18N
     /** 
      * The Code Completion DB is never updated after mounting a new filesystem.
      * @deprecated Without any replacement.
      */
+    @Deprecated
     public static final String NEVER = "pd_never";//NOI18N
     
 }

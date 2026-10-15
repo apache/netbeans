@@ -27,10 +27,12 @@ public class AntSettingsTest extends BasicTestForImport {
         super(testName, "org-apache-tools-ant-module-AntSettings.settings");
     }
     
+    @Override
     public void testPreferencesNodePath() throws Exception {
         assertPreferencesNodePath("/org/apache/tools/ant/module");
     }
     
+    @Override
     public void testPropertyNames() throws Exception {
         assertPropertyNames(new String[] {
             "saveAll",

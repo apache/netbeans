@@ -138,6 +138,14 @@ public class AddServerLocationPanel implements WizardDescriptor.FinishablePanel,
                 File installDir = new File(locationStr).getAbsoluteFile();
                 File payaraDir = getPayaraRoot(installDir);
                 File domainDir = getDefaultDomain(payaraDir);
+                StringBuilder message = new StringBuilder();
+                if (wizardIterator.downloadableValues.isEmpty()) {
+                    message.append(NbBundle.getMessage(
+                            AddServerLocationPanel.class,
+                            "LBL_UnableToConnectPayaraMavenRepo"))
+                            .append(" "); // NOI18N
+                    panel.updateMessageText(message.toString());
+                }
                 if (!installDir.exists()) {
                     if (!isLegalFolder(installDir)) {
                         wizard.putProperty(PROP_ERROR_MESSAGE, NbBundle.getMessage(
@@ -145,8 +153,9 @@ public class AddServerLocationPanel implements WizardDescriptor.FinishablePanel,
                         return false;
                     } else if (canCreate(installDir)) {
                         if (downloadState == AddServerLocationVisualPanel.DownloadState.AVAILABLE) {
-                            panel.updateMessageText(NbBundle.getMessage(AddServerLocationPanel.class,
+                            message.append(NbBundle.getMessage(AddServerLocationPanel.class,
                                     "LBL_NewInstallDirCanBeUsed", getSanitizedPath(installDir)));  // NOI18N
+                            panel.updateMessageText(message.toString());
                             wizard.putProperty(PROP_ERROR_MESSAGE, panel.getStatusText());
                             return false;
                         } else {
@@ -160,51 +169,56 @@ public class AddServerLocationPanel implements WizardDescriptor.FinishablePanel,
                         return false;
                     }
                 } else {
-                    Object candidate = wizardIterator.isValidInstall(installDir, payaraDir, wizard);
-                    if (null == candidate) {
-                        String errMsg = NbBundle.getMessage(AddServerLocationPanel.class, "ERR_InstallationInvalid", // NOI18N
-                                FileUtil.normalizeFile(installDir).getPath());
-                        wizard.putProperty(PROP_ERROR_MESSAGE, errMsg);
-                        return false;
-                    } else if (!isRegisterableDomain(domainDir)) {
-                        wizard.putProperty(PROP_ERROR_MESSAGE, NbBundle.getMessage(
-                                AddServerLocationPanel.class, "ERR_DefaultDomainInvalid", getSanitizedPath(installDir)));
-                    } else {
-                        org.netbeans.modules.payara.common.utils.Util.readServerConfiguration(domainDir, wizardIterator);
-                        // finish initializing the registration data
-                        if (installDir.equals(payaraDir)) {
-                            installDir = payaraDir.getParentFile();
-                        }
-                        wizardIterator.setInstallRoot(installDir.getAbsolutePath());
-                        wizardIterator.setPayaraRoot(payaraDir.getAbsolutePath());
-                        String uri = wizardIterator.formatUri(PayaraInstance.DEFAULT_HOST_NAME, 
-                                wizardIterator.getAdminPort(), wizardIterator.getTargetValue(),
-                                domainDir.getParentFile().getAbsolutePath(), domainDir.getName());
-                        if (-1 == wizardIterator.getHttpPort()) {
-                            wizard.putProperty(PROP_ERROR_MESSAGE,
-                                    NbBundle.getMessage(this.getClass(), "ERR_InvalidDomainData", domainDir.getName())); // NOI18N
+                    try {
+                        Object candidate = wizardIterator.isValidInstall(installDir, payaraDir, wizard);
+                        if (null == candidate) {
+                            String errMsg = NbBundle.getMessage(AddServerLocationPanel.class, "ERR_InstallationInvalid", // NOI18N
+                                    FileUtil.normalizeFile(installDir).getPath());
+                            wizard.putProperty(PROP_ERROR_MESSAGE, errMsg);
                             return false;
-                        }
-                        if (-1 == wizardIterator.getAdminPort()) {
-                            wizard.putProperty(PROP_ERROR_MESSAGE,
-                                    NbBundle.getMessage(this.getClass(), "ERR_InvalidDomainData", domainDir.getName())); // NOI18N
-                            return false;
-                        }
-                        if (wizardIterator.hasServer(uri)) {
-                            wizard.putProperty(PROP_INFO_MESSAGE, NbBundle.getMessage(AddServerLocationPanel.class, "MSG_DefaultDomainExists",
-                                    getSanitizedPath(installDir), PayaraInstance.DEFAULT_DOMAIN_NAME));
-                            wizardIterator.setHttpPort(-1); // FIXME this is a hack - disables finish button
+                        } else if (!isRegisterableDomain(domainDir)) {
+                            wizard.putProperty(PROP_ERROR_MESSAGE, NbBundle.getMessage(
+                                    AddServerLocationPanel.class, "ERR_DefaultDomainInvalid", getSanitizedPath(installDir)));
                         } else {
-                            String statusText = panel.getStatusText();
-                            if (statusText != null && statusText.length() > 0) {
-                                wizard.putProperty(PROP_ERROR_MESSAGE, statusText);
+                            org.netbeans.modules.payara.common.utils.Util.readServerConfiguration(domainDir, wizardIterator);
+                            // finish initializing the registration data
+                            if (installDir.equals(payaraDir)) {
+                                installDir = payaraDir.getParentFile();
+                            }
+                            wizardIterator.setInstallRoot(installDir.getAbsolutePath());
+                            wizardIterator.setPayaraRoot(payaraDir.getAbsolutePath());
+                            String uri = wizardIterator.formatUri(PayaraInstance.DEFAULT_HOST_NAME,
+                                    wizardIterator.getAdminPort(), wizardIterator.getTargetValue(),
+                                    domainDir.getParentFile().getAbsolutePath(), domainDir.getName());
+                            if (-1 == wizardIterator.getHttpPort()) {
+                                wizard.putProperty(PROP_ERROR_MESSAGE,
+                                        NbBundle.getMessage(this.getClass(), "ERR_InvalidDomainData", domainDir.getName())); // NOI18N
                                 return false;
+                            }
+                            if (-1 == wizardIterator.getAdminPort()) {
+                                wizard.putProperty(PROP_ERROR_MESSAGE,
+                                        NbBundle.getMessage(this.getClass(), "ERR_InvalidDomainData", domainDir.getName())); // NOI18N
+                                return false;
+                            }
+                            if (wizardIterator.hasServer(uri)) {
+                                wizard.putProperty(PROP_INFO_MESSAGE, NbBundle.getMessage(AddServerLocationPanel.class, "MSG_DefaultDomainExists",
+                                        getSanitizedPath(installDir), PayaraInstance.DEFAULT_DOMAIN_NAME));
+                                wizardIterator.setHttpPort(-1); // FIXME this is a hack - disables finish button
                             } else {
-                                wizard.putProperty(PROP_ERROR_MESSAGE, null);
-                                wizard.putProperty(PROP_INFO_MESSAGE, NbBundle.getMessage(
-                                        AddServerLocationPanel.class, "MSG_NextForSpecial", candidate)); // NOI18N
+                                String statusText = panel.getStatusText();
+                                if (statusText != null && statusText.length() > 0) {
+                                    wizard.putProperty(PROP_ERROR_MESSAGE, statusText);
+                                    return false;
+                                } else {
+                                    wizard.putProperty(PROP_ERROR_MESSAGE, null);
+                                    wizard.putProperty(PROP_INFO_MESSAGE, NbBundle.getMessage(
+                                            AddServerLocationPanel.class, "MSG_NextForSpecial", candidate)); // NOI18N
+                                }
                             }
                         }
+                    } catch (UnsupportedClassVersionError error) {
+                        wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE,
+                                NbBundle.getMessage(this.getClass(), "ERR_InvalidJDKVersion")); // NOI18N
                     }
                 }
                 // message has already been set, do not clear it here (see above).

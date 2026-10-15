@@ -207,20 +207,20 @@ class ControllerFileMaker {
             fname = FMT_controllerClassName(capitalize(context.getName()));
             // folder name within the classpath. Make 
             String resName = cp.getResourceName(context.getPrimaryFile().getParent());
-            packageName = resName.replaceAll("/", ".");
+            packageName = resName.replace("/", ".");
             targetFolder = context.getFolder();
         } else {
             int dot = cn.lastIndexOf('.');
             if (dot == -1) {
                 fname = cn;
                 String resName = cp.getResourceName(context.getPrimaryFile().getParent());
-                packageName = resName.replaceAll("/", ".");
+                packageName = resName.replace("/", ".");
                 targetFolder = context.getFolder();
             } else {
                 // convert the prefix into package:
                 packageName = cn.substring(0, dot);
                 fname = cn.substring(dot + 1);
-                folderName = packageName.replaceAll("\\.", "/");
+                folderName = packageName.replace(".", "/");
                 FileObject folder;
                 
                 folder = root.getFileObject(folderName);

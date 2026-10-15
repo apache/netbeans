@@ -130,7 +130,7 @@ public final class Services extends ServiceType.Registry implements LookupListen
     * instaces of the objects but only of the types that are already registered
     * to the system by manifest sections.
     *
-    * @param arr list of ServiceTypes 
+    * @param arr0 list of ServiceTypes 
     */
     public synchronized void setServiceTypes (java.util.List/*<ServiceType>*/ arr0) {
         if (arr0 == null) {

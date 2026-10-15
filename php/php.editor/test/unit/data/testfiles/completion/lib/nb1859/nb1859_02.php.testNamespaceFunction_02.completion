@@ -4,3 +4,4 @@ echo \TestNamespace\newTestClass()::|
 ------------------------------------
 METHOD     staticTest()                    [STATIC]   \TestNamespace\TestClass
 VARIABLE   ? $staticTest                   [STATIC]   \TestNamespace\TestClass
+CONSTANT   class \TestNamespace\TestClass  [PUBLIC]   Magic Constant

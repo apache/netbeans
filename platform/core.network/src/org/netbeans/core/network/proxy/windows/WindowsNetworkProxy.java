@@ -30,15 +30,15 @@ import org.netbeans.core.network.proxy.NetworkProxySettings;
  */
 public class WindowsNetworkProxy implements NetworkProxyResolver {
     
-    private final static Logger LOGGER = Logger.getLogger(WindowsNetworkProxy.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(WindowsNetworkProxy.class.getName());
     
-    private final static String HTTP_PROPERTY_NAME = "http="; //NOI18N
-    private final static String HTTPS_PROPERTY_NAME = "https="; //NOI18N
-    private final static String SOCKS_PROPERTY_NAME = "socks="; //NOI18N
+    private static final String HTTP_PROPERTY_NAME = "http="; //NOI18N
+    private static final String HTTPS_PROPERTY_NAME = "https="; //NOI18N
+    private static final String SOCKS_PROPERTY_NAME = "socks="; //NOI18N
     
-    private final static String SPACE = " "; //NOI18N
-    private final static String COLON = ":"; //NOI18N
-    private final static String SEMI_COLON = ";"; //NOI18N
+    private static final String SPACE = " "; //NOI18N
+    private static final String COLON = ":"; //NOI18N
+    private static final String SEMI_COLON = ";"; //NOI18N
     
 
     @Override
@@ -56,12 +56,12 @@ public class WindowsNetworkProxy implements NetworkProxyResolver {
             }
 
             Pointer pacFilePointer = prxCnf.pacFile;
-            if (pacFilePointer != null) {
-                String pacFileUrl = pacFilePointer.getWideString(0);
+            if (pacFilePointer != null || prxCnf.autoDetect) {
+                String pacFileUrl = pacFilePointer != null ? pacFilePointer.getWideString(0) : "http://wpad/wpad.dat"; // NOI18N
                 
                 LOGGER.log(Level.INFO, "Windows system proxy resolver: auto - PAC ({0})", pacFileUrl); //NOI18N                
                 return new NetworkProxySettings(pacFileUrl);
-            }
+            } 
 
             Pointer proxyPointer = prxCnf.proxy;
             Pointer proxyBypassPointer = prxCnf.proxyBypass;

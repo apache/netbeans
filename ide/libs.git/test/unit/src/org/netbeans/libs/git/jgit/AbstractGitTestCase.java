@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import org.eclipse.jgit.dircache.DirCache;
 import org.eclipse.jgit.dircache.DirCacheEntry;
+import org.eclipse.jgit.lib.ConfigConstants;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
@@ -60,6 +61,7 @@ public class AbstractGitTestCase extends NbTestCase {
     private final File repositoryLocation;
     private JGitRepository localRepository;
     protected static final ProgressMonitor NULL_PROGRESS_MONITOR = new NullProgressMonitor ();
+    private String defaultBranchName;
     
     public AbstractGitTestCase (String testName) throws IOException {
         super(testName);
@@ -98,23 +100,15 @@ public class AbstractGitTestCase extends NbTestCase {
     }
 
     protected void write(File file, String str) throws IOException {
-        FileWriter w = null;
-        try {
-            w = new FileWriter(file);
+        try (FileWriter w = new FileWriter(file)) {
             w.write(str);
             w.flush();
-        } finally {
-            if (w != null) {
-                w.close();
-            }
         }
     }
 
     protected String read(File file) throws IOException {
         StringBuilder sb = new StringBuilder();
-        BufferedReader r = null;
-        try {
-            r = new BufferedReader(new FileReader(file));
+        try (BufferedReader r = new BufferedReader(new FileReader(file))) {
             String s = r.readLine();
             if (s != null) {
                 while( true ) {
@@ -124,12 +118,20 @@ public class AbstractGitTestCase extends NbTestCase {
                     sb.append('\n');
                 }
             }
-        } finally {
-            if (r != null) {
-                r.close();
-            }
         }
         return sb.toString();
+    }
+
+    protected boolean containsCRorLF(File file) throws IOException {
+        try (BufferedReader r = new BufferedReader(new FileReader(file))) {
+            int i;
+            while ((i = r.read()) > -1) {
+                if (i == '\n' || i == '\r') {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     protected static void assertStatus (Map<File, GitStatus> statuses, File workDir, File file, boolean tracked, Status headVsIndex, Status indexVsWorking, Status headVsWorking, boolean conflict) {
@@ -170,6 +172,15 @@ public class AbstractGitTestCase extends NbTestCase {
             localRepository = (JGitRepository) f.get(fact);
             client.release();
         }
+        // cache defaut branch name
+        defaultBranchName = repository.getConfig().getString(ConfigConstants.CONFIG_INIT_SECTION, null, ConfigConstants.CONFIG_KEY_DEFAULT_BRANCH);
+        if (defaultBranchName == null) {
+            defaultBranchName = Constants.MASTER;
+        }
+    }
+    
+    protected String getDefaultBranch() {
+        return defaultBranchName;
     }
 
     protected GitClient getClient (File repository) throws GitException {
@@ -219,8 +230,8 @@ public class AbstractGitTestCase extends NbTestCase {
             DirCacheEntry e = cache.getEntry(relativePath);
             assertNotNull(e);
             assertEquals(relativePath, e.getPathString());
-            if (f.lastModified() != e.getLastModified()) {
-                assertEquals((f.lastModified() / 1000) * 1000, (e.getLastModified() / 1000) * 1000);
+            if (f.lastModified() != e.getLastModifiedInstant().toEpochMilli()) {
+                assertEquals((f.lastModified() / 1000) * 1000, (e.getLastModifiedInstant().toEpochMilli() / 1000) * 1000);
             }
             try (InputStream in = new FileInputStream(f)) {
                 assertEquals(e.getObjectId(), repository.newObjectInserter().idFor(Constants.OBJ_BLOB, f.length(), in));

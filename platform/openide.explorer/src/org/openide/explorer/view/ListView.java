@@ -80,7 +80,7 @@ import org.openide.util.actions.CallbackSystemAction;
 
 /** Explorer view to display items in a list.
  * <p>
- * This class is a <q>view</q>
+ * This class is a <em>view</em>
  * to use it properly you need to add it into a component which implements
  * {@link Provider}. Good examples of that can be found 
  * in {@link org.openide.explorer.ExplorerUtils}. Then just use 
@@ -88,7 +88,7 @@ import org.openide.util.actions.CallbackSystemAction;
  * and control its state.
  * </p>
  * <p>
- * There can be multiple <q>views</q> under one container implementing {@link Provider}. Select from
+ * There can be multiple <em>views</em> under one container implementing {@link Provider}. Select from
  * range of predefined ones or write your own:
  * </p>
  * <ul>
@@ -121,10 +121,10 @@ public class ListView extends JScrollPane implements Externalizable {
     private transient ExplorerManager manager;
 
     /** The actual JList list */
-    transient protected JList list;
+    protected transient JList list;
 
     /** model to use */
-    transient protected NodeListModel model;
+    protected transient NodeListModel model;
 
     //
     // listeners
@@ -175,8 +175,8 @@ public class ListView extends JScrollPane implements Externalizable {
     transient ListViewDropSupport dropSupport;
 
     // default DnD actions
-    transient private int allowedDragActions = DnDConstants.ACTION_COPY_OR_MOVE | DnDConstants.ACTION_REFERENCE;
-    transient private int allowedDropActions = DnDConstants.ACTION_COPY_OR_MOVE | DnDConstants.ACTION_REFERENCE;
+    private transient int allowedDragActions = DnDConstants.ACTION_COPY_OR_MOVE | DnDConstants.ACTION_REFERENCE;
+    private transient int allowedDropActions = DnDConstants.ACTION_COPY_OR_MOVE | DnDConstants.ACTION_REFERENCE;
 
     /** True, if the selection listener is attached. */
     transient boolean listenerActive;
@@ -233,7 +233,7 @@ public class ListView extends JScrollPane implements Externalizable {
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeObject(popupAllowed ? Boolean.TRUE : Boolean.FALSE);
         out.writeObject(traversalAllowed ? Boolean.TRUE : Boolean.FALSE);
-        out.writeObject(new Integer(getSelectionMode()));
+        out.writeObject(getSelectionMode());
     }
 
     /*
@@ -815,7 +815,7 @@ public class ListView extends JScrollPane implements Externalizable {
                 }
             };
 
-        final private int heightOfTextField = searchTextField.getPreferredSize().height;
+        private final int heightOfTextField = searchTextField.getPreferredSize().height;
         private int originalScrollMode;
         private JPanel searchpanel = null;
 
@@ -1072,8 +1072,8 @@ public class ListView extends JScrollPane implements Externalizable {
                 startIndex = startIndex % size;
                 startIndex = getNextMatch(prefix, startIndex, Position.Bias.Forward);
 
-                if ((startIndex != -1) && !results.contains(new Integer(startIndex))) {
-                    results.add(Integer.valueOf(startIndex));
+                if ((startIndex != -1) && !results.contains(startIndex)) {
+                    results.add(startIndex);
 
                     String elementName = getModel().getElementAt(startIndex).toString();
 
@@ -1431,7 +1431,7 @@ public class ListView extends JScrollPane implements Externalizable {
                 }
             }
 
-            Node[] nodes = ll.toArray(new Node[ll.size()]);
+            Node[] nodes = ll.toArray(new Node[0]);
 
             // forwarding TO E.M., so we won't listen to its cries for a while
             manager.removePropertyChangeListener(wlpc);

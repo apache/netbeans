@@ -9,7 +9,6 @@ final class TestFianl extends Bla {
     public function test2() {
         
     }
-
 }
 
 ?>

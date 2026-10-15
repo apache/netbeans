@@ -1,0 +1,9 @@
+    case CASE_B = 1; // fatal error: case of non-backed enum must not have a value
+    ----------------
+HINT:Case "CASE_B" of non-backed enum must not have a value
+    case CASE_C; // fatal error: case of backed enum must have a value (string)
+    ------------
+HINT:Case "CASE_C" of backed enum must have a value
+    case CASE_C; // fatal error: case of backed enum must have a value (int)
+    ------------
+HINT:Case "CASE_C" of backed enum must have a value

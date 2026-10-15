@@ -32,9 +32,6 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.php.spi.testing.coverage.Coverage;
 import org.netbeans.modules.php.spi.testing.coverage.FileMetrics;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
 
 public class CloverLogParserTest extends NbTestCase {
 
@@ -101,7 +98,8 @@ public class CloverLogParserTest extends NbTestCase {
         Path path = file.toPath();
         Charset charset = StandardCharsets.UTF_8;
         String content = new String(Files.readAllBytes(path), charset);
-        content = content.replaceAll("%WORKDIR%", getDataDir().getAbsolutePath());
+        content = content.replace("%WORKDIR%", getDataDir().getAbsolutePath());
+        content = content.replace("%SEP%", File.separator);
         Files.write(path, content.getBytes(charset));
     }
 

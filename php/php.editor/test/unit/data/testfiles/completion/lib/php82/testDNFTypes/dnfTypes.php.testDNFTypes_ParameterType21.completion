@@ -1,0 +1,13 @@
+Code completion result for source line:
+$phpdoc1::|publicStaticZMethod(); // null|ClassX|(ClassX&ClassZ)
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicStaticXMethod()           [STATIC]   ClassX
+METHOD     publicStaticZMethod()           [STATIC]   ClassZ
+VARIABLE   (ClassY&ClassZ)|ClassX $public  [STATIC]   ClassX
+VARIABLE   (ClassY&ClassZ)|ClassX $public  [STATIC]   ClassZ
+CONSTANT   IMPLICIT_X_CONSTANT "implicit   [PUBLIC]   ClassX
+CONSTANT   IMPLICIT_Z_CONSTANT "implicit   [PUBLIC]   ClassZ
+CONSTANT   PUBLIC_X_CONSTANT "public cons  [PUBLIC]   ClassX
+CONSTANT   PUBLIC_Z_CONSTANT "public cons  [PUBLIC]   ClassZ
+CONSTANT   class \ClassX                   [PUBLIC]   Magic Constant
+CONSTANT   class \ClassZ                   [PUBLIC]   Magic Constant

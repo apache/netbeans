@@ -32,6 +32,7 @@ public final class IconsUtils {
 
     private static final String PNG_EXTENSION = ".png"; //NOI18N
     private static final String GIF_EXTENSION = ".gif"; //NOI18N
+    private static final String SVG_EXTENSION = ".svg"; //NOI18N
     private static final String ICON_BASE = "org/netbeans/modules/php/editor/resources/"; //NOI18N
     private static final String EMPTY_FILE_ICON_BASE = "org/netbeans/modules/csl/source/resources/icons/emptyfile-icon"; //NOI18N
 
@@ -39,21 +40,16 @@ public final class IconsUtils {
     }
 
     public static ImageIcon getElementIcon(PhpElementKind elementKind, Collection<Modifier> modifiers) {
-        ImageIcon imageIcon;
-        switch (elementKind) {
-            case CLASS: imageIcon = ImageUtilities.loadImageIcon(ICON_BASE + "class" + PNG_EXTENSION, false); //NOI18N
-                break;
-            case IFACE: imageIcon = ImageUtilities.loadImageIcon(ICON_BASE + "interface" + PNG_EXTENSION, false); //NOI18N
-                break;
-            case TRAIT: imageIcon = ImageUtilities.loadImageIcon(ICON_BASE + "trait" + PNG_EXTENSION, false); //NOI18N
-                break;
-            case CONSTANT: imageIcon = ImageUtilities.loadImageIcon(ICON_BASE + "constant" + PNG_EXTENSION, false); //NOI18N
-                break;
-            case FUNCTION: imageIcon = ImageUtilities.loadImageIcon(ICON_BASE + "function" + PNG_EXTENSION, false); //NOI18N
-                break;
-            default: imageIcon = ImageUtilities.loadImageIcon(EMPTY_FILE_ICON_BASE + PNG_EXTENSION, false);
-        }
-        return imageIcon;
+        return switch (elementKind) {
+            case CLASS -> loadClassIcon();
+            case IFACE -> loadInterfaceIcon();
+            case TRAIT -> loadTraitIcon();
+            case ENUM -> loadEnumIcon();
+            case CONSTANT -> loadConstantIcon();
+            case FUNCTION -> loadFunctionIcon();
+            case PROPERTY_HOOK -> loadPropertyHookIcon();
+            default -> ImageUtilities.loadImageIcon(EMPTY_FILE_ICON_BASE + PNG_EXTENSION, false);
+        };
     }
 
     public static ImageIcon getElementIcon(PhpElementKind elementKind) {
@@ -64,4 +60,39 @@ public final class IconsUtils {
         return ImageUtilities.loadImageIcon(ICON_BASE + "error-glyph" + GIF_EXTENSION, false); //NOI18N
     }
 
+    public static ImageIcon loadClassIcon() {
+        return ImageUtilities.loadImageIcon(ICON_BASE + "class" + PNG_EXTENSION, false); // NOI18N
+    }
+
+    public static ImageIcon loadInterfaceIcon() {
+        return ImageUtilities.loadImageIcon(ICON_BASE + "interface" + PNG_EXTENSION, false); // NOI18N
+    }
+
+    public static ImageIcon loadTraitIcon() {
+        return ImageUtilities.loadImageIcon(ICON_BASE + "trait" + PNG_EXTENSION, false); // NOI18N
+    }
+
+    public static ImageIcon loadEnumIcon() {
+        return ImageUtilities.loadImageIcon(ICON_BASE + "enum" + PNG_EXTENSION, false); // NOI18N
+    }
+
+    public static ImageIcon loadFunctionIcon() {
+        return ImageUtilities.loadImageIcon(ICON_BASE + "function" + PNG_EXTENSION, false); // NOI18N
+    }
+
+    public static ImageIcon loadPropertyHookIcon() {
+        return ImageUtilities.loadImageIcon(ICON_BASE + "hook" + SVG_EXTENSION, false); // NOI18N
+    }
+
+    public static ImageIcon loadConstantIcon() {
+        return ImageUtilities.loadImageIcon(ICON_BASE + "constant" + PNG_EXTENSION, false); // NOI18N
+    }
+
+    public static ImageIcon loadEnumCaseIcon() {
+        return ImageUtilities.loadImageIcon(ICON_BASE + "enumCase" + PNG_EXTENSION, false); // NOI18N
+    }
+
+    public static ImageIcon loadKeywordIcon() {
+        return ImageUtilities.loadImageIcon(ICON_BASE + "php16Key" + PNG_EXTENSION, false); // NOI18N
+    }
 }

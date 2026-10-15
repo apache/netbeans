@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import static junit.framework.Assert.*;
+import static junit.framework.TestCase.*;
 import junit.framework.AssertionFailedError;
 
 /**

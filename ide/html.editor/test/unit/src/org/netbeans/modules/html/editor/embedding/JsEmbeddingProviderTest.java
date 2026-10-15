@@ -55,6 +55,8 @@ public class JsEmbeddingProviderTest extends CslTestBase {
                 + "}\n"
                 + "\n"
                 + "");
+
+        assertEmbedding("<script type=\"module\">alert();</script>", "alert();\n");
     }
 
     public void testCustomEL() {

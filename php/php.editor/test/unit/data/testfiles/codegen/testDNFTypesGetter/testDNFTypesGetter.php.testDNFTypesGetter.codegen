@@ -1,0 +1,24 @@
+public  function getDnf1(): (Foo&Bar)|Baz  {
+return $$this->dnf1;
+}
+
+public  function getDnf2(): Baz|(Foo&Bar&Baz)  {
+return $$this->dnf2;
+}
+
+public  function getDnf3(): (Foo&Bar)|(Bar&Baz)  {
+return $$this->dnf3;
+}
+
+public  function getDnf4(): (Foo&Bar)|Foo|(Bar&Baz)  {
+return $$this->dnf4;
+}
+
+public  function getDnf5(): Foo|(Foo&Bar)|Baz  {
+return $$this->dnf5;
+}
+
+public static function getStaticdnf(): (Foo&Bar)|Baz  {
+return self::$$staticdnf;
+}
+

@@ -89,7 +89,6 @@ import static org.netbeans.installer.wizard.components.panels.ErrorMessagePanel.
  
  */
 public class NbCustomizeSelectionDialog extends NbiDialog {
-    /////////////////////////////////////////////////////////////////////////////////
     // Instance
     private final NbWelcomePanel panel;
     private final Runnable callback;
@@ -171,7 +170,7 @@ public class NbCustomizeSelectionDialog extends NbiDialog {
         super.setVisible(visible);
     }
     
-    // private //////////////////////////////////////////////////////////////////////
+    // private
     private void initComponents() {
         //workaround with minimum size for JDK5
         addComponentListener(new ComponentAdapter() {
@@ -181,10 +180,10 @@ public class NbCustomizeSelectionDialog extends NbiDialog {
                         Math.max(getSize().height, getMinimumSize().height));
             }
         });
-        // messageLabel /////////////////////////////////////////////////////////////
+        // messageLabel
         messageLabel = new NbiLabel();
         
-        // componentsTree ///////////////////////////////////////////////////////////
+        // componentsTree
         componentsList = new NbiList();
         componentsList.setCellRenderer(
                 new ComponentsListCellRenderer());
@@ -239,19 +238,19 @@ public class NbCustomizeSelectionDialog extends NbiDialog {
                 KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, false),
                 KEYBOARD_TOGGLE_ACTION_NAME);
         
-        // componentsScrollPane /////////////////////////////////////////////////////
+        // componentsScrollPane
         componentsScrollPane = new NbiScrollPane(componentsList);
         componentsScrollPane.setVerticalScrollBarPolicy(
                 NbiScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);       
 
         messageLabel.setLabelFor(componentsScrollPane);
         
-        // descriptionPane //////////////////////////////////////////////////////////
+        // descriptionPane
         descriptionPane = new NbiTextPane();
         descriptionPane.setBorder(
                 new EmptyBorder(5, 5, 5, 5));        
         
-        // descriptionScrollPane ////////////////////////////////////////////////////
+        // descriptionScrollPane
         descriptionScrollPane = new NbiScrollPane(descriptionPane);
         descriptionScrollPane.setVerticalScrollBarPolicy(
                 NbiScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -259,20 +258,20 @@ public class NbCustomizeSelectionDialog extends NbiDialog {
                 new TitledBorder(FEATURE_DESCRIPTION_TITLE));
         descriptionScrollPane.setPreferredSize(new Dimension(200, 10));     
         
-        // componentPanel ///////////////////////////////////////////////////////////
+        // componentPanel
         componentPanel = new NbiPanel();
         componentPanel.setLayout(new BorderLayout(6, 0));
         componentPanel.add(componentsScrollPane, BorderLayout.CENTER);
         componentPanel.add(descriptionScrollPane, BorderLayout.EAST);
         
-        // sizesLabel ///////////////////////////////////////////////////////////////
+        // sizesLabel
         sizesLabel = new NbiLabel();
         //sizesLabel.setFocusable(true);
         
-        // errorMessageLabel ////////////////////////////////////////////////////////
+        // errorMessageLabel
         errorLabel = new NbiLabel();
         
-        // okButton /////////////////////////////////////////////////////////////////
+        // okButton
         okButton = new NbiButton();
         okButton.addActionListener(new ActionListener() {
             @Override
@@ -281,7 +280,7 @@ public class NbCustomizeSelectionDialog extends NbiDialog {
             }
         });
         
-        // cancelButton /////////////////////////////////////////////////////////////
+        // cancelButton
         cancelButton = new NbiButton();
         cancelButton.addActionListener(new ActionListener() {
             @Override
@@ -290,7 +289,7 @@ public class NbCustomizeSelectionDialog extends NbiDialog {
             }
         });
         
-        // buttonsPanel /////////////////////////////////////////////////////////////
+        // buttonsPanel
         buttonsPanel = new NbiPanel();
         buttonsPanel.add(okButton, new GridBagConstraints(
                 0, 0,                             // x, y
@@ -309,7 +308,7 @@ public class NbCustomizeSelectionDialog extends NbiDialog {
                 new Insets(0, 6, 0, 0),           // padding
                 0, 0));                           // padx, pady - ???)
         
-        // getContentPane() /////////////////////////////////////////////////////////
+        // getContentPane()
         getContentPane().add(messageLabel, new GridBagConstraints(
                 0, 0,                             // x, y
                 1, 1,                             // width, height
@@ -351,7 +350,7 @@ public class NbCustomizeSelectionDialog extends NbiDialog {
                 new Insets(11, 11, 11, 11),       // padding
                 0, 0));                           // padx, pady - ???
         
-        // this /////////////////////////////////////////////////////////////////////
+        // this
         setTitle(panel.getProperty(NbWelcomePanel.CUSTOMIZE_TITLE_PROPERTY));
         setModal(true);
         setDefaultCloseOperation(NbiDialog.DO_NOTHING_ON_CLOSE);
@@ -372,7 +371,7 @@ public class NbCustomizeSelectionDialog extends NbiDialog {
             }
         });
         
-        // l&f-specific tweaks //////////////////////////////////////////////////////
+        // l&f-specific tweaks
         if (UIManager.getLookAndFeel().getID().equals("GTK")) {
             descriptionPane.setOpaque(true);
         }
@@ -653,7 +652,6 @@ public class NbCustomizeSelectionDialog extends NbiDialog {
         return true;
     }
     
-    /////////////////////////////////////////////////////////////////////////////////
     // Inner Classes
     public class ComponentsListModel implements ListModel {
         private final List<RegistryNode> registryNodes;
@@ -840,9 +838,9 @@ public class NbCustomizeSelectionDialog extends NbiDialog {
             return panel;
         }
         
-        // private //////////////////////////////////////////////////////////////////
+        // private
         private void initComponents() {
-            // panel ////////////////////////////////////////////////////////////////
+            // panel
             panel = new RegistryNodePanel();                        
             panel.setLayout(new GridBagLayout());
             panel.setOpaque(false);
@@ -860,7 +858,7 @@ public class NbCustomizeSelectionDialog extends NbiDialog {
 
             });
             
-            // checkBox /////////////////////////////////////////////////////////////
+            // checkBox
             checkBox = new NbiCheckBox();
             checkBox.setOpaque(false);
             
@@ -870,7 +868,7 @@ public class NbCustomizeSelectionDialog extends NbiDialog {
             
             checkBox.setPreferredSize(preferredSize);
             
-            // titleLabel ///////////////////////////////////////////////////////////
+            // titleLabel
             titleLabel = new NbiLabel();
             titleLabel.setFocusable(false);
             titleLabel.setPreferredSize(preferredSize);
@@ -878,7 +876,7 @@ public class NbCustomizeSelectionDialog extends NbiDialog {
             panel.setCheckBox(checkBox);
             panel.setTitleLabel(titleLabel);
             
-            // panel ////////////////////////////////////////////////////////////////
+            // panel
             panel.add(checkBox, new GridBagConstraints(
                     0, 0,                             // x, y
                     1, 1,                             // width, height
@@ -923,7 +921,6 @@ public class NbCustomizeSelectionDialog extends NbiDialog {
         }        
     }
     
-    /////////////////////////////////////////////////////////////////////////////////
     // Constants
     public static final String KEYBOARD_TOGGLE_ACTION_NAME =
             "checkbox.update"; // NOI18N

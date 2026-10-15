@@ -1,0 +1,5 @@
+Code completion result for source line:
+public function childClassMethod(parent|self|null $object, self|par|ent|null $object2): self|parent|null {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    parent                                     null

@@ -130,7 +130,7 @@ public class GroovyProjectUtil {
 
         final ClassPath bootCP = getClassPath(files[0], ClassPath.BOOT);
         final ClassPath compileCP = getClassPath(files[0], ClassPath.COMPILE);
-        final ClassPath sourceCP = ClassPathSupport.createClassPath(dependentRoots.toArray(new URL[dependentRoots.size()]));
+        final ClassPath sourceCP = ClassPathSupport.createClassPath(dependentRoots.toArray(new URL[0]));
         
         return ClasspathInfo.create(bootCP, compileCP, sourceCP);
     }

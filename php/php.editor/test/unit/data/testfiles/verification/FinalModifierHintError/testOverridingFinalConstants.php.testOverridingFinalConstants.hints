@@ -1,0 +1,9 @@
+    const IMPLICIT_PUBLIC_CONST = "child";
+          ---------------------
+HINT:IMPLICIT_PUBLIC_CONST can't override final constant.
+    public const PUBLIC_CONST = "child";
+                 ------------
+HINT:PUBLIC_CONST can't override final constant.
+    protected const PROTECTED_CONST = "child";
+                    ---------------
+HINT:PROTECTED_CONST can't override final constant.

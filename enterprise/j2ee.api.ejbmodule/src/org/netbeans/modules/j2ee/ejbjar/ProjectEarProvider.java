@@ -33,7 +33,7 @@ public class ProjectEarProvider implements EarProvider {
     public org.netbeans.modules.j2ee.api.ejbjar.Ear findEar (org.openide.filesystems.FileObject file) {
         Project project = FileOwnerQuery.getOwner (file);
         if (project != null) {
-            EarProvider provider = (EarProvider) project.getLookup ().lookup (EarProvider.class);
+            EarProvider provider = project.getLookup().lookup(EarProvider.class);
             if (provider != null) {
                 return provider.findEar (file);
             }

@@ -45,8 +45,10 @@
     <codetemplate abbreviation="im"><code><![CDATA[${no-indent}implements ]]></code></codetemplate> 
     <codetemplate abbreviation="iof"><code><![CDATA[${no-indent}instanceof ]]></code></codetemplate> 
     <codetemplate abbreviation="ir"><code><![CDATA[${no-indent}import ]]></code></codetemplate> 
-    <codetemplate abbreviation="le"><code><![CDATA[${no-indent}length]]></code></codetemplate> 
+    <codetemplate abbreviation="le"><code><![CDATA[${no-indent}length]]></code></codetemplate>
+    <codetemplate abbreviation="nse"><code><![CDATA[${no-indent}non-sealed ]]></code></codetemplate>
     <codetemplate abbreviation="pe"><code><![CDATA[${no-indent}protected ]]></code></codetemplate> 
+    <codetemplate abbreviation="pt"><code><![CDATA[${no-indent}permits ]]></code></codetemplate>
     <codetemplate abbreviation="pr"><code><![CDATA[${no-indent}private ]]></code></codetemplate> 
     <codetemplate abbreviation="psf"><code><![CDATA[${no-format}private static final ]]></code></codetemplate> 
     <codetemplate abbreviation="psfi"><code><![CDATA[${no-format}private static final int ]]></code></codetemplate> 
@@ -54,22 +56,32 @@
     <codetemplate abbreviation="psfb"><code><![CDATA[${no-format}private static final boolean ]]></code></codetemplate> 
     <codetemplate abbreviation="pst" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION"><code><![CDATA[printStackTrace();]]></code></codetemplate> 
     <codetemplate abbreviation="pu"><code><![CDATA[${no-indent}public ]]></code></codetemplate> 
+    <codetemplate abbreviation="rc"><code><![CDATA[${no-indent}record ]]></code></codetemplate>
     <codetemplate abbreviation="re"><code><![CDATA[${no-indent}return ]]></code></codetemplate>
+    <codetemplate abbreviation="se"><code><![CDATA[${no-indent}sealed ]]></code></codetemplate>
     <codetemplate abbreviation="serr" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION"><code><![CDATA[System.err.println("${cursor}");]]></code></codetemplate> 
     <codetemplate abbreviation="sout" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION"><code><![CDATA[System.out.println("${cursor}");]]></code></codetemplate> 
     <codetemplate abbreviation="st"><code><![CDATA[${no-indent}static ]]></code></codetemplate> 
-    <codetemplate abbreviation="sw"><code><![CDATA[switch (${var instanceof="java.lang.Enum"}) {
-        case ${val completionInvoke}:
-            ${cursor}
-            break;
-        default:
-            throw new AssertionError();
-    }
-]]></code></codetemplate>
-    <codetemplate abbreviation="cs"><code><![CDATA[case ${what completionInvoke}:
-            ${cursor}
-            break;
-]]></code></codetemplate> 
+    <codetemplate abbreviation="sw" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION" descriptionId="CT_sw">
+        <code>
+<![CDATA[switch (${var instanceof="java.lang.Enum"}) {
+    case ${val completionInvoke}:
+        ${selection}${cursor}
+        break;
+    default:
+        throw new AssertionError();
+}
+]]>
+        </code>
+    </codetemplate>
+    <codetemplate abbreviation="cs" contexts="CASE,SWITCH">
+        <code>
+<![CDATA[case ${what completionInvoke}:
+    ${selection}${cursor}
+    break;
+]]>
+        </code>
+    </codetemplate>
     <codetemplate abbreviation="tw"><code><![CDATA[throw ${exc instanceof="java.lang.Throwable" default="new IllegalStateException()"};]]></code></codetemplate>
     <codetemplate abbreviation="ise"><code><![CDATA[throw new IllegalStateException("${arg}");]]></code></codetemplate>
     <codetemplate abbreviation="iae"><code><![CDATA[throw new IllegalArgumentException("${arg}");]]></code></codetemplate>
@@ -79,11 +91,17 @@
     }
 ]]></code></codetemplate>
     <codetemplate abbreviation="do"><code><![CDATA[do {
-            ${cursor}
-        } while (${expr instanceof="boolean" default="true"});
-    ]]></code></codetemplate>
+        ${cursor}
+    } while (${expr instanceof="boolean" default="true"});
+]]></code></codetemplate>
 
-    <codetemplate abbreviation="sy"><code><![CDATA[${no-indent}synchronized ]]></code></codetemplate> 
+    <codetemplate abbreviation="sy" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION">
+        <code>
+<![CDATA[synchronized (${OBJ instanceof="java.lang.Object" default="this"}) {
+    ${selection}${cursor}
+}]]>
+        </code>
+    </codetemplate>
     <codetemplate abbreviation="tds"><code><![CDATA[Thread.dumpStack();]]></code></codetemplate> 
     <codetemplate abbreviation="th"><code><![CDATA[${no-indent}throws ]]></code></codetemplate> 
     <codetemplate abbreviation="En"><code><![CDATA[${no-indent}Enumeration]]></code></codetemplate> 
@@ -108,7 +126,7 @@
     <codetemplate abbreviation="for" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION">
         <code>
 <![CDATA[for (int ${IDX newVarName default="i"} = 0; ${IDX} < ${MAX default="10"}; ${IDX}++) {
-${selection}${cursor}
+    ${selection}${cursor}
 }
 ]]>
         </code>
@@ -117,8 +135,8 @@ ${selection}${cursor}
     <codetemplate abbreviation="fori" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION">
         <code>
 <![CDATA[for (int ${IDX newVarName default="idx"} = 0; ${IDX} < ${ARR array default="arr"}.length; ${IDX}++) {
-   ${TYPE rightSideType default="Object"} ${ELEM newVarName default="elem"} = ${TYPE_CAST cast default="" editable=false}${ARR}[${IDX}];
-${selection}${cursor}
+    ${TYPE rightSideType default="Object"} ${ELEM newVarName default="elem"} = ${TYPE_CAST cast default="" editable=false}${ARR}[${IDX}];
+    ${selection}${cursor}
 }
 ]]>
         </code>
@@ -126,8 +144,8 @@ ${selection}${cursor}
     <codetemplate abbreviation="forc" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION">
         <code>
 <![CDATA[for (${IT_TYPE rightSideType type="java.util.Iterator" default="Iterator" editable=false} ${IT newVarName default="it"} = ${COL instanceof="java.util.Collection" default="col"}.iterator(); ${IT}.hasNext();) {
-   ${TYPE rightSideType default="Object"} ${ELEM newVarName default="elem"} = ${TYPE_CAST cast default="" editable=false}${IT}.next();
-${selection}${cursor}
+    ${TYPE rightSideType default="Object"} ${ELEM newVarName default="elem"} = ${TYPE_CAST cast default="" editable=false}${IT}.next();
+    ${selection}${cursor}
 }
 ]]>
         </code>
@@ -135,8 +153,8 @@ ${selection}${cursor}
     <codetemplate abbreviation="forl" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION">
         <code>
 <![CDATA[for (int ${IDX newVarName default="idx"} = 0; ${IDX} < ${LIST instanceof="java.util.List" default="lst"}.size(); ${IDX}++) {
-   ${TYPE rightSideType default="Object"} ${ELEM newVarName default="elem"} = ${TYPE_CAST cast default="" editable=false}${LIST}.get(${IDX});
-${selection}${cursor}
+    ${TYPE rightSideType default="Object"} ${ELEM newVarName default="elem"} = ${TYPE_CAST cast default="" editable=false}${LIST}.get(${IDX});
+    ${selection}${cursor}
 }
 ]]>
         </code>
@@ -144,8 +162,8 @@ ${selection}${cursor}
     <codetemplate abbreviation="forv" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION">
         <code>
 <![CDATA[for (int ${IDX newVarName default="idx"} = 0; ${IDX} < ${VECTOR instanceof="java.util.Vector" default="vct"}.size(); ${IDX}++) {
-   ${TYPE rightSideType default="Object"} ${ELEM newVarName default="elem"} = ${TYPE_CAST cast default="" editable=false}${VECTOR}.elementAt(${IDX});
-${selection}${cursor}
+    ${TYPE rightSideType default="Object"} ${ELEM newVarName default="elem"} = ${TYPE_CAST cast default="" editable=false}${VECTOR}.elementAt(${IDX});
+    ${selection}${cursor}
 }
 ]]>
         </code>
@@ -153,7 +171,7 @@ ${selection}${cursor}
     <codetemplate abbreviation="fore" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION">
         <code>
 <![CDATA[for (${TYPE iterableElementType default="Object" editable=false} ${ELEM newVarName default="elem" ordering=2} : ${ITER iterable default="col" ordering=1}) {
-${selection}${cursor}
+    ${selection}${cursor}
 }
 ]]>
         </code>
@@ -162,7 +180,7 @@ ${selection}${cursor}
         <code>
 <![CDATA[for (${STR_TOK type="java.util.StringTokenizer" default="StringTokenizer" editable=false} ${TOKENIZER newVarName} = new ${STR_TOK}(${STRING instanceof="java.lang.String"}); ${TOKENIZER}.hasMoreTokens();) {
     String ${TOKEN default="token"} = ${TOKENIZER}.nextToken();
-${selection}${cursor}
+    ${selection}${cursor}
 }
 ]]>
         </code>
@@ -170,8 +188,8 @@ ${selection}${cursor}
     <codetemplate abbreviation="inst" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION">
         <code>
 <![CDATA[if (${EXP instanceof="java.lang.Object" default="exp"} instanceof ${TYPE default="Object"}) {
-   ${TYPE} ${VAR newVarName default="obj"} = (${TYPE})${EXP};
-   ${cursor}
+    ${TYPE} ${VAR newVarName default="obj"} = (${TYPE})${EXP};
+    ${cursor}
 }
 ]]>
         </code>
@@ -184,8 +202,8 @@ ${selection}${cursor}
     <codetemplate abbreviation="whilen" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION">
         <code>
 <![CDATA[while (${ENUM instanceof="java.util.Enumeration" default="en"}.hasMoreElements()) {
-   ${TYPE rightSideType default="Object"} ${ELEM newVarName default="elem"} = ${TYPE_CAST cast default="" editable=false} ${ENUM}.nextElement();
-${selection}${cursor}
+    ${TYPE rightSideType default="Object"} ${ELEM newVarName default="elem"} = ${TYPE_CAST cast default="" editable=false} ${ENUM}.nextElement();
+    ${selection}${cursor}
 }
 ]]>
         </code>
@@ -193,8 +211,8 @@ ${selection}${cursor}
     <codetemplate abbreviation="whileit" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION">
         <code>
 <![CDATA[while (${IT instanceof="java.util.Iterator" default="it"}.hasNext()) {
-   ${TYPE rightSideType default="Object"} ${ELEM newVarName default="elem"} = ${TYPE_CAST cast default="" editable=false} ${IT}.next();
-${selection}${cursor}
+    ${TYPE rightSideType default="Object"} ${ELEM newVarName default="elem"} = ${TYPE_CAST cast default="" editable=false} ${IT}.next();
+    ${selection}${cursor}
 }
 ]]>
         </code>
@@ -202,7 +220,7 @@ ${selection}${cursor}
     <codetemplate abbreviation="iff" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION" descriptionId="CT_iff">
         <code>
 <![CDATA[if (${EXP instanceof="boolean" default="true"}) {
-${selection}${cursor}
+    ${selection}${cursor}
 }
 ]]>
         </code>
@@ -210,7 +228,7 @@ ${selection}${cursor}
     <codetemplate abbreviation="ifelse" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION" descriptionId="CT_ifelse">
         <code>
 <![CDATA[if (${EXP instanceof="boolean" default="true"}) {
-${selection}${cursor}
+    ${selection}${cursor}
 } else {
 }
 ]]>
@@ -219,7 +237,7 @@ ${selection}${cursor}
     <codetemplate abbreviation="whilexp" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION">
         <code>
 <![CDATA[while (${EXP instanceof="boolean" default="true"}) { 
-${selection}${cursor}
+    ${selection}${cursor}
 }
 ]]>
         </code>
@@ -227,7 +245,7 @@ ${selection}${cursor}
     <codetemplate abbreviation="dowhile" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION">
         <code>
 <![CDATA[do { 
-${selection}${cursor}
+    ${selection}${cursor}
 } while (${EXP instanceof="boolean" default="true"});
 ]]>
         </code>
@@ -235,18 +253,38 @@ ${selection}${cursor}
     <codetemplate abbreviation="runn" contexts="BLOCK,CASE,LABELED_STATEMENT">
         <code>
 <![CDATA[${RUNN_TYPE type="java.lang.Runnable" default="Runnable" editable=false} ${RUNN newVarName default="r"} = new ${RUNN_TYPE}() {
-   public void run() {
-${selection}${cursor}
-   }
+    public void run() {
+        ${selection}${cursor}
+    }
 };
 ]]>
         </code>
     </codetemplate>
-    <codetemplate abbreviation="trycatch" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION">
+    <codetemplate abbreviation="trycatch" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION" descriptionId="CT_trycatch">
         <code>
 <![CDATA[try {
-${selection}${cursor}
-} ${CATCH_STMTS uncaughtExceptionCatchStatements default="catch (Exception e) {}" editable=false}
+    ${selection}${cursor}
+} ${CATCH_STMTS uncaughtExceptionCatchStatements default="catch (Exception e) {
+}" editable=false}
+]]>
+        </code>
+    </codetemplate>
+    <codetemplate abbreviation="trycatchfin" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION" descriptionId="CT_trycatchfin">
+        <code>
+<![CDATA[try {
+    ${selection}${cursor}
+} ${CATCH_STMTS uncaughtExceptionCatchStatements default="catch (Exception e) {
+}" editable=false} finally {
+}
+]]>
+        </code>
+    </codetemplate>
+    <codetemplate abbreviation="tryfin" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION" descriptionId="CT_tryfin">
+        <code>
+<![CDATA[try {
+    ${selection}${cursor}
+} finally {
+}
 ]]>
         </code>
     </codetemplate>
@@ -255,11 +293,29 @@ ${selection}${cursor}
         <![CDATA[${TYPE default="Object"} ${OBJ newVarName default="obj"} = new ${TYPE}(${cursor});]]>
         </code>
     </codetemplate>
+
+    <codetemplate abbreviation="vm" contexts="CLASS">
+        <code>
+<![CDATA[void main() {
+    ${cursor}
+}
+]]>
+        </code>
+    </codetemplate>
+
+    <codetemplate abbreviation="svm" contexts="CLASS">
+        <code>
+<![CDATA[static void main() {
+    ${cursor}
+}
+]]>
+        </code>
+    </codetemplate>
         
     <codetemplate abbreviation="psvm" contexts="CLASS">
         <code>
 <![CDATA[public static void main(String[] args) {
-   ${cursor}
+    ${cursor}
 }
 ]]>
         </code>
@@ -268,7 +324,7 @@ ${selection}${cursor}
     <codetemplate abbreviation="main" contexts="CLASS">
         <code>
 <![CDATA[public static void main(String[] args) {
-   ${cursor}
+    ${cursor}
 }
 ]]>
         </code>
@@ -300,7 +356,7 @@ ${selection}${cursor}
     <!-- Arrays and List conversion and sorting -->
     <codetemplate abbreviation="2ar">
          <code>
- <![CDATA[${clazz}[] ${var newVarName default="arr"} = ${typeCast cast default="" editable=false} ${coll instanceof="java.util.Collection"}.toArray(new ${clazz}[${coll}.size()]);
+ <![CDATA[${clazz}[] ${var newVarName default="arr"} = ${typeCast cast default="" editable=false} ${coll instanceof="java.util.Collection"}.toArray(new ${clazz}[0]);
  ]]>
          </code>
      </codetemplate>
@@ -322,7 +378,7 @@ ${cursor}]]></code></codetemplate>
 <![CDATA[for (${entryType iterableElementType default="Map.Entry<Object, Object>" editable=false} ${entry newVarName default="en"} : ${map instanceof="java.util.Map" default="m"}.entrySet()) {
     ${KeyType rightSideType default="Object"} ${key newVarName default="key"} = ${entry}.getKey();
     ${ValType rightSideType default="Object"} ${val newVarName default="val"} = ${entry}.getValue();
-${selection}${cursor}
+    ${selection}${cursor}
 }]]>
          </code>
      </codetemplate>
@@ -341,11 +397,21 @@ ${selection}${cursor}
      <codetemplate abbreviation="sb"><code><![CDATA[${stype type="java.util.StringBuilder" default="StringBuilder" editable="false"} ${var newVarName default="sb"} = new ${stype}(${str instanceof="java.lang.String" default=""});
     ${cursor}]]></code></codetemplate>
 
+    <!-- Instantiating common collections -->
+    <codetemplate abbreviation="lof"><code><![CDATA[${no-indent}${stype type="java.util.List" default="List" editable="false"}.of(${args default=""})${cursor}]]></code></codetemplate>
+    <codetemplate abbreviation="mof"><code><![CDATA[${no-indent}${stype type="java.util.Map" default="Map" editable="false"}.of(${args default=""})${cursor}]]></code></codetemplate>
+    <codetemplate abbreviation="sof"><code><![CDATA[${no-indent}${stype type="java.util.Set" default="Set" editable="false"}.of(${args default=""})${cursor}]]></code></codetemplate>
+    <codetemplate abbreviation="vlof"><code><![CDATA[var ${list list} = ${stype type="java.util.List" default="List" editable="false"}.of(${args default=""});${cursor}]]></code></codetemplate>
+    <codetemplate abbreviation="vmof"><code><![CDATA[var ${map map} = ${stype type="java.util.Map" default="Map" editable="false"}.of(${args default=""});${cursor}]]></code></codetemplate>
+    <codetemplate abbreviation="vsof"><code><![CDATA[var ${set set} = ${stype type="java.util.Set" default="Set" editable="false"}.of(${args default=""});${cursor}]]></code></codetemplate>
+
     <!-- #167824 -->
     <codetemplate abbreviation="in"><code><![CDATA[${no-indent}interface ]]></code></codetemplate>
 
      <!-- Miscellaneous common code patterns -->
      <codetemplate abbreviation="rn"><code><![CDATA[${no-indent}return null;]]></code></codetemplate>
+     <codetemplate abbreviation="rt"><code><![CDATA[${no-indent}return true;]]></code></codetemplate>
+     <codetemplate abbreviation="rf"><code><![CDATA[${no-indent}return false;]]></code></codetemplate>
      <codetemplate abbreviation="f"><code><![CDATA[${no-indent}final ]]></code></codetemplate>
      <codetemplate abbreviation="ps"><code><![CDATA[${no-format}private static ]]></code></codetemplate>
      <codetemplate abbreviation="Ps"><code><![CDATA[${no-format}public static ]]></code></codetemplate>
@@ -453,6 +519,27 @@ ${selection}${cursor}
         }
      }
      ]]></code></codetemplate>
+
+    <!-- Record generation -->
+
+    <codetemplate abbreviation="Prec"><code><![CDATA[${no-format}public record ${Type}(${cursor}) {}]]></code></codetemplate>
+    <codetemplate abbreviation="Preci"><code><![CDATA[${no-format}public record ${Type}(${cursor}) implements ${classVar editable="false" currClassName default="getClass()"} {}]]></code></codetemplate>
+    <codetemplate abbreviation="prec"><code><![CDATA[${no-format}private record ${Type}(${cursor}) {}]]></code></codetemplate>
+    <codetemplate abbreviation="preci"><code><![CDATA[${no-format}private record ${Type}(${cursor}) implements ${classVar editable="false" currClassName default="getClass()"} {}]]></code></codetemplate>
+    <codetemplate abbreviation="rec"><code><![CDATA[${no-format}record ${Type}(${cursor}) {}]]></code></codetemplate>
+    <codetemplate abbreviation="reci"><code><![CDATA[${no-format}record ${Type}(${cursor}) implements ${classVar editable="false" currClassName default="getClass()"} {}]]></code></codetemplate>
+
+    <!-- Sealed Interfaces generation -->
+
+    <codetemplate abbreviation="psin"><code><![CDATA[public sealed interface ${Type} {
+    ${cursor}
+}]]></code>
+    </codetemplate>
+
+    <codetemplate abbreviation="psinp"><code><![CDATA[public sealed interface ${Type} permits ${cursor} {
+}]]></code>
+    </codetemplate>
+
     <codetemplate abbreviation="if" descriptionId="CT_iff">
         <code>
 <![CDATA[if (${EXP instanceof="boolean" default="true"}) {
@@ -478,7 +565,7 @@ ${selection}${cursor}
 ]]>
         </code>
     </codetemplate>
-     <codetemplate abbreviation="ap"><code><![CDATA[${sb instanceof="java.lang.StringBuilder" default="sb"}.append(${EXP instanceof="<any>" default=""exp""});
+    <codetemplate abbreviation="ap"><code><![CDATA[${sb instanceof="java.lang.StringBuilder" default="sb"}.append(${EXP instanceof="<any>" default=""exp""});
 ${cursor}]]></code></codetemplate>
 
      <codetemplate abbreviation="apo"><code><![CDATA[if (${sb instanceof="java.lang.StringBuilder" default="sb"}.length() > 0) {

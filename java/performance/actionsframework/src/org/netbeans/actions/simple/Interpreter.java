@@ -19,9 +19,12 @@
 
 package org.netbeans.actions.simple;
 
+import jakarta.websocket.ContainerProvider;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
-import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,13 +34,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 import java.util.StringTokenizer;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
-import org.netbeans.actions.spi.ActionProvider;
-import org.netbeans.actions.spi.ContainerProvider;
+import org.netbeans.spi.project.ActionProvider;
+import org.openide.util.ImageUtilities;
 import org.openide.xml.XMLUtil;
 import org.xml.sax.*;
 import org.xml.sax.helpers.XMLReaderAdapter;
@@ -253,9 +255,9 @@ public class Interpreter implements org.xml.sax.DocumentHandler {
             int idx = s.lastIndexOf("/");
             String urlString = s.substring(0, idx) + "/" + partialPath;
             try {
-                URL url = new URL (urlString);
-                return new ImageIcon(Toolkit.getDefaultToolkit().getImage(url));
-            } catch (Exception e) {
+                Image image = ImageUtilities.loadImage(new URI(urlString));
+                return image == null ? new ImageIcon() : ImageUtilities.image2Icon(image);
+            } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
         }
@@ -655,7 +657,7 @@ public class Interpreter implements org.xml.sax.DocumentHandler {
             return null;
         }
     }
-    private static final String ATT_VALUE="value";;
+    private static final String ATT_VALUE="value";
     private String findKeyValue(AttributeList l) throws SAXException {
         String result = l.getValue(ATT_VALUE);
         if (result != null) {

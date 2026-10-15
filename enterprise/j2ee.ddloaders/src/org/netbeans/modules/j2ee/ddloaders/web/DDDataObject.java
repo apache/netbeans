@@ -77,7 +77,7 @@ public class DDDataObject extends  DDMultiViewDataObject
     implements DDChangeListener, ChangeListener, PropertyChangeListener {
     private transient WebApp webApp;
     private transient FileObject srcRoots[];
-    protected transient final static RequestProcessor RP = new RequestProcessor("XML Parsing");   // NOI18N
+    protected static final transient RequestProcessor RP = new RequestProcessor("XML Parsing");   // NOI18N
     protected boolean changedFromUI;
 
     private static final long serialVersionUID = 8857563089355069362L;
@@ -124,8 +124,13 @@ public class DDDataObject extends  DDMultiViewDataObject
 
     // FIXME this is bit strange as we reference other mime types here
     @MultiViewElement.Registration(
-        mimeType={DDDataLoader.REQUIRED_MIME_1, DDWeb25DataLoader.REQUIRED_MIME, DDWeb30DataLoader.REQUIRED_MIME,
-            DDWebFragment30DataLoader.REQUIRED_MIME, DDWeb30DataLoader.REQUIRED_MIME_31, DDWebFragment30DataLoader.REQUIRED_MIME_31},
+        mimeType={DDDataLoader.REQUIRED_MIME_1, DDWeb25DataLoader.REQUIRED_MIME, 
+                DDWeb30DataLoader.REQUIRED_MIME, DDWebFragment30DataLoader.REQUIRED_MIME, 
+                DDWeb30DataLoader.REQUIRED_MIME_31, DDWebFragment30DataLoader.REQUIRED_MIME_31, 
+                DDWeb40DataLoader.REQUIRED_MIME_40, DDWebFragment40DataLoader.REQUIRED_MIME_40, 
+                DDWeb50DataLoader.REQUIRED_MIME_50, DDWebFragment50DataLoader.REQUIRED_MIME_50, 
+                DDWeb60DataLoader.REQUIRED_MIME_60, DDWebFragment60DataLoader.REQUIRED_MIME_60,
+                DDWeb60DataLoader.REQUIRED_MIME_61, DDWebFragment60DataLoader.REQUIRED_MIME_61},
         iconBase="org/netbeans/modules/j2ee/ddloaders/web/resources/DDDataIcon.gif",
         persistenceType=TopComponent.PERSISTENCE_ONLY_OPENED,
         preferredID="multiview_xml",
@@ -170,8 +175,7 @@ public class DDDataObject extends  DDMultiViewDataObject
                         operationListener);
             }
         }
-        srcRoots = (FileObject[]) srcRootList
-                .toArray(new FileObject[srcRootList.size()]);
+        srcRoots = (FileObject[]) srcRootList.toArray(new FileObject[0]);
     }
 
     private String getPackageName (FileObject clazz) {

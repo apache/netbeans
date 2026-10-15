@@ -259,7 +259,7 @@ public class TreeNodeAdapter implements TreeNode, DocumentElementListener {
             String cdataStart = "<![CDATA[";    //NOI18N
             String cdataEnd = "]]";             //NOI18N
             if(documentText.length() > 0 && documentText.contains(cdataStart))
-                documentText = documentText.substring(cdataStart.length(), documentText.length()).trim();
+                documentText = documentText.substring(cdataStart.length()).trim();
             if(documentText.length() > 0 && documentText.contains(cdataEnd))
                 documentText = documentText.substring(0, documentText.indexOf(cdataEnd)).trim();
         } catch(Exception e) {

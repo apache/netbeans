@@ -53,6 +53,8 @@ public class CatalogCustomizer extends javax.swing.JPanel implements Customizer 
         
         selectButton.setMnemonic(MNE_file().charAt(0));
         selectButton.getAccessibleContext().setAccessibleDescription(ACSD_file());
+
+        updateValidity();
     }
 
     /** This method is called from within the constructor to
@@ -69,6 +71,7 @@ public class CatalogCustomizer extends javax.swing.JPanel implements Customizer 
         selectButton = new javax.swing.JButton();
         preferCheckBox = new javax.swing.JCheckBox();
         descTextArea = new javax.swing.JTextArea();
+        warningLabel = new javax.swing.JLabel();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -117,7 +120,7 @@ public class CatalogCustomizer extends javax.swing.JPanel implements Customizer 
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(12, 12, 0, 11);
+        gridBagConstraints.insets = new java.awt.Insets(6, 12, 6, 12);
         add(preferCheckBox, gridBagConstraints);
 
         descTextArea.setEditable(false);
@@ -132,13 +135,25 @@ public class CatalogCustomizer extends javax.swing.JPanel implements Customizer 
         descTextArea.setEnabled(false);
         descTextArea.setOpaque(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        gridBagConstraints.gridheight = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(12, 0, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(6, 0, 0, 0);
         add(descTextArea, gridBagConstraints);
+
+        warningLabel.setForeground(new java.awt.Color(255, 0, 0));
+        warningLabel.setText(" ");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(6, 12, 6, 12);
+        add(warningLabel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void selectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectButtonActionPerformed
@@ -148,6 +163,7 @@ public class CatalogCustomizer extends javax.swing.JPanel implements Customizer 
             String location = f.toURL().toExternalForm();
             locationTextField.setText(location);
             model.setLocation(location);
+            updateValidity();
         } catch (MalformedURLException ex) {
             // ignore
         }
@@ -162,11 +178,13 @@ public class CatalogCustomizer extends javax.swing.JPanel implements Customizer 
     private void locationTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_locationTextFieldFocusLost
         //if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug("FocusLost-setting location: " + locationTextField.getText()); // NOI18N
         model.setLocation(locationTextField.getText());
+        updateValidity();
     }//GEN-LAST:event_locationTextFieldFocusLost
 
     private void locationTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_locationTextFieldActionPerformed
         //if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug("ActionPerformed-setting location: " + locationTextField.getText()); // NOI18N
         model.setLocation(locationTextField.getText());
+        updateValidity();
     }//GEN-LAST:event_locationTextFieldActionPerformed
 
     /**
@@ -180,12 +198,17 @@ public class CatalogCustomizer extends javax.swing.JPanel implements Customizer 
         model = (Catalog) peer;        
         locationTextField.setText(model.getLocation());
         preferCheckBox.setSelected(model.isPreferPublic());
+        updateValidity();
     }    
 
     public void addPropertyChangeListener(java.beans.PropertyChangeListener p1) {
     }
     
     public void removePropertyChangeListener(java.beans.PropertyChangeListener p1) {
+    }
+
+    private void updateValidity() {
+        warningLabel.setText((model != null && ! model.isValid()) ? TEXT_catalog_not_valid() : " ");
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -194,6 +217,7 @@ public class CatalogCustomizer extends javax.swing.JPanel implements Customizer 
     private javax.swing.JTextField locationTextField;
     private javax.swing.JCheckBox preferCheckBox;
     private javax.swing.JButton selectButton;
+    private javax.swing.JLabel warningLabel;
     // End of variables declaration//GEN-END:variables
 
 }

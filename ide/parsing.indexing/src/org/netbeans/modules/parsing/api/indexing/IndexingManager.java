@@ -77,7 +77,7 @@ public final class IndexingManager {
      * job will take.
      *
      * @param root The common parent folder of the files that should be reindexed.
-     * @param filesOrFolders The files to reindex. Can be <code>null</code> or an empty
+     * @param files The files to reindex. Can be <code>null</code> or an empty
      *   collection in which case <b>all</b> files under the <code>root</code> will
      *   be reindexed.
      */
@@ -102,7 +102,7 @@ public final class IndexingManager {
      * job will take.
      *
      * @param root The common parent folder of the files that should be reindexed.
-     * @param filesOrFolders The files to reindex. Can be <code>null</code> or an empty
+     * @param files The files to reindex. Can be <code>null</code> or an empty
      *   collection in which case <b>all</b> files under the <code>root</code> will
      *   be reindexed.
      * @param fullRescan If <code>true</code> no timestamps check will be done
@@ -138,7 +138,7 @@ public final class IndexingManager {
      * should be preferred.
      *
      * @param root The common parent folder of the files that should be reindexed.
-     * @param filesOrFolders The files to reindex. Can be <code>null</code> or an empty
+     * @param files The files to reindex. Can be <code>null</code> or an empty
      *   collection in which case <b>all</b> files under the <code>root</code> will
      *   be reindexed.
      * @param fullRescan If <code>true</code> no timestamps check will be done
@@ -165,7 +165,7 @@ public final class IndexingManager {
      * job will take.
      *
      * @param root The common parent folder of the files that should be reindexed.
-     * @param filesOrFolders The files to reindex. Can be <code>null</code> or an empty
+     * @param files The files to reindex. Can be <code>null</code> or an empty
      *   collection in which case <b>all</b> files under the <code>root</code> will
      *   be reindexed.
      */
@@ -183,7 +183,7 @@ public final class IndexingManager {
      * job will take.
      *
      * @param root The common parent folder of the files that should be reindexed.
-     * @param filesOrFolders The files to reindex. Can be <code>null</code> or an empty
+     * @param files The files to reindex. Can be <code>null</code> or an empty
      *   collection in which case <b>all</b> files under the <code>root</code> will
      *   be reindexed.
      * @param fullRescan If <code>true</code> no timestamps check will be done
@@ -244,8 +244,7 @@ public final class IndexingManager {
      *   indexers will be refreshed (ie. all types of indexers will used,
      *   not just <code>CustomIndexers</code>).
      *
-     * @since 1.8
-     * @since 
+     * @since 1.8 
      */
     public void refreshAllIndices(String indexerName) {
         if (indexerName != null) {

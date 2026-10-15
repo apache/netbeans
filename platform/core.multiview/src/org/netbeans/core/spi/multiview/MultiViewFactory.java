@@ -55,12 +55,12 @@ public final class MultiViewFactory {
      * A utility singleton instance of MultiViewElement that does nothing.
      */
     
-    public final static MultiViewElement BLANK_ELEMENT = new Blank();
+    public static final MultiViewElement BLANK_ELEMENT = new Blank();
     /**
      * a utility noop action instance to be used when no special handling is
      * required in createUnsafeCloseState() method.
      */
-    public final static Action NOOP_CLOSE_ACTION = new NoopAction();
+    public static final Action NOOP_CLOSE_ACTION = new NoopAction();
     
     
 
@@ -309,9 +309,9 @@ public final class MultiViewFactory {
             }
             
             StringBuilder sb = new StringBuilder();
-            Iterator it = elems.values().iterator();
+            Iterator<CloseOperationState> it = elems.values().iterator();
             while (it.hasNext()) {
-                CloseOperationState state = (CloseOperationState)it.next();
+                CloseOperationState state = it.next();
                 if (sb.length() > 0) {
                     sb.append(" ");
                 }

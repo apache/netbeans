@@ -352,7 +352,7 @@ public final class CommonTasksSupport {
 
     private static class CommandRunner implements Callable<Integer> {
 
-        private final static Logger log = org.netbeans.modules.nativeexecution.support.Logger.getInstance();
+        private static final Logger log = org.netbeans.modules.nativeexecution.support.Logger.getInstance();
         private final ExecutionEnvironment execEnv;
         private final String cmd;
         private final String[] args;

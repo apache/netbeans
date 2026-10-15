@@ -1,0 +1,4 @@
+Code completion result for source line:
+$arrow = #[Attr1(str|ing: Attr1::class)] fn(#[Attr1(int: 100)] int $int) => 100;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PARAMETER  string:                                    Parameter Name

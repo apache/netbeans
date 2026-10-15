@@ -64,7 +64,8 @@ import org.openide.util.Exceptions;
 @LazyActionsManagerListener.Registration(path="netbeans-JPDASession/Java")
 public class StepIntoJSHandler extends LazyActionsManagerListener implements PropertyChangeListener {
     
-    private static final String SCRIPT_ACCESS_CLASS = "jdk.nashorn.internal.runtime.ScriptFunctionData";    // NOI18N
+    private static final String SCRIPT_ACCESS_CLASS_JDK = "jdk.nashorn.internal.runtime.ScriptFunctionData";    // NOI18N
+    private static final String SCRIPT_ACCESS_CLASS_EXT = "org.openjdk.nashorn.internal.runtime.ScriptFunctionData";    // NOI18N
     private static final String[] SCRIPT_ACCESS_METHODS = { "invoke", "construct" };        // NOI18N
     // New notifyInvoke API:
     private static final String SCRIPT_NOTIFY_INVOKE_METHOD = "notifyInvoke";   // NOI18N
@@ -83,20 +84,25 @@ public class StepIntoJSHandler extends LazyActionsManagerListener implements Pro
         debugger.addPropertyChangeListener(JPDADebugger.PROP_CURRENT_CALL_STACK_FRAME, new CurrentSFTracker());
         ScriptBPListener sbl = new ScriptBPListener();
         int mbn = SCRIPT_ACCESS_METHODS.length;
-        scriptAccessBPs = new MethodBreakpoint[mbn];
-        for (int i = 0; i < mbn; i++) {
-            String method = SCRIPT_ACCESS_METHODS[i];
-            MethodBreakpoint mb = MethodBreakpoint.create(SCRIPT_ACCESS_CLASS, method);
-            mb.setHidden(true);
-            mb.setSuspend(debugger.getSuspend());
-            mb.setSession(debugger);
-            mb.disable();
-            mb.addJPDABreakpointListener(sbl);
-            DebuggerManager.getDebuggerManager().addBreakpoint(mb);
-            scriptAccessBPs[i] = mb;
+        scriptAccessBPs = new MethodBreakpoint[mbn * 2]; // JDK + External Nashorn
+        for (int jdk=0; jdk < 2; jdk++) {
+            boolean legacyJdk = (jdk == 0);
+            for (int i = 0; i < mbn; i++) {
+                String method = SCRIPT_ACCESS_METHODS[i];
+                MethodBreakpoint mb = MethodBreakpoint.create(legacyJdk ? SCRIPT_ACCESS_CLASS_JDK : SCRIPT_ACCESS_CLASS_EXT, method);
+                mb.setHidden(true);
+                mb.setSuspend(debugger.getSuspend());
+                mb.setSession(debugger);
+                mb.disable();
+                mb.addJPDABreakpointListener(sbl);
+                DebuggerManager.getDebuggerManager().addBreakpoint(mb);
+                scriptAccessBPs[i + jdk*mbn] = mb;
+            }
         }
         ScriptInvokeBPListener sibl = new ScriptInvokeBPListener();
-        notifyInvokeBP = MethodBreakpoint.create(DebuggerSupport.DEBUGGER_SUPPORT_CLASS,
+        // try which Nashorn debugger is available
+        String debugSupportClass = !debugger.getClassesByName(DebuggerSupport.DEBUGGER_SUPPORT_CLASS_JDK).isEmpty() ? DebuggerSupport.DEBUGGER_SUPPORT_CLASS_JDK : DebuggerSupport.DEBUGGER_SUPPORT_CLASS_EXT;
+        notifyInvokeBP = MethodBreakpoint.create(debugSupportClass,
                                                  SCRIPT_NOTIFY_INVOKE_METHOD);
         notifyInvokeBP.setMethodSignature(SCRIPT_NOTIFY_INVOKE_METHOD_SIG);
         notifyInvokeBP.setHidden(true);
@@ -110,7 +116,7 @@ public class StepIntoJSHandler extends LazyActionsManagerListener implements Pro
             public void propertyChange(PropertyChangeEvent evt) {
                 if (Breakpoint.VALIDITY.VALID.equals(notifyInvokeBP.getValidity())) {
                     // notifyInvoke is available we can remove the script access breakpoints
-                    logger.log(Level.FINE, "{0} is valid => we can disable breakpoints on "+SCRIPT_ACCESS_CLASS, notifyInvokeBP);
+                    logger.log(Level.FINE, "{0} is valid => we can disable breakpoints on "+SCRIPT_ACCESS_CLASS_JDK + "/" + SCRIPT_ACCESS_CLASS_EXT, notifyInvokeBP);
                     for (MethodBreakpoint mb : scriptAccessBPs) {
                         logger.log(Level.FINE, "{0} disable", mb);
                         mb.disable();

@@ -2,7 +2,7 @@
 
 Document 0
 Searchable Keys:
-  clz : c1;C1;52;;A;;1;;0;<TESTURL>/testMixin.php;\A\B\C3,\A\C2;
+  clz : c1;C1;52;;A;;1;;0;<TESTURL>/testMixin.php;\A\B\C3,\A\C2;0;
   top : c1
 
 Not Searchable Keys:
@@ -10,7 +10,7 @@ Not Searchable Keys:
 
 Document 1
 Searchable Keys:
-  clz : c2;C2;66;;A;;1;;0;<TESTURL>/testMixin.php;;
+  clz : c2;C2;66;;A;;1;;0;<TESTURL>/testMixin.php;;0;
   top : c2
 
 Not Searchable Keys:
@@ -18,7 +18,7 @@ Not Searchable Keys:
 
 Document 2
 Searchable Keys:
-  clz : c3;C3;95;;A\B;;1;;0;<TESTURL>/testMixin.php;;
+  clz : c3;C3;95;;A\B;;1;;0;<TESTURL>/testMixin.php;;0;
   top : c3
 
 Not Searchable Keys:
@@ -26,7 +26,7 @@ Not Searchable Keys:
 
 Document 3
 Searchable Keys:
-  clz : mixin;Mixin;200;MixinParent|\Mixin\MixinParent;Mixin;;1;;0;<TESTURL>/testMixin.php;\A\C1;
+  clz : mixin;Mixin;200;MixinParent|\Mixin\MixinParent;Mixin;;1;;0;<TESTURL>/testMixin.php;\A\C1;0;
   superclz : mixinparent;MixinParent;Mixin
   top : mixin
 
@@ -35,7 +35,7 @@ Not Searchable Keys:
 
 Document 4
 Searchable Keys:
-  clz : mixinparent;MixinParent;153;;Mixin;;1;;0;<TESTURL>/testMixin.php;\A\B\C3;
+  clz : mixinparent;MixinParent;153;;Mixin;;1;;0;<TESTURL>/testMixin.php;\A\B\C3;0;
   top : mixinparent
 
 Not Searchable Keys:

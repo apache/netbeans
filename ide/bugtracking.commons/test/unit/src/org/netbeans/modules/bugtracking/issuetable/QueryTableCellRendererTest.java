@@ -98,7 +98,7 @@ public class QueryTableCellRendererTest {
         
         // issue seen, not selected
         RendererIssue rendererIssue = new RendererIssue(rendererRepository, "");
-        IssueProperty property = new RendererNode(rendererIssue, "some value", rendererRepository).createProperty();
+        RendererNode.RendererIssueProperty property = new RendererNode(rendererIssue, "some value", rendererRepository).createProperty();
         rendererQuery.containsIssue = true;
         boolean selected = false;
         setIssueValues(rendererRepository, rendererIssue, Status.SEEN, true);
@@ -188,7 +188,7 @@ public class QueryTableCellRendererTest {
         RendererRepository rendererRepository = new RendererRepository();
         RendererIssue issue = new RendererIssue(rendererRepository, "");
         RendererQuery query = new RendererQuery(rendererRepository);
-        IssueProperty property = new RendererNode(issue, "some value", rendererRepository).createProperty();
+        RendererNode.RendererIssueProperty property = new RendererNode(issue, "some value", rendererRepository).createProperty();
 
         IssueTable issueTable = new IssueTable(
                 TestKit.getRepository(rendererRepository).getId(),
@@ -265,7 +265,7 @@ public class QueryTableCellRendererTest {
         }
     }
     
-    private class RendererNode<TestIssue> extends IssueNode {
+    private class RendererNode extends IssueNode<TestIssue> {
 
         Object propertyValue;
         public RendererNode(RendererIssue issue, String value, RendererRepository rendererRepository) {
@@ -279,8 +279,8 @@ public class QueryTableCellRendererTest {
         protected Property<?>[] getProperties() {
             return new Property[0];
         }
-        class RendererIssueProperty extends IssueProperty {
-            public RendererIssueProperty(String arg0, Class name, String type, String displayName, Object value) {
+        class RendererIssueProperty extends IssueProperty<Object> {
+            public RendererIssueProperty(String arg0, Class<Object> name, String type, String displayName, Object value) {
                 super(arg0, name, type, displayName);
             }
             @Override

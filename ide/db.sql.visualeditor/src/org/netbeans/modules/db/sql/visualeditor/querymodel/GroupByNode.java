@@ -32,7 +32,7 @@ public class GroupByNode implements GroupBy {
     // This will eventually include functions, but for now is simple columns
 
     // ToDo: consider replacing this with a HashMap
-    private List _columnList;
+    private List<Column> _columnList;
 
 
     // Constructor
@@ -40,7 +40,7 @@ public class GroupByNode implements GroupBy {
     public GroupByNode() {
     }
 
-    public GroupByNode(ArrayList columnList) {
+    public GroupByNode(List columnList) {
         _columnList = columnList;
     }
 

@@ -221,7 +221,7 @@ final class ActionFactory {
                             if (fold == null) {
                                 return;
                             }
-                            List allFolds = new ArrayList<Fold>(FoldUtilities.findRecursive(fold));
+                            List<Fold> allFolds = new ArrayList<Fold>(FoldUtilities.findRecursive(fold));
                             Collections.reverse(allFolds);
                             allFolds.add(0, fold);
                             hierarchy.expand(allFolds);
@@ -257,7 +257,7 @@ final class ActionFactory {
                             if (fold == null) {
                                 return;
                             }
-                            List allFolds = new ArrayList<Fold>(FoldUtilities.findRecursive(fold));
+                            List<Fold> allFolds = new ArrayList<>(FoldUtilities.findRecursive(fold));
                             Collections.reverse(allFolds);
                             allFolds.add(0, fold);
                             hierarchy.collapse(allFolds);
@@ -301,7 +301,7 @@ final class ActionFactory {
     }
 
 
-    static abstract class LocalBaseAction extends BaseAction {
+    abstract static class LocalBaseAction extends BaseAction {
         public LocalBaseAction() {
             super();
         }

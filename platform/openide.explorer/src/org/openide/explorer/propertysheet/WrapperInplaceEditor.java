@@ -326,6 +326,7 @@ class WrapperInplaceEditor extends JPanel implements InplaceEditor, ActionListen
      * Registers FocusListener to receive events.
      * @param listener The listener to register.
      */
+    @Override
     public synchronized void addFocusListener(FocusListener listener) {
         if (listenerList == null) {
             listenerList = new EventListenerList();
@@ -339,6 +340,7 @@ class WrapperInplaceEditor extends JPanel implements InplaceEditor, ActionListen
      * Removes FocusListener from the list of listeners.
      * @param listener The listener to remove.
      */
+    @Override
     public synchronized void removeFocusListener(FocusListener listener) {
         listenerList.remove(java.awt.event.FocusListener.class, listener);
         super.removeFocusListener(listener);

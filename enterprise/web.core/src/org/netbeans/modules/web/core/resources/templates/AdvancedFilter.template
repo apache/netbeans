@@ -2,7 +2,7 @@
 <#assign licensePrefix = " * ">
 <#assign licenseLast = " */">
 <#include "${project.licensePath}">
- 
+
 <#if package?? && package != "">
 package ${package};
 </#if>
@@ -16,6 +16,27 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+<#if jakartaPackages>
+<#if includeDispatcher??>
+import jakarta.servlet.DispatcherType;
+</#if>
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+<#if classAnnotation??>
+import jakarta.servlet.annotation.WebFilter;
+</#if>
+<#if includeInitParams??>
+import jakarta.servlet.annotation.WebInitParam;
+</#if>
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponseWrapper;
+<#else>
 <#if includeDispatcher??>
 import javax.servlet.DispatcherType;
 </#if>
@@ -35,6 +56,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
+</#if>
 
 /**
  *
@@ -49,11 +71,11 @@ public class ${name} implements Filter {
 
     // The filter configuration object we are associated with.  If
     // this value is null, this filter instance is not currently
-    // configured. 
+    // configured.
     private FilterConfig filterConfig = null;
 
     public ${name}() {
-    } 
+    }
 
     private void doBeforeProcessing(RequestWrapper request, ResponseWrapper response)
 	throws IOException, ServletException {
@@ -90,7 +112,7 @@ public class ${name} implements Filter {
 	    log(buf.toString());
 	}
 	*/
-    } 
+    }
 
     private void doAfterProcessing(RequestWrapper request, ResponseWrapper response)
 	throws IOException, ServletException {
@@ -98,9 +120,9 @@ public class ${name} implements Filter {
 
 	// Write code here to process the request and/or response after
 	// the rest of the filter chain is invoked.
-	
+
 	// For example, a logging filter might log the attributes on the
-	// request object after the request has been processed. 
+	// request object after the request has been processed.
 	/*
 	for (Enumeration en = request.getAttributeNames(); en.hasMoreElements(); ) {
 	    String name = (String)en.nextElement();
@@ -114,7 +136,7 @@ public class ${name} implements Filter {
 	/*
 	PrintWriter respOut = new PrintWriter(response.getWriter());
 	respOut.println("<p><strong>This has been appended by an intrusive filter.</strong></p>");
-	
+
 	respOut.println("<p>Params (after the filter chain):<br>");
 	for (Enumeration en = request.getParameterNames(); en.hasMoreElements(); ) {
 		String name = (String)en.nextElement();
@@ -147,7 +169,7 @@ public class ${name} implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
                          FilterChain chain)
 	throws IOException, ServletException {
-	
+
 	if (debug) log("${name}:doFilter()");
 
 	// Create wrappers for the request and response objects.
@@ -160,9 +182,9 @@ public class ${name} implements Filter {
 	// include requests.
 	RequestWrapper  wrappedRequest  = new RequestWrapper((HttpServletRequest)request);
 	ResponseWrapper wrappedResponse = new ResponseWrapper((HttpServletResponse)response);
-	    
+
 	doBeforeProcessing(wrappedRequest, wrappedResponse);
-	
+
 	Throwable problem = null;
 
 	try {
@@ -186,7 +208,7 @@ public class ${name} implements Filter {
 	    sendProcessingError(problem, response);
 	}
     }
-    
+
     /**
      * Return the filter configuration object for this filter.
      */
@@ -204,18 +226,18 @@ public class ${name} implements Filter {
     }
 
     /**
-     * Destroy method for this filter 
+     * Destroy method for this filter
      */
-    public void destroy() { 
+    public void destroy() {
     }
 
     /**
-     * Init method for this filter 
+     * Init method for this filter
      */
-    public void init(FilterConfig filterConfig) { 
+    public void init(FilterConfig filterConfig) {
 	this.filterConfig = filterConfig;
 	if (filterConfig != null) {
-	    if (debug) { 
+	    if (debug) {
 		log("${name}: Initializing filter");
 	    }
 	}
@@ -237,18 +259,18 @@ public class ${name} implements Filter {
     }
 
     private void sendProcessingError(Throwable t, ServletResponse response) {
-	String stackTrace = getStackTrace(t); 
+	String stackTrace = getStackTrace(t);
 
 	if(stackTrace != null && !stackTrace.equals("")) {
 	    try {
 		response.setContentType("text/html");
 		PrintStream ps = new PrintStream(response.getOutputStream());
-		PrintWriter pw = new PrintWriter(ps); 
+		PrintWriter pw = new PrintWriter(ps);
 		pw.print("<html>\n<head>\n<title>Error</title>\n</head>\n<body>\n"); //NOI18N
-		    
+
 		// PENDING! Localize this for next official release
-		pw.print("<h1>The resource did not process correctly</h1>\n<pre>\n"); 
-		pw.print(stackTrace); 
+		pw.print("<h1>The resource did not process correctly</h1>\n<pre>\n");
+		pw.print(stackTrace);
 		pw.print("</pre></body>\n</html>"); //NOI18N
 		pw.close();
 		ps.close();
@@ -282,13 +304,13 @@ public class ${name} implements Filter {
     }
 
     public void log(String msg) {
-	filterConfig.getServletContext().log(msg); 
+	filterConfig.getServletContext().log(msg);
     }
 
     /**
      * This request wrapper class extends the support class HttpServletRequestWrapper,
      * which implements all the methods in the HttpServletRequest interface, as
-     * delegations to the wrapped request. 
+     * delegations to the wrapped request.
      * You only need to override the methods that you need to change.
      * You can get access to the wrapped request using the method getRequest()
      */
@@ -305,7 +327,7 @@ public class ${name} implements Filter {
 
 	public void setParameter(String name, String []values) {
 	    if (debug) System.out.println("${name}::setParameter(" + name + "=" + values + ")" + " localParams = "+ localParams);
-	    
+
 	    if (localParams == null) {
 		localParams = new Hashtable();
 		// Copy the parameters from the underlying request.
@@ -355,7 +377,7 @@ public class ${name} implements Filter {
 	    if (localParams == null)
 		return getRequest().getParameterNames();
 	    return localParams.keys();
-	}	    
+	}
 
 <#if java15style??>
         @Override
@@ -371,14 +393,14 @@ public class ${name} implements Filter {
     /**
      * This response wrapper class extends the support class HttpServletResponseWrapper,
      * which implements all the methods in the HttpServletResponse interface, as
-     * delegations to the wrapped response. 
+     * delegations to the wrapped response.
      * You only need to override the methods that you need to change.
      * You can get access to the wrapped response using the method getResponse()
      */
     class ResponseWrapper extends HttpServletResponseWrapper {
 
 	public ResponseWrapper(HttpServletResponse response) {
-	    super(response); 
+	    super(response);
 	}
 
 	// You might, for example, wish to know what cookies were set on the response
@@ -387,14 +409,14 @@ public class ${name} implements Filter {
 	// are being set.
 	/*
 	protected Vector cookies = null;
-	
+
 	// Create a new method that doesn't exist in HttpServletResponse
 	public Enumeration getCookies() {
 		if (cookies == null)
 		    cookies = new Vector();
 		return cookies.elements();
 	}
-	
+
 	// Override this method from HttpServletResponse to keep track
 	// of cookies locally as well as in the wrapped response.
 	public void addCookie (Cookie cookie) {

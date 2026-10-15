@@ -86,8 +86,8 @@ import org.openide.util.NbCollections;
  * is deleted? There must be a way to indicate on the foremost delegate that it should not appear in the
  * composite (even while it remains in one of the delegates). For this reason, <code>MultiFileSystem</code> uses
  * "masks" which are simply empty files named according to the file they should hide, but with the suffix
- * <samp>_hidden</samp>. Thus, for example, if there is a file <samp>subdir/readme.txt_hidden</samp> in a front
- * delegate it will hide any files named <samp>subdir/readme.txt</samp> in delegates further back. These masks
+ * <code>_hidden</code>. Thus, for example, if there is a file <code>subdir/readme.txt_hidden</code> in a front
+ * delegate it will hide any files named <code>subdir/readme.txt</code> in delegates further back. These masks
  * are automatically created as needed when files are "deleted" from <code>MultiFileSystem</code>; or delegate
  * filesystems may explicitly provide them. Normally the mask files are not themselves visible as {@link
  * FileObject}s, since they are an artifact of the deletion logic. However, when nesting
@@ -105,7 +105,6 @@ import org.openide.util.NbCollections;
  * returned from the MFS, if they exist. The FileObjects can be also casted to <code>Callable&lt;FileObject></code>. When
  * called, the original version of the file is restored on the MultiFileSystem, and the restored instance is returned
  * as result.
- * <p>
  */
 public class MultiFileSystem extends FileSystem {
     static final long serialVersionUID = -767493828111559560L;

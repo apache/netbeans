@@ -1,0 +1,7 @@
+Code completion result for source line:
+new Helper().ov|erload(Arrays.asList("hi")).substring(1)
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     ovPrivate()                     [PRIVATE]  File
+METHOD     overload(List)                  [PUBLIC]   String
+METHOD     overload(String)                [PUBLIC]   File

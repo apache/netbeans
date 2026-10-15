@@ -326,7 +326,7 @@ public class RADVisualComponent extends RADComponent {
             l.add(layerProperty);
             nameToProperty.put(layerProperty.getName(), layerProperty);
 
-            constraintsProperties = l.toArray(new Node.Property[l.size()]);
+            constraintsProperties = l.toArray(new Node.Property[0]);
         }
 
         if (constraintsProperties == null) {
@@ -743,7 +743,7 @@ public class RADVisualComponent extends RADComponent {
         public void setAsText(String str) {
             if (!setValueFromString(str)) { // not one of the known constants
                 try {
-                    setValue(new Integer(Integer.parseInt(str)));
+                    setValue(Integer.valueOf(str));
                 } catch (NumberFormatException ex) {
                 }
             }

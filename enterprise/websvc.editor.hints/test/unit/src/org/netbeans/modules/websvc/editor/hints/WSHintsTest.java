@@ -118,4 +118,10 @@ public class WSHintsTest extends WSHintsTestBase {
         getRulesEngine().getParameterRules().add(instance);
         testRule(instance,instance.getClass().getSimpleName().concat("Test.java"));
     }
+
+    public final void testUnknownElement() throws IOException {
+        Rule<TypeElement> instance = new DefaultPackage();
+        getRulesEngine().getClassRules().add(instance);
+        testRule(instance,"UnknownElementTest.java");
+    }
 }

@@ -26,6 +26,7 @@ import java.awt.font.TextLayout;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.JTextComponent;
+import javax.swing.text.StyleContext;
 
 /**
  * Info about font measurements.
@@ -83,16 +84,26 @@ final class FontInfo {
 
     FontInfo(Font origFont, JTextComponent textComponent, FontRenderContext frc, float rowHeightCorrection, int textZoom) {
         renderFont = (textZoom != 0)
-                ? new Font(origFont.getName(), origFont.getStyle(), Math.max(origFont.getSize() + textZoom, 1))
-                : origFont;
+                ? StyleContext.getDefaultStyleContext().getFont(origFont.getName(), origFont.getStyle(), Math.max(origFont.getSize() + textZoom, 1))
+                : StyleContext.getDefaultStyleContext().getFont(origFont.getName(), origFont.getStyle(), origFont.getSize());
         char defaultChar = 'A';
         String defaultCharText = String.valueOf(defaultChar);
         TextLayout defaultCharTextLayout = new TextLayout(defaultCharText, renderFont, frc); // NOI18N
         TextLayout rowHeightTextLayout = new TextLayout("A_|B", renderFont, frc);
         // Round the ascent to eliminate long mantissa without any visible effect on rendering.
         updateRowHeight(rowHeightTextLayout, rowHeightCorrection);
-        // Ceil fractions to whole numbers since this measure may be used for background rendering
-        charWidth = (float) Math.ceil(defaultCharTextLayout.getAdvance());
+        /* We originally did Math.ceil() when setting charWidth, but this was the cause of NETBEANS-346,
+        where the end-of-line marker (SimpleValueNames.TEXT_LIMIT_WIDTH) would appear in the wrong
+        position due to rounding errors, and similar misalignments in tabs vs. spaces, on certain editor
+        zoom levels. This was observed on Java 9 or above on both Windows and MacOS. Java 9 saw many
+        changes in font metrics implementations, including a new font shaping engine (HarfBuzz) and
+        fractional HiDPI support. Avoiding Math.ceil fixes the problem. The original Math.ceil was
+        introduced by Miloslav Metelka on 2011-08-18, with a comment "Ceil fractions to whole numbers
+        since this measure may be used for background rendering" in the commit titled "Improve
+        AnnotationView performance" for the similarly titled BugZilla bug #201102. So the Math.ceil was
+        intended to be an optimization rather than fixing a correctness bug, and it seems safe to remove
+        it. */
+        charWidth = defaultCharTextLayout.getAdvance();
         LineMetrics lineMetrics = renderFont.getLineMetrics(defaultCharText, frc);
         underlineAndStrike[0] = lineMetrics.getUnderlineOffset() * rowHeightCorrection;
         underlineAndStrike[1] = lineMetrics.getUnderlineThickness();

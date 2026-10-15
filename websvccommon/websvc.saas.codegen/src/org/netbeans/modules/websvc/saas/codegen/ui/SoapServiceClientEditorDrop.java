@@ -170,7 +170,7 @@ public class SoapServiceClientEditorDrop implements ActiveEditorDrop {
         if (d == null) {
             return null;
         }
-        EditorCookie ec = (EditorCookie) d.getLookup().lookup(EditorCookie.class);
+        EditorCookie ec = d.getLookup().lookup(EditorCookie.class);
         if (ec == null || ec.getOpenedPanes() == null) {
             return null;
         }

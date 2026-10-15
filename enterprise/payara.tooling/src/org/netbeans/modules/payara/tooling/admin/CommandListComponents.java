@@ -34,20 +34,14 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
 @RunnerRestClass(runner=RunnerRestListApplications.class, command="list-applications")
 public class CommandListComponents extends CommandTarget {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command string for list components command. */
     private static final String COMMAND = "list-components";
 
     /** Error message for administration command execution exception .*/
     private static final String ERROR_MESSAGE = "List components failed.";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * List components.
      * <p/>
@@ -71,10 +65,7 @@ public class CommandListComponents extends CommandTarget {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara server list components
      * command entity.

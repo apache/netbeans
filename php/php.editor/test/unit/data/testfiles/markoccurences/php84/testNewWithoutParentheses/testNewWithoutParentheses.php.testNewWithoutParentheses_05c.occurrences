@@ -1,0 +1,3 @@
+    public static function |>MARK_OCCURRENCES:publicStaticTestMethod<|(): string {
+        $example = new Example()->test::|>MARK_OCCURRENCES:publicStaticTestMethod<|();
+new Example()->test::|>MARK_OCCURRENCES:pu^blicStaticTestMethod<|(); // test

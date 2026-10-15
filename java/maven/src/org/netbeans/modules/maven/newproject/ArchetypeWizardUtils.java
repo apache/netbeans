@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -64,8 +63,6 @@ public class ArchetypeWizardUtils {
     /** {@code Map<String,String>} of custom archetype properties to define. */
     public static final String ADDITIONAL_PROPS = "additionalProps"; // NOI18N
 
-    private static final Logger LOG = Logger.getLogger(ArchetypeWizardUtils.class.getName());
-
     private ArchetypeWizardUtils() {
     }
 
@@ -77,19 +74,22 @@ public class ArchetypeWizardUtils {
         BeanRunConfig config = new BeanRunConfig();
         config.setProperty("archetypeGroupId", arch.getGroupId()); //NOI18N
         config.setProperty("archetypeArtifactId", arch.getArtifactId()); //NOI18N
-        config.setProperty("archetypeVersion", arch.getVersion()); //NOI18N
+        if (arch.getVersion() != null
+                && !arch.getVersion().isEmpty()) {
+            config.setProperty("archetypeVersion", arch.getVersion()); //NOI18N
+        }
         String repo = arch.getRepository();
         config.setProperty("archetypeRepository", repo != null ? repo : RepositorySystem.DEFAULT_REMOTE_REPO_URL); //NOI18N
         config.setProperty("groupId", vi.groupId); //NOI18N
         config.setProperty("artifactId", vi.artifactId); //NOI18N
         config.setProperty("version", vi.version); //NOI18N
         final String pack = vi.packageName;
-        if (pack != null && pack.trim().length() > 0) {
+        if (pack != null && !pack.isBlank()) {
             config.setProperty("package", pack); //NOI18N
         }
         config.setProperty("basedir", directory.getAbsolutePath());//NOI18N
         
-        Map<String, String> baseprops = new HashMap<String, String>(config.getProperties());
+        Map<String, String> baseprops = new HashMap<>(config.getProperties());
         
         if (additional != null) {
             for (Map.Entry<String,String> entry : additional.entrySet()) {
@@ -113,6 +113,7 @@ public class ArchetypeWizardUtils {
         //ExecutionRequest.setInteractive seems to have no influence on archetype plugin.
         config.setInteractive(false);
         config.setProperty("archetype.interactive", "false");//NOI18N
+        config.setProperty("archetypeCatalog", "local");//NOI18N
         //#136853 make sure to get the latest snapshot always..
         if (arch.getVersion().contains("SNAPSHOT")) { //NOI18N
             config.setUpdateSnapshots(true);
@@ -159,7 +160,7 @@ public class ArchetypeWizardUtils {
         if (parent == null) {
             throw new IOException("no parent of " + projDir);
         }
-        if (updateLastUsedProjectDir && parent != null && parent.exists()) {
+        if (updateLastUsedProjectDir && parent.exists()) {
             ProjectChooser.setProjectsFolder(parent);
         }
         if (!parent.isDirectory() && !parent.mkdirs()) {
@@ -213,9 +214,7 @@ public class ArchetypeWizardUtils {
             if (watch != null) {
                 watch.downloadDependencyAndJavadocSource(false);
             }
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (IllegalArgumentException ex) {
+        } catch (IOException | IllegalArgumentException ex) {
             Exceptions.printStackTrace(ex);
         }
     }

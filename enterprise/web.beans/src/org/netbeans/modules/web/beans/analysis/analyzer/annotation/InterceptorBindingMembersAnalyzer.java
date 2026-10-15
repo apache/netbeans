@@ -35,6 +35,11 @@ import org.netbeans.modules.web.beans.analysis.analyzer.AnnotationElementAnalyze
 import org.openide.util.NbBundle;
 import org.netbeans.spi.editor.hints.Severity;
 
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.INTERCEPTOR_BINDING_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.INTERCEPTOR_BINDING_FQN_JAKARTA;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.NON_BINDING;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.NON_BINDING_JAKARTA;
+
 
 
 /**
@@ -50,17 +55,16 @@ public class InterceptorBindingMembersAnalyzer implements AnnotationAnalyzer {
     public void analyze( TypeElement element, AtomicBoolean cancel,
             CdiAnalysisResult result )
     {
-        if ( AnnotationUtil.hasAnnotation(element, AnnotationUtil.INTERCEPTOR_BINDING_FQN, 
-                result.getInfo()))
+        if (AnnotationUtil.hasAnnotation(element, result.getInfo(), INTERCEPTOR_BINDING_FQN_JAKARTA, INTERCEPTOR_BINDING_FQN))
         {
             checkMembers(element, result, NbBundle.getMessage(
-                    QualifierAnalyzer.class,  
+                    QualifierAnalyzer.class,
                     "WARN_ArrayAnnotationValuedIBindingMember"));      // NOI18N
         }
     }
-    
-    protected void checkMembers( TypeElement element, CdiAnalysisResult result , 
-            String localizedWarning ) 
+
+    protected void checkMembers( TypeElement element, CdiAnalysisResult result ,
+            String localizedWarning )
     {
         List<ExecutableElement> methods = ElementFilter.methodsIn(
                 element.getEnclosedElements());
@@ -71,19 +75,18 @@ public class InterceptorBindingMembersAnalyzer implements AnnotationAnalyzer {
                 warning = true;
             }
             else if ( returnType.getKind() == TypeKind.DECLARED){
-                Element returnElement = result.getInfo().getTypes().asElement( 
+                Element returnElement = result.getInfo().getTypes().asElement(
                         returnType );
                 warning = returnElement.getKind() == ElementKind.ANNOTATION_TYPE;
             }
             if ( !warning ){
                 continue;
             }
-            if (AnnotationUtil.hasAnnotation(executableElement, 
-                    AnnotationUtil.NON_BINDING,  result.getInfo()) )
+            if (AnnotationUtil.hasAnnotation(executableElement, result.getInfo(), NON_BINDING_JAKARTA, NON_BINDING))
             {
                 continue;
             }
-            result.addNotification(Severity.WARNING, element, localizedWarning); 
+            result.addNotification(Severity.WARNING, element, localizedWarning);
         }
     }
 

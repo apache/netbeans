@@ -478,8 +478,9 @@ public final class KitsTrackerImpl extends KitsTracker {
                             clazz = clazz.getSuperclass()
                         ) {
                             boolean kitClassFinal = (clazz.getModifiers() & Modifier.FINAL) != 0;
-                            for(String mimeType : mimeType2kitClass.keySet()) {
-                                FileObject f = mimeType2kitClass.get(mimeType);
+                            for(Map.Entry<String, FileObject> entry : mimeType2kitClass.entrySet()) {
+                                String mimeType = entry.getKey();
+                                FileObject f = entry.getValue();
                                 if (isInstanceOf(f, clazz, !kitClassFinal)) {
                                     list.add(mimeType);
                                 }

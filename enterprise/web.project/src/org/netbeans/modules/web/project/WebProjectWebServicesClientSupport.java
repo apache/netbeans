@@ -630,7 +630,7 @@ public class WebProjectWebServicesClientSupport implements WebServicesClientSupp
         "donotunwrap", // - portable
     };
     
-    private static final List allClientFeatures = Arrays.asList(WSCOMPILE_CLIENT_FEATURES);
+    private static final List<String> allClientFeatures = Arrays.asList(WSCOMPILE_CLIENT_FEATURES);
     
     private static final String [] WSCOMPILE_KEY_CLIENT_FEATURES = {
         "wsi",
@@ -645,7 +645,7 @@ public class WebProjectWebServicesClientSupport implements WebServicesClientSupp
         "searchschema",
     };
     
-    private static final List importantClientFeatures = Arrays.asList(WSCOMPILE_KEY_CLIENT_FEATURES);
+    private static final List<String> importantClientFeatures = Arrays.asList(WSCOMPILE_KEY_CLIENT_FEATURES);
     
     public List<WsCompileClientEditorSupport.ServiceSettings> getServiceClients() {
         List<WsCompileClientEditorSupport.ServiceSettings> serviceNames = new ArrayList<WsCompileClientEditorSupport.ServiceSettings>();

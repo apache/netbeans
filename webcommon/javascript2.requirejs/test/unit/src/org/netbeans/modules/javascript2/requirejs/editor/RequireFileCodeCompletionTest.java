@@ -30,9 +30,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Position;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
 import org.netbeans.editor.BaseDocument;
@@ -79,7 +76,7 @@ public class RequireFileCodeCompletionTest extends JsCodeCompletionBase {
         lookupAll.add(new TestProjectSupport.FileOwnerQueryImpl(tp));
         MockLookup.setInstances(lookupAll.toArray());
         
-        Map<String, String> mappings = new HashMap();
+        Map<String, String> mappings = new HashMap<>();
         mappings.put("utils", "js/folder1/api/utils.js");
         mappings.put("api", "js/folder1/api");
         mappings.put("lib/api", "js/folder1/api");
@@ -403,7 +400,7 @@ public class RequireFileCodeCompletionTest extends JsCodeCompletionBase {
         cpRoots.add(FileUtil.toFileObject(new File(getDataDir(), "/TestProject1")));
         return Collections.singletonMap(
             JS_SOURCE_ID,
-            ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[cpRoots.size()]))
+            ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[0]))
         );
     }
 

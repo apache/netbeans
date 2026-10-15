@@ -65,7 +65,7 @@ public class DbUtil {
         "datadirect_db2", "datadirect_informix", "datadirect_sybase"
     };
     
-    static Map<String, String> normalizePoolMap(Map<String, String> poolValues) {
+    public static Map<String, String> normalizePoolMap(Map<String, String> poolValues) {
         String driverClassName = poolValues.get("dsClassName"); //NOI18N
         String resType = poolValues.get("resType"); //NOI18N
         String url = ""; //NOI18N
@@ -81,7 +81,7 @@ public class DbUtil {
         String password = poolValues.get(__Password);
         String user = poolValues.get(__User);
         
-        if (driverClassName.indexOf("pointbase") != -1) {
+        if (driverClassName != null && driverClassName.indexOf("pointbase") != -1) {
             url = poolValues.get(__DatabaseName);
         }
         // Search for server name key should be case insensitive.

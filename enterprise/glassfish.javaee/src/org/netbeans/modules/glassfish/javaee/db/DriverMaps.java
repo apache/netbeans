@@ -88,8 +88,9 @@ public class DriverMaps {
     }
     
     private static final String getPrefix(Map<String, String> classMap, String inClass) {
-        for(String urlPrefix: classMap.keySet()) {
-            String dsClass = classMap.get(urlPrefix);
+        for(Map.Entry<String, String> entry: classMap.entrySet()) {
+            String urlPrefix = entry.getKey();
+            String dsClass = entry.getValue();
             if(dsClass.equalsIgnoreCase(inClass)) {
                 return urlPrefix;           
             }    

@@ -30,6 +30,7 @@ import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 
 /**
@@ -230,8 +231,9 @@ class TCGroupParser {
             tcGroupConfig = null;
             internalConfig = null;
         }
-        
-        public void startElement (String nameSpace, String name, String qname, Attributes attrs) 
+
+        @Override
+        public void startElement (String nameSpace, String name, String qname, Attributes attrs)
         throws SAXException {
             if ("tc-group".equals(qname)) { // NOI18N
                 handleTCGroup(attrs);
@@ -252,6 +254,7 @@ class TCGroupParser {
             }
         }
 
+        @Override
         public void error(SAXParseException ex) throws SAXException  {
             throw ex;
         }
@@ -397,7 +400,7 @@ class TCGroupParser {
                 try {
                     lock = cfgFOOutput.lock();
                     os = cfgFOOutput.getOutputStream(lock);
-                    osw = new OutputStreamWriter(os, "UTF-8"); // NOI18N
+                    osw = new OutputStreamWriter(os, StandardCharsets.UTF_8);
                     osw.write(buff.toString());
                     //log("DUMP TCGroup: " + TCGroupParser.this.getName());
                     //log(buff.toString());

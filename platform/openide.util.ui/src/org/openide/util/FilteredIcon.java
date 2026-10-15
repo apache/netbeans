@@ -21,14 +21,15 @@ package org.openide.util;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-import java.awt.Transparency;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.RGBImageFilter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -43,6 +44,7 @@ import javax.swing.ImageIcon;
  * icon is initially entered into the cache.
  */
 final class FilteredIcon extends CachedHiDPIIcon {
+    private static final Logger LOG = Logger.getLogger(FilteredIcon.class.getName());
     private final RGBImageFilter filter;
     private final Icon delegate;
 
@@ -55,16 +57,25 @@ final class FilteredIcon extends CachedHiDPIIcon {
     }
 
     public static Icon create(RGBImageFilter filter, Icon delegate) {
+        final int width = delegate.getIconWidth();
+        final int height = delegate.getIconHeight();
+        if (width < 0 || height < 0) {
+            /* This case was once observed in NETBEANS-3671. I'm not sure where the offending Icon
+            came from. Log some more information for future debugging, and fall back gracefully. */
+            Object url = ImageUtilities.icon2Image(delegate).getProperty("url", null);
+            LOG.log(Level.WARNING,
+                    "NETBEANS-3671: FilteredIcon.create got {0} of invalid dimensions {1}x{2} with URL={3}",
+                    new Object[] { delegate.getClass().getName(), width, height, url });
+            return delegate;
+        }
         return new FilteredIcon(filter, delegate);
     }
 
     @Override
-    protected Image createImage(
-            Component c, GraphicsConfiguration graphicsConfiguration,
-            int deviceWidth, int deviceHeight, double scale)
+    protected Image createAndPaintImage(
+            Component c, ColorModel colorModel, int deviceWidth, int deviceHeight, double scale)
     {
-        final BufferedImage img = graphicsConfiguration.createCompatibleImage(
-                deviceWidth, deviceHeight, Transparency.TRANSLUCENT);
+        final BufferedImage img = createBufferedImage(colorModel, deviceWidth, deviceHeight);
         final Graphics2D imgG = img.createGraphics();
         try {
             imgG.clip(new Rectangle(0, 0, img.getWidth(), img.getHeight()));

@@ -36,14 +36,14 @@ import org.openide.modules.ModuleInfo;
  * @author Radek Matous, Jiri Rechtacek
  */
 abstract class OperationValidator {
-    private final static OperationValidator FOR_INSTALL = new InstallValidator();
-    private final static OperationValidator FOR_INTERNAL_UPDATE = new InternalUpdateValidator();
-    private final static OperationValidator FOR_UNINSTALL = new UninstallValidator();
-    private final static OperationValidator FOR_UPDATE = new UpdateValidator();
-    private final static OperationValidator FOR_ENABLE = new EnableValidator();
-    private final static OperationValidator FOR_DISABLE = new DisableValidator();
-    private final static OperationValidator FOR_CUSTOM_INSTALL = new CustomInstallValidator();
-    private final static OperationValidator FOR_CUSTOM_UNINSTALL = new CustomUninstallValidator();
+    private static final OperationValidator FOR_INSTALL = new InstallValidator();
+    private static final OperationValidator FOR_INTERNAL_UPDATE = new InternalUpdateValidator();
+    private static final OperationValidator FOR_UNINSTALL = new UninstallValidator();
+    private static final OperationValidator FOR_UPDATE = new UpdateValidator();
+    private static final OperationValidator FOR_ENABLE = new EnableValidator();
+    private static final OperationValidator FOR_DISABLE = new DisableValidator();
+    private static final OperationValidator FOR_CUSTOM_INSTALL = new CustomInstallValidator();
+    private static final OperationValidator FOR_CUSTOM_UNINSTALL = new CustomUninstallValidator();
     private static final Logger LOGGER = Logger.getLogger (OperationValidator.class.getName ());
     
     /** Creates a new instance of OperationValidator */
@@ -218,13 +218,13 @@ abstract class OperationValidator {
             case KIT_MODULE :
             case MODULE :
                 Module m =  Utilities.toModule (((ModuleUpdateElementImpl) impl).getModuleInfo ());
-                res = ModuleDeleterImpl.getInstance ().canDelete (m);
+                res = ModuleEnableDisableDeleteHelper.getInstance ().canDelete (m);
                 break;
             case STANDALONE_MODULE :
             case FEATURE :
                 for (ModuleInfo info : ((FeatureUpdateElementImpl) impl).getModuleInfos ()) {
                     Module module = Utilities.toModule (info);
-                    res |= ModuleDeleterImpl.getInstance ().canDelete (module);
+                    res |= ModuleEnableDisableDeleteHelper.getInstance ().canDelete (module);
                 }
                 break;
             case CUSTOM_HANDLED_COMPONENT :
@@ -261,7 +261,7 @@ abstract class OperationValidator {
                     if (Utilities.isEssentialModule (module)) {
                         LOGGER.log (Level.WARNING, "Essential module cannot be planned for uninstall but " + module);
                         continue;
-                    } else if (! ModuleDeleterImpl.getInstance ().canDelete (module)) {
+                    } else if (! ModuleEnableDisableDeleteHelper.getInstance ().canDelete (module)) {
                         LOGGER.log (Level.WARNING, "The module " + module + " cannot be planned for uninstall because is read-only.");
                         continue;
                     }
@@ -516,7 +516,7 @@ abstract class OperationValidator {
             boolean res = false;
             UpdateElementImpl impl = Trampoline.API.impl (uElement);
             assert impl != null;
-            if (impl != null && impl instanceof NativeComponentUpdateElementImpl) {
+            if (impl instanceof NativeComponentUpdateElementImpl) {
                 NativeComponentUpdateElementImpl ni = (NativeComponentUpdateElementImpl) impl;
                 if (ni.getInstallInfo ().getCustomInstaller () != null) {
                     res = containsElement (uElement, unit);
@@ -538,7 +538,7 @@ abstract class OperationValidator {
             boolean res = false;
             UpdateElementImpl impl = Trampoline.API.impl (uElement);
             assert impl != null;
-            if (impl != null && impl instanceof NativeComponentUpdateElementImpl) {
+            if (impl instanceof NativeComponentUpdateElementImpl) {
                 NativeComponentUpdateElementImpl ni = (NativeComponentUpdateElementImpl) impl;
                 res = ni.getNativeItem ().getUpdateItemDeploymentImpl ().getCustomUninstaller () != null;
             }

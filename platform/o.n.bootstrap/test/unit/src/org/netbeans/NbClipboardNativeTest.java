@@ -146,7 +146,7 @@ public class NbClipboardNativeTest extends NbTestCase implements ClipboardListen
         
         
         // just simulate initial switch to NetBeans main window
-        ec.activateWindowHack (true);
+        ec.activateWindowHack ();
         waitFinished (ec);
         
         if (listenerCalls == 0) {
@@ -179,7 +179,7 @@ public class NbClipboardNativeTest extends NbTestCase implements ClipboardListen
         if (slowClipboardHack ()) {
             assertEquals ("The getContents rechecked the clipboard just for the first time, not now, so the content is the same", "data2", s);
 
-            ec.activateWindowHack (true);
+            ec.activateWindowHack ();
             Thread.sleep (200);
 
             t = this.ec.getContents(this);

@@ -37,7 +37,7 @@ import org.netbeans.modules.nativeexecution.support.Logger;
  */
 public final class JschSupport {
 
-    private final static java.util.logging.Logger log = Logger.getInstance();
+    private static final java.util.logging.Logger log = Logger.getInstance();
 
     private JschSupport() {
     }
@@ -114,7 +114,7 @@ public final class JschSupport {
         return start(worker, env, 2);
     }
 
-    private synchronized static ChannelStreams start(final JSchWorker<ChannelStreams> worker, final ExecutionEnvironment env, final int attempts) throws IOException, JSchException, InterruptedException {
+    private static synchronized ChannelStreams start(final JSchWorker<ChannelStreams> worker, final ExecutionEnvironment env, final int attempts) throws IOException, JSchException, InterruptedException {
         int retry = attempts;
 
         while (retry-- > 0) {
@@ -123,7 +123,7 @@ public final class JschSupport {
             } catch (JSchException ex) {
                 String message = ex.getMessage();
                 Throwable cause = ex.getCause();
-                if (cause != null && cause instanceof NullPointerException) {
+                if (cause instanceof NullPointerException) {
                     // Jsch bug... retry?
                     log.log(Level.INFO, "JSch exception opening channel to " + env + ". Retrying", ex); // NOI18N
                 } else if ("java.io.InterruptedIOException".equals(message)) { // NOI18N
@@ -151,7 +151,7 @@ public final class JschSupport {
         throw new IOException("Failed to execute " + worker.toString()); // NOI18N
     }
 
-    public final static class ChannelStreams {
+    public static final class ChannelStreams {
 
         public final InputStream out;
         public final InputStream err;

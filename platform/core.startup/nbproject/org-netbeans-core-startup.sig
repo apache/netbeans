@@ -1,18 +1,21 @@
 #Signature file v4.1
-#Version 1.68.0
+#Version 1.96.0
 
 CLSS public abstract interface java.io.Serializable
 
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -62,7 +65,7 @@ meth protected java.net.InetAddress getHostAddress(java.net.URL)
 meth protected java.net.URLConnection openConnection(java.net.URL,java.net.Proxy) throws java.io.IOException
 meth protected void parseURL(java.net.URL,java.lang.String,int,int)
 meth protected void setURL(java.net.URL,java.lang.String,java.lang.String,int,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected void setURL(java.net.URL,java.lang.String,java.lang.String,int,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
 supr java.lang.Object
 
@@ -150,7 +153,7 @@ meth public static java.lang.String getLogDir()
 meth public static java.lang.String getUserDir()
 meth public static void initialize()
 supr org.netbeans.CLIHandler
-hfds DIR_MODULES,cacheDir,defaultsLoaded,fallbackToMemory,gui,homeDir,noSplash,systemDir,uiFontSize,userDir
+hfds DIR_MODULES,cacheDir,defaultsLoaded,fallbackToMemory,gui,homeDir,noSplash,systemDir,uiClassName,uiFontSize,userDir
 
 CLSS public final org.netbeans.core.startup.CLITestModuleReload
 cons public init()
@@ -244,12 +247,12 @@ supr org.netbeans.core.startup.ManifestSection
 
 CLSS public final static org.netbeans.core.startup.ManifestSection$ClipboardConvertorSection
  outer org.netbeans.core.startup.ManifestSection
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr org.netbeans.core.startup.ManifestSection
 
 CLSS public final static org.netbeans.core.startup.ManifestSection$DebuggerSection
  outer org.netbeans.core.startup.ManifestSection
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr org.netbeans.core.startup.ManifestSection
 
 CLSS public final static org.netbeans.core.startup.ManifestSection$LoaderSection
@@ -331,7 +334,9 @@ intf org.netbeans.Stamps$Updater
 meth public java.awt.Component getComponent()
 meth public static java.awt.Image loadContent(boolean)
 meth public static org.netbeans.core.startup.Splash getInstance()
+meth public static void configureDefaultRenderingHints(java.awt.Graphics2D)
 meth public static void showAboutDialog(java.awt.Frame,javax.swing.JComponent)
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="")
 meth public void addToMaxSteps(int)
 meth public void cacheReady()
 meth public void dispose()
@@ -340,8 +345,8 @@ meth public void increment(int)
 meth public void print(java.lang.String)
 meth public void setRunning(boolean)
 supr java.lang.Object
-hfds ICON_1024,ICON_16,ICON_256,ICON_32,ICON_48,ICON_512,USE_LAUNCHER_SPLASH,comp,frame,noBar,painter,splash,splashScreen
-hcls SplashComponent,SplashDialog,SplashPainter,SplashRunner,TextBox
+hfds USE_LAUNCHER_SPLASH,comp,frame,noBar,painter,progress,splash
+hcls Progress,SplashComponent,SplashDialog,SplashPainter,TextBox
 
 CLSS public org.netbeans.core.startup.StartLog
 cons public init()
@@ -531,11 +536,11 @@ CLSS public abstract org.openide.filesystems.FileSystem
 cons public init()
 fld public final static java.lang.String PROP_DISPLAY_NAME = "displayName"
 fld public final static java.lang.String PROP_HIDDEN = "hidden"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String PROP_READ_ONLY = "readOnly"
 fld public final static java.lang.String PROP_ROOT = "root"
 fld public final static java.lang.String PROP_SYSTEM_NAME = "systemName"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String PROP_VALID = "valid"
 innr public abstract interface static AtomicAction
 intf java.io.Serializable
@@ -543,7 +548,7 @@ meth protected final void fireFileStatusChanged(org.openide.filesystems.FileStat
 meth protected final void firePropertyChange(java.lang.String,java.lang.Object,java.lang.Object)
 meth protected final void fireVetoableChange(java.lang.String,java.lang.Object,java.lang.Object) throws java.beans.PropertyVetoException
 meth protected final void setSystemName(java.lang.String) throws java.beans.PropertyVetoException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract boolean isReadOnly()
 meth public abstract java.lang.String getDisplayName()
 meth public abstract org.openide.filesystems.FileObject findResource(java.lang.String)
@@ -551,7 +556,7 @@ meth public abstract org.openide.filesystems.FileObject getRoot()
 meth public final boolean isDefault()
 meth public final boolean isValid()
 meth public final java.lang.String getSystemName()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void addFileChangeListener(org.openide.filesystems.FileChangeListener)
 meth public final void addFileStatusListener(org.openide.filesystems.FileStatusListener)
 meth public final void addPropertyChangeListener(java.beans.PropertyChangeListener)
@@ -564,7 +569,7 @@ meth public final void runAtomicAction(org.openide.filesystems.FileSystem$Atomic
 meth public java.lang.String toString()
 meth public org.openide.filesystems.FileObject createTempFile(org.openide.filesystems.FileObject,java.lang.String,java.lang.String,boolean) throws java.io.IOException
 meth public org.openide.filesystems.FileObject find(java.lang.String,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.filesystems.FileObject getTempFolder() throws java.io.IOException
 meth public org.openide.filesystems.StatusDecorator getDecorator()
 meth public org.openide.util.Lookup findExtrasFor(java.util.Set<org.openide.filesystems.FileObject>)
@@ -622,7 +627,7 @@ meth public boolean isReadOnly()
 meth public final boolean getPropagateMasks()
 meth public java.lang.String getDisplayName()
 meth public org.openide.filesystems.FileObject find(java.lang.String,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.filesystems.FileObject findResource(java.lang.String)
 meth public org.openide.filesystems.FileObject getRoot()
 meth public void addNotify()
@@ -640,41 +645,41 @@ meth protected final java.util.List<? extends java.net.URL> findLayers(org.openi
 meth protected final static void provideLayers(java.lang.ClassLoader,java.util.List<java.net.URL>) throws java.io.IOException
 meth protected void refreshAdditionalLayers()
 meth public final java.util.Enumeration<? extends org.openide.filesystems.FileObject> findAll(java.lang.String,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final java.util.Enumeration<? extends org.openide.filesystems.FileObject> findAllResources(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final java.util.Enumeration<? extends org.openide.filesystems.FileSystem> fileSystems()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final java.util.Enumeration<? extends org.openide.filesystems.FileSystem> getFileSystems()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final org.openide.filesystems.FileObject find(java.lang.String,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final org.openide.filesystems.FileObject findResource(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final org.openide.filesystems.FileSystem findFileSystem(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final org.openide.filesystems.FileSystem getDefaultFileSystem()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final org.openide.filesystems.FileSystem[] toArray()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void addFileChangeListener(org.openide.filesystems.FileChangeListener)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void addFileSystem(org.openide.filesystems.FileSystem)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void addRepositoryListener(org.openide.filesystems.RepositoryListener)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void readExternal(java.io.ObjectInput) throws java.io.IOException,java.lang.ClassNotFoundException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void removeFileChangeListener(org.openide.filesystems.FileChangeListener)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void removeFileSystem(org.openide.filesystems.FileSystem)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void removeRepositoryListener(org.openide.filesystems.RepositoryListener)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void reorder(int[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void writeExternal(java.io.ObjectOutput) throws java.io.IOException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.openide.filesystems.Repository getDefault()
 supr java.lang.Object
 hfds ADD_FS,NO_PROVIDER,fclSupport,fileSystems,fileSystemsClone,lastDefLookup,lastLocalProvider,listeners,names,propListener,repository,serialVersionUID,system,vetoListener
@@ -690,7 +695,7 @@ meth public abstract org.openide.filesystems.FileObject[] getFileObjects(java.ne
 meth public static java.net.URL findURL(org.openide.filesystems.FileObject,int)
 meth public static org.openide.filesystems.FileObject findFileObject(java.net.URL)
 meth public static org.openide.filesystems.FileObject[] findFileObjects(java.net.URL)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 hfds CACHE_JUST_COMPUTING,cache,result,threadCache
 hcls DefaultURLMapper
@@ -738,6 +743,8 @@ meth public abstract void resultChanged(org.openide.util.LookupEvent)
 CLSS public org.openide.util.lookup.ProxyLookup
 cons protected init()
 cons public !varargs init(org.openide.util.Lookup[])
+cons public init(org.openide.util.lookup.ProxyLookup$Controller)
+innr public final static Controller
 meth protected !varargs final void setLookups(java.util.concurrent.Executor,org.openide.util.Lookup[])
 meth protected !varargs final void setLookups(org.openide.util.Lookup[])
 meth protected final org.openide.util.Lookup[] getLookups()

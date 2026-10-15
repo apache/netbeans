@@ -56,23 +56,23 @@ import org.netbeans.test.git.operators.CommitOperator;
  */
 public final class TestKit {
 
-    public final static String MODIFIED_COLOR = "#0000FF";
-    public final static String NEW_COLOR = "#008000";
-    public final static String CONFLICT_COLOR = "#FF0000";
-    public final static String IGNORED_COLOR = "#999999";
-    public final static String MODIFIED_STATUS = "[-/M]";
-    public final static String NEW_STATUS = "[-/A]";
-    public final static String CONFLICT_STATUS = "[Conflict ]";
-    public final static String IGNORED_STATUS = "[I]";
-    public final static String UPTODATE_STATUS = "";
-    private final static String TMP_PATH = "/tmp";
-    private final static String WORK_PATH = "work";
+    public static final String MODIFIED_COLOR = "#0000FF";
+    public static final String NEW_COLOR = "#008000";
+    public static final String CONFLICT_COLOR = "#FF0000";
+    public static final String IGNORED_COLOR = "#999999";
+    public static final String MODIFIED_STATUS = "[-/M]";
+    public static final String NEW_STATUS = "[-/A]";
+    public static final String CONFLICT_STATUS = "[Conflict ]";
+    public static final String IGNORED_STATUS = "[I]";
+    public static final String UPTODATE_STATUS = "";
+    private static final String TMP_PATH = "/tmp";
+    private static final String WORK_PATH = "work";
     public static final String PROJECT_NAME = "JavaApp";
     public static final String PROJECT_TYPE = "Java Application";
-    public static final String PROJECT_CATEGORY = "Java";
+    public static final String PROJECT_CATEGORY = "Java with Ant";
     public static final String CLONE_SUF_0 = "_clone0";
     public static final String CLONE_SUF_1 = "_clone1";
-    public final static String LOGGER_NAME = "org.netbeans.modules.git.t9y";
+    public static final String LOGGER_NAME = "org.netbeans.modules.git.t9y";
     public static int TIME_OUT = 15;
 
     public static File prepareProject(String prj_category, String prj_type, String prj_name) throws Exception {

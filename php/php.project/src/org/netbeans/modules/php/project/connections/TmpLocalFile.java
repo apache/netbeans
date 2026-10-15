@@ -29,6 +29,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openide.filesystems.FileUtil;
@@ -162,7 +163,7 @@ public abstract class TmpLocalFile {
 
 
         public DiskTmpLocalFile(String extension) throws IOException {
-            file = FileUtil.normalizeFile(File.createTempFile("nb-php-remote-tmp-file-", extension != null ? "." + extension : null)); // NOI18N
+            file = FileUtil.normalizeFile(Files.createTempFile("nb-php-remote-tmp-file-", extension != null ? "." + extension : null).toFile()); // NOI18N
             file.deleteOnExit();
         }
 

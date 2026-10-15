@@ -63,7 +63,9 @@ import org.netbeans.spi.editor.completion.support.CompletionUtilities;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Utilities;
 
 /**
@@ -200,7 +202,7 @@ public class FSCompletion implements CompletionProvider {
                 if (pathPrefix != null) {
                     File toFile = FileUtil.toFile(f);
                     if (toFile != null) {
-                        URI resolve = Utilities.toURI(toFile).resolve(pathPrefix).normalize();
+                        URI resolve = BaseUtilities.normalizeURI(Utilities.toURI(toFile).resolve(pathPrefix));
                         File normalizedFile = FileUtil.normalizeFile(Utilities.toFile(resolve));
                         f = FileUtil.toFileObject(normalizedFile);
                     } else {
@@ -295,7 +297,7 @@ public class FSCompletion implements CompletionProvider {
 
             DataObject od = DataObject.find(file);
 
-            icon = new ImageIcon(od.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16));
+            icon = ImageUtilities.icon2ImageIcon(ImageUtilities.image2Icon(od.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16)));
 
             this.anchor = anchor;
 

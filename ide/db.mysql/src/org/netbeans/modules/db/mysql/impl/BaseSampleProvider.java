@@ -98,8 +98,8 @@ public class BaseSampleProvider implements SampleProvider {
             ResultSet rs = stmt.executeQuery("SHOW STORAGE ENGINES"); // NOI18N
 
             while (rs.next()) {
-                if ("INNODB".equals(rs.getString(1).toUpperCase()) &&
-                    ("YES".equals(rs.getString(2).toUpperCase()) || "DEFAULT".equals(rs.getString(2).toUpperCase()))) { // NOI18N
+                if ("INNODB".equalsIgnoreCase(rs.getString(1)) &&
+                    ("YES".equalsIgnoreCase(rs.getString(2)) || "DEFAULT".equalsIgnoreCase(rs.getString(2)))) { // NOI18N
                     return true;
                 }
             }

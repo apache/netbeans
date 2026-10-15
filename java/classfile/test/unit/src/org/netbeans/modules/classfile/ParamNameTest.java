@@ -34,7 +34,7 @@ import junit.textui.TestRunner;
  */
 public class ParamNameTest extends TestCase {
     ClassFile classFile;
-    List results;
+    List<String> results;
     
     String[] result = {
 	"void assertTrue(String message, boolean condition)",
@@ -91,14 +91,13 @@ public class ParamNameTest extends TestCase {
     }
 
     public void test() {
-        int counter = 0;
-        for (Iterator it = classFile.getMethods().iterator(); it.hasNext(); ) {
-            Method m = (Method) it.next();
-            if (m.getName().equals("<init>"))
+        for (Method m : classFile.getMethods()) {
+            if (m.getName().equals("<init>")) {
                 continue;
+            }
             String s = m.getReturnSignature() + ' ' + m.getName() + '(';
-            for (Iterator itPar = m.getParameters().iterator(); itPar.hasNext(); ) {
-                Parameter p = (Parameter) itPar.next();
+            for (Iterator<Parameter> itPar = m.getParameters().iterator(); itPar.hasNext(); ) {
+                Parameter p = itPar.next();
                 s += p.getDeclaration();
                 if (itPar.hasNext()) {
                     s += ", ";
@@ -107,7 +106,6 @@ public class ParamNameTest extends TestCase {
             s += ')';
             
             assertTrue("has \"" + s + "\"", results.contains(s));
-            counter++;
         }
     }
 

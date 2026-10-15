@@ -19,7 +19,6 @@
 package org.netbeans.modules.csl.api;
 
 import javax.swing.text.JTextComponent;
-import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.editor.hyperlink.GoToSupport;
 
 /**
@@ -30,7 +29,7 @@ public final class GoToDeclarationAction extends org.netbeans.editor.ext.ExtKit.
  
     @Override
     public boolean gotoDeclaration(JTextComponent target) {
-        GoToSupport.performGoTo((BaseDocument) target.getDocument(),
+        GoToSupport.performGoTo(target.getDocument(),
                 target.getCaretPosition());
 
         return true;

@@ -85,7 +85,7 @@ final class NbStartStop implements LookupListener {
         RequestProcessor.Task[] all;
         synchronized (onStart) {
             Collection<RequestProcessor.Task> values = onStart.values();
-            all = values.toArray(new RequestProcessor.Task[values.size()]);
+            all = values.toArray(new RequestProcessor.Task[0]);
         }
         for (RequestProcessor.Task t : all) {
             t.waitFinished();

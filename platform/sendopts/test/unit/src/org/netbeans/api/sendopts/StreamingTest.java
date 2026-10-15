@@ -109,7 +109,7 @@ public class StreamingTest extends NbTestCase {
         
     }
     
-    public static abstract class SinkProvider {
+    public abstract static class SinkProvider {
         /** associated option */
         final Option option;
 
@@ -136,7 +136,7 @@ public class StreamingTest extends NbTestCase {
         throws CommandException;
     }
     
-    public static abstract class Sink {
+    public abstract static class Sink {
         public static Sink create(String n, WritableByteChannel b, boolean x) {
             return null;
         }

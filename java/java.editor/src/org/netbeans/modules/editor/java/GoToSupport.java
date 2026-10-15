@@ -24,6 +24,8 @@ import com.sun.source.tree.ExportsTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ImportTree;
+import com.sun.source.tree.InstanceOfTree;
+import com.sun.source.tree.LineMap;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -49,8 +51,10 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -61,6 +65,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.PackageElement;
+import javax.lang.model.element.RecordComponentElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
@@ -91,7 +96,8 @@ import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.lsp.HyperlinkLocation;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.editor.ext.ToolTipSupport;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;
 import org.netbeans.lib.editor.util.StringEscapeUtils;
@@ -102,6 +108,7 @@ import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser.Result;
+import org.netbeans.spi.lsp.HyperlinkLocationProvider;
 import org.openide.awt.HtmlBrowser;
 import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
@@ -114,17 +121,17 @@ import org.openide.util.NbBundle;
  * @author Jan Lahoda
  */
 public class GoToSupport {
-    
+
     /** Creates a new instance of GoToSupport */
     public GoToSupport() {
     }
-    
+
     private static FileObject getFileObject(Document doc) {
         DataObject od = (DataObject) doc.getProperty(Document.StreamDescriptionProperty);
-        
+
         return od != null ? od.getPrimaryFile() : null;
     }
-    
+
     public static String getGoToElementTooltip(final Document doc, final int offset, final boolean goToSource, final HyperlinkType type) {
         try {
             final FileObject fo = getFileObject(doc);
@@ -157,14 +164,59 @@ public class GoToSupport {
             throw new IllegalStateException(ex);
         }
     }
-    
+
+    public static CompletableFuture<HyperlinkLocation> getGoToLocation(final Document doc, final int offset, final boolean goToSource) {
+        try {
+            final FileObject fo = getFileObject(doc);
+            if (fo != null) {
+                final GoToTarget[] target = new GoToTarget[1];
+                final LineMap[] lineMap = new LineMap[1];
+
+                ParserManager.parse(Collections.singleton (Source.create(doc)), new UserTask() {
+                    @Override
+                    public void run(ResultIterator resultIterator) throws Exception {
+                        Result res = resultIterator.getParserResult (offset);
+                        CompilationController controller = res != null ? CompilationController.get(res) : null;
+                        if (controller == null || controller.toPhase(Phase.RESOLVED).compareTo(Phase.RESOLVED) < 0) {
+                            return;
+                        }
+
+                        Context resolved = resolveContext(controller, doc, offset, goToSource, false);
+
+                        if (resolved == null) {
+                            target[0] = new GoToTarget(-1, -1, null, null, null, null, null, null, false);
+                        } else {
+                            target[0] = computeGoToTarget(controller, resolved, offset);
+                        }
+
+                        lineMap[0] = controller.getCompilationUnit().getLineMap();
+                    }
+                });
+                if (target[0] != null && target[0].success) {
+                    if (target[0].offsetToOpen < 0) {
+                        CompletableFuture<ElementOpen.Location> future = ElementOpen.getLocation(target[0].cpInfo, target[0].elementToOpen, target[0].resourceName, target[0].fileName);
+                        return future.thenApply(location -> {
+                            return location != null ? HyperlinkLocationProvider.createHyperlinkLocation(location.getFileObject(), location.getStartOffset(), location.getEndOffset()) : null;
+                        });
+                    }
+                    int start = target[0].nameSpan != null ? target[0].nameSpan[0] : target[0].offsetToOpen;
+                    int end = target[0].nameSpan != null ? target[0].nameSpan[1] : target[0].endPos;
+                    return CompletableFuture.completedFuture(HyperlinkLocationProvider.createHyperlinkLocation(fo, start, end));
+                }
+            }
+            return CompletableFuture.completedFuture(null);
+        } catch (ParseException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
     private static boolean isError(Element el) {
         return el == null || el.asType() == null || el.asType().getKind() == TypeKind.ERROR;
     }
-    
+
     private static void performGoTo(final Document doc, final int offset, final boolean goToSource, final boolean javadoc) {
         final AtomicBoolean cancel = new AtomicBoolean();
-        ProgressUtils.runOffEventDispatchThread(new Runnable() {
+        BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
             @Override
             public void run() {
                 performGoToImpl(doc, offset, goToSource, javadoc, cancel);
@@ -175,11 +227,11 @@ public class GoToSupport {
     private static void performGoToImpl (final Document doc, final int offset, final boolean goToSource, final boolean javadoc, final AtomicBoolean cancel) {
         try {
             final FileObject fo = getFileObject(doc);
-            
+
             if (fo == null) {
                 return ;
             }
-            
+
             GoToTarget[] target = new GoToTarget[1];
 
             ParserManager.parse(Collections.singleton (Source.create(doc)), new UserTask() {
@@ -197,23 +249,23 @@ public class GoToSupport {
                     Context resolved = resolveContext(controller, doc, offset, goToSource, false);
 
                     if (resolved == null) {
-                        target[0] = new GoToTarget(-1, null, null, null, false);
+                        target[0] = new GoToTarget(-1, -1, null, null, null, null, null, null, false);
                         return;
                     }
-                    
+
                     if (javadoc) {
                         final URL url = SourceUtils.getPreferredJavadoc(resolved.resolved);
                         if (url != null) {
                             HtmlBrowser.URLDisplayer.getDefault().showURL(url);
                         } else {
-                            target[0] = new GoToTarget(-1, null, null, null, false);
+                            target[0] = new GoToTarget(-1, -1, null, null, null, null, null, null, false);
                         }
                     } else {
                         target[0] = computeGoToTarget(controller, resolved, offset);
                     }
                 }
             });
-            
+
             if (target[0] != null) {
                 boolean openSucceeded = false;
 
@@ -228,7 +280,7 @@ public class GoToSupport {
                         openSucceeded = CALLER.open(fo, target[0].offsetToOpen);
                     } else {
                         if (target[0].elementToOpen != null) {
-                            openSucceeded = CALLER.open(target[0].cpInfo, target[0].elementToOpen);
+                            openSucceeded = CALLER.open(target[0].cpInfo, target[0].elementToOpen, target[0].fileName);
                         }
                     }
                     if (!openSucceeded) {
@@ -240,59 +292,101 @@ public class GoToSupport {
             throw new IllegalStateException(ex);
         }
     }
-    
+
     public static GoToTarget computeGoToTarget(CompilationController controller, Context resolved, int offset) {
         TreePath elpath = getPath(controller, resolved.resolved);
 
         if (elpath != null) {
             Tree tree = elpath.getLeaf();
-            long startPos = controller.getTrees().getSourcePositions().getStartPosition(controller.getCompilationUnit(), tree);
+            long startPos = controller.getTrees().getSourcePositions().getStartPosition(tree);
 
             if (startPos != (-1)) {
                 //check if the caret is inside the declaration itself, as jump in this case is not very usefull:
                 if (isCaretInsideDeclarationName(controller, tree, elpath, offset)) {
-                    return new GoToTarget(-1, null, null, null, false);
+                    return new GoToTarget(-1, -1, null, null, null, null, null, null, false);
                 } else {
+                    long endPos = controller.getTrees().getSourcePositions().getEndPosition(tree);
                     //#71272: it is necessary to translate the offset:
                     return new GoToTarget(controller.getSnapshot().getOriginalOffset((int) startPos),
+                                          controller.getSnapshot().getOriginalOffset((int) endPos),
+                                          getNameSpan(tree, controller.getTreeUtilities()),
+                                          null,
+                                          null,
                                           null,
                                           null,
                                           controller.getElementUtilities().getElementName(resolved.resolved, false).toString(),
                                           true);
                 }
             } else {
-                return new GoToTarget(-1, null, null, null, false);
+                return new GoToTarget(-1, -1, null, null, null, null, null, null, false);
             }
         } else {
+            TypeElement te = resolved.resolved != null ? controller.getElementUtilities().outermostTypeElement(resolved.resolved) : null;
+            String resourceName = te != null ? te.getQualifiedName().toString().replace('.', '/') + ".class" : null;
+            String fileName = findFileName(resolved.resolved);
             return new GoToTarget(-1,
+                                  -1,
+                                  null,
                                   controller.getClasspathInfo(),
                                   ElementHandle.create(resolved.resolved),
+                                  fileName,
+                                  resourceName,
                                   controller.getElementUtilities().getElementName(resolved.resolved, false).toString(),
                                   true);
         }
     }
 
+    public static int[] getNameSpan(Tree tree, TreeUtilities tu) {
+        int[] span = null;
+        switch(tree.getKind()) {
+            case CLASS:
+            case INTERFACE:
+            case ENUM:
+            case ANNOTATION_TYPE:
+                span = tu.findNameSpan((ClassTree)tree);
+                break;
+            case METHOD:
+                span = tu.findNameSpan((MethodTree)tree);
+                break;
+            case VARIABLE:
+                span = tu.findNameSpan((VariableTree)tree);
+                break;
+        }
+        return span;
+    }
+
     public static final class GoToTarget {
         public final int offsetToOpen;
+        public final int endPos;
+        public final int[] nameSpan;
         public final ClasspathInfo cpInfo;
         public final ElementHandle elementToOpen;
+        public final String resourceName;
+        public final String fileName;
         public final String displayNameForError;
         public final boolean success;
 
-        public GoToTarget(int offsetToOpen, ClasspathInfo cpInfo, ElementHandle elementToOpen, String displayNameForError, boolean success) {
+        public GoToTarget(int offsetToOpen, int endPos, int[] nameSpan, ClasspathInfo cpInfo, ElementHandle elementToOpen, String resourceName, String displayNameForError, boolean success) {
+            this(offsetToOpen, endPos, nameSpan, cpInfo, elementToOpen, null, resourceName, displayNameForError, success);
+        }
+
+        GoToTarget(int offsetToOpen, int endPos, int[] nameSpan, ClasspathInfo cpInfo, ElementHandle elementToOpen, String fileName, String resourceName, String displayNameForError, boolean success) {
             this.offsetToOpen = offsetToOpen;
+            this.endPos = endPos;
+            this.nameSpan = nameSpan;
             this.cpInfo = cpInfo;
             this.elementToOpen = elementToOpen;
+            this.fileName = fileName;
+            this.resourceName = resourceName;
             this.displayNameForError = displayNameForError;
             this.success = success;
         }
-
     }
 
     public static void goTo(final Document doc, final int offset, final boolean goToSource) {
         performGoTo(doc, offset, goToSource, false);
     }
-    
+
     public static void goToJavadoc(Document doc, int offset) {
         performGoTo(doc, offset, false, true);
     }
@@ -312,7 +406,7 @@ public class GoToSupport {
         boolean insideImportStmt = false;
         TreePath path = controller.getTreeUtilities().pathFor(exactOffset);
 
-        if (token[0] != null && token[0].id() == JavaTokenId.JAVADOC_COMMENT) {
+        if (token[0] != null && (token[0].id() == JavaTokenId.JAVADOC_COMMENT || token[0].id() == JavaTokenId.JAVADOC_COMMENT_LINE_RUN)) {
             el = JavadocImports.findReferencedElement(controller, offset);
         } else {
             path = adjustPathForModuleName(path);
@@ -347,6 +441,7 @@ public class GoToSupport {
                     el = controller.getTrees().getElement(path);
 
                     if (parentLeaf.getKind() == Kind.METHOD_INVOCATION && isError(el)) {
+                        //TODO: accessor handling?
                         List<ExecutableElement> ee = Utilities.fuzzyResolveMethodInvocation(controller, path.getParentPath(), new ArrayList<TypeMirror>(), new int[1]);
 
                         if (!ee.isEmpty()) {
@@ -378,6 +473,22 @@ public class GoToSupport {
                         Element e = controller.getTrees().getElement(new TreePath(path, ((VariableTree)path.getLeaf()).getInitializer()));
                         if (!controller.getElementUtilities().isSynthetic(e)) {
                             el = e;
+                        }
+                    }
+                    if (el != null && el.getKind() == ElementKind.METHOD) {
+                        Element enclosing = el.getEnclosingElement();
+                        if (enclosing.getKind() == ElementKind.RECORD) {
+                            OUTER:
+                            for (Element peer : enclosing.getEnclosedElements()) {
+                                if (peer.getKind() == ElementKind.RECORD_COMPONENT) {
+                                    for (RecordComponentElement rc : ((TypeElement)enclosing).getRecordComponents()) {
+                                        if (Objects.equals(el, rc.getAccessor())) {
+                                            el = rc;
+                                            break OUTER;
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -436,14 +547,14 @@ public class GoToSupport {
             // attempt to cancel the background task once the tooltip waiting period is over
             class Ctrl implements Callable<Boolean> {
                 private volatile boolean cancel;
-                
+
                 @Override
                 public Boolean call() throws Exception {
                     return cancel;
                 }
-                
+
             };
-            
+
             final Ctrl control = new Ctrl();
             // #240060: if non-null cancel is passed, the actual URL fetch is done on background, allowing us to proceed without blocking
             final ElementJavadoc jdoc = ElementJavadoc.create(controller, resolved.resolved, control);
@@ -465,7 +576,7 @@ public class GoToSupport {
                 }
                 doc.putProperty("TooltipResolver.hyperlinkListener", new HyperlinkListener() { //NOI18N
                     @Override
-                    public void hyperlinkUpdate(HyperlinkEvent e) {                    
+                    public void hyperlinkUpdate(HyperlinkEvent e) {
                         if (e != null && HyperlinkEvent.EventType.ACTIVATED.equals(e.getEventType())) {
                             String desc = e.getDescription();
                             if (desc != null) {
@@ -488,12 +599,12 @@ public class GoToSupport {
             }
             control.cancel = true;
         } catch (Exception ex) {}
-        
-        
+
+
         if (result == null || result.isEmpty()) {
             result = v.result.toString();
         }
-        
+
         int overridableKind = overridableKind(resolved.resolved);
 
         if (overridableKind != (-1) && type != null) {
@@ -510,15 +621,15 @@ public class GoToSupport {
 
         return result;
     }
-    
+
     private static final Set<JavaTokenId> USABLE_TOKEN_IDS = EnumSet.of(JavaTokenId.IDENTIFIER, JavaTokenId.THIS, JavaTokenId.SUPER, JavaTokenId.ARROW);
-    
+
     public static int[] getIdentifierOrLambdaArrowSpan(final Document doc, final int offset, final Token<JavaTokenId>[] token) {
         if (getFileObject(doc) == null) {
             //do nothing if FO is not attached to the document - the goto would not work anyway:
             return null;
         }
-        final int[][] ret = new int[][] {null}; 
+        final int[][] ret = new int[][] {null};
         doc.render(new Runnable() {
             @Override
             public void run() {
@@ -536,7 +647,7 @@ public class GoToSupport {
 
                 Token<JavaTokenId> t = ts.token();
 
-                if (JavaTokenId.JAVADOC_COMMENT == t.id()) {
+                if (JavaTokenId.JAVADOC_COMMENT == t.id() || JavaTokenId.JAVADOC_COMMENT_LINE_RUN == t.id()) {
                     // javadoc hyperlinking (references + param names)
                     TokenSequence<JavadocTokenId> jdts = ts.embedded(JavadocTokenId.language());
                     if (JavadocImports.isInsideReference(jdts, offset) || JavadocImports.isInsideParamName(jdts, offset)) {
@@ -570,11 +681,11 @@ public class GoToSupport {
         });
         return ret[0];
     }
-    
+
     private static Element handlePossibleAnonymousInnerClass(CompilationInfo info, final Element el) {
         Element encl = el.getEnclosingElement();
         Element doubleEncl = encl != null ? encl.getEnclosingElement() : null;
-        
+
         if (   doubleEncl != null
             && !doubleEncl.getKind().isClass()
             && !doubleEncl.getKind().isInterface()
@@ -582,26 +693,26 @@ public class GoToSupport {
             && encl.getKind() == ElementKind.CLASS) {
             TreePath enclTreePath = info.getTrees().getPath(encl);
             Tree enclTree = enclTreePath != null ? enclTreePath.getLeaf() : null;
-            
+
             if (enclTree != null && TreeUtilities.CLASS_TREE_KINDS.contains(enclTree.getKind()) && enclTreePath.getParentPath().getLeaf().getKind() == Tree.Kind.NEW_CLASS) {
                 NewClassTree nct = (NewClassTree) enclTreePath.getParentPath().getLeaf();
-                
+
                 if (nct.getClassBody() != null) {
                     Element parentElement = info.getTrees().getElement(new TreePath(enclTreePath, nct.getIdentifier()));
-                    
+
                     if (parentElement == null || parentElement.getKind().isInterface()) {
                         return parentElement;
                     } else {
                         //annonymous innerclass extending a class. Find out which constructor is used:
                         TreePath superConstructorCall = new FindSuperConstructorCall().scan(enclTreePath, null);
-                        
+
                         if (superConstructorCall != null) {
                             return info.getTrees().getElement(superConstructorCall);
                         }
                     }
                 }
             }
-            
+
             return null;//prevent jumps to incorrect positions
         } else {
             if (encl != null) {
@@ -611,7 +722,7 @@ public class GoToSupport {
             }
         }
     }
-    
+
     /**
      * Tries to guess element referenced by static import. It may not be deterministic
      * as in <code>import static java.awt.Color.getColor</code>.
@@ -621,7 +732,7 @@ public class GoToSupport {
         if (!impt.isStatic() || impIdent == null || impIdent.getKind() != Kind.MEMBER_SELECT) {
             return null;
         }
-        
+
         // resolve type element containing imported element
         Trees trees = javac.getTrees();
         MemberSelectTree select = (MemberSelectTree) impIdent;
@@ -632,7 +743,7 @@ public class GoToSupport {
         if (isError(selectElm)) {
             return null;
         }
-        
+
         // resolve class to determine scope
         TypeMirror clazzMir = null;
         TreePath clazzPath = null;
@@ -651,9 +762,9 @@ public class GoToSupport {
         if (clazzMir == null) {
             return null;
         }
-        
+
         Scope clazzScope = trees.getScope(clazzPath);
-        
+
         // choose the first acceptable member
         for (Element member : selectElm.getEnclosedElements()) {
             if (member.getModifiers().contains(Modifier.STATIC)
@@ -664,10 +775,16 @@ public class GoToSupport {
         }
         return null;
     }
-    
+
     private static boolean isCaretInsideDeclarationName(CompilationInfo info, Tree t, TreePath path, int caret) {
         try {
             switch (t.getKind()) {
+                case INSTANCE_OF:
+                    //XXX: why the following?
+                    Tree pattern = ((InstanceOfTree) t).getPattern();
+                    if (pattern == null || pattern.getKind() != Kind.BINDING_PATTERN) {
+                        return false;
+                    }
                 case ANNOTATION_TYPE:
                 case CLASS:
                 case ENUM:
@@ -709,7 +826,7 @@ public class GoToSupport {
 
         return -1;
     }
-    
+
     private static TreePath adjustPathForModuleName(TreePath path) {
         TreePath tp = path;
         while (tp != null && (tp.getLeaf().getKind() == Kind.IDENTIFIER || tp.getLeaf().getKind() == Kind.MEMBER_SELECT)) {
@@ -737,10 +854,19 @@ public class GoToSupport {
                 if (found != null) {
                     return null;
                 }
+                if (tree != null && tree.getKind() == Kind.BINDING_PATTERN) {
+                    if (process(new TreePath(getCurrentPath(), tree))) {
+                        return null;
+                    }
+                }
                 return super.scan(tree, p);
             }
             private boolean process() {
-                Element resolved = info.getTrees().getElement(getCurrentPath());
+                return process(getCurrentPath());
+            }
+            private boolean process(TreePath path) {
+
+                Element resolved = org.netbeans.modules.java.editor.base.semantic.Utilities.toRecordComponent(info.getTrees().getElement(path));
                 if (toFind.equals(resolved)) {
                     found = getCurrentPath();
                     return true;
@@ -785,16 +911,16 @@ public class GoToSupport {
     }
 
     private static final class FindSuperConstructorCall extends ErrorAwareTreePathScanner<TreePath, Void> {
-        
+
         @Override
         public TreePath visitMethodInvocation(MethodInvocationTree tree, Void v) {
             if (tree.getMethodSelect().getKind() == Kind.IDENTIFIER && "super".equals(((IdentifierTree) tree.getMethodSelect()).getName().toString())) {
                 return getCurrentPath();
             }
-            
+
             return null;
         }
-        
+
         @Override
         public TreePath reduce(TreePath first, TreePath second) {
             if (first == null) {
@@ -803,9 +929,9 @@ public class GoToSupport {
                 return first;
             }
         }
-        
+
     }
-    
+
     private static final class DisplayNameElementVisitor extends AbstractElementVisitor9<Void, Boolean> {
 
         private final CompilationInfo info;
@@ -813,15 +939,15 @@ public class GoToSupport {
         public DisplayNameElementVisitor(CompilationInfo info) {
             this.info = info;
         }
-        
+
         private StringBuffer result        = new StringBuffer();
-        
+
         private void boldStartCheck(boolean highlightName) {
             if (highlightName) {
                 result.append("<b>");
             }
         }
-        
+
         private void boldStopCheck(boolean highlightName) {
             if (highlightName) {
                 result.append("</b>");
@@ -831,18 +957,18 @@ public class GoToSupport {
         @Override
         public Void visitModule(ModuleElement e, Boolean highlightName) {
             result.append("module ");
-            boldStartCheck(highlightName);            
-            result.append(e.getQualifiedName());            
-            boldStopCheck(highlightName);            
+            boldStartCheck(highlightName);
+            result.append(e.getQualifiedName());
+            boldStopCheck(highlightName);
             return null;
         }
-        
+
         @Override
         public Void visitPackage(PackageElement e, Boolean highlightName) {
-            result.append("package ");                   
-            boldStartCheck(highlightName);            
-            result.append(e.getQualifiedName());            
-            boldStopCheck(highlightName);            
+            result.append("package ");
+            boldStartCheck(highlightName);
+            result.append(e.getQualifiedName());
+            boldStopCheck(highlightName);
             return null;
         }
 
@@ -850,7 +976,7 @@ public class GoToSupport {
         public Void visitType(TypeElement e, Boolean highlightName) {
             return printType(e, null, highlightName);
         }
-        
+
         Void printType(TypeElement e, DeclaredType dt, Boolean highlightName) {
             modifier(e.getModifiers());
             switch (e.getKind()) {
@@ -868,7 +994,7 @@ public class GoToSupport {
                     break;
             }
             Element enclosing = e.getEnclosingElement();
-            
+
             if (enclosing == SourceUtils.getEnclosingTypeElement(e)) {
                 result.append(((TypeElement) enclosing).getQualifiedName());
                 result.append('.');
@@ -878,7 +1004,7 @@ public class GoToSupport {
             } else {
                 result.append(e.getQualifiedName());
             }
-            
+
             if (dt != null) {
                 dumpRealTypeArguments(dt.getTypeArguments());
             }
@@ -889,34 +1015,35 @@ public class GoToSupport {
         @Override
         public Void visitVariable(VariableElement e, Boolean highlightName) {
             modifier(e.getModifiers());
-            
+
             result.append(getTypeName(info, e.asType(), true));
-            
+
             result.append(' ');
-            
+
             boldStartCheck(highlightName);
 
             result.append(e.getSimpleName());
-            
+
             boldStopCheck(highlightName);
-            
+
             if (highlightName) {
                 if (e.getConstantValue() != null) {
                     result.append(" = ");
                     result.append(StringEscapeUtils.escapeHtml(e.getConstantValue().toString()));
                 }
-                
+
                 Element enclosing = e.getEnclosingElement();
-                
+
                 if (e.getKind() != ElementKind.PARAMETER && e.getKind() != ElementKind.LOCAL_VARIABLE
-                        && e.getKind() != ElementKind.RESOURCE_VARIABLE && e.getKind() != ElementKind.EXCEPTION_PARAMETER) {
+                        && e.getKind() != ElementKind.RESOURCE_VARIABLE && e.getKind() != ElementKind.EXCEPTION_PARAMETER
+                        && e.getKind() != ElementKind.BINDING_VARIABLE) {
                     result.append(" in ");
 
                     //short typename:
                     result.append(getTypeName(info, enclosing.asType(), true));
                 }
             }
-            
+
             return null;
         }
 
@@ -970,10 +1097,15 @@ public class GoToSupport {
         public Void visitTypeParameter(TypeParameterElement e, Boolean highlightName) {
             return null;
         }
-        
+
+        @Override
+        public Void visitRecordComponent(RecordComponentElement e, Boolean p) {
+            return visitVariable((VariableElement) e, p);
+        }
+
         private void modifier(Set<Modifier> modifiers) {
             boolean addSpace = false;
-            
+
             for (Modifier m : modifiers) {
                 if (addSpace) {
                     result.append(' ');
@@ -981,33 +1113,33 @@ public class GoToSupport {
                 addSpace = true;
                 result.append(m.toString());
             }
-            
+
             if (addSpace) {
                 result.append(' ');
             }
         }
-        
+
 //        private void throwsDump()
 
         private void dumpTypeArguments(List<? extends TypeParameterElement> list) {
             if (list.isEmpty()) {
                 return ;
             }
-            
+
             boolean addSpace = false;
-            
+
             result.append("&lt;");
-            
+
             for (TypeParameterElement e : list) {
                 if (addSpace) {
                     result.append(", ");
                 }
-                
+
                 result.append(getTypeName(info, e.asType(), true));
-                
+
                 addSpace = true;
             }
-                
+
             result.append("&gt;");
         }
 
@@ -1035,7 +1167,7 @@ public class GoToSupport {
 
         private void dumpArguments(List<? extends VariableElement> list, List<? extends TypeMirror> types) {
             boolean addSpace = false;
-            
+
             result.append('(');
 
             Iterator<? extends VariableElement> listIt = list.iterator();
@@ -1045,7 +1177,7 @@ public class GoToSupport {
                 if (addSpace) {
                     result.append(", ");
                 }
-                
+
                 VariableElement ve = listIt.next();
                 TypeMirror      type = typesIt != null ? typesIt.next() : ve.asType();
 
@@ -1055,7 +1187,7 @@ public class GoToSupport {
 
                 addSpace = true;
             }
-                
+
             result.append(')');
         }
 
@@ -1063,39 +1195,43 @@ public class GoToSupport {
             if (list.isEmpty()) {
                 return ;
             }
-            
+
             boolean addSpace = false;
-            
+
             result.append(" throws ");
-            
+
             for (TypeMirror t : list) {
                 if (addSpace) {
                     result.append(", ");
                 }
-                
+
                 result.append(getTypeName(info, t, true));
-                
+
                 addSpace = true;
             }
         }
-            
+
     }
-    
+
     private static String getTypeName(CompilationInfo info, TypeMirror t, boolean fqn) {
         return translate(Utilities.getTypeName(info, t, fqn).toString());
     }
-    
+
     private static String[] c = new String[] {"&", "<", ">", "\n", "\""}; // NOI18N
     private static String[] tags = new String[] {"&amp;", "&lt;", "&gt;", "<br>", "&quot;"}; // NOI18N
-    
+
     private static String translate(String input) {
         for (int cntr = 0; cntr < c.length; cntr++) {
-            input = input.replaceAll(c[cntr], tags[cntr]);
+            input = input.replace(c[cntr], tags[cntr]);
         }
-        
+
         return input;
     }
-    
+
+    static String findFileName(Element resolved) {
+        return SourceUtils.findSourceFileName(resolved);
+    }
+
     static UiUtilsCaller CALLER = new UiUtilsCaller() {
         @Override
         public boolean open(FileObject fo, int pos) {
@@ -1108,8 +1244,8 @@ public class GoToSupport {
             StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(GoToSupport.class, "WARN_CannotGoToGeneric", value));
         }
         @Override
-        public boolean open(ClasspathInfo info, ElementHandle<?> el) {
-            return ElementOpen.open(info, el);
+        public boolean open(ClasspathInfo info, ElementHandle<?> el, String fileName) {
+            return ElementOpen.open(info, el, fileName);
         }
         @Override
         public void warnCannotOpen(String displayName) {
@@ -1117,11 +1253,11 @@ public class GoToSupport {
             StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(GoToSupport.class, "WARN_CannotGoTo", displayName));
         }
     };
-    
+
     interface UiUtilsCaller {
         public boolean open(FileObject fo, int pos);
         public void beep(boolean goToSource, boolean goToJavadoc);
-        public boolean open(ClasspathInfo info, ElementHandle<?> el);
+        public boolean open(ClasspathInfo info, ElementHandle<?> el, String fileName);
         public void warnCannotOpen(String displayName);
     }
 

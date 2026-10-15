@@ -1,0 +1,6 @@
+    const TRAIT_TEST = "trait1";
+          ----------
+HINT:Constant "TRAIT_TEST" has already been declared
+    const trait_test = "trait2";
+          ----------
+HINT:Constant "trait_test" has already been declared

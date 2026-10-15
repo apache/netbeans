@@ -120,7 +120,7 @@ public final class CompilerOptionsQueryMergerTest extends NbTestCase {
         final CompilerOptionsQueryImpl impl1 = new CompilerOptionsQueryImpl();
         final CompilerOptionsQueryImpl impl2 = new CompilerOptionsQueryImpl();
         impl1.addRoot(root1).addArgs("a1", "a2");   //NOI18N
-        impl2.addRoot(root2).addArgs("b1", "b2");;  //NOI18N
+        impl2.addRoot(root2).addArgs("b1", "b2");  //NOI18N
         final Lookup baseLkp = Lookups.fixed(
                 impl1,
                 impl2);

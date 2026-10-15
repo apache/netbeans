@@ -36,7 +36,7 @@ import org.openide.util.LookupListener;
 /**
  * Class for registering property editors.
  * 
- * @author Jan Horvath <jhorvath@netbeans.org>
+ * @author Jan Horvath &lt;jhorvath@netbeans.org&gt;
  */
 public final class NodesRegistrationSupport {
     
@@ -60,8 +60,8 @@ public final class NodesRegistrationSupport {
                 @Override
                 void register() {
                     ClassLoader clsLoader = findClsLoader();
-                    for (Iterator it = lookupResult.allInstances().iterator(); it.hasNext();) {
-                        PEClassRegistration clsReg = (PEClassRegistration) it.next();
+                    for (Iterator<PEClassRegistration> it = lookupResult.allInstances().iterator(); it.hasNext();) {
+                        PEClassRegistration clsReg = it.next();
                         for (String type : clsReg.targetTypes) {
                             try {
                                 Class<?> cls = getClassFromCanonicalName(type);
@@ -88,12 +88,12 @@ public final class NodesRegistrationSupport {
                 @Override
                 void register() {
                     Set<String> newPath = new LinkedHashSet<String> ();
-                    for (Iterator it = lookupResult.allInstances().iterator(); it.hasNext();) {
-                        PEPackageRegistration pkgReg = (PEPackageRegistration) it.next();
+                    for (Iterator<PEPackageRegistration> it = lookupResult.allInstances().iterator(); it.hasNext();) {
+                        PEPackageRegistration pkgReg = it.next();
                         newPath.add(pkgReg.pkg);
                     }
                     newPath.addAll(originalPath);
-                    PropertyEditorManager.setEditorSearchPath(newPath.toArray(new String[newPath.size()]));
+                    PropertyEditorManager.setEditorSearchPath(newPath.toArray(new String[0]));
                 }
 
                 @Override
@@ -113,12 +113,12 @@ public final class NodesRegistrationSupport {
                 @Override
                 void register() {
                     Set<String> newPath = new LinkedHashSet<String> ();
-                    for (Iterator it = lookupResult.allInstances().iterator(); it.hasNext();) {
-                        BeanInfoRegistration biReg = (BeanInfoRegistration) it.next();
+                    for (Iterator<BeanInfoRegistration> it = lookupResult.allInstances().iterator(); it.hasNext();) {
+                        BeanInfoRegistration biReg = it.next();
                         newPath.add(biReg.searchPath);
                     }
                     newPath.addAll(originalBeanInfoSearchPath);
-                    Introspector.setBeanInfoSearchPath(newPath.toArray(new String[newPath.size()]));
+                    Introspector.setBeanInfoSearchPath(newPath.toArray(new String[0]));
                 }
 
                 @Override
@@ -237,7 +237,7 @@ public final class NodesRegistrationSupport {
         }
     }
     
-    private static abstract class AbstractRegistrator implements LookupListener {
+    private abstract static class AbstractRegistrator implements LookupListener {
         Result lookupResult;
         private final Class cls;
         

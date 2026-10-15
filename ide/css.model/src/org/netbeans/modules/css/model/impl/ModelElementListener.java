@@ -36,9 +36,11 @@ import org.netbeans.modules.css.model.api.ImportItem;
 import org.netbeans.modules.css.model.api.Imports;
 import org.netbeans.modules.css.model.api.Media;
 import org.netbeans.modules.css.model.api.MediaBody;
+import org.netbeans.modules.css.model.api.MediaCondition;
 import org.netbeans.modules.css.model.api.MediaExpression;
 import org.netbeans.modules.css.model.api.MediaFeature;
 import org.netbeans.modules.css.model.api.MediaFeatureValue;
+import org.netbeans.modules.css.model.api.MediaInParens;
 import org.netbeans.modules.css.model.api.MediaQuery;
 import org.netbeans.modules.css.model.api.MediaQueryList;
 import org.netbeans.modules.css.model.api.MediaQueryOperator;
@@ -116,8 +118,12 @@ public interface ModelElementListener {
 
     public void elementAdded(MediaExpression mediaExpression);
 
+    public void elementAdded(MediaCondition mediaCondition);
+
+    public void elementAdded(MediaInParens mediaCondition);
+
     public void elementAdded(MediaFeature mediaFeature);
-    
+
     public void elementAdded(MediaFeatureValue mediaFeatureValue);
 
     public void elementAdded(MediaType mediaType);
@@ -571,7 +577,7 @@ public interface ModelElementListener {
         @Override
         public void elementRemoved(Declaration declaration) {
         }
-        
+
         @Override
         public void elementRemoved(PropertyDeclaration declaration) {
         }
@@ -594,6 +600,14 @@ public interface ModelElementListener {
 
         @Override
         public void elementAdded(MediaQueryOperator mediaQuery) {
+        }
+
+        @Override
+        public void elementAdded(MediaCondition mediaQuery) {
+        }
+
+        @Override
+        public void elementAdded(MediaInParens mediaQuery) {
         }
 
         @Override

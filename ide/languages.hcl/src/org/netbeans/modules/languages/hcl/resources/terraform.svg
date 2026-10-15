@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+
+The MIT License (MIT)
+Copyright (c) 2021 Philipp Kief
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO
+EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
+OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+IN THE SOFTWARE.
+
+-->
+
+<!--
+ Source:
+ https://github.com/PKief/vscode-material-icon-theme/blob/12c67aa287c23f68a5aa461daec293c8fabcb666/icons/terraform.svg
+
+ Modified:
+ - added height and width attributes to svg attribute
+ - added transform so that icon fits the height/width
+-->
+
+<svg class="logo"
+     viewBox="0 0 50 61"
+     version="1.1"
+     height="16px"
+     width="16px"
+     id="icon"
+     xmlns="http://www.w3.org/2000/svg"
+>
+  <g
+     fill="#5c6bc0"
+     id="g6"
+     transform="matrix(1.1683098,0,0,1.1683098,-4.207745,-5.1334489)">
+    <path
+       class="rect-dark"
+       d="m33.674 38.29 14.225-8.206V13.647L33.674 21.87"
+       id="path2" />
+    <path
+       class="rect-light"
+       d="m17.888 13.647 14.225 8.223v16.42l-14.225-8.215M2.101 20.907l14.225 8.214V12.693L2.101 4.479m15.787 43.828 14.225 8.214V40.093L17.888 31.88"
+       id="path4" />
+  </g>
+</svg>

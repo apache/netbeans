@@ -74,7 +74,7 @@ final class JspUpToDateStatusProvider extends UpToDateStatusProvider implements 
     //the property changes are fired via JspColoringData by TagLibParseSupport
     public void propertyChange(PropertyChangeEvent evt) {
         Boolean newValue = (Boolean)evt.getNewValue();
-        if(JspColoringData.PROP_PARSING_IN_PROGRESS.equals(evt.getPropertyName()) && newValue.booleanValue())
+        if(JspColoringData.PROP_PARSING_IN_PROGRESS.equals(evt.getPropertyName()) && newValue)
             setUpToDate(UpToDateStatus.UP_TO_DATE_PROCESSING);
         if(JspColoringData.PROP_PARSING_SUCCESSFUL.equals(evt.getPropertyName()))
             setUpToDate(UpToDateStatus.UP_TO_DATE_OK);

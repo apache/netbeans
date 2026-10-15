@@ -24,6 +24,7 @@ import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.WeakHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.netbeans.modules.web.clientproject.env.CommonProjectHelper;
 import org.netbeans.modules.web.clientproject.env.Values;
@@ -36,7 +37,6 @@ import org.netbeans.spi.project.support.ant.EditableProperties;
 import org.netbeans.spi.project.support.ant.ProjectXmlSavedHook;
 import org.netbeans.spi.queries.SharabilityQueryImplementation2;
 import org.openide.filesystems.FileObject;
-import org.openide.util.WeakSet;
 import org.w3c.dom.Element;
 
 /**
@@ -50,7 +50,7 @@ final class AntProjectHelperImpl extends CommonProjectHelper {
         this.delegate = delegate;
         this.listener = new L();
         this.delegate.addAntProjectListener(listener);
-        this.antListeners = Collections.synchronizedSet(new WeakSet<Callback>());
+        this.antListeners = Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
     }
 
     @Override

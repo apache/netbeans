@@ -84,6 +84,6 @@ public class Hk2ResourceNode extends Hk2ItemNode {
         if (customizer == ConnectionPoolCustomizer.class) {
             actions.add(SystemAction.get(ConnectionPoolAdvancedAttributesAction.class));
         }
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 }

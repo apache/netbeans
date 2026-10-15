@@ -49,6 +49,11 @@ public final class AliasedClass extends AliasedType implements ClassElement {
     }
 
     @Override
+    public boolean isReadonly() {
+        return getClassElement().isReadonly();
+    }
+
+    @Override
     public boolean isAnonymous() {
         return getClassElement().isAnonymous();
     }
@@ -70,5 +75,10 @@ public final class AliasedClass extends AliasedType implements ClassElement {
     @Override
     public Collection<QualifiedName> getUsedTraits() {
         return getClassElement().getUsedTraits();
+    }
+
+    @Override
+    public boolean isAttribute() {
+        return getClassElement().isAttribute();
     }
 }

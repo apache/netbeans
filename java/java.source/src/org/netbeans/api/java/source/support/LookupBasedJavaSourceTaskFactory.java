@@ -38,7 +38,7 @@ import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.Parameters;
 
-/**A {@link JavaSourceTaskFactorySupport} that registers tasks to all files that are
+/**A {@link JavaSourceTaskFactory} that registers tasks to all files that are
  * found in the given {@link Lookup}.
  *
  * This factory searches for {@link FileObject}, {@link DataObject} and {@link Node}
@@ -107,7 +107,7 @@ public abstract class LookupBasedJavaSourceTaskFactory extends JavaSourceTaskFac
      *
      * @param lookup new {@link Lookup}
      */
-    protected synchronized final void setLookup(Lookup lookup) {
+    protected final synchronized void setLookup(Lookup lookup) {
         if (fileObjectResult != null) {
             fileObjectResult.removeLookupListener(listener);
         }
@@ -154,7 +154,7 @@ public abstract class LookupBasedJavaSourceTaskFactory extends JavaSourceTaskFac
         }
     }
     
-    /**@inheritDoc*/
+    /**{@inheritDoc}*/
     public synchronized List<FileObject> getFileObjects() {
         return currentFiles;
     }

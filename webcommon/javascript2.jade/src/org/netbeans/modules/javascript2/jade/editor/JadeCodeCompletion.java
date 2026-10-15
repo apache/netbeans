@@ -70,10 +70,11 @@ public class JadeCodeCompletion implements CodeCompletionHandler2 {
     
     private boolean caseSensitive;
     
-    protected final static String CSS_ID_PREFIX = "#";
-    protected final static String CSS_CLASS_PREFIX = ".";
+    protected static final String CSS_ID_PREFIX = "#";
+    protected static final String CSS_CLASS_PREFIX = ".";
     
     @Override
+    @SuppressWarnings("fallthrough")
     public CodeCompletionResult complete(CodeCompletionContext context) {
         ParserResult info = context.getParserResult();
         int carretOffset = context.getParserResult().getSnapshot().getEmbeddedOffset(context.getCaretOffset());

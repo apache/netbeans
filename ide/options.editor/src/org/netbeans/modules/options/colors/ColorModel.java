@@ -25,9 +25,9 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Image;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,7 +38,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -115,7 +114,7 @@ public final class ColorModel {
     }
 
     private List<AttributeSet> processAnnotations(Map<String, AttributeSet> annos, boolean isdefault) {
-        List<AttributeSet> annotations = new ArrayList<AttributeSet>();
+        List<AttributeSet> annotations = new ArrayList<>();
         for(Iterator it = AnnotationTypes.getTypes().getAnnotationTypeNames(); it.hasNext(); ) {
             String name = (String) it.next ();
             
@@ -134,28 +133,32 @@ public final class ColorModel {
             category.addAttribute(StyleConstants.NameAttribute, annotationType.getName());
             
             URL iconURL = annotationType.getGlyph ();
-            Image image = null;
-            if (iconURL.getProtocol ().equals ("nbresloc")) { // NOI18N
-                image = ImageUtilities.loadImage(iconURL.getPath().substring(1));
-            } else {
-                image = Toolkit.getDefaultToolkit ().getImage (iconURL);
-            }
-            if (image != null) {
-                category.addAttribute("icon", new ImageIcon(image)); //NOI18N
+            try {
+                Image image = ImageUtilities.loadImage(iconURL.toURI());
+                if (image != null) {
+                    category.addAttribute("icon", ImageUtilities.image2Icon(image)); //NOI18N
+                }
+            } catch (URISyntaxException e) {
+                LOG.log(Level.WARNING, "AnnotationType.getGlyph() returned invalid URI", e);
             }
             
+            AttributeSet as = annos.get(name);
+            // don't set if profile value is null so that inherited values don't show up as fixed colors
             Color bgColor = annotationType.getHighlight();
-            if (annotationType.isUseHighlightColor() && bgColor != null) {
+            if (annotationType.isUseHighlightColor() && bgColor != null
+                    && (as == null || as.getAttribute(StyleConstants.Background) != null)) {
                 category.addAttribute(StyleConstants.Background, bgColor);
             }
             
             Color fgColor = annotationType.getForegroundColor();
-            if (!annotationType.isInheritForegroundColor() && fgColor != null) {
+            if (!annotationType.isInheritForegroundColor() && fgColor != null
+                    && (as == null || as.getAttribute(StyleConstants.Foreground) != null)) {
                 category.addAttribute(StyleConstants.Foreground, fgColor);
             }
 
             Color underColor = annotationType.getWaveUnderlineColor();
-            if (annotationType.isUseWaveUnderlineColor() && underColor != null) {
+            if (annotationType.isUseWaveUnderlineColor() && underColor != null
+                    && (as == null || as.getAttribute(EditorStyleConstants.WaveUnderlineColor) != null)) {
                 category.addAttribute(EditorStyleConstants.WaveUnderlineColor, underColor);
             }
             
@@ -166,9 +169,7 @@ public final class ColorModel {
                     category.removeAttribute(StyleConstants.Foreground);
                     category.removeAttribute(EditorStyleConstants.WaveUnderlineColor);
                 }
-                AttributeSet as = annos.get(name);
                 category.addAttributes(as);
-                
             }
 
             annotations.add(category);

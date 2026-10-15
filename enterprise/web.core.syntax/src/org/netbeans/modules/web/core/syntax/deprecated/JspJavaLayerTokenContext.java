@@ -29,7 +29,7 @@ import org.netbeans.editor.ext.java.JavaLayerTokenContext;
 * @author Petr Jiricka
 * @deprecated Will be replaced by Semantic Coloring
 */
-
+@Deprecated
 public class JspJavaLayerTokenContext extends TokenContext {
 
     private JspJavaLayerTokenContext() {

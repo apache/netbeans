@@ -54,9 +54,11 @@ public class ImageValuesModuleTest extends CssModuleTestBase {
         assertPropertyDeclaration("@repeating-radial-gradient:repeating-radial-gradient(20px 30px, circle contain, red, yellow, green 100%, yellow 150%, red 200%)");
         assertPropertyDeclaration("@repeating-radial-gradient:repeating-radial-gradient(red, blue 20px, red 40px)");
      
-        
-        
-        
+        assertPropertyDeclaration("@image: conic-gradient(from 40deg, white, black)");
+        assertPropertyDeclaration("@image: conic-gradient(red 36deg, orange 36deg 170deg, yellow 170deg)");
+        assertPropertyDeclaration("@image: conic-gradient(var(--color) var(--angle))");
+        assertPropertyDeclaration("@image: conic-gradient(at 60px 20%, coral, orange, coral)");
+        assertPropertyDeclaration("@image: conic-gradient(from 45deg in oklch, white, black, white)");
     }
     
 }

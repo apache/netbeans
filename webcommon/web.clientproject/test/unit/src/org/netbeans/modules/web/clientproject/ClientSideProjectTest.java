@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import org.netbeans.api.annotations.common.NullAllowed;
-import org.netbeans.api.progress.ProgressHandleFactory;
+import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.junit.NbTestCase;
@@ -137,7 +137,7 @@ public class ClientSideProjectTest extends NbTestCase {
                 templateProperties.getSiteRootFolder(),
                 templateProperties.getTestFolder(),
                 templateProperties.getTestSeleniumFolder());
-        siteZip.apply(project.getProjectDirectory(), templateProperties, ProgressHandleFactory.createHandle("somename"));
+        siteZip.apply(project.getProjectDirectory(), templateProperties, ProgressHandle.createHandle("somename"));
         ClientSideProjectProperties projectProperties = new ClientSideProjectProperties(project);
         assertEquals("site root should be created from template",
                 project.getProjectDirectory().getFileObject("custom_siteroot"), FileUtil.toFileObject(projectProperties.getResolvedSiteRootFolder()));

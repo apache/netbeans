@@ -43,6 +43,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -608,11 +610,8 @@ public class JavaSourceHelper {
 
     private static ModifiersTree createModifiersTree(WorkingCopy copy, Modifier[] modifiers, String[] annotations, Object[] annotationAttrs) {
         TreeMaker maker = copy.getTreeMaker();
-        Set<Modifier> modifierSet = new HashSet<Modifier>();
-
-        for (Modifier modifier : modifiers) {
-            modifierSet.add(modifier);
-        }
+        Set<Modifier> modifierSet = EnumSet.noneOf(Modifier.class);
+        modifierSet.addAll(Arrays.asList(modifiers));
 
         List<AnnotationTree> annotationTrees = createAnnotationTrees(copy, annotations, annotationAttrs);
 
@@ -999,7 +998,7 @@ public class JavaSourceHelper {
 
                     if (element != null) {
                         elementTree = trees.getTree(element);
-                        long pos = trees.getSourcePositions().getStartPosition(tree, elementTree);
+                        long pos = trees.getSourcePositions().getStartPosition(elementTree);
                         position[0] = tree.getLineMap().getLineNumber(pos) - 1;
                         position[1] = tree.getLineMap().getColumnNumber(pos) - 1;
                     }

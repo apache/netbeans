@@ -36,17 +36,11 @@ import org.netbeans.modules.glassfish.tooling.logging.Logger;
  */
 public abstract class AdminFactory {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(AdminFactory.class);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates specific <code>AdminFactory</code> child class instance
      * to build GlassFish server administration command runner and data objects
@@ -57,26 +51,17 @@ public abstract class AdminFactory {
      */
     static AdminFactory getInstance(final GlassFishVersion version)
             throws CommandException {
-        switch (version) {
-            // Use HTTP interface for any GlassFish older than 3.
-            case GF_1:
-                throw new CommandException(
-                        CommandException.UNSUPPORTED_VERSION);
-            case GF_2:
-            case GF_2_1:
-            case GF_2_1_1:
-                return AdminFactoryHttp.getInstance();
-            // Use REST interface for GlassFish 3 and 4.
-            case GF_3:
-            case GF_3_0_1:
-            case GF_3_1:
-            case GF_3_1_1:
-            case GF_3_1_2:
-            case GF_4:
-                return AdminFactoryRest.getInstance();
-            // Anything else is not unknown.
-            default:
-                throw new CommandException(CommandException.UNKNOWN_VERSION);
+        // Use REST interface for GlassFish 3 and newer.
+        if (GlassFishVersion.ge(version, GlassFishVersion.GF_3)) {
+            return AdminFactoryRest.getInstance();
+        }
+        // Use HTTP interface for any GlassFish older than 3.
+        else if (GlassFishVersion.ge(version, GlassFishVersion.GF_2)) {
+            return AdminFactoryHttp.getInstance();
+        }
+        // Anything else is not unknown.
+        else {
+            throw new CommandException(CommandException.UNKNOWN_VERSION);
         }
     }
 
@@ -100,10 +85,7 @@ public abstract class AdminFactory {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Abstract methods                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Build runner for command interface execution and connect it with
      * provided <code>Command</code> instance.
@@ -115,10 +97,7 @@ public abstract class AdminFactory {
     public abstract Runner getRunner(
             final GlassFishServer srv, final Command cmd);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of selected <code>Runner</code> child class.
      * <p/>

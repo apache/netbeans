@@ -31,7 +31,7 @@ import java.util.*;
 
 
 /** Not the preferred solution anymore, rather use
-* <a href="@org-openide-awt@/org/openide/awt/Actions.html#context-java.lang.Class-boolean-boolean-org.openide.util.ContextAwareAction-java.lang.String-java.lang.String-java.lang.String-boolean-">Actions.context</a>.
+* <a href="@org-openide-awt@/org/openide/awt/Actions.html#context(java.lang.Class,boolean,boolean,org.openide.util.ContextAwareAction,java.lang.String,java.lang.String,java.lang.String,boolean)">Actions.context</a>.
 * To replace your action
 * <a href="@org-openide-modules@/org/openide/modules/doc-files/api.html#how-layer">
 * layer definition</a> use more delarative way:
@@ -164,7 +164,7 @@ public abstract class CookieAction extends NodeAction {
             for (Class<?> cookie : cookies) {
                 // test for supported cookies
                 @SuppressWarnings("unchecked")
-                Lookup.Template<?> templ = new Lookup.Template(cookie);
+                Lookup.Template<?> templ = new Lookup.Template<>(cookie);
                 if (n.getLookup().lookupItem(templ) != null) {
                     ret++;
 
@@ -302,7 +302,7 @@ public abstract class CookieAction extends NodeAction {
      * extract the nodes it operates on from it. Otherwise it delegates to the
      * regular NodeAction.
      */
-    final static class CookieDelegateAction extends org.openide.util.actions.NodeAction.DelegateAction
+    static final class CookieDelegateAction extends org.openide.util.actions.NodeAction.DelegateAction
     implements org.openide.nodes.NodeListener, Runnable {
         /** our weak listener */
         private org.openide.nodes.NodeListener listener;

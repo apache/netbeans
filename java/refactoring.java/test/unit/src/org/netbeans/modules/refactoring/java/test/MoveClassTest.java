@@ -19,6 +19,7 @@
 package org.netbeans.modules.refactoring.java.test;
 
 import java.net.URL;
+import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.refactoring.api.Problem;
 
 /**
@@ -28,7 +29,7 @@ import org.netbeans.modules.refactoring.api.Problem;
 public class MoveClassTest extends MoveBase {
 
     public MoveClassTest(String name) {
-        super(name);
+        super(name, "testModuleInfoMoveFileDifferentPackage".equals(name) ? "11" : "1.6");
     }
     
     public void test204444() throws Exception { // #204444 - Improve Move Refactoring to support nested/inner classes
@@ -306,5 +307,35 @@ public class MoveClassTest extends MoveBase {
                 + "class B {\n"
                 + "    public int i = 42;\n"
                 + "}\n"));
+    }
+
+    public void testModuleInfoMoveFileDifferentPackage() throws Exception {
+        writeFilesAndWaitForScan(src,
+                new File("t/A.java", "package t;\n"
+                + "public class A {\n"
+                + "    public void foo() {\n"
+                + "    }\n"
+                + "}\n"),
+                new File("module-info.java", "module m {\n"
+                + "    requires java.base;\n"
+                + "    exports t to m;\n"
+                + "    uses t.A;\n"
+                + "}\n"));
+        performMove(src.getFileObject("t/A.java"), new URL(src.toURL(), "p/"));
+        verifyContent(src,
+                new File("p/A.java", "package p;\n"
+                + "public class A {\n"
+                + "    public void foo() {\n"
+                + "    }\n"
+                + "}\n"),
+                new File("module-info.java", "module m {\n"
+                + "    requires java.base;\n"
+                + "    exports t to m;\n"
+                + "    uses p.A;\n"
+                + "}\n"));
+    }
+
+    static {
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
     }
 }

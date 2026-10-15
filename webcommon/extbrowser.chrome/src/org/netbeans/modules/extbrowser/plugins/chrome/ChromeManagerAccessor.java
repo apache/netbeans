@@ -352,7 +352,7 @@ public class ChromeManagerAccessor implements ExtensionManagerAccessor {
                         }
                     }
                 }
-                return result.toArray(new String[result.size()]);
+                return result.toArray(new String[0]);
             }
             else if (Utilities.isMac()) {
                 return Utils.getUserPaths("/Library/Application Support/Google/Chrome");// NOI18N
@@ -563,7 +563,7 @@ public class ChromeManagerAccessor implements ExtensionManagerAccessor {
             return result[0];
         }
 
-        static private class FileFinder implements FileFilter {
+        private static class FileFinder implements FileFilter {
             FileFinder(String name){
                 this( name, false );
             }

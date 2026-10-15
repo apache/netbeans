@@ -31,6 +31,7 @@ import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -200,7 +201,7 @@ class GroupParser {
         sc.tcGroupConfigs = (TCGroupConfig []) 
             // safer array initialization, making sure the size of array matches size of list
             // see #45497
-            tcGroupCfgList.toArray(new TCGroupConfig[tcGroupCfgList.size()]);
+            tcGroupCfgList.toArray(new TCGroupConfig[0]);
         
         PersistenceManager pm = PersistenceManager.getDefault();
         for (int i = 0; i < sc.tcGroupConfigs.length; i++) {
@@ -255,8 +256,7 @@ class GroupParser {
             tcGroupConfigMap.put(sc.tcGroupConfigs[i].tc_id, sc.tcGroupConfigs[i]);
         }
         List<String> toDelete = new ArrayList<String>(10);
-        for (String s: tcGroupParserMap.keySet()) {
-            TCGroupParser tcGroupParser = tcGroupParserMap.get(s);
+        for (TCGroupParser tcGroupParser: tcGroupParserMap.values()) {
             if (!tcGroupConfigMap.containsKey(tcGroupParser.getName())) {
                 toDelete.add(tcGroupParser.getName());
             }
@@ -491,7 +491,8 @@ class GroupParser {
             groupConfig = null;
             internalConfig = null;
         }
-        
+
+        @Override
         public void startElement (String nameSpace, String name, String qname, Attributes attrs) throws SAXException {
             if ("group".equals(qname)) { // NOI18N
                 handleGroup(attrs);
@@ -509,7 +510,8 @@ class GroupParser {
                 //Parse version < 2.0
             }
         }
-        
+
+        @Override
         public void error(SAXParseException ex) throws SAXException  {
             throw ex;
         }
@@ -615,7 +617,7 @@ class GroupParser {
                 try {
                     lock = cfgFOOutput.lock();
                     os = cfgFOOutput.getOutputStream(lock);
-                    osw = new OutputStreamWriter(os, "UTF-8"); // NOI18N
+                    osw = new OutputStreamWriter(os, StandardCharsets.UTF_8);
                     osw.write(buff.toString());
                     //if (DEBUG) Debug.log(GroupParser.class, "-- DUMP Group: " + GroupParser.this.getName());
                     //if (DEBUG) Debug.log(GroupParser.class, buff.toString());
@@ -694,6 +696,7 @@ class GroupParser {
         
         /** Implementation of entity resolver. Points to the local DTD
          * for our public ID */
+        @Override
         public InputSource resolveEntity (String publicId, String systemId)
         throws SAXException {
             if (INSTANCE_DTD_ID_2_0.equals(publicId)) {

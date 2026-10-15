@@ -19,11 +19,8 @@
 
 package org.netbeans.modules.css.prep.syntax;
 
-import static junit.framework.Assert.assertTrue;
 import junit.framework.Test;
 import org.netbeans.jellytools.EditorOperator;
-import org.netbeans.jellytools.ProjectsTabOperator;
-import org.netbeans.jellytools.nodes.Node;
 import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.modules.css.prep.GeneralCSSPrep;

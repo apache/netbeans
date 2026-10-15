@@ -385,11 +385,11 @@ public class WorkingCopyDetails {
 
         List<String> keywordsList = new ArrayList<String>();
         
-        rawKeywords = rawKeywords.replaceAll("\n", " ");
-        rawKeywords = rawKeywords.replaceAll("\t", " ");        
+        rawKeywords = rawKeywords.replace("\n", " ");
+        rawKeywords = rawKeywords.replace("\t", " ");        
         keywordsList.addAll(normalizeKeywords(rawKeywords.split(" ")));             // NOI18N          
 
-        String[] keywords = keywordsList.toArray(new String[keywordsList.size()]);
+        String[] keywords = keywordsList.toArray(new String[0]);
         
         BufferedReader baseReader = null;
         BufferedReader fileReader = null;

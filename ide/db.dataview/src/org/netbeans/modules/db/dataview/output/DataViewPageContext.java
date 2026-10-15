@@ -72,7 +72,7 @@ class DataViewPageContext {
         return currentPos;
     }
 
-    synchronized private void setCurrentPos(int currentPos) {
+    private synchronized void setCurrentPos(int currentPos) {
         int oldPos = this.currentPos;
         this.currentPos = currentPos;
         firePropertyChange(PROP_currentPos, oldPos, currentPos);

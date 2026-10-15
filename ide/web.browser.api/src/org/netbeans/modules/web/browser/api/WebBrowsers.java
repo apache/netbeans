@@ -221,7 +221,7 @@ public final class WebBrowsers {
                 browsers.add(new BrowserWrapper(browser, others++));
             }
         }
-        Collections.sort(browsers, new Comparator<BrowserWrapper>() {
+        browsers.sort(new Comparator<BrowserWrapper>() {
             @Override
             public int compare(BrowserWrapper o1, BrowserWrapper o2) {
                 return o1.getOrder() - o2.getOrder();
@@ -408,9 +408,9 @@ public final class WebBrowsers {
 
     static BrowserFamilyId getIDEOptionsBrowserFamily() {
         HtmlBrowser.Factory factory = IDESettings.getWWWBrowser();
-        if (factory != null && factory instanceof ExtWebBrowser) {
+        if (factory instanceof ExtWebBrowser) {
             return WebBrowserFactoryDescriptor.convertBrowserFamilyId(((ExtWebBrowser)factory).getPrivateBrowserFamilyId());
-        } else if (factory != null && factory instanceof EnhancedBrowserFactory) {
+        } else if (factory instanceof EnhancedBrowserFactory) {
             return ((EnhancedBrowserFactory)factory).getBrowserFamilyId();
         }
         return BrowserFamilyId.UNKNOWN;

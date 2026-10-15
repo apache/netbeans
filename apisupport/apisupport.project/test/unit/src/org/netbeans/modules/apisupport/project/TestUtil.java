@@ -27,13 +27,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.util.zip.CRC32;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.test.TestFileUtils;
 import org.openide.util.test.JarBuilder;
 
@@ -64,16 +64,8 @@ public class TestUtil {
             }
         } else {
             assert from.isFile() : from;
-            InputStream is = new FileInputStream(from);
-            try {
-                OutputStream os = new FileOutputStream(to);
-                try {
-                    FileUtil.copy(is, os);
-                } finally {
-                    os.close();
-                }
-            } finally {
-                is.close();
+            try (InputStream is = new FileInputStream(from); OutputStream os = new FileOutputStream(to)) {
+                is.transferTo(os);
             }
         }
     }
@@ -96,7 +88,7 @@ public class TestUtil {
             JarOutputStream jos = manifest != null ? new JarOutputStream(os, manifest) : new JarOutputStream(os);
             for (Map.Entry<String,String> entry : contents.entrySet()) {
                 String path = entry.getKey();
-                byte[] data = entry.getValue().getBytes("UTF-8");
+                byte[] data = entry.getValue().getBytes(StandardCharsets.UTF_8);
                 JarEntry je = new JarEntry(path);
                 je.setSize(data.length);
                 CRC32 crc = new CRC32();
@@ -111,24 +103,12 @@ public class TestUtil {
         }
     }
 
-    public static void delete(File f) throws IOException {
-        if (f.isDirectory()) {
-            File[] kids = f.listFiles();
-            for (int i = 0; i < kids.length; i++) {
-                delete(kids[i]);
-            }
-        }
-        if (!f.delete()) {
-            throw new IOException("Could not delete " + f);
-        }
-    }
-
     /** @deprecated Use {@link TestFileUtils#writeFile} instead. */
     @Deprecated
     public static void dump(FileObject f, String contents) throws IOException {
         OutputStream os = f.getOutputStream();
         try {
-            Writer w = new OutputStreamWriter(os, "UTF-8");
+            Writer w = new OutputStreamWriter(os, StandardCharsets.UTF_8);
             w.write(contents);
             w.flush();
         } finally {

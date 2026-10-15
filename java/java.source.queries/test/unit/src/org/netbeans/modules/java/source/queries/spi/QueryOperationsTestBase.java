@@ -406,7 +406,7 @@ public abstract class QueryOperationsTestBase extends TestCase {
                         fqn,
                         useRT,
                         retType,
-                        paramTypes == null ? null : paramTypes.toArray(new String[paramTypes.size()]));
+                        paramTypes == null ? null : paramTypes.toArray(new String[0]));
                 }
             });
         assertContentEquals(expected, res);
@@ -450,7 +450,7 @@ public abstract class QueryOperationsTestBase extends TestCase {
                         methodName,
                         useRT,
                         retType,
-                        paramTypes == null ? null : paramTypes.toArray(new String[paramTypes.size()]));
+                        paramTypes == null ? null : paramTypes.toArray(new String[0]));
                 }
             });
         assertEquals(expected, res);

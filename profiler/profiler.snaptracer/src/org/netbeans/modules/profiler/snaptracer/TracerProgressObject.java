@@ -64,7 +64,7 @@ public final class TracerProgressObject {
         this.text = text;
         currentStep = 0;
         lastStep = 0;
-        listeners = new HashSet();
+        listeners = new HashSet<>();
     }
 
 
@@ -177,7 +177,7 @@ public final class TracerProgressObject {
         final int currentStepF = currentStep;
         final int addedStepsF = currentStep - lastStep;
         final String textF = text;
-        final Set<Listener> toNotify = new HashSet(listeners);
+        final Set<Listener> toNotify = new HashSet<>(listeners);
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 for (Listener listener : toNotify)

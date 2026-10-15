@@ -34,7 +34,7 @@ public class WsdlModelerFactory {
     
     /** Creates a new instance of WsdlModelerFactory */
     private WsdlModelerFactory() {
-        modelers = new WeakHashMap<URL, WeakReference<WsdlModeler>>(5);
+        modelers = new WeakHashMap<>(5);
     }
     
     /**
@@ -56,7 +56,7 @@ public class WsdlModelerFactory {
                 return modeler;
             }
             modeler = new WsdlModeler(wsdlUrl);
-            modelers.put(wsdlUrl, new WeakReference<WsdlModeler>(modeler));
+            modelers.put(wsdlUrl, new WeakReference<>(modeler));
         }
         return modeler;
     }
@@ -65,11 +65,11 @@ public class WsdlModelerFactory {
         if (url == null) {
             return null;
         }
-        WeakReference wr = modelers.get(url);
+        WeakReference<WsdlModeler> wr = modelers.get(url);
         if (wr == null) {
             return null;
         }
-        WsdlModeler modeler = (WsdlModeler) wr.get();
+        WsdlModeler modeler = wr.get();
         if (modeler == null) {
             modelers.remove(url);
         }

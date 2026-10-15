@@ -29,7 +29,7 @@ package org.netbeans.modules.classfile;
  */
 abstract class CPName extends CPEntry {
 
-    final static int INVALID_INDEX = -1;
+    static final int INVALID_INDEX = -1;
 
     int index;
     private String name;

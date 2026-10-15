@@ -88,6 +88,10 @@ public final class Settings {
         return impl.isTabRowPerProject();
     }
 
+    public boolean isShowFolderName() {
+        return impl.isShowFolderName();
+    }
+
     /**
      * @return Maximum tab row count.
      */

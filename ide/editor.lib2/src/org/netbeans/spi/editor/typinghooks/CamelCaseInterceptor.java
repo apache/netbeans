@@ -74,7 +74,7 @@ public interface CamelCaseInterceptor {
      *
      * <p>This method can be used for stopping further processing of the current
      * key typed event. If this method returns <code>true</code> the processing will
-     * be terminated and {@link #cancelled(Context)} will be called for all the interceptors
+     * be terminated and {@link #cancelled(CamelCaseInterceptor.MutableContext)} will be called for all the interceptors
      * that have already had their <code>beforeRemove</code> method called (including
      * the one that terminated the processing). The rest of the interceptors waiting
      * in the queue will not be called at all.
@@ -116,7 +116,7 @@ public interface CamelCaseInterceptor {
      * by the infrastructure.
      *
      * @param context The context object providing information necessary for processing
-     *   the event. The {@link Context#getText()} method will return text that was
+     *   the event. The {@code Context.getText()} method will return text that was
      *   removed from the document at the beginning of the text-removal stage.
      * 
      * @throws BadLocationException Since the document is not locked prior calling this
@@ -232,10 +232,10 @@ public interface CamelCaseInterceptor {
      * in <code>MimeLookup</code>. An example registration with java annotations.
      *
      *
-     * <pre>
-     * @MimeRegistrations({
-     *  @MimeRegistration(mimeType = "x-something", service = CamelCaseInterceptor.Factory.class)})
-     * </pre>
+     * <pre><code>
+     * &#64;MimeRegistrations({
+     *  &#64;MimeRegistration(mimeType = "x-something", service = CamelCaseInterceptor.Factory.class)})
+     * </code></pre>
      */
     public interface Factory {
 

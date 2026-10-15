@@ -38,11 +38,11 @@ public class DiffFlatProfileContainer extends FlatProfileContainer {
     static DiffFlatProfileContainer create(FlatProfileContainer c1, FlatProfileContainer c2) {
         boolean collectingTwoTimeStamps = c1.collectingTwoTimeStamps && c2.collectingTwoTimeStamps;
         
-        Set<ClientUtils.SourceCodeSelection> sels1 = new HashSet();
+        Set<ClientUtils.SourceCodeSelection> sels1 = new HashSet<>();
         int rows1 = c1.timeInMcs0.length;
         for (int i = 0; i < rows1; i++) sels1.add(c1.getSourceCodeSelectionAtRow(i));
         
-        Map<ClientUtils.SourceCodeSelection, Integer> sels2 = new HashMap();
+        Map<ClientUtils.SourceCodeSelection, Integer> sels2 = new HashMap<>();
         int rows2 = c2.timeInMcs0.length;
         for (int i = 0; i < rows2; i++) sels2.put(c2.getSourceCodeSelectionAtRow(i), i);
         

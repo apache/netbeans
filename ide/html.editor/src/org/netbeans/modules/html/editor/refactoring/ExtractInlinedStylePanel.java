@@ -37,6 +37,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.ListCellRenderer;
 import javax.swing.text.BadLocationException;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -356,7 +357,7 @@ public class ExtractInlinedStylePanel extends JPanel implements CustomRefactorin
         externalSheetRB.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(ExtractInlinedStylePanel.class, "ACSD_ExternalStylesheet")); // NOI18N
         existingEmbeddedSectionsComboBox.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(ExtractInlinedStylePanel.class, "ACSD_EmbeddedSectionComboBoxName")); // NOI18N
         existingEmbeddedSectionsComboBox.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(ExtractInlinedStylePanel.class, "ACSD_EmbeddedSectionComboBoxDescription")); // NOI18N
-        externalSheetsComboBox.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(ExtractInlinedStylePanel.class, "ASCD_ExternalStylesheetName")); // NOI18N
+        externalSheetsComboBox.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(ExtractInlinedStylePanel.class, "ACSD_ExternalStylesheetName")); // NOI18N
         externalSheetsComboBox.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(ExtractInlinedStylePanel.class, "ACSD_ExternalStylesheetDescr")); // NOI18N
         idSelectorTypeRB.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(ExtractInlinedStylePanel.class, "ASCD_GenerateIdSelectors")); // NOI18N
         classSelectorTypeRB.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(ExtractInlinedStylePanel.class, "ASCD_GenerateClassSelectors")); // NOI18N
@@ -459,8 +460,8 @@ public class ExtractInlinedStylePanel extends JPanel implements CustomRefactorin
             @Override
             public void run() {
                 try {
-                    int firstLine = Utilities.getLineOffset((BaseDocument) context.getDocument(), range.getStart());
-                    int lastLine = Utilities.getLineOffset((BaseDocument) context.getDocument(), range.getEnd());
+                    int firstLine = LineDocumentUtils.getLineIndex((BaseDocument) context.getDocument(), range.getStart());
+                    int lastLine = LineDocumentUtils.getLineIndex((BaseDocument) context.getDocument(), range.getEnd());
                     ret.set(new OffsetRange(firstLine, lastLine));
                 } catch (BadLocationException ex) {
                     Exceptions.printStackTrace(ex);

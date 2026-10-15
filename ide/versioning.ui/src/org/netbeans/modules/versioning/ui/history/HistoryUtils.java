@@ -39,9 +39,9 @@ public class HistoryUtils {
         for (int i=0; i<text.length(); i++) {
             char c = text.charAt(i);
             switch (c) {
-                case '<': sb.append("&lt;"); break;                             // NOI18N
-                case '>': sb.append("&gt;"); break;                             // NOI18N
-                default: sb.append(c);
+                case '<' -> sb.append("&lt;"); // NOI18N
+                case '>' -> sb.append("&gt;"); // NOI18N
+                default -> sb.append(c);
             }
         }
         return sb.toString();

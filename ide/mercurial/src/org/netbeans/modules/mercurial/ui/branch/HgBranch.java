@@ -29,7 +29,7 @@ public class HgBranch {
     private final String name;
     private final boolean closed;
     private final boolean active;
-    public static String DEFAULT_NAME = "default";; //NOI18N
+    public static String DEFAULT_NAME = "default"; //NOI18N
 
     public HgBranch (String name, HgLogMessage revisionInfo, boolean closed, boolean active) {
         this.revisionInfo = revisionInfo;

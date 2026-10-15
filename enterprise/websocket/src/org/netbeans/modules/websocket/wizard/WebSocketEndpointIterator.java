@@ -282,7 +282,7 @@ public class WebSocketEndpointIterator
                 list.add( sourceGroup );
             }
         }
-        return list.toArray( new SourceGroup[list.size()]);
+        return list.toArray(new SourceGroup[0]);
     }
     
     private Set<FileObject> getTestRoots( Project project ){

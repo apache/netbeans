@@ -169,18 +169,18 @@ public abstract class AnnotationDesc extends Object implements Comparable<Annota
 
     /** Add listeners on changes of annotation properties
      * @param l  change listener*/
-    final public void addPropertyChangeListener(PropertyChangeListener l) {
+    public final void addPropertyChangeListener(PropertyChangeListener l) {
         support.addPropertyChangeListener(l);
     }
 
     /** Remove listeners on changes of annotation properties
      * @param l  change listener*/
-    final public void removePropertyChangeListener(PropertyChangeListener l) {
+    public final void removePropertyChangeListener(PropertyChangeListener l) {
         support.removePropertyChangeListener(l);
     }
 
     /** Fire property change to registered listeners. */
-    final protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
+    protected final void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
         support.firePropertyChange(propertyName, oldValue, newValue);
     }
 

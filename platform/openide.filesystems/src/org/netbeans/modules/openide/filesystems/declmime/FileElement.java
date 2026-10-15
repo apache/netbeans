@@ -30,14 +30,12 @@ import org.openide.util.BaseUtilities;
 import org.openide.xml.XMLUtil;
 
 /**
- *
- * @author Jaroslav Tulach <jtulach@netbeans.org>
- */
-/**
  * Represents a resolving process made using a <tt>file</tt> element.
  * <p>
  * Responsible for pairing and performing fast check followed by optional
  * rules and if all matches returning MIME type.
+ * 
+ * @author Jaroslav Tulach <jtulach@netbeans.org>
  */
 final class FileElement {
     FileElement() {

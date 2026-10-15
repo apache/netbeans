@@ -1,0 +1,12 @@
+Code completion result for source line:
+echo B::staticReturnStatic()->|staticTestB() . PHP_EOL; // staticTestB
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     returnSelf()                    [PUBLIC]   A
+METHOD     returnStatic()                  [PUBLIC]   A
+METHOD     returnThis()                    [PUBLIC]   A
+METHOD     staticReturnSelf()              [STATIC]   A
+METHOD     staticReturnStatic()            [STATIC]   A
+METHOD     staticTestA()                   [STATIC]   A
+METHOD     staticTestB()                   [STATIC]   B
+METHOD     testA()                         [PUBLIC]   A
+METHOD     testB()                         [PUBLIC]   B

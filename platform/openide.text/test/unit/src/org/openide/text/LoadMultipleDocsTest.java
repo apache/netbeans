@@ -193,7 +193,7 @@ public class LoadMultipleDocsTest extends NbTestCase {
     }
 
     /** Implementation of the CES */
-    private final static class CES extends CloneableEditorSupport {
+    private static final class CES extends CloneableEditorSupport {
         public CES (Env env, org.openide.util.Lookup l) {
             super (env, l);
         }

@@ -573,7 +573,7 @@ private void browseLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
     }
     
     private String validFreeProjectName (final File parentFolder, final String formater, final int index) {
-        String name = MessageFormat.format (formater, new Object[]{Integer.valueOf(index)});                
+        String name = MessageFormat.format (formater, new Object[]{index});                
         File file = new File (parentFolder, name);
         return file.exists() ? null : name;
     }

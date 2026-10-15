@@ -25,6 +25,7 @@ import java.util.List;
 import javax.swing.text.BadLocationException;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.php.latte.lexer.LatteMarkupTokenId;
@@ -57,6 +58,7 @@ public class LatteBracesMatcher implements BracesMatcher {
         MATCHERS.add(new StartEndMacroMatcher("form")); //NOI18N
         MATCHERS.add(new StartEndMacroMatcher("label")); //NOI18N
         MATCHERS.add(new StartEndMacroMatcher("snippet")); //NOI18N
+        MATCHERS.add(new StartEndMacroMatcher("translate")); //NOI18N
         MATCHERS.add(new IfMatcher());
         MATCHERS.add(new IfsetMatcher());
         MATCHERS.add(new EndIfMatcher());
@@ -100,12 +102,38 @@ public class LatteBracesMatcher implements BracesMatcher {
             Token<? extends LatteMarkupTokenId> currentToken = ts.token();
             if (currentToken != null) {
                 LatteMarkupTokenId currentTokenId = currentToken.id();
-                if (currentTokenId == LatteMarkupTokenId.T_MACRO_START || currentTokenId == LatteMarkupTokenId.T_MACRO_END) {
+                if ((currentTokenId == LatteMarkupTokenId.T_MACRO_START || currentTokenId == LatteMarkupTokenId.T_MACRO_END)
+                        && !isUnderscoreTranslationTag(ts)) {
                     result = new int[] {ts.offset(), ts.offset() + currentToken.length()};
                 }
             }
         }
         return result;
+    }
+
+    private boolean isUnderscoreTranslationTag(TokenSequence<? extends LatteMarkupTokenId> ts) {
+        // check {_'text'}
+        // see: https://latte.nette.org/en/tags#toc-translation
+        int originalOffset = ts.offset();
+        boolean isTranslationTag = false;
+        if (TokenUtilities.textEquals("_", ts.token().text())) { // NOI18N
+            while(ts.moveNext()) {
+                Token<? extends LatteMarkupTokenId> token = ts.token();
+                if (token == null) {
+                    break;
+                }
+                if (token.id() == LatteMarkupTokenId.T_WHITESPACE) {
+                    continue;
+                }
+                if (token.id() == LatteMarkupTokenId.T_STRING) {
+                    isTranslationTag = true;
+                }
+                break;
+            }
+        }
+        ts.move(originalOffset);
+        ts.moveNext();
+        return isTranslationTag;
     }
 
     @Override

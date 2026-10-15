@@ -80,7 +80,7 @@ public final class SearchNbEditorKit extends NbEditorKit {
     }
     private static PropertyChangeListener searchAndReplaceBarPersistentListener = null;
 
-    public synchronized static void makeSearchAndReplaceBarPersistent() {
+    public static synchronized void makeSearchAndReplaceBarPersistent() {
         if (searchAndReplaceBarPersistentListener == null) {
             searchAndReplaceBarPersistentListener = new PropertyChangeListener() {
                 @Override
@@ -124,7 +124,7 @@ public final class SearchNbEditorKit extends NbEditorKit {
 
     public static void openFindIfNecessary(JTextComponent component, ActionEvent evt) {
         Object findWhat = EditorFindSupport.getInstance().getFindProperty(EditorFindSupport.FIND_WHAT);
-        if (findWhat == null || !(findWhat instanceof String) || ((String) findWhat).isEmpty()) {
+        if (!(findWhat instanceof String) || ((String) findWhat).isEmpty()) {
 
             Action findAction = ((BaseKit) component.getUI().getEditorKit(
                     component)).getActionByName("find");

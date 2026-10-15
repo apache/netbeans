@@ -25,7 +25,6 @@ import test.pkg.not.in.junit.NbModuleSuiteIns;
 import test.pkg.not.in.junit.NbModuleSuiteT;
 import test.pkg.not.in.junit.NbModuleSuiteS;
 import java.io.File;
-import org.netbeans.testjunit.AskForOrgOpenideUtilEnumClass;
 import java.util.Properties;
 import java.util.Set;
 import junit.framework.Test;

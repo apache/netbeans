@@ -1,0 +1,1310 @@
+<testresult testFile='dynamicClassConstantFetch_01.php'>
+    <scanner>
+        <token id='T_CLASS' start='815' end='820'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='821' end='825'>
+            <text>Test</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='826' end='827'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='832' end='838'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='839' end='844'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='845' end='848'>
+            <text>BAR</text>
+        </token>
+        <token id='T_EQUAL' start='849' end='850'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='851' end='856'>
+            <text>&apos;bar&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='856' end='857'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='862' end='868'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='869' end='874'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='875' end='877'>
+            <text>BA</text>
+        </token>
+        <token id='T_EQUAL' start='878' end='879'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='880' end='884'>
+            <text>&apos;BA&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='884' end='885'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='890' end='896'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='897' end='902'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='903' end='904'>
+            <text>R</text>
+        </token>
+        <token id='T_EQUAL' start='905' end='906'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='907' end='910'>
+            <text>&apos;R&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='910' end='911'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='916' end='922'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='923' end='928'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='929' end='930'>
+            <text>A</text>
+        </token>
+        <token id='T_EQUAL' start='931' end='932'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='933' end='937'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='937' end='939'>
+            <text>::</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='939' end='940'>
+            <text>{</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='940' end='945'>
+            <text>&apos;BAR&apos;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='945' end='946'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='946' end='947'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='952' end='958'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='959' end='964'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='965' end='966'>
+            <text>B</text>
+        </token>
+        <token id='T_EQUAL' start='967' end='968'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='969' end='973'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='973' end='975'>
+            <text>::</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='975' end='976'>
+            <text>{</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='976' end='980'>
+            <text>&apos;BA&apos;</text>
+        </token>
+        <token id='T_NEKUDA' start='981' end='982'>
+            <text>.</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='983' end='986'>
+            <text>&apos;R&apos;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='986' end='987'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='987' end='988'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='993' end='999'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='1000' end='1005'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1006' end='1007'>
+            <text>C</text>
+        </token>
+        <token id='T_EQUAL' start='1008' end='1009'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1010' end='1014'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1014' end='1016'>
+            <text>::</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1016' end='1017'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='1017' end='1021'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1021' end='1023'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1023' end='1025'>
+            <text>BA</text>
+        </token>
+        <token id='T_NEKUDA' start='1026' end='1027'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='1028' end='1032'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1032' end='1034'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1034' end='1035'>
+            <text>R</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1035' end='1036'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1036' end='1037'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1038' end='1039'>
+            <text>}</text>
+        </token>
+        <token id='T_VARIABLE' start='1041' end='1045'>
+            <text>$bar</text>
+        </token>
+        <token id='T_EQUAL' start='1046' end='1047'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1048' end='1053'>
+            <text>&apos;BAR&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='1053' end='1054'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='1056' end='1060'>
+            <text>Test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1060' end='1062'>
+            <text>::</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1062' end='1063'>
+            <text>{</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1063' end='1068'>
+            <text>"BAR"</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1068' end='1069'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1069' end='1070'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1071' end='1076'>
+            <text>$test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1076' end='1078'>
+            <text>::</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1078' end='1079'>
+            <text>{</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1079' end='1084'>
+            <text>"BAR"</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1084' end='1085'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1085' end='1086'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='1087' end='1091'>
+            <text>Test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1091' end='1093'>
+            <text>::</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1093' end='1094'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='1094' end='1098'>
+            <text>$bar</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1098' end='1099'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1099' end='1100'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1101' end='1106'>
+            <text>$test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1106' end='1108'>
+            <text>::</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1108' end='1109'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='1109' end='1113'>
+            <text>$bar</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1113' end='1114'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1114' end='1115'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='1116' end='1120'>
+            <text>Test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1120' end='1122'>
+            <text>::</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1122' end='1123'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='1123' end='1127'>
+            <text>$bar</text>
+        </token>
+        <token id='T_NEKUDA' start='1128' end='1129'>
+            <text>.</text>
+        </token>
+        <token id='T_VARIABLE' start='1130' end='1132'>
+            <text>$r</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1132' end='1133'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1133' end='1134'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1135' end='1140'>
+            <text>$test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1140' end='1142'>
+            <text>::</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1142' end='1143'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='1143' end='1147'>
+            <text>$bar</text>
+        </token>
+        <token id='T_NEKUDA' start='1148' end='1149'>
+            <text>.</text>
+        </token>
+        <token id='T_VARIABLE' start='1150' end='1152'>
+            <text>$r</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1152' end='1153'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1153' end='1154'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='1155' end='1159'>
+            <text>Test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1159' end='1161'>
+            <text>::</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1161' end='1162'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='1162' end='1172'>
+            <text>strtoupper</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1172' end='1173'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1173' end='1178'>
+            <text>"bar"</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1178' end='1179'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1179' end='1180'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1180' end='1181'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1182' end='1187'>
+            <text>$test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1187' end='1189'>
+            <text>::</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1189' end='1190'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='1190' end='1200'>
+            <text>strtoupper</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1200' end='1201'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1201' end='1206'>
+            <text>"bar"</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1206' end='1207'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1207' end='1208'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1208' end='1209'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='1210' end='1214'>
+            <text>Test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1214' end='1216'>
+            <text>::</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1216' end='1217'>
+            <text>{</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1217' end='1224'>
+            <text>&apos;$barr&apos;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1224' end='1225'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1225' end='1226'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1227' end='1232'>
+            <text>$test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1232' end='1234'>
+            <text>::</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1234' end='1235'>
+            <text>{</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1235' end='1242'>
+            <text>&apos;$barr&apos;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1242' end='1243'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1243' end='1244'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='1245' end='1249'>
+            <text>Test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1249' end='1251'>
+            <text>::</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1251' end='1252'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='1252' end='1262'>
+            <text>strtolower</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1262' end='1263'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1263' end='1270'>
+            <text>"CLASS"</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1270' end='1271'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1271' end='1272'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1272' end='1273'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1274' end='1279'>
+            <text>$test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1279' end='1281'>
+            <text>::</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1281' end='1282'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='1282' end='1292'>
+            <text>strtolower</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1292' end='1293'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1293' end='1300'>
+            <text>"CLASS"</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1300' end='1301'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1301' end='1302'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1302' end='1303'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='1304' end='1308'>
+            <text>Test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1308' end='1310'>
+            <text>::</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1310' end='1311'>
+            <text>{</text>
+        </token>
+        <token id='T_LNUMBER' start='1311' end='1314'>
+            <text>100</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1314' end='1315'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1315' end='1316'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1317' end='1322'>
+            <text>$test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1322' end='1324'>
+            <text>::</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1324' end='1325'>
+            <text>{</text>
+        </token>
+        <token id='T_LNUMBER' start='1325' end='1328'>
+            <text>100</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1328' end='1329'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1329' end='1330'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='1331' end='1335'>
+            <text>Test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1335' end='1337'>
+            <text>::</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1337' end='1338'>
+            <text>{</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1338' end='1339'>
+            <text>[</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1339' end='1340'>
+            <text>]</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1340' end='1341'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1341' end='1342'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1343' end='1348'>
+            <text>$test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1348' end='1350'>
+            <text>::</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1350' end='1351'>
+            <text>{</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1351' end='1352'>
+            <text>[</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1352' end='1353'>
+            <text>]</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1353' end='1354'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1354' end='1355'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='1357' end='1361'>
+            <text>Test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1361' end='1363'>
+            <text>::</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1363' end='1364'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='1364' end='1367'>
+            <text>foo</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1367' end='1368'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1368' end='1369'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1369' end='1370'>
+            <text>}</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1370' end='1372'>
+            <text>::</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1372' end='1373'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='1373' end='1376'>
+            <text>bar</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1376' end='1377'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1377' end='1378'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1378' end='1379'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1379' end='1380'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='1381' end='1385'>
+            <text>Test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1385' end='1387'>
+            <text>::</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1387' end='1388'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='1388' end='1392'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1392' end='1393'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1393' end='1398'>
+            <text>&apos;foo&apos;</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1398' end='1399'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1399' end='1400'>
+            <text>}</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1400' end='1402'>
+            <text>::</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1402' end='1403'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='1403' end='1407'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1407' end='1408'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1408' end='1413'>
+            <text>&apos;bar&apos;</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1413' end='1414'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1414' end='1415'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1415' end='1416'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='1417' end='1417'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1417'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='815' end='1039' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='821' end='825' name='Test'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='826' end='1039' isCurly='true'>
+                    <ClassConstantDeclaration start='832' end='857' modifier='public'>
+                        <Names>
+                            <Identifier start='845' end='848' name='BAR'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='851' end='856' type='STRING' value='&apos;bar&apos;'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='862' end='885' modifier='public'>
+                        <Names>
+                            <Identifier start='875' end='877' name='BA'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='880' end='884' type='STRING' value='&apos;BA&apos;'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='890' end='911' modifier='public'>
+                        <Names>
+                            <Identifier start='903' end='904' name='R'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='907' end='910' type='STRING' value='&apos;R&apos;'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='916' end='947' modifier='public'>
+                        <Names>
+                            <Identifier start='929' end='930' name='A'/>
+                        </Names>
+                        <Initializers>
+                            <StaticConstantAccess start='933' end='946' isDynamicName='true'>
+                                <NamespaceName start='933' end='937' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='933' end='937' name='self'/>
+                                </NamespaceName>
+                                <Constant>
+                                    <ReflectionVariable start='939' end='946'>
+                                        <Scalar start='940' end='945' type='STRING' value='&apos;BAR&apos;'/>
+                                    </ReflectionVariable>
+                                </Constant>
+                                <Member>
+                                    <ReflectionVariable start='939' end='946'>
+                                        <Scalar start='940' end='945' type='STRING' value='&apos;BAR&apos;'/>
+                                    </ReflectionVariable>
+                                </Member>
+                            </StaticConstantAccess>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='952' end='988' modifier='public'>
+                        <Names>
+                            <Identifier start='965' end='966' name='B'/>
+                        </Names>
+                        <Initializers>
+                            <StaticConstantAccess start='969' end='987' isDynamicName='true'>
+                                <NamespaceName start='969' end='973' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='969' end='973' name='self'/>
+                                </NamespaceName>
+                                <Constant>
+                                    <ReflectionVariable start='975' end='987'>
+                                        <InfixExpression start='976' end='986' operator='CONCAT'>
+                                            <Scalar start='976' end='980' type='STRING' value='&apos;BA&apos;'/>
+                                            <Scalar start='983' end='986' type='STRING' value='&apos;R&apos;'/>
+                                        </InfixExpression>
+                                    </ReflectionVariable>
+                                </Constant>
+                                <Member>
+                                    <ReflectionVariable start='975' end='987'>
+                                        <InfixExpression start='976' end='986' operator='CONCAT'>
+                                            <Scalar start='976' end='980' type='STRING' value='&apos;BA&apos;'/>
+                                            <Scalar start='983' end='986' type='STRING' value='&apos;R&apos;'/>
+                                        </InfixExpression>
+                                    </ReflectionVariable>
+                                </Member>
+                            </StaticConstantAccess>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='993' end='1037' modifier='public'>
+                        <Names>
+                            <Identifier start='1006' end='1007' name='C'/>
+                        </Names>
+                        <Initializers>
+                            <StaticConstantAccess start='1010' end='1036' isDynamicName='true'>
+                                <NamespaceName start='1010' end='1014' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1010' end='1014' name='self'/>
+                                </NamespaceName>
+                                <Constant>
+                                    <ReflectionVariable start='1016' end='1036'>
+                                        <InfixExpression start='1017' end='1035' operator='CONCAT'>
+                                            <StaticConstantAccess start='1017' end='1025' isDynamicName='false'>
+                                                <NamespaceName start='1017' end='1021' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='1017' end='1021' name='self'/>
+                                                </NamespaceName>
+                                                <Constant>
+                                                    <Identifier start='1023' end='1025' name='BA'/>
+                                                </Constant>
+                                                <Member>
+                                                    <Identifier start='1023' end='1025' name='BA'/>
+                                                </Member>
+                                            </StaticConstantAccess>
+                                            <StaticConstantAccess start='1028' end='1035' isDynamicName='false'>
+                                                <NamespaceName start='1028' end='1032' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='1028' end='1032' name='self'/>
+                                                </NamespaceName>
+                                                <Constant>
+                                                    <Identifier start='1034' end='1035' name='R'/>
+                                                </Constant>
+                                                <Member>
+                                                    <Identifier start='1034' end='1035' name='R'/>
+                                                </Member>
+                                            </StaticConstantAccess>
+                                        </InfixExpression>
+                                    </ReflectionVariable>
+                                </Constant>
+                                <Member>
+                                    <ReflectionVariable start='1016' end='1036'>
+                                        <InfixExpression start='1017' end='1035' operator='CONCAT'>
+                                            <StaticConstantAccess start='1017' end='1025' isDynamicName='false'>
+                                                <NamespaceName start='1017' end='1021' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='1017' end='1021' name='self'/>
+                                                </NamespaceName>
+                                                <Constant>
+                                                    <Identifier start='1023' end='1025' name='BA'/>
+                                                </Constant>
+                                                <Member>
+                                                    <Identifier start='1023' end='1025' name='BA'/>
+                                                </Member>
+                                            </StaticConstantAccess>
+                                            <StaticConstantAccess start='1028' end='1035' isDynamicName='false'>
+                                                <NamespaceName start='1028' end='1032' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='1028' end='1032' name='self'/>
+                                                </NamespaceName>
+                                                <Constant>
+                                                    <Identifier start='1034' end='1035' name='R'/>
+                                                </Constant>
+                                                <Member>
+                                                    <Identifier start='1034' end='1035' name='R'/>
+                                                </Member>
+                                            </StaticConstantAccess>
+                                        </InfixExpression>
+                                    </ReflectionVariable>
+                                </Member>
+                            </StaticConstantAccess>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <ExpressionStatement start='1041' end='1054'>
+                <Assignment start='1041' end='1053' operator='EQUAL'>
+                    <Variable start='1041' end='1045' isDollared='true'>
+                        <Identifier start='1042' end='1045' name='bar'/>
+                    </Variable>
+                    <Scalar start='1048' end='1053' type='STRING' value='&apos;BAR&apos;'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1056' end='1070'>
+                <StaticConstantAccess start='1056' end='1069' isDynamicName='true'>
+                    <NamespaceName start='1056' end='1060' isCurrent='false' isGlobal='false'>
+                        <Identifier start='1056' end='1060' name='Test'/>
+                    </NamespaceName>
+                    <Constant>
+                        <ReflectionVariable start='1062' end='1069'>
+                            <Scalar start='1063' end='1068' type='STRING' value='"BAR"'/>
+                        </ReflectionVariable>
+                    </Constant>
+                    <Member>
+                        <ReflectionVariable start='1062' end='1069'>
+                            <Scalar start='1063' end='1068' type='STRING' value='"BAR"'/>
+                        </ReflectionVariable>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='1071' end='1086'>
+                <StaticConstantAccess start='1071' end='1085' isDynamicName='true'>
+                    <Variable start='1071' end='1076' isDollared='true'>
+                        <Identifier start='1072' end='1076' name='test'/>
+                    </Variable>
+                    <Constant>
+                        <ReflectionVariable start='1078' end='1085'>
+                            <Scalar start='1079' end='1084' type='STRING' value='"BAR"'/>
+                        </ReflectionVariable>
+                    </Constant>
+                    <Member>
+                        <ReflectionVariable start='1078' end='1085'>
+                            <Scalar start='1079' end='1084' type='STRING' value='"BAR"'/>
+                        </ReflectionVariable>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='1087' end='1100'>
+                <StaticConstantAccess start='1087' end='1099' isDynamicName='true'>
+                    <NamespaceName start='1087' end='1091' isCurrent='false' isGlobal='false'>
+                        <Identifier start='1087' end='1091' name='Test'/>
+                    </NamespaceName>
+                    <Constant>
+                        <ReflectionVariable start='1093' end='1099'>
+                            <Variable start='1094' end='1098' isDollared='true'>
+                                <Identifier start='1095' end='1098' name='bar'/>
+                            </Variable>
+                        </ReflectionVariable>
+                    </Constant>
+                    <Member>
+                        <ReflectionVariable start='1093' end='1099'>
+                            <Variable start='1094' end='1098' isDollared='true'>
+                                <Identifier start='1095' end='1098' name='bar'/>
+                            </Variable>
+                        </ReflectionVariable>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='1101' end='1115'>
+                <StaticConstantAccess start='1101' end='1114' isDynamicName='true'>
+                    <Variable start='1101' end='1106' isDollared='true'>
+                        <Identifier start='1102' end='1106' name='test'/>
+                    </Variable>
+                    <Constant>
+                        <ReflectionVariable start='1108' end='1114'>
+                            <Variable start='1109' end='1113' isDollared='true'>
+                                <Identifier start='1110' end='1113' name='bar'/>
+                            </Variable>
+                        </ReflectionVariable>
+                    </Constant>
+                    <Member>
+                        <ReflectionVariable start='1108' end='1114'>
+                            <Variable start='1109' end='1113' isDollared='true'>
+                                <Identifier start='1110' end='1113' name='bar'/>
+                            </Variable>
+                        </ReflectionVariable>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='1116' end='1134'>
+                <StaticConstantAccess start='1116' end='1133' isDynamicName='true'>
+                    <NamespaceName start='1116' end='1120' isCurrent='false' isGlobal='false'>
+                        <Identifier start='1116' end='1120' name='Test'/>
+                    </NamespaceName>
+                    <Constant>
+                        <ReflectionVariable start='1122' end='1133'>
+                            <InfixExpression start='1123' end='1132' operator='CONCAT'>
+                                <Variable start='1123' end='1127' isDollared='true'>
+                                    <Identifier start='1124' end='1127' name='bar'/>
+                                </Variable>
+                                <Variable start='1130' end='1132' isDollared='true'>
+                                    <Identifier start='1131' end='1132' name='r'/>
+                                </Variable>
+                            </InfixExpression>
+                        </ReflectionVariable>
+                    </Constant>
+                    <Member>
+                        <ReflectionVariable start='1122' end='1133'>
+                            <InfixExpression start='1123' end='1132' operator='CONCAT'>
+                                <Variable start='1123' end='1127' isDollared='true'>
+                                    <Identifier start='1124' end='1127' name='bar'/>
+                                </Variable>
+                                <Variable start='1130' end='1132' isDollared='true'>
+                                    <Identifier start='1131' end='1132' name='r'/>
+                                </Variable>
+                            </InfixExpression>
+                        </ReflectionVariable>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='1135' end='1154'>
+                <StaticConstantAccess start='1135' end='1153' isDynamicName='true'>
+                    <Variable start='1135' end='1140' isDollared='true'>
+                        <Identifier start='1136' end='1140' name='test'/>
+                    </Variable>
+                    <Constant>
+                        <ReflectionVariable start='1142' end='1153'>
+                            <InfixExpression start='1143' end='1152' operator='CONCAT'>
+                                <Variable start='1143' end='1147' isDollared='true'>
+                                    <Identifier start='1144' end='1147' name='bar'/>
+                                </Variable>
+                                <Variable start='1150' end='1152' isDollared='true'>
+                                    <Identifier start='1151' end='1152' name='r'/>
+                                </Variable>
+                            </InfixExpression>
+                        </ReflectionVariable>
+                    </Constant>
+                    <Member>
+                        <ReflectionVariable start='1142' end='1153'>
+                            <InfixExpression start='1143' end='1152' operator='CONCAT'>
+                                <Variable start='1143' end='1147' isDollared='true'>
+                                    <Identifier start='1144' end='1147' name='bar'/>
+                                </Variable>
+                                <Variable start='1150' end='1152' isDollared='true'>
+                                    <Identifier start='1151' end='1152' name='r'/>
+                                </Variable>
+                            </InfixExpression>
+                        </ReflectionVariable>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='1155' end='1181'>
+                <StaticConstantAccess start='1155' end='1180' isDynamicName='true'>
+                    <NamespaceName start='1155' end='1159' isCurrent='false' isGlobal='false'>
+                        <Identifier start='1155' end='1159' name='Test'/>
+                    </NamespaceName>
+                    <Constant>
+                        <ReflectionVariable start='1161' end='1180'>
+                            <FunctionInvocation start='1162' end='1179'>
+                                <FucntionName start='1162' end='1172'>
+                                    <NamespaceName start='1162' end='1172' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1162' end='1172' name='strtoupper'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                    <Scalar start='1173' end='1178' type='STRING' value='"bar"'/>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </ReflectionVariable>
+                    </Constant>
+                    <Member>
+                        <ReflectionVariable start='1161' end='1180'>
+                            <FunctionInvocation start='1162' end='1179'>
+                                <FucntionName start='1162' end='1172'>
+                                    <NamespaceName start='1162' end='1172' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1162' end='1172' name='strtoupper'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                    <Scalar start='1173' end='1178' type='STRING' value='"bar"'/>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </ReflectionVariable>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='1182' end='1209'>
+                <StaticConstantAccess start='1182' end='1208' isDynamicName='true'>
+                    <Variable start='1182' end='1187' isDollared='true'>
+                        <Identifier start='1183' end='1187' name='test'/>
+                    </Variable>
+                    <Constant>
+                        <ReflectionVariable start='1189' end='1208'>
+                            <FunctionInvocation start='1190' end='1207'>
+                                <FucntionName start='1190' end='1200'>
+                                    <NamespaceName start='1190' end='1200' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1190' end='1200' name='strtoupper'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                    <Scalar start='1201' end='1206' type='STRING' value='"bar"'/>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </ReflectionVariable>
+                    </Constant>
+                    <Member>
+                        <ReflectionVariable start='1189' end='1208'>
+                            <FunctionInvocation start='1190' end='1207'>
+                                <FucntionName start='1190' end='1200'>
+                                    <NamespaceName start='1190' end='1200' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1190' end='1200' name='strtoupper'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                    <Scalar start='1201' end='1206' type='STRING' value='"bar"'/>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </ReflectionVariable>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='1210' end='1226'>
+                <StaticConstantAccess start='1210' end='1225' isDynamicName='true'>
+                    <NamespaceName start='1210' end='1214' isCurrent='false' isGlobal='false'>
+                        <Identifier start='1210' end='1214' name='Test'/>
+                    </NamespaceName>
+                    <Constant>
+                        <ReflectionVariable start='1216' end='1225'>
+                            <Scalar start='1217' end='1224' type='STRING' value='&apos;$barr&apos;'/>
+                        </ReflectionVariable>
+                    </Constant>
+                    <Member>
+                        <ReflectionVariable start='1216' end='1225'>
+                            <Scalar start='1217' end='1224' type='STRING' value='&apos;$barr&apos;'/>
+                        </ReflectionVariable>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='1227' end='1244'>
+                <StaticConstantAccess start='1227' end='1243' isDynamicName='true'>
+                    <Variable start='1227' end='1232' isDollared='true'>
+                        <Identifier start='1228' end='1232' name='test'/>
+                    </Variable>
+                    <Constant>
+                        <ReflectionVariable start='1234' end='1243'>
+                            <Scalar start='1235' end='1242' type='STRING' value='&apos;$barr&apos;'/>
+                        </ReflectionVariable>
+                    </Constant>
+                    <Member>
+                        <ReflectionVariable start='1234' end='1243'>
+                            <Scalar start='1235' end='1242' type='STRING' value='&apos;$barr&apos;'/>
+                        </ReflectionVariable>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='1245' end='1273'>
+                <StaticConstantAccess start='1245' end='1272' isDynamicName='true'>
+                    <NamespaceName start='1245' end='1249' isCurrent='false' isGlobal='false'>
+                        <Identifier start='1245' end='1249' name='Test'/>
+                    </NamespaceName>
+                    <Constant>
+                        <ReflectionVariable start='1251' end='1272'>
+                            <FunctionInvocation start='1252' end='1271'>
+                                <FucntionName start='1252' end='1262'>
+                                    <NamespaceName start='1252' end='1262' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1252' end='1262' name='strtolower'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                    <Scalar start='1263' end='1270' type='STRING' value='"CLASS"'/>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </ReflectionVariable>
+                    </Constant>
+                    <Member>
+                        <ReflectionVariable start='1251' end='1272'>
+                            <FunctionInvocation start='1252' end='1271'>
+                                <FucntionName start='1252' end='1262'>
+                                    <NamespaceName start='1252' end='1262' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1252' end='1262' name='strtolower'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                    <Scalar start='1263' end='1270' type='STRING' value='"CLASS"'/>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </ReflectionVariable>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='1274' end='1303'>
+                <StaticConstantAccess start='1274' end='1302' isDynamicName='true'>
+                    <Variable start='1274' end='1279' isDollared='true'>
+                        <Identifier start='1275' end='1279' name='test'/>
+                    </Variable>
+                    <Constant>
+                        <ReflectionVariable start='1281' end='1302'>
+                            <FunctionInvocation start='1282' end='1301'>
+                                <FucntionName start='1282' end='1292'>
+                                    <NamespaceName start='1282' end='1292' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1282' end='1292' name='strtolower'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                    <Scalar start='1293' end='1300' type='STRING' value='"CLASS"'/>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </ReflectionVariable>
+                    </Constant>
+                    <Member>
+                        <ReflectionVariable start='1281' end='1302'>
+                            <FunctionInvocation start='1282' end='1301'>
+                                <FucntionName start='1282' end='1292'>
+                                    <NamespaceName start='1282' end='1292' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1282' end='1292' name='strtolower'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                    <Scalar start='1293' end='1300' type='STRING' value='"CLASS"'/>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </ReflectionVariable>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='1304' end='1316'>
+                <StaticConstantAccess start='1304' end='1315' isDynamicName='true'>
+                    <NamespaceName start='1304' end='1308' isCurrent='false' isGlobal='false'>
+                        <Identifier start='1304' end='1308' name='Test'/>
+                    </NamespaceName>
+                    <Constant>
+                        <ReflectionVariable start='1310' end='1315'>
+                            <Scalar start='1311' end='1314' type='INT' value='100'/>
+                        </ReflectionVariable>
+                    </Constant>
+                    <Member>
+                        <ReflectionVariable start='1310' end='1315'>
+                            <Scalar start='1311' end='1314' type='INT' value='100'/>
+                        </ReflectionVariable>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='1317' end='1330'>
+                <StaticConstantAccess start='1317' end='1329' isDynamicName='true'>
+                    <Variable start='1317' end='1322' isDollared='true'>
+                        <Identifier start='1318' end='1322' name='test'/>
+                    </Variable>
+                    <Constant>
+                        <ReflectionVariable start='1324' end='1329'>
+                            <Scalar start='1325' end='1328' type='INT' value='100'/>
+                        </ReflectionVariable>
+                    </Constant>
+                    <Member>
+                        <ReflectionVariable start='1324' end='1329'>
+                            <Scalar start='1325' end='1328' type='INT' value='100'/>
+                        </ReflectionVariable>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='1331' end='1342'>
+                <StaticConstantAccess start='1331' end='1341' isDynamicName='true'>
+                    <NamespaceName start='1331' end='1335' isCurrent='false' isGlobal='false'>
+                        <Identifier start='1331' end='1335' name='Test'/>
+                    </NamespaceName>
+                    <Constant>
+                        <ReflectionVariable start='1337' end='1341'>
+                            <ArrayCreation start='1338' end='1340' type='NEW'>
+                            </ArrayCreation>
+                        </ReflectionVariable>
+                    </Constant>
+                    <Member>
+                        <ReflectionVariable start='1337' end='1341'>
+                            <ArrayCreation start='1338' end='1340' type='NEW'>
+                            </ArrayCreation>
+                        </ReflectionVariable>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='1343' end='1355'>
+                <StaticConstantAccess start='1343' end='1354' isDynamicName='true'>
+                    <Variable start='1343' end='1348' isDollared='true'>
+                        <Identifier start='1344' end='1348' name='test'/>
+                    </Variable>
+                    <Constant>
+                        <ReflectionVariable start='1350' end='1354'>
+                            <ArrayCreation start='1351' end='1353' type='NEW'>
+                            </ArrayCreation>
+                        </ReflectionVariable>
+                    </Constant>
+                    <Member>
+                        <ReflectionVariable start='1350' end='1354'>
+                            <ArrayCreation start='1351' end='1353' type='NEW'>
+                            </ArrayCreation>
+                        </ReflectionVariable>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='1357' end='1380'>
+                <StaticConstantAccess start='1357' end='1379' isDynamicName='true'>
+                    <StaticConstantAccess start='1357' end='1370' isDynamicName='true'>
+                        <NamespaceName start='1357' end='1361' isCurrent='false' isGlobal='false'>
+                            <Identifier start='1357' end='1361' name='Test'/>
+                        </NamespaceName>
+                        <Constant>
+                            <ReflectionVariable start='1363' end='1370'>
+                                <FunctionInvocation start='1364' end='1369'>
+                                    <FucntionName start='1364' end='1367'>
+                                        <NamespaceName start='1364' end='1367' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1364' end='1367' name='foo'/>
+                                        </NamespaceName>
+                                    </FucntionName>
+                                    <Parameters>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </ReflectionVariable>
+                        </Constant>
+                        <Member>
+                            <ReflectionVariable start='1363' end='1370'>
+                                <FunctionInvocation start='1364' end='1369'>
+                                    <FucntionName start='1364' end='1367'>
+                                        <NamespaceName start='1364' end='1367' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1364' end='1367' name='foo'/>
+                                        </NamespaceName>
+                                    </FucntionName>
+                                    <Parameters>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </ReflectionVariable>
+                        </Member>
+                    </StaticConstantAccess>
+                    <Constant>
+                        <ReflectionVariable start='1372' end='1379'>
+                            <FunctionInvocation start='1373' end='1378'>
+                                <FucntionName start='1373' end='1376'>
+                                    <NamespaceName start='1373' end='1376' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1373' end='1376' name='bar'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </ReflectionVariable>
+                    </Constant>
+                    <Member>
+                        <ReflectionVariable start='1372' end='1379'>
+                            <FunctionInvocation start='1373' end='1378'>
+                                <FucntionName start='1373' end='1376'>
+                                    <NamespaceName start='1373' end='1376' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1373' end='1376' name='bar'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </ReflectionVariable>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='1381' end='1416'>
+                <StaticConstantAccess start='1381' end='1415' isDynamicName='true'>
+                    <StaticConstantAccess start='1381' end='1400' isDynamicName='true'>
+                        <NamespaceName start='1381' end='1385' isCurrent='false' isGlobal='false'>
+                            <Identifier start='1381' end='1385' name='Test'/>
+                        </NamespaceName>
+                        <Constant>
+                            <ReflectionVariable start='1387' end='1400'>
+                                <FunctionInvocation start='1388' end='1399'>
+                                    <FucntionName start='1388' end='1392'>
+                                        <NamespaceName start='1388' end='1392' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1388' end='1392' name='test'/>
+                                        </NamespaceName>
+                                    </FucntionName>
+                                    <Parameters>
+                                        <Scalar start='1393' end='1398' type='STRING' value='&apos;foo&apos;'/>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </ReflectionVariable>
+                        </Constant>
+                        <Member>
+                            <ReflectionVariable start='1387' end='1400'>
+                                <FunctionInvocation start='1388' end='1399'>
+                                    <FucntionName start='1388' end='1392'>
+                                        <NamespaceName start='1388' end='1392' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1388' end='1392' name='test'/>
+                                        </NamespaceName>
+                                    </FucntionName>
+                                    <Parameters>
+                                        <Scalar start='1393' end='1398' type='STRING' value='&apos;foo&apos;'/>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </ReflectionVariable>
+                        </Member>
+                    </StaticConstantAccess>
+                    <Constant>
+                        <ReflectionVariable start='1402' end='1415'>
+                            <FunctionInvocation start='1403' end='1414'>
+                                <FucntionName start='1403' end='1407'>
+                                    <NamespaceName start='1403' end='1407' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1403' end='1407' name='test'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                    <Scalar start='1408' end='1413' type='STRING' value='&apos;bar&apos;'/>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </ReflectionVariable>
+                    </Constant>
+                    <Member>
+                        <ReflectionVariable start='1402' end='1415'>
+                            <FunctionInvocation start='1403' end='1414'>
+                                <FucntionName start='1403' end='1407'>
+                                    <NamespaceName start='1403' end='1407' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1403' end='1407' name='test'/>
+                                    </NamespaceName>
+                                </FucntionName>
+                                <Parameters>
+                                    <Scalar start='1408' end='1413' type='STRING' value='&apos;bar&apos;'/>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </ReflectionVariable>
+                    </Member>
+                </StaticConstantAccess>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

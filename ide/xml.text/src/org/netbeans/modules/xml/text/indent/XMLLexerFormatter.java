@@ -30,7 +30,6 @@ import org.netbeans.api.lexer.LanguagePath;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.xml.lexer.XMLTokenId;
-import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.editor.indent.api.IndentUtils;
 import org.netbeans.modules.editor.indent.spi.Context;
@@ -39,6 +38,8 @@ import org.netbeans.modules.xml.text.folding.TokenElement.TokenType;
 import org.netbeans.modules.xml.text.folding.XmlFoldManager;
 import org.openide.util.CharSequences;
 import org.openide.util.Exceptions;
+import javax.swing.text.Document;
+import org.netbeans.api.editor.document.AtomicLockDocument;
 
 /**
  * New XML formatter based on Lexer APIs.
@@ -70,13 +71,9 @@ public class XMLLexerFormatter {
 // # 170343
     public void reformat(Context context, final int startOffset, final int endOffset)
             throws BadLocationException {
-        final BaseDocument doc = (BaseDocument) context.document();
-        doc.runAtomic(new Runnable() {
-
-            public void run() {
-                doReformat(doc, startOffset, endOffset);
-            }
-        });
+        final Document doc = context.document();
+        LineDocumentUtils.asRequired(doc, AtomicLockDocument.class)
+                         .runAtomic(() -> doReformat((LineDocument)doc, startOffset, endOffset));
     }
 
     public LineDocument doReformat(LineDocument doc, int startOffset, int endOffset) {
@@ -117,7 +114,7 @@ public class XMLLexerFormatter {
         if(noNewline || so == 0 || CharSequences.indexOf(temp, "\n") != -1){ // NOI18N
             int i = LineDocumentUtils.getLineFirstNonWhitespace(doc, so);
             if (i == -1) {
-                i = LineDocumentUtils.getLineEnd(doc, so);
+                i = LineDocumentUtils.getLineEndOffset(doc, so);
             }
             int rowStart = LineDocumentUtils.getLineStart(doc, so);
             
@@ -236,7 +233,7 @@ public class XMLLexerFormatter {
         } else {
             try {
                 // align with the actual tag:
-                indentLevel = Utilities.getVisualColumn((BaseDocument)basedoc, 
+                indentLevel = Utilities.getVisualColumn((LineDocument)basedoc, 
                         LineDocumentUtils.getNextNonWhitespace(basedoc, 
                         LineDocumentUtils.getLineStart(basedoc, tokenSequence.offset())));
                 if (!increase) {
@@ -348,7 +345,7 @@ public class XMLLexerFormatter {
             } else {
                 // align one space after the tagname:
                 TokenIndent tagIndent = stack.peek();
-                int current = Utilities.getVisualColumn((BaseDocument)basedoc, tokenSequence.offset());
+                int current = Utilities.getVisualColumn((LineDocument)basedoc, tokenSequence.offset());
                 if (tagIndent == null) {
                     // fallback
                     firstAttributeIndent = current;
@@ -653,7 +650,7 @@ public class XMLLexerFormatter {
 
                     for (int lno = 0; lno < lineCount; lno++) {
                         // indent 1st comment line, as if it was text:
-                        int lineEnd = LineDocumentUtils.getLineEnd(basedoc, currentOffset);
+                        int lineEnd = LineDocumentUtils.getLineEndOffset(basedoc, currentOffset);
 
                         int desiredIndent;
                         if (lno == 0 || lno == lineCount -1) {

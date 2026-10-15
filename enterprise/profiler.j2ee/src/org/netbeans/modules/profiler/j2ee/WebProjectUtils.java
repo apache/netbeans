@@ -67,7 +67,7 @@ import org.openide.util.Lookup;
 })
 public class WebProjectUtils {
     //~ Static fields/initializers -----------------------------------------------------------------------------------------------
-    final private static Logger LOGGER = Logger.getLogger(WebProjectUtils.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(WebProjectUtils.class.getName());
     
     private static final Map<ClientUtils.SourceCodeSelection, String> jspClass2NameMap = new HashMap<ClientUtils.SourceCodeSelection, String>();
     private static final String[][] jspServletMethods = new String[][] {

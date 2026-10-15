@@ -50,8 +50,8 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.project.MavenProject;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.java.source.SourceUtils;
-import org.netbeans.api.progress.aggregate.AggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.AggregateProgressHandle;
+import org.netbeans.api.progress.aggregate.BasicAggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.ProgressContributor;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
@@ -135,7 +135,7 @@ public class DependenciesNode extends AbstractNode {
         toRet.addAll(Utilities.actionsForPath("Projects/org-netbeans-modules-maven/DependenciesActions")); //NOI18N
         toRet.add(null);
         toRet.add(new DependencyNode.ShowManagedStateAction());
-        return toRet.toArray(new Action[toRet.size()]);
+        return toRet.toArray(new Action[0]);
     }
     
     private static class DependenciesChildren extends ChildFactory<DependencyWrapper> implements ChangeListener {
@@ -209,7 +209,7 @@ public class DependenciesNode extends AbstractNode {
             }
             //#200927 do not use comparator in treeset, comparator not equivalent to equals/hashcode
             ArrayList<DependencyWrapper> l = new ArrayList<>(lst);
-            Collections.sort(l, new DependenciesComparator());
+            l.sort(new DependenciesComparator());
             return l;
         }
 
@@ -250,7 +250,7 @@ public class DependenciesNode extends AbstractNode {
         }
     }
     
-    private final static class DependencyWrapper {
+    private static final class DependencyWrapper {
 
         private final Artifact artifact;        
         private final FileObject fileObject;        
@@ -406,10 +406,10 @@ public class DependenciesNode extends AbstractNode {
                     Node[] nds = getChildren().getNodes(true);
                     ProgressContributor[] contribs = new ProgressContributor[nds.length];
                     for (int i = 0; i < nds.length; i++) {
-                        contribs[i] = AggregateProgressFactory.createProgressContributor("multi-" + i); //NOI18N
+                        contribs[i] = BasicAggregateProgressFactory.createProgressContributor("multi-" + i); //NOI18N
                     }
                     String label = javadoc ? Progress_Javadoc() : Progress_Source();
-                    AggregateProgressHandle handle = AggregateProgressFactory.createHandle(label, 
+                    AggregateProgressHandle handle = BasicAggregateProgressFactory.createHandle(label, 
                             contribs, ProgressTransferListener.cancellable(), null);
                     handle.start();
                     try {

@@ -48,10 +48,8 @@ import org.netbeans.api.queries.FileEncodingQuery;
 import org.netbeans.modules.j2ee.persistence.wizard.jpacontroller.JpaControllerUtil;
 import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.web.jsf.JSFUtils;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
 import org.netbeans.modules.web.jsf.palette.JSFPaletteUtilities;
 import org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo;
-import org.netbeans.modules.web.jsfapi.api.NamespaceUtils;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.filesystems.FileObject;
@@ -215,7 +213,8 @@ public abstract class FromEntityBase {
             JpaControllerUtil.EmbeddedPkSupport embeddedPkSupport = null;
             for (ExecutableElement method : methods) {
                 // filter out @Transient methods
-                if (JpaControllerUtil.findAnnotation(method, "javax.persistence.Transient") != null) { //NOI18N
+                if (JpaControllerUtil.findAnnotation(method, "jakarta.persistence.Transient") != null //NOI18N
+                        || JpaControllerUtil.findAnnotation(method, "javax.persistence.Transient") != null) { //NOI18N
                     continue;
                 }
 
@@ -453,7 +452,7 @@ public abstract class FromEntityBase {
             } else if ("Byte".equals(idType.toString()) || "java.lang.Byte".equals(idType.toString())) {
                 return "Byte.valueOf("+param+")";
             } else if ("Character".equals(idType.toString()) || "java.lang.Character".equals(idType.toString())) {
-                return "new Character("+param+".charAt(0))";
+                return "Character.valueOf("+param+".charAt(0))";
             } else if ("Double".equals(idType.toString()) || "java.lang.Double".equals(idType.toString())) {
                 return "Double.valueOf("+param+")";
             } else if ("Float".equals(idType.toString()) || "java.lang.Float".equals(idType.toString())) {
@@ -495,7 +494,7 @@ public abstract class FromEntityBase {
 //        }
 //    }
 
-    public final static class FieldDesc {
+    public static final class FieldDesc {
 
         private ExecutableElement method;
         private String methodName;
@@ -558,9 +557,9 @@ public abstract class FromEntityBase {
 
         private boolean isFieldAccess() {
             if (fieldAccess == null) {
-                fieldAccess = Boolean.valueOf(JpaControllerUtil.isFieldAccess(bean));
+                fieldAccess = JpaControllerUtil.isFieldAccess(bean);
             }
-            return fieldAccess.booleanValue();
+            return fieldAccess;
         }
 
         public boolean isValid() {
@@ -569,9 +568,9 @@ public abstract class FromEntityBase {
 
         public int getRelationship() {
             if (relationship == null) {
-                relationship = Integer.valueOf(JpaControllerUtil.isRelationship(method, isFieldAccess()));
+                relationship = JpaControllerUtil.isRelationship(method, isFieldAccess());
             }
-            return relationship.intValue();
+            return relationship;
         }
 
         public String getDateTimeFormat() {
@@ -593,7 +592,8 @@ public abstract class FromEntityBase {
             if (fieldElement == null) {
                 fieldElement = method;
             }
-            return JpaControllerUtil.isAnnotatedWith(fieldElement, "javax.persistence.Lob"); // NOI18N
+            return JpaControllerUtil.isAnnotatedWith(fieldElement, "jakarta.persistence.Lob") // NOI18N
+                    || JpaControllerUtil.isAnnotatedWith(fieldElement, "javax.persistence.Lob"); // NOI18N
         }
 
         @Override

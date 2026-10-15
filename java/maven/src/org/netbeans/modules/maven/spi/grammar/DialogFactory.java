@@ -70,8 +70,9 @@ public final class DialogFactory {
         if (ret == DialogDescriptor.OK_OPTION) {
             Map<Artifact, List<DependencyNode>> dependencyExcludes = pnl.getDependencyExcludes();
             Map<Artifact, List<Artifact>> toRet = new HashMap<Artifact, List<Artifact>>();
-            for (Artifact exclude : dependencyExcludes.keySet()) {
-                List<DependencyNode> directs = dependencyExcludes.get(exclude);
+            for (Map.Entry<Artifact, List<DependencyNode>> entry : dependencyExcludes.entrySet()) {
+                Artifact exclude = entry.getKey();
+                List<DependencyNode> directs = entry.getValue();
                 List<Artifact> dirArts = new ArrayList<Artifact>();
                 for (DependencyNode nd : directs) {
                     dirArts.add(nd.getArtifact());

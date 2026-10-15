@@ -24,7 +24,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Vector;
+import java.io.UnsupportedEncodingException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -162,219 +166,216 @@ public class ForkedJavaOverride extends Java {
 
         private class NbOutputStreamHandler implements ExecuteStreamHandler {
 
-            private Thread outTask;
-            private Thread errTask;
-            private Thread inTask;
-            private Copier outCopier, errCopier; // #212526
-            private FoldingHelper foldingHelper;
-
+            private final ExecutorService tasks;
+            private final FoldingHelper foldingHelper;
+            private Future inputTask;
+            private InputStream stdout, stderr;
+            private OutputStream stdin;
+            
             NbOutputStreamHandler() {
                 this.foldingHelper = new FoldingHelper();
+                this.tasks = Executors.newFixedThreadPool(3, (r) -> {
+                    Thread t = new Thread(Thread.currentThread().getThreadGroup(),
+                        r,
+                        "I/O Thread for " + getProject().getName()); // NOI18N
+                    t.setDaemon(true);
+                    return t;
+                });
             }
 
-            public void start() throws IOException {}
+            private void setCopier(InputStream inputStream, OutputStream os, boolean delegate, boolean err) {
+                if (os == null || delegate) {
+                    tasks.submit(new TransferCopier(inputStream, AntBridge.delegateOutputStream(err)));
+                } else {
+                    tasks.submit(new TransferCopier(inputStream, os));
+                }
+            }
+
+            public void start() throws IOException {
+                NbBuildLogger buildLogger = getProject().getBuildListeners().stream()
+                    .filter(o -> o instanceof NbBuildLogger)
+                    .map(o -> (NbBuildLogger)o)
+                    .findFirst()
+                    .orElse(null);
+                if (buildLogger != null) {
+                    tasks.submit(new MarkupCopier(stdout, Project.MSG_INFO, false, outEncoding, buildLogger, foldingHelper));
+                    tasks.submit(new MarkupCopier(stderr, Project.MSG_WARN, true, errEncoding, buildLogger, foldingHelper));
+                } else {
+                    setCopier(stdout, getOutputStream(), delegateOutputStream, false);
+                    setCopier(stderr, getErrorStream(), delegateErrorStream, true);
+                }                                
+                InputStream is = getInputStream();
+                if (is == null)
+                    is = AntBridge.delegateInputStream();
+                inputTask = tasks.submit(new TransferCopier(is, stdin));
+            }
 
             public void stop() {
-                if (errTask != null) {
-                    try {
-                        errTask.join(3000);
-                    } catch (InterruptedException ex) {
-                    }
-                }
-                if (outTask != null) {
-                    try {
-                        outTask.join(3000);
-                    } catch (InterruptedException ex) {
-                    }
-                }
-                if (inTask != null) {
-                    inTask.interrupt();
-                    try {
-                        inTask.join(1000);
-                    } catch (InterruptedException ex) {
-                    }
-                }
-                if (outCopier != null) {
-                    outCopier.maybeFlush();
-                }
-                if (errCopier != null) {
-                    errCopier.maybeFlush();
+                try {
+                    if (inputTask != null)
+                        inputTask.cancel(true);
+                    tasks.shutdown();
+                    tasks.awaitTermination(3, TimeUnit.SECONDS);
+                } catch (InterruptedException ex) {
+                } finally {
+                    tasks.shutdownNow();
                 }
             }
 
             public void setProcessOutputStream(InputStream inputStream) throws IOException {
-                OutputStream os = getOutputStream();
-                Integer logLevel = null;
-                if (os == null || delegateOutputStream) {
-                    os = AntBridge.delegateOutputStream(false);
-                    logLevel = Project.MSG_INFO;
-                }
-                outTask = new Thread(Thread.currentThread().getThreadGroup(), outCopier = new Copier(inputStream, os, logLevel, outEncoding, foldingHelper),
-                        "Out Thread for " + getProject().getName()); // NOI18N
-                outTask.setDaemon(true);
-                outTask.start();
+                this.stdout = inputStream;
             }
 
             public void setProcessErrorStream(InputStream inputStream) throws IOException {
-                OutputStream os = getErrorStream();
-                Integer logLevel = null;
-                if (os == null || delegateErrorStream) {
-                    os = AntBridge.delegateOutputStream(true);
-                    logLevel = Project.MSG_WARN;
-                }
-                errTask = new Thread(Thread.currentThread().getThreadGroup(), errCopier = new Copier(inputStream, os, logLevel, errEncoding, foldingHelper),
-                        "Err Thread for " + getProject().getName()); // NOI18N
-                errTask.setDaemon(true);
-                errTask.start();
+                this.stderr = inputStream;
             }
 
             public void setProcessInputStream(OutputStream outputStream) throws IOException {
-                InputStream is = getInputStream();
-                if (is == null) {
-                    is = AntBridge.delegateInputStream();
-                }
-                inTask = new Thread(Thread.currentThread().getThreadGroup(), new Copier(is, outputStream, null, null, foldingHelper),
-                        "In Thread for " + getProject().getName()); // NOI18N
-                inTask.setDaemon(true);
-                inTask.start();
+                this.stdin = outputStream;
             }
 
         }
 
     }
 
-    private class Copier implements Runnable {
+    /**
+     * Simple copier that transfers all input to output.
+     */
+    private class TransferCopier implements Runnable {
 
         private final InputStream in;
         private final OutputStream out;
-        private final Integer logLevel;
+
+        public TransferCopier(InputStream in, OutputStream out) {
+            this.in = in;
+            this.out = out;
+        }
+
+        @Override
+        public void run() {
+            try {
+                byte[] data = new byte[1024];
+                int len;
+                while ((len = in.read(data)) >= 0) {
+                    out.write(data, 0, len);
+                    out.flush();
+                }
+            } catch (IOException  x) {
+                // ignore IOException: Broken pipe from FileOutputStream.writeBytes in BufferedOutputStream.flush
+            }
+        }
+
+    }
+
+    /**
+     * Filtering copier that marks up links, ignoring stack traces.
+     */
+    private class MarkupCopier implements Runnable {
+
+        private final InputStream in;
+        private final int logLevel;
         private final String encoding;
         private final RequestProcessor.Task flusher;
         private final ByteArrayOutputStream currentLine;
-        private OutputWriter ow = null;
-        private boolean err;
-        private AntSession session = null;
+        private final OutputWriter ow;
+        private final boolean err;
+        private final AntSession session;
         private final FoldingHelper foldingHelper;
 
-        public Copier(InputStream in, OutputStream out, Integer logLevel, String encoding/*, long init*/,
-                FoldingHelper foldingHelper) {
+        public MarkupCopier(InputStream in, int logLevel, boolean err, String encoding, NbBuildLogger buildLogger, FoldingHelper foldingHelper) {
             this.in = in;
-            this.out = out;
             this.logLevel = logLevel;
+            this.err = err;
             this.encoding = encoding;
             this.foldingHelper = foldingHelper;
-            if (logLevel != null) {
-                flusher = PROCESSOR.create(new Runnable() {
-                    public void run() {
-                        maybeFlush();
-                    }
-                });
-                currentLine = new ByteArrayOutputStream();
+
+            flusher = PROCESSOR.create(() -> maybeFlush(false));
+            currentLine = new ByteArrayOutputStream();
+
+            ow = err ? buildLogger.err : buildLogger.out;
+            session = buildLogger.thisSession;
+        }
+
+        private synchronized void append(byte[] data, int off, int len) {
+            currentLine.write(data, off, len);
+            if (currentLine.size() > 8192) {
+                flusher.run();
             } else {
-                flusher = null;
-                currentLine = null;
+                flusher.schedule(250);
             }
+        }
+
+        private synchronized String appendAndTake(byte[] data, int off, int len) throws UnsupportedEncodingException {
+            currentLine.write(data, off, len);
+            String str = currentLine.toString(encoding);
+            currentLine.reset();
+            return str;
+        }
+
+        private synchronized String take() throws UnsupportedEncodingException {
+            String str = currentLine.toString(encoding);
+            currentLine.reset();
+            return str;
         }
 
         public void run() {
-            /*
-            StringBuilder content = new StringBuilder();
-            long tick = System.currentTimeMillis();
-            content.append(String.format("[init: %1.1fsec]", (tick - init) / 1000.0));
-             */
-            
-            if (ow == null && logLevel != null) {
-                Vector v = getProject().getBuildListeners();
-                for (Object o : v) {
-                    if (o instanceof NbBuildLogger) {
-                        NbBuildLogger l = (NbBuildLogger) o;
-                        err = logLevel != Project.MSG_INFO;
-                        ow = err ? l.err : l.out;
-                        session = l.thisSession;
-                        break;
-                    }
-                }
-            }
             try {
-                try {
-                    int c;
-                    while ((c = in.read()) != -1) {
-                        if (logLevel == null) {
-                            // Input gets sent immediately.
-                            out.write(c);
-                            out.flush();
-                        } else {
-                            synchronized (this) {
-                                if (c == '\n') {                                    
-                                    String str = currentLine.toString(encoding);
-                                    int len = str.length();
-                                    if (len > 0 && str.charAt(len - 1) == '\r') {
-                                        str = str.substring(0, len - 1);
-                                    }
+                byte[] data = new byte[1024];
+                int len;
 
+                try {
+                    while ((len = in.read(data)) >= 0) {
+                        int last = 0;
+                        for (int i = 0; i < len; i++) {
+                            int c = data[i] & 0xff;
+
+                            // Add folds for stack traces and mark up lines
+                            // not processed by JavaAntLogger stack trace detection
+                            if (c == '\n') {
+                                String str = appendAndTake(data, last, i > last && data[i - 1] == '\r' ? i - last - 1 : i - last);
+
+                                synchronized (foldingHelper) {
                                     foldingHelper.checkFolds(str, err, session);
-                                    if (str.length() < LOGGER_MAX_LINE_LENGTH) { // not too long message, probably interesting
-                                        // skip stack traces (hyperlinks are created by JavaAntLogger), everything else write directly
-                                        if (!STACK_TRACE.matcher(str).find()) {
-                                            StandardLogger.findHyperlink(str, session, null).println(session, err);
-                                        }
-                                    } else {
-                                        // do not match long strings, directly create a trivial hyperlink
+                                    if (str.length() >= LOGGER_MAX_LINE_LENGTH || !STACK_TRACE.matcher(str).matches())
                                         StandardLogger.findHyperlink(str, session, null).println(session, err);
-                                    }
                                     log(str, logLevel);
-                                    currentLine.reset();
-                                } else {                                    
-                                    currentLine.write(c);
-                                    if(currentLine.size() > 8192) {
-                                        flusher.run();
-                                    } else {
-                                        flusher.schedule(250);
-                                    }
                                 }
-                            }    
+                                last = i + 1;
+                            }
                         }
+
+                        if (last < len)
+                            append(data, last, len - last);
                     }
                 } finally {
-                    if (logLevel != null) {
-                        maybeFlush();
-                        if (err) {
-                            foldingHelper.clearHandle();
-                        }
-                    }
+                    maybeFlush(true);
                 }
             } catch (IOException x) {
                 // ignore IOException: Broken pipe from FileOutputStream.writeBytes in BufferedOutputStream.flush
-            } catch (ThreadDeath d) {
-                // OK, build just stopped.
-                return;
             }
-            //System.err.println("copied " + in + " to " + out + "; content='" + content + "'");
         }
 
-        private synchronized void maybeFlush() {
-            if (ow == null) { // ?? #200365
-                return;
-            }
+        public void maybeFlush(boolean end) {
             try {
-                if (currentLine.size() > 0) {
-                    String str = currentLine.toString(encoding);
-                    ow.write(str);
-                    log(str, logLevel);
+                String str = take();
+                synchronized (foldingHelper) {
+                    if (!str.isEmpty()) {
+                        ow.write(str);
+                        log(str, logLevel);
+                    }
+                    if (end && err)
+                        foldingHelper.clearHandle();
                 }
             } catch (IOException x) {
-                // probably safe to ignore
-            } catch (ThreadDeath d) {
-                // OK, build just stopped.
+                // ignore IOException: Broken pipe from FileOutputStream.writeBytes in BufferedOutputStream.flush
             }
-            currentLine.reset();
         }
 
     }
 
     /**
      * A helper class for detecting stacktraces in the output and for creating
-     * folds for them. It is also used as a shared lock for {@link Copier}s of
+     * folds for them. It is also used as a shared lock for {@link MarkupCopier}s of
      * standard and error outputs, which should make the mixed output a bit more
      * readable.
      */

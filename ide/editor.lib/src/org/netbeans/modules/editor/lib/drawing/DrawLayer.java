@@ -32,13 +32,13 @@ package org.netbeans.modules.editor.lib.drawing;
 * at the appropriate positions or it can mix these two approaches.
 *
 * @deprecated Please use Highlighting SPI instead, for details see
-*   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
+*   <a href="@org-netbeans-modules-editor-lib2@/index.html">Editor Library 2</a>.
 * 
 * @author Miloslav Metelka
 * @version 1.00
 */
 
-
+@Deprecated
 /* package */ interface DrawLayer {
 
     /**
@@ -132,9 +132,9 @@ package org.netbeans.modules.editor.lib.drawing;
      * Abstract implementation of the draw-layer. 
      * 
      * @deprecated Please use Highlighting SPI instead, for details see
-     *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a>.
+     *   <a href="@org-netbeans-modules-editor-lib2@/index.html">Editor Library 2</a>.
      */
-    public static abstract class AbstractLayer implements DrawLayer {
+    public abstract static class AbstractLayer implements DrawLayer {
 
         /** Name of this layer. The name of the layer must be unique among
         * layers installed into EditorUI

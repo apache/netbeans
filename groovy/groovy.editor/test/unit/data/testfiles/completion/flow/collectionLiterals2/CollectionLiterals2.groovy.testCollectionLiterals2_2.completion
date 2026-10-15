@@ -1,0 +1,6 @@
+Code completion result for source line:
+list1.listIter|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     listIterator()                  [PUBLIC]   ListIterator<E>
+METHOD     listIterator(int)               [PUBLIC]   ListIterator<E>

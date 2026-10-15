@@ -25,7 +25,7 @@ package org.netbeans.modules.websvc.rest.codegen;
  */
 public interface RestMethod {
 
-    String getMethod();
+    String getMethod(Boolean jakartaVariant);
 
     String getMethodName();
 

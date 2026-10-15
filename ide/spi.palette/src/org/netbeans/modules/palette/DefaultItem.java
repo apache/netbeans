@@ -80,7 +80,7 @@ public class DefaultItem implements Item {
     }
 
     public boolean equals(Object obj) {
-        if( null == obj || !(obj instanceof DefaultItem) )
+        if(!(obj instanceof DefaultItem))
             return false;
         
         return itemNode.equals( ((DefaultItem) obj).itemNode );

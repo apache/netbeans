@@ -40,6 +40,7 @@ import org.netbeans.modules.maven.indexer.api.RepositoryQueries;
 import org.netbeans.modules.maven.indexer.api.RepositoryQueries.Result;
 import org.netbeans.modules.maven.model.pom.POMModel;
 import org.netbeans.modules.maven.model.pom.Parent;
+import org.netbeans.modules.maven.model.pom.Properties;
 import org.netbeans.modules.xml.xam.Model;
 import org.netbeans.spi.editor.hints.ChangeInfo;
 import org.netbeans.spi.editor.hints.ErrorDescription;
@@ -108,6 +109,15 @@ public class ParentVersionError implements POMErrorFixProvider {
                         NbMavenProject nbprj = parentPrj.getLookup().lookup(NbMavenProject.class);
                         if (nbprj != null) { //do we have some non-maven project maybe?
                             MavenProject mav = nbprj.getMavenProject();
+                            if (PomModelUtils.isPropertyExpression(declaredVersion)) {
+                                String propVal = PomModelUtils.getProperty(model, declaredVersion);
+                                if (propVal != null) {
+                                    declaredVersion = propVal;
+                                } else {
+                                    String key = PomModelUtils.getPropertyName(declaredVersion);
+                                    declaredVersion = mav.getProperties().getProperty(key, declaredVersion);
+                                }
+                            }
                             //#167711 check the coordinates to filter out parents in non-default location without relative-path elemnt
                             if (parGr.equals(mav.getGroupId()) &&
                                 parArt.equals(mav.getArtifactId())) {

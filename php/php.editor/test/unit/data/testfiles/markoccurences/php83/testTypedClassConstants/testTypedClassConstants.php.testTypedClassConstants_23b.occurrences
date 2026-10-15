@@ -1,0 +1,2 @@
+    public const static A = EnumTest::|>MARK_OCCURRENCES:Test<|; // enum
+    case |>MARK_OCCURRENCES:T^est<|;

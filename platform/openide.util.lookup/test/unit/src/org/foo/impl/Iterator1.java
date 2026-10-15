@@ -23,7 +23,8 @@ public class Iterator1 implements java.util.Iterator {
     public boolean hasNext() {return false;}
     
     public Object next() {return null;}
-    
+
+    @Override
     public void remove() {}
    
 }

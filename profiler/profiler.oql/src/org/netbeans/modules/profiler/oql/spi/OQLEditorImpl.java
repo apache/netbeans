@@ -27,17 +27,17 @@ import org.netbeans.modules.profiler.oql.engine.api.OQLEngine;
  *
  * @author Jaroslav Bachorik
  */
-abstract public class OQLEditorImpl {
-    public final static String VALIDITY_PROPERTY = "document#valid";
+public abstract class OQLEditorImpl {
+    public static final String VALIDITY_PROPERTY = "document#valid";
     public static interface ValidationCallback {
         void callback(boolean lexingResult);
     }
 
-    final static protected ValidationCallback getValidationCallback(Document document) {
+    protected static final ValidationCallback getValidationCallback(Document document) {
         return (ValidationCallback)document.getProperty(ValidationCallback.class);
     }
 
-    final static protected OQLEngine getEngine(Document document) {
+    protected static final OQLEngine getEngine(Document document) {
         return (OQLEngine)document.getProperty(OQLEngine.class);
     }
 

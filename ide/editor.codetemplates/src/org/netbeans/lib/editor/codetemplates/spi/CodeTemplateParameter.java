@@ -29,7 +29,7 @@ import org.netbeans.lib.editor.codetemplates.CodeTemplateParameterImpl;
  * A first occurrence of the parameter in the parametrized text of the code template
  * define a master parameter. All other occurrences of the parameter
  * with the same name will become slave parameters.
- * <br/>
+ * <br>
  * The value of the master parameter
  * will be used for the slaves as well automatically and document modifications
  * to master parameter's value will be propagated to slaves as well.
@@ -42,10 +42,10 @@ import org.netbeans.lib.editor.codetemplates.CodeTemplateParameterImpl;
  * ${param hint ... }
  * </pre>
  * The hints give additional specification of what the parameter's value should be.
- * <br/>
+ * <br>
  * The slave parameters inherit their value from their master so it has no sense
  * to define any hints for slave parameters.
- * <br/>
+ * <br>
  * The hints without explicit <code>=value</code> are assigned with string value "true".
  * 
  * @author Miloslav Metelka
@@ -75,11 +75,11 @@ public final class CodeTemplateParameter {
     /**
      * Name of the hint that defines whether the given parameter is editable
      * by the user or not.
-     * <br/>
+     * <br>
      * If the parameter is not editable the user cannot jump to it by <i>TAB</i>
      * key during the post-insert editing. The value however can be changed
      * by the code template processor(s).
-     * <br/>
+     * <br>
      * Example of non-editable parameter:
      * <pre>
      * ${param editable=false}
@@ -99,8 +99,7 @@ public final class CodeTemplateParameter {
      * // paramC comes first, then paramB, then paramA
      * ${paramA} ${paramB ordering=2} ${paramC ordering=1}
      * </pre>
-     * </p>
-     * https://netbeans.org/bugzilla/show_bug.cgi?id=181703
+     * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=181703">#181703</a>
      * @since 1.43.0
      */
     public static final String ORDERING_HINT_NAME = "ordering"; // NOI18N
@@ -122,9 +121,9 @@ public final class CodeTemplateParameter {
      * Get the present value of this parameter.
      * 
      * @return non-null text value of this parameter.
-     *  <br/>
+     *  <br>
      *  The default value of the parameter is set to the name of the parameter.
-     *  <br/>
+     *  <br>
      *  If the parameter has hint of name
      *  {@link #DEFAULT_VALUE_HINT_NAME} then the default value
      *  is taken from the hint.
@@ -141,13 +140,13 @@ public final class CodeTemplateParameter {
     
     /**
      * Set a new value for this parameter.
-     * <br/>
+     * <br>
      * The value can only be set to the master parameters
      * because slave parameters will inherit values from their masters.
-     * <br/>
+     * <br>
      * If the code template was not yet inserted into the text the value
      * will be remembered and used as a default value during insertion.
-     * <br/>
+     * <br>
      * If the code template was already inserted and it's still actively
      * being changed then the value is propagated directly to the document's text.
      * 
@@ -183,7 +182,7 @@ public final class CodeTemplateParameter {
      * 
      * @return &gt;=0 starting offset of this parameter in the text being
      *  inserted into the document.
-     *  <br/>
+     *  <br>
      *  After the code template gets inserted into the document
      *  the value continues to be updated if the user changes the value
      *  by typing until the code template gets released which can be
@@ -195,7 +194,7 @@ public final class CodeTemplateParameter {
     
     /**
      * Get starting offset of this parameter in the parametrized text.
-     * <br/>
+     * <br>
      * The parametrized text can be obtained
      * by {@link CodeTemplateInsertRequest#getParametrizedText()}.
      *
@@ -208,7 +207,7 @@ public final class CodeTemplateParameter {
     
     /**
      * Get the ending offset of this parameter in the parametrized text.
-     * <br/>
+     * <br>
      * The parametrized text can be obtained
      * by {@link CodeTemplateInsertRequest#getParametrizedText()}.
      *
@@ -222,7 +221,7 @@ public final class CodeTemplateParameter {
 
     /**
      * Get map of the [String,String] hints in the parameter.
-     * <br/>
+     * <br>
      * For example the hints map for <code>${param hint1 hint2="defaultValue"}</code>
      * will contain ["hint1","true"] and ["hint2","defaultValue"].
      */
@@ -244,7 +243,7 @@ public final class CodeTemplateParameter {
      * Get unmodifiable collection of the slave parameters.
      *
      * @return non-null collection of the slave parameters for this parameter.
-     *  <br/>
+     *  <br>
      *  The collection will be empty if this is a slave parameter
      *  or a master with no slaves.
      */

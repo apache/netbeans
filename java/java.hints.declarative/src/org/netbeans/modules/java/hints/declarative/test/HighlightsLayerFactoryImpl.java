@@ -31,6 +31,7 @@ import org.netbeans.spi.editor.highlighting.ZOrder;
 @MimeRegistration(mimeType=TestTokenId.MIME_TYPE, service=HighlightsLayerFactory.class)
 public class HighlightsLayerFactoryImpl implements HighlightsLayerFactory {
 
+    @Override
     public HighlightsLayer[] createLayers(Context context) {
         return new HighlightsLayer[] {
             HighlightsLayer.create(HighlightsLayerFactoryImpl.class.getName(), ZOrder.DEFAULT_RACK, true, EditorTestPerformer.getBag(context.getDocument())),

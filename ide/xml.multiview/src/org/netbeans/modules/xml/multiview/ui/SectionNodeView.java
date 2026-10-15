@@ -38,7 +38,7 @@ public abstract class SectionNodeView extends SectionView {
 
     private final XmlMultiViewDataObject dataObject;
     private SectionNode rootNode = null;
-    private HashMap nodes = new HashMap();
+    private HashMap<SectionNode, SectionNode> nodes = new HashMap<>();
 
     private final RequestProcessor.Task refreshTask = RequestProcessor.getDefault().create(new Runnable() {
         public void run() {
@@ -108,7 +108,7 @@ public abstract class SectionNodeView extends SectionView {
     }
 
     public SectionNode retrieveSectionNode(SectionNode node) {
-        SectionNode sectionNode = (SectionNode) nodes.get(node);
+        SectionNode sectionNode = nodes.get(node);
         return sectionNode == null ? rootNode : sectionNode;
     }
 

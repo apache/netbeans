@@ -83,6 +83,90 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="run-test-in-parallel-action">
+            <api name="general"/>
+            <summary>Added action for running tests in parallel</summary>
+            <version major="1" minor="99"/>
+            <date day="2" month="12" year="2024"/>
+            <author login="petrovic-d"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    <code><a href="@TOP@/org/netbeans/spi/project/ActionProvider.html">ActionProvider.COMMAND_TEST_PARALLEL</a></code> was introduced in order to
+                    allow running tests in parallel.
+                    <code><a href="@TOP@/org/netbeans/api/project/ContainedProjectFilter.html">ContainedProjectFilter</a></code> was added and
+                    it can be used to pass list of projects the project action should apply to.
+                    <code><a href="@TOP@/org/netbeans/spi/project/NestedClass.html">NestedClass</a></code> was added in order to support
+                    nested classes.
+                </p>
+            </description>
+            <class package="org.netbeans.api.project" name="ContainedProjectFilter"/>
+            <class package="org.netbeans.spi.project" name="ActionProvider"/>
+            <class package="org.netbeans.spi.project" name="NestedClass"/>
+        </change>
+        <change id="project-action-context">
+            <api name="general"/>
+            <summary>Added <code>ProjectActionContext</code> that can pass action-like environment to project queries</summary>
+            <version major="1" minor="89"/>
+            <date day="10" month="8" year="2022"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    <code><a href="@TOP@/org/netbeans/api/project/ProjectActionContext.html">ProjectActionContext</a></code> can be used
+                    to inform various project queries about the intended action or environment for which the value is requested. This
+                    contract is optional for query implementors.
+                </p>
+            </description>
+            <class package="org.netbeans.api.project" name="ProjectActionContext"/>
+        </change>
+        <change id="active-configuration-getset">
+            <api name="general"/>
+            <summary>Added <code>ProjectUtils.get/setActiveConfiguration</code> convenience methods</summary>
+            <version major="1" minor="89"/>
+            <date day="10" month="8" year="2022"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Clients do not need to interact with Project's Lookup and <a href="@TOP@/org/netbeans/spi/project/ProjectConfigurationProvider.html">ProjectConfigurationProvider</a> directly,
+                    handling missing provider and mutex; they can use the convenience API method.
+                </p>
+            </description>
+            <class package="org.netbeans.api.project" name="ProjectUtils"/>
+        </change>
+        <change id="project-priming-action">
+            <api name="general"/>
+            <summary>Added <code>ActionProvider.COMMAND_PRIME</code> that initializes the project for IDE use.</summary>
+            <version major="1" minor="80"/>
+            <date day="5" month="3" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    <code><a href="@TOP@/org/netbeans/spi/project/ActionProvider.html">ActionProvider.COMMAND_PRIME</a></code> was introduced, so that
+                    projects can declare (and enable/disable as needed) an action that "primes" or initializes the project for the IDE. That often includes
+                    downloads, or partial build, which may produce messages, and could be automated by project-opening code.
+                </p>
+            </description>
+        </change>
+        <change id="parent-and-root-project-provider">
+            <api name="general"/>
+            <summary>Added <code>ParentProjectProvider</code> and <code>RootProjectProvider</code> to improve project hierarchy discovery</summary>
+            <version major="1" minor="79"/>
+            <date day="2" month="1" year="2021"/>
+            <author login="lkishalmi"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    <code><a href="@TOP@/org/netbeans/spi/project/ParentProjectProvider.html">ParentProjectProvider</a></code> and
+                    <code><a href="@TOP@/org/netbeans/spi/project/RootProjectProvider.html">RootProjectProvider</a></code> with correspondig
+                    utility methods in <code><a href="@TOP@/org/netbeans/api/project/ProjectUtils.html">RootProjectProvider</a></code>
+                    to improve project hierarchy discovery.
+                </p>
+            </description>
+            <issue number="NETBEANS-5204"/>
+        </change>
         <change id="SourceGroupRelativeModifierImplementation">
             <api name="general"/>
             <summary>Added a <code>SourceGroupRelativeModifierImplementation</code> to improve source root creation</summary>
@@ -608,7 +692,6 @@ is the proper place.
 -->
     <head>
       <title>Change History for the Project API</title>
-      <link rel="stylesheet" href="prose.css" type="text/css"/>
     </head>
     <body>
 

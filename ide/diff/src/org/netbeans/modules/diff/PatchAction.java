@@ -23,6 +23,7 @@ import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 import java.text.DateFormat;
 import javax.swing.JFileChooser;
@@ -73,12 +74,8 @@ public class PatchAction extends NodeAction {
         if (nodes.length == 1) {
             FileObject fo = DiffAction.getFileFromNode(nodes[0]);
             if (fo != null) {
-                try {
-                    // #63460
-                    return fo.getURL().getProtocol().equals("file");  // NOI18N
-                } catch (FileStateInvalidException fsiex) {
-                    return false;
-                }
+                // #63460
+                return fo.toURL().getProtocol().equals("file");  // NOI18N
             }
         }
         return false;
@@ -245,7 +242,7 @@ public class PatchAction extends NodeAction {
                 break;
             }
         }
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, patchDir);
+        chooser.setCurrentDirectory(patchDir);
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         String title = NbBundle.getMessage(PatchAction.class,
             (fo.isData()) ? "TITLE_SelectPatchForFile"
@@ -292,7 +289,7 @@ public class PatchAction extends NodeAction {
             if (binaries.contains(file)) continue;
             if (backup == null) {
                 try {
-                    backup = FileUtil.toFileObject(FileUtil.normalizeFile(File.createTempFile("diff-empty-backup", "")));
+                    backup = FileUtil.toFileObject(FileUtil.normalizeFile(Files.createTempFile("diff-empty-backup", "").toFile()));
                 } catch (IOException e) {
                     // ignore
                 }

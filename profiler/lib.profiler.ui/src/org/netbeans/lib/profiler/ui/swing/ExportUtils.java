@@ -29,6 +29,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -109,7 +110,7 @@ public final class ExportUtils {
     public static final FormatFilter PNG_FILTER = new FormatFilter(PNG_FILE, "png"); // NOI18N
     
     
-    public static abstract class Exportable {
+    public abstract static class Exportable {
         
         public abstract String getName();
         
@@ -119,7 +120,7 @@ public final class ExportUtils {
         
     }
     
-    public static abstract class ExportProvider {
+    public abstract static class ExportProvider {
         
         public abstract FormatFilter getFormatFilter();
         
@@ -127,7 +128,7 @@ public final class ExportUtils {
         
     }
     
-    public static abstract class BaseExportProvider extends ExportProvider {
+    public abstract static class BaseExportProvider extends ExportProvider {
         
         private final FormatFilter formatFilter;
         
@@ -138,7 +139,7 @@ public final class ExportUtils {
     }
     
     
-    public static abstract class ProfilerTableExportProvider extends BaseExportProvider {
+    public abstract static class ProfilerTableExportProvider extends BaseExportProvider {
         
         private final ProfilerTable table;
         
@@ -153,7 +154,7 @@ public final class ExportUtils {
         
     }
     
-    public static abstract class AbstractNPSExportProvider extends BaseExportProvider {
+    public abstract static class AbstractNPSExportProvider extends BaseExportProvider {
         
         private final File sourceFile;
         
@@ -695,7 +696,7 @@ public final class ExportUtils {
         
         private static Writer createWriter(File file) throws IOException {
             file.toPath(); // will fail for invalid file
-            CharsetEncoder encoder = Charset.forName("UTF-8").newEncoder(); // NOI18N
+            CharsetEncoder encoder = StandardCharsets.UTF_8.newEncoder();
             FileOutputStream out = new FileOutputStream(file);
             return new BufferedWriter(new OutputStreamWriter(out, encoder), WRT_BUF);
         }

@@ -22,20 +22,28 @@ package org.netbeans.modules.git;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Map;
 import java.util.Set;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.versioning.spi.VersioningSupport;
 import org.netbeans.modules.versioning.core.Utils;
+import org.openide.util.NbPreferences;
 
 /**
  *
  * @author tomas
  */
 public class getTopmostTest extends NbTestCase {
+    private File testBase;
+    private File userdir;
+    private GitVCS mvcs;
 
-    GitVCS mvcs;
     public getTopmostTest(String arg0) {
         super(arg0);
         mvcs = new GitVCS();
@@ -43,8 +51,36 @@ public class getTopmostTest extends NbTestCase {
 
     @Override
     protected void setUp() throws Exception {
+        testBase = Files.createTempDirectory("NBGitTest").toFile();
+        userdir = new File(testBase, "userdir");
+        userdir.mkdirs();
+        System.setProperty("netbeans.user", userdir.getAbsolutePath());
         super.setUp();
         clearCachedValues();
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        NbPreferences.root().flush();
+        NbPreferences.root().sync();
+        Files.walkFileTree(testBase.toPath(), new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException e) throws IOException {
+                if (e == null) {
+                    Files.delete(dir);
+                    return FileVisitResult.CONTINUE;
+                } else {
+                    throw e;
+                }
+            }
+        });
     }
 
     public void testGetTopmostManagedParentR1R2() throws Exception {
@@ -225,17 +261,16 @@ public class getTopmostTest extends NbTestCase {
         Field f = Utils.class.getDeclaredField("unversionedFolders");
         f.setAccessible(true);
         f.set(Utils.class, null);
-        File userDir = new File(getWorkDir(), "repoFolder");
         // completely ignore userdir being a repo root
-        System.setProperty("netbeans.user", userDir.getAbsolutePath());
-        File dotGitUserDir = createFolder(userDir.getParentFile(), ".git");
-        File r1 = createFolder(userDir, "r1");
+        System.setProperty("netbeans.user", userdir.getAbsolutePath());
+        File dotGitUserDir = createFolder(userdir.getParentFile(), ".git");
+        File r1 = createFolder(userdir, "r1");
         File dotGitR1 = createFolder(r1, ".git");
         File r1f1 = createFile(r1, "f1");
         
         // test
-        assertEquals(userDir.getParentFile(), Git.getInstance().getRepositoryRoot(userDir.getParentFile()));
-        assertNull(mvcs.getTopmostManagedAncestor(userDir));
+        assertEquals(userdir.getParentFile(), Git.getInstance().getRepositoryRoot(userdir.getParentFile()));
+        assertNull(mvcs.getTopmostManagedAncestor(userdir));
         assertNull(mvcs.getTopmostManagedAncestor(r1));
         assertNull(mvcs.getTopmostManagedAncestor(r1f1));
 
@@ -255,8 +290,8 @@ public class getTopmostTest extends NbTestCase {
         Git.getInstance().versionedFilesChanged();
         assertEquals(r1, Git.getInstance().getRepositoryRoot(r1));
         assertEquals(r1, Git.getInstance().getRepositoryRoot(r1f1));
-        assertEquals(userDir.getParentFile(), mvcs.getTopmostManagedAncestor(r1));
-        assertEquals(userDir.getParentFile(), mvcs.getTopmostManagedAncestor(r1f1));
+        assertEquals(userdir.getParentFile(), mvcs.getTopmostManagedAncestor(r1));
+        assertEquals(userdir.getParentFile(), mvcs.getTopmostManagedAncestor(r1f1));
         assertNull(mvcs.getTopmostManagedAncestor(r1fld1));
         assertNull(mvcs.getTopmostManagedAncestor(r1fld1f1));
 
@@ -283,7 +318,7 @@ public class getTopmostTest extends NbTestCase {
     }
 
     private File createFolder(String f) throws IOException {
-        return createFolder(getWorkDir(), f);
+        return createFolder(testBase, f);
     }
 
     private File createFolder(File parentfolder, String f) {

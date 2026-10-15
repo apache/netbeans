@@ -870,7 +870,7 @@ public class ReferenceHelperTest extends NbTestCase {
                         locs.add(locations[i]);
                     }
                 }
-                return locs.toArray(new URI[locs.size()]);
+                return locs.toArray(new URI[0]);
             }
         }
         AntArtifact art = new MultiAntArtifact();

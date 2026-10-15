@@ -23,6 +23,8 @@ import java.util.Set;
 import org.netbeans.modules.php.editor.api.elements.AliasedElement;
 import org.netbeans.modules.php.editor.api.elements.ClassElement;
 import org.netbeans.modules.php.editor.api.elements.ConstantElement;
+import org.netbeans.modules.php.editor.api.elements.EnumCaseElement;
+import org.netbeans.modules.php.editor.api.elements.EnumElement;
 import org.netbeans.modules.php.editor.api.elements.FieldElement;
 import org.netbeans.modules.php.editor.api.elements.FunctionElement;
 import org.netbeans.modules.php.editor.api.elements.InterfaceElement;
@@ -100,6 +102,10 @@ public interface ElementQuery {
 
     Set<TypeConstantElement> getTypeConstants(NameKind constantQuery);
 
+    Set<EnumCaseElement> getEnumCases(NameKind.Exact typeQuery, NameKind enumCaseQuery);
+
+    Set<EnumCaseElement> getEnumCases(NameKind enumCaseQuery);
+
     Set<VariableElement> getTopLevelVariables(NameKind query);
 
     Set<NamespaceElement> getNamespaces(NameKind query);
@@ -135,13 +141,56 @@ public interface ElementQuery {
 
         Set<ClassElement> getClasses(NameKind query, Set<AliasedName> aliases, AliasedElement.Trait trait);
 
+        /**
+         * Get classes marked as Attribute(#[\Attribute]).
+         *
+         * @param query the query
+         * @param aliases aliased names
+         * @param trait the trait
+         * @return classes marked as #[\Attribute]
+         * @since 2.36.0
+         */
+        Set<ClassElement> getAttributeClasses(NameKind query, Set<AliasedName> aliases, AliasedElement.Trait trait);
+
         Set<InterfaceElement> getInterfaces(NameKind query, Set<AliasedName> aliases, AliasedElement.Trait trait);
 
+        Set<EnumElement> getEnums(NameKind query, Set<AliasedName> aliases, AliasedElement.Trait trait);
+
+        /**
+         * Get traits.
+         *
+         * @param query the query
+         * @param aliases aliased names
+         * @param trait the trait
+         * @return traits
+         * @since 2.38.0
+         */
+        Set<TraitElement> getTraits(NameKind query, Set<AliasedName> aliases, AliasedElement.Trait trait);
+
         Set<TraitElement> getTraits(final NameKind query);
+
+        Set<EnumElement> getEnums(final NameKind query);
 
         Set<TypeElement> getTypes(NameKind query, Set<AliasedName> aliases, AliasedElement.Trait trait);
 
         Set<MethodElement> getConstructors(NameKind typeQuery, Set<AliasedName> aliases, AliasedElement.Trait trait);
+
+        /**
+         * Get constructors of attribute classes.
+         * <pre>
+         * #[\Attribute]
+         * class MyAttibute {
+         *     public function __construct(int $int, string $string) {}
+         * }
+         * </pre>
+         *
+         * @param typeQuery the query
+         * @param aliases aliased names
+         * @param trait the trait
+         * @return constructors of attribute classes
+         * @since 2.36.0
+         */
+        Set<MethodElement> getAttributeClassConstructors(NameKind typeQuery, Set<AliasedName> aliases, AliasedElement.Trait trait);
 
         Set<NamespaceElement> getNamespaces(NameKind query, Set<AliasedName> aliasedNames, AliasedElement.Trait trait);
 
@@ -163,6 +212,8 @@ public interface ElementQuery {
         Set<FieldElement> getDeclaredFields(TypeElement classQuery);
 
         Set<TypeConstantElement> getDeclaredTypeConstants(TypeElement typeElement);
+
+        Set<EnumCaseElement> getDeclaredEnumCases(TypeElement typeElement);
 
         Set<TypeElement> getDirectInheritedTypes(final TypeElement typeElement);
 
@@ -266,6 +317,8 @@ public interface ElementQuery {
          */
         Set<TypeConstantElement> getAllTypeConstants(TypeElement classElement);
 
+        Set<EnumCaseElement> getAllEnumCases(TypeElement enumElement);
+
         /**
          * @return declared + inherited elements (private,protected, public) - only overriden elements are filtered
          */
@@ -280,6 +333,8 @@ public interface ElementQuery {
          * @return declared + inherited elements (private,protected, public) - only overriden elements are filtered
          */
         Set<TypeConstantElement> getAllTypeConstants(NameKind.Exact typeQuery, NameKind constantQuery);
+
+        Set<EnumCaseElement> getAllEnumCases(NameKind.Exact typeQuery, NameKind enumCaseQuery);
 
         /** probably delete, just because of being able to somehow fast rewrite. */
         Set<FileObject> getLocationsForIdentifiers(String identifierName);

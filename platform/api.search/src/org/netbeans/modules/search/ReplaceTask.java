@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.search.MatchingObject.InvalidityStatus;
 import org.netbeans.modules.search.ui.BasicReplaceResultsPanel;
 import org.openide.filesystems.FileAlreadyLockedException;
@@ -70,13 +69,15 @@ public final class ReplaceTask implements Runnable {
         this.matchingObjects = matchingObjects;
         this.panel = panel;
         
-        problems = new ArrayList<String>(4);
-        progressHandle = ProgressHandleFactory.createHandle(
-                NbBundle.getMessage(getClass(), "LBL_Replacing"));      //NOI18N
+        problems = new ArrayList<>(4);
+        progressHandle = ProgressHandle.createHandle(
+                NbBundle.getMessage(getClass(), "LBL_Replacing"), //NOI18N
+                null, null);
     }
     
     /**
      */
+    @Override
     public void run() {
         assert !EventQueue.isDispatchThread();
         
@@ -96,11 +97,7 @@ public final class ReplaceTask implements Runnable {
         
         checkForErrors();
         if (resultStatus == null) {       //the check passed
-            FileUtil.runAtomicAction(new Runnable() {
-                public void run() {
-                    doReplace();
-                }
-            });
+            FileUtil.runAtomicAction((Runnable) this::doReplace);
         }
     }
     
@@ -126,9 +123,8 @@ public final class ReplaceTask implements Runnable {
     }
 
     /**
-     * 
-     * @return  list of strings describing problems that happened during
-     *          the replace, or {@code null} if no problem happened
+     * Fill internal list of strings describing problems that happened during
+     * the replace and set resultStatus variable
      */
     private void doReplace() {
         assert !EventQueue.isDispatchThread();
@@ -158,9 +154,8 @@ public final class ReplaceTask implements Runnable {
                 } else {
                     errMessage = status.getDescription(obj.getFileObject().getPath());
                 }
-            } catch (FileAlreadyLockedException ex) {
-                errMessage = createMsgFileLocked(obj);
-            } catch (UserQuestionException ex) {
+            } catch (FileAlreadyLockedException |
+                    UserQuestionException ex) {
                 errMessage = createMsgFileLocked(obj);
             } catch (IOException ex) {
                 ex.printStackTrace();      //PENDING - ex.printStackTrace()?
@@ -209,7 +204,7 @@ public final class ReplaceTask implements Runnable {
     String[] getProblems() {
         return problems.isEmpty()
                ? null
-               : problems.toArray(new String[problems.size()]);
+               : problems.toArray(new String[0]);
     }
 
     BasicReplaceResultsPanel getPanel() {

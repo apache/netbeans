@@ -37,7 +37,7 @@ public class JavaPersistenceQLKeywords {
     private JavaPersistenceQLKeywords() {}
     
     static{
-        String rawKeywords = NbBundle.getBundle(JavaPersistenceQLKeywords.class).getString("JavaPersistenceQLKeywords");
+        String rawKeywords = NbBundle.getMessage(JavaPersistenceQLKeywords.class, "JavaPersistenceQLKeywords");
         keywords = new TreeSet<String>(Arrays.asList(rawKeywords.split(","))); //NOI18N
     }
     

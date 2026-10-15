@@ -46,6 +46,7 @@ import org.openide.awt.Mnemonics;
 import org.openide.cookies.SaveCookie;
 import org.openide.loaders.DataObject;
 import org.openide.nodes.Node;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 
 
@@ -54,7 +55,7 @@ import org.openide.util.NbBundle;
  *
  * @author  Ian Formanek, Petr Hrebejk
  */
-final public class ExitDialog extends JPanel implements ActionListener {
+public final class ExitDialog extends JPanel implements ActionListener {
 
     /*for tests only!*/static boolean SAVE_ALL_UNCONDITIONALLY = false;
 
@@ -67,7 +68,7 @@ final public class ExitDialog extends JPanel implements ActionListener {
     private static boolean result = false;
 
     JList list;
-    DefaultListModel listModel;
+    DefaultListModel<DataObject> listModel;
 
     /** Constructs new dlg for unsaved files in filesystems marked 
      * for unmount.
@@ -75,7 +76,7 @@ final public class ExitDialog extends JPanel implements ActionListener {
     private ExitDialog (Set<DataObject> openedFiles) {
         setLayout (new BorderLayout ());
 
-        listModel = new DefaultListModel();
+        listModel = new DefaultListModel<>();
         
         Set<DataObject> set = getModifiedFiles (openedFiles);
         if (!set.isEmpty ()) {
@@ -333,7 +334,7 @@ final public class ExitDialog extends JPanel implements ActionListener {
 
             Node node = obj.getNodeDelegate();
 
-            ImageIcon icon = new ImageIcon(node.getIcon(BeanInfo.ICON_COLOR_16x16));
+            Icon icon = ImageUtilities.image2Icon(node.getIcon(BeanInfo.ICON_COLOR_16x16));
             super.setIcon(icon);
 
             setText(node.getDisplayName());

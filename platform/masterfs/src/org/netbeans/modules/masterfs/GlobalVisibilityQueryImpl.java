@@ -75,6 +75,7 @@ public class GlobalVisibilityQueryImpl implements VisibilityQueryImplementation2
         return NbPreferences.root().node("/org/netbeans/core");
     }
     
+    @Override
     public boolean isVisible(FileObject file) {
         String name = file.getNameExt();
         if (isIgnoreHiddenInHome() && isHidden(name) && isInHomeFolder(file)) {
@@ -84,6 +85,7 @@ public class GlobalVisibilityQueryImpl implements VisibilityQueryImplementation2
         }
     }
     
+    @Override
     public boolean isVisible(File file) {
         String name = file.getName();
         if (isIgnoreHiddenInHome() && isHidden(name) && isInHomeFolder(file)) {
@@ -103,6 +105,7 @@ public class GlobalVisibilityQueryImpl implements VisibilityQueryImplementation2
      * Add a listener to changes.
      * @param l a listener to add
      */
+    @Override
     public void addChangeListener(ChangeListener l) {
         cs.addChangeListener(l);
     }
@@ -111,6 +114,7 @@ public class GlobalVisibilityQueryImpl implements VisibilityQueryImplementation2
      * Stop listening to changes.
      * @param l a listener to remove
      */
+    @Override
     public void removeChangeListener(ChangeListener l) {
         cs.removeChangeListener(l);
     }
@@ -134,7 +138,7 @@ public class GlobalVisibilityQueryImpl implements VisibilityQueryImplementation2
 
     protected String getIgnoredFiles() {
         // \.(cvsignore|svn|DS_Store) is covered by ^\..*$
-        String retval = getPreferences().get(PROP_IGNORED_FILES, "^(CVS|SCCS|vssver.?\\.scc|#.*#|%.*%|_svn)$|~$|^\\.(git|hg|svn|cache|DS_Store)$|^Thumbs.db$");//NOI18N;
+        String retval = getPreferences().get(PROP_IGNORED_FILES, "^(CVS|SCCS|vssver.?\\.scc|#.*#|%.*%|_svn)$|~$|^\\.(git|hg|svn|cache|gradle|DS_Store)$|^Thumbs.db$");//NOI18N;
         PreferenceChangeListener listenerToAdd;
         synchronized (this) {
             if (preferencesListener == null) {

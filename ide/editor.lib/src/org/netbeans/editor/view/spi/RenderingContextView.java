@@ -62,7 +62,7 @@ public interface RenderingContextView {
     
     /**
      * Acquire an instance of rendering context.
-     * After use it must be released by {@link #releaseContext()}.
+     * After use it must be released by {@link #releaseRenderingContext(ViewRenderingContext) }.
      * @param v view for which the rendering context is being obtained.
      */
     public ViewRenderingContext acquireRenderingContext(View v);

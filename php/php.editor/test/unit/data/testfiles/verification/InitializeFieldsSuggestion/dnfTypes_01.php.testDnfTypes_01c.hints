@@ -1,0 +1,16 @@
+            (Foo&Bar)|Baz $param1,
+            ---------------------
+HINT:Initialize Field: $param1
+FIX:Initialize Field: $param1
+            (\Test\Foo&Bar)|(Foo&Baz) $param2,
+            ---------------------------------
+HINT:Initialize Field: $param2
+FIX:Initialize Field: $param2
+            Foo|(Foo&Baz) $para^m3,
+            ---------------------
+HINT:Initialize Field: $param3
+FIX:Initialize Field: $param3
+            Foo|(Foo&Baz)|null $param4,
+            --------------------------
+HINT:Initialize Field: $param4
+FIX:Initialize Field: $param4

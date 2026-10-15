@@ -260,22 +260,24 @@ DocumentationComment = "/*" "*"+ [^/*] ~"*/"
 /* identifiers */
 IdentifierPart = [:jletterdigit:]
 Identifier = [:jletter:]{IdentifierPart}*
+PrivateIdentifier = "#" {Identifier}?
 
 /* integer literals */
-DecIntegerLiteral = 0 | [1-9][0-9]*
+DecIntegerLiteral = 0 | [1-9] ("_"* [0-9])*
 DecLongLiteral    = {DecIntegerLiteral} [lL]
+BigInt = {DecIntegerLiteral} [n]
 
-HexIntegerLiteral = 0 [xX] 0* {HexDigit} {1,8}
-HexLongLiteral    = 0 [xX] 0* {HexDigit} {1,16} [lL]
+HexIntegerLiteral = 0 [xX] {HexDigit} ("_"* {HexDigit})*
+HexLongLiteral    = {HexIntegerLiteral} [lL]
 HexDigit          = [0-9a-fA-F]
 
-OctIntegerLiteral = 0 [oO] {OctDigit}+
+OctIntegerLiteral = 0 [oO] {OctDigit} ("_"* {OctDigit})*
 
 OctLegacyIntegerLiteral = 0+ [1-3]? {OctDigit} {1,15}
 OctLegacyLongLiteral    = 0+ 1? {OctDigit} {1,21} [lL]
 OctDigit          = [0-7]
 
-BinaryIntegerLiteral = 0 [bB] {BinaryDigit}+
+BinaryIntegerLiteral = 0 [bB] {BinaryDigit} ("_"* {BinaryDigit})*
 BinaryDigit          = [0-1]
 
 /* floating point literals */
@@ -441,6 +443,7 @@ RegexpFirstCharacter = [^*\x5b/\r\n\\] | {RegexpBackslashSequence} | {RegexpClas
   ";"                            { return JsTokenId.OPERATOR_SEMICOLON; }
   ","                            { return JsTokenId.OPERATOR_COMMA; }
   "."                            { return JsTokenId.OPERATOR_DOT; }
+  "?."                           { return JsTokenId.OPERATOR_OPTIONAL_ACCESS; }
   "..."                          { return JsTokenId.OPERATOR_REST; }
   "="                            { return JsTokenId.OPERATOR_ASSIGNMENT; }
   ">"                            { return JsTokenId.OPERATOR_GREATER; }
@@ -492,6 +495,10 @@ RegexpFirstCharacter = [^*\x5b/\r\n\\] | {RegexpBackslashSequence} | {RegexpClas
   ">>>="                         { return JsTokenId.OPERATOR_RIGHT_SHIFT_ASSIGNMENT; }
   "=>"                           { return JsTokenId.OPERATOR_ARROW; }
   "@"                            { return JsTokenId.OPERATOR_AT; }
+  "??"                           { return JsTokenId.OPERATOR_NULLISH; }
+  "&&="                          { return JsTokenId.OPERATOR_ASSIGN_LOG_AND; }
+  "||="                          { return JsTokenId.OPERATOR_ASSIGN_LOG_OR; }
+  "??="                          { return JsTokenId.OPERATOR_ASSIGN_NULLISH; }
 
   /* string literal */
   \"                             {
@@ -513,6 +520,7 @@ RegexpFirstCharacter = [^*\x5b/\r\n\\] | {RegexpBackslashSequence} | {RegexpClas
 
   {DecIntegerLiteral}            |
   {DecLongLiteral}               |
+  {BigInt}                       |
 
   {BinaryIntegerLiteral}         |
 
@@ -547,6 +555,7 @@ RegexpFirstCharacter = [^*\x5b/\r\n\\] | {RegexpBackslashSequence} | {RegexpClas
 
   /* identifiers */
   {Identifier}                   { return JsTokenId.IDENTIFIER; }
+  {PrivateIdentifier}            { return JsTokenId.PRIVATE_IDENTIFIER; }
 }
 
 <STRING> {
@@ -703,7 +712,7 @@ RegexpFirstCharacter = [^*\x5b/\r\n\\] | {RegexpBackslashSequence} | {RegexpClas
 }
 
 <JSX> {
-   "/>" | "</"{JSXCharacter}+">"       
+   "/>" | "</"{JSXCharacter}*">"
                                 {
                                      Integer balance = jsxBalances.isEmpty() ? 0 : jsxBalances.pop() - 1;
                                      if (balance <= 0) {

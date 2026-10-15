@@ -55,8 +55,7 @@ public class TestUtilTest extends NbTestCase {
         assertEquals( "WorkDir must be readable", true, sf.canRead() );
         assertEquals( "WorkDir must be writeable", true, sf.canWrite() );
         
-	TestUtil.copyFiles( TestUtil.getJdkDir(), workDir, TestUtil.RT_JAR );        
-        File rt = new File( workDir, TestUtil.RT_JAR );
+        File rt = TestUtil.createRT_JAR( workDir );
         
         assertEquals( "WorkDir must exist", true, rt.exists() );
         assertEquals( "WorkDir must be readable", true, rt.canRead() );
@@ -79,8 +78,7 @@ public class TestUtilTest extends NbTestCase {
         
         File workDir = getWorkDir();
         
-        TestUtil.copyFiles( TestUtil.getJdkDir(), workDir, TestUtil.RT_JAR );
-        File rt = new File( workDir, TestUtil.RT_JAR );
+        File rt = TestUtil.createRT_JAR( workDir );
         JarFile rtJar = new JarFile( rt );
         
         File dest = new File( workDir, "dest" );

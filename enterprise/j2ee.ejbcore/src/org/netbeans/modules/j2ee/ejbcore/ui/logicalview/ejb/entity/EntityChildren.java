@@ -50,9 +50,9 @@ import org.openide.util.RequestProcessor;
 public final class EntityChildren extends Children.Keys<EntityChildren.KEY> implements PropertyChangeListener {
     
     // indexes into fields with results for model query
-    private final static int REMOTE = 0;
-    private final static int LOCAL = 1;
-    private final static int CMP = 2;
+    private static final int REMOTE = 0;
+    private static final int LOCAL = 1;
+    private static final int CMP = 2;
     
     protected enum KEY { REMOTE, LOCAL, CMP_FIELDS }
 
@@ -62,7 +62,7 @@ public final class EntityChildren extends Children.Keys<EntityChildren.KEY> impl
     private final EntityMethodController controller;
     private final Entity model; // EJB 2.1
 
-    private final static RequestProcessor RP = new RequestProcessor(SessionChildren.class.getName(), 5);
+    private static final RequestProcessor RP = new RequestProcessor(SessionChildren.class.getName(), 5);
 
     public EntityChildren(EjbViewController ejbViewController) throws IOException {
         this.cpInfo = ejbViewController.getClasspathInfo();

@@ -43,6 +43,7 @@ import java.io.PrintWriter;
 import java.lang.management.ManagementFactory;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Collection;
 import javax.swing.text.Document;
 import org.netbeans.editor.BaseDocument;
@@ -53,7 +54,6 @@ import org.netbeans.modules.xml.xam.dom.AbstractDocumentModel;
 import org.netbeans.modules.xml.xam.dom.DocumentModel;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
@@ -169,7 +169,7 @@ public class Util {
     }
     
     public static File dumpToTempFile(Document doc) throws Exception {
-        File f = File.createTempFile("xsm", "xsd");
+        File f = Files.createTempFile("xsm", "xsd").toFile();
         dumpToFile(doc, f);
         return f;
     }
@@ -314,13 +314,11 @@ public class Util {
             dest = destFolder.createData(filename);
         }
         FileLock lock = dest.lock();
-        OutputStream out = dest.getOutputStream(lock);
-        InputStream in = Util.class.getResourceAsStream(path);
         try {
-            FileUtil.copy(in, out);
+            try (InputStream in = Util.class.getResourceAsStream(path); OutputStream out = dest.getOutputStream(lock)) {
+                in.transferTo(out);
+            }
         } finally {
-            out.close();
-            in.close();
             if (lock != null) lock.releaseLock();
         }
         return dest;

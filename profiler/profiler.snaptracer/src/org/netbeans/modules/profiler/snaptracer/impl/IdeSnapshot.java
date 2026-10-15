@@ -56,8 +56,8 @@ public final class IdeSnapshot {
         if (uigestureFO != null) {
             xmlLogs = new LogReader(uigestureFO);
             xmlLogs.load();
-            recordsMap = new HashMap();
-            infosMap = new HashMap();
+            recordsMap = new HashMap<>();
+            infosMap = new HashMap<>();
         }
     }
 
@@ -87,7 +87,7 @@ public final class IdeSnapshot {
         } else if (xmlLogs != null) {
             Integer val = getLogRecordValue(sampleIndex);
             if (val != null) {
-                return val.intValue();
+                return val;
             }
         }
         return 0;
@@ -97,7 +97,7 @@ public final class IdeSnapshot {
         if (xmlLogs == null || loggerValue == 0) {
             return null;
         }
-        Integer index = new Integer((int) loggerValue);
+        Integer index = (int) loggerValue;
         LogRecordInfo info = infosMap.get(index);
 
         if (info == null) {
@@ -120,7 +120,7 @@ public final class IdeSnapshot {
             long recTime = rec.getMillis() * 1000000;
             if (recTime > startTime && recTime < endTime) {
                 if (rec != lastRecord) {
-                    Integer index = new Integer(sampleIndex+1);
+                    Integer index = sampleIndex+1;
                     lastRecord = rec;
                     recordsMap.put(index, rec);
                     return index;

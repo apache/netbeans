@@ -54,9 +54,7 @@ import org.openide.modules.InstalledFileLocator;
  */
 public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
     private static final Logger LOGGER = Logger.getLogger("payara-jakartaee");
 
     /** Library provider type. */
@@ -110,12 +108,9 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
     /** Internal {@see PayaraServer} to {@see Hk2LibraryProvider}
      *  mapping. */
     private static final Map <PayaraServer, Hk2LibraryProvider> providers
-            = new HashMap();
+            = new HashMap<>();
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Returns {@see Hk2LibraryProvider} class instance for specific server
      * instance.
@@ -138,10 +133,7 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
         return provider;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Library builder associated with current platform.
       * This attribute should be accessed only using {@see #getBuilder()} even
       * internally. */
@@ -178,10 +170,7 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
      *  outside {@see #getJaxRsName()} method! */
     private volatile String jaxRsName = null;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of Jersey library provider.
      * <p/>
@@ -197,10 +186,7 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
         this.server = server;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get Java EE library name for this server context.
      * <p/>
@@ -415,7 +401,7 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
             return lib;
         }
         ConfigBuilder cb = ConfigBuilderProvider.getBuilder(server);
-        List<PayaraLibrary> gfLibs = cb.getLibraries(server.getVersion());
+        List<PayaraLibrary> gfLibs = cb.getPlatformLibraries(server.getPlatformVersion());
         for (PayaraLibrary gfLib : gfLibs) {
             if (namePattern.matcher(gfLib.getLibraryID()).matches()) {
                 Map<String,List<URL>> contents = new HashMap<>(1);
@@ -453,7 +439,7 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
     private void setLibraryImplementationContent(LibraryImplementation lib,
             Pattern namePattern, String libraryName) {
         ConfigBuilder cb = ConfigBuilderProvider.getBuilder(server);
-        List<PayaraLibrary> pfLibs = cb.getLibraries(server.getVersion());
+        List<PayaraLibrary> pfLibs = cb.getPlatformLibraries(server.getPlatformVersion());
         for (PayaraLibrary pfLib : pfLibs) {
             if (namePattern.matcher(pfLib.getLibraryID()).matches()) {
                 List<String> javadocLookups = pfLib.getJavadocLookups();
@@ -501,7 +487,7 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
      */
     private List<URL> getLibraryClassPathURLs(Pattern namePattern) {
         ConfigBuilder cb = ConfigBuilderProvider.getBuilder(server);
-        List<PayaraLibrary> pfLibs = cb.getLibraries(server.getVersion());
+        List<PayaraLibrary> pfLibs = cb.getPlatformLibraries(server.getPlatformVersion());
         for (PayaraLibrary pfLib : pfLibs) {
             if (namePattern.matcher(pfLib.getLibraryID()).matches()) {
                 return pfLib.getClasspath();

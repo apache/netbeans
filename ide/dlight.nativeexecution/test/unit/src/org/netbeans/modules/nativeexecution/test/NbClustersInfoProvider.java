@@ -21,7 +21,7 @@ package org.netbeans.modules.nativeexecution.test;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.TreeSet;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.junit.NbModuleSuite;
 
 /**

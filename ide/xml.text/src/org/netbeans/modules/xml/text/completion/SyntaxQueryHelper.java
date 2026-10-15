@@ -41,13 +41,13 @@ import org.w3c.dom.Node;
  */
 final class SyntaxQueryHelper {
     
-    public final static int COMPLETION_TYPE_UNKNOWN = 0;
-    public final static int COMPLETION_TYPE_ATTRIBUTE = 1;
-    public final static int COMPLETION_TYPE_VALUE = 2;
-    public final static int COMPLETION_TYPE_ELEMENT = 3;
-    public final static int COMPLETION_TYPE_ENTITY = 4;
-    public final static int COMPLETION_TYPE_NOTATION = 5;
-    public final static int COMPLETION_TYPE_DTD = 6;
+    public static final int COMPLETION_TYPE_UNKNOWN = 0;
+    public static final int COMPLETION_TYPE_ATTRIBUTE = 1;
+    public static final int COMPLETION_TYPE_VALUE = 2;
+    public static final int COMPLETION_TYPE_ELEMENT = 3;
+    public static final int COMPLETION_TYPE_ENTITY = 4;
+    public static final int COMPLETION_TYPE_NOTATION = 5;
+    public static final int COMPLETION_TYPE_DTD = 6;
     
     private XMLSyntaxSupport support;
 

@@ -146,7 +146,7 @@ public abstract class Pattern {
         if (this.name != other.name && (this.name == null || !this.name.equals(other.name))) {
             return false;
         }
-        if (this.kind != other.kind && (this.kind == null || !this.kind.equals(other.kind))) {
+        if (this.kind != other.kind && (this.kind == null || this.kind != other.kind)) {
             return false;
         }
         return true;

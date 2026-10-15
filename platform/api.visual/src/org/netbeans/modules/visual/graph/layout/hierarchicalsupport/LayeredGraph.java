@@ -26,22 +26,22 @@ import org.netbeans.modules.visual.graph.layout.hierarchicalsupport.DirectedGrap
  *
  * @author ptliu
  */
-public class LayeredGraph {
-    private DirectedGraph originalGraph;
-    private List<List<Vertex>> layers;
+public class LayeredGraph<N, E> {
+    private DirectedGraph<N, E> originalGraph;
+    private List<List<Vertex<N>>> layers;
     
     /** Creates a new instance of LayeredGraph */
-    protected LayeredGraph(DirectedGraph originalGraph) {
+    protected LayeredGraph(DirectedGraph<N, E> originalGraph) {
         this.originalGraph = originalGraph;
-        layers = new ArrayList<List<Vertex>>();
+        layers = new ArrayList<>();
     }
     
     /**
      *
      *
      */
-    public static LayeredGraph createGraph(DirectedGraph originalGraph) {
-        LayeredGraph graph = new LayeredGraph(originalGraph);
+    public static <N, E> LayeredGraph<N, E> createGraph(DirectedGraph<N, E> originalGraph) {
+        LayeredGraph<N, E> graph = new LayeredGraph<>(originalGraph);
         graph.createGraph();
         
         return graph;
@@ -52,8 +52,8 @@ public class LayeredGraph {
      *
      */
     protected void createGraph() {
-        Collection<Vertex> rootVertices = originalGraph.getRootVertices() ;
-        for (Vertex rootVertex : rootVertices) {
+        Collection<Vertex<N>> rootVertices = originalGraph.getRootVertices() ;
+        for (Vertex<N> rootVertex : rootVertices) {
             assignLayers(rootVertex, 0);
         }
     }
@@ -62,7 +62,7 @@ public class LayeredGraph {
      *
      *
      */
-    public DirectedGraph getOriginalGraph() {
+    public DirectedGraph<N, E> getOriginalGraph() {
         return originalGraph;
     }
     
@@ -71,11 +71,11 @@ public class LayeredGraph {
      *
      *
      */
-    private void assignLayers(Vertex vertex, int index) {
+    private void assignLayers(Vertex<N> vertex, int index) {
         assignLayer(vertex, index);
         
-        Collection<Vertex> vertices = vertex.getLowerNeighbors();
-        for (Vertex nv : vertices) {
+        Collection<Vertex<N>> vertices = vertex.getLowerNeighbors();
+        for (Vertex<N> nv : vertices) {
             int nvIndex = nv.getNumber();
             
             if (nvIndex <= index) {
@@ -89,15 +89,15 @@ public class LayeredGraph {
      *
      *
      */
-    public void assignLayer(Vertex vertex, int index) {
+    public void assignLayer(Vertex<N> vertex, int index) {
         int prevIndex = vertex.getNumber();
         
         if (prevIndex != -1) {
-            List<Vertex> layer = getLayer(prevIndex);
+            List<Vertex<N>> layer = getLayer(prevIndex);
             layer.remove(vertex);
         }
         
-        List<Vertex> layer = getLayer(index);
+        List<Vertex<N>> layer = getLayer(index);
         layer.add(vertex);
         vertex.setNumber(index);
         vertex.setY(index);
@@ -108,7 +108,7 @@ public class LayeredGraph {
      *
      *
      */
-    public List<List<Vertex>> getLayers() {
+    public List<List<Vertex<N>>> getLayers() {
         return layers;
     }
     
@@ -116,12 +116,12 @@ public class LayeredGraph {
      *
      *
      */
-    public List<Vertex> getLayer(int index) {
+    public List<Vertex<N>> getLayer(int index) {
         int size = layers.size();
         
         if (index >= size) {
             for (int i = size; i <= index; i++)
-                layers.add(new ArrayList<Vertex>());
+                layers.add(new ArrayList<>());
         }
         
         return layers.get(index);
@@ -132,18 +132,18 @@ public class LayeredGraph {
      *
      */
     public boolean[][] computeAdjacencyMatrix(int upperLayerIndex) {
-        List<Vertex> upperLayer = layers.get(upperLayerIndex);
-        List<Vertex> lowerLayer = layers.get(upperLayerIndex+1);
+        List<Vertex<N>> upperLayer = layers.get(upperLayerIndex);
+        List<Vertex<N>> lowerLayer = layers.get(upperLayerIndex+1);
         int upperLayerSize = upperLayer.size();
         int lowerLayerSize = lowerLayer.size();
         
         boolean[][] matrix = new boolean[upperLayerSize][lowerLayerSize];
         
         for (int j = 0; j < upperLayerSize; j++) {
-            Vertex v = upperLayer.get(j);
+            Vertex<N> v = upperLayer.get(j);
             if (v != null) {
-                Collection<Vertex> vertices = v.getLowerNeighbors();
-                for (Vertex nv : vertices) {
+                Collection<Vertex<N>> vertices = v.getLowerNeighbors();
+                for (Vertex<N> nv : vertices) {
                     int k = lowerLayer.indexOf(nv);
                     
                     if (k > -1) {
@@ -163,26 +163,24 @@ public class LayeredGraph {
      */
     public float[] computeLowerBarycenters(int upperLayerIndex) {
         boolean[][] matrix = computeAdjacencyMatrix(upperLayerIndex);
-        List<Vertex> upperLayer = layers.get(upperLayerIndex);
-        List<Vertex> lowerLayer = layers.get(upperLayerIndex+1);
+        List<Vertex<N>> upperLayer = layers.get(upperLayerIndex);
+        List<Vertex<N>> lowerLayer = layers.get(upperLayerIndex+1);
         int upperLayerSize = upperLayer.size();
         int lowerLayerSize = lowerLayer.size();
         float lowerBarycenters[] = new float[lowerLayerSize];
-        
-        float[] barycenters = new float[lowerLayerSize];
+
         for (int k = 0; k < lowerLayerSize; k++) {
             float sum = 0;
             float count = 0;
             for (int j = 0; j < upperLayerSize; j++) {
                 if (matrix[j][k]) {
-                    Vertex jv = upperLayer.get(j);
+                    Vertex<N> jv = upperLayer.get(j);
                     sum += jv.getX(); 
                     count++;
                 }
             }
-            Vertex kv = lowerLayer.get(k);
+            Vertex<N> kv = lowerLayer.get(k);
             lowerBarycenters[k] = sum/count;
-            //System.out.println("kv = " + kv + " barycenter = " + lowerBarycenters[k]);
         }
         
         return lowerBarycenters;
@@ -195,8 +193,8 @@ public class LayeredGraph {
      */
     public float[] computeUpperBarycenters(int upperLayerIndex) {
         boolean[][] matrix = computeAdjacencyMatrix(upperLayerIndex);
-        List<Vertex> upperLayer = layers.get(upperLayerIndex);
-        List<Vertex> lowerLayer = layers.get(upperLayerIndex+1);
+        List<Vertex<N>> upperLayer = layers.get(upperLayerIndex);
+        List<Vertex<N>> lowerLayer = layers.get(upperLayerIndex+1);
         int upperLayerSize = upperLayer.size();
         int lowerLayerSize = lowerLayer.size();
         float upperBarycenters[] = new float[upperLayerSize];
@@ -206,13 +204,13 @@ public class LayeredGraph {
             float count = 0;
             for (int k = 0; k < lowerLayerSize; k++) {
                 if (matrix[j][k]) {
-                    Vertex kv = lowerLayer.get(k);
+                    Vertex<N> kv = lowerLayer.get(k);
                     sum += kv.getX(); 
                     count++;
                 }
             }
             
-            Vertex jv = upperLayer.get(j);
+            Vertex<N> jv = upperLayer.get(j);
             upperBarycenters[j] = sum/count;
       
             //System.out.println("jv = " + jv + " barycenter = " + upperBarycenters[j]);

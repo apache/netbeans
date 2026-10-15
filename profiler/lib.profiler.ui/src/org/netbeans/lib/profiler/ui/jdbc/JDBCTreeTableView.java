@@ -92,7 +92,7 @@ abstract class JDBCTreeTableView extends JDBCView {
         long[] _nTotalAllocObjects = newData.getInvocationsPerSelectId();
         long[] _totalAllocObjectsSize = newData.getTimePerSelectId();
         
-        List<PresoObjAllocCCTNode> nodes = new ArrayList();
+        List<PresoObjAllocCCTNode> nodes = new ArrayList<>();
         
         long totalObjects = 0;
         long _totalObjects = 0;

@@ -71,7 +71,7 @@ public final class NavigationTask extends ParserResultTask<ConsoleContents>{
     }
     
     @MimeRegistration(service = TaskFactory.class, mimeType = "text/x-repl")
-    public final static class Factory extends TaskFactory {
+    public static final class Factory extends TaskFactory {
 
         @Override
         public Collection<? extends SchedulerTask> create(Snapshot snapshot) {

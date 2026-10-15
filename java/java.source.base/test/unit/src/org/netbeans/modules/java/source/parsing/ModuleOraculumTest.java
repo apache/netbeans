@@ -23,6 +23,7 @@ import com.sun.tools.javac.util.Options;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -462,7 +463,8 @@ public class ModuleOraculumTest extends NbTestCase {
             final boolean detached) {
         try {
             JavaFileObject jfo = file != null ? FileObjects.sourceFileObject(file, root, null, false) : null;
-            return JavacParser.createJavacTask(file, jfo, root, cpInfo, parser, diagnosticListener, detached);
+            Iterable<? extends JavaFileObject> jfos = jfo != null ? Arrays.asList(jfo) : Collections.emptyList();
+            return JavacParser.createJavacTask(file, jfos, root, cpInfo, parser, diagnosticListener, detached);
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }
@@ -525,7 +527,7 @@ public class ModuleOraculumTest extends NbTestCase {
             fld = root;
         }
         final FileObject file = FileUtil.createData(fld, name);
-        try(PrintWriter out = new PrintWriter(new OutputStreamWriter(file.getOutputStream(), "UTF-8"))) {   //NOI18N
+        try(PrintWriter out = new PrintWriter(new OutputStreamWriter(file.getOutputStream(), StandardCharsets.UTF_8))) {
             out.println(content);
         }
         return file;

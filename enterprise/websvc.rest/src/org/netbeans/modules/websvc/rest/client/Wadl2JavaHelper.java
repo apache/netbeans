@@ -29,7 +29,7 @@ import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.EnumSet;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -445,8 +446,7 @@ class Wadl2JavaHelper {
                 InputStreamReader is = null;
                 StringWriter writer = null;
                 try {
-                    is = new InputStreamReader(templateFo.getInputStream(), 
-                            Charset.forName("UTF-8"));          // NOI18N
+                    is = new InputStreamReader(templateFo.getInputStream(), StandardCharsets.UTF_8);
                     writer = new StringWriter();
                     char[] buffer = new char[1024];
                     int b;
@@ -466,7 +466,7 @@ class Wadl2JavaHelper {
     }
 
     private static Set<Modifier> getModifiers(String modif) {
-        Set<Modifier> modifs = new HashSet<Modifier>();
+        Set<Modifier> modifs = EnumSet.noneOf(Modifier.class);
         if (modif != null) {
             if (modif.contains("public")) { //NOI18N
                 modifs.add(Modifier.PUBLIC);
@@ -511,6 +511,7 @@ class Wadl2JavaHelper {
                     className,
                     Collections.<TypeParameterTree>emptyList(),
                     extendsTree,
+                    Collections.<Tree>emptyList(),
                     Collections.<Tree>emptyList(),
                     Collections.<Tree>emptyList());
 

@@ -1,0 +1,17 @@
+[Overridden]
+[Constant]
+IMPLICIT_PUBLIC_PARENT_CONST : ParentClass (by ChildClass1)(by ChildClass2)
+PROTECTED_PARENT_CONST : ParentClass (by ChildClass1)(by ChildClass2)
+PUBLIC_PARENT_CONST : ParentClass (by ChildClass1)(by ChildClass2)
+[Field]
+$protectedParentClassField : ParentClass (by ChildClass2)
+$protectedStaticParentClassField : ParentClass (by ChildClass2)
+$publicParentClassField : ParentClass (by ChildClass2)
+$publicStaticParentClassField : ParentClass (by ChildClass2)
+[Method]
+protectedParentClassMethod : ParentClass (by ChildClass2)
+protectedStaticParentClassMethod : ParentClass (by ChildClass2)
+publicParentClassMethod : ParentClass (by ChildClass2)
+publicStaticParentClassMethod : ParentClass (by ChildClass2)
+[Type]
+ParentClass (by ChildClass1)(by ChildClass2)

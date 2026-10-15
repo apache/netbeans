@@ -140,12 +140,8 @@ public class J2SELibrarySourceForBinaryQuery implements SourceForBinaryQueryImpl
         if (normalizedURL == null) {
             FileObject fo = URLMapper.findFileObject(url);
             if (fo != null) {
-                try {
-                    normalizedURL = fo.getURL();
-                    this.normalizedURLCache.put (url, normalizedURL);
-                } catch (FileStateInvalidException e) {
-                    Exceptions.printStackTrace(e);
-                }
+                normalizedURL = fo.toURL();
+                this.normalizedURLCache.put (url, normalizedURL);
             }
         }
         return normalizedURL;
@@ -219,7 +215,7 @@ public class J2SELibrarySourceForBinaryQuery implements SourceForBinaryQueryImpl
                             result.add (sourceRoot);
                         }
                     }
-                    this.cache = result.toArray(new FileObject[result.size()]);
+                    this.cache = result.toArray(new FileObject[0]);
                 }
                 else {
                     this.cache = new FileObject[0];

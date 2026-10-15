@@ -110,3 +110,44 @@ if you need make some changes please edit into netbeans.css*/
   color: #0000ff;
   }
 
+:root {
+  /* Background color for subnavigation and various headers */
+  --subnav-background-color: #dee3e9;
+  /* Background and text colors for selected tabs and navigation items */
+  --selected-background-color: #f8981d;
+  --selected-text-color: #253441;
+}
+
+table.tableapigroup {
+   table-layout: fixed;
+   width: 100%;
+   border-spacing: 4px;
+   border-collapse: collapse;
+   border: 4px solid var(--selected-background-color);
+   overflow-wrap: break-word;
+}
+
+table.tableapigroup caption {
+    color: var(--selected-text-color);
+    background: var(--selected-background-color);
+}
+table.tableapigroup td {border: 1px solid var(--selected-background-color);}
+table.tableapigroup  th:first-child {
+  background: var(--subnav-background-color);
+  width: 20%;
+}
+
+table.tableapigroup   th:nth-child(n+2) {
+  background: var(--subnav-background-color);
+  width: 10%;
+}
+
+table.tableapigroup  th:nth-child(n+3) {
+  background: var(--subnav-background-color);
+  width: 10%;
+}
+
+table.tableapigroup  th:nth-child(n+4) {
+  background: var(--subnav-background-color);
+  width: 60%;
+}

@@ -482,7 +482,7 @@ public abstract class SaasBean extends GenericResourceBean {
     }
     
     private Map<String, Map<String, String>> getArtifactTemplates(SaasMethod m) throws IOException {
-        Map<String, Map<String, String>> targetMaps = new HashMap();
+        Map<String, Map<String, String>> targetMaps = new HashMap<>();
         CodeGen codegen = m.getSaas().getSaasMetadata().getCodeGen();
         if(codegen != null) {
             List<Artifacts> artifactsList = codegen.getArtifacts();

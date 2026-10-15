@@ -19,10 +19,13 @@
 package org.netbeans.modules.php.editor.csl;
 
 import java.io.File;
+import java.io.IOException;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
 public abstract class OccurrencesFinderImplTestBase extends PHPNavTestBase {
+
+    protected static final String BASE_TEST_FOLDER_PATH = "testfiles/markoccurences/";
 
     public OccurrencesFinderImplTestBase(String testName) {
         super(testName);
@@ -33,8 +36,18 @@ public abstract class OccurrencesFinderImplTestBase extends PHPNavTestBase {
         return new FileObject[]{FileUtil.toFileObject(new File(getDataDir(), getTestFolderPath()))};
     }
 
+    @Override
+    protected void assertDescriptionMatches(FileObject fileObject, String description, boolean includeTestName, String ext) throws IOException {
+        // put each golden file to each test file directory
+        assertDescriptionMatches(fileObject, description, includeTestName, ext, true);
+    }
+
+    protected String getBaseTestFolderPath() {
+        return BASE_TEST_FOLDER_PATH;
+    }
+
     protected String getTestFolderPath() {
-        return "testfiles/markoccurences/" + getTestName();//NOI18N
+        return getBaseTestFolderPath() + getTestName();
     }
 
     protected String getTestPath() {
@@ -50,4 +63,11 @@ public abstract class OccurrencesFinderImplTestBase extends PHPNavTestBase {
         return name;
     }
 
+    protected void checkOccurrences(String caretLine) throws Exception {
+        checkOccurrences(caretLine, true);
+    }
+
+    protected void checkOccurrences(String caretLine, boolean symmetric) throws Exception {
+        checkOccurrences(getTestPath(), caretLine, symmetric);
+    }
 }

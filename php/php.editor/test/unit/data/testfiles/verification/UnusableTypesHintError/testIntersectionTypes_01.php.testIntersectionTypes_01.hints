@@ -1,0 +1,156 @@
+function testReturnArray(): array&Iterator {}
+                            -----
+HINT:"array" cannot be used as an intersection type.
+function testReturnBool(): bool&Iterator {}
+                           ----
+HINT:"bool" cannot be used as an intersection type.
+function testReturnCallable(): callable&Iterator {}
+                               --------
+HINT:"callable" cannot be used as an intersection type.
+function testReturnFalse(): false&Iterator {}
+                            -----
+HINT:"false" cannot be used as an intersection type.
+function testReturnFloat(): float&Iterator {}
+                            -----
+HINT:"float" cannot be used as an intersection type.
+function testReturnInt(): int&Iterator {}
+                          ---
+HINT:"int" cannot be used as an intersection type.
+function testReturnIterable(): iterable&Iterator {}
+                               --------
+HINT:"iterable" cannot be used as an intersection type.
+function testReturnMixed(): mixed&Iterator {}
+                            -----
+HINT:"mixed" cannot be used as an intersection type.
+function testReturnNever(): never&Iterator {}
+                            -----
+HINT:"never" cannot be used as an intersection type.
+function testReturnNull(): null&Iterator {}
+                           ----
+HINT:"null" cannot be used as an intersection type.
+function testReturnObject(): object&Iterator {}
+                             ------
+HINT:"object" cannot be used as an intersection type.
+function testReturnParent(): parent&Iterator {}
+                             ------
+HINT:"parent" cannot be used as an intersection type.
+function testReturnSelf(): self&Iterator {}
+                           ----
+HINT:"self" cannot be used as an intersection type.
+function testReturnStatic(): static&Iterator {}
+                             ------
+HINT:"static" cannot be used as an intersection type.
+function testReturnString(): string&Iterator {}
+                             ------
+HINT:"string" cannot be used as an intersection type.
+function testReturnTrue(): true&Iterator {}
+                           ----
+HINT:"true" cannot be used as an intersection type.
+function testReturnVoid(): void&Iterator {}
+                           ----
+HINT:"void" cannot be used as an intersection type.
+function testParamArray(Iterator&array $param): Iterator {}
+                                 -----
+HINT:"array" cannot be used as an intersection type.
+function testParamBool(Iterator&bool $param): Iterator {}
+                                ----
+HINT:"bool" cannot be used as an intersection type.
+function testParamCallable(Iterator&callable $param): Iterator {}
+                                    --------
+HINT:"callable" cannot be used as an intersection type.
+function testParamFalse(Iterator&false $param): Iterator {}
+                                 -----
+HINT:"false" cannot be used as an intersection type.
+function testParamFloat(Iterator&float $param): float {}
+                                 -----
+HINT:"float" cannot be used as an intersection type.
+function testParamInt(Iterator&int $param): int {}
+                               ---
+HINT:"int" cannot be used as an intersection type.
+function testParamIterable(Iterator&iterable $param): iterable {}
+                                    --------
+HINT:"iterable" cannot be used as an intersection type.
+function testParamMixed(Iterator&mixed $param): mixed {}
+                                 -----
+HINT:"mixed" cannot be used as an intersection type.
+function testParamNever(Iterator&never $param): never {}
+                                 -----
+HINT:"never" cannot be used as an intersection type.
+function testParamNull(Iterator&null $param): void {}
+                                ----
+HINT:"null" cannot be used as an intersection type.
+function testParamObject(Iterator&object $param): object {}
+                                  ------
+HINT:"object" cannot be used as an intersection type.
+function testParamParent(Iterator&parent $param): parent {}
+                                  ------
+HINT:"parent" cannot be used as an intersection type.
+function testParamSelf(Iterator&self $param): self {}
+                                ----
+HINT:"self" cannot be used as an intersection type.
+function testParamString(Iterator&string $param): string {}
+                                  ------
+HINT:"string" cannot be used as an intersection type.
+function testParamString(Iterator&true $param): true {}
+                                  ----
+HINT:"true" cannot be used as an intersection type.
+function testParamVoid(Iterator&void $param): void {}
+                                ----
+HINT:"void" cannot be used as an intersection type.
+function testReturnDuplicate(): Iterator&Iterator {}
+                                         --------
+HINT:Type "Iterator" is duplicated.
+function testParamDuplicate(Iterator&Iterator $param): void {}
+                                     --------
+HINT:Type "Iterator" is duplicated.
+    public array&Iterator $array;
+           -----
+HINT:"array" cannot be used as an intersection type.
+    public bool&Iterator $bool;
+           ----
+HINT:"bool" cannot be used as an intersection type.
+    public callable&Iterator $callable;
+           --------
+HINT:"callable" cannot be used as an intersection type.
+    public false&Iterator $false;
+           -----
+HINT:"false" cannot be used as an intersection type.
+    public float&Iterator $flaot;
+           -----
+HINT:"float" cannot be used as an intersection type.
+    public int&Iterator $int;
+           ---
+HINT:"int" cannot be used as an intersection type.
+    public iterable&Iterator $iterable;
+           --------
+HINT:"iterable" cannot be used as an intersection type.
+    public mixed&Iterator $mixed;
+           -----
+HINT:"mixed" cannot be used as an intersection type.
+    public never&Iterator $never;
+           -----
+HINT:"never" cannot be used as an intersection type.
+    public null&Iterator $null;
+           ----
+HINT:"null" cannot be used as an intersection type.
+    public object&Iterator $object;
+           ------
+HINT:"object" cannot be used as an intersection type.
+    public parent&Iterator $parent;
+           ------
+HINT:"parent" cannot be used as an intersection type.
+    public self&Iterator $self;
+           ----
+HINT:"self" cannot be used as an intersection type.
+    public string&Iterator $string;
+           ------
+HINT:"string" cannot be used as an intersection type.
+    public true&Iterator $true;
+           ----
+HINT:"true" cannot be used as an intersection type.
+    public void&Iterator $void;
+           ----
+HINT:"void" cannot be used as an intersection type.
+    public Iterator&Iterator $duplicate;
+                    --------
+HINT:Type "Iterator" is duplicated.

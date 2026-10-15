@@ -106,7 +106,7 @@ public class JavadocRegistry implements GlobalPathRegistryListener, ChangeListen
         Set<URL> s = readRoots(this, _classpaths, _results);
         synchronized (this) {
             if (this.docRoots == null) {
-                this.docRoots = ClassPathSupport.createClassPath(s.toArray(new URL[s.size()]));
+                this.docRoots = ClassPathSupport.createClassPath(s.toArray(new URL[0]));
                 this.classpaths = _classpaths;
                 this.results = _results;
                 registerListeners(this, _classpaths, _results, this.docRoots);

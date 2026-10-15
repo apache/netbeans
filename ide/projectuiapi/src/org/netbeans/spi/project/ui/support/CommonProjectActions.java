@@ -40,7 +40,7 @@ public class CommonProjectActions {
     public static final String EXISTING_SOURCES_FOLDER = "existingSourcesFolder";
     
     /**
-     * {@link java.applet.File} value honored by {@link #newProjectAction}
+     * {@link java.io.File} value honored by {@link #newProjectAction}
      * that defines initial value for parent folder
      *
      * @since 1.67
@@ -270,7 +270,7 @@ public class CommonProjectActions {
      */
     public static Action[] forType(String projectType) {
         List<? extends Action> actions = org.openide.util.Utilities.actionsForPath("Projects/" + projectType + "/Actions");
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
 }

@@ -37,7 +37,7 @@ public class SelectPathAction extends AbstractAction {
     private final SVNUrl selectionUrl;
     private Node[] selectionNodes;
     private final Browser browser;
-    private final static Node[] EMPTY_NODES = new Node[0];
+    private static final Node[] EMPTY_NODES = new Node[0];
     
     public SelectPathAction(Browser browser, SVNUrl selection) {
         this.browser = browser;

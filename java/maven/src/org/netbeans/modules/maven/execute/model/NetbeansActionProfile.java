@@ -20,7 +20,7 @@ package org.netbeans.modules.maven.execute.model;
 
 /**
  *
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  */
 public class NetbeansActionProfile {
     /**
@@ -28,7 +28,12 @@ public class NetbeansActionProfile {
      */
     private java.util.List<NetbeansActionMapping> actions;
     private String id;
-
+    
+    /**
+     * Display name, mainly for profiles shipped with the code. No reason to
+     * have in user custom profiles named by the users. 
+     */
+    private String displayName;
 
       //-----------/
      //- Methods -/
@@ -86,5 +91,22 @@ public class NetbeansActionProfile {
     {
         this.actions = actions;
     } //-- void setActions(java.util.List) 
-    
+
+    /**
+     * Returns human-readable display name, if defined.
+     * @return display name, or {@code null}
+     * @since 2.148
+     */
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    /**
+     * Sets the display name.
+     * @param displayName new display name, can be {@code null}.
+     * @since 2.148
+     */
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
 }

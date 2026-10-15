@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.php.editor.verification;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,11 +28,13 @@ import java.util.Map;
 import java.util.Set;
 import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.spi.support.CancelSupport;
-import org.netbeans.modules.php.editor.model.ClassConstantElement;
+import org.netbeans.modules.php.editor.model.ClassMemberElement;
 import org.netbeans.modules.php.editor.model.ClassScope;
+import org.netbeans.modules.php.editor.model.EnumScope;
 import org.netbeans.modules.php.editor.model.FileScope;
 import org.netbeans.modules.php.editor.model.InterfaceScope;
 import org.netbeans.modules.php.editor.model.ModelUtils;
+import org.netbeans.modules.php.editor.model.TraitScope;
 import org.netbeans.modules.php.editor.model.TypeScope;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.openide.filesystems.FileObject;
@@ -62,6 +65,14 @@ public class ConstantRedeclarationHintError extends HintErrorRule {
                 return;
             }
             checkTypeScopes(ModelUtils.getDeclaredInterfaces(fileScope), hints, fileObject);
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            checkTypeScopes(ModelUtils.getDeclaredTraits(fileScope), hints, fileObject);
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            checkTypeScopes(ModelUtils.getDeclaredEnums(fileScope), hints, fileObject);
         }
     }
 
@@ -71,7 +82,7 @@ public class ConstantRedeclarationHintError extends HintErrorRule {
     })
     private void checkTypeScopes(Collection<? extends TypeScope> typeScopes, final List<Hint> hints, FileObject fileObject) {
         for (TypeScope typeScope : typeScopes) {
-            for (ClassConstantElement constant : getRedeclaredConstants(typeScope)) {
+            for (ClassMemberElement constant : getRedeclaredConstants(typeScope)) {
                 if (CancelSupport.getDefault().isCancelled()) {
                     return;
                 }
@@ -80,24 +91,27 @@ public class ConstantRedeclarationHintError extends HintErrorRule {
         }
     }
 
-    private Set<ClassConstantElement> getRedeclaredConstants(TypeScope typeScope) {
-        Collection<? extends ClassConstantElement> declaredConstants;
-        if (typeScope instanceof ClassScope || typeScope instanceof InterfaceScope) {
-            declaredConstants = typeScope.getDeclaredConstants();
+    private Set<ClassMemberElement> getRedeclaredConstants(TypeScope typeScope) {
+        List<ClassMemberElement> declaredConstants = new ArrayList<>();
+        if (canDeclareConstants(typeScope)) {
+            declaredConstants.addAll(typeScope.getDeclaredConstants());
+        } else if (typeScope instanceof EnumScope) {
+            declaredConstants.addAll(((EnumScope) typeScope).getDeclaredEnumCases());
+            declaredConstants.addAll(((EnumScope) typeScope).getDeclaredConstants());
         } else {
             return Collections.emptySet();
         }
 
-        // mark as error other than the first declared constant
-        Set<ClassConstantElement> redeclaredConstants = new HashSet<>();
-        Map<String, ClassConstantElement> firstDeclaredConstants = new HashMap<>();
-        for (ClassConstantElement declaredConstant : declaredConstants) {
+        // mark constants other than the first declared one as errors
+        Set<ClassMemberElement> redeclaredConstants = new HashSet<>();
+        Map<String, ClassMemberElement> firstDeclaredConstants = new HashMap<>();
+        for (ClassMemberElement declaredConstant : declaredConstants) {
             String constantName = declaredConstant.getName();
-            ClassConstantElement firstDeclaredConstant = firstDeclaredConstants.get(constantName);
+            ClassMemberElement firstDeclaredConstant = firstDeclaredConstants.get(constantName);
             if (firstDeclaredConstant == null) {
                 firstDeclaredConstants.put(constantName, declaredConstant);
             } else if (firstDeclaredConstant.getOffset() > declaredConstant.getOffset()) {
-                ClassConstantElement oldConstant = firstDeclaredConstants.replace(constantName, declaredConstant);
+                ClassMemberElement oldConstant = firstDeclaredConstants.replace(constantName, declaredConstant);
                 redeclaredConstants.add(oldConstant);
             } else {
                 redeclaredConstants.add(declaredConstant);
@@ -106,4 +120,9 @@ public class ConstantRedeclarationHintError extends HintErrorRule {
         return redeclaredConstants;
     }
 
+    private boolean canDeclareConstants(TypeScope typeScope) {
+        return typeScope instanceof ClassScope
+                || typeScope instanceof InterfaceScope
+                || typeScope instanceof TraitScope;
+    }
 }

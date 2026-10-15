@@ -136,7 +136,7 @@ public class AngularJsIndex {
             }
             return controllers;
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     public Collection<String> getComponents(final String name, final boolean exact) {

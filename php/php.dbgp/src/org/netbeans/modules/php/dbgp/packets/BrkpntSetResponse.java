@@ -30,6 +30,8 @@ import org.w3c.dom.Node;
 public class BrkpntSetResponse extends DbgpResponse {
     private static final String STATE = "state"; // NOI18N
     private static final String ID = "id"; // NOI18N
+    private static final String ERROR = "error"; // NOI18N
+    private static final String MESSAGE = "message"; // NOI18N
 
     BrkpntSetResponse(Node node) {
         super(node);
@@ -56,6 +58,16 @@ public class BrkpntSetResponse extends DbgpResponse {
             // set f.e. for as temporary ( for run to cursor command ).
             return;
         }
+
+        Node error = getChild(getNode(), ERROR);
+        if (error != null) {
+            Node message = getChild(error, MESSAGE);
+            if (message != null) {
+                breakpoint.setInvalid(message.getTextContent());
+                return;
+            }
+        }
+
         breakpoint.setBreakpointId(getBreakpointId());
         if (getState() == State.DISABLED) {
             breakpoint.disable();

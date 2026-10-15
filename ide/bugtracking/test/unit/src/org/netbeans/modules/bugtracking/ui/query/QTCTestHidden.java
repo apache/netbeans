@@ -283,7 +283,7 @@ public class QTCTestHidden extends NbTestCase {
         tooltip="bugtracking connector created for testing purposes"
     )
     public static class MyConnector implements BugtrackingConnector {
-        final static String ID = "QTCconector";
+        static final String ID = "QTCconector";
 
         public MyConnector() {
         }

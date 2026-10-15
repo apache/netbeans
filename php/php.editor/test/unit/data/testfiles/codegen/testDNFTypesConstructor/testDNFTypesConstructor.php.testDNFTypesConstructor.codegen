@@ -1,0 +1,7 @@
+public function __construct((Foo&Bar)|Baz $dnf1, Baz|(Foo&Bar&Baz) $dnf2, (Foo&Bar)|(Bar&Baz) $dnf3, (Foo&Bar)|Foo|(Bar&Baz) $dnf4, Foo|(Foo&Bar)|Baz $dnf5) {
+$$this->dnf1 = $dnf1;
+$$this->dnf2 = $dnf2;
+$$this->dnf3 = $dnf3;
+$$this->dnf4 = $dnf4;
+$$this->dnf5 = $dnf5;${cursor}
+}

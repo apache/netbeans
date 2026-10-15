@@ -65,7 +65,7 @@ public class JavadocAndSourceRootDetection {
     /**
      * Finds Javadoc root inside of given folder.
      *
-     * @param fo base folder to start search in; routine will traverse 5 folders
+     * @param baseFolder base folder to start search in; routine will traverse 5 folders
      *  deep before giving up; cannot be null; must be folder
      * @return found Javadoc root or null if none found
      */
@@ -227,7 +227,8 @@ public class JavadocAndSourceRootDetection {
             final boolean singleRoot,
             final int depth) {
         final FileObject pkgList = folder.getFileObject("package-list", null); // NOI18N
-        if (pkgList != null) {
+        final FileObject elmList = folder.getFileObject("element-list", null); // NOI18N
+        if (pkgList != null || elmList != null) {
             result.add(folder);
             return singleRoot;
         }

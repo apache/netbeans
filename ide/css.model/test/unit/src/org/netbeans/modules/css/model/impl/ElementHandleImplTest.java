@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.css.model.impl;
 
-import static junit.framework.Assert.assertEquals;
 import org.netbeans.modules.css.model.api.Element;
 import org.netbeans.modules.css.model.api.ElementHandle;
 import org.netbeans.modules.css.model.api.Model;

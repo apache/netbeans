@@ -22,7 +22,6 @@ package org.netbeans.modules.j2ee.persistence.wizard.unit;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
@@ -73,18 +72,13 @@ public class PersistenceUnitWizardPanelDS extends PersistenceUnitWizardPanel imp
        
         providerCombo.setEnabled(false);
 
-        RP.post(new Runnable() {
-           @Override
-           public void run() {
-                PersistenceProviderComboboxHelper comboHelper = new PersistenceProviderComboboxHelper(project);
-                comboHelper.connect(providerCombo);
-                providerCombo.setEnabled(true);
-                checkValidity();
-           } 
+        RP.post( () -> {
+            PersistenceProviderComboboxHelper comboHelper = new PersistenceProviderComboboxHelper(project);
+            comboHelper.connect(providerCombo);
+            providerCombo.setEnabled(true);
+            checkValidity(); 
         });
         
-        PersistenceProviderComboboxHelper comboHelper = new PersistenceProviderComboboxHelper(project);
-        comboHelper.connect(providerCombo);
         unitNameTextField.setText(Util.getCandidateName(project));
         unitNameTextField.selectAll();
 
@@ -103,12 +97,7 @@ public class PersistenceUnitWizardPanelDS extends PersistenceUnitWizardPanel imp
             if(SwingUtilities.isEventDispatchThread()){
                 connectDatasources();
             } else {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        connectDatasources();
-                    }
-                });
+                SwingUtilities.invokeLater( () -> connectDatasources() );
             }
         }        
     }
@@ -144,12 +133,7 @@ public class PersistenceUnitWizardPanelDS extends PersistenceUnitWizardPanel imp
         JPADataSourcePopulator dsPopulator = project.getLookup().lookup(JPADataSourcePopulator.class);
         dsPopulator.connect(dsCombo);
         
-        dsCombo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                checkValidity();
-            }
-        });
+        dsCombo.addActionListener( (ActionEvent e) -> checkValidity() );
         
         ((JTextComponent)dsCombo.getEditor().getEditorComponent()).
                 getDocument().addDocumentListener(new DocumentListener() {
@@ -268,6 +252,7 @@ public class PersistenceUnitWizardPanelDS extends PersistenceUnitWizardPanel imp
         return (Provider) providerCombo.getSelectedItem();
     }
     
+    @Override
     public void setErrorMessage(String msg){
         errorMessage.setText(msg);
         errorMessage.setVisible(msg!=null && msg.length()>0);
@@ -466,8 +451,9 @@ public class PersistenceUnitWizardPanelDS extends PersistenceUnitWizardPanel imp
                    if(Util.isJPAVersionSupported(project, ver)){
                     String sourceLevel = SourceLevelChecker.getSourceLevel(project);
                     if(sourceLevel !=null ){
-                        if(sourceLevel.matches("1\\.[0-5]([^0-9].*)?"))//1.0-1.5
-                        warning  = NbBundle.getMessage(PersistenceUnitWizard.class, "ERR_WrongSourceLevel", sourceLevel);
+                        if(sourceLevel.matches("1\\.[0-5]([^0-9].*)?")) {//1.0-1.5
+                            warning  = NbBundle.getMessage(PersistenceUnitWizard.class, "ERR_WrongSourceLevel", sourceLevel);
+                        }
                     }
                 } else {
                     warning  = NbBundle.getMessage(PersistenceUnitWizard.class, "ERR_UnsupportedJpaVersion", ver, Util.getJPAVersionSupported(project, ver));
@@ -491,12 +477,15 @@ public class PersistenceUnitWizardPanelDS extends PersistenceUnitWizardPanel imp
      * changes are made.
      */
     private class ValidationListener implements DocumentListener {
+        @Override
         public void insertUpdate(DocumentEvent e) {
             checkValidity();
         }
+        @Override
         public void removeUpdate(DocumentEvent e) {
             checkValidity();
         }
+        @Override
         public void changedUpdate(DocumentEvent e) {
             checkValidity();
         }

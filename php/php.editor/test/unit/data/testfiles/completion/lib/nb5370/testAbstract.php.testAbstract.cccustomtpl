@@ -1,0 +1,4 @@
+Name: testAbstract
+public function testAbstract(): array {
+${cursor};
+}

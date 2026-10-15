@@ -183,7 +183,7 @@ public class FeatureDependsOnFeatureTest extends NbTestCase {
         assertFalse(testDependsOnFeature + " has some available updates.", testDependsOnFeature.getAvailableUpdates().isEmpty());
     }
 
-    final static class HackedModuleInfo extends ModuleInfo {
+    static final class HackedModuleInfo extends ModuleInfo {
 
         private ModuleInfo info;
         private SpecificationVersion hackedVersion;

@@ -20,7 +20,6 @@
 package org.netbeans.modules.parsing.api;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import org.netbeans.api.editor.mimelookup.MimePath;
@@ -123,14 +122,14 @@ public final class Embedding {
                 -1
             });
         }
-        Collections.sort (originalToCurrent, TMS_VCLV);
+        originalToCurrent.sort(TMS_VCLV);
         Snapshot snapshot = Snapshot.create (
             sb,
             null,
             source,
             mimePath,
-            currentToOriginal.toArray (new int [currentToOriginal.size ()] []),
-            originalToCurrent.toArray (new int [originalToCurrent.size ()] [])
+            currentToOriginal.toArray (new int [0] []),
+            originalToCurrent.toArray (new int [0] [])
         );
         return new Embedding (
             snapshot, 

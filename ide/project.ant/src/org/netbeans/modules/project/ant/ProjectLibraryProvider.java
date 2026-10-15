@@ -95,6 +95,7 @@ import org.openide.util.MutexException;
 import org.openide.util.NbBundle;
 import org.openide.util.NbCollections;
 import org.openide.util.RequestProcessor;
+import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.xml.XMLUtil;
@@ -179,7 +180,7 @@ public class ProjectLibraryProvider implements ArealLibraryProvider<ProjectLibra
     }
 
     public ProjectLibraryArea createArea() {
-        JFileChooser jfc = new JFileChooser();
+        JFileChooser jfc = new JFileChooser(); // XXX remember last-selected dir
         jfc.setApproveButtonText(NbBundle.getMessage(ProjectLibraryProvider.class, "ProjectLibraryProvider.open_or_create"));
         FileFilter filter = new FileFilter() {
             public boolean accept(File f) {
@@ -190,8 +191,7 @@ public class ProjectLibraryProvider implements ArealLibraryProvider<ProjectLibra
             }
         };
         jfc.setFileFilter(filter);
-        FileUtil.preventFileChooserSymlinkTraversal(jfc, null); // XXX remember last-selected dir
-        while (jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+        while (jfc.showOpenDialog(Utilities.findDialogParent()) == JFileChooser.APPROVE_OPTION) {
             File f = jfc.getSelectedFile();
             if (filter.accept(f)) {
                 return new ProjectLibraryArea(f);
@@ -603,9 +603,9 @@ public class ProjectLibraryProvider implements ArealLibraryProvider<ProjectLibra
         for (String name : added) {
             libraries.put(name, newLibraries.get(name));
         }
-        for (String name : removed) {
-            libraries.remove(name);
-        }
+
+        libraries.keySet().removeAll(removed);
+
         return !added.isEmpty() || !removed.isEmpty();
     }
 

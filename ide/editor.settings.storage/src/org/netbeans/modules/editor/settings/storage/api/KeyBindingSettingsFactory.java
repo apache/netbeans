@@ -74,14 +74,14 @@ public abstract class KeyBindingSettingsFactory {
     /**
      * PropertyChangeListener registration.
      *
-     * @param l a PropertyChangeListener to be registerred
+     * @param l a PropertyChangeListener to be registered
      */
     public abstract void addPropertyChangeListener (PropertyChangeListener l);
     
     /**
      * PropertyChangeListener registration.
      *
-     * @param l a PropertyChangeListener to be unregisterred
+     * @param l a PropertyChangeListener to be unregistered
      */
     public abstract void removePropertyChangeListener (PropertyChangeListener l);
 }

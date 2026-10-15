@@ -188,7 +188,7 @@ public final class RefactoringSession {
         }
         return null;
     }
-    
+
     private class ProgressL implements ProgressListener {
 
         private float progressStep;
@@ -383,6 +383,14 @@ public final class RefactoringSession {
         }
     }
 
+
+    List<Transaction> getCommits() {
+        return SPIAccessor.DEFAULT.getCommits(bag);
+    }
+
+    List<RefactoringElementImplementation> getFileChanges() {
+        return SPIAccessor.DEFAULT.getFileChanges(bag);
+    }
     
     private class ElementsCollection extends AbstractCollection<RefactoringElement> {
         @Override

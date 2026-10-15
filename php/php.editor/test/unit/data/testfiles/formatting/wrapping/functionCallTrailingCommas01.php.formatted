@@ -30,7 +30,7 @@ $foo->bar(
         'bar',
 );
 
-$bar = function(...$args) {
+$bar = function (...$args) {
     echo "closure" . PHP_EOL;
 };
 $bar(

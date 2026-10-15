@@ -20,8 +20,6 @@ package org.netbeans.modules.java.source.save;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -59,11 +57,7 @@ public class DiffUtilities {
     }
     
     public static List<ModificationResult.Difference> diff2ModificationResultDifference(FileObject fo, PositionConverter converter, Map<Integer, String> userInfo, String content, List<Diff> diffs, Source src) throws IOException, BadLocationException {
-        Collections.sort(diffs, new Comparator<Diff>() {
-            public int compare(Diff o1, Diff o2) {
-                return o1.getPos() - o2.getPos();
-            }
-        });
+        diffs.sort((Diff o1, Diff o2) -> o1.getPos() - o2.getPos());
 
         Rewriter out = new Rewriter(fo, converter, userInfo, src);
         char[] buf = content.toCharArray();

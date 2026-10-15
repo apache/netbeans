@@ -45,6 +45,7 @@ import org.netbeans.modules.web.jsf.editor.facelets.AbstractFaceletsLibrary;
 import org.netbeans.modules.web.jsf.editor.facelets.CompositeComponentLibrary;
 import org.netbeans.modules.web.jsf.editor.hints.HintsRegistry;
 import org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.api.Library;
 import org.netbeans.modules.web.jsfapi.api.LibraryComponent;
 import org.netbeans.modules.web.jsfapi.api.NamespaceUtils;
@@ -199,10 +200,10 @@ public class JsfHtmlExtension extends HtmlExtension {
                 if (declaredPrefix == null) {
                     //undeclared prefix, try to match with default library prefix
                     if (lib.getDefaultPrefix() != null && lib.getDefaultPrefix().startsWith(context.getPrefix())) {
-                        items.addAll(queryLibrary(context, lib, lib.getDefaultPrefix(), true, jsfs.isJsf22Plus()));
+                        items.addAll(queryLibrary(context, lib, lib.getDefaultPrefix(), true, jsfs.getJsfVersion().isAtLeast(JsfVersion.JSF_2_2)));
                     }
                 } else {
-                    items.addAll(queryLibrary(context, lib, declaredPrefix, false, jsfs.isJsf22Plus()));
+                    items.addAll(queryLibrary(context, lib, declaredPrefix, false, jsfs.getJsfVersion().isAtLeast(JsfVersion.JSF_2_2)));
                 }
             }
         } else {
@@ -215,7 +216,7 @@ public class JsfHtmlExtension extends HtmlExtension {
                 for (Library lib : librariesSet) {
                     if (lib.getDefaultPrefix() != null && lib.getDefaultPrefix().equals(tagNamePrefix)) {
                         //match
-                        items.addAll(queryLibrary(context, lib, tagNamePrefix, true, jsfs.isJsf22Plus()));
+                        items.addAll(queryLibrary(context, lib, tagNamePrefix, true, jsfs.getJsfVersion().isAtLeast(JsfVersion.JSF_2_2)));
                     }
                 }
 
@@ -227,7 +228,7 @@ public class JsfHtmlExtension extends HtmlExtension {
                     return Collections.emptyList();
                 } else {
                     //query the library
-                    items.addAll(queryLibrary(context, lib, tagNamePrefix, false, jsfs.isJsf22Plus()));
+                    items.addAll(queryLibrary(context, lib, tagNamePrefix, false, jsfs.getJsfVersion().isAtLeast(JsfVersion.JSF_2_2)));
                 }
             }
         }

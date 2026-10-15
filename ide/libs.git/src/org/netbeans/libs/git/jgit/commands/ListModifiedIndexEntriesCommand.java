@@ -114,6 +114,6 @@ public class ListModifiedIndexEntriesCommand extends GitCommand {
     }
 
     public File[] getFiles () {
-        return files.toArray(new File[files.size()]);
+        return files.toArray(new File[0]);
     }
 }

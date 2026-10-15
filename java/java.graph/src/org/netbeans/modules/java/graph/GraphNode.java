@@ -42,7 +42,7 @@ public final class GraphNode<I extends GraphNodeImplementation> {
 
     private I impl, parentAfterFix;
     
-    private final  HashSet<I> duplicates;
+    private final Set<I> duplicates;
     private int level; 
     private int managedState = UNMANAGED;
 
@@ -70,6 +70,10 @@ public final class GraphNode<I extends GraphNodeImplementation> {
     
     public void addDuplicateOrConflict(I i) {
         duplicates.add(i);
+    }
+
+    public void removeDuplicateOrConflict(I i) {
+        duplicates.remove(i);
     }
 
     public Set<I> getDuplicatesOrConflicts() {

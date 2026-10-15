@@ -29,7 +29,7 @@ package org.netbeans.editor;
  * of GapStart as a property:<PRE>
  *      GapStart gs = (GapStart)doc.getProperty(GapStart.class);
  *      int gapStart = gs.getGapStart();
- * <PRE>
+ * </PRE>
  * Once the start of the gap is known the client can optimize
  * access to the document's data. For example if the client
  * does not care about the chunks in which it gets the document's data
@@ -39,7 +39,7 @@ package org.netbeans.editor;
  *      ...
  *      doc.getText(gapStart, doc.getLength(), text); // document's data over gap
  *      ...
- * <PRE>
+ * </PRE>
  *
  * @author Miloslav Metelka
  * @version 1.00
@@ -47,6 +47,7 @@ package org.netbeans.editor;
  *  by {@link org.netbeans.lib.editor.util.swing.DocumentUtilities#getText(javax.swing.text.Document)}.
  */
 
+@Deprecated
 public interface GapStart {
 
     /**

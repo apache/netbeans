@@ -1,0 +1,9 @@
+public function testPHPDoc($parent): ParentClass{
+return parent::testPHPDoc($parent);
+}
+public function testParent(ParentClass $parent): ParentClass{
+return parent::testParent($parent);
+}
+public function testUniontypes(ParentClass|Child|null $parent): ParentClass|Child|null{
+return parent::testUniontypes($parent);
+}

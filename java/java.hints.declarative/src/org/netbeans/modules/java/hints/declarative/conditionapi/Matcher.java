@@ -24,8 +24,8 @@ import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.Collection;
 import java.util.LinkedList;
-import javax.lang.model.element.Element;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.modules.java.hints.errors.Utilities;
 import org.netbeans.spi.java.hints.MatcherUtilities;
 
 /**
@@ -91,68 +91,26 @@ public final class Matcher {
     }
 
     public boolean referencedIn(@NonNull Variable variable, @NonNull Variable in) {
-        final Element e = ctx.ctx.getInfo().getTrees().getElement(ctx.getSingleVariable(variable));
-
-        if (e == null) { //TODO: check also error
-            return false;
-        }
-
-        for (TreePath tp : ctx.getVariable(in)) {
-            boolean occurs = new ErrorAwareTreePathScanner<Boolean, Void>() {
-                @Override
-                public Boolean scan(Tree tree, Void p) {
-                    if (tree == null) {
-                        return false;
-                    }
-
-                    TreePath currentPath = new TreePath(getCurrentPath(), tree);
-                    Element currentElement = ctx.ctx.getInfo().getTrees().getElement(currentPath);
-
-                    if (e.equals(currentElement)) {
-                        return true; //TODO: throwing an exception might be faster...
-                    }
-
-                    return super.scan(tree, p);
-                }
-
-                @Override
-                public Boolean reduce(Boolean r1, Boolean r2) {
-                    if (r1 == null) {
-                        return r2;
-                    }
-
-                    if (r2 == null) {
-                        return r1;
-                    }
-
-                    return r1 || r2;
-                }
-
-            }.scan(tp, null) == Boolean.TRUE;
-
-            if (occurs) {
-                return true;
-            }
-        }
-
-        return false;
+        return Utilities.isReferencedIn(ctx.ctx.getInfo(), ctx.getSingleVariable(variable), ctx.getVariable(in));
     }
 
     public boolean matchesWithBind(Variable var, String pattern) {
         TreePath path = ctx.getSingleVariable(var);
 
         if (path != null) {
-            return MatcherUtilities.matches(ctx.ctx, path, pattern, ctx.variables.get(0), ctx.multiVariables.get(0), ctx.variableNames.get(0));
+            return MatcherUtilities.matches(ctx.ctx, path, pattern,
+                    ctx.variables.getFirst(), ctx.multiVariables.getFirst(), ctx.variableNames.getFirst());
         }
 
         Iterable<? extends Variable> multiVar = ctx.getIndexedVariables(var);
-        Collection<TreePath> multi = new LinkedList<TreePath>();
+        Collection<TreePath> multi = new LinkedList<>();
 
         for (Variable v : multiVar) {
             multi.add(ctx.getSingleVariable(v));
         }
 
-        return MatcherUtilities.matches(ctx.ctx, multi, pattern, ctx.variables.get(0), ctx.multiVariables.get(0), ctx.variableNames.get(0));
+        return MatcherUtilities.matches(ctx.ctx, multi, pattern,
+                ctx.variables.getFirst(), ctx.multiVariables.getFirst(), ctx.variableNames.getFirst());
     }
 
 }

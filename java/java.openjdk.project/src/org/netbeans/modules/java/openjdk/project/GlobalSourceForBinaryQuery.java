@@ -40,6 +40,7 @@ import org.netbeans.api.project.Sources;
 import org.netbeans.modules.java.openjdk.project.ModuleDescription.ModuleRepository;
 import org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation2;
 import org.openide.filesystems.FileObject;
+import org.openide.util.BaseUtilities;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.WeakListeners;
@@ -68,7 +69,7 @@ public class GlobalSourceForBinaryQuery implements SourceForBinaryQueryImplement
 
         if (prj == null) {
             try {
-                URI jdkRootCandidate = binaryRoot.toURI().resolve("../../../../../").normalize();
+                URI jdkRootCandidate = BaseUtilities.normalizeURI(binaryRoot.toURI().resolve("../../../../../"));
 
                 if (jdkRootCandidate != null) {
                     ModuleRepository repository = ModuleDescription.getModuleRepository(jdkRootCandidate);

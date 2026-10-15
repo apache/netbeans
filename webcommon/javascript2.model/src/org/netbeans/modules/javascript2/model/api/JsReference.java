@@ -20,10 +20,10 @@
 package org.netbeans.modules.javascript2.model.api;
 
 /**
- * 
+ *
  * @author ppisl
  */
 public interface JsReference extends JsObject {
-   
+
     public JsObject getOriginal();
 }

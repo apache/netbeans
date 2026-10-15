@@ -30,6 +30,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -178,7 +179,7 @@ public class ArchiveURLMapper extends URLMapper {
             URI nestedRootURI = null;
             FileObject rootFo = null;
             synchronized (copiedJARs) {
-                if (copiedJARs.values().contains(root)) {
+                if (copiedJARs.containsValue(root)) {
                     // nested jar
                     for (Map.Entry<URI, File> entry : copiedJARs.entrySet()) {
                         if (entry.getValue().equals(root)) {
@@ -237,20 +238,12 @@ public class ArchiveURLMapper extends URLMapper {
             File copy = copiedJARs.get(archiveFileURI);
             if (copy == null || replace) {
                 if (copy == null) {
-                    copy = File.createTempFile("copy", "-" + archiveFileURI.toString().replaceFirst(".+/", "")); // NOI18N
+                    copy = Files.createTempFile("copy", "-" + archiveFileURI.toString().replaceFirst(".+/", "")).toFile(); // NOI18N
                     copy = copy.getCanonicalFile();
                     copy.deleteOnExit();
                 }
-                InputStream is = fo.getInputStream();
-                try {
-                    OutputStream os = new FileOutputStream(copy);
-                    try {
-                        FileUtil.copy(is, os);
-                    } finally {
-                        os.close();
-                    }
-                } finally {
-                    is.close();
+                try (InputStream is = fo.getInputStream(); OutputStream os = new FileOutputStream(copy)) {
+                    is.transferTo(os);
                 }
                 copiedJARs.put(archiveFileURI, copy);
             }

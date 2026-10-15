@@ -100,7 +100,7 @@ public class DatabaseTypePropertyEditor implements PropertyEditor {
     }
 
     public Object getValue () {
-        return new Integer(constants[index]);
+        return Integer.valueOf(constants[index]);
     }
 
     public void setValue (Object object) {
@@ -113,7 +113,7 @@ public class DatabaseTypePropertyEditor implements PropertyEditor {
 //cannot use previous code because of MSSQL ODBC problems - see DriverSpecification.getRow() for more info
         Integer type;       
         try {
-            type = new Integer(object.toString());
+            type = Integer.valueOf(object.toString());
         } catch (NumberFormatException exc) {
             String message = NbBundle.getMessage (DatabaseTypePropertyEditor.class, "EXC_CannotOperateWith", object.toString()); // NOI18N
             throw new IllegalArgumentException(message);        

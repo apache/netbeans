@@ -464,9 +464,11 @@ public class NodeActionTest extends NbTestCase {
         protected boolean surviveFocusChange() {
             return false;
         }
+        @Override
         public String getName() {
             return "DoesNotSurviveFocusChgAction";
         }
+        @Override
         protected boolean asynchronous() {
             return false;
         }

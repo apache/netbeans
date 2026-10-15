@@ -96,7 +96,7 @@ public final class IndexedMethod extends IndexedElement implements MethodElement
         List<String> paramTypes = new ArrayList<>();
 
         for (MethodParameter parameter : getParameters()) {
-            paramTypes.add(parameter.getType());
+            paramTypes.add(parameter.getFqnType());
         }
         return paramTypes;
     }

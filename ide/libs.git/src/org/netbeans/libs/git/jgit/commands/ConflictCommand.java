@@ -46,13 +46,11 @@ import org.netbeans.libs.git.progress.StatusListener;
 public class ConflictCommand extends StatusCommand {
 
     private final ProgressMonitor monitor;
-    private final StatusListener listener;
     private final File[] roots;
 
     public ConflictCommand (Repository repository, GitClassFactory gitFactory, File[] roots, ProgressMonitor monitor, StatusListener listener) {
         super(repository, Constants.HEAD, roots, gitFactory, monitor, listener);
         this.monitor = monitor;
-        this.listener = listener;
         this.roots = roots;
     }
 
@@ -93,7 +91,7 @@ public class ConflictCommand extends StatusCommand {
                     DirCacheIterator indexIterator = treeWalk.getTree(0, DirCacheIterator.class);
                     DirCacheEntry indexEntry = indexIterator != null ? indexIterator.getDirCacheEntry() : null;
                     int stage = indexEntry == null ? 0 : indexEntry.getStage();
-                    long indexTS = indexEntry == null ? -1 : indexEntry.getLastModified();
+                    long indexTS = indexEntry == null ? -1 : indexEntry.getLastModifiedInstant().toEpochMilli();
 
                     if (stage != 0) {
                         GitStatus status = getClassFactory().createStatus(true, path, workTreePath, file,

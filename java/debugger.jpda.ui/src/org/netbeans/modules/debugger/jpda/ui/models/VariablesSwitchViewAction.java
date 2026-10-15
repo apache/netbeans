@@ -108,7 +108,7 @@ public class VariablesSwitchViewAction implements NodeActionsProviderFilter {
         return a;
     }
     
-    private final static class SwitchViewAction extends AbstractAction implements Presenter.Popup {
+    private static final class SwitchViewAction extends AbstractAction implements Presenter.Popup {
         
         private String id;
         private String treeNodeFormat;

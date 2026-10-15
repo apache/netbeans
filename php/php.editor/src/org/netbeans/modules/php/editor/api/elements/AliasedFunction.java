@@ -30,6 +30,7 @@ import org.netbeans.modules.php.editor.elements.TypeNameResolverImpl;
  * @author Radek Matous
  */
 public class AliasedFunction extends AliasedElement implements FunctionElement {
+
     public AliasedFunction(final AliasedName aliasedName, final FunctionElement functionElement) {
         super(aliasedName, functionElement);
     }
@@ -45,6 +46,21 @@ public class AliasedFunction extends AliasedElement implements FunctionElement {
     @Override
     public Collection<TypeResolver> getReturnTypes() {
         return getRealFunction().getReturnTypes();
+    }
+
+    @Override
+    public String getDeclaredReturnType() {
+        return getRealFunction().getDeclaredReturnType();
+    }
+
+    @Override
+    public boolean isReturnUnionType() {
+        return getRealFunction().isReturnUnionType();
+    }
+
+    @Override
+    public boolean isReturnIntersectionType() {
+        return getRealFunction().isReturnIntersectionType();
     }
 
     @Override

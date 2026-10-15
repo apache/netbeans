@@ -174,7 +174,7 @@ public class RequireJSCodeCompletion implements CompletionProvider {
                 }
 
                 if (relativeTo.isEmpty()) {
-                    Collection<String> basePaths = new ArrayList<String>();
+                    Collection<String> basePaths;
                     if (rIndex != null) {
                         basePaths = rIndex.getBasePaths();
                         relativeTo.add(fo.getParent());
@@ -284,7 +284,7 @@ public class RequireJSCodeCompletion implements CompletionProvider {
                     }
                 }
 
-                Map<String, String> mappings = new HashMap();
+                Map<String, String> mappings = new HashMap<>();
                 if (rIndex != null) {
                     mappings.putAll(rIndex.getPathMappings(writtenPath));
                 }
@@ -330,7 +330,7 @@ public class RequireJSCodeCompletion implements CompletionProvider {
     
     @Override
     public String getHelpDocumentation(ParserResult info, ElementHandle element) {
-        if (element != null && element instanceof FSCompletionItem.FSElementHandle) {
+        if (element instanceof FSCompletionItem.FSElementHandle) {
             Set<FileObject> representedFiles = ((FSCompletionItem.FSElementHandle)element).getRepresentedFiles();
             StringBuilder sb = new StringBuilder();
             for (Iterator<FileObject> iterator = representedFiles.iterator(); iterator.hasNext();) {
@@ -340,7 +340,7 @@ public class RequireJSCodeCompletion implements CompletionProvider {
             }
             return sb.toString();
         }
-        if (element != null && element instanceof SimpleHandle.DocumentationHandle) {
+        if (element instanceof SimpleHandle.DocumentationHandle) {
             return ((SimpleHandle.DocumentationHandle)element).getDocumentation();
         }
         return null;

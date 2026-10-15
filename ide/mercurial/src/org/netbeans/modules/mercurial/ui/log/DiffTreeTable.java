@@ -128,7 +128,7 @@ class DiffTreeTable extends OutlineView {
         }
         ExplorerManager em = ExplorerManager.find(this);
         try {
-            em.setSelectedNodes(nodes.toArray(new Node[nodes.size()]));
+            em.setSelectedNodes(nodes.toArray(new Node[0]));
         } catch (PropertyVetoException e) {
             ErrorManager.getDefault().notify(e);
         }

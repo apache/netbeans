@@ -53,7 +53,7 @@ import org.openide.util.NbPreferences;
 })
 class SQLFeatureModes {
     
-    private static abstract class SQLMode extends FeatureMode {
+    private abstract static class SQLMode extends FeatureMode {
         
         private static final String[] JDBC_MARKER_CLASSES = {
             JdbcCCTProvider.DRIVER_INTERFACE,
@@ -77,7 +77,7 @@ class SQLFeatureModes {
         
     }
     
-    static abstract class AllQueriesMode extends SQLMode {
+    abstract static class AllQueriesMode extends SQLMode {
         
         String getID() {
             return "AllQueriesMode"; // NOI18N
@@ -102,7 +102,7 @@ class SQLFeatureModes {
         
     }
     
-    static abstract class FilteredQueriesMode extends SQLMode {
+    abstract static class FilteredQueriesMode extends SQLMode {
         
         private static final String QUERIES_FILTER_FLAG = "QUERIES_FILTER_FLAG"; // NOI18N
         

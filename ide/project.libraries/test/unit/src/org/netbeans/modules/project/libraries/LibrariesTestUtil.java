@@ -19,7 +19,6 @@
 package org.netbeans.modules.project.libraries;
 
 import org.netbeans.spi.project.libraries.WritableLibraryProvider;
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
@@ -28,6 +27,7 @@ import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,11 +40,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.WeakHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
@@ -64,7 +62,9 @@ import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 import org.openide.util.Mutex;
-import org.openide.util.WeakSet;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Common support classes for unit tests in this module.
@@ -159,7 +159,7 @@ public class LibrariesTestUtil {
 
         final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
         public final Map<Area,List<TestLibrary>> libs = new HashMap<Area,List<TestLibrary>>();
-        final Set<LP> lps = new WeakSet<LP>();
+        final Set<LP> lps = Collections.newSetFromMap(new WeakHashMap<>());
         final Set<Area> open = new HashSet<Area>();
 
         public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -293,7 +293,7 @@ public class LibrariesTestUtil {
         @Override
         public LibraryTypeProvider[] getLibraryTypeProviders() {
             synchronized (providers) {
-                return providers.toArray(new LibraryTypeProvider[providers.size()]);
+                return providers.toArray(new LibraryTypeProvider[0]);
             }
         }
     }
@@ -393,7 +393,7 @@ public class LibrariesTestUtil {
     public static void registerLibraryTypeProvider (final Class<? extends LibraryTypeProvider> provider) throws Exception {
         final MockLibraryTypeRegistry mr = Lookup.getDefault().lookup(MockLibraryTypeRegistry.class);
         if (mr != null) {
-            mr.register(provider.newInstance());
+            mr.register(provider.getDeclaredConstructor().newInstance());
             return;
         }
         FileObject root = FileUtil.getConfigRoot();
@@ -429,7 +429,7 @@ public class LibrariesTestUtil {
                 PrintWriter out = null;
                 try {
                     lock = defFile.lock();
-                    out = new PrintWriter(new OutputStreamWriter(defFile.getOutputStream (lock),"UTF-8"));
+                    out = new PrintWriter(new OutputStreamWriter(defFile.getOutputStream (lock), StandardCharsets.UTF_8));
                     out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");      //NOI18N
                     out.println("<!DOCTYPE library PUBLIC \"-//NetBeans//DTD Library Declaration 1.0//EN\" \"http://www.netbeans.org/dtds/library-declaration-1_0.dtd\">");
                     out.println("<library version=\"1.0\">");

@@ -154,7 +154,18 @@ final class AsynchChildren <T> extends Children.Keys <Object> implements
             setKeys (Collections.<T>emptyList());
             return;
         }
-        final int minimalCount = getNodesCount();
+        final List<Entry> entries = entrySupport().getEntries();
+        // use entries count rather than node count, as some keys may result in no
+        // nodes, but they're still add()ed.
+        
+        // TODO: the refresh is not completely correct: if the ChildFactory inserts a (really!) new
+        // key into the list of existing ones, the count-based detection causes setKeys()
+        // to be callled and the node(s) for the yet-not-reported keys will be formally deleted
+        // and later re-created. But if content is only added or unchanged, the refresh won't
+        // cause nodes to be deleted + recreated.
+        // Implementation detail: there's one extra fixed Entry (Children.AE) 
+        // that represents this dynamic node array. 
+        final int minimalCount = Math.max(entries.size() - 1, 0);
         List <T> keys = new LinkedList <T> () {
             @Override public boolean add(T e) {
                 if (cancelled || Thread.interrupted()) {
@@ -163,6 +174,7 @@ final class AsynchChildren <T> extends Children.Keys <Object> implements
                 super.add(e);
                 LinkedList<Object> newKeys = new LinkedList<Object>(this);
                 Node n = factory.getWaitNode();
+
                 if (n != null) {
                     newKeys.add(n);
                 }

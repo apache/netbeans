@@ -27,13 +27,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -54,7 +54,6 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.editor.BaseDocument;
-import org.netbeans.modules.xml.retriever.XMLCatalogProvider;
 import org.netbeans.modules.xml.retriever.catalog.impl.*;
 import org.netbeans.modules.xml.retriever.catalog.impl.XAMCatalogWriteModelImpl;
 import org.netbeans.modules.xml.retriever.impl.Util;
@@ -141,12 +140,7 @@ public class Utilities {
             return null;
         }
         
-        try {
-            bytes = uriref.getBytes("UTF-8");
-        } catch (UnsupportedEncodingException uee) {
-            // this can't happen
-            return uriref;
-        }
+        bytes = uriref.getBytes(StandardCharsets.UTF_8);
         
         for (int count = 0; count < bytes.length; count++) {
             int ch = bytes[count] & 0xFF;

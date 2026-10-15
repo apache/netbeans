@@ -28,7 +28,6 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
-import java.net.PasswordAuthentication;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -42,6 +41,7 @@ import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
@@ -56,10 +56,8 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import javax.swing.JButton;
-import org.netbeans.modules.proxy.Base64Encoder;
 import org.netbeans.modules.subversion.Subversion;
 import org.netbeans.modules.subversion.client.SvnClientFactory.ConnectionType;
-import org.netbeans.modules.subversion.kenai.SvnKenaiAccessor;
 import org.netbeans.modules.subversion.SvnModuleConfig;
 import org.netbeans.modules.subversion.WorkingCopyAttributesCache;
 import org.netbeans.modules.subversion.client.cli.CommandlineClient;
@@ -118,28 +116,28 @@ public class SvnClientExceptionHandler {
         new CertificateFailure (8, "issuer is not trusted" ,                        NbBundle.getMessage(SvnClientExceptionHandler.class, "MSG_CertFailureNotTrusted"))         // NOI18N
     };
     
-    public final static int EX_UNKNOWN = 0;
-    public final static int EX_ACTION_CANCELED_BY_USER = 2;
-    public final static int EX_AUTHENTICATION = 4;
-    public final static int EX_NO_CERTIFICATE = 8;
-    public final static int EX_WRONG_URL = 16;
-    public final static int EX_NO_HOST_CONNECTION = 32;
-    public final static int EX_UNVERSIONED_RESOURCE = 64;
-    public final static int EX_WRONG_URL_IN_REVISION = 128;
-    public final static int EX_URL_NON_EXISTENT = 256;
-    public final static int EX_HTTP_405 = 512;
-    public final static int EX_IS_ALREADY_WC = 1024;
-    public final static int EX_CLOSED_CONNECTION = 2048;
-    public final static int EX_COMMIT_FAILED = 4096;
-    public final static int EX_FILE_ALREADY_EXISTS = 8192;
-    public final static int EX_IS_OUT_OF_DATE = 16384;            
-    public final static int EX_NO_SVN_CLIENT = 32768;            
-    public final static int EX_HTTP_FORBIDDEN = 65536;      
-    public final static int EX_SSL_NEGOTIATION_FAILED = 131072;
+    public static final int EX_UNKNOWN = 0;
+    public static final int EX_ACTION_CANCELED_BY_USER = 2;
+    public static final int EX_AUTHENTICATION = 4;
+    public static final int EX_NO_CERTIFICATE = 8;
+    public static final int EX_WRONG_URL = 16;
+    public static final int EX_NO_HOST_CONNECTION = 32;
+    public static final int EX_UNVERSIONED_RESOURCE = 64;
+    public static final int EX_WRONG_URL_IN_REVISION = 128;
+    public static final int EX_URL_NON_EXISTENT = 256;
+    public static final int EX_HTTP_405 = 512;
+    public static final int EX_IS_ALREADY_WC = 1024;
+    public static final int EX_CLOSED_CONNECTION = 2048;
+    public static final int EX_COMMIT_FAILED = 4096;
+    public static final int EX_FILE_ALREADY_EXISTS = 8192;
+    public static final int EX_IS_OUT_OF_DATE = 16384;            
+    public static final int EX_NO_SVN_CLIENT = 32768;            
+    public static final int EX_HTTP_FORBIDDEN = 65536;      
+    public static final int EX_SSL_NEGOTIATION_FAILED = 131072;
           
   
-    public final static int EX_HANDLED_EXCEPTIONS = EX_AUTHENTICATION | EX_NO_CERTIFICATE | EX_NO_HOST_CONNECTION | EX_SSL_NEGOTIATION_FAILED | EX_HTTP_FORBIDDEN;
-    public final static int EX_DEFAULT_HANDLED_EXCEPTIONS = EX_HANDLED_EXCEPTIONS;
+    public static final int EX_HANDLED_EXCEPTIONS = EX_AUTHENTICATION | EX_NO_CERTIFICATE | EX_NO_HOST_CONNECTION | EX_SSL_NEGOTIATION_FAILED | EX_HTTP_FORBIDDEN;
+    public static final int EX_DEFAULT_HANDLED_EXCEPTIONS = EX_HANDLED_EXCEPTIONS;
     
     private final SVNClientException exception;
     private final int exceptionMask;
@@ -172,23 +170,6 @@ public class SvnClientExceptionHandler {
         }
         throw getException();
     }
-       
-    private boolean handleKenaiAuthorization(SvnKenaiAccessor support, String url) {
-        PasswordAuthentication pa = support.getPasswordAuthentication(url, true);
-        if(pa == null) {
-            return false;
-        }
-
-        String user = pa.getUserName();
-        char[] password = pa.getPassword();
-        
-        adapter.setUsername(user != null ? user : "");
-        if (connectionType != ConnectionType.javahl) {
-            adapter.setPassword(password != null ? new String(password) : "");
-        }
-
-        return true;
-    }
     
     void setMethod (String methodName) {
         this.methodName = methodName;
@@ -201,73 +182,54 @@ public class SvnClientExceptionHandler {
             return false;
         }
 
-        SvnKenaiAccessor support = SvnKenaiAccessor.getInstance();
-        String sUrl = url.toString();
-        if(support.isKenai(sUrl)) {
-            if ("commit".equals(methodName)) { //NOI18N
-                if (!support.canWrite(sUrl)) {
-                    throw new SVNClientException(NbBundle.getMessage(Repository.class, "MSG_Repository.kenai.insufficientRights.write"));//NOI18N
-                }
-            } else if (!support.canRead(sUrl)) {
-                throw new SVNClientException(NbBundle.getMessage(Repository.class, "MSG_Repository.kenai.insufficientRights.read"));//NOI18N
-            }
-            return support.showLogin() && handleKenaiAuthorization(support, sUrl);
-        } else {
-            if (Thread.interrupted()) {
-                Subversion.LOG.log(Level.FINE, "SvnClientExceptionHandler.handleRepositoryConnectError(): canceled"); //NOI18N
-                return false;
-            }
-            Repository repository = new Repository(Repository.FLAG_SHOW_PROXY, org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "MSG_Error_ConnectionParameters"));  // NOI18N
-            repository.selectUrl(url, true);
-
-            JButton retryButton = new JButton(org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "CTL_Action_Retry"));           // NOI18N
-            String title = ((exceptionMask & EX_NO_HOST_CONNECTION) == exceptionMask) ?
-                                org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "MSG_Error_CouldNotConnect") :
-                                org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "MSG_Error_AuthFailed");
-            Object option = repository.show(title, new HelpCtx(this.getClass()), new Object[] {retryButton, org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "CTL_Action_Cancel")},    // NOI18N
-                    retryButton);
-
-            boolean ret = (option == retryButton);
-            if(ret) {
-                RepositoryConnection rc = repository.getSelectedRC();
-                String username = rc.getUsername();
-                char[] password = rc.getPassword();
-
-                adapter.setUsername(username);
-                if (connectionType != ConnectionType.javahl) {
-                    adapter.setPassword(password != null ? new String(password) : ""); //NOI18N
-                }
-                SvnModuleConfig.getDefault().insertRecentUrl(rc);
-            }
-            return ret;
+        if (Thread.interrupted()) {
+            Subversion.LOG.log(Level.FINE, "SvnClientExceptionHandler.handleRepositoryConnectError(): canceled"); //NOI18N
+            return false;
         }
+        Repository repository = new Repository(Repository.FLAG_SHOW_PROXY, org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "MSG_Error_ConnectionParameters"));  // NOI18N
+        repository.selectUrl(url, true);
+
+        JButton retryButton = new JButton(org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "CTL_Action_Retry"));           // NOI18N
+        String title = ((exceptionMask & EX_NO_HOST_CONNECTION) == exceptionMask) ?
+                            org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "MSG_Error_CouldNotConnect") :
+                            org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "MSG_Error_AuthFailed");
+        Object option = repository.show(title, new HelpCtx(this.getClass()), new Object[] {retryButton, org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "CTL_Action_Cancel")},    // NOI18N
+                retryButton);
+
+        boolean ret = (option == retryButton);
+        if(ret) {
+            RepositoryConnection rc = repository.getSelectedRC();
+            String username = rc.getUsername();
+            char[] password = rc.getPassword();
+
+            adapter.setUsername(username);
+            if (connectionType != ConnectionType.javahl) {
+                adapter.setPassword(password != null ? new String(password) : ""); //NOI18N
+            }
+            SvnModuleConfig.getDefault().insertRecentUrl(rc);
+        }
+        return ret;
     }
 
     @NbBundle.Messages("CTL_Action_Cancel=Cancel")
     public static boolean handleAuth (SVNUrl url) {
-        SvnKenaiAccessor support = SvnKenaiAccessor.getInstance();
-        String sUrl = url.toString();
-        if(support.isKenai(sUrl)) {
-            return support.showLogin() && support.getPasswordAuthentication(sUrl, true) != null;
-        } else {
-            Repository repository = new Repository(Repository.FLAG_SHOW_PROXY, org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "MSG_Error_ConnectionParameters"));  // NOI18N
-            repository.selectUrl(url, true);
+        Repository repository = new Repository(Repository.FLAG_SHOW_PROXY, org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "MSG_Error_ConnectionParameters"));  // NOI18N
+        repository.selectUrl(url, true);
 
-            JButton retryButton = new JButton(org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "CTL_Action_Retry"));           // NOI18N
-            String title = org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "MSG_Error_AuthFailed");
-            Object option = repository.show(
-                    title, 
-                    new HelpCtx("org.netbeans.modules.subversion.client.SvnClientExceptionHandler"), //NOI18N
-                    new Object[] { retryButton,
-                        Bundle.CTL_Action_Cancel()
-                    }, retryButton);
+        JButton retryButton = new JButton(org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "CTL_Action_Retry"));           // NOI18N
+        String title = org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "MSG_Error_AuthFailed");
+        Object option = repository.show(
+                title, 
+                new HelpCtx("org.netbeans.modules.subversion.client.SvnClientExceptionHandler"), //NOI18N
+                new Object[] { retryButton,
+                    Bundle.CTL_Action_Cancel()
+                }, retryButton);
 
-            boolean ret = (option == retryButton);
-            if(ret) {
-                SvnModuleConfig.getDefault().insertRecentUrl(repository.getSelectedRC());
-            }
-            return ret;
+        boolean ret = (option == retryButton);
+        if(ret) {
+            SvnModuleConfig.getDefault().insertRecentUrl(repository.getSelectedRC());
         }
+        return ret;
     }
 
     private boolean handleNoCertificateError() throws SVNClientException {
@@ -504,7 +466,7 @@ public class SvnClientExceptionHandler {
               .append("Connection: Keep-Alive\r\n");                    //NOI18N
       if (userName != null && password != null && userName.length() > 0) {
           Subversion.LOG.info("connectProxy: adding proxy authorization field"); //NOI18N
-          sb.append("Proxy-Authorization: Basic ").append(Base64Encoder.encode((userName + ":" + password).getBytes())).append("\r\n"); //NOI18N
+          sb.append("Proxy-Authorization: Basic ").append(Base64.getEncoder().encodeToString((userName + ":" + password).getBytes())).append("\r\n"); //NOI18N
       }
       String connectString = sb.append("\r\n").toString();
       byte connectBytes[];
@@ -591,7 +553,7 @@ public class SvnClientExceptionHandler {
                 ret.add(failure);
             }
         }
-        return ret.toArray(new CertificateFailure[ret.size()]);
+        return ret.toArray(new CertificateFailure[0]);
     }
    
     private int getFailuresMask() {

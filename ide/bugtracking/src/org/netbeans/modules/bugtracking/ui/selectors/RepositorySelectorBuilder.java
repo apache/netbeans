@@ -38,8 +38,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import static javax.swing.BoxLayout.X_AXIS;
 import static javax.swing.BoxLayout.Y_AXIS;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import static javax.swing.JComponent.LEFT_ALIGNMENT;
@@ -67,6 +65,7 @@ import org.netbeans.modules.bugtracking.api.Repository;
 import org.openide.DialogDescriptor;
 import org.openide.awt.Mnemonics;
 import org.openide.util.HelpCtx;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 
 /**
@@ -181,7 +180,7 @@ public final class RepositorySelectorBuilder implements ItemListener,
             }
         }
         
-        this.existingRepositories = l.toArray(new RepositoryImpl[l.size()]);
+        this.existingRepositories = l.toArray(new RepositoryImpl[0]);
     }
 
     public void setBugtrackingConnectors(DelegatingConnector[] connectors) {
@@ -443,7 +442,7 @@ public final class RepositorySelectorBuilder implements ItemListener,
                 result.add(new NewRepositoryInfo(connectors[i]));
             }
         }
-        return result.toArray(new NewRepositoryInfo[result.size()]);
+        return result.toArray(new NewRepositoryInfo[0]);
     }
 
     public RepositoryImpl getSelectedRepository() {
@@ -766,7 +765,7 @@ public final class RepositorySelectorBuilder implements ItemListener,
                                                                          cellHasFocus);
             if (r instanceof JLabel) {
                 JLabel label = (JLabel) r;
-                label.setIcon(new ImageIcon(icon));
+                label.setIcon(ImageUtilities.image2Icon(icon));
             }
             return r;
         }

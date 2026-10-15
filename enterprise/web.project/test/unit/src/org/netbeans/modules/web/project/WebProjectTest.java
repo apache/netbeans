@@ -20,7 +20,6 @@
 package org.netbeans.modules.web.project;
 
 import java.io.File;
-import static junit.framework.Assert.assertEquals;
 import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
@@ -29,7 +28,6 @@ import org.netbeans.modules.javaee.project.api.JavaEEProjectSettings;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule;
 import org.netbeans.modules.project.uiapi.ProjectOpenedTrampoline;
 import org.netbeans.modules.web.project.api.WebPropertyEvaluator;
-import org.netbeans.modules.web.project.test.TestUtil;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -40,13 +38,13 @@ import org.openide.util.test.MockLookup;
  * @author Martin Krauskopf, Radko Najman
  */
 public class WebProjectTest extends NbTestCase {
-    
+
     private String serverID;
-    
+
     public WebProjectTest(String testName) {
         super(testName);
     }
-    
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -66,7 +64,7 @@ public class WebProjectTest extends NbTestCase {
         MockLookup.setLookup(Lookup.EMPTY);
         super.tearDown();
     }
-    
+
 //    // see #99077, #70052
 //    // TODO investigate more
 //    @RandomlyFails
@@ -84,7 +82,7 @@ public class WebProjectTest extends NbTestCase {
 //        webProject = null;
 //        assertGC("project cannot be garbage collected", wr);
 //    }
-    
+
     public void testWebPropertiesEvaluator() throws Exception {
         File f = new File(getDataDir().getAbsolutePath(), "projects/WebApplication1");
         FileObject projdir = FileUtil.toFileObject(f);
@@ -107,6 +105,20 @@ public class WebProjectTest extends NbTestCase {
         JavaEEProjectSettings.setProfile(webProject, Profile.JAVA_EE_8_WEB);
         Profile obtainedProfileEE8 = JavaEEProjectSettings.getProfile(webProject);
         assertEquals(Profile.JAVA_EE_8_WEB, obtainedProfileEE8);
+        JavaEEProjectSettings.setProfile(webProject, Profile.JAKARTA_EE_8_WEB);
+        Profile obtainedProfileJakartaEE8 = JavaEEProjectSettings.getProfile(webProject);
+        assertEquals(Profile.JAKARTA_EE_8_WEB, obtainedProfileJakartaEE8);
+        JavaEEProjectSettings.setProfile(webProject, Profile.JAKARTA_EE_9_WEB);
+        Profile obtainedProfileJakartaEE9 = JavaEEProjectSettings.getProfile(webProject);
+        assertEquals(Profile.JAKARTA_EE_9_WEB, obtainedProfileJakartaEE9);
+        JavaEEProjectSettings.setProfile(webProject, Profile.JAKARTA_EE_9_1_WEB);
+        Profile obtainedProfileJakartaEE91 = JavaEEProjectSettings.getProfile(webProject);
+        assertEquals(Profile.JAKARTA_EE_9_1_WEB, obtainedProfileJakartaEE91);
+        JavaEEProjectSettings.setProfile(webProject, Profile.JAKARTA_EE_10_WEB);
+        Profile obtainedProfileJakartaEE10 = JavaEEProjectSettings.getProfile(webProject);
+        assertEquals(Profile.JAKARTA_EE_10_WEB, obtainedProfileJakartaEE10);
+        Profile obtainedProfileJakartaEE11 = JavaEEProjectSettings.getProfile(webProject);
+        assertEquals(Profile.JAKARTA_EE_11_WEB, obtainedProfileJakartaEE11);
     }
 
     /**
@@ -118,11 +130,11 @@ public class WebProjectTest extends NbTestCase {
         assertNotNull("has an OpenedHook", hook);
         ProjectOpenedTrampoline.DEFAULT.projectOpened(hook);
     }
-    
+
     public static void closeProject(final WebProject p) throws Exception {
         ProjectOpenedHook hook = p.getLookup().lookup(ProjectOpenedHook.class);
         assertNotNull("has an OpenedHook", hook);
         ProjectOpenedTrampoline.DEFAULT.projectClosed(hook);
     }
-    
+
 }

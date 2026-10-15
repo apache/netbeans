@@ -34,7 +34,6 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
-import org.netbeans.modules.j2ee.sun.ide.editors.NameValuePair;
 
 import org.netbeans.modules.j2ee.sun.ide.editors.ui.DDTablePanel;
 import org.netbeans.modules.j2ee.sun.ide.editors.ui.AbstractDDTableModel;
@@ -71,9 +70,9 @@ public class NameValuePairsPropertyEditor extends java.beans.PropertyEditorSuppo
         return getPaintableString();
     }
     
-////    protected DDTablePanel panel = null;
+//    protected DDTablePanel panel = null;
 
-    static protected String[] requiredToolTips = {        
+    protected static String[] requiredToolTips = {        
         bundle.getString("tipParamName"),          //NOI18N
         bundle.getString("tipParamValue")};         //NOI18N
         //bundle.getString("tipParamDescription")};  //NOI18N

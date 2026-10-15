@@ -38,7 +38,7 @@ public class PasswordFile extends SVNCredentialFile {
     private static final Key REALMSTRING_KEY = new Key(2, "svn:realmstring"); // NOI18N
     private static final Key USERNAME_KEY = new Key(3, "username"); // NOI18N
     
-    private final static String PASSTYPE_SIMPLE = "simple"; // NOI18N
+    private static final String PASSTYPE_SIMPLE = "simple"; // NOI18N
     private static Map<String, PasswordFile> files;
         
     public PasswordFile (String realmString) {

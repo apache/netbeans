@@ -351,7 +351,7 @@ public class HudsonOptionsPanel extends JPanel {
         "# {0} - file name",
         "HudsonOptionsPanel.jobConfig.browse.title=Select job config ({0})",
         "# {0} - file name",
-        "HudsonOptionsPanel.jobConfig.browse.filter=Hudson job config file ({0})",
+        "HudsonOptionsPanel.jobConfig.browse.filter=Jenkins job config file ({0})",
     })
     private void jobConfigBrowseButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jobConfigBrowseButtonActionPerformed
         File jobConfig = new FileChooserBuilder(HudsonOptionsPanel.class.getName() + JOB_CONFIG_LAST_FOLDER_SUFFIX)

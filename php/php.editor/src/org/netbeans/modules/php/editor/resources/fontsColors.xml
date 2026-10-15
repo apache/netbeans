@@ -62,6 +62,8 @@
         <font style="bold" />
     </fontcolor>
     <fontcolor name="mod-custom1" default="method" />
+    <!-- named arguments -->
+    <fontcolor name="mod-custom2" foreColor="9933cc" />
 
     <!-- code coverage -->
     <fontcolor name="covered" default="covered" />

@@ -49,7 +49,7 @@ final class DefaultPrintable extends Object implements Printable {
      */
     private AttributedCharacterIterator[] styledTexts;
 
-    /** expected page */
+    /* expected page */
 
     //    private int pageno;
 
@@ -237,7 +237,7 @@ final class DefaultPrintable extends Object implements Printable {
             System.out.println("DEF IS: " + paper.getHeight() + ", " + paper.getWidth());
         */
         // header & footer init
-        pageArgs[0] = new Integer(pageNo + 1); // pages numbered from 1
+        pageArgs[0] = pageNo + 1; // pages numbered from 1
 
         float pageBreakCorrection = 0.0F;
         TextLayout headerString = null;
@@ -392,7 +392,7 @@ final class DefaultPrintable extends Object implements Printable {
         }
     }
 
-    /** Translates given page number to line number.
+    /* Translates given page number to line number.
     * @param pageNo
     * @return number of first line on the page
     * /
@@ -448,7 +448,7 @@ final class DefaultPrintable extends Object implements Printable {
 
     /**
     * @param wrappingWidth width of the layout
-    * @param frCtx for possible new instance of LineBreakMeasurer
+    * @param frc for possible new instance of LineBreakMeasurer
     * @return next TextLayout that is to be rendered
     */
     private TextLayout nextLayout(float wrappingWidth, FontRenderContext frc) {
@@ -480,7 +480,7 @@ final class DefaultPrintable extends Object implements Printable {
     /** Sets @see #currentLayout variable then calls nextLayout.
     * @param pageNo searched page
     * @param wrappingWidth width of the layout
-    * @param frCtx for possible new instance of LineBreakMeasurer
+    * @param frc for possible new instance of LineBreakMeasurer
     * @return next TextLayout that is to be rendered
     */
     private TextLayout layoutForPage(int pageNo, float wrappingWidth, FontRenderContext frc) {
@@ -764,7 +764,7 @@ final class DefaultPrintable extends Object implements Printable {
         * @param <tt>pageno</tt> Page number that was printed.
         */
         public void setPageno(int pageno) {
-            msgParams[0] = new Integer(pageno + 1);
+            msgParams[0] = pageno + 1;
             printProgress.setText(format.format(msgParams));
             getAccessibleContext().setAccessibleDescription(printProgress.getText());
         }

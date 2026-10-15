@@ -97,6 +97,7 @@ public class SelectorsModule extends CssEditorModule {
     }
 
     @Override
+    @SuppressWarnings("fallthrough")
     public List<CompletionProposal> getCompletionProposals(CompletionContext context) {
         List<CompletionProposal> proposals = new ArrayList<>();
         Node activeNode = context.getActiveNode();
@@ -112,33 +113,33 @@ public class SelectorsModule extends CssEditorModule {
         switch (activeNode.type()) {
             case declaration:
                 if (errorNode != null) {
-                //div { &:| } completion
-                //SASS/LESS - referencing parent selector
-                switch (context.getActiveTokenId()) {
-                    case IDENT:
-                        //div { &:hov| }
-                        if (LexerUtils.followsToken(context.getTokenSequence(),
-                                Arrays.asList(CssTokenId.COLON, CssTokenId.DCOLON),
-                                true, false /* do NOT reposition back! */) == null) {
-                            break;
-                        } //else fallback!
+                    //div { &:| } completion
+                    //SASS/LESS - referencing parent selector
+                    switch (context.getActiveTokenId()) {
+                        case IDENT:
+                            //div { &:hov| }
+                            if (LexerUtils.followsToken(context.getTokenSequence(),
+                                    Arrays.asList(CssTokenId.COLON, CssTokenId.DCOLON),
+                                    true, false /* do NOT reposition back! */) == null) {
+                                break;
+                            } //else fallback!
 
-                    case COLON:
-                    case DCOLON:
-                        if (LexerUtils.followsToken(context.getTokenSequence(), CssTokenId.LESS_AND, true, true, CssTokenId.WS, CssTokenId.NL) != null) {
-                        //& before colon or double colon
-                        switch (context.getActiveTokenId()) {
-                            case COLON:
-                                proposals.addAll(getPseudoClasses(context));
-                                break;
-                            case DCOLON:
-                                proposals.addAll(getPseudoElements(context));
-                                break;
-                        }
+                        case COLON:
+                        case DCOLON:
+                            if (LexerUtils.followsToken(context.getTokenSequence(), CssTokenId.LESS_AND, true, true, CssTokenId.WS, CssTokenId.NL) != null) {
+                                //& before colon or double colon
+                                switch (context.getActiveTokenId()) {
+                                    case COLON:
+                                        proposals.addAll(getPseudoClasses(context));
+                                        break;
+                                    case DCOLON:
+                                        proposals.addAll(getPseudoElements(context));
+                                        break;
+                                }
+                            }
+                            break;
                     }
-                        break;
                 }
-            }
                 break;
 
             case simpleSelectorSequence:

@@ -22,7 +22,6 @@ package org.netbeans.modules.javascript2.nodejs.editor;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.junit.Before;
@@ -65,13 +64,13 @@ public class NodeJsDeclarationFinderTest extends JsTestBase {
     
     @Override
     protected Map<String, ClassPath> createClassPathsForTest() {
-        List<FileObject> cpRoots = new LinkedList<FileObject>();
+        List<FileObject> cpRoots = new ArrayList<>(1);
 
         cpRoots.add(FileUtil.toFileObject(new File(getDataDir(), "/TestNavigation/public_html/")));
 //        cpRoots.add(FileUtil.toFileObject(new File(getDataDir(), "/NodeJsRuntime/")));
         return Collections.singletonMap(
                 JS_SOURCE_ID,
-                ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[cpRoots.size()]))
+                ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[0]))
         );
     }
 

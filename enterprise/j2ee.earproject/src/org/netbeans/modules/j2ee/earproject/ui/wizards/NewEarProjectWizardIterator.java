@@ -112,18 +112,18 @@ public class NewEarProjectWizardIterator implements WizardDescriptor.ProgressIns
         Profile j2eeLevel = (Profile) wiz.getProperty(ProjectServerWizardPanel.J2EE_LEVEL);
         Boolean createWAR = (Boolean) wiz.getProperty(ProjectServerWizardPanel.CREATE_WAR);
         String warName = null;
-        if (createWAR.booleanValue()) {
+        if (createWAR) {
             warName = (String) wiz.getProperty(ProjectServerWizardPanel.WAR_NAME);
         }
         Boolean createJAR = (Boolean) wiz.getProperty(ProjectServerWizardPanel.CREATE_JAR);
         String ejbJarName = null;
-        if (createJAR.booleanValue()) {
+        if (createJAR) {
             ejbJarName = (String) wiz.getProperty(ProjectServerWizardPanel.JAR_NAME);
         }
         Boolean createCAR = (Boolean) wiz.getProperty(ProjectServerWizardPanel.CREATE_CAR);
         String carName = null;
         String mainClass = null;
-        if (createCAR.booleanValue()) {
+        if (createCAR) {
             carName = (String) wiz.getProperty(ProjectServerWizardPanel.CAR_NAME);
             mainClass = (String) wiz.getProperty(ProjectServerWizardPanel.MAIN_CLASS);
         }

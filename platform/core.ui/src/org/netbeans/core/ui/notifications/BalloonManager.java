@@ -121,7 +121,7 @@ class BalloonManager {
         }
         currentPane.addComponentListener( listener );
         configureBalloon( currentBalloon, currentPane, owner );
-        currentPane.add( currentBalloon, new Integer(JLayeredPane.POPUP_LAYER-1) );
+        currentPane.add(currentBalloon, Integer.valueOf(JLayeredPane.POPUP_LAYER-1));
     }
     
     /**

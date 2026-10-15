@@ -1,0 +1,14 @@
+Name: testNullableType
+public function testNullableType(): ?static {
+${cursor}return parent::testNullableType();
+}
+
+Name: testSimple
+public function testSimple(): static {
+${cursor}return parent::testSimple();
+}
+
+Name: testUnionType
+public function testUnionType(): static|string|null {
+${cursor}return parent::testUnionType();
+}

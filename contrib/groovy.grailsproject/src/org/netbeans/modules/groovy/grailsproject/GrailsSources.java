@@ -161,7 +161,7 @@ public class GrailsSources extends FileChangeAdapter implements Sources {
             addUnknownGroups(KNOWN_FOLDERS_IN_GRAILS_APP, result, "grails-app", null);
             addUnknownGroups(KNOWN_OR_IGNORED_FOLDERS_IN_TEST, result, "test", "LBL_SomeTests");
         }
-        return result.toArray(new SourceGroup[result.size()]);
+        return result.toArray(new SourceGroup[0]);
     }
 
     public void addChangeListener(ChangeListener listener) {

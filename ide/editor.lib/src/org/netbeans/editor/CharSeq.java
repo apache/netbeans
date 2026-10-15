@@ -29,12 +29,12 @@ package org.netbeans.editor;
  *  to obtain CharSequence instance from a document instead.
  */
 
-
+@Deprecated
 public interface CharSeq {
 
     /**
      * Returns the length of this character sequence.  The length is the number
-     * of 16-bit Unicode characters in the sequence. </p>
+     * of 16-bit Unicode characters in the sequence.
      *
      * @return  the number of characters in this sequence
      */
@@ -42,17 +42,17 @@ public interface CharSeq {
 
     /**
      * Returns the character at the specified index.  An index ranges from zero
-     * to <tt>length() - 1</tt>.  The first character of the sequence is at
+     * to <code>length() - 1</code>.  The first character of the sequence is at
      * index zero, the next at index one, and so on, as for array
-     * indexing. </p>
+     * indexing.
      *
      * @param   index   the index of the character to be returned
      *
      * @return  the specified character
      *
      * @throws  IndexOutOfBoundsException
-     *          if the <tt>index</tt> argument is negative or not less than
-     *          <tt>length()</tt>
+     *          if the <code>index</code> argument is negative or not less than
+     *          <code>length()</code>
      */
     char charAt(int index);
     

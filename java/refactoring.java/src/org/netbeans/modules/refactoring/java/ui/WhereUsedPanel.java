@@ -86,7 +86,10 @@ public class WhereUsedPanel extends JPanel implements CustomRefactoringPanel {
             case FIELD:
             case ENUM_CONSTANT:
             default: {
-                panel = new WhereUsedPanelVariable(parent);
+                if (kind.name().equals("RECORD"))   // NOI18N
+                     panel = new WhereUsedPanelClass(parent);
+                else
+                    panel = new WhereUsedPanelVariable(parent);
                 break;
             }
         }
@@ -142,7 +145,7 @@ public class WhereUsedPanel extends JPanel implements CustomRefactoringPanel {
                 final Element element = WhereUsedPanel.this.element.resolveElement(info);
                 panel.initialize(element, info);
 
-                if((element.getKind().equals(ElementKind.LOCAL_VARIABLE) || element.getKind().equals(ElementKind.PARAMETER))
+                if((element.getKind() == ElementKind.LOCAL_VARIABLE || element.getKind() == ElementKind.PARAMETER)
                         || element.getModifiers().contains(Modifier.PRIVATE)) {
                     enableScope = false;
                 } else {
@@ -168,7 +171,7 @@ public class WhereUsedPanel extends JPanel implements CustomRefactoringPanel {
             initialized = true;
     }
 
-    static abstract class WhereUsedInnerPanel extends JPanel {
+    abstract static class WhereUsedInnerPanel extends JPanel {
         abstract boolean isSearchInComments();
         abstract void initialize(Element element, CompilationController info);
     }
@@ -227,7 +230,7 @@ public class WhereUsedPanel extends JPanel implements CustomRefactoringPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(innerPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                .addComponent(innerPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(scope, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)

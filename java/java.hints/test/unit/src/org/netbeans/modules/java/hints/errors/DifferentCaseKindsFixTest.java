@@ -18,15 +18,12 @@
  */
 package org.netbeans.modules.java.hints.errors;
 
-import com.sun.source.util.TreePath;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import javax.lang.model.SourceVersion;
 import javax.swing.event.ChangeListener;
-import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsTestBase;
 import org.netbeans.modules.java.source.parsing.JavacParser;
-import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
@@ -47,9 +44,16 @@ public class DifferentCaseKindsFixTest extends ErrorHintsTestBase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        sourceLevel = "13";
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        EXTRA_OPTIONS.add("--enable-preview");
+        try {
+            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_14, skip test
+            sourceLevel = "13";
+            EXTRA_OPTIONS.add("--enable-preview");
+            return;
+        }
+        sourceLevel = "14";
     }
 
     @ServiceProvider(service = CompilerOptionsQueryImplementation.class, position = 100)
@@ -380,18 +384,4 @@ public class DifferentCaseKindsFixTest extends ErrorHintsTestBase {
                 + "}\n").replaceAll("[\\s]+", " "));
     }
 
-    @Override
-    protected List<Fix> computeFixes(CompilationInfo info, int pos, TreePath path) throws Exception {
-        return new DifferentCaseKindsFix().run(info, null, pos, path, null);
-    }
-
-    @Override
-    protected Set<String> getSupportedErrorKeys() {
-        return new DifferentCaseKindsFix().getCodes();
-    }
-
-    @Override
-    protected String toDebugString(CompilationInfo info, Fix f) {
-        return f.getText();
-    }
 }

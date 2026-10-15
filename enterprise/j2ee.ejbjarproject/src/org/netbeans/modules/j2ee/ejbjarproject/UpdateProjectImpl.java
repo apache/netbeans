@@ -88,7 +88,7 @@ public class UpdateProjectImpl implements UpdateImplementation {
                 synchronized (this) {
                     if (isCurrent == null) {
                         if ((cfg.getConfigurationFragment("data","http://www.netbeans.org/ns/j2ee-ejbjarproject/1",true) != null) ||
-                        (cfg.getConfigurationFragment("data","http://www.netbeans.org/ns/j2ee-ejbjarproject/2",true) != null)) {
+                                (cfg.getConfigurationFragment("data","http://www.netbeans.org/ns/j2ee-ejbjarproject/2",true) != null)) {
                             isCurrent = Boolean.FALSE;
                         } else {
                             isCurrent = Boolean.TRUE;
@@ -97,7 +97,7 @@ public class UpdateProjectImpl implements UpdateImplementation {
                     return isCurrent;
                 }
             }
-        }).booleanValue();
+        });
     }
 
     public boolean canUpdate() {
@@ -192,11 +192,11 @@ public class UpdateProjectImpl implements UpdateImplementation {
                             String fileText = XMLUtil.findText(library);
                             if (fileText.startsWith ("libs.")) {
                                 String libName = fileText.substring(6, fileText.indexOf(".classpath")); //NOI18N
-                                List/*<URL>*/ roots = LibraryManager.getDefault().getLibrary(libName).getContent("classpath"); //NOI18N
-                                ArrayList<FileObject> files = new ArrayList<FileObject>();
-                                ArrayList<FileObject> dirs = new ArrayList<FileObject>();
-                                for (Iterator it = roots.iterator(); it.hasNext();) {
-                                    URL rootUrl = (URL) it.next();
+                                List<URL> roots = LibraryManager.getDefault().getLibrary(libName).getContent("classpath"); //NOI18N
+                                List<FileObject> files = new ArrayList<>();
+                                List<FileObject> dirs  = new ArrayList<>();
+                                for (Iterator<URL> it = roots.iterator(); it.hasNext();) {
+                                    URL rootUrl = it.next();
                                     FileObject root = org.openide.filesystems.URLMapper.findFileObject (rootUrl);
                                     if ("jar".equals(rootUrl.getProtocol())) {  //NOI18N
                                         root = FileUtil.getArchiveFile (root);

@@ -57,6 +57,7 @@ public final class Variable extends Field {
      * Returns true if the variable is a constant; that is, a final
      * static variable.
      * @see #getConstantValue
+     * @return true if the variable is a constant
      */
     public final boolean isConstant() {
         return attributes.get("ConstantValue") != null;//NOI18N
@@ -66,6 +67,7 @@ public final class Variable extends Field {
      * Returns the value object of this variable if it is a constant,
      * otherwise null.
      * @deprecated replaced by <code>Object getConstantValue()</code>.
+     * @return the value object of this variable
      */
     @Deprecated
     public final Object getValue() {
@@ -76,6 +78,7 @@ public final class Variable extends Field {
      * Returns the value object of this variable if it is a constant,
      * otherwise null.
      * @see #isConstant
+     * @return the value object of this variable
      */
     public final Object getConstantValue() {
 	if (constValue == notLoadedConstValue) {
@@ -94,7 +97,7 @@ public final class Variable extends Field {
     }
     
     /**
-     * Return a string in the form "<type> <name>".  Class types
+     * Return a string in the form "&lt;type&gt; &lt;name&gt;".  Class types
      * are shown in a "short" form; i.e. "Object" instead of
      * "java.lang.Object"j.
      *
@@ -110,6 +113,7 @@ public final class Variable extends Field {
 
     /**
      * Returns true if this field defines an enum constant.
+     * @return true if this field defines an enum constant.
      */
     public final boolean isEnumConstant() {
 	return (access & Access.ENUM) == Access.ENUM;

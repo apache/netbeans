@@ -1,0 +1,709 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+# Base commit: 787a7a7e972719edf7a79009d768f5111e1d93bc
+
+---
+ .../checker/schematronequiv/Assertions.java   | 11 +---
+ .../messages/MessageEmitterAdapter.java       | 10 ++--
+ src/nu/validator/servlet/Main.java            | 50 +++++-----------
+ src/nu/validator/servlet/VerifierServlet.java | 10 ++--
+ .../servlet/VerifierServletTransaction.java   | 59 ++++++++++---------
+ src/nu/validator/source/LocationRecorder.java |  8 +--
+ src/nu/validator/source/SourceCode.java       |  6 +-
+ .../validation/SimpleDocumentValidator.java   |  3 -
+ .../xml/PrudentHttpEntityResolver.java        | 25 ++++----
+ 9 files changed, 78 insertions(+), 104 deletions(-)
+
+diff --git a/src/nu/validator/checker/schematronequiv/Assertions.java b/src/nu/validator/checker/schematronequiv/Assertions.java
+index 6aba4301..0f2da1af 100644
+--- a/src/nu/validator/checker/schematronequiv/Assertions.java
++++ b/src/nu/validator/checker/schematronequiv/Assertions.java
+@@ -22,8 +22,6 @@
+ 
+ package nu.validator.checker.schematronequiv;
+ 
+-import java.io.ByteArrayInputStream;
+-import java.io.StringReader;
+ import java.util.concurrent.ConcurrentHashMap;
+ import java.util.ArrayList;
+ import java.util.HashMap;
+@@ -35,6 +33,7 @@ import java.util.Map;
+ import java.util.Set;
+ import java.util.Arrays;
+ import java.util.Collections;
++import java.util.logging.Logger;
+ 
+ import javax.servlet.http.HttpServletRequest;
+ 
+@@ -44,7 +43,6 @@ import nu.validator.checker.LocatorImpl;
+ import nu.validator.checker.TaintableLocatorImpl;
+ import nu.validator.checker.VnuBadAttrValueException;
+ import nu.validator.checker.VnuBadElementNameException;
+-import nu.validator.client.TestRunner;
+ import nu.validator.datatype.AutocompleteDetailsAny;
+ import nu.validator.datatype.AutocompleteDetailsDate;
+ import nu.validator.datatype.AutocompleteDetailsEmail;
+@@ -61,21 +59,16 @@ import nu.validator.datatype.ImageCandidateStringsWidthRequired;
+ import nu.validator.datatype.ImageCandidateStrings;
+ import nu.validator.datatype.ImageCandidateURL;
+ import nu.validator.htmlparser.impl.NCName;
+-import nu.validator.messages.MessageEmitterAdapter;
+ 
+ import org.relaxng.datatype.DatatypeException;
+ 
+ import org.xml.sax.Attributes;
+ import org.xml.sax.Locator;
+ import org.xml.sax.SAXException;
+-import org.xml.sax.SAXParseException;
+-
+-import org.apache.log4j.Logger;
+ 
+ public class Assertions extends Checker {
+ 
+-    private static final Logger log4j = //
+-            Logger.getLogger(Assertions.class);
++    private static final Logger log4j = Logger.getLogger(Assertions.class.getName());
+ 
+     private static boolean equalsIgnoreAsciiCase(String one, String other) {
+         if (other == null) {
+diff --git a/src/nu/validator/messages/MessageEmitterAdapter.java b/src/nu/validator/messages/MessageEmitterAdapter.java
+index 4d143d42..aa7e156c 100644
+--- a/src/nu/validator/messages/MessageEmitterAdapter.java
++++ b/src/nu/validator/messages/MessageEmitterAdapter.java
+@@ -29,6 +29,7 @@ import java.util.HashSet;
+ import java.util.Iterator;
+ import java.util.LinkedList;
+ import java.util.List;
++import java.util.logging.Logger;
+ import java.util.Map;
+ import java.util.TreeMap;
+ import java.util.regex.Pattern;
+@@ -80,13 +81,12 @@ import com.thaiopensource.relaxng.exceptions.UnfinishedElementOneOfException;
+ import com.thaiopensource.relaxng.exceptions.UnknownElementException;
+ import com.thaiopensource.xml.util.Name;
+ 
+-import org.apache.log4j.Logger;
+ import com.ibm.icu.text.Normalizer;
+ 
+ @SuppressWarnings("unchecked")
+ public class MessageEmitterAdapter implements ErrorHandler {
+ 
+-    private static final Logger log4j = Logger.getLogger(MessageEmitterAdapter.class);
++    private static final Logger log4j = Logger.getLogger(MessageEmitterAdapter.class.getName());
+ 
+     private final static Map<String, char[]> WELL_KNOWN_NAMESPACES = new HashMap<>();
+ 
+@@ -817,7 +817,7 @@ public class MessageEmitterAdapter implements ErrorHandler {
+                 && msg != null
+                 && (systemId.startsWith("http:") || systemId.startsWith("https:"))) {
+             log4j.info(zapLf(new StringBuilder() //
+-                    .append(systemId).append('\t').append(msg)));
++                    .append(systemId).append('\t').append(msg)).toString());
+         }
+         if (errorsOnly && type.getSuperType() == "info") {
+             return;
+@@ -1241,7 +1241,7 @@ public class MessageEmitterAdapter implements ErrorHandler {
+             if (humanReadable == null) {
+                 if (loggingOk) {
+                     log4j.info(new StringBuilder().append("UNKNOWN_NS:\t").append(
+-                            ns));
++                            ns).toString());
+                 }
+                 messageTextString(messageTextHandler, ELEMENT, atSentenceStart);
+                 linkedCodeString(messageTextHandler, element.getLocalName(),
+@@ -1287,7 +1287,7 @@ public class MessageEmitterAdapter implements ErrorHandler {
+             if (humanReadable == null) {
+                 if (loggingOk) {
+                     log4j.info(new StringBuilder().append("UNKNOWN_NS:\t").append(
+-                            ns));
++                            ns).toString());
+                 }
+                 messageTextString(messageTextHandler, ATTRIBUTE,
+                         atSentenceStart);
+diff --git a/src/nu/validator/servlet/Main.java b/src/nu/validator/servlet/Main.java
+index 49c70181..1f154a4d 100644
+--- a/src/nu/validator/servlet/Main.java
++++ b/src/nu/validator/servlet/Main.java
+@@ -38,13 +38,10 @@ import java.net.Socket;
+ import java.net.SocketException;
+ import java.util.EnumSet;
+ import java.util.Enumeration;
++import java.util.logging.Logger;
+ 
+ import javax.servlet.DispatcherType;
+ 
+-import org.apache.log4j.ConsoleAppender;
+-import org.apache.log4j.Logger;
+-import org.apache.log4j.PatternLayout;
+-import org.apache.log4j.PropertyConfigurator;
+ import org.eclipse.jetty.http2.server.HTTP2CServerConnectionFactory;
+ import org.eclipse.jetty.server.Connector;
+ import org.eclipse.jetty.server.HttpConfiguration;
+@@ -88,19 +85,19 @@ public class Main {
+     private static final void emitStartupMessage(Logger log4j, String host,
+             int port) {
+         if (isRunningInsideDockerContainer()) {
+-            log4j.debug("");
+-            log4j.debug("Checker service started.");
++            log4j.fine("");
++            log4j.fine("Checker service started.");
+             return;
+         }
+         String ip;
+-        log4j.debug("");
+-        log4j.debug("WARNING: Future checker releases will bind by default to"
++        log4j.fine("");
++        log4j.fine("WARNING: Future checker releases will bind by default to"
+                 + " 127.0.0.1.");
+-        log4j.debug("Your checker deployment might become unreachable unless"
++        log4j.fine("Your checker deployment might become unreachable unless"
+                 + " you use the");
+-        log4j.debug("nu.validator.servlet.bind-address system property or"
++        log4j.fine("nu.validator.servlet.bind-address system property or"
+                 + " --bind-address");
+-        log4j.debug("script option to bind the checker to a different"
++        log4j.fine("script option to bind the checker to a different"
+                 + " address:");
+         try {
+             Enumeration<NetworkInterface> interfaces = //
+@@ -114,18 +111,18 @@ public class Main {
+                     InetAddress addr = addresses.nextElement();
+                     ip = addr.getHostAddress();
+                     if (addr instanceof Inet4Address) {
+-                        log4j.debug("");
+-                        log4j.debug(String.format(
++                        log4j.fine("");
++                        log4j.fine(String.format(
+                                 "  python ./checker.py --bind-address %s run",
+                                 ip));
+-                        log4j.debug(String.format("  java"
++                        log4j.fine(String.format("  java"
+                                 + " -Dnu.validator.servlet.bind-address=%s"
+                                 + " -cp vnu.jar"
+                                 + " nu.validator.servlet.Main 8888", ip));
+-                        log4j.debug(String.format("  vnu-runtime-image/bin/java"
++                        log4j.fine(String.format("  vnu-runtime-image/bin/java"
+                                 + " -Dnu.validator.servlet.bind-address=%s"
+                                 + " nu.validator.servlet.Main 8888", ip));
+-                        log4j.debug(String.format(
++                        log4j.fine(String.format(
+                                 "  vnu-runtime-image\\bin\\java.exe"
+                                         + " -Dnu.validator.servlet.bind-address=%s"
+                                         + " nu.validator.servlet.Main 8888",
+@@ -136,28 +133,13 @@ public class Main {
+         } catch (SocketException e) {
+             throw new RuntimeException(e);
+         }
+-        log4j.debug("");
+-        log4j.debug(String.format("Checker service started at http://%s:%s/",
++        log4j.fine("");
++        log4j.fine(String.format("Checker service started at http://%s:%s/",
+                 host, port));
+     }
+ 
+     public static void main(String[] args) throws Exception {
+-        if (!"1".equals(System.getProperty(
+-                "nu.validator.servlet.read-local-log4j-properties"))) {
+-            PropertyConfigurator.configure(
+-                    Main.class.getClassLoader().getResource(
+-                            "nu/validator/localentities/files/log4j.properties"));
+-        } else {
+-            PropertyConfigurator.configure(
+-                    System.getProperty("nu.validator.servlet.log4j-properties",
+-                            "log4j.properties"));
+-        }
+-        Logger log4j = Logger.getLogger(Main.class);
+-        ConsoleAppender console = new ConsoleAppender();
+-        console.setLayout(new PatternLayout("%m%n"));
+-        console.activateOptions();
+-        log4j.setAdditivity(false);
+-        log4j.addAppender(console);
++        Logger log4j = Logger.getLogger(Main.class.getName());
+ 
+         ServletContextHandler contextHandler = new ServletContextHandler();
+         contextHandler.setContextPath("/");
+diff --git a/src/nu/validator/servlet/VerifierServlet.java b/src/nu/validator/servlet/VerifierServlet.java
+index 8da1aaf1..a7fc9247 100644
+--- a/src/nu/validator/servlet/VerifierServlet.java
++++ b/src/nu/validator/servlet/VerifierServlet.java
+@@ -28,6 +28,7 @@ import java.io.InputStream;
+ import java.io.OutputStream;
+ import java.io.ByteArrayOutputStream;
+ import java.io.UnsupportedEncodingException;
++import java.util.logging.Logger;
+ 
+ import javax.servlet.ServletException;
+ import javax.servlet.http.HttpServlet;
+@@ -37,9 +38,6 @@ import javax.servlet.http.HttpServletResponse;
+ import nu.validator.messages.MessageEmitterAdapter;
+ import nu.validator.xml.PrudentHttpEntityResolver;
+ 
+-import org.apache.log4j.Logger;
+-
+-
+ /**
+  * @version $Id$
+  * @author hsivonen
+@@ -50,7 +48,7 @@ public class VerifierServlet extends HttpServlet {
+      */
+     private static final long serialVersionUID = 7811043632732680935L;
+ 
+-    private static final Logger log4j = Logger.getLogger(VerifierServlet.class);
++    private static final Logger log4j = Logger.getLogger(VerifierServlet.class.getName());
+ 
+     static final String GENERIC_HOST = System.getProperty("nu.validator.servlet.host.generic", "");
+ 
+@@ -272,8 +270,8 @@ public class VerifierServlet extends HttpServlet {
+             response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+             return;
+         }
+-        log4j.debug("pathInfo: " + pathInfo);
+-        log4j.debug("serverName: " + serverName);
++        log4j.fine("pathInfo: " + pathInfo);
++        log4j.fine("serverName: " + serverName);
+ 
+         if ("validator.nu".equals(serverName) && "/html5/".equals(pathInfo)) {
+                 response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+diff --git a/src/nu/validator/servlet/VerifierServletTransaction.java b/src/nu/validator/servlet/VerifierServletTransaction.java
+index 358bdc62..6c60ee1c 100644
+--- a/src/nu/validator/servlet/VerifierServletTransaction.java
++++ b/src/nu/validator/servlet/VerifierServletTransaction.java
+@@ -43,6 +43,8 @@ import java.util.HashSet;
+ import java.util.LinkedHashSet;
+ import java.util.LinkedList;
+ import java.util.List;
++import java.util.logging.Level;
++import java.util.logging.Logger;
+ import java.util.Map;
+ import java.util.Properties;
+ import java.util.Set;
+@@ -135,7 +137,6 @@ import com.thaiopensource.validate.prop.wrap.WrapProperty;
+ import com.thaiopensource.validate.rng.CompactSchemaReader;
+ 
+ import org.apache.http.conn.ConnectTimeoutException;
+-import org.apache.log4j.Logger;
+ 
+ import com.ibm.icu.text.Normalizer;
+ 
+@@ -150,7 +151,7 @@ class VerifierServletTransaction implements DocumentModeHandler, SchemaResolver
+         HTML, XHTML, TEXT, XML, JSON, RELAXED, SOAP, UNICORN, GNU
+     }
+ 
+-    private static final Logger log4j = Logger.getLogger(VerifierServletTransaction.class);
++    private static final Logger log4j = Logger.getLogger(VerifierServletTransaction.class.getName());
+ 
+     private static final Pattern SPACE = Pattern.compile("\\s+");
+ 
+@@ -418,7 +419,7 @@ class VerifierServletTransaction implements DocumentModeHandler, SchemaResolver
+ 
+     static {
+         try {
+-            log4j.debug("Starting static initializer.");
++            log4j.fine("Starting static initializer.");
+ 
+             lastModified = 0;
+             BufferedReader r = new BufferedReader(new InputStreamReader(LocalCacheEntityResolver.getPresetsAsStream(), "UTF-8"));
+@@ -429,7 +430,7 @@ class VerifierServletTransaction implements DocumentModeHandler, SchemaResolver
+             List<String> urls = new LinkedList<>();
+             Properties props = new Properties();
+ 
+-            log4j.debug("Reading miscellaneous properties.");
++            log4j.fine("Reading miscellaneous properties.");
+ 
+             props.load(VerifierServlet.class.getClassLoader().getResourceAsStream(
+                     "nu/validator/localentities/files/misc.properties"));
+@@ -448,7 +449,7 @@ class VerifierServletTransaction implements DocumentModeHandler, SchemaResolver
+                     props.getProperty("nu.validator.servlet.user-agent",
+                             "Validator.nu/LV")));
+ 
+-            log4j.debug("Starting to loop over config file lines.");
++            log4j.fine("Starting to loop over config file lines.");
+ 
+             while ((line = r.readLine()) != null) {
+                 if ("".equals(line.trim())) {
+@@ -461,14 +462,14 @@ class VerifierServletTransaction implements DocumentModeHandler, SchemaResolver
+                 urls.add(s[3]);
+             }
+ 
+-            log4j.debug("Finished reading config.");
++            log4j.fine("Finished reading config.");
+ 
+             String[] presetDoctypesAsStrings = doctypes.toArray(new String[0]);
+             presetNamespaces = namespaces.toArray(new String[0]);
+             presetLabels = labels.toArray(new String[0]);
+             presetUrls = urls.toArray(new String[0]);
+ 
+-            log4j.debug("Converted config to arrays.");
++            log4j.fine("Converted config to arrays.");
+ 
+             for (int i = 0; i < presetNamespaces.length; i++) {
+                 String str = presetNamespaces[i];
+@@ -479,18 +480,18 @@ class VerifierServletTransaction implements DocumentModeHandler, SchemaResolver
+                 }
+             }
+ 
+-            log4j.debug("Prepared namespace array.");
++            log4j.fine("Prepared namespace array.");
+ 
+             presetDoctypes = new int[presetDoctypesAsStrings.length];
+             for (int i = 0; i < presetDoctypesAsStrings.length; i++) {
+                 presetDoctypes[i] = Integer.parseInt(presetDoctypesAsStrings[i]);
+             }
+ 
+-            log4j.debug("Parsed doctype numbers into ints.");
++            log4j.fine("Parsed doctype numbers into ints.");
+ 
+             String prefix = System.getProperty("nu.validator.servlet.cachepathprefix");
+ 
+-            log4j.debug("The cache path prefix is: " + prefix);
++            log4j.fine("The cache path prefix is: " + prefix);
+ 
+             ErrorHandler eh = new SystemErrErrorHandler();
+             LocalCacheEntityResolver er = new LocalCacheEntityResolver(new NullEntityResolver());
+@@ -503,7 +504,7 @@ class VerifierServletTransaction implements DocumentModeHandler, SchemaResolver
+             RngProperty.CHECK_ID_IDREF.add(pmb);
+             PropertyMap pMap = pmb.toPropertyMap();
+ 
+-            log4j.debug("Parsing set up. Starting to read schemas.");
++            log4j.fine("Parsing set up. Starting to read schemas.");
+ 
+             SortedMap<String, Schema> schemaMap = new TreeMap<>();
+ 
+@@ -553,7 +554,7 @@ class VerifierServletTransaction implements DocumentModeHandler, SchemaResolver
+                 }
+             }
+ 
+-            log4j.debug("Schemas read.");
++            log4j.fine("Schemas read.");
+ 
+             preloadedSchemaUrls = new String[schemaMap.size()];
+             preloadedSchemas = new Schema[schemaMap.size()];
+@@ -582,14 +583,14 @@ class VerifierServletTransaction implements DocumentModeHandler, SchemaResolver
+                 i++;
+             }
+ 
+-            log4j.debug("Reading spec.");
++            log4j.fine("Reading spec.");
+ 
+             html5spec = Html5SpecBuilder.parseSpec(LocalCacheEntityResolver.getHtml5SpecAsStream());
+ 
+-            log4j.debug("Spec read.");
++            log4j.fine("Spec read.");
+ 
+             if (new File(FILTER_FILE).isFile()) {
+-                log4j.debug("Reading filter file " + FILTER_FILE);
++                log4j.fine("Reading filter file " + FILTER_FILE);
+                 try (BufferedReader reader = new BufferedReader(
+                         new InputStreamReader(new FileInputStream(FILTER_FILE),
+                                 "UTF-8"))) {
+@@ -612,7 +613,7 @@ class VerifierServletTransaction implements DocumentModeHandler, SchemaResolver
+                         }
+                     }
+                 }
+-                log4j.debug("Filter file read.");
++                log4j.fine("Filter file read.");
+             }
+         } catch (Exception e) {
+             throw new RuntimeException(e);
+@@ -719,7 +720,7 @@ class VerifierServletTransaction implements DocumentModeHandler, SchemaResolver
+         try {
+             request.setCharacterEncoding("utf-8");
+         } catch (NoSuchMethodError e) {
+-            log4j.debug("Vintage Servlet API doesn't support setCharacterEncoding().", e);
++            log4j.log(Level.FINE, "Vintage Servlet API doesn't support setCharacterEncoding().", e);
+         }
+ 
+         if (!methodIsGet) {
+@@ -978,7 +979,7 @@ class VerifierServletTransaction implements DocumentModeHandler, SchemaResolver
+                 validate();
+             }
+         } catch (SAXException e) {
+-            log4j.debug("SAXException: " + e.getMessage());
++            log4j.fine("SAXException: " + e.getMessage());
+         }
+     }
+ 
+@@ -1167,11 +1168,11 @@ class VerifierServletTransaction implements DocumentModeHandler, SchemaResolver
+             }
+         } catch (CannotFindPresetSchemaException e) {
+         } catch (ResourceNotRetrievableException e) {
+-            log4j.debug(e.getMessage());
++            log4j.fine(e.getMessage());
+         } catch (NonXmlContentTypeException e) {
+-            log4j.debug(e.getMessage());
++            log4j.fine(e.getMessage());
+         } catch (FatalSAXException e) {
+-            log4j.debug(e.getMessage());
++            log4j.fine(e.getMessage());
+         } catch (SocketTimeoutException e) {
+             errorHandler.ioError(new IOException(e.getMessage(), null));
+         } catch (ConnectTimeoutException e) {
+@@ -1181,28 +1182,28 @@ class VerifierServletTransaction implements DocumentModeHandler, SchemaResolver
+         } catch (SAXException e) {
+             String msg = e.getMessage();
+             if (!cannotRecover.equals(msg) && !changingEncoding.equals(msg)) {
+-                log4j.debug("SAXException: " + e.getMessage());
++                log4j.fine("SAXException: " + e.getMessage());
+             }
+         } catch (IOException e) {
+             isHtmlOrXhtml = false;
+             if (e.getCause() instanceof org.apache.http.TruncatedChunkException) {
+-                log4j.debug("TruncatedChunkException", e.getCause());
++                log4j.log(Level.FINE, "TruncatedChunkException", e.getCause());
+             } else {
+                 errorHandler.ioError(e);
+             }
+         } catch (IncorrectSchemaException e) {
+-            log4j.debug("IncorrectSchemaException", e);
++            log4j.log(Level.FINE, "IncorrectSchemaException", e);
+             errorHandler.schemaError(e);
+         } catch (RuntimeException e) {
+             isHtmlOrXhtml = false;
+-            log4j.error("RuntimeException, doc: " + document + " schema: "
++            log4j.log(Level.SEVERE, "RuntimeException, doc: " + document + " schema: "
+                     + schemaUrls + " lax: " + laxType, e);
+             errorHandler.internalError(
+                     e,
+                     "Oops. That was not supposed to happen. A bug manifested itself in the application internals. Unable to continue. Sorry. The admin was notified.");
+         } catch (Error e) {
+             isHtmlOrXhtml = false;
+-            log4j.error("Error, doc: " + document + " schema: " + schemaUrls
++            log4j.log(Level.SEVERE, "Error, doc: " + document + " schema: " + schemaUrls
+                     + " lax: " + laxType, e);
+             errorHandler.internalError(
+                     e,
+@@ -1448,7 +1449,7 @@ class VerifierServletTransaction implements DocumentModeHandler, SchemaResolver
+                 try {
+                     stats.incrementField(stats.getFieldFromName(fieldName));
+                 } catch (IllegalArgumentException e) {
+-                    log4j.error(e.getMessage(), e);
++                    log4j.log(Level.SEVERE, e.getMessage(), e);
+                 }
+             }
+             String langVal = (String) request.getAttribute(
+@@ -1834,13 +1835,13 @@ class VerifierServletTransaction implements DocumentModeHandler, SchemaResolver
+     private static Schema schemaByUrl(String url, EntityResolver resolver,
+             PropertyMap pMap) throws SAXException, IOException,
+             IncorrectSchemaException {
+-        log4j.debug("Will load schema: " + url);
++        log4j.fine("Will load schema: " + url);
+         TypedInputSource schemaInput;
+         try {
+         schemaInput = (TypedInputSource) resolver.resolveEntity(
+                 null, url);
+         } catch (ClassCastException e) {
+-            log4j.fatal(url, e);
++            log4j.log(Level.SEVERE, url, e);
+             throw e;
+         }
+         SchemaReader sr = null;
+diff --git a/src/nu/validator/source/LocationRecorder.java b/src/nu/validator/source/LocationRecorder.java
+index efdeb1fb..a296a656 100644
+--- a/src/nu/validator/source/LocationRecorder.java
++++ b/src/nu/validator/source/LocationRecorder.java
+@@ -22,7 +22,7 @@
+ 
+ package nu.validator.source;
+ 
+-import org.apache.log4j.Logger;
++import java.util.logging.Logger;
+ import org.xml.sax.Attributes;
+ import org.xml.sax.ContentHandler;
+ import org.xml.sax.Locator;
+@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
+ import org.xml.sax.ext.LexicalHandler;
+ 
+ final class LocationRecorder implements ContentHandler, LexicalHandler {
+-    private static final Logger log4j = Logger.getLogger(LocationRecorder.class);
++    private static final Logger log4j = Logger.getLogger(LocationRecorder.class.getName());
+ 
+     private final SourceCode owner;
+     
+@@ -51,7 +51,7 @@ final class LocationRecorder implements ContentHandler, LexicalHandler {
+     private void addLocatorLocation() {
+         if (locator != null) {
+             String systemId = locator.getSystemId();
+-            log4j.debug(systemId);
++            log4j.fine(systemId);
+             if (uri == systemId || (uri != null && uri.equals(systemId))) {
+                 owner.addLocatorLocation(locator.getLineNumber(), locator.getColumnNumber());
+             }
+@@ -97,7 +97,7 @@ final class LocationRecorder implements ContentHandler, LexicalHandler {
+     @Override
+     public void setDocumentLocator(Locator locator) {
+         this.locator = locator;
+-        log4j.debug(locator);
++        log4j.fine(String.valueOf(locator));
+     }
+ 
+     @Override
+diff --git a/src/nu/validator/source/SourceCode.java b/src/nu/validator/source/SourceCode.java
+index b7dcfb43..de50ce9d 100644
+--- a/src/nu/validator/source/SourceCode.java
++++ b/src/nu/validator/source/SourceCode.java
+@@ -28,20 +28,20 @@ import java.util.Iterator;
+ import java.util.LinkedList;
+ import java.util.List;
+ import java.util.SortedSet;
++import java.util.logging.Logger;
+ 
+ import nu.validator.collections.HeadBiasedSortedSet;
+ import nu.validator.collections.TailBiasedSortedSet;
+ import nu.validator.htmlparser.common.CharacterHandler;
+ import nu.validator.xml.TypedInputSource;
+ 
+-import org.apache.log4j.Logger;
+ import org.xml.sax.ContentHandler;
+ import org.xml.sax.InputSource;
+ import org.xml.sax.Locator;
+ import org.xml.sax.SAXException;
+ 
+ public final class SourceCode implements CharacterHandler {
+-    private static final Logger log4j = Logger.getLogger(SourceCode.class);
++    private static final Logger log4j = Logger.getLogger(SourceCode.class.getName());
+ 
+     private static Location[] SOURCE_LOCATION_ARRAY_TYPE = new Location[0];
+ 
+@@ -183,7 +183,7 @@ public final class SourceCode implements CharacterHandler {
+     }
+ 
+     public void addLocatorLocation(int oneBasedLine, int oneBasedColumn) {
+-        log4j.debug(oneBasedLine + ", " + oneBasedColumn);
++        log4j.fine(oneBasedLine + ", " + oneBasedColumn);
+         reverseSortedLocations.add(new Location(this, oneBasedLine - 1,
+                 oneBasedColumn - 1));
+     }
+diff --git a/src/nu/validator/validation/SimpleDocumentValidator.java b/src/nu/validator/validation/SimpleDocumentValidator.java
+index f9600817..b57404a5 100644
+--- a/src/nu/validator/validation/SimpleDocumentValidator.java
++++ b/src/nu/validator/validation/SimpleDocumentValidator.java
+@@ -79,8 +79,6 @@ import com.thaiopensource.validate.prop.rng.RngProperty;
+ import com.thaiopensource.validate.rng.CompactSchemaReader;
+ import com.thaiopensource.xml.sax.Jaxp11XMLReaderCreator;
+ 
+-import org.apache.log4j.PropertyConfigurator;
+-
+ import java.net.*;
+ import java.util.ArrayList;
+ import java.util.Collections;
+@@ -227,7 +225,6 @@ public class SimpleDocumentValidator {
+                             "log4j.logger.nu.validator.xml.PrudentHttpEntityResolver",
+                             "FATAL");
+                 }
+-                PropertyConfigurator.configure(properties);
+             } catch (IOException e) {
+                 e.printStackTrace();
+             }
+diff --git a/src/nu/validator/xml/PrudentHttpEntityResolver.java b/src/nu/validator/xml/PrudentHttpEntityResolver.java
+index f851bc32..22680402 100644
+--- a/src/nu/validator/xml/PrudentHttpEntityResolver.java
++++ b/src/nu/validator/xml/PrudentHttpEntityResolver.java
+@@ -31,6 +31,8 @@ import java.security.NoSuchAlgorithmException;
+ import java.security.cert.CertificateException;
+ import java.security.cert.X509Certificate;
+ import java.util.zip.GZIPInputStream;
++import java.util.logging.Level;
++import java.util.logging.Logger;
+ 
+ import javax.net.ssl.HostnameVerifier;
+ import javax.net.ssl.SSLContext;
+@@ -64,7 +66,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
+ import org.apache.http.impl.client.HttpClients;
+ import org.apache.http.impl.client.LaxRedirectStrategy;
+ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+-import org.apache.log4j.Logger;
+ 
+ import org.xml.sax.EntityResolver;
+ import org.xml.sax.ErrorHandler;
+@@ -83,7 +84,7 @@ import io.mola.galimatias.GalimatiasParseException;
+ @SuppressWarnings("deprecation") public class PrudentHttpEntityResolver
+         implements EntityResolver {
+ 
+-    private static final Logger log4j = Logger.getLogger(PrudentHttpEntityResolver.class);
++    private static final Logger log4j = Logger.getLogger(PrudentHttpEntityResolver.class.getName());
+ 
+     private static HttpClient client;
+ 
+@@ -380,14 +381,15 @@ import io.mola.galimatias.GalimatiasParseException;
+ 
+                         @Override
+                         public void closeCalled() {
+-                            log4j.debug("closeCalled");
++                            log4j.fine("closeCalled");
+                             if (!released) {
+-                                log4j.debug("closeCalled, not yet released");
++                                log4j.fine("closeCalled, not yet released");
+                                 released = true;
+                                 try {
+                                     meth.releaseConnection();
+                                 } catch (Exception e) {
+-                                    log4j.debug(
++                                    log4j.log(
++                                            Level.FINE,
+                                             "closeCalled, releaseConnection", e);
+                                 }
+                             }
+@@ -401,12 +403,13 @@ import io.mola.galimatias.GalimatiasParseException;
+                                 try {
+                                     meth.abort();
+                                 } catch (Exception e) {
+-                                    log4j.debug("exceptionOccurred, abort", e);
++                                    log4j.log(Level.FINE, "exceptionOccurred, abort", e);
+                                 } finally {
+                                     try {
+                                         meth.releaseConnection();
+                                     } catch (Exception e) {
+-                                        log4j.debug(
++                                        log4j.log(
++                                                Level.FINE,
+                                                 "exceptionOccurred, releaseConnection",
+                                                 e);
+                                     }
+@@ -434,12 +437,12 @@ import io.mola.galimatias.GalimatiasParseException;
+                                 try {
+                                     meth.abort();
+                                 } catch (Exception e) {
+-                                    log4j.debug("finalizerCalled, abort", e);
++                                    log4j.log(Level.FINE, "finalizerCalled, abort", e);
+                                 } finally {
+                                     try {
+                                         meth.releaseConnection();
+                                     } catch (Exception e) {
+-                                        log4j.debug(
++                                        log4j.log(Level.FINE,
+                                                 "finalizerCalled, releaseConnection",
+                                                 e);
+                                     }
+@@ -454,12 +457,12 @@ import io.mola.galimatias.GalimatiasParseException;
+                 try {
+                     m.abort();
+                 } catch (Exception ex) {
+-                    log4j.debug("abort", ex);
++                    log4j.log(Level.FINE, "abort", ex);
+                 } finally {
+                     try {
+                         m.releaseConnection();
+                     } catch (Exception ex) {
+-                        log4j.debug("releaseConnection", ex);
++                        log4j.log(Level.FINE, "releaseConnection", ex);
+                     }
+                 }
+             }
+-- 
+2.37.2
+

@@ -58,17 +58,14 @@
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-            <friend-packages>
-                <friend>org.netbeans.modules.subversion</friend>
-                <friend>org.netbeans.libs.svnClientAdapter.javahl</friend>
-                <friend>org.netbeans.libs.svnClientAdapter.svnkit</friend>
+            <public-packages>                
                 <package>org.netbeans.libs.svnclientadapter</package>
                 <package>org.tigris.subversion.svnclientadapter</package>
                 <package>org.tigris.subversion.svnclientadapter.utils</package>
-            </friend-packages>
+            </public-packages>    
             <class-path-extension>
-                <runtime-relative-path>ext/svnClientAdapter-main.jar</runtime-relative-path>
-                <binary-origin>external/svnClientAdapter-main-1.10.12.jar</binary-origin>
+                <runtime-relative-path>ext/adapter-base.jar</runtime-relative-path>
+                <binary-origin>external/adapter-base-1.14.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

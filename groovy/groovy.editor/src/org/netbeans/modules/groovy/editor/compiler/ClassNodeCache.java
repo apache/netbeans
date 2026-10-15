@@ -19,17 +19,25 @@
 package org.netbeans.modules.groovy.editor.compiler;
 
 import groovy.lang.GroovyClassLoader;
+import groovy.lang.GroovyCodeSource;
 import groovy.lang.GroovyResourceLoader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.codehaus.groovy.ast.ClassNode;
@@ -42,7 +50,9 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.JavaSource;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
+import org.openide.util.Enumerations;
 
 /**
  *
@@ -65,10 +75,10 @@ public final class ClassNodeCache {
     private final Map<CharSequence,ClassNode> cache;
     private final Map<CharSequence,Void> nonExistent;
     private Reference<JavaSource> resolver;
-    private Reference<GroovyClassLoader> transformationLoaderRef;
     private Reference<GroovyClassLoader> resolveLoaderRef;
     private long invocationCount;
     private long hitCount;
+    private PerfData perfData;
     
     private ClassNodeCache() {
         this.cache = new HashMap<>();
@@ -107,6 +117,18 @@ public final class ClassNodeCache {
                 (double)hitCount/invocationCount*100);
         }
         return result;
+    }
+    
+    public boolean isNonExistentResource(@NonNull final CharSequence name) {
+        return nonExistent.containsKey(name);
+    }
+    
+    public void addNonExistentResource(@NonNull final CharSequence name) {
+        LOG.log(
+            Level.FINE,
+            "Unreachable resource: {0}",    //NOI18N
+            name);
+        nonExistent.putIfAbsent(name, null);
     }
     
     public boolean isNonExistent (@NonNull final CharSequence name) {
@@ -186,23 +208,72 @@ public final class ClassNodeCache {
         return src;
     }
     
-    public GroovyClassLoader createTransformationLoader(
-            @NonNull final ClassPath allResources,
-            @NonNull final CompilerConfiguration configuration) {        
-        GroovyClassLoader transformationLoader = transformationLoaderRef == null ? null : transformationLoaderRef.get();
-        if (transformationLoader == null) {
-            LOG.log(Level.FINE,"Transformation ClassLoader created.");  //NOI18N
-            transformationLoader = 
-                new TransformationClassLoader(
-                    CompilationUnit.class.getClassLoader(),
-                    allResources,
-                    configuration);
-            transformationLoaderRef = new SoftReference<>(transformationLoader);
+    static class PathSnapshot {
+        final List<FileObject> roots;
+        final List<Long> modifiedStamps;
+        final int hash;
+
+        public PathSnapshot(ClassPath path) {
+            roots = Arrays.asList(path.getRoots());
+            List<Long> stamps = new ArrayList<>(roots.size());
+            for (FileObject f : roots) {
+                long ts;
+                
+                if (f.isValid()) {
+                    FileObject ar = FileUtil.getArchiveFile(f);
+                    ts = ar == null ? f.lastModified().getTime() : ar.lastModified().getTime();
+                } else {
+                    ts = -1;
+                }
+                stamps.add(ts);
+            }
+            modifiedStamps = stamps;
+            
+            int hash = 3;
+            hash = 59 * hash + Objects.hashCode(this.roots);
+            // hash = 59 * hash + Objects.hashCode(this.modifiedStamps);
+            this.hash = hash;
         }
-        return transformationLoader;
+        
+        @Override
+        public int hashCode() {
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final PathSnapshot other = (PathSnapshot) obj;
+            if (!Objects.equals(this.roots, other.roots)) {
+                return false;
+            }
+            /*
+            if (!Objects.equals(this.modifiedStamps, other.modifiedStamps)) {
+                return false;
+            }
+            */
+            return true;
+        }
     }
     
-    public GroovyClassLoader createResolveLoader(
+    public GroovyClassLoader createTransformationLoader(
+            @NonNull final ClassPath allResources,
+            @NonNull final CompilerConfiguration configuration, FileObject src, ClassPath... paths) {        
+        return new TransformationClassLoader(
+                    ClassLoaderFactory.forFile(src).createClassLoader(configuration, paths), 
+                    allResources, configuration, this
+        );
+    }
+    
+    public ParsingClassLoader createResolveLoader(
             @NonNull final ClassPath allResources,
             @NonNull final CompilerConfiguration configuration) {
         GroovyClassLoader resolveLoader = resolveLoaderRef == null ? null : resolveLoaderRef.get();
@@ -214,7 +285,7 @@ public final class ClassNodeCache {
                     this);
             resolveLoaderRef = new SoftReference<>(resolveLoader);
         }
-        return resolveLoader;
+        return (ParsingClassLoader)resolveLoader;
     }
 
     @CheckForNull
@@ -282,20 +353,73 @@ public final class ClassNodeCache {
         return true;
     }
     
-    private static class TransformationClassLoader extends GroovyClassLoader {
-
-        public TransformationClassLoader(ClassLoader parent, ClassPath cp, CompilerConfiguration config) {
+    public static class TransformationClassLoader extends GroovyClassLoader {
+        private PerfData perfData;
+        
+        private CompilationUnit unit;
+        
+        public TransformationClassLoader(ClassLoader parent, ClassPath cp, CompilerConfiguration config, 
+                ClassNodeCache cache) {
             super(parent, config);
             for (ClassPath.Entry entry : cp.entries()) {
                 this.addURL(entry.getURL());
             }
+            this.perfData = cache.perfData;
         }
 
+        public void setUnit(CompilationUnit unit) {
+            this.unit = unit;
+        }
+
+        @Override
+        public Class loadClass(String name, boolean lookupScriptFiles, boolean preferClassOverScript, boolean resolve) throws ClassNotFoundException, CompilationFailedException {
+            long t = System.currentTimeMillis();
+            try {
+                return super.loadClass(name, lookupScriptFiles, preferClassOverScript, resolve);
+            } finally {
+                long t2 = System.currentTimeMillis();
+                perfData.addVisitorTime(unit.getPhase(), "TransformationClassLoader", t2 - t);
+            }
+        }
+        
+        @Override 
+        protected Class<?> findClass(final String name) throws ClassNotFoundException {
+            Class<?> ret = super.findClass(name);
+            PerfData.LOG.log(Level.FINER, "** Found class: {0} ", name);
+            return ret;
+        }
+                
+
+        @Override
+        public Class defineClass(String name, byte[] b) {
+            PerfData.LOG.log(Level.FINER, "Defining class {0} from {1}", name);
+            return super.defineClass(name, b);
+        }
+
+        @Override
+        public Class parseClass(GroovyCodeSource codeSource, boolean shouldCacheSource) throws CompilationFailedException {
+            PerfData.LOG.log(Level.FINER, "Parsing Groovy class: {0} from {1}", new Object[] {
+                codeSource.getName(),
+                codeSource.getFile()
+            });
+            return super.parseClass(codeSource, shouldCacheSource); 
+        }
+
+        @Override
+        public Class defineClass(ClassNode classNode, String file, String newCodeBase) {
+            PerfData.LOG.log(Level.FINER, "Defining class {0} from {1}", new Object[] {
+                classNode.getName(),
+                file
+            });
+            return super.defineClass(classNode, file, newCodeBase);
+        }
     }
 
-    private static class ParsingClassLoader extends GroovyClassLoader {
+    public static class ParsingClassLoader extends GroovyClassLoader {
 
         private static final ClassNotFoundException CNF = new ClassNotFoundException();
+        
+        private final ResourceCache resourceCache;
         
         private final CompilerConfiguration config;
 
@@ -303,21 +427,14 @@ public final class ClassNodeCache {
         
         private final ClassNodeCache cache;
 
-        private final GroovyResourceLoader resourceLoader = new GroovyResourceLoader() {
-
-            @Override
-            public URL loadGroovySource(final String filename) throws MalformedURLException {
-                URL file = (URL) AccessController.doPrivileged(new PrivilegedAction() {
-
-                    @Override
-                    public Object run() {
-                        return getSourceFile(filename);
-                    }
-                });
-                return file;
-            }
-        };
-
+        private final GroovyResourceLoader resourceLoader
+                = (String filename) -> AccessController.doPrivileged(
+                        (PrivilegedAction<URL>) () -> getSourceFile(filename));
+        
+        private PerfData perfData;
+        
+        private CompilationUnit unit;
+        
         public ParsingClassLoader(
                 @NonNull ClassPath path,
                 @NonNull CompilerConfiguration config,
@@ -326,22 +443,130 @@ public final class ClassNodeCache {
             this.config = config;
             this.path = path;
             this.cache = cache;
+            this.resourceCache = new ResourceCache(path) {
+                @Override
+                protected void addNonExistentResource(String name) {
+                    super.addNonExistentResource(name);
+                    // in addition, mark the non-existent for others.
+                    cache.addNonExistentResource(name);
+                }
+            };
         }
-        
+
+        public void setPerfData(PerfData perfData) {
+            this.perfData = perfData;
+        }
+
+        public void setUnit(CompilationUnit unit) {
+            this.unit = unit;
+        }
+
         @Override
         public Class loadClass(
                 final String name,
                 final boolean lookupScriptFiles,
                 final boolean preferClassOverScript,
                 final boolean resolve) throws ClassNotFoundException, CompilationFailedException {
+            LOG.log(Level.FINE, "Parser {4} asking for {0}, scripts {1}, classOverScript {2}, resolve {3}", 
+                    new Object[] { name, lookupScriptFiles, preferClassOverScript, resolve, 
+                        System.identityHashCode(this)
+                    });
+            String rn = null;
             if (preferClassOverScript && !lookupScriptFiles) {
+                rn = name.replace(".", "/") + ".class";
+                if (cache.isNonExistentResource(rn)) {
+                    LOG.log(Level.FINE, " -> cached NONE");
+                    throw CNF;
+                }
+                
                 //Ideally throw CNF but we need to workaround fix of issue #206811
                 //which hurts performance.
                 if (cache.isNonExistent(name)) {
+                    LOG.log(Level.FINE, " -> cached NONE");
                     throw CNF;
                 }
             }
-            return super.loadClass(name, lookupScriptFiles, preferClassOverScript, resolve);
+            boolean ok = false;
+            try {
+                Class c = super.loadClass(name, lookupScriptFiles, preferClassOverScript, resolve);
+                ok = true;
+                return c;
+            } catch (ClassNotFoundException ex) {
+                // NETBEANS-5982: Groovy tries to load some types (i.e. annotations) into JVM. We serve .class resources
+                // from .sig files produced by Java indexer, then Groovy "needs" to load them for further inspection,
+                // but the ClassLoaderSupport refuses to do so. Until NETBEANS-5982 is fixed, attempt to load .sig file into
+                // JVM.
+                // This ClassLoader is a throwaway one, so if the source changes, the classes can be loaded again in a different
+                // ParsingCL instance next parsing round.
+                String cr = name.replace(".", "/") + ".class"; // NOI18N
+                // getResource now serves .sig files as well.
+                URL u = getResource(cr);
+                if (u != null) {
+                    try {
+                        URLConnection con = u.openConnection(); 
+                        byte[] contents = new byte[con.getContentLength()];
+                        try (InputStream cs = u.openStream()) {
+                            cs.read(contents);
+                        }
+                        Class c = defineClass(name, contents);
+                        ok = true;
+                        return c;
+                    } catch (IOException ex2) {
+                        throw ex;
+                    }
+                } else {
+                    throw ex;
+                }
+            } finally {
+                if (!ok && rn != null) {
+                    cache.addNonExistentResource(rn);
+                }
+            }
+        }
+        
+        @Override
+        public Enumeration<URL> getResources(String name) throws IOException {
+            if (cache.isNonExistentResource(name)) {
+                return Enumerations.empty();
+            }
+            Enumeration<URL> urls = resourceCache.getResources(name);
+            if (!urls.hasMoreElements()) {
+                cache.addNonExistentResource(name);
+            }
+            return urls;
+        }
+        
+        @Override
+        public URL getResource(String name) {
+            long t = System.currentTimeMillis();
+            try {
+                if (cache.isNonExistentResource(name)) {
+                    return null;
+                }
+                URL u = resourceCache.getResource(name);
+                if (u == null && name.endsWith(".class")) {
+                    String sigName = name.substring(0, name.length() - 5) + "sig";
+                    u = resourceCache.getResource(sigName);
+                }
+                if (u == null) {
+                    LOG.log(Level.FINE, " -> caching nonexistent: " + name);
+                    cache.addNonExistentResource(name);
+                }
+                return u;
+            } finally {
+                long t2 = System.currentTimeMillis();
+                perfData.addVisitorTime(unit.getPhase(), "ParsingClassLoader", t2 - t);
+            }
+        }
+
+        @Override
+        public URL findResource(String name) {
+            if (cache.isNonExistentResource(name)) {
+                return null;
+            }
+            LOG.log(Level.FINE, "Parser {1} findResource {0}", 
+                    new Object[] { name, System.identityHashCode(this) });
+            return super.findResource(name);
         }
 
         @Override
@@ -357,5 +582,13 @@ public final class ClassNodeCache {
             }
             return URLMapper.findURL(fo, URLMapper.EXTERNAL);
         }
+    }
+
+    public PerfData getPerfData() {
+        return perfData;
+    }
+
+    public void setPerfData(PerfData perfData) {
+        this.perfData = perfData;
     }
 }

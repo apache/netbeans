@@ -86,7 +86,7 @@ class ImportFoldersPanel extends javax.swing.JPanel {
     }
 
     private void resize() {
-        int width = (new Double(message.getFontMetrics(message.getFont()).getStringBounds(message.getText(), getGraphics()).getWidth() / 2.7)).intValue() + 40;
+        int width = (int)(message.getFontMetrics(message.getFont()).getStringBounds(message.getText(), getGraphics()).getWidth() / 2.7) + 40;
         int height = (message.getFont().getSize() * 5) + 100;
         if (width < 400)
             width = 400;

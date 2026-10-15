@@ -1,0 +1,72 @@
+<testresult testFile='readonlyPropertiesWithStaticError.php'>
+    <scanner>
+        <token id='T_CLASS' start='815' end='820'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='821' end='839'>
+            <text>ReadonlyProperties</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='840' end='841'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='847' end='853'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='854' end='860'>
+            <text>static</text>
+        </token>
+        <token id='T_READONLY' start='861' end='869'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='870' end='873'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='874' end='885'>
+            <text>$withStatic</text>
+        </token>
+        <token id='T_SEMICOLON' start='885' end='886'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='897' end='898'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='899' end='899'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='899'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='887' end='896' commentType='singleLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='887' end='896' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='815' end='898' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='821' end='839' name='ReadonlyProperties'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='840' end='898' isCurly='true'>
+                    <FieldsDeclaration start='847' end='886' modifier='public readonly static'>
+                        <FieldType>
+                            <NamespaceName start='870' end='873' isCurrent='false' isGlobal='false'>
+                                <Identifier start='870' end='873' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='874' end='885' isDollared='true'>
+                                <Identifier start='875' end='885' name='withStatic'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                </Block>
+            </ClassDeclaration>
+        </Statements>
+    </Program>
+</testresult>

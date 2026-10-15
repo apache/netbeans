@@ -408,6 +408,14 @@ class VersioningPanelController implements ActionListener, PropertyChangeListene
             if (affectsView((FileStatusCache.ChangedEvent) evt.getNewValue())) {
                 applyChange(changedEvent);
             }
+        } else if (FileStatusCache.PROP_FILES_STATUS_CHANGED.equals(evt.getPropertyName())) {
+            @SuppressWarnings("unchecked")
+            List<FileStatusCache.ChangedEvent> changedEvents = (List<FileStatusCache.ChangedEvent>) evt.getNewValue();
+            for (FileStatusCache.ChangedEvent changedEvent : changedEvents) {
+                if (affectsView(changedEvent)) {
+                    applyChange(changedEvent);
+                }
+            }
         }
     }
 
@@ -490,7 +498,7 @@ class VersioningPanelController implements ActionListener, PropertyChangeListene
                 files.add(f);
             }
         }
-        return files.toArray(new File[files.size()]);
+        return files.toArray(new File[0]);
     }
 
     private class RefreshNodesTask implements Runnable {
@@ -513,7 +521,7 @@ class VersioningPanelController implements ActionListener, PropertyChangeListene
                     nodes.add(new GitStatusNodeImpl(new GitLocalFileNode(root, f), mode));
                 }
             }
-            final GitStatusNodeImpl[] nodeArray = nodes.toArray(new GitStatusNodeImpl[nodes.size()]);
+            final GitStatusNodeImpl[] nodeArray = nodes.toArray(new GitStatusNodeImpl[0]);
             final Object modelDataList = fileListComponent.prepareModel(nodeArray);
             final Object modelDataTree = fileTreeComponent.prepareModel(nodeArray);
             Mutex.EVENT.readAccess(new Runnable () {

@@ -23,6 +23,7 @@ import org.netbeans.lib.profiler.heap.*;
 import org.netbeans.modules.profiler.heapwalk.ui.HeapFragmentWalkerUI;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -63,6 +64,7 @@ public class HeapFragmentWalker {
 
     private List<StateListener> stateListeners;
     private int retainedSizesStatus;
+    private final int heapSegment;
 
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 
@@ -72,7 +74,12 @@ public class HeapFragmentWalker {
     }
 
     public HeapFragmentWalker(Heap heapFragment, HeapWalker heapWalker, boolean supportsRetainedSizes) {
+        this(heapFragment, 0, heapWalker, supportsRetainedSizes);
+    }
+
+    HeapFragmentWalker(Heap heapFragment, int heapSegment, HeapWalker heapWalker, boolean supportsRetainedSizes) {
         this.heapFragment = heapFragment;
+        this.heapSegment = heapSegment;
         this.heapWalker = heapWalker;
 
         this.retainedSizesStatus = supportsRetainedSizes ? RETAINED_SIZES_UNKNOWN :
@@ -118,7 +125,7 @@ public class HeapFragmentWalker {
         }
     }
 
-    public synchronized final int getRetainedSizesStatus() {
+    public final synchronized int getRetainedSizesStatus() {
         return retainedSizesStatus;
     }
 
@@ -192,6 +199,10 @@ public class HeapFragmentWalker {
 
     public Heap getHeapFragment() {
         return heapFragment;
+    }
+    
+    public int getHeapSegment() {
+        return heapSegment;
     }
 
     public InstancesController getInstancesController() {
@@ -316,6 +327,25 @@ public class HeapFragmentWalker {
         }
 
         return null;
+    }
+
+    private Integer classLoaderCount;
+    public final int countClassLoaders() {
+        if (this.classLoaderCount != null) {
+            return this.classLoaderCount;
+        }
+        int nclassloaders = 0;
+        JavaClass cl = heapFragment.getJavaClassByName("java.lang.ClassLoader"); // NOI18N
+        if (cl != null) {
+            nclassloaders = cl.getInstancesCount();
+
+            Collection<JavaClass> jcs = cl.getSubClasses();
+
+            for (JavaClass jc : jcs) {
+                nclassloaders += jc.getInstancesCount();
+            }
+        }
+        return this.classLoaderCount = nclassloaders;
     }
 
 

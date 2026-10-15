@@ -306,7 +306,7 @@ public class BrowseFolders extends javax.swing.JPanel implements ExplorerManager
                     l.add(f);
                 }
             }
-            Collections.sort(l, new Comparator<FileObject>() { // #116545
+            l.sort(new Comparator<FileObject>() { // #116545
                 Collator COLL = Collator.getInstance();
                 @Override
                 public int compare(FileObject f1, FileObject f2) {

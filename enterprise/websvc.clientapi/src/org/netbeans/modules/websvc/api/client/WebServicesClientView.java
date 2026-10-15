@@ -41,7 +41,7 @@ import org.netbeans.modules.websvc.client.WebServicesClientViewAccessor;
 public final class WebServicesClientView {
 
 	private WebServicesClientViewImpl impl;
-	private static final Lookup.Result implementations =
+	private static final Lookup.Result<WebServicesClientViewProvider> implementations =
 		Lookup.getDefault().lookupResult(WebServicesClientViewProvider.class);
 
 	static  {
@@ -78,7 +78,7 @@ public final class WebServicesClientView {
 			}
 		}
 
-		WebServicesClientViewProvider impl = (WebServicesClientViewProvider) Lookup.getDefault().lookup(WebServicesClientViewProvider.class);
+		WebServicesClientViewProvider impl = Lookup.getDefault().lookup(WebServicesClientViewProvider.class);
 		if(impl != null) {
 			WebServicesClientView wsv = impl.findWebServicesClientView(f);
 			return wsv;

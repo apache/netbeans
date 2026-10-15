@@ -103,13 +103,6 @@
                     </file>
                 </folder>                
             </folder>
-            <folder name="x-jpql">
-                <folder name="CompletionProviders">
-                    <file name="org-netbeans-modules-j2ee-persistence-jpqleditor-completion-JPQLEditorCodeCompletionProvider.instance">
-                        <attr name="instanceOf" stringvalue="org.netbeans.spi.editor.completion.CompletionProvider"/>
-                    </file>
-                </folder>
-            </folder>
         </folder>
     </folder>
 
@@ -216,9 +209,7 @@
                     <file name="sep-6.instance">
                         <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                         <attr name="position" intvalue="1700"/>
-                    </file> 
-                    
-
+                    </file>
                 </folder>
             </folder>
         </folder>
@@ -228,6 +219,10 @@
         <file name="persistence-1.0.xml" url="persistence-1.0.xml"/>
         <file name="persistence-2.0.xml" url="persistence-2.0.xml"/>
         <file name="persistence-2.1.xml" url="persistence-2.1.xml"/>
+        <file name="persistence-2.2.xml" url="persistence-2.2.xml"/>
+        <file name="persistence-3.0.xml" url="persistence-3.0.xml"/>
+        <file name="persistence-3.1.xml" url="persistence-3.1.xml"/>
+        <file name="persistence-3.2.xml" url="persistence-3.2.xml"/>
     </folder>
 
     <folder name="Plugins">

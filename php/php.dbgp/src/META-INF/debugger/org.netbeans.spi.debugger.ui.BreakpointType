@@ -1,1 +1,2 @@
 org.netbeans.modules.php.dbgp.breakpoints.DbgpFunctionBreakpointType
+org.netbeans.modules.php.dbgp.breakpoints.DbgpExceptionBreakpointType

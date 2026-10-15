@@ -23,7 +23,7 @@ package org.netbeans.modules.profiler.oql.engine.api;
  * OQLException is thrown if OQL execution results in error
  *
  */
-final public class OQLException extends Exception {
+public final class OQLException extends Exception {
     public OQLException(String msg) {
         super(msg);
     }

@@ -20,8 +20,8 @@ METHOD     every(Closure)                             boolean
 METHOD     finalize()                      [PROTECTE  void
 METHOD     find()                                     Object
 METHOD     find(Closure)                              Object
-METHOD     findAll()                                  Collection
-METHOD     findAll(Closure)                           Collection
+METHOD     findAll()                                  List
+METHOD     findAll(Closure)                           List
 METHOD     findIndexOf(Closure)                       int
 METHOD     findIndexOf(int, Closure)                  int
 METHOD     findIndexValues(Closure)                   List
@@ -66,6 +66,7 @@ METHOD     sleep(long, Closure)                       void
 METHOD     split(Closure)                             Collection
 METHOD     sprintf(String, Object)                    String
 METHOD     sprintf(String, Object)                    String
+METHOD     stream()                                   Stream
 METHOD     tap(Closure)                               Object
 METHOD     toString()                      [PUBLIC]   String
 METHOD     use(Class, Closure)                        Object

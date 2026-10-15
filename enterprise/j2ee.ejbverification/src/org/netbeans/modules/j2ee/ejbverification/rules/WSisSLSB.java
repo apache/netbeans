@@ -75,7 +75,10 @@ public final class WSisSLSB {
             return null;
         }
         AnnotationMirror annWebService = JavaUtils.findAnnotation(ctx.getClazz(),
-                EJBAPIAnnotations.WEB_SERVICE);
+                EJBAPIAnnotations.WEB_SERVICE_JAKARTA);
+        if(annWebService == null) {
+            annWebService = JavaUtils.findAnnotation(ctx.getClazz(), EJBAPIAnnotations.WEB_SERVICE);
+        }
 
         if (annWebService != null) {
             ClassTree classTree = hintContext.getInfo().getTrees().getTree(ctx.getClazz());

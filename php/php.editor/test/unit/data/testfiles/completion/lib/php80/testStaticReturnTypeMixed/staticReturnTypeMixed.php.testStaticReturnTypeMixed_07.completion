@@ -1,0 +1,7 @@
+Code completion result for source line:
+::|testStaticReturnTypeTraitStatic(); // trait test7
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     testStaticReturnNullableTypeTr  [STATIC]   TestTrait
+METHOD     testStaticReturnTypeTraitStati  [STATIC]   TestTrait
+METHOD     testStaticReturnUnionTypeTrait  [STATIC]   TestTrait
+CONSTANT   class \TestTrait                [PUBLIC]   Magic Constant

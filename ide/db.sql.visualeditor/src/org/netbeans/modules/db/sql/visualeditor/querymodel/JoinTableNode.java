@@ -18,19 +18,17 @@
  */
 package org.netbeans.modules.db.sql.visualeditor.querymodel;
 
+import java.util.Collection;
+
+import org.netbeans.api.db.sql.support.SQLIdentifiers;
+
+
 /**
  * Represents a generalized table specification in a SQL FROM  clause
  * Example forms:
  *      employees e
  *      INNER JOIN employees e ON e.id = e.id
  */
-
-import org.netbeans.modules.db.sql.visualeditor.querybuilder.QueryBuilderMetaData;
-
-import java.util.Collection;
-
-import org.netbeans.api.db.sql.support.SQLIdentifiers;
-
 public class JoinTableNode implements JoinTable {
 
     // Fields

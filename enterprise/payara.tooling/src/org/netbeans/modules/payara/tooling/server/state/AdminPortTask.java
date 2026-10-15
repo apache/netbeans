@@ -36,10 +36,7 @@ import org.netbeans.modules.payara.tooling.logging.Logger;
  */
 class AdminPortTask extends AbstractTask {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(AdminPortTask.class);
 
@@ -49,10 +46,7 @@ class AdminPortTask extends AbstractTask {
     /** Task name for logging purposes. */
     private final String TASK_NAME = "port-check";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Format time value in miliseconds to be printed as value in seconds
      * and miliseconds
@@ -70,10 +64,7 @@ class AdminPortTask extends AbstractTask {
         return sb.toString();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Socked connecting timeout [ms]. */
     int timeout;
 
@@ -84,10 +75,7 @@ class AdminPortTask extends AbstractTask {
       *  means that start time was not set.*/
     private long tmStart;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of administration port status check.
      * <p/>
@@ -103,10 +91,7 @@ class AdminPortTask extends AbstractTask {
         this.tmStart = -1;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get last command task execution result.
      * <p/>
@@ -116,10 +101,7 @@ class AdminPortTask extends AbstractTask {
         return result;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Build arguments for operationStateChanged method listening for state
      * changes.
@@ -187,10 +169,7 @@ class AdminPortTask extends AbstractTask {
                 stateChangeArgs(ioe.getLocalizedMessage()));
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Runnable run() method                                                  //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Thread main method to be executed.
      * <p/>

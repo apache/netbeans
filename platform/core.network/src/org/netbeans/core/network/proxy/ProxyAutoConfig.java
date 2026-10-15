@@ -96,6 +96,9 @@ public class ProxyAutoConfig {
             } catch (MalformedURLException ex) {
                 LOGGER.log(Level.INFO, "PAC URL is malformed : ", ex);
                 return;
+            } catch (UnknownHostException ex) {
+                LOGGER.log(Level.INFO, "PAC script {0} unavailable, proxy disabled", pacURI);
+                return;
             } catch (IOException ex) {
                 LOGGER.log(Level.INFO, "InputStream for " + pacURI + " throws ", ex);
                 return;

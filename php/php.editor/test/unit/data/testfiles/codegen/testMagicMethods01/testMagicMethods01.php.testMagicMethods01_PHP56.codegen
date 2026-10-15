@@ -1,0 +1,35 @@
+public function __construct(){
+}
+public function __call(string $name, array $arguments){
+}
+public static function __callStatic(string $name, array $arguments){
+}
+public function __clone(){
+}
+public function __debugInfo(){
+}
+public function __destruct(){
+}
+public function __get(string $name){
+}
+public function __invoke(){
+}
+public function __isset(string $name){
+}
+public function __serialize(){
+}
+public function __set(string $name, $value){
+}
+public static function __set_state(array $properties){
+}
+public function __sleep(){
+}
+public function __toString(){
+return "TestMagicMethods[]";
+}
+public function __unserialize(array $data){
+}
+public function __unset(string $name){
+}
+public function __wakeup(){
+}

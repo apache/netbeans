@@ -51,82 +51,235 @@ public class PHPFormatterWrappingTest extends PHPFormatterTestBase {
     }
 
     public void testWrapMethodCallArg05() throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, false);
         reformatFileContents("testfiles/formatting/wrapping/methodCallArg05.php", options);
+    }
+
+    // NETBEANS-3391
+    public void testWrapMethodCallArg05_psr12() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodCallArg05_psr12.php", options);
     }
 
     public void testWrapMethodCallArgWithAnonymousClass01() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, false);
         reformatFileContents("testfiles/formatting/wrapping/methodCallArgWithAnonymousClass01.php", options);
+    }
+
+    // NETBEANS-3391
+    public void testWrapMethodCallArgWithAnonymousClass01_psr12() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodCallArgWithAnonymousClass01_psr12.php", options);
     }
 
     public void testWrapMethodCallArgWithAnonymousClass02() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_NEVER);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, false);
         reformatFileContents("testfiles/formatting/wrapping/methodCallArgWithAnonymousClass02.php", options);
     }
 
+    // NETBEANS-3391
+    public void testWrapMethodCallArgWithAnonymousClass02_psr12() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_NEVER);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodCallArgWithAnonymousClass02_psr12.php", options);
+    }
+
     public void testWrapMethodParams01() throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, false);
         reformatFileContents("testfiles/formatting/wrapping/methodParams01.php", options);
     }
 
-    public void testWrapMethodParams02() throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+    // NETBEANS-3391
+    public void testWrapMethodParams01_psr12() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodParams01_psr12.php", options);
+    }
+
+    public void testWrapMethodParams02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, false);
         reformatFileContents("testfiles/formatting/wrapping/methodParams02.php", options);
     }
 
-    public void testWrapMethodParams03() throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+    // NETBEANS-3391
+    public void testWrapMethodParams02_psr12() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodParams02_psr12.php", options);
+    }
+
+    public void testWrapMethodParams03() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, false);
         reformatFileContents("testfiles/formatting/wrapping/methodParams03.php", options);
     }
 
-    public void testWrapMethodParams04() throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+    // NETBEANS-3391
+    public void testWrapMethodParams03_psr12() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodParams03_psr12.php", options);
+    }
+
+    public void testWrapMethodParams04() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, false);
         reformatFileContents("testfiles/formatting/wrapping/methodParams04.php", options);
     }
 
-    public void testWrapMethodParams05() throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+    // NETBEANS-3391
+    public void testWrapMethodParams04_psr12() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodParams04_psr12.php", options);
+    }
+
+    public void testWrapMethodParams05() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, false);
         reformatFileContents("testfiles/formatting/wrapping/methodParams05.php", options);
     }
 
+    // NETBEANS-3391
+    public void testWrapMethodParams05_psr12() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodParams05_psr12.php", options);
+    }
+
     public void testWrapMethodParams06() throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_NEVER);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, false);
         options.put(FmtOptions.ALIGN_MULTILINE_METHOD_PARAMS, true);
         reformatFileContents("testfiles/formatting/wrapping/methodParams06.php", options);
     }
 
-    public void testWrapMethodParams07() throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+    // NETBEANS-3391
+    public void testWrapMethodParams06_psr12() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_NEVER);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE, true);
+        options.put(FmtOptions.ALIGN_MULTILINE_METHOD_PARAMS, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodParams06_psr12.php", options);
+    }
+
+    public void testWrapMethodParams07() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_NEVER);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, false);
         reformatFileContents("testfiles/formatting/wrapping/methodParams07.php", options);
+    }
+
+    // NETBEANS-3391
+    public void testWrapMethodParams07_psr12() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_NEVER);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodParams07_psr12.php", options);
     }
 
     // #270903
     public void testWrapMethodParams08() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, false);
         reformatFileContents("testfiles/formatting/wrapping/methodParams08.php", options);
+    }
+
+    // NETBEANS-3391
+    public void testWrapMethodParams08_psr12() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodParams08_psr12.php", options);
     }
 
     public void testWrapMethodParams09() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, false);
         reformatFileContents("testfiles/formatting/wrapping/methodParams09.php", options);
+    }
+
+    // NETBEANS-3391
+    public void testWrapMethodParams09_psr12() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodParams09_psr12.php", options);
     }
 
     public void testWrapMethodParams10() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, false);
         reformatFileContents("testfiles/formatting/wrapping/methodParams10.php", options);
+    }
+
+    // NETBEANS-3391
+    public void testWrapMethodParams10_psr12() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodParams10_psr12.php", options);
     }
 
     public void testWrapMethodParams11() throws Exception {
@@ -301,15 +454,37 @@ public class PHPFormatterWrappingTest extends PHPFormatterTestBase {
     }
 
     public void testWrappingFor01() throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.WRAP_FOR, CodeStyle.WrapStyle.WRAP_NEVER);
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, false);
         reformatFileContents("testfiles/formatting/wrapping/for01.php", options);
     }
 
+    // NETBEANS-3391
+    public void testWrappingFor01_psr12() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_FOR, CodeStyle.WrapStyle.WRAP_NEVER);
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/for01_psr12.php", options);
+    }
+
     public void testWrappingFor02() throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.WRAP_FOR, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, false);
         reformatFileContents("testfiles/formatting/wrapping/for02.php", options);
+    }
+
+    // NETBEANS-3391
+    public void testWrappingFor02_psr12() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_FOR, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/for02_psr12.php", options);
     }
 
     public void testWrappingBlock01() throws Exception {
@@ -435,9 +610,20 @@ public class PHPFormatterWrappingTest extends PHPFormatterTestBase {
     }
 
     public void testTernaryOp01() throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.WRAP_TERNARY_OPS, CodeStyle.WrapStyle.WRAP_NEVER);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, false);
         reformatFileContents("testfiles/formatting/wrapping/ternaryOp01.php", options);
+    }
+
+    // NETBEANS-3391
+    public void testTernaryOp01_psr12() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_TERNARY_OPS, CodeStyle.WrapStyle.WRAP_NEVER);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/ternaryOp01_psr12.php", options);
     }
 
     public void testTernaryOp02() throws Exception {
@@ -470,22 +656,86 @@ public class PHPFormatterWrappingTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/wrapping/ternaryOp06.php", options);
     }
 
-    public void testTernaryOp07() throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
-        options.put(FmtOptions.WRAP_TERNARY_OPS, CodeStyle.WrapStyle.WRAP_ALWAYS);
-        reformatFileContents("testfiles/formatting/wrapping/ternaryOp07.php", options);
+    public void testCoalescingOp01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_COALESCING_OPS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        reformatFileContents("testfiles/formatting/wrapping/coalescingOp01a.php", options);
+    }
+
+    public void testCoalescingOp01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_COALESCING_OPS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        reformatFileContents("testfiles/formatting/wrapping/coalescingOp01b.php", options);
+    }
+
+    public void testCoalescingOp02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_COALESCING_OPS, CodeStyle.WrapStyle.WRAP_NEVER);
+        reformatFileContents("testfiles/formatting/wrapping/coalescingOp02a.php", options);
+    }
+
+    public void testCoalescingOp02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_COALESCING_OPS, CodeStyle.WrapStyle.WRAP_NEVER);
+        reformatFileContents("testfiles/formatting/wrapping/coalescingOp02b.php", options);
+    }
+
+    public void testCoalescingOp03a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_COALESCING_OPS, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        reformatFileContents("testfiles/formatting/wrapping/coalescingOp03a.php", options);
+    }
+
+    public void testCoalescingOp03b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_COALESCING_OPS, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        reformatFileContents("testfiles/formatting/wrapping/coalescingOp03b.php", options);
+    }
+
+    public void testCoalescingOp04a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_COALESCING_OPS, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        reformatFileContents("testfiles/formatting/wrapping/coalescingOp04a.php", options);
+    }
+
+    public void testCoalescingOp04b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_COALESCING_OPS, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        reformatFileContents("testfiles/formatting/wrapping/coalescingOp04b.php", options);
     }
 
     public void testIssue189722_01() throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.WRAP_FOR, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, false);
         reformatFileContents("testfiles/formatting/wrapping/issue189722_01.php", options);
     }
 
-    public void testIssue189722_02() throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+    // NETBEANS-3391
+    public void testIssue189722_01_psr12() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.WRAP_FOR, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/issue189722_01_psr12.php", options);
+    }
+
+    public void testIssue189722_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_FOR, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, false);
         reformatFileContents("testfiles/formatting/wrapping/issue189722_02.php", options);
+    }
+
+    // NETBEANS-3391
+    public void testIssue189722_02_psr12() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_FOR, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/issue189722_02_psr12.php", options);
     }
 
     public void testIssue189722_03() throws Exception {
@@ -966,13 +1216,34 @@ public class PHPFormatterWrappingTest extends PHPFormatterTestBase {
     public void testFunctionCallTrailingCommas_01() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, false);
         reformatFileContents("testfiles/formatting/wrapping/functionCallTrailingCommas01.php", options);
+    }
+
+    public void testFunctionCallTrailingCommas_01_psr12() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/functionCallTrailingCommas01_psr12.php", options);
     }
 
     public void testFunctionCallTrailingCommas_02() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, false);
         reformatFileContents("testfiles/formatting/wrapping/functionCallTrailingCommas02.php", options);
+    }
+
+    // NETBEANS-3391
+    public void testFunctionCallTrailingCommas_02_psr12() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/functionCallTrailingCommas02_psr12.php", options);
     }
 
     public void testFunctionCallTrailingCommas_03() throws Exception {
@@ -984,6 +1255,808 @@ public class PHPFormatterWrappingTest extends PHPFormatterTestBase {
     public void testFunctionCallTrailingCommas_04() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_NEVER);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, false);
         reformatFileContents("testfiles/formatting/wrapping/functionCallTrailingCommas04.php", options);
+    }
+
+    public void testFunctionCallTrailingCommas_04_psr12() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_NEVER);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/functionCallTrailingCommas04_psr12.php", options);
+    }
+
+    // PHP 8.0
+    public void testAllowTrailingCommaInParameterListAlways_01() throws Exception {
+        // parameters are on each new line
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE, false);
+        reformatFileContents("testfiles/formatting/wrapping/php80/AllowTrailingCommaInParameterList/declarationsAlways01.php", options);
+    }
+
+    // NETBEANS-3391
+    public void testAllowTrailingCommaInParameterListAlways_01_psr12() throws Exception {
+        // parameters are on each new line
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE, true);
+        reformatFileContents("testfiles/formatting/wrapping/php80/AllowTrailingCommaInParameterList/declarationsAlways01_psr12.php", options);
+    }
+
+    public void testAllowTrailingCommaInParameterListAlways_02() throws Exception {
+        // all parameters are on the same line
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE, false);
+        reformatFileContents("testfiles/formatting/wrapping/php80/AllowTrailingCommaInParameterList/declarationsAlways02.php", options);
+    }
+
+    // NETBEANS-3391
+    public void testAllowTrailingCommaInParameterListAlways_02_psr12() throws Exception {
+        // all parameters are on the same line
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE, true);
+        reformatFileContents("testfiles/formatting/wrapping/php80/AllowTrailingCommaInParameterList/declarationsAlways02_psr12.php", options);
+    }
+
+    public void testAllowTrailingCommaInParameterListWithClosureInArrayAlways_01() throws Exception {
+        // parameters are on each new line
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        reformatFileContents("testfiles/formatting/wrapping/php80/AllowTrailingCommaInParameterList/closureInArrayAlways01.php", options);
+    }
+
+    public void testAllowTrailingCommaInParameterListWithClosureInArrayAlways_02() throws Exception {
+        // all parameters are on the same line
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE, false);
+        reformatFileContents("testfiles/formatting/wrapping/php80/AllowTrailingCommaInParameterList/closureInArrayAlways02.php", options);
+    }
+
+    // NETBEANS-3391
+    public void testAllowTrailingCommaInParameterListWithClosureInArrayAlways_02_psr12() throws Exception {
+        // all parameters are on the same line
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE, true);
+        reformatFileContents("testfiles/formatting/wrapping/php80/AllowTrailingCommaInParameterList/closureInArrayAlways02_psr12.php", options);
+    }
+
+    public void testAllowTrailingCommaInParameterListNever_01() throws Exception {
+        // parameters are on each new line
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_NEVER);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE, false);
+        reformatFileContents("testfiles/formatting/wrapping/php80/AllowTrailingCommaInParameterList/declarationsNever01.php", options);
+    }
+
+    // NETBEANS-3391
+    public void testAllowTrailingCommaInParameterListNever_01_psr12() throws Exception {
+        // parameters are on each new line
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_NEVER);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE, true);
+        reformatFileContents("testfiles/formatting/wrapping/php80/AllowTrailingCommaInParameterList/declarationsNever01_psr12.php", options);
+    }
+
+    public void testAllowTrailingCommaInParameterListNever_02() throws Exception {
+        // all parameters are on each new line
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_NEVER);
+        reformatFileContents("testfiles/formatting/wrapping/php80/AllowTrailingCommaInParameterList/declarationsNever02.php", options);
+    }
+
+    public void testAllowTrailingCommaInParameterListWithClosureInArrayNever_01() throws Exception {
+        // parameters are on each new line
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_NEVER);
+        reformatFileContents("testfiles/formatting/wrapping/php80/AllowTrailingCommaInParameterList/closureInArrayNever01.php", options);
+    }
+
+    public void testAllowTrailingCommaInParameterListWithClosureInArrayNever_02() throws Exception {
+        // all parameters are on the same line
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_NEVER);
+        reformatFileContents("testfiles/formatting/wrapping/php80/AllowTrailingCommaInParameterList/closureInArrayNever02.php", options);
+    }
+
+    // NETBEANS-3391
+    public void testForNoWrapParensNever_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/forNoWrapParensNever_01.php", options);
+    }
+
+    public void testForNoWrapParensNever_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/forNoWrapParensNever_02.php", options);
+    }
+
+    public void testForAfterLeftParenNever_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/forAfterLeftParenNever_01.php", options);
+    }
+
+    public void testForAfterLeftParenNever_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/forAfterLeftParenNever_02.php", options);
+    }
+
+    public void testForRightParenNever_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/forRightParenNever_01.php", options);
+    }
+
+    public void testForRightParenNever_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/forRightParenNever_02.php", options);
+    }
+
+    public void testForBothParensNever_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/forBothParensNever_01.php", options);
+    }
+
+    public void testForBothParensNever_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/forBothParensNever_02.php", options);
+    }
+
+    public void testForNoWrapParensAlways_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_FOR, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/forNoWrapParensAlways_01.php", options);
+    }
+
+    public void testForNoWrapParensAlways_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_FOR, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/forNoWrapParensAlways_02.php", options);
+    }
+
+    public void testForAfterLeftParenAlways_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_FOR, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/forAfterLeftParenAlways_01.php", options);
+    }
+
+    public void testForAfterLeftParenAlways_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_FOR, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/forAfterLeftParenAlways_02.php", options);
+    }
+
+    public void testForRightParenAlways_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_FOR, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/forRightParenAlways_01.php", options);
+    }
+
+    public void testForRightParenAlways_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_FOR, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/forRightParenAlways_02.php", options);
+    }
+
+    public void testForBothParensAlways_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_FOR, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/forBothParensAlways_01.php", options);
+    }
+
+    public void testForBothParensAlways_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_FOR, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/forBothParensAlways_02.php", options);
+    }
+
+    public void testForNoWrapParensIfLong_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_FOR, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/forNoWrapParensIfLong_01.php", options);
+    }
+
+    public void testForNoWrapParensIfLong_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_FOR, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/forNoWrapParensIfLong_02.php", options);
+    }
+
+    public void testForAfterLeftParenIfLong_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_FOR, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/forAfterLeftParenIfLong_01.php", options);
+    }
+
+    public void testForAfterLeftParenIfLong_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_FOR, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/forAfterLeftParenIfLong_02.php", options);
+    }
+
+    public void testForRightParenIfLong_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_FOR, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/forRightParenIfLong_01.php", options);
+    }
+
+    public void testForRightParenIfLong_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_FOR, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/forRightParenIfLong_02.php", options);
+    }
+
+    public void testForBothParensIfLong_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_FOR, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/forBothParensIfLong_01.php", options);
+    }
+
+    public void testForBothParensIfLong_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_FOR, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        options.put(FmtOptions.WRAP_FOR_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_FOR_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/forBothParensIfLong_02.php", options);
+    }
+
+    public void testMethodCallArgsNoWrapParensNever_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/methodCallArgsNoWrapParensNever_01.php", options);
+    }
+
+    public void testMethodCallArgsNoWrapParensNever_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/methodCallArgsNoWrapParensNever_02.php", options);
+    }
+
+    public void testMethodCallArgsAfterLeftParenNever_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/methodCallArgsAfterLeftParenNever_01.php", options);
+    }
+
+    public void testMethodCallArgsAfterLeftParenNever_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/methodCallArgsAfterLeftParenNever_02.php", options);
+    }
+
+    public void testMethodCallArgsRightParenNever_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodCallArgsRightParenNever_01.php", options);
+    }
+
+    public void testMethodCallArgsRightParenNever_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodCallArgsRightParenNever_02.php", options);
+    }
+
+    public void testMethodCallArgsBothParensNever_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodCallArgsBothParensNever_01.php", options);
+    }
+
+    public void testMethodCallArgsBothParensNever_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodCallArgsBothParensNever_02.php", options);
+    }
+
+    public void testMethodCallArgsNoWrapParensAlways_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/methodCallArgsNoWrapParensAlways_01.php", options);
+    }
+
+    public void testMethodCallArgsNoWrapParensAlways_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/methodCallArgsNoWrapParensAlways_02.php", options);
+    }
+
+    public void testMethodCallArgsAfterLeftParenAlways_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/methodCallArgsAfterLeftParenAlways_01.php", options);
+    }
+
+    public void testMethodCallArgsAfterLeftParenAlways_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/methodCallArgsAfterLeftParenAlways_02.php", options);
+    }
+
+    public void testMethodCallArgsRightParenAlways_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodCallArgsRightParenAlways_01.php", options);
+    }
+
+    public void testMethodCallArgsRightParenAlways_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodCallArgsRightParenAlways_02.php", options);
+    }
+
+    public void testMethodCallArgsBothParensAlways_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodCallArgsBothParensAlways_01.php", options);
+    }
+
+    public void testMethodCallArgsBothParensAlways_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodCallArgsBothParensAlways_02.php", options);
+    }
+
+    public void testMethodCallArgsNoWrapParensIfLong_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/methodCallArgsNoWrapParensIfLong_01.php", options);
+    }
+
+    public void testMethodCallArgsNoWrapParensIfLong_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/methodCallArgsNoWrapParensIfLong_02.php", options);
+    }
+
+    public void testMethodCallArgsAfterLeftParenIfLong_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/methodCallArgsAfterLeftParenIfLong_01.php", options);
+    }
+
+    public void testMethodCallArgsAfterLeftParenIfLong_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/methodCallArgsAfterLeftParenIfLong_02.php", options);
+    }
+
+    public void testMethodCallArgsRightParenIfLong_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodCallArgsRightParenIfLong_01.php", options);
+    }
+
+    public void testMethodCallArgsRightParenIfLong_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodCallArgsRightParenIfLong_02.php", options);
+    }
+
+    public void testMethodCallArgsBothParensIfLong_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodCallArgsBothParensIfLong_01.php", options);
+    }
+
+    public void testMethodCallArgsBothParensIfLong_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodCallArgsBothParensIfLong_02.php", options);
+    }
+
+    public void testMethodParamsNoWrapParensNever_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsNoWrapParensNever_01.php", options);
+    }
+
+    public void testMethodParamsNoWrapParensNever_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsNoWrapParensNever_02.php", options);
+    }
+
+    public void testMethodParamsAfterLeftParenNever_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsAfterLeftParenNever_01.php", options);
+    }
+
+    public void testMethodParamsAfterLeftParenNever_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsAfterLeftParenNever_02.php", options);
+    }
+
+    public void testMethodParamsRightParenNever_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsRightParenNever_01.php", options);
+    }
+
+    public void testMethodParamsRightParenNever_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsRightParenNever_02.php", options);
+    }
+
+    public void testMethodParamsBothParensNever_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsBothParensNever_01.php", options);
+    }
+
+    public void testMethodParamsBothParensNever_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsBothParensNever_02.php", options);
+    }
+
+    public void testMethodParamsNoWrapParensAlways_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsNoWrapParensAlways_01.php", options);
+    }
+
+    public void testMethodParamsNoWrapParensAlways_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsNoWrapParensAlways_02.php", options);
+    }
+
+    public void testMethodParamsAfterLeftParenAlways_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsAfterLeftParenAlways_01.php", options);
+    }
+
+    public void testMethodParamsAfterLeftParenAlways_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsAfterLeftParenAlways_02.php", options);
+    }
+
+    public void testMethodParamsRightParenAlways_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsRightParenAlways_01.php", options);
+    }
+
+    public void testMethodParamsRightParenAlways_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsRightParenAlways_02.php", options);
+    }
+
+    public void testMethodParamsBothParensAlways_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsBothParensAlways_01.php", options);
+    }
+
+    public void testMethodParamsBothParensAlways_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsBothParensAlways_02.php", options);
+    }
+
+    public void testMethodParamsNoWrapParensIfLong_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsNoWrapParensIfLong_01.php", options);
+    }
+
+    public void testMethodParamsNoWrapParensIfLong_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsNoWrapParensIfLong_02.php", options);
+    }
+
+    public void testMethodParamsAfterLeftParenIfLong_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsAfterLeftParenIfLong_01.php", options);
+    }
+
+    public void testMethodParamsAfterLeftParenIfLong_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, false);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsAfterLeftParenIfLong_02.php", options);
+    }
+
+    public void testMethodParamsRightParenIfLong_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsRightParenIfLong_01.php", options);
+    }
+
+    public void testMethodParamsRightParenIfLong_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, false);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsRightParenIfLong_02.php", options);
+    }
+
+    public void testMethodParamsBothParensIfLong_01() throws Exception {
+        // no newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsBothParensIfLong_01.php", options);
+    }
+
+    public void testMethodParamsBothParensIfLong_02() throws Exception {
+        // has newline
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_IF_LONG);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsBothParensIfLong_02.php", options);
+    }
+
+    public void testMethodParamsKeepRightParenAndLeftBraceOnTheSameLine_01_Newline() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE, true);
+        options.put(FmtOptions.METHOD_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsKeepRightParenAndLeftBraceOnTheSameLine_01_newline.php", options);
+    }
+
+    public void testMethodParamsKeepRightParenAndLeftBraceOnTheSameLine_01_SameLine() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE, true);
+        options.put(FmtOptions.METHOD_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.SAME_LINE);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsKeepRightParenAndLeftBraceOnTheSameLine_01_sameline.php", options);
+    }
+
+    public void testMethodParamsKeepRightParenAndLeftBraceOnTheSameLine_02_Newline() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE, true);
+        options.put(FmtOptions.METHOD_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsKeepRightParenAndLeftBraceOnTheSameLine_02_newline.php", options);
+    }
+
+    public void testMethodParamsKeepRightParenAndLeftBraceOnTheSameLine_02_SameLine() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE, true);
+        options.put(FmtOptions.METHOD_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.SAME_LINE);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsKeepRightParenAndLeftBraceOnTheSameLine_02_sameline.php", options);
+    }
+
+    public void testMethodParamsKeepRightParenAndLeftBraceOnTheSameLine_03_Newline() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE, true);
+        options.put(FmtOptions.METHOD_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsKeepRightParenAndLeftBraceOnTheSameLine_03_newline.php", options);
+    }
+
+    public void testMethodParamsKeepRightParenAndLeftBraceOnTheSameLine_03_SameLine() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_AFTER_LEFT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_RIGHT_PAREN, true);
+        options.put(FmtOptions.WRAP_METHOD_PARAMS_KEEP_PAREN_AND_BRACE_ON_THE_SAME_LINE, true);
+        options.put(FmtOptions.METHOD_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.SAME_LINE);
+        reformatFileContents("testfiles/formatting/wrapping/methodParamsKeepRightParenAndLeftBraceOnTheSameLine_03_sameline.php", options);
     }
 }

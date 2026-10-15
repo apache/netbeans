@@ -525,7 +525,7 @@ public class TreeModelRoot {
             Object actOn;
             node = node.getParentNode();
             if (node == null) {
-                actOn = new Integer(0);
+                actOn = Integer.valueOf(0);
             } else {
                 Children ch = node.getChildren();
                 if (ch instanceof TreeModelNode.TreeModelChildren) {

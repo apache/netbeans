@@ -24,7 +24,6 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
-import org.netbeans.modules.maven.api.NbMavenProject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.test.TestFileUtils;
 
@@ -61,16 +60,19 @@ public class MavenProjectGrammarTest extends NbTestCase {
         gid = "o${gid1}apa${gid2}t";
         gidProp = "rg.";
         String gidProp2 = "che.wicke";             
-        TestFileUtils.writeFile(pom,
-                "<project><modelVersion>4.0.0</modelVersion>"
-                        + "<groupId>" + gid + "</groupId>"
-                        + "<artifactId>prj</artifactId>"
-                        + "<version>1.0</version>"
-                        + "<properties>"
-                        + "<gid1>" + gidProp + "</gid1>\n" 
-                        + "<gid2>" + gidProp2 + "</gid2>\n" 
-                        + "</properties>"
-                        + "</project>");
+        TestFileUtils.writeFile(pom, 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>%s</groupId>
+                    <artifactId>prj</artifactId>
+                    <version>1.0</version>
+                    <properties>
+                        <gid1>%s</gid1>
+                        <gid2>%s</gid2>
+                    </properties>
+                </project>
+                """.formatted(gid, gidProp, gidProp2));
         assertEquals("o" + gidProp + "apa" + gidProp2 + "t", MavenProjectGrammar.getNodeValue(gid, getProject(pom).getProjectWatcher()));
 
         pom = new File(getWorkDir() + "4", "pom.xml"); 
@@ -80,15 +82,18 @@ public class MavenProjectGrammarTest extends NbTestCase {
     }
 
     protected void writeFile(File pom, String gid, String gidProp) throws IOException {
-        TestFileUtils.writeFile(pom,
-                "<project><modelVersion>4.0.0</modelVersion>"
-                        + "<groupId>" + gid + "</groupId>"
-                        + "<artifactId>prj</artifactId>"
-                        + "<version>1.0</version>"
-                        + "<properties>"
-                        + "<gid>" + gidProp + "</gid>\n" 
-                        + "</properties>"
-                        + "</project>");
+        TestFileUtils.writeFile(pom, 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>%s</groupId>
+                    <artifactId>prj</artifactId>
+                    <version>1.0</version>
+                    <properties>
+                        <gid>%s</gid>
+                    </properties>
+                </project>
+                """.formatted(gid, gidProp));
     }
 
     protected static NbMavenProjectImpl getProject(File pom) {

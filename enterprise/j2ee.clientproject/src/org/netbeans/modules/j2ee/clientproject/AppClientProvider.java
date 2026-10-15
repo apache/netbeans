@@ -30,6 +30,8 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -49,6 +51,7 @@ import org.netbeans.modules.j2ee.dd.spi.client.AppClientMetadataModelFactory;
 import org.netbeans.modules.j2ee.dd.spi.webservices.WebservicesMetadataModelFactory;
 import org.netbeans.modules.j2ee.deployment.common.api.EjbChangeDescriptor;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.Deployment;
+import org.netbeans.modules.j2ee.deployment.devmodules.api.InstanceRemovedException;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.ModuleChangeReporter;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.ResourceChangeReporter;
@@ -138,10 +141,12 @@ public final class AppClientProvider extends J2eeModuleProvider
         return getFile(AppClientProjectProperties.META_INF);
     }
     
+    @Override
     public File getResourceDirectory() {
         return getFile(AppClientProjectProperties.RESOURCE_DIR);
     }
     
+    @Override
     public File getDeploymentConfigurationFile(String name) {
         String path = getConfigSupport().getContentRelativePath(name);
         if (path == null) {
@@ -164,15 +169,15 @@ public final class AppClientProvider extends J2eeModuleProvider
                     FileUtil.toFile(project.getProjectDirectory()), project.evaluator(), new String[]{"javac.classpath"}));
         List<File> files = new ArrayList<File>();
         for (FileObject fo : cp.getRoots()) {
-            fo = FileUtil.getArchiveFile(fo);
-            if (fo == null) {
+            if (FileUtil.getArchiveFile(fo) == null) {
                 continue;
             }
-            files.add(FileUtil.toFile(fo));
+            files.add(FileUtil.toFile(FileUtil.getArchiveFile(fo)));
         }
-        return files.toArray(new File[files.size()]);
+        return files.toArray(new File[0]);
     }
 
+    @Override
     public FileObject getArchive() {
         return getFileObject(AppClientProjectProperties.DIST_JAR);
     }
@@ -194,6 +199,7 @@ public final class AppClientProvider extends J2eeModuleProvider
         return null;
     }
     
+    @Override
     public synchronized J2eeModule getJ2eeModule () {
         if (j2eeModule == null) {
             j2eeModule = J2eeModuleFactory.createJ2eeModule(this);
@@ -201,6 +207,7 @@ public final class AppClientProvider extends J2eeModuleProvider
         return j2eeModule;
     }
     
+    @Override
     public ModuleChangeReporter getModuleChangeReporter() {
         return this;
     }
@@ -220,15 +227,18 @@ public final class AppClientProvider extends J2eeModuleProvider
         return helper.getStandardPropertyEvaluator().getProperty(AppClientProjectProperties.J2EE_SERVER_INSTANCE);
     }
     
+    @Override
     public void setServerInstanceID(String serverInstanceID) {
         assert serverInstanceID != null : "passed serverInstanceID cannot be null";
         AppClientProjectProperties.setServerInstance(project, helper, serverInstanceID);
     }
     
+    @Override
     public Iterator<J2eeModule.RootedEntry> getArchiveContents() throws IOException {
         return new IT(getContentDirectory());
     }
     
+    @Override
     public FileObject getContentDirectory() {
         return getFileObject(ProjectProperties.BUILD_CLASSES_DIR);
     }
@@ -249,6 +259,7 @@ public final class AppClientProvider extends J2eeModuleProvider
 //        return null;
 //    }
     
+    @Override
     public <T> MetadataModel<T> getMetadataModel(Class<T> type) {
         if (type == AppClientMetadata.class) {
             @SuppressWarnings("unchecked") // NOI18N
@@ -324,38 +335,67 @@ public final class AppClientProvider extends J2eeModuleProvider
         return metaInfFo.getFileObject(WebServicesClientConstants.WEBSERVICES_DD, "xml"); // NOI18N
     }
     
+    @Override
     public EjbChangeDescriptor getEjbChanges(long timestamp) {
         return this;
     }
     
+    @Override
     public J2eeModule.Type getModuleType() {
         return J2eeModule.Type.CAR;
     }
     
+    @Override
     public String getModuleVersion() {
         Profile p = Profile.fromPropertiesString(project.evaluator().getProperty(AppClientProjectProperties.J2EE_PLATFORM));
         if (p == null) {
-            p = Profile.JAVA_EE_6_FULL;
-        }
-        if (Profile.JAVA_EE_5.equals(p)) {
-            return AppClient.VERSION_5_0;
-        } else if (Profile.J2EE_14.equals(p)) {
-            return AppClient.VERSION_1_4;
-        } else {
             return AppClient.VERSION_6_0;
+        }
+        switch (p) {
+            case JAKARTA_EE_11_FULL:
+            case JAKARTA_EE_11_WEB:
+                return AppClient.VERSION_11_0;
+            case JAKARTA_EE_10_FULL:
+            case JAKARTA_EE_10_WEB:
+                return AppClient.VERSION_10_0;
+            case JAKARTA_EE_9_1_FULL:
+            case JAKARTA_EE_9_1_WEB:
+            case JAKARTA_EE_9_FULL:
+            case JAKARTA_EE_9_WEB:
+                return AppClient.VERSION_9_0;
+            case JAKARTA_EE_8_FULL:
+            case JAKARTA_EE_8_WEB:
+            case JAVA_EE_8_FULL:
+            case JAVA_EE_8_WEB:
+                return AppClient.VERSION_8_0;
+            case JAVA_EE_7_FULL:
+            case JAVA_EE_7_WEB:
+                return AppClient.VERSION_7_0;
+            case JAVA_EE_5:
+                return AppClient.VERSION_5_0;
+            case J2EE_14:
+                return AppClient.VERSION_1_4;
+            default:
+                return AppClient.VERSION_6_0;
         }
     }
     
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(AppClient.PROPERTY_VERSION)) {
             String oldVersion = (String) evt.getOldValue();
             String newVersion = (String) evt.getNewValue();
             getPropertyChangeSupport().firePropertyChange(J2eeModule.PROP_MODULE_VERSION, oldVersion, newVersion);
         } else if (evt.getPropertyName().equals(AppClientProjectProperties.J2EE_SERVER_INSTANCE)) {
+            try {
             Deployment d = Deployment.getDefault();
-            String oldServerID = evt.getOldValue() == null ? null : d.getServerID((String) evt.getOldValue());
-            String newServerID = evt.getNewValue() == null ? null : d.getServerID((String) evt.getNewValue());
+            String oldServerID = evt.getOldValue() == null ? null : d.getServerInstance((String) evt.getOldValue()).getServerID();
+            String newServerID = evt.getNewValue() == null ? null : d.getServerInstance((String) evt.getNewValue()).getServerID();
             fireServerChange(oldServerID, newServerID);
+            } catch (InstanceRemovedException ie) {
+                // noop ignore
+                Logger.getLogger(AppClientProvider.class.getName()).log(Level.FINE, null, ie); //NO18N
+            }
         }  else if (AppClientProjectProperties.RESOURCE_DIR.equals(evt.getPropertyName())) {
             String oldValue = (String)evt.getOldValue();
             String newValue = (String)evt.getNewValue();
@@ -366,12 +406,14 @@ public final class AppClientProvider extends J2eeModuleProvider
         }
     }
     
+    @Override
     public String getUrl() {
         EditableProperties ep =  helper.getProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH);
         String name = ep.getProperty(AppClientProjectProperties.JAR_NAME);
         return name == null ? "" : ('/' + name);
     }
     
+    @Override
     public boolean isManifestChanged(long timestamp) {
         return false;
     }
@@ -380,10 +422,12 @@ public final class AppClientProvider extends J2eeModuleProvider
         throw new UnsupportedOperationException("Cannot customize URL of Application Client module"); // NOI18N
     }
     
+    @Override
     public boolean ejbsChanged() {
         return false;
     }
     
+    @Override
     public String[] getChangedEjbs() {
         return new String[] {};
     }
@@ -449,11 +493,13 @@ public final class AppClientProvider extends J2eeModuleProvider
         }
     }
 
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         // XXX need to listen on the module version
         getPropertyChangeSupport().addPropertyChangeListener(listener);
     }
 
+    @Override
     public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
         if (propertyChangeSupport == null) {
             return;
@@ -470,6 +516,7 @@ public final class AppClientProvider extends J2eeModuleProvider
 
     private class AppClientResourceChangeReporter implements ResourceChangeReporterImplementation {
 
+        @Override
         public boolean isServerResourceChanged(long lastDeploy) {
             File resDir = getResourceDirectory();
             if (resDir != null && resDir.exists() && resDir.isDirectory()) {
@@ -487,8 +534,7 @@ public final class AppClientProvider extends J2eeModuleProvider
     }
 
     private static class IT implements Iterator<J2eeModule.RootedEntry> {
-        
-        Enumeration ch;
+        Enumeration<? extends FileObject> ch;
         FileObject root;
         
         private IT(FileObject f) {
@@ -496,15 +542,18 @@ public final class AppClientProvider extends J2eeModuleProvider
             this.root = f;
         }
         
+        @Override
         public boolean hasNext() {
             return ch.hasMoreElements();
         }
         
+        @Override
         public J2eeModule.RootedEntry next() {
             FileObject f = (FileObject) ch.nextElement();
             return new FSRootRE(root, f);
         }
         
+        @Override
         public void remove() {
             throw new UnsupportedOperationException();
         }
@@ -521,10 +570,12 @@ public final class AppClientProvider extends J2eeModuleProvider
             this.root = root;
         }
         
+        @Override
         public FileObject getFileObject() {
             return f;
         }
         
+        @Override
         public String getRelativePath() {
             return FileUtil.getRelativePath(root, f);
         }

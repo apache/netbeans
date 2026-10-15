@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN" "http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd">
+<fontscolors>
+    <fontcolor name='abbreviation'/>
+    <fontcolor name='anchorlink' default='link'/>
+    <fontcolor name='autolink' default='link'/>
+    <fontcolor name='blockquote' default='comment'/>
+    <fontcolor name='bulletlist' default='keyword' foreColor="ff339900"/>
+    <fontcolor name='code' default='comment'/>
+    <fontcolor name='definition_list' default='keyword'/>
+    <fontcolor name='definition_term' default='keyword'/>
+    <fontcolor name='definition' default='keyword'/>
+    <fontcolor name='emph'><font style="italic"/></fontcolor>
+    <fontcolor name='expimage' default='image'/>
+    <fontcolor name='explink' default='link'/>
+    <fontcolor name='header' default='keyword' foreColor="ff990099"><font style="bold"/></fontcolor>
+    <fontcolor name='header1' default='header'/>
+    <fontcolor name='header2' default='header' foreColor="ff900090"/>
+    <fontcolor name='header3' default='header' foreColor="ff800080"/>
+    <fontcolor name='header4' default='header' foreColor="ff780078"/>
+    <fontcolor name='header5' default='header' foreColor="ff760076"/>
+    <fontcolor name='header6' default='header' foreColor="ff740074"/>
+    <fontcolor name='horizontalrule' default='separator'/>
+    <fontcolor name='htmlblock' default='string'/>
+    <fontcolor name='image' default='keyword'/>
+    <fontcolor name='inlinehtml' default='keyword'/>
+    <fontcolor name='link' default='keyword'/>
+    <fontcolor name='listitem' default='keyword'/>
+    <fontcolor name='maillink' default='link'/>
+    <fontcolor name='orderedlist' default='keyword'  foreColor="ff339900"/>
+    <fontcolor name='plain'/>
+    <fontcolor name='quoted' default='keyword'/>
+    <fontcolor name='ref_image' default='image'/>
+    <fontcolor name='ref_link' default='link'/>
+    <fontcolor name='reference' default='keyword'/>
+    <fontcolor name='strikethrough' strikeThrough="black"/>
+    <fontcolor name='strong'><font style="bold"/></fontcolor>
+    <fontcolor name='table' default='string'/>
+    <fontcolor name='verbatim' default='comment'/>
+    <fontcolor name='whitespace' default='whitespace'/>
+    <fontcolor name='wikilink' default='link'/>
+</fontscolors>

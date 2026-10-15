@@ -43,11 +43,9 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 
 import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementUtilities;
 import org.netbeans.api.java.source.GeneratorUtilities;
@@ -58,7 +56,6 @@ import org.netbeans.editor.GuardedException;
 import org.netbeans.editor.Utilities;
 import org.openide.DialogDescriptor;
 import org.openide.ErrorManager;
-import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 
 /**
@@ -170,7 +167,7 @@ public class GeneratorUtils {
         for (Tree member : members) {
             Tree dup = checkDuplicates(wc, clazz, member);
             if (dup != null) {
-                throw new DuplicateMemberException((int) wc.getTrees().getSourcePositions().getStartPosition(wc.getCompilationUnit(), dup));
+                throw new DuplicateMemberException((int) wc.getTrees().getSourcePositions().getStartPosition(dup));
             }
         }
         return GeneratorUtilities.get(wc).insertClassMembers(clazz, members, offset);

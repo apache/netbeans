@@ -1,0 +1,3 @@
+    private int $|>MARK_OCCURRENCES:privateField<| = 3;
+        $example = new Example()->|>MARK_OCCURRENCES:privateField<|;
+        $example = new Example()->returnThis()?->|>MARK_OCCURRENCES:priva^teField<|;

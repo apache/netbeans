@@ -124,13 +124,13 @@ public class J2SESampleProjectGenerator {
     
     private static FileObject createProjectFolder (File projectFolder) throws IOException {
         FileObject projLoc;
-        Stack nameStack = new Stack ();
+        Stack<String> nameStack = new Stack<>();
         while ((projLoc = FileUtil.toFileObject(projectFolder)) == null) {            
             nameStack.push(projectFolder.getName());
             projectFolder = projectFolder.getParentFile();            
         }
         while (!nameStack.empty()) {
-            projLoc = projLoc.createFolder ((String)nameStack.pop());
+            projLoc = projLoc.createFolder(nameStack.pop());
             assert projLoc != null;
         }
         return projLoc;

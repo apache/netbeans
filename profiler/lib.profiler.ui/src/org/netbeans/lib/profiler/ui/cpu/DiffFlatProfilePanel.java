@@ -50,7 +50,7 @@ public class DiffFlatProfilePanel extends SnapshotFlatProfilePanel {
             case 0:
                 return flatProfileContainer.getMethodNameAtRow(row);
             case 1:
-                return new Float(flatProfileContainer.getTimeInMcs0AtRow(row));
+                return (float)flatProfileContainer.getTimeInMcs0AtRow(row);
             case 2:
                 value = flatProfileContainer.getTimeInMcs0AtRow(row);
                 return (value > 0 ? "+" : "") + StringUtils.mcsTimeToString(value) + " ms"; // NOI18N

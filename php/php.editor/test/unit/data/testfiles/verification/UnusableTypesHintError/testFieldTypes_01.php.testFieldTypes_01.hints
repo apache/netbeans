@@ -1,0 +1,12 @@
+    public callable $callbleType; // error, Unusable type
+           --------
+HINT:"callable" cannot be used as a property type.
+    public void $voidType; // error, Unusable type
+           ----
+HINT:"void" cannot be used as a property type.
+    public callable $callbleType; // error, Unusable type
+           --------
+HINT:"callable" cannot be used as a property type.
+    public void $voidType; // error, Unusable type
+           ----
+HINT:"void" cannot be used as a property type.

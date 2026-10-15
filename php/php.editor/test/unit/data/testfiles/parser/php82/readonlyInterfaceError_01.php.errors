@@ -1,0 +1,7 @@
+[[824,833]-Syntax error
+ unexpected:	interface
+ after:	readonly
+ expected:	class, abstract, final, readonly] 824-833:Syntax error
+ unexpected:	interface
+ after:	readonly
+ expected:	class, abstract, final, readonly

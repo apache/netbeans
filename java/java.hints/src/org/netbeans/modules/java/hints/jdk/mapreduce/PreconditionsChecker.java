@@ -223,11 +223,15 @@ public class PreconditionsChecker {
         }
 
         private boolean isLocalVariable(IdentifierTree id, Trees trees) {
-            Element el = trees.getElement(TreePath.getPath(treePath, id));
-            if (el != null) {
-                return el.getKind() == ElementKind.LOCAL_VARIABLE || el.getKind() == ElementKind.PARAMETER;
+            TreePath path = TreePath.getPath(treePath, id);
+            if (path == null) {
+                return false;
             }
-            return false;
+            Element el = trees.getElement(path);
+            if (el == null) {
+                return false;
+            }
+            return el.getKind() == ElementKind.LOCAL_VARIABLE || el.getKind() == ElementKind.PARAMETER;
         }
     }
 

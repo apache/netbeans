@@ -40,7 +40,7 @@ public abstract class CatalogComponentImpl extends AbstractDocumentComponent<Cat
         return (CatalogModelImpl) super.getModel();
     }
 
-    static public Element createElementNS(CatalogModel model, CatalogQNames rq) {
+    public static Element createElementNS(CatalogModel model, CatalogQNames rq) {
         return model.getDocument().createElementNS(rq.getQName().getNamespaceURI(), rq.getQualifiedName());
     }
     

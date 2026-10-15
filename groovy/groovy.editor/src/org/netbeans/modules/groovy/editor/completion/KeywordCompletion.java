@@ -20,7 +20,7 @@
 package org.netbeans.modules.groovy.editor.completion;
 
 import java.util.EnumSet;
-import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
@@ -47,7 +47,7 @@ class KeywordCompletion extends BaseCompletion {
 
 
     @Override
-    public boolean complete(List<CompletionProposal> proposals, CompletionContext request, int anchor) {
+    public boolean complete(Map<Object, CompletionProposal> proposals, CompletionContext request, int anchor) {
         this.request = request;
 
         LOG.log(Level.FINEST, "-> completeKeywords"); // NOI18N
@@ -82,7 +82,19 @@ class KeywordCompletion extends BaseCompletion {
         // filter-out keywords in a step-by-step approach
         filterPackageStatement(havePackage);
         filterPrefix(prefix);
-        filterLocation(request.location);
+        if (keywords.contains(GroovyKeyword.KEYWORD_package) && SpockUtils.isFirstStatement(request)) {
+            // This is a hack for offering package keyword in the script as the first statement.
+            // The current implementation use INSIDE_LOCATION for the top context in script, which is OK, 
+            // but package is only above class keyword and will not be displayed here. 
+            // This covers case, when you have empty file and you want to write package as the first. 
+            filterLocation(request.location);
+            if (!keywords.contains(GroovyKeyword.KEYWORD_package)) {
+                // the package is only above class keyword, but on the first position we should offer it
+                keywords.add(GroovyKeyword.KEYWORD_package);
+            }
+        } else {
+            filterLocation(request.location);
+        }
         filterClassInterfaceOrdering(request.context);
         filterMethodDefinitions(request.context);
         filterKeywordsNextToEachOther(request.context);
@@ -91,7 +103,8 @@ class KeywordCompletion extends BaseCompletion {
 
         for (GroovyKeyword groovyKeyword : keywords) {
             LOG.log(Level.FINEST, "Adding keyword proposal : {0}", groovyKeyword.getName()); // NOI18N
-            proposals.add(new CompletionItem.KeywordItem(groovyKeyword.getName(), null, anchor, request.getParserResult(), groovyKeyword.isGroovyKeyword()));
+            proposals.put("keyword:" + groovyKeyword.getName(), 
+                    new CompletionItem.KeywordItem(groovyKeyword.getName(), null, anchor, request.getParserResult(), groovyKeyword.isGroovyKeyword()));
         }
 
         return true;

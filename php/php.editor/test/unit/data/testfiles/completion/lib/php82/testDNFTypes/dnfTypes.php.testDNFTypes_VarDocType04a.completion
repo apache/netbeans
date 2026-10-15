@@ -1,0 +1,9 @@
+Code completion result for source line:
+$vardoc4->|publicXField; // (ClassX&ClassY)|null
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicStaticXMethod()           [STATIC]   ClassX
+METHOD     publicStaticYMethod()           [STATIC]   ClassY
+METHOD     publicXMethod()                 [PUBLIC]   ClassX
+METHOD     publicYMethod()                 [PUBLIC]   ClassY
+VARIABLE   (ClassY&ClassZ)|ClassX publicX  [PUBLIC]   ClassX
+VARIABLE   (ClassY&ClassZ)|ClassX publicY  [PUBLIC]   ClassY

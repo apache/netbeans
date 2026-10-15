@@ -44,19 +44,19 @@ import java.util.concurrent.Callable;
  * &lt;/folder&gt;</pre>
  *
  * where:
- * <br/><b>controller</b> should be an instance of <code>OptionsPanelController</code>
- * <br/><b>displayName</b> should be a localized string for your tab display name
- * <br/><b>toolTip</b> should be a localized string for your tab tool tip
+ * <br><b>controller</b> should be an instance of <code>OptionsPanelController</code>
+ * <br><b>displayName</b> should be a localized string for your tab display name
+ * <br><b>toolTip</b> should be a localized string for your tab tool tip
  * <span class="nonnormative"><strong>Currently unused.</strong></span>
- * <br/><b>keywords</b> should be localized keywords list, separated by comma in Bundle, for quickserach purposes
- * <br/><b>keywordsCategory</b> should be relative path to your panel inside Options dialog
- * <br/><br/>
+ * <br><b>keywords</b> should be localized keywords list, separated by comma in Bundle, for quickserach purposes
+ * <br><b>keywordsCategory</b> should be relative path to your panel inside Options dialog
+ * <br><br>
  * No explicit sorting recognized (may be sorted e.g. by display name).
  *
  * <p><b>Related documentation</b>
  *
  * <ul>
- * <li><a href="http://platform.netbeans.org/tutorials/nbm-options.html">NetBeans Options Window Module Tutorial</a>
+ * <li><a href="https://netbeans.apache.org/tutorials/nbm-options.html">NetBeans Options Window Module Tutorial</a>
  * </ul>
  *
  * @see OptionsCategory

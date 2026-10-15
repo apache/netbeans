@@ -1,0 +1,11 @@
+Code completion result for source line:
+$param = |
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Foo                             [PUBLIC]   newInInitializersMethodTyping04.php
+CLASS      Test                            [PUBLIC]   newInInitializersMethodTyping04.php
+KEYWORD    parent::                                   null
+KEYWORD    self::                                     null
+KEYWORD    static::                                   null
+------------------------------------
+KEYWORD    array                                      null
+KEYWORD    new                                        null

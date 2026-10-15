@@ -1,0 +1,8 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = 'test.App'
+
+run {
+    jvmArgs '-Dtest.foo=bar', '-Dtest.bar=foo'
+}

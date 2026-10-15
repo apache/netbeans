@@ -1,0 +1,437 @@
+<testresult testFile='gh4684.php'>
+    <scanner>
+        <token id='T_CLASS' start='815' end='820'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='821' end='826'>
+            <text>Test1</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='827' end='828'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='833' end='839'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='840' end='846'>
+            <text>$test2</text>
+        </token>
+        <token id='T_EQUAL' start='847' end='848'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='849' end='856'>
+            <text>&apos;Test2&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='856' end='857'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='858' end='859'>
+            <text>}</text>
+        </token>
+        <token id='T_CLASS' start='861' end='866'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='867' end='872'>
+            <text>Test2</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='873' end='874'>
+            <text>{</text>
+        </token>
+        <token id='T_CONST' start='879' end='884'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='885' end='893'>
+            <text>CONSTANT</text>
+        </token>
+        <token id='T_EQUAL' start='894' end='895'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='896' end='897'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='897' end='904'>
+            <text>&apos;Test2&apos;</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='905' end='907'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='908' end='914'>
+            <text>&apos;Test&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='914' end='915'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='915' end='916'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='917' end='918'>
+            <text>}</text>
+        </token>
+        <token id='T_VARIABLE' start='920' end='926'>
+            <text>$test1</text>
+        </token>
+        <token id='T_EQUAL' start='927' end='928'>
+            <text>=</text>
+        </token>
+        <token id='T_NEW' start='929' end='932'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='933' end='938'>
+            <text>Test1</text>
+        </token>
+        <token id='T_SEMICOLON' start='938' end='939'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='940' end='945'>
+            <text>$test</text>
+        </token>
+        <token id='T_EQUAL' start='946' end='947'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='948' end='955'>
+            <text>"Test2"</text>
+        </token>
+        <token id='T_SEMICOLON' start='955' end='956'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='958' end='966'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='966' end='967'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='967' end='973'>
+            <text>$test1</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='973' end='975'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='975' end='980'>
+            <text>test2</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='980' end='982'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='982' end='990'>
+            <text>CONSTANT</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='990' end='991'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='991' end='992'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='1047' end='1055'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1055' end='1056'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1056' end='1062'>
+            <text>$test1</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1062' end='1064'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1064' end='1069'>
+            <text>test2</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1069' end='1071'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1071' end='1079'>
+            <text>CONSTANT</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1079' end='1080'>
+            <text>[</text>
+        </token>
+        <token id='T_VARIABLE' start='1080' end='1085'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1085' end='1086'>
+            <text>]</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1086' end='1087'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1087' end='1088'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='1110' end='1118'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1118' end='1119'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1119' end='1125'>
+            <text>$test1</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1125' end='1127'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1127' end='1132'>
+            <text>test2</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1132' end='1134'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1134' end='1142'>
+            <text>CONSTANT</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1142' end='1143'>
+            <text>[</text>
+        </token>
+        <token id='T_VARIABLE' start='1143' end='1149'>
+            <text>$test1</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1149' end='1151'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1151' end='1156'>
+            <text>test2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1156' end='1157'>
+            <text>]</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1157' end='1158'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1158' end='1159'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='1180' end='1180'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1160'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='993' end='1006' commentType='singleLine'/>
+            <Comment start='1006' end='1021' commentType='singleLine'/>
+            <Comment start='1021' end='1042' commentType='singleLine'/>
+            <Comment start='1042' end='1046' commentType='singleLine'/>
+            <Comment start='1089' end='1109' commentType='singleLine'/>
+            <Comment start='1160' end='1180' commentType='singleLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='993' end='1006' commentType='singleLine'/>
+            <Comment start='1006' end='1021' commentType='singleLine'/>
+            <Comment start='1021' end='1042' commentType='singleLine'/>
+            <Comment start='1042' end='1046' commentType='singleLine'/>
+            <Comment start='1089' end='1109' commentType='singleLine'/>
+            <Comment start='1160' end='1180' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='815' end='859' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='821' end='826' name='Test1'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='827' end='859' isCurly='true'>
+                    <FieldsDeclaration start='833' end='857' modifier='public'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='840' end='846' isDollared='true'>
+                                <Identifier start='841' end='846' name='test2'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                            <Scalar start='849' end='856' type='STRING' value='&apos;Test2&apos;'/>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <ClassDeclaration start='861' end='918' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='867' end='872' name='Test2'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='873' end='918' isCurly='true'>
+                    <ClassConstantDeclaration start='879' end='916' modifier='public'>
+                        <Names>
+                            <Identifier start='885' end='893' name='CONSTANT'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='896' end='915' type='NEW'>
+                                <ArrayElement start='897' end='914'>
+                                    <Key>
+                                        <Scalar start='897' end='904' type='STRING' value='&apos;Test2&apos;'/>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='908' end='914' type='STRING' value='&apos;Test&apos;'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <ExpressionStatement start='920' end='939'>
+                <Assignment start='920' end='938' operator='EQUAL'>
+                    <Variable start='920' end='926' isDollared='true'>
+                        <Identifier start='921' end='926' name='test1'/>
+                    </Variable>
+                    <ClassInstanceCreation start='929' end='938' anonymous='false'>
+                        <ClassName start='933' end='938'>
+                            <NamespaceName start='933' end='938' isCurrent='false' isGlobal='false'>
+                                <Identifier start='933' end='938' name='Test1'/>
+                            </NamespaceName>
+                        </ClassName>
+                        <Parameters>
+                        </Parameters>
+                    </ClassInstanceCreation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='940' end='956'>
+                <Assignment start='940' end='955' operator='EQUAL'>
+                    <Variable start='940' end='945' isDollared='true'>
+                        <Identifier start='941' end='945' name='test'/>
+                    </Variable>
+                    <Scalar start='948' end='955' type='STRING' value='"Test2"'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='958' end='992'>
+                <FunctionInvocation start='958' end='991'>
+                    <FucntionName start='958' end='966'>
+                        <NamespaceName start='958' end='966' isCurrent='false' isGlobal='false'>
+                            <Identifier start='958' end='966' name='var_dump'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <StaticConstantAccess start='967' end='990' isDynamicName='false'>
+                            <FieldAccess start='967' end='980' isNullsafe='false'>
+                                <Variable start='967' end='973' isDollared='true'>
+                                    <Identifier start='968' end='973' name='test1'/>
+                                </Variable>
+                                <Field>
+                                    <Variable start='975' end='980' isDollared='false'>
+                                        <Identifier start='975' end='980' name='test2'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                            <Constant>
+                                <Identifier start='982' end='990' name='CONSTANT'/>
+                            </Constant>
+                            <Member>
+                                <Identifier start='982' end='990' name='CONSTANT'/>
+                            </Member>
+                        </StaticConstantAccess>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='1047' end='1088'>
+                <FunctionInvocation start='1047' end='1087'>
+                    <FucntionName start='1047' end='1055'>
+                        <NamespaceName start='1047' end='1055' isCurrent='false' isGlobal='false'>
+                            <Identifier start='1047' end='1055' name='var_dump'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <StaticConstantAccess start='1056' end='1086' isDynamicName='false'>
+                            <FieldAccess start='1056' end='1069' isNullsafe='false'>
+                                <Variable start='1056' end='1062' isDollared='true'>
+                                    <Identifier start='1057' end='1062' name='test1'/>
+                                </Variable>
+                                <Field>
+                                    <Variable start='1064' end='1069' isDollared='false'>
+                                        <Identifier start='1064' end='1069' name='test2'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                            <Constant>
+                                <ExpressionArrayAccess start='1071' end='1086'>
+                                    <Identifier start='1071' end='1079' name='CONSTANT'/>
+                                    <ArrayDimension start='1079' end='1086'>
+                                        <Index>
+                                            <Variable start='1080' end='1085' isDollared='true'>
+                                                <Identifier start='1081' end='1085' name='test'/>
+                                            </Variable>
+                                        </Index>
+                                    </ArrayDimension>
+                                </ExpressionArrayAccess>
+                            </Constant>
+                            <Member>
+                                <ExpressionArrayAccess start='1071' end='1086'>
+                                    <Identifier start='1071' end='1079' name='CONSTANT'/>
+                                    <ArrayDimension start='1079' end='1086'>
+                                        <Index>
+                                            <Variable start='1080' end='1085' isDollared='true'>
+                                                <Identifier start='1081' end='1085' name='test'/>
+                                            </Variable>
+                                        </Index>
+                                    </ArrayDimension>
+                                </ExpressionArrayAccess>
+                            </Member>
+                        </StaticConstantAccess>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='1110' end='1159'>
+                <FunctionInvocation start='1110' end='1158'>
+                    <FucntionName start='1110' end='1118'>
+                        <NamespaceName start='1110' end='1118' isCurrent='false' isGlobal='false'>
+                            <Identifier start='1110' end='1118' name='var_dump'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <StaticConstantAccess start='1119' end='1157' isDynamicName='false'>
+                            <FieldAccess start='1119' end='1132' isNullsafe='false'>
+                                <Variable start='1119' end='1125' isDollared='true'>
+                                    <Identifier start='1120' end='1125' name='test1'/>
+                                </Variable>
+                                <Field>
+                                    <Variable start='1127' end='1132' isDollared='false'>
+                                        <Identifier start='1127' end='1132' name='test2'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                            <Constant>
+                                <ExpressionArrayAccess start='1134' end='1157'>
+                                    <Identifier start='1134' end='1142' name='CONSTANT'/>
+                                    <ArrayDimension start='1142' end='1157'>
+                                        <Index>
+                                            <FieldAccess start='1143' end='1156' isNullsafe='false'>
+                                                <Variable start='1143' end='1149' isDollared='true'>
+                                                    <Identifier start='1144' end='1149' name='test1'/>
+                                                </Variable>
+                                                <Field>
+                                                    <Variable start='1151' end='1156' isDollared='false'>
+                                                        <Identifier start='1151' end='1156' name='test2'/>
+                                                    </Variable>
+                                                </Field>
+                                            </FieldAccess>
+                                        </Index>
+                                    </ArrayDimension>
+                                </ExpressionArrayAccess>
+                            </Constant>
+                            <Member>
+                                <ExpressionArrayAccess start='1134' end='1157'>
+                                    <Identifier start='1134' end='1142' name='CONSTANT'/>
+                                    <ArrayDimension start='1142' end='1157'>
+                                        <Index>
+                                            <FieldAccess start='1143' end='1156' isNullsafe='false'>
+                                                <Variable start='1143' end='1149' isDollared='true'>
+                                                    <Identifier start='1144' end='1149' name='test1'/>
+                                                </Variable>
+                                                <Field>
+                                                    <Variable start='1151' end='1156' isDollared='false'>
+                                                        <Identifier start='1151' end='1156' name='test2'/>
+                                                    </Variable>
+                                                </Field>
+                                            </FieldAccess>
+                                        </Index>
+                                    </ArrayDimension>
+                                </ExpressionArrayAccess>
+                            </Member>
+                        </StaticConstantAccess>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

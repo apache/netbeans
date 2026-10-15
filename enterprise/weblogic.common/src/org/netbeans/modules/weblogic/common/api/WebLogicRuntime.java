@@ -31,6 +31,7 @@ import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.AccessController;
 import java.security.GeneralSecurityException;
 import java.security.PrivilegedAction;
@@ -599,8 +600,8 @@ public final class WebLogicRuntime {
             try {
                 socket.connect(new InetSocketAddress(host, port), timeout); // NOI18N
                 socket.setSoTimeout(timeout);
-                try (PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), true); // NOI18N
-                        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"))) { // NOI18N
+                try (PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8), true);
+                        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8))) {
                     out.println("GET " + path + " HTTP/1.1\nHost:\n"); // NOI18N
                     String line = in.readLine();
                     return "HTTP/1.1 200 OK".equals(line) // NOI18N
@@ -667,11 +668,11 @@ public final class WebLogicRuntime {
         public InputReaders.FileInput getFileInput() {
             File fresh = config.getLogFile();
             if (currentInput == null) {
-                currentInput = new InputReaders.FileInput(fresh, Charset.forName("UTF-8")); // NOI18N
+                currentInput = new InputReaders.FileInput(fresh, StandardCharsets.UTF_8);
             } else {
                 File current = currentInput.getFile();
                 if (!current.equals(fresh) && fresh.lastModified() > current.lastModified()) {
-                    currentInput = new InputReaders.FileInput(fresh, Charset.forName("UTF-8")); // NOI18N
+                    currentInput = new InputReaders.FileInput(fresh, StandardCharsets.UTF_8);
                 }
             }
             return currentInput;

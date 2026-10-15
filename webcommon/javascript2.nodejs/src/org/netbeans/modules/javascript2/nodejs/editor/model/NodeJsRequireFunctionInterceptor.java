@@ -104,7 +104,7 @@ public class NodeJsRequireFunctionInterceptor implements FunctionInterceptor {
                                 JsObject jsObject = ((JsObject)scope).getProperty(objectName);
                                 if (jsObject != null) {
                                     int assignmentOffset =  ts.offset() + token.length();
-                                    List<TypeUsage> modelTypes = new ArrayList();
+                                    List<TypeUsage> modelTypes = new ArrayList<>();
                                     StringBuilder sb = new StringBuilder();
                                     sb.append(NodeJsUtils.FAKE_OBJECT_NAME_PREFIX).append(NodeJsUtils.getModuleName(module)).append('.');
                                     modelTypes.add(factory.newType(sb.toString() + NodeJsUtils.EXPORTS, assignmentOffset, true));

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-/**
+/*
  * This interface has all of the bean info accessor methods.
  *
  * @Generated
@@ -43,6 +43,10 @@ public interface AppClient extends RootInterface {
      * @since 1.29
      */
     public static final String VERSION_7_0 = "7"; //NOI18N
+    public static final String VERSION_8_0 = "8"; //NOI18N
+    public static final String VERSION_9_0 = "9"; //NOI18N
+    public static final String VERSION_10_0 = "10"; //NOI18N
+    public static final String VERSION_11_0 = "11"; //NOI18N
     public static final int STATE_VALID=0;
     public static final int STATE_INVALID_PARSABLE=1;
     public static final int STATE_INVALID_UNPARSABLE=2;

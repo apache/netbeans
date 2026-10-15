@@ -36,14 +36,14 @@ public interface ReformatTask {
     /**
      * Perform reformatting of the {@link Context#document()}
      * between {@link Context#startOffset()} and {@link Context#endOffset()}.
-     * <br/>
+     * <br>
      * This method may be called several times repetitively for different areas
      * of a reformatted area.
-     * <br/>
+     * <br>
      * It is called from AWT thread and it should process synchronously. It is used
      * after a newline is inserted after the user presses Enter
      * or when a current line must be reindented e.g. when Tab is pressed in emacs mode.
-     * <br/>
+     * <br>
      * The method should use information from the context and modify
      * indentation at the given offset in the document.
      * 
@@ -59,7 +59,7 @@ public interface ReformatTask {
     
     /**
      * Reformat task factory produces reformat tasks for the given context.
-     * <br/>
+     * <br>
      * It should be registered in MimeLookup via xml layer in "/Editors/&lt;mime-type&gt;"
      * folder.
      */

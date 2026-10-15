@@ -86,7 +86,7 @@ public class AddJavaFXPropertyCodeGenerator implements CodeGenerator {
                     Element e = javac.getTrees().getElement(path);
                     
                     if (e == null || !e.getKind().isClass()) {
-                        return Collections.EMPTY_LIST;
+                        return Collections.<CodeGenerator>emptyList();
                     }
                     
                     List<String> existingFields = new LinkedList<String>();

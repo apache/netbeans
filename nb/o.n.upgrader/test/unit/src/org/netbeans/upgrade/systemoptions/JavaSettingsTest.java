@@ -25,10 +25,12 @@ public class JavaSettingsTest extends BasicTestForImport {
         super(name, "javaSettings.settings");
     }
 
+    @Override
     public void testPreferencesNodePath() throws Exception {
         assertPreferencesNodePath("/org/netbeans/modules/java/project");
     }
 
+    @Override
     public void testPropertyNames() throws Exception {
         assertPropertyNames(new String[] {
             "showAgainBrokenRefAlert",

@@ -30,8 +30,10 @@ import org.netbeans.modules.php.editor.model.NamespaceScope;
 import org.netbeans.modules.php.editor.model.nodes.NamespaceDeclarationInfo;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
+import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
 import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
+import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 import org.openide.util.Parameters;
 
 /**
@@ -111,6 +113,7 @@ public final class QualifiedName {
         return (fullName.toFullyQualified().equals(test.toFullyQualified())) ? retval : null;
     }
 
+    @CheckForNull
     public static QualifiedName createUnqualifiedNameInClassContext(Expression expression, ClassScope clsScope) {
         if (expression instanceof Identifier) {
             return createUnqualifiedNameInClassContext((Identifier) expression, clsScope);
@@ -139,6 +142,32 @@ public final class QualifiedName {
             return createUnqualifiedName((Identifier) e);
         }
         return null;
+    }
+
+    public static List<QualifiedName> create(UnionType unionType) {
+        List<QualifiedName> qualifiedNames = new ArrayList<>();
+        for (Expression type : unionType.getTypes()) {
+            if (type instanceof IntersectionType) {
+                qualifiedNames.addAll(create((IntersectionType) type));
+            } else {
+                QualifiedName qualifiedName = create(type);
+                if (qualifiedName != null) {
+                    qualifiedNames.add(qualifiedName);
+                }
+            }
+        }
+        return qualifiedNames;
+    }
+
+    public static List<QualifiedName> create(IntersectionType intersectionType) {
+        List<QualifiedName> qualifiedNames = new ArrayList<>();
+        for (Expression type : intersectionType.getTypes()) {
+            QualifiedName qualifiedName = create(type);
+            if (qualifiedName != null) {
+                qualifiedNames.add(qualifiedName);
+            }
+        }
+        return qualifiedNames;
     }
 
     public static QualifiedName create(boolean isFullyQualified, List<String> segments) {

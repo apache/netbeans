@@ -5,7 +5,9 @@ Code completion result for source line:
 CONSTRUCTO TestModel                       [PUBLIC]   index.html
 CLASS      $context                        [PRIVATE]  <font color=#999999>index.html</font>
 CLASS      $parentContext                  [PRIVATE]  <font color=#999999>index.html</font>
+CLASS      import                          [PUBLIC]   metaproperties.js
 CLASS      ko                              [PUBLIC]   <font color=#999999>Knockout</font>
+CLASS      new                             [PUBLIC]   <font color=#999999>metaproperties.js</font>
 FIELD      savedLists: ko.observableArray  [PUBLIC]   <font color=#999999>index.html</font>
 FIELD      userNameToAddIsValid            [PUBLIC]   <font color=#999999>index.html</font>
 VARIABLE   $data: ko.$bindings             [PRIVATE]  <font color=#999999>index.html</font>
@@ -16,34 +18,34 @@ VARIABLE   $root: ko.$bindings             [PRIVATE]  <font color=#999999>index.
 VARIABLE   arguments: Arguments            [PRIVATE]  <font color=#999999>index.html</font>
 VARIABLE   invalid                         [PUBLIC]   index.html
 VARIABLE   userNameToAdd                   [PUBLIC]   index.html
-KEYWORD    async                                      ECMAScript 7 (Experimental)
-KEYWORD    await                                      ECMAScript 7 (Experimental)
+KEYWORD    async                                      ECMAScript 7 - 2016 (Experimental)
+KEYWORD    await                                      ECMAScript 7 - 2016 (Experimental)
 KEYWORD    break                                      null
 KEYWORD    case                                       null
 KEYWORD    catch                                      null
-KEYWORD    class                                      ECMAScript 6
-KEYWORD    const                                      ECMAScript 6
+KEYWORD    class                                      ECMAScript 6 - 2015
+KEYWORD    const                                      ECMAScript 6 - 2015
 KEYWORD    continue                                   null
 KEYWORD    debugger                                   null
 KEYWORD    default                                    null
 KEYWORD    delete                                     null
 KEYWORD    do                                         null
 KEYWORD    else                                       null
-KEYWORD    export                                     ECMAScript 6
-KEYWORD    extends                                    ECMAScript 6
+KEYWORD    export                                     ECMAScript 6 - 2015
+KEYWORD    extends                                    ECMAScript 6 - 2015
 KEYWORD    false                                      null
 KEYWORD    finally                                    null
 KEYWORD    for                                        null
 KEYWORD    function                                   null
 KEYWORD    if                                         null
-KEYWORD    import                                     ECMAScript 6
+KEYWORD    import                                     ECMAScript 6 - 2015
 KEYWORD    in                                         null
 KEYWORD    instanceof                                 null
-KEYWORD    let                                        ECMAScript 6
+KEYWORD    let                                        ECMAScript 6 - 2015
 KEYWORD    new                                        null
 KEYWORD    null                                       null
 KEYWORD    return                                     null
-KEYWORD    super                                      ECMAScript 6
+KEYWORD    super                                      ECMAScript 6 - 2015
 KEYWORD    switch                                     null
 KEYWORD    this                                       null
 KEYWORD    throw                                      null
@@ -54,4 +56,4 @@ KEYWORD    var                                        null
 KEYWORD    void                                       null
 KEYWORD    while                                      null
 KEYWORD    with                                       null
-KEYWORD    yield                                      ECMAScript 6
+KEYWORD    yield                                      ECMAScript 6 - 2015

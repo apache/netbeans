@@ -78,8 +78,8 @@ public class AngularJsEmbeddingProviderPlugin extends JsEmbeddingProviderPlugin 
     private HashMap<String, String> propertyToFqn;
     
     public AngularJsEmbeddingProviderPlugin() {
-        this.stack = new LinkedList();
-        this.propertyToFqn = new HashMap();
+        this.stack = new LinkedList<>();
+        this.propertyToFqn = new HashMap<>();
     }
 
     @Override

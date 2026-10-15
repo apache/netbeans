@@ -21,7 +21,6 @@ package org.openide.filesystems;
 
 import java.beans.PropertyVetoException;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -30,18 +29,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.jar.Attributes;
@@ -51,7 +49,6 @@ import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipException;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.RequestProcessor.Task;
@@ -463,18 +460,9 @@ public class JarFileSystem extends AbstractFileSystem {
         return (retVal == -1) ? 0 : retVal;
     }
 
-    private InputStream getMemInputStream(JarFile jf, JarEntry je)
-    throws IOException {
+    private InputStream getMemInputStream(JarFile jf, JarEntry je) throws IOException {
         InputStream is = getInputStream4336753(jf, je);
-        ByteArrayOutputStream os = new ByteArrayOutputStream(is.available());
-
-        try {
-            FileUtil.copy(is, os);
-        } finally {
-            os.close();
-        }
-
-        return new ByteArrayInputStream(os.toByteArray());
+        return new ByteArrayInputStream(is.readAllBytes());
     }
 
     private InputStream getTemporaryInputStream(JarFile jf, JarEntry je, boolean forceRecreate)
@@ -503,18 +491,8 @@ public class JarFileSystem extends AbstractFileSystem {
         if (createContent || forceRecreate) {
             // JDK 1.3 contains bug #4336753
             //is = j.getInputStream (je);
-            InputStream is = getInputStream4336753(jf, je);
-
-            try {
-                OutputStream os = new FileOutputStream(f);
-
-                try {
-                    FileUtil.copy(is, os);
-                } finally {
-                    os.close();
-                }
-            } finally {
-                is.close();
+            try (InputStream is = getInputStream4336753(jf, je); OutputStream os = new FileOutputStream(f)) {
+                is.transferTo(os);
             }
         }
 
@@ -1331,12 +1309,7 @@ public class JarFileSystem extends AbstractFileSystem {
                 for (int i = 0; i < ret.length; i++) {
                     byte[] name = new byte[indices[(2 * i) + 1]];
                     System.arraycopy(names, indices[2 * i], name, 0, name.length);
-
-                    try {
-                        ret[i] = new String(name, "UTF-8");
-                    } catch (UnsupportedEncodingException e) {
-                        throw new InternalError("No UTF-8");
-                    }
+                    ret[i] = new String(name, StandardCharsets.UTF_8);
                 }
 
                 return ret;
@@ -1350,13 +1323,9 @@ public class JarFileSystem extends AbstractFileSystem {
                     indices = newInd;
                 }
 
-                try {
-                    byte[] bytes = name.getBytes("UTF-8");
-                    indices[idx++] = putName(bytes);
-                    indices[idx++] = bytes.length;
-                } catch (UnsupportedEncodingException e) {
-                    throw new InternalError("No UTF-8");
-                }
+                byte[] bytes = name.getBytes(StandardCharsets.UTF_8);
+                indices[idx++] = putName(bytes);
+                indices[idx++] = bytes.length;
             }
 
             void trunc() {

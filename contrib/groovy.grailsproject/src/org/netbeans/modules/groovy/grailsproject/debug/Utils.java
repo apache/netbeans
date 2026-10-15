@@ -85,7 +85,7 @@ public class Utils {
         // this is dup of above line in fact
         urls.addAll(grailsProject.getTestSourceRoots().getRootURLs());
 
-        return ClassPathSupport.createClassPath(urls.toArray(new URL[urls.size()]));
+        return ClassPathSupport.createClassPath(urls.toArray(new URL[0]));
     }
 
     static ClassPath createJDKSourcePath(Project nbproject) {
@@ -106,7 +106,7 @@ public class Utils {
             URL url = Utils.fileToURL(roots[i]);
             l.add(url);
         }
-        URL[] urls = l.toArray(new URL[l.size()]);
+        URL[] urls = l.toArray(new URL[0]);
         return ClassPathSupport.createClassPath(urls);
     }
 

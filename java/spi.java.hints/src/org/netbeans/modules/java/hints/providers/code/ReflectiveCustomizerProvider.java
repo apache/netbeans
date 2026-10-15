@@ -44,16 +44,7 @@ import org.openide.util.Exceptions;
  *
  * @author lahvac
  */
-public class ReflectiveCustomizerProvider implements CustomizerProvider {
-    private final String hintClassName;
-    private final String hintId;
-    private final List<OptionDescriptor> options;
-
-    public ReflectiveCustomizerProvider(String hintClassName, String hintId, List<OptionDescriptor> options) {
-        this.hintClassName = hintClassName;
-        this.hintId = hintId;
-        this.options = options;
-    }
+record ReflectiveCustomizerProvider(String hintClassName, String hintId, List<OptionDescriptor> options) implements CustomizerProvider {
 
     @Override
     public JComponent getCustomizer(Preferences prefs) {
@@ -92,9 +83,7 @@ public class ReflectiveCustomizerProvider implements CustomizerProvider {
                 constraints.weighty = 1;
 
                 add(new JPanel(), constraints);
-            } catch (IllegalArgumentException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (SecurityException ex) {
+            } catch (IllegalArgumentException | SecurityException ex) {
                 Exceptions.printStackTrace(ex);
             }
         }
@@ -118,7 +107,7 @@ public class ReflectiveCustomizerProvider implements CustomizerProvider {
             add(l, constraints);
             
             JComponent field;
-            int val = prefs.getInt(option.preferencesKey, ((Integer)option.defaultValue).intValue());
+            int val = prefs.getInt(option.preferencesKey, ((Integer)option.defaultValue));
             if (iopt.step() > 0) {
                 val = Math.min(iopt.maxValue(), Math.max(iopt.minValue(), val));
                 prefs.putInt(option.preferencesKey, val);
@@ -188,15 +177,7 @@ public class ReflectiveCustomizerProvider implements CustomizerProvider {
         }
                 
         
-        private static final class ActionListenerImpl implements ActionListener, ChangeListener {
-            private final String key;
-            private final Preferences prefs;
-
-            public ActionListenerImpl(String key, Preferences prefs) {
-                this.key = key;
-                this.prefs = prefs;
-            }
-
+        private record ActionListenerImpl(String key, Preferences prefs) implements ActionListener, ChangeListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JCheckBox checkBox = ((JCheckBox)e.getSource());
@@ -208,33 +189,15 @@ public class ReflectiveCustomizerProvider implements CustomizerProvider {
                 Integer i = (Integer)((JSpinner)e.getSource()).getValue();
                 prefs.putInt(key, i);
             }
-
         }
         
     }
-
-    public static final class OptionDescriptor {
-        public final String preferencesKey;
-        public final Object defaultValue;
-        public final String displayName;
-        public final String tooltip;
-        /**
-         * The original Annotation object, type-specific parameters.
-         */
-        public final Object parameters;
-
-        public OptionDescriptor(
-                String preferencesKey, 
-                Object defaultValue, 
-                String displayName, String tooltip, 
-                Object parameters) {
-            this.preferencesKey = preferencesKey;
-            this.defaultValue = defaultValue;
-            this.displayName = displayName;
-            this.tooltip = tooltip;
-            this.parameters = parameters;
-        }
-
+    
+    /**
+     * @param parameters The original Annotation object, type-specific parameters.
+     */
+    public record OptionDescriptor(
+        String preferencesKey, Object defaultValue, String displayName, String tooltip, Object parameters) {
     }
 
 }

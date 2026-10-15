@@ -27,6 +27,7 @@ import java.util.List;
 import javax.swing.JEditorPane;
 import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.test.java.editor.lib.EditorTestCase;
 import org.netbeans.test.java.editor.lib.EditorTestCase.ValueResolver;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
@@ -224,7 +225,7 @@ public class CompletionTestCase extends java.lang.Object {
             throw new IllegalStateException("The testPerform method may be called only inside AWT event dispatch thread.");
         
         BaseDocument doc        = Utilities.getDocument(editor);
-        int          lineOffset = Utilities.getRowStartFromLineOffset(doc, lineIndex -1);
+        int          lineOffset = LineDocumentUtils.getLineStartFromIndex(doc, lineIndex -1);
         
         editor.grabFocus();
         editor.getCaret().setDot(lineOffset);

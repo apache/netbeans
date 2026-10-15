@@ -1,0 +1,84 @@
+Name: __call
+public function __call(string $name, array $arguments) {
+${cursor};
+}
+
+Name: __callStatic
+public static function __callStatic(string $name, array $arguments) {
+${cursor};
+}
+
+Name: __clone
+public function __clone(): void {
+${cursor};
+}
+
+Name: __construct
+public function __construct() {
+${cursor};
+}
+
+Name: __debugInfo
+public function __debugInfo(): array {
+${cursor};
+}
+
+Name: __destruct
+public function __destruct() {
+${cursor};
+}
+
+Name: __get
+public function __get(string $name) {
+${cursor};
+}
+
+Name: __invoke
+public function __invoke() {
+${cursor};
+}
+
+Name: __isset
+public function __isset(string $name): bool {
+${cursor};
+}
+
+Name: __serialize
+public function __serialize(): array {
+${cursor};
+}
+
+Name: __set
+public function __set(string $name, $value): void {
+${cursor};
+}
+
+Name: __set_state
+public static function __set_state(array $properties) {
+${cursor};
+}
+
+Name: __sleep
+public function __sleep(): array {
+${cursor};
+}
+
+Name: __toString
+public function __toString(): string {
+return "MagicMethods[]";${cursor}
+}
+
+Name: __unserialize
+public function __unserialize(array $data): void {
+${cursor};
+}
+
+Name: __unset
+public function __unset(string $name): void {
+${cursor};
+}
+
+Name: __wakeup
+public function __wakeup(): void {
+${cursor};
+}

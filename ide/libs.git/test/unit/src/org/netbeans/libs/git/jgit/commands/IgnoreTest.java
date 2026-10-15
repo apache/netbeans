@@ -21,6 +21,8 @@ package org.netbeans.libs.git.jgit.commands;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Map;
 import org.eclipse.jgit.lib.ConfigConstants;
@@ -588,5 +590,36 @@ public class IgnoreTest extends AbstractGitTestCase {
         
         statuses = client.getStatus(new File[0], NULL_PROGRESS_MONITOR);
         assertEquals(Status.STATUS_IGNORED, statuses.get(f).getStatusIndexWC());
+    }
+
+    public void testGitIgnoreEndsWithNewLine () throws Exception {
+        File f = new File(workDir, "file");
+        f.createNewFile();
+        File gitIgnore = new File(workDir, Constants.DOT_GIT_IGNORE);
+        File[] ignores = getClient(workDir).ignore(new File[] { f }, NULL_PROGRESS_MONITOR);
+        assertTrue(gitIgnore.exists());
+        assertTrue("The .gitignore file should ends with an empty new line.",containsCRorLF(gitIgnore));
+    }
+
+    public void testUpdateRetainsFileSpecificLineSeparators1() throws Exception {
+        checkLineSeparatorRetention("\r\n");
+    }
+
+    public void testUpdateRetainsFileSpecificLineSeparators2() throws Exception {
+        checkLineSeparatorRetention("\n");
+    }
+
+    private void checkLineSeparatorRetention(String lineSeparator) throws Exception {
+        Path gitignore = workDir.toPath().resolve(Constants.DOT_GIT_IGNORE);
+        Path toIgnore = workDir.toPath().resolve("file");
+        String firstLine = "#comment" + lineSeparator;
+        String secondLine = "/file" + lineSeparator;
+        Files.writeString(gitignore, firstLine);
+        Files.writeString(toIgnore, "ignore");
+        getClient(workDir).ignore(new File[] { toIgnore.toFile() }, NULL_PROGRESS_MONITOR);
+
+        String postUpdate = Files.readString(gitignore);
+        assertEquals(firstLine, postUpdate.substring(0, firstLine.length()));
+        assertEquals(secondLine, postUpdate.substring(firstLine.length(), firstLine.length() + secondLine.length()));
     }
 }

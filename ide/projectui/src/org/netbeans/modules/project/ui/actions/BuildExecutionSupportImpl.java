@@ -106,9 +106,7 @@ public class BuildExecutionSupportImpl implements BuildExecutionSupportImplement
                         list = new ArrayList<BuildExecutionSupport.ActionItem>();
                         historyItems.put(action, list);
                     }
-                    if (list.contains(ai)) {
-                        list.remove(ai);
-                    }
+                    list.remove(ai);
                     list.add(ai);
                     if (list.size() > HISTORY_MAX) {
                         list.remove(0);

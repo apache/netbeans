@@ -28,18 +28,20 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiPredicate;
 import javax.lang.model.element.TypeElement;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
@@ -56,6 +58,7 @@ import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TestUtilities;
@@ -64,7 +67,6 @@ import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.source.tasklist.CompilerSettings;
-import org.netbeans.modules.openide.util.GlobalLookup;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
@@ -78,6 +80,7 @@ import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.UserTask;
+import org.netbeans.modules.parsing.lucene.support.LowMemoryWatcherAccessor;
 import org.netbeans.modules.parsing.spi.EmbeddingProvider;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
@@ -118,12 +121,13 @@ public class JavacParserTest extends NbTestCase {
         js.runUserActionTask(new Task<CompilationController>() {
             TypeElement storedJLObject;
             public void run(CompilationController parameter) throws Exception {
+                SourceUtils.forceSource(parameter, f1);
+                assertEquals(Phase.PARSED, parameter.toPhase(Phase.PARSED));
                 if ("Test3".equals(parameter.getFileObject().getName())) {
                     TypeElement te = parameter.getElements().getTypeElement("test.Test1");
                     assertNotNull(te);
                     assertNotNull(parameter.getTrees().getPath(te));
                 }
-                assertEquals(Phase.PARSED, parameter.toPhase(Phase.PARSED));
                 assertNotNull(parameter.getCompilationUnit());
                 TypeElement jlObject = parameter.getElements().getTypeElement("java.lang.Object");
 
@@ -136,37 +140,96 @@ public class JavacParserTest extends NbTestCase {
         }, true);
     }
 
-    public void testMultiSourceVanilla() throws Exception {
-        Lookup noSP = Lookups.exclude(Lookup.getDefault(), JavacParser.SequentialParsing.class);
-        GlobalLookup.execute(noSP, () -> {
-            try {
-                FileObject f1 = createFile("test/Test1.java", "package test; class Test1");
-                FileObject f2 = createFile("test/Test2.java", "package test; class Test2{}");
-                FileObject f3 = createFile("test/Test3.java", "package test; class Test3{}");
+    public void testMultiSourceOutOfMemory() throws Exception {
 
-                ClasspathInfo cpInfo = ClasspathInfo.create(f2);
-                JavaSource js = JavaSource.create(cpInfo, f2, f3);
+        FileObject f1 = createFile("test/Test1.java", "package test; class Test1 {}");
+        FileObject f2 = createFile("test/Test2.java", "package test; class Test2 {}");
+        FileObject f3 = createFile("test/Test3.java", "package test; class Test3 {}");
 
-                SourceUtilsTestUtil.compileRecursively(sourceRoot);
+        ClasspathInfo cpInfo = ClasspathInfo.create(f1);
+        JavaSource js = JavaSource.create(cpInfo, f1, f2, f3);
 
-                js.runUserActionTask(new Task<CompilationController>() {
-                    TypeElement storedJLObject;
-                    public void run(CompilationController parameter) throws Exception {
-                        assertEquals(Phase.PARSED, parameter.toPhase(Phase.PARSED));
-                        assertNotNull(parameter.getCompilationUnit());
-                        TypeElement jlObject = parameter.getElements().getTypeElement("java.lang.Object");
-
-                        if (storedJLObject == null) {
-                            storedJLObject = jlObject;
-                        } else {
-                            assertFalse(Objects.equals(storedJLObject, jlObject));
-                        }
-                    }
-                }, true);
-            } catch (Exception ex) {
-                throw new AssertionError(ex);
+        class TestCase {
+            BiPredicate<Phase, FileObject> stopAt;
+            List<String> expectedLog;
+            public TestCase(BiPredicate<Phase, FileObject> stopAt, String... expectedLog) {
+                this.stopAt = stopAt;
+                this.expectedLog = Arrays.asList(expectedLog);
             }
-        });
+        }
+
+        TestCase[] cases = new TestCase[] {
+            new TestCase((phase, file) -> phase == Phase.PARSED && file.equals(f1),
+                         "failed: Test1",
+                         "success: Test1, phase: PARSED", "0",
+                         "success: Test1, phase: ELEMENTS_RESOLVED", "1",
+                         "success: Test1, phase: RESOLVED", "1",
+                         "success: Test2, phase: PARSED", "2",
+                         "success: Test2, phase: ELEMENTS_RESOLVED", "3",
+                         "success: Test2, phase: RESOLVED", "3",
+                         "success: Test3, phase: PARSED", "4",
+                         "success: Test3, phase: ELEMENTS_RESOLVED", "5",
+                         "success: Test3, phase: RESOLVED", "5"),
+            new TestCase((phase, file) -> phase == Phase.ELEMENTS_RESOLVED && file.equals(f1),
+                         "success: Test1, phase: PARSED", "0",
+                         "failed: Test1",
+                         "success: Test1, phase: PARSED", "1",
+                         "success: Test1, phase: ELEMENTS_RESOLVED", "2",
+                         "success: Test1, phase: RESOLVED", "2",
+                         "success: Test2, phase: PARSED", "3",
+                         "success: Test2, phase: ELEMENTS_RESOLVED", "4",
+                         "success: Test2, phase: RESOLVED", "4",
+                         "success: Test3, phase: PARSED", "5",
+                         "success: Test3, phase: ELEMENTS_RESOLVED", "6",
+                         "success: Test3, phase: RESOLVED", "6"),
+            new TestCase((phase, file) -> phase == Phase.RESOLVED && file.equals(f2),
+                         "success: Test1, phase: PARSED", "0",
+                         "success: Test1, phase: ELEMENTS_RESOLVED", "1",
+                         "success: Test1, phase: RESOLVED", "1",
+                         "success: Test2, phase: PARSED", "2",
+                         "success: Test2, phase: ELEMENTS_RESOLVED", "1",
+                         "failed: Test2",
+                         "success: Test2, phase: PARSED", "3",
+                         "success: Test2, phase: ELEMENTS_RESOLVED", "4",
+                         "success: Test2, phase: RESOLVED", "4",
+                         "success: Test3, phase: PARSED", "5",
+                         "success: Test3, phase: ELEMENTS_RESOLVED", "6",
+                         "success: Test3, phase: RESOLVED", "6")
+        };
+
+        for (TestCase testCase : cases) {
+            List<String> log = new ArrayList<>();
+
+            js.runUserActionTask(new Task<CompilationController>() {
+                Map<Object, Integer> keys = new IdentityHashMap<>();
+                boolean wasCanceled;
+                public void run(CompilationController cc) throws Exception {
+                    for (Phase p : new Phase[] {Phase.PARSED, Phase.ELEMENTS_RESOLVED, Phase.RESOLVED}) {
+                        LowMemoryWatcherAccessor.setLowMemory(!wasCanceled && testCase.stopAt.test(p, cc.getFileObject()));
+                        if (cc.toPhase(p).compareTo(p) < 0) {
+                            log.add("failed: " + cc.getFileObject().getName());
+                            wasCanceled = true;
+                            return ;
+                        }
+                        log.add("success: " + cc.getFileObject().getName() + ", phase: " + p);
+                        Object key;
+                        switch (p) {
+                            case PARSED: key = cc.getCompilationUnit(); break;
+                            case ELEMENTS_RESOLVED:
+                            case RESOLVED:
+                                key = cc.getElements().getTypeElement("java.lang.Object");
+                                break;
+                            default:
+                                throw new IllegalStateException(p.name());
+                        }
+                        log.add("" + keys.computeIfAbsent(key, k -> keys.size()));
+                    }
+                }
+            }, true);
+
+            assertEquals(testCase.expectedLog, log);
+            LowMemoryWatcherAccessor.setLowMemory(false);
+        }
     }
 
     public void test199332() throws Exception {
@@ -234,8 +297,8 @@ public class JavacParserTest extends NbTestCase {
                     public Void scan(Tree tree, long[] parentSpan) {
                         if (tree == null) return null;
                         if (parameter.getTreeUtilities().isSynthetic(new TreePath(getCurrentPath(), tree))) return null;
-                        long start = parameter.getTrees().getSourcePositions().getStartPosition(parameter.getCompilationUnit(), tree);
-                        long end   = parameter.getTrees().getSourcePositions().getEndPosition(parameter.getCompilationUnit(), tree);
+                        long start = parameter.getTrees().getSourcePositions().getStartPosition(tree);
+                        long end   = parameter.getTrees().getSourcePositions().getEndPosition(tree);
                         assertTrue(start <= end);
                         if (parentSpan != null) {
                             assertTrue(parentSpan[0] <= start);
@@ -325,8 +388,8 @@ public class JavacParserTest extends NbTestCase {
                     public Void scan(Tree tree, long[] parentSpan) {
                         if (tree == null) return null;
                         if (parameter.getTreeUtilities().isSynthetic(new TreePath(getCurrentPath(), tree))) return null;
-                        long start = parameter.getTrees().getSourcePositions().getStartPosition(parameter.getCompilationUnit(), tree);
-                        long end   = parameter.getTrees().getSourcePositions().getEndPosition(parameter.getCompilationUnit(), tree);
+                        long start = parameter.getTrees().getSourcePositions().getStartPosition(tree);
+                        long end   = parameter.getTrees().getSourcePositions().getEndPosition(tree);
                         assertTrue(tree.toString() + ":" + start + "-" + end, start <= end);
                         if (parentSpan != null) {
                             assertTrue(parentSpan[0] <= start);
@@ -559,6 +622,53 @@ public class JavacParserTest extends NbTestCase {
         }, true);
     }
 
+    public void testReleaseValidateCompilerOptionsBasedOnRelease() throws Exception {
+        FileObject f = createFile("test/Test.java",
+                                  """
+                                  package test;
+                                  import javax.tools.Diagnostic;
+                                  """);
+        SourceUtilsTestUtil.setSourceLevel(f, "17");
+        SourceUtilsTestUtil.setCompilerOptions(f, List.of("--limit-modules=java.base"));
+        JavaSource js = JavaSource.create(new ClasspathInfo.Builder(ClassPath.EMPTY).build(), f);
+
+        js.runUserActionTask(new Task<CompilationController>() {
+            public void run(CompilationController parameter) throws Exception {
+                assertTrue(Phase.RESOLVED.compareTo(parameter.toPhase(Phase.RESOLVED)) <= 0);
+                assertEquals(parameter.getDiagnostics().toString(), 1, parameter.getDiagnostics().size());
+
+                Set<String> codes = new HashSet<String>();
+
+                for (Diagnostic d : parameter.getDiagnostics()) {
+                    codes.add(d.getCode());
+                }
+
+                assertEquals(new HashSet<String>(Arrays.asList("compiler.err.package.not.visible")), codes);
+            }
+        }, true);
+    }
+
+    public void testReleaseUnsupportedSourceLevel() throws Exception {
+        FileObject f = createFile("test/Test.java",
+                                  """
+                                  package test;
+                                  public class Test {
+                                      public static void main(String... args) {
+                                          System.out.println("");
+                                      }
+                                  }
+                                  """);
+        SourceUtilsTestUtil.setSourceLevel(f, "1.4");
+        JavaSource js = JavaSource.create(new ClasspathInfo.Builder(ClassPath.EMPTY).build(), f);
+
+        js.runUserActionTask(new Task<CompilationController>() {
+            public void run(CompilationController parameter) throws Exception {
+                assertTrue(Phase.RESOLVED.compareTo(parameter.toPhase(Phase.RESOLVED)) <= 0);
+                assertEquals(parameter.getDiagnostics().toString(), 0, parameter.getDiagnostics().size());
+            }
+        }, true);
+    }
+
     private FileObject createFile(String path, String content) throws Exception {
         FileObject file = FileUtil.createData(sourceRoot, path);
         TestUtilities.copyStringToFile(file, content);
@@ -585,11 +695,9 @@ public class JavacParserTest extends NbTestCase {
         assertNotNull("Resource found", resource);
         file.getParentFile().mkdirs();
         assertTrue("New file " + file + " created", file.createNewFile());
-        FileOutputStream os = new FileOutputStream(file);
-        InputStream is = resource.openStream();
-        FileUtil.copy(is, os);
-        is.close();
-        os.close();
+        try (InputStream is = resource.openStream(); FileOutputStream os = new FileOutputStream(file)) {
+            is.transferTo(os);
+        }
     }
     
     private static final CompilerSettingsImpl settings = new CompilerSettingsImpl();

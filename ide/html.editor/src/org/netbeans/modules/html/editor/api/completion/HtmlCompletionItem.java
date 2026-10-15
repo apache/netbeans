@@ -34,7 +34,6 @@ import org.netbeans.modules.editor.indent.api.Indent;
 import org.netbeans.spi.editor.completion.*;
 import java.awt.Color;
 import java.awt.EventQueue;
-import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -43,6 +42,7 @@ import java.lang.reflect.Method;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.modules.html.editor.lib.api.model.HtmlTagAttribute;
 import org.netbeans.modules.html.editor.HtmlPreferences;
 import org.netbeans.modules.html.editor.javadoc.HelpManager;
@@ -63,7 +63,8 @@ import org.openide.xml.XMLUtil;
 public class HtmlCompletionItem implements CompletionItem {
 
     protected static final int DEFAULT_SORT_PRIORITY = 20;
-
+    private static final String END_FONT = "</font>"; // NOI18N
+    
     //----------- Factory methods --------------
     public static HtmlCompletionItem createTag(HtmlTag tag, String name, int substitutionOffset, String helpId, boolean possible) {
         return new Tag(tag, name, substitutionOffset, helpId, possible);
@@ -93,12 +94,20 @@ public class HtmlCompletionItem implements CompletionItem {
         return new AttributeValue(name, substitutionOffset, addQuotation);
     }
 
+    public static HtmlCompletionItem createAttributeValue(String name, int substitutionOffset, boolean addQuotation, int sortPrioritiy) {
+        return new AttributeValue(name, substitutionOffset, addQuotation, sortPrioritiy);
+    }
+
     public static HtmlCompletionItem createAttributeValue(String name, int substitutionOffset) {
         return createAttributeValue(name, substitutionOffset, false);
     }
 
     public static HtmlCompletionItem createCharacterReference(String name, char value, int substitutionOffset, String helpId) {
         return new CharRefItem(name, value, substitutionOffset, helpId);
+    }
+
+    public static HtmlCompletionItem createCssValue(String value, int substitutionOffset, boolean related) {
+        return new HtmlCssValueCompletionItem(value, substitutionOffset, related);
     }
 
     /**
@@ -111,7 +120,8 @@ public class HtmlCompletionItem implements CompletionItem {
     public static HtmlCompletionItem createFileCompletionItem(FileObject file, int substitutionOffset) {
         boolean folder = file.isFolder();
         String name = new StringBuilder().append(file.getNameExt()).append(folder ? '/' : "").toString();
-        Color color = folder ? Color.BLUE : null;
+        // Should match color in o.n.m.web.common.ui.api.FileReferenceCompletion.getItems()
+        Color color = folder ? new Color(224, 160, 65) : null;
         ImageIcon icon = FileReferenceCompletion.getIcon(file);
         
         return new FileAttributeValue(folder, name, substitutionOffset, color, icon);
@@ -120,6 +130,7 @@ public class HtmlCompletionItem implements CompletionItem {
     public static HtmlCompletionItem createGoUpFileCompletionItem(int substitutionOffset, Color color, ImageIcon icon) {
         return new GoUpFileAttributeValue(substitutionOffset, color, icon);
     }
+
     //------------------------------------------
     protected int substitutionOffset;
     protected String text, helpId;
@@ -246,7 +257,7 @@ public class HtmlCompletionItem implements CompletionItem {
         return result[0];
     }
 
-    private void reindent(JTextComponent component) {
+    void reindent(JTextComponent component) {
 
         final BaseDocument doc = (BaseDocument) component.getDocument();
         final int dotPos = component.getCaretPosition();
@@ -257,8 +268,8 @@ public class HtmlCompletionItem implements CompletionItem {
                 @Override
                 public void run() {
                     try {
-                        int startOffset = Utilities.getRowStart(doc, dotPos);
-                        int endOffset = Utilities.getRowEnd(doc, dotPos);
+                        int startOffset = LineDocumentUtils.getLineStartOffset(doc, dotPos);
+                        int endOffset = LineDocumentUtils.getLineEndOffset(doc, dotPos);
                         indent.reindent(startOffset, endOffset);
                     } catch (BadLocationException ex) {
                         //ignore
@@ -401,6 +412,13 @@ public class HtmlCompletionItem implements CompletionItem {
         return hash;
     }
 
+    @Override
+    public String toString() {
+        return getItemText();
+    }
+    
+    
+
     //------------------------------------------------------------------------------
     /**
      * Completion item representing a JSP tag including its prefix eg.
@@ -416,7 +434,7 @@ public class HtmlCompletionItem implements CompletionItem {
                 = ImageUtilities.loadImageIcon("org/netbeans/modules/html/editor/resources/mathml.png", false); // NOI18N
 
         private static final Color GRAY_COLOR = Color.GRAY;
-        private static final Color DEFAULT_FG_COLOR = new Color(0, 0, 0xFF);
+        private static final Color DEFAULT_FG_COLOR = new Color(64, 64, 217);
         private boolean possible;
         private HtmlTag tag;
 
@@ -449,19 +467,19 @@ public class HtmlCompletionItem implements CompletionItem {
 
         @Override
         protected String getLeftHtmlText() {
+            Color tagColor = possible ? DEFAULT_FG_COLOR : GRAY_COLOR;
+            boolean isPossibleHtmlTag = possible && tag != null && tag.getTagClass() == HtmlTagType.HTML;
             StringBuilder b = new StringBuilder();
-            if (possible) {
-                b.append("<font color=#");
-                b.append(hexColorCode(DEFAULT_FG_COLOR));
-                b.append(">&lt;");
-                b.append(getItemText());
-                b.append("&gt;</font>");
-            } else {
-                b.append("<font color=#");
-                b.append(hexColorCode(GRAY_COLOR));
-                b.append(">&lt;");
-                b.append(getItemText());
-                b.append("&gt;</font>");
+            if (isPossibleHtmlTag) {
+                b.append("<b>");
+            }
+            b.append(getHtmlColor(tagColor));
+            b.append("&lt;"); // NO18N
+            b.append(getItemText());
+            b.append("&gt;"); // NOI18N
+            b.append(END_FONT);
+            if (isPossibleHtmlTag) {
+                b.append("</b>");
             }
             return b.toString();
         }
@@ -564,7 +582,7 @@ public class HtmlCompletionItem implements CompletionItem {
         @Override
         protected String getLeftHtmlText() {
             return (type.bold ? "<b>" : "") + //NOI18N
-                    "<font color=#" + hexColorCode(type.color) + ">&lt;/" + getItemText() + "&gt;</font>" + //NOI18N
+                    getHtmlColor(type.color) + "&lt;/" + getItemText() + "&gt;" + END_FONT + //NOI18N
                     (type.bold ? "</b>" : ""); //NOI18N
         }
 
@@ -628,11 +646,11 @@ public class HtmlCompletionItem implements CompletionItem {
                 strVal = Character.toString(value);
             }
             return new StringBuilder()
-                    .append("<b><font color=#")
-                    .append(hexColorCode(FG))
-                    .append(">")
+                    .append("<b>") // NOI18N
+                    .append(getHtmlColor(FG))
                     .append(strVal)
-                    .append("</font></b>").toString(); //NOI18N
+                    .append(END_FONT)
+                    .append("</b>").toString(); // NOI18N
         }
     }
 
@@ -641,11 +659,23 @@ public class HtmlCompletionItem implements CompletionItem {
      */
     public static class AttributeValue extends HtmlCompletionItem {
 
-        private boolean addQuotation;
+        private final boolean addQuotation;
+        
+        private final int sortPriority;
 
-        public AttributeValue(String value, int offset, boolean addQuotation) {
+        public AttributeValue(String value, int offset, boolean addQuotation, int sortPriority) {
             super(value, offset);
             this.addQuotation = addQuotation;
+            this.sortPriority = sortPriority;
+        }
+
+        public AttributeValue(String value, int offset, boolean addQuotation) {
+            this(value, offset, addQuotation, DEFAULT_SORT_PRIORITY);
+        }
+
+        @Override
+        public int getSortPriority() {
+            return sortPriority;
         }
 
         @Override
@@ -732,11 +762,9 @@ public class HtmlCompletionItem implements CompletionItem {
             if (required) {
                 sb.append("<b>"); //NOI18N
             }
-            sb.append("<font color=#"); //NOI18N
-            sb.append(hexColorCode(getAttributeColor()));
-            sb.append(">"); //NOI18N
+            sb.append(getHtmlColor(getAttributeColor()));
             sb.append(getItemText());
-            sb.append("</font>"); //NOI18N
+            sb.append(END_FONT);
             if (required) {
                 sb.append("</b>"); //NOI18N
             }
@@ -766,11 +794,9 @@ public class HtmlCompletionItem implements CompletionItem {
             if (required) {
                 sb.append("<b>"); //NOI18N
             }
-            sb.append("<font color=#"); //NOI18N
-            sb.append(hexColorCode(ATTR_NAME_COLOR));
-            sb.append(">"); //NOI18N
+            sb.append(getHtmlColor(ATTR_NAME_COLOR));
             sb.append(getItemText());
-            sb.append("</font>"); //NOI18N
+            sb.append(END_FONT);
             if (required) {
                 sb.append("</b>"); //NOI18N
             }
@@ -807,11 +833,9 @@ public class HtmlCompletionItem implements CompletionItem {
                 return getItemText();
             } else {
                 StringBuilder sb = new StringBuilder();
-                sb.append("<font color=#"); //NOI18N
-                sb.append(hexColorCode(color));
-                sb.append(">"); //NOI18N
+                sb.append(getHtmlColor(color));
                 sb.append(getItemText());
-                sb.append("</font>"); //NOI18N
+                sb.append(END_FONT);
                 return sb.toString();
             }
         }
@@ -888,5 +912,61 @@ public class HtmlCompletionItem implements CompletionItem {
             }
         }
         return s;
+    }
+    
+    private static String getHtmlColor(Color c) {
+        return "<font color=#" + hexColorCode(c) + ">"; // NOI18N
+    }
+
+
+
+    public static class HtmlCssValueCompletionItem extends HtmlCompletionItem {
+        private static final ImageIcon ICON = ImageUtilities.loadImageIcon("org/netbeans/modules/html/editor/resources/rule.png", false); //NOI18N
+        private static final String RELATED_SELECTOR_COLOR = "007c00"; //NOI18N
+        private static final String GRAY_COLOR_CODE = Integer.toHexString(Color.GRAY.getRGB()).substring(2);
+        private final boolean related;
+
+        private HtmlCssValueCompletionItem(
+                String value,
+                int substituteOffset,
+                boolean related) {
+            super(value, substituteOffset);
+            this.related = related;
+        }
+
+        @Override
+        protected String getLeftHtmlText() {
+            StringBuilder buf = new StringBuilder();
+            if (related) {
+                buf.append("<b><font color=#"); //NOI18N
+                buf.append(RELATED_SELECTOR_COLOR);
+            } else {
+                buf.append("<font color=#"); //NOI18N
+                buf.append(GRAY_COLOR_CODE);
+            }
+            buf.append(">");
+            buf.append(getItemText());
+            buf.append("</font>"); //NOI18N
+            if (related) {
+                buf.append("</b>"); //NOI18N
+            }
+
+            return buf.toString();
+        }
+
+        @Override
+        protected ImageIcon getIcon() {
+            return ICON;
+        }
+
+        @Override
+        public int getSortPriority() {
+            return super.getSortPriority() - (related ? 1 : 0);
+        }
+
+        @Override
+        void reindent(JTextComponent component) {
+            // Don't reindent
+        }
     }
 }

@@ -37,6 +37,7 @@ import java.util.*;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.io.*;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.openide.util.RequestProcessor;
 
 /**
@@ -254,7 +255,7 @@ class DiffViewManager implements ChangeListener {
     
     static int getRowStartFromLineOffset(Document doc, int lineIndex) {
         if (doc instanceof BaseDocument) {
-            return Utilities.getRowStartFromLineOffset((BaseDocument) doc, lineIndex);
+            return LineDocumentUtils.getLineStartFromIndex((BaseDocument) doc, lineIndex);
         } else {
             // TODO: find row start from line offet
             Element element = doc.getDefaultRootElement();
@@ -474,10 +475,10 @@ class DiffViewManager implements ChangeListener {
         GuardedDocument document = (GuardedDocument) doc;
         int start, end;
         if (diff.getType() == Difference.DELETE) {
-            start = end = Utilities.getRowStartFromLineOffset(document, diff.getSecondStart());
+            start = end = LineDocumentUtils.getLineStartFromIndex(document, diff.getSecondStart());
         } else {
-            start = Utilities.getRowStartFromLineOffset(document, diff.getSecondStart() > 0 ? diff.getSecondStart() - 1 : 0);
-            end = Utilities.getRowStartFromLineOffset(document, diff.getSecondEnd());
+            start = LineDocumentUtils.getLineStartFromIndex(document, diff.getSecondStart() > 0 ? diff.getSecondStart() - 1 : 0);
+            end = LineDocumentUtils.getLineStartFromIndex(document, diff.getSecondEnd());
         }
         MarkBlockChain mbc = ((GuardedDocument) document).getGuardedBlockChain();
         return (mbc.compareBlock(start, end) & MarkBlock.OVERLAP) == 0;
@@ -505,7 +506,7 @@ class DiffViewManager implements ChangeListener {
             if (checkFileEdge && rightOffet >= rightPane.getScrollPane().getVerticalScrollBar().getMaximum()) {
                 rightOffet = map.length - 1;
             }
-            if (rightOffet >= map.length) return;
+            if (rightOffet >= map.length || rightOffet < 0) return;
             leftPane.getScrollPane().getVerticalScrollBar().setValue(map[rightOffet]
                     - halfScreen);
         }

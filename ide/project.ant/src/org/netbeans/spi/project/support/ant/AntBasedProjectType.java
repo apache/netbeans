@@ -58,7 +58,7 @@ public interface AntBasedProjectType {
      * It is forbidden for the result of this method to change from call to call.
      * @param shared if true, refers to <code>project.xml</code>, else refers to
      *               <code>private.xml</code>
-     * @return a simple name; <samp>data</samp> is recommended but not required
+     * @return a simple name; <em>data</em> is recommended but not required
      */
     String getPrimaryConfigurationDataElementName(boolean shared);
     
@@ -70,8 +70,8 @@ public interface AntBasedProjectType {
      * It is forbidden for the result of this method to change from call to call.
      * @param shared if true, refers to <code>project.xml</code>, else refers to
      *               <code>private.xml</code>
-     * @return an XML namespace, e.g. <samp>http://www.netbeans.org/ns/j2se-project</samp>
-     *         or <samp>http://www.netbeans.org/ns/j2se-project-private</samp>
+     * @return an XML namespace, e.g. <em>http://www.netbeans.org/ns/j2se-project</em>
+     *         or <em>http://www.netbeans.org/ns/j2se-project-private</em>
      */
     String getPrimaryConfigurationDataElementNamespace(boolean shared);
 

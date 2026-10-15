@@ -1,0 +1,2 @@
+|-testArrayReturnType [824, 868] : ESCAPED{testArrayReturnType}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{array}</font>
+|-testArrayReturnTypeWithUnionType [880, 984] : ESCAPED{testArrayReturnTypeWithUnionType}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{array}</font>

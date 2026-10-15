@@ -151,11 +151,11 @@ public class HgLogMessage {
     }
 
     public HgLogMessageChangedPath [] getChangedPaths(){
-        return paths.toArray(new HgLogMessageChangedPath[paths.size()]);
+        return paths.toArray(new HgLogMessageChangedPath[0]);
     }
 
     HgLogMessageChangedPath [] getDummyChangedPaths () {
-        return dummyPaths.toArray(new HgLogMessageChangedPath[dummyPaths.size()]);
+        return dummyPaths.toArray(new HgLogMessageChangedPath[0]);
     }
 
     /**

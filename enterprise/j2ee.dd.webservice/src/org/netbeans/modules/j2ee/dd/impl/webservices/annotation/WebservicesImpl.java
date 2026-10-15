@@ -89,7 +89,7 @@ public class WebservicesImpl implements Webservices {
     
     public WebserviceDescription[] getWebserviceDescription() {
         Collection<WebserviceDescriptionImpl> webservices = webserviceManager.getObjects();
-        return webservices.toArray(new WebserviceDescriptionImpl[webservices.size()]);
+        return webservices.toArray(new WebserviceDescriptionImpl[0]);
     }
     
     public WebserviceDescription getWebserviceDescription(int index) {

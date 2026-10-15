@@ -104,8 +104,8 @@ class TemplateWizardIterator implements WizardDescriptor.AsynchronousInstantiati
 
     @Override
     public Set instantiate() throws IOException, IllegalArgumentException {
-        Set set = delegateIterator.instantiate();
-        FileObject template = (FileObject) set.iterator().next();
+        Set<FileObject> set = delegateIterator.instantiate();
+        FileObject template = set.iterator().next();
         if (wiz instanceof TemplateWizard) {
             Logger logger = Logger.getLogger("org.netbeans.ui.metrics.form"); // NOI18N
             LogRecord rec = new LogRecord(Level.INFO, "USG_FORM_CREATED"); // NOI18N
@@ -135,13 +135,7 @@ class TemplateWizardIterator implements WizardDescriptor.AsynchronousInstantiati
                             ExpressionTree extendsTree = superclassElm != null
                                 ? maker.QualIdent(superclassElm)
                                 : maker.Identifier(superclassName);
-                            ClassTree copy = maker.Class(
-                                orig.getModifiers(),
-                                orig.getSimpleName(),
-                                orig.getTypeParameters(),
-                                extendsTree,
-                                orig.getImplementsClause(),
-                                orig.getMembers());
+                            ClassTree copy = maker.setExtends(orig, extendsTree);
                             wcopy.rewrite(orig, copy);
                             break;
                         }
@@ -266,7 +260,7 @@ class TemplateWizardIterator implements WizardDescriptor.AsynchronousInstantiati
         SuperclassPanel() {
             ResourceBundle bundle = NbBundle.getBundle(TemplateWizardIterator.class);
             setName(bundle.getString("CTL_SuperclassTitle")); // NOI18N
-            putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(1)); //NOI18N
+            putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 1); //NOI18N
             getAccessibleContext()
                 .setAccessibleDescription(bundle.getString("ACSD_SuperclassPanel")); // NOI18N
 

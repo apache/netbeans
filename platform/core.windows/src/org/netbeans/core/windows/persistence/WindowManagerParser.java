@@ -34,6 +34,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import java.awt.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Logger;
@@ -470,7 +471,7 @@ public class WindowManagerParser {
         //remove modes still defined in Windows2 folder if they were merged into some other mode
         mergeModes( modeCfgList );
         
-        wmc.modes = modeCfgList.toArray(new ModeConfig[modeCfgList.size()]);
+        wmc.modes = modeCfgList.toArray(new ModeConfig[0]);
         
         if (DEBUG) Debug.log(WindowManagerParser.class, "readModes LEAVE");
     }
@@ -507,7 +508,7 @@ public class WindowManagerParser {
                                 refs.add( tcrf );
                             }
                         }
-                        mc.tcRefConfigs = refs.toArray( new TCRefConfig[refs.size()] );
+                        mc.tcRefConfigs = refs.toArray(new TCRefConfig[0] );
                         break;
                     }
                 }
@@ -634,7 +635,7 @@ public class WindowManagerParser {
             groupParserMap.remove(groupParser.getName());
         }
         
-        wmc.groups = groupCfgList.toArray(new GroupConfig[groupCfgList.size()]);
+        wmc.groups = groupCfgList.toArray(new GroupConfig[0]);
         
         if (DEBUG) Debug.log(WindowManagerParser.class, "readGroups LEAVE");
     }
@@ -728,8 +729,7 @@ public class WindowManagerParser {
             modeConfigMap.put(wmc.modes[i].name, wmc.modes[i]);
         }
         List<String> toDelete = new ArrayList<String>(10);
-        for (String s: modeParserMap.keySet()) {
-            ModeParser modeParser = modeParserMap.get(s);
+        for (ModeParser modeParser: modeParserMap.values()) {
             if (!modeConfigMap.containsKey(modeParser.getName())) {
                 toDelete.add(modeParser.getName());
             }
@@ -762,8 +762,7 @@ public class WindowManagerParser {
             groupConfigMap.put(wmc.groups[i].name, wmc.groups[i]);
         }
         List<String> toDelete = new ArrayList<String>(10);
-        for (String s: groupParserMap.keySet()) {
-            GroupParser groupParser = groupParserMap.get(s);
+        for (GroupParser groupParser: groupParserMap.values()) {
             if (!groupConfigMap.containsKey(groupParser.getName())) {
                 toDelete.add(groupParser.getName());
             }
@@ -982,16 +981,17 @@ public class WindowManagerParser {
             }
             
             winMgrConfig.editorAreaConstraints =
-                itemList.toArray(new SplitConstraint[itemList.size()]);
+                itemList.toArray(new SplitConstraint[0]);
             winMgrConfig.tcIdViewList = 
-                tcIdList.toArray(new String[tcIdList.size()]);
+                tcIdList.toArray(new String[0]);
             winMgrCfg = winMgrConfig;
             internalCfg = internalConfig;
             
             winMgrConfig = null;
             internalConfig = null;
         }
-        
+
+        @Override
         public void startElement (String nameSpace, String name, String qname, Attributes attrs) throws SAXException {
             if ("windowmanager".equals(qname)) { // NOI18N
                 handleWindowManager(attrs);
@@ -1033,6 +1033,7 @@ public class WindowManagerParser {
             }
         }
 
+        @Override
         public void error(SAXParseException ex) throws SAXException  {
             throw ex;
         }
@@ -1823,7 +1824,7 @@ public class WindowManagerParser {
                 try {
                     lock = cfgFOOutput.lock();
                     os = cfgFOOutput.getOutputStream(lock);
-                    osw = new OutputStreamWriter(os, "UTF-8"); // NOI18N
+                    osw = new OutputStreamWriter(os, StandardCharsets.UTF_8);
                     osw.write(buff.toString());
                     //if (DEBUG) Debug.log(WindowManagerParser.class, "-- DUMP WindowManager:");
                     //if (DEBUG) Debug.log(WindowManagerParser.class, buff.toString());

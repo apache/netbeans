@@ -197,7 +197,7 @@ public class HtmlElementProperties {
 
     private static String[] findTags(String tagName, String attrName) {
         ValueCompletion support = AttrValuesCompletion.getSupport(tagName, attrName);
-        if (support != null && support instanceof AttrValuesCompletion.ValuesSetSupport) {
+        if (support instanceof AttrValuesCompletion.ValuesSetSupport) {
             AttrValuesCompletion.ValuesSetSupport fixedValuesSupport = (AttrValuesCompletion.ValuesSetSupport) support;
             return fixedValuesSupport.getTags();
         }

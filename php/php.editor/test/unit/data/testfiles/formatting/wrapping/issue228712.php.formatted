@@ -6,7 +6,6 @@ class ClassName extends FooBarBazaaaaaaaa implements FooBarBaz, FooBarBaz, FooBa
     function __construct() {
         
     }
-
 }
 
 ?>

@@ -46,19 +46,17 @@ public class ASTNodeModel implements NodeModel {
             String label = ast.getClassSimpleName();
             String tags = ast.getTags();
             if (!tags.isEmpty()) {
-                label = '[' + tags + "] " + label;
+                label = '(' + tags + ") " + label;
             }
             int l1 = ast.getStartLine();
             if (l1 >= 0) {
                 int c1 = ast.getStartColumn();
                 int l2 = ast.getEndLine();
                 int c2 = ast.getEndColumn();
-                label += " <"+l1+":"+c1+"-"+l2+":"+c2+">";
+                label += " ["+l1+":"+c1+"-"+l2+":"+c2+"]";
             }
-            if (ast.getChildren().length == 0) {
-                if (ast.isCurrent()) {
-                    label = "<html><b>" + label + "</b></html>";
-                }
+            if (ast.isCurrent()) {
+                label = "<html><b>" + label + "</b></html>";
             }
             return label;
         } else {

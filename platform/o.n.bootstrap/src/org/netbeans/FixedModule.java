@@ -219,8 +219,13 @@ final class FixedModule extends Module {
     /** Turn on the classloader. Passed a list of parent modules to use.
      * The parents should already have had their classloaders initialized.
      */
-    protected void classLoaderUp(Set parents) throws IOException {
+    protected void classLoaderUp(Set<Module> parents) throws IOException {
         return; // no need
+    }
+
+    @Override
+    void releaseClassLoader() {
+        return; // don't touch it
     }
     
     /** Turn off the classloader and release all resources. */

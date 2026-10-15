@@ -131,6 +131,9 @@ public class NoMVCLookupTest extends NbTestCase {
             if(TopComponent.Registry.PROP_TC_OPENED.equals(evt.getPropertyName())) {
                 Object obj = evt.getNewValue();
                 if(obj instanceof TopComponent) {
+                    if (obj.getClass().getName().startsWith("org.netbeans.modules.favorites")) {
+                        return; // ignore automatically opening Favorites tab
+                    }
                     final TopComponent openedTC = (TopComponent) obj;
                     Lookup lookup = openedTC.getLookup();
                     DataObject openedDataObject = lookup.lookup(DataObject.class);

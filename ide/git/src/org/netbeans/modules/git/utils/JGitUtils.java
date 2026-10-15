@@ -55,6 +55,10 @@ public class JGitUtils {
         return Repository.isValidRefName(refName);
     }
     
+    public static String normalizeBranchName (String refName) {
+        return Repository.normalizeBranchName(refName);
+    }
+    
     public static boolean isUserSetup (File root) {
         Repository repository = getRepository(root);
         boolean userExists = true;

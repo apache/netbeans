@@ -32,12 +32,12 @@ import org.netbeans.modules.versioning.util.VCSHyperlinkSupport;
  * info.
  */
 public class RevisionItemCell extends JPanel implements VCSHyperlinkSupport.BoundsTranslator {
-    private JTextPane authorControl=new JTextPane();
-    private JTextPane dateControl=new JTextPane();
-    private JTextPane revisionControl=new JTextPane();
-    private JTextPane commitMessageControl=new JTextPane();
-    private JPanel northPanel=new JPanel();
-    private JPanel authorDatePanel=new JPanel();
+    private final JTextPane authorControl = new JTextPane();
+    private final JTextPane dateControl = new JTextPane();
+    private final JTextPane revisionControl = new JTextPane();
+    private final JTextPane commitMessageControl = new JTextPane();
+    private final JPanel northPanel = new JPanel();
+    private final JPanel authorDatePanel = new JPanel();
 
     public RevisionItemCell () {
         this.setBorder(null);
@@ -66,8 +66,6 @@ public class RevisionItemCell extends JPanel implements VCSHyperlinkSupport.Boun
     }
     /**
      * Corrects the bounding rectangle of nested textpanes.
-     * @param startComponent
-     * @param r 
      */
     @Override
     public void correctTranslation (final Container startComponent, final Rectangle r) {

@@ -71,7 +71,7 @@ import org.netbeans.api.java.source.ScanUtils;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.WorkingCopy;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.java.editor.codegen.ui.DelegatePanel;
 import org.netbeans.modules.java.editor.codegen.ui.ElementNode;
@@ -197,7 +197,7 @@ public class DelegateMethodGenerator implements CodeGenerator {
                 final int caretOffset = component.getCaretPosition();
                 final ElementNode.Description[] description = new ElementNode.Description[1];
                 final AtomicBoolean cancel = new AtomicBoolean();
-                ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -299,7 +299,7 @@ public class DelegateMethodGenerator implements CodeGenerator {
         return ElementNode.Description.create(descriptions);
     }
     
-    static void generateDelegatingMethods(WorkingCopy wc, TreePath path, VariableElement delegate, Iterable<? extends ExecutableElement> methods, int offset) {
+    public static void generateDelegatingMethods(WorkingCopy wc, TreePath path, VariableElement delegate, Iterable<? extends ExecutableElement> methods, int offset) {
         assert TreeUtilities.CLASS_TREE_KINDS.contains(path.getLeaf().getKind());
         TypeElement te = (TypeElement)wc.getTrees().getElement(path);
         if (te != null) {

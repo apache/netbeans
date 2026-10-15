@@ -72,16 +72,16 @@ public class SnapshotTest extends ParsingTestBase {
 //        assertEquals(originalSnapshot.getText ().length (),originalSnapshot.getOriginalOffset (originalSnapshot.getText ().length ()));
 //        try {
 //            assertEquals(-1, originalSnapshot.getOriginalOffset (originalSnapshot.getText ().length ()+1));
-////            assert (false);
+// //            assert (false);
 //        } catch (IndexOutOfBoundsException ex) {
 //        }
 //        assertEquals (0, originalSnapshot.getEmbeddedOffset (0));
 //        assertEquals (10, originalSnapshot.getEmbeddedOffset (10));
-////        try {
-////            originalSnapshot.getEmbeddedOffset (originalSnapshot.getText ().length ());
-////            assert (false);
-////        } catch (ArrayIndexOutOfBoundsException ex) {
-////        }
+// //        try {
+// //            originalSnapshot.getEmbeddedOffset (originalSnapshot.getText ().length ());
+// //            assert (false);
+// //        } catch (ArrayIndexOutOfBoundsException ex) {
+// //        }
 //        assertEquals("stovaci fi", originalSnapshot.create (10, 10, "text/jedna").getSnapshot ().getText ());
 //        assertEquals("1234567890", originalSnapshot.create ("1234567890", "text/jedna").getSnapshot ().getText ());
 //
@@ -101,11 +101,11 @@ public class SnapshotTest extends ParsingTestBase {
 //        assertEquals (30, languageJednaSnapshot.getOriginalOffset (20));
 //        assertEquals (33, languageJednaSnapshot.getOriginalOffset (23));
 //        assertEquals (40, languageJednaSnapshot.getOriginalOffset (30));
-////        try {
+// //        try {
 //            assertEquals (-1, languageJednaSnapshot.getOriginalOffset (31));
-////            assert (false);
-////        } catch (IndexOutOfBoundsException ex) {
-////        }
+// //            assert (false);
+// //        } catch (IndexOutOfBoundsException ex) {
+// //        }
 //        assertEquals (-1, languageJednaSnapshot.getEmbeddedOffset (0));
 //        assertEquals (-1, languageJednaSnapshot.getEmbeddedOffset (5));
 //        assertEquals (0, languageJednaSnapshot.getEmbeddedOffset (10));
@@ -117,11 +117,11 @@ public class SnapshotTest extends ParsingTestBase {
 //        assertEquals (25, languageJednaSnapshot.getEmbeddedOffset (35));
 //        assertEquals (30, languageJednaSnapshot.getEmbeddedOffset (40));
 //        assertEquals (-1, languageJednaSnapshot.getEmbeddedOffset (41));
-////        try {
-////            languageJednaSnapshot.getEmbeddedOffset (50);
-////            assert (false);
-////        } catch (ArrayIndexOutOfBoundsException ex) {
-////        }
+// //        try {
+// //            languageJednaSnapshot.getEmbeddedOffset (50);
+// //            assert (false);
+// //        } catch (ArrayIndexOutOfBoundsException ex) {
+// //        }
 //
 //        Embedding petaEmbedding = languageJednaSnapshot.create (5, 20, "text/peta");
 //        Snapshot petaSnapshot = petaEmbedding.getSnapshot ();
@@ -136,7 +136,7 @@ public class SnapshotTest extends ParsingTestBase {
 //        assertEquals (35, petaSnapshot.getOriginalOffset (20));
 //        try {
 //            assertEquals (-1, petaSnapshot.getOriginalOffset (21));
-////            assert (false);
+// //            assert (false);
 //        } catch (IndexOutOfBoundsException ex) {
 //        }
 //        assertEquals (-1, petaSnapshot.getEmbeddedOffset (0));
@@ -183,7 +183,7 @@ public class SnapshotTest extends ParsingTestBase {
 //        assertEquals (40, languageJednaSnapshot.getOriginalOffset (30));
 //        try {
 //            languageJednaSnapshot.getOriginalOffset (31);
-////            assert (false);
+// //            assert (false);
 //        } catch (IndexOutOfBoundsException ex) {
 //        }
 //        assertEquals (-1, languageJednaSnapshot.getEmbeddedOffset (0));
@@ -197,11 +197,11 @@ public class SnapshotTest extends ParsingTestBase {
 //        assertEquals (25, languageJednaSnapshot.getEmbeddedOffset (35));
 //        assertEquals (30, languageJednaSnapshot.getEmbeddedOffset (40));
 //        assertEquals (-1, languageJednaSnapshot.getEmbeddedOffset (41));
-////        try {
-////            languageJednaSnapshot.getEmbeddedOffset (50);
-////            assert (false);
-////        } catch (ArrayIndexOutOfBoundsException ex) {
-////        }
+// //        try {
+// //            languageJednaSnapshot.getEmbeddedOffset (50);
+// //            assert (false);
+// //        } catch (ArrayIndexOutOfBoundsException ex) {
+// //        }
 //    }
 //
 //    public void testSnapshotEmbedding159626 () throws IOException { // see issue #154444

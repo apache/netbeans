@@ -1,0 +1,973 @@
+<testresult testFile='dnfTypes_01.php'>
+    <scanner>
+        <token id='T_FUNCTION' start='815' end='823'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='824' end='836'>
+            <text>testFunction</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='836' end='837'>
+            <text>(</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='837' end='838'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='838' end='839'>
+            <text>X</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='839' end='840'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='840' end='841'>
+            <text>Y</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='841' end='842'>
+            <text>)</text>
+        </token>
+        <token id='T_OR' start='842' end='843'>
+            <text>|</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='843' end='844'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='844' end='845'>
+            <text>U</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='845' end='846'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='846' end='847'>
+            <text>V</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='847' end='848'>
+            <text>)</text>
+        </token>
+        <token id='T_VARIABLE' start='849' end='854'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='854' end='855'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='855' end='856'>
+            <text>:</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='857' end='858'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='858' end='859'>
+            <text>X</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='859' end='860'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='860' end='861'>
+            <text>Y</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='861' end='862'>
+            <text>)</text>
+        </token>
+        <token id='T_OR' start='862' end='863'>
+            <text>|</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='863' end='864'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='864' end='865'>
+            <text>U</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='865' end='866'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='866' end='867'>
+            <text>V</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='867' end='868'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='869' end='870'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='875' end='881'>
+            <text>return</text>
+        </token>
+        <token id='T_VARIABLE' start='882' end='887'>
+            <text>$test</text>
+        </token>
+        <token id='T_SEMICOLON' start='887' end='888'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='889' end='890'>
+            <text>}</text>
+        </token>
+        <token id='T_CLASS' start='892' end='897'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='898' end='907'>
+            <text>TestClass</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='908' end='909'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='914' end='920'>
+            <text>public</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='921' end='922'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='922' end='923'>
+            <text>X</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='923' end='924'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='924' end='925'>
+            <text>Y</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='925' end='926'>
+            <text>)</text>
+        </token>
+        <token id='T_OR' start='926' end='927'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='927' end='928'>
+            <text>Z</text>
+        </token>
+        <token id='T_VARIABLE' start='929' end='935'>
+            <text>$field</text>
+        </token>
+        <token id='T_SEMICOLON' start='935' end='936'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='941' end='947'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='948' end='954'>
+            <text>static</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='955' end='956'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='956' end='957'>
+            <text>X</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='957' end='958'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='958' end='959'>
+            <text>Y</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='959' end='960'>
+            <text>)</text>
+        </token>
+        <token id='T_OR' start='960' end='961'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='961' end='965'>
+            <text>null</text>
+        </token>
+        <token id='T_VARIABLE' start='966' end='978'>
+            <text>$staticField</text>
+        </token>
+        <token id='T_SEMICOLON' start='978' end='979'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='985' end='991'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='992' end='1000'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1001' end='1011'>
+            <text>testMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1011' end='1012'>
+            <text>(</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1012' end='1013'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1013' end='1014'>
+            <text>X</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='1014' end='1015'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='1015' end='1016'>
+            <text>Y</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1016' end='1017'>
+            <text>)</text>
+        </token>
+        <token id='T_OR' start='1017' end='1018'>
+            <text>|</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1018' end='1019'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1019' end='1020'>
+            <text>U</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='1020' end='1021'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='1021' end='1022'>
+            <text>V</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1022' end='1023'>
+            <text>)</text>
+        </token>
+        <token id='T_VARIABLE' start='1024' end='1029'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1029' end='1030'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1030' end='1031'>
+            <text>:</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1032' end='1033'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1033' end='1034'>
+            <text>X</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='1034' end='1035'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='1035' end='1036'>
+            <text>Y</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1036' end='1037'>
+            <text>)</text>
+        </token>
+        <token id='T_OR' start='1037' end='1038'>
+            <text>|</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1038' end='1039'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1039' end='1040'>
+            <text>U</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='1040' end='1041'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='1041' end='1042'>
+            <text>V</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1042' end='1043'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1044' end='1045'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1054' end='1060'>
+            <text>return</text>
+        </token>
+        <token id='T_VARIABLE' start='1061' end='1066'>
+            <text>$test</text>
+        </token>
+        <token id='T_SEMICOLON' start='1066' end='1067'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1072' end='1073'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1074' end='1075'>
+            <text>}</text>
+        </token>
+        <token id='T_INTERFACE' start='1077' end='1086'>
+            <text>interface</text>
+        </token>
+        <token id='T_STRING' start='1087' end='1100'>
+            <text>TestInterface</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1101' end='1102'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='1107' end='1113'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1114' end='1122'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1123' end='1133'>
+            <text>testMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1133' end='1134'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1134' end='1137'>
+            <text>int</text>
+        </token>
+        <token id='T_OR' start='1137' end='1138'>
+            <text>|</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1138' end='1139'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1139' end='1140'>
+            <text>A</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='1140' end='1141'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='1141' end='1142'>
+            <text>B</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='1142' end='1143'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='1143' end='1144'>
+            <text>C</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1144' end='1145'>
+            <text>)</text>
+        </token>
+        <token id='T_VARIABLE' start='1146' end='1151'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1151' end='1152'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1152' end='1153'>
+            <text>:</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1154' end='1155'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1155' end='1156'>
+            <text>A</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='1156' end='1157'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='1157' end='1158'>
+            <text>B</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='1158' end='1159'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='1159' end='1160'>
+            <text>C</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1160' end='1161'>
+            <text>)</text>
+        </token>
+        <token id='T_OR' start='1161' end='1162'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1162' end='1165'>
+            <text>int</text>
+        </token>
+        <token id='T_SEMICOLON' start='1165' end='1166'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1167' end='1168'>
+            <text>}</text>
+        </token>
+        <token id='T_TRAIT' start='1170' end='1175'>
+            <text>trait</text>
+        </token>
+        <token id='T_STRING' start='1176' end='1185'>
+            <text>TestTrait</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1186' end='1187'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='1192' end='1198'>
+            <text>public</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1199' end='1200'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1200' end='1201'>
+            <text>X</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='1201' end='1202'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='1202' end='1203'>
+            <text>Y</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1203' end='1204'>
+            <text>)</text>
+        </token>
+        <token id='T_OR' start='1204' end='1205'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1205' end='1206'>
+            <text>Z</text>
+        </token>
+        <token id='T_OR' start='1206' end='1207'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1207' end='1211'>
+            <text>null</text>
+        </token>
+        <token id='T_VARIABLE' start='1212' end='1218'>
+            <text>$field</text>
+        </token>
+        <token id='T_SEMICOLON' start='1218' end='1219'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1224' end='1230'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1231' end='1237'>
+            <text>static</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1238' end='1239'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1239' end='1240'>
+            <text>X</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='1240' end='1241'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='1241' end='1242'>
+            <text>Y</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1242' end='1243'>
+            <text>)</text>
+        </token>
+        <token id='T_OR' start='1243' end='1244'>
+            <text>|</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1244' end='1245'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1245' end='1246'>
+            <text>A</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='1246' end='1247'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='1247' end='1248'>
+            <text>B</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='1248' end='1249'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='1249' end='1250'>
+            <text>C</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1250' end='1251'>
+            <text>)</text>
+        </token>
+        <token id='T_OR' start='1251' end='1252'>
+            <text>|</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1252' end='1253'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1253' end='1254'>
+            <text>E</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='1254' end='1255'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='1255' end='1256'>
+            <text>D</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1256' end='1257'>
+            <text>)</text>
+        </token>
+        <token id='T_VARIABLE' start='1258' end='1269'>
+            <text>$staicField</text>
+        </token>
+        <token id='T_SEMICOLON' start='1269' end='1270'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1276' end='1282'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1283' end='1291'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1292' end='1302'>
+            <text>testMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1302' end='1303'>
+            <text>(</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1303' end='1304'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1304' end='1305'>
+            <text>X</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='1305' end='1306'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='1306' end='1307'>
+            <text>Y</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1307' end='1308'>
+            <text>)</text>
+        </token>
+        <token id='T_OR' start='1308' end='1309'>
+            <text>|</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1309' end='1310'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1310' end='1311'>
+            <text>U</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='1311' end='1312'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='1312' end='1313'>
+            <text>V</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1313' end='1314'>
+            <text>)</text>
+        </token>
+        <token id='T_VARIABLE' start='1315' end='1320'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1320' end='1321'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1321' end='1322'>
+            <text>:</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1323' end='1324'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1324' end='1325'>
+            <text>X</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='1325' end='1326'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='1326' end='1327'>
+            <text>Y</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1327' end='1328'>
+            <text>)</text>
+        </token>
+        <token id='T_OR' start='1328' end='1329'>
+            <text>|</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1329' end='1330'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1330' end='1331'>
+            <text>U</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='1331' end='1332'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='1332' end='1333'>
+            <text>V</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1333' end='1334'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1335' end='1336'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1345' end='1351'>
+            <text>return</text>
+        </token>
+        <token id='T_VARIABLE' start='1352' end='1357'>
+            <text>$test</text>
+        </token>
+        <token id='T_SEMICOLON' start='1357' end='1358'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1363' end='1364'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1365' end='1366'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='1367' end='1367'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1367'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <FunctionDeclaration start='815' end='890' isReference='false'>
+                <Identifier start='824' end='836' name='testFunction'/>
+                <FormalParameters>
+                    <FormalParameter start='837' end='854' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                            <UnionType start='837' end='848'>
+                                <IntersectionType start='838' end='841'>
+                                    <NamespaceName start='838' end='839' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='838' end='839' name='X'/>
+                                    </NamespaceName>
+                                    <NamespaceName start='840' end='841' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='840' end='841' name='Y'/>
+                                    </NamespaceName>
+                                </IntersectionType>
+                                <IntersectionType start='844' end='847'>
+                                    <NamespaceName start='844' end='845' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='844' end='845' name='U'/>
+                                    </NamespaceName>
+                                    <NamespaceName start='846' end='847' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='846' end='847' name='V'/>
+                                    </NamespaceName>
+                                </IntersectionType>
+                            </UnionType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='849' end='854' isDollared='true'>
+                                <Identifier start='850' end='854' name='test'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                </FormalParameters>
+                <UnionType start='857' end='868'>
+                    <IntersectionType start='858' end='861'>
+                        <NamespaceName start='858' end='859' isCurrent='false' isGlobal='false'>
+                            <Identifier start='858' end='859' name='X'/>
+                        </NamespaceName>
+                        <NamespaceName start='860' end='861' isCurrent='false' isGlobal='false'>
+                            <Identifier start='860' end='861' name='Y'/>
+                        </NamespaceName>
+                    </IntersectionType>
+                    <IntersectionType start='864' end='867'>
+                        <NamespaceName start='864' end='865' isCurrent='false' isGlobal='false'>
+                            <Identifier start='864' end='865' name='U'/>
+                        </NamespaceName>
+                        <NamespaceName start='866' end='867' isCurrent='false' isGlobal='false'>
+                            <Identifier start='866' end='867' name='V'/>
+                        </NamespaceName>
+                    </IntersectionType>
+                </UnionType>
+                <Block start='869' end='890' isCurly='true'>
+                    <ReturnStatement start='875' end='888'>
+                        <Variable start='882' end='887' isDollared='true'>
+                            <Identifier start='883' end='887' name='test'/>
+                        </Variable>
+                    </ReturnStatement>
+                </Block>
+            </FunctionDeclaration>
+            <ClassDeclaration start='892' end='1075' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='898' end='907' name='TestClass'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='908' end='1075' isCurly='true'>
+                    <FieldsDeclaration start='914' end='936' modifier='public'>
+                        <FieldType>
+                            <UnionType start='921' end='928'>
+                                <IntersectionType start='922' end='925'>
+                                    <NamespaceName start='922' end='923' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='922' end='923' name='X'/>
+                                    </NamespaceName>
+                                    <NamespaceName start='924' end='925' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='924' end='925' name='Y'/>
+                                    </NamespaceName>
+                                </IntersectionType>
+                                <NamespaceName start='927' end='928' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='927' end='928' name='Z'/>
+                                </NamespaceName>
+                            </UnionType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='929' end='935' isDollared='true'>
+                                <Identifier start='930' end='935' name='field'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='941' end='979' modifier='public static'>
+                        <FieldType>
+                            <UnionType start='955' end='965'>
+                                <IntersectionType start='956' end='959'>
+                                    <NamespaceName start='956' end='957' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='956' end='957' name='X'/>
+                                    </NamespaceName>
+                                    <NamespaceName start='958' end='959' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='958' end='959' name='Y'/>
+                                    </NamespaceName>
+                                </IntersectionType>
+                                <NamespaceName start='961' end='965' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='961' end='965' name='null'/>
+                                </NamespaceName>
+                            </UnionType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='966' end='978' isDollared='true'>
+                                <Identifier start='967' end='978' name='staticField'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <MethodDeclaration start='985' end='1073' modifiers='public'>
+                        <FunctionDeclaration start='992' end='1073' isReference='false'>
+                            <Identifier start='1001' end='1011' name='testMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='1012' end='1029' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <UnionType start='1012' end='1023'>
+                                            <IntersectionType start='1013' end='1016'>
+                                                <NamespaceName start='1013' end='1014' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='1013' end='1014' name='X'/>
+                                                </NamespaceName>
+                                                <NamespaceName start='1015' end='1016' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='1015' end='1016' name='Y'/>
+                                                </NamespaceName>
+                                            </IntersectionType>
+                                            <IntersectionType start='1019' end='1022'>
+                                                <NamespaceName start='1019' end='1020' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='1019' end='1020' name='U'/>
+                                                </NamespaceName>
+                                                <NamespaceName start='1021' end='1022' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='1021' end='1022' name='V'/>
+                                                </NamespaceName>
+                                            </IntersectionType>
+                                        </UnionType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1024' end='1029' isDollared='true'>
+                                            <Identifier start='1025' end='1029' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <UnionType start='1032' end='1043'>
+                                <IntersectionType start='1033' end='1036'>
+                                    <NamespaceName start='1033' end='1034' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1033' end='1034' name='X'/>
+                                    </NamespaceName>
+                                    <NamespaceName start='1035' end='1036' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1035' end='1036' name='Y'/>
+                                    </NamespaceName>
+                                </IntersectionType>
+                                <IntersectionType start='1039' end='1042'>
+                                    <NamespaceName start='1039' end='1040' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1039' end='1040' name='U'/>
+                                    </NamespaceName>
+                                    <NamespaceName start='1041' end='1042' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1041' end='1042' name='V'/>
+                                    </NamespaceName>
+                                </IntersectionType>
+                            </UnionType>
+                            <Block start='1044' end='1073' isCurly='true'>
+                                <ReturnStatement start='1054' end='1067'>
+                                    <Variable start='1061' end='1066' isDollared='true'>
+                                        <Identifier start='1062' end='1066' name='test'/>
+                                    </Variable>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <InterfaceDeclaration start='1077' end='1168'>
+                <Name>
+                    <Identifier start='1087' end='1100' name='TestInterface'/>
+                </Name>
+                <Block start='1101' end='1168' isCurly='true'>
+                    <MethodDeclaration start='1107' end='1166' modifiers='public'>
+                        <FunctionDeclaration start='1114' end='1166' isReference='false'>
+                            <Identifier start='1123' end='1133' name='testMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='1134' end='1151' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <UnionType start='1134' end='1145'>
+                                            <NamespaceName start='1134' end='1137' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1134' end='1137' name='int'/>
+                                            </NamespaceName>
+                                            <IntersectionType start='1139' end='1144'>
+                                                <NamespaceName start='1139' end='1140' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='1139' end='1140' name='A'/>
+                                                </NamespaceName>
+                                                <NamespaceName start='1141' end='1142' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='1141' end='1142' name='B'/>
+                                                </NamespaceName>
+                                                <NamespaceName start='1143' end='1144' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='1143' end='1144' name='C'/>
+                                                </NamespaceName>
+                                            </IntersectionType>
+                                        </UnionType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1146' end='1151' isDollared='true'>
+                                            <Identifier start='1147' end='1151' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <UnionType start='1154' end='1165'>
+                                <IntersectionType start='1155' end='1160'>
+                                    <NamespaceName start='1155' end='1156' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1155' end='1156' name='A'/>
+                                    </NamespaceName>
+                                    <NamespaceName start='1157' end='1158' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1157' end='1158' name='B'/>
+                                    </NamespaceName>
+                                    <NamespaceName start='1159' end='1160' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1159' end='1160' name='C'/>
+                                    </NamespaceName>
+                                </IntersectionType>
+                                <NamespaceName start='1162' end='1165' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1162' end='1165' name='int'/>
+                                </NamespaceName>
+                            </UnionType>
+                            <Block start='1165' end='1166' isCurly='flase'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </InterfaceDeclaration>
+            <TraitDeclaration start='1170' end='1366'>
+                <TraitName>
+                    <Identifier start='1176' end='1185' name='TestTrait'/>
+                </TraitName>
+                <Block start='1186' end='1366' isCurly='true'>
+                    <FieldsDeclaration start='1192' end='1219' modifier='public'>
+                        <FieldType>
+                            <UnionType start='1199' end='1211'>
+                                <IntersectionType start='1200' end='1203'>
+                                    <NamespaceName start='1200' end='1201' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1200' end='1201' name='X'/>
+                                    </NamespaceName>
+                                    <NamespaceName start='1202' end='1203' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1202' end='1203' name='Y'/>
+                                    </NamespaceName>
+                                </IntersectionType>
+                                <NamespaceName start='1205' end='1206' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1205' end='1206' name='Z'/>
+                                </NamespaceName>
+                                <NamespaceName start='1207' end='1211' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1207' end='1211' name='null'/>
+                                </NamespaceName>
+                            </UnionType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1212' end='1218' isDollared='true'>
+                                <Identifier start='1213' end='1218' name='field'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1224' end='1270' modifier='public static'>
+                        <FieldType>
+                            <UnionType start='1238' end='1257'>
+                                <IntersectionType start='1239' end='1242'>
+                                    <NamespaceName start='1239' end='1240' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1239' end='1240' name='X'/>
+                                    </NamespaceName>
+                                    <NamespaceName start='1241' end='1242' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1241' end='1242' name='Y'/>
+                                    </NamespaceName>
+                                </IntersectionType>
+                                <IntersectionType start='1245' end='1250'>
+                                    <NamespaceName start='1245' end='1246' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1245' end='1246' name='A'/>
+                                    </NamespaceName>
+                                    <NamespaceName start='1247' end='1248' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1247' end='1248' name='B'/>
+                                    </NamespaceName>
+                                    <NamespaceName start='1249' end='1250' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1249' end='1250' name='C'/>
+                                    </NamespaceName>
+                                </IntersectionType>
+                                <IntersectionType start='1253' end='1256'>
+                                    <NamespaceName start='1253' end='1254' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1253' end='1254' name='E'/>
+                                    </NamespaceName>
+                                    <NamespaceName start='1255' end='1256' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1255' end='1256' name='D'/>
+                                    </NamespaceName>
+                                </IntersectionType>
+                            </UnionType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1258' end='1269' isDollared='true'>
+                                <Identifier start='1259' end='1269' name='staicField'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <MethodDeclaration start='1276' end='1364' modifiers='public'>
+                        <FunctionDeclaration start='1283' end='1364' isReference='false'>
+                            <Identifier start='1292' end='1302' name='testMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='1303' end='1320' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <UnionType start='1303' end='1314'>
+                                            <IntersectionType start='1304' end='1307'>
+                                                <NamespaceName start='1304' end='1305' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='1304' end='1305' name='X'/>
+                                                </NamespaceName>
+                                                <NamespaceName start='1306' end='1307' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='1306' end='1307' name='Y'/>
+                                                </NamespaceName>
+                                            </IntersectionType>
+                                            <IntersectionType start='1310' end='1313'>
+                                                <NamespaceName start='1310' end='1311' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='1310' end='1311' name='U'/>
+                                                </NamespaceName>
+                                                <NamespaceName start='1312' end='1313' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='1312' end='1313' name='V'/>
+                                                </NamespaceName>
+                                            </IntersectionType>
+                                        </UnionType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1315' end='1320' isDollared='true'>
+                                            <Identifier start='1316' end='1320' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <UnionType start='1323' end='1334'>
+                                <IntersectionType start='1324' end='1327'>
+                                    <NamespaceName start='1324' end='1325' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1324' end='1325' name='X'/>
+                                    </NamespaceName>
+                                    <NamespaceName start='1326' end='1327' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1326' end='1327' name='Y'/>
+                                    </NamespaceName>
+                                </IntersectionType>
+                                <IntersectionType start='1330' end='1333'>
+                                    <NamespaceName start='1330' end='1331' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1330' end='1331' name='U'/>
+                                    </NamespaceName>
+                                    <NamespaceName start='1332' end='1333' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1332' end='1333' name='V'/>
+                                    </NamespaceName>
+                                </IntersectionType>
+                            </UnionType>
+                            <Block start='1335' end='1364' isCurly='true'>
+                                <ReturnStatement start='1345' end='1358'>
+                                    <Variable start='1352' end='1357' isDollared='true'>
+                                        <Identifier start='1353' end='1357' name='test'/>
+                                    </Variable>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </TraitDeclaration>
+        </Statements>
+    </Program>
+</testresult>

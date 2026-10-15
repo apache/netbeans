@@ -28,6 +28,7 @@ public class IDESettingsTest extends BasicTestForImport {
     public IDESettingsTest(String testName) {
         super(testName, "org-netbeans-core-IDESettings.settings");
     }
+    @Override
     public void testPropertyNames() throws Exception {
         assertPropertyNames(new String[] {
             "IgnoredFiles",
@@ -46,6 +47,7 @@ public class IDESettingsTest extends BasicTestForImport {
         });
     }
     
+    @Override
     public void testPreferencesNodePath() throws Exception {
         assertPreferencesNodePath("/org/netbeans/core");
     }

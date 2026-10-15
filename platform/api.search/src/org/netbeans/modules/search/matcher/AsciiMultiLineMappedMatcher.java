@@ -117,7 +117,7 @@ public class AsciiMultiLineMappedMatcher extends AbstractMatcher {
 
         while (textMatcher.find()) {
             if (textDetails == null) {
-                textDetails = new LinkedList<TextDetail>();
+                textDetails = new LinkedList<>();
                 dataObject = DataObject.find(fo);
                 fileMatches++;
             }

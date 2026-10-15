@@ -1,0 +1,15 @@
+Code completion result for source line:
+$example = new Example()->|returnThis()->publicMethod();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     privateMethod()                 [PRIVATE]  Example
+METHOD     privateStaticMethod()           [PRIVATE,  Example
+METHOD     protectedMethod()               [PROTECTE  Example
+METHOD     protectedStaticMethod()         [PROTECTE  Example
+METHOD     publicMethod()                  [PUBLIC]   Example
+METHOD     publicStaticMethod()            [STATIC]   Example
+METHOD     returnThis()                    [PUBLIC]   Example
+METHOD     test()                          [PUBLIC]   Example
+VARIABLE   Test test                       [PUBLIC]   Example
+VARIABLE   int privateField                [PRIVATE]  Example
+VARIABLE   int protectedField              [PROTECTE  Example
+VARIABLE   int publicField                 [PUBLIC]   Example

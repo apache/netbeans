@@ -28,10 +28,12 @@ public class SvnSettingsTest extends BasicTestForImport {
         super(testName, "org-netbeans-modules-subversion-settings-SvnModuleConfig.settings");
     }
 
+    @Override
     public void testPreferencesNodePath() throws Exception {
         assertPreferencesNodePath("/org/netbeans/modules/subversion"); 
     }
     
+    @Override
     public void testPropertyNames() throws Exception {
         assertPropertyNames(new String[] {"commitExclusions.0", "commitExclusions.1", "commitExclusions.2", "ignoredFilePatterns", "textAnnotationsFormat"});        
     }

@@ -105,6 +105,9 @@ public final class ProcessInputStream extends FilterInputStream {
     public synchronized int read(byte[] b, int off, int len) throws IOException {
         if (buffer != null) {
             int available = buffer.length - position;
+            if (available == 0) {
+                return -1;
+            }
             int size = Math.min(len, available);
             System.arraycopy(buffer, position, b, off, size);
             position += size;
@@ -136,13 +139,7 @@ public final class ProcessInputStream extends FilterInputStream {
         if (drain) {
             LOGGER.log(Level.FINE, "Draining process stream");
 
-            boolean running = false;
-            try {
-                process.exitValue();
-            } catch (IllegalThreadStateException ex) {
-                running = true;
-            }
-
+            boolean running = process.isAlive();
             if (running) {
                 LOGGER.log(Level.FINE, "Process is still running");
             }

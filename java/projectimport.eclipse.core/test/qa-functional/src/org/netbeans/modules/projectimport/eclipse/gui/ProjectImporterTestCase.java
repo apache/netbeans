@@ -43,7 +43,7 @@ import org.openide.util.test.TestFileUtils;
  */
 public abstract class ProjectImporterTestCase  extends NbTestCase {
     
-    private final static String caption = Bundle.getStringTrimmed("org.netbeans.modules.projectimport.eclipse.core.wizard.Bundle", "CTL_WizardTitle");
+    private static final String caption = Bundle.getStringTrimmed("org.netbeans.modules.projectimport.eclipse.core.wizard.Bundle", "CTL_WizardTitle");
 
     protected ProjectsTabOperator pto = null;
     public ProjectImporterTestCase(String testName) {

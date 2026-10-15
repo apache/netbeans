@@ -48,7 +48,7 @@ public class SimpleSearchIterator extends AbstractFileObjectIterator {
      * stack of the ancestor folders' children enumerations
      */
     private final Stack<Enumeration<? extends FileObject>> enums
-            = new Stack<Enumeration<? extends FileObject>>();   //unsynced stack
+            = new Stack<>();   //unsynced stack
     /**
      * whether value of {@link #nextObject} is up-to-date
      */
@@ -178,12 +178,10 @@ public class SimpleSearchIterator extends AbstractFileObjectIterator {
      * <code>the method returns
      * <code>null</code> and no further filters are checked. If a filter returns
      * <code>TRAVERSE_ALL_SUBFOLDERS</code>, the filter is removed from the base
-     * as it needs not be applied on the folder's children. The remaining list
-     * of filters is returned as a result.
+     * as it needs not be applied on the folder's children.
      *
      * @param folder folder to compute children filters for
-     * @return list of filters to be applied on the folder's children; or
-     * <code>null</code> if the folder should not be traversed
+     * @return True if directory can be searched, false if it cannot.
      */
     private boolean checkFolderFilters(final FileObject folder) {
         assert folder.isFolder();
@@ -225,7 +223,7 @@ public class SimpleSearchIterator extends AbstractFileObjectIterator {
     static <T extends FileObject> Enumeration<T> sortEnum(
             Enumeration<T> enm) {
 
-        TreeMap<String, T> map = new TreeMap<String, T>();
+        TreeMap<String, T> map = new TreeMap<>();
         while (enm.hasMoreElements()) {
             T o = enm.nextElement();
             map.put(o.getNameExt(), o);

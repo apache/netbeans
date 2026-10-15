@@ -61,7 +61,7 @@ import org.netbeans.api.java.source.support.ReferencesCount;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.options.OptionsDisplayer;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.api.whitelist.WhiteListQuery;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.lib.editor.codetemplates.api.CodeTemplateManager;
@@ -85,6 +85,9 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.xml.XMLUtil;
 import org.netbeans.swing.plaf.LFCustoms;
+
+import static javax.lang.model.type.TypeKind.VOID;
+import javax.swing.Icon;
 
 /**
  *
@@ -119,8 +122,19 @@ public abstract class JavaCompletionItem implements CompletionItem {
                 return new EnumItem(info, elem, type, 0, substitutionOffset, referencesCount, isDeprecated, insideNew, addSimpleName, smartType, autoImportEnclosingType, whiteList);
             case ANNOTATION_TYPE:
                 return new AnnotationTypeItem(info, elem, type, 0, substitutionOffset, referencesCount, isDeprecated, insideNew, addSimpleName, smartType, autoImportEnclosingType, whiteList);
+            case RECORD:
+                return new RecordItem(info, elem, type, 0, substitutionOffset, referencesCount, isDeprecated, insideNew, addSimpleName, smartType, autoImportEnclosingType, whiteList);
             default:
                 throw new IllegalArgumentException("kind=" + elem.getKind());
+        }
+    }
+
+    public static JavaCompletionItem createRecordPatternItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew, boolean addTypeVars) {
+        if(elem.getKind() == ElementKind.RECORD) {
+            return new RecordPatternItem(info, elem, type, 0, substitutionOffset, referencesCount, isDeprecated, insideNew);
+        }
+        else {
+            throw new IllegalArgumentException("kind=" + elem.getKind());
         }
     }
 
@@ -159,6 +173,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
         switch (elem.getKind()) {
             case LOCAL_VARIABLE:
             case RESOURCE_VARIABLE:
+            case BINDING_VARIABLE:
             case PARAMETER:
             case EXCEPTION_PARAMETER:
                 return new VariableItem(info, type, elem.getSimpleName().toString(), substitutionOffset, false, smartType, assignToVarOffset);
@@ -174,20 +189,20 @@ public abstract class JavaCompletionItem implements CompletionItem {
         return new VariableItem(info, null, varName, substitutionOffset, newVarName, smartType, -1);
     }
 
-    public static JavaCompletionItem createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef, WhiteListQuery.WhiteList whiteList) {
+    public static JavaCompletionItem createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean afterConstructorTypeParams, boolean smartType, int assignToVarOffset, boolean memberRef, boolean substituteTextParams, WhiteListQuery.WhiteList whiteList) {
         switch (elem.getKind()) {
             case METHOD:
-                return new MethodItem(info, elem, type, castType, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, smartType, assignToVarOffset, memberRef, whiteList);
+                return new MethodItem(info, elem, type, castType, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, smartType, assignToVarOffset, memberRef, substituteTextParams, whiteList);
             case CONSTRUCTOR:
-                return new ConstructorItem(info, elem, type, substitutionOffset, isDeprecated, smartType, null, whiteList);
+                return new ConstructorItem(info, elem, type, substitutionOffset, isDeprecated, afterConstructorTypeParams, smartType, null, substituteTextParams, whiteList);
             default:
                 throw new IllegalArgumentException("kind=" + elem.getKind());
         }
     }
 
-    public static JavaCompletionItem createThisOrSuperConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, String name, WhiteListQuery.WhiteList whiteList) {
+    public static JavaCompletionItem createThisOrSuperConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, String name, boolean substituteTextParams, WhiteListQuery.WhiteList whiteList) {
         if (elem.getKind() == ElementKind.CONSTRUCTOR) {
-            return new ConstructorItem(info, elem, type, substitutionOffset, isDeprecated, false, name, whiteList);
+            return new ConstructorItem(info, elem, type, substitutionOffset, isDeprecated, false, false, name, substituteTextParams, whiteList);
         }
         throw new IllegalArgumentException("kind=" + elem.getKind());
     }
@@ -231,12 +246,12 @@ public abstract class JavaCompletionItem implements CompletionItem {
         return new AttributeValueItem(info, value, documentation, element, substitutionOffset, referencesCount, whiteList);
     }
 
-    public static JavaCompletionItem createStaticMemberItem(CompilationInfo info, DeclaredType type, Element memberElem, TypeMirror memberType, boolean multipleVersions, int substitutionOffset, boolean isDeprecated, boolean addSemicolon, WhiteListQuery.WhiteList whiteList) {
+    public static JavaCompletionItem createStaticMemberItem(CompilationInfo info, DeclaredType type, Element memberElem, TypeMirror memberType, boolean multipleVersions, int substitutionOffset, boolean isDeprecated, boolean addSemicolon, boolean smartType, WhiteListQuery.WhiteList whiteList) {
         switch (memberElem.getKind()) {
             case METHOD:
             case ENUM_CONSTANT:
             case FIELD:
-                return new StaticMemberItem(info, type, memberElem, memberType, multipleVersions, substitutionOffset, isDeprecated, addSemicolon, whiteList);
+                return new StaticMemberItem(info, type, memberElem, memberType, multipleVersions, substitutionOffset, isDeprecated, addSemicolon, smartType, whiteList);
             default:
                 throw new IllegalArgumentException("kind=" + memberElem.getKind());
         }
@@ -250,8 +265,8 @@ public abstract class JavaCompletionItem implements CompletionItem {
         return new InitializeAllConstructorItem(info, isDefault, fields, superConstructor, parent, substitutionOffset);
     }
 
-    public static JavaCompletionItem createLambdaItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, boolean addSemicolon) {
-        return new LambdaCompletionItem(info, elem, type, substitutionOffset, addSemicolon);
+    public static JavaCompletionItem createLambdaItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, boolean expression, boolean addSemicolon) {
+        return new LambdaCompletionItem(info, elem, type, substitutionOffset, expression, addSemicolon);
     }
 
     private static CompletionItem createExcludeItem(CharSequence name) {
@@ -598,10 +613,10 @@ public abstract class JavaCompletionItem implements CompletionItem {
         return null;
     }
 
-    static abstract class WhiteListJavaCompletionItem<T extends Element> extends JavaCompletionItem {
+    abstract static class WhiteListJavaCompletionItem<T extends Element> extends JavaCompletionItem {
 
         private static final String WARNING = "org/netbeans/modules/java/editor/resources/warning_badge.gif";   //NOI18N
-        private static ImageIcon warningIcon;
+        private static Icon warningIcon;
         private final WhiteListQuery.WhiteList whiteList;
         private final List<ElementHandle<? extends Element>> handles;
         private Boolean isBlackListed;
@@ -666,10 +681,10 @@ public abstract class JavaCompletionItem implements CompletionItem {
                 return base;
             }
             if (warningIcon == null) {
-                warningIcon = ImageUtilities.loadImageIcon(WARNING, false);
+                warningIcon = ImageUtilities.loadIcon(WARNING);
             }
             assert warningIcon != null;
-            return new ImageIcon(ImageUtilities.mergeImages(base.getImage(), warningIcon.getImage(), 8, 8));
+            return ImageUtilities.icon2ImageIcon(ImageUtilities.mergeIcons(base, warningIcon, 8, 8));
         }
 
         protected ImageIcon getBaseIcon() {
@@ -987,6 +1002,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
             return simpleName;
         }
 
+        @Override
         public List<CompletionItem> getSubItems() {
             return subItems;
         }
@@ -1057,7 +1073,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
         protected CharSequence substituteText(final JTextComponent c, final int offset, final int length, final CharSequence text, final CharSequence toAdd) {
             final StringBuilder template = new StringBuilder();
             final AtomicBoolean cancel = new AtomicBoolean();
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -1239,7 +1255,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
             }
             if (path != null) {
                 Trees trees = info.getTrees();
-                int pos = (int)trees.getSourcePositions().getStartPosition(path.getCompilationUnit(), path.getLeaf().getKind() == Tree.Kind.VARIABLE ? ((VariableTree)path.getLeaf()).getType() : path.getLeaf());
+                int pos = (int)trees.getSourcePositions().getStartPosition(path.getLeaf().getKind() == Tree.Kind.VARIABLE ? ((VariableTree)path.getLeaf()).getType() : path.getLeaf());
                 if (pos >= 0) {
                     Scope scope = tu.scopeFor(pos);
                     String stmt = info.getText().substring(pos, offset);
@@ -1307,6 +1323,65 @@ public abstract class JavaCompletionItem implements CompletionItem {
                 icon = ImageUtilities.loadImageIcon(ENUM, false);
             }
             return icon;
+        }
+    }
+    
+    static class RecordItem extends ClassItem {
+
+        private static final String RECORD = "org/netbeans/modules/editor/resources/completion/record.png"; // NOI18N
+        private static ImageIcon icon;
+
+        private RecordItem(CompilationInfo info, TypeElement elem, DeclaredType type, int dim, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew, boolean addSimpleName, boolean smartType, boolean autoImport, WhiteListQuery.WhiteList whiteList) {
+            super(info, elem, type, dim, substitutionOffset, referencesCount, isDeprecated, insideNew, false, addSimpleName, smartType, autoImport, whiteList);
+        }
+
+        @Override
+        protected ImageIcon getBaseIcon() {
+            if (icon == null) {
+                icon = ImageUtilities.loadImageIcon(RECORD, false);
+            }
+            return icon;
+        }
+    }
+
+    static class RecordPatternItem extends ClassItem {
+
+        private String simpleName;
+        private String recordParams;
+
+        private RecordPatternItem(CompilationInfo info, TypeElement elem, DeclaredType type, int dim, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew) {
+            super(info, elem, type, dim, substitutionOffset, referencesCount, isDeprecated, insideNew, false, false, false, false, null);
+            simpleName = elem.getSimpleName().toString();
+            Iterator<? extends RecordComponentElement> it = elem.getRecordComponents().iterator();
+            StringBuilder sb = new StringBuilder();
+            RecordComponentElement recordComponent;
+            sb.append("(");
+            while (it.hasNext()) {
+                recordComponent = it.next();
+                sb.append(Utilities.getTypeName(info, recordComponent.getAccessor().getReturnType(), false));
+                sb.append(" ");
+                sb.append(recordComponent.getSimpleName());
+                if (it.hasNext()) {
+                    sb.append(", "); //NOI18N
+                }
+            }
+            sb.append(")");
+            recordParams = sb.toString();
+        }
+
+        @Override
+        protected CharSequence substituteText(final JTextComponent c, final int offset, final int length, final CharSequence text, final CharSequence toAdd) {
+            return recordParams;
+        }
+
+        @Override
+        protected String getLeftHtmlText() {
+            return simpleName + recordParams;
+        }
+
+        @Override
+        public int getSortPriority() {
+            return 650;
         }
     }
 
@@ -1445,7 +1520,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
         public String toString() {
             return (typeName != null ? typeName + " " : "") + varName; //NOI18N
         }
-   }
+    }
 
     static class FieldItem extends WhiteListJavaCompletionItem<VariableElement> {
 
@@ -1468,6 +1543,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
         private String typeName;
         private String leftText;
         private String rightText;
+        private CharSequence sortText;
         private boolean autoImportEnclosingType;
         private CharSequence enclSortText;
         private int castEndOffset;
@@ -1493,19 +1569,19 @@ public abstract class JavaCompletionItem implements CompletionItem {
             this.assignToVarText = assignToVarOffset < 0 ? null : createAssignToVarText(info, type, this.simpleName);
             if (castType != null) {
                 try {
+                    TreePath tp = info.getTreeUtilities().pathFor(substitutionOffset);
                     if (this.startOffset < 0) {
-                        TreePath tp = info.getTreeUtilities().pathFor(substitutionOffset);
                         if (tp != null && tp.getLeaf().getKind() == Tree.Kind.MEMBER_SELECT) {
-                            this.startOffset = (int)info.getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
+                            this.startOffset = (int)info.getTrees().getSourcePositions().getStartPosition(tp.getLeaf());
                         }
                     }
-                    this.castText = "(" + Utilities.getTypeName(info, castType, false) + (CodeStyle.getDefault(info.getDocument()).spaceAfterTypeCast() ? ") " : ")"); //NOI18N
+                    this.castText = "(" + AutoImport.resolveImport(info, tp, castType) + (CodeStyle.getDefault(info.getDocument()).spaceAfterTypeCast() ? ") " : ")"); //NOI18N
                     this.castEndOffset = findCastEndPosition(info.getTokenHierarchy().tokenSequence(JavaTokenId.language()), startOffset, substitutionOffset);
                 } catch (IOException ex) {
                 }
             } else {
                 this.castEndOffset = -1;
-            }           
+            }
         }
 
         @Override
@@ -1520,7 +1596,10 @@ public abstract class JavaCompletionItem implements CompletionItem {
 
         @Override
         public CharSequence getSortText() {
-            return simpleName + "#" + enclSortText; //NOI18N
+            if (sortText == null) {
+                sortText = LazySortText.link(simpleName, enclSortText);
+            }
+            return sortText;
         }
 
         @Override
@@ -1648,7 +1727,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
             final String[] prefix = {""}; //NOI18N
             if (findPrefix.get()) {
                 final AtomicBoolean cancel = new AtomicBoolean();
-                ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -1679,7 +1758,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
             CharSequence cs = super.substituteText(c, offset, length, prefix[0] + text, toAdd);
             if (autoImportEnclosingType) {
                 final AtomicBoolean cancel = new AtomicBoolean();
-                ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -1750,7 +1829,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
         protected List<ParamDesc> params;
         private String typeName;
         private boolean addSemicolon;
-        private String sortText;
+        private CharSequence sortText;
         private String leftText;
         private String rightText;
         private boolean autoImportEnclosingType;
@@ -1759,8 +1838,9 @@ public abstract class JavaCompletionItem implements CompletionItem {
         private CharSequence castText;
         private int startOffset;
         private CharSequence assignToVarText;
+        private final boolean substituteTextParams;
 
-        private MethodItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef, WhiteListQuery.WhiteList whiteList) {
+        private MethodItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef, boolean substituteTextParams, WhiteListQuery.WhiteList whiteList) {
             super(substitutionOffset, ElementHandle.create(elem), whiteList);
             Color c = LFCustoms.getTextFgColor();
             this.isInherited = isInherited;
@@ -1793,19 +1873,20 @@ public abstract class JavaCompletionItem implements CompletionItem {
             this.assignToVarText = this.startOffset < 0 ? null : createAssignToVarText(info, type.getReturnType(), this.simpleName);
             if (castType != null) {
                 try {
+                    TreePath tp = info.getTreeUtilities().pathFor(substitutionOffset);
                     if (this.startOffset < 0) {
-                        TreePath tp = info.getTreeUtilities().pathFor(substitutionOffset);
                         if (tp != null && tp.getLeaf().getKind() == Tree.Kind.MEMBER_SELECT) {
-                            this.startOffset = (int)info.getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
+                            this.startOffset = (int)info.getTrees().getSourcePositions().getStartPosition(tp.getLeaf());
                         }
                     }
-                    this.castText = "(" + Utilities.getTypeName(info, castType, false) + (CodeStyle.getDefault(info.getDocument()).spaceAfterTypeCast() ? ") " : ")"); //NOI18N
+                    this.castText = "(" + AutoImport.resolveImport(info, tp, castType) + (CodeStyle.getDefault(info.getDocument()).spaceAfterTypeCast() ? ") " : ")"); //NOI18N
                     this.castEndOffset = findCastEndPosition(info.getTokenHierarchy().tokenSequence(JavaTokenId.language()), startOffset, substitutionOffset);
                 } catch (IOException ex) {
                 }
             } else {
                 this.castEndOffset = -1;
-            }           
+            }
+            this.substituteTextParams = !memberRef && substituteTextParams;
         }
 
         @Override
@@ -1833,7 +1914,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
                     cnt++;
                 }
                 sortParams.append(')');
-                sortText = simpleName + "#" + enclSortText + "#" + ((cnt < 10 ? "0" : "") + cnt) + "#" + sortParams.toString(); //NOI18N
+                sortText = LazySortText.link(simpleName, enclSortText, ((cnt < 10 ? "0" : "") + cnt) + "#" + sortParams.toString()); //NOI18N
             }
             return sortText;
         }
@@ -1988,7 +2069,8 @@ public abstract class JavaCompletionItem implements CompletionItem {
                             sb.append(' '); //NOI18N
                         }
                         sb.append('('); //NOI18N
-                        if (params.isEmpty()) {
+                        if (params.isEmpty() || !substituteTextParams) {
+                            // Ensure that the cursor is placed in-between the inserted parentheses i.e. "(|)"
                             sb.append("${cursor}"); //NOI18N
                         } else {
                             boolean guessArgs = Utilities.guessMethodArguments();
@@ -2011,7 +2093,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
                         if (toAddText.length() > idx + 1) {
                             sb.append(toAddText.substring(idx + 1));
                         }
-                        showTooltip = true;
+                        showTooltip = Utilities.popupPrameterTooltip();
                     }
                 }
             }
@@ -2025,7 +2107,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
             }
             if (autoImportEnclosingType) {
                 final AtomicBoolean cancel = new AtomicBoolean();
-                ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -2100,7 +2182,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
         private String leftText;
 
         private OverrideMethodItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean implement, WhiteListQuery.WhiteList whiteList) {
-            super(info, elem, type, null, substitutionOffset, null, false, false, false, false, false, -1, false, whiteList);
+            super(info, elem, type, null, substitutionOffset, null, false, false, false, false, false, -1, false, true, whiteList);
             CodeStyle cs = null;
             try {
                 cs = CodeStyle.getDefault(info.getDocument());
@@ -2133,9 +2215,9 @@ public abstract class JavaCompletionItem implements CompletionItem {
                 return merged;
             }
             ImageIcon superIcon = super.getBaseIcon();
-            merged = new ImageIcon( ImageUtilities.mergeImages(
-                superIcon.getImage(),
-                implement ? implementBadge.getImage() : overrideBadge.getImage(),
+            merged = ImageUtilities.icon2ImageIcon(ImageUtilities.mergeIcons(
+                superIcon,
+                implement ? implementBadge : overrideBadge,
                 16 - 8,
                 16 - 8) );
 
@@ -2217,7 +2299,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
         private static final String SETTER_BADGE_PATH = "org/netbeans/modules/java/editor/resources/setter_badge.png"; //NOI18N
         private static final String PARAMETER_NAME_COLOR = Utilities.getHTMLColor(224, 160, 65);
 
-        private static ImageIcon superIcon;
+        private static Icon superIcon;
         private static ImageIcon[] merged_icons = new ImageIcon[2];
 
         protected ElementHandle<VariableElement> elementHandle;
@@ -2313,16 +2395,16 @@ public abstract class JavaCompletionItem implements CompletionItem {
         protected ImageIcon getIcon() {
             if (merged_icons[setter ? 1 : 0] == null) {
                 if (superIcon == null) {
-                    superIcon = ImageUtilities.loadImageIcon(METHOD_PUBLIC, false);
+                    superIcon = ImageUtilities.loadIcon(METHOD_PUBLIC);
                 }
                 if (setter) {
-                    ImageIcon setterBadge = ImageUtilities.loadImageIcon(SETTER_BADGE_PATH, false);
-                    merged_icons[1] = new ImageIcon(ImageUtilities.mergeImages(superIcon.getImage(),
-                            setterBadge.getImage(), 16 - 8, 16 - 8));
+                    Icon setterBadge = ImageUtilities.loadIcon(SETTER_BADGE_PATH);
+                    merged_icons[1] = ImageUtilities.icon2ImageIcon(ImageUtilities.mergeIcons(superIcon,
+                            setterBadge, 16 - 8, 16 - 8));
                 } else {
-                    ImageIcon getterBadge = ImageUtilities.loadImageIcon(GETTER_BADGE_PATH, false);
-                    merged_icons[0] = new ImageIcon(ImageUtilities.mergeImages(superIcon.getImage(),
-                            getterBadge.getImage(), 16 - 8, 16 - 8));
+                    Icon getterBadge = ImageUtilities.loadIcon(GETTER_BADGE_PATH);
+                    merged_icons[0] = ImageUtilities.icon2ImageIcon(ImageUtilities.mergeIcons(superIcon,
+                            getterBadge, 16 - 8, 16 - 8));
                 }
             }
             return merged_icons[setter ? 1 : 0];
@@ -2408,6 +2490,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
         private boolean isDeprecated;
         private boolean smartType;
         private String simpleName;
+        private String insertPrefix;
         protected Set<Modifier> modifiers;
         private List<ParamDesc> params;
         private boolean isAbstract;
@@ -2415,12 +2498,14 @@ public abstract class JavaCompletionItem implements CompletionItem {
         private boolean insertName;
         private String sortText;
         private String leftText;
+        private final boolean substituteTextParams;
 
-        private ConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, boolean smartType, String name, WhiteListQuery.WhiteList whiteList) {
+        private ConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, boolean afterConstructorTypeParams, boolean smartType, String name, boolean substituteTextParams, WhiteListQuery.WhiteList whiteList) {
             super(substitutionOffset, ElementHandle.create(elem), whiteList);
             this.isDeprecated = isDeprecated;
             this.smartType = smartType;
             this.simpleName = name != null ? name : elem.getEnclosingElement().getSimpleName().toString();
+            this.insertPrefix = !afterConstructorTypeParams ? simpleName : "";
             this.insertName = name != null;
             this.modifiers = elem.getModifiers();
             this.params = new ArrayList<ParamDesc>();
@@ -2436,6 +2521,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
             this.isAbstract = !insertName && elem.getEnclosingElement().getModifiers().contains(Modifier.ABSTRACT);
             Scope s = info.getTreeUtilities().scopeFor(substitutionOffset);
             this.isProtected = elem.getModifiers().contains(Modifier.PROTECTED) && !info.getTrees().isAccessible(s, elem, (DeclaredType)elem.getEnclosingElement().asType());
+            this.substituteTextParams = substituteTextParams;
         }
 
         @Override
@@ -2470,7 +2556,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
 
         @Override
         public CharSequence getInsertPrefix() {
-            return simpleName;
+            return insertPrefix;
         }
 
         @Override
@@ -2604,20 +2690,25 @@ public abstract class JavaCompletionItem implements CompletionItem {
                             }
                         }
                         if (!params.isEmpty()) {
-                            boolean guessArgs = Utilities.guessMethodArguments();
-                            for (Iterator<ParamDesc> it = params.iterator(); it.hasNext();) {
-                                ParamDesc paramDesc = it.next();
-                                sb.append("${"); //NOI18N
-                                sb.append(paramDesc.name);
-                                if (guessArgs) {
-                                    sb.append(" named instanceof=\""); //NOI18N
-                                    sb.append(paramDesc.fullTypeName);
-                                    sb.append("\""); //NOI18N
+                            if (substituteTextParams) {
+                                boolean guessArgs = Utilities.guessMethodArguments();
+                                for (Iterator<ParamDesc> it = params.iterator(); it.hasNext(); ) {
+                                    ParamDesc paramDesc = it.next();
+                                    sb.append("${"); //NOI18N
+                                    sb.append(paramDesc.name);
+                                    if (guessArgs) {
+                                        sb.append(" named instanceof=\""); //NOI18N
+                                        sb.append(paramDesc.fullTypeName);
+                                        sb.append("\""); //NOI18N
+                                    }
+                                    sb.append("}"); //NOI18N
+                                    if (it.hasNext()) {
+                                        sb.append(", "); //NOI18N
+                                    }
                                 }
-                                sb.append("}"); //NOI18N
-                                if (it.hasNext()) {
-                                    sb.append(", "); //NOI18N
-                                }
+                            } else {
+                                // Ensure that the cursor is placed in-between the inserted parentheses i.e. "(|)"
+                                sb.append("${cursor}"); //NOI18N
                             }
                             c.select(startPos.getOffset() + (insertName ? text.length() : 0) + toAddText.indexOf('(') + 1, endPos.getOffset());
                             sb.append(c.getSelectedText());
@@ -2628,7 +2719,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
             if (sb.length() == 0) {
                 return cs;
             }
-            showTooltip = true;
+            showTooltip = Utilities.popupPrameterTooltip();
             return sb;
         }
 
@@ -2921,7 +3012,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
                 }
             }
             sb.append(toAdd);
-            showTooltip = true;
+            showTooltip = Utilities.popupPrameterTooltip();
             return sb;
         }
 
@@ -2962,7 +3053,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
             final BaseDocument doc = (BaseDocument)c.getDocument();
             final StringBuilder sb = new StringBuilder();
             final AtomicBoolean cancel = new AtomicBoolean();
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -3122,9 +3213,6 @@ public abstract class JavaCompletionItem implements CompletionItem {
 
         private AttributeValueItem(CompilationInfo info, String value, String documentation, TypeElement element, int substitutionOffset, ReferencesCount referencesCount, WhiteListQuery.WhiteList whiteList) {
             super(substitutionOffset, element != null ? ElementHandle.create(element) : null, whiteList);
-            if (value.charAt(0) == '\"' && value.charAt(value.length() - 1) != '\"') { //NOI18N
-                value = value + '\"'; //NOI18N
-            }
             this.value = value;
             this.documentation = documentation;
             if (element != null) {
@@ -3209,7 +3297,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
                 } else {
                     StringBuilder sb = new StringBuilder();
                     sb.append(ATTRIBUTE_VALUE_COLOR);
-                    sb.append(value);
+                    sb.append(escape(getLastLine()));
                     sb.append(COLOR_END);
                     leftText = sb.toString();
                 }
@@ -3239,6 +3327,12 @@ public abstract class JavaCompletionItem implements CompletionItem {
                 sb.delete(sb.length() - 6, sb.length());
             }
             return super.substituteText(c, offset, length, sb, toAdd);
+        }
+
+        private String getLastLine() {
+            String[] lines = value.split("\n");
+            String last = lines.length > 0 ? lines[lines.length - 1] : value;
+            return last.trim();
         }
 
         @Override
@@ -3273,8 +3367,9 @@ public abstract class JavaCompletionItem implements CompletionItem {
         private String sortText;
         private String leftText;
         private String rightText;
+        private final boolean smartType;
 
-        private StaticMemberItem(CompilationInfo info, DeclaredType type, Element memberElem, TypeMirror memberType, boolean multipleVersions, int substitutionOffset, boolean isDeprecated, boolean addSemicolon, WhiteListQuery.WhiteList whiteList) {
+        private StaticMemberItem(CompilationInfo info, DeclaredType type, Element memberElem, TypeMirror memberType, boolean multipleVersions, int substitutionOffset, boolean isDeprecated, boolean addSemicolon, boolean smartType, WhiteListQuery.WhiteList whiteList) {
             super(substitutionOffset, ElementHandle.create(memberElem), whiteList);
             type = (DeclaredType) info.getTypes().erasure(type);
             this.typeHandle = TypeMirrorHandle.create(type);
@@ -3294,11 +3389,12 @@ public abstract class JavaCompletionItem implements CompletionItem {
                     this.params.add(new ParamDesc(tm.toString(), Utilities.getTypeName(info, tm, false, ((ExecutableElement)memberElem).isVarArgs() && !tIt.hasNext()).toString(), it.next().getSimpleName().toString()));
                 }
             }
+            this.smartType = smartType;
         }
 
         @Override
         public int getSortPriority() {
-            int p = (getElementHandle().getKind().isField() ? 720 : 750) - SMART_TYPE;
+            int p = (getElementHandle().getKind().isField() ? 720 : 750) - (smartType ? SMART_TYPE : 0);
             return isDeprecated ? p + DEPRECATED : p;
         }
 
@@ -3453,7 +3549,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
             final StringBuilder template = new StringBuilder();
             final AtomicBoolean cancel = new AtomicBoolean();
             final CharSequence finalToAdd = toAdd;
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -4120,13 +4216,14 @@ public abstract class JavaCompletionItem implements CompletionItem {
 
         private ElementHandle<ExecutableElement> handle;
         private ArrayList<ParamDesc> params;
-        private boolean addSemicolon;
-        private String typeName;
+        private final boolean expression;
+        private final boolean addSemicolon;
+        private final String typeName;
         private String sortText;
         private String leftText;
         private String rightText;
         
-        public LambdaCompletionItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, boolean addSemicolon) {
+        public LambdaCompletionItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, boolean expression, boolean addSemicolon) {
             super(substitutionOffset);
             ExecutableElement desc = info.getElementUtilities().getDescriptorElement(elem);
             this.handle = ElementHandle.create(desc);
@@ -4144,11 +4241,12 @@ public abstract class JavaCompletionItem implements CompletionItem {
             TypeMirror retType = descType.getReturnType();
             this.addSemicolon = addSemicolon && retType.getKind() == TypeKind.VOID;
             this.typeName = Utilities.getTypeName(info, retType, false).toString();
+            this.expression = expression;
         }
 
         @Override
         public int getSortPriority() {
-            return 50 - SMART_TYPE;
+            return 50 - SMART_TYPE - (expression ? 1 : 0);
         }
 
         @Override
@@ -4188,7 +4286,11 @@ public abstract class JavaCompletionItem implements CompletionItem {
                         lText.append(", "); //NOI18N
                     }
                 }
-                lText.append(") -> {...}"); //NOI18N
+                if (expression) {
+                    lText.append(") -> expr."); //NOI18N
+                } else {
+                    lText.append(") -> {...}"); //NOI18N
+                }
                 return lText.toString();
             }
             return leftText;
@@ -4222,8 +4324,8 @@ public abstract class JavaCompletionItem implements CompletionItem {
             boolean spaceAroundLambdaArrow = CodeStyle.getDefault(c.getDocument()).spaceAroundLambdaArrow();
             sb.append(spaceAroundLambdaArrow ? " ->" : "->"); //NOI18N
             sb.append(getIndent(c, spaceAroundLambdaArrow, false));                        
-            sb.append("{\n"); //NOI18N
-            sb.append(getIndent(c));
+            sb.append("{"); //NOI18N
+//            sb.append(getIndent(c));
             sb.append(addSemicolon ? "};" : "}"); //NOI18N
             return sb;
         }
@@ -4260,10 +4362,15 @@ public abstract class JavaCompletionItem implements CompletionItem {
                                     final int embeddedOffset = copy.getSnapshot().getEmbeddedOffset(off);
                                     TreePath path = copy.getTreeUtilities().pathFor(embeddedOffset);
                                     while (method != null && path.getLeaf() != path.getCompilationUnit()) {
-                                        Tree tree = path.getLeaf();
-                                        if (tree.getKind() == Tree.Kind.LAMBDA_EXPRESSION) {
-                                            BlockTree body = GeneratorUtilities.get(copy).createDefaultLambdaBody((LambdaExpressionTree)tree, method);
-                                            copy.rewrite(((LambdaExpressionTree)tree).getBody(), body);
+                                        if (path.getLeaf().getKind() == Tree.Kind.LAMBDA_EXPRESSION) {
+                                            LambdaExpressionTree tree = (LambdaExpressionTree) path.getLeaf();
+                                            Tree newBody;
+                                            if (expression && method.getReturnType().getKind() != VOID) {
+                                                newBody = GeneratorUtilities.get(copy).createDefaultLambdaExpression(tree, method);
+                                            } else {
+                                                newBody = GeneratorUtilities.get(copy).createDefaultLambdaBody(tree, method);
+                                            }
+                                            copy.rewrite(tree.getBody(), newBody);
                                             break;
                                         }
                                         path = path.getParentPath();
@@ -4284,8 +4391,26 @@ public abstract class JavaCompletionItem implements CompletionItem {
                                     sb.append(", "); //NOI18N
                                 }
                             }
-                            c.select(startPos.getOffset() + toAddText.indexOf('(') + 1, endPos.getOffset());
-                            sb.append(c.getSelectedText());
+                        }
+                        c.select(startPos.getOffset() + toAddText.indexOf('(') + 1, endPos.getOffset());
+                        String selected = c.getSelectedText();
+
+                        if (expression && selected.indexOf('{') == -1) {
+                            int n = selected.indexOf('>') + 1;
+                            sb.append(selected.substring(0, n));
+                            sb.append("${");
+                            sb.append(selected.substring(n));
+                            sb.append("}");
+                        } else {
+                            if (selected.contains("return ")) {
+                                selected = selected.replace("return ", "return ${")
+                                                   .replace(";", "};");
+                            }
+                            if (params.isEmpty()) {
+                                c.setCaretPosition(startPos.getOffset() + toAddText.indexOf('{') + 1); // between {}
+                            } else {
+                                sb.append(selected);
+                            }
                         }
                     }
                 }
@@ -4404,7 +4529,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
     private static String escape(String s) {
         if (s != null) {
             try {
-                return XMLUtil.toAttributeValue(s);
+                return XMLUtil.toElementContent(s);
             } catch (Exception ex) {}
         }
         return s;
@@ -4415,7 +4540,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
         final int offset = c.getSelectionEnd();
         final Source s = Source.create(c.getDocument());
         final AtomicBoolean cancel = new AtomicBoolean();
-        ProgressUtils.runOffEventDispatchThread(new Runnable() {
+        BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -4458,7 +4583,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
                             }
                             if (t != null) {
                                 SourcePositions sp = controller.getTrees().getSourcePositions();
-                                int endPos = (int)sp.getEndPosition(controller.getCompilationUnit(), t);
+                                int endPos = (int)sp.getEndPosition(t);
                                 TokenSequence<JavaTokenId> ts = findLastNonWhitespaceToken(controller.getTokenHierarchy().tokenSequence(JavaTokenId.language()), embeddedOffset, endPos);
                                 if (ts != null) {
                                     if (ts.token().id() == JavaTokenId.SEMICOLON) {
@@ -4508,6 +4633,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
                 case LINE_COMMENT:
                 case BLOCK_COMMENT:
                 case JAVADOC_COMMENT:
+                case JAVADOC_COMMENT_LINE_RUN:
                     break;
                 default:
                     return ts;

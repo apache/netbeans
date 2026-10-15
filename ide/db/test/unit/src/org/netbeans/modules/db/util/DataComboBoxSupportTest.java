@@ -148,12 +148,12 @@ public class DataComboBoxSupportTest extends NbTestCase {
         }
 
         private void setItems(List items) {
-            this.items = (Object[])items.toArray(new Object[items.size()]);
+            this.items = (Object[])items.toArray(new Object[0]);
             fireContentsChanged(this, 0, this.items.length);
         }
 
         private void setItems(List items, Object selectedItem) {
-            this.items = (Object[])items.toArray(new Object[items.size()]);
+            this.items = (Object[])items.toArray(new Object[0]);
             this.selectedItem = selectedItem;
             fireContentsChanged(this, 0, this.items.length);
         }

@@ -23,7 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.netbeans.CLIHandler;
-import org.netbeans.TopSecurityManager;
+import org.netbeans.NbExit;
 import org.netbeans.core.startup.layers.SessionManager;
 import org.openide.LifecycleManager;
 import org.openide.modules.Places;
@@ -33,18 +33,11 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * Rudimentary manager useful for non-GUI platform applications.
  * Superseded by NbLifecycleManager.
- * @see #158525
+ * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=158525">158525</a>
  */
 @ServiceProvider(service=LifecycleManager.class)
 public class ModuleLifecycleManager extends LifecycleManager {
     public ModuleLifecycleManager() {
-        Runtime.getRuntime().addShutdownHook(new Thread("close modules") { // NOI18N
-            public @Override void run() {
-                if (System.getSecurityManager() instanceof TopSecurityManager) {
-                    LifecycleManager.getDefault().exit();
-                }
-            }
-        });
     }
 
     public void saveAll() {
@@ -80,7 +73,7 @@ public class ModuleLifecycleManager extends LifecycleManager {
                 Exceptions.printStackTrace(t);
             }
             if (System.getProperty("netbeans.close.no.exit") == null) {
-                TopSecurityManager.exit(status);
+                NbExit.exit(status);
             }
         }
     }
@@ -97,7 +90,7 @@ public class ModuleLifecycleManager extends LifecycleManager {
      *   do not support restart and may throw an exception to indicate that
      */
     static void markReadyForRestart() throws UnsupportedOperationException {
-        String classLoaderName = TopSecurityManager.class.getClassLoader().getClass().getName();
+        String classLoaderName = NbExit.class.getClassLoader().getClass().getName();
         if (!classLoaderName.endsWith(".Launcher$AppClassLoader") && !classLoaderName.endsWith(".ClassLoaders$AppClassLoader")) {   // NOI18N
             throw new UnsupportedOperationException("not running in regular module system, cannot restart"); // NOI18N
         }

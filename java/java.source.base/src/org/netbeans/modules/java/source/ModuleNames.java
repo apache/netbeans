@@ -20,7 +20,6 @@ package org.netbeans.modules.java.source;
 
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ModuleTree;
-import com.sun.source.tree.Tree;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -39,7 +38,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.annotations.common.CheckForNull;
@@ -117,7 +115,7 @@ public final class ModuleNames {
             //Project binary
             final CacheLine cl = getProjectModuleName(
                     rootUrl,
-                    Arrays.stream(sfbqRes.getRoots()).map(FileObject::toURL).collect(Collectors.toList()),
+                    Arrays.stream(sfbqRes.getRoots()).map(FileObject::toURL).toList(),
                     canUseSources);
             if (cl.getValueNoCheck() != null) {
                 return register(rootUrl, cl);
@@ -307,14 +305,11 @@ public final class ModuleNames {
                     moduleInfo.getParent(),
                     null,
                     FileEncodingQuery.getEncoding(moduleInfo))));
-            final CompilationUnitTree cu =  jt.parse().iterator().next();
-            final List<? extends Tree> typeDecls = cu.getTypeDecls();
-            if (!typeDecls.isEmpty()) {
-                final Tree typeDecl = typeDecls.get(0);
-                if (typeDecl.getKind() == Tree.Kind.MODULE) {
-                    return ((ModuleTree)typeDecl).getName().toString();
-                }
-            }
+        final CompilationUnitTree cu =  jt.parse().iterator().next();
+        final ModuleTree module = cu.getModule();
+        if (module != null) {
+            return module.getName().toString();
+        }
         return null;
     }
 
@@ -567,7 +562,7 @@ public final class ModuleNames {
         void invalidate() {
             super.invalidate();
             if (this.copsCl != null) {
-                this.cops.removeChangeListener(this.copsCl);;
+                this.cops.removeChangeListener(this.copsCl);
             }
             if (this.resCl != null) {
                 this.res.removeChangeListener(this.resCl);

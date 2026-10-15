@@ -27,12 +27,17 @@ public class CastExpression extends Expression {
 
     public enum Type {
         INT, // 'int'
+        /**
+         * @deprecated will be removed in the future, to follow PHP type system,
+         * use {@link Type#FLOAT} instead
+         */
         REAL, // 'real'
         STRING, // 'string'
     	ARRAY, // 'array'
     	OBJECT, // 'object'
     	BOOL, // 'bool'
-    	UNSET// 'unset'
+    	UNSET,// 'unset'
+        FLOAT, // 'float'
     }
 
     private Expression expression;

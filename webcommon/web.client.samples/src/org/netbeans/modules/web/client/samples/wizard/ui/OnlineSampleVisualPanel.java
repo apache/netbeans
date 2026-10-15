@@ -28,7 +28,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.web.client.samples.wizard.WizardConstants;
 import org.netbeans.modules.web.client.samples.wizard.iterator.OnlineSiteTemplate;
 import org.netbeans.modules.web.clientproject.api.network.NetworkException;
@@ -38,7 +37,6 @@ import org.netbeans.spi.project.ui.support.ProjectChooser;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileChooserBuilder;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -169,7 +167,7 @@ public class OnlineSampleVisualPanel extends javax.swing.JPanel {
             return null;
         }
 
-        ProgressHandle progressHandle = ProgressHandleFactory.createHandle(Bundle.SiteTemplateWizard_template_preparing(templateName));
+        ProgressHandle progressHandle = ProgressHandle.createHandle(Bundle.SiteTemplateWizard_template_preparing(templateName));
         progressHandle.start();
         try {
             while (true) {

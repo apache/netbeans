@@ -377,7 +377,7 @@ public class CSS {
      * @return computed style for the specified node.
      */
     public List<ComputedStyleProperty> getComputedStyle(Node node) {
-        List<ComputedStyleProperty> list = Collections.EMPTY_LIST;
+        List<ComputedStyleProperty> list = Collections.emptyList();
         JSONObject params = new JSONObject();
         params.put("nodeId", node.getNodeId()); // NOI18N
         Response response = transport.sendBlockingCommand(new Command("CSS.getComputedStyleForNode", params)); // NOI18N
@@ -618,7 +618,7 @@ public class CSS {
     private String replaceHoverInStyleSheetText(String styleSheetText) {
         String clazz = getClassForHover();
         if (clazz != null) {
-            styleSheetText = styleSheetText.replaceAll(":hover", "." + clazz); // NOI18N
+            styleSheetText = styleSheetText.replace(":hover", "." + clazz); // NOI18N
         }
         return styleSheetText;
     }

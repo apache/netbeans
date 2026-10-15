@@ -1,0 +1,4 @@
+Code completion result for source line:
+use function TestA\myFunction|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     myFunction()                    [PUBLIC]   TestA

@@ -155,7 +155,7 @@ class DragOperation {
         
         if(item == null && type != null && JComponent.class.isAssignableFrom(type)) {
             try {
-                dragComponent = (JComponent)type.newInstance();
+                dragComponent = (JComponent)type.getDeclaredConstructor().newInstance();
             } catch (Exception ex) {
                 System.out.println("exception: " + ex.getMessage());
                 ex.printStackTrace();
@@ -419,7 +419,7 @@ class DragOperation {
         // if pre-creation failed then make new component manually
         if(newComponent == null) {
             try {
-                newComponent = (JComponent)paletteItem.getComponentClass().newInstance();
+                newComponent = (JComponent)paletteItem.getComponentClass().getDeclaredConstructor().newInstance();
             } catch (Exception ex) {
                 ex.printStackTrace();
                 return;

@@ -36,7 +36,7 @@ import org.openide.util.Lookup;
  * <li> The IDE keeps track in what context bugtracking related operations were done 
  * - e.g. when closing an issue during a VCS commit.</li>
  * <li> Other systems might provide information about bugtracking repositories - e.g. Maven</li>
- * </p>
+ * </ul>
  * 
  * @author Tomas Stupka
  * @since 1.85

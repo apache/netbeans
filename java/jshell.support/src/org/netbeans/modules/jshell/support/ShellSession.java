@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.jshell.support;
 
+import com.sun.jdi.connect.VMStartException;
 import java.beans.PropertyChangeListener;
 import org.netbeans.modules.jshell.tool.JShellLauncher;
 import org.netbeans.modules.jshell.tool.JShellTool;
@@ -30,6 +31,7 @@ import org.netbeans.modules.jshell.model.ConsoleModel;
 import org.netbeans.modules.jshell.model.ConsoleEvent;
 import java.beans.PropertyChangeSupport;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -44,6 +46,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CoderResult;
 import java.nio.charset.CodingErrorAction;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -96,7 +99,6 @@ import org.netbeans.modules.jshell.model.SnippetHandle;
 import org.netbeans.modules.jshell.parsing.ShellAccessBridge;
 import org.netbeans.modules.jshell.parsing.SnippetRegistry;
 import org.netbeans.modules.jshell.project.ShellProjectUtils;
-import static org.netbeans.modules.jshell.tool.JShellLauncher.quote;
 import org.netbeans.modules.jshell.support.ShellHistory.Item;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
@@ -120,6 +122,8 @@ import org.openide.util.NbPreferences;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Task;
+
+import static org.netbeans.modules.jshell.tool.JShellLauncher.quote;
 
 /**
  * The root object for any JShell session. A shell session consists of:
@@ -395,7 +399,7 @@ public class ShellSession  {
         
         public WriterOutputStream(Writer out) {
             this.writer = out;
-            this.decoder = Charset.forName("UTF-8"). //NOI18N
+            this.decoder = StandardCharsets.UTF_8.
                     newDecoder().
                     onMalformedInput(CodingErrorAction.REPLACE).
                     onUnmappableCharacter(CodingErrorAction.REPLACE).
@@ -776,8 +780,7 @@ public class ShellSession  {
                 builder.compilerOptions("--boot-class-path", getClasspathAsString(PathKind.BOOT));
             }
         }
-        JavaPlatform platform = ShellProjectUtils.findPlatform(p);
-        
+
         String classpath;
         String modulepath = "";
         
@@ -940,10 +943,41 @@ public class ShellSession  {
         }
         reportShellMessage(s);
     }
-    
+
+    @NbBundle.Messages({
+        "MSG_JShell_Start_STDOUT=Standard output:",
+        "MSG_JShell_Start_STDERR=Error output:"
+    })
     public void reportErrorMessage(Throwable t) {
-        LOG.log(Level.INFO, "Error in JSHell", t);
-        reportShellMessage(buildErrorMessage(t));
+        StringBuilder processOutput = null;
+        VMStartException startException = findVMStartException(t);
+        if(startException != null) {
+            processOutput = new StringBuilder();
+            // VMStartException is raised when target VM fails to start. At time
+            // of writing com.sun.tools.jdi.AbstractLauncher does not read the
+            // process output, so diagnostic output is lost, try to recover it.
+            assert !startException.process().isAlive() : "Process expected to be not alive"; // NOI18N
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            try {
+                startException.process().getInputStream().transferTo(baos);
+            } catch (IOException ex) {}
+            processOutput.append(Bundle.MSG_JShell_Start_STDOUT());
+            processOutput.append("\n");
+            processOutput.append(baos.toString(StandardCharsets.UTF_8));
+            baos.reset();
+            processOutput.append(Bundle.MSG_JShell_Start_STDERR());
+            try {
+                startException.process().getErrorStream().transferTo(baos);
+            } catch (IOException ex) {}
+            processOutput.append(baos.toString(StandardCharsets.UTF_8));
+        }
+        if(processOutput == null) {
+            LOG.log(Level.INFO, "Error in JSHell", t); // NOI18N
+            reportShellMessage(buildErrorMessage(t));
+        } else {
+            LOG.log(Level.INFO, "Error in JSHell\n" + processOutput.toString(), t); // NOI18N
+            reportShellMessage(buildErrorMessage(t) + "\n\n" + processOutput.toString()); // NOI18N
+        }
     }
     
     private void reportShellMessage(String msg) {
@@ -962,7 +996,19 @@ public class ShellSession  {
         sb.append("\n"); // NOI18N
         writeToShellDocument(sb.toString());
     }
-    
+
+    private static VMStartException findVMStartException(Throwable thrw) {
+        Throwable curr = thrw;
+        while (true) {
+            if(curr instanceof VMStartException) {
+                return (VMStartException) curr;
+            } else if (curr == null) {
+                return null;
+            }
+            curr = curr.getCause();
+        }
+    }
+
     private boolean scrollbackEndsWithNewline() {
         boolean[] ret = new boolean[1];
         ConsoleSection s = model.getInputSection();
@@ -995,40 +1041,11 @@ public class ShellSession  {
     
     private String createClasspathString() {
         String sep = System.getProperty("path.separator");
-        boolean modular = ShellProjectUtils.isModularJDK(platform);
-        String agentJar = 
-                modular ?
-                    "modules/ext/nb-mod-jshell-probe.jar" :
-                    "modules/ext/nb-custom-jshell-probe.jar";
-        
+        String agentJar = "modules/ext/nb-custom-jshell-probe.jar";
                 
         File remoteProbeJar = InstalledFileLocator.getDefault().locate(agentJar, 
                 "org.netbeans.lib.jshell.agent", false);
         StringBuilder sb = new StringBuilder(remoteProbeJar.getAbsolutePath());
-        
-        if (!modular) {
-//            File replJar = 
-//                    InstalledFileLocator.getDefault().locate(
-//                            "modules/ext/nb-jshell.jar", 
-//                            "org.netbeans.libs.jshell", false);
-//            sb.append(sep).append(replJar.getAbsolutePath());
-
-            File toolsJar = null;
-            for (FileObject jdkInstallDir : platform.getInstallFolders()) {
-                FileObject toolsJarFO = jdkInstallDir.getFileObject("lib/tools.jar");
-
-                if (toolsJarFO == null) {
-                    toolsJarFO = jdkInstallDir.getFileObject("../lib/tools.jar");
-                }
-                if (toolsJarFO != null) {
-                    toolsJar = FileUtil.toFile(toolsJarFO);
-                    break;
-                }
-            }
-            if (toolsJar != null) {
-                sb.append(sep).append(toolsJar);
-            }
-        }
         
         // classpath construction
         

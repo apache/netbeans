@@ -56,4 +56,29 @@ public class ImportsTest extends NbTestCase {
                               "    }\n" +
                               "}");
     }
+
+    public void testRedundantLangImportRemove() throws Exception {
+        HintTest.create()
+                .input(
+                    "package test;\n" +
+                    "import java.lang.Exception;\n" +
+                    "import java.lang.System;\n" +
+                    "public class Test {\n" +
+                    "    public static void main(String[] args) throws Exception {\n" +
+                    "        System.out.println(\"hello world\");\n" +
+                    "    }\n" +
+                    "}")
+                .run(Imports.class)
+                .assertWarnings("1:0-1:27:verifier:DN_Imports_DEFAULT_PACKAGE", "2:0-2:24:verifier:DN_Imports_DEFAULT_PACKAGE")
+                .findWarning("2:0-2:24:verifier:DN_Imports_DEFAULT_PACKAGE")
+                .applyFix("LBL_Imports_Fix_All_DEFAULT_PACKAGE")
+                .assertCompilable()
+                .assertOutput(
+                    "package test;\n" +
+                    "public class Test {\n" +
+                    "    public static void main(String[] args) throws Exception {\n" +
+                    "        System.out.println(\"hello world\");\n" +
+                    "    }\n" +
+                    "}");
+    }
 }

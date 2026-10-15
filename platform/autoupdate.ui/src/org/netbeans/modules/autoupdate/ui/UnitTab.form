@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -117,9 +118,6 @@
     </Component>
     <Container class="javax.swing.JSplitPane" name="spTab">
       <Properties>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="null"/>
-        </Property>
         <Property name="dividerLocation" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="Integer.parseInt(NbBundle.getMessage (UnitTab.class, &quot;UnitTab_Splitter_DefaultDividerLocation&quot;))" type="code"/>
         </Property>

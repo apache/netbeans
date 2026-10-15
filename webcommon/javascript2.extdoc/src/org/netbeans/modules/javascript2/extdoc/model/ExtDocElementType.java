@@ -27,7 +27,7 @@ public enum ExtDocElementType {
 
     // description type - at the start of comments
     DESCRIPTION("description", Category.DESCRIPTION), //NOI18N
-    // unknow type
+    // unknown type
     UNKNOWN("unknown", Category.UNKNOWN), //NOI18N
     
     // common ExtDoc tags

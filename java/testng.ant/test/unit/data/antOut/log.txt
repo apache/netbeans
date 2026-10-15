@@ -1,0 +1,77 @@
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+WARNING: Unknown module: jdk.compiler specified to --add-exports
+WARNING: Unknown module: jdk.compiler specified to --add-exports
+WARNING: Unknown module: jdk.compiler specified to --add-exports
+WARNING: Unknown module: jdk.compiler specified to --add-exports
+WARNING: Unknown module: jdk.compiler specified to --add-exports
+WARNING: Unknown module: jdk.compiler specified to --add-exports
+WARNING: Unknown module: jdk.compiler specified to --add-exports
+WARNING: Unknown module: jdk.compiler specified to --add-exports
+WARNING: Unknown module: jdk.compiler specified to --add-exports
+WARNING: Unknown module: jdk.compiler specified to --add-exports
+WARNING: Unknown module: jdk.compiler specified to --add-exports
+WARNING: Unknown module: jdk.compiler specified to --add-opens
+WARNING: Unknown module: jdk.compiler specified to --add-opens
+WARNING: package com.sun.java.swing.plaf.windows not in java.desktop
+WARNING: Unknown module: jdk.compiler specified to --add-opens
+WARNING: Unknown module: jdk.compiler specified to --add-opens
+WARNING: package sun.awt.X11 not in java.desktop
+WARNING: Unknown module: jdk.compiler specified to --add-opens
+WARNING: Unknown module: jdk.compiler specified to --add-opens
+WARNING: Unknown module: jdk.compiler specified to --add-opens
+WARNING: Unknown module: jdk.compiler specified to --add-opens
+WARNING: Unknown module: jdk.compiler specified to --add-opens
+WARNING: package com.sun.java.swing.plaf.gtk not in java.desktop
+WARNING: Unknown module: jdk.compiler specified to --add-opens
+WARNING: Unknown module: jdk.compiler specified to --add-opens
+java.io.FileNotFoundException: netbeans/java/testng/build/test/unit/results/test (No such file or directory)
+	at java.base/java.io.FileInputStream.open0(Native Method)
+	at java.base/java.io.FileInputStream.open(FileInputStream.java:213)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:152)
+	at org.testng.xml.internal.Parser.parse(Parser.java:151)
+	at org.testng.xml.internal.Parser.parse(Parser.java:241)
+	at org.testng.TestNG.parseSuite(TestNG.java:330)
+	at org.testng.TestNG.initializeSuitesAndJarFile(TestNG.java:394)
+	at org.testng.TestNG.initializeEverything(TestNG.java:1059)
+	at org.testng.TestNG.run(TestNG.java:1071)
+	at org.testng.TestNG.privateMain(TestNG.java:1430)
+	at org.testng.TestNG.main(TestNG.java:1394)
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+[TestNG] RUNNING: Suite: "UnitTest" containing "3" Tests (config: null)
+[TestNG] INVOKING: "UnitTest" - org.netbeans.modules.testng.api.XmlOutputParserTest.testParseSimpleXmlOutput()
+Nov 11, 2025 2:07:39 AM org.netbeans.modules.masterfs.watcher.Watcher getNotifierForPlatform
+INFO: Native file watcher is disabled
+[TestNG] PASSED: "UnitTest" - org.netbeans.modules.testng.api.XmlOutputParserTest.testParseSimpleXmlOutput() finished in 22010 ms
+[TestNG] INVOKING: "UnitTest" - org.netbeans.modules.testng.api.XmlOutputParserTest.testParseXmlOutput()
+[TestNG] PASSED: "UnitTest" - org.netbeans.modules.testng.api.XmlOutputParserTest.testParseXmlOutput() finished in 600 ms
+[TestNG] INVOKING: "UnitTest" - org.netbeans.modules.testng.api.XmlOutputParserTest.testParseXmlOutput2()
+[TestNG] PASSED: "UnitTest" - org.netbeans.modules.testng.api.XmlOutputParserTest.testParseXmlOutput2() finished in 505 ms
+===== Invoked methods
+    XmlOutputParserTest.testParseSimpleXmlOutput()[pri:0, instance:UnitTest(org.netbeans.modules.testng.api.XmlOutputParserTest)]
+    XmlOutputParserTest.testParseXmlOutput()[pri:0, instance:UnitTest(org.netbeans.modules.testng.api.XmlOutputParserTest)]
+    XmlOutputParserTest.testParseXmlOutput2()[pri:0, instance:UnitTest(org.netbeans.modules.testng.api.XmlOutputParserTest)]
+=====
+[TestNG] 
+[TestNG] ===============================================
+[TestNG]     UnitTest
+[TestNG]     Tests run: 3, Failures: 0, Skips: []
+[TestNG] ===============================================
+PASSED: org.netbeans.modules.testng.api.XmlOutputParserTest.testParseXmlOutput
+PASSED: org.netbeans.modules.testng.api.XmlOutputParserTest.testParseXmlOutput2
+PASSED: org.netbeans.modules.testng.api.XmlOutputParserTest.testParseSimpleXmlOutput
+
+===============================================
+    UnitTest
+    Tests run: 3, Failures: 0, Skips: 0
+===============================================
+
+
+===============================================
+org.netbeans.modules.testng
+Total tests run: 3, Passes: 3, Failures: 0, Skips: 0
+===============================================
+

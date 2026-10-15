@@ -32,6 +32,7 @@ import javax.lang.model.element.VariableElement;
 import javax.swing.JDialog;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
 import org.netbeans.api.java.source.CancellableTask;
 import org.netbeans.api.java.source.CompilationController;
@@ -41,7 +42,8 @@ import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.spi.java.queries.SourceLevelQueryImplementation;
+import org.netbeans.modules.java.source.BootClassPathUtil;
+import org.netbeans.spi.java.queries.SourceLevelQueryImplementation2;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -67,11 +69,20 @@ public class EqualsHashCodeGeneratorTest extends NbTestCase {
         super.setUp();
         fo = SourceUtilsTestUtil.makeScratchDir(this);
         System.setProperty("netbeans.user", getWorkDirPath());
-        SourceUtilsTestUtil.setLookup(new Object[] { new DD(), new SourceLevelQueryImplementation() {
-            @Override public String getSourceLevel(FileObject javaFile) {
-                return sourceLevel != null ? sourceLevel : "1.5";
+        SourceUtilsTestUtil.setLookup(new Object[] { new DD(), new SourceLevelQueryImplementation2() {
+            @Override public Result getSourceLevel(FileObject javaFile) {
+                return new Result() {
+                    @Override
+                    public String getSourceLevel() {
+                        return sourceLevel != null ? sourceLevel : "1.5";
+                    }
+                    @Override
+                    public void addChangeListener(ChangeListener listener) {}
+                    @Override
+                    public void removeChangeListener(ChangeListener listener) {}
+                };
             }
-        } }, getClass().getClassLoader());
+        }, BootClassPathUtil.getBootClassPathProvider() }, getClass().getClassLoader());
     }
     
     
@@ -391,10 +402,7 @@ public class EqualsHashCodeGeneratorTest extends NbTestCase {
                         "        if (!Arrays.deepEquals(this.y, other.y)) {\n" +
                         "            return false;\n" +
                         "        }" +
-                        "        if (this.o != other.o && (this.o == null || !this.o.equals(other.o))) {\n" +
-                        "            return false;\n" +
-                        "        }\n" +
-                        "        return true;\n" +
+                        "        return this.o == other.o || (this.o != null && this.o.equals(other.o));\n" +
                         "    }\n" +
                         "}\n";
 
@@ -573,10 +581,7 @@ public class EqualsHashCodeGeneratorTest extends NbTestCase {
                         "        if (this.c != other.c) {\n" +
                         "            return false;\n" +
                         "        }\n" +
-                        "        if (this.e != other.e) {\n" +
-                        "            return false;\n" +
-                        "        }\n" +
-                        "        return true;\n" +
+                        "        return this.e == other.e;\n" +
                         "    }\n" +
                         "  public enum E {A, B;}\n" +
                         "}\n";
@@ -651,10 +656,7 @@ public class EqualsHashCodeGeneratorTest extends NbTestCase {
                         "            return false;\n" +
                         "        }\n" +
                         "        final X other = (X) obj;\n" +
-                        "        if (this.e != other.e) {\n" +
-                        "            return false;\n" +
-                        "        }\n" +
-                        "        return true;\n" +
+                        "        return this.e == other.e;\n" +
                         "    }\n" +
                         "  enum E {A}\n" +
                         "}\n";

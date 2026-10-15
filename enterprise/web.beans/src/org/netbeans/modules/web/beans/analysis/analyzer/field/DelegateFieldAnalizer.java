@@ -37,6 +37,13 @@ import org.netbeans.modules.web.beans.analysis.analyzer.FieldElementAnalyzer.Fie
 import org.netbeans.modules.web.beans.hints.EditorAnnotationsHelper;
 import org.openide.util.NbBundle;
 
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.DECORATOR;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.DECORATOR_JAKARTA;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.DELEGATE_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.DELEGATE_FQN_JAKARTA;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.INJECT_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.INJECT_FQN_JAKARTA;
+
 
 /**
  * @author ads
@@ -53,22 +60,19 @@ public class DelegateFieldAnalizer implements FieldAnalyzer {
             CdiAnalysisResult result )
     {
         CompilationInfo compInfo = result.getInfo();
-        if (!AnnotationUtil.hasAnnotation(element, AnnotationUtil.DELEGATE_FQN, 
-                compInfo))
+        if (!AnnotationUtil.hasAnnotation(element, compInfo, DELEGATE_FQN_JAKARTA, DELEGATE_FQN))
         {
             return;
         }
         result.requireCdiEnabled(element);
-        if (!AnnotationUtil.hasAnnotation(element, AnnotationUtil.INJECT_FQN,
-                compInfo))
+        if (!AnnotationUtil.hasAnnotation(element, compInfo, INJECT_FQN_JAKARTA, INJECT_FQN))
         {
             result.addError(element,  NbBundle.getMessage(
                             DelegateFieldAnalizer.class,
                             "ERR_DelegateHasNoInject"));        // NOI18N
         }
         Element clazz = element.getEnclosingElement();
-        if (!AnnotationUtil.hasAnnotation(clazz, AnnotationUtil.DECORATOR,
-                compInfo))
+        if (! AnnotationUtil.hasAnnotation(clazz, compInfo, DECORATOR_JAKARTA, DECORATOR))
         {
             result.addError(element,  NbBundle.getMessage(
                             DelegateFieldAnalizer.class,
@@ -89,7 +93,7 @@ public class DelegateFieldAnalizer implements FieldAnalyzer {
             TypeMirror elementType, TypeElement parent,
             CdiAnalysisResult result  )
     {
-        Collection<TypeMirror> decoratedTypes = getDecoratedTypes( parent , 
+        Collection<TypeMirror> decoratedTypes = getDecoratedTypes( parent ,
                 result.getInfo() );
         for (TypeMirror decoratedType : decoratedTypes) {
             if ( !result.getInfo().getTypes().isSubtype( elementType,decoratedType )){
@@ -101,18 +105,18 @@ public class DelegateFieldAnalizer implements FieldAnalyzer {
         }
     }
 
-    public static Collection<TypeMirror> getDecoratedTypes( TypeElement element , 
-            CompilationInfo info ) 
+    public static Collection<TypeMirror> getDecoratedTypes( TypeElement element ,
+            CompilationInfo info )
     {
         TypeElement serializable = info.getElements().getTypeElement(
                 Serializable.class.getCanonicalName());
-        Collection<TypeMirror> result = new LinkedList<TypeMirror>();
+        Collection<TypeMirror> result = new LinkedList<>();
         collectDecoratedTypes( element.asType() , result , serializable, info );
         return result;
     }
 
     private static void collectDecoratedTypes( TypeMirror type,
-            Collection<TypeMirror> result, TypeElement serializable, 
+            Collection<TypeMirror> result, TypeElement serializable,
             CompilationInfo info)
     {
         List<? extends TypeMirror> directSupertypes = info.getTypes().

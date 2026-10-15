@@ -120,22 +120,6 @@
             </folder>
         </folder>
     </folder>
-    <folder name="Editors">
-        <folder name="text">
-            <folder name="x-springconfig+xml">
-                <folder name="HyperlinkProviders">
-                    <file name="SpringXMLConfigHyperlinkProvider.instance">
-                        <attr name="instanceClass" stringvalue="org.netbeans.modules.spring.beans.hyperlink.SpringXMLConfigHyperlinkProvider"/>
-                        <attr name="instanceOf" stringvalue="org.netbeans.lib.editor.hyperlink.spi.HyperlinkProvider"/>
-                        <attr name="position" intvalue="1000"/>
-                    </file>
-                </folder>
-                <folder name="CompletionProviders">
-                    <file name="org-netbeans-modules-spring-beans-completion-SpringXMLConfigCompletionProvider.instance"/>
-                </folder>
-            </folder>
-        </folder>
-    </folder>
     <folder name="Navigator">
         <folder name="Panels">
             <folder name="text">

@@ -21,6 +21,7 @@ package org.netbeans.lib.v8debug.connection;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  *
@@ -30,7 +31,7 @@ final class DebuggerConnection {
     
     private DebuggerConnection() {}
     
-    public static final Charset CHAR_SET = Charset.forName("UTF-8");            // NOI18N
+    public static final Charset CHAR_SET = StandardCharsets.UTF_8;
     public static final byte[] EOL = new byte[] { 13, 10 }; // \r\n
     public static final String EOL_STR = "\r\n";                                // NOI18N
     public static final String CONTENT_LENGTH_STR = "Content-Length: ";         // NOI18N

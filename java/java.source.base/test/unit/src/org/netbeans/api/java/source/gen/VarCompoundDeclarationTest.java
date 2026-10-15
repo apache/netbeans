@@ -88,7 +88,7 @@ public class VarCompoundDeclarationTest extends TreeRewriteTestBase {
 
         rewriteBlockStatement();
         String res = TestUtilities.copyFileToString(getTestFile());
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
 
     }
@@ -116,7 +116,7 @@ public class VarCompoundDeclarationTest extends TreeRewriteTestBase {
 
         rewriteBlockStatement();
         String res = TestUtilities.copyFileToString(getTestFile());
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -147,7 +147,7 @@ public class VarCompoundDeclarationTest extends TreeRewriteTestBase {
 
         rewriteCaseStatement();
         String res = TestUtilities.copyFileToString(getTestFile());
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -181,7 +181,7 @@ public class VarCompoundDeclarationTest extends TreeRewriteTestBase {
 
         rewriteCaseStatement();
         String res = TestUtilities.copyFileToString(getTestFile());
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 

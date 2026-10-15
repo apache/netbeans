@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.44
+#Version 1.71
 
 CLSS public abstract interface java.io.Serializable
 
@@ -8,8 +8,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -18,15 +20,16 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -36,6 +39,9 @@ meth public final void wait(long) throws java.lang.InterruptedException
 meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public final !enum org.netbeans.api.html.lexer.HTMLTokenId
 fld public final static java.lang.String SCRIPT_TYPE_TOKEN_PROPERTY = "type"
@@ -71,7 +77,7 @@ meth public static org.netbeans.api.html.lexer.HTMLTokenId valueOf(java.lang.Str
 meth public static org.netbeans.api.html.lexer.HTMLTokenId[] values()
 meth public static org.netbeans.api.lexer.Language<org.netbeans.api.html.lexer.HTMLTokenId> language()
 supr java.lang.Enum<org.netbeans.api.html.lexer.HTMLTokenId>
-hfds BABEL_MIMETYPE,JAVASCRIPT_MIMETYPE,LOG,LOGGER,STYLE_MIMETYPE,language,primaryCategory
+hfds BABEL_MIMETYPE,JAVASCRIPT_MIMETYPE,LOG,LOGGER,SCRIPT_TYPE_MODULE,STYLE_MIMETYPE,language,primaryCategory
 
 CLSS public abstract org.netbeans.api.html.lexer.HtmlLexerPlugin
 cons public init()

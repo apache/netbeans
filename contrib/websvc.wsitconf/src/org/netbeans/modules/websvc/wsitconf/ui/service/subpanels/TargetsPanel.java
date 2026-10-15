@@ -65,7 +65,7 @@ public class TargetsPanel extends javax.swing.JPanel {
         while (!(b instanceof Binding) && (b != null)) {
             b = b.getParent();
         }
-        if ((b != null) && (b instanceof Binding)) {
+        if (b instanceof Binding) {
             binding = (Binding) b;
         }
         
@@ -236,9 +236,7 @@ public class TargetsPanel extends javax.swing.JPanel {
         for (int i=0; i<rows.length; i++) {            
             rowsToRemove.add(getTargetsModel().get(rows[i]));
         }
-        for (Object o : rowsToRemove) {
-            getTargetsModel().remove(o);
-        }
+        getTargetsModel().removeAll(rowsToRemove);
         saveTargetsModel();
     }//GEN-LAST:event_removeButtonActionPerformed
     

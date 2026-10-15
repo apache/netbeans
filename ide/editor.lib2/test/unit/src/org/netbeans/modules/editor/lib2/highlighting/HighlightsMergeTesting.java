@@ -231,7 +231,7 @@ public class HighlightsMergeTesting {
         }
     }
 
-    final static class AddLayerOp extends RandomTestContainer.Op {
+    static final class AddLayerOp extends RandomTestContainer.Op {
 
         public AddLayerOp(String name) {
             super(name);
@@ -262,7 +262,7 @@ public class HighlightsMergeTesting {
 
     }
 
-    final static class RemoveLayerOp extends RandomTestContainer.Op {
+    static final class RemoveLayerOp extends RandomTestContainer.Op {
 
         public RemoveLayerOp(String name) {
             super(name);
@@ -281,7 +281,7 @@ public class HighlightsMergeTesting {
 
     }
     
-    final static class MergeCheck extends RandomTestContainer.Check {
+    static final class MergeCheck extends RandomTestContainer.Check {
 
         @Override
         protected void check(Context context) throws Exception {

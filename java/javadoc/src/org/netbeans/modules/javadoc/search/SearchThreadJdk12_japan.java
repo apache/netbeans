@@ -207,39 +207,39 @@ class SearchThreadJdk12_japan extends IndexSearchThread {
 
     /* These are constants for the inner class */
     
-    static private final String STR_CLASS = NbBundle.getMessage(SearchThreadJdk12_japan.class, "JDK12_CLASS" );       //NOI18N
-    static private final String STR_INTERFACE = NbBundle.getMessage(SearchThreadJdk12_japan.class, "JDK12_INTERFACE" );   //NOI18N
-    static private final String STR_EXCEPTION = NbBundle.getMessage(SearchThreadJdk12_japan.class, "JDK12_EXCEPTION" );   //NOI18N
-    static private final String STR_CONSTRUCTOR = NbBundle.getMessage(SearchThreadJdk12_japan.class, "JDK12_CONSTRUCTOR" );   //NOI18N
-    static private final String STR_METHOD = NbBundle.getMessage(SearchThreadJdk12_japan.class, "JDK12_METHOD" );   //NOI18N
-    static private final String STR_ERROR = NbBundle.getMessage(SearchThreadJdk12_japan.class, "JDK12_ERROR" );   //NOI18N
-    static private final String STR_VARIABLE = NbBundle.getMessage(SearchThreadJdk12_japan.class, "JDK12_VARIABLE" );   //NOI18N
-    static private final String STR_STATIC = NbBundle.getMessage(SearchThreadJdk12_japan.class, "JDK12_STATIC" );   //NOI18N
-    static private final String STR_DASH = NbBundle.getMessage(SearchThreadJdk12_japan.class, "JDK12_DASH" );   //NOI18N
-    static private final String STR_PACKAGE = NbBundle.getMessage(SearchThreadJdk12_japan.class, "JDK12_PACKAGE" );   //NOI18N
+    private static final String STR_CLASS = NbBundle.getMessage(SearchThreadJdk12_japan.class, "JDK12_CLASS" );       //NOI18N
+    private static final String STR_INTERFACE = NbBundle.getMessage(SearchThreadJdk12_japan.class, "JDK12_INTERFACE" );   //NOI18N
+    private static final String STR_EXCEPTION = NbBundle.getMessage(SearchThreadJdk12_japan.class, "JDK12_EXCEPTION" );   //NOI18N
+    private static final String STR_CONSTRUCTOR = NbBundle.getMessage(SearchThreadJdk12_japan.class, "JDK12_CONSTRUCTOR" );   //NOI18N
+    private static final String STR_METHOD = NbBundle.getMessage(SearchThreadJdk12_japan.class, "JDK12_METHOD" );   //NOI18N
+    private static final String STR_ERROR = NbBundle.getMessage(SearchThreadJdk12_japan.class, "JDK12_ERROR" );   //NOI18N
+    private static final String STR_VARIABLE = NbBundle.getMessage(SearchThreadJdk12_japan.class, "JDK12_VARIABLE" );   //NOI18N
+    private static final String STR_STATIC = NbBundle.getMessage(SearchThreadJdk12_japan.class, "JDK12_STATIC" );   //NOI18N
+    private static final String STR_DASH = NbBundle.getMessage(SearchThreadJdk12_japan.class, "JDK12_DASH" );   //NOI18N
+    private static final String STR_PACKAGE = NbBundle.getMessage(SearchThreadJdk12_japan.class, "JDK12_PACKAGE" );   //NOI18N
     private static final String STR_ENUM = NbBundle.getMessage(SearchThreadJdk12_japan.class, "JDK15_ENUM"); //NOI18N
     private static final String STR_ANNTYPE = NbBundle.getMessage(SearchThreadJdk12_japan.class, "JDK15_ANNOTATION_TYPE"); //NOI18N
 
     /* Same translations from JDK javadoc */
-    static private final String STR_CLASS_LOC = "\u30AF\u30E9\u30B9";       //NOI18N
-    static private final String STR_INTERFACE_LOC = "\u30A4\u30F3\u30BF\u30D5\u30A7\u30FC\u30B9";   //NOI18N
-    static private final String STR_EXCEPTION_LOC = "\u4F8B\u5916";   //NOI18N
-    static private final String STR_CONSTRUCTOR_LOC = "\u30B3\u30F3\u30B9\u30C8\u30E9\u30AF\u30BF";   //NOI18N
-    static private final String STR_METHOD_LOC = "\u30E1\u30BD\u30C3\u30C9";   //NOI18N
-    static private final String STR_ERROR_LOC = "\u30A8\u30E9\u30FC";   //NOI18N
-    static private final String STR_VARIABLE_LOC = "\u5909\u6570";   //NOI18N
-    static private final String STR_STATIC_LOC = "static";   //NOI18N
-    static private final String STR_DASH_LOC = "-";   //NOI18N
-    static private final String STR_PACKAGE_LOC = "\u30D1\u30C3\u30B1\u30FC\u30B8";   //NOI18N
+    private static final String STR_CLASS_LOC = "\u30AF\u30E9\u30B9";       //NOI18N
+    private static final String STR_INTERFACE_LOC = "\u30A4\u30F3\u30BF\u30D5\u30A7\u30FC\u30B9";   //NOI18N
+    private static final String STR_EXCEPTION_LOC = "\u4F8B\u5916";   //NOI18N
+    private static final String STR_CONSTRUCTOR_LOC = "\u30B3\u30F3\u30B9\u30C8\u30E9\u30AF\u30BF";   //NOI18N
+    private static final String STR_METHOD_LOC = "\u30E1\u30BD\u30C3\u30C9";   //NOI18N
+    private static final String STR_ERROR_LOC = "\u30A8\u30E9\u30FC";   //NOI18N
+    private static final String STR_VARIABLE_LOC = "\u5909\u6570";   //NOI18N
+    private static final String STR_STATIC_LOC = "static";   //NOI18N
+    private static final String STR_DASH_LOC = "-";   //NOI18N
+    private static final String STR_PACKAGE_LOC = "\u30D1\u30C3\u30B1\u30FC\u30B8";   //NOI18N
     private static final String STR_ENUM_LOC = "\u5217\u6319\u578B"; //NOI18N
     private static final String STR_ANNTYPE_LOC = "\u6CE8\u91C8\u578B"; //NOI18N
     
-    static private final int IN_BALAST = 0;
-    static private final int IN_DT = 1;
-    static private final int IN_AREF = 2;
+    private static final int IN_BALAST = 0;
+    private static final int IN_DT = 1;
+    private static final int IN_AREF = 2;
 //    static private final int IN_B = 3;
-    static private final int IN_DESCRIPTION = 4;
-    static private final int IN_DESCRIPTION_SUFFIX = 5;
+    private static final int IN_DESCRIPTION = 4;
+    private static final int IN_DESCRIPTION_SUFFIX = 5;
     
     /** This inner class parses the JDK 1.2 Documentation index and returns
      *  found indexItems. 
@@ -336,7 +336,7 @@ class SearchThreadJdk12_japan extends IndexSearchThread {
                 String text = new String( data );      
                 /*
                 // Stop suffering if we are behind the searched words
-                if ( text.substring( 0, Math.min(toFind.length(), text.length()) ).compareTo( toFind ) > 0 ) {
+                if ( text.substring( 0, Math.min(toFind.length()) ).compareTo( toFind ) > 0 ) {
                     try {
                         System.out.println("Stoping suffering");
                         in.close();

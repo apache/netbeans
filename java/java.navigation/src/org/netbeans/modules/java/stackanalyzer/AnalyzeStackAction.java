@@ -34,6 +34,7 @@ public class AnalyzeStackAction extends AbstractAction {
 //        putValue(SMALL_ICON, new ImageIcon(Utilities.loadImage(AnalyzeStackTopComponent.ICON_PATH, true)));
     }
 
+    @Override
     public void actionPerformed(ActionEvent evt) {
         TopComponent win = AnalyzeStackTopComponent.findInstance();
         win.open();

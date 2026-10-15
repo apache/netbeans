@@ -113,7 +113,7 @@ public interface ExtendedNodeModel extends NodeModel {
 
     /**
      * Returns icon resource with extension for given node.
-     * This is the preferred way of icon specification over {@link org.netbeans.spi.viewmodel.NodeModel.getIconBase}
+     * This is the preferred way of icon specification over {@link org.netbeans.spi.viewmodel.NodeModel#getIconBase}
      *
      * @param node The node object
      * @return The base resouce name with extension (no initial slash)

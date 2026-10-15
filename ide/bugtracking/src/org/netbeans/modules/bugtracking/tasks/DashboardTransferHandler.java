@@ -67,7 +67,7 @@ public class DashboardTransferHandler extends TransferHandler {
                     return null;
                 }
             }
-            return new DashboardTransferable(nodes.toArray(new TaskNode[nodes.size()]));
+            return new DashboardTransferable(nodes.toArray(new TaskNode[0]));
         }
         return null;
     }

@@ -30,9 +30,11 @@ import org.netbeans.modules.csl.spi.DefaultCompletionProposal;
 final class ELRawObjectPropertyCompletionItem extends DefaultCompletionProposal {
 
     private final String propertyName;
-    
-    public ELRawObjectPropertyCompletionItem(String propertyName) {
+    private final String clazz;
+
+    public ELRawObjectPropertyCompletionItem(String propertyName, String clazz) {
         this.propertyName = propertyName;
+        this.clazz = clazz;
     }
 
     @Override
@@ -51,11 +53,10 @@ final class ELRawObjectPropertyCompletionItem extends DefaultCompletionProposal 
     }
 
     @Override
-    public String getLhsHtml(HtmlFormatter formatter) {
-        ElementKind kind = getKind();
-        formatter.name(kind, true);
-        formatter.appendText(getName());
-        formatter.name(kind, false);
+    public String getRhsHtml(HtmlFormatter formatter) {
+        formatter.type(true);
+        formatter.appendText(clazz);
+        formatter.type(false);
         return formatter.getText();
     }
 

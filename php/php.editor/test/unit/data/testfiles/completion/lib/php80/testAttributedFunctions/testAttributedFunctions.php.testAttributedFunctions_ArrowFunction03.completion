@@ -1,0 +1,5 @@
+Code completion result for source line:
+$arrow = #[Attr1(string: Attr1::|class)] fn(#[Attr1(int: 100)] int $int) => 100;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   CONST_ATTR1 1                   [PUBLIC]   \Attributes\Test1\Attr1
+CONSTANT   class \Attributes\Test1\Attr1   [PUBLIC]   Magic Constant

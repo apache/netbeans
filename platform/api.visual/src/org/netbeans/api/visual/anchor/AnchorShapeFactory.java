@@ -126,7 +126,7 @@ public class AnchorShapeFactory {
      * the location of the associated AnchorShape will be determined by a
      * AnchorShapeLocationResolver.
      * 
-     * @param The shape that will be adjusted.
+     * @param shape The shape that will be adjusted.
      * @param resolver The AnchorShapeLocationResolver used to determine where to place the shape.
      */
     public static AnchorShape createAdjustableAnchorShape(AnchorShape shape, AnchorShapeLocationResolver resolver)

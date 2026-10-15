@@ -71,24 +71,8 @@ public class NewWebProjectJSFFrameworkStepOperator extends NewProjectWizardOpera
     }
 
     /*
-     * Selects a Struts Framework to be added
-     */
-
-    public boolean setStrutsFrameworkCheckbox() {
-        Integer strutsRow = tabSelectTheFrameworksYouWantToUseInYourWebApplication().findCellRow("org.netbeans.modules.web.struts");
-        if (strutsRow != -1) {
-            tabSelectTheFrameworksYouWantToUseInYourWebApplication().clickOnCell(strutsRow, 0);
-            return true;
-        } else {
-            System.err.println("No Struts framework found!");
-            return false;
-        }
-
-    }
-    /*
      * Selects a Spring MVC Framework to be added
      */
-
     public boolean setSpringFrameworkCheckbox() {
         Integer springRow = tabSelectTheFrameworksYouWantToUseInYourWebApplication().findCellRow("org.netbeans.modules.spring.webmvc");
         if (springRow != -1) {

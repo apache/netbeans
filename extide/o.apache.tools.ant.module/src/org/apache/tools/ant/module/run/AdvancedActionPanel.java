@@ -22,6 +22,7 @@ package org.apache.tools.ant.module.run;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.text.Collator;
 import java.util.Collections;
 import java.util.HashSet;
@@ -359,7 +360,7 @@ final class AdvancedActionPanel extends javax.swing.JPanel {
             StringTokenizer tok = new StringTokenizer(selection, " ,"); // NOI18N
             List<String> targetsL = Collections.list(NbCollections.checkedEnumerationByFilter(tok, String.class, true));
             if (!targetsL.isEmpty()) {
-                targets = targetsL.toArray(new String[targetsL.size()]);
+                targets = targetsL.toArray(new String[0]);
             }
         }
         Properties props = parseProperties(propertiesPane.getText());
@@ -438,7 +439,7 @@ final class AdvancedActionPanel extends javax.swing.JPanel {
     @NonNull
     private static Properties parseProperties(@NonNull final String text) throws IOException {
         final Properties props = new Properties();
-        final ByteArrayInputStream bais = new ByteArrayInputStream(text.getBytes("ISO-8859-1"));  //NOI18N
+        final ByteArrayInputStream bais = new ByteArrayInputStream(text.getBytes(StandardCharsets.ISO_8859_1));
         props.load(bais);
         return props;
     }

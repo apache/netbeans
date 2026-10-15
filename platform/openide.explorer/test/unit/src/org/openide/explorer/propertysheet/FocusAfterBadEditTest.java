@@ -182,7 +182,8 @@ public class FocusAfterBadEditTest extends NbTestCase {
                 }
             }
         }
-        
+
+        @Override
         public void windowOpened(WindowEvent e) {
             shown = true;
             synchronized(this) {
@@ -338,7 +339,8 @@ public class FocusAfterBadEditTest extends NbTestCase {
         
         public BadEditor() {
         }
-        
+
+        @Override
         public String[] getTags() {
             //return new String[] {"a","b","c","d","Value"};
             return null;
@@ -348,15 +350,18 @@ public class FocusAfterBadEditTest extends NbTestCase {
             this.env = env;
             env.setState(env.STATE_INVALID);
         }
-        
+
+        @Override
         public boolean supportsCustomEditor() {
             return false;
         }
-        
+
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
         }
-        
+
+        @Override
         public void setAsText(String txt) {
             IllegalArgumentException iae = new IllegalArgumentException("Bad, bad, bad");
             Exceptions.attachLocalizedMessage(iae, "I can\'t be nice, I\'m the evil property editor.");

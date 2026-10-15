@@ -23,7 +23,7 @@ package org.netbeans.core.spi.multiview;
  * A marker interface for <code>MultiViewDescription</code> instances that allows to identify them
  * as containing source code. The associated <code>MultiViewElement</code>'s visual representation
  * is assumed to implement <code>CloneableEditorSupport.Pane</code> interface.
- * Fixes issue <a href="http://www.netbeans.org/issues/show_bug.cgi?id=68912">#68912</a>.
+ * Fixes issue <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=68912">#68912</a>.
  * @author Milos Kleint
  * @since org.netbeans.core.multiview 1.10
  */

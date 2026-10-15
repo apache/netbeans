@@ -20,6 +20,9 @@ package org.netbeans.modules.javascript.nodejs.ui;
 
 import java.awt.Cursor;
 import java.awt.EventQueue;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -28,15 +31,18 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.GroupLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.LayoutStyle;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -54,6 +60,8 @@ import org.openide.awt.HtmlBrowser;
 import org.openide.awt.Mnemonics;
 import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileChooserBuilder;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.ChangeSupport;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
@@ -66,9 +74,9 @@ public final class NodeJsPathPanel extends JPanel {
 
     private final ChangeSupport changeSupport = new ChangeSupport(this);
     private final RequestProcessor.Task versionTask;
+    private final List<String> debugProtocolIds = new ArrayList<>();
 
     volatile File nodeSources = null;
-
 
     public NodeJsPathPanel() {
         initComponents();
@@ -95,6 +103,24 @@ public final class NodeJsPathPanel extends JPanel {
         "NodeJsPathPanel.node.hint2=Full path of node file (typically {0} or {1}).",
     })
     private void init() {
+        FileObject[] children = FileUtil.getConfigRoot().getFileObject("javascript/nodejs-debugger").getChildren();
+        Arrays.sort(children, (a, b) -> {
+            Integer valA = (Integer) a.getAttribute("position");
+            Integer valB = (Integer) b.getAttribute("position");
+            if(valA == null) valA = 0;
+            if(valB == null) valB = 0;
+            return valA - valB;
+        });
+        debugProtocolIds.add("");
+        debugProcotolComboBox.addItem("Default");
+        for(FileObject fo: children) {
+            debugProtocolIds.add(fo.getNameExt());
+            String displayName = (String) fo.getAttribute("displayName");
+            if(displayName == null) {
+                displayName = fo.getNameExt();
+            }
+            debugProcotolComboBox.addItem(displayName);
+        }
         sourcesTextField.setText(" "); // NOI18N
         String[] nodes = NodeExecutable.NODE_NAMES;
         if (nodes.length > 1) {
@@ -130,6 +156,18 @@ public final class NodeJsPathPanel extends JPanel {
         }
     }
 
+    public String getDebugProtocol() {
+        return debugProtocolIds.get(debugProcotolComboBox.getSelectedIndex());
+    }
+
+    public void setDebugProtocol(String debugProtocolId) {
+        int protocolIdx = debugProtocolIds.indexOf(debugProtocolId);
+        if(protocolIdx < 0) {
+            protocolIdx = 0;
+        }
+        debugProcotolComboBox.setSelectedIndex(protocolIdx);
+    }
+
     public void addChangeListener(ChangeListener listener) {
         changeSupport.addChangeListener(listener);
     }
@@ -150,6 +188,8 @@ public final class NodeJsPathPanel extends JPanel {
         sourcesTextField.setEnabled(enabled);
         selectSourcesButton.setEnabled(enabled);
         downloadSourcesButton.setEnabled(false);
+        debugProcotolComboBox.setEnabled(enabled);
+        debugProtocolLabel.setEnabled(enabled);
         if (enabled) {
             if (nodeSources != null) {
                 setNodeSourcesDescription();
@@ -192,7 +232,7 @@ public final class NodeJsPathPanel extends JPanel {
                     public void run() {
                         assert EventQueue.isDispatchThread();
                         if (version != null) {
-                            downloadSourcesButton.setEnabled(true);
+                            downloadSourcesButton.setEnabled(sourcesTextField.isEnabled());
                         }
                         if (nodeSources == null) {
                             setNodeSourcesDescription(version, realVersion);
@@ -229,7 +269,7 @@ public final class NodeJsPathPanel extends JPanel {
                     Bundle.NodeJsPathPanel_sources_exists(version.toString()),
                     NotifyDescriptor.YES_NO_OPTION);
             if (DialogDisplayer.getDefault().notify(confirmation) == NotifyDescriptor.NO_OPTION) {
-                downloadSourcesButton.setEnabled(true);
+                downloadSourcesButton.setEnabled(sourcesTextField.isEnabled());
                 return;
             }
         }
@@ -253,7 +293,7 @@ public final class NodeJsPathPanel extends JPanel {
                     @Override
                     public void run() {
                         setNodeSourcesDescription(version, realVersion);
-                        downloadSourcesButton.setEnabled(true);
+                        downloadSourcesButton.setEnabled(sourcesTextField.isEnabled());
                     }
                 });
             }
@@ -320,6 +360,7 @@ public final class NodeJsPathPanel extends JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        GridBagConstraints gridBagConstraints;
 
         nodeLabel = new JLabel();
         nodeTextField = new JTextField();
@@ -331,8 +372,27 @@ public final class NodeJsPathPanel extends JPanel {
         sourcesTextField = new JTextField();
         downloadSourcesButton = new JButton();
         selectSourcesButton = new JButton();
+        debugProtocolLabel = new JLabel();
+        debugProcotolComboBox = new JComboBox<>();
+
+        setLayout(new GridBagLayout());
 
         Mnemonics.setLocalizedText(nodeLabel, NbBundle.getMessage(NodeJsPathPanel.class, "NodeJsPathPanel.nodeLabel.text")); // NOI18N
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
+        add(nodeLabel, gridBagConstraints);
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.LINE_START;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
+        add(nodeTextField, gridBagConstraints);
 
         Mnemonics.setLocalizedText(nodeBrowseButton, NbBundle.getMessage(NodeJsPathPanel.class, "NodeJsPathPanel.nodeBrowseButton.text")); // NOI18N
         nodeBrowseButton.addActionListener(new ActionListener() {
@@ -340,6 +400,13 @@ public final class NodeJsPathPanel extends JPanel {
                 nodeBrowseButtonActionPerformed(evt);
             }
         });
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
+        add(nodeBrowseButton, gridBagConstraints);
 
         Mnemonics.setLocalizedText(nodeSearchButton, NbBundle.getMessage(NodeJsPathPanel.class, "NodeJsPathPanel.nodeSearchButton.text")); // NOI18N
         nodeSearchButton.addActionListener(new ActionListener() {
@@ -347,10 +414,28 @@ public final class NodeJsPathPanel extends JPanel {
                 nodeSearchButtonActionPerformed(evt);
             }
         });
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
+        add(nodeSearchButton, gridBagConstraints);
 
         Mnemonics.setLocalizedText(nodeHintLabel, "HINT"); // NOI18N
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.LINE_START;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
+        add(nodeHintLabel, gridBagConstraints);
 
+        nodeInstallLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         Mnemonics.setLocalizedText(nodeInstallLabel, NbBundle.getMessage(NodeJsPathPanel.class, "NodeJsPathPanel.nodeInstallLabel.text")); // NOI18N
+        nodeInstallLabel.setHorizontalTextPosition(SwingConstants.RIGHT);
         nodeInstallLabel.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
                 nodeInstallLabelMousePressed(evt);
@@ -359,19 +444,47 @@ public final class NodeJsPathPanel extends JPanel {
                 nodeInstallLabelMouseEntered(evt);
             }
         });
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.LINE_END;
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
+        add(nodeInstallLabel, gridBagConstraints);
 
         Mnemonics.setLocalizedText(sourcesLabel, NbBundle.getMessage(NodeJsPathPanel.class, "NodeJsPathPanel.sourcesLabel.text")); // NOI18N
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
+        add(sourcesLabel, gridBagConstraints);
 
         sourcesTextField.setEditable(false);
         sourcesTextField.setColumns(30);
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.LINE_START;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
+        add(sourcesTextField, gridBagConstraints);
 
         Mnemonics.setLocalizedText(downloadSourcesButton, NbBundle.getMessage(NodeJsPathPanel.class, "NodeJsPathPanel.downloadSourcesButton.text")); // NOI18N
-        downloadSourcesButton.setEnabled(false);
         downloadSourcesButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 downloadSourcesButtonActionPerformed(evt);
             }
         });
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
+        add(downloadSourcesButton, gridBagConstraints);
 
         Mnemonics.setLocalizedText(selectSourcesButton, NbBundle.getMessage(NodeJsPathPanel.class, "NodeJsPathPanel.selectSourcesButton.text")); // NOI18N
         selectSourcesButton.addActionListener(new ActionListener() {
@@ -379,51 +492,31 @@ public final class NodeJsPathPanel extends JPanel {
                 selectSourcesButtonActionPerformed(evt);
             }
         });
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
+        add(selectSourcesButton, gridBagConstraints);
 
-        GroupLayout layout = new GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(nodeLabel)
-                    .addComponent(sourcesLabel))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(nodeTextField)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nodeBrowseButton)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nodeSearchButton))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(nodeHintLabel)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(nodeInstallLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(sourcesTextField, GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(downloadSourcesButton)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(selectSourcesButton))))
-        );
-        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(nodeLabel)
-                    .addComponent(nodeTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(nodeBrowseButton)
-                    .addComponent(nodeSearchButton))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(nodeHintLabel)
-                    .addComponent(nodeInstallLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(sourcesLabel)
-                    .addComponent(downloadSourcesButton)
-                    .addComponent(selectSourcesButton)
-                    .addComponent(sourcesTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-        );
+        Mnemonics.setLocalizedText(debugProtocolLabel, NbBundle.getMessage(NodeJsPathPanel.class, "NodeJsPathPanel.debugProtocolLabel.text")); // NOI18N
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
+        add(debugProtocolLabel, gridBagConstraints);
+
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.LINE_START;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new Insets(3, 3, 3, 3);
+        add(debugProcotolComboBox, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     @NbBundle.Messages("NodeJsPathPanel.node.browse.title=Select node")
@@ -479,6 +572,8 @@ public final class NodeJsPathPanel extends JPanel {
     }//GEN-LAST:event_selectSourcesButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private JComboBox<String> debugProcotolComboBox;
+    private JLabel debugProtocolLabel;
     private JButton downloadSourcesButton;
     private JButton nodeBrowseButton;
     private JLabel nodeHintLabel;

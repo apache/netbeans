@@ -278,7 +278,7 @@ public final class Sheet extends Object {
         /** Get all properties in this set.
         * @return the properties
         */
-        synchronized public Node.Property<?>[] getProperties() {
+        public synchronized Node.Property<?>[] getProperties() {
             if (array == null) {
                 array = new Node.Property<?>[props.size()];
                 props.toArray(array);

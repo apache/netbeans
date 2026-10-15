@@ -9,6 +9,68 @@
 class BaseClass {
 
     /**
+     * The summary of BaseClass CONSTANT.
+     */
+    public const CONSTANT_SINGLE_SENTENCE = 0;
+
+    /**
+     * The summary of BaseClass CONSTANT.
+     *
+     * Description of BaseClass CONSTANT.
+     */
+    public const CONSTANT_ONLY_TAG = 0;
+
+    /**
+     * The summary of BaseClass CONSTANT.
+     *
+     * Description of BaseClass CONSTANT.
+     */
+    public const CONSTANT_INLINE_TAG = 0;
+
+    /**
+     * The summary of BaseClass CONSTANT.
+     *
+     * Description of BaseClass CONSTANT.
+     */
+    public const CONSTANT_WITHOUT_PHPDOC = 0;
+
+    /**
+     * The summary of BaseClass $field.
+     * @var int
+     */
+    public int $fieldSingleSentence = 0;
+
+    /**
+     * The summary of BaseClass $field.
+     *
+     * Description of BaseClass $field.
+     * @var int
+     */
+    public int $fieldOnlyTag = 0;
+
+    /**
+     * The summary of BaseClass $field.
+     *
+     * Description of BaseClass $field.
+     * @var int
+     */
+    public int $fieldInlineTag = 0;
+
+    /**
+     * The summary of BaseClass $field.
+     *
+     * Description of BaseClass $field.
+     * @var int
+     */
+    public int $fieldWithoutPHPDoc = 0;
+
+    /**
+     * testSingleSentence method of BaseClass.
+     */
+    public function testSingleSentence() {
+    }
+
+    /**
      * testOnlyTag method of BaseClass.
      *
      * testOnlyTag method description of BaseClass.
@@ -69,6 +131,54 @@ class BaseClass {
  * {@inheritdoc}
  */
 class ChildClass extends BaseClass {
+
+    /**
+     * {@inheritDoc} Description of ChildClass CONSTANT.
+     */
+    public const CONSTANT_SINGLE_SENTENCE = 0;
+
+    /**
+     * {@inheritDoc}
+     */
+    public const CONSTANT_ONLY_TAG = 0;
+
+    /**
+     * The summary of ChildClass CONSTANT.
+     *
+     * {@inheritDoc} Description of ChildClass CONSTANT.
+     */
+    public const CONSTANT_INLINE_TAG = 0;
+
+    public const CONSTANT_WITHOUT_PHPDOC = 0;
+
+    /**
+     * {@inheritDoc} Description of ChildClass $field.
+     * @var int
+     */
+    public int $fieldSingleSentence = 0;
+
+    /**
+     * {@inheritDoc}
+     */
+    public int $fieldOnlyTag = 0;
+
+    /**
+     * The summary of ChildClass $field.
+     *
+     * {@inheritDoc} Description of ChildClass $field.
+     * @var int
+     */
+    public int $fieldInlineTag = 0;
+
+    public int $fieldWithoutPHPDoc = 0;
+
+    /**
+     * testSingleSentence method of ChildClass.
+     *
+     * {@inheritDoc} Description of ChildClass.
+     */
+    public function testSingleSentence() {
+    }
 
     /**
      * {@inheritdoc }
@@ -181,6 +291,15 @@ class GrandchildClass extends ChildClass implements ChildInterface {
 }
 
 $childClass = new ChildClass();
+ChildClass::CONSTANT_SINGLE_SENTENCE;
+ChildClass::CONSTANT_ONLY_TAG;
+ChildClass::CONSTANT_INLINE_TAG;
+ChildClass::CONSTANT_WITHOUT_PHPDOC;
+$childClass->fieldSingleSentence;
+$childClass->fieldOnlytag;
+$childClass->fieldInlineTag;
+$childClass->fieldWithoutPhpDoc;
+$childClass->testSingleSentence();
 $childClass->testOnlyTag($param1, $param2);
 $childClass->testMissingParam($param1);
 $childClass->testNoDoc();

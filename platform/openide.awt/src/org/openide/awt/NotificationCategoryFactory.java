@@ -105,9 +105,9 @@ class NotificationCategoryFactory {
                     });
                 }
                 int index = 0;
-                categories = new ArrayList<Category>(Category.getDefaultCategories());
+                categories = new ArrayList<>(Category.getDefaultCategories());
                 categories.addAll(lookupRes.allInstances());
-                name2category = new HashMap<String, Category>(categories.size());
+                name2category = new HashMap<>(categories.size());
                 for (Category c : categories) {
                     name2category.put(c.getName(), c);
                     c.setIndex(index++);
@@ -118,7 +118,7 @@ class NotificationCategoryFactory {
 
     private Lookup.Result<Category> initLookup() {
         Lookup lkp = Lookups.forPath(CATEGORY_LIST_PATH);
-        Lookup.Template<Category> template = new Lookup.Template<Category>(Category.class);
+        Lookup.Template<Category> template = new Lookup.Template<>(Category.class);
         Lookup.Result<Category> res = lkp.lookup(template);
         return res;
     }

@@ -36,6 +36,8 @@ import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.spi.GsfUtilities;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.editor.indent.spi.Context;
+import org.netbeans.modules.php.editor.CodeUtils;
+import org.netbeans.modules.php.editor.indent.FormatToken.AssignmentAnchorToken;
 import org.netbeans.modules.php.editor.lexer.LexUtilities;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
@@ -71,27 +73,35 @@ public class TokenFormatter {
         public CodeStyle.BracePlacement classDeclBracePlacement;
         public CodeStyle.BracePlacement anonymousClassBracePlacement;
         public CodeStyle.BracePlacement methodDeclBracePlacement;
+        public CodeStyle.BracePlacement fieldDeclBracePlacement;
+        public CodeStyle.BracePlacement propertyHookDeclBracePlacement;
         public CodeStyle.BracePlacement ifBracePlacement;
         public CodeStyle.BracePlacement forBracePlacement;
         public CodeStyle.BracePlacement whileBracePlacement;
         public CodeStyle.BracePlacement switchBracePlacement;
+        public CodeStyle.BracePlacement matchBracePlacement;
         public CodeStyle.BracePlacement useTraitBodyBracePlacement;
         public CodeStyle.BracePlacement groupUseBracePlacement;
         public CodeStyle.BracePlacement catchBracePlacement;
         public CodeStyle.BracePlacement otherBracePlacement;
         public boolean spaceBeforeClassDeclLeftBrace;
         public boolean spaceBeforeMethodDeclLeftBrace;
+        public boolean spaceBeforeFieldDeclLeftBrace;
+        public boolean spaceBeforePropertyHookDeclLeftBrace;
         public boolean spaceBeforeIfLeftBrace;
         public boolean spaceBeforeElseLeftBrace;
         public boolean spaceBeforeWhileLeftBrace;
         public boolean spaceBeforeForLeftBrace;
         public boolean spaceBeforeDoLeftBrace;
         public boolean spaceBeforeSwitchLeftBrace;
+        public boolean spaceBeforeMatchLeftBrace;
         public boolean spaceBeforeTryLeftBrace;
         public boolean spaceBeforeCatchLeftBrace;
         public boolean spaceBeforeFinallyLeftBrace;
         public boolean spaceBeforeUseTraitBodyLeftBrace;
         public boolean spaceBeforeAnonymousClassParen;
+        public boolean spaceBeforeAnonymousFunctionParen;
+        public boolean spaceBeforeAttributeDeclParen;
         public boolean spaceBeforeMethodDeclParen;
         public boolean spaceBeforeMethodCallParen;
         public boolean spaceBeforeIfParen;
@@ -99,17 +109,23 @@ public class TokenFormatter {
         public boolean spaceBeforeWhileParen;
         public boolean spaceBeforeCatchParen;
         public boolean spaceBeforeSwitchParen;
+        public boolean spaceBeforeMatchParen;
         public boolean spaceBeforeArrayDeclParen;
         public boolean spaceBeforeWhile;
         public boolean spaceBeforeElse;
         public boolean spaceBeforeCatch;
         public boolean spaceBeforeFinally;
+        public boolean spaceAroundScopeResolutionOp;
         public boolean spaceAroundObjectOp;
+        public boolean spaceAroundNullsafeObjectOp;
         public boolean spaceAroundDeclareEqual;
+        public boolean spaceAroundUnionTypeSeparator;
+        public boolean spaceAroundIntersectionTypeSeparator;
         public boolean spaceAroundStringConcatOp;
         public boolean spaceAroundUnaryOps;
         public boolean spaceAroundBinaryOps;
         public boolean spaceAroundTernaryOps;
+        public boolean spaceAroundCoalescingOps;
         public boolean spaceAroundAssignOps;
         public boolean spaceAroundKeyValueOps;
         public boolean spaceWithinArrayDeclParens;
@@ -120,9 +136,13 @@ public class TokenFormatter {
         public boolean spaceWithinForParens;
         public boolean spaceWithinWhileParens;
         public boolean spaceWithinSwitchParens;
+        public boolean spaceWithinMatchParens;
         public boolean spaceWithinCatchParens;
         public boolean spaceWithinArrayBrackets;
+        public boolean spaceWithinAttributeBrackets;
+        public boolean spaceWithinAttributeDeclParens;
         public boolean spaceWithinTypeCastParens;
+        public boolean spaceWithinOtherParens;
         public boolean spaceBeforeComma;
         public boolean spaceAfterComma;
         public boolean spaceBeforeSemi;
@@ -140,13 +160,20 @@ public class TokenFormatter {
         public int blankLinesAfterNamespace;
         public int blankLinesBeforeUse;
         public int blankLinesBeforeUseTrait;
+        public int blankLinesAfterUseTrait;
         public int blankLinesAfterUse;
+        public int blankLinesBetweenUseTypes;
         public int blankLinesBeforeClass;
         public int blankLinesBeforeClassEnd;
         public int blankLinesAfterClass;
         public int blankLinesAfterClassHeader;
         public int blankLinesBeforeFields;
         public int blankLinesBetweenFields;
+        public int blankLinesBeforePropertyHooks;
+        public int blankLinesBetweenPropertyHooks;
+        public boolean blankLinesEmptyFunctionBody;
+        public boolean blankLinesEmptyPropertyHookBody;
+        public boolean blankLinesEOF;
         public boolean blankLinesGroupFields;
         public int blankLinesAfterFields;
         public int blankLinesBeforeFunction;
@@ -155,6 +182,7 @@ public class TokenFormatter {
         public int blankLinesAfterOpenPHPTag;
         public int blankLinesAfterOpenPHPTagInHTML;
         public int blankLinesBeforeClosePHPTag;
+        public int blankLinesMaxPreserved;
         public CodeStyle.WrapStyle wrapGroupUseList;
         public CodeStyle.WrapStyle wrapExtendsImplementsKeyword;
         public CodeStyle.WrapStyle wrapExtendsImplementsList;
@@ -169,12 +197,20 @@ public class TokenFormatter {
         public CodeStyle.WrapStyle wrapDoWhileStatement;
         public CodeStyle.WrapStyle wrapBinaryOps;
         public CodeStyle.WrapStyle wrapTernaryOps;
+        public CodeStyle.WrapStyle wrapCoalescingOps;
         public CodeStyle.WrapStyle wrapAssignOps;
         public boolean wrapBlockBrace;
         public boolean wrapGroupUseBraces;
         public boolean wrapStatementsOnTheSameLine;
         public boolean wrapAfterBinOps;
         public boolean wrapAfterAssignOps;
+        public boolean wrapMethodParamsAfterLeftParen;
+        public boolean wrapMethodParamsRightParen;
+        public boolean wrapMethodParamsKeepParenAndBraceOnTheSameLine;
+        public boolean wrapMethodCallArgsAfterLeftParen;
+        public boolean wrapMethodCallArgsRightParen;
+        public boolean wrapForAfterLeftParen;
+        public boolean wrapForRightParen;
         public boolean alignMultilineMethodParams;
         public boolean alignMultilineCallArgs;
         public boolean alignMultilineImplements;
@@ -190,8 +226,9 @@ public class TokenFormatter {
         public boolean alignMultilineFor; // not implemented yet
         @org.netbeans.api.annotations.common.SuppressWarnings({"URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"})
         public boolean alignMultilineArrayInit; //not implemented yet
-        public boolean groupMulitilineAssignment;
-        public boolean groupMulitilineArrayInit;
+        public boolean groupMultilineAssignment;
+        public boolean groupMultilineArrayInit;
+        public boolean groupMultilineMatchArmArrow;
 
         boolean wrapNeverKeepLines = Boolean.getBoolean("nb.php.editor.formatting.never.keep.lines"); // NOI18N
 
@@ -208,10 +245,13 @@ public class TokenFormatter {
             classDeclBracePlacement = codeStyle.getClassDeclBracePlacement();
             anonymousClassBracePlacement = codeStyle.getAnonymousClassBracePlacement();
             methodDeclBracePlacement = codeStyle.getMethodDeclBracePlacement();
+            fieldDeclBracePlacement = codeStyle.getFieldDeclBracePlacement();
+            propertyHookDeclBracePlacement = codeStyle.getPropertyHookDeclBracePlacement();
             ifBracePlacement = codeStyle.getIfBracePlacement();
             forBracePlacement = codeStyle.getForBracePlacement();
             whileBracePlacement = codeStyle.getWhileBracePlacement();
             switchBracePlacement = codeStyle.getSwitchBracePlacement();
+            matchBracePlacement = codeStyle.getMatchBracePlacement();
             catchBracePlacement = codeStyle.getCatchBracePlacement();
             useTraitBodyBracePlacement = codeStyle.getUseTraitBodyBracePlacement();
             groupUseBracePlacement = codeStyle.getGroupUseBracePlacement();
@@ -219,18 +259,23 @@ public class TokenFormatter {
 
             spaceBeforeClassDeclLeftBrace = codeStyle.spaceBeforeClassDeclLeftBrace();
             spaceBeforeMethodDeclLeftBrace = codeStyle.spaceBeforeMethodDeclLeftBrace();
+            spaceBeforeFieldDeclLeftBrace = codeStyle.spaceBeforeFieldDeclLeftBrace();
+            spaceBeforePropertyHookDeclLeftBrace = codeStyle.spaceBeforePropertyHookDeclLeftBrace();
             spaceBeforeIfLeftBrace = codeStyle.spaceBeforeIfLeftBrace();
             spaceBeforeElseLeftBrace = codeStyle.spaceBeforeElseLeftBrace();
             spaceBeforeWhileLeftBrace = codeStyle.spaceBeforeWhileLeftBrace();
             spaceBeforeForLeftBrace = codeStyle.spaceBeforeForLeftBrace();
             spaceBeforeDoLeftBrace = codeStyle.spaceBeforeDoLeftBrace();
             spaceBeforeSwitchLeftBrace = codeStyle.spaceBeforeSwitchLeftBrace();
+            spaceBeforeMatchLeftBrace = codeStyle.spaceBeforeMatchLeftBrace();
             spaceBeforeTryLeftBrace = codeStyle.spaceBeforeTryLeftBrace();
             spaceBeforeCatchLeftBrace = codeStyle.spaceBeforeCatchLeftBrace();
             spaceBeforeFinallyLeftBrace = codeStyle.spaceBeforeFinallyLeftBrace();
             spaceBeforeUseTraitBodyLeftBrace = codeStyle.spaceBeforeUseTraitBodyLeftBrace();
 
             spaceBeforeAnonymousClassParen = codeStyle.spaceBeforeAnonymousClassParen();
+            spaceBeforeAnonymousFunctionParen = codeStyle.spaceBeforeAnonymousFunctionParen();
+            spaceBeforeAttributeDeclParen = codeStyle.spaceBeforeAttributeDeclParen();
             spaceBeforeMethodDeclParen = codeStyle.spaceBeforeMethodDeclParen();
             spaceBeforeMethodCallParen = codeStyle.spaceBeforeMethodCallParen();
             spaceBeforeIfParen = codeStyle.spaceBeforeIfParen();
@@ -238,6 +283,7 @@ public class TokenFormatter {
             spaceBeforeWhileParen = codeStyle.spaceBeforeWhileParen();
             spaceBeforeCatchParen = codeStyle.spaceBeforeCatchParen();
             spaceBeforeSwitchParen = codeStyle.spaceBeforeSwitchParen();
+            spaceBeforeMatchParen = codeStyle.spaceBeforeMatchParen();
             spaceBeforeArrayDeclParen = codeStyle.spaceBeforeArrayDeclParen();
 
             spaceBeforeWhile = codeStyle.spaceBeforeWhile();
@@ -245,12 +291,17 @@ public class TokenFormatter {
             spaceBeforeCatch = codeStyle.spaceBeforeCatch();
             spaceBeforeFinally = codeStyle.spaceBeforeFinally();
 
+            spaceAroundScopeResolutionOp = codeStyle.spaceAroundScopeResolutionOps();
             spaceAroundObjectOp = codeStyle.spaceAroundObjectOps();
+            spaceAroundNullsafeObjectOp = codeStyle.spaceAroundNullsafeObjectOps();
             spaceAroundDeclareEqual = codeStyle.spaceAroundDeclareEqual();
+            spaceAroundUnionTypeSeparator = codeStyle.spaceAroundUnionTypeSeparator();
+            spaceAroundIntersectionTypeSeparator = codeStyle.spaceAroundIntersectionTypeSeparator();
             spaceAroundStringConcatOp = codeStyle.spaceAroundStringConcatOps();
             spaceAroundUnaryOps = codeStyle.spaceAroundUnaryOps();
             spaceAroundBinaryOps = codeStyle.spaceAroundBinaryOps();
             spaceAroundTernaryOps = codeStyle.spaceAroundTernaryOps();
+            spaceAroundCoalescingOps = codeStyle.spaceAroundCoalescingOps();
             spaceAroundAssignOps = codeStyle.spaceAroundAssignOps();
             spaceAroundKeyValueOps = codeStyle.spaceAroundKeyValueOps();
 
@@ -262,9 +313,13 @@ public class TokenFormatter {
             spaceWithinForParens = codeStyle.spaceWithinForParens();
             spaceWithinWhileParens = codeStyle.spaceWithinWhileParens();
             spaceWithinSwitchParens = codeStyle.spaceWithinSwitchParens();
+            spaceWithinMatchParens = codeStyle.spaceWithinMatchParens();
             spaceWithinCatchParens = codeStyle.spaceWithinCatchParens();
             spaceWithinArrayBrackets = codeStyle.spaceWithinArrayBrackets();
+            spaceWithinAttributeBrackets = codeStyle.spaceWithinAttributeBrackets();
+            spaceWithinAttributeDeclParens = codeStyle.spaceWithinAttributeDeclParens();
             spaceWithinTypeCastParens = codeStyle.spaceWithinTypeCastParens();
+            spaceWithinOtherParens = codeStyle.spaceWithinOtherParens();
 
             spaceBeforeComma = codeStyle.spaceBeforeComma();
             spaceAfterComma = codeStyle.spaceAfterComma();
@@ -285,13 +340,20 @@ public class TokenFormatter {
             blankLinesAfterNamespace = codeStyle.getBlankLinesAfterNamespace();
             blankLinesBeforeUse = codeStyle.getBlankLinesBeforeUse();
             blankLinesBeforeUseTrait = codeStyle.getBlankLinesBeforeUseTrait();
+            blankLinesAfterUseTrait = codeStyle.getBlankLinesAfterUseTrait();
             blankLinesAfterUse = codeStyle.getBlankLinesAfterUse();
+            blankLinesBetweenUseTypes = codeStyle.getBlankLinesBetweenUseTypes();
             blankLinesBeforeClass = codeStyle.getBlankLinesBeforeClass();
             blankLinesBeforeClassEnd = codeStyle.getBlankLinesBeforeClassEnd();
             blankLinesAfterClass = codeStyle.getBlankLinesAfterClass();
             blankLinesAfterClassHeader = codeStyle.getBlankLinesAfterClassHeader();
             blankLinesBeforeFields = codeStyle.getBlankLinesBeforeFields();
             blankLinesBetweenFields = codeStyle.getBlankLinesBetweenFields();
+            blankLinesBeforePropertyHooks = codeStyle.getBlankLinesBeforePropertyHooks();
+            blankLinesBetweenPropertyHooks = codeStyle.getBlankLinesBetweenPropertyHooks();
+            blankLinesEmptyFunctionBody = codeStyle.getBlankLinesEmptyFunctionBody();
+            blankLinesEmptyPropertyHookBody = codeStyle.getBlankLinesEmptyPropertyHookBody();
+            blankLinesEOF = codeStyle.getBlankLinesEOF();
             blankLinesGroupFields = codeStyle.getBlankLinesGroupFieldsWithoutDoc();
             blankLinesAfterFields = codeStyle.getBlankLinesAfterFields();
             blankLinesBeforeFunction = codeStyle.getBlankLinesBeforeFunction();
@@ -300,21 +362,30 @@ public class TokenFormatter {
             blankLinesAfterOpenPHPTag = codeStyle.getBlankLinesAfterOpenPHPTag();
             blankLinesAfterOpenPHPTagInHTML = codeStyle.getBlankLinesAfterOpenPHPTagInHTML();
             blankLinesBeforeClosePHPTag = codeStyle.getBlankLinesBeforeClosePHPTag();
+            blankLinesMaxPreserved = codeStyle.getBlankLinesMaxPreserved();
 
             wrapGroupUseList = codeStyle.wrapGroupUseList();
             wrapExtendsImplementsKeyword = codeStyle.wrapExtendsImplementsKeyword();
             wrapExtendsImplementsList = codeStyle.wrapExtendsImplementsList();
             wrapMethodParams = codeStyle.wrapMethodParams();
+            wrapMethodParamsAfterLeftParen = codeStyle.wrapMethodParamsAfterLeftParen();
+            wrapMethodParamsRightParen = codeStyle.wrapMethodParamsRightParen();
+            wrapMethodParamsKeepParenAndBraceOnTheSameLine = codeStyle.wrapMethodParamsKeepParenAndBraceOnTheSameLine();
             wrapMethodCallArgs = codeStyle.wrapMethodCallArgs();
+            wrapMethodCallArgsAfterLeftParen = codeStyle.wrapMethodCallArgsAfterLeftParen();
+            wrapMethodCallArgsRightParen = codeStyle.wrapMethodCallArgsRightParen();
             wrapChainedMethodCalls = codeStyle.wrapChainedMethodCalls();
             wrapArrayInit = codeStyle.wrapArrayInit();
             wrapFor = codeStyle.wrapFor();
+            wrapForAfterLeftParen = codeStyle.wrapForAfterLeftParen();
+            wrapForRightParen = codeStyle.wrapForRightParen();
             wrapForStatement = codeStyle.wrapForStatement();
             wrapIfStatement = codeStyle.wrapIfStatement();
             wrapWhileStatement = codeStyle.wrapWhileStatement();
             wrapDoWhileStatement = codeStyle.wrapDoWhileStatement();
             wrapBinaryOps = codeStyle.wrapBinaryOps();
             wrapTernaryOps = codeStyle.wrapTernaryOps();
+            wrapCoalescingOps = codeStyle.wrapCoalescingOps();
             wrapAssignOps = codeStyle.wrapAssignOps();
             wrapBlockBrace = codeStyle.wrapBlockBrace();
             wrapGroupUseBraces = codeStyle.wrapGroupUseBraces();
@@ -331,8 +402,9 @@ public class TokenFormatter {
             alignMultilineAssignment = codeStyle.alignMultilineAssignment();
             alignMultilineFor = codeStyle.alignMultilineFor();
             alignMultilineArrayInit = codeStyle.alignMultilineArrayInit();
-            groupMulitilineArrayInit = codeStyle.groupMulitlineArrayInit();
-            groupMulitilineAssignment = codeStyle.groupMulitlineAssignment();
+            groupMultilineArrayInit = codeStyle.groupMultilineArrayInit();
+            groupMultilineMatchArmArrow = codeStyle.groupMultilineMatchArmArrow();
+            groupMultilineAssignment = codeStyle.groupMultilineAssignment();
         }
 
     }
@@ -405,7 +477,9 @@ public class TokenFormatter {
                     int extraLines;
                     int column = 0;
                     int indentOfOpenTag = 0;
+                    int methodCallParenBalance = 0; // GH-6714 for nested arguments
                     final Deque<Integer> lastBracedBlockIndent = new ArrayDeque<>();
+                    final Deque<FormatToken.AnchorToken> lastAnchorTokenStack = new ArrayDeque<>(); // GH-6714 for nested arguments
 
                     FormatToken formatToken;
                     String newText = null;
@@ -413,6 +487,7 @@ public class TokenFormatter {
                     int changeOffset = -1;
                     int deltaForLastMoveBeforeLineComment = 0;
                     FormatToken.AnchorToken lastAnchor = null;
+                    boolean hasNewLineBeforeRightParen = false;
                     while (index < formatTokens.size()) {
                         formatToken = formatTokens.get(index);
                         oldText = null; //NOI18N
@@ -425,6 +500,8 @@ public class TokenFormatter {
                             boolean indentRule = false;
                             boolean afterSemi = false;
                             boolean wsBetweenBraces = false;
+                            boolean wsBetweenFunctionBraces = false;
+                            boolean wsBetweenPropertyHookBraces = false;
                             CodeStyle.BracePlacement lastBracePlacement = CodeStyle.BracePlacement.SAME_LINE;
 
                             changeOffset = formatToken.getOffset();
@@ -467,14 +544,64 @@ public class TokenFormatter {
                                         break;
                                     case WHITESPACE_BEFORE_FUNCTION_LEFT_BRACE:
                                         indentRule = true;
+                                        boolean isEmptyFunctionBody = isEmptyFunctionBody(templateEdit, index, formatTokens);
+                                        if (isEmptyFunctionBody) {
+                                            // GH-6716 PER
+                                            newLines = 0;
+                                            countSpaces = docOptions.spaceBeforeMethodDeclLeftBrace ? 1 : 0;
+                                        } else {
+                                            ws = countWhiteSpaceBeforeLeftBrace(
+                                                    docOptions.methodDeclBracePlacement,
+                                                    docOptions.spaceBeforeMethodDeclLeftBrace,
+                                                    oldText,
+                                                    indent,
+                                                    peekLastBracedIndent(lastBracedBlockIndent));
+                                            newLines = ws.lines;
+                                            countSpaces = ws.spaces;
+                                        }
+                                        // NETBEANS-3391
+                                        if (hasNewLineBeforeRightParen
+                                                && docOptions.wrapMethodParamsKeepParenAndBraceOnTheSameLine) {
+                                            newLines = 0;
+                                            countSpaces = docOptions.spaceBeforeMethodDeclLeftBrace ? 1 : 0;
+                                        }
+                                        hasNewLineBeforeRightParen = false;
+                                        break;
+                                    case WHITESPACE_BEFORE_FIELD_LEFT_BRACE:
+                                        indentRule = true;
                                         ws = countWhiteSpaceBeforeLeftBrace(
-                                                docOptions.methodDeclBracePlacement,
-                                                docOptions.spaceBeforeMethodDeclLeftBrace,
+                                                docOptions.fieldDeclBracePlacement,
+                                                docOptions.spaceBeforeFieldDeclLeftBrace,
                                                 oldText,
                                                 indent,
                                                 peekLastBracedIndent(lastBracedBlockIndent));
                                         newLines = ws.lines;
                                         countSpaces = ws.spaces;
+                                        break;
+                                    case WHITESPACE_AFTER_FIELD_LEFT_BRACE:
+                                        indentRule = true;
+                                        newLines = 1; // add options(e.g. docOptions.blankLinesAfterFieldBlockStart) if needed
+                                        countSpaces = indent;
+                                        break;
+                                    case WHITESPACE_BEFORE_PROPERTY_HOOK_LEFT_BRACE:
+                                        indentRule = true;
+                                        boolean isEmptyPropertyHookBody = isEmptyPropertyHookBody(templateEdit, index, formatTokens);
+                                        if (isEmptyPropertyHookBody) {
+                                            // e.g. avoid the following case
+                                            // get
+                                            // {}
+                                            newLines = 0;
+                                            countSpaces = docOptions.spaceBeforePropertyHookDeclLeftBrace ? 1 : 0;
+                                        } else {
+                                            ws = countWhiteSpaceBeforeLeftBrace(
+                                                    docOptions.propertyHookDeclBracePlacement,
+                                                    docOptions.spaceBeforePropertyHookDeclLeftBrace,
+                                                    oldText,
+                                                    indent,
+                                                    peekLastBracedIndent(lastBracedBlockIndent));
+                                            newLines = ws.lines;
+                                            countSpaces = ws.spaces;
+                                        }
                                         break;
                                     case WHITESPACE_BEFORE_IF_LEFT_BRACE:
                                         indentRule = true;
@@ -511,9 +638,15 @@ public class TokenFormatter {
                                         newLines = ws.lines;
                                         countSpaces = ws.spaces;
                                         break;
-                                    case WHITESPACE_BEFORE_SWITCH_LEFT_BACE:
+                                    case WHITESPACE_BEFORE_SWITCH_LEFT_BRACE:
                                         indentRule = true;
                                         ws = countWhiteSpaceBeforeLeftBrace(docOptions.switchBracePlacement, docOptions.spaceBeforeSwitchLeftBrace, oldText, indent, 0);
+                                        newLines = ws.lines;
+                                        countSpaces = ws.spaces;
+                                        break;
+                                    case WHITESPACE_BEFORE_MATCH_LEFT_BRACE:
+                                        indentRule = true;
+                                        ws = countWhiteSpaceBeforeLeftBrace(docOptions.matchBracePlacement, docOptions.spaceBeforeMatchLeftBrace, oldText, indent, 0);
                                         newLines = ws.lines;
                                         countSpaces = ws.spaces;
                                         break;
@@ -598,13 +731,21 @@ public class TokenFormatter {
                                         countSpaces = indentRule ? ws.spaces : 1;
                                         lastBracePlacement = docOptions.whileBracePlacement;
                                         break;
-                                    case WHITESPACE_BEFORE_SWITCH_RIGHT_BACE:
+                                    case WHITESPACE_BEFORE_SWITCH_RIGHT_BRACE:
                                         indentRule = oldText != null && countOfNewLines(oldText) > 0 ? true : docOptions.wrapBlockBrace;
                                         indentLine = indentRule;
                                         ws = countWhiteSpaceBeforeRightBrace(docOptions.switchBracePlacement, newLines, 0, indent, formatTokens, index - 1, oldText, 0);
                                         newLines = ws.lines;
                                         countSpaces = ws.spaces;
                                         lastBracePlacement = docOptions.switchBracePlacement;
+                                        break;
+                                    case WHITESPACE_BEFORE_MATCH_RIGHT_BRACE:
+                                        indentRule = oldText != null && countOfNewLines(oldText) > 0 ? true : docOptions.wrapBlockBrace;
+                                        indentLine = indentRule;
+                                        ws = countWhiteSpaceBeforeRightBrace(docOptions.matchBracePlacement, newLines, 0, indent, formatTokens, index - 1, oldText, 0);
+                                        newLines = ws.lines;
+                                        countSpaces = ws.spaces;
+                                        lastBracePlacement = docOptions.matchBracePlacement;
                                         break;
                                     case WHITESPACE_BEFORE_CATCH_RIGHT_BRACE:
                                         indentRule = oldText != null && countOfNewLines(oldText) > 0 ? true : docOptions.wrapBlockBrace;
@@ -639,6 +780,14 @@ public class TokenFormatter {
                                         newLines = ws.lines;
                                         countSpaces = indentRule ? ws.spaces : 1;
                                         lastBracePlacement = docOptions.otherBracePlacement;
+                                        break;
+                                    case WHITESPACE_BETWEEN_FUNCTION_OPEN_CLOSE_BRACES:
+                                        wsBetweenFunctionBraces = true;
+                                        wsBetweenBraces = true;
+                                        break;
+                                    case WHITESPACE_BETWEEN_PROPERTY_HOOK_OPEN_CLOSE_BRACES:
+                                        wsBetweenPropertyHookBraces = true;
+                                        wsBetweenBraces = true;
                                         break;
                                     case WHITESPACE_BETWEEN_OPEN_CLOSE_BRACES:
                                         wsBetweenBraces = true;
@@ -678,7 +827,7 @@ public class TokenFormatter {
                                         indentRule = true;
                                         ws = countWhiteSpaceBeforeRightBrace(
                                                 docOptions.classDeclBracePlacement,
-                                                newLines,
+                                                docOptions.blankLinesBeforeClassEnd + 1, // GH-46111 ignore existing newLines to prioritize this option
                                                 docOptions.blankLinesBeforeClassEnd,
                                                 indent,
                                                 formatTokens,
@@ -719,18 +868,25 @@ public class TokenFormatter {
                                     case WHITESPACE_BEFORE_FUNCTION_RIGHT_BRACE:
                                         indentRule = oldText != null && countOfNewLines(oldText) > 0 ? true : docOptions.wrapBlockBrace;
                                         indentLine = indentRule;
-                                        ws = countWhiteSpaceBeforeRightBrace(
-                                                docOptions.methodDeclBracePlacement,
-                                                newLines,
-                                                docOptions.blankLinesBeforeFunctionEnd,
-                                                indent,
-                                                formatTokens,
-                                                index - 1,
-                                                oldText,
-                                                popLastBracedIndent(lastBracedBlockIndent));
-                                        newLines = ws.lines;
-                                        countSpaces = indentRule ? ws.spaces : 1;
-                                        lastBracePlacement = docOptions.methodDeclBracePlacement;
+                                        if (!templateEdit && !docOptions.blankLinesEmptyFunctionBody && wsBetweenFunctionBraces) {
+                                            // GH-6716 PER: https://www.php-fig.org/per/coding-style/#44-methods-and-functions
+                                            // e.g. public function __construct(private int $int): void {}
+                                            newLines = 0;
+                                            countSpaces = 0;
+                                        } else {
+                                            ws = countWhiteSpaceBeforeRightBrace(
+                                                    docOptions.methodDeclBracePlacement,
+                                                    newLines,
+                                                    docOptions.blankLinesBeforeFunctionEnd,
+                                                    indent,
+                                                    formatTokens,
+                                                    index - 1,
+                                                    oldText,
+                                                    popLastBracedIndent(lastBracedBlockIndent));
+                                            newLines = ws.lines;
+                                            countSpaces = indentRule ? ws.spaces : 1;
+                                            lastBracePlacement = docOptions.methodDeclBracePlacement;
+                                        }
                                         break;
                                     case WHITESPACE_BEFORE_FIELDS:
                                         newLines = docOptions.blankLinesBeforeFields + 1 > newLines ? docOptions.blankLinesBeforeFields + 1 : newLines;
@@ -744,12 +900,61 @@ public class TokenFormatter {
                                         break;
                                     case WHITESPACE_BETWEEN_FIELDS:
                                         indentRule = true;
-                                        if (docOptions.blankLinesGroupFields && !isBeforePHPDoc(formatTokens, index)) {
+                                        if (docOptions.blankLinesGroupFields && !isBeforePHPDocOrAttribute(formatTokens, index)) {
                                             newLines = 1;
                                         } else {
                                             newLines = docOptions.blankLinesBetweenFields + 1 > newLines ? docOptions.blankLinesBetweenFields + 1 : newLines;
                                         }
                                         countSpaces = indent;
+                                        break;
+                                    case WHITESPACE_BEFORE_FIELD_RIGHT_BRACE:
+                                        indentRule = oldText != null && countOfNewLines(oldText) > 0 ? true : docOptions.wrapBlockBrace;
+                                        indentLine = indentRule;
+                                        ws = countWhiteSpaceBeforeRightBrace(
+                                                docOptions.fieldDeclBracePlacement,
+                                                newLines,
+                                                0,
+                                                indent,
+                                                formatTokens,
+                                                index - 1,
+                                                oldText,
+                                                popLastBracedIndent(lastBracedBlockIndent));
+                                        newLines = ws.lines;
+                                        countSpaces = indentRule ? ws.spaces : 1;
+                                        lastBracePlacement = docOptions.fieldDeclBracePlacement;
+                                        break;
+                                    case WHITESPACE_BEFORE_PROPERTY_HOOKS:
+                                        newLines = docOptions.blankLinesBeforePropertyHooks + 1 > newLines ? docOptions.blankLinesBeforePropertyHooks + 1 : newLines;
+                                        indentRule = true;
+                                        countSpaces = indent;
+                                        lastBracedBlockIndent.push(countLastBracedBlockIndent(indent, oldText));
+                                        break;
+                                    case WHITESPACE_BETWEEN_PROPERTY_HOOKS:
+                                        indentRule = true;
+                                        newLines = docOptions.blankLinesBetweenPropertyHooks + 1 > newLines ? docOptions.blankLinesBetweenPropertyHooks + 1 : newLines;
+                                        countSpaces = indent;
+                                        break;
+                                    case WHITESPACE_BEFORE_PROPERTY_HOOK_RIGHT_BRACE:
+                                        indentRule = oldText != null && countOfNewLines(oldText) > 0 ? true : docOptions.wrapBlockBrace;
+                                        indentLine = indentRule;
+                                        if (!templateEdit && !docOptions.blankLinesEmptyPropertyHookBody && wsBetweenPropertyHookBraces) {
+                                            // e.g. public $prop {get {} set {}}
+                                            newLines = 0;
+                                            countSpaces = 0;
+                                        } else {
+                                            ws = countWhiteSpaceBeforeRightBrace(
+                                                    docOptions.propertyHookDeclBracePlacement,
+                                                    newLines,
+                                                    0,
+                                                    indent,
+                                                    formatTokens,
+                                                    index - 1,
+                                                    oldText,
+                                                    popLastBracedIndent(lastBracedBlockIndent));
+                                            newLines = ws.lines;
+                                            countSpaces = indentRule ? ws.spaces : 1;
+                                            lastBracePlacement = docOptions.propertyHookDeclBracePlacement;
+                                        }
                                         break;
                                     case WHITESPACE_BEFORE_NAMESPACE:
                                         indentRule = true;
@@ -783,6 +988,10 @@ public class TokenFormatter {
                                         newLines = 1;
                                         countSpaces = indent;
                                         break;
+                                    case WHITESPACE_BETWEEN_USE_TYPES:
+                                        indentRule = true;
+                                        newLines = docOptions.blankLinesBetweenUseTypes + 1 > newLines ? docOptions.blankLinesBetweenUseTypes + 1 : newLines;
+                                        break;
                                     case WHITESPACE_AFTER_USE:
                                         indentRule = true;
                                         newLines = docOptions.blankLinesAfterUse + 1 > newLines ? docOptions.blankLinesAfterUse + 1 : newLines;
@@ -800,6 +1009,10 @@ public class TokenFormatter {
                                     case WHITESPACE_BEFORE_USE_TRAIT:
                                         indentRule = true;
                                         newLines = docOptions.blankLinesBeforeUseTrait + 1;
+                                        break;
+                                    case WHITESPACE_AFTER_USE_TRAIT:
+                                        indentRule = true;
+                                        newLines = docOptions.blankLinesAfterUseTrait + 1;
                                         break;
                                     case WHITESPACE_BEFORE_USE_TRAIT_PART:
                                         indentRule = true;
@@ -999,11 +1212,23 @@ public class TokenFormatter {
                                             }
                                         }
                                         break;
+                                    case WHITESPACE_AROUND_SCOPE_RESOLUTION_OP:
+                                        countSpaces = docOptions.spaceAroundScopeResolutionOp ? 1 : 0;
+                                        break;
                                     case WHITESPACE_AROUND_OBJECT_OP:
                                         countSpaces = docOptions.spaceAroundObjectOp ? 1 : 0;
                                         break;
+                                    case WHITESPACE_AROUND_NULLSAFE_OBJECT_OP:
+                                        countSpaces = docOptions.spaceAroundNullsafeObjectOp ? 1 : 0;
+                                        break;
                                     case WHITESPACE_AROUND_DECLARE_EQUAL:
                                         countSpaces = docOptions.spaceAroundDeclareEqual ? 1 : 0;
+                                        break;
+                                    case WHITESPACE_AROUND_UNION_TYPE_SEPARATOR:
+                                        countSpaces = docOptions.spaceAroundUnionTypeSeparator ? 1 : 0;
+                                        break;
+                                    case WHITESPACE_AROUND_INTERSECTION_TYPE_SEPARATOR:
+                                        countSpaces = docOptions.spaceAroundIntersectionTypeSeparator ? 1 : 0;
                                         break;
                                     case WHITESPACE_AROUND_CONCAT_OP:
                                         countSpaces = docOptions.spaceAroundStringConcatOp ? 1 : 0;
@@ -1013,6 +1238,9 @@ public class TokenFormatter {
                                         break;
                                     case WHITESPACE_AROUND_UNARY_OP:
                                         countSpaces = docOptions.spaceAroundUnaryOps ? 1 : countSpaces;
+                                        break;
+                                    case WHITESPACE_AROUND_TEXTUAL_OP:
+                                        countSpaces = 1;
                                         break;
                                     case WHITESPACE_BEFORE_BINARY_OP:
                                         if (docOptions.wrapAfterBinOps) {
@@ -1092,18 +1320,26 @@ public class TokenFormatter {
                                     case WHITESPACE_AROUND_TERNARY_OP:
                                         countSpaces = docOptions.spaceAroundTernaryOps ? 1 : 0;
                                         break;
+                                    case WHITESPACE_AROUND_COALESCING_OP:
+                                        countSpaces = docOptions.spaceAroundCoalescingOps ? 1 : 0;
+                                        break;
                                     case WHITESPACE_WITHIN_SHORT_TERNARY_OP:
                                         countSpaces = 0;
                                         break;
                                     case WHITESPACE_BEFORE_ASSIGN_OP:
                                         indentRule = true;
                                         countSpaces = 0;
-                                        if (index > 0 && docOptions.groupMulitilineAssignment
+                                        boolean addSpaceBeforeAssign = true;
+                                        if (index > 0 && docOptions.groupMultilineAssignment
                                                 && formatTokens.get(index - 1).getId() == FormatToken.Kind.ASSIGNMENT_ANCHOR) {
                                             FormatToken.AssignmentAnchorToken aaToken = (FormatToken.AssignmentAnchorToken) formatTokens.get(index - 1);
+                                            // space of options is added if the token is grouped and tab is not expanded
                                             countSpaces = new SpacesCounter(docOptions).count(aaToken);
+                                            addSpaceBeforeAssign = addSpaceAroundAssignment(aaToken, docOptions);
                                         }
-                                        countSpaces = countSpaces + (docOptions.spaceAroundAssignOps ? 1 : 0);
+                                        if (addSpaceBeforeAssign) {
+                                            countSpaces += (docOptions.spaceAroundAssignOps ? 1 : 0);
+                                        }
                                         newLines = 0;
                                         if (!docOptions.wrapAfterAssignOps) {
                                             switch (docOptions.wrapAssignOps) {
@@ -1127,12 +1363,17 @@ public class TokenFormatter {
                                     case WHITESPACE_AFTER_ASSIGN_OP:
                                         indentRule = true;
                                         countSpaces = 0;
-                                        if (index > 0 && docOptions.groupMulitilineAssignment
+                                        boolean addSpaceAfterAssign = true;
+                                        if (index > 0 && docOptions.groupMultilineAssignment
                                                 && formatTokens.get(index - 1).getId() == FormatToken.Kind.ASSIGNMENT_ANCHOR) {
                                             FormatToken.AssignmentAnchorToken aaToken = (FormatToken.AssignmentAnchorToken) formatTokens.get(index - 1);
+                                            // space of options is added if the token is grouped and tab is not expanded
                                             countSpaces = new SpacesCounter(docOptions).count(aaToken);
+                                            addSpaceAfterAssign = addSpaceAroundAssignment(aaToken, docOptions);
                                         }
-                                        countSpaces = countSpaces + (docOptions.spaceAroundAssignOps ? 1 : 0);
+                                        if (addSpaceAfterAssign) {
+                                            countSpaces += (docOptions.spaceAroundAssignOps ? 1 : 0);
+                                        }
                                         newLines = 0;
                                         if (docOptions.wrapAfterAssignOps) {
                                             switch (docOptions.wrapAssignOps) {
@@ -1155,17 +1396,39 @@ public class TokenFormatter {
                                         break;
                                     case WHITESPACE_AROUND_KEY_VALUE_OP:
                                         countSpaces = 0;
-                                        FormatToken lastToken = formatTokens.get(index - 1);
-                                        if (index > 0 && docOptions.groupMulitilineArrayInit && lastToken.getId() == FormatToken.Kind.ASSIGNMENT_ANCHOR) {
-                                            FormatToken.AssignmentAnchorToken anchorToken = (FormatToken.AssignmentAnchorToken) lastToken;
-                                            if (docOptions.wrapArrayInit == CodeStyle.WrapStyle.WRAP_ALWAYS || anchorToken.isMultilined()) {
-                                                countSpaces = new SpacesCounter(docOptions).count(anchorToken);
+                                        FormatToken lastToken = null;
+                                        if (index > 0) {
+                                            lastToken = formatTokens.get(index - 1);
+                                        }
+                                        boolean addSpaceAroundKeyValue = true;
+                                        if (lastToken != null && lastToken.getId() == FormatToken.Kind.ASSIGNMENT_ANCHOR) {
+                                            AssignmentAnchorToken anchorToken = (AssignmentAnchorToken) lastToken;
+                                            if (anchorToken.getType() == AssignmentAnchorToken.Type.ARRAY && docOptions.groupMultilineArrayInit) {
+                                                if (docOptions.wrapArrayInit == CodeStyle.WrapStyle.WRAP_ALWAYS || anchorToken.isMultilined()) {
+                                                    // space of options is added if the token is grouped and tab is not expanded
+                                                    countSpaces = new SpacesCounter(docOptions).count(anchorToken);
+                                                    addSpaceAroundKeyValue = addSpaceAroundAssignment(anchorToken, docOptions);
+                                                }
+                                            } else if (anchorToken.getType() == AssignmentAnchorToken.Type.MATCH_ARM && docOptions.groupMultilineMatchArmArrow) {
+                                                if (anchorToken.isMultilined()) {
+                                                    // space of options is added if the token is grouped and tab is not expanded
+                                                    countSpaces = new SpacesCounter(docOptions).count(anchorToken);
+                                                    addSpaceAroundKeyValue = addSpaceAroundAssignment(anchorToken, docOptions);
+                                                }
                                             }
                                         }
-                                        countSpaces = countSpaces + (docOptions.spaceAroundKeyValueOps ? 1 : 0);
+                                        if (addSpaceAroundKeyValue) {
+                                            countSpaces += docOptions.spaceAroundKeyValueOps ? 1 : 0;
+                                        }
                                         break;
                                     case WHITESPACE_BEFORE_ANONYMOUS_CLASS_PAREN:
                                         countSpaces = docOptions.spaceBeforeAnonymousClassParen ? 1 : 0;
+                                        break;
+                                    case WHITESPACE_BEFORE_ANONYMOUS_FUNCTION_PAREN:
+                                        countSpaces = docOptions.spaceBeforeAnonymousFunctionParen ? 1 : 0;
+                                        break;
+                                    case WHITESPACE_BEFORE_ATTRIBUTE_DEC_PAREN:
+                                        countSpaces = docOptions.spaceBeforeAttributeDeclParen ? 1 : 0;
                                         break;
                                     case WHITESPACE_BEFORE_METHOD_DEC_PAREN:
                                         countSpaces = docOptions.spaceBeforeMethodDeclParen ? 1 : 0;
@@ -1187,6 +1450,9 @@ public class TokenFormatter {
                                         break;
                                     case WHITESPACE_BEFORE_SWITCH_PAREN:
                                         countSpaces = docOptions.spaceBeforeSwitchParen ? 1 : 0;
+                                        break;
+                                    case WHITESPACE_BEFORE_MATCH_PAREN:
+                                        countSpaces = docOptions.spaceBeforeMatchParen ? 1 : 0;
                                         break;
                                     case WHITESPACE_BEFORE_ARRAY_DECL_PAREN:
                                         countSpaces = docOptions.spaceBeforeArrayDeclParen ? 1 : 0;
@@ -1269,20 +1535,68 @@ public class TokenFormatter {
                                         }
                                         break;
                                     case WHITESPACE_WITHIN_METHOD_DECL_PARENS:
+                                        // NETBEANS-3391
+                                        // reset the flag
+                                        // e.g.
+                                        // abstract public function abstractMethod(
+                                        //     $param
+                                        // ); // there is a newline before ")", however, there is no braces
+                                        // public function method($param) {
+                                        // }
+                                        hasNewLineBeforeRightParen = false;
                                         helpIndex = index - 1;
                                         while (helpIndex > 0
                                                 && formatTokens.get(helpIndex).getId() != FormatToken.Kind.WHITESPACE_WITHIN_METHOD_DECL_PARENS
-                                                && (formatTokens.get(helpIndex).getId() == FormatToken.Kind.WHITESPACE /*
+                                                && (formatTokens.get(helpIndex).getId() == FormatToken.Kind.WHITESPACE
+                                                || formatTokens.get(helpIndex).getId() == FormatToken.Kind.INDENT
+                                                /*
                                                  * ||
                                                  * formatTokens.get(helpIndex).getId()
                                                  * == FormatToken.Kind.WHITESPACE_INDENT
                                                  */)) {
                                             helpIndex--;
                                         }
-                                        if (helpIndex > 0 && formatTokens.get(helpIndex).getId() == FormatToken.Kind.WHITESPACE_WITHIN_METHOD_DECL_PARENS) {
+                                        boolean noParams = helpIndex > 0 && formatTokens.get(helpIndex).getId() == FormatToken.Kind.WHITESPACE_WITHIN_METHOD_DECL_PARENS;
+                                        if (noParams) {
                                             countSpaces = 0;
                                         } else {
                                             countSpaces = docOptions.spaceWithinMethodDeclParens ? 1 : 0;
+                                        }
+
+                                        // NETBEANS-3391
+                                        // Before:
+                                        // function test($arg1,
+                                        //     $arg2): string {
+                                        //     return 'foo';
+                                        // }
+                                        // After:
+                                        // function test(
+                                        //     $arg1,
+                                        //     $arg2
+                                        // ): string {
+                                        //     return 'foo';
+                                        // }
+                                        if (isLeftParen(formatTokens.get(index - 1))) {
+                                            helpIndex = index + 1;
+                                            while (helpIndex < formatTokens.size()
+                                                    && formatTokens.get(helpIndex).getId() != FormatToken.Kind.WHITESPACE_WITHIN_METHOD_DECL_PARENS
+                                                    && (formatTokens.get(helpIndex).getId() == FormatToken.Kind.WHITESPACE
+                                                    || formatTokens.get(helpIndex).getId() == FormatToken.Kind.INDENT)) {
+                                                helpIndex++;
+                                            }
+                                            if (docOptions.wrapMethodParamsAfterLeftParen) {
+                                                if (hasNewLineWithinParensForward(index, formatTokens, formatToken.getId())) {
+                                                    indentLine = true;
+                                                    newLines = 1;
+                                                }
+                                            }
+                                        } else {
+                                            if (docOptions.wrapMethodParamsRightParen) {
+                                                if (hasNewLineWithinParensBackward(index, formatTokens, formatToken.getId())) {
+                                                    indentLine = true;
+                                                    newLines = 1;
+                                                }
+                                            }
                                         }
                                         break;
                                     case WHITESPACE_WITHIN_METHOD_CALL_PARENS:
@@ -1298,18 +1612,54 @@ public class TokenFormatter {
                                         } else {
                                             countSpaces = docOptions.spaceWithinMethodCallParens ? 1 : 0;
                                         }
+                                        // NETBEANS-3391
+                                        if (isLeftParen(formatTokens.get(index - 1))) {
+                                            methodCallParenBalance++;
+                                            if (hasNewLineWithinParensForward(index, formatTokens, formatToken.getId())
+                                                    && docOptions.wrapMethodCallArgsAfterLeftParen) {
+                                                indentLine = true;
+                                                newLines = 1;
+                                            }
+                                        } else {
+                                            methodCallParenBalance--;
+                                            if (methodCallParenBalance > 0 && !lastAnchorTokenStack.isEmpty()) {
+                                                lastAnchor = lastAnchorTokenStack.pop();
+                                            }
+                                            if (hasNewLineWithinParensBackward(index, formatTokens, formatToken.getId())
+                                                    && docOptions.wrapMethodCallArgsRightParen) {
+                                                indentLine = true;
+                                                newLines = 1;
+                                            }
+                                        }
                                         break;
                                     case WHITESPACE_WITHIN_IF_PARENS:
                                         countSpaces = docOptions.spaceWithinIfParens ? 1 : 0;
                                         break;
                                     case WHITESPACE_WITHIN_FOR_PARENS:
                                         countSpaces = docOptions.spaceWithinForParens ? 1 : 0;
+                                        // NETBEANS-3391
+                                        if (isLeftParen(formatTokens.get(index - 1))) {
+                                            if (hasNewLineWithinParensForward(index, formatTokens, formatToken.getId())
+                                                    && docOptions.wrapForAfterLeftParen) {
+                                                indentLine = true;
+                                                newLines = 1;
+                                            }
+                                        } else {
+                                            if (hasNewLineWithinParensBackward(index, formatTokens, formatToken.getId())
+                                                    && docOptions.wrapForRightParen) {
+                                                indentLine = true;
+                                                newLines = 1;
+                                            }
+                                        }
                                         break;
                                     case WHITESPACE_WITHIN_WHILE_PARENS:
                                         countSpaces = docOptions.spaceWithinWhileParens ? 1 : 0;
                                         break;
                                     case WHITESPACE_WITHIN_SWITCH_PARENS:
                                         countSpaces = docOptions.spaceWithinSwitchParens ? 1 : 0;
+                                        break;
+                                    case WHITESPACE_WITHIN_MATCH_PARENS:
+                                        countSpaces = docOptions.spaceWithinMatchParens ? 1 : 0;
                                         break;
                                     case WHITESPACE_WITHIN_CATCH_PARENS:
                                         countSpaces = docOptions.spaceWithinCatchParens ? 1 : 0;
@@ -1327,8 +1677,58 @@ public class TokenFormatter {
                                             countSpaces = docOptions.spaceWithinArrayBrackets ? 1 : 0;
                                         }
                                         break;
+                                    case WHITESPACE_WITHIN_ATTRIBUTE_BRACKETS:
+                                        // countSpace 0
+                                        // #[
+                                        //     A(1)
+                                        // ]
+                                        // ^
+                                        // class MyClass {}
+                                        //
+                                        // or
+                                        // countSpace 1
+                                        // #[A(1)] class MyClass{}
+                                        helpIndex = index - 1;
+                                        while (helpIndex > 0
+                                                && (formatTokens.get(helpIndex).getId() == FormatToken.Kind.INDENT
+                                                || formatTokens.get(helpIndex).getId() == FormatToken.Kind.WHITESPACE)) {
+                                            helpIndex--;
+                                        }
+                                        if (index > 0 && formatTokens.get(helpIndex).getId() == FormatToken.Kind.WHITESPACE_INDENT) {
+                                            countSpaces = 0;
+                                        } else {
+                                            countSpaces = docOptions.spaceWithinAttributeBrackets ? 1 : 0;
+                                        }
+                                        break;
+                                    case WHITESPACE_WITHIN_ATTRIBUTE_DECL_PARENS:
+                                        // countSpace 0 if it's an empty parameter
+                                        // #[A()]
+                                        helpIndex = index - 1;
+                                        while (helpIndex > 0
+                                                && formatTokens.get(helpIndex).getId() != FormatToken.Kind.WHITESPACE_WITHIN_ATTRIBUTE_DECL_PARENS
+                                                && (formatTokens.get(helpIndex).getId() == FormatToken.Kind.WHITESPACE
+                                                || formatTokens.get(helpIndex).getId() == FormatToken.Kind.WHITESPACE_INDENT)) {
+                                            helpIndex--;
+                                        }
+                                        if (index > 0 && formatTokens.get(helpIndex).getId() == FormatToken.Kind.WHITESPACE_WITHIN_ATTRIBUTE_DECL_PARENS) {
+                                            countSpaces = 0;
+                                        } else {
+                                            countSpaces = docOptions.spaceWithinAttributeDeclParens ? 1 : 0;
+                                        }
+                                        break;
                                     case WHITESPACE_WITHIN_TYPE_CAST_PARENS:
                                         countSpaces = docOptions.spaceWithinTypeCastParens ? 1 : 0;
+                                        break;
+                                    case WHITESPACE_WITHIN_DNF_TYPE_PARENS:
+                                        // change here if we add the option for it
+                                        countSpaces = 0;
+                                        break;
+                                    case WHITESPACE_WITHIN_OTHER_PARENS:
+                                        countSpaces = docOptions.spaceWithinOtherParens ? 1 : 0;
+                                        break;
+                                    case WHITESPACE_WITHIN_DYNAMIC_NAME_BRACES:
+                                        // change here if we add the option for it
+                                        countSpaces = 0;
                                         break;
                                     case WHITESPACE_AFTER_TYPE_CAST:
                                         countSpaces = docOptions.spaceAfterTypeCast ? 1 : 0;
@@ -1402,12 +1802,33 @@ public class TokenFormatter {
                                                 isAfterLineComment(formatTokens, index));
                                         newLines = ws.lines;
                                         countSpaces = ws.spaces;
+                                        if (docOptions.wrapFor == CodeStyle.WrapStyle.WRAP_NEVER) {
+                                            // for keeping the same line
+                                            int countOfNewLines = countOfNewLines(oldText);
+                                            if (isAfterLineComment(formatTokens, index)
+                                                    || (!docOptions.wrapNeverKeepLines && countOfNewLines > 0)) {
+                                                newLines = 1;
+                                                countSpaces = indent;
+                                            }
+                                        }
                                         break;
                                     case WHITESPACE_IN_TERNARY_OP:
                                         indentRule = true;
                                         ws = countWSBeforeAStatement(
                                                 docOptions.wrapTernaryOps,
                                                 docOptions.spaceAroundTernaryOps,
+                                                column,
+                                                countLengthOfNextSequence(formatTokens, index + 1),
+                                                indent,
+                                                isAfterLineComment(formatTokens, index));
+                                        newLines = ws.lines;
+                                        countSpaces = ws.spaces;
+                                        break;
+                                    case WHITESPACE_IN_COALESCING_OP:
+                                        indentRule = true;
+                                        ws = countWSBeforeAStatement(
+                                                docOptions.wrapCoalescingOps,
+                                                docOptions.spaceAroundCoalescingOps,
                                                 column,
                                                 countLengthOfNextSequence(formatTokens, index + 1),
                                                 indent,
@@ -1479,6 +1900,14 @@ public class TokenFormatter {
                                         countSpaces = ws.spaces;
                                         break;
                                     case WHITESPACE_INDENT:
+                                        if (formatTokens.get(index - 1).getId() == FormatToken.Kind.WHITESPACE_AFTER_USE) {
+                                            // GH-6980
+                                            // namespace {
+                                            //     use Vendor\Package\ExampleClass;
+                                            //     $variable = 1; // add indent spaces here
+                                            // }
+                                            countSpaces = indent;
+                                        }
                                         indentLine = true;
                                         break;
                                     case INDENT:
@@ -1487,6 +1916,9 @@ public class TokenFormatter {
                                         lastPHPIndent += indentDelta;
                                         break;
                                     case ANCHOR:
+                                        if (methodCallParenBalance > 0 && lastAnchor != null) {
+                                            lastAnchorTokenStack.push(lastAnchor);
+                                        }
                                         lastAnchor = (FormatToken.AnchorToken) formatToken;
                                         lastAnchor.setAnchorColumn(column + 1);
                                         break;
@@ -1510,7 +1942,7 @@ public class TokenFormatter {
                                                             : Integer.valueOf(0);
                                                 }
 
-                                                int lineOffset = LineDocumentUtils.getLineStart(doc, phpOpenTagOffset);
+                                                int lineOffset = LineDocumentUtils.getLineStartOffset(doc, phpOpenTagOffset);
                                                 int firstNonWhiteCharacterOffset = LineDocumentUtils.getNextNonWhitespace(doc, lineOffset);
                                                 if (firstNonWhiteCharacterOffset == phpOpenTagOffset) {
                                                     indentRule = true;
@@ -1620,7 +2052,7 @@ public class TokenFormatter {
                                                 int lineNumber = LineDocumentUtils.getLineIndex(doc, offset);
                                                 Integer suggestedIndent = suggestedLineIndents.get(lineNumber);
                                                 if (suggestedIndent != null) {
-                                                    int lineOffset = LineDocumentUtils.getLineStart(doc, offset);
+                                                    int lineOffset = LineDocumentUtils.getLineStartOffset(doc, offset);
                                                     int firstNW = LineDocumentUtils.getNextNonWhitespace(doc, lineOffset);
                                                     if (firstNW == offset) {
                                                         countSpaces = lastPHPIndent == 0 ? htmlIndent : lastPHPIndent + htmlIndent + docOptions.initialIndent;
@@ -1665,6 +2097,18 @@ public class TokenFormatter {
                                         break;
                                     case WHITESPACE_AFTER_CLOSE_PHP_TAG:
                                         break;
+                                    case WHITESPACE_BEFORE_NAMED_ARGUMENT_SEPARATOR:
+                                        countSpaces = 0;
+                                        break;
+                                    case WHITESPACE_AFTER_NAMED_ARGUMENT_SEPARATOR:
+                                        countSpaces = 1;
+                                        break;
+                                    case WHITESPACE_BEFORE_ENUM_BACKING_TYPE_SEPARATOR:
+                                        countSpaces = 0;
+                                        break;
+                                    case WHITESPACE_AFTER_ENUM_BACKING_TYPE_SEPARATOR:
+                                        countSpaces = 1;
+                                        break;
                                     case WHITESPACE_BEFORE_RETURN_TYPE_SEPARATOR:
                                         countSpaces = 0;
                                         break;
@@ -1679,6 +2123,21 @@ public class TokenFormatter {
                                         break;
                                     case WHITESPACE_AFTER_MULTI_CATCH_SEPARATOR:
                                         countSpaces = 1;
+                                        break;
+                                    case WHITESPACE_AFTER_TYPE:
+                                        countSpaces = 1;
+                                        break;
+                                    case WHITESPACE_AFTER_ATTRIBUTE:
+                                        if (index + 1 < formatTokens.size()) {
+                                            // countSpace 0
+                                            // #[A(1)]
+                                            // class MyClass {}
+                                            //
+                                            // or
+                                            // countSpace 1
+                                            // #[A(1)] class MyClass{}
+                                            countSpaces = formatTokens.get(index + 1).getId() == FormatToken.Kind.WHITESPACE_INDENT ? 0 : 1;
+                                        }
                                         break;
                                     default:
                                     //no-op
@@ -1696,12 +2155,23 @@ public class TokenFormatter {
                                 if (wasARule) {
                                     if ((!indentRule || newLines == -1) && indentLine) {
                                         boolean handlingSpecialCases = false;
+                                        boolean checkHandlingSpecialCases = true;
                                         if (FormatToken.Kind.TEXT == formatToken.getId()
                                                 && (")".equals(formatToken.getOldText()) || "]".equals(formatToken.getOldText()))) {
+                                            if (formatTokens.get(index - 1).getId() == FormatToken.Kind.WHITESPACE_WITHIN_METHOD_CALL_PARENS
+                                                    && formatTokens.get(index - 2).getId() == FormatToken.Kind.INDENT) {
+                                                // GH-7172
+                                                // e.g.
+                                                // $example = (new Ex())
+                                                //     ->method(
+                                                //         $param
+                                                //     );
+                                                checkHandlingSpecialCases = false;
+                                            }
                                             // tryin find out and handling cases when )) folows.
                                             int hIndex = index + 1;
                                             int hindent = indent;
-                                            if (hIndex < formatTokens.size()) {
+                                            if (hIndex < formatTokens.size() && checkHandlingSpecialCases) {
                                                 FormatToken token;
                                                 int lastIndent = 0;
                                                 boolean bracketsInLine = false;
@@ -1713,6 +2183,12 @@ public class TokenFormatter {
                                                     } else if (token.getId() == FormatToken.Kind.TEXT
                                                             && (")".equals(token.getOldText()) || "]".equals(token.getOldText()))) {
                                                         bracketsInLine = true;
+                                                    } else if (token.getId() == FormatToken.Kind.WHITESPACE_WITHIN_METHOD_CALL_PARENS) {
+                                                        // NETBEANS-3391
+                                                        if (hasNewLineWithinParensBackward(hIndex, formatTokens, FormatToken.Kind.WHITESPACE_WITHIN_METHOD_CALL_PARENS)
+                                                                && docOptions.wrapMethodCallArgsRightParen) {
+                                                            break;
+                                                        }
                                                     }
 
                                                     hIndex++;
@@ -1788,20 +2264,33 @@ public class TokenFormatter {
                                     } else {
                                         if (!indentRule) {
                                             newLines = countOfNewLines(oldText);
+                                            newLines = docOptions.blankLinesMaxPreserved + 1 < newLines ? docOptions.blankLinesMaxPreserved + 1 : newLines;
                                         }
                                     }
                                 }
-
+                                // NETBEANS-3391 keep ")" and "{" on the same line
+                                // e.g.
+                                // funciton test(
+                                //    param,
+                                // ): string {
+                                if (isRightParen(formatToken) && newLines > 0) {
+                                    hasNewLineBeforeRightParen = true;
+                                }
                                 newText = createWhitespace(docOptions, newLines, countSpaces);
                                 if (wsBetweenBraces) {
-                                    if (lastBracePlacement == CodeStyle.BracePlacement.PRESERVE_EXISTING) {
-                                        newText = createWhitespace(docOptions, 1, indent + docOptions.indentSize) + newText;
-                                    } else {
-                                        newText = createWhitespace(docOptions, 1, indent + docOptions.indentSize)
-                                                + createWhitespace(
-                                                docOptions,
-                                                1,
-                                                lastBracePlacement == CodeStyle.BracePlacement.NEW_LINE_INDENTED ? indent + docOptions.indentSize : indent);
+                                    if (templateEdit
+                                            || (!wsBetweenFunctionBraces && !wsBetweenPropertyHookBraces)
+                                            || (docOptions.blankLinesEmptyFunctionBody && wsBetweenFunctionBraces)
+                                            || (docOptions.blankLinesEmptyPropertyHookBody && wsBetweenPropertyHookBraces)) {
+                                        if (lastBracePlacement == CodeStyle.BracePlacement.PRESERVE_EXISTING) {
+                                            newText = createWhitespace(docOptions, 1, indent + docOptions.indentSize) + newText;
+                                        } else {
+                                            newText = createWhitespace(docOptions, 1, indent + docOptions.indentSize)
+                                                    + createWhitespace(
+                                                    docOptions,
+                                                    1,
+                                                    lastBracePlacement == CodeStyle.BracePlacement.NEW_LINE_INDENTED ? indent + docOptions.indentSize : indent);
+                                        }
                                     }
                                 }
                                 int realOffset = changeOffset + delta;
@@ -1861,6 +2350,9 @@ public class TokenFormatter {
                                     }
                                     break;
                                 case ANCHOR:
+                                    if (methodCallParenBalance > 0 && lastAnchor != null) {
+                                        lastAnchorTokenStack.push(lastAnchor);
+                                    }
                                     lastAnchor = (FormatToken.AnchorToken) formatToken;
                                     lastAnchor.setAnchorColumn(column);
                                     break;
@@ -1926,34 +2418,76 @@ public class TokenFormatter {
                         }
 
                         delta = replaceString(doc, changeOffset, index, oldText, newText, delta, templateEdit);
+                        // GH-6714 if text have TABs, get incorrect column
+                        // so, use countOfSpaces() instead of newText.length()
                         if (newText == null) {
-                            String formatTokenOldText = formatToken.getOldText() == null ? "" : formatToken.getOldText();
-                            int formatTokenOldTextLength = formatTokenOldText.length();
+                            String formatTokenOldText = formatToken.getOldText() == null ? CodeUtils.EMPTY_STRING : formatToken.getOldText();
+                            int formatTokenOldTextLength = countOfSpaces(formatTokenOldText, docOptions.tabSize);
                             int lines = countOfNewLines(formatTokenOldText);
                             if (lines > 0) {
-                                int lastNewLine = formatTokenOldText.lastIndexOf('\n'); //NOI18N
-                                column = formatTokenOldText.substring(lastNewLine).length();
+                                int lastNewLine = formatTokenOldText.lastIndexOf(CodeUtils.NEW_LINE);
+                                String substring = formatTokenOldText.substring(lastNewLine);
+                                column = countOfSpaces(substring, docOptions.tabSize);
                             } else {
                                 column += formatTokenOldTextLength;
                             }
                         } else {
                             int lines = countOfNewLines(newText);
                             if (lines > 0) {
-                                column = newText.length() - lines;
+                                column = countOfSpaces(newText, docOptions.tabSize) - lines;
                             } else {
-                                column += newText.length();
+                                column += countOfSpaces(newText, docOptions.tabSize);
                             }
                         }
                         newText = null;
                         index++;
                     }
                 } finally {
+                    if (docOptions.blankLinesEOF) {
+                        resolveNoNewLineAtEOF(doc);
+                    }
                     mti.tokenHierarchyControl().setActive(true);
                 }
                 if (LOGGER.isLoggable(Level.FINE)) {
                     long end = System.currentTimeMillis();
                     LOGGER.log(Level.FINE, "Applaying format stream took: {0} ms", (end - start.get())); // NOI18N
                 }
+            }
+
+            private boolean isEmptyFunctionBody(final boolean templateEdit, int index, final List<FormatToken> formatTokens) {
+                boolean isEmptyFunctionBody = false;
+                if (!templateEdit && !docOptions.blankLinesEmptyFunctionBody) {
+                    int helpIndex = index;
+                    while (helpIndex + 1 < formatTokens.size()) {
+                        helpIndex++;
+                        FormatToken token = formatTokens.get(helpIndex);
+                        if (token.getId() == FormatToken.Kind.WHITESPACE_BETWEEN_FUNCTION_OPEN_CLOSE_BRACES) {
+                            isEmptyFunctionBody = true;
+                            break;
+                        } else if (token.getId() == FormatToken.Kind.WHITESPACE_BEFORE_FUNCTION_RIGHT_BRACE) {
+                            break;
+                        }
+                    }
+                }
+                return isEmptyFunctionBody;
+            }
+
+            private boolean isEmptyPropertyHookBody(final boolean templateEdit, int index, final List<FormatToken> formatTokens) {
+                boolean isEmptyBody = false;
+                if (!templateEdit && !docOptions.blankLinesEmptyPropertyHookBody) {
+                    int helpIndex = index;
+                    while (helpIndex + 1 < formatTokens.size()) {
+                        helpIndex++;
+                        FormatToken token = formatTokens.get(helpIndex);
+                        if (token.getId() == FormatToken.Kind.WHITESPACE_BETWEEN_PROPERTY_HOOK_OPEN_CLOSE_BRACES) {
+                            isEmptyBody = true;
+                            break;
+                        } else if (token.getId() == FormatToken.Kind.WHITESPACE_BEFORE_PROPERTY_HOOK_RIGHT_BRACE) {
+                            break;
+                        }
+                    }
+                }
+                return isEmptyBody;
             }
 
             private boolean isRightBeforeNamespaceDeclaration(List<FormatToken> formatTokens, int index) {
@@ -2389,7 +2923,16 @@ public class TokenFormatter {
                         && newText != null && newText.indexOf('\n') > -1) {
                     // will be formatted new line that the first one has to be special
                     previousNewIndentText = newText;
-                    previousOldIndentText = oldText;
+                    // e.g.
+                    // class C {
+                    //     public function example1(): void {} : in this case, oldText is an empty string("")
+                    //     public function example2(): void {}
+                    //     ^^^^^^^ format
+                    //
+                    //     public $hooked1 { get; set; } : in this case, oldText is " "
+                    //     public $hooked2 {}
+                    //     ^^^^^^^ format
+                    previousOldIndentText = oldText.indexOf('\n') > -1 ? oldText : newText;
                 }
                 if (newText != null && (!oldText.equals(newText)
                         || (startOffset > 0 && (startOffset - oldText.length()) == offset))) {
@@ -2606,6 +3149,112 @@ public class TokenFormatter {
                 value = index < formatTokens.size() && ";".equals(token.getOldText());
                 return value;
             }
+
+            private boolean hasNewLineWithinParensForward(int index, List<FormatToken> formatTokens, FormatToken.Kind tokenKind) {
+                int helpIndex = index - 1;
+                int balance = 0;
+                boolean hasNewLine = false;
+                if (helpIndex > 0 && isLeftParen(formatTokens.get(helpIndex))) {
+                    helpIndex = index + 1;
+                    balance++;
+                    while (helpIndex < formatTokens.size()) {
+                        switch (tokenKind) {
+                            case WHITESPACE_WITHIN_METHOD_DECL_PARENS:
+                                if (formatTokens.get(helpIndex).getId() == FormatToken.Kind.HAS_NEWLINE_WITHIN_METHOD_PARAMS) {
+                                    hasNewLine = true;
+                                }
+                                break;
+                            case WHITESPACE_WITHIN_METHOD_CALL_PARENS:
+                                if (formatTokens.get(helpIndex).getId() == FormatToken.Kind.HAS_NEWLINE_WITHIN_METHOD_CALL_ARGS) {
+                                    hasNewLine = true;
+                                }
+                                break;
+                            case WHITESPACE_WITHIN_FOR_PARENS:
+                                if (formatTokens.get(helpIndex).getId() == FormatToken.Kind.HAS_NEWLINE_WITHIN_FOR) {
+                                    hasNewLine = true;
+                                }
+                                break;
+                            default:
+                                if (formatTokens.get(helpIndex).getId() == FormatToken.Kind.WHITESPACE_INDENT) {
+                                    hasNewLine = true;
+                                }
+                                break;
+                        }
+                        if (hasNewLine) {
+                            break;
+                        }
+                        if (isLeftParen(formatTokens.get(helpIndex))) {
+                            balance++;
+                        }
+                        if (isRightParen(formatTokens.get(helpIndex))) {
+                            balance--;
+                            if (balance == 0) {
+                                break;
+                            }
+                        }
+                        helpIndex++;
+                    }
+                }
+                return hasNewLine;
+            }
+
+            private boolean hasNewLineWithinParensBackward(int index, List<FormatToken> formatTokens, FormatToken.Kind tokenKind) {
+                int helpIndex = index + 1;
+                int balance = 0;
+                boolean hasNewLine = false;
+                if (helpIndex > 0 && isRightParen(formatTokens.get(helpIndex))) {
+                    helpIndex = index - 1;
+                    balance++;
+                    while (helpIndex > 0) {
+                        switch (tokenKind) {
+                            case WHITESPACE_WITHIN_METHOD_DECL_PARENS:
+                                if (formatTokens.get(helpIndex).getId() == FormatToken.Kind.HAS_NEWLINE_WITHIN_METHOD_PARAMS) {
+                                    hasNewLine = true;
+                                }
+                                break;
+                            case WHITESPACE_WITHIN_METHOD_CALL_PARENS:
+                                if (formatTokens.get(helpIndex).getId() == FormatToken.Kind.HAS_NEWLINE_WITHIN_METHOD_CALL_ARGS) {
+                                    hasNewLine = true;
+                                }
+                                break;
+                            case WHITESPACE_WITHIN_FOR_PARENS:
+                                if (formatTokens.get(helpIndex).getId() == FormatToken.Kind.HAS_NEWLINE_WITHIN_FOR) {
+                                    hasNewLine = true;
+                                }
+                                break;
+                            default:
+                                if (formatTokens.get(helpIndex).getId() == FormatToken.Kind.WHITESPACE_INDENT) {
+                                    hasNewLine = true;
+                                }
+                                break;
+                        }
+                        if (hasNewLine) {
+                            break;
+                        }
+                        if (isLeftParen(formatTokens.get(helpIndex))) {
+                            balance--;
+                            if (balance == 0) {
+                                break;
+                            }
+                        }
+                        if (isRightParen(formatTokens.get(helpIndex))) {
+                            balance++;
+                        }
+                        helpIndex--;
+                    }
+                }
+                return hasNewLine;
+            }
+
+            private boolean isLeftParen(FormatToken formatToken) {
+                return formatToken.getId() == FormatToken.Kind.TEXT
+                        && "(".equals(formatToken.getOldText()); // NOI18N
+            }
+
+            private boolean isRightParen(FormatToken formatToken) {
+                return formatToken.getId() == FormatToken.Kind.TEXT
+                        && ")".equals(formatToken.getOldText()); // NOI18N
+            }
         });
     }
 
@@ -2678,13 +3327,32 @@ public class TokenFormatter {
         return token.getId() == FormatToken.Kind.LINE_COMMENT;
     }
 
-    private boolean isBeforePHPDoc(List<FormatToken> tokens, int index) {
-        FormatToken token = tokens.get(index);
-        while (index > 0 && (token.isWhitespace() || token.getId() == FormatToken.Kind.INDENT
+    private boolean isBeforePHPDocOrAttribute(List<FormatToken> tokens, int index) {
+        int i = index;
+        FormatToken token = tokens.get(i);
+        while (i > 0 && (token.isWhitespace() || token.getId() == FormatToken.Kind.INDENT
                 || token.getId() == FormatToken.Kind.UNBREAKABLE_SEQUENCE_END)) {
-            token = tokens.get(++index);
+            i++;
+            if (i < tokens.size()) {
+                token = tokens.get(i);
+            }
         }
-        return token.getId() == FormatToken.Kind.DOC_COMMENT_START;
+        if (token.getId() == FormatToken.Kind.LINE_COMMENT) {
+            // e.g.
+            // // comment
+            // #[A]
+            while (0 < i && i < tokens.size()
+                    && (token.getId() == FormatToken.Kind.LINE_COMMENT
+                    || token.getId() == FormatToken.Kind.WHITESPACE_BETWEEN_LINE_COMMENTS
+                    || token.getId() == FormatToken.Kind.WHITESPACE_INDENT)) {
+                i++;
+                if (i < tokens.size()) {
+                    token = tokens.get(i);
+                }
+            }
+        }
+        return token.getId() == FormatToken.Kind.DOC_COMMENT_START
+                || token.getId() == FormatToken.Kind.ATTRIBUTE_START;
     }
 
     private boolean isBeginLine(List<FormatToken> tokens, int index) {
@@ -2714,6 +3382,40 @@ public class TokenFormatter {
         return sb.toString();
     }
 
+    private void resolveNoNewLineAtEOF(BaseDocument document) {
+        try {
+            String lastChar = getLastChar(document);
+            String lineEndings = getLineEndings(document);
+            if (!lastChar.equals("\n") && !lastChar.equals("\r")) { // NOI18N
+                document.insertString(document.getLength(), lineEndings, null);
+            }
+        } catch (BadLocationException ex) {
+            LOGGER.log(Level.WARNING, "Cannot insert the newline to the EOF. document length: {0}, invalid offset: {1}",
+                    new Object[]{document.getLength(), ex.offsetRequested()});
+        }
+    }
+
+    private String getLastChar(BaseDocument document) throws BadLocationException {
+        String lastChar = ""; // NOI18N
+        if (document.getLength() > 0) {
+            lastChar = document.getText(document.getLength() - 1, 1);
+        }
+        return lastChar;
+    }
+
+    private String getLineEndings(BaseDocument document) {
+        String lineEndings = BaseDocument.LS_LF;
+        Object lineSeparator = document.getProperty(BaseDocument.READ_LINE_SEPARATOR_PROP);
+        if (lineSeparator instanceof String) {
+            lineEndings = (String) lineSeparator;
+        }
+        return lineEndings;
+    }
+
+    private boolean addSpaceAroundAssignment(AssignmentAnchorToken token, DocumentOptions docOption) {
+        return docOption.expandTabsToSpaces || !token.isInGroup();
+    }
+
     private static final class SpacesCounter {
         private final DocumentOptions documentOptions;
 
@@ -2732,7 +3434,7 @@ public class TokenFormatter {
         private int countSpacesForGroupedToken(final FormatToken.AssignmentAnchorToken token) {
             int spaces;
             if (documentOptions.expandTabsToSpaces) {
-                spaces = token.getMaxLength() - token.getLenght();
+                spaces = token.getMaxLength() - token.getLength();
             } else {
                 spaces = countSpacesWhenNotExpandingTabs(token);
             }
@@ -2741,53 +3443,71 @@ public class TokenFormatter {
 
         private int countSpacesWhenNotExpandingTabs(final FormatToken.AssignmentAnchorToken token) {
             int spaces;
+            int spaceAroundAssignment = getSpaceAroundAssignment(token);
+            // consider also the space around assinment here
+            // to avoid adding extra spaces before assignment
+            final int maxLength = token.getMaxLength() + spaceAroundAssignment;
+            final int tokenLength = token.getLength();
             // 1 tabSize will be reduced to tabWidthToComplete...
-            int tabWidthToCompleteMaxLengthToTab = documentOptions.tabSize - (token.getMaxLength() % documentOptions.tabSize);
-            int tabWidthToCompleteLengthToTab = documentOptions.tabSize - (token.getLenght() % documentOptions.tabSize);
-            if (tabWidthToCompleteMaxLengthToTab == documentOptions.tabSize) {
-                // the biggest item of the group doesn't have to be expanded by one Tab
-                tabWidthToCompleteMaxLengthToTab = 0;
-            }
+            int tabWidthToCompleteLengthToTab = documentOptions.tabSize - (tokenLength % documentOptions.tabSize);
             if (tabWidthToCompleteLengthToTab == documentOptions.tabSize) {
                 // current item is on the Tab offset
                 tabWidthToCompleteLengthToTab = 0;
             }
+            boolean hasIncompleteTab = tabWidthToCompleteLengthToTab != 0;
 
-            if (token.getLenght() == token.getMaxLength()) {
-                spaces = countSpacesForBiggestItem(tabWidthToCompleteLengthToTab);
+            if (tokenLength == token.getMaxLength()) {
+                spaces = spaceAroundAssignment;
             } else {
-                spaces = countSpacesForCommonItem(token, tabWidthToCompleteLengthToTab, tabWidthToCompleteMaxLengthToTab);
-            }
-            return spaces;
-        }
-
-        private int countSpacesForBiggestItem(final int tabWidthToCompleteLengthToTab) {
-            int spaces = 0;
-            if (tabWidthToCompleteLengthToTab != 0) {
-                // and this biggest item has to be expanded by one tab
-                spaces = documentOptions.tabSize;
-            }
-            return spaces;
-        }
-
-        private int countSpacesForCommonItem(final FormatToken.AssignmentAnchorToken token, final int tabWidthToCompleteLengthToTab, final int tabWidthToCompleteMaxLengthToTab) {
-            int spaces;
-            if (tabWidthToCompleteMaxLengthToTab == 0) {
-                if (tabWidthToCompleteLengthToTab == 0) {
-                    spaces = token.getMaxLength() - token.getLenght();
+                spaces = maxLength - tabWidthToCompleteLengthToTab - tokenLength;
+                // e.g. tab size: 4, spaceAroundKeyValueOps: true
+                // match ($cond) {
+                //     666666 => 6,
+                //     22 => 2,
+                // };
+                //     666666 =>
+                //     ^^^^^^^
+                //     maxLength = 7
+                //     22
+                //       ^^
+                //       tabWidthToCompleteLengthToTab = 2 (has incomplete tab, i.e. must add 4(tab size) instead of 2)
+                //     ^^
+                //     tokenLength = 2
+                //     666666 =>
+                //     22
+                //         ^^^
+                //         spaces = 3 = 7 - 2 - 2
+                if (spaces < 0) {
+                    // e.g. tab size: 4, spaceAroundKeyValueOps: true, spaces = -1
+                    // in this case, add maxLength - tokenLength = 2
+                    // match ($cond) {
+                    //     22 => 1, // max length = 3
+                    //     1 => 0, // tabWidthToCompleteLengthToTab = 3, token length = 1
+                    // };
+                    spaces = maxLength - tokenLength;
                 } else {
-                    spaces = (token.getMaxLength() - token.getLenght()) - tabWidthToCompleteLengthToTab + documentOptions.tabSize;
-                }
-            } else {
-                if (tabWidthToCompleteLengthToTab == 0) {
-                    spaces = (token.getMaxLength() + tabWidthToCompleteMaxLengthToTab) - token.getLenght();
-                } else {
-                    spaces = (token.getMaxLength() + tabWidthToCompleteMaxLengthToTab) - (token.getLenght() + tabWidthToCompleteLengthToTab) + documentOptions.tabSize;
+                    if (hasIncompleteTab) {
+                        spaces += documentOptions.tabSize;
+                    }
                 }
             }
             return spaces;
         }
 
+        private int getSpaceAroundAssignment(AssignmentAnchorToken token) {
+            int space = 0;
+            switch (token.getType()) {
+                case ARRAY: // no break
+                case MATCH_ARM:
+                    space = documentOptions.spaceAroundKeyValueOps ? 1 : 0;
+                    break;
+                case ASSIGNMENT:
+                    space = documentOptions.spaceAroundAssignOps ? 1 : 0;
+                    break;
+                default:
+                    assert false : "Unhandled AssignmentAnchorToken.Type: " + token.getType(); // NOI18N
+            }
+            return space;
+        }
     }
-
 }

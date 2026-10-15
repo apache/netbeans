@@ -161,11 +161,7 @@ public class BrowserPanel extends JPanel implements ExplorerManager.Provider {
         BrowserOutlineView() {
             setupColumns();
         }
-        
-        public void startEditingAtPath(TreePath path) {            
-            startEditingAtPath(path);
-        }         
-        
+
         @Override
         public void addNotify() {
             super.addNotify();

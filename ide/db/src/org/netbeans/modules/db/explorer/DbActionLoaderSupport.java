@@ -39,8 +39,8 @@ public class DbActionLoaderSupport {
     public static List<Action> getAllActions() {
         List<Action> actions = new ArrayList<Action>();
         Collection loaders = Lookup.getDefault().lookupAll(DbActionLoader.class);
-        for (Iterator i = loaders.iterator(); i.hasNext();) {
-            actions.addAll(((DbActionLoader)i.next()).getAllActions());
+        for (Iterator<DbActionLoader> i = loaders.iterator(); i.hasNext();) {
+            actions.addAll(i.next().getAllActions());
         }
         
         return actions;

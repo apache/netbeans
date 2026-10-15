@@ -44,7 +44,7 @@ public class ClassPath {
         protected int hits; // This is done to avoid indexing of the JAR files too early and all at once
         protected int threshHits; // This is done to avoid indexing of the JAR files too early and all at once
 
-        final protected Random r = new Random(System.currentTimeMillis());
+        protected final Random r = new Random(System.currentTimeMillis());
         
         //~ Methods --------------------------------------------------------------------------------------------------------------
 

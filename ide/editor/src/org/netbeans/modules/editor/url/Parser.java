@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
 public final class Parser {
 
     private enum STATE {
-        START, H, HT, F, HTT_FT, 
+        START, H, HT, F, HTT_FT,
         HTTP_FTP,
         HTTPS,
         HTTPC, // // (ht|f)tp(s?)
@@ -38,6 +38,7 @@ public final class Parser {
         FI,
         FIL,
         FILE,
+        N, NB, NBF_F, NBFS,
         END // (ht|f)tp(s?)://
     }
 
@@ -47,7 +48,7 @@ public final class Parser {
         List<int[]> result = new LinkedList<int[]>();
         STATE state = STATE.START;
         int lastURLStart = -1;
-        
+
         OUTER: for (int cntr = 0; cntr < text.length(); cntr++) {
             char ch = text.charAt(cntr);
 
@@ -61,7 +62,7 @@ public final class Parser {
                     case '%': case '_': case '~': case '=': //NOI18N
                     case '\\':case '&': case '$': case '-': //NOI18N
                     case '#': case ',': case ':': case ';': //NOI18N
-                    case '!': case '(': case ')': //NOI18N
+                    case '!': case '(': case ')': case '@': //NOI18N
                         continue OUTER;
                 }
 
@@ -81,6 +82,13 @@ public final class Parser {
                         continue OUTER;
                     }
                     break;
+                case 'n': //NOI18N
+                    if (state == STATE.START) {
+                        lastURLStart = cntr;
+                        state = STATE.N;
+                        continue OUTER;
+                    }
+                    break;
                 case 't': //NOI18N
                     if (state == STATE.H) {
                         state = STATE.HT;
@@ -93,15 +101,24 @@ public final class Parser {
                         continue OUTER;
                     }
                     break;
+                case 'b': //NOI18N
+                    if (state == STATE.N) {
+                        state = STATE.NB;
+                        continue OUTER;
+                    }
+                    break;
                 case 'f': //NOI18N
                     if (state == STATE.START) {
                         lastURLStart = cntr;
                         state = STATE.F;
                         continue OUTER;
+                    } else if (state == STATE.NB) {
+                        state = STATE.NBF_F;
+                        continue OUTER;
                     }
                     break;
                 case 'i': //NOI18N
-                    if (state == STATE.F) {
+                    if (state == STATE.F || state == STATE.NBF_F) {
                         state = STATE.FI;
                         continue OUTER;
                     }
@@ -125,10 +142,13 @@ public final class Parser {
                     if (state == STATE.HTTP_FTP) {
                         state = STATE.HTTPS;
                         continue OUTER;
+                    } else if (state == STATE.NBF_F) {
+                        state = STATE.NBFS;
+                        continue OUTER;
                     }
                     break;
                 case ':': //NOI18N
-                    if (state == STATE.HTTP_FTP || state == STATE.HTTPS || state == STATE.FILE) {
+                    if (state == STATE.HTTP_FTP || state == STATE.HTTPS || state == STATE.FILE || state == STATE.NBFS) {
                         state = STATE.HTTPC;
                         continue OUTER;
                     }
@@ -138,6 +158,9 @@ public final class Parser {
                         state = STATE.HTTPCS;
                         continue OUTER;
                     } else if (state == STATE.HTTPCS) {
+                        state = STATE.END;
+                        continue OUTER;
+                    } else if (state == STATE.NBFS) {
                         state = STATE.END;
                         continue OUTER;
                     }
@@ -151,11 +174,11 @@ public final class Parser {
         if (lastURLStart != (-1) && state == STATE.END) {
             result.add(new int[] {lastURLStart, text.length()});
         }
-        
+
         return result;
     }
-    
-    private static final Pattern URL_PATTERN = Pattern.compile("(ht|f)(tp(s?)|ile)://[0-9a-zA-Z/.?%+_~=\\\\&$\\-#,:!/(/)]*"); //NOI18N
+
+    private static final Pattern URL_PATTERN = Pattern.compile("(ht|f|n)(tp(s?)|ile|bfs)://[0-9a-zA-Z/.?%+_~=\\\\&@$\\-#,:!/(/)]*"); //NOI18N
 
     public static Iterable<int[]> recognizeURLsREBased(CharSequence text) {
         Matcher m = URL_PATTERN.matcher(text);

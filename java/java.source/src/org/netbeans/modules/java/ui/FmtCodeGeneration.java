@@ -529,10 +529,10 @@ public class FmtCodeGeneration extends javax.swing.JPanel implements Runnable, L
             members.add(gu.createConstructor(ct, Collections.<VariableTree>emptyList()));
             members.add(gu.createGetter(field));
             ModifiersTree mods = tm.Modifiers(EnumSet.of(Modifier.PRIVATE));
-            ClassTree inner = tm.Class(mods, "Inner", Collections.<TypeParameterTree>emptyList(), null, Collections.<Tree>emptyList(), Collections.<Tree>emptyList()); //NOI18N
+            ClassTree inner = tm.Class(mods, "Inner", Collections.<TypeParameterTree>emptyList(), null, Collections.<Tree>emptyList(), Collections.<ExpressionTree>emptyList(), Collections.<Tree>emptyList()); //NOI18N
             members.add(inner);
             mods = tm.Modifiers(EnumSet.of(Modifier.PRIVATE, Modifier.STATIC));
-            ClassTree nested = tm.Class(mods, "Nested", Collections.<TypeParameterTree>emptyList(), null, Collections.<Tree>emptyList(), Collections.<Tree>emptyList()); //NOI18N
+            ClassTree nested = tm.Class(mods, "Nested", Collections.<TypeParameterTree>emptyList(), null, Collections.<Tree>emptyList(), Collections.<ExpressionTree>emptyList(), Collections.<Tree>emptyList()); //NOI18N
             members.add(nested);
             IdentifierTree nestedId = tm.Identifier("Nested"); //NOI18N
             VariableTree staticField = tm.Variable(mods, "instance", nestedId, null); //NOI18N

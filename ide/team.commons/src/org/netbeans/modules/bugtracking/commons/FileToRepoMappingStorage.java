@@ -47,7 +47,7 @@ public class FileToRepoMappingStorage {
 
     private static FileToRepoMappingStorage instance;
 
-    public synchronized static FileToRepoMappingStorage getInstance() {
+    public static synchronized FileToRepoMappingStorage getInstance() {
         if (instance == null) {
             instance = new FileToRepoMappingStorage();
         }

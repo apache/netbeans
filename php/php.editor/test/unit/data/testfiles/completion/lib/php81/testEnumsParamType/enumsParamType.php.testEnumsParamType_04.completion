@@ -1,0 +1,4 @@
+Code completion result for source line:
+public function publicMethod1(Enum1 $enum1, Enum2| $enum2): void {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Enum2                           [PUBLIC]   EnumTestNamespace2

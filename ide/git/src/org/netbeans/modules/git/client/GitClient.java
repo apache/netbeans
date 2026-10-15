@@ -167,6 +167,7 @@ public final class GitClient {
             "push", //NOI18N // usually updates remote branches
             "rebase", //NOI18N // creates new head and branches
             "remove", //NOI18N // may change state, e.g. MERGING->MERGED
+            "renameBranch", //NOI18N
             "reset", //NOI18N
             "removeRemote", //NOI18N - updates remotes
             "revert", //NOI18N - creates a new head
@@ -706,7 +707,18 @@ public final class GitClient {
             }
         }, "rename", new File[] { source, target }); //NOI18N
     }
-    
+
+    public void renameBranch (final String oldName, final String newName, final ProgressMonitor monitor) throws GitException {
+        new CommandInvoker().runMethod(new Callable<Void>() {
+
+            @Override
+            public Void call() throws Exception {
+                delegate.renameBranch(oldName, newName, monitor);
+                return null;
+            }
+        }, "renameBranch"); //NOI18N
+    }
+
     public void reset (final File[] roots, final String revision, final boolean recursively, final ProgressMonitor monitor) throws GitException.MissingObjectException, GitException {
         new CommandInvoker().runMethod(new Callable<Void>() {
 

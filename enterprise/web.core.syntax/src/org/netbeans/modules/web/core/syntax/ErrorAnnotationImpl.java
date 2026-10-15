@@ -29,9 +29,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.StyledDocument;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.editor.NbEditorDocument;
@@ -59,12 +62,12 @@ public class ErrorAnnotationImpl implements ErrorAnnotation {
     /** Jsp file, for which is the ErrorAnnotation */
     private FileObject jspFo;
     
-    private ArrayList annotations;
+    private List<LineSetAnnotation> annotations;
     
     /** Creates a new instance of ErrorAnnotation */
     public ErrorAnnotationImpl(FileObject jspFo) {
         this.jspFo = jspFo;
-        annotations = new ArrayList();
+        annotations = new ArrayList<>();
     }
     
     /** Adds annotation for the errors. If the error is already annotated, does nothing. If there are 
@@ -74,8 +77,8 @@ public class ErrorAnnotationImpl implements ErrorAnnotation {
      */
     @Override
     public void annotate(ErrorInfo[] errors){
-        ArrayList added, removed, unchanged;
-        Collection newAnnotations;
+        List<LineSetAnnotation> added, removed, unchanged;
+        Collection<LineSetAnnotation> newAnnotations;
         
         // obtain data object
         DataObject doJsp;
@@ -113,10 +116,10 @@ public class ErrorAnnotationImpl implements ErrorAnnotation {
         // create annotations from errors
         newAnnotations = getAnnotations(errors, document);
         // which annotations are really new
-        added=new ArrayList(newAnnotations);
+        added=new ArrayList<>(newAnnotations);
         added.removeAll(annotations);
         // which annotations were here before
-        unchanged=new ArrayList(annotations);
+        unchanged=new ArrayList<>(annotations);
         unchanged.retainAll(newAnnotations);
         // which annotations are obsolete
         removed = annotations;
@@ -125,18 +128,14 @@ public class ErrorAnnotationImpl implements ErrorAnnotation {
 
         // are there new annotations?
         if (!added.isEmpty()) {
-            final ArrayList finalAdded = added;
+            final List<LineSetAnnotation>  finalAdded = added;
             final DataObject doJsp2 = doJsp;
-            Runnable docRenderer = new Runnable() {
-                @Override
-                public void run() {
-                    LineCookie cookie = (LineCookie)doJsp2.getCookie(LineCookie.class);
-                    Line.Set lines = cookie.getLineSet();
-
-                    for (Iterator i=finalAdded.iterator();i.hasNext();) {
-                        LineSetAnnotation ann=(LineSetAnnotation)i.next();
-                        ann.attachToLineSet(lines);
-                    }
+            Runnable docRenderer = () -> {
+                LineCookie cookie = (LineCookie)doJsp2.getCookie(LineCookie.class);
+                Line.Set lines = cookie.getLineSet();
+                                
+                for (LineSetAnnotation ann : finalAdded) {
+                    ann.attachToLineSet(lines);
                 }
             };
 
@@ -150,9 +149,9 @@ public class ErrorAnnotationImpl implements ErrorAnnotation {
     
     /** Transforms ErrosInfo to Annotation
      */
-    private Collection getAnnotations(ErrorInfo[] errors, StyledDocument document) {
+    private Collection<LineSetAnnotation> getAnnotations(ErrorInfo[] errors, StyledDocument document) {
         BaseDocument doc = (BaseDocument) document;
-        HashMap map = new HashMap(errors.length);
+        Map<Integer, LineSetAnnotation> map = new HashMap<>(errors.length);
         for (int i = 0; i < errors.length; i ++) {
             ErrorInfo err = errors[i];
             int line = err.getLine();
@@ -161,8 +160,8 @@ public class ErrorAnnotationImpl implements ErrorAnnotation {
             if (line<0){
                 // place error annotation on the 1st non-empty line
                 try {
-                    int firstNonWS = Utilities.getFirstNonWhiteFwd(doc, 0);
-                    line = Utilities.getLineOffset(doc, firstNonWS) + 1;
+                    int firstNonWS = LineDocumentUtils.getNextNonWhitespace(doc, 0);
+                    line = LineDocumentUtils.getLineIndex(doc, firstNonWS) + 1;
                 } catch (BadLocationException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -190,7 +189,7 @@ public class ErrorAnnotationImpl implements ErrorAnnotation {
             // If we knew the errors were sorted by file & line number,
             // this would be easy (and we wouldn't need to do the hashmap
             // "sort"
-            Integer lineInt = new Integer(line);
+            Integer lineInt = line;
             /*LineSetAnnotation prev = (LineSetAnnotation)map.get(lineInt);
             if (prev != null) {
                 prev.chain(ann);

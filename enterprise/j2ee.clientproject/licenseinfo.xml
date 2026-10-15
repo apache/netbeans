@@ -27,6 +27,7 @@
         <file>src/org/netbeans/modules/j2ee/clientproject/ui/resources/application-client-5.xml</file>
         <file>src/org/netbeans/modules/j2ee/clientproject/ui/resources/application-client-6.xml</file>
         <file>src/org/netbeans/modules/j2ee/clientproject/ui/resources/application-client-7.xml</file>
+        <file>src/org/netbeans/modules/j2ee/clientproject/ui/resources/application-client-8.xml</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="TEMPLATE_MINIMAL_IP"/>
     </fileset>
@@ -40,5 +41,12 @@
         <file>src/org/netbeans/modules/j2ee/clientproject/ui/resources/test.gif</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+    
+    <fileset>
+        <file>src/org/netbeans/modules/j2ee/clientproject/ui/resources/application-client-9.xml</file>
+        <file>src/org/netbeans/modules/j2ee/clientproject/ui/resources/application-client-10.xml</file>
+        <license ref="EPL-v20" />
+        <comment type="CATEGORY_B" />
     </fileset>
 </licenseinfo>

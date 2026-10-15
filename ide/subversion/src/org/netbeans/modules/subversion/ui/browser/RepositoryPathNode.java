@@ -420,8 +420,8 @@ public class RepositoryPathNode extends AbstractNode {
     static final String PROPERTY_NAME_AUTHOR   = "author";      // NOI18N
     static final String PROPERTY_NAME_HISTORY  = "history";     // NOI18N
 
-    private final static String HISTORY_DISPLAY_NAME = org.openide.util.NbBundle.getMessage(RepositoryPathNode.class, "LBL_BrowserTree_History_Name");
-    private final static String HISTORY_SHORT_DESC = org.openide.util.NbBundle.getMessage(RepositoryPathNode.class, "LBL_BrowserTree_History_Short_Desc");
+    private static final String HISTORY_DISPLAY_NAME = org.openide.util.NbBundle.getMessage(RepositoryPathNode.class, "LBL_BrowserTree_History_Name");
+    private static final String HISTORY_SHORT_DESC = org.openide.util.NbBundle.getMessage(RepositoryPathNode.class, "LBL_BrowserTree_History_Short_Desc");
 
     private class RevisionProperty extends NodeProperty<Object> {
         public RevisionProperty() {

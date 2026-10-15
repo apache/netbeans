@@ -17,7 +17,7 @@
  * under the License.
  */
 
-/**
+/*
  * ClientDisplay.java
  *
  *
@@ -37,7 +37,7 @@ import java.util.*;
 
 public class ClientDisplay extends DataDisplay {
 
-    private final static boolean debug = false;
+    private static final boolean debug = false;
     private DisplayTable clientTable = null;
     private DisplayTable engineTable = null;
 

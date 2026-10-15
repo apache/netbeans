@@ -205,6 +205,7 @@ public class BeanNodeTest extends NbTestCase {
     }
     
     public static final class Bean1BeanInfo extends SimpleBeanInfo {
+        @Override
         public PropertyDescriptor[] getPropertyDescriptors() {
             try {
                 PropertyDescriptor foo = new PropertyDescriptor("foo", Bean1.class);
@@ -334,6 +335,7 @@ public class BeanNodeTest extends NbTestCase {
     }
     
     public static class HidenPropertyBeanBeanInfo extends SimpleBeanInfo {
+        @Override
         public PropertyDescriptor[] getPropertyDescriptors () {
             PropertyDescriptor[] properties = new PropertyDescriptor[1];
 

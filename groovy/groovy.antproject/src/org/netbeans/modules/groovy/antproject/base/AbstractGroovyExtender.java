@@ -206,9 +206,9 @@ public abstract class AbstractGroovyExtender implements GroovyExtenderImplementa
             if (file.isFile()) {
                 JarFile jf = new JarFile(file);
                 try {
-                    Enumeration entries = jf.entries();
+                    Enumeration<JarEntry> entries = jf.entries();
                     while (entries.hasMoreElements()) {
-                        JarEntry entry = (JarEntry) entries.nextElement();
+                        JarEntry entry = entries.nextElement();
                         if (classFilePath.equals(entry.getName())) {
                             return true;
                         }

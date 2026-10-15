@@ -62,14 +62,6 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.api.progress.nb</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>1.40</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
                     <code-name-base>org.netbeans.lib.nbjavac</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -82,25 +74,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>8.0</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.libs.javacimpl</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <release-version>1</release-version>
                         <implementation-version/>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.libs.lucene</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <release-version>3</release-version>
-                        <specification-version>3.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -423,6 +397,9 @@
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
+                        <code-name-base>org.netbeans.libs.lucene</code-name-base>
+                    </test-dependency>
+                    <test-dependency>
                         <code-name-base>org.netbeans.modules.classfile</code-name-base>
                     </test-dependency>
                     <test-dependency>
@@ -513,14 +490,9 @@
             </test-dependencies>
             <public-packages>
                 <package>org.netbeans.spi.java.hints</package>
-                <package>org.netbeans.spi.java.hints.annotations</package>
-                <package>org.netbeans.spi.java.hints.matching</package>
                 <package>org.netbeans.spi.java.hints.support</package>
+                <package>org.netbeans.spi.java.hints.unused</package>
             </public-packages>
-            <class-path-extension>
-                <runtime-relative-path>ext/byte-buddy-1.7.9.jar</runtime-relative-path>
-                <binary-origin>external/byte-buddy-1.7.9.jar</binary-origin>
-            </class-path-extension>
         </data>
     </configuration>
 </project>

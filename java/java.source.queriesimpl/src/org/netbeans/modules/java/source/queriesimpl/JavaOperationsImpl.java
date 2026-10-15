@@ -196,8 +196,8 @@ class JavaOperationsImpl<T> implements ModelOperations {
         if (tp == null) {
             return null;
         }
-        int start = (int) trees.getSourcePositions().getStartPosition(tp.getCompilationUnit(),tp.getLeaf());
-        int end = (int) trees.getSourcePositions().getEndPosition(tp.getCompilationUnit(),tp.getLeaf());
+        int start = (int) trees.getSourcePositions().getStartPosition(tp.getLeaf());
+        int end = (int) trees.getSourcePositions().getEndPosition(tp.getLeaf());
         List<Comment> cmts = control.getTreeUtilities().getComments(tp.getLeaf(), true);
         for (Comment c : cmts) {
             final int cp = c.pos();
@@ -400,8 +400,8 @@ class JavaOperationsImpl<T> implements ModelOperations {
         final ErrorAwareTreePathScanner<Void,Void> scanner = new ErrorAwareTreePathScanner<Void, Void>(){
             @Override
             public Void scan(Tree node, Void p) {
-                final int start = (int) trees.getSourcePositions().getStartPosition(cu, node);
-                final int end = (int) trees.getSourcePositions().getEndPosition(cu, node);
+                final int start = (int) trees.getSourcePositions().getStartPosition(node);
+                final int end = (int) trees.getSourcePositions().getEndPosition(node);
                 final int status = contains(ranges,start,end);
                 switch (status) {
                         case -1:
@@ -530,6 +530,12 @@ nextM:  for (ExecutableElement me : ElementFilter.methodsIn(te.getEnclosedElemen
                     return super.visitClass(node, p);
                 }
             }
+
+            @Override
+            public TreePath reduce(TreePath r1, TreePath r2) {
+                return r1 != null ? r1 : r2;
+            }
+
             @Override
             public TreePath visitMethod(MethodTree node, Void p) {
                 return null;

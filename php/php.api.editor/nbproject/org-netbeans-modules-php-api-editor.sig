@@ -1,10 +1,11 @@
 #Signature file v4.1
-#Version 0.32
+#Version 0.60
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -112,6 +113,45 @@ meth public org.netbeans.modules.php.api.editor.PhpClass addMethod(java.lang.Str
  anno 2 org.netbeans.api.annotations.common.NullAllowed()
  anno 4 org.netbeans.api.annotations.common.NullAllowed()
 meth public org.netbeans.modules.php.api.editor.PhpClass addMethod(java.lang.String,java.lang.String,java.lang.String)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NullAllowed()
+ anno 3 org.netbeans.api.annotations.common.NullAllowed()
+supr org.netbeans.modules.php.api.editor.PhpType
+
+CLSS public org.netbeans.modules.php.api.editor.PhpEnum
+cons public init(java.lang.String,java.lang.String)
+cons public init(java.lang.String,java.lang.String,int)
+cons public init(java.lang.String,java.lang.String,int,java.lang.String)
+cons public init(java.lang.String,java.lang.String,java.lang.String)
+meth public org.netbeans.modules.php.api.editor.PhpEnum addField(java.lang.String,java.lang.String)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NullAllowed()
+meth public org.netbeans.modules.php.api.editor.PhpEnum addField(java.lang.String,java.lang.String,int)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NullAllowed()
+meth public org.netbeans.modules.php.api.editor.PhpEnum addField(java.lang.String,java.lang.String,int,java.lang.String)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NullAllowed()
+ anno 4 org.netbeans.api.annotations.common.NullAllowed()
+meth public org.netbeans.modules.php.api.editor.PhpEnum addField(java.lang.String,java.lang.String,java.lang.String)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NullAllowed()
+ anno 3 org.netbeans.api.annotations.common.NullAllowed()
+meth public org.netbeans.modules.php.api.editor.PhpEnum addField(java.lang.String,org.netbeans.modules.php.api.editor.PhpType,org.openide.filesystems.FileObject,int)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NullAllowed()
+ anno 3 org.netbeans.api.annotations.common.NullAllowed()
+meth public org.netbeans.modules.php.api.editor.PhpEnum addMethod(java.lang.String,java.lang.String)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NullAllowed()
+meth public org.netbeans.modules.php.api.editor.PhpEnum addMethod(java.lang.String,java.lang.String,int)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NullAllowed()
+meth public org.netbeans.modules.php.api.editor.PhpEnum addMethod(java.lang.String,java.lang.String,int,java.lang.String)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NullAllowed()
+ anno 4 org.netbeans.api.annotations.common.NullAllowed()
+meth public org.netbeans.modules.php.api.editor.PhpEnum addMethod(java.lang.String,java.lang.String,java.lang.String)
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NullAllowed()
  anno 3 org.netbeans.api.annotations.common.NullAllowed()

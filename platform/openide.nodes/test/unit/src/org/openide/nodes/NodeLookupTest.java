@@ -589,6 +589,7 @@ public class NodeLookupTest extends NbTestCase {
                 }
                 getCookieSet ().add (org.openide.cookies.OpenCookie.class, new F ());
             }
+            @Override
             public Node.Cookie getCookie (Class c) {
                 if (org.openide.cookies.OpenCookie.class == c) {
                     return new org.openide.cookies.OpenCookie () {

@@ -45,12 +45,9 @@ public class JsCamelCaseInterceptor implements CamelCaseInterceptor {
         final Document doc = context.getDocument();
         final int offset = context.getOffset();
         final boolean reverse = context.isBackward();
-        doc.render(new Runnable() {
-            @Override
-            public void run() {
-                int nextOffset = getWordOffset(doc, offset, reverse);
-                context.setNextWordOffset(nextOffset);
-            }
+        doc.render(() -> {
+            int nextOffset = getWordOffset(doc, offset, reverse);
+            context.setNextWordOffset(nextOffset);
         });
     }
 
@@ -84,7 +81,7 @@ public class JsCamelCaseInterceptor implements CamelCaseInterceptor {
             }
         }
 
-        if (token.id() == JsTokenId.IDENTIFIER) {
+        if (token.id() == JsTokenId.IDENTIFIER || token.id() == JsTokenId.PRIVATE_IDENTIFIER) {
             String image = token.text().toString();
             int imageLength = image.length();
             int offsetInImage = offset - ts.offset();

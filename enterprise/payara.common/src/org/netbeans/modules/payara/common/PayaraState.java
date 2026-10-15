@@ -21,7 +21,7 @@ package org.netbeans.modules.payara.common;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.payara.tooling.PayaraStatus;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.common.status.AuthFailureStateListener;
 import org.netbeans.modules.payara.common.status.MonitoringInitStateListener;
 import org.openide.util.NbBundle;
@@ -41,10 +41,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraServerStatus;
  */
 public class PayaraState {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Check mode.
      * <p/>
@@ -52,10 +49,7 @@ public class PayaraState {
      */
     public static enum Mode {
 
-        ////////////////////////////////////////////////////////////////////////
         // Enum values                                                        //
-        ////////////////////////////////////////////////////////////////////////
-
         /** Default server state check mode. All special features
          *  are turned off. */
         DEFAULT,
@@ -66,10 +60,7 @@ public class PayaraState {
          *  for remote servers. */
         REFRESH;
 
-        ////////////////////////////////////////////////////////////////////////
         // Methods                                                            //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Convert <code>Mode</code> value to <code>String</code>.
          * <p/>
@@ -88,10 +79,7 @@ public class PayaraState {
 
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = PayaraLogger.get(PayaraState.class);
@@ -120,12 +108,10 @@ public class PayaraState {
                     PayaraStatus.OFFLINE, PayaraStatus.STARTUP,
                     PayaraStatus.ONLINE, PayaraStatus.SHUTDOWN);
             if (added) {
-                if (instance.getVersion() != null) {
+                if (instance.getPlatformVersion() != null) {
                    AuthFailureStateListener authListener
-                           =  new AuthFailureStateListener(
-                           instance.getVersion().ordinal()
-                           >= PayaraVersion.PF_4_1_144.ordinal());
-                   PayaraStatus.addChangeListener(instance, authListener, PayaraStatus.STARTUP);
+                            = new AuthFailureStateListener(instance.getPlatformVersion().isMinimumSupportedVersion());
+                    PayaraStatus.addChangeListener(instance, authListener, PayaraStatus.STARTUP);
                     PayaraStatus.addErrorListener(instance, authListener);
                 }
                 try {

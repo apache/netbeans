@@ -48,7 +48,7 @@ public final class StorageSupport {
     /**
      * Converts a list of <code>KeyStroke</code>s to its textual representation. There
      * are two available formats for the textual representation:
-     * 
+     * <ul>
      * <li><b>Human readable</b> - this format encodes a <code>KeyStroke</code> to
      *   a string that looks like for example 'Ctrl+A' or 'Alt+Shift+M'.
      * <li><b>Emacs style</b> - this format encodes a <code>KeyStroke</code> to
@@ -56,18 +56,18 @@ public final class StorageSupport {
      *   It uses methods from <code>org.openide.util.Utilities</code>, which take
      *   care of Mac OS specifics and use 'D' and 'O' wildcards for encoding 'Ctrl'
      *   and 'Alt' keys.
-     * 
+     * </ul>
      * @param keys The <code>KeyStrokes</code> to convert.
      * @param emacsStyle If <code>true</code> the returned string will be in so called
      *   Emacs style, ortherwise it will be in human readable format.
      * 
      * @return The textual representation of <code>KeyStroke</code>s passed in.
      * @since 1.16
-     * @deprecated Use {@link KeyStrokeUtils#getKeyStrokesAsText} or {@link Utilities#keyToString(javax.swing.KeyStroke[], java.lang.String, boolean)}
+     * @deprecated Use {@link KeyStrokeUtils#getKeyStrokesAsText} or {@link Utilities#keyToString(javax.swing.KeyStroke, boolean)}
      */
     public static String keyStrokesToString(Collection<? extends KeyStroke> keys, boolean emacsStyle) {
         if (!emacsStyle) {
-            return KeyStrokeUtils.getKeyStrokesAsText(keys.toArray(new KeyStroke[keys.size()]), " "); // NOI18N
+            return KeyStrokeUtils.getKeyStrokesAsText(keys.toArray(new KeyStroke[0]), " "); // NOI18N
         }
         StringBuilder sb = new StringBuilder();
 
@@ -84,7 +84,7 @@ public final class StorageSupport {
 
     /**
      * Converts a textual representation of key strokes to an array of <code>KeyStroke</code>
-     * objects. Please see {@link #keyStrokesToString(Collection<KeyStroke>, boolean)}
+     * objects. Please see {@link #keyStrokesToString(Collection, boolean)}
      * ror details about the available formats.
      * 
      * @param key The textual representation of keystorkes to convert. Its format

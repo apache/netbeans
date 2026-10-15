@@ -39,7 +39,7 @@ public class DebugPortQuery extends javax.swing.JPanel {
         try {
             int port = Integer.valueOf(debugPort);
             if(port > 0 && port < 65536) {
-                debugPortSpinner.getModel().setValue(Integer.valueOf(port));
+                debugPortSpinner.getModel().setValue(port);
             } else {
                 Logger.getLogger("glassfish-javaee").log(
                         Level.INFO, "Debug port out of range in DebugPortQuery");

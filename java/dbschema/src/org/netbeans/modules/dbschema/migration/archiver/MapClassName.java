@@ -27,17 +27,17 @@ public class MapClassName {
     static String LEGACYPREFIX= "com.sun.forte4j.modules.dbmodel.";
     static String CURRENTPREFIX= "org.netbeans.modules.dbschema.";
 
-    static public String getClassNameToken(String realClassName){
+    public static String getClassNameToken(String realClassName){
         if (realClassName.startsWith(CURRENTPREFIX)){
-            realClassName = LEGACYPREFIX + realClassName.substring(CURRENTPREFIX.length(),realClassName.length());
+            realClassName = LEGACYPREFIX + realClassName.substring(CURRENTPREFIX.length());
         }
 
         return realClassName;
         }
 
-    static public String getRealClassName(String token){
+    public static String getRealClassName(String token){
         if (token.startsWith(LEGACYPREFIX)){
-            token = CURRENTPREFIX + token.substring(LEGACYPREFIX.length(),token.length());
+            token = CURRENTPREFIX + token.substring(LEGACYPREFIX.length());
         }
         return token;
     }

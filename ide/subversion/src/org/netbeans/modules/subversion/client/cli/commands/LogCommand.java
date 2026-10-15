@@ -314,7 +314,7 @@ public class LogCommand extends SvnCommand {
         }
 
         public ISVNLogMessage[] getLog() {            
-            return logs.toArray(new ISVNLogMessage[logs.size()]);
+            return logs.toArray(new ISVNLogMessage[0]);
         }
 
         private String toString(int length, char[] ch, int start) {

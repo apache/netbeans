@@ -28,7 +28,7 @@ import org.netbeans.modules.schema2beansdev.gen.*;
 
 public class JavaBeanClass extends AbstractCodeGeneratorClass implements CodeGeneratorClass {
     // No element type number can be this one.
-    final protected int elementTypeSetnull = -1;
+    protected final int elementTypeSetnull = -1;
     private Map/*QName, String*/ declaredQNames = new HashMap();
     private boolean loggerDeclared = false;
 
@@ -3091,7 +3091,7 @@ public class JavaBeanClass extends AbstractCodeGeneratorClass implements CodeGen
             jw.writeEol("(", namespaceMapName, ")");
             jw.end();
         }
-        jw.writeEol("String attrNSPrefix = attrName.substring(6, attrName.length())");
+        jw.writeEol("String attrNSPrefix = attrName.substring(6)");
         jw.writeEol(namespaceMapName, ".put(attrNSPrefix, attr.getValue())");
         jw.end();
         jw.end();

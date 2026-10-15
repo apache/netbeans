@@ -29,9 +29,11 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.List;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import org.netbeans.api.java.source.Task;
@@ -129,7 +131,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -169,7 +171,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -214,7 +216,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -257,7 +259,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -302,7 +304,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -383,7 +385,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -428,7 +430,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -480,7 +482,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -522,7 +524,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -564,7 +566,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -603,7 +605,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -644,7 +646,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -691,7 +693,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -731,7 +733,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -778,7 +780,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -818,7 +820,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -856,7 +858,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -893,7 +895,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -931,7 +933,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -969,7 +971,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -1009,7 +1011,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -1049,7 +1051,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -1091,7 +1093,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -1134,7 +1136,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -1175,7 +1177,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -1212,7 +1214,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
 //        };
 //        src.runModificationTask(task).commit();
 //        String res = TestUtilities.copyFileToString(testFile);
-//        System.err.println(res);
+//        //System.err.println(res);
 //        assertEquals(golden, res);
 //    }
 
@@ -1264,7 +1266,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -1302,7 +1304,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -1344,7 +1346,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -1379,7 +1381,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -1412,7 +1414,7 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -1445,7 +1447,199 @@ public class ImportsTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    public void testDiffAddWithModuleImport() throws Exception {
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile,
+            "package test;\n" +
+            "import module java.base;\n" +
+            "public class Test {\n" +
+            "}\n"
+            );
+        String golden =
+            "package test;\n" +
+            "import module java.base;\n" +
+            "import java.util.List;\n" +
+            "public class Test {\n" +
+            "}\n";
+
+        JavaSource src = getJavaSource(testFile);
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                TreeMaker make = workingCopy.getTreeMaker();
+                CompilationUnitTree node = workingCopy.getCompilationUnit();
+                ImportTree nueImport = make.Import(make.MemberSelect(make.MemberSelect(make.Identifier("java"), "util"), "List"), false);
+                CompilationUnitTree nueNode = make.addCompUnitImport(node, nueImport);
+                workingCopy.rewrite(node, nueNode);
+            }
+
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    public void testAddModuleImport() throws Exception {
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile,
+                                       """
+                                       package test;
+                                       public class Test {
+                                       }
+                                       """);
+        String golden =
+            """
+            package test;
+
+            import module java.base;
+
+            public class Test {
+            }
+            """;
+
+        JavaSource src = getJavaSource(testFile);
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                TreeMaker make = workingCopy.getTreeMaker();
+                CompilationUnitTree node = workingCopy.getCompilationUnit();
+                ImportTree nueImport = make.ImportModule(make.QualIdent("java.base"));
+                CompilationUnitTree nueNode = make.addCompUnitImport(node, nueImport);
+                workingCopy.rewrite(node, nueNode);
+            }
+
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    public void testRemoveModuleImport() throws Exception {
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile,
+                                       """
+                                       package test;
+                                       import module java.base;
+                                       public class Test {
+                                       }
+                                       """);
+        String golden =
+            """
+            package test;
+            public class Test {
+            }
+            """;
+
+        JavaSource src = getJavaSource(testFile);
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                TreeMaker make = workingCopy.getTreeMaker();
+                CompilationUnitTree node = workingCopy.getCompilationUnit();
+                CompilationUnitTree nueNode = make.removeCompUnitImport(node, 0);
+                workingCopy.rewrite(node, nueNode);
+            }
+
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    public void testReorderModuleImports() throws Exception {
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(
+                testFile,
+                """
+                package test;
+                import module java.desktop;                
+                import module java.base;
+                public class Test {
+                }
+                """
+        );
+        String golden = 
+            """
+            package test;
+            import module java.base;
+            import module java.desktop;
+            public class Test {
+            }
+            """;
+
+        JavaSource src = getJavaSource(testFile);
+        Task<WorkingCopy> task = (WorkingCopy workingCopy) -> {
+            workingCopy.toPhase(Phase.RESOLVED);
+            TreeMaker make = workingCopy.getTreeMaker();
+            CompilationUnitTree node = workingCopy.getCompilationUnit();
+            List<? extends ImportTree> imports = node.getImports();
+            List<ImportTree> newImports = new ArrayList<>(imports);
+            newImports.set(0, (ImportTree) make.asReplacementOf(make.ImportModule((ExpressionTree)imports.get(1).getQualifiedIdentifier()), imports.get(0)));
+            newImports.set(1, (ImportTree) make.asReplacementOf(make.ImportModule((ExpressionTree)imports.get(0).getQualifiedIdentifier()), imports.get(1)));
+            CompilationUnitTree nueNode = make.CompilationUnit(node.getPackageName(), newImports, node.getTypeDecls(), node.getSourceFile());
+            workingCopy.rewrite(node, nueNode);
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    public void testReorderImportsWithStaticAndModuleKinds() throws Exception {
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(
+                testFile,
+                """
+                package test;
+                import module java.desktop;
+                import static java.awt.*;
+                import java.util.List;
+                import static java.util.function.*;
+                import module java.base;
+                public class Test {
+                }
+                """
+        );
+        String golden = 
+            """
+            package test;
+            import java.util.List;
+            import static java.awt.*;
+            import static java.util.function.*;
+                        
+            import module java.base;
+            import module java.desktop;
+            public class Test {
+            }
+            """;
+
+        JavaSource src = getJavaSource(testFile);
+        Task<WorkingCopy> task = (WorkingCopy workingCopy) -> {
+            workingCopy.toPhase(Phase.RESOLVED);
+            TreeMaker make = workingCopy.getTreeMaker();
+            CompilationUnitTree node = workingCopy.getCompilationUnit();
+            List<? extends ImportTree> imports = node.getImports();
+            List<ImportTree> newImports = new ArrayList<>(imports);
+            newImports.set(0, (ImportTree) make.asReplacementOf(make.Import((ExpressionTree)imports.get(2).getQualifiedIdentifier(), false), imports.get(0)));
+            newImports.set(2, (ImportTree) make.asReplacementOf(make.Import((ExpressionTree)imports.get(3).getQualifiedIdentifier(), true), imports.get(2)));
+            newImports.set(3, (ImportTree) make.asReplacementOf(make.ImportModule((ExpressionTree)imports.get(4).getQualifiedIdentifier()), imports.get(3)));
+            newImports.set(4, (ImportTree) make.asReplacementOf(make.ImportModule((ExpressionTree)imports.get(0).getQualifiedIdentifier()), imports.get(4)));
+            CompilationUnitTree nueNode = make.CompilationUnit(node.getPackageName(), newImports, node.getTypeDecls(), node.getSourceFile());
+            workingCopy.rewrite(node, nueNode);
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -1456,5 +1650,5 @@ public class ImportsTest extends GeneratorTestMDRCompat {
     String getSourcePckg() {
         return "";
     }
-    
+
 }

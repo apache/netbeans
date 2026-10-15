@@ -26,6 +26,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -246,16 +247,8 @@ public class TestBase extends NbTestCase {
             }
         } else {
             assert from.isFile();
-            InputStream is = new FileInputStream(from);
-            try {
-                OutputStream os = new FileOutputStream(to);
-                try {
-                    FileUtil.copy(is, os);
-                } finally {
-                    os.close();
-                }
-            } finally {
-                is.close();
+            try (InputStream is = new FileInputStream(from); OutputStream os = new FileOutputStream(to)) {
+                is.transferTo(os);
             }
         }
     }
@@ -333,21 +326,13 @@ public class TestBase extends NbTestCase {
     }
 
     public static final FileObject copyStringToFileObject(FileObject fo, String content) throws IOException {
-        OutputStream os = fo.getOutputStream();
-        try {
-            InputStream is = new ByteArrayInputStream(content.getBytes("UTF-8"));
-            try {
-                FileUtil.copy(is, os);
-                return fo;
-            } finally {
-                is.close();
-            }
-        } finally {
-            os.close();
+        try (OutputStream os = fo.getOutputStream()) {
+            os.write(content.getBytes(StandardCharsets.UTF_8));
+            return fo;
         }
     }
 
-    protected static abstract class TestModule {
+    protected abstract static class TestModule {
 
         protected final FileObject projectDir;
         protected final FileObject[] sources;

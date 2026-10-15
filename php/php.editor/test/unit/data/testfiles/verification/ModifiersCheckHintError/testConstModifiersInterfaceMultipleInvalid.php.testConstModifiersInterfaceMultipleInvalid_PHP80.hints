@@ -1,0 +1,38 @@
+    private public const int|string INVALID_PRIVATE_PUBLIC = 1, INVALID_PRIVATE_PUBLIC2 = 1; // error1
+                                                                -----------------------
+HINT:Interface const "INVALID_PRIVATE_PUBLIC" can not be declared private
+FIX:Remove modifier: private
+HINT:Interface const "INVALID_PRIVATE_PUBLIC2" can not be declared private
+    static const int INVALID_STATIC = 1; // error2
+                     --------------
+HINT:Constant "INVALID_STATIC" cannot be declared static
+FIX:Remove modifier: static
+    abstract const int INVALID_ABSTRACT = 1; // error3
+                       ----------------
+HINT:Constant "INVALID_ABSTRACT" cannot be declared abstract
+FIX:Remove modifier: abstract
+    public(set) const int INVALID_SET_VISIBILITY = 1; // error4
+                          ----------------------
+HINT:Constant "INVALID_SET_VISIBILITY" cannot be declared public(set)
+FIX:Remove modifier: public(set)
+    readonly const INVALID_READONLY = 1; // error5
+                   ----------------
+HINT:Constant "INVALID_READONLY" cannot be declared readonly
+FIX:Remove modifier: readonly
+    public public const INVALID_MULTIPLE1 = 1; // error6
+                        -----------------
+HINT:Multiple public modifiers are not allowed
+FIX:Remove modifier: public
+    final final public const INVALID_MULTIPLE2 = 1, INVALID_MULTIPLE3 = 1; // error7
+                                                    -----------------
+HINT:Constant "INVALID_MULTIPLE2" cannot be declared final
+FIX:Remove modifier: final
+HINT:Constant "INVALID_MULTIPLE3" cannot be declared final
+    private const int|string INVALID_PRIVATE = 1; // error8
+                             ---------------
+HINT:Interface const "INVALID_PRIVATE" can not be declared private
+FIX:Remove modifier: private
+    protected const int|string INVALID_PROTECTED = 1; // error9
+                               -----------------
+HINT:Interface const "INVALID_PROTECTED" can not be declared protected
+FIX:Remove modifier: protected

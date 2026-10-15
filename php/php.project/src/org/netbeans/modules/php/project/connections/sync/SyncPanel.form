@@ -325,8 +325,8 @@
       <SubComponents>
         <Component class="javax.swing.JButton" name="diffButton">
           <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/org/netbeans/modules/php/project/ui/resources/diff.png"/>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="ImageUtilities.loadIcon(&quot;org/netbeans/modules/php/project/ui/resources/diff.png&quot;)" type="code"/>
             </Property>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>

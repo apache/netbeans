@@ -954,12 +954,12 @@ public final class BorderEditor extends PropertyEditorSupport
             node = attributes.getNamedItem(ATTR_JUSTIFICATION);
             if (node != null && (prop = (FormProperty)borderSupport
                              .getPropertyOfName("titleJustification")) != null) // NOI18N
-                prop.setValue(new Integer(node.getNodeValue()));
+                prop.setValue(Integer.valueOf(node.getNodeValue()));
 
             node = attributes.getNamedItem(ATTR_POSITION);
             if (node != null && (prop = (FormProperty)borderSupport
                                   .getPropertyOfName("titlePosition")) != null) // NOI18N
-                prop.setValue(new Integer(node.getNodeValue()));
+                prop.setValue(Integer.valueOf(node.getNodeValue()));
 
             readBorderProperty(ATTR_FONT, "titleFont", borderSupport, element); // NOI18N
 
@@ -1028,7 +1028,7 @@ public final class BorderEditor extends PropertyEditorSupport
             node = attributes.getNamedItem(ATTR_ETCH_TYPE);
             if (node != null && (prop = (FormProperty)borderSupport
                                        .getPropertyOfName("etchType")) != null) // NOI18N
-                prop.setValue(new Integer(node.getNodeValue()));
+                prop.setValue(Integer.valueOf(node.getNodeValue()));
 
             readBorderProperty(ATTR_HIGHLIGHT, "highlightColor", borderSupport, element); // NOI18N
 
@@ -1099,7 +1099,7 @@ public final class BorderEditor extends PropertyEditorSupport
             node = attributes.getNamedItem(ATTR_THICKNESS);
             if (node != null && (prop = (FormProperty)borderSupport
                                        .getPropertyOfName("thickness")) != null) // NOI18N
-                prop.setValue(new Integer(node.getNodeValue()));
+                prop.setValue(Integer.valueOf(node.getNodeValue()));
 
             node = attributes.getNamedItem(ATTR_CORNERS);
             if (node != null && (prop = (FormProperty)borderSupport
@@ -1313,7 +1313,7 @@ public final class BorderEditor extends PropertyEditorSupport
             node = attributes.getNamedItem(ATTR_BEVEL_TYPE);
             if (node != null && (prop = (FormProperty)borderSupport
                                        .getPropertyOfName("bevelType")) != null) // NOI18N
-                prop.setValue(new Integer(node.getNodeValue()));
+                prop.setValue(Integer.valueOf(node.getNodeValue()));
 
             readBorderProperty(ATTR_HIGHLIGHT_OUTER, "highlightOuterColor", borderSupport, element); // NOI18N
             readBorderProperty(ATTR_HIGHLIGHT_INNER, "highlightInnerColor", borderSupport, element); // NOI18N

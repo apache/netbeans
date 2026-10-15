@@ -18,33 +18,27 @@
  */
 package org.netbeans.modules.java.source.parsing;
 
-import com.sun.tools.javac.code.Source;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Locale;
-import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import java.util.zip.ZipEntry;
-import javax.tools.JavaCompiler;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
-import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
-import javax.tools.ToolProvider;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.junit.NbTestCase;
@@ -222,8 +216,7 @@ public class MRJARModuleFileManagerTest extends NbTestCase {
                 .map((jfo) -> {
                     try {
                         final BufferedReader in = new BufferedReader(new InputStreamReader(
-                                jfo.openInputStream(),
-                                Charset.forName("UTF-8"))); //NOI18N
+                                jfo.openInputStream(), StandardCharsets.UTF_8));
                         return in.readLine();
                     } catch (IOException ioe) {
                         throw new RuntimeException(ioe);
@@ -273,7 +266,7 @@ public class MRJARModuleFileManagerTest extends NbTestCase {
                             path :
                             String.format("%s/%s", prefix[0], path);            //NOI18N
                     jar.putNextEntry(new ZipEntry(pathWithScope));
-                    jar.write(String.format("%s %s", name, prefix[1]).getBytes(Charset.forName("UTF-8")));  //NOI18N
+                    jar.write(String.format("%s %s", name, prefix[1]).getBytes(StandardCharsets.UTF_8));  //NOI18N
                     jar.closeEntry();
                 }
             }

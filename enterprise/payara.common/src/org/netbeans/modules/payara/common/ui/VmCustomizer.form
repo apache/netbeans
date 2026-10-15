@@ -79,7 +79,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Debug Settings">
+            <TitledBorder title="&lt;VmCustomizer.debugSettingsPanel.border.title.text&gt;">
               <ResourceString PropertyName="titleX" bundle="org/netbeans/modules/glassfish/common/ui/Bundle.properties" key="VmCustomizer.debugSettingsPanel.border.title.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </TitledBorder>
           </Border>

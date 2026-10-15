@@ -100,7 +100,7 @@ public class WLModuleNode extends AbstractNode {
         actions.add(SystemAction.get(OpenModuleUrlAction.class));
         actions.add(null);
         actions.add(SystemAction.get(UndeployModuleAction.class));
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     @Override

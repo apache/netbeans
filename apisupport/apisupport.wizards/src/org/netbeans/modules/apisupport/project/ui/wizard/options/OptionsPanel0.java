@@ -96,7 +96,7 @@ final class OptionsPanel0 extends BasicWizardIterator.Panel {
         }
         primaryIds.remove("Advanced"); // NOI18N
         primaryIds.add(0, "Advanced"); // NOI18N
-        return primaryIds.toArray(new String[primaryIds.size()]);
+        return primaryIds.toArray(new String[0]);
     }
     
     private void addListeners() {

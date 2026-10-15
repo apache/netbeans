@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="24" height="24" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 24 24">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #137f00;
+      }
+
+      .st1 {
+        fill: none;
+        stroke: #626b70;
+        stroke-miterlimit: 10;
+        stroke-width: .5px;
+      }
+
+      .st2 {
+        fill: url(#radial-gradient);
+      }
+
+      .st3 {
+        fill: #626b70;
+      }
+
+      .st4 {
+        fill: #d28348;
+      }
+
+      .st5 {
+        fill: #b0db86;
+      }
+    </style>
+    <radialGradient id="radial-gradient" cx="11.5" cy="12.5" fx="11.5" fy="12.5" r="14.724" gradientTransform="translate(0 2.5) scale(1 .8)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f0f8ff"/>
+      <stop offset=".258" stop-color="#edf6fe"/>
+      <stop offset=".447" stop-color="#e3f1fd"/>
+      <stop offset=".614" stop-color="#d3e9fb"/>
+      <stop offset=".768" stop-color="#bdddf9"/>
+      <stop offset=".912" stop-color="#a0cff6"/>
+      <stop offset="1" stop-color="#8bc4f4"/>
+    </radialGradient>
+  </defs>
+  <g>
+    <path class="st2" d="M11.5,22.5c-5.514,0-10-4.486-10-10S5.986,2.5,11.5,2.5s10,4.486,10,10-4.486,10-10,10Z"/>
+    <path class="st3" d="M11.5,3c5.238,0,9.5,4.262,9.5,9.5s-4.262,9.5-9.5,9.5S2,17.738,2,12.5,6.262,3,11.5,3M11.5,2C5.701,2,1,6.701,1,12.5s4.701,10.5,10.5,10.5,10.5-4.701,10.5-10.5S17.299,2,11.5,2h0Z"/>
+  </g>
+  <g>
+    <line class="st1" x1="1.7" y1="12.5" x2="5.2" y2="12.5"/>
+    <line class="st1" x1="17.8" y1="12.5" x2="21.3" y2="12.5"/>
+    <line class="st1" x1="11.5" y1="2.7" x2="11.5" y2="6.2"/>
+    <line class="st1" x1="11.5" y1="18.8" x2="11.5" y2="22.3"/>
+    <line class="st1" x1="4.57" y1="19.43" x2="6.055" y2="17.945"/>
+    <line class="st1" x1="16.945" y1="7.055" x2="18.43" y2="5.57"/>
+    <line class="st1" x1="4.57" y1="5.57" x2="6.055" y2="7.055"/>
+    <line class="st1" x1="16.945" y1="17.945" x2="18.43" y2="19.43"/>
+  </g>
+  <circle class="st4" cx="11.5" cy="12.5" r="1.4"/>
+  <polygon class="st4" points="10.8 14.6 12.2 14.6 11.78 4.8 11.22 4.8 10.8 14.6"/>
+  <description>Apache NetBeans Logo
+  </description>
+  <g>
+    <polygon class="st5" points="14.5 22.5 14.5 8.5 15.793 8.5 22.793 15.5 15.793 22.5 14.5 22.5"/>
+    <path class="st0" d="M15.586,9l6.5,6.5-6.5,6.5h-.586v-13h.586M16,8h-2v15h2l7.5-7.5-7.5-7.5h0Z"/>
+  </g>
+</svg>

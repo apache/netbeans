@@ -43,11 +43,11 @@ public final class ClassName implements Comparable<ClassName>, Comparator<ClassN
 
     private final String type;
     private final transient String internalName;
-    private volatile transient String externalName;
-    private volatile transient String packageName;
-    private volatile transient String simpleName;
+    private transient volatile String externalName;
+    private transient volatile String packageName;
+    private transient volatile String simpleName;
 
-    private final static WeakHashMap<String,WeakReference<ClassName>> cache = 
+    private static final WeakHashMap<String,WeakReference<ClassName>> cache = 
             new WeakHashMap<String,WeakReference<ClassName>>();
 
     /**
@@ -63,12 +63,12 @@ public final class ClassName implements Comparable<ClassName>, Comparator<ClassN
      * replaced with dollar signs ('$').  Array classes have one
      * or more left brackets ('[') prepending the class type.
      * For example:
-     * <PRE><CODE>
+     * <pre>
      *   java.lang.String         java/lang/String
      *   java.util.HashMap.Entry  java/util/HashMap$Entry
      *   java.lang.Integer[]      [java/lang/Integer
      *   java.awt.Point[][]       [[java/awt/Point
-     * </CODE><PRE>
+     * </pre>
      * <P>
      * This method also accepts type strings which contain with
      * 'L' and end with ';' characters.  This format is used

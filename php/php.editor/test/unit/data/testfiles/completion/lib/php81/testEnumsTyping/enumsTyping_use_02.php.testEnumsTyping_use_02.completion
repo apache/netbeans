@@ -1,0 +1,5 @@
+Code completion result for source line:
+use Enum1\Sim|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      Simple                          [PUBLIC]   Enum1

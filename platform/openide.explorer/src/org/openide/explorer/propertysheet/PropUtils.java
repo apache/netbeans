@@ -213,7 +213,7 @@ final class PropUtils {
     //Comparators copied from original propertysheet implementation
 
     /** Comparator which compares types */
-    private final static Comparator<Node.Property> SORTER_TYPE = new Comparator<Node.Property>() {
+    private static final Comparator<Node.Property> SORTER_TYPE = new Comparator<Node.Property>() {
             @Override
             public int compare(Node.Property l, Node.Property r) {
 
@@ -241,7 +241,7 @@ final class PropUtils {
         };
 
     /** Comparator which compares PropertyDetils names */
-    private final static Comparator<Node.Property> SORTER_NAME = new Comparator<Node.Property>() {
+    private static final Comparator<Node.Property> SORTER_NAME = new Comparator<Node.Property>() {
         @Override
         public int compare(Node.Property l, Node.Property r) {
             String s1 = l.getDisplayName();
@@ -1514,7 +1514,7 @@ final class PropUtils {
      * Just a helper method which delegates to shallBeRDVEnabled(Node.Property).
      */
     static boolean shallBeRDVEnabled(FeatureDescriptor fd) {
-        if ((fd != null) && fd instanceof Node.Property) {
+        if (fd instanceof Property) {
             return shallBeRDVEnabled((Node.Property) fd);
         }
 
@@ -1532,7 +1532,7 @@ final class PropUtils {
      * return true and don't override Node.Property.isDefaultValue(). The
      * isDefaultValue() return false by default.<br>
      * For more information and detailed reason why we do so see
-     * <a href="http://www.netbeans.org/issues/show_bug.cgi?id=51907">
+     * <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=51907">
      * Issue 51907</a>.
      */
     static boolean shallBeRDVEnabled(Node.Property property) {

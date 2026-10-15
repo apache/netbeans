@@ -97,16 +97,16 @@ public class ProgressEventSupport {
         status = sCode;
         tmID = targetModuleID;
         
-	Vector targets = null;
+	Vector<ProgressListener> targets = null;
 	synchronized (this) {
 	    if (listeners != null) {
-	        targets = (Vector) listeners.clone();
+	        targets = new Vector<>(listeners);
 	    }
 	}
 
 	if (targets != null) {
 	    for (int i = 0; i < targets.size(); i++) {
-	        ProgressListener target = (ProgressListener)targets.elementAt(i);
+	        ProgressListener target = targets.elementAt(i);
 	        target.handleProgressEvent (evt);
 	    }
 	}

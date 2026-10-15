@@ -72,7 +72,7 @@ public final class ContextProviderSupport implements ContextProvider {
     /** Get a map composed of the contributions of each contributor */
     public final Map getContext() {
         if (contributors == null || contributors.length == 0) {
-            return Collections.EMPTY_MAP;
+            return Collections.emptyMap();
         } else {
             Map[] m = new Map[contributors.length];
             for (int i=0; i < contributors.length; i++) {
@@ -97,7 +97,7 @@ public final class ContextProviderSupport implements ContextProvider {
     
     /** Implementation of Contributor which takes fixed arrays of keys and
      * values */
-    public static abstract class FixedContributor  implements Contributor {
+    public abstract static class FixedContributor  implements Contributor {
         public final Map getContribution() {
             return new FixedMap(getKeys(), getValues());
         }
@@ -114,7 +114,7 @@ public final class ContextProviderSupport implements ContextProvider {
      * Note that the map that will actually be used is a snapshot of the map
      * returned, taken at the time of updating.
      */
-    public static abstract class ActiveContributor implements Contributor {
+    public abstract static class ActiveContributor implements Contributor {
         public abstract Map getContribution();
         
         Map toFixedMap() {

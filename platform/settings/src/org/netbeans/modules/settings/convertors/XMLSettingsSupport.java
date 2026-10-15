@@ -198,6 +198,8 @@ final class XMLSettingsSupport {
         /* Uses NetBeans module classloader to load the class.
          * @param v description of the class to load
          */
+
+        @Override
         protected Class resolveClass(ObjectStreamClass v) throws IOException, ClassNotFoundException {
             ClassLoader cl = getNBClassLoader();
             try {
@@ -214,6 +216,7 @@ final class XMLSettingsSupport {
          * postponed to readResolve;
          * otherwise the same implementation like NbObjectInputStream.readClassDescriptor
          */
+        @Override
         protected ObjectStreamClass readClassDescriptor() throws IOException, ClassNotFoundException {
             ObjectStreamClass ose = super.readClassDescriptor();
 
@@ -256,7 +259,7 @@ final class XMLSettingsSupport {
     
     
     // enlarged to not need do the test for negative byte values
-    private final static char[] HEXDIGITS = {'0', '1', '2', '3', '4', '5', '6', '7',
+    private static final char[] HEXDIGITS = {'0', '1', '2', '3', '4', '5', '6', '7',
                                              '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
                                              '0', '1', '2', '3', '4', '5', '6', '7'};
     
@@ -333,7 +336,7 @@ final class XMLSettingsSupport {
     }
     
     /** Settings parser. */
-    final static class SettingsRecognizer extends org.xml.sax.helpers.DefaultHandler {
+    static final class SettingsRecognizer extends org.xml.sax.helpers.DefaultHandler {
         
         private static final String ELM_SETTING = "settings"; // NOI18N
         private static final String ATR_SETTING_VERSION = "version"; // NOI18N
@@ -431,7 +434,8 @@ final class XMLSettingsSupport {
             if (serialdata == null) return null;
             return new ByteArrayInputStream(serialdata);
         }
-        
+
+        @Override
         public org.xml.sax.InputSource resolveEntity(String publicId, String systemId)
         throws SAXException {
             if (INSTANCE_DTD_ID.equals (publicId) || "-//NetBeans//DTD XML beans 1.0//EN".equals(publicId)) {
@@ -440,7 +444,8 @@ final class XMLSettingsSupport {
                 return null; // i.e. follow advice of systemID
             }
         }
-        
+
+        @Override
         public void characters(char[] values, int start, int length) throws SAXException {
             if (header) return;
             String element = stack.peek();
@@ -450,7 +455,8 @@ final class XMLSettingsSupport {
                 chaos.write(values, start, length);
             }
         }
-        
+
+        @Override
         public void startElement(String uri, String localName, String qName, Attributes attribs) throws SAXException {
             stack.push(qName);
             if (ELM_SETTING.equals(qName)) {
@@ -510,7 +516,8 @@ final class XMLSettingsSupport {
                 codeNameRelease = -1;
             }
         }
-        
+
+        @Override
         public void endElement(String uri, String localName, String qName) throws SAXException {
             //if (header) return;
             String element = stack.pop();
@@ -1143,7 +1150,7 @@ final class XMLSettingsSupport {
 
     }
     
-    final static class StopSAXException extends SAXException {
+    static final class StopSAXException extends SAXException {
         public StopSAXException() {
             super("Parser stopped"); // NOI18N
         }

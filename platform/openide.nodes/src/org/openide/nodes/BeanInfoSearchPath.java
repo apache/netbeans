@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  * during the IDE startup
  * 
  * @since 7.32
- * @author Jan Horvath <jhorvath@netbeans.org>
+ * @author Jan Horvath &lt;jhorvath@netbeans.org&gt;
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.PACKAGE)

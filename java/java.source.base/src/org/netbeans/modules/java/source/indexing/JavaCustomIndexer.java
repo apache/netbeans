@@ -20,7 +20,6 @@
 package org.netbeans.modules.java.source.indexing;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -35,6 +34,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -60,6 +60,10 @@ import java.util.logging.Level;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.LineMap;
+
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.TypeElement;
@@ -67,8 +71,8 @@ import javax.management.MBeanServer;
 import javax.tools.Diagnostic;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.JavaFileObject;
-import org.netbeans.api.annotations.common.CheckForNull;
 
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
@@ -82,7 +86,6 @@ import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.classfile.ClassFile;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.JavaSourceTaskFactoryManager;
 import org.netbeans.modules.java.source.ModuleNames;
@@ -115,7 +118,6 @@ import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
-import org.openide.modules.InstalledFileLocator;
 import org.openide.util.Exceptions;
 //import org.openide.util.NbBundle;
 import org.openide.util.Pair;
@@ -223,7 +225,7 @@ public class JavaCustomIndexer extends CustomIndexer {
                             toDir.mkdirs();
                             File to = new File(toDir, name);
                             try (OutputStream os = new FileOutputStream(to); InputStream is = ch.getInputStream()) {
-                                FileUtil.copy(is, os);
+                                is.transferTo(os);
                             }
                         }
                     }
@@ -491,7 +493,7 @@ public class JavaCustomIndexer extends CustomIndexer {
         final List<URL> bin = new ArrayList<>(artefacts.length+1);
         Collections.addAll(bin, artefacts);
         bin.add(BaseUtilities.toURI(JavaIndex.getClassFolder(sourceRoot, false, false)).toURL());
-        return bin.toArray(new URL[bin.size()]);
+        return bin.toArray(new URL[0]);
     }
 
     private static List<? extends Indexable> splitSources(final Iterable<? extends Indexable> indexables, final List<? super Indexable> javaSources) {
@@ -803,10 +805,10 @@ public class JavaCustomIndexer extends CustomIndexer {
         }
     }
 
-    public static void setErrors(Context context, CompileTuple active, DiagnosticListenerImpl errors) {
+    public static void setErrors(Context context, CompileTuple active, CompilationUnitTree cut, DiagnosticListenerImpl errors) {
         if (!active.virtual) {
             Iterable<Diagnostic<? extends JavaFileObject>> filteredErrorsList = Iterators.filter(errors.getDiagnostics(active.jfo), new FilterOutJDK7AndLaterWarnings());
-            ErrorsCache.setErrors(context.getRootURI(), active.indexable, filteredErrorsList, active.aptGenerated ? ERROR_CONVERTOR_NO_BADGE : ERROR_CONVERTOR);
+            ErrorsCache.setErrors(context.getRootURI(), active.indexable, filteredErrorsList, new ErrorConvertorImpl(active.aptGenerated ? ErrorKind.ERROR_NO_BADGE : ErrorKind.ERROR, cut.getLineMap()));
         }
     }
 
@@ -877,7 +879,7 @@ public class JavaCustomIndexer extends CustomIndexer {
 
     private static Iterable<String> readRSFile (final File file) throws IOException {
         final LinkedHashSet<String> binaryNames = new LinkedHashSet<String>();
-        BufferedReader in = new BufferedReader (new InputStreamReader ( new FileInputStream (file), "UTF-8")); //NOI18N
+        BufferedReader in = new BufferedReader (new InputStreamReader ( new FileInputStream (file), StandardCharsets.UTF_8));
         try {
             String binaryName;
             while ((binaryName=in.readLine())!=null) {
@@ -1299,13 +1301,15 @@ public class JavaCustomIndexer extends CustomIndexer {
         }
     }
 
-    private static final Convertor<Diagnostic<?>> ERROR_CONVERTOR = new ErrorConvertorImpl(ErrorKind.ERROR);
-    private static final Convertor<Diagnostic<?>> ERROR_CONVERTOR_NO_BADGE = new ErrorConvertorImpl(ErrorKind.ERROR_NO_BADGE);
+    private static final Convertor<Diagnostic<?>> ERROR_CONVERTOR = new ErrorConvertorImpl(ErrorKind.ERROR, null);
+    private static final Convertor<Diagnostic<?>> ERROR_CONVERTOR_NO_BADGE = new ErrorConvertorImpl(ErrorKind.ERROR_NO_BADGE, null);
     
     private static final class ErrorConvertorImpl implements Convertor<Diagnostic<?>> {
         private final ErrorKind errorKind;
-        public ErrorConvertorImpl(ErrorKind errorKind) {
+        private final LineMap lm;
+        public ErrorConvertorImpl(ErrorKind errorKind, LineMap lm) {
             this.errorKind = errorKind;
+            this.lm = lm;
         }
         @Override
         public ErrorKind getKind(Diagnostic<?> t) {
@@ -1314,6 +1318,22 @@ public class JavaCustomIndexer extends CustomIndexer {
         @Override
         public int getLineNumber(Diagnostic<?> t) {
             return (int) t.getLineNumber();
+        }
+        @Override
+        public ErrorsCache.Range getRange(Diagnostic<?> t) {
+            if (lm == null || t.getStartPosition() == (-1)) {
+                return new ErrorsCache.Range(new ErrorsCache.Position((int) t.getLineNumber(), (int) t.getColumnNumber()), null);
+            }
+            ErrorsCache.Position endPos;
+            if (t.getEndPosition() == (-1)) {
+                endPos = null;
+            } else {
+                endPos = new ErrorsCache.Position((int) lm.getLineNumber(t.getEndPosition()), (int) lm.getColumnNumber(t.getEndPosition()));
+            }
+            return new ErrorsCache.Range(
+                    new ErrorsCache.Position((int) lm.getLineNumber(t.getStartPosition()), (int) lm.getColumnNumber(t.getStartPosition())),
+                    endPos
+            );
         }
         @Override
         public String getMessage(Diagnostic<?> t) {
@@ -1395,15 +1415,7 @@ public class JavaCustomIndexer extends CustomIndexer {
     private static Pair<Object,Method> heapDumper;
 
     private static String computeJavacVersion() {
-        if (NoJavacHelper.hasNbJavac()) {
-            File nbJavac = InstalledFileLocator.getDefault().locate("modules/ext/nb-javac-impl.jar", "org.netbeans.modules.nbjavac.impl", false);
-            if (nbJavac != null) {
-                return String.valueOf(nbJavac.lastModified());
-            }
-            return "-1";
-        } else {
-            return System.getProperty("java.vm.version", "unknown");
-        }
+        return SourceVersion.latest().toString();
     }
 
     private static class FilterOutJDK7AndLaterWarnings implements Comparable<Diagnostic<? extends JavaFileObject>> {
@@ -1448,7 +1460,7 @@ public class JavaCustomIndexer extends CustomIndexer {
         }
     }
     
-    private static abstract class Check implements Callable<Boolean> {
+    private abstract static class Check implements Callable<Boolean> {
         
         protected final Context ctx;
         

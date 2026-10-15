@@ -264,7 +264,7 @@ class ResizeOptionsCustomizer extends javax.swing.JPanel {
         int selIndex = tblOptions.getSelectedRow();
         ResizeOption ro = selIndex < 0 ? null : options.get( selIndex );
         btnRemove.setEnabled( null != ro && !ro.isDefault() );
-        btnMoveUp.setEnabled( selIndex > 0 );;
+        btnMoveUp.setEnabled( selIndex > 0 );
         btnMoveDown.setEnabled( selIndex >= 0 && selIndex < tblOptions.getRowCount()-1 );
     }
 

@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -312,7 +313,7 @@ public class OptionsExportModelTest extends NbTestCase {
                 ZipEntry zipEntry = (ZipEntry) entries.nextElement();
                 if (zipEntry.getName().equals(OptionsExportModel.ENABLED_ITEMS_INFO)) {
                     InputStream stream = zipFile.getInputStream(zipEntry);
-                    BufferedReader br = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+                    BufferedReader br = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
                     String strLine;
                     while ((strLine = br.readLine()) != null) {
                         assertEquals("Wrong data saved in enabledItems.info", "Category0Item01", strLine);

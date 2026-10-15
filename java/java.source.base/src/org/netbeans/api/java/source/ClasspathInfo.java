@@ -36,11 +36,9 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.logging.Logger;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
 import javax.tools.JavaFileManager;
-import javax.tools.StandardLocation;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -260,8 +258,8 @@ public final class ClasspathInfo {
      * <div class="nonnormative">
      * <p>
      * It uses the {@link Document#StreamDescriptionProperty} to obtain the
-     * {@link DataObject} for the {@link Document} and creates a {@link ClasspathInfo}
-     * for the primary file of the {@link DataObject}
+     * <a href="@org-openide-loaders@/org/openide/loaders/DataObject.html">DataObject</a> for the {@link Document} and creates a {@link ClasspathInfo}
+     * for the primary file of the <a href="@org-openide-loaders@/org/openide/loaders/DataObject.html">DataObject</a>
      * </p>
      * </div>
      * @param doc a document for which the {@link ClasspathInfo} should be created
@@ -585,7 +583,7 @@ public final class ClasspathInfo {
                     entry.getURL());
             }
         }
-        return roots.toArray(new URI[roots.size()]);
+        return roots.toArray(new URI[0]);
     }
 
 
@@ -653,7 +651,7 @@ public final class ClasspathInfo {
                                     }
                                 })
                                 .filter((u) -> u != null)
-                                .collect(Collectors.toList());
+                                .toList();
                         if (cfs.size() > 1) {
                             for (URL u : cfs) {
                                 res.put(u, cfs);

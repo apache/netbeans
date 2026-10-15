@@ -30,7 +30,7 @@ public final class ProjectEarProvider implements EarProvider {
     
     public Ear findEar (FileObject file) {
         Project project = FileOwnerQuery.getOwner (file);
-        if (project != null && project instanceof EarProject) {
+        if (project instanceof EarProject) {
             EarProject ep = (EarProject) project;
             FileObject prjdir = ep.getProjectDirectory();
             if (prjdir != null && (prjdir.equals (file) || FileUtil.isParentOf(prjdir, file))) {

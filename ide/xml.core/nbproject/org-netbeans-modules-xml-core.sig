@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.49.0
+#Version 1.76.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -10,12 +10,12 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -33,7 +33,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -56,8 +55,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public org.netbeans.modules.xml.api.EncodingUtil
 cons public init()
@@ -94,7 +91,7 @@ meth public abstract org.netbeans.modules.xml.api.model.DescriptionSource resolv
 
 CLSS public abstract interface org.netbeans.modules.xml.api.model.ExtendedGrammarQuery
 intf org.netbeans.modules.xml.api.model.GrammarQuery
-meth public abstract java.util.List getResolvedEntities()
+meth public abstract java.util.List<java.lang.String> getResolvedEntities()
 
 CLSS public final org.netbeans.modules.xml.api.model.GrammarEnvironment
 cons public init(java.util.Enumeration,org.xml.sax.InputSource,org.openide.filesystems.FileObject)
@@ -299,7 +296,6 @@ fld public final static short VALIDATION_ERR = 16
 fld public final static short WRONG_DOCUMENT_ERR = 4
 fld public short code
 supr java.lang.RuntimeException
-hfds serialVersionUID
 
 CLSS public abstract interface org.w3c.dom.NamedNodeMap
 meth public abstract int getLength()

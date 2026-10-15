@@ -1,0 +1,27 @@
+<Program start='0' end='922'>
+    <Comments>
+        <Comment start='6' end='813' commentType='multiLine'/>
+    </Comments>
+    <Statements>
+        <ClassDeclaration start='815' end='921' modifier='NONE'>
+            <ClassName>
+                <Identifier start='821' end='849' name='ConstructorPropertyPromotion'/>
+            </ClassName>
+            <SuperClassName>
+            </SuperClassName>
+            <Interfaces>
+            </Interfaces>
+            <Block start='850' end='921' isCurly='true'>
+                <MethodDeclaration start='857' end='919' modifiers='public'>
+                    <FunctionDeclaration start='864' end='919' isReference='false'>
+                        <Identifier start='873' end='884' name='__construct'/>
+                        <FormalParameters>
+                        </FormalParameters>
+                        <Block start='912' end='919' isCurly='true'>
+                        </Block>
+                    </FunctionDeclaration>
+                </MethodDeclaration>
+            </Block>
+        </ClassDeclaration>
+    </Statements>
+</Program>

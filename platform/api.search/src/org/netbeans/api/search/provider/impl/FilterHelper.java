@@ -46,7 +46,7 @@ import org.openide.filesystems.FileUtil;
  */
 class FilterHelper {
 
-    private List<SearchFilterDefinition> filters = new ArrayList<SearchFilterDefinition>();
+    private List<SearchFilterDefinition> filters = new ArrayList<>();
     private boolean active;
     private Stack<List<SearchFilterDefinition>> stack;
 
@@ -81,7 +81,7 @@ class FilterHelper {
         for (SearchFilterDefinition fof : options.getFilters()) {
             filters.add(fof);
         }
-        stack = new Stack<List<SearchFilterDefinition>>();
+        stack = new Stack<>();
         stack.push(filters);
         /*
          * If helper is not active, filters are not used at all and all files
@@ -174,7 +174,7 @@ class FilterHelper {
                     case TRAVERSE_ALL_SUBFOLDERS:
                         if (remainingFilters == null) {
                             remainingFilters =
-                                    new LinkedList<SearchFilterDefinition>(
+                                    new LinkedList<>(
                                     stack.peek());
                         }
                         remainingFilters.remove(filter);

@@ -36,13 +36,13 @@ import org.openide.filesystems.FileUtil;
  * @author Jaroslav Bachorik
  * @version 0.1
  */
-final public class OQLQueryRepository {
-    final private static class Singleton {
-        final private static OQLQueryRepository INSTANCE = new OQLQueryRepository();
+public final class OQLQueryRepository {
+    private static final class Singleton {
+        private static final OQLQueryRepository INSTANCE = new OQLQueryRepository();
     }
 
-    final private static String MATCH_ALL = ".*"; // NOI18N
-    final private static Logger LOGGER = Logger.getLogger(OQLQueryRepository.class.getName());
+    private static final String MATCH_ALL = ".*"; // NOI18N
+    private static final Logger LOGGER = Logger.getLogger(OQLQueryRepository.class.getName());
 
     private OQLQueryRepository() {}
 
@@ -143,7 +143,7 @@ final public class OQLQueryRepository {
     }
 
     private static List<FileObject> sortedFOs(Enumeration<? extends FileObject> fos) {
-        List<FileObject> list = new ArrayList();
+        List<FileObject> list = new ArrayList<>();
         while(fos.hasMoreElements()) list.add(fos.nextElement());
         return FileUtil.getOrder(list, false);
     }

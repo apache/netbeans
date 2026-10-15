@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -40,7 +41,6 @@ import org.openide.cookies.OpenCookie;
 import org.openide.filesystems.FileStateInvalidException;
 import org.openide.filesystems.FileSystem;
 import org.openide.util.NbBundle;
-import org.openide.util.WeakSet;
 import org.openide.windows.CloneableOpenSupport;
 import org.openide.windows.CloneableTopComponent;
 
@@ -258,15 +258,15 @@ public abstract class OpenSupport extends CloneableOpenSupport {
         */
         public CloneableOpenSupport findCloneableOpenSupport() {
             OpenCookie oc = getDataObject().getCookie(OpenCookie.class);
-            if (oc != null && oc instanceof CloneableOpenSupport) {
+            if (oc instanceof CloneableOpenSupport) {
                 return (CloneableOpenSupport) oc;
             }
             EditCookie edc = getDataObject().getCookie(EditCookie.class);
-            if (edc != null && edc instanceof CloneableOpenSupport) {
+            if (edc instanceof CloneableOpenSupport) {
                 return (CloneableOpenSupport) edc;
             }
             EditorCookie ec = getDataObject().getCookie(EditorCookie.class);
-            if (ec != null && ec instanceof CloneableOpenSupport) {
+            if (ec instanceof CloneableOpenSupport) {
                 return (CloneableOpenSupport) ec;
             }
             return null;
@@ -348,7 +348,7 @@ public abstract class OpenSupport extends CloneableOpenSupport {
     private static final class FileSystemNameListener
     implements PropertyChangeListener, VetoableChangeListener {
         /** Set of Env's interested in changes on fs name. */
-        private final Set<Env> environments = new WeakSet<Env>(30);
+        private final Set<Env> environments = Collections.newSetFromMap(new WeakHashMap<>(30));
         
         public FileSystemNameListener() {
         }
@@ -404,15 +404,15 @@ public abstract class OpenSupport extends CloneableOpenSupport {
             DataObject obj = entry.getDataObject ();
             OpenSupport os = null;
             OpenCookie oc = obj.getCookie(OpenCookie.class);
-            if (oc != null && oc instanceof OpenSupport) {
+            if (oc instanceof OpenSupport) {
                 os = (OpenSupport) oc;
             } else {
                 EditCookie edc = obj.getCookie(EditCookie.class);
-                if (edc != null && edc instanceof OpenSupport) {
+                if (edc instanceof OpenSupport) {
                     os = (OpenSupport) edc;
                 } else {
                     EditorCookie ec = obj.getCookie(EditorCookie.class);
-                    if (ec != null && ec instanceof OpenSupport) {
+                    if (ec instanceof OpenSupport) {
                         os = (OpenSupport) ec;
                     }
                 }

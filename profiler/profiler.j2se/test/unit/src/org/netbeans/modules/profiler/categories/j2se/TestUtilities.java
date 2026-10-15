@@ -18,15 +18,13 @@
  */
 package org.netbeans.modules.profiler.categories.j2se;
 
-import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import junit.framework.Assert;
-
+import java.nio.charset.StandardCharsets;
+import org.junit.Assert;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer;
 import org.netbeans.modules.java.source.parsing.JavacParser;
@@ -71,31 +69,22 @@ public class TestUtilities extends ProxyLookup {
         });
     }
     
-    public static final FileObject copyStringToFileObject(FileObject fo, String content) 
-        throws IOException 
-     {
-        OutputStream os = fo.getOutputStream();
-        try {
-            InputStream is = new ByteArrayInputStream(content.getBytes("UTF-8"));
-            FileUtil.copy(is, os);
+    public static final FileObject copyStringToFileObject(FileObject fo, String content) throws IOException {
+        try (OutputStream os = fo.getOutputStream()) {
+            os.write(content.getBytes(StandardCharsets.UTF_8));
             return fo;
-        } finally {
-            os.close();
         }
     }
 
     public static final String copyFileObjectToString (FileObject fo) throws java.io.IOException {
         int s = (int)FileUtil.toFile(fo).length();
         byte[] data = new byte[s];
-        InputStream stream = fo.getInputStream();
-        try {
+        try (InputStream stream = fo.getInputStream()) {
             int len = stream.read(data);
             if (len != s) {
                 throw new EOFException("truncated file");
             }
             return new String (data);
-        } finally {
-            stream.close();
         }
     }
     

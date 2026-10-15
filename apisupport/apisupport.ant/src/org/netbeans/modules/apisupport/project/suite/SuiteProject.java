@@ -188,9 +188,9 @@ public final class SuiteProject implements Project {
         List<PropertyProvider> providers = new ArrayList<PropertyProvider>();
         providers.add(helper.getPropertyProvider("nbproject/private/platform-private.properties")); // NOI18N
         providers.add(helper.getPropertyProvider("nbproject/platform.properties")); // NOI18N
-        PropertyEvaluator baseEval = PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[providers.size()]));
+        PropertyEvaluator baseEval = PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[0]));
         providers.add(new ApisupportAntUtils.UserPropertiesFileProvider(baseEval, dir));
-        baseEval = PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[providers.size()]));
+        baseEval = PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[0]));
         providers.add(new DestDirProvider(baseEval));
         providers.add(helper.getPropertyProvider(AntProjectHelper.PRIVATE_PROPERTIES_PATH));
         providers.add(helper.getPropertyProvider(AntProjectHelper.PROJECT_PROPERTIES_PATH));
@@ -205,7 +205,7 @@ public final class SuiteProject implements Project {
         fixedProps.put("dist.dir", "dist"); // NOI18N
         fixedProps.put("test.user.dir", "${suite.build.dir}/testuserdir"); // NOI18N
         providers.add(PropertyUtils.fixedPropertyProvider(fixedProps));
-        return PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[providers.size()]));
+        return PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[0]));
     }
     
     private final class Info implements ProjectInformation, AntProjectListener {

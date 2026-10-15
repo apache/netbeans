@@ -28,6 +28,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -53,13 +55,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
-import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 import junit.framework.Protectable;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestFailure;
 import junit.framework.TestResult;
+import org.junit.Assert;
 import org.netbeans.junit.internal.NbModuleLogHandler;
 
 /**
@@ -82,7 +84,7 @@ import org.netbeans.junit.internal.NbModuleLogHandler;
  * For more advanced configuration see {@link #emptyConfiguration()} and {@link Configuration}.
  *
  * @since 1.46
- * @author Jaroslav Tulach <jaroslav.tulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jaroslav.tulach@netbeans.org&gt;
  */
 public class NbModuleSuite {
     private static final Logger LOG;
@@ -272,7 +274,7 @@ public class NbModuleSuite {
         /** Adds new test name, or array of names into the configuration. By 
          * default the suite executes all <code>testXYZ</code> 
          * methods present in the test class
-         * (the one passed into {@link Configuration#create(java.lang.Class)}
+         * (the one passed into {@link NbModuleSuite#createConfiguration(java.lang.Class)}
          * method). However if there is a need to execute just some of them,
          * one can use this method to explicitly enumerate them by subsequent
          * calls to <code>addTest</code> method.
@@ -738,7 +740,7 @@ public class NbModuleSuite {
                 //Fix for issue #57304
                 l.add(Character.toString(dosHack));
             }
-            return l.toArray(new String[l.size()]);
+            return l.toArray(new String[0]);
         }
 
         static void findClusters(Collection<File> clusters, List<String> regExps) throws IOException {
@@ -927,7 +929,7 @@ public class NbModuleSuite {
                     }else{
                         Class<? extends Test> sndClazz =
                             testLoader.loadClass(item.clazz.getName()).asSubclass(Test.class);
-                        toRun.addTest(sndClazz.newInstance());
+                        toRun.addTest(sndClazz.getDeclaredConstructor().newInstance());
                     }
                 }
 
@@ -1128,7 +1130,7 @@ public class NbModuleSuite {
                 if (dep == null) {
                     throw new IOException("no match for " + artifact + " found in " + classpath);
                 }
-                File depCopy = File.createTempFile(artifact.replace(':', '-') + '-', ".jar");
+                File depCopy = Files.createTempFile(artifact.replace(':', '-') + '-', ".jar").toFile();
                 depCopy.deleteOnExit();
                 NbTestCase.copytree(dep, depCopy);
                 if (classPathHeader.length() > 0) {
@@ -1138,7 +1140,7 @@ public class NbModuleSuite {
             }
             String n = jar.getName();
             int dot = n.lastIndexOf('.');
-            File jarCopy = File.createTempFile(n.substring(0, dot) + '-', n.substring(dot));
+            File jarCopy = Files.createTempFile(n.substring(0, dot) + '-', n.substring(dot)).toFile();
             jarCopy.deleteOnExit();
             InputStream is = new FileInputStream(jar);
             try {
@@ -1282,7 +1284,7 @@ public class NbModuleSuite {
             byte[] bytes = new byte[4096];
             try {
                 for (int i; (i = is.read(bytes)) != -1;) {
-                    builder.append(new String(bytes, 0, i, "UTF-8"));
+                    builder.append(new String(bytes, 0, i, StandardCharsets.UTF_8));
                 }
             } finally {
                 if (close) {
@@ -1431,6 +1433,9 @@ public class NbModuleSuite {
                 if (res.startsWith("org.junit") || res.startsWith("org/junit")) {
                     return true;
                 }
+                if (res.startsWith("org.hamcrest") || res.startsWith("org/hamcrest")) {
+                    return true;
+                }
                 if (res.startsWith("org.netbeans.junit") || res.startsWith("org/netbeans/junit")) {
                     if (res.startsWith("org.netbeans.junit.ide") || res.startsWith("org/netbeans/junit/ide")) {
                         return false;
@@ -1555,7 +1560,7 @@ public class NbModuleSuite {
                 }
             }
             FileOutputStream os = new FileOutputStream(file);
-            os.write(xml.getBytes("UTF-8"));
+            os.write(xml.getBytes(StandardCharsets.UTF_8));
             os.close();
         }
 

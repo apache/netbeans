@@ -26,10 +26,12 @@ import java.beans.PropertyChangeSupport;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.ImageObserver;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.openide.util.ImageUtilities;
 
 /** Definition of the annotation type. Annotation type is defined by attributes like
  * highlight color, foreground color, glyph icon, etc. Each annotation added to document
@@ -156,7 +158,12 @@ public class AnnotationType {
      */
     public Image getGlyphImage() {
         if (img == null) {
-            img = Toolkit.getDefaultToolkit().createImage(getGlyph());
+            try {
+                img = ImageUtilities.loadImage(getGlyph().toURI());
+            } catch (URISyntaxException e) {
+                LOG.log(Level.WARNING, "getGlyph() returned invalid URI", e);
+                return null;
+            }
             final boolean waiting[] = new boolean [1];
             waiting[0] = true;
             if (!Toolkit.getDefaultToolkit().prepareImage(img, -1, -1, new ImageObserver() {
@@ -325,7 +332,7 @@ public class AnnotationType {
     }
 
     /** Setter for Actions property
-     * @return array of actions */    
+     */
     public void setActions(javax.swing.Action[] actions) {
         putProp(PROP_ACTIONS, actions);
     }
@@ -403,7 +410,7 @@ public class AnnotationType {
     }
 
     /** Setter for the TooltipText property
-     * @param name localized TooltipText of the annotation type */    
+     * @param text localized TooltipText of the annotation type */    
     public void setTooltipText(String text) {
         putProp(PROP_TOOLTIP_TEXT, text);
     }
@@ -419,7 +426,7 @@ public class AnnotationType {
     /** Setter for the CombinationOrder property
      * @param order order of the annotation type combination */    
     public void setCombinationOrder(int order) {
-        putProp(PROP_COMBINATION_ORDER, new Integer(order));
+        putProp(PROP_COMBINATION_ORDER, Integer.valueOf(order));
     }
     
     /** Setter for the CombinationOrder property
@@ -432,7 +439,7 @@ public class AnnotationType {
             Utilities.annotateLoggable(ex);
             return;
         }
-        putProp(PROP_COMBINATION_ORDER, new Integer(order));
+        putProp(PROP_COMBINATION_ORDER, Integer.valueOf(order));
     }
 
     /** Getter for MinimumOptionals property
@@ -445,7 +452,7 @@ public class AnnotationType {
     }
 
     public void setMinimumOptionals(int min) {
-        putProp(PROP_COMBINATION_MINIMUM_OPTIONALS, new Integer(min));
+        putProp(PROP_COMBINATION_MINIMUM_OPTIONALS, Integer.valueOf(min));
     }
     
     public void setMinimumOptionals(String m) {
@@ -456,7 +463,7 @@ public class AnnotationType {
             Utilities.annotateLoggable(ex);
             return;
         }
-        putProp(PROP_COMBINATION_MINIMUM_OPTIONALS, new Integer(min));
+        putProp(PROP_COMBINATION_MINIMUM_OPTIONALS, Integer.valueOf(min));
     }
     
     /** Getter for Visible property
@@ -542,7 +549,7 @@ public class AnnotationType {
     }
 
     public void setPriority(int priority) {
-        putProp(PROP_PRIORITY, new Integer(priority));
+        putProp(PROP_PRIORITY, Integer.valueOf(priority));
     }
 
     public boolean isBrowseable() {
@@ -579,18 +586,18 @@ public class AnnotationType {
 
     /** Add listeners on changes of annotation type properties
      * @param l  change listener*/
-    final public void addPropertyChangeListener(java.beans.PropertyChangeListener l) {
+    public final void addPropertyChangeListener(java.beans.PropertyChangeListener l) {
         support.addPropertyChangeListener (l);
     }
     
     /** Remove listeners on changes of annotation type properties
      * @param l  change listener*/
-    final public void removePropertyChangeListener(java.beans.PropertyChangeListener l) {
+    public final void removePropertyChangeListener(java.beans.PropertyChangeListener l) {
         support.removePropertyChangeListener (l);
     }
 
     /** Fire property change to registered listeners. */
-    final protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
+    protected final void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
         support.firePropertyChange(propertyName, oldValue, newValue);
     }
 
@@ -759,7 +766,7 @@ public class AnnotationType {
             "none", "ok", "warning", "error" // NOI18N
         };
         
-        /**Returns a {@link String} representation of the {@link Status}.
+        /**Returns a {@link String} representation of the {@link Severity}.
          * The format of the {@link String} is not specified.
          * This method should only be used for debugging purposes.
          *
@@ -791,10 +798,10 @@ public class AnnotationType {
             return VALUES[Math.max(first.getStatus(), second.getStatus())];
         }
         
-        /**Returns default {@link Color} for a given {@link Status}.
+        /**Returns default {@link Color} for a given {@link Severity}.
          *
-         * @param s {@link Status} for which default color should be found
-         * @return default {@link Color} for a given {@link Status}
+         * @param s {@link Severity} for which default color should be found
+         * @return default {@link Color} for a given {@link Severity}
          */
         public static Color getDefaultColor(Severity s) {
             return DEFAULT_STATUS_COLORS[s.getStatus()];

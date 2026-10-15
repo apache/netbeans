@@ -20,6 +20,7 @@ package org.netbeans.modules.java.openjdk.project;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
@@ -58,7 +59,7 @@ public class FilterStandardProjectsTest extends NbTestCase {
                        "  <module>\n" +
                        "    <name>java.compiler</name>\n" +
                        "  </module>\n" +
-                       "</modules>\n").getBytes("UTF-8"));
+                       "</modules>\n").getBytes(StandardCharsets.UTF_8));
         }
         FileUtil.createFolder(workDir, "langtools/src/java.compiler/share/classes");
         FileObject langtoolsPrj = FileUtil.createFolder(workDir, "langtools/make/netbeans/langtools");

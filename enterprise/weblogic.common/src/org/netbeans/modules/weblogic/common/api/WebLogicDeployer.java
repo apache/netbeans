@@ -491,7 +491,7 @@ public final class WebLogicDeployer {
 
                 LastLineProcessor lineProcessor = new LastLineProcessor();
                 BaseExecutionService service = createService("-deploy", // NOI18N
-                        lineProcessor, parameters.toArray(new String[parameters.size()]));
+                        lineProcessor, parameters.toArray(new String[0]));
                 Future<Integer> result = service.run();
                 try {
                     Integer value = result.get(TIMEOUT, TimeUnit.MILLISECONDS);
@@ -584,7 +584,7 @@ public final class WebLogicDeployer {
                     }
 
                     BaseExecutionService service = createService("-redeploy", // NOI18N
-                            lineProcessor, parameters.toArray(new String[parameters.size()]));
+                            lineProcessor, parameters.toArray(new String[0]));
                     if (listener != null) {
                         listener.onStepStart(name);
                     }
@@ -683,7 +683,7 @@ public final class WebLogicDeployer {
                     parameters.add(artifact.getFile().getAbsolutePath());
 
                     BaseExecutionService service = createService("-deploy", // NOI18N
-                            lineProcessor, parameters.toArray(new String[parameters.size()]));
+                            lineProcessor, parameters.toArray(new String[0]));
                     if (listener != null) {
                         listener.onStepStart(name);
                     }

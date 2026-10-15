@@ -70,7 +70,7 @@ public final class MetalEditorTabDisplayerUI extends BasicScrollingTabDisplayerU
     
     public Dimension getPreferredSize(JComponent c) {
         int prefHeight = 28;
-        Graphics g = BasicScrollingTabDisplayerUI.getOffscreenGraphics();
+        Graphics g = BasicScrollingTabDisplayerUI.getOffscreenGraphics(c);
         if (g != null) {
             FontMetrics fm = g.getFontMetrics(displayer.getFont());
             Insets ins = getTabAreaInsets();

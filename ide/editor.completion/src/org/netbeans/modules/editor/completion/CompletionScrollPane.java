@@ -37,6 +37,7 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Keymap;
@@ -93,6 +94,17 @@ public class CompletionScrollPane extends JScrollPane {
 
         // Add the completion view
         view = new CompletionJList(maxVisibleRowCount, mouseListener, editorComponent);
+
+        // Apply selection colors as CompletionJList selecion also means focused
+        Color selBg = UIManager.getColor("nb.completion.selectedBackground"); //NOI18N
+        if (selBg != null) {
+            view.setSelectionBackground(selBg);
+        }
+        Color selFg = UIManager.getColor("nb.completion.selectedForeground"); //NOI18N
+        if (selFg != null) {
+            view.setSelectionForeground(selFg);
+        }
+
         if (listSelectionListener != null) {
             view.addListSelectionListener(listSelectionListener);
         }

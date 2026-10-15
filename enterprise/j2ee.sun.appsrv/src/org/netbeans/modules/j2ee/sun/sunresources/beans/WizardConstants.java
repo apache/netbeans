@@ -34,7 +34,7 @@ public interface WizardConstants {
     public static final String __General = "general";
     public static final String __Properties = "properties";
     public static final String __PropertiesURL = "propertiesUrl";
-//////    public static final String __RegisterResource = "register-resource";
+//    public static final String __RegisterResource = "register-resource";
 
     //jdbc-connection-pool
     public static final String __Name = "name";
@@ -105,7 +105,7 @@ public interface WizardConstants {
     
     //jms-resource Bean
     //Contains __BeanjndiName and __BeanisEnabled and __Description   
-////    public static final String __JMSResType = "resType";
+//    public static final String __JMSResType = "resType";
     
     public static final String __JavaMessageJndiName = "jndi_name";
     public static final String __JavaMessageResType = "res-type";

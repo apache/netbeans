@@ -19,6 +19,7 @@
 
 package org.netbeans.junit.diff;
 import java.io.*;
+import java.nio.file.Files;
 import java.util.StringTokenizer;
 
 /** Implementation of native OS diff.
@@ -66,7 +67,7 @@ public class NativeDiff implements Diff {
         File    diffFile = null;
         
         if (null == diff)
-            diffFile = File.createTempFile("~diff", "tmp~");
+            diffFile = Files.createTempFile("~diff", "tmp~").toFile();
         else
             diffFile = new File(diff);
         

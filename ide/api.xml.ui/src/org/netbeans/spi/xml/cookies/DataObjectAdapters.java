@@ -81,7 +81,7 @@ public final class DataObjectAdapters {
         
         public Reader getCharacterStream() {
 
-            EditorCookie editor = (EditorCookie) dataObject.getCookie(EditorCookie.class);
+            EditorCookie editor = dataObject.getCookie(EditorCookie.class);
 
             if (editor != null) {
                 Document doc = editor.getDocument();

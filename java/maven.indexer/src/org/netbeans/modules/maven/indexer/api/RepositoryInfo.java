@@ -45,7 +45,7 @@ public final class RepositoryInfo {
     private final String repositoryPath;
     private final String repositoryUrl;
     private final String indexUpdateUrl;
-    private final List<RepositoryInfo> mirrorOf = new ArrayList<RepositoryInfo>();
+    private final List<RepositoryInfo> mirrorOf = new ArrayList<>();
     
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
     
@@ -142,7 +142,7 @@ public final class RepositoryInfo {
      */
     public List<RepositoryInfo> getMirroredRepositories() {
         synchronized (mirrorOf) {
-            return new ArrayList<RepositoryInfo>(mirrorOf);
+            return new ArrayList<>(mirrorOf);
         }
     }
     

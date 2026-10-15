@@ -34,8 +34,8 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.source.util.Trees;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,29 +46,36 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import org.netbeans.api.java.source.ElementUtilities;
-import org.netbeans.api.java.source.Task;
+import javax.lang.model.util.ElementFilter;
+
+import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.api.java.source.ElementUtilities;
 import org.netbeans.api.java.source.ElementUtilities.ElementAcceptor;
 import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.java.source.JavaSource.Phase;
-import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.TreeMaker;
+import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.TypeMirrorHandle;
 import org.netbeans.api.java.source.WorkingCopy;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
 import org.netbeans.modules.java.hints.errors.ErrorFixesFakeHint.FixKind;
-import org.netbeans.spi.editor.hints.ChangeInfo;
-import org.netbeans.spi.editor.hints.Fix;
+import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
+import org.netbeans.spi.java.hints.JavaFix;
 import org.openide.util.NbBundle;
 
 
@@ -76,20 +83,22 @@ import org.openide.util.NbBundle;
  *
  * @author Jan Lahoda
  */
-final class MagicSurroundWithTryCatchFix implements Fix {
+final class MagicSurroundWithTryCatchFix extends JavaFix {
 
-    private JavaSource js;
+    private final TreePathHandle tph;
     private List<TypeMirrorHandle> thandles;
     private int offset;
     private ElementHandle<ExecutableElement> method;
     List<String> fqns;
     
-    public MagicSurroundWithTryCatchFix(JavaSource js, List<TypeMirrorHandle> thandles, int offset, ElementHandle<ExecutableElement> method, List<String> fqns) {
-        this.js = js;
+    public MagicSurroundWithTryCatchFix(TreePathHandle tph, List<TypeMirrorHandle> thandles, int offset, ElementHandle<ExecutableElement> method, List<String> fqns) {
+        super(tph);
+        this.tph = tph;
         this.thandles = thandles;
         this.offset = offset;
         this.method = method;
         this.fqns = fqns;
+        JavaFixImpl.Accessor.INSTANCE.setChangeInfoConvertor(this, r -> Utilities.computeChangeInfo(tph.getFileObject(), r, Utilities.TAG_SELECT));
     }
     
     public String getText() {
@@ -117,49 +126,44 @@ final class MagicSurroundWithTryCatchFix implements Fix {
         return false;
     }
 
-    public ChangeInfo implement() throws IOException {
-        ModificationResult mr = js.runModificationTask(new Task<WorkingCopy>() {
-            public void run(WorkingCopy wc) throws Exception {
-                wc.toPhase(Phase.RESOLVED);
-                TreePath currentPath = wc.getTreeUtilities().pathFor(offset + 1);
+    @Override
+    protected void performRewrite(TransformationContext ctx) throws Exception {
+        WorkingCopy wc = ctx.getWorkingCopy();
+        TreePath currentPath = wc.getTreeUtilities().pathFor(offset + 1);
 
-                //find statement:
-                while (currentPath != null && !UncaughtException.STATEMENT_KINDS.contains(currentPath.getLeaf().getKind()))
-                    currentPath = currentPath.getParentPath();
+        //find statement:
+        while (currentPath != null && !UncaughtException.STATEMENT_KINDS.contains(currentPath.getLeaf().getKind()))
+            currentPath = currentPath.getParentPath();
 
-                //TODO: test for final??
-                TreePath statement = currentPath;
-                boolean streamAlike = false;
+        //TODO: test for final??
+        TreePath statement = currentPath;
+        boolean streamAlike = false;
 
-                if (statement.getLeaf().getKind() == Kind.VARIABLE) {
-                    //special case variable declarations which intializers create streams or readers/writers:
-                    Element curType = wc.getTrees().getElement(statement);
+        if (statement.getLeaf().getKind() == Kind.VARIABLE) {
+            //special case variable declarations which intializers create streams or readers/writers:
+            Element curType = wc.getTrees().getElement(statement);
 
-                    streamAlike = isStreamAlike(wc, curType.asType());
-                }
+            streamAlike = isStreamAlike(wc, curType.asType());
+        }
 
-                //find try block containing this statement, if exists:
-                TreePath tryPath = enclosingTry(currentPath);
+        //find try block containing this statement, if exists:
+        TreePath tryPath = enclosingTry(currentPath);
 
-                if (tryPath != null) {
-                    //only add catches for uncaught exceptions:
-                    new TransformerImpl(wc, thandles, streamAlike, statement).scan(tryPath, null);
-                } else {
-                    //find block containing this statement, if exists:
-                    TreePath blockTree = currentPath;
+        if (tryPath != null) {
+            //only add catches for uncaught exceptions:
+            new TransformerImpl(wc, thandles, streamAlike, statement).scan(tryPath, null);
+        } else {
+            //find block containing this statement, if exists:
+            TreePath blockTree = currentPath;
 
-                    while (blockTree != null
-                            && blockTree.getLeaf().getKind() != Kind.BLOCK)
-                        blockTree = blockTree.getParentPath();
+            while (blockTree != null
+                    && blockTree.getLeaf().getKind() != Kind.BLOCK)
+                blockTree = blockTree.getParentPath();
 
-                    GeneratorUtilities.get(wc).importComments(blockTree.getLeaf(), blockTree.getCompilationUnit());
-                    
-                    new TransformerImpl(wc, thandles, streamAlike, statement).scan(blockTree, null);
-                }
-            }
-        });
-        
-        return Utilities.commitAndComputeChangeInfo(js.getFileObjects().iterator().next(), mr);
+            GeneratorUtilities.get(wc).importComments(blockTree.getLeaf(), blockTree.getCompilationUnit());
+
+            new TransformerImpl(wc, thandles, streamAlike, statement).scan(blockTree, null);
+        }
     }
     
     static TreePath enclosingTry(TreePath from) {
@@ -186,7 +190,7 @@ final class MagicSurroundWithTryCatchFix implements Fix {
         
         return null;
     }
-    
+
     private final class TransformerImpl extends ErrorAwareTreePathScanner<Void, Void> {
         
         private WorkingCopy info;
@@ -343,9 +347,6 @@ final class MagicSurroundWithTryCatchFix implements Fix {
             return false;
         }
         final MagicSurroundWithTryCatchFix other = (MagicSurroundWithTryCatchFix) obj;
-        if (this.js != other.js && (this.js == null || !this.js.equals(other.js))) {
-            return false;
-        }
         if (!this.fqns.equals(other.fqns)) {
             return false;
         }
@@ -358,7 +359,6 @@ final class MagicSurroundWithTryCatchFix implements Fix {
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 23 * hash + (this.js != null ? this.js.hashCode() : 0);
         hash = 23 * hash + (this.method != null ? this.method.hashCode() : 0);
         return hash;
     }
@@ -379,7 +379,11 @@ final class MagicSurroundWithTryCatchFix implements Fix {
     }
 
     private static StatementTree createLogStatement(CompilationInfo info, TreeMaker make, TreePath statement, String name) {
-        if (!ErrorFixesFakeHint.isUseLogger(ErrorFixesFakeHint.getPreferences(info.getFileObject(), FixKind.SURROUND_WITH_TRY_CATCH))) {
+        boolean isSystemLogger = false;
+        if (ErrorFixesFakeHint.isUseSystemLogger(ErrorFixesFakeHint.getPreferences(info.getFileObject(), FixKind.SURROUND_WITH_TRY_CATCH))
+                && info.getSourceVersion().compareTo(SourceVersion.RELEASE_9) >= 0) {
+            isSystemLogger = true;
+        } else if (!ErrorFixesFakeHint.isUseLogger(ErrorFixesFakeHint.getPreferences(info.getFileObject(), FixKind.SURROUND_WITH_TRY_CATCH))) {
             return null;
         }
 
@@ -387,8 +391,14 @@ final class MagicSurroundWithTryCatchFix implements Fix {
             return null;
         }
 
-        TypeElement logger = info.getElements().getTypeElement("java.util.logging.Logger");
-        TypeElement level = info.getElements().getTypeElement("java.util.logging.Level");
+        String loggerFQN = isSystemLogger ? "java.lang.System.Logger" : "java.util.logging.Logger";
+        String loggerFactoryFQN = isSystemLogger ? "java.lang.System" : loggerFQN;
+        String loggerLevelFQN = isSystemLogger ? "java.lang.System.Logger.Level" : "java.util.logging.Level";
+        String levelName = isSystemLogger ? "ERROR" : "SEVERE";
+
+        TypeElement logger = info.getElements().getTypeElement(loggerFQN);
+        TypeElement level = info.getElements().getTypeElement(loggerLevelFQN);
+        TypeElement loggerFactory = info.getElements().getTypeElement(loggerFactoryFQN);
 
         if (logger == null || level == null) {
             return null;
@@ -407,22 +417,51 @@ final class MagicSurroundWithTryCatchFix implements Fix {
         boolean useFQN = false;
         for (ImportTree dovoz : info.getCompilationUnit().getImports()) {
             MemberSelectTree id = (MemberSelectTree) dovoz.getQualifiedIdentifier();
-            if ("Logger".equals(id.getIdentifier()) && !"java.util.logging.Logger".equals(id.toString())) {
+            if ("Logger".equals(id.getIdentifier()) && !loggerFQN.equals(id.toString())) {
                 useFQN = true;
             }
         }
-        // finally, make the invocation
-        ExpressionTree etExpression = make.MethodInvocation(
-                Collections.<ExpressionTree>emptyList(),
-                make.MemberSelect(
-                useFQN ? make.Identifier(logger.toString()) : make.QualIdent(logger),
-                "getLogger"),
-                Collections.<ExpressionTree>singletonList(arg));
-        ExpressionTree levelExpression = make.MemberSelect(make.QualIdent(level), "SEVERE");
 
-        return make.ExpressionStatement(make.MethodInvocation(Collections.<ExpressionTree>emptyList(), make.MemberSelect(etExpression, "log"), Arrays.asList(levelExpression, make.Literal(null), make.Identifier(name))));
-    }
+        // check if there's a declared logger to use
+        VariableElement existingLogger = null;
+        if (info instanceof CompilationController controller
+                && ErrorFixesFakeHint.isUseExistingLogger(ErrorFixesFakeHint.getPreferences(info.getFileObject(), FixKind.SURROUND_WITH_TRY_CATCH))) {
+            try {
+                controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                TreePath typePath = info.getTrees().getPath(info.getCompilationUnit(), containingTopLevel);
+                TypeElement typeElement = (TypeElement) info.getTrees().getElement(typePath);
+                for (VariableElement ve : ElementFilter.fieldsIn(typeElement.getEnclosedElements())) {
+                    TypeMirror type = ve.asType();
+                    // System.Logger.class.getName() is "java.lang.System$Logger", note '$',
+                    // and "contentEquals" fails, so HACK! use litteral class name.
+                    if (type.getKind() == TypeKind.DECLARED && ((TypeElement)((DeclaredType)type).asElement()).getQualifiedName().contentEquals(loggerFQN)) {
+                        existingLogger = ve;
+                    }
+                }
+            } catch(IOException ex) {
+            }
+        }
+
+        // finally, make the invocation
+        ExpressionTree etExpression;
+        if (existingLogger != null) {
+            etExpression = make.Identifier(existingLogger);
+        } else {
+            etExpression = make.MethodInvocation(
+                    Collections.<ExpressionTree>emptyList(),
+                    make.MemberSelect(
+                        useFQN ? make.Identifier(loggerFactory.toString()) : make.QualIdent(loggerFactory),
+                        "getLogger"),
+                    Collections.<ExpressionTree>singletonList(arg));
+        }
+        ExpressionTree levelExpression = make.MemberSelect(make.QualIdent(level), levelName);
+        ExpressionTree nullMsgArg = isSystemLogger
+                ? (ExpressionTree)org.netbeans.modules.java.hints.spiimpl.Utilities.parseAndAttribute(info, "(String)null", null)
+                : make.Literal(null);
         
+        return make.ExpressionStatement(make.MethodInvocation(Collections.<ExpressionTree>emptyList(), make.MemberSelect(etExpression, "log"), Arrays.asList(levelExpression, nullMsgArg, make.Identifier(name))));
+    }
+    
     private static StatementTree createRethrowAsRuntimeExceptionStatement(WorkingCopy info, TreeMaker make, String name) {
         if (!ErrorFixesFakeHint.isRethrowAsRuntimeException(ErrorFixesFakeHint.getPreferences(info.getFileObject(), FixKind.SURROUND_WITH_TRY_CATCH))) {
             return null;
@@ -455,6 +494,9 @@ final class MagicSurroundWithTryCatchFix implements Fix {
     }
 
     private static StatementTree createPrintStackTraceStatement(CompilationInfo info, TreeMaker make, String name) {
+        if (!ErrorFixesFakeHint.isPrintStackTrace(ErrorFixesFakeHint.getPreferences(info.getFileObject(), FixKind.SURROUND_WITH_TRY_CATCH))) {
+            return null;
+        }
         return make.ExpressionStatement(make.MethodInvocation(Collections.<ExpressionTree>emptyList(), make.MemberSelect(make.Identifier(name), "printStackTrace"), Collections.<ExpressionTree>emptyList()));
     }
 
@@ -477,7 +519,7 @@ final class MagicSurroundWithTryCatchFix implements Fix {
             logStatement = createPrintStackTraceStatement(info, make, name);
         }
 
-        return make.Catch(make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), name, make.Type(type), null), make.Block(Collections.singletonList(logStatement), false));
+        return make.Catch(make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), name, make.Type(type), null), make.Block(logStatement != null ? Collections.singletonList(logStatement) : Collections.emptyList(), false));
     }
 
     static List<CatchTree> createCatches(WorkingCopy info, TreeMaker make, List<TypeMirrorHandle> thandles, TreePath currentPath) {

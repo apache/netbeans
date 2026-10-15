@@ -25,20 +25,26 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.editor.model.UseScope;
 import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.model.nodes.NamespaceDeclarationInfo;
+import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
+import org.netbeans.modules.php.editor.parser.astnodes.ArrayElement;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
 import org.netbeans.modules.php.editor.parser.astnodes.CatchClause;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassName;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
+import org.netbeans.modules.php.editor.parser.astnodes.ExpressionArrayAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
@@ -47,6 +53,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.FunctionName;
 import org.netbeans.modules.php.editor.parser.astnodes.GroupUseStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
 import org.netbeans.modules.php.editor.parser.astnodes.InfixExpression;
+import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
@@ -60,6 +67,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.StaticMethodInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.TypeDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.UnaryOperation;
 import org.netbeans.modules.php.editor.parser.astnodes.UnaryOperation.Operator;
+import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 import org.netbeans.modules.php.editor.parser.astnodes.UseStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
 import org.netbeans.modules.php.editor.parser.astnodes.Variadic;
@@ -74,10 +82,24 @@ import org.openide.util.Parameters;
  * @author tomslot
  */
 public final class CodeUtils {
-    public static final String FUNCTION_TYPE_PREFIX = "@fn:";
-    public static final String METHOD_TYPE_PREFIX = "@mtd:";
-    public static final String STATIC_METHOD_TYPE_PREFIX = "@static.mtd:";
+
+    public static final String FUNCTION_TYPE_PREFIX = "@fn:"; // NOI18N
+    public static final String METHOD_TYPE_PREFIX = "@mtd:"; // NOI18N
+    public static final String STATIC_METHOD_TYPE_PREFIX = "@static.mtd:"; // NOI18N
     public static final String NULLABLE_TYPE_PREFIX = "?"; // NOI18N
+    public static final String ELLIPSIS = "..."; // NOI18N
+    public static final String VAR_TAG = "@var"; // NOI18N
+    public static final String EMPTY_STRING = ""; // NOI18N
+    public static final String NEW_LINE = "\n"; // NOI18N
+    public static final String THIS_VARIABLE = "$this"; // NOI18N
+    public static final String NS_SEPARATOR = "\\"; // NOI18N
+    public static final String PIPE_OPERATOR = "|>"; // NOI18N
+
+    public static final Pattern WHITE_SPACES_PATTERN = Pattern.compile("\\s+"); // NOI18N
+    public static final Pattern SPLIT_TYPES_PATTERN = Pattern.compile("[()|&]+"); // NOI18N
+    public static final Pattern TYPE_NAMES_IN_TYPE_DECLARATION_PATTERN = Pattern.compile("[^?()|&]+"); // NOI18N
+    public static final Pattern COMMA_PATTERN = Pattern.compile(","); // NOI18N
+
     private static final Logger LOGGER = Logger.getLogger(CodeUtils.class.getName());
 
     private CodeUtils() {
@@ -228,10 +250,12 @@ public final class CodeUtils {
     }
 
     /**
-     * Extract unqualified name for Identifier, NamespaceName, and NullableType.
+     * Extract unqualified name for Identifier, NamespaceName, NullableType, and
+     * UnionType.
      *
      * @param typeName The type name
-     * @return The type name. If it is a nullable type, the name is returned with "?"
+     * @return The type name. If it is a nullable type, the name is returned
+     * with "?" If it's union type, type names separated by "|" are returned
      */
     @CheckForNull
     public static String extractUnqualifiedName(Expression typeName) {
@@ -242,6 +266,10 @@ public final class CodeUtils {
             return extractUnqualifiedName((NamespaceName) typeName);
         } else if (typeName instanceof NullableType) {
             return NULLABLE_TYPE_PREFIX + extractUnqualifiedName(((NullableType) typeName).getType());
+        } else if (typeName instanceof UnionType) {
+            return extractUnqualifiedName((UnionType) typeName);
+        } else if (typeName instanceof IntersectionType) {
+            return extractUnqualifiedName((IntersectionType) typeName);
         }
 
         //TODO: php5.3 !!!
@@ -249,11 +277,43 @@ public final class CodeUtils {
         return null;
     }
 
+    private static String extractUnqualifiedName(UnionType unionType) {
+        StringBuilder sb = new StringBuilder();
+        for (Expression type : unionType.getTypes()) {
+            if (sb.length() > 0) {
+                sb.append(Type.SEPARATOR);
+            }
+            boolean isIntersectionType = type instanceof IntersectionType;
+            if (isIntersectionType) {
+                sb.append("("); // NOI18N
+            }
+            sb.append(extractUnqualifiedName(type));
+            if (isIntersectionType) {
+                sb.append(")"); // NOI18N
+            }
+        }
+        return sb.toString();
+    }
+
+    private static String extractUnqualifiedName(IntersectionType intersectionType) {
+        StringBuilder sb = new StringBuilder();
+        for (Expression type : intersectionType.getTypes()) {
+            if (sb.length() > 0) {
+                sb.append(Type.SEPARATOR_INTERSECTION);
+            }
+            sb.append(extractUnqualifiedName(type));
+        }
+        return sb.toString();
+    }
+
     /**
-     * Extract qualified name for Identifier, NamespaceName, and NullableType.
+     * Extract qualified name for Identifier, NamespaceName, NullableType, and
+     * UnionType.
      *
      * @param typeName The type name
-     * @return The type name. If it is a nullable type, the name is returned with "?"
+     * @return The type name. If it is a nullable type, the name is returned
+     * with "?". If it's a union type, type names separated by "|" are returned.
+     * If it's an intersection type, type names separated by "&" are returned.
      */
     @CheckForNull
     public static String extractQualifiedName(Expression typeName) {
@@ -265,15 +325,57 @@ public final class CodeUtils {
         } else if (typeName instanceof NullableType) {
             NullableType nullableType = (NullableType) typeName;
             return NULLABLE_TYPE_PREFIX + extractQualifiedName(nullableType.getType());
+        } else if (typeName instanceof ExpressionArrayAccess) {
+            return extractQualifiedName(((ExpressionArrayAccess) typeName).getExpression());
+        } else if (typeName instanceof UnionType) {
+            return extractQualifiedName((UnionType) typeName);
+        } else if (typeName instanceof IntersectionType) {
+            return extractQualifiedName((IntersectionType) typeName);
+        } else if (typeName instanceof ClassInstanceCreation) {
+            // PHP 8.4 new without parentheses new A()->method();
+            return null;
         }
         assert false : typeName.getClass();
         return null;
+    }
+
+    private static String extractQualifiedName(UnionType unionType) {
+        StringBuilder sb = new StringBuilder();
+        for (Expression type : unionType.getTypes()) {
+            if (sb.length() > 0) {
+                sb.append(Type.SEPARATOR);
+            }
+            boolean isIntersectionType = type instanceof IntersectionType;
+            if (isIntersectionType) {
+                sb.append("("); // NOI18N
+            }
+            sb.append(extractQualifiedName(type));
+            if (isIntersectionType) {
+                sb.append(")"); // NOI18N
+            }
+        }
+        return sb.toString();
+    }
+
+    private static String extractQualifiedName(IntersectionType intersectionType) {
+        StringBuilder sb = new StringBuilder();
+        for (Expression type : intersectionType.getTypes()) {
+            if (sb.length() > 0) {
+                sb.append(Type.SEPARATOR_INTERSECTION);
+            }
+            sb.append(extractQualifiedName(type));
+        }
+        return sb.toString();
     }
 
     // XXX not only class name anymore in php7+
     public static String extractUnqualifiedClassName(StaticDispatch dispatch) {
         Parameters.notNull("dispatch", dispatch);
         Expression dispatcher = dispatch.getDispatcher();
+        if (dispatcher instanceof StaticConstantAccess) {
+            // e.g. EnumName::Case::staticMethod();
+            dispatcher = ((StaticConstantAccess) dispatcher).getDispatcher();
+        }
         return extractUnqualifiedName(dispatcher);
     }
 
@@ -543,6 +645,11 @@ public final class CodeUtils {
     @CheckForNull
     public static String getParamDefaultValue(FormalParameter param) {
         Expression expr = param.getDefaultValue();
+        return getParamDefaultValue(expr);
+    }
+
+    @CheckForNull
+    private static String getParamDefaultValue(Expression expr) {
         //TODO: can be improved
         Operator operator = null;
         if (expr instanceof UnaryOperation) {
@@ -557,7 +664,7 @@ public final class CodeUtils {
         } else if (expr instanceof NamespaceName) {
             return extractQualifiedName((NamespaceName) expr);
         } else if (expr instanceof ArrayCreation) {
-            return "array()"; //NOI18N
+            return getParamDefaultValue((ArrayCreation) expr);
         } else if (expr instanceof StaticConstantAccess) {
             StaticConstantAccess staticConstantAccess = (StaticConstantAccess) expr;
             Expression dispatcher = staticConstantAccess.getDispatcher();
@@ -571,6 +678,25 @@ public final class CodeUtils {
             }
         }
         return expr == null ? null : " "; //NOI18N
+    }
+
+    private static String getParamDefaultValue(ArrayCreation param) {
+        StringBuilder sb = new StringBuilder("["); //NOI18N
+        List<ArrayElement> arrayElements = param.getElements();
+        if (arrayElements.size() > 0) {
+            ArrayElement firstElement = arrayElements.get(0);
+            Expression key = firstElement.getKey();
+            if (key != null) {
+                sb.append(getParamDefaultValue(key));
+                sb.append(" => "); //NOI18N
+            }
+            sb.append(getParamDefaultValue(firstElement.getValue()));
+        }
+        if (arrayElements.size() > 1) {
+            sb.append(",..."); //NOI18N
+        }
+        sb.append("]"); //NOI18N
+        return sb.toString();
     }
 
     public static String getParamDisplayName(FormalParameter param) {
@@ -614,6 +740,15 @@ public final class CodeUtils {
 
     public static boolean isConstructor(MethodDeclaration node) {
         return "__construct".equals(extractMethodName(node)); //NOI18N
+    }
+
+    public static boolean isDollaredName(ClassName className) {
+        Expression name = className.getName();
+        if (name instanceof Variable) {
+            Variable variable = (Variable) name;
+            return variable.isDollared();
+        }
+        return false;
     }
 
     /**
@@ -747,4 +882,29 @@ public final class CodeUtils {
         return typeName;
     }
 
+    /**
+     * Get an OffsetRange of an ASTNode.
+     *
+     * @param node the ASTNode
+     * @return the OffsetRange
+     */
+    public static OffsetRange getOffsetRagne(@NonNull ASTNode node) {
+        return new OffsetRange(node.getStartOffset(), node.getEndOffset());
+    }
+
+    public static boolean isDnfType(UnionType unionType) {
+        if (unionType != null) {
+            for (Expression type : unionType.getTypes()) {
+                if (type instanceof IntersectionType) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean isTypeDeclaration(ASTNode node) {
+        return node instanceof TypeDeclaration
+                || ((node instanceof ClassInstanceCreation) && ((ClassInstanceCreation) node).isAnonymous());
+    }
 }

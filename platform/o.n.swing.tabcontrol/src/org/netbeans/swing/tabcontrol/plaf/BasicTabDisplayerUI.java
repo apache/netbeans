@@ -45,8 +45,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListDataEvent;
 import org.netbeans.swing.tabcontrol.TabData;
 import org.netbeans.swing.tabcontrol.TabDisplayer;
-import org.netbeans.swing.tabcontrol.WinsysInfoForTabbedContainer;
 import org.netbeans.swing.tabcontrol.event.ComplexListDataEvent;
+import org.openide.awt.GraphicsUtils;
 import org.openide.windows.TopComponent;
 
 /**
@@ -348,6 +348,10 @@ public abstract class BasicTabDisplayerUI extends AbstractTabDisplayerUI {
         return -1;
     }
 
+    /**
+     * @deprecated Use {@link GraphicsUtils#configureDefaultRenderingHints(java.awt.Graphics)} instead.
+     */
+    @Deprecated
     protected boolean isAntialiased() {
         return ColorUtil.shouldAntialias();
     }
@@ -361,7 +365,7 @@ public abstract class BasicTabDisplayerUI extends AbstractTabDisplayerUI {
     public final void paint(Graphics g, JComponent c) {
         assert c == displayer;
         
-        ColorUtil.setupAntialiasing(g);
+        GraphicsUtils.configureDefaultRenderingHints(g);
         
         paintBackground(g);
         int start = getFirstVisibleTab();

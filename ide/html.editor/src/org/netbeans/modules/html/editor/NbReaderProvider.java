@@ -96,7 +96,7 @@ public class NbReaderProvider implements ReaderProvider {
     }
 
     private Map<String, String> parseCatalog(Reader catalogReader) {
-        HashMap hashmap = new HashMap();
+        HashMap<String, String> hashmap = new HashMap<>();
         LineNumberReader reader = new LineNumberReader(catalogReader);
 
         for (;;) {

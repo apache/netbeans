@@ -26,7 +26,7 @@ import java.net.URL;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 import java.util.Enumeration;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.junit.Manager;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileStateInvalidException;
@@ -111,9 +111,9 @@ public class IDEInitializer extends ProxyLookup {
     
     public static void cleanWorkDir () {
         try {
-            Enumeration en = lfs.getRoot ().getChildren (false);
+            Enumeration<? extends FileObject> en = lfs.getRoot().getChildren(false);
             while (en.hasMoreElements ()) 
-                ((FileObject) en.nextElement ()).delete ();
+                en.nextElement().delete();
         } catch (IOException ex) {
             ex.printStackTrace ();
         }

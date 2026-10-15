@@ -32,10 +32,12 @@ import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.logging.Level;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JLabel;
@@ -44,6 +46,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.css.lib.api.properties.FixedTextGrammarElement;
@@ -214,8 +217,9 @@ public class RuleEditorNode extends AbstractNode {
                                 break update; //canot merge - the collections differ
                             }
 
-                            for (String declarationName : oName2DeclarationMap.keySet()) {
-                                PropertyDeclaration oldD = oName2DeclarationMap.get(declarationName);
+                            for (Entry<String, PropertyDeclaration> entry : oName2DeclarationMap.entrySet()) {
+                                String declarationName = entry.getKey();
+                                PropertyDeclaration oldD = entry.getValue();
                                 PropertyDeclaration newD = nName2DeclarationMap.get(declarationName);
 
                                 //update the existing DeclarationProperty with the fresh
@@ -355,7 +359,7 @@ public class RuleEditorNode extends AbstractNode {
                 }
                 
                 //sort alpha
-                Collections.sort(categoryDeclarations, PropertyUtils.getDeclarationsComparator());
+                categoryDeclarations.sort(PropertyUtils.getDeclarationsComparator());
 
                 PropertyCategoryPropertySet propertyCategoryPropertySet = new PropertyCategoryPropertySet(entry.getKey());
                 propertyCategoryPropertySet.addAll(categoryDeclarations);
@@ -372,7 +376,7 @@ public class RuleEditorNode extends AbstractNode {
                     if (allInCat.isEmpty()) {
                         continue; //skip empty categories (when filtering)
                     }
-                    Collections.sort(allInCat, PropertyUtils.getPropertyDefinitionsComparator());
+                    allInCat.sort(PropertyUtils.getPropertyDefinitionsComparator());
 
                     PropertyCategoryPropertySet propertySet = propertySetsMap.get(cat);
                     if (propertySet == null) {
@@ -432,7 +436,7 @@ public class RuleEditorNode extends AbstractNode {
                 }
                 //sort aplha
                 Comparator<PropertyDeclaration> comparator = PropertyUtils.createDeclarationsComparator(getRule(), panel.getCreatedDeclarationsIdsList());
-                Collections.sort(filtered, comparator);
+                filtered.sort(comparator);
                 set.addAll(filtered);
                 
                 //do NOT show all properties
@@ -468,7 +472,7 @@ public class RuleEditorNode extends AbstractNode {
                 set.addAll(filteredExisting);
                 
                 List<PropertyDefinition> all = new ArrayList<>(filterByPrefix(Properties.getPropertyDefinitions(file, true)));
-                Collections.sort(all, PropertyUtils.getPropertyDefinitionsComparator());
+                all.sort(PropertyUtils.getPropertyDefinitionsComparator());
 
                 //remove already used
                 for (PropertyDeclaration d : set.getDeclarations()) {
@@ -594,15 +598,29 @@ public class RuleEditorNode extends AbstractNode {
             GroupGrammarElement rootElement = pmodel.getGrammarElement(context);
 
             rootElement.accept(new GrammarElementVisitor() {
+                private Set<GroupGrammarElement> seen = Collections.newSetFromMap(new IdentityHashMap<>());
+
                 @Override
-                public void visit(UnitGrammarElement element) {
+                public boolean visit(UnitGrammarElement element) {
                     unitElements.add(element);
+                    return true;
                 }
 
                 @Override
-                public void visit(FixedTextGrammarElement element) {
+                public boolean visit(FixedTextGrammarElement element) {
                     fixedElements.add(element);
+                    return true;
                 }
+
+                @Override
+                public boolean visit(GroupGrammarElement element) {
+                    if (seen.contains(element)) {
+                        return false;
+                    }
+                    seen.add(element);
+                    return true;
+                }
+
             });
         }
 
@@ -855,7 +873,7 @@ public class RuleEditorNode extends AbstractNode {
                                 @Override
                                 public void run() {
                                     try {
-                                        int lineOffset = 1 + Utilities.getLineOffset((BaseDocument) doc, doc_from);
+                                        int lineOffset = 1 + LineDocumentUtils.getLineIndex((BaseDocument) doc, doc_from);
                                         sb.append(':');
                                         sb.append(lineOffset);
                                     } catch (BadLocationException ex) {

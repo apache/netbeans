@@ -22,7 +22,6 @@ package org.netbeans.modules.j2ee.persistence.wizard.fromdb;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
-import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.aggregate.ProgressContributor;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
@@ -33,16 +32,20 @@ import org.openide.filesystems.FileObject;
  */
 public class PersistenceGeneratorImpl implements PersistenceGenerator {
     
+    @Override
     public String generateEntityName(String className) {
         return className;
     }
 
+    @Override
     public void init(WizardDescriptor wiz) {
     }
 
+    @Override
     public void generateBeans(final ProgressPanel progressPanel, final RelatedCMPHelper helper, final FileObject dbschemaFile, final ProgressContributor handle) throws IOException {
     }
 
+    @Override
     public void uninit() {
     }
 
@@ -50,10 +53,12 @@ public class PersistenceGeneratorImpl implements PersistenceGenerator {
         return false;
     }
 
+    @Override
     public Set<FileObject> createdObjects() {
         return Collections.<FileObject>emptySet();
     }
 
+    @Override
     public String getFQClassName(String tableName) {
         return null;
     }

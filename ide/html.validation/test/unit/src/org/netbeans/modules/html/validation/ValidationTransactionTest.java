@@ -184,6 +184,22 @@ public class ValidationTransactionTest extends TestBase {
         assertNull(vt.htmlParser);
     }
 
+    // Ensure files with embedded CSS pass
+    public void testEmbeddedCSS() throws SAXException {
+        FileObject fo = getTestFile("testfiles/testEmbeddedCSS.xhtml");
+        Source source = Source.create(fo);
+        String code = source.createSnapshot().getText().toString();
+        SyntaxAnalyzerResult result = SyntaxAnalyzer.create(new HtmlSource(fo)).analyze();
+        assertNotNull(result);
+
+        assertSame(HtmlVersion.HTML5, result.getDetectedHtmlVersion());
+        HtmlVersion version = result.getHtmlVersion();
+        assertSame(HtmlVersion.HTML5, version);
+
+        NbValidationTransaction vt = NbValidationTransaction.create(result.getHtmlVersion());
+        validate(code, true, result.getHtmlVersion(), vt);
+    }
+
     public void testNamespacesFiltering() throws SAXException {
         FileObject fo = getTestFile("testfiles/wicket.xhtml");
         Source source = Source.create(fo);

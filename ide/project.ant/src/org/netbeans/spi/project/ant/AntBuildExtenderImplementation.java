@@ -27,9 +27,9 @@ import org.netbeans.api.project.Project;
  * A typical setup in the project type includes:
  * <ul>
  * <li>Provide an instance of {@link org.netbeans.api.project.ant.AntBuildExtender} in project's lookup for use by 3rd
- * party modules.</<li>
+ * party modules.</li>
  * <li>Use the new {@link org.netbeans.spi.project.support.ant.GeneratedFilesHelper#GeneratedFilesHelper(AntProjectHelper,AntBuildExtender)} constructor to
- *  create the helper for generating build related files.</<li>
+ *  create the helper for generating build related files.</li>
  * </ul>
  * @author mkleint
  * @since org.netbeans.modules.project.ant 1.16

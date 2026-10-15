@@ -24,15 +24,12 @@ import java.util.Objects;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullUnknown;
-import org.openide.util.WeakSet;
 
 /**
  *
  * @author Petr Hejl
  */
 public final class WebLogicConfiguration {
-
-    private static final WeakSet<WebLogicConfiguration> INSTANCES = new WeakSet<WebLogicConfiguration>();
 
     private final String id;
 
@@ -82,19 +79,13 @@ public final class WebLogicConfiguration {
         if (config == null) {
             return null;
         }
-        WebLogicConfiguration instance = new WebLogicConfiguration(serverHome, domainHome, config, null, null, null, credentials);
-        synchronized (INSTANCES) {
-            return INSTANCES.putIfAbsent(instance);
-        }
+        return new WebLogicConfiguration(serverHome, domainHome, config, null, null, null, credentials);
     }
 
     @NonNull
     public static WebLogicConfiguration forRemoteDomain(File serverHome, String host,
             int port, boolean secured, Credentials credentials) {
-        WebLogicConfiguration instance = new WebLogicConfiguration(serverHome, null, null, host, port, secured, credentials);
-        synchronized (INSTANCES) {
-            return INSTANCES.putIfAbsent(instance);
-        }
+        return new WebLogicConfiguration(serverHome, null, null, host, port, secured, credentials);
     }
 
     public String getId() {

@@ -22,6 +22,7 @@ import javax.lang.model.element.TypeElement;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.usages.IndexUtil;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -58,8 +59,11 @@ public class JavaSourceInvalidationTest extends NbTestCase {
         final FileObject srcFile = FileUtil.toFileObject(TestFileUtils.writeFile(
                 FileUtil.toFile(FileUtil.createData(srcDir,"foo/Src.java")),    //NOI18N
                 "package foo; public class Src {}"));                           //NOI18N        
+        final FileObject othFile = FileUtil.toFileObject(TestFileUtils.writeFile(
+                FileUtil.toFile(FileUtil.createData(srcDir,"foo/Oth.java")),    //NOI18N
+                "package foo; public class Oth {}"));                           //NOI18N
         SourceUtilsTestUtil.prepareTest(srcDir, buildDir,  cache);
-        final JavaSource js = JavaSource.forFileObject(srcFile);
+        final JavaSource js = JavaSource.forFileObject(othFile);
         js.runUserActionTask(new Task<CompilationController>() {
             @Override
             public void run(CompilationController cc) throws Exception {
@@ -82,7 +86,7 @@ public class JavaSourceInvalidationTest extends NbTestCase {
             }
         }, true);
 
-        final JavaSource js2 = JavaSource.forFileObject(srcFile);
+        final JavaSource js2 = JavaSource.forFileObject(othFile);
         js2.runUserActionTask(new Task<CompilationController>() {
             @Override
             public void run(CompilationController cc) throws Exception {
@@ -98,7 +102,7 @@ public class JavaSourceInvalidationTest extends NbTestCase {
         FileUtil.toFileObject(TestFileUtils.writeFile(
                 FileUtil.toFile(FileUtil.createData(srcDir,"foo/Src.java")),    //NOI18N
                 "package foo; public class Src {}"));                            //NOI18N
-        final ClassPath bootPath = TestUtilities.createBootClassPath();
+        final ClassPath bootPath = BootClassPathUtil.getBootClassPath();
         final ClassPath compilePath = ClassPath.EMPTY;
         final ClassPath srcPath = ClassPathSupport.createClassPath(wd.getFileObject("src"));    //NOI18N
         SourceUtilsTestUtil.prepareTest(srcDir, buildDir,  cache);
@@ -145,7 +149,7 @@ public class JavaSourceInvalidationTest extends NbTestCase {
         FileUtil.toFileObject(TestFileUtils.writeFile(
                 FileUtil.toFile(FileUtil.createData(srcDir,"foo/Src.java")),    //NOI18N
                 "package foo; public class Src {}"));                            //NOI18N
-        final ClassPath bootPath = TestUtilities.createBootClassPath();
+        final ClassPath bootPath = BootClassPathUtil.getBootClassPath();
         final ClassPath compilePath = ClassPath.EMPTY;
         final ClassPath srcPath = ClassPathSupport.createClassPath(wd.getFileObject("src"));    //NOI18N
         SourceUtilsTestUtil.prepareTest(srcDir, buildDir,  cache);

@@ -24,9 +24,9 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
-import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
+import com.sun.tools.javac.util.Position;
 
 /**
  * Helper visitor for partial reparse.
@@ -36,16 +36,13 @@ import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 class TranslatePositionsVisitor extends ErrorAwareTreeScanner<Void,Void> {
 
     private final MethodTree changedMethod;
-    private final EndPosTable endPos;
     private final int delta;
     boolean active;
     boolean inMethod;
 
-    public TranslatePositionsVisitor (final MethodTree changedMethod, final EndPosTable endPos, final int delta) {
+    public TranslatePositionsVisitor (final MethodTree changedMethod, final int delta) {
 //        assert changedMethod != null;
-        assert endPos != null;
         this.changedMethod = changedMethod;
-        this.endPos = endPos;
         this.delta = delta;
         
         active = changedMethod == null;//hack
@@ -60,21 +57,20 @@ class TranslatePositionsVisitor extends ErrorAwareTreeScanner<Void,Void> {
             }                
         }
         Void result = super.scan(node, p);            
+        JCTree jcNode = (JCTree) node;
         if (inMethod && node != null) {
-            endPos.replaceTree((JCTree) node, null);//remove
+            jcNode.endpos = Position.NOPOS;
         }
         if (active && node != null) {
-            Integer pos = endPos.replaceTree((JCTree) node, null);//remove
-            if (pos != null) {
-                int newPos;
-                if (pos < 0) {
-                    newPos = pos;
-                }
-                else {
-                    newPos = pos+delta;
-                }
-                endPos.storeEnd((JCTree)node,newPos);
-            }                
+            int pos = jcNode.endpos;
+            int newPos;
+            if (pos < 0) {
+                newPos = pos;
+            }
+            else {
+                newPos = pos+delta;
+            }
+            jcNode.endpos = newPos;
         }
         return result;
     }

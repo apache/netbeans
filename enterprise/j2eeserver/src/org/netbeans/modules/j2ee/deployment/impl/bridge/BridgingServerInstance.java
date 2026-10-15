@@ -206,7 +206,7 @@ public class BridgingServerInstance implements ServerInstanceImplementation, Loo
                 freshActions.add(null);
                 freshActions.add(SystemAction.get(BridgingCustomizerAction.class));
             }
-            return freshActions.toArray(new Action[freshActions.size()]);
+            return freshActions.toArray(new Action[0]);
         }
     }
 

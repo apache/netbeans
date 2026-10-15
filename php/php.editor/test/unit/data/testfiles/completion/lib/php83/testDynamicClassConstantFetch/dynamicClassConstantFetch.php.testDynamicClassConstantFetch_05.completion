@@ -1,0 +1,4 @@
+Code completion result for source line:
+$test::{$variable . $e|};
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   string $e                       [PUBLIC]   dynamicClassConstantFetch.php

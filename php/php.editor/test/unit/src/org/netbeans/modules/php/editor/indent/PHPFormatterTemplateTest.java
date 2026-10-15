@@ -535,4 +535,10 @@ public class PHPFormatterTemplateTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/templates/issue268920.php", options, true);
     }
 
+    public void testIssueGH6716_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_EMPTY_FUNCTION_BODY, false);
+        reformatFileContents("testfiles/formatting/templates/issueGH6716_01.php", options, true);
+    }
+
 }

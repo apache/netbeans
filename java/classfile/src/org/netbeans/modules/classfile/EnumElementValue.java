@@ -46,6 +46,7 @@ public final class EnumElementValue extends ElementValue {
     /**
      * Returns the enum type as a string, rather than a ClassName.
      * This is necessary because an enum may have a primitive type.
+     * @return the enum type as a string
      */
     public final String getEnumType() {
 	return enumType;
@@ -54,6 +55,7 @@ public final class EnumElementValue extends ElementValue {
     /**
      * Returns the name of the enum constant for this annotation
      * component.
+     * @return the name of the enum constant
      */
     public final String getEnumName() {
 	return enumName;

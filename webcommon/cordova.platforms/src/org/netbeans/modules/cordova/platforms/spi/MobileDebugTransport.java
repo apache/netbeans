@@ -77,7 +77,7 @@ public abstract class MobileDebugTransport implements TransportImplementation {
      * @return 
      */
     protected final String translate(String toString) {
-        return toString.replaceAll("localhost", WebUtils.getLocalhostInetAddress().getHostAddress()); // NOI18N
+        return toString.replace("localhost", WebUtils.getLocalhostInetAddress().getHostAddress()); // NOI18N
     }
 
     public final void setBaseUrl(String documentURL) {
@@ -86,8 +86,8 @@ public abstract class MobileDebugTransport implements TransportImplementation {
             int idx = documentURL.lastIndexOf("/www/");
             assert idx > -1 : "document url does not contain 'www' in path: " + documentURL;
             documentURL = documentURL.substring(0, idx + "/www/".length());
-            documentURL = documentURL.replaceAll("file:///", "file:/");
-            documentURL = documentURL.replaceAll("file:/", "file:///");
+            documentURL = documentURL.replace("file:///", "file:/");
+            documentURL = documentURL.replace("file:/", "file:///");
             try { 
                 mapper.setBrowserURLRoot(WebUtils.urlToString(new URL(documentURL)));
             } catch (MalformedURLException ex) {

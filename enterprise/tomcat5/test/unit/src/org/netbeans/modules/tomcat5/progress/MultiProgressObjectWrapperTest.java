@@ -127,7 +127,7 @@ public class MultiProgressObjectWrapperTest extends NbTestCase {
 
     private static class ProgressObjectImpl implements ProgressObject {
 
-        private List<ProgressListener> listeners = new CopyOnWriteArrayList<ProgressListener>();
+        private List<ProgressListener> listeners = new CopyOnWriteArrayList<>();
 
         private DeploymentStatus status;
 
@@ -138,40 +138,49 @@ public class MultiProgressObjectWrapperTest extends NbTestCase {
             this.targetModuleID = targetModuleID;
         }
 
+        @Override
         public ClientConfiguration getClientConfiguration(TargetModuleID arg0) {
             return null;
         }
 
+        @Override
         public synchronized DeploymentStatus getDeploymentStatus() {
             return status;
         }
 
+        @Override
         public TargetModuleID[] getResultTargetModuleIDs() {
             return new TargetModuleID[] { targetModuleID };
         }
 
+        @Override
         public boolean isCancelSupported() {
             return false;
         }
 
+        @Override
         public void cancel() throws OperationUnsupportedException {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+        @Override
         public boolean isStopSupported() {
             return false;
         }
 
+        @Override
         public void stop() throws OperationUnsupportedException {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+        @Override
         public void removeProgressListener(ProgressListener listener) {
             if (listener != null) {
                 listeners.remove(listener);
             }
         }
 
+        @Override
         public void addProgressListener(ProgressListener listener) {
             if (listener != null) {
                 listeners.add(listener);

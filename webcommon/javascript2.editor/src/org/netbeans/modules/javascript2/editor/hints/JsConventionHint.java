@@ -32,13 +32,10 @@ import org.netbeans.modules.csl.api.RuleContext;
  */
 public abstract class JsConventionHint implements Rule.AstRule {
     public static final String JSCONVENTION_OPTION_HINTS = "jsconvention.option.hints"; //NOI18N
-    
+
      @Override
     public boolean appliesTo(RuleContext context) {
-        if(context instanceof JsHintsProvider.JsRuleContext) {
-            return true;
-        }
-        return false;
+        return context instanceof JsHintsProvider.JsRuleContext;
     }
 
     @Override
@@ -66,5 +63,5 @@ public abstract class JsConventionHint implements Rule.AstRule {
     public Set<?> getKinds() {
         return Collections.singleton(JSCONVENTION_OPTION_HINTS);
     }
-    
+
 }

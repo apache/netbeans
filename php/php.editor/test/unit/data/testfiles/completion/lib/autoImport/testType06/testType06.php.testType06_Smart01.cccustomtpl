@@ -1,0 +1,8 @@
+Name: ExampleClass
+ExampleClass${php-auto-import default="" fqName=AutoImport\ExampleClass aliasName="" useType=type editable=false}
+
+Name: ExampleEnum
+ExampleEnum${php-auto-import default="" fqName=AutoImport\ExampleEnum aliasName="" useType=type editable=false}
+
+Name: ExampleInterface
+ExampleInterface${php-auto-import default="" fqName=AutoImport\ExampleInterface aliasName="" useType=type editable=false}

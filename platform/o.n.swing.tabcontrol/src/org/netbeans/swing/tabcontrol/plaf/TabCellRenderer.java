@@ -100,7 +100,7 @@ public interface TabCellRenderer {
      * Get the shape that represents those pixels actually occupied by the tab
      * on-screen.  This is used for determining whether a mouse event really
      * occured on a tab, and for painting.<p> <b>A note on painting of tab drag
-     * and drop indication:  <code>AbstractTabsUI</code> contains generic
+     * and drop indication:</b>  <code>AbstractTabsUI</code> contains generic
      * support for drawing drag and drop target indications. If want to use it
      * rather than write your own, you need to specify the polygon returned by
      * this method with the following point order:  The last two points in the

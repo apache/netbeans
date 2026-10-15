@@ -647,7 +647,7 @@ public class SunApplicationClientProxy implements SunApplicationClient, RootInte
     public void setStatus(int value) {
         if (ddStatus!=value) {
             PropertyChangeEvent evt = new PropertyChangeEvent(
-                    this, PROPERTY_STATUS, Integer.valueOf(ddStatus), Integer.valueOf(value));
+                    this, PROPERTY_STATUS, ddStatus, value);
             ddStatus=value;
             for (int i=0;i<listeners.size();i++) {
                 listeners.get(i).propertyChange(evt);

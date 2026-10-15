@@ -218,13 +218,13 @@ public abstract class DDMultiViewDataObject extends XmlMultiViewDataObject
                             NotifyDescriptor desc = new NotifyDescriptor.Confirmation(message,
                                     NotifyDescriptor.YES_NO_OPTION, NotifyDescriptor.WARNING_MESSAGE);
                             DialogDisplayer.getDefault().notify(desc);
-                            overwriteUnparseable = Boolean.valueOf(desc.getValue() == NotifyDescriptor.YES_OPTION);
+                            overwriteUnparseable = desc.getValue() == NotifyDescriptor.YES_OPTION;
                             handleUnparseableTimeout = new Date().getTime() + HANDLE_UNPARSABLE_TIMEOUT;
                         }
                     });
                 }
             }
-            return overwriteUnparseable.booleanValue();
+            return overwriteUnparseable;
         }
 
         public void updateData(FileLock dataLock, boolean modify) {

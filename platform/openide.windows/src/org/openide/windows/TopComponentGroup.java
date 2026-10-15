@@ -23,11 +23,11 @@ import java.util.Set;
 
 /**
  * Represents window group. The notion of window group is defined by
- * <a href="http://ui.netbeans.org/docs/ui/ws/ws_spec.html#3.7">Window system UI specification document</a>.
- * The concept of window group explains <a href="http://core.netbeans.org/windowsystem/changes.html#2.3">API changes document</a>.
+ * <a href="https://netbeans.apache.org/projects/ui/ws/ws_spec#s37">Window system UI specification document</a>.
+ * The concept of window group explains <a href="https://netbeans.apache.org/projects/platform/core/windowsystem/changes#s23">API changes document</a>.
  *
- * <p><p>
- * <b><font color="red"><em>Importatnt note: Do not provide implementation of this interface unless you are window system provider!</em></font></b>
+ * <p>
+ * <b><span style="color:red"><em>Important note: Do not provide implementation of this interface unless you are window system provider!</em></span></b>
  *
  * @author  Peter Zavadsky
  * @since 4.13

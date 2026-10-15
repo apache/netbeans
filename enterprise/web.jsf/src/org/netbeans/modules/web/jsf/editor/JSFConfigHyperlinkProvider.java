@@ -93,7 +93,6 @@ public class JSFConfigHyperlinkProvider implements HyperlinkProvider {
     private int valueOffset;
     private String [] ev = null;
     
-    /** Creates a new instance of StrutsHyperlinkProvider. */
     public JSFConfigHyperlinkProvider() {
     }
 

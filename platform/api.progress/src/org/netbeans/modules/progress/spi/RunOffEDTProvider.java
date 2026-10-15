@@ -47,14 +47,14 @@ public interface RunOffEDTProvider {
          * Show a modal progress dialog that blocks the main window while running
          * a background process.  This call should block until the work is
          * completed.
-         * <p/>
+         * <p>
          * The resulting progress UI should show a cancel button if the passed
          * runnable implements org.openide.util.Cancellable.
          *
          * @param operation A runnable that needs to be run with the UI blocked
          * @param handle A progress handle that will be updated to reflect
          * the progress of the operation
-         * @param showDetails If true, a label should be provided in the progress
+         * @param includeDetailLabel If true, a label should be provided in the progress
          * dialog to show detailed progress messages
          */
         public void showProgressDialogAndRun(Runnable operation, ProgressHandle handle, boolean includeDetailLabel);
@@ -63,7 +63,7 @@ public interface RunOffEDTProvider {
          * Show a modal progress dialog that blocks the main window while running
          * a background process.  This call should block until the work is
          * completed.
-         * <p/>
+         * <p>
          * The resulting progress UI should show a cancel button if the passed
          * runnable implements org.openide.util.Cancellable.
          *
@@ -83,7 +83,7 @@ public interface RunOffEDTProvider {
          * a background process.  This call should block until the work is
          * started, and then return a Future which can be monitored for completion
          * or cancelled.
-         * <p/>
+         * <p>
          * The resulting progress UI should show a cancel button if the passed
          * runnable implements org.openide.util.Cancellable.
          *
@@ -107,7 +107,7 @@ public interface RunOffEDTProvider {
          * to interrupt the operation.
          * 
          * @param operation  task to perform in the background
-         * @param dialogTitle dialog title
+         * @param operationDescr dialog title
          * @param progress  progress handle. Do not invoke any methods before
          *                  passing to this method. Start/progress/finish it
          *                  only in {@code operation}
@@ -148,6 +148,7 @@ public interface RunOffEDTProvider {
          * @since 1.30
          * @deprecated interface SwingProgress should be used instead.
          */
+        @Deprecated
         public void runOffEventThreadWithCustomDialogContent(
             final Runnable operation,
             final String dialogTitle,

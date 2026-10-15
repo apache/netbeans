@@ -21,7 +21,8 @@ package org.netbeans.modules.csl.spi;
 import java.util.ArrayList;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.editor.BaseDocument;
+import org.netbeans.api.editor.document.AtomicLockDocument;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.lib.editor.util.CharSequenceUtilities;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 
@@ -68,7 +69,7 @@ public interface CommentHandler {
      * Default implementation using simple document text search.
      * 
      */
-    public static abstract class DefaultCommentHandler implements CommentHandler {
+    public abstract static class DefaultCommentHandler implements CommentHandler {
 
         public int[] getAdjustedBlocks(@NonNull Document doc, int from, int to) {
             return new int[]{from,to};
@@ -113,9 +114,9 @@ public interface CommentHandler {
 
                 }
             };
-
-            if(doc instanceof BaseDocument) {
-                ((BaseDocument)doc).runAtomic(task);
+            AtomicLockDocument ald = LineDocumentUtils.as(doc, AtomicLockDocument.class);
+            if(ald != null) {
+                ald.runAtomic(task);
             } else {
                 task.run();
             }

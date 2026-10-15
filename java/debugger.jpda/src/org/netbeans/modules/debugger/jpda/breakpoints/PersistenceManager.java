@@ -63,8 +63,17 @@ public class PersistenceManager implements LazyDebuggerManagerListener {
         instanceRef = new WeakReference<PersistenceManager>(this);
     }
     
+    private boolean areBreakpointsPersisted() {
+        Properties p = Properties.getDefault ().getProperties ("debugger");
+        p = p.getProperties("persistence");
+        return p.getBoolean("breakpoints", true);
+    }
+    
     @Override
     public synchronized Breakpoint[] initBreakpoints () {
+        if (!areBreakpointsPersisted()) {
+            return new Breakpoint[]{};
+        }
         Properties p = Properties.getDefault ().getProperties ("debugger").
             getProperties (DebuggerManager.PROP_BREAKPOINTS);
         Breakpoint[] breakpoints = (Breakpoint[]) p.getArray (
@@ -126,6 +135,9 @@ public class PersistenceManager implements LazyDebuggerManagerListener {
     
     @Override
     public void breakpointAdded (Breakpoint breakpoint) {
+        if (!areBreakpointsPersisted()) {
+            return ;
+        }
         if (breakpoint instanceof JPDABreakpoint &&
                 !((JPDABreakpoint) breakpoint).isHidden ()) {
             synchronized (this) {
@@ -145,6 +157,9 @@ public class PersistenceManager implements LazyDebuggerManagerListener {
 
     @Override
     public void breakpointRemoved (Breakpoint breakpoint) {
+        if (!areBreakpointsPersisted()) {
+            return ;
+        }
         if (breakpoint instanceof JPDABreakpoint &&
                 !((JPDABreakpoint) breakpoint).isHidden ()) {
             synchronized (this) {

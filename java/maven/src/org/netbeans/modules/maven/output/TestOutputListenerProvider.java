@@ -124,12 +124,18 @@ public class TestOutputListenerProvider implements OutputProcessor {
         match = runningPattern2.matcher(line);
         if (match.matches()) {
             try {
-                Object defaultValue = PluginPropertyUtils.createEvaluator(visitor.getContext().getCurrentProject())
-                        .evaluate("${project.build.directory}/surefire-reports");
-                if (defaultValue instanceof String) {
-                    outputDir = (String) defaultValue;
-                    // don't want to create link on the surefire line
-//                    visitor.setOutputListener(new TestOutputListener(runningTestClass, outputDir), true);
+                OutputVisitor.Context context = visitor.getContext();
+                if (context != null) {
+                    Project currentProject = context.getCurrentProject();
+                    if (currentProject != null) {
+                        Object defaultValue = PluginPropertyUtils.createEvaluator(currentProject)
+                                                                 .evaluate("${project.build.directory}/surefire-reports");
+                        if (defaultValue instanceof String) {
+                            outputDir = (String) defaultValue;
+                            // don't want to create link on the surefire line
+        //                    visitor.setOutputListener(new TestOutputListener(runningTestClass, outputDir), true);
+                        }
+                    }
                 }
                 return;
             } catch (ExpressionEvaluationException ex) {
@@ -176,12 +182,6 @@ public class TestOutputListenerProvider implements OutputProcessor {
         public TestOutputListener(String test, String outDir) {
             testname = test;
             outputDir = outDir;
-        }
-        /** Called when a line is selected.
-         * @param ev the event describing the line
-         */
-        @Override
-        public void outputLineSelected(OutputEvent ev) {
         }
         
         /** Called when some sort of action is performed on a line.
@@ -244,13 +244,6 @@ public class TestOutputListenerProvider implements OutputProcessor {
                     StatusDisplayer.getDefault().setStatusText(MSG_CannotFollowLink2());
                 }
             }
-        }
-        
-        /** Called when a line is cleared from the buffer of known lines.
-         * @param ev the event describing the line
-         */
-        @Override
-        public void outputLineCleared(OutputEvent ev) {
         }
         
         private void openLog(final FileObject fo, String title, final File testDir) {

@@ -49,6 +49,17 @@
  <answer id="arch-overall">
   <p>
    Provides implementations of the Java platform SPI and the project library SPI.
+  </p>
+  <p>
+    <api category="official" group="java" name="J2SEPlatformCreator" type="export" url="@TOP@/org/netbeans/modules/java/j2seplatform/api/J2SEPlatformCreator.html">
+        API to register a JDK
+    </api>
+    and these
+    <api category="official" group="java" name="SPI" type="export" url="@TOP@/org/netbeans/modules/java/j2seplatform/spi/package-summary.html">
+        (service provide interfaces) for JDK sources and JavaDoc
+    </api>.
+  </p>
+  <p>
    Defines some formats:
   </p>
   <ul>
@@ -163,14 +174,14 @@
    <li>
     <p>
      J2SE-specific portion of <a
-     href="http://projects.netbeans.org/buildsys/j2se-project-ui-spec.html#Dialog_Java_Platform_Manager">Java
+     href="https://netbeans.apache.org/projects/buildsys/j2se-project-ui-spec#Dialog_Library_Manager">Java
      Platform Manager</a>.
     </p>
    </li>
    <li>
     <p>
      Class-library-specific portion of <a
-     href="http://projects.netbeans.org/buildsys/j2se-project-ui-spec.html#Dialog_Library_Manager">Library
+     href="https://netbeans.apache.org/projects/buildsys/j2se-project-ui-spec#Dialog_Java_Platform_Manager">Library
      Manager</a>.
     </p>
    </li>
@@ -340,9 +351,54 @@
     </api>
    </li>
   </ul>
+  
+  <api name="org.netbeans.modules.java.j2seplatform.api.API_Ask_attachSourcesQuestion" group="branding" type="export" category="stable">
+      <p>
+        Controls interaction when <b>sources</b> are about to be attached to a Classpath root, in
+        <a href="@org-netbeans-api-java@/org/netbeans/spi/java/queries/SourceJavadocAttacherImplementation.html">SourceJavadocAttacherImplementation</a>
+        provided by this module. By setting <code>API_Ask_attachSourcesQuestion</code> key in 
+        <code>org/netbeans/modules/java/j2seplatform/api/Bundle.properties</code> one can control the function:
+      </p>
+      <ul>
+          <li>
+              <b>no</b> will disable the attachers. No source/javadoc will be attached, and no user interaction will be started.
+          </li>
+          <li>
+              <b>yes</b> will permit the registered <a href="@org-netbeans-api-java@/org/netbeans/spi/java/queries/SourceJavadocAttacherImplementation.Definer.html">
+                  SourceJavadocAttacherImplementation.Definer</a> to attach an appropriate resource(s). <b>User interaction will be skipped</b>
+          </li>
+          <li>
+              <b>ask</b> (the default) will ask the user to supply the resources.
+          </li>
+      </ul>
+      <p>
+          The key can be set by a branding file in your application build.
+      </p>
+  </api>
+  <api name="org.netbeans.modules.java.j2seplatform.api.API_Ask_attachJavadocQuestion" group="branding" type="export" category="stable">
+      <p>
+        Controls interaction when <b>javadocs</b> are about to be attached to a Classpath root, in
+        <a href="@org-netbeans-api-java@/org/netbeans/spi/java/queries/SourceJavadocAttacherImplementation.html">SourceJavadocAttacherImplementation</a>
+        provided by this module. By setting <code>API_Ask_attachJavadocQuestion</code> key in 
+        <code>org/netbeans/modules/java/j2seplatform/api/Bundle.properties</code> one can control the function:
+      </p>
+      <ul>
+          <li>
+              <b>no</b> will disable the attachers. No source/javadoc will be attached, and no user interaction will be started.
+          </li>
+          <li>
+              <b>yes</b> will permit the registered <a href="@org-netbeans-api-java@/org/netbeans/spi/java/queries/SourceJavadocAttacherImplementation.Definer.html">
+                  SourceJavadocAttacherImplementation.Definer</a> to attach an appropriate resource(s). <b>User interaction will be skipped</b>
+          </li>
+          <li>
+              <b>ask</b> (the default) will ask the user to supply the resources.
+          </li>
+      </ul>
+      <p>
+          The key can be set by a branding file in your application build.
+      </p>
+  </api>  
  </answer>
-
-
 
 <!--
         <question id="dep-non-nb" when="init">
@@ -455,7 +511,7 @@
 -->
  <answer id="deploy-packages">
   <p>
-   No public packages.
+   Only API and SPI packages are exported.
   </p>
  </answer>
 

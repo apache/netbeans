@@ -191,7 +191,7 @@ public class CodeTemplatesPanel extends JPanel implements ActionListener, ListSe
             defaultSelectedLang = (String) selectedItem;
         }
         cbLanguage.removeAllItems ();
-        List<String> languages = new ArrayList<String>(model.getLanguages ());
+        List<String> languages = new ArrayList<>(model.getLanguages ());
         Collections.sort (languages);
         for(String l : languages) {
             cbLanguage.addItem(l);
@@ -286,6 +286,7 @@ public class CodeTemplatesPanel extends JPanel implements ActionListener, ListSe
     }
     
     // ActionListener ..........................................................
+    @Override
     public void actionPerformed (ActionEvent e) {
         if (e.getSource () == cbLanguage) {
             saveCurrentTemplate ();
@@ -456,6 +457,7 @@ public class CodeTemplatesPanel extends JPanel implements ActionListener, ListSe
         return true;
     }
     
+    @Override
     public void valueChanged (ListSelectionEvent e) {
         saveCurrentTemplate ();
         // new line in code templates table has been selected
@@ -515,9 +517,11 @@ public class CodeTemplatesPanel extends JPanel implements ActionListener, ListSe
         firePropertyChange(OptionsPanelController.PROP_CHANGED, null, null);
     }
 
+    @Override
     public void keyTyped(KeyEvent e) {
     }
 
+    @Override
     public void keyPressed(KeyEvent e) {
         // XXX: hack for #113802
         if (e.getKeyCode() == 32) {
@@ -525,6 +529,7 @@ public class CodeTemplatesPanel extends JPanel implements ActionListener, ListSe
         }
     }
 
+    @Override
     public void keyReleased(KeyEvent e) {
     }
 
@@ -535,14 +540,17 @@ public class CodeTemplatesPanel extends JPanel implements ActionListener, ListSe
         }
     }
 
+    @Override
     public void insertUpdate(DocumentEvent e) {
         textModified();
     }
 
+    @Override
     public void removeUpdate(DocumentEvent e) {
         textModified();
     }
 
+    @Override
     public void changedUpdate(DocumentEvent e) {
     }
 
@@ -659,7 +667,6 @@ public class CodeTemplatesPanel extends JPanel implements ActionListener, ListSe
                         .addComponent(lLanguage)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbLanguage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lTemplates)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lExplandTemplateOn)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -667,14 +674,17 @@ public class CodeTemplatesPanel extends JPanel implements ActionListener, ListSe
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(lOnExpandAction)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbOnExpandAction, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(bNew, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(bRemove, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap())
+                        .addComponent(cbOnExpandAction, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(lTemplates)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(bRemove, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(bNew, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -687,18 +697,19 @@ public class CodeTemplatesPanel extends JPanel implements ActionListener, ListSe
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cbExpandTemplateOn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lOnExpandAction)
+                            .addComponent(cbOnExpandAction, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lExplandTemplateOn))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(bNew)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(bRemove)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbExpandTemplateOn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lOnExpandAction)
-                    .addComponent(cbOnExpandAction, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lExplandTemplateOn))
-                .addGap(5, 5, 5))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
     }// </editor-fold>//GEN-END:initComponents
         
@@ -743,14 +754,19 @@ public class CodeTemplatesPanel extends JPanel implements ActionListener, ListSe
     
     private class CheckListener implements MouseListener, KeyListener {
 
+        @Override
         public void mouseEntered(MouseEvent e) {}
 
+        @Override
         public void mouseExited(MouseEvent e) {}
 
+        @Override
         public void mousePressed(MouseEvent e) {}
 
+        @Override
         public void mouseReleased(MouseEvent e) {}
 
+        @Override
         public void mouseClicked(MouseEvent e) {
             if (!e.isPopupTrigger()) {
                 contextsModified();
@@ -758,6 +774,7 @@ public class CodeTemplatesPanel extends JPanel implements ActionListener, ListSe
             }
         }
 
+        @Override
         public void keyPressed(KeyEvent e) {
             if (e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_ENTER) {
                 contextsModified();
@@ -765,8 +782,10 @@ public class CodeTemplatesPanel extends JPanel implements ActionListener, ListSe
             }
         }
         
+        @Override
         public void keyReleased(KeyEvent e) {}
 
+        @Override
         public void keyTyped(KeyEvent e) {}
 
         private void contextsModified() {

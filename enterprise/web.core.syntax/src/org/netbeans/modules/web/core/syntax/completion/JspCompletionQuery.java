@@ -25,8 +25,6 @@ import org.netbeans.modules.web.core.syntax.completion.api.JspCompletionItem;
 import java.util.*;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.BadLocationException;
-import javax.servlet.jsp.tagext.TagInfo;
-import javax.servlet.jsp.tagext.TagAttributeInfo;
 import org.netbeans.api.jsp.lexer.JspTokenId;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
@@ -36,6 +34,8 @@ import org.netbeans.lib.editor.util.CharSequenceUtilities;
 import org.netbeans.modules.web.core.syntax.deprecated.JspTagTokenContext;
 import org.netbeans.modules.web.core.syntax.*;
 import org.netbeans.modules.web.core.syntax.tld.TldLibrary;
+import org.netbeans.modules.web.jsps.parserapi.TagAttributeInfo;
+import org.netbeans.modules.web.jsps.parserapi.TagInfo;
 import org.netbeans.spi.editor.completion.CompletionItem;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -693,7 +693,7 @@ public class JspCompletionQuery {
                 attr = ((TagAttributeInfo)item).getName();
             else
                 attr = (String)item;
-            boolean isThere = tagDir.getAttributes().keySet().contains(attr);
+            boolean isThere = tagDir.getAttributes().containsKey(attr);
             if (!isThere || attr.equalsIgnoreCase(currentAttr) ||
                     (currentAttr != null && attr.startsWith(currentAttr) && attr.length()>currentAttr.length() && !isThere)) {
                 if (item instanceof TagAttributeInfo)
@@ -704,8 +704,8 @@ public class JspCompletionQuery {
                     //to do it.
                     if ("taglib".equalsIgnoreCase(tagDir.getName())){ //NOI18N
                         if (attr.equalsIgnoreCase("prefix")  //NOI18N
-                                || (attr.equalsIgnoreCase("uri") && !tagDir.getAttributes().keySet().contains("tagdir")) //NOI18N
-                                || (attr.equalsIgnoreCase("tagdir") && !tagDir.getAttributes().keySet().contains("uri"))) //NOI18N
+                            || (attr.equalsIgnoreCase("uri") && !tagDir.getAttributes().containsKey("tagdir")) //NOI18N
+                            || (attr.equalsIgnoreCase("tagdir") && !tagDir.getAttributes().containsKey("uri"))) //NOI18N
                             result.addItem(JspCompletionItem.createAttribute(offset, (TagAttributeInfo)item));
                     } else {
                         result.addItem(JspCompletionItem.createAttribute(offset, (TagAttributeInfo)item));

@@ -7,7 +7,7 @@ ${baseType type="java.util.List" default="List" editable="false"} <${type defaul
 null
 -----------------------
 2ar
-${clazz}[] ${var newVarName default="arr"} = ${typeCast cast default="" editable=false} ${coll instanceof="java.util.Collection"}.toArray(new ${clazz}[${coll}.size()]);
+${clazz}[] ${var newVarName default="arr"} = ${typeCast cast default="" editable=false} ${coll instanceof="java.util.Collection"}.toArray(new ${clazz}[0]);
  
 null
 -----------------------
@@ -662,6 +662,14 @@ null
 -----------------------
 rn
 ${no-indent}return null;
+null
+-----------------------
+rt
+${no-indent}return true;
+null
+-----------------------
+rf
+${no-indent}return false;
 null
 -----------------------
 rp

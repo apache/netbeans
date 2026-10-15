@@ -289,9 +289,6 @@ final class EventSupport extends SourceEnvironment {
                     resetState(true, false, -1, -1, false);
                 } catch (DataObjectNotFoundException e) {
                     //Ignore - invalidated after fobj.isValid () was called
-                } catch (IOException ex) {
-                    // should not occur
-                    Exceptions.printStackTrace(ex);
                 }
             }
         }        
@@ -400,7 +397,7 @@ final class EventSupport extends SourceEnvironment {
      * changes, the scheduler fires a its tasks with the Source object created
      * for the new file.
      */
-    private final static Map<Scheduler, SchedL> scheduledSources = new HashMap<>(7);
+    private static final Map<Scheduler, SchedL> scheduledSources = new HashMap<>(7);
     
     private static class SchedL implements PropertyChangeListener {
         /**

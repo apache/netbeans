@@ -34,7 +34,6 @@ import java.io.PrintStream;
 import java.lang.management.LockInfo;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MonitorInfo;
-import java.lang.management.PlatformLoggingMXBean;
 import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
@@ -42,6 +41,11 @@ import java.lang.ref.Reference;
 import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -62,6 +66,8 @@ import java.util.regex.Pattern;
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 import junit.framework.TestResult;
+import org.junit.AssumptionViolatedException;
+import org.junit.Ignore;
 import org.netbeans.insane.live.LiveReferences;
 import org.netbeans.insane.live.Path;
 import org.netbeans.insane.scanner.CountingVisitor;
@@ -74,9 +80,11 @@ import org.netbeans.junit.internal.NbModuleLogHandler;
  * Adds various abilities such as comparing golden files, getting a working
  * directory for test files, testing memory usage, etc.
  */
+
 public abstract class NbTestCase extends TestCase implements NbTest {
     static {
         MethodOrder.initialize();
+        System.setProperty("bootstrap.disableJDKCheck", "true");
     }
     /**
      * active filter
@@ -129,6 +137,22 @@ public abstract class NbTestCase extends TestCase implements NbTest {
      * @return true if the test can run
      */
     public @Override boolean canRun() {
+        if (getClass().isAnnotationPresent(Ignore.class)) {
+            String message = getClass().getAnnotation(Ignore.class).value();
+            System.err.println("Skipping " + getClass().getName() + (message.isEmpty() ? "" : ": " + message));
+            return false;
+        }
+        
+        try {
+            if (getClass().getMethod(getName()).isAnnotationPresent(Ignore.class)) {
+                String message = getClass().getMethod(getName()).getAnnotation(Ignore.class).value();
+                System.err.println("Skipping " + getClass().getName() + "." + getName() + (message.isEmpty() ? "" : ": " + message));
+                return false;
+            }
+        } catch (NoSuchMethodException x) {
+            // Specially named methods; let it pass.
+        }
+        
         if (NbTestSuite.ignoreRandomFailures()) {
             if (getClass().isAnnotationPresent(RandomlyFails.class)) {
                 System.err.println("Skipping " + getClass().getName());
@@ -449,7 +473,12 @@ public abstract class NbTestCase extends TestCase implements NbTest {
             // need to have timeout because previous test case can block AWT thread
             setUp.waitFinished(computeTimeOut());
         } else {
-            setUp();
+            try {
+                setUp();
+            } catch (AssumptionViolatedException ex) {
+                // ignore, the test is assumed to be meaningless.
+                return;
+            }
         }
         try {
             // runTest
@@ -458,6 +487,8 @@ public abstract class NbTestCase extends TestCase implements NbTest {
                     long now = System.nanoTime();
                     try {
                         runTest();
+                    } catch (AssumptionViolatedException ex) {
+                        // ignore, the test is assumed to be meaningless.
                     } catch (Throwable t) {
                         noteWorkDir(workdirNoCreate());
                         throw noteRandomness(t);
@@ -576,7 +607,6 @@ public abstract class NbTestCase extends TestCase implements NbTest {
     /** Parses the test name to find out whether it encodes a number. The
      * testSomeName1343 represents number 1343.
      * @return the number
-     * @exception may throw AssertionFailedError if the number is not found in the test name
      */
     protected final int getTestNumber() {
         try {
@@ -615,7 +645,7 @@ public abstract class NbTestCase extends TestCase implements NbTest {
      * @param externalDiff instance of class implementing the {@link org.netbeans.junit.diff.Diff} interface, it has to be
      * already initialized, when passed in this assertFile function.
      */
-    static public void assertFile(String message, String test, String pass, String diff, Diff externalDiff) {
+    public static void assertFile(String message, String test, String pass, String diff, Diff externalDiff) {
         Diff diffImpl = null == externalDiff ? Manager.getSystemDiff() : externalDiff;
         File    diffFile = getDiffName(pass, null == diff ? null : new File(diff));
         
@@ -650,7 +680,7 @@ public abstract class NbTestCase extends TestCase implements NbTest {
      * @param externalDiff instance of class implementing the {@link org.netbeans.junit.diff.Diff} interface, it has to be
      * already initialized, when passed in this assertFile function.
      */
-    static public void assertFile(String test, String pass, String diff, Diff externalDiff) {
+    public static void assertFile(String test, String pass, String diff, Diff externalDiff) {
         assertFile(null, test, pass, diff, externalDiff);
     }
     /**
@@ -665,7 +695,7 @@ public abstract class NbTestCase extends TestCase implements NbTest {
      * directory. Constructed file name consists from the name of pass file (without extension and path) appended
      * by the '.diff'.
      */
-    static public void assertFile(String message, String test, String pass, String diff) {
+    public static void assertFile(String message, String test, String pass, String diff) {
         assertFile(message, test, pass, diff, null);
     }
     /**
@@ -679,7 +709,7 @@ public abstract class NbTestCase extends TestCase implements NbTest {
      * directory. Constructed file name consists from the name of pass file (without extension and path) appended
      * by the '.diff'.
      */
-    static public void assertFile(String test, String pass, String diff) {
+    public static void assertFile(String test, String pass, String diff) {
         assertFile(null, test, pass, diff, null);
     }
     /**
@@ -688,7 +718,7 @@ public abstract class NbTestCase extends TestCase implements NbTest {
      * @param pass second file to be compared, it should be so called 'golden' file, which defines the
      * correct content for the test-generated file.
      */
-    static public void assertFile(String test, String pass) {
+    public static void assertFile(String test, String pass) {
         assertFile(null, test, pass, null, null);
     }
     
@@ -708,7 +738,7 @@ public abstract class NbTestCase extends TestCase implements NbTest {
      * @param externalDiff instance of class implementing the {@link org.netbeans.junit.diff.Diff} interface, it has to be
      * already initialized, when passed in this assertFile function.
      */
-    static public void assertFile(String message, File test, File pass, File diff, Diff externalDiff) {
+    public static void assertFile(String message, File test, File pass, File diff, Diff externalDiff) {
         Diff diffImpl = null == externalDiff ? Manager.getSystemDiff() : externalDiff;
         File    diffFile = getDiffName(pass.getAbsolutePath(), diff);
         
@@ -723,7 +753,7 @@ public abstract class NbTestCase extends TestCase implements NbTest {
         } else {
             try {
                 if (diffImpl.diff(test, pass, diffFile)) {
-                    throw new AssertionFileFailedError(message, null == diffFile ? "" : diffFile.getAbsolutePath());
+                    throw new AssertionFileFailedError(message+"\n diff: "+diffFile, null == diffFile ? "" : diffFile.getAbsolutePath());
                 }
             } catch (IOException e) {
                 fail("exception in assertFile : " + e.getMessage());
@@ -743,8 +773,8 @@ public abstract class NbTestCase extends TestCase implements NbTest {
      * @param externalDiff instance of class implementing the {@link org.netbeans.junit.diff.Diff} interface, it has to be
      * already initialized, when passed in this assertFile function.
      */
-    static public void assertFile(File test, File pass, File diff, Diff externalDiff) {
-        assertFile(null, test, pass, diff, externalDiff);
+    public static void assertFile(File test, File pass, File diff, Diff externalDiff) {
+        assertFile("Difference between " + test + " and " + pass, test, pass, diff, externalDiff);
     }
     /**
      * Asserts that two files are the same, it compares two files and stores possible differences
@@ -758,7 +788,7 @@ public abstract class NbTestCase extends TestCase implements NbTest {
      * directory. Constructed file name consists from the name of pass file (without extension and path) appended
      * by the '.diff'.
      */
-    static public void assertFile(String message, File test, File pass, File diff) {
+    public static void assertFile(String message, File test, File pass, File diff) {
         assertFile(message, test, pass, diff, null);
     }
     /**
@@ -772,8 +802,8 @@ public abstract class NbTestCase extends TestCase implements NbTest {
      * directory. Constructed file name consists from the name of pass file (without extension and path) appended
      * by the '.diff'.
      */
-    static public void assertFile(File test, File pass, File diff) {
-        assertFile(null, test, pass, diff, null);
+    public static void assertFile(File test, File pass, File diff) {
+        assertFile("Difference between " + test + " and " + pass, test, pass, diff, null);
     }
     /**
      * Asserts that two files are the same, it just compares two files and doesn't produce any additional output.
@@ -781,13 +811,13 @@ public abstract class NbTestCase extends TestCase implements NbTest {
      * @param pass second file to be compared, it should be so called 'golden' file, which defines the
      * correct content for the test-generated file.
      */
-    static public void assertFile(File test, File pass) {
+    public static void assertFile(File test, File pass) {
         assertFile("Difference between " + test + " and " + pass, test, pass, null, null);
     }
     
     /**
      */
-    static private File getDiffName(String pass, File diff) {
+    private static File getDiffName(String pass, File diff) {
         if (null == diff) {
             return null;
         }
@@ -965,21 +995,23 @@ public abstract class NbTestCase extends TestCase implements NbTest {
     }
     
     // private method for deleting a file/directory (and all its subdirectories/files)
-    private static void deleteFile(File file) throws IOException {
-        if (file.isDirectory() && file.equals(file.getCanonicalFile())) {
-            // file is a directory - delete sub files first
-            File files[] = file.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                deleteFile(files[i]);
+    private static void deleteRecursive(File file) throws IOException {
+        Files.walkFileTree(file.toPath(), new SimpleFileVisitor<java.nio.file.Path>() {
+            @Override
+            public FileVisitResult visitFile(java.nio.file.Path file, BasicFileAttributes attrs) throws IOException {
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
             }
-            
-        }
-        // file is a File :-)
-        boolean result = file.delete();
-        if (result == false ) {
-            // a problem has appeared
-            throw new IOException("Cannot delete file, file = "+file.getPath());
-        }
+            @Override
+            public FileVisitResult postVisitDirectory(java.nio.file.Path dir, IOException exc) throws IOException {
+                try {
+                    Files.delete(dir);
+                } catch (DirectoryNotEmptyException ex) {
+                    throw new IOException("concurrent write detected, folder no longer empty:\n" + Arrays.asList(dir.toFile().list()), ex);
+                }
+                return FileVisitResult.CONTINUE;
+            }
+        });
     }
     
     // private method for deleting every subfiles/subdirectories of a file object
@@ -987,7 +1019,7 @@ public abstract class NbTestCase extends TestCase implements NbTest {
         File files[] = file.getCanonicalFile().listFiles();
         if (files != null) {
             for (File f : files) {
-                deleteFile(f);
+                deleteRecursive(f);
             }
         } else {
             // probably do nothing - file is not a directory
@@ -1103,7 +1135,7 @@ public abstract class NbTestCase extends TestCase implements NbTest {
         try {
             return getFileLog(logName);
         } catch (IOException ioe) {
-            /// hey, file is not available - log will be made to System.out
+            // hey, file is not available - log will be made to System.out
             // we should probably write a little note about it
             //System.err.println("Test method "+this.getName()+" - cannot open file log to file:"+logName
             //                                +" - defaulting to System.out");
@@ -1298,7 +1330,7 @@ public abstract class NbTestCase extends TestCase implements NbTest {
     }
     
     // radix for new nbfsurl
-    private final static int radix = 16;
+    private static final int radix = 16;
     // new nbfsurl decoder - assumes the external form
     // begins with nbfs://
     private static String convertNewNBFSURL(URL url) {
@@ -1393,7 +1425,7 @@ public abstract class NbTestCase extends TestCase implements NbTest {
      * rootset for this scan. This is useful if you want to verify that one structure
      * (usually long living in real application) is not holding another structure
      * in memory, without setting a static reference to the former structure.
-     * <h3>Example:</h3>
+     * <p><strong>Example:</strong></p>
      * <pre>
      *  // test body
      *  WeakHashMap map = new WeakHashMap();

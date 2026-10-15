@@ -19,22 +19,16 @@
 package org.netbeans.modules.php.editor.model.nodes;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.php.editor.api.QualifiedName;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
 import org.netbeans.modules.php.editor.parser.astnodes.TraitDeclaration;
-import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatement;
-import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatementPart;
-import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 
 /**
  *
  * @author Ondrej Brejla <obrejla@netbeans.org>
  */
-public class TraitDeclarationInfo extends ASTNodeInfo<TraitDeclaration>  {
+public class TraitDeclarationInfo extends ASTNodeInfo<TraitDeclaration> {
 
     TraitDeclarationInfo(TraitDeclaration node) {
         super(node);
@@ -71,23 +65,5 @@ public class TraitDeclarationInfo extends ASTNodeInfo<TraitDeclaration>  {
         final UsedTraitsVisitor visitor = new UsedTraitsVisitor();
         getOriginalNode().getBody().accept(visitor);
         return visitor.getUsedTraits();
-    }
-
-    private static class UsedTraitsVisitor extends DefaultVisitor {
-        private List<UseTraitStatementPart> useParts = new LinkedList<>();
-
-        @Override
-        public void visit(UseTraitStatement node) {
-            useParts = node.getParts();
-        }
-
-        public Collection<QualifiedName> getUsedTraits() {
-            Collection<QualifiedName> retval = new HashSet<>();
-            for (UseTraitStatementPart useTraitStatementPart : useParts) {
-                retval.add(QualifiedName.create(useTraitStatementPart.getName()));
-            }
-            return retval;
-        }
-
     }
 }

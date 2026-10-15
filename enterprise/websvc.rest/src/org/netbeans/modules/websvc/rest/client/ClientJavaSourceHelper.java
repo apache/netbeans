@@ -40,13 +40,11 @@ import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.editor.GuardedException;
 import org.netbeans.modules.j2ee.dd.api.web.DDProvider;
 import org.netbeans.modules.j2ee.dd.api.web.Servlet;
-import org.netbeans.modules.j2ee.dd.api.web.ServletMapping;
 import org.netbeans.modules.j2ee.dd.api.web.ServletMapping25;
 import org.netbeans.modules.j2ee.dd.api.web.WebApp;
 import org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException;
@@ -121,6 +119,8 @@ public class ClientJavaSourceHelper {
                 cp.findResource("javax/ws/rs/core/Application.class") != null;
         boolean jaxRs2Available = cp != null &&
                 cp.findResource("javax/ws/rs/client/Client.class") != null;
+        boolean jakartaRsClientAvailable = cp != null &&
+                cp.findResource("jakarta/ws/rs/client/Client.class") != null;
         JaxRsStackSupport support = JaxRsStackSupport.getInstance(project);
         boolean jersey1AvailableOnServer = support != null &&
                 support.isBundled("com.sun.jersey.api.client.WebResource");
@@ -128,25 +128,25 @@ public class ClientJavaSourceHelper {
                 support.isBundled("org.glassfish.jersey.spi.Contract");
         ClientGenerationStrategy strategy = null;
         if (jersey2Available || jersey2AvailableOnServer) {
-            strategy = new JaxRsGenerationStrategy();
+            strategy = new JaxRsGenerationStrategy(jakartaRsClientAvailable);
         } else if (jersey1Available || jersey1AvailableOnServer) {
             strategy = new JerseyGenerationStrategy();
         }
         if (project != null && strategy == null) {
 
-            if (jaxRs2Available) {
-                strategy = new JaxRsGenerationStrategy();
+            if (jaxRs2Available || jakartaRsClientAvailable) {
+                strategy = new JaxRsGenerationStrategy(jakartaRsClientAvailable);
             } else if (jaxRs1Available) {
                 // JAX-RS 1.0 is on classpath but no Jersey; in this case project
                 // classpath needs to be enhanced with Jersey library but IDE has
                 // only Jersey 2.0. That's why JaxRsGenerationStrategy strategy is
                 // going to be used here:
-                strategy = new JaxRsGenerationStrategy();
+                strategy = new JaxRsGenerationStrategy(jakartaRsClientAvailable);
             }
         }
         // if all other tests were negative then generate the code using JAX-RS 2:
         if (strategy == null) {
-            strategy = new JaxRsGenerationStrategy();
+            strategy = new JaxRsGenerationStrategy(jakartaRsClientAvailable);
         }
         ProgressHandle handle = null;
         if (support == null) {
@@ -161,10 +161,10 @@ public class ClientJavaSourceHelper {
          * is based on JAX-RS 2.0 which is not supported by Java EE 6.... 
          */ 
         try {
-            handle = ProgressHandleFactory.createHandle(NbBundle.getMessage(ClientJavaSourceHelper.class, "MSG_creatingRESTClient"));
+            handle = ProgressHandle.createHandle(NbBundle.getMessage(ClientJavaSourceHelper.class, "MSG_creatingRESTClient"));
             handle.start();
             // add REST and Jersey dependencies
-            if (!jaxRs2Available && !jaxRs1Available) {
+            if (!jaxRs2Available && !jaxRs1Available && !jakartaRsClientAvailable) {
                 support.addJsr311Api(project);
                 support.extendsJerseyProjectClasspath(project);
             }
@@ -367,6 +367,7 @@ public class ClientJavaSourceHelper {
                 className,
                 Collections.<TypeParameterTree>emptyList(),
                 null,
+                Collections.<Tree>emptyList(),
                 Collections.<Tree>emptyList(),
                 Collections.<Tree>emptyList());
 

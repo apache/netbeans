@@ -249,12 +249,7 @@ public final class GenerateDTDSupport implements XMLGenerateCookie  {
     private boolean scanTemplate() {
         URL url = null;
         XMLReader parser = null;
-        try {
-            url = template.getPrimaryFile().getURL();
-        } catch (FileStateInvalidException e) {
-            warning = e.getLocalizedMessage();
-            return false;
-        }
+        url = template.getPrimaryFile().toURL();
 
         String system = url.toExternalForm();
         try {

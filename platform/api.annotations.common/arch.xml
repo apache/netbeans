@@ -53,7 +53,7 @@
    <api group="java" name="CommonAnnotationsAPI" type="export" category="stable" url="@TOP@org/netbeans/api/annotations/common/package-summary.html"/>
    that contains annotations usable across the IDE sources. One such type
    of annotations can guard (together with <a href="http://findbugs.sourceforge.net">FindBugs</a>)
-   your code against <code>null</code> related defect.
+   your code against <code>null</code> related defects.
   </p>
   <p>
    In case your module is using <code>projectized.xml</code> you can simply run
@@ -126,14 +126,14 @@
     When the method return value is important value to check (or the only effect
     the method has) the method can be annotated with
     <a href="@TOP@org/netbeans/api/annotations/common/CheckReturnValue.html">CheckReturnValue</a>.
-    Annotation servers as documentation as well as a hint for static code analysis.
+    Annotation serves as documentation as well as a hint for static code analysis.
    </p>
   </usecase>
   <usecase id="check-for-null" name="CheckForNull annotated method">
    <p>
     Method annotated with
     <a href="@TOP@org/netbeans/api/annotations/common/CheckForNull.html">CheckForNull</a>
-    may return <code>null</code> value. Annotation servers as documentation
+    may return <code>null</code> value. Annotation serves as documentation
     as well as a hint for static code analysis.
    </p>
   </usecase>
@@ -142,7 +142,7 @@
     When the field, parameter, local variable or return value of the method
     must not be <code>null</code> the
     <a href="@TOP@org/netbeans/api/annotations/common/NonNull.html">NonNull</a>
-    annotation can be used to clearly express this. It servers as documentation
+    annotation can be used to clearly express this. It serves as documentation
     as well as a hint for static code analysis.
    </p>
   </usecase>
@@ -151,7 +151,7 @@
     Field, parameter or local variable annotated with
     <a href="@TOP@org/netbeans/api/annotations/common/NullAllowed.html">NullAllowed</a>
     can contain <code>null</code> value so <code>null</code> check should
-    occur before any dereference. Annotation servers as documentation
+    occur before any dereference. Annotation serves as documentation
     as well as a hint for static code analysis.
    </p>
   </usecase>
@@ -159,7 +159,7 @@
    <p>
     Annotation
     <a href="@TOP@org/netbeans/api/annotations/common/NullUnknown.html">NullUnknown</a>
-    complementing other nullness annotations servers for cases where
+    complementing other nullness annotations serves for cases where
     the element may or may not be <code>null</code> under certain
     <i>defined</i> circumstances (usage).
    </p>
@@ -480,7 +480,7 @@
  <answer id="deploy-packages">
   <p>
    Only API packages are exported. JDK bug workarounded in build harness
-   (<a href="http://www.netbeans.org/issues/show_bug.cgi?id=152562">#152562</a>).
+   (<a href="https://bz.apache.org/netbeans/show_bug.cgi?id=152562">#152562</a>).
   </p>
  </answer>
 

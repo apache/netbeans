@@ -28,6 +28,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Locale;
@@ -179,7 +180,7 @@ public class NbURLStreamHandlerFactoryTest extends NbTestCase {
         URLConnection conn = u.openConnection();
         InputStream is = conn.getInputStream();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        FileUtil.copy(is, baos);
+        is.transferTo(baos);
         is.close();
         return baos.toString("UTF-8");
     }
@@ -207,7 +208,8 @@ public class NbURLStreamHandlerFactoryTest extends NbTestCase {
             first = null;
             return f;
         }
-        
+
+        @Override
         protected URL findResource(String name) {
             if (first == null) {
                 first = name;
@@ -228,6 +230,7 @@ public class NbURLStreamHandlerFactoryTest extends NbTestCase {
             }
         }
 
+        @Override
         protected Enumeration<URL> findResources(String name) throws IOException {
             URL u = findResource(name);
             if (u != null) {
@@ -275,11 +278,13 @@ public class NbURLStreamHandlerFactoryTest extends NbTestCase {
         }
 
         public void connect() throws IOException {}
-        
+
+        @Override
         public int getContentLength() {
             return path.length();
         }
 
+        @Override
         public String getContentType() {
             if (path.endsWith(".html")) {
                 return "text/html";
@@ -288,8 +293,9 @@ public class NbURLStreamHandlerFactoryTest extends NbTestCase {
             }
         }
 
+        @Override
         public InputStream getInputStream() throws IOException {
-            return new ByteArrayInputStream(path.getBytes("UTF-8"));
+            return new ByteArrayInputStream(path.getBytes(StandardCharsets.UTF_8));
         }
 
     }

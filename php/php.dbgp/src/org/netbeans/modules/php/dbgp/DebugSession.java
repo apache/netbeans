@@ -78,6 +78,7 @@ public class DebugSession extends SingleThread {
     private AtomicReference<DebuggerEngine> engine;
     private IDESessionBridge myBridge;
     private AtomicReference<String> myFileName;
+    private volatile boolean canceled;
 
     DebugSession(DebuggerOptions options, BackendLauncher backendLauncher) {
         commands = new LinkedList<>();
@@ -124,6 +125,14 @@ public class DebugSession extends SingleThread {
                 } catch (Throwable e) {
                     log(e, Level.SEVERE);
                 }
+                if (canceled) {
+                    synchronized (commands) {
+                        if (commands.isEmpty()) {
+                            detachRequest.set(true);
+                            stop();
+                        }
+                    }
+                }
             }
         } finally {
             postprocess();
@@ -133,7 +142,9 @@ public class DebugSession extends SingleThread {
     private void preprocess() {
         detachRequest.set(false);
         stopRequest.set(false);
-        commands.clear();
+        synchronized (commands) {
+            commands.clear();
+        }
         sessionId.set(null);
         myBridge = new IDESessionBridge();
         myFileName = new AtomicReference<>();
@@ -160,7 +171,9 @@ public class DebugSession extends SingleThread {
         DebuggerEngine[] engines = DebuggerManager.getDebuggerManager().getDebuggerEngines();
         for (DebuggerEngine nextEngine : engines) {
             SessionId id = (SessionId) nextEngine.lookupFirst(null, SessionId.class);
-            if (id != null && id.getId().equals(message.getSessionId())) {
+            // [NETBEANS-5905] don't check about what the idekey is
+            // see also https://bugs.xdebug.org/view.php?id=2005
+            if (id != null && message.getSessionId() != null) {
                 sessionId.set(id);
                 id.initialize(message.getFileUri(), options.getPathMapping());
                 engine.set(nextEngine);
@@ -323,6 +336,14 @@ public class DebugSession extends SingleThread {
 
     @Override
     public boolean cancel() {
+        // NETBEANS-5080 request cancellation
+        // startProcessing() may be called via other ways
+        // e.g. via command line: nc -vz localhost 9003(debugger port)
+        // First of all, get the socket after the above command is run
+        // See: Socket sessionSocket = myServer.accept(); in ServerThread.run()
+        // Then, invokeLater.get() is called in startProcessing()
+        // Finally, infinite loop occurs in run() becuase do not still receive anything
+        canceled = true;
         return true;
     }
 

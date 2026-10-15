@@ -49,9 +49,6 @@ public class StandardPropertiesHelpResolver extends HelpResolver {
     private static final Map<String, String> propertyNamesTranslationTable = 
             new HashMap<>();
     static {
-//        propertyNamesTranslationTable.put("transform", "effects"); //NOI18N
-        propertyNamesTranslationTable.put("line-break", "line-break0");
-        
     }
     
     private static final Logger LOGGER = Logger.getLogger(HelpResolver.class.getName());
@@ -60,7 +57,7 @@ public class StandardPropertiesHelpResolver extends HelpResolver {
     private static final String W3C_SPEC_URL_PREFIX = "http://www.w3.org/TR/"; //NOI18N
     private static final String MODULE_ARCHIVE_PATH = "www.w3.org/TR/"; //NOI18N
     private static final String INDEX_HTML_FILE_NAME = "index.html"; //NOI18N
-    
+
     private static final String NO_HELP_MSG = NbBundle.getMessage(StandardPropertiesHelpResolver.class, "completion-help-no-documentation-found");
 
     @Override
@@ -108,10 +105,15 @@ public class StandardPropertiesHelpResolver extends HelpResolver {
                 
                 String elementName = "dfn";
                 
-                String patternImg = String.format("(?s)<%s[^>]*id=['\"]?\\w*-??propdef-%s\\d?['\"]?[^>]*>", elementName, propertyName);
+                String patternImg = String.format("(?s)<%s[^>]*id=(['\"])propdef-%s\\d?\\1[^>]*>", elementName, propertyName);
                 
                 Pattern pattern = Pattern.compile(patternImg); //DOTALL mode
                 Matcher matcher = pattern.matcher(urlContent);
+                if (!matcher.find(0)){
+                    patternImg = String.format("(?s)<%s[^>]*id=['\"]?\\w*-??propdef-%s\\d?['\"]?[^>]*>", elementName, propertyName);
+                    pattern = Pattern.compile(patternImg); //DOTALL mode
+                    matcher = pattern.matcher(urlContent);
+                }
                 if (!matcher.find(0)){
                     patternImg = String.format("(?s)<%s[^>]*id=['\"]?\\w*-??%s\\d?['\"]?>", elementName, propertyName);
                     pattern = Pattern.compile(patternImg); //DOTALL mode
@@ -167,31 +169,15 @@ public class StandardPropertiesHelpResolver extends HelpResolver {
                         Matcher findSectionEnd = sectionEndFinder.matcher(urlContent.subSequence(from, urlContent.length()));
                         if (findSectionEnd.find()) {
                             String help = urlContent.substring(sectionStart, from + findSectionEnd.start());
-                            help = help.replaceAll("[A-Za-z-]+\\.(png|jpg)\"",getSpecURL() + MODULE_ARCHIVE_PATH + moduleFolderName + "/" + "$0");
-                            return help;                      
+                            help = "<base href=\"" + propertyHelpURL.toExternalForm() +"\">" + help;
+                            return help;
                         }
                     }
 
                 } else {
                     //no pattern found, likely a bit different source
-                    LOGGER.warning(String.format("No property anchor section pattern found for property '%s'", property.getName())); //NOI18N
-                    
-                    //strip the <style>...</style> section from the source since it causes a garbage in the swingbrowser
-                    int styleSectionStart = urlContent.indexOf("<style type=\"text/css\">"); //NOI18N
-                    if(styleSectionStart >= 0) {
-                        final String styleEndTag = "</style>"; //NOI18N
-                        int styleSectionEnd = urlContent.indexOf(styleEndTag, styleSectionStart);
-                        if(styleSectionEnd >= 0) {
-                            StringBuilder buf = new StringBuilder();
-                            buf.append(urlContent.subSequence(0, styleSectionStart));
-                            buf.append(urlContent.subSequence(styleSectionEnd + styleEndTag.length(), urlContent.length()));
-                            
-                            return buf.toString();
-                        }
-                    }
-                    
-                    
-                    return urlContent;
+                    LOGGER.warning(String.format("No property anchor section pattern found for property '%s'", propertyUrl)); //NOI18N
+                    return NO_HELP_MSG;
                 }
             } catch (MalformedURLException ex) {
                 LOGGER.log(Level.WARNING, null, ex);

@@ -79,7 +79,7 @@ public class ImportDebugger extends SecondaryDebuggerSupport {
     
     // variables ...............................................................
 
-    transient private ValidatorImpl validator;
+    private transient ValidatorImpl validator;
 
 
     // init ....................................................................
@@ -130,7 +130,7 @@ public class ImportDebugger extends SecondaryDebuggerSupport {
     /**
     * Trace into.
     */
-    synchronized public void traceInto () throws DebuggerException {
+    public synchronized void traceInto () throws DebuggerException {
         setState (DEBUGGER_RUNNING);
         Line l = step ();
         if (l == null) {
@@ -147,7 +147,7 @@ public class ImportDebugger extends SecondaryDebuggerSupport {
     /**
     * Trace over.
     */
-    synchronized public void traceOver () throws DebuggerException {
+    public synchronized void traceOver () throws DebuggerException {
         setState (DEBUGGER_RUNNING);
         int d = stack.size ();
         Line l = null;
@@ -168,7 +168,7 @@ public class ImportDebugger extends SecondaryDebuggerSupport {
     /**
     * Go.
     */
-    synchronized public void go () throws DebuggerException {
+    public synchronized void go () throws DebuggerException {
         setLastAction (ACTION_CONTINUE);
         setState (DEBUGGER_RUNNING);
         
@@ -183,7 +183,7 @@ public class ImportDebugger extends SecondaryDebuggerSupport {
     /**
     * Step out.
     */
-    synchronized public void stepOut () throws DebuggerException {
+    public synchronized void stepOut () throws DebuggerException {
         setLastAction (ACTION_STEP_OUT);
         setState (DEBUGGER_RUNNING);
         

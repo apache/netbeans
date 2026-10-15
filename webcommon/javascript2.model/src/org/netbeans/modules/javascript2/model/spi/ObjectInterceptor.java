@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
 import org.netbeans.modules.javascript2.model.api.JsObject;
 
 /**
- * 
+ *
  * @author Petr Pisl
  */
 public interface ObjectInterceptor {
@@ -38,5 +38,5 @@ public interface ObjectInterceptor {
     public @interface Registration {
 
         int priority() default 105;
-    }   
+    }
 }

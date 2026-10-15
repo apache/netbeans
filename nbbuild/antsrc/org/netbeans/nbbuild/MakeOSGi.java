@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -326,7 +327,8 @@ public class MakeOSGi extends Task {
             String classPath = netbeansAttr.getValue("Class-Path");
             if (classPath != null) {
                 StringBuilder bundleCP = new StringBuilder();
-                for (String entry : classPath.split("[, ]+")) {
+                for (String rawEntry : classPath.split("[, ]+")) {
+                    String entry = URLDecoder.decode(rawEntry, "UTF-8");
                     if (entry.startsWith("${java.home}")) {
                         continue;
                     }

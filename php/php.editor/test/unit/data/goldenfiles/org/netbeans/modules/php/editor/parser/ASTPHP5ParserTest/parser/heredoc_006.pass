@@ -249,7 +249,7 @@
                                 </ReflectionVariable>
                                 <Scalar start='171' end='177' type='STRING' value=', and '/>
                                 <ReflectionVariable start='177' end='184'>
-                                    <FieldAccess start='178' end='183'>
+                                    <FieldAccess start='178' end='183' isNullsafe='false'>
                                         <Variable start='178' end='180' isDollared='true'>
                                             <Identifier start='179' end='180' name='d'/>
                                         </Variable>
@@ -302,7 +302,7 @@
                             </ReflectionVariable>
                             <Scalar start='268' end='274' type='STRING' value=', and '/>
                             <ReflectionVariable start='274' end='281'>
-                                <FieldAccess start='275' end='280'>
+                                <FieldAccess start='275' end='280' isNullsafe='false'>
                                     <Variable start='275' end='277' isDollared='true'>
                                         <Identifier start='276' end='277' name='d'/>
                                     </Variable>

@@ -37,7 +37,6 @@ import java.util.Stack;
 import java.util.StringTokenizer;
 import javax.swing.AbstractAction;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.xml.retriever.DocumentParserFactory;
@@ -108,7 +107,7 @@ public class RetrieverEngineImpl extends RetrieverEngine {
     
     boolean STOP_PULL = false;
     public void run() {
-        ProgressHandle ph = ProgressHandleFactory.createHandle(
+        ProgressHandle ph = ProgressHandle.createHandle(
                 NbBundle.getMessage(RetrieverEngineImpl.class,"LBL_PROGRESSBAR_Retrieve_XML"),
                 new Cancellable(){
             public boolean cancel() {

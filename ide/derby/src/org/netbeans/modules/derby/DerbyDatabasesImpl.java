@@ -52,6 +52,8 @@ import org.openide.modules.InstalledFileLocator;
 import org.openide.util.Exceptions;
 import org.openide.util.NbPreferences;
 
+import static java.util.Arrays.asList;
+
 /**
  *
  * @author Andrei Badea, Jiri Rechtacek
@@ -488,15 +490,17 @@ public final class DerbyDatabasesImpl {
      * on the local Derby server.
      */
     private  synchronized DatabaseConnection registerDatabase(String databaseName, String user, String schema, String password, boolean rememberPassword) throws DatabaseException {
-        JDBCDriver drivers[] = JDBCDriverManager.getDefault().getDrivers(DerbyOptions.DRIVER_CLASS_NET);
-        if (drivers.length == 0) {
+        List<JDBCDriver> drivers = new ArrayList<>();
+        drivers.addAll(asList(JDBCDriverManager.getDefault().getDrivers(DerbyOptions.DRIVER_CLASS_NET)));
+        drivers.addAll(asList(JDBCDriverManager.getDefault().getDrivers(DerbyOptions.DRIVER_CLASS_NET_MODULAR)));
+        if (drivers.isEmpty()) {
             throw new IllegalStateException("The " + DerbyOptions.DRIVER_DISP_NAME_NET + " driver was not found"); // NOI18N
         }
         Preferences pref = NbPreferences.root().node(PATH_TO_DATABASE_PREFERENCES + databaseName);
         pref.put(USER_KEY, user == null ? "" : user);
         pref.put(SCHEMA_KEY, schema == null ? "" : schema);
         pref.put(PASSWORD_KEY, password == null ? "" : password);
-        DatabaseConnection dbconn = DatabaseConnection.create(drivers[0], "jdbc:derby://localhost:" + RegisterDerby.getDefault().getPort() + "/" + databaseName, user, schema, password, rememberPassword); // NOI18N
+        DatabaseConnection dbconn = DatabaseConnection.create(drivers.get(0), "jdbc:derby://localhost:" + RegisterDerby.getDefault().getPort() + "/" + databaseName, user, schema, password, rememberPassword); // NOI18N
         if (ConnectionManager.getDefault().getConnection(dbconn.getName()) == null) {
             ConnectionManager.getDefault().addConnection(dbconn);
         }
@@ -551,15 +555,20 @@ public final class DerbyDatabasesImpl {
             }
             URL[] driverURLs = new URL[] { derbyClient.toURI().toURL() }; // NOI18N
             DbURLClassLoader l = new DbURLClassLoader(driverURLs);
-            Class<?> c = Class.forName(DerbyOptions.DRIVER_CLASS_NET, true, l);
-            return (Driver)c.newInstance();
-        } catch (MalformedURLException e) {
-            exception = e;
-        } catch (IllegalAccessException e) {
-            exception = e;
-        } catch (ClassNotFoundException e) {
-            exception = e;
-        } catch (InstantiationException e) {
+            Class<?> driverClass = null;
+            for (String driverCandidate : new String[]{DerbyOptions.DRIVER_CLASS_NET, DerbyOptions.DRIVER_CLASS_NET_MODULAR}) {
+                try {
+                    driverClass = Class.forName(driverCandidate, true, l);
+                    break;
+                } catch (ClassNotFoundException ex) {
+                    exception = ex;
+                }
+            }
+            if(driverClass != null) {
+                exception = null;
+            }
+            return (Driver)driverClass.getDeclaredConstructor().newInstance();
+        } catch (MalformedURLException | ReflectiveOperationException e) {
             exception = e;
         }
         if (exception != null) {
@@ -587,13 +596,14 @@ public final class DerbyDatabasesImpl {
 
     List<DatabaseConnection> findDatabaseConnections(String databaseName) {
         String url = "jdbc:derby://localhost:" + RegisterDerby.getDefault().getPort() + "/" + databaseName;
-        List<DatabaseConnection> result = new ArrayList<DatabaseConnection>();
+        List<DatabaseConnection> result = new ArrayList<>();
 
         DatabaseConnection[] connections = ConnectionManager.getDefault().getConnections();
 
         for (DatabaseConnection conn : connections) {
             // If there's already a connection registered, we're done
-            if (conn.getDriverClass().equals(DerbyOptions.DRIVER_CLASS_NET)
+            if ((conn.getDriverClass().equals(DerbyOptions.DRIVER_CLASS_NET)
+                    || conn.getDriverClass().equals(DerbyOptions.DRIVER_CLASS_NET_MODULAR))
                     && conn.getDatabaseURL().equals(url)) {
                 result.add(conn);
             }

@@ -83,16 +83,19 @@ import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
@@ -106,7 +109,6 @@ import javax.lang.model.type.TypeVariable;
 import javax.lang.model.type.WildcardType;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
-import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -121,6 +123,7 @@ import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.queries.FileEncodingQuery;
 import org.netbeans.api.scripting.Scripting;
+import org.netbeans.modules.java.source.GeneratorUtilitiesAccessor;
 import org.netbeans.modules.java.source.builder.CommentHandlerService;
 import org.netbeans.modules.java.source.builder.CommentSetImpl;
 import org.netbeans.modules.java.source.parsing.AbstractSourceFileObject;
@@ -132,6 +135,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 
+
 /**
  *
  * @author Jan Lahoda, Dusan Balek
@@ -139,7 +143,7 @@ import org.openide.util.Exceptions;
  */
 public final class GeneratorUtilities {
 
-    private WorkingCopy copy;
+    private final WorkingCopy copy;
 
     private  GeneratorUtilities(WorkingCopy copy) {
         this.copy = copy;
@@ -184,7 +188,7 @@ public final class GeneratorUtilities {
 
     /**
      * Inserts a member to a class. Using the rules specified in the {@link CodeStyle}
-     * it finds the proper place for the member and calls {@link TreeMaker.insertClassMember}
+     * it finds the proper place for the member and calls {@link TreeMaker#insertClassMember}
      *
      * @param clazz the class to insert the member to
      * @param member the member to add
@@ -286,9 +290,9 @@ public final class GeneratorUtilities {
                         idx = i;
                         continue;
                     }
-                    int pos = (int)(lastMember != null ? sp.getEndPosition(compilationUnit, lastMember) : sp.getStartPosition( compilationUnit,clazz));
+                    int pos = (int)(lastMember != null ? sp.getEndPosition(lastMember) : sp.getStartPosition(clazz));
                     pos = guards.adjustPosition(pos, true);
-                    long treePos = sp.getStartPosition(compilationUnit, tree);
+                    long treePos = sp.getStartPosition(tree);
                     if (treePos < 0 || pos <= treePos) {
                         idx = i;
                     }
@@ -314,7 +318,7 @@ public final class GeneratorUtilities {
 
     /**
      * Inserts members to a class. Using the rules specified in the {@link CodeStyle}
-     * it finds the proper place for each of the members and calls {@link TreeMaker.insertClassMember}
+     * it finds the proper place for each of the members and calls {@link TreeMaker#insertClassMember}
      *
      * @param clazz the class to insert the members to
      * @param members the members to insert
@@ -342,15 +346,15 @@ public final class GeneratorUtilities {
         Tree lastMember = null;
         Tree nextMember = null;
         for (Tree tree : clazz.getMembers()) {
-            if (offset <= sp.getStartPosition(copy.getCompilationUnit(), tree)) {
+            if (offset <= sp.getStartPosition(tree)) {
                 DocumentGuards guards = LineDocumentUtils.as(doc, DocumentGuards.class);
                 if (doc == null || guards == null) {
                     nextMember = tree;
                     break;
                 }
-                int pos = (int)(lastMember != null ? sp.getEndPosition(copy.getCompilationUnit(), lastMember) : sp.getStartPosition(copy.getCompilationUnit(), clazz));
+                int pos = (int)(lastMember != null ? sp.getEndPosition(lastMember) : sp.getStartPosition(clazz));
                 pos = guards.adjustPosition(pos, true);
-                if (pos <= sp.getStartPosition(copy.getCompilationUnit(), tree)) {
+                if (pos <= sp.getStartPosition(tree)) {
                     nextMember = tree;
                     break;
                 }
@@ -360,10 +364,10 @@ public final class GeneratorUtilities {
         }
         if (lastMember != null) {
             // do not move the comments tied to last member in guarded block:
-            moveCommentsAfterOffset(copy, lastMember, members.get(0), offset, doc);
+            moveCommentsAfterOffset(copy, lastMember, members.getFirst(), offset, doc);
         }
         if (nextMember != null) {
-            moveCommentsBeforeOffset(copy, nextMember, members.get(members.size() - 1), offset, doc);
+            moveCommentsBeforeOffset(copy, nextMember, members.getLast(), offset, doc);
         }
         TreeMaker tm = copy.getTreeMaker();
         ClassTree newClazz = clazz;
@@ -375,7 +379,7 @@ public final class GeneratorUtilities {
     
     /**
      * Inserts a member to a class. Using the rules specified in the {@link CodeStyle}
-     * it finds the proper place for the member and calls {@link TreeMaker.insertClassMember}
+     * it finds the proper place for the member and calls {@link TreeMaker#insertClassMember}
      *
      * @param clazz the class to insert the member to
      * @param member the member to add
@@ -450,7 +454,7 @@ public final class GeneratorUtilities {
                 gu.copyComments(from, tree, false);
                 break;
         }
-        boolean before = (int)wc.getTrees().getSourcePositions().getStartPosition(wc.getCompilationUnit(), from) >= offset;
+        boolean before = (int)wc.getTrees().getSourcePositions().getStartPosition(from) >= offset;
         if (fromIdx >=0 && toIdx >= 0 && toIdx - fromIdx > 0) {
             for (int i = toIdx - 1; i >= fromIdx; i--) {
                 tm.removeComment(tree, i, before);
@@ -493,7 +497,7 @@ public final class GeneratorUtilities {
      * if 'collectNames' is set, it collects field names from the class definition. If
      * 'insertedName' is not null, it also collects references to that name in 
      * 'revDependencies'.
-     * <p/>
+     * <p>
      * For the secondPass, set 'collectNames' to false: the visitor will collect
      * dependencies of the scanned node into 'dependencies'. After 2 passes,
      * the revDependencies and dependencies can be used to determine partial order
@@ -526,12 +530,8 @@ public final class GeneratorUtilities {
         }
         
         private void addDependency(Name n) {
-            Collection<Name> deps = dependencies.get(member);
-            if (deps == null) {
-                deps = new ArrayList<>(3);
-                dependencies.put(member, deps);
-            }
-            deps.add(n);
+            dependencies.computeIfAbsent(member, k -> new ArrayList<>(3))
+                        .add(n);
         }
 
         // the following Nodes would just confuse the Identifier scanner:
@@ -662,7 +662,7 @@ public final class GeneratorUtilities {
     
     /**
      * Inserts members to a class. Using the rules specified in the {@link CodeStyle}
-     * it finds the proper place for each of the members and calls {@link TreeMaker.insertClassMember}
+     * it finds the proper place for each of the members and calls {@link TreeMaker#insertClassMember}
      *
      * @param clazz the class to insert the members to
      * @param members the members to insert
@@ -749,7 +749,7 @@ public final class GeneratorUtilities {
         return createMethod(method, clazz, false);
     }
 
-    /**Create a new method tree for the given method element. The method will be created as if it were member of {@link asMemberOf} type
+    /**Create a new method tree for the given method element. The method will be created as if it were member of {@code asMemberOf} type
      * (see also {@link Types#asMemberOf(javax.lang.model.type.DeclaredType,javax.lang.model.element.Element)}).
      * The new method will have an empty body.
      *
@@ -1047,6 +1047,22 @@ public final class GeneratorUtilities {
         } catch (Exception e) {}
         return copy.getTreeMaker().Block(Collections.emptyList(), false);
     }
+
+    /**
+     * Creates a default lambda expression.
+     *
+     * @param lambda a lambda to generate the expression for
+     * @param method a method of a functional interface to be implemented by the lambda expression
+     * @return the lambda expression
+     * @since 2.57
+     */
+    public ExpressionTree createDefaultLambdaExpression(LambdaExpressionTree lambda, ExecutableElement method) {
+        try {
+            String bodyTemplate = readFromTemplate(LAMBDA_EXPRESSION, createBindings(null, method)); //NOI18N
+            return copy.getTreeMaker().createLambdaExpression(lambda, bodyTemplate);
+        } catch (Exception e) {}
+        return null;
+    }
     
     private boolean isStarImport(ImportTree imp) {
         Tree qualIdent = imp.getQualifiedIdentifier();        
@@ -1067,20 +1083,29 @@ public final class GeneratorUtilities {
      * @since 0.86
      */
     public CompilationUnitTree addImports(CompilationUnitTree cut, Set<? extends Element> toImport) {
-        assert cut != null && toImport != null && toImport.size() > 0;
+        return addImports(cut, cut.getImports(), toImport, copy.getElements()::getModuleOf);
+    }
 
-        ArrayList<Element> elementsToImport = new ArrayList<Element>(toImport.size());
-        Set<String> staticImportNames = new HashSet<String>();
+    private CompilationUnitTree addImports(CompilationUnitTree cut, List<? extends ImportTree> cutImports, Set<? extends Element> toImport, Function<Element, ModuleElement> moduleOf) {
+        assert cut != null && toImport != null && !toImport.isEmpty();
+
+        ArrayList<Element> elementsToImport = new ArrayList<>(toImport.size());
+        Set<ModuleElement> modulesToImport = new LinkedHashSet<>();
+        Set<String> staticImportNames = new HashSet<>();
         for (Element e : toImport) {
             if (e == null) {
                 continue;
             }
             switch (e.getKind()) {
+                case MODULE:
+                    modulesToImport.add((ModuleElement)e);
+                    elementsToImport.add(e);
+                    break;
                 case METHOD:
                 case ENUM_CONSTANT:
                 case FIELD:
-                    StringBuilder name = new StringBuilder(((TypeElement)e.getEnclosingElement()).getQualifiedName()).append('.').append(e.getSimpleName());
-                    if (!staticImportNames.add(name.toString()))
+                    String name = new StringBuilder(((TypeElement)e.getEnclosingElement()).getQualifiedName()).append('.').append(e.getSimpleName()).toString();
+                    if (!staticImportNames.add(name))
                         break;
                 default:
                     elementsToImport.add(e);
@@ -1096,7 +1121,7 @@ public final class GeneratorUtilities {
         // check weather any conversions to star imports are needed
         int treshold = cs.useSingleClassImport() ? cs.countForUsingStarImport() : 1;
         int staticTreshold = cs.countForUsingStaticStarImport();        
-        Map<PackageElement, Integer> pkgCounts = new LinkedHashMap<PackageElement, Integer>();
+        Map<PackageElement, Integer> pkgCounts = new LinkedHashMap<>();
         PackageElement pkg = elements.getPackageElement("java.lang"); //NOI18N
         if (pkg != null) {
             pkgCounts.put(pkg, -2);
@@ -1110,17 +1135,24 @@ public final class GeneratorUtilities {
             pkg = elements.getPackageElement(elements.getName("")); //NOI18N
         }
         pkgCounts.put(pkg, -2);
-        Map<TypeElement, Integer> typeCounts = new LinkedHashMap<TypeElement, Integer>();
+        Map<TypeElement, Integer> typeCounts = new LinkedHashMap<>();
         // initially the import scope has no symbols. We must fill it in by:
-        // existing CUT named imports, package members AND then star imports, in this specific order
+        // existing CUT named imports, package members AND then star imports AND then module imports, in this specific order
         JCCompilationUnit jcut = (JCCompilationUnit)cut;
         StarImportScope importScope = new StarImportScope((Symbol)pkg);
+        if (jcut.moduleImportScope != null) {
+            importScope.prependSubScope(((JCCompilationUnit)cut).moduleImportScope);
+        }
         if (jcut.starImportScope != null) {
             importScope.prependSubScope(((JCCompilationUnit)cut).starImportScope);
         }
         if (jcut.packge != null) {
             importScope.prependSubScope(jcut.packge.members_field);
         }
+        // capture module counts if module imports are present
+        Map<ModuleElement, Integer> modCounts = jcut.moduleImportScope != null || !modulesToImport.isEmpty() ? new LinkedHashMap<>() : null;
+        Set<ModuleElement> transitivelyImportedUsedModules = modCounts != null ? new HashSet<>() : null;
+
         for (Element e : elementsToImport) {
             boolean isStatic = false;
             Element el = null;
@@ -1132,6 +1164,7 @@ public final class GeneratorUtilities {
                 case CLASS:
                 case ENUM:
                 case INTERFACE:
+                case RECORD:
                     if (e.getEnclosingElement().getKind() == ElementKind.PACKAGE)
                         el = e.getEnclosingElement();
                     break;
@@ -1140,6 +1173,10 @@ public final class GeneratorUtilities {
                 case FIELD:
                     isStatic = true;
                     el = e.getEnclosingElement();
+                    break;
+                case MODULE:
+                    if (modCounts != null)
+                        modCounts.merge((ModuleElement)e, 1, Integer::sum);
                     break;
                 default:
                     assert false : "Illegal element kind: " + e.getKind(); //NOI18N
@@ -1165,11 +1202,32 @@ public final class GeneratorUtilities {
                     typeCounts.put((TypeElement)el, cnt);
                 } else {
                     pkgCounts.put((PackageElement)el, cnt);
+                    if (cnt >= -1 && modCounts != null) {
+                        ModuleElement ml = moduleOf.apply(e);
+                        if (ml != null) {
+                            modCounts.merge(ml, 1, Integer::sum);
+                        }
+                    }
                 }
             }
         }
-        List<ImportTree> imports = new ArrayList<ImportTree>(cut.getImports());
+        List<ImportTree> imports = new ArrayList<>(cutImports);
         for (ImportTree imp : imports) {
+            if (imp.isModule()) {
+                // For module imports, no conversion thresholds to be checked, unlike star imports.
+                // The module imports should be retained, if in use; 
+                // even when the current usage is covered by existing named/star imports, 
+                // because more module classes may be used in the future.
+                if (modCounts != null) {
+                    ModuleElement m = elements.getModuleElement(imp.getQualifiedIdentifier().toString());
+                    if (m != null) {
+                        modCounts.put(m, -2); // -2 = do not touch the module import
+                        collectTransitivelyImportedUsedModules(m, modCounts.keySet(), copy, transitivelyImportedUsedModules);
+                        modulesToImport.remove(m);
+                    }
+                    continue;
+                }
+            }
             Element e = getImportedElement(cut, imp);
             if (!elementsToImport.contains(e)) {
                 if (imp.isStatic()) {
@@ -1231,6 +1289,9 @@ public final class GeneratorUtilities {
         // remove those star imports that do not satisfy the thresholds
         for (Iterator<ImportTree> ii = imports.iterator(); ii.hasNext();) {
             ImportTree imp = ii.next();
+            if (imp.isModule()) {                
+                continue;   // The module imports should be retained
+            }
             if (!isStarImport(imp)) {
                 continue;
             }
@@ -1246,17 +1307,37 @@ public final class GeneratorUtilities {
             }
         }
         
-        // check for possible name clashes originating from adding the package imports
-        Set<Element> explicitNamedImports = new HashSet<Element>();
+        // Add modulesToImport to the importScope, to check name clashes, if any
+        if (!modulesToImport.isEmpty()) {
+            assert modCounts != null && transitivelyImportedUsedModules != null;
+            modulesToImport.removeIf(transitivelyImportedUsedModules::contains);
+            for (ModuleElement m : modulesToImport) {
+                for (PackageElement e : elementUtilities.transitivelyExportedPackages(m)) {
+                    if (e instanceof Symbol p) {
+                        importScope.appendSubScope(p.members());
+                    }
+                    collectTransitivelyImportedUsedModule(e, m, modCounts.keySet(), transitivelyImportedUsedModules);
+                }
+                modCounts.replace(m, -1);
+            }
+        }        
+        if (transitivelyImportedUsedModules != null && modCounts != null) {
+            // Mark all transitively imported modules as already imported,
+            // and skip importing it or its members. This is done by setting the 
+            // value for it to -2 in modCounts.
+            transitivelyImportedUsedModules.forEach(m -> modCounts.computeIfPresent(m, (k, old) -> old != null && old < 0 ? old : Integer.valueOf(-2)));
+        }
+
+        // check for possible name clashes originating from adding the package or module imports
+        Set<Element> explicitNamedImports = new HashSet<>();
         for (Element element : elementsToImport) {
-            if (element.getKind().isClass() || element.getKind().isInterface()) {
+            if (element.getEnclosingElement() != pkg && (element.getKind().isClass() || element.getKind().isInterface())) {
                 for (Symbol sym : importScope.getSymbolsByName((com.sun.tools.javac.util.Name)element.getSimpleName())) {
                     if (sym.getKind().isClass() || sym.getKind().isInterface()) {
                         if (sym != element) {
                             explicitNamedImports.add(element);
+                            break;// break if explicitNameImport was added
                         }
-                        // break if explicitNameImport was added, or when the symbol is correctly resolved.
-                        break;
                     }
                 }
             }
@@ -1305,7 +1386,7 @@ public final class GeneratorUtilities {
 
         // sort the elements to import
         ImportsComparator comparator = new ImportsComparator(cs);
-        Collections.sort(elementsToImport, comparator);
+        elementsToImport.sort(comparator);
         
         // merge the elements to import with the existing import statemetns
         TreeMaker make = copy.getTreeMaker();
@@ -1323,6 +1404,7 @@ public final class GeneratorUtilities {
                 case CLASS:
                 case ENUM:
                 case INTERFACE:
+                case RECORD:
                     if (currentToImportElement.getEnclosingElement().getKind() == ElementKind.PACKAGE)
                         el = currentToImportElement.getEnclosingElement();
                     break;
@@ -1333,13 +1415,47 @@ public final class GeneratorUtilities {
                     el = currentToImportElement.getEnclosingElement();
                     break;
             }
-            Integer cnt = el == null ? Integer.valueOf(0) : isStatic ? typeCounts.get((TypeElement)el) : pkgCounts.get((PackageElement)el);
-            if (explicitNamedImports.contains(currentToImportElement))
-                cnt = 0;
+            final int cnt;  // Count of imports that may replace the currentToImportElement
+            if (explicitNamedImports.contains(currentToImportElement)) {
+                cnt = 0;    // Explicit named imports must not be replaced by another
+            } else {
+                /// Check if the import is replaced by a star import or module import
+                ///
+                /// Logic:
+                /// - This refers to the count of imports of the enclosing element, if any.
+                /// - A replacing star import or module import is indicated by a negative count.
+                ///     - If the replacement has already been included in the imports, the count is set as -2.
+                ///     - If the replacement is yet to be included in the imports, the count is set as -1.
+                /// - Otherwise, a non-negative count indicates that the import is below the threshold for replacement.
+
+                Integer enclosingStarCnt = el == null ? null : isStatic ? typeCounts.get((TypeElement)el) :  pkgCounts.get((PackageElement)el);
+                if (isStatic) {
+                    cnt = enclosingStarCnt == null ? 0 : enclosingStarCnt;
+                } else {
+                    int modCount = 0;
+                    if (modCounts != null) {
+                        ModuleElement m = moduleOf.apply(currentToImportElement);
+                        Integer mc = m == null ? null : modCounts.get(m);
+                        if (mc != null && mc < 0) {
+                            modCount = mc;
+                            if (modCount == -1) {
+                                // Import the module
+                                currentToImportElement = m;
+                                el = null;
+                                // Mark to skip importing this module subsequently.
+                                modCounts.put(m, -2);
+                            }
+                            // Else, no need to add the current import as its module has already been imported.
+                        }
+                    }
+                    cnt = modCount < 0 ? modCount : enclosingStarCnt == null ? 0 : enclosingStarCnt;
+                }
+            }
+
             if (cnt == -2) {
                 currentToImport--;
             } else {
-                if (cnt == -1) {
+                if (cnt == -1 && el != null) {
                     currentToImportElement = el;
                     if (isStatic) {
                         typeCounts.put((TypeElement)el, -2);
@@ -1353,7 +1469,7 @@ public final class GeneratorUtilities {
                 if (isStar) {
                     qualIdent = make.MemberSelect(qualIdent, elements.getName("*")); //NOI18N
                 }
-                ImportTree nImport = make.Import(qualIdent, isStatic);
+                ImportTree nImport = currentToImportElement.getKind() == ElementKind.MODULE ? make.ImportModule(qualIdent) : make.Import(qualIdent, isStatic);
                 while (currentExisting >= 0) {
                     ImportTree imp = imports.get(currentExisting);
                     Element impElement = getImportedElement(cut, imp);
@@ -1376,6 +1492,22 @@ public final class GeneratorUtilities {
         
         // return a copy of the unit with changed imports section
         return make.CompilationUnit(cut.getPackage(), imports, cut.getTypeDecls(), cut.getSourceFile());
+    }
+
+    private static void collectTransitivelyImportedUsedModules(final ModuleElement importedModule, final Set<ModuleElement> usedModules, final CompilationInfo info, final Set<ModuleElement> transitivelyImportedUsedModules) {
+        if (importedModule != null) {
+            if (transitivelyImportedUsedModules.contains(importedModule))
+                return;
+            for (PackageElement pack : info.getElementUtilities().transitivelyExportedPackages(importedModule)) {
+                collectTransitivelyImportedUsedModule(pack, importedModule, usedModules, transitivelyImportedUsedModules);
+            }
+        }
+    }
+
+    private static void collectTransitivelyImportedUsedModule(final PackageElement transitivePackage, final ModuleElement importedModule, final Set<ModuleElement> usedModules, final Set<ModuleElement> transitivelyImportedUsedModules) {
+        if ((transitivePackage.getEnclosingElement() instanceof ModuleElement transitiveModule) && transitiveModule != importedModule && usedModules.contains(transitiveModule)) {
+            transitivelyImportedUsedModules.add(transitiveModule);
+        }
     }
 
     /**
@@ -1411,6 +1543,7 @@ public final class GeneratorUtilities {
             TokenSequence<JavaTokenId> seq = tokens.tokenSequence(JavaTokenId.language());
             TreePath tp = TreePath.getPath(cut, original);
             Tree toMap = original;
+            TreePath toMapPath = tp;
             Tree mapTarget = null;
             
             if (tp != null && original.getKind() != Kind.COMPILATION_UNIT) {
@@ -1426,7 +1559,7 @@ public final class GeneratorUtilities {
                         break;
                     }
                    switch (p2.getLeaf().getKind()) {
-                       case CLASS: case INTERFACE: case ENUM:
+                       case CLASS: case INTERFACE: case ENUM: case RECORD:
                        case METHOD:
                        case BLOCK:
                        case VARIABLE:
@@ -1443,17 +1576,33 @@ public final class GeneratorUtilities {
                 }
                 if (p2 != null) {
                     toMap = p2.getLeaf();
+                    toMapPath = p2;
                 }
                 if (toMap == tp.getLeaf()) {
                     // go at least one level up in a hope it's sufficient.
                     toMap = tp.getParentPath().getLeaf();
+                    toMapPath = tp.getParentPath();
                 }
             }
             if (mapTarget == null) {
                 mapTarget = original;
             }
+
             AssignComments translator = new AssignComments(info, mapTarget, seq, unit);
-            
+
+            if (toMapPath != null &&
+                toMapPath.getParentPath() != null &&
+                TreeUtilities.CLASS_TREE_KINDS.contains(toMapPath.getParentPath().getLeaf().getKind())) {
+                //run the mapping the preceding member, so that its trailing comments are properly consumed:
+                ClassTree enclClass = (ClassTree) toMapPath.getParentPath().getLeaf();
+                List<? extends Tree> members = enclClass.getMembers();
+                int currentIndex = members.indexOf(toMap);
+
+                if (currentIndex > 0) {
+                    translator.scan(members.get(currentIndex - 1), null);
+                }
+            }
+
             translator.scan(toMap, null);
 
             return original;
@@ -1494,7 +1643,8 @@ public final class GeneratorUtilities {
      * converted from a single value into an array.
      *
      * The typical trees passed as {@code attributeValuesToAdd} are:
-     * <table border="1">
+     * <table>
+     * <caption>Typical tree</caption>
      *     <tr>
      *         <th>attribute type</th>
      *         <th>expected tree type</th>
@@ -1547,7 +1697,8 @@ public final class GeneratorUtilities {
      * {@link CompilationUnitTree} from {@code package-info.java}.
      *
      * The typical trees passed as {@code attributeValuesToAdd} are:
-     * <table border="1">
+     * <table>
+     * <caption>Typical tree</caption>
      *     <tr>
      *         <th>attribute type</th>
      *         <th>expected tree type</th>
@@ -1709,7 +1860,8 @@ public final class GeneratorUtilities {
         if (isImplement && clazz.getKind().isInterface()) {
             mt = make.addModifiersModifier(mt, Modifier.DEFAULT);                                
         }
-        boolean isAbstract = element.getModifiers().contains(Modifier.ABSTRACT);
+        boolean replaceable = copy.getTrees().getTree(clazz).getKind() == Kind.RECORD && copy.getElementUtilities().isSynthetic(element);
+        boolean isAbstract = element.getModifiers().contains(Modifier.ABSTRACT) || replaceable;
         if (isImplement || clazz.getKind().isClass() && (!isAbstract || !clazz.getModifiers().contains(Modifier.ABSTRACT))) {
             try {
                 bodyTemplate = "{" + readFromTemplate(isAbstract ? GENERATED_METHOD_BODY : OVERRIDDEN_METHOD_BODY, createBindings(clazz, element)) + "\n}"; //NOI18N
@@ -1878,7 +2030,9 @@ public final class GeneratorUtilities {
     
     private ExpressionTree qualIdentFor(Element e) {
         TreeMaker tm = copy.getTreeMaker();
-        if (e.getKind() == ElementKind.PACKAGE) {
+        if (e.getKind() == ElementKind.MODULE) {
+            return qualIdentFor(((ModuleElement)e).getQualifiedName().toString());
+        } else if (e.getKind() == ElementKind.PACKAGE) {
             String name = ((PackageElement)e).getQualifiedName().toString();
             if (e instanceof Symbol) {
                 int lastDot = name.lastIndexOf('.');
@@ -1909,6 +2063,7 @@ public final class GeneratorUtilities {
         if (clazz != null) {
             bindings.put(CLASS_NAME, clazz.getQualifiedName().toString());
             bindings.put(SIMPLE_CLASS_NAME, clazz.getSimpleName().toString());
+            bindings.put(CLASS_KIND, clazz.getKind().toString());
         }
         if (element != null) {
             bindings.put(METHOD_NAME, element.getSimpleName().toString());
@@ -1930,7 +2085,11 @@ public final class GeneratorUtilities {
                 default:
                     value = "null"; //NOI18N
             }
-            bindings.put(DEFAULT_RETURN_TYPE_VALUE, value);
+            if (clazz != null && clazz.getKind() == ElementKind.RECORD) {
+                bindings.put(DEFAULT_RETURN_TYPE_VALUE, element.getSimpleName());
+            } else {
+                bindings.put(DEFAULT_RETURN_TYPE_VALUE, value);
+            }
         }
         if (clazz != null && element != null) {
             StringBuilder sb = new StringBuilder();
@@ -1983,7 +2142,7 @@ public final class GeneratorUtilities {
     private static String[] correspondingGSNames(Tree member) {
         if (isSetter(member)) {
             String name = name(member);
-            VariableTree param = ((MethodTree)member).getParameters().get(0);
+            VariableTree param = ((MethodTree)member).getParameters().getFirst();
             if (param.getType().getKind() == Tree.Kind.PRIMITIVE_TYPE && ((PrimitiveTypeTree)param.getType()).getPrimitiveTypeKind() == TypeKind.BOOLEAN) {
                 return new String[] {'g' + name.substring(1), "is" + name.substring(3)};
             }
@@ -2094,12 +2253,13 @@ public final class GeneratorUtilities {
                 return 0;
             
             boolean isStatic1 = false;
+            boolean isModule1 = false;
             StringBuilder sb1 = new StringBuilder();
-            if (o1 instanceof ImportTree) {
-                isStatic1 = ((ImportTree)o1).isStatic();
-                sb1.append(((ImportTree)o1).getQualifiedIdentifier().toString());
-            } else if (o1 instanceof Element) {
-                Element e1 = (Element)o1;
+            if (o1 instanceof ImportTree it1) {
+                isStatic1 = it1.isStatic();
+                isModule1 = it1.isModule();
+                sb1.append(it1.getQualifiedIdentifier().toString());
+            } else if (o1 instanceof Element e1) {
                 if (e1.getKind().isField() || e1.getKind() == ElementKind.METHOD) {
                     sb1.append('.').append(e1.getSimpleName());
                     e1 = e1.getEnclosingElement();
@@ -2109,17 +2269,21 @@ public final class GeneratorUtilities {
                     sb1.insert(0, ((TypeElement)e1).getQualifiedName());
                 } else if (e1.getKind() == ElementKind.PACKAGE) {
                     sb1.insert(0, ((PackageElement)e1).getQualifiedName());
+                } else if (e1.getKind() == ElementKind.MODULE) {
+                    isModule1 = true;
+                    sb1.insert(0, ((ModuleElement)e1).getQualifiedName());
                 }
             }
             String s1 = sb1.toString();
                 
             boolean isStatic2 = false;
+            boolean isModule2 = false;
             StringBuilder sb2 = new StringBuilder();
-            if (o2 instanceof ImportTree) {
-                isStatic2 = ((ImportTree)o2).isStatic();
-                sb2.append(((ImportTree)o2).getQualifiedIdentifier().toString());
-            } else if (o2 instanceof Element) {
-                Element e2 = (Element)o2;
+            if (o2 instanceof ImportTree it2) {
+                isStatic2 = it2.isStatic();
+                isModule2 = it2.isModule();
+                sb2.append(it2.getQualifiedIdentifier().toString());
+            } else if (o2 instanceof Element e2) {
                 if (e2.getKind().isField() || e2.getKind() == ElementKind.METHOD) {
                     sb2.append('.').append(e2.getSimpleName());
                     e2 = e2.getEnclosingElement();
@@ -2129,12 +2293,21 @@ public final class GeneratorUtilities {
                     sb2.insert(0, ((TypeElement)e2).getQualifiedName());
                 } else if (e2.getKind() == ElementKind.PACKAGE) {
                     sb2.insert(0, ((PackageElement)e2).getQualifiedName());
+                } else if (e2.getKind() == ElementKind.MODULE) {
+                    isModule2 = true;
+                    sb2.insert(0, ((ModuleElement)e2).getQualifiedName());
                 }
             }
             String s2 = sb2.toString();
 
-            int bal = groups.getGroupId(s1, isStatic1) - groups.getGroupId(s2, isStatic2);
-
+            int bal;
+            if (isModule1) {
+                bal = isModule2 ? 0 : 1;    // Place module imports last
+            } else if (isModule2) {
+                bal = -1;                   // Place module imports last
+            } else {
+                bal = groups.getGroupId(s1, isStatic1) - groups.getGroupId(s2, isStatic2);
+            }
             return bal == 0 ? s1.compareTo(s2) : bal;
         }
     }
@@ -2145,10 +2318,10 @@ public final class GeneratorUtilities {
      */
     private void tagFirst(List<MethodTree> methods) {
         //tag first method body, if any
-        if (methods.size() > 0) {
-            BlockTree body = methods.get(0).getBody();
+        if (!methods.isEmpty()) {
+            BlockTree body = methods.getFirst().getBody();
             if (body != null && !body.getStatements().isEmpty()) {
-                copy.tag(body.getStatements().get(0), "methodBodyTag"); // NOI18N
+                copy.tag(body.getStatements().getFirst(), "methodBodyTag"); // NOI18N
             }
         }
     }
@@ -2169,12 +2342,14 @@ public final class GeneratorUtilities {
     private static final String GENERATED_METHOD_BODY = "Templates/Classes/Code/GeneratedMethodBody"; //NOI18N
     private static final String OVERRIDDEN_METHOD_BODY = "Templates/Classes/Code/OverriddenMethodBody"; //NOI18N
     private static final String LAMBDA_BODY = "Templates/Classes/Code/LambdaBody"; //NOI18N
+    private static final String LAMBDA_EXPRESSION = "Templates/Classes/Code/LambdaExpression"; //NOI18N
     private static final String METHOD_RETURN_TYPE = "method_return_type"; //NOI18N
     private static final String DEFAULT_RETURN_TYPE_VALUE = "default_return_value"; //NOI18N
     private static final String SUPER_METHOD_CALL = "super_method_call"; //NOI18N
     private static final String METHOD_NAME = "method_name"; //NOI18N
     private static final String CLASS_NAME = "class_name"; //NOI18N
     private static final String SIMPLE_CLASS_NAME = "simple_class_name"; //NOI18N
+    private static final String CLASS_KIND = "class_kind"; //NOI18N
     private static final String SCRIPT_ENGINE_ATTR = "javax.script.ScriptEngine"; //NOI18N    
     private static final String STRING_OUTPUT_MODE_ATTR = "com.sun.script.freemarker.stringOut"; //NOI18N
     private static ScriptEngineManager manager;
@@ -2184,20 +2359,14 @@ public final class GeneratorUtilities {
         Charset sourceEnc = FileEncodingQuery.getEncoding(template);
 
         ScriptEngine eng = engine(template);
-        Bindings bind = eng.getContext().getBindings(ScriptContext.ENGINE_SCOPE);
-        bind.putAll(values);
+        ScriptContext context = eng.getContext();
+        context.getBindings(ScriptContext.ENGINE_SCOPE).putAll(values);
+        context.setAttribute(FileObject.class.getName(), template, ScriptContext.ENGINE_SCOPE);
+        context.setAttribute(ScriptEngine.FILENAME, template.getNameExt(), ScriptContext.ENGINE_SCOPE);
+        context.setAttribute(STRING_OUTPUT_MODE_ATTR, true, ScriptContext.ENGINE_SCOPE);
 
-        Reader is = null;
-        try {
-            eng.getContext().setAttribute(FileObject.class.getName(), template, ScriptContext.ENGINE_SCOPE);
-            eng.getContext().setAttribute(ScriptEngine.FILENAME, template.getNameExt(), ScriptContext.ENGINE_SCOPE);
-            eng.getContext().setAttribute(STRING_OUTPUT_MODE_ATTR, true, ScriptContext.ENGINE_SCOPE);
-            is = new InputStreamReader(template.getInputStream(), sourceEnc);
+        try (Reader is = new InputStreamReader(template.getInputStream(), sourceEnc)) {
             return (String)eng.eval(is);
-        } finally {
-            if (is != null) {
-                is.close();
-            }
         }
     }
 
@@ -2239,5 +2408,14 @@ public final class GeneratorUtilities {
             }
         }.scan(tree, false);
         return b != null ? b : false;
+    }
+
+    static {
+        GeneratorUtilitiesAccessor.setInstance(new GeneratorUtilitiesAccessor() {
+            @Override
+            public CompilationUnitTree addImports(GeneratorUtilities gu, CompilationUnitTree cut, List<? extends ImportTree> cutImports, Set<? extends Element> toImport, Function<Element, ModuleElement> moduleOf) {
+                return gu.addImports(cut, cutImports, toImport, moduleOf);
+            }
+        });
     }
 }

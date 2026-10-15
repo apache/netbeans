@@ -20,7 +20,6 @@
 package org.netbeans.modules.j2ee.persistence.wizard.unit;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.db.explorer.DatabaseConnection;
@@ -70,14 +69,11 @@ public class PersistenceUnitWizardDescriptor implements WizardDescriptor.Finisha
                 jdbcPanel= new PersistenceUnitWizardPanelJdbc(project, this, true);
                 panel = jdbcPanel;
             }
-            panel.addPropertyChangeListener(new PropertyChangeListener() {
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    if (evt.getPropertyName().equals(PersistenceUnitWizardPanel.IS_VALID)) {
-                        Object newvalue = evt.getNewValue();
-                        if ((newvalue != null) && (newvalue instanceof Boolean)) {
-                            stateChanged(null);
-                        }
+            panel.addPropertyChangeListener( (PropertyChangeEvent evt) -> {
+                if (evt.getPropertyName().equals(PersistenceUnitWizardPanel.IS_VALID)) {
+                    Object newvalue = evt.getNewValue();
+                    if (newvalue instanceof Boolean) {
+                        stateChanged(null);
                     }
                 }
             });

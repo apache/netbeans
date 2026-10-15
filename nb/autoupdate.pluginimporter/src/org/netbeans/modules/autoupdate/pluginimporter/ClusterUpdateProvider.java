@@ -90,7 +90,7 @@ public class ClusterUpdateProvider implements UpdateProvider {
     public Map<String, UpdateItem> getUpdateItems () throws IOException {
         Map<String, UpdateItem> res = new HashMap<String, UpdateItem> ();
         for (File cf: readModules (cluster)) {
-            String cnb = (cf.getName ().substring (0, cf.getName ().length () - ".xml".length ())).replaceAll ("-", "."); // NOI18N
+            String cnb = (cf.getName ().substring (0, cf.getName ().length () - ".xml".length ())).replace ("-", "."); // NOI18N
             Map<String, String> attr = new HashMap<String, String> (7);
             readConfigFile (cf, attr);
             String jarName = attr.get ("jar");

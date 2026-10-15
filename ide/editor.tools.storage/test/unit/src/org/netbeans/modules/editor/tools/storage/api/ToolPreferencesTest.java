@@ -24,6 +24,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.nio.charset.StandardCharsets;
 import java.util.prefs.Preferences;
 import org.netbeans.junit.NbTestCase;
 
@@ -76,7 +77,7 @@ public class ToolPreferencesTest extends NbTestCase {
         p.node("a/b/c/d").put("test", "test");
         prefs.save();
         StringBuilder content = new StringBuilder();
-        try (Reader r = new InputStreamReader(new FileInputStream(settingsFile), "UTF-8")) {
+        try (Reader r = new InputStreamReader(new FileInputStream(settingsFile), StandardCharsets.UTF_8)) {
             int read;
             
             while ((read = r.read()) != (-1)) {

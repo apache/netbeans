@@ -44,7 +44,6 @@ import org.netbeans.api.editor.EditorRegistry;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.java.source.Task;
 import org.netbeans.modules.j2ee.persistence.editor.JPAEditorUtil;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionQuery;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
@@ -285,7 +284,7 @@ public abstract class JPACompletionItem implements CompletionItem {
         return substituteText(component, substOffset, component.getCaret().getDot() - substOffset, false);
     }
 
-    private abstract static class DBElementItem extends JPACompletionItem {
+    abstract static class DBElementItem extends JPACompletionItem {
 
         private String name;
         private boolean quote;
@@ -689,9 +688,9 @@ public abstract class JPACompletionItem implements CompletionItem {
     }
     public static final class IndexElementItem extends DBElementItem {
 
-        public final static String ASC = "ASC";
-        public final static String DESC = "DESC";
-        public final static String[] PARAMS = {ASC, DESC};
+        public static final String ASC = "ASC";
+        public static final String DESC = "DESC";
+        public static final String[] PARAMS = {ASC, DESC};
         private final int shift;
         
         protected static CCPaintComponent.TableElementPaintComponent paintComponent = null;
@@ -851,9 +850,7 @@ public abstract class JPACompletionItem implements CompletionItem {
         }
     }
     
-    abstract private static class PersistenceXmlCompletionItem extends JPACompletionItem {
-        /////////
-
+    private abstract static class PersistenceXmlCompletionItem extends JPACompletionItem {
         protected int substitutionOffset;
 
         protected PersistenceXmlCompletionItem(int substitutionOffset) {
@@ -882,7 +879,7 @@ public abstract class JPACompletionItem implements CompletionItem {
             try {
                 Position position = doc.createPosition(offset);
                 doc.remove(offset, len);
-                doc.insertString(position.getOffset(), text.toString(), null);
+                doc.insertString(position.getOffset(), text, null);
             } catch (BadLocationException ble) {
                 // nothing can be done to update
             } finally {
@@ -941,7 +938,6 @@ public abstract class JPACompletionItem implements CompletionItem {
         }
 
         public abstract String getDisplayText();
-        /////////
     }
 
     private static class AttribValueItem extends PersistenceXmlCompletionItem {
@@ -1066,18 +1062,14 @@ public abstract class JPACompletionItem implements CompletionItem {
                             return;
                         }
 
-                        js.runUserActionTask(new Task<CompilationController>() {
-
-                            @Override
-                            public void run(CompilationController cc) throws Exception {
-                                cc.toPhase(JavaSource.Phase.RESOLVED);
-                                Element element = elemHandle.resolve(cc);
-                                if (element == null) {
-                                    return;
-                                }
-                                PersistenceCompletionDocumentation doc = PersistenceCompletionDocumentation.createJavaDoc(cc, element);
-                                resultSet.setDocumentation(doc);
+                        js.runUserActionTask( (CompilationController cc) -> {
+                            cc.toPhase(JavaSource.Phase.RESOLVED);
+                            Element element = elemHandle.resolve(cc);
+                            if (element == null) {
+                                return;
                             }
+                            PersistenceCompletionDocumentation doc1 = PersistenceCompletionDocumentation.createJavaDoc(cc, element);
+                            resultSet.setDocumentation(doc1);
                         }, false);
                         resultSet.finish();
                     } catch (IOException ex) {

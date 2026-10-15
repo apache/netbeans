@@ -52,9 +52,7 @@ public class XmlSuiteHandler extends TestNGContentHandler {
             r.parse(new InputSource(suiteFile.getInputStream()));
             location[0] = sl.getLine();
             location[1] = sl.getColumn();
-        } catch (IOException ex) {
-            LOGGER.log(Level.WARNING, null, ex);
-        } catch (SAXException ex) {
+        } catch (IOException | SAXException ex) {
             LOGGER.log(Level.WARNING, null, ex);
         }
         return location;
@@ -66,7 +64,7 @@ public class XmlSuiteHandler extends TestNGContentHandler {
     }
 
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes attributes) {
         if ("test".equals(qName) && attributes != null && suite.equals(attributes.getValue("name"))) {
             line = loc.getLineNumber();
             column = loc.getColumnNumber() - suite.length() - 3;
@@ -74,7 +72,7 @@ public class XmlSuiteHandler extends TestNGContentHandler {
     }
 
     @Override
-    public void endElement(String uri, String localName, String qName) throws SAXException {
+    public void endElement(String uri, String localName, String qName) {
     }
 
     public int getLine() {

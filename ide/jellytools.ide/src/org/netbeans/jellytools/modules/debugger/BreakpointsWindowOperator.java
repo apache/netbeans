@@ -63,8 +63,6 @@ public class BreakpointsWindowOperator extends TopComponentOperator {
         return new BreakpointsWindowOperator();
     }
     
-    /********************************** Actions ****************************/
-    
     /** Performs Delete All action on active tab. */
     public void deleteAll() {
         new DeleteAllBreakpointsAction().perform(this);

@@ -80,8 +80,8 @@ public class SunResourceDataObject extends XMLDataObject implements FileChangeLi
     private static String MAIL = "mail-resource"; //NOI18N
     private static String JMS = "jms-resource"; //NOI18N
 
-    transient private ValidateXMLCookie validateCookie = null;
-    transient private CheckXMLCookie checkCookie = null;
+    private transient ValidateXMLCookie validateCookie = null;
+    private transient CheckXMLCookie checkCookie = null;
     
     ConnPoolBean cpBean = null;
     DataSourceBean dsBean = null;

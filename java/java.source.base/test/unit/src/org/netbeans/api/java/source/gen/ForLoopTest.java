@@ -28,6 +28,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
 import org.netbeans.api.java.source.*;
 import org.netbeans.api.java.source.JavaSource.Phase;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import org.netbeans.junit.NbTestSuite;
 import org.openide.filesystems.FileUtil;
 
@@ -106,7 +107,7 @@ public class ForLoopTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -157,7 +158,7 @@ public class ForLoopTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -217,7 +218,7 @@ public class ForLoopTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -276,7 +277,7 @@ public class ForLoopTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -324,7 +325,7 @@ public class ForLoopTest extends GeneratorTestMDRCompat {
                 WhileLoopTree wlt = (WhileLoopTree) stmts.get(0);
                 ExpressionStatementTree statement = (ExpressionStatementTree) wlt.getStatement();
                 VariableTree var = make.Variable(
-                        make.Modifiers(Collections.<Modifier>emptySet()), 
+                        make.Modifiers(Collections.<Modifier>emptySet()),
                         "properties",
                         make.Identifier("Properties"),
                         statement.getExpression()
@@ -337,7 +338,7 @@ public class ForLoopTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -385,7 +386,7 @@ public class ForLoopTest extends GeneratorTestMDRCompat {
                 ForLoopTree foor = (ForLoopTree) stmts.get(0);
                 ExpressionStatementTree statement = (ExpressionStatementTree) foor.getStatement();
                 VariableTree var = make.Variable(
-                        make.Modifiers(Collections.<Modifier>emptySet()), 
+                        make.Modifiers(Collections.<Modifier>emptySet()),
                         "properties",
                         make.Identifier("Properties"),
                         statement.getExpression()
@@ -398,7 +399,7 @@ public class ForLoopTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -444,7 +445,7 @@ public class ForLoopTest extends GeneratorTestMDRCompat {
                 WhileLoopTree wlt = (WhileLoopTree) stmts.get(0);
                 ExpressionStatementTree statement = (ExpressionStatementTree) wlt.getStatement();
                 VariableTree var = make.Variable(
-                        make.Modifiers(Collections.<Modifier>emptySet()), 
+                        make.Modifiers(Collections.<Modifier>emptySet()),
                         "properties",
                         make.Identifier("Properties"),
                         statement.getExpression()
@@ -457,7 +458,7 @@ public class ForLoopTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -512,7 +513,7 @@ public class ForLoopTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -565,7 +566,7 @@ public class ForLoopTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -609,7 +610,7 @@ public class ForLoopTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -649,7 +650,7 @@ public class ForLoopTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -693,7 +694,7 @@ public class ForLoopTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -736,7 +737,7 @@ public class ForLoopTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -780,7 +781,55 @@ public class ForLoopTest extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    public void testInitializerAssignmentToVariableNoSemis() throws Exception {
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile,
+                """
+                package javaapplication1;
+
+                class UserTask {
+                    public void method() {
+                        for (t = 0) {
+                        }
+                    }
+                }
+                """);
+        String golden =
+            """
+            package javaapplication1;
+
+            class UserTask {
+                public void method() {
+                    for (int t = 0) {
+                    }
+                }
+            }
+            """;
+        JavaSource testSource = JavaSource.forFileObject(FileUtil.toFileObject(testFile));
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(final WorkingCopy workingCopy) throws java.io.IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                final TreeMaker make = workingCopy.getTreeMaker();
+                new ErrorAwareTreePathScanner<Void, Void>() {
+                    @Override
+                    public Void visitAssignment(AssignmentTree node, Void p) {
+                        if (node.getVariable().toString().equals("t")) {
+                            VariableTree var = make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "t", make.PrimitiveType(TypeKind.INT), node.getExpression());
+                            workingCopy.rewrite(getCurrentPath().getParentPath().getLeaf(), var);
+                        }
+                        return super.visitAssignment(node, p);
+                    }
+                }.scan(workingCopy.getCompilationUnit(), null);
+            }
+        };
+        testSource.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 

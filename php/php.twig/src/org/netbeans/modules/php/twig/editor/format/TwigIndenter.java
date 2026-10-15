@@ -162,7 +162,7 @@ public class TwigIndenter extends AbstractIndenter<TwigTopTokenId> {
                 } else if (start == ts.offset()) {
                     if (end < commentEndOffset) {
                         // if comment ends on next line put formatter to IN_COMMENT state
-                        int lineStart = LineDocumentUtils.getLineStart(getDocument(), ts.offset());
+                        int lineStart = LineDocumentUtils.getLineStartOffset(getDocument(), ts.offset());
                         preservedLineIndentation = start - lineStart;
                     }
                 } else if (end == commentEndOffset) {

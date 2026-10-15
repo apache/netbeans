@@ -36,12 +36,24 @@ public interface Constants {
     String PROP_VERSION = "version";
     String PROP_PACKAGE = "package";
 
+    @Deprecated
     String PROP_JAVA_EE_VERSION = "javaeeVersion";
     String PROP_PAYARA_MICRO_VERSION = "payaraMicroVersion";
+    String PROP_PAYARA_VERSION = "payaraVersion";
     String PROP_AUTO_BIND_HTTP = "autoBindHttp";
     String PROP_CONTEXT_ROOT = "contextRoot";
+    String PROP_PLATFORM = "platform";
+    String PROP_PLATFORM_MICRO_VALUE = "micro";
 
     String VERSION = "version";
+    String HOT_DEPLOY = "hotDeploy";
+    String DEV_MODE = "devMode";
+    String DEPLOY_WAR = "deployWar";
+    String EXPLODED = "exploded";
+    String TRIM_LOG = "trimLog";
+    String AUTO_DEPLOY = "autoDeploy";
+    String KEEP_STATE = "keepState";
+    String LIVE_RELOAD = "liveReload";
 
     String WAR_PACKAGING = "war";
 
@@ -68,9 +80,10 @@ public interface Constants {
     String RUN_SINGLE_ACTION = ActionProvider.COMMAND_RUN_SINGLE + ".deploy";
     String DEBUG_SINGLE_ACTION = ActionProvider.COMMAND_DEBUG_SINGLE + ".deploy";
     String PROFILE_SINGLE_ACTION = ActionProvider.COMMAND_PROFILE_SINGLE + ".deploy";
-
     String ARCHETYPE_GROUP_ID = "fish.payara.maven.archetypes";
     String ARCHETYPE_ARTIFACT_ID = "payara-micro-maven-archetype";
+    String STARTER_ARCHETYPE_GROUP_ID = "fish.payara.starter";
+    String STARTER_ARCHETYPE_ARTIFACT_ID = "payara-starter-archetype";
     String ARCHETYPE_REPOSITORY = "https://oss.sonatype.org/content/repositories/snapshots";
 
     @StaticResource

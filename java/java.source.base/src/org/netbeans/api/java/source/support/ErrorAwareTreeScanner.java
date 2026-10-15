@@ -19,6 +19,8 @@
 package org.netbeans.api.java.source.support;
 
 import com.sun.source.tree.ErroneousTree;
+import com.sun.source.tree.CaseTree;
+import com.sun.source.tree.CaseTree.CaseKind;
 import com.sun.source.util.TreeScanner;
 
 /**
@@ -32,4 +34,15 @@ public class ErrorAwareTreeScanner<R,P> extends TreeScanner<R,P> {
         return scan(et.getErrorTrees(), p);
     }
 
+    @Override
+    public R visitCase(CaseTree node, P p) {
+        R r = scan(node.getLabels(), p);
+        r = reduce(scan(node.getGuard(), p), r);
+        if (node.getCaseKind() == CaseKind.STATEMENT) {
+            r = reduce(scan(node.getStatements(), p), r);
+        } else {
+            r = reduce(scan(node.getBody(), p), r);
+        }
+        return r;
+    }
 }

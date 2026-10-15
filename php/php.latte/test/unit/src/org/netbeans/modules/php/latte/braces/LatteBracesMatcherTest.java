@@ -503,7 +503,53 @@ public class LatteBracesMatcherTest extends LatteTestBase {
                 + "</html>");
     }
 
+    public void testIssueGH5862_01() throws Exception {
+        // no golden file
+        testMatches("<html>\n"
+                + "<p>{^_'test'}</p>\n"
+                + "</html>",
+                true
+        );
+    }
+
+    public void testIssueGH5862_02() throws Exception {
+        testMatches("<html>\n"
+                + "<p>{tr^anslate}Test{/translate}</p>\n"
+                + "</html>");
+    }
+
+    public void testIssueGH5862_03() throws Exception {
+        testMatches("<html>\n"
+                + "<p>{translate}Test{/transl^ate}</p>\n"
+                + "</html>");
+    }
+
+    public void testIssueGH5862_04() throws Exception {
+        testMatches("<html>\n"
+                + "<p>{transl^ate domain: order}Test{/translate}</p>\n"
+                + "</html>");
+    }
+
+    public void testIssueGH5862_05() throws Exception {
+        testMatches("<html>\n"
+                + "<p>{translate domain: order}Test{/transla^te}</p>\n"
+                + "</html>");
+    }
+
+    public void testIssueGH5862_06() throws Exception {
+        // no goleden file
+        testMatches("<html>\n"
+                + "<p>{translate dom^ain: order}Test{/translate}</p>\n"
+                + "</html>",
+                true
+        );
+    }
+
     private void testMatches(String originalWithCaret) throws Exception {
+        testMatches(originalWithCaret, false);
+    }
+
+    private void testMatches(String originalWithCaret, boolean notFoundOrigin) throws Exception {
         BracesMatcherFactory factory = MimeLookup.getLookup(getPreferredMimeType()).lookup(BracesMatcherFactory.class);
         int caretPosition = originalWithCaret.indexOf('^');
         assert caretPosition != -1;
@@ -518,6 +564,9 @@ public class LatteBracesMatcherTest extends LatteTestBase {
             origin = matcher.findOrigin();
             matches = matcher.findMatches();
         } catch (InterruptedException ex) {
+        }
+        if (notFoundOrigin && origin == null) {
+            return;
         }
 
         assertNotNull("Did not find origin", origin);

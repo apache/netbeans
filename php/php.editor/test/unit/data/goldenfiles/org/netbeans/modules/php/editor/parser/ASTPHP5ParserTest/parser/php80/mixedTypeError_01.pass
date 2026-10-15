@@ -1,0 +1,42 @@
+<testresult testFile='mixedTypeError_01.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='849' end='853'>
+            <text>$foo</text>
+        </token>
+        <token id='T_EQUAL' start='854' end='855'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='856' end='857'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='857' end='862'>
+            <text>mixed</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='862' end='863'>
+            <text>)</text>
+        </token>
+        <token id='T_LNUMBER' start='864' end='866'>
+            <text>12</text>
+        </token>
+        <token id='T_SEMICOLON' start='866' end='867'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='868' end='868'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='868'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='815' end='849' commentType='singleLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='815' end='849' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <ASTError start='849' end='863'/>
+            <ExpressionStatement start='864' end='867'>
+                <Scalar start='864' end='866' type='INT' value='12'/>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

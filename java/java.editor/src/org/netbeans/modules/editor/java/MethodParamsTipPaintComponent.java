@@ -21,9 +21,10 @@ package org.netbeans.modules.editor.java;
 
 import java.awt.*;
 import java.util.List;
-import java.util.Map;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
+import org.openide.awt.GraphicsUtils;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -42,7 +43,7 @@ public class MethodParamsTipPaintComponent extends JToolTip {
 
     private List<List<String>> params;
     private int idx;
-    private JTextComponent component;
+    private final JTextComponent component;
 
     public MethodParamsTipPaintComponent(JTextComponent component){
         super();
@@ -63,27 +64,15 @@ public class MethodParamsTipPaintComponent extends JToolTip {
         return params != null;
     }
     
+    @Override
     public void paintComponent(Graphics g) {
+        GraphicsUtils.configureDefaultRenderingHints(g);
         // clear background
         g.setColor(getBackground());
         Rectangle r = g.getClipBounds();
         g.fillRect(r.x, r.y, r.width, r.height);
         g.setColor(getForeground());
-
-        Object value = (Map)(Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints")); //NOI18N
-        Map renderingHints = (value instanceof Map) ? (java.util.Map)value : null;
-        if (renderingHints != null && g instanceof Graphics2D) {
-            Graphics2D g2d = (Graphics2D) g;
-            RenderingHints oldHints = g2d.getRenderingHints();
-            g2d.addRenderingHints(renderingHints);
-            try {
-                draw(g2d);
-            } finally {
-                g2d.setRenderingHints(oldHints);
-            }
-        } else {
-            draw(g);
-        }
+        draw(g);
     }
 
     protected void draw(Graphics g) {
@@ -104,8 +93,14 @@ public class MethodParamsTipPaintComponent extends JToolTip {
         if (params != null) {
             for (List<String> p : params) {
                 int i = 0;
+                if (p.isEmpty()) {
+                    p.add(NbBundle.getMessage(MethodParamsTipPaintComponent.class, "JCP-no-parameters"));
+                }
                 int plen = p.size() - 1;
                 for (String s : p) {
+                    if (i < plen) {
+                        s += ", "; //NOI18N
+                    }
                     if (getWidth(s, i == idx || i == plen && idx > plen ? getDrawFont().deriveFont(Font.BOLD) : getDrawFont()) + drawX > screenWidth) {
                         drawY += fontHeight;
                         drawX = startX + getWidth("        ", drawFont); //NOI18N
@@ -140,11 +135,7 @@ public class MethodParamsTipPaintComponent extends JToolTip {
         return getFontMetrics(font).stringWidth(s);
     }
 
-    protected int getHeight(String s, Font font) {
-        if (font == null) return fontMetrics.stringWidth(s);
-        return getFontMetrics(font).stringWidth(s);
-    }
-
+    @Override
     public void setFont(Font font) {
         super.setFont(font);
         fontMetrics = this.getFontMetrics(font);
@@ -158,6 +149,7 @@ public class MethodParamsTipPaintComponent extends JToolTip {
         return drawFont;
     }
 
+    @Override
     public Dimension getPreferredSize() {
         draw(null);
         Insets i = getInsets();

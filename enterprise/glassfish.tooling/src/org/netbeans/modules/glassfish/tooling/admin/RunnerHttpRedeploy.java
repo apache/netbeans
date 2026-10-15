@@ -32,10 +32,7 @@ import org.netbeans.modules.glassfish.tooling.utils.Utils;
  */
 public class RunnerHttpRedeploy extends RunnerHttp {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Deploy command <code>target</code> parameter name. */
     private static final String TARGET_PARAM = "target";
 
@@ -54,10 +51,7 @@ public class RunnerHttpRedeploy extends RunnerHttp {
     /** Deploy command <code>keepState</code> parameter name. */
     private static final String KEEP_STATE_PARAM = "keepState";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Builds redeploy query string for given command.
      * <p/>
@@ -128,18 +122,12 @@ public class RunnerHttpRedeploy extends RunnerHttp {
         return sb.toString();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Holding data for command execution. */
     @SuppressWarnings("FieldNameHidesFieldInSuperclass")
     final CommandRedeploy command;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of administration command executor using
      * HTTP interface.

@@ -24,6 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -84,7 +85,7 @@ public final class ShortcutWizard extends WizardDescriptor {
                 for (FileObject kid : build.getChildren()) {
                     if (isAntScript(kid)) {
                         try {
-                            Document doc = XMLUtil.parse(new InputSource(kid.getURL().toString()), false, false, /*XXX*/ null, null);
+                            Document doc = XMLUtil.parse(new InputSource(kid.toURL().toString()), false, false, /*XXX*/ null, null);
                             NodeList nl = doc.getElementsByTagName("ant"); // NOI18N
                             if (nl.getLength() == 1) {
                                 Element ael = (Element) nl.item(0);
@@ -253,7 +254,7 @@ public final class ShortcutWizard extends WizardDescriptor {
                 FileObject shortcut = actionsBuild.createData(fname); // NOI18N
                 OutputStream os = shortcut.getOutputStream();
                 try {
-                    os.write(getContents().getBytes("UTF-8")); // NOI18N
+                    os.write(getContents().getBytes(StandardCharsets.UTF_8));
                 } finally {
                     os.close();
                 }
@@ -279,7 +280,7 @@ public final class ShortcutWizard extends WizardDescriptor {
         List<DataObject> children = new ArrayList<DataObject>(Arrays.asList(folder.getChildren()));
         if (children.remove(shadow)) {
             children.add(shadow);
-            folder.setOrder(children.toArray(new DataObject[children.size()]));
+            folder.setOrder(children.toArray(new DataObject[0]));
         } else {
             LOG.warning("#175981: could not find " + shadow + " among " + children);
         }

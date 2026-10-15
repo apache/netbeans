@@ -19,8 +19,6 @@
 package org.netbeans.modules.javascript2.editor.qaf.cc;
 
 import java.awt.event.InputEvent;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
 import junit.framework.Test;
 import org.netbeans.jellytools.EditorOperator;
 import org.netbeans.jellytools.modules.editor.CompletionJListOperator;
@@ -90,7 +88,7 @@ public class TestCCInsideWith extends GeneralJavaScript {
         checkCompletionItems(cjo, res);
         String[] res2 = {"foo"};
         checkCompletionDoesntContainItems(cjo, res2);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         cleanFile(eo);
         endTest();
@@ -121,7 +119,7 @@ public class TestCCInsideWith extends GeneralJavaScript {
         String[] res = {"test", "value"};
         CompletionJListOperator cjo = completion.listItself;
         checkCompletionItems(cjo, res);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         endTest();
     }
@@ -144,7 +142,7 @@ public class TestCCInsideWith extends GeneralJavaScript {
         String[] res = {"call", "apply"};
         CompletionJListOperator cjo = completion.listItself;
         checkCompletionItems(cjo, res);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         endTest();
     }
@@ -167,7 +165,7 @@ public class TestCCInsideWith extends GeneralJavaScript {
         String[] res = {"learn"};
         CompletionJListOperator cjo = completion.listItself;
         checkCompletionItems(cjo, res);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         endTest();
     }
@@ -187,7 +185,7 @@ public class TestCCInsideWith extends GeneralJavaScript {
         String[] res = {"name", "myname"};
         CompletionJListOperator cjo = completion.listItself;
         checkCompletionItems(cjo, res);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         endTest();
     }
@@ -209,7 +207,7 @@ public class TestCCInsideWith extends GeneralJavaScript {
         String[] res = {"firstChild", "removeChild"};
         CompletionJListOperator cjo = completion.listItself;
         checkCompletionItems(cjo, res);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         endTest();
     }
@@ -228,7 +226,7 @@ public class TestCCInsideWith extends GeneralJavaScript {
             GeneralJavaScript.CompletionInfo completion = getCompletion();
             CompletionJListOperator cjo = completion.listItself;
             assertTrue("", (cjo.getCompletionItems().size() > 2 ? true : false));
-            completion.listItself.hideAll();
+            CompletionJListOperator.hideAll();
 
             endTest();
         } catch (Exception ex) {
@@ -253,7 +251,7 @@ public class TestCCInsideWith extends GeneralJavaScript {
         String[] res = {"value", "increment"};
         CompletionJListOperator cjo = completion.listItself;
         checkCompletionItems(cjo, res);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         endTest();
     }
@@ -273,7 +271,7 @@ public class TestCCInsideWith extends GeneralJavaScript {
         String[] res = {"param1"};
         CompletionJListOperator cjo = completion.listItself;
         checkCompletionItems(cjo, res);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         type(eo, "param1;\n var pr = 1;\n this.start = function(){\n");
         eo.setCaretPositionToEndOfLine(eo.getLineNumber() + 1);
@@ -288,7 +286,7 @@ public class TestCCInsideWith extends GeneralJavaScript {
         String[] res5 = {"name", "start", "pr", "param1", "secret"};
         cjo = completion.listItself;
         checkCompletionItems(cjo, res5);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         type(eo, "\n Foo.prototype.setName = function(n){\n this.");
 
@@ -298,7 +296,7 @@ public class TestCCInsideWith extends GeneralJavaScript {
         String[] res4 = {"name", "start", "setName"};
         cjo = completion.listItself;
         checkCompletionItems(cjo, res4);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
         type(eo, "name;");
 
         eo.setCaretPositionToEndOfLine(eo.getLineNumber() + 2);
@@ -313,7 +311,7 @@ public class TestCCInsideWith extends GeneralJavaScript {
         String[] res6 = {"Foo"};
         cjo = completion.listItself;
         checkCompletionItems(cjo, res6);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         type(eo, "Foo();\n o.");
         // public variable & method & prototype
@@ -322,12 +320,12 @@ public class TestCCInsideWith extends GeneralJavaScript {
         String[] res2 = {"name", "start", "setName"};
         cjo = completion.listItself;
         checkCompletionItems(cjo, res2);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         // private variable & method
         String[] res3 = {"secret", "pr"};
         checkCompletionDoesntContainItems(cjo, res3);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         endTest();
     }
@@ -349,7 +347,7 @@ public class TestCCInsideWith extends GeneralJavaScript {
         String[] res = {"insertBefore"};
         CompletionJListOperator cjo = completion.listItself;
         checkCompletionItems(cjo, res);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         endTest();
     }
@@ -378,7 +376,7 @@ public class TestCCInsideWith extends GeneralJavaScript {
         String[] res2 = {"aa", "bb"};
         CompletionJListOperator cjo = completion.listItself;
         checkCompletionItems(cjo, res2);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
         type(eo, "aa");
         eo.save();
 
@@ -408,7 +406,7 @@ public class TestCCInsideWith extends GeneralJavaScript {
         String[] res2 = {"aa", "bb", "cc", "dd"};
         CompletionJListOperator cjo = completion.listItself;
         checkCompletionItems(cjo, res2);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         endTest();
     }

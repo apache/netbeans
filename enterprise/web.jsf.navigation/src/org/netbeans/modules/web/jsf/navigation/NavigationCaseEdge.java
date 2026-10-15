@@ -48,6 +48,7 @@ import org.openide.nodes.Sheet.Set;
 import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
 
 /**
  *
@@ -137,7 +138,7 @@ public final class NavigationCaseEdge extends PageFlowSceneElement  {
             try { 
                 name =  navCase.getFromOutcome() != null ? navCase.getFromOutcome() : navCase.getFromAction();
             } catch (IllegalStateException ise){
-                JOptionPane.showMessageDialog(null, MSG_FacesConfigIllegalStateWarning, TLE_FacesConfigIllegalStateWarning, JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(Utilities.findDialogParent(), MSG_FacesConfigIllegalStateWarning, TLE_FacesConfigIllegalStateWarning, JOptionPane.WARNING_MESSAGE);
             }
         }
         return name;

@@ -1,0 +1,185 @@
+Name: __call
+#[\Override]
+public function __call(string $name, array $arguments): mixed {
+${cursor}return parent::__call($name, $arguments);
+}
+
+Name: __call
+public function __call(string $name, array $arguments): mixed {
+${cursor};
+}
+
+Name: __callStatic
+#[\Override]
+public static function __callStatic(string $name, array $arguments): mixed {
+${cursor}return parent::__callStatic($name, $arguments);
+}
+
+Name: __callStatic
+public static function __callStatic(string $name, array $arguments): mixed {
+${cursor};
+}
+
+Name: __clone
+#[\Override]
+public function __clone(): void {
+${cursor};
+}
+
+Name: __clone
+public function __clone(): void {
+${cursor};
+}
+
+Name: __construct
+public function __construct() {
+${cursor}parent::__construct();
+}
+
+Name: __construct
+public function __construct() {
+${cursor};
+}
+
+Name: __debugInfo
+#[\Override]
+public function __debugInfo(): array {
+${cursor}return parent::__debugInfo();
+}
+
+Name: __debugInfo
+public function __debugInfo(): array {
+${cursor};
+}
+
+Name: __destruct
+#[\Override]
+public function __destruct() {
+${cursor}parent::__destruct();
+}
+
+Name: __destruct
+public function __destruct() {
+${cursor};
+}
+
+Name: __get
+#[\Override]
+public function __get(string $name): mixed {
+${cursor}return parent::__get($name);
+}
+
+Name: __get
+public function __get(string $name): mixed {
+${cursor};
+}
+
+Name: __invoke
+#[\Override]
+public function __invoke(): mixed {
+${cursor}return parent::__invoke();
+}
+
+Name: __invoke
+public function __invoke(): mixed {
+${cursor};
+}
+
+Name: __isset
+#[\Override]
+public function __isset(string $name): bool {
+${cursor}return parent::__isset($name);
+}
+
+Name: __isset
+public function __isset(string $name): bool {
+${cursor};
+}
+
+Name: __serialize
+#[\Override]
+public function __serialize(): array {
+${cursor}return parent::__serialize();
+}
+
+Name: __serialize
+public function __serialize(): array {
+${cursor};
+}
+
+Name: __set
+#[\Override]
+public function __set(string $name, mixed $value): void {
+${cursor};
+}
+
+Name: __set
+public function __set(string $name, mixed $value): void {
+${cursor};
+}
+
+Name: __set_state
+#[\Override]
+public static function __set_state(array $properties): object {
+${cursor}return parent::__set_state($properties);
+}
+
+Name: __set_state
+public static function __set_state(array $properties): object {
+${cursor};
+}
+
+Name: __sleep
+#[\Override]
+public function __sleep(): array {
+${cursor}return parent::__sleep();
+}
+
+Name: __sleep
+public function __sleep(): array {
+${cursor};
+}
+
+Name: __toString
+#[\Override]
+public function __toString(): string {
+return "base[]";${cursor}
+}
+
+Name: __toString
+public function __toString(): string {
+return "TestOverride[]";${cursor}
+}
+
+Name: __unserialize
+#[\Override]
+public function __unserialize(array $data): void {
+${cursor};
+}
+
+Name: __unserialize
+public function __unserialize(array $data): void {
+${cursor};
+}
+
+Name: __unset
+#[\Override]
+public function __unset(string $name): void {
+${cursor};
+}
+
+Name: __unset
+public function __unset(string $name): void {
+${cursor};
+}
+
+Name: __wakeup
+#[\Override]
+public function __wakeup(): void {
+${cursor};
+}
+
+Name: __wakeup
+public function __wakeup(): void {
+${cursor};
+}

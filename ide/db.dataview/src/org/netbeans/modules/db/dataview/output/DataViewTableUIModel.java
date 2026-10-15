@@ -176,7 +176,7 @@ public class DataViewTableUIModel extends ResultSetTableModel {
 
     boolean hasUpdates(int row, int col) {
         assert SwingUtilities.isEventDispatchThread() : "Not on EDT";
-        Map<Integer, Object> rowMap = oldData.get(new Integer(row));
+        Map<Integer, Object> rowMap = oldData.get(Integer.valueOf(row));
         return rowMap != null && rowMap.containsKey(col);
     }
 }

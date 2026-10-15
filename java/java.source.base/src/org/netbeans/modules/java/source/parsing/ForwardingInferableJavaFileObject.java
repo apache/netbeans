@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.java.source.parsing;
 
+import com.sun.tools.javac.api.ClientCodeWrapper;
 import javax.tools.ForwardingJavaFileObject;
 import org.netbeans.api.annotations.common.NonNull;
 
@@ -26,6 +27,7 @@ import org.netbeans.api.annotations.common.NonNull;
  *
  * @author Tomas Zezula
  */
+@ClientCodeWrapper.Trusted
 public class ForwardingInferableJavaFileObject extends ForwardingJavaFileObject<InferableJavaFileObject> implements InferableJavaFileObject {
 
     public ForwardingInferableJavaFileObject(@NonNull final InferableJavaFileObject delegate) {

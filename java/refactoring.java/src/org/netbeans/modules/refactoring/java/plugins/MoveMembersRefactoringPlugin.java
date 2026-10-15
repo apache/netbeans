@@ -109,7 +109,7 @@ public class MoveMembersRefactoringPlugin extends JavaRefactoringPlugin {
         }
         ClasspathInfo cpInfo;
         if (!handles.isEmpty()) {
-            cpInfo = RefactoringUtils.getClasspathInfoFor(handles.toArray(new TreePathHandle[handles.size()]));
+            cpInfo = RefactoringUtils.getClasspathInfoFor(handles.toArray(new TreePathHandle[0]));
         } else {
             cpInfo = JavaRefactoringUtils.getClasspathInfoFor((FileObject)properties.getPreSelectedMembers()[0].getFileObject());
         }
@@ -201,12 +201,18 @@ public class MoveMembersRefactoringPlugin extends JavaRefactoringPlugin {
             }
         }
 
-        TreePath targetPath = target.resolve(javac);
-        if(targetPath == null) {
+        Element targetElement = target.resolveElement(javac);
+        Element targetClass = targetElement;
+        if(targetClass == null) {
             return new Problem(true, NbBundle.getMessage(MoveMembersRefactoringPlugin.class, "ERR_TargetNotResolved"));
         }
-        TreePath targetClass = JavaRefactoringUtils.findEnclosingClass(javac, targetPath, true, true, true, true, true);
-        TypeMirror targetType = javac.getTrees().getTypeMirror(targetClass);
+        while (targetClass != null && !targetClass.getKind().isClass() && !targetClass.getKind().isInterface()) {
+            targetClass = targetClass.getEnclosingElement();
+        }
+        if(targetClass == null) {
+            return new Problem(true, NbBundle.getMessage(MoveMembersRefactoringPlugin.class, "ERR_TargetNotResolved"));
+        }
+        TypeMirror targetType = targetClass.asType();
         if(targetType == null) {
             return new Problem(true, NbBundle.getMessage(MoveMembersRefactoringPlugin.class, "ERR_TargetNotResolved"));
         }
@@ -227,7 +233,6 @@ public class MoveMembersRefactoringPlugin extends JavaRefactoringPlugin {
             return new Problem(true, NbBundle.getMessage(MoveMembersRefactoringPlugin.class, "ERR_MoveToSubClass")); //NOI18N
         }
         
-        Element targetElement = target.resolveElement(javac);
         PackageElement targetPackage = (PackageElement) javac.getElementUtilities().outermostTypeElement(targetElement).getEnclosingElement();
         Element sourceElement = sourceTph.resolveElement(javac);
         PackageElement sourcePackage = (PackageElement) javac.getElementUtilities().outermostTypeElement(sourceElement).getEnclosingElement();
@@ -391,23 +396,23 @@ public class MoveMembersRefactoringPlugin extends JavaRefactoringPlugin {
                              */
                             switch (exType.getKind()) {
                                 case DOUBLE:
-                                    if (paramType.getKind().equals(TypeKind.FLOAT)) {
+                                    if (paramType.getKind() ==TypeKind.FLOAT) {
                                         break;
                                     }
                                 case FLOAT:
-                                    if (paramType.getKind().equals(TypeKind.LONG)) {
+                                    if (paramType.getKind() == TypeKind.LONG) {
                                         break;
                                     }
                                 case LONG:
-                                    if (paramType.getKind().equals(TypeKind.INT)) {
+                                    if (paramType.getKind() == TypeKind.INT) {
                                         break;
                                     }
                                 case INT:
-                                    if (paramType.getKind().equals(TypeKind.SHORT)) {
+                                    if (paramType.getKind() == TypeKind.SHORT) {
                                         break;
                                     }
                                 case SHORT:
-                                    if (paramType.getKind().equals(TypeKind.BYTE)) {
+                                    if (paramType.getKind() == TypeKind.BYTE) {
                                         break;
                                     }
                                 case BYTE:

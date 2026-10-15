@@ -36,8 +36,8 @@ import org.netbeans.modules.visual.graph.layout.orthogonalsupport.MGraph.Vertex;
  */
 public class Face {
 
-    private List<Edge> edges;
-    private Set<Edge> edgeMap;
+    private List<Edge<?>> edges;
+    private Set<Edge<?>> edgeMap;
     private List<Dart> darts;
     private Set<Dart> dartMap;
     private Map<Dart, Integer> dartIndices;
@@ -47,11 +47,11 @@ public class Face {
      * 
      */
     public Face() {
-        edges = new ArrayList<Edge>();
-        edgeMap = new HashSet<Edge>();
-        darts = new ArrayList<Dart>();
-        dartMap = new HashSet<Dart>();
-        dartIndices = new HashMap<Dart, Integer>();
+        edges = new ArrayList<>();
+        edgeMap = new HashSet<>();
+        darts = new ArrayList<>();
+        dartMap = new HashSet<>();
+        dartIndices = new HashMap<>();
     }
 
     /**
@@ -82,8 +82,8 @@ public class Face {
      * 
      * @return
      */
-    public List<Vertex> getVertices() {
-        List<Vertex> vertices = new ArrayList<Vertex>();
+    public List<Vertex<?>> getVertices() {
+        List<Vertex<?>> vertices = new ArrayList<>();
         List<Dart> _darts = getDarts();
 
         for (Dart dart : _darts) {
@@ -97,7 +97,7 @@ public class Face {
      * 
      * @param edge
      */
-    public void addEdge(Edge edge) {
+    public void addEdge(Edge<?> edge) {
         edgeMap.add(edge);
         edges.add(edge);
     }
@@ -106,7 +106,7 @@ public class Face {
      * 
      * @param newEdges
      */
-    public void addEdges(Collection<Edge> newEdges) {
+    public void addEdges(Collection<Edge<?>> newEdges) {
         this.edges.addAll(newEdges);
         this.edgeMap.addAll(newEdges);
     }
@@ -116,7 +116,7 @@ public class Face {
      * @param index
      * @param newEdge
      */
-    private void addEdge(int index, Edge newEdge) {
+    private void addEdge(int index, Edge<?> newEdge) {
         edges.add(index, newEdge);
         edgeMap.add(newEdge);
     }
@@ -125,7 +125,7 @@ public class Face {
      * 
      * @param edgeToRemove
      */
-    private void removeEdge(Edge edgeToRemove) {
+    private void removeEdge(Edge<?> edgeToRemove) {
         edges.remove(edgeToRemove);
 
         // It's possible to have two entries of the same edge.
@@ -139,7 +139,7 @@ public class Face {
      * @param index
      */
     private void removeEdge(int index) {
-        Edge removedEdge = edges.remove(index);
+        Edge<?> removedEdge = edges.remove(index);
 
         // It's possible to have two entries of the same edge.
         if (!edges.contains(removedEdge)) {
@@ -151,7 +151,7 @@ public class Face {
      * 
      * @return
      */
-    public List<Edge> getEdges() {
+    public List<Edge<?>> getEdges() {
         return Collections.unmodifiableList(edges);
     }
 
@@ -160,8 +160,8 @@ public class Face {
      * @param face
      * @return
      */
-    public Edge getBorderingEdge(Face face) {
-        for (Edge e : face.getEdges()) {
+    public Edge<?> getBorderingEdge(Face face) {
+        for (Edge<?> e : face.getEdges()) {
             if (edgeMap.contains(e)) {
                 return e;
             }
@@ -176,20 +176,20 @@ public class Face {
      * @param newEdges
      * @return
      */
-    public List<Dart> replaceEdge(Edge edgeToReplace, Collection<Edge> newEdges) {
-        HashSet<Edge> newEdgeSet = new HashSet<Edge>(newEdges);
-        ArrayList<Dart> newDarts = new ArrayList<Dart>();
+    public List<Dart> replaceEdge(Edge<?> edgeToReplace, Collection<Edge<?>> newEdges) {
+        HashSet<Edge<?>> newEdgeSet = new HashSet<>(newEdges);
+        ArrayList<Dart> newDarts = new ArrayList<>();
         Dart dartToReplace = getDart(edgeToReplace);
-        Vertex v = dartToReplace.getV();
-        Vertex w = dartToReplace.getW();
+        Vertex<?> v = dartToReplace.getV();
+        Vertex<?> w = dartToReplace.getW();
         int index = getDartIndex(dartToReplace);
 
         removeEdge(index);
         removeDart(index);
 
         while (v != w) {
-            Edge newEdge = searchAndRemoveEdge(v, newEdgeSet);
-            Vertex ov = newEdge.getOppositeVertex(v);
+            Edge<?> newEdge = searchAndRemoveEdge(v, newEdgeSet);
+            Vertex<?> ov = newEdge.getOppositeVertex(v);
             Dart newDart = new Dart(v, ov, newEdge);
 
             addEdge(index, newEdge);
@@ -208,19 +208,19 @@ public class Face {
      * @param newEdges
      * @return
      */
-    public List<Dart> replaceDart(Dart dartToReplace, Collection<Edge> newEdges) {
-        HashSet<Edge> newEdgeSet = new HashSet<Edge>(newEdges);
-        ArrayList<Dart> newDarts = new ArrayList<Dart>();
-        Vertex v = dartToReplace.getV();
-        Vertex w = dartToReplace.getW();
+    public List<Dart> replaceDart(Dart dartToReplace, Collection<Edge<?>> newEdges) {
+        HashSet<Edge<?>> newEdgeSet = new HashSet<>(newEdges);
+        ArrayList<Dart> newDarts = new ArrayList<>();
+        Vertex<?> v = dartToReplace.getV();
+        Vertex<?> w = dartToReplace.getW();
         int index = getDartIndex(dartToReplace);
 
         removeEdge(index);
         removeDart(index);
 
         while (v != w) {
-            Edge newEdge = searchAndRemoveEdge(v, newEdgeSet);
-            Vertex ov = newEdge.getOppositeVertex(v);
+            Edge<?> newEdge = searchAndRemoveEdge(v, newEdgeSet);
+            Vertex<?> ov = newEdge.getOppositeVertex(v);
             Dart newDart = new Dart(v, ov, newEdge);
             addEdge(index, newEdge);
             addDart(index, newDart);
@@ -237,7 +237,7 @@ public class Face {
      * @param edgeToAdd
      * @return
      */
-    public List<Dart> replaceDarts(Edge edgeToAdd) {
+    public List<Dart> replaceDarts(Edge<?> edgeToAdd) {
         return replaceDarts(edgeToAdd, null);
     }
 
@@ -247,10 +247,10 @@ public class Face {
      * @param startingVertex
      * @return
      */
-    public List<Dart> replaceDarts(Edge edgeToAdd, Vertex startingVertex) {
-        ArrayList<Dart> removedDarts = new ArrayList<Dart>();
-        Vertex v = null;
-        Vertex w = null;
+    public List<Dart> replaceDarts(Edge<?> edgeToAdd, Vertex<?> startingVertex) {
+        ArrayList<Dart> removedDarts = new ArrayList<>();
+        Vertex<?> v = null;
+        Vertex<?> w = null;
 
         if (startingVertex == null) {
             v = edgeToAdd.getV();
@@ -296,10 +296,10 @@ public class Face {
      * @param edges
      * @return
      */
-    private Edge searchAndRemoveEdge(Vertex v, Collection<Edge> edges) {
-        Edge edge = null;
+    private Edge<?> searchAndRemoveEdge(Vertex<?> v, Collection<Edge<?>> edges) {
+        Edge<?> edge = null;
 
-        for (Edge e : edges) {
+        for (Edge<?> e : edges) {
             if (e.contains(v)) {
                 edge = e;
                 break;
@@ -327,16 +327,16 @@ public class Face {
      * 
      * @param startingVertex
      */
-    public void createDarts(Vertex startingVertex) {
-        Vertex prevVertex = null;
+    public void createDarts(Vertex<?> startingVertex) {
+        Vertex<?> prevVertex = null;
 
         darts.clear();
         dartMap.clear();
 
-        for (Edge e : edges) {
+        for (Edge<?> e : edges) {
             if (prevVertex == null) {
-                Vertex v = e.getV();
-                Vertex w = e.getW();
+                Vertex<?> v = e.getV();
+                Vertex<?> w = e.getW();
 
                 if (startingVertex == null) {
                     if (isOuterFace) {
@@ -357,7 +357,7 @@ public class Face {
                 }
             }
 
-            Vertex nextVertex = e.getOppositeVertex(prevVertex);
+            Vertex<?> nextVertex = e.getOppositeVertex(prevVertex);
             Dart dart = new Dart(prevVertex, nextVertex, e);
             addDart(dart);
 
@@ -439,8 +439,8 @@ public class Face {
      * @param v
      * @return
      */
-    public List<Dart> getDartsFrom(Vertex v) {
-        ArrayList<Dart> darts = new ArrayList<Dart>();
+    public List<Dart> getDartsFrom(Vertex<?> v) {
+        ArrayList<Dart> darts = new ArrayList<>();
 
         for (Dart d : getDarts()) {
             if (v == d.getV()) {
@@ -456,7 +456,7 @@ public class Face {
      * @param v
      * @return
      */
-    public Dart getDartFrom(Vertex v) {
+    public Dart getDartFrom(Vertex<?> v) {
         for (Dart d : getDarts()) {
             if (v == d.getV()) {
                 return d;
@@ -471,8 +471,8 @@ public class Face {
      * @param v
      * @return
      */
-    public List<Dart> getDartsTo(Vertex v) {
-        ArrayList<Dart> darts = new ArrayList<Dart>();
+    public List<Dart> getDartsTo(Vertex<?> v) {
+        ArrayList<Dart> darts = new ArrayList<>();
 
         for (Dart d : getDarts()) {
             if (v == d.getW()) {
@@ -488,7 +488,7 @@ public class Face {
      * @param v
      * @return
      */
-    public Dart getDartTo(Vertex v) {
+    public Dart getDartTo(Vertex<?> v) {
         for (Dart d : getDarts()) {
             if (v == d.getW()) {
                 return d;
@@ -503,7 +503,7 @@ public class Face {
      * @param edge
      * @return
      */
-    public Dart getDart(Edge edge) {
+    public Dart getDart(Edge<?> edge) {
         for (Dart d : getDarts()) {
             if (d.getEdge() == edge) {
                 return d;
@@ -518,8 +518,8 @@ public class Face {
      * @param edge
      * @return
      */
-    public List<Dart> getDarts(Edge edge) {
-        ArrayList<Dart> _darts = new ArrayList<Dart>();
+    public List<Dart> getDarts(Edge<?> edge) {
+        ArrayList<Dart> _darts = new ArrayList<>();
 
         for (Dart d : getDarts()) {
             if (d.getEdge() == edge) {
@@ -536,7 +536,7 @@ public class Face {
      * @param sourceVertex
      * @return
      */
-    public Dart getDart(Edge edge, Vertex sourceVertex) {
+    public Dart getDart(Edge<?> edge, Vertex<?> sourceVertex) {
         for (Dart d : getDarts()) {
             if (d.getEdge() == edge && d.getV() == sourceVertex) {
                 return d;
@@ -552,7 +552,7 @@ public class Face {
      * @return
      */
     public Dart getBorderingDart(Face face) {
-        Edge edge = getBorderingEdge(face);
+        Edge<?> edge = getBorderingEdge(face);
 
         for (Dart d : getDarts()) {
             if (d.getEdge() == edge) {
@@ -568,7 +568,7 @@ public class Face {
      * @param e
      * @return
      */
-    public boolean containsEdge(Edge e) {
+    public boolean containsEdge(Edge<?> e) {
         return edgeMap.contains(e);
     }
 
@@ -586,8 +586,8 @@ public class Face {
      * @param v
      * @return
      */
-    public boolean containsVertex(Vertex v) {
-        for (Edge e : edges) {
+    public boolean containsVertex(Vertex<?> v) {
+        for (Edge<?> e : edges) {
             if (e.contains(v)) {
                 return true;
             }
@@ -602,8 +602,8 @@ public class Face {
      * @return
      */
     public boolean connects(Face face) {
-        for (Edge e : getEdges()) {
-            for (Edge ne : face.getEdges()) {
+        for (Edge<?> e : getEdges()) {
+            for (Edge<?> ne : face.getEdges()) {
                 if (e.shareVertex(ne)) {
                     return true;
                 }
@@ -619,7 +619,7 @@ public class Face {
      * @return
      */
     public boolean borders(Face face) {
-        for (Edge e : face.edges) {
+        for (Edge<?> e : face.edges) {
             if (edgeMap.contains(e)) {
                 return true;
             }
@@ -633,12 +633,12 @@ public class Face {
      * @param edge
      * @return
      */
-    public Vertex getCornerVertex(Edge edge) {
-        Edge nextEdge = getNextEdge(edge);
-        Vertex v = edge.getV();
-        Vertex w = edge.getW();
-        Vertex nv = nextEdge.getV();
-        Vertex nw = nextEdge.getW();
+    public Vertex<?> getCornerVertex(Edge<?> edge) {
+        Edge<?> nextEdge = getNextEdge(edge);
+        Vertex<?> v = edge.getV();
+        Vertex<?> w = edge.getW();
+        Vertex<?> nv = nextEdge.getV();
+        Vertex<?> nw = nextEdge.getW();
 
         if (v == nv || v == nw) {
             return v;
@@ -658,7 +658,7 @@ public class Face {
      * @param e
      * @return
      */
-    public Edge getNextEdge(Edge e) {
+    public Edge<?> getNextEdge(Edge<?> e) {
         int index = getEdgeIndex(e);
 
         return edges.get((index + 1) % edges.size());
@@ -670,7 +670,7 @@ public class Face {
      * @param e
      * @return
      */
-    private int getEdgeIndex(Edge e) {
+    private int getEdgeIndex(Edge<?> e) {
         return edges.indexOf(e);
     }
 
@@ -679,12 +679,12 @@ public class Face {
      * @param dart
      * @return
      */
-    public Vertex getCornerVertex(Dart dart) {
+    public Vertex<?> getCornerVertex(Dart dart) {
         Dart nextDart = getNextDart(dart);
-        Vertex v = dart.getV();
-        Vertex w = dart.getW();
-        Vertex nv = nextDart.getV();
-        Vertex nw = nextDart.getW();
+        Vertex<?> v = dart.getV();
+        Vertex<?> w = dart.getW();
+        Vertex<?> nv = nextDart.getV();
+        Vertex<?> nw = nextDart.getW();
 
         if (v == nv || v == nw) {
             return v;
@@ -725,7 +725,7 @@ public class Face {
      * 
      */
     public void reverseDirection() {
-        ArrayList<Edge> l = new ArrayList<Edge>(edges);
+        ArrayList<Edge<?>> l = new ArrayList<>(edges);
         edges.clear();
         edgeMap.clear();
 
@@ -737,10 +737,7 @@ public class Face {
         dartMap.clear();
     }
 
-    /**
-     * 
-     * @return
-     */
+    @Override
     public String toString() {
         String s = "Face:\n";
 
@@ -749,7 +746,7 @@ public class Face {
         }
 
         s = s + "Edges:\n";
-        for (Edge e : edges) {
+        for (Edge<?> e : edges) {
             s = s + "\t" + e + "\n";
         }
 
@@ -761,13 +758,13 @@ public class Face {
     }
 
     /**
-     * The difference between a Dart and and Edge is that Dart
+     * The difference between a Dart and an Edge is that Dart
      * has direction. Each edge can have two Darts going in
      * the opposite direction.
      */
-    public static class Dart extends Edge {
+    public static class Dart extends Edge<Object> {
 
-        private Edge e;
+        private Edge<?> e;
 
         /**
          * 
@@ -775,7 +772,7 @@ public class Face {
          * @param w
          * @param e
          */
-        public Dart(Vertex v, Vertex w, Edge e) {
+        public Dart(Vertex<?> v, Vertex<?> w, Edge<?> e) {
             super(v, w, null);
             this.e = e;
 
@@ -785,7 +782,7 @@ public class Face {
          * 
          * @return
          */
-        public Edge getEdge() {
+        public Edge<?> getEdge() {
             return e;
         }
 

@@ -19,6 +19,8 @@
 
 package org.netbeans.core.startup.layers;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
@@ -48,7 +50,7 @@ public final class SessionManager {
     private HashMap<String,FileSystem> layers = new HashMap<String,FileSystem>(); //<layer_key, fs>
     
     /** Utility field holding list of PropertyChangeListeners. */
-    private transient java.util.ArrayList<PropertyChangeListener> propertyChangeListeners;
+    private transient List<PropertyChangeListener> propertyChangeListeners;
     
     /** Creates new SessionManager */
     private SessionManager() {
@@ -69,7 +71,7 @@ public final class SessionManager {
     * @param homeDir directory where netbeans has been installed, user need not have write access
     * @param extradirs 0+ extra dirs to add; cf. #27151
     * @return repository
-    * @exception PropertyVetoException if something fails
+    * @exception java.beans.PropertyVetoException if something fails
     */
     public FileSystem create(File userDir, File homeDir, File[] extradirs)
     throws java.beans.PropertyVetoException, IOException {
@@ -87,7 +89,7 @@ public final class SessionManager {
     
     /** get a layer associated with the name
      * @param name layer name (LAYER_SESSION, ...)
-     * @return layer, can be <code>null</null>
+     * @return layer, can be <code>null</code>
      */
     public FileSystem getLayer(String name) {
         return layers.get(name);
@@ -98,7 +100,7 @@ public final class SessionManager {
      */
     public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
         if (propertyChangeListeners == null ) {
-            propertyChangeListeners = new java.util.ArrayList<PropertyChangeListener>();
+            propertyChangeListeners = new ArrayList<>();
         }
         propertyChangeListeners.add(listener);
     }
@@ -116,15 +118,15 @@ public final class SessionManager {
      * @param name the name to be fired
      */
     private void firePropertyChange(String name) {
-        java.util.ArrayList list;
+        List<PropertyChangeListener> list;
         synchronized (this) {
             if (propertyChangeListeners == null || propertyChangeListeners.size() == 0) return;
-            list = (java.util.ArrayList)propertyChangeListeners.clone();
+            list = new ArrayList<>(propertyChangeListeners);
         }
         java.beans.PropertyChangeEvent event = new java.beans.PropertyChangeEvent(this, name, null, null);
         for (int i = 0; i < list.size(); i++) {
             try {
-                ((PropertyChangeListener) list.get(i)).propertyChange(event);
+                list.get(i).propertyChange(event);
             }
             catch (RuntimeException e) {
                 Exceptions.printStackTrace(e);

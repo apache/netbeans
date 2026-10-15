@@ -59,15 +59,14 @@ import org.netbeans.modules.maven.api.execute.RunUtils;
 import org.netbeans.modules.maven.classpath.AbstractProjectClassPathImpl;
 import org.netbeans.modules.maven.classpath.RuntimeClassPathImpl;
 import org.netbeans.modules.maven.classpath.TestRuntimeClassPathImpl;
-import org.netbeans.modules.maven.customizer.RunJarPanel;
 import org.netbeans.modules.maven.execute.DefaultReplaceTokenProvider;
+import org.netbeans.modules.maven.runjar.MavenExecuteUtils;
 import org.netbeans.modules.maven.spi.cos.CompileOnSaveSkipper;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -168,7 +167,6 @@ public class OldJavaRunnerCOS {
             }
             return OldJavaRunnerCOS.deprecatedJavaRunnerApproachTest(config, actionName);
         } else {
-            CosChecker.warnNoTestCoS(config);
             return true;
         }
     }    
@@ -314,7 +312,7 @@ public class OldJavaRunnerCOS {
                     Logger.getLogger(CosChecker.class.getName()).log(Level.INFO, "Cannot convert ''{0}'' to URL.", add);
                 }
             }
-            ClassPath addCp = ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
+            ClassPath addCp = ClassPathSupport.createClassPath(roots.toArray(new URL[0]));
             cp = ClassPathSupport.createProxyClassPath(cp, addCp);
         }
         params.put(JavaRunner.PROP_EXECUTE_CLASSPATH, cp);
@@ -336,11 +334,8 @@ public class OldJavaRunnerCOS {
                                 }
                                 try {
                                     collectStartupArgs(config, params);
-                                    final ExecutorTask tsk = JavaRunner.execute(action2Quick, params);
-                                    CosChecker.warnCoSInOutput(tsk, config);
-                                } catch (IOException ex) {
-                                    Exceptions.printStackTrace(ex);
-                                } catch (UnsupportedOperationException ex) {
+                                    JavaRunner.execute(action2Quick, params);
+                                } catch (IOException | UnsupportedOperationException ex) {
                                     Exceptions.printStackTrace(ex);
                                 } finally {
                                     CosChecker.touchCoSTimeStamp(config, true);
@@ -387,7 +382,7 @@ public class OldJavaRunnerCOS {
         }
         String exargs = config.getProperties().get("exec.args");
         if (exargs != null) {
-            String[] args = RunJarPanel.splitAll(exargs);
+            String[] args = MavenExecuteUtils.splitAll(exargs, true);
             if (params.get(JavaRunner.PROP_EXECUTE_FILE) == null) {
                 params.put(JavaRunner.PROP_CLASSNAME, args[1]);
             }
@@ -424,11 +419,8 @@ public class OldJavaRunnerCOS {
                                     }
                                     try {
                                         collectStartupArgs(config, params);
-                                        ExecutorTask tsk = JavaRunner.execute(action2Quick, params);
-                                        CosChecker.warnCoSInOutput(tsk, config);
-                                    } catch (IOException ex) {
-                                        Exceptions.printStackTrace(ex);
-                                    } catch (UnsupportedOperationException ex) {
+                                        JavaRunner.execute(action2Quick, params);
+                                    } catch (IOException | UnsupportedOperationException ex) {
                                         Exceptions.printStackTrace(ex);
                                     } finally {
                                         if (RunUtils.hasApplicationCompileOnSaveEnabled(config)) {

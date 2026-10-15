@@ -3,13 +3,8 @@ f|ormatter.print("text");
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 CLASS      formatter                       [PUBLIC]   Formatter.js
-METHOD     find(aString: String, aCaseSen  [PUBLIC,   JS Platform
-METHOD     focus(): undefined              [PUBLIC,   JS Platform
-METHOD     forward(): undefined            [PUBLIC,   JS Platform
-METHOD     freeze(obj: Object): Object     [PUBLIC,   JS Platform
-FIELD      frameElement: Element           [PUBLIC]   JS Platform
-FIELD      frames: Array                   [PUBLIC]   JS Platform
-FIELD      fullScreen: Boolean             [PUBLIC]   JS Platform
+METHOD     freeze(o: Object): Object       [PUBLIC,   JS Platform
+METHOD     fromEntries(entries: Iterable)  [PUBLIC,   JS Platform
 KEYWORD    false                                      null
 KEYWORD    finally                                    null
 KEYWORD    for                                        null

@@ -24,16 +24,13 @@
  */
 package org.netbeans.modules.web.beans.actions;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 
 import org.openide.filesystems.FileObject;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 
@@ -58,14 +55,7 @@ public class InterceptorPanel extends javax.swing.JPanel {
         myInterceptorName.getDocument().addDocumentListener( 
                 createValidationListener( approveButton ) );
         myInterceptorName.setText( getProposedName() );
-        URL errorUrl;
-        try {
-            errorUrl = new URL("nbresloc:/org/netbeans/modules/dialogs/error.gif");
-            myStatusLbl.setIcon( new ImageIcon( errorUrl ));
-        }
-        catch (MalformedURLException e) {
-            assert false;
-        }
+        myStatusLbl.setIcon(ImageUtilities.loadIcon("org/netbeans/modules/dialogs/error.gif"));
         
         myStatusLbl.setVisible( false );
     }

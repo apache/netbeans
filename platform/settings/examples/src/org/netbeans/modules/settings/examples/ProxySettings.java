@@ -26,8 +26,8 @@ import java.util.Properties;
  * @author  Jan Pokorsky
  */
 public final class ProxySettings {
-    private final static String PROP_PROXYHOST = "proxyHost"; //NOI18N
-    private final static String PROP_PROXYPORT = "proxyPort"; //NOI18N
+    private static final String PROP_PROXYHOST = "proxyHost"; //NOI18N
+    private static final String PROP_PROXYPORT = "proxyPort"; //NOI18N
 
     /** Holds value of property proxyHost. */
     private String proxyHost;

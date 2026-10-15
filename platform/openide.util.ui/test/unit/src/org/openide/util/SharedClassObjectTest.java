@@ -207,6 +207,8 @@ public class SharedClassObjectTest extends NbTestCase {
             super(new URL[] {SharedClassObjectTest.class.getProtectionDomain().getCodeSource().getLocation()},
                   SharedClassObject.class.getClassLoader());
         }
+
+        @Override
         protected Class loadClass(String name, boolean resolve) throws ClassNotFoundException {
             if (name.startsWith("org.openide.util.SharedClassObjectTest")) {
                 // Do not proxy to parent!

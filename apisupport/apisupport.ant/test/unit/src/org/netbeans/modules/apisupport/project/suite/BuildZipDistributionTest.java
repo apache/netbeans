@@ -90,7 +90,6 @@ public class BuildZipDistributionTest extends TestBase {
         suite.open();
         proj.open();
         
-        LOG.info("Workdir " + getWorkDirPath());
     }
     
     public void testBuildTheZipAppWhenAppNamePropIsNotSet() throws Exception {
@@ -115,7 +114,6 @@ public class BuildZipDistributionTest extends TestBase {
             "org.openide.compat," +
             "org.netbeans.api.progress," +
             "org.netbeans.core.multiview," +
-            "org.openide.util.enumerations" +
             "");
         suite.getHelper().putProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH, ep);
         ProjectManager.getDefault().saveProject(suite);
@@ -185,9 +183,9 @@ public class BuildZipDistributionTest extends TestBase {
             }
             File entry = new File(expand, path);
             entry.getParentFile().mkdirs();
-            FileOutputStream os = new FileOutputStream(entry);
-            FileUtil.copy(f.getInputStream(jarEntry), os);
-            os.close();
+            try (FileOutputStream os = new FileOutputStream(entry)) {
+                f.getInputStream(jarEntry).transferTo(os);
+            }
         }
 
         File root = new File(expand, "fakeapp");
@@ -235,6 +233,7 @@ public class BuildZipDistributionTest extends TestBase {
         assertTrue("file found: " + testf, testf.exists());
         
         LinkedList<String> allArgs = new LinkedList<String>(Arrays.asList(args));
+        allArgs.addFirst("-J-Dbootstrap.disableJDKCheck=true");   // TODO remove once tests can run on JDK 21
         allArgs.addFirst("-J-Dnetbeans.mainclass=" + MainCallback.class.getName());
         allArgs.addFirst(getWorkDirPath());
         allArgs.addFirst("--userdir");

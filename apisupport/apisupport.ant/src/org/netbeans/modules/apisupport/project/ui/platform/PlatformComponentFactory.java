@@ -184,7 +184,7 @@ public final class PlatformComponentFactory {
             if (extra != null) {
                 _platforms.add(extra);
             }
-            NbPlatform[] platforms = _platforms.toArray(new NbPlatform[_platforms.size()]);
+            NbPlatform[] platforms = _platforms.toArray(new NbPlatform[0]);
             Arrays.sort(platforms, new Comparator<NbPlatform>() {
                 public int compare(NbPlatform p1, NbPlatform p2) {
                     int res = Collator.getInstance().compare(p1.getLabel(), p2.getLabel());

@@ -29,14 +29,14 @@ import org.openide.filesystems.FileSystem;
 import org.openide.util.Lookup;
 
 /** Can provide status and actions for FileObjects. Register it using {@link org.openide.util.lookup.ServiceProvider}.
- * <p/>
+ * <p>
  * This is a replacement for former {@code AnnotationProvider} API, which depends on java.awt.
  * The original API has moved to a UI-dependent module, {@code org.netbeans.modules.masterfs.ui}
  * @author Jaroslav Tulach
  */
 public abstract class BaseAnnotationProvider {
     /** listeners */
-    private List<FileStatusListener> fsStatusListener = new ArrayList<FileStatusListener>();
+    private final List<FileStatusListener> fsStatusListener = new ArrayList<>();
     /** lock for modification of listeners */
     private static final Object LOCK = new Object();
     
@@ -69,9 +69,9 @@ public abstract class BaseAnnotationProvider {
      * It may be null if getStatus returned status that doesn't implement
      * HtmlStatus but plain Status.
      * 
-     * @see org.openide.awt.HtmlRenderer
+     * @see <a href="@org-openide-awt@/org/openide/awt/HtmlRenderer.html">org.openide.awt.HtmlRenderer</a>
      * @see <a href="@org-openide-loaders@/org/openide/loaders/DataNode.html#getHtmlDisplayName()"><code>DataNode.getHtmlDisplayName()</code></a>
-     * @see org.openide.nodes.Node#getHtmlDisplayName
+     * @see <a href="@org-openide-nodes@/org/openide/nodes/Node.html#getHtmlDisplayName()">org.openide.nodes.Node#getHtmlDisplayName</a>
      **/
     public abstract String annotateNameHtml(String name, Set<? extends FileObject> files);
 
@@ -120,7 +120,7 @@ public abstract class BaseAnnotationProvider {
     * @param event The event to be fired
     */
     protected final void fireFileStatusChanged(FileStatusEvent event) {
-        List<FileStatusListener> listeners = new ArrayList<FileStatusListener>();
+        List<FileStatusListener> listeners = new ArrayList<>();
         synchronized (LOCK) {
             listeners.addAll(fsStatusListener);
         }

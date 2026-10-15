@@ -1,0 +1,6 @@
+Code completion result for source line:
+$example = new Example()->priva|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     privateMethod()                 [PRIVATE]  Example
+METHOD     privateStaticMethod()           [PRIVATE,  Example
+VARIABLE   int privateField                [PRIVATE]  Example

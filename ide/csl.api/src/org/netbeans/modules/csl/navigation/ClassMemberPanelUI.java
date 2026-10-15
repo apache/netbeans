@@ -121,7 +121,7 @@ public class ClassMemberPanelUI extends javax.swing.JPanel
                         }
                         }
                     
-                    actions = newActions.toArray(new Action[newActions.size()]);
+                    actions = newActions.toArray(new Action[0]);
                     }
                 }
             final boolean finalIncludeFilters = includeFilters;
@@ -140,7 +140,7 @@ public class ClassMemberPanelUI extends javax.swing.JPanel
         initComponents();
         
         // Tree view of the elements
-        elementView = createBeanTreeView();        
+        elementView = createBeanTreeView();
         add(elementView, BorderLayout.CENTER);
                
         filters = new ClassMemberFilters( this );
@@ -302,7 +302,6 @@ public class ClassMemberPanelUI extends javax.swing.JPanel
                 public void run() {
                     long startTime = System.currentTimeMillis();
                     elementView.setRootVisible(false);
-                    elementView.setAutoWaitCursor(false);
                     manager.setRootContext(new ElementNode( description, ClassMemberPanelUI.this, fileObject ) );
 
                     int expandDepth = -1;
@@ -328,7 +327,6 @@ public class ClassMemberPanelUI extends javax.swing.JPanel
                             elementView.setScrollOnExpand( scrollOnExpand );
                         }
                     });
-                    elementView.setAutoWaitCursor(true);
                     long endTime = System.currentTimeMillis();
                     Logger.getLogger("TIMER").log(Level.FINE, "Navigator Initialization",
                             new Object[] {fileObject, endTime - startTime});
@@ -476,17 +474,8 @@ public class ClassMemberPanelUI extends javax.swing.JPanel
     }
     
     private MyBeanTreeView createBeanTreeView() {
-//        ActionMap map = getActionMap();
-//        map.put(DefaultEditorKit.copyAction, ExplorerUtils.actionCopy(manager));
-//        map.put(DefaultEditorKit.cutAction, ExplorerUtils.actionCut(manager));
-//        map.put(DefaultEditorKit.pasteAction, ExplorerUtils.actionPaste(manager));
-//        map.put("delete", new DelegatingAction(ActionProvider.COMMAND_DELETE, ExplorerUtils.actionDelete(manager, true)));
-//        
-        
         MyBeanTreeView btv = new MyBeanTreeView();    // Add the BeanTreeView        
-//      btv.setDragSource (true);        
-//      btv.setRootVisible(false);        
-//      associateLookup( ExplorerUtils.createLookup(manager, map) );        
+        btv.setAutoWaitCursor(false);
         return btv;
         
     }

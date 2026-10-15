@@ -55,7 +55,7 @@ public class RunCheckerImpl implements LateBoundPrerequisitesChecker {
 //    private static final String PROFILER_JDKHOME_OPT = "${profiler.jdkhome.opt}"; // NOI18N
     
     @ProjectServiceProvider(service=ProfilerLauncher.LauncherFactory.class, projectType="org-netbeans-modules-maven")
-    final public static class MavenLauncherFactory implements ProfilerLauncher.LauncherFactory {
+    public static final class MavenLauncherFactory implements ProfilerLauncher.LauncherFactory {
         @Override
         public Launcher createLauncher(final Session session) {
             return new Launcher() {
@@ -112,16 +112,29 @@ public class RunCheckerImpl implements LateBoundPrerequisitesChecker {
             
             session.setAttribute("mvn-run-checker.config", config);
              
+            final String agentArg = sProps.get("agent.jvmargs"); // NOI18N
+            final String internalProfilerArgs = sProps.get("profiler.info.jvmargs") // NOI18N
+                                + " " + agentArg; // NOI18N 
+
+            final String prefixPublicArgs = "profiler.jvmargs"; // NOI18N
+            config.setProperty(prefixPublicArgs+".all",internalProfilerArgs); // NOI18N
             for (Map.Entry<? extends String, ? extends String> entry : config.getProperties().entrySet()) {
                 if (entry.getKey().equals(VM_ARGS)) {
                     String value = entry.getValue();
                     int index = value.indexOf(PROFILER_ARGS);
                     if(index > -1) {
-                        String agentArg = sProps.get("agent.jvmargs");
-                        value = value.replace(PROFILER_ARGS, sProps.get("profiler.info.jvmargs") // NOI18N
-                                + " " + agentArg); // NOI18N
+                        value = value.replace(PROFILER_ARGS, internalProfilerArgs);
                         config.setProperty(entry.getKey(), value);
                     }
+                }
+            }
+            // Make the profiler jvm args available as individual arguments.
+            // Note: this assumes ordering doesn't matter.
+            int idxArg = 0;
+            for(Map.Entry<String, String> entry : sProps.entrySet()) {
+                if(entry.getKey().startsWith("profiler.netbeansBindings.jvmarg.")) { // NOI18N
+                    ++idxArg;
+                    config.setProperty(prefixPublicArgs+".arg"+idxArg, entry.getValue()); // NOI18N
                 }
             }
             final ProfilerLauncher.Session s = session;

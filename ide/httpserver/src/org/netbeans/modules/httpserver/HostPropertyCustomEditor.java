@@ -25,6 +25,7 @@ import java.beans.PropertyChangeListener;
 import org.openide.explorer.propertysheet.PropertyEnv;
 import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -32,9 +33,10 @@ import org.openide.util.HelpCtx;
  */
 public class HostPropertyCustomEditor extends javax.swing.JPanel 
         implements HelpCtx.Provider, ActionListener, PropertyChangeListener {
-    private HostPropertyEditor editor;
+    private final HostPropertyEditor editor;
 
     /** Creates new form HostEditorPanel */
+    @SuppressWarnings("LeakingThisInConstructor")
     public HostPropertyCustomEditor (HostPropertyEditor ed, PropertyEnv env) {
         editor = ed;
         initComponents ();
@@ -58,6 +60,7 @@ public class HostPropertyCustomEditor extends javax.swing.JPanel
         env.addPropertyChangeListener(this);
     }
 
+    @Override
     public void actionPerformed (ActionEvent event) {
         try {
             if (event.getSource() == anyRadioButton) {
@@ -75,10 +78,10 @@ public class HostPropertyCustomEditor extends javax.swing.JPanel
     
     private void initAccessibility()
     {
-        hostLabel.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getBundle(HostPropertyCustomEditor.class).getString("ACS_HostLabelA11yDesc"));
-        grantLabel.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getBundle(HostPropertyCustomEditor.class).getString("ACS_GrantLabelA11yDesc"));
-        grantTextArea.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getBundle(HostPropertyCustomEditor.class).getString("ACS_GrantTextAreaA11yName"));
-        getAccessibleContext().setAccessibleDescription (org.openide.util.NbBundle.getBundle(HostPropertyCustomEditor.class).getString("ACS_HostPropertyPanelA11yDesc"));
+        hostLabel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(HostPropertyCustomEditor.class, "ACS_HostLabelA11yDesc"));
+        grantLabel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(HostPropertyCustomEditor.class, "ACS_GrantLabelA11yDesc"));
+        grantTextArea.getAccessibleContext().setAccessibleName(NbBundle.getMessage(HostPropertyCustomEditor.class, "ACS_GrantTextAreaA11yName"));
+        getAccessibleContext().setAccessibleDescription (NbBundle.getMessage(HostPropertyCustomEditor.class, "ACS_HostPropertyPanelA11yDesc"));
     }
     
     /** This method is called from within the constructor to
@@ -170,11 +173,13 @@ public class HostPropertyCustomEditor extends javax.swing.JPanel
     /** Help context where to find more about the paste type action.
      * @return the help context for this action
      */
+    @Override
     public HelpCtx getHelpCtx() {
         String helpid = HostPropertyCustomEditor.class.getName()+"_properties"; //NOI18N
         return new HelpCtx(helpid);
     }        
 
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (PropertyEnv.PROP_STATE.equals(evt.getPropertyName()) && evt.getNewValue() == PropertyEnv.STATE_VALID) {
             editor.setValue(getPropertyValue());

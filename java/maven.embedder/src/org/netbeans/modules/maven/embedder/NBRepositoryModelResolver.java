@@ -25,6 +25,7 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
+import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Parent;
 import org.apache.maven.model.Repository;
 import org.apache.maven.model.building.FileModelSource;
@@ -33,7 +34,6 @@ import org.apache.maven.model.resolution.InvalidRepositoryException;
 import org.apache.maven.model.resolution.ModelResolver;
 import org.apache.maven.model.resolution.UnresolvableModelException;
 import org.apache.maven.repository.RepositorySystem;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -43,7 +43,7 @@ class NBRepositoryModelResolver
         implements ModelResolver {
 
     private final MavenEmbedder embedder;
-    private List<ArtifactRepository> remoteRepositories = new ArrayList<ArtifactRepository>();
+    private List<ArtifactRepository> remoteRepositories = new ArrayList<>();
 
 
     NBRepositoryModelResolver(MavenEmbedder embedder) {
@@ -52,7 +52,7 @@ class NBRepositoryModelResolver
 
     private NBRepositoryModelResolver(NBRepositoryModelResolver original) {
         this(original.embedder);
-        this.remoteRepositories = new ArrayList<ArtifactRepository>(original.remoteRepositories);
+        this.remoteRepositories = new ArrayList<>(original.remoteRepositories);
     }
 
     @Override
@@ -70,13 +70,9 @@ class NBRepositoryModelResolver
             throws UnresolvableModelException {
         Artifact artifactParent = embedder.lookupComponent(RepositorySystem.class).createProjectArtifact(groupId, artifactId, version);
         try {
-            embedder.resolve(artifactParent, remoteRepositories, embedder.getLocalRepository());
-        } catch (ArtifactResolutionException ex) {
-            Exceptions.printStackTrace(ex);
+            embedder.resolveArtifact(artifactParent, remoteRepositories, embedder.getLocalRepository());
+        } catch (ArtifactResolutionException | ArtifactNotFoundException ex) {
              throw new UnresolvableModelException(ex.getMessage(),  groupId , artifactId , version );
-        } catch (ArtifactNotFoundException ex) {
-            Exceptions.printStackTrace(ex);
-            throw new UnresolvableModelException( ex.getMessage(),  groupId , artifactId , version );
         }
 
         return new FileModelSource(artifactParent.getFile());
@@ -101,4 +97,9 @@ class NBRepositoryModelResolver
             throw new InvalidRepositoryException(ex.toString(), repository, ex);
         }
     }
+
+    @Override
+    public ModelSource resolveModel(Dependency dpndnc) throws UnresolvableModelException {
+        return resolveModel(dpndnc.getGroupId(), dpndnc.getArtifactId(), dpndnc.getVersion());
+    }    
 }

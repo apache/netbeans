@@ -58,7 +58,7 @@ public class SaasServicesModel {
     }
     private static SaasServicesModel instance;
 
-    public synchronized static SaasServicesModel getInstance() {
+    public static synchronized SaasServicesModel getInstance() {
         if (instance == null) {
             instance = new SaasServicesModel();
         }

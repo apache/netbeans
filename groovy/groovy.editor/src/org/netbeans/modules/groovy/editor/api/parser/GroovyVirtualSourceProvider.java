@@ -28,10 +28,12 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.ConstructorNode;
@@ -52,6 +54,7 @@ import org.codehaus.groovy.ast.stmt.Statement;
 import org.codehaus.groovy.control.ResolveVisitor;
 import org.netbeans.modules.groovy.editor.api.ASTUtils;
 import org.netbeans.modules.groovy.editor.api.elements.ast.ASTRoot;
+import org.netbeans.modules.groovy.editor.compiler.GroovyIndexingTask;
 import org.netbeans.modules.java.preprocessorbridge.spi.VirtualSourceProvider;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
@@ -122,7 +125,7 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
 
     @SuppressWarnings("unchecked")
     static List<ClassNode> getClassNodes(File file) {
-        final List<ClassNode> resultList = new ArrayList<ClassNode>();
+        final List<ClassNode> resultList = new ArrayList<>();
         FileObject fo = FileUtil.toFileObject(file);
         if (fo != null) {
             Source source = Source.create(fo);
@@ -130,23 +133,7 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
             if (GroovyLanguage.GROOVY_MIME_TYPE.equals(source.getMimeType())) {
                 try {
                     // FIXME can we move this out of task (?)
-                    ParserManager.parse(Collections.singleton(source), new UserTask() {
-                        @Override
-                        public void run(ResultIterator resultIterator) throws Exception {
-                            Parser.Result parseResult = resultIterator.getParserResult();
-                            if (parseResult != null) {
-                                GroovyParserResult result = ASTUtils.getParseResult(parseResult);
-
-                                ASTRoot astRootElement = result.getRootElement();
-                                if (astRootElement != null) {
-                                    ModuleNode moduleNode = astRootElement.getModuleNode();
-                                    if (moduleNode != null) {
-                                        resultList.addAll(moduleNode.getClasses());
-                                    }
-                                }
-                            }
-                        }
-                    });
+                    ParserManager.parse(Collections.singleton(source), new Task(resultList));
                 } catch (ParseException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -154,6 +141,31 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
         }
 
         return resultList;
+    }
+
+    static class Task extends UserTask implements GroovyIndexingTask {
+
+        private final List<ClassNode> resultList;
+
+        public Task(List<ClassNode> resultList) {
+            this.resultList = resultList;
+        }
+
+        @Override
+        public void run(ResultIterator resultIterator) throws Exception {
+            Parser.Result parseResult = resultIterator.getParserResult();
+            if (parseResult != null) {
+                GroovyParserResult result = ASTUtils.getParseResult(parseResult);
+
+                ASTRoot astRootElement = result.getRootElement();
+                if (astRootElement != null) {
+                    ModuleNode moduleNode = astRootElement.getModuleNode();
+                    if (moduleNode != null) {
+                        resultList.addAll(moduleNode.getClasses());
+                    }
+                }
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -311,8 +323,9 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
             if (fields == null) {
                 return;
             }
-            ArrayList<FieldNode> enumFields   = new ArrayList<FieldNode>(fields.size());
-            ArrayList<FieldNode> normalFields = new ArrayList<FieldNode>(fields.size());
+
+            List<FieldNode> enumFields   = new ArrayList<>(fields.size());
+            List<FieldNode> normalFields = new ArrayList<>(fields.size());
             
             for (FieldNode fieldNode : fields) {
                 boolean isEnumField = (fieldNode.getModifiers() & Opcodes.ACC_ENUM) != 0;
@@ -386,14 +399,14 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
             }
         }
 
-        private void genEnumFields(List fields, PrintWriter out) {
+        private void genEnumFields(List<FieldNode> fields, PrintWriter out) {
             if (fields.isEmpty()) {
                 return;
             }
             boolean first = true;
             
-            for (Iterator iterator = fields.iterator(); iterator.hasNext();) {
-                FieldNode fieldNode = (FieldNode) iterator.next();
+            for (Iterator<FieldNode> iterator = fields.iterator(); iterator.hasNext();) {
+                FieldNode fieldNode = iterator.next();
                 if (!first) {
                     out.print(", ");
                 } else {
@@ -433,7 +446,7 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
             if (stats == null || stats.isEmpty()) {
                 return null;
             }
-            Statement stat = (Statement) stats.get(0);
+            Statement stat = stats.get(0);
             if (!(stat instanceof ExpressionStatement)) {
                 return null;
             }
@@ -475,7 +488,12 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
             ClassNode superType = type.getSuperClass();
 
             boolean hadPrivateConstructor = false;
-            for (ConstructorNode c : superType.getDeclaredConstructors()) {
+            
+            List<ConstructorNode> constructorNodes = superType
+                    .getDeclaredConstructors().stream()
+                    .sorted(Comparator.comparing(ConstructorNode::getTypeDescriptor))
+                    .collect(Collectors.toList());
+            for (ConstructorNode c : constructorNodes) {
                 // Only look at things we can actually call
                 if (c.isPublic() || c.isProtected()) {
                     return c.getParameters();
@@ -681,7 +699,12 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
             if (genericsType.isPlaceholder()) {
                 out.print(genericsType.getName());
             } else {
-                printTypeName(genericsType.getType(), out);
+                // Note: Groovy's GenericsType.toString() uses Set<String> to avoid
+                // recursion through placeholders; but the algorithm here differs, bcs
+                // placeholders bypass this recursive invocation at all. 
+                // If this simplified printing produces some errors, the algo should be
+                // tuned to be like the GenericsType.toString one.
+                printType(genericsType.getType(), out);
                 ClassNode[] upperBounds = genericsType.getUpperBounds();
                 ClassNode lowerBound = genericsType.getLowerBound();
                 if (upperBounds != null) {

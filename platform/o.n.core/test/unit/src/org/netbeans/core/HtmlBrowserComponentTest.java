@@ -87,7 +87,7 @@ public class HtmlBrowserComponentTest {
     private static class TestBrowserImpl extends HtmlBrowser.Impl {
 
         private final JComponent theComponent = new JPanel();
-        private final static TestLookupContent lookupContent = new TestLookupContent();
+        private static final TestLookupContent lookupContent = new TestLookupContent();
         private final Lookup lookup = Lookups.singleton( lookupContent );
 
         @Override

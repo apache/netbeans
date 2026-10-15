@@ -129,7 +129,7 @@ public class SaasGroupNode extends AbstractNode {
         actions.add(SystemAction.get(AddGroupAction.class));
         actions.add(SystemAction.get(DeleteGroupAction.class));
         actions.add(SystemAction.get(RenameGroupAction.class));
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
     
     @Override

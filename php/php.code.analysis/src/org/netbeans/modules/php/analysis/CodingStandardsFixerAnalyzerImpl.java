@@ -37,6 +37,7 @@ import org.netbeans.modules.php.analysis.ui.analyzer.CodingStandardsFixerCustomi
 import org.netbeans.modules.php.analysis.util.AnalysisUtils;
 import org.netbeans.modules.php.analysis.util.Mappers;
 import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
+import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.refactoring.api.Scope;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.openide.filesystems.FileObject;
@@ -167,7 +168,15 @@ public final class CodingStandardsFixerAnalyzerImpl implements Analyzer {
 
     @CheckForNull
     private CodingStandardsFixer getValidCodingStandardsFixer() {
+        Preferences settings = context.getSettings();
+        String codingStandardsFixerPath = null;
+        if (settings != null) {
+            codingStandardsFixerPath = settings.get(CodingStandardsFixerCustomizerPanel.PATH, null);
+        }
         try {
+            if (StringUtils.hasText(codingStandardsFixerPath)) {
+                return CodingStandardsFixer.getCustom(codingStandardsFixerPath);
+            }
             return CodingStandardsFixer.getDefault();
         } catch (InvalidPhpExecutableException ex) {
             LOGGER.log(Level.INFO, null, ex);

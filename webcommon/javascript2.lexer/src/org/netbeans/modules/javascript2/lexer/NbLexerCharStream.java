@@ -32,7 +32,7 @@ public class NbLexerCharStream implements CharStream {
 
     private static final String STREAM_NAME = "NbLexerCharStream"; //NOI18N
     private final LexerInput li;
-    private final Stack<Integer> markers = new Stack();
+    private final Stack<Integer> markers = new Stack<>();
 
     public NbLexerCharStream(LexerRestartInfo lri) {
         this.li = lri.input();
@@ -75,9 +75,9 @@ public class NbLexerCharStream implements CharStream {
         }
         
         //remove all markers from the given one, including the requested one
-        for(int i = marker; i < markers.size(); i++) {
-            markers.remove(i);
-        }
+        do {
+            markers.pop();
+        } while (marker < markers.size());
     }
 
     @Override

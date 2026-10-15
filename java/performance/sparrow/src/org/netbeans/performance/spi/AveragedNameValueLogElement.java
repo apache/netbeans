@@ -78,14 +78,14 @@ public class AveragedNameValueLogElement extends NameValueLogElement implements 
      * used to create this element.
      * the set of values used to create this element. */
     public Float getMin() {
-        return new Float (samples[0]);
+        return samples[0];
     }
     
     /** Returns the highest value in the set of values
      * used to create this element.
      * the set of values used to create this element. */
     public Float getMax() {
-        return new Float(samples[samples.length-1]);
+        return samples[samples.length-1];
     }
     
     /** Returns the mean, or arithmetic average of 
@@ -105,7 +105,7 @@ public class AveragedNameValueLogElement extends NameValueLogElement implements 
         } else {
             result = samples[samples.length/2];
         }
-        return new Float(result);
+        return result;
     }
     
     /** Returns the values used to create this element.     */

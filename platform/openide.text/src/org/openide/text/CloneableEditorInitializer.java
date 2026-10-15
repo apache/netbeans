@@ -67,7 +67,7 @@ final class CloneableEditorInitializer implements Runnable {
     
     private static final RequestProcessor RP = new RequestProcessor("org.openide.text Editor Initialization");
     
-    final static Logger TIMER = Logger.getLogger("TIMER"); // NOI18N
+    static final Logger TIMER = Logger.getLogger("TIMER"); // NOI18N
     
     /**
      * Flag indicating if modal dialog for handling UQE is displayed. If it is

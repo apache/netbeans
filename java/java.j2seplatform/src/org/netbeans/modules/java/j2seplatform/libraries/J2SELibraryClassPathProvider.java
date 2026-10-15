@@ -91,10 +91,10 @@ public class J2SELibraryClassPathProvider implements ClassPathProvider {
                     final JavaPlatform defPlatform = JavaPlatformManager.getDefault().getDefaultPlatform();
                     setLastUsedLibrary(root, lib);
                     if (ClassPath.SOURCE.equals(type)) {
-                        return new ClassPath[] {ClassPathSupport.createClassPath(resources.toArray(new URL[resources.size()]))};
+                        return new ClassPath[] {ClassPathSupport.createClassPath(resources.toArray(new URL[0]))};
                     } else if (ClassPath.COMPILE.equals(type)) {
                         resources = lib.getContent(J2SELibraryTypeProvider.VOLUME_TYPE_CLASSPATH);
-                        return new ClassPath[] {ClassPathSupport.createClassPath(resources.toArray(new URL[resources.size()]))};
+                        return new ClassPath[] {ClassPathSupport.createClassPath(resources.toArray(new URL[0]))};
                     } else if (ClassPath.BOOT.equals(type)) {
                         return new ClassPath[] {defPlatform.getBootstrapLibraries()};
                     } else if (JavaClassPathConstants.MODULE_BOOT_PATH.equals(type) &&

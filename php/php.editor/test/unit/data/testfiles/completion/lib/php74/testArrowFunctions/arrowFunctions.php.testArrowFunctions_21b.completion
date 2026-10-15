@@ -52,6 +52,7 @@ KEYWORD    endforeach                                 null
 KEYWORD    endif                                      null
 KEYWORD    endswitch                                  null
 KEYWORD    endwhile                                   null
+KEYWORD    enum                                       null
 KEYWORD    eval()                                     Language Construct
 KEYWORD    exit()                                     Language Construct
 KEYWORD    extends                                    null
@@ -71,19 +72,25 @@ KEYWORD    instanceof                                 null
 KEYWORD    interface                                  null
 KEYWORD    isset()                                    Language Construct
 KEYWORD    list()                                     Language Construct
+KEYWORD    match                                      null
 KEYWORD    namespace                                  null
 KEYWORD    new                                        null
 KEYWORD    or                                         null
 KEYWORD    print '';                                  Language Construct
 KEYWORD    private                                    null
+KEYWORD    private(set)                               null
 KEYWORD    protected                                  null
+KEYWORD    protected(set)                             null
 KEYWORD    public                                     null
+KEYWORD    public(set)                                null
+KEYWORD    readonly                                   null
 KEYWORD    require '';                                Language Construct
 KEYWORD    require_once '';                           Language Construct
 KEYWORD    return ;                                   Language Construct
 KEYWORD    static                                     null
 KEYWORD    switch                                     null
 KEYWORD    throw                                      null
+KEYWORD    trait                                      null
 KEYWORD    try                                        null
 KEYWORD    unset()                                    Language Construct
 KEYWORD    use                                        null

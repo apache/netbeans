@@ -28,9 +28,9 @@ import org.netbeans.modules.nativeexecution.support.windows.PathConverter.PathTy
  */
 public class Shell {
 
-    final public ShellType type;
-    final public String shell;
-    final public File bindir;
+    public final ShellType type;
+    public final String shell;
+    public final File bindir;
     private ShellValidationStatus validationStatus = null;
 
     public Shell(ShellType type, String shell, File bindir) {

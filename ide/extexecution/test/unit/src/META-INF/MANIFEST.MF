@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.extexecution.xtest/1
+OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Module-Dependencies: org.netbeans.modules.extexecution/2 > 1.62
+OpenIDE-Module-Short-Description: Tests for ExternalExecution API
+OpenIDE-Module-Layer: org/netbeans/api/extexecution/resources/mf-layer.xml
+OpenIDE-Module-Name: External Execution API tests
+OpenIDE-Module-Public-Packages: -

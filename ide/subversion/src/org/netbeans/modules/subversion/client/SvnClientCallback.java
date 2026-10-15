@@ -19,12 +19,10 @@
 package org.netbeans.modules.subversion.client;
 
 import java.awt.Dialog;
-import java.net.PasswordAuthentication;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
-import org.netbeans.modules.subversion.kenai.SvnKenaiAccessor;
 import org.netbeans.modules.subversion.SvnModuleConfig;
 import org.netbeans.modules.subversion.ui.repository.RepositoryConnection;
 import org.openide.DialogDescriptor;
@@ -169,20 +167,6 @@ public abstract class SvnClientCallback implements ISVNPromptUserPassword {
         return certFilePath;
     }
 
-    private void getKenaiAuthData(SvnKenaiAccessor support) {
-        final String urlString = url.toString();
-        
-        PasswordAuthentication pa = support.getPasswordAuthentication(urlString, true);
-        if(pa == null) {
-            throw new RuntimeException(new InterruptedException(org.openide.util.NbBundle.getMessage(SvnClientExceptionHandler.class, "MSG_ActionCanceledByUser"))); //NOI18N
-        }
-        String user = pa.getUserName();
-        char[] psswd = pa.getPassword();
-
-        username = user != null ? user : "";
-        password = psswd;
-    }
-
     private void showDialog(DialogDescriptor dialogDescriptor) {
         dialogDescriptor.setModal(true);
         dialogDescriptor.setValid(false);     
@@ -192,20 +176,15 @@ public abstract class SvnClientCallback implements ISVNPromptUserPassword {
     }    
     
     private void getAuthData() {        
-        SvnKenaiAccessor support = SvnKenaiAccessor.getInstance();
-        if(support != null && support.isKenai(url.toString())) {
-            getKenaiAuthData(support);
-        } else {
-            RepositoryConnection rc = SvnModuleConfig.getDefault().getRepositoryConnection(url.toString());
-            if (rc != null) {
-                username = rc.getUsername();
-                password = rc.getPassword();
-                certFilePath = rc.getCertFile();
-                certPassword = rc.getCertPassword();
-                sshPort = rc.getSshPortNumber();
-                if (sshPort <= 0) {
-                    sshPort = 22;
-                }
+        RepositoryConnection rc = SvnModuleConfig.getDefault().getRepositoryConnection(url.toString());
+        if (rc != null) {
+            username = rc.getUsername();
+            password = rc.getPassword();
+            certFilePath = rc.getCertFile();
+            certPassword = rc.getCertPassword();
+            sshPort = rc.getSshPortNumber();
+            if (sshPort <= 0) {
+                sshPort = 22;
             }
         }
     }

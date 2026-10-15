@@ -40,7 +40,8 @@ public final class CodeceptionLogParser extends DefaultHandler {
     private enum Content {
         NONE,
         ERROR,
-        FAILURE
+        FAILURE,
+        SKIPPED
     };
 
     final XMLReader xmlReader;
@@ -95,10 +96,14 @@ public final class CodeceptionLogParser extends DefaultHandler {
                 processTestCase(attributes);
                 break;
             case "failure": // NOI18N
+            case "warning": // NOI18N
                 startTestFailure(attributes);
                 break;
             case "error": // NOI18N
                 startTestError(attributes);
+                break;
+            case "skipped": // NOI18N
+                startTestSkipped(attributes);
                 break;
             default:
                 // noop
@@ -117,6 +122,7 @@ public final class CodeceptionLogParser extends DefaultHandler {
                 testCase = null;
                 break;
             case "failure": // NOI18N
+            case "warning": // NOI18N
             case "error": // NOI18N
                 endTestContent();
                 break;
@@ -130,6 +136,7 @@ public final class CodeceptionLogParser extends DefaultHandler {
         switch (content) {
             case FAILURE:
             case ERROR:
+            case SKIPPED:
                 buffer.append(new String(ch, start, length));
                 break;
             case NONE:
@@ -185,6 +192,11 @@ public final class CodeceptionLogParser extends DefaultHandler {
 
     private void startTestFailure(Attributes attributes) {
         content = Content.FAILURE;
+    }
+
+    private void startTestSkipped(Attributes attributes) {
+        content = Content.SKIPPED;
+        testCase.setSkippedStatus();
     }
 
     private void endTestContent() {

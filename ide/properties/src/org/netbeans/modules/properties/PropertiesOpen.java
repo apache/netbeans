@@ -36,10 +36,13 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
@@ -73,7 +76,6 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 import org.openide.util.actions.SystemAction;
 import org.openide.windows.CloneableOpenSupport;
 import org.openide.windows.CloneableTopComponent;
@@ -954,12 +956,12 @@ public class PropertiesOpen extends CloneableOpenSupport
          * Changes display name of components accordingly. */
         private transient PropertyChangeListener nameUpdaterListener;
 
-        private transient static HashMap<PropertiesDataObject,PropertyChangeListener> weakNameUpdateListeners;
+        private static transient HashMap<PropertiesDataObject,PropertyChangeListener> weakNameUpdateListeners;
 
         /** Generated serial version UID. */
         static final long serialVersionUID =2836248291419024296L;
         
-        private final static transient Object UPDATE_LOCK = new Object();
+        private static final transient Object UPDATE_LOCK = new Object();
         /** Default constructor for deserialization. */
         public PropertiesCloneableTopComponent() {
         }
@@ -1427,7 +1429,7 @@ public class PropertiesOpen extends CloneableOpenSupport
     private static class CompoundUndoRedoManager implements UndoRedo {
         
         /** Set of weak references to all "underlying" editor support undoredo managers. */
-        private WeakSet<Manager> managers = new WeakSet<Manager>(5);
+        private Set<Manager> managers = Collections.newSetFromMap(new WeakHashMap<>(5));
         
         // Constructor
         

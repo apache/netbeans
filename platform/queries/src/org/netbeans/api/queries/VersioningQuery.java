@@ -23,6 +23,7 @@ import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.spi.queries.VersioningQueryImplementation;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Lookup;
 
 /**
@@ -53,7 +54,7 @@ public final class VersioningQuery {
         boolean asserts = false;
         assert asserts = true;
         if (asserts) {
-            URI normUri = uri.normalize();
+            URI normUri = BaseUtilities.normalizeURI(uri);
             if (!uri.equals(normUri)) {
                 throw new IllegalArgumentException("Must pass a normalized URI: " + uri + " vs. " + normUri);
             }
@@ -89,7 +90,7 @@ public final class VersioningQuery {
         boolean asserts = false;
         assert asserts = true;
         if (asserts) {
-            URI normUri = uri.normalize();
+            URI normUri = BaseUtilities.normalizeURI(uri);
             if (!uri.equals(normUri)) {
                 throw new IllegalArgumentException("Must pass a normalized URI: " + uri + " vs. " + normUri);
             }

@@ -59,10 +59,10 @@ public class ExternalDragAndDrop {
         Transferable res = multi;
         try {
             MultiTransferObject mto = (MultiTransferObject) multi.getTransferData(ExTransferable.multiFlavor);
-            final ArrayList fileList = new ArrayList( mto.getCount() );
+            final List fileList = new ArrayList<>( mto.getCount() );
             for( int i=0; i<mto.getCount(); i++ ) {
                 if( mto.isDataFlavorSupported( i, DataFlavor.javaFileListFlavor ) ) {
-                    List list = (List)mto.getTransferData( i, DataFlavor.javaFileListFlavor );
+                    List<?> list = (List<?>)mto.getTransferData( i, DataFlavor.javaFileListFlavor );
                     fileList.addAll( list );
                 }
             }

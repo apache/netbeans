@@ -20,6 +20,7 @@
 package org.netbeans.modules.dbschema.migration.archiver.serializer;
 
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.junit.NbTestCase;
 
 /**
@@ -36,7 +37,7 @@ public class XMLGraphSerializerTest extends NbTestCase {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         new XMLGraphSerializer(outputStream).writeObject(new FooList());
 
-        String string = new String(outputStream.toByteArray(), "UTF-8");
+        String string = new String(outputStream.toByteArray(), StandardCharsets.UTF_8);
         assertTrue(string.contains("XMLGraphSerializerTest$Foo42"));
         assertTrue(string.contains("XMLGraphSerializerTest$Foo42#1"));
     }

@@ -23,23 +23,26 @@ package org.netbeans.modules.css.lib.api.properties;
  * @author marekfukala
  */
 public abstract class GrammarElementVisitor {
-    
-    public void visit(UnitGrammarElement element) {
+
+    public boolean visit(UnitGrammarElement element) {
+        return true;
     }
-    
-    public void visit(FixedTextGrammarElement element) {
+
+    public boolean visit(FixedTextGrammarElement element) {
+        return true;
     }
-    
-    public void visit(GroupGrammarElement element) {
+
+    public boolean visit(GroupGrammarElement element) {
+        return true;
     }
-    
-    public final void visit(GrammarElement element) {
+
+    public final boolean visit(GrammarElement element) {
         if(element instanceof UnitGrammarElement) {
-            visit((UnitGrammarElement)element);
+            return visit((UnitGrammarElement)element);
         } else if(element instanceof FixedTextGrammarElement) {
-            visit((FixedTextGrammarElement)element);
+            return visit((FixedTextGrammarElement)element);
         } else if(element instanceof GroupGrammarElement) {
-            visit((GroupGrammarElement)element);
+            return visit((GroupGrammarElement)element);
         } else {
             throw new IllegalStateException();
         }

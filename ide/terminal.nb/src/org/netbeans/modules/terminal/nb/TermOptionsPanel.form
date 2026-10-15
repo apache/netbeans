@@ -37,7 +37,6 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="previewPanel" alignment="0" max="32767" attributes="0"/>
           <Group type="102" alignment="1" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="fontLabel" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -50,7 +49,7 @@
               </Group>
               <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="foregroundComboBox" alignment="0" pref="252" max="32767" attributes="0"/>
+                  <Component id="foregroundComboBox" alignment="0" max="32767" attributes="0"/>
                   <Component id="backgroundComboBox" alignment="0" max="32767" attributes="0"/>
                   <Component id="selectionComboBox" alignment="0" max="32767" attributes="0"/>
                   <Component id="selectByWordTextField" alignment="0" max="32767" attributes="0"/>
@@ -75,34 +74,38 @@
                   <Component id="tabSizeLabel" min="-2" max="-2" attributes="0"/>
                   <Component id="previewLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="selectByWordLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="ignoreKeymapCheckBox" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="86" max="-2" attributes="0"/>
-                      <Component id="altSendsEscapeCheckBox" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="scrollOnInputCheckBox" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="scrollOnOutputCheckBox" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="clickToTypeCheckBox" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
-                      <Component id="lineWrapCheckBox" min="-2" max="-2" attributes="0"/>
-                  </Group>
               </Group>
               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
           </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="scrollOnInputCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="clickToTypeCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="lineWrapCheckBox" min="-2" max="-2" attributes="0"/>
+                  <Component id="scrollOnOutputCheckBox" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="ignoreKeymapCheckBox" min="-2" max="-2" attributes="0"/>
+                  <Component id="altSendsEscapeCheckBox" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
+          <Component id="previewPanel" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="descriptionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="restoreButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="restoreButton" min="-2" max="-2" attributes="0"/>
+                  <Component id="descriptionLabel" alignment="1" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="fontLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="fontButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -143,25 +146,22 @@
                   <Component id="selectByWordLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="selectByWordTextField" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="ignoreKeymapCheckBox" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
-                  <Component id="altSendsEscapeCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="clickToTypeCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="lineWrapCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="ignoreKeymapCheckBox" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="scrollOnInputCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="scrollOnOutputCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="altSendsEscapeCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="previewLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="previewPanel" pref="45" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="previewPanel" pref="67" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>

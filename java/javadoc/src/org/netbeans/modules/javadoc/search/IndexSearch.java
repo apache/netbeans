@@ -103,9 +103,9 @@ public final class IndexSearch
     /* Holds split position if the quick view is disabled */
     private int oldSplit = DocumentationSettings.getDefault().getIdxSearchSplit();
 
-    private final DefaultListModel waitModel = new DefaultListModel();
-    private final DefaultListModel initModel = new DefaultListModel();
-    private final DefaultListModel notModel = new DefaultListModel();
+    private final DefaultListModel<DocIndexItem> waitModel = new DefaultListModel<>();
+    private final DefaultListModel<DocIndexItem> initModel = new DefaultListModel<>();
+    private final DefaultListModel<DocIndexItem> notModel  = new DefaultListModel<>();
     private boolean setDividerLocation;
 
     /** Initializes the Form */
@@ -747,7 +747,7 @@ public final class IndexSearch
     DefaultListModel generateModel( java.util.Comparator<DocIndexItem> comp ) {
         DefaultListModel model = new DefaultListModel();
 
-        java.util.Collections.sort( results, comp );
+        results.sort(comp);
 
         String pckg = null;
 

@@ -80,4 +80,10 @@ final class AccessorImpl extends SPIAccessor {
             ((RefactoringCommit) commit).sum();
         }
     }
+
+    @Override
+    public Collection<? extends ModificationResult> getTransactions(RefactoringCommit c) {
+        return c.results;
+    }
+    
 }

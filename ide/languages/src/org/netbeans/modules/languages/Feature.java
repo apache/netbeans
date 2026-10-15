@@ -293,7 +293,7 @@ public class Feature {
                 l.add (expression.substring (ss, se));
                 start = se + 1;
             } while (start < expression.length ());
-            names = l.toArray (new String [l.size ()]);
+            names = l.toArray (new String [0]);
         }
 
         public Object evaluate (Context context) {

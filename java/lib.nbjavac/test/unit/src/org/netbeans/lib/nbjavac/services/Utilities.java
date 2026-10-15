@@ -43,7 +43,6 @@ import javax.tools.ToolProvider;
 public class Utilities {
     
     public static JavacTaskImpl createJavac(JavaFileManager fm, JavaFileObject... sources) {
-        final String bootPath = System.getProperty("sun.boot.class.path"); //NOI18N
         final String version = System.getProperty("java.vm.specification.version"); //NOI18N
         final JavaCompiler tool = ToolProvider.getSystemJavaCompiler();
         assert tool != null;
@@ -52,7 +51,7 @@ public class Utilities {
         Log.preRegister(context, DEV_NULL);
         JavacTaskImpl task = (JavacTaskImpl)JavacTool.create().getTask(null, 
                 fm,
-                null, Arrays.asList("-bootclasspath",  bootPath, "-source", version, "-target", version, "-Xjcov", "-XDshouldStopPolicy=GENERATE"), null, Arrays.asList(sources),
+                null, Arrays.asList("-source", version, "-target", version, "-Xjcov", "-XDshouldStopPolicy=GENERATE"), null, Arrays.asList(sources),
                 context);
         NBParserFactory.preRegister(context);
         NBTreeMaker.preRegister(context);
@@ -77,6 +76,7 @@ public class Utilities {
     }
 
     public static final PrintWriter DEV_NULL = new PrintWriter(new NullWriter(), false);
+    public static final PrintWriter OUT = new PrintWriter(System.err, true);
 
     private static class NullWriter extends Writer {
 

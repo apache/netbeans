@@ -56,7 +56,7 @@ import org.openide.util.NbBundle;
 
 public class JDBCDriverDeployHelper {
 
-    static public ProgressObject getProgressObject(File driverLoc, List listOfURLS) {
+    public static ProgressObject getProgressObject(File driverLoc, List<URL> listOfURLS) {
         return new JDBCDriversProgressObject(driverLoc, listOfURLS);
     }
 
@@ -66,7 +66,7 @@ public class JDBCDriverDeployHelper {
      * @param drivers Target ULR list where to add drivers.
      * @param jdbcDrivers JDBC drivers to be searched for URLs.
      */
-    static private void addDriversURLs(List<URL> drivers, JDBCDriver[] jdbcDrivers) {
+    private static void addDriversURLs(List<URL> drivers, JDBCDriver[] jdbcDrivers) {
         for (JDBCDriver jdbcDriver : jdbcDrivers) {
             URL[] allUrls = jdbcDriver.getURLs();
             for (int i = 0; i < allUrls.length; i++) {
@@ -94,7 +94,7 @@ public class JDBCDriverDeployHelper {
      * @param datasources Server data sources from server resources files.
      * @return List of JDBC drivers URLs to be deployed.
      */
-    static public List<URL> getMissingDrivers(File[] driverLocs, Set<Datasource> datasources) {
+    public static List<URL> getMissingDrivers(File[] driverLocs, Set<Datasource> datasources) {
         List<URL> drivers = new ArrayList<URL>();
         for (Datasource datasource : datasources) {
             String className = datasource.getDriverClassName();
@@ -145,13 +145,13 @@ public class JDBCDriverDeployHelper {
         return drivers;
     }
 
-    static private class JDBCDriversProgressObject implements ProgressObject, Runnable {
+    private static class JDBCDriversProgressObject implements ProgressObject, Runnable {
 
         private final ProgressEventSupport eventSupport;
         private final File driverLoc;
-        private List jdbcDriverURLs;
+        private List<URL> jdbcDriverURLs;
 
-        public JDBCDriversProgressObject(File driverLoc, List jdbcDriverURLs) {
+        public JDBCDriversProgressObject(File driverLoc, List<URL> jdbcDriverURLs) {
             eventSupport = new ProgressEventSupport(this); //JDBCDriverDeployHelper.this);
             String msg = NbBundle.getMessage(JDBCDriverDeployHelper.class, "MSG_CheckMissingDrivers");
             eventSupport.fireHandleProgressEvent(null, ProgressEventSupport.createStatus(ActionType.EXECUTE, CommandType.DISTRIBUTE, msg, StateType.RUNNING));
@@ -164,7 +164,7 @@ public class JDBCDriverDeployHelper {
             if (jdbcDriverURLs.size() > 0) {
                 boolean success = true;
                 for (int i = 0; i < jdbcDriverURLs.size(); i++) {
-                    URL jarUrl = (URL) jdbcDriverURLs.get(i);
+                    URL jarUrl = jdbcDriverURLs.get(i);
                     File libsDir = driverLoc;
                     try {
                         File toJar = new File(libsDir, new File(jarUrl.toURI()).getName());

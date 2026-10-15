@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.StringTokenizer;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,10 +48,10 @@ import org.openide.util.Exceptions;
 
 /**
  * An instance of the indexer which can be held until the source roots are valid.
- * 
- * TODO: Release the cached value of css index once any of the underlying data 
+ *
+ * TODO: Release the cached value of css index once any of the underlying data
  * models changes (mainly the classpath).
- * 
+ *
  * @author mfukala@netbeans.org
  */
 public class CssIndex {
@@ -61,27 +60,28 @@ public class CssIndex {
 
     private static final String SCSS_EXT = "scss"; //NOI18N
     private static final String SASS_EXT = "sass"; //NOI18N
-    
+
     private static final Map<Project, CssIndex> INDEXES = new WeakHashMap<>();
-    
+    private static final String VIRTUAL_ELEMENT_MARKER_STR = Character.toString(CssIndexer.VIRTUAL_ELEMENT_MARKER);
+
      /**
      * Creates a new instance of {@link CssIndex}.
-     * 
+     *
      * @param project The project for which you want to get the index for.
      * @return non null instance of the {@link CssIndex}
-     * @throws IOException 
+     * @throws IOException
      */
     public static CssIndex create(Project project) throws IOException {
         return new CssIndex(project);
     }
-    
+
     /**
      * Gets an instance of {@link CssIndex}. The instance may be cached.
-     * 
+     *
      * @since 1.34
      * @param project The project for which you want to get the index for.
      * @return non null instance of the {@link CssIndex}
-     * @throws IOException 
+     * @throws IOException
      */
     public static CssIndex get(Project project) throws IOException {
         if(project == null) {
@@ -92,18 +92,17 @@ public class CssIndex {
             if(index == null) {
                 index = create(project);
                 INDEXES.put(project, index);
-            } 
+            }
             return index;
         }
     }
-    
+
     private final QuerySupport querySupport;
     private final Collection<FileObject> sourceRoots;
-    
+    private final ChangeSupport changeSupport;
+
     private AllDependenciesMaps allDepsCache;
     private long allDepsCache_hashCode;
-    
-    private ChangeSupport changeSupport;
 
     /** Creates a new instance of JsfIndex */
     private CssIndex(Project project) throws IOException {
@@ -115,25 +114,29 @@ public class CssIndex {
         this.querySupport = QuerySupport.forRoots(CssIndexer.Factory.NAME, CssIndexer.Factory.VERSION, sourceRoots.toArray(new FileObject[]{}));        
         this.changeSupport = new ChangeSupport(this);
     }
-    
+
     /**
      * Adds a {@link ChangeListener} so one may listen on changes in the index.
-     * 
+     *
+     * @param changeListener
+     *
      * @since 1.34
      */
-    public void addChangeListener(ChangeListener l) {
-        changeSupport.addChangeListener(l);
+    public void addChangeListener(ChangeListener changeListener) {
+        changeSupport.addChangeListener(changeListener);
     }
 
      /**
      * Removes the {@link ChangeListener}.
-     * 
+     *
+     * @param changeListener
+     *
      * @since 1.34
      */
-    public void removeChangeListener(ChangeListener l) {
-        changeSupport.removeChangeListener(l);
+    public void removeChangeListener(ChangeListener changeListener) {
+        changeSupport.removeChangeListener(changeListener);
     }
-    
+
     // TODO: should not be in the API; for now it is OK; need to talk to Marek
     // whether this approach to notification of changes makes any sense or should
     // be done completely differently
@@ -143,12 +146,12 @@ public class CssIndex {
 
     /**
      * Creates an instance of {@link CssIndexModel} for the given file and factory type.
-     * 
+     *
      * @param <T> the type of requested {@link CssIndexModel}
      * @param factoryClass class of the {@link CssIndexModelFactory}
      * @param file the file you want to get the model for
      * @return instance of the model or null if the model cann't be build upon the requested file index data.
-     * @throws IOException 
+     * @throws IOException
      */
     public <T extends CssIndexModel> T getIndexModel(Class factoryClass, FileObject file) throws IOException {
         if(file == null) {
@@ -159,40 +162,39 @@ public class CssIndex {
             throw new IllegalArgumentException(String.format("No %s class registered as a system service!", factoryClass.getName()));
         }
         final Collection<String> fieldsToLoad = factory.getIndexKeys();
-        final Collection<? extends IndexResult> results = querySupport.getQueryFactory().file(file).execute(
-            fieldsToLoad.toArray(new String[fieldsToLoad.size()]));
+        final Collection<? extends IndexResult> results = querySupport.getQueryFactory().file(file).execute(fieldsToLoad.toArray(new String[0]));
         if (!results.isEmpty()) {
             return factory.loadFromIndex(results.iterator().next());
         }
         return null;
     }
-    
-      /**
+
+    /**
      * Creates a map of file to {@link CssIndexModel}.
-     * 
+     *
      * @see #getIndexModel(java.lang.Class, org.openide.filesystems.FileObject) 
-     * 
+     *
      * @param <T> the type of requested {@link CssIndexModel}
      * @param factoryClass class of the {@link CssIndexModelFactory}
      * @return instance of the model or null if the model cann't be build upon the requested file index data.
-     * @throws IOException 
+     * @throws IOException
      */
     public <T extends CssIndexModel> Map<FileObject, T> getIndexModels(Class<CssIndexModelFactory<T>> factoryClass) throws IOException {
         CssIndexModelFactory<T> factory = CssIndexModelSupport.getFactory(factoryClass);
         if(factory == null) {
             throw new IllegalArgumentException(String.format("No %s class registered as a system service!", factoryClass.getName()));
         }
-        
+
         Collection<? extends IndexResult> results =
                     querySupport.query(CssIndexer.CSS_CONTENT_KEY, "", QuerySupport.Kind.PREFIX, factory.getIndexKeys().toArray(new String[0]));
-            
+
         Map<FileObject, T> file2model = new HashMap<>();
         for(IndexResult result : results) {
             file2model.put(result.getFile(), factory.loadFromIndex(result));
         }
         return file2model;
     }
-    
+
     /**
      *
      * @param id
@@ -201,23 +203,24 @@ public class CssIndex {
     public Collection<FileObject> findIds(String id) {
         return find(RefactoringElementType.ID, id);
     }
-    
+
     /**
      * Returns a collection of file containing declaration of the css id.
      * Note that the generic {@link #findIds(java.lang.String)} method
      * also takes into account the usages of the css id in html code.
-     * 
+     *
      * @since 1.28
-     * 
+     *
      * @param id name of the css id
+     * @return
      */
     public Collection<FileObject> findIdDeclarations(String id) {
         return find(RefactoringElementType.ID, id, false);
     }
-    
+
     /**
      * @since 1.28
-     * 
+     *
      * @return map of all id declarations. See {@link #findAll(org.netbeans.modules.css.refactoring.api.RefactoringElementType)}
      */
     public Map<FileObject, Collection<String>> findAllIdDeclarations() {
@@ -226,30 +229,31 @@ public class CssIndex {
 
     /**
      *
-     * @param id
+     * @param clazz
      * @return collection of files defining exactly the given element
      */
     public Collection<FileObject> findClasses(String clazz) {
         return find(RefactoringElementType.CLASS, clazz);
     }
-    
+
    /**
      * @since 1.28
-     * 
+     *
      * @return map of all class declarations. See {@link #findAll(org.netbeans.modules.css.refactoring.api.RefactoringElementType)}
      */
     public Map<FileObject, Collection<String>> findAllClassDeclarations() {
         return findAll(RefactoringElementType.CLASS, false);
-    }    
-    
+    }
+
     /**
      * Returns a collection of file containing declaration of the css class.
      * Note that the generic {@link #findClasses(java.lang.String)} method
      * also takes into account the usages of the css class in html code.
-     * 
+     *
      * @since 1.28
-     * 
+     *
      * @param clazz name of the css class
+     * @return
      */
     public Collection<FileObject> findClassDeclarations(String clazz) {
         return find(RefactoringElementType.CLASS, clazz, false);
@@ -257,7 +261,7 @@ public class CssIndex {
 
     /**
      *
-     * @param id
+     * @param htmlElement
      * @return collection of files defining exactly the given element
      */
     public Collection<FileObject> findHtmlElement(String htmlElement) {
@@ -266,7 +270,7 @@ public class CssIndex {
 
     /**
      *
-     * @param id
+     * @param colorCode
      * @return collection of files defining exactly the given element
      */
     public Collection<FileObject> findColor(String colorCode) {
@@ -299,35 +303,25 @@ public class CssIndex {
     public Map<FileObject, Collection<String>> findColorsByPrefix(String prefix) {
         return findByPrefix(RefactoringElementType.COLOR, prefix);
     }
-    
+
     public Map<FileObject, Collection<String>> findByPrefix(RefactoringElementType type, String prefix) {
         String keyName = type.getIndexKey();
         Map<FileObject, Collection<String>> map = new HashMap<>();
         try {
-            Collection<? extends IndexResult> results;
-            if(prefix.length() == 0) {
-                results = querySupport.query(keyName, "", QuerySupport.Kind.PREFIX, keyName);
-            } else {
-                String searchExpression = ".*("+encodeValueForRegexp(prefix)+").*"; //NOI18N
-                results = querySupport.query(keyName, searchExpression, QuerySupport.Kind.REGEXP, keyName);
-            }
-            String VIRTUAL_ELEMENT_MARKER_STR = Character.toString(CssIndexer.VIRTUAL_ELEMENT_MARKER);
+            Collection<? extends IndexResult> results = querySupport.query(keyName, prefix, QuerySupport.Kind.PREFIX, keyName);
             for (IndexResult result : results) {
-                Collection<String> elements = decodeListValue(result.getValue(keyName));
+                String[] elements = result.getValues(keyName);
                 for(String e : elements) {
-                    if(e.startsWith(prefix)) {
-                        if(e.endsWith(VIRTUAL_ELEMENT_MARKER_STR)) {
+                    String val = e;
+                    if(val.startsWith(prefix)) {
+                        if(val.endsWith(VIRTUAL_ELEMENT_MARKER_STR)) {
                             //strip the marker
-                            e = e.substring(0, e.length() - 1);
+                            val = val.substring(0, val.length() - 1);
                         }
                         FileObject file = result.getFile();
                         if(file != null) {
-                            Collection<String> col = map.get(file);
-                            if(col == null) {
-                                col = new LinkedList<>();
-                                map.put(file, col);
-                            }
-                            col.add(e);
+                            map.computeIfAbsent(file, f -> new LinkedList<>())
+                                .add(val);
                         } // else file deleted and index not updated yet
                     }
                 }
@@ -342,31 +336,30 @@ public class CssIndex {
     public Map<FileObject, Collection<String>> findAll(RefactoringElementType type) {
         return findAll(type, true);
     }
-    
+
     private Map<FileObject, Collection<String>> findAll(RefactoringElementType type, boolean includeVirtualElements) {
         String keyName = type.getIndexKey();
         Map<FileObject, Collection<String>> map = new HashMap<>();
         try {
             Collection<? extends IndexResult> results =
                     querySupport.query(keyName, "", QuerySupport.Kind.PREFIX, keyName);
-            String VIRTUAL_ELEMENT_MARKER_STR = Character.toString(CssIndexer.VIRTUAL_ELEMENT_MARKER);
+
             for (IndexResult result : filterDeletedFiles(results)) {
-                Collection<String> elements = decodeListValue(result.getValue(keyName));
+                String[] elements = result.getValues(keyName);
                 for (String e : elements) {
+                    String val;
                     if(e.endsWith(VIRTUAL_ELEMENT_MARKER_STR)) {
                         if(includeVirtualElements) {
                             //strip the marker
-                            e = e.substring(0, e.length() - 1);
+                            val = e.substring(0, e.length() - 1);
                         } else {
                             continue; //ignore
                         }
+                    } else {
+                        val = e;
                     }
-                    Collection<String> col = map.get(result.getFile());
-                    if (col == null) {
-                        col = new LinkedList<>();
-                        map.put(result.getFile(), col);
-                    }
-                    col.add(e);
+                    map.computeIfAbsent(result.getFile(), f -> new LinkedList<>())
+                        .add(val);
                 }
 
             }
@@ -378,28 +371,25 @@ public class CssIndex {
 
     /**
      *
-     * @param keyName
+     * @param type
      * @param value
-     * @return returns a collection of files which contains the keyName key and the
-     * value matches the value regular expression
+     * @return returns a collection of files which contains elements with the
+     * given name and with the given type
      */
     public Collection<FileObject> find(RefactoringElementType type, String value) {
         return find(type, value, true);
     }
-    
-    
+
     private Collection<FileObject> find(RefactoringElementType type, String value, boolean includeVirtualElements) {
         String keyName = type.getIndexKey();
         try {
             StringBuilder searchExpression = new StringBuilder();
-            searchExpression.append(".*("); //NOI18N
             searchExpression.append(encodeValueForRegexp(value));
             if(includeVirtualElements) {
                 searchExpression.append(CssIndexer.VIRTUAL_ELEMENT_MARKER);
                 searchExpression.append('?'); //!?
             }
-            searchExpression.append(")[,;].*"); //NOI18N
-            
+
             Collection<FileObject> matchedFiles = new LinkedList<>();
             Collection<? extends IndexResult> results = querySupport.query(keyName, searchExpression.toString(), QuerySupport.Kind.REGEXP, keyName);
             for (IndexResult result : filterDeletedFiles(results)) {
@@ -415,8 +405,8 @@ public class CssIndex {
 
     /**
      * Get all stylesheets from the project.
-     * 
-     * @return 
+     *
+     * @return
      */
     public Collection<FileObject> getAllIndexedFiles() {
         try {
@@ -436,7 +426,7 @@ public class CssIndex {
 
     /**
      * Gets all 'related' files to the given css file object.
-     * 
+     *
      * @param cssFile
      * @return a collection of all files which either imports or are imported
      * by the given cssFile both directly and indirectly (transitive relation)
@@ -471,9 +461,9 @@ public class CssIndex {
             sb.append(sr.getPath());
             sb.append(',');
         }
-        
+
         LOGGER.log(Level.FINE, "Fresh deps hash code for roots {0} is {1}", new Object[]{sb.toString(), freshAllDeps_hashCode});
-        
+
         if(allDepsCache != null) {
             LOGGER.fine("allDepsCache is NOT null");
             //verify whether the cache is still valid
@@ -484,17 +474,18 @@ public class CssIndex {
         } else {
             LOGGER.fine("allDepsCache is null");
         }
-        
+
         //not cached or invalidated
         allDepsCache = createAllDependencies();
         allDepsCache_hashCode = freshAllDeps_hashCode;
         LOGGER.log(Level.FINE, "Created new dependencties map with with hashcode {0}", allDepsCache_hashCode);
-        
+
         if(LOGGER.isLoggable(Level.FINE)) {
             StringBuilder deps = new StringBuilder();
             deps.append("dest2source:\n");
-            for(FileObject dest : allDepsCache.dest2source.keySet()) {
-                Collection<FileReference> source = allDepsCache.dest2source.get(dest);
+            for(Map.Entry<FileObject, Collection<FileReference>> entry : allDepsCache.dest2source.entrySet()) {
+                FileObject dest = entry.getKey();
+                Collection<FileReference> source = entry.getValue();
                 deps.append(dest.getNameExt());
                 deps.append("->");
                 for(FileReference fref : source) {
@@ -504,8 +495,9 @@ public class CssIndex {
                 deps.append('\n');
             }
             deps.append("source2dest:\n");
-            for(FileObject source : allDepsCache.source2dest.keySet()) {
-                Collection<FileReference> dest = allDepsCache.source2dest.get(source);
+            for(Map.Entry<FileObject, Collection<FileReference>> entry : allDepsCache.source2dest.entrySet()) {
+                FileObject source = entry.getKey();
+                Collection<FileReference> dest = entry.getValue();
                 deps.append(source.getNameExt());
                 deps.append("->");
                 for(FileReference fref : dest) {
@@ -516,18 +508,17 @@ public class CssIndex {
             }
             LOGGER.log(Level.FINE, deps.toString());
         }
-        
+
         return allDepsCache;
     }
-    
+
     private AllDependenciesMaps createAllDependencies() throws IOException {
         Collection<? extends IndexResult> results = filterDeletedFiles(querySupport.query(CssIndexer.IMPORTS_KEY, "", QuerySupport.Kind.PREFIX, CssIndexer.IMPORTS_KEY));
         Map<FileObject, Collection<FileReference>> source2dests = new HashMap<>();
         Map<FileObject, Collection<FileReference>> dest2sources = new HashMap<>();
         for (IndexResult result : results) {
-            String importsValue = result.getValue(CssIndexer.IMPORTS_KEY);
             FileObject file = result.getFile();
-            Collection<String> imports = decodeListValue(importsValue);
+            String[] imports = result.getValues(CssIndexer.IMPORTS_KEY);
             Collection<FileReference> imported = new HashSet<>();
             for (String importedFileName : imports) {
                 //resolve the file
@@ -549,44 +540,45 @@ public class CssIndex {
         return new AllDependenciesMaps(source2dests, dest2sources);
 
     }
-    
+
     //some hardcoded SASS logic here, may be refactored to some nice resolver SPI though :-)
-    private FileReference resolveImport(FileObject source, String importedFileName) {
+    @SuppressWarnings("AssignmentToMethodParameter")
+    private FileReference resolveImport(final FileObject source, String importedFileName) {
         //possibly remove the query part of the link
         int qmIndex = importedFileName.indexOf("?"); //NOI18N
         if(qmIndex >= 0) {
             importedFileName = importedFileName.substring(0, qmIndex);
         }
-        
+
         //first try the original file reference
         FileReference resolvedReference = WebUtils.resolveToReference(source, importedFileName);
         if(resolvedReference != null) {
-            return resolvedReference; 
+            return resolvedReference;
         }
-        
+
         //The SASS import spec: http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html#import
         //
         //check if the importedFileName already contains an extension
         int dotIndex = importedFileName.lastIndexOf('.');
         String extension = dotIndex == -1 ? null : importedFileName.substring(dotIndex + 1);
-        
-        if(extension == null 
+
+        if(extension == null
                 || (!SASS_EXT.equalsIgnoreCase(extension) && !SCSS_EXT.equals(extension))) {
             //no extension at all or the extension is not SASS or SCSS
-            
+
             //if the original reference is not resolved to an existing file
             //so first try to append the .scss extension
             String impliedScssExt = createImpliedFileName(importedFileName, SCSS_EXT, false); //NOI18N
             resolvedReference = WebUtils.resolveToReference(source, impliedScssExt);
             if(resolvedReference != null) {
-                return resolvedReference; 
+                return resolvedReference;
             }
 
             //lets try to imply the leading underscore for sass partials
             String impliedUnderscoreAndScssExt = createImpliedFileName(importedFileName, SCSS_EXT, true); //NOI18N
             resolvedReference = WebUtils.resolveToReference(source, impliedUnderscoreAndScssExt);
             if(resolvedReference != null) {
-                return resolvedReference; 
+                return resolvedReference;
             }
 
             //if still nothing then try .sass extension as a last resort
@@ -600,29 +592,29 @@ public class CssIndex {
             String impliedUnderscoreAndSassExt = createImpliedFileName(importedFileName, SCSS_EXT, true); //NOI18N
             resolvedReference = WebUtils.resolveToReference(source, impliedUnderscoreAndSassExt);
             if(resolvedReference != null) {
-                return resolvedReference; 
+                return resolvedReference;
             }
-            
+
         } else if(SASS_EXT.equalsIgnoreCase(extension) || SCSS_EXT.equalsIgnoreCase(extension)) {
             //lets try to imply the leading underscore for sass partials
             String impliedUnderscoreAndSassExt = createImpliedFileName(importedFileName, null, true);
             resolvedReference = WebUtils.resolveToReference(source, impliedUnderscoreAndSassExt);
             if(resolvedReference != null) {
-                return resolvedReference; 
+                return resolvedReference;
             }
-            
+
         }
-        
+
         return null; //give up
-        
+
     }
-    
+
     /* test */ static String createImpliedFileName(@NonNull String original, String extension, boolean underscore) {
         if(extension == null && !underscore) {
             //no change
             return original;
         }
-        
+
         if(!underscore) {
             return new StringBuilder().append(original).append('.').append(extension).toString();
         } else {
@@ -681,18 +673,6 @@ public class CssIndex {
 
     }
 
-
-    //each list value is terminated by semicolon
-    private Collection<String> decodeListValue(String value) {
-        assert value.charAt(value.length() - 1) == ';';
-        Collection<String> list = new ArrayList<>();
-        StringTokenizer st = new StringTokenizer(value.substring(0, value.length() - 1), ",");
-        while (st.hasMoreTokens()) {
-            list.add(st.nextToken());
-        }
-        return list;
-    }
-
     //if an indexed file is delete and IndexerFactory.filesDeleted() hasn't removed
     //the entris from index yet, then we may receive IndexResult-s with null file.
     //Please note that the IndexResult.getFile() result is cached, so the IndexResult.getFile()
@@ -727,6 +707,7 @@ public class CssIndex {
 
     public static class AllDependenciesMaps {
 
+        @SuppressWarnings("PackageVisibleField")
         Map<FileObject, Collection<FileReference>> source2dest, dest2source;
 
         public AllDependenciesMaps(Map<FileObject, Collection<FileReference>> source2dest, Map<FileObject, Collection<FileReference>> dest2source) {
@@ -739,6 +720,7 @@ public class CssIndex {
          * @return reversed map of getSource2dest() (imported file -> collection of
          * importing files)
          */
+        @SuppressWarnings("ReturnOfCollectionOrArrayField")
         public Map<FileObject, Collection<FileReference>> getDest2source() {
             return dest2source;
         }
@@ -749,11 +731,11 @@ public class CssIndex {
          * relations between css file defined by import directive. The key represents
          * a fileobject which imports the files from the value's collection.
          */
+        @SuppressWarnings("ReturnOfCollectionOrArrayField")
         public Map<FileObject, Collection<FileReference>> getSource2dest() {
             return source2dest;
         }
 
     }
 
-    
 }

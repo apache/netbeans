@@ -1,0 +1,14 @@
+class |>MARK_OCCURRENCES:B<| extends A {}
+    private const A||>MARK_OCCURRENCES:B<| UNION = A;
+    protected const A&|>MARK_OCCURRENCES:B<| INTERSECTION = B;
+    public const (A&|>MARK_OCCURRENCES:B<|)|C DNF = C;
+    public const A||>MARK_OCCURRENCES:B<| UNION = A; // interface
+    public const A&|>MARK_OCCURRENCES:B<| INTERSECTION = B; // interface
+    public const (A&|>MARK_OCCURRENCES:B<|)|C DNF = C; // interface
+    private const A||>MARK_OCCURRENCES:B<| UNION = A; // trait
+    protected const A&|>MARK_OCCURRENCES:B<| INTERSECTION = B; // trait
+    public const (A&|>MARK_OCCURRENCES:B<|)|C DNF = C; // trait
+    private const A||>MARK_OCCURRENCES:B<| UNION = A; // enum
+    protected const A&^|>MARK_OCCURRENCES:B<| INTERSECTION = B; // enum
+    public const (A&|>MARK_OCCURRENCES:B<|)|(A&C) DNF = C; // enum
+define("B", new |>MARK_OCCURRENCES:B<|());

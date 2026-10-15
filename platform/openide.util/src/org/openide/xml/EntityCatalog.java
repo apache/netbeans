@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
  * <p>You can register your own instances via lookup to add to the resolver pool,
  * but for reasons of performance and predictability during startup it is best to provide
  * the entity (e.g. some DTD you define) as the contents of a file in
- * the system filesystem, in the <samp>/xml/entities/</samp> folder, where the file path
+ * the system filesystem, in the <code>/xml/entities/</code> folder, where the file path
  * beneath this folder is based on the public ID as follows:
  * <ol>
  * <li>US-ASCII alphanumeric characters and '_' are left as is.
@@ -46,10 +46,10 @@ import org.xml.sax.SAXException;
  * <li>Final '//EN' is dropped.
  * <li>Exactly two forward slashes in a row are converted to one.
  * </ol>
- * Thus for example the public ID <samp>-//NetBeans//Entity&nbsp;Mapping&nbsp;Registration&nbsp;1.0//EN</samp>
- * would be looked for in the file <samp>/xml/entities/NetBeans/Entity_Mapping_Registration_1_0</samp>.
+ * Thus for example the public ID <code>-//NetBeans//Entity&nbsp;Mapping&nbsp;Registration&nbsp;1.0//EN</code>
+ * would be looked for in the file <code>/xml/entities/NetBeans/Entity_Mapping_Registration_1_0</code>.
  * Naturally this only works if you are defining a fixed number of entities.
- * <p>It is recommended that the entity file in <samp>/xml/entities/</samp> also be given a file
+ * <p>It is recommended that the entity file in <code>/xml/entities/</code> also be given a file
  * attribute named <code>hint.originalPublicID</code> with a string value giving the public ID.
  * This permits {@code org.netbeans.modules.xml.catalog} to display the entry properly.
  * @author  Petr Kuzel
@@ -71,6 +71,7 @@ public abstract class EntityCatalog implements EntityResolver {
 
     /** Get a master entity catalog which can delegate to any others that have
      * been registered via lookup.
+     * @return master entity catalog
      */
     public static EntityCatalog getDefault() {
         return instance;

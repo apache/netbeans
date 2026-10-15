@@ -50,6 +50,7 @@ public final class MetalLFCustoms extends LFCustoms {
         Font controlFont = new Font("Dialog", Font.PLAIN, fontsize); //NOI18N
         Object[] result = {
             //The assorted standard NetBeans metal font customizations
+            EDITOR_PREFERRED_COLOR_PROFILE, "NetBeans", //NOI18N
             CONTROLFONT, controlFont,
             SYSTEMFONT, controlFont,
             USERFONT, controlFont,
@@ -125,6 +126,9 @@ public final class MetalLFCustoms extends LFCustoms {
             //browser picker
             "Nb.browser.picker.background.light", new Color(249,249,249),
             "Nb.browser.picker.foreground.light", new Color(130,130,130),
+            
+            // Options Panel
+            OPTIONS_USE_UI_DEFAULT_COLORS, true,
         }; //NOI18N
 
         //#108517 - turn off ctrl+page_up and ctrl+page_down mapping

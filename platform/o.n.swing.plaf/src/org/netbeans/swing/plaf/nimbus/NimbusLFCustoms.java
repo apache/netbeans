@@ -79,6 +79,7 @@ public final class NimbusLFCustoms extends LFCustoms {
         }*/
 
         Object[] result = {
+            EDITOR_PREFERRED_COLOR_PROFILE, "NetBeans", //NOI18N
             //UI Delegates for the tab control
             EDITOR_TAB_DISPLAYER_UI,
                 "org.netbeans.swing.tabcontrol.plaf.NimbusEditorTabDisplayerUI", //NOI18N
@@ -112,6 +113,10 @@ public final class NimbusLFCustoms extends LFCustoms {
             //browser picker
             "Nb.browser.picker.background.light", new Color(249,249,249),
             "Nb.browser.picker.foreground.light", new Color(130,130,130),
+            
+            // Options Panel
+            OPTIONS_USE_UI_DEFAULT_COLORS, true,
+            OPTIONS_CATEGORIES_BUTTON_USE_NIMBUS, true,
         };
         /*Object[] result = {
             DESKTOP_BORDER, new EmptyBorder(1, 1, 1, 1),

@@ -19,6 +19,8 @@
 
 package org.netbeans.modules.db.util;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,6 +60,7 @@ public class JdbcUrl extends HashMap<String, String> {
     public static final String TOKEN_SID = "<SID>";
     public static final String TOKEN_SERVICENAME = "<SERVICE>";
     public static final String TOKEN_DSN = "<DSN>";
+    public static final String TOKEN_FILE = "<FILE>";
     public static final String TOKEN_INSTANCE = "<INSTANCE>";
     
     private static final String OPTIONAL_START = "[";
@@ -71,6 +74,8 @@ public class JdbcUrl extends HashMap<String, String> {
     private String sampleUser;
     private String samplePassword;
     private String sampleUrl;
+    private boolean usernamePasswordDisplayed = true;
+    private DatabaseFileValidator databaseFileValidator = null;
         
     public JdbcUrl(String name, String displayName, String className, String type, String urlTemplate, boolean parseUrl) {
         this.name = name;
@@ -107,6 +112,8 @@ public class JdbcUrl extends HashMap<String, String> {
         this.samplePassword = template.getSamplePassword();
         this.sampleUser = template.getSampleUser();
         this.sampleUrl = template.getSampleUrl();
+        this.usernamePasswordDisplayed = template.isUsernamePasswordDisplayed();
+        this.databaseFileValidator = template.getDatabaseFileValidator();
         this.driver = driver;
     }
 
@@ -139,9 +146,44 @@ public class JdbcUrl extends HashMap<String, String> {
         this.name = driver.getName();
         this.displayName = driver.getDisplayName();
     }
-    
+
+    public void setUsernamePasswordDisplayed(boolean usernamePasswordDisplayed) {
+        this.usernamePasswordDisplayed = usernamePasswordDisplayed;
+    }
+
+    /**
+     * @return true if this driver always uses an empty username and password
+     */
+    public boolean isUsernamePasswordDisplayed() {
+        return usernamePasswordDisplayed;
+    }
+
     public JDBCDriver getDriver() {
         return driver;
+    }
+
+    public void setDatabaseFileValidator(DatabaseFileValidator databaseFileValidator) {
+        this.databaseFileValidator = databaseFileValidator;
+    }
+
+    /**
+     * @return may be null
+     */
+    public DatabaseFileValidator getDatabaseFileValidator() {
+        return databaseFileValidator;
+    }
+
+    public static interface DatabaseFileValidator {
+        /**
+         * Do a quick check of whether the given file is a valid database file for the relevant JDBC
+         * driver. This would typically be based on examination of the first few bytes in the file.
+         * Called after the user selects a file in the file browser, for JDBC drivers that expect a
+         * {@link JdbcUrl#TOKEN_FILE} field.
+         *
+         * @return null if the file was of a valid type for this JDBC driver, otherwise an error
+         *         message that can be displayed to the user in a dialog box
+         */
+        String getValidationErrorMessage(File file) throws IOException;
     }
 
     /**
@@ -155,15 +197,24 @@ public class JdbcUrl extends HashMap<String, String> {
             nameAndType = displayName + " (" + getType() + ")";         //NOI18N
         }
         if (driver != null && driver.getDisplayName() != null
-                && !driver.getDisplayName().equals(displayName)) {
-            return NbBundle.getMessage(DriverListUtil.class,
-                    "JDBC_URL_DRIVER_NAME", //NOI18N
-                    nameAndType, driver.getDisplayName());
+                && !driver.getDisplayName().equals(displayName))
+        {
+            /* If the driver name has been customized such that
+            JDBC_URL_DRIVER_NAME format would yield, for instance,
+            "Oracle Thin / Service ID (SID) on Oracle", then we can just drop
+            the "on Oracle" part. */
+            if (nameAndType.startsWith(driver.getDisplayName())) {
+                return nameAndType;
+            } else {
+                return NbBundle.getMessage(DriverListUtil.class,
+                        "JDBC_URL_DRIVER_NAME", //NOI18N
+                        nameAndType, driver.getDisplayName());
+            }
         } else {
             return nameAndType;
         }
     }
-    
+
     public boolean supportsToken(String token) {
         return supportedTokens.contains(token);
     }
@@ -218,6 +269,9 @@ public class JdbcUrl extends HashMap<String, String> {
             return false;
         }
         if (!Objects.equals(this.type, other.type)) {
+            return false;
+        }
+        if (!Objects.equals(this.usernamePasswordDisplayed, other.usernamePasswordDisplayed)) {
             return false;
         }
         return true;
@@ -728,7 +782,8 @@ public class JdbcUrl extends HashMap<String, String> {
                 "',className='" + className + // NOI18N
                 "',type='" + type + // NOI18N
                 "',urlTemplate='" + urlTemplate + // NOI18N
-                "'parseUrl,=" + parseUrl + "]"; // NOI18N
+                "',parseUrl=" + parseUrl + // NOI18N
+                "',sampleUrl=" + sampleUrl + "]"; // NOI18N
     }
 
     public String getSampleUser() {

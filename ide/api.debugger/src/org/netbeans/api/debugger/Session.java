@@ -31,11 +31,12 @@ import org.netbeans.spi.debugger.ContextProvider;
  * be simple bean with properties like process ID, session name, etc.
  * All other functionality is delegated to current debugger engine.
  *
- * <p><br><table border="1" cellpadding="3" cellspacing="0" width="100%">
- * <tbody><tr bgcolor="#ccccff">
- * <td colspan="2"><font size="+2"><b>Description </b></font></td>
- * </tr><tr><td align="left" valign="top" width="1%"><font size="+1">
- * <b>Functionality</b></font></td><td>
+ * <table>
+ * <caption>Description of Session</caption>
+ * <tbody><tr>
+ * <td colspan="2" style="background-color:#4D7A97"><b>Description </b></td>
+ * </tr><tr><td>
+ * <b>Functionality</b></td><td>
  *
  * <b>Properties:</b>
  *    Session has two standard read only properties - name ({@link #getName}) and
@@ -62,8 +63,8 @@ import org.netbeans.spi.debugger.ContextProvider;
  * <br><br>
  * <b>Support for additional services:</b>
  *    Session is final class. The standard method how to 
- *    extend its functionality is using lookup methods ({@link #lookup} and 
- *    {@link #lookupFirst}).
+ *    extend its functionality is using lookup methods ({@link #lookup(String,Class)} and 
+ *    {@link #lookupFirst(String,Class)}).
  *    There are two ways how to register some service provider for some
  *    type of Session:
  *    <ul>
@@ -82,15 +83,15 @@ import org.netbeans.spi.debugger.ContextProvider;
  *    {@link java.beans.PropertyChangeListener}.
  *
  * <br> 
- * </td></tr><tr><td align="left" valign="top" width="1%"><font size="+1">
- * <b>Clients / Providers</b></font></td><td>
+ * </td></tr><tr><td>
+ * <b>Clients / Providers</b></td><td>
  *
  * This class is final, so it does not have any external provider.
  * Debugger Core and UI modules are clients of this class.
  *
  * <br>
- * </td></tr><tr><td align="left" valign="top" width="1%"><font size="+1">
- * <b>Life-cycle</b></font></td><td>
+ * </td></tr><tr><td>
+ * <b>Life-cycle</b></td><td>
  *
  * A new instance of Session class can be created and registered to
  * {@link org.netbeans.api.debugger.DebuggerManager} during the process
@@ -101,8 +102,8 @@ import org.netbeans.spi.debugger.ContextProvider;
  * {@link org.netbeans.api.debugger.DebuggerManager} when the 
  * number of "supported languages" ({@link #getSupportedLanguages}) is zero.
  *
- * </td></tr><tr><td align="left" valign="top" width="1%"><font size="+1">
- * <b>Evolution</b></font></td><td>
+ * </td></tr><tr><td>
+ * <b>Evolution</b></td><td>
  *
  * No method should be removed from this class, but some functionality can
  * be added in future.

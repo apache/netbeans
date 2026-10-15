@@ -87,7 +87,7 @@ class FileTreeViewImpl extends FileTreeView<GitStatusNodeImpl> {
     @Override
     protected JPopupMenu getPopup () {
         List<Node> nodes = getSelectedNodes();
-        return master.getPopupFor(nodes.toArray(new Node[nodes.size()]));
+        return master.getPopupFor(nodes.toArray(new Node[0]));
     }
     
     @Override

@@ -365,7 +365,7 @@ public class Scene extends Widget {
         while (! isValidated ()) {
             SceneListener[] ls;
             synchronized (sceneListeners) {
-                ls = sceneListeners.toArray (new SceneListener[sceneListeners.size ()]);
+                ls = sceneListeners.toArray (new SceneListener[0]);
             }
 
             for (SceneListener listener : ls)
@@ -417,7 +417,7 @@ public class Scene extends Widget {
     private void repaintSatellite () {
         SceneListener[] ls;
         synchronized (sceneListeners) {
-            ls = sceneListeners.toArray (new SceneListener[sceneListeners.size ()]);
+            ls = sceneListeners.toArray (new SceneListener[0]);
         }
 
         for (SceneListener listener : ls)

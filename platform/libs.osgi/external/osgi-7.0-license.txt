@@ -1,10 +1,10 @@
 Name: OSGi
 Version: 7.0
-Files: osgi.core-7.0.0.jar osgi.cmpn-7.0.0.jar
-Description: OSGi specification (core & compendium).
+Files: osgi.cmpn-7.0.0.jar
+Description: OSGi specification (compendium).
 License: Apache-2.0
 Origin: OSGi
-URL: https://www.osgi.org/release-7-download/
+URL: https://search.maven.org/artifact/org.osgi/osgi.cmpn/7.0.0/jar
 
                                  Apache License
                            Version 2.0, January 2004

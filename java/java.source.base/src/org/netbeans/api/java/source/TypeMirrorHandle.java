@@ -19,6 +19,7 @@
 package org.netbeans.api.java.source;
 
 import com.sun.tools.javac.code.Flags;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symtab;
@@ -31,7 +32,10 @@ import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.code.Types.DefaultTypeVisitor;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.ListBuffer;
+import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -57,7 +61,7 @@ import org.netbeans.api.annotations.common.NonNull;
 /**
  * Represents a handle for {@link TypeMirror} which can be kept and later resolved
  * by another javac. The Javac {@link TypeMirror}s are valid only in the single
- * {@link javax.tools.CompilationTask} or single run of the
+ * {@link javax.tools.JavaCompiler.CompilationTask} or single run of the
  * {@link org.netbeans.api.java.source.CancellableTask}. If the client needs to
  * keep a reference to the {@link TypeMirror} and use it in the other CancellableTask
  * he has to serialize it into the {@link TypeMirrorHandle}.
@@ -65,7 +69,7 @@ import org.netbeans.api.annotations.common.NonNull;
  * <p>
  ** Typical usage of TypeMirrorHandle is:
  * </p>
- * <pre>
+ * <pre>{@code
  * final TypeMirrorHandle[] typeMirrorHandle = new TypeMirrorHandle[1];
  * javaSource.runCompileControlTask(new CancellableTask<CompilationController>() {
  *     public void run(CompilationController compilationController) {
@@ -83,10 +87,10 @@ import org.netbeans.api.annotations.common.NonNull;
  *         ....
  *    }
  * },priority);
- * </pre>
+ * }</pre>
  * </div>
  * Currently, not all the {@link TypeMirror} {@link TypeKind kinds} are supported by handle.
- * The unsupported {@link TykeKind kinds} are: {@link TypeKind#EXECUTABLE}, {@link TypeKind#OTHER},
+ * The unsupported {@link TypeKind kinds} are: {@link TypeKind#EXECUTABLE}, {@link TypeKind#OTHER},
  * and {@link TypeKind#PACKAGE}.
  *
  * @author Jan Lahoda, Dusan Balek
@@ -105,9 +109,9 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
     
     /**
      * Factory method for creating {@link TypeMirrorHandle}.
-     * @param {@link TypeMirror} for which the {@link TypeMirrorHandle} should be created.
+     * @param tm for which the {@link TypeMirrorHandle} should be created.
      * Not all the {@link TypeMirror} {@link TypeKind kinds} are currently supported.
-     * The unsupported {@link TykeKind kinds} are: {@link TypeKind#EXECUTABLE}, {@link TypeKind#OTHER},
+     * The unsupported {@link TypeKind kinds} are: {@link TypeKind#EXECUTABLE}, {@link TypeKind#OTHER},
      * and {@link TypeKind#PACKAGE}.
      * @return a new {@link TypeMirrorHandle}
      * @throws IllegalArgumentException if the {@link TypeMirror} is of an unsupported
@@ -120,7 +124,7 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
     private static <T extends TypeMirror> TypeMirrorHandle<T> create(T tm, Map<TypeMirror, TypeMirrorHandle> map) {
         TypeMirrorHandle<T> handle = map.get(tm);
         if (handle != null)
-            return handle.typeMirrors == null ? handle : (TypeMirrorHandle<T>)handle.typeMirrors.get(0);
+            return handle.typeMirrors == null ? handle : (TypeMirrorHandle<T>)handle.typeMirrors.getFirst();
         map.put(tm, new TypeMirrorHandle(null, null, null));
         TypeKind kind = tm.getKind();
         ElementHandle<? extends Element> element = null;
@@ -160,7 +164,7 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
                     targs = temp;
                 }
                 if (!targs.isEmpty()) {
-                    TypeMirror targ = targs.get(0);
+                    TypeMirror targ = targs.getFirst();
                     if (targ.getKind() == TypeKind.TYPEVAR) {
                         TypeParameterElement tpe = (TypeParameterElement)((TypeVariable)targ).asElement();
                         if (tpe.getGenericElement() == dt.asElement())
@@ -218,10 +222,10 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
     
     /**
      * Resolves an {@link TypeMirror} from the {@link TypeMirrorHandle}.
-     * @param {@link CompilationInfo} representing the {@link javax.tools.CompilationTask}
+     * @param info representing the {@link javax.tools.JavaCompiler.CompilationTask}
      * in which the {@link TypeMirror} should be resolved.
      * @return resolved subclass of {@link TypeMirror} or null if the type cannot be
-     * resolved in this {@link javax.tools.CompilationTask}.
+     * resolved in this {@link javax.tools.JavaCompiler.CompilationTask}.
      */
     public T resolve(@NonNull CompilationInfo info) {
         return resolve(info, new HashMap<TypeMirrorHandle, PlaceholderType>());
@@ -229,12 +233,8 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
     
     private T resolve(CompilationInfo info, Map<TypeMirrorHandle, PlaceholderType> map) {
         if (kind == null) {
-            TypeMirrorHandle handle = typeMirrors.get(0);
-            PlaceholderType pt = map.get(handle);
-            if (pt == null) {
-                pt = new PlaceholderType();
-                map.put(handle, pt);
-            }
+            TypeMirrorHandle handle = typeMirrors.getFirst();
+            PlaceholderType pt = map.computeIfAbsent(handle, k -> new PlaceholderType());
             return pt.delegate != null ? (T)pt.delegate : (T)pt;
         }
         switch (kind) {
@@ -290,8 +290,8 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
                         return null;
                     resolvedTypeArguments.add(resolved);
                 }
-                DeclaredType dt = outer != null ? info.getTypes().getDeclaredType((DeclaredType)outer, te, resolvedTypeArguments.toArray(new TypeMirror[resolvedTypeArguments.size()]))
-                        : info.getTypes().getDeclaredType(te, resolvedTypeArguments.toArray(new TypeMirror[resolvedTypeArguments.size()]));
+                DeclaredType dt = outer != null ? info.getTypes().getDeclaredType((DeclaredType)outer, te, resolvedTypeArguments.toArray(new TypeMirror[0]))
+                        : info.getTypes().getDeclaredType(te, resolvedTypeArguments.toArray(new TypeMirror[0]));
                 t.supertype((Type)dt); //initialize supertype_field
                 t.interfaces((Type)dt); //initialize interfaces_field
                 PlaceholderType pt = map.get(this);
@@ -301,7 +301,7 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
                 }
                 return (T)dt;
             case ARRAY:
-                TypeMirror resolved = typeMirrors.get(0).resolve(info, map);
+                TypeMirror resolved = typeMirrors.getFirst().resolve(info, map);
                 if (resolved == null)
                     return null;
                 ArrayType at = info.getTypes().getArrayType(resolved);
@@ -315,7 +315,7 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
                 Element e = element.resolve(info);
                 if (!(e instanceof TypeSymbol))
                     return null;
-                TypeMirrorHandle<? extends TypeMirror> lBound = typeMirrors.get(0);
+                TypeMirrorHandle<? extends TypeMirror> lBound = typeMirrors.getFirst();
                 TypeMirror lowerBound = lBound != null ? lBound.resolve(info, map) : null;
                 TypeMirrorHandle<? extends TypeMirror> uBound = typeMirrors.get(1);
                 TypeMirror upperBound = uBound != null ? uBound.resolve(info, map) : null;
@@ -327,7 +327,7 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
                 }
                 return (T)tv;
             case WILDCARD:
-                TypeMirrorHandle<? extends TypeMirror> eBound = typeMirrors.get(0);
+                TypeMirrorHandle<? extends TypeMirror> eBound = typeMirrors.getFirst();
                 TypeMirror extendsBound = eBound != null ? eBound.resolve(info, map) : null;
                 TypeMirrorHandle<? extends TypeMirror> sBound = typeMirrors.get(1);
                 TypeMirror superBound = sBound != null ? sBound.resolve(info, map) : null;
@@ -344,7 +344,18 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
                     String[] signatures = element.getSignature();
                     assert signatures.length == 1;
                     Context context = info.impl.getJavacTask().getContext();
-                    return (T)new Type.ErrorType(Names.instance(context).table.fromString(signatures[0]), Symtab.instance(context).rootPackage, Type.noType);
+                    try {
+                        return (T) new Type.ErrorType(Names.instance(context).table.fromString(signatures[0]), Symtab.instance(context).rootPackage, Type.noType);
+                    } catch (NoSuchMethodError err) {
+                        // ErrorType constructor signature in vanilla javac differ from the corresponding signature in nb-javac.
+                        // TODO: Remove reflection once the nb-javac is fixed.
+                        try {
+                            Constructor<Type.ErrorType> constructor = Type.ErrorType.class.getConstructor(Name.class, Symbol.class, Type.class);
+                            return (T) constructor.newInstance(Names.instance(context).table.fromString(signatures[0]), Symtab.instance(context).rootPackage, Type.noType);
+                        } catch (IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException ex) {
+                            return null;
+                        }
+                    }
                 }
                 if (!(e instanceof ClassSymbol))
                     return null;
@@ -402,20 +413,20 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
         private Type delegate = null;
         
         public PlaceholderType() {
-            this(TypeMetadata.EMPTY);
+            this(com.sun.tools.javac.util.List.nil());
         }       
 
-        public PlaceholderType(TypeMetadata md) {
+        public PlaceholderType(com.sun.tools.javac.util.List<TypeMetadata> md) {
             super(null, md);
         }       
 
         @Override
         public TypeTag getTag() {
-            return TypeTag.UNKNOWN;
+            return TypeTag.NONE;
         }
 
         @Override
-        public Type cloneWithMetadata(TypeMetadata md) {
+        public Type cloneWithMetadata(com.sun.tools.javac.util.List<TypeMetadata> md) {
             PlaceholderType out = new PlaceholderType(md);
             out.delegate = delegate;
             return out;
@@ -450,10 +461,10 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
 
         @Override
         public Void visitTypeVar(TypeVar t, Void s) {
-            if (t.bound instanceof PlaceholderType)
-                t.bound = ((PlaceholderType)t.bound).delegate;
-            else if (t.bound != null)
-                t.bound.accept(this, s);
+            if (t.getUpperBound() instanceof PlaceholderType)
+                t.setUpperBound(((PlaceholderType)t.getUpperBound()).delegate);
+            else if (t.getUpperBound() != null)
+                t.getUpperBound().accept(this, s);
             if (t.lower instanceof PlaceholderType)
                 t.lower = ((PlaceholderType)t.lower).delegate;
             else if (t.lower != null)
@@ -467,8 +478,8 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
                 t.type = ((PlaceholderType)t.type).delegate;
             else if (t.type != null)
                 t.type.accept(this, s);
-            if (t.bound != null)
-                t.bound.accept(this, s);
+            if (t.getUpperBound() != null)
+                t.getUpperBound().accept(this, s);
             return null;
         }
     }

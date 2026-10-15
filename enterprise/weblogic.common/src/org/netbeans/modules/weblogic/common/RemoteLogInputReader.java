@@ -278,13 +278,13 @@ public class RemoteLogInputReader implements InputReader {
                 return;
             }
 
-            Map columnIndexMap = (Map) connection.getAttribute(wldf, "ColumnIndexMap"); // NOI18N
-            recordIdIndex = ((Integer) columnIndexMap.get("RECORDID")); // NOI18N
-            timestampIndex = ((Integer) columnIndexMap.get("DATE")); // NOI18N
-            severityIndex = ((Integer) columnIndexMap.get("SEVERITY")); // NOI18N
-            subsystemIndex = ((Integer) columnIndexMap.get("SUBSYSTEM")); // NOI18N
-            messageIdIndex = ((Integer) columnIndexMap.get("MSGID")); // NOI18N
-            messageIndex = ((Integer) columnIndexMap.get("MESSAGE")); // NOI18N
+            Map<String, Integer> columnIndexMap = (Map<String, Integer>)connection.getAttribute(wldf, "ColumnIndexMap"); // NOI18N
+            recordIdIndex  = columnIndexMap.get("RECORDID"); // NOI18N
+            timestampIndex = columnIndexMap.get("DATE"); // NOI18N
+            severityIndex  = columnIndexMap.get("SEVERITY"); // NOI18N
+            subsystemIndex = columnIndexMap.get("SUBSYSTEM"); // NOI18N
+            messageIdIndex = columnIndexMap.get("MSGID"); // NOI18N
+            messageIndex   = columnIndexMap.get("MESSAGE"); // NOI18N
             configured = true;
         }
 

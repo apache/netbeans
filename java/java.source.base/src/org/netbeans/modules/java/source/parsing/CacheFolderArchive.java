@@ -21,6 +21,7 @@ package org.netbeans.modules.java.source.parsing;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Set;
 
 import javax.tools.JavaFileObject;
@@ -60,6 +61,11 @@ class CacheFolderArchive implements Archive, FileChangeListener {
     @Override
     public JavaFileObject getFile(String name) throws IOException {
         return delegate.getFile(name);
+    }
+
+    @Override
+    public URI getDirectory(String dirName) throws IOException {
+        return delegate.getDirectory(dirName);
     }
 
     @Override

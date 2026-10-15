@@ -307,7 +307,7 @@ public class GlassFishUtils {
                         final String port = element.getAttribute("port");
                         
                         if (id.contains("admin")) {
-                            return new Integer(port);
+                            return Integer.parseInt(port);
                         }
                     }
                 }
@@ -605,7 +605,6 @@ public class GlassFishUtils {
         }
     }
     
-    /////////////////////////////////////////////////////////////////////////////////
     // Inner Classes
     public static class DomainCreationException extends IOException {
         private String message;
@@ -640,7 +639,6 @@ public class GlassFishUtils {
         }
     }
     
-    /////////////////////////////////////////////////////////////////////////////////
     // Constants
     public static final String INSTALL_ADDON_COMMAND =
             "install-addon"; // NOI18N

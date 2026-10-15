@@ -57,7 +57,7 @@ public class ExportDiffProviderImpl extends ExportDiffSupport.ExportDiffProvider
                 fs.add(fo);
             }
         }
-        this.files = fs.toArray(new FileObject[fs.size()]);
+        this.files = fs.toArray(new FileObject[0]);
     }
 
     @Override

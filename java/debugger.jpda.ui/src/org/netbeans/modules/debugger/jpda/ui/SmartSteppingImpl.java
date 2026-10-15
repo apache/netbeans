@@ -153,15 +153,15 @@ PropertyChangeListener {
             
         HashSet s = new HashSet ();
         s.add (name.replace ('/', '.') + ".*");
-        addExclusionPatterns (s);
+        addExclusionPatterns (s, f);
         return false;
     }
     
-    private void addExclusionPatterns (
-        Set ep
-    ) {
-        smartSteppingFilter.addExclusionPatterns (ep);
-        exclusionPatterns.addAll (ep);
+    private void addExclusionPatterns(Set ep, SmartSteppingFilter f) {
+        f.addExclusionPatterns (ep);
+        if (f == smartSteppingFilter) {
+            exclusionPatterns.addAll (ep);
+        }
     }
     
     private void removeExclusionPatterns () {

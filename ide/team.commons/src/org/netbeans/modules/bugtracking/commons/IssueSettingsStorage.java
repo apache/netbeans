@@ -53,7 +53,7 @@ public class IssueSettingsStorage {
         }
     }
     
-    public synchronized static IssueSettingsStorage getInstance() {
+    public static synchronized IssueSettingsStorage getInstance() {
         if(instance == null) {
             instance = new IssueSettingsStorage();
         }
@@ -83,7 +83,7 @@ public class IssueSettingsStorage {
             l.release();
         }
                 
-        return Collections.EMPTY_SET;
+        return Collections.emptySet();
     }
     
     private Properties load(File file, String repoUrl, String id) throws IOException {
@@ -162,7 +162,7 @@ public class IssueSettingsStorage {
     
     private static class FileLocks {
         private static FileLocks instance;
-        private synchronized static FileLocks getInstance() {
+        private static synchronized FileLocks getInstance() {
             if(instance == null) {
                 instance = new FileLocks();
             }

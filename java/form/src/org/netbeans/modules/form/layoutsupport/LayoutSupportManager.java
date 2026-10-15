@@ -79,7 +79,7 @@ public final class LayoutSupportManager implements LayoutSupportContext {
     /**
      * Creation and initialization of a layout delegate for a new container.
      * @return false if suitable layout delegate is not found
-     * @throw IllegalArgumentException if the container instance is not empty
+     * @throws IllegalArgumentException if the container instance is not empty
      */
     public boolean prepareLayoutDelegate(boolean fromCode, boolean initialize)
         throws Exception

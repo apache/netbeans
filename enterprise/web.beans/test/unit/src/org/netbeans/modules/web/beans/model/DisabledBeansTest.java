@@ -46,7 +46,7 @@ import org.netbeans.modules.web.beans.api.model.WebBeansModel;
 public class DisabledBeansTest extends CommonTestCase {
 
     public DisabledBeansTest( String testName ) {
-        super(testName);
+        super(testName, false);
     }
     
     public void testSingeAlternative() throws IOException{

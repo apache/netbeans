@@ -106,7 +106,7 @@ public class NestedBlocksHint extends HintRule implements CustomisableRule {
         private void createHint(ASTNode block) {
             int lineEnd = block.getEndOffset();
             try {
-                lineEnd = LineDocumentUtils.getLineEnd(baseDocument, block.getStartOffset());
+                lineEnd = LineDocumentUtils.getLineEndOffset(baseDocument, block.getStartOffset());
             } catch (BadLocationException ex) {
                 LOGGER.log(Level.FINE, null, ex);
             }

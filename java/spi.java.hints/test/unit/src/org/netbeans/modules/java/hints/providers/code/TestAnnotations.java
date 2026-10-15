@@ -42,9 +42,9 @@ public class TestAnnotations {
         public TestAnnotation2 a1();
 //        public TestAnnotation2 a2() default @TestAnnotation2(a1=@TestAnnotation3(as1={"a", "b"}, as3="c"));
 //        public TestAnnotation2 a3() default @TestAnnotation2(a1=@TestAnnotation3(as1={"a2", "b2"}, as3="c2"));
-        public Class   c1();
-        public Class   c2() default Void.class;
-        public Class   c3() default Void.class;
+        public Class<?>   c1();
+        public Class<?>   c2() default Void.class;
+        public Class<?>   c3() default Void.class;
         public TestEnum e1();
 //        public TestEnum e2() default TestEnum.A;
         public TestEnum e3()/* default TestEnum.A*/;
@@ -60,9 +60,9 @@ public class TestAnnotations {
         public TestAnnotation2[] aa1();
 //        public TestAnnotation2[] aa2() default @TestAnnotation2(a1=@TestAnnotation3(as1={"a", "b"}, as3="c"));
 //        public TestAnnotation2[] aa3() default @TestAnnotation2(a1=@TestAnnotation3(as1={"a2", "b2"}, as3="c2"));
-        public Class[]   ac1();
-        public Class[]   ac2() default Void.class;
-        public Class[]   ac3() default Void.class;
+        public Class<?>[]   ac1();
+        public Class<?>[]   ac2() default Void.class;
+        public Class<?>[]   ac3() default Void.class;
         public TestEnum[] ae1();
 //        public TestEnum[] ae2() default TestEnum.A;
         public TestEnum[] ae3()/* default TestEnum.A*/;

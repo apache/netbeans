@@ -22,6 +22,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexResult;
 import org.netbeans.modules.php.api.editor.PhpType;
 import org.netbeans.modules.php.editor.api.ElementQuery;
@@ -30,10 +32,13 @@ import org.netbeans.modules.php.editor.api.NameKind;
 import org.netbeans.modules.php.editor.api.PhpElementKind;
 import org.netbeans.modules.php.editor.api.PhpModifiers;
 import org.netbeans.modules.php.editor.api.elements.FieldElement;
+import org.netbeans.modules.php.editor.api.elements.PropertyHookElement;
 import org.netbeans.modules.php.editor.api.elements.TypeElement;
 import org.netbeans.modules.php.editor.api.elements.TypeResolver;
 import org.netbeans.modules.php.editor.index.PHPIndexer;
 import org.netbeans.modules.php.editor.index.Signature;
+import org.netbeans.modules.php.editor.model.impl.PropertyHookSignatureItem;
+import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.model.impl.VariousUtils;
 import org.netbeans.modules.php.editor.model.nodes.ASTNodeInfo;
 import org.netbeans.modules.php.editor.model.nodes.SingleFieldDeclarationInfo;
@@ -44,7 +49,7 @@ import org.openide.util.Parameters;
 /**
  * @author Radek Matous
  */
-public final class FieldElementImpl extends PhpElementImpl implements FieldElement {
+public final class FieldElementImpl extends PhpElementImpl implements FieldElement.HookedFieldElement {
 
     public static final String IDX_FIELD = PHPIndexer.FIELD_FIELD;
 
@@ -53,6 +58,10 @@ public final class FieldElementImpl extends PhpElementImpl implements FieldEleme
     private final Set<TypeResolver> instanceTypes;
     private final Set<TypeResolver> instanceFQTypes;
     private final boolean isAnnotation;
+    private final Type.Kind typeKind;
+    @NullAllowed
+    private final String declaredType;
+    private final List<PropertyHookElement> propertyHooks;
 
     private FieldElementImpl(
             final TypeElement enclosingType,
@@ -64,13 +73,20 @@ public final class FieldElementImpl extends PhpElementImpl implements FieldEleme
             final Set<TypeResolver> instanceTypes,
             final Set<TypeResolver> instanceFQTypes,
             final boolean isDeprecated,
-            final boolean isAnnotation) {
+            final boolean isAnnotation,
+            Type.Kind typeKind,
+            String declaredType,
+            List<PropertyHookElement> propertyHooks
+    ) {
         super(FieldElementImpl.getName(fieldName, true), enclosingType.getName(), fileUrl, offset, elementQuery, isDeprecated);
         this.modifiers = PhpModifiers.fromBitMask(flags);
         this.enclosingType = enclosingType;
         this.instanceTypes = instanceTypes;
         this.instanceFQTypes = instanceFQTypes;
         this.isAnnotation = isAnnotation;
+        this.typeKind = typeKind;
+        this.declaredType = declaredType;
+        this.propertyHooks = List.copyOf(propertyHooks);
     }
 
     public static Set<FieldElement> fromSignature(final TypeElement type,
@@ -82,7 +98,7 @@ public final class FieldElementImpl extends PhpElementImpl implements FieldEleme
             final IndexQueryImpl indexQuery, final IndexResult indexResult) {
         final String[] values = indexResult.getValues(IDX_FIELD);
         final Set<FieldElement> retval = values.length > 0
-                ? new HashSet<FieldElement>() : Collections.<FieldElement>emptySet();
+                ? new HashSet<>() : Collections.<FieldElement>emptySet();
         for (String val : values) {
             final FieldElement field = fromSignature(type, query, indexQuery, Signature.get(val));
             if (field != null) {
@@ -98,10 +114,27 @@ public final class FieldElementImpl extends PhpElementImpl implements FieldEleme
         final FieldSignatureParser signParser = new FieldSignatureParser(sig);
         FieldElement retval = null;
         if (matchesQuery(query, signParser)) {
-            retval = new FieldElementImpl(type, signParser.getFieldName(),
-                    signParser.getOffset(), signParser.getFlags(), signParser.getFileUrl(),
-                    indexScopeQuery, signParser.getTypes(), signParser.getFQTypes(), signParser.isDeprecated(), signParser.isAnnotation());
-
+            List<PropertyHookElement> propertyHooks = PropertyHookElementImpl.fromSignatureItems(
+                    signParser.getPropertyHookSignatrueItem(),
+                    FieldElementImpl.getName(signParser.getFieldName(), true),
+                    signParser.getFileUrl(),
+                    indexScopeQuery
+            );
+            retval = new FieldElementImpl(
+                    type,
+                    signParser.getFieldName(),
+                    signParser.getOffset(),
+                    signParser.getFlags(),
+                    signParser.getFileUrl(),
+                    indexScopeQuery,
+                    signParser.getTypes(),
+                    signParser.getFQTypes(),
+                    signParser.isDeprecated(),
+                    signParser.isAnnotation(),
+                    signParser.getTypeKind(),
+                    signParser.getDeclaredType(),
+                    propertyHooks
+            );
         }
         return retval;
     }
@@ -113,11 +146,23 @@ public final class FieldElementImpl extends PhpElementImpl implements FieldEleme
         final List<? extends SingleFieldDeclarationInfo> fields = SingleFieldDeclarationInfo.create(node);
         final Set<FieldElement> retval = new HashSet<>();
         for (SingleFieldDeclarationInfo info : fields) {
-            final String returnType = VariousUtils.getFieldTypeFromPHPDoc(fileQuery.getResult().getProgram(), info.getOriginalNode());
-            Set<TypeResolver> types = returnType != null ? TypeResolverImpl.parseTypes(returnType) : null;
-            retval.add(new FieldElementImpl(type, info.getName(), info.getRange().getStart(),
-                    info.getAccessModifiers().toFlags(), fileQuery.getURL().toString(), fileQuery,
-                    types, types, VariousUtils.isDeprecatedFromPHPDoc(fileQuery.getResult().getProgram(), node), false));
+            final String fieldType = VariousUtils.getFieldTypeFromPHPDoc(fileQuery.getResult().getProgram(), info.getOriginalNode());
+            Set<TypeResolver> types = fieldType != null ? TypeResolverImpl.parseTypes(fieldType) : null;
+            retval.add(new FieldElementImpl(
+                    type,
+                    info.getName(),
+                    info.getRange().getStart(),
+                    info.getAccessModifiers().toFlags(),
+                    fileQuery.getURL().toString(),
+                    fileQuery,
+                    types,
+                    types,
+                    VariousUtils.isDeprecatedFromPHPDoc(fileQuery.getResult().getProgram(), node),
+                    false,
+                    Type.Kind.fromTypes(fieldType),
+                    info.getFieldType(),
+                    PropertyHookElementImpl.fromNode(info.getPropertyHooks(), info.getName(), fileQuery.getURL().toString(), fileQuery))
+            );
         }
         return retval;
     }
@@ -139,7 +184,10 @@ public final class FieldElementImpl extends PhpElementImpl implements FieldEleme
                 resolvers,
                 resolvers,
                 VariousUtils.isDeprecatedFromPHPDoc(fileQuery.getResult().getProgram(), node),
-                false
+                false,
+                Type.Kind.NORMAL,
+                null,
+                List.of()
         );
     }
 
@@ -152,7 +200,7 @@ public final class FieldElementImpl extends PhpElementImpl implements FieldEleme
                 ? Collections.<TypeResolver>singleton(new TypeResolverImpl(fldType.getFullyQualifiedName(), false))
                 : Collections.<TypeResolver>emptySet();
         FieldElementImpl retval = new FieldElementImpl(type, field.getName(), field.getOffset(),
-                PhpModifiers.NO_FLAGS, null, elementQuery, typeResolvers, typeResolvers, false, false);
+                PhpModifiers.NO_FLAGS, null, elementQuery, typeResolvers, typeResolvers, false, false, Type.Kind.NORMAL, null, List.of());
         retval.setFileObject(field.getFile());
         return retval;
     }
@@ -180,6 +228,7 @@ public final class FieldElementImpl extends PhpElementImpl implements FieldEleme
         sb.append(isDeprecated() ? 1 : 0).append(Separator.SEMICOLON);
         sb.append(getFilenameUrl()).append(Separator.SEMICOLON);
         sb.append(isAnnotation() ? 1 : 0).append(Separator.SEMICOLON);
+        sb.append(PropertyHookSignatureItem.getSignatureFromElements(propertyHooks)).append(Separator.SEMICOLON);
         checkSignature(sb);
         return sb.toString();
     }
@@ -201,12 +250,27 @@ public final class FieldElementImpl extends PhpElementImpl implements FieldEleme
 
     @Override
     public Set<TypeResolver> getInstanceTypes() {
-        return instanceTypes;
+        return Collections.unmodifiableSet(instanceTypes);
     }
 
     @Override
     public Set<TypeResolver> getInstanceFQTypes() {
-        return instanceFQTypes;
+        return Collections.unmodifiableSet(instanceFQTypes);
+    }
+
+    @Override
+    public boolean isUnionType() {
+        return typeKind == Type.Kind.UNION;
+    }
+
+    @Override
+    public boolean isIntersectionType() {
+        return typeKind == Type.Kind.INTERSECTION;
+    }
+
+    @Override
+    public String getDeclaredType() {
+        return declaredType;
     }
 
     private void checkSignature(StringBuilder sb) {
@@ -222,6 +286,7 @@ public final class FieldElementImpl extends PhpElementImpl implements FieldEleme
             assert getInstanceFQTypes().size() == parser.getFQTypes().size();
             assert isDeprecated() == parser.isDeprecated();
             assert isAnnotation() == parser.isAnnotation();
+            assert PropertyHookSignatureItem.getSignatureFromElements(propertyHooks).equals(parser.getPropertyHookSignature());
         }
     }
 
@@ -273,6 +338,16 @@ public final class FieldElementImpl extends PhpElementImpl implements FieldEleme
         return isAnnotation;
     }
 
+    @Override
+    public boolean isHooked() {
+        return !propertyHooks.isEmpty();
+    }
+
+    @Override
+    public List<PropertyHookElement> getPropertyHooks() {
+        return propertyHooks;
+    }
+
     private static class FieldSignatureParser {
 
         private final Signature signature;
@@ -293,6 +368,16 @@ public final class FieldElementImpl extends PhpElementImpl implements FieldEleme
             return signature.integer(3);
         }
 
+        @CheckForNull
+        String getDeclaredType() {
+            return signature.string(4).isEmpty() ? null : signature.string(4);
+        }
+
+        @CheckForNull
+        String getDeclaredFQType() {
+            return signature.string(5).isEmpty() ? null : signature.string(5);
+        }
+
         Set<TypeResolver> getTypes() {
             return TypeResolverImpl.parseTypes(signature.string(4));
         }
@@ -311,6 +396,25 @@ public final class FieldElementImpl extends PhpElementImpl implements FieldEleme
 
         boolean isAnnotation() {
             return signature.integer(8) == 1;
+        }
+
+        String getPropertyHookSignature() {
+            return signature.string(9);
+        }
+
+        List<PropertyHookSignatureItem> getPropertyHookSignatrueItem () {
+            return PropertyHookSignatureItem.fromSignature(getPropertyHookSignature());
+        }
+
+        Type.Kind getTypeKind() {
+            String types = signature.string(4);
+            Type.Kind typeKind = Type.Kind.NORMAL;
+            if (types.contains(Type.SEPARATOR)) {
+                typeKind = Type.Kind.UNION;
+            } else if (types.contains(Type.SEPARATOR_INTERSECTION)) {
+                typeKind = Type.Kind.INTERSECTION;
+            }
+            return typeKind;
         }
     }
 }

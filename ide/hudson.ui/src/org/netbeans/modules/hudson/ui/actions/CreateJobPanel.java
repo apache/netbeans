@@ -174,7 +174,7 @@ public class CreateJobPanel extends JPanel implements ChangeListener {
         SortedSet<Project> projects = new TreeSet<Project>(ProjectRenderer.comparator());
         projects.addAll(Arrays.asList(OpenProjects.getDefault().getOpenProjects()));
         projects.addAll(manuallyAddedProjects);
-        project.setModel(new DefaultComboBoxModel(projects.toArray(new Project[projects.size()])));
+        project.setModel(new DefaultComboBoxModel(projects.toArray(new Project[0])));
     }
 
     @SuppressWarnings("unchecked")

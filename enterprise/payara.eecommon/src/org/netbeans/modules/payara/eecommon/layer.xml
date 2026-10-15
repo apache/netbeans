@@ -36,7 +36,7 @@
     </folder>
     <folder name="Templates">
         <folder name="PayaraResources">
-            <attr name="position" intvalue="1800"/>
+            <attr name="position" intvalue="1750"/>
             <attr name="displayName" bundlevalue="org.netbeans.modules.payara.eecommon.Bundle#PayaraResourcesFolder"/>
         </folder>
     </folder>

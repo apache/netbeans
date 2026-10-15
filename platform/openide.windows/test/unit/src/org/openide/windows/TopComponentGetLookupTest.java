@@ -877,7 +877,7 @@ public class TopComponentGetLookupTest extends NbTestCase {
         }
 
     }
-    private final static Def defaultFocusManager = new Def();
+    private static final Def defaultFocusManager = new Def();
     static {
         try {
             Utilities.actionsGlobalContext();

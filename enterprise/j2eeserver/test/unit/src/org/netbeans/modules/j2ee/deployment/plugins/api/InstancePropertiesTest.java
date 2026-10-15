@@ -23,6 +23,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import org.netbeans.api.keyring.Keyring;
@@ -131,7 +132,7 @@ public class InstancePropertiesTest extends ServerRegistryTestBase {
         try {
             InstanceProperties.createInstanceProperties(
                     url, TEST_USERNAME, TEST_PASSWORD, TEST_DISPLAY_NAME);
-            fail("the unknow serverplugin should be unknown at this point"); // NOI18N
+            fail("the unknown serverplugin should be unknown at this point"); // NOI18N
         } catch (InstanceCreationException ex) {
             // expected
         }
@@ -144,7 +145,7 @@ public class InstancePropertiesTest extends ServerRegistryTestBase {
                     FileObject fo = folder.createData("Descriptor");
                     InputStream is = new ByteArrayInputStream(
                             ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                            + "<netbeans-deployment></netbeans-deployment>").getBytes("UTF-8"));
+                            + "<netbeans-deployment></netbeans-deployment>").getBytes(StandardCharsets.UTF_8));
                     try {
                         OutputStream os = fo.getOutputStream();
                         try {

@@ -429,7 +429,7 @@ public final class SearchUtils {
     private SearchUtils() {}
     
     
-    public static abstract class TreeHelper {
+    public abstract static class TreeHelper {
         
         public static final int NODE_SEARCH_DOWN =  10; // Node to be searched, search its children
         public static final int NODE_SEARCH_NEXT =  11; // Node to be searched, do not search its children

@@ -29,16 +29,18 @@ import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.LabeledStatementTree;
 import com.sun.source.tree.LineMap;
+import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
-import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -51,6 +53,8 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.TypeParameterElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
@@ -91,18 +95,53 @@ import org.openide.util.NbBundle.Messages;
 })
 public class Tiny {
 
-    @Hint(displayName = "#DN_org.netbeans.modules.java.hints.bugs.Tiny.stringReplaceAllDot", description = "#DESC_org.netbeans.modules.java.hints.bugs.Tiny.stringReplaceAllDot", category="bugs", suppressWarnings="ReplaceAllDot")
-    @TriggerPattern(value="$str.replaceAll(\".\", $to)",
-                    constraints=@ConstraintVariableType(variable="$str", type="java.lang.String"))
-    public static ErrorDescription stringReplaceAllDot(HintContext ctx) {
+    @Hint(displayName = "#DN_org.netbeans.modules.java.hints.bugs.Tiny.singleCharRegex", description = "#DESC_org.netbeans.modules.java.hints.bugs.Tiny.singleCharRegex", category="bugs", suppressWarnings="SingleCharRegex")
+    @TriggerPatterns({
+        @TriggerPattern(value="$str.replaceAll($pattern, $to)",
+                constraints = {
+                    @ConstraintVariableType(variable="$str", type="java.lang.String"),
+                    @ConstraintVariableType(variable="$pattern", type="java.lang.String") }),
+        @TriggerPattern(value = "$str.replaceFirst($pattern, $repl)",
+                constraints = {
+                    @ConstraintVariableType(variable = "$str", type = "java.lang.String"),
+                    @ConstraintVariableType(variable = "$pattern", type = "java.lang.String"),
+                    @ConstraintVariableType(variable = "$repl", type = "java.lang.String")
+                }),
+        @TriggerPattern(value="$str.split($pattern)",
+                constraints = {
+                    @ConstraintVariableType(variable="$str", type="java.lang.String"),
+                    @ConstraintVariableType(variable="$pattern", type="java.lang.String") }),
+        @TriggerPattern(value = "$str.split($pattern, $limit)",
+                constraints = {
+                    @ConstraintVariableType(variable = "$str", type = "java.lang.String"),
+                    @ConstraintVariableType(variable = "$pattern", type = "java.lang.String"),
+                    @ConstraintVariableType(variable = "$limit", type = "int")
+                })
+    })
+    public static ErrorDescription singleCharRegex(HintContext ctx) {
         Tree constant = ((MethodInvocationTree) ctx.getPath().getLeaf()).getArguments().get(0);
         TreePath constantTP = new TreePath(ctx.getPath(), constant);
 
-        String fixDisplayName = NbBundle.getMessage(Tiny.class, "FIX_string-replace-all-dot");
-        Fix fix = JavaFixUtilities.rewriteFix(ctx, fixDisplayName, constantTP, "\"\\\\.\"");
-        String displayName = NbBundle.getMessage(Tiny.class, "ERR_string-replace-all-dot");
+        if (constantTP.getLeaf().getKind() == Kind.STRING_LITERAL) {
 
-        return ErrorDescriptionFactory.forTree(ctx, constant, displayName, fix);
+            String value = (String) ((LiteralTree) constantTP.getLeaf()).getValue();
+
+            if (value != null && value.length() == 1 && isRegExControlCharacter(value.charAt(0))) {
+
+                String fixDisplayName = NbBundle.getMessage(Tiny.class, "FIX_single-char-regex");
+                String displayName = NbBundle.getMessage(Tiny.class, "ERR_single-char-regex");
+
+                Fix fix = JavaFixUtilities.rewriteFix(ctx, fixDisplayName, constantTP, "\"\\\\"+value.charAt(0)+"\"");
+                return ErrorDescriptionFactory.forTree(ctx, constant, displayName, fix);
+            }
+        }
+
+        return null;
+    }
+
+    private static boolean isRegExControlCharacter(char c) {
+        return c == '.' || c == '$' || c == '|' || c == '^' || c == '?' || c == '*' || c == '+' || c == '\\'
+                        || c == '(' || c == ')' || c == '[' || c == ']'  || c == '{' || c == '}';
     }
 
     @Hint(displayName = "#DN_org.netbeans.modules.java.hints.bugs.Tiny.newObject", description = "#DESC_org.netbeans.modules.java.hints.bugs.Tiny.newObject", category="bugs", suppressWarnings="ResultOfObjectAllocationIgnored", options=Options.QUERY)
@@ -160,6 +199,42 @@ public class Tiny {
         return ErrorDescriptionFactory.forTree(ctx, ctx.getPath(), displayName, fix);
     }
 
+    @Hint(displayName = "#DN_org.netbeans.modules.java.hints.bugs.Tiny.varTypeDiamondOperator", description = "#DESC_org.netbeans.modules.java.hints.bugs.Tiny.varTypeDiamondOperator", category="bugs", suppressWarnings="AllowVarTypeDiamondOperator")
+    @TriggerPatterns({
+        @TriggerPattern(value="$mods$ $varType $name = new $type<>($args$)", constraints=@ConstraintVariableType(variable="$type", type="java.util.Collection")),
+        @TriggerPattern(value="$mods$ $varType $name = new $type<>($args$)", constraints=@ConstraintVariableType(variable="$type", type="java.util.Map"))
+    })
+    public static ErrorDescription varTypeDiamondOperator(HintContext ctx) {
+        TreePath path = ctx.getPath();
+        Boolean isVarUsed = ctx.getInfo().getTreeUtilities().isVarType(path);
+        if(!isVarUsed){
+            return null;
+        }
+
+        VariableTree vt = (VariableTree) ctx.getPath().getLeaf();
+        NewClassTree nct = (NewClassTree) vt.getInitializer();
+        Element constructorCand = ctx.getInfo().getTrees().getElement(new TreePath(ctx.getPath(), nct));
+
+        if (constructorCand.getKind() != ElementKind.CONSTRUCTOR) {
+            return null;
+        }
+
+        ExecutableElement constructor = (ExecutableElement) constructorCand;
+
+        for (VariableElement param : constructor.getParameters()) {
+            if (param.asType().getKind() == TypeKind.DECLARED) {
+                DeclaredType dt = (DeclaredType) param.asType();
+                if (!dt.getTypeArguments().isEmpty()) {
+                    return null;
+                }
+            }
+        }
+
+        String displayName = NbBundle.getMessage(Tiny.class, "ERR_varTypeDiamondOperator");
+
+        return ErrorDescriptionFactory.forTree(ctx, path, displayName);
+    }
+    
     @Hint(displayName = "#DN_org.netbeans.modules.java.hints.bugs.Tiny.resultSet", description = "#DESC_org.netbeans.modules.java.hints.bugs.Tiny.resultSet", category="bugs", suppressWarnings="UseOfIndexZeroInJDBCResultSet", options=Options.QUERY)
     @TriggerPattern(value="$set.$method($columnIndex, $other$)",
                     constraints={
@@ -288,7 +363,7 @@ public class Tiny {
     }
     
     private static int indent(HintContext ctx, Tree t) {
-        long start = ctx.getInfo().getTrees().getSourcePositions().getStartPosition(ctx.getInfo().getCompilationUnit(), t);
+        long start = ctx.getInfo().getTrees().getSourcePositions().getStartPosition(t);
         LineMap lm = ctx.getInfo().getCompilationUnit().getLineMap();
         // see defect #240493; incorrect data may be provided by Lombok processing.
         if (start == -1) {
@@ -407,8 +482,8 @@ public class Tiny {
                 } 
                 // attempt to resolve a simple-qualified identifier; assuming the user already has an import in the source
                 Element outer = el.getEnclosingElement();
-                if (outer != null && (outer.getKind() == ElementKind.CLASS || outer.getKind() == ElementKind.INTERFACE ||
-                        outer.getKind() == ElementKind.ENUM)) {
+                if (outer != null && (outer.getKind() == ElementKind.CLASS || outer.getKind() == ElementKind.INTERFACE
+                                   || outer.getKind() == ElementKind.RECORD || outer.getKind() == ElementKind.ENUM)) {
                     TypeElement tel = (TypeElement)outer;
                     String x =  tel.getSimpleName() + "." + l.toString();
                     if (tryResolveIdentifier(info, lPath, m, resolved, x)) {
@@ -432,7 +507,7 @@ public class Tiny {
                         "case " + s + ": $stmt;"));
         }
         return ErrorDescriptionFactory.forName(ctx, lt, Bundle.TEXT_MissingSwitchCase(), 
-                fixes.toArray(new Fix[fixes.size()]));
+                fixes.toArray(new Fix[0]));
     }
     
     private static boolean tryResolveIdentifier(CompilationInfo info, TreePath place, 

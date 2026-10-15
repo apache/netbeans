@@ -153,7 +153,7 @@ public class FieldsBrowserControllerUI extends JTitledPanel {
         }
 
         public void mouseClicked(MouseEvent e) {
-            if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
+             if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
                 int row = fieldsListTable.rowAtPoint(e.getPoint());
                 if (e.getX() >= fieldsListTable.getTree().getRowBounds(row).x -
                                 fieldsListTable.getTreeCellOffsetX() && row != -1) {
@@ -337,10 +337,10 @@ public class FieldsBrowserControllerUI extends JTitledPanel {
         fieldsListTable.selectNode(node, true);
     }
     
-    private List expandedPaths = null;
+    private List<TreePath> expandedPaths = null;
     private TreePath selectedPath = null;
     
-    public List getExpandedPaths() {
+    public List<TreePath> getExpandedPaths() {
         if (!showsData()) return null;
         return fieldsListTable.getExpandedPaths();
     }
@@ -350,7 +350,7 @@ public class FieldsBrowserControllerUI extends JTitledPanel {
         return fieldsListTable.getTree().getSelectionPath();
     }
     
-    public void restoreState(List expanded, TreePath selected) {
+    public void restoreState(List<TreePath> expanded, TreePath selected) {
         if (showsData()) {
             expandedPaths = expanded;
             selectedPath = selected;

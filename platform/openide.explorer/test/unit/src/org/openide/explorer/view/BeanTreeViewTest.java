@@ -275,7 +275,7 @@ public class BeanTreeViewTest extends NbTestCase {
                 }
 
                 try {
-                    p.getExplorerManager().setSelectedNodes(selection.toArray(new Node[selection.size()]));
+                    p.getExplorerManager().setSelectedNodes(selection.toArray(new Node[0]));
                 } catch (PropertyVetoException e) {
                     fail("Unexpected PropertyVetoException from ExplorerManager.setSelectedNodes()");
                 }
@@ -306,7 +306,7 @@ public class BeanTreeViewTest extends NbTestCase {
                     public void run () {
                         List<String> newKeys = new ArrayList<String>(Arrays.asList(childrenNames));
                         newKeys.remove(name);
-                        ((RefreshableChildren) root.getChildren()).refreshKeys(newKeys.toArray(new String[newKeys.size()]));
+                        ((RefreshableChildren) root.getChildren()).refreshKeys(newKeys.toArray(new String[0]));
                         children = null;
                     }
                 });

@@ -29,10 +29,7 @@ import java.util.Map;
  */
 public enum PayaraContainer implements Comparator<PayaraContainer> {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Enum values                                                            //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** EAR application. */
     EAR,
     /** jRuby application. */
@@ -48,10 +45,7 @@ public enum PayaraContainer implements Comparator<PayaraContainer> {
     /** Unknown application. */
     UNKNOWN;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**  A <code>String</code> representation of EAR value. */
     static final String EAR_STR = "ear";
 
@@ -81,7 +75,7 @@ public enum PayaraContainer implements Comparator<PayaraContainer> {
      * conversion.
      */
     private static final Map<String, PayaraContainer> stringValuesMap
-            = new HashMap(2 * values().length);
+            = new HashMap<>(2 * values().length);
 
     // Initialize backward String conversion Map.
     static {
@@ -111,10 +105,7 @@ public enum PayaraContainer implements Comparator<PayaraContainer> {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Convert <code>PayaraContainer</code> value to <code>String</code>.
      * <p>

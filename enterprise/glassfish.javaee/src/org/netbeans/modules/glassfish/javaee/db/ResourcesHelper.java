@@ -88,7 +88,7 @@ public class ResourcesHelper {
         });
     }
 
-    static private J2eeModuleProvider getProvider(Project project) {
+    private static J2eeModuleProvider getProvider(Project project) {
         J2eeModuleProvider provider = null;
         if (project != null) {
             org.openide.util.Lookup lookup = project.getLookup();
@@ -97,7 +97,7 @@ public class ResourcesHelper {
         return provider;
     }
 
-    static private void registerSampleResource(GlassfishModule commonSupport) {
+    private static void registerSampleResource(GlassfishModule commonSupport) {
         String sample_poolname = "SamplePool"; //NOI18N
         String sample_jdbc = "jdbc/sample"; //NOI18N
         String sample_classname = "org.apache.derby.jdbc.ClientDataSource"; //NOI18N

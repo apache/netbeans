@@ -92,7 +92,7 @@ public class ParallelSftpTest extends NativeExecutionBaseTestCase {
                 result.add(ls[i]);
             }            
         }
-        return result.toArray(new StatInfo[result.size()]);
+        return result.toArray(new StatInfo[0]);
     }
     
     @ForAllEnvironments(section = "remote.platforms")
@@ -190,7 +190,7 @@ public class ParallelSftpTest extends NativeExecutionBaseTestCase {
         File platformDir = getNetBeansPlatformDir();
         assertNotNull("netbeans platform dir", platformDir);
         gatherPlainFiles(platformDir, result, new TreeSet<String>());
-        return result.toArray(new File[result.size()]);
+        return result.toArray(new File[0]);
     }
     
     @RandomlyFails

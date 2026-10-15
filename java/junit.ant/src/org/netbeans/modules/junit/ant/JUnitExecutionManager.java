@@ -209,7 +209,7 @@ public class JUnitExecutionManager implements RerunHandler{
             FileObject tmpDir = FileUtil.toFileObject(new File(System.getProperty("java.io.tmpdir")).getCanonicalFile());
             FileObject targetFO = tmpDir.createFolder("junit-custom-" + id);                //NOI18N
 //            DataFolder targetDF = DataFolder.findFolder(targetFO);
-            Map<String,Object> params = new HashMap();
+            Map<String,Object> params = new HashMap<>();
             String testStr = "";
             for(String testClass: toTest.keySet()){
                 testStr += "<test name=\"" + testClass + "\" methods=\"" + toTest.get(testClass) + "\" todir=\"${test.result.dir.custom}\"/>\n"; //NOI18N

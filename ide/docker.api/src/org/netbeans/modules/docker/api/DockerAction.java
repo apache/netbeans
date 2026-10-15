@@ -30,7 +30,6 @@ import org.netbeans.modules.docker.HttpUtils;
 import org.netbeans.modules.docker.DirectStreamResult;
 import org.netbeans.modules.docker.Demuxer;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -45,8 +44,11 @@ import java.net.ProxySelector;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.UnixDomainSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -78,14 +80,15 @@ import org.netbeans.modules.docker.DockerConfig;
 import org.netbeans.modules.docker.DockerUtils;
 import org.netbeans.modules.docker.Endpoint;
 import org.netbeans.modules.docker.StreamResult;
-import static org.netbeans.modules.docker.api.DockerEntityType.Container;
-import org.newsclub.net.unix.AFUNIXSocket;
-import org.newsclub.net.unix.AFUNIXSocketAddress;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Pair;
 import org.openide.util.Parameters;
 import org.openide.util.io.NullInputStream;
 import org.openide.util.io.NullOutputStream;
+
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.netbeans.modules.docker.api.DockerEntityType.Container;
 
 /**
  *
@@ -145,9 +148,9 @@ public class DockerAction {
                 JSONObject json = (JSONObject) o;
                 JSONArray repoTags = (JSONArray) json.get("RepoTags");
                 String id = (String) json.get("Id");
-                long created = (long) json.get("Created");
-                long size = (long) json.get("Size");
-                long virtualSize = (long) json.get("VirtualSize");
+                long created = (long) json.getOrDefault("Created", 0L);
+                long size = (long) json.getOrDefault("Size", 0L);
+                long virtualSize = (long) json.getOrDefault("VirtualSize", size);
                 ret.add(new DockerImage(instance, repoTags, id, created, size, virtualSize));
             }
             return ret;
@@ -491,12 +494,12 @@ public class DockerAction {
             os.write(("POST /containers/" + container.getId()
                     + "/attach?logs=" + (logs ? 1 : 0)
                     + "&stream=1&stdout=1&stdin=" + (stdin ? 1 : 0)
-                    + "&stderr=1 HTTP/1.1\r\n").getBytes("ISO-8859-1"));
+                    + "&stderr=1 HTTP/1.1\r\n").getBytes(ISO_8859_1));
             HttpUtils.configureHeaders(os, DockerConfig.getDefault().getHttpHeaders(),
                     getHostHeader(),
                     Pair.of("Connection", "Upgrade"),
                     Pair.of("Upgrade", "tcp"));
-            os.write("\r\n".getBytes("ISO-8859-1"));
+            os.write("\r\n".getBytes(ISO_8859_1));
             os.flush();
 
             InputStream is = s.getInputStream();
@@ -548,13 +551,13 @@ public class DockerAction {
             try {
                 OutputStream os = s.getOutputStream();
                 os.write(("POST /images/create?fromImage="
-                        + HttpUtils.encodeParameter(imageName) + " HTTP/1.1\r\n").getBytes("ISO-8859-1"));
+                        + HttpUtils.encodeParameter(imageName) + " HTTP/1.1\r\n").getBytes(ISO_8859_1));
                 Pair<String, String> authHeader = null;
                 JSONObject auth = createAuthObject(CredentialsManager.getDefault().getCredentials(parsed.getRegistry()));
                 authHeader = Pair.of("X-Registry-Auth", HttpUtils.encodeBase64(auth.toJSONString()));
                 HttpUtils.configureHeaders(os, DockerConfig.getDefault().getHttpHeaders(),
                         getHostHeader(), ACCEPT_JSON_HEADER, authHeader);
-                os.write(("\r\n").getBytes("ISO-8859-1"));
+                os.write(("\r\n").getBytes(ISO_8859_1));
                 os.flush();
 
                 InputStream is = s.getInputStream();
@@ -624,13 +627,13 @@ public class DockerAction {
             Endpoint s = createEndpoint();
             try {
                 OutputStream os = s.getOutputStream();
-                os.write(("POST " + action.toString() + " HTTP/1.1\r\n").getBytes("ISO-8859-1"));
+                os.write(("POST " + action.toString() + " HTTP/1.1\r\n").getBytes(ISO_8859_1));
                 Pair<String, String> authHeader = null;
                 JSONObject auth = createAuthObject(CredentialsManager.getDefault().getCredentials(parsed.getRegistry()));
                 authHeader = Pair.of("X-Registry-Auth", HttpUtils.encodeBase64(auth.toJSONString()));
                 HttpUtils.configureHeaders(os, DockerConfig.getDefault().getHttpHeaders(),
                         getHostHeader(), ACCEPT_JSON_HEADER, authHeader);
-                os.write(("\r\n").getBytes("ISO-8859-1"));
+                os.write(("\r\n").getBytes(ISO_8859_1));
                 os.flush();
 
                 InputStream is = s.getInputStream();
@@ -752,7 +755,7 @@ public class DockerAction {
                     request.append("\r\n");
 
                     OutputStream os = s.getOutputStream();
-                    os.write(request.toString().getBytes("ISO-8859-1"));
+                    os.write(request.toString().getBytes(ISO_8859_1));
                     os.flush();
 
                     buildListener.onEvent(new BuildEvent(instance, request.toString(), false, null, false));
@@ -886,9 +889,9 @@ public class DockerAction {
             s = createEndpoint();
 
             OutputStream os = s.getOutputStream();
-            os.write(("GET /containers/" + container.getId() + "/logs?stderr=1&stdout=1&timestamps=1&follow=1 HTTP/1.1\r\n").getBytes("ISO-8859-1"));
+            os.write(("GET /containers/" + container.getId() + "/logs?stderr=1&stdout=1&timestamps=1&follow=1 HTTP/1.1\r\n").getBytes(ISO_8859_1));
             HttpUtils.configureHeaders(os, DockerConfig.getDefault().getHttpHeaders(), getHostHeader());
-            os.write("\r\n".getBytes("ISO-8859-1"));
+            os.write("\r\n".getBytes(ISO_8859_1));
             os.flush();
 
             InputStream is = s.getInputStream();
@@ -938,16 +941,16 @@ public class DockerAction {
         try {
             s = createEndpoint();
 
-            byte[] data = configuration.toJSONString().getBytes("UTF-8");
+            byte[] data = configuration.toJSONString().getBytes(UTF_8);
             Map<String, String> defaultHeaders = DockerConfig.getDefault().getHttpHeaders();
 
             OutputStream os = s.getOutputStream();
-            os.write(("POST " + (name != null ? "/containers/create?name=" + HttpUtils.encodeParameter(name) : "/containers/create") + " HTTP/1.1\r\n").getBytes("ISO-8859-1"));
+            os.write(("POST " + (name != null ? "/containers/create?name=" + HttpUtils.encodeParameter(name) : "/containers/create") + " HTTP/1.1\r\n").getBytes(ISO_8859_1));
             HttpUtils.configureHeaders(os, defaultHeaders,
                     getHostHeader(),
                     Pair.of("Content-Type", "application/json"),
                     Pair.of("Content-Length", Integer.toString(data.length)));
-            os.write("\r\n".getBytes("ISO-8859-1"));
+            os.write("\r\n".getBytes(ISO_8859_1));
             os.write(data);
             os.flush();
 
@@ -979,9 +982,9 @@ public class DockerAction {
                     DockerContainer.Status.STOPPED);
             ActionStreamResult r = attach(container, true, true);
 
-            os.write(("POST /containers/" + id + "/start HTTP/1.1\r\n").getBytes("ISO-8859-1"));
+            os.write(("POST /containers/" + id + "/start HTTP/1.1\r\n").getBytes(ISO_8859_1));
             HttpUtils.configureHeaders(os, defaultHeaders, getHostHeader());
-            os.write("\r\n".getBytes("ISO-8859-1"));
+            os.write("\r\n".getBytes(ISO_8859_1));
             os.flush();
 
             response = HttpUtils.readResponse(is);
@@ -1004,26 +1007,30 @@ public class DockerAction {
         }
     }
 
-    public boolean ping() {
+    public boolean pingWithExceptions() throws Exception {
         assert !SwingUtilities.isEventDispatchThread() : "Remote access invoked from EDT";
+        Endpoint s = createEndpoint();
         try {
-            Endpoint s = createEndpoint();
-            try {
-                OutputStream os = s.getOutputStream();
-                // FIXME should we use default headers ?
-                os.write(("GET /_ping HTTP/1.1\r\n"
-                        + "Host: " + getHostHeader().second() + "\r\n\r\n").getBytes("ISO-8859-1"));
-                os.flush();
+            OutputStream os = s.getOutputStream();
+            // FIXME should we use default headers ?
+            os.write(("GET /_ping HTTP/1.1\r\n"
+                    + "Host: " + getHostHeader().second() + "\r\n\r\n").getBytes(ISO_8859_1));
+            os.flush();
 
-                InputStream is = s.getInputStream();
-                HttpUtils.Response response = HttpUtils.readResponse(is);
-                return response.getCode() == HttpURLConnection.HTTP_OK;
-            } finally {
-                closeEndpoint(s);
-            }
+            InputStream is = s.getInputStream();
+            HttpUtils.Response response = HttpUtils.readResponse(is);
+            return response.getCode() == HttpURLConnection.HTTP_OK;
+        } finally {
+            closeEndpoint(s);
+        }
+    }
+    
+    public boolean ping() {      
+        try {
+            return pingWithExceptions();
         } catch (MalformedURLException ex) {
             LOGGER.log(Level.INFO, null, ex);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             LOGGER.log(Level.FINE, null, ex);
         }
         return false;
@@ -1039,7 +1046,7 @@ public class DockerAction {
                 OutputStream os = s.getOutputStream();
                 os.write(("GET " + (since != null ? "/events?since=" + since : "/events") + " HTTP/1.1\r\n"
                         + "Host: " + getHostHeader().second() + "\r\n"
-                        + "Accept: application/json\r\n\r\n").getBytes("ISO-8859-1"));
+                        + "Accept: application/json\r\n\r\n").getBytes(ISO_8859_1));
                 os.flush();
 
                 InputStream is = s.getInputStream();
@@ -1098,10 +1105,10 @@ public class DockerAction {
             Endpoint s = createEndpoint();
             try {
                 OutputStream os = s.getOutputStream();
-                os.write(("GET " + action + " HTTP/1.1\r\n").getBytes("ISO-8859-1"));
+                os.write(("GET " + action + " HTTP/1.1\r\n").getBytes(ISO_8859_1));
                 HttpUtils.configureHeaders(os, DockerConfig.getDefault().getHttpHeaders(),
                         getHostHeader(), ACCEPT_JSON_HEADER);
-                os.write(("\r\n").getBytes("ISO-8859-1"));
+                os.write(("\r\n").getBytes(ISO_8859_1));
                 os.flush();
 
                 InputStream is = s.getInputStream();
@@ -1140,10 +1147,10 @@ public class DockerAction {
             Endpoint s = createEndpoint();
             try {
                 OutputStream os = s.getOutputStream();
-                os.write(("POST " + action + " HTTP/1.1\r\n").getBytes("ISO-8859-1"));
+                os.write(("POST " + action + " HTTP/1.1\r\n").getBytes(ISO_8859_1));
                 HttpUtils.configureHeaders(os, DockerConfig.getDefault().getHttpHeaders(),
                         getHostHeader(), Pair.of("Content-Type", "application/json"));
-                os.write(("\r\n").getBytes("ISO-8859-1"));
+                os.write(("\r\n").getBytes(ISO_8859_1));
                 os.flush();
 
                 InputStream is = s.getInputStream();
@@ -1185,10 +1192,10 @@ public class DockerAction {
             Endpoint s = createEndpoint();
             try {
                 OutputStream os = s.getOutputStream();
-                os.write(("DELETE " + action + " HTTP/1.1\r\n").getBytes("ISO-8859-1"));
+                os.write(("DELETE " + action + " HTTP/1.1\r\n").getBytes(ISO_8859_1));
                 HttpUtils.configureHeaders(os, DockerConfig.getDefault().getHttpHeaders(),
                         getHostHeader(), ACCEPT_JSON_HEADER);
-                os.write(("\r\n").getBytes("ISO-8859-1"));
+                os.write(("\r\n").getBytes(ISO_8859_1));
                 os.flush();
 
                 InputStream is = s.getInputStream();
@@ -1262,10 +1269,8 @@ public class DockerAction {
                 s.connect(new InetSocketAddress(realUrl.getHost(), port));
                 return Endpoint.forSocket(s);
             } else if ("file".equals(realUrl.getProtocol())) {
-                AFUNIXSocket s = AFUNIXSocket.newInstance();
-                AFUNIXSocketAddress sockAdd = new AFUNIXSocketAddress(new File(realUrl.getFile()));
-                s.connect(sockAdd);
-                return Endpoint.forSocket(s);
+                SocketChannel channel = SocketChannel.open(UnixDomainSocketAddress.of(Path.of(realUrl.getFile())));
+                return Endpoint.forSocketChannel(channel);
             } else {
                 throw new IOException("Unknown protocol: " + realUrl.getProtocol());
             }
@@ -1450,7 +1455,7 @@ public class DockerAction {
 
         @Override
         public Charset getCharset() {
-            return Charset.forName("UTF-8");
+            return UTF_8;
         }
 
         @Override

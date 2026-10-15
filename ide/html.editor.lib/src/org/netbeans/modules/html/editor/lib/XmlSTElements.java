@@ -21,10 +21,8 @@ package org.netbeans.modules.html.editor.lib;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import org.netbeans.editor.BaseElement;
 import org.netbeans.modules.html.editor.lib.api.ProblemDescription;
 import org.netbeans.modules.html.editor.lib.api.elements.*;
-import org.netbeans.modules.html.editor.lib.plain.TextElement;
 import org.netbeans.modules.web.common.api.LexerUtils;
 import org.openide.util.CharSequences;
 
@@ -34,7 +32,7 @@ import org.openide.util.CharSequences;
  */
 public class XmlSTElements {
     
-    static abstract class ElementBase implements Element {
+    abstract static class ElementBase implements Element {
 
         private CharSequence source;
         private int from, to;
@@ -91,7 +89,7 @@ public class XmlSTElements {
         }
     }
     
-    static abstract class NamedElement extends ElementBase  implements Named {
+    abstract static class NamedElement extends ElementBase  implements Named {
 
         private CharSequence name; //we can possibly use the original source code + pointer
         

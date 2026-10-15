@@ -360,7 +360,7 @@ public class ColumnElement extends DBMemberElement {
 			int old = _type;
 
 			_type = type;
-			firePropertyChange (PROP_TYPE, new Integer(old), new Integer(type));
+			firePropertyChange (PROP_TYPE, old, type);
 		}
 
 		/** Returns whether the column is nullable.

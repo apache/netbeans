@@ -329,7 +329,7 @@ public class DOMNode extends AbstractNode {
             actions.add(null);
             actions.add(SystemAction.get(PropertiesAction.class));
         }
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     @Override

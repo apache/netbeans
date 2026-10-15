@@ -55,13 +55,14 @@ final class NewObjectPanel extends javax.swing.JPanel implements DocumentListene
         setNewObjectName(""); // NOI18N
 
         putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, new String[] { getName() }); //NOI18N
-        putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(0)); //NOI18N
+        putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 0); //NOI18N
         
         newObjectName.getAccessibleContext().setAccessibleDescription(bundle.getString("ACSD_NewObjectName"));  // NOI18N
         getAccessibleContext().setAccessibleDescription(bundle.getString("ACSD_NewObjectPanel")); // NOI18N
     }
 
     /** Preffered size */
+    @Override
     public java.awt.Dimension getPreferredSize() {
         return TemplateWizard.PREF_DIM;
     }
@@ -175,6 +176,7 @@ final class NewObjectPanel extends javax.swing.JPanel implements DocumentListene
         changedUpdate (p1);
     }
 
+    @Override
     public void addNotify () {
         super.addNotify ();
         newObjectName.requestFocus ();

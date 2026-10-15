@@ -18,11 +18,14 @@
  */
 
 package org.netbeans.modules.web.jsf.wizards;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -34,14 +37,14 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.modules.web.api.webmodule.WebModule;
-import org.netbeans.modules.web.beans.CdiUtil;
 import org.netbeans.modules.web.jsf.JSFConfigUtilities;
 import org.netbeans.modules.web.jsf.JSFUtils;
 import org.netbeans.modules.web.jsf.api.ConfigurationUtils;
 import org.netbeans.modules.web.jsf.api.facesmodel.FacesConfig;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
 import org.netbeans.modules.web.jsf.api.facesmodel.ManagedBean;
 import org.netbeans.modules.web.jsf.wizards.ManagedBeanIterator.NamedScope;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.wizards.Utilities;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
@@ -55,8 +58,10 @@ import org.openide.util.NbBundle.Messages;
 @SuppressWarnings("serial") // not used to be serialized
 public class ManagedBeanPanelVisual extends javax.swing.JPanel implements HelpCtx.Provider {
 
-    private final DefaultComboBoxModel scopeModel = new DefaultComboBoxModel();
+    private final DefaultComboBoxModel<Object> scopeModel = new DefaultComboBoxModel<>();
     private boolean isCDIEnabled = false;
+    private JsfVersion jsfVersion = null;
+
     /**
      * Creates new form PropertiesPanelVisual
      */
@@ -66,34 +71,36 @@ public class ManagedBeanPanelVisual extends javax.swing.JPanel implements HelpCt
         boolean addToFacesConfig = false;
 
         WebModule wm = WebModule.getWebModule(proj.getProjectDirectory());
+        Profile profile = null;
         if (wm != null){
+            jsfVersion = JsfVersionUtils.forWebModule(wm);
             String[] configFiles = JSFConfigUtilities.getConfigFiles(wm);
             if (configFiles.length > 0){
                 FileObject documentBase = wm.getDocumentBase();
-                ArrayList<String> files = new ArrayList<String>();
-                for (int i = 0; i < configFiles.length; i++){
-                    if (documentBase.getFileObject(configFiles[i]) != null)
-                        files.add(configFiles[i]);
-                }
-                configFiles = (String[])files.toArray(new String[files.size()]);
+                configFiles = Stream.of(configFiles)
+                        .filter(configFile -> documentBase.getFileObject(configFile) != null)
+                        .toArray(String[]::new);
             }
-            jComboBoxConfigFile.setModel(new javax.swing.DefaultComboBoxModel(configFiles));
+            jComboBoxConfigFile.setModel(new DefaultComboBoxModel<>(configFiles));
             //No config files found
             if (configFiles.length==0) {
                 addToConfigCheckBox.setEnabled(false);
                 jComboBoxConfigFile.setEnabled(false);
             } else {
-                Profile profile = wm.getJ2eeProfile();
+                profile = wm.getJ2eeProfile();
                 if (profile != null && !profile.isAtLeast(Profile.JAVA_EE_6_WEB)) {
                     addToFacesConfig = true;
                     addToConfigCheckBox.setSelected(true);
                     setVisibleBeanDescription(true);
                     addToConfigCheckBox.setEnabled(false);
+                } else if (jsfVersion != null && jsfVersion.isAtLeast(JsfVersion.JSF_4_0)) {
+                    addToConfigCheckBox.setEnabled(false);
+                    jComboBoxConfigFile.setEnabled(false);
                 }
             }
         }
         Object[] scopes;
-        CdiUtil cdiUtil = proj.getLookup().lookup(CdiUtil.class);
+        org.netbeans.modules.web.beans.CdiUtil cdiUtil = proj.getLookup().lookup(org.netbeans.modules.web.beans.CdiUtil.class);
         isCDIEnabled = cdiUtil != null && cdiUtil.isCdiEnabled();
         if (isCDIEnabled && !addToFacesConfig) {
             scopes = ManagedBeanIterator.NamedScope.values();
@@ -139,11 +146,11 @@ public class ManagedBeanPanelVisual extends javax.swing.JPanel implements HelpCt
     private void initComponents() {
 
         jLabelConfigFile = new javax.swing.JLabel();
-        jComboBoxConfigFile = new javax.swing.JComboBox();
+        jComboBoxConfigFile = new javax.swing.JComboBox<>();
         jLabelName = new javax.swing.JLabel();
         jTextFieldName = new javax.swing.JTextField();
         jLabelScope = new javax.swing.JLabel();
-        jComboBoxScope = new javax.swing.JComboBox();
+        jComboBoxScope = new javax.swing.JComboBox<>();
         jLabelDesc = new javax.swing.JLabel();
         jScrollPaneDesc = new javax.swing.JScrollPane();
         jTextAreaDesc = new javax.swing.JTextArea();
@@ -246,8 +253,8 @@ public class ManagedBeanPanelVisual extends javax.swing.JPanel implements HelpCt
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox addToConfigCheckBox;
-    private javax.swing.JComboBox jComboBoxConfigFile;
-    private javax.swing.JComboBox jComboBoxScope;
+    private javax.swing.JComboBox<String> jComboBoxConfigFile;
+    private javax.swing.JComboBox<Object> jComboBoxScope;
     private javax.swing.JLabel jLabelConfigFile;
     private javax.swing.JLabel jLabelDesc;
     private javax.swing.JLabel jLabelName;
@@ -258,7 +265,8 @@ public class ManagedBeanPanelVisual extends javax.swing.JPanel implements HelpCt
     // End of variables declaration//GEN-END:variables
 
     @Messages({
-        "ManagedBeanPanelVisual.warn.flowScoped.low.version=FlowScoped bean can be used only in projects with JSF2.2+"
+        "ManagedBeanPanelVisual.warn.flowScoped.low.version=FlowScoped bean can be used only in projects with JSF2.2+",
+        "ManagedBeanPanelVisual.warn.clientWindowScoped.low.version=ClientWindowScoped can be used only in projects with Faces 4.0+"
     })
     boolean valid(WizardDescriptor wizardDescriptor) {
         String configFile = (String) jComboBoxConfigFile.getSelectedItem();
@@ -275,7 +283,7 @@ public class ManagedBeanPanelVisual extends javax.swing.JPanel implements HelpCt
 
         if (configFile == null) {
             if (!Utilities.isJavaEE6Plus((TemplateWizard) wizardDescriptor) && !isAddBeanToConfig()
-                    && !(JSFUtils.isJavaEE5((TemplateWizard) wizardDescriptor) && JSFUtils.isJSF20Plus(wm, true))) {
+                    && !(JSFUtils.isJavaEE5((TemplateWizard) wizardDescriptor) && jsfVersion != null && jsfVersion.isAtLeast(JsfVersion.JSF_2_0))) {
                 wizardDescriptor.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE,
                         NbBundle.getMessage(ManagedBeanPanelVisual.class, "MSG_NoConfigFile")); //NOI18N
                 return false;
@@ -293,19 +301,26 @@ public class ManagedBeanPanelVisual extends javax.swing.JPanel implements HelpCt
         }
 
         String name = jTextFieldName.getText();
-        if (name.trim().equals("")) { // NOI18N
+        if (name.isBlank()) { // NOI18N
             wizardDescriptor.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE,
                     NbBundle.getMessage(ManagedBeanPanelVisual.class, "MSG_InvalidBeanName")); //NOI18N
             return false;
         }
 
         Object scope = jComboBoxScope.getSelectedItem();
-        if (scope instanceof NamedScope && scope == NamedScope.FLOW) {
-            JSFVersion jsfVersion = JSFVersion.forWebModule(wm);
-            if (jsfVersion != null && !jsfVersion.isAtLeast(JSFVersion.JSF_2_2)) {
-                wizardDescriptor.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE,
-                        Bundle.ManagedBeanPanelVisual_warn_flowScoped_low_version());
-                return false;
+        if (scope instanceof NamedScope namedScope) {
+            if (namedScope == NamedScope.FLOW) {
+                if (jsfVersion != null && !jsfVersion.isAtLeast(JsfVersion.JSF_2_2)) {
+                    wizardDescriptor.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE,
+                            Bundle.ManagedBeanPanelVisual_warn_flowScoped_low_version());
+                    return false;
+                }
+            } else if (namedScope == NamedScope.CLIENT_WINDOW) {
+                if (jsfVersion != null && !jsfVersion.isAtLeast(JsfVersion.JSF_4_0)) {
+                    wizardDescriptor.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE,
+                        Bundle.ManagedBeanPanelVisual_warn_clientWindowScoped_low_version());
+                    return false;
+                }
             }
         }
 
@@ -341,7 +356,7 @@ public class ManagedBeanPanelVisual extends javax.swing.JPanel implements HelpCt
         return new HelpCtx("org.netbeans.modules.web.jsf.wizards.ManagedBeanPanelVisual");
     }
 
-    private final Set<ChangeListener> listeners = new HashSet(1);
+    private final Set<ChangeListener> listeners = new HashSet<>(1);
 
     public final void addChangeListener(ChangeListener l) {
         synchronized (listeners) {

@@ -20,7 +20,6 @@ package org.netbeans.modules.refactoring.java.plugins;
 
 import com.sun.source.tree.*;
 import com.sun.source.util.TreePath;
-import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.source.util.Trees;
 import java.io.IOException;
 import java.util.*;
@@ -257,7 +256,7 @@ public final class ExtractSuperclassRefactoringPlugin extends JavaRefactoringPlu
     
     private ClasspathInfo getClasspathInfo(Set<FileObject> a) {
         ClasspathInfo cpInfo;
-        cpInfo = JavaRefactoringUtils.getClasspathInfoFor(a.toArray(new FileObject[a.size()]));
+        cpInfo = JavaRefactoringUtils.getClasspathInfoFor(a.toArray(new FileObject[0]));
         return cpInfo;
     }
     
@@ -272,7 +271,7 @@ public final class ExtractSuperclassRefactoringPlugin extends JavaRefactoringPlu
         return problem;
     }
     
-    private final static class ExtractSuperclassTransformer extends RefactoringVisitor {
+    private static final class ExtractSuperclassTransformer extends RefactoringVisitor {
         private final ExtractSuperclassRefactoring refactoring;
         private final ElementHandle<TypeElement> sourceType;
         private List<Tree> members;
@@ -338,6 +337,7 @@ public final class ExtractSuperclassRefactoringPlugin extends JavaRefactoringPlu
                         newTypeParams,
                         superClass,
                         implementsList,
+                        Collections.emptyList(),
                         Collections.<Tree>emptyList());
                 newClassTree = GeneratorUtilities.get(workingCopy).insertClassMembers(newClassTree, members);
 
@@ -383,6 +383,7 @@ public final class ExtractSuperclassRefactoringPlugin extends JavaRefactoringPlu
                         classTree.getTypeParameters(),
                         superClassTree,
                         newImpls,
+                        classTree.getPermitsClause(),
                         newMembers);
 
                 rewrite(classTree, nc);
@@ -611,7 +612,7 @@ public final class ExtractSuperclassRefactoringPlugin extends JavaRefactoringPlu
                                                 ))), false);
                                 // create constructor
                                 MethodTree newConstr = make.Method(superclassConstr, block);
-
+                                newConstr = removeAnnotations(make, newConstr);
                                 newConstr = removeRuntimeExceptions(workingCopy, superclassConstr, make, newConstr);
 
                                 newConstr = genUtils.importFQNs(newConstr);
@@ -624,6 +625,11 @@ public final class ExtractSuperclassRefactoringPlugin extends JavaRefactoringPlu
                     }
                 }
             }
+        }
+
+        private static MethodTree removeAnnotations(final TreeMaker make, MethodTree newConstr) {
+            return make.Method(make.Modifiers(newConstr.getModifiers().getFlags(), Collections.emptyList()), newConstr.getName(), newConstr.getReturnType(),
+                    newConstr.getTypeParameters(), newConstr.getParameters(), newConstr.getThrows(), newConstr.getBody(), (ExpressionTree) newConstr.getDefaultValue());
         }
 
         private static MethodTree removeRuntimeExceptions(final WorkingCopy javac, ExecutableElement superclassConstr, final TreeMaker make, MethodTree newConstr) {

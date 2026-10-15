@@ -61,7 +61,7 @@ implements ChangeListener {
     private Map<FileObject,List<Item>> children = new HashMap<FileObject, List<Item>>();
     
     /** covers all FileSystems we're listening on */
-    private final Set<FileSystem> knownFileSystems = new WeakSet<FileSystem>();
+    private final Set<FileSystem> knownFileSystems = Collections.newSetFromMap(new WeakHashMap<>());
     
     /** error manager to log what is happening here */
     private static final Logger err = Logger.getLogger("org.openide.loaders.DataObject.find"); // NOI18N
@@ -117,7 +117,7 @@ implements ChangeListener {
 	
     /** Method to check whether the constructor is allowed.
      */
-    final static boolean isConstructorAllowed() {
+    static final boolean isConstructorAllowed() {
         return FIND.get() != null;
     }
 
@@ -657,7 +657,7 @@ implements ChangeListener {
         }
     }
     
-    static private Collection<Item> getTargets(FileEvent fe, boolean checkSiblings) {
+    private static Collection<Item> getTargets(FileEvent fe, boolean checkSiblings) {
         FileObject fo = fe.getFile();
         // The FileSystem notifying us about the changes should
         // not hold any lock so we're safe here

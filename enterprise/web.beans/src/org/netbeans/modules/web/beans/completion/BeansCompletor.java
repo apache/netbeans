@@ -147,7 +147,7 @@ public abstract class BeansCompletor {
         for (AnnotationMirror annotation : annotationMirrors) {
             if (annotation.getAnnotationType().asElement() instanceof TypeElement) {
                 String typeName = ((TypeElement) annotation.getAnnotationType().asElement()).getQualifiedName().toString();
-                if (AnnotationUtil.ALTERNATVE.equals(typeName)) {
+                if (AnnotationUtil.ALTERNATVE.equals(typeName) || AnnotationUtil.ALTERNATVE_JAKARTA.equals(typeName)) {
                     return true;
                 }
             }

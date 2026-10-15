@@ -33,7 +33,7 @@ public class ThreadInfo {
     //  we will have to compensate for the processing time
 
     //~ Instance fields ------------------------------------------------------------------------------------------------------
-    final private Object stackLock = new Object();
+    private final Object stackLock = new Object();
     public TimedCPUCCTNode[] stack;
     // Simulated stack for this thread - stack starting at root method
     // (or a pseudo node if multiple root methods are called within the thread)

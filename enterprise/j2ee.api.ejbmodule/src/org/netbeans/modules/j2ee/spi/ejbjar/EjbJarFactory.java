@@ -42,6 +42,7 @@ public final class EjbJarFactory {
      * @return instance of API webmodule
      * @deprecated use {@link #create }
      */
+    @Deprecated
     public static EjbJar createEjbJar(EjbJarImplementation spiWebmodule) {
         return EjbJarAccessor.getDefault().createEjbJar (spiWebmodule);
     }

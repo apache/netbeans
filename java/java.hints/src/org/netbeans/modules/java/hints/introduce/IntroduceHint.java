@@ -23,7 +23,6 @@ import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
-import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
@@ -40,7 +39,6 @@ import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -48,8 +46,6 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -64,10 +60,8 @@ import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ErrorType;
-import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.ElementFilter;
 import javax.swing.SwingUtilities;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -79,8 +73,6 @@ import org.netbeans.api.editor.settings.AttributesUtilities;
 import org.netbeans.api.java.source.CancellableTask;
 import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.java.source.CompilationInfo;
-import org.netbeans.api.java.source.ElementHandle;
-import org.netbeans.api.java.source.ElementUtilities.ElementAcceptor;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.TreePathHandle;
@@ -144,8 +136,8 @@ public class IntroduceHint implements CancellableTask<CompilationInfo> {
                 && (leaf.getKind() != Kind.VARIABLE || ((VariableTree) leaf).getInitializer() == null))
                continue;
 
-            long treeStart = ci.getTrees().getSourcePositions().getStartPosition(ci.getCompilationUnit(), leaf);
-            long treeEnd   = ci.getTrees().getSourcePositions().getEndPosition(ci.getCompilationUnit(), leaf);
+            long treeStart = ci.getTrees().getSourcePositions().getStartPosition(leaf);
+            long treeEnd   = ci.getTrees().getSourcePositions().getEndPosition(leaf);
 
             if (treeStart != start || treeEnd != end) {
                 continue;
@@ -244,6 +236,7 @@ public class IntroduceHint implements CancellableTask<CompilationInfo> {
         TreePath method   = TreeUtils.findMethod(resolved);
         boolean variableRewrite = resolved.getLeaf().getKind() == Kind.VARIABLE;
         TreePath value = !variableRewrite ? resolved : new TreePath(resolved, ((VariableTree) resolved.getLeaf()).getInitializer());
+        boolean hasNonLocalRefs = hasNonLocalRefs(info, value);
         boolean isVariable = TreeUtils.findStatement(resolved) != null && method != null && !variableRewrite;
         Set<TreePath> duplicatesForVariable = isVariable ? SourceUtils.computeDuplicates(info, resolved, method, cancel) : null;
         Set<TreePath> duplicatesForConstant = /*isConstant ? */SourceUtils.computeDuplicates(info, resolved, new TreePath(info.getCompilationUnit()), cancel);// : null;
@@ -254,16 +247,13 @@ public class IntroduceHint implements CancellableTask<CompilationInfo> {
         if (guessedName == null) guessedName = "name"; // NOI18N
         Scope s = info.getTrees().getScope(resolved);
         CodeStyle cs = CodeStyle.getDefault(info.getFileObject());
-        Fix variable = isVariable ? new IntroduceVariableFix(h, info.getJavaSource(), 
-                variableRewrite ? 
-                        guessedName : 
-                        Utilities.makeNameUnique(info, s, guessedName, cs.getLocalVarNamePrefix(), cs.getLocalVarNameSuffix()), 
+        Fix variable = isVariable ? new IntroduceVariableFix(h, info.getSnapshot().getSource(),
+                variableRewrite ? guessedName : Utilities.makeNameUnique(info, s, guessedName, cs.getLocalVarNamePrefix(), cs.getLocalVarNameSuffix()),
                 duplicatesForVariable.size() + 1, IntroduceKind.CREATE_VARIABLE, TreePathHandle.create(method, info), end) : null;
-        Fix constant = IntroduceConstantFix.createConstant(resolved, info, value, guessedName, 
-                        duplicatesForConstant.size() + 1, end, variableRewrite, cancel);
+        Fix constant = IntroduceConstantFix.createConstant(resolved, info, value, guessedName, duplicatesForConstant.size() + 1, end, variableRewrite, cancel);
 
 
-        Fix parameter = isVariable ? new IntroduceParameterFix(h) : null;
+        Fix parameter = isVariable && !hasNonLocalRefs ? new IntroduceParameterFix(h) : null;
         IntroduceFieldFix field = null;
         IntroduceFixBase methodFix = null;
 
@@ -297,7 +287,7 @@ public class IntroduceHint implements CancellableTask<CompilationInfo> {
             }
             Element el = info.getTrees().getElement(pathToClass);
             if (pathToClass != null && el != null && (el.getKind().isClass() || el.getKind().isInterface())) {
-                field = new IntroduceFieldFix(h, info.getJavaSource(), guessedName, duplicatesForConstant.size() + 1, initilizeIn, 
+                field = new IntroduceFieldFix(h, info.getSnapshot().getSource(), guessedName, duplicatesForConstant.size() + 1, initilizeIn,
                         statik, allowFinalInCurrentMethod, end, !variableRewrite, TreePathHandle.create(pathToClass, info));
             }
 
@@ -331,7 +321,7 @@ public class IntroduceHint implements CancellableTask<CompilationInfo> {
                     }
                 }
 
-                if (!error186980) {
+                if (!error186980 && !hasNonLocalRefs) {
                     Set<TypeMirror> exceptions = new HashSet<TypeMirror>(info.getTreeUtilities().getUncaughtExceptions(resolved));
 
                     Set<TypeMirrorHandle> exceptionHandles = new HashSet<TypeMirrorHandle>();
@@ -352,12 +342,10 @@ public class IntroduceHint implements CancellableTask<CompilationInfo> {
                     if (viableTargets != null && !viableTargets.isEmpty()) {
                         TypeMirror returnType = 
                                 Utilities.convertIfAnonymous(Utilities.resolveCapturedType(info, 
-                                        resolveType(info, resolved)));
+                                        resolveType(info, resolved)), false);
                         if (Utilities.isValidType(returnType)) {
-                            methodFix = new IntroduceExpressionBasedMethodFix(info.getJavaSource(), 
-                                    h, params, TypeMirrorHandle.create(returnType), 
-                                    exceptionHandles, duplicatesCount, typeVars, end, 
-                                    viableTargets);
+                            methodFix = new IntroduceExpressionBasedMethodFix(info.getSnapshot().getSource(), h, params, TypeMirrorHandle.create(returnType),
+                                    exceptionHandles, duplicatesCount, typeVars, end, viableTargets);
                             methodFix.setTargetIsInterface(allIfaces.get());
                         }
                     }
@@ -391,6 +379,12 @@ public class IntroduceHint implements CancellableTask<CompilationInfo> {
         if (parameter != null) {
             fixes.add(parameter);
         } 
+    }
+
+    private static boolean hasNonLocalRefs(final CompilationInfo info, TreePath path) {
+        InstanceRefFinder finder = new InstanceRefFinder(info, path);
+        finder.process();
+        return finder.containsLocalReferences();
     }
 
     public static List<ErrorDescription> computeError(CompilationInfo info, int start, int end, Map<IntroduceKind, Fix> fixesMap, Map<IntroduceKind, String> errorMessage, AtomicBoolean cancel) {
@@ -857,7 +851,7 @@ public class IntroduceHint implements CancellableTask<CompilationInfo> {
         TypeMirror tm = info.getTrees().getTypeMirror(path);
         
         if (tm != null && tm.getKind() == TypeKind.NULL) {
-            List<? extends TypeMirror> targetType = CreateElementUtilities.resolveType(new HashSet<ElementKind>(), info, path.getParentPath(), path.getLeaf(), (int) info.getTrees().getSourcePositions().getStartPosition(path.getCompilationUnit(), path.getLeaf()), new TypeMirror[1], new int[1]);
+            List<? extends TypeMirror> targetType = CreateElementUtilities.resolveType(new HashSet<ElementKind>(), info, path.getParentPath(), path.getLeaf(), (int) info.getTrees().getSourcePositions().getStartPosition(path.getLeaf()), new TypeMirror[1], new int[1]);
             
             if (targetType != null && !targetType.isEmpty()) {
                 tm = targetType.get(0);

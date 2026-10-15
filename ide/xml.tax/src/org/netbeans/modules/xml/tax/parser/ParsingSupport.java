@@ -97,7 +97,7 @@ public abstract class ParsingSupport {
     protected TreeDocumentRoot parse(FileObject fo) throws IOException, TreeException{
         
         try {
-            URL url = fo.getURL();
+            URL url = fo.toURL();
             InputSource in = new InputSource(url.toExternalForm());  //!!! we could try ti get encoding from MIME content type
             in.setByteStream(fo.getInputStream());
             return parse(in);

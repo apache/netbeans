@@ -36,7 +36,6 @@ import java.util.regex.Pattern;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
-import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
@@ -162,8 +161,9 @@ final class Worker implements Runnable {
         @NonNull final String text,
         @NonNull final QuerySupport.Kind searchType,
         @NullAllowed final Project project,
+        final boolean searchByFolders,
         final int lineNr) {
-        return new Request(text, searchType, project, lineNr);
+        return new Request(text, searchType, project, searchByFolders, lineNr);
     }
 
 
@@ -218,6 +218,7 @@ final class Worker implements Runnable {
         private final String text;
         private final QuerySupport.Kind searchType;
         private final Project currentProject;
+        private final boolean searchByFolders;
         private final int lineNr;
         private final Set<FileObject> excludes;
         //@GuardedBy("this")
@@ -229,12 +230,14 @@ final class Worker implements Runnable {
             @NonNull final String text,
             @NonNull final QuerySupport.Kind searchType,
             @NullAllowed final Project currentProject,
+            final boolean searchByFolders,
             final int lineNr) {
             Parameters.notNull("text", text);   //NOI18N
             Parameters.notNull("searchType", searchType);   //NOI18N
             this.text = text;
             this.searchType = searchType;
             this.currentProject = currentProject;
+            this.searchByFolders = searchByFolders;
             this.lineNr = lineNr;
             this.excludes = Collections.newSetFromMap(new ConcurrentHashMap<FileObject, Boolean>());
         }
@@ -247,6 +250,10 @@ final class Worker implements Runnable {
         @NonNull
         QuerySupport.Kind getSearchKind() {
             return searchType;
+        }
+
+        public boolean isSearchByFolders() {
+            return searchByFolders;
         }
 
         @CheckForNull
@@ -400,7 +407,7 @@ final class Worker implements Runnable {
         }
     }
 
-    private static abstract class Strategy {
+    private abstract static class Strategy {
         private volatile boolean cancelled;
 
         @CheckForNull
@@ -541,7 +548,7 @@ final class Worker implements Runnable {
             final QuerySupport q = QuerySupport.forRoots(
                 FileIndexer.ID,
                 FileIndexer.VERSION,
-                roots.toArray(new FileObject[roots.size()]));
+                roots.toArray(new FileObject[0]));
             final QuerySupport.Query.Factory f = q.getQueryFactory().
                     setCamelCaseSeparator(FileSearchAction.CAMEL_CASE_SEPARATOR).
                     setCamelCasePart(Utils.isCaseSensitive(Utils.toSearchType(request.getSearchKind())) ?
@@ -617,6 +624,13 @@ final class Worker implements Runnable {
                     indexQueryText = request.getText();
                     break;
             }
+            if (request.isSearchByFolders()) {
+                if (searchField.equals(FileIndexer.FIELD_CASE_INSENSITIVE_NAME)) {
+                    searchField = FileIndexer.FIELD_CASE_INSENSITIVE_RELATIVE_PATH;
+                } else {
+                    searchField = FileIndexer.FIELD_RELATIVE_PATH;
+                }
+            }
             return Pair.<String,String>of(searchField, indexQueryText);
         }
 
@@ -647,7 +661,7 @@ final class Worker implements Runnable {
             final NameMatcher matcher = NameMatcherFactory.createNameMatcher(
                     request.getText(),
                     jumpToSearchType,
-                    Utils.isCaseSensitive(Utils.toSearchType(request.getSearchKind())) ?
+                    Utils.isCaseSensitive(jumpToSearchType) ?
                             FileSearchAction.SEARCH_OPTIONS_CASE_SENSITIVE :
                             FileSearchAction.SEARCH_OPTIONS_CASE_INSENSITIVE);
             final List<FileDescriptor> files = new ArrayList<FileDescriptor>();
@@ -669,7 +683,9 @@ final class Worker implements Runnable {
                         FileObject file = filesInFolder.nextElement();
                         if (file.isFolder()) continue;
 
-                        if (matcher.accept(file.getNameExt())) {
+                        final String rootRelativePath = FileUtil.getRelativePath(root, file);
+
+                        if (matcher.accept(request.isSearchByFolders() ? rootRelativePath : file.getNameExt())) {
                             Project project = ProjectConvertors.getNonConvertorOwner(file);
                             boolean preferred = false;
                             String relativePath = null;

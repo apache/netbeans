@@ -22,6 +22,9 @@ package org.netbeans.modules.payara.spi;
 import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.nio.file.Files;
+import static java.nio.file.StandardOpenOption.CREATE;
+import static java.nio.file.StandardOpenOption.WRITE;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -52,15 +55,20 @@ public class UtilsTest extends NbTestCase {
 
     @Before
     @Override
-    public void setUp() {
+    public void setUp() throws IOException {
+        File dataDir = getDataDir();
+        // Create dummy file to test version matcher - Apache policy makes it
+        // difficult to have "jar" files in the repository, even if they are
+        // just files, containing a newline ...
+        Files.write(dataDir.toPath().resolve("nottaDir-4_1_2.jar"), new byte[] {'\n'}, CREATE, WRITE);
+        Files.write(dataDir.toPath().resolve("subdir/nottaDir-5.0.jar"), new byte[] {'\n'}, CREATE, WRITE);
     }
 
     @After
     @Override
     public void tearDown() {
     }
-
-
+    
     /**
      * Test of getHttpListenerProtocol method, of class Utils.
      */

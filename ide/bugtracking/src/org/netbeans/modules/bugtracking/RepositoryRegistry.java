@@ -60,7 +60,7 @@ public class RepositoryRegistry {
      * A repository was created or removed, where old value is a Collection of all repositories 
      * before the change and new value a Collection of all repositories after the change.
      */
-    public final static String EVENT_REPOSITORIES_CHANGED = RepositoryManager.EVENT_REPOSITORIES_CHANGED; // NOI18N
+    public static final String EVENT_REPOSITORIES_CHANGED = RepositoryManager.EVENT_REPOSITORIES_CHANGED; // NOI18N
     
     private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
     
@@ -271,10 +271,7 @@ public class RepositoryRegistry {
         TeamRepositories.getInstance().addPropertyChangeListener(listener);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////
     // private 
-    ////////////////////////////////////////////////////////////////////////////////////////
-    
     /**
      * for testing
      */
@@ -357,7 +354,7 @@ public class RepositoryRegistry {
                 ret.add(key);
             }
         }
-        return ret.toArray(new String[ret.size()]);
+        return ret.toArray(new String[0]);
     }
     
     /**
@@ -395,8 +392,6 @@ public class RepositoryRegistry {
         
     }
     
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-
     private static final String JIRA_REPO_ID                    = "jira.repository_";           // NOI18N 
     private static final String BUGZILLA_REPO_ID                = "bugzilla.repository_";       // NOI18N
     private static final String NB_BUGZILLA_USERNAME            = "nbbugzilla.username";        // NOI18N
@@ -438,7 +433,7 @@ public class RepositoryRegistry {
                 ret.add(key.substring(repoId.length()));
             }
         }
-        return ret.toArray(new String[ret.size()]);
+        return ret.toArray(new String[0]);
     }    
     private void migrateBugzillaRepository(Preferences preferences, String repoID) {
         String[] values = getRepositoryValues(preferences, BUGZILLA_REPO_ID, repoID);

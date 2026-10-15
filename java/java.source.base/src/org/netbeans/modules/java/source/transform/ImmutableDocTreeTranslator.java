@@ -37,6 +37,7 @@ import com.sun.source.doctree.LinkTree;
 import com.sun.source.doctree.LiteralTree;
 import com.sun.source.doctree.ParamTree;
 import com.sun.source.doctree.ProvidesTree;
+import com.sun.source.doctree.RawTextTree;
 import com.sun.source.doctree.ReferenceTree;
 import com.sun.source.doctree.ReturnTree;
 import com.sun.source.doctree.SeeTree;
@@ -52,9 +53,12 @@ import com.sun.source.doctree.UnknownInlineTagTree;
 import com.sun.source.doctree.UsesTree;
 import com.sun.source.doctree.ValueTree;
 import com.sun.source.doctree.VersionTree;
+import com.sun.source.doctree.SnippetTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.parser.Tokens.Comment.CommentStyle;
 import com.sun.tools.javac.tree.DCTree;
+import com.sun.tools.javac.tree.DCTree.DCDocComment;
 import com.sun.tools.javac.tree.DCTree.DCReference;
 import com.sun.tools.javac.util.Name;
 import java.util.ArrayList;
@@ -77,7 +81,9 @@ public class ImmutableDocTreeTranslator extends ImmutableTreeTranslator implemen
     public DocTree translate(DocTree tree) {
         if (tree == null) {
             return null;
-        } else {
+        } else if (tree.getKind().name().equals("SNIPPET")){
+            return rewriteSnippetChildren(tree);
+        }else {
             DocTree t = tree.accept(this, null);
             if (tree2Tag != null && tree != t) {
                 tree2Tag.put(t, tree2Tag.get(tree));
@@ -114,7 +120,13 @@ public class ImmutableDocTreeTranslator extends ImmutableTreeTranslator implemen
         List<? extends DocTree> fullBody = translateDoc(tree.getFullBody());
         List<? extends DocTree> blockTags = translateDoc(tree.getBlockTags());
         if (fullBody != tree.getFullBody()|| blockTags != tree.getBlockTags()) {
-            value = make.DocComment(fullBody, blockTags);
+            boolean markdown = tree instanceof DCDocComment c &&
+                               c.comment.getStyle() == CommentStyle.JAVADOC_LINE;
+            if (markdown) {
+                value = make.MarkdownDocComment(fullBody, blockTags);
+            } else {
+                value = make.DocComment(fullBody, blockTags);
+            }
         }
         return value;
     }
@@ -370,7 +382,23 @@ public class ImmutableDocTreeTranslator extends ImmutableTreeTranslator implemen
             value = make.Version(body);
         }
         return value;
+    }  
+
+    protected final RawTextTree rewriteChildren(RawTextTree tree) {
+        return tree; // Nothing to do for a string
     }
+
+    protected final DocTree rewriteSnippetChildren(DocTree tree) {
+        DocTree value = tree;
+		SnippetTree javadocSnippet = (SnippetTree)tree;
+        List<? extends DocTree> snippetTreeAttributes = translateDoc(javadocSnippet.getAttributes());
+        TextTree snippetTreeText = (TextTree) translate(javadocSnippet.getBody());
+        if((snippetTreeAttributes != javadocSnippet.getAttributes()) || (snippetTreeText != javadocSnippet.getBody())){
+            value=make.Snippet(snippetTreeAttributes, snippetTreeText);
+        }    
+        return value;
+    }
+    
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="VisitMethods">
@@ -531,6 +559,11 @@ public class ImmutableDocTreeTranslator extends ImmutableTreeTranslator implemen
 
     @Override
     public DocTree visitVersion(VersionTree tree, Object p) {
+        return rewriteChildren(tree);
+    }
+
+    @Override
+    public DocTree visitRawText(RawTextTree tree, Object p) {
         return rewriteChildren(tree);
     }
 

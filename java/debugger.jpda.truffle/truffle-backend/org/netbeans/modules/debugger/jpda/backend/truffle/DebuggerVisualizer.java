@@ -21,8 +21,11 @@ package org.netbeans.modules.debugger.jpda.backend.truffle;
 
 import com.oracle.truffle.api.CallTarget;
 import com.oracle.truffle.api.RootCallTarget;
+import com.oracle.truffle.api.debug.DebugStackFrame;
 import com.oracle.truffle.api.nodes.RootNode;
 import com.oracle.truffle.api.source.SourceSection;
+
+import java.lang.reflect.Method;
 
 /**
  *
@@ -47,12 +50,24 @@ final class DebuggerVisualizer {
     }
     
     /** &lt;File name&gt;:&lt;line number&gt; */
-    static String getSourceLocation(SourceSection ss) {
-        if (ss == null) {
-            //System.err.println("No source section for node "+n);
-            return "unknown";
+    static String getSourceLocation(DebugStackFrame sf, boolean isHost) {
+        if (!isHost) {
+            SourceSection ss = sf.getSourceSection();
+            if (ss == null) {
+                //System.err.println("No source section for node "+n);
+                return "unknown";
+            }
+            return ss.getSource().getName() + ":" + ss.getStartLine();
+        } else {
+            try {
+                Method getHostTraceElementMethod = DebugStackFrame.class.getMethod("getHostTraceElement");
+                StackTraceElement ste = (StackTraceElement) getHostTraceElementMethod.invoke(sf);
+                return ste.getFileName() + ":" + ste.getLineNumber();
+            } catch (Exception ex) {
+                LangErrors.exception("getHostTraceElement", ex);
+                return null;
+            }
         }
-        return ss.getSource().getName() + ":" + ss.getStartLine();
     }
 
 }

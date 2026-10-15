@@ -53,6 +53,7 @@ import org.netbeans.spi.project.support.ant.AntProjectHelper;
 import org.netbeans.spi.project.support.ant.EditableProperties;
 import org.netbeans.spi.project.support.ant.ReferenceHelper;
 import org.openide.filesystems.FileObject;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Exceptions;
 
 /**
@@ -244,7 +245,7 @@ public class JarContainerImpl implements EnterpriseReferenceContainer {
         
         try {
             AntArtifact target = getAntArtifact(ejbReference, refType);
-            ProjectClassPathModifier.addAntArtifacts(new AntArtifact[] {target}, new URI[] {target.getArtifactLocations()[0].normalize()}, referencingFile, ClassPath.COMPILE);
+            ProjectClassPathModifier.addAntArtifacts(new AntArtifact[] {target}, new URI[] {BaseUtilities.normalizeURI(target.getArtifactLocations()[0])}, referencingFile, ClassPath.COMPILE);
         } catch (IOException ioe) {
             Exceptions.printStackTrace(ioe);
         }

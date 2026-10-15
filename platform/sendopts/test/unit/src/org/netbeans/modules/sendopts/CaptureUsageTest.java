@@ -20,9 +20,6 @@ package org.netbeans.modules.sendopts;
 
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertNotEquals;
 import org.junit.Test;
 import org.netbeans.api.sendopts.CommandException;
 import org.netbeans.api.sendopts.CommandLine;
@@ -30,6 +27,10 @@ import org.netbeans.spi.sendopts.Arg;
 import org.netbeans.spi.sendopts.ArgsProcessor;
 import org.netbeans.spi.sendopts.Description;
 import org.netbeans.spi.sendopts.Env;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotEquals;
 
 public class CaptureUsageTest implements ArgsProcessor {
     private static String usage;

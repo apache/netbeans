@@ -28,6 +28,7 @@ import org.openide.filesystems.FileObject;
  * @author Lukas Jungmann
  * @deprecated implement {@link CarImplementation2}
  */
+@Deprecated
 public interface CarImplementation {
     
     /** J2EE platform version - one of the constants 

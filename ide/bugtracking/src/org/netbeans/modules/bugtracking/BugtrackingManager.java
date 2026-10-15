@@ -47,7 +47,7 @@ public final class BugtrackingManager implements LookupListener {
     /**
      * Recent issues have changed.
      */
-    public final static String PROP_RECENT_ISSUES_CHANGED = "recent.issues.changed"; // NOI18N
+    public static final String PROP_RECENT_ISSUES_CHANGED = "recent.issues.changed"; // NOI18N
     
     private static BugtrackingManager instance;
 
@@ -74,7 +74,7 @@ public final class BugtrackingManager implements LookupListener {
     
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
     
-    public synchronized static BugtrackingManager getInstance() {
+    public static synchronized BugtrackingManager getInstance() {
         if(instance == null) {
             instance = new BugtrackingManager();
         }
@@ -92,7 +92,7 @@ public final class BugtrackingManager implements LookupListener {
             if(connectorsLookup == null) {
                 refreshConnectors();
             }
-            return connectors.toArray(new DelegatingConnector[connectors.size()]);
+            return connectors.toArray(new DelegatingConnector[0]);
         }
     }
 
@@ -198,6 +198,10 @@ public final class BugtrackingManager implements LookupListener {
 
     public static boolean isLocalConnectorID (String connectorID) {
         return LOCAL_CONNECTOR_ID.equals(connectorID);
+    }
+
+    public boolean hasRegisteredConnectors() {
+        return getConnectors().length > 0;
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {

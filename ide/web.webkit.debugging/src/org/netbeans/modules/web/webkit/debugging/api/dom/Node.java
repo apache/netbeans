@@ -215,7 +215,7 @@ public class Node {
      * 
      * @param newChildren new children to add.
      */
-    synchronized final void addChildren(List<Node> newChildren) {
+    final synchronized void addChildren(List<Node> newChildren) {
         if (children == null) {
             initChildren();
         }
@@ -230,7 +230,7 @@ public class Node {
      * 
      * @param child child to remove.
      */
-    synchronized final void removeChild(Node child) {
+    final synchronized void removeChild(Node child) {
         children.remove(child);
         child.parent = null;
     }
@@ -242,7 +242,7 @@ public class Node {
      * @param previousChild previous child ({@code null} when the new child
      * should be the first one).
      */
-    synchronized final void insertChild(Node child, Node previousChild) {
+    final synchronized void insertChild(Node child, Node previousChild) {
         if (children == null) {
             initChildren();
         }
@@ -262,7 +262,7 @@ public class Node {
      * @return shadow roots of this node.
      */
     public final synchronized List<Node> getShadowRoots() {
-        return (shadowRoots == null) ? Collections.EMPTY_LIST : shadowRoots;
+        return (shadowRoots == null) ? Collections.emptyList() : shadowRoots;
     }
 
     /**
@@ -270,7 +270,7 @@ public class Node {
      * 
      * @param shadowRoot shadow root to add.
      */
-    synchronized final void addShadowRoot(Node shadowRoot) {
+    final synchronized void addShadowRoot(Node shadowRoot) {
         if (shadowRoots == null) {
             shadowRoots = new LinkedList<Node>();
         }
@@ -283,7 +283,7 @@ public class Node {
      * 
      * @param shadowRoot shadow root to remove.
      */
-    synchronized final void removeShadowRoot(Node shadowRoot) {
+    final synchronized void removeShadowRoot(Node shadowRoot) {
         shadowRoots.remove(shadowRoot);
     }
 
@@ -343,7 +343,7 @@ public class Node {
      * an empty list is returned when there are no attributes).
      */
     public synchronized List<Attribute> getAttributes() {
-        return (attributes == null) ? Collections.EMPTY_LIST : attributes;
+        return (attributes == null) ? Collections.emptyList() : attributes;
     }
 
     /**

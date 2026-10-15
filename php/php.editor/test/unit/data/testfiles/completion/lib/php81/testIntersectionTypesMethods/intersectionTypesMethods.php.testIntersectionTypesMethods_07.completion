@@ -1,0 +1,29 @@
+Code completion result for source line:
+): |\Test1\Intersection2&\Test1\Intersection1 {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    Test1                           [PUBLIC]   null
+PACKAGE    Test2                           [PUBLIC]   null
+CLASS      Intersection1                   [PUBLIC]   Test1
+CLASS      Intersection2                   [PUBLIC]   Test1
+CLASS      TestAbstractClass               [PUBLIC,   Test2
+CLASS      TestChildClass                  [PUBLIC]   Test2
+CLASS      TestClass                       [PUBLIC]   Test2
+CLASS      TestInterface                   [PUBLIC]   Test2
+------------------------------------
+KEYWORD    array                                      null
+KEYWORD    bool                                       null
+KEYWORD    callable                                   null
+KEYWORD    false                                      null
+KEYWORD    float                                      null
+KEYWORD    int                                        null
+KEYWORD    iterable                                   null
+KEYWORD    mixed                                      null
+KEYWORD    never                                      null
+KEYWORD    null                                       null
+KEYWORD    object                                     null
+KEYWORD    parent                                     null
+KEYWORD    self                                       null
+KEYWORD    static                                     null
+KEYWORD    string                                     null
+KEYWORD    true                                       null
+KEYWORD    void                                       null

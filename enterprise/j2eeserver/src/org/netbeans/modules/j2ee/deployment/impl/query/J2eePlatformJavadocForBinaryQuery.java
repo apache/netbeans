@@ -84,7 +84,7 @@ public class J2eePlatformJavadocForBinaryQuery implements JavadocForBinaryQueryI
                         URL u = (URL) it.next ();
                         result.add (getIndexFolder(u));
                     }
-                    this.cachedRoots =  (URL[])result.toArray(new URL[result.size()]);
+                    this.cachedRoots =  (URL[])result.toArray(new URL[0]);
                 }
                 return this.cachedRoots;
             }

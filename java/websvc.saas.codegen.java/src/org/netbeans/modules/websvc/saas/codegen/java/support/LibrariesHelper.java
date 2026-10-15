@@ -120,7 +120,7 @@ public class LibrariesHelper {
                     } catch (IOException ex) {
                         Exceptions.printStackTrace(ex);
                     }
-                    URL[] archiveURLs = archiveJars.toArray(new URL[archiveJars.size()]);
+                    URL[] archiveURLs = archiveJars.toArray(new URL[0]);
                     ProjectClassPathModifier.addRoots(archiveURLs, targetSource, classPathType);
                 }
 

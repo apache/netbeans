@@ -56,8 +56,8 @@ import org.openide.util.actions.SystemAction;
 public final class JsfPopupAction extends SystemAction implements Presenter.Popup {
     
     private ArrayList actions = null;
-    protected final static int MANAGED_BEAN_TYPE = 1;
-    protected final static int NAVIGATION_RULE_TYPE = 2;
+    protected static final int MANAGED_BEAN_TYPE = 1;
+    protected static final int NAVIGATION_RULE_TYPE = 2;
     
     public String getName() {
         return NbBundle.getMessage(JsfPopupAction.class, "org-netbeans-modules-web-jsf-editor-JSFPopupAction.instance"); // NOI18N

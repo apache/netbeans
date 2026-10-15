@@ -27,14 +27,17 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.apache.maven.artifact.Artifact;
@@ -59,7 +62,6 @@ import org.netbeans.spi.project.FileOwnerQueryImplementation;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbPreferences;
 import org.openide.util.Utilities;
@@ -75,9 +77,9 @@ public class MavenFileOwnerQueryImpl implements FileOwnerQueryImplementation {
     
     private final PropertyChangeListener projectListener;
     private final ProjectGroupChangeListener groupListener;
-    private final List<ChangeListener> listeners = new CopyOnWriteArrayList<ChangeListener>();
+    private final List<ChangeListener> listeners = new CopyOnWriteArrayList<>();
 
-    private static final AtomicReference<Preferences> prefs = new AtomicReference<Preferences>(NbPreferences.forModule(MavenFileOwnerQueryImpl.class).node(EXTERNAL_OWNERS));
+    private static final AtomicReference<Preferences> prefs = new AtomicReference<>(NbPreferences.forModule(MavenFileOwnerQueryImpl.class).node(EXTERNAL_OWNERS));
 
     private static final Logger LOG = Logger.getLogger(MavenFileOwnerQueryImpl.class.getName());
     
@@ -139,7 +141,7 @@ public class MavenFileOwnerQueryImpl implements FileOwnerQueryImplementation {
         return groupId + ':' + artifactId + ":" + version;
     }
 
-    public void registerCoordinates(String groupId, String artifactId, String version, URL owner, boolean fire) {
+    public synchronized void registerCoordinates(String groupId, String artifactId, String version, URL owner, boolean fire) {
         String oldkey = groupId + ':' + artifactId;
         //remove old key if pointing to the same project
         if (owner.toString().equals(prefs().get(oldkey, null))) {
@@ -148,9 +150,30 @@ public class MavenFileOwnerQueryImpl implements FileOwnerQueryImplementation {
         
         String key = cacheKey(groupId, artifactId, version);
         String ownerString = owner.toString();
+
+        String oldString = prefs().get(key, null);
+        if (oldString != null && !oldString.equals(ownerString)) {
+            // avoid replacing gav to an opened project with gav to a closed project. Closed projects continue to listen and sometimes register themselves
+            // - this is to avoid replacing a "live, opened" project registration with a closed project registration, if they compete for the same artifact id.
+            Set<String> opened = Arrays.stream(OpenProjects.getDefault().getOpenProjects()).
+                    map(p -> p.getProjectDirectory().toURI().toString()).collect(Collectors.toSet());
+            if (opened.contains(oldString) && !opened.contains(ownerString)) {
+                LOG.log(Level.FINE, "NOT replacing {0} with {1} under {2}, old owner is opened while the new is not.", new Object[] {oldString, owner, key});
+                return;
+            }
+        }
+
         try {
             for (String k : prefs().keys()) {
-                if (ownerString.equals(prefs().get(k, null))) {
+                String value;
+                try {
+                    value = prefs().get(k, null);
+                } catch (IllegalArgumentException ex) {
+                     // e.g invalid code point JDK-8075156
+                    LOG.log(Level.WARNING, "Invalid prefrences key at {0}, msg: {1}", new Object[] { prefs().absolutePath(), ex.getMessage() });
+                    continue;
+                }
+                if (ownerString.equals(value)) {
                     prefs().remove(k);
                     break;
                 }
@@ -158,7 +181,7 @@ public class MavenFileOwnerQueryImpl implements FileOwnerQueryImplementation {
         } catch (BackingStoreException ex) {
             LOG.log(Level.FINE, "Error iterating preference to find old mapping", ex);
         }
-        
+
         prefs().put(key, ownerString);
         LOG.log(Level.FINE, "Registering {0} under {1}", new Object[] {owner, key});
         if (fire) {

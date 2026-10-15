@@ -21,6 +21,8 @@
 package org.netbeans.modules.editor.completion;
 
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -34,11 +36,15 @@ import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.plaf.TextUI;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
+import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
 import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
+import javax.swing.text.Element;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Keymap;
+import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 
 import org.netbeans.editor.*;
@@ -47,6 +53,7 @@ import org.netbeans.spi.editor.completion.CompletionDocumentation;
 
 import org.openide.awt.HtmlBrowser;
 import org.openide.awt.StatusDisplayer;
+import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
@@ -62,7 +69,7 @@ public class DocumentationScrollPane extends JScrollPane {
     private static final String FORWARD = "org/netbeans/modules/editor/completion/resources/forward.png"; //NOI18N
     private static final String GOTO_SOURCE = "org/netbeans/modules/editor/completion/resources/open_source_in_editor.png"; //NOI18N
     private static final String SHOW_WEB = "org/netbeans/modules/editor/completion/resources/open_in_external_browser.png"; //NOI18N
-
+    
     private static final String JAVADOC_ESCAPE = "javadoc-escape"; //NOI18N
     private static final String JAVADOC_BACK = "javadoc-back"; //NOI18N
     private static final String JAVADOC_FORWARD = "javadoc-forward"; //NOI18N    
@@ -118,7 +125,7 @@ public class DocumentationScrollPane extends JScrollPane {
         }
         view.addHyperlinkListener(new HyperlinkAction());
         setViewportView(view);
-        
+
         installTitleComponent();
         installKeybindings(editorComponent);
         this.editorComponent = editorComponent;
@@ -157,6 +164,8 @@ public class DocumentationScrollPane extends JScrollPane {
         ImageIcon icon = resolveIcon(BACK);
         if (icon != null) {            
             bBack = new BrowserButton(icon);
+            // For HiDPI support.
+            bBack.setDisabledIcon(ImageUtilities.createDisabledIcon(icon));
             bBack.addMouseListener(new MouseEventListener(bBack));
             bBack.setEnabled(false);
             bBack.setFocusable(false);
@@ -172,6 +181,7 @@ public class DocumentationScrollPane extends JScrollPane {
         icon = resolveIcon(FORWARD);
         if (icon != null) {
             bForward = new BrowserButton(icon);
+            bForward.setDisabledIcon(ImageUtilities.createDisabledIcon(icon));
             bForward.addMouseListener(new MouseEventListener(bForward));
             bForward.setEnabled(false);
             bForward.setFocusable(false);
@@ -187,6 +197,7 @@ public class DocumentationScrollPane extends JScrollPane {
         icon = resolveIcon(SHOW_WEB);
         if (icon != null) {            
             bShowWeb = new BrowserButton(icon);
+            bShowWeb.setDisabledIcon(ImageUtilities.createDisabledIcon(icon));
             bShowWeb.addMouseListener(new MouseEventListener(bShowWeb));
             bShowWeb.setEnabled(false);
             bShowWeb.setFocusable(false);
@@ -203,6 +214,7 @@ public class DocumentationScrollPane extends JScrollPane {
         icon = resolveIcon(GOTO_SOURCE);
         if (icon != null) {
             bGoToSource = new BrowserButton(icon);
+            bGoToSource.setDisabledIcon(ImageUtilities.createDisabledIcon(icon));
             bGoToSource.addMouseListener(new MouseEventListener(bGoToSource));
             bGoToSource.setEnabled(false);
             bGoToSource.setFocusable(false);
@@ -446,8 +458,26 @@ public class DocumentationScrollPane extends JScrollPane {
 
     private class HyperlinkAction implements HyperlinkListener {
         
+        @Override
         public void hyperlinkUpdate(HyperlinkEvent e) {
-            if (e != null && HyperlinkEvent.EventType.ACTIVATED.equals(e.getEventType())) {
+            if (e != null && e.getEventType() == HyperlinkEvent.EventType.ACTIVATED && e.getDescription().startsWith("copy.snippet")) {
+                Clipboard systemClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                String snippetCount = e.getDescription().replaceAll("[^0-9]", "");
+                HTMLDocument HtmlDoc = (HTMLDocument) e.getSourceElement().getDocument();
+                HTMLDocView source = (HTMLDocView) e.getSource();
+                source.getText();
+                Element snippetElement = HtmlDoc.getElement("snippet" + snippetCount);
+                StringBuilder text = new StringBuilder();
+                getTextToCopy(HtmlDoc, text, snippetElement);
+                handleTextToCopy(HtmlDoc, snippetElement, text);
+                systemClipboard.setContents(new StringSelection(text.toString()), null);
+                view.getHighlighter().removeAllHighlights();
+                try {
+                    view.getHighlighter().addHighlight(e.getSourceElement().getStartOffset(), e.getSourceElement().getEndOffset(), new DefaultHighlightPainter(Color.GRAY));
+                } catch (BadLocationException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            } else if (e != null && HyperlinkEvent.EventType.ACTIVATED.equals(e.getEventType())) {
                 final String desc = e.getDescription();
                 if (desc != null) {
                     RP.post(new Runnable() {
@@ -465,7 +495,48 @@ public class DocumentationScrollPane extends JScrollPane {
                             }
                         }
                     });
-                }                    
+                }
+            }
+        }
+
+        private void handleTextToCopy(HTMLDocument HtmlDoc, Element snippetElement, StringBuilder text) {
+            HTMLDocument.Iterator it = HtmlDoc.getIterator(HTML.Tag.A);
+            int startOffset = snippetElement.getStartOffset();
+            int endOffset = snippetElement.getEndOffset();
+            int count = 0;
+            while (it.isValid()) {
+                int startOffset1 = it.getStartOffset();
+                int endOffset1 = it.getEndOffset();
+                try {
+                    String aTagText = HtmlDoc.getText(startOffset1, endOffset1 - startOffset1);
+                    if (startOffset1 > startOffset && endOffset1 < endOffset
+                            && aTagText.length() == 1 && Character.isWhitespace(aTagText.charAt(0))) {
+                        text.deleteCharAt(startOffset1 - startOffset - count);
+                        count++;
+                    }
+                } catch (BadLocationException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+                it.next();
+            }
+            text.delete(0, text.indexOf("\n") + 1); //removing first line of div i.e. "Copy"  
+        }
+
+        private void getTextToCopy(HTMLDocument HtmlDoc, StringBuilder sb, Element snippetElement) {
+            int elementCount = snippetElement.getElementCount();
+            if (elementCount == 0) {
+                int startOffset = snippetElement.getStartOffset();
+                int endOffset = snippetElement.getEndOffset();
+                try {
+                    sb.append(HtmlDoc.getText(startOffset, endOffset - startOffset));
+                } catch (BadLocationException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+                return;
+            }
+            for (int i = 0; i < elementCount; i++) {
+                Element element = snippetElement.getElement(i);
+                getTextToCopy(HtmlDoc, sb, element);
             }
         }
     }

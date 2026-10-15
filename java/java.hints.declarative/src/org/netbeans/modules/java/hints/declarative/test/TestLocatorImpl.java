@@ -38,6 +38,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=TestLocator.class)
 public class TestLocatorImpl implements TestLocator {
 
+    @Override
     public boolean appliesTo(FileObject fo) {
         String mimeType = FileUtil.getMIMEType(fo);
 
@@ -52,10 +53,12 @@ public class TestLocatorImpl implements TestLocator {
         return false;
     }
 
+    @Override
     public boolean asynchronous() {
         return false;
     }
 
+    @Override
     public LocationResult findOpposite(FileObject fo, int caretOffset) {
         String mimeType = FileUtil.getMIMEType(fo);
 
@@ -82,10 +85,12 @@ public class TestLocatorImpl implements TestLocator {
         throw new IllegalArgumentException();
     }
 
+    @Override
     public void findOpposite(FileObject fo, int caretOffset, LocationListener callback) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public FileType getFileType(FileObject fo) {
         String mimeType = FileUtil.getMIMEType(fo);
 

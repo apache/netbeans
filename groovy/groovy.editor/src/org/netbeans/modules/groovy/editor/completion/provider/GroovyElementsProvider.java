@@ -19,12 +19,14 @@
 
 package org.netbeans.modules.groovy.editor.completion.provider;
 
+import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import javax.lang.model.element.Modifier;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.groovy.editor.api.GroovyIndex;
 import org.netbeans.modules.groovy.editor.api.completion.CompletionItem;
 import org.netbeans.modules.groovy.editor.api.completion.FieldSignature;
@@ -35,9 +37,12 @@ import org.netbeans.modules.groovy.editor.api.elements.index.IndexedMethod;
 import org.netbeans.modules.groovy.editor.completion.AccessLevel;
 import org.netbeans.modules.groovy.editor.java.Utilities;
 import org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext;
+import org.netbeans.modules.groovy.editor.java.JavaElementHandle;
 import org.netbeans.modules.groovy.editor.spi.completion.CompletionProvider;
+import org.netbeans.modules.groovy.support.api.GroovySettings;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.URLMapper;
 
 /**
  *
@@ -50,6 +55,7 @@ public final class GroovyElementsProvider implements CompletionProvider {
     public Map<MethodSignature, CompletionItem> getMethods(CompletionContext context) {
         final GroovyIndex index = getIndex(context);
         final Map<MethodSignature, CompletionItem> result = new HashMap<>();
+        final boolean acc = GroovySettings.getInstance().isHonourAccessModifiers();
         
         if (index != null) {
             Set<IndexedMethod> methods;
@@ -61,16 +67,29 @@ public final class GroovyElementsProvider implements CompletionProvider {
             }
 
             for (IndexedMethod indexedMethod : methods) {
-                if (accept(context.access, indexedMethod)) {
-                    result.put(getMethodSignature(indexedMethod), CompletionItem.forJavaMethod(
+                if (!acc || accept(context.access, indexedMethod)) {
+                    JavaElementHandle jeh = null;
+                    if (indexedMethod.getFileObject().getMIMEType("text/x-java") != null) {
+                        URL u = URLMapper.findURL(indexedMethod.getFileObject(), URLMapper.INTERNAL);
+                        jeh = new JavaElementHandle(u, 
+                                indexedMethod.getName(), context.getTypeName(), ElementKind.METHOD, 
+                                indexedMethod.getParameterTypes(), 
+                                indexedMethod.getModifiers());
+                    }
+                    
+                    CompletionItem ci = CompletionAccessor.instance().createJavaMethod(
                             context.getTypeName(),
                             indexedMethod.getName(),
-                            indexedMethod.getParameterTypes(),
+                            indexedMethod.getParameters(),
                             indexedMethod.getReturnType(),
                             Utilities.gsfModifiersToModel(indexedMethod.getModifiers(), Modifier.PUBLIC),
                             context.getAnchor(),
                             false,
-                            context.isNameOnly()));
+                            context.isNameOnly());
+                    
+                    result.put(getMethodSignature(indexedMethod), 
+                        CompletionAccessor.instance().assignHandle(ci, jeh)
+                    );
                 }
             }
         }
@@ -87,7 +106,7 @@ public final class GroovyElementsProvider implements CompletionProvider {
     public Map<FieldSignature, CompletionItem> getFields(CompletionContext context) {
         final GroovyIndex index = getIndex(context);
         final Map<FieldSignature, CompletionItem> result = new HashMap<>();
-        
+        final boolean acc = GroovySettings.getInstance().isHonourAccessModifiers();
         if (index != null) {
             Set<IndexedField> fields;
 
@@ -98,6 +117,11 @@ public final class GroovyElementsProvider implements CompletionProvider {
             }
 
             for (IndexedField indexedField : fields) {
+                // properties are represented as indexed fields, with private access. Maybe should
+                // change so access checks can succeed without special cases.
+                if (acc && (!(indexedField.isProperty() || accept(context.access, indexedField)))) {
+                    continue;
+                }
                 result.put(getFieldSignature(indexedField), new CompletionItem.FieldItem(
                         indexedField.getTypeName(),
                         indexedField.getName(),

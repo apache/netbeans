@@ -270,7 +270,7 @@ class CustomCodeData {
         }
 
         CodeEntry[] getEntries() {
-            return entries.toArray(new CodeEntry[entries.size()]);
+            return entries.toArray(new CodeEntry[0]);
         }
     }
 

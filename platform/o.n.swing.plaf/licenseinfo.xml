@@ -33,6 +33,8 @@
         <file>src/org/netbeans/swing/plaf/resources/cancel_task_win_classic.png</file>
         <file>src/org/netbeans/swing/plaf/resources/win-explorer-folder.gif</file>
         <file>src/org/netbeans/swing/plaf/resources/cancel_task_linux_mac.png</file>
+        <file>src/org/netbeans/swing/plaf/resources/hidpi-folder-closed.png</file>
+        <file>src/org/netbeans/swing/plaf/resources/hidpi-folder-open.png</file>
         <file>src/org/netbeans/swing/plaf/aqua/border_top_left.png</file>
         <file>src/org/netbeans/swing/plaf/aqua/border_bottom.png</file>
         <file>src/org/netbeans/swing/plaf/aqua/border_top.png</file>

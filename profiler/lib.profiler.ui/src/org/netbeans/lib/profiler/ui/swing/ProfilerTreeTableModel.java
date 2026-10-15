@@ -48,7 +48,7 @@ public interface ProfilerTreeTableModel {
     public void removeListener(Listener listener);
     
     
-    public static abstract class Abstract implements ProfilerTreeTableModel {
+    public abstract static class Abstract implements ProfilerTreeTableModel {
         
         private TreeNode root;
         

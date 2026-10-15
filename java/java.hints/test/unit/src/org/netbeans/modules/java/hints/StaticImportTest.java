@@ -99,6 +99,12 @@ public class StaticImportTest extends NbTestCase {
         String golden = "package test; import static java.lang.Math.abs; public class Test { public Test() { abs(1); } }";
         performFixTest(test, golden);
     }
+    
+    public void testStaticImportHint1_InRecord() throws Exception {
+        String test = "package test; public record Test(int n) { public Test { Math.|abs(n); } }";
+        String golden = "package test; import static java.lang.Math.abs; public record Test(int n) { public Test { abs(n); } }";
+        performFixTest(test, golden, 17);
+    }
 
     public void testStaticImportHint2() throws Exception {
         String test = "package test; public class Test { public Test() { Test.get|Logger(); } public static void getLogger() { } }";
@@ -161,10 +167,14 @@ public class StaticImportTest extends NbTestCase {
         performAnalysisTest(test);
     }
 
+    private void performFixTest(String test, String golden) throws Exception {
+        performFixTest(test, golden, 8);
+    }
+
     // test is single line source code for test.Test, | in the member select, space before
     // golden is the output to test against
     // sn is the simple name of the static method
-    private void performFixTest(String test, String golden) throws Exception {
+    private void performFixTest(String test, String golden, int level) throws Exception {
         int offset = test.indexOf("|");
         assertTrue(offset != -1);
         int end = test.indexOf("(", offset) - 1;
@@ -172,6 +182,7 @@ public class StaticImportTest extends NbTestCase {
         int start = test.lastIndexOf(" ", offset) + 1;
         assertTrue(start > 0);
         HintTest.create()
+                .sourceLevel(level)
                 .input(test.replace("|", ""))
                 .run(StaticImport.class)
                 .findWarning("0:" + start + "-0:" + end + ":hint:" + NbBundle.getMessage(StaticImport.class, "ERR_StaticImport"))

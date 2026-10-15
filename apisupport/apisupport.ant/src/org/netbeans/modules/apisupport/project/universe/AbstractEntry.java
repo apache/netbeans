@@ -114,9 +114,9 @@ abstract class AbstractEntry implements ModuleEntry {
         }
         JarFile jf = new JarFile(jar);
         try {
-            Enumeration entries = jf.entries();
+            Enumeration<JarEntry> entries = jf.entries();
             ENTRY: while (entries.hasMoreElements()) {
-                JarEntry entry = (JarEntry) entries.nextElement();
+                JarEntry entry = entries.nextElement();
                 String path = entry.getName();
                 if (!path.endsWith(".class")) { // NOI18N
                     continue;
@@ -128,9 +128,9 @@ abstract class AbstractEntry implements ModuleEntry {
                 String pkg = path.substring(0, slash + 1);
                 if (!publicPackagesSlashNonRec.contains(pkg)) {
                     boolean pub = false;
-                    Iterator it = publicPackagesSlashRec.iterator();
+                    Iterator<String> it = publicPackagesSlashRec.iterator();
                     while (it.hasNext()) {
-                        if (pkg.startsWith((String) it.next())) {
+                        if (pkg.startsWith(it.next())) {
                             pub = true;
                             break;
                         }

@@ -93,13 +93,13 @@ public class DiffLivenessResultsPanel extends SnapshotLivenessResultsPanel {
     }
 
     protected Object computeValueAt(int row, int col) {
-        int index = ((Integer) filteredToFullIndexes.get(row)).intValue();
+        int index = (Integer) filteredToFullIndexes.get(row);
 
         switch (col) {
             case 0:
                 return sortedClassNames[index];
             case 1:
-                return new Long(trackedLiveObjectsSize[index]);
+                return trackedLiveObjectsSize[index];
             case 2:
                 return ((trackedLiveObjectsSize[index] > 0) ? "+" : "") + intFormat.format(trackedLiveObjectsSize[index]) + " B"; // NOI18N
             case 3:

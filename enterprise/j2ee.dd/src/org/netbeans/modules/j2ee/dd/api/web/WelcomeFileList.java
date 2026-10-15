@@ -21,7 +21,7 @@ package org.netbeans.modules.j2ee.dd.api.web;
 /**
  * Generated interface for WelcomeFileList element.
  *
- *<p><b><font color="red"><em>Important note: Do not provide an implementation of this interface unless you are a DD API provider!</em></font></b>
+ *<p><b><span style="color:red"><em>Important note: Do not provide an implementation of this interface unless you are a DD API provider!</em></span></b>
  *</p>
  */
 public interface WelcomeFileList extends org.netbeans.modules.j2ee.dd.api.common.CommonDDBean {
@@ -36,7 +36,6 @@ public interface WelcomeFileList extends org.netbeans.modules.j2ee.dd.api.common
          */
 	public java.lang.String getWelcomeFile(int index);
         /** Setter for welcome-file property.
-         * @param index position in the array of welcome-files
          * @param value array of welcome-file properties
          */
 	public void setWelcomeFile(java.lang.String[] value);

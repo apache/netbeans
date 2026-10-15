@@ -41,6 +41,13 @@ public final class GroovySettings extends AdvancedOption {
     public static final String GROOVY_DOC_PROPERTY  = "groovy.doc"; // NOI18N
     
     private static final String GROOVY_DOC  = "groovyDoc"; // NOI18N
+    private static final String ACCESS_MODIFIERS = "honourAccessModifiers";
+    
+    /**
+     * If true, IDE will pretend that access modifiers are not broken in Groovy.
+     */
+    private static final boolean DEFAULT_ACCESS_MODIFIERS = false;
+    
     private static GroovySettings instance;
     private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
     
@@ -78,6 +85,23 @@ public final class GroovySettings extends AdvancedOption {
             getPreferences().put(GROOVY_DOC, groovyDoc);
         }
         propertyChangeSupport.firePropertyChange(GROOVY_DOC_PROPERTY, oldValue, groovyDoc);
+    }
+    
+    public void setHonourAccessModifiers(boolean mods) {
+        boolean old;
+        synchronized (this) {
+            old = isHonourAccessModifiers();
+            getPreferences().putBoolean(ACCESS_MODIFIERS, mods);
+        }
+        propertyChangeSupport.firePropertyChange(ACCESS_MODIFIERS, old, mods);
+    }
+    
+    /**
+     * Should code analysis honour access modifiers ?
+     * @return true, if access modifiers should be respected.
+     */
+    public boolean isHonourAccessModifiers() {
+        return getPreferences().getBoolean(ACCESS_MODIFIERS, DEFAULT_ACCESS_MODIFIERS);
     }
 
     @Override

@@ -109,19 +109,13 @@ public class WLDriverDeployer implements JDBCDriverDeployer {
                         for (FileObject file : jdbcDriverURLs) {
                             File toJar = new File(libsDir, file.getNameExt());
                             try {
-                                BufferedInputStream is = new BufferedInputStream(file.getInputStream());
-                                try {
+                                try (BufferedInputStream is = new BufferedInputStream(file.getInputStream())) {
                                     progress.fireProgressEvent(null, new WLDeploymentStatus(
                                             ActionType.EXECUTE, CommandType.DISTRIBUTE, StateType.RUNNING,
                                             NbBundle.getMessage(WLDriverDeployer.class, "MSG_DeployingJDBCDrivers", toJar.getPath())));
-                                    BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(toJar));
-                                    try {
-                                        FileUtil.copy(is, os);
-                                    } finally {
-                                        os.close();
+                                    try (BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(toJar))) {
+                                        is.transferTo(os);
                                     }
-                                } finally {
-                                    is.close();
                                 }
                             } catch (IOException e) {
                                 LOGGER.log(Level.INFO, null, e);

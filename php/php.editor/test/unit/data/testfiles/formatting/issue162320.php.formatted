@@ -14,7 +14,6 @@ class class_name {
     // cmt
     echo 1;
   }
-
 }
 
 ?>

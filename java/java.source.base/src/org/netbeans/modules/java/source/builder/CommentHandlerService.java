@@ -24,7 +24,6 @@ import org.netbeans.modules.java.source.query.CommentHandler;
 
 import com.sun.source.tree.Tree;
 
-import com.sun.tools.javac.tree.JCTree.*;
 import com.sun.tools.javac.util.Context;
 
 import java.util.*;
@@ -178,7 +177,7 @@ public class CommentHandlerService implements CommentHandler {
     private static class CopyEntry {
         private Tree target;
         private RelativePosition pos;
-        private Collection<Comment> comments = new ArrayList();
+        private Collection<Comment> comments = new ArrayList<>();
     }
     
     /**

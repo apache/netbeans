@@ -239,7 +239,7 @@ class PropertiesParser {
                 for(startIndex=0; startIndex < fl.line.length(); startIndex++)
                     if(UtilConvert.whiteSpaceChars.indexOf(fl.line.charAt(startIndex)) == -1)
                         break;
-                fl.stringValue = fl.line.substring(startIndex, fl.line.length());
+                fl.stringValue = fl.line.substring(startIndex);
                 fl.startPosition = nowPos + startIndex;
                 lines.add(fl);
             }

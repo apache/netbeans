@@ -100,11 +100,13 @@ public class JsfUtils {
     }
 
     public static Node getRoot(HtmlParserResult parserResult, LibraryInfo library) {
-        Node rootNode = parserResult.root(library.getNamespace());
-        if ((rootNode == null || rootNode.children().isEmpty()) && library.getLegacyNamespace() != null) {
-            rootNode = parserResult.root(library.getLegacyNamespace());
+        for (String namespace : library.getValidNamespaces()) {
+            Node rootNode = parserResult.root(namespace);
+            if (rootNode != null && !rootNode.children().isEmpty()) {
+                return rootNode;
+            }
         }
-        return rootNode;
+
+        return null;
     }
-    
 }

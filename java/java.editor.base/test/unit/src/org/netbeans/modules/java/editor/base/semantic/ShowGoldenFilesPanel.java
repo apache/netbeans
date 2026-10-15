@@ -36,7 +36,6 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
-import org.openide.filesystems.FileUtil;
 
 /**
  *
@@ -139,32 +138,12 @@ public class ShowGoldenFilesPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-// TODO add your handling code here:
-        InputStream source = null;
-        OutputStream target = null;
                 
-        try {
-            source = new FileInputStream(testFile);
-            target = new FileOutputStream(goldenFile);
-            
-            FileUtil.copy(source, target);
+        try (InputStream source = new FileInputStream(testFile);
+             OutputStream target = new FileOutputStream(goldenFile)) {
+            source.transferTo(target);
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (source != null) {
-                try {
-                    source.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (target != null) {
-                try {
-                    target.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
         c.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed

@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -173,7 +174,7 @@ public class SiteZip implements SiteTemplateImplementation {
         }
         // remote file => calculate hash of its url
         CRC32 crc = new CRC32();
-        crc.update(template.getBytes(Charset.forName("UTF-8")));
+        crc.update(template.getBytes(StandardCharsets.UTF_8));
         String filename = String.valueOf(crc.getValue()) + ".zip"; // NOI18N
         LOGGER.log(Level.INFO, "Remote URL \"{0}\" set, downloaded to {1}", new Object[] {template, filename}); //NOI18N
         return new File(SiteHelper.getJsLibsDirectory(), filename);

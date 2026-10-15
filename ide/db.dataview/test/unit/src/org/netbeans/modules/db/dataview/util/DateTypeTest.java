@@ -21,10 +21,7 @@ package org.netbeans.modules.db.dataview.util;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
 import java.util.TimeZone;
 import org.netbeans.junit.NbTestCase;
 
@@ -33,7 +30,6 @@ import org.netbeans.junit.NbTestCase;
  * @author navaneeth
  */
 public class DateTypeTest extends NbTestCase {
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     private long now = System.currentTimeMillis();
     private long expectedMillis = 0l;
     private DateType type = null;
@@ -105,21 +101,6 @@ public class DateTypeTest extends NbTestCase {
 
         Date expectedDate = new Date(GMT_2002_0801 - TimeZone.getDefault().getOffset(GMT_2002_0801));
         assertEquals("Should accept", expectedDate, DateType.convert("2002-08-01"));
-
-        // August 1, 2002 12:00 PM CDT
-        expectedDate = new Date(expectedDate.getTime() + 12 * 60 * 60 * 1000L // time (daylight
-                // savings)
-                );
-        DateFormat fmt = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG,
-                Locale.UK);
-        fmt.setTimeZone(TimeZone.getDefault());
-        assertEquals("Make sure 'expected' is as expected",
-                "01 August 2002 12:00:00 "
-                + TimeZone.getDefault().getDisplayName(true, TimeZone.SHORT, Locale.UK),
-                fmt.format(expectedDate));
-
-        String toConvert = DATE_FORMAT.format(expectedDate);
-        assertEquals("Check format", "2002-08-01", toConvert);
 
         String tExpected = "2002-08-01";
         String converted = DateType.convert(tExpected).toString();

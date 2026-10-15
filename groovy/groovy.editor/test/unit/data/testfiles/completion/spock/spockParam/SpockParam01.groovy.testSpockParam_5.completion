@@ -1,0 +1,5 @@
+Code completion result for source line:
+nim || squa|re
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+VARIABLE   square                                     Object

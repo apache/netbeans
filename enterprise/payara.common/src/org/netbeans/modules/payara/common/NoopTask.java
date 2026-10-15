@@ -32,10 +32,7 @@ import org.netbeans.modules.payara.tooling.TaskStateListener;
  */
 class NoopTask extends BasicTask<TaskState> {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of empty command execution class.
      * <p/>
@@ -49,10 +46,7 @@ class NoopTask extends BasicTask<TaskState> {
         super(serverSupport.getInstance(), stopServerListener, stateListener);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Callable call() Method                                                 //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Executes nothing on remote Payara instance.
      * <p/>

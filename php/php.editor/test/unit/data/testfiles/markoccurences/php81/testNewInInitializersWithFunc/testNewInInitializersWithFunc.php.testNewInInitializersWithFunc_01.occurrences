@@ -1,0 +1,5 @@
+class |>MARK_OCCURRENCES:Fun^c<| {}
+function func1($param = new |>MARK_OCCURRENCES:Func<|) {}
+function func2($param = new |>MARK_OCCURRENCES:Func<|()) {}
+function func3($param = new |>MARK_OCCURRENCES:Func<|(1)) {}
+function func4($param = new |>MARK_OCCURRENCES:Func<|(test: 1)) {}

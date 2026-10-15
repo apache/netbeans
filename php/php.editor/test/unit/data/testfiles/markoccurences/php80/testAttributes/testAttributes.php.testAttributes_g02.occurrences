@@ -1,0 +1,2 @@
+#[AttributeClass1(1, self::|>MARK_OCCURRENCES:CONSTANT_CLASS<|)]
+    public const |>MARK_OCCURRENCES:CO^NSTANT_CLASS<| = 'constant';

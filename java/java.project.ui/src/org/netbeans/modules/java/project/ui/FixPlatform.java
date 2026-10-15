@@ -311,7 +311,7 @@ final class FixPlatform extends javax.swing.JPanel {
                 toSelect = broken;
                 newPlatfs.add(broken);
             }
-            Collections.sort(newPlatfs, (p1,p2) -> {
+            newPlatfs.sort((p1,p2) -> {
                 if (p1 == broken) {
                     return -1;
                 }
@@ -320,7 +320,7 @@ final class FixPlatform extends javax.swing.JPanel {
                 }
                 return p1.getDisplayName().compareTo(p2.getDisplayName());
             });
-            platforms  = newPlatfs.toArray(new JavaPlatform[newPlatfs.size()]);
+            platforms  = newPlatfs.toArray(new JavaPlatform[0]);
             setSelectedItem(toSelect);
         }
 

@@ -381,6 +381,7 @@ public class MavenJaxWsSupportProvider extends ProjectOpenedHook
                     commonServices.add(key);
                 }
             }
+
             for (String key : commonServices) {
                 oldServices.remove(key);
                 newServices.remove(key);
@@ -388,12 +389,13 @@ public class MavenJaxWsSupportProvider extends ProjectOpenedHook
 
             // remove old services
             boolean needToSave = false;
-            for (String key : oldServices.keySet()) {
-                jaxWsSupport.removeService(oldServices.get(key));
+            for (JaxWsService jaxWsService : oldServices.values()) {
+                jaxWsSupport.removeService(jaxWsService);
             }
             // add new services
-            for (String key : newServices.keySet()) {
-                ServiceInfo serviceInfo = newServices.get(key);
+            for (Map.Entry<String, ServiceInfo> entry : newServices.entrySet()) {
+                String key = entry.getKey();
+                ServiceInfo serviceInfo = entry.getValue();
                 String wsdlLocation = serviceInfo.getWsdlLocation();
                 JaxWsService service = new JaxWsService(serviceInfo.getServiceName(), key);
                 if (wsdlLocation != null && wsdlLocation.length() > 0) {

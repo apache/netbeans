@@ -415,8 +415,7 @@ public class MergeControl extends Object implements ActionListener, VetoableChan
                     }
                 }
                 try {
-                    panel.writeResult(resultSource.createWriter(unresolvedConflicts.toArray(
-                        new Difference[unresolvedConflicts.size()])), firstNewlineIsFake | secondNewlineIsFake);
+                    panel.writeResult(resultSource.createWriter(unresolvedConflicts.toArray(new Difference[0])), firstNewlineIsFake | secondNewlineIsFake);
                     panel.setNeedsSaveState(false);
                 } catch (IOException ioex) {
                     PropertyVetoException pvex =

@@ -1,0 +1,10 @@
+<?php
+
+class Issue270368Class04 {
+
+    private \Foo\Bar $test;
+
+    function __construct(\Foo\Bar $test) {
+        $this->test = $test;
+    }
+}

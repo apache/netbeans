@@ -23,11 +23,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.RenderingHints;
 import java.awt.Shape;
-import java.awt.Toolkit;
 import java.awt.font.LineMetrics;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
@@ -40,8 +37,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.plaf.LabelUI;
-import org.openide.ErrorManager;
+import org.openide.awt.GraphicsUtils;
 import org.openide.util.Utilities;
 
 /**
@@ -81,14 +77,6 @@ public final class PatchedHtmlRenderer {
     /** System property to cause exceptions to be thrown when unparsable
      * html is encountered */
     private static final boolean STRICT_HTML = Boolean.getBoolean("netbeans.lwhtml.strict"); //NOI18N
-
-    /** System property to automatically turn on antialiasing for html strings */    
-    private static final boolean ANTIALIAS = Boolean.getBoolean("nb.cellrenderer.antialiasing") // NOI18N
-         ||Boolean.getBoolean("swing.aatext") // NOI18N
-         ||(isGTK() && gtkShouldAntialias()) // NOI18N
-         || isAqua();
-    
-    private static Boolean gtkAA;
 
     /** Cache for strings which have produced errors, so we don't post an
      * error message more than once */
@@ -188,7 +176,7 @@ public final class PatchedHtmlRenderer {
                 }
 
                 double chWidth = wid / chars.length;
-                int estCharsToPaint = new Double(w / chWidth).intValue();
+                int estCharsToPaint = (int)(w / chWidth);
                 if( estCharsToPaint > chars.length )
                     estCharsToPaint = chars.length;
                 //let's correct the estimate now
@@ -369,9 +357,7 @@ public final class PatchedHtmlRenderer {
 
         g.setColor(defaultColor);
         g.setFont(f);
-        if (ANTIALIAS && g instanceof Graphics2D) {
-            ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        }
+        GraphicsUtils.configureDefaultRenderingHints(g);
 
         char[] chars = s.toCharArray();
         int origX = x;
@@ -855,7 +841,7 @@ public final class PatchedHtmlRenderer {
                             //Word wrap mode
                             goToNextRow = true;
 
-                            int lastChar = new Double(nextTag - estCharsOver).intValue();
+                            int lastChar = (int)(nextTag - estCharsOver);
 
                             //Unlike Swing's word wrap, which does not wrap on tag boundaries correctly, if we're out of space,
                             //we're out of space
@@ -906,7 +892,7 @@ public final class PatchedHtmlRenderer {
                                 }
                             } else if (brutalWrap) {
                                 //wrap without checking word boundaries
-                                length = (new Double((w - widthPainted) / chWidth)).intValue();
+                                length = (int)((w - widthPainted) / chWidth);
 
                                 if ((pos + length) > nextTag) {
                                     length = (nextTag - pos);
@@ -925,7 +911,7 @@ public final class PatchedHtmlRenderer {
 
                     if (strikethrough || underline) {
                         LineMetrics lm = fm.getLineMetrics(chars, pos, length - 1, g);
-                        int lineWidth = new Double(x + r.getWidth()).intValue();
+                        int lineWidth = (int)(x + r.getWidth());
 
                         if (paint) {
                             if (strikethrough) {
@@ -944,7 +930,7 @@ public final class PatchedHtmlRenderer {
 
                                 //PENDING - worth supporting with g.setStroke()? A one pixel line is most likely
                                 //good enough
-                                //int stThick = new Float (lm.getUnderlineThickness()).intValue();
+                                //int stThick = Float.valueOf(lm.getUnderlineThickness()).intValue();
                                 g.drawLine(x, y + stPos, lineWidth, y + stPos);
                             }
                         }
@@ -1192,22 +1178,5 @@ public final class PatchedHtmlRenderer {
         } else {
             throw new IllegalArgumentException(out);
         }
-    }
-    
-    private static boolean isAqua () {
-        return "Aqua".equals(UIManager.getLookAndFeel().getID()); //NOI18N
-    }
-    
-    private static boolean isGTK () {
-        return "GTK".equals(UIManager.getLookAndFeel().getID()); //NOI18N
-    }
-    
-    private  static final boolean gtkShouldAntialias() {
-        if (gtkAA == null) {
-            Object o = Toolkit.getDefaultToolkit().getDesktopProperty("gnome.Xft/Antialias"); //NOI18N
-            gtkAA = new Integer(1).equals(o) ? Boolean.TRUE : Boolean.FALSE;
-        }
-
-        return gtkAA.booleanValue();
     }
 }

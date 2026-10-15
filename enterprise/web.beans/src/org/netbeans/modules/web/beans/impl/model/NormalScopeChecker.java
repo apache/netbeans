@@ -18,7 +18,10 @@
  */
 package org.netbeans.modules.web.beans.impl.model;
 
+import java.util.List;
 
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.NORMAL_SCOPE_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.NORMAL_SCOPE_FQN_JAKARTA;
 
 
 /**
@@ -26,7 +29,11 @@ package org.netbeans.modules.web.beans.impl.model;
  *
  */
 class NormalScopeChecker extends ScopeChecker {
-    
+
+    private static final List<String> ANNOTATIONS = List.of(
+            NORMAL_SCOPE_FQN, NORMAL_SCOPE_FQN_JAKARTA
+    );
+
     static NormalScopeChecker get(){
         return  new NormalScopeChecker();
     }
@@ -35,8 +42,8 @@ class NormalScopeChecker extends ScopeChecker {
      * @see org.netbeans.modules.web.beans.impl.model.ScopeChecker#getAnnotation()
      */
     @Override
-    protected String getAnnotation() {
-        return NORMAL_SCOPE;
+    protected List<String> getAnnotation() {
+        return ANNOTATIONS;
     }
 
 }

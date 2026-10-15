@@ -326,14 +326,14 @@ public class CommonAnnotationHelperTest extends CommonTestCase {
                 "import javax.annotation.Resource;" +
                 "import javax.sql.DataSource;" +
                 "" +
-                "@Resource(name=\"yourClass\", type=javax.transaction.UserTransaction)" +
+                "@Resource(name=\"yourClass\", type=javax.transaction.UserTransaction.class)" +
                 "public class YourClass {" +
                 "   @Resource" +
                 "   private void setYourDataSource(DataSource ds) {" +
                 "   }" +
                 "" +
                 "   @Resource" +
-                "   private void setYourLong(Long long) {" +
+                "   private void setYourLong(Long value) {" +
                 "   }" +
                 "" +
                 "   @Resource" +

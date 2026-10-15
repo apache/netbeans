@@ -41,7 +41,7 @@ public final class AquaLFCustoms extends LFCustoms {
         Integer cus = (Integer) UIManager.get("customFontSize"); //NOI18N
         Object[] result;
         if (cus != null) {
-            int uiFontSize = cus.intValue();
+            int uiFontSize = cus;
             Font controlFont = new GuaranteedValue (new String[] {"controlFont", "Tree.font", "Label.font"},
                                                 new FontUIResource("Dialog", Font.PLAIN, uiFontSize)).getFont(); //NOI18N
             result = new Object[] {
@@ -86,22 +86,20 @@ public final class AquaLFCustoms extends LFCustoms {
 
         Border empty = BorderFactory.createEmptyBorder();
 
-        Image explorerIcon = null;
-        Icon treeIcon = UIManager.getIcon("Tree.closedIcon"); //NOI18N
-        if( null != treeIcon )
-            explorerIcon = icon2Image(treeIcon);
-        else
-            explorerIcon = UIUtils.loadImage(
-            "org/netbeans/swing/plaf/resources/osx-folder.png"); //NOI18N
+        /* This icon pair exists in both PNG and SVG versions; the SVG version will be substituted
+        automatically if ImageUtilities and the SVG Loader implementation module is available. */
+        Image explorerFolderIcon       = UIUtils.loadImage("org/netbeans/swing/plaf/resources/hidpi-folder-closed.png");
+        Image explorerFolderOpenedIcon = UIUtils.loadImage("org/netbeans/swing/plaf/resources/hidpi-folder-open.png");
 
         Object[] result = {
+            EDITOR_PREFERRED_COLOR_PROFILE, "NetBeans", //NOI18N
             TOOLBAR_UI, "org.netbeans.swing.plaf.aqua.PlainAquaToolbarUI",
 
             // XXX  - EXPLORER_STATUS_BORDER,
             DESKTOP_BACKGROUND, new Color(226, 223, 214), //NOI18N
             SCROLLPANE_BORDER_COLOR, new Color(127, 157, 185),
-            EXPLORER_FOLDER_ICON ,explorerIcon,
-            EXPLORER_FOLDER_OPENED_ICON, explorerIcon,
+            EXPLORER_FOLDER_ICON ,explorerFolderIcon,
+            EXPLORER_FOLDER_OPENED_ICON, explorerFolderOpenedIcon,
             DESKTOP_BORDER, empty,
             SCROLLPANE_BORDER, UIManager.get("ScrollPane.border"),
             EXPLORER_STATUS_BORDER, topOnly,
@@ -143,13 +141,13 @@ public final class AquaLFCustoms extends LFCustoms {
                     
             TAB_ACTIVE_SELECTION_FOREGROUND, new GuaranteedValue ("textText", Color.BLACK),
 
-            "NbSplitPane.dividerSize", new Integer(3),
+            "NbSplitPane.dividerSize", 3,
             "NbSplitPane.background", new Color(101,101,101),
             "nb.desktop.splitpane.border", BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(49,49,49)),
             "nb.desktop.view.insets", new Insets(0, 0, 0, 0),
 
-            SPLIT_PANE_DIVIDER_SIZE_VERTICAL, new Integer(3),
-            SPLIT_PANE_DIVIDER_SIZE_HORIZONTAL, new Integer(3),
+            SPLIT_PANE_DIVIDER_SIZE_VERTICAL, 3,
+            SPLIT_PANE_DIVIDER_SIZE_HORIZONTAL, 3,
 
             "NbExplorerView.quicksearch.border", new Color(64,64,64),
             "NbExplorerView.quicksearch.background.top", new Color(197,197,197),

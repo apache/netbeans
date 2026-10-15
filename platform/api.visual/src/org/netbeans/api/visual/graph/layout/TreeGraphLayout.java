@@ -29,7 +29,7 @@ import java.util.*;
  *
  * @author David Kaspar
  */
-public class TreeGraphLayout<N, E> extends GraphLayout {
+public class TreeGraphLayout<N, E> extends GraphLayout<N, E> {
 
     private GraphScene<N, E> scene;
     private int originX;
@@ -180,7 +180,7 @@ public class TreeGraphLayout<N, E> extends GraphLayout {
     }
     
     @Override
-    protected void performGraphLayout(UniversalGraph graph) {
+    protected void performGraphLayout(UniversalGraph<N, E> graph) {
         Collection<N> allNodes = scene.getNodes ();
         ArrayList<N> rootNodes = new ArrayList<N>() ;
         for (N node: allNodes) {
@@ -196,7 +196,7 @@ public class TreeGraphLayout<N, E> extends GraphLayout {
     }
 
     @Override
-    protected void performNodesLayout(UniversalGraph graph, Collection nodes) {
+    protected void performNodesLayout(UniversalGraph<N,E> graph, Collection<N> nodes) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

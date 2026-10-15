@@ -463,8 +463,8 @@ public class TagHandlerPanelGUI extends javax.swing.JPanel implements ListSelect
         final int row = attrTable.getSelectedRow();
         String attrName = (String)tableModel.getValueAt(row,0);
         String attrType = (String)tableModel.getValueAt(row,1);
-        boolean required = ((Boolean)tableModel.getValueAt(row,2)).booleanValue();
-        boolean rtexpr = ((Boolean)tableModel.getValueAt(row,3)).booleanValue();
+        boolean required = ((Boolean)tableModel.getValueAt(row,2));
+        boolean rtexpr = ((Boolean)tableModel.getValueAt(row,3));
         final AttrDialog panel = new AttrDialog(attrName,attrType,required,rtexpr);
         EditDialog editDialog = new EditDialog(panel,title, false) {
             protected String validate() {

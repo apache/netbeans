@@ -26,6 +26,7 @@ import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -468,7 +469,7 @@ public final class SettingsType {
                 }
             } else {
                 try {
-                    BufferedReader ois = new BufferedReader(new InputStreamReader(link.getInputStream(), "UTF-8")); // NOI18N
+                    BufferedReader ois = new BufferedReader(new InputStreamReader(link.getInputStream(), StandardCharsets.UTF_8));
                     try {
                         targetFilePath = ois.readLine();
                         targetFilesystem = ois.readLine();

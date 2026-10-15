@@ -1,0 +1,6 @@
+{foreach $cart->items as $item}
+<div class="cart-item">
+  <span class="product">{$item->name}</span><br>
+        {$item->price}
+</div>
+{/foreach}

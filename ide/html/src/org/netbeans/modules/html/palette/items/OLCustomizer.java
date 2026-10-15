@@ -250,7 +250,7 @@ public class OLCustomizer extends javax.swing.JPanel {
 
         jSpinner1.setModel(new SpinnerNumberModel(ol.getCount(), 0, Integer.MAX_VALUE, 1));
         jSpinner1.setEditor(new NumberEditor(jSpinner1, "#"));
-        jSpinner1.setValue(new Integer(ol.getCount()));
+        jSpinner1.setValue(Integer.valueOf(ol.getCount()));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(12, 12, 0, 18);

@@ -1,0 +1,7 @@
+Code completion result for source line:
+self::TEST1->|value;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     test()                          [PUBLIC]   Union
+------------------------------------
+METHOD     cases()                         [STATIC,   UnitEnum
+VARIABLE   string name                                \Union

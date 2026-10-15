@@ -32,8 +32,8 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.AbstractArtifactResolutionException;
 import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.api.progress.aggregate.AggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.AggregateProgressHandle;
+import org.netbeans.api.progress.aggregate.BasicAggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.ProgressContributor;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.netbeans.modules.maven.embedder.MavenEmbedder;
@@ -79,7 +79,7 @@ public class MavenSourceJavadocAttacher implements SourceJavadocAttacherImplemen
             message = StatusDisplayer.getDefault().setStatusText(Bundle.LBL_DOWNLOAD_REPO(), StatusDisplayer.IMPORTANCE_ERROR_HIGHLIGHT);
         } else if (file.isFile() && file.exists()) {
             List<RepositoryForBinaryQueryImpl.Coordinates> coordinates2 = RepositoryForBinaryQueryImpl.getJarMetadataCoordinates(file);
-            if (coordinates != null && coordinates2.size() == 1) { //only when non-shaded?
+            if (coordinates2 != null && coordinates2.size() == 1) { //only when non-shaded?
                 RepositoryForBinaryQueryImpl.Coordinates coord = coordinates2.get(0);
                 defined = new NBVersionInfo(null, coord.groupId, coord.artifactId, coord.version, null, null, null, null, null);
             }
@@ -112,15 +112,15 @@ public class MavenSourceJavadocAttacher implements SourceJavadocAttacherImplemen
             return Collections.emptyList();
         }
 
-        AggregateProgressHandle hndl = AggregateProgressFactory.createHandle(Bundle.attaching(art.getId()),
-                new ProgressContributor[]{AggregateProgressFactory.createProgressContributor("attach")},
+        AggregateProgressHandle hndl = BasicAggregateProgressFactory.createHandle(Bundle.attaching(art.getId()),
+                new ProgressContributor[]{ BasicAggregateProgressFactory.createProgressContributor("attach")},
                 ProgressTransferListener.cancellable(), null);
         ProgressTransferListener.setAggregateHandle(hndl);
         try {
             hndl.start();
             // XXX should this be limited to _defined.getRepoId()?
             List<ArtifactRepository> repos = RepositoryPreferences.getInstance().remoteRepositories(online);
-            online.resolve(art, repos, online.getLocalRepository());
+            online.resolveArtifact(art, repos, online.getLocalRepository());
             File result = art.getFile();
             if (result.isFile()) {
                 URL rootUrl = findRoot(result, javadoc);
@@ -145,7 +145,7 @@ public class MavenSourceJavadocAttacher implements SourceJavadocAttacherImplemen
                                     coordinate.version,
                                     "jar",
                                     javadoc ? "javadoc" : "sources"); //NOI18N
-                            online.resolve(sources, repos, online.getLocalRepository());
+                            online.resolveArtifact(sources, repos, online.getLocalRepository());
                             URL rootUrl = findRoot(sources.getFile(), javadoc);
                             if (rootUrl != null) {
                                 res.add(rootUrl);

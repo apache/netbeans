@@ -150,7 +150,7 @@ public class CompositePanelProviderImpl implements ProjectCustomizer.CompositeCa
                     FRAMEWORKS,
                     NbBundle.getMessage(CustomizerProviderImpl.class, "LBL_Config_Frameworks"),
                     null,
-                    subcategories.toArray(new ProjectCustomizer.Category[subcategories.size()]));
+                    subcategories.toArray(new ProjectCustomizer.Category[0]));
         } else if (TESTING.equals(name)) {
             fillTestingProviderPanels(uiProps, context);
             List<ProjectCustomizer.Category> subcategories = sortCategories(testingProviderPanels.keySet());
@@ -158,9 +158,10 @@ public class CompositePanelProviderImpl implements ProjectCustomizer.CompositeCa
                     TESTING,
                     Bundle.CompositePanelProviderImpl_category_testing_title(),
                     null,
-                    subcategories.toArray(new ProjectCustomizer.Category[subcategories.size()]));
+                    subcategories.toArray(new ProjectCustomizer.Category[0]));
         } else if (TESTING_SELENIUM.equals(name)) {
-            toReturn = ProjectCustomizer.Category.create(TESTING_SELENIUM,
+            toReturn = ProjectCustomizer.Category.create(
+                    TESTING_SELENIUM,
                     Bundle.CompositePanelProviderImpl_category_selenium_testing_title(),
                     null);
         } else if (LICENSE.equals(name)) {
@@ -414,7 +415,7 @@ public class CompositePanelProviderImpl implements ProjectCustomizer.CompositeCa
     private static List<ProjectCustomizer.Category> sortCategories(Collection<ProjectCustomizer.Category> categories) {
         final Collator collator = Collator.getInstance();
         List<ProjectCustomizer.Category> sortedCategories = new ArrayList<>(categories);
-        Collections.sort(sortedCategories, new Comparator<ProjectCustomizer.Category>() {
+        sortedCategories.sort(new Comparator<ProjectCustomizer.Category>() {
             @Override
             public int compare(ProjectCustomizer.Category category1, ProjectCustomizer.Category category2) {
                 return collator.compare(category1.getDisplayName(), category2.getDisplayName());

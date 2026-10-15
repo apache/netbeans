@@ -41,7 +41,7 @@ class CreateRelationshipPanel extends javax.swing.JPanel {
     public enum NameStatus {VALID, ILLEGAL_JAVA_ID, ILLEGAL_SQL_KEYWORD,  DUPLICATE};
     public enum AvailableSelection {INVERSE_ONLY, OWNING_ONLY, BOTH};
     private Collection<String> availableFields;
-    private DefaultComboBoxModel mdlAvailableFields = new DefaultComboBoxModel();
+    private DefaultComboBoxModel<String> mdlAvailableFields = new DefaultComboBoxModel<>();
     private FieldNameValidator nameValidator = null;
     private Border brdrBlack = BorderFactory.createLineBorder(Color.BLACK);
     private DialogDescriptor dlgDescriptor = null;

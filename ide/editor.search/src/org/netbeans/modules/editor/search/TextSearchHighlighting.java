@@ -193,7 +193,7 @@ public class TextSearchHighlighting extends AbstractHighlightsContainer implemen
     @MimeRegistration(mimeType = "", service = HighlightsLayerFactory.class)
     public static final class FactoryImpl implements HighlightsLayerFactory {
 
-        public final static class SearchBlockHighlighting extends BlockHighlighting {
+        public static final class SearchBlockHighlighting extends BlockHighlighting {
             public SearchBlockHighlighting(String layerId, JTextComponent component) {
                 super(layerId,component);
                 EditorFindSupport.getInstance().hookLayer(this, component);
@@ -221,7 +221,7 @@ public class TextSearchHighlighting extends AbstractHighlightsContainer implemen
                     true,
                     new SearchBlockHighlighting(INC_SEARCH_LAYER, context.getComponent())));
 
-            return layers.toArray(new HighlightsLayer[layers.size()]);
+            return layers.toArray(new HighlightsLayer[0]);
         }
 
     } // End of FactoryImpl class

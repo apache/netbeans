@@ -1,0 +1,12 @@
+    public Test $|>MARK_OCCURRENCES:test<|;
+        $this->|>MARK_OCCURRENCES:test<| = new Test();
+        $example = new Example()->|>MARK_OCCURRENCES:test<|->publicTestField;
+        $example = new Example()->|>MARK_OCCURRENCES:te^st<|->publicTestMethod();
+        $example = new Example()->|>MARK_OCCURRENCES:test<|::PUBLIC_TEST_CONST;
+        $example = new Example()->|>MARK_OCCURRENCES:test<|::$publicStaticTestField;
+        $example = new Example()->|>MARK_OCCURRENCES:test<|::publicStaticTestMethod();
+new Example()->|>MARK_OCCURRENCES:test<|->publicTestField; // test
+new Example()->|>MARK_OCCURRENCES:test<|->publicTestMethod(); // test
+new Example()->|>MARK_OCCURRENCES:test<|::PUBLIC_TEST_CONST; // test
+new Example()->|>MARK_OCCURRENCES:test<|::$publicStaticTestField; // test
+new Example()->|>MARK_OCCURRENCES:test<|::publicStaticTestMethod(); // test

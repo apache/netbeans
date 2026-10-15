@@ -307,7 +307,7 @@ public final class ProxyPreferencesImpl extends Preferences implements Preferenc
             }
             keys.addAll(data.keySet());
             keys.removeAll(removedKeys);
-            return keys.toArray(new String [keys.size()]);
+            return keys.toArray(new String[0]);
         }
     }
 
@@ -321,7 +321,7 @@ public final class ProxyPreferencesImpl extends Preferences implements Preferenc
             }
             names.addAll(children.keySet());
             names.removeAll(removedChildren);
-            return names.toArray(new String [names.size()]);
+            return names.toArray(new String[0]);
         }
     }
 
@@ -573,7 +573,7 @@ public final class ProxyPreferencesImpl extends Preferences implements Preferenc
                     }
                 }
             }
-            listeners = prefListeners.toArray(new PreferenceChangeListener[prefListeners.size()]);
+            listeners = prefListeners.toArray(new PreferenceChangeListener[0]);
         }
 
         PreferenceChangeEvent myEvt = null;
@@ -607,7 +607,7 @@ public final class ProxyPreferencesImpl extends Preferences implements Preferenc
                 childNode = node(evt.getChild().name());
             }
             
-            listeners = nodeListeners.toArray(new NodeChangeListener[nodeListeners.size()]);
+            listeners = nodeListeners.toArray(new NodeChangeListener[0]);
         }
 
         NodeChangeEvent myEvt = null;
@@ -638,7 +638,7 @@ public final class ProxyPreferencesImpl extends Preferences implements Preferenc
                 return;
             }
             
-            listeners = nodeListeners.toArray(new NodeChangeListener[nodeListeners.size()]);
+            listeners = nodeListeners.toArray(new NodeChangeListener[0]);
         }
 
         NodeChangeEvent myEvt = null;

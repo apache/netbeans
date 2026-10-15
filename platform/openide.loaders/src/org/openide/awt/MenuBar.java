@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -40,10 +39,8 @@ import java.util.Objects;
 import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -65,6 +62,7 @@ import org.openide.nodes.NodeListener;
 import org.openide.nodes.NodeMemberEvent;
 import org.openide.nodes.NodeReorderEvent;
 import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 import org.openide.util.Task;
@@ -100,11 +98,6 @@ public class MenuBar extends JMenuBar implements Externalizable {
 
     /** the folder which represents and loads content of the menubar */
     private MenuBarFolder menuBarFolder;
-
-    /*
-    private static final Icon BLANK_ICON = new ImageIcon(
-        Utilities.loadImage("org/openide/loaders/empty.gif")); // NOI18N            
-     */
 
     static final long serialVersionUID =-4721949937356581268L;
     static {
@@ -163,15 +156,21 @@ public class MenuBar extends JMenuBar implements Externalizable {
             return !UIManager.getBoolean("NbMainWindow.showCustomBackground"); //NOI18N
         return super.isOpaque();
     }
-    
+
     @Override
     public void updateUI() {
         if (EventQueue.isDispatchThread()) {
             super.updateUI();
-            boolean GTK = "GTK".equals(UIManager.getLookAndFeel().getID());
-            if (!GTK) { //Let GTK supply some border, or mnemonic underlines
-                //will be flush and look ugly
+            String laf = UIManager.getLookAndFeel().getID();
+            // Let GTK supply some border, or mnemonic underlines.
+            boolean gtk = laf.equals("GTK");
+            boolean windows = laf.equals("Windows");
+            if (!(gtk || windows)) {
                 setBorder(BorderFactory.createEmptyBorder());
+            }
+            if (windows) {
+                // Ensure that Windows8LFCustoms can provide a custom border here.
+                setBorderPainted(true);
             }
         }
     }
@@ -652,8 +651,9 @@ public class MenuBar extends JMenuBar implements Externalizable {
                 // set the text and be aware of mnemonics
                 Node n = master.getNodeDelegate ();
                 Mnemonics.setLocalizedText(this, n.getDisplayName());
-                if (icon) setIcon (new ImageIcon (
-                n.getIcon (java.beans.BeanInfo.ICON_COLOR_16x16)));
+                if (icon) {
+                    setIcon(ImageUtilities.image2Icon(n.getIcon(java.beans.BeanInfo.ICON_COLOR_16x16)));
+                }
             } else {
                 setText(master.getName());
                 setIcon(null);

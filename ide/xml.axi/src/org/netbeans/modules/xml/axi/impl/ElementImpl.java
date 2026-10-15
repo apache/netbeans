@@ -341,7 +341,7 @@ public final class ElementImpl extends Element {
         }
         
         //remove listener from old content model
-        if(oldValue != null && oldValue instanceof ContentModel) {
+        if(oldValue instanceof ContentModel) {
             ContentModel cm = (ContentModel)oldValue;
             cm.removeListener(this);
         }
@@ -382,7 +382,7 @@ public final class ElementImpl extends Element {
      * Overwrites addCompositor of AXIContainer.
      */
     public void addCompositor(Compositor compositor) {
-        if( getType() != null && getType() instanceof ContentModel &&
+        if( getType() instanceof ContentModel &&
                 getModel() != ((ContentModel)getType()).getModel() ) {
             //no drops allowed when the element's type
             //belongs to some other model
@@ -400,7 +400,7 @@ public final class ElementImpl extends Element {
      */
     public void addAttribute(AbstractAttribute attribute) {
         AXIType type = getType();
-        if(type != null && type instanceof ContentModel) {
+        if(type instanceof ContentModel) {
             ((ContentModel)type).addAttribute(attribute);
             return;
         }

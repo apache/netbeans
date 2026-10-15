@@ -31,7 +31,6 @@ public class JSFConfigNode extends DataNode {
 
     public static final String ICON_BASE =  "org/netbeans/modules/web/jsf/resources/JSFConfigIcon.png";
 
-    /** Creates a new instance of StrutsConfigNode */
     public JSFConfigNode (final JSFConfigDataObject dataObject) {
 	super(dataObject,Children.LEAF);
         setIconBaseWithExtension(ICON_BASE);

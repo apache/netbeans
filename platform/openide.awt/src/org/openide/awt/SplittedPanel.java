@@ -55,8 +55,9 @@ import javax.swing.border.*;
 * right/bottom component resizes), while in the proportional mode the splitPosition
 * is a percentage of the width/height assigned to the left/top component.
 
-* <P><TABLE BORDER COLS=3 WIDTH=100%>
-* <TR><TH WIDTH=15%>Property<TH WIDTH=15%>Property Type<TH>Description
+* <TABLE>
+* <caption>properties of SplittedPanel</caption>
+* <TR><TH style="width:15%" >Property<TH style="width:15%" >Property Type<TH>Description
 * <TR><TD> SplitType            <TD> int       <TD> The type of the splitting - HORIZONTAL, VERTICAL or NONE
 * <TR><TD> SplitPosition        <TD> int       <TD> The position of the split point - either absolute position or number of percents
 *                                                   according to the "Absolute" property settings, could be one of FIRST_PREFERRED or
@@ -84,22 +85,22 @@ public class SplittedPanel extends JComponent implements Accessible {
     static final long serialVersionUID = 5058424218525927233L;
 
     /** constant for no split - only the first (left/top) component will be shown */
-    public final static int NONE = 0;
+    public static final int NONE = 0;
 
     /** constant for vertical split */
-    public final static int VERTICAL = 1;
+    public static final int VERTICAL = 1;
 
     /** constant for horizontal split */
-    public final static int HORIZONTAL = 2;
+    public static final int HORIZONTAL = 2;
 
     /** constraints constant for adding a splitter */
-    public static final Object ADD_SPLITTER = new Integer(0);
+    public static final Object ADD_SPLITTER = 0;
 
     /** constraints constant for adding a component to the first (left/top) pane */
-    public static final Object ADD_FIRST = new Integer(1);
+    public static final Object ADD_FIRST = 1;
 
     /** constraints constant for adding a component to the second (right/bottom) pane */
-    public static final Object ADD_SECOND = new Integer(2);
+    public static final Object ADD_SECOND = 2;
 
     /** constraints constant for adding a component to the left(top) pane (an alias for the ADD_FIRST constant) */
     public static final Object ADD_LEFT = ADD_FIRST;
@@ -131,7 +132,7 @@ public class SplittedPanel extends JComponent implements Accessible {
     private static MessageFormat descriptionFormat = null;
 
     /** The default split type */
-    private final static int DEFAULT_SPLIT_TYPE = HORIZONTAL;
+    private static final int DEFAULT_SPLIT_TYPE = HORIZONTAL;
 
     /** Save the last preferred setting (first or second). Double click reset the splitPosition to this value */
     private int resetPosition = FIRST_PREFERRED;
@@ -140,10 +141,7 @@ public class SplittedPanel extends JComponent implements Accessible {
     private Boolean popupMenuEnabled;
     private boolean drawBumps;
 
-    ///////////////////////
     // Private variables //
-    ///////////////////////
-
     /** the first (left/top) component */
     private Component firstComponent = null;
 
@@ -179,29 +177,29 @@ public class SplittedPanel extends JComponent implements Accessible {
 
     /** current keepFirstSame state */
     private boolean keepFirstSame = false;
-    transient private boolean splitIsChanging = false;
+    private transient boolean splitIsChanging = false;
     private int dragPos = -1;
 
     /** true if the panes were swapped, false otherwise */
     private boolean panesSwapped = false;
 
     /** popup menu for setting vertical/horizontal splitting */
-    transient private JPopupMenu popupMenu;
+    private transient JPopupMenu popupMenu;
 
     /** The popup menu item */
-    transient private JRadioButtonMenuItem verticalCMI;
+    private transient JRadioButtonMenuItem verticalCMI;
 
     /** The popup menu item */
-    transient private JRadioButtonMenuItem horizontalCMI;
+    private transient JRadioButtonMenuItem horizontalCMI;
 
     /** The popup menu item */
-    transient private JMenuItem swapCMI;
+    private transient JMenuItem swapCMI;
 
     /** The popup menu item */
-    transient private JMenuItem splitterCMI;
+    private transient JMenuItem splitterCMI;
 
     /** A Vector of SplitChangeListeners */
-    transient private Vector<SplitChangeListener> listeners;
+    private transient Vector<SplitChangeListener> listeners;
 
     /** Accessible context */
     private AccessibleContext accessibleContext;
@@ -234,6 +232,7 @@ public class SplittedPanel extends JComponent implements Accessible {
     }
 
     /** Updates splitting, too. */
+    @Override
     public void updateUI() {
         super.updateUI();
         updateSplitting();
@@ -437,10 +436,7 @@ public class SplittedPanel extends JComponent implements Accessible {
         return panesSwapped;
     }
 
-    ///////////////////////////////
     // Property accessor methods //
-    ///////////////////////////////
-
     /** Getter method for the SplitType property.
     * @return Current SplitType value.
     */
@@ -711,10 +707,7 @@ public class SplittedPanel extends JComponent implements Accessible {
         updatePopupMenu();
     }
 
-    /////////////////////
     // Event Listeners //
-    /////////////////////
-
     /** Adds specified listener to the current set of SplitChangeListeners */
     public void addSplitChangeListener(SplitChangeListener l) {
         if (listeners == null) {
@@ -778,14 +771,12 @@ public class SplittedPanel extends JComponent implements Accessible {
 
         getAccessibleContext().setAccessibleName(
             nameFormat.format(
-                new Object[] {
-                    ((firstComponent == null) || !(firstComponent instanceof Accessible)) ? null
-                                                                                          : firstComponent.getAccessibleContext()
-                                                                                                          .getAccessibleName(),
-                    ((secondComponent == null) || !(secondComponent instanceof Accessible)) ? null
-                                                                                            : secondComponent.getAccessibleContext()
-                                                                                                             .getAccessibleName()
-                }
+                    new Object[]{
+                            (!(firstComponent instanceof Accessible)) ? null
+                                    : firstComponent.getAccessibleContext().getAccessibleName(),
+                            (!(secondComponent instanceof Accessible)) ? null
+                                    : secondComponent.getAccessibleContext().getAccessibleName()
+                    }
             )
         );
 
@@ -796,14 +787,12 @@ public class SplittedPanel extends JComponent implements Accessible {
 
         getAccessibleContext().setAccessibleDescription(
             descriptionFormat.format(
-                new Object[] {
-                    ((firstComponent == null) || !(firstComponent instanceof Accessible)) ? null
-                                                                                          : firstComponent.getAccessibleContext()
-                                                                                                          .getAccessibleDescription(),
-                    ((secondComponent == null) || !(secondComponent instanceof Accessible)) ? null
-                                                                                            : secondComponent.getAccessibleContext()
-                                                                                                             .getAccessibleDescription()
-                }
+                    new Object[]{
+                            (!(firstComponent instanceof Accessible)) ? null
+                                    : firstComponent.getAccessibleContext().getAccessibleDescription(),
+                            (!(secondComponent instanceof Accessible)) ? null
+                                    : secondComponent.getAccessibleContext().getAccessibleDescription()
+                    }
             )
         );
     }
@@ -815,10 +804,7 @@ public class SplittedPanel extends JComponent implements Accessible {
         init();
     }
 
-    ///////////////////
     // Inner Classes //
-    ///////////////////
-
     /** A listener interface for tracking split point changes */
     public static interface SplitChangeListener {
         /** Called when a split point changes
@@ -884,13 +870,16 @@ public class SplittedPanel extends JComponent implements Accessible {
             getAccessibleContext().setAccessibleName(bundle.getString("ACSD_SplittedPanel_EmptySplitter"));
         }
 
+        @Override
         public Dimension getPreferredSize() {
             return new Dimension(width, width);
         }
 
+        @Override
         public AccessibleContext getAccessibleContext() {
             if (accessibleContext == null) {
                 accessibleContext = new AccessibleJComponent() {
+                            @Override
                             public AccessibleRole getAccessibleRole() {
                                 return AccessibleRole.SPLIT_PANE;
                             }
@@ -920,10 +909,12 @@ public class SplittedPanel extends JComponent implements Accessible {
             }
         }
 
+        @Override
         public Dimension getPreferredSize() {
             return new Dimension(splitterSize, splitterSize);
         }
 
+        @Override
         public void paint(Graphics g) {
             super.paint(g);
 
@@ -1034,6 +1025,7 @@ public class SplittedPanel extends JComponent implements Accessible {
             }
         }
 
+        @Override
         public AccessibleContext getAccessibleContext() {
             return SplittedPanel.this.getAccessibleContext();
         }

@@ -164,6 +164,10 @@ public class AquaViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
                           UIManager.getColor("textText"),
                           HtmlRenderer.STYLE_TRUNCATE, true);
     }
+
+    private static void drawLine(Graphics g, int x1, int y1, int x2, int y2) {
+        AquaEditorTabDisplayerUI.drawLine(g, x1, y1, x2, y2);
+    }
     
     @Override
     protected void paintTabBorder(Graphics g, int index, int x, int y,
@@ -172,33 +176,33 @@ public class AquaViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
         Color borderShadowColor = UIManager.getColor("NbTabControl.borderShadowColor");
         g.setColor(borderColor);
         if( index > 0 ) {
-            g.drawLine(x, y, x, y+height);
+            drawLine(g, x, y, x, y+height);
             if( !isSelected(index) ) {
                 g.setColor(borderShadowColor);
-                g.drawLine(x+1, y+1, x+1, y+height-1);
+                drawLine(g, x+1, y+1, x+1, y+height-1);
             }
         }
         if( index < getDataModel().size()-1 || !isUseStretchingTabs() ) {
             g.setColor(borderColor);
-            g.drawLine(x+width, y, x+width, y+height);
+            drawLine(g, x+width, y, x+width, y+height);
             if( !isSelected(index) ) {
                 g.setColor(borderShadowColor);
-                g.drawLine(x+width-1, y+1, x+width-1, y+height-1);
+                drawLine(g, x+width-1, y+1, x+width-1, y+height-1);
             }
         }
         g.setColor(borderColor);
         if( !isSelected(index) ) {
-            g.drawLine(x, y+height-1, x+width, y+height-1);
+            drawLine(g, x, y+height-1, x+width, y+height-1);
         }
-        g.drawLine(x, y, x+width, y);
+        drawLine(g, x, y, x+width, y);
         if( getDataModel().size() == 1 ) {
             g.setColor(UIManager.getColor("NbTabControl.editorTabBackground"));
-            g.drawLine(x, y+height-1, x+width, y+height-1);
+            drawLine(g, x, y+height-1, x+width, y+height-1);
         }
         if( isSelected(index) && isFocused(index) ) {
             g.setColor(UIManager.getColor("NbTabControl.focusedTabBackground"));
-            g.drawLine(x+(index == 0 ? 0 : 1), y+1, x+width-1, y+1);
-            g.drawLine(x+(index == 0 ? 0 : 1), y+2, x+width-1, y+2);
+            drawLine(g, x+(index == 0 ? 0 : 1), y+1, x+width-1, y+1);
+            drawLine(g, x+(index == 0 ? 0 : 1), y+2, x+width-1, y+2);
         }
     }
 

@@ -32,6 +32,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.test.TestFileUtils;
 import org.openide.util.test.MockChangeListener;
 
+@SuppressWarnings("null")
 public class MavenSourcesImplTest extends NbTestCase {
 
     public MavenSourcesImplTest(String name) {
@@ -46,18 +47,20 @@ public class MavenSourcesImplTest extends NbTestCase {
 
     public void testITSourceGroups() throws Exception {
         TestFileUtils.writeFile(d,
-                "pom.xml",
-                "<project xmlns='http://maven.apache.org/POM/4.0.0'>" +
-                "<modelVersion>4.0.0</modelVersion>" +
-                "<groupId>grp</groupId>" +
-                "<artifactId>art</artifactId>" +
-                "<packaging>jar</packaging>" +
-                "<version>1.0-SNAPSHOT</version>" +
-                "<name>Test</name>" +
-                "<build>" +
-                "<testSourceDirectory>src/it/java</testSourceDirectory>" +
-                "</build>" +
-                "</project>");
+                "pom.xml", 
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>art</artifactId>
+                    <packaging>jar</packaging>
+                    <version>1.0-SNAPSHOT</version>
+                    <name>Test</name>
+                    <build>
+                        <testSourceDirectory>src/it/java</testSourceDirectory>
+                    </build>
+                </project>
+                """);
         FileObject itsrc = FileUtil.createFolder(d, "src/it/java");
         SourceGroup[] grps = ProjectUtils.getSources(ProjectManager.getDefault().findProject(d)).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
         assertEquals(1, grps.length);
@@ -66,39 +69,43 @@ public class MavenSourcesImplTest extends NbTestCase {
 
     public void testFragmentaryResourceDecl() throws Exception { // #195928
         TestFileUtils.writeFile(d,
-                "pom.xml",
-                "<project xmlns='http://maven.apache.org/POM/4.0.0'>" +
-                "<modelVersion>4.0.0</modelVersion>" +
-                "<groupId>grp</groupId>" +
-                "<artifactId>art</artifactId>" +
-                "<packaging>jar</packaging>" +
-                "<version>1.0-SNAPSHOT</version>" +
-                "<build>" +
-                "<resources>" +
-                "<resource>" +
-                "<directory>.</directory>" +
-                "<targetPath>META-INF</targetPath>" +
-                "<includes>" +
-                "<include>changelog.txt</include>" +
-                "</includes>" +
-                "</resource>" +
-                "</resources>" +
-                "</build>" +
-                "</project>");
+                "pom.xml", 
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>art</artifactId>
+                    <packaging>jar</packaging>
+                    <version>1.0-SNAPSHOT</version>
+                    <build>
+                        <resources>
+                            <resource>
+                                <directory>.</directory>
+                                <targetPath>META-INF</targetPath>
+                                <includes>
+                                    <include>changelog.txt</include>
+                                </includes>
+                            </resource>
+                        </resources>
+                    </build>
+                </project>
+                """);
         SourceGroup[] grps = ProjectUtils.getSources(ProjectManager.getDefault().findProject(d)).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_RESOURCES);
         assertEquals(0, grps.length);
     }
 
     public void testGeneratedSources() throws Exception { // #187595
         TestFileUtils.writeFile(d,
-                "pom.xml",
-                "<project xmlns='http://maven.apache.org/POM/4.0.0'>" +
-                "<modelVersion>4.0.0</modelVersion>" +
-                "<groupId>grp</groupId>" +
-                "<artifactId>art</artifactId>" +
-                "<packaging>jar</packaging>" +
-                "<version>0</version>" +
-                "</project>");
+                "pom.xml", 
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>art</artifactId>
+                    <packaging>jar</packaging>
+                    <version>0</version>
+                </project>
+                """);
         FileObject src = FileUtil.createFolder(d, "src/main/java");
         FileObject gsrc = FileUtil.createFolder(d, "target/generated-sources/xjc");
         gsrc.createData("Whatever.class");
@@ -116,7 +123,15 @@ public class MavenSourcesImplTest extends NbTestCase {
     }
 
     public void testNewlyCreatedSourceGroup() throws Exception { // #200969
-        TestFileUtils.writeFile(d, "pom.xml", "<project><modelVersion>4.0.0</modelVersion><groupId>g</groupId><artifactId>a</artifactId><version>0</version></project>");
+        TestFileUtils.writeFile(d, "pom.xml", 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>g</groupId>
+                    <artifactId>a</artifactId>
+                    <version>0</version>
+                </project>
+                """);
         FileObject main = FileUtil.createFolder(d, "src/main/java");
         Project p = ProjectManager.getDefault().findProject(d);
         Sources s = ProjectUtils.getSources(p);
@@ -134,7 +149,15 @@ public class MavenSourcesImplTest extends NbTestCase {
     }
 
     public void testManuallyDeletedSourceGroup() throws Exception { // #204545
-        TestFileUtils.writeFile(d, "pom.xml", "<project><modelVersion>4.0.0</modelVersion><groupId>g</groupId><artifactId>a</artifactId><version>0</version></project>");
+        TestFileUtils.writeFile(d, "pom.xml", 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>g</groupId>
+                    <artifactId>a</artifactId>
+                    <version>0</version>
+                </project>
+                """);
         FileObject main = FileUtil.createFolder(d, "src/main/java");
         FileObject test = FileUtil.createFolder(d, "src/test/java");
         Project p = ProjectManager.getDefault().findProject(d);

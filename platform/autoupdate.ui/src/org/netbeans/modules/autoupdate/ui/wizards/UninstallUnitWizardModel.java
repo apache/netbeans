@@ -38,7 +38,7 @@ public class UninstallUnitWizardModel extends OperationWizardModel {
     /**
      * The nested install operation
      */
-    private OperationContainer  installContainer;
+    private OperationContainer<InstallSupport>  installContainer;
     private OperationContainer<OperationSupport> customContainer;
     
     /**

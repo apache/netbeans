@@ -38,7 +38,6 @@ import org.netbeans.modules.payara.tooling.utils.OsUtils;
 import org.netbeans.modules.payara.tooling.utils.ServerUtils;
 import org.netbeans.modules.payara.tooling.utils.Utils;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
-import static org.netbeans.modules.payara.tooling.data.JDKVersion.IDE_JDK_VERSION;
 import org.netbeans.modules.payara.tooling.data.JDKVersion;
 import org.netbeans.modules.payara.tooling.server.parser.JvmConfigReader.JvmOption;
 
@@ -49,10 +48,7 @@ import org.netbeans.modules.payara.tooling.server.parser.JvmConfigReader.JvmOpti
  */
 public class ServerTasks {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     public enum StartMode {
         /** Regular server start. */
         START,
@@ -62,10 +58,7 @@ public class ServerTasks {
         PROFILE;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(ServerTasks.class);
 
@@ -84,8 +77,8 @@ public class ServerTasks {
         varMap.put(ServerUtils.PF_DOMAIN_ROOT_PROPERTY,
                 ServerUtils.getDomainPath(server));
         varMap.put(ServerUtils.PF_JAVA_ROOT_PROPERTY, javaHome);
-        varMap.put(ServerUtils.PF_DERBY_ROOT_PROPERTY,
-                ServerUtils.getDerbyRoot(server));
+        varMap.put(ServerUtils.PF_H2_DIR_NAME,
+                ServerUtils.getH2Root(server));
         return varMap;
     }
 
@@ -164,11 +157,18 @@ public class ServerTasks {
             }
         }
 
-        JDKVersion javaVersion = args.getJavaVersion() != null ? args.getJavaVersion() : IDE_JDK_VERSION;
+        JDKVersion javaVersion = args.getJavaVersion() == null ? JDKVersion.getDefaultPlatformVersion() : args.getJavaVersion();
+        String selectedJavaHome
+                = args.getJavaHome() != null
+                ? args.getJavaHome()
+                : System.getProperty("java.home");
         List<String> optList
                 = jvmConfigReader.getJvmOptions()
                         .stream()
-                        .filter(fullOption -> JDKVersion.isCorrectJDK(javaVersion, fullOption.minVersion, fullOption.maxVersion))
+                        .filter(fullOption
+                                -> javaVersion.isOptionSupported(
+                                fullOption,
+                                selectedJavaHome))
                         .map(fullOption -> fullOption.option)
                         .collect(toList());
 
@@ -193,13 +193,13 @@ public class ServerTasks {
         // Add debug parameters read from domain.xml.
         // It's important to add them before java options specified by user
         // in case user specified it by himslef.
-        if (mode.equals(StartMode.DEBUG)) {
+        if (mode == StartMode.DEBUG) {
             String debugOpts = propMap.get("debug-options");
             String[] debugOptsSplited = debugOpts.split("\\s+(?=-)");
             optList.addAll(Arrays.asList(debugOptsSplited));
         }
         // add profile parameters
-        if (mode.equals(StartMode.PROFILE)) {
+        if (mode == StartMode.PROFILE) {
         }
         // appending IDE specified options after the ones got from domain.xml
         // IDE specified are takind precedence this way

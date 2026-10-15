@@ -71,7 +71,7 @@ public class CreateAction implements ActionListener, HelpCtx.Provider {
     private final File[] rootFiles;
 
     public CreateAction (List<File> rootFiles) {
-        this.rootFiles = rootFiles.toArray(new File[rootFiles.size()]);
+        this.rootFiles = rootFiles.toArray(new File[0]);
     }
     
     @Override

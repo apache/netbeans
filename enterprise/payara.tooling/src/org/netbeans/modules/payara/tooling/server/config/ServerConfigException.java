@@ -27,10 +27,7 @@ import org.netbeans.modules.payara.tooling.PayaraIdeException;
  */
 public class ServerConfigException extends PayaraIdeException {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Exception message for invalid Payara JavaSE profile version. */
     static final String INVALID_SE_PLATFORM_VERSION
             = "Invalid Payara JavaSE version";
@@ -44,10 +41,7 @@ public class ServerConfigException extends PayaraIdeException {
             = "Invalid Payara module type name";
 
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of <code>ServerConfigException</code> without
      * detail message.

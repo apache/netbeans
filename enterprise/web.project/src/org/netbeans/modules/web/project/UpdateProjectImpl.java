@@ -107,7 +107,7 @@ public class UpdateProjectImpl implements UpdateImplementation {
                 synchronized (this) {
                     if (isCurrent == null) {
                         if ((cfg.getConfigurationFragment("data","http://www.netbeans.org/ns/web-project/1",true) != null) || // NOI18N
-                        (cfg.getConfigurationFragment("data","http://www.netbeans.org/ns/web-project/2",true) != null)) { // NOI18N
+                                (cfg.getConfigurationFragment("data","http://www.netbeans.org/ns/web-project/2",true) != null)) { // NOI18N
                             isCurrent = Boolean.FALSE;
                         } else {
                             isCurrent = Boolean.TRUE;
@@ -116,7 +116,7 @@ public class UpdateProjectImpl implements UpdateImplementation {
                     return isCurrent;
                 }
             }
-        }).booleanValue();
+        });
     }
 
     public boolean canUpdate () {
@@ -194,7 +194,7 @@ public class UpdateProjectImpl implements UpdateImplementation {
             ReferenceHelper refHelper = new ReferenceHelper(helper, cfg, helper.getStandardPropertyEvaluator());
             ClassPathSupport cs = new ClassPathSupport(helper.getStandardPropertyEvaluator(), refHelper, helper,
                     updateHelper, new ClassPathSupportCallbackImpl(helper));
-            Iterator<ClassPathSupport.Item> items = cs.itemsIterator((String)props.get( ProjectProperties.JAVAC_CLASSPATH ), ClassPathSupportCallbackImpl.TAG_WEB_MODULE_LIBRARIES);
+            Iterator<ClassPathSupport.Item> items = cs.itemsIterator(props.get( ProjectProperties.JAVAC_CLASSPATH ), ClassPathSupportCallbackImpl.TAG_WEB_MODULE_LIBRARIES);
             ArrayList<ClassPathSupport.Item> cpItems = new ArrayList<ClassPathSupport.Item>();
             while(items.hasNext()) {
                 ClassPathSupport.Item cpti = items.next();

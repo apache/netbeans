@@ -254,7 +254,7 @@ public class DependencyGraphTopComponent extends TopComponent implements LookupL
                 return super.getListCellRendererComponent(list, msg, index, isSelected, cellHasFocus);
             }
         });
-        DefaultComboBoxModel mdl = new DefaultComboBoxModel();
+        DefaultComboBoxModel<List<String>> mdl = new DefaultComboBoxModel<>();
         mdl.addElement(Arrays.asList(new String[0]));
         mdl.addElement(Arrays.asList(new String[] {
             Artifact.SCOPE_PROVIDED,

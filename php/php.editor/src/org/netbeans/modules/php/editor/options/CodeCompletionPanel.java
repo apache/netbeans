@@ -49,7 +49,8 @@ public class CodeCompletionPanel extends JPanel {
     public static enum CodeCompletionType {
         SMART,
         FULLY_QUALIFIED,
-        UNQUALIFIED;
+        UNQUALIFIED,
+        ;
 
         public static CodeCompletionType resolve(String value) {
             if (value != null) {
@@ -79,6 +80,23 @@ public class CodeCompletionPanel extends JPanel {
         }
     }
 
+    public static enum GlobalNamespaceAutoImportType {
+        IMPORT,
+        DO_NOT_IMPORT,
+        ;
+
+        public static GlobalNamespaceAutoImportType resolve(String value) {
+            if (value != null) {
+                try {
+                    return valueOf(value);
+                } catch (IllegalArgumentException ex) {
+                    // ignored
+                }
+            }
+            return IMPORT;
+        }
+    }
+
     static final String PHP_AUTO_COMPLETION_FULL = "phpAutoCompletionFull"; // NOI18N
     static final String PHP_AUTO_COMPLETION_VARIABLES = "phpAutoCompletionVariables"; // NOI18N
     static final String PHP_AUTO_COMPLETION_TYPES = "phpAutoCompletionTypes"; // NOI18N
@@ -88,10 +106,17 @@ public class CodeCompletionPanel extends JPanel {
     static final String PHP_CODE_COMPLETION_VARIABLES_SCOPE = "phpCodeCompletionVariablesScope"; // NOI18N
     static final String PHP_CODE_COMPLETION_TYPE = "phpCodeCompletionType"; // NOI18N
     static final String PHP_CODE_COMPLETION_SMART_PARAMETERS_PRE_FILLING = "phpCodeCompletionSmartParametersPreFilling"; //NOI18N
+    static final String PHP_CODE_COMPLETION_FIRST_CLASS_CALLABLE = "phpCodeCompletionFirstClassCallable"; //NOI18N
     static final String PHP_AUTO_COMPLETION_SMART_QUOTES = "phpCodeCompletionSmartQuotes"; //NOI18N
     static final String PHP_AUTO_STRING_CONCATINATION = "phpCodeCompletionStringAutoConcatination"; //NOI18N
     static final String PHP_AUTO_COMPLETION_USE_LOWERCASE_TRUE_FALSE_NULL = "phpAutoCompletionUseLowercaseTrueFalseNull"; //NOI18N
     static final String PHP_AUTO_COMPLETION_COMMENT_ASTERISK = "phpAutoCompletionCommentAsterisk"; // NOI18N
+    static final String PHP_AUTO_IMPORT = "phpAutoImport"; // NOI18N
+    static final String PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_TYPE = "phpAutoImportGlobalNSImportType"; // NOI18N
+    static final String PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_FUNCTION = "phpAutoImportGlobalNSImportFunction"; // NOI18N
+    static final String PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_CONST = "phpAutoImportGlobalNSImportConst"; // NOI18N
+    static final String PHP_AUTO_IMPORT_FILE_SCOPE = "phpAutoImportFileScope"; //NOI18N
+    static final String PHP_AUTO_IMPORT_NAMESPACE_SCOPE = "phpAutoImportNamespaceScope"; //NOI18N
 
     // default values
     static final boolean PHP_AUTO_COMPLETION_FULL_DEFAULT = true;
@@ -101,10 +126,17 @@ public class CodeCompletionPanel extends JPanel {
     static final boolean PHP_CODE_COMPLETION_STATIC_METHODS_DEFAULT = true;
     static final boolean PHP_CODE_COMPLETION_NON_STATIC_METHODS_DEFAULT = false;
     static final boolean PHP_CODE_COMPLETION_SMART_PARAMETERS_PRE_FILLING_DEFAULT = true;
+    static final boolean PHP_CODE_COMPLETION_FIRST_CLASS_CALLABLE_DEFAULT = false;
     static final boolean PHP_AUTO_COMPLETION_SMART_QUOTES_DEFAULT = true;
     static final boolean PHP_AUTO_STRING_CONCATINATION_DEFAULT = true;
     static final boolean PHP_AUTO_COMPLETION_USE_LOWERCASE_TRUE_FALSE_NULL_DEFAULT = true;
     static final boolean PHP_AUTO_COMPLETION_COMMENT_ASTERISK_DEFAULT = true;
+    static final boolean PHP_AUTO_IMPORT_DEFAULT = false;
+    static final boolean PHP_AUTO_IMPORT_FILE_SCOPE_DEFAULT = false;
+    static final boolean PHP_AUTO_IMPORT_NAMESPACE_SCOPE_DEFAULT = true;
+    static final String PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_TYPE_DEFAULT = GlobalNamespaceAutoImportType.DO_NOT_IMPORT.name();
+    static final String PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_FUNCTION_DEFAULT = GlobalNamespaceAutoImportType.DO_NOT_IMPORT.name();
+    static final String PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_CONST_DEFAULT = GlobalNamespaceAutoImportType.DO_NOT_IMPORT.name();
 
     private final Preferences preferences;
     private final ItemListener defaultCheckBoxListener = new DefaultCheckBoxListener();
@@ -121,6 +153,7 @@ public class CodeCompletionPanel extends JPanel {
         initCodeCompletionForMethods();
         initCodeCompletionForVariables();
         initCodeCompletionType();
+        initGlobalNamespaceAutoImportType();
         id2Saved.put(PHP_AUTO_COMPLETION_FULL, autoCompletionFullRadioButton.isSelected());
         id2Saved.put(PHP_AUTO_COMPLETION_VARIABLES, autoCompletionVariablesCheckBox.isSelected());
         id2Saved.put(PHP_AUTO_COMPLETION_TYPES, autoCompletionTypesCheckBox.isSelected());
@@ -132,10 +165,20 @@ public class CodeCompletionPanel extends JPanel {
         CodeCompletionType type = CodeCompletionType.resolve(preferences.get(PHP_CODE_COMPLETION_TYPE, null));
         id2Saved.put(PHP_CODE_COMPLETION_TYPE, type == null ? null : type.name());
         id2Saved.put(PHP_CODE_COMPLETION_SMART_PARAMETERS_PRE_FILLING, codeCompletionSmartParametersPreFillingCheckBox.isSelected());
+        id2Saved.put(PHP_CODE_COMPLETION_FIRST_CLASS_CALLABLE, codeCompletionFirstClassCallableCheckBox.isSelected());
         id2Saved.put(PHP_AUTO_COMPLETION_SMART_QUOTES, autoCompletionSmartQuotesCheckBox.isSelected());
         id2Saved.put(PHP_AUTO_STRING_CONCATINATION, autoStringConcatenationCheckBox.isSelected());
         id2Saved.put(PHP_AUTO_COMPLETION_USE_LOWERCASE_TRUE_FALSE_NULL, trueFalseNullCheckBox.isSelected());
         id2Saved.put(PHP_AUTO_COMPLETION_COMMENT_ASTERISK, autoCompletionCommentAsteriskCheckBox.isSelected());
+        id2Saved.put(PHP_AUTO_IMPORT, autoImportCheckBox.isSelected());
+        id2Saved.put(PHP_AUTO_IMPORT_FILE_SCOPE, autoImportFileScopeCheckBox.isSelected());
+        id2Saved.put(PHP_AUTO_IMPORT_NAMESPACE_SCOPE, autoImportNamesapceScopeCheckBox.isSelected());
+        GlobalNamespaceAutoImportType typeType = GlobalNamespaceAutoImportType.resolve(preferences.get(PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_TYPE, PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_TYPE_DEFAULT));
+        id2Saved.put(PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_TYPE, typeType == null ? null : typeType.name());
+        GlobalNamespaceAutoImportType functionType = GlobalNamespaceAutoImportType.resolve(preferences.get(PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_FUNCTION, PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_FUNCTION_DEFAULT));
+        id2Saved.put(PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_FUNCTION, functionType == null ? null : functionType.name());
+        GlobalNamespaceAutoImportType constType = GlobalNamespaceAutoImportType.resolve(preferences.get(PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_CONST, PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_CONST_DEFAULT));
+        id2Saved.put(PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_CONST, constType == null ? null : constType.name());
     }
 
     public static PreferencesCustomizer.Factory getCustomizerFactory() {
@@ -239,6 +282,31 @@ public class CodeCompletionPanel extends JPanel {
                 PHP_CODE_COMPLETION_SMART_PARAMETERS_PRE_FILLING_DEFAULT);
         codeCompletionSmartParametersPreFillingCheckBox.setSelected(codeCompletionSmartParametersPreFilling);
         codeCompletionSmartParametersPreFillingCheckBox.addItemListener(defaultCheckBoxListener);
+
+        // NETBEANS-5599 PHP 8.1: First-class callable syntax
+        boolean codeCompletionFirstClassCallable = preferences.getBoolean(
+                PHP_CODE_COMPLETION_FIRST_CLASS_CALLABLE,
+                PHP_CODE_COMPLETION_FIRST_CLASS_CALLABLE_DEFAULT);
+        codeCompletionFirstClassCallableCheckBox.setSelected(codeCompletionFirstClassCallable);
+        codeCompletionFirstClassCallableCheckBox.addItemListener(defaultCheckBoxListener);
+
+        boolean autoImport = preferences.getBoolean(
+                PHP_AUTO_IMPORT,
+                PHP_AUTO_IMPORT_DEFAULT);
+        autoImportCheckBox.setSelected(autoImport);
+        autoImportCheckBox.addItemListener(defaultCheckBoxListener);
+
+        boolean autoImportFileScope = preferences.getBoolean(
+                PHP_AUTO_IMPORT_FILE_SCOPE,
+                PHP_AUTO_IMPORT_FILE_SCOPE_DEFAULT);
+        autoImportFileScopeCheckBox.setSelected(autoImportFileScope);
+        autoImportFileScopeCheckBox.addItemListener(defaultCheckBoxListener);
+
+        boolean autoImportNamespaceScope = preferences.getBoolean(
+                PHP_AUTO_IMPORT_NAMESPACE_SCOPE,
+                PHP_AUTO_IMPORT_NAMESPACE_SCOPE_DEFAULT);
+        autoImportNamesapceScopeCheckBox.setSelected(autoImportNamespaceScope);
+        autoImportNamesapceScopeCheckBox.addItemListener(defaultCheckBoxListener);
     }
 
     private void initCodeCompletionForVariables() {
@@ -277,6 +345,31 @@ public class CodeCompletionPanel extends JPanel {
         unqualifiedRadioButton.addItemListener(defaultRadioButtonListener);
     }
 
+    private void initGlobalNamespaceAutoImportType() {
+        GlobalNamespaceAutoImportType typeType = GlobalNamespaceAutoImportType.resolve(preferences.get(PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_TYPE, GlobalNamespaceAutoImportType.IMPORT.name()));
+        initAutoImportButton(typeType, autoImportGlobalNamespaceTypeImportRadioButton, autoImportGlobalNamespaceTypeDoNotImportRadioButton);
+        GlobalNamespaceAutoImportType functionType = GlobalNamespaceAutoImportType.resolve(preferences.get(PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_FUNCTION, GlobalNamespaceAutoImportType.DO_NOT_IMPORT.name()));
+        initAutoImportButton(functionType, autoImportGlobalNamespaceFunctionImportRadioButton, autoImportGlobalNamespaceFunctionDoNotImportRadioButton);
+        GlobalNamespaceAutoImportType constType = GlobalNamespaceAutoImportType.resolve(preferences.get(PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_CONST, GlobalNamespaceAutoImportType.DO_NOT_IMPORT.name()));
+        initAutoImportButton(constType, autoImportGlobalNamespaceConstImportRadioButton, autoImportGlobalNamespaceConstDoNotImportRadioButton);
+    }
+
+    private void initAutoImportButton(GlobalNamespaceAutoImportType type, JRadioButton importButton, JRadioButton doNotImportButton) {
+        switch (type) {
+            case IMPORT:
+                importButton.setSelected(true);
+                break;
+            case DO_NOT_IMPORT:
+                doNotImportButton.setSelected(true);
+                break;
+            default:
+                assert false : "Unknown Import Type: " + type; // NOI18N
+                break;
+        }
+        importButton.addItemListener(defaultRadioButtonListener);
+        doNotImportButton.addItemListener(defaultRadioButtonListener);
+    }
+
     void validateData() {
         preferences.putBoolean(PHP_AUTO_COMPLETION_FULL, autoCompletionFullRadioButton.isSelected());
         preferences.putBoolean(PHP_AUTO_COMPLETION_VARIABLES, autoCompletionVariablesCheckBox.isSelected());
@@ -286,10 +379,14 @@ public class CodeCompletionPanel extends JPanel {
         preferences.putBoolean(PHP_CODE_COMPLETION_STATIC_METHODS, codeCompletionStaticMethodsCheckBox.isSelected());
         preferences.putBoolean(PHP_CODE_COMPLETION_NON_STATIC_METHODS, codeCompletionNonStaticMethodsCheckBox.isSelected());
         preferences.putBoolean(PHP_CODE_COMPLETION_SMART_PARAMETERS_PRE_FILLING, codeCompletionSmartParametersPreFillingCheckBox.isSelected());
+        preferences.putBoolean(PHP_CODE_COMPLETION_FIRST_CLASS_CALLABLE, codeCompletionFirstClassCallableCheckBox.isSelected());
         preferences.putBoolean(PHP_AUTO_COMPLETION_SMART_QUOTES, autoCompletionSmartQuotesCheckBox.isSelected());
         preferences.putBoolean(PHP_AUTO_STRING_CONCATINATION, autoStringConcatenationCheckBox.isSelected());
         preferences.putBoolean(PHP_AUTO_COMPLETION_USE_LOWERCASE_TRUE_FALSE_NULL, trueFalseNullCheckBox.isSelected());
         preferences.putBoolean(PHP_AUTO_COMPLETION_COMMENT_ASTERISK, autoCompletionCommentAsteriskCheckBox.isSelected());
+        preferences.putBoolean(PHP_AUTO_IMPORT, autoImportCheckBox.isSelected());
+        preferences.putBoolean(PHP_AUTO_IMPORT_FILE_SCOPE, autoImportFileScopeCheckBox.isSelected());
+        preferences.putBoolean(PHP_AUTO_IMPORT_NAMESPACE_SCOPE, autoImportNamesapceScopeCheckBox.isSelected());
 
         VariablesScope variablesScope = null;
         if (allVariablesRadioButton.isSelected()) {
@@ -310,6 +407,33 @@ public class CodeCompletionPanel extends JPanel {
         }
         assert type != null;
         preferences.put(PHP_CODE_COMPLETION_TYPE, type.name());
+
+        GlobalNamespaceAutoImportType typeType = null;
+        if (autoImportGlobalNamespaceTypeImportRadioButton.isSelected()) {
+            typeType = GlobalNamespaceAutoImportType.IMPORT;
+        } else if (autoImportGlobalNamespaceTypeDoNotImportRadioButton.isSelected()) {
+            typeType = GlobalNamespaceAutoImportType.DO_NOT_IMPORT;
+        }
+        assert typeType != null;
+        preferences.put(PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_TYPE, typeType.name());
+
+        GlobalNamespaceAutoImportType functionType = null;
+        if (autoImportGlobalNamespaceFunctionImportRadioButton.isSelected()) {
+            functionType = GlobalNamespaceAutoImportType.IMPORT;
+        } else if (autoImportGlobalNamespaceFunctionDoNotImportRadioButton.isSelected()) {
+            functionType = GlobalNamespaceAutoImportType.DO_NOT_IMPORT;
+        }
+        assert functionType != null;
+        preferences.put(PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_FUNCTION, functionType.name());
+
+        GlobalNamespaceAutoImportType constType = null;
+        if (autoImportGlobalNamespaceConstImportRadioButton.isSelected()) {
+            constType = GlobalNamespaceAutoImportType.IMPORT;
+        } else if (autoImportGlobalNamespaceConstDoNotImportRadioButton.isSelected()) {
+            constType = GlobalNamespaceAutoImportType.DO_NOT_IMPORT;
+        }
+        assert constType != null;
+        preferences.put(PHP_AUTO_IMPORT_GLOBAL_NS_IMPORT_CONST, constType.name());
     }
 
     void setAutoCompletionState(boolean enabled) {
@@ -330,6 +454,9 @@ public class CodeCompletionPanel extends JPanel {
         codeCompletionTypeButtonGroup = new ButtonGroup();
         codeCompletionVariablesScopeButtonGroup = new ButtonGroup();
         autoCompletionButtonGroup = new ButtonGroup();
+        autoImportGlobalNSTypebuttonGroup = new ButtonGroup();
+        autoImportGlobalNSFunctionbuttonGroup = new ButtonGroup();
+        autoImportGlobalNSConstbuttonGroup = new ButtonGroup();
         enableAutocompletionLabel = new JLabel();
         autoCompletionFullRadioButton = new JRadioButton();
         autoCompletionCustomizeRadioButton = new JRadioButton();
@@ -349,7 +476,9 @@ public class CodeCompletionPanel extends JPanel {
         fullyQualifiedInfoLabel = new JLabel();
         unqualifiedRadioButton = new JRadioButton();
         unqualifiedInfoLabel = new JLabel();
+        autoImportInfoLabel = new JLabel();
         codeCompletionSmartParametersPreFillingCheckBox = new JCheckBox();
+        codeCompletionFirstClassCallableCheckBox = new JCheckBox();
         autoCompletionSmartQuotesLabel = new JLabel();
         autoCompletionSmartQuotesCheckBox = new JCheckBox();
         autoStringConcatenationCheckBox = new JCheckBox();
@@ -357,6 +486,20 @@ public class CodeCompletionPanel extends JPanel {
         trueFalseNullCheckBox = new JCheckBox();
         autoCompletionCommentAsteriskLabel = new JLabel();
         autoCompletionCommentAsteriskCheckBox = new JCheckBox();
+        autoImportGlobalNamespaceLabel = new JLabel();
+        autoImportGlobalNamespaceTypeLabel = new JLabel();
+        autoImportGlobalNamespaceTypeImportRadioButton = new JRadioButton();
+        autoImportGlobalNamespaceTypeDoNotImportRadioButton = new JRadioButton();
+        autoImportGlobalNamespaceFunctionLabel = new JLabel();
+        autoImportGlobalNamespaceFunctionImportRadioButton = new JRadioButton();
+        autoImportGlobalNamespaceFunctionDoNotImportRadioButton = new JRadioButton();
+        autoImportGlobalNamespaceConstLabel = new JLabel();
+        autoImportGlobalNamespaceConstImportRadioButton = new JRadioButton();
+        autoImportGlobalNamespaceConstDoNotImportRadioButton = new JRadioButton();
+        autoImportForScopeLabel = new JLabel();
+        autoImportFileScopeCheckBox = new JCheckBox();
+        autoImportNamesapceScopeCheckBox = new JCheckBox();
+        autoImportCheckBox = new JCheckBox();
 
         enableAutocompletionLabel.setLabelFor(autoCompletionFullRadioButton);
         Mnemonics.setLocalizedText(enableAutocompletionLabel, NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.enableAutocompletionLabel.text")); // NOI18N
@@ -411,8 +554,12 @@ public class CodeCompletionPanel extends JPanel {
         unqualifiedInfoLabel.setLabelFor(unqualifiedRadioButton);
         Mnemonics.setLocalizedText(unqualifiedInfoLabel, NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.unqualifiedInfoLabel.text")); // NOI18N
 
+        Mnemonics.setLocalizedText(autoImportInfoLabel, NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.autoImportInfoLabel.text")); // NOI18N
+
         codeCompletionSmartParametersPreFillingCheckBox.setSelected(true);
         Mnemonics.setLocalizedText(codeCompletionSmartParametersPreFillingCheckBox, NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.codeCompletionSmartParametersPreFillingCheckBox.text")); // NOI18N
+
+        Mnemonics.setLocalizedText(codeCompletionFirstClassCallableCheckBox, NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.codeCompletionFirstClassCallableCheckBox.text")); // NOI18N
 
         autoCompletionSmartQuotesLabel.setLabelFor(autoCompletionSmartQuotesCheckBox);
         Mnemonics.setLocalizedText(autoCompletionSmartQuotesLabel, NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.autoCompletionSmartQuotesLabel.text")); // NOI18N
@@ -430,58 +577,108 @@ public class CodeCompletionPanel extends JPanel {
 
         Mnemonics.setLocalizedText(autoCompletionCommentAsteriskCheckBox, NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.autoCompletionCommentAsteriskCheckBox.text")); // NOI18N
 
+        Mnemonics.setLocalizedText(autoImportGlobalNamespaceLabel, NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.autoImportGlobalNamespaceLabel.text")); // NOI18N
+
+        autoImportGlobalNamespaceTypeLabel.setLabelFor(autoImportGlobalNamespaceTypeImportRadioButton);
+        Mnemonics.setLocalizedText(autoImportGlobalNamespaceTypeLabel, NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.autoImportGlobalNamespaceTypeLabel.text")); // NOI18N
+
+        autoImportGlobalNSTypebuttonGroup.add(autoImportGlobalNamespaceTypeImportRadioButton);
+        Mnemonics.setLocalizedText(autoImportGlobalNamespaceTypeImportRadioButton, NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.autoImportGlobalNamespaceTypeImportRadioButton.text")); // NOI18N
+
+        autoImportGlobalNSTypebuttonGroup.add(autoImportGlobalNamespaceTypeDoNotImportRadioButton);
+        Mnemonics.setLocalizedText(autoImportGlobalNamespaceTypeDoNotImportRadioButton, NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.autoImportGlobalNamespaceTypeDoNotImportRadioButton.text")); // NOI18N
+
+        autoImportGlobalNamespaceFunctionLabel.setLabelFor(autoImportGlobalNamespaceFunctionImportRadioButton);
+        Mnemonics.setLocalizedText(autoImportGlobalNamespaceFunctionLabel, NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.autoImportGlobalNamespaceFunctionLabel.text")); // NOI18N
+
+        autoImportGlobalNSFunctionbuttonGroup.add(autoImportGlobalNamespaceFunctionImportRadioButton);
+        Mnemonics.setLocalizedText(autoImportGlobalNamespaceFunctionImportRadioButton, NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.autoImportGlobalNamespaceFunctionImportRadioButton.text")); // NOI18N
+
+        autoImportGlobalNSFunctionbuttonGroup.add(autoImportGlobalNamespaceFunctionDoNotImportRadioButton);
+        Mnemonics.setLocalizedText(autoImportGlobalNamespaceFunctionDoNotImportRadioButton, NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.autoImportGlobalNamespaceFunctionDoNotImportRadioButton.text")); // NOI18N
+
+        autoImportGlobalNamespaceConstLabel.setLabelFor(autoImportGlobalNamespaceConstImportRadioButton);
+        Mnemonics.setLocalizedText(autoImportGlobalNamespaceConstLabel, NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.autoImportGlobalNamespaceConstLabel.text")); // NOI18N
+
+        autoImportGlobalNSConstbuttonGroup.add(autoImportGlobalNamespaceConstImportRadioButton);
+        Mnemonics.setLocalizedText(autoImportGlobalNamespaceConstImportRadioButton, NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.autoImportGlobalNamespaceConstImportRadioButton.text")); // NOI18N
+
+        autoImportGlobalNSConstbuttonGroup.add(autoImportGlobalNamespaceConstDoNotImportRadioButton);
+        Mnemonics.setLocalizedText(autoImportGlobalNamespaceConstDoNotImportRadioButton, NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.autoImportGlobalNamespaceConstDoNotImportRadioButton.text")); // NOI18N
+
+        autoImportForScopeLabel.setLabelFor(autoImportFileScopeCheckBox);
+        Mnemonics.setLocalizedText(autoImportForScopeLabel, NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.autoImportForScopeLabel.text")); // NOI18N
+
+        Mnemonics.setLocalizedText(autoImportFileScopeCheckBox, NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.autoImportFileScopeCheckBox.text")); // NOI18N
+
+        Mnemonics.setLocalizedText(autoImportNamesapceScopeCheckBox, NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.autoImportNamesapceScopeCheckBox.text")); // NOI18N
+
+        Mnemonics.setLocalizedText(autoImportCheckBox, NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.autoImportCheckBox.text")); // NOI18N
+
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
+                        .addGap(21, 21, 21)
+                        .addComponent(autoImportInfoLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addComponent(autoImportCheckBox)
+                    .addComponent(autoImportForScopeLabel)
+                    .addComponent(autoImportGlobalNamespaceLabel)
+                    .addComponent(autoCompletionCustomizeRadioButton)
+                    .addComponent(autoCompletionFullRadioButton)
+                    .addComponent(methodCodeCompletionLabel)
+                    .addComponent(codeCompletionNonStaticMethodsCheckBox)
+                    .addComponent(codeCompletionStaticMethodsCheckBox)
+                    .addComponent(enableAutocompletionLabel)
+                    .addComponent(currentFileVariablesRadioButton)
+                    .addComponent(allVariablesRadioButton)
+                    .addComponent(codeCompletionVariablesScopeLabel)
+                    .addComponent(codeCompletionSmartParametersPreFillingCheckBox)
+                    .addComponent(autoCompletionSmartQuotesLabel)
+                    .addComponent(autoCompletionSmartQuotesCheckBox)
+                    .addComponent(autoStringConcatenationCheckBox)
+                    .addComponent(codeCompletionFirstClassCallableCheckBox)
+                    .addComponent(codeCompletionTypeLabel)
+                    .addComponent(smartRadioButton)
+                    .addComponent(fullyQualifiedRadioButton)
+                    .addComponent(unqualifiedRadioButton)
+                    .addComponent(useLowercaseLabel)
+                    .addComponent(trueFalseNullCheckBox)
+                    .addComponent(autoCompletionCommentAsteriskLabel)
+                    .addComponent(autoCompletionCommentAsteriskCheckBox)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
                         .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                            .addComponent(autoCompletionCustomizeRadioButton)
-                            .addComponent(autoCompletionFullRadioButton)
-                            .addComponent(methodCodeCompletionLabel)
-                            .addComponent(codeCompletionNonStaticMethodsCheckBox)
-                            .addComponent(codeCompletionStaticMethodsCheckBox)
-                            .addComponent(enableAutocompletionLabel)
-                            .addComponent(currentFileVariablesRadioButton)
-                            .addComponent(allVariablesRadioButton)
-                            .addComponent(codeCompletionVariablesScopeLabel)
-                            .addComponent(codeCompletionSmartParametersPreFillingCheckBox)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(21, 21, 21)
-                                .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                                    .addComponent(autoCompletionTypesCheckBox)
-                                    .addComponent(autoCompletionVariablesCheckBox)
-                                    .addComponent(autoCompletionNamespacesCheckBox)))
-                            .addComponent(autoCompletionSmartQuotesLabel)
-                            .addComponent(autoCompletionSmartQuotesCheckBox)
-                            .addComponent(autoStringConcatenationCheckBox)))
+                            .addComponent(autoCompletionTypesCheckBox)
+                            .addComponent(autoCompletionVariablesCheckBox)
+                            .addComponent(autoCompletionNamespacesCheckBox)
+                            .addComponent(smartInfoLabel)
+                            .addComponent(fullyQualifiedInfoLabel)
+                            .addComponent(unqualifiedInfoLabel)))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
+                        .addGap(6, 6, 6)
                         .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                            .addComponent(codeCompletionTypeLabel)
-                            .addComponent(smartRadioButton)
-                            .addComponent(fullyQualifiedRadioButton)
-                            .addComponent(unqualifiedRadioButton)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(21, 21, 21)
-                                .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                                    .addComponent(smartInfoLabel)
-                                    .addComponent(fullyQualifiedInfoLabel)
-                                    .addComponent(unqualifiedInfoLabel)))))
+                            .addComponent(autoImportGlobalNamespaceTypeLabel)
+                            .addComponent(autoImportGlobalNamespaceFunctionLabel)
+                            .addComponent(autoImportGlobalNamespaceConstLabel))
+                        .addPreferredGap(ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(Alignment.LEADING)
+                            .addComponent(autoImportGlobalNamespaceFunctionImportRadioButton)
+                            .addComponent(autoImportGlobalNamespaceTypeImportRadioButton)
+                            .addComponent(autoImportGlobalNamespaceConstImportRadioButton))
+                        .addPreferredGap(ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(Alignment.LEADING)
+                            .addComponent(autoImportGlobalNamespaceConstDoNotImportRadioButton)
+                            .addComponent(autoImportGlobalNamespaceFunctionDoNotImportRadioButton)
+                            .addComponent(autoImportGlobalNamespaceTypeDoNotImportRadioButton)))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(useLowercaseLabel))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(trueFalseNullCheckBox))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(autoCompletionCommentAsteriskLabel))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(autoCompletionCommentAsteriskCheckBox)))
+                        .addGap(6, 6, 6)
+                        .addGroup(layout.createParallelGroup(Alignment.LEADING)
+                            .addComponent(autoImportNamesapceScopeCheckBox)
+                            .addComponent(autoImportFileScopeCheckBox))))
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(layout.createParallelGroup(Alignment.LEADING)
@@ -506,6 +703,8 @@ public class CodeCompletionPanel extends JPanel {
                 .addComponent(codeCompletionNonStaticMethodsCheckBox)
                 .addPreferredGap(ComponentPlacement.RELATED)
                 .addComponent(codeCompletionSmartParametersPreFillingCheckBox)
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addComponent(codeCompletionFirstClassCallableCheckBox)
                 .addPreferredGap(ComponentPlacement.UNRELATED)
                 .addComponent(codeCompletionVariablesScopeLabel)
                 .addPreferredGap(ComponentPlacement.RELATED)
@@ -527,6 +726,33 @@ public class CodeCompletionPanel extends JPanel {
                 .addPreferredGap(ComponentPlacement.RELATED)
                 .addComponent(unqualifiedInfoLabel)
                 .addPreferredGap(ComponentPlacement.UNRELATED)
+                .addComponent(autoImportCheckBox)
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addComponent(autoImportInfoLabel, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(ComponentPlacement.UNRELATED)
+                .addComponent(autoImportForScopeLabel)
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addComponent(autoImportFileScopeCheckBox)
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addComponent(autoImportNamesapceScopeCheckBox)
+                .addPreferredGap(ComponentPlacement.UNRELATED)
+                .addComponent(autoImportGlobalNamespaceLabel)
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(Alignment.BASELINE)
+                    .addComponent(autoImportGlobalNamespaceTypeLabel)
+                    .addComponent(autoImportGlobalNamespaceTypeImportRadioButton)
+                    .addComponent(autoImportGlobalNamespaceTypeDoNotImportRadioButton))
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(Alignment.BASELINE)
+                    .addComponent(autoImportGlobalNamespaceFunctionLabel)
+                    .addComponent(autoImportGlobalNamespaceFunctionImportRadioButton)
+                    .addComponent(autoImportGlobalNamespaceFunctionDoNotImportRadioButton))
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(Alignment.BASELINE)
+                    .addComponent(autoImportGlobalNamespaceConstDoNotImportRadioButton)
+                    .addComponent(autoImportGlobalNamespaceConstImportRadioButton)
+                    .addComponent(autoImportGlobalNamespaceConstLabel))
+                .addPreferredGap(ComponentPlacement.UNRELATED)
                 .addComponent(autoCompletionSmartQuotesLabel)
                 .addPreferredGap(ComponentPlacement.RELATED)
                 .addComponent(autoCompletionSmartQuotesCheckBox)
@@ -540,7 +766,7 @@ public class CodeCompletionPanel extends JPanel {
                 .addComponent(autoCompletionCommentAsteriskLabel)
                 .addPreferredGap(ComponentPlacement.RELATED)
                 .addComponent(autoCompletionCommentAsteriskCheckBox)
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(44, Short.MAX_VALUE))
         );
 
         enableAutocompletionLabel.getAccessibleContext().setAccessibleName(NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.enableAutocompletionLabel.AccessibleContext.accessibleName")); // NOI18N
@@ -583,6 +809,7 @@ public class CodeCompletionPanel extends JPanel {
         getAccessibleContext().setAccessibleName(NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.AccessibleContext.accessibleName")); // NOI18N
         getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(CodeCompletionPanel.class, "CodeCompletionPanel.AccessibleContext.accessibleDescription")); // NOI18N
     }// </editor-fold>//GEN-END:initComponents
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JRadioButton allVariablesRadioButton;
     private ButtonGroup autoCompletionButtonGroup;
@@ -595,7 +822,26 @@ public class CodeCompletionPanel extends JPanel {
     private JLabel autoCompletionSmartQuotesLabel;
     private JCheckBox autoCompletionTypesCheckBox;
     private JCheckBox autoCompletionVariablesCheckBox;
+    private JCheckBox autoImportCheckBox;
+    private JCheckBox autoImportFileScopeCheckBox;
+    private JLabel autoImportForScopeLabel;
+    private ButtonGroup autoImportGlobalNSConstbuttonGroup;
+    private ButtonGroup autoImportGlobalNSFunctionbuttonGroup;
+    private ButtonGroup autoImportGlobalNSTypebuttonGroup;
+    private JRadioButton autoImportGlobalNamespaceConstDoNotImportRadioButton;
+    private JRadioButton autoImportGlobalNamespaceConstImportRadioButton;
+    private JLabel autoImportGlobalNamespaceConstLabel;
+    private JRadioButton autoImportGlobalNamespaceFunctionDoNotImportRadioButton;
+    private JRadioButton autoImportGlobalNamespaceFunctionImportRadioButton;
+    private JLabel autoImportGlobalNamespaceFunctionLabel;
+    private JLabel autoImportGlobalNamespaceLabel;
+    private JRadioButton autoImportGlobalNamespaceTypeDoNotImportRadioButton;
+    private JRadioButton autoImportGlobalNamespaceTypeImportRadioButton;
+    private JLabel autoImportGlobalNamespaceTypeLabel;
+    private JLabel autoImportInfoLabel;
+    private JCheckBox autoImportNamesapceScopeCheckBox;
     private JCheckBox autoStringConcatenationCheckBox;
+    private JCheckBox codeCompletionFirstClassCallableCheckBox;
     private JCheckBox codeCompletionNonStaticMethodsCheckBox;
     private JCheckBox codeCompletionSmartParametersPreFillingCheckBox;
     private JCheckBox codeCompletionStaticMethodsCheckBox;

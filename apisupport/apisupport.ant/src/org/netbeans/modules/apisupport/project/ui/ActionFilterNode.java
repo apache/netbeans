@@ -127,7 +127,7 @@ class ActionFilterNode extends FilterNode {
                     }
                 }
             }
-            actionCache = result.toArray(new Action[result.size()]);
+            actionCache = result.toArray(new Action[0]);
         }
         return actionCache;
     }

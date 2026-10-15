@@ -1,0 +1,8 @@
+    public function interfaceMethod1(): void {
+                    ----------------
+HINT:Add "#[\Override]" Attribute
+FIX:Add "#[\Override]" Attribute
+    #[\Override]
+      ---------
+HINT:Remove "#[\Override]" Attribute from "interfaceMethod2" method
+FIX:Remove "#[\Override]" Attribute from "interfaceMethod2" method

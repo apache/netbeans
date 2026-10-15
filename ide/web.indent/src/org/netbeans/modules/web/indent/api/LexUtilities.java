@@ -20,7 +20,6 @@
 package org.netbeans.modules.web.indent.api;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import javax.swing.text.BadLocationException;
@@ -252,7 +251,7 @@ public final class LexUtilities {
                 }
             }
         }
-        Collections.sort(tss, new Comparator<TokenSequence<T1>>() {
+        tss.sort(new Comparator<TokenSequence<T1>>() {
             @Override
             public int compare(TokenSequence<T1> o1, TokenSequence<T1> o2) {
                 assert o1.offset() != o2.offset() : "should never have two equal TokenSequence " + o1.toString() + " " +  o2.language().toString(); //NOI18N

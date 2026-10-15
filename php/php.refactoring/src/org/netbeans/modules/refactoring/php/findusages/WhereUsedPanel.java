@@ -199,6 +199,12 @@ public class WhereUsedPanel extends JPanel implements CustomRefactoringPanel {
             case TRAIT:
                 bundleKey = "DSC_TraitUsages"; //NOI18N
                 break;
+            case ENUM:
+                bundleKey = "DSC_EnumUsages"; // NOI18N
+                break;
+            case ENUM_CASE:
+                bundleKey = "DSC_EnumCaseUsages"; // NOI18N
+                break;
             default:
                 assert false : usage.getKind();
         }

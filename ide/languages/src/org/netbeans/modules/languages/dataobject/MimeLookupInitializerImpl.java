@@ -107,14 +107,10 @@ public class MimeLookupInitializerImpl implements MimeLookupInitializer {
             if (LanguagesManager.getDefault ().isSupported (mimeTypes [0])) {
                 lookup = Lookups.fixed (
                     new Integer[] {
-                        new Integer (1), 
-                        new Integer (2), 
-//                        new Integer (3), 
-//                        new Integer (4),
-                        new Integer (5),
-                        new Integer (6),
-                        new Integer (7)
-                    },
+                        1, 2,
+//                        3,
+//                        4,
+                        5, 6, 7},
                     new InstanceContent.Convertor<Integer,Object> () {
                         public Object convert (Integer i) {
                             switch (i.intValue ()) {

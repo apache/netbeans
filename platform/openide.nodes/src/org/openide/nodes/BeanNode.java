@@ -39,6 +39,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
@@ -67,7 +68,7 @@ import org.openide.util.actions.SystemAction;
 * </p>
 *
 * @author Jan Jancura, Ian Formanek, Jaroslav Tulach
-* @param T the type of bean to be represented
+* @param <T> the type of bean to be represented
 */
 public class BeanNode<T> extends AbstractNode {
     // static ..................................................................................................................
@@ -382,14 +383,9 @@ public class BeanNode<T> extends AbstractNode {
         Object o;
 
         try {
-            o = clazz.newInstance();
-        } catch (InstantiationException e) {
+            o = clazz.getDeclaredConstructor().newInstance();
+        } catch (ReflectiveOperationException e) {
             NodeOp.exception(e);
-
-            return null;
-        } catch (IllegalAccessException e) {
-            NodeOp.exception(e);
-
             return null;
         }
 
@@ -448,9 +444,9 @@ public class BeanNode<T> extends AbstractNode {
     * @return three property lists
     */
     public static Descriptor computeProperties(Object bean, BeanInfo info) {
-        ArrayList<Node.Property> property = new ArrayList<Node.Property>();
-        ArrayList<Node.Property> expert = new ArrayList<Node.Property>();
-        ArrayList<Node.Property> hidden = new ArrayList<Node.Property>();
+        List<Node.Property> property = new ArrayList<>();
+        List<Node.Property> expert = new ArrayList<>();
+        List<Node.Property> hidden = new ArrayList<>();
 
         PropertyDescriptor[] propertyDescriptor = info.getPropertyDescriptors();
 
@@ -511,7 +507,7 @@ public class BeanNode<T> extends AbstractNode {
             // Propagate helpID's.
             Object help = propertyDescriptor[i].getValue("helpID"); // NOI18N
 
-            if ((help != null) && (help instanceof String)) {
+            if (help instanceof String) {
                 prop.setValue("helpID", help); // NOI18N
             }
 
@@ -787,7 +783,7 @@ public class BeanNode<T> extends AbstractNode {
         public final Node.Property[] hidden;
 
         /** private constructor */
-        Descriptor(ArrayList<Node.Property> p, ArrayList<Node.Property> e, ArrayList<Node.Property> h) {
+        Descriptor(List<Node.Property> p, List<Node.Property> e, List<Node.Property> h) {
             property = new Node.Property[p.size()];
             p.toArray(property);
 

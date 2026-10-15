@@ -114,12 +114,7 @@ class ResultViewPanel extends JPanel implements Lookup.Provider {
             toolBar.setFloatable(false);
             toolBar.setOrientation(JToolBar.VERTICAL);
             btnStop.setIcon(ImageUtilities.loadImageIcon(STOP_ICON, false));
-            btnStop.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    searchCancelled();
-                }
-            });
+            btnStop.addActionListener((ActionEvent e) -> searchCancelled());
             btnStop.setToolTipText(UiUtils.getText("TEXT_BUTTON_STOP"));//NOI18N
             toolBar.add(btnStop);
             infoPanel.add(toolBar, BorderLayout.WEST);
@@ -138,7 +133,7 @@ class ResultViewPanel extends JPanel implements Lookup.Provider {
         resultViewCards.show(this, CARD_NAME_RESULTS);
     }
 
-    public synchronized final GraphicalSearchListener createListener() {
+    public final synchronized GraphicalSearchListener createListener() {
         if (searchListener == null) {
             searchListener = new GraphicalSearchListener(
                     searchComposition, this);

@@ -84,7 +84,7 @@ public final class ClassMemberFilters {
         boolean non_public = filters.isSelected(SHOW_NON_PUBLIC);
         boolean statik = filters.isSelected(SHOW_STATIC);
         boolean fields = filters.isSelected(SHOW_FIELDS);
-        // XXX Enable later boolean inherited = filters.isSelected(SHOW_INHERITED);
+        boolean inherited = filters.isSelected(SHOW_INHERITED);
         
         if (original == null || original.isEmpty()) {
             return Collections.EMPTY_LIST;
@@ -112,7 +112,10 @@ public final class ClassMemberFilters {
                     continue;
                 }
 
-                // XXX Inherited members
+                // Inherited members
+                if (!inherited && StructureItem.isInherited(description)) {
+                    continue;
+                }
 
                 result.add(description);
             }
@@ -120,7 +123,7 @@ public final class ClassMemberFilters {
             result.addAll(original);
         }
 
-        Collections.sort(result, isNaturalSort() ? Description.POSITION_COMPARATOR : Description.ALPHA_COMPARATOR);
+        result.sort(isNaturalSort() ? Description.POSITION_COMPARATOR : Description.ALPHA_COMPARATOR);
 
         return result;
     }
@@ -140,33 +143,32 @@ public final class ClassMemberFilters {
     private static FiltersManager createFilters () {
         FiltersDescription desc = new FiltersDescription();
         
-        // XXX to be enabled later
-//        desc.addFilter(SHOW_INHERITED,
-//                NbBundle.getMessage(ClassMemberFilters.class, "LBL_ShowInherited"),     //NOI18N
-//                NbBundle.getMessage(ClassMemberFilters.class, "LBL_ShowInheritedTip"),     //NOI18N
-//                false,
-//                new ImageIcon (Utilities.loadImage("org/netbeans/modules/csl/navigation/resources/filterHideInherited.png")), //NOI18N
-//                null
-//        );
+        desc.addFilter(SHOW_INHERITED,
+                NbBundle.getMessage(ClassMemberFilters.class, "LBL_ShowInherited"),     //NOI18N
+                NbBundle.getMessage(ClassMemberFilters.class, "LBL_ShowInheritedTip"),     //NOI18N
+                false,
+                ImageUtilities.loadImageIcon("org/netbeans/modules/csl/navigation/resources/filterHideInherited.png", false), //NOI18N
+                null
+        );
         desc.addFilter(SHOW_FIELDS,
                 NbBundle.getMessage(ClassMemberFilters.class, "LBL_ShowFields"),     //NOI18N
                 NbBundle.getMessage(ClassMemberFilters.class, "LBL_ShowFieldsTip"),     //NOI18N
                 true,
-                new ImageIcon (ImageUtilities.loadImage("org/netbeans/modules/csl/navigation/resources/filterHideFields.gif")), //NOI18N
+                ImageUtilities.loadImageIcon("org/netbeans/modules/csl/navigation/resources/filterHideFields.gif", false), //NOI18N
                 null
         );
         desc.addFilter(SHOW_STATIC,
                 NbBundle.getMessage(ClassMemberFilters.class, "LBL_ShowStatic"),     //NOI18N
                 NbBundle.getMessage(ClassMemberFilters.class, "LBL_ShowStaticTip"),     //NOI18N
                 true,
-                new ImageIcon (ImageUtilities.loadImage("org/netbeans/modules/csl/navigation/resources/filterHideStatic.png")), //NOI18N
+                ImageUtilities.loadImageIcon("org/netbeans/modules/csl/navigation/resources/filterHideStatic.png", false), //NOI18N
                 null
         );
         desc.addFilter(SHOW_NON_PUBLIC,
                 NbBundle.getMessage(ClassMemberFilters.class, "LBL_ShowNonPublic"),     //NOI18N
                 NbBundle.getMessage(ClassMemberFilters.class, "LBL_ShowNonPublicTip"),     //NOI18N
                 true,
-                new ImageIcon (ImageUtilities.loadImage("org/netbeans/modules/csl/navigation/resources/filterHideNonPublic.png")), //NOI18N
+                ImageUtilities.loadImageIcon("org/netbeans/modules/csl/navigation/resources/filterHideNonPublic.png", false), //NOI18N
                 null
         );
         

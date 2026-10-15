@@ -1,0 +1,3 @@
+    public static function |>MARK_OCCURRENCES:staticMethodBaz<|(Foo&Bar $param): void {}
+        self::$staticFieldClass::|>MARK_OCCURRENCES:staticmethod^Baz<|(null);
+$vardoc2::|>MARK_OCCURRENCES:staticMethodBaz<|(null);

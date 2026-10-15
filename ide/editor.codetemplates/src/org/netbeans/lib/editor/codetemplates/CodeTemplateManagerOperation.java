@@ -251,14 +251,14 @@ public final class CodeTemplateManagerOperation
         return result;
     }
     
-    public static Collection<? extends CodeTemplateFilter> getTemplateFilters(JTextComponent component, int offset) {
-        MimePath mimeType = getFullMimePath(component.getDocument(), offset);
+    public static Collection<? extends CodeTemplateFilter> getTemplateFilters(Document doc, int startOffset, int endOffset) {
+        MimePath mimeType = getFullMimePath(doc, startOffset);
         Collection<? extends CodeTemplateFilter.Factory> filterFactories = 
             MimeLookup.getLookup(mimeType).lookupAll(CodeTemplateFilter.Factory.class);
         
         List<CodeTemplateFilter> result = new ArrayList<CodeTemplateFilter>(filterFactories.size());
         for (CodeTemplateFilter.Factory factory : filterFactories) {
-            result.add(factory.createFilter(component, offset));
+            result.add(factory.createFilter(doc, startOffset, endOffset));
         }
         return result;
     }
@@ -412,12 +412,12 @@ public final class CodeTemplateManagerOperation
         }
 
         List<CodeTemplate> byAbbrev = new ArrayList<CodeTemplate>(map.values());
-        Collections.sort(byAbbrev, CodeTemplateComparator.BY_ABBREVIATION_IGNORE_CASE);
+        byAbbrev.sort(CodeTemplateComparator.BY_ABBREVIATION_IGNORE_CASE);
 
         List<CodeTemplate> byText = new ArrayList<CodeTemplate>(map.values());
-        Collections.sort(byText, CodeTemplateComparator.BY_PARAMETRIZED_TEXT_IGNORE_CASE);
+        byText.sort(CodeTemplateComparator.BY_PARAMETRIZED_TEXT_IGNORE_CASE);
         
-        Collections.sort(templatesWithSelection, CodeTemplateComparator.BY_PARAMETRIZED_TEXT_IGNORE_CASE);
+        templatesWithSelection.sort(CodeTemplateComparator.BY_PARAMETRIZED_TEXT_IGNORE_CASE);
 
         boolean fire = false;
 
@@ -452,7 +452,7 @@ public final class CodeTemplateManagerOperation
         String expandKeyStrokeText;
         if (keyStroke.equals(KeyStroke.getKeyStroke(' '))) { //NOI18N
             expandKeyStrokeText = "SPACE"; // NOI18N
-        } else if (keyStroke.equals(KeyStroke.getKeyStroke(new Character(' '), InputEvent.SHIFT_MASK))) { //NOI18N
+        } else if (keyStroke.equals(KeyStroke.getKeyStroke(Character.valueOf(' '), InputEvent.SHIFT_MASK))) { //NOI18N
             expandKeyStrokeText = "Shift-SPACE"; // NOI18N
         } else if (keyStroke.equals(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0))) {
             expandKeyStrokeText = "TAB"; // NOI18N
@@ -469,7 +469,7 @@ public final class CodeTemplateManagerOperation
         if (eks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0))) {
             eks = KeyStroke.getKeyStroke(' ');
         } else if (eks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, InputEvent.SHIFT_MASK))) {
-            eks = KeyStroke.getKeyStroke(new Character(' '), InputEvent.SHIFT_MASK);
+            eks = KeyStroke.getKeyStroke(Character.valueOf(' '), InputEvent.SHIFT_MASK);
         } else if (eks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0))) {
         } else if (eks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0))) {
         }

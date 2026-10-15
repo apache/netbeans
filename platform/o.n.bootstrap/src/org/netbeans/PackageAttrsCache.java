@@ -71,7 +71,7 @@ final class PackageAttrsCache implements Stamps.Updater {
             }
         }
         if (tmp == null) {
-            cache = new ConcurrentHashMap();
+            cache = new ConcurrentHashMap<>();
             Stamps.getModulesJARs().scheduleSave(this, CACHE, false);
         } else {
             cache = Collections.unmodifiableMap(tmp);

@@ -1,0 +1,4 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Tue May 24 16:10:23 CEST 2022
+test-processor-12.6.jar>=
+test-processor-12.6.pom>=

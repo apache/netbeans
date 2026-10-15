@@ -796,7 +796,7 @@ public class TreeObjectList extends TreeObject implements TreeNodeContentEventMo
     /**
      *
      */
-    public static abstract class ContentManager {
+    public abstract static class ContentManager {
         
         /**
          * @return reference to the particular object list owner that created us

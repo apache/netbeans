@@ -170,16 +170,16 @@ public class MessageGeneratorTest extends TestBase {
                 );
 
         // Topic based MessageDriven EJB in Java EE 5 defined in annotation
-        messageDestination = new MessageDestinationImpl("TestMessageDestination", MessageDestination.Type.TOPIC);
+        messageDestination = new MessageDestinationImpl("TestMDBTopicBean", MessageDestination.Type.TOPIC);
         panel.setDefaultProperties(messageDestination);
         properties = panel.getProperties();
-        generator = new MessageGenerator(Profile.JAVA_EE_5, "TestMDBTopic", packageFileObject, messageDestination,
+        generator = new MessageGenerator(Profile.JAVA_EE_5, "TestMDBTopicBean", packageFileObject, messageDestination,
                 true, properties, JmsSupport.getInstance(null), true);
         generator.generate();
         
         assertFile(
-                FileUtil.toFile(packageFileObject.getFileObject("TestMDBQueueBean.java")), 
-                getGoldenFile("testGenerateJavaEE50/TestMDBQueueBean.java"), 
+                FileUtil.toFile(packageFileObject.getFileObject("TestMDBTopicBean.java")),
+                getGoldenFile("testGenerateJavaEE50/TestMDBTopicBean.java"),
                 FileUtil.toFile(packageFileObject)
                 );
     }

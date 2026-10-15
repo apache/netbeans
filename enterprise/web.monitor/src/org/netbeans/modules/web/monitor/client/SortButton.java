@@ -27,7 +27,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.logging.Logger;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
+import org.openide.util.ImageUtilities;
 import javax.swing.JButton;
 
 import org.openide.util.NbBundle;
@@ -41,12 +41,9 @@ class SortButton extends JButton {
     
     public SortButton(final DisplayTable dt) {    
 	super();
-	icon[0] = new ImageIcon(TransactionView.class.getResource
-				("/org/netbeans/modules/web/monitor/client/icons/unsorted.gif")); // NOI18N)
-	icon[1] = new ImageIcon(TransactionView.class.getResource
-				("/org/netbeans/modules/web/monitor/client/icons/a2z.gif")); // NOI18N
-	icon[2] = new ImageIcon(TransactionView.class.getResource
-				("/org/netbeans/modules/web/monitor/client/icons/z2a.gif")); // NOI18N
+	icon[0] = ImageUtilities.loadIcon("org/netbeans/modules/web/monitor/client/icons/unsorted.gif"); // NOI18N)
+	icon[1] = ImageUtilities.loadIcon("org/netbeans/modules/web/monitor/client/icons/a2z.gif"); // NOI18N
+	icon[2] = ImageUtilities.loadIcon("org/netbeans/modules/web/monitor/client/icons/z2a.gif"); // NOI18N
 	setIcon(icon[state]); 
 	setBorder(null);
 	setBorderPainted(false);

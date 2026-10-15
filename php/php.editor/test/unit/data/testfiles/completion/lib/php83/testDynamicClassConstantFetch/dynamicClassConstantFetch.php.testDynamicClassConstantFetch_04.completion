@@ -1,0 +1,21 @@
+Code completion result for source line:
+$test::{$variable . $|e};
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   string $e                       [PUBLIC]   dynamicClassConstantFetch.php
+VARIABLE   string $test                    [PUBLIC]   dynamicClassConstantFetch.php
+VARIABLE   string $variable                [PUBLIC]   dynamicClassConstantFetch.php
+------------------------------------
+VARIABLE   $GLOBALS                                   PHP Platform
+VARIABLE   $HTTP_RAW_POST_DATA                        PHP Platform
+VARIABLE   $_COOKIE                                   PHP Platform
+VARIABLE   $_ENV                                      PHP Platform
+VARIABLE   $_FILES                                    PHP Platform
+VARIABLE   $_GET                                      PHP Platform
+VARIABLE   $_POST                                     PHP Platform
+VARIABLE   $_REQUEST                                  PHP Platform
+VARIABLE   $_SERVER                                   PHP Platform
+VARIABLE   $_SESSION                                  PHP Platform
+VARIABLE   $argc                                      PHP Platform
+VARIABLE   $argv                                      PHP Platform
+VARIABLE   $http_response_header                      PHP Platform
+VARIABLE   $php_errormsg                              PHP Platform

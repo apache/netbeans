@@ -151,7 +151,7 @@ public final class CustomizerSupport {
      * @return A tokenization of the specified path into the list of URLs.
      */
     public static List<URL> tokenizePath(String path) {
-            List<URL> l = new ArrayList();
+            List<URL> l = new ArrayList<>();
             StringTokenizer tok = new StringTokenizer(path, ":;", true); // NOI18N
             char dosHack = '\0';
             char lastDelim = '\0';
@@ -604,7 +604,6 @@ public final class CustomizerSupport {
 
         private void addPathElement () {
             JFileChooser chooser = new JFileChooser();
-            FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
             chooser.setMultiSelectionEnabled (true);
             String title = null;
             String message = null;
@@ -630,9 +629,7 @@ public final class CustomizerSupport {
             //#61789 on old macosx (jdk 1.4.1) these two method need to be called in this order.
             chooser.setAcceptAllFileFilterUsed( false );
             chooser.setFileFilter (new SimpleFileFilter(message,new String[] {"ZIP","JAR"}));   //NOI18N
-            if (this.currentDir != null && currentDir.exists()) {
-                chooser.setCurrentDirectory(this.currentDir);
-            }
+            chooser.setCurrentDirectory(this.currentDir != null && currentDir.exists() ? this.currentDir : null);
             if (chooser.showOpenDialog(this)==JFileChooser.APPROVE_OPTION) {
                 File[] fs = chooser.getSelectedFiles();
                 PathModel model = (PathModel) this.resources.getModel();

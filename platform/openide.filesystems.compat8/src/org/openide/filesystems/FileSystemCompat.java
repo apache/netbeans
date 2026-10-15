@@ -20,15 +20,16 @@
 package org.openide.filesystems;
 
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.beans.BeanInfo;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Set;
+import java.util.logging.Level;
 import static org.openide.filesystems.FileSystem.LOG;
 import org.openide.modules.PatchFor;
 import org.openide.util.Exceptions;
@@ -43,8 +44,12 @@ import org.openide.util.actions.SystemAction;
  */
 @PatchFor(FileSystem.class)
 public abstract class FileSystemCompat {
+    /** system actions for this FS */
+    private static final SystemAction[] NO_SYSTEM_ACTIONS = new SystemAction[0];
+
     /** Property name giving capabilities state. @deprecated No more capabilities. */
-    static final String PROP_CAPABILITIES = "capabilities"; // NOI18N    
+    @Deprecated
+    static final String PROP_CAPABILITIES = "capabilities"; // NOI18N
 
     /** hidden flag */
     private boolean hidden = false;
@@ -67,7 +72,14 @@ public abstract class FileSystemCompat {
     *
     * @return array of available actions
     */
-    public abstract SystemAction[] getActions();
+    @SuppressWarnings("ReturnOfCollectionOrArrayField")
+    public SystemAction[] getActions() {
+        // If implementations don't override getActions, an empty array is
+        // returned to satisfy the FileSystem#getActions contract. As the
+        // empty array is immutable, it is save to return a singleton in this
+        // case
+        return NO_SYSTEM_ACTIONS;
+    }
 
     /**
      * Get actions appropriate to a certain file selection.
@@ -273,7 +285,11 @@ public abstract class FileSystemCompat {
                 Object value = fo.getAttribute(attr);
                 if (value != null) {
                     if (value instanceof URL) {
-                        return Toolkit.getDefaultToolkit().getImage((URL) value);
+                        try {
+                            return ImageUtilities.loadImage(((URL) value).toURI());
+                        } catch (URISyntaxException e) {
+                            LOG.log(Level.WARNING, "Annotation has invalid icon URI", e);
+                        }
                     } else if (value instanceof Image) {
                         // #18832
                         return (Image) value;

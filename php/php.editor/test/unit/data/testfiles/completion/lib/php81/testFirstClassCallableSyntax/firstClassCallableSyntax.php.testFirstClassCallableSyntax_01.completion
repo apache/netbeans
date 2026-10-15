@@ -1,0 +1,7 @@
+Code completion result for source line:
+tes|t(...);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Test                            [PUBLIC]   firstClassCallableSyntax.php
+METHOD     test($param1, $param2)          [PUBLIC]   firstClassCallableSyntax.php
+METHOD     test($param1, $param2, $param3  [PUBLIC]   firstClassCallableSyntax.php
+METHOD     test(...)                       [PUBLIC]   firstClassCallableSyntax.php

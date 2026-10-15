@@ -25,7 +25,6 @@ import java.awt.event.ItemListener;
 import java.io.File;
 import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -133,9 +132,8 @@ public class CustomizerTesting extends JPanel {
         GroupLayout providersPanelLayout = new GroupLayout(providersPanel);
         GroupLayout.ParallelGroup horizontalGroup = providersPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING);
         GroupLayout.SequentialGroup verticalGroup = providersPanelLayout.createSequentialGroup();
-        boolean first = true;
         final Collator collator = Collator.getInstance();
-        Collections.sort(allTestingProviders, new Comparator<PhpTestingProvider>() {
+        allTestingProviders.sort(new Comparator<PhpTestingProvider>() {
             @Override
             public int compare(PhpTestingProvider provider1, PhpTestingProvider provider2) {
                 return collator.compare(provider1.getDisplayName(), provider2.getDisplayName());
@@ -150,11 +148,7 @@ public class CustomizerTesting extends JPanel {
             }
             horizontalGroup.addComponent(checkBox);
             verticalGroup.addComponent(checkBox);
-            if (first) {
-                first = false;
-            } else {
-                verticalGroup.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED);
-            }
+            verticalGroup.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED);
         }
         providersPanel.setLayout(providersPanelLayout);
         providersPanelLayout.setHorizontalGroup(

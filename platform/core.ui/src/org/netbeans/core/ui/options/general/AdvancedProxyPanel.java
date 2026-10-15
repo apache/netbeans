@@ -18,12 +18,16 @@
  */
 package org.netbeans.core.ui.options.general;
 
+import java.awt.Desktop;
+import java.net.URI;
+import java.net.URISyntaxException;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.DialogDescriptor;
 import org.openide.NotificationLineSupport;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -176,6 +180,7 @@ public class AdvancedProxyPanel extends javax.swing.JPanel {
         lUserName.setEnabled (use);
         pfUserPassword.setEnabled (use);
         lUserPassword.setEnabled (use);
+        lblBasicAuthNote.setEnabled(use);
     }
     
     private void followHttpHostIfDemand () {
@@ -272,9 +277,12 @@ public class AdvancedProxyPanel extends javax.swing.JPanel {
         lUserPassword = new javax.swing.JLabel();
         tfUserName = new javax.swing.JTextField();
         pfUserPassword = new javax.swing.JPasswordField();
+        lblBasicAuthNote = new javax.swing.JLabel();
 
         lHttpProxyHost.setLabelFor(tfHttpProxyHost);
         org.openide.awt.Mnemonics.setLocalizedText(lHttpProxyHost, org.openide.util.NbBundle.getMessage(AdvancedProxyPanel.class, "LBL_AdvancedProxyPanel_lHttpProxyHost")); // NOI18N
+
+        tfHttpProxyHost.setColumns(20);
 
         org.openide.awt.Mnemonics.setLocalizedText(cbSameProxySettings, org.openide.util.NbBundle.getMessage(AdvancedProxyPanel.class, "LBL_AdvancedProxyPanel_cbSameProxySettings")); // NOI18N
         cbSameProxySettings.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -287,8 +295,12 @@ public class AdvancedProxyPanel extends javax.swing.JPanel {
         lHttpsProxyHost.setLabelFor(tfHttpsProxyHost);
         org.openide.awt.Mnemonics.setLocalizedText(lHttpsProxyHost, org.openide.util.NbBundle.getMessage(AdvancedProxyPanel.class, "LBL_AdvancedProxyPanel_lHttpsProxyHots")); // NOI18N
 
+        tfHttpsProxyHost.setColumns(20);
+
         lSocksHost.setLabelFor(tfSocksHost);
         org.openide.awt.Mnemonics.setLocalizedText(lSocksHost, org.openide.util.NbBundle.getMessage(AdvancedProxyPanel.class, "LBL_AdvancedProxyPanel_lSocksHost")); // NOI18N
+
+        tfSocksHost.setColumns(20);
 
         lHttpProxyPort.setLabelFor(tfHttpProxyPort);
         org.openide.awt.Mnemonics.setLocalizedText(lHttpProxyPort, org.openide.util.NbBundle.getMessage(AdvancedProxyPanel.class, "LBL_AdvancedProxyPanel_lHttpProxyPort")); // NOI18N
@@ -324,29 +336,28 @@ public class AdvancedProxyPanel extends javax.swing.JPanel {
         lUserPassword.setLabelFor(pfUserPassword);
         org.openide.awt.Mnemonics.setLocalizedText(lUserPassword, org.openide.util.NbBundle.getMessage(AdvancedProxyPanel.class, "LBL_AdvancedProxyPanel_lUserPassword")); // NOI18N
 
+        lblBasicAuthNote.setFont(lblBasicAuthNote.getFont().deriveFont(lblBasicAuthNote.getFont().getSize()-2f));
+        lblBasicAuthNote.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        org.openide.awt.Mnemonics.setLocalizedText(lblBasicAuthNote, org.openide.util.NbBundle.getMessage(AdvancedProxyPanel.class, "AdvancedProxyPanel.lblBasicAuthNote.text")); // NOI18N
+        lblBasicAuthNote.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblBasicAuthNote.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblBasicAuthNoteMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addComponent(cbUseProxyAuthentication))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblBasicAuthNote, javax.swing.GroupLayout.DEFAULT_SIZE, 569, Short.MAX_VALUE)
+                    .addComponent(cbUseProxyAuthentication, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(sSeparator, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(sSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 512, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lUserName)
-                            .addComponent(lUserPassword))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(pfUserPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE)
-                            .addComponent(tfUserName, javax.swing.GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lHttpProxyHost)
                             .addComponent(lHttpsProxyHost)
@@ -354,13 +365,11 @@ public class AdvancedProxyPanel extends javax.swing.JPanel {
                             .addComponent(lNonProxyHosts))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lNonProxyHostsDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cbSameProxySettings, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(tfHttpProxyHost, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
-                                    .addComponent(tfSocksHost, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
-                                    .addComponent(tfHttpsProxyHost, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE))
+                                    .addComponent(tfHttpProxyHost, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tfSocksHost, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tfHttpsProxyHost, javax.swing.GroupLayout.Alignment.LEADING))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lHttpProxyPort)
@@ -371,8 +380,18 @@ public class AdvancedProxyPanel extends javax.swing.JPanel {
                                     .addComponent(tfHttpProxyPort)
                                     .addComponent(tfSocksPort)
                                     .addComponent(tfHttpsProxyPort)))
-                            .addComponent(tfNonProxyHosts, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE))))
-                .addGap(18, 18, 18))
+                            .addComponent(tfNonProxyHosts)
+                            .addComponent(cbSameProxySettings, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lNonProxyHostsDescription, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lUserName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lUserPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tfUserName)
+                            .addComponent(pfUserPassword))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -415,7 +434,9 @@ public class AdvancedProxyPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lUserPassword)
                     .addComponent(pfUserPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
+                .addComponent(lblBasicAuthNote)
+                .addContainerGap())
         );
 
         tfHttpProxyHost.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(AdvancedProxyPanel.class, "ACD_AdvancedProxyPanel_tfHttpProxyHost")); // NOI18N
@@ -451,6 +472,19 @@ private void cbSameProxySettingsActionPerformed(java.awt.event.ActionEvent evt) 
     }
     followHttpProxyIfDemand ();
 }//GEN-LAST:event_cbSameProxySettingsActionPerformed
+
+    private void lblBasicAuthNoteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblBasicAuthNoteMouseClicked
+        if (!lblBasicAuthNote.isEnabled()) {
+            return;
+        }
+        try {
+            // Issue https://github.com/apache/netbeans/issues/3748
+            URI uri = new URI("https://netbeans.apache.org/wiki/ProxyBasicAuth"); // NOI18N
+            Desktop.getDesktop().browse(uri);
+        } catch (Exception ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }//GEN-LAST:event_lblBasicAuthNoteMouseClicked
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -466,6 +500,7 @@ private void cbSameProxySettingsActionPerformed(java.awt.event.ActionEvent evt) 
     private javax.swing.JLabel lSocksPort;
     private javax.swing.JLabel lUserName;
     private javax.swing.JLabel lUserPassword;
+    private javax.swing.JLabel lblBasicAuthNote;
     private javax.swing.JPasswordField pfUserPassword;
     private javax.swing.JSeparator sSeparator;
     private javax.swing.JTextField tfHttpProxyHost;

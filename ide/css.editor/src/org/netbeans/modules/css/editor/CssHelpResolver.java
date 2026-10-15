@@ -154,8 +154,8 @@ public class CssHelpResolver {
         int firstLineEnd = anchor_part.indexOf("\n");  //NOI18N
         if (firstLineEnd > 0) {
             String firstLine = anchor_part.substring(0, firstLineEnd);
-            firstLine = firstLine.replaceAll("<strong>'", "<strong style=\"font-size: large\">");   //NOI18N
-            firstLine = firstLine.replaceAll("'</strong>", "</strong>"); //NOI18N
+            firstLine = firstLine.replace("<strong>'", "<strong style=\"font-size: large\">");   //NOI18N
+            firstLine = firstLine.replace("'</strong>", "</strong>"); //NOI18N
             anchor_part = firstLine + anchor_part.substring(firstLineEnd + 1);
         }
         return anchor_part;

@@ -32,7 +32,7 @@ public interface OutputProcessor {
     /**
      * specify the segments that this processor is interested in.
      * there are 2 kinds of sequences project-execute and mojo-execute.
-     *The format for the registration is as follows: <type>#<goal>
+     * The format for the registration is as follows: {@code <type>#<goal>}
      * Eg mojo-execute#compile:compile
      */
     String[] getRegisteredOutputSequences();

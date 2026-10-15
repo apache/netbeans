@@ -1,0 +1,43 @@
+|-A [820, 918] : ESCAPED{A}
+|--__toString [866, 916] : ESCAPED{__toString}ESCAPED{(}ESCAPED{)}
+|-B [926, 940] : ESCAPED{B}<font color="#999999">::ESCAPED{A}</font>
+|-C [947, 961] : ESCAPED{C}<font color="#999999">::ESCAPED{A}</font>
+|-ClassTest [969, 1571] : ESCAPED{ClassTest}
+|--WITHOUT_TYPE [998, 1010] : ESCAPED{WITHOUT_TYPE}ESCAPED{ }<font color="#999999">ESCAPED{1}</font>
+|--NULLABLE [1038, 1046] : ESCAPED{NULLABLE}<font color="#999999">:ESCAPED{?}ESCAPED{int}</font>ESCAPED{ }<font color="#999999">ESCAPED{1}</font>
+|--UNION [1074, 1079] : ESCAPED{UNION}<font color="#999999">:ESCAPED{A}ESCAPED{|}ESCAPED{B}</font>
+|--INTERSECTION [1111, 1123] : ESCAPED{INTERSECTION}<font color="#999999">:ESCAPED{A}ESCAPED{&}ESCAPED{B}</font>
+|--DNF [1156, 1159] : ESCAPED{DNF}<font color="#999999">:ESCAPED{(}ESCAPED{A}ESCAPED{&}ESCAPED{B}ESCAPED{)}ESCAPED{|}ESCAPED{C}</font>
+|--STRING [1191, 1197] : ESCAPED{STRING}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{'a'}</font>
+|--INT [1226, 1229] : ESCAPED{INT}<font color="#999999">:ESCAPED{int}</font>ESCAPED{ }<font color="#999999">ESCAPED{1}</font>
+|--FLOAT [1258, 1263] : ESCAPED{FLOAT}<font color="#999999">:ESCAPED{float}</font>ESCAPED{ }<font color="#999999">ESCAPED{1.5}</font>
+|--BOOL [1293, 1297] : ESCAPED{BOOL}<font color="#999999">:ESCAPED{bool}</font>ESCAPED{ }<font color="#999999">ESCAPED{true}</font>
+|--ARRAY [1329, 1334] : ESCAPED{ARRAY}<font color="#999999">:ESCAPED{array}</font>ESCAPED{ }<font color="#999999">ESCAPED{['t', 'e', 's', 't']}</font>
+|--ITERABLE [1385, 1393] : ESCAPED{ITERABLE}<font color="#999999">:ESCAPED{iterable}</font>ESCAPED{ }<font color="#999999">ESCAPED{['a', 'b', 'c']}</font>
+|--MIXED [1436, 1441] : ESCAPED{MIXED}<font color="#999999">:ESCAPED{mixed}</font>ESCAPED{ }<font color="#999999">ESCAPED{1}</font>
+|--OBJECT [1471, 1477] : ESCAPED{OBJECT}<font color="#999999">:ESCAPED{object}</font>
+|--UNION2 [1515, 1521] : ESCAPED{UNION2}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{array}</font>ESCAPED{ }<font color="#999999">ESCAPED{'a'}</font>
+|--UNION3 [1555, 1561] : ESCAPED{UNION3}<font color="#999999">:ESCAPED{int}ESCAPED{|}ESCAPED{null}</font>ESCAPED{ }<font color="#999999">ESCAPED{null}</font>
+|-InterfaceTest [1583, 1783] : ESCAPED{InterfaceTest}
+|--STRING [1616, 1622] : ESCAPED{STRING}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"string"}</font>
+|--NULLABLE [1657, 1665] : ESCAPED{NULLABLE}<font color="#999999">:ESCAPED{?}ESCAPED{int}</font>ESCAPED{ }<font color="#999999">ESCAPED{1}</font>
+|--UNION [1692, 1697] : ESCAPED{UNION}<font color="#999999">:ESCAPED{A}ESCAPED{|}ESCAPED{B}</font>
+|--INTERSECTION [1726, 1738] : ESCAPED{INTERSECTION}<font color="#999999">:ESCAPED{A}ESCAPED{&}ESCAPED{B}</font>
+|--DNF [1771, 1774] : ESCAPED{DNF}<font color="#999999">:ESCAPED{(}ESCAPED{A}ESCAPED{&}ESCAPED{B}ESCAPED{)}ESCAPED{|}ESCAPED{C}</font>
+|-TraitTest [1791, 1991] : ESCAPED{TraitTest}
+|--STRING [1820, 1826] : ESCAPED{STRING}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"string"}</font>
+|--NULLABLE [1861, 1869] : ESCAPED{NULLABLE}<font color="#999999">:ESCAPED{?}ESCAPED{int}</font>ESCAPED{ }<font color="#999999">ESCAPED{1}</font>
+|--UNION [1897, 1902] : ESCAPED{UNION}<font color="#999999">:ESCAPED{A}ESCAPED{|}ESCAPED{B}</font>
+|--INTERSECTION [1934, 1946] : ESCAPED{INTERSECTION}<font color="#999999">:ESCAPED{A}ESCAPED{&}ESCAPED{B}</font>
+|--DNF [1979, 1982] : ESCAPED{DNF}<font color="#999999">:ESCAPED{(}ESCAPED{A}ESCAPED{&}ESCAPED{B}ESCAPED{)}ESCAPED{|}ESCAPED{C}</font>
+|-EnumTest [1998, 2261] : ESCAPED{EnumTest}
+|--STRING [2026, 2032] : ESCAPED{STRING}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"string"}</font>
+|--NULLABLE [2067, 2075] : ESCAPED{NULLABLE}<font color="#999999">:ESCAPED{?}ESCAPED{int}</font>ESCAPED{ }<font color="#999999">ESCAPED{1}</font>
+|--UNION [2103, 2108] : ESCAPED{UNION}<font color="#999999">:ESCAPED{A}ESCAPED{|}ESCAPED{B}</font>
+|--INTERSECTION [2140, 2152] : ESCAPED{INTERSECTION}<font color="#999999">:ESCAPED{A}ESCAPED{&}ESCAPED{B}</font>
+|--DNF [2189, 2192] : ESCAPED{DNF}<font color="#999999">:ESCAPED{(}ESCAPED{A}ESCAPED{&}ESCAPED{B}ESCAPED{)}ESCAPED{|}ESCAPED{(}ESCAPED{A}ESCAPED{&}ESCAPED{C}ESCAPED{)}</font>
+|--A [2224, 2225] : ESCAPED{A}<font color="#999999">:ESCAPED{static}</font>
+|--Test [2254, 2258] : ESCAPED{Test}
+|-D_A [2271, 2274] : ESCAPED{D_A}
+|-D_B [2295, 2298] : ESCAPED{D_B}
+|-D_C [2319, 2322] : ESCAPED{D_C}

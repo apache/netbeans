@@ -285,7 +285,7 @@ public class CharSequencesTest  {
 
     @Test
     public void createSample() {
-        // BEGIN: CharSequencesTest#createSample
+        // @start region="createSample"
         CharSequence englishText = CharSequences.create("English Text");
         assertTrue("English text can be compacted", CharSequences.isCompact(englishText));
 
@@ -297,12 +297,12 @@ public class CharSequencesTest  {
 
         CharSequence czechText = CharSequences.create("\u017Dlu\u0165ou\u010Dk\u00FD k\u016F\u0148");
         assertTrue("Czech text can be compacted", CharSequences.isCompact(czechText));
-        // END: CharSequencesTest#createSample
+        // @end region="createSample"
     }
 
     @Test
     public void compareStrings() {
-        // BEGIN: CharSequencesTest#compareStrings
+        // @start region="compareStrings"
         String h1 = "Hello World!";
         CharSequence h2 = CharSequences.create(h1);
         CharSequence h3 = CharSequences.create(h1.toCharArray(), 0, h1.length());
@@ -314,19 +314,19 @@ public class CharSequencesTest  {
         assertEquals("Content remains the same #1", 0, CharSequences.comparator().compare(h1, h2));
         assertEquals("Content remains the same #2", 0, CharSequences.comparator().compare(h2, h3));
         assertEquals("Content remains the same #3", 0, CharSequences.comparator().compare(h3, h1));
-        // END: CharSequencesTest#compareStrings
+        // @end region="compareStrings"
     }
 
     @Test
     public void indexOfSample() {
-        // BEGIN: CharSequencesTest#indexOfSample
+        // @start region="indexOfSample"
         CharSequence horseCarriesPepsi = CharSequences.create("K\u016F\u0148 veze Pepsi.");
         int findPepsi = CharSequences.indexOf(horseCarriesPepsi, "Pepsi");
         assertEquals("Pepsi found in the sentence", 9, findPepsi);
         CharSequence pepsi = horseCarriesPepsi.subSequence(findPepsi, findPepsi + 5);
         assertTrue("It is still compacted", CharSequences.isCompact(pepsi));
         assertEquals(0, CharSequences.comparator().compare("Pepsi", pepsi));
-        // END: CharSequencesTest#indexOfSample
+        // @end region="indexOfSample"
     }
 
     private static boolean isJDK11() {

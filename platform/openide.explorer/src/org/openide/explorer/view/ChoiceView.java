@@ -32,7 +32,7 @@ import javax.swing.*;
 
 /** Explorer view based on a combo box.
  * <p>
- * This class is a <q>view</q>
+ * This class is a <em>view</em>
  * to use it properly you need to add it into a component which implements
  * {@link Provider}. Good examples of that can be found
  * in {@link ExplorerUtils}. Then just use
@@ -40,7 +40,7 @@ import javax.swing.*;
  * and control its state.
  * </p>
  * <p>
- * There can be multiple <q>views</q> under one container implementing {@link Provider}. Select from
+ * There can be multiple <em>views</em> under one container implementing {@link Provider}. Select from
  * range of predefined ones or write your own:
  * </p>
  * <ul>
@@ -69,13 +69,13 @@ public class ChoiceView extends JComboBox implements Externalizable {
 
     /** The local reference to the explorerManager. It is transient
     * because it will be reset in initializeManager() after deserialization.*/
-    transient private ExplorerManager manager;
+    private transient ExplorerManager manager;
 
     /** Listens on ExplorerManager. */
-    transient private PropertyIL iListener;
+    private transient PropertyIL iListener;
 
     /** model to use */
-    transient private NodeListModel model;
+    private transient NodeListModel model;
 
     /** Value of property showExploredContext. */
     private boolean showExploredContext = true;

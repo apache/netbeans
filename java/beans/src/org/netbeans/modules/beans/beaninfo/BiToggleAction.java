@@ -32,8 +32,6 @@ import org.openide.util.actions.NodeAction;
 public class BiToggleAction extends NodeAction  {
 
     static final long serialVersionUID =3773842179168178798L;
-    /** generated Serialized Version UID */
-    //static final long serialVersionUID = 1391479985940417455L;
 
     //private static final Class[] cookieClasses = new Class[] { BiFeatureNode.class };
 
@@ -84,8 +82,8 @@ public class BiToggleAction extends NodeAction  {
         for(int i = 0; i <activatedNodes.length; i++ ) {
             if( activatedNodes[i].getCookie( BiFeatureNode.class ) == null )
                 return false;
-            BiFeature biFeature = ((BiFeatureNode)activatedNodes[i].getCookie( BiFeatureNode.class )).getBiFeature();
-            BiAnalyser biAnalyser = ((BiFeatureNode)activatedNodes[i].getCookie( BiFeatureNode.class )).getBiAnalyser();
+            BiFeature biFeature = (activatedNodes[i].getCookie( BiFeatureNode.class )).getBiFeature();
+            BiAnalyser biAnalyser = (activatedNodes[i].getCookie( BiFeatureNode.class )).getBiAnalyser();
             if( ( biFeature instanceof BiFeature.Property || biFeature instanceof BiFeature.IdxProperty ) && biAnalyser.isNullProperties() )
                 return false;
             if( biFeature instanceof BiFeature.EventSet && biAnalyser.isNullEventSets() )
@@ -111,7 +109,7 @@ public class BiToggleAction extends NodeAction  {
 
         for(int i = 0; i < nodes.length; i++ ) {
             if( nodes[i].getCookie( BiFeatureNode.class ) != null )
-                ((BiFeatureNode)nodes[i].getCookie( BiFeatureNode.class )).toggleSelection();
+                (nodes[i].getCookie( BiFeatureNode.class )).toggleSelection();
         }
 
     }

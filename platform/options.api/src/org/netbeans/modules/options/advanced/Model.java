@@ -23,7 +23,6 @@ import java.awt.Component;
 import java.beans.PropertyChangeListener;
 import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -82,7 +81,7 @@ public final class Model extends TabbedPanelModel {
         // Sort Miscellaneous (aka Advanced) subcategories. Order of other categories
         // can be defined in layer by position attribute.
         if(OptionsDisplayer.ADVANCED.equals(subpath)) {
-            Collections.sort(l, Collator.getInstance());
+            l.sort(Collator.getInstance());
         }
         return l;
     }
@@ -221,7 +220,7 @@ public final class Model extends TabbedPanelModel {
         while (it.hasNext ())
             lookups.add (it.next ().getLookup ());
         return new ProxyLookup 
-            (lookups.toArray (new Lookup [lookups.size ()]));
+            (lookups.toArray (new Lookup [0]));
     }
     
     HelpCtx getHelpCtx (JComponent panel) {

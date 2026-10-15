@@ -39,13 +39,8 @@ public final class DiffViewModeSwitcher implements ChangeListener {
     private int diffViewMode = 0;
     private final Map<JComponent, ChangeListener> handledViews = new WeakHashMap<>();
 
-    public static synchronized DiffViewModeSwitcher get (Object holder) {
-        DiffViewModeSwitcher instance = INSTANCES.get(holder);
-        if (instance == null) {
-            instance = new DiffViewModeSwitcher();
-            INSTANCES.put(holder, instance);
-        }
-        return instance;
+    public static synchronized DiffViewModeSwitcher get(Object holder) {
+        return INSTANCES.computeIfAbsent(holder, k -> new DiffViewModeSwitcher());
     }
 
     public void setupMode (DiffController view) {
@@ -63,7 +58,7 @@ public final class DiffViewModeSwitcher implements ChangeListener {
     }
 
     @Override
-    public void stateChanged (ChangeEvent e) {
+    public void stateChanged(ChangeEvent e) {
         Object source = e.getSource();
         if (source instanceof JTabbedPane) {
             JTabbedPane tabPane = (JTabbedPane) source;
@@ -73,24 +68,23 @@ public final class DiffViewModeSwitcher implements ChangeListener {
         }
     }
 
-    private static JTabbedPane findTabbedPane (JComponent component) {
-        JTabbedPane pane = null;
+    private static JTabbedPane findTabbedPane(JComponent component) {
         if (component instanceof JTabbedPane && Boolean.TRUE.equals(component.getClientProperty("diff-view-mode-switcher"))) {
-            pane = (JTabbedPane) component;
+            return (JTabbedPane) component;
         } else {
             for (Component c : component.getComponents()) {
                 if (c instanceof JComponent) {
-                    pane = findTabbedPane((JComponent) c);
+                    JTabbedPane pane = findTabbedPane((JComponent) c);
                     if (pane != null) {
-                        break;
+                        return pane;
                     }
                 }
             }
         }
-        return pane;
+        return null;
     }
 
-    public static synchronized void release (Object holder) {
+    public static synchronized void release(Object holder) {
         INSTANCES.remove(holder);
     }
 

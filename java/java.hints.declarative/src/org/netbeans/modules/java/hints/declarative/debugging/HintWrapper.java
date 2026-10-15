@@ -50,7 +50,7 @@ public class HintWrapper {
     public static Collection<? extends HintWrapper> parse(@NonNull FileObject file, String spec) {
         TokenHierarchy<?> h = TokenHierarchy.create(spec, DeclarativeHintTokenId.language());
         TokenSequence<DeclarativeHintTokenId> ts = h.tokenSequence(DeclarativeHintTokenId.language());
-        List<HintWrapper> result = new LinkedList<HintWrapper>();
+        List<HintWrapper> result = new LinkedList<>();
         Result parsed = new DeclarativeHintsParser().parse(file, spec, ts);
 
         for (HintTextDescription d : parsed.hints) {

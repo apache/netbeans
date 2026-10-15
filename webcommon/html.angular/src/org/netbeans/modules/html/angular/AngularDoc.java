@@ -28,11 +28,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.html.angular.model.Directive;
 import org.openide.modules.Places;
 import org.openide.util.Enumerations;
@@ -83,7 +83,7 @@ public class AngularDoc {
         LOG.fine("start loading doc"); //NOI18N
         Directive[] dirs = Directive.values();
         directives = Enumerations.array(dirs);
-        progress = ProgressHandleFactory.createHandle(Bundle.doc_building());
+        progress = ProgressHandle.createHandle(Bundle.doc_building());
         progress.start(dirs.length);
 
         buildDoc();
@@ -139,9 +139,9 @@ public class AngularDoc {
         synchronized (cacheFile) {
             String tmpFileName = cacheFile.getAbsolutePath() + ".tmp";
             File tmpFile = new File(tmpFileName);
-            try (Writer writer = new OutputStreamWriter(new FileOutputStream(tmpFile), "UTF-8")) { // NOI18N
+            try (Writer writer = new OutputStreamWriter(new FileOutputStream(tmpFile), StandardCharsets.UTF_8)) { // NOI18N
                 writer.append("<!doctype html><html><head><title>AngularJS documentation</title></head><body>");
-                Utils.loadURL(url, writer, Charset.forName("UTF-8"));
+                Utils.loadURL(url, writer, StandardCharsets.UTF_8);
                 writer.append("</body></html>");
                 writer.close();
                 tmpFile.renameTo(cacheFile);

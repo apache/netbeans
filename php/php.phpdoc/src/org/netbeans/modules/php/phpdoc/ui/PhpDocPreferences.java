@@ -20,13 +20,19 @@
 package org.netbeans.modules.php.phpdoc.ui;
 
 import java.util.prefs.Preferences;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
+import org.netbeans.modules.php.api.util.StringUtils;
+import org.netbeans.spi.project.support.ant.PropertyUtils;
+import org.openide.filesystems.FileUtil;
 
 public final class PhpDocPreferences {
 
     private static final String PHPDOC_ENABLED = "enabled"; // NOI18N
     private static final String PHPDOC_TARGET = "target"; // NOI18N
     private static final String PHPDOC_TITLE = "title"; // NOI18N
+    private static final String PHPDOC_CONFIGURATION_ENABLED = "configuration.enabled"; // NOI18N
+    private static final String PHPDOC_CONFIGURATION_PATH = "configuration.path"; // NOI18N
 
 
     private PhpDocPreferences() {
@@ -69,11 +75,36 @@ public final class PhpDocPreferences {
         getPreferences(phpModule).put(PHPDOC_TITLE, phpDocTitle);
     }
 
+    public static boolean isConfigurationEnabled(PhpModule phpModule) {
+        return getPreferences(phpModule).getBoolean(PHPDOC_CONFIGURATION_ENABLED, false);
+    }
+
+    public static void setConfigurationEnabled(PhpModule phpModule, boolean configurationEnabled) {
+        getPreferences(phpModule).putBoolean(PHPDOC_CONFIGURATION_ENABLED, configurationEnabled);
+    }
+
+    @CheckForNull
+    public static String getPhpDocConfigurationPath(PhpModule phpModule) {
+        return resolvePath(phpModule, getPreferences(phpModule).get(PHPDOC_CONFIGURATION_PATH, null));
+    }
+
+    public static void setPhpDocConfigurationPath(PhpModule phpModule, String phpDocConfiguration) {
+        getPreferences(phpModule).put(PHPDOC_CONFIGURATION_PATH, phpDocConfiguration);
+    }
+
     private static Preferences getPreferences(PhpModule phpModule) {
         return phpModule.getPreferences(PhpDocPreferences.class, false);
     }
 
     private static String getDefaultPhpDocTitle(PhpModule phpModule) {
         return phpModule.getDisplayName();
+    }
+
+    @CheckForNull
+    private static String resolvePath(PhpModule phpModule, String filePath) {
+        if (!StringUtils.hasText(filePath)) {
+            return null;
+        }
+        return PropertyUtils.resolveFile(FileUtil.toFile(phpModule.getProjectDirectory()), filePath).getAbsolutePath();
     }
 }

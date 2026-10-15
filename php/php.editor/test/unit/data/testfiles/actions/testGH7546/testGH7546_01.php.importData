@@ -1,0 +1,52 @@
+Caret position: 844
+Should show uses panel: true
+Defaults:
+ \NS1\Sub1\Sub2\Sub3\CONSTANT
+ <html><font color='#FF0000'>&lt;cannot be resolved&gt;
+ \NS1\TestClass
+ \NS1\TestEnum
+ \NS1\TestInterface
+ \NS1\TestTrait
+ \NS1\Sub1\Sub2\Sub3\TestInterface
+ \NS1\Sub1\Sub2\Sub3\func
+
+Names:
+ CONSTANT
+ NS1\Sub1\TestClass
+ TestClass
+ TestEnum
+ TestInterface
+ TestTrait
+ \NS1\Sub1\Sub2\Sub3\TestInterface
+ func
+
+Variants:
+ \NS1\CONSTANT
+ \NS1\Sub1\Sub2\Sub3\CONSTANT
+ Don't import.
+
+ <html><font color='#FF0000'>&lt;cannot be resolved&gt;
+
+ \NS1\Sub1\Sub2\Sub3\TestClass
+ \NS1\TestClass
+ Don't import.
+
+ \NS1\Sub1\Sub2\Sub3\TestEnum
+ \NS1\TestEnum
+ Don't import.
+
+ \NS1\Sub1\Sub2\Sub3\TestInterface
+ \NS1\TestInterface
+ Don't import.
+
+ \NS1\Sub1\Sub2\Sub3\TestTrait
+ \NS1\TestTrait
+ Don't import.
+
+ \NS1\Sub1\Sub2\Sub3\TestInterface
+ Don't import.
+
+ \NS1\func
+ \NS1\Sub1\Sub2\Sub3\func
+ Don't import.
+

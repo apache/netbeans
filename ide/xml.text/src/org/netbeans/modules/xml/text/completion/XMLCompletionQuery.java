@@ -444,7 +444,7 @@ public class XMLCompletionQuery {
             return null;
         } 
         // tag name does not include end sharp brace
-        tagName = tagName.substring(1, tagName.length()).trim();
+        tagName = tagName.substring(1).trim();
         if (isClosingEndTagFoundAfter(offset, ts, tagName)) {
             // I know, there may be multiple levels of the same tag name, and the innermost may
             // be missing...

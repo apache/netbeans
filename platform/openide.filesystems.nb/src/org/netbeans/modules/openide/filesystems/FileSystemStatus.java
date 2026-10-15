@@ -20,8 +20,8 @@
 package org.netbeans.modules.openide.filesystems;
 
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.beans.BeanInfo;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.MissingResourceException;
@@ -117,7 +117,11 @@ public final class FileSystemStatus implements StatusDecorator, ImageDecorator {
             Object value = fo.getAttribute(attr);
             if (value != null) {
                 if (value instanceof URL) {
-                    return Toolkit.getDefaultToolkit().getImage((URL) value);
+                    try {
+                        return ImageUtilities.loadImage(((URL) value).toURI());
+                    } catch (URISyntaxException e) {
+                        LOG.log(Level.WARNING, "Annotation has invalid icon URI", e);
+                    }
                 } else if (value instanceof Image) {
                     // #18832
                     return (Image) value;

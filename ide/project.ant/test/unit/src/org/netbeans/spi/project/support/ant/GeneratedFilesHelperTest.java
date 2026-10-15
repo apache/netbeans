@@ -23,6 +23,7 @@ import org.netbeans.spi.project.ant.AntBuildExtenderImplementation;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import org.netbeans.api.project.Project;
@@ -182,9 +183,9 @@ public class GeneratedFilesHelperTest extends NbTestCase {
         String testDataNl = "hi mom\nhow are you\n";
         String testDataCrNl = "hi mom\r\nhow are you\r\n";
         String testDataCr = "hi mom\rhow are you\r";
-        String crcNl = GeneratedFilesHelper.computeCrc32(new ByteArrayInputStream(testDataNl.getBytes("UTF-8")));
-        String crcCrNl = GeneratedFilesHelper.computeCrc32(new ByteArrayInputStream(testDataCrNl.getBytes("UTF-8")));
-        String crcCr = GeneratedFilesHelper.computeCrc32(new ByteArrayInputStream(testDataCr.getBytes("UTF-8")));
+        String crcNl = GeneratedFilesHelper.computeCrc32(new ByteArrayInputStream(testDataNl.getBytes(StandardCharsets.UTF_8)));
+        String crcCrNl = GeneratedFilesHelper.computeCrc32(new ByteArrayInputStream(testDataCrNl.getBytes(StandardCharsets.UTF_8)));
+        String crcCr = GeneratedFilesHelper.computeCrc32(new ByteArrayInputStream(testDataCr.getBytes(StandardCharsets.UTF_8)));
         assertEquals("CRNL normalized -> NL", crcNl, crcCrNl);
         assertEquals("CR normalized -> NL", crcNl, crcCr);
     }

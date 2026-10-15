@@ -62,22 +62,18 @@ public class JsErrorManager extends ErrorManager implements ANTLRErrorListener {
 
     private static final Logger LOGGER = Logger.getLogger(JsErrorManager.class.getName());
 
-    private static final int MAX_MESSAGE_LENGTH = 100;
+    private static final int MAX_MESSAGE_LENGTH = 250;
 
-    private static final boolean SHOW_BADGES_EMBEDDED = Boolean.getBoolean(JsErrorManager.class.getName() + ".showBadgesEmbedded");;
+    private static final boolean SHOW_BADGES_EMBEDDED = Boolean.getBoolean(JsErrorManager.class.getName() + ".showBadgesEmbedded");
 
-    private static final Comparator<SimpleError> POSITION_COMPARATOR = new Comparator<SimpleError>() {
-
-        @Override
-        public int compare(SimpleError o1, SimpleError o2) {
-            if (o1.getStartPosition() < o2.getStartPosition()) {
-                return -1;
-            }
-            if (o1.getStartPosition() > o2.getStartPosition()) {
-                return 1;
-            }
-            return 0;
+    private static final Comparator<SimpleError> POSITION_COMPARATOR = (SimpleError o1, SimpleError o2) -> {
+        if (o1.getStartPosition() < o2.getStartPosition()) {
+            return -1;
         }
+        if (o1.getStartPosition() > o2.getStartPosition()) {
+            return 1;
+        }
+        return 0;
     };
 
     // message pattern is for example "index.html:2:16 Exepcted ;"
@@ -101,7 +97,7 @@ public class JsErrorManager extends ErrorManager implements ANTLRErrorListener {
 
     private List<JsParserError> convertedErrors;
 
-    private final static Map<String, JsTokenId> JS_TEXT_TOKENS = new HashMap<String, JsTokenId>();
+    private static final Map<String, JsTokenId> JS_TEXT_TOKENS = new HashMap<>();
 
     static {
         for (JsTokenId jsTokenId : JsTokenId.values()) {
@@ -132,7 +128,7 @@ public class JsErrorManager extends ErrorManager implements ANTLRErrorListener {
                     && (error.message.contains("Expected }") || error.message.contains("but found }"))) { // NOI18N
                 return new JsParserError(error.toSimpleError(snapshot, language),
                         snapshot != null ? snapshot.getSource().getFileObject() : null,
-                        Severity.ERROR, null, false, false, 
+                        Severity.ERROR, null, false, false,
                         enableFilterAction, disableFilterAction);
             }
         }
@@ -192,23 +188,24 @@ public class JsErrorManager extends ErrorManager implements ANTLRErrorListener {
             if (parserErrors == null) {
                 convertedErrors = Collections.emptyList();
             } else {
-                ArrayList<SimpleError> errors = new ArrayList<SimpleError>(parserErrors.size());
+                ArrayList<SimpleError> errors = new ArrayList<>(parserErrors.size());
                 for (ParserError error : parserErrors) {
                     errors.add(error.toSimpleError(snapshot, language));
                 }
-                Collections.sort(errors, POSITION_COMPARATOR);
+                errors.sort(POSITION_COMPARATOR);
                 convertedErrors = convert(snapshot, errors);
             }
         }
         return Collections.unmodifiableList(convertedErrors);
     }
 
+    @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
     JsErrorManager fillErrors(JsErrorManager original) {
         assert this.snapshot == original.snapshot : this.snapshot + ":" + original.snapshot;
         assert this.language == original.language : this.language + ":" + original.language;
 
         if (original.parserErrors != null) {
-            this.parserErrors = new ArrayList<ParserError>(original.parserErrors);
+            this.parserErrors = new ArrayList<>(original.parserErrors);
         } else {
             this.parserErrors = null;
         }
@@ -219,14 +216,14 @@ public class JsErrorManager extends ErrorManager implements ANTLRErrorListener {
     private void addParserError(ParserError error) {
         convertedErrors = null;
         if (parserErrors == null) {
-            parserErrors = new ArrayList<ParserError>();
+            parserErrors = new ArrayList<>();
         }
         parserErrors.add(error);
     }
 
     private static List<JsParserError> convert(Snapshot snapshot, List<SimpleError> errors) {
         // basically we are solwing showExplorerBadge attribute here
-        List<JsParserError> ret = new ArrayList<JsParserError>(errors.size());
+        List<JsParserError> ret = new ArrayList<>(errors.size());
         final FileObject file = snapshot != null ? snapshot.getSource().getFileObject() : null;
         Collection<FilterableError.SetFilterAction> enableFilterAction = file != null
                 ? ParsingErrorFilter.getEnableFilterAction(file)
@@ -234,7 +231,7 @@ public class JsErrorManager extends ErrorManager implements ANTLRErrorListener {
         FilterableError.SetFilterAction disableFilterAction = file != null
                 ? ParsingErrorFilter.getDisableFilterAction(file)
                 : null;
-        
+
         if (snapshot != null && BaseParserResult.isEmbedded(snapshot)) {
             int nextCorrect = -1;
             boolean afterGeneratedIdentifier = false;
@@ -257,7 +254,7 @@ public class JsErrorManager extends ErrorManager implements ANTLRErrorListener {
                             nextCorrect = findNextCorrectOffset(ts, error.getStartPosition());
                             showInEditor = false;
                             afterGeneratedIdentifier = true;
-                        } else if (afterGeneratedIdentifier && error.getMessage().indexOf(EXPECTED) != -1) {
+                        } else if (afterGeneratedIdentifier && error.getMessage().contains(EXPECTED)) {
                             // errors after generated identifiers can display farther - see issue #229985
                             String expected = getExpected(error.getMessage());
                             if ("eof".equals(expected)) { //NOI18N
@@ -414,13 +411,13 @@ public class JsErrorManager extends ErrorManager implements ANTLRErrorListener {
         SimpleError toSimpleError(
                 @NonNull final Snapshot snapshot,
                 @NonNull final Language<JsTokenId> language) {
-            String message = this.message;
+            String simpleMessage = this.message;
             int offset = -1;
-            Matcher matcher = ERROR_MESSAGE_PATTERN.matcher(message);
+            Matcher matcher = ERROR_MESSAGE_PATTERN.matcher(simpleMessage);
             if (matcher.matches()) {
-                message = matcher.group(1);
+                simpleMessage = matcher.group(1);
             }
-            message = REPLACE_POINTER_PATTERN.matcher(message).replaceAll(""); // NOI18N
+            simpleMessage = REPLACE_POINTER_PATTERN.matcher(simpleMessage).replaceAll(""); // NOI18N
 
             if (this.token > 0) {
                 offset = Token.descPosition(this.token);
@@ -460,12 +457,12 @@ public class JsErrorManager extends ErrorManager implements ANTLRErrorListener {
                     }
                 }
             }
-            return new SimpleError(message, true, offset, offset+1);
+            return new SimpleError(simpleMessage, true, offset, offset+1);
         }
     }
 
     private static final class AntlrParserError extends ParserError {
-        
+
         final Object token;
 
         public AntlrParserError(String message, int line, int column, Object token) {
@@ -475,7 +472,6 @@ public class JsErrorManager extends ErrorManager implements ANTLRErrorListener {
 
         @Override
         SimpleError toSimpleError(Snapshot snapshot, Language<JsTokenId> language) {
-            String message = this.message;
             LineDocument doc = (LineDocument)snapshot.getSource().getDocument(false);
             if (doc == null) {
                 LOGGER.log(Level.WARNING, "No document found");

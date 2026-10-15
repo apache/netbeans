@@ -65,7 +65,7 @@ public final class ContextHelper {
     public static List<ClassNode> getDeclaredClasses(CompletionContext request) {
         if (request.path == null) {
             LOG.log(Level.FINEST, "path == null"); // NOI18N
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
 
         for (Iterator<ASTNode> it = request.path.iterator(); it.hasNext();) {
@@ -75,7 +75,7 @@ public final class ContextHelper {
                 return ((ModuleNode) current).getClasses();
             }
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     /**
@@ -156,6 +156,31 @@ public final class ContextHelper {
         return null;
     }
 
+    public static ASTNode getSurroundingClassMember(CompletionContext request) {
+        if (request.path == null) {
+            LOG.log(Level.FINEST, "path == null"); // NOI18N
+            return null;
+        }
+
+        LOG.log(Level.FINEST, "getSurroundingMethodOrClosure() ----------------------------------------");
+        LOG.log(Level.FINEST, "Path : {0}", request.path);
+
+        for (Iterator<ASTNode> it = request.path.iterator(); it.hasNext();) {
+            ASTNode current = it.next();
+            if (current instanceof MethodNode) {
+                MethodNode mn = (MethodNode) current;
+                LOG.log(Level.FINEST, "Found Method: {0}", mn.getName()); // NOI18N
+                return mn;
+            } else if (current instanceof FieldNode) {
+                FieldNode fn = (FieldNode) current;
+                return fn;
+            } else if (current instanceof ClassNode) {
+                return null;
+            }
+        }
+        return null;
+    }
+    
     /**
      * Finds out if the given {@link CompletionContext} is a complete-constructor call.
      * 
@@ -266,7 +291,7 @@ public final class ContextHelper {
                 ASTNode node = getASTNodeForToken(ctx.before1, request);
                 LOG.log(Level.FINEST, "getASTNodeForToken(ASTNode) : {0}", node); //NOI18N
 
-                if (node != null && (node instanceof ClassExpression || node instanceof DeclarationExpression)) {
+                if (node instanceof ClassExpression || node instanceof DeclarationExpression) {
                     LOG.log(Level.FINEST, "ClassExpression or DeclarationExpression discovered"); //NOI18N
                     return true;
                 }

@@ -190,7 +190,7 @@ public class ServerResourceNode extends FilterNode {
 //        return Lookups.singleton(DataFolder.find(projectFolder));
 //    }
 
-    final private class ProjectDirectoryListener extends FileChangeAdapter {
+    private final class ProjectDirectoryListener extends FileChangeAdapter {
         
         public void fileDeleted(FileEvent fe) {
             if (isWatchedFile(getFileName(fe)))
@@ -225,7 +225,7 @@ public class ServerResourceNode extends FilterNode {
         }
     }
     
-    final private static class VisibilityQueryDataFilter implements ChangeListener, ChangeableDataFilter {
+    private static final class VisibilityQueryDataFilter implements ChangeListener, ChangeableDataFilter {
         
         private EventListenerList ell = new EventListenerList();
         

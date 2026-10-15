@@ -35,7 +35,7 @@ import org.netbeans.editor.TokenID;
 * @version 1.00
 * @deprecated Use JSP Lexer instead
 */
-
+@Deprecated
 public class JspTagSyntax extends Syntax {
 
     // Internal states

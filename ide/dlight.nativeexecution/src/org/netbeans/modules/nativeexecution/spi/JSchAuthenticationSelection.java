@@ -26,7 +26,7 @@ import org.openide.util.Lookup;
  *
  * @author masha
  */
-abstract public class JSchAuthenticationSelection {
+public abstract class JSchAuthenticationSelection {
     private static final JSchAuthenticationSelection INSTANCE = new JSchAuthenticationSelectionImpl();
     
     public static JSchAuthenticationSelection find() {
@@ -37,7 +37,7 @@ abstract public class JSchAuthenticationSelection {
         return sels.iterator().next();
     }
     
-    abstract public  boolean initAuthentication(Authentication auth);
+    public abstract  boolean initAuthentication(Authentication auth);
     
     private static final  class JSchAuthenticationSelectionImpl extends JSchAuthenticationSelection {
 

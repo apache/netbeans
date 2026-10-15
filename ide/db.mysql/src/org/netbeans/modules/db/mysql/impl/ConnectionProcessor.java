@@ -49,14 +49,14 @@ public final class ConnectionProcessor implements Runnable {
     // synchronized on this
     private Quoter quoter;
 
-    private final AtomicReference<Thread> taskThreadRef = new AtomicReference<Thread>();;
+    private final AtomicReference<Thread> taskThreadRef = new AtomicReference<Thread>();
 
     synchronized void setConnection(Connection conn) throws DatabaseException {
         this.conn = conn;
         setQuoter();
     }
     
-    synchronized private void setQuoter() throws DatabaseException {
+    private synchronized void setQuoter() throws DatabaseException {
         // Enforces the invariant relationship between the database connection
         // and the quoter 
         try {

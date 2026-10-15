@@ -82,7 +82,7 @@ public class NbMoveRefactoringPlugin extends AbstractRefactoringPlugin {
     private EditableManifest targetManifest;
     
     private Map packagePostfix = new HashMap();
-    ArrayList<FileObject> filesToMove = new ArrayList();    
+    ArrayList<FileObject> filesToMove = new ArrayList<>();
     HashMap<FileObject,ElementHandle> classes;
     
     /**
@@ -579,7 +579,7 @@ public class NbMoveRefactoringPlugin extends AbstractRefactoringPlugin {
     
     
     
-    ///------- copied from MoveRefactoringPlugin
+    //------- copied from MoveRefactoringPlugin
     
     private void setup(Collection fileObjects, String postfix, boolean recursively) {
         for (Iterator i = fileObjects.iterator(); i.hasNext(); ) {
@@ -647,7 +647,7 @@ public class NbMoveRefactoringPlugin extends AbstractRefactoringPlugin {
     }  
    
    private void initClasses() {
-        classes = new HashMap();
+        classes = new HashMap<>();
         for (int i=0;i<filesToMove.size();i++) {
             final int j = i;
             try {

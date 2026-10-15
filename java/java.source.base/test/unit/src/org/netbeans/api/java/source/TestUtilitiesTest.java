@@ -23,6 +23,7 @@ import java.net.URL;
 import java.util.concurrent.TimeUnit;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -52,7 +53,7 @@ public class TestUtilitiesTest extends NbTestCase {
         cache.mkdirs();
         final File sourceDir = FileUtil.normalizeFile(new File(wf,"src"));
         sourceDir.mkdirs();        
-        boot = TestUtilities.createBootClassPath ();
+        boot = BootClassPathUtil.getBootClassPath();
         compile = ClassPathSupport.createClassPath(new URL[0]);
         source = ClassPathSupport.createClassPath(new URL[]{Utilities.toURI(sourceDir).toURL()});
         TestUtilities.setCacheFolder(cache);

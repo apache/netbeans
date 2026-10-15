@@ -48,7 +48,7 @@ class LegacySettingsSync implements PreferenceChangeListener {
     
     private Reference<Preferences> defaultMimePrefs;
     
-    synchronized static LegacySettingsSync get() {
+    static synchronized LegacySettingsSync get() {
         if (INSTANCE == null) {
             INSTANCE = new LegacySettingsSync();
         }

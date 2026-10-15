@@ -1,0 +1,13 @@
+    private ?mixed $mixed; // can't use with "?"
+             -----
+HINT:"mixed" cannot be used as a nullable type.
+    public function mixed(mixed $mixed): mixed|void { // can't use with "void"
+                                               ----
+HINT:"mixed" cannot be used as a union type.
+HINT:"void" cannot be used as a union type.
+    public function mixed2(mixed|int $mixed): mixed {
+                           -----
+HINT:"mixed" cannot be used as a union type.
+    public function mixed3(mixed $mixed): null|mixed {
+                                               -----
+HINT:"mixed" cannot be used as a union type.

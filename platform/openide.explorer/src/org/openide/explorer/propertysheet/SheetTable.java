@@ -195,6 +195,11 @@ final class SheetTable extends BaseTable implements PropertySetModelListener, Cu
 
         if (!PropUtils.noAltBg()) {
             setIntercellSpacing(new Dimension(0, 0));
+        } else {
+            Dimension intercellSpacing = UIManager.getDimension("PropSheet.intercellSpacing");
+            if (intercellSpacing != null) {
+                setIntercellSpacing(intercellSpacing);
+            }
         }
 
         setGridColor(PropUtils.getSetRendererColor());

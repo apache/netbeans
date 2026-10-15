@@ -1,0 +1,15 @@
+Code completion result for source line:
+public $prop = |new Foo("test"),
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Constant                        [PUBLIC]   newInInitializers.php
+CLASS      Foo                             [PUBLIC]   newInInitializers.php
+CLASS      Func                            [PUBLIC]   newInInitializers.php
+CLASS      StaticVariable                  [PUBLIC]   newInInitializers.php
+CLASS      Test                            [PUBLIC]   newInInitializers.php
+CONSTANT   CONSTANT ?                      [PUBLIC]   newInInitializers.php
+KEYWORD    parent::                                   null
+KEYWORD    self::                                     null
+KEYWORD    static::                                   null
+------------------------------------
+KEYWORD    array                                      null
+KEYWORD    new                                        null

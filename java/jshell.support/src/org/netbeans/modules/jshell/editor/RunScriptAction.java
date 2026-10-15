@@ -330,7 +330,7 @@ public class RunScriptAction extends TextAction
     }
     
     static JTextComponent findComponent(Lookup lookup) {
-        EditorCookie ec = (EditorCookie) lookup.lookup(EditorCookie.class);
+        EditorCookie ec = lookup.lookup(EditorCookie.class);
         if (ec != null) {
             JEditorPane panes[] = ec.getOpenedPanes();
             if (panes != null && panes.length > 0) {

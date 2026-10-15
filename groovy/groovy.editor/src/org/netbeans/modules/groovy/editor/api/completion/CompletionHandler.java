@@ -19,23 +19,14 @@
 package org.netbeans.modules.groovy.editor.api.completion;
 
 import groovy.lang.MetaMethod;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.*;
+import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.codehaus.groovy.ast.ASTNode;
-import org.codehaus.groovy.ast.ModuleNode;
 import org.codehaus.groovy.ast.expr.ArgumentListExpression;
-import org.codehaus.groovy.reflection.CachedClass;
-import org.netbeans.api.java.platform.JavaPlatform;
-import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
@@ -46,195 +37,44 @@ import org.netbeans.modules.csl.spi.DefaultCompletionResult;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.groovy.editor.api.AstPath;
 import org.netbeans.modules.groovy.editor.api.ASTUtils;
-import org.netbeans.modules.groovy.editor.completion.ProposalsCollector;
-import org.netbeans.modules.groovy.editor.api.completion.util.ContextHelper;
-import org.netbeans.modules.groovy.editor.api.elements.ast.ASTMethod;
 import org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId;
 import org.netbeans.modules.groovy.editor.api.lexer.LexUtilities;
 import org.netbeans.modules.groovy.editor.utils.GroovyUtils;
 import org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext;
-import org.netbeans.modules.groovy.support.api.GroovySettings;
-import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
-import org.openide.util.WeakListeners;
+import org.netbeans.modules.groovy.editor.completion.provider.GroovyCompletionImpl;
+import org.openide.util.Lookup;
 
-public class CompletionHandler implements CodeCompletionHandler {
-
+public class CompletionHandler implements CodeCompletionHandler2 {
     private static final Logger LOG = Logger.getLogger(CompletionHandler.class.getName());
-    private final PropertyChangeListener docListener;
-    private String jdkJavaDocBase = null;
-    private String groovyJavaDocBase = null;
-    private String groovyApiDocBase = null;
+    /**
+     * The real implementation, in an implementation package.
+     */
+    private GroovyCompletionImpl impl;
     
-
     public CompletionHandler() {
-        JavaPlatformManager platformMan = JavaPlatformManager.getDefault();
-        JavaPlatform platform = platformMan.getDefaultPlatform();
-        List<URL> docfolder = platform.getJavadocFolders();
-
-        for (URL url : docfolder) {
-            LOG.log(Level.FINEST, "JDK Doc path: {0}", url.toString()); // NOI18N
-            jdkJavaDocBase = url.toString();
-        }
-
-        GroovySettings groovySettings = GroovySettings.getInstance();
-        docListener = new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                synchronized (CompletionHandler.this) {
-                    groovyJavaDocBase = null;
-                    groovyApiDocBase = null;
-                }
+    }
+    
+    private GroovyCompletionImpl impl() {
+        if (impl == null) {
+            impl = Lookup.getDefault().lookup(GroovyCompletionImpl.class);
+            if (impl == null) {
+                LOG.severe("Unable to find completion impl");
+                impl = new GroovyCompletionImpl();
             }
-        };
-        groovySettings.addPropertyChangeListener(WeakListeners.propertyChange(docListener, this));
+        }
+        return impl;
     }
 
     @Override
     public CodeCompletionResult complete(CodeCompletionContext completionContext) {
-        ParserResult parserResult = completionContext.getParserResult();
-        String prefix = completionContext.getPrefix();
-        
-        // Documentation says that @NonNull is return from getPrefix() but it's not true
-        // Invoking "this.^" makes the return value null
-        if (prefix == null) {
-            prefix = "";
-        }
-        
-        int lexOffset = completionContext.getCaretOffset();
-        int astOffset = ASTUtils.getAstOffset(parserResult, lexOffset);
-        int anchor = lexOffset - prefix.length();
-
-        LOG.log(Level.FINEST, "complete(...), prefix      : {0}", prefix); // NOI18N
-        LOG.log(Level.FINEST, "complete(...), lexOffset   : {0}", lexOffset); // NOI18N
-        LOG.log(Level.FINEST, "complete(...), astOffset   : {0}", astOffset); // NOI18N
-
-        final Document document = parserResult.getSnapshot().getSource().getDocument(false);
-        if (document == null) {
+        GroovyCompletionImpl.CompletionImplResult rs = impl().makeProposals(completionContext);
+        if (rs == null) {
             return CodeCompletionResult.NONE;
+        } 
+        if (rs.isEmpty()) {
+            return new DefaultCompletionResult(Collections.<CompletionProposal>emptyList(), false);
         }
-        final BaseDocument doc = (BaseDocument) document;
-
-        doc.readLock(); // Read-lock due to Token hierarchy use
-
-        try {
-            CompletionContext context = new CompletionContext(parserResult, prefix, anchor, lexOffset, astOffset, doc);
-            context.init();
-
-            // if we are above a package statement or inside a comment there's no completion at all.
-            if (context.location == CaretLocation.ABOVE_PACKAGE || context.location == CaretLocation.INSIDE_COMMENT) {
-                return new DefaultCompletionResult(Collections.EMPTY_LIST, false);
-            }
-            
-            ProposalsCollector proposalsCollector = new ProposalsCollector(context);
-
-            if (ContextHelper.isVariableNameDefinition(context) || ContextHelper.isFieldNameDefinition(context)) {
-                proposalsCollector.completeNewVars(context);
-            } else {
-                if (!(context.location == CaretLocation.OUTSIDE_CLASSES || context.location == CaretLocation.INSIDE_STRING)) {
-                    proposalsCollector.completePackages(context);
-                    proposalsCollector.completeTypes(context);
-                }
-
-                if (!context.isBehindImportStatement()) {
-                    if (context.location != CaretLocation.INSIDE_STRING) {
-                        proposalsCollector.completeKeywords(context);
-                        proposalsCollector.completeMethods(context);
-                    }
-
-                    proposalsCollector.completeFields(context);
-                    proposalsCollector.completeLocalVars(context);
-                }
-
-                if (context.location == CaretLocation.INSIDE_CONSTRUCTOR_CALL) {
-                    if (ContextHelper.isAfterComma(context) || ContextHelper.isAfterLeftParenthesis(context)) {
-                        proposalsCollector.completeNamedParams(context);
-                    }
-                }
-            }
-            proposalsCollector.completeCamelCase(context);
-
-            return new GroovyCompletionResult(proposalsCollector.getCollectedProposals(), context);
-        } finally {
-            doc.readUnlock();
-        }
-    }
-
-    private String getGroovyJavadocBase() {
-        synchronized (this) {
-            if (groovyJavaDocBase == null) {
-                String docroot = GroovySettings.getInstance().getGroovyDoc() + "/"; // NOI18N
-                groovyJavaDocBase = directoryNameToUrl(docroot + "groovy-jdk/"); // NOI18N
-            }
-            return groovyJavaDocBase;
-        }
-    }
-
-    private String getGroovyApiDocBase() {
-        synchronized (this) {
-            if (groovyApiDocBase == null) {
-                String docroot = GroovySettings.getInstance().getGroovyDoc() + "/"; // NOI18N
-                groovyApiDocBase = directoryNameToUrl(docroot + "gapi/"); // NOI18N
-            }
-            return groovyApiDocBase;
-        }
-    }
-
-    private static String directoryNameToUrl(String dirname) {
-        if (dirname == null) {
-            return "";
-        }
-
-        // FIXME use FileObject (?)
-        File dirFile = new File(dirname);
-
-        if (dirFile != null && dirFile.exists() && dirFile.isDirectory()) {
-            String fileURL = "";
-            if (Utilities.isWindows()) {
-                dirname = dirname.replace("\\", "/");
-                fileURL = "file:/"; // NOI18N
-            } else {
-                fileURL = "file://"; // NOI18N
-            }
-            return fileURL + dirname;
-        } else {
-            return "";
-        }
-    }
-
-    private static void printASTNodeInformation(String description, ASTNode node) {
-
-        LOG.log(Level.FINEST, "--------------------------------------------------------");
-        LOG.log(Level.FINEST, "{0}", description);
-
-        if (node == null) {
-            LOG.log(Level.FINEST, "node == null");
-        } else {
-            LOG.log(Level.FINEST, "Node.getText()  : {0}", node.getText());
-            LOG.log(Level.FINEST, "Node.toString() : {0}", node.toString());
-            LOG.log(Level.FINEST, "Node.getClass() : {0}", node.getClass());
-            LOG.log(Level.FINEST, "Node.hashCode() : {0}", node.hashCode());
-
-
-            if (node instanceof ModuleNode) {
-                LOG.log(Level.FINEST, "ModuleNode.getClasses() : {0}", ((ModuleNode) node).getClasses());
-                LOG.log(Level.FINEST, "SourceUnit.getName() : {0}", ((ModuleNode) node).getContext().getName());
-            }
-        }
-
-        LOG.log(Level.FINEST, "--------------------------------------------------------");
-    }
-
-    private static void printMethod(MetaMethod mm) {
-
-        LOG.log(Level.FINEST, "--------------------------------------------------");
-        LOG.log(Level.FINEST, "getName()           : {0}", mm.getName());
-        LOG.log(Level.FINEST, "toString()          : {0}", mm.toString());
-        LOG.log(Level.FINEST, "getDescriptor()     : {0}", mm.getDescriptor());
-        LOG.log(Level.FINEST, "getSignature()      : {0}", mm.getSignature());
-        // LOG.log(Level.FINEST, "getParamTypes()     : " + mm.getParameterTypes());
-        LOG.log(Level.FINEST, "getDeclaringClass() : {0}", mm.getDeclaringClass());
+        return new GroovyCompletionResult(rs.getProposals(), rs.getGroovyContext());
     }
 
     boolean checkForPackageStatement(final CompletionContext request) {
@@ -345,7 +185,7 @@ public class CompletionHandler implements CodeCompletionHandler {
             }
 
             if (forURL) {
-                methodSignature = methodSignature.replaceAll(", ", ",%20");
+                methodSignature = methodSignature.replace(", ", ",%20");
             }
 
             return methodSignature;
@@ -429,116 +269,7 @@ public class CompletionHandler implements CodeCompletionHandler {
 
     @Override
     public String document(ParserResult info, ElementHandle element) {
-        LOG.log(Level.FINEST, "document(), ElementHandle : {0}", element);
-
-        String error = NbBundle.getMessage(CompletionHandler.class, "GroovyCompletion_NoJavaDocFound");
-        String doctext = null;
-
-        if (element instanceof ASTMethod) {
-            ASTMethod ame = (ASTMethod) element;
-
-            String base = "";
-
-            String javadoc = getGroovyJavadocBase();
-            if (jdkJavaDocBase != null && ame.isGDK() == false) {
-                base = jdkJavaDocBase;
-            } else if (javadoc != null && ame.isGDK() == true) {
-                base = javadoc;
-            } else {
-                LOG.log(Level.FINEST, "Neither JDK nor GDK or error locating: {0}", ame.isGDK());
-                return error;
-            }
-
-            MetaMethod mm = ame.getMethod();
-
-            // enable this to troubleshoot subtle differences in JDK/GDK signatures
-            printMethod(mm);
-
-            // figure out who originally defined this method
-
-            String className;
-
-            if (ame.isGDK()) {
-                className = mm.getDeclaringClass()/*.getCachedClass()*/.getName();
-            } else {
-
-                String declName = null;
-
-                if (mm != null) {
-                    CachedClass cc = mm.getDeclaringClass();
-                    if (cc != null) {
-                        declName = cc.getName();
-                    }
-                    /*CachedClass cc = mm.getDeclaringClass();
-                    if (cc != null) {
-                        Class clz = cc.getCachedClass();
-                        if (clz != null) {
-                            declName = clz.getName();
-                        }
-                    }*/
-                }
-
-                if (declName != null) {
-                    className = declName;
-                } else {
-                    className = ame.getClz().getName();
-                }
-            }
-
-            // create path from fq java package name:
-            // java.lang.String -> java/lang/String.html
-            String classNamePath = className.replace(".", "/");
-            classNamePath = classNamePath + ".html"; // NOI18N
-
-            // if the file can be located in the GAPI folder prefer it
-            // over the JDK
-            if (!ame.isGDK()) {
-
-                URL url;
-                File testFile;
-
-                String apiDoc = getGroovyApiDocBase();
-                try {
-                    url = new URL(apiDoc + classNamePath);
-                    testFile = new File(url.toURI());
-                } catch (MalformedURLException ex) {
-                    LOG.log(Level.FINEST, "MalformedURLException: {0}", ex);
-                    return error;
-                } catch (URISyntaxException uriEx) {
-                    LOG.log(Level.FINEST, "URISyntaxException: {0}", uriEx);
-                    return error;
-                }
-
-                if (testFile != null && testFile.exists()) {
-                    base = apiDoc;
-                }
-            }
-
-            // create the signature-string of the method
-            String sig = getMethodSignature(ame.getMethod(), true, ame.isGDK());
-            String printSig = getMethodSignature(ame.getMethod(), false, ame.isGDK());
-
-            String urlName = base + classNamePath + "#" + sig;
-
-            try {
-                LOG.log(Level.FINEST, "Trying to load URL = {0}", urlName); // NOI18N
-                doctext = HTMLJavadocParser.getJavadocText(
-                    new URL(urlName),
-                    false,
-                    ame.isGDK());
-            } catch (MalformedURLException ex) {
-                LOG.log(Level.FINEST, "document(), URL trouble: {0}", ex); // NOI18N
-                return error;
-            }
-
-            // If we could not find a suitable JavaDoc for the method - say so.
-            if (doctext == null) {
-                return error;
-            }
-
-            doctext = "<h3>" + className + "." + printSig + "</h3><BR>" + doctext;
-        }
-        return doctext;
+        return impl().document(info, element);
     }
 
     @Override
@@ -629,5 +360,10 @@ public class CompletionHandler implements CodeCompletionHandler {
             return ParameterInfo.NONE;
         }
         return ParameterInfo.NONE;
+    }
+
+    @Override
+    public Documentation documentElement(ParserResult info, ElementHandle handle, Callable<Boolean> cancel) {
+        return impl().documentElement(info, handle, cancel);
     }
 }

@@ -180,7 +180,7 @@ public class JdbcResultsSnapshot extends ResultsSnapshot {
     private void filter(String filter, int filterType, PresoObjAllocCCTNode node) {
         if (node.children != null) {
             PresoObjAllocCCTNode filtered = null;
-            List<PresoObjAllocCCTNode> ch = new ArrayList();
+            List<PresoObjAllocCCTNode> ch = new ArrayList<>();
             for (PresoObjAllocCCTNode n : node.children) {
                 PresoObjAllocCCTNode nn = (PresoObjAllocCCTNode)n;
                 if (FilterSortSupport.passesFilter(filter, filterType, nn.getNodeName())) {

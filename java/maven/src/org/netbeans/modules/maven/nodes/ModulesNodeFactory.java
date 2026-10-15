@@ -55,7 +55,7 @@ public class ModulesNodeFactory implements NodeFactory {
             project = prj;
         }
         
-        @Override
+        @Override   
         public void propertyChange(PropertyChangeEvent evt) {
             if (NbMavenProject.PROP_PROJECT.equals(evt.getPropertyName())) {
                 fireChange();

@@ -75,16 +75,16 @@ import org.openide.util.NbBundle;
  */
 public class Repository implements ActionListener, FocusListener, ItemListener {
     
-    public final static int FLAG_URL_ENABLED            = 4;
-    public final static int FLAG_ACCEPT_REVISION        = 8;
-    public final static int FLAG_SHOW_HINTS             = 32;    
-    public final static int FLAG_SHOW_PROXY             = 64;    
+    public static final int FLAG_URL_ENABLED            = 4;
+    public static final int FLAG_ACCEPT_REVISION        = 8;
+    public static final int FLAG_SHOW_HINTS             = 32;    
+    public static final int FLAG_SHOW_PROXY             = 64;    
     
-    private final static String LOCAL_URL_HELP          = "file:/repository_path";              // NOI18N
-    private final static String HTTP_URL_HELP           = "http://hostname/repository_path";      // NOI18N
-    private final static String HTTPS_URL_HELP          = "https://hostname/repository_path";     // NOI18N
-    private final static String STATIC_HTTP_URL_HELP    = "static-http://hostname/repository_path";       // NOI18N
-    private final static String SSH_URL_HELP            = "ssh://hostname/repository_path";   // NOI18N   
+    private static final String LOCAL_URL_HELP          = "file:/repository_path";              // NOI18N
+    private static final String HTTP_URL_HELP           = "http://hostname/repository_path";      // NOI18N
+    private static final String HTTPS_URL_HELP          = "https://hostname/repository_path";     // NOI18N
+    private static final String STATIC_HTTP_URL_HELP    = "static-http://hostname/repository_path";       // NOI18N
+    private static final String SSH_URL_HELP            = "ssh://hostname/repository_path";   // NOI18N   
                
     private RepositoryPanel repositoryPanel;
     private boolean valid = true;

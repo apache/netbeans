@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.Icon;
 import javax.swing.event.ChangeListener;
-import static junit.framework.Assert.assertTrue;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.test.MockMimeLookup;
 import org.netbeans.api.html.lexer.HTMLTokenId;
@@ -131,7 +130,7 @@ public class AngularJsDelcarationFinderTest extends JsTestBase {
         cpRoots.add(FileUtil.toFileObject(new File(getDataDir(), "/angularTestProject/public_html")));
         return Collections.singletonMap(
             JS_SOURCE_ID,
-            ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[cpRoots.size()]))
+            ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[0]))
         );
     }
 

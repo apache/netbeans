@@ -21,35 +21,38 @@
 package org.netbeans.core.windows.view.ui;
 
 
-import org.netbeans.swing.tabcontrol.customtabs.Tabbed;
-import org.netbeans.core.windows.Constants;
-import org.netbeans.core.windows.actions.ActionUtils;
-import org.netbeans.core.windows.actions.MaximizeWindowAction;
-import org.netbeans.core.windows.view.ModeView;
-import org.netbeans.core.windows.WindowManagerImpl;
-import org.netbeans.core.windows.view.ui.slides.SlideOperation;
-import org.netbeans.swing.tabcontrol.TabbedContainer;
-import org.netbeans.swing.tabcontrol.event.TabActionEvent;
-import org.openide.windows.TopComponent;
-import org.openide.util.Utilities;
+import java.awt.*;
+import java.awt.event.AWTEventListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.AWTEventListener;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.netbeans.core.windows.Constants;
 import org.netbeans.core.windows.ModeImpl;
 import org.netbeans.core.windows.Switches;
+import org.netbeans.core.windows.WindowManagerImpl;
+import org.netbeans.core.windows.actions.ActionUtils;
+import org.netbeans.core.windows.actions.MaximizeWindowAction;
+import org.netbeans.core.windows.view.ModeView;
 import org.netbeans.core.windows.view.ui.slides.SlideBar;
 import org.netbeans.core.windows.view.ui.slides.SlideBarActionEvent;
+import org.netbeans.core.windows.view.ui.slides.SlideOperation;
 import org.netbeans.core.windows.view.ui.slides.SlideOperationFactory;
+import org.netbeans.swing.tabcontrol.TabbedContainer;
+import org.netbeans.swing.tabcontrol.customtabs.Tabbed;
+import org.netbeans.swing.tabcontrol.event.TabActionEvent;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.Utilities;
+import org.openide.windows.TopComponent;
 
 
 /** Helper class which handles <code>Tabbed</code> component inside
@@ -82,6 +85,8 @@ public final class TabbedHandler implements ChangeListener, ActionListener {
                 activationManager = new ActivationManager();
                 Toolkit.getDefaultToolkit().addAWTEventListener(
                     activationManager, AWTEvent.MOUSE_EVENT_MASK);
+                KeyboardFocusManager.getCurrentKeyboardFocusManager()
+                    .addPropertyChangeListener("permanentFocusOwner", activationManager);
             }
         }
         tabbed = tbd;
@@ -272,7 +277,6 @@ public final class TabbedHandler implements ChangeListener, ActionListener {
         tabbed.setActive(active);
     }
     
-    ///////////////////
     // ChangeListener
     @Override
     public void stateChanged(ChangeEvent evt) {
@@ -464,11 +468,45 @@ public final class TabbedHandler implements ChangeListener, ActionListener {
 
     /** Well, we can't totally get rid of AWT event listeners - this is what
      * keeps track of the activated mode. */
-    private static class ActivationManager implements AWTEventListener {
+    private static class ActivationManager implements AWTEventListener, PropertyChangeListener {
         @Override
         public void eventDispatched(AWTEvent e) {
             if(e.getID() == MouseEvent.MOUSE_PRESSED) {
-                handleActivation((MouseEvent) e);
+                handleActivation(e.getSource());
+            }
+        }
+
+        /**
+         * Keyboard focus change event handler. Handle situation where
+         * active TopComponent was in a different window and window
+         * changed without a mouse event.
+         * See
+         *     Editor with Keyboard focus is not active TopComponent
+         *     https://github.com/apache/netbeans/issues/4437
+         */
+        @Override
+        public void propertyChange(PropertyChangeEvent e) {
+            KeyboardFocusManager focusMgr = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+            Frame mainWindowNB = WindowManagerImpl.getInstance().getMainWindow();
+            Window activeWindowKB = focusMgr.getActiveWindow();
+            TopComponent currentTC = TopComponent.getRegistry().getActivated();
+            // Only do something if focus to the main window and
+            // active TC is not in the main window. Note that focus changes
+            // to detached windows handled in DefaultSeparateContainer.
+            if(mainWindowNB == activeWindowKB
+                    && mainWindowNB != SwingUtilities.getRoot(currentTC)) {
+                // Defer possible activation with invokeLater(). This allows the focus
+                // manager to finish focus changes. Only activate if, after settling,
+                // the activationTarget is still focused.
+                Object activationTarget = e.getNewValue();
+                if (activationTarget != null) {
+                    EventQueue.invokeLater(() -> {
+                        if (activationTarget == focusMgr.getFocusOwner()) {
+                            // ActivationTarget is still focused; activate it.
+                            handleActivation(activationTarget);
+                        }
+                    });
+                }
             }
         }
 
@@ -490,12 +528,11 @@ public final class TabbedHandler implements ChangeListener, ActionListener {
          * components.  This behavior is compatible with all window managers I can
          * imagine.
          */
-        private void handleActivation(MouseEvent evt) {
-            Object obj = evt.getSource();
-            if (!(obj instanceof Component)) {
+        private void handleActivation(Object evtObject) {
+            if (!(evtObject instanceof Component)) {
                 return;
             }
-            Component comp = (Component) obj;
+            Component comp = (Component) evtObject;
             
             while (comp != null && !(comp instanceof ModeComponent)) {
                 if (comp instanceof JComponent) {

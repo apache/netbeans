@@ -106,8 +106,6 @@ public class OutputOperator extends TopComponentOperator {
         return getActiveOutputTab().getText();
     }
     
-    /********************************** Actions ****************************/
-    
     /** Performs copy action on active tab. */
     public void copy() {
         getActiveOutputTab().copy();

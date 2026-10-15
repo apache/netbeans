@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.foo.javafx
+OpenIDE-Module-Name: Simulated Core Javafx package
+OpenIDE-Module-Public-Packages: org.foo.javafx.*
+OpenIDE-Module-Needs: org.openide.modules.jre.JavaFX

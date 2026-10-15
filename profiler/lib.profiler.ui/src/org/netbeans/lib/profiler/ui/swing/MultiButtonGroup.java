@@ -30,7 +30,7 @@ import javax.swing.ButtonModel;
  */
 public class MultiButtonGroup extends ButtonGroup {
         
-    private final Set<ButtonModel> selected = new HashSet();
+    private final Set<ButtonModel> selected = new HashSet<>();
 
     public void setSelected(ButtonModel m, boolean b) {
         if (b == false) {

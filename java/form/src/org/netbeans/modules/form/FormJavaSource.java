@@ -250,7 +250,7 @@ public final class FormJavaSource {
                 return queries.getMethodNames(cls, true, returnType.getCanonicalName(), new String[0]);
             }
         }) : null;
-        return result != null ? result.toArray(new String[result.size()]) : new String[0];
+        return result != null ? result.toArray(new String[0]) : new String[0];
     }
 
     /**
@@ -269,7 +269,7 @@ public final class FormJavaSource {
                 result.add(name);
             }		    
         }
-        return result.toArray(new String[result.size()]);
+        return result.toArray(new String[0]);
     }
     
     public static String extractPropertyName(String methodName) {

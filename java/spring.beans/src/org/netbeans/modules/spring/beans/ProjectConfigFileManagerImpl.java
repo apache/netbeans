@@ -271,18 +271,14 @@ public class ProjectConfigFileManagerImpl implements ConfigFileManagerImplementa
 
     private boolean differingFiles (List<File> files) {
         if (this.files.size() == files.size()) {
-            return !Arrays.equals(
-                    this.files.toArray(new File[this.files.size()]),
-                    files.toArray(new File[files.size()]));
+            return !Arrays.equals(this.files.toArray(new File[0]), files.toArray(new File[0]));
         }
         return true;
     }
 
     private boolean differingGroups (List<ConfigFileGroup> groups) {
         if (this.groups.size() == groups.size()) {
-            return !Arrays.equals(
-                    this.groups.toArray(new ConfigFileGroup[this.groups.size()]),
-                    groups.toArray(new ConfigFileGroup[groups.size()]));
+            return !Arrays.equals(this.groups.toArray(new ConfigFileGroup[0]), groups.toArray(new ConfigFileGroup[0]));
         }
         return true;
     }

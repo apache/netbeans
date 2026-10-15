@@ -48,4 +48,6 @@
     <fontcolor name="trailing-whitespace"/>
     <fontcolor name="nbeditor-bracesMatching-sidebar"/>
     <fontcolor name="indent-guide-lines" foreColor="white"/>
+    <fontcolor name="remove-surround-code-delete" foreColor="lightGray" bgColor="ff333333"/>
+    <fontcolor name="remove-surround-code-remain" bgColor="ff3E5431"/>
 </fontscolors>

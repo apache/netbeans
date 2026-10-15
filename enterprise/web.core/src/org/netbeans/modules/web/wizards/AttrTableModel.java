@@ -80,8 +80,8 @@ public class AttrTableModel extends AbstractTableModel {
 
         data2[j][0] = name;
         data2[j][1] = type;
-        data2[j][2] = Boolean.valueOf(required);
-        data2[j][3] = Boolean.valueOf(rtexpr);
+        data2[j][2] = required;
+        data2[j][3] = rtexpr;
         data = data2; 
         numRows++;
         return j; 
@@ -102,8 +102,8 @@ public class AttrTableModel extends AbstractTableModel {
     public void setData(String name, String value, boolean required, boolean rtexpr, int row) { 
         data[row][0] = name;
         data[row][1] = value;
-        data[row][2] = Boolean.valueOf(required);
-        data[row][3] = Boolean.valueOf(rtexpr);
+        data[row][2] = required;
+        data[row][3] = rtexpr;
         fireTableChanged(new TableModelEvent(this, row)); 
     } 
 

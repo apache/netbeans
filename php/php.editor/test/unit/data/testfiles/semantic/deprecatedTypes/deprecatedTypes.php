@@ -9,4 +9,7 @@ interface Bar {}
 /** @deprecated */
 trait Baz {}
 
+/** @deprecated */
+enum Qux {}
+
 ?>

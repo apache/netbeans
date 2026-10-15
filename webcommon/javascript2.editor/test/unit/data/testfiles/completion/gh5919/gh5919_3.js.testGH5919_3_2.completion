@@ -1,0 +1,5 @@
+Code completion result for source line:
+import/*dummy*/./*dummy*/|meta.url;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      meta                            [PUBLIC]   metaproperties.js

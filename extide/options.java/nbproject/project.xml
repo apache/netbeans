@@ -63,6 +63,7 @@
                 <friend>org.netbeans.modules.profiler.options</friend>
                 <friend>org.netbeans.modules.vmd.componentssupport</friend>
                 <friend>org.netbeans.modules.jshell.support</friend>
+                <friend>org.netbeans.modules.java.file.launcher</friend>
                 <package>org.netbeans.modules.options.java.api</package>
             </friend-packages>
         </data>

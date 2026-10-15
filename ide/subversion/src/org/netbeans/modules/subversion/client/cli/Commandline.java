@@ -171,7 +171,7 @@ class Commandline {
         if(!vars.containsKey("LC_ALL"))      ret.add("LC_ALL=");                // NOI18N    
         if(!vars.containsKey("LC_MESSAGES")) ret.add("LC_MESSAGES=C");          // NOI18N
         if(!vars.containsKey("LC_TIME"))     ret.add("LC_TIME=C");              // NOI18N
-        return (String[]) ret.toArray(new String[ret.size()]);
+        return (String[]) ret.toArray(new String[0]);
     }	    
     
 }

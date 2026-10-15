@@ -54,7 +54,7 @@ public interface WidgetAction {
     /**
      * Represents a state of event processing.
      */
-    public static abstract class State {
+    public abstract static class State {
 
         /**
          * The state that means: The event is not processed by the action and has to be processed by other actions too.
@@ -468,7 +468,7 @@ public interface WidgetAction {
      * An adapter of the widget action. All methods return locked or rejected event state based on a result of isLocked method.
      * This is often used for long-term actions like MoveAction.
      */
-    public static abstract class LockedAdapter implements WidgetAction {
+    public abstract static class LockedAdapter implements WidgetAction {
 
         /**
          * Called by event handlers to resolve whether they should return locked or rejected event state.
@@ -724,7 +724,7 @@ public interface WidgetAction {
          * @return the event state
          */
         public State mouseClicked(Widget widget, WidgetMouseEvent event) {
-            WidgetAction[] actionsArray = actions.toArray(new WidgetAction[actions.size()]);
+            WidgetAction[] actionsArray = actions.toArray(new WidgetAction[0]);
             State chainState = State.REJECTED;
             for (WidgetAction action : actionsArray) {
                 State state = action.mouseClicked(widget, event);
@@ -743,7 +743,7 @@ public interface WidgetAction {
          * @return the event state
          */
         public State mousePressed(Widget widget, WidgetMouseEvent event) {
-            WidgetAction[] actionsArray = actions.toArray(new WidgetAction[actions.size()]);
+            WidgetAction[] actionsArray = actions.toArray(new WidgetAction[0]);
             State chainState = State.REJECTED;
             for (WidgetAction action : actionsArray) {
                 State state = action.mousePressed(widget, event);
@@ -762,7 +762,7 @@ public interface WidgetAction {
          * @return the event state
          */
         public State mouseReleased(Widget widget, WidgetMouseEvent event) {
-            WidgetAction[] actionsArray = actions.toArray(new WidgetAction[actions.size()]);
+            WidgetAction[] actionsArray = actions.toArray(new WidgetAction[0]);
             State chainState = State.REJECTED;
             for (WidgetAction action : actionsArray) {
                 State state = action.mouseReleased(widget, event);
@@ -781,7 +781,7 @@ public interface WidgetAction {
          * @return the event state
          */
         public State mouseEntered(Widget widget, WidgetMouseEvent event) {
-            WidgetAction[] actionsArray = actions.toArray(new WidgetAction[actions.size()]);
+            WidgetAction[] actionsArray = actions.toArray(new WidgetAction[0]);
             State chainState = State.REJECTED;
             for (WidgetAction action : actionsArray) {
                 State state = action.mouseEntered(widget, event);
@@ -800,7 +800,7 @@ public interface WidgetAction {
          * @return the event state
          */
         public State mouseExited(Widget widget, WidgetMouseEvent event) {
-            WidgetAction[] actionsArray = actions.toArray(new WidgetAction[actions.size()]);
+            WidgetAction[] actionsArray = actions.toArray(new WidgetAction[0]);
             State chainState = State.REJECTED;
             for (WidgetAction action : actionsArray) {
                 State state = action.mouseExited(widget, event);
@@ -819,7 +819,7 @@ public interface WidgetAction {
          * @return the event state
          */
         public State mouseDragged(Widget widget, WidgetMouseEvent event) {
-            WidgetAction[] actionsArray = actions.toArray(new WidgetAction[actions.size()]);
+            WidgetAction[] actionsArray = actions.toArray(new WidgetAction[0]);
             State chainState = State.REJECTED;
             for (WidgetAction action : actionsArray) {
                 State state = action.mouseDragged(widget, event);
@@ -838,7 +838,7 @@ public interface WidgetAction {
          * @return the event state
          */
         public State mouseMoved(Widget widget, WidgetMouseEvent event) {
-            WidgetAction[] actionsArray = actions.toArray(new WidgetAction[actions.size()]);
+            WidgetAction[] actionsArray = actions.toArray(new WidgetAction[0]);
             State chainState = State.REJECTED;
             for (WidgetAction action : actionsArray) {
                 State state = action.mouseMoved(widget, event);
@@ -857,7 +857,7 @@ public interface WidgetAction {
          * @return the event state
          */
         public State mouseWheelMoved(Widget widget, WidgetMouseWheelEvent event) {
-            WidgetAction[] actionsArray = actions.toArray(new WidgetAction[actions.size()]);
+            WidgetAction[] actionsArray = actions.toArray(new WidgetAction[0]);
             State chainState = State.REJECTED;
             for (WidgetAction action : actionsArray) {
                 State state = action.mouseWheelMoved(widget, event);
@@ -876,7 +876,7 @@ public interface WidgetAction {
          * @return the event state
          */
         public State keyTyped(Widget widget, WidgetKeyEvent event) {
-            WidgetAction[] actionsArray = actions.toArray(new WidgetAction[actions.size()]);
+            WidgetAction[] actionsArray = actions.toArray(new WidgetAction[0]);
             State chainState = State.REJECTED;
             for (WidgetAction action : actionsArray) {
                 State state = action.keyTyped(widget, event);
@@ -895,7 +895,7 @@ public interface WidgetAction {
          * @return the event state
          */
         public State keyPressed(Widget widget, WidgetKeyEvent event) {
-            WidgetAction[] actionsArray = actions.toArray(new WidgetAction[actions.size()]);
+            WidgetAction[] actionsArray = actions.toArray(new WidgetAction[0]);
             State chainState = State.REJECTED;
             for (WidgetAction action : actionsArray) {
                 State state = action.keyPressed(widget, event);
@@ -914,7 +914,7 @@ public interface WidgetAction {
          * @return the event state
          */
         public State keyReleased(Widget widget, WidgetKeyEvent event) {
-            WidgetAction[] actionsArray = actions.toArray(new WidgetAction[actions.size()]);
+            WidgetAction[] actionsArray = actions.toArray(new WidgetAction[0]);
             State chainState = State.REJECTED;
             for (WidgetAction action : actionsArray) {
                 State state = action.keyReleased(widget, event);
@@ -933,7 +933,7 @@ public interface WidgetAction {
          * @return the event state
          */
         public State focusGained(Widget widget, WidgetAction.WidgetFocusEvent event) {
-            WidgetAction[] actionsArray = actions.toArray(new WidgetAction[actions.size()]);
+            WidgetAction[] actionsArray = actions.toArray(new WidgetAction[0]);
             State chainState = State.REJECTED;
             for (WidgetAction action : actionsArray) {
                 State state = action.focusGained(widget, event);
@@ -952,7 +952,7 @@ public interface WidgetAction {
          * @return the event state
          */
         public State focusLost(Widget widget, WidgetAction.WidgetFocusEvent event) {
-            WidgetAction[] actionsArray = actions.toArray(new WidgetAction[actions.size()]);
+            WidgetAction[] actionsArray = actions.toArray(new WidgetAction[0]);
             State chainState = State.REJECTED;
             for (WidgetAction action : actionsArray) {
                 State state = action.focusLost(widget, event);
@@ -971,7 +971,7 @@ public interface WidgetAction {
          * @return the event state
          */
         public State dragEnter (Widget widget, WidgetDropTargetDragEvent event) {
-            WidgetAction[] actionsArray = actions.toArray (new WidgetAction[actions.size ()]);
+            WidgetAction[] actionsArray = actions.toArray (new WidgetAction[0]);
             State chainState = State.REJECTED;
             for (WidgetAction action : actionsArray) {
                 State state = action.dragEnter (widget, event);
@@ -990,7 +990,7 @@ public interface WidgetAction {
          * @return the event state
          */
         public State dragOver (Widget widget, WidgetDropTargetDragEvent event) {
-            WidgetAction[] actionsArray = actions.toArray (new WidgetAction[actions.size ()]);
+            WidgetAction[] actionsArray = actions.toArray (new WidgetAction[0]);
             State chainState = State.REJECTED;
             for (WidgetAction action : actionsArray) {
                 State state = action.dragOver (widget, event);
@@ -1009,7 +1009,7 @@ public interface WidgetAction {
          * @return the event state
          */
         public State dropActionChanged (Widget widget, WidgetDropTargetDragEvent event) {
-            WidgetAction[] actionsArray = actions.toArray (new WidgetAction[actions.size ()]);
+            WidgetAction[] actionsArray = actions.toArray (new WidgetAction[0]);
             State chainState = State.REJECTED;
             for (WidgetAction action : actionsArray) {
                 State state = action.dropActionChanged (widget, event);
@@ -1028,7 +1028,7 @@ public interface WidgetAction {
          * @return the event state
          */
         public State dragExit (Widget widget, WidgetDropTargetEvent event) {
-            WidgetAction[] actionsArray = actions.toArray (new WidgetAction[actions.size ()]);
+            WidgetAction[] actionsArray = actions.toArray (new WidgetAction[0]);
             State chainState = State.REJECTED;
             for (WidgetAction action : actionsArray) {
                 State state = action.dragExit (widget, event);
@@ -1047,7 +1047,7 @@ public interface WidgetAction {
          * @return the event state
          */
         public State drop (Widget widget, WidgetDropTargetDropEvent event) {
-            WidgetAction[] actionsArray = actions.toArray (new WidgetAction[actions.size ()]);
+            WidgetAction[] actionsArray = actions.toArray (new WidgetAction[0]);
             State chainState = State.REJECTED;
             for (WidgetAction action : actionsArray) {
                 State state = action.drop (widget, event);

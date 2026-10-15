@@ -51,7 +51,7 @@ import org.xml.sax.SAXException;
  */
 public class XMLFile {
     
-    final protected Document doc;
+    protected final Document doc;
     private File file;
     private final XPath xPath;
 
@@ -143,7 +143,7 @@ public class XMLFile {
             node = indexOf <0 ? null : getNode(xpath.substring(0, indexOf));
         }
         
-        String rest = xpath.substring(lastIndexOf + 1, xpath.length());
+        String rest = xpath.substring(lastIndexOf + 1);
         for (String newTag:rest.split("/")) { // NOI18N
             lastNode = lastNode.appendChild(doc.createElement(newTag));
         }

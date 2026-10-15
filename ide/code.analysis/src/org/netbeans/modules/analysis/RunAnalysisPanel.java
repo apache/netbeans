@@ -21,6 +21,7 @@ package org.netbeans.modules.analysis;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
@@ -101,7 +102,7 @@ import org.openide.util.RequestProcessor;
  */
 public final class RunAnalysisPanel extends javax.swing.JPanel implements LookupListener {
 
-    private static final String COMBO_PROTOTYPE = "999999999999999999999999999999999999999999999999999999999999";
+    private static final String COMBO_PROTOTYPE = "999999999999999999999999999999999999";
     private static final RequestProcessor WORKER = new RequestProcessor(RunAnalysisPanel.class.getName(), 1, false, false);
     private final JPanel progress;
     private final RequiredPluginsPanel requiredPlugins;
@@ -543,15 +544,16 @@ public final class RunAnalysisPanel extends javax.swing.JPanel implements Lookup
         java.awt.GridBagConstraints gridBagConstraints;
 
         radioButtons = new javax.swing.ButtonGroup();
-        jLabel1 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
         scopeCombo = new javax.swing.JComboBox();
-        jLabel2 = new javax.swing.JLabel();
+        javax.swing.JLabel jLabel2 = new javax.swing.JLabel();
         configurationCombo = new javax.swing.JComboBox();
         manage = new javax.swing.JButton();
         configurationRadio = new javax.swing.JRadioButton();
         singleInspectionRadio = new javax.swing.JRadioButton();
         inspectionCombo = new javax.swing.JComboBox();
         browse = new javax.swing.JButton();
+        javax.swing.JPanel emptyPanel = new javax.swing.JPanel();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -568,6 +570,7 @@ public final class RunAnalysisPanel extends javax.swing.JPanel implements Lookup
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.ABOVE_BASELINE_LEADING;
+        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 12, 0, 0);
         add(scopeCombo, gridBagConstraints);
 
@@ -590,6 +593,7 @@ public final class RunAnalysisPanel extends javax.swing.JPanel implements Lookup
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.ABOVE_BASELINE_LEADING;
+        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(12, 12, 0, 0);
         add(configurationCombo, gridBagConstraints);
 
@@ -640,6 +644,7 @@ public final class RunAnalysisPanel extends javax.swing.JPanel implements Lookup
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE;
+        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(12, 12, 0, 0);
         add(inspectionCombo, gridBagConstraints);
 
@@ -656,6 +661,12 @@ public final class RunAnalysisPanel extends javax.swing.JPanel implements Lookup
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE;
         gridBagConstraints.insets = new java.awt.Insets(12, 12, 0, 0);
         add(browse, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weighty = 1.0;
+        add(emptyPanel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void configurationComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_configurationComboActionPerformed
@@ -672,6 +683,7 @@ public final class RunAnalysisPanel extends javax.swing.JPanel implements Lookup
             }
         };
         AdjustConfigurationPanel panel = new AdjustConfigurationPanel(analyzers, preselectedAnalyzer, preselected, configurationToSelect, errorListener);
+        panel.setPreferredSize(new Dimension(700, 300));
         DialogDescriptor nd = new DialogDescriptor(panel, Bundle.LBL_Configurations(), true, NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.OK_OPTION, null);
         
         nls[0] = nd.createNotificationLineSupport();
@@ -727,8 +739,6 @@ public final class RunAnalysisPanel extends javax.swing.JPanel implements Lookup
     private javax.swing.JComboBox configurationCombo;
     private javax.swing.JRadioButton configurationRadio;
     private javax.swing.JComboBox inspectionCombo;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JButton manage;
     private javax.swing.ButtonGroup radioButtons;
     private javax.swing.JComboBox scopeCombo;

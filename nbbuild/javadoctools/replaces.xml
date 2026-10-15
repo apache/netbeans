@@ -27,12 +27,11 @@
    to decide whether such change shall be commited to the repository
    or not
 -->
-<replacefilter token="@org-openide-compat@" value="${javadoc.docs.org-openide-compat}"/>
+
 <replacefilter token="@org-openide-util@" value="${javadoc.docs.org-openide-util}"/>
 <replacefilter token="@org-openide-nodes@" value="${javadoc.docs.org-openide-nodes}"/>
 <replacefilter token="@org-netbeans-modules-nbjunit@" value="${javadoc.docs.org-netbeans-modules-nbjunit}"/>
 <replacefilter token="@org-openide-actions@" value="${javadoc.docs.org-openide-actions}"/>
-<replacefilter token="@org-openide-options@" value="${javadoc.docs.org-openide-options}"/>
 <replacefilter token="@org-openide-awt@" value="${javadoc.docs.org-openide-awt}"/>
 <replacefilter token="@org-openide-dialogs@" value="${javadoc.docs.org-openide-dialogs}"/>
 <replacefilter token="@org-openide-explorer@" value="${javadoc.docs.org-openide-explorer}"/>
@@ -42,7 +41,6 @@
 <replacefilter token="@org-openide-loaders@" value="${javadoc.docs.org-openide-loaders}"/>
 <replacefilter token="@org-openide-io@" value="${javadoc.docs.org-openide-io}"/>
 <replacefilter token="@org-openide-execution@" value="${javadoc.docs.org-openide-execution}"/>
-<replacefilter token="@org-openidex-util@" value="${javadoc.docs.org-openidex-util}"/>
 <replacefilter token="@org-apache-tools-ant-module@" value="${javadoc.docs.org-apache-tools-ant-module}"/>
 <replacefilter token="@org-netbeans-modules-javahelp@" value="${javadoc.docs.org-netbeans-modules-javahelp}"/>
 <replacefilter token="@org-netbeans-modules-settings@" value="${javadoc.docs.org-netbeans-modules-settings}"/>
@@ -91,7 +89,6 @@
 <replacefilter token="@org-netbeans-api-mdr@" value="${javadoc.docs.org-netbeans-api-mdr}"/>
 <replacefilter token="@org-netbeans-api-progress@" value="${javadoc.docs.org-netbeans-api-progress}"/>
 <replacefilter token="@org-openide-filesystems@" value="${javadoc.docs.org-openide-filesystems}"/>
-<replacefilter token="@org-openide-util-enumerations@" value="${javadoc.docs.org-openide-util-enumerations}"/>
 <replacefilter token="@org-netbeans-modules-editor-completion@" value="${javadoc.docs.org-netbeans-modules-editor-completion}"/>
 <replacefilter token="@org-netbeans-modules-adaptable@" value="${javadoc.docs.org-netbeans-modules-adaptable}"/>
 <replacefilter token="@org-netbeans-spi-navigator@" value="${javadoc.docs.org-netbeans-spi-navigator}"/>
@@ -233,3 +230,17 @@
 <replacefilter token="@org-netbeans-modules-gradle@" value="${javadoc.docs.org-netbeans-modules-gradle}"/>
 <replacefilter token="@org-netbeans-modules-gradle-java@" value="${javadoc.docs.org-netbeans-modules-gradle-java}"/>
 <replacefilter token="@org-netbeans-modules-textmate-lexer@" value="${javadoc.docs.org-netbeans-modules-textmate-lexer}"/>
+<replacefilter token="@org-netbeans-modules-jumpto@" value="${javadoc.docs.org-netbeans-modules-jumpto}"/>
+<replacefilter token="@org-netbeans-modules-java-editor-lib@" value="${javadoc.docs.org-netbeans-modules-java-editor-lib}"/>
+<replacefilter token="@org-netbeans-modules-web-common@" value="${javadoc.docs.org-netbeans-modules-web-common}"/>
+<replacefilter token="@org-netbeans-modules-db-core@" value="${javadoc.docs.org-netbeans-modules-db-core}"/>
+<replacefilter token="@org-netbeans-modules-nativeimage-api@" value="${javadoc.docs.org-netbeans-modules-nativeimage-api}"/>
+<replacefilter token="@org-netbeans-api-lsp@" value="${javadoc.docs.org-netbeans-api-lsp}"/>
+<replacefilter token="@org-netbeans-modules-java-j2seplatform@" value="${javadoc.docs.org-netbeans-modules-java-j2seplatform}"/>
+<replacefilter token="@org-netbeans-modules-xml-wsdl-model@" value="${javadoc.docs.org-netbeans-modules-xml-wsdl-model}"/>
+<replacefilter token="@org-netbeans-api-dashboard@" value="${javadoc.docs.org-netbeans-api-dashboard}"/>
+<!-- deprecated -->
+<replacefilter token="@org-openidex-util@" value="${javadoc.docs.org-openidex-util}"/>
+<!-- deprecated not linked-->
+<!-- replacefilter token="@org-openide-compat@" value="${javadoc.docs.org-openide-compat}"/ -->
+<!-- unsorted filter --><replacefilter token="@org-netbeans-modules-project-dependency@" value="${javadoc.docs.org-netbeans-modules-project-dependency}"/>

@@ -44,9 +44,7 @@ public final class TreeParser extends DefaultHandler {
     /** XML elements path items separator. */
     static final String PATH_SEPARATOR = "/";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(TreeParser.class);
 
@@ -278,7 +276,7 @@ public final class TreeParser extends DefaultHandler {
         return super.resolveEntity(string, string1);
     }
 
-    public static abstract class NodeListener {
+    public abstract static class NodeListener {
 
         public void readAttributes(String qname, Attributes attributes) throws
                 SAXException {

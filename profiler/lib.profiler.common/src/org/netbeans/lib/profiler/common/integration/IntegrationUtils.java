@@ -60,8 +60,8 @@ public class IntegrationUtils {
     public static final String PLATFORM_LINUX_CVM = messages.getString("IntegrationUtils_PlatformLinuxCvm"); // NOI18N
     public static final String PLATFORM_SOLARIS_INTEL_OS = messages.getString("IntegrationUtils_PlatformSolarisIntelOs"); // NOI18N
     public static final String PLATFORM_SOLARIS_AMD64_OS = messages.getString("IntegrationUtils_PlatformSolarisAmd64Os"); // NOI18N
-    public static final String PLATFORM_SOLARIS_SPARC_OS = messages.getString("IntegrationUtils_PlatformSolarisSparcOs"); // NOI18N
     public static final String PLATFORM_SOLARIS_SPARC64_OS = messages.getString("IntegrationUtils_PlatformSolarisSparc64Os"); // NOI18N
+    public static final String PLATFORM_SOLARIS_SPARC_OS = messages.getString("IntegrationUtils_PlatformSolarisSparcOs"); // NOI18N
     public static final String PLATFORM_MAC_OS = messages.getString("IntegrationUtils_PlatformMacOs"); // NOI18N
     public static final String MODIFIED_FOR_PROFILER_STRING = messages.getString("IntegrationUtils_ModifiedForProfilerString"); // NOI18N
     public static final String ORIGINAL_BACKUP_LOCATION_STRING = messages.getString("IntegrationUtils_OriginalBackupLocationString"); // NOI18N
@@ -270,12 +270,6 @@ public class IntegrationUtils {
                     }
                 } else if ((Platform.OS_WINDOWS_MASK & platform) != 0) {
                     return PLATFORM_WINDOWS_OS;
-                } else if (platform == Platform.OS_SOLARIS) {
-                    if (arch.startsWith("x86")) {   //NOI18N
-                        return PLATFORM_SOLARIS_INTEL_OS;
-                    } else {
-                        return PLATFORM_SOLARIS_SPARC_OS;
-                    }
                 } else {
                     throw new UnsupportedOperationException(); //Mac32, Unknown
                 }
@@ -397,13 +391,13 @@ public class IntegrationUtils {
                 return PLATFORM_LINUX_OS;
             } else if (Platform.isSolarisIntel()) {
                 return PLATFORM_SOLARIS_INTEL_OS;
-            } else if (Platform.isSolarisSparc()) {
-                return PLATFORM_SOLARIS_SPARC_OS;
             } else if (Platform.isMac()) {
                 return PLATFORM_MAC_OS;
             }
 
-            return PLATFORM_SOLARIS_SPARC_OS; // Not supported platform => assume UNIX
+            // We have an unsupported platform at this point..
+            // So assume it is UNIX-like..
+            return PLATFORM_LINUX_OS;
         } else {
             if (Platform.isWindows()) {
                 return PLATFORM_WINDOWS_AMD64_OS;
@@ -469,8 +463,6 @@ public class IntegrationUtils {
             return "solaris-i386"; //NOI18N
         } else if (targetPlatform.equals(PLATFORM_SOLARIS_AMD64_OS)) {
             return "solaris-amd64"; //NOI18N
-        } else if (targetPlatform.equals(PLATFORM_SOLARIS_SPARC_OS)) {
-            return "solaris-sparc"; //NOI18N
         } else if (targetPlatform.equals(PLATFORM_SOLARIS_SPARC64_OS)) {
             return "solaris-sparcv9"; //NOI18N
         } else if (targetPlatform.equals(PLATFORM_MAC_OS)) {
@@ -646,7 +638,7 @@ public class IntegrationUtils {
     
     public static boolean isSolarisPlatform(String targetPlatform) {
         return targetPlatform.equals(PLATFORM_SOLARIS_AMD64_OS) || targetPlatform.equals(PLATFORM_SOLARIS_INTEL_OS) 
-                || targetPlatform.equals(PLATFORM_SOLARIS_SPARC64_OS) || targetPlatform.equals(PLATFORM_SOLARIS_SPARC_OS);
+                || targetPlatform.equals(PLATFORM_SOLARIS_SPARC64_OS);
     }
     
     public static boolean isMacPlatform(String targetPlatform) {

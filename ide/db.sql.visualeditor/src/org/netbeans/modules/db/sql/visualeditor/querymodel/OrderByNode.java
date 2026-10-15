@@ -19,6 +19,7 @@
 package org.netbeans.modules.db.sql.visualeditor.querymodel;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Collection;
 
 import org.netbeans.api.db.sql.support.SQLIdentifiers;
@@ -32,7 +33,7 @@ public class OrderByNode implements OrderBy {
 
     // A vector of generalized column objects (JoinTables)
 
-    ArrayList _sortSpecificationList;
+    List<SortSpecification> _sortSpecificationList;
 
 
     // Constructors
@@ -40,7 +41,7 @@ public class OrderByNode implements OrderBy {
     public OrderByNode() {
     }
 
-    public OrderByNode(ArrayList sortSpecificationList) {
+    public OrderByNode(List sortSpecificationList) {
         _sortSpecificationList = sortSpecificationList;
     }
 
@@ -52,11 +53,11 @@ public class OrderByNode implements OrderBy {
         String res = "";    // NOI18N
         if (_sortSpecificationList != null && _sortSpecificationList.size() > 0) {
 
-            res = " ORDER BY " + ((SortSpecification)_sortSpecificationList.get(0)).genText(quoter);  // NOI18N
+            res = " ORDER BY " + _sortSpecificationList.get(0).genText(quoter);  // NOI18N
 
             for (int i=1; i<_sortSpecificationList.size(); i++) {
                 res += ", " + "                    " +    // NOI18N
-                  ((SortSpecification)_sortSpecificationList.get(i)).genText(quoter);
+                  _sortSpecificationList.get(i).genText(quoter);
             }
         }
 
@@ -72,14 +73,14 @@ public class OrderByNode implements OrderBy {
     void renameTableSpec(String oldTableSpec, String corrName) {
         if (_sortSpecificationList != null) {
             for (int i=0; i<_sortSpecificationList.size(); i++)
-                ((SortSpecification)_sortSpecificationList.get(i)).renameTableSpec(oldTableSpec, corrName);
+                _sortSpecificationList.get(i).renameTableSpec(oldTableSpec, corrName);
         }
     }
 
     public void removeSortSpecification(String tableSpec) {
         if (_sortSpecificationList != null) {
             for (int i=0; i<_sortSpecificationList.size(); i++) {
-                ColumnNode col = (ColumnNode)((SortSpecification)_sortSpecificationList.get(i)).getColumn();
+                ColumnNode col = (ColumnNode)_sortSpecificationList.get(i).getColumn();
                 if (col.getTableSpec().equals(tableSpec))
                 {
                     _sortSpecificationList.remove(i);
@@ -95,7 +96,7 @@ public class OrderByNode implements OrderBy {
     public void removeSortSpecification(String tableSpec, String columnName) {
         if (_sortSpecificationList != null) {
             for (int i=0; i<_sortSpecificationList.size(); i++) {
-                ColumnNode col = (ColumnNode)((SortSpecification)_sortSpecificationList.get(i)).getColumn();
+                ColumnNode col = (ColumnNode)_sortSpecificationList.get(i).getColumn();
                 if (col.matches(tableSpec, columnName))
                 {
                     _sortSpecificationList.remove(i);
@@ -112,7 +113,7 @@ public class OrderByNode implements OrderBy {
         SortSpecification sortSpec = new SortSpecification(new ColumnNode(tableSpec, columnName), direction);
         // Insert the new one in an appropriate place
         if (_sortSpecificationList == null)
-            _sortSpecificationList = new ArrayList();
+            _sortSpecificationList = new ArrayList<>();
         _sortSpecificationList.add(order-1, sortSpec);
     }
 
@@ -121,13 +122,13 @@ public class OrderByNode implements OrderBy {
     }
 
     public SortSpecification getSortSpecification(int i) {
-        return (_sortSpecificationList != null) ? ((SortSpecification)_sortSpecificationList.get(i)) : null;
+        return (_sortSpecificationList != null) ? _sortSpecificationList.get(i) : null;
     }
 
     public void  getReferencedColumns (Collection columns) {
         if (_sortSpecificationList != null) {
             for (int i = 0; i < _sortSpecificationList.size(); i++)
-                ((SortSpecification)_sortSpecificationList.get(i)).getReferencedColumns(columns);
+                _sortSpecificationList.get(i).getReferencedColumns(columns);
         }
     }
 

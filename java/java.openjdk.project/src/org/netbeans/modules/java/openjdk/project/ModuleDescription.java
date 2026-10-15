@@ -411,20 +411,45 @@ public class ModuleDescription {
             return true;
         }
 
-        public String moduleTests(String moduleName) {
-            String open = explicitOpen ? "open/" : "";
-            //TODO? for now, tests are assigned to java.base, java.compiler and java.xml, depending on the location of the tests:
-            switch (moduleName) {
-                case "java.base":
-                    return consolidatedRepository ? "${jdkRoot}/" + open + "test/jdk/" : "${jdkRoot}/jdk/test/";
-                case "java.compiler":
-                    return consolidatedRepository ? "${jdkRoot}/test/" + open + "langtools/" : "${jdkRoot}/langtools/test/";
-                case "java.xml":
-                    return consolidatedRepository ? "${jdkRoot}/test/" + open + "jaxp/" : "${jdkRoot}/jaxp/test/";
-                case "jdk.scripting.nashorn":
-                    return consolidatedRepository ? "${jdkRoot}/test/" + open + "nashorn/" : "${jdkRoot}/nashorn/test/";
+        public List<String> moduleTests(String moduleName) {
+            if (!consolidatedRepository) {
+                switch (moduleName) {
+                    case "java.base":
+                        return List.of("${jdkRoot}/jdk/test/");
+                    case "java.compiler":
+                        return List.of("${jdkRoot}/langtools/test/");
+                    case "java.xml":
+                        return List.of("${jdkRoot}/jaxp/test/");
+                    case "jdk.scripting.nashorn":
+                        return List.of("${jdkRoot}/nashorn/test/");
+                }
+                return List.of();
             }
-            return null;
+
+            List<String> result = new ArrayList<>();
+
+            for (String dir : explicitOpen ? new String[] {"open/", "closed/"}
+                                           : new String[] {""}) {
+                //TODO? for now, tests are assigned to java.base, java.compiler and java.xml, depending on the location of the tests:
+                switch (moduleName) {
+                    case "java.base":
+                        result.add("${jdkRoot}/" + dir + "test/jdk/");
+                        result.add("${jdkRoot}/" + dir + "test/hotspot/");
+                        result.add("${jdkRoot}/" + dir + "test/lib/");
+                        break;
+                    case "java.compiler":
+                        result.add("${jdkRoot}/" + dir + "test/langtools/");
+                        break;
+                    case "java.xml":
+                        result.add("${jdkRoot}/" + dir + "test/jaxp/");
+                        break;
+                    case "jdk.scripting.nashorn":
+                        result.add("${jdkRoot}/" + dir + "test/nashorn/");
+                        break;
+                }
+            }
+
+            return result;
         }
 
         public Collection<String> allDependencies(ModuleDescription module) {

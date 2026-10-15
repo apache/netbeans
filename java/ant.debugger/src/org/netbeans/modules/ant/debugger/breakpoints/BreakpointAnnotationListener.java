@@ -40,9 +40,8 @@ import org.netbeans.modules.ant.debugger.DebuggerBreakpointAnnotation;
 public class BreakpointAnnotationListener extends DebuggerManagerAdapter 
 implements PropertyChangeListener {
     
-    private Map breakpointToAnnotation = new HashMap ();
-    
- 
+    private Map<AntBreakpoint, DebuggerBreakpointAnnotation> breakpointToAnnotation = new HashMap<>();
+  
     @Override
     public String[] getProperties () {
         return new String[] {DebuggerManager.PROP_BREAKPOINTS};
@@ -100,13 +99,9 @@ implements PropertyChangeListener {
     }
     
     private void removeAnnotation (Breakpoint b) {
-        DebuggerBreakpointAnnotation annotation = (DebuggerBreakpointAnnotation) 
-            breakpointToAnnotation.remove (b);
+        DebuggerBreakpointAnnotation annotation = breakpointToAnnotation.remove(b);
         if (annotation == null) return;
         annotation.detach ();
-        b.removePropertyChangeListener (
-            Breakpoint.PROP_ENABLED, 
-            this
-        );
+        b.removePropertyChangeListener(Breakpoint.PROP_ENABLED, this);
     }
 }

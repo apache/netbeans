@@ -21,9 +21,11 @@ package org.netbeans.modules.j2ee.metadata.model.api.support.annotation;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -45,7 +47,6 @@ import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.TypesEvent;
 import org.netbeans.modules.j2ee.metadata.model.api.MetadataModelException;
 import org.openide.util.Exceptions;
-import org.openide.util.WeakSet;
 
 /**
  *
@@ -58,9 +59,9 @@ public final class AnnotationModelHelper {
 
     private final ClasspathInfo cpi;
     // @GuardedBy("this")
-    private final Set<JavaContextListener> javaContextListeners = new WeakSet<JavaContextListener>();
+    private final Set<JavaContextListener> javaContextListeners = Collections.newSetFromMap(new WeakHashMap<>());
     // @GuardedBy("this")
-    private final Set<PersistentObjectManager<? extends PersistentObject>> managers = new WeakSet<PersistentObjectManager<? extends PersistentObject>>();
+    private final Set<PersistentObjectManager<? extends PersistentObject>> managers = Collections.newSetFromMap(new WeakHashMap<>());
 
     // @GuardedBy("this")
     private ClassIndex classIndex;

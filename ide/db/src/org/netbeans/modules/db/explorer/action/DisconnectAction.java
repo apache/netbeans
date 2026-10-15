@@ -25,6 +25,10 @@ import org.netbeans.modules.db.explorer.DatabaseConnection;
 import org.netbeans.modules.db.explorer.node.ConnectionNode;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionRegistration;
+import org.openide.awt.ActionState;
 import org.openide.nodes.Node;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
@@ -32,6 +36,13 @@ import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 
 
+@ActionRegistration(
+        displayName = "#Disconnect", 
+        lazy = false,
+        enabledOn = @ActionState(type = DatabaseConnection.class, useActionInstance = true)
+)
+@ActionID(category = "Database", id = "netbeans.db.explorer.action.Disconnect")
+@ActionReference(path = "Databases/Explorer/Connection/Actions", position = 150)
 public class DisconnectAction extends BaseAction {
 
     @Override

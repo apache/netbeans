@@ -37,21 +37,31 @@ import org.netbeans.modules.css.lib.api.CssModule;
 //TODO defined the displaynames and descriptions
 public enum PropertyCategory {
 
+    ALIGNMENT,
     ANIMATIONS,
     BOX,
     BACKGROUND,
     COLORS,
     CONTENT, //generated & repl. content
+    CONTAIN,
+    FILTER_EFFECTS,
     FLEXIBLE_BOX_LAYOUT,
     FONTS,
+    FRAGMENTATION,
     GRID,
     HYPERLINKS,
     IMAGES,
+    IMAGES_4,
     LINE,
     LISTS_AND_COUNTERS,
+    LOGICAL,
     MARQUEE,
     MULTI_COLUMN_LAYOUT,
+    OVERFLOW,
     PAGED_MEDIA,
+    POSITIONING,
+    SIZING,
+    SCROLL_SNAP,
     RUBY,
     SPEECH,
     TEXT,
@@ -60,43 +70,37 @@ public enum PropertyCategory {
     TRANSITIONS,
     USER_INTERFACE,
     WRITING_MODES,
-    
+
     //browsers
     CHROME,
     FIREFOX,
     INTERNET_EXPLORER,
     OPERA,
     SAFARI,
-    
+
     //default, the rest
-    DEFAULT, 
-    
+    DEFAULT,
+
     //unknown
     UNKNOWN;
-    
-    private String displayName;
-    private String shortDescription;
-    private String longDescription;
+
+    private final String displayName;
+    private final String shortDescription;
+    private final String longDescription;
 
     private PropertyCategory() {
         displayName = new StringBuilder()
                 .append(name().charAt(0))
                 .append(name().substring(1).toLowerCase().replace('_', ' '))
                 .toString();
-        
+
         shortDescription = new StringBuilder()
                 .append("Provides styling support for ")
                 .append(getDisplayName())
                 .append('.')
                 .toString();
-        
-        longDescription = shortDescription;
-    }
 
-    private PropertyCategory(String displayName, String shortDescription, String longDescription) {
-        this.displayName = displayName;
-        this.shortDescription = shortDescription;
-        this.longDescription = longDescription;
+        longDescription = shortDescription;
     }
 
     public String getDisplayName() {
@@ -110,5 +114,5 @@ public enum PropertyCategory {
     public String getLongDescription() {
         return longDescription;
     }
-    
+
 }

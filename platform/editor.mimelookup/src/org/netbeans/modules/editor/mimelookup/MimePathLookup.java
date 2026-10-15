@@ -154,7 +154,7 @@ public final class MimePathLookup extends ProxyLookup implements LookupListener 
             LOG.fine("MimeLookup for '" + mimePath.getPath() + "' rebuilt."); //NOI18N
         }
 
-        setLookups(WORKER, lookups.toArray(new Lookup[lookups.size()])); // NOI18N
+        setLookups(WORKER, lookups.toArray(new Lookup[0])); // NOI18N
     }
 
     private boolean isDefaultProvider(MimeDataProvider provider) {

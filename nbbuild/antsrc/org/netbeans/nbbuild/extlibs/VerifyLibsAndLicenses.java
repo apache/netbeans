@@ -49,6 +49,7 @@ import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -56,15 +57,15 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.netbeans.nbbuild.JUnitReportWriter;
-import org.netbeans.nbbuild.extlibs.DownloadBinaries.MavenCoordinate;
 import org.netbeans.nbbuild.extlibs.licenseinfo.Fileset;
 import org.netbeans.nbbuild.extlibs.licenseinfo.Licenseinfo;
-import org.netbeans.nbbuild.extlibs.licenseinfo.Licenseinfos;
 
 /**
  * Task to check that external libraries have legitimate licenses, etc.
  */
 public class VerifyLibsAndLicenses extends Task {
+
+    private static final Pattern URL_PATTERN = Pattern.compile("(https?://\\S*[^/\\s]+)\\s+(\\S+)$");
 
     private File nball;
     public void setNball(File nball) {
@@ -94,13 +95,14 @@ public class VerifyLibsAndLicenses extends Task {
             modules.add("nbbuild");
         } else {
             Path nbAllPath = nball.toPath();
-            modules = new TreeSet<>(
-                    Files.walk(nbAllPath)
-                            .filter(p -> Files.exists(p.resolve("external/binaries-list")))
-                            .map(p -> nbAllPath.relativize(p))
-                            .map(p -> p.toString())
-                            .collect(Collectors.toSet())
-            );
+            try ( Stream<Path> walk = Files.walk(nbAllPath)) {
+                modules = new TreeSet<>(
+                        walk.filter(p -> Files.exists(p.resolve("external/binaries-list")))
+                                .map(p -> nbAllPath.relativize(p))
+                                .map(p -> p.toString())
+                                .collect(Collectors.toSet())
+                );
+            }
         }
         try {
             testNoStrayThirdPartyBinaries();
@@ -323,9 +325,10 @@ public class VerifyLibsAndLicenses extends Task {
                 String license = headers.get("License");
                 if (license != null) {
                     if (license.contains("GPL")) {
-                        if (headers.getOrDefault("Type", "").contains("compile-time")) {
+                        String type = headers.getOrDefault("Type", "");
+                        if (type.contains("compile-time") || type.contains("reviewed")) {
                             // GPL dependencies are ok as build/compile time dependencies
-                            // but not ok, as a runtime dependency
+                            // or if they are explicitly reviewed
                             if (!headers.containsKey("Comment")) {
                                 msg.append("\n" + path + " has a GPL-family license but does not have a Comment.");
                             }
@@ -422,20 +425,22 @@ public class VerifyLibsAndLicenses extends Task {
         }
         pseudoTests.put("testLicenses", msg.length() > 0 ? "Some license files have incorrect headers" + msg : null);
     }
-    
+
     private void testLicenseinfo() throws IOException {
         Path nballPath = nball.toPath();
-        List<File> licenseinfofiles = Files.walk(nballPath)
-                .filter(p -> p.endsWith("licenseinfo.xml"))
-                .map(p -> p.toFile())
-                .collect(Collectors.toList());
-        
+        List<File> licenseinfofiles;
+        try ( Stream<Path> walk = Files.walk(nballPath)) {
+            licenseinfofiles = walk
+                    .filter(p -> p.endsWith("licenseinfo.xml"))
+                    .map(p -> p.toFile())
+                    .collect(Collectors.toList());
+        }
         File licenses = new File(new File(nball, "nbbuild"), "licenses");
         StringBuilder msg = new StringBuilder();
-        
+
         for (File licenseInfoFile: licenseinfofiles) {
             String path = nballPath.relativize(licenseInfoFile.toPath()).toString();
-            
+
             Licenseinfo li;
             try {
                 li = Licenseinfo.parse(licenseInfoFile);
@@ -446,7 +451,7 @@ public class VerifyLibsAndLicenses extends Task {
                 msg.append(ex.getMessage());
                 continue;
             }
-            
+
             for(Fileset fs: li.getFilesets()) {
                 for(File f: fs.getFiles()) {
                     if(! f.exists()) {
@@ -474,10 +479,10 @@ public class VerifyLibsAndLicenses extends Task {
                 }
             }
         }
- 
+
         pseudoTests.put("testLicenseinfo", msg.length() > 0 ? "Some licenseinfo.xml files failed verification:" + msg : null);
     }
-    
+
     private static String templateMatch(String actual, String expected, boolean left) {
         String reason = null;
         boolean expectReason = false;
@@ -535,7 +540,7 @@ public class VerifyLibsAndLicenses extends Task {
     }
     private static String headOrTail(String text, boolean useHead) {
         int context = 20;
-        return text.length() > context ? (useHead ? text.substring(0, context) : text.substring(text.length() - context, text.length())) : text;
+        return text.length() > context ? (useHead ? text.substring(0, context) : text.substring(text.length() - context)) : text;
     }
 
     static List<String> loadPatterns(String resource) throws IOException {
@@ -680,10 +685,13 @@ public class VerifyLibsAndLicenses extends Task {
                     if (hashAndFile.length < 2) {
                         throw new BuildException("Bad line '" + line + "' in " + list);
                     }
+                    Matcher urlMatcher = URL_PATTERN.matcher(hashAndFile[1]);
                     if (MavenCoordinate.isMavenFile(hashAndFile[1])) {
                         MavenCoordinate coordinate = MavenCoordinate.fromGradleFormat(hashAndFile[1]);
                         String artifactFile = coordinate.toArtifactFilename();
                         files.add(artifactFile);
+                    } else if (urlMatcher.matches()) {
+                        files.add(urlMatcher.group(2));
                     } else {
                         files.add(hashAndFile[1]);
                     }

@@ -1,0 +1,26 @@
+protected function testAbstractProtectedClassMethod(): string{
+}
+protected static function testAbstractProtectedStaticClassMethod(): int{
+}
+public function testAbstractPublicClassMethod(): void{
+}
+public static function testAbstractPublicStaticClassMethod(): int{
+}
+private static function testAbstractPrivateStaticTraitMethod(): int{
+}
+private function testAbstractPrivateTraitMethod(): string{
+}
+protected static function testAbstractProtectedStaticTraitMethod(): int{
+}
+protected function testAbstractProtectedTraitMethod(): string{
+}
+public static function testAbstractPublicStaticTraitMethod(): int{
+}
+public function testAbstractPublicTraitMethod(): void{
+}
+public function testInterfaceMethod(): void{
+}
+public function testClassMethod(): void{
+}
+public function testTraitMethod(): void{
+}

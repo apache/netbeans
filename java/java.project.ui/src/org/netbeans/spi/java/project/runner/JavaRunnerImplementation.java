@@ -40,7 +40,7 @@ public interface JavaRunnerImplementation {
      * Implementation of {@link JavaRunner#isSupported(java.lang.String, java.util.Map)}.
      * 
      * @param command command name
-     * @param toRun either the file that would be executed, or the project folder
+     * @param properties properties
      * @return true if and only if the given command is supported for given file/folder
      *
      * @since 1.22
@@ -51,8 +51,7 @@ public interface JavaRunnerImplementation {
      * Implementation of {@link JavaRunner#execute(java.lang.String, java.util.Map)}.
      *
      * @param command command to execute
-     * @param props properties
-     * @param toRun file to run
+     * @param properties properties
      * @throws java.io.IOException if execution fails
      *
      * @since 1.22

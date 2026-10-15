@@ -42,6 +42,7 @@ public class NodesTest extends NbTestCase {
     }    
     
     
+    @Override
     protected void setUp () throws Exception {
         super.setUp ();
         
@@ -64,28 +65,27 @@ public class NodesTest extends NbTestCase {
         Action add = Actions.add();
         Action remove = Actions.remove();
         
-        for (int i = 0; i < arr.length; i++) {
-            File f = FavoritesNode.fileForNode(arr[i]);
+        for (Node arr1 : arr) {
+            File f = FavoritesNode.fileForNode(arr1);
             //First level (link) has action remove
             //Further level has action add
-            Collection set = Arrays.asList (arr[i].getActions(false));
+            Collection<Action> set = Arrays.asList(arr1.getActions(false));
             if (depth == 1) {
                 if (!set.contains (remove)) {
-                    fail ("Node " + arr[i] + " does not contain action remove, but:\n" + set);
+                    fail("Node " + arr1 + " does not contain action remove, but:\n" + set);
                 }
                 if (set.contains(add)) {
-                    fail ("Node " + arr[i] + " contains action add.");
+                    fail("Node " + arr1 + " contains action add.");
                 }
             } else {
                 if (!set.contains(add)) {
-                    fail ("Node " + arr[i] + " does not contain action, but:\n" + set);
+                    fail("Node " + arr1 + " does not contain action, but:\n" + set);
                 }
                 if (set.contains (remove)) {
-                    fail ("Node " + arr[i] + " contains action remove.");
+                    fail("Node " + arr1 + " contains action remove.");
                 }
             }
-            
-            doCheckDepth (arr[i], depth + 1);
+            doCheckDepth(arr1, depth + 1);
         }
     }
 }

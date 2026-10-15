@@ -39,6 +39,7 @@ class TestLexer implements Lexer<TestTokenId> {
         this.factory = info.tokenFactory();
     }
 
+    @Override
     public Token<TestTokenId> nextToken() {
         if (input.read() == LexerInput.EOF) {
             return null;
@@ -68,10 +69,12 @@ class TestLexer implements Lexer<TestTokenId> {
         return read != LexerInput.EOF;
     }
 
+    @Override
     public Object state() {
         return null;
     }
 
+    @Override
     public void release() {}
 
 }

@@ -20,7 +20,6 @@ package org.netbeans.modules.payara.tooling.data;
 
 import java.util.List;
 import java.util.Map;
-import org.netbeans.modules.payara.tooling.data.JDKVersion;
 
 /**
  * This interface provides IDE and user specific arguments for starting the server.

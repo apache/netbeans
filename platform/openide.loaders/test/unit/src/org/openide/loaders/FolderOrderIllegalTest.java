@@ -93,7 +93,7 @@ public class FolderOrderIllegalTest extends NbTestCase {
         
         DataObject[] arr = f.getChildren();
         
-        String txt = Arrays.toString(arr).replaceAll(", ", "\n");
+        String txt = Arrays.toString(arr).replace(", ", "\n");
         assertEquals("All 10:\n" + txt, 10, arr.length);//fail("OK:\n" + txt);
     }
 }

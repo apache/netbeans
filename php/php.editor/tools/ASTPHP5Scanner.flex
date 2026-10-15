@@ -19,9 +19,12 @@
 
 package org.netbeans.modules.php.editor.parser;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 import java_cup.runtime.*;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.php.editor.parser.astnodes.*;
 import org.netbeans.modules.web.common.api.ByteStack;
 
@@ -70,12 +73,12 @@ import org.netbeans.modules.web.common.api.ByteStack;
 %state ST_HALTED_COMPILER
 %{
     private final List commentList = new ArrayList();
+    private final Deque<HeredocInfo> heredocStack = new ArrayDeque<>();
     private String heredoc = null;
     private int heredocBodyStart = -1;
     private int heredocBodyLength = 0;
     private final StringBuilder heredocBody = new StringBuilder();
     private String nowdoc = null;
-    private int nowdoc_len  = 0;
     private int nowdocBodyStart = -1;
     private int nowdocBodyLength = 0;
     private final StringBuilder nowdocBody = new StringBuilder();
@@ -239,6 +242,7 @@ import org.netbeans.modules.web.common.api.ByteStack;
     private Symbol createFullNowdocBodySymbol() {
         Symbol symbol = new Symbol(ASTPHP5Symbols.T_ENCAPSED_AND_WHITESPACE, nowdocBodyStart, nowdocBodyStart + nowdocBodyLength);
         symbol.value = nowdocBody.toString();
+        resetNowdocBodyInfo();
         return symbol;
     }
 
@@ -254,6 +258,21 @@ import org.netbeans.modules.web.common.api.ByteStack;
         heredocBodyStart = -1;
         heredocBodyLength = 0;
         heredocBody.delete(0, heredocBody.length());
+    }
+
+    private void resetNowdocBodyInfo() {
+        nowdocBodyStart = -1;
+        nowdocBodyLength = 0;
+        nowdocBody.delete(0, nowdocBody.length());
+    }
+
+    private void setHeredocInfo(@NullAllowed HeredocInfo info) {
+        if (info != null) {
+            heredoc = info.getId();
+            heredocBody.append(info.getBody());
+            heredocBodyStart = info.getBodyStart();
+            heredocBodyLength = info.getBodyLength();
+        }
     }
 
     private Symbol createFullHeredocBodySymbol() {
@@ -327,6 +346,37 @@ import org.netbeans.modules.web.common.api.ByteStack;
         this.yychar = this.zzStartRead - this.zzPushbackPos;
     }
 
+    //~ inner class
+    private static final class HeredocInfo {
+
+        private final String id;
+        private final String body;
+        private final int bodyStart;
+        private final int bodyLength;
+
+        public HeredocInfo(String id, String body, int bodyStart, int bodyLength) {
+            this.id = id;
+            this.body = body;
+            this.bodyStart = bodyStart;
+            this.bodyLength = bodyLength;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public String getBody() {
+            return body;
+        }
+
+        public int getBodyStart() {
+            return bodyStart;
+        }
+
+        public int getBodyLength() {
+            return bodyLength;
+        }
+    }
 %}
 
 LNUM=[0-9]+(_[0-9]+)*
@@ -334,6 +384,7 @@ DNUM=({LNUM}?[\.]{LNUM})|({LNUM}[\.]{LNUM}?)
 EXPONENT_DNUM=(({LNUM}|{DNUM})[eE][+-]?{LNUM})
 HNUM="0x"[0-9a-fA-F]+(_[0-9a-fA-F]+)*
 BNUM="0b"[01]+(_[01]+)*
+ONUM="0o"[0-7]+(_[0-7]+)* // PHP 8.1: Explicit octal integer literal notation
 //LABEL=[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
 LABEL=([[:letter:]_]|[\u007f-\u00ff])([[:letter:][:digit:]_]|[\u007f-\u00ff])*
 NAMESPACE_SEPARATOR=[\\]
@@ -384,6 +435,14 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
 
 <ST_IN_SCRIPTING>"return" {
     return createFullSymbol(ASTPHP5Symbols.T_RETURN);
+}
+
+// NETBEANS-4443 PHP 8.0: Attribute Syntax
+// https://wiki.php.net/rfc/attributes_v2
+// https://wiki.php.net/rfc/shorter_attribute_syntax
+// https://wiki.php.net/rfc/shorter_attribute_syntax_change
+<ST_IN_SCRIPTING>"#[" {
+    return createSymbol(ASTPHP5Symbols.T_ATTRIBUTE);
 }
 
 <ST_IN_SCRIPTING>"yield"{WHITESPACE}+"from" {
@@ -482,6 +541,10 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
     return createFullSymbol(ASTPHP5Symbols.T_ENDSWITCH);
 }
 
+<ST_IN_SCRIPTING>"match" {
+    return createFullSymbol(ASTPHP5Symbols.T_MATCH);
+}
+
 <ST_IN_SCRIPTING>"case" {
     return createFullSymbol(ASTPHP5Symbols.T_CASE);
 }
@@ -522,6 +585,16 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
     return createFullSymbol(ASTPHP5Symbols.T_INTERFACE);
 }
 
+<ST_IN_SCRIPTING>"enum"{WHITESPACE}("extends"|"implements") {
+    yypushback(yylength() - 4); // 4: enum length
+    return createFullSymbol(ASTPHP5Symbols.T_STRING);
+}
+
+<ST_IN_SCRIPTING>"enum"{WHITESPACE}[a-zA-Z_\x80-\xff] {
+    yypushback(yylength() - 4); // 4: enum length
+    return createFullSymbol(ASTPHP5Symbols.T_ENUM);
+}
+
 <ST_IN_SCRIPTING>"extends" {
     return createFullSymbol(ASTPHP5Symbols.T_EXTENDS);
 }
@@ -535,12 +608,25 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
     return createSymbol(ASTPHP5Symbols.T_OBJECT_OPERATOR);
 }
 
+// NETBEANS-4443 PHP 8.0: Nullsafe operator
+// https://wiki.php.net/rfc/nullsafe_operator
+<ST_IN_SCRIPTING>"?->" {
+    pushState(ST_LOOKING_FOR_PROPERTY);
+    return createSymbol(ASTPHP5Symbols.T_NULLSAFE_OBJECT_OPERATOR);
+}
+
 <ST_IN_SCRIPTING,ST_LOOKING_FOR_PROPERTY>{WHITESPACE}+ {
     whitespaceEndPosition = getTokenStartPosition() + yylength();
 }
 
 <ST_LOOKING_FOR_PROPERTY>"->" {
     return createSymbol(ASTPHP5Symbols.T_OBJECT_OPERATOR);
+}
+
+// NETBEANS-4443 PHP 8.0: Nullsafe operator
+// https://wiki.php.net/rfc/nullsafe_operator
+<ST_LOOKING_FOR_PROPERTY>"?->" {
+    return createSymbol(ASTPHP5Symbols.T_NULLSAFE_OBJECT_OPERATOR);
 }
 
 <ST_LOOKING_FOR_PROPERTY>{LABEL} {
@@ -555,6 +641,18 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
 
 <ST_IN_SCRIPTING>"::" {
     return createSymbol(ASTPHP5Symbols.T_PAAMAYIM_NEKUDOTAYIM);
+}
+
+<ST_IN_SCRIPTING>"namespace"("\\"{LABEL})+ {
+    return createFullSymbol(ASTPHP5Symbols.T_NAME_RELATIVE);
+}
+
+<ST_IN_SCRIPTING>{LABEL}("\\"{LABEL})+ {
+    return createFullSymbol(ASTPHP5Symbols.T_NAME_QUALIFIED);
+}
+
+<ST_IN_SCRIPTING>"\\"{LABEL}("\\"{LABEL})* {
+    return createFullSymbol(ASTPHP5Symbols.T_NAME_FULLY_QUALIFIED);
 }
 
 <ST_IN_SCRIPTING>"\\" {
@@ -676,6 +774,22 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
 
 <ST_IN_SCRIPTING>"public" {
     return createFullSymbol(ASTPHP5Symbols.T_PUBLIC);
+}
+
+<ST_IN_SCRIPTING>"public(set)" {
+    return createFullSymbol(ASTPHP5Symbols.T_PUBLIC_SET);
+}
+
+<ST_IN_SCRIPTING>"protected(set)" {
+    return createFullSymbol(ASTPHP5Symbols.T_PROTECTED_SET);
+}
+
+<ST_IN_SCRIPTING>"private(set)" {
+    return createFullSymbol(ASTPHP5Symbols.T_PRIVATE_SET);
+}
+
+<ST_IN_SCRIPTING>"readonly" {
+    return createFullSymbol(ASTPHP5Symbols.T_READONLY);
 }
 
 <ST_IN_SCRIPTING>"unset" {
@@ -826,6 +940,17 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
     return createSymbol(ASTPHP5Symbols.T_COALESCE_EQUAL);
 }
 
+// NETBEANS-4443 PHP 8.5: Pipe operator
+// https://wiki.php.net/rfc/pipe-operator-v3
+<ST_IN_SCRIPTING>"|>" {
+    return createSymbol(ASTPHP5Symbols.T_PIPE);
+}
+
+<ST_IN_SCRIPTING>"&"{TABS_AND_SPACES}("$"|"...") {
+    yypushback(yylength() - 1);
+    return createSymbol(ASTPHP5Symbols.T_REFERENCE);
+}
+
 // TOKENS
 <ST_IN_SCRIPTING> {
     ";"                     {return createSymbol(ASTPHP5Symbols.T_SEMICOLON);}
@@ -838,7 +963,7 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
     ")"                     {return createSymbol(ASTPHP5Symbols.T_CLOSE_PARENTHESE);}
     "|"                     {return createSymbol(ASTPHP5Symbols.T_OR);}
     "^"                     {return createSymbol(ASTPHP5Symbols.T_KOVA);}
-    "&"                     {return createSymbol(ASTPHP5Symbols.T_REFERENCE);}
+    "&"                     {return createSymbol(ASTPHP5Symbols.T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG);}
     "+"                     {return createSymbol(ASTPHP5Symbols.T_PLUS);}
     "-"                     {return createSymbol(ASTPHP5Symbols.T_MINUS);}
     "/"                     {return createSymbol(ASTPHP5Symbols.T_DIV);}
@@ -863,6 +988,7 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
 
 <ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC>"${" {
     pushState(ST_LOOKING_FOR_VARNAME);
+    bracket++;
     return createSymbol(ASTPHP5Symbols.T_DOLLAR_OPEN_CURLY_BRACES);
 }
 
@@ -885,6 +1011,12 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
     yypushback(yylength());
     popState();
     pushState(ST_IN_SCRIPTING);
+}
+
+<ST_IN_SCRIPTING>{ONUM} {
+    // PHP 8.1: Explicit octal integer literal notation
+    // https://wiki.php.net/rfc/explicit_octal_notation
+    return createFullSymbol(ASTPHP5Symbols.T_LNUMBER);
 }
 
 <ST_IN_SCRIPTING>{LNUM} {
@@ -921,6 +1053,10 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
 
 <ST_IN_SCRIPTING>"__FUNCTION__" {
     return createFullSymbol(ASTPHP5Symbols.T_FUNC_C);
+}
+
+<ST_IN_SCRIPTING>"__PROPERTY__" {
+    return createFullSymbol(ASTPHP5Symbols.T_PROPERTY_C);
 }
 
 <ST_IN_SCRIPTING>"__METHOD__" {
@@ -1090,7 +1226,7 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
     }
 }
 
-<ST_IN_SCRIPTING>"/*"{WHITESPACE}*"@var"{WHITESPACE}("$"?){LABEL}("["({LABEL} | "\"" | "'")*"]")*{WHITESPACE}{QUALIFIED_LABEL}("[""]")*([|]{QUALIFIED_LABEL}("[""]")*)*{WHITESPACE}?"*/" {
+<ST_IN_SCRIPTING>"/*"{WHITESPACE}*"@var"{WHITESPACE}("$"?){LABEL}("["({LABEL} | "\"" | "'")*"]")*{WHITESPACE}("?"?)("("?){QUALIFIED_LABEL}("[""]")*([|&]("("?){QUALIFIED_LABEL}("[""]")*(")"?))*{WHITESPACE}?"*/" {
     comment = yytext();
     handleVarComment();
     // if we want to handle the var comment in  ast, then return the T_VAR_Comment symbol
@@ -1098,7 +1234,7 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
     //return createFullSymbol(ASTPHP5Symbols.T_VAR_COMMENT);
 }
 
-<ST_IN_SCRIPTING>"/**"{WHITESPACE}*"@var"{WHITESPACE}{QUALIFIED_LABEL}("[""]")*([|]{QUALIFIED_LABEL}("[""]")*)*{WHITESPACE}("$"){LABEL}("["({LABEL} | "\"" | "'")*"]")*{WHITESPACE}?[^\n\r]*"*/" {
+<ST_IN_SCRIPTING>"/**"{WHITESPACE}*"@var"{WHITESPACE}("?"?)("("?){QUALIFIED_LABEL}("[""]")*([|&]("("?){QUALIFIED_LABEL}("[""]")*(")"?))*{WHITESPACE}("$"){LABEL}("["({LABEL} | "\"" | "'")*"]")*{WHITESPACE}?[^\n\r]*"*/" {
     comment = yytext();
     handleVarComment();
 }
@@ -1185,14 +1321,14 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
     int bprefix = (yytext().charAt(0) != '<') ? 1 : 0;
     int startString=3+bprefix;
     /* 3 is <<<, 2 is quotes, 1 is newline */
-    nowdoc_len = yylength()-bprefix-3-2-1-(yytext().charAt(yylength()-2)=='\r'?1:0);
+    int nowdoc_len = yylength() - bprefix - 3 - 2 - 1 - (yytext().charAt(yylength() - 2) == '\r' ? 1 : 0);
     while ((yytext().charAt(startString) == ' ') || (yytext().charAt(startString) == '\t')) {
         startString++;
         nowdoc_len--;
     }
     // first quate
     startString++;
-    nowdoc = yytext().substring(startString,nowdoc_len+startString);
+    nowdoc = yytext().substring(startString, nowdoc_len + startString);
     yybegin(ST_START_NOWDOC);
     return createSymbol(ASTPHP5Symbols.T_START_NOWDOC);
 }
@@ -1210,11 +1346,9 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
         int indexOfNowdocId = yytext().indexOf(nowdoc);
         int back = yylength() - indexOfNowdocId - nowdoc.length();
         yypushback(back);
+
         nowdoc = null;
-        nowdoc_len = 0;
-        nowdocBody.delete(0, nowdocBody.length());
-        nowdocBodyStart = -1;
-        nowdocBodyLength = 0;
+        resetNowdocBodyInfo();
         yybegin(ST_IN_SCRIPTING);
         return createSymbol(ASTPHP5Symbols.T_END_NOWDOC);
     } else {
@@ -1226,11 +1360,18 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
 
 
 <ST_NOWDOC> {
-    {NEWLINE}{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\r\n]? {
-        /* <ST_NOWDOC>{NEWLINE}{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\r\n]? */
+    {NEWLINE}+{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\r\n]? {
+        /* <ST_NOWDOC>{NEWLINE}+{TABS_AND_SPACES}{LABEL}";"?[^\n\r]*[\r\n]? */
         if (isEndHereOrNowdoc(nowdoc)) {
             String yytext = yytext();
-            int newlineLength = yytext.startsWith("\r\n") ? 2 : 1;
+            int newlineLength = 0;
+            for (int i = 0; i < yylength(); i++) {
+                char c = yytext.charAt(i);
+                if (c != '\n' && c != '\r') {
+                    break;
+                }
+                newlineLength++;
+            }
             int back = yylength() - newlineLength;
             yypushback(back);
             updateNowdocBodyInfo();
@@ -1252,11 +1393,8 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
 
 <ST_END_NOWDOC>{TABS_AND_SPACES}{LABEL}";"? {
     /* <ST_END_NOWDOC>{LABEL}";"?[\n\r] */
-    nowdoc=null;
-    nowdoc_len=0;
-    nowdocBody.delete(0, nowdocBody.length());
-    nowdocBodyStart = -1;
-    nowdocBodyLength = 0;
+    nowdoc = null;
+    resetNowdocBodyInfo();
     yybegin(ST_IN_SCRIPTING);
     int back = 0;
     if (yytext().charAt(yylength() - 1)==';') {
@@ -1268,11 +1406,18 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
 
 <ST_IN_SCRIPTING>b?"<<<"{TABS_AND_SPACES}({LABEL}|"\""{LABEL}"\""){NEWLINE} {
     int removeChars = (yytext().charAt(0) == 'b')?4:3;
+    if (heredoc != null) {
+        heredocStack.push(new HeredocInfo(heredoc, heredocBody.toString(), heredocBodyStart, heredocBodyLength));
+    }
     heredoc = yytext().substring(removeChars).trim();    // for 'b<<<' or '<<<'
     if (heredoc.charAt(0) == '"') {
         heredoc = heredoc.substring(1, heredoc.length()-1);
     }
-    yybegin(ST_START_HEREDOC);
+    if (!heredocStack.isEmpty()) {
+        pushState(ST_START_HEREDOC);
+    } else {
+        yybegin(ST_START_HEREDOC);
+    }
     return createSymbol(ASTPHP5Symbols.T_START_HEREDOC);
 }
 
@@ -1394,9 +1539,15 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
 
 <ST_END_HEREDOC>{TABS_AND_SPACES}{LABEL}";"? {
     /* <ST_END_HEREDOC>{TABS_AND_SPACES}{LABEL}";"? */
-    heredoc=null;
+    heredoc = null;
     resetHeredocBodyInfo();
-    yybegin(ST_IN_SCRIPTING);
+    HeredocInfo info = heredocStack.pollFirst();
+    setHeredocInfo(info);
+    if (heredoc != null) {
+        popState();
+    } else {
+        yybegin(ST_IN_SCRIPTING);
+    }
     int back = 0;
     // mark just the label
     if (yytext().charAt(yylength() - 1)==';') {

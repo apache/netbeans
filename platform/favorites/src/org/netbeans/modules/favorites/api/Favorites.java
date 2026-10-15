@@ -90,12 +90,7 @@ public final class Favorites {
         }
         if (obj != null) {
             final DataObject fObj = obj;
-            Mutex.EVENT.readAccess(new Runnable() {
-                @Override
-                public void run () {
-                    Actions.Add.selectAfterAddition(fObj);
-                }
-            });
+            Mutex.EVENT.readAccess(() -> Actions.Add.selectAfterAddition(fObj));
         }
         return result;
     }
@@ -132,9 +127,9 @@ public final class Favorites {
     private DataShadow findShadow(FileObject fo) {
         DataFolder f = FavoritesNode.getFolder();
         DataObject [] arr = f.getChildren();
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i] instanceof DataShadow) {
-                DataShadow obj = (DataShadow) arr[i];
+        for (DataObject arr1 : arr) {
+            if (arr1 instanceof DataShadow) {
+                DataShadow obj = (DataShadow) arr1;
                 if (fo.equals(obj.getOriginal().getPrimaryFile())) {
                     return obj;
                 }
@@ -150,7 +145,7 @@ public final class Favorites {
     public synchronized List<FileObject> getFavoriteRoots() {
         DataFolder f = FavoritesNode.getFolder();
         DataObject [] arr = f.getChildren();
-        List<FileObject> ret = new ArrayList<FileObject>(arr.length);
+        List<FileObject> ret = new ArrayList<>(arr.length);
 
         for (DataObject obj : arr) {
             if (obj instanceof DataShadow) {
@@ -193,10 +188,10 @@ public final class Favorites {
     }
 
     private DataShadow[] createShadows(final DataFolder favorites, final FileObject[] toAdd) throws DataObjectNotFoundException, IllegalArgumentException {
-        List<DataShadow> createdDO = new ArrayList<DataShadow>(toAdd.length);
-        for (int i = 0; i < toAdd.length; i++) {
-            if (!isInFavorites(toAdd[i])) {
-                DataObject obj = DataObject.find(toAdd[i]);
+        List<DataShadow> createdDO = new ArrayList<>(toAdd.length);
+        for (FileObject toAdd1 : toAdd) {
+            if (!isInFavorites(toAdd1)) {
+                DataObject obj = DataObject.find(toAdd1);
                 if (obj != null) {
                     try {
                         createdDO.add(obj.createShadow(favorites));
@@ -206,7 +201,7 @@ public final class Favorites {
                 }
             }
         }
-        return createdDO.toArray(new DataShadow[createdDO.size()]);
+        return createdDO.toArray(new DataShadow[0]);
     }
 
 }

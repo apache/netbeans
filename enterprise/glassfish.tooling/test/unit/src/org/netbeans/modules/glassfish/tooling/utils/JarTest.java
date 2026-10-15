@@ -41,7 +41,7 @@ public class JarTest extends CommonTest {
      * <p/>
      * @param server GlassFish server to be tested.
      */
-    public void doTestJavaVersionCompareTo(final GlassFishServer server) {
+    private void doTestJavaVersionCompareTo(final GlassFishServer server) {
         File jersey = ServerUtils.getJerseyCommonJarInModules(
                 server.getServerHome());
         if (jersey != null) {

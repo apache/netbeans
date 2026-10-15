@@ -23,9 +23,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Collection;
-import java.util.logging.Logger;
+import org.eclipse.jgit.dircache.Checkout;
 import org.eclipse.jgit.dircache.DirCache;
-import org.eclipse.jgit.dircache.DirCacheCheckout;
 import org.eclipse.jgit.dircache.DirCacheEntry;
 import org.eclipse.jgit.dircache.DirCacheIterator;
 import org.eclipse.jgit.lib.FileMode;
@@ -52,7 +51,6 @@ public class CheckoutIndex {
     private final ProgressMonitor monitor;
     private final boolean checkContent;
     private final boolean recursively;
-    private static final Logger LOG = Logger.getLogger(CheckoutIndex.class.getName());
 
     public CheckoutIndex (Repository repository, DirCache cache, File[] roots, boolean recursively, FileListener listener, ProgressMonitor monitor, boolean checkContent) {
         this.repository = repository;
@@ -118,7 +116,9 @@ public class CheckoutIndex {
             }
             file.createNewFile();
             if (file.isFile()) {
-                DirCacheCheckout.checkoutEntry(repository, e, od);
+                new Checkout(repository)
+                        .setRecursiveDeletion(false)
+                        .checkout(e, null, od, null);
             } else {
                 monitor.notifyError(MessageFormat.format(Utils.getBundle(CheckoutIndex.class).getString("MSG_Warning_CannotCreateFile"), file.getAbsolutePath())); //NOI18N
             }
@@ -152,7 +152,4 @@ public class CheckoutIndex {
         return false;
     }
 
-    private static boolean isWindows () {
-        return System.getProperty("os.name", "").toLowerCase().contains("windows"); //NOI18N
-    }
 }

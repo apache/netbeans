@@ -1,16 +1,19 @@
 #Signature file v4.1
-#Version 1.81
+#Version 1.108
 
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -104,13 +107,13 @@ supr java.lang.Object
 hfds LOG
 
 CLSS public abstract interface org.netbeans.spi.java.project.classpath.ProjectClassPathExtender
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract boolean addAntArtifact(org.netbeans.api.project.ant.AntArtifact,java.net.URI) throws java.io.IOException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract boolean addArchiveFile(org.openide.filesystems.FileObject) throws java.io.IOException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract boolean addLibrary(org.netbeans.api.project.libraries.Library) throws java.io.IOException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 
 CLSS public abstract org.netbeans.spi.java.project.classpath.ProjectClassPathModifierImplementation
 cons protected init()
@@ -228,7 +231,7 @@ meth public !varargs static org.netbeans.spi.project.ui.ProjectProblemsProvider 
  anno 4 org.netbeans.api.annotations.common.NonNull()
  anno 5 org.netbeans.api.annotations.common.NonNull()
 meth public static boolean isBroken(org.netbeans.spi.project.support.ant.AntProjectHelper,org.netbeans.spi.project.support.ant.ReferenceHelper,java.lang.String[],java.lang.String[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.netbeans.spi.project.ui.ProjectProblemsProvider createReferenceProblemsProvider(org.netbeans.spi.project.support.ant.AntProjectHelper,org.netbeans.spi.project.support.ant.ReferenceHelper,org.netbeans.spi.project.support.ant.PropertyEvaluator,java.lang.String[],java.lang.String[])
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
@@ -245,16 +248,16 @@ meth public static org.netbeans.spi.project.ui.ProjectProblemsProvider createRef
  anno 5 org.netbeans.api.annotations.common.NonNull()
  anno 6 org.netbeans.api.annotations.common.NonNull()
 meth public static void showAlert()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void showAlert(org.netbeans.spi.project.support.ant.AntProjectHelper,org.netbeans.spi.project.support.ant.ReferenceHelper,org.netbeans.spi.project.support.ant.PropertyEvaluator,java.lang.String[],java.lang.String[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NonNull()
  anno 3 org.netbeans.api.annotations.common.NonNull()
  anno 4 org.netbeans.api.annotations.common.NonNull()
  anno 5 org.netbeans.api.annotations.common.NonNull()
 meth public static void showCustomizer(org.netbeans.spi.project.support.ant.AntProjectHelper,org.netbeans.spi.project.support.ant.ReferenceHelper,java.lang.String[],java.lang.String[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 hcls ProjectDecorator
 
@@ -267,6 +270,13 @@ CLSS public abstract interface static org.netbeans.spi.java.project.support.ui.B
  outer org.netbeans.spi.java.project.support.ui.BrokenReferencesSupport
 meth public abstract void platformPropertyUpdated(org.netbeans.api.java.platform.JavaPlatform)
  anno 1 org.netbeans.api.annotations.common.NonNull()
+
+CLSS public org.netbeans.spi.java.project.support.ui.CreateJavaClassFileFromClipboard
+cons public init(org.openide.loaders.DataFolder,java.awt.datatransfer.Transferable)
+meth public java.awt.datatransfer.Transferable paste() throws java.io.IOException
+supr org.openide.util.datatransfer.PasteType
+hfds PUBLIC_MODIFIER,context,t
+hcls ClassContent,MyFileObject
 
 CLSS public final org.netbeans.spi.java.project.support.ui.EditJarSupport
 cons public init()
@@ -337,5 +347,38 @@ meth public static org.openide.WizardDescriptor$InstantiatingIterator<org.openid
 meth public static org.openide.WizardDescriptor$Panel<org.openide.WizardDescriptor> createPackageChooser(org.netbeans.api.project.Project,org.netbeans.api.project.SourceGroup[])
 meth public static org.openide.WizardDescriptor$Panel<org.openide.WizardDescriptor> createPackageChooser(org.netbeans.api.project.Project,org.netbeans.api.project.SourceGroup[],org.openide.WizardDescriptor$Panel<org.openide.WizardDescriptor>)
 meth public static org.openide.WizardDescriptor$Panel<org.openide.WizardDescriptor> createPackageChooser(org.netbeans.api.project.Project,org.netbeans.api.project.SourceGroup[],org.openide.WizardDescriptor$Panel<org.openide.WizardDescriptor>,boolean)
+supr java.lang.Object
+
+CLSS public final org.openide.util.HelpCtx
+cons public init(java.lang.Class<?>)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+cons public init(java.lang.String)
+cons public init(java.net.URL)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+fld public final static org.openide.util.HelpCtx DEFAULT_HELP
+innr public abstract interface static Displayer
+innr public abstract interface static Provider
+meth public boolean display()
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public java.lang.String getHelpID()
+meth public java.lang.String toString()
+meth public java.net.URL getHelp()
+meth public static org.openide.util.HelpCtx findHelp(java.awt.Component)
+meth public static org.openide.util.HelpCtx findHelp(java.lang.Object)
+meth public static void setHelpIDString(javax.swing.JComponent,java.lang.String)
+supr java.lang.Object
+hfds err,helpCtx,helpID
+
+CLSS public abstract interface static org.openide.util.HelpCtx$Provider
+ outer org.openide.util.HelpCtx
+meth public abstract org.openide.util.HelpCtx getHelpCtx()
+
+CLSS public abstract org.openide.util.datatransfer.PasteType
+cons public init()
+intf org.openide.util.HelpCtx$Provider
+meth public abstract java.awt.datatransfer.Transferable paste() throws java.io.IOException
+meth public java.lang.String getName()
+meth public org.openide.util.HelpCtx getHelpCtx()
 supr java.lang.Object
 

@@ -33,7 +33,7 @@ public interface ChartItem {
     public void removeItemListener(ChartItemListener listener);
 
 
-    public static abstract class Abstract implements ChartItem {
+    public abstract static class Abstract implements ChartItem {
 
 
         private List<ChartItemListener> listeners;

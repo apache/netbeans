@@ -48,9 +48,9 @@ public class JSFEditorUtilities {
     /** The constant from XML editor
      */
     // The constant are taken from class org.netbeans.modules.xml.text.syntax.XMLTokenIDs
-    public  final static int XML_ELEMENT = 4;
-    public  final static int XML_TEXT = 1;
-    public final static String END_LINE = System.getProperty("line.separator");  //NOI18N
+    public  static final int XML_ELEMENT = 4;
+    public  static final int XML_TEXT = 1;
+    public static final String END_LINE = System.getProperty("line.separator");  //NOI18N
     
     /** Returns the value of from-view-id element of navigation rule definition on the offset possition.
      *  If there is not the navigation rule definition on the offset, then returns null. 
@@ -309,9 +309,7 @@ public class JSFEditorUtilities {
     private static String addNewLines(final BaseBean bean) throws IOException {
         StringWriter sWriter = new StringWriter();
         bean.writeNode(sWriter);
-        String sBean = sWriter.toString();
-        sBean = sBean.replaceAll("><", ">"+END_LINE+"<");               //NOI18N
-        return sBean;
+        return sWriter.toString().replace("><", ">"+END_LINE+"<");     //NOI18N
     }
     
     private static int writeString(BaseDocument doc, String text, int offset){

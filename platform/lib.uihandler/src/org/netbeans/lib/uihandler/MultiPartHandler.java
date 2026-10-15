@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.SocketTimeoutException;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.HashMap;
@@ -443,7 +444,7 @@ class MultiPartHandler {
     do {
       result = in.readLine(buf, 0, buf.length);  // does +=
       if (result != -1) {
-        sbuf.append(new String(buf, 0, result, "ISO-8859-1"));
+        sbuf.append(new String(buf, 0, result, StandardCharsets.ISO_8859_1));
       }
     } while (result == buf.length);  // loop only if the buffer was filled
 
@@ -779,6 +780,7 @@ class MultiPartHandler {
        *
        * throws IOException  if an I/O error occurs.
        */
+      @Override
       public int read() throws IOException {
           if (count - pos <= 2) {
               fill();
@@ -797,6 +799,7 @@ class MultiPartHandler {
        *
        * throws IOException  if an I/O error occurs.
        */
+      @Override
       public int read(byte b[]) throws IOException {
           return read(b, 0, b.length);
       }
@@ -808,6 +811,7 @@ class MultiPartHandler {
        *
        * throws IOException  if an I/O error occurs.
        */
+      @Override
       public int read(byte b[], int off, int len) throws IOException
 {
           int total = 0;
@@ -850,6 +854,7 @@ class MultiPartHandler {
        *
        * throws IOException  if an I/O error occurs.
        */
+      @Override
       public int available() throws IOException {
           int avail = (count - pos - 2) + in.available();
           // Never return a negative value
@@ -864,6 +869,7 @@ class MultiPartHandler {
        *
        * throws IOException  if an I/O error occurs.
        */
+      @Override
       public void close() throws IOException {
           if (!eof) {
               while (read(buf, 0, buf.length) != -1)

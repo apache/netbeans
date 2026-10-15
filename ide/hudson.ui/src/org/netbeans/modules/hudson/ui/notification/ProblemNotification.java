@@ -113,7 +113,7 @@ class ProblemNotification {
     @Messages({
         "# {0} - job name",
         "# {1} - server name",
-        "ProblemNotification.ignore.question=Do you wish to cease to receive notifications of failures in {0}? If you change your mind, use Services > Hudson Builders > {1} > {0} > Properties > Watched.",
+        "ProblemNotification.ignore.question=Do you wish to cease to receive notifications of failures in {0}? If you change your mind, use Services > Jenkins Builders > {1} > {0} > Properties > Watched.",
         "# {0} - job name",
         "ProblemNotification.ignore.title=Ignore Failures in {0}"
     })

@@ -87,7 +87,7 @@ public class ImportFormatTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testFirstAddition_ImportFormatTest.pass");
     }
 
@@ -114,7 +114,7 @@ public class ImportFormatTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testAddFirstImport_ImportFormatTest.pass");
     }
     
@@ -141,7 +141,7 @@ public class ImportFormatTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testAddLastImport_ImportFormatTest.pass");
     }
     
@@ -167,7 +167,7 @@ public class ImportFormatTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testRemoveInnerImport_ImportFormatTest.pass");
     }
     
@@ -192,7 +192,7 @@ public class ImportFormatTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testRemoveFirstImport_ImportFormatTest.pass");
     }
 
@@ -217,7 +217,7 @@ public class ImportFormatTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testRemoveLastImport_ImportFormatTest.pass");
     }
     
@@ -241,7 +241,7 @@ public class ImportFormatTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testRemoveAllRemaning_ImportFormatTest.pass");
     }
 
@@ -276,7 +276,7 @@ public class ImportFormatTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testAddSeveral_ImportFormatTest.pass");
     }
     
@@ -302,7 +302,7 @@ public class ImportFormatTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testRemoveInside_ImportFormatTest.pass");
     }
     
@@ -329,7 +329,7 @@ public class ImportFormatTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testMoveFirst_ImportFormatTest.pass");
     }
     
@@ -356,7 +356,7 @@ public class ImportFormatTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testMoveLast_ImportFormatTest.pass");
     }
     
@@ -383,7 +383,7 @@ public class ImportFormatTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testReplaceLine_ImportFormatTest.pass");
     }
 
@@ -399,7 +399,7 @@ public class ImportFormatTest extends GeneratorTestMDRCompat {
                 List<ImportTree> imports = new ArrayList<ImportTree>(cut.getImports());
                 ImportTree oneImport = imports.remove(4);
                 imports.add(4, make.Import(make.Identifier("java.util.Collection"), false));
-                Collections.sort(imports, new Comparator() {
+                imports.sort(new Comparator() {
                     public int compare(Object o1, Object o2) {
                         if (o1 == o2) {
                             return 0;
@@ -432,7 +432,7 @@ public class ImportFormatTest extends GeneratorTestMDRCompat {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testSort_ImportFormatTest.pass");
     }
     

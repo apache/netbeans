@@ -1,0 +1,17 @@
+java.io
+java.lang
+java.lang.annotation
+java.lang.ref
+java.lang.reflect
+java.net
+java.nio.charset
+java.nio.file
+java.security
+java.security.cert
+java.text
+java.util
+java.util.concurrent
+java.util.concurrent.atomic
+java.util.concurrent.locks
+java.util.jar
+java.util.regex

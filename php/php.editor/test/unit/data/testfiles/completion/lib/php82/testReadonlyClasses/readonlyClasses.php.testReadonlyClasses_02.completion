@@ -1,0 +1,8 @@
+Code completion result for source line:
+readonl|y final class ReadonlyFinalClass {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      ReadonlyAbstractClass           [PUBLIC,   readonlyClasses.php
+CLASS      ReadonlyClass                   [PUBLIC]   readonlyClasses.php
+CLASS      ReadonlyFinalClass              [PUBLIC]   readonlyClasses.php
+------------------------------------
+KEYWORD    readonly                                   null

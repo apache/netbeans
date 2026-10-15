@@ -34,7 +34,7 @@
     </condition>
 
     <property name="test.run.args" value="-client
-            -Xss4m -Xms64m -Xmx512m -XX:PermSize=64m -XX:MaxPermSize=300m
+            -Xss4m -Xms64m -Xmx512m
             -Dnetbeans.keyring.no.master=true
             -Xverify:none -Dsun.java2d.noddraw=true
             -Dtomcat.installRoot=&quot;${tomcat.webserver.path}&quot;

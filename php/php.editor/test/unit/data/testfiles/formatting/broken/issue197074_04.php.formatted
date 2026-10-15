@@ -21,25 +21,28 @@ class companyAddressesActions extends myFrontModuleActions {
         }
 
         if ($this->getPage()->getModuleAction() == 'supplier/editCompanyAddress')
-            $this->getRequest ()->setParameter ('cancel_url', $this->getHelper ()main/checkout')
+        $this->getRequest ()->setParameter ('cancel_url', $this->getHelper ()main/checkout')
 
-        if ($this->company_id && $address_id) {
+        
+            if ($this->company_id && $address_id) {
 
             $user_id = $this->getUser()->getDmUser()->getId();
 
             $q = DmDb::table('CompanyAddresses')->createQuery('ca')
                     ->innerJoin('ca.Company c')
                     ->innerJoin('c.Contacts cc ON cc.company_id = c.id')
-                    ->andWhere('cc.user_id = ?', $user_id)
-                    ->andWhere('ca.id = ?', $address_id)
-                    ->andWhere('ca.company_id = ?', $this->company_id);
+                    ->andWhere('cc.user_id = ? ', $user_id)
+                    ->andWhere('ca.id = ? ', $address_id)
+                    ->andWhere('ca.company_id = ? ', $this->company_id);
             $company_address = $q->fetchOne();
             if (!$company_address instanceof CompanyAddresses || $company_address->count() == 0) {
                 $company_name = dmDb::table('Company')->find($this->company_id);
-                if ($company_name) $company_name = $company_name->company_name;
-                else $company_name = 'No company';
+                if ($company_name) 
+                $company_name = $company_name->company_name;
+                else $company_name = 'No
+                company';
                 $this->getUser()->logError(
-                        $this->getI18n()->__('Address id "%address_id%" is not available to company "%company%" for user "%user%"',
+                        $this->getI18n()->__('Address id "%address_id%" is not available to company "%company%" for user "%user%" ',
                         array('%address_id%' => $address_id,'%company%' => $company_name, '%user%' => $this->getUser()->getDmUser())));
                 $this->redirect($this->getHelper()->link('main/editMyCompany')->getHref());
             }
@@ -69,9 +72,10 @@ if ($request->isMethod('post') && $form->bindAndValid($request)) {
 
     $module_action = $this->getPage()->getModuleAction();
     if ($module_action == 'main/editCompanyAddress')
-        $this->redirect ($this->getHelper()->link('main/editMyCompany')->getHref());
+        $t
+            his->redirect ($this->getHelper()->link('main/editMyCompany')->getHref());
 
 }
-$this->forms['CompanyAddresses'] = $form;
+$this->forms['CompanyAddresses  '] = $form;
 
 }

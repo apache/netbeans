@@ -38,7 +38,7 @@ import org.openide.util.NbBundle;
  */
 public class ReplaceConstructorWithBuilderPanel extends javax.swing.JPanel implements CustomRefactoringPanel {
 
-    private final static String DEFAULT_PREFIX = "set";
+    private static final String DEFAULT_PREFIX = "set";
     private static final String[] columnNames = {
         getString("LBL_BuilderParameter"), // NOI18N
         getString("LBL_BuilderSetterName"), // NOI18N
@@ -249,7 +249,7 @@ public class ReplaceConstructorWithBuilderPanel extends javax.swing.JPanel imple
     }
 
     public List<ReplaceConstructorWithBuilderRefactoring.Setter> getSetters() {
-        List<ReplaceConstructorWithBuilderRefactoring.Setter> result = new ArrayList();
+        List<ReplaceConstructorWithBuilderRefactoring.Setter> result = new ArrayList<>();
         int size = parameterTypes.size();
         for (int i = 0; i < size; i++) {
             final String name = (String) ((DefaultTableModel) paramTable.getModel()).getValueAt(i, 0);

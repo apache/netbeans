@@ -1,0 +1,14 @@
+class |>MARK_OCCURRENCES:AttributeClass3<| {
+use Attributes\|>MARK_OCCURRENCES:AttributeClass3<|;
+    #[|>MARK_OCCURRENCES:AttributeClass3<|(6, "trait static method")]
+    public static function staticTraitMethod(#[|>MARK_OCCURRENCES:AttributeClass3<|] int|string $param1): bool|int {
+    #[|>MARK_OCCURRENCES:AttributeClass3<|(3, "anonymous class field")]
+    #[AttributeClass2(6, "anonymous class method")] #[|>MARK_OCCURRENCES:Attribu^teClass3<|()]
+    #[AttributeClass2(self::CONSTANT_INTERFACE, "interface method")] #[|>MARK_OCCURRENCES:AttributeClass3<|()]
+    #[AttributeClass2(4, "interface static method")] #[|>MARK_OCCURRENCES:AttributeClass3<|()]
+#[\Attributes\|>MARK_OCCURRENCES:AttributeClass3<|(1, "enum"), AttributeClass1]
+    #[AttributeClass1(4, "enum method")] #[|>MARK_OCCURRENCES:AttributeClass3<|()]
+    public static function staticMethod(#[|>MARK_OCCURRENCES:AttributeClass3<|(5, "enum static method param")] int|bool $pram1): int|string {
+    |>MARK_OCCURRENCES:AttributeClass3<|(int: CONST_1, string: "function" . Example::class)
+$labmda2 = #[AttributeClass2(2, "closure")] #[|>MARK_OCCURRENCES:AttributeClass3<|(2, "closurr")] function(#[AttributeClass2(int: 2 * \Attributes\CONST_1, string: "closure param" . Example::CONST_EXAMPLE)] $test): void {};
+$labmda3 = #[|>MARK_OCCURRENCES:AttributeClass3<|(3, "closure")] static function(): void {};

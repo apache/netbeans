@@ -31,8 +31,10 @@ import java.util.Collections;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.JFileChooser;
+import javax.swing.KeyStroke;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
@@ -77,19 +79,20 @@ implements Runnable, ExplorerManager.Provider {
     static final long serialVersionUID =-8178367548546385799L;
     static final RequestProcessor RP = new RequestProcessor("Favorites", 1); //NOI18N
 
+    static final String HELP_ID = Tab.class.getName();
     private static final Logger LOG = Logger.getLogger(Tab.class.getName());
 
     /* private */ static transient Tab DEFAULT; // package-private for unit tests
 
     /** composited view */
-    transient protected TreeView view;
+    protected transient TreeView view;
     /** listeners to the root context and IDE settings */
-    transient private PropertyChangeListener weakRcL;
-    transient private NodeListener weakNRcL;
+    private transient PropertyChangeListener weakRcL;
+    private transient NodeListener weakNRcL;
 
-    transient private NodeListener rcListener;
+    private transient NodeListener rcListener;
     /** validity flag */
-    transient private boolean valid = true;
+    private transient boolean valid = true;
 
     private ExplorerManager manager;
     
@@ -109,9 +112,9 @@ implements Runnable, ExplorerManager.Provider {
     
     @Override
     public HelpCtx getHelpCtx () {
-        return new HelpCtx(Tab.class);
+        return new HelpCtx(Tab.HELP_ID);
     }
-    
+
     @Override
     public ExplorerManager getExplorerManager() {
         return manager;
@@ -134,6 +137,11 @@ implements Runnable, ExplorerManager.Provider {
         }
         
         run();
+    }
+
+    /// true if this tab has been opened during this session
+    boolean wasOpened() {
+        return view != null;
     }
 
     /** Initializes gui of this component. Subclasses can override
@@ -231,7 +239,12 @@ implements Runnable, ExplorerManager.Provider {
     * obtained from specified root context node */
     private void initializeWithRootContext (Node rc) {
         // update TC's attributes
-        setToolTipText(rc.getDisplayName());
+        String hotkey = ""; // NOI18N
+        Action action = org.openide.awt.Actions.forID("Window/SelectDocumentNode", "org.netbeans.modules.favorites.Select"); // NOI18N
+        if (action != null && action.getValue(Action.ACCELERATOR_KEY) instanceof KeyStroke ks) {
+            hotkey = org.openide.awt.Actions.keyStrokeToString(ks);
+        }
+        setToolTipText(NbBundle.getMessage(Tab.class, "TT_Favorites", hotkey)); //NOI18N
         setName(rc.getDisplayName());
         updateTitle();
         // attach listener
@@ -355,7 +368,7 @@ implements Runnable, ExplorerManager.Provider {
     private static Node findClosestNode (DataObject obj, Node start, boolean useLogicalViews) {
         DataObject original = obj;
         
-        Stack<DataObject> stack = new Stack<DataObject> ();
+        Stack<DataObject> stack = new Stack<> ();
         while (obj != null) {
             stack.push(obj);
             DataObject tmp = obj.getFolder();
@@ -394,8 +407,7 @@ implements Runnable, ExplorerManager.Provider {
         }
         if (!check(current, original) && useLogicalViews) {
             Node[] children = current.getChildren().getNodes();
-            for (int j = 0; j < children.length; j++) {
-                Node child = children[j];
+            for (Node child : children) {
                 Node n = selectInLogicalViews(original, child);
                 if (check(n, original)) {
                     current = n;
@@ -431,7 +443,7 @@ implements Runnable, ExplorerManager.Provider {
     }
 
     private static boolean check(Node node, DataObject obj) {
-        DataObject dObj = (DataObject)node.getLookup().lookup(DataObject.class);
+        DataObject dObj = node.getLookup().lookup(DataObject.class);
         if (obj == dObj) {
             return true;
         }
@@ -447,14 +459,14 @@ implements Runnable, ExplorerManager.Provider {
     */
     private static Node findDataObject (Node node, DataObject obj) {
         Node[] arr = node.getChildren ().getNodes (true);
-        for (int i = 0; i < arr.length; i++) {
-            DataShadow ds = (DataShadow) arr[i].getCookie (DataShadow.class);
+        for (Node arr1 : arr) {
+            DataShadow ds = arr1.getCookie(DataShadow.class);
             if ((ds != null) && (obj == ds.getOriginal())) {
-                return arr[i];
+                return arr1;
             } else {
-                DataObject o = (DataObject) arr[i].getCookie (DataObject.class);
+                DataObject o = arr1.getCookie(DataObject.class);
                 if ((o != null) && (obj == o)) {
-                    return arr[i];
+                    return arr1;
                 }
             }
         }
@@ -464,21 +476,13 @@ implements Runnable, ExplorerManager.Provider {
     /** Exchanges deserialized root context to projects root context
     * to keep the uniquennes. */
     protected void validateRootContext () {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run () {
-                Node n = new AbstractNode(Children.LEAF);
-                n.setName(NbBundle.getMessage(Tab.class, "MSG_Tab.rootNode.loading")); //NOI18N
-                setRootContext(n);
-            }
+        EventQueue.invokeLater(() -> {
+            Node n = new AbstractNode(Children.LEAF);
+            n.setName(NbBundle.getMessage(Tab.class, "MSG_Tab.rootNode.loading")); //NOI18N
+            setRootContext(n);
         });
         final Node projectsRc = FavoritesNode.getNode ();
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run () {
-                setRootContext(projectsRc);
-            }
-        });
+        EventQueue.invokeLater(() -> setRootContext(projectsRc));
     }
     
     
@@ -496,33 +500,25 @@ implements Runnable, ExplorerManager.Provider {
         Node root = getExplorerManager().getRootContext();
         StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(Tab.class,"MSG_SearchingForNode"));
         final boolean selected = selectNode(obj, root);
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if (selected) {
-                    open();
-                    requestActive();
-                    scrollToSelection();
-                    StatusDisplayer.getDefault().setStatusText(""); // NOI18N
-                } else {
-                    StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(Tab.class,"MSG_NodeNotFound"));
-                    FileObject file = chooseFileObject(obj.getPrimaryFile());
-                    if (file == null) {
-                        return;
-                    }
-                    open();
-                    requestActive();
-                    try {
-                        final DataObject dobj = DataObject.find(file);
-                        RP.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                Actions.Add.addToFavorites(Collections.singletonList(dobj));
-                            }
-                        });
-                    } catch (DataObjectNotFoundException e) {
-                        LOG.log(Level.WARNING, null, e);
-                    }
+        EventQueue.invokeLater(() -> {
+            if (selected) {
+                open();
+                requestActive();
+                scrollToSelection();
+                StatusDisplayer.getDefault().setStatusText(""); // NOI18N
+            } else {
+                StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(Tab.class,"MSG_NodeNotFound"));
+                FileObject file = chooseFileObject(obj.getPrimaryFile());
+                if (file == null) {
+                    return;
+                }
+                open();
+                requestActive();
+                try {
+                    final DataObject dobj = DataObject.find(file);
+                    RP.post(() -> Actions.Add.addToFavorites(Collections.singletonList(dobj)));
+                } catch (DataObjectNotFoundException e) {
+                    LOG.log(Level.WARNING, null, e);
                 }
             }
         });
@@ -537,8 +533,8 @@ implements Runnable, ExplorerManager.Provider {
         File chooserSelection = null;
         JFileChooser chooser = new JFileChooser ();
         chooser.setFileSelectionMode( JFileChooser.FILES_AND_DIRECTORIES );
-        chooser.setDialogTitle(NbBundle.getBundle(Actions.class).getString ("CTL_DialogTitle"));
-        chooser.setApproveButtonText(NbBundle.getBundle(Actions.class).getString ("CTL_ApproveButtonText"));
+        chooser.setDialogTitle(NbBundle.getMessage(Actions.class, "CTL_DialogTitle"));
+        chooser.setApproveButtonText(NbBundle.getMessage(Actions.class, "CTL_ApproveButtonText"));
         chooser.setSelectedFile(FileUtil.toFile(file));
         int option = chooser.showOpenDialog( WindowManager.getDefault().getMainWindow() ); // Show the chooser
         if ( option == JFileChooser.APPROVE_OPTION ) {
@@ -578,32 +574,28 @@ implements Runnable, ExplorerManager.Provider {
         final Node[] selection = getExplorerManager().getSelectedNodes();
         if( null == selection || selection.length < 1 )
             return;
-        if( view instanceof MyBeanTreeView ) {
-            ((MyBeanTreeView)view).scrollNodeToVisible(selection[0]);
+        if( view instanceof MyBeanTreeView myBeanTreeView ) {
+            myBeanTreeView.scrollNodeToVisible(selection[0]);
         }
     }
 
     private static class MyBeanTreeView extends BeanTreeView {
         private void scrollNodeToVisible( final Node n ) {
-            EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    TreeNode tn = Visualizer.findVisualizer(n);
-                    if (tn == null) {
-                        return;
-                    }
-                    TreeModel model = tree.getModel();
-                    if (!(model instanceof DefaultTreeModel)) {
-                        return;
-                    }
-                    TreePath path = new TreePath(((DefaultTreeModel) model).getPathToRoot(tn));
-                    if( null == path )
-                        return;
-                    Rectangle r = tree.getPathBounds(path);
-                    if (r != null) {
-                        tree.scrollRectToVisible(r);
-                    }
+            EventQueue.invokeLater(() -> {
+                TreeNode tn = Visualizer.findVisualizer(n);
+                if (tn == null) {
+                    return;
+                }
+                TreeModel model = tree.getModel();
+                if (!(model instanceof DefaultTreeModel)) {
+                    return;
+                }
+                TreePath path = new TreePath(((DefaultTreeModel) model).getPathToRoot(tn));
+                if( null == path )
+                    return;
+                Rectangle r = tree.getPathBounds(path);
+                if (r != null) {
+                    tree.scrollRectToVisible(r);
                 }
             });
         }

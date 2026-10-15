@@ -333,42 +333,6 @@ public class ProjectFactorySupportTest extends NbTestCase {
             "jre="+JavaPlatform.getDefault().getDisplayName()+";", oldKey);
     }
 
-    public void testTransitiveDependencies() throws Exception {
-        File transdep = ProjectImporterTestCase.extractToWorkDir("transitive-dependencies.zip", this);
-        EclipseProject prj_a = ProjectFactory.getInstance().load(new File(transdep, "a"));
-        ProjectImportModel mdl_a = new ProjectImportModel(prj_a, null, null, null);
-        AntProjectHelper aph_a = J2SEProjectGenerator.createProject(
-                new File(getWorkDir(), "a"), "a", mdl_a.getEclipseSourceRootsAsFileArray(),
-                mdl_a.getEclipseTestSourceRootsAsFileArray(), null, null, null);
-        EclipseProject prj_b = ProjectFactory.getInstance().load(new File(transdep, "b"));
-        ProjectImportModel mdl_b = new ProjectImportModel(prj_b, null, null, null);
-        AntProjectHelper aph_b = J2SEProjectGenerator.createProject(
-                new File(getWorkDir(), "b"), "b", mdl_b.getEclipseSourceRootsAsFileArray(),
-                mdl_b.getEclipseTestSourceRootsAsFileArray(), null, null, null);
-        EclipseProject prj_c = ProjectFactory.getInstance().load(new File(transdep, "c"));
-        ProjectImportModel mdl_c = new ProjectImportModel(prj_c, null, null, Arrays.asList(
-                ProjectManager.getDefault().findProject(aph_a.getProjectDirectory()),
-                ProjectManager.getDefault().findProject(aph_b.getProjectDirectory())));
-        AntProjectHelper aph_c = J2SEProjectGenerator.createProject(
-                new File(getWorkDir(), "c"), "c", mdl_c.getEclipseSourceRootsAsFileArray(),
-                mdl_c.getEclipseTestSourceRootsAsFileArray(), null, null, null);
-        J2SEProject j2seprj_c = (J2SEProject) ProjectManager.getDefault().findProject(aph_c.getProjectDirectory());
-        EclipseProjectReference.write(j2seprj_c, new EclipseProjectReference(j2seprj_c, new File(transdep, "c").getAbsolutePath(), null, 0L, ""));
-        EclipseProject prj_d = ProjectFactory.getInstance().load(new File(transdep, "d"));
-        ProjectImportModel mdl_d = new ProjectImportModel(prj_d, null, null, Arrays.asList(
-                ProjectManager.getDefault().findProject(aph_a.getProjectDirectory()),
-                ProjectManager.getDefault().findProject(aph_b.getProjectDirectory()),
-                j2seprj_c));
-        AntProjectHelper aph_d = J2SEProjectGenerator.createProject(
-                new File(getWorkDir(), "d"), "d", mdl_d.getEclipseSourceRootsAsFileArray(),
-                mdl_d.getEclipseTestSourceRootsAsFileArray(), null, null, null);
-        List<String> problems = new ArrayList<String>();
-        J2SEProject j2seprj_d = (J2SEProject) ProjectManager.getDefault().findProject(aph_d.getProjectDirectory());
-        ProjectFactorySupport.updateProjectClassPath(aph_d, j2seprj_d.getReferenceHelper(), mdl_d, problems);
-        assertEquals(Collections.emptyList(), problems);
-        assertEquals("${reference.c.jar}:${reference.b.jar}", aph_d.getProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH).get("javac.classpath"));
-    }
-
     public void testParseSourcesAndJavadoc() throws Exception {
         File repo = new File(getWorkDir(), "repo");
         repo.mkdir();

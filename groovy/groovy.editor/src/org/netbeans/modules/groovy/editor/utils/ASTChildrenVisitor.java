@@ -197,7 +197,12 @@ public class ASTChildrenVisitor implements GroovyCodeVisitor {
     public void visitClosureExpression(ClosureExpression expression) {
         children.add(expression.getCode());
     }
-    
+
+    @Override
+    public void visitLambdaExpression(LambdaExpression expression) {
+        visitClosureExpression(expression);
+    }
+
     @Override
     public void visitTupleExpression(TupleExpression expression) {
         visitListOfExpressions(expression.getExpressions());
@@ -217,14 +222,12 @@ public class ASTChildrenVisitor implements GroovyCodeVisitor {
     @Override
     public void visitMapExpression(MapExpression expression) {
         visitListOfExpressions(expression.getMapEntryExpressions());
-        
     }
 
     @Override
     public void visitMapEntryExpression(MapEntryExpression expression) {
         children.add(expression.getKeyExpression());
         children.add(expression.getValueExpression());
-        
     }
 
     @Override
@@ -247,6 +250,11 @@ public class ASTChildrenVisitor implements GroovyCodeVisitor {
     public void visitMethodPointerExpression(MethodPointerExpression expression) {
         children.add(expression.getExpression());
         children.add(expression.getMethodName());
+    }
+
+    @Override
+    public void visitMethodReferenceExpression(MethodReferenceExpression expression) {
+        visitMethodPointerExpression(expression);
     }
 
     @Override
@@ -308,19 +316,6 @@ public class ASTChildrenVisitor implements GroovyCodeVisitor {
         visitListOfExpressions(expression.getValues());
     }
 
-    private void visitListOfExpressions(List list) {
-        if (list==null) return;
-        for (Iterator iter = list.iterator(); iter.hasNext(); ) {
-            Expression expression = (Expression) iter.next();
-            if (expression instanceof SpreadExpression) {
-                Expression spread = ((SpreadExpression) expression).getExpression();
-                children.add(spread);
-            } else {
-                children.add(expression);
-            }
-        }
-    }
-    
     @Override
     public void visitCatchStatement(CatchStatement statement) {
     	children.add(statement.getCode());

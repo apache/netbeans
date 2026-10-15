@@ -20,6 +20,8 @@
 package org.netbeans.lib.editor.codetemplates.spi;
 
 import java.util.List;
+import javax.swing.JTextArea;
+import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.lib.editor.codetemplates.api.CodeTemplate;
 import org.netbeans.spi.editor.mimelookup.MimeLocation;
@@ -42,7 +44,7 @@ public interface CodeTemplateFilter {
     
     /**
      * Factory for producing of the code template filters.
-     * <br/>
+     * <br>
      * It should be registered in the MimeLookup for a given mime-type.
      */
     @MimeLocation(subfolderName="CodeTemplateFilterFactories")
@@ -56,12 +58,28 @@ public interface CodeTemplateFilter {
          * @return non-null code template filter instance.
          */
         CodeTemplateFilter createFilter(JTextComponent component, int offset);
+
+        /**
+         * Create code template filter for the given context.
+         *
+         * @param doc non-null document for which the filter is being created.
+         * @param startOffset &gt;=0 start offset for which the filter is being created.
+         * @param endOffset &gt;=startOffset end offset for which the filter is being created.
+         * @return non-null code template filter instance.
+         * @since 1.57
+         */
+        default CodeTemplateFilter createFilter(Document doc, int startOffset, int endOffset) {
+            JTextArea component = new JTextArea(doc);
+            component.setSelectionStart(startOffset);
+            component.setSelectionEnd(endOffset);
+            return createFilter(component, startOffset);
+        }
     }
     
     /**
      * Factory for producing of the code template filters that filter templates
      * based on their contexts.
-     * <br/>
+     * <br>
      * It should be registered in the MimeLookup for a given mime-type.
      * 
      * @since 1.34

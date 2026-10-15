@@ -250,8 +250,9 @@ public class GroupsManager {
             }
 
             Map<String, String> oldId2newId = new HashMap<>(id2tc.size());
-            for( String oldId : id2tc.keySet() ) {
-                TopComponent tc = id2tc.get(oldId);
+            for( Map.Entry<String, TopComponent> entry : id2tc.entrySet() ) {
+                String oldId = entry.getKey();
+                TopComponent tc = entry.getValue();
                 ModeImpl mode = tcid2mode.get(oldId);
                 if( null != mode ) {
                     mode.dockInto(tc);

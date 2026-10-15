@@ -26,12 +26,13 @@ import java.awt.event.ActionListener;
 
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+import javax.swing.BorderFactory;
 import javax.swing.ComboBoxEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 import org.netbeans.api.debugger.Breakpoint.HIT_COUNT_FILTERING_STYLE;
 import org.netbeans.api.debugger.Properties;
@@ -56,7 +57,14 @@ public class ConditionsPanel extends javax.swing.JPanel {
         tfConditionFieldForUI = new javax.swing.JTextField();
         tfConditionFieldForUI.setEnabled(false);
         tfConditionFieldForUI.setToolTipText(tfCondition.getToolTipText());
-        
+
+        // remove border from condition editor on some LAFs
+        String lafID = UIManager.getLookAndFeel().getID();
+        if (lafID.equals("Windows") || lafID.startsWith("FlatLaf")) { // NOI18N
+            tfConditionFieldForUI.setBorder(BorderFactory.createEmptyBorder());
+            spCondition.setBorder(BorderFactory.createEmptyBorder());
+        }
+
         classFilterCheckBoxActionPerformed(null);
         conditionCheckBoxActionPerformed(null);
         cbWhenHitCountActionPerformed(null);

@@ -1,10 +1,11 @@
 #Signature file v4.1
-#Version 1.16
+#Version 1.43
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -30,7 +31,7 @@ meth public java.util.Collection<java.lang.String> getCustomElementParameters(ja
 meth public java.util.Collection<org.netbeans.modules.javascript2.knockout.index.KnockoutCustomElement> getCustomElements(java.lang.String,boolean)
 meth public static org.netbeans.modules.javascript2.knockout.index.KnockoutIndex get(org.netbeans.api.project.Project) throws java.io.IOException
 supr java.lang.Object
-hfds INDEXES,LOGGER,areProjectsOpen,querySupport
+hfds INDEXES,querySupport
 
 CLSS public org.netbeans.modules.javascript2.knockout.index.KnockoutIndexer
 cons public init()

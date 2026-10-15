@@ -93,7 +93,7 @@ public final class CommandLine {
     }
 
     private static CommandLine createImpl(Object[] instances) {
-        List<OptionProcessor> arr = new ArrayList<OptionProcessor>();
+        List<OptionProcessor> arr = new ArrayList<>();
         for (Object o : instances) {
             Class<?> c;
             Object instance;
@@ -107,12 +107,10 @@ public final class CommandLine {
             if (OptionProcessor.class.isAssignableFrom(c)) {
                 try {
                     if (instance == null) {
-                        instance = c.newInstance();
+                        instance = c.getDeclaredConstructor().newInstance();
                     }
                     arr.add((OptionProcessor) instance);
-                } catch (InstantiationException ex) {
-                    throw new IllegalStateException(ex);
-                } catch (IllegalAccessException ex) {
+                } catch (ReflectiveOperationException ex) {
                     throw new IllegalStateException(ex);
                 }
             } else {

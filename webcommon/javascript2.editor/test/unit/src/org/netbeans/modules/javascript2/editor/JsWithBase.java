@@ -23,9 +23,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import javax.swing.text.Document;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
 import org.netbeans.modules.csl.api.ColoringAttributes;
 import org.netbeans.modules.csl.api.DeclarationFinder;
 import org.netbeans.modules.csl.api.OccurrencesFinder;
@@ -82,6 +79,7 @@ public class JsWithBase extends JsCodeCompletionBase{
     }
     
     @Override
+    @SuppressWarnings({"rawtypes", "unchecked"})
     protected void checkOccurrences(String relFilePath, String caretLine, final boolean symmetric) throws Exception {
         Source testSource = getTestSource(getTestFile(relFilePath));
 
@@ -149,7 +147,7 @@ public class JsWithBase extends JsCodeCompletionBase{
                     highlights = Collections.emptyMap();
                 }
 
-                Document doc = GsfUtilities.getDocument(pr.getSnapshot().getSource().getFileObject(), true);
+                Document doc = GsfUtilities.getADocument(pr.getSnapshot().getSource().getFileObject(), true);
                 checkNoOverlaps(highlights.keySet(), doc);
 
                 String annotatedSource = annotateSemanticResults(doc, highlights);

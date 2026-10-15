@@ -22,10 +22,10 @@ package org.netbeans.modules.java.source;
 
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ModuleTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.source.util.Trees;
+import com.sun.tools.javac.api.ClientCodeWrapper;
 import com.sun.tools.javac.code.ClassFinder;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symtab;
@@ -48,11 +48,12 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
+import javax.tools.Diagnostic.Kind;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
@@ -87,7 +88,6 @@ import org.netbeans.spi.java.classpath.ClassPathImplementation;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Pair;
 import org.openide.util.Parameters;
 
 /**
@@ -99,6 +99,7 @@ import org.openide.util.Parameters;
 public final class JavaSourceUtilImpl extends org.netbeans.modules.java.preprocessorbridge.spi.JavaSourceUtilImpl {
     private static final Logger LOGGER = Logger.getLogger(JavaSourceUtilImpl.class.getName());
     
+    @Override
     protected long createTaggedCompilationController(FileObject file, int position, long currenTag, Object[] out) throws IOException {
         assert file != null;
         final JavaSource js = JavaSource.forFileObject(file);
@@ -151,31 +152,31 @@ public final class JavaSourceUtilImpl extends org.netbeans.modules.java.preproce
                 .register(FileManagerTransaction.class, FileManagerTransaction.writeThrough())
                 .register(ProcessorGenerated.class, ProcessorGenerated.create(srcRoot.toURL()));
         try {
-            ClassPath src = ClassPath.getClassPath(srcRoot, ClassPath.SOURCE);
+            ClassPath src = ClassPath.getClassPath(file, ClassPath.SOURCE);
             if (src == null) {
                 src = ClassPathSupport.createClassPath(srcRoot);
             }
-            ClassPath moduleSrc = ClassPath.getClassPath(srcRoot, JavaClassPathConstants.MODULE_SOURCE_PATH);
+            ClassPath moduleSrc = ClassPath.getClassPath(file, JavaClassPathConstants.MODULE_SOURCE_PATH);
             if (moduleSrc == null) {
                 moduleSrc = ClassPath.EMPTY;
             }
-            ClassPath boot = ClassPath.getClassPath(srcRoot, ClassPath.BOOT);
+            ClassPath boot = ClassPath.getClassPath(file, ClassPath.BOOT);
             if (boot == null) {
                 boot = JavaPlatform.getDefault().getBootstrapLibraries();
             }   
-            ClassPath moduleBoot = ClassPath.getClassPath(srcRoot, JavaClassPathConstants.MODULE_BOOT_PATH);
+            ClassPath moduleBoot = ClassPath.getClassPath(file, JavaClassPathConstants.MODULE_BOOT_PATH);
             if (moduleBoot == null) {
                 moduleBoot = ClassPath.EMPTY;
             }
-            ClassPath compile = ClassPath.getClassPath(srcRoot, ClassPath.COMPILE);
+            ClassPath compile = ClassPath.getClassPath(file, ClassPath.COMPILE);
             if (compile == null) {
                 compile = ClassPath.EMPTY;
             }
-            ClassPath moduleCompile = ClassPath.getClassPath(srcRoot, JavaClassPathConstants.MODULE_COMPILE_PATH);
+            ClassPath moduleCompile = ClassPath.getClassPath(file, JavaClassPathConstants.MODULE_COMPILE_PATH);
             if (moduleCompile == null) {
                 moduleCompile = ClassPath.EMPTY;
             }
-            ClassPath moduleClass = ClassPath.getClassPath(srcRoot, JavaClassPathConstants.MODULE_CLASS_PATH);
+            ClassPath moduleClass = ClassPath.getClassPath(file, JavaClassPathConstants.MODULE_CLASS_PATH);
             if (moduleClass == null) {
                 moduleClass = ClassPath.EMPTY;
             }
@@ -216,11 +217,19 @@ public final class JavaSourceUtilImpl extends org.netbeans.modules.java.preproce
                     false,
                     jfmProvider);
             final APTUtils aptUtils = APTUtils.get(srcRoot);
+            boolean[] hasErrors = new boolean[1];
+            DiagnosticListener<? super JavaFileObject> diagnosticsDelegate = diagnostics != null ?
+                            diagnostics :
+                            new Diags();
+            DiagnosticListener<JavaFileObject> errors = d -> {
+                if (d.getKind() == Kind.ERROR) {
+                    hasErrors[0] = true;
+                }
+                diagnosticsDelegate.report(d);
+            };
             final JavacTaskImpl  jt = JavacParser.createJavacTask(
                     cpInfo,
-                    diagnostics != null ?
-                            diagnostics :
-                            new Diags(),
+                    errors,
                     r.getSourceLevel(),
                     r.getProfile(),
                     null,
@@ -228,11 +237,14 @@ public final class JavaSourceUtilImpl extends org.netbeans.modules.java.preproce
                     aptUtils,
                     null,
                     Arrays.asList(toCompile));
+            Iterable<? extends Element> attributed = jt.analyze(jt.enter(jt.parse()));
+            if (hasErrors[0])
+                return Collections.emptyMap();
             final Iterable<? extends JavaFileObject> generated = jt.generate(
-                    StreamSupport.stream(jt.analyze(jt.enter(jt.parse())).spliterator(), false)
+                    StreamSupport.stream(attributed.spliterator(), false)
                             .filter((e) -> e.getKind().isClass() || e.getKind().isInterface())
                             .map((e) -> (TypeElement)e)
-                            .collect(Collectors.toList()));
+                            .toList());
             final Map<String,byte[]> result = new HashMap<>();
             for (JavaFileObject jfo : generated) {
                 if (jfo instanceof OutputFileManager.MemOutFileObject) {
@@ -276,12 +288,8 @@ public final class JavaSourceUtilImpl extends org.netbeans.modules.java.preproce
                     public String parseModuleName() throws IOException {
                         cc.toPhase(JavaSource.Phase.PARSED);
                         final CompilationUnitTree cu = cc.getCompilationUnit();
-                        for (Tree decl : cu.getTypeDecls()) {
-                            if (decl.getKind() == Tree.Kind.MODULE) {
-                                return ((ModuleTree) decl).getName().toString();
-                            }
-                        }
-                        return null;
+                        ModuleTree mt = cu.getModule();
+                        return mt != null ? mt.getName().toString() : null;
                     }
 
                     @Override
@@ -474,6 +482,7 @@ public final class JavaSourceUtilImpl extends org.netbeans.modules.java.preproce
             throw new IllegalStateException(String.valueOf(l));
         }
         
+        @ClientCodeWrapper.Trusted
         private static final class MemOutFileObject extends FileObjects.Base {            
             private final ByteArrayOutputStream out;
             private long modified;

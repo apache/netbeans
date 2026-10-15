@@ -1,0 +1,62 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='38'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='38'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <WhileNode start='0' end='19'>
+      <Block start='3' end='4'>
+        <isSynthetic/>
+        <!-- Block Statements -->
+        <EmptyNode start='3' end='4'>
+        </EmptyNode>
+      </Block>
+      <JoinPredecessorExpression start='12' end='18'>
+        <AccessNode property='test' start='12' end='18'>
+          <!-- AccessNode Base -->
+          <IdentNode start='12' end='13'>
+            <name>r</name>
+          </IdentNode>
+        </AccessNode>
+      </JoinPredecessorExpression>
+    </WhileNode>
+    <BlockStatement start='21' end='37'>
+      <Block start='21' end='37'>
+        <!-- Block Statements -->
+        <BlockStatement start='27' end='35'>
+          <Block start='27' end='35'>
+            <!-- Block Statements -->
+            <ExpressionStatement start='29' end='33'>
+              <StringLiteralNode value='good' start='29' end='33'/>
+            </ExpressionStatement>
+          </Block>
+        </BlockStatement>
+      </Block>
+    </BlockStatement>
+    <EmptyNode start='37' end='38'>
+    </EmptyNode>
+  </Block>
+</FunctionNode>

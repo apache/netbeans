@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #e2e2e2;
+      }
+
+      .st1 {
+        opacity: .4;
+      }
+
+      .st2 {
+        opacity: .33;
+      }
+
+      .st3 {
+        fill: #a7cdea;
+      }
+    </style>
+  </defs>
+  <g>
+    <rect class="st3" x="5" y="4" width="11" height="11"/>
+    <g class="st2">
+      <path d="M15,5v9H6V5h9M16,4H5v11h11V4h0Z"/>
+    </g>
+  </g>
+  <g>
+    <g>
+      <path class="st0" d="M5.5,10c.552,0,1-.448,1-1v-1c0-.552-.448-1-1-1h-.5v-1.3c1.179-.483,2-1.505,2-2.7,0-1.657-1.567-3-3.5-3S0,1.343,0,3c0,1.195.821,2.218,2,2.7v4.3c0,.552.448,1,1,1h1c.552,0,1-.448,1-1h.5Z"/>
+      <g class="st1">
+        <path d="M3.5,1c1.378,0,2.5.897,2.5,2,0,.747-.528,1.427-1.379,1.775l-.621.254v2.971h1.5v1h-1.5v1h-1v-4.971l-.621-.254c-.85-.348-1.379-1.028-1.379-1.775,0-1.103,1.122-2,2.5-2M3.5,0C1.567,0,0,1.343,0,3c0,1.195.821,2.218,2,2.7v4.3c0,.552.448,1,1,1h1c.552,0,1-.448,1-1h.5c.552,0,1-.448,1-1v-1c0-.552-.448-1-1-1h-.5v-1.3c1.179-.483,2-1.505,2-2.7,0-1.657-1.567-3-3.5-3h0Z"/>
+      </g>
+    </g>
+    <g class="st1">
+      <ellipse cx="3.5" cy="3" rx="1.25" ry=".833"/>
+    </g>
+  </g>
+</svg>

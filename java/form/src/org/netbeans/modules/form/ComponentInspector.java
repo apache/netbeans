@@ -112,6 +112,7 @@ public class ComponentInspector extends JPanel
 
     private void createComponents() {
         treeView = new BeanTreeView();
+        treeView.setAutoWaitCursor(false);
         treeView.setDragSource(true);
         treeView.setDropTarget(true);
         treeView.getAccessibleContext().setAccessibleName(
@@ -280,7 +281,7 @@ public class ComponentInspector extends JPanel
                 }
             }
             if (list.size() < selected.length) {
-                selected = list.toArray(new Node[list.size()]);
+                selected = list.toArray(new Node[0]);
             }
         }
         return selected;
@@ -621,7 +622,7 @@ public class ComponentInspector extends JPanel
 //        }
 //    }
 
-    final public static class ResolvableHelper implements java.io.Serializable {
+    public static final class ResolvableHelper implements java.io.Serializable {
         static final long serialVersionUID = 7424646018839457544L;
         public Object readResolve() {
             return new TopComponent() {

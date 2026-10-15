@@ -91,7 +91,7 @@ public class InteceptorTest extends NbTestCase {
         wc2 = new File(dataRootDir, getName() + "_wc2");
         repoDir = new File(dataRootDir, "repo");
         String repoPath = repoDir.getAbsolutePath();
-        if(repoPath.startsWith("/")) repoPath = repoPath.substring(1, repoPath.length());
+        if(repoPath.startsWith("/")) repoPath = repoPath.substring(1);
         repoUrl = new SVNUrl("file:///" + repoPath);
         
         repo2Dir = new File(dataRootDir, "repo2");

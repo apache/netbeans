@@ -71,7 +71,7 @@ public final class DocumentInputSource extends InputSource {
      *  <li>use client's <code>setSystemId()</code>, or
      *  <li>try to derive it from <code>Document</code>
      *      <p>e.g. look at <code>Document.StreamDescriptionProperty</code> for
-     *      {@link DataObject} and use URL of its primary file.
+     *      <a href="@org-openide-loaders@/org/openide/loaders/DataObject.html">DataObject</a> and use URL of its primary file.
      * </ul>
      * @return entity system Id or <code>null</code>
      */

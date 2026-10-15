@@ -19,6 +19,7 @@
 package org.netbeans.modules.db.sql.visualeditor.querymodel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.netbeans.api.db.sql.support.SQLIdentifiers;
 
@@ -32,7 +33,7 @@ public class AndNode extends BooleanExpressionList implements And {
     // Constructors
     //
 
-    public AndNode(ArrayList expressions) {
+    public AndNode(List expressions) {
         _expressions = new ArrayList();
         BooleanExpressionList.flattenExpression(expressions, AndNode.class, _expressions);
     }

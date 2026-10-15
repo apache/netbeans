@@ -1,0 +1,5 @@
+package test;
+public class Test {
+    private t(Number n) {
+        if (n instanceof Integer) {
+            n.intValue()

@@ -48,29 +48,25 @@ public class RefreshAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (mo != null) {
-            RequestProcessor.getDefault().post(new Runnable() {
-
-                @Override
-                public void run() {
-                    FileObject fo = mo.getFileObject();
-                    if (!fo.isValid()) {
-                        try {
-                            // get fresh fo in case it has been recreated
-                            fo = fo.getFileSystem().findResource(fo.getPath());
-                        } catch (FileStateInvalidException ex) {
-                            Logger.getLogger(
-                                    BasicReplaceResultsPanel.class.getName())
-                                    .log(Level.FINE, null, ex);
-                        }
+            RequestProcessor.getDefault().post(() -> {
+                FileObject fo = mo.getFileObject();
+                if (!fo.isValid()) {
+                    try {
+                        // get fresh fo in case it has been recreated
+                        fo = fo.getFileSystem().findResource(fo.getPath());
+                    } catch (FileStateInvalidException ex) {
+                        Logger.getLogger(
+                                BasicReplaceResultsPanel.class.getName())
+                                .log(Level.FINE, null, ex);
                     }
-                    if (fo != null && fo.isValid()) {
-                        MatchingObject.Def def = mo.getBasicComposition()
-                                .getMatcher().check(
-                                        fo, new SearchListener() {
-                                        });
-                        if (def != null) {
-                            mo.refresh(def);
-                        }
+                }
+                if (fo != null && fo.isValid()) {
+                    MatchingObject.Def def = mo.getBasicComposition()
+                            .getMatcher().check(
+                                    fo, new SearchListener() {
+                                    });
+                    if (def != null) {
+                        mo.refresh(def);
                     }
                 }
             });

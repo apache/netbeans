@@ -429,7 +429,7 @@ public class WebActionProvider extends BaseActionProvider {
 
                     WebServicesSupport wss = WebServicesSupport.getWebServicesSupport(serverProject.getProjectDirectory());
                     if (wss != null) { //project contains ws
-                        List services = wss.getServices();
+                        List<WsCompileEditorSupport.ServiceSettings> services = wss.getServices();
                         boolean match = false;
                         for (Iterator sIt = services.iterator(); sIt.hasNext();) {
                             WsCompileEditorSupport.ServiceSettings serviceSettings =
@@ -808,7 +808,7 @@ public class WebActionProvider extends BaseActionProvider {
         if (files.isEmpty()) {
             return null;
         }
-        return files.toArray(new FileObject[files.size()]);
+        return files.toArray(new FileObject[0]);
     }
 
     private FileObject[] findHtml(Lookup context) {
@@ -835,7 +835,7 @@ public class WebActionProvider extends BaseActionProvider {
     }
 
     private boolean isDebugged() {
-        J2eeModuleProvider jmp = (J2eeModuleProvider) getWebProject().getLookup().lookup(J2eeModuleProvider.class);
+        J2eeModuleProvider jmp = getWebProject().getLookup().lookup(J2eeModuleProvider.class);
         Session[] sessions = DebuggerManager.getDebuggerManager().getSessions();
         ServerDebugInfo sdi = null;
         if (sessions != null && sessions.length > 0) {

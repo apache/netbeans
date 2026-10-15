@@ -528,7 +528,6 @@ private void includeExcludeButtonActionPerformed(java.awt.event.ActionEvent evt)
     
     private void updateFolder(JTextField textField) {
         JFileChooser chooser = new JFileChooser();
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         File fileName = new File(textField.getText());
         File folder = fileName.isAbsolute() ? fileName : new File(projectFld, fileName.getPath());

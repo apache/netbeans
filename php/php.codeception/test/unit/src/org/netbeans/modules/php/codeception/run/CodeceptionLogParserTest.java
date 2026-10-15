@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
+import java.util.Arrays;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.php.spi.testing.run.TestCase;
 
@@ -182,6 +183,80 @@ public class CodeceptionLogParserTest extends NbTestCase {
                 testCase.getStackTrace()[0]);
         assertEquals("/home/junichi11/NetBeansProjects/codeception/tests/_support/_generated/AcceptanceTesterActions.php:257", testCase.getStackTrace()[1]);
         assertEquals("/home/junichi11/NetBeansProjects/codeception/tests/acceptance/WelcomeCept.php:6", testCase.getStackTrace()[2]);
+    }
+
+
+    public void testParseLogWithWarningPhpUnitSuite() throws Exception {
+        Reader reader = createReader("codeception-log-warning-phpunit-suite.xml");
+        TestSessionVo testSession = new TestSessionVo();
+
+        CodeceptionLogParser.parse(reader, testSession);
+        assertEquals(20, testSession.getTime());
+        assertEquals(1, testSession.getTests());
+
+        // test suites & test cases
+        assertEquals(1, testSession.getTestSuites().size());
+
+        // 1st
+        TestSuiteVo testSuite = testSession.getTestSuites().get(0);
+        assertEquals("unit", testSuite.getName());
+        assertEquals(null, testSuite.getLocation());
+        assertEquals(20, testSuite.getTime());
+        assertEquals(1, testSuite.getTestCases().size());
+
+        TestCaseVo testCase = testSuite.getTestCases().get(0);
+        assertEquals("ProjectX\\FooTest", testCase.getClassName());
+        assertEquals("testGetBar", testCase.getName());
+        assertEquals("/home/kacer/projectx/tests/unit/FooTest.php", testCase.getFile());
+        assertEquals(6, testCase.getLine());
+        assertEquals(20, testCase.getTime());
+        assertTrue(testCase.isFailure());
+        assertFalse(testCase.isError());
+        assertEquals(TestCase.Status.FAILED, testCase.getStatus());
+        assertEquals(1, testCase.getStackTrace().length);
+        assertEquals("Trying to configure method \"getBarAAA\" which cannot be configured because it does not exist, has not been specified, is final, or is static", testCase.getStackTrace()[0]);
+    }
+
+    public void testParseLogSkippedUnitTests() throws Exception {
+        Reader reader = createReader("codeception-log-skipped-unit-tests.xml");
+        TestSessionVo testSession = new TestSessionVo();
+
+        CodeceptionLogParser.parse(reader, testSession);
+        assertEquals(43, testSession.getTime());
+        assertEquals(13, testSession.getTests());
+
+        assertEquals(1, testSession.getTestSuites().size());
+
+        TestSuiteVo testSuite = testSession.getTestSuites().get(0);
+        assertEquals("unit", testSuite.getName());
+        assertEquals(null, testSuite.getLocation());
+        assertEquals(43, testSuite.getTime());
+        assertEquals(13, testSuite.getTestCases().size());
+
+        TestCaseVo testCase = testSuite.getTestCases().get(1);
+        assertTrue(testCase.isSkipped());
+        assertTrue(Arrays.asList(testCase.getStackTrace()).isEmpty());
+    }
+
+    public void testParseLogSkippedFunctionalTests() throws Exception {
+        Reader reader = createReader("codeception-log-skipped-functional-tests.xml");
+        TestSessionVo testSession = new TestSessionVo();
+
+        CodeceptionLogParser.parse(reader, testSession);
+        assertEquals(191, testSession.getTime());
+        assertEquals(6, testSession.getTests());
+
+        assertEquals(1, testSession.getTestSuites().size());
+
+        TestSuiteVo testSuite = testSession.getTestSuites().get(0);
+        assertEquals("functional", testSuite.getName());
+        assertEquals(null, testSuite.getLocation());
+        assertEquals(191, testSuite.getTime());
+        assertEquals(6, testSuite.getTestCases().size());
+
+        TestCaseVo testCase = testSuite.getTestCases().get(0);
+        assertTrue(testCase.isSkipped());
+        assertTrue(Arrays.asList(testCase.getStackTrace()).isEmpty());
     }
 
     private Reader createReader(String filename) throws FileNotFoundException {

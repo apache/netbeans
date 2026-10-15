@@ -20,6 +20,7 @@ package org.netbeans.core.windows;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import junit.framework.Test;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
 import org.openide.windows.WindowManager;
@@ -30,7 +31,7 @@ public class InvokeWhenUIReadInHeadlessModeTest extends NbTestCase {
         super(name);
     }
 
-    public static junit.framework.Test suite() {
+    public static Test suite() {
         return NbModuleSuite.emptyConfiguration().
             gui(false).
             addTest(InvokeWhenUIReadInHeadlessModeTest.class).

@@ -12,23 +12,8 @@
         <token id='T_INSTANCEOF' start='15' end='25'>
             <text>instanceof</text>
         </token>
-        <token id='T_NS_SEPARATOR' start='26' end='27'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='27' end='30'>
-            <text>Bar</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='30' end='31'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='31' end='34'>
-            <text>Baz</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='34' end='35'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='35' end='38'>
-            <text>Bat</text>
+        <token id='T_NAME_FULLY_QUALIFIED' start='26' end='38'>
+            <text>\Bar\Baz\Bat</text>
         </token>
         <token id='T_CLOSE_PARENTHESE' start='38' end='39'>
             <text>)</text>

@@ -319,7 +319,7 @@ public class CategorySupport implements ActionListener, ChangeListener, ListData
 
         public PreferencesCustomizer create(Preferences preferences) {
             try {
-                CategorySupport categorySupport = new CategorySupport(preferences, id, panelClass.newInstance(), previewText, forcedOptions);
+                CategorySupport categorySupport = new CategorySupport(preferences, id, panelClass.getDeclaredConstructor().newInstance(), previewText, forcedOptions);
                 if (categorySupport.panel instanceof Runnable)
                     ((Runnable)categorySupport.panel).run();
                 return categorySupport;
@@ -555,7 +555,7 @@ public class CategorySupport implements ActionListener, ChangeListener, ListData
         }
     }
 
-    static abstract class DocumentCategorySupport extends CategorySupport {
+    abstract static class DocumentCategorySupport extends CategorySupport {
         /**
          * Two Sources are used. While one Source document is displayed by the preview JEditorPane, 
          * the other source may be formatted in the RP. The editor then switch between those sources.
@@ -764,7 +764,7 @@ public class CategorySupport implements ActionListener, ChangeListener, ListData
             for(Preferences p : delegates) {
                 keys.addAll(Arrays.asList(p.keys()));
             }
-            return keys.toArray(new String[ keys.size() ]);
+            return keys.toArray(new String[ 0 ]);
         }
 
         protected String[] childrenNamesSpi() throws BackingStoreException {

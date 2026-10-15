@@ -262,8 +262,8 @@ public class RevisionDialogController implements ActionListener, DocumentListene
                 return b1.getRevision().compareTo(b2.getRevision());
             }
         };
-        Collections.sort(branchList, comp);
-        Collections.sort(remoteBranchList, comp);
+        branchList.sort(comp);
+        remoteBranchList.sort(comp);
         branchList.addAll(remoteBranchList);
         final Revision toSelect = activeBranch;
         branchModel = new DefaultListModel<Object>();

@@ -37,8 +37,8 @@ public class DataModel extends AbstractTableModel
     /** Column data */
     private List<ColumnItem> data;
 
-    transient private List<ColumnItem> primaryKeys = new ArrayList<ColumnItem>();
-    transient private List<ColumnItem> uniqueKeys = new ArrayList<ColumnItem>();
+    private transient List<ColumnItem> primaryKeys = new ArrayList<ColumnItem>();
+    private transient List<ColumnItem> uniqueKeys = new ArrayList<ColumnItem>();
 
     static final long serialVersionUID =4162743695966976536L;
     

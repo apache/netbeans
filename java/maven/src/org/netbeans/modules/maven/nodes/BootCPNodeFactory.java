@@ -69,7 +69,7 @@ public class BootCPNodeFactory implements NodeFactory {
                         Collections.<Void>emptyList() :
                         Collections.<Void>singletonList(null);
             }
-            @Override public Node node(Void _) {
+            @Override public Node node(Void v) {
                 return new BootCPNode(p);
             }
         };

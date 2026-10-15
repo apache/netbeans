@@ -99,7 +99,7 @@ public class LogAction extends SearchHistoryAction {
         String title = NbBundle.getMessage(
                 LogAction.class, 
                 "MSG_Log_TabTitle", // NOI18N
-                Utils.getContextDisplayName(VCSContext.forNodes(nodes.toArray(new Node[nodes.size()]))));
+                Utils.getContextDisplayName(VCSContext.forNodes(nodes.toArray(new Node[0]))));
         openHistory(repositoryRoot, files, title, revision);
     }
     
@@ -158,7 +158,7 @@ public class LogAction extends SearchHistoryAction {
                     }
                     originalFiles.add(file);
                 }
-                return originalFiles.toArray(new File[originalFiles.size()]);
+                return originalFiles.toArray(new File[0]);
             }
 
     /**

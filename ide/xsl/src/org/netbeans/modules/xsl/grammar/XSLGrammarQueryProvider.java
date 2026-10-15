@@ -53,12 +53,7 @@ public class XSLGrammarQueryProvider extends GrammarQueryManager {
         Enumeration en = ctx.getDocumentChildren();
         while (en.hasMoreElements()) {
             Node next = (Node) en.nextElement();
-            if (next.getNodeType() == next.DOCUMENT_TYPE_NODE) {
-//                DocumentType doctype = (DocumentType) next;
-//                if (PUBLIC.equals(doctype.getPublicId()) || SYSTEM.equals(doctype.getSystemId())) {
-//                    return new SingletonEnumeration(next);
-//                }
-            } else if (next.getNodeType() == next.ELEMENT_NODE) {
+            if (next.getNodeType() == next.ELEMENT_NODE) {
                 Element element = (Element) next;
                 String tag = element.getTagName();
                 if (tag.indexOf(":") == -1) {  // NOI18N

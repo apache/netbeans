@@ -78,7 +78,7 @@ class ToDoCustomizer extends javax.swing.JPanel implements DocumentListener{
     private boolean detailsValid;
     /* Contains all modified comments and is used to enable/disable the Apply button.
        All the mappings are saved when OK or Apply buttons are pressed.*/
-    private final static Map<String, CommentTags> id2comments = new HashMap<String, CommentTags>();
+    private static final Map<String, CommentTags> id2comments = new HashMap<String, CommentTags>();
     
     /** Creates new form ToDoCustomizer */
     public ToDoCustomizer() {
@@ -96,7 +96,7 @@ class ToDoCustomizer extends javax.swing.JPanel implements DocumentListener{
                 if ("tableCellEditor".equals(evt.getPropertyName())) { //NOI18N
                     if (!table.isEditing()) { //  A cell has stopped editing
                         fireChanged();
-                        firePropertyChange(OptionsPanelController.PROP_CHANGED, new Boolean(changed), Boolean.TRUE);
+                        firePropertyChange(OptionsPanelController.PROP_CHANGED, Boolean.valueOf(changed), Boolean.TRUE);
                         firePropertyChange(OptionsPanelController.PROP_VALID, null, null);
                     }
                 }
@@ -152,8 +152,9 @@ class ToDoCustomizer extends javax.swing.JPanel implements DocumentListener{
             Settings.getDefault().setScanCommentsOnly(checkScanCommentsOnly.isSelected());            
             
             // make sure modified identifiers are saved
-            for (String id : id2comments.keySet()) {
-                CommentTags comments = id2comments.get(id);
+            for (Map.Entry<String, CommentTags> entry : id2comments.entrySet()) {
+                String id = entry.getKey();
+                CommentTags comments = entry.getValue();
                 for (int i = 0; i < extensionIdentifiers.size(); i++) {
                     ExtensionIdentifier identifier = extensionIdentifiers.get(i);
                     if (identifier.getId().equals(id)) {
@@ -751,9 +752,8 @@ private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     
     boolean wasChanged = changed;
     fireChanged();
-    firePropertyChange( OptionsPanelController.PROP_CHANGED, new Boolean(wasChanged), Boolean.TRUE);
-    
-    firePropertyChange( OptionsPanelController.PROP_VALID, new Boolean(wasValid), new Boolean(isDataValid()));
+    firePropertyChange( OptionsPanelController.PROP_CHANGED, Boolean.valueOf(wasChanged), Boolean.TRUE);
+    firePropertyChange( OptionsPanelController.PROP_VALID, Boolean.valueOf(wasValid), Boolean.valueOf(isDataValid()));
 }//GEN-LAST:event_btnRemoveActionPerformed
 
 private void btnChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangeActionPerformed
@@ -768,7 +768,7 @@ private void btnChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
             editor.removeCellEditorListener( this );
             table.setValueAt(editor.getCellEditorValue(), selRow, 0);
             fireChanged();
-            firePropertyChange( OptionsPanelController.PROP_CHANGED, new Boolean(wasChanged), Boolean.TRUE);
+            firePropertyChange( OptionsPanelController.PROP_CHANGED, Boolean.valueOf(wasChanged), Boolean.TRUE);
             firePropertyChange(OptionsPanelController.PROP_VALID, null, null);
         }
 
@@ -791,7 +791,7 @@ private void btnChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                 editor.removeCellEditorListener( this );
                 model.setValueAt(editor.getCellEditorValue(), model.getRowCount() - 1, 0);
                 fireChanged();
-                firePropertyChange( OptionsPanelController.PROP_CHANGED, new Boolean(wasChanged), Boolean.TRUE);
+                firePropertyChange( OptionsPanelController.PROP_CHANGED, Boolean.valueOf(wasChanged), Boolean.TRUE);
                 firePropertyChange(OptionsPanelController.PROP_VALID, null, null);
             }
 
@@ -806,7 +806,7 @@ private void scanCommentsOnlyChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:
         return;
     boolean wasChanged = changed;
     fireChanged();
-    firePropertyChange( OptionsPanelController.PROP_CHANGED, new Boolean(wasChanged), Boolean.TRUE);
+    firePropertyChange( OptionsPanelController.PROP_CHANGED, Boolean.valueOf(wasChanged), Boolean.TRUE);
 }//GEN-LAST:event_scanCommentsOnlyChanged
 
     private void btnAddMimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddMimeActionPerformed

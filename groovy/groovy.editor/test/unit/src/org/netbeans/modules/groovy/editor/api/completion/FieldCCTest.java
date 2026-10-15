@@ -24,9 +24,7 @@ package org.netbeans.modules.groovy.editor.api.completion;
  * @author schmidtm
  */
 import java.util.Map;
-import org.netbeans.modules.groovy.editor.test.GroovyTestBase;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
@@ -36,13 +34,23 @@ import org.openide.filesystems.FileUtil;
  *
  * @author schmidtm
  */
-public class FieldCCTest extends GroovyTestBase {
+public class FieldCCTest extends GroovyCCTestBase {
 
     String TEST_BASE = "testfiles/completion/field/";
 
     public FieldCCTest(String testName) {
         super(testName);
-        Logger.getLogger(CompletionHandler.class.getName()).setLevel(Level.FINEST);
+    }
+
+    @Override
+    protected void setUp() throws Exception {
+        clearWorkDir();
+        super.setUp();
+    }
+
+    @Override
+    protected String getTestType() {
+        return ".";
     }
 
     // uncomment this to have logging from GroovyLexer
@@ -68,4 +76,51 @@ public class FieldCCTest extends GroovyTestBase {
         checkCompletion(TEST_BASE + "" + "Fields1.groovy", "println \"Hi: $ad^\"", true);
     }
 
+    /**
+     * Groovy fields (not properties) with private modifiers are accessible.
+     */
+    public void testFields2_modifiers() throws Exception {
+        checkCompletion(TEST_BASE + "" + "Fields2.groovy", "new Helper().builder^Property.inheritIO()", true);
+    }
+    
+    /**
+     * But java class fields respect the access modifiers. Must not contain 'classLoader0' property.
+     */
+    public void testFields2_javaModifiers() throws Exception {
+        checkCompletion(TEST_BASE + "" + "Fields2.groovy", "Helper.class.classL^oader", true);
+    }
+    
+    public void testFields2_propertyChain1() throws Exception {
+        checkCompletion(TEST_BASE + "" + "Fields2.groovy", "someFile.parent^File.mkdirs()", true);
+    }
+
+    public void testFields2_propertyChain2() throws Exception {
+        checkCompletion(TEST_BASE + "" + "Fields2.groovy", "someFile.absoluteFile.parent^File.mkdirs()", true);
+    }
+
+    public void testFields2_propertyChain3() throws Exception {
+        checkCompletion(TEST_BASE + "" + "Fields2.groovy", "someFile.absoluteFile.parentFile.mkd^irs()", true);
+    }
+
+    /**
+     * Cannot work ATM, see NETBEANS-5964
+     * @throws Exception 
+    public void testFields2_propertyChain4() throws Exception {
+        checkCompletion(TEST_BASE + "" + "Fields2.groovy", "(someFile.canonicalFile.getParentFile).mkd^irs()", true);
+    }
+     */
+    
+    /**
+     * See NETBEANS-5991 -- bug in type parameters substitution. Note that JDK9 added j.u.Properties#get(Object) -> Object
+     * while JDK8 had no such method. Since V (unsubstituted superclass' parameter) != Object, JDK9+ reports get() -> Object
+     * (signature of superclass' get() -> V is the same, so it is ignored) and 2 getOrDefault as the superclass' signature contains 'V' 
+     * and is therefore different.
+     */
+    public void testFields2_javaPropertyReference() throws Exception {
+        checkCompletion(TEST_BASE + "" + "Fields2.groovy", "System.properties.ge^t(", true);
+    }
+    
+    public void testFields2_otherClassProperty() throws Exception {
+        checkCompletion(TEST_BASE + "" + "Fields2.groovy", "new Helper().builderProperty.inher^itIO()", true);
+    }
 }

@@ -27,8 +27,13 @@
 package ${package};
 
 </#if>
+<#if jakartaNamespace?? && jakartaNamespace>
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.UriInfo;
+<#else>
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
+</#if>
 
 /**
  * REST Web Service

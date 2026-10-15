@@ -143,7 +143,7 @@ public final class Actions implements ActionProvider {
         names.add(COMMAND_MOVE);
         names.add(COMMAND_COPY);
         names.add(COMMAND_DELETE);
-        return names.toArray(new String[names.size()]);
+        return names.toArray(new String[0]);
     }
     
     public boolean isActionEnabled(String command, Lookup context) throws IllegalArgumentException {
@@ -463,7 +463,7 @@ public final class Actions implements ActionProvider {
         } else if (scriptFile.hasFirst()) {
             final String[] targetNameArray;
             if (!targetNames.isEmpty()) {
-                targetNameArray = targetNames.toArray(new String[targetNames.size()]);
+                targetNameArray = targetNames.toArray(new String[0]);
             } else {
                 // Run default target.
                 targetNameArray = null;
@@ -562,7 +562,7 @@ public final class Actions implements ActionProvider {
                 }
             }
         }
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
     
     private static final class CustomAction extends AbstractAction {

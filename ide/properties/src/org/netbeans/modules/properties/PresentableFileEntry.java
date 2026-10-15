@@ -302,7 +302,7 @@ public abstract class PresentableFileEntry extends FileEntry
      *
      * @return support
      */
-    private synchronized final PropertyChangeSupport getChangeSupport () {
+    private final synchronized PropertyChangeSupport getChangeSupport () {
         if (changeSupport == null) {
             changeSupport = new PropertyChangeSupport (this);
         }
@@ -317,6 +317,7 @@ public abstract class PresentableFileEntry extends FileEntry
      * @param s the cookie set to use
      * @deprecated
      */
+    @Deprecated
     protected final synchronized void setCookieSet (CookieSet s) {
         if (cookieSet != null) {
             cookieSet.removeChangeListener (cookieL);

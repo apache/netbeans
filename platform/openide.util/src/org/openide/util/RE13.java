@@ -139,7 +139,7 @@ ALL:
      */
     private static void placeString(List<Object> item, String s, int indx) {
         if (s.length() == 0) {
-            item.add(new Integer(indx));
+            item.add(indx);
 
             return;
         }
@@ -163,19 +163,19 @@ ALL:
                             it.set(pref.substring(0, i));
 
                             // next is the list or null
-                            List listForPref = (List) it.next();
+                            List<Object> listForPref = (List<Object>) it.next();
 
-                            ArrayList<Object> switchList = new ArrayList<Object>();
+                            List<Object> switchList = new ArrayList<Object>();
                             it.set(switchList);
 
                             switchList.add(pref.substring(i));
                             switchList.add(listForPref);
 
                             if (i >= s.length()) {
-                                switchList.add(new Integer(indx));
+                                switchList.add(indx);
                             } else {
                                 ArrayList<Object> terminalList = new ArrayList<Object>();
-                                terminalList.add(new Integer(indx));
+                                terminalList.add(indx);
 
                                 switchList.add(s.substring(i));
                                 switchList.add(terminalList);
@@ -200,7 +200,7 @@ ALL:
         // ok new prefix in this item
         //
         ArrayList<Object> id = new ArrayList<Object>();
-        id.add(new Integer(indx));
+        id.add(indx);
 
         item.add(s);
         item.add(id);
@@ -214,12 +214,12 @@ ALL:
 
     /** Compress tree of Lists into tree of Objects.
      */
-    private static Object[] compress(List item) {
+    private static Object[] compress(List<Object> item) {
         Object[] arr = new Object[item.size()];
 
         Integer last = null;
 
-        Iterator it = item.iterator();
+        Iterator<?> it = item.iterator();
         int i = 0;
 
         while (it.hasNext()) {

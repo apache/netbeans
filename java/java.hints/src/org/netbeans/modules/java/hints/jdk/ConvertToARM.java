@@ -612,12 +612,16 @@ public class ConvertToARM {
             final List<StatementTree> statements = new ArrayList<StatementTree>(originalStatements.size());
             int state = var != null ? 0 : 1;  //0 - ordinary,1 - replace by try, 2 - remove 
             final Set<Tree> toRemove = new HashSet<Tree>(oldStms);
+            boolean preVarDeclsWritten = false;
             for (StatementTree statement : originalStatements) {
                 if (removeStms.contains(statement)) {
                     continue;
                 }
                 if (var == statement) {
-                    statements.addAll(preVarDecls);
+                    if (!preVarDeclsWritten) {
+                        preVarDeclsWritten = true;
+                        statements.addAll(preVarDecls);
+                    }
                     if (var.getKind() == Kind.TRY) {
                         gen.copyComments(statement, newTry, true);
                         gen.copyComments(statement, newTry, false);
@@ -658,6 +662,10 @@ public class ConvertToARM {
                             gen.copyComments(tt.getFinallyBlock(), nt, false);
                         }
                     }
+                    if (!preVarDeclsWritten) {
+                        preVarDeclsWritten = true;
+                        statements.addAll(preVarDecls);
+                    }
                     statement = newTry;
                 } else if (state == 2) {
                     if (!toRemove.contains(statement)) {
@@ -667,6 +675,7 @@ public class ConvertToARM {
                 }
                 statements.add(statement);
             }
+
             return tm.Block(statements, false);
         }
         

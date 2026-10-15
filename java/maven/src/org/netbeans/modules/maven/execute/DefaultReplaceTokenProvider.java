@@ -29,6 +29,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.queries.UnitTestForSourceQuery;
@@ -38,6 +40,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
+import org.netbeans.modules.maven.ActionProviderImpl;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.classpath.MavenSourcesImpl;
@@ -45,6 +48,8 @@ import org.netbeans.modules.maven.configurations.M2ConfigProvider;
 import org.netbeans.modules.maven.spi.actions.ActionConvertor;
 import org.netbeans.modules.maven.spi.actions.ReplaceTokenProvider;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.api.project.ContainedProjectFilter;
+import org.netbeans.spi.project.NestedClass;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.SingleMethod;
 import org.netbeans.spi.project.support.ant.EditableProperties;
@@ -69,6 +74,7 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
     static final String CLASSNAME = "className";//NOI18N
     static final String CLASSNAME_EXT = "classNameWithExtension";//NOI18N
     static final String PACK_CLASSNAME = "packageClassName";//NOI18N
+    static final String PROJECTS = "projects";//NOI18N
     static final String ABSOLUTE_PATH = "absolutePathName";
     public static final String METHOD_NAME = "nb.single.run.methodName"; //NOI18N
     private static final String VARIABLE_PREFIX = "var."; //NOI18N
@@ -93,11 +99,28 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
             files.add(method.getFile());
         }
 
-        return files.toArray(new FileObject[files.size()]);
+        return files.toArray(new FileObject[0]);
+    }
+
+    private static NestedClass extractNestedClassFromLookup(Lookup lookup) {
+        NestedClass nestedClass = lookup.lookup(NestedClass.class);
+        if (nestedClass != null) {
+            return nestedClass;
+        }
+
+        SingleMethod sm = lookup.lookup(SingleMethod.class);
+        if (sm != null) {
+            return sm.getNestedClass();
+        }
+
+        return null;
     }
 
     @Override public Map<String, String> createReplacements(String actionName, Lookup lookup) {
+        NestedClass nestedClass = extractNestedClassFromLookup(lookup);
         FileObject[] fos = extractFileObjectsfromLookup(lookup);
+        List<Project> projects = extractProjectsFromLookup(lookup);
+        
         SourceGroup group = findGroup(ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA), fos);
         HashMap<String, String> replaceMap = new HashMap<String, String>();
         // read environment variables in the IDE and prefix them with "env." just in case someone uses it as variable in the action mappings
@@ -135,7 +158,8 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
                     if (!isTest && !(ActionProvider.COMMAND_TEST_SINGLE.equals(actionName) ||
                                      ActionProvider.COMMAND_DEBUG_TEST_SINGLE.equals(actionName) ||
                                      ActionProvider.COMMAND_PROFILE_TEST_SINGLE.equals(actionName) ||
-                                     ActionProvider.COMMAND_TEST.equals(actionName))) {
+                                     ActionProvider.COMMAND_TEST.equals(actionName) ||
+                                     ActionProvider.COMMAND_TEST_PARALLEL.equals(actionName))) {
                         // Execution can not have more files separated by commas. Only test can.
                         break;
                     } else {
@@ -145,9 +169,9 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
                     classname.append(',');
                     classnameExt.append(',');
                 }
+                String rel = FileUtil.getRelativePath(group.getRootFolder(), file);
+                assert rel != null;
                 if (file.isFolder()) {
-                    String rel = FileUtil.getRelativePath(group.getRootFolder(), file);
-                    assert rel != null;
                     String pkg = rel.replace('/', '.');
                     if (!pkg.isEmpty()) {
                         packClassname.append(pkg).append(".**."); // test everything under this package recusively
@@ -159,22 +183,18 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
                     classname.append(pkg); // ?
                     classnameExt.append(pkg); // ??
                 } else { // XXX do we need to limit to text/x-java? What about files of other type?
-                    String relP = FileUtil.getRelativePath(group.getRootFolder(), file.getParent());
-                    assert relP != null;
-                    StringBuilder cn = new StringBuilder();
-                    if (!relP.isEmpty()) {
-                        cn.append(relP.replace('/', '.')).append('.');
-                    }
-                    String n = file.getName();
-                    cn.append(n);
-                    if (uniqueClassNames.add(cn.toString())) {
+                    String cn = SourceUtils.classNameFor(ClasspathInfo.create(file), rel, nestedClass);
+                    int idx = cn.lastIndexOf('.');
+                    String n = idx < 0 ? cn : cn.substring(idx + 1);
+                    if (uniqueClassNames.add(cn)) {
                         packClassname.append(cn);
                         classname.append(n);
                     } else {
                         packClassname.deleteCharAt(packClassname.length() - 1); // Delete the comma
                         classname.deleteCharAt(classname.length() - 1);
                     }
-                    classnameExt.append(file.getNameExt());
+                    classnameExt.append(n).append('.').append(file.getExt());
+                    String relP = FileUtil.getRelativePath(group.getRootFolder(), file.getParent());
                     if (MavenSourcesImpl.NAME_SOURCE.equals(group.getName()) &&
                         (ActionProvider.COMMAND_TEST_SINGLE.equals(actionName) ||
                          ActionProvider.COMMAND_DEBUG_TEST_SINGLE.equals(actionName) ||
@@ -206,13 +226,19 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
             // not all of the selected files are under one source root, so maybe they were
             // selected from both source and test packages and "Test Files" action was invoked on them?
             if (ActionProvider.COMMAND_TEST_SINGLE.equals(actionName) ||
+                ActionProviderImpl.COMMAND_INTEGRATION_TEST_SINGLE.equals(actionName) ||
                 ActionProvider.COMMAND_DEBUG_TEST_SINGLE.equals(actionName)) 
             {
                 HashSet<String> test = new HashSet<String>();
                 addSelectedFiles(false, fos, test);
                 addSelectedFiles(true, fos, test);
-                String files2test = test.toString().replace(" ", "");
-                packClassname.append(files2test.substring(1, files2test.length() - 1));
+                
+                packClassname.append(test
+                        .stream()
+                        .map(String::trim)
+                        .collect(Collectors.joining(","))
+                );
+
             }
         }
         if (packClassname.length() > 0) { //#213671
@@ -223,6 +249,10 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
         }
         if (classnameExt.length() > 0) { //#213671
             replaceMap.put(CLASSNAME_EXT, classnameExt.toString());
+        }
+        if (projects != null && !projects.isEmpty()) {
+            List<String> projectReplacements = createProjectsReplacement(projects);
+            replaceMap.put(PROJECTS, String.join(",", projectReplacements));
         }
 
         Collection<? extends SingleMethod> methods = lookup.lookupAll(SingleMethod.class);
@@ -241,29 +271,50 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
         }
         return replaceMap;
     }
-
+    
+    private List<Project> extractProjectsFromLookup(Lookup lookup) {
+        ContainedProjectFilter projectFilter = lookup.lookup(ContainedProjectFilter.class);
+        return projectFilter == null ? null : projectFilter.getProjectsToProcess();
+    }
+    
+    private List<String> createProjectsReplacement(List<Project> projects) {
+        return projects
+                .stream()
+                .map(prj -> prj.getProjectDirectory().getName())
+                .toList();
+    }
+    
     private void addSelectedFiles(boolean testRoots, FileObject[] candidates, HashSet<String> test) {
         NbMavenProjectImpl prj = project.getLookup().lookup(NbMavenProjectImpl.class);
         if (prj != null) {
-            URI[] roots = prj.getSourceRoots(testRoots);
-            for (URI uri : roots) {
-                FileObject root = FileUtil.toFileObject(Utilities.toFile(uri));
-                // test if root isn't null - NbMavenProjectImpl.getSourceRoots() might return a bogus 
-                // non test uri in case there are only test source roots.
-                // NOTE that not sure if this is generaly the right place for the fix. Even though it is 
-                // MavenProject which returns those uris, not sure if e.g. that behaviour wasn't somewhere on the way overriden 
-                // by the nb maven module ...
-                if(root != null) {
-                    for (FileObject candidate : candidates) {
-                        String relativePath = FileUtil.getRelativePath(root, candidate);
-                        if (relativePath != null) {
-                            if (testRoots) {
-                                relativePath = relativePath.replace(".java", "").replace('/', '.'); //NOI18N
-                            } else {
-                                relativePath = relativePath.replace(".java", "Test").replace('/', '.'); //NOI18N
+            addSelectedFilesInGivenRoot(prj.getSourceRoots(testRoots), candidates, testRoots, test);
+            addSelectedFilesInGivenRoot(prj.getGeneratedSourceRoots(testRoots), candidates, testRoots, test);
+        }
+    }
+
+    private void addSelectedFilesInGivenRoot(URI[] roots, FileObject[] candidates, boolean testRoots, HashSet<String> test) throws IllegalArgumentException {
+        for (URI rootUri : roots) {
+            FileObject root = FileUtil.toFileObject(Utilities.toFile(rootUri));
+            // test if root isn't null - NbMavenProjectImpl.getSourceRoots() might return a bogus
+            // non test uri in case there are only test source roots.
+            // NOTE that not sure if this is generaly the right place for the fix. Even though it is
+            // MavenProject which returns those uris, not sure if e.g. that behaviour wasn't somewhere on the way overriden
+            // by the nb maven module ...
+            if(root != null) {
+                for (FileObject candidate : candidates) {
+                    String relativePath = FileUtil.getRelativePath(root, candidate);
+                    if (relativePath != null) {
+                        if (testRoots) {
+                            relativePath = relativePath.replace(".java", "").replace('/', '.'); //NOI18N
+                            if (candidate.isFolder()) {
+                                relativePath += relativePath.isEmpty()
+                                        ? "**"
+                                        : ".**";
                             }
-                            test.add(relativePath);
+                        } else {
+                            relativePath = relativePath.replace(".java", "Test").replace('/', '.'); //NOI18N
                         }
+                        test.add(relativePath);
                     }
                 }
             }
@@ -336,13 +387,37 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
 //        return files.toArray(
 //                new FileObject[files.size()]);
 //    }
+    
+    private boolean isIntegrationTestFile(FileObject file) {
+        return file.getName().endsWith("IT") || file.getName().endsWith("ITCase"); //NOI18N
+    }
 
+    private boolean isIntegrationTestTarget(Lookup lookup) {
+        FileObject[] targetFiles = extractFileObjectsfromLookup(lookup);
+        if (targetFiles.length > 0) {
+            return Stream.of(targetFiles).allMatch(file -> isIntegrationTestFile(file));
+        }
+        return false;
+    }
+    
     @Override public String convert(String action, Lookup lookup) {
         if (SingleMethod.COMMAND_DEBUG_SINGLE_METHOD.equals(action)) {
+            if (isIntegrationTestTarget(lookup)) {
+                return ActionProviderImpl.COMMAND_DEBUG_INTEGRATION_TEST_SINGLE;
+            }
             return ActionProvider.COMMAND_DEBUG_TEST_SINGLE;
         }
         if (SingleMethod.COMMAND_RUN_SINGLE_METHOD.equals(action)) {
+            if (isIntegrationTestTarget(lookup)) {
+                return ActionProviderImpl.COMMAND_INTEGRATION_TEST_SINGLE;
+            }
             return ActionProvider.COMMAND_TEST_SINGLE;
+        }
+        if (ActionProvider.COMMAND_TEST_SINGLE.equals(action) && isIntegrationTestTarget(lookup)) {
+            return ActionProviderImpl.COMMAND_INTEGRATION_TEST_SINGLE;
+        }
+        if (ActionProvider.COMMAND_DEBUG_TEST_SINGLE.equals(action) && isIntegrationTestTarget(lookup)) {
+            return ActionProviderImpl.COMMAND_DEBUG_INTEGRATION_TEST_SINGLE;
         }
         if (ActionProvider.COMMAND_RUN_SINGLE.equals(action) ||
             ActionProvider.COMMAND_DEBUG_SINGLE.equals(action) ||

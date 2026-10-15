@@ -126,7 +126,11 @@ public final class TermOptions {
     }
 
     private static Color getDefaultColorBackground() {
-        Color back = UIManager.getColor("nb.output.backgorund"); //NOI18N
+        Color back = UIManager.getColor("nb.output.background"); //NOI18N
+        if (back == null) {
+            // deprecated
+            back = UIManager.getColor("nb.output.backgorund");   //NOI18N
+        }
         if (back == null) {
             back = UIManager.getColor("TextField.background"); //NOI18N
             if (back == null) {
@@ -149,7 +153,7 @@ public final class TermOptions {
         return color;
     }
 
-    public synchronized static TermOptions getDefault(Preferences prefs) {
+    public static synchronized TermOptions getDefault(Preferences prefs) {
 	if (DEFAULT == null) {
 	    DEFAULT = new TermOptions();
 	    DEFAULT.loadFrom(prefs);

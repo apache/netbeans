@@ -276,6 +276,19 @@ bool checkLoggingArg(int argc, char *argv[], bool delFile) {
     return true;
 }
 
+void setConsoleCodepage() {
+    /* The Windows console (cmd) has its own code page setting that's usually different from the
+    system and user code page, e.g. on US Windows the console will use code page 437 while the
+    rest of the system uses 1252. Setting the console code page here to UTF-8 makes Unicode
+    characters printed from the application appear correctly. Since the launcher itself also runs
+    with UTF-8 as its code page (specified in the application manifest), this also makes log
+    messages from the launchers appear correctly, e.g. when printing paths that may have Unicode
+    characters in them. Note that if we attached to an existing console, the modified code page
+    setting will persist after the launcher exits. */
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
+}
+
 bool setupProcess(int &argc, char *argv[], DWORD &parentProcID, const char *attachMsg) {
 #define CHECK_ARG \
     if (i+1 == argc) {\
@@ -290,6 +303,7 @@ bool setupProcess(int &argc, char *argv[], DWORD &parentProcID, const char *atta
             CHECK_ARG;
             if (strcmp("new", argv[i + 1]) == 0){
                 AllocConsole();
+                setConsoleCodepage();
             } else if (strcmp("suppress", argv[i + 1]) == 0) {
                 // nothing, no console should be attached
             } else {
@@ -332,6 +346,7 @@ bool setupProcess(int &argc, char *argv[], DWORD &parentProcID, const char *atta
                     logErr(true, false, "AttachConsole of PP failed.");
                 } else {
                     getParentProcessID(parentProcID);
+                    setConsoleCodepage();
                     if (attachMsg) {
                         printToConsole(attachMsg);
                     }

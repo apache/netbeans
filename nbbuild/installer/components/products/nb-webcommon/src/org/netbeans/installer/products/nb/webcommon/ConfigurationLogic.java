@@ -27,14 +27,12 @@ import org.netbeans.installer.utils.exceptions.InitializationException;
  * @author Dmitry Lipin
  */
 public class ConfigurationLogic extends NbClusterConfigurationLogic {
-    /////////////////////////////////////////////////////////////////////////////////
     // Constants
     private static final String WEBCOMMON_CLUSTER = 
             "{webcommon-cluster}"; // NOI18N
     private static final String ID = 
             "WEBCOMMON"; // NOI18N
     
-    /////////////////////////////////////////////////////////////////////////////////
     // Instance
     public ConfigurationLogic() throws InitializationException {
         super(new String[]{

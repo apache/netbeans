@@ -80,7 +80,7 @@ class DominatorTree {
                 switchParents();
             } while (changed || !igonoreDirty);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Systems.printStackTrace(ex);
         }
         deleteBuffers();
         dirtySet = new LongSet();
@@ -89,7 +89,7 @@ class DominatorTree {
     private boolean computeOneLevel(boolean ignoreDirty) throws IOException {
         boolean changed = false;
         LongSet newDirtySet = new LongSet(map.size()/10);
-        List<Long> additionalIds = new ArrayList();
+        List<Long> additionalIds = new ArrayList<>();
         int additionalIndex = 0;
         // debug 
 //        long processedId = 0;
@@ -101,13 +101,13 @@ class DominatorTree {
 //        List<Long> oldDomIds = new ArrayList();
 //        List<Long> newDomIds = new ArrayList();
 
-//System.out.println("New level, dirtyset size: "+dirtySet.size());
+//Systems.debug("New level, dirtyset size: "+dirtySet.size());
         for (;;) {
             long instanceId = readLong();
             if (instanceId == 0) {  // end of level
                 if (additionalIndex >= additionalIds.size()) {
                     if (additionalIndex>0) {
-//System.out.println("Additional instances "+additionalIndex);
+//Systems.debug("Additional instances "+additionalIndex);
                     }
                     break;
                 }
@@ -159,28 +159,28 @@ class DominatorTree {
             dirtySetSameSize++;
         }
         dirtySet = newDirtySet;
-//System.out.println("Processed: "+processedId);
-//System.out.println("Changed:   "+changedId);
-//System.out.println("-------------------");
+//Systems.debug("Processed: "+processedId);
+//Systems.debug("Changed:   "+changedId);
+//Systems.debug("-------------------");
 //printObjs(changedIds,oldDomIds,newDomIds, addedBynewDirtySet, changedIdx);
-//System.out.println("-------------------");
+//Systems.debug("-------------------");
         return changed;
     }
         
     private void updateAdditionalIds(final long instanceId, final List<Long> additionalIds) {
         Instance i = heap.getInstanceByID(instanceId);
-//System.out.println("Inspecting "+printInstance(instanceIdObj));
+//Systems.debug("Inspecting "+printInstance(instanceIdObj));
         if (i != null) {
             for (Object v : i.getFieldValues()) {
                 if (v instanceof ObjectFieldValue) {
                     Instance val = ((ObjectFieldValue)v).getInstance();
                     if (val != null) {
                         long idp = val.getInstanceId();
-                        Long idO = new Long(idp);
+                        Long idO = idp;
                         long idomO = map.get(idp);
                         if (idomO > 0) {
                             additionalIds.add(idO);
-//System.out.println("  Adding "+printInstance(idO));
+//Systems.debug("  Adding "+printInstance(idO));
                         }
                     }
                 }
@@ -315,7 +315,7 @@ class DominatorTree {
     // debugging 
     private void printObjs(List<Long> changedIds, List<Long> oldDomIds, List<Long> newDomIds, List<Boolean> addedByDirtySet, List<Long> changedIdx) {
         if (changedIds.size()>20) return;
-        TreeMap<Integer,String> m = new TreeMap();
+        TreeMap<Integer,String> m = new TreeMap<>();
         
         for (int i=0; i<changedIds.size(); i++) {
             Long iid = changedIds.get(i);
@@ -331,8 +331,8 @@ class DominatorTree {
             text+=" NewDom: "+printInstance(newDom);
             m.put(number,text);
         }
-        for (Integer in : m.keySet()) {
-            System.out.println(m.get(in));
+        for (String value : m.values()) {
+            Systems.debug(value);
         }
     }
     

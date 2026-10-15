@@ -96,7 +96,7 @@ public class StackGetResponse extends DbgpResponse {
         IDESessionBridge bridge = session.getBridge();
         if (bridge != null) {
             BreakpointModel breakpointModel = bridge.getBreakpointModel();
-            if (breakpointModel != null) {
+            if (breakpointModel != null && !breakpointModel.isSearchCurrentBreakpointById()) {
                 breakpointModel.setCurrentStack(
                         stacks.get(0), session);
             }

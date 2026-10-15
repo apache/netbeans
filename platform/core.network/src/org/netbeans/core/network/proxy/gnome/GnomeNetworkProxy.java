@@ -33,7 +33,7 @@ import org.netbeans.core.network.proxy.NetworkProxySettings;
  */
 public class GnomeNetworkProxy implements NetworkProxyResolver{
     
-    private final static Logger LOGGER = Logger.getLogger(GnomeNetworkProxy.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(GnomeNetworkProxy.class.getName());
         
     @Override
     public NetworkProxySettings getNetworkProxySettings() {

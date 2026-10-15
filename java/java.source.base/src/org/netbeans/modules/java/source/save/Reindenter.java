@@ -35,11 +35,13 @@ import com.sun.source.tree.ModuleTree;
 import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TryTree;
+import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.SourcePositions;
@@ -47,7 +49,8 @@ import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.api.JavacTrees;
-import com.sun.tools.javac.main.JavaCompiler;
+import com.sun.tools.javac.code.Flags;
+import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 
 import java.util.Collections;
 import java.util.EnumSet;
@@ -65,26 +68,24 @@ import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
 
-import com.sun.tools.javac.parser.ParserFactory;
-import com.sun.tools.javac.util.Log;
-import java.util.ArrayList;
 import java.util.Arrays;
+import javax.lang.model.element.Modifier;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.lib.nbjavac.services.NBParserFactory;
+import org.netbeans.lib.nbjavac.services.NBTreeMaker;
 import org.netbeans.modules.editor.indent.api.IndentUtils;
 import org.netbeans.modules.editor.indent.spi.Context;
 import org.netbeans.modules.editor.indent.spi.Context.Region;
 import org.netbeans.modules.editor.indent.spi.ExtraLock;
 import org.netbeans.modules.editor.indent.spi.IndentTask;
 import org.netbeans.modules.java.source.NoJavacHelper;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.TreeUtilitiesAccessor;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.java.source.parsing.ParsingUtils;
-import org.netbeans.modules.java.source.parsing.PrefetchableJavaFileObject;
 import org.netbeans.modules.parsing.impl.Utilities;
 import org.openide.filesystems.FileObject;
 
@@ -253,13 +254,14 @@ public class Reindenter implements IndentTask {
             ClassLoader origCL = Thread.currentThread().getContextClassLoader();
             try {
                 Thread.currentThread().setContextClassLoader(Reindenter.class.getClassLoader());
+                com.sun.tools.javac.util.Context ctx = new com.sun.tools.javac.util.Context();
+                NBParserFactory.preRegister(ctx);
+                NBTreeMaker.preRegister(ctx);
                 JavacTaskImpl javacTask = (JavacTaskImpl)JavacTool.create().getTask(null, null, new DiagnosticListener<JavaFileObject>() {
                     @Override
                     public void report(Diagnostic<? extends JavaFileObject> diagnostic) {
                     }
-                }, Collections.singletonList("-proc:none"), null, Collections.<JavaFileObject>emptySet()); //NOI18N
-                com.sun.tools.javac.util.Context ctx = javacTask.getContext();
-                JavaCompiler.instance(ctx).genEndPos = true;
+                }, Collections.singletonList("-proc:none"), null, Collections.<JavaFileObject>emptySet(), ctx); //NOI18N
                 text = context.document().getText(currentEmbeddingStartOffset, currentEmbeddingLength);
                 if (JavacParser.MIME_TYPE.equals(context.mimePath())) {
                     FileObject fo = Utilities.getFileObject(context.document());
@@ -272,13 +274,12 @@ public class Reindenter implements IndentTask {
                     parsedTree = TreeUtilitiesAccessor.getInstance().parseStatement(javacTask, "{" + text + "}", psp);
                     sp = new SourcePositions() {
                         @Override
-                        public long getStartPosition(CompilationUnitTree file, Tree tree) {
-                            return currentEmbeddingStartOffset + psp[0].getStartPosition(file, tree) - 1;
+                        public long getStartPosition(Tree tree) {
+                            return currentEmbeddingStartOffset + psp[0].getStartPosition(tree) - 1;
                         }
-
                         @Override
-                        public long getEndPosition(CompilationUnitTree file, Tree tree) {
-                            return currentEmbeddingStartOffset + psp[0].getEndPosition(file, tree) - 1;
+                        public long getEndPosition(Tree tree) {
+                            return currentEmbeddingStartOffset + psp[0].getEndPosition(tree) - 1;
                         }
                     };
                 }
@@ -331,7 +332,7 @@ public class Reindenter implements IndentTask {
                 } else {
                     Tree t = null;
                     for (Tree member : ((ModuleTree)last).getDirectives()) {
-                        if (sp.getEndPosition(cut, member) > startOffset) {
+                        if (getEndPosition(member) > startOffset) {
                             break;
                         }
                         t = member;
@@ -690,7 +691,7 @@ public class Reindenter implements IndentTask {
                 if (statements != null) {
                     tokenId = JavaTokenId.COLON;
                 } else {
-                    Tree caseBody = TreeShims.getBody((CaseTree) last);
+                    Tree caseBody = ((CaseTree) last).getBody();
                     if (caseBody instanceof StatementTree) {
                         statements = Collections.singletonList((StatementTree) caseBody);
                         tokenId = JavaTokenId.ARROW;
@@ -707,9 +708,9 @@ public class Reindenter implements IndentTask {
                 }
                     if (t != null) {
                         int i = getCurrentIndent(t, path);
-                        currentIndent = i < 0 ? getStmtIndent(startOffset, endOffset, EnumSet.of(tokenId), getEndPosition(((CaseTree) last).getExpression()), currentIndent) : i;
+                        currentIndent = i < 0 ? getStmtIndent(startOffset, endOffset, EnumSet.of(tokenId), getEndPosition(((CaseTree) last).getExpression()), currentIndent) : i; // TODO
                     } else {
-                        currentIndent = getStmtIndent(startOffset, endOffset, EnumSet.of(tokenId), getEndPosition(((CaseTree) last).getExpression()), currentIndent);
+                        currentIndent = getStmtIndent(startOffset, endOffset, EnumSet.of(tokenId), getEndPosition(((CaseTree) last).getExpression()), currentIndent); // TODO
                     }
 
                 break;
@@ -811,11 +812,14 @@ public class Reindenter implements IndentTask {
                     currentIndent += cs.getLabelIndent();
                 }
                 break;
+            case SWITCH_EXPRESSION:
+                currentIndent = getSwitchIndent(startOffset, endOffset,nextTokenId,lastPos,currentIndent) ;
+                break;
+            case RECORD:
+                currentIndent = getRecordIndent(startOffset, endOffset, nextTokenId, lastPos, currentIndent);
+                break;
             default:
-                if (last.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) {
-                   currentIndent = getSwitchIndent(startOffset, endOffset,nextTokenId,lastPos,currentIndent) ;
-                }
-                else currentIndent = getContinuationIndent(path, currentIndent);
+                currentIndent = getContinuationIndent(path, currentIndent);
                 break;
         }
         return currentIndent;
@@ -840,7 +844,13 @@ public class Reindenter implements IndentTask {
             }
         } else {
             Tree t = null;
-            for (CaseTree ct : TreeShims.getCases(last)) {
+            List<? extends CaseTree> cases;
+            if (last.getKind() == Tree.Kind.SWITCH) {
+                cases = ((SwitchTree) last).getCases();
+            } else {
+                cases = ((SwitchExpressionTree) last).getCases();
+            }
+            for (CaseTree ct : cases) {
                 if (getEndPosition(ct) > startOffset) {
                     break;
                 }
@@ -853,7 +863,7 @@ public class Reindenter implements IndentTask {
                     List<? extends StatementTree> statements = ct.getStatements();
                     if(statements == null)
                     {
-                        Tree caseBody = TreeShims.getBody(ct);
+                        Tree caseBody = ct.getBody();
                         if (caseBody instanceof StatementTree) {
                             statements = Collections.singletonList((StatementTree) caseBody);
                         }
@@ -870,10 +880,10 @@ public class Reindenter implements IndentTask {
                     }
                     if (t != null) {
                         int i = getCurrentIndent(t, path);
-                        currentIndent = i < 0 ? getStmtIndent(startOffset, endOffset, EnumSet.of(JavaTokenId.COLON), getEndPosition(ct.getExpression()), currentIndent) : i;
+                        currentIndent = i < 0 ? getStmtIndent(startOffset, endOffset, EnumSet.of(JavaTokenId.COLON), getEndPosition(ct.getExpression()), currentIndent) : i; // TODO
                     } else {
                         int i = getCurrentIndent(ct, path);
-                        currentIndent = i < 0 ? getStmtIndent(startOffset, endOffset, EnumSet.of(JavaTokenId.COLON), getEndPosition(ct.getExpression()), currentIndent) : i;
+                        currentIndent = i < 0 ? getStmtIndent(startOffset, endOffset, EnumSet.of(JavaTokenId.COLON), getEndPosition(ct.getExpression()), currentIndent) : i; // TODO
                         currentIndent += cs.getIndentSize();
                     }
                 } else {
@@ -888,7 +898,7 @@ public class Reindenter implements IndentTask {
                     if (last.getKind() == Tree.Kind.SWITCH) {
                         currentIndent = getStmtIndent(startOffset, endOffset, EnumSet.of(JavaTokenId.RPAREN), getEndPosition(((SwitchTree) last).getExpression()) - 1, currentIndent);
                     } else {
-                        currentIndent = getStmtIndent(startOffset, endOffset, EnumSet.of(JavaTokenId.RPAREN), getEndPosition(TreeShims.getExpressions(last).get(0)) - 1, currentIndent);
+                        currentIndent = getStmtIndent(startOffset, endOffset, EnumSet.of(JavaTokenId.RPAREN), getEndPosition(((SwitchExpressionTree) last).getExpression()) - 1, currentIndent);
                     }
                 }
             }
@@ -896,12 +906,120 @@ public class Reindenter implements IndentTask {
         return currentIndent;
     }
 
+    private int getRecordIndent(int startOffset, int endOffset, JavaTokenId nextTokenId, int lastPos, int currentIndent) throws BadLocationException {
+        LinkedList<? extends Tree> path = getPath(startOffset);
+        Tree last = path.getFirst();
+        TokenSequence<JavaTokenId> token = findFirstNonWhitespaceToken(startOffset, endOffset);
+        nextTokenId = token != null ? token.token().id() : null;
+        if (nextTokenId != null && nextTokenId == JavaTokenId.RBRACE) {
+            if (isLeftBraceOnNewLine(lastPos, startOffset)) {
+                switch (cs.getClassDeclBracePlacement()) {
+                    case NEW_LINE_INDENTED:
+                        currentIndent += cs.getIndentSize();
+                        break;
+                    case NEW_LINE_HALF_INDENTED:
+                        currentIndent += (cs.getIndentSize() / 2);
+                        break;
+                }
+            }
+        } else {
+
+            token = findFirstNonWhitespaceToken(startOffset, lastPos);
+            JavaTokenId prevTokenId = token != null ? token.token().id() : null;
+            if (prevTokenId != null) {
+                switch (prevTokenId) {
+                    case LBRACE:
+                        if (path.size() > 1 && path.get(1).getKind() == Kind.NEW_CLASS && isLeftBraceOnNewLine(lastPos, startOffset)) {
+                            switch (cs.getClassDeclBracePlacement()) {
+                                case SAME_LINE:
+                                case NEW_LINE:
+                                    currentIndent += cs.getIndentSize();
+                                    break;
+                                case NEW_LINE_HALF_INDENTED:
+                                    currentIndent += (cs.getIndentSize() - cs.getIndentSize() / 2);
+                                    break;
+                            }
+                        } else {
+                            currentIndent += cs.indentTopLevelClassMembers() ? cs.getIndentSize() : 0;
+                        }
+                        break;
+                    case COMMA:
+                        List<? extends Tree> implClauses = ((ClassTree) last).getImplementsClause();
+                        if (!implClauses.isEmpty() && getStartPosition(implClauses.get(0)) < token.offset()) {
+                            currentIndent = getMultilineIndent(implClauses, path, token.offset(), currentIndent, cs.alignMultilineImplements(), true);
+                            break;
+                        }
+                        List<? extends Tree> members = ((ClassTree) last).getMembers();
+                        if (!members.isEmpty() && getStartPosition(members.get(0)) < token.offset()) {
+                            currentIndent = getMultilineIndent(members, path, token.offset(), currentIndent, cs.alignMultilineMethodParams(), true);
+                            break;
+                        }
+                        List<? extends TypeParameterTree> typeParams = ((ClassTree) last).getTypeParameters();
+                        if (!typeParams.isEmpty() && getStartPosition(typeParams.get(0)) < token.offset()) {
+                            currentIndent = getMultilineIndent(typeParams, path, token.offset(), currentIndent, cs.alignMultilineMethodParams(), true);
+                            break;
+                        }
+                        break;
+                    case IDENTIFIER:
+                    case GT:
+                    case GTGT:
+                    case GTGTGT:
+                    case RPAREN:
+                        if (nextTokenId != null && nextTokenId == JavaTokenId.LBRACE) {
+                            switch (cs.getClassDeclBracePlacement()) {
+                                case NEW_LINE_INDENTED:
+                                    currentIndent += cs.getIndentSize();
+                                    break;
+                                case NEW_LINE_HALF_INDENTED:
+                                    currentIndent += (cs.getIndentSize() / 2);
+                                    break;
+                            }
+                        } else {
+                            currentIndent += cs.getContinuationIndentSize();
+                        }
+                        break;
+
+                    default:
+                        Tree t = null;
+                        for (Tree member : ((ClassTree) last).getMembers()) {
+
+                            if (member.getKind() == Tree.Kind.VARIABLE && !((VariableTree) member).getModifiers().getFlags().contains(Modifier.STATIC)) {
+                                continue;
+                            }
+                            if (getEndPosition(member) > startOffset) {
+                                break;
+                            }
+                            t = member;
+                        }
+                        if (t != null) {
+                            int i = getCurrentIndent(t, path);
+                            currentIndent = i < 0 ? currentIndent + (cs.indentTopLevelClassMembers() ? cs.getIndentSize() : 0) : i;
+                            return currentIndent;
+                        }
+
+                        currentIndent += cs.getContinuationIndentSize();
+                }
+            }
+        }
+        return currentIndent;
+    }
+
     private int getStartPosition(Tree last) {
-        return (int) sp.getStartPosition(cut, last);
+        return (int) sp.getStartPosition(last);
     }
 
     private int getEndPosition(Tree last) {
-        return (int) sp.getEndPosition(cut, last);
+        int result = (int) sp.getEndPosition(last);
+
+        if (result == -1) {
+            //see JDK-8364015:
+            if (last instanceof JCClassDecl clazz &&
+                (clazz.mods.flags & Flags.IMPLICIT_CLASS) != 0) {
+                return getEndPosition(cut);
+            }
+        }
+
+        return result;
     }
 
     private LinkedList<? extends Tree> getPath(final int startOffset) {

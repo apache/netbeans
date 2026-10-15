@@ -90,12 +90,6 @@
                     </file>
                 </folder>
                 <folder name="Actions">
-                    <file name="org-netbeans-modules-db-explorer-action-ConnectAction.instance">
-                        <attr name="position" intvalue="100"/>
-                    </file>
-                    <file name="org-netbeans-modules-db-explorer-action-DisconnectAction.instance">
-                        <attr name="position" intvalue="150"/>
-                    </file>
                     <file name="Separator1.instance">
                         <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                         <attr name="position" intvalue="200"/>
@@ -103,9 +97,6 @@
                     <file name="Separator2.instance">
                         <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                         <attr name="position" intvalue="300"/>
-                    </file>
-                    <file name="org-netbeans-modules-db-explorer-action-RefreshAction.instance">
-                        <attr name="position" intvalue="350"/>
                     </file>
                     <file name="Separator3.instance">
                         <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
@@ -137,9 +128,6 @@
                     <file name="org-netbeans-modules-db-explorer-action-MakeDefaultCatalogAction.instance">
                         <attr name="position" intvalue="100"/>
                     </file>
-                    <file name="org-netbeans-modules-db-explorer-action-RefreshAction.instance">
-                        <attr name="position" intvalue="350"/>
-                    </file>
                     <file name="org-netbeans-modules-db-explorer-action-ToggleImportantAction.instance">
                         <attr name="position" intvalue="450"/>
                     </file>
@@ -166,9 +154,6 @@
                 <folder name="Actions">
                     <file name="org-netbeans-modules-db-explorer-action-MakeDefaultSchemaAction.instance">
                         <attr name="position" intvalue="100"/>
-                    </file>
-                    <file name="org-netbeans-modules-db-explorer-action-RefreshAction.instance">
-                        <attr name="position" intvalue="350"/>
                     </file>
                     <file name="org-netbeans-modules-db-explorer-action-ToggleImportantAction.instance">
                         <attr name="position" intvalue="450"/>
@@ -198,9 +183,6 @@
                         <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                         <attr name="position" intvalue="300"/>
                     </file>
-                    <file name="org-netbeans-modules-db-explorer-action-RefreshAction.instance">
-                        <attr name="position" intvalue="350"/>
-                    </file>
                 </folder>
             </folder>
             <folder name="SystemTableList">
@@ -215,9 +197,6 @@
                     <file name="Separator2.instance">
                         <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                         <attr name="position" intvalue="300"/>
-                    </file>
-                    <file name="org-netbeans-modules-db-explorer-action-RefreshAction.instance">
-                        <attr name="position" intvalue="350"/>
                     </file>
                 </folder>
             </folder>
@@ -249,9 +228,6 @@
                     </file>
                     <file name="org-netbeans-modules-db-explorer-action-AddColumnAction.instance">
                         <attr name="position" intvalue="200"/>
-                    </file>
-                    <file name="org-netbeans-modules-db-explorer-action-RefreshAction.instance">
-                        <attr name="position" intvalue="250"/>
                     </file>
                     <file name="Separator2.instance">
                         <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
@@ -297,9 +273,6 @@
                         <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                         <attr name="position" intvalue="300"/>
                     </file>
-                    <file name="org-netbeans-modules-db-explorer-action-RefreshAction.instance">
-                        <attr name="position" intvalue="350"/>
-                    </file>
                 </folder>
             </folder>
             <folder name="View">
@@ -340,9 +313,6 @@
                     <file name="Separator2.instance">
                         <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                         <attr name="position" intvalue="300"/>
-                    </file>
-                    <file name="org-netbeans-modules-db-explorer-action-RefreshAction.instance">
-                        <attr name="position" intvalue="350"/>
                     </file>
                 </folder>
             </folder>
@@ -424,9 +394,6 @@
                         <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                         <attr name="position" intvalue="300"/>
                     </file>
-                    <file name="org-netbeans-modules-db-explorer-action-RefreshAction.instance">
-                        <attr name="position" intvalue="350"/>
-                    </file>
                     <file name="Separator3.instance">
                         <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                         <attr name="position" intvalue="400"/>
@@ -449,11 +416,6 @@
                         <attr name="position" intvalue="200"/>
                     </file>
                 </folder>
-                <folder name="Actions">
-                    <file name="org-netbeans-modules-db-explorer-action-RefreshAction.instance">
-                        <attr name="position" intvalue="300"/>
-                    </file>
-                </folder>
             </folder>
             <folder name="ForeignKey">
                 <folder name="NodeProviders">
@@ -467,9 +429,6 @@
                     <file name="Separator1.instance">
                         <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                         <attr name="position" intvalue="200"/>
-                    </file>
-                    <file name="org-netbeans-modules-db-explorer-action-RefreshAction.instance">
-                        <attr name="position" intvalue="300"/>
                     </file>
                 </folder>
             </folder>

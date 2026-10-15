@@ -141,7 +141,7 @@ public final class ReflectionTextComponentUpdater extends TextComponentUpdater {
     }
     
     
-    public static abstract class Operation implements ModelOperation<POMModel> {
+    public abstract static class Operation implements ModelOperation<POMModel> {
 
         boolean isValueSet = false; 
         private String newValue;

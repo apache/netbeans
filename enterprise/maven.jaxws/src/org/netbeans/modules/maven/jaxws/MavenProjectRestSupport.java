@@ -26,7 +26,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -36,9 +36,6 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
-import org.netbeans.modules.j2ee.dd.api.web.ServletMapping;
-import org.netbeans.modules.j2ee.dd.api.web.ServletMapping25;
-import org.netbeans.modules.j2ee.dd.api.web.WebApp;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.api.execute.RunConfig;
 import org.netbeans.modules.maven.api.execute.RunUtils;
@@ -51,7 +48,6 @@ import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -208,11 +204,9 @@ public class MavenProjectRestSupport extends RestSupport {
         try {
             lock = fo.lock();
             OutputStream os = fo.getOutputStream(lock);
-            writer = new BufferedWriter(new OutputStreamWriter(os, 
-                    Charset.forName("UTF-8")));         // NOI18N
+            writer = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
             InputStream is = RestSupport.class.getResourceAsStream("resources/"+name);
-            reader = new BufferedReader(new InputStreamReader(is, 
-                    Charset.forName("UTF-8")));         // NOI18N
+            reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
             String line;
             String lineSep = "\n";//Unix
             if(File.separatorChar == '\\')//Windows

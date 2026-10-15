@@ -1,0 +1,4 @@
+Code completion result for source line:
+$country = User::create("test")?->getAddress()?->|country;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   Country country                 [PUBLIC]   Address

@@ -50,7 +50,7 @@ import javax.swing.text.AttributeSet;
  *
  * <p>Instances of this class should be retrieved from <code>MimeLookup</code>.
  * 
- * <p><font color="red">This class must NOT be extended by any API clients.</font>
+ * <p><span style="color:red">This class must NOT be extended by any API clients.</span>
  *
  * @author Martin Roskanin
  */
@@ -59,6 +59,7 @@ public abstract class FontColorSettings {
     /**
      * @deprecated This should have never been made public. Nobody can listen on this property.
      */
+    @Deprecated
     public static final String PROP_FONT_COLORS = "fontColors"; //NOI18N
     
     /**

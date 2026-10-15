@@ -25,6 +25,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,14 +34,13 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-import org.jdom.DefaultJDOMFactory;
-import org.jdom.Document;
-import org.jdom.JDOMException;
-import org.jdom.JDOMFactory;
-import org.jdom.input.SAXBuilder;
-import org.jdom.output.Format;
+import org.jdom2.DefaultJDOMFactory;
+import org.jdom2.Document;
+import org.jdom2.JDOMException;
+import org.jdom2.JDOMFactory;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.Format;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.ui.ProjectProblems;
@@ -75,6 +76,7 @@ import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 import static org.netbeans.modules.maven.customizer.Bundle.*;
+import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ui.CustomizerProvider2;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle.Messages;
@@ -223,6 +225,21 @@ public class CustomizerProviderImpl implements CustomizerProvider2 {
                 active = c;
             }
         }
+
+        for (M2Configuration config : provider.getProvidedConfigurations()) {
+            mapps.put(config.getId(), reader.read(new StringReader(config.getRawMappingsAsString())));
+            c = ModelHandle.createDefaultConfiguration();
+            CustomizerProviderImpl.ACCESSOR.setConfigurationId(c, config.getId());
+            String dn = config.getDisplayName();
+            if (!config.getId().equals(dn)) {
+                c.setDisplayName(dn);
+            }
+            configs.add(c);
+            if (act.equals(config)) {
+                active = c;
+            }
+        }
+
         for (M2Configuration config : provider.getProfileConfigurations()) {
             mapps.put(config.getId(), reader.read(new StringReader(config.getRawMappingsAsString())));
             c = ModelHandle.createProfileConfiguration(config.getId());
@@ -231,15 +248,20 @@ public class CustomizerProviderImpl implements CustomizerProvider2 {
                 active = c;
             }
         }
+
         if (active == null) { //#152706
             active = configs.get(0); //default if current not found..
         }
+        
+        ActionProvider ap = project.getLookup().lookup(ActionProvider.class);
+        List<String> actionNames = ap == null ? Collections.emptyList() : Arrays.asList(ap.getSupportedActions());
 
         handle = ACCESSOR.createHandle(model,
                 project.getLookup().lookup(NbMavenProject.class).getMavenProject(), mapps, configs, active,
                 project.getLookup().lookup(MavenProjectPropsImpl.class));
         handle2 = ACCESSOR2.createHandle(model,
-                project.getLookup().lookup(NbMavenProject.class).getMavenProject(), mapps, new ArrayList<ModelHandle2.Configuration>(configs), active, 
+                project.getLookup().lookup(NbMavenProject.class).getMavenProject(), mapps, new ArrayList<ModelHandle2.Configuration>(configs), active,
+                actionNames,
                 project.getLookup().lookup(MavenProjectPropsImpl.class));
         return model;
     }
@@ -265,23 +287,26 @@ public class CustomizerProviderImpl implements CustomizerProvider2 {
     }    
     
     
-    public static abstract class ModelAccessor {
+    public abstract static class ModelAccessor {
+        public abstract void setConfigurationId(ModelHandle.Configuration cfg, String id);
         
         public abstract ModelHandle createHandle(POMModel model, MavenProject proj, Map<String, ActionToGoalMapping> mapp,
                 List<ModelHandle.Configuration> configs, ModelHandle.Configuration active, MavenProjectPropsImpl auxProps);
         
     }
         
-    public static abstract class ModelAccessor2 {
+    public abstract static class ModelAccessor2 {
         
         public abstract ModelHandle2 createHandle(POMModel model, MavenProject proj, Map<String, ActionToGoalMapping> mapp,
-                List<ModelHandle2.Configuration> configs, ModelHandle2.Configuration active, MavenProjectPropsImpl auxProps);
+                List<ModelHandle2.Configuration> configs, ModelHandle2.Configuration active, List<String> allActions, MavenProjectPropsImpl auxProps);
         
         public abstract TreeMap<String, String> getModifiedAuxProps(ModelHandle2 handle, boolean shared);
         
         public abstract boolean isConfigurationModified(ModelHandle2 handle);
         
         public abstract boolean isModified(ModelHandle2 handle, ActionToGoalMapping mapp);
+        
+        public abstract List<String> getAllActions(ModelHandle2 handle);
         
         }
         
@@ -389,10 +414,6 @@ public class CustomizerProviderImpl implements CustomizerProvider2 {
             @Override
             public void run() throws IOException {
                 JDOMFactory factory = new DefaultJDOMFactory();
-                
-                InputStream inStr = null;
-                FileLock lock = null;
-                OutputStreamWriter outStr = null;
                 try {
                     Document doc;
                     if (mapping.getActions().isEmpty()) { //#224450 don't write empty nbactions.xml files
@@ -408,19 +429,19 @@ public class CustomizerProviderImpl implements CustomizerProvider2 {
                         doc = factory.document(factory.element("actions")); //NOI18N
                     } else {
                         //TODO..
-                        inStr = fo.getInputStream();
-                        SAXBuilder builder = new SAXBuilder();
-                        doc = builder.build(inStr);
-                        inStr.close();
-                        inStr = null;
+                        try (InputStream inStr = fo.getInputStream()) {
+                            SAXBuilder builder = new SAXBuilder();
+                            doc = builder.build(inStr);
+                        }
                     }
-                    lock = fo.lock();
-                    NetbeansBuildActionJDOMWriter writer = new NetbeansBuildActionJDOMWriter();
                     String encoding = mapping.getModelEncoding() != null ? mapping.getModelEncoding() : "UTF-8"; //NOI18N
-                    outStr = new OutputStreamWriter(fo.getOutputStream(lock), encoding);
-                    Format form = Format.getRawFormat().setEncoding(encoding);
-                    form = form.setLineSeparator(System.getProperty("line.separator")); //NOI18N
-                    writer.write(mapping, doc, outStr, form);
+                    try (FileLock lock = fo.lock();
+                            OutputStreamWriter outStr = new OutputStreamWriter(fo.getOutputStream(lock), encoding);) {
+                        NetbeansBuildActionJDOMWriter writer = new NetbeansBuildActionJDOMWriter();
+                        Format form = Format.getRawFormat().setEncoding(encoding);
+                        form = form.setLineSeparator(System.getProperty("line.separator")); //NOI18N
+                        writer.write(mapping, doc, outStr, form);
+                    }
                 } catch (JDOMException exc){
                     //throw (IOException) new IOException("Cannot parse the nbactions.xml by JDOM.").initCause(exc); //NOI18N
                     //TODO this would need it's own problem provider, but how to access it in project lookup if all are merged into one?
@@ -435,13 +456,6 @@ public class CustomizerProviderImpl implements CustomizerProvider2 {
                         impl.addReport(rep);
                     }
                     Logger.getLogger(CustomizerProviderImpl.class.getName()).log(Level.INFO, exc.getMessage(), exc);
-                } finally {
-                    IOUtil.close(inStr);
-                    IOUtil.close(outStr);
-                    if (lock != null) {
-                        lock.releaseLock();
-                    }
-                    
                 }
             }
         });

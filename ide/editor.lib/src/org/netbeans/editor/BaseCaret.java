@@ -54,11 +54,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.function.IntUnaryOperator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
+
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JScrollBar;
@@ -80,6 +82,7 @@ import javax.swing.event.EventListenerList;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.Position;
 import javax.swing.text.StyleConstants;
+
 import org.netbeans.api.editor.fold.FoldHierarchyEvent;
 import org.netbeans.api.editor.fold.FoldHierarchyListener;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
@@ -401,9 +404,14 @@ AtomicLockListener, FoldHierarchyListener {
                                 c, offset, Position.Bias.Forward);
                         // [TODO] Temporary fix - impl should remember real bounds computed by paintCustomCaret()
                         if (newCaretBounds != null) {
-                            newCaretBounds.width = Math.max(newCaretBounds.width, 2);
+                            int minwidth = 2;
+                            // [NETBEANS-4940] Caret drawing problems over a TAB
+                            Object o = component.getClientProperty("CARET_MIN_WIDTH");
+                            if(o instanceof IntUnaryOperator) {
+                                minwidth = ((IntUnaryOperator)o).applyAsInt(offset);
+                            }
+                            newCaretBounds.width = Math.max(newCaretBounds.width, minwidth);
                         }
-
                     } catch (BadLocationException e) {
                         newCaretBounds = null;
                         Utilities.annotateLoggable(e);
@@ -700,7 +708,7 @@ AtomicLockListener, FoldHierarchyListener {
 
     /**
      * Update the caret's visual position.
-     * <br/>
+     * <br>
      * The document is read-locked while calling this method.
      *
      * @param scrollViewToCaret whether the view of the text component should be
@@ -1144,7 +1152,7 @@ AtomicLockListener, FoldHierarchyListener {
 
     /**
      * Assign the caret a new offset in the underlying document.
-     * <br/>
+     * <br>
      * This method implicitly sets the selection range to zero.
      */
     public @Override void setDot(int offset) {
@@ -1182,7 +1190,7 @@ AtomicLockListener, FoldHierarchyListener {
      *
      * @deprecated use #setDot(int, boolean) preceded by <code>JComponent.scrollRectToVisible()</code>.
      */
-    
+    @Deprecated
     public void setDot(int offset, Rectangle scrollRect, int scrollPolicy, boolean expandFold) {
         if (LOG_EDT.isLoggable(Level.FINE)) { // Only permit operations in EDT
             if (!SwingUtilities.isEventDispatchThread()) {
@@ -1253,6 +1261,7 @@ AtomicLockListener, FoldHierarchyListener {
      *
      * @deprecated use #setDot(int) preceded by <code>JComponent.scrollRectToVisible()</code>.
      */
+    @Deprecated
     public void setDot(int offset, Rectangle scrollRect, int scrollPolicy) {
         setDot(offset, scrollRect, scrollPolicy, true);
     }
@@ -1274,6 +1283,7 @@ AtomicLockListener, FoldHierarchyListener {
      *
      * @deprecated use #setDot(int) preceded by <code>JComponent.scrollRectToVisible()</code>.
      */
+    @Deprecated
     public void moveDot(int offset, Rectangle scrollRect, int scrollPolicy) {
         if (LOG_EDT.isLoggable(Level.FINE)) { // Only permit operations in EDT
             if (!SwingUtilities.isEventDispatchThread()) {
@@ -1733,7 +1743,7 @@ AtomicLockListener, FoldHierarchyListener {
         }
         JTextComponent c = component;
         int offset = c.viewToModel(new Point(x, y));
-        Rectangle r = null;;
+        Rectangle r = null;
         if (offset >= 0) {
             try {
                 r = c.modelToView(offset);
@@ -2231,7 +2241,7 @@ AtomicLockListener, FoldHierarchyListener {
      * Some height or view changes may result in the caret going off the screen. In some cases, this is not desirable,
      * as the user's work may be interrupted by e.g. an automatic refresh. This method repositions the view so the
      * caret remains visible.
-     * <p/>
+     * <p>
      * The method has two modes: it can reposition the view just if it originally displayed the caret and the caret became
      * invisible, and it can scroll the caret into view unconditionally.
      * @param retainInView true to scroll only if the caret was visible. False to refresh regardless of visibility.

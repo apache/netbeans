@@ -23,7 +23,6 @@ import java.awt.Image;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
@@ -121,7 +120,7 @@ public class RemoteFilesNode extends AbstractNode {
             for (URL u : remoteFiles.getRemoteFiles()) {
                 keys.add(new RemoteFile(u));
             }
-            Collections.sort(keys, new Comparator<RemoteFile>() {
+            keys.sort(new Comparator<RemoteFile>() {
                     @Override
                     public int compare(RemoteFile o1, RemoteFile o2) {
                         // #232116

@@ -21,7 +21,7 @@ package org.netbeans.editor;
 
 /**
 * Token-id with the fixed token image. The image text is provided
-* in constructor and can be retrieved by <tt>getImage()</tt>.
+* in constructor and can be retrieved by <code>getImage()</code>.
 *
 * @author Miloslav Metelka
 * @version 1.00

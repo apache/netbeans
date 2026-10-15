@@ -82,7 +82,7 @@ public class LogicalHandlerWizard implements WizardDescriptor.InstantiatingItera
         c.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, //NOI18N
                 HANDLER_STEPS);
         c.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, //NOI18N
-                Integer.valueOf(0));
+        0);
         c.getAccessibleContext().setAccessibleDescription
                 (HANDLER_STEPS[0]);
         wizardPanels = new WizardDescriptor.Panel[] {firstPanel};

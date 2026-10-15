@@ -62,39 +62,41 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
   
     public SchemaElementImpl(ConnectionProvider cp) {
         tables = new DBElementsCollection(this, new TableElement[0]);
-        
-        //workaround for bug #4396371
-        //http://andorra.eng:8080/cgi-bin/ws.exe/bugtraq/bug.hts?where=bugid_value%3D4396371
-        Object hc = String.valueOf(tables.hashCode());
+
+        // NOTE - After doing research, not sure this comment still applys? Remove it?
+        // workaround for bug #4396371
+        // http://andorra.eng:8080/cgi-bin/ws.exe/bugtraq/bug.hts?where=bugid_value%3D4396371
+        String hc = String.valueOf(tables.hashCode());
+
         while (DBElementsCollection.instances.contains(hc)) {
             tables = new DBElementsCollection(this, new TableElement[0]);
             hc = String.valueOf(tables.hashCode());
         }
         DBElementsCollection.instances.add(hc);
-        
-		if (cp != null) {
-			try {
-				String schema;
 
-				dmd = cp.getDatabaseMetaData();
+        if (cp != null) {
+            try {
+                String schema;
 
-				_url = dmd.getURL();
-				_username = dmd.getUserName();
-//				schema = dmd.getUserName();
-				schema = cp.getSchema();
-				_schema = schema == null ? DBIdentifier.create("") : DBIdentifier.create(schema); //NOI18N
-				catalog = cp.getConnection().getCatalog();
-				_catalog = catalog == null ? DBIdentifier.create("") : DBIdentifier.create(catalog); //NOI18N
-				_driver = cp.getDriver();
-				_databaseProductName = dmd.getDatabaseProductName().trim();
-				_databaseProductVersion = dmd.getDatabaseProductVersion();
-				_driverName = dmd.getDriverName();
-				_driverVersion = dmd.getDriverVersion();
-			} catch (Exception exc) {
-				exc.printStackTrace();
-			}
-		}
-        
+                dmd = cp.getDatabaseMetaData();
+
+                _url = dmd.getURL();
+                _username = dmd.getUserName();
+//		schema = dmd.getUserName();
+                schema = cp.getSchema();
+                _schema = schema == null ? DBIdentifier.create("") : DBIdentifier.create(schema); //NOI18N
+                catalog = cp.getConnection().getCatalog();
+                _catalog = catalog == null ? DBIdentifier.create("") : DBIdentifier.create(catalog); //NOI18N
+                _driver = cp.getDriver();
+                _databaseProductName = dmd.getDatabaseProductName().trim();
+                _databaseProductVersion = dmd.getDatabaseProductVersion();
+                _driverName = dmd.getDriverName();
+                _driverVersion = dmd.getDriverVersion();
+            } catch (Exception exc) {
+                exc.printStackTrace();
+            }
+        }
+
         stop = false;
     }
   
@@ -176,7 +178,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
      */
     public TableElement[] getTables() {
         DBElement[] dbe = tables.getElements();
-        return (TableElement[]) Arrays.asList(dbe).toArray(new TableElement[dbe.length]);
+        return Arrays.asList(dbe).toArray(new TableElement[dbe.length]);
     }
 
     /** Find a table by name.
@@ -211,13 +213,12 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
         if (cp !=null)
             try {
                 progress = 0;
-                LinkedList tables = new LinkedList();
-                LinkedList views = new LinkedList();
-                LinkedList tablesTmp = new LinkedList();
-                LinkedList viewsTmp = new LinkedList();
-//                String user = dmd.getUserName().trim();
+                List<String> tables = new LinkedList<>();
+                List<String> views = new LinkedList<>();
+                List<String> tablesTmp = new LinkedList<>();
+                List<String> viewsTmp = new LinkedList<>();
                 String user = cp.getSchema();
-                List recycleBinTables;
+                List<String> recycleBinTables;
                 ResultSet rs;
                 
                 DDLBridge bridge = null;
@@ -247,7 +248,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
 
                         String tableTmp;
                         if (bridge != null)
-                            tableTmp = bridge.getDriverSpecification().getRow().get(new Integer(3));
+                            tableTmp = bridge.getDriverSpecification().getRow().get(3);
                         else
                             tableTmp = rs.getString("TABLE_NAME").trim(); //NOI18N
                         
@@ -276,7 +277,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                         }
 
                         if (bridge != null)
-                            viewsTmp.add(bridge.getDriverSpecification().getRow().get(new Integer(3)));
+                            viewsTmp.add(bridge.getDriverSpecification().getRow().get(3));
                         else
                             viewsTmp.add(rs.getString("TABLE_NAME").trim()); //NOI18N
                     }
@@ -301,7 +302,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                 
                 // the tables are included twice because for each table
                 // the progress is incremented twice (once for the table itself and once for the keys)
-                propertySupport.firePropertyChange("totalCount", null, new Integer(2 * tables.size() + views.size())); //NOI18N
+                propertySupport.firePropertyChange("totalCount", null, 2 * tables.size() + views.size()); //NOI18N
                 
                 initTables(cp, tables, allTables);
                 initViews(cp, views, bridge);
@@ -311,8 +312,8 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
             }
     }
     
-    private LinkedList checkNames(LinkedList toCheck, LinkedList names) {
-        LinkedList result = new LinkedList();
+    private LinkedList checkNames(List toCheck, List names) {
+        LinkedList result = new LinkedList<>();
         
         for (int i = 0; i < toCheck.size(); i++) {
             Object table = toCheck.get(i);
@@ -327,7 +328,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
         return result;
     }
     
-    private LinkedList checkReferences(LinkedList tables, DDLBridge bridge, String schema) throws SQLException {
+    private List checkReferences(List<String> tables, DDLBridge bridge, String schema) throws SQLException {
         ResultSet rs;
         String pkSchema;
         String fkSchema;
@@ -341,17 +342,17 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                 rs = dmd.getImportedKeys(catalog, schema, tables.get(i).toString());
 
             if (rs != null) {
-                Map rset = new HashMap();
+                Map<Integer, String> rset = new HashMap<>();
                 String c1, c2, s1, s2;
                 while (rs.next()) {
                     if (bridge != null) {
                         rset = bridge.getDriverSpecification().getRow();
                         
                         //test references between two schemas
-                        c1 = (String) rset.get(new Integer(1));
-                        s1 = (String) rset.get(new Integer(2));
-                        c2 = (String) rset.get(new Integer(5));
-                        s2 = (String) rset.get(new Integer(6));
+                        c1 = rset.get(1);
+                        s1 = rset.get(2);
+                        c2 = rset.get(5);
+                        s2 = rset.get(6);
                         
                         if (comp(c1, c2)) {
                             if (! comp(s1, s2))
@@ -359,10 +360,10 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                         } else
                             continue;                            
                         
-                        pkSchema = (String) rset.get(new Integer(2));
-                        fkSchema = (String) rset.get(new Integer(6));
-                        if ((pkSchema == fkSchema) || (pkSchema.equals(fkSchema))) {
-                            refTable = (String) rset.get(new Integer(3));
+                        pkSchema = rset.get(2);
+                        fkSchema = rset.get(6);
+                        if (Objects.equals(pkSchema, fkSchema)) {
+                            refTable = rset.get(3);
                             if (! tables.contains(refTable))
                                 tables.add(refTable);
                         }
@@ -388,7 +389,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                         if (fkSchema != null) {
                             fkSchema = fkSchema.trim();
                         }
-                        if ((pkSchema == fkSchema) || (pkSchema.equals(fkSchema))) {
+                        if (Objects.equals(pkSchema, fkSchema)) {
                             refTable = rs.getString("PKTABLE_NAME").trim(); //NOI18N
                             if (! tables.contains(refTable))
                                 tables.add(refTable);
@@ -402,7 +403,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
         return tables;
     }
     
-    private void initTables(ConnectionProvider cp, LinkedList tables, boolean allTables) throws DBException {
+    private void initTables(ConnectionProvider cp, List tables, boolean allTables) throws DBException {
         String name;
         
         for (int i = 0; i < tables.size(); i++) {
@@ -420,7 +421,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
             changeTables(te, DBElement.Impl.ADD);
 
             progress++;
-            propertySupport.firePropertyChange("progress", null, new Integer(progress)); //NOI18N
+            propertySupport.firePropertyChange("progress", null, progress); //NOI18N
         }
 
         TableElement te;
@@ -438,11 +439,11 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
             }
 
             progress++;
-            propertySupport.firePropertyChange("progress", null, new Integer(progress)); //NOI18N
+            propertySupport.firePropertyChange("progress", null, progress); //NOI18N
         }
     }
     
-    private void initViews(ConnectionProvider cp, LinkedList views, DDLBridge bridge) throws DBException, SQLException {
+    private void initViews(ConnectionProvider cp, List views, DDLBridge bridge) throws DBException, SQLException {
         String name;
         ResultSet rs;
         
@@ -468,8 +469,8 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                 propertySupport.firePropertyChange("FKv", null, name); //NOI18N
                 
                 ViewDependency vd = new ViewDependency(cp, cp.getSchema(), name);
-                LinkedList tables = new LinkedList();
-                LinkedList columns = new LinkedList();
+                List<String> tables = new LinkedList<>();
+                List<String> columns = new LinkedList<>();
 
                 tables.clear();
                 columns.clear();
@@ -480,13 +481,13 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                     boolean all = false;
                     for (int k = 0; k < columns.size(); k++)
                         //test if the view is created over all columns and try to eliminate agregation functions
-                        if (((String) columns.get(k)).trim().endsWith("*")) {
+                        if (columns.get(k).trim().endsWith("*")) {
                             all = true;
                             break;
                         }
                             
                     boolean capture = true;
-                    LinkedList pkTables = new LinkedList();
+                    List<String> pkTables = new LinkedList<>();
                     for (int j = 0; j < tables.size(); j++) {
                         if (isStop())
                             return;
@@ -501,11 +502,11 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                         if (rs != null) {
                             if (! all) {
                                 String colName;
-                                Map rset = new HashMap();
+                                Map<Integer, String> rset = new HashMap<>();
                                 while (rs.next()) {
                                     if (bridge != null) {
                                         rset = bridge.getDriverSpecification().getRow();
-                                        colName = (String) rset.get(new Integer(4));
+                                        colName = rset.get(4);
                                         rset.clear();
                                     } else
                                         colName = rs.getString("COLUMN_NAME").trim(); //NOI18N                                    
@@ -532,7 +533,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                             tei.initIndexes(cp, pkTables.get(j).toString());
                             tei.initKeys(cp, 1, pkTables.get(j).toString());
 
-                            LinkedList tempList = new LinkedList();
+                            List<UniqueKeyElement> tempList = new LinkedList<>();
                             UniqueKeyElement[] keys = te.getUniqueKeys();
                             for (int k = 0; k < keys.length; k++)
                                 if (keys[k].isPrimaryKey())
@@ -540,7 +541,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
 
                             keys = new UniqueKeyElement[tempList.size()];
                             for (int k = 0; k < tempList.size(); k++)
-                                keys[k] = (UniqueKeyElement) tempList.get(k);
+                                keys[k] = tempList.get(k);
                             te.setKeys(keys);
 
                             IndexElement[] indexes = new IndexElement[keys.length];
@@ -566,9 +567,9 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                     }
                     
                     //compute FKs
-                    LinkedList toCapture = new LinkedList();
-                    LinkedList validFKs = new LinkedList();
-                    LinkedList fkTables = new LinkedList();
+                    List<String> toCapture = new LinkedList<>();
+                    List<Object> validFKs       = new LinkedList<>();
+                    List<String> fkTables  = new LinkedList<>();
                     for (int j = 0; j < tables.size(); j++) {
                         if (isStop())
                             return;
@@ -580,20 +581,20 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                             rs = cp.getDatabaseMetaData().getImportedKeys(cp.getConnection().getCatalog(), cp.getSchema(), tables.get(j).toString());
                         
                         if (rs != null) {
-                            Map rset = new HashMap();
-                            LinkedList local = new LinkedList();
-                            LinkedList ref = new LinkedList();
-                            LinkedList fk = new LinkedList();
+                            Map<Integer, String> rset = new HashMap<>();
+                            List<String> local = new LinkedList<>();
+                            List<String> ref   = new LinkedList<>();
+                            List<String> fk    = new LinkedList<>();
                             String fkName, c1, c2, s1, s2;
                             while (rs.next()) {
                                 if (bridge != null) {
                                     rset = bridge.getDriverSpecification().getRow();
                                     
                                     //test references between two schemas
-                                    c1 = (String) rset.get(new Integer(1));
-                                    s1 = (String) rset.get(new Integer(2));
-                                    c2 = (String) rset.get(new Integer(5));
-                                    s2 = (String) rset.get(new Integer(6));
+                                    c1 = rset.get(1);
+                                    s1 = rset.get(2);
+                                    c2 = rset.get(5);
+                                    s2 = rset.get(6);
 
                                     if (comp(c1, c2)) {
                                         if (! comp(s1, s2))
@@ -601,14 +602,14 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                                     } else
                                         continue;                            
                                     
-                                    fkName = (String) rset.get(new Integer(12));
+                                    fkName = rset.get(12);
                                     if (fkName == null)
                                         continue;
                                     else
                                         fkName = fkName.trim();
 //                                    schemas = ((rset.get(new Integer(6)) == rset.get(new Integer(2))) || rset.get(new Integer(6)).equals(rset.get(new Integer(2)))) ? true : false;                                    
-                                    local.add(fkName + "." + ((String) rset.get(new Integer(7))) + "." + ((String) rset.get(new Integer(8)))); //NOI18N
-                                    ref.add(fkName + "." + ((String) rset.get(new Integer(3))) + "." + ((String) rset.get(new Integer(4)))); //NOI18N
+                                    local.add(fkName + "." + rset.get(7) + "." + rset.get(8)); //NOI18N
+                                    ref.add(fkName + "." + rset.get(3) + "." + rset.get(4)); //NOI18N
                                     if (! fk.contains(fkName))
                                         fk.add(fkName);
                                     rset.clear();
@@ -686,7 +687,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                     for (int j = 0; j < fkTables.size(); j++)
                         tei.initKeys(cp, 2, fkTables.get(j).toString());
                     
-                    LinkedList tempList = new LinkedList();
+                    List<ForeignKeyElement> tempList = new LinkedList<>();
                     ForeignKeyElement[] fke = te.getForeignKeys();
                     UniqueKeyElement[] uke = te.getUniqueKeys();
                     for (int j = 0; j < fke.length; j++)
@@ -697,7 +698,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                         ke[j] = uke[j];
                     int idx = uke.length;
                     for (int j = 0; j < tempList.size(); j++)
-                        ke[j + idx] = (ForeignKeyElement) tempList.get(j);
+                        ke[j + idx] = tempList.get(j);
                     
                     te.setKeys(ke);
 
@@ -707,12 +708,12 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
             changeTables(new TableElement[] {te}, DBElement.Impl.ADD);
 
             progress++;
-            propertySupport.firePropertyChange("progress", null, new Integer(progress)); //NOI18N
+            propertySupport.firePropertyChange("progress", null, progress); //NOI18N
         }
     }
     
     private List getOracleRecycleBinTables() {
-        List result = new ArrayList();
+        List<String> result = new ArrayList<>();
         try {
             if ( dmd.getDatabaseMajorVersion() < 10 ) {
                 return Collections.EMPTY_LIST;
@@ -739,13 +740,13 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                     " Setting recycle bin tables to an empty list.", 
                     exc); // NOI18N
 
-            result = Collections.EMPTY_LIST;
+            result = Collections.emptyList();
         } catch (AbstractMethodError ame) {
             LOGGER.log(Level.WARNING, "Some older versions of the Oracle " +
                     " driver do not support getDatabaseMajorVersion().  " +
                     " Setting recycle bin tables to an empty list.", 
                     ame); // NOI18N
-            result = Collections.EMPTY_LIST;
+            result = Collections.emptyList();
         }
         return result;
     }

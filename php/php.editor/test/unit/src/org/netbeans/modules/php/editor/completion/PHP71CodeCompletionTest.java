@@ -43,15 +43,6 @@ public class PHP71CodeCompletionTest extends PHPCodeCompletionTestBase {
         );
     }
 
-    private String getTestDirName() {
-        String name = getName();
-        int indexOf = name.indexOf("_");
-        if (indexOf != -1) {
-            name = name.substring(0, indexOf);
-        }
-        return name;
-    }
-
     private String getTestPath(String fileName) {
         return String.format("testfiles/completion/lib/php71/%s/%s.php", getTestDirName(), fileName);
     }

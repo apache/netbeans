@@ -45,10 +45,10 @@ public class JPDAEngineComponentsProvider implements EngineComponentsProvider {
     private static final String PROPERTY_BASE_NAME = "netbeans-JPDASession.EngineComponentsProvider"; // NOI18N
 
     private static final String[] DBG_COMPONENTS_OPENED = {
-        "localsView", "watchesView", "breakpointsView", "debuggingView"         // NOI18N
+        "localsView", "watchesView", "breakpointsView", "debuggingView", "evaluatorPane"         // NOI18N
     };
     private static final String[] DBG_COMPONENTS_CLOSED = {
-        "callstackView", "evaluatorPane", "resultsView", "sessionsView",        // NOI18N
+        "callstackView", "resultsView", "sessionsView",        // NOI18N
         "sources", "threadsView", "classes"                                     // NOI18N
     };
 

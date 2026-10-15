@@ -53,6 +53,27 @@ public class NavigatorDeprecatedTest extends PhpNavigatorTestBase {
         performTest("structure/deprecatedTypesForNullableTypes_02");
     }
 
+    public void testDeprecatedTypedFields() throws Exception {
+        // GH-6310
+        performTest("structure/deprecatedTypedFields");
+    }
+
+    public void testDeprecatedInheritedDeclarations() throws Exception {
+        performTest("structure/deprecatedInheritedDeclarations");
+    }
+
+    public void testDeprecatedTypesForDNFReturnTypes_01() throws Exception {
+        performTest("structure/php82/deprecatedDnfReturnTypes_01");
+    }
+
+    public void testDeprecatedTypesForDNFParameterTypes_01() throws Exception {
+        performTest("structure/php82/deprecatedDnfParameterTypes_01");
+    }
+
+    public void testDeprecatedTypesForDNFFieldTypes_01() throws Exception {
+        performTest("structure/php82/deprecatedDnfFieldTypes_01");
+    }
+
     @Override
     protected Map<String, ClassPath> createClassPathsForTest() {
         return Collections.singletonMap(

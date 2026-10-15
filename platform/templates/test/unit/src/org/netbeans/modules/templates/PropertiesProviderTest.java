@@ -20,18 +20,18 @@
 package org.netbeans.modules.templates;
 
 import java.awt.Dialog;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.api.templates.CreateDescriptor;
+import org.netbeans.api.templates.CreateFromTemplateHandler;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.spi.queries.FileEncodingQueryImplementation;
@@ -61,12 +61,17 @@ import org.openide.util.Lookup;
 public class PropertiesProviderTest extends NbTestCase {
     static {
         System.setProperty("netbeans.full.hack", "true");
+        // Ensure polyglot can be loaded cleanly and executed. Normally set by
+        // org.netbeans.libs.graalsdk.impl.Installer, when loaded as a netbeans
+        // module
+        System.setProperty("polyglot.engine.WarnInterpreterOnly", "false");
+        System.setProperty("truffle.UseFallbackRuntime", "true");
     }
-    
+
     public PropertiesProviderTest(String testName) {
         super(testName);
     }
-    
+
     @Override
     protected boolean runInEQ() {
         return true;
@@ -76,13 +81,13 @@ public class PropertiesProviderTest extends NbTestCase {
     protected Level logLevel() {
         return Level.FINE;
     }
-    
+
     @Override
     protected void setUp() throws Exception {
         clearWorkDir();
-        
+
         Lookup.getDefault().lookup(ModuleInfo.class);
-        
+
         MockServices.setServices(DD.class, Pool.class, FEQI.class);
     }
 
@@ -99,13 +104,13 @@ public class PropertiesProviderTest extends NbTestCase {
             fail("There should be some content: " + props.getSize());
         }
     }
-    
+
     public void testBasePropertiesAlwaysPresent() throws Exception {
         FileObject root = FileUtil.createMemoryFileSystem().getRoot();
         FileObject fo = FileUtil.createData(root, "simpleObject.txt");
         {
             OutputStream os = fo.getOutputStream();
-            String txt = 
+            String txt =
                 "print('<html><h1>');print(name);print('</h1>');" +
                 "print('<h2>');print(date);print('</h2>');" +
                 "print('<h3>');print(time);print('</h3>');" +
@@ -115,36 +120,36 @@ public class PropertiesProviderTest extends NbTestCase {
             os.close();
         }
         fo.setAttribute("javax.script.ScriptEngine", "js");
-        
-        
+
+
         FileObject props = FileUtil.createData(FileUtil.getConfigRoot(),
             "Templates/Properties/my.properties"
         );
-        
+
         {
             for (FileObject f : props.getChildren()) {
                 f.delete();
             }
-            
+
             OutputStream os = props.getOutputStream();
             String txt = "user=Yarda";
             os.write(txt.getBytes());
             os.close();
         }
-        
-        
+
+
         DataObject obj = DataObject.find(fo);
-        
+
         DataFolder folder = DataFolder.findFolder(FileUtil.createFolder(root, "target"));
-        
+
         Map<String,String> parameters = Collections.singletonMap("title", "Nazdar");
         DataObject n = obj.createFromTemplate(folder, "complex", parameters);
-        
+
         assertEquals("Created in right place", folder, n.getFolder());
         assertEquals("Created with right name", "complex.txt", n.getName());
-        
-        String res = readFile(n.getPrimaryFile());
-        
+
+        String res = n.getPrimaryFile().asText();
+
         if (res.indexOf("date") >= 0) {
             fail(res);
         }
@@ -157,29 +162,150 @@ public class PropertiesProviderTest extends NbTestCase {
         if (res.indexOf("name") >= 0) {
             fail(res);
         }
-        
+
         if (res.indexOf("Yarda") == -1) {
             fail("There should be Yarda:\n" + res);
         }
     }
-    
-    private static String readFile(FileObject fo) throws IOException {
-        byte[] arr = new byte[(int)fo.getSize()];
-        int len = fo.getInputStream().read(arr);
-        assertEquals("Fully read", arr.length, len);
-        return new String(arr);
+
+    public void testFolderTemplateWithProperties() throws Exception {
+        FileObject root = FileUtil.createMemoryFileSystem().getRoot();
+        FileObject tmplt = root.createFolder("tmplt");
+        FileObject fo = FileUtil.createData(tmplt, "simpleObject.txt");
+        {
+            OutputStream os = fo.getOutputStream();
+            String txt =
+                "print('<html><h1>');print(firstName);print('</h1>');" +
+                "print('<h2>');print(lastName);print('</h2>');" +
+                "print('<h3>');print(title);print('</h3>');" +
+                "print('</html>');";
+            os.write(txt.getBytes());
+            os.close();
+        }
+        fo.setAttribute("javax.script.ScriptEngine", "js");
+
+
+        FileObject props = FileUtil.createData(FileUtil.getConfigRoot(),
+            "Templates/Properties/my.properties"
+        );
+
+        {
+            for (FileObject f : props.getChildren()) {
+                f.delete();
+            }
+            props.delete();
+        }
+
+        DataObject obj = DataObject.find(tmplt);
+
+        DataFolder folder = DataFolder.findFolder(FileUtil.createFolder(root, "target"));
+
+        Map<String,String> parameters = new HashMap<>();
+        parameters.put("firstName", "Yarda");
+        parameters.put("lastName", "Tulach");
+        parameters.put("title", "Anarchitect");
+        DataObject n = obj.createFromTemplate(folder, "complex", parameters);
+
+        assertEquals("Created in right place", folder, n.getFolder());
+        assertTrue("Folder created", n instanceof DataFolder);
+        assertEquals("Created with right name", "complex", n.getName());
+
+        DataFolder nf = (DataFolder) n;
+        DataObject[] arr = nf.getChildren();
+        assertEquals("One object created", 1, arr.length);
+        assertEquals("simpleObject.txt", arr[0].getName());
+
+        String res = arr[0].getPrimaryFile().asText();
+
+        if (res.indexOf("firstName") >= 0) {
+            fail(res);
+        }
+        if (res.indexOf("lastName") >= 0) {
+            fail(res);
+        }
+        if (res.indexOf("title") >= 0) {
+            fail(res);
+        }
+
+        if (res.indexOf("Yarda") == -1) {
+            fail("There should be Yarda:\n" + res);
+        }
+        if (res.indexOf("Tulach") == -1) {
+            fail("There should be Tulach:\n" + res);
+        }
+        if (res.indexOf("Anarchitect") == -1) {
+            fail("There should be Anarchitect:\n" + res);
+        }
     }
 
-    private static String readChars(FileObject fo, Charset set) throws IOException {
-        CharBuffer arr = CharBuffer.allocate((int)fo.getSize() * 2);
-        BufferedReader r = new BufferedReader(new InputStreamReader(fo.getInputStream(), set));
-        while (r.read(arr) != -1) {
-            // again
+    public static final class JustCreateFolderHandler extends CreateFromTemplateHandler {
+        @Override
+        protected boolean accept(CreateDescriptor desc) {
+            return Boolean.TRUE.equals(desc.getTemplate().getAttribute("justCreate"));
         }
-        r.close();
-        
-        arr.flip();
-        return arr.toString();
+
+        @Override
+        protected List<FileObject> createFromTemplate(CreateDescriptor desc) throws IOException {
+            FileObject folder = desc.getTarget().createFolder(desc.getName());
+            for (Map.Entry<String, Object> entry : desc.getParameters().entrySet()) {
+                folder.setAttribute(entry.getKey(), entry.getValue());
+            }
+            return Collections.nCopies(1, folder);
+        }
+
+    }
+
+    public void testFolderTemplateHandledByHandler() throws Exception {
+        MockServices.setServices(JustCreateFolderHandler.class);
+
+        FileObject root = FileUtil.createMemoryFileSystem().getRoot();
+        FileObject tmplt = root.createFolder("tmplt");
+        tmplt.setAttribute("justCreate", true);
+        FileObject fo = FileUtil.createData(tmplt, "simpleObject.txt");
+        {
+            OutputStream os = fo.getOutputStream();
+            String txt =
+                "print('<html><h1>');print(firstName);print('</h1>');" +
+                "print('<h2>');print(lastName);print('</h2>');" +
+                "print('<h3>');print(title);print('</h3>');" +
+                "print('</html>');";
+            os.write(txt.getBytes());
+            os.close();
+        }
+        fo.setAttribute("javax.script.ScriptEngine", "js");
+
+
+        FileObject props = FileUtil.createData(FileUtil.getConfigRoot(),
+            "Templates/Properties/my.properties"
+        );
+
+        {
+            for (FileObject f : props.getChildren()) {
+                f.delete();
+            }
+            props.delete();
+        }
+
+        DataObject obj = DataObject.find(tmplt);
+
+        DataFolder folder = DataFolder.findFolder(FileUtil.createFolder(root, "target"));
+
+        Map<String,String> parameters = new HashMap<>();
+        parameters.put("firstName", "Yarda");
+        parameters.put("lastName", "Tulach");
+        parameters.put("title", "Anarchitect");
+        DataObject n = obj.createFromTemplate(folder, "complex", parameters);
+
+        assertEquals("Created in right place", folder, n.getFolder());
+        assertTrue("Folder created", n instanceof DataFolder);
+        assertEquals("Created with right name", "complex", n.getName());
+
+        DataFolder nf = (DataFolder) n;
+        DataObject[] arr = nf.getChildren();
+        assertEquals("No object created", 0, arr.length);
+        assertEquals("Yarda", nf.getPrimaryFile().getAttribute("firstName"));
+        assertEquals("Tulach", nf.getPrimaryFile().getAttribute("lastName"));
+        assertEquals("Anarchitect", nf.getPrimaryFile().getAttribute("title"));
     }
 
     public static final class DD extends DialogDisplayer {
@@ -213,7 +339,7 @@ public class PropertiesProviderTest extends NbTestCase {
     public static final class FEQI extends FileEncodingQueryImplementation {
         public static FileSystem fs;
         public static Charset result;
-    
+
         public Charset getEncoding(FileObject f) {
             try {
                 if (f.getFileSystem() == fs) {
@@ -225,16 +351,16 @@ public class PropertiesProviderTest extends NbTestCase {
             }
         }
     }
-    
+
     public static final class Pool extends DataLoaderPool {
         protected Enumeration<DataLoader> loaders() {
-            return Enumerations.<DataLoader>array(new DataLoader[] { 
+            return Enumerations.<DataLoader>array(new DataLoader[] {
                 TwoPartLoader.getLoader(TwoPartLoader.class),
                 SimpleLoader.getLoader(SimpleLoader.class),
             });
         }
     }
-    
+
     public static final class SimpleLoader extends MultiFileLoader {
         public SimpleLoader() {
             super(SimpleObject.class.getName());
@@ -258,7 +384,7 @@ public class PropertiesProviderTest extends NbTestCase {
             return new FileEntry(obj, secondaryFile);
         }
     }
-    
+
     private static final class FE extends FileEntry {
         public FE(MultiDataObject mo, FileObject fo) {
             super(mo, fo);
@@ -270,15 +396,15 @@ public class PropertiesProviderTest extends NbTestCase {
             return null;
         }
 
-        
-        
+
+
     }
-    
+
     public static final class SimpleObject extends MultiDataObject {
         public SimpleObject(SimpleLoader l, FileObject fo) throws DataObjectExistsException {
             super(fo, l);
         }
-        
+
         @Override
         public String getName() {
             return getPrimaryFile().getNameExt();
@@ -288,7 +414,7 @@ public class PropertiesProviderTest extends NbTestCase {
     static final Logger LOG = Logger.getLogger("tst.TwoPartLoader");
     public static final class TwoPartLoader extends MultiFileLoader {
         static Map<FileObject,Integer> queried = new HashMap<FileObject,Integer>();
-        
+
         public TwoPartLoader() {
             super(TwoPartObject.class.getName ());
         }
@@ -299,13 +425,13 @@ public class PropertiesProviderTest extends NbTestCase {
             Integer i = queried.get(fo);
             queried.put(fo, i == null ? 1 : i + 1);
             FileObject ret;
-            
+
             if (fo.hasExt("java") || fo.hasExt("form")) {
                 ret = org.openide.filesystems.FileUtil.findBrother(fo, "java");
             } else {
                 ret = null;
             }
-            
+
             LOG.fine("findPrimaryFile for " + fo + " yeilded " + ret);
             return ret;
         }
@@ -333,8 +459,8 @@ public class PropertiesProviderTest extends NbTestCase {
             public Charset getEncoding(FileObject file) {
                 return encoding;
             }
-            
+
         };
     }
-    
+
 }

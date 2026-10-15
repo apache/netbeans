@@ -1,0 +1,5 @@
+Code completion result for source line:
+$param = ne|w Foo(test: "test"),
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    new                                        null

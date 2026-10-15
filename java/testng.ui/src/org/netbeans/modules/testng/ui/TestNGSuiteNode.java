@@ -65,7 +65,7 @@ public final class TestNGSuiteNode extends TestsuiteNode {
             actions.add(preferred);
         }
         actions.add(SystemAction.get(DebugTestClassAction.class));
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     @Override

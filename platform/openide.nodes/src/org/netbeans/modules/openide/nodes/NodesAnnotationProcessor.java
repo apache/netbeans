@@ -49,7 +49,7 @@ import org.openide.util.lookup.ServiceProvider;
  * Processing annotation <code>@PropertyEditorSearchPath</code> 
  * and <code>@PropertyEditorRegistration</code>
  * 
- * @author Jan Horvath <jhorvath@netbeans.org>
+ * @author Jan Horvath &lt;jhorvath@netbeans.org&gt;
  */
 @ServiceProvider(service=Processor.class)
 public class NodesAnnotationProcessor extends LayerGeneratingProcessor {

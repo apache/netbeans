@@ -29,17 +29,11 @@ package org.netbeans.modules.payara.tooling.admin;
 @RunnerRestClass(runner=RunnerRestEnable.class)
 public class CommandEnable extends CommandTargetName {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command string for enable command. */
     private static final String COMMAND = "enable";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara server enable command entity.
      * <p/>

@@ -85,7 +85,7 @@ final class ComponentBuilders {
         ChildrenBuilder(Instance instance, Heap heap) {
             super(instance, heap);
             
-            component = new ArrayList();
+            component = new ArrayList<>();
             
             if (instance instanceof ObjectArrayInstance) {                      // Component[] (JDK 5-)
                 List<Instance> components = ((ObjectArrayInstance)instance).getValues();
@@ -129,8 +129,8 @@ final class ComponentBuilders {
     
     static class ComponentBuilder<T extends Component> extends InstanceBuilder<T> {
         
-        private final static int MAX_WIDTH = 10000;
-        private final static int MAX_HEIGHT = 10000;
+        private static final int MAX_WIDTH = 10000;
+        private static final int MAX_HEIGHT = 10000;
         
         protected final String className;
         

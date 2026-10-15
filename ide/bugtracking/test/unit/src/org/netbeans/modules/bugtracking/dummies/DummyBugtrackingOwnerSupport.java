@@ -88,7 +88,7 @@ public class DummyBugtrackingOwnerSupport extends BugtrackingOwnerSupport {
     }
 
     @Override
-    synchronized public RepositoryImpl getRepository(FileObject fo) {
+    public synchronized RepositoryImpl getRepository(FileObject fo) {
         Object obj = fo.getAttribute(DummyNode.TEST_REPO);
         if(obj instanceof Repository) {
             return APIAccessor.IMPL.getImpl((Repository)obj);

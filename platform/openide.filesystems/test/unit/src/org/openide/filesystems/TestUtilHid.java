@@ -57,13 +57,13 @@ public class TestUtilHid {
     }
 
     /** @return  URL to folder where should be placed tested data */
-    public final static URL getResourceContext () {
+    public static final URL getResourceContext () {
         //System.out.println("getResourceContext: " + FileSystemFactoryHid.class.getResource("../data"));
         return FileSystemFactoryHid.class.getResource("../data/");
     }
     
     /** It may be helpful to delete resursively Files */
-    public final static boolean  deleteFolder (File file)  throws IOException{
+    public static final boolean  deleteFolder (File file)  throws IOException{
         boolean ret = file.delete();
         
         if (ret) {
@@ -94,7 +94,7 @@ public class TestUtilHid {
      * {@link #createLocalFileSystem(File,String[])}
      * or use FileUtil.toFileObject with masterfs in CP
      */
-    public final static FileSystem createLocalFileSystem(String testName, String[] resources) throws IOException {
+    public static final FileSystem createLocalFileSystem(String testName, String[] resources) throws IOException {
         File mountPoint = locationOfLFSTempFolder(testName);
         return createLocalFileSystem(mountPoint, resources);
 
@@ -131,7 +131,7 @@ public class TestUtilHid {
         return mountPoint;
     }
 
-    public final static  void destroyLocalFileSystem (String testName) throws IOException {            
+    public static final  void destroyLocalFileSystem (String testName) throws IOException {            
         File mountPoint = TestUtilHid.locationOfTempFolder("lfstest");
         
         if (mountPoint.exists()) {
@@ -141,7 +141,7 @@ public class TestUtilHid {
         
     }
 
-    public final static void destroyXMLFileSystem(String testName) throws IOException {    
+    public static final void destroyXMLFileSystem(String testName) throws IOException {    
         File tempFile = TestUtilHid.locationOfTempFolder("xfstest");
         File xmlFile = new File (tempFile,"xfstest.xml");
         if (xmlFile.exists()) 
@@ -149,7 +149,7 @@ public class TestUtilHid {
     }
     
     
-    public final static FileSystem createXMLFileSystem(String testName, String[] resources) throws IOException{
+    public static final FileSystem createXMLFileSystem(String testName, String[] resources) throws IOException{
         File xmlFile = createXMLLayer(testName, resources);
 
         XMLFileSystem xfs = new XMLFileSystem  ();
@@ -160,7 +160,7 @@ public class TestUtilHid {
         return xfs;
     }
     
-    public final static FileSystem createXMLFileSystem(String testName, Resource rootResource) throws IOException {
+    public static final FileSystem createXMLFileSystem(String testName, Resource rootResource) throws IOException {
         File xmlFile = createXMLLayer(testName, rootResource);
         
         XMLFileSystem xfs = new XMLFileSystem  ();
@@ -319,11 +319,13 @@ public class TestUtilHid {
             this.forceFolder = true;
             return this;
         }
-        
+
+        @Override
         public boolean isLeaf() {
             return !forceFolder && super.isLeaf();
         }
-        
+
+        @Override
         public void serialize(String path, String tab, PrintWriter pw, File baseFolder) throws IOException {
             if (!getName().isEmpty()) {
                 String n = getName();
@@ -335,7 +337,7 @@ public class TestUtilHid {
                 String urlVal = null;
 
                 if (fileContents != null) {
-                    urlVal = (path + getName()).replaceAll("/", "-");
+                    urlVal = (path + getName()).replace("/", "-");
                     File f = new File(baseFolder, urlVal);
                     FileWriter wr = new FileWriter(f);
                     wr.append(fileContents);

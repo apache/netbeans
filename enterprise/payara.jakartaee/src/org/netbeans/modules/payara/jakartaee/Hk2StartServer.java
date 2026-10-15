@@ -40,10 +40,10 @@ import org.netbeans.modules.payara.tooling.TaskState;
 import org.netbeans.modules.payara.tooling.TaskStateListener;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
 import org.netbeans.api.server.ServerInstance;
+import org.netbeans.modules.glassfish.javaee.ui.DebugPortQuery;
 import org.netbeans.modules.payara.common.PayaraState;
 import org.netbeans.modules.payara.eecommon.api.Utils;
 import org.netbeans.modules.payara.jakartaee.ide.Hk2DeploymentStatus;
-import org.netbeans.modules.payara.jakartaee.ui.DebugPortQuery;
 import org.netbeans.modules.payara.spi.PayaraModule;
 import org.netbeans.modules.payara.spi.PayaraModule3;
 import org.netbeans.modules.j2ee.deployment.plugins.api.InstanceProperties;
@@ -58,7 +58,7 @@ import org.openide.util.NbBundle;
 /**
  *
  * @author Ludovic Champenois
- * @auther Peter Williams
+ * @author Peter Williams
  * @author vince kraemer
  */
 public class Hk2StartServer extends StartServer implements ProgressObject {

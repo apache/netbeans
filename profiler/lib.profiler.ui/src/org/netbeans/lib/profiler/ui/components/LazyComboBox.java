@@ -110,7 +110,7 @@ public class LazyComboBox<E> extends JComboBox<E> {
     protected int getPreferredWidth() { return -1; }
 
 
-    public static abstract class Populator<E> {
+    public abstract static class Populator<E> {
         
         protected abstract E initial();
 

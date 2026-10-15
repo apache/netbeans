@@ -291,19 +291,18 @@ public class NewFileWizardTest extends JavaTestCase {
                 Common.unify(expected),true);
     }
     
+    public void testCreateRecord() {
+        String expected = getContentOfGoldenFile();
+        createAndVerify("MyRecord", "Java Record",
+                Common.unify(expected), true);
+    }
+    
     public void testCreateException() {
         String expected = getContentOfGoldenFile();
         createAndVerify("MyExp" ,"Java Exception",
                 Common.unify(expected),true);
     }
-    
-    
-    public void testCreateJApplet() {
-        String expected = getContentOfGoldenFile();
-        createAndVerify("MyJApplet" , "JApplet",
-                Common.unify(expected),true);
-    }
-    
+
     public void testCreateEmptyFile() {
         String expected = getContentOfGoldenFile();
         createAndVerify("Empty" ,"Empty Java File", 

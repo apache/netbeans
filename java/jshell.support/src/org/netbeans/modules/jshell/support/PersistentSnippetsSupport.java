@@ -368,7 +368,7 @@ public class PersistentSnippetsSupport  {
         session.clearInputAndEvaluateExternal(execCommands, scriptFile.getName());
     }
     
-    final static class ProjectSnippetsFolder extends SnippetsFolder implements PropertyChangeListener  {
+    static final class ProjectSnippetsFolder extends SnippetsFolder implements PropertyChangeListener  {
         final SnippetStorage projectStorage;
         final Project project;
         

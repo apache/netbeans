@@ -283,7 +283,7 @@ public final class MiscEditorUtil {
      *         the list is empty when the script does not have a source map.
      */
     public static List<FileObject> registerScriptSourceMap(Project project, Debugger debugger, Script script) {
-        List<FileObject> mappedSourceFiles = Collections.EMPTY_LIST;
+        List<FileObject> mappedSourceFiles = Collections.emptyList();
         if (USE_SOURCE_MAPS) {
             String url = script.getURL();
             if (!url.isEmpty()) {

@@ -1,0 +1,74 @@
+
+
+Document 0
+Searchable Keys:
+  bn : SelfreferencingFunctionmod#=>#21
+  bni : selfreferencingfunctionmod#=>#21
+  fqn : mod.SelfreferencingFunctionmod#=>#21A
+  offset : 870
+
+Not Searchable Keys:
+  assign : 
+  flag : 33554625
+  param : action:
+  return : 
+
+
+Document 1
+Searchable Keys:
+  bn : action
+  bni : action
+  fqn : mod.SelfreferencingFunctionmod#=>#21.actionP
+  offset : 871
+
+Not Searchable Keys:
+  assign : 
+  flag : 131138
+
+
+Document 2
+Searchable Keys:
+  bn : actions
+  bni : actions
+  fqn : mod.actionsP
+  offset : 836
+
+Not Searchable Keys:
+  assign : 
+  flag : 131138
+
+
+Document 3
+Searchable Keys:
+  bn : mod
+  bni : mod
+  fqn : modO
+  offset : 832
+
+Not Searchable Keys:
+  assign : 
+  flag : 8258
+  param : actions:
+  return : 0|,928,@pro;actions@call;map
+
+
+Document 4
+Searchable Keys:
+  bn : param
+  bni : param
+  fqn : mod.actions.map.paramP
+  offset : 0
+
+Not Searchable Keys:
+  assign : 
+  flag : 131138
+
+
+Document 5
+Searchable Keys:
+  usage : actions:map#F
+  usage : map
+  usage : mod
+  usage : param
+
+Not Searchable Keys:

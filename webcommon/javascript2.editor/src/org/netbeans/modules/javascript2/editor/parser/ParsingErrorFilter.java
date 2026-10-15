@@ -41,20 +41,20 @@ import org.openide.util.RequestProcessor;
  * @author Petr Pisl
  */
 public class ParsingErrorFilter {
-    
+
     private static final RequestProcessor RP = new RequestProcessor(ParsingErrorFilter.class);
-    
+
     private static final String DISABLE_JS_ERROR_KEY = "disable_error_checking_CSS"; //NOI18N
-    
+
     public static Collection<FilterableError.SetFilterAction> getEnableFilterAction(@NonNull FileObject file) {
         FileObject source = file;
-        Collection<FilterableError.SetFilterAction> actions = new ArrayList<FilterableError.SetFilterAction>();
+        Collection<FilterableError.SetFilterAction> actions = new ArrayList<>();
         for (; file != null && FileOwnerQuery.getOwner(file) != null; file = file.getParent()) {
             actions.add(new ParsingErrorFilter.SetFileFilterAction(source, file, true));
         }
         return actions;
     }
-    
+
     /**
      * Checks if the parsing errors are filtered for this file or any of its
      * parent folders.
@@ -71,7 +71,7 @@ public class ParsingErrorFilter {
         }
         return null;
     }
-    
+
     @NbBundle.Messages({
         "# {0} - file name",
         "disableFilterForFile=Disable filtering of JS errors in \"{0}\"",
@@ -105,7 +105,7 @@ public class ParsingErrorFilter {
             return enable ? Bundle.enableFilterForFile(path) : Bundle.disableFilterForFile(path);
         }
     }
-    
+
      private static void refresh(FileObject file) {
         try {
 //            reindexActionItems();
@@ -115,19 +115,16 @@ public class ParsingErrorFilter {
             Exceptions.printStackTrace(ex);
         }
     }
-    
+
      private static void refreshDocument(final FileObject fo) throws IOException {
-        RP.post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    DataObject dobj = DataObject.find(fo);
-                    EditorCookie editorCookie = dobj.getLookup().lookup(EditorCookie.class);
-                    StyledDocument document = editorCookie.openDocument();
-                    forceReparse(document);
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
+        RP.post(() -> {
+            try {
+                DataObject dobj = DataObject.find(fo);
+                EditorCookie editorCookie = dobj.getLookup().lookup(EditorCookie.class);
+                StyledDocument document = editorCookie.openDocument();
+                forceReparse(document);
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
             }
         });
 
@@ -135,22 +132,14 @@ public class ParsingErrorFilter {
 
     //force reparse of *THIS document only* => hints update
     private static void forceReparse(final Document doc) {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                NbEditorDocument nbdoc = (NbEditorDocument) doc;
-                nbdoc.runAtomic(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        MutableTextInput mti = (MutableTextInput) doc.getProperty(MutableTextInput.class);
-                        if (mti != null) {
-                            mti.tokenHierarchyControl().rebuild();
-                        }
-                    }
-                });
-            }
+        SwingUtilities.invokeLater(() -> {
+            NbEditorDocument nbdoc = (NbEditorDocument) doc;
+            nbdoc.runAtomic(() -> {
+                MutableTextInput mti = (MutableTextInput) doc.getProperty(MutableTextInput.class);
+                if (mti != null) {
+                    mti.tokenHierarchyControl().rebuild();
+                }
+            });
         });
     }
 }

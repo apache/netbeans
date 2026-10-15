@@ -1,0 +1,133 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n
+token #2 PHP_COMMENT_START /*
+token #3 PHP_COMMENT \n * Licensed to the Apache Software Foundation (ASF) under one\n * or more contributor license agreements.  See the NOTICE file\n * distributed with this work for additional information\n * regarding copyright ownership.  The ASF licenses this file\n * to you under the Apache License, Version 2.0 (the\n * "License"); you may not use this file except in compliance\n * with the License.  You may obtain a copy of the License at\n *\n *   http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing,\n * software distributed under the License is distributed on an\n * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\n * KIND, either express or implied.  See the License for the\n * specific language governing permissions and limitations\n * under the License.\n 
+token #4 PHP_COMMENT_END */
+token #5 WHITESPACE \n
+token #6 PHP_CLASS class
+token #7 WHITESPACE  
+token #8 PHP_STRING T
+token #9 WHITESPACE  
+token #10 PHP_CURLY_OPEN {
+token #11 WHITESPACE \n\n    
+token #12 PHP_PUBLIC public
+token #13 WHITESPACE  
+token #14 PHP_FUNCTION function
+token #15 WHITESPACE  
+token #16 PHP_STRING test
+token #17 PHP_TOKEN (
+token #18 PHP_TOKEN )
+token #19 PHP_TOKEN :
+token #20 WHITESPACE  
+token #21 PHP_TYPE_STRING string
+token #22 WHITESPACE  
+token #23 PHP_CURLY_OPEN {
+token #24 WHITESPACE \n        
+token #25 PHP_RETURN return
+token #26 WHITESPACE  
+token #27 PHP_CONSTANT_ENCAPSED_STRING "test method"
+token #28 PHP_SEMICOLON ;
+token #29 WHITESPACE \n    
+token #30 PHP_CURLY_CLOSE }
+token #31 WHITESPACE \n\n    
+token #32 PHP_PUBLIC public
+token #33 WHITESPACE  
+token #34 PHP_FUNCTION function
+token #35 WHITESPACE  
+token #36 PHP_STRING test2
+token #37 PHP_TOKEN (
+token #38 PHP_VARIABLE $param
+token #39 PHP_TOKEN )
+token #40 PHP_TOKEN :
+token #41 WHITESPACE  
+token #42 PHP_TYPE_STRING string
+token #43 WHITESPACE  
+token #44 PHP_CURLY_OPEN {
+token #45 WHITESPACE \n        
+token #46 PHP_RETURN return
+token #47 WHITESPACE  
+token #48 PHP_VARIABLE $param
+token #49 WHITESPACE  
+token #50 PHP_TOKEN .
+token #51 WHITESPACE  
+token #52 PHP_STRING PHP_EOL
+token #53 PHP_SEMICOLON ;
+token #54 WHITESPACE \n    
+token #55 PHP_CURLY_CLOSE }
+token #56 WHITESPACE \n
+token #57 PHP_CURLY_CLOSE }
+token #58 WHITESPACE \n\n
+token #59 PHP_VARIABLE $t
+token #60 WHITESPACE  
+token #61 PHP_OPERATOR =
+token #62 WHITESPACE  
+token #63 PHP_NEW new
+token #64 WHITESPACE  
+token #65 PHP_STRING T
+token #66 PHP_TOKEN (
+token #67 PHP_TOKEN )
+token #68 PHP_SEMICOLON ;
+token #69 WHITESPACE \n
+token #70 PHP_ECHO echo
+token #71 WHITESPACE  
+token #72 PHP_HEREDOC_TAG_START <<< HTML\n
+token #73 PHP_ENCAPSED_AND_WHITESPACE     <span>
+token #74 PHP_CURLY_OPEN {
+token #75 PHP_VARIABLE $t
+token #76 PHP_OBJECT_OPERATOR ->
+token #77 PHP_STRING test
+token #78 PHP_TOKEN (
+token #79 PHP_TOKEN )
+token #80 PHP_CURLY_CLOSE }
+token #81 PHP_CONSTANT_ENCAPSED_STRING </span>
+token #82 PHP_ENCAPSED_AND_WHITESPACE \n    
+token #83 PHP_CURLY_OPEN {
+token #84 PHP_VARIABLE $t
+token #85 PHP_OBJECT_OPERATOR ->
+token #86 PHP_STRING test2
+token #87 PHP_TOKEN (
+token #88 PHP_HEREDOC_TAG_START <<< X\n
+token #89 PHP_CONSTANT_ENCAPSED_STRING         something
+token #90 PHP_CONSTANT_ENCAPSED_STRING \n        something
+token #91 PHP_CONSTANT_ENCAPSED_STRING \n
+token #92 PHP_HEREDOC_TAG_END     X
+token #93 PHP_TOKEN )
+token #94 PHP_CURLY_CLOSE }
+token #95 PHP_CONSTANT_ENCAPSED_STRING \n
+token #96 PHP_HEREDOC_TAG_END     HTML
+token #97 PHP_SEMICOLON ;
+token #98 WHITESPACE \n\n
+token #99 PHP_ECHO echo
+token #100 WHITESPACE  
+token #101 PHP_HEREDOC_TAG_START <<< HTML\n
+token #102 PHP_ENCAPSED_AND_WHITESPACE     <span>
+token #103 PHP_CURLY_OPEN {
+token #104 PHP_VARIABLE $t
+token #105 PHP_OBJECT_OPERATOR ->
+token #106 PHP_STRING test
+token #107 PHP_TOKEN (
+token #108 PHP_TOKEN )
+token #109 PHP_CURLY_CLOSE }
+token #110 PHP_CONSTANT_ENCAPSED_STRING </span>
+token #111 PHP_ENCAPSED_AND_WHITESPACE \n    
+token #112 PHP_CURLY_OPEN {
+token #113 PHP_VARIABLE $t
+token #114 PHP_OBJECT_OPERATOR ->
+token #115 PHP_STRING test2
+token #116 PHP_TOKEN (
+token #117 PHP_NOWDOC_TAG_START <<< 'X'\n
+token #118 PHP_CONSTANT_ENCAPSED_STRING \n\n\n        something\n        something\n\n
+token #119 PHP_NOWDOC_TAG_END     X
+token #120 PHP_TOKEN )
+token #121 PHP_CURLY_CLOSE }
+token #122 PHP_CONSTANT_ENCAPSED_STRING \n
+token #123 PHP_HEREDOC_TAG_END     HTML
+token #124 PHP_SEMICOLON ;
+token #125 WHITESPACE \n\n
+token #126 PHP_ECHO echo
+token #127 WHITESPACE  
+token #128 PHP_NOWDOC_TAG_START <<< 'HTML'\n
+token #129 PHP_CONSTANT_ENCAPSED_STRING     <span>{$t->test()}</span>\n    {$t->test2(<<< X\n        something\n\n        something\n    X)}\n\n\n
+token #130 PHP_NOWDOC_TAG_END     HTML
+token #131 PHP_SEMICOLON ;
+token #132 WHITESPACE \n

@@ -100,7 +100,9 @@ public final class SerialDataNode extends DataNode {
             getPrimaryFile().getAttribute("beaninfo"))); // NOI18N
     }
      
-    /** @param obj the object to use
+    /**
+     * @param conv convertor to handle serialdata format
+     * @param dobj object to work with
      * @param noBeanInfo info to use
      */
     private SerialDataNode(SerialDataConvertor conv, DataObject dobj, boolean noBeanInfo) {
@@ -481,7 +483,7 @@ public final class SerialDataNode extends DataNode {
         convertProps (p, descr.expert, this);
         if (bd != null) {
             Object helpID = bd.getValue("expertHelpID"); // NOI18N
-            if (helpID != null && helpID instanceof String) {
+            if (helpID instanceof String) {
                 p.setValue("helpID", helpID); // NOI18N
             }
         }
@@ -497,7 +499,7 @@ public final class SerialDataNode extends DataNode {
         if (bd != null) {
             // #29550: help from the beaninfo on property tabs
             Object helpID = bd.getValue("propertiesHelpID"); // NOI18N
-            if (helpID != null && helpID instanceof String) {
+            if (helpID instanceof String) {
                 props.setValue("helpID", helpID); // NOI18N
             }
         }
@@ -845,7 +847,7 @@ public final class SerialDataNode extends DataNode {
     } // end of I
     
     /** Derived from BeanChildren and allow replace beancontext. */
-    private final static class InstanceChildren extends Children.Keys {
+    private static final class InstanceChildren extends Children.Keys {
         SerialDataNode task;
         DataObject dobj;
         Object bean;

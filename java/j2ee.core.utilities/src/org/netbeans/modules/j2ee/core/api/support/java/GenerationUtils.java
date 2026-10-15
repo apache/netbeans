@@ -344,7 +344,7 @@ public final class GenerationUtils {
                 ModifiersTree oldModifiersTree = constructorTree.getModifiers();
                 Set<Modifier> newModifiers = EnumSet.of(Modifier.PUBLIC);
                 for (Modifier modifier : oldModifiersTree.getFlags()) {
-                    if (!Modifier.PROTECTED.equals(modifier) && !Modifier.PRIVATE.equals(modifier)) {
+                    if (Modifier.PROTECTED != modifier && Modifier.PRIVATE != modifier) {
                         newModifiers.add(modifier);
                     }
                 }
@@ -598,6 +598,7 @@ public final class GenerationUtils {
                 classTree.getTypeParameters(),
                 classTree.getExtendsClause(),
                 (List<ExpressionTree>)classTree.getImplementsClause(),
+                classTree.getPermitsClause(),
                 classTree.getMembers());
     }
 

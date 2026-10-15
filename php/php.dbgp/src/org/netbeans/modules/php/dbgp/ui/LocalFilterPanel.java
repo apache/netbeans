@@ -65,7 +65,7 @@ public class LocalFilterPanel extends javax.swing.JPanel {
         if (mySuperglobal.isSelected()) {
             result.add(FilterType.SUPERGLOBALS);
         }
-        return result.toArray(new FilterType[result.size()]);
+        return result.toArray(new FilterType[0]);
     }
 
     private void init() {

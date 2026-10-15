@@ -359,6 +359,22 @@
                     </folder>
                 </folder>
             </folder>
+            <folder name="MarkOccurrences">
+                <folder name="text">
+                    <folder name="javascript">
+                        <file name="MarkOccurences.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.spi.options.OptionsPanelController"/>
+                            <attr name="instanceCreate" newvalue="org.netbeans.modules.javascript2.editor.options.ui.MarkOccurencesOptionsPanelController"/>
+                        </file>
+                    </folder>
+                    <folder name="x-json">
+                        <file name="MarkOccurences.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.spi.options.OptionsPanelController"/>
+                            <attr name="instanceCreate" newvalue="org.netbeans.modules.javascript2.editor.options.ui.json.MarkOccurencesOptionsPanelController"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
         </folder>
     </folder>
 
@@ -437,8 +453,8 @@
                 </folder>            
             </folder>
             <folder name="x-json">
-                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/javascript2/editor/resources/javascript.png"/>
-                <attr name="iconBase" stringvalue="org/netbeans/modules/javascript2/editor/resources/javascript.png"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/javascript2/editor/resources/json.png"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/javascript2/editor/resources/json.png"/>
                 <folder name="Actions">
                     <file name="CopyAction.shadow">
                         <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CopyAction.instance"/>
@@ -568,12 +584,18 @@
                         <file name="org-netbeans-modules-javascript2-editor-hints-IncorrectReturnStatement.instance"/>
                         <file name="org-netbeans-modules-javascript2-editor-hints-Ecma6Rule.instance"/>
                         <file name="org-netbeans-modules-javascript2-editor-hints-Ecma7Rule.instance"/>
+                        <file name="org-netbeans-modules-javascript2-editor-hints-Ecma10Rule.instance"/>
+                        <file name="org-netbeans-modules-javascript2-editor-hints-Ecma11Rule.instance"/>
+                        <file name="org-netbeans-modules-javascript2-editor-hints-Ecma12Rule.instance"/>
+                        <file name="org-netbeans-modules-javascript2-editor-hints-OperatorRule.instance"/>
                     </folder>
                 </folder>
             </folder>
         </folder>
        </folder>
        <folder name="JavaScript">
+           <folder name="Editor">
+           </folder>
            <folder name="Model">
                <folder name="MethodCallProcessors">
                    <file name="org-netbeans-modules-javascript2-editor-extjs-ExtModelExtender$ExtDefineMethodProcessor.instance">

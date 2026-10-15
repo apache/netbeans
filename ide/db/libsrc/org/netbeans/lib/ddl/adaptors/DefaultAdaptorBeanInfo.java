@@ -241,7 +241,7 @@ public class DefaultAdaptorBeanInfo extends SimpleBeanInfo
 
         public Object getValue()
         {
-            return new Integer(constants[index]);
+            return Integer.valueOf(constants[index]);
         }
 
         public void setValue(Object object)

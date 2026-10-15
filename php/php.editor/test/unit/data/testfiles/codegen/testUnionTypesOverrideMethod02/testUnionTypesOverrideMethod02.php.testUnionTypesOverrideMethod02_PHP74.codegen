@@ -1,0 +1,3 @@
+public function testMethod(float|int|array|Foo|null $param): Foo|Bar{
+return parent::testMethod($param);
+}

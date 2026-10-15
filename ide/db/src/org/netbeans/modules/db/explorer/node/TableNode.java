@@ -159,7 +159,7 @@ public class TableNode extends BaseNode implements SchemaNameProvider {
             Exceptions.printStackTrace(e);
         }
 
-        setValue(BaseFilterNode.REFRESH_ANCESTOR_DISTANCE, new Integer(1));
+        setValue(BaseFilterNode.REFRESH_ANCESTOR_DISTANCE, Integer.valueOf(1));
     }
 
     @Override

@@ -62,7 +62,7 @@ public class MultiLineStreamMatcher extends AbstractMatcher {
      * List of currently processed searches.
      */
     private List<BufferedCharSequence> currentlyProcessedSequences =
-            new ArrayList<BufferedCharSequence>(1);
+            new ArrayList<>(1);
     private Pattern pattern;
     private SearchPattern searchPattern;
 
@@ -155,7 +155,7 @@ public class MultiLineStreamMatcher extends AbstractMatcher {
                 || txtDetails.size() < limit)) {
 
             if (txtDetails == null) {
-                txtDetails = new ArrayList<TextDetail>();
+                txtDetails = new ArrayList<>();
                 dataObject = DataObject.find(fo);
             }
 

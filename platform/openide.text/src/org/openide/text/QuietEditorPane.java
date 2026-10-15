@@ -80,9 +80,9 @@ final class QuietEditorPane extends JEditorPane {
         }
     }
     
-    final static int FIRE = 0x1;
-    final static int PAINT = 0x2;
-    final static int ALL = FIRE | PAINT;
+    static final int FIRE = 0x1;
+    static final int PAINT = 0x2;
+    static final int ALL = FIRE | PAINT;
 
     // #21120. Caret was null while serializing CloneableEditor.
 
@@ -104,7 +104,8 @@ final class QuietEditorPane extends JEditorPane {
     public QuietEditorPane() {
         setFontHeightWidth(getFont());
     }
-    
+
+    @Override
     public AccessibleContext getAccessibleContext() {
         AccessibleContext ctx = super.getAccessibleContext();
         if (ctx != null) {
@@ -434,7 +435,7 @@ final class QuietEditorPane extends JEditorPane {
                     "exportDone",  // NOI18N
                     new Class<?>[] {javax.swing.JComponent.class, Transferable.class, int.class});
                 method.setAccessible(true);
-                method.invoke(delegator, new Object[] {source, data, new Integer(action)});
+                method.invoke(delegator, new Object[] {source, data, action});
             } catch (NoSuchMethodException ex) {
                 ex.printStackTrace();
             } catch (IllegalAccessException ex) {

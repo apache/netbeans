@@ -34,6 +34,7 @@ import java.util.SortedMap;
 import javax.swing.JEditorPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Position;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.AnnotationDesc;
 import org.netbeans.editor.AnnotationType;
 import org.netbeans.editor.AnnotationTypes;
@@ -192,7 +193,7 @@ public class AnnotationViewDataImplTest extends NbTestCase {
         
         bd.insertString(0, "\n\n\n\n\n\n\n\n\n\n", null);
         
-        Position start = bd.createPosition(Utilities.getRowStartFromLineOffset(bd, 2));
+        Position start = bd.createPosition(LineDocumentUtils.getLineStartFromIndex(bd, 2));
         
         AnnotationDesc a1 = new AnnotationTestUtilities.TestAnnotationDesc1(bd, start);
         AnnotationDesc a2 = new AnnotationTestUtilities.TestAnnotationDesc2(bd, start);
@@ -218,10 +219,10 @@ public class AnnotationViewDataImplTest extends NbTestCase {
         TestMark mark2 = new TestMark(Status.STATUS_OK, null, null, new int[] {2, 2});
         TestMark mark3 = new TestMark(Status.STATUS_OK, null, null, new int[] {4, 6});
         
-        List marks = Arrays.asList(new Mark[]{mark1, mark2});
-        List marksOnlyFirst = Arrays.asList(new Mark[]{mark1});
-        List marksOnlySecond = Arrays.asList(new Mark[]{mark2});
-        List marksFirstAndThird = Arrays.asList(new Mark[]{mark1, mark3});
+        List<Mark> marks = Arrays.asList(new Mark[]{mark1, mark2});
+        List<Mark> marksOnlyFirst = Arrays.asList(new Mark[]{mark1});
+        List<Mark> marksOnlySecond = Arrays.asList(new Mark[]{mark2});
+        List<Mark> marksFirstAndThird = Arrays.asList(new Mark[]{mark1, mark3});
         
         TestMarkProvider provider = new TestMarkProvider(marks, UpToDateStatus.UP_TO_DATE_OK);
         TestMarkProviderCreator creator = TestMarkProviderCreator.getDefault();
@@ -231,12 +232,12 @@ public class AnnotationViewDataImplTest extends NbTestCase {
         AnnotationView aView = new AnnotationView(editor);
         AnnotationViewDataImpl data = (AnnotationViewDataImpl) aView.getData();
         
-        Collection mergedMarks;
-        SortedMap map;
+        Collection<Mark> mergedMarks;
+        SortedMap<Integer, List<Mark>> map;
         
         mergedMarks = data.getMergedMarks();
         
-        assertEquals(new LinkedHashSet(marks), mergedMarks);
+        assertEquals(new LinkedHashSet<Mark>(marks), mergedMarks);
         
         map = data.getMarkMap();
         
@@ -247,7 +248,7 @@ public class AnnotationViewDataImplTest extends NbTestCase {
         
         mergedMarks = data.getMergedMarks();
         
-        assertEquals(new LinkedHashSet(marksOnlyFirst), mergedMarks);
+        assertEquals(new LinkedHashSet<Mark>(marksOnlyFirst), mergedMarks);
         
         map = data.getMarkMap();
         
@@ -258,7 +259,7 @@ public class AnnotationViewDataImplTest extends NbTestCase {
         
         mergedMarks = data.getMergedMarks();
         
-        assertEquals(new LinkedHashSet(marksFirstAndThird), mergedMarks);
+        assertEquals(new LinkedHashSet<Mark>(marksFirstAndThird), mergedMarks);
         
         map = data.getMarkMap();
         
@@ -283,7 +284,7 @@ public class AnnotationViewDataImplTest extends NbTestCase {
         
         mergedMarks = data.getMergedMarks();
         
-        assertEquals(new LinkedHashSet(marksFirstAndThird), mergedMarks);
+        assertEquals(new LinkedHashSet<Mark>(marksFirstAndThird), mergedMarks);
         
         map = data.getMarkMap();
         
@@ -426,7 +427,7 @@ public class AnnotationViewDataImplTest extends NbTestCase {
 
         public int getLine() {
             try {
-                return Utilities.getLineOffset(doc, getOffset());
+                return LineDocumentUtils.getLineIndex(doc, getOffset());
             } catch (BadLocationException e) {
                 IllegalStateException exc = new IllegalStateException();
                 

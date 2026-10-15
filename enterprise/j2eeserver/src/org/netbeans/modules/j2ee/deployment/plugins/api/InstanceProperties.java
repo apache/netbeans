@@ -145,7 +145,8 @@ public abstract class InstanceProperties {
      *            registered.
      *
      * @deprecated use the factory method with displayName parameter.
-     */    
+     */
+    @Deprecated
     public static InstanceProperties createInstanceProperties(
             String url, String username, String password) throws InstanceCreationException {
         return createInstanceProperties(url, username, password, null);
@@ -337,6 +338,7 @@ public abstract class InstanceProperties {
      * @deprecated without replacement - this method should not be used as there
      * is no api use case for it
      */
+    @Deprecated
     public abstract DeploymentManager getDeploymentManager();
     
     /**

@@ -22,14 +22,11 @@ package org.netbeans.modules.java.source.parsing;
 
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -107,7 +104,7 @@ public final class CachingArchiveProvider {
     public Archive getArchive(@NonNull final URL root, final boolean cacheFile)  {
         final URI rootURI = toURI(root);
         Archive archive;
-        
+
         synchronized (this) {
             archive = archives.get(rootURI);
         }
@@ -200,7 +197,7 @@ public final class CachingArchiveProvider {
                 Exceptions.printStackTrace(e);
             }
         }
-        return res.toArray(new URL[res.size()]);
+        return res.toArray(new URL[0]);
     }
 
     /**
@@ -254,7 +251,8 @@ public final class CachingArchiveProvider {
                 return EMPTY;
             }
         }
-        if ("jar".equals(protocol)) {       //NOI18N
+        if ("jar".equals(protocol) &&      //NOI18N
+            root.first().getPath().endsWith("!/")) { //CachingArchive does not handle paths inside the archive - skip and use FileObjectArchive      //NOI18N
             URL inner = FileUtil.getArchiveFile(root.first());
             protocol = inner.getProtocol();
             if ("file".equals(protocol)) {  //NOI18N

@@ -132,7 +132,7 @@ public class ListCommand extends SvnCommand {
 
         private String REVISION_ATTR                    = "revision_attr";
         private String KIND_ATTR                        = "kind_attr";
-        private String PATH_ATTR                        = "path_attr";;
+        private String PATH_ATTR                        = "path_attr";
         
         private List<ISVNDirEntry> entries = new ArrayList<ISVNDirEntry>();        
 //        <?xml version="1.0"?>
@@ -250,7 +250,7 @@ public class ListCommand extends SvnCommand {
         }
 
         public ISVNDirEntry[] getEntryAttributes() {            
-            return entries != null ? entries.toArray(new ISVNDirEntry[entries.size()]) : new ISVNDirEntry[] {} ;
+            return entries != null ? entries.toArray(new ISVNDirEntry[0]) : new ISVNDirEntry[] {} ;
         }
 
         private String toString(int length, char[] ch, int start) {

@@ -56,7 +56,7 @@ public final class ELIndex {
         try {
             QuerySupport support = QuerySupport.forRoots(ELIndexer.Factory.NAME,
                     ELIndexer.Factory.VERSION,
-                    sourceRoots.toArray(new FileObject[sourceRoots.size()]));
+                    sourceRoots.toArray(new FileObject[0]));
 
             return new ELIndex(support);
 

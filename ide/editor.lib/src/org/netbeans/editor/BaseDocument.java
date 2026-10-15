@@ -64,6 +64,7 @@ import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoableEdit;
 import org.netbeans.api.editor.document.CustomUndoDocument;
 import org.netbeans.api.editor.document.LineDocument;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.settings.SimpleValueNames;
@@ -194,6 +195,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
      * Values: java.lang.Integer
      * @deprecated property no longer populated; deprecated without replacement.
      */
+    @Deprecated
     public static final String LINE_LIMIT_PROP = "line-limit"; // NOI18N
 
     /**
@@ -209,6 +211,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
      * especially when processing lines by syntax scanner.
      * @deprecated property no longer populated; deprecated without replacement.
      */
+    @Deprecated
     public static final String LINE_BATCH_SIZE = "line-batch-size"; // NOI18N
 
     /** Line separator is marked by CR (Macintosh) */
@@ -367,7 +370,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
                 if (readBufferSize <= 0) {
                     readBufferSize = EditorPreferencesDefaults.defaultReadBufferSize;
                 }
-                putProperty(EditorPreferencesKeys.READ_BUFFER_SIZE, new Integer(readBufferSize));
+                putProperty(EditorPreferencesKeys.READ_BUFFER_SIZE, Integer.valueOf(readBufferSize));
             }
 
             if (key == null || EditorPreferencesKeys.WRITE_BUFFER_SIZE.equals(key)) {
@@ -375,7 +378,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
                 if (writeBufferSize <= 0) {
                     writeBufferSize = EditorPreferencesDefaults.defaultWriteBufferSize;
                 }
-                putProperty(EditorPreferencesKeys.WRITE_BUFFER_SIZE, new Integer(writeBufferSize));
+                putProperty(EditorPreferencesKeys.WRITE_BUFFER_SIZE, Integer.valueOf(writeBufferSize));
             }
 
             if (key == null || EditorPreferencesKeys.MARK_DISTANCE.equals(key)) {
@@ -383,7 +386,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
                 if (markDistance <= 0) {
                     markDistance = EditorPreferencesDefaults.defaultMarkDistance;
                 }
-                putProperty(EditorPreferencesKeys.MARK_DISTANCE, new Integer(markDistance));
+                putProperty(EditorPreferencesKeys.MARK_DISTANCE, Integer.valueOf(markDistance));
             }
 
             if (key == null || EditorPreferencesKeys.MAX_MARK_DISTANCE.equals(key)) {
@@ -391,7 +394,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
                 if (maxMarkDistance <= 0) {
                     maxMarkDistance = EditorPreferencesDefaults.defaultMaxMarkDistance;
                 }
-                putProperty(EditorPreferencesKeys.MAX_MARK_DISTANCE, new Integer(maxMarkDistance));
+                putProperty(EditorPreferencesKeys.MAX_MARK_DISTANCE, Integer.valueOf(maxMarkDistance));
             }
 
             if (key == null || EditorPreferencesKeys.MIN_MARK_DISTANCE.equals(key)) {
@@ -399,7 +402,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
                 if (minMarkDistance <=0 ) {
                     minMarkDistance = EditorPreferencesDefaults.defaultMinMarkDistance;
                 }
-                putProperty(EditorPreferencesKeys.MIN_MARK_DISTANCE, new Integer(minMarkDistance));
+                putProperty(EditorPreferencesKeys.MIN_MARK_DISTANCE, Integer.valueOf(minMarkDistance));
             }
 
             if (key == null || EditorPreferencesKeys.READ_MARK_DISTANCE.equals(key)) {
@@ -407,7 +410,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
                 if (readMarkDistance <= 0) {
                     readMarkDistance = EditorPreferencesDefaults.defaultReadMarkDistance;
                 }
-                putProperty(EditorPreferencesKeys.READ_MARK_DISTANCE, new Integer(readMarkDistance));
+                putProperty(EditorPreferencesKeys.READ_MARK_DISTANCE, Integer.valueOf(readMarkDistance));
             }
 
             if (key == null || EditorPreferencesKeys.SYNTAX_UPDATE_BATCH_SIZE.equals(key)) {
@@ -415,7 +418,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
                 if (syntaxUpdateBatchSize <= 0) {
                     syntaxUpdateBatchSize = 7 * (Integer) getProperty(EditorPreferencesKeys.MARK_DISTANCE);
                 }
-                putProperty(EditorPreferencesKeys.SYNTAX_UPDATE_BATCH_SIZE, new Integer(syntaxUpdateBatchSize));
+                putProperty(EditorPreferencesKeys.SYNTAX_UPDATE_BATCH_SIZE, Integer.valueOf(syntaxUpdateBatchSize));
             }
 
             if (key == null || LINE_BATCH_SIZE.equals(key)) {
@@ -423,7 +426,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
                 if (lineBatchSize <= 0) {
                     lineBatchSize = EditorPreferencesDefaults.defaultLineBatchSize;
                 }
-                putProperty(LINE_BATCH_SIZE, new Integer(lineBatchSize));
+                putProperty(LINE_BATCH_SIZE, Integer.valueOf(lineBatchSize));
             }
 
             if (key == null || EditorPreferencesKeys.IDENTIFIER_ACCEPTOR.equals(key)) {
@@ -464,6 +467,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
      * @deprecated Use of editor kit's implementation classes is deprecated
      *   in favor of mime types.
      */
+    @Deprecated
     public BaseDocument(Class kitClass, boolean addToRegistry) {
         super(new EditorDocumentContent());
 
@@ -612,7 +616,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
 // XXX: formatting cleanup
 //    /**
 //     * @deprecated Please use Editor Indentation API instead, for details see
-//     *   <a href="@org-netbeans-modules-editor-indent@/overview-summary.html">Editor Indentation</a>.
+//     *   <a href="@org-netbeans-modules-editor-indent@/index.html">Editor Indentation</a>.
 //     */
 //    public Formatter getLegacyFormatter() {
 //        if (formatter == null) {
@@ -628,7 +632,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
 //     * Gets the formatter for this document.
 //     *
 //     * @deprecated Please use Editor Indentation API instead, for details see
-//     *   <a href="@org-netbeans-modules-editor-indent@/overview-summary.html">Editor Indentation</a>.
+//     *   <a href="@org-netbeans-modules-editor-indent@/index.html">Editor Indentation</a>.
 //     */
 //    public Formatter getFormatter() {
 //        Formatter f = getLegacyFormatter();
@@ -638,8 +642,9 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
 
     /**
      * @deprecated Please use Lexer instead, for details see
-     *   <a href="@org-netbeans-modules-lexer@/overview-summary.html">Lexer</a>.
+     *   <a href="@org-netbeans-modules-lexer@/index.html">Lexer</a>.
      */
+    @Deprecated
     public SyntaxSupport getSyntaxSupport() {
         if (syntaxSupport == null) {
             EditorKit kit = getEditorKit();
@@ -884,8 +889,8 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
 
     public void checkTrailingSpaces(int offset) {
         try {
-            int lineNum = Utilities.getLineOffset(this, offset);
-            int lastEditedLine = lastPositionEditedByTyping != null ? Utilities.getLineOffset(this, lastPositionEditedByTyping.getOffset()) : -1;
+            int lineNum = LineDocumentUtils.getLineIndex(this, offset);
+            int lastEditedLine = lastPositionEditedByTyping != null ? LineDocumentUtils.getLineIndex(this, lastPositionEditedByTyping.getOffset()) : -1;
             if (lastEditedLine != -1 && lastEditedLine != lineNum) {
                 // clear trailing spaces in the last edited line
                 Element root = getDefaultRootElement();
@@ -1072,7 +1077,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
 
     /** This method is called automatically before the document
     * insertion occurs and can be used to revoke the insertion before it occurs
-    * by throwing the <tt>BadLocationException</tt>.
+    * by throwing the <code>BadLocationException</code>.
     * @param offset position where the insertion will be done
     * @param text string to be inserted
     * @param a attributes of the inserted text
@@ -1083,7 +1088,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
 
     /** This method is called automatically before the document
     * removal occurs and can be used to revoke the removal before it occurs
-    * by throwing the <tt>BadLocationException</tt>.
+    * by throwing the <code>BadLocationException</code>.
     * @param offset position where the insertion will be done
     * @param len length of the removal
     */
@@ -1178,7 +1183,6 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
      * @param ret destination array
      * @param offset offset in the destination array.
      * @param len number of characters to obtain.
-     * @return array with the requested characters.
      */
     public void getChars(int pos, char ret[], int offset, int len)
     throws BadLocationException {
@@ -1280,6 +1284,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
     /** Fire the change event to repaint the given block of text.
      * @deprecated Please use <code>JTextComponent.getUI().damageRange()</code> instead.
      */
+    @Deprecated
     public void repaintBlock(int startOffset, int endOffset) {
         BaseDocumentEvent evt = getDocumentEvent(startOffset,
                 endOffset - startOffset, DocumentEvent.EventType.CHANGE, null);
@@ -1559,10 +1564,11 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
      * The algorithm first checks whether there's a value for the INDENT_SHIFT_WIDTH
      * setting. If so it uses it, otherwise it uses <code>formatter.getSpacesPerTab()</code>.
      *
-     * @see getTabSize()
+     * @see #getTabSize()
      * @deprecated Please use Editor Indentation API instead, for details see
-     *   <a href="@org-netbeans-modules-editor-indent@/overview-summary.html">Editor Indentation</a>.
+     *   <a href="@org-netbeans-modules-editor-indent@/index.html">Editor Indentation</a>.
      */
+    @Deprecated
     public int getShiftWidth() {
         return shiftWidth;
     }
@@ -1571,6 +1577,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
      * @deprecated Don't use implementation class of editor kits. Use mime type,
      *   <code>MimePath</code> and <code>MimeLookup</code>.
      */
+    @Deprecated
     public final Class getKitClass() {
         return getEditorKit().getClass();
     }
@@ -1697,7 +1704,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
     }
 
     /** Extended write unlocking.
-    * @see extWriteLock()
+    * @see #extWriteLock()
     */
     public final void extWriteUnlock() {
         super.writeUnlock(); // AD.writeUnlock() already reentrant for several JDK releases
@@ -1707,6 +1714,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
      * 
      * @deprecated Please use {@link BaseDocument#runAtomic(java.lang.Runnable)} instead.
      */
+    @Deprecated
     @Override
     public final void atomicLock () {
         if (LOG.isLoggable(Level.FINER)) {
@@ -1766,6 +1774,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
      * 
      * @deprecated Please use {@link BaseDocument#runAtomic(java.lang.Runnable)} instead.
      */
+    @Deprecated
     @Override
     public final synchronized void atomicUnlock () {
         atomicUnlockImpl ();
@@ -1996,6 +2005,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
      *
      * @deprecated Use addPostModificationDocumentListener(DocumentListener)
      */
+    @Deprecated
     public void setPostModificationDocumentListener(DocumentListener listener) {
         this.postModificationDocumentListener = listener;
     }
@@ -2060,7 +2070,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
 
     /**
      * Add a custom undoable edit during atomic lock of the document.
-     * <br/>
+     * <br>
      * For example code templates use this method to mark an insertion of a code template
      * skeleton into the document. Once the edit gets undone the CT editing will be cancelled.
      *
@@ -2160,30 +2170,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
     *   the function itself computes the begining of the line first
     */
     int getVisColFromPos(int offset) throws BadLocationException {
-        if (offset < 0 || offset > getLength()) {
-            throw new BadLocationException("Invalid offset", offset); // NOI18N
-        }
-        int startLineOffset = Utilities.getRowStart(this, offset);
-        int tabSize = getTabSize();
-        CharSequence docText = org.netbeans.lib.editor.util.swing.DocumentUtilities.getText(this);
-        int visCol = 0;
-        for (int i = startLineOffset; i < offset; i++) {
-            char ch = docText.charAt(i);
-            if (ch == '\t') {
-                visCol = (visCol + tabSize) / tabSize * tabSize;
-            } else {
-                // #17356
-                int codePoint;
-                if (Character.isHighSurrogate(ch) && i + 1 < docText.length()) {
-                    codePoint = Character.toCodePoint(ch, docText.charAt(++i));
-                } else {
-                    codePoint = ch;
-                }
-                int w = WcwdithUtil.wcwidth(codePoint);
-                visCol += w > 0 ? w : 0;
-            }
-        }
-        return visCol;
+        return Utilities.getVisColFromPos(this, offset);
     }
 
     protected Dictionary createDocumentProperties(Dictionary origDocumentProperties) {
@@ -2441,7 +2428,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
 
     /** Property evaluator is useful for lazy evaluation
      * of properties of the document when
-     * {@link javax.swing.text.Document#getProperty(java.lang.String)}
+     * {@link javax.swing.text.Document#getProperty(Object)}
      * is called.
      */
     public static interface PropertyEvaluator {

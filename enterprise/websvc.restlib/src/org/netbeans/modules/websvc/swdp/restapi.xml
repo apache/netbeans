@@ -27,13 +27,13 @@
     <localizing-bundle>org/netbeans/modules/websvc/swdp/Bundle</localizing-bundle>
     <volume>
         <type>classpath</type>
-        <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jaxrs-2.0/javax.ws.rs-api-2.0.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.websvc.restlib/modules/ext/jaxrs-2.1/jakarta.ws.rs-api-2.1.6.jar!/</resource>
     </volume>  
     <properties>
         <!-- please check with mkleint@netbeans.org before/after updating this or "classpath" section -->
         <property>
             <name>maven-dependencies</name>
-            <value>javax.ws.rs:javax.ws.rs-api:jar</value>
+            <value>jakarta.ws.rs:jakarta.ws.rs-api:2.1.6:jar</value>
         </property>
     </properties>
 </library>

@@ -1,0 +1,66 @@
+<testresult testFile='readonlyPropertiesWithConstError.php'>
+    <scanner>
+        <token id='T_CLASS' start='815' end='820'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='821' end='839'>
+            <text>ReadonlyProperties</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='840' end='841'>
+            <text>{</text>
+        </token>
+        <token id='T_READONLY' start='847' end='855'>
+            <text>readonly</text>
+        </token>
+        <token id='T_CONST' start='856' end='861'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='862' end='876'>
+            <text>READONLY_CONST</text>
+        </token>
+        <token id='T_EQUAL' start='877' end='878'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='879' end='889'>
+            <text>"constant"</text>
+        </token>
+        <token id='T_SEMICOLON' start='889' end='890'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='901' end='902'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='903' end='903'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='903'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='891' end='900' commentType='singleLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='891' end='900' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='815' end='902' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='821' end='839' name='ReadonlyProperties'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='840' end='902' isCurly='true'>
+                    <ClassConstantDeclaration start='847' end='890' modifier='readonly'>
+                        <Names>
+                            <Identifier start='862' end='876' name='READONLY_CONST'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='879' end='889' type='STRING' value='"constant"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                </Block>
+            </ClassDeclaration>
+        </Statements>
+    </Program>
+</testresult>

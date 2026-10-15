@@ -20,6 +20,7 @@
 package org.openide.windows;
 
 import java.awt.Frame;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.WindowAdapter;
@@ -301,6 +302,10 @@ final class DummyWindowManager extends WindowManager {
     }
 
     protected void topComponentOpen(TopComponent tc) {
+        if (GraphicsEnvironment.isHeadless()) {
+            return;
+        }
+
         JFrame f = (JFrame) SwingUtilities.getAncestorOfClass(JFrame.class, tc);
 
         if (f == null) {
@@ -318,6 +323,7 @@ final class DummyWindowManager extends WindowManager {
             final java.lang.ref.WeakReference<TopComponent> ref = new java.lang.ref.WeakReference<TopComponent>(tc);
             f.addWindowListener(
                 new WindowAdapter() {
+                    @Override
                     public void windowClosing(WindowEvent ev) {
                         TopComponent tc = ref.get();
 
@@ -328,6 +334,7 @@ final class DummyWindowManager extends WindowManager {
                         tc.close();
                     }
 
+                    @Override
                     public void windowActivated(WindowEvent e) {
                         TopComponent tc = ref.get();
 

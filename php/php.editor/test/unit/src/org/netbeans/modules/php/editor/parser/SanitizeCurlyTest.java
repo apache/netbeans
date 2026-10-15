@@ -19,8 +19,10 @@
 
 package org.netbeans.modules.php.editor.parser;
 
+import java.io.StringReader;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.parsing.api.Source;
+import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.editor.PHPTestBase;
 import org.netbeans.modules.php.editor.parser.GSFPHPParser.Context;
 
@@ -232,14 +234,31 @@ public class SanitizeCurlyTest extends PHPTestBase {
         execute(orig, expected, 0);
     }
 
+    public void testCurlyBalance01() throws Exception {
+        String source = ""
+                + "<?php\n"
+                + "class Example {\n"
+                + "    public function run(int $param1) : void {\n"
+                + "        $example = new class() {};\n"
+                + "        \"'single ${$complex->quote()}'\";\n"
+                + "    }\n"
+                + "}";
+        checkCurlyBalance(source, 0);
+    }
+
     private void execute(String original, String expected, int expectedDelta) throws Exception {
         int originalLength = original.length();
         GSFPHPParser parser = new GSFPHPParser();
-        BaseDocument doc = new BaseDocument(true, "text/x-php5");
+        BaseDocument doc = new BaseDocument(true, FileUtils.PHP_MIME_TYPE);
         doc.insertString(0, original, null);
         Context context = new GSFPHPParser.Context(Source.create(doc).createSnapshot() , -1);
         parser.sanitizeCurly(context);
         assertEquals(expected, context.getSanitizedSource());
         assertEquals(originalLength+expectedDelta, context.getSanitizedSource().length());
+    }
+
+    private void checkCurlyBalance(String source, int expectedBalance) throws Exception {
+        ASTPHP5Scanner scanner = new ASTPHP5Scanner(new StringReader(source), false, false);
+        assertEquals(expectedBalance, scanner.getCurlyBalance());
     }
 }

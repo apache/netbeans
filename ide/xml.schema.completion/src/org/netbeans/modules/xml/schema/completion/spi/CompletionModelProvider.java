@@ -61,7 +61,7 @@ public abstract class CompletionModelProvider {
      * A model that describes a schema that applies to an XML document at a
      * point where code completion is requested.
      */
-    public static abstract class CompletionModel {
+    public abstract static class CompletionModel {
         
         /**
          * Returns the suggested prefix to be used for completion.

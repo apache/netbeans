@@ -25,6 +25,7 @@ import org.netbeans.modules.maven.newproject.*;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -33,17 +34,18 @@ import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
 import org.codehaus.plexus.util.StringUtils;
 import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.templates.FileBuilder;
 import org.netbeans.api.validation.adapters.WizardDescriptorAdapter;
 import org.netbeans.modules.maven.api.archetype.ProjectInfo;
 import static org.netbeans.modules.maven.newproject.idenative.Bundle.LBL_CreateProjectStep2;
 import static org.netbeans.modules.maven.newproject.idenative.Bundle.NameFormat;
 
-import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.netbeans.validation.api.ui.ValidationGroup;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
+import org.openide.loaders.TemplateWizard;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -78,19 +80,32 @@ public abstract class IDENativeMavenWizardIterator implements WizardDescriptor.I
         handle.start();
         try {
             handle.progress(Bundle.PRG_Dir());
-            ProjectInfo vi = new ProjectInfo((String) wiz.getProperty("groupId"), (String) wiz.getProperty("artifactId"), (String) wiz.getProperty("version"), (String) wiz.getProperty("package")); //NOI18N
             String[] splitlog = StringUtils.split(log, ":");
             ArchetypeWizardUtils.logUsage(splitlog[0], splitlog[1], splitlog[2]);
-            File projFile = FileUtil.normalizeFile((File) wiz.getProperty(CommonProjectActions.PROJECT_PARENT_FOLDER)); // NOI18N
-            CreateProjectBuilder builder = createBuilder(projFile, vi, handle);
-            builder.create();
-            handle.progress(Bundle.PRG_FINISH());
-            return ArchetypeWizardUtils.openProjects(projFile, null);   
+            return new LinkedHashSet<>(builder(handle).build());
         } finally {
             handle.finish();
         }
     }
+
+    protected FileBuilder builder(ProgressHandle h) throws IOException {
+        TemplateWizard w = (TemplateWizard)wiz;
+
+        return new FileBuilder(w.getTemplate().getPrimaryFile(), w.getTargetFolder().getPrimaryFile().getParent()).
+            param(TemplateUtils.PARAM_PACKAGE, (String) wiz.getProperty("package")).
+            param(TemplateUtils.PARAM_PACKAGING, (String) this.packaging).
+            param(TemplateUtils.PARAM_GROUP_ID, (String) wiz.getProperty("groupId")).
+            param(TemplateUtils.PARAM_ARTIFACT_ID, (String) wiz.getProperty("artifactId")).
+            param(TemplateUtils.PARAM_VERSION, (String) wiz.getProperty("version")).
+            defaultMode(FileBuilder.Mode.COPY).
+            name(w.getTargetName()).
+            useLookup(Lookups.fixed(h));
+    }
     
+    /**
+     * @deprecated Hook into {@link IDENativeTemplateHandler} instead.
+     */
+    @Deprecated
     protected CreateProjectBuilder createBuilder(File projFile, ProjectInfo vi, ProgressHandle handle) {
             CreateProjectBuilder builder = new CreateProjectBuilder(projFile, vi.groupId, vi.artifactId, vi.version)
                     .setProgressHandle(handle)
@@ -108,10 +123,10 @@ public abstract class IDENativeMavenWizardIterator implements WizardDescriptor.I
         }
         index = 0;
         ValidationGroup vg = ValidationGroup.create(new WizardDescriptorAdapter(wiz));
-        panels = new ArrayList<WizardDescriptor.Panel<WizardDescriptor>>();
+        panels = new ArrayList<>();
         List<String> steps = new ArrayList<String>();
         
-        panels.add(new BasicWizardPanel(vg, null, true, false)); //only download archetype (for additional props) when unknown archetype is used.
+        panels.add(new BasicWizardPanel(vg, null, true, false, null)); //only download archetype (for additional props) when unknown archetype is used.
         steps.add(LBL_CreateProjectStep2());
         for (int i = 0; i < panels.size(); i++) {
             JComponent c = (JComponent) panels.get(i).getComponent();

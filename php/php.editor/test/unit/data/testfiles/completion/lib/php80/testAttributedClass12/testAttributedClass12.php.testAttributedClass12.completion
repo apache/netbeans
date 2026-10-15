@@ -1,0 +1,8 @@
+Code completion result for source line:
+|// test
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTRUCTO Attr1                           [PUBLIC]   testAttributedClass12.php
+CONSTRUCTO Attr1(int $int, string $string  [PUBLIC]   Attr1
+CONSTRUCTO Attr2                           [PUBLIC]   testAttributedClass12.php
+CONSTRUCTO Attr2(string $string)           [PUBLIC]   Attr2
+CONSTRUCTO Attr2(string $string, bool $bo  [PUBLIC]   Attr2

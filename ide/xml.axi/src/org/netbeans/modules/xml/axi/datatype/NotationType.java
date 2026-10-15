@@ -118,7 +118,7 @@ public class NotationType extends StringBase {
             lengths = new ArrayList<Integer>(1);
             hasFacets = true;
         }
-        this.lengths.add(new Integer(length));
+        this.lengths.add(Integer.valueOf(length));
     }
     
         /*
@@ -131,7 +131,7 @@ public class NotationType extends StringBase {
             minLengths = new ArrayList<Integer>(1);
             hasFacets = true;
         }
-        this.minLengths.add(new Integer(minLength));
+        this.minLengths.add(Integer.valueOf(minLength));
     }
     
         /*
@@ -144,7 +144,7 @@ public class NotationType extends StringBase {
             maxLengths = new ArrayList<Integer>(1);
             hasFacets = true;
         }
-        this.maxLengths.add(new Integer(maxLength));
+        this.maxLengths.add(Integer.valueOf(maxLength));
     }
     
         /*
@@ -193,7 +193,7 @@ public class NotationType extends StringBase {
          */
     public void removeLength(int length) {
         if(lengths != null)
-            lengths.remove(new Integer(length));
+            lengths.remove(Integer.valueOf(length));
     }
     
         /*
@@ -203,7 +203,7 @@ public class NotationType extends StringBase {
          */
     public void removeMinLength(int minLength) {
         if(minLengths != null)
-            minLengths.remove(new Integer(minLength));
+            minLengths.remove(Integer.valueOf(minLength));
     }
     
         /*
@@ -213,7 +213,7 @@ public class NotationType extends StringBase {
          */
     public void removeMaxLength(int maxLength) {
         if(maxLengths != null)
-            maxLengths.remove(new Integer(maxLength));
+            maxLengths.remove(Integer.valueOf(maxLength));
     }
     
         /*

@@ -185,7 +185,7 @@ public class InspectAndRefactorPanel extends javax.swing.JPanel implements Popup
         customScopeLab = new JLabel(NbBundle.getMessage(InspectAndRefactorPanel.class, "LBL_CustomScope"), prj , SwingConstants.LEFT); //NOI18N
         if (fileObject!=null) {
             if (!fileObject.isFolder())
-                currentFile = new JLabel(NbBundle.getMessage(InspectAndRefactorPanel.class, "LBL_CurrentFile", fileObject.getNameExt()), new ImageIcon(dob.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16)), SwingConstants.LEFT);
+                currentFile = new JLabel(NbBundle.getMessage(InspectAndRefactorPanel.class, "LBL_CurrentFile", fileObject.getNameExt()), ImageUtilities.image2Icon(dob.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16)), SwingConstants.LEFT);
             String packageName = getPackageName(fileObject);
             if (packageName!=null)
                 currentPackage = new JLabel(NbBundle.getMessage(InspectAndRefactorPanel.class, "LBL_CurrentPackage", packageName), ImageUtilities.loadImageIcon(PACKAGE, false), SwingConstants.LEFT);
@@ -235,12 +235,12 @@ public class InspectAndRefactorPanel extends javax.swing.JPanel implements Popup
     }
     
     private static Object[] createArray(Object ... items) {
-        ArrayList a = new ArrayList();
+        List<Object> a = new ArrayList<>();
         for (Object o:items) {
             if (o!=null)
                 a.add(o);
         }
-        return a.toArray(new Object[a.size()]);
+        return a.toArray(new Object[0]);
     }
 
     /** This method is called from within the constructor to
@@ -328,8 +328,7 @@ public class InspectAndRefactorPanel extends javax.swing.JPanel implements Popup
 
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(Alignment.LEADING)
+        layout.setHorizontalGroup(layout.createParallelGroup(Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(Alignment.LEADING)
@@ -338,24 +337,22 @@ public class InspectAndRefactorPanel extends javax.swing.JPanel implements Popup
                 .addPreferredGap(ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                            .addComponent(configurationRadio)
-                            .addComponent(singleRefactorRadio))
+                        .addComponent(singleRefactorRadio)
                         .addPreferredGap(ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                            .addComponent(singleRefactoringCombo, 0, 196, Short.MAX_VALUE)
-                            .addComponent(configurationCombo, 0, 196, Short.MAX_VALUE)))
-                    .addComponent(scopeCombo, Alignment.TRAILING, 0, 346, Short.MAX_VALUE))
+                        .addComponent(singleRefactoringCombo, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(configurationRadio)
+                        .addGap(25, 25, 25)
+                        .addComponent(configurationCombo, 0, 242, Short.MAX_VALUE))
+                    .addComponent(scopeCombo, Alignment.TRAILING, 0, 377, Short.MAX_VALUE))
                 .addPreferredGap(ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(Alignment.LEADING, false)
-                        .addComponent(manageSingleRefactoring, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(manageConfigurations, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(customScopeButton))
+                .addGroup(layout.createParallelGroup(Alignment.LEADING, false)
+                    .addComponent(manageConfigurations, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(customScopeButton)
+                    .addComponent(manageSingleRefactoring, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(Alignment.LEADING)
+        layout.setVerticalGroup(layout.createParallelGroup(Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(Alignment.BASELINE)
@@ -368,11 +365,12 @@ public class InspectAndRefactorPanel extends javax.swing.JPanel implements Popup
                     .addComponent(configurationCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(manageConfigurations)
                     .addComponent(refactorUsingLabel))
-                .addGap(1, 1, 1)
+                .addPreferredGap(ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(Alignment.BASELINE)
+                    .addComponent(singleRefactorRadio)
                     .addComponent(singleRefactoringCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(manageSingleRefactoring)
-                    .addComponent(singleRefactorRadio)))
+                    .addComponent(manageSingleRefactoring))
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -413,13 +411,13 @@ public class InspectAndRefactorPanel extends javax.swing.JPanel implements Popup
                 todo.addAll(Arrays.asList(source.getRoots()));
             }
 
-            customScope = org.netbeans.modules.refactoring.api.Scope.create(todo, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+            customScope = org.netbeans.modules.refactoring.api.Scope.create(todo, Collections.<NonRecursiveFolder>emptyList(), Collections.<FileObject>emptyList());
         } else if (selectedItem == currentProject) {
-            ArrayList<FileObject> roots = new ArrayList();
+            List<FileObject> roots = new ArrayList<>();
             for (SourceGroup gr:ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
                 roots.add(gr.getRootFolder());
             }
-            customScope = org.netbeans.modules.refactoring.api.Scope.create(roots, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+            customScope = org.netbeans.modules.refactoring.api.Scope.create(roots, Collections.<NonRecursiveFolder>emptyList(), Collections.<FileObject>emptyList());
         } else if (selectedItem == currentPackage) {
             //current package
             if (fileObject != null) {
@@ -430,15 +428,15 @@ public class InspectAndRefactorPanel extends javax.swing.JPanel implements Popup
                         return fileObject.isFolder()?fileObject:fileObject.getParent();
                     }
                 });
-                customScope = org.netbeans.modules.refactoring.api.Scope.create(Collections.EMPTY_LIST, col, Collections.EMPTY_LIST);
+                customScope = org.netbeans.modules.refactoring.api.Scope.create(Collections.<FileObject>emptyList(), col, Collections.<FileObject>emptyList());
             }
         } else if (selectedItem == currentFile) {
-                customScope = org.netbeans.modules.refactoring.api.Scope.create(Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.singleton(fileObject));
+                customScope = org.netbeans.modules.refactoring.api.Scope.create(Collections.<FileObject>emptyList(), Collections.<NonRecursiveFolder>emptyList(), Collections.singleton(fileObject));
         } else {
             //custom
             customScope = readScope();
             if (customScope==null)
-                customScope = org.netbeans.modules.refactoring.api.Scope.create(Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+                customScope = org.netbeans.modules.refactoring.api.Scope.create(Collections.<FileObject>emptyList(), Collections.<NonRecursiveFolder>emptyList(), Collections.<FileObject>emptyList());
         }
         org.netbeans.modules.refactoring.api.Scope s = JavaScopeBuilder.open(NbBundle.getMessage(InspectAndRefactorPanel.class, "CTL_CustomScope"), customScope);
         if (s != null) {
@@ -481,7 +479,7 @@ public class InspectAndRefactorPanel extends javax.swing.JPanel implements Popup
             
         } else {
             Configuration config = (Configuration) configurationCombo.getSelectedItem();
-            List<HintDescription> hintsToApply = new LinkedList();
+            List<HintDescription> hintsToApply = new LinkedList<>();
             HintsSettings settings = config.getSettings();
             for (Entry<? extends HintMetadata, ? extends Iterable<? extends HintDescription>> e : allHints.entrySet()) {
                 if (!settings.isEnabled(e.getKey())) continue;
@@ -522,7 +520,7 @@ public class InspectAndRefactorPanel extends javax.swing.JPanel implements Popup
         if (customScope==null) {
             return Scopes.specifiedFoldersScope(new Folder[0]);
         }
-        LinkedList list = new LinkedList();
+        List list = new LinkedList<>();
         list.addAll(customScope.getFiles());
         list.addAll(customScope.getFolders());
         list.addAll(customScope.getSourceRoots());
@@ -583,20 +581,16 @@ public class InspectAndRefactorPanel extends javax.swing.JPanel implements Popup
         return toRet;
     }
     
-    private void storeFileList(Set files, String basekey) throws BackingStoreException {
+    private void storeFileList(Set<?> files, String basekey) throws BackingStoreException {
         Preferences pref = NbPreferences.forModule(JavaScopeBuilder.class).node(PREF_SCOPE).node(basekey);
         assert files != null;
         pref.clear();
         int count = 0;
         for (Object next : files) {
-            try {
-                if (next instanceof FileObject) {
-                    pref.put(basekey + count++, ((FileObject) next).getURL().toExternalForm());
-                } else {
-                    pref.put(basekey + count++, ((NonRecursiveFolder) next).getFolder().getURL().toExternalForm());
-                }
-            } catch (FileStateInvalidException ex) {
-                Exceptions.printStackTrace(ex);
+            if (next instanceof FileObject) {
+                pref.put(basekey + count++, ((FileObject)next).toURL().toExternalForm());
+            } else {
+                pref.put(basekey + count++, ((NonRecursiveFolder)next).getFolder().toURL().toExternalForm());
             }
         }
         pref.flush();

@@ -44,7 +44,7 @@ import org.openide.util.Utilities;
  */
 public final class MacroMap implements Cloneable {
 
-    private final static java.util.logging.Logger log = Logger.getInstance();
+    private static final java.util.logging.Logger log = Logger.getInstance();
     private final ExecutionEnvironment execEnv;
     private final MacroExpander macroExpander;
     private final TreeMap<String, String> hostEnv;
@@ -237,7 +237,7 @@ public final class MacroMap implements Cloneable {
 
         String oldpath = get(name);
         String newPath = path + (oldpath == null ? "" : (isWindows ? ';' : ':') + oldpath); // NOI18N
-        newPath = newPath.replaceAll("::", ":"); // NOI18N
+        newPath = newPath.replace("::", ":"); // NOI18N
         newPath = newPath.replaceAll("^:", ""); // NOI18N
         newPath = newPath.replaceAll(":$", ""); // NOI18N
         put(name, newPath);

@@ -3,14 +3,8 @@
         <token id='T_USE' start='7' end='10'>
             <text>use</text>
         </token>
-        <token id='T_STRING' start='11' end='15'>
-            <text>some</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='15' end='16'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='16' end='18'>
-            <text>ns</text>
+        <token id='T_NAME_QUALIFIED' start='11' end='18'>
+            <text>some\ns</text>
         </token>
         <token id='T_NS_SEPARATOR' start='18' end='19'>
             <text>\</text>

@@ -31,27 +31,18 @@ import org.xml.sax.SAXException;
  */
 public class ConfigReaderJavaSE extends ConfigReaderJava {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** <code>java</code> XML element name. */
     static final String NODE = "java";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** <code>platform</code> XML element reader. */
     private final JavaSEPlatformReader platformReader;
 
     /** JavaSE set for Payara features configuration read from XML. */
     JavaSESet javaSE;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of Java EE configuration XML element reader.
      * <p/>
@@ -64,10 +55,7 @@ public class ConfigReaderJavaSE extends ConfigReaderJava {
         javaSE = null;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // XML reader methods                                                     //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Provide paths to listen on.
      * <p/>
@@ -84,10 +72,7 @@ public class ConfigReaderJavaSE extends ConfigReaderJava {
         return paths;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Tree parser methods                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Process attributes from current XML element.
      * <p/>
@@ -120,10 +105,7 @@ public class ConfigReaderJavaSE extends ConfigReaderJava {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get platforms retrieved from XML elements.
      * <p/>
@@ -133,10 +115,7 @@ public class ConfigReaderJavaSE extends ConfigReaderJava {
         return platformReader.getPlatforms();
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Reset this XML element reader.
      */

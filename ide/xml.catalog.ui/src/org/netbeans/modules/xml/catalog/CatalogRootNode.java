@@ -77,11 +77,6 @@ public final class CatalogRootNode extends AbstractNode implements Node.Cookie {
             SystemAction.get(PropertiesAction.class)
         };
     }
-
-    /** We can mount entity catalogs. */
-//    public NewType[] getNewTypes() {
-//        return new NewType[] {new CatalogMounter()};
-//    }
     
     /** 
      * Mounts new catalalog as specified by user. 
@@ -172,7 +167,7 @@ public final class CatalogRootNode extends AbstractNode implements Node.Cookie {
     private static class RootChildren extends Children.Keys implements Comparator, PropertyChangeListener {
         
         /** Contains CatalogReader instances. */
-        private final TreeSet keys = new TreeSet(this);
+        private final Set<CatalogReader> keys = new TreeSet<>(this);
         
         /**
           * Create new keys, register itself as listener.
@@ -220,7 +215,7 @@ public final class CatalogRootNode extends AbstractNode implements Node.Cookie {
         private void createKeys(CatalogSettings mounted) {
             keys.clear();
             if (mounted != null) {
-                Iterator it = mounted.getCatalogs(new Class[] {CatalogReader.class});
+                Iterator<CatalogReader> it = mounted.getCatalogs(new Class[] {CatalogReader.class});
                 while (it.hasNext()) {
                     keys.add(it.next());    //!!! use immutable key wrappers, some
                                             // instances may overwrite equals() so

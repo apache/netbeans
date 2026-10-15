@@ -62,8 +62,13 @@ public class NbProgressBar extends JProgressBar implements ExtractedProgressUIWo
     
     public void setUseInStatusBar(boolean use) {
         usedInStatusBar = use;
+
+        if (UIManager.getLookAndFeel().getID().startsWith("FlatLaf")) { //NOI18N
+            putClientProperty("JProgressBar.largeHeight", use ? true : null); //NOI18N
+        }
     }
-    
+
+    @Override
     public Dimension getPreferredSize() {
         Dimension supers = super.getPreferredSize();
         if (usedInStatusBar) {

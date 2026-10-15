@@ -301,7 +301,7 @@ public abstract class BreakpointImpl implements ConditionedExecutor, PropertyCha
         }
     }
 
-    synchronized protected void removeAllEventRequests () {
+    protected synchronized void removeAllEventRequests () {
         if (requests.isEmpty()) return;
         VirtualMachine vm = getDebugger().getVirtualMachine();
         if (vm == null) return; 
@@ -324,7 +324,7 @@ public abstract class BreakpointImpl implements ConditionedExecutor, PropertyCha
         requests = new LinkedList<EventRequest>();
     }
     
-    synchronized private void removeEventRequest(EventRequest r) {
+    private synchronized void removeEventRequest(EventRequest r) {
         VirtualMachine vm = getDebugger().getVirtualMachine();
         if (vm == null) return; 
         try {

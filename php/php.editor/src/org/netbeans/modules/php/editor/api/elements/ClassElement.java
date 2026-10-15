@@ -36,5 +36,14 @@ public interface ClassElement extends TraitedElement {
     Collection<QualifiedName> getFQMixinClassNames();
     boolean isFinal();
     boolean isAbstract();
+    boolean isReadonly();
     boolean isAnonymous();
+    /**
+     * Check whether a class is marked with #[\Attribute].
+     *
+     * @return {@code true} if a class is marked with #[\Attribute],
+     * {@code false} otherwise
+     * @since 2.36.0
+     */
+    boolean isAttribute();
 }

@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.MissingResourceException;
 import java.util.Set;
 import java.util.TreeSet;
@@ -197,7 +198,7 @@ public final class DesignSupport implements TaskListener, Runnable {
                         final String name = "Windows2/Modes/" + m.getNameExt(); // NOI18N
                         FileObject mode = FileUtil.createData(layer.getRoot(), name); // NOI18N
                         os = mode.getOutputStream();
-                        os.write(DesignSupport.readMode(m).getBytes("UTF-8")); // NOI18N
+                        os.write(DesignSupport.readMode(m).getBytes(StandardCharsets.UTF_8));
                         os.close();
                         sb.append(name).append("\n");
                     }

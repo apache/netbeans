@@ -49,7 +49,7 @@ public class ContextTest extends TestBase {
         prepareTest("test/Test.java", code);
 
         TreePath tp = info.getTreeUtilities().pathFor(pos);
-        Map<String, TreePath> variables = new HashMap<String, TreePath>();
+        Map<String, TreePath> variables = new HashMap<>();
         variables.put("$1", tp);
         variables.put("$2", tp.getParentPath());
         variables.put("$3", tp.getParentPath().getParentPath());

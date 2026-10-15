@@ -155,7 +155,7 @@ class PropertiesStorage implements NbPreferences.FileStorage {
                 }
             }
             
-            return folderNames.toArray(new String[folderNames.size()]);
+            return folderNames.toArray(new String[0]);
         } finally {
             sw.stop();
         }

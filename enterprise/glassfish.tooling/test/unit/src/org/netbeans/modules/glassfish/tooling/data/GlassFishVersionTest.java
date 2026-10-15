@@ -31,15 +31,12 @@ import org.testng.annotations.Test;
 @Test(groups = {"unit-tests"})
 public class GlassFishVersionTest {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Test that <code>toValue</code> handles addition values for given version
      * and additional values array.
      */
-    public static void verifyToValueFromAdditionalArray(
+    private static void verifyToValueFromAdditionalArray(
             GlassFishVersion version, String[] values) {
         for (String value : values) {
             GlassFishVersion gfVersion = GlassFishVersion.toValue(value);
@@ -47,10 +44,7 @@ public class GlassFishVersionTest {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Test methods                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Test that <code>toString</code> handles all <code>enum</code> values.
      */
@@ -85,6 +79,82 @@ public class GlassFishVersionTest {
                 GlassFishVersion.GF_3_1_STR_NEXT);
         verifyToValueFromAdditionalArray(GlassFishVersion.GF_4,
                 GlassFishVersion.GF_4_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_4_1_2,
+                GlassFishVersion.GF_4_1_2_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_5,
+                GlassFishVersion.GF_5_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_5_1_0,
+                GlassFishVersion.GF_5_1_0_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_6,
+                GlassFishVersion.GF_6_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_6_1_0,
+                GlassFishVersion.GF_6_1_0_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_6_2_5,
+                GlassFishVersion.GF_6_2_5_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_0,
+                GlassFishVersion.GF_7_0_0_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_1,
+                GlassFishVersion.GF_7_0_1_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_2,
+                GlassFishVersion.GF_7_0_2_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_3,
+                GlassFishVersion.GF_7_0_3_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_4,
+                GlassFishVersion.GF_7_0_4_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_5,
+                GlassFishVersion.GF_7_0_5_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_6,
+                GlassFishVersion.GF_7_0_6_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_7,
+                GlassFishVersion.GF_7_0_7_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_8,
+                GlassFishVersion.GF_7_0_8_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_9,
+                GlassFishVersion.GF_7_0_9_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_10,
+                GlassFishVersion.GF_7_0_10_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_11,
+                GlassFishVersion.GF_7_0_11_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_12,
+                GlassFishVersion.GF_7_0_12_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_13,
+                GlassFishVersion.GF_7_0_13_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_14,
+                GlassFishVersion.GF_7_0_14_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_15,
+                GlassFishVersion.GF_7_0_15_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_16,
+                GlassFishVersion.GF_7_0_16_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_17,
+                GlassFishVersion.GF_7_0_17_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_18,
+                GlassFishVersion.GF_7_0_18_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_19,
+                GlassFishVersion.GF_7_0_19_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_20,
+                GlassFishVersion.GF_7_0_20_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_21,
+                GlassFishVersion.GF_7_0_21_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_22,
+                GlassFishVersion.GF_7_0_22_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_23,
+                GlassFishVersion.GF_7_0_23_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_24,
+                GlassFishVersion.GF_7_0_24_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_25,
+                GlassFishVersion.GF_7_0_25_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_1_0,
+                GlassFishVersion.GF_7_1_0_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_8_0_0,
+                GlassFishVersion.GF_8_0_0_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_8_0_1,
+                GlassFishVersion.GF_8_0_1_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_8_0_2,
+                GlassFishVersion.GF_8_0_2_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_8_0_3,
+                GlassFishVersion.GF_8_0_3_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_8_0_4,
+                GlassFishVersion.GF_8_0_4_STR_NEXT);
     }
 
     /**
@@ -93,26 +163,52 @@ public class GlassFishVersionTest {
     @Test
     public void testToValueIncomplete() {
         GlassFishVersion versions[] = {
-            GlassFishVersion.GF_1,
-            GlassFishVersion.GF_2,
-            GlassFishVersion.GF_2_1,
-            GlassFishVersion.GF_2_1_1,
-            GlassFishVersion.GF_3,
-            GlassFishVersion.GF_3_1_2,
-            GlassFishVersion.GF_3_1_2_2,
-            GlassFishVersion.GF_3_1_2_3,
-            GlassFishVersion.GF_3_1_2_4
+            GlassFishVersion.GF_1, GlassFishVersion.GF_2,
+            GlassFishVersion.GF_2_1, GlassFishVersion.GF_2_1_1,
+            GlassFishVersion.GF_3, GlassFishVersion.GF_3_1_2,
+            GlassFishVersion.GF_3_1_2_2, GlassFishVersion.GF_3_1_2_3,
+            GlassFishVersion.GF_3_1_2_4, GlassFishVersion.GF_3_1_2_5,
+            GlassFishVersion.GF_4, GlassFishVersion.GF_4_0_1,
+            GlassFishVersion.GF_4_1, GlassFishVersion.GF_4_1_1,
+            GlassFishVersion.GF_4_1_2, GlassFishVersion.GF_5,
+            GlassFishVersion.GF_5_0_1, GlassFishVersion.GF_5_1_0,
+            GlassFishVersion.GF_6, GlassFishVersion.GF_6_1_0,
+            GlassFishVersion.GF_6_2_0, GlassFishVersion.GF_6_2_1,
+            GlassFishVersion.GF_6_2_2, GlassFishVersion.GF_6_2_3,
+            GlassFishVersion.GF_6_2_4, GlassFishVersion.GF_6_2_5,
+            GlassFishVersion.GF_7_0_0, GlassFishVersion.GF_7_0_1,
+            GlassFishVersion.GF_7_0_2, GlassFishVersion.GF_7_0_3,
+            GlassFishVersion.GF_7_0_4, GlassFishVersion.GF_7_0_5,
+            GlassFishVersion.GF_7_0_6, GlassFishVersion.GF_7_0_7,
+            GlassFishVersion.GF_7_0_8, GlassFishVersion.GF_7_0_9,
+            GlassFishVersion.GF_7_0_10, GlassFishVersion.GF_7_0_11,
+            GlassFishVersion.GF_7_0_12, GlassFishVersion.GF_7_0_13,
+            GlassFishVersion.GF_7_0_14, GlassFishVersion.GF_7_0_15,
+            GlassFishVersion.GF_7_0_16, GlassFishVersion.GF_7_0_17,
+            GlassFishVersion.GF_7_0_18, GlassFishVersion.GF_7_0_19,
+            GlassFishVersion.GF_7_0_20, GlassFishVersion.GF_7_0_21,
+            GlassFishVersion.GF_7_0_22, GlassFishVersion.GF_7_0_23,
+            GlassFishVersion.GF_7_0_24, GlassFishVersion.GF_7_0_25,
+            GlassFishVersion.GF_7_1_0, GlassFishVersion.GF_8_0_0,
+            GlassFishVersion.GF_8_0_1, GlassFishVersion.GF_8_0_2,
+            GlassFishVersion.GF_8_0_3, GlassFishVersion.GF_8_0_4
         };
         String strings[] = {
-            "1.0.1.4",
-            "2.0.1.5",
-            "2.1.0.3",
-            "2.1.1.7",
-            "3.0.0.1",
-            "3.1.2.1",
-            "3.1.2.2",
-            "3.1.2.3",
-            "3.1.2.4"
+            "1.0.1.4", "2.0.1.5", "2.1.0.3", "2.1.1.7",
+            "3.0.0.1", "3.1.2.1", "3.1.2.2", "3.1.2.3",
+            "3.1.2.4", "3.1.2.5", "4.0.0.0", "4.0.1.0",
+            "4.1.0.0", "4.1.1.0", "4.1.2.0", "5.0.0.0",
+            "5.0.1.0", "5.1.0.0", "6.0.0.0", "6.1.0.0",
+            "6.2.0.0", "6.2.1.0", "6.2.2.0", "6.2.3.0",
+            "6.2.4.0", "6.2.5.0", "7.0.0.0", "7.0.1.0",
+            "7.0.2.0", "7.0.3.0", "7.0.4.0", "7.0.5.0",
+            "7.0.6.0", "7.0.7.0", "7.0.8.0", "7.0.9.0",
+            "7.0.10.0", "7.0.11.0", "7.0.12.0", "7.0.13.0",
+            "7.0.14.0", "7.0.15.0", "7.0.16.0", "7.0.17.0",
+            "7.0.18.0", "7.0.19.0", "7.0.20.0", "7.0.21.0",
+            "7.0.22.0", "7.0.23.0", "7.0.24.0", "7.0.25.0",
+            "7.1.0.0", "8.0.0.0", "8.0.1.0", "8.0.2.0",
+            "8.0.3.0", "8.0.4.0"
         };
         for (int i = 0; i < versions.length; i++) {
             GlassFishVersion version = GlassFishVersion.toValue(strings[i]);

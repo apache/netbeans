@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -76,7 +77,7 @@ public final class EditableManifest {
      * @throws IOException if reading the stream failed, or the contents were syntactically malformed
      */
     public EditableManifest(InputStream is) throws IOException {
-        BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8")); // NOI18N
+        BufferedReader r = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
         sections = new LinkedList<Section>();
         String text;
         int blankLines = 0;
@@ -129,7 +130,7 @@ public final class EditableManifest {
      * @throws IOException if writing to the stream failed
      */
     public void write(OutputStream os) throws IOException {
-        Writer w = new OutputStreamWriter(os, "UTF-8"); // NOI18N
+        Writer w = new OutputStreamWriter(os, StandardCharsets.UTF_8);
         mainSection.write(w, !sections.isEmpty());
         Iterator<Section> it = sections.iterator();
         while (it.hasNext()) {
@@ -455,9 +456,9 @@ public final class EditableManifest {
         }
         
         public void write(Writer w, boolean forceBlankLine) throws IOException {
-            Iterator it = lines.iterator();
+            Iterator<Line> it = lines.iterator();
             while (it.hasNext()) {
-                Line line = (Line) it.next();
+                Line line = it.next();
                 line.write(w);
             }
             for (int i = 0; i < blankLinesAfter; i++) {

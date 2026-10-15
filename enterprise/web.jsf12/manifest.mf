@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.netbeans.modules.web.jsf12/1
-OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/web/jsf12/Bundle.properties
-OpenIDE-Module-Implementation-Version: 12
-AutoUpdate-Show-In-Client: false

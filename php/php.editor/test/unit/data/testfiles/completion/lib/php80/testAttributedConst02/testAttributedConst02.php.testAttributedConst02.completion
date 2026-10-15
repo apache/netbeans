@@ -1,0 +1,6 @@
+Code completion result for source line:
+#[Attr2|]
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTRUCTO Attr2                           [PUBLIC]   testAttributedConst02.php
+CONSTRUCTO Attr2(string $string)           [PUBLIC]   Attr2
+CONSTRUCTO Attr2(string $string, bool $bo  [PUBLIC]   Attr2

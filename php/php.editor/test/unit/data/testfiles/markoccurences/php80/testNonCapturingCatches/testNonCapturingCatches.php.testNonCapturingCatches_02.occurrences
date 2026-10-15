@@ -1,0 +1,3 @@
+class |>MARK_OCCURRENCES:ExceptionA<| extends Exception // test1
+} catch (|>MARK_OCCURRENCES:Exceptio^nA<|) { // test2
+} catch (|>MARK_OCCURRENCES:ExceptionA<| | ExceptionB) { // test3 test5

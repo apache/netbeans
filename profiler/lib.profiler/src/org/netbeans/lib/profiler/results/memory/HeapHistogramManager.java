@@ -34,7 +34,7 @@ import org.netbeans.lib.profiler.wireprotocol.HeapHistogramResponse;
  */
 public class HeapHistogramManager {
 
-    private Map<Integer, String> classesIdMap = new HashMap(8000);
+    private Map<Integer, String> classesIdMap = new HashMap<>(8000);
     private final ProfilerEngineSettings settings;
 
     public HeapHistogramManager(ProfilerEngineSettings settings) {
@@ -76,8 +76,8 @@ public class HeapHistogramManager {
 
         HeapHistogramImpl(Date t) {
             time = t;
-            heap = new HashSet(4096);
-            perm = new HashSet();
+            heap = new HashSet<>(4096);
+            perm = new HashSet<>();
         }
 
         void addClassInfo(ClassInfo ci, boolean permInfo) {

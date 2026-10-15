@@ -35,6 +35,7 @@ import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -320,7 +321,7 @@ public class AntBasedTestUtil {
         }
         InputStream is = new FileInputStream(f);
         try {
-            Reader r = new InputStreamReader(is, "UTF-8");
+            Reader r = new InputStreamReader(is, StandardCharsets.UTF_8);
             StringBuilder b = new StringBuilder();
             char[] buf = new char[4096];
             int read;
@@ -477,7 +478,7 @@ public class AntBasedTestUtil {
         StringBuilder b = new StringBuilder((int)f.length());
         InputStream is = new FileInputStream(f);
         try {
-            Reader r = new InputStreamReader(is, "UTF-8");
+            Reader r = new InputStreamReader(is, StandardCharsets.UTF_8);
             char[] buf = new char[4096];
             int i;
             while ((i = r.read(buf)) != -1) {
@@ -504,7 +505,7 @@ public class AntBasedTestUtil {
        assert s2.length() - s.length() == count * (to.length() - from.length());
        OutputStream os = new FileOutputStream(f);
        try {
-           Writer w = new OutputStreamWriter(os, "UTF-8");
+           Writer w = new OutputStreamWriter(os, StandardCharsets.UTF_8);
            w.write(s2);
            w.flush();
        } finally {

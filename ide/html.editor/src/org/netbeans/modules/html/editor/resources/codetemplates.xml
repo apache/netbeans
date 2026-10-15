@@ -21,64 +21,110 @@
 -->
 <!DOCTYPE codetemplates PUBLIC "-//NetBeans//DTD Editor Code Templates settings 1.0//EN" "http://www.netbeans.org/dtds/EditorCodeTemplates-1_0.dtd">
 <codetemplates>
-    <codetemplate abbreviation="scr" xml:space="preserve">
+    <codetemplate abbreviation="a" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<a href="${url}">${cursor}</a>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="a:target" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<a href="${url}" target="${target}">${cursor}</a>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="a:blank" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<a href="${url}" target="_blank">${cursor}</a>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="scr" xml:space="preserve" contexts="html-code">
         <code><![CDATA[<script src="${link}">${cursor}</script>]]></code>
     </codetemplate>
-    <codetemplate abbreviation="d" xml:space="preserve">
+    <codetemplate abbreviation="d" xml:space="preserve" contexts="html-code">
         <code><![CDATA[<div>${content}${cursor}</div>]]></code>
     </codetemplate>
-    <codetemplate abbreviation="ul" xml:space="preserve">
+    <codetemplate abbreviation="p" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<p>${text}${cursor}</p>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="b" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<b>${text}</b>${cursor}]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="i" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<i>${text}</i>${cursor}]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="st" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<strong>${text}</strong>${cursor}]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="sp" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<span class="${class}">${text}</span>${cursor}]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="ul" xml:space="preserve" contexts="html-code">
         <code><![CDATA[<ul>
     <li>${first}</li>
     <li>${second}</li>
-    <li>${third}</li>
-    ${cursor}
+    <li>${third}</li>${cursor}
 </ul>
 ]]></code>
     </codetemplate>
-    <codetemplate abbreviation="form" xml:space="preserve">
+    <codetemplate abbreviation="form" xml:space="preserve" contexts="html-code">
         <code><![CDATA[<form action="${action}">${cursor}</form>]]></code>
     </codetemplate>
-    <codetemplate abbreviation="c" xml:space="preserve">
+    <codetemplate abbreviation="c" xml:space="preserve" contexts="html-code">
         <code><![CDATA[<!-- ${comment} -->]]></code>
     </codetemplate>
-    <codetemplate abbreviation="link" xml:space="preserve">
+    <codetemplate abbreviation="link" xml:space="preserve" contexts="html-code">
         <code><![CDATA[<link rel="stylesheet" href="${url}"/>]]></code>
     </codetemplate>
-    <codetemplate abbreviation="tab" xml:space="preserve">
+    <codetemplate abbreviation="tab" xml:space="preserve" contexts="html-code">
         <code><![CDATA[<table>
     <tr>
         <th>${Header}</th>
         <th>${Header2}</th>
     </tr>
     <tr>
-        <td>${Cell}</td>
-        <td>${Cell}</td>
+        <td>${Cell1}</td>
+        <td>${Cell2}</td>
     </tr>
     <tr>
-        <td>${Cell}</td>
-        <td>${Cell}</td>
-    </tr>
-    ${cursor}
+        <td>${Cell3}</td>
+        <td>${Cell4}</td>
+    </tr>${cursor}
 </table>]]></code>
     </codetemplate>
-    <codetemplate abbreviation="tit" xml:space="preserve">
+    <codetemplate abbreviation="ta" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<table>${cursor}</table>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="tr" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<tr>${cursor}</tr>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="trth" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<tr>
+    <th>${header}</th>${cursor}
+</tr>
+]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="trtd" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<tr>
+    <td>${cell}</td>${cursor}
+</tr>
+]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="th" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<th>${header}</th>${cursor}]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="td" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<td>${cell}</td>${cursor}]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="tit" xml:space="preserve" contexts="html-code">
         <code><![CDATA[<title>${title}</title>]]></code>
     </codetemplate>
-    <codetemplate abbreviation="he" xml:space="preserve">
+    <codetemplate abbreviation="he" xml:space="preserve" contexts="html-code">
         <code><![CDATA[<head>
     ${cursor}
 </head>]]></code>
     </codetemplate>
-    <codetemplate abbreviation="bo" xml:space="preserve">
+    <codetemplate abbreviation="bo" xml:space="preserve" contexts="html-code">
         <code><![CDATA[<body>
     ${cursor}
 </body>]]></code>
     </codetemplate>
-    <codetemplate abbreviation="doc" xml:space="preserve">
+    <codetemplate abbreviation="doc" xml:space="preserve" contexts="html-code">
         <code><![CDATA[<!doctype html>]]></code>
     </codetemplate>
-    <codetemplate abbreviation="html" xml:space="preserve">
+    <codetemplate abbreviation="html" xml:space="preserve" contexts="html-code">
         <code><![CDATA[<html>
     <head>
         <title>${title}</title>
@@ -89,7 +135,7 @@
 </html>
 ]]></code>
     </codetemplate>
-    <codetemplate abbreviation="ol" xml:space="preserve">
+    <codetemplate abbreviation="ol" xml:space="preserve" contexts="html-code">
         <code><![CDATA[<ol>
     <li>${first}</li>
     <li>${second}</li>
@@ -97,5 +143,201 @@
     ${cursor}
 </ol>
 ]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="li" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<li>${item}</li>${cursor}]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="label" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<label>${text}</label>${cursor}]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="labelf" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<label for="${id}">${text}</label>${cursor}]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<input type="${type}" name="${name}"${cursor}>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:button" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<input type="button" value="${Button}"${cursor}>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:check" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<input type="checkbox" id="${id}" name="${name}" value="${value}"${cursor}>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:checkl" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<label>${text}
+    <input type="checkbox" id="${id}" name="${name}" value="${value}">
+</label>${cursor}]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:checklf" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<input type="checkbox" id="${id}" name="${name}" value="${value}">
+<label for="${id}">${text}</label>${cursor}]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:color" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<input type="color"${cursor}>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:colorv" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<input type="color" value="${#ffffff}"${cursor}>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:date" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<input type="date"${cursor}>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:datetl" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<input type="datetime-local"${cursor}>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:email" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<input type="email" id="${id}"${cursor}>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:file" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<input type="file" id="${id}" accept="${image/png,image/jpeg}"${cursor}>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:filem" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<input type="file" id="${id}" accept="${image/png,image/jpeg}" multiple="multiple"${cursor}>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:hidden" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<input type="hidden" id="${id}" name="${name}" value="${value}"${cursor}>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:image" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<input type="image" id="${id}" src="${src}" width="${width}" height="${height}" alt="${alt}"${cursor}>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:number" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<input type="number"${cursor}>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:month" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<input type="month"${cursor}>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:pass" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<input type="password" id="${id}" minlength="${8}"${cursor}>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:radio" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<input type="radio" id="${id}" name="${name}" value="${value}"${cursor}>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:radiol" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<label>${text}
+    <input type="radio" id="${id}" name="${name}" value="${value}">
+</label>${cursor}]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:radiolf" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<input type="radio" id="${id}" name="${name}" value="${value}">
+<label for="${id}">${text}</label>${cursor}]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:range" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<input type="range" min="${0}" max="${50}"${cursor}>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:reset" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<input type="reset" value="${Reset}"${cursor}>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:search" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<input type="search" id="${id}"${cursor}>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:submit" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<input type="submit" value="${Submit}"${cursor}>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:tel" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<input type="tel" id="${id}"${cursor}>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:telp" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<input type="tel" id="${id}" pattern="${pattern}"${cursor}>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:text" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<input type="text" id="${id}"${cursor}>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:time" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<input type="time" id="${id}"${cursor}>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:url" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<input type="url" id="${id}"  name="${name}"${cursor}>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="in:week" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<input type="week" id="${id}"${cursor}>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="texta" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<textarea id="${id}" name="${name}" rows="${5}" cols="${10}">${cursor}</textarea>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="me:char" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<meta charset="${UTF-8}">${cursor}]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="me:content-type" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<meta http-equiv="content-type" content="text/html; charset=${UTF-8}">${cursor}]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="me:http" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<meta http-equiv="${content-type}" content="${content}"${cursor}>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="me:key" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<meta name="keywords" content="${keywords}">]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="me:name" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<meta name="${name}" content="${content}"${cursor}>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="me:viewport" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<meta name="viewport" content="width=device-width, initial-scale=1.0">${cursor}]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="datal" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<datalist id="${list}">
+    <option value="${first}">${text1}</option>
+    <option value="${second}">${text2}</option>
+    <option value="${third}">${text3}</option>${cursor}
+</datalist>
+]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="sel" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<select id="${id}">
+    <option value="${first}">${text1}</option>
+    <option value="${second}">${text2}</option>
+    <option value="${third}">${text3}</option>${cursor}
+</select>
+]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="op" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<option value="${value}">${text}</option>${cursor}]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="ad" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<address>${cursor}</address>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="art" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<article class="${class}">${cursor}</article>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="as" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<aside>${cursor}</aside>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="footer" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<footer>${cursor}</footer>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="header" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<header>${cursor}</header>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="hg" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<hgroup>${cursor}</hgroup>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="main" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<main>${cursor}</main>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="nav" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<nav>${cursor}</nav>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="sec" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<section>${cursor}</section>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="h1" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<h1>${title}</h1>${cursor}]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="h2" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<h2>${title}</h2>${cursor}]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="h3" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<h3>${title}</h3>${cursor}]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="h4" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<h4>${title}</h4>${cursor}]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="h5" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<h5>${title}</h5>${cursor}]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="h6" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<h6>${title}</h6>${cursor}]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="img" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<img src="${src}" alt="${alt}"${cursor}/>]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="img:wh" xml:space="preserve" contexts="html-code">
+        <code><![CDATA[<img src="${src}" width="${width}" height="${height}" alt="${alt}"${cursor}/>]]></code>
     </codetemplate>
 </codetemplates>

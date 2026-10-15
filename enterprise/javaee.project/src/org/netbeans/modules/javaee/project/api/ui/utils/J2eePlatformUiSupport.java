@@ -132,7 +132,7 @@ public class J2eePlatformUiSupport {
                         }
                     }
                 }
-                j2eePlatforms = orderedNames.toArray(new J2eePlatformAdapter[orderedNames.size()]);
+                j2eePlatforms = orderedNames.toArray(new J2eePlatformAdapter[0]);
             }
             return j2eePlatforms;
         }
@@ -187,7 +187,7 @@ public class J2eePlatformUiSupport {
                 orderedListItems.add(0, new J2eePlatformComboBoxItem(Profile.J2EE_13));
             }
             
-            j2eeSpecVersions = orderedListItems.toArray(new J2eePlatformComboBoxItem[orderedListItems.size()]);
+            j2eeSpecVersions = orderedListItems.toArray(new J2eePlatformComboBoxItem[0]);
             selectedJ2eeSpecVersion = initialJ2eeSpecVersion;
         }
         

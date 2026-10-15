@@ -46,7 +46,7 @@ public class DDRegistryParser implements Iterator {
     /**
      *	Analyze and resolve the vriable references specified in the path
      */
-    static public class PathResolver {
+    public static class PathResolver {
 	
 	static final char VARBEGIN 		= '{';
 	static final char VAREND 		= '}';
@@ -117,7 +117,7 @@ public class DDRegistryParser implements Iterator {
 	    }
 	    
 	    if (path.indexOf('#') == 0 ) {
-		path = path.substring(1, path.length());
+		path = path.substring(1);
 		
 		String remSuffix = null;
 		int idx = path.indexOf('-');
@@ -131,7 +131,7 @@ public class DDRegistryParser implements Iterator {
 		    int in = path.indexOf(':');
 		    if (in != -1) {
 			String name = path.substring(in+1);
-			path = this.getDDNameValue(cur, name).toString();;
+			path = this.getDDNameValue(cur, name).toString();
 			path = cur.getRegistry().getName(path);
 		    } else {
 			path = cur.getRegistry().getName(cur);
@@ -224,7 +224,7 @@ public class DDRegistryParser implements Iterator {
      *  Note that DDCursor can be created in two different ways: from a schema2beans
      *  path or from a schema2beans node (BaseBean).
      */
-    static public class DDCursor {
+    public static class DDCursor {
 	DDCursor 	parent;
 	BaseBean 	root;
 	DDRegistry 	registry;
@@ -427,7 +427,7 @@ public class DDRegistryParser implements Iterator {
 	    graphName = path.substring(1, idx);
 	    
 	    if (path.length() > idx+1)
-		path = path.substring(idx+1, path.length());
+		path = path.substring(idx+1);
 	    else
 		path = ".";	// NOI18N
 	    

@@ -34,7 +34,7 @@ import org.openide.windows.TopComponent;
  * Corresponds to core.io.ui...IOWindow.
  * @author ivan
  */
-final public class TerminalContainerMuxable extends TerminalContainerCommon {
+public final class TerminalContainerMuxable extends TerminalContainerCommon {
 
     private final JPanel cardContainer = new JPanel();
     private final CardLayout cardLayout = new CardLayout();
@@ -67,7 +67,7 @@ final public class TerminalContainerMuxable extends TerminalContainerCommon {
     }
 
     @Override
-    final protected void addTabWork(JComponent comp) {
+    protected final void addTabWork(JComponent comp) {
 	final String cardName = cardName(comp);
 	cardContainer.add(cardName, comp);
 	cardLayout.addLayoutComponent(comp, cardName);
@@ -76,7 +76,7 @@ final public class TerminalContainerMuxable extends TerminalContainerCommon {
     }
 
     @Override
-    final protected void removeTabWork(JComponent comp) {
+    protected final void removeTabWork(JComponent comp) {
 	cardContainer.remove(comp);
 	cardLayout.removeLayoutComponent(comp);
 	components.remove(comp);

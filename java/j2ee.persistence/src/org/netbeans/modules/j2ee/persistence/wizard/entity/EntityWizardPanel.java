@@ -35,8 +35,6 @@ import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.ui.TypeElementFinder;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.j2ee.persistence.provider.InvalidPersistenceXmlException;
-import org.netbeans.modules.schema2beans.Schema2BeansException;
-import org.netbeans.modules.schema2beans.Schema2BeansException;
 import org.netbeans.modules.j2ee.persistence.provider.ProviderUtil;
 import org.openide.filesystems.FileObject;
 import org.openide.util.ImageUtilities;
@@ -199,28 +197,25 @@ public class EntityWizardPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
     
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                final ElementHandle<TypeElement> handle = TypeElementFinder.find(null, new TypeElementFinder.Customizer() {
-
-                    @Override
-                            public Set<ElementHandle<TypeElement>> query(ClasspathInfo classpathInfo, String textForQuery, NameKind nameKind, Set<SearchScope> searchScopes) {
-                                return classpathInfo.getClassIndex().getDeclaredTypes(textForQuery, nameKind, searchScopes);
-                            }
-
-                    @Override
-                            public boolean accept(ElementHandle<TypeElement> typeHandle) {
-                                //XXX not all types are supported as identifiers by the jpa spec, but 
-                                // leaving unrestricted for now since different persistence providers 
-                                // might support more types
-                                return true;
-                            }
-                        });
-
-                if (handle != null) {
-                    primaryKeyTextField.setText(handle.getQualifiedName());
+        SwingUtilities.invokeLater( () -> {
+            final ElementHandle<TypeElement> handle = TypeElementFinder.find(null, new TypeElementFinder.Customizer() {
+                
+                @Override
+                public Set<ElementHandle<TypeElement>> query(ClasspathInfo classpathInfo, String textForQuery, NameKind nameKind, Set<SearchScope> searchScopes) {
+                    return classpathInfo.getClassIndex().getDeclaredTypes(textForQuery, nameKind, searchScopes);
                 }
+                
+                @Override
+                public boolean accept(ElementHandle<TypeElement> typeHandle) {
+                    //XXX not all types are supported as identifiers by the jpa spec, but
+                    // leaving unrestricted for now since different persistence providers
+                    // might support more types
+                    return true;
+                }
+            });
+            
+            if (handle != null) {
+                primaryKeyTextField.setText(handle.getQualifiedName());
             }
         });
     }//GEN-LAST:event_searchButtonActionPerformed

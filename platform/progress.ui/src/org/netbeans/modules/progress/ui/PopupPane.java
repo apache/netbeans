@@ -38,9 +38,9 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 import org.netbeans.modules.progress.spi.InternalHandle;
-import org.netbeans.modules.progress.spi.UIInternalHandle;
 import org.openide.util.Mutex;
 
 /**
@@ -119,6 +119,11 @@ public class PopupPane extends JScrollPane {
                         break;
                     }
                 }
+                if (view.getComponentCount() > 0) {
+                    // remove bottom border from last component
+                    JComponent last = (JComponent)view.getComponent(view.getComponentCount() - 1);
+                    last.setBorder(null);
+                }
                 if (listComponents.size() > 3) {
                     setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
                 } else {
@@ -155,9 +160,14 @@ public class PopupPane extends JScrollPane {
     
     private static class BottomLineBorder implements Border {
         private Insets ins = new Insets(0, 0, 1, 0);
-        private Color col = new Color(221, 229, 248);
+        private Color col;
         
-        public BottomLineBorder () {}
+        public BottomLineBorder () {
+            col = UIManager.getColor("Separator.foreground"); // NOI18N
+            if (col == null) {
+                col = new Color(221, 229, 248);
+            }
+        }
         
         public @Override Insets getBorderInsets(Component c) {
             return ins;

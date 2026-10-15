@@ -20,7 +20,6 @@ package org.netbeans.modules.web.jsf.editor.el;
 
 import java.util.Iterator;
 import java.util.SortedSet;
-import static junit.framework.Assert.assertNotNull;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.UserTask;

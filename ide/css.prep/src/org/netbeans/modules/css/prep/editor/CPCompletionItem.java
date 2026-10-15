@@ -18,25 +18,18 @@
  */
 package org.netbeans.modules.css.prep.editor;
 
-import java.awt.Color;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.HtmlFormatter;
 import org.netbeans.modules.css.editor.module.spi.CssCompletionItem;
 import org.netbeans.modules.css.prep.editor.model.CPElementHandle;
-import static org.netbeans.modules.css.prep.editor.model.CPElementType.VARIABLE_GLOBAL_DECLARATION;
-import org.netbeans.modules.web.common.ui.api.WebUIUtils;
-import org.netbeans.swing.plaf.LFCustoms;
 
 /**
  *
  * @author marekfukala
  */
 public abstract class CPCompletionItem extends CssCompletionItem {
-
-    protected static final Color COLOR = new Color(0, 0, 0);
-    protected static final Color ORIGIN_COLOR = new Color(99, 99, 99);
     
     protected String origin;
     protected CPElementHandle handle;
@@ -52,9 +45,7 @@ public abstract class CPCompletionItem extends CssCompletionItem {
         switch (handle.getType()) {
             case VARIABLE_GLOBAL_DECLARATION:
             case MIXIN_DECLARATION:
-                formatter.appendHtml("<font color=");
-                formatter.appendHtml(WebUIUtils.toHexCode(LFCustoms.shiftColor(COLOR)));
-                formatter.appendHtml("><b>"); //NOI18N
+                formatter.emphasis(true);
                 break;
         }
         
@@ -63,7 +54,7 @@ public abstract class CPCompletionItem extends CssCompletionItem {
         switch (handle.getType()) {
             case MIXIN_DECLARATION:
             case VARIABLE_GLOBAL_DECLARATION:
-                formatter.appendHtml("</b></font>"); //NOI18N);
+                formatter.emphasis(false);
                 break;
         }
         
@@ -72,14 +63,12 @@ public abstract class CPCompletionItem extends CssCompletionItem {
 
     @Override
     public String getRhsHtml(HtmlFormatter formatter) {
-        if(origin == null) {
+        if (origin == null) {
             return super.getRhsHtml(formatter);
         } else {
-            formatter.appendHtml("<font color=");
-            formatter.appendHtml(WebUIUtils.toHexCode(LFCustoms.shiftColor(ORIGIN_COLOR)));
-            formatter.appendHtml(">");
+            formatter.type(true);
             formatter.appendText(origin);
-            formatter.appendHtml("</font>"); //NOI18N
+            formatter.type(false);
             return formatter.getText();
         }
     }

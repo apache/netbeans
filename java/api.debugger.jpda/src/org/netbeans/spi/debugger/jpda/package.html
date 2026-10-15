@@ -33,8 +33,8 @@ JPDA Debugger SPIs defines support for Smart Stepping, Variables Filtering
 and filtering of all Debugger Views.
 
 <br>
-<h3><a name="Smart_Stepping_Support"></a>Smart Stepping Support</h3>
-<h4><span style="font-weight: bold;">Interfaces involved:</span></h4>
+<h2 id="Smart_Stepping_Support">Smart Stepping Support</h2>
+<h3><span style="font-weight: bold;">Interfaces involved:</span></h3>
 <ul>
   <li>{@link org.netbeans.api.debugger.jpda.SmartSteppingFilter} :
 Defines list of class exclusion filters to be used to filter stepping
@@ -46,7 +46,7 @@ can stop in. </li>
 context for SmartSteppingCallback (class name, method name, line
 number, ...).</li>
 </ul>
-<h4><span style="font-weight: bold;">Functionality supported:</span></h4>
+<h3><span style="font-weight: bold;">Functionality supported:</span></h3>
 <div style="margin-left: 40px;">Set of SmartSteppingCallback installed
 to JPDA Debugger defines scope for Step Into / Over / Out Actions. When
 user press some Step action, debugging is resumed. And when debugger
@@ -65,7 +65,7 @@ all sourceless classes (packages). So, if user does not have mounted
 sources for Java default libraries, this SSListener adds patterns like:
 java.*, javax.* and com.sun.*. <br>
 </div>
-<h4>How to implement some new Smart Stepping Listener:</h4>
+<h3>How to implement some new Smart Stepping Listener:</h3>
 <div style="margin-left: 40px;">Lets say we have some xxx module which
 generates some code to standard Java classes. The generated code is
 always in some methods, which name is prefixed with "xxx" like:<br>
@@ -81,21 +81,20 @@ To register this implementation, add following annotation before the class decla
 Or register the full implementation class name (packagename.SmartSteppingCallbackImpl) into the file named:<br>
 <pre style="background-color: rgb(255, 255, 102);">META-INF\debugger\netbeans-JPDASession\org.netbeans.spi.debugger.jpda.SmartSteppingCallback</pre>
 </div>
-<h3><a name="Variables_Filtering_Support"></a>Variables Filtering
-Support</h3>
+<h2 id="Variables_Filtering_Support">Variables Filtering
+Support</h2>
 <br>
-<h3><a name="Filtering_of_Debugger_Views"></a>Filtering of Debugger
-Views</h3>
-<ul>
-</ul>
+<h2 id="Filtering_of_Debugger_Views">Filtering of Debugger
+Views</h2>
+
 <div style="margin-left: 40px;">Content of all Debugger Views (like
 Breakpoints View, Threads View, ...) can be changed by
 viewmodel.*Filters. Folowing example shows how to filter Callstack
 View. We would hide all frames associated with some "java.*" packages.
 Some dummy node will be displayed in the place of this frames.<br>
-<h4>Step 1.</h4>
-<div style="margin-left: 40px;">We should implement {@link
-org.netbeans.spi.viewmodel.TreeModelFilter} first:<br>
+<h3>Step 1.</h3>
+<div style="margin-left: 40px;">We should implement <a href="@org-netbeans-spi-viewmodel@/org/netbeans/spi/viewmodel/TreeModelFilter.html">
+org.netbeans.spi.viewmodel.TreeModelFilter</a> first:<br>
 <pre style="background-color: rgb(255, 255, 102);">public class CallStackFilter implements TreeModelFilter {<br>    <br>    public Object[] getChildren (TreeModel original, Object parent, int from, int to) {<br>        Object[] originalCh = original.getChildren (parent, from, to);<br>        int i, k = originalCh.length;<br>        ArrayList newCh = new ArrayList ();<br>        boolean in = false;<br>        for (i = 0; i &lt; k; i++) {<br>            if (! (originalCh [i] instanceof CallStackFrame)) {<br>                newCh.add (originalCh [i]);<br>
                 continue;<br>            }<br>            CallStackFrame f = (CallStackFrame) originalCh [i];<br>            String className = f.getClassName ();<br>            if (className.startsWith ("java")) {<br>                if (!in) {<br>                    newCh.add (new JavaxSwing ());<br>                    in = true;<br>                }<br>            } else {<br>                in = false;<br>                newCh.add (f);<br>            }<br>        }<br>        return newCh.toArray ();<br>    }<br>    <br>    public Object getRoot (TreeModel original) {<br>        return original.getRoot ();<br>    }<br>    <br>    public boolean isLeaf (TreeModel original, Object node) <br>    throws UnknownTypeException {<br>        if (node instanceof JavaxSwing) return true;<br>        return original.isLeaf (node);<br>    }<br>    <br>    private static class JavaFrames {}<br>}<br></pre>
 And register it in file:<br>
@@ -107,7 +106,7 @@ by some dummy node.<br>
  alt="Callstack Filtering 2" width="559" height="285">
 </div>
  
-<h4>Step 2.</h4>
+<h3>Step 2.</h3>
 </div>
 <div style="margin-left: 80px;">We should provide NodeModel (at least)
 for our new node type (JavaFrames) now.<br>
@@ -116,7 +115,7 @@ for our new node type (JavaFrames) now.<br>
 And registration:<br>
 <pre style="background-color: rgb(255, 255, 102);">Meta-inf\debugger\netbeans-JPDASession\CallStackView\org.netbeans.spi.viewmodel.TreeModelFilter</pre>
 <img
- src="doc-files/CallStackViewFilterring3.JPG" title=""
+ src="doc-files/CallStackViewFilterring3.JPG"
  alt="Callstack View Filtering 3" style="width: 322px; height: 285px;">
 <br>
 <br>

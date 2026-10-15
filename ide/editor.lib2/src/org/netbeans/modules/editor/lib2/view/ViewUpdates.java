@@ -137,7 +137,7 @@ public final class ViewUpdates implements DocumentListener, EditorViewFactoryLis
                 }
             }
         }
-        viewFactories = factoryList.toArray(new EditorViewFactory[factoryList.size()]);
+        viewFactories = factoryList.toArray(new EditorViewFactory[0]);
         if (LOG.isLoggable(Level.FINE)) {
             LOG.log(Level.FINE, "ViewUpdates initializing for {0}, factories: {1}", 
                     new Object[] { docView.getTextComponent(), Arrays.asList(viewFactories) });

@@ -1,0 +1,5 @@
+Code completion result for source line:
+readonly public str|ing $readonlyPublic;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    string                                     null

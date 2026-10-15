@@ -1,0 +1,3 @@
+    public static function |>MARK_OCCURRENCES:create<|(string $name): User {
+$country = User::|>MARK_OCCURRENCES:create<|("test")?->getAddress()?->country;
+$country = $session->getUser()::|>MARK_OCCURRENCES:cre^ate<|("test")?->getAddress()->country;

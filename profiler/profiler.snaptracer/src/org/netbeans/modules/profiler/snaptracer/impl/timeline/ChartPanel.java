@@ -411,7 +411,7 @@ final class ChartPanel extends JPanel {
     }
 
 
-    private static abstract class OneWayToggleButton extends JToggleButton {
+    private abstract static class OneWayToggleButton extends JToggleButton {
 
         private boolean action;
 

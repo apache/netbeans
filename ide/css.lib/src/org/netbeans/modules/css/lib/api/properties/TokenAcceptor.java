@@ -33,11 +33,9 @@ import org.openide.util.lookup.InstanceContent;
  */
 public abstract class TokenAcceptor {
 
-    public static final Collection<TokenAcceptor> ACCEPTORS = 
-            new ArrayList<TokenAcceptor>();
-    public static final Map<String, TokenAcceptor> ACCEPTORS_MAP = 
-            new LinkedHashMap<String, TokenAcceptor> ();
-    private static Lookup INSTANCES;
+    public static final Collection<TokenAcceptor> ACCEPTORS = new ArrayList<>();
+    public static final Map<String, TokenAcceptor> ACCEPTORS_MAP = new LinkedHashMap<> ();
+    private static final Lookup INSTANCES;
 
     static {
         ACCEPTORS.add(new Resolution("resolution"));
@@ -59,13 +57,14 @@ public abstract class TokenAcceptor {
         ACCEPTORS.add(new Decibel("decibel"));
         ACCEPTORS.add(new RelativeLength("relative-length"));
         ACCEPTORS.add(new Uri("uri"));
-        ACCEPTORS.add(new Anything("anything")); 
-        
-        ACCEPTORS.add(new GenericFunctionContent("function-content")); 
+        ACCEPTORS.add(new Anything("anything"));
+        ACCEPTORS.add(new Urange("urange"));
+        ACCEPTORS.add(new Flex("flex"));
+        ACCEPTORS.add(new NonBrace("nonbrace"));
         
         InstanceContent content = new InstanceContent();
         for(TokenAcceptor ta : ACCEPTORS) {
-            ACCEPTORS_MAP.put(ta.id(), ta);
+            ACCEPTORS_MAP.put(ta.id().toLowerCase(), ta);
             content.add(ta);
         }
         INSTANCES = new AbstractLookup(content);
@@ -80,7 +79,7 @@ public abstract class TokenAcceptor {
         return ACCEPTORS_MAP.get(name.toLowerCase());
     }
 
-    private String id;
+    private final String id;
 
     public TokenAcceptor(String id) {
         this.id = id;
@@ -98,7 +97,7 @@ public abstract class TokenAcceptor {
     
     public static class Resolution extends NumberPostfixAcceptor {
 
-        private static final List<String> POSTFIXES = Arrays.asList(new String[]{"dpi", "dppx", "dpcm"}); //NOI18N
+        private static final List<String> POSTFIXES = Arrays.asList(new String[]{"dpi", "dppx", "dpcm", "x"}); //NOI18N
 
         public Resolution(String id) {
             super(id);
@@ -190,8 +189,34 @@ public abstract class TokenAcceptor {
 
         @Override
         public boolean accepts(Token token) {
-            int len = token.image().length();
-            return token.tokenId() == CssTokenId.HASH && (len == 4 || len == 7); //three of six hex digits after hash sign are allowed
+            if(token.tokenId() != CssTokenId.HASH) {
+                return false;
+            }
+            CharSequence cs = token.image();
+            // Variants:
+            // #RGB
+            // #RRGGBB
+            // #RGBA
+            // #RRGGBBAA
+            int len = cs.length();
+            if(len != 4 && len != 7 && len != 5 && len != 9) {
+                return false;
+            }
+            if (cs.charAt(0) != '#') {
+                return false;
+            }
+            for (int i = 1; i < len; i++) {
+                if (!hexChar(cs.charAt(i))) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private static boolean hexChar(int val) {
+            return (val >= '0' && val <= '9')
+                    || ( val >= 'a' && val <= 'f')
+                    || (val >= 'A' && val <= 'F');
         }
     }
 
@@ -278,8 +303,9 @@ public abstract class TokenAcceptor {
         //!!! if a longer postfix has sub-postfix which equals to any of the shortest
         //postfixes, then it needs to be before the sub-postfix postfix (e.g. rem - em)!!!
         private static final List<String> POSTFIXES = Arrays.asList(new String[]{
-            "rem", "vmin", "vmax", "ex", "em", "vw", "vh", "ch",
-            "cm", "mm", "in", "pt", "pc", "px"}); //NOI18N
+            "rem", "vmin", "vmax", "cqmin", "cqmax", "ex", "em", "vw", "vh", "ch",
+            "cm", "mm", "in", "pt", "pc", "px",
+            "cqw", "cqh", "cqi", "cqb"}); //NOI18N
 
         public Length(String id) {
             super(id);
@@ -310,7 +336,7 @@ public abstract class TokenAcceptor {
             Float f = super.getNumberValue(image);
             if(f == null) {
                 if(image.length() > 0 && image.charAt(0) == '0') {
-                    f = new Float(0);
+                    f = 0F;
                 }
             } 
             return f;
@@ -357,7 +383,7 @@ public abstract class TokenAcceptor {
         
         public Float getNumberValue(String token) {
             try {
-                return Float.parseFloat(token);
+                return Float.valueOf(token);
             } catch (NumberFormatException nfe) {
                 return null;
             }
@@ -373,6 +399,8 @@ public abstract class TokenAcceptor {
         /**
          * Please be aware that if there are prefixes that ends with another prefix image
          * the order must be: the longer prefix sooner! (khz, hz)
+         * 
+         * @return postfixes to match with this acceptor
          */
         protected abstract List<String> postfixes();
 
@@ -398,7 +426,7 @@ public abstract class TokenAcceptor {
             
             CharSequence numberImage = image.subSequence(0, image.length() - postfix.length());
             try {
-                return Float.parseFloat(numberImage.toString());
+                return Float.valueOf(numberImage.toString());
             } catch (NumberFormatException nfe) {
                 return null;
             }
@@ -449,6 +477,20 @@ public abstract class TokenAcceptor {
         }
     }
 
+    public static class Flex extends NumberPostfixAcceptor {
+
+        private static final List<String> POSTFIXES = Collections.singletonList("fr"); //NOI18N
+
+        public Flex(String id) {
+            super(id);
+        }
+
+        @Override
+        protected List<String> postfixes() {
+            return POSTFIXES;
+        }
+    }
+
     public static class StringAcceptor extends TokenImageAcceptor {
 
         public StringAcceptor(String id) {
@@ -490,7 +532,7 @@ public abstract class TokenAcceptor {
         
     }
 
-    public static abstract class TokenImageAcceptor extends TokenAcceptor {
+    public abstract static class TokenImageAcceptor extends TokenAcceptor {
 
         public TokenImageAcceptor(String id) {
             super(id);
@@ -525,18 +567,45 @@ public abstract class TokenAcceptor {
         }
         
     }
-    
-    private static class GenericFunctionContent extends TokenAcceptor {
 
-        public GenericFunctionContent(String id) {
+    public static class Urange extends TokenAcceptor {
+
+        private static final String URANGE_TOKEN_IMAGE = "U+";
+
+        public Urange(String id) {
             super(id);
         }
 
         @Override
         public boolean accepts(Token token) {
-            //consume everything except ")"
-            return token.tokenId() != CssTokenId.RPAREN;
+            return token.tokenId() == CssTokenId.URANGE;
         }
-        
+
+        @Override
+        Collection<String> getFixedImageTokens() {
+            return Collections.singleton(URANGE_TOKEN_IMAGE);
+        }
+
+    }
+
+    private static class NonBrace extends TokenAcceptor {
+        private static final Set<CssTokenId> BRACES = new HashSet<>(Arrays.asList(
+                CssTokenId.LBRACE,
+                CssTokenId.LBRACKET,
+                CssTokenId.LPAREN,
+                CssTokenId.RBRACE,
+                CssTokenId.RBRACKET,
+                CssTokenId.RPAREN
+        ));
+
+        public NonBrace(String id) {
+            super(id);
+        }
+
+        @Override
+        public boolean accepts(Token token) {
+            //consume everything except block paratheses
+            return ! BRACES.contains(token.tokenId());
+        }
     }
 }

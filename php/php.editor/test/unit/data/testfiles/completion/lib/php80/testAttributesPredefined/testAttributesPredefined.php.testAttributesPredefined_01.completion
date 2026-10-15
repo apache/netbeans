@@ -1,0 +1,16 @@
+Code completion result for source line:
+#[|]
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTRUCTO AllowDynamicProperties          [PUBLIC]   testAttributesPredefined.php
+CONSTRUCTO AllowDynamicProperties()        [PUBLIC]   AllowDynamicProperties
+CONSTRUCTO Attribute                       [PUBLIC]   testAttributesPredefined.php
+CONSTRUCTO Attribute()                     [PUBLIC]   Attribute
+CONSTRUCTO Override                        [PUBLIC]   testAttributesPredefined.php
+CONSTRUCTO Override()                      [PUBLIC]   Override
+CONSTRUCTO ReturnTypeWillChange            [PUBLIC]   testAttributesPredefined.php
+CONSTRUCTO ReturnTypeWillChange()          [PUBLIC]   ReturnTypeWillChange
+CONSTRUCTO SensitiveParameter              [PUBLIC]   testAttributesPredefined.php
+CONSTRUCTO SensitiveParameter()            [PUBLIC]   SensitiveParameter
+PACKAGE    Predefined                      [PUBLIC]   null
+------------------------------------
+PACKAGE    Attributes                      [PUBLIC]   Predefined

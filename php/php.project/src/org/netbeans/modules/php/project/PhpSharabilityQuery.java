@@ -112,7 +112,7 @@ public class PhpSharabilityQuery implements SharabilityQueryImplementation2, Pro
             props.add("${" + test + "}"); // NOI18N
         }
 
-        return helper.createSharabilityQuery2(evaluator, props.toArray(new String[props.size()]), new String[0]);
+        return helper.createSharabilityQuery2(evaluator, props.toArray(new String[0]), new String[0]);
     }
 
 }

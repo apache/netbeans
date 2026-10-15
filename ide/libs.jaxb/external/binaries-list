@@ -14,7 +14,6 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-387BE740EAEF52B3F6E6EE2F140757E7632584CE com.sun.xml.bind:jaxb-impl:2.2.5-2
-F4DB465F207907A2406B0BF5C8FFEE22A5C3E4E3 com.sun.xml.bind:jaxb1-impl:2.2.5-2
-C3787DAB0DDFBD9E98086ED2F219859B0CB77EF7 com.sun.xml.bind:jaxb-xjc:2.2.5-2
-DEA09C627DA5AA8FB0E6B1E39F85B2AE6AE9C3E7 javax.xml.bind:jaxb-api:2.2.5:javadoc
+D32308BAD0B8B259A3DE55641C365E1AE9372505 com.sun.xml.bind:jaxb-impl:2.3.5
+6F47B124B356A218EBBD5ECBF6BB959D8C37525F com.sun.xml.bind:jaxb-xjc:2.3.5
+5685A1E75F9135DCC71E73A690B378E90FCD3B53 jakarta.xml.bind:jakarta.xml.bind-api:2.3.3:javadoc

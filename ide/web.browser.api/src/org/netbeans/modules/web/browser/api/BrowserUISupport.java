@@ -36,6 +36,7 @@ import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.web.browser.ui.picker.BrowserCombo;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.Parameters;
 
@@ -328,7 +329,7 @@ public final class BrowserUISupport {
             Component c = defaultRenderer.getListCellRendererComponent(list, getLongDisplayName(value), index, isSelected, cellHasFocus);
             if (c instanceof JLabel) {
                 JLabel l = (JLabel)c;
-                l.setIcon(new ImageIcon(value.getIconImage(true)));
+                l.setIcon(ImageUtilities.image2Icon(value.getIconImage(true)));
             }
             return c;
         }

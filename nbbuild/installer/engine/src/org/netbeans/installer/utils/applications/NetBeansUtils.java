@@ -39,7 +39,6 @@ import org.w3c.dom.Element;
  *
  */
 public class NetBeansUtils {
-    /////////////////////////////////////////////////////////////////////////////////
     // Static
     public static void addCluster(File nbLocation, String clusterName) throws IOException {
         addCluster(nbLocation, clusterName, null);
@@ -136,7 +135,7 @@ public class NetBeansUtils {
         }
         
         final List<String> ids =
-                new LinkedList(Arrays.asList(id.split(PACK_ID_SEPARATOR)));
+                new LinkedList<>(Arrays.asList(id.split(PACK_ID_SEPARATOR)));
         
         boolean packAdded = false;
         for (int i = 1; i < ids.size(); i++) {
@@ -710,7 +709,7 @@ public class NetBeansUtils {
             sysProp + nbHomeProp    + eq + nbHome,
             sysProp + nbUserdirProp + eq + nbUserdir,
             sysProp + nbDirsProp    + eq + nbDirsString,
-            "-Xms32m", "-XX:MaxPermSize=96m", "-Xverify:none", "-Xmx128m",
+            "-Xms32m", "-Xverify:none", "-Xmx128m",
             "-cp", classpath,
             UPDATER_FRAMENAME, "--nosplash"});
     }
@@ -788,7 +787,7 @@ public class NetBeansUtils {
         return new File(cluster, "config" + File.separator + "Modules" + File.separator + moduleName + ".xml");
     }
     
-    // private //////////////////////////////////////////////////////////////////////
+    // private
     private static long getJavaMemorySize(String string) {
         String suffix = string.substring(string.length() - 1);
         
@@ -833,13 +832,11 @@ public class NetBeansUtils {
                 System.getProperty(NbWelcomePanel.WELCOME_PAGE_TYPE_PROPERTY)).
                 getNetBeansBundleId();
     }
-    /////////////////////////////////////////////////////////////////////////////////
     // Instance
     private NetBeansUtils() {
         // does nothing
     }
     
-    /////////////////////////////////////////////////////////////////////////////////
     // Constants
     public static final String NETBEANS_CLUSTERS =
             "netbeans/etc/netbeans.clusters"; // NOI18N

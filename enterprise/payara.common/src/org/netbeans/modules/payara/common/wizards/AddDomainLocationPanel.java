@@ -29,7 +29,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.tooling.server.config.ConfigBuilderProvider;
 import org.netbeans.modules.payara.tooling.server.config.PayaraConfigManager;
 import org.netbeans.modules.payara.tooling.server.config.JavaSEPlatform;
@@ -164,10 +164,10 @@ public class AddDomainLocationPanel implements WizardDescriptor.Panel, ChangeLis
         JavaPlatform defaultJava = JavaPlatform.getDefault();
         JavaSEPlatform defaultJavaPlatform = JavaSEPlatform.toValue(
                     defaultJava.getSpecification().getVersion().toString());
-        PayaraVersion gpayaraVersion
-                = ServerUtils.getServerVersion(gfRoot);
+        PayaraPlatformVersionAPI payaraVersion
+                = ServerUtils.getPlatformVersion(gfRoot);
         PayaraConfig configAdapter = PayaraConfigManager.getConfig(
-                ConfigBuilderProvider.getBuilderConfig(gpayaraVersion));
+                ConfigBuilderProvider.getPlatformBuilderConfig(payaraVersion));
         JavaSESet javaSEConfig = configAdapter != null
                 ? configAdapter.getJavaSE() : null;
         Set<JavaSEPlatform> javaSEPlatfors = javaSEConfig != null
@@ -198,6 +198,10 @@ public class AddDomainLocationPanel implements WizardDescriptor.Panel, ChangeLis
         wizardIterator.setPassword(panel.getPasswordValue());
         wizardIterator.setAdminPort(Integer.parseInt(panel.getAdminPortValue()));
         wizardIterator.setHttpPort(Integer.parseInt(panel.getHttpPortValue()));
+        wizardIterator.setWSL(panel.getWSL());
+        wizardIterator.setDocker(panel.getDockerValue());
+        wizardIterator.setHostPath(panel.getHostPathValue());
+        wizardIterator.setContainerPath(panel.getContainerPathValue());
     }
 
     private String validateLocalHost(final Object rawHost) {

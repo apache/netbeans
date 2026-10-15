@@ -75,7 +75,7 @@ class CustomPopupFactory extends PopupFactory {
         }
     }
     
-    private static abstract class OurPopup extends Popup {
+    private abstract static class OurPopup extends Popup {
         protected Component owner = null;
         protected Component contents = null;
         protected int x = -1;

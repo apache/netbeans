@@ -118,7 +118,7 @@ final class RepositoryRevision {
         if (events == null) {
             return;
         }
-        Collections.sort(events, comparator);
+        events.sort(comparator);
     }
 
     boolean expandEvents () {
@@ -168,7 +168,7 @@ final class RepositoryRevision {
                         repositoryRootUrl, NbBundle.getMessage(SummaryView.class, "MSG_Revert_Progress")); //NOI18N
             }
         });
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     public class Event {
@@ -324,7 +324,7 @@ final class RepositoryRevision {
                     });
                 }
             }
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
 
         void viewFile (boolean showAnnotations) {
@@ -439,7 +439,7 @@ final class RepositoryRevision {
                     for (File f : selectionRoots) {
                         String p = SvnUtils.getRelativePath(f);
                         if (p != null && p.startsWith("/")) { //NOI18N
-                            p = p.substring(1, p.length());
+                            p = p.substring(1);
                         }
                         messages = client.getLogMessages(repositoryRootUrl.appendPath(p), pegRevisions.get(p),
                                 message.getRevision(), message.getRevision(), false, true, 0);
@@ -532,7 +532,7 @@ final class RepositoryRevision {
                     }
                     events.add(event);
                 }
-                Collections.sort(events, new EventFullNameComparator());
+                events.sort(new EventFullNameComparator());
                 return events;
             }
         }

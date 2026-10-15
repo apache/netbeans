@@ -96,7 +96,7 @@ public final class MimeLookup extends Lookup {
      * Gets a <code>Lookup</code> implementation that exposes objects specific
      * for the given <code>MimePath</code> for the given mime-type
      * or mime-path given as string.
-     * <br/>
+     * <br>
      * The method first translates the string mime-path into {@link MimePath}
      * by using {@link MimePath#parse(String)} and then calls
      * {@link #getLookup(MimePath)}.
@@ -118,6 +118,7 @@ public final class MimeLookup extends Lookup {
      * @return non-null mime-type specific lookup
      * @deprecated Use {@link #getLookup(MimePath) getLookup(MimePath.get(mimeType))} instead.
      */
+    @Deprecated
     public static MimeLookup getMimeLookup(String mimeType) {
         if (mimeType == null) {
             throw new NullPointerException("The mimeType parameter must not be null."); //NOI18N
@@ -150,6 +151,7 @@ public final class MimeLookup extends Lookup {
      * @deprecated Use {@link #getLookup(MimePath)} with the <code>MimePath</code>
      * of the embedded mime type instead.
      */
+    @Deprecated
     public MimeLookup childLookup(String mimeType) {
         if (mimeType == null) {
             throw new NullPointerException("The mimeType parameter must not be null."); //NOI18N
@@ -169,6 +171,7 @@ public final class MimeLookup extends Lookup {
      * @deprecated Use {@link #getLookup(MimePath)} and the methods provided by
      * the ordinary <code>Lookup</code> instance returned.
      */
+    @Deprecated
     public <T> T lookup(Class<T> clazz) {
         return mimePathLookup.lookup(clazz);
     }
@@ -182,6 +185,7 @@ public final class MimeLookup extends Lookup {
      * @deprecated Use {@link #getLookup(MimePath)} and the methods provided by
      * the ordinary <code>Lookup</code> instance returned.
      */
+    @Deprecated
     public <T> Result<T> lookup(Template<T> template) {
         return mimePathLookup.lookup(template);
     }

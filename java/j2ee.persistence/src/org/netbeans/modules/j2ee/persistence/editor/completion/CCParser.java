@@ -84,7 +84,7 @@ public class CCParser {
             boolean currAttrQuated = false;
             int lparopened = 0;
             
-            List<NNAttr> attrs = new ArrayList<NNAttr>(5);
+            List<NNAttr> attrs = new ArrayList<>(5);
             //helper var
             int eqOffset = -1;
             
@@ -147,6 +147,14 @@ public class CCParser {
                             case COMMA:
                                 //just consume, still in INNN
                                 break;
+                            case STRING_LITERAL:
+                                if (attrs.isEmpty()) {
+                                    state = EQ;
+                                    currAttrStartOffset = currAttrStartOffset<0 ? ts.offset() : currAttrStartOffset;
+                                    currAttrQuated = true;//currently is used in cc and we support qq for one literal only, may need to be revieved later for "combined" cases
+                                    currAttrValue = Utils.unquote(titk.text().toString());
+                                    break;
+                                }
                             default:
                                 //we reached end of the annotation, or error
                                 state = ERROR;
@@ -341,7 +349,7 @@ public class CCParser {
         }
         
         public Map<String,Object> getAttributes() {
-            HashMap<String,Object> map = new HashMap<String,Object>();
+            HashMap<String,Object> map = new HashMap<>();
             for(NNAttr nnattr : getAttributesList()) {
                 map.put(nnattr.getName(), nnattr.getValue());
             }

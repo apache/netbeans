@@ -39,19 +39,23 @@ public class PUDataLoader extends UniFileLoader {
         PersistenceUtils.logUsage(PUDataLoader.class, "USG_PERSISTENCE_DETECTED", new String[]{"XML"});//NOI18N
     }
     
+    @Override
     protected void initialize() {
         super.initialize();
         getExtensions().addMimeType(REQUIRED_MIME);
     }
     
+    @Override
     protected String defaultDisplayName() {
         return NbBundle.getMessage(PUDataLoader.class, "LBL_loaderName"); // NOI18N
     }
     
+    @Override
     protected MultiDataObject createMultiObject(FileObject pf) throws IOException {
         return new PUDataObject(pf, this);
     }
     
+    @Override
     protected String actionsContext() {
         return "Loaders/" + REQUIRED_MIME + "/Actions";
     }

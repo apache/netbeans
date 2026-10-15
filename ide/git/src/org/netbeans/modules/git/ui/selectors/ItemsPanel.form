@@ -40,7 +40,7 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" alignment="0" pref="360" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="titleLabel" min="-2" max="-2" attributes="0"/>
@@ -49,7 +49,7 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btnSelectNone" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnAllowDeletes" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnAllowDestructiveActions" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -70,7 +70,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                       <Component id="btnSelectNone" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnAllowDeletes" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnAllowDestructiveActions" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="btnSelectAll" min="-2" max="-2" attributes="0"/>
               </Group>
@@ -141,13 +141,13 @@
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
       </AuxValues>
     </Component>
-    <Component class="javax.swing.JButton" name="btnAllowDeletes">
+    <Component class="javax.swing.JButton" name="btnAllowDestructiveActions">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/netbeans/modules/git/ui/selectors/Bundle.properties" key="ItemsPanel.btnAllowDeletes.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/netbeans/modules/git/ui/selectors/Bundle.properties" key="ItemsPanel.btnAllowDestructiveActions.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/netbeans/modules/git/ui/selectors/Bundle.properties" key="ItemsPanel.btnAllowDeletes.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="org/netbeans/modules/git/ui/selectors/Bundle.properties" key="ItemsPanel.btnAllowDestructiveActions.description" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <AuxValues>

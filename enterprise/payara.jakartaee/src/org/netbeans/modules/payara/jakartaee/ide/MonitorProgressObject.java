@@ -195,7 +195,7 @@ public class MonitorProgressObject
         }
     }
 
-    static final private String[] TYPES = {"web", "ejb"};
+    private static final String[] TYPES = {"web", "ejb"};
 
     private TargetModuleID[] createModuleIdTree(Hk2TargetModuleID moduleId)
             throws InterruptedException, ExecutionException, TimeoutException {

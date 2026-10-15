@@ -21,6 +21,7 @@ package org.netbeans.modules.parsing.api;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -202,7 +203,7 @@ public class SnapshotMemLeakTest extends NbTestCase {
     private FileObject generateFile(final int rounds) throws IOException {
         final FileObject wd = FileUtil.toFileObject(FileUtil.normalizeFile(getWorkDir()));
         final FileObject file = FileUtil.createData(wd, "test.foo");    //NOI18N
-        try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(file.getOutputStream(),"UTF-8"))) { //NOI18N
+        try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(file.getOutputStream(), StandardCharsets.UTF_8))) {
             for (int i = 0; i< rounds; i++) {
                 out.write(CONTENT);
                 out.write(CONTENT);

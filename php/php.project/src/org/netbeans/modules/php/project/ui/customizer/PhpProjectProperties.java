@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.php.project.ui.customizer;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -496,8 +495,7 @@ public final class PhpProjectProperties implements ConfigManager.ConfigProvider 
                     assert false : String.valueOf(properties);
                 }
             }
-            testDirectoriesListModel = PathUiSupport.createListModel(testDirectoriesPathSupport.itemsIterator(
-                    values.toArray(new String[values.size()])));
+            testDirectoriesListModel = PathUiSupport.createListModel(testDirectoriesPathSupport.itemsIterator(values.toArray(new String[0])));
         }
         return testDirectoriesListModel;
     }
@@ -524,8 +522,7 @@ public final class PhpProjectProperties implements ConfigManager.ConfigProvider 
                     assert false : String.valueOf(properties);
                 }
             }
-            seleniumTestDirectoriesListModel = PathUiSupport.createListModel(seleniumTestDirectoriesPathSupport.itemsIterator(
-                    values.toArray(new String[values.size()])));
+            seleniumTestDirectoriesListModel = PathUiSupport.createListModel(seleniumTestDirectoriesPathSupport.itemsIterator(values.toArray(new String[0])));
         }
         return seleniumTestDirectoriesListModel;
     }
@@ -815,7 +812,7 @@ public final class PhpProjectProperties implements ConfigManager.ConfigProvider 
                 } else {
                     charsetName = ProjectPropertiesSupport.getEncoding(project);
                 }
-                FileUtil.copy(new ByteArrayInputStream(changedLicensePathContent.getBytes(charsetName)), out);
+                out.write(changedLicensePathContent.getBytes(charsetName));
             }
         }
 

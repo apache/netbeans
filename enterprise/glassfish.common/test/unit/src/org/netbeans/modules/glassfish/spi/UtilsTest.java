@@ -22,6 +22,9 @@ package org.netbeans.modules.glassfish.spi;
 import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.nio.file.Files;
+import static java.nio.file.StandardOpenOption.CREATE;
+import static java.nio.file.StandardOpenOption.WRITE;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -42,17 +45,16 @@ public class UtilsTest extends NbTestCase {
         super(testName);
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
     @Before
     @Override
-    public void setUp() {
+    public void setUp() throws IOException {
+        File dataDir = getDataDir();
+        // Create dummy file to test version matcher - Apache policy makes it
+        // difficult to have "jar" files in the repository, even if they are
+        // just files, containing a newline ...
+        Files.createDirectories(dataDir.toPath().resolve("subdir"));
+        Files.write(dataDir.toPath().resolve("nottaDir-4_1_2.jar"), new byte[] {'\n'}, CREATE, WRITE);
+        Files.write(dataDir.toPath().resolve("subdir/nottaDir-5.0.jar"), new byte[] {'\n'}, CREATE, WRITE);
     }
 
     @After
@@ -68,33 +70,15 @@ public class UtilsTest extends NbTestCase {
     public void testGetHttpListenerProtocol() {
         System.out.println("getHttpListenerProtocol");
         String hostname = "glassfish.java.net";
-        //int port = 443;
-        //String expResult = "https";
-        //String result = Utils.getHttpListenerProtocol(hostname, port);
-        //assertEquals(expResult, result);
+
         int port = 80;
         String expResult = "http";
         String result = Utils.getHttpListenerProtocol(hostname, port);
         assertEquals(expResult, result);
     }
 
-    /**
-     * Test of isSecurePort method, of class Utils.
-     */
-    @Test
-    public void testIsSecurePort() throws Exception {
-        System.out.println("isSecurePort");
-        /*String hostname = "glassfish.java.net";
-        int port = 443;
-        boolean expResult = true;
-        boolean result = Utils.isSecurePort(hostname, port);
-        assertEquals(expResult, result);
-        * */ 
-    }
-
     @Test
     public void testGetFileFromPattern() throws Exception {
-        System.out.println("getFileFromPattern");
         File f;
         try {
             f = Utils.getFileFromPattern(null, null);
@@ -137,7 +121,6 @@ public class UtilsTest extends NbTestCase {
      */
     @Test
     public void testSanitizeName() {
-        System.out.println("sanitizeName");
         String name = "aa";
         String expResult = "aa";
         String result = Utils.sanitizeName(name);
@@ -198,7 +181,6 @@ public class UtilsTest extends NbTestCase {
 
     @Test
     public void testIsLocalPortOccupied() throws IOException {
-        System.out.println("isLocalPortOccupied");
         ServerSocket ss = new ServerSocket(0);
         int port = ss.getLocalPort();
         assert Utils.isLocalPortOccupied(port) : "the port is not occupied?";

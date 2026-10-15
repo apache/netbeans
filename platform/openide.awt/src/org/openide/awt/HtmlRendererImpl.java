@@ -21,6 +21,9 @@ package org.openide.awt;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 
 import java.beans.PropertyChangeListener;
 import java.beans.VetoableChangeListener;
@@ -54,13 +57,13 @@ import javax.swing.event.AncestorListener;
 class HtmlRendererImpl extends JLabel implements HtmlRenderer.Renderer {
     private static final Rectangle bounds = new Rectangle();
     private static final boolean swingRendering = Boolean.getBoolean("nb.useSwingHtmlRendering"); //NOI18N
-    private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
+    private final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
     enum Type {UNKNOWN, TREE, LIST, TABLE}
 
     //For experimentation - holding the graphics object may be the source of some
     //strange painting problems on Apple
     private static boolean noCacheGraphics = Boolean.getBoolean("nb.renderer.nocache"); //NOI18N
-    private static Reference<Graphics> scratchGraphics = null;
+    private ScratchGraphics cachedScratchGraphics = null;
     private boolean centered = false;
     private boolean parentFocused = false;
     private Boolean html = null;
@@ -72,6 +75,15 @@ class HtmlRendererImpl extends JLabel implements HtmlRenderer.Renderer {
     private Type type = Type.UNKNOWN;
     private int renderStyle = HtmlRenderer.STYLE_CLIP;
     private boolean enabled = true;
+    private final boolean cellRenderer;
+
+    HtmlRendererImpl(boolean cellRenderer) {
+        this.cellRenderer = cellRenderer;
+    }
+
+    Type type() {
+        return type;
+    }
 
     /** Restore the renderer to a pristine state */
     public void reset() {
@@ -150,7 +162,7 @@ class HtmlRendererImpl extends JLabel implements HtmlRenderer.Renderer {
         // ##93658: In GTK we have to paint borders in combo boxes 
         if (HtmlLabelUI.isGTK()) {
             if (index == -1) {
-                Color borderC = UIManager.getColor("controlShadow");
+                Color borderC = UIManager.getColor("controlShadow"); //NOI18N
                 borderC = borderC == null ? Color.GRAY : borderC;
                 setBorder(BorderFactory.createCompoundBorder(
                         BorderFactory.createLineBorder(borderC),
@@ -166,10 +178,6 @@ class HtmlRendererImpl extends JLabel implements HtmlRenderer.Renderer {
     /** Generic code to set properties appropriately from any of the renderer
      * fetching methods */
     private void configureFrom(Object value, JComponent target, boolean selected, boolean leadSelection) {
-        if (value == null) {
-            value = "";
-        }
-
         setText((value == null) ? "" : value.toString());
 
         setSelected(selected);
@@ -199,13 +207,13 @@ class HtmlRendererImpl extends JLabel implements HtmlRenderer.Renderer {
     }
 
     public @Override void addNotify() {
-        if (swingRendering) {
+        if (swingRendering || !cellRenderer) {
             super.addNotify();
         }
     }
 
     public @Override void removeNotify() {
-        if (swingRendering) {
+        if (swingRendering || !cellRenderer) {
             super.removeNotify();
         }
     }
@@ -244,6 +252,9 @@ class HtmlRendererImpl extends JLabel implements HtmlRenderer.Renderer {
 
     public void setIndent(int pixels) {
         this.indent = pixels;
+        if (!cellRenderer || swingRendering) {
+            invalidate();
+        }
     }
 
     public void setHtml(boolean val) {
@@ -251,7 +262,7 @@ class HtmlRendererImpl extends JLabel implements HtmlRenderer.Renderer {
         String txt = getText();
         html = val ? Boolean.TRUE : Boolean.FALSE;
 
-        if (swingRendering && (html != wasHtml)) {
+        if ((html != wasHtml) || (swingRendering || !cellRenderer)) {
             //Ensure label UI gets updated and builds its little document tree...
             firePropertyChange("text", txt, getText()); //NOI18N
         }
@@ -484,8 +495,8 @@ class HtmlRendererImpl extends JLabel implements HtmlRenderer.Renderer {
     /** Overridden to do nothing under normal circumstances.  If the boolean flag to <strong>not</strong> use the
      * internal HTML renderer is in effect, this will fire changes normally */
     protected @Override final void firePropertyChange(String name, Object old, Object nue) {
-        if (swingRendering) {
-            if ("text".equals(name) && isHtml()) {
+        if (swingRendering || !cellRenderer) {
+            if ("text".equals(name) && isHtml()) {  //NOI18N
                 //Force in the HTML tags so the UI will set up swing HTML rendering appropriately
                 nue = getText();
             }
@@ -497,7 +508,7 @@ class HtmlRendererImpl extends JLabel implements HtmlRenderer.Renderer {
     public @Override Border getBorder() {
         Border result;
 
-        if ((indent != 0) && swingRendering) {
+        if ((indent != 0) && (swingRendering || !cellRenderer)) {
             result = BorderFactory.createEmptyBorder(0, indent, 0, 0);
         } else {
             result = border;
@@ -510,7 +521,7 @@ class HtmlRendererImpl extends JLabel implements HtmlRenderer.Renderer {
         Border old = border;
         border = b;
 
-        if (swingRendering) {
+        if (swingRendering || !cellRenderer) {
             firePropertyChange("border", old, b);
         }
     }
@@ -528,14 +539,15 @@ class HtmlRendererImpl extends JLabel implements HtmlRenderer.Renderer {
         Border b = getBorder();
 
         if (b == null) {
-            result = EMPTY_INSETS;
+            // If being used externally, defensively return a new instance
+            result = cellRenderer ? EMPTY_INSETS : new Insets(0, 0, 0, 0);
         } else {
             //workaround for open jdk bug, see issue #192388
             try {
                 result = b.getBorderInsets(this);
             } catch( NullPointerException e ) {
                 Logger.getLogger(HtmlRendererImpl.class.getName()).log(Level.FINE, null, e);
-                result = EMPTY_INSETS;
+                result = cellRenderer ? EMPTY_INSETS : new Insets(0, 0, 0, 0);
             }
         }
         if( null != insets ) {
@@ -549,7 +561,7 @@ class HtmlRendererImpl extends JLabel implements HtmlRenderer.Renderer {
         //OptimizeIt shows about 12Ms overhead calling back to Component.enable(), so avoid it if possible
         enabled = b;
 
-        if (swingRendering) {
+        if (swingRendering || !cellRenderer) {
             super.setEnabled(b);
         }
     }
@@ -584,44 +596,72 @@ class HtmlRendererImpl extends JLabel implements HtmlRenderer.Renderer {
         return result;
     }
 
+    private static final class ScratchGraphics {
+        private final GraphicsConfiguration configuration;
+        private Reference<Graphics2D> graphics = new SoftReference<>(null);
+
+        public ScratchGraphics(GraphicsConfiguration configuration) {
+            if (configuration == null) {
+                throw new NullPointerException();
+            }
+            this.configuration = configuration;
+        }
+
+        public boolean isConfigurationCompatible(GraphicsConfiguration other) {
+          return configuration.getColorModel().equals(other.getColorModel())
+              && configuration.getDefaultTransform().equals(other.getDefaultTransform());
+        }
+
+        public Graphics2D getGraphics() {
+          Graphics2D result = graphics.get();
+          if (result == null) {
+              /* Equivalent to configuration.createCompatibleImage(int, int), just to show that only the
+              ColorModel field of the GraphicsConfiguration is really relevant here. */
+              ColorModel model = configuration.getColorModel();
+              WritableRaster raster = model.createCompatibleWritableRaster(1, 1);
+              BufferedImage img = new BufferedImage(model, raster, model.isAlphaPremultiplied(), null);
+              result = img.createGraphics();
+              this.graphics = new SoftReference<>(result);
+          }
+          // Restore state on every call, just in case a client modified it for some reason.
+          result.setClip(null);
+          /* NETBEANS-2543: Apply the scaling HiDPI transform. This affects font measurements, via
+                            FontRenderContext.getTransform(). */
+          result.setTransform(configuration.getDefaultTransform());
+          return result;
+        }
+    }
+
     /** Fetch a scratch graphics object for calculating preferred sizes while
      * offscreen */
-    private static final Graphics scratchGraphics() {
-        Graphics result = null;
-
-        if (scratchGraphics != null) {
-            result = scratchGraphics.get();
-
-            if (result != null) {
-                result.setClip(null); //just in case somebody did something nasty
-            }
+    private final Graphics2D scratchGraphics() {
+        GraphicsConfiguration gc = getGraphicsConfiguration();
+        if (gc == null) {
+            gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
         }
 
-        if (result == null) {
-            result = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration()
-                                        .createCompatibleImage(1, 1).getGraphics();
-
-            if (!noCacheGraphics) {
-                scratchGraphics = new SoftReference<Graphics>(result);
-            }
+        ScratchGraphics scratchGraphics = cachedScratchGraphics;
+        if (scratchGraphics != null && scratchGraphics.isConfigurationCompatible(gc)) {
+            return scratchGraphics.getGraphics();
         }
 
-        return result;
+        scratchGraphics = new ScratchGraphics(gc);
+        if (!noCacheGraphics) {
+            cachedScratchGraphics = scratchGraphics;
+        }
+        return scratchGraphics.getGraphics();
     }
 
     public @Override void setBounds(int x, int y, int w, int h) {
-        if (swingRendering) {
-            super.setBounds(x, y, w, h);
-        }
-
-        bounds.setBounds(x, y, w, h);
+        reshape(x, y, w, h);
     }
 
     @Deprecated
     public @Override void reshape(int x, int y, int w, int h) {
-        if (swingRendering) {
+        if (swingRendering || !cellRenderer) {
             super.reshape(x, y, w, h);
         }
+        bounds.setBounds(x, y, w, h);
     }
 
     public @Override int getWidth() {
@@ -638,115 +678,132 @@ class HtmlRendererImpl extends JLabel implements HtmlRenderer.Renderer {
 
     /** Overridden to do nothing for performance reasons */
     public @Override void validate() {
-        //do nothing
+        if (!cellRenderer) {
+            super.validate();
+        }
+    }
+
+    public @Override void setText(String text) {
+        if (!cellRenderer) {
+            prefSize = null;
+        }
+        super.setText(text);
     }
 
     /** Overridden to do nothing for performance reasons */
     public @Override void repaint(long tm, int x, int y, int w, int h) {
-        //do nothing
+        if (!cellRenderer) {
+            super.repaint(tm, x, y, w, h);
+        }
     }
 
     /** Overridden to do nothing for performance reasons */
     public @Override void repaint() {
-        //do nothing
+        if (!cellRenderer) {
+            super.repaint();
+        }
     }
 
     /** Overridden to do nothing for performance reasons */
     public @Override void invalidate() {
-        //do nothing
+        if (!cellRenderer) {
+            super.invalidate();
+        }
     }
 
     /** Overridden to do nothing for performance reasons */
     public @Override void revalidate() {
-        //do nothing
+        if (!cellRenderer) {
+            super.revalidate();
+        }
     }
 
     /** Overridden to do nothing for performance reasons */
     public @Override void addAncestorListener(AncestorListener l) {
-        if (swingRendering) {
+        if (swingRendering || !cellRenderer) {
             super.addAncestorListener(l);
         }
     }
 
     /** Overridden to do nothing for performance reasons */
     public @Override void addComponentListener(ComponentListener l) {
-        if (swingRendering) {
+        if (swingRendering || !cellRenderer) {
             super.addComponentListener(l);
         }
     }
 
     /** Overridden to do nothing for performance reasons */
     public @Override void addContainerListener(ContainerListener l) {
-        if (swingRendering) {
+        if (swingRendering || !cellRenderer) {
             super.addContainerListener(l);
         }
     }
 
     /** Overridden to do nothing for performance reasons */
     public @Override void addHierarchyListener(HierarchyListener l) {
-        if (swingRendering) {
+        if (swingRendering || !cellRenderer) {
             super.addHierarchyListener(l);
         }
     }
 
     /** Overridden to do nothing for performance reasons */
     public @Override void addHierarchyBoundsListener(HierarchyBoundsListener l) {
-        if (swingRendering) {
+        if (swingRendering || !cellRenderer) {
             super.addHierarchyBoundsListener(l);
         }
     }
 
     /** Overridden to do nothing for performance reasons */
     public @Override void addInputMethodListener(InputMethodListener l) {
-        if (swingRendering) {
+        if (swingRendering || !cellRenderer) {
             super.addInputMethodListener(l);
         }
     }
 
     /** Overridden to do nothing for performance reasons */
     public @Override void addFocusListener(FocusListener fl) {
-        if (swingRendering) {
+        if (swingRendering || !cellRenderer) {
             super.addFocusListener(fl);
         }
     }
 
     /** Overridden to do nothing for performance reasons */
     public @Override void addMouseListener(MouseListener ml) {
-        if (swingRendering) {
+        if (swingRendering || !cellRenderer) {
             super.addMouseListener(ml);
         }
     }
 
     /** Overridden to do nothing for performance reasons */
     public @Override void addMouseWheelListener(MouseWheelListener ml) {
-        if (swingRendering) {
+        if (swingRendering || !cellRenderer) {
             super.addMouseWheelListener(ml);
         }
     }
 
     /** Overridden to do nothing for performance reasons */
     public @Override void addMouseMotionListener(MouseMotionListener ml) {
-        if (swingRendering) {
+        if (swingRendering || !cellRenderer) {
             super.addMouseMotionListener(ml);
         }
     }
 
     /** Overridden to do nothing for performance reasons */
     public @Override void addVetoableChangeListener(VetoableChangeListener vl) {
-        if (swingRendering) {
+        if (swingRendering || !cellRenderer) {
             super.addVetoableChangeListener(vl);
         }
     }
 
     /** Overridden to do nothing for performance reasons, unless using standard swing rendering */
     public @Override void addPropertyChangeListener(String s, PropertyChangeListener l) {
-        if (swingRendering) {
+        if (swingRendering || !cellRenderer) {
             super.addPropertyChangeListener(s, l);
         }
     }
 
     public @Override void addPropertyChangeListener(PropertyChangeListener l) {
-        if (swingRendering) {
+        if (swingRendering || !cellRenderer) {
             super.addPropertyChangeListener(l);
         }
     }

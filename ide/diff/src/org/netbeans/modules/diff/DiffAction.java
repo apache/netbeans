@@ -70,7 +70,7 @@ public class DiffAction extends NodeAction {
 
         private DiffActionImpl(Lookup context) {
             Collection<? extends Node> nodez = context.lookup(new Lookup.Template<Node>(Node.class)).allInstances();
-            nodes = nodez.toArray(new Node[nodez.size()]);
+            nodes = nodez.toArray(new Node[0]);
             if (nodes.length == 1) {
                 putValue(Action.NAME, NbBundle.getMessage(DiffAction.class, "CTL_DiffToActionName"));
             } else {

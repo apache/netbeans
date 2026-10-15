@@ -144,6 +144,12 @@ public interface EditorCookie extends LineCookie {
          */
         public static final String PROP_OPENED_PANES = "openedPanes";
 
+        /** This property is fired on the EDT when the reloading state of the
+         * document has changed; reloading is due to an external file change.
+         * @since 6.86
+         */
+        public static final String PROP_RELOADING = "reloading";
+
         /** Add a PropertyChangeListener to the listener list.
          * @param l  the PropertyChangeListener to be added
          */

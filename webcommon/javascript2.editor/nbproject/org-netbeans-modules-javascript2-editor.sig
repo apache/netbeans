@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.79
+#Version 0.108
 
 CLSS public abstract interface java.io.Serializable
 
@@ -8,8 +8,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -18,15 +20,16 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -62,6 +65,9 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public abstract interface !annotation org.netbeans.api.annotations.common.SuppressWarnings
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=CLASS)
@@ -122,6 +128,11 @@ CLSS public abstract interface static !annotation org.netbeans.modules.javascrip
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault int priority()
 
+CLSS public abstract interface org.netbeans.modules.javascript2.editor.spi.CompletionProviderEx
+intf org.netbeans.modules.javascript2.editor.spi.CompletionProvider
+meth public abstract java.util.List<org.netbeans.modules.csl.api.CompletionProposal> complete(org.netbeans.modules.javascript2.editor.spi.ProposalRequest)
+meth public java.util.List<org.netbeans.modules.csl.api.CompletionProposal> complete(org.netbeans.modules.csl.api.CodeCompletionContext,org.netbeans.modules.javascript2.editor.spi.CompletionContext,java.lang.String)
+
 CLSS public abstract interface org.netbeans.modules.javascript2.editor.spi.DeclarationFinder
 innr public abstract interface static !annotation Registration
 intf org.netbeans.modules.csl.api.DeclarationFinder
@@ -133,7 +144,22 @@ CLSS public abstract interface static !annotation org.netbeans.modules.javascrip
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault int priority()
 
+CLSS public abstract interface org.netbeans.modules.javascript2.editor.spi.ElementDocumentation
+meth public abstract org.netbeans.modules.csl.api.Documentation getDocumentation()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+
 CLSS public abstract interface org.netbeans.modules.javascript2.editor.spi.PostScanProvider
 meth public abstract void addPostScanTask(java.lang.Runnable)
  anno 1 org.netbeans.api.annotations.common.NonNull()
+
+CLSS public final org.netbeans.modules.javascript2.editor.spi.ProposalRequest
+cons public init(org.netbeans.modules.csl.api.CodeCompletionContext,org.netbeans.modules.javascript2.editor.spi.CompletionContext,java.util.Collection<java.lang.String>,int)
+meth public int getAnchor()
+meth public java.lang.String getPrefix()
+meth public java.util.Collection<java.lang.String> getSelectors()
+meth public org.netbeans.modules.csl.api.CodeCompletionContext getContext()
+meth public org.netbeans.modules.csl.spi.ParserResult getInfo()
+meth public org.netbeans.modules.javascript2.editor.spi.CompletionContext getType()
+supr java.lang.Object
+hfds context,offset,selectors,type
 

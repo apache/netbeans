@@ -25,9 +25,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -43,7 +43,6 @@ import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.DirectoryScanner;
-import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
@@ -70,6 +69,7 @@ import org.netbeans.modules.maven.model.pom.Configuration;
 import org.netbeans.modules.maven.model.pom.POMExtensibilityElement;
 import org.netbeans.modules.maven.model.pom.POMModel;
 import org.netbeans.modules.maven.model.pom.Plugin;
+import org.netbeans.modules.maven.options.MavenVersionSettings;
 import org.netbeans.spi.project.AuxiliaryProperties;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
@@ -78,7 +78,6 @@ import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.XMLFileSystem;
 import org.openide.modules.SpecificationVersion;
-import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -90,10 +89,7 @@ public class MavenNbModuleImpl implements NbModuleProvider {
     
     private final Project project;
     private final DependencyAdder dependencyAdder = new DependencyAdder();
-    private static final RequestProcessor RP = new RequestProcessor(MavenNbModuleImpl.class);
-    
-    private final RequestProcessor.Task tsk = RP.create(dependencyAdder);
-    
+
     public static final String MAVEN_CENTRAL = "central";
     public static final String APACHE_SNAPSHOT_REPO_ID = "apache.snapshots";
     // this repository is not good anymore, dev-SNAPSHOT version are buil on apache snapshot
@@ -107,10 +103,8 @@ public class MavenNbModuleImpl implements NbModuleProvider {
     public static final String GROUPID_MOJO = "org.codehaus.mojo";
     public static final String GROUPID_APACHE = "org.apache.netbeans.utilities";
     public static final String NBM_PLUGIN = "nbm-maven-plugin";
-    public static final String LATEST_NBM_PLUGIN_VERSION = "4.3";
-    
-    public static final String NETBEANSAPI_GROUPID = "org.netbeans.api";  
-    
+
+    public static final String NETBEANSAPI_GROUPID = "org.netbeans.api";
 
     /** Creates a new instance of MavenNbModuleImpl 
      * @param project 
@@ -123,7 +117,15 @@ public class MavenNbModuleImpl implements NbModuleProvider {
         return Arrays.asList(
                 RepositoryPreferences.getInstance().getRepositoryInfoById(MAVEN_CENTRAL));
     }
-    
+
+    /**
+     * Returns the latest known version of the NetBeans maven plugin which is not a SNAPSHOT release.
+     * This method will not wait for the index to be downloaded, it will return a default value instead.
+     */
+    public static String getLatestNbmPluginVersion() {
+        return MavenVersionSettings.getDefault().getVersion(GROUPID_APACHE, NBM_PLUGIN);
+    }
+
     private File getModuleXmlLocation() {
         String file = PluginBackwardPropertyUtils.getPluginProperty(project, 
                     "descriptor", null, null); //NOI18N
@@ -137,18 +139,14 @@ public class MavenNbModuleImpl implements NbModuleProvider {
         return FileUtil.normalizeFile(rel);
     }
     
-    private Xpp3Dom getModuleDom() throws UnsupportedEncodingException, IOException, XmlPullParserException {
+    private Xpp3Dom getModuleDom() throws IOException, XmlPullParserException {
         //TODO convert to FileOBject and have the IO stream from there..
         File file = getModuleXmlLocation();
         if (!file.exists()) {
             return null;
         }
-        FileInputStream is = new FileInputStream(file);
-        Reader reader = new InputStreamReader(is, "UTF-8"); //NOI18N
-        try {
+        try (Reader reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
             return Xpp3DomBuilder.build(reader);
-        } finally {
-            IOUtil.close(reader);
         }
     }
     
@@ -178,15 +176,13 @@ public class MavenNbModuleImpl implements NbModuleProvider {
                         return val;
                     }
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (XmlPullParserException e) {
+            } catch (IOException | XmlPullParserException e) {
                 e.printStackTrace();
             }
             MavenProject prj = project.getLookup().lookup(NbMavenProject.class).getMavenProject();
             //same fallback is in nbm-maven-plugin, keep it synchronized with codeNameBase parameter
             codename = prj.getGroupId() + "." + prj.getArtifactId(); //NOI18N
-            codename = codename.replaceAll( "-", "." ); //NOI18N
+            codename = codename.replace( "-", "." ); //NOI18N
         }
         return codename;
     }
@@ -210,8 +206,7 @@ public class MavenNbModuleImpl implements NbModuleProvider {
             try {
                 fo = FileUtil.createFolder(project.getProjectDirectory(),
                                            getSourceDirectoryPath());
-            }
-            catch (IOException ex) {
+            } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }
@@ -235,9 +230,7 @@ public class MavenNbModuleImpl implements NbModuleProvider {
                     path = cnb.getValue();
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (XmlPullParserException e) {
+        } catch (IOException | XmlPullParserException e) {
             e.printStackTrace();
         }
         return project.getProjectDirectory().getFileObject(path);
@@ -270,7 +263,7 @@ public class MavenNbModuleImpl implements NbModuleProvider {
         for (NbModuleProvider.ModuleDependency mdep : dependencies) {
         String codeNameBase = mdep.getCodeNameBase();
         SpecificationVersion version = mdep.getVersion();
-        String artifactId = codeNameBase.replaceAll("\\.", "-"); //NOI18N
+        String artifactId = codeNameBase.replace(".", "-"); //NOI18N
         NbMavenProject watch = project.getLookup().lookup(NbMavenProject.class);
         if (hasDependency(codeNameBase)) {
             //TODO
@@ -354,7 +347,7 @@ public class MavenNbModuleImpl implements NbModuleProvider {
     }
 
     public @Override boolean hasDependency(String codeNameBase) throws IOException {
-        String artifactId = codeNameBase.replaceAll("\\.", "-"); //NOI18N
+        String artifactId = codeNameBase.replace(".", "-"); //NOI18N
         NbMavenProject watch = project.getLookup().lookup(NbMavenProject.class);
         Set<Artifact> set = watch.getMavenProject().getDependencyArtifacts();
         if (set != null) {
@@ -417,7 +410,7 @@ public class MavenNbModuleImpl implements NbModuleProvider {
     }
     
     private class DependencyAdder implements Runnable {
-        List<Dependency> toAdd = new ArrayList<Dependency>();
+        List<Dependency> toAdd = new ArrayList<>();
         
         private synchronized void addDependency(Dependency dep) {
             toAdd.add(dep);
@@ -460,7 +453,7 @@ public class MavenNbModuleImpl implements NbModuleProvider {
      */ 
     @Override
     public SpecificationVersion getDependencyVersion(String codenamebase) throws IOException {
-        String artifactId = codenamebase.replaceAll("\\.", "-"); //NOI18N
+        String artifactId = codenamebase.replace(".", "-"); //NOI18N
         NbMavenProject watch = project.getLookup().lookup(NbMavenProject.class);
         for (Artifact art : watch.getMavenProject().getArtifacts()) {
             if (art.getGroupId().startsWith("org.netbeans") && art.getArtifactId().equals(artifactId)) { //NOI18N
@@ -571,7 +564,7 @@ public class MavenNbModuleImpl implements NbModuleProvider {
         }
         String groupId = mp.getMavenProject().getGroupId();
         String artifactId = mp.getMavenProject().getArtifactId();
-        List<Project> candidates = new ArrayList<Project>();
+        List<Project> candidates = new ArrayList<>();
         for (Project p : OpenProjects.getDefault().getOpenProjects()) {
             NbMavenProject mp2 = p.getLookup().lookup(NbMavenProject.class);
             if (mp2 != null && NbMavenProject.TYPE_NBM_APPLICATION.equals(mp2.getPackagingType())) {
@@ -590,7 +583,7 @@ public class MavenNbModuleImpl implements NbModuleProvider {
         if (size > 1) {
             //heuristic storm
             //1. similar path? colocation?
-            List<Project> colocated = new ArrayList<Project>();
+            List<Project> colocated = new ArrayList<>();
             URI moduleUri = nbmProject.getProjectDirectory().toURI();
             for (Project p : candidates) {
                 if (CollocationQuery.areCollocated(moduleUri, p.getProjectDirectory().toURI())) {
@@ -642,17 +635,17 @@ public class MavenNbModuleImpl implements NbModuleProvider {
 
     @Override public FileSystem getEffectiveSystemFilesystem() throws IOException {
         FileSystem projectLayer = LayerHandle.forProject(project).layer(false);
-        Collection<FileSystem> platformLayers = new ArrayList<FileSystem>();
+        Collection<FileSystem> platformLayers = new ArrayList<>();
         PlatformJarProvider pjp = project.getLookup().lookup(PlatformJarProvider.class);
         if (pjp != null) {
-            List<URL> urls = new ArrayList<URL>();
+            List<URL> urls = new ArrayList<>();
             for (File jar : pjp.getPlatformJars()) {
                 // XXX use LayerHandle.forProject on this and sister modules instead
                 urls.addAll(LayerUtil.layersOf(jar));
             }
             XMLFileSystem xmlfs = new XMLFileSystem();
             try {
-                xmlfs.setXmlUrls(urls.toArray(new URL[urls.size()]));
+                xmlfs.setXmlUrls(urls.toArray(new URL[0]));
             } catch (PropertyVetoException x) {
                 throw new IOException(x);
             }

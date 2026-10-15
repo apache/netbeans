@@ -1,0 +1,6 @@
+Code completion result for source line:
+testNes|tedFunction2(); // test3
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     testNestedFunction()            [PUBLIC]   nb4503.php
+METHOD     testNestedFunction2()           [PUBLIC]   nb4503.php
+METHOD     testNestedGlobalFunction()      [PUBLIC]   nb4503.php

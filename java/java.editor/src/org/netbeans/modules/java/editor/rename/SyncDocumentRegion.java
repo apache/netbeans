@@ -20,7 +20,6 @@
 package org.netbeans.modules.java.editor.rename;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -64,7 +63,7 @@ public final class SyncDocumentRegion {
             sortedRegions = regions;
         } else {
             sortedRegions = new ArrayList<MutablePositionRegion>(regions);
-            Collections.sort(sortedRegions, PositionRegion.getComparator());
+            sortedRegions.sort(PositionRegion.getComparator());
         }
     }
     

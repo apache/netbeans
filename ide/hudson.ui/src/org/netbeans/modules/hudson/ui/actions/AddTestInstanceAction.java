@@ -28,7 +28,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.hudson.api.ConnectionBuilder;
 import org.netbeans.modules.hudson.api.HudsonManager;
 import org.netbeans.modules.hudson.ui.api.UI;
@@ -45,7 +44,7 @@ public class AddTestInstanceAction extends AbstractAction implements Runnable {
 
     private static final Logger LOG = Logger.getLogger(AddTestInstanceAction.class.getName());
 
-    @Messages("AddTestInstanceAction.label=Try Hudson on &Localhost")
+    @Messages("AddTestInstanceAction.label=Try Jenkins on &Localhost")
     public AddTestInstanceAction() {
         super(Bundle.AddTestInstanceAction_label());
     }
@@ -57,8 +56,8 @@ public class AddTestInstanceAction extends AbstractAction implements Runnable {
 
     @Messages({
         "# {0} - path to javaws", "AddTestInstanceAction.no_javaws=Could not find {0}. Run: javaws https://hudson.dev.java.net/hudson.jnlp",
-        "AddTestInstanceAction.could_not_run=Could not download or run Hudson. Run: javaws https://hudson.dev.java.net/hudson.jnlp",
-        "AddTestInstanceAction.starting=Downloading & running Hudson...",
+        "AddTestInstanceAction.could_not_run=Could not download or run Jenkins. Run: javaws https://hudson.dev.java.net/hudson.jnlp",
+        "AddTestInstanceAction.starting=Downloading & running Jenkins...",
         "AddTestInstanceAction.instance_name=Local Test Server"
     })
     @Override
@@ -89,7 +88,7 @@ public class AddTestInstanceAction extends AbstractAction implements Runnable {
             return;
         }
         final AtomicBoolean cancelled = new AtomicBoolean();
-        ProgressHandle progress = ProgressHandleFactory.createHandle(
+        ProgressHandle progress = ProgressHandle.createHandle(
                 Bundle.AddTestInstanceAction_starting(), new Cancellable() {
             @Override
             public boolean cancel() {

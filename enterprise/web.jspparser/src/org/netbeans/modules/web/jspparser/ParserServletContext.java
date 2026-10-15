@@ -38,20 +38,20 @@ import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.Filter;
-import javax.servlet.FilterRegistration;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.Servlet;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
-import javax.servlet.ServletRegistration.Dynamic;
-import javax.servlet.SessionCookieConfig;
-import javax.servlet.SessionTrackingMode;
-import javax.servlet.descriptor.JspConfigDescriptor;
-import javax.servlet.descriptor.JspPropertyGroupDescriptor;
-import javax.servlet.descriptor.TaglibDescriptor;
-import javax.servlet.jsp.tagext.TagLibraryInfo;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterRegistration;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRegistration;
+import jakarta.servlet.ServletRegistration.Dynamic;
+import jakarta.servlet.SessionCookieConfig;
+import jakarta.servlet.SessionTrackingMode;
+import jakarta.servlet.descriptor.JspConfigDescriptor;
+import jakarta.servlet.descriptor.JspPropertyGroupDescriptor;
+import jakarta.servlet.descriptor.TaglibDescriptor;
+import jakarta.servlet.jsp.tagext.TagLibraryInfo;
 import org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException;
 import org.netbeans.modules.j2ee.dd.api.web.DDProvider;
 import org.netbeans.modules.j2ee.dd.api.web.JspConfig;
@@ -260,7 +260,7 @@ public class ParserServletContext implements ServletContext {
      */
     public ServletContext getContext(String uripath) {
         
-        return (null);
+        return null;
         
     }
     
@@ -272,7 +272,7 @@ public class ParserServletContext implements ServletContext {
      */
     public String getInitParameter(String name) {
         
-        return (null);
+        return null;
         
     }
     
@@ -283,7 +283,7 @@ public class ParserServletContext implements ServletContext {
      */
     public Enumeration getInitParameterNames() {
         
-        return (new Vector().elements());
+        return new Vector().elements();
         
     }
     
@@ -293,7 +293,7 @@ public class ParserServletContext implements ServletContext {
      */
     public int getMajorVersion() {
         
-        return (3);
+        return 4;
         
     }
     
@@ -305,7 +305,7 @@ public class ParserServletContext implements ServletContext {
      */
     public String getMimeType(String file) {
         
-        return (null);
+        return null;
         
     }
     
@@ -315,7 +315,7 @@ public class ParserServletContext implements ServletContext {
      */
     public int getMinorVersion() {
         
-        return (0);
+        return 0;
         
     }
     
@@ -327,7 +327,7 @@ public class ParserServletContext implements ServletContext {
      */
     public RequestDispatcher getNamedDispatcher(String name) {
         
-        return (null);
+        return null;
         
     }
     
@@ -364,7 +364,7 @@ public class ParserServletContext implements ServletContext {
     public String getRealPath(String path) {
         LOGGER.log(Level.FINE,  "getRealPath({0})", path);
         if (!path.startsWith("/")) {
-            return (null);
+            return null;
         }
         FileObject fo = getResourceAsObject(path);
         if (fo != null) {
@@ -385,7 +385,7 @@ public class ParserServletContext implements ServletContext {
      */
     public RequestDispatcher getRequestDispatcher(String path) {
         
-        return (null);
+        return null;
         
     }
     
@@ -443,7 +443,7 @@ public class ParserServletContext implements ServletContext {
             }
         } catch (Throwable t) {
             LOGGER.log(Level.INFO, null, t);
-            return (null);
+            return null;
         }
         
     }
@@ -462,7 +462,7 @@ public class ParserServletContext implements ServletContext {
         } catch (DataObjectNotFoundException e) {
             LOGGER.log(Level.INFO, null, e);
         }
-        if (ec != null && (ec instanceof CloneableEditorSupport)) {
+        if ((ec instanceof CloneableEditorSupport)) {
             try {
                 result = ((CloneableEditorSupport) ec).getInputStream();
             } catch (IOException e) {
@@ -486,10 +486,10 @@ public class ParserServletContext implements ServletContext {
             path += "/";
         String basePath = getRealPath(path);
         if (basePath == null)
-            return (thePaths);
+            return thePaths;
         File theBaseDir = new File(basePath);
         if (!theBaseDir.exists() || !theBaseDir.isDirectory())
-            return (thePaths);
+            return thePaths;
         String theFiles[] = theBaseDir.list();
         for (int i = 0; i < theFiles.length; i++) {
             File testFile = new File(basePath + File.separator + theFiles[i]);
@@ -508,7 +508,7 @@ public class ParserServletContext implements ServletContext {
      */
     public String getServerInfo() {
         
-        return ("NB.ParserServletContext/1.0");
+        return "NB.ParserServletContext/1.0";
         
     }
     
@@ -520,9 +520,10 @@ public class ParserServletContext implements ServletContext {
      *
      * @deprecated This method has been deprecated with no replacement
      */
+    @Deprecated
     public Servlet getServlet(String name) throws ServletException {
         
-        return (null);
+        return null;
         
     }
     
@@ -532,7 +533,7 @@ public class ParserServletContext implements ServletContext {
      */
     public String getServletContextName() {
         
-        return (getServerInfo());
+        return getServerInfo();
         
     }
     
@@ -542,9 +543,10 @@ public class ParserServletContext implements ServletContext {
      *
      * @deprecated This method has been deprecated with no replacement
      */
+    @Deprecated
     public Enumeration getServletNames() {
         
-        return (new Vector().elements());
+        return new Vector().elements();
         
     }
     
@@ -554,9 +556,10 @@ public class ParserServletContext implements ServletContext {
      *
      * @deprecated This method has been deprecated with no replacement
      */
+    @Deprecated
     public Enumeration getServlets() {
         
-        return (new Vector().elements());
+        return new Vector().elements();
         
     }
     
@@ -579,6 +582,7 @@ public class ParserServletContext implements ServletContext {
      *
      * @deprecated Use log(String,Throwable) instead
      */
+    @Deprecated
     public void log(Exception exception, String message) {
         
         log(message, exception);
@@ -627,7 +631,7 @@ public class ParserServletContext implements ServletContext {
 
     @Override
     public int getEffectiveMajorVersion() {
-        return 3;
+        return 4;
     }
 
     @Override
@@ -642,18 +646,21 @@ public class ParserServletContext implements ServletContext {
 
     @Override
     public Dynamic addServlet(String string, String string1) {
-        System.err.println("** addServlet(string,string)");
         return null;
     }
 
     @Override
     public Dynamic addServlet(String string, Servlet srvlt) {
-        System.err.println("** addServlet(string,srvlt)");
         return null;
     }
 
     @Override
     public Dynamic addServlet(String string, Class<? extends Servlet> type) {
+        return null;
+    }
+    
+    @Override
+    public Dynamic addJspFile(String servletName, String jspFile) {
         return null;
     }
 
@@ -749,7 +756,7 @@ public class ParserServletContext implements ServletContext {
 
     @Override
     public ClassLoader getClassLoader() {
-        /// !!!!!
+        // !!!!!
         return null;
     }
 
@@ -758,16 +765,34 @@ public class ParserServletContext implements ServletContext {
         
     }
     
-    /**
-     * This interface delegates lifecycle of {@link WebModule} to the caller.
-     * See issue #85817 for more information.
-     */
-    public interface WebModuleProvider {
-        /**
-         * Get {@link WebModule} instance.
-         * @return {@link WebModule} instance or <code>null</code> if WebModule has already been garbage collected.
-         */
-        WebModule getWebModule();
+    @Override
+    public int getSessionTimeout() {
+        return 0;
+    }
+      
+    @Override
+    public void setSessionTimeout(int sessionTimeout) {
+        
+    }
+    
+    @Override
+    public String getRequestCharacterEncoding() {
+        return "";
+    }
+    
+    @Override
+    public void setRequestCharacterEncoding(String encoding) {
+        
+    }
+    
+    @Override
+    public String getResponseCharacterEncoding() {
+        return "";
+    }
+    
+    @Override
+    public void setResponseCharacterEncoding(String encoding) {
+        
     }
     
     private static class JspPropertyGroupDescriptorImpl implements JspPropertyGroupDescriptor {
@@ -827,6 +852,11 @@ public class ParserServletContext implements ServletContext {
         @Override
         public Collection<String> getIncludeCodas() {
             return includeCodas;
+        }
+
+        @Override
+        public String getErrorOnELNotFound() {
+            return "ErrorOnELNotFound";
         }
 
         @Override

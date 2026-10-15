@@ -20,7 +20,6 @@ package org.netbeans.modules.tomcat5.customizer;
 
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import org.openide.util.NbBundle;
 import org.netbeans.modules.tomcat5.deploy.TomcatManager;
 
@@ -43,27 +42,25 @@ public class Customizer extends JTabbedPane {
         getAccessibleContext().setAccessibleDescription (NbBundle.getMessage(Customizer.class,"ACS_Customizer")); // NOI18N
         CustomizerDataSupport custData = new CustomizerDataSupport(manager);
         // set help ID according to selected tab
-        addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                String helpID = null;
-                switch (getSelectedIndex()) {
-                    case 0 : helpID = "tomcat_customizer_general";    // NOI18N
-                             break;
-                    case 1 : helpID = "tomcat_customizer_startup";    // NOI18N
-                             break;
-                    case 2 : helpID = "tomcat_customizer_platform";    // NOI18N
-                             break;
-                    case 3 : helpID = "tomcat_customizer_deployment";   // NOI18N
-                             break;
-                    case 4 : helpID = "tomcat_customizer_classes";    // NOI18N
-                             break;
-                    case 5 : helpID = "tomcat_customizer_sources";    // NOI18N
-                             break;
-                    case 6 : helpID = "tomcat_customizer_javadoc";    // NOI18N
-                             break;
-                }
-                putClientProperty("HelpID", helpID); // NOI18N
+        addChangeListener( (ChangeEvent e) -> {
+            String helpID = null;
+            switch (getSelectedIndex()) {
+                case 0 : helpID = "tomcat_customizer_general";    // NOI18N
+                break;
+                case 1 : helpID = "tomcat_customizer_startup";    // NOI18N
+                break;
+                case 2 : helpID = "tomcat_customizer_platform";    // NOI18N
+                break;
+                case 3 : helpID = "tomcat_customizer_deployment";   // NOI18N
+                break;
+                case 4 : helpID = "tomcat_customizer_classes";    // NOI18N
+                break;
+                case 5 : helpID = "tomcat_customizer_sources";    // NOI18N
+                break;
+                case 6 : helpID = "tomcat_customizer_javadoc";    // NOI18N
+                break;
             }
+            putClientProperty("HelpID", helpID); // NOI18N
         });
         addTab(NbBundle.getMessage(Customizer.class,"TXT_General"),
                 new CustomizerGeneral(custData));

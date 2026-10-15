@@ -1,0 +1,4 @@
+Name: testInterface
+public function testInterface(): array {
+${cursor};
+}

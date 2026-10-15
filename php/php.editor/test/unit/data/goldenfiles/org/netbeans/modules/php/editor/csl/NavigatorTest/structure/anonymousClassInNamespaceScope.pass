@@ -1,7 +1,7 @@
 |-NamespaceScopeTestInterface [16, 52] : ESCAPED{NamespaceScopeTestInterface}
 |-NamespaceScopeTestClass [60, 92] : ESCAPED{NamespaceScopeTestClass}
 |-NamespaceScopeTestTrait [100, 132] : ESCAPED{NamespaceScopeTestTrait}
-|-#anon#anonymousClassInNamespaceScope_php#1 [141, 871] : ESCAPED{{}}<font color="#999999">::ESCAPED{NamespaceScopeTestClass}</font><font color="#999999">:ESCAPED{NamespaceScopeTestInterface}</font><font color="#999999">#ESCAPED{NamespaceScopeTestTrait}</font>
+|-#anon#anonymousClassInNamespaceScope_php#1 [145, 871] : ESCAPED{{}}<font color="#999999">::ESCAPED{NamespaceScopeTestClass}</font><font color="#999999">:ESCAPED{NamespaceScopeTestInterface}</font><font color="#999999">#ESCAPED{NamespaceScopeTestTrait}</font>
 |--CONSTANT [275, 283] : ESCAPED{CONSTANT}ESCAPED{ }<font color="#999999">ESCAPED{"CONSTANT"}</font>
 |--$publicField [310, 321] : ESCAPED{$publicField}
 |--$privateField [336, 348] : ESCAPED{$privateField}
@@ -16,7 +16,7 @@
 |--publicStaticMethod [719, 747] : ESCAPED{publicStaticMethod}ESCAPED{(}ESCAPED{)}
 |--privateStaticMethod [777, 806] : ESCAPED{privateStaticMethod}ESCAPED{(}ESCAPED{)}
 |--protectedStaticMethod [838, 869] : ESCAPED{protectedStaticMethod}ESCAPED{(}ESCAPED{)}
-|-#anon#anonymousClassInNamespaceScope_php#3 [886, 1025] : ESCAPED{{}}
+|-#anon#anonymousClassInNamespaceScope_php#3 [890, 1025] : ESCAPED{{}}
 |--test [918, 1023] : ESCAPED{test}ESCAPED{(}ESCAPED{)}
-|-#anon#anonymousClassInNamespaceScope_php#2 [942, 1016] : ESCAPED{{}}
+|-#anon#anonymousClassInNamespaceScope_php#2 [946, 1016] : ESCAPED{{}}
 |--nested [982, 1006] : ESCAPED{nested}ESCAPED{(}ESCAPED{)}

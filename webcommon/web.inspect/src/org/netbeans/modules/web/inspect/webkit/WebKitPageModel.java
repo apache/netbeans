@@ -773,7 +773,7 @@ public class WebKitPageModel extends PageModel {
     List<DOMNode> matchingNodes(String selector) {
         List<DOMNode> domNodes = Collections.EMPTY_LIST;
         if (selector != null) {
-            selector = selector.replaceAll(":hover", "." + CSSUtils.HOVER_CLASS); // NOI18N
+            selector = selector.replace(":hover", "." + CSSUtils.HOVER_CLASS); // NOI18N
             DOM dom = webKit.getDOM();
             Node documentElement = dom.getDocument();
             if (documentElement != null) {

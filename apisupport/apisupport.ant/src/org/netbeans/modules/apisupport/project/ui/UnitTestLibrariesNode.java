@@ -142,7 +142,7 @@ final class UnitTestLibrariesNode extends AbstractNode {
             actions.add(new AddJUnit4Action(testType, project));
         }
         actions.add(new AddUnitTestDependencyAction(testType, project));
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     @Messages("HINT_missing_junit4=Incomplete test libraries. Use context menu to resolve.")
@@ -326,7 +326,7 @@ final class UnitTestLibrariesNode extends AbstractNode {
                 result.add(new EditTestDependencyAction(dep, testType, project));
                 // Remove dependency
                 result.add(LibrariesChildren.REMOVE_DEPENDENCY_ACTION);
-                actions = result.toArray(new Action[result.size()]);
+                actions = result.toArray(new Action[0]);
             }
             return actions;
         }
@@ -379,7 +379,7 @@ final class UnitTestLibrariesNode extends AbstractNode {
                     }
                 }
                 result.add(LibrariesChildren.REMOVE_DEPENDENCY_ACTION);
-                actions = result.toArray(new Action[result.size()]);
+                actions = result.toArray(new Action[0]);
             }
             return actions;
         }

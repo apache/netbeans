@@ -90,7 +90,7 @@ class MultiViewTopComponentLookup extends Lookup {
     private static final class ExclusionResult extends Lookup.Result implements LookupListener {
         
         private final Lookup.Result delegate;
-        private final List listeners = new ArrayList(); // List<LookupListener>
+        private final List<LookupListener> listeners = new ArrayList<>();
         private Collection lastResults;
         
         public ExclusionResult(Lookup.Result delegate) {
@@ -99,7 +99,7 @@ class MultiViewTopComponentLookup extends Lookup {
         
         public Collection allInstances() {
             // this shall remove duplicates??
-            Set s = new HashSet(delegate.allInstances());
+            Set<Lookup.Result> s = new HashSet<>(delegate.allInstances());
             return s;
         }
         
@@ -109,11 +109,11 @@ class MultiViewTopComponentLookup extends Lookup {
         
         public Collection allItems() {
             // remove duplicates..
-            Set s = new HashSet(delegate.allItems());
-            Iterator it = s.iterator();
-            Set instances = new HashSet();
+            Set<Lookup.Item> s = new HashSet<>(delegate.allItems());
+            Iterator<Lookup.Item> it = s.iterator();
+            Set instances = new HashSet<>();
             while (it.hasNext()) {
-                Lookup.Item i = (Lookup.Item)it.next();
+                Lookup.Item i = it.next();
                 if (instances.contains(i.getInstance())) {
                     it.remove();
                 } else {
@@ -159,7 +159,7 @@ class MultiViewTopComponentLookup extends Lookup {
             LookupEvent ev2 = new LookupEvent(this);
             LookupListener[] ls;
             synchronized (listeners) {
-                ls = (LookupListener[])listeners.toArray(new LookupListener[listeners.size()]);
+                ls = listeners.toArray(new LookupListener[0]);
             }
             for (int i = 0; i < ls.length; i++) {
                 ls[i].resultChanged(ev2);

@@ -58,7 +58,7 @@ public class CreateTestClassHint {
         ClassTree cls = (ClassTree) tp.getLeaf();
         CompilationInfo info = context.getInfo();
         SourcePositions sourcePositions = info.getTrees().getSourcePositions();
-        int startPos = (int) sourcePositions.getStartPosition(tp.getCompilationUnit(), cls);
+        int startPos = (int) sourcePositions.getStartPosition(cls);
         int caret = context.getCaretLocation();
         String code = context.getInfo().getText();
 	if (startPos < 0 || caret < 0 || caret < startPos || caret >= code.length()) {
@@ -98,7 +98,7 @@ public class CreateTestClassHint {
                     }
                 }
                 validCombinations.clear();
-                return ErrorDescriptionFactory.forTree(context, context.getPath(), Bundle.ERR_CreateTestClassHint(), fixes.toArray(new Fix[fixes.size()]));
+                return ErrorDescriptionFactory.forTree(context, context.getPath(), Bundle.ERR_CreateTestClassHint(), fixes.toArray(new Fix[0]));
             }
         }
         validCombinations.clear();

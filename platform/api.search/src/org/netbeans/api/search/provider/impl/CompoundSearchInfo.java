@@ -84,15 +84,14 @@ public class CompoundSearchInfo extends SearchInfo {
         }
 
         List<SearchInfo> searchableElements =
-                new ArrayList<SearchInfo>(elements.length);
+                new ArrayList<>(elements.length);
         for (SearchInfo element : elements) {
             if (element.canSearch()) {
                 searchableElements.add(element);
             }
         }
         return new AbstractCompoundIterator<SearchInfo, FileObject>(
-                searchableElements.toArray(
-                new SearchInfo[searchableElements.size()]),
+                searchableElements.toArray(new SearchInfo[0]),
                 options, listener, terminated) {
             @Override
             protected Iterator<FileObject> getIteratorFor(SearchInfo element,
@@ -113,15 +112,14 @@ public class CompoundSearchInfo extends SearchInfo {
         }
 
         List<SearchInfo> searchableElements =
-                new ArrayList<SearchInfo>(elements.length);
+                new ArrayList<>(elements.length);
         for (SearchInfo element : elements) {
             if (element.canSearch()) {
                 searchableElements.add(element);
             }
         }
         return new AbstractCompoundIterator<SearchInfo, URI>(
-                searchableElements.toArray(
-                new SearchInfo[searchableElements.size()]),
+                searchableElements.toArray(new SearchInfo[0]),
                 options, listener, terminated) {
             @Override
             protected Iterator<URI> getIteratorFor(SearchInfo element,
@@ -135,7 +133,7 @@ public class CompoundSearchInfo extends SearchInfo {
 
     @Override
     public List<SearchRoot> getSearchRoots() {
-        List<SearchRoot> allRoots = new LinkedList<SearchRoot>();
+        List<SearchRoot> allRoots = new LinkedList<>();
         for (SearchInfo si : elements) {
             allRoots.addAll(si.getSearchRoots());
         }

@@ -445,7 +445,7 @@ private void btnFetchAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         @Override
         public void perform () {
             try {
-                final DefaultListModel targetsModel = new DefaultListModel();
+                final DefaultListModel<HgLogMessage> targetsModel = new DefaultListModel<>();
                 final HgLogMessage displayedRevision = getDisplayedRevision();
                 if (displayedRevision == null) {
                     if (acceptSelection(NO_REVISION)) {
@@ -619,7 +619,7 @@ private void btnFetchAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 
     private void applyFilter () {
         HgLogMessage selectedRevision = getSelectedRevision();
-        DefaultListModel targetsModel = new DefaultListModel();
+        DefaultListModel<HgLogMessage> targetsModel = new DefaultListModel<>();
         targetsModel.removeAllElements();
         HgLogMessage toSelectRevision = null;
         String filter = txtFilter.getText();

@@ -19,7 +19,6 @@
 package org.netbeans.modules.cordova.project;
 
 import java.awt.EventQueue;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import javax.swing.AbstractListModel;
@@ -358,7 +357,7 @@ public final class PluginsPanel extends JPanel {
          * Make selected plugins unique and sort them.
          */
         private void sortLibraries() {
-            Collections.sort(plugins, SELECTED_PLUGINS_COMPARATOR);
+            plugins.sort(SELECTED_PLUGINS_COMPARATOR);
         }
 
     }

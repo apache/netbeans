@@ -25,6 +25,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import org.netbeans.api.debugger.DebuggerManager;
@@ -459,7 +460,7 @@ public class JspLineBreakpointTest extends NbTestCase {
                         int len = readU2();
                         writeU2(len);
                         byte[] utf8 = readBytes(len);
-                        String str = new String(utf8, "UTF-8");
+                        String str = new String(utf8, StandardCharsets.UTF_8);
                         if (isDebugEnabled())
                             System.out.println(i + " read class attr -- '" + str + "'");
                         if (str.equals(nameSDE)) {

@@ -29,12 +29,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.extexecution.ExecutionDescriptor.InputProcessorFactory;
 import org.netbeans.api.extexecution.ExecutionDescriptor.InputProcessorFactory2;
 import org.netbeans.api.extexecution.ExecutionDescriptor.LineConvertorFactory;
@@ -65,7 +65,7 @@ import org.openide.windows.OutputWriter;
  * <p>
  * Note that once service is run for the first time, subsequents runs can be
  * invoked by the user (rerun button) if it is allowed to do so
- * ({@link ExecutionDescriptor#isControllable()}).
+ * ({@code ExecutionDescriptor#isControllable()}).
  *
  * <div class="nonnormative">
  * <p>
@@ -133,7 +133,7 @@ public final class ExecutionService {
      * as a result of the {@link Future} is exit code of the process.
      * <p>
      * The output tabs are reused (if caller does not use the custom one,
-     * see {@link ExecutionDescriptor#getInputOutput()}) - the tab to reuse
+     * see {@code ExecutionDescriptor#getInputOutput()}) - the tab to reuse
      * (if any) is selected by having the same name and same buttons
      * (control and option). If there is no output tab to reuse new one
      * is opened.
@@ -196,12 +196,12 @@ public final class ExecutionService {
         realDescriptor = realDescriptor.postExecution(new ParametrizedRunnable<Integer>() {
 
             @Override
-            public void run(Integer parameter) {
+            public void run(Integer exitCode) {
                 cleanup(handle, ioData, ioData.getInputOutput() != descriptor.getInputOutput(),
-                        descriptor.isFrontWindowOnError() && parameter != null && parameter != 0);
-                Runnable orig = descriptor.getPostExecution();
+                        descriptor.isFrontWindowOnError() && exitCode != null && exitCode != 0);
+                Consumer<? super Integer> orig = descriptor.getPostExecution();
                 if (orig != null) {
-                    orig.run();
+                    orig.accept(exitCode);
                 }
             }
         });
@@ -379,7 +379,7 @@ public final class ExecutionService {
             return null;
         }
 
-        ProgressHandle handle = ProgressHandleFactory.createHandle(displayName,
+        ProgressHandle handle = ProgressHandle.createHandle(displayName,
                 cancellable, new ProgressAction(inputOutput));
 
         handle.setInitialDelay(0);

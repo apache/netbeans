@@ -237,9 +237,9 @@ public final class SyncController implements Cancellable {
 
     private SyncItems pairItems(Set<TransferFile> remoteFiles, Set<TransferFile> localFiles) {
         List<TransferFile> remoteFilesSorted = new ArrayList<>(remoteFiles);
-        Collections.sort(remoteFilesSorted, TransferFile.TRANSFER_FILE_COMPARATOR);
+        remoteFilesSorted.sort(TransferFile.TRANSFER_FILE_COMPARATOR);
         List<TransferFile> localFilesSorted = new ArrayList<>(localFiles);
-        Collections.sort(localFilesSorted, TransferFile.TRANSFER_FILE_COMPARATOR);
+        localFilesSorted.sort(TransferFile.TRANSFER_FILE_COMPARATOR);
 
         removeProjectRoot(remoteFilesSorted);
         removeProjectRoot(localFilesSorted);
@@ -492,7 +492,7 @@ public final class SyncController implements Cancellable {
                 return false;
             }
             try (InputStream inputStream = source.getInputStream(); OutputStream outputStream = fileObject.getOutputStream()) {
-                FileUtil.copy(inputStream, outputStream);
+                inputStream.transferTo(outputStream);
             }
             return true;
         }

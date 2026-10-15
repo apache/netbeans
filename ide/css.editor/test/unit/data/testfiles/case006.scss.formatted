@@ -1,0 +1,8 @@
+@mixin corner-icon($name, $top-or-bottom, $left-or-right) {
+    .icon-#{$name} {
+        background-image: url("/icons/#{$name}.svg");
+        position: absolute;
+        #{$top-or-bottom}: 0;
+        #{$left-or-right}: 0;
+    }
+}

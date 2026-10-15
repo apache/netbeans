@@ -31,8 +31,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Icon;
 import org.netbeans.core.windows.nativeaccess.NativeWindowSystem;
-import org.openide.util.Utilities;
-
 
 /**
  * Implementation of NativeWindowSystem based on JNA library.
@@ -49,16 +47,9 @@ public class NativeWindowSystemImpl extends NativeWindowSystem {
 
     @Override
     public boolean isWindowAlphaSupported() {
-        if( Utilities.isMac() ) {
-            String version = System.getProperty("java.version"); //NOI18N
-            if( null != version && version.startsWith("1.7" ) ) //NOI18N
-                return false;
-        }
         boolean res = false;
         try {
             res = WindowUtils.isWindowAlphaSupported();
-        } catch( ThreadDeath td ) {
-            throw td;
         } catch (UnsatisfiedLinkError e) {
             // E.g. "Unable to load library 'X11': libX11.so: cannot open shared object file: No such file or directory"
             // on headless build machine (missing libx11-dev.deb)
@@ -78,18 +69,20 @@ public class NativeWindowSystemImpl extends NativeWindowSystem {
             if (gd.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT) ) {
                 try {
                     w.setOpacity(alpha);
+                    return;
                 } catch( Exception e ) {
                     //ignore, we'll try JNA
                 }
             }
         }
-        //try the JNA way
-        try {
-            WindowUtils.setWindowAlpha(w, alpha);
-        } catch( ThreadDeath td ) {
-            throw td;
-        } catch( Throwable e ) {
-            LOG.log(Level.INFO, null, e);
+        // Test isWindowAlphaSupported first to avoid an unnecessary log message.
+        if (WindowUtils.isWindowAlphaSupported()) {
+            //try the JNA way
+            try {
+                WindowUtils.setWindowAlpha(w, alpha);
+            } catch( Throwable e ) {
+                LOG.log(Level.INFO, null, e);
+            }
         }
     }
     
@@ -123,8 +116,6 @@ public class NativeWindowSystemImpl extends NativeWindowSystem {
             return;
         try {
             WindowUtils.setWindowMask(w, mask);
-        } catch( ThreadDeath td ) {
-            throw td;
         } catch( Throwable e ) {
             LOG.log(Level.INFO, null, e);
         }
@@ -134,8 +125,6 @@ public class NativeWindowSystemImpl extends NativeWindowSystem {
     public void setWindowMask(Window w, Icon mask) {
         try {
             WindowUtils.setWindowMask(w, mask);
-        } catch( ThreadDeath td ) {
-            throw td;
         } catch( Throwable e ) {
             LOG.log(Level.INFO, null, e);
         }

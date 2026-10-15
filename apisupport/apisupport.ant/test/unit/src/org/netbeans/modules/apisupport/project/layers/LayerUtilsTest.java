@@ -141,7 +141,7 @@ public class LayerUtilsTest extends LayerTestBase {
             }
         }));
         System.out.println("Loading external cache from " + cacheDir + ", " + files.size() + " files");
-        Collections.sort(files, new Comparator<File>() {
+        files.sort(new Comparator<File>() {
             public int compare(File f1, File f2) {
                 return - f1.getName().compareTo(f2.getName());
             }

@@ -38,7 +38,7 @@ import java.util.*;
 
 public class SessionDisplay extends DataDisplay {
 
-    private final static boolean debug = false;
+    private static final boolean debug = false;
 
     public SessionDisplay() {
 	super();

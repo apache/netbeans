@@ -1,0 +1,4 @@
+    public const TRAIT_C = self::{self::TRAIT_BA . self::TRA^IT_R};
+                                                   -------------
+HINT:Introduce Hint
+FIX:Create Constant "TRAIT_R" in Trait "TraitTest" (testDynamicClassConstantFetch.php)

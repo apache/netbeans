@@ -223,7 +223,7 @@ final class DefaultSettingsContext implements Context, NameParser {
         }
     }
     
-    // NameParser impl //////////////////////////////////////////////////////
+    // NameParser impl
     
     public Name parse(String name) throws NamingException {
         if (name == null) throw new InvalidNameException("name cannot be null"); //NOI18N

@@ -20,7 +20,6 @@
 package org.netbeans.core.startup;
 
 import java.lang.Thread.UncaughtExceptionHandler;
-import org.netbeans.TopSecurityManager;
 import org.openide.util.Exceptions;
 
 /** The ThreadGroup for catching uncaught exceptions in Corona.
@@ -97,14 +96,7 @@ final class TopThreadGroup extends ThreadGroup implements Runnable {
         try {
             Main.start (args);
         } catch (Throwable t) {
-            t.printStackTrace();
-            // System is probably broken, so don't just sit there with the splash screen open.
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException x) {
-                Exceptions.printStackTrace(x);
-            }
-            TopSecurityManager.exit(2);
+            TopLogging.exit(2, t);
         } finally {
             synchronized (this) {
                 finished = true;

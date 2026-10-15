@@ -22,11 +22,13 @@ package org.netbeans.modules.websvc.editor.hints.common;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.util.ElementKindVisitor6;
+import javax.lang.model.util.ElementKindVisitor8;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 
 /**
@@ -34,7 +36,7 @@ import org.netbeans.spi.editor.hints.ErrorDescription;
  * @author Ajit.Bhate@Sun.COM
  * @author Tomasz.Slota@Sun.COM
  */
-public abstract class RulesEngine extends ElementKindVisitor6<Void, ProblemContext> {
+public abstract class RulesEngine extends ElementKindVisitor8<Void, ProblemContext> {
     //private ProblemContext ctx;
     private List<ErrorDescription> problemsFound = new ArrayList<ErrorDescription>();
     
@@ -112,6 +114,11 @@ public abstract class RulesEngine extends ElementKindVisitor6<Void, ProblemConte
             }
         }
         
+        return null;
+    }
+    
+    @Override public Void visitUnknown(Element e, ProblemContext p) {
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "Unknown element type: {0}.", e.getKind());
         return null;
     }
     

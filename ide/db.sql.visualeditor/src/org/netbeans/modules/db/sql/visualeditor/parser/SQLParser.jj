@@ -33,6 +33,7 @@ PARSER_BEGIN(SQLParser)
 package org.netbeans.modules.db.sql.visualeditor.parser;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.netbeans.modules.db.sql.visualeditor.querymodel.*;
 
@@ -191,9 +192,8 @@ QueryNode SQLQuery() :
 
 // SELECT [ quantifier ] column (, column)*
 
-SelectNode SQLSelect() :
-{
-    ArrayList selctItemList=new ArrayList();
+SelectNode SQLSelect() : {
+    List<ColumnItem> selctItemList=new ArrayList<>();
     String q="ALL";
     ColumnItem item = null;
 }
@@ -288,7 +288,7 @@ SetFunction SQLSetFunction(int type) :
 
 FromNode SQLFrom() :
 {
-    ArrayList tableList = new ArrayList();
+    List<JoinTableNode> tableList = new ArrayList<>();
     JoinTableNode jt=null;
 }
 {
@@ -308,7 +308,7 @@ FromNode SQLFrom() :
 
 GroupByNode SQLGroupBy() :
 {
-    ArrayList columnList=new ArrayList();
+    List<ColumnItem> columnList=new ArrayList<>();
     ColumnItem col;
 }
 {
@@ -467,7 +467,7 @@ Expression SQLOr() :
 {
 //    System.out.println("SQLOr");
     Expression a;
-    ArrayList forms = new ArrayList();
+    List<Expression> forms = new ArrayList<>();
 }
 {
     a=SQLAndExpr()
@@ -513,7 +513,7 @@ Expression SQLAnd() :
 {
 //    System.out.println("SQLAnd");
     Expression c;
-    ArrayList forms = new ArrayList();
+    List<Expression> forms = new ArrayList<>();
 }
 {
     c=SQLNot()
@@ -625,7 +625,7 @@ Value SQLValue() :
 
 OrderByNode SQLOrderBy() :
 {
-    ArrayList sortSpecificationList=new ArrayList();
+    List<SortSpecification> sortSpecificationList = new ArrayList<>();
     SortSpecification ss=null;
 }
 {

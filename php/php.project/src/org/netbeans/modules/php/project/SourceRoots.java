@@ -160,7 +160,7 @@ public final class SourceRoots {
                         }
                         pureSourceRootNames = getPureSourceRootsNames(dirPaths);
                     }
-                    return pureSourceRootNames.toArray(new String[pureSourceRootNames.size()]);
+                    return pureSourceRootNames.toArray(new String[0]);
                 }
             }
 
@@ -197,7 +197,7 @@ public final class SourceRoots {
                             i++;
                         }
                     }
-                    return sourceRootProperties.toArray(new String[sourceRootProperties.size()]);
+                    return sourceRootProperties.toArray(new String[0]);
                 }
             }
 
@@ -233,7 +233,7 @@ public final class SourceRoots {
                             }
                             sourceRoots = Collections.unmodifiableList(result);
                         }
-                        return sourceRoots.toArray(new FileObject[sourceRoots.size()]);
+                        return sourceRoots.toArray(new FileObject[0]);
                     }
                 }
         });
@@ -275,7 +275,7 @@ public final class SourceRoots {
                         }
                         sourceRootUrls = Collections.unmodifiableList(result);
                     }
-                    return sourceRootUrls.toArray(new URL[sourceRootUrls.size()]);
+                    return sourceRootUrls.toArray(new URL[0]);
                 }
             }
         });

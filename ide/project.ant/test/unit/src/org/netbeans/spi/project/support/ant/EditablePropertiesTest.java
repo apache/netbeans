@@ -29,6 +29,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.junit.NbTestCase;
 import org.openide.util.Utilities;
 
@@ -187,8 +188,8 @@ public class EditablePropertiesTest extends NbTestCase {
         Reader r1 = null;
         Reader r2 = null;
         try {
-            r1 = new InputStreamReader(new FileInputStream(f1), "ISO-8859-1");
-            r2 = new InputStreamReader(new FileInputStream(f2), "ISO-8859-1");
+            r1 = new InputStreamReader(new FileInputStream(f1), StandardCharsets.ISO_8859_1);
+            r2 = new InputStreamReader(new FileInputStream(f2), StandardCharsets.ISO_8859_1);
             return AntBasedTestUtil.countTextDiffs(r1, r2);
         } finally {
             if (r1 != null) {

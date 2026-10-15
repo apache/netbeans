@@ -24,7 +24,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -32,6 +31,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -51,7 +51,6 @@ import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
@@ -107,9 +106,7 @@ public class ExportZIP extends JPanel {
                     @Override public void run() {
                         try {
                             if (!build(root, zip)) {
-                                if (!zip.delete()) {
-                                    throw new IOException("Cannot delete " + zip);
-                                }
+                                Files.delete(zip.toPath());
                                 return;
                             }
                         } catch (IOException x) {
@@ -118,7 +115,7 @@ public class ExportZIP extends JPanel {
                         }
                         StatusDisplayer.getDefault().setStatusText(MSG_created(zip));
                         try {
-                            Desktop.getDesktop().open(zip);
+                            Desktop.getDesktop().open(zip.getParentFile());
                         } catch (Exception x) {
                             LOG.log(Level.FINE, null, x);
                         }
@@ -135,7 +132,7 @@ public class ExportZIP extends JPanel {
     })
     private static boolean build(File root, File zip) throws IOException {
         final AtomicBoolean canceled = new AtomicBoolean();
-        ProgressHandle handle = ProgressHandleFactory.createHandle(MSG_building(zip.getName()), new Cancellable() {
+        ProgressHandle handle = ProgressHandle.createHandle(MSG_building(zip.getName()), new Cancellable() {
             @Override public boolean cancel() {
                 return canceled.compareAndSet(false, true);
             }
@@ -480,7 +477,11 @@ public class ExportZIP extends JPanel {
     private void zipButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zipButtonActionPerformed
         JFileChooser fc = new JFileChooser();
         if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            zipField.setText(fc.getSelectedFile().getAbsolutePath());
+            String sf = fc.getSelectedFile().getAbsolutePath();
+            if (!"zip".equalsIgnoreCase(FileUtil.getExtension(sf))) {
+                sf += ".zip";
+            }
+            zipField.setText(sf);
         }
     }//GEN-LAST:event_zipButtonActionPerformed
 

@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.ide.branding;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.script.ScriptEngine;
 import junit.framework.Test;
 import org.netbeans.core.network.proxy.pac.impl.NbPacScriptEvaluatorTest;
@@ -44,6 +46,10 @@ public class RealPacEngineTest extends NbTestCase {
         ScriptEngine eng = NbPacScriptEvaluatorTest.findDefaultEngineInTheSystem(err);
         assertEquals("No error: " + err, 0, err.length());
         assertNotNull("Engine found", eng);
-        assertEquals("GraalVM:js", eng.getFactory().getEngineName());
+        
+        List<String> allowedEngines = new ArrayList<String>();
+        allowedEngines.add("GraalVM:js");
+        allowedEngines.add("Oracle Nashorn");
+        assertTrue("Allowed engine", allowedEngines.contains(eng.getFactory().getEngineName()));
     }
 }

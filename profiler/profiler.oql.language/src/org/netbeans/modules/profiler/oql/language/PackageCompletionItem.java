@@ -36,11 +36,11 @@ import org.netbeans.spi.editor.completion.support.CompletionUtilities;
  * @author Jaroslav Bachorik
  */
 public class PackageCompletionItem implements CompletionItem {
-    final private String text;
-    final private int caret;
-    final private int correction;
+    private final String text;
+    private final int caret;
+    private final int correction;
 
-    final private static Color fieldColor = Color.GRAY;
+    private static final Color fieldColor = Color.GRAY;
 
     public PackageCompletionItem(String text, int caretOffset) {
         this(text, caretOffset, 0);

@@ -42,8 +42,12 @@ import org.openide.windows.TopComponent;
     iconBase="org/netbeans/modules/j2ee/ddloaders/web/resources/DDDataIcon.gif",
     persistenceType=TopComponent.PERSISTENCE_NEVER,
     preferredID=DDDataObject.DD_MULTIVIEW_PREFIX + DDDataObject.MULTIVIEW_FILTERS,
-    mimeType={DDDataLoader.REQUIRED_MIME_1, DDWeb25DataLoader.REQUIRED_MIME, DDWeb30DataLoader.REQUIRED_MIME,
-        DDWebFragment30DataLoader.REQUIRED_MIME, DDWeb30DataLoader.REQUIRED_MIME_31, DDWebFragment30DataLoader.REQUIRED_MIME_31},
+    mimeType={DDDataLoader.REQUIRED_MIME_1, DDWeb25DataLoader.REQUIRED_MIME, 
+        DDWeb30DataLoader.REQUIRED_MIME, DDWebFragment30DataLoader.REQUIRED_MIME, 
+        DDWeb30DataLoader.REQUIRED_MIME_31, DDWebFragment30DataLoader.REQUIRED_MIME_31, 
+        DDWeb40DataLoader.REQUIRED_MIME_40, DDWebFragment40DataLoader.REQUIRED_MIME_40,
+        DDWeb50DataLoader.REQUIRED_MIME_50, DDWebFragment50DataLoader.REQUIRED_MIME_50,
+        DDWeb60DataLoader.REQUIRED_MIME_60, DDWebFragment60DataLoader.REQUIRED_MIME_60},
     position=700
 )
 public class FiltersMultiViewElement extends ToolBarMultiViewElement implements java.beans.PropertyChangeListener {
@@ -237,7 +241,7 @@ public class FiltersMultiViewElement extends ToolBarMultiViewElement implements 
         AddAction(final DDDataObject dObj, String actionName) {
             super(actionName);
             char mnem = NbBundle.getMessage(FiltersMultiViewElement.class,"LBL_addFilter_mnem").charAt(0);
-            putValue(MNEMONIC_KEY,new Integer((int)mnem));
+            putValue(MNEMONIC_KEY, (int)mnem);
         }
         public void actionPerformed(java.awt.event.ActionEvent evt) {
 
@@ -328,7 +332,7 @@ public class FiltersMultiViewElement extends ToolBarMultiViewElement implements 
         RemoveAction(String actionName) {
             super(actionName);
             char mnem = NbBundle.getMessage(FiltersMultiViewElement.class,"LBL_remove_mnem").charAt(0);
-            putValue(MNEMONIC_KEY,new Integer((int)mnem));
+            putValue(MNEMONIC_KEY, (int)mnem);
         }
         
         public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -353,7 +357,7 @@ public class FiltersMultiViewElement extends ToolBarMultiViewElement implements 
                     SectionInnerPanel mappingsInnerPanel = ((FiltersView)sectionPanel.getSectionView()).getFilterMappingSectionPanel().getInnerPanel();
                     if (mappingsInnerPanel!=null) {
                         while (!deletedRows.empty())
-                            ((FilterMappingsPanel)mappingsInnerPanel).removeRow(((Integer)deletedRows.pop()).intValue());
+                            ((FilterMappingsPanel)mappingsInnerPanel).removeRow(((Integer)deletedRows.pop()));
                     }
                 } finally {
                     dObj.setChangedFromUI(false);

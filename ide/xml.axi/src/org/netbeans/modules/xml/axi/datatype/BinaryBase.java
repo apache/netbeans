@@ -151,7 +151,7 @@ public abstract class BinaryBase extends Datatype {
             lengths = new ArrayList<Integer>(1);
             hasFacets = true;
         }
-        this.lengths.add(new Integer(length));
+        this.lengths.add(Integer.valueOf(length));
     }
     
     /*
@@ -164,7 +164,7 @@ public abstract class BinaryBase extends Datatype {
             minLengths = new ArrayList<Integer>(1);
             hasFacets = true;
         }
-        this.minLengths.add(new Integer(minLength));
+        this.minLengths.add(Integer.valueOf(minLength));
     }
     
     /*
@@ -177,7 +177,7 @@ public abstract class BinaryBase extends Datatype {
             maxLengths = new ArrayList<Integer>(1);
             hasFacets = true;
         }
-        this.maxLengths.add(new Integer(maxLength));
+        this.maxLengths.add(Integer.valueOf(maxLength));
     }
     
     /*

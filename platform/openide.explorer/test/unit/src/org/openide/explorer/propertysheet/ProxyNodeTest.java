@@ -240,7 +240,7 @@ public class ProxyNodeTest extends NbTestCase {
             this.name = name;
             propertyChangeSupport.firePropertyChange(PROP_NAME, oldName, name);
         }
-        private transient final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+        private final transient PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
         public void addPropertyChangeListener(PropertyChangeListener listener) {
             propertyChangeSupport.addPropertyChangeListener(listener);

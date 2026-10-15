@@ -7,7 +7,6 @@ class Test {
     public function getText() {
         return $this->text;
     }
-
 }
 
 ?>

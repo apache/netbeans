@@ -38,6 +38,8 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.file.launcher.queries.MultiSourceRootProvider;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.parsing.JavacParserResult;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
@@ -92,21 +94,7 @@ public class ScanUtilsTest extends NbTestCase {
     }
 
     private ClassPath createBootPath () throws MalformedURLException {
-        String bootPath = System.getProperty ("sun.boot.class.path");
-        String[] paths = bootPath.split(File.pathSeparator);
-        List<URL>roots = new ArrayList<URL> (paths.length);
-        for (String path : paths) {
-            File f = new File (path);
-            if (!f.exists()) {
-                continue;
-            }
-            URL url = org.openide.util.Utilities.toURI(f).toURL();
-            if (FileUtil.isArchiveFile(url)) {
-                url = FileUtil.getArchiveRoot(url);
-            }
-            roots.add (url);
-        }
-        return ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
+        return BootClassPathUtil.getBootClassPath();
     }
 
     private ClassPath createCompilePath () {
@@ -695,5 +683,9 @@ public class ScanUtilsTest extends NbTestCase {
             assertTrue(passed.get());
             assertNull(error.get(), error.get());
         }
+    }
+
+    static {
+        MultiSourceRootProvider.DISABLE_MULTI_SOURCE_ROOT = true;
     }
 }

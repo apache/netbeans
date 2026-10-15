@@ -48,10 +48,7 @@ import org.openide.util.NbBundle;
  */
 public class JavaSEPlatformPanel extends JPanel {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Action to invoke Java SE platforms customizer.
      */
@@ -67,18 +64,12 @@ public class JavaSEPlatformPanel extends JPanel {
         
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = GlassFishLogger.get(JavaSEPlatformPanel.class);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Set buttons in user notification descriptor depending on Java SE
      * platforms.
@@ -114,9 +105,20 @@ public class JavaSEPlatformPanel extends JPanel {
         JavaPlatform platform = JavaUtils.findInstalledPlatform(javaHome);
         String platformName = platform != null
                 ? platform.getDisplayName() : javaHome.getAbsolutePath();
-        String message = NbBundle.getMessage(
-                JavaSEPlatformPanel.class,
-                "JavaSEPlatformPanel.warning", platformName);
+        // When no installed platform is compatible the selection combo is
+        // empty and OK stays disabled, so point the user at "Manage Platforms"
+        // and name the supported range instead of the generic warning.
+        JavaPlatform[] supportedPlatforms
+                = JavaUtils.findSupportedPlatforms(instance);
+        String message = supportedPlatforms == null
+                || supportedPlatforms.length == 0
+                ? NbBundle.getMessage(
+                        JavaSEPlatformPanel.class,
+                        "JavaSEPlatformPanel.noPlatform", platformName,
+                        JavaUtils.supportedJavaSERange(instance))
+                : NbBundle.getMessage(
+                        JavaSEPlatformPanel.class,
+                        "JavaSEPlatformPanel.warning", platformName);
         String title = NbBundle.getMessage(
                 JavaSEPlatformPanel.class,
                 "JavaSEPlatformPanel.title", platformName);
@@ -150,10 +152,7 @@ public class JavaSEPlatformPanel extends JPanel {
         return selectedJavaHome;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish server instance used to search for supported platforms. */
     private final GlassfishInstance instance;
 
@@ -178,10 +177,7 @@ public class JavaSEPlatformPanel extends JPanel {
     /** User notification descriptor. */
     private final NotifyDescriptor descriptor;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates new Java SE platform selection panel with message.
      * <p/>
@@ -212,10 +208,7 @@ public class JavaSEPlatformPanel extends JPanel {
         initComponents();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // GUI Getters and Setters                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Retrieve state of properties update check box.
      * <p/>
@@ -250,10 +243,7 @@ public class JavaSEPlatformPanel extends JPanel {
         return platform != null ? platform.isDefault() : false;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Generated GUI code                                                     //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

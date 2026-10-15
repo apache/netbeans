@@ -1,0 +1,138 @@
+<testresult testFile='treatNamespacedNamesAsSingleToken_03.php'>
+    <scanner>
+        <token id='T_NAMESPACE' start='815' end='824'>
+            <text>namespace</text>
+        </token>
+        <token id='T_NAME_QUALIFIED' start='825' end='834'>
+            <text>use\trait</text>
+        </token>
+        <token id='T_SEMICOLON' start='834' end='835'>
+            <text>;</text>
+        </token>
+        <token id='T_TRAIT' start='837' end='842'>
+            <text>trait</text>
+        </token>
+        <token id='T_STRING' start='843' end='852'>
+            <text>TestTrait</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='853' end='854'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='860' end='861'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='863' end='872'>
+            <text>namespace</text>
+        </token>
+        <token id='T_STRING' start='873' end='877'>
+            <text>Test</text>
+        </token>
+        <token id='T_SEMICOLON' start='877' end='878'>
+            <text>;</text>
+        </token>
+        <token id='T_CLASS' start='880' end='885'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='886' end='895'>
+            <text>TestClass</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='896' end='897'>
+            <text>{</text>
+        </token>
+        <token id='T_USE' start='902' end='905'>
+            <text>use</text>
+        </token>
+        <token id='T_NAME_QUALIFIED' start='906' end='925'>
+            <text>use\trait\TestTrait</text>
+        </token>
+        <token id='T_SEMICOLON' start='925' end='926'>
+            <text>;</text>
+        </token>
+        <token id='T_USE' start='931' end='934'>
+            <text>use</text>
+        </token>
+        <token id='T_NAME_FULLY_QUALIFIED' start='935' end='955'>
+            <text>\use\trait\TestTrait</text>
+        </token>
+        <token id='T_SEMICOLON' start='955' end='956'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='957' end='958'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='959' end='959'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='959'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <NamespaceDeclaration start='815' end='861' isBracketed='false'>
+                <NamespaceName start='825' end='834' isCurrent='false' isGlobal='false'>
+                    <Identifier start='825' end='828' name='use'/>
+                    <Identifier start='829' end='834' name='trait'/>
+                </NamespaceName>
+                <Block start='835' end='861' isCurly='true'>
+                    <TraitDeclaration start='837' end='861'>
+                        <TraitName>
+                            <Identifier start='843' end='852' name='TestTrait'/>
+                        </TraitName>
+                        <Block start='853' end='861' isCurly='true'>
+                        </Block>
+                    </TraitDeclaration>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='863' end='958' isBracketed='false'>
+                <NamespaceName start='873' end='877' isCurrent='false' isGlobal='false'>
+                    <Identifier start='873' end='877' name='Test'/>
+                </NamespaceName>
+                <Block start='878' end='958' isCurly='true'>
+                    <ClassDeclaration start='880' end='958' modifier='NONE'>
+                        <ClassName>
+                            <Identifier start='886' end='895' name='TestClass'/>
+                        </ClassName>
+                        <SuperClassName>
+                        </SuperClassName>
+                        <Interfaces>
+                        </Interfaces>
+                        <Block start='896' end='958' isCurly='true'>
+                            <UseTraitStatement start='902' end='926'>
+                                <Parts>
+                                    <UseTraitStatementPart start='906' end='925'>
+                                        <Name>
+                                            <NamespaceName start='906' end='925' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='906' end='909' name='use'/>
+                                                <Identifier start='910' end='915' name='trait'/>
+                                                <Identifier start='916' end='925' name='TestTrait'/>
+                                            </NamespaceName>
+                                        </Name>
+                                    </UseTraitStatementPart>
+                                </Parts>
+                                <Body>
+                                </Body>
+                            </UseTraitStatement>
+                            <UseTraitStatement start='931' end='956'>
+                                <Parts>
+                                    <UseTraitStatementPart start='935' end='955'>
+                                        <Name>
+                                            <NamespaceName start='935' end='955' isCurrent='false' isGlobal='true'>
+                                                <Identifier start='936' end='939' name='use'/>
+                                                <Identifier start='940' end='945' name='trait'/>
+                                                <Identifier start='946' end='955' name='TestTrait'/>
+                                            </NamespaceName>
+                                        </Name>
+                                    </UseTraitStatementPart>
+                                </Parts>
+                                <Body>
+                                </Body>
+                            </UseTraitStatement>
+                        </Block>
+                    </ClassDeclaration>
+                </Block>
+            </NamespaceDeclaration>
+        </Statements>
+    </Program>
+</testresult>

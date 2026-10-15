@@ -838,7 +838,7 @@ ExplorerManager.Provider, PropertyChangeListener {
         } catch (SecurityException ex) {
             Exceptions.printStackTrace(ex);
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     // Re-order the UI columns according to the defined order

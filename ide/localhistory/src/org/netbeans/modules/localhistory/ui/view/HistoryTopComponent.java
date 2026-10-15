@@ -32,7 +32,7 @@ import org.netbeans.modules.versioning.ui.history.HistoryComponent;
  * 
  * @author Tomas Stupka
  */
-final public class HistoryTopComponent extends TopComponent {
+public final class HistoryTopComponent extends TopComponent {
 
     static final String PREFERRED_ID = "text.history";
     private HistoryComponent hc;

@@ -1,0 +1,5 @@
+class Implement extends AbstractClass implements TestInterface {
+      ---------
+HINT:\Test\Implement is not abstract and does not override abstract method  abstractPrivateStaticTraitMethod() in \Test\AbstractTrait
+FIX:Implement All Abstract Methods
+FIX:Declare Abstract Class

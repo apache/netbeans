@@ -34,6 +34,7 @@ import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.php.api.editor.EditorSupport;
 import org.netbeans.modules.php.api.editor.PhpBaseElement;
 import org.netbeans.modules.php.api.editor.PhpClass;
+import org.netbeans.modules.php.api.editor.PhpEnum;
 import org.netbeans.modules.php.api.editor.PhpFunction;
 import org.netbeans.modules.php.api.editor.PhpInterface;
 import org.netbeans.modules.php.api.editor.PhpTrait;
@@ -44,6 +45,7 @@ import org.netbeans.modules.php.editor.api.NameKind;
 import org.netbeans.modules.php.editor.api.QuerySupportFactory;
 import org.netbeans.modules.php.editor.api.elements.ClassElement;
 import org.netbeans.modules.php.editor.model.ClassScope;
+import org.netbeans.modules.php.editor.model.EnumScope;
 import org.netbeans.modules.php.editor.model.FieldElement;
 import org.netbeans.modules.php.editor.model.FileScope;
 import org.netbeans.modules.php.editor.model.FunctionScope;
@@ -80,7 +82,7 @@ public class EditorSupportImpl implements EditorSupport {
                     @Override
                     public void run(ResultIterator resultIterator) throws Exception {
                         Parser.Result pr = resultIterator.getParserResult();
-                        if (pr != null && pr instanceof PHPParseResult) {
+                        if (pr instanceof PHPParseResult) {
                             Model model = ModelFactory.getModel((PHPParseResult) pr);
                             FileScope fileScope = model.getFileScope();
                             Collection<? extends TypeScope> allTypes = ModelUtils.getDeclaredTypes(fileScope);
@@ -107,7 +109,7 @@ public class EditorSupportImpl implements EditorSupport {
                     @Override
                     public void run(ResultIterator resultIterator) throws Exception {
                         Parser.Result pr = resultIterator.getParserResult();
-                        if (pr != null && pr instanceof PHPParseResult) {
+                        if (pr instanceof PHPParseResult) {
                             Model model = ModelFactory.getModel((PHPParseResult) pr);
                             FileScope fileScope = model.getFileScope();
                             Collection<? extends ClassScope> allClasses = ModelUtils.getDeclaredClasses(fileScope);
@@ -154,7 +156,7 @@ public class EditorSupportImpl implements EditorSupport {
                     @Override
                     public void run(ResultIterator resultIterator) throws Exception {
                         Parser.Result pr = resultIterator.getParserResult();
-                        if (pr != null && pr instanceof PHPParseResult) {
+                        if (pr instanceof PHPParseResult) {
                             Model model = ModelFactory.getModel((PHPParseResult) pr);
                             retval.add(getPhpBaseElement(model.getVariableScopeForNamedElement(offset)));
                         }
@@ -226,6 +228,17 @@ public class EditorSupportImpl implements EditorSupport {
                 phpTrait.addMethod(methodScope.getName(), methodScope.getName(), methodScope.getOffset());
             }
             phpType = phpTrait;
+        } else if (typeScope instanceof EnumScope) {
+            EnumScope enumScope = (EnumScope) typeScope;
+            PhpEnum phpEnum = new PhpEnum(
+                    enumScope.getName(),
+                    enumScope.getNamespaceName().append(enumScope.getName()).toFullyQualified().toString(),
+                    enumScope.getOffset()
+            );
+            for (MethodScope methodScope : enumScope.getDeclaredMethods()) {
+                phpEnum.addMethod(methodScope.getName(), methodScope.getName(), methodScope.getOffset());
+            }
+            phpType = phpEnum;
         }
         return phpType;
     }

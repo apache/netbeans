@@ -42,7 +42,7 @@ public class AnnotationsHolder implements PropertyChangeListener {
 
     private static final Logger LOGGER = Logger.getLogger(AnnotationsHolder.class.getName());
     private static final RequestProcessor WORKER = new RequestProcessor(AnnotationsHolder.class.getName(), 1, false, false);
-    private static final Map<DataObject, AnnotationsHolder> file2Annotations = new HashMap<DataObject, AnnotationsHolder>();
+    private static final Map<DataObject, AnnotationsHolder> file2Annotations = new HashMap<>();
     
     public static synchronized AnnotationsHolder get(FileObject file) {
         try {
@@ -59,12 +59,11 @@ public class AnnotationsHolder implements PropertyChangeListener {
                 return null;
             }
             
-            file2Annotations.put(od, a = new AnnotationsHolder(od, ec));
-            
+            a = new AnnotationsHolder(od, ec);
+            file2Annotations.put(od, a);
             return a;
         } catch (IOException ex) {
             LOGGER.log(Level.INFO, null, ex);
-            
             return null;
         }
     }
@@ -75,19 +74,16 @@ public class AnnotationsHolder implements PropertyChangeListener {
     private AnnotationsHolder(DataObject file, EditorCookie.Observable ec) {
         this.file = file;
         this.ec   = ec;
-        this.annotations = new ArrayList<IsOverriddenAnnotation>();
+        this.annotations = new ArrayList<>();
         
         ec.addPropertyChangeListener(this);
         
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                checkForReset();
-            }
-        });
+        SwingUtilities.invokeLater(this::checkForReset);
         
         Logger.getLogger("TIMER").log(Level.FINE, "Overridden AnnotationsHolder", new Object[] {file.getPrimaryFile(), this}); //NOI18N
      }
     
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (EditorCookie.Observable.PROP_OPENED_PANES.endsWith(evt.getPropertyName()) || evt.getPropertyName() == null) {
             checkForReset();
@@ -111,26 +107,24 @@ public class AnnotationsHolder implements PropertyChangeListener {
     private final List<IsOverriddenAnnotation> annotations;
     
     public void setNewAnnotations(final List<IsOverriddenAnnotation> as) {
-        Runnable doAttachDetach = new Runnable() {
-            public void run() {
-                final List<IsOverriddenAnnotation> toRemove;
-                final List<IsOverriddenAnnotation> toAdd;
+        Runnable doAttachDetach = () -> {
+            List<IsOverriddenAnnotation> toRemove;
+            List<IsOverriddenAnnotation> toAdd;
+            
+            synchronized (AnnotationsHolder.this) {
+                toRemove = new ArrayList<>(annotations);
+                toAdd    = new ArrayList<>(as);
                 
-                synchronized (AnnotationsHolder.this) {
-                    toRemove = new ArrayList<IsOverriddenAnnotation>(annotations);
-                    toAdd    = new ArrayList<IsOverriddenAnnotation>(as);
-
-                    annotations.clear();
-                    annotations.addAll(as);
-                }
-
-                for (IsOverriddenAnnotation a : toRemove) {
-                    a.detachImpl();
-                }
-                
-                for (IsOverriddenAnnotation a : toAdd) {
-                    a.attach();
-                }
+                annotations.clear();
+                annotations.addAll(as);
+            }
+            
+            for (IsOverriddenAnnotation a : toRemove) {
+                a.detachImpl();
+            }
+            
+            for (IsOverriddenAnnotation a : toAdd) {
+                a.attach();
             }
         };
         
@@ -140,6 +134,6 @@ public class AnnotationsHolder implements PropertyChangeListener {
     }
     
     public synchronized List<IsOverriddenAnnotation> getAnnotations() {
-        return new ArrayList<IsOverriddenAnnotation>(annotations);
+        return new ArrayList<>(annotations);
     }
 }

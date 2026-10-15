@@ -25,8 +25,8 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -35,12 +35,10 @@ import javax.lang.model.element.TypeElement;
 import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
-import org.netbeans.api.java.source.Task;
-import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.editor.BaseAction;
 import org.netbeans.editor.ext.ExtKit;
 import org.netbeans.modules.editor.java.GoToSupport;
@@ -57,12 +55,13 @@ public class GoToSuperTypeAction extends BaseAction {
     
     public GoToSuperTypeAction() {
         super(JavaKit.gotoSuperImplementationAction, SAVE_POSITION | ABBREV_RESET);
-        putValue(SHORT_DESCRIPTION, NbBundle.getBundle(JavaKit.class).getString("goto-super-implementation"));
-        String name = NbBundle.getBundle(JavaKit.class).getString("goto-super-implementation-trimmed");
+        putValue(SHORT_DESCRIPTION, NbBundle.getMessage(JavaKit.class, "goto-super-implementation"));
+        String name = NbBundle.getMessage(JavaKit.class, "goto-super-implementation-trimmed");
         putValue(ExtKit.TRIMMED_TEXT,name);
         putValue(POPUP_MENU_TEXT, name);
     }
     
+    @Override
     public void actionPerformed(ActionEvent evt, final JTextComponent target) {
         final JavaSource js = JavaSource.forDocument(target.getDocument());
         
@@ -74,53 +73,45 @@ public class GoToSuperTypeAction extends BaseAction {
         final int caretPos = target.getCaretPosition();
         final AtomicBoolean cancel = new AtomicBoolean();
         
-        ProgressUtils.runOffEventDispatchThread(new Runnable() {
-            @Override
-            public void run() {
-                goToImpl(target, js, caretPos, cancel);
-            }
+        BaseProgressUtils.runOffEventDispatchThread(() -> {
+            goToImpl(target, js, caretPos, cancel);
         }, NbBundle.getMessage(JavaKit.class, "goto-super-implementation"), cancel, false);
     }
 
     private static void goToImpl(final JTextComponent c, final JavaSource js, final int caretPos, final AtomicBoolean cancel) {
        try {
-            js.runUserActionTask(new Task<CompilationController>() {
-                public void run(CompilationController parameter) throws Exception {
-                    if (cancel != null && cancel.get())
-                        return ;
-                    parameter.toPhase(Phase.RESOLVED); //!!!
-                    
-                    ExecutableElement ee = resolveMethodElement(parameter, caretPos);
-
-                    if (ee == null) {
-                        ee = resolveMethodElement(parameter, caretPos + 1);
-                    }
-
-                    if (ee == null) {
-                        Toolkit.getDefaultToolkit().beep();
-                        return ;
-                    }
-                    
-                    final List<ElementDescription> result = new ArrayList<ElementDescription>();
-                    final AnnotationType type = ComputeOverriding.detectOverrides(parameter, (TypeElement) ee.getEnclosingElement(), ee, result);
-
-                    if (type == null) {
-                        Toolkit.getDefaultToolkit().beep();
-                        return ;
-                    }
-                    
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override public void run() {
-                            try {
-                                Point p = c.modelToView(c.getCaretPosition()).getLocation();
-                                IsOverriddenAnnotationAction.mouseClicked(Collections.singletonMap(IsOverriddenAnnotationAction.computeCaption(type, ""), result), c, p);
-                            } catch (BadLocationException e) {
-                                Exceptions.printStackTrace(e);
-                            }
-                        }
-                    });
+            js.runUserActionTask(controller -> {
+                if (cancel != null && cancel.get())
+                    return ;
+                controller.toPhase(Phase.RESOLVED); //!!!
+                
+                ExecutableElement ee = resolveMethodElement(controller, caretPos);
+                
+                if (ee == null) {
+                    ee = resolveMethodElement(controller, caretPos + 1);
                 }
                 
+                if (ee == null) {
+                    Toolkit.getDefaultToolkit().beep();
+                    return ;
+                }
+                
+                final List<ElementDescription> result = new ArrayList<>();
+                final AnnotationType type = ComputeOverriding.detectOverrides(controller, (TypeElement) ee.getEnclosingElement(), ee, result);
+                
+                if (type == null) {
+                    Toolkit.getDefaultToolkit().beep();
+                    return ;
+                }
+                
+                SwingUtilities.invokeLater(() -> {
+                    try {
+                        Point p = c.modelToView(c.getCaretPosition()).getLocation();
+                        IsOverriddenAnnotationAction.mouseClicked(Map.of(IsOverriddenAnnotationAction.computeCaption(type, ""), result), c, p);
+                    } catch (BadLocationException e) {
+                        Exceptions.printStackTrace(e);
+                    }
+                });
             }, true);
             
         } catch (IOException e) {

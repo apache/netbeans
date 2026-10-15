@@ -18,9 +18,7 @@
  */
 package org.netbeans.modules.javascript2.editor;
 
-import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.csl.api.InstantRenamer;
 import org.netbeans.modules.csl.api.OffsetRange;

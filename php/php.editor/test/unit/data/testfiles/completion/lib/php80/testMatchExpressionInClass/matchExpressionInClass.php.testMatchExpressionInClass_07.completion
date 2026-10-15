@@ -1,0 +1,8 @@
+Code completion result for source line:
+MatchExpression::SUSPEND => $this->|suspend,
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     default()                       [STATIC]   MatchExpression
+METHOD     match()                         [PUBLIC]   MatchExpression
+METHOD     run()                           [PUBLIC]   MatchExpression
+METHOD     stopState()                     [PUBLIC]   MatchExpression
+VARIABLE   ? suspend                       [PRIVATE]  MatchExpression

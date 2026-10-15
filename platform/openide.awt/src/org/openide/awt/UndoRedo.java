@@ -111,7 +111,7 @@ public interface UndoRedo {
 
     /**
      * An undo manager which fires a change event each time it consumes a new undoable edit.
-     * <br/>
+     * <br>
      * Compared to Swing this implementation is more stable.
      * If any contained undo edit throws an exception from its undo/redo methods
      * the implementation will fail gracefully (unlike in Swing it will not change

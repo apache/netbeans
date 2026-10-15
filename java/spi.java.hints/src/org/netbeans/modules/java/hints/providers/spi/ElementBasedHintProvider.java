@@ -21,7 +21,6 @@ package org.netbeans.modules.java.hints.providers.spi;
 
 import java.util.Collection;
 import org.netbeans.api.java.source.CompilationInfo;
-import org.netbeans.modules.java.hints.providers.spi.HintDescription;
 
 /**
  * XXX: this is an ugly hack!

@@ -60,12 +60,19 @@ import org.openide.util.Exceptions;
 public class EntityClassInfo {
 
     private static final String JAVAX_PERSISTENCE = "javax.persistence.";//NOI18N
-    
-    private static final String MAPPED_SUPERCLASS = JAVAX_PERSISTENCE+"MappedSuperclass";   // NOI18N
-    
-    private static final String ENTITY = JAVAX_PERSISTENCE+"Entity";    // NOI18N
-    
+
+    private static final String JAKARTA_PERSISTENCE = "jakarta.persistence.";//NOI18N
+
+    private static final String MAPPED_SUPERCLASS = JAVAX_PERSISTENCE + "MappedSuperclass";   // NOI18N
+
+    private static final String MAPPED_SUPERCLASS_JAKARTA = JAKARTA_PERSISTENCE + "MappedSuperclass";   // NOI18N
+
+    private static final String ENTITY = JAVAX_PERSISTENCE + "Entity";    // NOI18N
+
+    private static final String ENTITY_JAKARTA = JAKARTA_PERSISTENCE + "Entity";    // NOI18N
+
     private static final Set<String> LIFECYCLE_ANNOTATIONS = new HashSet<String>(7);
+
     static {
         LIFECYCLE_ANNOTATIONS.add("PrePersist");    // NOI18N
         LIFECYCLE_ANNOTATIONS.add("PostPersist");   // NOI18N
@@ -74,7 +81,7 @@ public class EntityClassInfo {
         LIFECYCLE_ANNOTATIONS.add("PreUpdate");     // NOI18N
         LIFECYCLE_ANNOTATIONS.add("PostUpdate");    // NOI18N
         LIFECYCLE_ANNOTATIONS.add("PostLoad");      // NOI18N
-        }; 
+    }
     
     private EntityResourceModelBuilder builder;
     private final String entityFqn;
@@ -275,11 +282,9 @@ public class EntityClassInfo {
             return null;
         }
         Element superElement = controller.getTypes().asElement( superclass );
-        if ( superElement instanceof TypeElement ){
-            if ( hasAnnotation( superElement, controller, MAPPED_SUPERCLASS, 
-                    ENTITY))
-            {
-                return (TypeElement)superElement;
+        if (superElement instanceof TypeElement) {
+            if (hasAnnotation(superElement, controller, MAPPED_SUPERCLASS_JAKARTA, ENTITY_JAKARTA, MAPPED_SUPERCLASS, ENTITY)) {
+                return (TypeElement) superElement;
             }
         }
         return null;
@@ -519,12 +524,16 @@ public class EntityClassInfo {
         public void parseAnnotations(List<? extends AnnotationMirror> annotationMirrors) {
             for (AnnotationMirror annotation : annotationMirrors) {
                 String annotationType = annotation.getAnnotationType().toString();
-              
-                if (!annotationType.startsWith(JAVAX_PERSISTENCE)) { 
-                    continue;     
+
+                String simpleName;
+                if (annotationType.startsWith(JAKARTA_PERSISTENCE)) {
+                    simpleName = annotationType.substring(JAKARTA_PERSISTENCE.length());
+                } else if (annotationType.startsWith(JAVAX_PERSISTENCE)) {
+                    simpleName = annotationType.substring(JAVAX_PERSISTENCE.length());
+                } else {
+                    continue;
                 }
-                String simpleName = annotationType.substring( 
-                        JAVAX_PERSISTENCE.length() );
+
                 if ( LIFECYCLE_ANNOTATIONS.contains( simpleName)){
                     continue;
                 }

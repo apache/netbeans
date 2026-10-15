@@ -19,12 +19,12 @@
 package org.netbeans.lib.profiler.ui.memory;
 
 import javax.swing.Icon;
-import javax.swing.UIManager;
 import org.netbeans.lib.profiler.results.memory.PresoObjAllocCCTNode;
 import org.netbeans.lib.profiler.ui.swing.renderer.JavaNameRenderer;
 import org.netbeans.modules.profiler.api.icons.Icons;
 import org.netbeans.modules.profiler.api.icons.LanguageIcons;
 import org.netbeans.modules.profiler.api.icons.ProfilerIcons;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -34,7 +34,7 @@ public class MemoryJavaNameRenderer extends JavaNameRenderer {
     
     private static final Icon CLASS_ICON = Icons.getIcon(LanguageIcons.CLASS);
     private static final Icon REVERSE_ICON = Icons.getIcon(ProfilerIcons.NODE_REVERSE);
-    private static final Icon REVERSE_ICON_DISABLED = UIManager.getLookAndFeel().getDisabledIcon(null, REVERSE_ICON);
+    private static final Icon REVERSE_ICON_DISABLED = ImageUtilities.createDisabledIcon(REVERSE_ICON);
     
     public void setValue(Object value, int row) {
         if (value instanceof PresoObjAllocCCTNode) {

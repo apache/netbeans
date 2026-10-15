@@ -1,0 +1,6 @@
+[Overridden]
+[Method]
+interfaceMethod1 : I (by ExtendingClass)(by ImplementingClass)(by ImplementingEnum)
+interfaceStaticMethod1 : I (by ExtendingClass)(by ImplementingClass)(by ImplementingEnum)
+[Type]
+I (by ExtendingClass)(by ImplementingClass)(by ImplementingEnum)

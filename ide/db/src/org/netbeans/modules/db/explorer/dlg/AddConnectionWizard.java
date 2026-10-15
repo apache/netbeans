@@ -21,6 +21,8 @@ package org.netbeans.modules.db.explorer.dlg;
 import java.awt.Dialog;
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -60,12 +62,11 @@ public class AddConnectionWizard extends ConnectionDialogMediator implements Wiz
     private final String pwd;
     private final String databaseUrl;
     private final String user;
+    private final WizardDescriptor wd;
     private DatabaseConnection connection;
     private List<String> schemas = null;
     private String currentSchema;
     private JDBCDriver jdbcDriver;
-    private boolean increase = false;
-    private WizardDescriptor wd;
 
     private AddConnectionWizard(JDBCDriver driver, String databaseUrl, String user, String password) {
         this.databaseUrl = databaseUrl;
@@ -123,30 +124,41 @@ public class AddConnectionWizard extends ConnectionDialogMediator implements Wiz
      */
     private WizardDescriptor.Panel<AddConnectionWizard>[] getPanels() {
         if (panels == null) {
+            boolean skipDriverSelection = false;
             if (jdbcDriver != null) {
                 URL[] jars = jdbcDriver.getURLs();
                 if (jars != null && jars.length > 0) {
                         FileObject jarFO = URLMapper.findFileObject(jars[0]);
                         if (jarFO != null && jarFO.isValid()) {
                             this.allPrivilegedFileNames.add(jarFO.getNameExt());
-                            this.increase = true;
+                            skipDriverSelection = true;
                         }
                 }
             }
-            driverPanel = new ChoosingDriverPanel(jdbcDriver);
-            panels = new Panel[] {
-                driverPanel,
-                new ConnectionPanel(),
-                new ChoosingSchemaPanel(),
-                new ChoosingConnectionNamePanel()
-            };
-            steps = new String[panels.length];
-            steps = new String[] {
-                NbBundle.getMessage(AddConnectionWizard.class, "ChoosingDriverUI.Name"), // NOI18N
-                NbBundle.getMessage(AddConnectionWizard.class, "ConnectionPanel.Name"), // NOI18N
-                NbBundle.getMessage(AddConnectionWizard.class, "ChoosingSchemaPanel.Name"), // NOI18N
-                NbBundle.getMessage(AddConnectionWizard.class, "ChooseConnectionNamePanel.Name"), // NOI18N
-            };
+            List<Panel> toPanels = new ArrayList<>();
+            List<String> toSteps = new ArrayList<>();
+            int stepIndex = 0;
+
+            if (!skipDriverSelection) {
+                toPanels.add(new ChoosingDriverPanel(jdbcDriver, stepIndex));
+                toSteps.add(NbBundle.getMessage(AddConnectionWizard.class, "ChoosingDriverUI.Name")); // NOI18N
+                stepIndex++;
+            }
+
+            toPanels.add(new ConnectionPanel(stepIndex));
+            toSteps.add(NbBundle.getMessage(AddConnectionWizard.class, "ConnectionPanel.Name")); // NOI18N
+            stepIndex++;
+
+            toPanels.add(new ChoosingSchemaPanel(stepIndex));
+            toSteps.add(NbBundle.getMessage(AddConnectionWizard.class, "ChoosingSchemaPanel.Name")); // NOI18N
+            stepIndex++;
+
+            toPanels.add(new ChoosingConnectionNamePanel(stepIndex));
+            toSteps.add(NbBundle.getMessage(AddConnectionWizard.class, "ChooseConnectionNamePanel.Name")); // NOI18N
+            stepIndex++;
+
+            panels = toPanels.toArray(new Panel[stepIndex]);
+            steps = toSteps.toArray(new String[stepIndex]);
         }
         return panels;
     }
@@ -155,11 +167,6 @@ public class AddConnectionWizard extends ConnectionDialogMediator implements Wiz
     public WizardDescriptor.Panel<AddConnectionWizard> current() {
         // init panels first
         getPanels();
-        if (increase) {
-            index++;
-            increase = false;
-        }
-                
         return getPanels()[index];
     }
 

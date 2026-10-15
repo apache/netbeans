@@ -21,9 +21,9 @@ package org.netbeans.modules.css.indexing;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -56,8 +56,8 @@ public class CssIndexer extends EmbeddingIndexer {
     /**
      * For firing index changes out of the parsing thread.
      */
-    private static RequestProcessor RP = new RequestProcessor();
-    
+    private static final RequestProcessor RP = new RequestProcessor();
+
     private static final Logger LOGGER = Logger.getLogger(CssIndexer.class.getSimpleName());
     private static final boolean LOG = LOGGER.isLoggable(Level.FINE);
 
@@ -69,16 +69,13 @@ public class CssIndexer extends EmbeddingIndexer {
     public static final String COLORS_KEY = "colors"; //NOI18N
 
     public static final char VIRTUAL_ELEMENT_MARKER = '!'; //NOI18N
-    
+
     //used during the indexing (content is mutable)
     private static final Map<FileObject, AtomicLong> importsHashCodes = new HashMap<>();
-    
+
     //final version used after the indexing finishes (immutable)
     private static Map<FileObject, AtomicLong> computedImportsHashCodes = new HashMap<>();
-    
-//    static {
-//	LOG.setLevel(Level.ALL);
-//    }
+
     @Override
     protected void index(Indexable indexable, Result parserResult, Context context) {
         try {
@@ -96,7 +93,7 @@ public class CssIndexer extends EmbeddingIndexer {
             storeEntries(model.getClasses(), document, CLASSES_KEY);
             storeEntries(model.getHtmlElements(), document, HTML_ELEMENTS_KEY);
             storeEntries(model.getColors(), document, COLORS_KEY);
-            
+
             //support for caching the file dependencies
             int entriesHashCode = storeEntries(model.getImports(), document, IMPORTS_KEY);
             FileObject root = context.getRoot();
@@ -105,10 +102,10 @@ public class CssIndexer extends EmbeddingIndexer {
                 if (aggregatedHash == null) {
                     aggregatedHash = new AtomicLong(0);
                     importsHashCodes.put(root, aggregatedHash);
-                } 
+                }
                 aggregatedHash.set(aggregatedHash.get() * 79 + entriesHashCode);
             }
-            
+
             //this is a marker key so it's possible to find
             //all stylesheets easily
             document.addPair(CSS_CONTENT_KEY, Boolean.TRUE.toString(), true, true);
@@ -117,14 +114,14 @@ public class CssIndexer extends EmbeddingIndexer {
             for(CssIndexModel indexModel : indexModels) {
                 indexModel.storeToIndex(document);
             }
-            
+
             support.addDocument(document);
-            
+
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
     }
-    
+
     //1. no synchronization on the computedImportsHashCodes!
     //2. the callers of this method will get old results if an indexing is in progress and 
     //   if the cached hashcode changes - possibly add some kind of synchronization 
@@ -142,45 +139,32 @@ public class CssIndexer extends EmbeddingIndexer {
 
     private int storeEntries(Collection<Entry> entries, IndexDocument doc, String key) {
         if (!entries.isEmpty()) {
-            
+
             //eliminate duplicated entries
-            Collection<String> entryStrings = new HashSet<>();
+            Set<String> entryStrings = new TreeSet<>();
             for(Entry entry : entries) {
-                StringBuilder sb = new StringBuilder();
-                sb.append(entry.getName());
                 if(entry.isVirtual()) {
-                    sb.append(VIRTUAL_ELEMENT_MARKER);
-                }
-                entryStrings.add(sb.toString());
-            }
-            
-            StringBuilder sb = new StringBuilder();
-            Iterator<String> i = entryStrings.iterator();
-            while(i.hasNext()) {
-                sb.append(i.next());
-                if (i.hasNext()) {
-                    sb.append(','); //NOI18N
+                    entryStrings.add(entry.getName() + VIRTUAL_ELEMENT_MARKER);
+                } else {
+                    entryStrings.add(entry.getName());
                 }
             }
-            
-            sb.append(';'); //end of string
-            doc.addPair(key, sb.toString(), true, true);
-            return sb.toString().hashCode();
+
+            for(String e: entryStrings) {
+                doc.addPair(key, e, true, true);
+            }
+
+            return entryStrings.hashCode();
         }
         return 0;
     }
-    
+
     private static void fireChange(final FileObject fo) {
         // handle events firing in separate thread:
-        RP.post(new Runnable() {
-            @Override
-            public void run() {
-                fireChangeImpl(fo);
-            }
-        });
+        RP.post(() -> fireChangeImpl(fo));
     }
-    
-    static private void fireChangeImpl(FileObject fo) {
+
+    private static void fireChangeImpl(FileObject fo) {
         Project p = FileOwnerQuery.getOwner(fo);
         if (p == null) {
             // no project to notify
@@ -199,7 +183,7 @@ public class CssIndexer extends EmbeddingIndexer {
     public static class Factory extends EmbeddingIndexerFactory {
 
         public static final String NAME = "css"; //NOI18N
-        public static final int VERSION = 4;
+        public static final int VERSION = 5;
 
         @Override
         public EmbeddingIndexer createIndexer(Indexable indexable, Snapshot snapshot) {
@@ -209,7 +193,7 @@ public class CssIndexer extends EmbeddingIndexer {
                 return null;
             }
         }
-    
+
         @Override
         public boolean scanStarted(Context context) {
             synchronized(importsHashCodes) {
@@ -218,7 +202,6 @@ public class CssIndexer extends EmbeddingIndexer {
             return super.scanStarted(context);
         }
 
-        
         @Override
         public void scanFinished(Context context) {
             synchronized(importsHashCodes) {

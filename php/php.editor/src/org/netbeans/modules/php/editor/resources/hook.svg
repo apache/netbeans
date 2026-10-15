@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <g transform="translate(2.3062434e-4,3.1400188e-4)">
+    <path
+       style="fill:#999999;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
+       d="M 8,1.34375 C 7.0511556,1.3430029 6.2652327,2.1343684 6.2636719,3.0800781 v 0.00195 1.8417968 c 0,1.7147841 1.3048479,2.7936415 2.3730469,3.28125 C 8.9852863,8.3641912 9.270109,8.6497654 9.4257813,9.0273438 9.6685342,9.6161385 9.5371114,10.275254 9.0898438,10.724609 8.642575,11.173966 7.9925787,11.30292 7.4101562,11.060547 6.8281818,10.81836 6.4577994,10.262417 6.4570312,9.625 V 9.62305 C 6.4567006,8.6766232 5.6685177,7.8820657 4.71875,7.8828125 3.7705507,7.884392 2.9847034,8.678185 2.984375,9.6230469 c 0,2.0306851 1.2240886,3.8715251 3.0957031,4.6503911 1.8720182,0.779033 4.0377609,0.343916 5.4687499,-1.09375 C 12.980185,11.74165 13.408401,9.573703 12.634766,7.6972656 12.139763,6.4966454 11.210576,5.5577845 10.074219,5.0390625 9.9219553,4.9695576 9.7940193,4.8683316 9.7382813,4.8066406 9.6825432,4.7449496 9.7363281,4.7388049 9.7363281,4.9238281 V 3.0820313 3.0800813 C 9.7347673,2.1343676 8.9488452,1.3430017 8,1.34375 Z"/>
+    <path
+       style="fill:#e6e6e6;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
+       d="M 8.0000136,2.343269 A 0.73593304,0.73936707 0 0 0 7.2635048,3.0814099 v 1.8426457 c 0,1.1960236 0.9306747,1.9795482 1.7891785,2.3714357 0.5758646,0.262869 1.0445037,0.7375911 1.2969737,1.3499494 0.39452,0.956904 0.177496,2.0523403 -0.5514836,2.7847223 C 9.0691926,12.162547 7.978844,12.380583 7.0263853,11.984221 6.0739256,11.587858 5.4563629,10.659359 5.4563629,9.6236131 A 0.73593304,0.73936707 0 0 0 4.7198541,8.8836675 0.73593304,0.73936707 0 0 0 3.9851415,9.6236131 c 0,1.6295909 0.9804289,3.1031829 2.4789812,3.7267999 1.4985523,0.623617 3.2289991,0.276993 4.3759413,-0.875301 1.146942,-1.152295 1.490159,-2.8908163 0.869439,-4.3963612 C 11.312281,7.1152963 10.568803,6.3640665 9.659854,5.9491512 9.12315,5.7041577 8.7365233,5.2793885 8.7365233,4.9240556 V 3.0814099 A 0.73593304,0.73936707 0 0 0 8.0000136,2.343269 Z"/>
+  </g>
+</svg>

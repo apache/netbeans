@@ -34,29 +34,22 @@ public class FixLibDeclaration implements HintFix{
     private final String nsPrefix;
     private final Library lib;
     private final Document doc;
-    private final boolean isJsf22Plus;
 
-    public FixLibDeclaration(Document doc, String nsPrefix, Library lib, boolean isJsf22Plus) {
+    public FixLibDeclaration(Document doc, String nsPrefix, Library lib) {
         this.doc = doc;
         this.nsPrefix = nsPrefix;
         this.lib = lib;
-        this.isJsf22Plus = isJsf22Plus;
     }
 
     @Override
     public String getDescription() {
-        String namespace;
-        if (isJsf22Plus || lib.getLegacyNamespace() == null) {
-            namespace = lib.getNamespace();
-        } else {
-            namespace = lib.getLegacyNamespace();
-        }
+        String namespace = lib.getNamespace();
         return NbBundle.getMessage(FixLibDeclaration.class, "MSG_FixLibDeclaration", nsPrefix, namespace); //NOI18N
     }
 
     @Override
     public void implement() throws Exception {
-        LibraryUtils.importLibrary(doc, lib, nsPrefix, isJsf22Plus);
+        LibraryUtils.importLibrary(doc, lib, nsPrefix);
     }
 
     @Override

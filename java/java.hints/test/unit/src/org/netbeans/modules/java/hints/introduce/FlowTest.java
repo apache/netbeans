@@ -39,6 +39,7 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
 import org.netbeans.api.lexer.Language;
+import org.netbeans.core.startup.Main;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.hints.introduce.Flow.FlowResult;
 import org.netbeans.modules.java.hints.spiimpl.TestUtilities;
@@ -62,6 +63,7 @@ public class FlowTest extends NbTestCase {
 
     @Override
     protected void setUp() throws Exception {
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         SourceUtilsTestUtil
                 .prepareTest(new String[0], new Object[0]);
         super
@@ -1153,14 +1155,12 @@ public class FlowTest extends NbTestCase {
                     .add((int) info
                     .getTrees()
                     .getSourcePositions()
-                    .getStartPosition(info
-                    .getCompilationUnit(), dead));
+                    .getStartPosition(dead));
             actual
                     .add((int) info
                     .getTrees()
                     .getSourcePositions()
-                    .getEndPosition(info
-                    .getCompilationUnit(), dead));
+                    .getEndPosition(dead));
         }
 
         assertEquals(goldenSpans, actual);
@@ -1200,8 +1200,8 @@ public class FlowTest extends NbTestCase {
         TreePath tp = info.getTreeUtilities().pathFor((span[0] + span[1]) / 2);
         
         while (tp != null) {
-            long s = info.getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
-            long e = info.getTrees().getSourcePositions().getEndPosition(tp.getCompilationUnit(), tp.getLeaf());
+            long s = info.getTrees().getSourcePositions().getStartPosition(tp.getLeaf());
+            long e = info.getTrees().getSourcePositions().getEndPosition(tp.getLeaf());
             
             if (span[0] == s && span[1] == e) break;
             
@@ -1552,6 +1552,104 @@ public class FlowTest extends NbTestCase {
                 "di");
     }
     
+    public void testRuleCases() throws Exception {
+        sourceLevel = "14";
+        performTest("package test;\n" +
+                    "public class Test {\n" +
+                    "    public void test(int i) {\n" +
+                    "        int val;\n" +
+                    "        switch (i) {\n" +
+                    "            case 0 -> val = 0;\n" +
+                    "            case 1 -> val = 1;\n" +
+                    "            case 2 -> { val = 2; }\n" +
+                    "            case 3 -> { val = 3; }\n" +
+                    "            default -> { val = -1; }\n" +
+                    "        }\n" +
+                    "        System.err.println(val`);\n" +
+                    "    }\n" +
+                    "}",
+                    "0",
+                    "1",
+                    "2",
+                    "3",
+                    "-1");
+    }
+
+    public void testSwitchExpression1() throws Exception {
+        sourceLevel = "14";
+        performTest("package test;\n" +
+                    "public class Test {\n" +
+                    "    static void t(int p) {\n" +
+                    "        int ii;\n" +
+                    "        int x = switch (p) {\n" +
+                    "            case 0: ii = 1; yield 0;\n" +
+                    "            case 1: ii = 2;\n" +
+                    "            case 2: ii = 3; yield 0;\n" +
+                    "            default: ii = 4; yield 0;\n" +
+                    "        };\n" +
+                    "        System.err.println(i`i);\n" +
+                    "    }\n" +
+                    "}\n",
+                    "1",
+                    "3",
+                    "4");
+    }
+
+    public void testParameters() throws Exception {
+        performTest("""
+                    package test;
+                    public class Test {
+                        static void t(int ii) {
+                            System.err.println(i`i);
+                        }
+                    }
+                    """,
+                    "int ii");
+    }
+
+    public void testLambdaParameters() throws Exception {
+        performTest("""
+                    package test;
+                    public class Test {
+                        static void t() {
+                            I i = ii -> System.err.println(i`i);
+                        }
+                        interface I {
+                            public void consume(int ii);
+                        }
+                    }
+                    """,
+                    "/*missing*/ ii");
+    }
+
+    public void testCatchParameters() throws Exception {
+        performTest("""
+                    package test;
+                    public class Test {
+                        static void t() {
+                            try {
+                            } catch (Throwable tt) {
+                                System.err.println(t`t);
+                            }
+                        }
+                    }
+                    """,
+                    "Throwable tt");
+    }
+
+    public void testBindingVariables() throws Exception {
+        sourceLevel = "21";
+        performTest("""
+                    package test;
+                    public class Test {
+                        static void t(Object o) {
+                            boolean b = o instanceof Integer ii && i`i == 0;
+                        }
+                    }
+                    """,
+                    "Integer ii");
+    }
+
     private void performFinalCandidatesTest(String code, boolean allowErrors, String... finalCandidates) throws Exception {
         prepareTest(code, allowErrors);
 
@@ -1565,5 +1663,9 @@ public class FlowTest extends NbTestCase {
         Collections.sort(computedCandidates);
         
         assertEquals(Arrays.asList(finalCandidates), computedCandidates);
+    }
+
+    static {
+        Main.initializeURLFactory();
     }
 }

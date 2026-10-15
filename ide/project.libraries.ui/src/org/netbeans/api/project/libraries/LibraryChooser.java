@@ -57,8 +57,8 @@ public final class LibraryChooser {
     }
 
     /**
-     * Filter for use by {@link LibraryChooser#createPanel()} or 
-     * {@link LibraryChooser#showDialog()}.
+     * Filter for use by {@link #createPanel(LibraryManager, org.netbeans.api.project.libraries.LibraryChooser.Filter)} or 
+     * {@link #showDialog(LibraryManager, org.netbeans.api.project.libraries.LibraryChooser.Filter, org.netbeans.api.project.libraries.LibraryChooser.LibraryImportHandler) }.
      */
     public interface Filter {
 

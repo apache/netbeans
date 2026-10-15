@@ -28,7 +28,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -36,7 +36,6 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.html.knockout.model.Binding;
 import org.openide.modules.Places;
 import org.openide.util.NbBundle;
@@ -86,7 +85,7 @@ public class KODoc {
         items.addAll(Arrays.asList(Binding.values()));
         
         bindings = items.iterator();        
-        progress = ProgressHandleFactory.createHandle(Bundle.doc_building());
+        progress = ProgressHandle.createHandle(Bundle.doc_building());
         progress.start(items.size());
 
         buildDoc();
@@ -124,11 +123,11 @@ public class KODoc {
         synchronized (cacheFile) {
             StringWriter sw = new StringWriter();
             //load from the URL
-            KOUtils.loadURL(url, sw, Charset.forName("UTF-8")); //NOI18N
+            KOUtils.loadURL(url, sw, StandardCharsets.UTF_8);
             //strip off the proper content
             String knockoutDocumentationContent = KOUtils.getKnockoutDocumentationContent(sw.getBuffer().toString());
             //save to cache file
-            try (Writer writer = new OutputStreamWriter(new FileOutputStream(cacheFile), "UTF-8")) { // NOI18N
+            try (Writer writer = new OutputStreamWriter(new FileOutputStream(cacheFile), StandardCharsets.UTF_8)) {
                 writer.append("<!doctype html><html><head><title>Knockout documentation</title></head><body>"); //NOI18N
                 writer.append(knockoutDocumentationContent);
                 writer.append("</body></html>"); //NOI18N

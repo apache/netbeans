@@ -1,0 +1,4 @@
+Name: testMethod
+public function testMethod(null|(Foo&\Bar) $param1, (Foo&Bar)|Baz $pram2, (Foo&Bar)|(Bar&Baz) $param3): Bar|(Bar&Baz) {
+${cursor}return parent::testMethod($param1, $pram2, $param3);
+}

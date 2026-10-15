@@ -89,7 +89,7 @@ public class JspCSingle extends JspC {
             // other
             newArgs.add(p);
         }
-        String newArgsS[] = (String[])newArgs.toArray(new String[newArgs.size()]);
+        String newArgsS[] = (String[])newArgs.toArray(new String[0]);
         
         JspC.main(newArgsS);
     }
@@ -117,7 +117,7 @@ public class JspCSingle extends JspC {
                     String jsp = uriroot + "/" + tok.nextToken (); // NOI18N
                     list.add (jsp);
                 }
-                setArgs( (String []) list.toArray (new String[list.size ()]));
+                setArgs( (String []) list.toArray (new String[0]));
             } catch (JasperException e) {
                 throw new BuildException (e);
             }

@@ -21,8 +21,13 @@ package org.netbeans.nbbuild;
 
 import java.io.*;
 import java.net.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.*;
 
 import org.apache.tools.ant.BuildException;
@@ -47,9 +52,11 @@ public class CheckLinks extends MatchingTask {
     private boolean checkexternal = true;
     private boolean checkspaces = true;
     private boolean checkforbidden = true;
+    private boolean failbroken = false;
     private List<Mapper> mappers = new LinkedList<>();
     private List<Filter> filters = new ArrayList<>();
     private File report;
+    private File externallinksdump;
 
     /** Set whether to check external links (absolute URLs).
      * Local relative links are always checked.
@@ -70,7 +77,16 @@ public class CheckLinks extends MatchingTask {
     public void setCheckforbidden(boolean s) {
         checkforbidden = s;
     }
-    
+
+    /**
+     * Allows to fail build on broken links. Default to false.
+     *
+     * @param fail fail build on broken links
+     */
+    public void setFailbroken(boolean fail) {
+        failbroken = fail;
+    }
+
     /** Set the base directory from which to scan files.
      */
     public void setBasedir (File basedir) {
@@ -90,6 +106,12 @@ public class CheckLinks extends MatchingTask {
         this.report = report;
     }
 
+    /**
+     * Folder where we collect all external links for further inspection
+     */
+    public void setExternallinkslist(File externallinksdump) {
+        this.externallinksdump = externallinksdump;
+    }
     /**
      * Add a mapper to translate file names to the "originals".
      */
@@ -130,9 +152,12 @@ public class CheckLinks extends MatchingTask {
             testMessage = b.toString();
         }
         JUnitReportWriter.writeReport(this, null, report, Collections.singletonMap("testBrokenLinks", testMessage));
+        if (!errors.isEmpty() && failbroken) {
+            throw new BuildException("Broken links found in Javadoc");
+        }
     }
     
-    private static Pattern hrefOrAnchor = Pattern.compile("<(a|img|link)(\\s+shape=\"rect\")?(?:\\s+rel=\"stylesheet\")?\\s+(href|name|src)=\"([^\"#]*)(#[^\"]+)?\"(\\s+shape=\"rect\")?(?:\\s+type=\"text/css\")?\\s*/?>", Pattern.CASE_INSENSITIVE);
+    private static Pattern hrefOrAnchor = Pattern.compile("<(a|code|div|img|link|h1|h2|h3|h4|h5|li|section|span)(\\s+class=\"[\\w\\-]*\")?(\\s+shape=\"rect\")?(?:\\s+rel=\"stylesheet\")?\\s+(href|name|id|src)=\"([^\"#]*)(#[^\"$]+)?\"(\\s+shape=\"rect\")?(?:\\s+type=\"text/css\")?(\\s+class=\"[\\w\\-]*\")?\\s*/?>", Pattern.CASE_INSENSITIVE);
     private static Pattern lineBreak = Pattern.compile("^", Pattern.MULTILINE);
     
     /**
@@ -189,7 +214,7 @@ public class CheckLinks extends MatchingTask {
                 int pos = referrer.indexOf("!");
                 if (pos != -1) {
                     String base = referrer.substring(0,pos+1);
-                    String path1 = referrer.substring(pos+1,referrer.length());
+                    String path1 = referrer.substring(pos+1);
                     //System.out.println("base:" + base);
                     //System.out.println("path1:" + path1);
                     File f1 = new File(path1);
@@ -295,7 +320,7 @@ public class CheckLinks extends MatchingTask {
                 String name = u.getPath();
                 //Strip leading "/" as findResource does not work when leading slash is present
                 if (name.startsWith("/")) {
-                    name = name.substring(1,name.length());
+                    name = name.substring(1);
                     //System.out.println("name:" + name);
                 }
                 URL res;
@@ -332,7 +357,7 @@ public class CheckLinks extends MatchingTask {
                 String name = u.getPath();
                 //Strip leading "/" as findResource does not work when leading slash is present
                 if (name.startsWith("/")) {
-                    name = name.substring(1,name.length());
+                    name = name.substring(1);
                     //System.out.println("name:" + name);
                 }
                 URL res = null;
@@ -458,15 +483,15 @@ public class CheckLinks extends MatchingTask {
             Set<String> names = new HashSet<>(100); // Set<String>
             while (m.find()) {
                 // Get the stuff involved:
-                String type = m.group(3);
-                if (type.equalsIgnoreCase("name")) {
+                String type = m.group(4);
+                if (type.equalsIgnoreCase("name") || (type.equalsIgnoreCase("id") && !unescape(m.group(5)).startsWith("#"))) {
                     // We have an anchor, therefore refs to it are valid.
-                    String name = unescape(m.group(4));
+                    String name = unescape(m.group(5));
                     if (names.add(name)) {
                         try {
                             //URI does not handle jar:file: protocol
                             //okurls.add(new URI(base.getScheme(), base.getUserInfo(), base.getHost(), base.getPort(), base.getPath(), base.getQuery(), /*fragment*/name));
-                            okurls.add(new URI(base + "#" + name.replaceAll(" ", "%20")));
+                            okurls.add(new URI(base + "#" + name.replace(" ", "%20").replace("<", "%3C").replace(">", "%3E").replace("[", "%5B").replace("]", "%5D")));
                         } catch (URISyntaxException e) {
                             errors.add(normalize(basepath, mappers) + findLocation(content, m.start(4)) + ": bad anchor name: " + e.getMessage());
                         }
@@ -486,10 +511,10 @@ public class CheckLinks extends MatchingTask {
                     }
 
                     if (others != null && !commentedOut) {
-                        String otherbase = unescape(m.group(4));
-                        String otheranchor = unescape(m.group(5));
+                        String otherbase = unescape(m.group(5));
+                        String otheranchor = unescape(m.group(6));
                         String uri = (otheranchor == null) ? otherbase : otherbase + otheranchor;
-                        String location = findLocation(content, m.start(4));
+                        String location = findLocation(content, m.start(5));
                         String fixedUri;
                         if (uri.indexOf(' ') != -1) {
                             fixedUri = uri.replaceAll(" ", "%20");
@@ -633,8 +658,26 @@ public class CheckLinks extends MatchingTask {
                 throw new BuildException ("Each filter must have pattern attribute");
             }
             
-            if (pattern.matcher (u.toString ()).matches ()) {
-                log ("Matched " + u + " accepted: " + accept, org.apache.tools.ant.Project.MSG_VERBOSE);
+            if (pattern.matcher(u.toString()).matches()) {
+                log("Matched " + u + " accepted: " + accept, org.apache.tools.ant.Project.MSG_VERBOSE);
+                if (externallinksdump != null) {
+                    try {
+                        // triage result to file for later processing.
+                        String dumpFileName = accept ? "acceptednetbeans.txt" : "rejectednetbeans.txt";
+
+                        Path dumppath = externallinksdump.toPath().resolve(dumpFileName);
+                        if (Files.notExists(dumppath)) {
+                            Files.createDirectories(dumppath.getParent());
+                            Files.createFile(dumppath);
+                        }
+                        Set<String> sortedEntries = new TreeSet<>(Files.readAllLines(externallinksdump.toPath().resolve(dumpFileName)));
+                        sortedEntries.add(u.toString());
+                        // ordered and unique per Set usage
+                        Files.write(dumppath, sortedEntries, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
+                    } catch (IOException ex) {
+                        Logger.getLogger(CheckLinks.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
                 return accept;
             }
             return null;

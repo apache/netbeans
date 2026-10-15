@@ -46,7 +46,7 @@ import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.TreeUtilities;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.editor.BaseAction;
 import org.netbeans.editor.BaseDocument;
 import org.openide.text.NbDocument;
@@ -143,7 +143,7 @@ final class SelectCodeElementAction extends BaseAction {
                 final JavaSource js = JavaSource.forDocument(target.getDocument());
                 if (js != null) {
                     final AtomicBoolean cancel = new AtomicBoolean();
-                    ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                    BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                         @Override
                         public void run() {
                             try {
@@ -227,8 +227,8 @@ final class SelectCodeElementAction extends BaseAction {
 	    final TreeUtilities treeUtilities = ci.getTreeUtilities();
             TreePath tp = treeUtilities.pathFor(caretPos);
             for (Tree tree: tp) {
-                int startPos = (int)sp.getStartPosition(tp.getCompilationUnit(), tree);
-                int endPos = (int)sp.getEndPosition(tp.getCompilationUnit(), tree);
+                int startPos = (int)sp.getStartPosition(tree);
+                int endPos = (int)sp.getEndPosition(tree);
                 positions.add(new SelectionInfo(startPos, endPos));
 
                 //support content selection within the string literal too
@@ -296,7 +296,7 @@ final class SelectCodeElementAction extends BaseAction {
 		}
 	    }
 
-	    return orderedPositions.toArray(new SelectionInfo[orderedPositions.size()]);
+	    return orderedPositions.toArray(new SelectionInfo[0]);
         }
 
         public synchronized void run() {

@@ -21,6 +21,7 @@ package org.netbeans.insane.impl;
 
 import java.lang.reflect.*;
 import java.util.*;
+import org.netbeans.insane.hook.MakeAccessible;
 
 import org.netbeans.insane.scanner.*;
 
@@ -66,7 +67,7 @@ public final class InsaneEngine {
     
     public void traverse(Collection roots) throws Exception {
         // process all given roots first - remember them and put them into queue
-        for (Iterator it = roots.iterator(); it.hasNext(); ) recognize(it.next());
+        for (Iterator<?> it = roots.iterator(); it.hasNext(); ) recognize(it.next());
         
         while (!queue.isEmpty()) {
             process(queue.get());
@@ -83,7 +84,17 @@ public final class InsaneEngine {
         
         // dispatch the recognition
         if (o instanceof Class) {
-            recognizeClass((Class)o);
+            try {
+                recognizeClass((Class)o);
+            } catch (SecurityException ex) {
+                if (ex.getMessage() == null || !ex.getMessage().contains("java.lang")) {
+                    throw ex;
+                }
+                // just report: possibly an upwards-compatible method 
+                // not linkable on current runtime.
+                System.err.println("Failed analysing class " + ((Class)o).getName() +
+                        " because of " + ex.getMessage());
+            }
         } else {
             recognizeObject(o);
         }
@@ -210,7 +221,7 @@ try {
             Field act = flds[i];
             if (((act.getModifiers() & Modifier.STATIC) != 0) &&
                                 (!act.getType().isPrimitive())) {
-                act.setAccessible(true);
+                MakeAccessible.setAccessible(act, true);
                 Object target;
                 try {
                     target = act.get(null);
@@ -262,7 +273,7 @@ try {
                         if (((act.getModifiers() & Modifier.STATIC) == 0) &&
                                     (!act.getType().isPrimitive())) {
                         
-                            act.setAccessible(true);
+                            MakeAccessible.setAccessible(act, true);
                             Object target = act.get(obj);
                             if (target!= null) {
                                 if (filter.accept(target, obj, act)) {

@@ -1,0 +1,23 @@
+Code completion result for source line:
+new Helper().overload("hello").get|AbsoluteFile();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     getAbsoluteFile()               [PUBLIC]   File
+METHOD     getAbsolutePath()               [PUBLIC]   String
+METHOD     getAt(String)                              Object
+METHOD     getBytes()                                 byte[]
+METHOD     getCanonicalFile()              [PUBLIC]   File
+METHOD     getCanonicalPath()              [PUBLIC]   String
+METHOD     getClass()                      [PUBLIC]   Class<?>
+METHOD     getFreeSpace()                  [PUBLIC]   long
+METHOD     getMetaClass()                             MetaClass
+METHOD     getMetaPropertyValues()                    List
+METHOD     getName()                       [PUBLIC]   String
+METHOD     getParent()                     [PUBLIC]   String
+METHOD     getParentFile()                 [PUBLIC]   File
+METHOD     getPath()                       [PUBLIC]   String
+METHOD     getProperties()                            Map
+METHOD     getText()                                  String
+METHOD     getText(String)                            String
+METHOD     getTotalSpace()                 [PUBLIC]   long
+METHOD     getUsableSpace()                [PUBLIC]   long

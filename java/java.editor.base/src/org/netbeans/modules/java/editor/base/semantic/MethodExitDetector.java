@@ -66,8 +66,8 @@ public class MethodExitDetector extends CancellableTreePathScanner<Boolean, Stac
     public List<int[]> process(CompilationInfo info, Document document, TreePath methoddeclorblock, Collection<Tree> excs) {
         this.info = info;
         this.doc  = document;
-        this.highlights = new ArrayList<int[]>();
-        this.exceptions2HighlightsStack = new Stack<Map<TypeMirror, List<Tree>>>();
+        this.highlights = new ArrayList<>();
+        this.exceptions2HighlightsStack = new Stack<>();
         this.exceptions2HighlightsStack.push(null);
         
         try {
@@ -93,7 +93,7 @@ public class MethodExitDetector extends CancellableTreePathScanner<Boolean, Stac
             List<TypeMirror> exceptions = null;
             
             if (excs != null) {
-                exceptions = new ArrayList<TypeMirror>();
+                exceptions = new ArrayList<>();
                 
                 for (Tree t : excs) {
                     if (isCanceled())
@@ -149,8 +149,8 @@ public class MethodExitDetector extends CancellableTreePathScanner<Boolean, Stac
     }
     
     private void addHighlightFor(Tree t) {
-        int start = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), t);
-        int end   = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), t);
+        int start = (int) info.getTrees().getSourcePositions().getStartPosition(t);
+        int end   = (int) info.getTrees().getSourcePositions().getEndPosition(t);
         
         highlights.add(new int[] {start, end});
     }
@@ -162,7 +162,7 @@ public class MethodExitDetector extends CancellableTreePathScanner<Boolean, Stac
         Map<TypeMirror, List<Tree>> map = exceptions2HighlightsStack.peek();
         
         if (map == null) {
-            map = new HashMap<TypeMirror, List<Tree>>();
+            map = new HashMap<>();
             exceptions2HighlightsStack.pop();
             exceptions2HighlightsStack.push(map);
         }
@@ -170,7 +170,7 @@ public class MethodExitDetector extends CancellableTreePathScanner<Boolean, Stac
         List<Tree> l = map.get(key);
         
         if (l == null) {
-            map.put(key, l = new ArrayList<Tree>());
+            map.put(key, l = new ArrayList<>());
         }
         
         l.add(value);
@@ -189,8 +189,9 @@ public class MethodExitDetector extends CancellableTreePathScanner<Boolean, Stac
             return ;
         }
         
-        for (TypeMirror key : top.keySet()) {
-            List<Tree> topKey    = top.get(key);
+        for (Map.Entry<TypeMirror, List<Tree>> entry : top.entrySet()) {
+            TypeMirror key    = entry.getKey();
+            List<Tree> topKey = entry.getValue();
             List<Tree> resultKey = result.get(key);
             
             if (topKey == null)
@@ -249,7 +250,7 @@ public class MethodExitDetector extends CancellableTreePathScanner<Boolean, Stac
         Types t = info.getTypes();
         
         if (type1 != null) {
-            Set<TypeMirror> toRemove = new HashSet<TypeMirror>();
+            Set<TypeMirror> toRemove = new HashSet<>();
             Map<TypeMirror, List<Tree>> exceptions2Highlights = exceptions2HighlightsStack.peek();
             
             if (exceptions2Highlights != null) {
@@ -259,9 +260,7 @@ public class MethodExitDetector extends CancellableTreePathScanner<Boolean, Stac
                     }
                 }
                 
-                for (TypeMirror type : toRemove) {
-                    exceptions2Highlights.remove(type);
-                }
+                exceptions2Highlights.keySet().removeAll(toRemove);
             }
             
         }

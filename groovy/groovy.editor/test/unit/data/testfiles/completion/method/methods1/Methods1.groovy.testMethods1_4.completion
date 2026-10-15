@@ -28,8 +28,8 @@ METHOD     filterLine(Writer, Closure)                void
 METHOD     filterLine(Writer, String, Clo             void
 METHOD     find()                                     Object
 METHOD     find(Closure)                              Object
-METHOD     findAll()                                  Collection
-METHOD     findAll(Closure)                           Collection
+METHOD     findAll()                                  List
+METHOD     findAll(Closure)                           List
 METHOD     findIndexOf(Closure)                       int
 METHOD     findIndexOf(int, Closure)                  int
 METHOD     findIndexValues(Closure)                   List
@@ -44,7 +44,7 @@ METHOD     getBytes()                                 byte[]
 METHOD     getBytes(Map)                              byte[]
 METHOD     getClass()                      [PUBLIC]   Class<?>
 METHOD     getContent()                    [PUBLIC]   Object
-METHOD     getContent(Class[])             [PUBLIC]   Object
+METHOD     getContent(Class<?>[])          [PUBLIC]   Object
 METHOD     getDefaultPort()                [PUBLIC]   int
 METHOD     getFile()                       [PUBLIC]   String
 METHOD     getHost()                       [PUBLIC]   String
@@ -109,6 +109,7 @@ METHOD     splitEachLine(String, Closure)             Object
 METHOD     splitEachLine(String, String,              Object
 METHOD     sprintf(String, Object)                    String
 METHOD     sprintf(String, Object)                    String
+METHOD     stream()                                   Stream
 METHOD     tap(Closure)                               Object
 METHOD     toExternalForm()                [PUBLIC]   String
 METHOD     toString()                      [PUBLIC]   String
@@ -130,7 +131,6 @@ FIELD      authority                       [PUBLIC]   String
 FIELD      class                           [PUBLIC]   Class
 FIELD      content                         [PUBLIC]   Object
 FIELD      defaultPort                     [PUBLIC]   int
-FIELD      deserializedFields              [PRIVATE]  URLStreamHandler
 FIELD      file                            [PUBLIC]   String
 FIELD      host                            [PUBLIC]   String
 FIELD      path                            [PUBLIC]   String
@@ -138,5 +138,4 @@ FIELD      port                            [PUBLIC]   int
 FIELD      protocol                        [PUBLIC]   String
 FIELD      query                           [PUBLIC]   String
 FIELD      ref                             [PUBLIC]   String
-FIELD      serializedHashCode              [PRIVATE]  int
 FIELD      userInfo                        [PUBLIC]   String

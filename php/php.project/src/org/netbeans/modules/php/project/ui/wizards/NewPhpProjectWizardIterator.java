@@ -412,7 +412,7 @@ public class NewPhpProjectWizardIterator implements WizardDescriptor.ProgressIns
             steps.add(NbBundle.getMessage(NewPhpProjectWizardIterator.class, step3));
         }
         steps.addAll(extenderSteps);
-        String[] stepsArray = steps.toArray(new String[steps.size()]);
+        String[] stepsArray = steps.toArray(new String[0]);
         // panels
         WizardDescriptor.Panel<WizardDescriptor> panel3 = null;
         List<WizardDescriptor.Panel<WizardDescriptor>> extenderPanels = new ArrayList<>();

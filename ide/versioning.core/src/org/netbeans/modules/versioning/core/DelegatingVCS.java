@@ -278,7 +278,7 @@ public class DelegatingVCS extends VersioningSystem implements VCSSystemProvider
             // global actions
             l.addAll(Arrays.asList(ga));
             
-            return  l.toArray(new Action[l.size()]);
+            return  l.toArray(new Action[0]);
         }        
     }
     
@@ -294,7 +294,7 @@ public class DelegatingVCS extends VersioningSystem implements VCSSystemProvider
                 ret.add(action);
             }
         }        
-        return ret != null ? ret.toArray(new Action[ret.size()]) : new Action[0];
+        return ret != null ? ret.toArray(new Action[0]) : new Action[0];
     }
     
     Action[] getInitActions(VCSContext ctx) {
@@ -308,7 +308,7 @@ public class DelegatingVCS extends VersioningSystem implements VCSSystemProvider
                 ret.add(action);
             }
         }
-        return ret.toArray(new Action[ret.size()]);
+        return ret.toArray(new Action[0]);
     }
 
     boolean isAlive() {

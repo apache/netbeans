@@ -41,6 +41,7 @@ public class XMLUtil {
 
     /** @deprecated this public method is not expected to be used by schema2beans client 
      */
+    @Deprecated
     public static void printXML(StringBuffer out, char msg, boolean attribute) {
         if (msg == '&')
             out.append("&amp;");
@@ -77,7 +78,8 @@ public class XMLUtil {
 	}
         
         /** @deprecated this public method is not expected to be used by schema2beans client 
-         */ 
+         */
+    @Deprecated
 	public static void writeXML(java.io.Writer out, char msg, boolean attribute) throws java.io.IOException {
 		if (msg == '&')
 			out.write("&amp;");
@@ -146,26 +148,27 @@ public class XMLUtil {
     private static String convertChars(String msg, boolean attribute) {
         String result=msg;
         if (msg.indexOf("&")>=0) //NOI18N
-            result = result.replaceAll("&","&amp;"); //NOI18N
+            result = result.replace("&","&amp;"); //NOI18N
         if (msg.indexOf("<")>=0) //NOI18N
-            result = result.replaceAll("<","&lt;"); //NOI18N
+            result = result.replace("<","&lt;"); //NOI18N
         if (msg.indexOf(">")>=0) //NOI18N   
-            result = result.replaceAll(">","&gt;"); //NOI18N
+            result = result.replace(">","&gt;"); //NOI18N
         if (attribute) { //NOI18N
             if (msg.indexOf("\"")>=0) //NOI18N
-                result = result.replaceAll("\"","&quot;"); //NOI18N
+                result = result.replace("\"","&quot;"); //NOI18N
             if (msg.indexOf("'")>=0) //NOI18N
-                result = result.replaceAll("'","&apos;"); //NOI18N
+                result = result.replace("'","&apos;"); //NOI18N
             if (msg.indexOf("\n")>=0) //NOI18N
-                result = result.replaceAll("\n","&#xA"); //NOI18N
+                result = result.replace("\n","&#xA"); //NOI18N
             if (msg.indexOf("\t")>=0) //NOI18N
-                result = result.replaceAll("\t","&#x9"); //NOI18N
+                result = result.replace("\t","&#x9"); //NOI18N
         }
         return result;
     }
     
     /** @deprecated this public method is not expected to be used by schema2beans client 
      */
+    @Deprecated
     public static void printXML(java.io.Writer out, char msg, boolean attribute) throws java.io.IOException {
         if (msg == '&')
             out.write("&amp;");
@@ -401,7 +404,7 @@ public class XMLUtil {
             while (pos >= 0) {
                 out.write(text.substring(0, pos));
                 out.write("&#x2d;&#x2d;");
-                text = text.substring(pos+2, text.length());
+                text = text.substring(pos+2);
                 pos = text.indexOf("--");
             }
             out.write(text);
@@ -465,7 +468,7 @@ public class XMLUtil {
     }
 
     // Given @param doc what should it's DOCTYPE name be.
-    static protected String getDocTypeName(Document doc) {
+    protected static String getDocTypeName(Document doc) {
         // First look for a DOCTYPE
         NodeList children = doc.getChildNodes();
         int length = children.getLength();
@@ -689,7 +692,7 @@ public class XMLUtil {
         public XPathLocator(String xpathExpr) {
             xpathExpr = xpathExpr.trim();
             if (xpathExpr.startsWith("/"))
-                xpathExpr = xpathExpr.substring(1, xpathExpr.length());
+                xpathExpr = xpathExpr.substring(1);
             this.xpathExpr = xpathExpr;
             xpathParts = xpathExpr.split("/");  // This is a bit too simple.
             partNum = 0;
@@ -711,7 +714,7 @@ public class XMLUtil {
                 desiredElementName = desiredElementName.substring(0, startPos);
                 //System.out.println("subExpr="+subExpr);
                 if (subExpr.startsWith("position()=")) {
-                    desiredPosition = Integer.parseInt(subExpr.substring(11, subExpr.length()));
+                    desiredPosition = Integer.parseInt(subExpr.substring(11));
                 } else {
                     boolean allDigits = subExpr.length() > 0;
                     for (int i = 0; i < subExpr.length(); ++i) {
@@ -728,7 +731,7 @@ public class XMLUtil {
                 }
             } else if (desiredElementName.startsWith("@")) {
                 isAttribute = true;
-                desiredElementName = desiredElementName.substring(1, desiredElementName.length());
+                desiredElementName = desiredElementName.substring(1);
             }
             //System.out.println("desiredElementName="+desiredElementName);
         }

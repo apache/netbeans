@@ -86,7 +86,7 @@ public interface QueryController {
      * 
      * @param mode
      * @return <code>true</code> if the given mode is provided by the particular 
-     * implementation, otherwise false</code>
+     * implementation, otherwise <code>false</code>
      * @since 1.85
      */
     public boolean providesMode(QueryMode mode);

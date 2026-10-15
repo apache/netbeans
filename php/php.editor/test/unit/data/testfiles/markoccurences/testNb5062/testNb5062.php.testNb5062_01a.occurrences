@@ -1,0 +1,7 @@
+        $static1->|>MARK_OCCURRENCES:testMe^thod<|();
+        $static2->|>MARK_OCCURRENCES:testMethod<|();
+        $static3->|>MARK_OCCURRENCES:testMethod<|();
+        $self1->|>MARK_OCCURRENCES:testMethod<|();
+        $self2->|>MARK_OCCURRENCES:testMethod<|();
+        $self3->|>MARK_OCCURRENCES:testMethod<|();
+    public function |>MARK_OCCURRENCES:testMethod<|() { // Test2

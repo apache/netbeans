@@ -30,7 +30,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.logging.Level;
-import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -51,6 +50,7 @@ import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.TopComponent;
 import static org.netbeans.modules.profiler.heapwalk.details.jdk.image.ImageBuilder.LOGGER;
 import static org.netbeans.modules.profiler.heapwalk.details.jdk.image.ImageBuilder.BUILDERS;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -129,7 +129,6 @@ public class ImageDetailProvider extends DetailsProvider.Basic {
 
         @Override
         protected void computeView(Instance instance, Heap heap) {
-            FieldAccessor fa = new FieldAccessor(heap, BUILDERS);
             Image image = null;
             JLabel label = null;
             try {
@@ -306,7 +305,7 @@ public class ImageDetailProvider extends DetailsProvider.Basic {
             drawChecker(g, 0, 0, width, height);
             g.drawImage(image, 0, 0, null);
 
-            JComponent c = new JScrollPane(new JLabel(new ImageIcon(displayedImage)));
+            JComponent c = new JScrollPane(new JLabel(ImageUtilities.image2Icon(displayedImage)));
             add(c, BorderLayout.CENTER);
 
 

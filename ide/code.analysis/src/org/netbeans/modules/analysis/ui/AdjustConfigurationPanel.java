@@ -20,7 +20,6 @@ package org.netbeans.modules.analysis.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -41,7 +40,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComponent;
 import javax.swing.JList;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import org.netbeans.modules.analysis.Configuration;
 import org.netbeans.modules.analysis.ConfigurationsManager;
@@ -102,7 +100,7 @@ public class AdjustConfigurationPanel extends javax.swing.JPanel implements Prop
         }
 
         this.analyzers = analyzers;
-        DefaultComboBoxModel analyzerModel = new DefaultComboBoxModel();
+        DefaultComboBoxModel<AnalyzerFactory> analyzerModel = new DefaultComboBoxModel<>();
 
         for (AnalyzerFactory a : analyzers) {
             CustomizerProvider<Object, JComponent> cp = a.getCustomizerProvider();
@@ -281,7 +279,7 @@ public class AdjustConfigurationPanel extends javax.swing.JPanel implements Prop
                             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(configurationCombo, 0, 254, Short.MAX_VALUE)
+                            .addComponent(configurationCombo, 0, 220, Short.MAX_VALUE)
                             .addComponent(analyzerCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
@@ -296,8 +294,8 @@ public class AdjustConfigurationPanel extends javax.swing.JPanel implements Prop
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(analyzerCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(analyzerPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(analyzerPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents

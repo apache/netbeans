@@ -82,7 +82,7 @@ public class NetigsoReloadTest extends NetigsoHid {
         
         FileOutputStream os = new FileOutputStream(withoutA);
         FileInputStream is = new FileInputStream(withActivator);
-        FileUtil.copy(is, os);
+        is.transferTo(os);
         is.close();
         os.close();
         

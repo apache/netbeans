@@ -1,0 +1,10 @@
+Code completion result for source line:
+TestClass::returnStaticReturnTypeMethod()->|testClassMethod();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     returnStaticPhpDocMethod()      [STATIC]   TestTrait
+METHOD     returnStaticReturnTypeMethod()  [STATIC]   TestTrait
+METHOD     testClassMethod()               [PUBLIC]   TestClass
+METHOD     testStaticClassMethod()         [STATIC]   TestClass
+METHOD     testStaticTraitMethod()         [STATIC]   TestTrait
+METHOD     traitMethod()                   [PUBLIC]   TestTrait
+VARIABLE   int field                       [PUBLIC]   TestClass

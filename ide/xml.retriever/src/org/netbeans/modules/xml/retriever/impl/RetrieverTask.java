@@ -37,6 +37,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.xml.retriever.*;
@@ -45,6 +46,7 @@ import org.netbeans.modules.xml.retriever.catalog.Utilities;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.BaseUtilities;
 import org.openide.util.NbBundle;
 
 /**
@@ -85,7 +87,7 @@ public class RetrieverTask {
                 throw new IOException("File already exists"); //NOI18N
             }
 
-            HashMap<String, InputStream> srcAddrNContent;
+            Map<String, InputStream> srcAddrNContent;
             ResourceRetriever rr;
             
             for (;;) {
@@ -237,7 +239,7 @@ public class RetrieverTask {
                     result = new File(new URI(rent.getLocalBaseFile().getParentFile().toURI().toString()+"/"+temp.toString()));
             }
         }else{
-            File newFile = new File(new URI(rent.getLocalBaseFile().getParentFile().toURI().normalize().toString()+"/"+rent.getCurrentAddress())).getCanonicalFile();
+            File newFile = new File(new URI(BaseUtilities.normalizeURI(rent.getLocalBaseFile().getParentFile().toURI()).toString()+"/"+rent.getCurrentAddress())).getCanonicalFile();
             File newParentFile = getModifiedParentFile(rent.getLocalBaseFile(), newFile);
             if(rent.getLocalBaseFile() != newParentFile)
                 result = new File(new URI(newParentFile.getParentFile().toURI().toString()+"/"+rent.getCurrentAddress()));
@@ -282,7 +284,7 @@ public class RetrieverTask {
             resultStr = resultStr + "index";
         }
         try {
-            return new File(new URI(resultStr).normalize());
+            return new File(BaseUtilities.normalizeURI(new URI(resultStr)));
         } catch (URISyntaxException ex) {
             return null;
         }

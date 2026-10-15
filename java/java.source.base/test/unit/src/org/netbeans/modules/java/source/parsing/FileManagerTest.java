@@ -29,6 +29,7 @@ import javax.tools.ToolProvider;
 import java.io.File;
 import java.util.zip.ZipFile;
 import javax.tools.StandardLocation;
+import junit.framework.Test;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.source.TestUtil;
 import org.openide.util.Utilities;
@@ -199,4 +200,15 @@ public class FileManagerTest extends NbTestCase {
 		
     }
     
+    public static Test suite() {
+        return new NoopClass("noop");
+    }
+    public static class NoopClass extends NbTestCase {
+
+        public NoopClass(String name) {
+            super(name);
+        }
+
+        public void noop() {}
+    }
 }

@@ -48,6 +48,7 @@ import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eePlatform;
 import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.modules.j2ee.common.dd.DDHelper;
+import org.netbeans.modules.j2ee.deployment.devmodules.api.InstanceRemovedException;
 import org.netbeans.modules.javaee.project.api.ant.AntProjectConstants;
 import org.netbeans.modules.javaee.project.api.ant.ui.J2EEProjectProperties;
 import org.netbeans.modules.java.api.common.ant.UpdateHelper;
@@ -79,7 +80,6 @@ import org.w3c.dom.NodeList;
  * Creates a AppClientProject from scratch according to some initial configuration.
  */
 public class AppClientProjectGenerator {
-    
     private static final String DEFAULT_CONF_FOLDER = "conf"; //NOI18N
     private static final String DEFAULT_SRC_FOLDER = "src"; //NOI18N
     private static final String DEFAULT_TEST_FOLDER = "test"; //NOI18N
@@ -99,7 +99,7 @@ public class AppClientProjectGenerator {
      * @param dir the top-level directory (need not yet exist but if it does it must be empty)
      * @param name the name for the project
      * @param mainClass the name for the main class
-     * @param j2eeLevel defined in <code>org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule<code>
+     * @param j2eeLevel defined in <code>org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule</code>
      * @param serverInstanceID provided by j2eeserver module
      *
      * @return the helper object permitting it to be further customized
@@ -137,6 +137,7 @@ public class AppClientProjectGenerator {
         // create project in one FS atomic action:
         FileSystem fs = projectDir.getFileSystem();
         fs.runAtomicAction(new FileSystem.AtomicAction() {
+            @Override
             public void run() throws IOException {
                 AntProjectHelper helper = createProjectImpl(createData, projectDir);
                 h[0] = helper;
@@ -159,16 +160,47 @@ public class AppClientProjectGenerator {
         
         // create application-client.xml
         String resource;
-        if (Profile.JAVA_EE_5.equals(j2eeProfile)) {
-                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-5.xml"; // NOI18N
-        } else if (Profile.J2EE_14.equals(j2eeProfile)) {
-                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-1.4.xml"; // NOI18N
-        } else if (j2eeProfile != null && j2eeProfile.isAtLeast(Profile.JAVA_EE_7_WEB)) {
-                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-7.xml"; // NOI18N
-        } else {
+        if(null == j2eeProfile) {
             resource = "org-netbeans-modules-j2ee-clientproject/application-client-6.xml"; // NOI18N
+        } else { 
+            switch (j2eeProfile) {
+                case JAKARTA_EE_11_FULL:
+                case JAKARTA_EE_11_WEB:
+                    resource = "org-netbeans-modules-j2ee-clientproject/application-client-11.xml"; // NOI18N
+                    break;
+                case JAKARTA_EE_10_FULL:
+                case JAKARTA_EE_10_WEB:
+                    resource = "org-netbeans-modules-j2ee-clientproject/application-client-10.xml"; // NOI18N
+                    break;
+                case JAKARTA_EE_9_1_FULL:
+                case JAKARTA_EE_9_1_WEB:
+                case JAKARTA_EE_9_FULL:
+                case JAKARTA_EE_9_WEB:
+                    resource = "org-netbeans-modules-j2ee-clientproject/application-client-9.xml"; // NOI18N
+                    break;
+                case JAKARTA_EE_8_FULL:
+                case JAKARTA_EE_8_WEB:
+                case JAVA_EE_8_FULL:
+                case JAVA_EE_8_WEB:
+                    resource = "org-netbeans-modules-j2ee-clientproject/application-client-8.xml"; // NOI18N
+                    break;
+                case JAVA_EE_7_FULL:
+                case JAVA_EE_7_WEB:
+                    resource = "org-netbeans-modules-j2ee-clientproject/application-client-7.xml"; // NOI18N
+                    break;
+                case JAVA_EE_5:
+                    resource = "org-netbeans-modules-j2ee-clientproject/application-client-5.xml"; // NOI18N
+                    break;
+                case J2EE_14:
+                    resource = "org-netbeans-modules-j2ee-clientproject/application-client-1.4.xml"; // NOI18N
+                    break;
+                default:
+                    resource = "org-netbeans-modules-j2ee-clientproject/application-client-6.xml"; // NOI18N
+                    break;
+            }
         }
-        FileObject ddFile = FileUtil.copyFile(FileUtil.getConfigFile(resource), confRoot, "application-client"); //NOI18N
+        FileObject foSource = FileUtil.getConfigFile(resource);
+        FileObject ddFile = FileUtil.copyFile(foSource, confRoot, "application-client"); //NOI18N
         AppClient appClient = DDProvider.getDefault().getDDRoot(ddFile);
         appClient.setDisplayName(name);
         appClient.write(ddFile);
@@ -195,6 +227,7 @@ public class AppClientProjectGenerator {
         final ReferenceHelper refHelper = p.getReferenceHelper();        
         try {
             ProjectManager.mutex().writeAccess(new Mutex.ExceptionAction<Void>() {
+                @Override
                 public Void run() throws Exception {
                     copyRequiredLibraries(h, refHelper, createData);
                     return null;
@@ -222,7 +255,7 @@ public class AppClientProjectGenerator {
      * @param testFolders top-level location(s) of test(s) - must not be null
      * @param confFolder top-level location of configuration file(s) folder - must not be null
      * @param libFolder top-level location of libraries
-     * @param j2eeLevel defined in <code>org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule<code>
+     * @param j2eeLevel defined in <code>org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule</code>
      * @param serverInstanceID provided by j2eeserver module
      *
      * @return the helper object permitting it to be further customized
@@ -265,6 +298,7 @@ public class AppClientProjectGenerator {
         // create project in one FS atomic action:
         FileSystem fs = projectDir.getFileSystem();
         fs.runAtomicAction(new FileSystem.AtomicAction() {
+            @Override
             public void run() throws IOException {
                 AntProjectHelper helper = importProjectImpl(createData, projectDir);
                 h[0] = helper;
@@ -292,6 +326,7 @@ public class AppClientProjectGenerator {
         
         try {
             ProjectManager.mutex().writeAccess( new Mutex.ExceptionAction<Void>() {
+                @Override
                 public Void run() throws Exception {
                     Element data = h.getPrimaryConfigurationData(true);
                     Document doc = data.getOwnerDocument();
@@ -372,14 +407,44 @@ public class AppClientProjectGenerator {
         } else {
             // XXX just temporary, since now the import would fail due to another bug
             String resource;
-            if (Profile.JAVA_EE_5.equals(j2eeProfile)) {
-                resource = "org-netbeans-modules-j2ee-clientproject/application-client-5.xml"; // NOI18N
-            } else if (Profile.J2EE_14.equals(j2eeProfile)) {
-                resource = "org-netbeans-modules-j2ee-clientproject/application-client-1.4.xml"; // NOI18N
-            } else if (j2eeProfile != null && j2eeProfile.isAtLeast(Profile.JAVA_EE_7_WEB)) {
-                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-7.xml"; // NOI18N
-            } else {
+            if (null == j2eeProfile) {
                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-6.xml"; // NOI18N
+            } else {
+                switch (j2eeProfile) {
+                    case JAKARTA_EE_11_FULL:
+                    case JAKARTA_EE_11_WEB:
+                        resource = "org-netbeans-modules-j2ee-clientproject/application-client-11.xml"; // NOI18N
+                        break;
+                    case JAKARTA_EE_10_FULL:
+                    case JAKARTA_EE_10_WEB:
+                        resource = "org-netbeans-modules-j2ee-clientproject/application-client-10.xml"; // NOI18N
+                        break;
+                    case JAKARTA_EE_9_1_FULL:
+                    case JAKARTA_EE_9_1_WEB:
+                    case JAKARTA_EE_9_FULL:
+                    case JAKARTA_EE_9_WEB:
+                        resource = "org-netbeans-modules-j2ee-clientproject/application-client-9.xml"; // NOI18N
+                        break;
+                    case JAKARTA_EE_8_FULL:
+                    case JAKARTA_EE_8_WEB:
+                    case JAVA_EE_8_FULL:
+                    case JAVA_EE_8_WEB:
+                        resource = "org-netbeans-modules-j2ee-clientproject/application-client-8.xml"; // NOI18N
+                        break;
+                    case JAVA_EE_7_FULL:
+                    case JAVA_EE_7_WEB:
+                        resource = "org-netbeans-modules-j2ee-clientproject/application-client-7.xml"; // NOI18N
+                        break;
+                    case JAVA_EE_5:
+                        resource = "org-netbeans-modules-j2ee-clientproject/application-client-5.xml"; // NOI18N
+                        break;
+                    case J2EE_14:
+                        resource = "org-netbeans-modules-j2ee-clientproject/application-client-1.4.xml"; // NOI18N
+                        break;
+                    default:
+                        resource = "org-netbeans-modules-j2ee-clientproject/application-client-6.xml"; // NOI18N
+                        break;
+                }
             }
             FileUtil.copyFile(FileUtil.getConfigFile(resource),
                     confFolderFO, "application-client"); //NOI18N
@@ -408,11 +473,11 @@ public class AppClientProjectGenerator {
         String libraryName = null;
         if (j2eeProfile.equals(Profile.JAVA_EE_6_FULL) || j2eeProfile.equals(Profile.JAVA_EE_6_WEB)) {
             libraryName = AntProjectConstants.ENDORSED_LIBRARY_NAME_6;
-        }
-        if (j2eeProfile.equals(Profile.JAVA_EE_7_FULL) || j2eeProfile.equals(Profile.JAVA_EE_7_WEB)) {
+            if (rh.getProjectLibraryManager().getLibrary(libraryName) == null) { // NOI18N
+                rh.copyLibrary(LibraryManager.getDefault().getLibrary(libraryName)); // NOI18N
+            }
+        } else if (j2eeProfile.equals(Profile.JAVA_EE_7_FULL) || j2eeProfile.equals(Profile.JAVA_EE_7_WEB)) {
             libraryName = AntProjectConstants.ENDORSED_LIBRARY_NAME_7;
-        }
-        if (libraryName != null) {
             if (rh.getProjectLibraryManager().getLibrary(libraryName) == null) { // NOI18N
                 rh.copyLibrary(LibraryManager.getDefault().getLibrary(libraryName)); // NOI18N
             }
@@ -432,7 +497,7 @@ public class AppClientProjectGenerator {
      * @param testFolders top-level location(s) of test(s) - must not be null
      * @param confFolder top-level location of configuration file(s) folder - must not be null
      * @param libFolder top-level location of libraries
-     * @param j2eeLevel defined in <code>org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule<code>
+     * @param j2eeLevel defined in <code>org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule</code>
      * @param serverInstanceID provided by j2eeserver module
      * @throws IOException in case something went wrong
      */
@@ -456,7 +521,7 @@ public class AppClientProjectGenerator {
             boolean skipTests) throws IOException {
 
         Utils.logUI(NbBundle.getBundle(AppClientProjectGenerator.class), "UI_APP_PROJECT_CREATE_SHARABILITY", // NOI18N
-                new Object[]{Boolean.valueOf(librariesDefinition != null), Boolean.FALSE});
+                new Object[]{(librariesDefinition != null), Boolean.FALSE});
 
         AntProjectHelper h = ProjectGenerator.createProject(dirFO, AppClientProjectType.TYPE, librariesDefinition);
         final AppClientProject prj = (AppClientProject)ProjectManager.getDefault().findProject(h.getProjectDirectory());
@@ -544,9 +609,7 @@ public class AppClientProjectGenerator {
         String sourceLevel = v.toString();
         // #89131: these levels are not actually distinct from 1.5.
         // #181215: JDK 6 should be the default source/binary format for Java EE 6 projects
-        if (sourceLevel.equals("1.7")) {
-            sourceLevel = "1.6";
-        }
+        // #181215: Not neccessary anymore because NetBeans should run on minimum JDK 8
         ep.setProperty(AppClientProjectProperties.JAVAC_SOURCE, sourceLevel); // NOI18N
         ep.setProperty(AppClientProjectProperties.JAVAC_TARGET, sourceLevel); // NOI18N
         
@@ -601,14 +664,21 @@ public class AppClientProjectGenerator {
         ep.setProperty(AppClientProjectProperties.JAVADOC_ENCODING, "${" + AppClientProjectProperties.SOURCE_ENCODING + "}"); // NOI18N
         ep.setProperty(AppClientProjectProperties.JAVADOC_ADDITIONALPARAM, ""); // NOI18N
         
-        Deployment deployment = Deployment.getDefault();
-        J2eePlatform j2eePlatform = Deployment.getDefault().getJ2eePlatform(serverInstanceID);
-        if (!j2eePlatform.getSupportedProfiles(J2eeModule.Type.CAR).contains(j2eeProfile)) {
-            Logger.getLogger("global").log(Level.WARNING,
-                                           NbBundle.getMessage(AppClientProjectGenerator.class,
-                                                               "MSG_Warning_SpecLevelNotSupported",
-                                                               new Object[] {j2eeProfile, Deployment.getDefault().getServerInstanceDisplayName(serverInstanceID)}));
+        //Deployment deployment = Deployment.getDefault();
+        J2eePlatform j2eePlatform = null;
+        try {
+            j2eePlatform = Deployment.getDefault().getServerInstance(serverInstanceID).getJ2eePlatform();
+            if (!j2eePlatform.getSupportedProfiles(J2eeModule.Type.CAR).contains(j2eeProfile)) {
+                Logger.getLogger(AppClientProjectGenerator.class.getName())
+                                .log(Level.WARNING, NbBundle.getMessage(AppClientProjectGenerator.class,
+                                "MSG_Warning_SpecLevelNotSupported",
+                                new Object[] {j2eeProfile, Deployment.getDefault().getServerInstance(serverInstanceID).getDisplayName()}));
+            }
+        } catch (InstanceRemovedException ie) {
+            // noop ignore
+            Logger.getLogger(AppClientProjectGenerator.class.getName()).log(Level.FINE, "{0}", ie);
         }
+        
         ep.setProperty(AppClientProjectProperties.J2EE_PLATFORM, j2eeProfile.toPropertiesString());
         ep.setProperty("manifest.file", "${" +AppClientProjectProperties.META_INF + "}/" + MANIFEST_FILE); // NOI18N
         
@@ -619,18 +689,16 @@ public class AppClientProjectGenerator {
         String mainClassArgs = j2eePlatform.getToolProperty(J2eePlatform.TOOL_APP_CLIENT_RUNTIME, J2eePlatform.TOOL_PROP_MAIN_CLASS_ARGS);
         if (mainClassArgs != null && !mainClassArgs.equals("")) {
             ep.put(AppClientProjectProperties.APPCLIENT_MAINCLASS_ARGS, mainClassArgs);
-        } else if ((mainClassArgs = j2eePlatform.getToolProperty(J2eePlatform.TOOL_APP_CLIENT_RUNTIME, AppClientProjectProperties.CLIENT_NAME))
-                != null) {
+        } else if ((j2eePlatform.getToolProperty(J2eePlatform.TOOL_APP_CLIENT_RUNTIME, AppClientProjectProperties.CLIENT_NAME)) != null) {
             ep.put(AppClientProjectProperties.CLIENT_NAME, mainClassArgs);
         }
-
+        
         if (j2eeProfile.equals(Profile.JAVA_EE_6_FULL) || j2eeProfile.equals(Profile.JAVA_EE_6_WEB)) {
             ep.setProperty(ProjectProperties.ENDORSED_CLASSPATH, new String[]{AntProjectConstants.ENDORSED_LIBRARY_CLASSPATH_6});
-        }
-        if (j2eeProfile.equals(Profile.JAVA_EE_7_FULL) || j2eeProfile.equals(Profile.JAVA_EE_7_WEB)) {
+        } else if (j2eeProfile.equals(Profile.JAVA_EE_7_FULL) || j2eeProfile.equals(Profile.JAVA_EE_7_WEB)) {
             ep.setProperty(ProjectProperties.ENDORSED_CLASSPATH, new String[]{AntProjectConstants.ENDORSED_LIBRARY_CLASSPATH_7});
         }
-
+        
         h.putProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH, ep);
         
         // XXX this seems to be used in runtime only so, not part of sharable server
@@ -638,7 +706,6 @@ public class AppClientProjectGenerator {
         File[] accrt = j2eePlatform.getToolClasspathEntries(J2eePlatform.TOOL_APP_CLIENT_RUNTIME);
         Map<String, String> roots = J2EEProjectProperties.extractPlatformLibrariesRoot(j2eePlatform);
         epPriv.setProperty(AppClientProjectProperties.APPCLIENT_TOOL_RUNTIME, J2EEProjectProperties.toClasspathString(accrt, roots));
-        
         
         String acMain = j2eePlatform.getToolProperty(J2eePlatform.TOOL_APP_CLIENT_RUNTIME, J2eePlatform.TOOL_PROP_MAIN_CLASS);
         if (acMain != null) {
@@ -736,8 +803,10 @@ public class AppClientProjectGenerator {
         // it is deadlock-prone
         try {
             projectDir.getFileSystem().runAtomicAction(new AtomicAction() {
+                @Override
                 public void run() throws IOException {
                     ProjectManager.mutex().writeAccess(new Runnable() {
+                        @Override
                         public void run() {
                             try {
                                 AppClientProject project = (AppClientProject)ProjectManager.getDefault().findProject(helper.getProjectDirectory());
@@ -747,13 +816,10 @@ public class AppClientProjectGenerator {
                                 if (finalPlatformName == null) {
                                     finalPlatformName = PreferredProjectPlatform.getPreferredPlatform(JavaPlatform.getDefault().getSpecification().getName()).getDisplayName();
                                 }
-
                                 // #89131: these levels are not actually distinct from 1.5.
                                 // #181215: JDK 6 should be the default source/binary format for Java EE 6 projects
+                                // #181215: Not neccessary anymore because NetBeans should run on minimum JDK 8
                                 String srcLevel = sourceLevel;
-                                if (sourceLevel.equals("1.7")) {
-                                    srcLevel = "1.6";
-                                }
                                 PlatformUiSupport.storePlatform(ep, updateHelper, AppClientProjectType.PROJECT_CONFIGURATION_NAMESPACE, finalPlatformName, srcLevel != null ? new SpecificationVersion(srcLevel) : null);
                                 helper.putProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH, ep);
                                 ProjectManager.getDefault().saveProject(ProjectManager.getDefault().findProject(helper.getProjectDirectory()));
@@ -778,24 +844,13 @@ public class AppClientProjectGenerator {
     private static void createManifest(FileObject dir, String path) throws IOException {
         if (dir.getFileObject(path) == null) {
             FileObject manifest = FileUtil.createData(dir, path);
-            FileLock lock = manifest.lock();
-            try {
-                OutputStream os = manifest.getOutputStream(lock);
-                try {
-                    PrintWriter pw = new PrintWriter(os);
-                    pw.println("Manifest-Version: 1.0"); // NOI18N
-                    pw.println("X-COMMENT: Main-Class will be added automatically by build"); // NOI18N
-                    pw.println(); // safest to end in \n\n due to JRE parsing bug
-                    pw.flush();
-                } finally {
-                    os.close();
-                }
-            } finally {
-                lock.releaseLock();
+            try (FileLock lock = manifest.lock();
+                    OutputStream os = manifest.getOutputStream(lock); PrintWriter pw = new PrintWriter(os, true)) {
+                pw.println("Manifest-Version: 1.0"); // NOI18N
+                pw.println("X-COMMENT: Main-Class will be added automatically by build"); // NOI18N
+                pw.println(); // safest to end in \n\n due to JRE parsing bug
             }
         }
     }
     
 }
-
-

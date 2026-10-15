@@ -54,7 +54,7 @@ public class QueryTableCellRenderer extends DefaultTableCellRenderer {
     private final IssueTable issueTable;
 
     private static final int VISIBLE_START_CHARS = 0;
-    private static final Icon seenValueIcon = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/bugtracking/commons/resources/seen-value.png")); // NOI18N
+    private static final Icon seenValueIcon = ImageUtilities.loadIcon("org/netbeans/modules/bugtracking/commons/resources/seen-value.png"); // NOI18N
 
     private static final MessageFormat issueNewFormat       = getFormat("issueNewFormat", UIUtils.getTaskNewColor()); //NOI18N
     private static final MessageFormat issueObsoleteFormat  = getFormat("issueObsoleteFormat", UIUtils.getTaskObsoleteColor()); //NOI18N
@@ -122,7 +122,7 @@ public class QueryTableCellRenderer extends DefaultTableCellRenderer {
         
         TableCellStyle style = null;
         if(value instanceof IssueNode.SeenProperty) {
-            IssueNode.SeenProperty ps = (IssueNode.SeenProperty) value;
+            IssueNode<?>.SeenProperty ps = (IssueNode<?>.SeenProperty) value;
             renderer.setIcon(!ps.getValue() ? seenValueIcon : null);
             renderer.setText("");                                               // NOI18N
         } 
@@ -212,7 +212,7 @@ public class QueryTableCellRenderer extends DefaultTableCellRenderer {
             idx = matcher.end();
         }
         if(sb.length() > 0) {
-            sb.append(idx < s.length() ? s.substring(idx, s.length()) : "");
+            sb.append(idx < s.length() ? s.substring(idx) : "");
             s = sb.toString();
         }
         return s;
@@ -292,7 +292,7 @@ public class QueryTableCellRenderer extends DefaultTableCellRenderer {
 
     }
     
-    public static TableCellStyle getCellStyle(JTable table, IssueTable issueTable, IssueProperty p, boolean isSelected, int row) {
+    public static TableCellStyle getCellStyle(JTable table, IssueTable issueTable, IssueNode<?>.IssueProperty<?> p, boolean isSelected, int row) {
         TableCellStyle style = getDefaultCellStyle(table, issueTable, p, isSelected, row);
         try {
             // set text format and background depending on selection and issue status
@@ -343,7 +343,7 @@ public class QueryTableCellRenderer extends DefaultTableCellRenderer {
         }
         return style;
     }
-    public static TableCellStyle getDefaultCellStyle(JTable table, IssueTable issueTable, IssueProperty p, boolean isSelected, int row) {
+    public static TableCellStyle getDefaultCellStyle(JTable table, IssueTable issueTable, IssueNode<?>.IssueProperty<?> p, boolean isSelected, int row) {
         // set default values
         return new TableCellStyle(
             null,                                                                       // format
@@ -354,7 +354,7 @@ public class QueryTableCellRenderer extends DefaultTableCellRenderer {
         );
     }
 
-    private static Pattern getHightlightPattern(IssueTable issueTable, IssueProperty p) {
+    private static Pattern getHightlightPattern(IssueTable issueTable, IssueNode<?>.IssueProperty<?> p) {
         if(p instanceof IssueNode.SummaryProperty) {            
             SummaryTextFilter f = issueTable.getSummaryFilter();
             if(f != null && f.isHighLightingOn()) {

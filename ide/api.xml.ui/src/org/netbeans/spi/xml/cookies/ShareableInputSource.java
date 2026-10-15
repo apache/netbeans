@@ -36,7 +36,7 @@ final class ShareableInputSource extends InputSource {
     private final InputSource peer;
     private final int bufferSize;
     // #32939 keep the buffer big enough to be able to validate large XML documets
-    private final static int BUFFER_SIZE = 1024 * 1024 + 7;
+    private static final int BUFFER_SIZE = 1024 * 1024 + 7;
     private IOException resetException;
 
     public static ShareableInputSource create(InputSource peer) {

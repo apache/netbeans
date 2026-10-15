@@ -126,7 +126,7 @@
             <arg value="test-qa-functional"/>
             <arg value="-Dtest.includes=**/WhitelistTest.class"/>
             <arg value="-Dpermit.jdk6.builds=true"/>
-            <arg value="-Dtest.run.args=-ea -XX:PermSize=64m -XX:MaxPermSize=400m -Xmx512m -Xverify:none -Dtest.whitelist.stage=1 -Dorg.netbeans.core.TimeableEventQueue.quantum=60000 ${debug.args}"/>
+            <arg value="-Dtest.run.args=-ea -Xmx512m -Xverify:none -Dtest.whitelist.stage=1 -Dorg.netbeans.core.TimeableEventQueue.quantum=60000 ${debug.args}"/>
             <arg value="-Dtest-qa-functional-sys-prop.allowed.violations=${allowed.violations}"/>
         </exec>
     </target>
@@ -141,7 +141,7 @@
             <arg value="test-qa-functional"/>
             <arg value="-Dtest.includes=**/WhitelistTest.class"/>
             <arg value="-Dpermit.jdk6.builds=true"/>
-            <arg value="-Dtest.run.args=-ea -XX:PermSize=64m -XX:MaxPermSize=400m -Xmx512m -Xverify:none -Dtest.whitelist.stage=2 -Dorg.netbeans.core.TimeableEventQueue.quantum=60000 ${debug.args}"/>
+            <arg value="-Dtest.run.args=-ea -Xmx512m -Xverify:none -Dtest.whitelist.stage=2 -Dorg.netbeans.core.TimeableEventQueue.quantum=60000 ${debug.args}"/>
             <arg value="-Dtest-qa-functional-sys-prop.allowed.violations=${allowed.violations}"/>
         </exec>
     </target>
@@ -156,7 +156,7 @@
             <arg value="test-qa-functional"/>
             <arg value="-Dtest.includes=**/WhitelistTest.class"/>
             <arg value="-Dpermit.jdk6.builds=true"/>
-            <arg value="-Dtest.run.args=-ea -XX:PermSize=64m -XX:MaxPermSize=400m -Xmx512m -Xverify:none -Dtest.whitelist.stage=3 -Dorg.netbeans.core.TimeableEventQueue.quantum=60000 ${debug.args}"/>
+            <arg value="-Dtest.run.args=-ea -Xmx512m -Xverify:none -Dtest.whitelist.stage=3 -Dorg.netbeans.core.TimeableEventQueue.quantum=60000 ${debug.args}"/>
             <arg value="-Dtest-qa-functional-sys-prop.allowed.violations=${allowed.violations}"/>
         </exec>
     </target>

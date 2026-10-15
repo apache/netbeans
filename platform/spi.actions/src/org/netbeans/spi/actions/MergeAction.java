@@ -152,8 +152,9 @@ final class MergeAction extends NbAction implements PropertyChangeListener {
 
     private void sievePropertyChanges() {
         Map<String, Object> nue = new HashMap<String, Object>();
-        for (String key : knownValues.keySet()) {
-            Object expected = knownValues.get(key);
+        for (Map.Entry<String, Object> entry : knownValues.entrySet()) {
+            String key = entry.getKey();
+            Object expected = entry.getValue();
             Object found = getValue(key);//del.getValue(key);
             if (found != expected) {
                 nue.put(key, found);

@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.openide.util;
 
 import java.io.ByteArrayInputStream;
@@ -27,6 +26,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -39,10 +39,13 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
 import java.util.jar.Attributes;
-import junit.framework.TestCase;
-import org.openide.util.NbBundle;
-import org.openide.util.NbCollections;
 import org.openide.util.base.BundleClass;
+import junit.framework.TestCase;
+
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.fail;
+import static org.junit.Assert.assertNotEquals;
 
 // XXX testGetClassBundle
 // XXX testGetLocalizedFile
@@ -63,6 +66,7 @@ public class NbBundleTest extends TestCase {
         NbBundle.setBranding(null);
         NbBundle.localizedFileCache.clear();
         NbBundle.bundleCache.clear();
+        System.clearProperty("java.util.PropertyResourceBundle.encoding");
     }
 
     public static void testLocalizingSuffixes() throws Exception {
@@ -75,6 +79,7 @@ public class NbBundleTest extends TestCase {
         Locale.setDefault(Locale.JAPAN);
         assertEquals("_f4j_ce_ja_JP,_f4j_ce_ja,_f4j_ce,_f4j_ja_JP,_f4j_ja,_f4j,_ja_JP,_ja,", locSuff());
     }
+
     private static String locSuff() {
         StringBuffer b = new StringBuffer();
         boolean first = true;
@@ -91,7 +96,7 @@ public class NbBundleTest extends TestCase {
     }
 
     public void testGetBundle() throws Exception {
-        ResourceBundle rb = NbBundle.getBundle("foo.Bundle", Locale.ENGLISH, fixedLoader("foo/Bundle.properties:k=v"));
+        ResourceBundle rb = NbBundle.getBundle("foo.Bundle", Locale.ENGLISH, fixedLoader(false, "foo/Bundle.properties:k=v"));
         assertEquals("v", rb.getString("k"));
         try {
             rb.getString("kkk");
@@ -99,21 +104,21 @@ public class NbBundleTest extends TestCase {
         } catch (MissingResourceException mre) {
             // OK
         }
-        rb = NbBundle.getBundle("foo.Bundle", Locale.US, fixedLoader("foo/Bundle.properties:k=v"));
+        rb = NbBundle.getBundle("foo.Bundle", Locale.US, fixedLoader(false, "foo/Bundle.properties:k=v"));
         assertEquals("v", rb.getString("k"));
-        rb = NbBundle.getBundle("foo.Bundle", Locale.JAPAN, fixedLoader("foo/Bundle.properties:k=v"));
+        rb = NbBundle.getBundle("foo.Bundle", Locale.JAPAN, fixedLoader(false, "foo/Bundle.properties:k=v"));
         assertEquals("v", rb.getString("k"));
-        rb = NbBundle.getBundle("foo.Bundle", Locale.JAPAN, fixedLoader("foo/Bundle.properties:k=v", "foo/Bundle_ja.properties:k=v2"));
+        rb = NbBundle.getBundle("foo.Bundle", Locale.JAPAN, fixedLoader(false, "foo/Bundle.properties:k=v", "foo/Bundle_ja.properties:k=v2"));
         assertEquals("v2", rb.getString("k"));
         assertEquals(Locale.JAPAN, rb.getLocale());
         try {
-            NbBundle.getBundle("foo.Bundle", Locale.ENGLISH, fixedLoader());
+            NbBundle.getBundle("foo.Bundle", Locale.ENGLISH, fixedLoader(false));
             fail();
         } catch (MissingResourceException mre) {
             // OK
         }
         NbBundle.setBranding("nb");
-        rb = NbBundle.getBundle("foo.Bundle", Locale.US, fixedLoader("foo/Bundle.properties:k1=v1\nk2=v2", "foo/Bundle_nb.properties:k1=v1 NB"));
+        rb = NbBundle.getBundle("foo.Bundle", Locale.US, fixedLoader(false, "foo/Bundle.properties:k1=v1\nk2=v2", "foo/Bundle_nb.properties:k1=v1 NB"));
         assertEquals("v1 NB", rb.getString("k1"));
         assertEquals("v2", rb.getString("k2"));
         List<String> keys = new ArrayList<String>(Collections.list(rb.getKeys()));
@@ -121,14 +126,17 @@ public class NbBundleTest extends TestCase {
         assertEquals("[k1, k2]", keys.toString());
     }
 
-    public void testGetMessage() throws Exception {
-        ClassLoader l = fixedLoader(
-                "org/openide/util/Bundle.properties:" +
-                "k1=v1\n" +
-                "k2=v2 {0}\n" +
-                "k3=v3 {0} {1} {2} {3} {4}",
-                "org/openide/util/Bundle_ja.properties:" +
-                "k1=v1 ja");
+    public void testGetMessageISO() throws Exception {
+        ClassLoader l = fixedLoader(false,
+                "org/openide/util/Bundle.properties:"
+                + "k1=v1\n"
+                + "k2=v2 {0}\n"
+                + "k3=v3 {0} {1} {2} {3} {4}",
+                "org/openide/util/Bundle_ja.properties:"
+                + "k1=v1 ja",
+                "org/openide/util/Bundle_fr.properties:"
+                + "k1=v1 ô Hélène"
+        );
         Class<?> c = l.loadClass(Dummy.class.getName());
         assertEquals(l, c.getClassLoader());
         assertEquals("v1", NbBundle.getMessage(c, "k1"));
@@ -136,24 +144,87 @@ public class NbBundleTest extends TestCase {
         assertEquals("v1 ja", NbBundle.getMessage(c, "k1"));
         assertEquals("v2 x", NbBundle.getMessage(c, "k2", "x"));
         assertEquals("v3 a b c d e", NbBundle.getMessage(c, "k3", "a", "b", "c", "d", "e"));
+        Locale.setDefault(Locale.FRENCH);
+        assertEquals("v1 ô Hélène", NbBundle.getMessage(c, "k1"));
+    }
+
+    public void testGetMessageUTF8() throws Exception {
+        ClassLoader l = fixedLoader(true,
+                "org/openide/util/Bundle.properties:"
+                + "k1=v1\n"
+                + "k2=v2 {0}\n"
+                + "k3=v3 {0} {1} {2} {3} {4}",
+                "org/openide/util/Bundle_ja.properties:"
+                + "k1=v1 ja",
+                "org/openide/util/Bundle_fr.properties:"
+                + "k2=v2 ô Hélène {0}"
+        );
+        Class<?> c = l.loadClass(Dummy.class.getName());
+        assertEquals(l, c.getClassLoader());
+        assertEquals("v1", NbBundle.getMessage(c, "k1"));
+        Locale.setDefault(Locale.JAPAN);
+        assertEquals("v1 ja", NbBundle.getMessage(c, "k1"));
+        assertEquals("v2 x", NbBundle.getMessage(c, "k2", "x"));
+        assertEquals("v3 a b c d e", NbBundle.getMessage(c, "k3", "a", "b", "c", "d", "e"));
+        Locale.setDefault(Locale.FRENCH);
+        assertEquals("v2 ô Hélène chérie", NbBundle.getMessage(c, "k2", "chérie"));
+    }
+
+    public void testSystemPropertyISO() throws Exception {
+        ClassLoader l = fixedLoader(true,
+                "org/openide/util/Bundle.properties:"
+                + "k1=yo\n"
+                + "k2=where and ouch",
+                "org/openide/util/Bundle_fr.properties:"
+                + "k1=fr yo\n"
+                + "k2=où et aïe"
+        );
+        Class<?> c = l.loadClass(Dummy.class.getName());
+        assertEquals(l, c.getClassLoader());
+        Locale.setDefault(Locale.FRENCH);
+        System.setProperty("java.util.PropertyResourceBundle.encoding", "ISO-8859-1");
+        assertEquals("fr yo", NbBundle.getMessage(c, "k1"));
+        assertNotEquals("où et aïe", NbBundle.getMessage(c, "k2"));
+    }
+
+    public void testSystemPropertyUTF() throws Exception {
+        ClassLoader l = fixedLoader(false,
+                "org/openide/util/Bundle.properties:"
+                + "k1=yo\n"
+                + "k2=where and ouch",
+                "org/openide/util/Bundle_fr.properties:"
+                + "k1=fr yo\n"
+                + "k2=où et aïe"
+        );
+        Class<?> c = l.loadClass(Dummy.class.getName());
+        assertEquals(l, c.getClassLoader());
+        Locale.setDefault(Locale.FRENCH);
+        System.setProperty("java.util.PropertyResourceBundle.encoding", "UTF-8");
+        try {
+            assertEquals("fr yo", NbBundle.getMessage(c, "k1"));
+            fail();
+        } catch (MissingResourceException mre) {
+            // OK MalformedInputException
+        }
+
     }
 
     static class Dummy {}
     /**
-     * Creates a loader which can load just fixed resources you supply.
-     * Each entry should be of the form
+     * Creates a loader which can load just fixed resources you supply. Each
+     * entry should be of the form
      * <pre>
      * path/to/res1:some contents
      * for res1
-     * </pre>
-     * Resources are expected to be in ISO-8859-1.
-     * Also can define a class named Dummy.class.getName().
+     * </pre> Also can define a class named Dummy.class.getName().
+     *
+     * @param useUTF8 If false use ISO-8859-1 encoding, otherwise UTF-8
      */
-    private static ClassLoader fixedLoader(String... entries) throws Exception {
-        final Map<String,byte[]> data = new HashMap<String,byte[]>();
+    private static ClassLoader fixedLoader(boolean useUTF8, String... entries) throws Exception {
+        final Map<String, byte[]> data = new HashMap<String, byte[]>();
         for (String entry : entries) {
             int colon = entry.indexOf(':');
-            data.put(entry.substring(0, colon), entry.substring(colon + 1).getBytes("ISO-8859-1"));
+            data.put(entry.substring(0, colon), entry.substring(colon + 1).getBytes(useUTF8 ? "UTF-8" : "ISO-8859-1"));
         }
         return new ClassLoader() {
             @Override
@@ -180,6 +251,7 @@ public class NbBundleTest extends TestCase {
                     return null;
                 }
             }
+
             @Override
             public Class loadClass(String n) throws ClassNotFoundException {
                 if (n.equals(Dummy.class.getName())) {
@@ -277,7 +349,7 @@ public class NbBundleTest extends TestCase {
         // XXX value beginning with \
     }
     private static String debugIS(String s, boolean loc) throws IOException {
-        InputStream dis = new NbBundle.DebugLoader.DebugInputStream(new ByteArrayInputStream(s.getBytes("ISO-8859-1")), 17, loc);
+        InputStream dis = new NbBundle.DebugLoader.DebugInputStream(new ByteArrayInputStream(s.getBytes(StandardCharsets.ISO_8859_1)), 17, loc);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         byte[] buf = new byte[4096];
         int read;

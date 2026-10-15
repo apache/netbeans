@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.projectapi;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
@@ -27,10 +28,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -45,30 +45,44 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.spi.project.FileOwnerQueryImplementation;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.BaseUtilities;
 import org.openide.util.NbPreferences;
-import org.openide.util.WeakSet;
 
 /**
  * Finds a project by searching the directory tree.
+ *
+ * This allows for safely scanning up the directory hierarchy, up to the
+ * globally configured scan root limits ({@code -Dproject.limitScanRoot}), if
+ * any; and mindful of forbidden folders ({@code -Dproject.forbiddenFolders} or
+ * {@code -Dversioning.forbiddenFolders}), if any.
+ *
  * @author Jesse Glick
+ * @implNote The logic and most of the code of scanning with limits is shared to
+ * {@code org.netbeans.modules.gradle.spi.GradleFiles.Searcher}; with the
+ * replacement of handling paths from {@code FileObject} instances to handling
+ * paths from {@code File} instances there, instead. If any logical changes are
+ * made here, they should also be kept in sync in {@code GradleFiles.Searcher}.
  */
 @org.openide.util.lookup.ServiceProvider(service=org.netbeans.spi.project.FileOwnerQueryImplementation.class, position=100)
 public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImplementation {
     private static final Logger LOG = Logger.getLogger(SimpleFileOwnerQueryImplementation.class.getName());
     private static final URI UNOWNED_URI = URI.create("http:unowned");
     private static final Set<String> forbiddenFolders;
+    private static final Set<String> projectScanRoots;
+    
     static {
-        Set<String> files = new HashSet<String>();
+        Set<String> folders = null;
+        Set<String> roots = null;
         try {
-            String forbidden = System.getProperty("project.forbiddenFolders", System.getProperty("versioning.forbiddenFolders", "")); //NOI18N
-            files.addAll(Arrays.asList(forbidden.split("\\;"))); //NOI18N
-            files.remove(""); //NOI18N
+            roots = separatePaths(System.getProperty("project.limitScanRoot"), File.pathSeparator); //NOI18N
+            folders = separatePaths(System.getProperty("project.forbiddenFolders", System.getProperty("versioning.forbiddenFolders")), ";"); //NOI18N
         } catch (Exception e) {
             LOG.log(Level.INFO, e.getMessage(), e);
         }
-        forbiddenFolders = files;
+        forbiddenFolders = folders == null ? Collections.emptySet() : folders;
+        projectScanRoots = roots;
     }
     
     /** Do nothing */
@@ -88,9 +102,9 @@ public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImpleme
         return getOwner(file);
     }
     
-    private final Set<FileObject> warnedAboutBrokenProjects = new WeakSet<FileObject>();
+    private final Set<FileObject> warnedAboutBrokenProjects = Collections.newSetFromMap(new WeakHashMap<>());
         
-    private Map<FileObject, Reference<Project>> projectCache = new WeakHashMap();    
+    private Map<FileObject, Reference<Project>> projectCache = new WeakHashMap<>();    
     /**
      * 
      * #111892
@@ -104,10 +118,13 @@ public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImpleme
     
     
     public Project getOwner(FileObject f) {
-        List<FileObject> folders = new ArrayList();
-        
+        List<FileObject> folders = new ArrayList<>();
+
         deserialize();
         while (f != null) {
+            if (notWithinProjectScanRoots(f)) {
+                break;
+            }
             boolean folder = f.isFolder();
             final URI[] furi = new URI[1];
             if (folder) {
@@ -129,8 +146,8 @@ public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImpleme
                 }
                 folders.add(f);
                 if (!forbiddenFolders.contains(f.getPath()) &&
-                    !hasRoot(externalOwners.keySet(), f, folder, furi) &&
-                    !hasRoot(deserializedExternalOwners.keySet(), f, folder, furi)) {
+                    !hasRoot(externalOwners.keySet(), f, true, furi) &&
+                    !hasRoot(deserializedExternalOwners.keySet(), f, true, furi)) {
                     Project p;
                     try {
                         p = ProjectManager.getDefault().findProject(f);
@@ -143,7 +160,7 @@ public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImpleme
                     }
                     if (p != null) {
                         synchronized (cacheLock) {
-                            WeakReference<Project> rp = new WeakReference(p);
+                            WeakReference<Project> rp = new WeakReference<>(p);
                             for (FileObject fldr : folders) {
                                 projectCache.put(fldr, rp);
                             }
@@ -204,6 +221,21 @@ public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImpleme
         return null;
     }
 
+    private static boolean notWithinProjectScanRoots(FileObject f) {
+        if (projectScanRoots == null)
+            return false;
+        String path = f.getPath();
+        for (String scanRoot : projectScanRoots) {
+            if (path.startsWith(scanRoot)
+                    && (path.length() == scanRoot.length()
+                    || path.charAt(scanRoot.length()) == '/'))
+                return false;
+            // Note: Since the path is obtained from a FileObject,
+            // the file-separator will always be '/', even on Windows,
+            // not File.separatorChar.
+        }
+        return true;
+    }
 
     private static boolean hasRoot(
             @NonNull final Set<URI> extRoots,
@@ -306,8 +338,9 @@ public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImpleme
     static void serialize() {
         try {
             Preferences p = NbPreferences.forModule(SimpleFileOwnerQueryImplementation.class).node("externalOwners");
-            for (URI uri : externalOwners.keySet()) {
-                URI ownerURI = externalOwners.get(uri);
+            for (Map.Entry<URI, URI> entry : externalOwners.entrySet()) {
+                URI uri = entry.getKey();
+                URI ownerURI = entry.getValue();
                 if (ownerURI != UNOWNED_URI) {
                 p.put(uri.toString(), ownerURI.toString());
             }
@@ -405,6 +438,40 @@ public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImpleme
         assert u.toString().startsWith(nue.toString()) : "not a parent: " + nue + " of " + u;
         return nue;
     }
+
+    private static Set<String> separatePaths(String joinedPaths, String pathSeparator) {
+        if (joinedPaths == null || joinedPaths.isEmpty())
+            return null;
+
+        Set<String> paths = null;
+        for (String split : joinedPaths.split(pathSeparator)) {
+            if (split.isBlank()) continue;
+
+            // Ensure that variations in terms of ".." or "." or windows drive-letter case differences are removed.
+            // File.getCanonicalFile() will additionally resolve symlinks, which is not required.
+            File file = FileUtil.normalizeFile(new File(split));
+
+            // Store FileObject.getPath(); because getOwner() compares these with FileObject.getPath() strings.
+            // This has some peculiarities as compared to File.getAbsolutePath(); such as return "" for File("/").
+            FileObject fileObject = FileUtil.toFileObject(file);
+            // This conversion may get rid of non-existent paths.
+            if (fileObject == null) continue;
+
+            String path = fileObject.getPath();
+            if (path == null || path.isEmpty()) continue;
+
+            if (paths == null) {
+                paths = Collections.singleton(path);    // more performant in usage when only a single element is present.
+            } else {
+                if (paths.size() == 1) {
+                    paths = new LinkedHashSet<>(paths); // more performant in iteration
+                }
+                paths.add(path);
+            }
+        }
+        return paths;
+    }
+
     private static final boolean WINDOWS = BaseUtilities.isWindows();
     
 }

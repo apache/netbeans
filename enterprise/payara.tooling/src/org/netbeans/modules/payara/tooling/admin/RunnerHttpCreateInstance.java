@@ -37,10 +37,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
  */
 public class RunnerHttpCreateInstance extends RunnerHttp {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER
             = new Logger(RunnerHttpCreateInstance.class);
@@ -54,10 +51,7 @@ public class RunnerHttpCreateInstance extends RunnerHttp {
     /** Start/Stop command <code>cluster</code> param name. */
     private static final String CLUSTER_PARAM = "cluster";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Builds enable/disable query string for given command.
      * <p/>
@@ -104,10 +98,7 @@ public class RunnerHttpCreateInstance extends RunnerHttp {
         return sb.toString();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of administration command executor using
      * HTTP interface.
@@ -120,10 +111,7 @@ public class RunnerHttpCreateInstance extends RunnerHttp {
         super(server, command, query(command));
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Implemented Abstract Methods                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Extracts result value from internal <code>Manifest</code> object.
      * Value of <i>message</i> attribute in <code>Manifest</code> object is

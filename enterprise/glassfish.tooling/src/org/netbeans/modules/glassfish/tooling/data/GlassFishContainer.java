@@ -29,10 +29,7 @@ import java.util.Map;
  */
 public enum GlassFishContainer implements Comparator<GlassFishContainer> {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Enum values                                                            //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** EAR application. */
     EAR,
     /** jRuby application. */
@@ -48,10 +45,7 @@ public enum GlassFishContainer implements Comparator<GlassFishContainer> {
     /** Unknown application. */
     UNKNOWN;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**  A <code>String</code> representation of EAR value. */
     static final String EAR_STR = "ear";
 
@@ -81,7 +75,7 @@ public enum GlassFishContainer implements Comparator<GlassFishContainer> {
      * conversion.
      */
     private static final Map<String, GlassFishContainer> stringValuesMap
-            = new HashMap(2 * values().length);
+            = new HashMap<>(2 * values().length);
 
     // Initialize backward String conversion Map.
     static {
@@ -111,10 +105,7 @@ public enum GlassFishContainer implements Comparator<GlassFishContainer> {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Convert <code>GlassFishContainer</code> value to <code>String</code>.
      * <p>

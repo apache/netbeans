@@ -56,7 +56,7 @@ class DiffFileTreeImpl extends FileTreeView<DiffNode> {
     
     private static final String ICON_KEY_UIMANAGER = "Tree.closedIcon"; //NOI18N
     private static final String ICON_KEY_UIMANAGER_NB = "Nb.Explorer.Folder.icon"; //NOI18N
-    private final static String PATH_SEPARATOR_REGEXP = File.separator.replace("\\", "\\\\"); //NOI18N
+    private static final String PATH_SEPARATOR_REGEXP = File.separator.replace("\\", "\\\\"); //NOI18N
     
     /**
      * Defines labels for Diff view table columns.

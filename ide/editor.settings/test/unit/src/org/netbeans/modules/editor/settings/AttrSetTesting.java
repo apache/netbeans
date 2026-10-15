@@ -73,8 +73,8 @@ final class AttrSetTesting {
 
     public static RandomTestContainer createContainer() throws Exception {
         RandomTestContainer container = new RandomTestContainer();
-        container.putProperty(SimpleWeakSet.class, new SimpleWeakSet()); // Weak map
-        container.putProperty(List.class, new ArrayList()); // List of the items (strongly referenced)
+        container.putProperty(SimpleWeakSet.class, new SimpleWeakSet<Object>()); // Weak map
+        container.putProperty(List.class, new ArrayList<Object>()); // List of the items (strongly referenced)
         container.addOp(new AddOp());
         container.addOp(new ForgetOp());
         container.addOp(new MergeOp());
@@ -204,7 +204,8 @@ final class AttrSetTesting {
 
         @Override
         protected void run(Context context) throws Exception {
-            List list = context.getInstance(List.class);
+            @SuppressWarnings("unchecked")
+            List<Object> list = context.getInstance(List.class);
             if (list.size() > 0) {
                 Random random = context.container().random();
                 int elementIndex = random.nextInt(list.size());
@@ -222,7 +223,8 @@ final class AttrSetTesting {
 
         @Override
         protected void run(Context context) throws Exception {
-            List list = context.getInstance(List.class);
+            @SuppressWarnings("unchecked")
+            List<Object> list = context.getInstance(List.class);
             if (list.size() > 0) {
                 Random random = context.container().random();
                 int attrCount = 1 + random.nextInt(MAX_MERGE_SETS_COUNT);

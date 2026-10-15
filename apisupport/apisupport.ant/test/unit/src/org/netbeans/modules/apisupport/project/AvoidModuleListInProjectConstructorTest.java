@@ -40,7 +40,7 @@ public class AvoidModuleListInProjectConstructorTest extends TestBase {
     // XXX cannot be run in binary dist, requires sources; test against fake platform
     public void testNetBeansOrgModules() throws Exception {
         assertEquals("no scans of netbeans.org initially", 0, ModuleList.getKnownEntries(file("nbbuild/netbeans/extide/org-apache-tools-ant-module.jar")).size());
-        FileObject fo = nbRoot().getFileObject("o.apache.tools.ant.module");
+        FileObject fo = nbRoot().getFileObject("extide/o.apache.tools.ant.module");
         Project p = ProjectManager.getDefault().findProject(fo);
         assertNotNull(p);
         assertEquals("still no scans", 0, ModuleList.getKnownEntries(file("nbbuild/netbeans/" + "extide" + "/modules/org-apache-tools-ant-module.jar")).size());

@@ -20,11 +20,13 @@
 package org.netbeans.modules.php.phpunit.ui.customizer;
 
 import java.awt.Component;
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
@@ -35,11 +37,15 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
+import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.api.validation.ValidationResult;
+import org.netbeans.modules.php.phpunit.PhpUnitVersion;
 import org.netbeans.modules.php.phpunit.commands.PhpUnit;
+import org.netbeans.modules.php.phpunit.options.PhpUnitOptions;
 import org.netbeans.modules.php.phpunit.preferences.PhpUnitPreferences;
 import org.netbeans.modules.php.phpunit.preferences.PhpUnitPreferencesValidator;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer;
@@ -51,6 +57,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
 
 /**
  * @author Tomas Mysik
@@ -58,6 +65,7 @@ import org.openide.util.NbBundle;
 public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider {
 
     private static final long serialVersionUID = 2171421712032630826L;
+    private static final RequestProcessor RP = new RequestProcessor(CustomizerPhpUnit.class);
 
     private final ProjectCustomizer.Category category;
     private final PhpModule phpModule;
@@ -88,6 +96,8 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
         runPhpUnitOnlyCheckBox.setSelected(PhpUnitPreferences.getRunPhpUnitOnly(phpModule));
         runTestUsingUnitCheckBox.setSelected(PhpUnitPreferences.getRunAllTestFiles(phpModule));
         askForTestGroupsCheckBox.setSelected(PhpUnitPreferences.getAskForTestGroups(phpModule));
+        isRelativePathEnabled.setSelected(PhpUnitPreferences.isRelativePathEnabled(phpModule));
+        initPhpUnitVersion();
 
         enableFile(bootstrapCheckBox.isSelected(), bootstrapLabel, bootstrapTextField, bootstrapGenerateButton, bootstrapBrowseButton, bootstrapForCreateTestsCheckBox);
         enableFile(configurationCheckBox.isSelected(), configurationLabel, configurationTextField, configurationGenerateButton, configurationBrowseButton);
@@ -137,7 +147,28 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
         category.setValid(true);
     }
 
+    void updatePhpUnitVersion() {
+        assert EventQueue.isDispatchThread();
+        ValidationResult result = new PhpUnitPreferencesValidator()
+                .validatePhpUnit(scriptCheckBox.isSelected(), scriptTextField.getText())
+                .getResult();
+        // errors and warnings are shown with validateData()
+        if (result.hasErrors() || result.hasWarnings()) {
+            versionLineLabel.setText(Bundle.CustomizerPhpUnit_notFound_phpUnit_version());
+            return;
+        }
+        setPhpUnitVersion();
+    }
+
+    private boolean resetPhpUnitVersions() {
+        return scriptCheckBox.isSelected() != PhpUnitPreferences.isPhpUnitEnabled(phpModule)
+                || !scriptTextField.getText().equals(PhpUnitPreferences.getPhpUnitPath(phpModule));
+    }
+
     void storeData() {
+        if (resetPhpUnitVersions()) {
+            PhpUnit.resetVersions();
+        }
         PhpUnitPreferences.setBootstrapEnabled(phpModule, bootstrapCheckBox.isSelected());
         PhpUnitPreferences.setBootstrapPath(phpModule, bootstrapTextField.getText());
         PhpUnitPreferences.setBootstrapForCreateTests(phpModule, bootstrapForCreateTestsCheckBox.isSelected());
@@ -150,6 +181,7 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
         PhpUnitPreferences.setRunPhpUnitOnly(phpModule, runPhpUnitOnlyCheckBox.isSelected());
         PhpUnitPreferences.setRunAllTestFiles(phpModule, runTestUsingUnitCheckBox.isSelected());
         PhpUnitPreferences.setAskForTestGroups(phpModule, askForTestGroupsCheckBox.isSelected());
+        PhpUnitPreferences.setRelativePathEnabled(phpModule, isRelativePathEnabled.isSelected());
     }
 
     private void initFile(boolean enabled, String file, JCheckBox checkBox, JTextField textField) {
@@ -198,9 +230,11 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
             public void itemStateChanged(ItemEvent e) {
                 enableFile(e.getStateChange() == ItemEvent.SELECTED, scriptLabel, scriptTextField, scriptBrowseButton);
                 validateData();
+                updatePhpUnitVersion();
             }
         });
         scriptTextField.getDocument().addDocumentListener(defaultDocumentListener);
+        scriptTextField.getDocument().addDocumentListener(new PhpUnitScriptDocumentListener());
 
         final ItemListener validateItemListener = new ItemListener() {
             @Override
@@ -236,6 +270,33 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
         return true;
     }
 
+    private void initPhpUnitVersion() {
+        setPhpUnitVersion();
+    }
+
+    @NbBundle.Messages({
+        "CustomizerPhpUnit.getting.phpUnit.version=Getting the version...",
+        "CustomizerPhpUnit.notFound.phpUnit.version=PHPUnit version not found"
+    })
+    private void setPhpUnitVersion() {
+        assert EventQueue.isDispatchThread();
+        versionLineLabel.setText(Bundle.CustomizerPhpUnit_getting_phpUnit_version());
+        final String phpUnitPath;
+        if (scriptCheckBox.isSelected()) {
+            phpUnitPath = scriptTextField.getText().trim();
+        } else {
+            phpUnitPath = PhpUnitOptions.getInstance().getPhpUnitPath();
+        }
+        if (!StringUtils.hasText(phpUnitPath)) {
+            SwingUtilities.invokeLater(() -> versionLineLabel.setText(Bundle.CustomizerPhpUnit_notFound_phpUnit_version()));
+        } else {
+            RP.post(() -> {
+                String versionLine = PhpUnit.getVersionLine(phpUnitPath);
+                SwingUtilities.invokeLater(() -> versionLineLabel.setText(versionLine));
+            });
+        }
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -268,6 +329,9 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
         runPhpUnitOnlyCheckBox = new JCheckBox();
         runTestUsingUnitCheckBox = new JCheckBox();
         askForTestGroupsCheckBox = new JCheckBox();
+        versionLabel = new JLabel();
+        versionLineLabel = new JLabel();
+        isRelativePathEnabled = new JCheckBox();
 
         bootstrapLabel.setLabelFor(bootstrapTextField);
         Mnemonics.setLocalizedText(bootstrapLabel, NbBundle.getMessage(CustomizerPhpUnit.class, "CustomizerPhpUnit.bootstrapLabel.text")); // NOI18N
@@ -349,6 +413,12 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
 
         Mnemonics.setLocalizedText(askForTestGroupsCheckBox, NbBundle.getMessage(CustomizerPhpUnit.class, "CustomizerPhpUnit.askForTestGroupsCheckBox.text")); // NOI18N
 
+        Mnemonics.setLocalizedText(versionLabel, NbBundle.getMessage(CustomizerPhpUnit.class, "CustomizerPhpUnit.versionLabel.text")); // NOI18N
+
+        Mnemonics.setLocalizedText(versionLineLabel, "VERSION"); // NOI18N
+
+        Mnemonics.setLocalizedText(isRelativePathEnabled, NbBundle.getMessage(CustomizerPhpUnit.class, "CustomizerPhpUnit.isRelativePathEnabled.text")); // NOI18N
+
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(Alignment.LEADING)
@@ -399,8 +469,14 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
                     .addComponent(runTestUsingUnitCheckBox)
                     .addComponent(askForTestGroupsCheckBox)
                     .addComponent(scriptCheckBox)
-                    .addComponent(runPhpUnitOnlyCheckBox))
+                    .addComponent(runPhpUnitOnlyCheckBox)
+                    .addComponent(isRelativePathEnabled))
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(versionLabel)
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addComponent(versionLineLabel)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         layout.linkSize(SwingConstants.HORIZONTAL, new Component[] {bootstrapBrowseButton, bootstrapGenerateButton, configurationBrowseButton, configurationGenerateButton, scriptBrowseButton, suiteBrowseButton});
@@ -434,19 +510,25 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
                     .addComponent(suiteBrowseButton))
                 .addPreferredGap(ComponentPlacement.RELATED)
                 .addComponent(suiteInfoLabel)
-                .addPreferredGap(ComponentPlacement.UNRELATED)
+                .addPreferredGap(ComponentPlacement.RELATED)
                 .addComponent(scriptCheckBox)
                 .addPreferredGap(ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(Alignment.BASELINE)
                     .addComponent(scriptLabel)
                     .addComponent(scriptTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(scriptBrowseButton))
-                .addPreferredGap(ComponentPlacement.UNRELATED)
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addComponent(isRelativePathEnabled)
+                .addPreferredGap(ComponentPlacement.RELATED)
                 .addComponent(runPhpUnitOnlyCheckBox)
                 .addPreferredGap(ComponentPlacement.RELATED)
                 .addComponent(runTestUsingUnitCheckBox)
                 .addPreferredGap(ComponentPlacement.RELATED)
                 .addComponent(askForTestGroupsCheckBox)
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(Alignment.BASELINE)
+                    .addComponent(versionLabel)
+                    .addComponent(versionLineLabel))
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -482,6 +564,7 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
         suiteBrowseButton.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(CustomizerPhpUnit.class, "CustomizerPhpUnit.suiteBrowseButton.AccessibleContext.accessibleDescription")); // NOI18N
         suiteInfoLabel.getAccessibleContext().setAccessibleName(NbBundle.getMessage(CustomizerPhpUnit.class, "CustomizerPhpUnit.suiteInfoLabel.AccessibleContext.accessibleName")); // NOI18N
         suiteInfoLabel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(CustomizerPhpUnit.class, "CustomizerPhpUnit.suiteInfoLabel.AccessibleContext.accessibleDescription")); // NOI18N
+        versionLabel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(CustomizerPhpUnit.class, "CustomizerPhpUnit.versionLabel.AccessibleContext.accessibleDescription")); // NOI18N
 
         getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(CustomizerPhpUnit.class, "CustomizerPhpUnit.AccessibleContext.accessibleDescription")); // NOI18N
     }// </editor-fold>//GEN-END:initComponents
@@ -570,6 +653,7 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
     private JButton configurationGenerateButton;
     private JLabel configurationLabel;
     private JTextField configurationTextField;
+    private JCheckBox isRelativePathEnabled;
     private JCheckBox runPhpUnitOnlyCheckBox;
     private JCheckBox runTestUsingUnitCheckBox;
     private JButton scriptBrowseButton;
@@ -581,6 +665,8 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
     private JLabel suiteInfoLabel;
     private JLabel suiteLabel;
     private JTextField suiteTextField;
+    private JLabel versionLabel;
+    private JLabel versionLineLabel;
     // End of variables declaration//GEN-END:variables
 
     //~ Inner classes
@@ -600,6 +686,48 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
         }
         private void processUpdate() {
             validateData();
+        }
+    }
+
+    private final class PhpUnitScriptDocumentListener implements DocumentListener {
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            processUpdate();
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            processUpdate();
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            processUpdate();
+        }
+
+        private void processUpdate() {
+            updatePhpUnitVersion();
+        }
+    }
+
+    // if we have to add the phpunit version combobox in the future, we can use this
+    private static class PhpUnitVersionComboBoxModel extends DefaultComboBoxModel<PhpUnitVersion> {
+
+        private static final long serialVersionUID = 5850175934190021687L;
+
+        public PhpUnitVersionComboBoxModel() {
+            this(null);
+        }
+
+        public PhpUnitVersionComboBoxModel(PhpUnitVersion preselected) {
+            super(PhpUnitVersion.values());
+
+            if (preselected != null) {
+                setSelectedItem(preselected);
+            } else {
+                setSelectedItem(PhpUnitVersion.getDefault());
+            }
         }
     }
 

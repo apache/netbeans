@@ -162,7 +162,7 @@ public class OverridableMethodCallInConstructor {
             flags,
             NbBundle.getMessage(OverridableMethodCallInConstructor.class,
                 "FIX_MakeMethod", "private", mt.getName())));
-        return result.toArray(new Fix[result.size()]);
+        return result.toArray(new Fix[0]);
     }
 
     private static boolean invocationOnThis(MethodInvocationTree mit) {

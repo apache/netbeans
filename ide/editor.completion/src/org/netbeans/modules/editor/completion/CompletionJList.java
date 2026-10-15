@@ -23,7 +23,6 @@ import java.awt.*;
 import java.awt.event.MouseListener;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
@@ -33,6 +32,7 @@ import org.netbeans.editor.LocaleSupport;
 import org.netbeans.spi.editor.completion.CompletionItem;
 import org.netbeans.spi.editor.completion.CompositeCompletionItem;
 import org.netbeans.spi.editor.completion.LazyCompletionItem;
+import org.openide.awt.GraphicsUtils;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Utilities;
 
@@ -45,7 +45,7 @@ public class CompletionJList extends JList {
 
     private static final int DARKER_COLOR_COMPONENT = 5;
     private static final int SUB_MENU_ICON_GAP = 1;
-    private static final ImageIcon subMenuIcon = ImageUtilities.loadImageIcon("org/netbeans/modules/editor/completion/resources/suggestion.png", false); // NOI18N
+    private static final Icon subMenuIcon = ImageUtilities.loadIcon("org/netbeans/modules/editor/completion/resources/suggestion.png", false); // NOI18N
 
     private final RenderComponent renderComponent;
     
@@ -62,7 +62,7 @@ public class CompletionJList extends JList {
         setFont(editorComponent.getFont());
         setLayoutOrientation(JList.VERTICAL);
         setFixedCellHeight(fixedItemHeight = Math.max(CompletionLayout.COMPLETION_ITEM_HEIGHT, getFontMetrics(getFont()).getHeight()));
-        setModel(new Model(Collections.EMPTY_LIST));
+        setModel(new Model(Collections.emptyList()));
         setFocusable(false);
 
         renderComponent = new RenderComponent();
@@ -112,20 +112,8 @@ public class CompletionJList extends JList {
     }
 
     public @Override void paint(Graphics g) {
-        Object value = (Map)(Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints")); //NOI18N
-        Map renderingHints = (value instanceof Map) ? (java.util.Map)value : null;
-        if (renderingHints != null && g instanceof Graphics2D) {
-            Graphics2D g2d = (Graphics2D) g;
-            RenderingHints oldHints = g2d.getRenderingHints();
-            g2d.addRenderingHints(renderingHints);
-            try {
-                super.paint(g2d);
-            } finally {
-                g2d.setRenderingHints(oldHints);
-            }
-        } else {
-            super.paint(g);
-        }
+        GraphicsUtils.configureDefaultRenderingHints(g);
+        super.paint(g);
     }
     
     void setData(List data, int selectedIndex) {
@@ -357,7 +345,7 @@ public class CompletionJList extends JList {
             item.render(g, CompletionJList.this.getFont(), getForeground(), bgColor,
                     itemRenderWidth, getHeight(), selected);
             if (selected && item instanceof CompositeCompletionItem && !((CompositeCompletionItem)item).getSubItems().isEmpty()) {
-                g.drawImage(subMenuIcon.getImage(), itemRenderWidth - subMenuIcon.getIconWidth() - SUB_MENU_ICON_GAP, (height - subMenuIcon.getIconHeight()) / 2, null);
+                subMenuIcon.paintIcon(null, g, itemRenderWidth - subMenuIcon.getIconWidth() - SUB_MENU_ICON_GAP, (height - subMenuIcon.getIconHeight()) / 2);
             }
             
             if (separator) {

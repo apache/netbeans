@@ -70,8 +70,8 @@ public final class ClassPathSupportCallbackImpl implements org.netbeans.modules.
     //private static final String ATTR_FILES = "files"; //NOI18N
     private static final String ATTR_DIRS = "dirs"; //NOI18N
     
-    public final static String TAG_WEB_MODULE_LIBRARIES = "web-module-libraries"; // NOI18N
-    public final static String TAG_WEB_MODULE__ADDITIONAL_LIBRARIES = "web-module-additional-libraries"; // NOI18N
+    public static final String TAG_WEB_MODULE_LIBRARIES = "web-module-libraries"; // NOI18N
+    public static final String TAG_WEB_MODULE__ADDITIONAL_LIBRARIES = "web-module-additional-libraries"; // NOI18N
 
     public static final String PATH_IN_WAR_LIB = "WEB-INF/lib"; //NOI18N
     public static final String PATH_IN_WAR_DIR = "WEB-INF/classes"; //NOI18N

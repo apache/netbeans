@@ -445,7 +445,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
         } else if (type instanceof ClassType) {
             cType = (ClassType) type;
         } else {
-            if (JPDAUtils.IS_JDK_180_40 && (type instanceof InterfaceType) && isStatic) {
+            if ((type instanceof InterfaceType) && isStatic) {
                 cType = null;
                 iType = (InterfaceType) type;
             } else {
@@ -1719,15 +1719,15 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
             }
             Method iteratorMethod = null;
             try {
-                iteratorMethod = getConcreteMethod(objType, "iterator", Collections.EMPTY_LIST);
+                iteratorMethod = getConcreteMethod(objType, "iterator", Collections.<TypeMirror>emptyList());
             } catch (UnsuitableArgumentsException ex) {
             }
             iterator = (ObjectReference)invokeMethod(arg0, iteratorMethod, Boolean.FALSE, (ClassType)objRef.type(),
-                    objRef, Collections.EMPTY_LIST, evaluationContext, false);
+                    objRef, Collections.<Value>emptyList(), evaluationContext, false);
             try {
                 ReferenceType iteratorType = iterator.referenceType();
-                nextMethod = getConcreteMethod(iteratorType, "next", Collections.EMPTY_LIST);
-                hasNextMethod = getConcreteMethod(iteratorType, "hasNext", Collections.EMPTY_LIST);
+                nextMethod = getConcreteMethod(iteratorType, "next", Collections.<TypeMirror>emptyList());
+                hasNextMethod = getConcreteMethod(iteratorType, "hasNext", Collections.<TypeMirror>emptyList());
             } catch (UnsuitableArgumentsException ex) {
             }
         } else {
@@ -1752,12 +1752,12 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
                     index++;
                 } else {
                     value = invokeMethod(arg0, hasNextMethod, Boolean.FALSE, (ClassType)iterator.type(),
-                        iterator, Collections.EMPTY_LIST, evaluationContext, false);
+                        iterator, Collections.<Value>emptyList(), evaluationContext, false);
                     if (!((BooleanValue)value).value()) {
                         break;
                     }
                     value = invokeMethod(arg0, nextMethod, Boolean.FALSE, (ClassType)iterator.type(),
-                        iterator, Collections.EMPTY_LIST, evaluationContext, false);
+                        iterator, Collections.<Value>emptyList(), evaluationContext, false);
                 }
                 scriptVar.setValue(value); // [TODO] check if value is assignable to variable
                 try {
@@ -2130,6 +2130,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
             case LOCAL_VARIABLE:
             case EXCEPTION_PARAMETER:
             case RESOURCE_VARIABLE:
+            case BINDING_VARIABLE:
                 ve = (VariableElement) elm;
                 String varName = ve.getSimpleName().toString();
                 ScriptVariable var = evaluationContext.getScriptVariableByName(varName);
@@ -2621,7 +2622,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
                     throw iex; // re-throw the original
                 }
             }
-            if (enclosing != null && enclosing instanceof ObjectReference) {
+            if (enclosing instanceof ObjectReference) {
                 ObjectReference enclosingObject = (ObjectReference) enclosing;
                 argVals.add(0, enclosingObject);
                 firstParamSignature = enclosingObject.referenceType().signature();
@@ -2705,7 +2706,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
                     throw iex; // re-throw the original
                 }
             }
-            if (enclosing != null && enclosing instanceof ObjectReference) {
+            if (enclosing instanceof ObjectReference) {
                 ObjectReference enclosingObject = (ObjectReference) enclosing;
                 argVals.add(0, enclosingObject);
                 argTypes.add(0, enclosingObject.referenceType());
@@ -3602,7 +3603,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
         ScriptVariable var = evaluationContext.createScriptLocalVariable(name, type);
         ExpressionTree initializer = arg0.getInitializer();
         if (initializer != null) {
-            if (Tree.Kind.NEW_ARRAY.equals(initializer.getKind())) {
+            if (Tree.Kind.NEW_ARRAY == initializer.getKind()) {
                 try {
                     newArrayType = ArrayTypeWrapper.componentType((ArrayType) type);
                 } catch (ClassNotLoadedException cnlex) {
@@ -4519,7 +4520,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
             com.sun.jdi.Method forName = clazz.concreteMethodByName("forName", "(Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;");
             StackFrame frame = evaluationContext.getFrame();
             ClassLoaderReference executingClassloader = frame.location().declaringType().classLoader();
-            List args = new ArrayList();
+            List<Value> args = new ArrayList<>();
             StringReference className = createStringMirrorWithDisabledCollection(name, vm, evaluationContext);
             args.add(className);
             args.add(vm.mirrorOf(true));
@@ -4624,7 +4625,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
         public UnsuitableArgumentsException() {}
     }
 
-    static abstract class ArtificialMirror implements Mirror {
+    abstract static class ArtificialMirror implements Mirror {
 
         @Override
         public VirtualMachine virtualMachine() {
@@ -4635,7 +4636,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
 
     }
 
-    private static abstract class CommandMirror extends ArtificialMirror {
+    private abstract static class CommandMirror extends ArtificialMirror {
 
     }
 
@@ -5496,7 +5497,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
 
         @Override
         public List<ReferenceType> nestedTypes() {
-            return Collections.EMPTY_LIST;
+            return Collections.<ReferenceType>emptyList();
         }
 
         @Override
@@ -5512,7 +5513,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
 
         @Override
         public Map<Field, Value> getValues(List<? extends Field> list) {
-            List[] listByTypes = new List[types.length];
+            List<Field>[] listByTypes = new List[types.length];
             for (int i = 0; i < types.length; i++) {
                 listByTypes[i] = new ArrayList();
                 ReferenceType t = types[i];
@@ -5532,7 +5533,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
                         singleMap = tmap;
                     } else {
                         if (map == null) {
-                            map = new HashMap<Field, Value>(list.size());
+                            map = new HashMap<>(list.size());
                             map.putAll(singleMap);
                         }
                         map.putAll(tmap);
@@ -5600,7 +5601,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
 
         @Override
         public List<ObjectReference> instances(long l) {
-            return Collections.EMPTY_LIST;
+            return Collections.<ObjectReference>emptyList();
         }
 
         @Override

@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.xml.text.syntax;
 
-import java.lang.ref.*;
 import java.util.*;
 
 import javax.swing.text.*;
@@ -50,7 +49,6 @@ import org.openide.util.WeakListeners;
  */
 public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLTokenIDs {
     
-    private Reference reference = new SoftReference(null);  // cached helper
     private String systemId = null;  // cached refernce to DTD
     private String publicId = null;  // cached refernce to DTD
     private volatile boolean requestedAutoCompletion = false;
@@ -306,7 +304,7 @@ public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLToken
             case XMLDefaultTokenContext.DECLARATION_ID:
                 
                 // we treat internal DTD as one syntax element
-                boolean seekforDTDEnd = false;;
+                boolean seekforDTDEnd = false;
                 while( id == XMLDefaultTokenContext.DECLARATION
                         || id == XMLDefaultTokenContext.VALUE
                         || seekforDTDEnd) {
@@ -363,7 +361,7 @@ public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLToken
                     }
                 } else {                                                                // starttag
                     String name = text.substring( 1 );
-                    ArrayList attrs = new ArrayList();
+                    List<String> attrs = new ArrayList<>();
                     
                     // skip attributes
                     
@@ -415,29 +413,8 @@ public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLToken
     }
     
     // ~~~~~~~~~~~~~~~~~ utility methods ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
-    
-    /**
-     * Locate DOCTYPE from the start of document.
-     */
-//    public SyntaxElement.Declaration getDeclarationElement(){
-//        int offset = 5;
-//        SyntaxElement elem = null;
-//
-//        try {
-//            while(true){  //??? optimalize stop on first element
-//                elem = getElementChain(offset);
-//                if(elem instanceof SyntaxElement.Declaration || elem == null)
-//                    break;
-//                offset += elem.getElementLength()+1;
-//            }
-//        } catch (BadLocationException ble) {
-//            org.openide.TopManager.getDefault().notifyException(ble);
-//        }
-//        return elem != null ? (SyntaxElement.Declaration)elem : null;
-//    }
-    
-    
+
+
     /**
      * Look for pairing closing tag.
      *
@@ -482,10 +459,10 @@ public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLToken
      * @param  offset of a child in parent
      * @return all tags used as children of given parent that precedes the offset
      */
-    public List getPreviousLevelTags( int offset) throws BadLocationException {
-        List result = new ArrayList();
-        Stack stack = new Stack();
-        Vector children = new Vector();
+    public List<String> getPreviousLevelTags( int offset) throws BadLocationException {
+        List<String> result = new ArrayList<>();
+        Stack<String> stack = new Stack<>();
+        Vector<String> children = new Vector<>();
         
         SyntaxElement elem = getElementChain( offset );
         if( elem != null ) {
@@ -540,9 +517,9 @@ public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLToken
      * @param  offset of a child in parent
      * @return all tags used as children of given parent that follows the offset
      */
-    public List getFollowingLevelTags(int offset)throws BadLocationException{
-        Stack stack = new Stack();
-        Vector children = new Vector();
+    public List<String> getFollowingLevelTags(int offset)throws BadLocationException{
+        Stack<String> stack = new Stack<>();
+        Vector<String> children = new Vector<>();
         
         SyntaxElement elem = getElementChain( offset );
         if( elem != null ) {
@@ -551,7 +528,7 @@ public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLToken
             if( offset > 0 ) {
                 elem = getElementChain( offset-1 );
             } else { // beginning of document too, not much we can do on empty doc
-                return new ArrayList();
+                return new ArrayList<>();
             }
         }
         
@@ -620,7 +597,7 @@ public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLToken
                     dotPos = target.getCaret().getDot();
                     try {
                         SyntaxElement sel = getElementChain(dotPos);
-                        if(sel != null && sel instanceof StartTag) {
+                        if(sel instanceof StartTag) {
                             retVal = COMPLETION_POPUP;
                         }
                     } catch (BadLocationException e) {
@@ -877,7 +854,7 @@ public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLToken
                 String tag = token.getImage().substring(2).trim().toLowerCase();
                 while ( token != null){
                     if (token.getTokenID() == XMLTokenIDs.TAG && !">".equals(token.getImage())) {
-                        if (token.getImage().substring(1).trim().toLowerCase().equals(tag)
+                        if (token.getImage().substring(1).trim().equalsIgnoreCase(tag)
                         && !isSingletonTag(token)) {
                             //it's an open tag
                             if (poss == 0){
@@ -913,7 +890,7 @@ public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLToken
                 String tag = token.getImage().substring(1).toLowerCase();
                 while ( token != null){
                     if (token.getTokenID() == XMLTokenIDs.TAG && !">".equals(token.getImage())) {
-                        if (token.getImage().substring(2).trim().toLowerCase().equals(tag)) {
+                        if (token.getImage().substring(2).trim().equalsIgnoreCase(tag)) {
                             //it's a close tag
                             if (poss == 0) {
                                 //get offset of previous token: < or </
@@ -924,7 +901,7 @@ public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLToken
                             } else
                                 poss--;
                         } else{
-                            if (token.getImage().substring(1).toLowerCase().equals(tag)
+                            if (token.getImage().substring(1).equalsIgnoreCase(tag)
                             && !isSingletonTag(token))
                                 poss++;
                         }

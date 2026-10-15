@@ -122,7 +122,7 @@ public final class CompoundFolderChildren implements FileChangeListener {
                     }
                 }
             }
-            mergedLayers = new MultiFileSystem(layers.toArray(new FileSystem[layers.size()])).getRoot();
+            mergedLayers = new MultiFileSystem(layers.toArray(new FileSystem[0])).getRoot();
             mergedLayers.addFileChangeListener(this); // need not be weak since only we hold this FS
             List<FileObject> unsorted = new ArrayList<FileObject>();
             for (FileObject f : mergedLayers.getChildren()) {

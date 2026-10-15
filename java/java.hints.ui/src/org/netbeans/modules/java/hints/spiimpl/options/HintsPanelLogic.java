@@ -115,8 +115,8 @@ public class HintsPanelLogic implements MouseListener, KeyListener, TreeSelectio
     private JCheckBox tasklistCheckBox;
     private JPanel customizerPanel;
     private JEditorPane descriptionTextArea;
-    private DefaultComboBoxModel defModel = new DefaultComboBoxModel();
-    private DefaultComboBoxModel depScanningModel = new DefaultComboBoxModel();
+    private DefaultComboBoxModel<String> defModel = new DefaultComboBoxModel<>();
+    private DefaultComboBoxModel<String> depScanningModel = new DefaultComboBoxModel<>();
     private String defLabel = NbBundle.getMessage(HintsPanel.class, "CTL_ShowAs_Label"); //NOI18N
     private String depScanningLabel = NbBundle.getMessage(HintsPanel.class, "CTL_Scope_Label"); //NOI18N
     private String depScanningDescription = NbBundle.getMessage(HintsPanel.class, "CTL_Scope_Desc"); //NOI18N
@@ -758,8 +758,9 @@ public class HintsPanelLogic implements MouseListener, KeyListener, TreeSelectio
         
         public boolean isModified() {
             boolean isChanged = false;
-            for (HintMetadata hint : changes.keySet()) {
-                ModifiedHint e = changes.get(hint);
+            for (Entry<HintMetadata, ModifiedHint> entry : changes.entrySet()) {
+                HintMetadata hint = entry.getKey();
+                ModifiedHint e = entry.getValue();
                 if (e.enabledOverride != null) {
                     Boolean currentEnabled = e.enabledOverride;
                     Boolean savedEnabled = delegate.isEnabled(hint);

@@ -386,7 +386,7 @@ public class DOMBinding {
 		    try {
                 //  If cls implements Wrapper, use it first
                 if ((Wrapper.class).isAssignableFrom(cls)) {
-                    Wrapper w = (Wrapper)cls.newInstance();
+                    Wrapper w = (Wrapper)cls.getDeclaredConstructor().newInstance();
                     w.setWrapperValue(ret);
                     return w;
                 }
@@ -405,7 +405,7 @@ public class DOMBinding {
                     else
                         c = s.charAt(0);
 
-                    return new Character(c);
+                    return Character.valueOf(c);
                 }
                 if (charArrayClass.isAssignableFrom(cls))
                     return ret.toCharArray();
@@ -419,7 +419,7 @@ public class DOMBinding {
                         localPart = ret;
                     } else {
                         prefix = ret.substring(0, colonPos);
-                        localPart = ret.substring(colonPos+1, ret.length());
+                        localPart = ret.substring(colonPos+1);
                         ns = findNamespace(prefix);
                     }
                     //System.out.println("localPart="+localPart+" ns="+ns+" prefix="+prefix);
@@ -455,7 +455,7 @@ public class DOMBinding {
 	    default:
             throw new Schema2BeansRuntimeException(Common.getMessage(
                           "TypeNotSupported_msg",
-		                  prop.getPropClass(), new Integer(prop.getType())));
+		                  prop.getPropClass(), Integer.valueOf(prop.getType())));
 	}
     }
 
@@ -971,7 +971,7 @@ public class DOMBinding {
             }
             else
                 throw new IllegalArgumentException(Common.getMessage(
-                                                                     "UnknownAction_msg", new Integer(a.action)));
+                                                                     "UnknownAction_msg", Integer.valueOf(a.action)));
     }
 
     boolean hasDomNode() {

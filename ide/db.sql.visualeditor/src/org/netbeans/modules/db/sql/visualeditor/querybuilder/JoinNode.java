@@ -242,7 +242,7 @@ public class JoinNode extends AbstractNode
             } catch(SQLException sqle) {
                 return new String[0] ;
             }
-            return (String[])columnNames.toArray(new String[columnNames.size()]);
+            return (String[])columnNames.toArray(new String[0]);
         }
     }
 
@@ -256,7 +256,7 @@ public class JoinNode extends AbstractNode
             } catch(SQLException sqle) {
                 return new String[0] ;
             }
-            return (String[])columnNames.toArray(new String[columnNames.size()]);
+            return (String[])columnNames.toArray(new String[0]);
         }
     }
 }

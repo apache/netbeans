@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.MissingResourceException;
 import javax.swing.Action;
-import javax.swing.UIManager;
 import org.netbeans.modules.gsf.testrunner.api.OutputLine;
 import org.netbeans.modules.gsf.testrunner.api.Report;
 import org.netbeans.modules.gsf.testrunner.api.Status;
@@ -47,20 +46,22 @@ public class TestsuiteNode extends AbstractNode {
      * The max number of output lines to display in the tooltip.
      */
     static final int MAX_TOOLTIP_LINES = Integer.getInteger("testrunner.max.tooltip.lines", 4); //NOI18N
+
     /**
      * The max line length to display in the tooltip.
      */
     private static final int MAX_TOOLTIP_LINE_LENGTH = Integer.getInteger("testrunner.max.tooltip.line.length", 80); //NOI18N
+
     /**
      * The system property for enabling/disabling tooltips.
      */
-    static final boolean DISPLAY_TOOLTIPS = Boolean.valueOf(System.getProperty("testrunner.display.tooltips", "true"));//NOI18N
+    static final boolean DISPLAY_TOOLTIPS = Boolean.parseBoolean(System.getProperty("testrunner.display.tooltips", "true"));//NOI18N
+
     /**
      * The max line length to display in the messages.
      * 
      * By default, the max line length for the messages in the Test Results
-     * window will be set to 120 for the GTK look and feel or JDK8, and won't be limited
-     * for other look and feels or JDKs. For any look and feel or JDK a user can change the
+     * window will be set to 250. A user can change the
      * default setting via the system property
      * {@code testrunner.max.msg.line.length=MAX_LINE_LENGTH},
      * where  {@code MAX_LINE_LENGTH} is a desired value.
@@ -69,9 +70,7 @@ public class TestsuiteNode extends AbstractNode {
      * See Issue #175430
      * See Issue #188632
      */
-    static final int MAX_MSG_LINE_LENGTH = 
-          Integer.getInteger("testrunner.max.msg.line.length", //NOI18N
-                             isGTK() || isJDK8() ? 120 : Integer.MAX_VALUE);
+    static final int MAX_MSG_LINE_LENGTH = Integer.getInteger("testrunner.max.msg.line.length", 250);
 
     protected String suiteName;
     protected TestSuite suite;
@@ -207,7 +206,7 @@ public class TestsuiteNode extends AbstractNode {
     public void displayReport(final Report report) {
         assert (report != null);
         assert report.getSuiteClassName().equals(this.suiteName)
-               || (this.suiteName == TestSuite.ANONYMOUS_SUITE);
+               || TestSuite.ANONYMOUS_SUITE.equals(this.suiteName);
         
         this.report = report;
         suiteName = report.getSuiteClassName();
@@ -274,7 +273,7 @@ public class TestsuiteNode extends AbstractNode {
         assert suiteName != null;
         
         StringBuilder buf = new StringBuilder(60);
-        if (suiteName != TestSuite.ANONYMOUS_SUITE) {
+        if (!TestSuite.ANONYMOUS_SUITE.equals(suiteName)) {
             buf.append(suiteName);
         } else {
             buf.append(Bundle.MSG_TestsuiteNoname());
@@ -304,7 +303,7 @@ public class TestsuiteNode extends AbstractNode {
         "MSG_TestsuiteAborted_HTML=Aborted",
         "MSG_TestsuiteSkipped_HTML=Skipped"})
     static String suiteStatusToMsg(Status status, boolean html) {
-        String result = null;
+        String result;
         if(Status.ABORTED == status){
             result = html ? Bundle.MSG_TestsuiteAborted_HTML() : Bundle.MSG_TestsuiteAborted("");
         } else if (Status.ERROR == status || Status.FAILED == status) {
@@ -369,7 +368,7 @@ public class TestsuiteNode extends AbstractNode {
     }
 
     private List<OutputLine> getOutput() {
-        List<OutputLine> result = new ArrayList<OutputLine>();
+        List<OutputLine> result = new ArrayList<>();
         for (Testcase testcase : report.getTests()) {
             result.addAll(testcase.getOutput());
         }
@@ -412,27 +411,6 @@ public class TestsuiteNode extends AbstractNode {
             }
         }
         return line;
-    }
-
-
-    /**
-     * Checks whether a currently used look and feel is GTK.
-     *
-     * @return {@code true} if a currently used look and feel has got the
-     * identifier "GTK", otherwise {@code true}.
-     */
-    private static boolean isGTK() {
-        return "GTK".equals(UIManager.getLookAndFeel().getID());
-    }
-    
-    /**
-     * Checks whether the currently used JDK version is 1.8.x_xx
-     *
-     * @return {@code true} if the currently used JDK version is 8, otherwise {@code false}.
-     */
-    private static boolean isJDK8() {
-        final String javaVersion = System.getProperty("java.version");  //NOI18N
-        return javaVersion != null && javaVersion.startsWith("1.8");    //NOI18N
     }
 
 }

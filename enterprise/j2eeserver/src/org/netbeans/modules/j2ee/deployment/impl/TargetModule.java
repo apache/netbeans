@@ -59,7 +59,7 @@ public class TargetModule implements WebTargetModuleID, java.io.Serializable {
     
     public TargetModule(String id, String url, String targetName, long timestamp, String contentDir, String contextRoot) {
         if (id == null || url == null || targetName == null || timestamp < 0) {
-            java.util.List args = Arrays.asList(new Object[] { id, url, targetName, Long.valueOf(timestamp)});
+            java.util.List args = Arrays.asList(new Object[] { id, url, targetName, timestamp});
             throw new IllegalArgumentException(NbBundle.getMessage(TargetModule.class, "MSG_BadTargetModuleAttributes", args));
         }
         this.id = id;
@@ -268,7 +268,7 @@ public class TargetModule implements WebTargetModuleID, java.io.Serializable {
                 targetModules.add(tm);
             }
         }
-        return (TargetModule[]) targetModules.toArray(new TargetModule[targetModules.size()]);
+        return (TargetModule[]) targetModules.toArray(new TargetModule[0]);
     }
     public void save(String fileName) {
         TargetModuleConverter.writeTargetModule(this, getManagerDirName(), getReadableName(targetName), fileName);

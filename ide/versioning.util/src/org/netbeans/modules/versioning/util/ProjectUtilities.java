@@ -259,7 +259,7 @@ public final class ProjectUtilities {
      */
     public static void sortProjectsByParents (List<Project> rootProjects, Map<Project, Set<Project>> sortedProjects) {
         ArrayList<Project> sortedList = new ArrayList<Project>(rootProjects.size());
-        Collections.sort(sortedList, new Comparator<Project>() {
+        sortedList.sort(new Comparator<Project>() {
             public int compare(Project o1, Project o2) {
                 String p1 = o1.getProjectDirectory().getPath();
                 String p2 = o2.getProjectDirectory().getPath();

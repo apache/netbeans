@@ -50,9 +50,8 @@ final class SearchTask implements Runnable, Cancellable {
     /**
      * Creates a new <code>SearchTask</code>.
      *
-     * @param  searchScope  defines scope of the search task
-     * @param  basicSearchCriteria  basic search criteria
-     * @param  customizedSearchTypes  search types
+     * @param searchComposition search composition
+     * @param replacing replace mode
      */
     public SearchTask(SearchComposition<?> searchComposition,
             boolean replacing) {
@@ -84,12 +83,7 @@ final class SearchTask implements Runnable, Cancellable {
         try {
             makeResultViewBusy(true);
             searchListener.searchStarted();
-            Mutex.EVENT.writeAccess(new Runnable() {
-                @Override
-                public void run() {
-                    resultViewPanel.requestFocusInWindow();
-                }
-            });
+            Mutex.EVENT.writeAccess((Runnable) resultViewPanel::requestFocusInWindow);
             searchComposition.start(searchListener);
         } catch (RuntimeException e) {
             searchListener.generalError(e);
@@ -177,11 +171,6 @@ final class SearchTask implements Runnable, Cancellable {
     }
 
     private void makeResultViewBusy(final boolean busy) {
-        Mutex.EVENT.writeAccess(new Runnable() {
-            @Override
-            public void run() {
-                ResultView.getInstance().makeBusy(busy);
-            }
-        });
+        Mutex.EVENT.writeAccess(() -> ResultView.getInstance().makeBusy(busy));
     }
 }

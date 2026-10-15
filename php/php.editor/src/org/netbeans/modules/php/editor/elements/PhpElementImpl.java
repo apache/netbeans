@@ -36,6 +36,7 @@ import org.netbeans.modules.php.editor.api.PhpElementKind;
 import org.netbeans.modules.php.editor.api.PhpModifiers;
 import org.netbeans.modules.php.editor.api.elements.FullyQualifiedElement;
 import org.netbeans.modules.php.editor.api.elements.PhpElement;
+import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.project.api.PhpSourcePath;
 import org.netbeans.modules.php.project.api.PhpSourcePath.FileType;
 import org.openide.filesystems.FileObject;
@@ -53,7 +54,7 @@ public abstract class PhpElementImpl implements PhpElement {
         SEMICOLON(";"), //NOI18N
         COMMA(","), //NOI18N
         COLON(":"), //NOI18N
-        PIPE("|"); //NOI18N
+        PIPE(Type.SEPARATOR);
 
         public static EnumSet<Separator> toEnumSet() {
             return EnumSet.allOf(Separator.class);

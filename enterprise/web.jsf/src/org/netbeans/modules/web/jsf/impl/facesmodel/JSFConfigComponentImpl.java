@@ -101,7 +101,7 @@ public abstract class JSFConfigComponentImpl extends AbstractDocumentComponent <
     }
     
     protected Map<String,Integer> getOrderedMapOfLocalNames(){
-        return Collections.EMPTY_MAP;
+        return Collections.<String,Integer>emptyMap();
     }
     
     protected void reorderChildren(){
@@ -145,7 +145,7 @@ public abstract class JSFConfigComponentImpl extends AbstractDocumentComponent <
         getModel().getAccess().reorderChildren(getPeer(), newIndexes, this);
     }
     
-    static public Element createElementNS(JSFConfigModel model,JSFConfigQNames jsfqname) {
+    public static Element createElementNS(JSFConfigModel model,JSFConfigQNames jsfqname) {
         return model.getDocument().createElementNS(model.getRootComponent().getPeer().getNamespaceURI(), jsfqname.getQualifiedName(model.getVersion()));
     }
     

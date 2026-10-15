@@ -1,0 +1,4 @@
+        echo self::CONST^ANT;
+             --------------
+HINT:Introduce Hint
+FIX:Create Constant "CONSTANT" in Trait "IntroduceConst1" (testConstantsInTraits01.php)

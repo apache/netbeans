@@ -77,7 +77,7 @@ public abstract class TableViewSettings {
      * registration changes to firing PCEs on returned
      * instance.
      */
-    public synchronized static TableViewSettings getDefault() {
+    public static synchronized TableViewSettings getDefault() {
         
         if (delegatingSettings == null) {
             Lookup lookup = Lookup.getDefault();

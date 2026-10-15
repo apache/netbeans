@@ -185,11 +185,18 @@
                 <friend>org.netbeans.modules.html.editor</friend>
                 <friend>org.netbeans.modules.javafx2.editor</friend>
                 <friend>org.netbeans.modules.javascript2.editor</friend>
+                <friend>org.netbeans.modules.javascript2.html</friend>
                 <friend>org.netbeans.modules.javascript2.jade</friend>
+                <friend>org.netbeans.modules.javascript2.vue</friend>
                 <friend>org.netbeans.modules.web.inspect</friend>
                 <package>org.netbeans.modules.css.lib.api</package>
                 <package>org.netbeans.modules.css.lib.api.properties</package>
             </friend-packages>
+            <extra-compilation-unit>
+                <package-root>src-buildtool</package-root>
+                <classpath></classpath>
+                <built-to>build/buildtool</built-to>
+            </extra-compilation-unit>
         </data>
     </configuration>
 </project>

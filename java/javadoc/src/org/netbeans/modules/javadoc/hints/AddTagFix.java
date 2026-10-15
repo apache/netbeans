@@ -85,7 +85,7 @@ abstract class AddTagFix extends JavaFix {
             blockTags.add(newTree);
         }
         
-        DocCommentTree newDoc = make.DocComment(docComment.getFirstSentence(), docComment.getBody(), blockTags);
+        DocCommentTree newDoc = make.DocComment(docComment.getFullBody(), blockTags);
         Tree tree = ctx.getPath().getLeaf();
         javac.rewrite(tree, docComment, newDoc);
     }
@@ -96,7 +96,7 @@ abstract class AddTagFix extends JavaFix {
         return new AddTagFix(dtph, isTypeParam? MISSING_TYPEPARAM_HINT("<" + name + ">"):MISSING_PARAM_HINT(name), index) {
             @Override
             protected DocTree getNewTag(TreeMaker make) {
-                return make.Param(isTypeParam, make.DocIdentifier(name), Collections.EMPTY_LIST);
+                return make.Param(isTypeParam, make.DocIdentifier(name), Collections.emptyList());
             }
         };
     }
@@ -105,7 +105,7 @@ abstract class AddTagFix extends JavaFix {
         return new AddTagFix(dtph, MISSING_RETURN_HINT(), -1) {
             @Override
             protected DocTree getNewTag(TreeMaker make) {
-                return make.DocReturn(Collections.EMPTY_LIST);
+                return make.DocReturn(Collections.emptyList());
             }
         };
     }
@@ -114,7 +114,7 @@ abstract class AddTagFix extends JavaFix {
         return new AddTagFix(dtph, MISSING_THROWS_HINT(fqn), throwIndex) {
             @Override
             protected DocTree getNewTag(TreeMaker make) {
-                return make.Throws(make.Reference(make.Identifier(fqn), null, null), Collections.EMPTY_LIST);
+                return make.Throws(make.Reference(make.Identifier(fqn), null, null), Collections.emptyList());
             }
         };
     }
@@ -123,7 +123,7 @@ abstract class AddTagFix extends JavaFix {
         return new AddTagFix(dtph, MISSING_DEPRECATED_HINT(), -1) {
             @Override
             protected DocTree getNewTag(TreeMaker make) {
-                return make.Deprecated(Collections.EMPTY_LIST);
+                return make.Deprecated(Collections.emptyList());
             }
         };
     }
@@ -146,9 +146,9 @@ abstract class AddTagFix extends JavaFix {
      */
     private static class TagComparator implements Comparator<DocTree> {
         
-        private final static int HIGHER = -1;
-        private final static int EQUAL = 0;
-        private final static int LOWER = 1;
+        private static final int HIGHER = -1;
+        private static final int EQUAL = 0;
+        private static final int LOWER = 1;
 
         @Override
         public int compare(DocTree t, DocTree t1) {

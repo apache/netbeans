@@ -153,7 +153,7 @@ public class SessionEJBWizardPanel extends javax.swing.JPanel {
         inProjectCombo.setVisible(show);
         if (show && projectsList == null) {
             List<Project> projects = SessionEJBWizardPanel.getProjectsList(project);
-            projectsList = new DefaultComboBoxModel(projects.toArray(new Project[projects.size()]));
+            projectsList = new DefaultComboBoxModel(projects.toArray(new Project[0]));
             final ListCellRenderer defaultRenderer = inProjectCombo.getRenderer();
             if (!projects.isEmpty()){
                 inProjectCombo.setRenderer(new ListCellRenderer() {
@@ -476,15 +476,15 @@ public class SessionEJBWizardPanel extends javax.swing.JPanel {
     }
 
     private boolean isSingletonSupported(J2eeProjectCapabilities projectCap) {
-        return projectCap.isEjb31LiteSupported();
+        return projectCap.isEjb31LiteSupported() || projectCap.isEjb40LiteSupported();
     }
 
     private boolean isNoInterfaceViewSupported(J2eeProjectCapabilities projectCap) {
-        return projectCap.isEjb31LiteSupported();
+        return projectCap.isEjb31LiteSupported() || projectCap.isEjb40LiteSupported();
     }
 
     private boolean isTimerSupported(J2eeProjectCapabilities projectCap) {
-        return projectCap.isEjb31Supported() || projectCap.isEjb32LiteSupported();
+        return projectCap.isEjb31Supported() || projectCap.isEjb32LiteSupported() || projectCap.isEjb40LiteSupported();
     }
 
     private boolean isRemoteInterfaceSupported() {

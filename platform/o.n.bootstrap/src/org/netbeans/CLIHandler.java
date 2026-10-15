@@ -45,7 +45,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openide.util.RequestProcessor;
@@ -55,12 +54,12 @@ import org.openide.util.Task;
  * Command Line Interface and User Directory Locker support class.
  * Subclasses may be registered into the system to handle special command-line options.
  * To be registered, use {@link org.openide.util.lookup.ServiceProvider}
- * in a JAR file in the startup or dynamic class path (e.g. <samp>lib/ext/</samp>
- * or <samp>lib/</samp>).
+ * in a JAR file in the startup or dynamic class path (e.g. <code>lib/ext/</code>
+ * or <code>lib/</code>).
  * @author Jaroslav Tulach
  * @since org.netbeans.core/1 1.18
  * @see "#32054"
- * @see <a href="http://openide.netbeans.org/proposals/arch/cli.html">Specification</a>
+ * @see <a href="https://netbeans.apache.org/projects/platform/openide/proposals/arch/cli">Specification</a>
  */
 public abstract class CLIHandler extends Object {
     /** lenght of the key used for connecting */
@@ -258,6 +257,7 @@ public abstract class CLIHandler extends Object {
         public static final int CANNOT_CONNECT = -255;
         public static final int CANNOT_WRITE = -254;
         public static final int ALREADY_RUNNING = -253;
+        public static final int CONNECTED = -252;
         
         private final File lockFile;
         private final int port;
@@ -579,7 +579,7 @@ public abstract class CLIHandler extends Object {
                 enterState(10, block);
                 
                 final byte[] arr = new byte[KEY_LENGTH];
-                new Random().nextBytes(arr);
+                new SecureRandom().nextBytes(arr);
 
                 
                 final RandomAccessFile os = raf;
@@ -818,7 +818,7 @@ public abstract class CLIHandler extends Object {
                                     if (howMuch > outputArr.length) {
                                         outputArr = new byte[howMuch];
                                     }
-                                    replyStream.read(outputArr, 0, howMuch);
+                                    replyStream.readFully(outputArr, 0, howMuch);
                                     args.getOutputStream().write(outputArr, 0, howMuch);
                                     break;
                                 }
@@ -828,7 +828,7 @@ public abstract class CLIHandler extends Object {
                                     if (howMuch > outputArr.length) {
                                         outputArr = new byte[howMuch];
                                     }
-                                    replyStream.read(outputArr, 0, howMuch);
+                                    replyStream.readFully(outputArr, 0, howMuch);
                                     args.getErrorStream().write(outputArr, 0, howMuch);
                                     break;
                                 }
@@ -947,7 +947,7 @@ public abstract class CLIHandler extends Object {
                 }
                 List<String> l = new ArrayList<String>(Arrays.asList(a));
                 l.removeAll(Collections.singleton(null));
-                args = l.toArray(new String[l.size()]);
+                args = l.toArray(new String[0]);
             } else {
                 args = argsBackup.clone();
             }
@@ -1293,6 +1293,9 @@ public abstract class CLIHandler extends Object {
             if (ex.getMessage().equals("Broken pipe")) { // NOI18N
                 return true;
             }
+            if (ex.getMessage().contains("SIGPIPE")) { // NOI18N
+                return true;
+            }
             if (ex.getMessage().startsWith("Connection reset by peer")) { // NOI18N
                 return true;
             }
@@ -1345,7 +1348,8 @@ public abstract class CLIHandler extends Object {
                     // read provided data
                     int really = requestedVersion >= 1 ? is.readInt() : is.read ();
                     if (really > 0) {
-                        return is.read(b, off, really);
+                        is.readFully(b, off, really);
+                        return really;
                     } else {
                         if (really < 0) {
                             return really;

@@ -20,12 +20,10 @@
 package org.netbeans.modules.j2ee.persistence.wizard.fromdb;
 
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.modules.j2ee.persistence.entitygenerator.EntityRelation.CollectionType;
 import org.netbeans.modules.j2ee.persistence.entitygenerator.EntityRelation.FetchType;
 import org.openide.WizardDescriptor;
-import org.openide.util.ChangeSupport;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 
@@ -261,6 +259,7 @@ public class MappingOptionsPanel extends javax.swing.JPanel {
         private boolean componentInitialized;
         private WizardDescriptor wizardDescriptor;
 
+        @Override
         public MappingOptionsPanel getComponent() {
             if (component == null) {
                 component = new MappingOptionsPanel();
@@ -269,10 +268,12 @@ public class MappingOptionsPanel extends javax.swing.JPanel {
             return component;
         }
 
+        @Override
         public HelpCtx getHelp() {
                 return new HelpCtx(MappingOptionsPanel.class);
         }
 
+        @Override
         public void readSettings(WizardDescriptor settings) {
             wizardDescriptor = settings;
             
@@ -289,10 +290,12 @@ public class MappingOptionsPanel extends javax.swing.JPanel {
             }
         }
 
+        @Override
         public boolean isValid() {
             return true;
         }
 
+        @Override
         public void storeSettings(WizardDescriptor settings) {
             RelatedCMPHelper helper = RelatedCMPWizard.getHelper(wizardDescriptor);
             MappingOptionsPanel mPanel = getComponent();
@@ -305,9 +308,11 @@ public class MappingOptionsPanel extends javax.swing.JPanel {
             helper.setGenerateUnresolvedRelationships(mPanel.isGenerateUnresolved());
         }
 
+        @Override
         public void addChangeListener(ChangeListener l) {
         }
 
+        @Override
         public void removeChangeListener(ChangeListener l) {
         }
     }

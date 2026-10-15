@@ -45,7 +45,7 @@ public abstract class DD2beansDataObject extends XMLJ2eeDataObject implements or
 
     private static final int DELAY_FOR_TIMER=200;
     /** Private request processor for parsing and text generating tasks */
-    protected final static RequestProcessor RP = new RequestProcessor("XML Parsing"); //NOI18N
+    protected static final RequestProcessor RP = new RequestProcessor("XML Parsing"); //NOI18N
     private final RequestProcessor.Task generationTask;
     // constructor settings
     private String prefixMark;
@@ -73,7 +73,7 @@ public abstract class DD2beansDataObject extends XMLJ2eeDataObject implements or
                             XMLJ2eeUtils.replaceDocument(doc, newDoc, prefixMark);
                             setDocumentValid(true);
                             if (saveAfterNodeChanges) {
-                                SaveCookie savec = (SaveCookie) getCookie(SaveCookie.class);
+                                SaveCookie savec = getCookie(SaveCookie.class);
                                 if (savec != null) {
                                     savec.save();
                                 }

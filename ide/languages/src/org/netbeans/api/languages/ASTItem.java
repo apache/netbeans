@@ -212,7 +212,7 @@ public class ASTItem {
 
     private ASTPath findPath2 (List<ASTItem> path, int offset) {
         TreeMap<Integer,ASTItem> childrenMap = getChildrenMap ();
-        SortedMap<Integer,ASTItem> headMap = childrenMap.headMap (new Integer (offset + 1));
+        SortedMap<Integer,ASTItem> headMap = childrenMap.headMap(offset + 1);
         if (headMap.isEmpty ())
             return ASTPath.create (path);
         Integer key = headMap.lastKey ();
@@ -231,7 +231,7 @@ public class ASTItem {
             Iterator<ASTItem> it = getChildren ().iterator ();
             while (it.hasNext ()) {
                 ASTItem item = it.next ();
-                childrenMap.put (new Integer (item.getOffset ()), item);
+                childrenMap.put(item.getOffset(), item);
             }
         }
         return childrenMap;

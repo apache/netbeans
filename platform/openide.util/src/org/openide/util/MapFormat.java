@@ -66,7 +66,7 @@ public class MapFormat extends Format {
     private String rdel = "}"; // NOI18N
 
     /** Used formatting map */
-    private Map argmap;
+    private Map<String, ?> argmap;
 
     /** Offsets to {} expressions */
     private int[] offsets;
@@ -88,7 +88,7 @@ public class MapFormat extends Format {
     * For common work use  <code>format(pattern, arguments) </code>.
     * @param arguments keys and values to use in the format
     */
-    public MapFormat(Map arguments) {
+    public MapFormat(Map<String, ?> arguments) {
         super();
         setMap(arguments);
     }
@@ -108,34 +108,8 @@ public class MapFormat extends Format {
         return temp.format(pattern);
     }
 
-    // unused so removed --jglick
-
-    /**
-    * Search for comments and quotation marks.
-    * Prepares internal structures.
-    * @param pattern String to be parsed.
-    * @param lmark Left mark of to-be-skipped block.
-    * @param rmark Right mark of to-be-skipped block or null if does not exist (// comment).
-    private void process(String pattern, String lmark, String rmark)
-    {
-        int idx = 0;
-        while (true) {
-            int ridx = -1, lidx = pattern.indexOf(lmark,idx);
-            if (lidx >= 0) {
-                if (rmark != null) {
-                    ridx = pattern.indexOf(rmark,lidx + lmark.length());
-                } else ridx = pattern.length();
-            } else break;
-            if (ridx >= 0) {
-                skipped.put(new Range(lidx, ridx-lidx));
-                if (rmark != null) idx = ridx+rmark.length();
-                else break;
-            } else break;
-        }
-    }
-    */
     /** Returns the value for given key. Subclass may define its own beahvior of
-    * this method. For example, if key is not defined, subclass can return <not defined>
+    * this method. For example, if key is not defined, subclass can return &lt;not defined&gt;
     * string.
     *
     * @param key Key.
@@ -151,6 +125,7 @@ public class MapFormat extends Format {
     * @exception IllegalArgumentException if number of arguments exceeds BUFSIZE or
     * parser found unmatched brackets (this exception should be switched off
     * using setExactMatch(false)).
+    * @return parsed string
     */
     public String processPattern(String newPattern) throws IllegalArgumentException {
         int idx = 0;
@@ -279,7 +254,7 @@ public class MapFormat extends Format {
                     throw new IllegalArgumentException(
                         MessageFormat.format(
                             NbBundle.getBundle(MapFormat.class).getString("MSG_FMT_ObjectForKey"),
-                            new Object[] { new Integer(key) }
+                            Integer.valueOf(key)
                         )
                     );
                 } else {
@@ -290,7 +265,7 @@ public class MapFormat extends Format {
             result.append(obj);
         }
 
-        result.append(pattern.substring(lastOffset, pattern.length()));
+        result.append(pattern.substring(lastOffset));
 
         return result;
     }
@@ -306,17 +281,18 @@ public class MapFormat extends Format {
     /**
     * Parses the string. Does not yet handle recursion (where
     * the substituted strings contain {n} references.)
+    * @param source string to parse
     * @return New format.
     */
     public String parse(String source) {
         StringBuffer sbuf = new StringBuffer(source);
-        Iterator key_it = argmap.keySet().iterator();
+        Iterator<String> key_it = argmap.keySet().iterator();
 
         //skipped = new RangeList();
         // What was this for??
         //process(source, "\"", "\""); // NOI18N
         while (key_it.hasNext()) {
-            String it_key = (String) key_it.next();
+            String it_key = key_it.next();
             String it_obj = formatObject(argmap.get(it_key));
             int it_idx = -1;
 
@@ -339,6 +315,7 @@ public class MapFormat extends Format {
     /** Test whether formatter will throw exception if object for key was not found.
     * If given map does not contain object for key specified, it could
     * throw an exception. Returns true if throws. If not, key is left unchanged.
+    * @return true if throws.
     */
     public boolean willThrowExceptionIfKeyWasNotFound() {
         return throwex;
@@ -356,6 +333,7 @@ public class MapFormat extends Format {
     /** Test whether both brackets are required in the expression.
     * If not, use setExactMatch(false) and formatter will ignore missing right
     * bracket. Advanced feature.
+    * @return true if both brackets are required
     */
     public boolean isExactMatch() {
         return exactmatch;
@@ -370,7 +348,9 @@ public class MapFormat extends Format {
         exactmatch = flag;
     }
 
-    /** Returns string used as left brace */
+    /** Returns string used as left brace.
+     * @return string used as left brace
+     */
     public String getLeftBrace() {
         return ldel;
     }
@@ -382,7 +362,9 @@ public class MapFormat extends Format {
         ldel = delimiter;
     }
 
-    /** Returns string used as right brace */
+    /** Returns string used as right brace.
+     *  @return string used as right brace
+     */
     public String getRightBrace() {
         return rdel;
     }
@@ -394,7 +376,9 @@ public class MapFormat extends Format {
         rdel = delimiter;
     }
 
-    /** Returns argument map */
+    /** Returns argument map.
+     * @return argument map
+     */
     public Map getMap() {
         return argmap;
     }
@@ -407,110 +391,8 @@ public class MapFormat extends Format {
     *
     * @param map the argument map
     */
-    public void setMap(Map map) {
+    public void setMap(Map<String, ?> map) {
         argmap = map;
     }
 
-    // commented out because unused --jglick
-
-    /**
-    * Range of expression in string.
-    * Used internally to store information about quotation marks and comments
-    * in formatted string.
-    *
-    * @author   Slavek Psenicka
-    * @version  1.0, March 11. 1999
-    *
-    class Range extends Object
-    {
-        /** Offset of expression *
-        private int offset;
-
-        /** Length of expression *
-        private int length;
-
-        /** Constructor *
-        public Range(int off, int len)
-        {
-            offset = off;
-            length = len;
-        }
-
-        /** Returns offset *
-        public int getOffset()
-        {
-            return offset;
-        }
-
-        /** Returns length of expression *
-        public int getLength()
-        {
-            return length;
-        }
-
-        /** Returns final position of expression *
-        public int getEnd()
-        {
-            return offset+length;
-        }
-
-        public String toString()
-        {
-            return "("+offset+", "+length+")"; // NOI18N
-        }
-    }
-
-    /**
-    * List of ranges.
-    * Used internally to store information about quotation marks and comments
-    * in formatted string.
-    *
-    * @author   Slavek Psenicka
-    * @version  1.0, March 11. 1999
-    *
-    class RangeList
-    {
-        /** Map with Ranges *
-        private HashMap hmap;
-
-        /** Constructor *
-        public RangeList()
-        {
-            hmap = new HashMap();
-        }
-
-        /** Returns true if offset is enclosed by any Range object in list *
-        public boolean containsOffset(int offset)
-        {
-            return (getRangeContainingOffset(offset) != null);
-        }
-
-        /** Returns enclosing Range object in list for given offset *
-        public Range getRangeContainingOffset(int offset)
-        {
-            if (hmap.size() == 0) return null;
-            int offit = offset;
-            while (offit-- >= 0) {
-                Integer off = new Integer(offit);
-                if (hmap.containsKey(off)) {
-                    Range ran = (Range)hmap.get(off);
-                    if (ran.getEnd() - offset > 0) return ran;
-                }
-            }
-
-            return null;
-        }
-
-        /** Puts new range into list *
-        public void put(Range range)
-        {
-            hmap.put(new Integer(range.getOffset()), range);
-        }
-
-        public String toString()
-        {
-            return hmap.toString();
-        }
-    }
-     */
 }

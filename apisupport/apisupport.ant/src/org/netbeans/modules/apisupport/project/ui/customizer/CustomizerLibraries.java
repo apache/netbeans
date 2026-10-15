@@ -827,7 +827,7 @@ public final class CustomizerLibraries extends NbPropertyPanel.Single {
                 newPaths.add (path);
             }
 
-            filePaths = newPaths.toArray (new String [newPaths.size ()]);
+            filePaths = newPaths.toArray (new String [0]);
             final DefaultListModel model = getProperties().getWrappedJarsListModel();
             int[] newSelection = ClassPathUiSupport.addJarFiles(model,emListComp.getSelectedIndices(),
                     filePaths, base,

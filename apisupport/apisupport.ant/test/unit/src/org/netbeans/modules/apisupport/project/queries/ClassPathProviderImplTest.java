@@ -20,6 +20,7 @@
 package org.netbeans.modules.apisupport.project.queries;
 
 import java.io.File;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -35,6 +36,9 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import org.apache.tools.ant.module.api.support.ActionUtils;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.classpath.ClassPath.Entry;
+import org.netbeans.api.java.classpath.JavaClassPathConstants;
+import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.apisupport.project.InstalledFileLocatorImpl;
@@ -228,8 +232,8 @@ public class ClassPathProviderImplTest extends TestBase {
      *     * org-netbeans-modules-apisupport-harness.jar
      *   * platform
      *     * core/core.jar
-     *     * ext/junit-4.5.jar (not a NBM module)
-     *     * org-netbeans-libs-junit4.jar (with junit 4.5 on CP)
+     *     * ext/junit-4.13.2.jar (not a NBM module)
+     *     * org-netbeans-libs-junit4.jar (with junit 4.13.2 on CP)
      *   * somecluster
      *     * foo.jar (CNB foo)
      *     * bar.jar (CNB org.example.bar, runtime dep on foo.jar)
@@ -255,11 +259,11 @@ public class ClassPathProviderImplTest extends TestBase {
         TestBase.createJar(barJar, Collections.<String,String>emptyMap(), mani);
         // add testlibs to platform, so that test CP isn't full of obsolete backward-compatibility entries
         mani = new Manifest();
-        File junitJar = new File(install, "platform/modules/ext/junit-4.5.jar");
+        File junitJar = new File(install, "platform/modules/ext/junit-4.13.2.jar");
         TestBase.createJar(junitJar, Collections.<String,String>emptyMap(), mani);
         mani = new Manifest();
         mani.getMainAttributes().putValue(ManifestManager.OPENIDE_MODULE, "org.netbeans.libs.junit4");
-        mani.getMainAttributes().putValue(ManifestManager.CLASS_PATH, "ext/junit-4.5.jar");
+        mani.getMainAttributes().putValue(ManifestManager.CLASS_PATH, "ext/junit-4.13.2.jar");
         libsJunitJar = new File(install, "platform/modules/org-netbeans-libs-junit4.jar");
         TestBase.createJar(libsJunitJar, Collections.<String,String>emptyMap(), mani);
         mani = new Manifest();
@@ -359,7 +363,7 @@ public class ClassPathProviderImplTest extends TestBase {
         assertNotNull("have .../dummy-project/src", src);
         ClassPath cp = ClassPath.getClassPath(src, ClassPath.COMPILE);
         assertNotNull("have a COMPILE classpath", cp);
-        Set<String> expectedRoots = new TreeSet<String>();
+        Set<String> expectedRoots = new TreeSet<>();
         expectedRoots.add(urlForJar(resolveEEPPath("/suite3/nbplatform/random/modules/random.jar")));
         expectedRoots.add(urlForJar(resolveEEPPath("/suite3/nbplatform/random/modules/ext/stuff.jar")));
         assertEquals("right COMPILE classpath", expectedRoots, urlsOfCp(cp));
@@ -649,8 +653,8 @@ public class ClassPathProviderImplTest extends TestBase {
 
     // XXX fails without NB sources
     public void testRecursiveScanOptimization() throws Exception {
-        FileObject src = nbRoot().getFileObject("apisupport.project/test/unit/src");
-        assertNotNull("apisupport.project/test/unit/src", src);
+        FileObject src = nbRoot().getFileObject("apisupport/apisupport.project/test/unit/src");
+        assertNotNull("apisupport/apisupport.project/test/unit/src", src);
         Logger logger = Logger.getLogger("org.netbeans.modules.apisupport.project.Evaluator");
         MyHandler h = new MyHandler();
         logger.addHandler(h);
@@ -1072,8 +1076,15 @@ public class ClassPathProviderImplTest extends TestBase {
 
     public void testBootClasspath() throws Exception {
         NbModuleProject p = generateStandaloneModule("prj");
-        ClassPath boot = ClassPath.getClassPath(p.getSourceDirectory(), ClassPath.BOOT);
-        // XXX test that it is sane... although by default, ${nbjdk.home} will be undefined
+        ClassPathProvider cpp = p.getLookup().lookup(ClassPathProvider.class);
+
+        ClassPath boot = cpp.findClassPath(p.getSourceDirectory(), ClassPath.BOOT);
+        ClassPath moduleBoot = cpp.findClassPath(p.getSourceDirectory(), JavaClassPathConstants.MODULE_BOOT_PATH);
+        assertEquals(JavaPlatform.getDefault().getBootstrapLibraries().toString(ClassPath.PathConversionMode.PRINT), boot.toString(ClassPath.PathConversionMode.PRINT));
+        assertEquals(JavaPlatform.getDefault().getBootstrapLibraries().toString(ClassPath.PathConversionMode.PRINT), moduleBoot.toString(ClassPath.PathConversionMode.PRINT));
+
+        //a weak test that bootclasspath.prepend is reflected in the bootpath for source level <= 8
+        //note this does not mean requires.nb.javac=true is reflected correctly:
         FileObject xtra = TestFileUtils.writeZipFile(FileUtil.toFileObject(getWorkDir()), "xtra.jar", "META-INF/MANIFEST.MF:Manifest-Version: 1.0\n\n");
         EditableProperties ep = p.getHelper().getProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH);
         ep.put(ClassPathProviderImpl.BOOTCLASSPATH_PREPEND, FileUtil.toFile(xtra).getAbsolutePath());

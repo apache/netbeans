@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -90,7 +89,7 @@ public class HintMetadata {
         private boolean enabled;
         private Hint.Kind kind;
         private Severity severity;
-        private final Collection<String> suppressWarnings = new ArrayList<String>();
+        private final Collection<String> suppressWarnings = new ArrayList<>();
         private CustomizerProvider customizer;
         private final Set<Options> options = EnumSet.noneOf(Options.class);
         private SourceVersion sourceVersion;
@@ -175,6 +174,7 @@ public class HintMetadata {
                     this.sourceVersion = SourceVersion.valueOf("RELEASE_" + version);
                 } catch (IllegalArgumentException ex) {
                     this.sourceVersion = SourceVersion.RELEASE_3;
+                    setEnabled(false);
                 }
             }
             return this;
@@ -209,7 +209,7 @@ public class HintMetadata {
         HEAVY;
 
         public static Set<Options> fromHintOptions(Hint.Options... options) {
-            Set<Options> result = new HashSet<Options>();
+            Set<Options> result = EnumSet.noneOf(Options.class);
 
             for (Hint.Options opt : options) {
                 result.add(valueOf(opt.name()));

@@ -59,7 +59,7 @@ public abstract class EditorViewFactory {
         List<Factory> copy = new ArrayList<Factory>(viewFactoryFactories);
         
         copy.add(factory);
-        Collections.sort(copy, new Comparator<Factory>() {
+        copy.sort(new Comparator<Factory>() {
             public int compare(Factory f0, Factory f1) {
                 return f0.weight() - f1.weight();
             }

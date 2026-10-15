@@ -134,28 +134,28 @@ public class Inflector {
      * <p>The singleton instance returned by the default <code>getInstance()</code>
      * method.</p>
      */
-    private transient static Inflector instance = null;
+    private static transient Inflector instance = null;
 
 
     /**
      * <p>List of <code>Replacer</code>s for performing replacement operations
      * on matches for plural words.</p>
      */
-    private List plurals = new LinkedList();
+    private List<Replacer> plurals = new LinkedList<>();
 
 
     /**
      * <p>List of <code>Replacer</code>s for performing replacement operations
      * on matches for addSingular words.</p>
      */
-    private List singulars = new ArrayList();
+    private List<Replacer> singulars = new ArrayList<>();
 
 
     /**
      * <p>List of words that represent addUncountable concepts that cannot be
      * pluralized or singularized.</p>
      */
-    private List uncountables = new LinkedList();
+    private List<String> uncountables = new LinkedList<>();
 
 
     // ------------------------------------------------------ Instance Variables
@@ -516,7 +516,7 @@ public class Inflector {
 
         // Scan our patterns for a match and return the correct replacement
         for (int i = 0; i < plurals.size(); i++) {
-            Replacer replacer = (Replacer) plurals.get(i);
+            Replacer replacer = plurals.get(i);
             if (replacer.matches(word)) {
                 return replacer.replacement();
             }
@@ -545,7 +545,7 @@ public class Inflector {
 
         // Scan our patterns for a match and return the correct replacement
         for (int i = 0; i < singulars.size(); i++) {
-            Replacer replacer = (Replacer) singulars.get(i);
+            Replacer replacer = singulars.get(i);
             if (replacer.matches(word)) {
                 return replacer.replacement();
             }

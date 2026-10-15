@@ -240,7 +240,7 @@ public class CSSStylesDocumentPanel extends JPanel implements ExplorerManager.Pr
                                 }
                             }
                             try {
-                                manager.setSelectedNodes(selection.toArray(new Node[selection.size()]));
+                                manager.setSelectedNodes(selection.toArray(new Node[0]));
                             } catch (PropertyVetoException pvex) {
                                 Logger.getLogger(CSSStylesDocumentPanel.class.getName()).log(Level.FINEST, null, pvex);
                             }

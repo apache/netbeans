@@ -74,7 +74,7 @@ public class JsfModelImpl extends JsfModelManagers implements JsfModel {
     private List<JSFConfigModel> models;
     private JSFConfigModel facesConfigModel;
     private Map<FileObject, WeakReference<JSFConfigModel>> modelCache = new HashMap<FileObject, WeakReference<JSFConfigModel>>();
-    private final static Map<Class<? extends JsfModelElement>, ElementFinder<? extends JsfModelElement>> FINDERS =
+    private static final Map<Class<? extends JsfModelElement>, ElementFinder<? extends JsfModelElement>> FINDERS =
             new HashMap<Class<? extends JsfModelElement>, ElementFinder<? extends JsfModelElement>>();
 
     static {

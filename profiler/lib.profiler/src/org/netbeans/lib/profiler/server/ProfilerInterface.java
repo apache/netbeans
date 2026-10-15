@@ -1494,7 +1494,7 @@ public class ProfilerInterface implements CommonConstants {
             int index = classIndex.size();
             classesArray[index] = clazz;
             loaders[index] = loadedClassesLoaders[i];
-            classIndex.put(clazz, new Integer(index));
+            classIndex.put(clazz, index);
         }
         for (int i = 0; i < classIndex.size(); i++) {
             Class<?> clazz = classesArray[i];

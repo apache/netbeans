@@ -98,6 +98,7 @@ import org.netbeans.api.visual.anchor.AnchorShapeFactory;
 import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.SelectProvider;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Exceptions;
 
 /**
@@ -161,12 +162,6 @@ public class QueryBuilderGraphFrame extends JPanel
     private boolean                     _checkTableColumnValidity = false;
     
     private boolean                     _inputTableAddCriteria = false;
-    
-    java.net.URL url_primary_key =
-            getClass().getResource("/org/netbeans/modules/db/sql/visualeditor/resources/primaryKey.gif"); // NOI18N
-    java.net.URL url_foreign_key =
-            getClass().getResource("/org/netbeans/modules/db/sql/visualeditor/resources/foreignKey.gif"); // NOI18N
-    
     
     // Constructor
     
@@ -685,7 +680,7 @@ public class QueryBuilderGraphFrame extends JPanel
                     ? criteriaCount+1
                             : Integer.parseInt(order);
                     _inputTableAddCriteria = true;
-                    model.setValueAt(new Integer(orderNum).toString(), row,
+                    model.setValueAt(Integer.valueOf(orderNum).toString(), row,
                             QueryBuilderInputTable.CriteriaOrder_COLUMN);
                     _inputTableAddCriteria = false;
                     if ( orderNum < criteriaCount+1 ) {
@@ -848,7 +843,7 @@ public class QueryBuilderGraphFrame extends JPanel
                 SQLQueryFactory.createTable(tableName, corrName, schemaName);
             JoinTable joinTable=SQLQueryFactory.createJoinTable(tbl);
             
-            List columnNames = new ArrayList();
+            List<String> columnNames = new ArrayList<>();
             columnNames.add("*"); // NOI18N
             
             // Insert the table into the model first, so that column insertions can refer to it
@@ -1052,12 +1047,13 @@ public class QueryBuilderGraphFrame extends JPanel
             // JLabel (String text, Icon image, SwingConstants.LEFT);
             // We used to use toUpperCase() during comparison, but drop that now that we are
             // canonicalizing table/column names.
-            if (primaryKeys.contains(columnName.trim()))
-                dbData[i][1] = new ImageIcon(url_primary_key);
-            else if (foreignKeyCols.contains(columnName.trim()))
-                dbData[i][1] = new ImageIcon(url_foreign_key);
-            else
+            if (primaryKeys.contains(columnName.trim())) {
+                dbData[i][1] = ImageUtilities.loadImageIcon("org/netbeans/modules/db/sql/visualeditor/resources/primaryKey.gif", false);
+            } else if (foreignKeyCols.contains(columnName.trim())) {
+                dbData[i][1] = ImageUtilities.loadImageIcon("org/netbeans/modules/db/sql/visualeditor/resources/foreignKey.gif", false);
+            } else {
                 dbData[i][1] = null;
+            }
             
             dbData[i][2] = columnName;
             _queryBuilderInputTable.addRow(tableSpec, columnName);
@@ -1412,11 +1408,11 @@ public class QueryBuilderGraphFrame extends JPanel
 //	    System.out.println("Removing Node: " + node + ((QBNodeComponent)node).getNodeName());
 //	    _scene.removeNodeWithEdges(node);
 //	}
-//// 	Collection edges = _scene.getEdges();
-//// 	for (Object edge : edges) {
-//// 	    _scene.removeEdge(edge);
-//// 	    System.out.println("Removing Edge: " + edge);
-//// 	}
+// // 	Collection edges = _scene.getEdges();
+// // 	for (Object edge : edges) {
+// // 	    _scene.removeEdge(edge);
+// // 	    System.out.println("Removing Edge: " + edge);
+// // 	}
 //    }
     
     
@@ -1582,7 +1578,7 @@ public class QueryBuilderGraphFrame extends JPanel
                         QueryBuilderInputTable.Criteria_Uneditable_String,
                         QueryBuilderInputTable.CriteriaOrder_Uneditable_String);
             } else {
-                String orderString = (order == -1) ? "" : new Integer(order+1).toString();
+                String orderString = (order == -1) ? "" : Integer.valueOf(order+1).toString();
                 
                 // Update the appropriate row, or add a new one
                 _queryBuilderInputTable.addCriterion(tableSpec, columnName,
@@ -2039,7 +2035,7 @@ public class QueryBuilderGraphFrame extends JPanel
         public void select(Widget widget, Point localLocation, boolean invertSelection) {
 
             Object object = _scene.findObject(widget);
-            if ((object != null) && (object instanceof AbstractNode)) {
+            if (object instanceof AbstractNode) {
 		AbstractNode an = (AbstractNode)object;
 		_queryBuilder.setActivatedNodes(new Node[] { an });
                 _scene.userSelectionSuggested(Collections.singleton(object), invertSelection);

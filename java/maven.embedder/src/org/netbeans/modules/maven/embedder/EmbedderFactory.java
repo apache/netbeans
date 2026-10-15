@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import org.apache.maven.cli.configuration.SettingsXmlConfigurationProcessor;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.building.*;
@@ -44,6 +45,7 @@ import org.netbeans.api.project.ui.ProjectGroup;
 import org.netbeans.api.project.ui.ProjectGroupChangeEvent;
 import org.netbeans.api.project.ui.ProjectGroupChangeListener;
 import org.netbeans.modules.maven.embedder.impl.ExtensionModule;
+import org.netbeans.modules.maven.embedder.impl.OfflineOperationError;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.InstalledFileLocator;
 import org.openide.util.NbPreferences;
@@ -56,38 +58,37 @@ import org.openide.util.BaseUtilities;
 public final class EmbedderFactory {
 
     public static final String PROP_COMMANDLINE_PATH = "commandLineMavenPath";
+    public static final String PROP_USER_SETTINGS_XML = "userSettingsXml";
     
     //same prop constant in MavenSettings.java
-    static final String PROP_DEFAULT_OPTIONS = "defaultOptions"; 
-    private static final Set<String> forbidden = new HashSet<String>();
-    static {
-        forbidden.add("netbeans.logger.console"); //NOI18N
-        forbidden.add("java.util.logging.config.class"); //NOI18N
-        forbidden.add("netbeans.autoupdate.language"); //NOI18N
-        forbidden.add("netbeans.dirs"); //NOI18N
-        forbidden.add("netbeans.home"); //NOI18N
-        forbidden.add("sun.awt.exception.handler"); //NOI18N
-        forbidden.add("org.openide.TopManager.GUI"); //NOI18N
-        forbidden.add("org.openide.major.version"); //NOI18N
-        forbidden.add("netbeans.autoupdate.variant"); //NOI18N
-        forbidden.add("netbeans.dynamic.classpath"); //NOI18N
-        forbidden.add("netbeans.autoupdate.country"); //NOI18N
-        forbidden.add("netbeans.hash.code"); //NOI18N
-        forbidden.add("org.openide.TopManager"); //NOI18N
-        forbidden.add("org.openide.version"); //NOI18N
-        forbidden.add("netbeans.buildnumber"); //NOI18N
-        forbidden.add("javax.xml.parsers.DocumentBuilderFactory"); //NOI18N
-        forbidden.add("javax.xml.parsers.SAXParserFactory"); //NOI18N
-        forbidden.add("rave.build"); //NOI18N
-        forbidden.add("netbeans.accept_license_class"); //NOI18N
-        forbidden.add("rave.version"); //NOI18N
-        forbidden.add("netbeans.autoupdate.version"); //NOI18N
-        forbidden.add("netbeans.importclass"); //NOI18N
-        forbidden.add("netbeans.user"); //NOI18N
-//        forbidden.add("java.class.path");
-//        forbidden.add("https.nonProxyHosts");
-
-    }    
+    static final String PROP_DEFAULT_OPTIONS = "defaultOptions";
+    private static final Set<String> forbidden = Set.of(
+        "netbeans.logger.console", //NOI18N
+        "java.util.logging.config.class", //NOI18N
+        "netbeans.autoupdate.language", //NOI18N
+        "netbeans.dirs", //NOI18N
+        "netbeans.home", //NOI18N
+        "sun.awt.exception.handler", //NOI18N
+        "org.openide.TopManager.GUI", //NOI18N
+        "org.openide.major.version", //NOI18N
+        "netbeans.autoupdate.variant", //NOI18N
+        "netbeans.dynamic.classpath", //NOI18N
+        "netbeans.autoupdate.country", //NOI18N
+        "netbeans.hash.code", //NOI18N
+        "org.openide.TopManager", //NOI18N
+        "org.openide.version", //NOI18N
+        "netbeans.buildnumber", //NOI18N
+        "javax.xml.parsers.DocumentBuilderFactory", //NOI18N
+        "javax.xml.parsers.SAXParserFactory", //NOI18N
+        "rave.build", //NOI18N
+        "netbeans.accept_license_class", //NOI18N
+        "rave.version", //NOI18N
+        "netbeans.autoupdate.version", //NOI18N
+        "netbeans.importclass", //NOI18N
+        "netbeans.user" //NOI18N
+//        "java.class.path",
+//        "https.nonProxyHosts"
+    ); 
 
     private static final Logger LOG = Logger.getLogger(EmbedderFactory.class.getName());
 
@@ -99,31 +100,31 @@ public final class EmbedderFactory {
     
     private static final RequestProcessor RP = new RequestProcessor("Maven Embedder warmup");
     
-    private static final RequestProcessor.Task warmupTask = RP.create(new Runnable() {
-            @Override
-            public void run() {
-                //#211158 after being reset, recreate the instance for followup usage. 
-                //makes the performance stats of the project embedder after resetting more predictable
-                getProjectEmbedder();
-            }
-        });
+    //#211158 after being reset, recreate the instance for followup usage. 
+    //makes the performance stats of the project embedder after resetting more predictable
+    private static final RequestProcessor.Task warmupTask = RP.create(EmbedderFactory::getProjectEmbedder);
 
     static {
-        RP.post(new Runnable() {
-            @Override
-            public void run() { //#228379
-                OpenProjects.getDefault().addProjectGroupChangeListener(new ProjectGroupChangeListener() {
-                    @Override
-                    public void projectGroupChanging(ProjectGroupChangeEvent event) {
-                        resetCachedEmbedders();
-                    }
-
-                    @Override
-                    public void projectGroupChanged(ProjectGroupChangeEvent event) {
-                    }
-                });
+        RP.post(() -> { //#228379
+            OpenProjects.getDefault().addProjectGroupChangeListener(new ProjectGroupChangeListener() {
+                @Override
+                public void projectGroupChanging(ProjectGroupChangeEvent event) {
+                    resetCachedEmbedders();
+                }
+                @Override
+                public void projectGroupChanged(ProjectGroupChangeEvent event) {}
+            });
+        });
+        // Listen for external preference changes (e.g. from LSP module) and reset
+        // cached embedders so they pick up the new user settings XML path.
+        getPreferences().addPreferenceChangeListener((evt) -> {
+            if (PROP_USER_SETTINGS_XML.equals(evt.getKey())) {
+                resetCachedEmbedders();
             }
         });
+        // start initialization; guice can take a while the first time it runs
+        // if something calls getProjectEmbedder() in the mean time, this is becomes a no-op
+        warmupTask.schedule(100);
     }
     
     private EmbedderFactory() {
@@ -235,7 +236,7 @@ public final class EmbedderFactory {
     
     static Map<String, String> getCustomGlobalUserProperties() {
         //maybe set org.eclipse.aether.ConfigurationProperties.USER_AGENT with netbeans specific value.
-        Map<String, String> toRet = new HashMap<String, String>();
+        Map<String, String> toRet = new HashMap<>();
         String options = getPreferences().get(PROP_DEFAULT_OPTIONS, "");
         try {
             
@@ -262,6 +263,33 @@ public final class EmbedderFactory {
 
     private static File getSettingsXml() {
         return new File(getEffectiveMavenHome(), "conf/settings.xml");
+    }
+
+    public static @NonNull File getDefaultUserSettingsXmlFile() {
+        return SettingsXmlConfigurationProcessor.DEFAULT_USER_SETTINGS_FILE;
+    }
+
+    public static @NonNull File getUserSettingsXmlFile() {
+        String str = getPreferences().get(PROP_USER_SETTINGS_XML, null);
+        if (str != null) {
+            return FileUtil.normalizeFile(new File(str));
+        } else {
+            return getDefaultUserSettingsXmlFile();
+        }
+    }
+
+    public static void setUserSettingsXmlFile(File path) {
+        File oldValue = getUserSettingsXmlFile();
+        File defValue = getDefaultUserSettingsXmlFile();
+        if (oldValue.equals(path) || path == null && oldValue.equals(defValue)) {
+            return;
+        }
+        if (path == null || path.equals(defValue)) {
+            getPreferences().remove(PROP_USER_SETTINGS_XML);
+        } else {
+            getPreferences().put(PROP_USER_SETTINGS_XML, FileUtil.normalizeFile(path).getAbsolutePath());
+        }
+        resetCachedEmbedders();
     }
 
     /**
@@ -330,7 +358,7 @@ public final class EmbedderFactory {
 
         Properties userprops = new Properties();
         userprops.putAll(getCustomGlobalUserProperties());
-        EmbedderConfiguration configuration = new EmbedderConfiguration(pc, cloneStaticProps(), userprops, true, getSettingsXml());
+        EmbedderConfiguration configuration = new EmbedderConfiguration(pc, cloneStaticProps(), userprops, true, getSettingsXml(), getUserSettingsXmlFile());
         
         try {
             return new MavenEmbedder(configuration);
@@ -433,7 +461,7 @@ public final class EmbedderFactory {
 
         Properties userprops = new Properties();
         userprops.putAll(getCustomGlobalUserProperties());
-        EmbedderConfiguration req = new EmbedderConfiguration(pc, cloneStaticProps(), userprops, false, getSettingsXml());
+        EmbedderConfiguration req = new EmbedderConfiguration(pc, cloneStaticProps(), userprops, false, getSettingsXml(), getUserSettingsXmlFile());
 
 //        //TODO remove explicit activation
 //        req.addActiveProfile("netbeans-public").addActiveProfile("netbeans-private"); //NOI18N
@@ -478,7 +506,7 @@ public final class EmbedderFactory {
      * @return 
      * @deprecated use MavenEmbedder.createRemoteRepository
      */
-    @Deprecated
+    @Deprecated(forRemoval = true)
     public static ArtifactRepository createRemoteRepository(MavenEmbedder embedder, String url, String id) {
         return embedder.createRemoteRepository(url, id);
     }
@@ -493,7 +521,7 @@ public final class EmbedderFactory {
      * @throws ModelBuildingException if the POM or parents could not even be parsed; warnings are not reported
      * @deprecated use MavenEmbedder.createModelLineage
      */
-    @Deprecated
+    @Deprecated(forRemoval = true)
     public static List<Model> createModelLineage(File pom, MavenEmbedder embedder) throws ModelBuildingException {
         return embedder.createModelLineage(pom);
     }
@@ -513,5 +541,18 @@ public final class EmbedderFactory {
             properties.setProperty("env." + key, entry.getValue());
         }
         return properties;
+    }
+
+    /**
+     * Checks if the throwable is actually a report that operation failed because of
+     * offline mode. The errors are thrown if an operation attempts to go online despite
+     * that the maven session was configured for offline mode.
+     * 
+     * @param t throwable to check
+     * @return true, if the throwable 
+     * @since 2.71
+     */
+    public static boolean isOfflineException(Throwable t) {
+        return t instanceof OfflineOperationError;
     }
 }

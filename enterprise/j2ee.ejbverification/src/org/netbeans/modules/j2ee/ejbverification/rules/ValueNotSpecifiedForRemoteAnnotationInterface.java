@@ -65,7 +65,10 @@ public final class ValueNotSpecifiedForRemoteAnnotationInterface {
             return Collections.emptyList();
         }
 
-        AnnotationMirror annRemote = JavaUtils.findAnnotation(ctx.getClazz(), EJBAPIAnnotations.REMOTE);
+        AnnotationMirror annRemote = JavaUtils.findAnnotation(ctx.getClazz(), EJBAPIAnnotations.REMOTE_JAKARTA);
+        if(annRemote == null) {
+            annRemote = JavaUtils.findAnnotation(ctx.getClazz(), EJBAPIAnnotations.REMOTE);
+        }
         if (annRemote != null && JavaUtils.getAnnotationAttrValue(annRemote, EJBAPIAnnotations.VALUE) != null) {
             ErrorDescription err = HintsUtils.createProblem(
                     ctx.getClazz(),

@@ -20,7 +20,6 @@
 package org.netbeans.modules.db.metadata.model.api;
 
 import java.util.Collection;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.netbeans.modules.db.metadata.model.spi.ForeignKeyImplementation;
 
 /**
@@ -41,10 +40,10 @@ public class ForeignKey extends MetadataElement {
         return impl.getParent();
     }
 
-    @Override
     /**
      * Return the name of the foreign key.  The name of a foreign key may be null
      */
+    @Override
     public String getName() {
         return impl.getName();
     }

@@ -47,9 +47,9 @@ final class SAXBindingsGenerator {
     private static String elementBindings(SAXGeneratorModel model) {
         StringBuffer s = new StringBuffer();
         
-        Iterator it = model.getElementBindings().values().iterator();
+        Iterator<ElementBindings.Entry> it = model.getElementBindings().values().iterator();
         while (it.hasNext()) {
-            ElementBindings.Entry next = (ElementBindings.Entry) it.next();
+            ElementBindings.Entry next = it.next();
             s.append("\t<bind element='" + next.getElement() + "' method='" + next.getMethod() + "' "); // NOI18N
             s.append("type='" + next.getType() + "' "); // NOI18N
             if (next.getParslet() != null) {
@@ -64,9 +64,9 @@ final class SAXBindingsGenerator {
         
         StringBuffer s = new StringBuffer();
         
-        Iterator it = model.getParsletBindings().values().iterator();
+        Iterator<ParsletBindings.Entry> it = model.getParsletBindings().values().iterator();
         while (it.hasNext()) {
-            ParsletBindings.Entry next = (ParsletBindings.Entry) it.next();
+            ParsletBindings.Entry next = it.next();
             s.append("\t<parslet parslet='" + next.getId() + "' return='" + next.getType() + "' />\n"); // NOI18N
         }
         

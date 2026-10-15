@@ -60,7 +60,7 @@ import org.openide.util.NbBundle;
 
 public final class GrailsCommandChooser extends JPanel {
 
-    private final static Object NO_TASK_ITEM = getMessage("GrailsCommandChooser.no.matching.task");
+    private static final Object NO_TASK_ITEM = getMessage("GrailsCommandChooser.no.matching.task");
 
     /** Remember checkbox state per IDE sessions. */
     private static boolean debug;
@@ -577,7 +577,7 @@ public final class GrailsCommandChooser extends JPanel {
     private javax.swing.JComboBox taskParametersComboBox;
     // End of variables declaration//GEN-END:variables
 
-    final static class Filter {
+    static final class Filter {
 
         private final String filter;
         private final List<GrailsCommand> tasks;

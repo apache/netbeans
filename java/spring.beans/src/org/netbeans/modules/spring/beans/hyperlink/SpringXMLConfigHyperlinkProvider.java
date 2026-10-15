@@ -22,6 +22,7 @@ package org.netbeans.modules.spring.beans.hyperlink;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.text.Document;
+import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProvider;
 import org.netbeans.modules.spring.beans.BeansAttributes;
@@ -37,6 +38,7 @@ import org.netbeans.modules.xml.text.api.dom.XMLSyntaxSupport;
  * 
  * @author Rohan Ranade
  */
+@MimeRegistration(mimeType = "x-springconfig+xml", service = HyperlinkProvider.class, position = 1000)
 public class SpringXMLConfigHyperlinkProvider implements HyperlinkProvider {
 
     private static final String P_NAMESPACE = "http://www.springframework.org/schema/p"; // NOI18N

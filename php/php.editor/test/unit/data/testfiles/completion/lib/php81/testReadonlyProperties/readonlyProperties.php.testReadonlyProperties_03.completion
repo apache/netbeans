@@ -1,0 +1,5 @@
+Code completion result for source line:
+public readonly in|t $publicReadonly;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    int                                        null

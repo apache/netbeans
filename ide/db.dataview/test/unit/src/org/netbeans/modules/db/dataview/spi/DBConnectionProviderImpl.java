@@ -89,25 +89,17 @@ public class DBConnectionProviderImpl implements DBConnectionProvider{
 
             TestCaseContext context = DbUtil.getContext();
             File[] jars = context.getJars();
-            ArrayList<URL> list = new java.util.ArrayList<URL>();
+            ArrayList<URL> list = new ArrayList<>();
             for (int i = 0; i < jars.length; i++) {
                 list.add(jars[i].toURI().toURL());
             }
             URL[] driverURLs = list.toArray(new URL[0]);
             URLClassLoader l = new URLClassLoader(driverURLs);
             Class<?> c = Class.forName(driver, true, l);
-            Driver drv = (Driver) c.newInstance();
+            Driver drv = (Driver) c.getDeclaredConstructor().newInstance();
             Connection con = drv.connect(url, prop);
             return con;
-        } catch (SQLException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (InstantiationException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (IllegalAccessException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (ClassNotFoundException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (MalformedURLException ex) {
+        } catch (ReflectiveOperationException | SQLException | MalformedURLException ex) {
             Exceptions.printStackTrace(ex);
         }
         return null;

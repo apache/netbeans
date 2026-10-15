@@ -164,7 +164,7 @@ public final class XMLTextUtils {
      * @param doc
      * @param startOffset
      * @param endOffset 
-     * @throw IllegalArgumentException if the document implementation is not compatible
+     * @throws IllegalArgumentException if the document implementation is not compatible
      */
     public static void reformat(final LineDocument doc, final int startOffset, final int endOffset) {
         final XMLLexerFormatter formatter = new XMLLexerFormatter(null);

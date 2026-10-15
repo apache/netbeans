@@ -29,10 +29,7 @@ import org.netbeans.modules.glassfish.tooling.logging.Logger;
  */
 public enum GlassFishStatusCheck {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Enum values                                                            //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Administration port check. */
     PORT,
 
@@ -42,10 +39,7 @@ public enum GlassFishStatusCheck {
     /** Locations command check. */
     LOCATIONS;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(GlassFishStatusCheck.class);
 
@@ -64,17 +58,14 @@ public enum GlassFishStatusCheck {
     /** Stored <code>String</code> values for backward <code>String</code>
      *  conversion. */
     private static final Map<String, GlassFishStatusCheck> stringValuesMap
-            = new HashMap(values().length);
+            = new HashMap<>(values().length);
     static {
         for (GlassFishStatusCheck state : GlassFishStatusCheck.values()) {
             stringValuesMap.put(state.toString().toUpperCase(), state);
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Returns a <code>GlassFishStatusCheck</code> with a value represented
      * by the specified <code>String</code>.
@@ -98,10 +89,7 @@ public enum GlassFishStatusCheck {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Convert <code>GlassFishStatusCheck</code> value to <code>String</code>.
      * <p/>

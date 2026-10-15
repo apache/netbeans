@@ -10,7 +10,6 @@ namespace Test {
             echo $this->testFunc();
             return null;
         }
-
     }
 
 }

@@ -2,15 +2,20 @@ package org.netbeans.test.java.hints.BroadCatchBlockTest;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.Collections;
 
 public class TwoExceptions {
+    private static class StableMethod {
+        public Object invoke(Object obj, Object... args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {return null;}
+    }
+    private static class StableClass {
+        public StableMethod getDeclaredMethod(String name, Class<?>... types) throws NoSuchMethodException, SecurityException {return null;}
+    }
     public void t() {
-        Class c = Collections.class;
+        StableClass c = new StableClass();
         try {
-            Method m = c.getDeclaredMethod("foobar");
+            StableMethod m = c.getDeclaredMethod("foobar");
             m.invoke(null);
         } /* cmt */ catch (IllegalArgumentException | SecurityException ex) {
             /* cmt */

@@ -22,6 +22,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.modules.form.codestructure.CodeVariable;
 import org.openide.filesystems.FileObject;
 import org.openide.nodes.Node;
@@ -202,7 +203,7 @@ public class RenameSupport {
         try {
             String outString;
             is = formFile.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8")); // NOI18N
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
             if (!shortName) {
                 // With fully qualified name we can safely do plain textual
                 // search/replace over the file and get all changes covered

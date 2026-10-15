@@ -18,12 +18,14 @@
  */
 package org.netbeans.modules.java.source.parsing;
 
+import com.sun.tools.javac.api.ClientCodeWrapper;
 import org.netbeans.api.annotations.common.NonNull;
 
 /**
  *
  * @author Tomas Zezula
  */
+@ClientCodeWrapper.Trusted
 final class MultiReleaseJarFileObject extends ForwardingInferableJavaFileObject {
     private final int start;
     MultiReleaseJarFileObject(

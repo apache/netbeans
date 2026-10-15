@@ -18,6 +18,10 @@
  */
 package org.netbeans.modules.php.editor.model.nodes;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.NavUtils;
@@ -27,6 +31,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassName;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
@@ -44,12 +49,16 @@ import org.netbeans.modules.php.editor.parser.astnodes.Reference;
 import org.netbeans.modules.php.editor.parser.astnodes.ReturnStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.Scalar;
 import org.netbeans.modules.php.editor.parser.astnodes.SingleUseStatementPart;
+import org.netbeans.modules.php.editor.parser.astnodes.Statement;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticConstantAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticDispatch;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticFieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticMethodInvocation;
+import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatement;
+import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
 import org.netbeans.modules.php.editor.parser.astnodes.Variadic;
+import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 
 /**
  *
@@ -65,7 +74,9 @@ public class ASTNodeInfo<T extends ASTNode> {
         FIELD, STATIC_FIELD,
         CLASS_CONSTANT, STATIC_CLASS_CONSTANT,
         VARIABLE, CONSTANT, FUNCTION, PARAMETER,
-        INCLUDE, RETURN_MARKER, GOTO, TRAIT, USE_ALIAS
+        INCLUDE, RETURN_MARKER, GOTO, TRAIT, USE_ALIAS,
+        ENUM, ENUM_CASE,
+        PROPERTY_HOOK
     }
 
     ASTNodeInfo(T node) {
@@ -87,22 +98,17 @@ public class ASTNodeInfo<T extends ASTNode> {
 
     public static QualifiedName toQualifiedName(ASTNode node, boolean type) {
         QualifiedName retval = null;
-        if (node instanceof FunctionInvocation) {
-            FunctionInvocation fi = (FunctionInvocation) node;
+        if (node instanceof FunctionInvocation fi) {
             retval = QualifiedName.create(fi.getFunctionName().getName());
-        } else if (node instanceof ClassName) {
-            ClassName cname = (ClassName) node;
+        } else if (node instanceof ClassName cname) {
             retval = QualifiedName.create(cname.getName());
-        } else if (node instanceof Identifier) {
-            Identifier cname = (Identifier) node;
+        } else if (node instanceof Identifier cname) {
             retval = QualifiedName.createUnqualifiedName(cname);
-        } else if (node instanceof NamespaceName) {
-            retval = QualifiedName.create((NamespaceName) node);
-        } else if (node instanceof ClassInstanceCreation) {
-            ClassInstanceCreation instanceCreation = (ClassInstanceCreation) node;
+        } else if (node instanceof NamespaceName namespaceName) {
+            retval = QualifiedName.create(namespaceName);
+        } else if (node instanceof ClassInstanceCreation instanceCreation) {
             retval = QualifiedName.create(instanceCreation.getClassName().getName());
-        } else if (node instanceof SingleUseStatementPart) {
-            SingleUseStatementPart statementPart = (SingleUseStatementPart) node;
+        } else if (node instanceof SingleUseStatementPart statementPart) {
             retval = QualifiedName.create(statementPart.getName());
         } else if (type && node instanceof StaticDispatch) {
             StaticDispatch staticDispatch = (StaticDispatch) node;
@@ -130,45 +136,42 @@ public class ASTNodeInfo<T extends ASTNode> {
 
     public PhpElementKind getPhpElementKind() {
         Kind k = getKind();
-        switch (k) {
-            case INCLUDE:
-                return PhpElementKind.INCLUDE;
-            case IFACE:
-                return PhpElementKind.IFACE;
-            case CLASS:
-                return PhpElementKind.CLASS;
-            case CLASS_INSTANCE_CREATION:
-                return PhpElementKind.CLASS;
-            case METHOD:
-                return PhpElementKind.METHOD;
-            case STATIC_METHOD:
-                return PhpElementKind.METHOD;
-            case FIELD:
-                return PhpElementKind.FIELD;
-            case STATIC_FIELD:
-                return PhpElementKind.FIELD;
-            case CLASS_CONSTANT:
-                return PhpElementKind.TYPE_CONSTANT;
-            case STATIC_CLASS_CONSTANT:
-                return PhpElementKind.TYPE_CONSTANT;
-            case VARIABLE:
-                return PhpElementKind.VARIABLE;
-            case CONSTANT:
-                return PhpElementKind.CONSTANT;
-            case FUNCTION:
-                return PhpElementKind.FUNCTION;
-            case USE_STATEMENT:
-                return PhpElementKind.USE_STATEMENT;
-            case GROUP_USE_STATEMENT:
-                return PhpElementKind.GROUP_USE_STATEMENT;
-            case TRAIT:
-                return PhpElementKind.TRAIT;
-            case USE_ALIAS:
-                return PhpElementKind.USE_ALIAS;
-            default:
-                assert false : k;
-        }
-        throw new IllegalStateException();
+        return switch (k) {
+            case INCLUDE ->
+                PhpElementKind.INCLUDE;
+            case IFACE ->
+                PhpElementKind.IFACE;
+            case CLASS, CLASS_INSTANCE_CREATION ->
+                PhpElementKind.CLASS;
+            case METHOD, STATIC_METHOD ->
+                PhpElementKind.METHOD;
+            case FIELD, STATIC_FIELD ->
+                PhpElementKind.FIELD;
+            case CLASS_CONSTANT, STATIC_CLASS_CONSTANT ->
+                PhpElementKind.TYPE_CONSTANT;
+            case VARIABLE ->
+                PhpElementKind.VARIABLE;
+            case CONSTANT ->
+                PhpElementKind.CONSTANT;
+            case FUNCTION ->
+                PhpElementKind.FUNCTION;
+            case USE_STATEMENT ->
+                PhpElementKind.USE_STATEMENT;
+            case GROUP_USE_STATEMENT ->
+                PhpElementKind.GROUP_USE_STATEMENT;
+            case TRAIT ->
+                PhpElementKind.TRAIT;
+            case USE_ALIAS ->
+                PhpElementKind.USE_ALIAS;
+            case ENUM ->
+                PhpElementKind.ENUM;
+            case ENUM_CASE ->
+                PhpElementKind.ENUM_CASE;
+            case PROPERTY_HOOK ->
+                PhpElementKind.PROPERTY_HOOK;
+            case GOTO, NAMESPACE_DECLARATION, PARAMETER, RETURN_MARKER ->
+                throw new IllegalStateException("Unexpected ASTNodeInfo.Kind: " + k.name()); // NOI18N
+        };
     }
 
     public OffsetRange getRange() {
@@ -228,11 +231,11 @@ public class ASTNodeInfo<T extends ASTNode> {
     }
 
     public static ASTNodeInfo<Expression> create(Kind kind, NamespaceName namespaceName) {
-        return new ASTNodeInfo<Expression>(kind, namespaceName);
+        return new ASTNodeInfo<>(kind, namespaceName);
     }
 
     public static ASTNodeInfo<Expression> create(Kind kind, Identifier identifier) {
-        return new ASTNodeInfo<Expression>(kind, identifier);
+        return new ASTNodeInfo<>(kind, identifier);
     }
 
     public static ASTNodeInfo<Scalar> create(Kind kind, Scalar scalar) {
@@ -436,4 +439,31 @@ public class ASTNodeInfo<T extends ASTNode> {
         }
         return new OffsetRange(name.getStartOffset(), name.getEndOffset());
     }
+
+    //~ inner class
+    static class UsedTraitsVisitor extends DefaultVisitor {
+
+        private final List<UseTraitStatementPart> useParts = new LinkedList<>();
+
+        @Override
+        public void visit(Block node) {
+            for (Statement statement : node.getStatements()) {
+                if (statement instanceof UseTraitStatement useTraitStatement) {
+                    for (UseTraitStatementPart parts : useTraitStatement.getParts()) {
+                        useParts.add(parts);
+                    }
+                }
+            }
+        }
+
+        public Collection<QualifiedName> getUsedTraits() {
+            Collection<QualifiedName> retval = new HashSet<>();
+            for (UseTraitStatementPart useTraitStatementPart : useParts) {
+                retval.add(QualifiedName.create(useTraitStatementPart.getName()));
+            }
+            return retval;
+        }
+
+    }
+
 }

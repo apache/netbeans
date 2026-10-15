@@ -22,7 +22,6 @@ import org.netbeans.modules.java.hints.spiimpl.batch.TestUtils.File;
 import org.netbeans.modules.java.hints.spiimpl.MessageImpl;
 import org.netbeans.modules.java.hints.providers.spi.HintDescription;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -35,33 +34,41 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.regex.Pattern;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import junit.framework.TestSuite;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.java.classpath.GlobalPathRegistryEvent;
 import org.netbeans.api.java.classpath.GlobalPathRegistryListener;
+import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
+import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
 import org.netbeans.core.startup.Main;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.NbTestSuite;
 import org.netbeans.junit.RandomlyFails;
+import org.netbeans.lib.nbjavac.services.NBAttr;
+import org.netbeans.modules.java.file.launcher.queries.MultiSourceRootProvider;
 import org.netbeans.modules.java.hints.spiimpl.batch.BatchSearch.BatchResult;
 import org.netbeans.modules.java.hints.spiimpl.batch.BatchSearch.Folder;
 import org.netbeans.modules.java.hints.spiimpl.batch.BatchSearch.Resource;
+import org.netbeans.modules.java.hints.spiimpl.batch.BatchSearch.VerifiedSpansCallBack;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.parsing.impl.indexing.CacheFolder;
 import org.netbeans.modules.parsing.impl.indexing.MimeTypes;
 import org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater;
+import org.netbeans.modules.parsing.lucene.support.LowMemoryWatcherAccessor;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileStateInvalidException;
 import org.openide.filesystems.FileUtil;
 
-import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
+
 import static org.netbeans.modules.java.hints.spiimpl.batch.TestUtils.writeFilesAndWaitForScan;
 import static org.netbeans.modules.java.hints.spiimpl.batch.TestUtils.prepareHints;
 
@@ -89,6 +96,7 @@ public class BatchSearchTest extends NbTestCase {
     protected void setUp() throws Exception {
         SourceUtilsTestUtil.prepareTest(new String[0], new Object[0]);
         Main.initializeURLFactory();
+        MultiSourceRootProvider.DISABLE_MULTI_SOURCE_ROOT = true;
         org.netbeans.api.project.ui.OpenProjects.getDefault().getOpenProjects();
         prepareTest();
         MimeTypes.setAllMimeTypes(Collections.singleton("text/x-java"));
@@ -123,13 +131,13 @@ public class BatchSearchTest extends NbTestCase {
                 resourcesRepr.add(r.getRelativePath());
             }
 
-            output.put(e.getKey().getURL().toExternalForm(), resourcesRepr);
+            output.put(e.getKey().toURL().toExternalForm(), resourcesRepr);
         }
 
         Map<String, Iterable<String>> golden = new HashMap<String, Iterable<String>>();
 
-        golden.put(src1.getURL().toExternalForm(), Arrays.asList("test/Test1.java"));
-        golden.put(src2.getURL().toExternalForm(), Arrays.asList("test/Test1.java"));
+        golden.put(src1.toURL().toExternalForm(), Arrays.asList("test/Test1.java"));
+        golden.put(src2.toURL().toExternalForm(), Arrays.asList("test/Test1.java"));
 
         assertEquals(golden, output);
     }
@@ -185,13 +193,13 @@ public class BatchSearchTest extends NbTestCase {
                 resourcesRepr.add(r.getRelativePath());
             }
 
-            output.put(e.getKey().getURL().toExternalForm(), resourcesRepr);
+            output.put(e.getKey().toURL().toExternalForm(), resourcesRepr);
         }
 
         Map<String, Iterable<String>> golden = new HashMap<String, Iterable<String>>();
 
-        golden.put(src1.getURL().toExternalForm(), Arrays.asList("test/Test1.java"));
-        golden.put(src3.getURL().toExternalForm(), Arrays.asList("test/Test1.java"));
+        golden.put(src1.toURL().toExternalForm(), Arrays.asList("test/Test1.java"));
+        golden.put(src3.toURL().toExternalForm(), Arrays.asList("test/Test1.java"));
 
         assertEquals(golden, output);
 
@@ -199,8 +207,8 @@ public class BatchSearchTest extends NbTestCase {
         Map<String, Map<String, Iterable<String>>> verifiedOutput = verifiedSpans(result, false);
         Map<String, Map<String, Iterable<String>>> verifiedGolden = new HashMap<String, Map<String, Iterable<String>>>();
 
-        verifiedGolden.put(src1.getURL().toExternalForm(), Collections.<String, Iterable<String>>singletonMap("test/Test1.java", Arrays.<String>asList()));
-        verifiedGolden.put(src3.getURL().toExternalForm(), Collections.<String, Iterable<String>>singletonMap("test/Test1.java", Arrays.asList("0:75-0:86:verifier:")));
+        verifiedGolden.put(src1.toURL().toExternalForm(), Collections.<String, Iterable<String>>singletonMap("test/Test1.java", Arrays.<String>asList()));
+        verifiedGolden.put(src3.toURL().toExternalForm(), Collections.<String, Iterable<String>>singletonMap("test/Test1.java", Arrays.asList("0:75-0:86:verifier:")));
 
         assertEquals(verifiedGolden, verifiedOutput);
     }
@@ -229,12 +237,12 @@ public class BatchSearchTest extends NbTestCase {
                 resourcesRepr.add(r.getRelativePath());
             }
 
-            output.put(e.getKey().getURL().toExternalForm(), resourcesRepr);
+            output.put(e.getKey().toURL().toExternalForm(), resourcesRepr);
         }
 
         Map<String, Iterable<String>> golden = new HashMap<String, Iterable<String>>();
 
-        golden.put(data.getURL().toExternalForm(), new HashSet<String>(Arrays.asList("src1/test/Test1.java", "src2/test/Test1.java")));
+        golden.put(data.toURL().toExternalForm(), new HashSet<String>(Arrays.asList("src1/test/Test1.java", "src2/test/Test1.java")));
 
         assertEquals(golden, output);
 
@@ -243,11 +251,13 @@ public class BatchSearchTest extends NbTestCase {
         final Set<FileObject> removed = new HashSet<FileObject>();
 
         GlobalPathRegistry.getDefault().addGlobalPathRegistryListener(new GlobalPathRegistryListener() {
+            @Override
             public void pathsAdded(GlobalPathRegistryEvent event) {
                 for (ClassPath cp : event.getChangedPaths()) {
                     added.addAll(Arrays.asList(cp.getRoots()));
                 }
             }
+            @Override
             public void pathsRemoved(GlobalPathRegistryEvent event) {
                 for (ClassPath cp : event.getChangedPaths()) {
                     removed.addAll(Arrays.asList(cp.getRoots()));
@@ -264,7 +274,7 @@ public class BatchSearchTest extends NbTestCase {
         verifiedGoldenPart.put("src1/test/Test1.java", Arrays.<String>asList());
         verifiedGoldenPart.put("src2/test/Test1.java", Arrays.<String>asList("0:75-0:86:verifier:"));
 
-        verifiedGolden.put(data.getURL().toExternalForm(), verifiedGoldenPart);
+        verifiedGolden.put(data.toURL().toExternalForm(), verifiedGoldenPart);
 
         assertEquals(verifiedGolden, verifiedOutput);
         assertEquals(new HashSet<FileObject>(Arrays.asList(dataSrc1, dataSrc2)), added);
@@ -287,9 +297,150 @@ public class BatchSearchTest extends NbTestCase {
         Map<String, Iterable<String>> output = toDebugOutput(result);
         Map<String, Iterable<String>> golden = new HashMap<String, Iterable<String>>();
 
-        golden.put(data.getURL().toExternalForm(), new HashSet<String>(Arrays.asList("src1/test/Test1.java", "src2/test/Test1.java")));
+        golden.put(data.toURL().toExternalForm(), new HashSet<String>(Arrays.asList("src1/test/Test1.java", "src2/test/Test1.java")));
 
         assertEquals(golden, output);
+    }
+
+    public void testBatchSearchOutOfMemory() throws Exception {
+        FileObject data = FileUtil.createFolder(workdir, "data");
+        FileObject dataSrc1 = FileUtil.createFolder(data, "src1");
+        writeFilesAndWaitForScan(dataSrc1,
+                                 new File("test/Test1.java", "package test; public class Test1 { private void test() { java.io.File f = null; f.isDirectory(); } }"),
+                                 new File("test/Test2.java", "package test; public class Test2 { private void test() { java.io.File f = null; f.isDirectory(); } }"),
+                                 new File("test/Test3.java", "package test; public class Test3 { private void test() { java.io.File f = null; f.isDirectory(); } }"));
+
+        ClassPathProviderImpl.setSourceRoots(Arrays.asList(dataSrc1));
+
+        Iterable<? extends HintDescription> hints = prepareHints("$1.isDirectory()", "$1", "java.io.File");
+        BatchResult result = BatchSearch.findOccurrences(hints, Scopes.specifiedFoldersScope(Folder.convert(data)));
+        Map<String, Iterable<String>> output = new HashMap<String, Iterable<String>>();
+
+        for (Entry<FileObject, Collection<? extends Resource>> e : result.getResourcesWithRoots().entrySet()) {
+            Collection<String> resourcesRepr = new HashSet<String>();
+
+            for (Resource r : e.getValue()) {
+                resourcesRepr.add(r.getRelativePath());
+            }
+
+            output.put(e.getKey().toURL().toExternalForm(), resourcesRepr);
+        }
+
+        Map<String, Iterable<String>> golden = new HashMap<String, Iterable<String>>();
+
+        golden.put(data.toURL().toExternalForm(), new HashSet<String>(Arrays.asList("src1/test/Test1.java", "src1/test/Test2.java", "src1/test/Test3.java")));
+
+        assertEquals(golden, output);
+
+        //check verification:
+        Map<String, Map<String, Iterable<String>>> verifiedOutput = verifiedSpans(result, false, c -> new VerifiedSpansCallBack() {
+            int callbacks;
+            @Override
+            public void groupStarted() {
+                c.groupStarted();
+            }
+            @Override
+            public boolean spansVerified(CompilationController wc, Resource r, Collection<? extends ErrorDescription> hints) throws Exception {
+                if (++callbacks == 1) {
+                    LowMemoryWatcherAccessor.setLowMemory(true);
+                }
+                return c.spansVerified(wc, r, hints);
+            }
+
+            @Override
+            public void groupFinished() {
+                c.groupFinished();
+            }
+
+            @Override
+            public void cannotVerifySpan(Resource r) {
+                c.cannotVerifySpan(r);
+            }
+        }, errors -> assertEquals(0, errors.size()));
+        Map<String, Map<String, Iterable<String>>> verifiedGolden = new HashMap<String, Map<String, Iterable<String>>>();
+
+        Map<String, Iterable<String>> verifiedGoldenPart = new HashMap<String, Iterable<String>>();
+
+        verifiedGoldenPart.put("src1/test/Test1.java", Arrays.<String>asList("0:82-0:93:verifier:"));
+        verifiedGoldenPart.put("src1/test/Test2.java", Arrays.<String>asList("0:82-0:93:verifier:"));
+        verifiedGoldenPart.put("src1/test/Test3.java", Arrays.<String>asList("0:82-0:93:verifier:"));
+
+        verifiedGolden.put(data.toURL().toExternalForm(), verifiedGoldenPart);
+
+        assertEquals(verifiedGolden, verifiedOutput);
+    }
+
+    public void testBatchSearchParserCrashProgressEnsured() throws Exception {
+        writeFilesAndWaitForScan(src1,
+                                 new File("test/Test1.java", "package test; public class Test1 { private void test() { java.io.File f = null; f.isDirectory(); } }"));
+
+        Iterable<? extends HintDescription> hints = prepareHints("$1.isDirectory()", "$1", "java.io.File");
+        BatchResult result = BatchSearch.findOccurrences(hints, Scopes.allOpenedProjectsScope());
+        Map<String, Iterable<String>> output = new HashMap<String, Iterable<String>>();
+
+        for (Entry<FileObject, Collection<? extends Resource>> e : result.getResourcesWithRoots().entrySet()) {
+            Collection<String> resourcesRepr = new HashSet<String>();
+
+            for (Resource r : e.getValue()) {
+                resourcesRepr.add(r.getRelativePath());
+            }
+
+            output.put(e.getKey().toURL().toExternalForm(), resourcesRepr);
+        }
+
+        Map<String, Iterable<String>> golden = new HashMap<String, Iterable<String>>();
+
+        golden.put(src1.toURL().toExternalForm(), new HashSet<String>(Arrays.asList("test/Test1.java")));
+
+        assertEquals(golden, output);
+
+        //check verification:
+        Entry<ClasspathInfo, Collection<FileObject>> cpAndFile = BatchUtilities.sortFiles(Arrays.asList(src1.getFileObject("test/Test1.java"))).entrySet().iterator().next();
+        JavaSource js = JavaSource.create(cpAndFile.getKey(), cpAndFile.getValue());
+
+        try {
+            js.runUserActionTask(cc -> {
+                NBAttr.TEST_DO_SINGLE_FAIL = true; //the upcoming attribution will fail
+                cc.toPhase(Phase.RESOLVED);
+            }, true);
+            fail("Expected exception not thrown!");
+        } catch (IllegalStateException ex) {
+            //OK
+        }
+
+        Map<String, Map<String, Iterable<String>>> verifiedOutput = verifiedSpans(result, false, c -> new VerifiedSpansCallBack() {
+            @Override
+            public void groupStarted() {
+                c.groupStarted();
+                NBAttr.TEST_DO_SINGLE_FAIL = true; //the upcoming attribution will fail
+            }
+            @Override
+            public boolean spansVerified(CompilationController wc, Resource r, Collection<? extends ErrorDescription> hints) throws Exception {
+                return c.spansVerified(wc, r, hints);
+            }
+
+            @Override
+            public void groupFinished() {
+                c.groupFinished();
+            }
+
+            @Override
+            public void cannotVerifySpan(Resource r) {
+                c.cannotVerifySpan(r);
+            }
+        }, errors -> {
+            assertEquals(1, errors.size());
+            assertTrue(errors.get(0).text.contains("IDE log"));
+        });
+
+        Map<String, Map<String, Iterable<String>>> verifiedGolden = new HashMap<String, Map<String, Iterable<String>>>();
+
+        assertEquals(verifiedGolden, verifiedOutput);
+
+        //prevent GC:
+        js.runUserActionTask(cc -> {
+            assertTrue(true);
+        }, true);
     }
 
     private FileObject workdir;
@@ -324,22 +475,28 @@ public class BatchSearchTest extends NbTestCase {
                 resourcesRepr.add(r.getRelativePath());
             }
 
-            output.put(e.getKey().getURL().toExternalForm(), resourcesRepr);
+            output.put(e.getKey().toURL().toExternalForm(), resourcesRepr);
         }
 
         return output;
     }
 
     private Map<String, Map<String, Iterable<String>>> verifiedSpans(BatchResult candidates, boolean doNotRegisterClassPath) throws Exception {
+        return verifiedSpans(candidates, doNotRegisterClassPath, c -> c, errors -> assertEquals(0, errors.size()));
+    }
+
+    private Map<String, Map<String, Iterable<String>>> verifiedSpans(BatchResult candidates, boolean doNotRegisterClassPath, Function<VerifiedSpansCallBack, VerifiedSpansCallBack> wrapper, Consumer<List<MessageImpl>> validateErrors) throws Exception {
         final Map<String, Map<String, Iterable<String>>> result = new HashMap<String, Map<String, Iterable<String>>>();
         List<MessageImpl> errors = new LinkedList<MessageImpl>();
-        BatchSearch.getVerifiedSpans(candidates, new ProgressHandleWrapper(1), new BatchSearch.VerifiedSpansCallBack() {
+        BatchSearch.getVerifiedSpans(candidates, new ProgressHandleWrapper(1), wrapper.apply(new VerifiedSpansCallBack() {
+            @Override
             public void groupStarted() {}
+            @Override
             public boolean spansVerified(CompilationController wc, Resource r, Collection<? extends ErrorDescription> hints) throws Exception {
-                Map<String, Iterable<String>> files = result.get(r.getRoot().getURL().toExternalForm());
+                Map<String, Iterable<String>> files = result.get(r.getRoot().toURL().toExternalForm());
 
                 if (files == null) {
-                    result.put(r.getRoot().getURL().toExternalForm(), files = new HashMap<String, Iterable<String>>());
+                    result.put(r.getRoot().toURL().toExternalForm(), files = new HashMap<String, Iterable<String>>());
                 }
 
                 Collection<String> currentHints = new LinkedList<String>();
@@ -352,11 +509,15 @@ public class BatchSearchTest extends NbTestCase {
 
                 return true;
             }
+            @Override
             public void groupFinished() {}
+            @Override
             public void cannotVerifySpan(Resource r) {
                 fail("Cannot verify: " +r.getRelativePath());
             }
-        }, doNotRegisterClassPath, errors, new AtomicBoolean());
+        }), doNotRegisterClassPath, errors, new AtomicBoolean());
+
+        validateErrors.accept(errors);
 
         return result;
     }
@@ -366,17 +527,18 @@ public class BatchSearchTest extends NbTestCase {
 
         private static Collection<FileObject> sourceRoots;
 
-        public synchronized static void setSourceRoots(Collection<FileObject> sourceRoots) {
+        public static synchronized void setSourceRoots(Collection<FileObject> sourceRoots) {
             ClassPathProviderImpl.sourceRoots = sourceRoots;
         }
 
-        public synchronized static Collection<FileObject> getSourceRoots() {
+        public static synchronized Collection<FileObject> getSourceRoots() {
             return sourceRoots;
         }
 
+        @Override
         public synchronized ClassPath findClassPath(FileObject file, String type) {
             if (ClassPath.BOOT.equals(type)) {
-                return ClassPathSupport.createClassPath(getBootClassPath().toArray(new URL[0]));
+                return BootClassPathUtil.getBootClassPath();
             }
 
             if (ClassPath.COMPILE.equals(type)) {
@@ -394,42 +556,6 @@ public class BatchSearchTest extends NbTestCase {
             return null;
         }
 
-    }
-
-    //TODO: copied from SourceUtilsTestUtil:
-    private static List<URL> bootClassPath;
-
-    public static synchronized List<URL> getBootClassPath() {
-        if (bootClassPath == null) {
-            try {
-                String cp = System.getProperty("sun.boot.class.path");
-                List<URL> urls = new ArrayList<URL>();
-                String[] paths = cp.split(Pattern.quote(System.getProperty("path.separator")));
-
-                for (String path : paths) {
-                    java.io.File f = new java.io.File(path);
-
-                    if (!f.canRead())
-                        continue;
-
-                    FileObject fo = FileUtil.toFileObject(f);
-
-                    if (FileUtil.isArchiveFile(fo)) {
-                        fo = FileUtil.getArchiveRoot(fo);
-                    }
-
-                    if (fo != null) {
-                        urls.add(fo.getURL());
-                    }
-                }
-
-                bootClassPath = urls;
-            } catch (FileStateInvalidException e) {
-                Exceptions.printStackTrace(e);
-            }
-        }
-
-        return bootClassPath;
     }
 
 }

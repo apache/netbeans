@@ -98,7 +98,7 @@ public class FormLayoutHelper {
                 GroupLayout.DEFAULT_SIZE, component);
     }
 
-    public static abstract class Column {
+    public abstract static class Column {
 
         protected abstract void addComponent(
                 JComponent component, Group parallelColumnGroup);

@@ -224,7 +224,7 @@ public class EjbRefactoringPlugin implements RefactoringPlugin {
             if (emod != null) {
                 projects.add(affectedProject);
             } else {
-                return Collections.EMPTY_SET;
+                return Collections.emptySet();
             }
             for (Project project : OpenProjects.getDefault().getOpenProjects()) {
                 Object isJ2eeApp = project.getLookup().lookup(J2eeApplicationProvider.class);
@@ -254,8 +254,8 @@ public class EjbRefactoringPlugin implements RefactoringPlugin {
                 //mkleint: see subprojectprovider for official contract, maybe classpath should be checked instead? see #210465
                 //in this case J2eeApplicationprovider might provide the same results though.
                 Object obj = project.getLookup().lookup(SubprojectProvider.class);
-                if ((obj != null) && (obj instanceof SubprojectProvider)) {
-                    Set subprojects = ((SubprojectProvider) obj).getSubprojects();
+                if (obj instanceof SubprojectProvider) {
+                    Set<? extends Project> subprojects = ((SubprojectProvider) obj).getSubprojects();
                     if (subprojects.contains(affectedProject)) {
                         org.netbeans.modules.j2ee.api.ejbjar.EjbJar em = org.netbeans.modules.j2ee.api.ejbjar.EjbJar
                                 .getEjbJar(project.getProjectDirectory());

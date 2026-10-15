@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.SortedSet;
@@ -288,6 +289,7 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
             }
         }
 
+        @Override
         public void postCheck() {
 
             assert vertexToLayoutNode.keySet().size() == nodes.size();
@@ -407,6 +409,7 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
             oldTo.succs.add(e);
         }
 
+        @Override
         public void postCheck() {
 
             for (LayoutNode n : nodes) {
@@ -436,6 +439,7 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
 
     private class AssignLayers extends AlgorithmPart {
 
+        @Override
         public void preCheck() {
             for (LayoutNode n : nodes) {
                 assert n.layer == -1;
@@ -514,12 +518,14 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
 
         }
 
+        @Override
         public void printStatistics() {
             //for(LayoutNode n : nodes) {
             //	System.out.println(n + " on layer " + n.layer);
             //}
         }
 
+        @Override
         public void postCheck() {
             for (LayoutNode n : nodes) {
                 assert n.layer >= 0;
@@ -535,6 +541,7 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
 
         private int oldNodeCount;
 
+        @Override
         protected void preCheck() {
             for (LayoutNode n : nodes) {
                 for (LayoutEdge e : n.succs) {
@@ -590,10 +597,12 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
             return result;
         }
 
+        @Override
         public void printStatistics() {
             System.out.println("Dummy nodes created: " + (nodes.size() - oldNodeCount));
         }
 
+        @Override
         public void postCheck() {
             ArrayList<LayoutNode> currentNodes = new ArrayList<LayoutNode>(nodes);
             for (LayoutNode n : currentNodes) {
@@ -626,6 +635,7 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
 
     private class CrossingReduction extends AlgorithmPart {
 
+        @Override
         public void preCheck() {
             for (LayoutNode n : nodes) {
                 assert n.layer < layerCount;
@@ -633,8 +643,9 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
         }
 
         protected void run() {
-
-            layers = new List[layerCount];
+            @SuppressWarnings({"unchecked", "rawtypes"})
+            List<LayoutNode>[] layersTmp = new List[layerCount];
+            layers = layersTmp;
 
             for (int i = 0; i < layerCount; i++) {
                 layers[i] = new ArrayList<LayoutNode>();
@@ -709,7 +720,7 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
                     }
                 }
 
-                Collections.sort(layers[i], crossingNodeComparator);
+                layers[i].sort(crossingNodeComparator);
 
                 int z = 0;
                 for (LayoutNode n : layers[i]) {
@@ -743,7 +754,7 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
 
                 }
 
-                Collections.sort(layers[i], crossingNodeComparator);
+                layers[i].sort(crossingNodeComparator);
 
                 int z = 0;
                 for (LayoutNode n : layers[i]) {
@@ -758,6 +769,7 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
             return 0;
         }
 
+        @Override
         public void postCheck() {
 
             HashSet<LayoutNode> visited = new HashSet<LayoutNode>();
@@ -852,11 +864,17 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
             }
         }
 
+        @Override
         protected void run() {
-
-            space = new ArrayList[layers.length];
-            downProcessingOrder = new ArrayList[layers.length];
-            upProcessingOrder = new ArrayList[layers.length];
+            @SuppressWarnings({"unchecked", "rawtypes"})
+            ArrayList<Integer>[] spaceTmp = new ArrayList[layers.length];
+            space = spaceTmp;
+            @SuppressWarnings({"unchecked", "rawtypes"})
+            ArrayList<LayoutNode>[] downProcessingOrderTmp = new ArrayList[layers.length];
+            downProcessingOrder = downProcessingOrderTmp;
+            @SuppressWarnings({"unchecked", "rawtypes"})
+            ArrayList<LayoutNode>[] upProcessingOrderTmp = new ArrayList[layers.length];
+            upProcessingOrder = upProcessingOrderTmp;
 
             for (int i = 0; i < layers.length; i++) {
                 space[i] = new ArrayList<Integer>();
@@ -871,8 +889,8 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
                     upProcessingOrder[i].add(n);
                 }
 
-                Collections.sort(downProcessingOrder[i], nodeProcessingDownComparator);
-                Collections.sort(upProcessingOrder[i], nodeProcessingUpComparator);
+                downProcessingOrder[i].sort(nodeProcessingDownComparator);
+                upProcessingOrder[i].sort(nodeProcessingUpComparator);
             }
 
             initialPositions();
@@ -1085,14 +1103,11 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
 
             int minX = Integer.MAX_VALUE;
             int minY = Integer.MAX_VALUE;
-            for (N v : vertexPositions.keySet()) {
-                Point p = vertexPositions.get(v);
+            for (Point p : vertexPositions.values()) {
                 minX = Math.min(minX, p.x);
                 minY = Math.min(minY, p.y);
             }
-
-            for (E l : linkPositions.keySet()) {
-                List<Point> points = linkPositions.get(l);
+            for (List<Point> points : linkPositions.values()) {
                 for (Point p : points) {
                     if (p != null) {
                         minX = Math.min(minX, p.x);
@@ -1102,8 +1117,9 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
 
             }
 
-            for (N v : vertexPositions.keySet()) {
-                Point p = vertexPositions.get(v);
+            for (Map.Entry<N, Point> entry : vertexPositions.entrySet()) {
+                N v = entry.getKey();
+                Point p = entry.getValue();
                 p.x -= minX;
                 p.y -= minY;
                 Widget w = graph.getScene().findWidget(v);
@@ -1114,8 +1130,9 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
                 }
             }
 
-            for (E l : linkPositions.keySet()) {
-                List<Point> points = linkPositions.get(l);
+            for (Map.Entry<E, List<Point>> entry : linkPositions.entrySet()) {
+                E l = entry.getKey();
+                List<Point> points = entry.getValue();
 
                 for (Point p : points) {
                     if (p != null) {
@@ -1155,6 +1172,7 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
             graph.getScene().revalidate();
         }
 
+        @Override
         protected void printStatistics() {
             System.out.println("Number of nodes: " + nodes.size());
             int edgeCount = 0;

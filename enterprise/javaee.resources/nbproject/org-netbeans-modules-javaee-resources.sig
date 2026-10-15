@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.16
+#Version 1.43
 
 CLSS public abstract interface java.io.Serializable
 
@@ -21,7 +21,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
@@ -74,6 +73,8 @@ fld public final static java.lang.String ANN_DATA_SOURCE = "javax.annotation.sql
 fld public final static java.lang.String ANN_JMS_CONNECTION_FACTORY = "javax.jms.JMSConnectionFactoryDefinition"
 fld public final static java.lang.String ANN_JMS_DESTINATION = "javax.jms.JMSDestinationDefinition"
 fld public final static java.lang.String ANN_JMS_DESTINATIONS = "javax.jms.JMSDestinationDefinitions"
+fld public final static java.lang.String ANN_JMS_DESTINATIONS_JAKARTA = "jakarta.jms.JMSDestinationDefinitions"
+fld public final static java.lang.String ANN_JMS_DESTINATION_JAKARTA = "jakarta.jms.JMSDestinationDefinition"
 supr java.lang.Object
 
 CLSS public abstract org.netbeans.modules.javaee.resources.api.model.JndiResourcesAbstractModel

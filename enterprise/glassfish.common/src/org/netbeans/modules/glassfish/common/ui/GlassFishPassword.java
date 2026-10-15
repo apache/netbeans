@@ -36,18 +36,12 @@ import org.openide.util.NbBundle;
  */
 public class GlassFishPassword extends CommonPasswordPanel {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = GlassFishLogger.get(GlassFishPassword.class);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Display GlassFish password panel to change GlassFish password.
      <p/>
@@ -84,17 +78,11 @@ public class GlassFishPassword extends CommonPasswordPanel {
         return password;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Password verification label. */
     private final String passwordVerifyLabelText;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates new GlassFish password panel.
      * <p/>
@@ -118,10 +106,7 @@ public class GlassFishPassword extends CommonPasswordPanel {
                 .addDocumentListener(initPasswordValidateListener());
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // GUI Getters and Setters                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get password value from form.
      * <p/>
@@ -131,10 +116,7 @@ public class GlassFishPassword extends CommonPasswordPanel {
         return new String(password.getPassword());
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Validators                                                             //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Validate password fields.
      * <p/>
@@ -173,10 +155,7 @@ public class GlassFishPassword extends CommonPasswordPanel {
         };
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Clear form fields to remove password {@see String}s from them.
      */
@@ -185,10 +164,7 @@ public class GlassFishPassword extends CommonPasswordPanel {
         this.passwordVerify.setText("");
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Generated GUI code                                                     //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

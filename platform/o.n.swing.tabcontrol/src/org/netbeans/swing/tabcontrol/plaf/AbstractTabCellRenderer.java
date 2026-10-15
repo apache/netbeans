@@ -425,7 +425,9 @@ public abstract class AbstractTabCellRenderer extends JLabel
         paintIconAndText(g);
     }
 
-    /** Return non-zero to shift the text up or down by the specified number of pixels when painting.
+    /**
+     * Return non-zero to shift the text up or down by the specified number of pixels when painting.
+     * Used by the default implementation of {@link #getCaptionYPosition(Graphics)}.
      *
      * @return A positive or negative number of pixels
      */
@@ -442,12 +444,14 @@ public abstract class AbstractTabCellRenderer extends JLabel
     }
 
     /**
-     * Actually paints the icon and text (using the lightweight HTML renderer)
+     * Get the Y position of the caption. May be overridden. The default implementation uses an old
+     * formula which is retained for backwards compatibility (since subclasses may have tuned their
+     * value of {@link #getCaptionYAdjustment()} based on it).
      *
      * @param g The graphics context
+     * @return The Y position of the caption's baseline
      */
-    protected void paintIconAndText(Graphics g) {
-        g.setFont(getFont());
+    protected int getCaptionYPosition(Graphics g) {
         FontMetrics fm = g.getFontMetrics(getFont());
         //Find out what height we need
         int txtH = fm.getHeight();
@@ -460,6 +464,23 @@ public abstract class AbstractTabCellRenderer extends JLabel
         } else {
             txtY = txtH + ins.top;
         }
+        txtY += getCaptionYAdjustment();
+        return txtY;
+    }
+
+    /**
+     * Actually paints the icon and text (using the lightweight HTML renderer)
+     *
+     * @param g The graphics context
+     */
+    protected void paintIconAndText(Graphics g) {
+        g.setFont(getFont());
+        FontMetrics fm = g.getFontMetrics(getFont());
+        //Find out what height we need
+        int txtH = fm.getHeight();
+        Insets ins = getInsets();
+        //find out the available height
+        int availH = getHeight() - (ins.top + ins.bottom);
         int txtX;
 
         int centeringToAdd = getPixelsToAddToSelection() != 0 ?
@@ -467,18 +488,11 @@ public abstract class AbstractTabCellRenderer extends JLabel
 
         Icon icon = getIcon();
         //Check the icon non-null and height (see TabData.NO_ICON for why)
-        if (!isClipLeft() && icon != null && icon.getIconWidth() > 0
-                && icon.getIconHeight() > 0) {
-            int iconY;
-            if (availH > icon.getIconHeight()) {
-                //add 2 to make sure icon top pixels are not cut off by outline
-                iconY = ins.top
-                        + ((availH / 2) - (icon.getIconHeight() / 2))
+        if (!isClipLeft() && icon != null && icon.getIconWidth() > 0 && icon.getIconHeight() > 0) {
+            int iconY = ins.top
+                        + Math.max(0, (availH - icon.getIconHeight())) / 2
+                        //add 2 to make sure icon top pixels are not cut off by outline
                         + 2;
-            } else {
-                //add 2 to make sure icon top pixels are not cut off by outline
-                iconY = ins.top + 2;
-            }
             int iconX = ins.left + centeringToAdd;
 
             iconY += getIconYAdjustment();
@@ -495,7 +509,7 @@ public abstract class AbstractTabCellRenderer extends JLabel
             txtX += 5;
         }
 
-        txtY += getCaptionYAdjustment();
+        int txtY = getCaptionYPosition(g);
 
         //Get the available horizontal pixels for text
         int txtW = getWidth() - (txtX + ins.right);

@@ -186,7 +186,7 @@ public class ApisupportAntUtils {
                 }
                 if (!bundleFOs.isEmpty()) {
                     Collections.reverse(bundleFOs);
-                    return LocalizedBundleInfo.load(bundleFOs.toArray(new FileObject[bundleFOs.size()]));
+                    return LocalizedBundleInfo.load(bundleFOs.toArray(new FileObject[0]));
                 }
             }
         } catch (IOException e) {
@@ -264,7 +264,7 @@ public class ApisupportAntUtils {
                         addBundlesFromJar(main, bundleISs, locBundleResource);
                         if (!bundleISs.isEmpty()) {
                             Collections.reverse(bundleISs);
-                            return LocalizedBundleInfo.load(bundleISs.toArray(new InputStream[bundleISs.size()]));
+                            return LocalizedBundleInfo.load(bundleISs.toArray(new InputStream[0]));
                         }
                     } finally {
                         for (InputStream bundleIS : bundleISs) {
@@ -474,7 +474,7 @@ public class ApisupportAntUtils {
      * Property provider which computes one or more properties based on some properties coming
      * from an intermediate evaluator, and is capable of firing changes correctly.
      */
-    public static abstract class ComputedPropertyProvider implements PropertyProvider, PropertyChangeListener {
+    public abstract static class ComputedPropertyProvider implements PropertyProvider, PropertyChangeListener {
         private final PropertyEvaluator eval;
         private final ChangeSupport cs = new ChangeSupport(this);
         protected ComputedPropertyProvider(PropertyEvaluator eval) {
@@ -676,13 +676,13 @@ public class ApisupportAntUtils {
         if (dir == null) {
             return;
         }
-        for (Enumeration en1 = dir.getFolders(false); en1.hasMoreElements(); ) {
+        for (Enumeration<? extends FileObject> en1 = dir.getFolders(false); en1.hasMoreElements(); ) {
             FileObject subDir = (FileObject) en1.nextElement();
             if (VisibilityQuery.getDefault().isVisible(subDir)) {
                 scanForPackages(validPkgs, subDir, ext);
             }
         }
-        for (Enumeration en2 = dir.getData(false); en2.hasMoreElements(); ) {
+        for (Enumeration<? extends FileObject> en2 = dir.getData(false); en2.hasMoreElements(); ) {
             FileObject kid = (FileObject) en2.nextElement();
             if (kid.hasExt(ext) && Utilities.isJavaIdentifier(kid.getName())) {
                 // at least one class inside directory -> valid package

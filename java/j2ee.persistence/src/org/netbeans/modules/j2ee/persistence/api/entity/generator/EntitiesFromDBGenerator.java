@@ -41,6 +41,7 @@ import org.netbeans.modules.j2ee.persistence.entitygenerator.EntityRelation.Coll
 import org.netbeans.modules.j2ee.persistence.entitygenerator.EntityRelation.FetchType;
 import org.netbeans.modules.j2ee.persistence.wizard.fromdb.JavaPersistenceGenerator;
 import org.netbeans.modules.j2ee.persistence.wizard.fromdb.DBSchemaTableProvider;
+import org.netbeans.modules.j2ee.persistence.wizard.fromdb.PersistenceGenerator;
 import org.netbeans.modules.j2ee.persistence.wizard.fromdb.RelatedCMPHelper;
 import org.netbeans.modules.j2ee.persistence.wizard.fromdb.SelectedTables;
 import org.netbeans.modules.j2ee.persistence.wizard.fromdb.Table;
@@ -63,7 +64,7 @@ public final class EntitiesFromDBGenerator {
     private final DatabaseConnection connection;
     private final Project project;
     private final PersistenceUnit persistenceUnit;
-    private final JavaPersistenceGenerator generator; 
+    private final PersistenceGenerator generator;
     
     // Global mapping options
     private boolean fullyQualifiedTableNames;
@@ -104,6 +105,41 @@ public final class EntitiesFromDBGenerator {
             FetchType fetchType, CollectionType collectionType,
             String packageName, SourceGroup location, DatabaseConnection connection,
             Project project, PersistenceUnit persistenceUnit) {
+        this(tableNames, generateNamedQueries, fullyQualifiedTableNames, regenTablesAttrs, fetchType, collectionType, packageName, location, connection, project, persistenceUnit, new JavaPersistenceGenerator(persistenceUnit));
+    }
+
+    /**
+     * Creates a new instance of EntitiesFromDBGenerator.
+     *
+     * @param tableNames the names of the tables for which entities are generated. Must not be null.
+     * @param generateNamedQueries specifies whether named queries should be generated.
+     * @param fullyQualifiedTableNames specifies whether fully qualified database table names should be used.
+     *        Attribute catalog and schema are added to the Table annotation if true
+     * @param regenTablesAttrs specified whether attributes used for regenerating tables from entity classes
+     *        should be included. If true, unique containtraints are generated on @Table annotation and attributes
+     *        nullable (if false), length (for String type), precision and scale(for decimal type) are added to
+     *        the Column annotation
+     * @param fetchType specifies the fetch type for the associations. Can be <code>FetchType.DEFAULT</code>,
+     *        <code>FetchType.EAGER</code> or <code>FetchType.LAZY</code>. Default to <code>FetchType.DEFAULT</code>,
+     *        meaning no fetch attribute is added to the relationship annotation
+     * @param collectionType specifies the collection type for the OneToMany and ManyToMany fields.
+     *        Can be <code>CollectionType.COLLECTION</code>, <code>CollectionType.LIST</code> or
+     *        <code>CollectionType.SET</code>. Default to <code>CollectionType.COLLECTION</code>.
+     * @param packageName the name of the package for the generated entities. Must not be null.
+     * @param location the location. Must not be null.
+     * @param connection the database connection for the specified tables. Must not be null.
+     * @param project the project to which entities are generated.
+     * @param persistenceUnit the persistenceUnit to which generated entities should be added
+     * as managed classes. May be null, in which case it is up to the client to add
+     * the generated entities to an appropriate persistence unit (if any).
+     * @param persistenceGenerator persistence generator
+     *
+     */
+    public EntitiesFromDBGenerator(List<String> tableNames, boolean generateNamedQueries,
+            boolean fullyQualifiedTableNames, boolean regenTablesAttrs,
+            FetchType fetchType, CollectionType collectionType,
+            String packageName, SourceGroup location, DatabaseConnection connection,
+            Project project, PersistenceUnit persistenceUnit, PersistenceGenerator persistenceGenerator) {
         Parameters.notNull("project", project); //NOI18N
         Parameters.notNull("tableNames", tableNames); //NOI18N
         Parameters.notNull("packageName", packageName); //NOI18N
@@ -121,7 +157,7 @@ public final class EntitiesFromDBGenerator {
         this.connection = connection;
         this.project = project;
         this.persistenceUnit = persistenceUnit;
-        this.generator = new JavaPersistenceGenerator(persistenceUnit);
+        this.generator = persistenceGenerator;
     }
     
     /**
@@ -179,9 +215,7 @@ public final class EntitiesFromDBGenerator {
             helper.buildBeans();
             
         } catch (DBException ex){
-            IOException wrapper = new IOException(ex.getMessage());
-            wrapper.initCause(ex);
-            throw wrapper;
+            throw new IOException(ex);
         }
         
         
@@ -195,7 +229,7 @@ public final class EntitiesFromDBGenerator {
     private TableClosure getTableClosure() throws SQLException, DBException{
         TableProvider tableProvider = new DBSchemaTableProvider(getSchemaElement(), generator, project);
         
-        Set<Table> selectedTables = new HashSet<Table>();
+        Set<Table> selectedTables = new HashSet<>();
         for (Table each : tableProvider.getTables()){
             if (tableNames.contains(each.getName())){
                 selectedTables.add(each);
@@ -220,7 +254,7 @@ public final class EntitiesFromDBGenerator {
         SchemaElementImpl impl = new SchemaElementImpl(connectionProvider);
         schemaElement = new SchemaElement(impl);
         schemaElement.setName(DBIdentifier.create("schema")); // NOI18N
-        impl.initTables(connectionProvider, new LinkedList(tableNames), new LinkedList(), true);
+        impl.initTables(connectionProvider, new LinkedList<>(tableNames), new LinkedList<>(), true);
         
         return schemaElement;
     }

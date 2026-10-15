@@ -318,7 +318,7 @@ public class PatternNode extends AbstractNode {
                     if ( !oldSubs.contains(newSub) && node.getChildren() != Children.LEAF) {                                           
                         pattern.getPatternAnalyser().getUI().expandNode(node); // Make sure new nodes get expanded
                     }     
-                    ((PatternNode)node).updateRecursively( newSub ); // update the node recursively
+                    node.updateRecursively( newSub ); // update the node recursively
                 }
            }
         }

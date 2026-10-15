@@ -28,13 +28,16 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.api.MavenConfiguration;
 import static org.netbeans.modules.maven.configurations.Bundle.*;
@@ -44,16 +47,23 @@ import org.netbeans.modules.maven.execute.model.NetbeansActionProfile;
 import org.netbeans.modules.maven.execute.model.NetbeansActionReader;
 import org.netbeans.modules.maven.execute.model.io.xpp3.NetbeansBuildActionXpp3Writer;
 import org.netbeans.modules.maven.spi.actions.AbstractMavenActionsProvider;
+import org.netbeans.modules.maven.spi.actions.MavenActionsProvider;
 import org.openide.filesystems.FileChangeAdapter;
 import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
 
 /**
+ * Represents a configuration, Properties defined by {@link MavenConfiguration} plus list of action descriptions
+ * for that configuration. This class is used to represent:
+ * <ul>
+ * <li>default configurations, provided by Maven project.
+ * <li>profile-based configurations
+ * <li>user-customized configurations, that loads action configs from the project directory.
+ * </ul>
  *
  * @author mkleint
  */
@@ -61,21 +71,26 @@ public class M2Configuration extends AbstractMavenActionsProvider implements Mav
     private static final Logger LOG = Logger.getLogger(M2Configuration.class.getName());
 
     public static final String DEFAULT = "%%DEFAULT%%"; //NOI18N
+    public static final String FILENAME = "nbactions.xml"; //NOI18N
+    public static final String FILENAME_PREFIX = "nbactions-"; //NOI18N
+    public static final String FILENAME_SUFFIX = ".xml"; //NOI18N
     
     public static M2Configuration createDefault(FileObject projectDirectory) {
         return new M2Configuration(DEFAULT, projectDirectory);
     }
-    
+
+    /**
+     * True, if the M2Configuration comes from a customized project storage.
+     */
+    private boolean customized;
     private @NonNull final String id;
     private List<String> profiles;
-    public static final String FILENAME = "nbactions.xml"; //NOI18N
-    public static final String FILENAME_PREFIX = "nbactions-"; //NOI18N
-    public static final String FILENAME_SUFFIX = ".xml"; //NOI18N
     private final Map<String,String> properties = new HashMap<String,String>();
     private final FileObject projectDirectory;
     
     private final AtomicBoolean resetCache = new AtomicBoolean(false);
     private FileChangeListener listener = null;
+    private String displayName;
     
     public M2Configuration(String id, FileObject projectDirectory) {
         assert id != null;
@@ -83,7 +98,6 @@ public class M2Configuration extends AbstractMavenActionsProvider implements Mav
         this.projectDirectory = projectDirectory;
         profiles = Collections.<String>emptyList();
     }
-
     
      @Override       
      @Messages("TXT_DefaultConfig=<default config>")
@@ -91,7 +105,11 @@ public class M2Configuration extends AbstractMavenActionsProvider implements Mav
         if (DEFAULT.equals(id)) {
             return TXT_DefaultConfig();
         }
-        return id;
+        return displayName != null ? displayName : id;
+    }
+     
+    void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
     
     public @NonNull String getId() {
@@ -146,10 +164,15 @@ public class M2Configuration extends AbstractMavenActionsProvider implements Mav
     public @Override InputStream getActionDefinitionStream() {
         return getActionDefinitionStream(id);
     }
-    
+
+    public boolean isCustomized() {
+        return customized;
+    }
+
     final InputStream getActionDefinitionStream(String forId) {
         checkListener();
         FileObject fo = projectDirectory.getFileObject(getFileNameExt(forId));
+        customized = fo != null;
         resetCache.set(false);
         if (fo != null) {
             try {
@@ -157,7 +180,7 @@ public class M2Configuration extends AbstractMavenActionsProvider implements Mav
             } catch (FileNotFoundException ex) {
                 LOG.log(Level.WARNING, "Cannot read " + fo, ex); // NOI18N
             }
-        }
+        } 
         return null;
     }
     
@@ -223,7 +246,7 @@ public class M2Configuration extends AbstractMavenActionsProvider implements Mav
                     toRet.add(mapp);
                 }
             }
-            return toRet.toArray(new NetbeansActionMapping[toRet.size()]);
+            return toRet.toArray(new NetbeansActionMapping[0]);
         } catch (XmlPullParserException ex) {
             LOG.log(Level.WARNING, null, ex);
         } catch (IOException ex) {
@@ -249,15 +272,25 @@ public class M2Configuration extends AbstractMavenActionsProvider implements Mav
                         rdr = new InputStreamReader(in);
                         ActionToGoalMapping def = reader.read(rdr);
                         for (NetbeansActionProfile p : def.getProfiles()) {
-                            if (id.equals(p.getId())) {
-                                ActionToGoalMapping m = new ActionToGoalMapping();
-                                m.setActions(m.getActions());
-                                m.setModelEncoding(m.getModelEncoding());
-                                originalMappings = m;
+                            if (id.equals(p.getId()) && p.getActions() != null) {
+                                Map<String, Integer> posMap = new HashMap<>();
+                                for (int i = 0; i < def.getActions().size(); i++) {
+                                    posMap.put(def.getActions().get(i).getActionName(), i);
+                                }
+                                // merge in or override global actions:
+                                for (NetbeansActionMapping am : p.getActions()) {
+                                    String n = am.getActionName();
+                                    Integer i = posMap.get(n);
+                                    if (null == i) {
+                                        def.getActions().add(am);
+                                    } else {
+                                        def.getActions().set(i, am);
+                                    }
+                                }
                                 break;
                             }
                         }
-
+                        originalMappings = def;
                     } else {
                         originalMappings = new ActionToGoalMapping();
                     }
@@ -295,19 +328,10 @@ public class M2Configuration extends AbstractMavenActionsProvider implements Mav
                 StringWriter str = new StringWriter();
                 InputStreamReader rdr = null;
                 try {
-                    InputStream in = getActionDefinitionStream();
-                    if (in == null) {
-                      in = getActionDefinitionStream(DEFAULT);
-                    }
-                    if (in == null) {
-                        return null;
-                    }                    
-                    rdr = new InputStreamReader(in);
-                    ActionToGoalMapping map = reader.read(rdr);
+                    // relay the action load to the possibly customized getRawMappings
+                    ActionToGoalMapping map = getRawMappings();
                     writer.write(str, map);
                 } catch (IOException ex) {
-                    LOG.log(Level.WARNING, "Loading raw mappings", ex);
-                } catch (XmlPullParserException ex) {
                     LOG.log(Level.WARNING, "Loading raw mappings", ex);
                 } finally {
                     if(rdr != null) {
@@ -358,5 +382,4 @@ public class M2Configuration extends AbstractMavenActionsProvider implements Mav
             }
         }.getMappingForAction(reader, LOG, actionName, null, project, null, replaceMap);
     }
-
 }

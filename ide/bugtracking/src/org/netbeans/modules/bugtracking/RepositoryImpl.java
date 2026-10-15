@@ -45,18 +45,18 @@ import org.openide.util.Utilities;
  */
 public final class RepositoryImpl<R, Q, I> {
 
-    private final static Logger LOG = Logger.getLogger("org.netbeans.modules.bugtracking.Repository"); // NOI18N
+    private static final Logger LOG = Logger.getLogger("org.netbeans.modules.bugtracking.Repository"); // NOI18N
     
-    public final static String EVENT_QUERY_LIST_CHANGED = RepositoryProvider.EVENT_QUERY_LIST_CHANGED;
+    public static final String EVENT_QUERY_LIST_CHANGED = RepositoryProvider.EVENT_QUERY_LIST_CHANGED;
     
-    public final static String EVENT_UNSUBMITTED_ISSUES_CHANGED = RepositoryProvider.EVENT_UNSUBMITTED_ISSUES_CHANGED;
+    public static final String EVENT_UNSUBMITTED_ISSUES_CHANGED = RepositoryProvider.EVENT_UNSUBMITTED_ISSUES_CHANGED;
         
     /**
      * RepositoryProvider's attributes have changed, e.g. name, url, etc.
      * Old and new value are maps of changed doubles: attribute-name / attribute-value.
      * Old value can be null in case the repository is created.
      */
-    public final static String EVENT_ATTRIBUTES_CHANGED = "bugtracking.repository.attributes.changed"; //NOI18N
+    public static final String EVENT_ATTRIBUTES_CHANGED = "bugtracking.repository.attributes.changed"; //NOI18N
 
     public static final String ATTRIBUTE_URL = "repository.attribute.url"; //NOI18N
     public static final String ATTRIBUTE_DISPLAY_NAME = "repository.attribute.displayName"; //NOI18N
@@ -114,7 +114,7 @@ public final class RepositoryImpl<R, Q, I> {
                     if(LOG.isLoggable(Level.FINE)) {
                         LOG.log(Level.FINE, "firing query list change {0} - rImpl: {1} - r: {2}", new Object[]{getDisplayName(), this, r}); // NOI18N
                     }
-                    Collection<QueryImpl> queries = new ArrayList<QueryImpl>(getQueries());
+                    Collection<QueryImpl> queries = new ArrayList<>(getQueries());
                     synchronized(queryMap) {
                         List<Q> toRemove = new LinkedList<Q>();
                         for(Entry<Q, WeakReference<QueryImpl>> e : queryMap.entrySet()) {
@@ -130,9 +130,8 @@ public final class RepositoryImpl<R, Q, I> {
                                 toRemove.add(e.getKey());
                             }
                         }
-                        for (Q q : toRemove) {
-                            queryMap.remove(q);
-                        }
+
+                        queryMap.keySet().removeAll(toRemove);
                     }
                     fireQueryListChanged();
                 } else if (RepositoryProvider.EVENT_UNSUBMITTED_ISSUES_CHANGED.equals(evt.getPropertyName())) {
@@ -218,7 +217,7 @@ public final class RepositoryImpl<R, Q, I> {
         if(is == null || is.isEmpty()) {
             return Collections.emptyList();
         }
-        List<IssueImpl> ret = new ArrayList<IssueImpl>(is.size());
+        List<IssueImpl> ret = new ArrayList<>(is.size());
         for (I i : is) {
             IssueImpl impl = getIssue(i);
             if(impl != null) {
@@ -255,7 +254,7 @@ public final class RepositoryImpl<R, Q, I> {
     
     public Collection<IssueImpl> simpleSearch(String criteria) {
         Collection<I> issues = repositoryProvider.simpleSearch(r, criteria);
-        List<IssueImpl> ret = new ArrayList<IssueImpl>(issues.size());
+        List<IssueImpl> ret = new ArrayList<>(issues.size());
         for (I i : issues) {
             ret.add(getIssue(i));
         }
@@ -419,16 +418,13 @@ public final class RepositoryImpl<R, Q, I> {
         return repositoryProvider.getController(r);
     }
     
-    //////////////////////
     // Unsubmitted issues
-    //////////////////////
-    
     public Collection<IssueImpl> getUnsubmittedIssues () {
         Collection<I> issues = issueStatusProvider != null ? issueStatusProvider.getUnsubmittedIssues(r) : null;
         if (issues == null || issues.isEmpty()) {
-            return Collections.<IssueImpl>emptyList();
+            return Collections.emptyList();
         }
-        List<IssueImpl> ret = new ArrayList<IssueImpl>(issues.size());
+        List<IssueImpl> ret = new ArrayList<>(issues.size());
         for (I i : issues) {
             IssueImpl impl = getIssue(i);
             if(impl != null) {
@@ -521,7 +517,7 @@ public final class RepositoryImpl<R, Q, I> {
             return w;
         }
         
-        public WeakReference get(DATA key, WRAPPER w) {
+        public WeakReference<WRAPPER> get(DATA key, WRAPPER w) {
             return super.put(key, new MapReference(key, w)); 
         }
         

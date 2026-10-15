@@ -254,15 +254,15 @@ public final class EarProjectProperties {
         }
         EditableProperties projectProperties = updateHelper.getProperties( AntProjectHelper.PROJECT_PROPERTIES_PATH );                
         EditableProperties privateProperties = updateHelper.getProperties( AntProjectHelper.PRIVATE_PROPERTIES_PATH );
-        DEBUG_CLASSPATH_MODEL = ClassPathUiSupport.createListModel( cs.itemsIterator( (String)projectProperties.get( ProjectProperties.RUN_CLASSPATH ), null ) );
-        ENDORSED_CLASSPATH_MODEL = ClassPathUiSupport.createListModel( cs.itemsIterator( (String)projectProperties.get( ProjectProperties.ENDORSED_CLASSPATH ), null ) );
+        DEBUG_CLASSPATH_MODEL = ClassPathUiSupport.createListModel( cs.itemsIterator(projectProperties.get( ProjectProperties.RUN_CLASSPATH ), null ) );
+        ENDORSED_CLASSPATH_MODEL = ClassPathUiSupport.createListModel( cs.itemsIterator(projectProperties.get( ProjectProperties.ENDORSED_CLASSPATH ), null ) );
         CLASS_PATH_LIST_RENDERER = ClassPathListCellRenderer.createClassPathListRenderer(evaluator, project.getProjectDirectory());
 
         // CustomizerJarContent
         ARCHIVE_COMPRESS_MODEL = projectGroup.createToggleButtonModel( evaluator, JAR_COMPRESS );
         ARCHIVE_NAME_MODEL = projectGroup.createStringDocument( evaluator, JAR_NAME );
         BUILD_CLASSES_EXCLUDES_MODEL = projectGroup.createStringDocument( evaluator, BUILD_CLASSES_EXCLUDES );
-        EAR_CONTENT_ADDITIONAL_MODEL = AdditionalContentTableModel.createTableModel( cs.itemsIterator( (String)projectProperties.get( JAR_CONTENT_ADDITIONAL ), TAG_WEB_MODULE__ADDITIONAL_LIBRARIES) );
+        EAR_CONTENT_ADDITIONAL_MODEL = AdditionalContentTableModel.createTableModel( cs.itemsIterator(projectProperties.get( JAR_CONTENT_ADDITIONAL ), TAG_WEB_MODULE__ADDITIONAL_LIBRARIES) );
         EAR_CONTENT_ADDITIONAL_MODEL.getDefaultListModel().addListDataListener(new ListDataListener() {
             public void intervalAdded(ListDataEvent e) {
                 CLIENT_MODULE_MODEL.refresh(ClassPathUiSupport.getList( EAR_CONTENT_ADDITIONAL_MODEL.getDefaultListModel()));
@@ -492,7 +492,7 @@ public final class EarProjectProperties {
         }
     }
     
-    static private void removeItemFromAppDD(EarProject project, Application dd, ClassPathSupport.Item item) {
+    private static void removeItemFromAppDD(EarProject project, Application dd, ClassPathSupport.Item item) {
         String pathInEAR = getCompletePathInArchive(project, item);
         Module m = searchForModule(dd, pathInEAR);
         if (null != m) {
@@ -821,7 +821,7 @@ public final class EarProjectProperties {
         return projects;
     }
     
-    static public List getSortedSubprojectsList(EarProject project) {
+    public static List getSortedSubprojectsList(EarProject project) {
         List<Project> subprojects = new ArrayList<Project>();
         addSubprojects( project, subprojects ); // Find the projects recursively
         String[] displayNames = new String[subprojects.size()];
@@ -837,14 +837,14 @@ public final class EarProjectProperties {
     
     /** Gets all subprojects recursively
      */
-    static private void addSubprojects( Project project, List<Project> result ) {
+    private static void addSubprojects( Project project, List<Project> result ) {
         SubprojectProvider spp = project.getLookup().lookup( SubprojectProvider.class );
         
         if ( spp == null ) {
             return;
         }
         
-        for( Iterator/*<Project>*/ it = spp.getSubprojects().iterator(); it.hasNext(); ) {
+        for( Iterator<? extends Project> it = spp.getSubprojects().iterator(); it.hasNext(); ) {
             Project sp = (Project) it.next();
             if (ProjectUtils.hasSubprojectCycles(project, sp)) {
                 Logger.getLogger("global").log(Level.WARNING, "There would be cyclic " + // NOI18N

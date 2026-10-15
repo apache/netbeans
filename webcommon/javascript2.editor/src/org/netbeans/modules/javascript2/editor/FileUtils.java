@@ -36,19 +36,19 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Utilities;
 import org.netbeans.api.queries.VisibilityQuery;
+import org.openide.util.BaseUtilities;
 
 /**
  *
  * @author Petr Pisl
  */
 public class FileUtils {
-    
-    final static String GO_UP = "../"; //NOI18N
+
     private static final String SLASH = "/"; //NOI18N
     private static final String FILE = "file"; // URI scheme
-    
+
     private static final Logger LOG = Logger.getLogger(FileUtils.class.getName());
-    
+
     public static FileObject findFileObject(final FileObject fromFO, final String path, boolean filesOnly) {
         FileObject parent = fromFO.getParent();
         FileObject targetFO;
@@ -74,13 +74,13 @@ public class FileUtils {
 
         return null;
     }
-    
+
     public interface FileObjectFilter {
 
         boolean accept(FileObject file);
 
     }
-    
+
     public static List<CompletionProposal> computeRelativeItems(
             Collection<? extends FileObject> relativeTo,
             final String prefix,
@@ -91,7 +91,7 @@ public class FileUtils {
 
         assert relativeTo != null;
 
-        List<CompletionProposal> result = new LinkedList();
+        List<CompletionProposal> result = new LinkedList<>();
 
         int lastSlash = prefix.lastIndexOf('/');
         String pathPrefix;
@@ -105,7 +105,7 @@ public class FileUtils {
             filePrefix = prefix;
         }
 
-        Set<FileObject> directories = new HashSet();
+        Set<FileObject> directories = new HashSet<>();
         File prefixFile = null;
         if (pathPrefix != null && !pathPrefix.startsWith(".")) { //NOI18N
             if (pathPrefix.length() == 0 && prefix.startsWith(SLASH)) {
@@ -128,9 +128,9 @@ public class FileUtils {
                 if (pathPrefix != null) {
                     File toFile = FileUtil.toFile(f);
                     if (toFile != null) {
-                        URI resolve = null;
+                        URI resolve;
                         try {
-                            resolve = Utilities.toURI(toFile).resolve(pathPrefix).normalize();
+                            resolve = BaseUtilities.normalizeURI(Utilities.toURI(toFile).resolve(pathPrefix));
                         } catch (IllegalArgumentException ex) {
                             resolve = null;
                         }

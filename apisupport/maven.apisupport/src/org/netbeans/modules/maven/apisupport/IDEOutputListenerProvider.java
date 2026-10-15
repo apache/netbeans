@@ -74,7 +74,7 @@ public class IDEOutputListenerProvider implements OutputProcessor {
             }
         }
         if (list.size() > 0) {
-            return ClassPathSupport.createProxyClassPath(list.toArray(new ClassPath[list.size()]));
+            return ClassPathSupport.createProxyClassPath(list.toArray(new ClassPath[0]));
         }
         return null;
     }

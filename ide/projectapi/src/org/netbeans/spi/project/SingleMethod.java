@@ -19,6 +19,7 @@
 
 package org.netbeans.spi.project;
 
+import java.util.Objects;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -29,9 +30,26 @@ import org.openide.filesystems.FileObject;
  */
 public final class SingleMethod {
 
-    private FileObject file;
-    private String methodName;
+    private final FileObject file;
+    private final String methodName;
+    private final NestedClass nestedClass;
 
+    /**
+     * Creates a new instance holding the specified identification
+     * of a method/function in a file.
+     *
+     * @param nestedClass nested class containing the method
+     * @param file file to be kept in the object
+     * @param methodName name of a method inside the file
+     * 
+     * @since 1.99
+     */
+    private SingleMethod(NestedClass nestedClass, FileObject file, String methodName) {
+        this.methodName = methodName;
+        this.file = file;
+        this.nestedClass = nestedClass;
+    }
+    
     /**
      * Creates a new instance holding the specified identification
      * of a method/function in a file.
@@ -43,15 +61,39 @@ public final class SingleMethod {
      * @since 1.19
      */
     public SingleMethod(FileObject file, String methodName) {
-        super();
-        if (file == null) {
-            throw new IllegalArgumentException("file is <null>");
+        this(null, nonNull(file, "file"), nonNull(methodName, "methodName"));
+    }
+    
+    /**
+     * Creates a new instance holding the specified identification
+     * of a method/function in nested class in a file.
+     *
+     * @param methodName name of a method inside the file     
+     * @param nestedClass nested class containing the method
+     * 
+     * @exception  java.lang.IllegalArgumentException
+     *             if the nested class name is {@code null}
+     * @since 1.99
+     */
+    public SingleMethod(String methodName, NestedClass nestedClass) {
+        this(nonNull(nestedClass, "nestedClass"), nonNull(nestedClass.getFile(), "file"), nonNull(methodName, "methodName"));
+    }
+    
+    private static <T> T nonNull(T value, String paramName) {
+        if (value == null) {
+            throw new IllegalArgumentException(paramName + " is <null>");
         }
-        if (methodName == null) {
-            throw new IllegalArgumentException("methodName is <null>");
-        }
-        this.file = file;
-        this.methodName = methodName;
+        return value;
+    }
+    
+    /**
+     * Returns the nested class containing the method.
+     *
+     * @return nested class containing the method
+     * @since 1.99
+     */
+    public NestedClass getNestedClass() {
+        return nestedClass;
     }
 
     /**
@@ -94,7 +136,7 @@ public final class SingleMethod {
             return false;
         }
         SingleMethod other = (SingleMethod) obj;
-        return other.file.equals(file) && other.methodName.equals(methodName);
+        return other.file.equals(file) && other.methodName.equals(methodName) && Objects.equals(other.nestedClass, nestedClass);
     }
 
     @Override
@@ -102,6 +144,7 @@ public final class SingleMethod {
         int hash = 7;
         hash = 29 * hash + this.file.hashCode();
         hash = 29 * hash + this.methodName.hashCode();
+        hash = 29 * hash + Objects.hashCode(this.nestedClass);
         return hash;
     }
 }

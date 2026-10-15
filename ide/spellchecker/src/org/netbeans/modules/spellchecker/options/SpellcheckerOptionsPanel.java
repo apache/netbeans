@@ -20,7 +20,6 @@
 package org.netbeans.modules.spellchecker.options;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -33,7 +32,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -43,9 +41,6 @@ import javax.swing.DefaultListModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JList;
-import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
@@ -88,7 +83,7 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
     private List<DictionaryDescription> addedDictionaries = new ArrayList<DictionaryDescription>();
 
     private SpellcheckerOptionsPanelController c;
-    private static final Icon errorIcon = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/spellchecker/resources/error.gif"));
+    private static final Icon errorIcon = ImageUtilities.loadIcon("org/netbeans/modules/spellchecker/resources/error.gif");
     
     /**
      * Creates new form SpellcheckerOptionsPanel
@@ -126,7 +121,7 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
             public void changedUpdate(DocumentEvent e) {}
         });
         List<String> cathegories = loadCategories ();
-        DefaultListModel model = new DefaultListModel ();
+        DefaultListModel<String> model = new DefaultListModel<>();
         for (String category : cathegories)
             model.addElement (category);
         lUseIn.setModel (model);
@@ -225,7 +220,7 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
     
     private void updateUsedIn() {
         List<String> categories = loadCategories();
-        DefaultListModel model = new DefaultListModel();
+        DefaultListModel<String> model = new DefaultListModel<>();
         for (String category : categories) {
             model.addElement(category);
         }
@@ -233,8 +228,8 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
     }
 
     private void updateLocales() {
-        DefaultListModel model = new DefaultListModel();
-        List<Locale> locales = new ArrayList<Locale>(Arrays.asList(DictionaryProviderImpl.getInstalledDictionariesLocales()));
+        DefaultListModel<Locale> model = new DefaultListModel<>();
+        List<Locale> locales = new ArrayList<>(Arrays.asList(DictionaryProviderImpl.getInstalledDictionariesLocales()));
 
         for (DictionaryDescription desc : addedDictionaries) {
             locales.add(desc.getLocale());
@@ -516,7 +511,7 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
     
     private ListModel getInstalledDictionariesModel() {
-        DefaultListModel dlm = new DefaultListModel();
+        DefaultListModel<Locale> dlm = new DefaultListModel<>();
 
         for (Locale l : DictionaryProviderImpl.getInstalledDictionariesLocales()) {
             dlm.addElement(l);
@@ -526,10 +521,10 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
     }
 
     private ComboBoxModel getLocaleModel() {
-        DefaultComboBoxModel dlm = new DefaultComboBoxModel();
-        List<Locale> locales = new ArrayList<Locale>(Arrays.asList(Locale.getAvailableLocales()));
+        DefaultComboBoxModel<Locale> dlm = new DefaultComboBoxModel<>();
+        List<Locale> locales = new ArrayList<>(Arrays.asList(Locale.getAvailableLocales()));
         
-        Collections.sort(locales, new LocaleComparator());
+        locales.sort(new LocaleComparator());
         
         for (Locale l : locales) {
             dlm.addElement(l);
@@ -559,7 +554,7 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
                 }
             }
         }
-        Collections.sort (result, CategoryComparator);
+        result.sort(CategoryComparator);
         return result;
     }
 

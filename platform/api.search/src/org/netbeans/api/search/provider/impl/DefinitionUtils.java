@@ -39,7 +39,7 @@ public final class DefinitionUtils {
     public static List<SearchFilter> createSearchFilterList(
             SearchFilterDefinition[] definitions) {
 
-        List<SearchFilter> list = new ArrayList<SearchFilter>(
+        List<SearchFilter> list = new ArrayList<>(
                 definitions.length);
 
         for (SearchFilterDefinition def : definitions) {

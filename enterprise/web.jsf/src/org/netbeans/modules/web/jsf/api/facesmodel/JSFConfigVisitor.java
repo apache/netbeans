@@ -423,7 +423,7 @@ public interface JSFConfigVisitor {
 
         @Override
         public void visit(FlowSwitch svitch) {
-            visitChild();;
+            visitChild();
         }
 
         @Override

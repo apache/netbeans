@@ -214,7 +214,7 @@ public class ULCustomizer extends javax.swing.JPanel {
 
         jSpinner1.setModel(new SpinnerNumberModel(ul.getCount(), 0, Integer.MAX_VALUE, 1));
         jSpinner1.setEditor(new NumberEditor(jSpinner1, "#"));
-        jSpinner1.setValue(new Integer(ul.getCount()));
+        jSpinner1.setValue(Integer.valueOf(ul.getCount()));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(12, 12, 0, 18);

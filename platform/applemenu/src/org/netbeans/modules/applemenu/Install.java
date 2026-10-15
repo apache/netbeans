@@ -21,7 +21,6 @@ package org.netbeans.modules.applemenu;
 
 import java.awt.AWTEvent;
 import java.awt.Toolkit;
-import java.lang.reflect.*;
 import org.openide.modules.ModuleInstall;
 import org.openide.util.Utilities;
 
@@ -32,7 +31,6 @@ import org.openide.util.Utilities;
  */
 public class Install extends ModuleInstall {
     private CtrlClickHack listener;
-    private Class adapter;
 
     @Override
     public void restored () {
@@ -43,39 +41,18 @@ public class Install extends ModuleInstall {
             if (System.getProperty(pn) == null) {
                 System.setProperty(pn, "true"); // NOI18N
             }
-            if (!installAdapter("org.netbeans.modules.applemenu.NbApplicationAdapterJDK8")) {   // NOI18N
-                // JDK 8 failed, try JDK 9
-                installAdapter("org.netbeans.modules.applemenu.NbApplicationAdapterJDK9");      // NOI18N
-            }
+            NbApplicationAdapter.install();
         }
     }
 
-    private boolean installAdapter(String className) {
-        try {
-            adapter = Class.forName(className);
-            Method m = adapter.getDeclaredMethod("install", new Class[0] ); // NOI18N
-            m.invoke(adapter, new Object[0]);
-            return true;
-        }catch (NoClassDefFoundError e) {
-        }catch (ClassNotFoundException e) {
-        }catch (Exception e) {
-        }
-        return false;
-    }
-    
     @Override
     public void uninstalled () {
          if (listener != null) {
             Toolkit.getDefaultToolkit().removeAWTEventListener(listener);
             listener = null;
          }
-        if (Utilities.isMac() && adapter != null) {
-            try {
-                Method m = adapter.getDeclaredMethod("uninstall", new Class[0] );   // NOI18N
-                m.invoke(adapter, new Object[0]);
-            } catch (NoClassDefFoundError e) {
-            } catch (Exception e) {
-            }
+        if (Utilities.isMac()) {
+            NbApplicationAdapter.uninstall();
         }
     }
 }

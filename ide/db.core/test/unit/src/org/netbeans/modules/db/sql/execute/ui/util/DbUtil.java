@@ -55,7 +55,7 @@ public class DbUtil {
         URL[] driverURLs=(URL[])list.toArray(new URL[0]);
         URLClassLoader l = new URLClassLoader(driverURLs);
         Class c = Class.forName(driver_name, true, l);
-        Driver driver=(Driver)c.newInstance();
+        Driver driver=(Driver)c.getDeclaredConstructor().newInstance();
         Connection con=driver.connect(url,p);
         return con;
     }

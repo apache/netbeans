@@ -115,7 +115,6 @@
         </question>
 -->
  <answer id="arch-usecases">
-  <p>
    <usecase id="creating" name="Creating a new Java Hint">
        Simple way to create a new Java hint is as follows:
        <ul>
@@ -153,7 +152,6 @@
    <usecase id="adding-options" name="Adding options to a Java Hint">
        To add a simple boolean option to your hint, use <a href="@TOP@/org/netbeans/spi/java/hints/BooleanOption.html">@BooleanOption</a>.
    </usecase>
-  </p>
  </answer>
 
 

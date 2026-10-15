@@ -20,7 +20,9 @@
 package org.netbeans.modules.groovy.editor.completion;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import org.netbeans.modules.csl.api.CompletionProposal;
 import org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext;
 
@@ -34,7 +36,7 @@ import org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext;
  */
 public class ProposalsCollector {
 
-    private List<CompletionProposal> proposals;
+    private Map<Object, CompletionProposal> proposals;
     private CompletionContext context;
 
     private BaseCompletion typesCompletion;
@@ -51,7 +53,7 @@ public class ProposalsCollector {
     public ProposalsCollector(CompletionContext context) {
         this.context = context;
         
-        proposals = new ArrayList<CompletionProposal>();
+        proposals = new LinkedHashMap<Object, CompletionProposal>();
         typesCompletion = new TypesCompletion();
         fieldCompletion = new FieldCompletion();
         methodCompletion = new MethodCompletion();
@@ -65,6 +67,7 @@ public class ProposalsCollector {
 
     public void completeKeywords(CompletionContext completionRequest) {
         keywordCompletion.complete(proposals, completionRequest, context.getAnchor());
+        (new SpockBlockNamesCompletion()).complete(proposals, completionRequest, context.getAnchor());
     }
 
     public void completeMethods(CompletionContext completionRequest) {
@@ -89,6 +92,7 @@ public class ProposalsCollector {
 
     public void completeLocalVars(CompletionContext request) {
         localVarCompletion.complete(proposals, request, context.getAnchor());
+        (new SpockMethodParamCompletion()).complete(proposals, request, context.getAnchor());
     }
 
     public void completeNewVars(CompletionContext request) {
@@ -100,7 +104,7 @@ public class ProposalsCollector {
     }
 
     public List<CompletionProposal> getCollectedProposals() {
-        return proposals;
+        return new ArrayList<>(proposals.values());
     }
 
     public void clearProposals() {

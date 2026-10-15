@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -412,8 +413,8 @@ public class FormRefactoringUpdate extends SimpleRefactoringElementImplementatio
             }
         }
         if (!oldList.isEmpty()) {
-            oldNames = oldList.toArray(new String[oldList.size()]);
-            newNames = newList.toArray(new String[newList.size()]);
+            oldNames = oldList.toArray(new String[0]);
+            newNames = newList.toArray(new String[0]);
             return replaceClassOrPkgName(oldNames, newNames, false);
         }
         return false;
@@ -472,8 +473,8 @@ public class FormRefactoringUpdate extends SimpleRefactoringElementImplementatio
                 }
             }
             if (!oldList.isEmpty()) {
-                String[] oldNames = oldList.toArray(new String[oldList.size()]);
-                String[] newNames = newList.toArray(new String[newList.size()]);
+                String[] oldNames = oldList.toArray(new String[0]);
+                String[] newNames = newList.toArray(new String[0]);
                 replaced |= replaceClassOrPkgName(oldNames, newNames, false);
                // also try to replace short class name
                 switch (refInfo.getChangeType()) {
@@ -738,7 +739,7 @@ public class FormRefactoringUpdate extends SimpleRefactoringElementImplementatio
             if (outString != null) {
                 saveForUndo(formFile);
                 os = formFile.getOutputStream(lock);
-                os.write(outString.getBytes("UTF-8")); // NOI18N
+                os.write(outString.getBytes(StandardCharsets.UTF_8));
             }
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);

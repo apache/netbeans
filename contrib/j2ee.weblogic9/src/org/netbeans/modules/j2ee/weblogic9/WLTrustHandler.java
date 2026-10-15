@@ -28,6 +28,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -167,7 +168,7 @@ public class WLTrustHandler implements WebLogicTrustHandler {
                         // we just trigger the trust manager here
                         socket.connect(new InetSocketAddress(config.getHost(), config.getPort()), CHECK_TIMEOUT); // NOI18N
                         socket.setSoTimeout(CHECK_TIMEOUT);
-                        PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), true); // NOI18N
+                        PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8), true);
                         try {
                             out.println("GET / HTTP/1.1\nHost:\n"); // NOI18N
                             return true;
@@ -379,7 +380,7 @@ public class WLTrustHandler implements WebLogicTrustHandler {
                     }
                 }
             }
-            return chainList.toArray(new X509Certificate[chainList.size()]);
+            return chainList.toArray(new X509Certificate[0]);
         }
     }
 

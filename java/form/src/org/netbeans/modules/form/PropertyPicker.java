@@ -49,7 +49,7 @@ public class PropertyPicker extends javax.swing.JPanel {
         initComponents();
 
         java.util.List<RADComponent> componentsList = formModel.getComponentList();
-        Collections.sort(componentsList, new ParametersPicker.ComponentComparator());
+        componentsList.sort(new ParametersPicker.ComponentComparator());
         components = new RADComponent[componentsList.size()];
         componentsList.toArray(components);
 
@@ -141,9 +141,9 @@ public class PropertyPicker extends javax.swing.JPanel {
 		String[] names = FormEditor.getFormJavaSource(sel.getFormModel()).getPropertyReadMethodNames(requiredType);
 		for (int i = 0; i < names.length; i++) {
 		    PropertyPickerItem item = createItem(names[i]);
-		    if(!filtered.keySet().contains(item.getPropertyName())){
-			filtered.put(item.getPropertyName(), item);	
-		    }                    
+            if (!filtered.containsKey(item.getPropertyName())) {
+                filtered.put(item.getPropertyName(), item);
+            }
 		}		
 	    } 
 	    

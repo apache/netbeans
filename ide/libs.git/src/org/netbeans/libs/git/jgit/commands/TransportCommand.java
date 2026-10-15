@@ -19,30 +19,28 @@
 
 package org.netbeans.libs.git.jgit.commands;
 
-import com.jcraft.jsch.JSchException;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.sshd.common.SshException;
 import org.eclipse.jgit.errors.NotSupportedException;
 import org.eclipse.jgit.errors.TransportException;
 import org.eclipse.jgit.errors.UnsupportedCredentialItem;
-import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.storage.file.FileBasedConfig;
 import org.eclipse.jgit.transport.CredentialItem;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.Transport;
 import org.eclipse.jgit.transport.TransportProtocol;
 import org.eclipse.jgit.transport.URIish;
-import org.eclipse.jgit.util.FS;
 import org.eclipse.jgit.util.SystemReader;
 import org.netbeans.libs.git.GitException;
 import org.netbeans.libs.git.jgit.GitClassFactory;
 import org.netbeans.libs.git.progress.ProgressMonitor;
+import org.eclipse.jgit.internal.transport.sshd.AuthenticationCanceledException;
 
 /**
  *
@@ -81,17 +79,17 @@ abstract class TransportCommand extends GitCommand {
                 password = "";
             }
             for (CredentialItem i : items) {
-                if (i instanceof CredentialItem.Username) {
-                    ((CredentialItem.Username) i).setValue(user);
+                if (i instanceof CredentialItem.Username un) {
+                    un.setValue(user);
                     continue;
                 }
-                if (i instanceof CredentialItem.Password) {
-                    ((CredentialItem.Password) i).setValue(password.toCharArray());
+                if (i instanceof CredentialItem.Password pw) {
+                    pw.setValue(password.toCharArray());
                     continue;
                 }
-                if (i instanceof CredentialItem.StringType) {
+                if (i instanceof CredentialItem.StringType st) {
                     if (i.getPromptText().equals("Password: ")) { //NOI18N
-                        ((CredentialItem.StringType) i).setValue(password);
+                        st.setValue(password);
                         continue;
                     }
                 }
@@ -226,14 +224,10 @@ abstract class TransportCommand extends GitCommand {
         } else if ((pos = message.toLowerCase().indexOf(": auth cancel")) != -1) { //NOI18N
             String repositoryUrl = message.substring(0, pos);
             throw new GitException.AuthorizationException(repositoryUrl, message, e);
-        } else if (e.getCause() instanceof JSchException) {
-            if (message.contains("timeout:") || message.contains("ProxyHTTP")
-                    || message.contains("ProxySOCKS4")
-                    || message.contains("ProxySOCKS5")) { //NOI18N
-                throw new GitException(message, e);
-            } else {
-                throw new GitException.AuthorizationException(uri.toString(), message, e);
-            }
+        } else if (e.getCause() instanceof AuthenticationCanceledException) {
+            throw new GitException.AuthorizationException(uri.toString(), message, e);
+        } else if (e.getCause() instanceof SshException && e.getCause().getMessage().contains("No more authentication methods available")) {
+            throw new GitException.AuthorizationException(uri.toString(), message, e);
         } else {
             throw new GitException(message, e);
         }
@@ -241,16 +235,13 @@ abstract class TransportCommand extends GitCommand {
 
     protected abstract void runTransportCommand () throws GitException;
     
-    private static class DelegatingSystemReader extends SystemReader {
+    private static class DelegatingSystemReader extends SystemReader.Delegate {
+
         private final SystemReader instance;
 
         public DelegatingSystemReader (SystemReader sr) {
+            super(sr);
             this.instance = sr;
-        }
-
-        @Override
-        public String getHostname () {
-            return instance.getHostname();
         }
 
         @Override
@@ -260,30 +251,6 @@ abstract class TransportCommand extends GitCommand {
             }
             return instance.getenv(string);
         }
-
-        @Override
-        public String getProperty (String string) {
-            return instance.getProperty(string);
-        }
-
-        @Override
-        public FileBasedConfig openUserConfig (Config config, FS fs) {
-            return instance.openUserConfig(config, fs);
-        }
-
-        @Override
-        public FileBasedConfig openSystemConfig (Config config, FS fs) {
-            return instance.openSystemConfig(config, fs);
-        }
-
-        @Override
-        public long getCurrentTime () {
-            return instance.getCurrentTime();
-        }
-
-        @Override
-        public int getTimezone (long l) {
-            return instance.getTimezone(l);
-        }
+        
     }
 }

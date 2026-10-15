@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-
 /**
  *
  * @author Tomas Hurka
@@ -59,9 +58,9 @@ class ClassDumpSegment extends TagBounds {
     final int superClassIDOffset;
     ClassDump java_lang_Class;
     boolean newSize;
-    Map /*<JavaClass,List<Field>>*/ fieldsCache;
-    private List<JavaClass> classes;
-    private Map /*<Byte,JavaClass>*/ primitiveArrayMap;
+    Map<JavaClass, List<Field>> fieldsCache;
+    private List<ClassDump> classes;
+    private Map<Integer, ClassDump> primitiveArrayMap;
 
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 
@@ -165,13 +164,13 @@ class ClassDumpSegment extends TagBounds {
 
     Map getClassIdToClassMap() {
         Collection allClasses = createClassCollection();
-        Map map = new HashMap(allClasses.size()*4/3);
-        Iterator classIt = allClasses.iterator();
+        Map<Long, ClassDump> map = new HashMap<>(allClasses.size()*4/3);
+        Iterator<ClassDump> classIt = allClasses.iterator();
         
         while(classIt.hasNext()) {
-            ClassDump cls = (ClassDump) classIt.next();
+            ClassDump cls = (ClassDump)classIt.next();
             
-            map.put(new Long(cls.getJavaClassId()),cls);
+            map.put(cls.getJavaClassId(), cls);
         }
         return map;
     }
@@ -202,20 +201,19 @@ class ClassDumpSegment extends TagBounds {
         }
     }
 
-    synchronized List /*<JavaClass>*/ createClassCollection() {
+    synchronized List<ClassDump> createClassCollection() {
         if (classes != null) {
             return classes;
         }
 
-        List cls = new ArrayList /*<JavaClass>*/(1000);
+        List<ClassDump> cls = new ArrayList<>(1000);
 
         long[] offset = new long[] { startOffset };
 
         while (offset[0] < endOffset) {
             long start = offset[0];
-            int tag = hprofHeap.readDumpTag(offset);
 
-            if (tag == HprofHeap.CLASS_DUMP) {
+            if (hprofHeap.readDumpTag(offset) == HprofHeap.CLASS_DUMP) {
                 ClassDump classDump = new ClassDump(this, start);
                 long classId = classDump.getJavaClassId();
                 LongMap.Entry classEntry = hprofHeap.idToOffsetMap.put(classId, start);
@@ -235,55 +233,58 @@ class ClassDumpSegment extends TagBounds {
 
     void extractSpecialClasses() {
         ClassDump java_lang_Object = null;
-        primitiveArrayMap = new HashMap();
+        primitiveArrayMap = new HashMap<>();
 
-        Iterator classIt = classes.iterator();
+        Iterator<ClassDump> classIt = classes.iterator();
 
         while (classIt.hasNext()) {
             ClassDump jcls = (ClassDump) classIt.next();
             String vmName = jcls.getLoadClass().getVMName();
             Integer typeObj = null;
 
-            if (vmName.equals("[Z")) { // NOI18N
-                typeObj = Integer.valueOf(HprofHeap.BOOLEAN);
-            } else if (vmName.equals("[C")) { // NOI18N
-                typeObj = Integer.valueOf(HprofHeap.CHAR);
-            } else if (vmName.equals("[F")) { // NOI18N
-                typeObj = Integer.valueOf(HprofHeap.FLOAT);
-            } else if (vmName.equals("[D")) { // NOI18N
-                typeObj = Integer.valueOf(HprofHeap.DOUBLE);
-            } else if (vmName.equals("[B")) { // NOI18N
-                typeObj = Integer.valueOf(HprofHeap.BYTE);
-            } else if (vmName.equals("[S")) { // NOI18N
-                typeObj = Integer.valueOf(HprofHeap.SHORT);
-            } else if (vmName.equals("[I")) { // NOI18N
-                typeObj = Integer.valueOf(HprofHeap.INT);
-            } else if (vmName.equals("[J")) { // NOI18N
-                typeObj = Integer.valueOf(HprofHeap.LONG);
-            } else if (vmName.equals("java/lang/Class")) { // NOI18N
-                java_lang_Class = jcls;
-            } else if (vmName.equals("java/lang/Object")) { // NOI18N
-                java_lang_Object = jcls;
-            } else if (vmName.equals("boolean[]")) { // NOI18N
-                typeObj = Integer.valueOf(HprofHeap.BOOLEAN);
-            } else if (vmName.equals("char[]")) { // NOI18N
-                typeObj = Integer.valueOf(HprofHeap.CHAR);
-            } else if (vmName.equals("float[]")) { // NOI18N
-                typeObj = Integer.valueOf(HprofHeap.FLOAT);
-            } else if (vmName.equals("double[]")) { // NOI18N
-                typeObj = Integer.valueOf(HprofHeap.DOUBLE);
-            } else if (vmName.equals("byte[]")) { // NOI18N
-                typeObj = Integer.valueOf(HprofHeap.BYTE);
-            } else if (vmName.equals("short[]")) { // NOI18N
-                typeObj = Integer.valueOf(HprofHeap.SHORT);
-            } else if (vmName.equals("int[]")) { // NOI18N
-                typeObj = Integer.valueOf(HprofHeap.INT);
-            } else if (vmName.equals("long[]")) { // NOI18N
-                typeObj = Integer.valueOf(HprofHeap.LONG);
-            } else if (vmName.equals("java.lang.Class")) { // NOI18N
-                java_lang_Class = jcls;
-            } else if (vmName.equals("java.lang.Object")) { // NOI18N
-                java_lang_Object = jcls;
+            switch (vmName) {
+                case "[Z": typeObj = HprofHeap.BOOLEAN; break;            // NOI18N
+                    
+                case "[C": typeObj = HprofHeap.CHAR; break;               // NOI18N
+                    
+                case "[F": typeObj = HprofHeap.FLOAT; break;              // NOI18N
+                    
+                case "[D": typeObj = HprofHeap.DOUBLE; break;             // NOI18N
+                    
+                case "[B": typeObj = HprofHeap.BYTE; break;               // NOI18N
+                    
+                case "[S": typeObj = HprofHeap.SHORT; break;              // NOI18N
+                    
+                case "[I": typeObj = HprofHeap.INT; break;                // NOI18N
+                    
+                case "[J": typeObj = HprofHeap.LONG; break;               // NOI18N
+                    
+                case "java/lang/Class": java_lang_Class = jcls; break;    // NOI18N
+                    
+                case "java/lang/Object": java_lang_Object = jcls; break;  // NOI18N
+                    
+                case "boolean[]": typeObj = HprofHeap.BOOLEAN; break;     // NOI18N
+                    
+                case "char[]": typeObj = HprofHeap.CHAR; break;           // NOI18N
+                    
+                case "float[]": typeObj = HprofHeap.FLOAT; break;         // NOI18N
+                    
+                case "double[]": typeObj = HprofHeap.DOUBLE; break;       // NOI18N
+                    
+                case "byte[]": typeObj = HprofHeap.BYTE; break;           // NOI18N
+                    
+                case "short[]": typeObj = HprofHeap.SHORT; break;         // NOI18N
+                    
+                case "int[]": typeObj = HprofHeap.INT; break;             // NOI18N
+                    
+                case "long[]": typeObj = HprofHeap.LONG; break;           // NOI18N
+                    
+                case "java.lang.Class": java_lang_Class = jcls; break;    // NOI18N
+                    
+                case "java.lang.Object": java_lang_Object = jcls; break;  // NOI18N
+                    
+                default:
+                    break;
             }
 
             if (typeObj != null) {
@@ -296,20 +297,21 @@ class ClassDumpSegment extends TagBounds {
     }
 
     //---- Serialization support
+    @Override
     void writeToStream(DataOutputStream out) throws IOException {
         super.writeToStream(out);
         if (classes == null) {
             out.writeInt(0);
         } else {
             out.writeInt(classes.size());
-            for (int i=0; i<classes.size(); i++) {
-                ClassDump classDump = (ClassDump) classes.get(i);
+            for (int i=0; i < classes.size(); i++) {
+                ClassDump classDump = (ClassDump)classes.get(i);
 
                 classDump.writeToStream(out);
-                Long size = (Long) arrayMap.get(classDump);
+                Long size = (Long)arrayMap.get(classDump);
                 out.writeBoolean(size != null);
                 if (size != null) {
-                    out.writeLong(size.longValue());
+                    out.writeLong(size);
                 }
             }
         }
@@ -319,14 +321,14 @@ class ClassDumpSegment extends TagBounds {
         this(heap, start, end);
         int classesSize = dis.readInt();
         if (classesSize != 0) {
-            List<JavaClass> cls = new ArrayList<>(classesSize);
-            arrayMap = new HashMap(classesSize / 15);
+            List<ClassDump> cls = new ArrayList<>(classesSize);
+            arrayMap = new HashMap<>(classesSize / 15);
             
-            for (int i=0; i<classesSize; i++) {
+            for (int i=0; i < classesSize; i++) {
                 ClassDump c = new ClassDump(this, dis.readLong(), dis);
                 cls.add(c);
                 if (dis.readBoolean()) {
-                    Long size = Long.valueOf(dis.readLong());
+                    Long size = dis.readLong();
                     arrayMap.put(c, size);
                 }
             }
@@ -341,11 +343,9 @@ class ClassDumpSegment extends TagBounds {
             super(SIZE,0.75f,true);
         }
 
+        @Override
         protected boolean removeEldestEntry(Map.Entry eldest) {
-            if (size() > SIZE) {
-                return true;
-            }
-            return false;
+            return size() > SIZE;
         }
     }
 }

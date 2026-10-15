@@ -54,6 +54,7 @@ public final class ServerManager {
      *         event dispatch thread.
      * @deprecated use {@link org.netbeans.api.server.CommonServerUIs#showCustomizer} instead
      */
+    @Deprecated
     public static void showCustomizer(String serverInstanceID) {
         // bridge to new infrastructure (common server)
         ServerInstance bridgingInstance = CommonServerBridge.getCommonInstance(serverInstanceID);

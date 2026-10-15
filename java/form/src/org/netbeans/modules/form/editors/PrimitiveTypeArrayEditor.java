@@ -66,7 +66,7 @@ public class PrimitiveTypeArrayEditor extends PropertyEditorSupport
             String tempVal = ""; // NOI18N
             char prevChar = ' '; // NOI18N
             char prevPrevChar = ' '; // NOI18N            
-            ArrayList<String> list = new ArrayList();
+            ArrayList<String> list = new ArrayList<>();
             
             for (int i = 0; i < body.length(); i++) {
                 char actChar = body.charAt(i);
@@ -94,7 +94,7 @@ public class PrimitiveTypeArrayEditor extends PropertyEditorSupport
                 prevPrevChar = prevChar;
                 prevChar = actChar;
             }
-            return list.toArray(new String[list.size()]);
+            return list.toArray(new String[0]);
     }
     
     /**
@@ -175,7 +175,7 @@ public class PrimitiveTypeArrayEditor extends PropertyEditorSupport
         String[] parts;
         String trimText = text.trim();
         
-        if ((trimText.length() == 0) || trimText.toLowerCase().equals(NULL_STR)) {
+        if ((trimText.length() == 0) || trimText.equalsIgnoreCase(NULL_STR)) {
             return null;
         }
 
@@ -192,7 +192,7 @@ public class PrimitiveTypeArrayEditor extends PropertyEditorSupport
             while (st.hasMoreTokens()) {
                 tokens.add(st.nextToken());
             }
-            parts = tokens.toArray(new String[tokens.size()]);
+            parts = tokens.toArray(new String[0]);
         } else {
             parts = splitCharArray(body);
         }

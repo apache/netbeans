@@ -348,4 +348,9 @@ public class JsCodeCompletionTest extends JsCodeCompletionBase {
     public void testIssue258724_02() throws Exception {
         checkCompletion("testfiles/completion/issue258724.js", "return this.a^;", false);
     }
+
+    public void testCompletionPrivateMembers() throws Exception {
+        checkCompletion("testfiles/completion/classPrivateMembersInside.js", "        return this.^;", false);
+        checkCompletion("testfiles/completion/classPrivateMembersOutside.js", "c.^", false);
+    }
 }

@@ -725,7 +725,7 @@ public class AddPropertyPanel extends javax.swing.JPanel {
                             });
                     return;
                 }
-                final ComboBoxModel fmodel = new DefaultComboBoxModel(types.toArray(new String[types.size()]));
+                final ComboBoxModel fmodel = new DefaultComboBoxModel(types.toArray(new String[0]));
                 if (canceled) {
                     LOGGER.log(Level.FINE, "Worker for {0} exited after cancel {1} ms.", //NOI18N
                             new Object[]{

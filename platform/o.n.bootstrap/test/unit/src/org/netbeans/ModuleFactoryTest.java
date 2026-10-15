@@ -191,7 +191,7 @@ public class ModuleFactoryTest extends ModuleManagerTest {
         public void reload() throws IOException {
         }
         @Override
-        protected void classLoaderUp(Set parents) throws IOException {
+        protected void classLoaderUp(Set<Module> parents) throws IOException {
             classloader = new JarClassLoader(Collections.<File>emptyList(), new ClassLoader[] {new NoOpClassLoader()});
         }
         @Override
@@ -220,7 +220,7 @@ public class ModuleFactoryTest extends ModuleManagerTest {
         NoOpClassLoader() {
 	    super(ClassLoader.getSystemClassLoader());
 	}
-        protected @Override Class loadClass(String name, boolean resolve) throws ClassNotFoundException {
+        protected @Override Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
             if ("java.lang.String".equals(name)) {
                 throw new ClassNotFoundException("NoOpClassLoader cannot load " + name);
             }

@@ -168,6 +168,17 @@ public class HighlightingTest extends NbTestCase {
         checkHighlights(content, new int[]{3, 9});
     }
 
+    public void testHighlightsOnMultiLinesMarkdown() throws Exception {
+        String content
+                = """
+                  /// the 1st line
+                  /// the 2nd line.
+                  /// the 3rd line.
+                  /// @author junichi11
+                  ///""";
+        checkHighlights(content, new int[]{4, 17, 21, 34});
+    }
+
     /**
      * Check highlight ranges.
      *

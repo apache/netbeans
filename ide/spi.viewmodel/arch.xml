@@ -161,7 +161,7 @@ We would like to test 100% of our APIs.
         </question>
 -->
 <answer id="dep-nb">
-    <api name="OpenAPIs" type="import" category="official" url="http://openide.netbeans.org" group="java"/> 
+    <api name="OpenAPIs" type="import" category="official" group="java"/> 
 </answer>
 
 

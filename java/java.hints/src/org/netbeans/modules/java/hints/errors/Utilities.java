@@ -63,6 +63,7 @@ import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.Scope;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.Tree;
@@ -85,6 +86,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.EnumMap;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -122,9 +124,9 @@ import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
-import static com.sun.source.tree.Tree.Kind.*;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.util.TreePathScanner;
+import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacScope;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Type;
@@ -147,10 +149,11 @@ import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.java.source.CodeStyleUtils;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.spi.java.hints.JavaFix;
 import org.netbeans.spi.java.hints.JavaFixUtilities;
 import org.openide.util.Pair;
+
+import static com.sun.source.tree.Tree.Kind.*;
 
 /**
  *
@@ -159,6 +162,7 @@ import org.openide.util.Pair;
 public class Utilities {
     public  static final String JAVA_MIME_TYPE = "text/x-java";
     private static final String DEFAULT_NAME = "name";
+    private static final String UNDERSCORE = "_";
     enum SWITCH_TYPE { TRADITIONAL_SWITCH, RULE_SWITCH, SWITCH_EXPRESSION }
 
     public Utilities() {
@@ -187,12 +191,12 @@ public class Utilities {
         return makeNameUnique(info, s, name, Collections.<String>emptySet(), prefix, suffix, acceptExistingPrefixes);
     }
     
-    private static final Map<String, String> TYPICAL_KEYWORD_CONVERSIONS = new HashMap<String, String>() {{
-        put("class", "clazz");
-        put("interface", "intf");
-        put("new", "nue");
-        put("static", "statik");
-    }};
+    private static final Map<String, String> TYPICAL_KEYWORD_CONVERSIONS = Map.of(
+        "class", "clazz",
+        "interface", "intf",
+        "new", "nue",
+        "static", "statik"
+    );
     
     public static String makeNameUnique(CompilationInfo info, Scope s, String name, String prefix, String suffix) {
         return makeNameUnique(info, s, name, Collections.<String>emptySet(), prefix, suffix);
@@ -448,10 +452,13 @@ public class Utilities {
             return null;
         }
         
+        diff.commit();
+        return computeChangeInfo(target, diff, tag);
+    }
+        
+    public static ChangeInfo computeChangeInfo(FileObject target, final ModificationResult diff, final Object tag) {
         List<? extends Difference> differences = diff.getDifferences(target);
         ChangeInfo result = null;
-        
-        diff.commit();
         
         try {
             if (differences != null) {
@@ -503,8 +510,8 @@ public class Utilities {
 
             if (doc instanceof GuardedDocument) {
                 GuardedDocument bdoc = (GuardedDocument) doc;
-                int methodStart = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), method);
-                int methodEnd = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), method);
+                int methodStart = (int) info.getTrees().getSourcePositions().getStartPosition(method);
+                int methodEnd = (int) info.getTrees().getSourcePositions().getEndPosition(method);
 
                 return (bdoc.getGuardedBlockChain().compareBlock(methodStart, methodEnd) & MarkBlock.OVERLAP) != 0;
             }
@@ -649,13 +656,13 @@ public class Utilities {
      * 
      * @return typemirror of supertype/iface, initial tm if not anonymous
      */
-    public static TypeMirror convertIfAnonymous(TypeMirror tm) {
+    public static TypeMirror convertIfAnonymous(TypeMirror tm, boolean keepLocal) {
         //anonymous class?
         Set<ElementKind> fm = EnumSet.of(ElementKind.METHOD, ElementKind.FIELD);
         if (tm instanceof DeclaredType) {
             Element el = ((DeclaredType) tm).asElement();
             //XXX: the null check is needed for lambda type, not covered by test:
-            if (el != null && (el.getSimpleName().length() == 0 || fm.contains(el.getEnclosingElement().getKind()))) {
+            if (el != null && (el.getSimpleName().length() == 0 || (!keepLocal && fm.contains(el.getEnclosingElement().getKind())))) {
                 List<? extends TypeMirror> interfaces = ((TypeElement) el).getInterfaces();
                 if (interfaces.isEmpty()) {
                     tm = ((TypeElement) el).getSuperclass();
@@ -804,7 +811,7 @@ public class Utilities {
     private static final Map<Kind, String> operator2DN;
 
     static {
-        operator2DN = new HashMap<Kind, String>();
+        operator2DN = new EnumMap<>(Kind.class);
 
         operator2DN.put(AND, "&");
         operator2DN.put(XOR, "^");
@@ -886,8 +893,8 @@ public class Utilities {
             if (node.getValue() instanceof String)
                 return "...";
 
-            int start = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), node);
-            int end   = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), node);
+            int start = (int) info.getTrees().getSourcePositions().getStartPosition(node);
+            int end   = (int) info.getTrees().getSourcePositions().getEndPosition(node);
 
             if (start < 0 || end < 0 || end < start) {
                 return node.toString();
@@ -1045,6 +1052,67 @@ public class Utilities {
                 enclosingMethodElement.getKind() == ElementKind.CONSTRUCTOR);
     }
 
+    @SuppressWarnings("BoxedValueEquality")
+    public static boolean isReferencedIn(CompilationInfo info, TreePath variable, Iterable<? extends TreePath> in) {
+        final Trees trees = info.getTrees();
+        final Element e = trees.getElement(variable);
+
+        if (e == null) { //TODO: check also error
+            return false;
+        }
+
+        for (TreePath tp : in) {
+
+            if (e.equals(trees.getElement(tp))) {
+                return true;
+            }
+
+            boolean occurs = new ErrorAwareTreePathScanner<Boolean, Void>() {
+                private boolean found = false;
+                @Override
+                public Boolean scan(Tree tree, Void p) {
+                    if (found) {
+                        return true; // fast path
+                    }
+
+                    if (tree == null) {
+                        return false;
+                    }
+
+                    TreePath currentPath = new TreePath(getCurrentPath(), tree);
+                    Element currentElement = trees.getElement(currentPath);
+
+                    if (e.equals(currentElement)) {
+                        found = true;
+                        return true;
+                    }
+
+                    return super.scan(tree, p);
+                }
+
+                @Override
+                public Boolean reduce(Boolean r1, Boolean r2) {
+                    if (r1 == null) {
+                        return r2;
+                    }
+
+                    if (r2 == null) {
+                        return r1;
+                    }
+
+                    return r1 || r2;
+                }
+
+            }.scan(tp, null) == Boolean.TRUE;
+
+            if (occurs) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static Pair<List<? extends TypeMirror>, List<String>> resolveArguments(CompilationInfo info, TreePath invocation, List<? extends ExpressionTree> realArguments, Element target) {
         MethodArguments ma = resolveArguments(info, invocation, realArguments, target, null);
         
@@ -1088,7 +1156,7 @@ public class Utilities {
             TypeMirror tm = info.getTrees().getTypeMirror(argPath);
 
             //anonymous class?
-            tm = Utilities.convertIfAnonymous(tm);
+            tm = Utilities.convertIfAnonymous(tm, false);
 
             if (tm == null || tm.getKind() == TypeKind.NONE || containsErrorsRecursively(tm)) {
                 return null;
@@ -1494,6 +1562,7 @@ public class Utilities {
                 case CLASS:
                 case ENUM:
                 case INTERFACE:
+                case RECORD:
                     tpes = ((TypeElement) target).getTypeParameters();
                     break;
                 case METHOD:
@@ -1643,7 +1712,7 @@ public class Utilities {
         if (outterMostSource != null) {
             sourcePackage = outterMostSource.getEnclosingElement();
         } else if (info.getCompilationUnit().getPackageName() != null) {
-            sourcePackage = info.getTrees().getElement(new TreePath(new TreePath(info.getCompilationUnit()), info.getCompilationUnit().getPackageName()));
+            sourcePackage = info.getTrees().getElement(new TreePath(new TreePath(info.getCompilationUnit()), info.getCompilationUnit().getPackage()));
         } else {
             sourcePackage = info.getElements().getPackageElement("");
         }
@@ -1747,18 +1816,16 @@ public class Utilities {
         }
     }
 
-    private static final Set<String> PRIMITIVE_NAMES = new HashSet<String>(7);
-    
-    static {
-        PRIMITIVE_NAMES.add("java.lang.Integer"); // NOI18N
-        PRIMITIVE_NAMES.add("java.lang.Character"); // NOI18N
-        PRIMITIVE_NAMES.add("java.lang.Long"); // NOI18N
-        PRIMITIVE_NAMES.add("java.lang.Byte"); // NOI18N
-        PRIMITIVE_NAMES.add("java.lang.Short"); // NOI18N
-        PRIMITIVE_NAMES.add("java.lang.Boolean"); // NOI18N
-        PRIMITIVE_NAMES.add("java.lang.Float"); // NOI18N
-        PRIMITIVE_NAMES.add("java.lang.Double"); // NOI18N
-    }
+    private static final Set<String> PRIMITIVE_NAMES = Set.of(
+        "java.lang.Integer", // NOI18N
+        "java.lang.Character", // NOI18N
+        "java.lang.Long", // NOI18N
+        "java.lang.Byte", // NOI18N
+        "java.lang.Short", // NOI18N
+        "java.lang.Boolean", // NOI18N
+        "java.lang.Float", // NOI18N
+        "java.lang.Double" // NOI18N
+    );
 
     public static TypeKind getPrimitiveKind(CompilationInfo ci, TypeMirror tm) {
         if (tm == null) {
@@ -1849,10 +1916,10 @@ public class Utilities {
         JavaFileObject prev = log.useSource(new DummyJFO());
         Enter enter = Enter.instance(jti.getContext());
         
-        Log.DiagnosticHandler discardHandler = new Log.DiscardDiagnosticHandler(log) {
+        Log.DiagnosticHandler discardHandler = log.new DiscardDiagnosticHandler() {
             private Diagnostic.Kind f = filter == null ? Diagnostic.Kind.ERROR : filter;
             @Override
-            public void report(JCDiagnostic diag) {
+            public void reportReady(JCDiagnostic diag) {
                 if (diag.getKind().compareTo(f) >= 0) {
                     errors.add(diag);
                 }
@@ -1888,11 +1955,9 @@ public class Utilities {
         }
         SourcePositions sp = ci.getTrees().getSourcePositions();
         
-        int invOffset = (int)sp.getEndPosition(ci.getCompilationUnit(), sel) - 1;
-        int origExpStart = (int)sp.getStartPosition(ci.getCompilationUnit(), 
-                origPath.getLeaf());
-        int origExpEnd = (int)sp.getEndPosition(ci.getCompilationUnit(), 
-                origPath.getLeaf());
+        int invOffset = (int)sp.getEndPosition(sel) - 1;
+        int origExpStart = (int)sp.getStartPosition(origPath.getLeaf());
+        int origExpEnd = (int)sp.getEndPosition(origPath.getLeaf());
         
         if (invOffset < 0 || origExpStart < 0 || origExpEnd < 0) {
             return false;
@@ -2003,7 +2068,7 @@ public class Utilities {
             return false;
         }
 
-        int baseIndex = (int)sp.getStartPosition(ci.getCompilationUnit(), exp.getLeaf());
+        int baseIndex = (int)sp.getStartPosition(exp.getLeaf());
         if (baseIndex < 0) {
             return false;
         }
@@ -2014,9 +2079,9 @@ public class Utilities {
         if (customPrefix != null) {
             sb.append(customPrefix);
         }
-        int valStart = (int)sp.getStartPosition(ci.getCompilationUnit(), valPath.getLeaf());
-        int valEnd = (int)sp.getEndPosition(ci.getCompilationUnit(), valPath.getLeaf());
-        int expEndPos = (int)sp.getEndPosition(ci.getCompilationUnit(), exp.getLeaf());
+        int valStart = (int)sp.getStartPosition(valPath.getLeaf());
+        int valEnd = (int)sp.getEndPosition(valPath.getLeaf());
+        int expEndPos = (int)sp.getEndPosition(exp.getLeaf());
         if (valStart < 0 || valEnd < 0 || expEndPos < 0) {
             return false;
         }
@@ -2649,8 +2714,10 @@ public class Utilities {
                         ));
                 
             case BLOCK: {
-                BlockTree bt = (BlockTree)parent.getLeaf();
-                List<? extends StatementTree> stats = getRealStatements(wc, parent);
+                BlockTree originalBlock = (BlockTree)parent.getLeaf();
+                BlockTree bt = (BlockTree) wc.resolveRewriteTarget(originalBlock);
+                List<? extends StatementTree> stats = originalBlock == bt ? getRealStatements(wc, parent)
+                                                                          : bt.getStatements();
                 int index = stats.indexOf(toRemove.getLeaf());
                 if (index == -1) {
                     throw new IllegalArgumentException("Not proper child of the parent path");
@@ -3133,7 +3200,8 @@ public class Utilities {
                             }
                             break;
                         } else {
-                            if (leftTreeName != null && leftTreeName.contentEquals(getLeftTreeName(statements.get(0)))) {
+                            Name exprTree = getLeftTreeName(statements.get(0));
+                            if (leftTreeName != null && exprTree != null && leftTreeName.contentEquals(exprTree)) {
                                 break;
                             } else {
                                 return false;
@@ -3151,7 +3219,8 @@ public class Utilities {
                             }
                             firstCase = false;
                         }
-                        if (leftTreeName != null && leftTreeName.contentEquals(getLeftTreeName(statements.get(0)))) {
+                        Name exprTree = getLeftTreeName(statements.get(0));
+                        if (leftTreeName != null && exprTree != null && leftTreeName.contentEquals(exprTree)) {
                             break;
                         } else {
                             return false;
@@ -3172,21 +3241,25 @@ public class Utilities {
         List<CaseTree> newCases = new ArrayList<>();
         SWITCH_TYPE switchType = SWITCH_TYPE.TRADITIONAL_SWITCH;
         Tree typeCastTree = null;
+        ExpressionTree switchExpr;
         List<? extends CaseTree> cases;
         Set<VariableElement> variablesDeclaredInOtherCases = new HashSet<>();
-        List<ExpressionTree> patterns = new ArrayList<>();
+
+        List<Tree> patterns = new ArrayList<>();
         Tree leftVariable = null;
-        boolean ruleSwitchFlag = st.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION);
+        boolean ruleSwitchFlag = st.getKind() == Kind.SWITCH_EXPRESSION;
         if (ruleSwitchFlag) {
-            cases = TreeShims.getCases(st);
+            switchExpr = ((SwitchExpressionTree) st).getExpression();
+            cases = ((SwitchExpressionTree) st).getCases();
             switchType = SWITCH_TYPE.RULE_SWITCH;
         } else {
+            switchExpr = ((SwitchTree) st).getExpression();
             cases = ((SwitchTree) st).getCases();
         }
         for (Iterator<? extends CaseTree> it = cases.iterator(); it.hasNext();) {
             CaseTree ct = it.next();
             TreePath casePath = new TreePath(tp, ct);
-            patterns.addAll(TreeShims.getExpressions(ct));
+            patterns.addAll(ct.getLabels());
             List<StatementTree> statements;
             if (ct.getStatements() == null) {
                 statements = new ArrayList<>(((JCTree.JCCase) ct).stats);
@@ -3263,19 +3336,19 @@ public class Utilities {
             if (isSwitchExpression) {
                 switchType = SWITCH_TYPE.SWITCH_EXPRESSION;
                 if (statements.get(0).getKind() == Tree.Kind.RETURN) {
-                    body = ((JCTree.JCReturn) statements.get(0)).getExpression();
+                    body = ((ReturnTree) statements.get(0)).getExpression();
                 } else {
-                    JCTree.JCExpressionStatement jceTree = (JCTree.JCExpressionStatement) statements.get(0);
-                    body = ((JCTree.JCAssign) jceTree.expr).rhs;
-                    leftVariable = ((JCTree.JCAssign) jceTree.expr).lhs;
+                    ExpressionStatementTree esTree = (ExpressionStatementTree) statements.get(0);
+                    body = ((AssignmentTree) esTree.getExpression()).getExpression();
+                    leftVariable = ((AssignmentTree) esTree.getExpression()).getVariable();
                 }
                 if (body.getKind() == Tree.Kind.TYPE_CAST) {
-                        typeCastTree = ((JCTree.JCTypeCast)body).getType();
-                        body = ((JCTree.JCTypeCast)body).getExpression();
-                    }
-                newCases.add(make.Case(patterns, make.ExpressionStatement((ExpressionTree) body)));
+                    typeCastTree = ((TypeCastTree) body).getType();
+                    body = ((TypeCastTree) body).getExpression();
+                }
+                newCases.add(make.CasePatterns(patterns, ct.getGuard(), make.ExpressionStatement((ExpressionTree) body)));
             } else {
-                newCases.add(make.Case(patterns, body));
+                newCases.add(make.CasePatterns(patterns, ct.getGuard(), body));
             }
 
             patterns = new ArrayList<>();
@@ -3288,7 +3361,7 @@ public class Utilities {
         ExpressionTree et = null;
         switch (switchType) {
             case SWITCH_EXPRESSION:
-                et = (ExpressionTree) make.SwitchExpression(TreeShims.getExpressions(st).get(0), newCases);
+                et = (ExpressionTree) make.SwitchExpression(switchExpr, newCases);
                 if (typeCastTree != null) {
                     et = make.Parenthesized(et);
                     et = make.TypeCast(typeCastTree, et);
@@ -3300,10 +3373,10 @@ public class Utilities {
                 }
                 break;
             case RULE_SWITCH:
-                wc.rewrite(st, make.SwitchExpression(TreeShims.getExpressions(st).get(0), newCases));
+                wc.rewrite(st, make.SwitchExpression(switchExpr, newCases));
                 break;
             case TRADITIONAL_SWITCH:
-                wc.rewrite((SwitchTree) st, make.Switch(((SwitchTree) st).getExpression(), newCases));
+                wc.rewrite((SwitchTree) st, make.Switch(switchExpr, newCases));
                 break;
             default:
                 break;
@@ -3318,17 +3391,33 @@ public class Utilities {
         } else {
             return null;
         }
-   }
+    }
     
     private static Name getLeftTreeName(StatementTree statement) {
         if (statement.getKind() != Kind.EXPRESSION_STATEMENT) {
             return null;
         }
-        JCTree.JCExpressionStatement jceTree = (JCTree.JCExpressionStatement) statement;
-        if (jceTree.expr.getKind() != Kind.ASSIGNMENT) {
+        ExpressionStatementTree esTree = (ExpressionStatementTree) statement;
+        if (esTree.getExpression().getKind() != Kind.ASSIGNMENT) {
             return null;
         }
-        JCTree.JCAssign assignTree = (JCTree.JCAssign) jceTree.expr;
-        return ((JCTree.JCIdent) assignTree.lhs).name;
+        AssignmentTree assignTree = (AssignmentTree) esTree.getExpression();
+        return ((IdentifierTree) assignTree.getVariable()).getName();
+    }
+
+    public static VariableTree setVariableType(WorkingCopy copy, VariableTree var, Tree newType) {
+        TreeMaker make = copy.getTreeMaker();
+        Tree origType = var.getType();
+
+        if (origType != null) {
+            GeneratorUtilities.get(copy).copyComments(origType, newType, true);
+            GeneratorUtilities.get(copy).copyComments(origType, newType, false);
+        }
+
+        return make.Variable(var.getModifiers(),
+                var.getName(),
+                newType,
+                var.getInitializer()
+        );
     }
 }

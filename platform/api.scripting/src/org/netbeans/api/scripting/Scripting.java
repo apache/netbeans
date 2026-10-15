@@ -22,9 +22,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
@@ -40,15 +44,17 @@ import org.openide.util.Lookup;
  * as well as specific discovery mechanisms to locate additional
  * implementations of {@link ScriptEngineFactory}. To execute a JavaScript
  * code use:
- * <p>
- * {@codesnippet org.netbeans.api.scripting.ScriptingTutorialTest#testFourtyTwo}
- * <p>
+ * 
+ * {@snippet file="org/netbeans/api/scripting/ScriptingTutorialTest.java" region="testFourtyTwo"}
+ * 
  * Consult <a href="@org-netbeans-libs-graalsdk@/org/netbeans/libs/graalsdk/package-summary.html">scripting tutorial</a>
  * to learn more about advanced polyglot scripting topics.
  *
  * @since 1.0
  */
 public final class Scripting {
+    private static final Logger LOG = Logger.getLogger(Scripting.class.getName());
+    
     private boolean allowAllAccess;
 
     private Scripting() {
@@ -83,14 +89,14 @@ public final class Scripting {
      * classes and features in the JVM. For example it is common in Nashorn scripts
      * to use:
      * 
-     * {@codesnippet org.netbeans.api.scripting.JavaScriptEnginesTest#allowLoadAClassInJS}
+     * {@snippet file="org/netbeans/api/scripting/JavaScriptEnginesTest.java" region="allowLoadAClassInJS"}
      * 
      * Such classloading is prevented by default. To allow it, specify {@code true}
      * in here.
      * <p>
      * {@link ScriptEngineManager} created with all access on, has a boolean property
      * in its {@link ScriptEngineManager#getBindings()}:
-     * {@codesnippet org.netbeans.api.scripting.ScriptingTest#testBuilderAllowAccess}
+     * {@snippet file="org/netbeans/api/scripting/ScriptingTest.java" region="testBuilderAllowAccess"}
      *
      * @param allAccess allow access to JVM internals from the script
      * @return instance of {@code this} builder
@@ -141,11 +147,25 @@ public final class Scripting {
                 }
             }
         }
+        
+        private final Set<String> faultyLookupIds = Collections.synchronizedSet(new HashSet<>());
 
-        private static List<ScriptEngineFactory> populateExtras(EngineManager m) {
+        private List<ScriptEngineFactory> populateExtras(EngineManager m) {
             List<ScriptEngineFactory> extra = new ArrayList<>();
-            for (EngineProvider p : Lookup.getDefault().lookupAll(EngineProvider.class)) {
-                extra.addAll(p.factories(m));
+            // use Iterator so that materializing a single instance is protected by try-catch
+            for (Lookup.Item<EngineProvider> pi : Lookup.getDefault().lookupResult(EngineProvider.class).allItems()) {
+                try {
+                    EngineProvider p = pi.getInstance();
+                    extra.addAll(p.factories(m));
+                } catch (ThreadDeath td) {
+                    throw td;
+                } catch (Throwable t) {
+                    if (faultyLookupIds.add(pi.getId())) {
+                        // catch even linkage errors; log the issue.
+                        LOG.log(Level.WARNING, "Could not load or initialize script engine {0} ({1})", new Object[] { pi.getId(), pi.getDisplayName() });
+                        LOG.log(Level.WARNING, "Stacktrace:", t);
+                    }
+                }
             }
             return Collections.unmodifiableList(extra);
         }
@@ -162,6 +182,9 @@ public final class Scripting {
                     it.set(new GraalJSWrapperFactory(f));
                 }
             }
+            // reverse the list: as later engines override the earlier ones in MIME mappings, so
+            // they should be enumerated first, to give them higher precedence
+            Collections.reverse(all);
             return all;
         }
 
@@ -188,9 +211,8 @@ public final class Scripting {
                 final Bindings b = eng.getBindings(ScriptContext.ENGINE_SCOPE);
                 if (allowAllAccess) {
                     b.put("polyglot.js.nashorn-compat", true); // NOI18N
-                } else {
-                    b.put("polyglot.js.allowHostAccess", true); // NOI18N
                 }
+                b.put("polyglot.js.allowHostAccess", true); // NOI18N
                 b.put("polyglot.js.allowHostClassLookup", (Predicate<String>) (s) -> { // NOI18N
                     return allowHostClassLookup(eng, s);
                 });

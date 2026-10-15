@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.php.api;
 
+import java.time.LocalDate;
 import org.openide.util.NbBundle;
 
 /**
@@ -34,7 +35,13 @@ import org.openide.util.NbBundle;
     "PhpVersion.PHP_71=PHP 7.1",
     "PhpVersion.PHP_72=PHP 7.2",
     "PhpVersion.PHP_73=PHP 7.3",
-    "PhpVersion.PHP_74=PHP 7.4"
+    "PhpVersion.PHP_74=PHP 7.4",
+    "PhpVersion.PHP_80=PHP 8.0",
+    "PhpVersion.PHP_81=PHP 8.1",
+    "PhpVersion.PHP_82=PHP 8.2",
+    "PhpVersion.PHP_83=PHP 8.3",
+    "PhpVersion.PHP_84=PHP 8.4",
+    "PhpVersion.PHP_85=PHP 8.5",
 })
 public enum PhpVersion {
 
@@ -83,7 +90,38 @@ public enum PhpVersion {
      * PHP 7.4.
      * @since 2.65
      */
-    PHP_74(Bundle.PhpVersion_PHP_74());
+    PHP_74(Bundle.PhpVersion_PHP_74()),
+    /**
+     * PHP 8.0.
+     * @since 2.74
+     */
+    PHP_80(Bundle.PhpVersion_PHP_80()),
+    /**
+     * PHP 8.1.
+     * @since 2.80
+     */
+    PHP_81(Bundle.PhpVersion_PHP_81()),
+    /**
+     * PHP 8.2.
+     * @since 2.87
+     */
+    PHP_82(Bundle.PhpVersion_PHP_82()),
+    /**
+     * PHP 8.3.
+     * @since 2.93
+     */
+    PHP_83(Bundle.PhpVersion_PHP_83()),
+    /**
+     * PHP 8.4.
+     * @since 2.100
+     */
+    PHP_84(Bundle.PhpVersion_PHP_84()),
+    /**
+     * PHP 8.5
+     * @since 2.106
+     */
+    PHP_85(Bundle.PhpVersion_PHP_85()),
+    ;
 
     private final String displayName;
     private final boolean namespaces;
@@ -117,6 +155,11 @@ public enum PhpVersion {
      */
     public static PhpVersion getLegacy() {
         PhpVersion[] phpVersions = PhpVersion.values();
+        for (PhpVersion phpVersion : phpVersions) {
+            if (phpVersion.isSupportedVersion()) {
+                return phpVersion;
+            }
+        }
         return phpVersions[phpVersions.length - 2];
     }
 
@@ -170,6 +213,17 @@ public enum PhpVersion {
     }
 
     /**
+     * Check whether this version supports an object type.
+     *
+     * @return {@code true} if this version supports an object type,
+     * {@code false} otherwise
+     * @since 2.95
+     */
+    public boolean hasObjectType() {
+        return this.compareTo(PhpVersion.PHP_72) >= 0;
+    }
+
+    /**
      * Check whether this version supports typed properties.
      *
      * @return {@code true} if this version supports typed properties,
@@ -180,9 +234,202 @@ public enum PhpVersion {
         return this.compareTo(PhpVersion.PHP_74) >= 0;
     }
 
+    /**
+     * Check whether this version supports the mixed type.
+     *
+     * @return {@code true} if this version supports mixed type, {@code false}
+     * otherwise
+     * @since 2.74
+     */
+    public boolean hasMixedType() {
+        return this.compareTo(PhpVersion.PHP_80) >= 0;
+    }
+
+    /**
+     * Check whether this version supports the static return type. (as of PHP 8.0)
+     *
+     * @return {@code true} if this version supports static return type,
+     * {@code false} otherwise
+     * @since 2.107
+     */
+    public boolean hasStaticReturnType() {
+        return this.compareTo(PhpVersion.PHP_80) >= 0;
+    }
+    
+    /**
+     * Check whether this version supports the self return type. (as of PHP 7.0)
+     *
+     * @return {@code true} if this version supports self return type,
+     * {@code false} otherwise
+     * @since 2.107
+     */
+    public boolean hasSelfReturnType() {
+        return this.compareTo(PhpVersion.PHP_70) >= 0;
+    }
+
+    /**
+     * Check whether this version supports the never type.
+     *
+     * @return {@code true} if this version supports never type, {@code false}
+     * otherwise
+     * @since 2.81
+     */
+    public boolean hasNeverType() {
+        return this.compareTo(PhpVersion.PHP_81) >= 0;
+    }
+
+    /**
+     * Check whether this version supports final const. (as of PHP 8.1)
+     *
+     * @return {@code true} if this version supports final const, {@code false}
+     * otherwise
+     * @since 2.101
+     */
+    public boolean hasFinalConst() {
+        return this.compareTo(PhpVersion.PHP_81) >= 0;
+    }
+
+    /**
+     * Check whether this version supports the null, false, and true types.
+     *
+     * @return {@code true} if this version supports null, false, and true
+     * types, {@code false} otherwise
+     * @since 2.87
+     */
+    public boolean hasNullAndFalseAndTrueTypes() {
+        return this.compareTo(PhpVersion.PHP_82) >= 0;
+    }
+
+    /**
+     * Check whether this version supports constants in traits.
+     *
+     * @return {@code true} if this version supports constants in traits,
+     * {@code false} otherwise
+     * @since 2.92
+     */
+    public boolean hasConstantsInTraits() {
+        return this.compareTo(PhpVersion.PHP_82) >= 0;
+    }
+
+    /**
+     * Check whether this version supports [#\Override] attribute.
+     *
+     * @return {@code true} if this version supports [#\Override] attribute,
+     * {@code false} otherwise
+     * @since 2.94
+     */
+    public boolean hasOverrideAttribute() {
+        return this.compareTo(PhpVersion.PHP_83) >= 0;
+    }
+
+    /**
+     * Check whether this version supports [#\Deprecated] attribute. (as of PHP
+     * 8.4)
+     *
+     * @return {@code true} if this version supports [#\Deprecated] attribute,
+     * {@code false} otherwise
+     * @since 2.101
+     */
+    public boolean hasDeprecatedAttribute() {
+        return this.compareTo(PhpVersion.PHP_84) >= 0;
+    }
+
+    /**
+     * Check whether this version supports final property(field). (as of PHP
+     * 8.4) e.g. `final public string $s;`
+     *
+     * @return {@code true} if this version supports final property,
+     * {@code false} otherwise
+     * @see
+     * <a href="https://www.php.net/manual/ja/language.oop5.final.php">Final
+     * Keyword</a>
+     * @since 2.101
+     */
+    public boolean hasFinalProperty() {
+        return this.compareTo(PhpVersion.PHP_84) >= 0;
+    }
+
+    /**
+     * Check whether this version supports Asymmetric Visibility. (as of PHP
+     * 8.4) e.g. `private(set)`, `protected(set)`
+     *
+     * @return {@code true} if this version supports Asymmetric Visibility,
+     * {@code false} otherwise
+     * @see
+     * <a href="https://wiki.php.net/rfc/asymmetric-visibility-v2">Asymmetric
+     * Visibility v2</a>
+     * @since 2.101
+     */
+    public boolean hasAsymmetricVisibility() {
+        return this.compareTo(PhpVersion.PHP_84) >= 0;
+    }
+
+    /**
+     * Check whether this is supported version yet by PHP official.
+     *
+     * @return {@code true} if this is supported version, {@code false}
+     * otherwise
+     * @since 2.72
+     */
+    public boolean isSupportedVersion() {
+        return Period.valueOf(name()).isSupportedVersion();
+    }
+
     @Override
     public String toString() {
         return getDisplayName();
+    }
+
+    /**
+     * Valid period for each php version.
+     * https://www.php.net/supported-versions.php
+     */
+    private enum Period {
+        // Use the same name as PhpVersion
+        PHP_5(LocalDate.of(2005, 11, 24), LocalDate.of(2011, 1, 6), LocalDate.of(2011, 1, 6)),
+        PHP_53(LocalDate.of(2009, 6, 30), LocalDate.of(2014, 8, 14), LocalDate.of(2014, 8, 14)),
+        PHP_54(LocalDate.of(2012, 3, 1), LocalDate.of(2014, 9, 14), LocalDate.of(2014, 9, 14)),
+        PHP_55(LocalDate.of(2013, 6, 20), LocalDate.of(2015, 7, 10), LocalDate.of(2015, 7, 10)),
+        PHP_56(LocalDate.of(2014, 8, 28), LocalDate.of(2017, 1, 19), LocalDate.of(2018, 12, 31)),
+        PHP_70(LocalDate.of(2015, 12, 3), LocalDate.of(2017, 12, 3), LocalDate.of(2018, 12, 3)),
+        PHP_71(LocalDate.of(2016, 12, 1), LocalDate.of(2018, 12, 1), LocalDate.of(2019, 12, 1)),
+        PHP_72(LocalDate.of(2017, 11, 30), LocalDate.of(2019, 11, 30), LocalDate.of(2020, 11, 30)),
+        PHP_73(LocalDate.of(2018, 12, 6), LocalDate.of(2020, 12, 6), LocalDate.of(2021, 12, 6)),
+        PHP_74(LocalDate.of(2019, 11, 28), LocalDate.of(2021, 11, 28), LocalDate.of(2022, 11, 28)),
+        PHP_80(LocalDate.of(2020, 11, 26), LocalDate.of(2022, 11, 26), LocalDate.of(2023, 11, 26)),
+        PHP_81(LocalDate.of(2021, 11, 25), LocalDate.of(2023, 11, 25), LocalDate.of(2025, 12, 31)),
+        PHP_82(LocalDate.of(2022, 12, 8), LocalDate.of(2024, 12, 31), LocalDate.of(2026, 12, 31)),
+        PHP_83(LocalDate.of(2023, 11, 23), LocalDate.of(2025, 12, 31), LocalDate.of(2027, 12, 31)),
+        PHP_84(LocalDate.of(2024, 11, 21), LocalDate.of(2026, 12, 31), LocalDate.of(2028, 12, 31)),
+        PHP_85(LocalDate.of(2025, 11, 20), LocalDate.of(2027, 12, 31), LocalDate.of(2029, 12, 31)),
+        ;
+
+        private final LocalDate initialRelease;
+        private final LocalDate activeSupport;
+        private final LocalDate securitySupport;
+
+        private Period(LocalDate initialRelease, LocalDate activeSupport, LocalDate securitySupport) {
+            this.initialRelease = initialRelease;
+            this.activeSupport = activeSupport;
+            this.securitySupport = securitySupport;
+        }
+
+        public LocalDate getInitialRelease() {
+            return initialRelease;
+        }
+
+        public LocalDate getActiveSupport() {
+            return activeSupport;
+        }
+
+        public LocalDate getSecuritySupport() {
+            return securitySupport;
+        }
+
+        public boolean isSupportedVersion() {
+            return LocalDate.now().isBefore(securitySupport);
+        }
+
     }
 
 };

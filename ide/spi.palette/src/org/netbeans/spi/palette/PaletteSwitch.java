@@ -74,7 +74,7 @@ final class PaletteSwitch implements Runnable, LookupListener {
         propertySupport = new PropertyChangeSupport( this );
     }
     
-    public synchronized static PaletteSwitch getDefault() {
+    public static synchronized PaletteSwitch getDefault() {
         if( null == theInstance ) {
             theInstance = new PaletteSwitch();
         }
@@ -364,7 +364,7 @@ final class PaletteSwitch implements Runnable, LookupListener {
         boolean result = true;
         try {
             String resValue = NbBundle.getMessage(PaletteModule.class, "Palette.Window.Enabled" ); //NOI18N
-            result = "true".equals( resValue.toLowerCase() ); //NOI18N
+            result = "true".equalsIgnoreCase(resValue); //NOI18N
         } catch( MissingResourceException mrE ) {
             //ignore
         }

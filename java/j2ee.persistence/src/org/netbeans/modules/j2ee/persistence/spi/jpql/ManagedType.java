@@ -41,7 +41,7 @@ import org.netbeans.modules.j2ee.persistence.spi.jpql.support.JPAAttribute;
  *
  * @author sp153251
  */
-abstract public class ManagedType implements IManagedType {
+public abstract class ManagedType implements IManagedType {
     private final PersistentObject element;
     private final IManagedTypeProvider provider;
     private Map<String, IMapping> mappings;

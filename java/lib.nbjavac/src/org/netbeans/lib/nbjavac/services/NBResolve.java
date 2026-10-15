@@ -20,11 +20,17 @@ package org.netbeans.lib.nbjavac.services;
 
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
+import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Type.MethodType;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Env;
 import com.sun.tools.javac.comp.Resolve;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.FatalError;
+import com.sun.tools.javac.util.JCDiagnostic;
+import com.sun.tools.javac.util.List;
+import com.sun.tools.javac.util.Name;
 
 /**
  *
@@ -46,8 +52,12 @@ public class NBResolve extends Resolve {
         });
     }
 
+    private final Symtab syms;
+    boolean inStringTemplate;
+
     protected NBResolve(Context ctx) {
         super(ctx);
+        syms = Symtab.instance(ctx);
     }
 
     private boolean accessibleOverride;
@@ -75,4 +85,17 @@ public class NBResolve extends Resolve {
     public static boolean isStatic(Env<AttrContext> env) {
         return Resolve.isStatic(env);
     }
+
+    @Override
+    public Symbol.MethodSymbol resolveInternalMethod(JCDiagnostic.DiagnosticPosition pos, Env<AttrContext> env, Type site, Name name, List<Type> argtypes, List<Type> typeargtypes) {
+        try {
+            return super.resolveInternalMethod(pos, env, site, name, argtypes, typeargtypes);
+        } catch (FatalError ex) {
+            if (inStringTemplate) {
+                return new Symbol.MethodSymbol(0, name, new MethodType(argtypes, syms.errType, List.nil(), syms.methodClass), syms.noSymbol);
+            }
+            throw ex;
+        }
+    }
+
 }

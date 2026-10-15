@@ -32,7 +32,9 @@ import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
+import java.util.Arrays;
 import java.util.List;
+import java.util.EnumSet;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -353,7 +355,7 @@ public class JavaSourceHelper {
         return null;
     }
 
-    public static JavaSource createJavaSource(String template, Map<String, String> params, FileObject targetFolder, String packageName, String className) {
+    public static JavaSource createJavaSource(String template, Map<String, Object> params, FileObject targetFolder, String packageName, String className) {
         try {
             FileObject fobj = targetFolder.getFileObject(className, Constants.JAVA_EXT);
             if (fobj == null) {
@@ -367,9 +369,9 @@ public class JavaSourceHelper {
         return null;
     }
 
-    private static DataObject createDataObjectFromTemplate(String template, 
-            FileObject targetFolder, String packageName, String targetName, 
-            Map<String, String> params) throws IOException {
+    private static DataObject createDataObjectFromTemplate(String template,
+            FileObject targetFolder, String packageName, String targetName,
+            Map<String, Object> params) throws IOException {
         assert template != null;
         assert targetFolder != null;
         assert targetName != null && targetName.trim().length() > 0;
@@ -378,15 +380,13 @@ public class JavaSourceHelper {
         DataObject templateDO = DataObject.find(templateFO);
         DataFolder dataFolder = DataFolder.findFolder(targetFolder);
 
-        Map<String, String> parameters = new HashMap<String, String>();
+        Map<String, Object> parameters = new HashMap<>();
         parameters.put("package", packageName);
         if (params != null) {
-            for(Entry<String, String> entry: params.entrySet()){
-                parameters.put(entry.getKey(), entry.getValue());
-            }
+            parameters.putAll(params);
         }
 
-        return templateDO.createFromTemplate(dataFolder, targetName, params);
+        return templateDO.createFromTemplate(dataFolder, targetName, parameters);
     }
 
     public static void addClassAnnotation(WorkingCopy copy, String[] annotations, Object[] annotationAttrs) {
@@ -599,7 +599,8 @@ public class JavaSourceHelper {
         return maker.Class(modifiersTree, className,
                 Collections.<TypeParameterTree>emptyList(),
                 createIdentifierTree(copy, classToExtend),
-                Collections.<Tree>emptyList(), Collections.<Tree>emptyList());
+                Collections.<Tree>emptyList(), Collections.<Tree>emptyList(),
+                Collections.<Tree>emptyList());
     }
 
      public static ClassTree createInnerClass(WorkingCopy copy, 
@@ -637,7 +638,7 @@ public class JavaSourceHelper {
         List<ExpressionTree> typeArgTrees = new ArrayList<ExpressionTree>();
 
         for (String arg : typeArgs) {
-            typeArgTrees.add((ExpressionTree) createTypeTree(copy, arg));
+            typeArgTrees.add(createTypeTree(copy, arg));
         }
 
         return maker.ParameterizedType(typeTree, typeArgTrees);
@@ -645,11 +646,8 @@ public class JavaSourceHelper {
 
     public static ModifiersTree createModifiersTree(WorkingCopy copy, Modifier[] modifiers, String[] annotations, Object[] annotationAttrs) {
         TreeMaker maker = copy.getTreeMaker();
-        Set<Modifier> modifierSet = new HashSet<Modifier>();
-
-        for (Modifier modifier : modifiers) {
-            modifierSet.add(modifier);
-        }
+        Set<Modifier> modifierSet = EnumSet.noneOf(Modifier.class);
+        modifierSet.addAll(Arrays.asList(modifiers));
 
         List<AnnotationTree> annotationTrees = createAnnotationTrees(copy, annotations, annotationAttrs);
 
@@ -989,7 +987,7 @@ public class JavaSourceHelper {
 
                     if (element != null) {
                         elementTree = trees.getTree(element);
-                        long pos = trees.getSourcePositions().getStartPosition(tree, elementTree);
+                        long pos = trees.getSourcePositions().getStartPosition(elementTree);
                         position[0] = tree.getLineMap().getLineNumber(pos) - 1;
                         position[1] = tree.getLineMap().getColumnNumber(pos) - 1;
                     }

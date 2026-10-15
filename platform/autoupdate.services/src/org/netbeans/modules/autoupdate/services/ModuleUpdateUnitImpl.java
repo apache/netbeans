@@ -83,7 +83,7 @@ public class ModuleUpdateUnitImpl extends UpdateUnitImpl {
                 UpdateElementImpl visibleImpl = Trampoline.API.impl(visibleAncestor.getInstalled());
                 String visTargetCluster = null;
                 String visCat = null;
-                if (visibleImpl != null && visibleImpl instanceof ModuleUpdateElementImpl) {
+                if (visibleImpl instanceof ModuleUpdateElementImpl) {
                     visTargetCluster = ((ModuleUpdateElementImpl) visibleImpl).getInstallationCluster();
                     visCat = visibleImpl.getCategory();
                 }
@@ -114,7 +114,7 @@ public class ModuleUpdateUnitImpl extends UpdateUnitImpl {
     
     private static Set<Module> findVisibleAncestor(Module module, Set<Module> seen) {
         if (! seen.add(module)) {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
         Set<Module> visible = new HashSet<Module> ();
         ModuleManager manager = module.getManager();

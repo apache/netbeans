@@ -30,7 +30,7 @@ public interface SessionListener {
     /**
      * Default No-op implementation of {@linkplain SessionListener}
      */
-    public static abstract class Adapter implements SessionListener {
+    public abstract static class Adapter implements SessionListener {
 
         @Override
         public void onShutdown() {

@@ -24,7 +24,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -174,12 +174,7 @@ public class TextImporter implements Runnable {
     }
     
     private String toUTF8( String s ) {
-        try {
-            return new String( s.getBytes("UTF-8") ); //NOI18N
-        } catch( UnsupportedEncodingException e ) {
-            Logger.getLogger(TextImporter.class.getName()).log(Level.WARNING, null, e);
-            return s;
-        }
+        return new String( s.getBytes(StandardCharsets.UTF_8) );
     }
     
     private void reorder( String fileName, FileObject categoryFolder, int dropIndex ) throws IOException {

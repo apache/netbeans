@@ -42,7 +42,7 @@ import org.netbeans.modules.web.beans.api.model.WebBeansModel;
 public class RawParameterizedAssignabilityTest extends CommonTestCase {
 
     public RawParameterizedAssignabilityTest( String testName ) {
-        super(testName);
+        super(testName, false);
     }
 
     public void testGenerics() throws IOException, InterruptedException {

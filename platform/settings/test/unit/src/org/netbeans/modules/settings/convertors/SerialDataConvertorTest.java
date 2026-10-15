@@ -28,6 +28,7 @@ import java.util.logging.Level;
 import org.openide.modules.ModuleInfo;
 import org.openide.util.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -174,7 +175,7 @@ public class SerialDataConvertorTest extends NbTestCase {
         SerialDataConvertorTest.waitUntilIsSaved (ido);
         assertEquals(newName, ido.getNodeDelegate().getDisplayName());
         
-        /// simulates recretaion of instance e.g. after IDE restart
+        // simulates recretaion of instance e.g. after IDE restart
         fo = FileUtil.copyFile(fo, fo.getParent(),"copiedPeer", fo.getExt());
         fo.setAttribute("SystemFileSystem.localizingBundle", "org.netbeans.modules.settings.convertors.data.Bundle");        
         ido = (InstanceDataObject)DataObject.find(fo);
@@ -620,7 +621,7 @@ public class SerialDataConvertorTest extends NbTestCase {
                 try {
                     l = corrupted.lock();
                     os = corrupted.getOutputStream(l);
-                    FileUtil.copy(valid.getInputStream(), os);
+                    valid.getInputStream().transferTo(os);
                     os.flush();
                 } finally {
                     if (os != null) try { os.close(); } catch (IOException ex) {}
@@ -644,7 +645,7 @@ public class SerialDataConvertorTest extends NbTestCase {
 "<settings version=\"1.0\">\n" +
 "  <instance class=\"" + FactoryBase.class.getName() + "\"/>\n" +
 "</settings>\n"
-        ).getBytes("UTF-8"));
+        ).getBytes(StandardCharsets.UTF_8));
         os.close();
         
         InstanceCookie ido = DataObject.find(fo).getCookie(InstanceCookie.class);

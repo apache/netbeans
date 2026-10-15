@@ -53,7 +53,7 @@ public class TestJavaPlatformProvider implements JavaPlatformProvider {
 
     @Override
     public JavaPlatform[] getInstalledPlatforms() {
-        return this.platforms.toArray(new JavaPlatform[platforms.size()]);
+        return this.platforms.toArray(new JavaPlatform[0]);
     }
 
     public void addPlatform (JavaPlatform platform) {

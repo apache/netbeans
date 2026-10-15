@@ -65,7 +65,7 @@ public final class NativeProcessExecutionService {
 
     private static class ExecutionTask implements Callable<Integer> {
 
-        private final static Logger log = org.netbeans.modules.nativeexecution.support.Logger.getInstance();
+        private static final Logger log = org.netbeans.modules.nativeexecution.support.Logger.getInstance();
         private final NativeProcessBuilder npb;
         private final LineProcessor outProcessor;
         private final LineProcessor errProcessor;

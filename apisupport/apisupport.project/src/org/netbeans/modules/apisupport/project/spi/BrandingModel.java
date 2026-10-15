@@ -68,6 +68,9 @@ public abstract class BrandingModel {
     private @NullAllowed BrandingSupport.BrandedFile icon48 = null;
     private BrandingSupport.BrandedFile icon16 = null;
     private BrandingSupport.BrandedFile icon32 = null;
+    private BrandingSupport.BrandedFile icon256 = null;
+    private BrandingSupport.BrandedFile icon512 = null;
+    private BrandingSupport.BrandedFile icon1024 = null;
     
     /** representation of bundle keys depending on app.title */
     private BrandingSupport.BundleKey productInformation = null;
@@ -195,6 +198,12 @@ public abstract class BrandingModel {
                 return icon32 != null ? icon32.getBrandingSource() : null;
             case 48:
                 return icon48 != null ? icon48.getBrandingSource() : null;
+            case 256:
+                return icon256 != null ? icon256.getBrandingSource() : null;
+            case 512:
+                return icon512 != null ? icon512.getBrandingSource() : null;
+            case 1024:
+                return icon1024 != null ? icon1024.getBrandingSource() : null;
         }
         throw new IllegalArgumentException("Invalid icon size: " + size);
     }
@@ -211,6 +220,15 @@ public abstract class BrandingModel {
                     break;
                 case 48:
                     icon = icon48;
+                    break;
+                case 256:
+                    icon = icon256;
+                    break;
+                case 512:
+                    icon = icon512;
+                    break;
+                case 1024:
+                    icon = icon1024;
                     break;
                 default:
                     throw new IllegalArgumentException("Invalid icon size: " + size);
@@ -257,6 +275,18 @@ public abstract class BrandingModel {
 
             if (icon32 != null) {
                 getBranding().brandFile(icon32, getScaleAndStoreIconTask(icon32, 32, 32));
+            }
+
+            if (icon256 != null) {
+                getBranding().brandFile(icon256, getScaleAndStoreIconTask(icon256, 256, 256));
+            }
+
+            if (icon512 != null) {
+                getBranding().brandFile(icon512, getScaleAndStoreIconTask(icon512, 512, 512));
+            }
+            
+            if (icon1024 != null) {
+                getBranding().brandFile(icon1024, getScaleAndStoreIconTask(icon1024, 1024, 1024));
             }
                                     
             getBranding().brandBundleKeys(splashKeys);
@@ -444,6 +474,18 @@ public abstract class BrandingModel {
         icon32 = getBranding().getBrandedFile(
                 "org.netbeans.core.startup",//NOI18N
                 "org/netbeans/core/startup/frame32.gif");//NOI18N
+        
+        icon256 = getBranding().getBrandedFile(
+                "org.netbeans.core.startup",//NOI18N
+                "org/netbeans/core/startup/frame256.png");//NOI18N
+        
+        icon512 = getBranding().getBrandedFile(
+                "org.netbeans.core.startup",//NOI18N
+                "org/netbeans/core/startup/frame512.png");//NOI18N
+        
+        icon1024 = getBranding().getBrandedFile(
+                "org.netbeans.core.startup",//NOI18N
+                "org/netbeans/core/startup/frame1024.png");//NOI18N
 
         splash = getBranding().getBrandedFile(
                 "org.netbeans.core.startup",//NOI18N
@@ -657,7 +699,7 @@ public abstract class BrandingModel {
         generalResourceBundleKeys.clear();
         
         internationalizedResourceBundleKeys.clear();
-}
+    }
 
     private String backslashesToSlashes (String text) {
         return text.replace('\\', '/'); // NOI18N
@@ -677,7 +719,7 @@ public abstract class BrandingModel {
         for (BundleKey bundleKey : internationalizedResourceBundleKeys) {
             String localizedBundlepath = bundlepath;
             if(!localizedBundlepath.endsWith("_" + this.locale.toString() + ".properties"))
-                localizedBundlepath = bundlepath.replaceAll(".properties", "_" + this.locale.toString() + ".properties");
+                localizedBundlepath = bundlepath.replace(".properties", "_" + this.locale.toString() + ".properties");
             if (key.equals(bundleKey.getKey()) &&
                 backslashesToSlashes(bundleKey.getBundleFilePath()).endsWith(localizedBundlepath) &&
                 codenamebase.equals(bundleKey.getModuleEntry().getCodeNameBase()))
@@ -694,7 +736,7 @@ public abstract class BrandingModel {
         Set<BrandingSupport.BundleKey> brandedBundleKeys = branding.getBrandedBundleKeys();
         String localizedBundlepath = key.getBundleFilePath();
         if(!localizedBundlepath.endsWith("_" + this.locale.toString() + ".properties"))
-                localizedBundlepath = localizedBundlepath.replaceAll(".properties", "_" + this.locale.toString() + ".properties");
+                localizedBundlepath = localizedBundlepath.replace(".properties", "_" + this.locale.toString() + ".properties");
         File bundleFile = new File(localizedBundlepath);
         if(!bundleFile.exists()) {
             for(BrandingSupport.BundleKey keyIter:brandedBundleKeys) {
@@ -753,7 +795,7 @@ public abstract class BrandingModel {
             String bundleFilePath = bundleKey.getBundleFilePath();
             String localizedBundlepath = bundlepath;
             if(bundleFilePath.endsWith("_" + this.locale.toString() + ".properties"))
-                localizedBundlepath = bundlepath.replaceAll(".properties", "_" + this.locale.toString() + ".properties");
+                localizedBundlepath = bundlepath.replace(".properties", "_" + this.locale.toString() + ".properties");
             if (key.equals(bundleKey.getKey()) &&
                 backslashesToSlashes(bundleFilePath).endsWith(localizedBundlepath) &&
                 codenamebase.equals(bundleKey.getModuleEntry().getCodeNameBase()))
@@ -780,7 +822,7 @@ public abstract class BrandingModel {
         for (BundleKey bundleKey : internationalizedResourceBundleKeys) {
             String localizedBundlepath = bundlepath;
             if(!localizedBundlepath.endsWith("_" + this.locale.toString() + ".properties"))
-                localizedBundlepath = bundlepath.replaceAll(".properties", "_" + this.locale.toString() + ".properties");
+                localizedBundlepath = bundlepath.replace(".properties", "_" + this.locale.toString() + ".properties");
             if (key.equals(bundleKey.getKey()) &&
                 backslashesToSlashes(bundleKey.getBundleFilePath()).endsWith(localizedBundlepath) &&
                 codenamebase.equals(bundleKey.getModuleEntry().getCodeNameBase()))
@@ -813,7 +855,7 @@ public abstract class BrandingModel {
             String bundleFilePath = bundleKey.getBundleFilePath();
             String localizedBundlepath = bundlepath;
             if(bundleFilePath.endsWith("_" + this.locale.toString() + ".properties"))
-                localizedBundlepath = bundlepath.replaceAll(".properties", "_" + this.locale.toString() + ".properties");
+                localizedBundlepath = bundlepath.replace(".properties", "_" + this.locale.toString() + ".properties");
             if (backslashesToSlashes(bundleFilePath).endsWith(localizedBundlepath) &&
                 codenamebase.equals(bundleKey.getModuleEntry().getCodeNameBase()))
                 return true;
@@ -838,7 +880,7 @@ public abstract class BrandingModel {
         for (BundleKey bundleKey : internationalizedResourceBundleKeys) {
             String localizedBundlepath = bundlepath;
             if(!localizedBundlepath.endsWith("_" + this.locale.toString() + ".properties"))
-                localizedBundlepath = bundlepath.replaceAll(".properties", "_" + this.locale.toString() + ".properties");
+                localizedBundlepath = bundlepath.replace(".properties", "_" + this.locale.toString() + ".properties");
             if (backslashesToSlashes(bundleKey.getBundleFilePath()).endsWith(localizedBundlepath) &&
                 codenamebase.equals(bundleKey.getModuleEntry().getCodeNameBase()))
                 return true;

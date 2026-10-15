@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project name="platform/o.apache.commons.logging" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
+    <!--
+        The NetBeans module org.apache.commons.logging is just a repackaging
+        of the original bundle, the bulk of the module is a verbatim copy of
+        the original commons-logging.
+    -->
+    <target name="jar" depends="-prepare-mandatory-files-for-module,projectized-common.jar,-define-FileCRC32Calculator">
+        <FileCRC32Calculator file="external/commons-logging-1.4.0.jar" property="o.apache.commons.logging.crc32" />
+        <jar jarfile="${cluster}/${module.jar}">
+            <zipfileset src="external/commons-logging-1.4.0.jar"/>
+            <!--
+                The module source code consists only of a bundle activator, that
+                configures commons-logging to log using java.util.logging. The
+                built classes must be included in the rebuild jar.
+            -->
+            <fileset dir="build/classes" 
+                     includes="**/*"
+                     excludes="META-INF/LICENSE META-INF/NOTICE"
+            >
+            </fileset>
+            <manifest>
+                <attribute name="Bundle-SymbolicName" value="org.apache.commons.logging"/>
+                <attribute name="Bundle-Version" value="1.4.0"/>
+                <!-- register the BundleActivator, so that commons-logging is propertly configured -->
+                <attribute name="Bundle-Activator" value="org.netbeans.modules.commonslogging.CommonsLoggingBundleActivator"/>
+                <attribute name="Import-Package" value="org.osgi.framework"/>
+                <attribute name="Export-Package" value="org.apache.commons.logging;version=&quot;1.4.0&quot;,org.apache.commons.logging.impl;version=&quot;1.4.0&quot;"/>
+                <attribute name="NB-Original-CRC" value="${o.apache.commons.logging.crc32}"/>
+            </manifest>
+        </jar>
+    </target>
+</project>

@@ -27,10 +27,12 @@ public class JUnitSettingsTest extends BasicTestForImport {
         super(testName, "org-netbeans-modules-junit-JUnitSettings.settings");
     }
     
+    @Override
     public void testPreferencesNodePath() throws Exception {
         assertPreferencesNodePath("/org/netbeans/modules/junit");
     }
     
+    @Override
     public void testPropertyNames() throws Exception {
         assertPropertyNames(new String[] {
             "fileSystem",

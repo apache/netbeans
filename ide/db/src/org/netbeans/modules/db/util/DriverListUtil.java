@@ -19,6 +19,11 @@
 
 package org.netbeans.modules.db.util;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -96,11 +101,19 @@ public class DriverListUtil {
         add("Cloudscape RMI",
         "RmiJdbc.RJDriver",
         "jdbc:rmi://<HOST>[:<PORT>]/jdbc:cloudscape:<DB>");
+
+        add(NbBundle.getMessage(DriverListUtil.class, "DRIVERNAME_JavaDbEmbeddedModular"),
+        "org.apache.derby.iapi.jdbc.AutoloadedDriver",
+        "jdbc:derby:<DB>[;<ADDITIONAL>]", true);
+
+        add(NbBundle.getMessage(DriverListUtil.class, "DRIVERNAME_JavaDbNetworkModular"),
+        "org.apache.derby.client.ClientAutoloadedDriver",
+        "jdbc:derby://<HOST>[:<PORT>]/<DB>[;<ADDITIONAL>]", true);
         
         add(NbBundle.getMessage(DriverListUtil.class, "DRIVERNAME_JavaDbEmbedded"),
         "org.apache.derby.jdbc.EmbeddedDriver",
         "jdbc:derby:<DB>[;<ADDITIONAL>]", true);
-        
+
         add(NbBundle.getMessage(DriverListUtil.class, "DRIVERNAME_JavaDbNetwork"),
         "org.apache.derby.jdbc.ClientDriver",
         "jdbc:derby://<HOST>[:<PORT>]/<DB>[;<ADDITIONAL>]", true);
@@ -213,9 +226,12 @@ public class DriverListUtil {
         "com.microsoft.jdbc.sqlserver.SQLServerDriver",
         "jdbc:microsoft:sqlserver://<HOST>[:<PORT>][;DatabaseName=<DB>]");
 
-        add(NbBundle.getMessage(DriverListUtil.class, "DRIVERNAME_MSSQL2005"),
+        /* Previously we used to say "Microsoft SQL Server 2005" here, but as of driver version 7.2.2
+        (latest per July 2019), the class name is still the same. So don't say "2005" anymore. */
+        url = add(NbBundle.getMessage(DriverListUtil.class, "DRIVERNAME_MSSQL"),
         "com.microsoft.sqlserver.jdbc.SQLServerDriver",
         "jdbc:sqlserver://[<HOST>[\\<INSTANCE>][:<PORT>]][;databaseName=<DB>][;<ADDITIONAL>]", true);
+        url.setSampleUrl("jdbc:sqlserver://localhost:1433");
         
         url = add(NbBundle.getMessage(DriverListUtil.class, "DRIVERNAME_MySQL"),
                 "com.mysql.cj.jdbc.Driver", 
@@ -233,6 +249,46 @@ public class DriverListUtil {
         url.setSampleUrl("jdbc:mariadb://localhost:3306/mysql");
         url.setSampleUser("root");
         url.setSamplePassword("");
+
+        /* Use the class com.simba.athena.jdbc.Driver instead of
+        com.simba.athena.jdbc42.Driver, per the documentation: "The connector supports the following
+        fully-qualified class names (FQCNs) that are independent of the JDBC version:
+        com.simba.athena.jdbc.Driver". */
+        url = add(NbBundle.getMessage(DriverListUtil.class, "DRIVERNAME_Athena"),
+                NbBundle.getMessage(DriverListUtil.class, "TYPE_Standard"),
+                "com.simba.athena.jdbc.Driver",
+                "jdbc:awsathena://[<ADDITIONAL>]", true); // NOI18N
+        url.setSampleUser("");
+        url.setSamplePassword("");
+        url.setSampleUrl("jdbc:awsathena://AwsRegion=us-west-1;S3OutputLocation=s3://working/dir");
+
+        url = add(NbBundle.getMessage(DriverListUtil.class, "DRIVERNAME_Athena"),
+                NbBundle.getMessage(DriverListUtil.class, "TYPE_Endpoint"),
+                "com.simba.athena.jdbc.Driver",
+                "jdbc:awsathena://<HOST>[:<PORT>][;<ADDITIONAL>]", true); // NOI18N
+        url.setSampleUser("");
+        url.setSamplePassword("");
+        url.setSampleUrl("jdbc:awsathena://athena.us-east-1.amazonaws.com:443;S3OutputLocation=s3://working/dir"); // Make sure the default port gets set.
+
+        /* Use the class com.amazon.redshift.jdbc.Driver instead of
+        com.amazon.redshift.jdbc42.Driver, per the documentation: "The connector supports the
+        following fully-qualified class names (FQCNs) that are independent of the JDBC version:
+        com.amazon.redshift.jdbc.Driver". */
+        url = add(NbBundle.getMessage(DriverListUtil.class, "DRIVERNAME_Redshift"),
+                NbBundle.getMessage(DriverListUtil.class, "TYPE_UserName"),
+                "com.amazon.redshift.jdbc.Driver",
+                "jdbc:redshift://[<HOST>[:<PORT>]][/<DB>][;<ADDITIONAL>]", true); // NOI18N
+        url.setSampleUser("");
+        url.setSamplePassword("");
+        url.setSampleUrl("jdbc:redshift://examplecluster.abc123xyz789.us-west-2.redshift.amazonaws.com:5439/dev"); // Make sure the default port gets set.
+
+        url = add(NbBundle.getMessage(DriverListUtil.class, "DRIVERNAME_Redshift"),
+                NbBundle.getMessage(DriverListUtil.class, "TYPE_IAM"),
+                "com.amazon.redshift.jdbc.Driver",
+                "jdbc:redshift:iam://[<HOST>[:<PORT>]][/<DB>][;<ADDITIONAL>]", true); // NOI18N
+        url.setSampleUser("");
+        url.setSamplePassword("");
+        url.setSampleUrl("jdbc:redshift:iam://examplecluster.abc123xyz789.us-west-2.redshift.amazonaws.com:5439/dev"); // Make sure the default port gets set.
 
         add("MySQL (MM.MySQL driver)",
         "org.gjt.mm.mysql.Driver",
@@ -325,17 +381,42 @@ public class DriverListUtil {
         
         add("Sybase Driver",
         "com.sun.sql.jdbc.sybase.SybaseDriver",
-        "jdbc:sun:sybase://<HOST>[:<PORT]");          
+        "jdbc:sun:sybase://<HOST>[:<PORT>]");
 
-        add("SQLite",
-            "org.sqlite.JDBC",
-            "jdbc:sqlite:<FILE>");
-        
-        add("H2 Database Engine",
+        url = add("SQLite", null, "org.sqlite.JDBC", "jdbc:sqlite:<FILE>", true);
+        url.setSampleUrl("jdbc:sqlite:");
+        url.setUsernamePasswordDisplayed(false);
+        url.setDatabaseFileValidator(new SQLiteDatabaseFileValidator());
+
+        // The FILE field is optional for DuckDB. If omitted, an in-memory database will be opened.
+        url = add("DuckDB", null, "org.duckdb.DuckDBDriver", "jdbc:duckdb:[<FILE>]", true);
+        url.setSampleUrl("jdbc:duckdb:");
+        url.setUsernamePasswordDisplayed(false);
+        url.setDatabaseFileValidator(new DuckDBDatabaseFileValidator());
+
+        url = add("H2 Database Engine",
             "org.h2.Driver",
             "jdbc:h2:<FILE>");
+        /* I think H2 can sometimes use a password with the database, even though it's a file-based
+        database. So keep the username/password displayed in this case.  */
+        // url.setUsernamePasswordDisplayed(false);
+
+        /* There is also a driver class com.snowflake.client.jdbc.SnowflakeDriver, which is
+        deprecated. The one below (starting "net") is the currently recommended one. See
+        https://docs.snowflake.com/en/developer-guide/jdbc/jdbc-configure */
+        url = add("Snowflake", null, "net.snowflake.client.jdbc.SnowflakeDriver", "jdbc:snowflake://<HOST>/[?<ADDITIONAL>]", true);
+        url.setSampleUrl("jdbc:snowflake://my-account-id.snowflakecomputing.com/?warehouse=COMPUTE_WH");
+
+        // See https://cloud.google.com/bigquery/docs/reference/odbc-jdbc-drivers#jdbc_release_1621003
+        url = add("Google BigQuery", null, "com.simba.googlebigquery.jdbc.Driver",
+                "jdbc:bigquery://https://<HOST>/bigquery/v2:<PORT>;ProjectId=<INSTANCE>;<ADDITIONAL>", true);
+        /* None of the available authentication methods use a JDBC-level username/password prompt.
+        (Instead, an external browser may be opened to prompt for credentials when the user attempts
+        to connect.) */
+        url.setUsernamePasswordDisplayed(false);
+        url.setSampleUrl("jdbc:bigquery://https://www.googleapis.com/bigquery/v2:443;ProjectId=ProjectIdGoesHere;OAuthType=1;");
     }
-    
+
     public static Set<String> getDrivers() {
         TreeSet<String> drivers = new TreeSet<>();
         for (JdbcUrl url : templateUrls) {
@@ -352,8 +433,7 @@ public class DriverListUtil {
         
         for (JdbcUrl url : templateUrls) {
             if (url.getClassName().equals(driver.getClassName())) {
-                JdbcUrl newurl = new JdbcUrl(url, driver);
-                driverUrls.add(newurl);
+                driverUrls.add(new JdbcUrl(url, driver));
             }
         }
 
@@ -396,6 +476,80 @@ public class DriverListUtil {
             }
         } else {
             return name;
+        }
+    }
+
+    private static class SQLiteDatabaseFileValidator implements JdbcUrl.DatabaseFileValidator {
+        /* From zMagicHeader in src/btree.c in
+        https://github.com/sqlite/sqlite/blob/cc83b6e071ba69943f175a038d2625ae3d6abf47/src/btree.c */
+        private static final byte[] SQLITE2_MAGIC_HEADER =
+            "** This file contains an SQLite ".getBytes(StandardCharsets.US_ASCII);
+        // From https://www.sqlite.org/fileformat.html
+        private static final byte[] SQLITE3_MAGIC_HEADER =
+            "SQLite format 3\u0000".getBytes(StandardCharsets.US_ASCII);
+
+        private static Integer getSQLiteVersion(File file) throws IOException {
+            final byte[] actual;
+            try (InputStream is = new FileInputStream(file)) {
+                actual = is.readNBytes(Math.max(SQLITE2_MAGIC_HEADER.length, SQLITE3_MAGIC_HEADER.length));
+            }
+            if (startsWith(actual, SQLITE3_MAGIC_HEADER)) {
+                return 3;
+            } else if (startsWith(actual, SQLITE2_MAGIC_HEADER)) {
+                return 2;
+            } else {
+                return null;
+            }
+        }
+
+        private static boolean startsWith(byte[] arr, byte[] prefix) {
+          if (arr.length < prefix.length) {
+                return false;
+          }
+          for (int i = 0; i < prefix.length; i++) {
+                if (arr[i] != prefix[i]) {
+                    return false;
+                }
+          }
+          return true;
+        }
+
+        @Override
+        public String getValidationErrorMessage(File file) throws IOException {
+            Integer ret = getSQLiteVersion(file);
+            if (ret == null) {
+                return "This file is not a SQLite 3 database.";
+            } else if (ret == 2) {
+                return "This file may be an older SQLite 2 database, which is not supported.";
+            } else {
+                return null;
+            }
+        }
+    }
+
+    private static class DuckDBDatabaseFileValidator implements JdbcUrl.DatabaseFileValidator {
+        // From https://duckdb.org/docs/internals/storage.html
+        private static final byte[] DUCKDB_MAGIC_HEADER =
+            "DUCK".getBytes(StandardCharsets.US_ASCII);
+
+        @Override
+        public String getValidationErrorMessage(File file) throws IOException {
+            final byte[] actual;
+            /* "DuckDB files start with a uint64_t which contains a checksum for the main header,
+            followed by four magic bytes (DUCK)"
+            https://duckdb.org/docs/internals/storage.html */
+            try (InputStream is = new FileInputStream(file)) {
+                actual = is.readNBytes(8 + 4);
+            }
+            if (actual[8]  == (byte) 'D' &&
+                actual[9]  == (byte) 'U' &&
+                actual[10] == (byte) 'C' &&
+                actual[11] == (byte) 'K')
+            {
+                return null;
+            } else {
+                return "This file is not a valid DuckDB database.";
+            }
         }
     }
 }

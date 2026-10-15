@@ -68,7 +68,7 @@ final class Clusters implements Stamps.Updater {
                     tmp.add(tok.nextToken());
                 }
             }
-            dirs = tmp.toArray(new String[tmp.size()]);
+            dirs = tmp.toArray(new String[0]);
         }
         return dirs;
     }

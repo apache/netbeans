@@ -154,7 +154,7 @@ class FinishPatch {
         if (toAdd.isEmpty()) {
             panel.lstPatches.setListData(new String[] { NO_PATCHES });
         } else {
-            panel.lstPatches.setListData(toAdd.toArray(new QPatch[toAdd.size()]));
+            panel.lstPatches.setListData(toAdd.toArray(new QPatch[0]));
             panel.lstPatches.setEnabled(true);
         }
     }

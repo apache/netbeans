@@ -19,6 +19,7 @@
 package org.netbeans.modules.search.matcher;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.api.search.SearchPattern;
 import org.netbeans.api.search.provider.SearchListener;
 import org.netbeans.junit.MockServices;
@@ -101,7 +102,7 @@ public class AbstractMatcherTest extends NbTestCase {
         @Override
         public Charset getEncoding(FileObject file) {
             if (file.getName().equals("latin2file")) {
-                return Charset.forName("UTF-8");
+                return StandardCharsets.UTF_8;
             } else {
                 return null;
             }

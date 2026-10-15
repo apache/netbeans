@@ -48,7 +48,7 @@ public class WhiteListLookupProvider implements LookupProvider {
     private static final String PROP_WHITELIST = "whitelist-";
 
     //@GuardedBy("lookupCache")
-    private final static Map<Project,Reference<WhiteListLookup>> lookupCache =
+    private static final Map<Project,Reference<WhiteListLookup>> lookupCache =
             Collections.synchronizedMap(new WeakHashMap<Project, Reference<WhiteListLookup>>());
 
 
@@ -144,7 +144,7 @@ public class WhiteListLookupProvider implements LookupProvider {
                     impls.add(w);
                 }
             }
-            return impls.toArray(new UserSelectable[impls.size()]);
+            return impls.toArray(new UserSelectable[0]);
         }
     }
 }

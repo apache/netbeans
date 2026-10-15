@@ -31,7 +31,7 @@ package org.openide.util;
  * to currently activated <a href="@org-openide-windows@/org/openide/windows/TopComponent.html#getLookup()">TopComponent's  lookup</a>.
  * <p>
  * There is an external FAQ entry describing how to
- * <a href="http://wiki.netbeans.org/DevFaqAddGlobalContext">add content to
+ * <a href="https://netbeans.apache.org/wiki/DevFaqAddGlobalContext">add content to
  * the global context</a> by providing customized implementation of this
  * interface.
  * 

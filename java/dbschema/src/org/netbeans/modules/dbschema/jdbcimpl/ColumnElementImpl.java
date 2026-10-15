@@ -43,10 +43,10 @@ public class ColumnElementImpl extends DBMemberElementImpl implements ColumnElem
     public ColumnElementImpl(String name, String type, String isNullable, boolean isAutoIncrement, String size, String decimal) {
         super(name);
         
-        _type = new Integer(type).intValue();
+        _type = Integer.parseInt(type);
         _isAutoIncrement = isAutoIncrement;
 
-        int nullable = new Integer(isNullable).intValue();
+        int nullable = Integer.parseInt(isNullable);
  
 /*
         if (isNullable.trim().equals("YES")) //NOI18N
@@ -62,17 +62,17 @@ public class ColumnElementImpl extends DBMemberElementImpl implements ColumnElem
             _isNullable = true;
         
         if (size != null)
-            _length = new Integer(size);
+            _length = Integer.valueOf(size);
         else
             _length = null;
 
         if (size != null)
-            _precision = new Integer(size);
+            _precision = Integer.valueOf(size);
         else
-            _precision = new Integer(0);
+            _precision = 0;
 
         if (decimal != null)
-            _scale =  new Integer(decimal);
+            _scale =  Integer.valueOf(decimal);
         else
             _scale = null;
     }

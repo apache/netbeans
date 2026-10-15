@@ -168,8 +168,7 @@ public final class WLJpa2SwitchSupport {
                 createContributionsJar(oepeFile, contribPath);
                 // exists so update cp
             } else {
-                JarFile oepeJarFile = new JarFile(oepeFile);
-                try {
+                try (JarFile oepeJarFile = new JarFile(oepeFile)) {
                     Manifest mf = oepeJarFile.getManifest();
                     String cp = mf.getMainAttributes().getValue(Name.CLASS_PATH);
                     if (cp == null) {
@@ -194,15 +193,12 @@ public final class WLJpa2SwitchSupport {
                         mf.getMainAttributes().put(Name.CLASS_PATH, updated.toString());
                         replaceManifest(oepeFile, mf);
                     }
-                } finally {
-                    oepeJarFile.close();
                 }
             }
 
             // update weblogic.jar
             File weblogicFile = WebLogicLayout.getWeblogicJar(serverRoot);
-            JarFile weblogicJarFile = new JarFile(weblogicFile);
-            try {
+            try (JarFile weblogicJarFile = new JarFile(weblogicFile)) {
                 Manifest wlManifest = weblogicJarFile.getManifest();
                 String cp = wlManifest.getMainAttributes().getValue(Name.CLASS_PATH);
                 if (cp == null) {
@@ -217,8 +213,6 @@ public final class WLJpa2SwitchSupport {
                     wlManifest.getMainAttributes().put(Name.CLASS_PATH, cp);
                     replaceManifest(weblogicFile, wlManifest);
                 }
-            } finally {
-                weblogicJarFile.close();
             }
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
@@ -241,8 +235,7 @@ public final class WLJpa2SwitchSupport {
             if (!oepeJarFile.exists() || !oepeJarFile.isFile()) {
                 return;
             }
-            JarFile file = new JarFile(oepeJarFile);
-            try {
+            try (JarFile file = new JarFile(oepeJarFile)) {
                 Manifest mf = file.getManifest();
                 String cp = mf.getMainAttributes().getValue(Name.CLASS_PATH);
                 if (cp == null) {
@@ -262,8 +255,6 @@ public final class WLJpa2SwitchSupport {
                     mf.getMainAttributes().remove(Name.CLASS_PATH);
                 }
                 replaceManifest(oepeJarFile, mf);
-            } finally {
-                file.close();
             }
         } catch (IOException ex) {
             // TODO some exception/message to the user
@@ -354,20 +345,10 @@ public final class WLJpa2SwitchSupport {
                 jarFile.getName(), "tmp"); // NOI18N
         File tmpJar = new File(jarFile.getParentFile(), tmpName + ".tmp"); // NOI18N
         try {
-            InputStream is = new BufferedInputStream(
-                    new FileInputStream(jarFile));
-            try {
-                OutputStream os = new BufferedOutputStream(
-                        new FileOutputStream(tmpJar));
-                try {
-                    replaceManifest(is, os, manifest);
-                } finally {
-                    os.close();
-                }
-            } finally {
-                is.close();
+            try (InputStream is = new BufferedInputStream(new FileInputStream(jarFile));
+                 OutputStream os = new BufferedOutputStream(new FileOutputStream(tmpJar))) {
+                replaceManifest(is, os, manifest);
             }
-
             if (tmpJar.renameTo(jarFile)) {
                 LOGGER.log(Level.FINE, "Successfully moved {0}", tmpJar);
                 return;
@@ -380,64 +361,43 @@ public final class WLJpa2SwitchSupport {
     }
 
     private void replaceManifest(InputStream is, OutputStream os, Manifest manifest) throws IOException {
-        JarInputStream in = new JarInputStream(is);
-        try {
-            JarOutputStream out = new JarOutputStream(os, manifest);
-            try {
-                JarEntry entry = null;
-                byte[] temp = new byte[32768];
-                while ((entry = in.getNextJarEntry()) != null) {
-                    String name = entry.getName();
-                    if (name.equalsIgnoreCase("META-INF/MANIFEST.MF")) { // NOI18N
-                        continue;
-                    }
-                    out.putNextEntry(entry);
-                    while (in.available() != 0) {
-                        int read = in.read(temp);
-                        if (read != -1) {
-                            out.write(temp, 0, read);
-                        }
-                    }
-                    out.closeEntry();
+        try (JarInputStream in = new JarInputStream(is); JarOutputStream out = new JarOutputStream(os, manifest)) {
+            JarEntry entry = null;
+            byte[] temp = new byte[32768];
+            while ((entry = in.getNextJarEntry()) != null) {
+                String name = entry.getName();
+                if (name.equalsIgnoreCase("META-INF/MANIFEST.MF")) { // NOI18N
+                    continue;
                 }
-            } finally {
-                out.close();
+                out.putNextEntry(entry);
+                while (in.available() != 0) {
+                    int read = in.read(temp);
+                    if (read != -1) {
+                        out.write(temp, 0, read);
+                    }
+                }
+                out.closeEntry();
             }
-        } finally {
-            in.close();
         }
     }
 
     private void createContributionsJar(File jarFile, String classpath) throws IOException {
         //need to create zip file
-        OutputStream os = new BufferedOutputStream(new FileOutputStream(jarFile));
-        try {
+        try (OutputStream os = new BufferedOutputStream(new FileOutputStream(jarFile))) {
             Manifest manifest = new Manifest();
             manifest.getMainAttributes().put(Name.MANIFEST_VERSION, "1.0"); // NOI18N
             manifest.getMainAttributes().put(Name.CLASS_PATH, classpath);
-            JarOutputStream dest = new JarOutputStream(new BufferedOutputStream(os), manifest);
-            try {
+            try (JarOutputStream dest = new JarOutputStream(new BufferedOutputStream(os), manifest)) {
                 dest.closeEntry();
                 dest.finish();
-            } finally {
-                dest.close();
             }
-        } finally {
-            os.close();
         }
     }
 
     private void copy(File source, File dest) throws IOException {
-        InputStream is = new BufferedInputStream(new FileInputStream(source));
-        try {
-            OutputStream os = new BufferedOutputStream(new FileOutputStream(dest));
-            try {
-                FileUtil.copy(is, os);
-            } finally {
-                os.close();
-            }
-        } finally {
-            is.close();
+        try (InputStream is = new BufferedInputStream(new FileInputStream(source));
+             OutputStream os = new BufferedOutputStream(new FileOutputStream(dest))) {
+            is.transferTo(os);
         }
     }
 

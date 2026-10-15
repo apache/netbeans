@@ -23,14 +23,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.concurrent.CountDownLatch;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
-import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.parsing.impl.SourceAccessor;
 import org.netbeans.modules.parsing.impl.TaskProcessor;
 import org.openide.cookies.EditorCookie;
@@ -291,12 +290,7 @@ public class SourceTest extends ParsingTestBase {
         final CountDownLatch startLatch2 = new CountDownLatch(1);
 
         //Prerender
-        ParserManager.parse(Collections.singleton(source), new UserTask() {
-            @Override
-            public void run(ResultIterator resultIterator) throws Exception {
-                
-            }
-        });
+        ParserManager.parse(Collections.singleton(source), (result) -> {});
 
         new Thread() {
             public void run () {
@@ -316,10 +310,7 @@ public class SourceTest extends ParsingTestBase {
         synchronized(TaskProcessor.INTERNAL_LOCK) {
             startLatch1.countDown();
             startLatch2.await();
-            NbDocument.runAtomic(doc, new Runnable() {
-                public void run() {
-                }
-            });
+            NbDocument.runAtomic(doc, () -> {});
         }
     }
 
@@ -332,11 +323,10 @@ public class SourceTest extends ParsingTestBase {
     }
 
     private void writeToFileObject(FileObject f, String documentContent, String eol) throws IOException {
-        assertTrue("No UTF-8 available", Charset.isSupported("UTF-8"));
         OutputStream os = f.getOutputStream();
         try {
-            byte [] eolBytes = eol.getBytes("UTF-8");
-            byte [] bytes = documentContent.getBytes("UTF-8");
+            byte [] eolBytes = eol.getBytes(StandardCharsets.UTF_8);
+            byte [] bytes = documentContent.getBytes(StandardCharsets.UTF_8);
             for(byte b : bytes) {
                 if (b == '\n') {
                     os.write(eolBytes);

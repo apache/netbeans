@@ -19,6 +19,7 @@
 
 package org.netbeans.core.windows;
 
+import java.awt.AWTEvent;
 import java.awt.AWTKeyStroke;
 import java.awt.Component;
 import java.awt.Container;
@@ -26,10 +27,13 @@ import java.awt.Dialog;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyEventPostProcessor;
 import java.awt.KeyboardFocusManager;
+import java.awt.Toolkit;
 import java.awt.Window;
+import java.awt.event.AWTEventListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Set;
@@ -42,6 +46,7 @@ import javax.swing.KeyStroke;
 import javax.swing.MenuElement;
 import javax.swing.MenuSelectionManager;
 import javax.swing.SwingUtilities;
+import javax.swing.text.JTextComponent;
 import javax.swing.text.Keymap;
 import org.netbeans.core.NbKeymap;
 import org.netbeans.core.NbLifecycleManager;
@@ -58,7 +63,7 @@ import org.openide.util.Utilities;
  * 
  * @author Tran Duc Trung
  */
-final class ShortcutAndMenuKeyEventProcessor implements KeyEventDispatcher, KeyEventPostProcessor {
+final class ShortcutAndMenuKeyEventProcessor implements KeyEventDispatcher, KeyEventPostProcessor, AWTEventListener {
     
     private static ShortcutAndMenuKeyEventProcessor defaultInstance;
     
@@ -107,7 +112,8 @@ final class ShortcutAndMenuKeyEventProcessor implements KeyEventDispatcher, KeyE
         keyboardFocusManager.setDefaultFocusTraversalKeys(
             KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS,
             Collections.singleton(AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_TAB, KeyEvent.SHIFT_DOWN_MASK))
-        );                
+        );
+        Toolkit.getDefaultToolkit().addAWTEventListener(instance, AWTEvent.MOUSE_EVENT_MASK);
     }
     
     public static synchronized void uninstall() {
@@ -129,6 +135,7 @@ final class ShortcutAndMenuKeyEventProcessor implements KeyEventDispatcher, KeyE
         );                
         defaultBackward = null;
         defaultForward = null;
+        Toolkit.getDefaultToolkit().removeAWTEventListener(instance);
     }
 
     private boolean wasPopupDisplayed;
@@ -136,6 +143,13 @@ final class ShortcutAndMenuKeyEventProcessor implements KeyEventDispatcher, KeyE
     private char lastKeyChar;
     private boolean lastSampled = false;
     private boolean skipNextTyped = false;
+
+    @Override
+    public void eventDispatched(AWTEvent event) {
+        if (event instanceof MouseEvent) {
+            processMouseEvent((MouseEvent) event);
+        }
+    }
     
     public boolean postProcessKeyEvent(KeyEvent ev) {
         if (ev.isConsumed())
@@ -295,6 +309,82 @@ final class ShortcutAndMenuKeyEventProcessor implements KeyEventDispatcher, KeyE
             return true;
         }
         return false;
+    }
+
+    private void processMouseEvent(MouseEvent mev) {
+        if (mev.getID() != MouseEvent.MOUSE_PRESSED
+                || mev.getButton() <= MouseEvent.BUTTON3
+                || mev.isPopupTrigger()
+                || mev.isConsumed()) {
+            return;
+        }
+        int button = mev.getButton();
+        if (Utilities.getOperatingSystem() == Utilities.OS_LINUX) {
+            // the JDK drops buttons for vertical scroll
+            // drop buttons for horizontal scroll here.
+            button -= 2;
+            if (button <= 3) {
+                return;
+            }
+        }
+        //ignore when the IDE is shutting down
+        if (NbLifecycleManager.isExiting()) {
+            return;
+        }
+        int keycode = Utilities.mouseButtonKeyCode(button);
+        if (keycode == KeyEvent.VK_UNDEFINED) {
+            return;
+        }
+        int modifiers = 0;
+        if (mev.isControlDown()) {
+            modifiers |= InputEvent.CTRL_DOWN_MASK;
+        }
+        if (mev.isAltDown()) {
+            modifiers |= InputEvent.ALT_DOWN_MASK;
+        }
+        if (mev.isShiftDown()) {
+            modifiers |= InputEvent.SHIFT_DOWN_MASK;
+        }
+        if (mev.isMetaDown()) {
+            modifiers |= InputEvent.META_DOWN_MASK;
+        }
+
+        KeyStroke ks = KeyStroke.getKeyStroke(keycode, modifiers);
+        Window w = SwingUtilities.windowForComponent(mev.getComponent());
+
+        // don't process shortcuts if this is a help frame
+        if ((w instanceof JFrame) && ((JFrame) w).getRootPane().getClientProperty("netbeans.helpframe") != null) { // NOI18N
+            return;
+        }
+
+        // don't let action keystrokes to propagate from both
+        // modal and nonmodal dialogs, but propagate from separate floating windows,
+        // even if they are backed by JDialog
+        if ((w instanceof Dialog)
+                && !WindowManagerImpl.isSeparateWindow(w)
+                && !isTransmodalAction(ks)) {
+            return;
+        }
+
+        // Provide a reasonably useful action event that identifies what was focused
+        // when the key was pressed, as well as what keystroke ran the action.
+        ActionEvent aev = new ActionEvent(
+                mev.getSource(), ActionEvent.ACTION_PERFORMED, Utilities.keyToString(ks));
+
+        Action action = null;
+        Component focused = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        if (focused instanceof JTextComponent) {
+            action = ((JTextComponent) focused).getKeymap().getAction(ks);
+        }
+        if (action == null) {
+            Keymap km = Lookup.getDefault().lookup(Keymap.class);
+            action = (km != null) ? km.getAction(ks) : null;
+        }
+
+        if (action != null && action.isEnabled()) {
+            action.actionPerformed(aev);
+            mev.consume();
+        }
     }
 
     private static boolean invokeProcessKeyBindingsForAllComponents(

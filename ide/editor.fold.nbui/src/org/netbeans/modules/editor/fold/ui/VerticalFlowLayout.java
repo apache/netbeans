@@ -33,7 +33,7 @@ import java.util.Set;
  */
 final class VerticalFlowLayout implements LayoutManager2 {
 
-    final private Set<Component> components = new LinkedHashSet<Component>();
+    private final Set<Component> components = new LinkedHashSet<Component>();
     private int hgap = 0;
     private int vgap = 0;
 

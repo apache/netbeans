@@ -247,7 +247,7 @@ public abstract class BasicWizardIterator implements WizardDescriptor.Asynchrono
         // mkleint: copied from the NewJavaFileWizardIterator.. there must be something painfully wrong..
         String[] beforeSteps = null;
         Object prop = wiz.getProperty(WizardDescriptor.PROP_CONTENT_DATA); // NOI18N
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[])prop;
         }
         position = 0;
@@ -396,7 +396,7 @@ public abstract class BasicWizardIterator implements WizardDescriptor.Asynchrono
             panel.addPropertyChangeListener(this);
             panel.setName(panel.getPanelName()); // NOI18N
             this.panel = panel;
-            panel.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(stepIndex)); // NOI18N
+            panel.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, stepIndex); // NOI18N
             // names of currently used steps
             panel.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, allSteps); // NOI18N
         }

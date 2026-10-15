@@ -25,7 +25,7 @@ import org.openide.util.NbBundle;
  * @author Petr Pisl
  */
 public class BetterConditionHint extends JsConventionHint {
-    
+
     @Override
     @NbBundle.Messages("BetterConditionDisplayName=Using === or !== instead == or !=")
     public String getDisplayName() {
@@ -42,5 +42,5 @@ public class BetterConditionHint extends JsConventionHint {
     public String getDescription() {
         return Bundle.BetterConditionDescription();
     }
-    
+
 }

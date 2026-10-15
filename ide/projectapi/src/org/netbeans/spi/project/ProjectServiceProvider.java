@@ -46,7 +46,7 @@ public final class TestAction implements ActionListener {
             }
         }
     }
-    public static abstract class Service {
+    public abstract static class Service {
         static {
             System.err.println("===> loading Service");
         }

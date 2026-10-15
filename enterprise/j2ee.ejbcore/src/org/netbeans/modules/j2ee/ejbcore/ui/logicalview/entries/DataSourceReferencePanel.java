@@ -34,7 +34,6 @@ import javax.swing.event.AncestorListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.netbeans.modules.j2ee.common.DatasourceUIHelper;
-import org.netbeans.modules.j2ee.common.ProjectUtil;
 import org.netbeans.modules.j2ee.common.ServerUtil;
 import org.netbeans.modules.j2ee.core.api.support.progress.ProgressSupport;
 import org.netbeans.modules.j2ee.core.api.support.progress.ProgressSupport.Action;
@@ -192,7 +191,7 @@ public class DataSourceReferencePanel extends JPanel {
         assert datasources != null && comboBox != null;
         
         List<Datasource> sortedDatasources = new ArrayList<Datasource>(datasources);
-        Collections.sort(sortedDatasources, DatasourceUIHelper.createDatasourceComparator());
+        sortedDatasources.sort(DatasourceUIHelper.createDatasourceComparator());
         
         comboBox.removeAllItems();
         for (Datasource ds : sortedDatasources) {

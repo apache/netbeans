@@ -19,7 +19,6 @@
 package org.netbeans.modules.web.inspect.webkit.knockout;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import org.netbeans.modules.web.webkit.debugging.api.WebKitDebugging;
@@ -84,7 +83,7 @@ public class KnockoutChildFactory extends ChildFactory<PropertyDescriptor> {
     static List<PropertyDescriptor> sort(List<PropertyDescriptor> list) {
         List<PropertyDescriptor> copy = new ArrayList<PropertyDescriptor>();
         copy.addAll(list);
-        Collections.sort(copy, PropertyDescriptorComparator.getInstance());
+        copy.sort(PropertyDescriptorComparator.getInstance());
         return copy;
     }
 

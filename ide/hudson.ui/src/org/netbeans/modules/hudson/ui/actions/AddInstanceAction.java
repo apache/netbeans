@@ -26,7 +26,7 @@ import org.netbeans.modules.hudson.ui.wizard.InstanceDialog;
 import org.openide.util.NbBundle;
 
 /**
- * Add Hudson instance action launches the wizard.
+ * Add Jenkins instance action launches the wizard.
  */
 public class AddInstanceAction extends AbstractAction {
 

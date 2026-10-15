@@ -27,22 +27,24 @@ import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.java.source.JavaSource.Phase;
+import org.netbeans.core.startup.Main;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.JavaDataLoader;
 import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.TestUtil;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer;
+import org.netbeans.modules.java.source.parsing.ClassParser;
+import org.netbeans.modules.java.source.parsing.ClassParserFactory;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.java.source.parsing.JavacParserFactory;
 import org.netbeans.modules.java.source.usages.IndexUtil;
@@ -52,10 +54,10 @@ import org.netbeans.spi.editor.document.DocumentFactory;
 import org.netbeans.spi.editor.mimelookup.MimeDataProvider;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
 import org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation;
 import org.netbeans.spi.java.queries.SourceLevelQueryImplementation;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileStateInvalidException;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.LocalFileSystem;
@@ -79,6 +81,7 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
     private static SourceUtilsTestUtil DEFAULT_LOOKUP = null;
     private static final Set<String> NB_JAVAC = Collections.unmodifiableSet(new HashSet<String>(
         Arrays.asList("nb-javac-api.jar","nb-javac-impl.jar", "vanilla-javac-api.jar")));    //NOI18N
+    private static final FileObject[] EMPTY_PATH = new FileObject[0];
     
     public SourceUtilsTestUtil() {
 //        Assert.assertNull(DEFAULT_LOOKUP);
@@ -169,6 +172,7 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
         amt.add("text/x-java");
         MimeTypes.setAllMimeTypes(amt);
         org.netbeans.api.project.ui.OpenProjects.getDefault().getOpenProjects();
+        Main.initializeURLFactory();
 
         TestUtil.setupEditorMockServices();
     }
@@ -177,24 +181,38 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
         SourceUtilsTestUtil.class.getClassLoader().setDefaultAssertionStatus(true);
         System.setProperty("org.openide.util.Lookup", SourceUtilsTestUtil.class.getName());
         Assert.assertEquals(SourceUtilsTestUtil.class, Lookup.getDefault().getClass());
+        SourceUtilsTestUtil2.disableMultiFileSourceRoots();
     }
     
     public static void prepareTest(FileObject sourceRoot, FileObject buildRoot, FileObject cache) throws Exception {
-        prepareTest(sourceRoot, buildRoot, cache, new FileObject[0]);
+        prepareTest(sourceRoot, buildRoot, cache, EMPTY_PATH);
     }
     
     public static void prepareTest(FileObject sourceRoot, FileObject buildRoot, FileObject cache, FileObject[] classPathElements) throws Exception {
+        prepareTest(sourceRoot, buildRoot, cache, classPathElements, EMPTY_PATH);
+    }
+
+    public static void prepareTest(FileObject sourceRoot, FileObject buildRoot, FileObject cache, FileObject[] classPathElements, FileObject[] modulePathElements) throws Exception {
+        prepareTest(ClassPathSupport.createClassPath(sourceRoot), buildRoot, cache, classPathElements, modulePathElements);
+    }
+
+    public static void prepareTest(ClassPath sourceCP, FileObject buildRoot, FileObject cache, FileObject[] classPathElements) throws Exception {
+        prepareTest(sourceCP, buildRoot, cache, classPathElements, EMPTY_PATH);
+    }
+
+    public static void prepareTest(ClassPath sourceCP, FileObject buildRoot, FileObject cache, FileObject[] classPathElements, FileObject[] modulePathElements) throws Exception {
         if (extraLookupContent == null)
             prepareTest(new String[0], new Object[0]);
         
-        Object[] lookupContent = new Object[extraLookupContent.length + 4];
+        Object[] lookupContent = new Object[extraLookupContent.length + 5];
         
-        System.arraycopy(extraLookupContent, 0, lookupContent, 4, extraLookupContent.length);
+        System.arraycopy(extraLookupContent, 0, lookupContent, 5, extraLookupContent.length);
         
-        lookupContent[0] = new TestProxyClassPathProvider(sourceRoot, buildRoot, classPathElements);
-        lookupContent[1] = new TestSourceForBinaryQuery(sourceRoot, buildRoot);
+        lookupContent[0] = new TestProxyClassPathProvider(sourceCP, buildRoot, classPathElements, modulePathElements);
+        lookupContent[1] = new TestSourceForBinaryQuery(sourceCP, buildRoot);
         lookupContent[2] = new TestSourceLevelQueryImplementation();
-        lookupContent[3] = JavaDataLoader.findObject(JavaDataLoader.class, true);
+        lookupContent[3] = new TestCompilerOptionsQueryImplementation();
+        lookupContent[4] = JavaDataLoader.findObject(JavaDataLoader.class, true);
         
         setLookup(lookupContent, SourceUtilsTestUtil.class.getClassLoader());
 
@@ -205,6 +223,12 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
     
     public static void setSourceLevel(FileObject file, String level) {
         file2SourceLevel.put(file, level);
+    }
+
+    private static Map<FileObject,  List<String>> file2CompilerOptions = new WeakHashMap<FileObject, List<String>>();
+
+    public static void setCompilerOptions(FileObject file, List<String> options) {
+        file2CompilerOptions.put(file, options);
     }
 
     /**This method assures that all java classes under sourceRoot are compiled,
@@ -235,11 +259,11 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
 
     private static class TestSourceForBinaryQuery implements SourceForBinaryQueryImplementation {
         
-        private final FileObject sourceRoot;
+        private final ClassPath sourcePath;
         private final FileObject buildRoot;
         
-        public TestSourceForBinaryQuery(FileObject sourceRoot, FileObject buildRoot) {
-            this.sourceRoot = sourceRoot;
+        public TestSourceForBinaryQuery(ClassPath sourcePath, FileObject buildRoot) {
+            this.sourcePath = sourcePath;
             this.buildRoot = buildRoot;
         }
         
@@ -249,9 +273,7 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
             if (buildRoot.equals(f)) {
                 return new SourceForBinaryQuery.Result() {
                     public FileObject[] getRoots() {
-                        return new FileObject[] {
-                            sourceRoot,
-                        };
+                        return sourcePath.getRoots();
                     }
 
                     public void addChangeListener(ChangeListener l) {
@@ -269,14 +291,16 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
     
     private static class TestProxyClassPathProvider implements ClassPathProvider {
         
-        private FileObject sourceRoot;
+        private ClassPath sourcePath;
         private FileObject buildRoot;
         private FileObject[] classPathElements;
+        private FileObject[] modulePathElements;
         
-        public TestProxyClassPathProvider(FileObject sourceRoot, FileObject buildRoot, FileObject[] classPathElements) {
-            this.sourceRoot = sourceRoot;
+        public TestProxyClassPathProvider(ClassPath sourcePath, FileObject buildRoot, FileObject[] classPathElements, FileObject[] modulePathElements) {
+            this.sourcePath = sourcePath;
             this.buildRoot = buildRoot;
             this.classPathElements = classPathElements;
+            this.modulePathElements = modulePathElements;
         }
         
         public ClassPath findClassPath(FileObject file, String type) {
@@ -290,15 +314,17 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
                 }
             
             if (ClassPath.SOURCE == type) {
-                return ClassPathSupport.createClassPath(new FileObject[] {
-                    sourceRoot
-                });
+                return sourcePath;
             }
             
             if (ClassPath.COMPILE == type) {
                 return ClassPathSupport.createClassPath(classPathElements);
             }
             
+            if (JavaClassPathConstants.MODULE_COMPILE_PATH == type) {
+                return ClassPathSupport.createClassPath(modulePathElements);
+            }
+
             if (ClassPath.EXECUTE == type) {
                 return ClassPathSupport.createClassPath(new FileObject[] {
                     buildRoot
@@ -330,6 +356,28 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
                 return level;
         }
         
+    }
+
+    public static class TestCompilerOptionsQueryImplementation implements CompilerOptionsQueryImplementation {
+
+        @Override
+        public Result getOptions(FileObject file) {
+            List<String> options = file2CompilerOptions.get(file);
+            if (options != null) {
+                return new Result() {
+                    @Override
+                    public List<? extends String> getArguments() {
+                        return options;
+                    }
+                    @Override
+                    public void addChangeListener(ChangeListener listener) {}
+                    @Override
+                    public void removeChangeListener(ChangeListener listener) {}
+                };
+            }
+            return null;
+        }
+
     }
 
     /**Copied from org.netbeans.api.project.
@@ -403,10 +451,14 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
     public static final class JavacParserProvider implements MimeDataProvider {
 
         private Lookup javaLookup = Lookups.fixed(new JavacParserFactory(), new JavaCustomIndexer.Factory());
+        private Lookup classLookup = Lookups.fixed(new ClassParserFactory(), new JavaCustomIndexer.Factory());
 
         public Lookup getLookup(MimePath mimePath) {
             if (mimePath.getPath().endsWith(JavacParser.MIME_TYPE)) {
                 return javaLookup;
+            }
+            if (mimePath.getPath().endsWith(ClassParser.MIME_TYPE)) {
+                return classLookup;
             }
 
             return Lookup.EMPTY;
@@ -425,6 +477,9 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
         public String findMIMEType(FileObject fo) {
             if ("java".equals(fo.getExt())) {
                 return JavacParser.MIME_TYPE;
+            }
+            if ("class".equals(fo.getExt())) {
+                return ClassParser.MIME_TYPE;
             }
 
             return null;

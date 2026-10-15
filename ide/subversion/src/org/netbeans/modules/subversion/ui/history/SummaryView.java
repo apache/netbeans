@@ -47,7 +47,6 @@ import org.netbeans.modules.subversion.util.SvnUtils;
 import org.netbeans.modules.versioning.history.AbstractSummaryView;
 import org.netbeans.modules.versioning.history.AbstractSummaryView.SummaryViewMaster.SearchHighlight;
 import org.netbeans.modules.versioning.util.Utils;
-import org.netbeans.modules.versioning.util.VCSKenaiAccessor.KenaiUser;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.WeakListeners;
 import org.tigris.subversion.svnclientadapter.SVNClientException;
@@ -137,7 +136,7 @@ class SummaryView extends AbstractSummaryView implements DiffSetupSource {
                 });
             }
             actions.addAll(Arrays.asList(revision.getActions()));
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
 
         @Override
@@ -245,7 +244,7 @@ class SummaryView extends AbstractSummaryView implements DiffSetupSource {
                 });
             }
             actions.addAll(Arrays.asList(event.getActions()));
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
 
         @Override
@@ -259,8 +258,8 @@ class SummaryView extends AbstractSummaryView implements DiffSetupSource {
         }
     }
 
-    public SummaryView (SearchHistoryPanel master, List<? extends LogEntry> results, Map<String, KenaiUser> kenaiUserMap) {
-        super(createViewSummaryMaster(master), results, kenaiUserMap);
+    public SummaryView (SearchHistoryPanel master, List<? extends LogEntry> results) {
+        super(createViewSummaryMaster(master), results);
         this.master = master;
     }
     
@@ -269,7 +268,7 @@ class SummaryView extends AbstractSummaryView implements DiffSetupSource {
         Node [] nodes = TopComponent.getRegistry().getActivatedNodes();
         if (nodes.length == 0) {
             List<RepositoryRevision> results = master.getResults();
-            return master.getSetups(results.toArray(new RepositoryRevision[results.size()]), new RepositoryRevision.Event[0]);
+            return master.getSetups(results.toArray(new RepositoryRevision[0]), new RepositoryRevision.Event[0]);
         }
     
         Set<RepositoryRevision.Event> events = new HashSet<RepositoryRevision.Event>();
@@ -283,7 +282,7 @@ class SummaryView extends AbstractSummaryView implements DiffSetupSource {
                 events.add((RepositoryRevision.Event) revCon);
             }
         }
-        return master.getSetups(revisions.toArray(new RepositoryRevision[revisions.size()]), events.toArray(new RepositoryRevision.Event[events.size()]));
+        return master.getSetups(revisions.toArray(new RepositoryRevision[0]), events.toArray(new RepositoryRevision.Event[0]));
     }
 
     @Override
@@ -384,7 +383,7 @@ class SummaryView extends AbstractSummaryView implements DiffSetupSource {
             }
             container = drevList.get(0).getLogInfoHeader();
         }
-        final RepositoryRevision.Event[] drev = drevList.toArray(new RepositoryRevision.Event[drevList.size()]);
+        final RepositoryRevision.Event[] drev = drevList.toArray(new RepositoryRevision.Event[0]);
         long revision = container.getLog().getRevision().getNumber();
 
         final boolean rollbackToEnabled = !deleted && !missingFile && !revisionSelected && oneRevisionMultiselected;
@@ -515,7 +514,7 @@ class SummaryView extends AbstractSummaryView implements DiffSetupSource {
                 events.add((RepositoryRevision.Event) o);
             }
         }
-        revert(master, revisions.toArray(new RepositoryRevision[revisions.size()]), (RepositoryRevision.Event[]) events.toArray(new RepositoryRevision.Event[events.size()]));
+        revert(master, revisions.toArray(new RepositoryRevision[0]), (RepositoryRevision.Event[]) events.toArray(new RepositoryRevision.Event[0]));
     }
 
     private static void revert(final SearchHistoryPanel master, final RepositoryRevision [] revisions, final RepositoryRevision.Event [] events) {

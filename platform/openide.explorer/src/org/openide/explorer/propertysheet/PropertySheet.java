@@ -737,7 +737,7 @@ public class PropertySheet extends JPanel {
         } catch (IllegalArgumentException iae) {
             throw new PropertyVetoException(
                 NbBundle.getMessage(PropertySheet.class, "EXC_Unknown_sorting_mode"),
-                new PropertyChangeEvent(this, PROPERTY_SORTING_MODE, new Integer(0), new Integer(sortingMode))
+                new PropertyChangeEvent(this, PROPERTY_SORTING_MODE, 0, sortingMode)
             ); //NOI18N
         }
     }
@@ -1130,7 +1130,7 @@ public class PropertySheet extends JPanel {
             String id = null;
 
             //First look on the individual property
-            if ((fd != null) && fd instanceof Node.Property) {
+            if (fd instanceof Node.Property) {
                 id = (String) fd.getValue("helpID"); //NOI18N
             }
 

@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import org.netbeans.api.visual.graph.GraphScene;
 import org.netbeans.api.visual.graph.layout.UniversalGraph;
@@ -37,31 +38,31 @@ import org.netbeans.api.visual.widget.Widget;
 public class DirectedGraph<N, E> {
 
     private Collection<N> nodes;
-    private Collection<Vertex> rootVertices;
-    private Collection<Vertex> vertices;
+    private Collection<Vertex<N>> rootVertices;
+    private Collection<Vertex<N>> vertices;
     private Collection<E> edges;
-    private Map<N, Vertex> vertexMap;
-    private Map<E, Edge> edgeMap;
-    private GraphScene scene;
+    private Map<N, Vertex<N>> vertexMap;
+    private Map<E, Edge<E>> edgeMap;
+    private GraphScene<N, E> scene;
     private UniversalGraph<N, E> uGraph;
 
     /**
      * Creates a new instance of DirectedGraph
      */
-    protected DirectedGraph(UniversalGraph<N, E> uGraph, GraphScene scene) {
+    protected DirectedGraph(UniversalGraph<N, E> uGraph, GraphScene<N, E> scene) {
         this.uGraph = uGraph;
         this.scene = scene;
         this.nodes = uGraph.getNodes();
         this.edges = uGraph.getEdges();
 
-        vertexMap = new HashMap<N, Vertex>();
-        edgeMap = new LinkedHashMap<E, Edge>();
-        rootVertices = new ArrayList<Vertex>();
-        vertices = new ArrayList<Vertex>();
+        vertexMap = new HashMap<>();
+        edgeMap = new LinkedHashMap<>();
+        rootVertices = new ArrayList<>();
+        vertices = new ArrayList<>();
     }
 
-    public static <N, E> DirectedGraph createGraph(UniversalGraph<N, E> uGraph, GraphScene scene) {
-        DirectedGraph<N, E> graph = new DirectedGraph<N, E>(uGraph, scene);
+    public static <N, E> DirectedGraph<N, E> createGraph(UniversalGraph<N, E> uGraph, GraphScene<N, E> scene) {
+        DirectedGraph<N, E> graph = new DirectedGraph<>(uGraph, scene);
         graph.createGraph();
         //graph.printGraph();
         return graph;
@@ -73,10 +74,10 @@ public class DirectedGraph<N, E> {
             N source = uGraph.getEdgeSource(e);
             N target = uGraph.getEdgeTarget(e);
 
-            Vertex sourceVertex = getVertex(source);
-            Vertex targetVertex = getVertex(target);
+            Vertex<N> sourceVertex = getVertex(source);
+            Vertex<N> targetVertex = getVertex(target);
 
-            Edge edge = createEdge(sourceVertex, targetVertex, e);
+            Edge<E> edge = createEdge(sourceVertex, targetVertex, e);
 
             sourceVertex.addOutgoingEdge(edge);
             targetVertex.addIncomingEdge(edge);
@@ -87,7 +88,7 @@ public class DirectedGraph<N, E> {
         }
 
         for (N node : nodes) {
-            Vertex vertex = getVertex(node);
+            Vertex<N> vertex = getVertex(node);
 
             Widget widget = scene.findWidget(node);
             if (widget == null) continue ;  //why is it null
@@ -103,8 +104,8 @@ public class DirectedGraph<N, E> {
     //printGraph();
     }
 
-    private Vertex getVertex(N node) {
-        Vertex vertex = vertexMap.get(node);
+    private Vertex<N> getVertex(N node) {
+        Vertex<N> vertex = vertexMap.get(node);
 
         if (vertex == null) {
             vertex = createVertex(node);
@@ -115,16 +116,16 @@ public class DirectedGraph<N, E> {
         return vertex;
     }
 
-    protected Vertex createVertex(N node) {
-        return new Vertex(node);
+    protected Vertex<N> createVertex(N node) {
+        return new Vertex<>(node);
     }
 
-    protected Edge createEdge(Vertex source, Vertex target, E edgeDE) {
-        return new Edge(source, target, edgeDE);
+    protected Edge<E> createEdge(Vertex<N> source, Vertex<N> target, E edgeDE) {
+        return new Edge<>(source, target, edgeDE);
     }
 
-    private Edge getEdge(Vertex source, Vertex target, E edgeDE) {
-        Edge edge = edgeMap.get(edgeDE);
+    private Edge<E> getEdge(Vertex<N> source, Vertex<N> target, E edgeDE) {
+        Edge<E> edge = edgeMap.get(edgeDE);
 
         if (edge == null) {
             edge = createEdge(source, target, edgeDE);
@@ -134,41 +135,45 @@ public class DirectedGraph<N, E> {
         return edge;
     }
 
-    public Collection<Vertex> getVertices() {
+    public Collection<Vertex<N>> getVertices() {
         return vertexMap.values();
     }
 
-    public Collection<Vertex> getRootVertices() {
+    public Collection<Vertex<N>> getRootVertices() {
         return rootVertices;
     }
 
     private void findRootVertices() {
-        for (Vertex vertex : vertexMap.values()) {
-            Collection<Vertex> uppers = vertex.getUpperNeighbors();
+        for (Vertex<N> vertex : vertexMap.values()) {
+            Collection<Vertex<N>> uppers = vertex.getUpperNeighbors();
             if (uppers.size() == 0) {
                 rootVertices.add(vertex);
             }
         }
     }
 
-    public DummyVertex insertDummyVertex(Edge edge, DummyVertex.Type type) {
-        Edge originalEdge = edge;
+    public DummyVertex<N> insertDummyVertex(Edge<E> edge, DummyVertex.Type type) {
+        Edge<E> originalEdge;
 
         if (edge instanceof DummyEdge) {
-            originalEdge = ((DummyEdge) edge).getOriginalEdge();
+            originalEdge = ((DummyEdge<E>) edge).getOriginalEdge();
+        } else {
+            originalEdge = edge;
         }
 
-        DummyVertex dv = createDummyVertex(originalEdge, type);
+        DummyVertex<N> dv = createDummyVertex(originalEdge, type);
         vertices.add(dv);
 
-        Vertex source = edge.getSource();
-        Vertex target = edge.getTarget();
+        @SuppressWarnings("unchecked")
+        Vertex<N> source = (Vertex<N>) edge.getSource();
+        @SuppressWarnings("unchecked")
+        Vertex<N> target = (Vertex<N>) edge.getTarget();
 
         source.removeOutgoingEdge(edge);
         source.removeLowerNeighbor(target);
         source.addLowerNeighbor(dv);
         dv.addUpperNeighbor(target);
-        DummyEdge de = createDummyEdge(source, dv, originalEdge);
+        DummyEdge<E> de = createDummyEdge(source, dv, originalEdge);
         source.addOutgoingEdge(de);
         dv.addIncomingEdge(de);
 
@@ -183,12 +188,12 @@ public class DirectedGraph<N, E> {
         return dv;
     }
 
-    protected DummyVertex createDummyVertex(Edge originalEdge, DummyVertex.Type type) {
-        return new DummyVertex(originalEdge, type);
+    protected DummyVertex<N> createDummyVertex(Edge<?> originalEdge, DummyVertex.Type type) {
+        return new DummyVertex<N>(originalEdge, type);
     }
 
-    public DummyEdge addDummyEdge(Vertex source, Vertex target) {
-        DummyEdge de = createDummyEdge(source, target, null);
+    public DummyEdge<E> addDummyEdge(Vertex<N> source, Vertex<N> target) {
+        DummyEdge<E> de = createDummyEdge(source, target, null);
         source.addOutgoingEdge(de);
         target.addIncomingEdge(de);
         source.addLowerNeighbor(target);
@@ -197,26 +202,26 @@ public class DirectedGraph<N, E> {
         return de;
     }
 
-    protected DummyEdge createDummyEdge(Vertex source, Vertex target,
-            Edge originalEdge) {
-        return new DummyEdge(source, target, originalEdge);
+    protected DummyEdge<E> createDummyEdge(Vertex<?> source, Vertex<?> target,
+            Edge<E> originalEdge) {
+        return new DummyEdge<>(source, target, originalEdge);
     }
 
     private void printGraph() {
-        for (Vertex rootVertex : getRootVertices()) {
+        for (Vertex<?> rootVertex : getRootVertices()) {
             System.out.println("root vertex = " + rootVertex);
         }
 
-        for (Vertex v : getVertices()) {
+        for (Vertex<N> v : getVertices()) {
             System.out.println("vertex = " + v);
 
-            Collection<Vertex> neighbors = v.getUpperNeighbors();
-            for (Vertex nv : neighbors) {
+            Collection<Vertex<N>> neighbors = v.getUpperNeighbors();
+            for (Vertex<N> nv : neighbors) {
                 System.out.println("\tupper neighbor = " + nv);
             }
 
             neighbors = v.getLowerNeighbors();
-            for (Vertex nv : neighbors) {
+            for (Vertex<?> nv : neighbors) {
                 System.out.println("\tlower neighbor = " + nv);
             }
         }
@@ -289,10 +294,10 @@ public class DirectedGraph<N, E> {
     public static class Vertex<N> {
 
         private N nodeDE;
-        private ArrayList<Vertex> upperNeighbors;
-        private ArrayList<Vertex> lowerNeighbors;
-        private Collection<Edge> incomingEdges;
-        private Collection<Edge> outgoingEdges;
+        private List<Vertex<N>> upperNeighbors;
+        private List<Vertex<N>> lowerNeighbors;
+        private Collection<Edge<?>> incomingEdges;
+        private Collection<Edge<?>> outgoingEdges;
         private int number = -1;
         private int x;
         private int y;
@@ -302,10 +307,10 @@ public class DirectedGraph<N, E> {
         /** Creates a new instance of Vertex */
         public Vertex(N nodeDE) {
             this.nodeDE = nodeDE;
-            upperNeighbors = new ArrayList<Vertex>();
-            lowerNeighbors = new ArrayList<Vertex>();
-            incomingEdges = new ArrayList<Edge>();
-            outgoingEdges = new ArrayList<Edge>();
+            upperNeighbors = new ArrayList<>();
+            lowerNeighbors = new ArrayList<>();
+            incomingEdges = new ArrayList<>();
+            outgoingEdges = new ArrayList<>();
         }
 
         public Dimension getSize() {
@@ -376,7 +381,7 @@ public class DirectedGraph<N, E> {
          *
          *
          */
-        public void addLowerNeighbor(Vertex vertex) {
+        public void addLowerNeighbor(Vertex<N> vertex) {
             if (!lowerNeighbors.contains(vertex)) {
                 lowerNeighbors.add(vertex);
             }
@@ -386,7 +391,7 @@ public class DirectedGraph<N, E> {
          *
          *
          */
-        public void removeLowerNeighbor(Vertex vertex) {
+        public void removeLowerNeighbor(Vertex<?> vertex) {
             lowerNeighbors.remove(vertex);
         }
 
@@ -394,7 +399,7 @@ public class DirectedGraph<N, E> {
          *
          *
          */
-        public void replaceLowerNeighbor(Vertex oldVertex, Vertex newVertex) {
+        public void replaceLowerNeighbor(Vertex<N> oldVertex, Vertex<N> newVertex) {
             lowerNeighbors.set(lowerNeighbors.indexOf(oldVertex), newVertex);
         }
 
@@ -402,7 +407,7 @@ public class DirectedGraph<N, E> {
          *
          *
          */
-        public Collection<Vertex> getLowerNeighbors() {
+        public Collection<Vertex<N>> getLowerNeighbors() {
             return Collections.unmodifiableCollection(lowerNeighbors);
         }
 
@@ -410,7 +415,7 @@ public class DirectedGraph<N, E> {
          *
          *
          */
-        public void addUpperNeighbor(Vertex vertex) {
+        public void addUpperNeighbor(Vertex<N> vertex) {
             if (!upperNeighbors.contains(vertex)) {
                 upperNeighbors.add(vertex);
             }
@@ -420,7 +425,7 @@ public class DirectedGraph<N, E> {
          *
          *
          */
-        public void removeUpperNeighbor(Vertex vertex) {
+        public void removeUpperNeighbor(Vertex<N> vertex) {
             upperNeighbors.remove(vertex);
         }
 
@@ -428,7 +433,7 @@ public class DirectedGraph<N, E> {
          *
          *
          */
-        public void replaceUpperNeighbor(Vertex oldVertex, Vertex newVertex) {
+        public void replaceUpperNeighbor(Vertex<N> oldVertex, Vertex<N> newVertex) {
             upperNeighbors.set(upperNeighbors.indexOf(oldVertex), newVertex);
         }
 
@@ -436,7 +441,7 @@ public class DirectedGraph<N, E> {
          *
          *
          */
-        public Collection<Vertex> getUpperNeighbors() {
+        public Collection<Vertex<N>> getUpperNeighbors() {
             return Collections.unmodifiableCollection(upperNeighbors);
         }
 
@@ -444,7 +449,7 @@ public class DirectedGraph<N, E> {
          *
          *
          */
-        public Collection<Edge> getOutgoingEdges() {
+        public Collection<Edge<?>> getOutgoingEdges() {
             return outgoingEdges;
         }
 
@@ -452,7 +457,7 @@ public class DirectedGraph<N, E> {
          *
          *
          */
-        public void addOutgoingEdge(Edge edge) {
+        public void addOutgoingEdge(Edge<?> edge) {
             if (!outgoingEdges.contains(edge)) {
                 outgoingEdges.add(edge);
             }
@@ -462,7 +467,7 @@ public class DirectedGraph<N, E> {
          *
          *
          */
-        public Collection<Edge> getIncomingEdges() {
+        public Collection<Edge<?>> getIncomingEdges() {
             return incomingEdges;
         }
 
@@ -470,7 +475,7 @@ public class DirectedGraph<N, E> {
          *
          *
          */
-        public void removeOutgoingEdge(Edge edge) {
+        public void removeOutgoingEdge(Edge<?> edge) {
             outgoingEdges.remove(edge);
         }
 
@@ -478,7 +483,7 @@ public class DirectedGraph<N, E> {
          *
          *
          */
-        public void addIncomingEdge(Edge edge) {
+        public void addIncomingEdge(Edge<?> edge) {
             if (!incomingEdges.contains(edge)) {
                 incomingEdges.add(edge);
             }
@@ -488,7 +493,7 @@ public class DirectedGraph<N, E> {
          *
          *
          */
-        public void removeIncomingEdge(Edge edge) {
+        public void removeIncomingEdge(Edge<?> edge) {
             incomingEdges.remove(edge);
         }
 
@@ -496,10 +501,10 @@ public class DirectedGraph<N, E> {
          *
          *
          */
-        public Edge getEdgeToLowerNeighbor(Vertex nv) {
-            Collection<Edge> edges = nv.getOutgoingEdges();
+        public Edge<?> getEdgeToLowerNeighbor(Vertex<N> nv) {
+            Collection<Edge<?>> edges = nv.getOutgoingEdges();
 
-            for (Edge edge : edges) {
+            for (Edge<?> edge : edges) {
                 if (edge.getTarget() == nv) {
                     return edge;
                 }
@@ -512,10 +517,10 @@ public class DirectedGraph<N, E> {
          *
          *
          */
-        public Edge getEdgeToUpperNeighbor(Vertex nv) {
-            Collection<Edge> edges = nv.getIncomingEdges();
+        public Edge<?> getEdgeToUpperNeighbor(Vertex<N> nv) {
+            Collection<Edge<?>> edges = nv.getIncomingEdges();
 
-            for (Edge edge : edges) {
+            for (Edge<?> edge : edges) {
                 if (edge.getSource() == nv) {
                     return edge;
                 }
@@ -555,15 +560,15 @@ public class DirectedGraph<N, E> {
      */
     public static class Edge<E> {
 
-        private Vertex source;
-        private Vertex target;
+        private Vertex<?> source;
+        private Vertex<?> target;
         private E edgeDE;
 
         /**
          *
          *
          */
-        public Edge(Vertex source, Vertex target, E edgeDE) {
+        public Edge(Vertex<?> source, Vertex<?> target, E edgeDE) {
             this.source = source;
             this.target = target;
             this.edgeDE = edgeDE;
@@ -573,7 +578,7 @@ public class DirectedGraph<N, E> {
          *
          *
          */
-        public Vertex getSource() {
+        public Vertex<?> getSource() {
             return source;
         }
 
@@ -581,7 +586,7 @@ public class DirectedGraph<N, E> {
          *
          *
          */
-        public Vertex getTarget() {
+        public Vertex<?> getTarget() {
             return target;
         }
 
@@ -598,27 +603,19 @@ public class DirectedGraph<N, E> {
      *
      *
      */
-    public static class DummyVertex extends Vertex {
+    public static class DummyVertex<N> extends Vertex<N> {
 
         private static int counter = 0;
 
         public enum Type {
 
             CROSSING, HYPEREDGE, BEND, TEMPORARY
-        }
+        };
+        private Edge<?> originalEdge;
+        private Type type;
+        private int index;
 
-        
-        
-          ;
-        private  Edge originalEdge;
-        private   Type 
-
-         
-
-         type ;   
-            private int index;
-        
-        public DummyVertex(Edge originalEdge, Type type) {
+        public DummyVertex(Edge<?> originalEdge, Type type) {
             super(null);
             this.originalEdge = originalEdge;
             this.type = type;
@@ -629,11 +626,11 @@ public class DirectedGraph<N, E> {
             this(null, type);
         }
 
-        public void setOriginalEdge(Edge originalEdge) {
+        public void setOriginalEdge(Edge<?> originalEdge) {
             this.originalEdge = originalEdge;
         }
 
-        public Edge getOriginalEdge() {
+        public Edge<?> getOriginalEdge() {
             return originalEdge;
         }
 
@@ -641,6 +638,7 @@ public class DirectedGraph<N, E> {
             return type;
         }
 
+        @Override
         public String toString() {
             return "dummy vertex " + index;
         }
@@ -650,24 +648,24 @@ public class DirectedGraph<N, E> {
      *
      *
      */
-    public static class DummyEdge extends Edge {
+    public static class DummyEdge<E> extends Edge<E> {
 
-        private Edge originalEdge;
+        private Edge<E> originalEdge;
 
-        public DummyEdge(Vertex source, Vertex target, Edge originalEdge) {
+        public DummyEdge(Vertex<?> source, Vertex<?> target, Edge<E> originalEdge) {
             super(source, target, null);
             this.originalEdge = originalEdge;
         }
 
-        public DummyEdge(Vertex source, Vertex target) {
+        public DummyEdge(Vertex<?> source, Vertex<?> target) {
             this(source, target, null);
         }
 
-        public void setOriginalEdge(Edge originalEdge) {
+        public void setOriginalEdge(Edge<E> originalEdge) {
             this.originalEdge = originalEdge;
         }
 
-        public Edge getOriginalEdge() {
+        public Edge<E> getOriginalEdge() {
             return originalEdge;
         }
 

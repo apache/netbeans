@@ -1,0 +1,8 @@
+Name: ExampleClass
+ExampleClass::${cursor}
+
+Name: ExampleEnum
+ExampleEnum::${cursor}
+
+Name: ExampleInterface
+ExampleInterface::${cursor}

@@ -42,8 +42,8 @@
         </depend>
         <javac srcdir="src-ant" destdir="${src-ant.build}"
             deprecation="${build.compiler.deprecation}"
-            debug="true"
-            source="1.6" target="1.6" includeantruntime="false">
+            debug="true" release="8"
+            source="${javac.source}" target="${javac.target}" includeantruntime="false">
             <classpath>
                 <path path="${src-ant.cp}"/>
             </classpath>

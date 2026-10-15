@@ -101,7 +101,7 @@ public class CPUCallGraphBuilder extends BaseCallGraphBuilder implements CPUProf
 
     private MethodInfoMapper methodInfoMapper = MethodInfoMapper.DEFAULT;
     private TimingAdjusterOld timingAdjuster = TimingAdjusterOld.getDefault();
-    final private ThreadInfos threadInfos = new ThreadInfos();
+    private final ThreadInfos threadInfos = new ThreadInfos();
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
@@ -901,7 +901,7 @@ public class CPUCallGraphBuilder extends BaseCallGraphBuilder implements CPUProf
         instrFilter = profilerClient.getSettings().getInstrumentationFilter();
         
         setMethodInfoMapper(new MethodInfoMapper() {
-            final private String INVALID_MID=ResourceBundle.getBundle("org.netbeans.lib.profiler.results.cpu.Bundle").getString("MSG_INVALID_METHODID"); // NOI18N
+            private final String INVALID_MID=ResourceBundle.getBundle("org.netbeans.lib.profiler.results.cpu.Bundle").getString("MSG_INVALID_METHODID"); // NOI18N
             @Override
             public String getInstrMethodClass(int methodId) {
                 String[] cNames = profilerClient.getStatus().getInstrMethodClasses();

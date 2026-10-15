@@ -24,7 +24,7 @@ import org.openide.util.NbBundle;
  *
  * @author Petr Pisl
  */
-public class DuplicatePropertyName extends JsConventionHint { 
+public class DuplicatePropertyName extends JsConventionHint {
 
     @Override
     public String getId() {
@@ -42,5 +42,5 @@ public class DuplicatePropertyName extends JsConventionHint {
     public String getDisplayName() {
         return Bundle.DuplicatePropertyNameDisplayName();
     }
-    
+
 }

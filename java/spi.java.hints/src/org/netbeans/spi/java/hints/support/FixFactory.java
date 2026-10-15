@@ -22,7 +22,6 @@ import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.Set;
 import javax.lang.model.element.Modifier;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -107,6 +106,7 @@ public final class FixFactory {
             this.text = text;
         }
 
+        @Override
         public String getText() {
             return text;
         }

@@ -28,9 +28,9 @@ import java.util.Set;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.netbeans.api.editor.document.LineDocument;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.editor.BaseDocument;
-import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.api.HintFix;
 import org.netbeans.modules.csl.api.HintSeverity;
@@ -59,13 +59,11 @@ import org.openide.util.NbBundle;
  */
 public class GlobalIsNotDefined extends JsAstRule {
 
-    private static final List<String> KNOWN_GLOBAL_OBJECTS = Arrays.asList("window", "document", "console", //NOI18N
-            "clearInterval", "clearTimeout", "event", "frames", "history", //NOI18N
-            "Image", "location", "name", "navigator", "Option", "parent", "screen", "setInterval", "setTimeout", "super", //NOI18N
-            "XMLHttpRequest", "JSON", "Date", "undefined", "Math", "$", "jQuery",  //NOI18N
-            "Error", "EvalError", "RangeError", "ReferenceError", "SyntaxError", "TypeError", "URIError", //NOI18N
-            Type.ARRAY, Type.OBJECT, Type.BOOLEAN, Type.NULL, Type.NUMBER, Type.REGEXP, Type.STRING, Type.UNDEFINED, Type.UNRESOLVED);
-    
+    private static final List<String> KNOWN_GLOBAL_OBJECTS = Arrays.asList(
+            "super",  "$", "jQuery", "this", //NOI18N
+            Type.ARRAY, Type.OBJECT, Type.BOOLEAN, Type.NULL, Type.NUMBER,
+            Type.REGEXP, Type.STRING, Type.UNDEFINED, Type.UNRESOLVED);
+
     @Override
     void computeHints(JsRuleContext context, List<Hint> hints, int offset, HintsProvider.HintsManager manager) throws BadLocationException {
         if (!JsTokenId.JAVASCRIPT_MIME_TYPE.equals(context.getJsParserResult().getSnapshot().getMimePath().getPath())) {
@@ -76,7 +74,7 @@ public class GlobalIsNotDefined extends JsAstRule {
         Collection<? extends JsObject> variables = ModelUtils.getVariables((DeclarationScope)globalObject);
         FileObject fo = context.parserResult.getSnapshot().getSource().getFileObject();
         Index jsIndex = Index.get(fo);
-        Set<String> namesFromFrameworks = new HashSet<String>();
+        Set<String> namesFromFrameworks = new HashSet<>();
         for (JsObject globalFiles:  ModelUtils.getExtendingGlobalObjects(context.getJsParserResult().getSnapshot().getSource().getFileObject())) {
             for (JsObject global : globalFiles.getProperties().values()) {
                 namesFromFrameworks.add(global.getName());
@@ -85,7 +83,7 @@ public class GlobalIsNotDefined extends JsAstRule {
         Collection<String> jsHintGlobalDefinition = findJsHintGlobalDefinition(context.getJsParserResult().getSnapshot());
         for (JsObject variable : variables) {
             String varName = variable.getName();
-            if(!variable.isDeclared() 
+            if(!variable.isDeclared()
                     && !KNOWN_GLOBAL_OBJECTS.contains(varName)
                     && !namesFromFrameworks.contains(varName)
                     && !jsHintGlobalDefinition.contains(varName)
@@ -96,9 +94,10 @@ public class GlobalIsNotDefined extends JsAstRule {
                     return;
                 }
 
-                // check whether is defined as window property
-                Collection<? extends IndexResult> findByFqn = jsIndex.findByFqn("window." + varName, Index.FIELD_BASE_NAME);
-                if (findByFqn.isEmpty()) {
+                // check whether is defined as window property or defined in classpath
+                Collection<? extends IndexResult> findByFqnOnWindow = jsIndex.findByFqn("window." + varName, Index.FIELD_BASE_NAME);
+                Collection<? extends IndexResult> findByFqnPlain = jsIndex.findByFqn(varName, Index.FIELD_BASE_NAME);
+                if (findByFqnOnWindow.isEmpty() && findByFqnPlain.isEmpty()) {
                     if (variable.getOccurrences().isEmpty()) {
                         addHint(context, hints, offset, varName, variable.getOffsetRange());
                     } else {
@@ -115,10 +114,10 @@ public class GlobalIsNotDefined extends JsAstRule {
         boolean add = false;
         Document document = context.getJsParserResult().getSnapshot().getSource().getDocument(false);
         if (offset > -1) {
-            if (document != null && document instanceof BaseDocument) {
-                BaseDocument baseDocument = (BaseDocument)document;
-                int lineOffset = Utilities.getLineOffset(baseDocument, offset);
-                int lineOffsetRange = Utilities.getLineOffset(baseDocument, range.getStart());
+            LineDocument ld = LineDocumentUtils.as(document, LineDocument.class);
+            if (ld != null) {
+                int lineOffset = LineDocumentUtils.getLineIndex(ld, offset);
+                int lineOffsetRange = LineDocumentUtils.getLineIndex(ld, range.getStart());
                 add = lineOffset == lineOffsetRange;
             }
         } else {
@@ -134,13 +133,13 @@ public class GlobalIsNotDefined extends JsAstRule {
                 } finally {
                     ((AbstractDocument) document).readUnlock();
                 }
-                
+
             }
         }
-        
+
         if (add) {
             List<HintFix> fixes;
-            fixes = new ArrayList<HintFix>();
+            fixes = new ArrayList<>();
             fixes.add(new AddJsHintFix(context.getJsParserResult().getSnapshot(), offset, name));
             hints.add(new Hint(this, Bundle.JsGlobalIsNotDefinedHintDesc(name),
                     context.getJsParserResult().getSnapshot().getSource().getFileObject(),
@@ -148,7 +147,7 @@ public class GlobalIsNotDefined extends JsAstRule {
                     range.getStart(), range.getEnd()), fixes, 500));
         }
     }
-    
+
     @Override
     public Set<?> getKinds() {
         return Collections.singleton(JsAstRule.JS_OTHER_HINTS);
@@ -178,36 +177,39 @@ public class GlobalIsNotDefined extends JsAstRule {
     public HintSeverity getDefaultSeverity() {
         return HintSeverity.WARNING;
     }
-   
+
     @Override
     public boolean getDefaultEnabled() {
         return true;
     }
-    
+
     private Collection<String> findJsHintGlobalDefinition(Snapshot snapshot) {
-        ArrayList<String> names = new ArrayList<String>();
+        ArrayList<String> names = new ArrayList<>();
         Collection<Identifier> definedGlobal = ModelUtils.getDefinedGlobal(snapshot, 0);
         for (Identifier identifier: definedGlobal) {
             names.add(identifier.getName());
         }
         return names;
     }
-    
+
     static class AddJsHintFix implements HintFix {
 
         private final Snapshot snapshot;
         private final String name;
-        private int offset;
+        private final int offset;
 
         public AddJsHintFix(final Snapshot snapshot, final int offset, final String name) {
             this.snapshot = snapshot;
             this.name = name;
             this.offset = offset;
         }
-        
-        
+
+
         @Override
-        @NbBundle.Messages({"AddGlobalJsHint_Description=Generate JsHint global directive for variable {0}"})
+        @NbBundle.Messages({
+            "# {0} - name of variable",
+            "AddGlobalJsHint_Description=Generate JsHint global directive for variable {0}"
+        })
         public String getDescription() {
             return Bundle.AddGlobalJsHint_Description(this.name);
         }
@@ -226,7 +228,7 @@ public class GlobalIsNotDefined extends JsAstRule {
         public boolean isInteractive() {
             return false;
         }
-        
+
     }
-    
+
 }

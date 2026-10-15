@@ -104,9 +104,8 @@ abstract class DefaultParser  extends DefaultHandler {
                 // ignore wrong encoding, for example
                 parser.setFeature("http://apache.org/xml/features/continue-after-fatal-error", 
                         true);  //NOI18N
-                parser.setProperty(
-                        "http://apache.org/xml/properties/input-buffer-size", //NOI18N
-                        new Integer(2048)); // #230305
+                parser.setProperty("http://apache.org/xml/properties/input-buffer-size", //NOI18N
+                        2048); // #230305
             } catch (SAXException ignore) {
                 // parsing may be slower :-(
             }
@@ -209,22 +208,27 @@ abstract class DefaultParser  extends DefaultHandler {
         throw sex;
     }
 
+    @Override
     public void error(SAXParseException exception) throws SAXException {
         throw exception;
     }
 
+    @Override
     public void fatalError(SAXParseException exception) throws SAXException {
         throw exception;
     }
 
+    @Override
     public void endDocument() throws SAXException {
         state = PARSED;
     }
 
+    @Override
     public void setDocumentLocator(Locator locator) {
         this.locator = locator;
     }
 
+    @Override
     public InputSource resolveEntity (String publicID, String systemID) {
         // Read nothing whatsoever.
         return new InputSource (new ByteArrayInputStream (new byte[] { }));

@@ -51,9 +51,10 @@ public abstract class SassCli {
 
     // #247890
     /**
-     * System property to be set to "true" if <tt>libsass</tt> should be used.
+     * System property to be set to "false" if <tt>libsass</tt> should be not be used
+     * for legacy RubySass implementation (https://github.com/apache/netbeans/pull/1234)
      */
-    private static final boolean USE_LIBSASS = Boolean.getBoolean("nb.sass.libsass"); // NOI18N
+    private static final boolean USE_LIBSASS = Boolean.parseBoolean(System.getProperty("nb.sass.libsass", "true")); // NOI18N
 
     // version of the compiler set in ide options
     @NullAllowed

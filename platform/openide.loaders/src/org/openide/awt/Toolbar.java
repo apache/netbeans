@@ -24,7 +24,6 @@ import java.awt.Component;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
 import java.io.IOException;
 import java.util.EventListener;
 import java.util.EventObject;
@@ -78,6 +77,12 @@ public class Toolbar extends ToolbarWithOverflow /*implemented by patchsuperclas
     //needed to turn off the painting of toolbar button borders on ocean
     private static final boolean isMetalLaF =
             MetalLookAndFeel.class.isAssignableFrom(UIManager.getLookAndFeel().getClass());
+
+    private static final boolean isFlatLaF =
+            UIManager.getLookAndFeel().getID().startsWith("FlatLaf");
+
+    private static final boolean isWindowsLaF =
+            UIManager.getLookAndFeel().getID().equals("Windows");
     
     static final long serialVersionUID = 5011742660516204764L;
     static {
@@ -180,9 +185,9 @@ public class Toolbar extends ToolbarWithOverflow /*implemented by patchsuperclas
                 ((AbstractButton) c).setBorderPainted(false);
                 ((AbstractButton) c).setOpaque(false);
             }
-            //This is active for GTK L&F. It should be fixed in JDK
-            //but it is not fixed in JDK 6.0.
-            if (!isMetalLaF) {
+            if (isWindowsLaF) {
+                ((AbstractButton) c).setMargin(new Insets(2,1,0,1));
+            } else if (!isMetalLaF && !isFlatLaF) {
                 ((AbstractButton) c).setMargin( emptyInsets );
             }
             if( null != label && c != label ) {
@@ -248,7 +253,7 @@ public class Toolbar extends ToolbarWithOverflow /*implemented by patchsuperclas
      * @deprecated Always returns 1
      */
     @Deprecated
-    static public int rowCount (int height) {
+    public static int rowCount (int height) {
         return 1;
     }
 
@@ -428,7 +433,7 @@ public class Toolbar extends ToolbarWithOverflow /*implemented by patchsuperclas
                         }
                         if (obj instanceof javax.swing.JComponent) {
                             if (ToolbarPool.getDefault().getPreferredIconSize() == 24) {
-                                ((JComponent) obj).putClientProperty("PreferredIconSize", new Integer(24));
+                                ((JComponent) obj).putClientProperty("PreferredIconSize", 24);
                             }
                             ((JComponent) obj).putClientProperty("file", file);
                         }
@@ -445,7 +450,7 @@ public class Toolbar extends ToolbarWithOverflow /*implemented by patchsuperclas
                         }
 
                         if (ToolbarPool.getDefault().getPreferredIconSize() == 24) {
-                            b.putClientProperty("PreferredIconSize", new Integer(24));
+                            b.putClientProperty("PreferredIconSize", 24);
                         }
                         if (null == a.getValue(Action.SMALL_ICON)
                             && (null == a.getValue(Action.NAME) || a.getValue(Action.NAME).toString().length() == 0)) {

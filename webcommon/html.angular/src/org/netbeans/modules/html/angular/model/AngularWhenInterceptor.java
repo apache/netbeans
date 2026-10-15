@@ -42,10 +42,10 @@ import org.openide.filesystems.FileObject;
 @FunctionInterceptor.Registration(priority = 16)
 public class AngularWhenInterceptor implements FunctionInterceptor {
 
-    private final static Pattern PATTERN = Pattern.compile("(.)*\\.(when|state)");  //NOI18N
-    public final static String TEMPLATE_URL_PROP = "templateUrl";  //NOI18N
-    public final static String CONTROLLER_PROP = "controller";     //NOI18N
-    public final static String CONTROLLER_AS_PROP = "controllerAs"; //NOI18N
+    private static final Pattern PATTERN = Pattern.compile("(.)*\\.(when|state)");  //NOI18N
+    public static final String TEMPLATE_URL_PROP = "templateUrl";  //NOI18N
+    public static final String CONTROLLER_PROP = "controller";     //NOI18N
+    public static final String CONTROLLER_AS_PROP = "controllerAs"; //NOI18N
 
     @Override
     public Pattern getNamePattern() {
@@ -74,7 +74,8 @@ public class AngularWhenInterceptor implements FunctionInterceptor {
                         String controllerName = getStringValueAt(content, controller.getOffsetRange().getStart());
                         if (controllerName.isEmpty()
                                 && (controller.getJSKind() == JsElement.Kind.METHOD
-                                || controller.getJSKind() == JsElement.Kind.FUNCTION)) {
+                                || controller.getJSKind() == JsElement.Kind.FUNCTION
+                                || controller.getJSKind() == JsElement.Kind.ARROW_FUNCTION)) {
                             // probably anonymous function as a controller
                             controllerName = controller.getFullyQualifiedName();
                             if (controllerName != null && !controllerName.isEmpty()) {
@@ -102,6 +103,7 @@ public class AngularWhenInterceptor implements FunctionInterceptor {
         INIT, INSTRING, INVALUE, END
     }
 
+    @SuppressWarnings("fallthrough")
     private String getStringValueAt(String content, int offset) {
         String value = "";
         STATE state = STATE.INIT;

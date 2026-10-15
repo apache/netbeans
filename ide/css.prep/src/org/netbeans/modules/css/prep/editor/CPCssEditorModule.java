@@ -106,6 +106,7 @@ public class CPCssEditorModule extends CssEditorModule {
     }
 
     @Override
+    @SuppressWarnings("fallthrough")
     public List<CompletionProposal> getCompletionProposals(final CompletionContext context) {
         final List<CompletionProposal> proposals = new ArrayList<>();
 
@@ -711,7 +712,7 @@ public class CPCssEditorModule extends CssEditorModule {
         }
 
         if (!vars.isEmpty()) {
-            result.add(new CPCategoryStructureItem.Variables(vars));
+            result.add(new CPCategoryStructureItem.Variables(vars, context));
         }
         if (!mixins.isEmpty()) {
             result.add(new CPCategoryStructureItem.Mixins(mixins, context));

@@ -291,7 +291,7 @@ public class QCommitPanel extends VCSCommitPanel<QFileNode> {
                     allCookies.add(cookies[0]);
                 }
             }
-            return allCookies.toArray(new EditorCookie[allCookies.size()]);
+            return allCookies.toArray(new EditorCookie[0]);
         }        
     }
     
@@ -427,7 +427,7 @@ public class QCommitPanel extends VCSCommitPanel<QFileNode> {
                         QFileNode node = new QFileNode(repository, f, fi);
                         nodesList.add(node);
                     }
-                    return nodesList.toArray(new QFileNode[nodesList.size()]);
+                    return nodesList.toArray(new QFileNode[0]);
                 }
             } catch (HgException.HgCommandCanceledException ex) {
                 //

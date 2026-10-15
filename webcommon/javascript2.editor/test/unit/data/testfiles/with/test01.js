@@ -1,7 +1,7 @@
 var roman = new Man("Roman", "Php");
 
 roman.getFirstName();
-console.log();  
+console.log();
 with(roman) {
-   console.log(getFirstName()); 
+    console.log(getFirstName());
 }

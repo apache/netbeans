@@ -47,11 +47,11 @@ import org.openide.util.NbBundle;
  */
 public class GoToSourceActionGroup extends EJBActionGroup {
 
-    private final static int EJB_CLASS = 0;
-    private final static int REMOTE = 1;
-    private final static int LOCAL = 2;
-    private final static int HOME = 3;
-    private final static int LOCAL_HOME = 4;
+    private static final int EJB_CLASS = 0;
+    private static final int REMOTE = 1;
+    private static final int LOCAL = 2;
+    private static final int HOME = 3;
+    private static final int LOCAL_HOME = 4;
     
     public String getName() {
         return NbBundle.getMessage(GoToSourceActionGroup.class, "LBL_GoToSourceGroup");
@@ -121,7 +121,7 @@ public class GoToSourceActionGroup extends EJBActionGroup {
             actions.add(new GoToSourceAction(results[LOCAL_HOME], NbBundle.getMessage(GoToSourceActionGroup.class, "LBL_GoTo_LocalHomeInterface")));
         }
         
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     public HelpCtx getHelpCtx() {

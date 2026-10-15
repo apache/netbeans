@@ -643,13 +643,14 @@ public class CurrentThreadAnnotationListener extends DebuggerManagerAdapter {
                 //System.err.print("TASK annot: "+this.threadAnnotations.keySet()+" -> ");
                 this.threadAnnotations.keySet().removeAll(removeFutures);
                 //this.futureAnnotations.keySet().removeAll(removeFutures);
-                for (JPDAThread t : threadFutureAnnotations.keySet()) {
-                    FutureAnnotation fa = threadFutureAnnotations.get(t);
+                for (Map.Entry<JPDAThread, FutureAnnotation> entry : threadFutureAnnotations.entrySet()) {
+                    JPDAThread t = entry.getKey();
+                    FutureAnnotation fa = entry.getValue();
                     if (!this.annotationsToRemove.contains(fa)) {
                         this.threadAnnotations.put(t, fa.getAnnotation());
                     }
                 }
-                
+
                 //System.err.println(this.threadAnnotations.keySet());
                 /*for (JPDAThread t : futureAnnotations.keySet()) {
                     futureAnnotations.get(t).setAnnotation(threadAnnotations.get(t));

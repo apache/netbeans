@@ -555,7 +555,7 @@ public final class RemoteClient implements Cancellable {
                 files.add(f);
             }
         }
-        return prepareDownload(FileUtil.toFile(baseLocalDirectory), files.toArray(new File[files.size()]));
+        return prepareDownload(FileUtil.toFile(baseLocalDirectory), files.toArray(new File[0]));
     }
 
     public Set<TransferFile> prepareDownload(File baseLocalDir, File... filesToDownload) throws RemoteException {
@@ -879,7 +879,7 @@ public final class RemoteClient implements Cancellable {
                     // TODO the doewnload action shoudln't save all file before
                     // executing, then the ide will ask, whether user wants
                     // to replace currently editted file.
-                    FileUtil.copy(in, out);
+                    in.transferTo(out);
                     moved = true;
                 }
             } finally {

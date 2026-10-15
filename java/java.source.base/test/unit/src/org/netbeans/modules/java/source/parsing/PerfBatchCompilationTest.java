@@ -21,6 +21,7 @@ package org.netbeans.modules.java.source.parsing;
 import java.util.jar.JarFile;
 import java.io.File;
 import java.util.zip.ZipFile;
+import junit.framework.Test;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.source.TestUtil;
 import org.netbeans.modules.java.source.usages.IndexUtil;
@@ -155,4 +156,15 @@ public class PerfBatchCompilationTest extends NbTestCase {
 //        return result;	       
 //    }
     
+    public static Test suite() {
+        return new NoopClass("noop");
+    }
+    public static class NoopClass extends NbTestCase {
+
+        public NoopClass(String name) {
+            super(name);
+        }
+
+        public void noop() {}
+    }
 }

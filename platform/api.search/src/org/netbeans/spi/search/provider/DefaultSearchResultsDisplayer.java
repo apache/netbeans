@@ -160,7 +160,7 @@ public final class DefaultSearchResultsDisplayer<U>
      * Class definining which nodes should be selected when Previous or Next
      * button is pressed and what action should be performed.
      */
-    public static abstract class ResultNodeShiftSupport {
+    public abstract static class ResultNodeShiftSupport {
 
         /**
          * Method that checks whether a node should be selected when Next or

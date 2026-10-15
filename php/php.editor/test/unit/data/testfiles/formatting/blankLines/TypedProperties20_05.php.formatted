@@ -27,5 +27,4 @@ class Simple {
     // comment 3
 
     public MyClass $field2;
-
 }

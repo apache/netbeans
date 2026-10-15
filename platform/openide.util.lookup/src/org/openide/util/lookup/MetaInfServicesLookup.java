@@ -27,6 +27,7 @@ import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -57,7 +58,7 @@ final class MetaInfServicesLookup extends AbstractLookup {
         if (res == null) {
             try {
                 Class<?> seek = Class.forName("org.openide.util.RequestProcessor");
-                res = (Executor)seek.newInstance();
+                res = (Executor)seek.getDeclaredConstructor().newInstance();
             } catch (Throwable t) {
                 try {
                     res = Executors.newSingleThreadExecutor();
@@ -238,7 +239,7 @@ final class MetaInfServicesLookup extends AbstractLookup {
                 InputStream is = url.openStream();
 
                 try {
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8")); // NOI18N
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
 
                     // XXX consider using ServiceLoaderLine instead
                     while (true) {

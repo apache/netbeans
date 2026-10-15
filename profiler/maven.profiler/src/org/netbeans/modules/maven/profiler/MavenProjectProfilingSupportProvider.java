@@ -37,14 +37,14 @@ import org.openide.filesystems.FileObject;
                         projectType="org-netbeans-modules-maven") // NOI18N
 public class MavenProjectProfilingSupportProvider extends JavaProjectProfilingSupportProvider {
     
-    final private Set<String> supportedJ2eePTypes = new HashSet<String>() {
+    private final Set<String> supportedJ2eePTypes = new HashSet<String>() {
         {
             add(NbMavenProject.TYPE_WAR);
             add(NbMavenProject.TYPE_EJB);
         }
     };
     
-    final private Set<String> supportedPTypes = new HashSet<String>() {
+    private final Set<String> supportedPTypes = new HashSet<String>() {
         {
             add(NbMavenProject.TYPE_JAR);
             addAll(supportedJ2eePTypes);

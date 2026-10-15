@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.lang.model.type.TypeMirror;
@@ -40,6 +41,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.GeneratorUtilities;
+import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.queries.FileEncodingQuery;
@@ -56,7 +58,7 @@ import org.openide.util.Parameters;
 
 /**A base class for fixes that modify Java source code. Using this class
  * as a base class makes creating the fix somewhat simpler, but also supports
- * running the hint in the Inspect&Transform dialog. The fix can be converted
+ * running the hint in the Inspect&amp;Transform dialog. The fix can be converted
  * to {@link Fix} by means of the {@link #toEditorFix() } method.
  *
  * @see JavaFixUtilities for various predefined fixes.
@@ -67,6 +69,7 @@ public abstract class JavaFix {
     private final TreePathHandle handle;
     private final Map<String, String> options;
     private final String sortText;
+    private volatile Function<ModificationResult, ChangeInfo> modResult2ChangeInfo;
 
     /**Create JavaFix with the given base {@link TreePath}. The base {@link TreePath}
      * will be passed back to the real implementation of the fix.
@@ -126,7 +129,7 @@ public abstract class JavaFix {
     
     JavaFix(TreePathHandle handle, Map<String, String> options, String sortText) {
         this.handle = handle;
-        this.options = Collections.unmodifiableMap(new HashMap<String, String>(options));
+        this.options = Collections.unmodifiableMap(new HashMap<>(options));
         this.sortText = sortText;
     }
 
@@ -205,6 +208,17 @@ public abstract class JavaFix {
             public String getSortText(JavaFix jf) {
                 return jf.sortText;
             }
+
+            @Override
+            public void setChangeInfoConvertor(JavaFix jf, Function<ModificationResult, ChangeInfo> modResult2ChangeInfo) {
+                jf.modResult2ChangeInfo = modResult2ChangeInfo;
+            }
+
+            @Override
+            public Function<ModificationResult, ChangeInfo> getChangeInfoConvertor(JavaFix jf) {
+                return jf.modResult2ChangeInfo;
+            }
+
         };
     }
 
@@ -268,13 +282,11 @@ public abstract class JavaFix {
                 if (doc != null) {
                     final String[] result = new String[1];
 
-                    doc.render(new Runnable() {
-                        @Override public void run() {
-                            try {
-                                result[0] = doc.getText(0, doc.getLength());
-                            } catch (BadLocationException ex) {
-                                Exceptions.printStackTrace(ex);
-                            }
+                    doc.render(() -> {
+                        try {
+                            result[0] = doc.getText(0, doc.getLength());
+                        } catch (BadLocationException ex) {
+                            Exceptions.printStackTrace(ex);
                         }
                     });
 
@@ -295,7 +307,7 @@ public abstract class JavaFix {
         }
 
         /**Record a changed version of a file. The changes will be applied altogether with
-         * changes to the Java file. In Inspect&Transform, changes done through this
+         * changes to the Java file. In Inspect&amp;Transform, changes done through this
          * method will be part of the preview.
          *
          * @param file whose content should be changed

@@ -34,7 +34,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.beans.IntrospectionException;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -58,7 +57,6 @@ import javax.swing.table.TableModel;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.editor.NbEditorDocument;
@@ -102,9 +100,9 @@ public final class JPQLEditorTopComponent extends TopComponent {
     static final String ICON_PATH = "org/netbeans/modules/j2ee/persistence/jpqleditor/ui/resources/queryEditor16X16.png"; //NOI18N
     private static final Logger logger = Logger.getLogger(JPQLEditorTopComponent.class.getName());
     private PUDataObject puObject;
-    private HashMap<String, PersistenceUnit> puConfigMap = new HashMap<String, PersistenceUnit>();
-    private static List<Integer> windowCounts = new ArrayList<Integer>();
-    private Integer thisWindowCount = new Integer(0);
+    private HashMap<String, PersistenceUnit> puConfigMap = new HashMap<>();
+    private static List<Integer> windowCounts = new ArrayList<>();
+    private Integer thisWindowCount = 0;
     private JPQLEditorController controller = null;
     private ProgressHandle ph = null;
     private ProgressHandle ph2 = null;
@@ -146,12 +144,7 @@ public final class JPQLEditorTopComponent extends TopComponent {
         }
         resultsTable.setRowHeight(Math.max(resultsTable.getRowHeight(), height));
         
-        puComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                puComboboxActionPerformed();
-            }
-        });
+        puComboBox.addActionListener( (ActionEvent e) -> puComboboxActionPerformed() );
 
         this.thisWindowCount = getNextWindowCount();
         setName(NbBundle.getMessage(JPQLEditorTopComponent.class, "CTL_JPQLEditorTopComponent") + thisWindowCount);
@@ -160,11 +153,10 @@ public final class JPQLEditorTopComponent extends TopComponent {
 
         sqlToggleButton.setSelected(true);
         jpqlEditor.getDocument().addDocumentListener(new JPQLDocumentListener());
-        ((NbEditorDocument) jpqlEditor.getDocument()).runAtomic(new Runnable() {//hack to unlock editor (make modifieble)
-            @Override
-            public void run() {
-            }
-        });
+        
+        //hack to unlock editor (make modifieble)
+        ((NbEditorDocument) jpqlEditor.getDocument()).runAtomic( () -> {} );
+        
         jpqlEditor.addMouseListener(new JPQLEditorPopupMouseAdapter());
         showSQL(NbBundle.getMessage(JPQLEditorTopComponent.class, "BuildHint"));
         resultsTable.setDefaultRenderer(Object.class, new ResultTableCellRenderer());
@@ -222,14 +214,14 @@ public final class JPQLEditorTopComponent extends TopComponent {
         @Override
         protected void showPopup(MouseEvent evt) {
             // Series of checks.. to enable or disable menus.
-            if (jpqlEditor.getText().trim().equals("")) {
+            if (jpqlEditor.getText().trim().isEmpty()) {
                 runJPQLMenuItem.setEnabled(false);
                 selectAllMenuItem.setEnabled(false);
             } else {
                 runJPQLMenuItem.setEnabled(true);
                 selectAllMenuItem.setEnabled(true);
             }
-            if (jpqlEditor.getSelectedText() == null || jpqlEditor.getSelectedText().trim().equals("")) {
+            if (jpqlEditor.getSelectedText() == null || jpqlEditor.getSelectedText().trim().isEmpty()) {
                 cutMenuItem.setEnabled(false);
                 copyMenuItem.setEnabled(false);
             } else {
@@ -281,7 +273,7 @@ public final class JPQLEditorTopComponent extends TopComponent {
                     } catch (IOException ex) {
                         logger.log(Level.INFO, "IOException during paste operation", ex);
                     }
-                    if (!clipboardContents.equals("")) {
+                    if (!clipboardContents.isEmpty()) {
                         if (jpqlEditor.getSelectedText() != null) {
                             jpqlEditor.replaceSelection(clipboardContents);
                         } else {
@@ -308,7 +300,7 @@ public final class JPQLEditorTopComponent extends TopComponent {
         public void run() {
             while (!isSqlTranslationProcessDone) {
                 String jpql = jpqlEditor.getText().trim();
-                if (jpql.equals("")) {
+                if (jpql.isEmpty()) {
                     return;
                 }
                 if (puComboBox.getSelectedItem() == null) {
@@ -325,24 +317,24 @@ public final class JPQLEditorTopComponent extends TopComponent {
                     if (Thread.interrupted() || isSqlTranslationProcessDone) {
                         return;    // Cancel the task
                     }
-                    ph2 = ProgressHandleFactory.createHandle(
+                    ph2 = ProgressHandle.createHandle(
                             NbBundle.getMessage(JPQLEditorTopComponent.class, "progressTaskname"));
                     ph2.start(100);
                     FileObject pXml = puObject.getPrimaryFile();
                     Project project = pXml != null ? FileOwnerQuery.getOwner(pXml) : null;
                     PersistenceEnvironment pe = project != null ? project.getLookup().lookup(PersistenceEnvironment.class) : null;
                     ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
-                    final List<URL> localResourcesURLList = new ArrayList<URL>();
-                    final HashMap<String, String> props = new HashMap<String, String>();
+                    final List<URL> localResourcesURLList = new ArrayList<>();
+                    final HashMap<String, String> props = new HashMap<>();
                     final boolean containerManaged = Util.isSupportedJavaEEVersion(pe.getProject());
                     final Provider provider = ProviderUtil.getProvider(selectedConfigObject.getProvider(), pe.getProject());
-                    final List<String> initialProblems = new ArrayList<String>();
+                    final List<String> initialProblems = new ArrayList<>();
                     if (containerManaged && provider!=null) {
                         Utils.substitutePersistenceProperties(pe, selectedConfigObject, dbconn, props);
                     }
                     try {
                         initialProblems.addAll(Utils.collectClassPathURLs(pe, selectedConfigObject, dbconn, localResourcesURLList));
-                        if(initialProblems.size()==0) {
+                        if(initialProblems.isEmpty()) {
                             ClassLoader customClassLoader = pe.getProjectClassLoader(
                                     localResourcesURLList.toArray(new URL[]{}));
                             Thread.currentThread().setContextClassLoader(customClassLoader);
@@ -354,7 +346,7 @@ public final class JPQLEditorTopComponent extends TopComponent {
 
                                 ph2.progress(50);
                                 ph2.setDisplayName(NbBundle.getMessage(JPQLEditorTopComponent.class, "queryParsingPassControlToProvider"));
-                                jpqlResult = queryExecutor.execute(jpql, selectedConfigObject, pe, props, provider, 0, ph2, false);
+                                jpqlResult = queryExecutor.execute(jpql, puObject.getPersistence(), selectedConfigObject, pe, props, provider, 0, ph2, false);
                                 ph2.progress(80);
                                 ph2.setDisplayName(NbBundle.getMessage(JPQLEditorTopComponent.class, "queryParsingProcessResults"));
 
@@ -366,7 +358,7 @@ public final class JPQLEditorTopComponent extends TopComponent {
                             if (Thread.interrupted() || isSqlTranslationProcessDone) {
                                 return;    // Cancel the task
                             }
-                            if (jpqlResult.getExceptions() != null && jpqlResult.getExceptions().size() > 0) {
+                            if (jpqlResult.getExceptions() != null && !jpqlResult.getExceptions().isEmpty()) {
                                 logger.log(Level.INFO, "", jpqlResult.getExceptions());
                                 showSQLError("GeneralError", jpqlResult.getQueryProblems());//NOI18N
                             } else {
@@ -461,20 +453,12 @@ public final class JPQLEditorTopComponent extends TopComponent {
         puObject = null;
         if (dO instanceof PUDataObject) {
             puObject = (PUDataObject) dO;
-            dO.addPropertyChangeListener(new PropertyChangeListener() {
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    if (DataObject.PROP_VALID.equals(evt.getPropertyName()) && Boolean.FALSE.equals(evt.getNewValue())) {
-                        if (SwingUtilities.isEventDispatchThread()) {
-                            close();//need to close if corresponding dataobject was invalidated (deleted)
-                        } else {
-                            SwingUtilities.invokeLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    close();//need to close if corresponding dataobject was invalidated (deleted)
-                                }
-                            });
-                        }
+            dO.addPropertyChangeListener( (PropertyChangeEvent evt) -> {
+                if (DataObject.PROP_VALID.equals(evt.getPropertyName()) && Boolean.FALSE.equals(evt.getNewValue())) {
+                    if (SwingUtilities.isEventDispatchThread()) {
+                        close();//need to close if corresponding dataobject was invalidated (deleted)
+                    } else {
+                        SwingUtilities.invokeLater( () -> close() );
                     }
                 }
             });
@@ -842,37 +826,37 @@ public final class JPQLEditorTopComponent extends TopComponent {
         return 1000; // Optimum value.
     }
 
-private void resultToggleButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_resultToggleButtonItemStateChanged
-    if (resultToggleButton.isSelected()) {//GEN-LAST:event_resultToggleButtonItemStateChanged
+    private void resultToggleButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_resultToggleButtonItemStateChanged
+        if (resultToggleButton.isSelected()) {
             ((CardLayout) (executionPanel.getLayout())).first(executionPanel);
             sqlToggleButton.setSelected(false);
         }
-    }
+    }//GEN-LAST:event_resultToggleButtonItemStateChanged
 
-private void sqlToggleButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_sqlToggleButtonItemStateChanged
-    if (sqlToggleButton.isSelected()) {//GEN-HEADEREND:event_sqlToggleButtonItemStateChanged
-        ((CardLayout) (executionPanel.getLayout())).last(executionPanel);//GEN-LAST:event_sqlToggleButtonItemStateChanged
+    private void sqlToggleButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_sqlToggleButtonItemStateChanged
+        if (sqlToggleButton.isSelected()) {
+            ((CardLayout) (executionPanel.getLayout())).last(executionPanel);
             resultToggleButton.setSelected(false);
         }
-    }
+    }//GEN-LAST:event_sqlToggleButtonItemStateChanged
 
-private void runJPQLButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runJPQLButtonActionPerformed
-    // Fix - 138856
-    if(jpqlEditor.getText().trim().equals("")) {
-        switchToResultView();
-        setStatus(NbBundle.getMessage(JPQLEditorTopComponent.class, "emptyQuery"));
-        return;
-    }
-    if (puComboBox.getSelectedItem() == null) {
-        logger.info("hibernate configuration combo box is empty.");
-        switchToResultView();
-        setStatus(NbBundle.getMessage(JPQLEditorTopComponent.class, "emptyConfiguration"));
-        return;
-    }
-    runJPQLButton.setEnabled(false);                                            
-    try {
-        ph = ProgressHandleFactory.createHandle(//GEN-HEADEREND:event_runJPQLButtonActionPerformed
-                NbBundle.getMessage(JPQLEditorTopComponent.class, "progressTaskname"));//GEN-LAST:event_runJPQLButtonActionPerformed
+    private void runJPQLButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runJPQLButtonActionPerformed
+        // Fix - 138856
+        if(jpqlEditor.getText().trim().equals("")) {
+            switchToResultView();
+            setStatus(NbBundle.getMessage(JPQLEditorTopComponent.class, "emptyQuery"));
+            return;
+        }
+        if (puComboBox.getSelectedItem() == null) {
+            logger.info("hibernate configuration combo box is empty.");
+            switchToResultView();
+            setStatus(NbBundle.getMessage(JPQLEditorTopComponent.class, "emptyConfiguration"));
+            return;
+        }
+        runJPQLButton.setEnabled(false);                                            
+        try {
+            ph = ProgressHandle.createHandle(
+                NbBundle.getMessage(JPQLEditorTopComponent.class, "progressTaskname"));
             isSqlTranslationProcessDone = true;//will be reparsed in execution thread
             if (hqlParserTask != null && !hqlParserTask.isFinished() && (hqlParserTask.getDelay() != 0)) {
                 hqlParserTask.cancel();
@@ -884,6 +868,7 @@ private void runJPQLButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             PersistenceUnit pu = (PersistenceUnit) puConfigMap.get(puComboBox.getSelectedItem());
             ph.start(100);
             controller.executeJPQLQuery(jpqlEditor.getText(),
+                    puObject.getPersistence(),
                     pu,
                     pe,
                     getMaxRowCount(),
@@ -891,7 +876,8 @@ private void runJPQLButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
         }
-    }
+    }//GEN-LAST:event_runJPQLButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel containerPanel;
     private javax.swing.JTextArea errorTextArea;
@@ -958,12 +944,9 @@ private void runJPQLButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             dbconn = JPAEditorUtil.findDatabaseConnection(pu, pe.getProject());
             if (dbconn != null) {
                 if (dbconn.getJDBCConnection() == null) {
-                    Mutex.EVENT.readAccess(new Mutex.Action<DatabaseConnection>() {
-                        @Override
-                        public DatabaseConnection run() {
-                            ConnectionManager.getDefault().showConnectionDialog(dbconn);
-                            return dbconn;
-                        }
+                    Mutex.EVENT.readAccess( (Mutex.Action<DatabaseConnection>) () -> {
+                        ConnectionManager.getDefault().showConnectionDialog(dbconn);
+                        return dbconn;
                     });
                 }
             } else {

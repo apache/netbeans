@@ -58,7 +58,7 @@ public class ConnectTest extends AbstractGitTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        System.setProperty("netbeans.user", new File(repositoryLocation.getParentFile(), "home").getAbsolutePath());
+        System.setProperty("netbeans.user", userdir.getAbsolutePath());
         client = Git.getInstance().getClient(repositoryLocation, null, false);
         prefs = NbPreferences.forModule(GitModuleConfig.class);
         prefs.clear();

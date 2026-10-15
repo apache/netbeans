@@ -23,11 +23,18 @@ import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.EventQueue;
 import java.awt.Frame;
+import java.awt.KeyboardFocusManager;
 import java.awt.Window;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.RandomlyFails;
@@ -71,6 +78,19 @@ public class DialogDisplayerImplTest extends NbTestCase {
         openChild = new JButton ("Open child");
         closeChild = new JButton ("Close child");
         pane = new JOptionPane ("", JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[] {openChild, closeChild});
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        while (true) {
+            Window w = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+            if (w == null) {
+                break;
+            }
+            w.setVisible(false);
+            w.dispose();
+        }
+        super.tearDown();
     }
 
     @Override
@@ -331,6 +351,23 @@ public class DialogDisplayerImplTest extends NbTestCase {
         assertEquals(frame, dlg.getOwner());
     }
     
+    @RandomlyFails
+    public void testNestedDialogParent() throws Exception {
+        Frame f = null;
+        Dialog owner = new Dialog(f, true);
+        postInAwtAndWaitOutsideAwt(() -> owner.setVisible(true));
+        assertShowing("Owner is invisible", true, owner);
+
+        child = new JButton();
+        final NotifyDescriptor nd = new NotifyDescriptor.Message(child);
+        postInAwtAndWaitOutsideAwt(() -> DialogDisplayer.getDefault().notify(nd));
+
+        assertShowing("Child is invisible", true, child);
+        Window w = SwingUtilities.windowForComponent(child);
+        assertSame("Window parent is not owner", owner, w.getParent());
+        postInAwtAndWaitOutsideAwt(() -> owner.setVisible(false));
+    }
+
     static void postInAwtAndWaitOutsideAwt (final Runnable run) throws Exception {
         // pendig to better implementation
         SwingUtilities.invokeLater (run);
@@ -354,4 +391,124 @@ public class DialogDisplayerImplTest extends NbTestCase {
         }
         assertEquals(msg, showing, c.isShowing());
     }
+    
+    /**
+     * Checks that the CompletableFuture completes and the descriptor has the selected
+     * option.
+     */
+    public void testNotifyCompletion1() throws Exception {
+        SwingUtilities.invokeAndWait(() -> DialogDisplayerImpl.runDelayed());
+        NotifyDescriptor nd = new NotifyDescriptor.Confirmation ("AnyQuestion?");
+        Object r = dd.notifyFuture(nd).thenApply((d) -> d.getValue()).get();
+        assertEquals (RESULT, r);
+    }
+
+    /**
+     * Checks that selecting CLOSED option will complete the Future exceptionally.
+     */
+    public void testNotifyCompletionUserClosed() throws Exception {
+        SwingUtilities.invokeAndWait(() -> DialogDisplayerImpl.runDelayed());
+        NotifyDescriptor nd = new NotifyDescriptor.Confirmation ("AnyQuestion?");
+        DialogDisplayerImpl dd2 = new DialogDisplayerImpl (NotifyDescriptor.CLOSED_OPTION);
+        CompletableFuture<Object> cf =  dd2.notifyFuture(nd).thenApply((d) -> d.getValue());
+        try {
+            cf.get();
+            fail("Should fail with CancellationException");
+        } catch (ExecutionException ex) {
+            assertTrue(ex.getCause() instanceof CancellationException);
+        }
+    }
+    
+    /**
+     * Checks that selecting CANCEL option will complete the Future exceptionally.
+     */
+    public void testNotifyCompletionUserCancelled() throws Exception {
+        SwingUtilities.invokeAndWait(() -> DialogDisplayerImpl.runDelayed());
+        NotifyDescriptor nd = new NotifyDescriptor.Confirmation ("AnyQuestion?");
+        DialogDisplayerImpl dd2 = new DialogDisplayerImpl (NotifyDescriptor.CLOSED_OPTION);
+        CompletableFuture<Object> cf =  dd2.notifyFuture(nd).thenApply((d) -> d.getValue());
+        try {
+            cf.get();
+            fail("Should fail with CancellationException");
+        } catch (ExecutionException ex) {
+            assertTrue(ex.getCause() instanceof CancellationException);
+        }
+    }
+    
+    class P extends JPanel {
+        CountDownLatch displayed = new CountDownLatch(1);
+
+        @Override
+        public void addNotify() {
+            super.addNotify(); 
+            SwingUtilities.invokeLater(() -> displayed.countDown());
+        }
+    }
+    
+    /**
+     * Checks that cancel to the Future returned from the dialog will close the dialog
+     * @throws Exception 
+     */
+    public void testUserCancelClosesDialog() throws Exception {
+        P panel = new P();
+        SwingUtilities.invokeAndWait(() -> DialogDisplayerImpl.runDelayed());
+        NotifyDescriptor nd = new NotifyDescriptor.Confirmation(panel);
+        
+        CompletableFuture<NotifyDescriptor> cf = DialogDisplayer.getDefault().notifyFuture(nd);
+        Throwable[] ex = new Throwable[1];
+        
+        CompletableFuture<NotifyDescriptor> cf2 = cf.
+            exceptionally((t) -> {
+                ex[0] = t;
+                return null; 
+            }).
+            thenApply((x) -> x);
+        
+        // wait for the dialog to be displayed
+        assertTrue(panel.displayed.await(10, TimeUnit.SECONDS));
+        
+        cf.cancel(true);
+        
+        NotifyDescriptor d = cf2.get(10, TimeUnit.SECONDS);
+        
+        assertNull(d);
+        assertTrue(ex[0] instanceof CancellationException);
+    }
+    
+    public void testExampleHandlingWithCancel() throws Exception {
+        SwingUtilities.invokeAndWait(() -> DialogDisplayerImpl.runDelayed());
+        
+        class UserData {
+            String answer1;
+            String answer2;
+        }
+        
+        NotifyDescriptor.InputLine nd = new NotifyDescriptor.InputLine("Question", "Title");
+        CompletableFuture<NotifyDescriptor.InputLine> cf = DialogDisplayer.getDefault().notifyFuture(nd);
+        
+        // chain additional processing on normal completion, and substitute some default on error
+        cf.thenApply(d -> {
+            UserData userData = new UserData();
+            // this will not execute, if user cancels "Question" dialog. Neither will execute subsequent steps.
+            userData.answer1 = d.getInputText();
+            // do something with user input and display another question
+            NotifyDescriptor.InputLine nd2 = new NotifyDescriptor.InputLine("Question2", "Title");
+        
+            return DialogDisplayer.getDefault().notifyFuture(nd).
+                thenApply(x -> {
+                // pass userData to the next step
+                userData.answer2 = x.getInputText();
+                return userData;
+            });
+        }).thenApply((data) -> {
+            // do some finalization steps. This code will not execute if Question or Question2 is cancelled.
+            return data;
+        }).exceptionally(ex -> {
+            if (!(ex instanceof CancellationException)) {
+                // do error handling
+            }
+            return null;
+        });
+    }
+
 }

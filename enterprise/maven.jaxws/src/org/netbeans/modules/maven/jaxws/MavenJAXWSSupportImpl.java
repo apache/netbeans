@@ -54,9 +54,9 @@ public class MavenJAXWSSupportImpl implements JAXWSLightSupportImpl {
     /** Path for catalog file. */
     public static final String CATALOG_PATH = "src/jax-ws-catalog.xml"; //NOI18N
 
-    private final static String SERVLET_CLASS_NAME =
+    private static final String SERVLET_CLASS_NAME =
             "com.sun.xml.ws.transport.http.servlet.WSServlet"; //NOI18N
-    private final static String SERVLET_LISTENER =
+    private static final String SERVLET_LISTENER =
             "com.sun.xml.ws.transport.http.servlet.WSServletContextListener"; //NOI18N
     /** Constructor.
      *

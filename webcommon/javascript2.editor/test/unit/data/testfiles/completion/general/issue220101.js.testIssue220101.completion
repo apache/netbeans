@@ -2,5 +2,6 @@ Code completion result for source line:
 window.TEST.case.f|
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-METHOD     freeze(obj: Object): Object     [PUBLIC,   JS Platform
+METHOD     freeze(o: Object): Object       [PUBLIC,   JS Platform
+METHOD     fromEntries(entries: Iterable)  [PUBLIC,   JS Platform
 FIELD      fixed: Number                   [PUBLIC]   issue220101.js

@@ -92,15 +92,10 @@ public final class Convertors {
         if (system == null) {
             Object obj = doc.getProperty(Document.StreamDescriptionProperty);        
             if (obj instanceof DataObject) {
-                try { 
-                        DataObject dobj = (DataObject) obj;
-                        FileObject fo = dobj.getPrimaryFile();
-                        URL url = fo.getURL();
-                        system = url.toExternalForm();
-                } catch (IOException io) {
-                    ErrorManager emgr = (ErrorManager) Lookup.getDefault().lookup(ErrorManager.class);
-                    emgr.notify(io);
-                }
+                DataObject dobj = (DataObject) obj;
+                FileObject fo = dobj.getPrimaryFile();
+                URL url = fo.toURL();
+                system = url.toExternalForm();
             } else {
                 ErrorManager emgr = (ErrorManager) Lookup.getDefault().lookup(ErrorManager.class);
                 emgr.log("XML:Convertors:Unknown stream description:" + obj);
@@ -158,15 +153,15 @@ public final class Convertors {
     static class EncodingUtil {
 
         /** IANA to Java encoding mappings */
-        protected final static Map<String, String> encodingIANA2JavaMap = new TreeMap<String, String>();
+        protected static final Map<String, String> encodingIANA2JavaMap = new TreeMap<String, String>();
 
         /** */
-        protected final static Map<String, String> encodingIANADescriptionMap = new TreeMap<String, String>();
+        protected static final Map<String, String> encodingIANADescriptionMap = new TreeMap<String, String>();
 
         /** */
-        protected final static Map<String, String> encodingIANAAliasesMap = new TreeMap<String, String>();
+        protected static final Map<String, String> encodingIANAAliasesMap = new TreeMap<String, String>();
         
-        protected final static Map<String, String> encodingJava2IANAMap = new TreeMap<String, String>();
+        protected static final Map<String, String> encodingJava2IANAMap = new TreeMap<String, String>();
 
         //
         // Static initialization

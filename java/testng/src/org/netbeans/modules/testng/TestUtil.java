@@ -56,26 +56,26 @@ import org.openide.util.Utilities;
  * @version 1.1
  */
 public class TestUtil extends CommonTestUtil {
-    static private final String JAVA_SOURCES_SUFFIX               = "java";
+    private static final String JAVA_SOURCES_SUFFIX               = "java";
     private static final String JAVA_MIME_TYPE = "text/x-java";         //NOI18N
 
-    static private String getTestClassSuffix() {
+    private static String getTestClassSuffix() {
         return TestNGSettings.TEST_CLASSNAME_SUFFIX;
     }
     
-    static private String getTestClassPrefix() {
+    private static String getTestClassPrefix() {
         return TestNGSettings.TEST_CLASSNAME_PREFIX;
     }
     
-    static private String getTestSuiteSuffix() {
+    private static String getTestSuiteSuffix() {
         return TestNGSettings.SUITE_CLASSNAME_SUFFIX;
     }
     
-    static private String getTestSuitePrefix() {
+    private static String getTestSuitePrefix() {
         return TestNGSettings.SUITE_CLASSNAME_PREFIX;
     }
     
-    static private String getRootSuiteName() {
+    private static String getRootSuiteName() {
         return TestNGSettings.getDefault().getRootSuiteClassName();
     }
     
@@ -170,15 +170,15 @@ public class TestUtil extends CommonTestUtil {
 //            return df.getPrimaryFile();
 //        }
 //        
-////XXX: retouche
-////        ClassElement ce = (ClassElement) node.getCookie(ClassElement.class);
-////        if (null != ce) {
-////            // find the parent DataObject, which node belongs to
-////            while (null != (node = node.getParentNode())) {
-////                if (null != (dO = (DataObject) node.getCookie(DataObject.class)))
-////                    return dO.getPrimaryFile();
-////            }
-////        }
+// //XXX: retouche
+// //        ClassElement ce = (ClassElement) node.getCookie(ClassElement.class);
+// //        if (null != ce) {
+// //            // find the parent DataObject, which node belongs to
+// //            while (null != (node = node.getParentNode())) {
+// //                if (null != (dO = (DataObject) node.getCookie(DataObject.class)))
+// //                    return dO.getPrimaryFile();
+// //            }
+// //        }
 //        return null;
 //    }
 
@@ -310,7 +310,7 @@ public class TestUtil extends CommonTestUtil {
 
         FileObject[] javaFilesArr = (javaFiles.size() == children.length)
                                     ? children
-                                    : javaFiles.toArray(new FileObject[javaFiles.size()]);
+                                    : javaFiles.toArray(new FileObject[0]);
         final JavaSource source = JavaSource.create(cpInfo, javaFilesArr);
         if (source == null) {
             ErrorManager.getDefault().log(
@@ -371,7 +371,7 @@ public class TestUtil extends CommonTestUtil {
 //        return cls.getInnerClass(name, false);
 //    }
 
-    static public String createNewName(int i, Set usedNames) {
+    public static String createNewName(int i, Set usedNames) {
         String ret;
         do {
             ret = "p" + i++;

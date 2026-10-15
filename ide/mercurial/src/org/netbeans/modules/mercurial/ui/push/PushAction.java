@@ -54,6 +54,7 @@ import static org.netbeans.modules.mercurial.util.HgUtils.isNullOrEmpty;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Utilities;
 
 /**
  * Push action for mercurial:
@@ -281,7 +282,7 @@ public class PushAction extends ContextAction {
                         logger, showSaveCredsOption);
                 String newBranches = failedNewBranch(list);
                 if (newBranches != null) {
-                    if (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(null, 
+                    if (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(Utilities.findDialogParent(), 
                             Bundle.MSG_PushAction_questionPushNewBranches(newBranches),
                             NbBundle.getMessage(PushAction.class, "MSG_PUSH_ERROR_TITLE"), //NOI18N
                             JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)) {

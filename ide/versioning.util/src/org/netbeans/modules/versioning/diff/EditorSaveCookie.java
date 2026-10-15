@@ -43,6 +43,7 @@ public class EditorSaveCookie implements SaveCookie {
         this.name = name;
     }
 
+    @Override
     public void save() throws IOException {
         editorCookie.saveDocument();
     }

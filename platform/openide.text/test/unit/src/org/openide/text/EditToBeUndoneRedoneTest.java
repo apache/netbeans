@@ -72,7 +72,7 @@ implements CloneableEditorSupport.Env {
     /** if not null contains message why this document cannot be modified */
     private transient String cannotBeModified;
     private transient Date date = new Date ();
-    private transient final PropertyChangeSupport pcl;
+    private final transient PropertyChangeSupport pcl;
     private transient VetoableChangeListener vetoL;
     
     private transient volatile boolean inReloadBeforeSupportLock;
@@ -194,6 +194,7 @@ implements CloneableEditorSupport.Env {
     }
     public OutputStream outputStream() throws IOException {
         class ContentStream extends ByteArrayOutputStream {
+            @Override
             public void close () throws IOException {
                 super.close ();
                 content = new String (toByteArray ());
@@ -215,6 +216,7 @@ implements CloneableEditorSupport.Env {
         if (cannotBeModified != null) {
             final String notify = cannotBeModified;
             IOException e = new IOException () {
+                @Override
                 public String getLocalizedMessage () {
                     return notify;
                 }

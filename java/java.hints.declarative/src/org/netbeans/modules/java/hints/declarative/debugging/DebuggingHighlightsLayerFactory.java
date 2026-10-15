@@ -34,6 +34,7 @@ import org.netbeans.spi.editor.highlighting.support.OffsetsBag;
 @MimeRegistration(mimeType=DeclarativeHintTokenId.MIME_TYPE, service=HighlightsLayerFactory.class)
 public class DebuggingHighlightsLayerFactory implements HighlightsLayerFactory {
 
+    @Override
     public HighlightsLayer[] createLayers(Context context) {
         return new HighlightsLayer[] {
             HighlightsLayer.create(DebuggingHighlightsLayerFactory.class.getName(),

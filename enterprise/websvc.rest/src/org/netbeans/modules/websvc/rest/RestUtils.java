@@ -244,7 +244,8 @@ public class RestUtils {
         List<? extends AnnotationMirror> annotations = JavaSourceHelper.getClassAnnotations(rSrc);
         for (AnnotationMirror annotation : annotations) {
             String cAnonType = annotation.getAnnotationType().toString();
-            if (RestConstants.PATH.equals(cAnonType) ) {
+            if (RestConstants.PATH_JAKARTA.equals(cAnonType)
+                    || RestConstants.PATH.equals(cAnonType)) {
                 path = getValueFromAnnotation(annotation);
             }
         }
@@ -253,12 +254,13 @@ public class RestUtils {
 
     public static boolean isStaticResource(JavaSource src) {
         List<? extends AnnotationMirror> annotations = JavaSourceHelper.getClassAnnotations(src);
-        if (annotations != null && annotations.size() > 0) {
+        if (annotations != null) {
             for (AnnotationMirror annotation : annotations) {
                 String classAnonType = annotation.getAnnotationType().toString();
-                if (RestConstants.PATH.equals(classAnonType)) {
+                if (RestConstants.PATH_JAKARTA.equals(classAnonType)
+                        || RestConstants.PATH.equals(classAnonType)) {
                     return true;
-                } 
+                }
             }
         }
         return false;
@@ -266,10 +268,11 @@ public class RestUtils {
 
     public static boolean isConverter(JavaSource src) {
         List<? extends AnnotationMirror> annotations = JavaSourceHelper.getClassAnnotations(src);
-        if (annotations != null && annotations.size() > 0) {
+        if (annotations != null) {
             for (AnnotationMirror annotation : annotations) {
                 String classAnonType = annotation.getAnnotationType().toString();
-                if (Constants.XML_ROOT_ELEMENT.equals(classAnonType)) {
+                if (Constants.XML_ROOT_ELEMENT.equals(classAnonType)
+                        || Constants.XML_ROOT_ELEMENT_JAKARTA.equals(classAnonType)) {
                     return true;
                 }
             }
@@ -281,12 +284,16 @@ public class RestUtils {
         List<MethodTree> trees = JavaSourceHelper.getAllMethods(src);
         for (MethodTree tree : trees) {
             List<? extends AnnotationTree> mAnons = tree.getModifiers().getAnnotations();
-            if (mAnons != null && mAnons.size() > 0) {
+            if (mAnons != null) {
                 for (AnnotationTree mAnon : mAnons) {
                     String mAnonType = mAnon.getAnnotationType().toString();
-                    if (RestConstants.PATH_ANNOTATION.equals(mAnonType) || RestConstants.PATH.equals(mAnonType)) {
+                    if (RestConstants.PATH_ANNOTATION.equals(mAnonType)
+                            || RestConstants.PATH_JAKARTA.equals(mAnonType)
+                            || RestConstants.PATH.equals(mAnonType)) {
                         return true;
-                    } else if (RestConstants.GET_ANNOTATION.equals(mAnonType) || RestConstants.GET.equals(mAnonType)) {
+                    } else if (RestConstants.GET_ANNOTATION.equals(mAnonType)
+                            || RestConstants.GET_JAKARTA.equals(mAnonType)
+                            || RestConstants.GET.equals(mAnonType)) {
                         return true;
                     }
                 }
@@ -298,7 +305,7 @@ public class RestUtils {
     public static String findElementName(MethodTree tree) {
         String eName = "";
         List<? extends AnnotationTree> mAnons = tree.getModifiers().getAnnotations();
-        if (mAnons != null && mAnons.size() > 0) {
+        if (mAnons != null) {
             for (AnnotationTree mAnon : mAnons) {
                 eName = mAnon.toString();
                 if (eName.indexOf("\"") != -1) {
@@ -318,13 +325,16 @@ public class RestUtils {
             boolean isHttpGetMethod = false;
             boolean isXmlMime = false;
             List<? extends AnnotationTree> mAnons = tree.getModifiers().getAnnotations();
-            if (mAnons != null && mAnons.size() > 0) {
+            if (mAnons != null) {
                 for (AnnotationTree mAnon : mAnons) {
                     String mAnonType = mAnon.getAnnotationType().toString();
-                    if (RestConstants.GET_ANNOTATION.equals(mAnonType) || RestConstants.GET.equals(mAnonType)) {
+                    if (RestConstants.GET_ANNOTATION.equals(mAnonType)
+                            || RestConstants.GET_JAKARTA.equals(mAnonType)
+                            || RestConstants.GET.equals(mAnonType)) {
                         isHttpGetMethod = true;
-                    } else if (RestConstants.PRODUCE_MIME_ANNOTATION.equals(mAnonType) || 
-                            RestConstants.PRODUCE_MIME.equals(mAnonType)) {
+                    } else if (RestConstants.PRODUCE_MIME_ANNOTATION.equals(mAnonType)
+                            || RestConstants.PRODUCE_MIME_JAKARTA.equals(mAnonType)
+                            || RestConstants.PRODUCE_MIME.equals(mAnonType)) {
                         List<String> mimes = getMimeAnnotationValue(mAnon);
                          if (mimes.contains(Constants.MimeType.JSON.value()) ||
                             mimes.contains(Constants.MimeType.XML.value())) {
@@ -437,7 +447,8 @@ public class RestUtils {
         }
         return false;
     }
-    
+
+    // @todo: Needs to be adjusted for jakartaEE
     public static FileObject createApplicationConfigClass(final RestSupport restSupport, FileObject packageFolder,
             String name ) throws IOException
     {   

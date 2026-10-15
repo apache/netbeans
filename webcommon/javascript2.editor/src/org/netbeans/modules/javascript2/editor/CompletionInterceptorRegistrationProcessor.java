@@ -40,7 +40,7 @@ public class CompletionInterceptorRegistrationProcessor extends LayerGeneratingP
     public CompletionInterceptorRegistrationProcessor() {
         super();
     }
-    
+
     @Override
     protected boolean handleProcess(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) throws LayerGenerationException {
         for (Element element : roundEnv.getElementsAnnotatedWith(CompletionProvider.Registration.class)) {
@@ -51,5 +51,5 @@ public class CompletionInterceptorRegistrationProcessor extends LayerGeneratingP
         }
         return true;
     }
-    
+
 }

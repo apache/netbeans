@@ -27,6 +27,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -116,7 +117,7 @@ public abstract class AbstractServiceProviderProcessor extends AbstractProcessor
     /**
      * Register a service.
      * If the class does not have an appropriate signature, an error will be printed and the registration skipped.
-     * @param clazz the service implementation type (an error will be reported if not a {@link TypeElement})
+     * @param el the service implementation type (an error will be reported if not a {@link TypeElement})
      * @param annotation the (top-level) annotation registering the service, for diagnostic purposes
      * @param type the type to which the implementation must be assignable
      * @param path a path under which to register, or "" if inapplicable
@@ -214,7 +215,7 @@ public abstract class AbstractServiceProviderProcessor extends AbstractProcessor
                     FileObject in = filer.getResource(StandardLocation.CLASS_OUTPUT, "", rsrc);
                     InputStream is = in.openInputStream();
                     try {
-                        ServiceLoaderLine.parse(new InputStreamReader(is, "UTF-8"), lines); // NOI18N
+                        ServiceLoaderLine.parse(new InputStreamReader(is, StandardCharsets.UTF_8), lines);
                     } finally {
                         is.close();
                     }
@@ -300,7 +301,7 @@ public abstract class AbstractServiceProviderProcessor extends AbstractProcessor
                             originatingElementsByProcessor.get(filer).get(entry.getKey()).toArray(new Element[0]));
                     OutputStream os = out.openOutputStream();
                     try {
-                        PrintWriter w = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
+                        PrintWriter w = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
                         for (ServiceLoaderLine line : entry.getValue()) {
                             line.write(w);
                         }

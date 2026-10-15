@@ -755,7 +755,7 @@ public class ImportAnalysisTest extends GeneratorTestBase {
                 TreeMaker make = workingCopy.getTreeMaker();
                 ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
                 MethodTree node = (MethodTree) clazz.getMembers().get(0);
-                int offset = (int) (workingCopy.getTrees().getSourcePositions().getStartPosition(workingCopy.getCompilationUnit(), node) + 1);
+                int offset = (int) (workingCopy.getTrees().getSourcePositions().getStartPosition(node) + 1);
                 TreePath context = workingCopy.getTreeUtilities().pathFor(offset);
                 try {
                     assertEquals("List", SourceUtils.resolveImport(workingCopy, context, "java.util.List"));
@@ -767,7 +767,7 @@ public class ImportAnalysisTest extends GeneratorTestBase {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testAddImportThroughMethod1.pass");
     }
 
@@ -780,7 +780,7 @@ public class ImportAnalysisTest extends GeneratorTestBase {
                 TreeMaker make = workingCopy.getTreeMaker();
                 ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
                 MethodTree node = (MethodTree) clazz.getMembers().get(0);
-                int offset = (int) (workingCopy.getTrees().getSourcePositions().getStartPosition(workingCopy.getCompilationUnit(), node) + 1);
+                int offset = (int) (workingCopy.getTrees().getSourcePositions().getStartPosition(node) + 1);
                 TreePath context = workingCopy.getTreeUtilities().pathFor(offset);
                 try {
                     assertEquals("List", SourceUtils.resolveImport(workingCopy, context, "java.util.List"));
@@ -792,7 +792,7 @@ public class ImportAnalysisTest extends GeneratorTestBase {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testAddImportThroughMethod2.pass");
     }
 
@@ -805,7 +805,7 @@ public class ImportAnalysisTest extends GeneratorTestBase {
                 TreeMaker make = workingCopy.getTreeMaker();
                 ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
                 MethodTree node = (MethodTree) clazz.getMembers().get(0);
-                int offset = (int) (workingCopy.getTrees().getSourcePositions().getStartPosition(workingCopy.getCompilationUnit(), node) + 1);
+                int offset = (int) (workingCopy.getTrees().getSourcePositions().getStartPosition(node) + 1);
                 TreePath context = workingCopy.getTreeUtilities().pathFor(offset);
                 try {
                     assertEquals("List", SourceUtils.resolveImport(workingCopy, context, "java.util.List"));
@@ -818,7 +818,7 @@ public class ImportAnalysisTest extends GeneratorTestBase {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testAddImportThroughMethod3.pass");
     }
 
@@ -831,7 +831,7 @@ public class ImportAnalysisTest extends GeneratorTestBase {
                 TreeMaker make = workingCopy.getTreeMaker();
                 ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
                 MethodTree node = (MethodTree) clazz.getMembers().get(0);
-                int offset = (int) (workingCopy.getTrees().getSourcePositions().getStartPosition(workingCopy.getCompilationUnit(), node) + 1);
+                int offset = (int) (workingCopy.getTrees().getSourcePositions().getStartPosition(node) + 1);
                 TreePath context = workingCopy.getTreeUtilities().pathFor(offset);
                 try {
                     assertEquals("SuperClassTest", SourceUtils.resolveImport(workingCopy, context, "org.netbeans.test.codegen.SuperClassTest"));
@@ -842,7 +842,7 @@ public class ImportAnalysisTest extends GeneratorTestBase {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testAddImportThroughMethod4.pass");
     }
 
@@ -855,7 +855,7 @@ public class ImportAnalysisTest extends GeneratorTestBase {
                 TreeMaker make = workingCopy.getTreeMaker();
                 ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
                 MethodTree node = (MethodTree) clazz.getMembers().get(0);
-                int offset = (int) (workingCopy.getTrees().getSourcePositions().getStartPosition(workingCopy.getCompilationUnit(), node) + 1);
+                int offset = (int) (workingCopy.getTrees().getSourcePositions().getStartPosition(node) + 1);
                 TreePath context = workingCopy.getTreeUtilities().pathFor(offset);
                 try {
                     assertEquals("SuperClassTest.FirstInnerClass", SourceUtils.resolveImport(workingCopy, context, "org.netbeans.test.codegen.SuperClassTest.FirstInnerClass"));
@@ -866,7 +866,7 @@ public class ImportAnalysisTest extends GeneratorTestBase {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testAddImportThroughMethod4.pass");
     }
 
@@ -981,7 +981,7 @@ public class ImportAnalysisTest extends GeneratorTestBase {
                 ClassTree clazz = (ClassTree) cut.getTypeDecls().get(0);
                 MethodTree method = (MethodTree) clazz.getMembers().get(2);
                 BlockTree block = method.getBody();
-                int offset = (int) (workingCopy.getTrees().getSourcePositions().getStartPosition(workingCopy.getCompilationUnit(), block) + 1);
+                int offset = (int) (workingCopy.getTrees().getSourcePositions().getStartPosition(block) + 1);
                 TreePath context = workingCopy.getTreeUtilities().pathFor(offset);
                 try {
                     assertEquals("Foo", SourceUtils.resolveImport(workingCopy, context, "org.netbeans.test.codegen.ImportsTest130479.Foo"));
@@ -992,7 +992,7 @@ public class ImportAnalysisTest extends GeneratorTestBase {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testAddImportThroughMethod1.pass");
     }
     

@@ -41,8 +41,8 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NullAllowed;
-import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.editor.EditorRegistry;
 import org.netbeans.api.editor.completion.Completion;
 import org.netbeans.api.lexer.Token;
@@ -103,6 +103,12 @@ import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.model.impl.VariousUtils;
 import org.netbeans.modules.php.editor.model.nodes.NamespaceDeclarationInfo;
 import org.netbeans.modules.php.editor.NavUtils;
+import static org.netbeans.modules.php.editor.PredefinedSymbols.Attributes.OVERRIDE;
+import org.netbeans.modules.php.editor.api.elements.EnumCaseElement;
+import org.netbeans.modules.php.editor.api.elements.EnumElement;
+import org.netbeans.modules.php.editor.codegen.AutoImport;
+import org.netbeans.modules.php.editor.elements.ElementUtils;
+import org.netbeans.modules.php.editor.options.CodeCompletionPanel;
 import org.netbeans.modules.php.editor.options.CodeCompletionPanel.CodeCompletionType;
 import org.netbeans.modules.php.editor.options.OptionsUtils;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
@@ -123,18 +129,26 @@ import org.openide.util.WeakListeners;
  */
 public abstract class PHPCompletionItem implements CompletionProposal {
 
-    @StaticResource
-    private static final String PHP_KEYWORD_ICON = "org/netbeans/modules/php/editor/resources/php16Key.png"; //NOI18N
-    protected static final ImageIcon KEYWORD_ICON = new ImageIcon(ImageUtilities.loadImage(PHP_KEYWORD_ICON));
+    protected static final ImageIcon KEYWORD_ICON = IconsUtils.loadKeywordIcon();
+    protected static final ImageIcon ENUM_CASE_ICON = IconsUtils.loadEnumCaseIcon();
+    private static final int TYPE_NAME_MAX_LENGTH = Integer.getInteger("nb.php.editor.ccTypeNameMaxLength", 30); // NOI18N
+    private static final Cache<FileObject, PhpLanguageProperties> PROPERTIES_CACHE
+            = new Cache<>(new WeakHashMap<>());
+    private static final String AUTO_IMPORT_PARAM_FORMAT = "%s${php-auto-import default=\"\" fqName=%s aliasName=\"%s\" useType=%s editable=false}"; // NOI18N
+    private static ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+    private static volatile Boolean ADD_FIRST_CLASS_CALLABLE = null; // for unit tests
+
     final CompletionRequest request;
     private final ElementHandle element;
-    private QualifiedNameKind generateAs;
-    private static ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-    private static final Cache<FileObject, PhpLanguageProperties> PROPERTIES_CACHE
-            = new Cache<>(new WeakHashMap<FileObject, PhpLanguageProperties>());
     private final boolean isPlatform;
     private final boolean isDeprecated;
+    private QualifiedNameKind generateAs;
+
+    // for unit tests
     private PhpVersion phpVersion;
+    private CodeCompletionType codeCompletionType;
+    private Boolean isAutoImport = null;
+    private Boolean isGlobalItemImportable = null;
 
     PHPCompletionItem(ElementHandle element, CompletionRequest request, QualifiedNameKind generateAs) {
         this.request = request;
@@ -152,6 +166,11 @@ public abstract class PHPCompletionItem implements CompletionProposal {
 
     PHPCompletionItem(ElementHandle element, CompletionRequest request) {
         this(element, request, null);
+    }
+
+    // for unit tests
+    static void setAddFirstClassCallable(Boolean add) {
+        ADD_FIRST_CLASS_CALLABLE = add;
     }
 
     @Override
@@ -263,7 +282,7 @@ public abstract class PHPCompletionItem implements CompletionProposal {
         ElementHandle elem = getElement();
         if (elem instanceof MethodElement) {
             final MethodElement method = (MethodElement) elem;
-            if (method.isConstructor() && request.context.equals(CompletionContext.NEW_CLASS)) {
+            if (method.isConstructor() && isNewClassContext(request.context)) {
                 elem = method.getType();
             }
         }
@@ -280,19 +299,23 @@ public abstract class PHPCompletionItem implements CompletionProposal {
             }
             if (props.getPhpVersion() != PhpVersion.PHP_5) {
                 if (generateAs == null) {
-                    CodeCompletionType codeCompletionType = OptionsUtils.codeCompletionType();
-                    switch (codeCompletionType) {
+                    CodeCompletionType completionType = getCodeCompletionType();
+                    switch (completionType) {
                         case FULLY_QUALIFIED:
                             template.append(ifq.getFullyQualifiedName());
                             return template.toString();
                         case UNQUALIFIED:
+                            String autoImportTemplate = createAutoImportTemplate(ifq);
+                            if (autoImportTemplate != null) {
+                                return autoImportTemplate;
+                            }
                             template.append(getName());
                             return template.toString();
                         case SMART:
                             generateAs = qn.getKind();
                             break;
                         default:
-                            assert false : codeCompletionType;
+                            assert false : completionType;
                     }
                 }
             } else {
@@ -350,10 +373,119 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                     assert false : "[" + tpl + "] should start with [" + extraPrefix + "]";
                 }
             }
+            String autoImportTemplate = createAutoImportTemplate(ifq);
+            if (autoImportTemplate != null) {
+                return autoImportTemplate;
+            }
             return tpl;
         }
 
         return getName();
+    }
+
+    @CheckForNull
+    private String createAutoImportTemplate(FullyQualifiedElement fullyQualifiedElement) {
+        if (isAutoImport()) {
+            String fqName = fullyQualifiedElement.getFullyQualifiedName().toString().substring(CodeUtils.NS_SEPARATOR.length());
+            String name = getName();
+            String useType = getUseType();
+            String aliasName = CodeUtils.EMPTY_STRING;
+            boolean isGlobalNamespace = !fqName.contains(CodeUtils.NS_SEPARATOR);
+            Model model = request.result.getModel();
+            NamespaceDeclaration namespaceDeclaration = findEnclosingNamespace(request.result, request.anchor);
+            NamespaceScope namespaceScope = ModelUtils.getNamespaceScope(namespaceDeclaration, model.getFileScope());
+            if (!useType.isEmpty() && isImportableScope() && !AutoImport.sameUseNameExists(name, fqName, AutoImport.getUseScopeType(useType), namespaceScope)) {
+                if (isAutoImportContext(request.context) && !fullyQualifiedElement.isAliased() && isGlobalItemImportable(isGlobalNamespace)) {
+                    // note: add an empty parameter(hidden parameter) after a name to avoid filtering completion items
+                    // if we add a default value to the parameter template, completion items are removed(filtered) from a completion list when we move the caret.
+                    // see: org.netbeans.modules.csl.editor.completion.GsfCompletionProvider.JavaCompletionQuery.getFilteredData()
+                    return String.format(AUTO_IMPORT_PARAM_FORMAT, name, fqName, aliasName, useType);
+                }
+            }
+        }
+        return null;
+    }
+
+    // for unit tests
+    void setAutoImport(boolean isAutoImport) {
+        this.isAutoImport = isAutoImport;
+    }
+
+    private boolean isAutoImport() {
+        if (isAutoImport != null) {
+            // for unit tests
+            return isAutoImport;
+        }
+        return OptionsUtils.autoImport();
+    }
+
+    // for unit tests
+    void setCodeCompletionType(CodeCompletionType codeCompletionType) {
+        this.codeCompletionType = codeCompletionType;
+    }
+
+    private CodeCompletionType getCodeCompletionType() {
+        if (codeCompletionType != null) {
+            // for unit tests
+            return codeCompletionType;
+        }
+        return OptionsUtils.codeCompletionType();
+    }
+
+    // for unit tests
+    void setGlobalItemImportable(boolean isGlobalItemImportable) {
+        this.isGlobalItemImportable = isGlobalItemImportable;
+    }
+
+    private boolean isGlobalItemImportable(boolean isGlobalNamespace) {
+        if (isGlobalNamespace) {
+            if (isGlobalItemImportable != null) {
+                // for unit tests
+                return isGlobalItemImportable;
+            }
+            CodeCompletionPanel.GlobalNamespaceAutoImportType globalNSImport = null;
+            switch (getUseType()) {
+                case AutoImport.USE_TYPE:
+                    globalNSImport = OptionsUtils.globalNSImportType();
+                    break;
+                case AutoImport.USE_FUNCTION:
+                    globalNSImport = OptionsUtils.globalNSImportFunction();
+                    break;
+                case AutoImport.USE_CONST:
+                    globalNSImport = OptionsUtils.globalNSImportConst();
+                    break;
+                default:
+                    assert false : "Unknown use type: " + getUseType(); // NOI18N
+            }
+            return globalNSImport == CodeCompletionPanel.GlobalNamespaceAutoImportType.IMPORT;
+        }
+        return true;
+    }
+
+    private boolean isImportableScope() {
+        Model model = request.result.getModel();
+        Collection<? extends NamespaceScope> declaredNamespaces = model.getFileScope().getDeclaredNamespaces();
+        NamespaceDeclaration namespaceDeclaration = findEnclosingNamespace(request.result, request.anchor);
+        if (declaredNamespaces.size() > 1 && namespaceDeclaration == null) {
+            return false;
+        } else if (declaredNamespaces.size() == 1) {
+            return OptionsUtils.autoImportFileScope();
+        } else if (namespaceDeclaration != null) {
+            return OptionsUtils.autoImportNamespaceScope();
+        }
+        return false;
+    }
+
+    private String getUseType() {
+        String useType = CodeUtils.EMPTY_STRING;
+        if (getKind() == ElementKind.CLASS || getKind() == ElementKind.CONSTRUCTOR) {
+            useType = AutoImport.USE_TYPE;
+        } else if (this instanceof ConstantItem) {
+            useType = AutoImport.USE_CONST;
+        } else if (this instanceof FunctionElementItem) {
+            useType = AutoImport.USE_FUNCTION;
+        }
+        return useType;
     }
 
     @Override
@@ -400,9 +532,39 @@ public abstract class PHPCompletionItem implements CompletionProposal {
         return null;
     }
 
+    public static boolean insertOnlyParameterName(CompletionRequest request) {
+        boolean result = false;
+        TokenHierarchy<?> tokenHierarchy = request.result.getSnapshot().getTokenHierarchy();
+        TokenSequence<PHPTokenId> tokenSequence = (TokenSequence<PHPTokenId>) tokenHierarchy.tokenSequence();
+        if (tokenSequence != null) {
+            tokenSequence.move(request.anchor);
+            // na^me: -> only parameter name
+            // n^ age: -> add also ":"
+            while (tokenSequence.moveNext()) {
+                Token<PHPTokenId> token = tokenSequence.token();
+                PHPTokenId id = token.id();
+                if (id == PHPTokenId.PHP_STRING) {
+                    continue;
+                }
+                if (id == PHPTokenId.PHP_TOKEN
+                        && TokenUtilities.textEquals(token.text(), ":")) { // NOI18N
+                    result = true;
+                    break;
+                }
+                break;
+            }
+        }
+        return result;
+    }
+
     public static boolean insertOnlyMethodsName(CompletionRequest request) {
         if (request.insertOnlyMethodsName != null) {
             return request.insertOnlyMethodsName;
+        }
+        if (isUseFunctionContext(request.context)) {
+            // GH-7041
+            // e.g. use function Vendor\Package\myFunction;
+            return true;
         }
         boolean result = false;
         TokenHierarchy<?> tokenHierarchy = request.result.getSnapshot().getTokenHierarchy();
@@ -436,6 +598,26 @@ public abstract class PHPCompletionItem implements CompletionProposal {
             }
         }
         return result;
+    }
+
+    private static boolean isUseFunctionContext(CompletionContext context) {
+        return context == CompletionContext.USE_FUNCTION_KEYWORD
+                || context == CompletionContext.GROUP_USE_FUNCTION_KEYWORD;
+    }
+
+    private boolean isNewClassContext(CompletionContext context) {
+        return context.equals(CompletionContext.NEW_CLASS)
+                || context.equals(CompletionContext.THROW_NEW)
+                || context.equals(CompletionContext.ATTRIBUTE);
+    }
+
+    private boolean isAutoImportContext(CompletionContext context) {
+        return context != CompletionContext.GROUP_USE_KEYWORD
+                && context != CompletionContext.GROUP_USE_FUNCTION_KEYWORD
+                && context != CompletionContext.GROUP_USE_CONST_KEYWORD
+                && context != CompletionContext.USE_KEYWORD
+                && context != CompletionContext.USE_FUNCTION_KEYWORD
+                && context != CompletionContext.USE_CONST_KEYWORD;
     }
 
     static class NewClassItem extends MethodElementItem {
@@ -515,7 +697,7 @@ public abstract class PHPCompletionItem implements CompletionProposal {
         }
 
         MethodElementItem(FunctionElementItem function, boolean completeAccessPrefix) {
-            super(function.getBaseFunctionElement(), function.request, function.parameters);
+            super(function.getBaseFunctionElement(), function.request, function.parameters, null, function.isFirstClassCallable);
             this.completeAccessPrefix = completeAccessPrefix;
         }
 
@@ -591,11 +773,17 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                             variableToUseName.getName(),
                             param.getDefaultValue(),
                             param.getOffset(),
+                            param.getDeclaredType(),
+                            param.getPhpdocType(),
                             param.getTypes(),
                             param.isMandatory(),
                             param.hasDeclaredType(),
                             param.isReference(),
-                            param.isVariadic());
+                            param.isVariadic(),
+                            param.isUnionType(),
+                            param.getModifier(),
+                            param.isIntersectionType()
+                    );
                 }
             }
             return param;
@@ -635,6 +823,10 @@ public abstract class PHPCompletionItem implements CompletionProposal {
     static class FunctionElementItem extends PHPCompletionItem {
 
         private List<ParameterElement> parameters;
+        // NETBEANS-5599 PHP 8.1
+        // https://wiki.php.net/rfc/first_class_callable_syntax
+        // https://www.php.net/manual/en/functions.first_class_callable_syntax.php
+        private final boolean isFirstClassCallable;
 
         /**
          * @return more than one instance in case if optional parameters exists
@@ -661,17 +853,42 @@ public abstract class PHPCompletionItem implements CompletionProposal {
             if (retval.isEmpty()) {
                 retval.add(new FunctionElementItem(function, request, parameters, generateAs));
             }
+            if (addFirstClassCallableItem(function)) {
+                retval.add(createFirstClassCallableItem(function, request));
+            }
 
             return retval;
         }
 
+        static FunctionElementItem createFirstClassCallableItem(BaseFunctionElement function, CompletionRequest request) {
+            return new FunctionElementItem(function, request, Collections.emptyList(), null, true);
+        }
+
+        private static boolean addFirstClassCallableItem(BaseFunctionElement function) {
+            return !isConstructor(function)
+                    && (OptionsUtils.codeCompletionFirstClassCallable()
+                    || (ADD_FIRST_CLASS_CALLABLE != null && ADD_FIRST_CLASS_CALLABLE)); // for unit tests
+        }
+
+        private static boolean isConstructor(BaseFunctionElement function) {
+            if (function instanceof MethodElement) {
+                return ((MethodElement) function).isConstructor();
+            }
+            return false;
+        }
+
         FunctionElementItem(BaseFunctionElement function, CompletionRequest request, List<ParameterElement> parameters) {
-            this(function, request, parameters, null);
+            this(function, request, parameters, null, false);
         }
 
         FunctionElementItem(BaseFunctionElement function, CompletionRequest request, List<ParameterElement> parameters, QualifiedNameKind generateAs) {
+            this(function, request, parameters, generateAs, false);
+        }
+
+        FunctionElementItem(BaseFunctionElement function, CompletionRequest request, List<ParameterElement> parameters, QualifiedNameKind generateAs, boolean isFirstClassCallable) {
             super(function, request, generateAs);
             this.parameters = new ArrayList<>(parameters);
+            this.isFirstClassCallable = isFirstClassCallable;
         }
 
         public BaseFunctionElement getBaseFunctionElement() {
@@ -695,13 +912,16 @@ public abstract class PHPCompletionItem implements CompletionProposal {
             template.append(super.getInsertPrefix());
             if (!insertOnlyMethodsName(request)) {
                 template.append("("); //NOI18N
+                if (isFirstClassCallable) {
+                    template.append(CodeUtils.ELLIPSIS); // ...
+                }
                 List<String> params = getInsertParams();
                 for (int i = 0; i < params.size(); i++) {
                     String param = params.get(i);
                     if (param.startsWith("&")) { //NOI18N
                         param = param.substring(1);
                     }
-                    template.append(String.format("${php-cc-%d  default=\"%s\"}", i, param));
+                    template.append(String.format("${php-cc-%d  default=\"%s\"}", i, param)); // NOI18N
 
                     if (i < params.size() - 1) {
                         template.append(", "); //NOI18N
@@ -763,6 +983,13 @@ public abstract class PHPCompletionItem implements CompletionProposal {
 
         @Override
         public String getSortText() {
+            if (isFirstClassCallable) {
+                // put first-class callable syntax on the last position
+                // e.g.
+                // strlen($length)
+                // strlen(...)
+                return getName() + "99"; // NOI18N
+            }
             return getName() + parameters.size();
         }
 
@@ -782,6 +1009,9 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                     formatter.appendText(paramTpl);
                     formatter.emphasis(false);
                 }
+            }
+            if (isFirstClassCallable) {
+                formatter.appendText(CodeUtils.ELLIPSIS); // ...
             }
         }
     }
@@ -846,6 +1076,45 @@ public abstract class PHPCompletionItem implements CompletionProposal {
         }
     }
 
+    // Backed cases have an additional read-only property (value)
+    // e.g. EnumName::CASE_NAME->value;
+    // see https://www.php.net/manual/en/language.enumerations.backed.php
+    static class AdditionalFieldItem extends BasicFieldItem {
+
+        private final String fieldName;
+        private final String fieldTypeName;
+        private final String typeName;
+
+        public static AdditionalFieldItem getItem(String fieldName, String fieldTypeName, String typeName, CompletionRequest request) {
+            return new AdditionalFieldItem(fieldName, fieldTypeName, typeName, request);
+        }
+
+        private AdditionalFieldItem(String fieldName, String filedTypeName, String typeName, CompletionRequest request) {
+            super(null, fieldName, request);
+            this.fieldName = fieldName;
+            this.fieldTypeName = filedTypeName;
+            this.typeName = typeName;
+        }
+
+        @Override
+        public String getRhsHtml(HtmlFormatter formatter) {
+            if (typeName != null) {
+                formatter.appendText(typeName);
+            }
+            return formatter.getText();
+        }
+
+        @Override
+        public String getName() {
+            return fieldName;
+        }
+
+        @Override
+        protected String getTypeName() {
+            return fieldTypeName;
+        }
+    }
+
     static class FieldItem extends BasicFieldItem {
         private final boolean forceDollared;
         private final boolean completeAccessPrefix;
@@ -880,18 +1149,40 @@ public abstract class PHPCompletionItem implements CompletionProposal {
 
         @Override
         protected String getTypeName() {
+            String declaredType = getField().getDeclaredType();
+            if (declaredType != null) {
+                return StringUtils.truncate(declaredType, 0, TYPE_NAME_MAX_LENGTH, CodeUtils.ELLIPSIS);
+            }
             Set<TypeResolver> types = getField().getInstanceTypes();
-            String typeName = types.isEmpty() ? "?" : types.size() > 1 ? Type.MIXED : "?"; //NOI18N
-            if (types.size() == 1) {
-                TypeResolver typeResolver = types.iterator().next();
-                if (typeResolver.isResolved()) {
-                    QualifiedName qualifiedName = typeResolver.getTypeName(false);
+            List<String> typeNames = new ArrayList<>();
+            for (TypeResolver type : types) {
+                String typeName = "?"; //NOI18N
+                if (type.isResolved()) {
+                    QualifiedName qualifiedName = type.getTypeName(false);
                     if (qualifiedName != null) {
                         typeName = qualifiedName.toString();
+                        if (type.isNullableType()) {
+                            typeName = CodeUtils.NULLABLE_TYPE_PREFIX + typeName;
+                        }
                     }
                 }
+                typeNames.add(typeName);
             }
-            return typeName;
+            String typeName;
+            if (typeNames.isEmpty()) {
+                typeName = "?"; // NOI18N
+            } else if (typeNames.size() == 1) {
+                typeName = typeNames.get(0);
+            } else {
+                if (getField().isUnionType()) {
+                    typeName = StringUtils.implode(typeNames, Type.SEPARATOR);
+                } else if (getField().isIntersectionType()) {
+                    typeName = StringUtils.implode(typeNames, Type.SEPARATOR_INTERSECTION);
+                } else {
+                    typeName = StringUtils.implode(typeNames, Type.SEPARATOR);
+                }
+            }
+            return StringUtils.truncate(typeName, 0, TYPE_NAME_MAX_LENGTH, CodeUtils.ELLIPSIS); // ...
         }
 
         @Override
@@ -981,6 +1272,79 @@ public abstract class PHPCompletionItem implements CompletionProposal {
         }
     }
 
+    static class EnumCaseItem extends PHPCompletionItem {
+
+        private final boolean completeAccessPrefix;
+
+        public static EnumCaseItem getItem(EnumCaseElement constant, CompletionRequest request) {
+            return getItem(constant, request, false);
+        }
+
+        public static EnumCaseItem getItem(EnumCaseElement constant, CompletionRequest request, boolean completeAccessPrefix) {
+            return new EnumCaseItem(constant, request, completeAccessPrefix);
+        }
+
+        private EnumCaseItem(EnumCaseElement constant, CompletionRequest request, boolean completeAccessPrefix) {
+            super(constant, request);
+            this.completeAccessPrefix = completeAccessPrefix;
+        }
+
+        EnumCaseElement getEnumCase() {
+            return (EnumCaseElement) getElement();
+        }
+
+        @Override
+        public ElementKind getKind() {
+            return ElementKind.CONSTANT;
+        }
+
+        @Override
+        public String getLhsHtml(HtmlFormatter formatter) {
+            formatter.name(getKind(), true);
+            if (isDeprecated()) {
+                formatter.deprecated(true);
+                formatter.appendText(getName());
+                formatter.deprecated(false);
+            } else {
+                formatter.appendText(getName());
+            }
+            formatter.name(getKind(), false);
+            if (getEnumCase().isBacked()) {
+                formatter.appendText(" "); //NOI18N
+                String value = getEnumCase().getValue();
+                formatter.type(true);
+                formatter.appendText(value != null ? value : "?"); // NOI18N
+                formatter.type(false);
+            }
+
+            return formatter.getText();
+        }
+
+        @Override
+        public String getName() {
+            return getEnumCase().getName();
+        }
+
+        @Override
+        public String getInsertPrefix() {
+            Completion.get().showToolTip();
+            return getName();
+        }
+
+        @Override
+        public String getCustomInsertTemplate() {
+            if (completeAccessPrefix) {
+                return "self::" + getName(); // NOI18N
+            }
+            return super.getCustomInsertTemplate();
+        }
+
+        @Override
+        public ImageIcon getIcon() {
+            return ENUM_CASE_ICON;
+        }
+    }
+
     public static class MethodDeclarationItem extends MethodElementItem {
 
         public static MethodDeclarationItem getDeclarationItem(final MethodElement methodElement, CompletionRequest request) {
@@ -1043,8 +1407,9 @@ public abstract class PHPCompletionItem implements CompletionProposal {
         public String getCustomInsertTemplate() {
             StringBuilder template = new StringBuilder();
             String modifierStr = BodyDeclaration.Modifier.toString(getBaseFunctionElement().getFlags());
+            template.append(getOverrideAttribute()); // PHP 8.3
             if (modifierStr.length() != 0) {
-                modifierStr = modifierStr.replace("abstract", "").trim(); //NOI18N
+                modifierStr = modifierStr.replace("abstract", CodeUtils.EMPTY_STRING).trim(); //NOI18N
                 template.append(modifierStr);
             }
             template.append(" ").append("function"); //NOI18N
@@ -1052,23 +1417,47 @@ public abstract class PHPCompletionItem implements CompletionProposal {
             return template.toString();
         }
 
+        private String getOverrideAttribute() {
+            MethodElement method = (MethodElement) getBaseFunctionElement();
+            if (method.isConstructor()) {
+                return CodeUtils.EMPTY_STRING;
+            }
+            TypeElement type = method.getType();
+            if (!isMagic()
+                    && (!type.isTrait() || ElementUtils.isAbstractTraitMethod(method))
+                    && request != null) {
+                FileObject fileObject = request.result.getSnapshot().getSource().getFileObject();
+                PhpVersion phpVersion = getPhpVersion(fileObject);
+                if (phpVersion.hasOverrideAttribute()) {
+                    return OVERRIDE.asAttributeExpression() + CodeUtils.NEW_LINE;
+                }
+            }
+            return CodeUtils.EMPTY_STRING;
+        }
+
         protected String getNameAndFunctionBodyForTemplate() {
+            FileObject fileObject = null;
+            if (request != null) {
+                fileObject = request.result.getSnapshot().getSource().getFileObject();
+            }
+            PhpVersion phpVersion = getPhpVersion(fileObject);
             StringBuilder template = new StringBuilder();
             TypeNameResolver typeNameResolver = getBaseFunctionElement().getParameters().isEmpty() || request == null
                     ? TypeNameResolverImpl.forNull()
                     : CodegenUtils.createSmarterTypeNameResolver(getBaseFunctionElement(), request.result.getModel(), request.anchor);
-            template.append(getBaseFunctionElement().asString(PrintAs.NameAndParamsDeclaration, typeNameResolver));
+            template.append(getBaseFunctionElement().asString(PrintAs.NameAndParamsDeclaration, typeNameResolver, phpVersion));
             // #270237
-            FileObject fileObject = null;
             if (request != null) {
                 // resquest is null if completion items are used in the IntroduceSuggestion hint
-                fileObject = request.result.getSnapshot().getSource().getFileObject();
-                PhpVersion phpVersion = getPhpVersion(fileObject);
                 if (phpVersion != null
                         && phpVersion.compareTo(PhpVersion.PHP_70) >= 0) {
                     Collection<TypeResolver> returnTypes = getBaseFunctionElement().getReturnTypes();
-                    if (returnTypes.size() == 1) {
-                        String returnType = getBaseFunctionElement().asString(PrintAs.ReturnTypes);
+                    // we can also write a union type in phpdoc e.g. @return int|float
+                    // check whether the union type is actual declared return type to avoid adding the union type for phpdoc
+                    if (returnTypes.size() == 1
+                            || getBaseFunctionElement().isReturnUnionType()
+                            || getBaseFunctionElement().isReturnIntersectionType()) {
+                        String returnType = getBaseFunctionElement().asString(PrintAs.ReturnTypes, typeNameResolver, phpVersion);
                         if (StringUtils.hasText(returnType)) {
                             boolean nullableType = CodeUtils.isNullableType(returnType);
                             if (nullableType) {
@@ -1106,12 +1495,26 @@ public abstract class PHPCompletionItem implements CompletionProposal {
             StringBuilder template = new StringBuilder();
             MethodElement method = (MethodElement) getBaseFunctionElement();
             TypeElement type = method.getType();
-            if (isMagic() || type.isInterface() || method.isAbstract()) {
+            Collection<TypeResolver> returnTypes = getBaseFunctionElement().getReturnTypes();
+            if (ElementUtils.isToStringMagicMethod(method)) {
+                template.append(getToStringMethodBody(type)).append("${cursor}\n"); // NOI18N
+            } else if (isMagic() || type.isInterface() || method.isAbstract() || type.isTrait() || ElementUtils.isVoidOrNeverType(returnTypes)) {
                 template.append("${cursor};\n"); //NOI18N
             } else {
-                template.append("${cursor}parent::").append(getSignature().replace("&$", "$")).append(";\n"); //NOI18N
+                if (returnTypes.size() == 1 || getBaseFunctionElement().isReturnUnionType()) {
+                    template.append("${cursor}return parent::").append(getSignature().replace("&$", "$")).append(";\n"); //NOI18N
+                } else {
+                    template.append("${cursor}parent::").append(getSignature().replace("&$", "$")).append(";\n"); //NOI18N
+                }
             }
             return template.toString();
+        }
+
+        private String getToStringMethodBody(TypeElement type) {
+            if (request != null) {
+                return ElementUtils.getToStringMagicMethodBody(type, request.index);
+            }
+            return CodeUtils.EMPTY_STRING;
         }
 
         private String getSignature() {
@@ -1185,12 +1588,13 @@ public abstract class PHPCompletionItem implements CompletionProposal {
 
     static class KeywordItem extends PHPCompletionItem {
 
-        String keyword = null;
+        final String keyword;
         private static final List<String> CLS_KEYWORDS =
                 Arrays.asList(PHPCodeCompletion.PHP_CLASS_KEYWORDS);
 
         KeywordItem(String keyword, CompletionRequest request) {
             super(null, request);
+            assert keyword != null;
             this.keyword = keyword;
         }
 
@@ -1269,7 +1673,11 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                             appendSpace = codeStyle.spaceBeforeSwitchParen();
                             break;
                         case "array": //NOI18N
-                            if (request.context == CompletionContext.TYPE_NAME) {
+                            if (request.context == CompletionContext.TYPE_NAME
+                                    || request.context == CompletionContext.VISIBILITY_MODIFIER_OR_TYPE_NAME
+                                    || request.context == CompletionContext.RETURN_TYPE_NAME
+                                    || request.context == CompletionContext.FIELD_TYPE_NAME
+                                    || request.context == CompletionContext.CONST_TYPE_NAME) {
                                 // e.g. return type
                                 appendBrackets = false;
                                 appendSpace = false;
@@ -1532,6 +1940,11 @@ public abstract class PHPCompletionItem implements CompletionProposal {
         }
 
         @Override
+        public String getCustomInsertTemplate() {
+            return super.getInsertPrefix();
+        }
+
+        @Override
         public String getLhsHtml(HtmlFormatter formatter) {
             ElementHandle element = getElement();
             assert element != null;
@@ -1581,6 +1994,10 @@ public abstract class PHPCompletionItem implements CompletionProposal {
             return ElementKind.CLASS;
         }
 
+        @Override
+        public String getCustomInsertTemplate() {
+            return super.getInsertPrefix();
+        }
     }
 
     static class ClassItem extends PHPCompletionItem {
@@ -1594,6 +2011,9 @@ public abstract class PHPCompletionItem implements CompletionProposal {
 
         @Override
         public ElementKind getKind() {
+            if (request.context == CompletionContext.ATTRIBUTE) {
+                return ElementKind.CONSTRUCTOR;
+            }
             return ElementKind.CLASS;
         }
 
@@ -1634,6 +2054,61 @@ public abstract class PHPCompletionItem implements CompletionProposal {
         }
     }
 
+    static class EnumItem extends PHPCompletionItem {
+
+        private static final ImageIcon ICON = IconsUtils.getElementIcon(PhpElementKind.ENUM);
+        private boolean endWithDoubleColon;
+
+        EnumItem(EnumElement enumElement, CompletionRequest request, boolean endWithDoubleColon, QualifiedNameKind generateAs) {
+            super(enumElement, request, generateAs);
+            this.endWithDoubleColon = endWithDoubleColon;
+        }
+
+        @Override
+        public ImageIcon getIcon() {
+            return ICON;
+        }
+
+        @Override
+        public ElementKind getKind() {
+            return ElementKind.CLASS;
+        }
+
+        @Override
+        public String getInsertPrefix() {
+            return getName();
+        }
+
+        @Override
+        public String getCustomInsertTemplate() {
+            final String superTemplate = super.getInsertPrefix();
+            if (endWithDoubleColon) {
+                StringBuilder builder = new StringBuilder();
+                builder.append(superTemplate);
+                boolean includeDoubleColumn = true;
+                if (EditorRegistry.lastFocusedComponent() != null) {
+                    Document doc = EditorRegistry.lastFocusedComponent().getDocument();
+                    int caret = EditorRegistry.lastFocusedComponent().getCaretPosition();
+                    try {
+                        if (caret + 2 < doc.getLength() && "::".equals(doc.getText(caret, 2))) { //NOI18N
+                            includeDoubleColumn = false;
+                        }
+                    } catch (BadLocationException ex) {
+                        // do nothing
+                    }
+                }
+
+                if (includeDoubleColumn) {
+                    builder.append("::"); // NOI18N
+                }
+                builder.append("${cursor}"); //NOI18N
+                scheduleShowingCompletion();
+                return builder.toString();
+            }
+            return superTemplate;
+        }
+    }
+
     public static ImageIcon getInterfaceIcon() {
         return InterfaceItem.icon();
     }
@@ -1661,7 +2136,7 @@ public abstract class PHPCompletionItem implements CompletionProposal {
 
         private static ImageIcon icon() {
             if (interfaceIcon == null) {
-                interfaceIcon = new ImageIcon(ImageUtilities.loadImage(PHP_INTERFACE_ICON));
+                interfaceIcon = ImageUtilities.loadImageIcon(PHP_INTERFACE_ICON, false);
             }
             return interfaceIcon;
         }
@@ -1742,6 +2217,75 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                 }
             }
             return typeName;
+        }
+    }
+
+    @NbBundle.Messages("LBL_PARAMETER_NAME=Parameter Name")
+    static class ParameterNameItem extends PHPCompletionItem {
+
+        private final ParameterElement parameterElement;
+
+        public ParameterNameItem(ParameterElement parameterElement, CompletionRequest request) {
+            super(null, request);
+            this.parameterElement = parameterElement;
+        }
+
+        @Override
+        public String getName() {
+            return getParameterName() + ":"; // NOI18N
+        }
+
+        private String getParameterName() {
+            return parameterElement.getName().substring(1);
+        }
+
+        @Override
+        public ElementKind getKind() {
+            return ElementKind.PARAMETER;
+        }
+
+        public ParameterElement getParameterElement() {
+            return parameterElement;
+        }
+
+        @Override
+        public String getLhsHtml(HtmlFormatter formatter) {
+            formatter.name(getKind(), true);
+            formatter.appendText(getName());
+            formatter.name(getKind(), false);
+            return formatter.getText();
+        }
+
+        @Override
+        public String getRhsHtml(HtmlFormatter formatter) {
+            return Bundle.LBL_PARAMETER_NAME();
+        }
+
+        @Override
+        public boolean isSmart() {
+            return true;
+        }
+
+        @Override
+        public int getSortPrioOverride() {
+            // NamespaceItem can be -10001
+            return -10010;
+        }
+
+        @Override
+        public String getInsertPrefix() {
+            return getName();
+        }
+
+        @Override
+        public String getCustomInsertTemplate() {
+            if (insertOnlyParameterName(request)) {
+                // ^maxLength: (^: caret)
+                // we are unsure whether a user expects to add or override an item in this context
+                // so, just add a name (i.e. don't add ":")
+                return getParameterName();
+            }
+            return getName() + " "; // NOI18N
         }
     }
 

@@ -41,8 +41,8 @@ public class NotificationFilter {
     }
 
     private NotificationFilter(NotificationFilter src) {
-        this.name = src.name;
-        categoryFilter = null == src.categoryFilter ? null : src.categoryFilter.clone();
+        this.name = src.getName();
+        categoryFilter = null == src.getCategoryFilter() ? null : src.getCategoryFilter().clone();
     }
 
     public boolean isEnabled(NotificationImpl notification) {

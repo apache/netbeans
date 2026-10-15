@@ -1,8 +1,29 @@
-<FunctionNode name=':program' kind='SCRIPT' start='0' end='52'>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='50'>
   <isProgram/>
   <!-- FunctionNode Parameters -->
   <!-- FunctionNode Body -->
-  <Block start='0' end='50'>
+  <Block start='0' end='48'>
     <isFunctionBody/>
     <isSynthetic/>
     <!-- Block Statements -->
@@ -16,21 +37,16 @@
       <isLet/>
       <isDestructuring/>
     </VarNode>
-    <VarNode name='z' start='4' end='17'>
+    <VarNode name='z' start='4' end='16'>
       <isBlockScoped/>
       <isLet/>
       <isDestructuring/>
     </VarNode>
-    <VarNode name='z' start='4' end='17'>
-      <isBlockScoped/>
-      <isLet/>
-      <isDestructuring/>
-    </VarNode>
-    <ExpressionStatement start='4' end='49'>
-      <BinaryNode type='ASSIGN' start='4' end='49'>
+    <ExpressionStatement start='4' end='47'>
+      <BinaryNode type='ASSIGN' start='4' end='47'>
         <isAssignment/>
         <!-- BinaryNode lhs -->
-        <ObjectNode start='4' end='20'>
+        <ObjectNode start='4' end='18'>
           <!-- ObjectNode Elements -->
           <PropertyNode name='x' start='6' end='7'>
             <!-- PropertyNode Key -->
@@ -56,69 +72,65 @@
             </IdentNode>
             <!-- PropertyNode Decorators -->
           </PropertyNode>
-          <PropertyNode start='12' end='18'>
+          <PropertyNode start='12' end='16'>
             <!-- PropertyNode Key -->
-            <UnaryNode type='SPREAD_OBJECT' start='12' end='18'>
+            <UnaryNode type='SPREAD_OBJECT' start='12' end='16'>
               <!-- UnaryNode Expression -->
-              <ArrayLiteralNode start='15' end='18'>
-                <IdentNode start='16' end='17'>
-                  <name>z</name>
-                </IdentNode>
-              </ArrayLiteralNode>
+              <IdentNode start='15' end='16'>
+                <name>z</name>
+              </IdentNode>
             </UnaryNode>
             <!-- PropertyNode Value -->
-            <UnaryNode type='SPREAD_OBJECT' start='12' end='18'>
+            <UnaryNode type='SPREAD_OBJECT' start='12' end='16'>
               <!-- UnaryNode Expression -->
-              <ArrayLiteralNode start='15' end='18'>
-                <IdentNode start='16' end='17'>
-                  <name>z</name>
-                </IdentNode>
-              </ArrayLiteralNode>
+              <IdentNode start='15' end='16'>
+                <name>z</name>
+              </IdentNode>
             </UnaryNode>
             <!-- PropertyNode Decorators -->
           </PropertyNode>
         </ObjectNode>
         <!-- BinaryNode rhs -->
-        <ObjectNode start='23' end='49'>
+        <ObjectNode start='21' end='47'>
           <!-- ObjectNode Elements -->
-          <PropertyNode name='x' start='25' end='29'>
+          <PropertyNode name='x' start='23' end='27'>
             <!-- PropertyNode Key -->
-            <IdentNode start='25' end='26'>
+            <IdentNode start='23' end='24'>
               <name>x</name>
               <isPropertyName/>
             </IdentNode>
             <!-- PropertyNode Value -->
-            <NumberLiteralNode value='1' start='28' end='29'/>
+            <NumberLiteralNode value='1' start='26' end='27'/>
             <!-- PropertyNode Decorators -->
           </PropertyNode>
-          <PropertyNode name='y' start='31' end='35'>
+          <PropertyNode name='y' start='29' end='33'>
             <!-- PropertyNode Key -->
-            <IdentNode start='31' end='32'>
+            <IdentNode start='29' end='30'>
               <name>y</name>
               <isPropertyName/>
             </IdentNode>
             <!-- PropertyNode Value -->
-            <NumberLiteralNode value='2' start='34' end='35'/>
+            <NumberLiteralNode value='2' start='32' end='33'/>
             <!-- PropertyNode Decorators -->
           </PropertyNode>
-          <PropertyNode name='a' start='37' end='41'>
+          <PropertyNode name='a' start='35' end='39'>
             <!-- PropertyNode Key -->
-            <IdentNode start='37' end='38'>
+            <IdentNode start='35' end='36'>
               <name>a</name>
               <isPropertyName/>
             </IdentNode>
             <!-- PropertyNode Value -->
-            <NumberLiteralNode value='3' start='40' end='41'/>
+            <NumberLiteralNode value='3' start='38' end='39'/>
             <!-- PropertyNode Decorators -->
           </PropertyNode>
-          <PropertyNode name='b' start='43' end='47'>
+          <PropertyNode name='b' start='41' end='45'>
             <!-- PropertyNode Key -->
-            <IdentNode start='43' end='44'>
+            <IdentNode start='41' end='42'>
               <name>b</name>
               <isPropertyName/>
             </IdentNode>
             <!-- PropertyNode Value -->
-            <NumberLiteralNode value='4' start='46' end='47'/>
+            <NumberLiteralNode value='4' start='44' end='45'/>
             <!-- PropertyNode Decorators -->
           </PropertyNode>
         </ObjectNode>

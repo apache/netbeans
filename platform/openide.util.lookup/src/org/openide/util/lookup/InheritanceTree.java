@@ -768,7 +768,7 @@ implements Serializable, AbstractLookup.Storage<ArrayList<Class>> {
             Map.Entry entry = (Map.Entry) it.next();
             Object value = entry.getValue();
 
-            HashMap<?,?> retain = new HashMap(retainItems);
+            HashMap<?,?> retain = new HashMap<>(retainItems);
 
             Iterator elems;
             boolean multi = value instanceof Collection;
@@ -810,7 +810,7 @@ implements Serializable, AbstractLookup.Storage<ArrayList<Class>> {
             if (reordered && value instanceof List) {
                 // if reordered, than update the order in the collection
                 List l = (List) value;
-                Collections.sort(l, ALPairComparator.DEFAULT);
+                l.sort(ALPairComparator.DEFAULT);
             }
 
             if (changed) {

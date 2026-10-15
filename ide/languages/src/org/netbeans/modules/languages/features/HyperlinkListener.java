@@ -180,7 +180,7 @@ public class HyperlinkListener implements MouseMotionListener, MouseListener,
             DatabaseContext root = DatabaseManager.getRoot (ast);
             if (root != null) {
                 final DatabaseItem item = root.getDatabaseItem (offset);
-                if (item != null && item instanceof DatabaseUsage) {
+                if (item instanceof DatabaseUsage) {
                     highlight = Highlighting.getHighlighting (document).highlight (
                         path.getLeaf ().getOffset (),
                         path.getLeaf ().getEndOffset (),

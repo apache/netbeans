@@ -18,10 +18,18 @@
  */
 package org.netbeans.core.multitabs.impl;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import javax.swing.event.ChangeListener;
 import org.netbeans.swing.tabcontrol.TabData;
 import org.openide.util.Lookup;
 import org.openide.util.Parameters;
+import org.openide.util.RequestProcessor;
 
 /**
  * Abstraction of Project API
@@ -31,6 +39,7 @@ import org.openide.util.Parameters;
 public abstract class ProjectSupport {
 
     private static ProjectSupport theInstance = null;
+    private static final RequestProcessor RP = new RequestProcessor("project support queries");
 
     public static ProjectSupport getDefault() {
         synchronized( ProjectSupport.class ) {
@@ -42,6 +51,35 @@ public abstract class ProjectSupport {
             }
         }
         return theInstance;
+    }
+
+    public final ProjectProxy tryGetProjectForTab(TabData tab) {
+        Map<TabData, ProjectProxy> ret = queryProjectsForTabs(Collections.singletonList(tab), 50);
+        if (ret.isEmpty()) {
+            return null;
+        } else {
+            return ret.get(tab);
+        }
+    }
+
+    public final Map<TabData, ProjectProxy> tryGetProjectsForTabs(List<TabData> tabs) {
+        return queryProjectsForTabs(tabs, 200);
+    }
+
+    private Map<TabData, ProjectProxy> queryProjectsForTabs(List<TabData> tabs, int timeout) {
+        try {
+            return RP.submit(() -> {
+                Map<TabData, ProjectProxy> map = new HashMap<>();
+                for (TabData tab : tabs) {
+                    ProjectProxy proj = getProjectForTab(tab);
+                    if (proj != null) {
+                        map.put(tab, proj);
+                    }
+                }
+                return map;
+            }).get(timeout, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException ignored) {}
+        return Collections.emptyMap();
     }
 
     public abstract boolean isEnabled();

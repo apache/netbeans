@@ -33,10 +33,7 @@ import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule;
  */
 public enum JavaEEModule {
     
-    ////////////////////////////////////////////////////////////////////////////
     // Enum values                                                            //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Client application archive. */
     CAR(ModuleType.CAR),
     /** Enterprise application archive */
@@ -48,10 +45,7 @@ public enum JavaEEModule {
     /** Web application archive. */
     WAR(ModuleType.WAR);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish Java EE common module Logger. */
     private static final Logger LOGGER = Logger.getLogger("glassfish-eecommon");
 
@@ -77,10 +71,7 @@ public enum JavaEEModule {
         j2eeModuleTypeToValue.put(J2eeModule.Type.WAR, WAR);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
    /**
      * Get Java EE module configuration directory (e.g. {@code "META-INF"}).
      * This is just {@link J2eeModule.Type} shortcut.
@@ -107,17 +98,11 @@ public enum JavaEEModule {
         return j2eeModuleTypeToValue.get(type);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Java EE module type. */
     private final ModuleType moduleType;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of Java EE module type.
      * <p/>
@@ -127,10 +112,7 @@ public enum JavaEEModule {
         this.moduleType = moduleType;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get stored {@link ModuleType} value.
      * <p/>

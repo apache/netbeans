@@ -38,9 +38,9 @@ import org.netbeans.modules.javascript2.types.api.TypeUsage;
  * @author Petr Pisl
  */
 public class JsObjectReference extends JsObjectImpl implements JsReference {
- 
+
     private final JsObject original;
-    
+
     private final Set<Modifier> modifiers;
 
     public JsObjectReference(JsObject parent, Identifier declarationName,
@@ -92,7 +92,7 @@ public class JsObjectReference extends JsObjectImpl implements JsReference {
         }
         return original.getModifiers();
     }
-    
+
     public JsObject getOriginal() {
         return original;
     }
@@ -114,12 +114,12 @@ public class JsObjectReference extends JsObjectImpl implements JsReference {
 
     @Override
     public Documentation getDocumentation() {
-        return original.getDocumentation(); 
+        return original.getDocumentation();
     }
 
     @Override
     protected void correctTypes(String fromType, String toType) {
         //Do nothing
     }
-    
+
 }

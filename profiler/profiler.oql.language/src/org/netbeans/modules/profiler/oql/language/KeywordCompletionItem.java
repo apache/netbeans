@@ -36,12 +36,12 @@ import org.netbeans.spi.editor.completion.support.CompletionUtilities;
  * @author Jaroslav Bachorik
  */
 public class KeywordCompletionItem implements CompletionItem {
-    final private String text;
-    final private String sortPrefix;
-    final private int caret;
-    final private int correction;
+    private final String text;
+    private final String sortPrefix;
+    private final int caret;
+    private final int correction;
 
-    final private static Color fieldColor = Color.decode("0x0000B2");
+    private static final Color fieldColor = Color.decode("0x0000B2");
 
     public KeywordCompletionItem(String sortPrefix, String text, int caretOffset) {
         this(sortPrefix, text, caretOffset, 0);

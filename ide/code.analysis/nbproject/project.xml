@@ -61,11 +61,11 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.modules.autoupdate.ui</code-name-base>
+                    <code-name-base>org.netbeans.modules.autoupdate.services</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.35</specification-version>
+                        <specification-version>1.76</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -281,8 +281,6 @@
                 <friend>org.netbeans.modules.cnd.analysis.api</friend>
                 <friend>org.netbeans.modules.cnd.analysis.impl</friend>
                 <friend>org.netbeans.modules.cnd.highlight</friend>
-                <friend>org.netbeans.modules.findbugs</friend>
-                <friend>org.netbeans.modules.findbugs.installer</friend>
                 <friend>org.netbeans.modules.java.hints</friend>
                 <friend>org.netbeans.modules.java.hints.ui</friend>
                 <friend>org.netbeans.modules.java.j2seprofiles</friend>

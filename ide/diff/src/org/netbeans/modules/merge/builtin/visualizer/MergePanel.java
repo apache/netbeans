@@ -118,8 +118,6 @@ public class MergePanel extends javax.swing.JPanel implements java.awt.event.Act
         lastConflictButton.setVisible(false);
         prevConflictButton.setIcon(ImageUtilities.loadImageIcon("org/netbeans/modules/diff/builtin/visualizer/prev.gif", true));
         nextConflictButton.setIcon(ImageUtilities.loadImageIcon("org/netbeans/modules/diff/builtin/visualizer/next.gif", true));
-        //prevConflictButton.setIcon(new ImageIcon(getClass().getResource("/org/netbeans/modules/diff/builtin/visualizer/prev.gif")));
-        //nextConflictButton.setIcon(new ImageIcon(getClass().getResource("/org/netbeans/modules/diff/builtin/visualizer/next.gif")));
         //setTitle(org.openide.util.NbBundle.getBundle(DiffComponent.class).getString("DiffComponent.title"));
         //setName(org.openide.util.NbBundle.getMessage(MergePanel.class, "MergePanel.title"));
         //HelpCtx.setHelpIDString (getRootPane (), DiffComponent.class.getName ());
@@ -514,7 +512,7 @@ public class MergePanel extends javax.swing.JPanel implements java.awt.event.Act
   }
   
   private void updateAcceptButtons(int linePos) {
-      Integer conflictPos = new Integer(linePos);
+      Integer conflictPos = Integer.valueOf(linePos);
       boolean left = resolvedLeftConflictsLineNumbers.contains(conflictPos);
       boolean right = resolvedRightConflictsLineNumbers.contains(conflictPos);
       boolean leftRight = resolvedLeftRightConflictsLineNumbers.contains(conflictPos);
@@ -1166,7 +1164,7 @@ public class MergePanel extends javax.swing.JPanel implements java.awt.event.Act
      */
     public void replaceSource1InResult(int line1, int line2, int line3, int line4) {
         //System.out.println("replaceSource1InResult("+line1+", "+line2+", "+line3+", "+line4+")");
-        Integer conflictLine = new Integer((line1 > 0) ? line1 : 1);
+        Integer conflictLine = Integer.valueOf((line1 > 0) ? line1 : 1);
         // If trying to resolve the conflict twice simply return .
         if (resolvedLeftConflictsLineNumbers.contains(conflictLine)) return ;
         StyledDocument doc1 = (StyledDocument) jEditorPane1.getDocument();
@@ -1201,7 +1199,7 @@ public class MergePanel extends javax.swing.JPanel implements java.awt.event.Act
      */
     public void replaceSource2InResult(int line1, int line2, int line3, int line4) {
         //System.out.println("replaceSource2InResult("+line1+", "+line2+", "+line3+", "+line4+")");
-        Integer conflictLine = new Integer((line1 > 0) ? line1 : 1);
+        Integer conflictLine = Integer.valueOf((line1 > 0) ? line1 : 1);
         // If trying to resolve the conflict twice simply return .
         if (resolvedRightConflictsLineNumbers.contains(conflictLine)) return ;
         StyledDocument doc1 = (StyledDocument) jEditorPane2.getDocument();
@@ -1597,7 +1595,7 @@ public class MergePanel extends javax.swing.JPanel implements java.awt.event.Act
     }
     
     private void writeText(Writer w, String text) throws IOException {
-        text = text.replaceAll("\n", System.getProperty("line.separator"));
+        text = text.replace("\n", System.getProperty("line.separator"));
         w.write(text);
     }
 

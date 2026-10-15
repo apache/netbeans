@@ -36,6 +36,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -45,7 +46,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
@@ -54,6 +54,7 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.openide.modules.Places;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
@@ -61,7 +62,7 @@ import org.openide.util.NbBundle;
  * Support for optimal checking of time stamps of certain files in
  * NetBeans directory structure. 
  *
- * @author Jaroslav Tulach <jaroslav.tulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jaroslav.tulach@netbeans.org&gt;
  * @since 2.9
  */
 public final class Stamps {
@@ -132,7 +133,7 @@ public final class Stamps {
     }
     
     /** Opens the access to cache object as a stream.
-     * @param name name of the cache
+     * @param cache name of the cache
      * @return stream to read from the cache or null if the cache is not valid
      */
     public InputStream asStream(String cache) {
@@ -150,13 +151,9 @@ public final class Stamps {
     public MappedByteBuffer asMappedByteBuffer(String cache) {
         return (MappedByteBuffer)asByteBuffer(cache, true, true);
     }
-        
-    /** Returns the stamp for this caches. 
-     * @return a date, each cache needs to be newer than this date
-     */
    
     /** Opens the access to cache object as a stream.
-     * @param name name of the cache
+     * @param cache name of the cache
      * @return stream to read from the cache or null if the cache is not valid
      */
     public ByteBuffer asByteBuffer(String cache) {
@@ -185,8 +182,7 @@ public final class Stamps {
             return null;
         }
         
-        try {
-            FileChannel fc = new FileInputStream(cacheFile).getChannel();
+        try (FileChannel fc = new FileInputStream(cacheFile).getChannel()) {
             ByteBuffer master;
             if (mmap) {
                 master = fc.map(FileChannel.MapMode.READ_ONLY, 0, len[0]);
@@ -200,9 +196,6 @@ public final class Stamps {
                 }
                 master.flip();
             }
-
-            fc.close();
-            
             return master;
         } catch (IOException ex) {
             LOG.log(Level.WARNING, "Cannot read cache " + cacheFile, ex); // NOI18N
@@ -212,7 +205,7 @@ public final class Stamps {
     
     /** Method for registering updates to caches.
      * @param updater the callback to start when flushing caches
-     * @param file name of the file to store the cache into
+     * @param cache name of the file to store the cache into
      * @param append write from scratch or append?
      */
     public void scheduleSave(Updater updater, String cache, boolean append) {
@@ -311,17 +304,16 @@ public final class Stamps {
     private static void stamp(boolean checkStampFile, AtomicLong result, AtomicReference<File> newestFile) {
         StringBuilder sb = new StringBuilder();
         
-        Set<File> processedDirs = new HashSet<File>();
         String[] relativeDirs = Clusters.relativeDirsWithHome();
         String home = System.getProperty ("netbeans.home"); // NOI18N
         if (home != null) {
-            long stamp = stampForCluster (new File (home), result, newestFile, processedDirs, checkStampFile, true, null);
+            long stamp = stampForCluster (new File (home), result, newestFile, checkStampFile, true, null);
             sb.append(relativeDirs[0]).append('=').append(stamp).append('\n');
         }
         String[] drs = Clusters.dirs();
         for (int i = 0; i < drs.length; i++) {
             final File clusterDir = new File(drs[i]);
-            long stamp = stampForCluster(clusterDir, result, newestFile, processedDirs, checkStampFile, true, null);
+            long stamp = stampForCluster(clusterDir, result, newestFile, checkStampFile, true, null);
             if (stamp != -1) {
                 sb.append("cluster.").append(relativeDirs[i + 1]).append('=').append(stamp).append('\n');
             }
@@ -329,13 +321,22 @@ public final class Stamps {
         File user = Places.getUserDirectory();
         if (user != null) {
             AtomicInteger crc = new AtomicInteger();
-            stampForCluster(user, result, newestFile, new HashSet<File>(), false, false, crc);
+            stampForCluster(user, result, newestFile, false, false, crc);
             sb.append("user=").append(result.longValue()).append('\n');
             sb.append("crc=").append(crc.intValue()).append('\n');
             sb.append("locale=").append(Locale.getDefault()).append('\n');
             sb.append("branding=").append(NbBundle.getBranding()).append('\n');
             sb.append("java.version=").append(System.getProperty("java.version")).append('\n');
             sb.append("java.vm.version=").append(System.getProperty("java.vm.version")).append('\n');
+            if (BaseUtilities.isWindows()) {
+              /* NETBEANS-1914: On Windows (but not on Linux or MacOS), the cache directory has been
+              observed to contain absolute paths to the NetBeans install directory (netbeans.home).
+              This can cause errors on startup if said directory is later moved. As a workaround,
+              include the netbeans.home path among the values that will cause the cache to be
+              invalidated if changed. (A better solution would be to get rid of the absolute paths;
+              but after some investigation, I could not figure out how to do this.) */
+              sb.append("netbeans.home=").append(home == null ? "" : home).append('\n');
+            }
                     
             File checkSum = new File(Places.getCacheDirectory(), "lastModified/all-checksum.txt");
             if (!compareAndUpdateFile(checkSum, sb.toString(), result)) {
@@ -345,7 +346,7 @@ public final class Stamps {
     }
     
     private static long stampForCluster(
-        File cluster, AtomicLong result, AtomicReference<File> newestFile, Set<File> hashSet,
+        File cluster, AtomicLong result, AtomicReference<File> newestFile,
         boolean checkStampFile, boolean createStampFile, AtomicInteger crc
     ) {
         File stamp = new File(cluster, ".lastModified"); // NOI18N
@@ -427,14 +428,12 @@ public final class Stamps {
     
     private static boolean compareAndUpdateFile(File file, String content, AtomicLong result) {
         try {
-            byte[] expected = content.getBytes("UTF-8"); // NOI18N
+            byte[] expected = content.getBytes(StandardCharsets.UTF_8);
             byte[] read = new byte[expected.length];
-            FileInputStream is = null;
             boolean areCachesOK;
             boolean writeFile;
             long lastMod;
-            try {
-                is = new FileInputStream(file);
+            try (FileInputStream is = new FileInputStream(file)) {
                 int len = is.read(read);
                 areCachesOK = len == read.length && is.available() == 0 && Arrays.equals(expected, read);
                 writeFile = !areCachesOK;
@@ -444,16 +443,12 @@ public final class Stamps {
                 areCachesOK = true;
                 writeFile = true;
                 lastMod = result.get();
-            } finally {
-                if (is != null) {
-                    is.close();
-                }
             }
             if (writeFile) {
                 file.getParentFile().mkdirs();
-                FileOutputStream os = new FileOutputStream(file);
-                os.write(expected);
-                os.close();
+                try (FileOutputStream os = new FileOutputStream(file)) {
+                    os.write(expected);
+                }
                 if (areCachesOK) {
                     file.setLastModified(lastMod);
                 }
@@ -485,7 +480,6 @@ public final class Stamps {
                 LOG.log(Level.INFO, "cannot rename (#{0}): {1}", new Object[]{i, cacheFile}); // NOI18N
                 // try harder
                 System.gc();
-                System.runFinalization();
                 LOG.info("after GC"); // NOI18N
                 if (r == null) {
                     r = new Random();
@@ -551,12 +545,8 @@ public final class Stamps {
         if (is == null) {
             return;
         }
-        ZipInputStream zip = null;
-        FileOutputStream os = null;
-        try {
-            byte[] arr = new byte[4096];
+        try (ZipInputStream zip = new ZipInputStream(is)) {
             LOG.log(Level.FINE, "Found populate.zip about to extract it into {0}", cache);
-            zip = new ZipInputStream(is);
             for (;;) {
                 ZipEntry en = zip.getNextEntry();
                 if (en == null) {
@@ -567,17 +557,10 @@ public final class Stamps {
                 }
                 File f = new File(cache, en.getName().replace('/', File.separatorChar));
                 f.getParentFile().mkdirs();
-                os = new FileOutputStream(f);
-                for (;;) {
-                    int len = zip.read(arr);
-                    if (len == -1) {
-                        break;
-                    }
-                    os.write(arr, 0, len);
+                try (FileOutputStream os = new FileOutputStream(f)) {
+                    zip.transferTo(os);
                 }
-                os.close();
             }
-            zip.close();
         } catch (IOException ex) {
             LOG.log(Level.INFO, "Failed to populate {0}", cache);
         }
@@ -591,22 +574,12 @@ public final class Stamps {
         final String clustersCache = "all-clusters.dat"; // NOI18N
         File f = fileImpl(clustersCache, null, -1); // no timestamp check
         if (f != null) {
-            DataInputStream dis = null;
-            try {
-                dis = new DataInputStream(new FileInputStream(f));
+            try (DataInputStream dis = new DataInputStream(new FileInputStream(f))) {
                 if (Clusters.compareDirs(dis)) {
                     return false;
                 }
             } catch (IOException ex) {
                 return clustersChanged = true;
-            } finally {
-                if (dis != null) {
-                    try {
-                        dis.close();
-                    } catch (IOException ex) {
-                        LOG.log(Level.INFO, null, ex);
-                    }
-                }
             }
         } else {
             // missing cluster file signals caches are OK, for 
@@ -701,12 +674,10 @@ public final class Stamps {
 
                 LOG.log(Level.FINE, "Storing cache {0}", cacheFile);
                 os = new FileOutputStream(cacheFile, append); //append new entries only
-                DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(this, 1024 * 1024));
-                
-                this.delay = delay;
-        
-                updater.flushCaches(dos);
-                dos.close();
+                try (DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(this, 1024 * 1024))) {
+                    this.delay = delay;
+                    updater.flushCaches(dos);
+                }
                 LOG.log(Level.FINE, "Done Storing cache {0}", cacheFile);
             } catch (IOException ex) {
                 LOG.log(Level.WARNING, "Error saving cache {0}", cacheFile);
@@ -914,7 +885,7 @@ public final class Stamps {
     }
 
     static String clusterLocalStamp(File cluster) {
-        return cluster.getName().replaceAll("\\.\\.", "__");
+        return cluster.getName().replace("..", "__");
     }
     
     static String readRelativePath(DataInput dis) throws IOException {
@@ -946,8 +917,7 @@ public final class Stamps {
 
     private static void produceRelativePath(String path, Object out) throws IOException {
         if (path.isEmpty()) {
-            if (out instanceof DataOutput) {
-                DataOutput dos = (DataOutput)out;
+            if (out instanceof DataOutput dos) {
                 dos.writeUTF(path);
             }
             return;
@@ -957,7 +927,7 @@ public final class Stamps {
         }
         int cnt = 0;
         for (String p : Clusters.dirs()) {
-            if (testWritePath(path, p, "" + cnt, out)) {
+            if (testWritePath(path, p, Integer.toString(cnt), out)) {
                 return;
             }
             cnt++;
@@ -981,12 +951,12 @@ public final class Stamps {
         return false;
     }
     private static void doWritePath(String codeName, String relPath, Object out) throws IOException {
-        if (out instanceof DataOutput) {
-            DataOutput dos = (DataOutput) out;
+        if (out instanceof DataOutput dos) {
             dos.writeUTF(codeName);
             dos.writeUTF(relPath);
         } else {
-            Collection coll = (Collection) out;
+            @SuppressWarnings("unchecked")
+            Collection<String> coll = (Collection<String>) out;
             coll.add(codeName);
             coll.add(relPath);
         }

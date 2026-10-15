@@ -220,7 +220,7 @@ public class ServerWizardVisual extends javax.swing.JPanel {
     }
 
     private void fillDisplayName(ServerWizardProvider server) {
-        String name = (String) displayNames.get(server);
+        String name = displayNames.get(server);
         if (name == null || name.length() == 0) {
             name = generateDisplayName(server);
         }

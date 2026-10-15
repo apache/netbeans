@@ -28,8 +28,6 @@ import java.util.logging.Logger;
 import javax.swing.JEditorPane;
 import javax.swing.KeyStroke;
 import javax.swing.text.BadLocationException;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
 import org.netbeans.jellytools.*;
 import org.netbeans.jellytools.modules.editor.CompletionJListOperator;
 import org.netbeans.jellytools.nodes.Node;
@@ -39,7 +37,6 @@ import org.netbeans.jemmy.JemmyProperties;
 import org.netbeans.jemmy.Waitable;
 import org.netbeans.jemmy.Waiter;
 import org.netbeans.jemmy.operators.*;
-import org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem;
 import org.openide.util.Exceptions;
 
 /**
@@ -316,11 +313,7 @@ public class GeneralJavaScript extends JellyTestCase {
             int matches = 0;
             for (int i = 0; i < items.size(); i++) {
                 item = items.get(i);
-                if (item instanceof HtmlCompletionItem) {
-                    if (((HtmlCompletionItem) item).getItemText().toLowerCase().startsWith(pattern)) {
-                        matches++;
-                    }
-                } else if (item.toString().toLowerCase().startsWith(pattern)) {
+                if (item.toString().toLowerCase().startsWith(pattern)) {
                     matches++;
                 }
             }

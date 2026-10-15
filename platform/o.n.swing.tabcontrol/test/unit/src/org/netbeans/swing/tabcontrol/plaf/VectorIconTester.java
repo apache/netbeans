@@ -36,6 +36,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -56,6 +57,7 @@ import javax.swing.Timer;
 import javax.swing.UIManager;
 import org.netbeans.swing.tabcontrol.TabDisplayer;
 import org.netbeans.swing.tabcontrol.TabDisplayerUI;
+import org.openide.awt.GraphicsUtils;
 import org.openide.util.ImageUtilities;
 
 /**
@@ -103,7 +105,7 @@ public class VectorIconTester extends javax.swing.JFrame {
             @Override
             public void run() {
                 try {
-                    File tempFile = File.createTempFile("VectorIconTester", ".png");
+                    File tempFile = Files.createTempFile("VectorIconTester", ".png").toFile();
                     ImageIO.write(bi, "PNG", tempFile);
                     System.out.println("Output was written to " + tempFile);
                 } catch (IOException e) {
@@ -339,19 +341,9 @@ public class VectorIconTester extends javax.swing.JFrame {
             requestFocusInWindow();
         }
 
-        // This should really be a utility method somewhere...
-        // See VectorIcon.createGraphicsWithRenderingHintsConfigured.
         private static Graphics2D createGraphicsWithRenderingHintsConfigured(Graphics basedOn) {
             Graphics2D ret = (Graphics2D) basedOn.create();
-            Object desktopHints
-                    = Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints");
-            Map<Object, Object> hints = new LinkedHashMap<Object, Object>();
-            if (desktopHints != null && desktopHints instanceof Map<?, ?>) {
-                hints.putAll((Map<?, ?>) desktopHints);
-            }
-            hints.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            hints.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-            ret.addRenderingHints(hints);
+            GraphicsUtils.configureDefaultRenderingHints(basedOn);
             return ret;
         }
 

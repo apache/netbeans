@@ -1,0 +1,4 @@
+TestClass::CONSTA^NT;
+-------------------
+HINT:Introduce Hint
+FIX:Create Constant "CONSTANT" in Class "TestClass" (TestClass.php)

@@ -45,7 +45,7 @@ public class WLTargetModuleID implements WebTargetModuleID {
 
     private String contextUrl;
 
-    private List children = new ArrayList();
+    private List<WLTargetModuleID> children = new ArrayList<>();
 
     private TargetModuleID  parent;
 
@@ -83,7 +83,7 @@ public class WLTargetModuleID implements WebTargetModuleID {
     }
 
     public synchronized TargetModuleID[] getChildTargetModuleID(){
-        return (TargetModuleID[]) children.toArray(new TargetModuleID[children.size()]);
+        return (TargetModuleID[]) children.toArray(new TargetModuleID[0]);
     }
     
     public synchronized void addUrl(URL url) {

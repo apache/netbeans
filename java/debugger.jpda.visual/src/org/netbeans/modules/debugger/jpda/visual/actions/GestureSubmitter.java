@@ -21,13 +21,14 @@ package org.netbeans.modules.debugger.jpda.visual.actions;
 
 import org.openide.util.NbBundle;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
-import org.openide.util.WeakSet;
 
 
 /**
@@ -39,7 +40,7 @@ class GestureSubmitter {
 
     private static final Logger USG_LOGGER = Logger.getLogger("org.netbeans.ui.metrics.debugger"); // NOI18N
     
-    private static final Set reportedDebuggers = new WeakSet();
+    private static final Set reportedDebuggers = Collections.newSetFromMap(new WeakHashMap());
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
@@ -52,9 +53,9 @@ class GestureSubmitter {
         record.setResourceBundle(NbBundle.getBundle(GestureSubmitter.class));
         record.setResourceBundleName(GestureSubmitter.class.getPackage().getName() + ".Bundle"); // NOI18N
         record.setLoggerName(USG_LOGGER.getName());
-        List params = new ArrayList();
+        List<String> params = new ArrayList<>();
         params.add(language);
-        record.setParameters(params.toArray(new Object[params.size()]));
+        record.setParameters(params.toArray(new Object[0]));
         USG_LOGGER.log(record);
     }
 }

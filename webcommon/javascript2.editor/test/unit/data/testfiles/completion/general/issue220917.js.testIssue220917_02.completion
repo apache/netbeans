@@ -2,20 +2,6 @@ Code completion result for source line:
 document.create|Attribute();
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-METHOD     create(proto: Object): Object   [PUBLIC,   JS Platform
-METHOD     createAttribute(name: String):  [PUBLIC]   JS Platform
-METHOD     createAttributeNS(namespaceURI  [PUBLIC]   JS Platform
-METHOD     createCDATASection(data: Strin  [PUBLIC]   JS Platform
-METHOD     createComment(data: String): C  [PUBLIC]   JS Platform
-METHOD     createDocumentFragment(): Docu  [PUBLIC]   JS Platform
-METHOD     createElement(tagName: String)  [PUBLIC]   JS Platform
-METHOD     createElementNS(namespaceURI:   [PUBLIC]   JS Platform
-METHOD     createEntityReference(name: St  [PUBLIC]   JS Platform
-METHOD     createEvent(type: String): Eve  [PUBLIC,   JS Platform
-METHOD     createExpression(xpathText: St  [PUBLIC,   JS Platform
-METHOD     createNSResolver(node: Node):   [PUBLIC,   JS Platform
-METHOD     createNodeIterator(root: Node,  [PUBLIC]   JS Platform
-METHOD     createProcessingInstruction(ta  [PUBLIC]   JS Platform
-METHOD     createRange(): Range            [PUBLIC,   JS Platform
-METHOD     createTextNode(data: String):   [PUBLIC]   JS Platform
-METHOD     createTreeWalker(root: Node, w  [PUBLIC]   JS Platform
+METHOD     create(o: null|Object, propert  [PUBLIC,   JS Platform
+METHOD     createAttribute()               [PUBLIC]   issue220917.js
+METHOD     createElement()                 [PUBLIC]   <font color=#999999>issue220621.js</font>

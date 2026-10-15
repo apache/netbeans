@@ -23,18 +23,18 @@ import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.netbeans.api.core.ide.ServicesTabNodeRegistration;
 import org.netbeans.modules.bugtracking.api.Repository;
 import org.netbeans.modules.bugtracking.api.RepositoryManager;
 import org.netbeans.modules.bugtracking.api.Util;
+import org.netbeans.modules.bugtracking.spi.BugtrackingConnector;
 import org.openide.nodes.*;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
 /**
@@ -87,10 +87,18 @@ public class BugtrackingRootNode extends AbstractNode {
     public Action[] getActions(boolean context) {
         return new Action[] {
             new AbstractAction(NbBundle.getMessage(BugtrackingRootNode.class, "LBL_CreateRepository")) { // NOI18N
+                final boolean hasConnector = Lookup.getDefault().lookup(BugtrackingConnector.class) != null;
+                        
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     Util.createRepository();
                 }
+
+                @Override
+                public boolean isEnabled() {
+                    return hasConnector;
+                }
+
             }
         };
     }
@@ -129,7 +137,7 @@ public class BugtrackingRootNode extends AbstractNode {
                 }
             }
             
-            Collections.sort(toPopulate, new RepositoryComparator());
+            toPopulate.sort(new RepositoryComparator());
             return true;
         }
     }

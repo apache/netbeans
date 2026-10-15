@@ -212,7 +212,7 @@ public abstract class TypeNameResolverImpl implements TypeNameResolver {
 
         private QualifiedName resolveForMatchedUseScope(final QualifiedName qualifiedName, final UseScope matchedUseScope) {
             QualifiedName result = qualifiedName;
-            final ArrayList<String> segments = new ArrayList();
+            final ArrayList<String> segments = new ArrayList<>();
             for (StringTokenizer st = new StringTokenizer(matchedUseScope.getName(), NamespaceDeclarationInfo.NAMESPACE_SEPARATOR); st.hasMoreTokens();) {
                 String token = st.nextToken();
                 segments.add(token);
@@ -360,7 +360,7 @@ public abstract class TypeNameResolverImpl implements TypeNameResolver {
         }
 
         private static List<String> createSegments(final UseScope matchedUseElement) {
-            List<String> segments = new ArrayList();
+            List<String> segments = new ArrayList<>();
             for (StringTokenizer st = new StringTokenizer(matchedUseElement.getName(), NamespaceDeclarationInfo.NAMESPACE_SEPARATOR); st.hasMoreTokens();) {
                 String token = st.nextToken();
                 if (st.hasMoreTokens()) {

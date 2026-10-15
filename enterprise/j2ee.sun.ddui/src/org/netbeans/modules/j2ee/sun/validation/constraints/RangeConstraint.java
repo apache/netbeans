@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.text.MessageFormat;
 
-import org.netbeans.modules.j2ee.sun.validation.constraints.ConstraintFailure;
 import org.netbeans.modules.j2ee.sun.validation.util.BundleReader;
 
 /**
@@ -67,8 +66,8 @@ public class RangeConstraint extends ConstraintUtils
     /** Creates a new instance of <code>RangeConstraint</code>. */
     public RangeConstraint(String startValue, String endValue) {
         try {
-           this.startValue = new Double(startValue);
-           this.endValue = new Double(endValue);
+           this.startValue = Double.valueOf(startValue);
+           this.endValue = Double.valueOf(endValue);
         } catch(NumberFormatException e) {
             String format = 
                 BundleReader.getValue("Error_failed_to_create");        //NOI18N
@@ -103,7 +102,7 @@ public class RangeConstraint extends ConstraintUtils
         
         if((value != null) && (value.length() != 0)){
             try {
-                Double val = new Double(value);
+                Double val = Double.valueOf(value);
                 if((val.compareTo(startValue) < 0) ||
                     (val.compareTo(endValue) > 0)){
                     addFailure(failed_constrained_list, name, value);
@@ -123,7 +122,7 @@ public class RangeConstraint extends ConstraintUtils
      */
     public void setRangeStart(String value){
         try {
-           startValue = new Double(value);
+           startValue = Double.valueOf(value);
         } catch(NumberFormatException e) {
             String format = 
                 BundleReader.getValue("Error_failed_to_set");           //NOI18N
@@ -143,7 +142,7 @@ public class RangeConstraint extends ConstraintUtils
      */
     public void setRangeEnd(String value){
         try {
-           endValue = new Double(value);
+           endValue = Double.valueOf(value);
         } catch(NumberFormatException e) {
             String format = 
                 BundleReader.getValue("Error_failed_to_set");           //NOI18N

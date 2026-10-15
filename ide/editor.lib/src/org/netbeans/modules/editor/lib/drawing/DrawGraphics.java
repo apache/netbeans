@@ -29,6 +29,7 @@ import java.awt.Shape;
 import java.awt.Rectangle;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
+import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.text.View;
 import org.netbeans.editor.Analyzer;
@@ -37,6 +38,7 @@ import org.netbeans.editor.AnnotationTypes;
 import org.netbeans.editor.Annotations;
 import org.netbeans.editor.FontMetricsCache;
 import org.netbeans.editor.PrintContainer;
+import org.openide.util.ImageUtilities;
 
 /** Draw graphics functions as abstraction over various kinds of drawing. It's used
 * for drawing into classic graphics, printing and measuring.
@@ -175,7 +177,7 @@ public interface DrawGraphics {
     /** Abstract draw-graphics that maintains a fg and bg color, font,
     * current x and y coordinates.
     */
-    public static abstract class AbstractDG implements DrawGraphics {
+    public abstract static class AbstractDG implements DrawGraphics {
 
         /** Current foreground color */
         Color foreColor;
@@ -587,8 +589,9 @@ public interface DrawGraphics {
                 graphics.setClip(clip);
 
                 for (int i=0; i < passiveAnnosAtY.length; i++) {
-                    g2d.drawImage(passiveAnnosAtY[i].getGlyph(), glyphX, y, null);
-                    glyphX += passiveAnnosAtY[i].getGlyph().getWidth(null)+1;
+                    Icon glyphIcon = ImageUtilities.image2Icon(passiveAnnosAtY[i].getGlyph());
+                    glyphIcon.paintIcon(null, g2d, glyphX, y);
+                    glyphX += glyphIcon.getIconWidth() + 1;
                 }
 
                 // restore original clip region

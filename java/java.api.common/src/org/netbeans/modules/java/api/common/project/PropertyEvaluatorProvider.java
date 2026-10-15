@@ -23,7 +23,7 @@ import org.netbeans.spi.project.support.ant.PropertyEvaluator;
 
 /**
  * An optional interface which implementation can be provided in
- * the project's {@link Lookup} to allow access to project's {@link PropertyEvaluator}.
+ * the project's {@link org.openide.util.Lookup} to allow access to project's {@link PropertyEvaluator}.
  * @author Tomas Zezula
  * @since 1.105
  */

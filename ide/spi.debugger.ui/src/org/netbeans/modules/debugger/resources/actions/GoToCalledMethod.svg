@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #757017;
+      }
+
+      .st1 {
+        fill: #96961d;
+      }
+
+      .st2 {
+        fill: #eaea5e;
+      }
+    </style>
+  </defs>
+  <g>
+    <rect class="st2" x="3.5" y="6.5" width="10" height="4"/>
+    <path class="st1" d="M13,7v3H4v-3h9M14,6H3v5h11v-5h0Z"/>
+  </g>
+  <g>
+    <rect class="st2" x="3.5" y="10.5" width="10" height="4"/>
+    <path class="st1" d="M13,11v3H4v-3h9M14,10H3v5h11v-5h0Z"/>
+  </g>
+  <g>
+    <rect class="st2" x="3" y="1" width="11" height="5"/>
+    <path class="st0" d="M13,2v3H4v-3h9M15,0H2v7h13V0h0Z"/>
+  </g>
+  <description>Apache NetBeans Logo
+  </description>
+</svg>

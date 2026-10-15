@@ -36,7 +36,7 @@ import org.openide.util.Lookup;
  * The 3rd party {@link org.netbeans.spi.project.LookupProvider} implementors provide instances of mergeableClass.
  * {@link org.netbeans.spi.project.support.LookupProviderSupport#createCompositeLookup} handles the hiding of individual mergeable instances 
  * and exposing the merged instance created by the <code>LookupMerger</code>.
- * @param T the type of object being merged (see {@link org.netbeans.api.project.Project#getLookup} for examples)
+ * @param <T> the type of object being merged (see {@link org.netbeans.api.project.Project#getLookup} for examples)
  * @author mkleint
  * @since org.netbeans.modules.projectapi 1.12
  */

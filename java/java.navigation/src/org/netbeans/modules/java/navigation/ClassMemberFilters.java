@@ -93,7 +93,7 @@ public final class ClassMemberFilters extends Filters<Description> {
             result.add(description);                        
         }
                 
-        Collections.sort( result, isNaturalSort() ?  Description.POSITION_COMPARATOR : Description.ALPHA_COMPARATOR );
+        result.sort(isNaturalSort() ?  Description.POSITION_COMPARATOR : Description.ALPHA_COMPARATOR );
         
         return result;
     }

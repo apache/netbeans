@@ -439,7 +439,7 @@ public class DocumentFinder
         private FalseFinder() {}
     }
     
-    private static abstract class AbstractBlocksFinder extends AbstractFinder
+    private abstract static class AbstractBlocksFinder extends AbstractFinder
         implements BlocksFinder {
 
         private static final int[] EMPTY_INT_ARRAY = new int[0];
@@ -527,7 +527,7 @@ public class DocumentFinder
     /** Abstract finder implementation. The only <CODE>find()</CODE>
     * method must be redefined.
     */
-    private static abstract class AbstractFinder implements DocFinder {
+    private abstract static class AbstractFinder implements DocFinder {
 
         /** Was the string found? */
         protected boolean found;
@@ -830,7 +830,7 @@ public class DocumentFinder
 
     
     /** Generic forward finder that simplifies the search process. */
-    private static abstract class GenericFwdFinder extends AbstractFinder {
+    private abstract static class GenericFwdFinder extends AbstractFinder {
 
         @Override
         public final int find(int initOffset, CharSequence chars) {
@@ -864,7 +864,7 @@ public class DocumentFinder
     }
 
     /** Generic backward finder that simplifies the search process. */
-    private static abstract class GenericBwdFinder extends AbstractFinder {
+    private abstract static class GenericBwdFinder extends AbstractFinder {
 
         @Override
         public final int find(int initOffset, CharSequence chars) {

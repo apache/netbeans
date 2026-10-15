@@ -25,20 +25,18 @@ import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadMXBean;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.actions.Openable;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.loaders.DataObject;
 import org.openide.modules.Places;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
+
 import static org.netbeans.modules.sampler.Bundle.*;
 
 /**
@@ -48,7 +46,6 @@ import static org.netbeans.modules.sampler.Bundle.*;
 final class InternalSampler extends Sampler {
     private static final String SAMPLER_NAME = "selfsampler";  // NOI18N
     private static final String FILE_NAME = SAMPLER_NAME+SamplesOutputStream.FILE_EXT;
-    private static final String UNKNOW_MIME_TYPE = "content/unknown"; // NOI18N
     private static final String X_DEBUG_ARG = "-Xdebug"; // NOI18N
     private static final String JDWP_DEBUG_ARG = "-agentlib:jdwp"; // NOI18N
     private static final String JDWP_DEBUG_ARG_PREFIX = "-agentlib:jdwp="; // NOI18N
@@ -59,7 +56,7 @@ final class InternalSampler extends Sampler {
     private ProgressHandle progress;
 
     static InternalSampler createInternalSampler(String key) {
-        if (SamplesOutputStream.isSupported() && isRunMode()) {
+        if (isRunMode()) {
             return new InternalSampler(key);
         }
         return null;
@@ -112,8 +109,9 @@ final class InternalSampler extends Sampler {
         return runMode;
     }
     
-    InternalSampler(String thread) {
+    InternalSampler(String thread) throws LinkageError {
         super(thread);
+        progress = ProgressHandle.createHandle(Save_Progress());
     }
 
     @Override
@@ -122,9 +120,12 @@ final class InternalSampler extends Sampler {
     }
 
     @Override
-    @Messages("SelfSamplerAction_SavedFile=Snapshot was saved to {0}")
+    @Messages({
+        "# {0} - the file",
+        "SelfSamplerAction_SavedFile=Snapshot was saved to {0}"
+    })
     protected void saveSnapshot(byte[] arr) throws IOException { // save snapshot
-        File outFile = File.createTempFile(SAMPLER_NAME, SamplesOutputStream.FILE_EXT);
+        File outFile = Files.createTempFile(SAMPLER_NAME, SamplesOutputStream.FILE_EXT).toFile();
         File userDir = Places.getUserDirectory();
         File gestures = null;
         SelfSampleVFS fs;
@@ -142,12 +143,15 @@ final class InternalSampler extends Sampler {
         // open snapshot
         FileObject fo = fs.findResource(FILE_NAME);
         // test for DefaultDataObject
-        if (UNKNOW_MIME_TYPE.equals(fo.getMIMEType())) {
-            String msg = SelfSamplerAction_SavedFile(outFile.getAbsolutePath());
-            DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(msg));
+        Openable open = fo.getLookup().lookup(Openable.class);
+        if (open != null) {
+            open.open();
         } else {
-            DataObject dobj = DataObject.find(fo);
-            dobj.getLookup().lookup(Openable.class).open();
+            IOException ex = new IOException("Cannot open " + fo + " with MIME type: " + fo.getMIMEType());
+            String msg = SelfSamplerAction_SavedFile(outFile.getAbsolutePath());
+            Exceptions.attachSeverity(ex, Level.WARNING);
+            Exceptions.attachLocalizedMessage(ex, msg);
+            Exceptions.printStackTrace(ex);
         }
     }
 
@@ -169,31 +173,34 @@ final class InternalSampler extends Sampler {
     @Override
     @Messages("Save_Progress=Saving snapshot")
     void openProgress(final int steps) {
-        if (EventQueue.isDispatchThread()) {
+        if (isDispatchThread()) {
             // log warnining
             return;
         }
-        progress = ProgressHandleFactory.createHandle(Save_Progress());
         progress.start(steps);
     }
 
     @Override
     void closeProgress() {
-        if (EventQueue.isDispatchThread()) {
+        if (isDispatchThread()) {
             return;
         }
         progress.finish();
-        progress = null;
+        progress = ProgressHandle.createHandle(Save_Progress());
     }
 
     @Override
     void progress(int i) {
-        if (EventQueue.isDispatchThread()) {
+        if (isDispatchThread()) {
             return;
         }
         if (progress != null) {
             progress.progress(i);
         }
     }
-    
+
+    @Override
+    boolean isDispatchThread() {
+        return EventQueue.isDispatchThread();
+    }
 }

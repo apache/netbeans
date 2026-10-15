@@ -79,7 +79,8 @@ public class SessionEJBWizardDescriptor implements WizardDescriptor.FinishablePa
         }
         boolean isLocal = wizardPanel.isLocal();
         boolean isRemote = wizardPanel.isRemote();
-        if (!isLocal && !isRemote && !J2eeProjectCapabilities.forProject(project).isEjb31LiteSupported()) {
+        J2eeProjectCapabilities projectCap = J2eeProjectCapabilities.forProject(project);
+        if (!isLocal && !isRemote && !projectCap.isEjb31LiteSupported() && !projectCap.isEjb40LiteSupported()) {
             wizardDescriptor.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, NbBundle.getMessage(SessionEJBWizardDescriptor.class,"ERR_RemoteOrLocal_MustBeSelected")); //NOI18N
             return false;
         }

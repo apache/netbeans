@@ -1,0 +1,2 @@
+            MatchExpression::STOP => $this->|>MARK_OCCURRENCES:stop^State<|(),
+    public function |>MARK_OCCURRENCES:stopState<|(): string {

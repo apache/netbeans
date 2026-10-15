@@ -1,0 +1,3 @@
+    public int $|>MARK_OCCURRENCES:publicTestField<| = 1;
+        $example = new Example()->test->|>MARK_OCCURRENCES:publicTestF^ield<|;
+new Example()->test->|>MARK_OCCURRENCES:publicTestField<|; // test

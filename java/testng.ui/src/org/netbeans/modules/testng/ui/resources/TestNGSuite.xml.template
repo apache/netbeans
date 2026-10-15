@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
-<suite name="${suiteName}">
+<suite name="${suiteName!'Suite name'}">
 
     <!--
     see examples at http://testng.org/doc/documentation-main.html#testng-xml
@@ -17,10 +17,10 @@
         </classes>
     </test>
     -->
-    
-    <test name="${testName}">
+
+    <test name="${testName!'testName'}">
         <packages>
-            <package name="${pkg}"/>
+            <package name="${pkg!'org.pkg'}"/>
         </packages>
     </test>
 

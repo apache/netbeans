@@ -19,7 +19,6 @@
 package org.netbeans.api.db.explorer.support;
 
 import javax.swing.JComboBox;
-import static junit.framework.Assert.assertEquals;
 import org.netbeans.api.db.explorer.*;
 import org.netbeans.modules.db.test.TestBase;
 import org.netbeans.modules.db.test.Util;
@@ -81,6 +80,8 @@ public class DatabaseExplorerUIsTest extends TestBase {
         initConnections();
         JComboBox combo = connect();
 
+        forceFlush(); // The next assert would occasionally fail unless this delay is added.
+
         assertTrue("Wrong number of items in the combobox", combo.getItemCount() == 3);
 
         assertSame(dbconn2, combo.getItemAt(0));
@@ -90,6 +91,8 @@ public class DatabaseExplorerUIsTest extends TestBase {
     public void testComboboxChangingConnections() throws Exception {
         initConnections();
         JComboBox combo = connect();
+
+        forceFlush(); // The next assert would occasionally fail unless this delay is added.
 
         assertEquals("Wrong number of items in the combobox", 3, combo.getItemCount());
 

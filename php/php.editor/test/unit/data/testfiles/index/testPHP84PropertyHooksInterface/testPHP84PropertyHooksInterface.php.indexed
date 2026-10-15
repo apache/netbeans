@@ -1,0 +1,77 @@
+
+
+Document 0
+Searchable Keys:
+
+Not Searchable Keys:
+
+
+Document 1
+Searchable Keys:
+  field : invalid01;invalid01;1094;1025;;;0;<TESTURL>/testPHP84PropertyHooksInterface.php;0;[{"name":"get","start":1106,"end":1109,"mod":32,"isRef":false,"isAttr":false,"hasBody":false,"paramSig":""},{"name":"set","start":1111,"end":1114,"mod":32,"isRef":false,"isAttr":false,"hasBody":false,"paramSig":""}];
+  field : invalid02;invalid02;1160;4;;;0;<TESTURL>/testPHP84PropertyHooksInterface.php;0;[{"name":"get","start":1171,"end":1174,"mod":32,"isRef":false,"isAttr":false,"hasBody":false,"paramSig":""},{"name":"set","start":1176,"end":1179,"mod":32,"isRef":false,"isAttr":false,"hasBody":false,"paramSig":""}];
+  field : invalid03;invalid03;1222;2;;;0;<TESTURL>/testPHP84PropertyHooksInterface.php;0;[{"name":"get","start":1269,"end":1272,"mod":32,"isRef":false,"isAttr":false,"hasBody":false,"paramSig":""},{"name":"set","start":1282,"end":1285,"mod":32,"isRef":false,"isAttr":false,"hasBody":false,"paramSig":""}];
+  field : invalid04;invalid04;1305;1;;;0;<TESTURL>/testPHP84PropertyHooksInterface.php;0;[{"name":"get","start":1323,"end":1326,"mod":48,"isRef":false,"isAttr":false,"hasBody":false,"paramSig":""}];
+  field : invalid05;invalid05;1375;17;;;0;<TESTURL>/testPHP84PropertyHooksInterface.php;0;[{"name":"get","start":1387,"end":1390,"mod":32,"isRef":false,"isAttr":false,"hasBody":false,"paramSig":""},{"name":"set","start":1392,"end":1395,"mod":32,"isRef":false,"isAttr":false,"hasBody":false,"paramSig":""}];
+  field : invalid06;invalid06;1438;1;;;0;<TESTURL>/testPHP84PropertyHooksInterface.php;0;[{"name":"get","start":1458,"end":1461,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""}];
+  field : invalid07;invalid07;1510;1;;;0;<TESTURL>/testPHP84PropertyHooksInterface.php;0;[{"name":"set","start":1530,"end":1533,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""}];
+  field : invalid08;invalid08;1582;1;;;0;<TESTURL>/testPHP84PropertyHooksInterface.php;0;[{"name":"get","start":1602,"end":1605,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""},{"name":"set","start":1644,"end":1647,"mod":32,"isRef":false,"isAttr":false,"hasBody":true,"paramSig":""}];
+  field : invalid09;invalid09;1713;257;int;int;0;<TESTURL>/testPHP84PropertyHooksInterface.php;0;[{"name":"set","start":1733,"end":1736,"mod":32,"isRef":false,"isAttr":false,"hasBody":false,"paramSig":""}];
+  field : invalid10;invalid10;1766;17;int;int;0;<TESTURL>/testPHP84PropertyHooksInterface.php;0;[{"name":"set","start":1813,"end":1816,"mod":32,"isRef":false,"isAttr":false,"hasBody":false,"paramSig":""}];
+  field : invalid10;invalid10;1849;65;int;int;0;<TESTURL>/testPHP84PropertyHooksInterface.php;0;[{"name":"get","start":1896,"end":1899,"mod":32,"isRef":false,"isAttr":false,"hasBody":false,"paramSig":""}];
+  field : prop1;prop1;892;1;string;string;0;<TESTURL>/testPHP84PropertyHooksInterface.php;0;[{"name":"get","start":908,"end":911,"mod":32,"isRef":false,"isAttr":false,"hasBody":false,"paramSig":""}];
+  field : prop2;prop2;941;17;int;int;0;<TESTURL>/testPHP84PropertyHooksInterface.php;0;[{"name":"set","start":957,"end":960,"mod":32,"isRef":false,"isAttr":false,"hasBody":false,"paramSig":""}];
+  field : prop3;prop3;980;1;;;0;<TESTURL>/testPHP84PropertyHooksInterface.php;0;[{"name":"get","start":996,"end":999,"mod":32,"isRef":false,"isAttr":false,"hasBody":false,"paramSig":""},{"name":"set","start":1009,"end":1012,"mod":32,"isRef":false,"isAttr":false,"hasBody":false,"paramSig":""}];
+  field : ref;ref;1032;1;;;0;<TESTURL>/testPHP84PropertyHooksInterface.php;0;[{"name":"get","start":1039,"end":1042,"mod":32,"isRef":true,"isAttr":false,"hasBody":false,"paramSig":""}];
+  iface : propertyhookinterface;PropertyHookInterface;825;;;0;<TESTURL>/testPHP84PropertyHooksInterface.php;
+  top : propertyhookinterface
+
+Not Searchable Keys:
+
+
+Document 2
+Searchable Keys:
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : get;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : invalid01;
+  identifier_used : invalid02;
+  identifier_used : invalid03;
+  identifier_used : invalid04;
+  identifier_used : invalid05;
+  identifier_used : invalid06;
+  identifier_used : invalid07;
+  identifier_used : invalid08;
+  identifier_used : invalid09;
+  identifier_used : invalid10;
+  identifier_used : invalid10;
+  identifier_used : prop1;
+  identifier_used : prop2;
+  identifier_used : prop3;
+  identifier_used : propertyhookinterface;
+  identifier_used : ref;
+  identifier_used : set;
+  identifier_used : set;
+  identifier_used : set;
+  identifier_used : set;
+  identifier_used : set;
+  identifier_used : set;
+  identifier_used : set;
+  identifier_used : set;
+  identifier_used : set;
+  identifier_used : set;
+  identifier_used : string;
+
+Not Searchable Keys:

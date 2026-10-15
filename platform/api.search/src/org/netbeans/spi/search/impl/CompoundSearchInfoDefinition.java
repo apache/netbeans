@@ -84,15 +84,14 @@ public class CompoundSearchInfoDefinition extends SearchInfoDefinition {
         }
 
         List<SearchInfoDefinition> searchableElements =
-                new ArrayList<SearchInfoDefinition>(elements.length);
+                new ArrayList<>(elements.length);
         for (SearchInfoDefinition element : elements) {
             if (element.canSearch()) {
                 searchableElements.add(element);
             }
         }
         return new AbstractCompoundIterator<SearchInfoDefinition, FileObject>(
-                searchableElements.toArray(
-                new SearchInfoDefinition[searchableElements.size()]),
+                searchableElements.toArray(new SearchInfoDefinition[0]),
                 options, listener, terminated) {
             @Override
             protected Iterator<FileObject> getIteratorFor(
@@ -113,15 +112,14 @@ public class CompoundSearchInfoDefinition extends SearchInfoDefinition {
         }
 
         List<SearchInfoDefinition> searchableElements =
-                new ArrayList<SearchInfoDefinition>(elements.length);
+                new ArrayList<>(elements.length);
         for (SearchInfoDefinition element : elements) {
             if (element.canSearch()) {
                 searchableElements.add(element);
             }
         }
         return new AbstractCompoundIterator<SearchInfoDefinition, URI>(
-                searchableElements.toArray(
-                new SearchInfoDefinition[searchableElements.size()]),
+                searchableElements.toArray(new SearchInfoDefinition[0]),
                 options, listener, terminated) {
             @Override
             protected Iterator<URI> getIteratorFor(
@@ -134,7 +132,7 @@ public class CompoundSearchInfoDefinition extends SearchInfoDefinition {
 
     @Override
     public List<SearchRoot> getSearchRoots() {
-        List<SearchRoot> allRoots = new LinkedList<SearchRoot>();
+        List<SearchRoot> allRoots = new LinkedList<>();
         for (SearchInfoDefinition si : elements) {
             allRoots.addAll(si.getSearchRoots());
         }

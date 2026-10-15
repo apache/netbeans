@@ -65,10 +65,11 @@ import org.openide.util.lookup.ServiceProvider;
     "ProfilerLauncher_noFeature=<html><b>No profiling feature selected.</b><br><br>Please select at least one profiling feature for the session.</html>"
 })
 public class ProfilerLauncher {
-    final private static Logger LOG = Logger.getLogger(ProfilerLauncher.class.getName());
+    private static final Logger LOG = Logger.getLogger(ProfilerLauncher.class.getName());
     
-    final private static String AGENT_ARGS = "agent.jvmargs"; // NOI18N
-    final private static String LINUX_THREAD_TIMER_KEY = "-XX:+UseLinuxPosixThreadCPUClocks"; // NOI18N
+    private static final String AGENT_ARGS = "agent.jvmargs"; // NOI18N
+    private static final String LINUX_THREAD_TIMER_KEY = "-XX:+UseLinuxPosixThreadCPUClocks"; // NOI18N
+    private static final String ARGS_PREFIX = "profiler.netbeansBindings.jvmarg"; // NOI18N
     
     public static final class Command {
         private final String command;
@@ -83,7 +84,7 @@ public class ProfilerLauncher {
         }
     }
     
-    final private static class ProfilerSessionImpl extends ProfilerSession {
+    private static final class ProfilerSessionImpl extends ProfilerSession {
         
         ProfilerSessionImpl(Lookup _context) {
             super(NetBeansProfiler.getDefaultNB(), _context);
@@ -200,7 +201,7 @@ public class ProfilerLauncher {
         
     }
 
-    final public static class Session  {
+    public static final class Session  {
         private SessionSettings ss;
         private ProfilingSettings ps;
         private Map<String, String> props;
@@ -210,7 +211,7 @@ public class ProfilerLauncher {
         private JavaPlatform platform;
         private String command;
         private Lookup context;
-        final private Map<String, Object> customProps = new HashMap<String, Object>();
+        private final Map<String, Object> customProps = new HashMap<String, Object>();
         
         private boolean configured = false;
         private boolean rerun;
@@ -319,7 +320,7 @@ public class ProfilerLauncher {
             NetBeansProfiler.getDefaultNB().setProfiledProject(project, fo);
 
 //            // ** display select task panel
-//            ProfilingSettings ps = ProfilingSupport.getDefault().selectTaskForProfiling(project, ss, fo, true);;
+//            ProfilingSettings ps = ProfilingSupport.getDefault().selectTaskForProfiling(project, ss, fo, true);
 //            if (ps != null) {
 //                this.ps = ps;
 //                this.ps.store(props); // TODO: check whether necessary or not!
@@ -381,8 +382,8 @@ public class ProfilerLauncher {
         @ProjectType(id="org-netbeans-modules-autoproject"),
         @ProjectType(id="org-netbeans-modules-java-j2semodule")
     })
-    final public static class AntLauncherFactory implements LauncherFactory {
-        final private Project prj;
+    public static final class AntLauncherFactory implements LauncherFactory {
+        private final Project prj;
         public AntLauncherFactory(Project prj) {
             this.prj = prj;
         }
@@ -398,7 +399,7 @@ public class ProfilerLauncher {
         }
     }
     
-    final private static class AntLauncher implements Launcher {
+    private static final class AntLauncher implements Launcher {
         private ActionProvider ap;
         private String command;
         private Lookup context;
@@ -541,6 +542,7 @@ public class ProfilerLauncher {
         }
         assert agentArgs != null;
         props.put(AGENT_ARGS, agentArgs);
+        props.put(ARGS_PREFIX + ".agent", agentArgs); // NOI18N
 
         if (Platform.isLinux() && javaVersion.equals(CommonConstants.JDK_16_STRING)) {
             activateLinuxPosixThreadTime(pSettings, props);
@@ -608,8 +610,12 @@ public class ProfilerLauncher {
                     heapDumpPath = "\"" + heapDumpPath + "\"";//NOI18N
                 }
 
-                oomArgsBuffer.append(" -XX:+HeapDumpOnOutOfMemoryError"); // NOI18N
-                oomArgsBuffer.append(" -XX:HeapDumpPath=").append(heapDumpPath).append(" "); // NOI18N
+                final String oom = "-XX:+HeapDumpOnOutOfMemoryError";
+                final String path = "-XX:HeapDumpPath=" + heapDumpPath;
+                oomArgsBuffer.append(" ").append(oom); // NOI18N
+                oomArgsBuffer.append(" ").append(path).append(" "); // NOI18N
+                props.put(ARGS_PREFIX + ".outOfMemory", oom); // NOI18N
+                props.put(ARGS_PREFIX + ".heapDumpPath", path); // NOI18N
 
                 ProfilerLogger.log("Profiler.OutOfMemoryDetection: Enabled"); // NOI18N
             }

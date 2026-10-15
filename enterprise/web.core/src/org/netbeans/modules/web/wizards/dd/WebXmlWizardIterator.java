@@ -64,7 +64,7 @@ public final class WebXmlWizardIterator implements WizardDescriptor.Instantiatin
                 if (component instanceof JComponent) { // assume Swing components
                     JComponent jComponent = (JComponent) component;
                     // Sets step number of a component
-                    jComponent.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, Integer.valueOf(i));
+                    jComponent.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i);
                     // Sets steps names for a panel
                     jComponent.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps);
                     // Turn on subtitle creation on each step
@@ -148,7 +148,7 @@ public final class WebXmlWizardIterator implements WizardDescriptor.Instantiatin
     private String[] createSteps() {
         String[] beforeSteps = null;
         Object prop = wizard.getProperty(WizardDescriptor.PROP_CONTENT_DATA);
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[]) prop;
         }
 

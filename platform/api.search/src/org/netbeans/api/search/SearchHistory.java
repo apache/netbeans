@@ -58,9 +58,9 @@ public final class SearchHistory {
 
     /** Shareable SearchPattern history. It is a List of SearchPatterns */
     private List<SearchPattern> searchPatternsList
-            = new ArrayList<SearchPattern>(MAX_SEARCH_PATTERNS_ITEMS);
+            = new ArrayList<>(MAX_SEARCH_PATTERNS_ITEMS);
     
-    private List<ReplacePattern> replacePatternsList = new ArrayList<ReplacePattern>(MAX_SEARCH_PATTERNS_ITEMS);
+    private List<ReplacePattern> replacePatternsList = new ArrayList<>(MAX_SEARCH_PATTERNS_ITEMS);
 
     /** Singleton instance */
     private static SearchHistory INSTANCE = null;
@@ -72,14 +72,14 @@ public final class SearchHistory {
      *  @deprecated just changes in history
      */
     @Deprecated
-    public final static String LAST_SELECTED = "last-selected"; //NOI18N
+    public static final String LAST_SELECTED = "last-selected"; //NOI18N
     
     /** Property name for adding pattern that was not in history
      *  Firing:
      *  oldValue - null
      *  newValue - added pattern
      */
-    public final static String ADD_TO_HISTORY = "add-to-history"; //NOI18N
+    public static final String ADD_TO_HISTORY = "add-to-history"; //NOI18N
     
     /** Property name for adding replace pattern that was not in history
      *  Firing:
@@ -87,7 +87,7 @@ public final class SearchHistory {
      *  newValue - added pattern
      * @since 1.8
      */
-    public final static String ADD_TO_REPLACE = "add-to-replace"; //NOI18N
+    public static final String ADD_TO_REPLACE = "add-to-replace"; //NOI18N
 
     /** Preferences node for storing history info */
     private static Preferences prefs;
@@ -103,7 +103,7 @@ public final class SearchHistory {
     }
 
     /** @return singleton instance of SearchHistory */
-    public synchronized static SearchHistory getDefault(){
+    public static synchronized SearchHistory getDefault(){
         if (INSTANCE == null) {
             INSTANCE = new SearchHistory();
         }

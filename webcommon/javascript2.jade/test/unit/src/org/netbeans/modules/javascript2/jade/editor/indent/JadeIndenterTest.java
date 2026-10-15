@@ -21,7 +21,6 @@ package org.netbeans.modules.javascript2.jade.editor.indent;
 import javax.swing.JEditorPane;
 import javax.swing.text.Caret;
 import javax.swing.text.DefaultEditorKit;
-import static junit.framework.Assert.assertNotNull;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.lib.lexer.test.TestLanguageProvider;
 import org.netbeans.modules.csl.api.Formatter;

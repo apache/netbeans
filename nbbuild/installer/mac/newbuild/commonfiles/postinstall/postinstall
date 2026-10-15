@@ -32,7 +32,7 @@ jdk_home=`"$dirname"/get_current_jdk.sh`
 
 #"$dirname"/add_tc.sh "$NETBEANS_INSTALL_DIR" "$TOMCAT_INSTALL_DIR"
 
-DEFAULT_JDK_HOME=`/usr/libexec/java_home --version 1.8+`
+DEFAULT_JDK_HOME=`/usr/libexec/java_home`
 
 if [ -f "$dirname"/set_jdk_home.sh ]; then
     "$dirname"/set_jdk_home.sh "$NETBEANS_INSTALL_DIR" "$DEFAULT_JDK_HOME"

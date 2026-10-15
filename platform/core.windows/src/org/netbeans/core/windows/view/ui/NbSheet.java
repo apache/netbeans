@@ -75,9 +75,9 @@ public final class NbSheet extends TopComponent {
     /** shared sheet */
     private static NbSheet sharedSheet;
     /** listener to the property changes */
-    transient private final Listener listener;
+    private final transient Listener listener;
     /** listener to the node changes, especially their destruction */
-    transient private final SheetNodesListener snListener;
+    private final transient SheetNodesListener snListener;
     /** Should property sheet listen to the global changes ? */
     boolean global;
     /** the property sheet that is used to display nodes */

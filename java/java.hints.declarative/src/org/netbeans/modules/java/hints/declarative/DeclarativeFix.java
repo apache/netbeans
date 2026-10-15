@@ -59,4 +59,10 @@ public final class DeclarativeFix {
     public static DeclarativeFix create(String name, String fix, List<Condition> conditions, Map<String, String> options) {
         return new DeclarativeFix(fix, name, conditions, options);
     }
+
+    @Override
+    public String toString() {
+        return getClass().getName()+" ["+pattern+"]";
+    }
+
 }

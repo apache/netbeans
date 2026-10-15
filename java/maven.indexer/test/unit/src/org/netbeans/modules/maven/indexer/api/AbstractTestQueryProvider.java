@@ -20,9 +20,7 @@ package org.netbeans.modules.maven.indexer.api;
 
 import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import org.apache.maven.artifact.Artifact;
 import org.netbeans.modules.maven.indexer.spi.ArchetypeQueries;
 import org.netbeans.modules.maven.indexer.spi.BaseQueries;
 import org.netbeans.modules.maven.indexer.spi.ChecksumQueries;
@@ -52,6 +50,7 @@ public abstract class AbstractTestQueryProvider implements RepositoryIndexQueryP
         public TestIndexer1() {
             this.repos = new RepositoryInfo[] {REPO};
         }
+        @Override
         protected String getID() {
             return ID;
         }
@@ -66,6 +65,7 @@ public abstract class AbstractTestQueryProvider implements RepositoryIndexQueryP
             this.repos = new RepositoryInfo[] {REPO};
         }
         
+        @Override
         protected String getID() {
             return ID;
         }
@@ -85,37 +85,32 @@ public abstract class AbstractTestQueryProvider implements RepositoryIndexQueryP
         return false;
     }
 
-    abstract protected String getID();
+    protected abstract String getID();
 
     @Override
     public ArchetypeQueries getArchetypeQueries() {
-        return new ArchetypeQueries() {
+        return (List<RepositoryInfo> repos1) -> new ResultImplementation<NBVersionInfo>() {
             @Override
-            public ResultImplementation<NBVersionInfo> findArchetypes(List<RepositoryInfo> repos) {
-                return new ResultImplementation<NBVersionInfo>() {
-                    @Override
-                    public boolean isPartial() {
-                        return false;
-                    }
+            public boolean isPartial() {
+                return false;
+            }
 
-                    @Override
-                    public void waitForSkipped() { }
+            @Override
+            public void waitForSkipped() { }
 
-                    @Override
-                    public List<NBVersionInfo> getResults() {
-                        return Arrays.asList(new NBVersionInfo(getID(), getID(), getID(), "1.0", "jar", "jar", "test", "test", null));
-                    }
+            @Override
+            public List<NBVersionInfo> getResults() {
+                return Arrays.asList(new NBVersionInfo(getID(), getID(), getID(), "1.0", "jar", "jar", "test", "test", null));
+            }
 
-                    @Override
-                    public int getTotalResultCount() {
-                        return 1;
-                    }
+            @Override
+            public int getTotalResultCount() {
+                return 1;
+            }
 
-                    @Override
-                    public int getReturnedResultCount() {
-                        return 1;
-                    }
-                };
+            @Override
+            public int getReturnedResultCount() {
+                return 1;
             }
         };
     }

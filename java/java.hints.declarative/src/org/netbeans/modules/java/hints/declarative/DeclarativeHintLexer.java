@@ -45,6 +45,7 @@ class DeclarativeHintLexer implements Lexer<DeclarativeHintTokenId> {
         fact  = info.tokenFactory();
     }
 
+    @Override
     public Token<DeclarativeHintTokenId> nextToken() {
         int read = input.read();
 
@@ -117,6 +118,52 @@ class DeclarativeHintLexer implements Lexer<DeclarativeHintTokenId> {
                 
                 Token<DeclarativeHintTokenId> t = testToken(inputString, whitespaceLength, false);
 
+                if (t == null && inputString.endsWith("::")) {
+                    //need to disambiguate :: as a member ref separator; and as a snippet-conditions separator
+                    int len = input.readLength();
+                    if (len > 2) {
+                        boolean colonColon = false;
+                        StringBuilder ident = new StringBuilder();
+                        boolean identFinished = false;
+                        OUTER: while (true) {
+                            int read2 = input.read();
+                            if (Character.isWhitespace(read2)) {
+                                if (ident.length() > 0) {
+                                    identFinished = true;
+                                }
+                                continue;
+                            }
+                            if (identFinished || !Character.isJavaIdentifierPart((char) read2)) {
+                                identFinished = true;
+                                switch (read2) {
+                                    case '(': case '&': case 'i': case '!':
+                                        //condition
+                                        colonColon = true;
+                                        break OUTER;
+                                    case ';':
+                                        if (input.read() == ';') {
+                                            input.backup(2);
+                                            if ("otherwise".contentEquals(ident)) {
+                                                //condition
+                                                colonColon = true;
+                                                break OUTER;
+                                            }
+                                        }
+                                    default:
+                                        //member ref
+                                        break OUTER;
+                                }
+                            } else {
+                                ident.append((char) read2);
+                            }
+                        }
+                        if (colonColon) {
+                            t = resolvePrereadText(input.readLength() - len + 2, whitespaceLength);
+                        }
+                    } else {
+                        t = fact.createToken(DeclarativeHintTokenId.DOUBLE_COLON);
+                    }
+                }
                 if (t != null) {
                     return t;
                 }
@@ -135,10 +182,12 @@ class DeclarativeHintLexer implements Lexer<DeclarativeHintTokenId> {
         return fact.createToken(DeclarativeHintTokenId.JAVA_SNIPPET);
     }
 
+    @Override
     public Object state() {
         return null;
     }
 
+    @Override
     public void release() {}
 
     private Token<DeclarativeHintTokenId> testToken(String toTest, int whitespaceLength, boolean eof) {
@@ -153,7 +202,7 @@ class DeclarativeHintLexer implements Lexer<DeclarativeHintTokenId> {
         
         for (Entry<String, DeclarativeHintTokenId> e : TOKENS.entrySet()) {
             int i = snip.indexOf(e.getKey());
-            if (i != (-1) && (snip.length() - i + 1 > backup || e.getKey().startsWith(lastImage))) {
+            if (i != (-1) && (snip.length() - i + 1 > backup || e.getKey().startsWith(lastImage)) && (e.getValue() != DeclarativeHintTokenId.COLON || !snip.substring(i).startsWith("::"))) {
                 id = e.getValue();
                 backup = snip.length() - i + 1;
                 exact = i == 0;
@@ -228,10 +277,9 @@ class DeclarativeHintLexer implements Lexer<DeclarativeHintTokenId> {
     private static final Map<DeclarativeHintTokenId, String> BLOCK_TOKEN_END;
 
     static {
-        Map<String, DeclarativeHintTokenId> map = new HashMap<String, DeclarativeHintTokenId>();
+        Map<String, DeclarativeHintTokenId> map = new HashMap<>();
 
         map.put("=>", DeclarativeHintTokenId.LEADS_TO);
-        map.put("::", DeclarativeHintTokenId.DOUBLE_COLON);
         map.put("&&", DeclarativeHintTokenId.AND);
         map.put("!", DeclarativeHintTokenId.NOT);
         map.put(";;", DeclarativeHintTokenId.DOUBLE_SEMICOLON);
@@ -242,7 +290,7 @@ class DeclarativeHintLexer implements Lexer<DeclarativeHintTokenId> {
 
         TOKENS = Collections.unmodifiableMap(map);
 
-        Map<String, DeclarativeHintTokenId> blockStartMap = new HashMap<String, DeclarativeHintTokenId>();
+        Map<String, DeclarativeHintTokenId> blockStartMap = new HashMap<>();
 
         blockStartMap.put("/*", DeclarativeHintTokenId.BLOCK_COMMENT);
         blockStartMap.put("//", DeclarativeHintTokenId.LINE_COMMENT);
@@ -253,7 +301,7 @@ class DeclarativeHintLexer implements Lexer<DeclarativeHintTokenId> {
 
         BLOCK_TOKEN_START = Collections.unmodifiableMap(blockStartMap);
 
-        Map<DeclarativeHintTokenId, String> blockEndMap = new HashMap<DeclarativeHintTokenId, String>();
+        Map<DeclarativeHintTokenId, String> blockEndMap = new HashMap<>();
 
         blockEndMap.put(DeclarativeHintTokenId.BLOCK_COMMENT, "*/");
         blockEndMap.put(DeclarativeHintTokenId.LINE_COMMENT, "\n");

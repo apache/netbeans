@@ -31,6 +31,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -44,7 +45,6 @@ import javax.tools.Diagnostic.Kind;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 import org.netbeans.api.javahelp.HelpSetRegistration;
-import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.annotations.LayerBuilder;
 import org.openide.filesystems.annotations.LayerGeneratingProcessor;
 import org.openide.filesystems.annotations.LayerGenerationException;
@@ -122,17 +122,14 @@ public class HelpSetRegistrationProcessor extends LayerGeneratingProcessor {
                     File d = Utilities.toFile(loc).getParentFile();
                     String out = hs.replaceFirst("/[^/]+$", "/") + searchDir + "/";
                     try {
-                        File config = File.createTempFile("jhindexer-config", ".txt");
+                        File config = Files.createTempFile("jhindexer-config", ".txt").toFile();
                         try {
                             AtomicInteger cnt = new AtomicInteger();
-                            OutputStream os = new FileOutputStream(config);
-                            try {
+                            try (OutputStream os = new FileOutputStream(config)) {
                                 PrintWriter pw = new PrintWriter(os);
                                 pw.println("IndexRemove " + d + File.separator);
                                 scan(d, pw, cnt, new HashSet<String>(Arrays.asList(r.excludes())), "");
                                 pw.flush();
-                            } finally {
-                                os.close();
                             }
                             processingEnv.getMessager().printMessage(Kind.NOTE, "Indexing " + cnt + " HTML files in " + d + " into " + out);
                             File db = createTempFile("jhindexer-out", "");
@@ -146,16 +143,8 @@ public class HelpSetRegistrationProcessor extends LayerGeneratingProcessor {
                             } finally {
                                 for (File f : db.listFiles()) {
                                     FileObject dest = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", out + f.getName(), e);
-                                    os = dest.openOutputStream();
-                                    try {
-                                        InputStream is = new FileInputStream(f);
-                                        try {
-                                            FileUtil.copy(is, os);
-                                        } finally {
-                                            is.close();
-                                        }
-                                    } finally {
-                                        os.close();
+                                    try (InputStream is = new FileInputStream(f); OutputStream os = dest.openOutputStream()) {
+                                        is.transferTo(os);
                                     }
                                     f.delete();
                                 }
@@ -195,7 +184,7 @@ public class HelpSetRegistrationProcessor extends LayerGeneratingProcessor {
      */
     static File createTempFile(String pref, String suff) throws IOException {
 
-        File f = File.createTempFile(pref, suff); //file in default tmp folder
+        File f = Files.createTempFile(pref, suff).toFile(); //file in default tmp folder
         if (!isUrlCompatible(f)) {
             if (Utilities.isWindows()) {
                 f = replaceTempFile(f, "c:\\Temp", pref, suff);         //NOI18N

@@ -33,7 +33,7 @@ import javax.swing.*;
  * properties for currently selected {@link Node}
  *
  * <p>
- * This class is a <q>view</q>
+ * This class is a <em>view</em>
  * to use it properly you need to add it into a component which implements
  * {@link Provider}. Good examples of that can be found
  * in {@link ExplorerUtils}. Then just use 
@@ -41,7 +41,7 @@ import javax.swing.*;
  * and control its state.
  * </p>
  * <p>
- * There can be multiple <q>views</q> under one container implementing {@link Provider}. Select from
+ * There can be multiple <em>views</em> under one container implementing {@link Provider}. Select from
  * range of predefined ones or write your own:
  * </p>
  * <ul>
@@ -70,13 +70,13 @@ public class PropertySheetView extends PropertySheet {
     static final long serialVersionUID = -7568245745904766160L;
 
     /** helper flag for avoiding multiple initialization of the GUI */
-    transient private boolean guiInitialized = false;
+    private transient boolean guiInitialized = false;
 
     /** The Listener that tracks changes in explorerManager */
-    transient private PropertyIL managerListener;
+    private transient PropertyIL managerListener;
 
     /** manager to use */
-    transient private ExplorerManager explorerManager;
+    private transient ExplorerManager explorerManager;
 
     public PropertySheetView() {
         setPreferredSize(new Dimension (200, 300));

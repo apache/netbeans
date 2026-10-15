@@ -32,7 +32,6 @@ import org.netbeans.core.startup.MainLookup;
 import org.netbeans.modules.autoupdate.services.*;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogProvider;
-import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 
 /**
@@ -59,12 +58,8 @@ public class DefaultTestCase extends NbTestCase {
     }
 
     public void populateCatalog(InputStream is) throws FileNotFoundException, IOException {
-        OutputStream os = new FileOutputStream(catalogFile);
-        try {
-            FileUtil.copy(is, os);
-        } finally {
-            is.close();
-            os.close();
+        try (is; OutputStream os = new FileOutputStream(catalogFile)) {
+            is.transferTo(os);
         }
     }
     

@@ -31,7 +31,7 @@ import org.json.simple.JSONObject;
  */
 public class LinkedJSONObject extends JSONObject {
 
-    LinkedHashMap linkedMap = new LinkedHashMap();
+    Map<Object, Object> linkedMap = new LinkedHashMap<>();
 
     public LinkedJSONObject() {
     }
@@ -44,7 +44,7 @@ public class LinkedJSONObject extends JSONObject {
     @Override
     public Object clone() {
         LinkedJSONObject ljo = new LinkedJSONObject();
-        ljo.linkedMap = (LinkedHashMap) linkedMap.clone();
+        ljo.linkedMap = new LinkedHashMap<>(linkedMap);
         return ljo;
     }
 

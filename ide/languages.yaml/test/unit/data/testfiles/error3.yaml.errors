@@ -1,1 +1,1 @@
-31-31:While scanning a block mapping we had this expected <block end>, but found org.jvyamlb.tokens.PositionedBlockMappingStartToken
+0-31:While parsing a block mapping, expected <block end>, but found '<block mapping start>'

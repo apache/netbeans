@@ -208,7 +208,7 @@ public class SourcePath implements ClassPathImplementation, PropertyChangeListen
                     rootsList.add(url);
                 }
             }
-            URL[] res = rootsList.toArray(new URL[rootsList.size()]);
+            URL[] res = rootsList.toArray(new URL[0]);
             synchronized (this) {
                 if (currentEventId == this.eventId) {
                     if (cache == null) {

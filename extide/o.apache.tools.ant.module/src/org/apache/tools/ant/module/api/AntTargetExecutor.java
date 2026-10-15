@@ -38,7 +38,7 @@ import org.openide.util.Parameters;
  * Executes an Ant target or list of targets asynchronously inside NetBeans.
  * @since 2.15
  */
-final public class AntTargetExecutor {
+public final class AntTargetExecutor {
 
     private final Env env;
 
@@ -105,7 +105,7 @@ final public class AntTargetExecutor {
      * The class can be used for customization of properties avaialble during the 
      * execution, verbosity of Ant target execution and output stream definition.
      */
-    final public static class Env {
+    public static final class Env {
 
         private int verbosity;
         private Properties properties;

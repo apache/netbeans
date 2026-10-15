@@ -32,7 +32,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import javax.tools.FileObject;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
@@ -100,6 +99,8 @@ final class ModuleFileManager implements JavaFileManager {
                 final Archive archive = cap.getArchive(root, cacheFile);
                 if (archive != null) {
                     final Iterable<JavaFileObject> entries;
+                    // multi-release code here duplicated in CachingFileManager
+                    // fixes should be ported across, or ideally this logic abstracted
                     if (supportsMultiRelease && archive.isMultiRelease()) {
                         if (prefixes == null) {
                             prefixes = multiReleaseRelocations();
@@ -120,11 +121,12 @@ final class ModuleFileManager implements JavaFileManager {
                                 }
                                 final String fqn = inferBinaryName(l, fo);
                                 final String pkg = FileObjects.getPackageAndName(fqn)[0];
+                                final String name = pkg + "/" + FileObjects.getName(fo, false);
                                 if (base) {
                                     seenPackages.add(pkg);
-                                    fqn2f.put(fqn, fo);
+                                    fqn2f.put(name, fo);
                                 } else if (seenPackages.contains(pkg)) {
-                                    fqn2f.put(fqn, fo);
+                                    fqn2f.put(name, fo);
                                 }
                             }
                         }
@@ -270,7 +272,7 @@ final class ModuleFileManager implements JavaFileManager {
     public Iterable<Set<Location>> listLocationsForModules(Location location) throws IOException {
         return moduleLocations(location).stream()
                 .map((ml) -> Collections.<Location>singleton(ml))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

@@ -1,0 +1,12 @@
+        $y, // class
+        --
+HINT:Initialize Field: $y
+FIX:Initialize Field: $y
+        $^y, // trait
+        --
+HINT:Initialize Field: $y
+FIX:Initialize Field: $y
+        $y, // anon class
+        --
+HINT:Initialize Field: $y
+FIX:Initialize Field: $y

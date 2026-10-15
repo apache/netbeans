@@ -36,11 +36,10 @@ import javax.swing.Action;
  * often taken from an activated node selection. The context action might be
  * enabled only if a certain "cookie" is present in that selection. When invoked,
  * the action need not search for an object to act on, since it can use the context.
- * <p>
  *
  * @author Jaroslav Tulach, Peter Zavadsky
  *
- * @see <a href="http://wiki.netbeans.org/DevFaqActionContextSensitive">NetBeans FAQ</a>
+ * @see <a href="https://netbeans.apache.org/wiki/DevFaqActionContextSensitive">NetBeans FAQ</a>
  * @see org.openide.util.Utilities#actionsToPopup
  * @see org.openide.util.Utilities#actionsGlobalContext
  * @since 3.29

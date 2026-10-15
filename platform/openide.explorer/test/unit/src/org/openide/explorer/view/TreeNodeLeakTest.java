@@ -66,7 +66,7 @@ public final class TreeNodeLeakTest extends NbTestCase {
     }
     
     /**
-     * @see http://www.netbeans.org/issues/show_bug.cgi?id=84970
+     * @see https://bz.apache.org/netbeans/show_bug.cgi?id=84970
      */
     public void testNodesLeak() throws Exception {
         assert !EventQueue.isDispatchThread();

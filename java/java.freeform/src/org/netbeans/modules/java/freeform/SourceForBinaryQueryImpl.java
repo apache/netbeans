@@ -20,9 +20,9 @@
 package org.netbeans.modules.java.freeform;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -31,7 +31,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.project.ProjectManager;
@@ -117,7 +116,7 @@ final class SourceForBinaryQueryImpl implements SourceForBinaryQueryImplementati
                             assert compilationUnit.getLocalName().equals("compilation-unit") : compilationUnit;
                             List<URL> binaries = findBinaries(compilationUnit);
                             List<FileObject> packageRoots = Classpaths.findPackageRoots(helper, evaluator, compilationUnit);
-                            FileObject[] sources = packageRoots.toArray(new FileObject[packageRoots.size()]);
+                            FileObject[] sources = packageRoots.toArray(new FileObject[0]);
                             if (binaries.isEmpty()) {
                                 binaries = createArtificialBinaries(sources);
                             }
@@ -213,7 +212,7 @@ final class SourceForBinaryQueryImpl implements SourceForBinaryQueryImplementati
                     } else {
                         md5.reset();
                     }
-                    final String digest = str(md5.digest(srcURI.toString().getBytes("UTF-8"))); //NOI18N
+                    final String digest = str(md5.digest(srcURI.toString().getBytes(StandardCharsets.UTF_8)));
                     final File binFile = new File (artBinaries,digest);
                     bin = FileUtil.urlForArchiveOrDir(binFile);
                     artificalBinariesCache.put(srcURI, bin);
@@ -221,7 +220,7 @@ final class SourceForBinaryQueryImpl implements SourceForBinaryQueryImplementati
                 res.add(bin);
             }
             return res;
-        } catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
     }

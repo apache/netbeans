@@ -308,8 +308,7 @@ public class ExportShortcutsAction {
             sb.append (actionName);
             XMLStorage.generateFolderEnd (sb, "td", "        ");
             
-            for (String profile: keymaps.keySet ()) {
-                Map<ShortcutAction, Set<String>> keymap = keymaps.get (profile);
+            for (Map<ShortcutAction, Set<String>> keymap: keymaps.values ()) {
                 Set<String> shortcuts = keymap.get (action);
 
                 XMLStorage.generateFolderStart (sb, "td", attribs, "        ");
@@ -411,14 +410,12 @@ public class ExportShortcutsAction {
             XMLStorage.generateFolderStart (sb, "bindings", attribs, "");
             
             Map<String, Set<String>> sortedMap = new TreeMap<String, Set<String>> ();
-            for (ShortcutAction action: actionToShortcuts.keySet ()) {
-                sortedMap.put (
-                    action.getDisplayName (), 
-                    actionToShortcuts.get (action)
-                );
+            for (Map.Entry<ShortcutAction, Set<String>> entry : actionToShortcuts.entrySet()) {
+                sortedMap.put(entry.getKey().getDisplayName(), entry.getValue());
             }
-            for (String actionName: sortedMap.keySet ()) {
-                Set<String> shortcuts = sortedMap.get (actionName);
+            for (Map.Entry<String, Set<String>> entry: sortedMap.entrySet ()) {
+                String actionName = entry.getKey ();
+                Set<String> shortcuts = entry.getValue();
                 for (String shortcut: shortcuts) {
                     attribs = new Attribs (true);
                     attribs.add ("actionName", actionName);

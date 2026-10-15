@@ -51,7 +51,7 @@ class HuntDiff {
         int[] J = prepareIndex(lines1, lines2, options);
         List<Difference2> differences = getDifferences(J, lines1, lines2);
         cleanup(differences);
-        Difference2[] tempDiffs = differences.toArray(new Difference2[differences.size()]);
+        Difference2[] tempDiffs = differences.toArray(new Difference2[0]);
         Difference[] diffs = new Difference[tempDiffs.length];
         for (int i = 0; i < tempDiffs.length; ++i) {
             Difference2 tempDiff = tempDiffs[i];
@@ -279,7 +279,7 @@ class HuntDiff {
                     end1++;
                 }
                 differences.add(new Difference2(Difference.DELETE, start1, end1 - 1, start2 - 1, 0,
-                        deletedLines.toArray(new String[deletedLines.size()]), null));
+                        deletedLines.toArray(new String[0]), null));
                 start1 = end1;
             } else { // There's something extra in the second file
                 int end2 = J[start1];
@@ -289,7 +289,7 @@ class HuntDiff {
                     addedLines.add(line);
                 }
                 differences.add(new Difference2(Difference.ADD, (start1 - 1), 0, start2, (end2 - 1),
-                        null, addedLines.toArray(new String[addedLines.size()])));
+                        null, addedLines.toArray(new String[0])));
                 start2 = end2;
             }
         } while (start1 <= n);
@@ -303,7 +303,7 @@ class HuntDiff {
                 end2++;
             }
             differences.add(new Difference2(Difference.ADD, n, 0, start2, m,
-                    null, addedLines.toArray(new String[addedLines.size()])));
+                    null, addedLines.toArray(new String[0])));
         }
         return differences;
     }

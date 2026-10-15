@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  * @author Misha Dmitriev
  */
 public class InstrTimingData implements Cloneable {
-    final public static InstrTimingData DEFAULT = new InstrTimingData();
+    public static final InstrTimingData DEFAULT = new InstrTimingData();
 
     // Of these variables, the xxx0 ones are used when either only absolute or only thread CPU timer is used.
     // xxx0 and xxx1 together are used only when both timers are used.

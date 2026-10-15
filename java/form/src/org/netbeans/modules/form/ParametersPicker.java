@@ -84,7 +84,7 @@ public class ParametersPicker extends javax.swing.JPanel {
                 beansList.add(radComp);
         }
         if (beansList.size() > 0) {
-            Collections.sort(beansList, new ComponentComparator());
+            beansList.sort(new ComponentComparator());
 
             beanCombo.addItem(FormUtils.getBundleString("CTL_CW_SelectBean")); // NOI18N
             for (Iterator it = beansList.iterator(); it.hasNext(); ) {

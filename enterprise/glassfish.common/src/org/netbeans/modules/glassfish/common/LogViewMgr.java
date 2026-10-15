@@ -373,7 +373,7 @@ public class LogViewMgr {
         }
         if(setClosedMethod != null) {
             try {
-                setClosedMethod.invoke(io, Boolean.valueOf(closed));
+                setClosedMethod.invoke(io, closed);
             } catch (Exception ex) {
                 if(LOGGER.isLoggable(Level.FINER)) {
                     LOGGER.log(Level.FINER, "invokeSetClosed", ex); // NOI18N
@@ -704,7 +704,7 @@ public class LogViewMgr {
         
     }
     
-    private static abstract class StateFilter implements Filter {
+    private abstract static class StateFilter implements Filter {
         
         protected String message;
         
@@ -1051,7 +1051,7 @@ public class LogViewMgr {
         return newIO;
     }
 
-    static public void displayOutput(GlassfishInstance instance, Lookup lookup) {
+    public static void displayOutput(GlassfishInstance instance, Lookup lookup) {
         String uri = instance.getProperty(GlassfishModule.URL_ATTR);
         if (null != uri && (uri.contains("gfv3ee6wc") || uri.contains("localhost"))) {
                 FetchLog log = getServerLogStream(instance);
@@ -1065,7 +1065,7 @@ public class LogViewMgr {
         }
     }
 
-    static private List<Recognizer> getRecognizers(Collection<? extends RecognizerCookie> cookies) {
+    private static List<Recognizer> getRecognizers(Collection<? extends RecognizerCookie> cookies) {
         List<Recognizer> recognizers;
         if(!cookies.isEmpty()) {
             recognizers = new LinkedList<Recognizer>();
@@ -1192,7 +1192,7 @@ public class LogViewMgr {
      *         cerated one when no log fetcher was found.
      * @throws IOException 
      */
-    static private FetchLog getServerLogStream(
+    private static FetchLog getServerLogStream(
             final GlassfishInstance instance) {
         FetchLog log;
         FetchLog deadLog = null;

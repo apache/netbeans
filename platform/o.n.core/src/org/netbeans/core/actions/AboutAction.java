@@ -20,15 +20,11 @@
 package org.netbeans.core.actions;
 
 import java.awt.Dialog;
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
-import java.security.KeyStore;
 import javax.swing.*;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 import org.openide.util.actions.CallableSystemAction;
-import org.openide.util.actions.Presenter;
 
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -44,6 +40,7 @@ public class AboutAction extends CallableSystemAction {
         putValue("noIconInMenu", Boolean.TRUE); // NOI18N
     }
 
+    @Override
     public void performAction () {
         DialogDescriptor descriptor = new DialogDescriptor(
             new org.netbeans.core.ui.ProductInformationPanel (),
@@ -73,14 +70,17 @@ public class AboutAction extends CallableSystemAction {
         }
     }
     
+    @Override
     protected boolean asynchronous() {
         return false;
     }
     
+    @Override
     public HelpCtx getHelpCtx() {
         return new HelpCtx(AboutAction.class);
     }
 
+    @Override
     public String getName() {
         return NbBundle.getMessage(AboutAction.class, "About");
     }

@@ -141,7 +141,7 @@
       The Visual Library 2.0 is the next generation of the original Graph Library 1.0.
       It is designed for a general visualization with a support for graph-oriented modeling.
       Its focus is to become a part of the NetBeans platform and unify the visualization (UI and API) used in NetBeans-Platform-based applications.
-      See http://graph.netbeans.org/ web-site for details.
+      See https://netbeans.apache.org/front/main/projects/graph/ web-site for details.
       See <a href="@TOP@/org/netbeans/api/visual/widget/doc-files/documentation.html">documentation</a> for complete set of use-cases and code-snippets.
   </p>
  </answer>

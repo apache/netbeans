@@ -72,7 +72,9 @@ public final class Composer {
     private static final String INIT_COMMAND = "init"; // NOI18N
     private static final String INSTALL_COMMAND = "install"; // NOI18N
     private static final String UPDATE_COMMAND = "update"; // NOI18N
+    private static final String UPDATE_AUTOLOADER_COMMAND = "dump-autoload"; // NOI18N
     private static final String REQUIRE_COMMAND = "require"; // NOI18N
+    private static final String RUN_SCRIPT_COMMAND = "run-script"; // NOI18N
     private static final String VALIDATE_COMMAND = "validate"; // NOI18N
     private static final String SELF_UPDATE_COMMAND = "self-update"; // NOI18N
     private static final String SEARCH_COMMAND = "search"; // NOI18N
@@ -221,6 +223,20 @@ public final class Composer {
         return runCommand(phpModule, UPDATE_COMMAND, Collections.singletonList(NO_DEV_PARAM));
     }
 
+    public Future<Integer> updateAutoloader(PhpModule phpModule) {
+        assert phpModule != null;
+        return runCommand(phpModule, UPDATE_AUTOLOADER_COMMAND);
+    }
+
+    public Future<Integer> updateAutoloaderDev(PhpModule phpModule) {
+        return updateAutoloader(phpModule);
+    }
+
+    public Future<Integer> updateAutoloaderNoDev(PhpModule phpModule) {
+        assert phpModule != null;
+        return runCommand(phpModule, UPDATE_AUTOLOADER_COMMAND, Collections.singletonList(NO_DEV_PARAM));
+    }
+
     public Future<Integer> require(PhpModule phpModule, String... packages) {
         assert phpModule != null;
         return runCommand(phpModule, REQUIRE_COMMAND, Arrays.asList(packages));
@@ -232,6 +248,11 @@ public final class Composer {
         params.add(DEV_PARAM);
         params.addAll(Arrays.asList(packages));
         return runCommand(phpModule, REQUIRE_COMMAND, params);
+    }
+
+    public Future<Integer> runScript(PhpModule phpModule, String scriptName) {
+        assert phpModule != null;
+        return runCommand(phpModule, RUN_SCRIPT_COMMAND, Collections.singletonList(scriptName));
     }
 
     public Future<Integer> validate(PhpModule phpModule) {

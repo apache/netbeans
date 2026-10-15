@@ -109,7 +109,7 @@ public abstract class IndentFileEntry extends FileEntry.Format {
         Object attr = getFile().getAttribute(EA_PREFORMATTED);
         boolean preformatted = false;
         
-        if (attr != null && attr instanceof Boolean) {
+        if (attr instanceof Boolean) {
             preformatted = ((Boolean)attr).booleanValue();
         }
 
@@ -153,14 +153,14 @@ public abstract class IndentFileEntry extends FileEntry.Format {
             r.close ();
         }
         // copy attributes
-        FileUtil.copyAttributes (getFile (), fo);
-	// hack to overcome package-private modifier in setTemplate(fo, boolean)
-        fo.setAttribute(DataObject.PROP_TEMPLATE, null);
+        FileUtil.copyAttributes (getFile (), fo, (n, v) -> {
+            return DataObject.PROP_TEMPLATE.equals(n) ? null : FileUtil.defaultAttributesTransformer().apply(n, v);
+        });
         return fo;
     }
     
     /** The prefix of all magic strings */
-    private final static String MAGIC_PREFIX = "//GEN-"; // NOI18N
+    private static final String MAGIC_PREFIX = "//GEN-"; // NOI18N
 
     static String fixupGuardedBlocks(String indentedLine) {
         int offset = indentedLine.indexOf(MAGIC_PREFIX);

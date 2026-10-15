@@ -38,7 +38,7 @@ import java.util.logging.Logger;
  *
  * @author Ian Formanek, Tomas Pavek
  */
-final public class FormPropertyEditorManager {
+public final class FormPropertyEditorManager {
 
     /**
      * Maps property type to property editor class. There are 2 maps - one for
@@ -72,7 +72,7 @@ final public class FormPropertyEditorManager {
         Class type = property.getValueType();
         FormModel form = property.getPropertyContext().getFormModel();
         List<PropertyEditor> list = findEditors(type, form, true);
-        return list.toArray(new PropertyEditor[list.size()]);
+        return list.toArray(new PropertyEditor[0]);
     }
 
     public static synchronized void registerEditor(Class propertyType, Class editorClass) {
@@ -267,7 +267,7 @@ final public class FormPropertyEditorManager {
 
     private static Map<Class,Class> getEditorClassCache(String key) {
         if (editorClassCache == null) {
-            editorClassCache = new HashMap();
+            editorClassCache = new HashMap<>();
         }
         Map<Class, Class> classCache = editorClassCache.get(key);
         if (classCache == null) {
@@ -304,7 +304,7 @@ final public class FormPropertyEditorManager {
 
     private static PropertyEditor createEditorInstance(Class cls) {
         try {
-            return (PropertyEditor) cls.newInstance();
+            return (PropertyEditor) cls.getDeclaredConstructor().newInstance();
         } catch (Exception ex) {
             log(ex, "Error instantiating property editor: "+cls.getName()); // NOI18N
         } catch (LinkageError ex) {

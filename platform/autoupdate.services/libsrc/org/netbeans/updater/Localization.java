@@ -152,9 +152,9 @@ class Localization {
             for( LocaleIterator li = new LocaleIterator( Locale.getDefault() ); li.hasNext(); ) {
                 String localeName = li.next().toString ();
                 // loop for clusters
-                Iterator it = UpdateTracking.clusters (true).iterator ();
+                Iterator<File> it = UpdateTracking.clusters (true).iterator ();
                 while (it.hasNext ()) {
-                    File cluster = (File)it.next ();
+                    File cluster = it.next();
                     File locJar = new File( cluster.getPath () + FILE_SEPARATOR + LOCALE_DIR + FILE_SEPARATOR + UPDATER_JAR + localeName + UPDATER_JAR_EXT );
                     if ( locJar.exists() ) {  // File exists
                         try {
@@ -329,6 +329,7 @@ class Localization {
             return (current != null);
         }
 
+        @Override
         public void remove () throws UnsupportedOperationException {
             throw new UnsupportedOperationException ();
         }

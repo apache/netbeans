@@ -28,7 +28,7 @@ import org.netbeans.modules.javascript2.lexer.api.JsTokenId;
  */
 public final class Defaults {
 
-    private static final Map<String, String> JSON_SPECIAL_VALUES = new HashMap<String, String>();
+    private static final Map<String, String> JSON_SPECIAL_VALUES = new HashMap<>();
 
     static {
         JSON_SPECIAL_VALUES.put(FmtOptions.wrapObjects, CodeStyle.WrapStyle.WRAP_ALWAYS.name());
@@ -54,7 +54,7 @@ public final class Defaults {
 
         String getDefaultAsString(String key);
     }
-    
+
     public static class ProxyDefaultsProvider implements Provider {
 
         private final Provider provider;

@@ -1,0 +1,46 @@
+|-Simple [820, 829] : ESCAPED{Simple}
+|-Simple1 [836, 895] : ESCAPED{Simple1}
+|--A [855, 856] : ESCAPED{A}
+|--B [867, 868] : ESCAPED{B}
+|--C [879, 880] : ESCAPED{C}
+|--D [891, 892] : ESCAPED{D}
+|-BackedCaseInt [902, 923] : ESCAPED{BackedCaseInt}<font color="#999999">(ESCAPED{int})</font>
+|-BackedCaseInt1 [930, 1055] : ESCAPED{BackedCaseInt1}<font color="#999999">(ESCAPED{int})</font>
+|--A [961, 962] : ESCAPED{A}ESCAPED{ }<font color="#999999">ESCAPED{1}</font>
+|--B [977, 978] : ESCAPED{B}ESCAPED{ }<font color="#999999">ESCAPED{2}</font>
+|--C [993, 994] : ESCAPED{C}ESCAPED{ }<font color="#999999">ESCAPED{3}</font>
+|--D [1009, 1010] : ESCAPED{D}ESCAPED{ }<font color="#999999">ESCAPED{4}</font>
+|--E [1025, 1026] : ESCAPED{E}
+|--F [1046, 1047] : ESCAPED{F}ESCAPED{ }<font color="#999999">ESCAPED{-1}</font>
+|-BackedCaseString [1062, 1089] : ESCAPED{BackedCaseString}<font color="#999999">(ESCAPED{string})</font>
+|-BackedCaseString1 [1096, 1327] : ESCAPED{BackedCaseString1}<font color="#999999">(ESCAPED{string})</font>
+|--A [1133, 1134] : ESCAPED{A}ESCAPED{ }<font color="#999999">ESCAPED{"A"}</font>
+|--B [1151, 1152] : ESCAPED{B}ESCAPED{ }<font color="#999999">ESCAPED{"B"}</font>
+|--C [1169, 1170] : ESCAPED{C}ESCAPED{ }<font color="#999999">ESCAPED{"C"}</font>
+|--D [1187, 1188] : ESCAPED{D}ESCAPED{ }<font color="#999999">ESCAPED{"D"}</font>
+|--E [1205, 1206] : ESCAPED{E}
+|--F [1229, 1230] : ESCAPED{F}
+|--G [1281, 1282] : ESCAPED{G}ESCAPED{ }<font color="#999999">ESCAPED{    Test
+    Test
+    Test
+}</font>
+|-Impl [1334, 1462] : ESCAPED{Impl}<font color="#999999">:ESCAPED{Iface1}ESCAPED{, }ESCAPED{Iface2}</font>
+|--A [1376, 1377] : ESCAPED{A}
+|--B [1388, 1389] : ESCAPED{B}
+|--C [1400, 1401] : ESCAPED{C}
+|--implMethod [1424, 1460] : ESCAPED{implMethod}ESCAPED{(}<font color="#999999">ESCAPED{Test}ESCAPED{ }</font>ESCAPED{$test}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|-Attributes [1475, 1755] : ESCAPED{Attributes}<font color="#999999">(ESCAPED{int})</font><font color="#999999">:ESCAPED{Iface}</font>
+|--A [1529, 1530] : ESCAPED{A}ESCAPED{ }<font color="#999999">ESCAPED{1}</font>
+|--B [1555, 1556] : ESCAPED{B}ESCAPED{ }<font color="#999999">ESCAPED{2}</font>
+|--CONSTANT1 [1583, 1592] : ESCAPED{CONSTANT1}ESCAPED{ }<font color="#999999">ESCAPED{"constant"}</font>
+|--CONSTANT2 [1617, 1626] : ESCAPED{CONSTANT2}
+|--implMethod [1669, 1753] : ESCAPED{implMethod}ESCAPED{(}<font color="#999999">ESCAPED{Test}ESCAPED{ }</font>ESCAPED{$test}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|-TestTrait [1763, 1824] : ESCAPED{TestTrait}
+|--test [1802, 1822] : ESCAPED{test}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|-WithTrait [1831, 1945] : ESCAPED{WithTrait}<font color="#999999">#ESCAPED{TestTrait}</font>
+|--A [1872, 1873] : ESCAPED{A}
+|--B [1884, 1885] : ESCAPED{B}
+|--staticMethod [1915, 1943] : ESCAPED{staticMethod}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|-Iface [1957, 1965] : ESCAPED{Iface}
+|-Iface1 [1976, 1985] : ESCAPED{Iface1}
+|-Iface2 [1996, 2005] : ESCAPED{Iface2}

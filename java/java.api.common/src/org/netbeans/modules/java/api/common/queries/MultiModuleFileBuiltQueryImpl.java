@@ -126,10 +126,9 @@ final class MultiModuleFileBuiltQueryImpl implements FileBuiltQueryImplementatio
             final Set<ClassPath> classpaths = Collections.newSetFromMap(new IdentityHashMap<>());
             collectRoots(sourceModules, ProjectProperties.BUILD_MODULES_DIR, from, to, classpaths);
             collectRoots(testModules, ProjectProperties.BUILD_TEST_MODULES_DIR, from, to, classpaths);
-            res = helper.createGlobFileBuiltQuery(
-                    eval,
-                    from.toArray(new String[from.size()]),
-                    to.toArray(new String[to.size()]));
+            res = helper.createGlobFileBuiltQuery(eval,
+                    from.toArray(new String[0]),
+                    to.toArray(new String[0]));
             synchronized (this) {
                 if (delegate == null) {
                     for (Pair<ClassPath,PropertyChangeListener> cplp : currentPaths) {

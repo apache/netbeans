@@ -19,11 +19,6 @@
 
 package org.netbeans.upgrade.systemoptions;
 
-import java.rmi.UnexpectedException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Radek Matous
@@ -33,6 +28,7 @@ class IntrospectedInfoProcessor extends PropertyProcessor {
         super("org.apache.tools.ant.module.api.IntrospectedInfo");//NOI18N
     }
     
+    @Override
     void processPropertyImpl(String propertyName, Object value) {
         //skip it
     }

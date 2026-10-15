@@ -53,4 +53,5 @@ public class CreateJobTest {
         assertTrue(withCustomAction.runCustomActionIfAvailable(null));
         HudsonManager.removeInstance(hi);
     }
+    
 }

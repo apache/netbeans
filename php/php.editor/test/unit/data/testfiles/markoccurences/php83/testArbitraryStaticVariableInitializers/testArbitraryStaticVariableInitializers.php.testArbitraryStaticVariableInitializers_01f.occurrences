@@ -1,0 +1,4 @@
+    public function run(int $|>MARK_OCCURRENCES:param1<|) : void {
+        static $example2 = $|>MARK_OCCURRENCES:param1<|;
+        static $example6 = new stdClass($|>MARK_OCCURRENCES:param1<|);
+        static $example9 = $|>MARK_OCCURRENCES:param1<| <= 100 ? run($|>MARK_OCCURRENCES:param1<| + 1) : "Test $|>MARK_OCCURRENCES:para^m1<|";

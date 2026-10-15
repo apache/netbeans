@@ -122,7 +122,7 @@ public final class DeleteLocalAction extends ContextAction {
                             }
                             return null;
                         }
-                    }, files.toArray(new File[files.size()]));
+                    }, files.toArray(new File[0]));
                 } catch (HgException ex) {
                     HgUtils.notifyException(ex);
                 }

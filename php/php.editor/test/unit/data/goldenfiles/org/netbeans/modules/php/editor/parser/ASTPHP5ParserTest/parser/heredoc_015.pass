@@ -147,7 +147,7 @@
                     </FucntionName>
                     <Parameters>
                         <InfixExpression start='197' end='209' operator='CONCAT'>
-                            <FieldAccess start='197' end='202'>
+                            <FieldAccess start='197' end='202' isNullsafe='false'>
                                 <Variable start='197' end='199' isDollared='true'>
                                     <Identifier start='198' end='199' name='e'/>
                                 </Variable>

@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.php.editor.model.impl;
 
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexDocument;
 import org.netbeans.modules.php.editor.api.PhpElementKind;
 import org.netbeans.modules.php.editor.api.elements.TypeConstantElement;
@@ -29,9 +30,10 @@ import org.netbeans.modules.php.editor.model.TypeScope;
 import org.netbeans.modules.php.editor.model.nodes.ClassConstantDeclarationInfo;
 
 class ClassConstantElementImpl extends ModelElementImpl implements ClassConstantElement {
-    private String typeName;
-    private final String value;
 
+    private final String typeName;
+    private final String value;
+    private final String declaredType;
 
     ClassConstantElementImpl(Scope inScope, TypeConstantElement indexedConstant) {
         super(inScope, indexedConstant, PhpElementKind.TYPE_CONSTANT);
@@ -43,12 +45,14 @@ class ClassConstantElementImpl extends ModelElementImpl implements ClassConstant
             typeName = inScope.getName();
         }
         value = indexedConstant.getValue();
+        declaredType = indexedConstant.getDeclaredType();
     }
 
     ClassConstantElementImpl(Scope inScope, ClassConstantDeclarationInfo clsConst, boolean isDeprecated) {
         super(inScope, clsConst, clsConst.getAccessModifiers(), isDeprecated);
         typeName = inScope.getName();
         value = clsConst.getValue();
+        declaredType = clsConst.getDeclaredType();
     }
 
     @Override
@@ -70,11 +74,18 @@ class ClassConstantElementImpl extends ModelElementImpl implements ClassConstant
         sb.append(isDeprecated() ? 1 : 0).append(Signature.ITEM_DELIMITER);
         sb.append(getFilenameUrl()).append(Signature.ITEM_DELIMITER);
         sb.append(getPhpModifiers().toFlags()).append(Signature.ITEM_DELIMITER);
+        sb.append((getDeclaredType() == null) ? "" : getDeclaredType()).append(Signature.ITEM_DELIMITER); // NOI18N
         return sb.toString();
     }
 
     @Override
     public String getValue() {
         return value;
+    }
+
+    @CheckForNull
+    @Override
+    public String getDeclaredType() {
+        return declaredType;
     }
 }

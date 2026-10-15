@@ -172,7 +172,7 @@ public class QCreatePatchParameters extends DefaultCommitParameters implements I
     }
 
     ComboBoxModel createRecentUsersModel () {
-        return new DefaultComboBoxModel(recentUsers.toArray(new String[recentUsers.size()]));
+        return new DefaultComboBoxModel(recentUsers.toArray(new String[0]));
     }
 
     private boolean isUserValid () {

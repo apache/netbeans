@@ -672,7 +672,7 @@ final class JavaActions implements ActionProvider {
      * Use with {@link #GENERAL_SCRIPT_PATH}.
      * Idempotent, takes effect only once.
      * @param antProject XML of an Ant project (document element)
-     * @oaram origScriptPath Ant name of original build script's path
+     * @param origScriptPath Ant name of original build script's path
      */
     void ensureImports(Element antProject, String origScriptPath) throws IOException, SAXException {
         if (antProject.getAttribute("basedir").length() > 0) {
@@ -923,7 +923,7 @@ final class JavaActions implements ActionProvider {
                 outputs.add(builts.item(i).getTextContent());
             }
         }
-        return outputs.toArray(new String[outputs.size()]);
+        return outputs.toArray(new String[0]);
     }
 
     //The order of the root elements as specified in the schema.
@@ -1190,7 +1190,7 @@ final class JavaActions implements ActionProvider {
                         }
                     }
                 }
-                return scriptPlusTargetNames.toArray(new String[scriptPlusTargetNames.size()]);
+                return scriptPlusTargetNames.toArray(new String[0]);
             }
         }
         return null;

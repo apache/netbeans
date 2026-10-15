@@ -1,0 +1,11 @@
+Code completion result for source line:
+display: inline |;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+GLOBAL     flex                                       <font color=999999>display</font>
+GLOBAL     flow                                       <font color=999999>display</font>
+GLOBAL     flow-root                                  <font color=999999>display</font>
+GLOBAL     grid                                       <font color=999999>display</font>
+GLOBAL     list-item                                  <font color=999999>display</font>
+GLOBAL     ruby                                       <font color=999999>display</font>
+GLOBAL     table                                      <font color=999999>display</font>

@@ -89,7 +89,7 @@ public interface DocumentIndex {
     
     /**
      * Performs a search on the index using primary key
-     * @param value of the primary key
+     * @param primaryKeyValue of the primary key
      * @param kind of the query, see {@link Queries.QueryKind} for details
      * @param fieldsToLoad names of the field which should be loaded into the document.
      * Loading only needed fields speeds up the search. If null or empty all fields are loaded.

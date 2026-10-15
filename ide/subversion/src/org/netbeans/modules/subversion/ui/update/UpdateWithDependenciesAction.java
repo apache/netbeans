@@ -109,7 +109,7 @@ public class UpdateWithDependenciesAction extends ContextAction {
                 }
             }
         }
-        Context context = SvnUtils.getProjectsContext(projectsToUpdate.toArray(new Project[projectsToUpdate.size()]));
+        Context context = SvnUtils.getProjectsContext(projectsToUpdate.toArray(new Project[0]));
         UpdateAction.performUpdate(context, getContextDisplayName(nodes));
     }
 }

@@ -37,8 +37,8 @@ public class BarycenterXCoordinateAssigner {
      *
      *
      */
-    public LayeredGraph assignCoordinates(LayeredGraph graph) {
-        List<List<Vertex>> layers = graph.getLayers();
+    public <N, E> LayeredGraph<N, E> assignCoordinates(LayeredGraph<N, E> graph) {
+        List<List<Vertex<N>>> layers = graph.getLayers();
         int size = layers.size();
         int maxIteration = 1;
         
@@ -47,7 +47,7 @@ public class BarycenterXCoordinateAssigner {
             //System.out.println("downward phase");
             for (int i = 0; i < size-1; i++) {
                 float lowerBarycenters[] = graph.computeLowerBarycenters(i);
-                List<Vertex> lowerLayer = graph.getLayer(i+1);
+                List<Vertex<N>> lowerLayer = graph.getLayer(i+1);
                 int upPriorities[] = computeUpPriorities(lowerLayer);
                 moveVertices(lowerLayer, lowerBarycenters, upPriorities);
             }
@@ -56,7 +56,7 @@ public class BarycenterXCoordinateAssigner {
             // upward phase
             for (int i = size-2; i >= 0; i--) {
                 float upperBarycenters[] = graph.computeUpperBarycenters(i);
-                List<Vertex> upperLayer = graph.getLayer(i);
+                List<Vertex<N>> upperLayer = graph.getLayer(i);
                 int downPriorities[] = computeDownPriorities(upperLayer);
                 moveVertices(upperLayer, upperBarycenters, downPriorities);
             }
@@ -69,13 +69,13 @@ public class BarycenterXCoordinateAssigner {
      *
      *
      */
-    private void moveVertices(List<Vertex> layer, float[] barycenters,
+    private <N> void moveVertices(List<Vertex<N>> layer, float[] barycenters,
             int[] priorities) {
         int size = layer.size();
         
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                Vertex jv = layer.get(j);
+                Vertex<N> jv = layer.get(j);
                 int jp = priorities[j]; 
                 float jbc = barycenters[j]; 
                 float jhd = jv.getX(); 
@@ -91,7 +91,6 @@ public class BarycenterXCoordinateAssigner {
                     // higher priority vertex to the right
                     int hpIndex = -1;
                     for (int k = j+1; k < size; k++) {
-                        Vertex kv = layer.get(k);
                         if (priorities[k] >= jp) {
                             hpIndex = k;
                             break;
@@ -106,7 +105,7 @@ public class BarycenterXCoordinateAssigner {
                     if (hpIndex != -1) {
                         lastIndex = hpIndex;
                         // If there is a higher priority vertex to the right,
-                        Vertex hv = layer.get(hpIndex);
+                        Vertex<N> hv = layer.get(hpIndex);
                         float hhd = hv.getX(); 
                         float spacing = (hhd-jhd)/(hpIndex-j);
                         //System.out.println("spacing = " + spacing);
@@ -130,7 +129,7 @@ public class BarycenterXCoordinateAssigner {
                     float chd = nhd;  //current horizontal distance
                     
                     for (int k = j+1; k < lastIndex; k++) {
-                        Vertex kv = layer.get(k);
+                        Vertex<N> kv = layer.get(k);
                         float khd = kv.getX(); 
                         
                         if (khd <= (chd + 1.0f)) {
@@ -151,13 +150,13 @@ public class BarycenterXCoordinateAssigner {
      *
      *
      */
-    private int[] computeUpPriorities(List<Vertex> layer) {
+    private <N> int[] computeUpPriorities(List<Vertex<N>> layer) {
         int size = layer.size();
         int upPriorities[] = new int[size];
         int maxUpPriority = -1;
         
         for (int i = 0; i < size; i++) {
-            Vertex v = layer.get(i);
+            Vertex<N> v = layer.get(i);
             
             if (!(v instanceof DummyVertex)) {
                 int upPriority = v.getUpperNeighbors().size();
@@ -173,7 +172,7 @@ public class BarycenterXCoordinateAssigner {
         
         // assign each dummy vertex with max priority + 1
         for (int i = 0; i < size; i++) {
-            Vertex v = layer.get(i);
+            Vertex<N> v = layer.get(i);
             
             if (v instanceof DummyVertex) {
                 upPriorities[i] = maxUpPriority;
@@ -188,13 +187,13 @@ public class BarycenterXCoordinateAssigner {
      *
      *
      */
-    private int[] computeDownPriorities(List<Vertex> layer) {
+    private <N> int[] computeDownPriorities(List<Vertex<N>> layer) {
         int size = layer.size();
         int downPriorities[] = new int[size];
         int maxDownPriority = -1;
         
         for (int i = 0; i < size; i++) {
-            Vertex v = layer.get(i);
+            Vertex<N> v = layer.get(i);
             
             if (!(v instanceof DummyVertex)) {
                 int downPriority = v.getLowerNeighbors().size();
@@ -210,7 +209,7 @@ public class BarycenterXCoordinateAssigner {
         
         // assign each dummy vertex with max priority + 1
         for (int i = 0; i < size; i++) {
-            Vertex v = layer.get(i);
+            Vertex<N> v = layer.get(i);
             
             if (v instanceof DummyVertex) {
                 downPriorities[i] = maxDownPriority;

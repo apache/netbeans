@@ -70,7 +70,7 @@ public class BraceToolTip extends JPanel {
         try {
             clazz = Class.forName("org.netbeans.editor.GlyphGutter", true, cls); // NOI18N
             // get the factory instance
-            Object o = clazz.newInstance();
+            Object o = clazz.getDeclaredConstructor().newInstance();
             Method m = clazz.getDeclaredMethod("createSideBar", JTextComponent.class); // NOI18N
             gutter = (JComponent)m.invoke(o, jtx);
         } catch (IllegalArgumentException ex) {

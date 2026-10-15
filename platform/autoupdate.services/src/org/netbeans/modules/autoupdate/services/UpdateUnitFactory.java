@@ -113,7 +113,7 @@ public class UpdateUnitFactory {
 
         for (UpdateUnitProvider up : updates) {
             UpdateUnitProviderImpl impl = Trampoline.API.impl (up);
-            
+
             // append units from provider
             mappedImpl = appendUpdateItems (mappedImpl, impl.getUpdateProvider ());
             reportRunTime ("AppendUpdateItems for " + impl.getUpdateProvider ().getDisplayName ());
@@ -126,7 +126,7 @@ public class UpdateUnitFactory {
         //TODO: this call should be forced not to be called from AWT
         //assert !SwingUtilities.isEventDispatchThread();
         resetRunTime ("Measuring UpdateUnitFactory.getUpdateUnits (" + provider.getDisplayName () + ")"); // NOI18N
-        
+
         // append units from provider
         Map<String, UpdateUnit> temp = appendUpdateItems (new HashMap<String, UpdateUnit> (), provider);
         reportRunTime ("Get appendUpdateItems for " + provider.getDisplayName ());
@@ -143,6 +143,8 @@ public class UpdateUnitFactory {
     Map<String, UpdateUnit> appendUpdateItems (Map<String, UpdateUnit> originalUnits, UpdateProvider provider) {
         assert originalUnits != null : "Map of original UnitImpl cannot be null";
 
+        boolean trusted = UpdateUnitProviderImpl.loadTrusted(provider);
+
         Map<String, UpdateItem> items;
         try {
             items = provider.getUpdateItems ();
@@ -154,13 +156,10 @@ public class UpdateUnitFactory {
         assert items != null : "UpdateProvider[" + provider.getName () + "] should return non-null items.";
         
         // append updates
-        for (String simpleItemId : items.keySet ()) {
-            
+        for (UpdateItem ui : items.values()) {
             UpdateElement updateEl = null;
             try {
-
-                // create UpdateItemImpl
-                UpdateItemImpl itemImpl = Trampoline.SPI.impl (items.get (simpleItemId));
+                UpdateItemImpl itemImpl = Trampoline.SPI.impl(ui); // create UpdateItemImpl
 
                 boolean isKitModule = false;
                 if (itemImpl instanceof ModuleItem) {
@@ -204,6 +203,7 @@ public class UpdateUnitFactory {
 
             // add element to map
             if (updateEl != null) {
+                Trampoline.API.impl(updateEl).setCatalogTrusted(trusted);
                 addElement (originalUnits, updateEl, provider);
             }
         }
@@ -217,13 +217,14 @@ public class UpdateUnitFactory {
         
         // XXX: it's should be moved in UI what should filter all elements w/ broken dependencies
         // #101515: Plugin Manager must filter updates by platform dependency
-        boolean passed = false;
         UpdateElementImpl elImpl = Trampoline.API.impl (element);
         if (elImpl instanceof ModuleUpdateElementImpl && elImpl.getModuleInfos () != null && elImpl.getModuleInfos ().size() == 1) {
             for (Dependency d : elImpl.getModuleInfos ().get (0).getDependencies ()) {
                 if (Dependency.TYPE_REQUIRES == d.getType ()) {
                     //log.log (Level.FINEST, "Dependency: NAME: " + d.getName () + ", TYPE: " + d.getType () + ": " + d.toString ());
                     if (d.getName ().startsWith ("org.openide.modules.os")) { // NOI18N
+                        // Filter OS specific dependencies
+                        boolean passed = false;
                         for (ModuleInfo info : InstalledModuleProvider.getInstalledModules ().values ()) {
                             if (Arrays.asList (info.getProvides ()).contains (d.getName ())) {
                                 log.log (Level.FINEST, element + " which requires OS " + d + " succeed.");
@@ -233,6 +234,20 @@ public class UpdateUnitFactory {
                         }
                         if (! passed) {
                             log.log (Level.FINE, element + " which requires OS " + d + " fails.");
+                            return ;
+                        }
+                    } else if (d.getName ().startsWith ("org.openide.modules.arch")) { // NOI18N
+                        // Filter architecture specific dependencies
+                        boolean passed = false;
+                        for (ModuleInfo info : InstalledModuleProvider.getInstalledModules ().values ()) {
+                            if (Arrays.asList (info.getProvides ()).contains (d.getName ())) {
+                                log.log (Level.FINEST, element + " which requires architecture " + d + " succeed.");
+                                passed = true;
+                                break;
+                            }
+                        }
+                        if (! passed) {
+                            log.log (Level.FINE, element + " which requires architecture " + d + " fails.");
                             return ;
                         }
                     }
@@ -282,7 +297,7 @@ public class UpdateUnitFactory {
         
         // set UpdateUnit into element
         elImpl.setUpdateUnit (unit);
-        
+
     }
     
     private UpdateUnit mergeInstalledUpdateUnit (UpdateUnit uu) {

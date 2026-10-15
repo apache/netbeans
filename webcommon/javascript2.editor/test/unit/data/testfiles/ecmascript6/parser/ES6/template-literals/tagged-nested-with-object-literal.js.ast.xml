@@ -1,0 +1,70 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='44'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='43'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='43'>
+      <CallNode start='4' end='43'>
+        <!-- CallNode Arguments -->
+        <RuntimeNode start='4' end='43'>
+          <ArrayLiteralNode start='4' end='43'>
+            <StringLiteralNode value='token' start='4' end='10'/>
+            <StringLiteralNode value='' start='43' end='43'/>
+          </ArrayLiteralNode>
+          <ArrayLiteralNode start='4' end='43'>
+            <StringLiteralNode value='token' start='4' end='10'/>
+            <StringLiteralNode value='' start='43' end='43'/>
+          </ArrayLiteralNode>
+        </RuntimeNode>
+        <BinaryNode type='ADD' start='13' end='41'>
+          <!-- BinaryNode lhs -->
+          <BinaryNode type='ADD' start='13' end='35'>
+            <!-- BinaryNode lhs -->
+            <StringLiteralNode value='nested' start='13' end='20'/>
+            <!-- BinaryNode rhs -->
+            <RuntimeNode start='31' end='35'>
+              <BinaryNode type='ADD' start='23' end='35'>
+                <!-- BinaryNode lhs -->
+                <StringLiteralNode value='deeply' start='23' end='29'/>
+                <!-- BinaryNode rhs -->
+                <ObjectNode start='33' end='35'>
+                  <!-- ObjectNode Elements -->
+                </ObjectNode>
+              </BinaryNode>
+            </RuntimeNode>
+          </BinaryNode>
+          <!-- BinaryNode rhs -->
+          <StringLiteralNode value='blah' start='36' end='41'/>
+        </BinaryNode>
+        <!-- CallNode Function -->
+        <IdentNode start='0' end='3'>
+          <name>raw</name>
+        </IdentNode>
+      </CallNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

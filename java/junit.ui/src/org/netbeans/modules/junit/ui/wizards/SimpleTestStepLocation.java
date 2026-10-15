@@ -1038,7 +1038,7 @@ public final class SimpleTestStepLocation implements WizardDescriptor.Panel<Wiza
         }
         return cands == null
               ? new SourceGroup[] {testableSourceGroups[sourceGroupParentIndex]}
-              : cands.toArray(new SourceGroup[cands.size()]);
+              : cands.toArray(new SourceGroup[0]);
     }
     
     /**
@@ -1444,8 +1444,7 @@ public final class SimpleTestStepLocation implements WizardDescriptor.Panel<Wiza
                 }
             }
         }
-        allTestSourceGroups = testGroups.toArray(
-                                            new SourceGroup[testGroups.size()]);
+        allTestSourceGroups = testGroups.toArray(new SourceGroup[0]);
         
         tfProjectName.setText(
                 ProjectUtils.getInformation(project).getDisplayName());

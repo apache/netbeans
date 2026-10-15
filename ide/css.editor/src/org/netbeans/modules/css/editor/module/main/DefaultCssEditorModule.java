@@ -36,7 +36,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.lib.editor.util.CharSequenceUtilities;
 import org.netbeans.modules.csl.api.ColoringAttributes;
 import org.netbeans.modules.csl.api.CompletionProposal;
@@ -81,28 +80,39 @@ public class DefaultCssEditorModule extends CssEditorModule {
 
     private static final String MODULE_PATH_BASE = "org/netbeans/modules/css/editor/module/main/properties/"; //NOI18N    
     private static final CssModule[] MODULE_PROPERTY_DEFINITION_FILE_NAMES = new CssModule[]{
-        module("default_module", "http://www.w3.org/TR/CSS2"),
-        module("marquee", "http://www.w3.org/TR/css3-marquee"),
-        module("ruby", "http://www.w3.org/TR/css3-ruby"),
-        module("multi-column_layout", "http://www.w3.org/TR/css3-multicol"),
-        module("values_and_units", "http://www.w3.org/TR/css3-values"),
-        module("text", "http://www.w3.org/TR/css3-text"),
-        module("writing_modes", "http://www.w3.org/TR/css3-writing-modes"),
-        module("generated_content_for_paged_media", "http://www.w3.org/TR/css3-gcpm"),
-        module("fonts", "http://www.w3.org/TR/css3-fonts"),
-        module("basic_box_model", "http://www.w3.org/TR/css3-box"),
-        module("speech", "http://www.w3.org/TR/css3-speech"),
-        //        module("grid_positioning", "http://www.w3.org/TR/css3-grid"), //obsolete
-        module("flexible_box_layout", "http://www.w3.org/TR/css3-flexbox"),
-        module("image_values", "http://www.w3.org/TR/css3-images"),
-        module("animations", "http://www.w3.org/TR/css3-animations"),
-        module("transforms_2d", "http://www.w3.org/TR/css3-2d-transforms"),
-        module("transforms_3d", "http://www.w3.org/TR/css3-3d-transforms"),
-        module("transitions", "http://www.w3.org/TR/css3-transitions"),
-        module("line", "http://www.w3.org/TR/css3-linebox"),
-        module("hyperlinks", "http://www.w3.org/TR/css3-hyperlinks"),
-        module("presentation_levels", "http://www.w3.org/TR/css3-preslev"),
-        module("generated_and_replaced_content", "http://www.w3.org/TR/css3-content") //NOI18N
+        module("default_module", "http://www.w3.org/TR/CSS2"), //NOI18N
+        module("marquee", "http://www.w3.org/TR/css3-marquee"), //NOI18N
+        module("ruby", "http://www.w3.org/TR/css3-ruby"), //NOI18N
+        module("multi-column_layout", "http://www.w3.org/TR/css3-multicol"), //NOI18N
+        module("values_and_units", "http://www.w3.org/TR/css3-values"), //NOI18N
+        module("text", "http://www.w3.org/TR/css-text-4"), //NOI18N
+        module("writing_modes", "http://www.w3.org/TR/css3-writing-modes"), //NOI18N
+        module("generated_content_for_paged_media", "http://www.w3.org/TR/css3-gcpm"), //NOI18N
+        module("filter_effects", "http://www.w3.org/TR/filter-effects-1"), //NOI18N
+        module("fonts", "http://www.w3.org/TR/css3-fonts"), //NOI18N
+        module("basic_box_model", "http://www.w3.org/TR/css3-box"), //NOI18N
+        module("logical", "https://www.w3.org/TR/css-logical-1"), //NOI18N
+        module("speech", "http://www.w3.org/TR/css3-speech"), //NOI18N
+        module("grid", "http://www.w3.org/TR/css3-grid"), //NOI18N
+        module("flexible_box_layout", "http://www.w3.org/TR/css3-flexbox"), //NOI18N
+        module("image_values", "http://www.w3.org/TR/css3-images"), //NOI18N
+        module("animations", "http://www.w3.org/TR/css3-animations"), //NOI18N
+        module("transforms_2d", "http://www.w3.org/TR/css3-2d-transforms"), //NOI18N
+        module("transforms_3d", "http://www.w3.org/TR/css3-3d-transforms"), //NOI18N
+        module("transitions", "http://www.w3.org/TR/css3-transitions"), //NOI18N
+        module("line", "http://www.w3.org/TR/css3-linebox"), //NOI18N
+        module("hyperlinks", "http://www.w3.org/TR/css3-hyperlinks"), //NOI18N
+        module("presentation_levels", "http://www.w3.org/TR/css3-preslev"), //NOI18N
+        module("generated_and_replaced_content", "http://www.w3.org/TR/css3-content"), //NOI18N
+        module("alignment", "http://www.w3.org/TR/css-align-3"), //NOI18N
+        module("fragmentation", "http://www.w3.org/TR/css-break-3"), //NOI18N
+        module("positioning", "http://www.w3.org/TR/css-position-3"), //NOI18N
+        module("overflow", "http://www.w3.org/TR/css-overflow-3"), //NOI18N
+        module("scroll_snap", "http://www.w3.org/TR/css-scroll-snap-1"), //NOI18N
+        module("images_4", "http://www.w3.org/TR/css-images-4/"), //NOI18N
+        module("sizing", "http://www.w3.org/TR/css-sizing-3"), //NOI18N
+        module("contain", "http://www.w3.org/TR/css-contain-3"), //NOI18N
+        module("other", null) //NOI18N
     };
     private static Map<String, PropertyDefinition> propertyDescriptors;
 
@@ -186,7 +196,12 @@ public class DefaultCssEditorModule extends CssEditorModule {
 
     @Override
     public PropertyDefinition getPropertyDefinition(String propertyName) {
-        return getProperties().get(propertyName);
+        PropertyDefinition pd = getProperties().get(propertyName);
+        if (pd != null || propertyName == null) {
+            return pd;
+        } else {
+            return getProperties().get(propertyName.toLowerCase());
+        }
     }
 
     @Override
@@ -248,7 +263,7 @@ public class DefaultCssEditorModule extends CssEditorModule {
                             //check vendor speficic property
                             OffsetRange range = new OffsetRange(dso, deo);
 
-                            CharSequence propertyName = node.image();
+                            CharSequence propertyName = node.unescapedImage();
                             if (Css3Utils.containsGeneratedCode(propertyName)) {
                                 return false;
                             }
@@ -576,35 +591,35 @@ public class DefaultCssEditorModule extends CssEditorModule {
                             int eo = snapshot.getOriginalOffset(ruleNode.to());
                             if (eo > so) {
                                 //todo: filter out virtual selectors
-                                StructureItem item = new CssRuleStructureItem(node.image(), CssNodeElement.createElement(file, ruleNode), snapshot);
+                                StructureItem item = new CssRuleStructureItem(node.unescapedImage(), CssNodeElement.createElement(file, ruleNode), snapshot);
                                 addRule(item);
                             }
                         }
                         break;
                     case elementName: //element
-                        addElement(new CssRuleStructureItemHashableByName(node.image(), CssNodeElement.createElement(file, node), snapshot));
+                        addElement(new CssRuleStructureItemHashableByName(node.unescapedImage(), CssNodeElement.createElement(file, node), snapshot));
                         break;
                     case cssClass:
-                        addClass(new CssRuleStructureItemHashableByName(node.image(), CssNodeElement.createElement(file, node), snapshot));
+                        addClass(new CssRuleStructureItemHashableByName(node.unescapedImage(), CssNodeElement.createElement(file, node), snapshot));
                         break;
                     case cssId:
-                        addId(new CssRuleStructureItemHashableByName(node.image(), CssNodeElement.createElement(file, node), snapshot));
+                        addId(new CssRuleStructureItemHashableByName(node.unescapedImage(), CssNodeElement.createElement(file, node), snapshot));
                         break;
                     case charSet:
                     case imports:
                     case namespace:
-                        addAtRule(new CssRuleStructureItem(node.image(), CssNodeElement.createElement(file, node), snapshot));
+                        addAtRule(new CssRuleStructureItem(node.unescapedImage(), CssNodeElement.createElement(file, node), snapshot));
                         break;
                     case fontFace:
                         Node tokenNode = NodeUtil.getChildTokenNode(node, CssTokenId.FONT_FACE_SYM);
-                        addAtRule(new CssRuleStructureItem(tokenNode.image(), CssNodeElement.createElement(file, node), snapshot));
+                        addAtRule(new CssRuleStructureItem(tokenNode.unescapedImage(), CssNodeElement.createElement(file, node), snapshot));
                         break;
                     case mediaQueryList:
                         Node mediaNode = node.parent();
                         StringBuilder image = new StringBuilder();
                         if (mediaNode.type() == NodeType.media) {
                             image.append("@media "); //NOI18N
-                            image.append(node.image());
+                            image.append(node.unescapedImage());
                             addAtRule(new CssRuleStructureItem(image, CssNodeElement.createElement(file, mediaNode), snapshot));
                         }
                         break;
@@ -621,14 +636,14 @@ public class DefaultCssEditorModule extends CssEditorModule {
                         if (identNode != null) {
                             image = new StringBuilder();
                             image.append("@counter-style "); //NOI18N
-                            image.append(identNode.image());
+                            image.append(identNode.unescapedImage());
                             addAtRule(new CssRuleStructureItem(image, CssNodeElement.createElement(file, node), snapshot));
                         }
                         break;
                     case importItem:
                         Node[] resourceIdentifiers = NodeUtil.getChildrenByType(node, NodeType.resourceIdentifier);
                         for (Node ri : resourceIdentifiers) {
-                            addImport(new CssRuleStructureItem(WebUtils.unquotedValue(ri.image()), CssNodeElement.createElement(file, ri), snapshot));
+                            addImport(new CssRuleStructureItem(WebUtils.unquotedValue(ri.unescapedImage()), CssNodeElement.createElement(file, ri), snapshot));
                         }
                         break;
 

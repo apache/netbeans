@@ -19,9 +19,6 @@
 
 package org.netbeans.modules.groovy.editor.language;
 
-import com.sun.source.tree.Tree;
-import com.sun.source.util.SourcePositions;
-import com.sun.source.util.Trees;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
@@ -39,8 +36,10 @@ import javax.lang.model.util.Elements;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.codehaus.groovy.ast.ASTNode;
+import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.FieldNode;
+import org.codehaus.groovy.ast.ImportNode;
 import org.codehaus.groovy.ast.ModuleNode;
 import org.codehaus.groovy.ast.Parameter;
 import org.codehaus.groovy.ast.PropertyNode;
@@ -58,8 +57,8 @@ import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.Task;
+import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenId;
@@ -222,7 +221,18 @@ public class GroovyDeclarationFinder implements DeclarationFinder {
                     // TODO this and super magic ?
                     
                     String typeName = objectExpression.getType().getName();
-
+                    if (objectExpression instanceof VariableExpression) {
+                        VariableExpression variableE = (VariableExpression) objectExpression;
+                        if (variableE.isDynamicTyped()) {
+                            ClassNode cn = GroovyUtils.findInferredType(variableE);
+                            if (cn != null) { 
+                                if (cn.getName() != null) {
+                                    typeName = cn.getName();
+                                }
+                                
+                            }
+                        }
+                    }
                     // try to find it in Java
                     FileObject fo = parserResult.getSnapshot().getSource().getFileObject();
                     if (fo != null) {
@@ -255,10 +265,7 @@ public class GroovyDeclarationFinder implements DeclarationFinder {
                 if (scope != null) {
                     ASTNode variable = ASTUtils.getVariable(scope, variableExpression.getName(), path, doc, lexOffset);
                     if (variable != null) {
-                        // I am using getRange and not getOffset, because getRange is adding 'def_' to offset of field
-                        int offset = ASTUtils.getRange(variable, doc).getStart();
-                        // FIXME parsing API
-                        return new DeclarationLocation(info.getSnapshot().getSource().getFileObject(), offset);
+                        return getVariableLocation(variable, doc, info);
                     }
                 }
             // find a field ?
@@ -279,9 +286,7 @@ public class GroovyDeclarationFinder implements DeclarationFinder {
                         }
                         ASTNode variable = ASTUtils.getVariable(scope, ((ConstantExpression) property).getText(), path, doc, lexOffset);
                         if (variable != null) {
-                            int offset = ASTUtils.getOffset(doc, variable.getLineNumber(), variable.getColumnNumber());
-                            // FIXME parsing API
-                            return new DeclarationLocation(info.getSnapshot().getSource().getFileObject(), offset);
+                            return getVariableLocation(variable, doc, info);
                         }
                     } else {
                         // find variable type
@@ -299,6 +304,17 @@ public class GroovyDeclarationFinder implements DeclarationFinder {
                         }
 
                         // TODO try to find it in Groovy
+                        
+                        // This resolves the problem only partially.
+                        // I reuse the VariableScopeVisitor and if it finds the FiledNode, it return its position. 
+                        VariableScopeVisitor vsv = new VariableScopeVisitor(((ModuleNode)root).getContext(), path, doc, astOffset);
+                        vsv.collect();
+                        for (ASTNode astNode : vsv.getOccurrences()) {
+                            if (astNode instanceof FieldNode) {
+                                int offset = ASTUtils.getOffset(doc, astNode.getLineNumber(), astNode.getColumnNumber());
+                                return new DeclarationLocation(fo, offset);
+                            }
+                        }
                     }
                 }
             } else if (closest instanceof DeclarationExpression
@@ -306,7 +322,9 @@ public class GroovyDeclarationFinder implements DeclarationFinder {
                 || closest instanceof ClassExpression
                 || closest instanceof PropertyNode
                 || closest instanceof FieldNode
-                || closest instanceof Parameter) {
+                || closest instanceof Parameter
+                || closest instanceof ImportNode
+                || closest instanceof AnnotationNode) {
 
                 String fqName = getFqNameForNode(closest);
                 return findType(fqName, range, doc, info, index);
@@ -359,6 +377,13 @@ public class GroovyDeclarationFinder implements DeclarationFinder {
             Exceptions.printStackTrace(ble);
         }
         return DeclarationLocation.NONE;
+    }
+
+    private DeclarationLocation getVariableLocation(ASTNode variable, BaseDocument doc, ParserResult info) {
+        // I am using getRange and not getOffset, because getRange is adding 'def_' to offset of field
+        int offset = ASTUtils.getRange(variable, doc).getStart();
+        // FIXME parsing API
+        return new DeclarationLocation(info.getSnapshot().getSource().getFileObject(), offset);
     }
 
     private DeclarationLocation findType(String fqName, OffsetRange range,
@@ -479,6 +504,10 @@ public class GroovyDeclarationFinder implements DeclarationFinder {
             return ((FieldNode) node).getType().getName();
         } else if (node instanceof Parameter) {
             return ((Parameter) node).getType().getName();
+        } else if (node instanceof ImportNode) {
+            return ((ImportNode) node).getType().getName();
+        } else if (node instanceof AnnotationNode) {
+            return ((AnnotationNode) node).getClassNode().getName();
         }
 
         return "";
@@ -508,10 +537,11 @@ public class GroovyDeclarationFinder implements DeclarationFinder {
             Elements elements = info.getElements();
 
             if (elements != null) {
+                info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                 final javax.lang.model.element.TypeElement typeElement = ElementSearch.getClass(elements, fqName);
 
                 if (typeElement != null) {
-                    DeclarationLocation found = ElementDeclaration.getDeclarationLocation(cpi, typeElement);
+                    DeclarationLocation found = ElementDeclaration.getDeclarationLocation(cpi, typeElement).getNow(DeclarationLocation.NONE);
                     synchronized (this) {
                         location = found;
                     }
@@ -822,22 +852,10 @@ public class GroovyDeclarationFinder implements DeclarationFinder {
                 }
             }, true);
             if (handles[0] != null) {
-                FileObject fileObject = SourceUtils.getFile(handles[0], cpInfo);
-                if (fileObject != null) {
-                    javaSource = JavaSource.forFileObject(fileObject);
-                    javaSource.runUserActionTask(new Task<CompilationController>() {
-                        @Override
-                        public void run(CompilationController controller) throws Exception {
-                            controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                            Element element = handles[0].resolve(controller);
-                            Trees trees = controller.getTrees();
-                            Tree tree = trees.getTree(element);
-                            SourcePositions sourcePositions = trees.getSourcePositions();
-                            offset[0] = (int) sourcePositions.getStartPosition(controller.getCompilationUnit(), tree);
-                        }
-                    }, true);
-                    return new DeclarationLocation(fileObject, offset[0]);
-                }
+                ElementHandle<Element> handle = handles[0];
+                return ElementOpen.getLocation(cpInfo, handle, fqn.replace('.', '/') + ".class").thenApply(location -> {
+                    return location != null ? new DeclarationLocation(location.getFileObject(), location.getStartOffset()) : DeclarationLocation.NONE;
+                }).getNow(DeclarationLocation.NONE);
             }
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
@@ -847,7 +865,6 @@ public class GroovyDeclarationFinder implements DeclarationFinder {
 
     private static DeclarationLocation findJavaMethod(ClasspathInfo cpInfo, final String fqn, final MethodCallExpression methodCall) {
         final ElementHandle[] handles = new ElementHandle[1];
-        final int[] offset = new int[1];
         JavaSource javaSource = JavaSource.create(cpInfo);
         try {
             javaSource.runUserActionTask(new Task<CompilationController>() {
@@ -865,29 +882,17 @@ public class GroovyDeclarationFinder implements DeclarationFinder {
                 }
             }, true);
             if (handles[0] != null) {
-                FileObject fileObject = SourceUtils.getFile(handles[0], cpInfo);
-                if (fileObject != null) {
-                    javaSource = JavaSource.forFileObject(fileObject);
-                    if (javaSource != null) {
-                        javaSource.runUserActionTask(new Task<CompilationController>() {
-                            @Override
-                            public void run(CompilationController controller) throws Exception {
-                                controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                                Element element = handles[0].resolve(controller);
-                                Trees trees = controller.getTrees();
-                                Tree tree = trees.getTree(element);
-                                SourcePositions sourcePositions = trees.getSourcePositions();
-                                offset[0] = (int) sourcePositions.getStartPosition(controller.getCompilationUnit(), tree);
-                            }
-                        }, true);
-                    }
-                    return new DeclarationLocation(fileObject, offset[0]);
-                }
+                ElementHandle<Element> handle = handles[0];
+                return ElementOpen.getLocation(cpInfo, handle, fqn.replace('.', '/') + ".class").thenApply(location -> {
+                    return location != null ? new DeclarationLocation(location.getFileObject(), location.getStartOffset()) : DeclarationLocation.NONE;
+                }).getNow(DeclarationLocation.NONE);
             }
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
         return DeclarationLocation.NONE;
     }
+    
+    
 
 }

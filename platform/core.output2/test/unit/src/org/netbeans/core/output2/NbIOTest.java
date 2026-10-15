@@ -26,7 +26,6 @@ import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
 import java.util.concurrent.Semaphore;
-import static junit.framework.Assert.assertEquals;
 import junit.framework.TestCase;
 import org.openide.util.Exceptions;
 import org.openide.windows.IOColorLines;

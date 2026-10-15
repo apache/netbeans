@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 import org.netbeans.api.annotations.common.NullAllowed;
-import org.netbeans.api.project.Project;
 import org.netbeans.api.templates.TemplateRegistration;
 import org.netbeans.modules.maven.model.ModelOperation;
 import org.netbeans.modules.maven.model.pom.POMModel;
@@ -32,7 +31,6 @@ import org.netbeans.modules.maven.newproject.ArchetypeWizardUtils;
 import org.netbeans.modules.maven.newproject.BasicWizardPanel;
 import org.netbeans.modules.maven.newproject.MavenWizardIterator;
 import org.netbeans.validation.api.ui.ValidationGroup;
-import org.netbeans.validation.api.ui.ValidationGroupProvider;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
 
@@ -83,7 +81,7 @@ public class ArchetypeWizards {
     }
 
     public static WizardDescriptor.Panel<WizardDescriptor> basicWizardPanel(ValidationGroup vg, boolean isFinish, @NullAllowed Archetype archetype) {
-        return new BasicWizardPanel(vg, archetype, isFinish, false);
+        return new BasicWizardPanel(vg, archetype, isFinish, false, null);
     }
 
     static WizardDescriptor.Panel<WizardDescriptor> basicWizardPanel(Object p, String type) {
@@ -109,12 +107,21 @@ public class ArchetypeWizards {
      * @see #TEMPLATE_FOLDER
      */
     public static WizardDescriptor.InstantiatingIterator<?> definedArchetype(String groupId, String artifactId, String version, @NullAllowed String repository, String title) {
+        return definedArchetype(groupId, artifactId, version, repository, title, null);
+    }
+    /** 
+     * @since 2.138
+     */
+    public static WizardDescriptor.InstantiatingIterator<?> definedArchetype(
+        String groupId, String artifactId, String version, @NullAllowed String repository, String title,
+        Map<String,String> defaultProps
+    ) {
         Archetype arch = new Archetype();
         arch.setGroupId(groupId);
         arch.setArtifactId(artifactId);
         arch.setVersion(version);
         arch.setRepository(repository);
-        return new MavenWizardIterator(arch, title);
+        return new MavenWizardIterator(arch, title, defaultProps);
     }
 
 }

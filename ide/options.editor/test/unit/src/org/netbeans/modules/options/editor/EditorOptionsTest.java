@@ -46,6 +46,8 @@ public class EditorOptionsTest extends NbTestCase {
         
         EditorTestLookup.setLookup(
             new URL[] {
+                getClass().getClassLoader().getResource("org/netbeans/core/resources/mf-layer.xml"),
+                getClass().getClassLoader().getResource("org/netbeans/core/ui/resources/layer.xml"),
                 getClass().getClassLoader().getResource("org/netbeans/modules/options/editor/mf-layer.xml"),
                 getClass().getClassLoader().getResource("org/netbeans/modules/options/keymap/mf-layer.xml"),
                 getClass().getClassLoader().getResource("org/netbeans/modules/options/editor/test-layer.xml"),
@@ -67,15 +69,14 @@ public class EditorOptionsTest extends NbTestCase {
     
     public void testPanelsRegistration () {
         // there are two panels registered from this module - Editor, Fonts & Colors
-        // and one panel from core/options/keymap
-        assertEquals (3, getCategories ().size ());
+        // and two panels from core/options/keymap (General, Keymaps)
+        assertEquals (4, getCategories ().size ());
     }
     
     public void testOptionsCategories () {
         for(OptionsCategory oc : getCategories()) {
-            assertNotNull (oc.getCategoryName ());
-            assertNotNull (oc.getIcon());
-            assertNotNull (oc.getTitle ());
+            assertNotNull (oc + " no category name", oc.getCategoryName ());
+            assertNotNull (oc + " no icon", oc.getIcon());
         }
     }
     
@@ -87,7 +88,7 @@ public class EditorOptionsTest extends NbTestCase {
             controllers.add (pc);
             lookups.add (pc.getLookup ());
         }
-        Lookup masterLookup = new ProxyLookup(lookups.toArray (new Lookup [lookups.size ()]));
+        Lookup masterLookup = new ProxyLookup(lookups.toArray (new Lookup [0]));
         for(OptionsPanelController pc : controllers) {
             JComponent c = pc.getComponent (masterLookup);
             pc.update ();
@@ -103,7 +104,7 @@ public class EditorOptionsTest extends NbTestCase {
             controllers.add (pc);
             lookups.add (pc.getLookup ());
         }
-        Lookup masterLookup = new ProxyLookup(lookups.toArray(new Lookup[lookups.size()]));
+        Lookup masterLookup = new ProxyLookup(lookups.toArray(new Lookup[0]));
         for(OptionsPanelController pc : controllers) {
             JComponent c = pc.getComponent (masterLookup);
             pc.update ();
@@ -119,7 +120,7 @@ public class EditorOptionsTest extends NbTestCase {
             controllers.add (pc);
             lookups.add (pc.getLookup ());
         }
-        Lookup masterLookup = new ProxyLookup(lookups.toArray(new Lookup[lookups.size()]));
+        Lookup masterLookup = new ProxyLookup(lookups.toArray(new Lookup[0]));
         for(OptionsPanelController pc : controllers) {
             JComponent c = pc.getComponent (masterLookup);
             pc.update();
@@ -137,7 +138,7 @@ public class EditorOptionsTest extends NbTestCase {
             controllers.add (pc);
             lookups.add (pc.getLookup ());
         }
-        Lookup masterLookup = new ProxyLookup(lookups.toArray(new Lookup[lookups.size()]));
+        Lookup masterLookup = new ProxyLookup(lookups.toArray(new Lookup[0]));
         
         // 2) create panels & call cancel on all PanelControllers
         for(OptionsPanelController pc : controllers) {
@@ -157,7 +158,7 @@ public class EditorOptionsTest extends NbTestCase {
             controllers.add (pc);
             lookups.add (pc.getLookup ());
         }
-        Lookup masterLookup = new ProxyLookup(lookups.toArray(new Lookup[lookups.size()]));
+        Lookup masterLookup = new ProxyLookup(lookups.toArray(new Lookup[0]));
         
         // 2) create panels & call cancel on all PanelControllers
         for(OptionsPanelController pc : controllers) {

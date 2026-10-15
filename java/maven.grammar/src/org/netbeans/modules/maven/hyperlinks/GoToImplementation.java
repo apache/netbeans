@@ -26,6 +26,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.EditorActionRegistration;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.editor.AnnotationDesc;
@@ -69,7 +70,7 @@ public final class GoToImplementation extends BaseAction {
                  @Override
                 public void run() {
                     try {
-                        int line = Utilities.getLineOffset((BaseDocument) doc, currentPosition);
+                        int line = LineDocumentUtils.getLineIndex((BaseDocument) doc, currentPosition);
                         AnnotationDesc desc = annotations.getActiveAnnotation(line);
                         if (desc == null) {
                             return;

@@ -36,10 +36,12 @@ public final class MasterURLMapper extends URLMapper {
     public MasterURLMapper() {
     }
 
+    @Override
     public FileObject[] getFileObjects(final URL url) {                
         return delegate.getFileObjects(url);
     }
 
+    @Override
     public URL getURL(final FileObject fo, final int type) {
         return delegate.getURL(fo, type);
     }

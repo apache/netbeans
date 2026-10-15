@@ -1,9 +1,0 @@
-Code completion result for source line:
-class PrefixMatchPackage extends ja| {
-(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
-------------------------------------
-PACKAGE    java                                       null
-PACKAGE    javax                                      null
-CLASS      JarURLConnection                           null
-CLASS      JavadocAssertionTestBuilder                null
-CLASS      JavadocAssertionTestSuite                  null

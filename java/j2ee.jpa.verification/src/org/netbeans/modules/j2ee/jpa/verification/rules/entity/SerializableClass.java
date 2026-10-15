@@ -114,7 +114,7 @@ public class SerializableClass {
         // Check if the super class implements java.io.Serializable
         // See issue 139751
         TypeMirror superCls = subject.getSuperclass();
-        while (superCls != null && (superCls instanceof DeclaredType)) {
+        while (superCls instanceof DeclaredType) {
             TypeElement superElem = (TypeElement) ((DeclaredType) superCls).asElement();
             if (extendsFromSerializable(superElem)) {
                 return null;

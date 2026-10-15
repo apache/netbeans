@@ -85,6 +85,8 @@ public class JavaStringLexer<T extends TokenId> implements Lexer<T> {
                             return token((T) (isStringTokenId() ? JavaStringTokenId.DOUBLE_QUOTE : JavaCharacterTokenId.DOUBLE_QUOTE));
                         case '\\': //NOI18N
                             return token((T) (isStringTokenId() ? JavaStringTokenId.BACKSLASH : JavaCharacterTokenId.BACKSLASH));
+                        case '{': //NOI18N
+                            return token((T) (isStringTokenId() ? JavaStringTokenId.TEMPLATE_START : JavaCharacterTokenId.TEMPLATE_START));
                         case 'u': //NOI18N
                             while ('u' == (ch = input.read())) {}; //NOI18N
                             

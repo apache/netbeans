@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -37,7 +38,7 @@ import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 /**
  * Common utility methods for massaging and inspecting files from tests.
@@ -54,7 +55,7 @@ public class TestFileUtils {
     public static File writeFile(File f, String body) throws IOException {
         f.getParentFile().mkdirs();
         OutputStream os = new FileOutputStream(f);
-        PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
+        PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
         pw.print(body);
         pw.flush();
         os.close();
@@ -119,7 +120,7 @@ public class TestFileUtils {
         for (String entry : entries) {
             int colon = entry.indexOf(':');
             assert colon != -1 : entry;
-            binary.put(entry.substring(0, colon), entry.substring(colon + 1).getBytes("UTF-8"));
+            binary.put(entry.substring(0, colon), entry.substring(colon + 1).getBytes(StandardCharsets.UTF_8));
         }
         writeZipFile(os, binary);
     }
@@ -127,7 +128,7 @@ public class TestFileUtils {
     /**
      * Create a new ZIP file.
      * @param os a stream to which the ZIP will be written
-     * @param entries entries as maps from filename to binary contents;; parent dirs created automatically
+     * @param entries entries as maps from filename to binary contents; parent dirs created automatically
      * @throws IOException for the usual reasons
      */
     public static void writeZipFile(OutputStream os, Map<String,byte[]> entries) throws IOException {

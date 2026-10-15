@@ -23,7 +23,7 @@ import org.netbeans.jellytools.Bundle;
 /** Used to call "Explore From Here" popup menu item,
  * "org.openide.actions.OpenLocalExplorerAction".
  * @see Action
- * @see org.netbeans.jellytools.nodes.FolderNode
+ * @see <a href="@org-netbeans-modules-jellytools-ide@/org/netbeans/jellytools/nodes/FolderNode.html">org.netbeans.jellytools.nodes.FolderNode</a>
  * @author <a href="mailto:adam.sotona@sun.com">Adam Sotona</a> */
 public class ExploreFromHereAction extends Action {
 

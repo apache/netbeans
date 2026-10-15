@@ -308,7 +308,7 @@ public class TableColumnModelEditor extends PropertyEditorSupport
                         } else {
                             Class propEdClass = PersistenceObjectRegistry.loadClass(propEdName,
                                 FormEditor.getFormDataObject(formModel).getFormFile());
-                            Object propEd = propEdClass.newInstance();
+                            Object propEd = propEdClass.getDeclaredConstructor().newInstance();
                             if (propEd instanceof XMLPropertyEditor) {
                                 xmlPropEd = (XMLPropertyEditor)propEd;
                                 if (propEd instanceof FormAwareEditor) {

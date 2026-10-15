@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.maven.customizer;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -103,11 +102,8 @@ public class LicenseHeaderPanelProvider implements ProjectCustomizer.CompositeCa
                                 fo = FileUtil.toFileObject(file);
                             }
                             if (fo.isData()) {
-                                OutputStream out = fo.getOutputStream();
-                                try {
-                                    FileUtil.copy(new ByteArrayInputStream(licenseContent.getBytes()), out);
-                                } finally {
-                                    out.close();
+                                try (OutputStream out = fo.getOutputStream()) {
+                                    out.write(licenseContent.getBytes());
                                 }
                             }
                         } else {

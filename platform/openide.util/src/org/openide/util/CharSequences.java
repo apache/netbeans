@@ -33,23 +33,24 @@ import java.util.Comparator;
  * behind the scene. Use the here-in provided methods and your strings will be
  * stored as efficiently as possible. As can be seen from the following example,
  * many languages benefit from the <em>compaction</em>:
- * <p>
- * {@codesnippet CharSequencesTest#createSample}
+ * </p>
+ * {@snippet  file="org/openide/util/CharSequencesTest.java" region="createSample"}
  * <p>
  * To compare two sequences use dedicated {@link CharSequences#comparator()}
  * which understands the compacted representation and uses it, prior to falling
  * back to {@code char} by {@code char} comparision:
- * <p>
- * {@codesnippet CharSequencesTest#compareStrings}
+ * </p>
+ * {@snippet  file="org/openide/util/CharSequencesTest.java" region="compareStrings"}
  * <p>
  * Use {@link CharSequences#indexOf(java.lang.CharSequence, java.lang.CharSequence)} method
  * to search the compacted strings efficiently:
- * <p>
- * {@codesnippet CharSequencesTest#indexOfSample}
+ * </p>
+ * {@snippet  file="org/openide/util/CharSequencesTest.java" region="indexOfSample"}
  * <p>
  * This <a target="_blank" href="https://search.maven.org/artifact/org.netbeans.api/org-openide-util/RELEASE110/jar">
  * library is available on Maven central</a>. Use it with following co-ordinates:
- * {@codesnippet CharSequencesPomDependency}
+ * </p>
+ * {@snippet  file="org/openide/util/CharSequencesTest.xml" region="CharSequencesPomDependency"}
  *
  * @since 8.3
  * @author Alexander Simon
@@ -113,9 +114,9 @@ public final class CharSequences {
     /**
      * Creates new {@link CharSequence} instance representing the content
      * of another sequence or {@link String} efficiently.
-     * <p>
-     * {@codesnippet CharSequencesTest#createSample}
-     * <p>
+     * 
+     * {@snippet  file="org/openide/util/CharSequencesTest.java" region="createSample"}
+     * 
      * @param s existing string or sequence of chars
      * @return immutable char sequence efficiently representing the data
      */
@@ -162,7 +163,7 @@ public final class CharSequences {
     /**
      * Provides optimized char sequences comparator.
      *
-     * {@codesnippet CharSequencesTest#compareStrings}
+     * {@snippet  file="org/openide/util/CharSequencesTest.java" region="compareStrings"}
      *
      * @return comparator for {@link CharSequence} objects
      */
@@ -191,7 +192,7 @@ public final class CharSequences {
     /**
      * Implementation of {@link String#indexOf(String)} for character sequences.
      *
-     * {@codesnippet CharSequencesTest#indexOfSample}
+     * {@snippet  file="org/openide/util/CharSequencesTest.java" region="indexOfSample"}
      *
      * @param text the text to search
      * @param seq the sequence to find in the {@code text}
@@ -301,7 +302,6 @@ public final class CharSequences {
         return createFromBytes(b, n, id);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////
     // Memory efficient implementations of CharSequence
     // Comparision between Fixed and String memory consumption:
     // 32-bit JVM
@@ -1388,7 +1388,7 @@ public final class CharSequences {
      * it is still more efficient than String, because string stores length in field
      * and it costs 20 bytes aligned into 24
      */
-    private final static class CharBasedSequence implements CompactCharSequence, Comparable<CharSequence> {
+    private static final class CharBasedSequence implements CompactCharSequence, Comparable<CharSequence> {
 
         private final char[] value;
         private int hash;
@@ -1457,7 +1457,7 @@ public final class CharSequences {
      * compact char sequence implementation based on byte[]
      * size: 8 + 4 + 4 (= 16 bytes) + sizeof ('value')
      */
-    private final static class ByteBasedSequence implements CompactCharSequence, Comparable<CharSequence> {
+    private static final class ByteBasedSequence implements CompactCharSequence, Comparable<CharSequence> {
 
         private final byte[] value;
         private int hash;

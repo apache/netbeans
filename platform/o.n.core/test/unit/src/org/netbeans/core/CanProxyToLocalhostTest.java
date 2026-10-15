@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Locale;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
-import org.netbeans.core.ProxySettings;
 import org.netbeans.junit.NbTestCase;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
@@ -83,13 +82,13 @@ public class CanProxyToLocalhostTest extends NbTestCase {
         String staticNonProxyHosts = NbBundle.getMessage(ProxySettings.class, "StaticNonProxyHosts"); // NOI18N
         assertNotNull(staticNonProxyHosts);
         assertEquals("The default non proxy hosts", "", staticNonProxyHosts);
-        assertEquals("Connect TO_LOCALHOST provided by MyPS", "HTTP @ my.webcache:8080", selector.select(TO_LOCALHOST).get(0).toString());
+        assertEquals("Connect TO_LOCALHOST provided by MyPS", "HTTP @ my.webcache/<unresolved>:8080", selector.select(TO_LOCALHOST).get(0).toString());
         assertEquals("One call to my ps", 1, MY_PS.called);
     }
 
     public void testAlwaysProxyForNonLocalhost() {
         Locale.setDefault(Locale.US);
-        assertEquals("Connect TO_NB provided by MyPS", "HTTP @ my.webcache:8080", selector.select(TO_NB).get(0).toString());
+        assertEquals("Connect TO_NB provided by MyPS", "HTTP @ my.webcache/<unresolved>:8080", selector.select(TO_NB).get(0).toString());
         assertEquals("One call to my ps", 1, MY_PS.called);
     }
 

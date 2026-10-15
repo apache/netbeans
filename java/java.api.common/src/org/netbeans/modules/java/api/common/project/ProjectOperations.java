@@ -68,6 +68,7 @@ import org.netbeans.spi.project.support.ant.ReferenceHelper;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
@@ -537,10 +538,8 @@ public final class ProjectOperations {
             final String buildXmlName = CommonProjectUtils.getBuildXmlName(eval, buildScriptProperty);
             final FileObject buildXML = project.getProjectDirectory().getFileObject(buildXmlName);
             if (buildXML != null) {
-                ActionUtils.runTarget(
-                    buildXML,
-                    cleanTargets.toArray(new String[cleanTargets.size()]),
-                    p).waitFinished();
+                ActionUtils.runTarget(buildXML, cleanTargets.toArray(new String[0]), p)
+                           .waitFinished();
             } else {
                 LOG.log(
                     Level.INFO,
@@ -814,7 +813,7 @@ public final class ProjectOperations {
         private static URI resolve (
                 @NonNull final FileObject prjDir,
                 @NonNull final URI relative) {
-            return prjDir.toURI().resolve(relative).normalize();
+            return BaseUtilities.normalizeURI(prjDir.toURI().resolve(relative));
         }
 
         @NonNull

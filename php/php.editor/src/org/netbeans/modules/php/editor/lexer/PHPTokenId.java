@@ -40,7 +40,7 @@ import org.netbeans.spi.lexer.LexerRestartInfo;
  */
 public enum PHPTokenId implements TokenId {
 
-    T_INLINE_HTML(null, "php"),
+    T_INLINE_HTML(null, "php"), // NOI18N
     PHP_OPENTAG(null, "phpopenclose"), //NOI18N
     T_OPEN_TAG_WITH_ECHO(null, "phpopenclose"),
     PHP_CLOSETAG(null, "phpopenclose"), //NOI18N
@@ -59,6 +59,8 @@ public enum PHPTokenId implements TokenId {
     PHP_TYPE_BOOL("bool", "keyword"), //NOI18N
     PHP_TYPE_VOID("void", "keyword"), //NOI18N
     PHP_TYPE_OBJECT("object", "keyword"), //NOI18N
+    PHP_TYPE_MIXED("mixed", "keyword"), //NOI18N
+    PHP_TYPE_NEVER("never", "keyword"), //NOI18N NETBEANS-5599 PHP 8.1
     PHP_FINAL(null, "keyword"), //NOI18N
     PHP_PAAMAYIM_NEKUDOTAYIM(null, "operator"), //NOI18N
     PHP_EXTENDS(null, "keyword"), //NOI18N
@@ -68,6 +70,7 @@ public enum PHPTokenId implements TokenId {
     PHP_EMPTY(null, "keyword"), //NOI18N
     PHP_CLASS("class", "keyword"), //NOI18N
     PHP_TRAIT("trait", "keyword"), //NOI18N
+    PHP_ENUM("enum", "keyword"), //NOI18N PHP 8.1
     PHP_FOR("for", "keyword"), //NOI18N
     PHP_STRING(null, "identifier"), //NOI18N
     PHP_AS(null, "keyword"), //NOI18N
@@ -105,6 +108,9 @@ public enum PHPTokenId implements TokenId {
     PHP_FUNCTION(null, "keyword"), //NOI18N
     PHP_PROTECTED(null, "keyword"), //NOI18N
     PHP_PRIVATE(null, "keyword"), //NOI18N
+    PHP_PUBLIC_SET(null, "keyword"), //NOI18N PHP 8.4
+    PHP_PROTECTED_SET(null, "keyword"), //NOI18N PHP 8.4
+    PHP_PRIVATE_SET(null, "keyword"), //NOI18N PHP 8.4
     PHP_ENDDECLARE(null, "keyword"), //NOI18N
     PHP_CURLY_CLOSE(null, "php"), //NOI18N
     PHP_ELSE("else", "keyword"), //NOI18N
@@ -117,9 +123,11 @@ public enum PHPTokenId implements TokenId {
     PHP_ENCAPSED_AND_WHITESPACE(null, "string"), //NOI18N
     WHITESPACE(null, "whitespace"), //NOI18N
     PHP_SWITCH("switch", "keyword"), //NOI18N
+    PHP_MATCH("match", "keyword"), //NOI18N
     PHP_CONST(null, "keyword"), //NOI18N
     PHP_PUBLIC(null, "keyword"), //NOI18N
     PHP_RETURN(null, "keyword"), //NOI18N
+    PHP_ATTRIBUTE(null, "php"), //NOI18N NETBEANS-4443 PHP 8.0 #[
     PHP_YIELD(null, "keyword"), //NOI18N
     PHP_YIELD_FROM(null, "keyword"), //NOI18N
     PHP_LOGICAL_AND(null, "operator"), //NOI18N
@@ -136,6 +144,7 @@ public enum PHPTokenId implements TokenId {
     PHP_IF("if", "keyword"), //NOI18N
     PHP_DECLARE(null, "keyword"), //NOI18N
     PHP_OBJECT_OPERATOR(null, "operator"), //NOI18N
+    PHP_NULLSAFE_OBJECT_OPERATOR(null, "operator"), //NOI18N NETBEANS-4443 PHP 8.0
     PHP_SELF(null, "keyword"), //NOI18N
     PHP_COMMENT(null, "comment"), //NOI18N
     PHP_COMMENT_START(null, "comment"), //NOI18N
@@ -161,10 +170,13 @@ public enum PHPTokenId implements TokenId {
     PHP_PARENT(null, "keyword"), //NOI18N
     PHP__CLASS__(null, "constant"), //NOI18N
     PHP__TRAIT__(null, "constant"), //NOI18N
+    PHP__PROPERTY__(null, "constant"), //NOI18N PHP 8.4
     PHP__METHOD__(null, "constant"), //NOI18N
     PHP_TRUE(null, "keyword"), //NOI18N
     PHP_FALSE(null, "keyword"), //NOI18N
-    PHP_NULL(null, "keyword"); //NOI18N
+    PHP_NULL(null, "keyword"), // NOI18N
+    PHP_READONLY(null, "keyword"), // NOI18N NETBEANS-5599 PHP 8.1
+    ;
 
     private final String fixedText;
     private final String primaryCategory;

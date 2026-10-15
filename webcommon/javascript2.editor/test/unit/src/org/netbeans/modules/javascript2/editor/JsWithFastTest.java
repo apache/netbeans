@@ -29,15 +29,15 @@ public class JsWithFastTest extends JsWithBase {
     }
     
     public void testWith_01() throws Exception {
-        checkOccurrences("testfiles/with/test01.js", "console.log(getFirst^Name());", true);
+        checkOccurrences("testfiles/with/test01.js", "    console.log(getFirst^Name());", true);
     }
     
     public void testWith_02() throws Exception {
-        checkOccurrences("testfiles/with/test01.js", "console.l^og(getFirstName());", true);
+        checkOccurrences("testfiles/with/test01.js", "    console.l^og(getFirstName());", true);
     }
     
     public void testWith_03() throws Exception {
-        checkOccurrences("testfiles/with/test01.js", "conso^le.log(getFirstName());", true);
+        checkOccurrences("testfiles/with/test01.js", "    conso^le.log(getFirstName());", true);
     }
     
     public void testWith_04() throws Exception {

@@ -23,7 +23,8 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import org.netbeans.junit.NbTestCase;
-import org.openide.filesystems.FileUtil;
+import org.openide.modules.DummyInstalledFileLocator;
+import org.openide.util.test.MockLookup;
 
 /**
  *
@@ -39,25 +40,26 @@ public class StatusProviderTest extends NbTestCase {
         clearWorkDir();
     }
 
+    //@org.openide.util.lookup.ServiceProvider(service=org.openide.modules.InstalledFileLocator.class, position = 1000)
+    public static class InstalledFileLocator extends DummyInstalledFileLocator {
+        public InstalledFileLocator() {
+            registerDestDir(new File(System.getProperty("test.netbeans.dest.dir")));
+        }
+    }
+
     public void testModelLoading() throws Exception { // #212152
+        MockLookup.setLayersAndInstances(new InstalledFileLocator());
         // new File(StatusProviderTest.class.getResource(...).toURI()) may not work in all environments, e.g. testdist
         File pom = new File(getWorkDir(), "pom.xml");
-        InputStream is = StatusProviderTest.class.getResourceAsStream("pom-with-warnings.xml");
-        try {
-            OutputStream os = new FileOutputStream(pom);
-            try {
-                FileUtil.copy(is, os);
-            } finally {
-                os.close();
-            }
-        } finally {
-            is.close();
+        try (InputStream is = StatusProviderTest.class.getResourceAsStream("pom-with-warnings.xml");
+             OutputStream os = new FileOutputStream(pom)) {
+            is.transferTo(os);
         }
-        String warnings = StatusProvider.runMavenValidationImpl(pom).toString().replace(pom.getAbsolutePath(), "pom.xml");
+        String warnings = PomModelUtils.runMavenValidationImpl(pom, null).toString().replace(pom.getAbsolutePath(), "pom.xml");
         assertEquals("["
-                + "[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-compiler-plugin is missing. @ test:mavenproject4:1.0-SNAPSHOT, pom.xml, line 22, column 12, "
-                + "[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-surefire-plugin is missing. @ test:mavenproject4:1.0-SNAPSHOT, pom.xml, line 72, column 12, "
-                + "[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-war-plugin is missing. @ test:mavenproject4:1.0-SNAPSHOT, pom.xml, line 64, column 12]"
+                + "[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-compiler-plugin is missing. @ test:mavenproject4:1.0-SNAPSHOT, pom.xml, line 41, column 12, "
+                + "[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-surefire-plugin is missing. @ test:mavenproject4:1.0-SNAPSHOT, pom.xml, line 91, column 12, "
+                + "[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-war-plugin is missing. @ test:mavenproject4:1.0-SNAPSHOT, pom.xml, line 83, column 12]"
 //#223562                + "[WARNING] The <reporting> section is deprecated, please move the reports to the <configuration> section of the new Maven Site Plugin. @ test:mavenproject4:1.0-SNAPSHOT, pom.xml, line 102, column 13, "
                 // not reported since upgrade to 3.3.9 + "[WARNING] 'reporting.plugins.plugin.version' for org.apache.maven.plugins:maven-surefire-report-plugin is missing. @ test:mavenproject4:1.0-SNAPSHOT, pom.xml, line 127, column 12]"
                 , warnings);

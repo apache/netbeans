@@ -228,7 +228,7 @@ that depends on  NetBeans APIs specified in this document.
         </ul>
     </api> 
     <br/>
-    <api group="java" name="OpenAPIs" type="import" category="official" url="http://openide.netbeans.org"/> 
+    <api group="java" name="OpenAPIs" type="import" category="official"/> 
     <br/>
     <api group="java" name="CodeFoldingAPI" type="import" category="official"
         url="@org-netbeans-modules-editor-fold@/architecture-summary.html#java-CodeFoldingAPI"
@@ -254,7 +254,7 @@ that depends on  NetBeans APIs specified in this document.
         </question>
 -->
 <answer id="dep-non-nb">
-    <api group="java" name="JAXP" type="import" category="standard" url="http://java.sun.com/xml/jaxp/dist/1.1/docs/api/"> 
+    <api group="java" name="JAXP" type="import" category="standard" url="https://www.oracle.com/java/technologies/jaxp-introduction.html"> 
     Standard XML APIs (DOM, SAX) - distributed with the IDE (in ../editor.lib/ext/xml-apis*.jar),
     already part of JDK 1.4 and newer).
     </api>
@@ -520,7 +520,7 @@ No.
     </ul>
 
     <api type="import" name="NbKeymap.context" category="friend" group="java"
-     url="http://www.netbeans.org/source/browse/editor/src/org/netbeans/core/NbKeymap.html">
+     url="https://github.com/apache/netbeans/tree/master/platform/o.n.core/src/org/netbeans/core/NbKeymap.java">
         The <code>context</code> field is accessed by reflection
         from <a href="@org-netbeans-modules-editor-lib@/org/netbeans/editor/MultiKeymap.html">MultiKeymap</a>.
     </api>
@@ -843,13 +843,13 @@ No.
         <li>
             Annotation Types can be registered as .xml files under <i>Editors/AnnotationTypes</i>.
             <br/>
-            An example of a bookmark annotation descrioption xml file can be found
-            <a href="http://www.netbeans.org/source/browse/editor/src/org/netbeans/modules/editor/resources/AnnotationTypes/bookmark.xml">here</a>.
+            An example of a bookmark annotation description xml file can be found
+            <a href="https://github.com/apache/netbeans/tree/master/ide/editor/src/org/netbeans/modules/editor/resources/AnnotationTypes/">here</a>.
             <br/>
             DTDs can be found
-            <a href="http://www.netbeans.org/source/browse/editor/src/org/netbeans/modules/editor/resources/AnnotationTypes/annotation-type-1_0.dtd">here</a>
+            <a href="https://github.com/apache/netbeans/tree/master/ide/editor/src/org/netbeans/modules/editor/resources/AnnotationTypes/annotation-type-1_0.dtd">here</a>
             and
-            <a href="http://www.netbeans.org/source/browse/editor/src/org/netbeans/modules/editor/resources/AnnotationTypes/annotation-type-1_1.dtd">here</a>.
+            <a href="https://github.com/apache/netbeans/tree/master/ide/editor/src/org/netbeans/modules/editor/resources/AnnotationTypes/annotation-type-1_1.dtd">here</a>.
         </li>
 
         <li>Mime-type specific editor data under <i>/Editors/mime-type</i> folder (e.g. <i>/Editors/text/plain</i>).
@@ -950,7 +950,7 @@ No.
     </ul>
 
     <p>
-    Please see <a href="http://www.netbeans.org/source/browse/editor/src/org/netbeans/modules/editor/resources/layer.xml">layer.xml</a> for further details.
+    Please see <a href="https://github.com/apache/netbeans/tree/master/ide/editor/src/org/netbeans/modules/editor/resources/layer.xml">layer.xml</a> for further details.
     </p>
     
     <p>

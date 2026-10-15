@@ -22,7 +22,6 @@ package org.netbeans.modules.web.core.syntax;
 
 import java.util.Map;
 import org.netbeans.editor.ext.ExtKit;
-import org.netbeans.modules.csl.api.KeystrokeHandler;
 import org.netbeans.modules.editor.NbEditorDocument;
 import org.netbeans.modules.editor.NbEditorKit;
 import org.netbeans.modules.web.core.syntax.deprecated.Jsp11Syntax;
@@ -33,6 +32,7 @@ import javax.swing.Action;
 import javax.swing.SwingUtilities;
 import javax.swing.text.*;
 import org.netbeans.api.editor.completion.Completion;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
@@ -48,9 +48,7 @@ import org.netbeans.modules.web.core.syntax.deprecated.HtmlSyntax;
 import org.netbeans.modules.web.core.api.JspColoringData;
 import org.netbeans.api.jsp.lexer.JspTokenId;
 import org.netbeans.api.lexer.InputAttributes;
-import org.netbeans.editor.BaseKit.InsertBreakAction;
 import org.netbeans.editor.ext.ExtKit.ExtDefaultKeyTypedAction;
-import org.netbeans.editor.ext.ExtKit.ExtDeleteCharAction;
 import org.netbeans.modules.csl.api.*;
 import org.netbeans.spi.lexer.MutableTextInput;
 
@@ -232,7 +230,7 @@ public class JspKit extends NbEditorKit implements org.openide.util.HelpCtx.Prov
                 BaseDocument doc = (BaseDocument) target.getDocument();
 
                 // inside scriptlet
-                int startPos = org.netbeans.editor.Utilities.getRowStart(doc, target.getSelectionStart());
+                int startPos = LineDocumentUtils.getLineStartOffset(doc, target.getSelectionStart());
                 TokenHierarchy th = TokenHierarchy.create(target.getText(), JspTokenId.language());
                 List<TokenSequence> ets = th.embeddedTokenSequences(startPos, false);
                 if (!ets.isEmpty()

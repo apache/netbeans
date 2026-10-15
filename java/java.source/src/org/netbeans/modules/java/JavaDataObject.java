@@ -27,12 +27,14 @@ import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.loaders.JavaDataSupport;
+import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.MIMEResolver;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
@@ -40,8 +42,10 @@ import org.openide.loaders.DataObjectExistsException;
 import org.openide.loaders.MultiDataObject;
 import org.openide.loaders.MultiFileLoader;
 import org.openide.nodes.Node;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
 import org.openide.windows.TopComponent;
 
 @NbBundle.Messages({
@@ -89,6 +93,30 @@ public final class JavaDataObject extends MultiDataObject {
     public static MultiViewEditorElement createMultiViewEditorElement(Lookup context) {
         return new MultiViewEditorElement(context);
     }
+
+    @Override
+    protected DataObject handleCreateFromTemplate(DataFolder df, String name) throws IOException {
+        if (name == null) {
+            return super.handleCreateFromTemplate(df, name);
+        }
+        String[] packageAndName = name.split("\\.");
+        if (packageAndName.length > 1) {
+            verifyJavaNames(packageAndName);
+            FileObject f = df.getPrimaryFile();
+            for (int i = 0; i < packageAndName.length - 1; i++) {
+                f = FileUtil.createFolder(f, packageAndName[i]);
+            }
+            return super.handleCreateFromTemplate(
+                DataFolder.findFolder(f),
+                packageAndName[packageAndName.length - 1]
+            );
+        } else {
+            if (!getName().equals(name)) {
+                verifyJavaNames(name);
+            }
+            return super.handleCreateFromTemplate(df, name);
+        }
+    }
     
     /**
      * XXX: Change this when there will be a write model.
@@ -100,6 +128,9 @@ public final class JavaDataObject extends MultiDataObject {
             final String originalName) throws IOException 
     {
         JavaSource javaSource = JavaSource.forFileObject (fileToUpdate);
+        if (javaSource == null) {
+            return;
+        }
 
         Task<WorkingCopy> task = new Task<WorkingCopy>() {
             
@@ -130,6 +161,26 @@ public final class JavaDataObject extends MultiDataObject {
                 }
             }                
         };
-        javaSource.runModificationTask(task).commit();
+        final ModificationResult taskResult = javaSource.runModificationTask(task);
+        taskResult.commit();
+    }
+
+    @NbBundle.Messages({
+        "# {0} - name of file",
+        "MSG_NotIdentifier={0} is not proper Java identifier"
+    })
+    private static void verifyJavaNames(String... names) throws IOException {
+        for (int i = 0; i < names.length; i++) {
+            String name = names[i];
+            if ("package-info".equals(name)) { // NOI18N
+                continue;
+            }
+            if ("module-info".equals(name)) { // NOI18N
+                continue;
+            }
+            if (!Utilities.isJavaIdentifier(name)) {
+                throw Exceptions.attachLocalizedMessage(new IOException(name + " is not Java identifier"), Bundle.MSG_NotIdentifier(name));
+            }
+        }
     }
 }

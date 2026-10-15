@@ -58,11 +58,12 @@ public final class ListenerList<T extends EventListener> implements Serializable
      * for firing events to all the listeners you get from this
      * method.
      * 
-     * <pre>
+     * <pre>{@code
      *      List<MyListener> listeners = listenerList.getListeners();
      *      for (MyListener l : listeners) {
      *          l.notify(evt);
      *      }
+     * }
      * </pre>
      * 
      * @return An immutable list of listeners contained in this listener list.
@@ -146,7 +147,7 @@ public final class ListenerList<T extends EventListener> implements Serializable
             T l = (T)listenerOrNull;
             lList.add(l);
         }
-        this.listenersList = new ImmutableList<T>((EventListener [])lList.toArray(new EventListener[lList.size()]));
+        this.listenersList = new ImmutableList<T>((EventListener [])lList.toArray(new EventListener[0]));
     }
     
     public String toString() {

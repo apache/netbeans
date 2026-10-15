@@ -50,7 +50,7 @@ public class JiraUpdater {
     private JiraUpdater() {
     }
 
-    public synchronized static JiraUpdater getInstance() {
+    public static synchronized JiraUpdater getInstance() {
         if(instance == null) {
             instance = new JiraUpdater();
         }

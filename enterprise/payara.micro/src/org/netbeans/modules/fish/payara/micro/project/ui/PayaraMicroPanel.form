@@ -37,20 +37,28 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="microVersionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="autoBindHttpLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="contextRootLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Component id="autoBindHttpCheckBox" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="91" max="32767" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="microVersionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="autoBindHttpLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="contextRootLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="autoBindHttpCheckBox" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="91" max="32767" attributes="0"/>
+                          </Group>
+                          <Component id="microVersionCombobox" alignment="0" max="32767" attributes="0"/>
+                          <Component id="contextRootTextField" alignment="1" max="32767" attributes="0"/>
+                      </Group>
                   </Group>
-                  <Component id="microVersionCombobox" alignment="0" max="32767" attributes="0"/>
-                  <Component id="contextRootTextField" alignment="1" max="32767" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="statusMessage" max="32767" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -73,7 +81,9 @@
                   <Component id="contextRootLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="contextRootTextField" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="217" max="32767" attributes="0"/>
+              <EmptySpace pref="188" max="32767" attributes="0"/>
+              <Component id="statusMessage" min="-2" pref="18" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -82,9 +92,13 @@
     <Component class="javax.swing.JComboBox" name="microVersionCombobox">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="new DefaultComboBoxModel(VersionRepository.getInstance().getMicroVersion().toArray())" type="code"/>
+          <Connection code="new DefaultComboBoxModel(&#xa;    PayaraPlatformVersion.getVersions()&#xa;    .stream()&#xa;    .sorted(Collections.reverseOrder())&#xa;    .toArray(PayaraPlatformVersionAPI[]::new)&#xa;)" type="code"/>
         </Property>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="if(PayaraPlatformVersion.getVersions().isEmpty()) {&#xa;    statusMessage.setText(NbBundle.getMessage(PayaraMicroPanel.class, &quot;LBL_UnaleToConnectPayaraMavenRepo&quot;));&#xa;} else {&#xa;    statusMessage.setText(&quot;&quot;);&#xa;}"/>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;PayaraPlatformVersionAPI&gt;"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="microVersionLabel">
       <Properties>
@@ -129,6 +143,8 @@
           <ResourceString bundle="org/netbeans/modules/fish/payara/micro/project/ui/Bundle.properties" key="PayaraMicroPanel.contextRootTextField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="statusMessage">
     </Component>
   </SubComponents>
 </Form>

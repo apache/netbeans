@@ -269,6 +269,8 @@ public class CreateClassTest extends ErrorHintsTestBase {
 
         TestUtilities.copyStringToFile(aux, "package test; public class Aux {}");
         
+        doRunIndexing = true;
+        
         performAnalysisTest("Test.java",
                             "import test.Aux.t|t; public class Test { }",
                             "CreateInnerClass:test.Aux.tt:[public, static]:CLASS");

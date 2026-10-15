@@ -116,7 +116,7 @@
                     </FucntionName>
                     <Parameters>
                         <InfixExpression start='214' end='225' operator='CONCAT'>
-                            <StaticConstantAccess start='214' end='218'>
+                            <StaticConstantAccess start='214' end='218' isDynamicName='false'>
                                 <NamespaceName start='214' end='215' isCurrent='false' isGlobal='false'>
                                     <Identifier start='214' end='215' name='e'/>
                                 </NamespaceName>

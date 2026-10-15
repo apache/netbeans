@@ -135,7 +135,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -208,7 +208,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -269,7 +269,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -328,7 +328,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -389,7 +389,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -451,7 +451,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -513,7 +513,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -575,7 +575,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -641,7 +641,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -702,7 +702,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -796,7 +796,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -857,7 +857,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -921,7 +921,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -980,7 +980,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -1044,7 +1044,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -1103,7 +1103,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -1162,7 +1162,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -1221,7 +1221,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -1280,7 +1280,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -1339,7 +1339,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -1402,7 +1402,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -1465,7 +1465,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -1542,7 +1542,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -1605,7 +1605,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -1668,7 +1668,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -1732,7 +1732,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -1794,7 +1794,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -1856,7 +1856,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -1914,7 +1914,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -1978,7 +1978,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -2040,7 +2040,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -2101,7 +2101,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -2162,7 +2162,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -2221,7 +2221,7 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -2284,7 +2284,226 @@ public class DoctreeTest extends GeneratorTestBase {
         };
         src.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    public void testAddMarkdownTag() throws Exception {
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile,
+                """
+                package hierbas.del.litoral;
+
+                public class Test {
+
+                    /// Test method
+                    ///
+                    /// @param p1 param1
+                    private void test(int p1, int p2) {
+                    }
+                }
+                """);
+        String golden =
+                """
+                package hierbas.del.litoral;
+
+                public class Test {
+
+                    /// Test method
+                    ///
+                    /// @param p1 param1
+                    /// @param p2 param2
+                    private void test(int p1, int p2) {
+                    }
+                }
+                """;
+
+        JavaSource src = getJavaSource(testFile);
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+            @Override
+            public void run(final WorkingCopy wc) throws IOException {
+                wc.toPhase(JavaSource.Phase.RESOLVED);
+                final TreeMaker make = wc.getTreeMaker();
+                final DocTrees trees = wc.getDocTrees();
+                new ErrorAwareTreePathScanner<Void, Void>() {
+                    @Override
+                    public Void visitMethod(final MethodTree mt, Void p) {
+                        DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
+                        if (docTree != null) {
+                            ArrayList<DocTree> blockTags = new ArrayList<>(docTree.getBlockTags());
+                            blockTags.add(make.Param(false, make.DocIdentifier("p2"), List.of(make.Text("param2"))));
+                            wc.rewrite(mt, docTree, make.DocComment(docTree.getFullBody(), blockTags));
+                        }
+                        return super.visitMethod(mt, p);
+                    }
+                }.scan(wc.getCompilationUnit(), null);
+            }
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    public void testChangeMarkdownParam() throws Exception {
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile,
+                """
+                package hierbas.del.litoral;
+
+                public class Test {
+
+                    /// Test method
+                    ///
+                    /// @param p1 param1
+                    private void test(int p2) {
+                    }
+                }
+                """);
+        String golden =
+                """
+                package hierbas.del.litoral;
+
+                public class Test {
+
+                    /// Test method
+                    ///
+                    /// @param p2 param2
+                    private void test(int p2) {
+                    }
+                }
+                """;
+
+        JavaSource src = getJavaSource(testFile);
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+            @Override
+            public void run(final WorkingCopy wc) throws IOException {
+                wc.toPhase(JavaSource.Phase.RESOLVED);
+                final TreeMaker make = wc.getTreeMaker();
+                final DocTrees trees = wc.getDocTrees();
+                new ErrorAwareTreePathScanner<Void, Void>() {
+                    @Override
+                    public Void visitMethod(final MethodTree mt, Void p) {
+                        DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
+                        DocTreeScanner<Void, Void> scanner = new DocTreeScanner<Void, Void>() {
+                            @Override
+                            public Void visitParam(ParamTree node, Void p) {
+                                ParamTree newParam = make.Param(false, make.DocIdentifier("p2"), List.of(make.Text("param2")));
+                                wc.rewrite(mt, node, newParam);
+                                return super.visitParam(node, p);
+                            }
+                        };
+                        scanner.scan(docTree, null);
+                        return super.visitMethod(mt, p);
+                    }
+                }.scan(wc.getCompilationUnit(), null);
+            }
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    public void testRemoveMarkdownParam() throws Exception {
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile,
+                """
+                package hierbas.del.litoral;
+
+                public class Test {
+
+                    /// Test method
+                    ///
+                    /// @param p1 param1
+                    private void test(int p2) {
+                    }
+                }
+                """);
+        String golden =
+                """
+                package hierbas.del.litoral;
+
+                public class Test {
+
+                    /// Test method
+                    ///
+                    private void test(int p2) {
+                    }
+                }
+                """;
+
+        JavaSource src = getJavaSource(testFile);
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+            @Override
+            public void run(final WorkingCopy wc) throws IOException {
+                wc.toPhase(JavaSource.Phase.RESOLVED);
+                final TreeMaker make = wc.getTreeMaker();
+                final DocTrees trees = wc.getDocTrees();
+                new ErrorAwareTreePathScanner<Void, Void>() {
+                    @Override
+                    public Void visitMethod(final MethodTree mt, Void p) {
+                        DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
+                        if (docTree != null) {
+                            wc.rewrite(mt, docTree, make.DocComment(docTree.getFullBody(), List.of()));
+                        }
+                        return super.visitMethod(mt, p);
+                    }
+                }.scan(wc.getCompilationUnit(), null);
+            }
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    public void testNewMarkdownComment() throws Exception {
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile,
+                """
+                package hierbas.del.litoral;
+
+                public class Test {
+
+                    private void test(int p2) {
+                    }
+                }
+                """);
+        String golden =
+                """
+                package hierbas.del.litoral;
+
+                public class Test {
+
+                    /// Test method
+                    /// @param p2 param2
+                    private void test(int p2) {
+                    }
+                }
+                """;
+
+        JavaSource src = getJavaSource(testFile);
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+            @Override
+            public void run(final WorkingCopy wc) throws IOException {
+                wc.toPhase(JavaSource.Phase.RESOLVED);
+                final TreeMaker make = wc.getTreeMaker();
+                final DocTrees trees = wc.getDocTrees();
+                new ErrorAwareTreePathScanner<Void, Void>() {
+                    @Override
+                    public Void visitMethod(final MethodTree mt, Void p) {
+                        ParamTree param2 = make.Param(false, make.DocIdentifier("p2"), List.of(make.Text("param2")));
+                        DocCommentTree newDoc = make.MarkdownDocComment(List.of(make.RawText("Test method")), List.of(param2));
+                        wc.rewrite(mt, null, newDoc);
+                        return super.visitMethod(mt, p);
+                    }
+                }.scan(wc.getCompilationUnit(), null);
+            }
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 }

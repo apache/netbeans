@@ -134,9 +134,7 @@ public abstract class Attribute extends AbstractAttribute implements AXIType {
         return getName();              //NOI18N
     }
     
-    ////////////////////////////////////////////////////////////////////
-    ////////////////////////// member variables ////////////////////////
-    ////////////////////////////////////////////////////////////////////
+    // member variables
     protected String name;
     protected Form form;
     protected Use use;
@@ -144,9 +142,7 @@ public abstract class Attribute extends AbstractAttribute implements AXIType {
     protected String fixedValue;
     protected AXIType datatype;
 
-    ////////////////////////////////////////////////////////////////////
-    ////////////////// Properties for firing events ////////////////////
-    ////////////////////////////////////////////////////////////////////
+    // Properties for firing events
     public static final String PROP_NAME            = "name"; //NOI18N
     public static final String PROP_FORM            = "form"; //NOI18N
     public static final String PROP_USE             = "use"; //NOI18N

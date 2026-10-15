@@ -44,7 +44,7 @@ public abstract class AttrValuesCompletion {
     private static final ValueCompletion<HtmlCompletionItem> LINK_TYPE_SUPPORT =
             new ValuesSetSupport(new String[]{"text/css", "text/javascript"});
     private static final ValueCompletion<HtmlCompletionItem> SCRIPT_TYPE_SUPPORT = 
-            new ValuesSetSupport(new String[]{"text/javascript"});
+            new ValuesSetSupport(new String[]{"text/javascript", "module"}); // NOI18N
     private static final ValueCompletion<HtmlCompletionItem> STYLE_TYPE_SUPPORT = 
             new ValuesSetSupport(new String[]{"text/css"});
     private static final ValueCompletion<HtmlCompletionItem> TRUE_FALSE_SUPPORT =
@@ -55,10 +55,10 @@ public abstract class AttrValuesCompletion {
             new ValuesSetSupport(new String[]{"circle", "default", "poly", "rect"});
     private static final ValueCompletion<HtmlCompletionItem> ON_OFF_SUPPORT =
             new ValuesSetSupport(new String[]{"on", "off"});
-    private static final ValueCompletion<HtmlCompletionItem> FORMENCTYPE_SUPPORT =
+    private static final ValueCompletion<HtmlCompletionItem> FORM_ENCTYPE_SUPPORT =
             new ValuesSetSupport(new String[]{"application/x-www-form-urlencoded", "multipart/form-data", "text/plain"});
-    private static final ValueCompletion<HtmlCompletionItem> FORMMETHOD_SUPPORT =
-            new ValuesSetSupport(new String[]{"GET", "POST", "PUT", "DELETE"});
+    private static final ValueCompletion<HtmlCompletionItem> FORM_METHOD_SUPPORT =
+            new ValuesSetSupport(new String[]{"get", "post", "dialog"});
     private static final ValueCompletion<HtmlCompletionItem> PRELOAD_SUPPORT =
             new ValuesSetSupport(new String[]{"none", "metadata", "auto"});
     private static final ValueCompletion<HtmlCompletionItem> BUTTON_TYPE_SUPPORT =
@@ -69,6 +69,8 @@ public abstract class AttrValuesCompletion {
             new ValuesSetSupport(new String[]{"context", "toolbar"});
     private static final ValueCompletion<HtmlCompletionItem> WRAP_SUPPORT =
             new ValuesSetSupport(new String[]{"soft", "hard"});
+    private static final ValueCompletion<HtmlCompletionItem> TARGET_SUPPORT =
+            new ValuesSetSupport(new String[]{"_self", "_blank", "_parent", "_top"});
     private static final ValueCompletion<HtmlCompletionItem> INPUT_TYPE_SUPPORT =
             new ValuesSetSupport(new String[]{"hidden",
                 "text","search","tel","url","email","password","datetime","date",
@@ -87,81 +89,100 @@ public abstract class AttrValuesCompletion {
     static {
         //TODO uff, such long list ... redo it so it resolves according to the DTD attribute automatically
         //mixed with html5 content...
+        putSupport(null, "contenteditable", TRUE_FALSE_SUPPORT); //NOI18N
+        putSupport(null, "dir", DIR_SUPPORT);
+        putSupport(null, "itemprop", FILE_NAME_SUPPORT); //NOI18N
+        putSupport(null, "itemtype", FILE_NAME_SUPPORT); //NOI18N
+        putSupport(null, "rel", LINK_TYPES_SUPPORT);
+        putSupport(null, "spellcheck", TRUE_FALSE_SUPPORT); //NOI18N
+
         putSupport("a", "href", FILE_NAME_SUPPORT); //NOI18N
-        putSupport("area", "href", FILE_NAME_SUPPORT); //NOI18N
         putSupport("a", "ping", FILE_NAME_SUPPORT); //NOI18N
+        putSupport("a", "target", TARGET_SUPPORT); //NOI18N
+
+        putSupport("applet", "codebase", FILE_NAME_SUPPORT); //NOI18N
+
+        putSupport("area", "href", FILE_NAME_SUPPORT); //NOI18N
         putSupport("area", "ping", FILE_NAME_SUPPORT); //NOI18N
-        putSupport("link", "href", FILE_NAME_SUPPORT); //NOI18N
-        putSupport("base", "href", FILE_NAME_SUPPORT); //NOI18N
-        putSupport("script", "src", FILE_NAME_SUPPORT); //NOI18N
+        putSupport("area", "shape", SHAPE_SUPPORT); //NOI18N
+
+        putSupport("audio", "preload", PRELOAD_SUPPORT); //NOI18N
         putSupport("audio", "src", FILE_NAME_SUPPORT); //NOI18N
-        putSupport("embed", "src", FILE_NAME_SUPPORT); //NOI18N
-        putSupport("iframe", "src", FILE_NAME_SUPPORT); //NOI18N
-        putSupport("img", "src", FILE_NAME_SUPPORT); //NOI18N
-        putSupport("input", "src", FILE_NAME_SUPPORT); //NOI18N
-        putSupport("source", "src", FILE_NAME_SUPPORT); //NOI18N
-        putSupport("track", "src", FILE_NAME_SUPPORT); //NOI18N
-        putSupport("video", "src", FILE_NAME_SUPPORT); //NOI18N        
-        putSupport("img", "longdesc", FILE_NAME_SUPPORT); //NOI18N
-        putSupport("img", "usemap", FILE_NAME_SUPPORT); //NOI18N
-        putSupport("input", "src", FILE_NAME_SUPPORT); //NOI18N
-        putSupport("frame", "src", FILE_NAME_SUPPORT); //NOI18N
-        putSupport("iframe", "src", FILE_NAME_SUPPORT); //NOI18N
+
+        putSupport("base", "href", FILE_NAME_SUPPORT); //NOI18N
+
+        putSupport("blackquote", "cite", FILE_NAME_SUPPORT); //NOI18N
+
         putSupport("body", "background", FILE_NAME_SUPPORT); //NOI18N
+
+        putSupport("button", "formaction", FILE_NAME_SUPPORT); //NOI18N
+        putSupport("button", "formenctype", FORM_ENCTYPE_SUPPORT); //NOI18N
+        putSupport("button", "formmethod", FORM_METHOD_SUPPORT); //NOI18N
+        putSupport("button", "formtarget", TARGET_SUPPORT); //NOI18N
+        putSupport("button", "type", BUTTON_TYPE_SUPPORT); //NOI18N
+
+        putSupport("command", "icon", FILE_NAME_SUPPORT); //NOI18N
+        putSupport("command", "type", COMMAND_TYPE_SUPPORT); //NOI18N
+
+        putSupport("del", "cite", FILE_NAME_SUPPORT); //NOI18N
+
+        putSupport("embed", "src", FILE_NAME_SUPPORT); //NOI18N
+
+        putSupport("form", "action", FILE_NAME_SUPPORT); //NOI18N
+        putSupport("form", "autocomplete", ON_OFF_SUPPORT); //NOI18N
+        putSupport("form", "enctype", FORM_ENCTYPE_SUPPORT); //NOI18N
+        putSupport("form", "method", FORM_METHOD_SUPPORT); //NOI18N
+        putSupport("form", "target", TARGET_SUPPORT); //NOI18N
+
+        putSupport("frame", "src", FILE_NAME_SUPPORT); //NOI18N
+
+        putSupport("html", "manifest", FILE_NAME_SUPPORT); //NOI18N
+
+        putSupport("iframe", "src", FILE_NAME_SUPPORT); //NOI18N
+
+        putSupport("img", "longdesc", FILE_NAME_SUPPORT); //NOI18N
+        putSupport("img", "src", FILE_NAME_SUPPORT); //NOI18N
+        putSupport("img", "usemap", FILE_NAME_SUPPORT); //NOI18N
+
+        putSupport("input", "autocomplete", ON_OFF_SUPPORT); //NOI18N
+        putSupport("input", "formaction", FILE_NAME_SUPPORT); //NOI18N
+        putSupport("input", "formenctype", FORM_ENCTYPE_SUPPORT); //NOI18N
+        putSupport("input", "formmethod", FORM_METHOD_SUPPORT); //NOI18N
+        putSupport("input", "formtarget", TARGET_SUPPORT); //NOI18N
+        putSupport("input", "src", FILE_NAME_SUPPORT); //NOI18N
+        putSupport("input", "type", INPUT_TYPE_SUPPORT); //NOI18N
         putSupport("input", "usemap", FILE_NAME_SUPPORT); //NOI18N
+
+        putSupport("ins", "cite", FILE_NAME_SUPPORT); //NOI18N
+
+        putSupport("link", "href", FILE_NAME_SUPPORT); //NOI18N
+        putSupport("link", "type", LINK_TYPE_SUPPORT); //NOI18N
+
+        putSupport("menu", "type", MENU_TYPE_SUPPORT); //NOI18N
+
         putSupport("object", "classid", FILE_NAME_SUPPORT); //NOI18N
         putSupport("object", "codebase", FILE_NAME_SUPPORT); //NOI18N
         putSupport("object", "data", FILE_NAME_SUPPORT); //NOI18N
         putSupport("object", "usemap", FILE_NAME_SUPPORT); //NOI18N
-        putSupport("applet", "codebase", FILE_NAME_SUPPORT); //NOI18N
+
         putSupport("q", "cite", FILE_NAME_SUPPORT); //NOI18N
-        putSupport("blackquote", "cite", FILE_NAME_SUPPORT); //NOI18N
-        putSupport("ins", "cite", FILE_NAME_SUPPORT); //NOI18N
-        putSupport("del", "cite", FILE_NAME_SUPPORT); //NOI18N
-        putSupport("form", "action", FILE_NAME_SUPPORT); //NOI18N
-        putSupport("button", "formaction", FILE_NAME_SUPPORT); //NOI18N
-        putSupport("input", "formaction", FILE_NAME_SUPPORT); //NOI18N
-        putSupport("command", "icon", FILE_NAME_SUPPORT); //NOI18N
-        putSupport(null, "itemprop", FILE_NAME_SUPPORT); //NOI18N
-        putSupport(null, "itemtype", FILE_NAME_SUPPORT); //NOI18N
-        putSupport("html", "manifest", FILE_NAME_SUPPORT); //NOI18N
-        putSupport("video", "poster", FILE_NAME_SUPPORT); //NOI18N
 
+        putSupport("script", "src", FILE_NAME_SUPPORT); //NOI18N
         putSupport("script", "type", SCRIPT_TYPE_SUPPORT); //NOI18N
+
+        putSupport("source", "src", FILE_NAME_SUPPORT); //NOI18N
+
         putSupport("style", "type", STYLE_TYPE_SUPPORT); //NOI18N
-        putSupport("link", "type", LINK_TYPE_SUPPORT); //NOI18N
-
-        putSupport("form", "autocomplete", ON_OFF_SUPPORT); //NOI18N
-        putSupport("input", "autocomplete", ON_OFF_SUPPORT); //NOI18N
-
-        putSupport(null, "contenteditable", TRUE_FALSE_SUPPORT); //NOI18N
-
-        putSupport("button", "formenctype", FORMENCTYPE_SUPPORT); //NOI18N
-        putSupport("input", "formenctype", FORMENCTYPE_SUPPORT); //NOI18N
-
-        putSupport("button", "formmethod", FORMMETHOD_SUPPORT); //NOI18N
-        putSupport("input", "formmethod", FORMMETHOD_SUPPORT); //NOI18N
-
-        putSupport("audio", "preload", PRELOAD_SUPPORT); //NOI18N
-        putSupport("video", "preload", PRELOAD_SUPPORT); //NOI18N
-
-        putSupport(null, "spellcheck", TRUE_FALSE_SUPPORT); //NOI18N
 
         putSupport("th", "scope", SCOPE_SUPPORT); //NOI18N
 
-        putSupport("area", "shape", SHAPE_SUPPORT); //NOI18N
-
-        putSupport("button", "type", BUTTON_TYPE_SUPPORT); //NOI18N
-        putSupport("command", "type", COMMAND_TYPE_SUPPORT); //NOI18N
-        putSupport("menu", "type", MENU_TYPE_SUPPORT); //NOI18N
-
         putSupport("textarea", "wrap", WRAP_SUPPORT); //NOI18N
 
-        putSupport("input", "type", INPUT_TYPE_SUPPORT); //NOI18N
-        
-        putSupport(null, "rel", LINK_TYPES_SUPPORT);
-        
-        putSupport(null, "dir", DIR_SUPPORT);
+        putSupport("track", "src", FILE_NAME_SUPPORT); //NOI18N
+
+        putSupport("video", "poster", FILE_NAME_SUPPORT); //NOI18N
+        putSupport("video", "preload", PRELOAD_SUPPORT); //NOI18N
+        putSupport("video", "src", FILE_NAME_SUPPORT); //NOI18N        
     }
 
     private static void putSupport(String tag, String attr, ValueCompletion<HtmlCompletionItem> support) {

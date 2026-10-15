@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.16
+#Version 1.48.0
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -24,7 +24,6 @@ meth public void setPreferred(boolean)
 meth public void setShortDescription(java.lang.String)
 meth public void setValue(java.lang.String,java.lang.Object)
 supr java.lang.Object
-hfds TRANSIENT,classRef,displayName,expert,hidden,name,preferred,shortDescription,table
 
 CLSS public abstract interface java.io.Serializable
 
@@ -34,6 +33,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -66,7 +66,6 @@ meth public void putValue(java.lang.String,java.lang.Object)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void setEnabled(boolean)
 supr java.lang.Object
-hfds RECONFIGURE_ON_NULL,arrayTable
 
 CLSS public abstract interface javax.swing.Action
 fld public final static java.lang.String ACCELERATOR_KEY = "AcceleratorKey"
@@ -87,6 +86,7 @@ meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeLis
 meth public abstract void putValue(java.lang.String,java.lang.Object)
 meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public abstract void setEnabled(boolean)
+meth public boolean accept(java.lang.Object)
 
 CLSS public org.netbeans.modules.gsf.testrunner.ui.api.CallstackFrameNode
 cons public init(java.lang.String)
@@ -153,6 +153,29 @@ CLSS public static org.netbeans.modules.gsf.testrunner.ui.api.TestCreatorPanelDi
 cons public init(org.netbeans.api.project.Project)
 supr java.lang.Object
 
+CLSS public org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController
+cons public init()
+innr public final static TestMethod
+meth public static void setTestMethods(javax.swing.text.Document,java.util.List<org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController$TestMethod>)
+supr java.lang.Object
+
+CLSS public final static org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController$TestMethod
+ outer org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController
+cons public init(java.lang.String,javax.swing.text.Position,org.netbeans.spi.project.SingleMethod,javax.swing.text.Position,javax.swing.text.Position,javax.swing.text.Position)
+cons public init(java.lang.String,org.netbeans.spi.project.SingleMethod,javax.swing.text.Position,javax.swing.text.Position)
+cons public init(java.lang.String,org.netbeans.spi.project.SingleMethod,javax.swing.text.Position,javax.swing.text.Position,javax.swing.text.Position)
+cons public init(org.netbeans.spi.project.SingleMethod,javax.swing.text.Position,javax.swing.text.Position)
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public java.lang.String getTestClassName()
+meth public javax.swing.text.Position end()
+meth public javax.swing.text.Position getTestClassPosition()
+meth public javax.swing.text.Position preferred()
+meth public javax.swing.text.Position start()
+meth public org.netbeans.spi.project.SingleMethod method()
+supr java.lang.Object
+hfds end,method,preferred,start,testClassName,testClassPosition
+
 CLSS public abstract org.netbeans.modules.gsf.testrunner.ui.api.TestMethodDebuggerProvider
 cons public init()
 meth public abstract boolean canHandle(org.openide.nodes.Node)
@@ -161,6 +184,11 @@ meth public boolean isTestClass(org.openide.nodes.Node)
 meth public final void debugTestMethod(org.openide.nodes.Node)
 supr java.lang.Object
 hfds command,singleMethod,singleMethodTask
+
+CLSS public final org.netbeans.modules.gsf.testrunner.ui.api.TestMethodFinder
+cons public init()
+meth public static java.util.Map<org.openide.filesystems.FileObject,java.util.Collection<org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController$TestMethod>> findTestMethods(java.lang.Iterable<org.openide.filesystems.FileObject>,java.util.function.BiConsumer<org.openide.filesystems.FileObject,java.util.Collection<org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController$TestMethod>>)
+supr java.lang.Object
 
 CLSS public org.netbeans.modules.gsf.testrunner.ui.api.TestMethodNode
 cons protected init(org.netbeans.modules.gsf.testrunner.api.Testcase,org.netbeans.api.project.Project,org.openide.util.Lookup)
@@ -192,6 +220,30 @@ cons public init()
 meth protected abstract void doActionPerformed(java.awt.event.ActionEvent)
 meth public final void actionPerformed(java.awt.event.ActionEvent)
 supr javax.swing.AbstractAction
+
+CLSS public abstract org.netbeans.modules.gsf.testrunner.ui.api.TestResultDisplayHandler
+innr public abstract interface static Spi
+meth public abstract int getTotalTests()
+meth public abstract void displayMessage(java.lang.String)
+meth public abstract void displayMessageSessionFinished(java.lang.String)
+meth public abstract void displayOutput(java.lang.String,boolean)
+meth public abstract void displayReport(org.netbeans.modules.gsf.testrunner.api.Report)
+meth public abstract void displaySuiteRunning(java.lang.String)
+meth public abstract void displaySuiteRunning(org.netbeans.modules.gsf.testrunner.api.TestSuite)
+meth public final static org.netbeans.modules.gsf.testrunner.ui.api.TestResultDisplayHandler create(org.netbeans.modules.gsf.testrunner.api.TestSession)
+supr java.lang.Object
+hcls Impl
+
+CLSS public abstract interface static org.netbeans.modules.gsf.testrunner.ui.api.TestResultDisplayHandler$Spi<%0 extends java.lang.Object>
+ outer org.netbeans.modules.gsf.testrunner.ui.api.TestResultDisplayHandler
+meth public abstract int getTotalTests({org.netbeans.modules.gsf.testrunner.ui.api.TestResultDisplayHandler$Spi%0})
+meth public abstract void displayMessage({org.netbeans.modules.gsf.testrunner.ui.api.TestResultDisplayHandler$Spi%0},java.lang.String)
+meth public abstract void displayMessageSessionFinished({org.netbeans.modules.gsf.testrunner.ui.api.TestResultDisplayHandler$Spi%0},java.lang.String)
+meth public abstract void displayOutput({org.netbeans.modules.gsf.testrunner.ui.api.TestResultDisplayHandler$Spi%0},java.lang.String,boolean)
+meth public abstract void displayReport({org.netbeans.modules.gsf.testrunner.ui.api.TestResultDisplayHandler$Spi%0},org.netbeans.modules.gsf.testrunner.api.Report)
+meth public abstract void displaySuiteRunning({org.netbeans.modules.gsf.testrunner.ui.api.TestResultDisplayHandler$Spi%0},java.lang.String)
+meth public abstract void displaySuiteRunning({org.netbeans.modules.gsf.testrunner.ui.api.TestResultDisplayHandler$Spi%0},org.netbeans.modules.gsf.testrunner.api.TestSuite)
+meth public abstract {org.netbeans.modules.gsf.testrunner.ui.api.TestResultDisplayHandler$Spi%0} create(org.netbeans.modules.gsf.testrunner.api.TestSession)
 
 CLSS public abstract org.netbeans.modules.gsf.testrunner.ui.api.TestRunnerNodeFactory
 cons public init()
@@ -232,6 +284,9 @@ meth public static void notifyUser(java.lang.String,int)
 supr java.lang.Object
 hfds LOG
 
+CLSS public abstract interface org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods
+meth public abstract java.util.List<org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController$TestMethod> computeTestMethods(org.netbeans.modules.parsing.spi.Parser$Result,java.util.concurrent.atomic.AtomicBoolean)
+
 CLSS public abstract org.netbeans.modules.gsf.testrunner.ui.spi.TestCreatorConfiguration
 cons public init()
 innr public abstract interface static Callback
@@ -270,15 +325,15 @@ cons public init(org.openide.nodes.Children)
 cons public init(org.openide.nodes.Children,org.openide.util.Lookup)
 fld protected java.text.MessageFormat displayFormat
 fld protected org.openide.util.actions.SystemAction[] systemActions
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected final org.openide.nodes.CookieSet getCookieSet()
 meth protected final org.openide.nodes.Sheet getSheet()
 meth protected final void setCookieSet(org.openide.nodes.CookieSet)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected final void setSheet(org.openide.nodes.Sheet)
 meth protected org.openide.nodes.Sheet createSheet()
 meth protected org.openide.util.actions.SystemAction[] createActions()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected void createPasteTypes(java.awt.datatransfer.Transferable,java.util.List<org.openide.util.datatransfer.PasteType>)
 meth public <%0 extends org.openide.nodes.Node$Cookie> {%%0} getCookie(java.lang.Class<{%%0}>)
 meth public boolean canCopy()
@@ -300,15 +355,15 @@ meth public org.openide.nodes.Node$Handle getHandle()
 meth public org.openide.nodes.Node$PropertySet[] getPropertySets()
 meth public org.openide.util.HelpCtx getHelpCtx()
 meth public org.openide.util.actions.SystemAction getDefaultAction()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.util.actions.SystemAction[] getActions()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.util.datatransfer.NewType[] getNewTypes()
 meth public org.openide.util.datatransfer.PasteType getDropType(java.awt.datatransfer.Transferable,int,int)
 meth public void setDefaultAction(org.openide.util.actions.SystemAction)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setIconBase(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setName(java.lang.String)
 supr org.openide.nodes.Node
 hfds DEFAULT_ICON,DEFAULT_ICON_BASE,DEFAULT_ICON_EXTENSION,ICON_BASE,NO_NEW_TYPES,NO_PASTE_TYPES,OPENED_ICON_BASE,iconBase,iconExtension,icons,lookup,overridesGetDefaultAction,preferredAction,sheet,sheetCookieL
@@ -381,15 +436,15 @@ meth public java.lang.String toString()
 meth public javax.swing.Action getPreferredAction()
 meth public javax.swing.Action[] getActions(boolean)
 meth public org.openide.util.actions.SystemAction getDefaultAction()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.util.actions.SystemAction[] getActions()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.util.actions.SystemAction[] getContextActions()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void destroy() throws java.io.IOException
 meth public void setDisplayName(java.lang.String)
 meth public void setHidden(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setName(java.lang.String)
 meth public void setShortDescription(java.lang.String)
 supr java.beans.FeatureDescriptor
@@ -398,10 +453,10 @@ hcls LookupEventList,PropertyEditorRef
 
 CLSS public final org.openide.util.HelpCtx
 cons public init(java.lang.Class<?>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String)
 cons public init(java.net.URL)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.openide.util.HelpCtx DEFAULT_HELP
 innr public abstract interface static Displayer
 innr public abstract interface static Provider

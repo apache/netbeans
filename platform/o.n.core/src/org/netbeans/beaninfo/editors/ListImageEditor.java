@@ -104,12 +104,14 @@ public class ListImageEditor extends PropertyEditorSupport implements ExProperty
     public boolean isEditable () {
         return canWrite;
     }
-    
+
+    @Override
     public String getAsText () {
         int i = findIndex (values, getValue ());
         return (String) findObject (descriptions, i);
     }
-    
+
+    @Override
     public void setAsText (String str) throws java.lang.IllegalArgumentException {
         int i = findIndex (descriptions, str);
         if (i == -1) {
@@ -123,15 +125,18 @@ public class ListImageEditor extends PropertyEditorSupport implements ExProperty
         }
         setValue (findObject (values, i));
     }
-    
+
+    @Override
     public String[] getTags () {
         return descriptions;
     }
 
+    @Override
     public boolean isPaintable () {
         return true;
     }
-    
+
+    @Override
     public void paintValue (java.awt.Graphics g, java.awt.Rectangle rectangle) {
         Image img = (Image) findObject (images, findIndex (values, getValue ()));
     
@@ -144,9 +149,10 @@ public class ListImageEditor extends PropertyEditorSupport implements ExProperty
                 null);
         }
     }
-    
+
+    @Override
     public String getJavaInitializationString () {
-        return "new Integer(" + getValue () + ")"; // NOI18N
+        return "Integer.valueOf(" + getValue () + ")"; // NOI18N
     }
     
     private Object findObject (Object [] objs, int i) {

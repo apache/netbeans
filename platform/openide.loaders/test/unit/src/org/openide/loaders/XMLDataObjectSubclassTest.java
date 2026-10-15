@@ -22,29 +22,11 @@ package org.openide.loaders;
 import java.util.Enumeration;
 import org.openide.filesystems.*;
 import java.io.*;
-import java.lang.ref.Reference;
-import java.lang.ref.WeakReference;
-import java.security.Permission;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.logging.Level;
-import junit.framework.Assert;
 import org.netbeans.junit.Log;
 import org.netbeans.junit.MockServices;
-import org.netbeans.junit.RandomlyFails;
 import org.openide.cookies.*;
-import org.openide.loaders.MultiDataObject.Entry;
-import org.openide.nodes.Node;
 import org.openide.util.Enumerations;
-import org.openide.util.RequestProcessor;
-import org.openide.xml.XMLUtil;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXParseException;
 
 /**
  *

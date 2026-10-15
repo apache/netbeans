@@ -24,6 +24,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -448,7 +449,7 @@ public final class SnippetRegistry {
                 }
             }
             try (OutputStream ostm = pkg.createAndOpen(fn)) {
-                try (OutputStreamWriter ows = new OutputStreamWriter(ostm, "UTF-8")) {
+                try (OutputStreamWriter ows = new OutputStreamWriter(ostm, StandardCharsets.UTF_8)) {
                     ows.append(contents);
                     ows.flush();
                 }

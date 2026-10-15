@@ -22,6 +22,7 @@ package org.netbeans.modules.apisupport.project.ui.wizard.winsys;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -422,7 +423,7 @@ public final class NewTCIterator extends BasicWizardIterator {
                         FileObject wsmode = FileUtil.createData(fo, entry.getKey() + ".wsmode");
                         OutputStream os = wsmode.getOutputStream();
                         try {
-                            os.write(entry.getValue().getBytes("UTF-8"));
+                            os.write(entry.getValue().getBytes(StandardCharsets.UTF_8));
                         } finally {
                             os.close();
                         }

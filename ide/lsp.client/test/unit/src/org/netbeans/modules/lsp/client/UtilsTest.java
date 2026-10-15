@@ -19,10 +19,12 @@
 package org.netbeans.modules.lsp.client;
 
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import org.eclipse.lsp4j.CreateFile;
 import org.eclipse.lsp4j.DeleteFile;
@@ -61,7 +63,7 @@ public class UtilsTest extends NbTestCase {
                        "0123456789\n" +
                        "0123456789\n" +
                        "0123456789\n" +
-                       "0123456789\n").getBytes("UTF-8"));
+                       "0123456789\n").getBytes(StandardCharsets.UTF_8));
         }
         FileObject sourceFile2 = wd.createData("Test2.txt");
         try (OutputStream out = sourceFile2.getOutputStream()) {
@@ -69,7 +71,7 @@ public class UtilsTest extends NbTestCase {
                        "0123456789\n" +
                        "0123456789\n" +
                        "0123456789\n" +
-                       "0123456789\n").getBytes("UTF-8"));
+                       "0123456789\n").getBytes(StandardCharsets.UTF_8));
         }
         Map<String, List<TextEdit>> changes = new HashMap<>();
         changes.put(Utils.toURI(sourceFile1), Arrays.asList(new TextEdit(new Range(new Position(2, 3), new Position(2, 6)), "a"),
@@ -93,6 +95,28 @@ public class UtilsTest extends NbTestCase {
         LifecycleManager.getDefault().saveAll();
     }
 
+    public void testSamePosition() throws Exception {
+        //what happens when there are two edits at the same location:
+        //apply them in a reverse original order - but not clear what's correct,
+        //this is pretty broken
+        clearWorkDir();
+        FileObject wd = FileUtil.toFileObject(getWorkDir());
+        FileObject sourceFile1 = wd.createData("Test1.txt");
+        try (OutputStream out = sourceFile1.getOutputStream()) {
+            out.write(("0123456789\n" +
+                       "0123456789\n").getBytes(StandardCharsets.UTF_8));
+        }
+        Map<String, List<TextEdit>> changes = new HashMap<>();
+        changes.put(Utils.toURI(sourceFile1), Arrays.asList(new TextEdit(new Range(new Position(1, 3), new Position(1, 3)), "a"),
+                                                            new TextEdit(new Range(new Position(1, 3), new Position(1, 3)), "b")));
+        WorkspaceEdit edit = new WorkspaceEdit(changes);
+        Utils.applyWorkspaceEdit(edit);
+        assertContent("0123456789\n" +
+                      "012ab3456789\n",
+                      sourceFile1);
+        LifecycleManager.getDefault().saveAll();
+    }
+
     public void testApplyChanges() throws Exception {
         clearWorkDir();
         FileObject wd = FileUtil.toFileObject(getWorkDir());
@@ -102,7 +126,7 @@ public class UtilsTest extends NbTestCase {
                        "0123456789\n" +
                        "0123456789\n" +
                        "0123456789\n" +
-                       "0123456789\n").getBytes("UTF-8"));
+                       "0123456789\n").getBytes(StandardCharsets.UTF_8));
         }
         FileObject sourceFile2 = wd.createData("Test2.txt");
         try (OutputStream out = sourceFile2.getOutputStream()) {
@@ -110,7 +134,7 @@ public class UtilsTest extends NbTestCase {
                        "0123456789\n" +
                        "0123456789\n" +
                        "0123456789\n" +
-                       "0123456789\n").getBytes("UTF-8"));
+                       "0123456789\n").getBytes(StandardCharsets.UTF_8));
         }
         FileObject sourceFile3 = wd.createData("Test3.txt");
         WorkspaceEdit edit = new WorkspaceEdit(Arrays.asList(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(Utils.toURI(sourceFile1), -1), Arrays.asList(new TextEdit(new Range(new Position(2, 3), new Position(2, 6)), "a"),
@@ -137,6 +161,68 @@ public class UtilsTest extends NbTestCase {
         assertContent("new content", wd.getFileObject("Test4.txt"));
         assertNull(wd.getFileObject("Test3.txt"));
         LifecycleManager.getDefault().saveAll();
+    }
+
+    public void testDefaultIndent1() throws Exception {
+        doTestDefaultIndent("if (true) {|",
+                            "\n",
+                            "if (true) {\n" +
+                            "    |");
+    }
+
+    public void testDefaultIndent2() throws Exception {
+        doTestDefaultIndent("    if (true) {\n" +
+                            "        |",
+                            "}",
+                            "    if (true) {\n" +
+                            "    }|");
+    }
+
+    public void testDefaultIndent3() throws Exception {
+        doTestDefaultIndent("   if (true) {\n" +
+                            "             |",
+                            "}",
+                            "   if (true) {\n" +
+                            "   }|");
+    }
+
+    public void testDefaultIndent4  () throws Exception {
+        doTestDefaultIndent("         |",
+                            "}",
+                            "}|");
+    }
+
+    public void testDefaultIndent5() throws Exception {
+        doTestDefaultIndent("   if (true) {\n" +
+                            "   }|",
+                            "}",
+                            "   if (true) {\n" +
+                            "   }}|");
+    }
+
+    private void doTestDefaultIndent(String code, String insertCode, String expectedResult) throws Exception {
+        clearWorkDir();
+        FileObject wd = FileUtil.toFileObject(getWorkDir());
+        FileObject sourceFile1 = wd.createData("Test1.txt");
+        EditorCookie ec = sourceFile1.getLookup().lookup(EditorCookie.class);
+        Document doc = ec.openDocument();
+        int insertPos = code.indexOf("|");
+        code = code.replace("|", "");
+        doc.insertString(0, code, null);
+        javax.swing.text.Position caret = doc.createPosition(insertPos);
+        doc.insertString(insertPos, insertCode, null);
+        List<TextEdit> edits = Utils.computeDefaultOnTypeIndent(doc, insertPos, Utils.createPosition(doc, insertPos), insertCode);
+        Utils.applyEditsNoLock(doc, edits);
+        int expectedPos = expectedResult.indexOf("|");
+        expectedResult = expectedResult.replace("|", "");
+        assertEquals(expectedResult, doc.getText(0, doc.getLength()));
+        assertEquals(expectedPos, caret.getOffset());
+        LifecycleManager.getDefault().saveAll();
+    }
+
+    public void testRemovedTestPosition() throws Exception {
+        assertEquals(new Position(2, 3), Utils.computeEndPositionForRemovedText(new Position(2, 2), "a"));
+        assertEquals(new Position(4, 1), Utils.computeEndPositionForRemovedText(new Position(2, 2), "aaaaa\naaaaaaaa\na"));
     }
 
     private void assertContent(String expectedContent, FileObject sourceFile) throws Exception {

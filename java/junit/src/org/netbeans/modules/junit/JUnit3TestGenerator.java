@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.junit;
 
+import org.netbeans.modules.junit.api.JUnitVersion;
 import org.netbeans.modules.junit.api.JUnitTestUtil;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
@@ -104,6 +105,7 @@ final class JUnit3TestGenerator extends AbstractTestGenerator {
                     Collections.<TypeParameterTree>emptyList(),//type params
                     extendsClause,                             //extends
                     Collections.<ExpressionTree>emptyList(),   //implements
+                    Collections.<ExpressionTree>emptyList(),   //permits
                     members);                                  //members
     }
     
@@ -157,6 +159,7 @@ final class JUnit3TestGenerator extends AbstractTestGenerator {
                 tstClass.getTypeParameters(),
                 tstClass.getExtendsClause(),
                 (List<? extends ExpressionTree>) tstClass.getImplementsClause(),
+                (List<? extends ExpressionTree>) tstClass.getPermitsClause(),
                 tstMembers);
         return newClass;
     }
@@ -357,6 +360,7 @@ final class JUnit3TestGenerator extends AbstractTestGenerator {
                 tstClass.getTypeParameters(),
                 tstClass.getExtendsClause(),
                 (List<? extends ExpressionTree>) tstClass.getImplementsClause(),
+                (List<? extends ExpressionTree>) tstClass.getPermitsClause(),
                 tstMembers);
     }
 

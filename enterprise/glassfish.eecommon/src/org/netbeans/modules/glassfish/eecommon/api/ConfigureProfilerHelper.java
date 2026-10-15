@@ -37,7 +37,7 @@ public class ConfigureProfilerHelper {
     
     
     // replaces the AS_JAVA item in asenv.bat/conf
-    static public boolean modifyAsEnvScriptFile( File irf, String targetJavaHomePath) {
+    public static boolean modifyAsEnvScriptFile( File irf, String targetJavaHomePath) {
         
         String ext = (isUnix() ? "conf" : "bat");
         //File irf = ((SunDeploymentManagerInterface)dm).getPlatformRoot();

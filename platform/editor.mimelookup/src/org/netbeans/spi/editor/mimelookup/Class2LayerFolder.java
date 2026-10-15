@@ -36,7 +36,7 @@ package org.netbeans.spi.editor.mimelookup;
  * path 'text/x-jsp/text/x-java' and they would be located in the folder
  * 'Editors/text/x-jsp/text/x-java' on the system filesystem. For more details
  * on the implementation of the default <code>MimeDataProvider</code> please see
- * the <a href="package-summary.html#defaultMimeDataProvider"/>SPI package</a> description.
+ * the <a href="package-summary.html#defaultMimeDataProvider">SPI package</a> description.
  *
  * <p>The implementations of this interface are used for determining the structure
  * under the folder belonging to a given mime type. This interface allows to 
@@ -51,7 +51,7 @@ package org.netbeans.spi.editor.mimelookup;
  * can be registered in the 'Editors/text/x-java/foldManager' folder and they
  * will be properly retrieved when calling
  * <code>MimeLookup.getLookup(MimePath.get("text/x-java")).lookup(FolderManager.class);</code>.
- * @param T type of instance which will be created
+ * @param <T> type of instance which will be created
  *
  * @author Miloslav Metelka, Martin Roskanin, Vita Stejskal
  * @deprecated Use {@link MimeLocation} instead

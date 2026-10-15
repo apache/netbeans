@@ -13,4 +13,9 @@ class               /*fjlajdfla*/           ClassName {
         return   "test"   ;
     }
 }
+
+$lambda =    function      ($param)   use  ($parent) {
+    echo "$param\n";
+};
+
 ?>

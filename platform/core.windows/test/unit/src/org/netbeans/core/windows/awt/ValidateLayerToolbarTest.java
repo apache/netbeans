@@ -40,25 +40,29 @@ public class ValidateLayerToolbarTest extends ValidateLayerMenuTest {
     }
 
     public static Test suite() {
-        return
-            NbModuleSuite.createConfiguration(ValidateLayerToolbarTest.class).
-                clusters(".*").enableModules(".*").gui(false)
-        .suite();
+        return NbModuleSuite.createConfiguration(ValidateLayerToolbarTest.class)
+                .clusters(".*")
+                .enableModules(".*")
+                .gui(false)
+                .suite();
     }
     
     //
     // override in subclasses
     //
     
+    @Override
     protected String rootName () {
         return "Toolbars";
     }
     
     /** Allowes to skip filest that are know to be broken */
+    @Override
     protected boolean skipFile (FileObject fo) {
         return false;
     }
     
+    @Override
     protected boolean correctInstance (Object obj) {
         if (obj instanceof javax.swing.Action) {
             return true;

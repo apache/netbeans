@@ -118,13 +118,9 @@ public class LayoutNode extends FormNode
         // create bean customizer for layout manager
         Object customizerObject;
         try {
-            customizerObject = customizerClass.newInstance();
+            customizerObject = customizerClass.getDeclaredConstructor().newInstance();
         }
-        catch (InstantiationException e) {
-            ErrorManager.getDefault().notify(ErrorManager.WARNING, e);
-            return null;
-        }
-        catch (IllegalAccessException e) {
+        catch (ReflectiveOperationException e) {
             ErrorManager.getDefault().notify(ErrorManager.WARNING, e);
             return null;
         }

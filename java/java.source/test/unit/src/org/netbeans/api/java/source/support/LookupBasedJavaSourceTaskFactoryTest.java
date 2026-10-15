@@ -110,13 +110,13 @@ public class LookupBasedJavaSourceTaskFactoryTest extends NbTestCase {
         
         lookup.setLookupsImpl(new Lookup[] {Lookups.fixed(new Object[] {testFile1DO, testFile1Node})});
         
-        assertEquals(8, changeCount[0]);
+        assertEquals(7, changeCount[0]);
         assertEquals(1, factory.getFileObjects().size());
         assertEquals(testFile1, factory.getFileObjects().get(0));
         
         lookup.setLookupsImpl(new Lookup[] {Lookups.singleton(testFile2Node)});
         
-        assertEquals(10, changeCount[0]);
+        assertEquals(8, changeCount[0]);
         assertEquals(1, factory.getFileObjects().size());
         assertEquals(testFile2, factory.getFileObjects().get(0));
     }

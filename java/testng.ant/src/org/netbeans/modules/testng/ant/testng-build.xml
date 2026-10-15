@@ -46,7 +46,7 @@
                     <filename name="@{testincludes}"/>
                 </fileset>
                 <taskdef name="testng" classname="org.testng.TestNGAntTask" classpath="${run.test.classpath}"/>
-                <testng mode="mixed" classfilesetref="mixed.tests" workingDir="${basedir}" failureProperty="tests.failed" outputdir="${build.test.results.dir}">
+                <testng mode="mixed" classfilesetref="mixed.tests" workingDir="${basedir}" failureProperty="tests.failed" outputdir="${build.test.results.dir}" verbose="5">
                     <classpath>
                         <pathelement path="${run.test.classpath}"/>
                         <pathelement path="${j2ee.platform.classpath}"/>
@@ -65,7 +65,7 @@
             <attribute name="testSuite" default="${build.dir}/generated/testng/temp-testng-customsuite.xml"/>
             <sequential>
                 <taskdef name="testng" classname="org.testng.TestNGAntTask" classpath="${run.test.classpath}"/>
-                <testng workingDir="${basedir}" failureProperty="tests.failed" outputdir="${build.test.results.dir}">
+                <testng workingDir="${basedir}" failureProperty="tests.failed" outputdir="${build.test.results.dir}" verbose="5">
                     <classpath>
                         <pathelement path="${run.test.classpath}"/>
                         <pathelement path="${j2ee.platform.classpath}"/>
@@ -189,7 +189,7 @@
                 <jvmarg value="-ea"/>
                 <arg line="-mixed"/>
                 <arg line="-d ${build.test.results.dir}"/>
-                <arg line="-listener org.testng.reporters.VerboseReporter"/>
+                <arg line="-verbose 5"/>
                 <arg line="${test.name.arg}"/>
                 <arg line="${test.class.or.method}"/>
             </customize>

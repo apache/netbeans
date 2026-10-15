@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.75.0
+#Version 2.13.0
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -12,8 +12,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -22,15 +24,16 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -40,6 +43,9 @@ meth public final void wait(long) throws java.lang.InterruptedException
 meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public abstract interface java.util.EventListener
 
@@ -62,6 +68,7 @@ meth public static org.netbeans.api.project.libraries.Library createMavenDepende
  anno 2 org.netbeans.api.annotations.common.NonNull()
  anno 3 org.netbeans.api.annotations.common.NonNull()
 meth public static org.netbeans.api.project.libraries.Library enhanceLibraryWithPomContent(org.netbeans.api.project.libraries.Library,java.util.List<java.net.URI>) throws java.io.IOException
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void enhanceFileBody(org.openide.loaders.DataObject,java.lang.String,java.lang.String)
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NonNull()
@@ -122,9 +129,9 @@ intf org.netbeans.modules.web.jsfapi.api.Library
 meth public java.lang.String getDefaultNamespace()
 meth public java.lang.String getDefaultPrefix()
 meth public java.lang.String getDisplayName()
-meth public java.lang.String getLegacyNamespace()
 meth public java.lang.String getNamespace()
 meth public java.util.Collection<? extends org.netbeans.modules.web.jsfapi.api.LibraryComponent> getComponents()
+meth public java.util.Set<java.lang.String> getValidNamespaces()
 meth public org.netbeans.modules.web.jsfapi.api.LibraryComponent getComponent(java.lang.String)
 meth public org.netbeans.modules.web.jsfapi.api.LibraryType getType()
 meth public void addComponent(org.netbeans.modules.web.jsfapi.api.LibraryComponent)
@@ -917,7 +924,7 @@ CLSS public abstract interface org.netbeans.modules.web.jsf.api.facesmodel.JSFCo
 intf org.netbeans.modules.xml.xam.dom.DocumentModel<org.netbeans.modules.web.jsf.api.facesmodel.JSFConfigComponent>
 meth public abstract org.netbeans.modules.web.jsf.api.facesmodel.FacesConfig getRootComponent()
 meth public abstract org.netbeans.modules.web.jsf.api.facesmodel.JSFConfigComponentFactory getFactory()
-meth public abstract org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion getVersion()
+meth public abstract org.netbeans.modules.web.jsfapi.api.JsfVersion getVersion()
 
 CLSS public org.netbeans.modules.web.jsf.api.facesmodel.JSFConfigModelFactory
 meth protected org.netbeans.modules.web.jsf.api.facesmodel.JSFConfigModel createModel(org.netbeans.modules.xml.xam.ModelSource)
@@ -1119,39 +1126,27 @@ meth public void visit(org.netbeans.modules.web.jsf.api.facesmodel.ViewParam)
 meth public void visit(org.netbeans.modules.web.jsf.api.facesmodel.VisitContextFactory)
 supr java.lang.Object
 
-CLSS public final !enum org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion
-fld public final static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion JSF_1_0
-fld public final static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion JSF_1_1
-fld public final static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion JSF_1_2
-fld public final static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion JSF_2_0
-fld public final static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion JSF_2_1
-fld public final static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion JSF_2_2
-fld public final static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion JSF_2_3
-meth public boolean isAtLeast(org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion)
- anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public java.lang.String getShortName()
-meth public static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion forClasspath(java.util.Collection<java.io.File>)
+CLSS public final org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils
+meth public static org.netbeans.modules.web.jsfapi.api.JsfVersion forClasspath(java.util.Collection<java.io.File>)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion forClasspath(java.util.List<java.net.URL>)
+meth public static org.netbeans.modules.web.jsfapi.api.JsfVersion forClasspath(java.util.List<java.net.URL>)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion forProject(org.netbeans.api.project.Project)
+meth public static org.netbeans.modules.web.jsfapi.api.JsfVersion forProject(org.netbeans.api.project.Project)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion forServerLibrary(org.netbeans.modules.j2ee.deployment.plugins.api.ServerLibrary)
+meth public static org.netbeans.modules.web.jsfapi.api.JsfVersion forServerLibrary(org.netbeans.modules.j2ee.deployment.plugins.api.ServerLibrary)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion forWebModule(org.netbeans.modules.web.api.webmodule.WebModule)
+meth public static org.netbeans.modules.web.jsfapi.api.JsfVersion forWebModule(org.netbeans.modules.web.api.webmodule.WebModule)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion get(org.netbeans.modules.web.api.webmodule.WebModule,boolean)
+meth public static org.netbeans.modules.web.jsfapi.api.JsfVersion get(org.netbeans.modules.web.api.webmodule.WebModule,boolean)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion valueOf(java.lang.String)
-meth public static org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion[] values()
-supr java.lang.Enum<org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion>
-hfds LOG,RP,SPECIFIC_CLASS_NAMES,projectListenerCache,projectVersionCache,shortName
+supr java.lang.Object
+hfds LOG,SPECIFIC_CLASS_NAMES,projectListenerCache,projectVersionCache
 
 CLSS public abstract interface org.netbeans.modules.web.jsf.api.facesmodel.LangAttribute
 fld public final static java.lang.String LANG_ATTRIBUTE
@@ -1654,7 +1649,7 @@ meth public abstract java.lang.String getDisplayName()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public abstract java.lang.String getName()
  anno 0 org.netbeans.api.annotations.common.NonNull()
-meth public abstract java.util.Set<org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion> getJsfVersion()
+meth public abstract java.util.Set<org.netbeans.modules.web.jsfapi.api.JsfVersion> getJsfVersion()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public abstract java.util.Set<org.openide.filesystems.FileObject> extend(org.netbeans.modules.web.api.webmodule.WebModule,org.netbeans.modules.web.jsf.spi.components.JsfComponentCustomizer)
  anno 0 org.netbeans.api.annotations.common.NonNull()
@@ -1679,7 +1674,7 @@ meth public abstract java.util.Collection<? extends org.netbeans.modules.web.jsf
 meth public abstract org.netbeans.modules.web.jsfapi.api.LibraryComponent getComponent(java.lang.String)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
 meth public abstract org.netbeans.modules.web.jsfapi.api.LibraryType getType()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
  anno 0 org.netbeans.api.annotations.common.NonNull()
 
 CLSS public abstract interface org.netbeans.modules.web.jsfapi.api.LibraryComponent
@@ -1695,9 +1690,8 @@ meth public abstract org.netbeans.modules.web.jsfapi.api.Tag getTag()
 CLSS public abstract interface org.netbeans.modules.web.jsfapi.api.LibraryInfo
 meth public abstract java.lang.String getDefaultPrefix()
 meth public abstract java.lang.String getDisplayName()
-meth public abstract java.lang.String getLegacyNamespace()
- anno 0 org.netbeans.api.annotations.common.CheckForNull()
 meth public abstract java.lang.String getNamespace()
+meth public abstract java.util.Set<java.lang.String> getValidNamespaces()
 
 CLSS public abstract org.netbeans.modules.xml.xam.AbstractModelFactory<%0 extends org.netbeans.modules.xml.xam.Model>
 cons public init()
@@ -1782,10 +1776,10 @@ meth public abstract void fileRenamed(org.openide.filesystems.FileRenameEvent)
 
 CLSS public final org.openide.util.HelpCtx
 cons public init(java.lang.Class<?>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String)
 cons public init(java.net.URL)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.openide.util.HelpCtx DEFAULT_HELP
 innr public abstract interface static Displayer
 innr public abstract interface static Provider

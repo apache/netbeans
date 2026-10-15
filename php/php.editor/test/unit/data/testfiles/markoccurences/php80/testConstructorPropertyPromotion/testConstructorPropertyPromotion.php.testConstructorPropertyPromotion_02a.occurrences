@@ -1,0 +1,4 @@
+            protected int|string|\Test2\Foo $|>MARK_OCCURRENCES:fiel^d2<|,
+            echo $|>MARK_OCCURRENCES:field2<|;
+            $this->|>MARK_OCCURRENCES:field2<|;
+            var_dump($this->|>MARK_OCCURRENCES:field2<|);

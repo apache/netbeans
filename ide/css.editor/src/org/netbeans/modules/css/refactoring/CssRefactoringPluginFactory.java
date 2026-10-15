@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.css.refactoring;
 
+import org.netbeans.modules.css.refactoring.api.CssRefactoringInfo;
 import org.netbeans.modules.refactoring.api.AbstractRefactoring;
 import org.netbeans.modules.refactoring.api.RenameRefactoring;
 import org.netbeans.modules.refactoring.api.WhereUsedQuery;
@@ -35,7 +36,7 @@ public class CssRefactoringPluginFactory implements RefactoringPluginFactory {
     @Override
     public RefactoringPlugin createInstance(AbstractRefactoring refactoring) {
 	if (refactoring instanceof RenameRefactoring) {
-	    if (null != refactoring.getRefactoringSource().lookup(CssElementContext.class)) {
+	    if (null != refactoring.getRefactoringSource().lookup(CssRefactoringInfo.class)) {
 		return new CssRenameRefactoringPlugin((RenameRefactoring)refactoring);
 	    } else {
                 //folder refactoring
@@ -45,7 +46,7 @@ public class CssRefactoringPluginFactory implements RefactoringPluginFactory {
                 }
             }
 	} else if(refactoring instanceof WhereUsedQuery) {
-            if (null != refactoring.getRefactoringSource().lookup(CssElementContext.class)) {
+            if (null != refactoring.getRefactoringSource().lookup(CssRefactoringInfo.class)) {
                 return new CssWhereUsedQueryPlugin((WhereUsedQuery)refactoring);
             }
         }

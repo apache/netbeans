@@ -46,7 +46,7 @@ import org.openide.loaders.TemplateWizard;
 public class WebServiceClientWizardIterator implements TemplateWizard.Iterator {
 
     private int index = 0;
-    private WizardDescriptor.Panel [] panels;
+    private WizardDescriptor.Panel<WizardDescriptor>[] panels;
 
     private TemplateWizard wiz;
     // !PW FIXME How to handle freeform???
@@ -73,7 +73,7 @@ public class WebServiceClientWizardIterator implements TemplateWizard.Iterator {
 
         Object prop = wiz.getProperty(WizardDescriptor.PROP_CONTENT_DATA); // NOI18N
         String[] beforeSteps = null;
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[])prop;
         }
         String[] steps = JaxWsUtils.createSteps (beforeSteps, panels);
@@ -90,7 +90,7 @@ public class WebServiceClientWizardIterator implements TemplateWizard.Iterator {
             assert c instanceof JComponent;
             JComponent jc = (JComponent)c;
             // Step #.
-            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, Integer.valueOf(i)); // NOI18N
+            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i); // NOI18N
             // Step name (actually the whole list for reference).
             jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps); // NOI18N
         }

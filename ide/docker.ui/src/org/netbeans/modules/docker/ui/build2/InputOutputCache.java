@@ -154,7 +154,7 @@ public final class InputOutputCache {
 
             if (actions != null && !actions.isEmpty()) {
                 io = IOProvider.getDefault().getIO(displayName,
-                        actions.toArray(new Action[actions.size()]));
+                        actions.toArray(new Action[0]));
 
                 //rerunAction.setParent(io);
             } else {

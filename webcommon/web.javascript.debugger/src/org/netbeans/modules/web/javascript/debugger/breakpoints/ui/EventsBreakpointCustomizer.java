@@ -96,7 +96,7 @@ public class EventsBreakpointCustomizer extends javax.swing.JPanel implements Co
     
     private void fillCategoryEvents() {
         Set<String> allEventCategories = EventsBreakpoint.getAllEventCategories();
-        DefaultListModel categoryModel = new DefaultListModel();
+        DefaultListModel<String> categoryModel = new DefaultListModel<>();
         for (String category : allEventCategories) {
             categoryModel.addElement(category);
         }
@@ -104,7 +104,7 @@ public class EventsBreakpointCustomizer extends javax.swing.JPanel implements Co
     }
     
     private void fillEvents(String category) {
-        DefaultListModel eventsModel = new DefaultListModel();
+        DefaultListModel<String> eventsModel = new DefaultListModel<>();
         Set<String> allEvents = EventsBreakpoint.getAllEvents(category);
         for (String event : allEvents) {
             eventsModel.addElement(event);

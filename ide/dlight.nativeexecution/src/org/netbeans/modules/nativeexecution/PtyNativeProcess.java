@@ -116,7 +116,7 @@ public final class PtyNativeProcess extends AbstractNativeProcess {
         info.setCommandLine(null);
         final String path = PtyUtility.getInstance().getPath(env);
         info.setExecutable(path);
-        info.setArguments(newArgs.toArray(new String[newArgs.size()]));
+        info.setArguments(newArgs.toArray(new String[0]));
 
         // no need to preload unbuffer in case of running in internal terminal
         info.setUnbuffer(false);

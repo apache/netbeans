@@ -29,18 +29,12 @@ package org.netbeans.modules.glassfish.tooling.admin;
 @RunnerRestClass(runner=RunnerLocal.class)
 public class CommandStartDAS extends CommandJavaClassPath {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** No command string is needed for Start DAS command but we may use it
      *  in logs. */
     private static final String COMMAND = "start-das";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** JVM options to be passed to java executable.
         Typically options as as <code>-D&lt;name&gt;=&lt;value&gt;</code>
         or <code>-X&lt;option&gt</code>. 
@@ -54,10 +48,7 @@ public class CommandStartDAS extends CommandJavaClassPath {
     /** GlassFish server domain directory (full path). */
     final String domainDir;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of GlassFish server start DAS command entity.
      * @param javaHome      Java SE home used to select JRE for GlassFish

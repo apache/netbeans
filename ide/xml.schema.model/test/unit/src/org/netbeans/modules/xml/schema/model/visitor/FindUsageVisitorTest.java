@@ -70,7 +70,7 @@ public class FindUsageVisitorTest extends TestCase {
 	SchemaModel model = Util.loadSchemaModel(TEST_XSD);
 	schema = model.getSchema();
         
-        Collection<GlobalType> types = new ArrayList(schema.getComplexTypes());
+        Collection<GlobalType> types = new ArrayList<>(schema.getComplexTypes());
         types.addAll(schema.getSimpleTypes());
         for(GlobalType type : types) {
             if(type.getName().equals(FIND_USAGE_FOR_TYPE)) {
@@ -110,7 +110,7 @@ public class FindUsageVisitorTest extends TestCase {
 
     public int findUsageCountForItem(NamedReferenceable<SchemaComponent> ref) {
         long startTime = System.currentTimeMillis();
-        System.out.println("Finding Usage for " + ref.getName() == null? ref : ref.getName());
+        System.out.println("Finding Usage for " + (ref.getName() == null ? ref : ref.getName()));
         FindUsageVisitor usage = new FindUsageVisitor();
         Preview preview = usage.findUsages(Collections.singletonList(schema), ref);
         System.out.println(preview.getUsages().size() + " occurances found!!!");

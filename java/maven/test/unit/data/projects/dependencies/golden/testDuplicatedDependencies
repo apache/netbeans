@@ -1,0 +1,1832 @@
+[ ] com.example:demo:0.1[jar] / compilation
+ +-- [ ] ch.qos.logback:logback-classic:1.2.11[jar] / runtime
+ |    +-- [ ] ch.qos.logback:logback-core:1.2.11[jar] / runtime
+ |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / runtime
+ +-- [ ] io.micronaut:micronaut-http-client:3.7.0[jar] / compilation
+ |    +-- [ ] io.micronaut:micronaut-http-client-core:3.7.0[jar] / compilation
+ |    |    +-- [ ] io.micronaut:micronaut-runtime:3.7.0[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-aop:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-context:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-aop:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    +-- [ ] javax.validation:validation-api:2.0.1.Final[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-http:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-jackson-databind:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-databind:2.13.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    +-- [ ] com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.13.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-databind:2.13.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    +-- [ ] com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-databind:2.13.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-jackson-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-json-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-context:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-aop:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] javax.validation:validation-api:2.0.1.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-http:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    +-- [ ] javax.validation:validation-api:2.0.1.Final[jar] / compilation
+ |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    +-- [ ] io.micronaut:micronaut-http-netty:3.7.0[jar] / compilation
+ |    |    +-- [ ] io.micronaut:micronaut-buffer-netty:3.7.0[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    +-- [ ] io.micronaut:micronaut-http:3.7.0[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    +-- [ ] io.micronaut:micronaut-websocket:3.7.0[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-aop:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-http-client-core:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-runtime:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-aop:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-context:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-aop:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] javax.validation:validation-api:2.0.1.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-http:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-jackson-databind:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-databind:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-databind:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-databind:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-jackson-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-json-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-context:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-aop:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] javax.validation:validation-api:2.0.1.Final[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-http:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    |    |    +-- [ ] javax.validation:validation-api:2.0.1.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-http:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    +-- [ ] io.netty:netty-codec-http2:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-codec-http:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-codec:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-handler:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-codec:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-transport-native-unix-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-codec:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-handler:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-codec:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-transport-native-unix-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    +-- [ ] io.netty:netty-codec-http:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-codec:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-handler:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-codec:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-transport-native-unix-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    +-- [ ] io.netty:netty-handler:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-codec:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-transport-native-unix-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    +-- [ ] io.micronaut:micronaut-runtime:3.7.0[jar] / compilation
+ |    |    +-- [ ] io.micronaut:micronaut-aop:3.7.0[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    +-- [ ] io.micronaut:micronaut-context:3.7.0[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-aop:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    +-- [ ] javax.validation:validation-api:2.0.1.Final[jar] / compilation
+ |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    +-- [ ] io.micronaut:micronaut-http:3.7.0[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    +-- [ ] io.micronaut:micronaut-jackson-databind:3.7.0[jar] / compilation
+ |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-databind:2.13.4[jar] / compilation
+ |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    +-- [ ] com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.13.4[jar] / compilation
+ |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-databind:2.13.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    +-- [ ] com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.4[jar] / compilation
+ |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-databind:2.13.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-jackson-core:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-json-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-context:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-aop:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] javax.validation:validation-api:2.0.1.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-http:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    +-- [ ] javax.validation:validation-api:2.0.1.Final[jar] / compilation
+ |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    +-- [ ] io.micronaut:micronaut-websocket:3.7.0[jar] / compilation
+ |    |    +-- [ ] io.micronaut:micronaut-aop:3.7.0[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    +-- [ ] io.micronaut:micronaut-http-client-core:3.7.0[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-runtime:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-aop:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-context:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-aop:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    +-- [ ] javax.validation:validation-api:2.0.1.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-http:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-jackson-databind:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-databind:2.13.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.13.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-databind:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-databind:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-jackson-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-json-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-context:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-aop:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] javax.validation:validation-api:2.0.1.Final[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-http:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    |    +-- [ ] javax.validation:validation-api:2.0.1.Final[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    +-- [ ] io.micronaut:micronaut-http:3.7.0[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    +-- [ ] io.netty:netty-handler-proxy:4.1.82.Final[jar] / compilation
+ |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    +-- [ ] io.netty:netty-codec-http:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-codec:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-handler:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-codec:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-transport-native-unix-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    +-- [ ] io.netty:netty-codec-socks:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-codec:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    +-- [ ] io.netty:netty-codec:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ +-- [ ] io.micronaut:micronaut-http-server-netty:3.7.0[jar] / compilation
+ |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    +-- [ ] io.micronaut:micronaut-http-netty:3.7.0[jar] / compilation
+ |    |    +-- [ ] io.micronaut:micronaut-buffer-netty:3.7.0[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    +-- [ ] io.micronaut:micronaut-http:3.7.0[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    +-- [ ] io.micronaut:micronaut-websocket:3.7.0[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-aop:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-http-client-core:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-runtime:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-aop:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-context:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-aop:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] javax.validation:validation-api:2.0.1.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-http:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-jackson-databind:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-databind:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-databind:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-databind:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-jackson-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-json-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-context:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-aop:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] javax.validation:validation-api:2.0.1.Final[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-http:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    |    |    +-- [ ] javax.validation:validation-api:2.0.1.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-http:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    +-- [ ] io.netty:netty-codec-http2:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-codec-http:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-codec:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-handler:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-codec:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-transport-native-unix-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-codec:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-handler:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-codec:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-transport-native-unix-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    +-- [ ] io.netty:netty-codec-http:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-codec:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-handler:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-codec:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-transport-native-unix-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    +-- [ ] io.netty:netty-handler:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-codec:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-transport-native-unix-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    +-- [ ] io.micronaut:micronaut-http-server:3.7.0[jar] / compilation
+ |    |    +-- [ ] io.micronaut:micronaut-router:3.7.0[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-http:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    +-- [ ] io.micronaut:micronaut-runtime:3.7.0[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-aop:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-context:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-aop:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    +-- [ ] javax.validation:validation-api:2.0.1.Final[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-http:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-jackson-databind:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-databind:2.13.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    +-- [ ] com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.13.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-databind:2.13.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    +-- [ ] com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-databind:2.13.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-jackson-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-json-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-context:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-aop:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] javax.validation:validation-api:2.0.1.Final[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-http:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    +-- [ ] javax.validation:validation-api:2.0.1.Final[jar] / compilation
+ |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    +-- [ ] io.micronaut:micronaut-websocket:3.7.0[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-aop:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-http-client-core:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-runtime:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-aop:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-context:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-aop:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] javax.validation:validation-api:2.0.1.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-http:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-jackson-databind:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-databind:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-databind:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-databind:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-jackson-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-json-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-context:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-aop:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] javax.validation:validation-api:2.0.1.Final[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-http:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    |    |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    |    |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    |    |    +-- [ ] javax.validation:validation-api:2.0.1.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-http:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    +-- [ ] io.netty:netty-codec-http:4.1.82.Final[jar] / compilation
+ |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    +-- [ ] io.netty:netty-codec:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    +-- [ ] io.netty:netty-handler:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-codec:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-transport-native-unix-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    +-- [ ] io.netty:netty-transport:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-buffer:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    |    |    +-- [ ] io.netty:netty-resolver:4.1.82.Final[jar] / compilation
+ |    |    |    |    +-- [ ] io.netty:netty-common:4.1.82.Final[jar] / compilation
+ |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ +-- [ ] io.micronaut:micronaut-jackson-databind:3.7.0[jar] / compilation
+ |    +-- [ ] com.fasterxml.jackson.core:jackson-databind:2.13.4[jar] / compilation
+ |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    +-- [ ] com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.13.4[jar] / compilation
+ |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    +-- [ ] com.fasterxml.jackson.core:jackson-databind:2.13.4[jar] / compilation
+ |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    +-- [ ] com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.4[jar] / compilation
+ |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    +-- [ ] com.fasterxml.jackson.core:jackson-databind:2.13.4[jar] / compilation
+ |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    +-- [ ] io.micronaut:micronaut-jackson-core:3.7.0[jar] / compilation
+ |    |    +-- [ ] com.fasterxml.jackson.core:jackson-annotations:2.13.4[jar] / compilation
+ |    |    +-- [ ] com.fasterxml.jackson.core:jackson-core:2.13.4[jar] / compilation
+ |    |    +-- [ ] io.micronaut:micronaut-json-core:3.7.0[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-context:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-aop:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    +-- [ ] javax.validation:validation-api:2.0.1.Final[jar] / compilation
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] io.micronaut:micronaut-http:3.7.0[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    |    |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    |    |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    |    |    |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    |    |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ +-- [ ] io.micronaut:micronaut-validation:3.7.0[jar] / compilation
+ |    +-- [ ] io.micronaut:micronaut-core-reactive:3.7.0[jar] / compilation
+ |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / compilation
+ |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    +-- [ ] io.micronaut:micronaut-inject:3.7.0[jar] / compilation
+ |    |    +-- [ ] io.micronaut:micronaut-core:3.7.0[jar] / compilation
+ |    |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation
+ |    |    +-- [ ] jakarta.inject:jakarta.inject-api:2.0.1[jar] / compilation
+ |    |    +-- [ ] javax.annotation:javax.annotation-api:1.3.2[jar] / compilation
+ |    |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ |    |    +-- [ ] org.yaml:snakeyaml:1.32[jar] / compilation
+ |    +-- [ ] io.projectreactor:reactor-core:3.4.23[jar] / runtime
+ |    |    +-- [ ] org.reactivestreams:reactive-streams:1.0.4[jar] / runtime
+ |    +-- [ ] javax.validation:validation-api:2.0.1.Final[jar] / compilation
+ |    +-- [ ] org.slf4j:slf4j-api:1.7.36[jar] / compilation
+ +-- [ ] jakarta.annotation:jakarta.annotation-api:2.1.1[jar] / compilation

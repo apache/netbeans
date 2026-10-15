@@ -117,6 +117,11 @@ public class SessionManager {
         }
         SessionManager.closeServerThread(session);
         resetBreakpoints();
+        // NETBEANS-5080 request cancellation to finish the task
+        DebugSession debugSession = session.lookupFirst(null, DebugSession.class);
+        if (debugSession != null) {
+            debugSession.cancel();
+        }
     }
 
     public static SessionId getSessionId(Project project) {

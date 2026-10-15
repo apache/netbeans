@@ -64,7 +64,7 @@ public class OutputOptions {
     public static final String PROP_COLOR_LINK_IMPORTANT =
             "color.link.important";                                     //NOI18N
     public static final String PROP_COLOR_BACKGROUND =
-            "color.backgorund";                                         //NOI18N
+            "color.background";                                         //NOI18N
     public static final String PROP_COLOR_WARNING = "color.warning";    //NOI18N
     public static final String PROP_COLOR_FAILURE = "color.failure";    //NOI18N
     public static final String PROP_COLOR_SUCCESS = "color.success";    //NOI18N
@@ -563,7 +563,7 @@ public class OutputOptions {
 
     public void setLinkStyle(LinkStyle linkStyle) {
         Parameters.notNull("linkStyle", linkStyle);                     //NOI18N
-        if (!linkStyle.equals(this.linkStyle)) {
+        if (linkStyle != this.linkStyle) {
             LinkStyle oldLinkStyle = this.linkStyle;
             this.linkStyle = linkStyle;
             pcs.firePropertyChange(PROP_STYLE_LINK, oldLinkStyle, linkStyle);
@@ -668,7 +668,11 @@ public class OutputOptions {
     }
 
     static Color getDefaultColorBackground() {
-        Color back = UIManager.getColor("nb.output.backgorund");        //NOI18N
+        Color back = UIManager.getColor("nb.output.background");        //NOI18N
+        if (back == null) {
+            // deprecated
+            back = UIManager.getColor("nb.output.backgorund");        //NOI18N
+        }
         if (back == null) {
             back = UIManager.getColor("TextField.background");          //NOI18N
             if (back == null) {

@@ -24,11 +24,11 @@ import java.io.InputStream;
 import java.net.HttpRetryException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -47,7 +47,6 @@ import org.netbeans.modules.hudson.api.HudsonJobBuild.Result;
 import org.netbeans.modules.hudson.api.HudsonMavenModuleBuild;
 import org.netbeans.modules.hudson.api.HudsonVersion;
 import org.netbeans.modules.hudson.api.Utilities;
-import static org.netbeans.modules.hudson.constants.HudsonXmlApiConstants.*;
 import org.netbeans.modules.hudson.spi.BuilderConnector;
 import org.netbeans.modules.hudson.spi.HudsonJobChangeItem;
 import org.netbeans.modules.hudson.spi.HudsonSCM;
@@ -61,6 +60,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXParseException;
+
+import static org.netbeans.modules.hudson.constants.HudsonXmlApiConstants.*;
 
 /**
  * Hudson Server Connector
@@ -145,7 +146,7 @@ public class HudsonConnector extends BuilderConnector {
         try {
             new ConnectionBuilder().homeURL(instanceUrl).
                     url(job.getUrl() + "build"). //NOI18N
-                    postData("delay=0sec".getBytes("UTF-8")). //NOI18N
+                    postData("delay=0sec".getBytes(StandardCharsets.UTF_8)). //NOI18N
                     followRedirects(false).connection(); // NOI18N
         } catch (MalformedURLException mue) {
             LOG.log(Level.INFO, "Malformed URL " + instanceUrl, mue);

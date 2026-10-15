@@ -21,7 +21,6 @@ package org.netbeans.modules.updatecenters.resources;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStore;
 import java.util.logging.Level;
@@ -39,6 +38,7 @@ public final class NetBeansKeyStoreProvider implements KeyStoreProvider {
     public static final String KS_FILE_PATH = "core/ide.ks";
     private static final String KS_DEFAULT_PASSWORD = "open4all";
     
+    @Override
     public KeyStore getKeyStore() {
         return getKeyStore (getKeyStoreFile (), getPassword ());
     }
@@ -54,28 +54,17 @@ public final class NetBeansKeyStoreProvider implements KeyStoreProvider {
     * @param password
     */
     private static KeyStore getKeyStore(File file, String password) {
-        if (file == null) return null;
-        KeyStore keyStore = null;
-        InputStream is = null;
-        
-        try {
-
-            is = new FileInputStream (file);
-
-            keyStore = KeyStore.getInstance (KeyStore.getDefaultType ());
-            keyStore.load (is, password.toCharArray ());
-            
+        if (file == null) {
+            return null;
+        }
+        try (InputStream is = new FileInputStream(file)) {
+            KeyStore keyStore = KeyStore.getInstance (KeyStore.getDefaultType());
+            keyStore.load (is, password.toCharArray());
+            return keyStore;
         } catch (Exception ex) {
             Logger.getLogger ("global").log (Level.INFO, ex.getMessage (), ex);
-        } finally {
-            try {
-                if (is != null) is.close ();
-            } catch (IOException ex) {
-                assert false : ex;
-            }
         }
-
-        return keyStore;
+        return null;
     }
     
     private static String getPassword () {

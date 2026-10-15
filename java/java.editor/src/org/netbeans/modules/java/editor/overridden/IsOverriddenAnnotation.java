@@ -49,28 +49,20 @@ public class IsOverriddenAnnotation extends Annotation {
         this.declarations = declarations;
     }
     
+    @Override
     public String getShortDescription() {
         return shortDescription;
     }
 
+    @Override
     public String getAnnotationType() {
-        switch(type) {
-            case IS_OVERRIDDEN:
-
-                return "org-netbeans-modules-editor-annotations-is_overridden"; //NOI18N
-            case HAS_IMPLEMENTATION:
-
-                return "org-netbeans-modules-editor-annotations-has_implementations"; //NOI18N
-            case IMPLEMENTS:
-
-                return "org-netbeans-modules-editor-annotations-implements"; //NOI18N
-            case OVERRIDES:
-
-                return "org-netbeans-modules-editor-annotations-overrides"; //NOI18N
-            default:
-
-                throw new IllegalStateException("Currently not implemented: " + type); //NOI18N
-        }
+        return switch(type) {
+            case IS_OVERRIDDEN -> "org-netbeans-modules-editor-annotations-is_overridden"; //NOI18N
+            case HAS_IMPLEMENTATION -> "org-netbeans-modules-editor-annotations-has_implementations"; //NOI18N
+            case IMPLEMENTS -> "org-netbeans-modules-editor-annotations-implements"; //NOI18N
+            case OVERRIDES -> "org-netbeans-modules-editor-annotations-overrides"; //NOI18N
+            default -> throw new IllegalStateException("Currently not implemented: " + type); //NOI18N
+        };
     }
     
     public void attach() {
@@ -81,6 +73,7 @@ public class IsOverriddenAnnotation extends Annotation {
         NbDocument.removeAnnotation(document, this);
     }
     
+    @Override
     public String toString() {
         return "[IsOverriddenAnnotation: " + shortDescription + "]"; //NOI18N
     }
@@ -90,7 +83,7 @@ public class IsOverriddenAnnotation extends Annotation {
     }
     
     public String debugDump(boolean includePosition) {
-        List<String> elementNames = new ArrayList<String>();
+        List<String> elementNames = new ArrayList<>();
         
         for(ElementDescription desc : declarations) {
             elementNames.add(desc.getDisplayName());

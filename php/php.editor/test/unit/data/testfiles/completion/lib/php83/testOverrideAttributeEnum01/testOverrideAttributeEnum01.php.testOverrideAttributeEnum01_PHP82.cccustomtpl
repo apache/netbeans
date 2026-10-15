@@ -1,0 +1,39 @@
+Name: testAbstractPrivateStaticTraitMethod
+private  static function testAbstractPrivateStaticTraitMethod(): int {
+${cursor};
+}
+
+Name: testAbstractPrivateTraitMethod
+private function testAbstractPrivateTraitMethod(): string {
+${cursor};
+}
+
+Name: testAbstractProtectedStaticTraitMethod
+protected  static function testAbstractProtectedStaticTraitMethod(): int {
+${cursor};
+}
+
+Name: testAbstractProtectedTraitMethod
+protected function testAbstractProtectedTraitMethod(): string {
+${cursor};
+}
+
+Name: testAbstractPublicStaticTraitMethod
+public  static function testAbstractPublicStaticTraitMethod(): int {
+${cursor};
+}
+
+Name: testAbstractPublicTraitMethod
+public function testAbstractPublicTraitMethod(): void {
+${cursor};
+}
+
+Name: testInterfaceMethod
+public function testInterfaceMethod(): void {
+${cursor};
+}
+
+Name: testTraitMethod
+public function testTraitMethod(): void {
+${cursor};
+}

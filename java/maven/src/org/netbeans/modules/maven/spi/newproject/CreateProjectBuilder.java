@@ -129,7 +129,7 @@ public class CreateProjectBuilder {
                     }
                 }
             }
-            if (parent != null && MavenProjectCache.isFallbackproject(parent)) {
+            if (parent != null && NbMavenProject.isErrorPlaceholder(parent)) {
                 //#240989 - guessing that unloadable parent project could be the problem.
                 parent = null;
             }

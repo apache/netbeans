@@ -184,8 +184,8 @@ public class PListReader {
 
             tokenizer.pushBack();
             double d = Math.rint(tokenizer.nval);
-            if(d == tokenizer.nval) return new Integer((int)d);
-            return new Double(tokenizer.nval);
+            if(d == tokenizer.nval) return Integer.valueOf((int)d);
+            return Double.valueOf(tokenizer.nval);
         }
     }
 

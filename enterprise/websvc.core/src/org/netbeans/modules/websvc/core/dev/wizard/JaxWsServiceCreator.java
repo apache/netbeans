@@ -63,7 +63,6 @@ import org.netbeans.api.java.source.*;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.ui.ScanDialog;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
@@ -119,12 +118,11 @@ public class JaxWsServiceCreator implements ServiceCreator {
     }
 
     public void createService() throws IOException {
-        serviceType = ((Integer) wiz.getProperty(WizardProperties.WEB_SERVICE_TYPE)).
-            intValue();
+        serviceType = ((Integer) wiz.getProperty(WizardProperties.WEB_SERVICE_TYPE));
         projectType = projectInfo.getProjectType();
 
         // Use Progress API to display generator messages.
-        final ProgressHandle handle = ProgressHandleFactory.createHandle(
+        final ProgressHandle handle = ProgressHandle.createHandle(
                 NbBundle.getMessage(JaxWsServiceCreator.class, 
                         "TXT_WebServiceGeneration")); //NOI18N
         handle.start(100);
@@ -157,7 +155,7 @@ public class JaxWsServiceCreator implements ServiceCreator {
 
         //initProjectInfo(project);
 
-        final ProgressHandle handle = ProgressHandleFactory.createHandle(
+        final ProgressHandle handle = ProgressHandle.createHandle(
                 NbBundle.getMessage(JaxWsServiceCreator.class, 
                         "TXT_WebServiceGeneration")); //NOI18N
 

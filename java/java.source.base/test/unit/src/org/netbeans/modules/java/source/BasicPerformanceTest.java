@@ -31,6 +31,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import junit.framework.*;
+import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.classfile.ClassFile;
 
 /** Tests for basic JDK operations
@@ -100,9 +101,9 @@ public class BasicPerformanceTest extends TestCase {
 //        }
 //        swatch.stop( "Got distinct strings " + distinct.size()  );
 //        
-////        for( String name : distinct ) {
-////            System.out.println( name );
-////        }
+// //        for( String name : distinct ) {
+// //            System.out.println( name );
+// //        }
 //        
 //    }
 //    
@@ -159,4 +160,15 @@ public class BasicPerformanceTest extends TestCase {
 //        
 //    }
 
+    public static Test suite() {
+        return new NoopClass("noop");
+    }
+    public static class NoopClass extends NbTestCase {
+
+        public NoopClass(String name) {
+            super(name);
+        }
+
+        public void noop() {}
+    }
 }

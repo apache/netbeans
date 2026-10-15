@@ -70,7 +70,7 @@ public abstract class XsdBasedValidator implements Validator {
      * @param model Get Schemas that the model has to be validated against.
      * @return Compiled Schema object.
      */
-    abstract protected Schema getSchema(Model model);
+    protected abstract Schema getSchema(Model model);
     
     /**
      * Entry point to validate a model.

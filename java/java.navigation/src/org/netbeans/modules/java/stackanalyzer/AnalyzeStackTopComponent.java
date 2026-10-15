@@ -37,6 +37,7 @@ import java.io.Serializable;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultListModel;
+import javax.swing.UIManager;
 import javax.swing.text.DefaultEditorKit;
 
 import org.netbeans.modules.java.stackanalyzer.StackLineAnalyser.Link;
@@ -65,6 +66,7 @@ final class AnalyzeStackTopComponent extends TopComponent {
         getActionMap ().put (DefaultEditorKit.pasteAction, new PasteAction ());
         insertButton.getActionMap ().put (DefaultEditorKit.pasteAction, new PasteAction ());
         scrollPane.getActionMap ().put (DefaultEditorKit.pasteAction, new PasteAction ());
+        list.setBackground(UIManager.getColor("Tree.background"));
         list.getActionMap ().put (DefaultEditorKit.pasteAction, new PasteAction ());
         list.setCellRenderer (new AnalyserCellRenderer ());
         list.addKeyListener (new KeyAdapter () {
@@ -137,7 +139,8 @@ final class AnalyzeStackTopComponent extends TopComponent {
         String lastLine = null;
         try {
             while ((currentLine = r.readLine()) != null) {
-                currentLine = currentLine.trim();
+                // strip ANSI symbols just in case the terminal/clipboard hasn't done that
+                currentLine = currentLine.replaceAll("\u001B\\[[\\d;]*[^\\d;]", "").strip();
                 if (StackLineAnalyser.matches(currentLine)) {
                     if (lastLine != null) {
                         model.addElement(lastLine);
@@ -232,9 +235,7 @@ final class AnalyzeStackTopComponent extends TopComponent {
             Reader reader = DataFlavor.stringFlavor.getReaderForText (transferable);
             BufferedReader r = new BufferedReader (reader);
             fill(r);
-        } catch (UnsupportedFlavorException ex) {
-            Exceptions.printStackTrace (ex);
-        } catch (IOException ex) {
+        } catch (UnsupportedFlavorException | IOException ex) {
             Exceptions.printStackTrace (ex);
         }
     }//GEN-LAST:event_insertButtonActionPerformed
@@ -312,7 +313,7 @@ final class AnalyzeStackTopComponent extends TopComponent {
     }
 
     
-    final static class ResolvableHelper implements Serializable {
+    static final class ResolvableHelper implements Serializable {
 
         private static final long serialVersionUID = 1L;
 

@@ -30,7 +30,7 @@ import org.netbeans.core.network.utils.SimpleObjCache;
 /**
  * Methods and constants useful in PAC script evaluation.
  * 
- * @see org.netbeans.network.proxy.pac.datetime.PacUtilsDateTime
+ * @see org.netbeans.core.network.proxy.pac.datetime.PacUtilsDateTime
  * 
  * @author lbruun
  */
@@ -54,17 +54,18 @@ public class PacUtils {
      *
      * <p>
      * This method supports all GLOB wildcards, such as
-     * <table border="0" style="order-collapse: separate;border-spacing: 50px 0;" summary="">
-     * <tr align="left"><td>{@code *}</td><td>matches any number of any
+     * <table>
+     * <caption>Example of translation</caption>
+     * <tr><td>{@code *}</td><td>matches any number of any
      * characters including none</td>
-     * <tr align="left"><td>{@code ?}</td><td>matches any single character</td>
-     * <tr align="left"><td>{@code [abc]}</td><td>matches one character given in
+     * <tr><td>{@code ?}</td><td>matches any single character</td>
+     * <tr><td>{@code [abc]}</td><td>matches one character given in
      * the bracket</td>
-     * <tr align="left"><td>{@code [a-z]}</td><td>matches one character from the
+     * <tr><td>{@code [a-z]}</td><td>matches one character from the
      * range given in the bracket</td>
-     * <tr align="left"><td>{@code [!abc]}</td><td>matches one character
+     * <tr><td>{@code [!abc]}</td><td>matches one character
      * <i>not</i> given in the bracket</td>
-     * <tr align="left"><td>{@code [!a-z]}</td><td>matches one character
+     * <tr><td>{@code [!a-z]}</td><td>matches one character
      * <i>not</i> from the range given in the bracket</td>
      * </table>
      *

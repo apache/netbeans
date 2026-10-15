@@ -83,7 +83,7 @@ public final class CodeceptRunParametersPanel extends JPanel {
         List<String> params = new ArrayList<>();
         params.add(""); // NOI18N
         params.addAll(getStoredParameters());
-        parametersComboBox.setModel(new DefaultComboBoxModel<>(params.toArray(new String[params.size()])));
+        parametersComboBox.setModel(new DefaultComboBoxModel<>(params.toArray(new String[0])));
         preselectLastSelectedParam();
     }
 

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.12
+#Version 1.39
 
 CLSS public abstract interface java.io.Serializable
 
@@ -8,8 +8,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -18,15 +20,16 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -36,6 +39,9 @@ meth public final void wait(long) throws java.lang.InterruptedException
 meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public abstract interface org.netbeans.api.lexer.TokenId
 meth public abstract int ordinal()
@@ -138,6 +144,9 @@ fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId NUM
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_AND
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_ARROW
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_ASSIGNMENT
+fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_ASSIGN_LOG_AND
+fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_ASSIGN_LOG_OR
+fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_ASSIGN_NULLISH
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_AT
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_BITWISE_AND
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_BITWISE_AND_ASSIGNMENT
@@ -172,6 +181,8 @@ fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPE
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_NOT
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_NOT_EQUALS
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_NOT_EQUALS_EXACTLY
+fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_NULLISH
+fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_OPTIONAL_ACCESS
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_OR
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_PLUS
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_PLUS_ASSIGNMENT
@@ -182,6 +193,7 @@ fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPE
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_RIGHT_SHIFT_ASSIGNMENT
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_SEMICOLON
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_TERNARY
+fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId PRIVATE_IDENTIFIER
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId REGEXP
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId REGEXP_BEGIN
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId REGEXP_END

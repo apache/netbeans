@@ -90,7 +90,7 @@ class ProfilerRuntimeSampler extends ProfilerRuntime {
                             } else if (status != CommonConstants.THREAD_STATUS_ZOMBIE && mids.length>0) { 
                                 // new thread with a stacktrace
                                 ThreadInfo ti = ThreadInfo.getThreadInfo(t);
-                                tid = new Integer(ti.getThreadId());
+                                tid = ti.getThreadId();
                                 if (!ti.isInitialized()) {
                                     ti.initialize();
                                     ProfilerRuntime.writeThreadCreationEvent(t,tid.intValue());
@@ -99,7 +99,7 @@ class ProfilerRuntimeSampler extends ProfilerRuntime {
                             } else { // new thread which is not started yet or it did not ever have stacktrace 
                                 continue; 
                             }
-                            newArrayOffsetMap.put(ltid, new Integer(i));
+                            newArrayOffsetMap.put(ltid, i);
                             newThreadIdMap.put(ltid,tid);
                         }
                     }

@@ -31,10 +31,6 @@ public class ArrayEnumTest extends EnumBenchmark {
 	array = new Object[arg];
     }
 
-    protected Object createInstance() {
-	return new ArrayEnumeration( array );
-    }
-
     public static void main( String[] args ) {
 	junit.textui.TestRunner.run( new junit.framework.TestSuite( ArrayEnumTest.class ) );
     }

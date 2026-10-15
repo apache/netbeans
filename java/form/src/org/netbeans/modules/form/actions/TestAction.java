@@ -330,7 +330,7 @@ public class TestAction extends CallableSystemAction implements Runnable {
                             try {
                                 Class<?> clazz = pitem.getComponentClass();
                                 if ((clazz != null) && (LookAndFeel.class.isAssignableFrom(clazz))) {
-                                    LookAndFeel laf = (LookAndFeel)clazz.newInstance();
+                                    LookAndFeel laf = (LookAndFeel)clazz.getDeclaredConstructor().newInstance();
                                     supported = laf.isSupportedLookAndFeel();
                                     if (supported && isSynthLAF && !lafName.equals(pitem.getComponentClassName())
                                             && SynthLookAndFeel.class.isAssignableFrom(clazz)) {

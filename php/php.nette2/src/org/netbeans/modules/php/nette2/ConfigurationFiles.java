@@ -78,7 +78,7 @@ public final class ConfigurationFiles extends FileChangeAdapter implements Impor
                     configFiles.add(new FileInfo(child));
                 }
             }
-            Collections.sort(configFiles, FileInfo.COMPARATOR);
+            configFiles.sort(FileInfo.COMPARATOR);
             files.addAll(configFiles);
         }
         return files;

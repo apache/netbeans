@@ -51,7 +51,6 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="cbLanguage" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="lTemplates" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="lExplandTemplateOn" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -61,16 +60,20 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="cbOnExpandAction" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Group type="102" attributes="0">
-                      <Component id="jSplitPane1" pref="343" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="bNew" max="32767" attributes="1"/>
-                          <Component id="bRemove" max="32767" attributes="1"/>
-                      </Group>
-                  </Group>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="1" attributes="0">
+              <Component id="lTemplates" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="1" attributes="0">
+              <Component id="jSplitPane1" pref="0" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="bRemove" max="32767" attributes="1"/>
+                  <Component id="bNew" min="-2" pref="78" max="-2" attributes="1"/>
+              </Group>
           </Group>
       </Group>
     </DimensionLayout>
@@ -81,26 +84,28 @@
                   <Component id="lLanguage" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="cbLanguage" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="lTemplates" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
+                      <Component id="jSplitPane1" pref="318" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="cbExpandTemplateOn" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lOnExpandAction" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbOnExpandAction" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lExplandTemplateOn" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
                       <Component id="bNew" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="bRemove" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
-                  <Component id="jSplitPane1" pref="318" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="cbExpandTemplateOn" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="lOnExpandAction" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="cbOnExpandAction" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="lExplandTemplateOn" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>

@@ -194,7 +194,7 @@ public class ElementsFactory {
         
     }
     
-    static abstract class TagElement implements Named, ModifiableElement {
+    abstract static class TagElement implements Named, ModifiableElement {
 
         //32-64
         protected CharSequence source;

@@ -85,7 +85,7 @@ public class ResultProcessor {
         if (o == review) {
             openInVersioningView(conflicts);
         } else if (o == resolve) {
-            GitProgressSupport supp = new ResolveConflictsExecutor(conflicts.toArray(new File[conflicts.size()]));
+            GitProgressSupport supp = new ResolveConflictsExecutor(conflicts.toArray(new File[0]));
             supp.start(Git.getInstance().getRequestProcessor(repository), repository, NbBundle.getMessage(ResolveConflictsAction.class, "MSG_PreparingMerge")); //NOI18N
         }
     }
@@ -124,7 +124,7 @@ public class ResultProcessor {
         for (String path : conflicts) {
             files.add(new File(repository, path));
         }
-        return files.toArray(new File[files.size()]);
+        return files.toArray(new File[0]);
     }
 
     protected final void openInVersioningView (final Collection<File> files) {

@@ -21,7 +21,6 @@ package org.netbeans.modules.docker.ui.build2;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import javax.swing.DefaultComboBoxModel;
@@ -122,7 +121,7 @@ public class BuildInstanceVisual extends javax.swing.JPanel {
         DockerInstanceWrapper wrapper = (DockerInstanceWrapper) model.getSelectedItem();
         model.removeAllElements();
         List<? extends DockerInstance> instances = new ArrayList<>(DockerSupport.getDefault().getInstances());
-        Collections.sort(instances, UiUtils.getInstanceComparator());
+        instances.sort(UiUtils.getInstanceComparator());
         for (DockerInstance i : instances) {
             model.addElement(new DockerInstanceWrapper(i));
         }

@@ -165,8 +165,9 @@ public class MavenRunOptions extends javax.swing.JPanel implements HelpCtx.Provi
             return;
         }
         Map<String, String> opts = nestedOptions.getChangedOptions();
-        for (String k : opts.keySet()) {
-            String v = opts.get(k);
+        for (Map.Entry<String, String> entry : opts.entrySet()) {
+            String k = entry.getKey();
+            String v = entry.getValue();
             if (v != null) {
                 am.addProperty(k, v);
             } else {
@@ -182,7 +183,7 @@ public class MavenRunOptions extends javax.swing.JPanel implements HelpCtx.Provi
     }
 
     private void setupConfigurations() {
-        DefaultComboBoxModel comModel = new DefaultComboBoxModel();
+        DefaultComboBoxModel<ModelHandle2.Configuration> comModel = new DefaultComboBoxModel<>();
         for (ModelHandle2.Configuration conf : handle.getConfigurations()) {
             comModel.addElement(conf);
         }

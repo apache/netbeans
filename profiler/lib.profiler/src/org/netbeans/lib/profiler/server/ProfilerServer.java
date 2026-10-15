@@ -390,7 +390,7 @@ public class ProfilerServer extends Thread implements CommonConstants {
     private WireIO wireIO;
     private boolean dynamic;
     private int agentId = -1;
-    final private Random r = new Random(System.currentTimeMillis()) ;
+    private final Random r = new Random(System.currentTimeMillis()) ;
 
     //---------------------------------------------------------------------------------------
     // Communication management

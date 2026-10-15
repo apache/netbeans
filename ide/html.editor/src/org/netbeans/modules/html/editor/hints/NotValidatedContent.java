@@ -31,7 +31,7 @@ public class NotValidatedContent extends PatternRule {
         "Content is being hidden from the validator based on namespace filtering."
     }; //NOI18N
     
-    private final static Pattern[] PATTERNS = buildPatterns(PATTERNS_SOURCES);
+    private static final Pattern[] PATTERNS = buildPatterns(PATTERNS_SOURCES);
 
     @Override
     public Pattern[] getPatterns() {

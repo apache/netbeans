@@ -37,10 +37,10 @@ public final class NetworkProxySettings {
         MANUAL
     }        
     
-    private final static Logger LOGGER = Logger.getLogger(NetworkProxySettings.class.getName());
-    private final static String COLON = ":"; //NOI18N
-    private final static String SLASH = "/"; //NOI18N
-    private final static String EMPTY_STRING = ""; //NOI18N
+    private static final Logger LOGGER = Logger.getLogger(NetworkProxySettings.class.getName());
+    private static final String COLON = ":"; //NOI18N
+    private static final String SLASH = "/"; //NOI18N
+    private static final String EMPTY_STRING = ""; //NOI18N
     private final boolean resolved;
     private final ProxyMode proxyMode;
     private final String httpProxyHost;
@@ -157,6 +157,10 @@ public final class NetworkProxySettings {
         if (string == null) {
             return EMPTY_STRING;
         } else {
+            // the proxy string may possibly contain protocol part - strip it.
+            if (string.contains("://")) { // NOI18N
+                string = string.substring(string.indexOf("://") + 3); // NOI18N
+            }
             if (string.contains(COLON)) {
                 return string.substring(0, string.lastIndexOf(COLON));
             } else {
@@ -170,7 +174,7 @@ public final class NetworkProxySettings {
             return EMPTY_STRING;
         } else {
             if (string.endsWith(SLASH)) {
-                string = string.substring(string.length() - 1, string.length());
+                string = string.substring(string.length() - 1);
             }
             if (string.contains(COLON)) {
                 return string.substring(string.lastIndexOf(COLON) + 1);

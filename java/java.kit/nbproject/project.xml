@@ -55,12 +55,6 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.modules.findbugs.installer</code-name-base>
-                    <run-dependency>
-                        <specification-version>1.0</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
                     <code-name-base>org.netbeans.modules.i18n</code-name-base>
                     <run-dependency>
                         <release-version>1</release-version>
@@ -91,14 +85,7 @@
                     <code-name-base>org.netbeans.modules.java.editor</code-name-base>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>2.8</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.modules.java.editor.lib</code-name-base>
-                    <run-dependency>
-                        <release-version>1</release-version>
-                        <specification-version>1.9</specification-version>
+                        <specification-version>2.78</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -106,6 +93,12 @@
                     <run-dependency>
                         <release-version>1</release-version>
                         <specification-version>1.6</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.java.file.launcher</code-name-base>
+                    <run-dependency>
+                        <specification-version>1.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -171,6 +164,13 @@
                     <code-name-base>org.netbeans.modules.java.module.graph</code-name-base>
                     <run-dependency>
                         <specification-version>1.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.java.nativeimage.debugger</code-name-base>
+                    <run-dependency>
+                        <release-version>0</release-version>
+                        <specification-version>0.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -241,6 +241,12 @@
                     <run-dependency>
                         <release-version>2</release-version>
                         <specification-version>2.23</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.languages.antlr</code-name-base>
+                    <run-dependency>
+                        <specification-version>1.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

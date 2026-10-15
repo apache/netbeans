@@ -137,8 +137,8 @@ public class OpenSubprojects extends NodeAction implements Presenter.Popup{
     
     private class LazyMenu extends JMenu {
         private final Node[] activatedNodes;
-        boolean initialized; // create only once, prevents recreating items when user repeatedly expends and collapses the menu
-        private Set<? extends Project> subProjects;
+        private boolean menuCreated; // create only once, prevents recreating items when user repeatedly expends and collapses the menu
+        private volatile Set<? extends Project> subProjects;
 
         @NbBundle.Messages("LBL_SubProjectPopupMenu_Initializing=Initializing...")
         private LazyMenu(Node[] nodes) {
@@ -147,17 +147,12 @@ public class OpenSubprojects extends NodeAction implements Presenter.Popup{
             JMenuItem item = new JMenuItem(Bundle.LBL_SubProjectPopupMenu_Initializing());
             item.setEnabled(false);
             add(item);
-            RP.post(new Runnable() {
-                @Override
-                public void run() {
-                    getSubProjects();
-                }
-            });
+            RP.post(this::asyncFindSubProjects);
         }
 
         @Override
         public JPopupMenu getPopupMenu() {
-            if(initialized) {
+            if (!menuCreated && subProjects != null) {
                 createSubMenu();
             }
             return super.getPopupMenu(); 
@@ -165,7 +160,7 @@ public class OpenSubprojects extends NodeAction implements Presenter.Popup{
         
         private void createSubMenu() {
             removeAll();
-            if(subProjects != null && !subProjects.isEmpty()) {
+            if (!subProjects.isEmpty()) {
                 super.getPopupMenu().setLayout(new VerticalGridLayout());
                 final JMenuItem openAllProjectsItem = new JMenuItem(new AbstractAction() {
                     @Override
@@ -181,7 +176,7 @@ public class OpenSubprojects extends NodeAction implements Presenter.Popup{
                 nothingItem.setEnabled(false);
                 add(nothingItem);
             }
-            if(subProjects != null && !subProjects.isEmpty()) {
+            if (!subProjects.isEmpty()) {
                 for(final Project prjIter:subProjects) {
                     JMenuItem selectPrjAction = new JMenuItem(new AbstractAction() {
                         @Override
@@ -193,9 +188,10 @@ public class OpenSubprojects extends NodeAction implements Presenter.Popup{
                     add(selectPrjAction);
                 }
             }
+            menuCreated = true;
         }
 
-        private void getSubProjects() {
+        private void asyncFindSubProjects() {
             try {
                 if(activatedNodes != null) {
                     for( int i = 0; i < activatedNodes.length; i++ ) {
@@ -214,7 +210,15 @@ public class OpenSubprojects extends NodeAction implements Presenter.Popup{
                     }
                 }
             } finally {
-                initialized = true;
+                if (subProjects == null) {
+                    subProjects = Set.of();
+                } else {
+                    // trigger project name query tasks
+                    // without this, the first call to getDisplayName() will likely return a project path fallback
+                    for (Project project : subProjects) {
+                        ProjectUtils.getInformation(project).getDisplayName();
+                    }
+                }
             }
         }
     }

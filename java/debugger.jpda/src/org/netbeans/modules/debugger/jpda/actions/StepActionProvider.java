@@ -54,6 +54,7 @@ import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
 import org.netbeans.modules.debugger.jpda.JPDAStepImpl;
 import org.netbeans.modules.debugger.jpda.JPDAStepImpl.MethodExitBreakpointListener;
 import org.netbeans.modules.debugger.jpda.SourcePath;
+import org.netbeans.modules.debugger.jpda.impl.StepUtils;
 import org.netbeans.modules.debugger.jpda.jdi.IllegalThreadStateExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.InternalExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.InvalidRequestStateExceptionWrapper;
@@ -167,7 +168,32 @@ implements Executor {
             }
         });
     }
-    
+
+    /**
+     * Returns whether we can stop in the class based on the smart stepping filter.
+     */
+    public static boolean stopInClass(String className, SmartSteppingFilter filter) {
+        for (String pattern : filter.getExclusionPatterns()) {
+            if (pattern.startsWith ("*")) {
+                String end = pattern.substring(1);
+                if (className.endsWith(end)) {
+                    return false;
+                }
+            } else if (pattern.endsWith ("*")) {
+                String start = pattern.substring(0, pattern.length() - 1);
+                if (className.startsWith(start)) {
+                    return false;
+                }
+            } else {
+                // exact match
+                if (className.equals(pattern)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public void runAction(final Object action) {
         runAction(getJDIAction(action), StepRequest.STEP_LINE, true, null, null, null);
     }
@@ -208,6 +234,7 @@ implements Executor {
                     }
                 }
             }
+            smartSteppingFilter = new SmartSteppingFilterWrapper(debugger.getSmartSteppingFilter());
             resumeThread.waitUntilMethodInvokeDone();
             ThreadReference tr = resumeThread.getThreadReference ();
             removeStepRequests (tr);
@@ -221,6 +248,7 @@ implements Executor {
                     stepSize,
                     stepDepth
                 );
+            StepUtils.markOriginalStepDepth(stepRequest, tr);
             EventRequestWrapper.addCountFilter (stepRequest, 1);
             getDebuggerImpl ().getOperator ().register (stepRequest, StepActionProvider.this);
             EventRequestWrapper.setSuspendPolicy (stepRequest, suspendPolicy);
@@ -256,17 +284,17 @@ implements Executor {
             if (isSteppingFromFilteredLocation != null) {
                 steppingFromFilteredLocation = isSteppingFromFilteredLocation;
             } else {
-                steppingFromFilteredLocation = !getSmartSteppingFilterImpl ().stopHere(className);
+                steppingFromFilteredLocation = !stopInClass(className, smartSteppingFilter);
             }
             if (isSteppingFromCompoundFilteredLocation != null) {
                 steppingFromCompoundFilteredLocation = isSteppingFromCompoundFilteredLocation;
             } else {
                 if (topFrame != null) {
                     steppingFromCompoundFilteredLocation = !getCompoundSmartSteppingListener ().stopAt
-                             (lookupProvider, topFrame, getSmartSteppingFilterImpl()).isStop();
+                             (lookupProvider, topFrame, smartSteppingFilter).isStop();
                 } else {
                     steppingFromCompoundFilteredLocation = !getCompoundSmartSteppingListener ().stopHere
-                             (lookupProvider, resumeThread, getSmartSteppingFilterImpl());
+                             (lookupProvider, resumeThread, smartSteppingFilter);
                 }
             }
             if (logger.isLoggable(Level.FINE)) {
@@ -416,6 +444,7 @@ implements Executor {
                     StepRequest.STEP_LINE,
                     step
                 );
+                StepUtils.markOriginalStepDepth(stepRequest, tr);
                 EventRequestWrapper.addCountFilter(stepRequest, 1);
                 getDebuggerImpl ().getOperator ().register (stepRequest, this);
                 EventRequestWrapper.setSuspendPolicy(stepRequest, suspendPolicy);
@@ -446,7 +475,7 @@ implements Executor {
             if (steppingFromFilteredLocation) {
                 fsh = StopOrStep.stop();
             } else {
-                fsh = getSmartSteppingFilterImpl().stopHere(className) ? StopOrStep.stop() : StopOrStep.skip();
+                fsh = stopInClass(className, smartSteppingFilter) ? StopOrStep.stop() : StopOrStep.skip();
             }
             if (loggerStep.isLoggable(Level.FINE))
                 loggerStep.fine("SS  SmartSteppingFilter.stopHere (" + className + ") ? " + fsh);
@@ -458,10 +487,10 @@ implements Executor {
                     CallStackFrame topFrame = getTopFrame(t);
                     if (topFrame != null) {
                         fsh = getCompoundSmartSteppingListener ().stopAt
-                             (lookupProvider, topFrame, getSmartSteppingFilterImpl());
+                             (lookupProvider, topFrame, smartSteppingFilter);
                     } else {
                         fsh = getCompoundSmartSteppingListener ().stopHere
-                             (lookupProvider, t, getSmartSteppingFilterImpl()) ? StopOrStep.stop() : StopOrStep.skip();
+                             (lookupProvider, t, smartSteppingFilter) ? StopOrStep.stop() : StopOrStep.skip();
                     }
                 }
                 if (fsh.isStop()) {
@@ -605,6 +634,9 @@ implements Executor {
             return 0;
         } catch (InternalExceptionWrapper iex) {
             return 0;
+        } catch (IndexOutOfBoundsException iobe) {
+            // no frames on stack
+            return 0;
         } catch (InvalidStackFrameExceptionWrapper iex) {
             return 0;
         } catch (ObjectCollectedExceptionWrapper iex) {
@@ -735,15 +767,8 @@ implements Executor {
         return stepIntoActionProvider;
     }
 
-    private SmartSteppingFilterImpl smartSteppingFilterImpl;
+    private SmartSteppingFilterWrapper smartSteppingFilter;
     
-    private SmartSteppingFilterImpl getSmartSteppingFilterImpl () {
-        if (smartSteppingFilterImpl == null)
-            smartSteppingFilterImpl = (SmartSteppingFilterImpl) lookupProvider.
-                lookupFirst (null, SmartSteppingFilter.class);
-        return smartSteppingFilterImpl;
-    }
-
     private CompoundSmartSteppingListener compoundSmartSteppingListener;
     
     private CompoundSmartSteppingListener getCompoundSmartSteppingListener () {

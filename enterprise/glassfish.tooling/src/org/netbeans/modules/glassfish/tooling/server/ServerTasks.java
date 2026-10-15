@@ -45,10 +45,7 @@ import org.netbeans.modules.glassfish.tooling.utils.Utils;
  */
 public class ServerTasks {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     public enum StartMode {
         /** Regular server start. */
         START,
@@ -58,10 +55,7 @@ public class ServerTasks {
         PROFILE;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(ServerTasks.class);
 
@@ -109,6 +103,28 @@ public class ServerTasks {
             }
         }
     }
+    
+    /**
+     * Append module path and add modules to java options when there is at least
+     * one '--add-opens' without 'ALL-UNNAMED'.
+     * <p/>
+     * @param server    GlassFish server entity.
+     * @param optList   Returned list of java options.
+     */
+    private static void appendModulePath(GlassFishServer server, List<String> optList) {
+        boolean needed = optList.stream()
+                .anyMatch(opt -> opt.contains("--add-opens") && !opt.contains("ALL-UNNAMED"));
+        if (needed) {
+            // appending module path and all modules in order to use
+            // '--add-opens' without 'ALL-UNNAMED'.
+            // See https://github.com/eclipse-ee4j/glassfish/pull/25537
+            String modulePath = server.getServerHome() + File.separator
+                    + ServerUtils.GF_LIB_DIR_NAME + File.separator 
+                    + "bootstrap";
+            optList.add("--module-path=" + modulePath);
+            optList.add("--add-modules=ALL-MODULE-PATH");
+        }
+    }
 
     /**
      * Adds server variables from variables map into Java VM options
@@ -148,8 +164,9 @@ public class ServerTasks {
         JvmConfigReader jvmConfigReader = new JvmConfigReader(DAS_NAME);
         String domainAbsolutePath = server.getDomainsFolder() + File.separator
                 + server.getDomainName();
-        String domainXmlPath = domainAbsolutePath + File.separator + "config"
-                + File.separator + "domain.xml";
+        String domainXmlPath = domainAbsolutePath + File.separator 
+                + ServerUtils.GF_DOMAIN_CONFIG_DIR_NAME + File.separator 
+                + ServerUtils.GF_DOMAIN_CONFIG_FILE_NAME;
         if (!TreeParser.readXml(new File(domainXmlPath), jvmConfigReader)) {
             // retry with platform default
             LOGGER.log(Level.INFO, "Retrying with {0} encoding", Charset.defaultCharset());
@@ -160,6 +177,7 @@ public class ServerTasks {
             }
         }
         List<String> optList = jvmConfigReader.getOptList();
+        appendModulePath(server, optList);
         Map<String, String> propMap = jvmConfigReader.getPropMap();
         addJavaAgent(server, jvmConfigReader);
         // try to find bootstraping jar - usually glassfish.jar
@@ -181,13 +199,13 @@ public class ServerTasks {
         // Add debug parameters read from domain.xml.
         // It's important to add them before java options specified by user
         // in case user specified it by himslef.
-        if (mode.equals(StartMode.DEBUG)) {
+        if (mode == StartMode.DEBUG) {
             String debugOpts = propMap.get("debug-options");
             String[] debugOptsSplited = debugOpts.split("\\s+(?=-)");
             optList.addAll(Arrays.asList(debugOptsSplited));
         }
         // add profile parameters
-        if (mode.equals(StartMode.PROFILE)) {
+        if (mode == StartMode.PROFILE) {
         }
         // appending IDE specified options after the ones got from domain.xml
         // IDE specified are takind precedence this way
@@ -303,19 +321,33 @@ public class ServerTasks {
      */
     private static void appendOptions(StringBuilder argumentBuf,
             List<String> optList, Map<String, String> varMap) {
-        final String METHOD = "appendOptions";
-        HashMap<String, String> keyValueArgs = new HashMap<>();
-        LinkedList<String> keyOrder = new LinkedList<>();
-        String name, value;
+        final boolean isWindows = OsUtils.isWin();
+        final String METHOD = "appendOptions"; // NOI18N
+        // override the values that are found in the domain.xml file.
+        // this is totally a copy/paste from StartTomcat...
+        final Map<String,String> PROXY_PROPS = new HashMap<>();
+        for(String s: new String[] {
+            "http.proxyHost", // NOI18N
+            "http.proxyPort", // NOI18N
+            "http.nonProxyHosts", // NOI18N
+            "https.proxyHost", // NOI18N
+            "https.proxyPort", // NOI18N
+        }) {
+            PROXY_PROPS.put(JavaUtils.systemPropertyName(s), s);
+            PROXY_PROPS.put("-D\"" + s, s); // NOI18N
+            PROXY_PROPS.put("-D" + s, s); // NOI18N
+        }
+
         // first process optList aquired from domain.xml 
         for (String opt : optList) {
+            String name, value;
             // do placeholder substitution
             opt = Utils.doSub(opt.trim(), varMap);
             int splitIndex = opt.indexOf('=');
             // && !opt.startsWith("-agentpath:") is a temporary hack to
             // not touch already quoted -agentpath. Later we should handle it
             // in a better way.
-            if (splitIndex != -1 && !opt.startsWith("-agentpath:")) {
+            if (splitIndex != -1 && !opt.startsWith("-agentpath:")) { // NOI18N
                 // key=value type of option
                 name = opt.substring(0, splitIndex);
                 value = Utils.quote(opt.substring(splitIndex + 1));
@@ -325,44 +357,27 @@ public class ServerTasks {
             } else {
                 name = opt;
                 value = null;
-                LOGGER.log(Level.FINER, METHOD, "jvmOpt", name);
+                LOGGER.log(Level.FINER, METHOD, "jvmOpt", name); // NOI18N
             }
-            if (!keyValueArgs.containsKey(name)) {
-                keyOrder.add(name);
-            }
-            keyValueArgs.put(name, value);
-        }
 
-        // override the values that are found in the domain.xml file.
-        // this is totally a copy/paste from StartTomcat...
-        final String[] PROXY_PROPS = {
-            "http.proxyHost", // NOI18N
-            "http.proxyPort", // NOI18N
-            "http.nonProxyHosts", // NOI18N
-            "https.proxyHost", // NOI18N
-            "https.proxyPort", // NOI18N
-        };
-        boolean isWindows = OsUtils.isWin();
-        for (String prop : PROXY_PROPS) {
-            value = System.getProperty(prop);
-            if (value != null && value.trim().length() > 0) {
-                if (isWindows && "http.nonProxyHosts".equals(prop)) {
-                    // enclose in double quotes to escape the pipes separating
-                    // the hosts on windows
-                    value = "\"" + value + "\""; // NOI18N
+            if(PROXY_PROPS.containsKey(name)) {
+                String sysValue = System.getProperty(PROXY_PROPS.get(name));
+                if (sysValue != null && sysValue.trim().length() > 0) {
+                    if (isWindows && "http.nonProxyHosts".equals(PROXY_PROPS.get(name))) { // NOI18N
+                        // enclose in double quotes to escape the pipes separating
+                        // the hosts on windows
+                        sysValue = "\"" + value + "\""; // NOI18N
+                    }
+                    name = JavaUtils.systemPropertyName(PROXY_PROPS.get(name));
+                    value = sysValue;
                 }
-                keyValueArgs.put(JavaUtils.systemPropertyName(prop), value);
             }
-        }
 
-        // appending key=value options to the command line argument
-        // using the same order as they came in argument - important!
-        for (String key : keyOrder) {
             argumentBuf.append(' ');
-            argumentBuf.append(key);
-            if (keyValueArgs.get(key) != null) {
+            argumentBuf.append(name);
+            if(value != null) {
                 argumentBuf.append("="); // NOI18N
-                argumentBuf.append(keyValueArgs.get(key));
+                argumentBuf.append(value);
             }
         }
     }

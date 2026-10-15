@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import org.netbeans.junit.NbTestCase;
+import org.openide.util.BaseUtilities;
 
 /**
  *
@@ -70,6 +71,12 @@ public class StampsRenameTest extends NbTestCase implements Stamps.Updater{
 
         File i2 = new File(getWorkDir(), "inst2");
         assertTrue("Rename of the dir successful", install.renameTo(i2));
+        if (BaseUtilities.isWindows()) {
+          // See comment in org.netbeans.Stamps.
+          assertTrue("Renamed back to install to permit workaround for NETBEANS-1914",
+              i2.renameTo(install));
+          i2 = install;
+        }
         
         setNetBeansProperties(i2, userdir, Stamps.moduleJARs());
         

@@ -28,7 +28,7 @@ import org.openide.util.Lookup;
  *
  * @author Petr Hejl
  */
-@StartupExtenderImplementation.Registration(displayName="Test", startMode=StartMode.NORMAL)
+@StartupExtenderImplementation.Registration(displayName="Test", startMode=StartMode.NORMAL, position = 0)
 public class TestStartupExtender implements StartupExtenderImplementation {
 
     @Override

@@ -186,7 +186,11 @@ public abstract class WebServicesTestBase extends J2eeTestCase {
         JAVAEE5,
         JAVAEE6,
         JAVAEE7,
-        JAVAEE8;
+        JAVAEE8,
+        JAKARTAEE8,
+        JAKARTAEE9,
+        JAKARTAEE91,
+        JAKARTAEE10;
 
         @Override
         public String toString() {
@@ -206,6 +210,18 @@ public abstract class WebServicesTestBase extends J2eeTestCase {
                 case JAVAEE8:
                       //Java EE 8
                       return "Java EE 8";
+                case JAKARTAEE8:
+                      //Jakarta EE 8
+                     return "Jakarta EE 8";
+               case JAKARTAEE9:
+                     //Jakarta EE 9
+                    return "Jakarta EE 9";
+               case JAKARTAEE91:
+                     //Jakarta EE 9.1
+                    return "Jakarta EE 9.1";
+               case JAKARTAEE10:
+                     //Jakarta EE 10
+                    return "Jakarta EE 10";
             }
             throw new AssertionError("Unknown type: " + this); //NOI18N
         }
@@ -479,7 +495,13 @@ public abstract class WebServicesTestBase extends J2eeTestCase {
                 jcboVersion.selectItem(javaeeVersion.toString());
             } else {
                 // cannot use display name for Maven project
-                if (JavaEEVersion.JAVAEE8.equals(javaeeVersion)) {
+                if (JavaEEVersion.JAKARTAEE91.equals(javaeeVersion) || JavaEEVersion.JAKARTAEE10.equals(javaeeVersion)) {
+                    jcboVersion.selectItem("11");
+                } else if (JavaEEVersion.JAKARTAEE9.equals(javaeeVersion)) {
+                    jcboVersion.selectItem("1.8.0");
+                } else if (JavaEEVersion.JAKARTAEE8.equals(javaeeVersion)) {
+                    jcboVersion.selectItem("1.8.0");
+                } else if( JavaEEVersion.JAVAEE8.equals(javaeeVersion)) {
                     jcboVersion.selectItem("1.8");
                 } else if (JavaEEVersion.JAVAEE7.equals(javaeeVersion)) {
                     jcboVersion.selectItem("1.7");
@@ -796,7 +818,7 @@ public abstract class WebServicesTestBase extends J2eeTestCase {
     /**
      * Opens Services tab, go to specified Maven repository, call Update Index
      * and immediately cancel this action.
-     * @param repositoryName 
+     * @param repositoryName
      */
     private static void runAndCancelUpdateIndex(String repositoryName) {
         RuntimeTabOperator servicesOper = RuntimeTabOperator.invoke();
@@ -815,7 +837,7 @@ public abstract class WebServicesTestBase extends J2eeTestCase {
             JemmyProperties.setCurrentTimeout("ComponentOperator.WaitComponentTimeout", oldTimeout);
         }
     }
-    
+
     protected File getProjectsRootDir() throws IOException {
         File f = getWorkDir();
         LOGGER.log(Level.FINE, "Working directory is set to: {0}", f);

@@ -33,7 +33,7 @@ public final class LogUtils {
     /**
      * Metrics logger
      */
-    private final static Logger METRICS_LOG = Logger.getLogger("org.netbeans.ui.metrics.bugtracking"); // NOI18N
+    private static final Logger METRICS_LOG = Logger.getLogger("org.netbeans.ui.metrics.bugtracking"); // NOI18N
 
     /**
      * The automatic refresh was set on or off.<br>
@@ -78,7 +78,7 @@ public final class LogUtils {
      */
     private static final String USG_ISSUE_TRACKING_REPOSITORY = "USG_ISSUE_TRACKING_REPOSITORY"; // NOI18N
     
-    private final static Set<String> loggedParams = new HashSet<String>(1); // to avoid logging same params more than once in a session
+    private static final Set<String> loggedParams = new HashSet<String>(1); // to avoid logging same params more than once in a session
 
     public static void logQueryEvent(String connector, String name, int count, boolean isFromTeamServer, boolean isAutoRefresh) {
         name = obfuscateQueryName(name);
@@ -144,8 +144,6 @@ public final class LogUtils {
                 || repositoryUrl.contains("code.google.com") //NOI18N
                 || repositoryUrl.contains("googlesource.com")) { //NOI18N
             return "GOOGLECODE"; //NOI18N
-        } else if (repositoryUrl.contains("kenai.com")) { //NOI18N
-            return "KENAI"; //NOI18N
         } else if (repositoryUrl.contains("java.net")) { //NOI18N
             return "JAVANET"; //NOI18N
         } else if (repositoryUrl.contains("netbeans.org")) { //NOI18N

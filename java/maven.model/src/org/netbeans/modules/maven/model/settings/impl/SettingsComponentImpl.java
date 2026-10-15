@@ -172,7 +172,7 @@ public abstract class SettingsComponentImpl extends AbstractDocumentComponent<Se
         if (text != null) {
             SettingsExtensibilityElement el = getModel().getFactory().createSettingsExtensibilityElement(qname);
             el.setElementText(text);
-            addAfter(qname.getLocalPart(), el, Collections.EMPTY_LIST);
+            addAfter(qname.getLocalPart(), el, Collections.emptyList());
         }
     }
 

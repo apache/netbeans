@@ -159,7 +159,7 @@ public class RestWrapperForSoapClientGenerator extends SoapClientRestResourceCod
             annos.add(annotations);
         }
 
-        return annos.toArray(new String[annos.size()][]);
+        return annos.toArray(new String[0][]);
     }
 
     private Object[][] getGetParamAnnotationAttrs(List<ParameterInfo> queryParams) {
@@ -181,7 +181,7 @@ public class RestWrapperForSoapClientGenerator extends SoapClientRestResourceCod
             attrs.add(annotationAttrs);
         }
 
-        return attrs.toArray(new Object[attrs.size()][]);
+        return attrs.toArray(new Object[0][]);
     }
 
     private String getMethodName(HttpMethodType methodType) {

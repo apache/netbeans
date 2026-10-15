@@ -42,6 +42,7 @@ import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -51,7 +52,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -78,6 +78,7 @@ import org.openide.util.Exceptions;
  */
 public class ParameterNameProviderImpl {
     public static boolean DISABLE_ARTIFICAL_PARAMETER_NAMES;
+    public static boolean DISABLE_PARAMETER_NAMES_LOADING;
 
     public static void register(JavacTask task, ClasspathInfo cpInfo) {
         try {
@@ -115,44 +116,56 @@ public class ParameterNameProviderImpl {
     }
 
     public CharSequence getParameterName(VariableElement parameter) {
+        if (DISABLE_PARAMETER_NAMES_LOADING) {
+            return null;
+        }
+
         Element method = parameter.getEnclosingElement();
         String methodKey = computeKey(method);
-        List<String> names;
+        List<String> names = null;
 
         //from sources:
         {
-        Element topLevel = parameter;
-        while (topLevel.getEnclosingElement().getKind() != ElementKind.PACKAGE) {
-            topLevel = topLevel.getEnclosingElement();
-        }
-        ElementHandle<?> topLevelHandle = ElementHandle.create(topLevel);
+            Element topLevel = parameter;
+            while (topLevel.getEnclosingElement().getKind() != ElementKind.PACKAGE) {
+                topLevel = topLevel.getEnclosingElement();
+            }
+            ElementHandle<?> topLevelHandle = ElementHandle.create(topLevel);
 
-        names = source_toplevelClass2method2Parameters.computeIfAbsent(computeKey(topLevel), d -> {
-            Map<String, List<String>> parametersInClass = new HashMap<>();
-            FileObject source = SourceUtils.getFile(topLevelHandle, cpInfo);
-            JavaSource javaSource = source != null ? JavaSource.forFileObject(source) : null;
-            if (javaSource != null) {
-                try {
-                    javaSource.runUserActionTask(cc -> {
-                        cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                        new TreePathScanner<Void, Void>() {
-                            public Void visitMethod(MethodTree mt, Void v) {
-                                Element el = cc.getTrees().getElement(getCurrentPath());
-                                if (el != null && el.getKind() == ElementKind.METHOD) {
-                                    parametersInClass.put(computeKey(el), ((ExecutableElement) el).getParameters().stream().map(p -> p.getSimpleName().toString()).collect(Collectors.toList()));
-                                }
-                                return super.visitMethod(mt, v);
-                            }
-                        }.scan(cc.getCompilationUnit(), null);
-                    }, true);
-                } catch (IOException ex) {
-                    //ignore
+            String topLevelKey = computeKey(topLevel);
+            try {
+                names = source_toplevelClass2method2Parameters.computeIfAbsent(topLevelKey, d -> {
+                    Map<String, List<String>> parametersInClass = new HashMap<>();
+                    FileObject source = SourceUtils.getFile(topLevelHandle, cpInfo);
+                    JavaSource javaSource = source != null ? JavaSource.forFileObject(source) : null;
+                    if (javaSource != null) {
+                        try {
+                            javaSource.runUserActionTask(cc -> {
+                                cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                                new TreePathScanner<Void, Void>() {
+                                    public Void visitMethod(MethodTree mt, Void v) {
+                                        Element el = cc.getTrees().getElement(getCurrentPath());
+                                        if (el != null && el.getKind() == ElementKind.METHOD) {
+                                            parametersInClass.put(computeKey(el), ((ExecutableElement) el).getParameters().stream().map(p -> p.getSimpleName().toString()).toList());
+                                        }
+                                        return super.visitMethod(mt, v);
+                                    }
+                                }.scan(cc.getCompilationUnit(), null);
+                            }, true);
+                        } catch (IOException ex) {
+                            //ignore
+                        }
+                    }
+                    return parametersInClass;
+                }).get(methodKey);
+            } catch(ConcurrentModificationException ex) {
+                // Naive fix for CME, we assume that some other thread computed
+                // the required results. NETBEANS-3286
+                if (source_toplevelClass2method2Parameters.containsKey(topLevelKey)) {
+                    names = source_toplevelClass2method2Parameters.get(topLevelKey).get(methodKey);
                 }
             }
-            return parametersInClass;
-        }).get(methodKey);
         }
-
         if (names == null) {
             Element clazzCandidate = method.getEnclosingElement();
             if (clazzCandidate != null && (clazzCandidate.getKind().isClass() || clazzCandidate.getKind().isInterface())) {
@@ -171,7 +184,7 @@ public class ParameterNameProviderImpl {
             if (!DISABLE_ARTIFICAL_PARAMETER_NAMES) {
                 names = artificial_method2Parameters.computeIfAbsent(methodKey, mk -> {
                     Set<String> usedNames = new HashSet<>();
-                    return ((ExecutableElement) method).getParameters().stream().map(p -> generateReadableParameterName(p.asType().toString(), usedNames)).collect(Collectors.toList());
+                    return ((ExecutableElement) method).getParameters().stream().map(p -> generateReadableParameterName(p.asType().toString(), usedNames)).toList();
                 });
             } else {
                 names = Collections.emptyList();
@@ -186,13 +199,15 @@ public class ParameterNameProviderImpl {
         return idx != (-1) && idx < names.size() ? names.get(idx) : null;
     }
 
+
+
     private static String computeKey(Element el) {
-        return Arrays.stream(SourceUtils.getJVMSignature(ElementHandle.create(el))).collect(Collectors.joining(":"));
+        return String.join(":", SourceUtils.getJVMSignature(ElementHandle.create(el)));
     }
 
     static void capCache(LinkedHashMap<String, ?> map) {
         Iterator<String> it = map.keySet().iterator();
-        while (map.size() > MAX_CACHE_SIZE) {
+        while (map.size() > MAX_CACHE_SIZE && it.hasNext()) {
             it.next();
             it.remove();
         }

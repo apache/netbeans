@@ -13,10 +13,9 @@ class A {
 
     public function func() {
         [
-            'func' => function() {
+            'func' => function () {
                 $array = [];
             }
         ];
     }
-
 }

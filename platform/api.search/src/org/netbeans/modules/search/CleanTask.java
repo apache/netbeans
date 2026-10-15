@@ -41,6 +41,7 @@ class CleanTask implements Runnable {
 
     /**
      */
+    @Override
     public void run() {
         resultModel.close();
     }

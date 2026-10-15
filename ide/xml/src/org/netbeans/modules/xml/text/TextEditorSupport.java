@@ -559,9 +559,9 @@ public class TextEditorSupport extends DataEditorSupport implements EditorCookie
                 StatusDisplayer.getDefault().setStatusText(msg);
             }
 
-            Enumeration en = allEditors.getComponents();
+            Enumeration<CloneableTopComponent> en = allEditors.getComponents();
             while ( en.hasMoreElements() ) {
-                CloneableTopComponent editor = (CloneableTopComponent)en.nextElement();
+                CloneableTopComponent editor = en.nextElement();
                 if ( editor instanceof CloneableEditor ) {
                     editor.open();
                     ret = (CloneableEditor) editor;
@@ -703,7 +703,7 @@ public class TextEditorSupport extends DataEditorSupport implements EditorCookie
      */
     public static class TextEditorSupportFactory implements CookieSet.Factory {
         /** */
-        private WeakReference editorRef;
+        private WeakReference<TextEditorSupport> editorRef;
         /** */
         private final XMLDataObjectLook dataObject; // used while creating the editor
         /** */
@@ -762,13 +762,13 @@ public class TextEditorSupport extends DataEditorSupport implements EditorCookie
 
             synchronized (this) {
                 if ( editorRef != null ) {
-                    editorSupport = (TextEditorSupport) editorRef.get();
+                    editorSupport = editorRef.get();
                 }
                 if ( editorSupport != null ) {
                     return editorSupport;
                 }
                 editorSupport = prepareEditor();
-                editorRef = new WeakReference(editorSupport);
+                editorRef = new WeakReference<>(editorSupport);
             }
             editorSupport.syncMimeType();
             return editorSupport;

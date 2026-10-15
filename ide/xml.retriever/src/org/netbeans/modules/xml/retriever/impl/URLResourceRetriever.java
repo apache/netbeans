@@ -39,7 +39,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
-import org.netbeans.modules.xml.retriever.*;
 
 /**
  *
@@ -71,6 +70,7 @@ public class URLResourceRetriever implements ResourceRetriever{
     public URLResourceRetriever() {
     }
     
+    @Override
     public boolean accept(String baseAddr, String currentAddr) throws URISyntaxException {
         URI currURI = new URI(currentAddr);
         if( (currURI.isAbsolute()) && (currURI.getScheme().equalsIgnoreCase(URI_SCHEME)))
@@ -85,18 +85,19 @@ public class URLResourceRetriever implements ResourceRetriever{
         return false;
     }
     
-    public HashMap<String, InputStream> retrieveDocument(String baseAddress,
+    @Override
+    public Map<String, InputStream> retrieveDocument(String baseAddress,
             String documentAddress) throws IOException,URISyntaxException{
         
         String effAddr = getEffectiveAddress(baseAddress, documentAddress);
         if(effAddr == null)
             return null;
         URI currURI = new URI(effAddr);
-        HashMap<String, InputStream> result = null;
+        Map<String, InputStream> result = null;
         
         InputStream is = getInputStreamOfURL(currURI.toURL(), ProxySelector.
                 getDefault().select(currURI).get(0));
-        result = new HashMap<String, InputStream>();
+        result = new HashMap<>();
         result.put(effectiveURL.toString(), is);
         return result;
         
@@ -167,10 +168,12 @@ public class URLResourceRetriever implements ResourceRetriever{
         
     }
     
+    @Override
     public long getStreamLength() {
         return streamLength;
     }
     
+    @Override
     public String getEffectiveAddress(String baseAddress, String documentAddress) throws IOException, URISyntaxException {
         return resolveURL(baseAddress, documentAddress, true);
     }

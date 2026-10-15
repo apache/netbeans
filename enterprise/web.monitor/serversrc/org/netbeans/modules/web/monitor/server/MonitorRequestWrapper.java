@@ -17,13 +17,9 @@
  * under the License.
  */
 
-/**
- * @author Ana von Klopp
- * @author Simran Gleason
- */
-
 package org.netbeans.modules.web.monitor.server;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -34,7 +30,6 @@ import java.util.Vector;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpUtils;
 import org.netbeans.modules.web.monitor.data.RequestData;
 import org.netbeans.modules.web.monitor.data.Param;
 
@@ -54,15 +49,15 @@ public class MonitorRequestWrapper extends HttpServletRequestWrapper {
     private String localRemoteAddr = null;
     private String localQueryString = null;
     private Param[] localHeaders = null;
-    private Vector localCookies = null;
-    private Map oldParams = null; 
-    private Map localParams = null;
+    private Vector<Cookie> localCookies = null;
+    private Map<String, String[]> oldParams = null; 
+    private Map<String, String[]> localParams = null;
     private Stack extraParamStack = null;
 
     // These fields are used to manage session replacement during
     // replay, if the server supports it
-    public final static String JSESSIONID = "JSESSIONID"; // NOI18N
-    public final static String REPLACED =
+    public static final String JSESSIONID = "JSESSIONID"; // NOI18N
+    public static final String REPLACED =
 	"netbeans.replay.session-replaced"; //NOI18N    
 
     private static final boolean debug = false;
@@ -463,24 +458,24 @@ public class MonitorRequestWrapper extends HttpServletRequestWrapper {
 	if(localMethod.equals("GET")) { //NOI18N
 
 	    try {
-		localParams = HttpUtils.parseQueryString(localQueryString);
+		localParams = Collections.synchronizedMap(RequestData.parseQueryString(localQueryString));
 	    }
 	    catch(Exception ex) {
 		// This utility doesn't like query strings that aren't 
 		// in parameter format
-		localParams = new Hashtable();
+		localParams = new Hashtable<>();
 	    }
 	}
 
 	else if(localMethod.equals("POST")) { // NOI18N
 
 	    try {
-		localParams = HttpUtils.parseQueryString(localQueryString);
+		localParams = Collections.synchronizedMap(RequestData.parseQueryString(localQueryString));
 	    }
 	    catch(Exception ex) {
 		// This utility doesn't like query strings that aren't 
 		// in parameter format
-		localParams = new Hashtable();
+		localParams = new Hashtable<>();
 	    }
 
 	    // PENDING - this assumes the stuff comes in as parameters,
@@ -496,7 +491,7 @@ public class MonitorRequestWrapper extends HttpServletRequestWrapper {
 		String name = params[i].getAttributeValue("name"); // NOI18N
 		String[] values = null;
 		if(localParams.containsKey(name)) {
-		    values = (String[])localParams.get(name);
+		    values = localParams.get(name);
 		    String[] newvals = new String[values.length+1];
 		    int j;
 		    for(j=0; j<values.length; ++j)
@@ -513,7 +508,7 @@ public class MonitorRequestWrapper extends HttpServletRequestWrapper {
 	}
 	else if(localMethod.equals("PUT")) { // NOI18N
 
-	    localParams = new Hashtable(); 
+	    localParams = new Hashtable<>(); 
 
 	    // PENDING
 	    // This method would normally come with a file passed in
@@ -523,7 +518,7 @@ public class MonitorRequestWrapper extends HttpServletRequestWrapper {
 	else {
 	    // The user shouldn't be able to set any parameters for
 	    // other HTTP methods. 
-	    localParams = new Hashtable(); 
+	    localParams = new Hashtable<>(); 
 	}
 
 	// Set the headers and cookies
@@ -536,7 +531,7 @@ public class MonitorRequestWrapper extends HttpServletRequestWrapper {
 	} 
 
 	// Used to create the cookie header
-	StringBuffer cookieBuf = new StringBuffer();
+	StringBuilder cookieBuf = new StringBuilder();
 
 	// Set the headers in the wrapper to what they were set to in
 	// the data record. It will have to be modified in case either 
@@ -557,7 +552,7 @@ public class MonitorRequestWrapper extends HttpServletRequestWrapper {
 
 	// We're going to parse the cookies again so we'll start with
 	// an empty vector
-	localCookies = new Vector();
+	localCookies = new Vector<>();
 
 	// Holds the session id from the data record
 	String idFromRequest = null;

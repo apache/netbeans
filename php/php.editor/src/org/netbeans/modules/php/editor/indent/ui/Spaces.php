@@ -6,6 +6,17 @@ namespace ExampleNamespace;
 use Some\Classes\{ClassA, ClassB, ClassC as C};
 
 class Example implements Iface1, Iface2, Iface3 {
+#[A1("param")]
+private ClassA|ClassB|null $unionType;
+
+private ClassA&ClassB $intersectionType;
+
+private string $propertyHook {
+    &get {
+        return $this->propertyHook;
+    }
+    set($value) => $this->propertyHook = $value;
+}
 
     public function ifExample ($a, $b) {
         if (convert($a) > $b) {
@@ -16,6 +27,10 @@ class Example implements Iface1, Iface2, Iface3 {
             $result = getText($this->property1, $this->property2) ;
         }
 	$result = $a < $b ? $a : $b;
+    }
+
+    public function coalescingOperatorExample(?string $a): string {
+        return $a ?? 'default value';
     }
 
 public function forExample() {
@@ -52,6 +67,19 @@ switch ($i) {
         break;
 }
 }
+
+public function matchExample() {
+$result = match ($i) {
+    1,2,3 => "1, 2, or 3",
+    4,5, => "4 or 5",
+    default => $this->getDefaultValue(),
+};
+}
+
+public function getDefaultValue(): int {
+    return 10;
+}
+
 public function tryExample() {
     try {
     echo inverse(5) . "\n";
@@ -79,12 +107,48 @@ public function alignParamsExample($arg1,
         $arg2, $arg3,
         $arg4, $arg5) {
 }
+
+public function unionTypesExample(
+        Class1|Class2|null $object
+        ): int|float|null {
+    return null;
 }
+
+public function intersectionTypesExample(
+        ClassA&ClassB $object
+        ): ClassA&ClassB {
+    return $object;
+}
+
+public function nullsafeOperatorExample(object $object){
+    $object?->nullsafe();
+}
+}
+
+enum EnumExample: string {
+
+    case FOO = 'F';
+    case BAR = 'B';
+
+    public function example(): string {
+        return match ($this) {
+            static::FOO => 'Foo',
+            static::BAR => 'Bar',
+        };
+    }
+}
+
+$anonymousFunc = function ($arg) use ($param):int {
+    return 1;
+};
 
 // Wrapping: Method Call Arguments must be set
 (new Example())->alignParamsExample('one',
         'two', 'three',
         'four', 'five');
+
+function namedArguments($a, $b) {}
+namedArguments(a:1, b:2);
 
 $shortName=10;
 $veryLooongName=20;
@@ -93,4 +157,10 @@ $data=[
 'very_looong_key'=>100,
 ];
 
-?>
+$match = match ($type) {
+    "condition" => 1,
+    "loooooong condition" => 2,
+    default => 0,
+};
+
+new (trim(' Example '))()->field;

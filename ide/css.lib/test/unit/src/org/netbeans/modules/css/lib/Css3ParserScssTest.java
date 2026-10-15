@@ -73,43 +73,53 @@ public class Css3ParserScssTest extends CssTestBase {
     }
 
     public void testVariable() {
-        String source = "$color: #4D926F;\n"
+        assertParses("$color: #4D926F;\n"
                 + "\n"
                 + "#header {\n"
                 + "  color: $color;\n"
                 + "}\n"
                 + "h2 {\n"
                 + "  color: $color;\n"
-                + "}";
+                + "}");
+    }
 
-        CssParserResult result = TestUtil.parse(source);
-
-//        NodeUtil.dumpTree(result.getParseTree());
-        assertResultOK(result);
+    public void testNamespacedVariable() {
+        assertParses("@use \"vars\";\n"
+                + "#test {     \n"
+                + "    color: vars.$someColor;     \n"
+                + "    font-size: 12px; \n"
+                + "}");
     }
 
     public void testVariable2() {
-        String source = "#header {\n"
+        assertParses("#header {\n"
                 + "  border: 2px $color solid;\n"
-                + "}\n";
+                + "}\n");
+    }
 
-        CssParserResult result = TestUtil.parse(source);
-
-//        NodeUtil.dumpTree(result.getParseTree());
-        assertResultOK(result);
+    public void testNamespacedVariable2() {
+        assertParses("@use \"vars\";\n"
+                + "#header {\n"
+                + "  border: 2px vars.$color solid;\n"
+                + "}\n");
     }
 
     public void testVariableAsPropertyName() {
-        String source = ".class {\n"
+        assertParses(".class {\n"
                 + "    $var: 2;\n"
                 + "    three: $var;\n"
                 + "    $var: 3;\n"
-                + "  }";
+                + "  }");
+    }
 
-        CssParserResult result = TestUtil.parse(source);
-
-//        NodeUtil.dumpTree(result.getParseTree());
-        assertResultOK(result);
+    public void testVariableAsPropertyName2() {
+        assertParses(
+                "@use \"vars\";\n"
+                + ".class {\n"
+                + "    vars.$var: 2;\n"
+                + "    three: vars.$var;\n"
+                + "    vars.$var: 3;\n"
+                + "  }");
     }
 
     public void testFunction() {
@@ -198,7 +208,7 @@ public class Css3ParserScssTest extends CssTestBase {
 //
 //        CssParserResult result = TestUtil.parse(source);
 //
-////        NodeUtil.dumpTree(result.getParseTree());
+// //        NodeUtil.dumpTree(result.getParseTree());
 //        assertResultOK(result);
 //    }
 //
@@ -211,7 +221,7 @@ public class Css3ParserScssTest extends CssTestBase {
 //
 //        CssParserResult result = TestUtil.parse(source);
 //
-////        NodeUtil.dumpTree(result.getParseTree());
+// //        NodeUtil.dumpTree(result.getParseTree());
 //        assertResultOK(result);
 //    }
 //
@@ -233,7 +243,7 @@ public class Css3ParserScssTest extends CssTestBase {
 //
 //        CssParserResult result = TestUtil.parse(source);
 //
-////        NodeUtil.dumpTree(result.getParseTree());
+// //        NodeUtil.dumpTree(result.getParseTree());
 //        assertResultOK(result);
 //    }
 //
@@ -784,6 +794,10 @@ public class Css3ParserScssTest extends CssTestBase {
 
     }
 
+    public void testExtendMultipleSelectors() {
+        assertParses("dummy {@extend .message, .info;};");
+    }
+
     public void testDebug() {
         String source = "@debug 10em + 12em;\n"
                 + ".class {\n"
@@ -927,7 +941,7 @@ public class Css3ParserScssTest extends CssTestBase {
     //
 //    public void testMergedScssTests() throws ParseException, BadLocationException, IOException {
 //        CssParserResult result = TestUtil.parse(getTestFile("testfiles/scss/scss-tests-merged.scss"));
-////        TestUtil.dumpResult(result);
+// //        TestUtil.dumpResult(result);
 //        assertResult(result, 0);
 //    }
     public void testLocalVariableDeclaration() {
@@ -1564,6 +1578,17 @@ public class Css3ParserScssTest extends CssTestBase {
                 + "  &-primary { background: orange; }\n"
                 + "  &-secondary { background: blue; }\n"
                 + "}\n");
+        // Test parent selector combined with interpolation
+        assertParses("$i: 1;\n"
+                + ".selector\n"
+                + "{\n"
+                + "    &--#{$i}\n"
+                + "    {\n"
+                + "    }\n"
+                + "    &__#{$i}\n"
+                + "    {\n"
+                + "    }\n"
+                + "}", true);
     }
 
     public void testAtRoot() {
@@ -1696,7 +1721,7 @@ public class Css3ParserScssTest extends CssTestBase {
         CssParserResult result = TestUtil.parse(source);
         assertResultOK(result);
     }
-    
+
     public void testAdditionalCommaInTheEndOfSelector() {
         String source = ".ui-convex,\n"
                 + ".ui-convex-hover,\n"
@@ -1709,7 +1734,7 @@ public class Css3ParserScssTest extends CssTestBase {
         CssParserResult result = TestUtil.parse(source);
         assertResultOK(result);
     }
-    
+
     public void testQuoteEscapingInString() {
         String source = "@function icon-character-for-name($name) {\n"
                 + "    // http://pictos.cc/font/\n"
@@ -1721,23 +1746,23 @@ public class Css3ParserScssTest extends CssTestBase {
         CssParserResult result = TestUtil.parse(source);
         assertResultOK(result);
     }
-    
+
     public void testEachWithMapPairs() {
-      String source = "@each $header, $size in (h1: 2em, h2: 1.5em, h3: 1.2em) {\n"
-              + "  #{$header} {\n"
-              + "    font-size: $size;\n"
-              + "  }\n"
-              + "}";
-      CssParserResult result = TestUtil.parse(source);
-      assertResultOK(result);
+        String source = "@each $header, $size in (h1: 2em, h2: 1.5em, h3: 1.2em) {\n"
+                + "  #{$header} {\n"
+                + "    font-size: $size;\n"
+                + "  }\n"
+                + "}";
+        CssParserResult result = TestUtil.parse(source);
+        assertResultOK(result);
     }
-    
+
     public void testParenSelectorAsPropertyValue() {
         String source = ".foo .bar, .baz { $selector: & }";
         CssParserResult result = TestUtil.parse(source);
         assertResultOK(result);
     }
-    
+
     public void testMultiDimensionalMaps() {
         String source = "$type-scale: (\n"
                 + "    tiny: (\n"
@@ -1765,7 +1790,7 @@ public class Css3ParserScssTest extends CssTestBase {
         CssParserResult result = TestUtil.parse(source);
         assertResultOK(result);
     }
-    
+
     public void testAtRootDeclaration() {
         String source = "@media print {\n"
                 + "  .page {\n"
@@ -1778,7 +1803,7 @@ public class Css3ParserScssTest extends CssTestBase {
         CssParserResult result = TestUtil.parse(source);
         assertResultOK(result);
     }
-    
+
     public void testKeyframesInSass() {
         String source = "@mixin keyframes($name)\n"
                 + "{\n"
@@ -1793,24 +1818,24 @@ public class Css3ParserScssTest extends CssTestBase {
                 + "}";
         CssParserResult result = TestUtil.parse(source);
         assertResultOK(result);
-        
+
         source = "@mixin keyframes($name) {\n"
                 + "  @-webkit-keyframes #{$name} {\n"
                 + "    @content; \n"
                 + "  }}";
-        
+
         result = TestUtil.parse(source);
         assertResultOK(result);
-        
+
         source = "@include keyframes(slide-down) {\n"
                 + "  0% { opacity: 1; }\n"
                 + "  90% { opacity: 0; }\n"
                 + "}";
-        
+
         result = TestUtil.parse(source);
         assertResultOK(result);
     }
-    
+
     public void testSassNestingGreater() {
         assertParses("div {\n"
                 + "    margin: 0;\n"
@@ -1823,8 +1848,8 @@ public class Css3ParserScssTest extends CssTestBase {
                 + "        }\n"
                 + "    }\n"
                 + "}");
-    } 
-    
+    }
+
     public void testPseudoClassBeforeAmpersand() {
         assertParses("  li {\n"
                 + "        a:hover, &.selected {\n"
@@ -1833,12 +1858,12 @@ public class Css3ParserScssTest extends CssTestBase {
                 + "    }");
 
     }
-    
+
     public void testDotInterpolationMinus() {
-    assertParses("$fa-css-prefix : test;\n"
+        assertParses("$fa-css-prefix : test;\n"
                 + ".#{$fa-css-prefix}-2x { font-size: 2em; }");
     }
-    
+
     public void testAmpColonInterpolation() {
         assertParses("a {\n"
                 + "    &:#{$state}{\n"
@@ -1850,7 +1875,7 @@ public class Css3ParserScssTest extends CssTestBase {
     public void testMathExpWithUnits() {
         assertParses("$fa-li-width: (30em / 14) !default;");
     }
-    
+
     public void testExtendPlaceHolderWithInterpolation() {
         assertParses("%at-contactformelement-skin-default {\n"
                 + "  margin-top: 6rem;\n"
@@ -1862,7 +1887,7 @@ public class Css3ParserScssTest extends CssTestBase {
                 + "  }\n"
                 + "}");
     }
-    
+
     public void testSpacesInSassInterpolation() {
         assertParses(".test {\n"
                 + "    &.#{ $active_class } > a {\n"
@@ -1870,7 +1895,7 @@ public class Css3ParserScssTest extends CssTestBase {
                 + "    }\n"
                 + "}");
     }
-    
+
     public void testMathExpressionInPropertyValue() {
         assertParses("@mixin dropdown-container($content:list, $triangle:true, $max-width:$f-dropdown-max-width) {\n"
                 + "    &:before {\n"
@@ -1882,14 +1907,14 @@ public class Css3ParserScssTest extends CssTestBase {
                 + "    }\n"
                 + "}");
     }
-    
+
     public void testPropertyDeclarationWithExpression() {
         assertParses("@media only screen and (min-width: $media-xs)\n"
                 + "{\n"
                 + "    width: calc(100% - #{$left-column-width});\n"
                 + "}");
     }
-    
+
     public void testURLinScss() {
         assertParses("@function oj-image-url($path){\n"
                 + " @return url($imageDir + $path);\n"
@@ -1913,9 +1938,9 @@ public class Css3ParserScssTest extends CssTestBase {
                 + "				padding-left: 14px;\n"
                 + "				margin-bottom: 5px;\n"
                 + "}");
-        
+
     }
-    
+
     public void testPseudoWithWhitespaceOnEnd() {
         assertParses("#test\n"
                 + "{\n"
@@ -1925,22 +1950,22 @@ public class Css3ParserScssTest extends CssTestBase {
                 + "    }\n"
                 + "}");
     }
-    
+
     public void testFunctionQuoteInMap() {
         assertParses("$a: (quote(bgcolor): black)");
     }
-    
+
     public void testSassMapWithNumbers() {
         assertParses("$twoToTheN: (0: 1, 1: 2, 2: 4, 3: 8, 4: 16, 5: 32);");
     }
-    
+
     public void testStringEscapesInInterpolation() {
         assertParses("@function oj-prepend-slash($char)\n"
                 + "{\n"
                 + "  @return #{\"\\\"\\\\\"}#{$char + \"\\\"\"};\n"
                 + "}");
     }
-    
+
     public void testEachWithMultipleLists() {
         assertParses("@each $className, $iconFile\n"
                 + "in\n"
@@ -1956,7 +1981,7 @@ public class Css3ParserScssTest extends CssTestBase {
                 + "  }\n"
                 + "}");
     }
-    
+
     public void testMapAnyDatatypeasKey() {
         assertParses("$font-formats: 'woff' 'ttf'; // Define what webfont formats need importing\n"
                 + "$font-path: '../fonts/'; // Set the a path to your fonts directory\n"
@@ -1981,7 +2006,7 @@ public class Css3ParserScssTest extends CssTestBase {
                 + "  'alias': 'body', // create aliases when useful\n"
                 + ");");
     }
-    
+
     public void testMediaWithInterpolation() {
         assertParses("$information-phone: \"(max-width : 320px)\";\n"
                 + "@media screen and (#{$information-phone}) {\n"
@@ -1990,5 +2015,164 @@ public class Css3ParserScssTest extends CssTestBase {
                 + "@media screen and #{$information-phone} {\n"
                 + "  background: red;\n"
                 + "}");
+    }
+
+    public void testScssUseForward() {
+        assertParses("@use 'test1';");
+        assertParses("@use 'test2' as t;");
+        assertParses("@use 'test2' with ($black: #222, $border-radius: 0.1rem);");
+        assertParses("@use 'test2' as t with ($black: #222, $border-radius: 0.1rem);");
+        assertParses("@forward 'test1';");
+        assertParses("@forward 'test2' as t;");
+        assertParses("@forward 'test2' with ($black: #222, $border-radius: 0.1rem);");
+        assertParses("@forward 'test2' as t with ($black: #222, $border-radius: 0.1rem);");
+        assertParses("@forward 'test2' hide dummy1;");
+        assertParses("@forward 'test2' show dummy1, dummy2;");
+    }
+
+    public void testParseLayer() {
+        assertParses("@layer layer1;");
+        assertParses("@layer layer1, layer2;");
+        assertParses("@layer layer1 {}");
+        assertParses("@layer layer1 {h1 {font-weight: bold}}");
+        assertParses("@layer layer1 {h1 {font-weight: bold}} @layer layer2 {}");
+        assertParses("@layer layer1.sublayer1 {h1 {font-weight: bold}}");
+        assertParses("@layer layer1 { @layer sublayer1 {}}");
+        assertParses("@layer layer1 { @layer sublayer1 {h1 {font-weight: bold}}}");
+        assertParses("@layer layer1 { @layer sublayer1, sublayer2; @layer sublayer1 {} @layer sublayer2{}}");
+        assertParses("@layer {}");
+        assertParses("@layer {h1 {font-weight: bold}}");
+        assertParses("@layer {h1 {font-weight: bold}} @layer layer2 {}");
+        assertParses("@import \"test.css\" layer;");
+        assertParses("@import \"test.css\" layer(test);");
+        assertParses("@import \"test.css\" layer(test.test2);");
+        assertParses("@layer default;\n"
+                + "@import url(theme.css) layer(theme);\n"
+                + "@layer components;\n"
+                + "@layer default {}");
+    }
+
+    public void testMediaQueryRangeContext() throws Exception {
+        assertParses("@media (width <= $widthValue) {}");
+        assertParses("@media (width <= 1200px) {}");
+        assertParses("@media (30em <= width <= #{$widthValue}) {}");
+    }
+
+    // https://github.com/apache/netbeans/issues/8686
+    public void testBemModifierWithDimension() {
+        // BEM modifier starting with digits — &--32x15 is tokenized as LESS_AND(&--) + DIMENSION(32x15)
+        assertParses(".o-ratio {\n"
+                + "  aspect-ratio: 1 / 1;\n"
+                + "\n"
+                + "  &--32x15 {\n"
+                + "    aspect-ratio: 32 / 15;\n"
+                + "  }\n"
+                + "}\n");
+        assertParses(".block {\n"
+                + "  &--16x9 { aspect-ratio: 16 / 9; }\n"
+                + "  &--4x { aspect-ratio: 4 / 3; }\n"
+                + "  &--4foo { aspect-ratio: 4 / 3; }\n"
+                + "}\n");
+    }
+
+    // @use 'module' as * — wildcard namespace import
+    public void testScssUseAsWildcard() {
+        assertParses("@use '../tools/tools.icons' as *;\n"
+                + ".c-social-media-icons { a { color: inherit; } }\n");
+        assertParses("@use 'sass:math' as *;\n");
+        assertParses("@use 'sass-math' as *;\n");
+        // @forward as * is the same pattern
+        assertParses("@forward 'module' as *;\n");
+        // normal 'as name' still works
+        assertParses("@use '../tools/tools' as tools;\n"
+                + ".x { @include tools.media((max-width: 400px)) { color: red; } }\n");
+    }
+
+    // SCSS namespace variable inside url() — url(settings.$path-images + 'file.png')
+    public void testScssNamespacedVarInUrl() {
+        // simple IDENT inside url (standard CSS url)
+        assertParses(".x { background: url(img); }\n");
+        // SASS_VAR + single-quoted string concat (no namespace) — should work
+        assertParses(".x { background: url($path + 'file.png'); }\n");
+        // namespace var alone (URI lexer handles this)
+        assertParses(".x { background: url(settings.$img); }\n");
+        // namespace var + double-quoted string (URI lexer handles `"`)
+        assertParses(".x { background: url(settings.$path + \"file.png\"); }\n");
+        // namespace var + single-quoted string (URI lexer FAILS, parsed as function) — THIS IS THE BUG
+        assertParses(".x { background: url(settings.$path + 'file.png'); }\n");
+        // full real-world example with hyphenated var
+        assertParses(".x {\n"
+                + "  background: url(settings.$path-images + 'arrows.png') 0 0 no-repeat;\n"
+                + "}\n");
+    }
+
+    // https://github.com/apache/netbeans/issues/8686 (namespace mixin part)
+    public void testScssNamespacedMixinCall() {
+        // @use 'tools' as tools; then @include tools.media(...) — DOT is SCSS namespace separator
+        assertParses(".x {\n"
+                + "  @include tools.media((max-width: 750px)) {\n"
+                + "    columns: 1;\n"
+                + "  }\n"
+                + "}\n");
+        // namespaced mixin without block
+        assertParses(".x { @include tools.rem(14px); }\n");
+        // multi-segment namespace (e.g. @use 'a/b' as a-b)
+        assertParses(".x { @include ns.mixin(); }\n");
+        // exact code pattern from the reported file
+        assertParses(".ls-text-block {\n"
+                + "  &-main-text {\n"
+                + "    &.has-two-columns {\n"
+                + "      columns: 2;\n"
+                + "      column-gap: 2rem;\n"
+                + "      @include tools.media(\n"
+                + "        (\n"
+                + "          max-width: tools.em(750px),\n"
+                + "        )\n"
+                + "      ) {\n"
+                + "        columns: 1;\n"
+                + "      }\n"
+                + "    }\n"
+                + "  }\n"
+                + "}\n");
+    }
+
+    // https://github.com/apache/netbeans/issues/8636
+    public void testNestedContainerQuery() {
+        // @container nested inside SCSS rules
+        assertParses("h2 {\n"
+                + "  span {\n"
+                + "    @container (width < 458px) {\n"
+                + "      display: none;\n"
+                + "    }\n"
+                + "  }\n"
+                + "}\n");
+        // single nesting level
+        assertParses(".foo {\n"
+                + "  @container (width < 600px) {\n"
+                + "    display: block;\n"
+                + "  }\n"
+                + "}\n");
+        // with container name
+        assertParses(".foo {\n"
+                + "  @container sidebar (width < 600px) {\n"
+                + "    font-size: 1rem;\n"
+                + "  }\n"
+                + "}\n");
+    }
+
+    // https://github.com/apache/netbeans/issues/5799
+    public void testMixinCallWithBracketedList() {
+        // bracketed list as mixin argument
+        assertParses("div {\n"
+                + "  @include test($parameter: [one, two]);\n"
+                + "}\n");
+        // multiple values in bracketed list
+        assertParses("div {\n"
+                + "  @include test($parameter: [one, two, three]);\n"
+                + "}\n");
+        // bracketed list without named parameter
+        assertParses("div {\n"
+                + "  @include test([one, two]);\n"
+                + "}\n");
     }
 }

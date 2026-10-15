@@ -40,7 +40,7 @@ import org.openide.util.RequestProcessor;
 public class Hk2WSChildren extends Children.Keys<Object> implements Refreshable {
     
     private Lookup lookup;
-    private final static Node WAIT_NODE = Hk2ItemNode.createWaitNode();
+    private static final Node WAIT_NODE = Hk2ItemNode.createWaitNode();
     
     Hk2WSChildren(Lookup lookup) {
         this.lookup = lookup;

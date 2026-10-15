@@ -16,35 +16,35 @@ $var111111	 = 'test';
 $var1111111	 = 'test';
 $longVarName = 'test';
 
-$v			 = 'test';
-$va			 = 'test';
-$var		 = 'test';
-$var1		 = 'test';
-$var11		 = 'test';
-$var111		 = 'test';
-$var1111	 = 'test';
-$var11111	 = 'test';
-$var111111	 = 'test';
-$var1111111	 = 'test';
+$v			= 'test';
+$va			= 'test';
+$var		= 'test';
+$var1		= 'test';
+$var11		= 'test';
+$var111		= 'test';
+$var1111	= 'test';
+$var11111	= 'test';
+$var111111	= 'test';
+$var1111111 = 'test';
 
-$v			 = 'test';
-$va			 = 'test';
-$var		 = 'test';
-$var1		 = 'test';
-$var11		 = 'test';
-$var111		 = 'test';
-$var1111	 = 'test';
-$var11111	 = 'test';
-$var111111	 = 'test';
+$v		   = 'test';
+$va		   = 'test';
+$var	   = 'test';
+$var1	   = 'test';
+$var11	   = 'test';
+$var111	   = 'test';
+$var1111   = 'test';
+$var11111  = 'test';
+$var111111 = 'test';
 
-$v			 = 'test';
-$va			 = 'test';
-$var		 = 'test';
-$var1		 = 'test';
-$var11		 = 'test';
-$var111		 = 'test';
-$var1111	 = 'test';
-$var11111	 = 'test';
+$v		  = 'test';
+$va		  = 'test';
+$var	  = 'test';
+$var1	  = 'test';
+$var11	  = 'test';
+$var111	  = 'test';
+$var1111  = 'test';
+$var11111 = 'test';
 
 $v		 = 'test';
 $va		 = 'test';
@@ -54,43 +54,43 @@ $var11	 = 'test';
 $var111	 = 'test';
 $var1111 = 'test';
 
-$v		 = 'test';
-$va		 = 'test';
-$var	 = 'test';
-$var1	 = 'test';
-$var11	 = 'test';
-$var111	 = 'test';
+$v		= 'test';
+$va		= 'test';
+$var	= 'test';
+$var1	= 'test';
+$var11	= 'test';
+$var111 = 'test';
 
-$v		 = 'test';
-$va		 = 'test';
-$var	 = 'test';
-$var1	 = 'test';
-$var11	 = 'test';
+$v	   = 'test';
+$va	   = 'test';
+$var   = 'test';
+$var1  = 'test';
+$var11 = 'test';
 
-$v		 = 'test';
-$va		 = 'test';
-$var	 = 'test';
-$var1	 = 'test';
+$v	  = 'test';
+$va	  = 'test';
+$var  = 'test';
+$var1 = 'test';
 
 $v	 = 'test';
 $va	 = 'test';
 $var = 'test';
 
-$v	 = 'test';
-$va	 = 'test';
+$v	= 'test';
+$va = 'test';
 
 $short	 = 'test';
 $shortli = "test";
 
 $ar = array(
-	"var"		 => 10,
-	"longname"	 => 20,
-	"short"		 => 333
+	"var"	   => 10,
+	"longname" => 20,
+	"short"	   => 333
 );
 
 function functionName($param) {
-	$va4567890	 = 'test';
-	$var1		 = 10;
+	$va4567890 = 'test';
+	$var1	   = 10;
 
 	$va4567890 = 'test';
 }
@@ -99,19 +99,19 @@ $ar = array(
 	"longname" => 20,
 );
 
-$var1111	 = 'test';
-$var111111	 = 'test';
+$var1111   = 'test';
+$var111111 = 'test';
 
-$va4567890	 = 'test';
-$var1		 = 10;
-$var1111	 = 'test';
-$var11111	 = 'test';
+$va4567890 = 'test';
+$var1	   = 10;
+$var1111   = 'test';
+$var11111  = 'test';
 
-$var	 = 'test';
-$var1	 = 'test';
+$var  = 'test';
+$var1 = 'test';
 
-$var		 = 'test';
-$var11111	 = 'test';
+$var	  = 'test';
+$var11111 = 'test';
 
 $v			 = 'test';
 $longVarName = 'test';

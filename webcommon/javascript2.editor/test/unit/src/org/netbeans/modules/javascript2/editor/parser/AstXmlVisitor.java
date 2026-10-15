@@ -37,6 +37,8 @@ import com.oracle.js.parser.ir.UnaryNode;
 import com.oracle.js.parser.ir.VarNode;
 import com.oracle.js.parser.ir.visitor.NodeVisitor;
 import com.oracle.js.parser.Token;
+import com.oracle.js.parser.ir.ClassElement;
+import com.oracle.js.parser.ir.ForNode;
 import com.oracle.js.parser.ir.JsxAttributeNode;
 import com.oracle.js.parser.ir.JsxElementNode;
 import java.util.List;
@@ -53,6 +55,26 @@ public class AstXmlVisitor extends NodeVisitor {
     public AstXmlVisitor(LexicalContext lc) {
         super(lc);
         this.sb = new StringBuilder();
+        this.sb.append("<!--\n"
+                + "\n"
+                + "    Licensed to the Apache Software Foundation (ASF) under one\n"
+                + "    or more contributor license agreements.  See the NOTICE file\n"
+                + "    distributed with this work for additional information\n"
+                + "    regarding copyright ownership.  The ASF licenses this file\n"
+                + "    to you under the Apache License, Version 2.0 (the\n"
+                + "    \"License\"); you may not use this file except in compliance\n"
+                + "    with the License.  You may obtain a copy of the License at\n"
+                + "\n"
+                + "      http://www.apache.org/licenses/LICENSE-2.0\n"
+                + "\n"
+                + "    Unless required by applicable law or agreed to in writing,\n"
+                + "    software distributed under the License is distributed on an\n"
+                + "    \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\n"
+                + "    KIND, either express or implied.  See the License for the\n"
+                + "    specific language governing permissions and limitations\n"
+                + "    under the License.\n"
+                + "\n"
+                + "-->\n\n");
         this.indent = 0;
     }
 
@@ -443,8 +465,6 @@ public class AstXmlVisitor extends NodeVisitor {
         return false;
     }
 
-    
-    
     @Override
     public boolean enterVarNode(VarNode node) {
         createOpenTag(node, createTagAttribute("name", node.getName().getName()));
@@ -466,5 +486,31 @@ public class AstXmlVisitor extends NodeVisitor {
         return false;
     }
 
-    
+
+    @Override
+    public boolean enterClassElement(ClassElement node) {
+        createOpenTag(node, createTagAttribute("name", node.getKeyName()));
+        processAttribute(node.isComputed(), "isComputed");
+        processAttribute(node.isStatic(), "isStatic");
+        processAttribute(node);
+
+        processWithComment(node.getKey(), "ClassElement Key");
+        processWithComment(node.getValue(), "ClassElement Value");
+        processWithComment(node.getGetter(), "ClassElement Getter");
+        processWithComment(node.getSetter(), "ClassElement Setter");
+        processWithComment(node.getDecorators(), "ClassElement Decorators");
+        createCloseTag(node);
+        return false;
+    }
+
+    @Override
+    public boolean enterForNode(ForNode forNode) {
+        enterDefault(forNode);
+        processAttribute(forNode.hasPerIterationScope(), "hasPerIterationScope");
+        processAttribute(forNode.isForAwaitOf(), "isForAwaitOf");
+        processAttribute(forNode.isForEach(), "isForEach");
+        processAttribute(forNode.isForIn(), "isForIn");
+        processAttribute(forNode.isForOf(), "isForOf");
+        return true;
+    }
 }

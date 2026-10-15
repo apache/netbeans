@@ -75,12 +75,12 @@ public class UpdateProjectImpl implements UpdateImplementation {
                 synchronized (this) {
                     if (isCurrent == null) {
                         isCurrent = cfg.getConfigurationFragment("data","http://www.netbeans.org/ns/j2ee-earproject/1",true) == null //NOI18N
-                            ? Boolean.TRUE : Boolean.FALSE;
+                                ? Boolean.TRUE : Boolean.FALSE;
                     }
                     return isCurrent;
                 }
             }
-        }).booleanValue();
+        });
     }
 
     public boolean canUpdate() {

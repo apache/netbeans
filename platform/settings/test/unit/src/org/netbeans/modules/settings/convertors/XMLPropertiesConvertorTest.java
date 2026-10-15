@@ -22,21 +22,16 @@ package org.netbeans.modules.settings.convertors;
 import java.io.*;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.netbeans.api.settings.FactoryMethod;
-
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.RandomlyFails;
-
-
 import org.netbeans.spi.settings.Convertor;
 import org.netbeans.spi.settings.Saver;
 import org.openide.cookies.InstanceCookie;
 import org.openide.filesystems.FileLock;
-
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
@@ -155,11 +150,7 @@ public final class XMLPropertiesConvertorTest extends NbTestCase {
         assertEquals("Saver was not marked as dirty.", SaverImpl.DIRTY, s.state);
     }
     
-    //////////////////////////////////////////////////////////
     // Tests on SFS
-    //////////////////////////////////////////////////////////
-    
-    
     /** Checks whether the instance is the same.
      */
     public void testSame() throws Exception {
@@ -400,7 +391,7 @@ public final class XMLPropertiesConvertorTest extends NbTestCase {
 		+ "<!DOCTYPE settings PUBLIC \"-//NetBeans//DTD Session settings 1.0//EN\" \"http://www.netbeans.org/dtds/sessionsettings-1_0.dtd\">\n"
 		+ "<settings version=\"1.0\">\n"
 		+ "  <instance class=\"" + Change.class.getName() + "\"/>\n"
-		+ "</settings>\n").getBytes("UTF-8"));
+		+ "</settings>\n").getBytes(StandardCharsets.UTF_8));
 	os.close();
 
 	DataObject ido = DataObject.find(fo);
@@ -414,7 +405,7 @@ public final class XMLPropertiesConvertorTest extends NbTestCase {
 	assertEquals("Default value in value", "", ch.value);
 
 	os = ido.getPrimaryFile().getOutputStream();
-	os.write(w.toString().getBytes("UTF-8"));
+	os.write(w.toString().getBytes(StandardCharsets.UTF_8));
 	os.close();
 
 	InstanceCookie icNew = ido.getCookie(InstanceCookie.class);
@@ -485,7 +476,7 @@ public final class XMLPropertiesConvertorTest extends NbTestCase {
                 try {
                     l = corrupted.lock();
                     os = corrupted.getOutputStream(l);
-                    FileUtil.copy(valid.getInputStream(), os);
+                    valid.getInputStream().transferTo(os);
                     os.flush();
                 } finally {
                     if (os != null) try { os.close(); } catch (IOException ex) {}

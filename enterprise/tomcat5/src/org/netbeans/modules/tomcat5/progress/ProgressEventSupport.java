@@ -72,7 +72,7 @@ public class ProgressEventSupport {
 
     /** Report event to any registered listeners. */
     public void fireHandleProgressEvent (TargetModuleID targetModuleID, DeploymentStatus sCode) {
-        Logger.getLogger(ProgressEventSupport.class.getName()).log(Level.FINE, "progress event from " + obj + " status " + sCode); // NOI18N
+        Logger.getLogger(ProgressEventSupport.class.getName()).log(Level.FINE, "progress event from {0} status {1}", new Object[]{obj, sCode}); // NOI18N
         synchronized (this) {
             status = sCode;
         }

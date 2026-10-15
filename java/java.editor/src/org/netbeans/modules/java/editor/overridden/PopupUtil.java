@@ -28,7 +28,6 @@ import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
@@ -47,15 +46,13 @@ import org.openide.windows.WindowManager;
  */
 public final class PopupUtil  {
     
-    // private static MyFocusListener mfl = new MyFocusListener();
-    
     private static final String CLOSE_KEY = "CloseKey"; //NOI18N
     private static final Action CLOSE_ACTION = new CloseAction();
     private static final KeyStroke ESC_KEY_STROKE = KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ); 
         
     private static final String POPUP_NAME = "popupComponent"; //NOI18N
     private static JDialog popupWindow;
-    private static HideAWTListener hideListener = new HideAWTListener();
+    private static final HideAWTListener hideListener = new HideAWTListener();
     
     // Singleton
     private PopupUtil() {
@@ -100,8 +97,6 @@ public final class PopupUtil  {
         }
         // popupWindow.setAlwaysOnTop( true );
         popupWindow.getContentPane().add(content);
-        // popupWindow.addFocusListener( mfl );                        
-        // content.addFocusListener( mfl );                        
                 
         WindowManager.getDefault().getMainWindow().addWindowStateListener(hideListener);
         WindowManager.getDefault().getMainWindow().addComponentListener(hideListener);
@@ -149,8 +144,7 @@ public final class PopupUtil  {
                                  point.y + (getMainWindow().getHeight() - popupWindow.getHeight()) / 3);
     }
     
-    private static final int X_INSET = 10;
-    private static final int Y_INSET = X_INSET;
+    private static final int INSET = 10;
     
     private static Point fitToScreen( int x, int y, int altHeight ) {
         
@@ -159,12 +153,12 @@ public final class PopupUtil  {
         Point p = new Point( x, y );
         
         // Adjust the x postition if necessary
-        if ( ( p.x + popupWindow.getWidth() ) > ( screen.x + screen.width - X_INSET ) ) {
-            p.x = screen.x + screen.width - X_INSET - popupWindow.getWidth(); 
+        if ( ( p.x + popupWindow.getWidth() ) > ( screen.x + screen.width - INSET ) ) {
+            p.x = screen.x + screen.width - INSET - popupWindow.getWidth(); 
         }
         
         // Adjust the y position if necessary
-        if ( ( p.y + popupWindow.getHeight() ) > ( screen.y + screen.height - X_INSET ) ) {
+        if ( ( p.y + popupWindow.getHeight() ) > ( screen.y + screen.height - INSET ) ) {
             p.y = p.y - popupWindow.getHeight() - altHeight;
         }
         
@@ -180,9 +174,9 @@ public final class PopupUtil  {
     
     private static class HideAWTListener extends ComponentAdapter implements  AWTEventListener, WindowStateListener {
         
+        @Override
         public void eventDispatched(java.awt.AWTEvent aWTEvent) {
-            if (aWTEvent instanceof MouseEvent) {
-                MouseEvent mv = (MouseEvent)aWTEvent;
+            if (aWTEvent instanceof MouseEvent mv) {
                 if (mv.getID() == MouseEvent.MOUSE_CLICKED && mv.getClickCount() > 0) {
                     //#118828
                     if (! (aWTEvent.getSource() instanceof Component)) {
@@ -201,6 +195,7 @@ public final class PopupUtil  {
             }
         }
 
+        @Override
         public void windowStateChanged(WindowEvent windowEvent) {
             if (popupWindow != null ) {
                 int oldState = windowEvent.getOldState();
@@ -217,12 +212,14 @@ public final class PopupUtil  {
 
         }
         
+        @Override
         public void componentResized(ComponentEvent evt) {
             if (popupWindow != null) {
                 resizePopup();
             }
         }
         
+        @Override
         public void componentMoved(ComponentEvent evt) {
             if (popupWindow!= null) {
                 resizePopup();
@@ -230,26 +227,13 @@ public final class PopupUtil  {
         }        
         
     }
-    
-    private static class MyFocusListener implements FocusListener {
-        
-        public void focusLost(java.awt.event.FocusEvent e) {
-            System.out.println( e );
-        }
 
-        public void focusGained(java.awt.event.FocusEvent e) {
-            System.out.println( e );
-        }
-                        
-    }
-    
     private static class CloseAction extends AbstractAction {
         
+        @Override
         public void actionPerformed(java.awt.event.ActionEvent e) {
             hidePopup();
         }
-                
-                
     }
     
 }

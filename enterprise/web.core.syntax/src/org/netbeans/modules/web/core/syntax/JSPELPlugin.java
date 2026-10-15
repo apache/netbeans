@@ -20,7 +20,6 @@ package org.netbeans.modules.web.core.syntax;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.String;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -138,7 +137,7 @@ public class JSPELPlugin extends ELPlugin {
     public List<Function> getFunctions(FileObject file) {
         List<Function> functions =  new ArrayList<Function>();
         Document document = getDocumentForFile(file);
-        if (document == null || !(document instanceof BaseDocument)) {
+        if (!(document instanceof BaseDocument)) {
             return functions;
         }
 

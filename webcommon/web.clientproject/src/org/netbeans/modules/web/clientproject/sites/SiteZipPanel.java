@@ -41,7 +41,7 @@ public class SiteZipPanel extends javax.swing.JPanel implements DocumentListener
         if (templates.size() > 0 && templates.get(0).length() > 0) {
             templates.add(0, ""); //NOI18N
         }
-        archiveComboBox.setModel(new DefaultComboBoxModel(templates.toArray(new String[templates.size()])));
+        archiveComboBox.setModel(new DefaultComboBoxModel(templates.toArray(new String[0])));
         ((JTextField)(archiveComboBox.getEditor().getEditorComponent())).getDocument().addDocumentListener(this);
     }
 

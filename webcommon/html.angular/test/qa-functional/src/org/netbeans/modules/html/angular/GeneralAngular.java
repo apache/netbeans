@@ -160,7 +160,7 @@ public class GeneralAngular extends JellyTestCase {
             int count = 0;
             while (!text.isEmpty() && count < 20) {
                 eo.pushKey(KeyEvent.VK_Z, KeyEvent.CTRL_MASK);
-                text = eo.getText(eo.getLineNumber() + iOffset).replace("\r\n", "").replace("\n", "");;
+                text = eo.getText(eo.getLineNumber() + iOffset).replace("\r\n", "").replace("\n", "");
                 log(">>" + text + "<<");
                 count++;
             }

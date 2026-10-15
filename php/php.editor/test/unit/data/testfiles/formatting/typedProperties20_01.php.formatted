@@ -49,5 +49,4 @@ class TypedPropertiesClass {
     // Handle these as error in UnusableTypesUnhandledError
     public callable $callble; // NG, Unusable type
     public void $void; // NG, Unusable type
-
 }

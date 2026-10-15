@@ -34,6 +34,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.api.project.ui.ProjectGroup;
 import org.netbeans.api.project.ui.ProjectGroupChangeListener;
+import org.openide.explorer.ExplorerManager;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 
@@ -68,7 +69,7 @@ public final class BaseUtilities {
         }
     }
 
-    public static abstract class ProjectGroupAccessor {
+    public abstract static class ProjectGroupAccessor {
 
         public abstract ProjectGroup createGroup(String name, Preferences prefs);
 
@@ -85,7 +86,7 @@ public final class BaseUtilities {
         }
 
         @Override public Project[] getOpenProjectsAPI() {
-            return open.toArray(new Project[open.size()]);
+            return open.toArray(new Project[0]);
         }
         @Override public void openAPI(Project[] projects, boolean openRequiredProjects, boolean showProgress) {
             open.addAll(Arrays.asList(projects));
@@ -140,6 +141,16 @@ public final class BaseUtilities {
             }
             assert res != null;
             return res;
+        }
+
+        @Override
+        public ExplorerManager createLogicalView() {
+            return new ExplorerManager();
+        }
+
+        @Override
+        public ExplorerManager createPhysicalView() {
+            return new ExplorerManager();
         }
     }
 }

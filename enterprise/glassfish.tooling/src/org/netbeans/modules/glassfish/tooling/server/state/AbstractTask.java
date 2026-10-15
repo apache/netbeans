@@ -31,17 +31,11 @@ import org.netbeans.modules.glassfish.tooling.logging.Logger;
  */
 public abstract class AbstractTask implements Runnable {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(AbstractTask.class);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Server status check job internal data. */
     final StatusJob job;
 
@@ -77,10 +71,7 @@ public abstract class AbstractTask implements Runnable {
         this.cancelled = false;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Mark this task as canceled.
      * <p/>

@@ -59,7 +59,7 @@ public final class TestNGNodeOpener extends NodeOpener {
 
     public void openTestsuite(TestsuiteNode node) {
         TestSuite suite = node.getSuite();
-        if ((suite != null) && (suite instanceof TestSuite)) {
+        if (suite instanceof TestSuite) {
             final FileObject fo = ((TestNGTestSuite) suite).getSuiteFO();
             if (fo != null) {
                 int[] location = XmlSuiteHandler.getSuiteLocation(fo, suite.getName());
@@ -91,7 +91,7 @@ public final class TestNGNodeOpener extends NodeOpener {
                                     List<? extends ExecutableElement> methodElements = methodsIn(element.getEnclosedElements());
                                     for (Element child : methodElements) {
                                         if (child.getSimpleName().contentEquals(((TestNGMethodNode) node).getTestcase().getTestName())) {
-                                            long pos = trees.getSourcePositions().getStartPosition(compilationUnitTree, trees.getTree(child));
+                                            long pos = trees.getSourcePositions().getStartPosition(trees.getTree(child));
                                             line[0] = compilationUnitTree.getLineMap().getLineNumber(pos);
                                             break;
                                         }

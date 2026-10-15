@@ -154,7 +154,7 @@ public class TABLECustomizer extends javax.swing.JPanel {
 
         jSpinner1.setModel(new SpinnerNumberModel(table.getRows(), 0, Integer.MAX_VALUE, 1));
         jSpinner1.setEditor(new JSpinner.NumberEditor(jSpinner1, "#"));
-        jSpinner1.setValue(new Integer(table.getRows()));
+        jSpinner1.setValue(Integer.valueOf(table.getRows()));
         jSpinner1.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinner1StateChanged(evt);
@@ -163,7 +163,7 @@ public class TABLECustomizer extends javax.swing.JPanel {
 
         jSpinner2.setModel(new SpinnerNumberModel(table.getCols(), 0, Integer.MAX_VALUE, 1));
         jSpinner2.setEditor(new JSpinner.NumberEditor(jSpinner2, "#"));
-        jSpinner2.setValue(new Integer(table.getCols()));
+        jSpinner2.setValue(Integer.valueOf(table.getCols()));
         jSpinner2.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinner2StateChanged(evt);
@@ -188,19 +188,19 @@ public class TABLECustomizer extends javax.swing.JPanel {
 
         jSpinner3.setModel(new SpinnerNumberModel(table.getBorder(), 0, Integer.MAX_VALUE, 1));
         jSpinner3.setEditor(new JSpinner.NumberEditor(jSpinner3, "#"));
-        jSpinner3.setValue(new Integer(table.getBorder()));
+        jSpinner3.setValue(Integer.valueOf(table.getBorder()));
 
         jSpinner4.setModel(new SpinnerNumberModel(table.getCspac(), 0, Integer.MAX_VALUE, 1));
         jSpinner4.setEditor(new JSpinner.NumberEditor(jSpinner4, "#"));
-        jSpinner4.setValue(new Integer(table.getCspac()));
+        jSpinner4.setValue(Integer.valueOf(table.getCspac()));
 
         jSpinner5.setModel(new SpinnerNumberModel(table.getCpadd(), 0, Integer.MAX_VALUE, 1));
         jSpinner5.setEditor(new JSpinner.NumberEditor(jSpinner5, "#"));
-        jSpinner5.setValue(new Integer(table.getCpadd()));
+        jSpinner5.setValue(Integer.valueOf(table.getCpadd()));
 
         widthSpinner.setModel(new SpinnerNumberModel(table.getWidth(), 0, Integer.MAX_VALUE, 1));
         widthSpinner.setEditor(new JSpinner.NumberEditor(widthSpinner, "#"));
-        widthSpinner.setValue(new Integer(table.getWidth()));
+        widthSpinner.setValue(Integer.valueOf(table.getWidth()));
 
         jLabel9.setForeground(javax.swing.UIManager.getDefaults().getColor("nb.errorForeground"));
         org.openide.awt.Mnemonics.setLocalizedText(jLabel9, org.openide.util.NbBundle.getMessage(TABLECustomizer.class, "TABLECustomizer.jLabel9.text")); // NOI18N

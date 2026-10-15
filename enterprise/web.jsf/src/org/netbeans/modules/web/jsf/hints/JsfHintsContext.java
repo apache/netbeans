@@ -18,11 +18,11 @@
  */
 package org.netbeans.modules.web.jsf.hints;
 
-import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.web.api.webmodule.WebModule;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -33,13 +33,13 @@ public final class JsfHintsContext {
 
     private final FileObject fileObject;
     private final Project project;
-    private final JSFVersion jsfVersion;
+    private final JsfVersion jsfVersion;
 
     JsfHintsContext(FileObject fileObject) {
         this.fileObject = fileObject;
         this.project = FileOwnerQuery.getOwner(fileObject);
         WebModule webModule = project != null ? WebModule.getWebModule(project.getProjectDirectory()) : null;
-        this.jsfVersion = webModule != null ? JSFVersion.forWebModule(webModule) : null;
+        this.jsfVersion = webModule != null ? JsfVersionUtils.forWebModule(webModule) : null;
     }
 
     public FileObject getFileObject() {
@@ -50,7 +50,7 @@ public final class JsfHintsContext {
         return project;
     }
 
-    public JSFVersion getJsfVersion() {
+    public JsfVersion getJsfVersion() {
         return jsfVersion;
     }
 }

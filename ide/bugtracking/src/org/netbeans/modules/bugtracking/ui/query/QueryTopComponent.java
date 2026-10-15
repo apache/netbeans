@@ -142,6 +142,7 @@ public final class QueryTopComponent extends TopComponent
                 getBundleText("QueryTopComponent.repositoryComboBox.AccessibleContext.accessibleDescription")); //NOI18N
         newButton.getAccessibleContext().setAccessibleDescription(
                 getBundleText("QueryTopComponent.newButton.AccessibleContext.accessibleDescription")); //NOI18N
+        newButton.setEnabled(BugtrackingManager.getInstance().hasRegisteredConnectors());
 
         /* background colors */
         Color editorBgColor = UIManager.getDefaults()
@@ -334,7 +335,7 @@ public final class QueryTopComponent extends TopComponent
     private static QueryTopComponent[] getOpenQueries() {
         QueryTopComponent[] tcs;
         synchronized(openQueries) {
-            tcs = openQueries.toArray(new QueryTopComponent[openQueries.size()]);
+            tcs = openQueries.toArray(new QueryTopComponent[0]);
         }
         return tcs;
     }
@@ -423,8 +424,7 @@ public final class QueryTopComponent extends TopComponent
         } else if(evt.getPropertyName().equals(RepositoryRegistry.EVENT_REPOSITORIES_CHANGED)) {
             if(query != null) {
                 Object cOld = evt.getOldValue();
-                if(cOld != null &&
-                   cOld instanceof Collection)
+                if(cOld instanceof Collection)
                 {
                     RepositoryImpl thisRepo = query.getRepositoryImpl();
                     if(contains((Collection) cOld, thisRepo)) {
@@ -604,7 +604,7 @@ public final class QueryTopComponent extends TopComponent
         });
     }
 
-    final static class ResolvableHelper implements Serializable {
+    static final class ResolvableHelper implements Serializable {
 
         private static final long serialVersionUID = 1L;
 
@@ -695,7 +695,7 @@ public final class QueryTopComponent extends TopComponent
 
     private RepositoryImpl getRepository() {
         Object item = repositoryComboBox.getSelectedItem();
-        if (item == null || !(item instanceof Repository)) {
+        if (!(item instanceof Repository)) {
             return null;
         }
         return APIAccessor.IMPL.getImpl((Repository)item);

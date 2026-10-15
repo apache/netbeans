@@ -79,7 +79,9 @@ import org.openide.util.WeakListeners;
  * <p>The EditorContextDispatcher provides convenient access to currently selected
  * elements and recently selected elements in the GUI.
  * 
- * <H2>Typical usage:</H2>
+ * <p>
+ * <strong>Typical usage:</strong>
+ * </p>
  * Attach a listener based on file MIME type. The usage of WeakListeners is
  * preferred, unless the listener can be removed explicitely.
  * <pre>
@@ -474,7 +476,7 @@ public final class EditorContextDispatcher {
         pcs.removePropertyChangeListener(l);
         // Also remove the listener from all MIME types
         synchronized (pcsByMIMEType) {
-            Set<String> MIMETypes = new HashSet(pcsByMIMEType.keySet());
+            Set<String> MIMETypes = new HashSet<>(pcsByMIMEType.keySet());
             for (String MIMEType : MIMETypes) {
                 PropertyChangeSupport _pcs = pcsByMIMEType.get(MIMEType);
                 _pcs.removePropertyChangeListener(l);
@@ -567,7 +569,7 @@ public final class EditorContextDispatcher {
                 Map<String, Reference<Object>> lastEvents;
                 synchronized (this) {
                     lastMIMEType = lastFiredMIMEType;
-                    lastEvents = new HashMap(lastMIMETypeEvents);
+                    lastEvents = new HashMap<>(lastMIMETypeEvents);
                     if (lastMIMEType != null && lastMIMEType.equals(oldMIMEType)) {
                         lastFiredMIMEType = null;
                         lastMIMETypeEvents.clear();
@@ -884,7 +886,7 @@ public final class EditorContextDispatcher {
      * Therefore it can block EventQueue for an unpredictable amount of time.
      * This is why doing it in AWT can block UI. Use this class not to block the UI.
      */
-    private final static class AddRemoveFileListenerInEQThread implements Runnable {
+    private static final class AddRemoveFileListenerInEQThread implements Runnable {
         
         private enum AddRemove { ADD, REMOVE }
         private static final Queue<Work> work = new LinkedList<Work>();
@@ -924,7 +926,7 @@ public final class EditorContextDispatcher {
             }
         }
         
-        private synchronized static Work getWork() {
+        private static synchronized Work getWork() {
             return work.poll();
         }
 

@@ -29,6 +29,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.logging.Level;
@@ -40,6 +41,11 @@ import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
+import org.netbeans.api.java.platform.JavaPlatform;
+import org.netbeans.api.java.source.ClasspathInfo;
+import org.netbeans.api.java.source.CompilationController;
+import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.Task;
 import org.netbeans.api.project.libraries.Library;
 import org.netbeans.api.project.libraries.LibraryManager;
 import org.netbeans.modules.java.openjdk.project.JDKProject.Root;
@@ -70,6 +76,7 @@ public class ClassPathProviderImpl implements ClassPathProvider {
         "${outputRoot}/corba/dist/lib/classes.jar",
     };
     
+    private final AtomicBoolean initialScanDone = new AtomicBoolean();
     private final ClassPath bootCP;
     private final ClassPath moduleBootCP;
     private final ClassPath compileCP;
@@ -187,7 +194,7 @@ public class ClassPathProviderImpl implements ClassPathProvider {
         this.repository = repository;
     }
 
-    private static final String[] TEST_LIBRARIES = new String[] {"testng", "junit_4"};
+    private static final String[] TEST_LIBRARIES = new String[] {"testng", "junit_4", "junit_5"};
 
     private static URL projectDir2FakeTarget(FileObject projectDir) throws MalformedURLException {
         return FileUtil.getArchiveRoot(projectDir.toURI().resolve("fake-target.jar").toURL());
@@ -196,7 +203,7 @@ public class ClassPathProviderImpl implements ClassPathProvider {
     @Override
     public ClassPath findClassPath(FileObject file, String type) {
         if (sourceCP.findOwnerRoot(file) != null) {
-            if (!repository.isAnyProjectOpened()) {
+            if (repository != null && !repository.isAnyProjectOpened()) {
                 //if no project is open, java.base may not be indexed. Fallback on default queries:
                 return null;
             }
@@ -214,8 +221,12 @@ public class ClassPathProviderImpl implements ClassPathProvider {
         } else {
             if (file.isFolder()) return null;
 
-            if (ClassPath.BOOT.equals(type)) {
-                return ClassPath.EMPTY;
+            if (ClassPath.BOOT.equals(type) || JavaClassPathConstants.MODULE_BOOT_PATH.equals(type)) {
+                if (initialScanDone.get()) {
+                    return ClassPath.EMPTY;
+                } else {
+                    return null;
+                }
             } else if (ClassPath.COMPILE.equals(type) ||
                        JavaClassPathConstants.MODULE_COMPILE_PATH.equals(type) ||
                        JavaClassPathConstants.MODULE_CLASS_PATH.equals(type)) {
@@ -241,6 +252,15 @@ public class ClassPathProviderImpl implements ClassPathProvider {
         if (REGISTER_TESTS_AS_JAVA)
             GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, new ClassPath[] {testsRegCP});
         GlobalPathRegistry.getDefault().register(TEST_SOURCE, new ClassPath[] {testsRegCP});
+        try {
+            JavaSource js = JavaSource.create(ClasspathInfo.create(ClassPath.EMPTY, testsCompileCP, ClassPath.EMPTY));
+            if (js != null) {
+                js.runWhenScanFinished(cc -> initialScanDone.set(true), true);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(ClassPathProviderImpl.class.getName())
+                  .log(Level.FINE, null, ex);
+        }
     }
     
     public void unregisterClassPaths() {

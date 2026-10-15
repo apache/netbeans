@@ -67,7 +67,7 @@ OSFAMILY=\${OSFAMILY:-\`test "\$OS" = "Linux" && echo Linux\`}
 OSFAMILY=\${OSFAMILY:-\${OS}}
 
 CPUFAMILY=\`echo \${CPUTYPE} | egrep "^i|x86_64|athlon|Intel" >/dev/null && echo x86\`
-CPUFAMILY=\${CPUFAMILY:-\`echo \${CPUTYPE} | egrep "armv" > /dev/null && echo arm\`}
+CPUFAMILY=\${CPUFAMILY:-\`echo \${CPUTYPE} | egrep "arm" > /dev/null && echo arm\`}
 CPUFAMILY=\${CPUFAMILY:-\`echo \${CPUTYPE} | egrep "sparc" > /dev/null && echo sparc\`} # sparc or sparc64
 CPUFAMILY=\${CPUFAMILY:-\${CPUTYPE}}
 

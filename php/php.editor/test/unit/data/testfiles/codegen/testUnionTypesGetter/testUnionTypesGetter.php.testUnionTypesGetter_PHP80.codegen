@@ -1,0 +1,28 @@
+public  function getNumber(): int|float  {
+return $$this->number;
+}
+
+public  function getNullableInt(): int|null  {
+return $$this->nullableInt;
+}
+
+public  function getFooBarBaz(): Foo|Bar|Baz  {
+return $$this->fooBarBaz;
+}
+
+public  function getIterableFalse(): iterable|false  {
+return $$this->iterableFalse;
+}
+
+public static function getStaticNullableArray(): array|null  {
+return self::$$staticNullableArray;
+}
+
+public static function getStaticNullableStringBool(): string|bool|null  {
+return self::$$staticNullableStringBool;
+}
+
+public static function getStaticFooBar(): \Test\Foo|\Test\Bar  {
+return self::$$staticFooBar;
+}
+

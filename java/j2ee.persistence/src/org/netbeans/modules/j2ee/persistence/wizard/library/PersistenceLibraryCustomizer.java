@@ -21,7 +21,6 @@ package org.netbeans.modules.j2ee.persistence.wizard.library;
 
 import java.awt.Dialog;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import org.netbeans.spi.project.libraries.LibraryImplementation;
 import org.netbeans.spi.project.libraries.support.LibrariesSupport;
 import org.openide.DialogDescriptor;
@@ -41,13 +40,11 @@ public class PersistenceLibraryCustomizer {
         LibraryImplementation libImpl = LibrariesSupport.createLibraryImplementation(PersistenceLibrarySupport.LIBRARY_TYPE, PersistenceLibrarySupport.VOLUME_TYPES);
         PersistenceLibraryPanel customizer = new PersistenceLibraryPanel(libImpl);
         final DialogDescriptor descriptor = new DialogDescriptor(customizer,NbBundle.getMessage(PersistenceLibraryCustomizer.class, "TXT_PersistenceLibrariesManager"));
-        customizer.addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getPropertyName().equals(PersistenceLibraryPanel.IS_VALID)) {
-                    Object newvalue = evt.getNewValue();
-                    if ((newvalue != null) && (newvalue instanceof Boolean)) {
-                        descriptor.setValid(((Boolean)newvalue).booleanValue());
-                    }
+        customizer.addPropertyChangeListener( (PropertyChangeEvent evt) -> {
+            if (evt.getPropertyName().equals(PersistenceLibraryPanel.IS_VALID)) {
+                Object newvalue = evt.getNewValue();
+                if (newvalue instanceof Boolean) {
+                    descriptor.setValid(((Boolean)newvalue));
                 }
             }
         });

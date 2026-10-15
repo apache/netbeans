@@ -59,7 +59,7 @@ public class WLTargetModuleIDResolver extends TargetModuleIDResolver {
             Logger.getLogger(WLTargetModuleIDResolver.class.getName()).log(Level.INFO, null, ex);
         }
 
-        return (TargetModuleID[]) result.toArray(new TargetModuleID[result.size()]);
+        return (TargetModuleID[]) result.toArray(new TargetModuleID[0]);
     }
 
     private void addCollisions(String contextRoot, String noSlashContextRoot, List<TargetModuleID> result, TargetModuleID[] candidates) {

@@ -76,7 +76,7 @@ import org.openide.util.RequestProcessor;
  *
  * @author Chris Webster
  * @author Martin Adamek
- * @Petr Slechta
+ * @author Petr Slechta
  */
 public class CallEjbPanel extends javax.swing.JPanel {
 
@@ -649,7 +649,7 @@ public class CallEjbPanel extends javax.swing.JPanel {
                 Exceptions.printStackTrace(ex);
             }
 
-            return result.booleanValue();
+            return result;
         }
 
         private boolean hasJarArtifact() {

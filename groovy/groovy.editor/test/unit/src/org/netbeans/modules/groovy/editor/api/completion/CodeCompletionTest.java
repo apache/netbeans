@@ -21,21 +21,22 @@ package org.netbeans.modules.groovy.editor.api.completion;
 
 import java.util.Collections;
 import java.util.Set;
-import org.netbeans.modules.groovy.editor.test.GroovyTestBase;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author schmidtm
  */
-public class CodeCompletionTest extends GroovyTestBase {
+public class CodeCompletionTest extends GroovyCCTestBase {
 
     String TEST_BASE = "testfiles/completion/";
 
     public CodeCompletionTest(String testName) {
         super(testName);
-        Logger.getLogger(CompletionHandler.class.getName()).setLevel(Level.FINEST);
+    }
+
+    @Override
+    protected String getTestType() {
+        return ".";
     }
 
     @Override
@@ -129,18 +130,18 @@ public class CodeCompletionTest extends GroovyTestBase {
 //
 //
 //    // Package completion could not be tested at the moment, since this statement returns nothing for "java.n|":
-////    pkgSet = pathInfo.getClassIndex().getPackageNames(packageRequest.fullString, true, EnumSet.allOf(ClassIndex.SearchScope.class));
-//
-////    public void testKeywordImport2() throws Exception {
-////        checkCompletion(TEST_BASE + "KeywordImport2.groovy", "import java.n^", false);
-////        assertTrue(false);
-////    }
-//
-//
-////    Testing all completion possibilities for java.lang.String is broken
-//
-////    public void testClassMethodLocalStringConst1() throws Exception {
-////        checkCompletion(TEST_BASE + "ClassMethodLocalStringConst1.groovy", "\" ddd \".^", false);
-////    }
+//    pkgSet = pathInfo.getClassIndex().getPackageNames(packageRequest.fullString, true, EnumSet.allOf(ClassIndex.SearchScope.class));
+
+//    public void testKeywordImport2() throws Exception {
+//        checkCompletion(TEST_BASE + "KeywordImport2.groovy", "import java.n^", false);
+//        assertTrue(false);
+//    }
+
+
+//    Testing all completion possibilities for java.lang.String is broken
+
+//    public void testClassMethodLocalStringConst1() throws Exception {
+//        checkCompletion(TEST_BASE + "ClassMethodLocalStringConst1.groovy", "\" ddd \".^", false);
+//    }
 
 }

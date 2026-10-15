@@ -61,11 +61,11 @@ public class TreeGraphLayoutUtility <N,E,P> {
             this.vertical = vertical;
         }
     
-    public final static <N,E,P> void performLayout( GraphPinScene <N, E, P> scene) {
+    public static final <N,E,P> void performLayout( GraphPinScene <N, E, P> scene) {
         performLayout( scene, 100, 100, 50, 50, true);
     }
     
-    public final static <N,E,P> void performLayout( GraphPinScene<N, E, P> graph, int originX, int originY, int verticalGap, int horizontalGap, boolean vertical){
+    public static final <N,E,P> void performLayout( GraphPinScene<N, E, P> graph, int originX, int originY, int verticalGap, int horizontalGap, boolean vertical){
         Collection<N> allNodes = graph.getNodes();
         HashSet<N> unresolvedNodes = new HashSet<N> (allNodes);
         

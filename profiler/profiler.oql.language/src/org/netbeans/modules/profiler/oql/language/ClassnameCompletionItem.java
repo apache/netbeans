@@ -36,14 +36,14 @@ import org.netbeans.spi.editor.completion.support.CompletionUtilities;
  * @author Jaroslav Bachorik
  */
 public class ClassnameCompletionItem implements CompletionItem {
-    final private String text;
-    final private String sortPrefix;
-    final private int caret;
-    final private int correction;
-    final private String pkgName;
-    final private String typeName;
+    private final String text;
+    private final String sortPrefix;
+    private final int caret;
+    private final int correction;
+    private final String pkgName;
+    private final String typeName;
 
-    final private static Color fieldColor = Color.decode("0xa38000");
+    private static final Color fieldColor = Color.decode("0xa38000");
 
     public ClassnameCompletionItem(String sortPrefix, String text, int caretOffset) {
         this(sortPrefix, text, caretOffset, 0);

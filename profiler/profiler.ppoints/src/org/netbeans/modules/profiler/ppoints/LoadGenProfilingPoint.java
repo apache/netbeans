@@ -34,9 +34,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.net.URL;
-import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
@@ -218,12 +216,7 @@ public class LoadGenProfilingPoint extends CodeProfilingPoint.Paired implements 
                     dataAreaTextBuilder.append(ProfilingPointReport.getNoDataHint(LoadGenProfilingPoint.this));
                 } else {
                     if (results.size() > 1) {
-                        Collections.sort(results,
-                                         new Comparator<LoadGenProfilingPoint.Result>() {
-                                public int compare(LoadGenProfilingPoint.Result o1, LoadGenProfilingPoint.Result o2) {
-                                    return Long.valueOf(o1.getTimestamp()).compareTo(Long.valueOf(o2.getTimestamp()));
-                                }
-                            });
+                        results.sort((o1, o2) -> Long.compare(o1.getTimestamp(), o2.getTimestamp()));
                     }
 
                     for (int i = 0; i < results.size(); i++) {

@@ -29,8 +29,8 @@ import org.openide.util.lookup.ProxyLookup;
  * 
  * @author Jaroslav Bachorik
  */
-abstract public class ProfilerProject implements Lookup.Provider {
-    final private Object lkpLock = new Object();
+public abstract class ProfilerProject implements Lookup.Provider {
+    private final Object lkpLock = new Object();
     // @GuardedBy lkpLock
     private Lookup lkp;
     private Lookup.Provider provider;
@@ -49,5 +49,5 @@ abstract public class ProfilerProject implements Lookup.Provider {
         }
     }
     
-    abstract protected Lookup additionalLookup();
+    protected abstract Lookup additionalLookup();
 }

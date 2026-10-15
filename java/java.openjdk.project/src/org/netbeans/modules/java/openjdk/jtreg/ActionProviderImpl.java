@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -45,22 +46,29 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import javax.swing.AbstractAction;
 import javax.swing.SwingUtilities;
 
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectManager;
+import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.java.openjdk.common.BuildUtils;
+import org.netbeans.modules.java.openjdk.common.BuildUtils.ExtraMakeTargets;
 import org.netbeans.modules.java.openjdk.common.ShortcutUtils;
 import org.netbeans.modules.java.openjdk.project.Settings;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.SingleMethod;
 import org.netbeans.spi.project.ui.CustomizerProvider2;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.NotifyDescriptor.InputLine;
 import org.openide.cookies.LineCookie;
 import org.openide.cookies.OpenCookie;
 import org.openide.execution.ExecutionEngine;
@@ -78,6 +86,7 @@ import org.openide.util.Mutex;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
+import org.openide.util.RequestProcessor.Task;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.IOProvider;
@@ -89,7 +98,7 @@ import org.openide.windows.OutputListener;
  *
  * @author lahvac
  */
-@ServiceProvider(service=ActionProvider.class)
+@ServiceProvider(service=ActionProvider.class, position=1_000_000)
 public class ActionProviderImpl implements ActionProvider {
 
     private static final Logger LOG = Logger.getLogger(ActionProviderImpl.class.getName());
@@ -99,6 +108,8 @@ public class ActionProviderImpl implements ActionProvider {
         COMMAND_TEST_SINGLE,
         COMMAND_DEBUG_TEST_SINGLE,
         COMMAND_PROFILE_TEST_SINGLE,
+        SingleMethod.COMMAND_RUN_SINGLE_METHOD,
+        SingleMethod.COMMAND_DEBUG_SINGLE_METHOD
     };
 
     @Override
@@ -111,16 +122,39 @@ public class ActionProviderImpl implements ActionProvider {
         createAndRunTest(context, command);
     }
 
-    private static final String COMMAND_BUILD_FAST = "build-fast";
-    private static final String COMMAND_BUILD_GENERIC_FAST = "build-generic-fast";
+    static final String COMMAND_BUILD_FAST = "build-fast";
+    static final String COMMAND_BUILD_GENERIC_FAST = "build-generic-fast";
 
     //public for test
     @Messages({"# {0} - simple file name",
                "DN_Debugging=Debugging ({0})",
                "# {0} - simple file name",
-               "DN_Running=Running ({0})"})
-    public static ExecutorTask createAndRunTest(Lookup context, String command) {
-        final FileObject file = context.lookup(FileObject.class);
+               "DN_Running=Running ({0})",
+               "LBL_IncorrectVersionSelectJTReg=Location of JTReg:",
+               "TITLE_IncorrectVersionSelectJTReg=Version of JTReg appears to be incorrect, please select a correct version"})
+    public static ExecutorTask createAndRunTest(Lookup context, String inputCommand) {
+        FileObject file;
+        String query;
+        String command;
+
+        if (SingleMethod.COMMAND_RUN_SINGLE_METHOD.equals(inputCommand) ||
+            SingleMethod.COMMAND_DEBUG_SINGLE_METHOD.equals(inputCommand)) {
+            SingleMethod singleMethod = context.lookup(SingleMethod.class);
+
+            assert singleMethod != null;
+
+            file = singleMethod.getFile();
+            query = singleMethod.getMethodName();
+            command = SingleMethod.COMMAND_RUN_SINGLE_METHOD.equals(inputCommand) ? COMMAND_TEST_SINGLE
+                                                                                  : COMMAND_DEBUG_TEST_SINGLE;
+        } else {
+            file = context.lookup(FileObject.class);
+            query = null;
+            command = inputCommand;
+        }
+
+        ensureProjectsRegistered(file);
+
         String ioName = COMMAND_DEBUG_TEST_SINGLE.equals(command) ? Bundle.DN_Debugging(file.getName()) : Bundle.DN_Running(file.getName());
         StopAction newStop = new StopAction();
         ReRunAction newReRun = new ReRunAction(COMMAND_TEST_SINGLE);
@@ -157,12 +191,15 @@ public class ActionProviderImpl implements ActionProvider {
                     redebug.disable();
                     Project prj = FileOwnerQuery.getOwner(file);
                     ActionProvider prjAP = prj != null ? prj.getLookup().lookup(ActionProvider.class) : null;
-                    if (prjAP != null) {
+                    Settings settings = prj != null ? prj.getLookup().lookup(Settings.class) : null;
+                    boolean useAntBuild = settings != null ? settings.isUseAntBuild(): false;
+                    boolean useFullImage = settings != null ? settings.isTestUseImage() : false;
+                    if (prjAP != null && (settings == null || settings.getRunBuildSetting() != Settings.RunBuild.NEVER)) {
                         Lookup targetContext = Lookup.EMPTY;
                         Set<String> supported = new HashSet<>(Arrays.asList(prjAP.getSupportedActions()));
                         String toRun = null;
-                        
-                        for (String command : new String[] {idealBuildTarget(file), ActionProvider.COMMAND_BUILD}) {
+
+                        for (String command : beforeTestProjectBuildTargets(file, useAntBuild, useFullImage)) {
                             if (supported.contains(command) && prjAP.isActionEnabled(command, targetContext)) {
                                 toRun = command;
                                 break;
@@ -170,9 +207,17 @@ public class ActionProviderImpl implements ActionProvider {
                         }
 
                         if (toRun != null) {
+                            String[] extraMakeTarget;
+                            switch (inferTestType(prj)) {
+                                case JDK:
+                                    extraMakeTarget = new String[] {"build-test-jdk-jtreg-native"};
+                                    break;
+                                default:
+                                    extraMakeTarget = new String[0];
+                            }
                             final CountDownLatch wait = new CountDownLatch(1);
                             final boolean[] state = new boolean[1];
-                            targetContext = Lookups.singleton(new ActionProgress() {
+                            targetContext = Lookups.fixed(new ActionProgress() {
                                 @Override
                                 protected void started() {
                                     state[0] = true;
@@ -181,6 +226,12 @@ public class ActionProviderImpl implements ActionProvider {
                                 public void finished(boolean success) {
                                     state[0] = success;
                                     wait.countDown();
+                                }
+                            },
+                            new ExtraMakeTargets() {
+                                @Override
+                                public String[] getExtraMakeTargets() {
+                                    return extraMakeTarget;
                                 }
                             });
                             prjAP.invokeAction(toRun, targetContext);
@@ -209,7 +260,7 @@ public class ActionProviderImpl implements ActionProvider {
                     ClassPath extraSourcePath = allSources(file);
                     final ClassPath fullSourcePath = ClassPathSupport.createProxyClassPath(testSourcePath, extraSourcePath);
                     List<String> options = new ArrayList<>();
-                    File targetJavaHome = BuildUtils.findTargetJavaHome(file);
+                    File targetJavaHome = BuildUtils.findTargetJavaHome(file, useFullImage);
                     options.add(new File(new File(targetJavaHome, "bin"), "java").getAbsolutePath());
                     options.add("-jar");
                     options.add(jtregJar.getAbsolutePath());
@@ -224,9 +275,10 @@ public class ActionProviderImpl implements ActionProvider {
                     options.add(jtregReport.getAbsolutePath());
                     options.add("-xml:verify");
                     options.add("-javacoptions:-g");
+                    File buildDir = BuildUtils.getBuildTargetDir(file);
+                    options.add("-vmoption:-Djava.library.path=" + buildDir.getAbsolutePath() + "/support/test/jdk/jtreg/native/lib/");
                     Set<File> toRefresh = new HashSet<>();
                     if (hasXPatch(targetJavaHome)) {
-                        File buildDir = BuildUtils.getBuildTargetDir(file);
                         CoverageSupport covSupp = Lookup.getDefault().lookup(CoverageSupport.class);
                         CoverageSupport.Result covResult = covSupp != null ? covSupp.coverage(jtregOutput, buildDir, io.getOut()) : null;
                         if (covResult != null) {
@@ -247,7 +299,8 @@ public class ActionProviderImpl implements ActionProvider {
                         case COMMAND_RUN_SINGLE: break;
                         case COMMAND_DEBUG_TEST_SINGLE:
                             try {
-                                InetAddress addr = InetAddress.getLocalHost();
+                                String userSelectedAddress = settings != null ? settings.getDebugListenAddress() : null;
+                                InetAddress addr = userSelectedAddress == null || userSelectedAddress.isBlank() ? InetAddress.getLoopbackAddress() : InetAddress.getByName(userSelectedAddress);
                                 debugSocket[0] = new ServerSocket(0, 1, addr);
                                 BACKGROUND.post(() -> {
                                     try {
@@ -279,16 +332,41 @@ public class ActionProviderImpl implements ActionProvider {
                             }
                             break;
                     }
-                    options.add(FileUtil.toFile(file).getAbsolutePath());
+                    String testPath = FileUtil.toFile(file).getAbsolutePath();
+                    if (query != null) {
+                        testPath += "?" + query;
+                    }
+                    options.add(testPath);
                     try {
                         stop.started();
                         Process jtregProcess = new ProcessBuilder(options).start();
-                        BACKGROUND.post(new CopyReaderWriter(new InputStreamReader(jtregProcess.getInputStream()), io.getOut()));
-                        BACKGROUND.post(new CopyReaderWriter(new InputStreamReader(jtregProcess.getErrorStream()), io.getErr()));
+                        StringWriter errorOutput = new StringWriter();
+                        Task outCopy = BACKGROUND.post(new CopyReaderWriter(new InputStreamReader(jtregProcess.getInputStream()), io.getOut()));
+                        Task errCopy = BACKGROUND.post(new CopyReaderWriter(new InputStreamReader(jtregProcess.getErrorStream()), io.getErr(), errorOutput));
                         BACKGROUND.post(new CopyReaderWriter(io.getIn(), new OutputStreamWriter(jtregProcess.getOutputStream())));
-                        jtregProcess.waitFor();
+                        int processResult = jtregProcess.waitFor();
+                        outCopy.waitFinished();
+                        errCopy.waitFinished();
+                        switch (processResult) {
+                            case 5: //error
+                                //check if it is a version error:
+                                if (errorOutput.toString().contains("jtreg version")) {
+                                    String jtregLocation = settings.getJTregLocation();
+                                    InputLine nd = new InputLine(Bundle.LBL_IncorrectVersionSelectJTReg(), Bundle.TITLE_IncorrectVersionSelectJTReg(), NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.ERROR_MESSAGE);
+                                    nd.setInputText(jtregLocation);
+                                    if (DialogDisplayer.getDefault().notify(nd) == NotifyDescriptor.OK_OPTION) {
+                                        settings.setJTregLocation(nd.getInputText());
+                                        BACKGROUND.post(() -> {
+                                            createAndRunTest(context, command);
+                                        });
+                                    }
+                                }
+                                break;
+                            default:
+                                printJTR(io, jtregWork, fullSourcePath, file);
+                                break;
+                        }
                         success = true;
-                        printJTR(io, jtregWork, fullSourcePath, file);
 
                         for (File refresh : toRefresh) {
                             FileUtil.refreshFor(refresh);
@@ -352,7 +430,7 @@ public class ActionProviderImpl implements ActionProvider {
 
         listAllRoots(jdkRoot, new LinkedList<>(sourceDirPaths), roots);
 
-        return ClassPathSupport.createClassPath(roots.toArray(new FileObject[roots.size()]));
+        return ClassPathSupport.createClassPath(roots.toArray(new FileObject[0]));
     }
 
     private static void listAllRoots(FileObject currentDir, List<String> remainders, List<FileObject> roots) {
@@ -409,12 +487,15 @@ public class ActionProviderImpl implements ActionProvider {
     static String builtClassesDirsForBootClassPath(FileObject testFile) {
         File buildDir = BuildUtils.getBuildTargetDir(testFile);
         Project prj = FileOwnerQuery.getOwner(testFile);
+        Settings settings = prj.getLookup().lookup(Settings.class);
+        boolean useLangtoolsBuild = settings == null || settings.isUseAntBuild();
         List<FileObject> roots = new ArrayList<>();
 
         if (buildDir != null) {
             FileObject repo = prj.getProjectDirectory().getParent().getParent();
             if (repo.getNameExt().equals("langtools") &&
-                ShortcutUtils.getDefault().shouldUseCustomTest(repo.getNameExt(), FileUtil.getRelativePath(repo, testFile))) {
+                ShortcutUtils.getDefault().shouldUseCustomTest(repo.getNameExt(), FileUtil.getRelativePath(repo, testFile)) &&
+                useLangtoolsBuild) {
                 listAllRoots(BuildUtils.getFileObject(prj.getProjectDirectory(), "../.."), new LinkedList<>(Arrays.asList("build", "classes")), roots);
                 listAllRoots(BuildUtils.getFileObject(prj.getProjectDirectory(), "../.."), new LinkedList<>(Arrays.asList("build", "*", "classes")), roots);
             } else {
@@ -441,12 +522,15 @@ public class ActionProviderImpl implements ActionProvider {
     static boolean fullBuild(FileObject testFile) {
         File buildDir = BuildUtils.getBuildTargetDir(testFile);
         Project prj = FileOwnerQuery.getOwner(testFile);
+        Settings settings = prj.getLookup().lookup(Settings.class);
+        boolean useLangtoolsBuild = settings == null || settings.isUseAntBuild();
 
         if (buildDir != null) {
             FileObject repo = prj.getProjectDirectory().getParent().getParent();
             String repoName = ShortcutUtils.getDefault().inferLegacyRepository(prj);
             return !("langtools".equals(repoName) &&
-                    ShortcutUtils.getDefault().shouldUseCustomTest(repoName, FileUtil.getRelativePath(repo, testFile)));
+                    ShortcutUtils.getDefault().shouldUseCustomTest(repoName, FileUtil.getRelativePath(repo, testFile)) &&
+                    useLangtoolsBuild);
         }
 
         return false;
@@ -523,14 +607,19 @@ public class ActionProviderImpl implements ActionProvider {
         }
     }
 
-    static String idealBuildTarget(FileObject testFile) {
+    static String[] beforeTestProjectBuildTargets(FileObject testFile, boolean useAntBuild, boolean useFullImage) {
         Project prj = FileOwnerQuery.getOwner(testFile);
         FileObject repo = prj.getProjectDirectory().getParent().getParent();
         String repoName = ShortcutUtils.getDefault().inferLegacyRepository(prj);
-        if (ShortcutUtils.getDefault().shouldUseCustomTest(repoName, FileUtil.getRelativePath(repo, testFile))) {
-            return COMMAND_BUILD_FAST;
+        if (ShortcutUtils.getDefault().shouldUseCustomTest(repoName, FileUtil.getRelativePath(repo, testFile)) && useAntBuild) {
+            //make "ant" build override the "useFullImage" w.r.t. building;
+            //if useFullImage == true, tests will run using a full JDK image,
+            //but will still patch in the custom built classes:
+            return new String[] {COMMAND_BUILD_FAST, COMMAND_BUILD};
+        } else if (useFullImage) {
+            return new String[] {COMMAND_BUILD};
         } else {
-            return COMMAND_BUILD_GENERIC_FAST;
+            return new String[] {COMMAND_BUILD_GENERIC_FAST, COMMAND_BUILD};
         }
     }
 
@@ -597,18 +686,15 @@ public class ActionProviderImpl implements ActionProvider {
     }
 
     @Messages({
-        "LBL_NoJTReg=No JTReg found, please specify JTReg location either when " +
-                    "configuring JDK build, or in the Project Properties.\n" +
-                    "Open Project Properties?\n",
-        "TITLE_NoJTReg=No JTReg found",
+        "LBL_SelectJTReg=JTreg Location:",
+        "TITLE_SelectJTReg=Please select JTReg location",
     })
     private static File findJTReg(FileObject file) {
         File buildDir = BuildUtils.getBuildTargetDir(file);
         File spec = new File(buildDir, "spec.gmk");
         if (spec.canRead()) {
-            try {
-                String jtHome = Files.lines(spec.toPath())
-                                     .filter(l -> l.startsWith(JT_HOME_KEY))
+            try (Stream<String> lines = Files.lines(spec.toPath())) {
+                String jtHome = lines.filter(l -> l.startsWith(JT_HOME_KEY))
                                      .findAny()
                                      .orElse(JT_HOME_KEY)
                                      .substring(JT_HOME_KEY.length());
@@ -621,18 +707,23 @@ public class ActionProviderImpl implements ActionProvider {
             }
         }
         Project prj = FileOwnerQuery.getOwner(file);
-        String jtregLocation = prj.getLookup().lookup(Settings.class).getJTregLocation();
-        File jtregHome = jtregLocation != null ? new File(jtregLocation) : null;
-        File jtregJar = jtregHome != null ? new File(new File(jtregHome, "lib"), "jtreg.jar") : null;
-        if (jtregJar == null || !jtregJar.canRead()) {
-            NotifyDescriptor.Confirmation nd = new NotifyDescriptor.Confirmation(Bundle.LBL_NoJTReg(), Bundle.TITLE_NoJTReg(), NotifyDescriptor.OK_CANCEL_OPTION);
-            if (DialogDisplayer.getDefault().notify(nd) == NotifyDescriptor.OK_OPTION) {
-                CustomizerProvider2 p = prj.getLookup().lookup(CustomizerProvider2.class);
-                p.showCustomizer("test", null);
+        Settings settings = prj.getLookup().lookup(Settings.class);
+        while (true) {
+            String jtregLocation = settings.getJTregLocation();
+            File jtregHome = jtregLocation != null ? new File(jtregLocation) : null;
+            File jtregJar = jtregHome != null ? new File(new File(jtregHome, "lib"), "jtreg.jar") : null;
+            if (jtregJar == null || !jtregJar.canRead()) {
+                InputLine nd = new InputLine(Bundle.LBL_SelectJTReg(), Bundle.TITLE_SelectJTReg(), NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.ERROR_MESSAGE);
+                nd.setInputText(jtregLocation);
+                if (DialogDisplayer.getDefault().notify(nd) == NotifyDescriptor.OK_OPTION) {
+                    settings.setJTregLocation(nd.getInputText());
+                    continue;
+                } else {
+                    return null;
+                }
             }
-            return null;
+            return jtregJar;
         }
-        return jtregJar;
     }
         private static final String JT_HOME_KEY = "JT_HOME:=";
 
@@ -646,16 +737,71 @@ public class ActionProviderImpl implements ActionProvider {
     public boolean isActionEnabled(String command, Lookup context) throws IllegalArgumentException {
         FileObject file = context.lookup(FileObject.class);
 
+        if (file == null) {
+            SingleMethod singleMethod = context.lookup(SingleMethod.class);
+
+            file = singleMethod != null ? singleMethod.getFile() : null;
+        }
+
         if (file == null)
             return false;
         
+        return findJDKRoot(file) != null;
+    }
+
+    private static FileObject findJDKRoot(FileObject file) {
         while (!file.isRoot()) {
             if (Utilities.isJDKRepository(file))
-                return true;
+                return file;
             file = file.getParent();
         }
 
-        return false;
+        return null;
+    }
+
+    private static void ensureProjectsRegistered(FileObject file) {
+        if (FileOwnerQuery.getOwner(file) != null) {
+            return ;
+        }
+
+        FileObject jdkRoot = findJDKRoot(file);
+
+        if (jdkRoot == null) {
+            return ;
+        }
+
+        for (String wellKnownProject : new String[] {"java.base", "java.compiler",
+                                                     "java.xml", "jdk.scripting.nashorn"}) {
+            for (String open : new String[] {"open/", ""}) {
+                FileObject prjRoot = jdkRoot.getFileObject(open + "src/" + wellKnownProject);
+
+                if (prjRoot == null) {
+                    continue;
+                }
+
+                Project thisPrj = FileOwnerQuery.getOwner(prjRoot);
+
+                if (thisPrj != null) {
+                    //ensure external roots are registered:
+                    ProjectUtils.getSources(thisPrj)
+                                .getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
+                }
+            }
+        }
+    }
+
+    private static TestType inferTestType(Project prj) {
+        switch (prj.getProjectDirectory().getNameExt()) {
+            case "java.base": return TestType.JDK;
+            case "java.compiler": return TestType.LANGTOOLS;
+            default: return TestType.OTHER;
+        }
+    }
+
+    static enum TestType {
+        JDK,
+        LANGTOOLS,
+        OTHER;
     }
 
     private static final class StopAction extends AbstractAction {
@@ -811,10 +957,16 @@ public class ActionProviderImpl implements ActionProvider {
     private static final class CopyReaderWriter implements Runnable {
         private final Reader in;
         private final Writer out;
+        private final Writer secondaryOut;
 
         public CopyReaderWriter(Reader in, Writer out) {
+            this(in, out, null);
+        }
+
+        public CopyReaderWriter(Reader in, Writer out, Writer secondaryOut) {
             this.in = in;
             this.out = out;
+            this.secondaryOut = secondaryOut;
         }
 
         @Override
@@ -825,6 +977,9 @@ public class ActionProviderImpl implements ActionProvider {
 
                 while ((read = in.read(buf)) != (-1)) {
                     out.write(buf, 0, read);
+                    if (secondaryOut != null) {
+                        secondaryOut.write(buf, 0, read);
+                    }
                 }
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);

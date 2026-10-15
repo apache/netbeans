@@ -29,17 +29,11 @@ import java.util.Map;
 @RunnerHttpClass(runner=RunnerHttpCreateAdminObject.class)
 public class CommandCreateAdminObject extends Command {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command string for create administered object command. */
     private static final String COMMAND = "create-admin-object";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** The JNDI name of this JDBC resource. */
     final String jndiName;
 
@@ -56,10 +50,7 @@ public class CommandCreateAdminObject extends Command {
     /** If this object is enabled. */
     final boolean enabled;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara server create administered object
      * command entity.

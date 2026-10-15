@@ -55,8 +55,8 @@ public class GroovyVirtualSourceProviderTest extends GroovyTestBase {
         CharSequence charSequence = generator.generateClass(classNodes.get(0));
         assertEquals(
                 "import groovy.lang.*;" + lineSep +
-                "import java.net.*;" + lineSep +
                 "import java.util.*;" + lineSep +
+                "import java.net.*;" + lineSep +
                 "import java.lang.*;" + lineSep +
                 "import groovy.util.*;" + lineSep +
                 "import java.io.*;" + lineSep +
@@ -66,6 +66,8 @@ public class GroovyVirtualSourceProviderTest extends GroovyTestBase {
                 "    groovy.lang.GroovyObject {" + lineSep +
                 "public Foo() {}" + lineSep +
                 "public java.lang.Object method1() { return null;}" + lineSep +
+                "public groovy.lang.MetaClass getMetaClass() { return (groovy.lang.MetaClass)null;}" + lineSep +
+                "public void setMetaClass(groovy.lang.MetaClass mc) { }" + lineSep +
                 "public java.lang.Object getClosure1() { return null;}" + lineSep +
                 "public void setClosure1(java.lang.Object value) { }" + lineSep +
                 "}" + lineSep, charSequence);
@@ -86,8 +88,8 @@ public class GroovyVirtualSourceProviderTest extends GroovyTestBase {
         CharSequence charSequence = generator.generateClass(classNodes.get(0));
         assertEquals(
                 "import groovy.lang.*;" + lineSep +
-                "import java.net.*;" + lineSep +
                 "import java.util.*;" + lineSep +
+                "import java.net.*;" + lineSep +
                 "import java.lang.*;" + lineSep +
                 "import groovy.util.*;" + lineSep +
                 "import java.io.*;" + lineSep +
@@ -118,8 +120,8 @@ public class GroovyVirtualSourceProviderTest extends GroovyTestBase {
         CharSequence charSequence = generator.generateClass(classNodes.get(0));
         assertEquals(
                 "import groovy.lang.*;" + lineSep +
-                "import java.net.*;" + lineSep +
                 "import java.util.*;" + lineSep +
+                "import java.net.*;" + lineSep +
                 "import java.lang.*;" + lineSep +
                 "import groovy.util.*;" + lineSep +
                 "import java.io.*;" + lineSep +
@@ -129,6 +131,8 @@ public class GroovyVirtualSourceProviderTest extends GroovyTestBase {
                 "    groovy.lang.GroovyObject {" + lineSep +
                 "public Foo() {}" + lineSep +
                 "public static java.util.List<java.lang.String> get() { return (java.util.List<java.lang.String>)null;}" + lineSep +
+                "public groovy.lang.MetaClass getMetaClass() { return (groovy.lang.MetaClass)null;}" + lineSep +
+                "public void setMetaClass(groovy.lang.MetaClass mc) { }" + lineSep +
                 "}" + lineSep, charSequence);
     }
 
@@ -148,8 +152,8 @@ public class GroovyVirtualSourceProviderTest extends GroovyTestBase {
         CharSequence charSequence = generator.generateClass(classNodes.get(0));
         assertEquals(
                 "import groovy.lang.*;" + lineSep +
-                "import java.net.*;" + lineSep +
                 "import java.util.*;" + lineSep +
+                "import java.net.*;" + lineSep +
                 "import java.lang.*;" + lineSep +
                 "import groovy.util.*;" + lineSep +
                 "import javax.swing.*;" + lineSep +
@@ -160,6 +164,8 @@ public class GroovyVirtualSourceProviderTest extends GroovyTestBase {
                 "    groovy.lang.GroovyObject {" + lineSep +
                 "public MyTest() {}" + lineSep +
                 "public javax.swing.JPanel getPanel() { return (javax.swing.JPanel)null;}" + lineSep +
+                "public groovy.lang.MetaClass getMetaClass() { return (groovy.lang.MetaClass)null;}" + lineSep +
+                "public void setMetaClass(groovy.lang.MetaClass mc) { }" + lineSep +
                 "}" + lineSep, charSequence);
     }
 
@@ -184,8 +190,8 @@ public class GroovyVirtualSourceProviderTest extends GroovyTestBase {
         CharSequence charSequence = generator.generateClass(classNodes.get(0));
         assertEquals(
                 "import groovy.lang.*;" + lineSep +
-                "import java.net.*;" + lineSep +
                 "import java.util.*;" + lineSep +
+                "import java.net.*;" + lineSep +
                 "import java.lang.*;" + lineSep +
                 "import groovy.util.*;" + lineSep +
                 "import java.io.*;" + lineSep +
@@ -195,6 +201,8 @@ public class GroovyVirtualSourceProviderTest extends GroovyTestBase {
                 "    groovy.lang.GroovyObject {" + lineSep +
                 "public PostService() {}" + lineSep +
                 "public java.lang.Object serviceMethod() throws PostException { return null;}" + lineSep +
+                "public groovy.lang.MetaClass getMetaClass() { return (groovy.lang.MetaClass)null;}" + lineSep +
+                "public void setMetaClass(groovy.lang.MetaClass mc) { }" + lineSep +
                 "public boolean getTransactional() { return (boolean)false;}" + lineSep +
                 "public void setTransactional(boolean value) { }" + lineSep +
                 "public boolean isTransactional() { return (boolean)false;}" + lineSep +
@@ -203,8 +211,8 @@ public class GroovyVirtualSourceProviderTest extends GroovyTestBase {
         charSequence = generator.generateClass(classNodes.get(1));
         assertEquals(
                 "import groovy.lang.*;" + lineSep +
-                "import java.net.*;" + lineSep +
                 "import java.util.*;" + lineSep +
+                "import java.net.*;" + lineSep +
                 "import java.lang.*;" + lineSep +
                 "import groovy.util.*;" + lineSep +
                 "import java.io.*;" + lineSep +
@@ -215,6 +223,8 @@ public class GroovyVirtualSourceProviderTest extends GroovyTestBase {
                 "public PostException() {" + lineSep +
                 "super ();" + lineSep +
                 "}" + lineSep +
+                "public groovy.lang.MetaClass getMetaClass() { return (groovy.lang.MetaClass)null;}" + lineSep +
+                "public void setMetaClass(groovy.lang.MetaClass mc) { }" + lineSep +
                 "}" + lineSep, charSequence);
     }
 
@@ -239,8 +249,8 @@ public class GroovyVirtualSourceProviderTest extends GroovyTestBase {
         CharSequence charSequence = generator.generateClass(classNodes.get(0));
         assertEquals(
                 "import groovy.lang.*;" + lineSep +
-                "import java.net.*;" + lineSep +
                 "import java.util.*;" + lineSep +
+                "import java.net.*;" + lineSep +
                 "import java.lang.*;" + lineSep +
                 "import groovy.util.*;" + lineSep +
                 "import java.io.*;" + lineSep +
@@ -252,6 +262,8 @@ public class GroovyVirtualSourceProviderTest extends GroovyTestBase {
                 "public void test1() throws java.lang.RuntimeException { }" + lineSep +
                 "public void test2() throws java.lang.Exception { }" + lineSep +
                 "public java.lang.Object test3() throws java.lang.RuntimeException { return null;}" + lineSep +
+                "public groovy.lang.MetaClass getMetaClass() { return (groovy.lang.MetaClass)null;}" + lineSep +
+                "public void setMetaClass(groovy.lang.MetaClass mc) { }" + lineSep +
                 "}" + lineSep, charSequence);
     }
 }

@@ -92,7 +92,7 @@ public class SwingAppLibDownloader implements LibraryDefiner {
         UpdateUnit unit = findSwingAppLibModule();
         if (unit == null) {
             String searchingHandleTxt = FormUtils.getBundleString("swingapp.searching_handle"); // NOI18N
-            final ProgressHandle handle = ProgressHandleFactory.createHandle(searchingHandleTxt);
+            final ProgressHandle handle = ProgressHandle.createHandle(searchingHandleTxt);
             initButtons();
             final DialogDescriptor searching = new DialogDescriptor(
                     searchingPanel(new JLabel(searchingHandleTxt), ProgressHandleFactory.createProgressComponent(handle)),
@@ -176,7 +176,7 @@ public class SwingAppLibDownloader implements LibraryDefiner {
                 for (UpdateElement req : oc.add(unit.getInstalled()).getRequiredElements()) {
                     oc.add(req);
                 }
-                ProgressHandle activeHandle = ProgressHandleFactory.createHandle (FormUtils.getBundleString("swingapp.active_handle")); // NOI18N
+                ProgressHandle activeHandle = ProgressHandle.createHandle (FormUtils.getBundleString("swingapp.active_handle")); // NOI18N
                 Restarter restarter = oc.getSupport().doOperation(activeHandle);
                 assert restarter == null : "No Restater need to make " + unit.getInstalled() + " active"; // NOI18N
                 // XXX new library & build.properties apparently do not show up immediately... how to listen properly?

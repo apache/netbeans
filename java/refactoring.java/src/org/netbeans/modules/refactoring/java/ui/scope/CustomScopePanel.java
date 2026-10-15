@@ -376,7 +376,7 @@ public class CustomScopePanel extends javax.swing.JPanel implements ExplorerMana
         }
     }
 
-    private static abstract class CustomNode extends AbstractNode implements PropertyChangeListener {
+    private abstract static class CustomNode extends AbstractNode implements PropertyChangeListener {
 
         protected final CustomScopePanel panel;
         private final Data data;
@@ -693,7 +693,7 @@ public class CustomScopePanel extends javax.swing.JPanel implements ExplorerMana
                     ClassIndex index = cpInfo.getClassIndex();
                     Set<String> packageNames = index.getPackageNames("", false, EnumSet.of(ClassIndex.SearchScope.SOURCE)); // NOI18N
                     for (String packageName : packageNames) {
-                        String pathname = packageName.replaceAll("\\.", "/"); // NOI18N
+                        String pathname = packageName.replace(".", "/"); // NOI18N
                         final FileObject folder = sg.getRootFolder().getFileObject(pathname);
                         if(folder != null) {
                             PackageData data = new PackageData(sourceData, packageName, sourceData, folder, folders); // NOI18N

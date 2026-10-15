@@ -21,6 +21,11 @@ CLASS      Arrays                                     null
 CLASS      AssertionError                             null
 CLASS      Authenticator                              null
 CLASS      AutoCloseable                              null
+METHOD     addShutdownHook(Closure)                   void
+METHOD     any()                                      boolean
+METHOD     any(Closure)                               boolean
+METHOD     asBoolean()                                boolean
+METHOD     asType(Class)                              Object
 VARIABLE   aa                                         Object
 VARIABLE   ab                                         Object
 KEYWORD    assert                                     null

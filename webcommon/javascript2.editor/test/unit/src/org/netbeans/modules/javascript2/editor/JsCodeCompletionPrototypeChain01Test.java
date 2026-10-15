@@ -19,8 +19,8 @@
 package org.netbeans.modules.javascript2.editor;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -34,27 +34,27 @@ import org.openide.filesystems.FileUtil;
  * @author Petr Pisl
  */
 public class JsCodeCompletionPrototypeChain01Test extends JsCodeCompletionBase {
-    
+
     public JsCodeCompletionPrototypeChain01Test(String testName) {
         super(testName);
     }
-    
+
     public void testSimple01() throws Exception {
         checkCompletion("testfiles/completion/prototypeChain01/issue214556.js", "formatter.print(\"a.say(): \" + a.^help());", false);
     }
-    
+
     public void testSimple02() throws Exception {
         checkCompletion("testfiles/completion/prototypeChain01/issue214556.js", "formatter.print(\"b.say(): \" + b.^help());", false);
     }
-    
+
     public void testSimple03() throws Exception {
         checkCompletion("testfiles/completion/prototypeChain01/issue214556.js", "formatter.print(\"c.say(): \" + c.^help());", false);
     }
-    
+
     public void testFromIndex() throws Exception {
         checkCompletion("testfiles/completion/prototypeChain01/issue214556_test.js", "cc.^toString();", false);
     }
-    
+
     public void testDocument01() throws Exception {
         checkCompletion("testfiles/completion/prototypeChain01/basicDocumentCC.js", "document.getE^lementById(\"dd\").getElementsByTagName(\"*\").item(2).getFeature(\"pero\").toLocaleString().charCodeAt(10).toExponential();", false);
     }
@@ -66,19 +66,20 @@ public class JsCodeCompletionPrototypeChain01Test extends JsCodeCompletionBase {
     public void testDocument03() throws Exception {
         checkCompletion("testfiles/completion/prototypeChain01/basicDocumentCC.js", "document.getElementById(\"dd\").getElementsByTagName(\"*\").item(2).getFeature(\"pero\").toLocaleString().charCodeAt(10).toEx^ponential();", false);
     }
-    
+
     public void testDocument04() throws Exception {
         checkCompletion("testfiles/completion/prototypeChain01/basicDocumentCC.js", "document.createTextNode(\"null\").replaceWholeText(\"flajfda\").le^ngth;", false);
     }
 
     @Override
     protected Map<String, ClassPath> createClassPathsForTest() {
-        List<FileObject> cpRoots = new LinkedList<FileObject>(ClasspathProviderImplAccessor.getJsStubs());
+        List<FileObject> cpRoots = new ArrayList<>(3);
+        cpRoots.add(ClasspathProviderImplAccessor.getJsStubs().get(0)); // Only use core stubs in unittests
         cpRoots.add(FileUtil.toFileObject(new File(getDataDir(), "/testfiles/completion/prototypeChain01")));
         cpRoots.add(FileUtil.toFileObject(new File(getDataDir(), "/testfiles/completion/lib")));
         return Collections.singletonMap(
             JS_SOURCE_ID,
-            ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[cpRoots.size()]))
+            ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[0]))
         );
     }
 

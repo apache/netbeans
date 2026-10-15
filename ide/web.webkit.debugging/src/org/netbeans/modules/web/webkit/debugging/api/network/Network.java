@@ -265,7 +265,7 @@ public class Network {
 
     }
 
-    public final static class Request {
+    public static final class Request {
 
         public static final String PROP_RESPONSE = "Network.Request.Response"; // NOI18N
         public static final String PROP_RESPONSE_DATA = "Network.Request.Response.Data"; // NOI18N
@@ -395,7 +395,7 @@ public class Network {
 
     }
 
-    public final static class WebSocketRequest {
+    public static final class WebSocketRequest {
 
         public static final String PROP_HANDSHAKE_REQUEST = "Network.WebSocketRequest.Handshake.Request"; // NOI18N
         public static final String PROP_HANDSHAKE_RESPONSE = "Network.WebSocketRequest.Handshake.Response"; // NOI18N
@@ -487,7 +487,7 @@ public class Network {
         RECEIVED,
     }
     
-    public final static class WebSocketFrame {
+    public static final class WebSocketFrame {
 
         private final Direction direction;
         private final JSONObject data;

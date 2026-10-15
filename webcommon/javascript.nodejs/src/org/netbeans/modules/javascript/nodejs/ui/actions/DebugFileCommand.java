@@ -46,7 +46,6 @@ final class DebugFileCommand extends Command {
     @Override
     ValidationResult validateRunInfo(RunInfo runInfo) {
         return new NodeJsPreferencesValidator()
-                .validateDebugPort(runInfo.getDebugPort())
                 .getResult();
     }
 
@@ -62,7 +61,7 @@ final class DebugFileCommand extends Command {
         if (runInfo == null) {
             return;
         }
-        node.debug(runInfo.getDebugPort(), file, null);
+        node.debug(file, null);
     }
 
 }

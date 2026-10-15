@@ -121,7 +121,7 @@ public class Utils {
     public static boolean hasMainMethod(FileObject fo) {
         // support for unit testing
         if (MainClassChooser.unitTestingSupport_hasMainMethodResult != null) {
-            return MainClassChooser.unitTestingSupport_hasMainMethodResult.booleanValue ();
+            return MainClassChooser.unitTestingSupport_hasMainMethodResult;
         }
         if (fo == null) {
             // ??? maybe better should be thrown IAE

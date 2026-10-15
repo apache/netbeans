@@ -65,9 +65,9 @@ public final class SearchPatternController
     }
 
     private final Map<Option, AbstractButton> bindings =
-            new EnumMap<Option, AbstractButton>(Option.class);
+            new EnumMap<>(Option.class);
     private final Map<Option, Boolean> options =
-            new EnumMap<Option, Boolean>(Option.class);
+            new EnumMap<>(Option.class);
     private JComboBox matchTypeComboBox = null;
     private MatchType matchType = MatchType.LITERAL;
     private final ItemListener listener;
@@ -104,51 +104,45 @@ public final class SearchPatternController
         textToFindEditor.getDocument().addDocumentListener(
                 new TextToFindChangeListener());
 
-        component.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                Object si = component.getSelectedItem();
-                if (si instanceof ModelItem) {
-                    SearchPattern sp = ((ModelItem) si).sp;
-                    for (Map.Entry<Option, AbstractButton> be :
-                            bindings.entrySet()) {
-                        switch (be.getKey()) {
-                            case MATCH_CASE:
-                                be.getValue().setSelected(sp.isMatchCase());
-                                break;
-                            case WHOLE_WORDS:
-                                be.getValue().setSelected(sp.isWholeWords());
-                                break;
-                            case REGULAR_EXPRESSION:
-                                be.getValue().setSelected(sp.isRegExp());
-                                break;
-                        }
+        component.addItemListener((ItemEvent e) -> {
+            Object si = component.getSelectedItem();
+            if (si instanceof ModelItem) {
+                SearchPattern sp = ((ModelItem) si).sp;
+                for (Map.Entry<Option, AbstractButton> be :
+                        bindings.entrySet()) {
+                    switch (be.getKey()) {
+                        case MATCH_CASE:
+                            be.getValue().setSelected(sp.isMatchCase());
+                            break;
+                        case WHOLE_WORDS:
+                            be.getValue().setSelected(sp.isWholeWords());
+                            break;
+                        case REGULAR_EXPRESSION:
+                            be.getValue().setSelected(sp.isRegExp());
+                            break;
                     }
-                    if (matchTypeComboBox != null) {
-                        matchTypeComboBox.setSelectedItem(sp.getMatchType());
-                        // set only to match type that is supported by the combo
-                        matchType =
-                                (MatchType) matchTypeComboBox.getSelectedItem();
-                    } else {
-                        matchType = sp.getMatchType();
-                    }
-                    options.put(Option.MATCH_CASE, sp.isMatchCase());
-                    options.put(Option.WHOLE_WORDS, sp.isWholeWords());
-                    options.put(Option.REGULAR_EXPRESSION, sp.isRegExp());
                 }
+                if (matchTypeComboBox != null) {
+                    matchTypeComboBox.setSelectedItem(sp.getMatchType());
+                    // set only to match type that is supported by the combo
+                    matchType =
+                            (MatchType) matchTypeComboBox.getSelectedItem();
+                } else {
+                    matchType = sp.getMatchType();
+                }
+                options.put(Option.MATCH_CASE, sp.isMatchCase());
+                options.put(Option.WHOLE_WORDS, sp.isWholeWords());
+                options.put(Option.REGULAR_EXPRESSION, sp.isRegExp());
             }
         });
 
-        listener = new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                for (Map.Entry<Option, AbstractButton> entry :
-                        bindings.entrySet()) {
-                    if (entry.getValue() == e.getSource()) {
-                        setOption(entry.getKey(),
-                                e.getStateChange() == ItemEvent.SELECTED);
-                        break;
-                    }
+        listener = (ItemEvent e) -> {
+            for (Map.Entry<Option, AbstractButton> entry :
+                    bindings.entrySet()) {
+                if (entry.getValue() == e.getSource()) {
+                    setOption(entry.getKey(),
+                            e.getStateChange() == ItemEvent.SELECTED);
+                    break;
                 }
             }
         };
@@ -195,12 +189,7 @@ public final class SearchPatternController
      */
     private boolean getOption(@NonNull Option option) {
         Parameters.notNull("option", option);                           //NOI18N
-        Boolean b = options.get(option);
-        if (b == null) {
-            return false;
-        } else {
-            return b.booleanValue();
-        }
+        return Boolean.TRUE.equals(options.get(option));
     }
 
     /**
@@ -288,12 +277,7 @@ public final class SearchPatternController
 
         bindings.put(option, button);
         button.setSelected(getOption(option));
-        button.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                setOption(option, button.isSelected());
-            }
-        });
+        button.addItemListener((ItemEvent e) -> setOption(option, button.isSelected()));
     }
 
     /**
@@ -333,12 +317,7 @@ public final class SearchPatternController
         comboBox.setEditable(false);
         setMatchType(this.matchType); //update match type, check it is supported
         comboBox.setSelectedItem(matchType);
-        comboBox.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                setMatchType((MatchType) comboBox.getSelectedItem());
-            }
-        });
+        comboBox.addItemListener((ItemEvent e) -> setMatchType((MatchType) comboBox.getSelectedItem()));
     }
 
     /**

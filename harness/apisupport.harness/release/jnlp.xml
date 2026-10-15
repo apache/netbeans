@@ -127,6 +127,7 @@
                 keystore="${jnlp.signjar.keystore}"
                 storepass="${jnlp.signjar.password}"
                 dname="${jnlp.signjar.vendor}"
+                keyalg="DSA"
         />
     </target>
 

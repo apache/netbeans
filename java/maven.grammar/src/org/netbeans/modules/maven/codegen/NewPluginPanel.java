@@ -31,7 +31,6 @@ import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -124,10 +123,10 @@ public class NewPluginPanel extends javax.swing.JPanel implements ChangeListener
 
     public List<String> getGoals () {
         List<String> goals = new ArrayList<String>();
-        Enumeration e  = listModel.elements();
+        Enumeration<GoalEntry> e  = listModel.elements();
         GoalEntry ge;
         while (e.hasMoreElements()) {
-            ge = (GoalEntry) e.nextElement();
+            ge = e.nextElement();
             if (ge.isSelected) {
                 goals.add(ge.name);
             }
@@ -214,7 +213,7 @@ public class NewPluginPanel extends javax.swing.JPanel implements ChangeListener
                 }
                 final List<String> keyList = new ArrayList<String>(map.keySet());
                 // sort specially using our comparator, see compare method
-                Collections.sort(keyList, NewPluginPanel.this);
+                keyList.sort(NewPluginPanel.this);
 
                 SwingUtilities.invokeLater(new Runnable() {
 
@@ -562,7 +561,7 @@ public class NewPluginPanel extends javax.swing.JPanel implements ChangeListener
     }
 
     private void updateGoals() {
-        DefaultListModel m = (DefaultListModel) goalsList.getModel();
+        DefaultListModel<GoalEntry> m = (DefaultListModel<GoalEntry>) goalsList.getModel();
         m.clear();
 
         if (selVi != null) {

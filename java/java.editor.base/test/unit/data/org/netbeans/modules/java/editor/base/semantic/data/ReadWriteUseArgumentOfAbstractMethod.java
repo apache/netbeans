@@ -14,7 +14,7 @@ public class ReadWriteUseArgumentOfAbstractMethod {
         
     }
     
-    public static abstract class Z {
+    public abstract static class Z {
         
         public abstract void test(int arg1, Object arg2);
         

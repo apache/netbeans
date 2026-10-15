@@ -18,9 +18,11 @@
  */
 package org.netbeans.modules.javascript2.editor.parser;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.swing.text.Document;
 import org.netbeans.modules.javascript2.editor.JsonTestBase;
 import org.netbeans.modules.javascript2.lexer.api.JsTokenId;
@@ -86,7 +88,7 @@ public class JsonParserTest extends JsonTestBase {
                 //Todo: Consider to join antlr errors in String token
                 Arrays.asList(
                         "token recognition error at: '\"test\\x'",
-                        "no viable alternative at input '}'"));
+                        "mismatched input '}' expecting {'{', '[', 'true', 'false', 'null', NUMBER, STRING}"));
     }
 
     public void testStringLiteral3() throws Exception {
@@ -96,7 +98,7 @@ public class JsonParserTest extends JsonTestBase {
                         "token recognition error at: '\"test\\\\n'",
                         "token recognition error at: 'w'",
                         "token recognition error at: '\" }'",
-                        "no viable alternative at input '<EOF>'"));
+                        "mismatched input '<EOF>' expecting {'{', '[', 'true', 'false', 'null', NUMBER, STRING}"));
     }
 
     public void testStringLiteral4() throws Exception {
@@ -109,7 +111,7 @@ public class JsonParserTest extends JsonTestBase {
                 //Todo: Consider to join antlr errors in String token
                 Arrays.asList(
                         "token recognition error at: '\"test\\u000g'",
-                        "no viable alternative at input '}'"
+                        "mismatched input '}' expecting {'{', '[', 'true', 'false', 'null', NUMBER, STRING}"
                 ));
     }
 
@@ -123,7 +125,7 @@ public class JsonParserTest extends JsonTestBase {
                 //Todo: Consider to join antlr errors in String token
                 Arrays.asList(
                     "token recognition error at: '\"t\\''",
-                    "no viable alternative at input '}'"
+                    "mismatched input '}' expecting {'{', '[', 'true', 'false', 'null', NUMBER, STRING}"
                 ));
     }
 
@@ -140,11 +142,11 @@ public class JsonParserTest extends JsonTestBase {
     }
 
     public void testTrailingComma4() throws Exception {
-        parse("{ \"a\" : [1, 2,] }", false, Collections.singletonList("no viable alternative at input ']'"));
+        parse("{ \"a\" : [1, 2,] }", false, Collections.singletonList("mismatched input ']' expecting {'{', '[', 'true', 'false', 'null', NUMBER, STRING}"));
     }
 
     public void testTrailingComma5() throws Exception {
-        parse("{ \"a\" : [{\"w\":1}, {\"e\":2},] }", false, Collections.singletonList("no viable alternative at input ']'"));
+        parse("{ \"a\" : [{\"w\":1}, {\"e\":2},] }", false, Collections.singletonList("mismatched input ']' expecting {'{', '[', 'true', 'false', 'null', NUMBER, STRING}"));
     }
 
     public void testEmpty() throws Exception {

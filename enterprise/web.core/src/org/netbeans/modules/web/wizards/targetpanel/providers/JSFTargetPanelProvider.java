@@ -273,7 +273,6 @@ class JSFUIManager extends AbstractOptionPanelManager {
     {
         myFaceletsSyntaxButton = new JRadioButton();
         
-        GridBagConstraints gridBagConstraints = new GridBagConstraints();
         myFaceletsSyntaxButton.setSelected(true);
         getSegmentBox().setEnabled(false);
         myFaceletsSyntaxButton.setMnemonic(NbBundle.getMessage(
@@ -285,7 +284,7 @@ class JSFUIManager extends AbstractOptionPanelManager {
             }
         });
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        GridBagConstraints gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = gridy++;
         gridBagConstraints.insets = new java.awt.Insets(0, 6, 0, 0);

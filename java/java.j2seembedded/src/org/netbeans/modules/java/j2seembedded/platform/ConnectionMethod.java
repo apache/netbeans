@@ -40,13 +40,13 @@ public final class ConnectionMethod {
 
     private static final Logger LOG = Logger.getLogger(ConnectionMethod.class.getName());
 
-    private final static String PLAT_PROP_HOST = "platform.host";                       //NOI18N
-    private final static String PLAT_PROP_PORT = "platform.port";                       //NOI18N
+    private static final String PLAT_PROP_HOST = "platform.host";                       //NOI18N
+    private static final String PLAT_PROP_PORT = "platform.port";                       //NOI18N
 
-    public static abstract class Authentification {
+    public abstract static class Authentification {
 
-        private final static String PLAT_PROP_AUTH_KIND = "platform.auth.kind";         //NOI18N
-        private final static String PLAT_PROP_AUTH_USER = "platform.auth.username";     //NOI18N
+        private static final String PLAT_PROP_AUTH_KIND = "platform.auth.kind";         //NOI18N
+        private static final String PLAT_PROP_AUTH_USER = "platform.auth.username";     //NOI18N
 
 
         public static enum Kind {
@@ -170,7 +170,7 @@ public final class ConnectionMethod {
 
         public static final class Password extends Authentification {
 
-            private final static String PLAT_PROP_AUTH_PASSWD = "platform.auth.passwd";         //NOI18N
+            private static final String PLAT_PROP_AUTH_PASSWD = "platform.auth.passwd";         //NOI18N
 
             private final String password;  //TODO: Store in keystore
 
@@ -206,8 +206,8 @@ public final class ConnectionMethod {
 
         public static final class Key extends Authentification {
 
-            private final static String PLAT_PROP_AUTH_KEYSTORE = "platform.auth.keystore";         //NOI18N
-            private final static String PLAT_PROP_AUTH_PASSPHRASE = "platform.auth.passphrase";     //NOI18N
+            private static final String PLAT_PROP_AUTH_KEYSTORE = "platform.auth.keystore";         //NOI18N
+            private static final String PLAT_PROP_AUTH_PASSPHRASE = "platform.auth.passphrase";     //NOI18N
 
             private final File keyStore;
             private final String passPhrase;    //TODO: Store in keystore
@@ -332,13 +332,13 @@ public final class ConnectionMethod {
         }
         final String _port = props.get(PLAT_PROP_PORT);
         if (_port == null) {
-            throw new IllegalStateException("No platfrom port");    //NOI18N
+            throw new IllegalStateException("No platform port");    //NOI18N
         }
         try {
             final int port = Integer.parseInt(_port);
             return new ConnectionMethod(host, port, Authentification.load(props));
         } catch (NumberFormatException nfe) {
-            throw new IllegalStateException("Invalid platfrom port: " + _port);    //NOI18N
+            throw new IllegalStateException("Invalid platform port: " + _port);    //NOI18N
         }
     }
 

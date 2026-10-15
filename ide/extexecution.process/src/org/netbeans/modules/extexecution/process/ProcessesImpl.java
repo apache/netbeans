@@ -20,7 +20,9 @@
 package org.netbeans.modules.extexecution.process;
 
 import java.util.Map;
-import org.netbeans.processtreekiller.ProcessTreeKiller;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Stream;
 import org.netbeans.spi.extexecution.base.ProcessesImplementation;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -28,16 +30,25 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author mkleint
  */
-@ServiceProvider(service=ProcessesImplementation.class)
+@ServiceProvider(service=ProcessesImplementation.class, position = 1000)
 public class ProcessesImpl implements ProcessesImplementation {
+
+    private static final Logger LOGGER = Logger.getLogger(ProcessesImpl.class.getName());
 
     @Override
     public void killTree(Process process, Map<String, String> environment) {
-        try {
-            ProcessTreeKiller.get().kill(process, environment);
-        } catch (LinkageError e) {
-            throw new UnsupportedOperationException(null, e);
+        ProcessHandle handle = process.toHandle();
+        try (Stream<ProcessHandle> tree = handle.descendants()) {
+            destroy("proc", handle);
+            tree.forEach(ch -> destroy("child", ch));
         }
+    }
+
+    private static void destroy(String kind, ProcessHandle handle) {
+        if (LOGGER.isLoggable(Level.FINE)) {
+            LOGGER.log(Level.FINE, "destroying {0}: {1}; info: {2}", new Object[]{kind, handle, handle.info()});
+        }
+        handle.destroy();
     }
 
 }

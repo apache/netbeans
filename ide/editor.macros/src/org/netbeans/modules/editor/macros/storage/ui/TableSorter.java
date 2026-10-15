@@ -30,7 +30,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
@@ -40,6 +39,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
+import org.openide.util.ImageUtilities;
 
 
 public class TableSorter extends AbstractTableModel {
@@ -66,8 +66,8 @@ public class TableSorter extends AbstractTableModel {
     private JTableHeader tableHeader;
     private MouseListener mouseListener;
     private TableModelListener tableModelListener;
-    private Map columnComparators = new HashMap();
-    private List sortingColumns = new ArrayList();
+    private Map<Class, Comparator> columnComparators = new HashMap<>();
+    private List<Directive> sortingColumns = new ArrayList<>();
 
     public TableSorter() {
         this.mouseListener = new MouseHandler();
@@ -132,7 +132,7 @@ public class TableSorter extends AbstractTableModel {
 
     private Directive getDirective(int column) {
         for (int i = 0; i < sortingColumns.size(); i++) {
-            Directive directive = (Directive) sortingColumns.get(i);
+            Directive directive = sortingColumns.get(i);
             if (directive.column == column) {
                 return directive;
             }
@@ -176,9 +176,9 @@ public class TableSorter extends AbstractTableModel {
             return null;
         }
         if (directive.direction == DESCENDING) {
-            return new ImageIcon(getClass().getResource("/org/netbeans/modules/editor/macros/storage/ui/columnsSortedDesc.png"));	// NOI18N
+            return ImageUtilities.loadIcon("org/netbeans/modules/editor/macros/storage/ui/columnsSortedDesc.png");	// NOI18N
         } else {
-            return new ImageIcon(getClass().getResource("/org/netbeans/modules/editor/macros/storage/ui/columnsSortedAsc.png"));	// NOI18N
+            return ImageUtilities.loadIcon("org/netbeans/modules/editor/macros/storage/ui/columnsSortedAsc.png");	// NOI18N
         }
     }
 
@@ -197,7 +197,7 @@ public class TableSorter extends AbstractTableModel {
 
     protected Comparator getComparator(int column) {
         Class columnType = tableModel.getColumnClass(column);
-        Comparator comparator = (Comparator) columnComparators.get(columnType);
+        Comparator comparator = columnComparators.get(columnType);
         if (comparator != null) {
             return comparator;
         }
@@ -283,8 +283,8 @@ public class TableSorter extends AbstractTableModel {
         public int compareTo(Object o) {
             int row1 = modelIndex;
             int row2 = ((Row) o).modelIndex;
-            for (Iterator it = sortingColumns.iterator(); it.hasNext();) {
-                Directive directive = (Directive) it.next();
+            for (Iterator<Directive> it = sortingColumns.iterator(); it.hasNext();) {
+                Directive directive = it.next();
                 int column = directive.column;
                 Object o1 = tableModel.getValueAt(row1, column);
                 Object o2 = tableModel.getValueAt(row2, column);

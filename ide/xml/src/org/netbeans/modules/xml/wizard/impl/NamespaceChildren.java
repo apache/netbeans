@@ -77,7 +77,7 @@ public class NamespaceChildren extends Children.Keys {
                     }
                 }
                 Children.Array children = new Children.Array();
-                children.add(filterNodes.toArray(new Node[filterNodes.size()]));
+                children.add(filterNodes.toArray(new Node[0]));
                 Node node = new NamespaceNode(children, (String) key);
                 return new Node[] { node };
             }

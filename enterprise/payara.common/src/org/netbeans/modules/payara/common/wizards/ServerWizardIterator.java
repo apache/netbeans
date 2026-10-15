@@ -19,13 +19,14 @@
 
 package org.netbeans.modules.payara.common.wizards;
 
-import org.netbeans.modules.payara.common.ServerDetails;
+import org.netbeans.modules.payara.common.PayaraPlatformDetails;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static java.util.stream.Collectors.toList;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
@@ -33,7 +34,6 @@ import javax.swing.event.ChangeListener;
 import org.netbeans.api.server.ServerInstance;
 import org.netbeans.modules.payara.common.CreateDomain;
 import org.netbeans.modules.payara.common.PayaraInstance;
-import org.netbeans.modules.payara.spi.RegisteredDerbyServer;
 import org.netbeans.modules.payara.spi.ServerUtilities;
 import org.netbeans.modules.payara.spi.Utils;
 import org.openide.DialogDisplayer;
@@ -46,7 +46,9 @@ import org.openide.util.NbPreferences;
 import org.openide.util.Utilities;
 import org.netbeans.modules.payara.common.PayaraInstanceProvider;
 import org.netbeans.modules.payara.common.PortCollection;
+import static org.netbeans.modules.payara.common.PayaraPlatformDetails.getVersionFromInstallDirectory;
 import org.netbeans.modules.payara.spi.PayaraModule;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 
 
 /**
@@ -68,10 +70,10 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
     private final transient List<ChangeListener> listeners = new CopyOnWriteArrayList<>();
     private String domainsDir;
     private String domainName;
-    private ServerDetails serverDetails;
+    private PayaraPlatformVersionAPI serverDetails;
     private final PayaraInstanceProvider instanceProvider;
-    ServerDetails[] acceptedValues;
-    ServerDetails[] downloadableValues;
+    final List<PayaraPlatformVersionAPI> acceptedValues;
+    final List<PayaraPlatformVersionAPI> downloadableValues;
     private String targetValue;
 
     public String getTargetValue() {
@@ -82,13 +84,16 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
         this.targetValue = targetValue;
     }
 
-    public ServerWizardIterator(ServerDetails[] possibleValues, ServerDetails[] downloadableValues) {
+    public ServerWizardIterator(List<PayaraPlatformVersionAPI> possibleValues) {
         this.acceptedValues = possibleValues;
-        this.downloadableValues = downloadableValues;
+        this.downloadableValues = possibleValues
+                .stream()
+                .sorted(Collections.reverseOrder())
+                .collect(toList());
         this.instanceProvider = PayaraInstanceProvider.getProvider();
         this.hostName = "localhost"; // NOI18N
     }
-    
+
     @Override
     public void removeChangeListener(ChangeListener l) {
         listeners.remove(l);
@@ -144,14 +149,6 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
             handleLocalDomains(result, ir);
         } else {
             handleRemoteDomains(result,ir);
-        }
-        // lookup the javadb register service here and use it.
-        RegisteredDerbyServer db = Lookup.getDefault().lookup(RegisteredDerbyServer.class);
-        if (null != db) {
-            File f = new File(ir, "javadb");
-            if (f.exists() && f.isDirectory() && f.canRead()) {
-                db.initialize(f.getAbsolutePath());
-            }
         }
         NbPreferences.forModule(this.getClass()).put("INSTALL_ROOT_KEY", installRoot); // NOI18N
         return result;
@@ -236,6 +233,10 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
     private String userName;
     /** Payara server administrator's password. */
     private String password;
+    private boolean docker;
+    private boolean wsl;
+    private String hostPath;
+    private String containerPath;
     private String installRoot;
     private String payaraRoot;
     private String hostName;
@@ -338,7 +339,39 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
         return instanceProvider.hasServer(uri);
     }
 
-    ServerDetails isValidInstall(File installDir, File payaraDir, WizardDescriptor wizard) {
+    public boolean isDocker() {
+        return docker;
+    }
+
+    public void setDocker(boolean docker) {
+        this.docker = docker;
+    }
+
+    public boolean isWSL() {
+        return wsl;
+    }
+
+    public void setWSL(boolean wsl) {
+        this.wsl = wsl;
+    }
+
+    public String getHostPath() {
+        return hostPath;
+    }
+
+    public void setHostPath(String hostPath) {
+        this.hostPath = hostPath;
+    }
+
+    public String getContainerPath() {
+        return containerPath;
+    }
+
+    public void setContainerPath(String containerPath) {
+        this.containerPath = containerPath;
+    }
+
+    PayaraPlatformVersionAPI isValidInstall(File installDir, File payaraDir, WizardDescriptor wizard) {
         String errMsg = NbBundle.getMessage(AddServerLocationPanel.class, "ERR_InstallationInvalid", // NOI18N
                 FileUtil.normalizeFile(installDir).getPath());
         wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, errMsg); // getSanitizedPath(installDir)));
@@ -351,27 +384,31 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
         if (!containerRef.exists()) {
             return null;
         }
-        for (ServerDetails candidate : acceptedValues) {
-            if (candidate.isInstalledInDirectory(payaraDir)) {
-                wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, "   ");
-                this.serverDetails = candidate;
-                return candidate;
-            }
+        Optional<PayaraPlatformVersionAPI> serverDetails = getVersionFromInstallDirectory(payaraDir);
+        if (serverDetails.isPresent()) {
+            wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, "   ");
+            this.serverDetails = serverDetails.get();
+            return serverDetails.get();
         }
         return null;
-
     }
 
     /**
      * Set values for remote domain.
      * <p/>
-     * Domains directory shall be <code>null</code> for remote domains.
+     * For remote domains, sets the domain name and determines the domains directory path based on the environment.
+     * If running in a WSL (Windows Subsystem for Linux) environment, the domains directory is set to
+     * <code>payaraRoot/domains</code>; otherwise, the domains directory is set to <code>null</code>.
      * <p/>
      * @param domainName Domain name to set.
      */
     public void setRemoteDomain(final String domainName) {
-        this.domainsDir = null;
         this.domainName = domainName;
+        if (isWSL()) {
+            this.domainsDir = this.payaraRoot + File.separator + "domains";
+        } else {
+            this.domainsDir = null;
+        }
     }
 
     // expose for qa-functional tests
@@ -495,14 +532,16 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
             cd.start();
             PayaraInstance instance = PayaraInstance.create((String) wizard.getProperty("ServInstWizard_displayName"),  // NOI18N
                     installRoot, payaraRoot, domainsDir, domainName, 
-                    newHttpPort, newAdminPort, userName, password, targetValue,
+                    newHttpPort, newAdminPort, userName, password,
+                    wsl, docker, hostPath, containerPath, targetValue,
                     formatUri(hostName, newAdminPort, getTargetValue(),domainsDir,domainName), 
                     instanceProvider);
             result.add(instance.getCommonInstance());
         } else {
             PayaraInstance instance = PayaraInstance.create((String) wizard.getProperty("ServInstWizard_displayName"),  // NOI18N
                     installRoot, payaraRoot, domainsDir, domainName,
-                    getHttpPort(), getAdminPort(), userName, password, targetValue,
+                    getHttpPort(), getAdminPort(), userName, password, 
+                    wsl, docker, hostPath, containerPath, targetValue,
                     formatUri(hostName, getAdminPort(), getTargetValue(), domainsDir, domainName),
                     instanceProvider);
             result.add(instance.getCommonInstance());
@@ -514,10 +553,11 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
         if ("localhost".equals(hn)) {
             hn = "127.0.0.1";
         }
-        PayaraInstance instance = PayaraInstance.create((String) wizard.getProperty("ServInstWizard_displayName"),   // NOI18N
-                installRoot, payaraRoot, null, domainName,
-                getHttpPort(), getAdminPort(), userName, password, targetValue,
-                formatUri(hn, getAdminPort(), getTargetValue(),null, domainName), 
+        PayaraInstance instance = PayaraInstance.create((String) wizard.getProperty("ServInstWizard_displayName"), // NOI18N
+                installRoot, payaraRoot, wsl ? domainsDir : null, domainName,
+                getHttpPort(), getAdminPort(), userName, password,
+                wsl, docker, hostPath, containerPath, targetValue,
+                formatUri(hn, getAdminPort(), getTargetValue(), null, domainName),
                 instanceProvider);
         result.add(instance.getCommonInstance());
     }

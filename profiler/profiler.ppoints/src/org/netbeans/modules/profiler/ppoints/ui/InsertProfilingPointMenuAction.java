@@ -45,7 +45,7 @@ public class InsertProfilingPointMenuAction extends ProfilingAwareAction {
 
     private static final class Singleton {
 
-        final private static InsertProfilingPointMenuAction INSTANCE = new InsertProfilingPointMenuAction();
+        private static final InsertProfilingPointMenuAction INSTANCE = new InsertProfilingPointMenuAction();
     }
 
     @ActionID(id = "org.netbeans.modules.profiler.actions.InsertProfilingPointMenuAction", category = "Profile")

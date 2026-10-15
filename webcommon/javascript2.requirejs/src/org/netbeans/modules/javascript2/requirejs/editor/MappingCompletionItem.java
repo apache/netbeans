@@ -75,7 +75,7 @@ public class MappingCompletionItem implements CompletionProposal {
     public ImageIcon getIcon() {
         
         if (REQUIREJS_ICON == null) {
-            REQUIREJS_ICON = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/requirejs/resources/requirejs.png")); //NOI18N
+            REQUIREJS_ICON = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/requirejs/resources/requirejs.png", false); //NOI18N
         }
         return REQUIREJS_ICON;
     }

@@ -1,0 +1,5 @@
+Code completion result for source line:
+private Test&\Test1\IntersectionTypes2&\Test1\IntersectionT|ypes2 $test;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      IntersectionTypes1              [PUBLIC]   Test1
+CLASS      IntersectionTypes2              [PUBLIC]   Test1

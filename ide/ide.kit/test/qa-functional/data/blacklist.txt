@@ -120,7 +120,14 @@ org.netbeans.modules.j2ee.ddloaders.web.DDDataLoader
 org.netbeans.modules.j2ee.ddloaders.app.EarDataLoader
 org.netbeans.modules.j2ee.ddloaders.ejb.EjbJarDataLoader
 org.netbeans.modules.j2ee.ddloaders.ejb.EjbJar30DataLoader
+org.netbeans.modules.j2ee.ddloaders.ejb.EjbJar40DataLoader
 org.netbeans.modules.j2ee.ddloaders.web.DDWeb25DataLoader
+org.netbeans.modules.j2ee.ddloaders.web.DDWeb30DataLoader
+org.netbeans.modules.j2ee.ddloaders.web.DDWeb40DataLoader
+org.netbeans.modules.j2ee.ddloaders.web.DDWeb50DataLoader
+org.netbeans.modules.j2ee.ddloaders.web.DDWebFragment30DataLoader
+org.netbeans.modules.j2ee.ddloaders.web.DDWebFragment40DataLoader
+org.netbeans.modules.j2ee.ddloaders.web.DDWebFragment50DataLoader
 org.netbeans.modules.j2ee.sun.ide.sunresources.resourcesloader.SunResourceDataLoader
 org.netbeans.modules.bpel.core.BPELDataLoader
 org.netbeans.modules.mobility.svgcore.SVGDataLoader

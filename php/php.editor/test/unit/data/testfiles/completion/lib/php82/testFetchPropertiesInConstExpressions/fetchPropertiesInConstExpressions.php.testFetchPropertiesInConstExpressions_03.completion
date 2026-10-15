@@ -1,0 +1,5 @@
+Code completion result for source line:
+const NAME = E::Case->na|me;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+VARIABLE   string name                                \E

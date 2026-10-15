@@ -22,7 +22,6 @@ package org.netbeans.modules.websvc.core.jaxws.nodes;
  *
  * @author mkuchtiak
  */
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.netbeans.modules.websvc.api.jaxws.wsdlmodel.WsdlOperation;
@@ -55,7 +54,7 @@ public class PortChildren extends Children.Keys<WsdlOperation> {
             setKeys(Collections.<WsdlOperation>emptyList() );
         }
         else {
-            Collections.sort( keys , WsdlOperationComparator.getInstance());
+            keys.sort(WsdlOperationComparator.getInstance());
             setKeys(keys);
         }
         

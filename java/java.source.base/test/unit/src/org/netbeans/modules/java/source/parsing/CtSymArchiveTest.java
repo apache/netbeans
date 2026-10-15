@@ -47,6 +47,7 @@ import org.netbeans.api.java.source.Task;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.modules.SpecificationVersion;
 
 /**
  *
@@ -100,6 +101,11 @@ public class CtSymArchiveTest extends NbTestCase {
     public void testCtSym() throws Exception {
         final JavaPlatform jp = JavaPlatform.getDefault();
         assertNotNull(jp);
+        if (jp.getInstallFolders().iterator().next().getFileObject("lib/modules") != null) {
+            //the semantics of ct.sym is changed since JDK 9, disable this test for now:
+            log("Running on JDK 9+, passed vacuously.");  //NOI18N
+            return ;
+        }
         final FileObject ctSym = jp.getInstallFolders().iterator().next().getFileObject("lib/ct.sym");  //NOI18N
         if (ctSym == null) {
             log(String.format("No ct.sym for platform: %s installed in: %s",jp.getDisplayName(), jp.getInstallFolders()));  //NOI18N

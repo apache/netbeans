@@ -34,8 +34,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.text.BadLocationException;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
 import org.netbeans.jellytools.EditorOperator;
 import org.netbeans.jellytools.JellyTestCase;
 import org.netbeans.jellytools.NavigatorOperator;
@@ -237,7 +235,7 @@ public class GeneralNodeJs extends JellyTestCase {
             int count = 0;
             while (!text.isEmpty() && count < 20) {
                 eo.pushKey(KeyEvent.VK_Z, KeyEvent.CTRL_MASK);
-                text = eo.getText(eo.getLineNumber() + iOffset).replace("\r\n", "").replace("\n", "");;
+                text = eo.getText(eo.getLineNumber() + iOffset).replace("\r\n", "").replace("\n", "");
                 log(">>" + text + "<<");
                 count++;
             }

@@ -1,0 +1,143 @@
+<testresult testFile='enumCasesWithError.php'>
+    <scanner>
+        <token id='T_ENUM' start='815' end='819'>
+            <text>enum</text>
+        </token>
+        <token id='T_STRING' start='820' end='831'>
+            <text>EnumCaseInt</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='831' end='832'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='833' end='836'>
+            <text>int</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='837' end='838'>
+            <text>{</text>
+        </token>
+        <token id='T_CASE' start='843' end='847'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='848' end='854'>
+            <text>CASE_A</text>
+        </token>
+        <token id='T_EQUAL' start='855' end='856'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='857' end='860'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='860' end='861'>
+            <text>;</text>
+        </token>
+        <token id='T_CASE' start='866' end='870'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='871' end='877'>
+            <text>CASE_B</text>
+        </token>
+        <token id='T_EQUAL' start='878' end='879'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='880' end='881'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='881' end='882'>
+            <text>;</text>
+        </token>
+        <token id='T_CASE' start='887' end='891'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='892' end='898'>
+            <text>CASE_C</text>
+        </token>
+        <token id='T_EQUAL' start='899' end='900'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='901' end='905'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='905' end='907'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='912' end='916'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='917' end='923'>
+            <text>CASE_D</text>
+        </token>
+        <token id='T_EQUAL' start='924' end='925'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='926' end='930'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='930' end='932'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='932' end='938'>
+            <text>CASE_A</text>
+        </token>
+        <token id='T_PLUS' start='939' end='940'>
+            <text>+</text>
+        </token>
+        <token id='T_STRING' start='941' end='945'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='945' end='947'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='947' end='953'>
+            <text>CASE_B</text>
+        </token>
+        <token id='T_SEMICOLON' start='953' end='954'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='955' end='956'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='957' end='957'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='957'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <EnumDeclaration start='815' end='956'>
+                <EnumName>
+                    <Identifier start='820' end='831' name='EnumCaseInt'/>
+                </EnumName>
+                <BackingType>
+                    <NamespaceName start='833' end='836' isCurrent='false' isGlobal='false'>
+                        <Identifier start='833' end='836' name='int'/>
+                    </NamespaceName>
+                </BackingType>
+                <Interfaces>
+                </Interfaces>
+                <Block start='837' end='956' isCurly='true'>
+                    <CaseDeclaration start='843' end='861'>
+                        <CaseName>
+                            <Identifier start='848' end='854' name='CASE_A'/>
+                        </CaseName>
+                        <Scalar start='857' end='860' type='INT' value='100'/>
+                    </CaseDeclaration>
+                    <CaseDeclaration start='866' end='882'>
+                        <CaseName>
+                            <Identifier start='871' end='877' name='CASE_B'/>
+                        </CaseName>
+                        <Scalar start='880' end='881' type='INT' value='1'/>
+                    </CaseDeclaration>
+                    <CaseDeclaration start='887' end='954'>
+                        <CaseName>
+                            <Identifier start='892' end='898' name='CASE_C'/>
+                        </CaseName>
+                        <ASTErrorExpression start='901' end='916'/>
+                    </CaseDeclaration>
+                </Block>
+            </EnumDeclaration>
+        </Statements>
+    </Program>
+</testresult>

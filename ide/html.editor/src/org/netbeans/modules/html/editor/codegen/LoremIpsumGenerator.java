@@ -26,10 +26,8 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
-import org.netbeans.api.editor.EditorUtilities;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
-import org.netbeans.editor.Utilities;
-import org.netbeans.modules.editor.indent.api.IndentUtils;
 import org.netbeans.modules.editor.indent.api.Reformat;
 import org.netbeans.spi.editor.codegen.CodeGenerator;
 import org.openide.DialogDescriptor;
@@ -104,7 +102,7 @@ public class LoremIpsumGenerator implements CodeGenerator {
                 public void run() {
                     try {
                         StringBuilder litext = getLoremIpsumText(paragraphs, tag);
-                        if(!Utilities.isRowWhite(document, offset)) {
+                        if(!LineDocumentUtils.isLineWhitespace(document, offset)) {
                             //generate the li text at a new line if the current one is not empty
                             litext.insert(0, '\n');
                         }

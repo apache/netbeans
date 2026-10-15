@@ -20,6 +20,7 @@
 package org.netbeans.modules.apisupport.project.queries;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.spi.queries.FileEncodingQueryImplementation;
 import org.openide.filesystems.FileObject;
 
@@ -37,7 +38,7 @@ public class FileEncodingQueryImpl extends FileEncodingQueryImplementation {
     public FileEncodingQueryImpl() {}
 
     public Charset getEncoding(FileObject file) {
-        return Charset.forName("UTF-8");
+        return StandardCharsets.UTF_8;
     }
 
 }

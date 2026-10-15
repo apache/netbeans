@@ -33,12 +33,19 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.MirroredTypeException;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
+import org.netbeans.api.templates.CreateFromTemplateHandler;
+import org.netbeans.api.templates.FileBuilder;
 import org.openide.filesystems.annotations.LayerGenerationException;
 import org.netbeans.api.templates.TemplateRegistration;
 import org.netbeans.api.templates.TemplateRegistrations;
 import org.openide.filesystems.annotations.LayerBuilder;
 import org.openide.filesystems.annotations.LayerGeneratingProcessor;
+import org.openide.util.BaseUtilities;
 import org.openide.util.lookup.ServiceProvider;
 
 @ServiceProvider(service=Processor.class)
@@ -57,7 +64,7 @@ public class TemplateProcessor extends LayerGeneratingProcessor {
             if (r == null) {
                 continue;
             }
-            process(e, r);
+            process(e, r, roundEnv);
         }
         for (Element e : roundEnv.getElementsAnnotatedWith(TemplateRegistrations.class)) {
             TemplateRegistrations rr = e.getAnnotation(TemplateRegistrations.class);
@@ -65,20 +72,52 @@ public class TemplateProcessor extends LayerGeneratingProcessor {
                 continue;
             }
             for (TemplateRegistration t : rr.value()) {
-                process(e, t);
+                process(e, t, roundEnv);
             }
         }
         return true;
     }
+    
+    private void checkPublicAbstract(Element e, TypeMirror clazz, TypeMirror typeMirror) throws LayerGenerationException {
+        if (e.getModifiers().contains(Modifier.ABSTRACT)) {
+            throw new LayerGenerationException(clazz + " must not be abstract", e, processingEnv, null, null);
+        }
+        {
+            boolean hasDefaultCtor = false;
+            for (ExecutableElement constructor : ElementFilter.constructorsIn(e.getEnclosedElements())) {
+                if (constructor.getParameters().isEmpty()) {
+                    hasDefaultCtor = true;
+                    break;
+                }
+            }
+            if (!hasDefaultCtor) {
+                throw new LayerGenerationException(clazz + " must have a no-argument constructor", e, processingEnv, null, null);
+            }
+        }
+        if (typeMirror != null && !processingEnv.getTypeUtils().isAssignable(e.asType(), typeMirror)) {
+            throw new LayerGenerationException(clazz + " is not assignable to " + typeMirror, e, processingEnv, null, null);
+        }
+        if (!e.getModifiers().contains(Modifier.PUBLIC)) {
+            throw new LayerGenerationException(clazz + " is not public", e, processingEnv, null, null);
+        }
+        if (((TypeElement) e).getNestingKind().isNested() && !e.getModifiers().contains(Modifier.STATIC)) {
+            throw new LayerGenerationException(clazz + " is nested but not static", e, processingEnv, null, null);
+        }
+    }
 
-    private void process(Element e, TemplateRegistration t) throws LayerGenerationException {
+    private void process(Element e, TemplateRegistration t, RoundEnvironment renv) throws LayerGenerationException {
         LayerBuilder builder = layer(e);
         String basename;
+        boolean createFolder = false;
         if (!t.id().isEmpty()) {
             if (t.content().length > 0) {
                 throw new LayerGenerationException("Cannot specify both id and content", e, processingEnv, t);
             }
             basename = t.id();
+            if (basename.endsWith("/")) {
+                basename = basename.substring(0, basename.length() - 1);
+                createFolder = true;
+            }
         } else if (t.content().length > 0) {
             basename = basename(t.content()[0]);
         } else {
@@ -91,7 +130,7 @@ public class TemplateProcessor extends LayerGeneratingProcessor {
             }
         }
         String folder = "Templates/" + t.folder() + '/';
-        LayerBuilder.File f = builder.file(folder + basename);
+        LayerBuilder.File f = createFolder ? builder.folder(folder + basename) : builder.file(folder + basename);
         f.boolvalue("template", true);
         f.position(t.position());
         if (!t.displayName().isEmpty()) {
@@ -106,11 +145,35 @@ public class TemplateProcessor extends LayerGeneratingProcessor {
         if (!t.description().isEmpty()) {
             f.urlvalue("instantiatingWizardURL", contentURI(e, t.description(), builder, t, "description"));
         }
+
+        boolean handlerSpecified = false;
+        try {
+            t.createHandlerClass();
+            // handler was not specified
+        } catch (MirroredTypeException me) {
+            TypeMirror handlerClass = me.getTypeMirror();
+            if (handlerClass instanceof DeclaredType) {
+                Element cfth = processingEnv.getElementUtils().getTypeElement(CreateFromTemplateHandler.class.getName());
+                TypeMirror cfthType = cfth.asType();
+                if (!processingEnv.getTypeUtils().isSameType(cfthType, handlerClass)) {
+                    checkPublicAbstract(((DeclaredType) handlerClass).asElement(), handlerClass, cfthType);
+                    String handlerClassName = processingEnv.getElementUtils().getBinaryName((TypeElement)((DeclaredType)handlerClass).asElement()).toString();
+                    f.newvalue(FileBuilder.ATTR_TEMPLATE_HANDLER, handlerClassName);
+                    handlerSpecified = true;
+                }
+            }
+        }
+
         if (e.getKind() != ElementKind.PACKAGE) {
             if (t.page().isEmpty()) {
+                // can annotate either WizardDescriptor.InstantiatingIterator, or CreateFromTemplateHandler.
                 try {
                     Class<?> iterClazz = Class.forName("org.openide.WizardDescriptor$InstantiatingIterator"); // NOI18N
                     f.instanceAttribute("instantiatingIterator", iterClazz);
+                } catch (LayerGenerationException ex) {
+                    if (!handlerSpecified) {
+                        f.instanceAttribute(FileBuilder.ATTR_TEMPLATE_HANDLER, CreateFromTemplateHandler.class);
+                    }
                 } catch (ClassNotFoundException ex) {
                     Messager msg = processingEnv.getMessager();
                     msg.printMessage(Diagnostic.Kind.ERROR,
@@ -161,7 +224,7 @@ public class TemplateProcessor extends LayerGeneratingProcessor {
         String path = LayerBuilder.absolutizeResource(e, relativePath);
         builder.validateResource(path, e, t, annotationMethod, false);
         try {
-            return new URI("nbresloc", "/" + path, null).normalize();
+            return BaseUtilities.normalizeURI(new URI("nbresloc", "/" + path, null));
         } catch (URISyntaxException x) {
             throw new LayerGenerationException("could not translate " + path, e, processingEnv, t);
         }

@@ -56,7 +56,7 @@ public interface SchemaComponent extends DocumentComponent<SchemaComponent> {
     
     /**
      * Sets value of an attribute defined in a certain namespace.
-     * Propery change event will be fired with property name using attribute local name.
+     * Property change event will be fired with property name using attribute local name.
      */
     void setAnyAttribute(QName attributeName, String value);
     

@@ -21,7 +21,6 @@ package org.netbeans.modules.editor.fold;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
@@ -395,7 +394,7 @@ public final class FoldOperationImpl {
      * The blocker + blockers folds are ordered using the fold order. Results
      * are filtered to contain just Folds produced by this Operation. Folds 
      * owned by other operations/executions are skipped.
-     * <p/>
+     * <p>
      * Note that blocked folds do not form a hierarchy; they were removed from
      * the fold hierarchy when it was decided to block those folds. So prior to
      * iterating further in FoldHierarchy, all (recursively) blocked folds must
@@ -430,7 +429,7 @@ public final class FoldOperationImpl {
                 blockedSorted.addAll(blocked);
                 // enumerate together with blocked ones
                 blockedSorted.add(f);
-                Collections.sort(blockedSorted, FOLD_COMPARATOR);
+                blockedSorted.sort(FOLD_COMPARATOR);
                 blockStack.push(new Object[] { blockedFolds, blocker});
                 blockedFolds = blockedSorted.iterator();
                 blocker = f;
@@ -698,7 +697,7 @@ public final class FoldOperationImpl {
         public void run() throws BadLocationException {
             // first order the supplied folds:
             List ll = new ArrayList<FoldInfo>(foldInfos);
-            Collections.sort(ll, this);
+            ll.sort(this);
             
             foldIt = foldIterator();
             infoIt = ll.iterator();

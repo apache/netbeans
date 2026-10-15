@@ -1,0 +1,10 @@
+Code completion result for source line:
+$child->testSelfReturnNullableTypeParent()->|testStaticReturnTypeParent(); // parent items
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     testSelfReturnNullableTypePare  [PUBLIC]   ParentClass
+METHOD     testSelfReturnTypeParent()      [PUBLIC]   ParentClass
+METHOD     testSelfReturnUnionTypeParent(  [PUBLIC]   ParentClass
+METHOD     testStaticReturnNullableTypePa  [PUBLIC]   ParentClass
+METHOD     testStaticReturnTypeParent()    [PUBLIC]   ParentClass
+METHOD     testStaticReturnUnionTypeParen  [PUBLIC]   ParentClass
+METHOD     testStaticSelfReturnUnionTypeP  [PUBLIC]   ParentClass

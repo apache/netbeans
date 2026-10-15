@@ -53,7 +53,7 @@ public final class CloseAllProjectsAction implements ActionListener {
                 OpenProjects manager = OpenProjects.getDefault();
                 List<Project> openProjects = new ArrayList<Project>(Arrays.asList(manager.getOpenProjects()));
                 if (!openProjects.isEmpty()) {
-                    Project[] projectsToBeClosed = openProjects.toArray(new Project[openProjects.size()]);
+                    Project[] projectsToBeClosed = openProjects.toArray(new Project[0]);
                     manager.close(projectsToBeClosed);
                 }
             }

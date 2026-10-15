@@ -25,8 +25,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
 import javax.swing.JEditorPane;
 import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
@@ -156,8 +156,6 @@ public class PositionBoundsResolver {
                 ErrorManager.getDefault().notify(ex);
             } catch (FileNotFoundException ex) {
                 ErrorManager.getDefault().notify(ex);
-            } catch (IOException ex) {
-                ErrorManager.getDefault().notify(ex);
             } catch (BadLocationException ex) {
                 ErrorManager.getDefault().notify(ex);
             }
@@ -174,15 +172,13 @@ public class PositionBoundsResolver {
         String lineSep = System.getProperty("line.separator");//NO18N
         BufferedReader reader = null;
         try {
-            reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));//NO18N
+            reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
             String line = reader.readLine();
             while (line != null) {
                 result.append(line);
                 result.append(lineSep);
                 line = reader.readLine();
             }
-        } catch (UnsupportedEncodingException ex) {
-            ErrorManager.getDefault().notify(ex);
         } catch (IOException ex) {
             ErrorManager.getDefault().notify(ex);
         } finally {

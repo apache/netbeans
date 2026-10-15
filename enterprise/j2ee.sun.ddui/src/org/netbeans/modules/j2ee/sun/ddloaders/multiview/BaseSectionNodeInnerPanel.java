@@ -104,7 +104,7 @@ public class BaseSectionNodeInnerPanel extends SectionNodeInnerPanel {
      *  needs to be scaled upwards (IZ 115372).  There is probably a better way
      *  to do this, but this works for now.
      */
-    private volatile static int scaledMaxWidth = 0;
+    private static volatile int scaledMaxWidth = 0;
     
     protected int getScaledMaxWidth() {
         int smw = scaledMaxWidth;

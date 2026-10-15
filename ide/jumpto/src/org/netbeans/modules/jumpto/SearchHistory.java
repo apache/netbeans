@@ -77,7 +77,7 @@ public final class SearchHistory {
      * @param textField a text field which is used for showing/storing history.
      */
     public SearchHistory(String historyKey, JTextField textField) {
-        assert historyKey != null && historyKey.trim().length() > 0;
+        assert historyKey != null && !historyKey.isBlank();
         assert textField != null;
 
         this.historyKey = historyKey;
@@ -115,7 +115,7 @@ public final class SearchHistory {
     }
 
     private void addHistoryItem(String text, MoveOffset moveOffset) {
-        if (text == null || text.trim().length() == 0) {
+        if (text == null || text.isBlank()) {
             LOGGER.fine("String to store is empty => ignoring.");
             return;
         }
@@ -212,18 +212,18 @@ public final class SearchHistory {
             LOGGER.fine("New text is: " + newText);
         } else {
             LOGGER.fine("Text changed => remember the current one & set the last (or first) one to the text field.");
-            int index = moveOffset.equals(MoveOffset.PREVIOUS) ? getLastIndex() : getFirstIndex();
+            int index = moveOffset == MoveOffset.PREVIOUS ? getLastIndex() : getFirstIndex();
             newText = getCachedText(index);
             LOGGER.fine("New text is: " + newText);
             addHistoryItem(userText, moveOffset);
         }
-        assert newText != null && newText.trim().length() > 0;
+        assert newText != null && !newText.isBlank();
         textField.setText(newText);
     }
 
     private List<String> readHistory() {
         String history = getPreferences().get(historyKey, null);
-        if (history == null || history.trim().length() == 0) {
+        if (history == null || history.isBlank()) {
             LOGGER.fine("No history found");
             return new ArrayList<String>(2 * HISTORY_LIMIT);
         }

@@ -41,7 +41,7 @@ public class TransformationActionTest extends JXTest {
         super(testName);
     }
     
-    // TESTS ///////////////////////////////////////////////////////////////////
+    // TESTS
     
     /** Performs 'XSL Transformation...' action and checks output. */
     public void testTransformation() throws Exception {
@@ -93,7 +93,7 @@ public class TransformationActionTest extends JXTest {
         dialog.close();
     }
     
-    // LIB ////////////////////////////////////////////////////////////////////
+    // LIB
     
     /**
      * Performs 'XSL Transformation...' action on a XML.
@@ -107,7 +107,7 @@ public class TransformationActionTest extends JXTest {
         return dialog;
     }
     
-    // MAIN ////////////////////////////////////////////////////////////////////
+    // MAIN
     
     public static Test suite() {
         TestSuite suite = new NbTestSuite();

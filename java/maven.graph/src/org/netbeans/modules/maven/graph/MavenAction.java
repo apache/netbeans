@@ -145,7 +145,7 @@ public abstract class MavenAction extends AbstractAction {
                 }
             }
         }
-        List<GraphEdge> edges2Exclude = new ArrayList<GraphEdge>();
+        List<GraphEdge> edges2Exclude = new ArrayList<>();
         Collection<GraphEdge<MavenDependencyNode>> incoming = scene.findNodeEdges(node, false, true);
         GraphNode<MavenDependencyNode> sourceNode = null;
         boolean primaryExcluded = false;
@@ -164,7 +164,9 @@ public abstract class MavenAction extends AbstractAction {
             }
         }
         // note, must be called before node removing edges to work correctly
-        node.getDuplicatesOrConflicts().removeAll(toExclude);
+        for(MavenDependencyNode mdn: toExclude) {
+            node.removeDuplicateOrConflict(mdn);
+        }
         for (GraphEdge<MavenDependencyNode> age : edges2Exclude) {
             scene.removeEdge(age);
             age.getSource().removeChild(age.getTarget());
@@ -210,7 +212,7 @@ public abstract class MavenAction extends AbstractAction {
             children.add(childNode);
             scene.removeEdge(age);
             age.getSource().removeChild(dn);
-            childNode.getDuplicatesOrConflicts().remove(dn);
+            childNode.removeDuplicateOrConflict(dn);
         }
         // recurse to children
         for (GraphNode age : children) {

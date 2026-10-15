@@ -41,7 +41,8 @@ import org.openide.util.Pair;
  * @author Radek Matous
  */
 public class MethodDeclarationInfo extends ASTNodeInfo<MethodDeclaration> {
-    Map<String, List<Pair<QualifiedName, Boolean>>> paramDocTypes = Collections.emptyMap();
+
+    private Map<String, Pair<String /*raw types*/, List<Pair<QualifiedName, Boolean>>>> paramDocTypes = Collections.emptyMap();
     private final boolean isFromInterface;
 
     MethodDeclarationInfo(Program program, MethodDeclaration methodDeclaration, final boolean isFromInterface) {

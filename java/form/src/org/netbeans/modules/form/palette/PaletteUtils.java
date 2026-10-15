@@ -405,7 +405,7 @@ public final class PaletteUtils {
         }
         PaletteItem[] res;
         if( null != uniqueItems ) {
-            res = uniqueItems.toArray( new PaletteItem[uniqueItems.size()] );
+            res = uniqueItems.toArray(new PaletteItem[0]);
         } else {
             res = new PaletteItem[0];
         }
@@ -451,7 +451,7 @@ public final class PaletteUtils {
             }
         }
         if (validList != null)
-            nodes = validList.toArray(new Node[validList.size()]);
+            nodes = validList.toArray(new Node[0]);
 
         return nodes;
     }
@@ -553,8 +553,8 @@ public final class PaletteUtils {
 
         ClassPathFilter(ClassPath cp) {
             if (cp != null) {
-                validItems = new WeakSet<PaletteItem>();
-                invalidItems = new WeakSet<PaletteItem>();
+                validItems = Collections.newSetFromMap(new WeakHashMap<>());
+                invalidItems = Collections.newSetFromMap(new WeakHashMap<>());
             }
             classPath = cp;
         }

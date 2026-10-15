@@ -262,7 +262,7 @@ public class JavaEditActionsTest extends JavaEditorActionsTestCase {
 
     public void testEditActionsTestCase_17() {
         openFileAndSetEditorState("testEditActions", "testEditActions16.pass", 10, 34);
-        /// 17 -- test expanding abbreviation
+        // 17 -- test expanding abbreviation
         editor.setCaretPosition(19, 12);
         txtOper.typeKey('s');
         txtOper.typeKey('t');

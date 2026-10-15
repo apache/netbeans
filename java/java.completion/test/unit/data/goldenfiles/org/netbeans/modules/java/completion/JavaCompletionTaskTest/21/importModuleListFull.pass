@@ -1,0 +1,8 @@
+java.base
+java.compiler
+java.xml
+jdk.compiler
+jdk.internal.opt
+jdk.jartool
+jdk.javadoc
+jdk.zipfs

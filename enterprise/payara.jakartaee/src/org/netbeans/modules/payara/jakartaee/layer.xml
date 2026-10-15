@@ -243,7 +243,7 @@
             </folder>
             <folder name="GrammarQueryManagers">
                 <file name="org-netbeans-modules-payara-jakartaee-RunTimeDDCatalog.instance">
-                    <attr name="position" intvalue="350"/>
+                    <attr name="position" intvalue="400"/>
                     <attr name="instanceCreate" methodvalue="org.netbeans.modules.payara.jakartaee.RunTimeDDCatalog.getDefaultRunTimeDDCatalog"/>
                 </file>
             </folder> <!-- GrammarQueryManagers -->

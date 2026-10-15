@@ -307,7 +307,7 @@ public class RunConfigurationPanel implements WizardDescriptor.Panel<WizardDescr
             }
         }
 
-        ComboBoxModel model = new LocalServer.ComboBoxModel(localServers.toArray(new LocalServer[localServers.size()]));
+        ComboBoxModel model = new LocalServer.ComboBoxModel(localServers.toArray(new LocalServer[0]));
         // store settings
         if (selected != null) {
             model.setSelectedItem(selected);

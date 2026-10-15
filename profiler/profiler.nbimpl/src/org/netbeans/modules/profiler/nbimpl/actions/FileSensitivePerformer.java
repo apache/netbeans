@@ -39,7 +39,7 @@ import org.openide.util.lookup.Lookups;
  */
 public class FileSensitivePerformer implements FileActionPerformer {
 
-    final private String command;
+    private final String command;
 
     public FileSensitivePerformer(String command) {
         this.command = command;

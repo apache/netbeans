@@ -84,8 +84,8 @@ public class LocalHistory {
     private final Pattern metadataPattern = Pattern.compile(".*\\" + File.separatorChar + "((\\.|_)svn|.hg|CVS)(\\" + File.separatorChar + ".*|$)");
     private final Pattern lhTmpFilePattern = Pattern.compile(".*\\.\\d+?\\" + LH_TMP_FILE_SUFFIX);
         
-    public final static Object EVENT_FILE_CREATED = new Object();
-    final static Object EVENT_PROJECTS_CHANGED = new Object();
+    public static final Object EVENT_FILE_CREATED = new Object();
+    static final Object EVENT_PROJECTS_CHANGED = new Object();
         
     /** default logger for whole module */
     public static final Logger LOG = Logger.getLogger("org.netbeans.modules.localhistory"); // NOI18N
@@ -110,7 +110,7 @@ public class LocalHistory {
         
         String rootPaths = System.getProperty("netbeans.localhistory.historypath");
         if(rootPaths == null || rootPaths.trim().equals("")) {            
-            userDefinedRoots = Collections.EMPTY_SET;               
+            userDefinedRoots = Collections.emptySet();
         } else {
             String[] paths = rootPaths.split(";");
             userDefinedRoots = new HashSet<String>(paths.length);

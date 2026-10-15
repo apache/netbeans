@@ -79,7 +79,7 @@ public class SafeDeleteUI implements RefactoringUI, RefactoringUIBypass, JavaRef
      */
     private SafeDeleteUI(FileObject[] selectedFiles, Collection<TreePathHandle> handles, boolean regulardelete) {
         this.elementsToDelete = selectedFiles;
-        refactoring = new SafeDeleteRefactoring(new ProxyLookup(Lookups.fixed(elementsToDelete), Lookups.fixed(handles.toArray(new Object[handles.size()]))));
+        refactoring = new SafeDeleteRefactoring(new ProxyLookup(Lookups.fixed(elementsToDelete), Lookups.fixed(handles.toArray(new Object[0]))));
         refactoring.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(selectedFiles));
         this.regulardelete = regulardelete;
     }

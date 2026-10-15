@@ -98,7 +98,9 @@ public class MavenProjectPropsImpl {
                         LOG.log(Level.FINE, null, ex);
                     }
                     String val = model != null ? model.getPackaging() : null;
-                    if (val != null) {
+                    // In the unfortunate case that the project packaging contains value reference, it's probably
+                    // better not to provide anything: packaging affects Project Lookup and things may get screwed up.
+                    if (val != null && !val.contains("${")) {
                         return val;
                     }   
                 }

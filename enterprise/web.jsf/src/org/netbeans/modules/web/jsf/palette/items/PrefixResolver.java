@@ -34,7 +34,7 @@ public class PrefixResolver {
 
     public String getPrefixForNS(String namespace, String fallbackPrefix) {
         for (DefaultLibraryInfo dli : DefaultLibraryInfo.values()) {
-            if (dli.getNamespace().equals(namespace) || (dli.getLegacyNamespace() != null && dli.getLegacyNamespace().equals(namespace))) {
+            if (dli.getValidNamespaces().contains(namespace)) {
                 return jls.getLibraryPrefix(dli);
             }
         }

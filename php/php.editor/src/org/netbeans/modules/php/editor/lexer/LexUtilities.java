@@ -31,8 +31,9 @@ import org.netbeans.api.lexer.TokenId;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.editor.BaseDocument;
-import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.api.OffsetRange;
+import static org.netbeans.modules.php.editor.CodeUtils.PIPE_OPERATOR;
+import org.netbeans.modules.php.editor.lexer.utils.LexerUtils;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
@@ -175,7 +176,8 @@ public final class LexUtilities {
             Token<?extends PHPTokenId> token = ts.token();
 
             if ((token.id() == tokenUpId && textEquals(token.text(), up))
-                    || (tokenUpId == PHPTokenId.PHP_CURLY_OPEN && token.id() == PHPTokenId.PHP_TOKEN && token.text().charAt(token.text().length() - 1) == '{')) {
+                    || (tokenUpId == PHPTokenId.PHP_CURLY_OPEN && token.id() == PHPTokenId.PHP_TOKEN && token.text().charAt(token.text().length() - 1) == '{')
+                    || (up == '[' && token.id() == PHPTokenId.PHP_ATTRIBUTE)) /* #[ */ {
                 balance++;
             } else if (token.id() == tokenDownId && textEquals(token.text(), down)) {
                 if (balance == 0) {
@@ -198,7 +200,8 @@ public final class LexUtilities {
             TokenId id = token.id();
 
             if (token.id() == tokenUpId && textEquals(token.text(), up)
-                    || (tokenUpId == PHPTokenId.PHP_CURLY_OPEN && token.id() == PHPTokenId.PHP_TOKEN && token.text().charAt(token.text().length() - 1) == '{')) {
+                    || (tokenUpId == PHPTokenId.PHP_CURLY_OPEN && token.id() == PHPTokenId.PHP_TOKEN && token.text().charAt(token.text().length() - 1) == '{')
+                    || (up == '[' && token.id() == PHPTokenId.PHP_ATTRIBUTE)) /* #[ */ {
                 if (balance == 0) {
                     return new OffsetRange(ts.offset(), ts.offset() + token.length());
                 }
@@ -325,8 +328,8 @@ public final class LexUtilities {
     /* Compute the balance of begin/end tokens on the line */
     public static int getLineBalance(BaseDocument doc, int offset, TokenId up, TokenId down, LineBalance lineBalance) {
         try {
-            int begin = LineDocumentUtils.getLineStart(doc, offset);
-            int end = LineDocumentUtils.getLineEnd(doc, offset);
+            int begin = LineDocumentUtils.getLineStartOffset(doc, offset);
+            int end = LineDocumentUtils.getLineEndOffset(doc, offset);
 
             TokenSequence<?extends PHPTokenId> ts = LexUtilities.getPHPTokenSequence(doc, begin);
             if (ts == null) {
@@ -421,7 +424,7 @@ public final class LexUtilities {
      */
     public static boolean isCommentOnlyLine(BaseDocument doc, int offset)
         throws BadLocationException {
-        int begin = Utilities.getRowFirstNonWhite(doc, offset);
+        int begin = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
 
         if (begin == -1) {
             return false; // whitespace only
@@ -502,33 +505,39 @@ public final class LexUtilities {
         int start = -1;
         int origOffset = ts.offset();
 
-        Token token;
+        Token<? extends PHPTokenId> token = null;
+        Token<? extends PHPTokenId> lastTokenWithoutWSAndComments = null;
         int balance = 0;
         int curlyBalance = 0;
+        boolean isInQuotes = false; // GH-6731 for checking a variable in string
         do {
+            if (!LexerUtils.isWhitespaceOrCommentToken(token)) {
+                lastTokenWithoutWSAndComments = token;
+            }
             token = ts.token();
-            if (token.id() == PHPTokenId.PHP_TOKEN) {
+            if (token.id() == PHPTokenId.PHP_TOKEN && !LexerUtils.isDollarCurlyOpen(token)) {
                 switch (token.text().charAt(0)) {
-                    case ')':
-                        balance--;
-                        break;
-                    case '(':
-                        balance++;
-                        break;
-                    default:
+                    case ')' -> balance--;
+                    case '(' -> balance++;
+                    default -> {
                         //no-op
+                    }
+                }
+            } else if (token.id() == PHPTokenId.PHP_CONSTANT_ENCAPSED_STRING) {
+                // GH-6731 for checking a variable in string
+                // e.g. "example {$example}"
+                if ((token.text().length() == 1 && TokenUtilities.textEquals(token.text(), "\"")) // NOI18N
+                        || (!TokenUtilities.startsWith(token.text(), "\"") && TokenUtilities.endsWith(token.text(), "\"")) // NOI18N
+                        || (TokenUtilities.startsWith(token.text(), "\"") && !TokenUtilities.endsWith(token.text(), "\""))) { // NOI18N
+                    isInQuotes = !isInQuotes;
                 }
             } else if ((token.id() == PHPTokenId.PHP_SEMICOLON || token.id() == PHPTokenId.PHP_OPENTAG)
                     && ts.moveNext()) {
                 // we found previous end of expression => find begin of the current.
-                LexUtilities.findNext(ts, Arrays.asList(
-                        PHPTokenId.WHITESPACE,
-                        PHPTokenId.PHPDOC_COMMENT, PHPTokenId.PHPDOC_COMMENT_END, PHPTokenId.PHPDOC_COMMENT_START,
-                        PHPTokenId.PHP_COMMENT, PHPTokenId.PHP_COMMENT_END, PHPTokenId.PHP_COMMENT_START,
-                        PHPTokenId.PHP_LINE_COMMENT));
+                LexUtilities.findNext(ts, LexerUtils.getWSCommentTokens());
                 start = ts.offset();
                 break;
-            } else if (token.id() == PHPTokenId.PHP_IF) {
+            } else if (token.id() == PHPTokenId.PHP_IF && curlyBalance == 0) {
                 // we are at a beginning of if .... withouth curly?
                 // need to find end of the condition.
                 int offsetIf = ts.offset(); // remember the if offset
@@ -560,11 +569,7 @@ public final class LexUtilities {
                             }
                         }
                         if (parentBalance == 1 && ts.movePrevious()) {
-                            LexUtilities.findPrevious(ts, Arrays.asList(
-                                    PHPTokenId.WHITESPACE,
-                                    PHPTokenId.PHPDOC_COMMENT, PHPTokenId.PHPDOC_COMMENT_END, PHPTokenId.PHPDOC_COMMENT_START,
-                                    PHPTokenId.PHP_COMMENT, PHPTokenId.PHP_COMMENT_END, PHPTokenId.PHP_COMMENT_START,
-                                    PHPTokenId.PHP_LINE_COMMENT));
+                            LexUtilities.findPrevious(ts, LexerUtils.getWSCommentTokens());
                             start = ts.offset();
                         }
                         break;
@@ -577,34 +582,36 @@ public final class LexUtilities {
                     ts.move(offsetIf);
                     ts.movePrevious();
                 }
-            } else if (token.id() == PHPTokenId.PHP_CASE || token.id() == PHPTokenId.PHP_DEFAULT) {
+            } else if ((token.id() == PHPTokenId.PHP_CASE || token.id() == PHPTokenId.PHP_DEFAULT) && curlyBalance == 0) {
                 start = ts.offset();
                 break;
             } else if (token.id() == PHPTokenId.PHP_CURLY_CLOSE) {
                 curlyBalance--;
-                if (curlyBalance == -1 && ts.moveNext()) {
-                    // we are after previous blog close
-                    LexUtilities.findNext(ts, Arrays.asList(
-                            PHPTokenId.WHITESPACE,
-                            PHPTokenId.PHPDOC_COMMENT, PHPTokenId.PHPDOC_COMMENT_END, PHPTokenId.PHPDOC_COMMENT_START,
-                            PHPTokenId.PHP_COMMENT, PHPTokenId.PHP_COMMENT_END, PHPTokenId.PHP_COMMENT_START,
-                            PHPTokenId.PHP_LINE_COMMENT));
-                    if (ts.offset() <= origOffset) {
-                        start = ts.offset();
-                    } else {
-                        start = origOffset;
+                if (lastTokenWithoutWSAndComments == null || !LexerUtils.isComma(lastTokenWithoutWSAndComments)) {
+                    // check },
+                    // e.g. hooked property (CPP), lambda functions
+                    // public __construct(
+                    //     public int $prop {get {} set {}},
+                    // ) {}
+                    // myFunc(
+                    //     function() {},
+                    // )
+                    if (!isInQuotes && curlyBalance == -1 && ts.moveNext()) {
+                        // we are after previous block close
+                        LexUtilities.findNext(ts, LexerUtils.getWSCommentTokens());
+                        if (ts.offset() <= origOffset) {
+                            start = ts.offset();
+                        } else {
+                            start = origOffset;
+                        }
+                        break;
                     }
-                    break;
                 }
-            } else if (token.id() == PHPTokenId.PHP_CURLY_OPEN) {
+            } else if (LexerUtils.hasCurlyOpen(token)) {
                 curlyBalance++;
-                if (curlyBalance == 1 && ts.moveNext()) {
-                    // we are at the begining of a blog
-                    LexUtilities.findNext(ts, Arrays.asList(
-                            PHPTokenId.WHITESPACE,
-                            PHPTokenId.PHPDOC_COMMENT, PHPTokenId.PHPDOC_COMMENT_END, PHPTokenId.PHPDOC_COMMENT_START,
-                            PHPTokenId.PHP_COMMENT, PHPTokenId.PHP_COMMENT_END, PHPTokenId.PHP_COMMENT_START,
-                            PHPTokenId.PHP_LINE_COMMENT));
+                if (!isInQuotes && curlyBalance == 1 && ts.moveNext()) {
+                    // we are at the begining of a block
+                    LexUtilities.findNext(ts, LexerUtils.getWSCommentTokens());
                     if (ts.offset() <= origOffset) {
                         start = ts.offset();
                     } else {
@@ -612,6 +619,18 @@ public final class LexUtilities {
                     }
                     break;
                 }
+            } else if (curlyBalance == 1
+                    && (LexerUtils.isGetOrSetVisibilityToken(token) || token.id() == PHPTokenId.PHP_FUNCTION)) {
+                // e.g. CPP, lambda function
+                // func(
+                //     function() {^
+                // )
+                start = ts.offset();
+                break;
+            } else if (token.id() == PHPTokenId.PHP_OPERATOR && TokenUtilities.textEquals(token.text(), PIPE_OPERATOR)) { // NOI18N
+                //PHP 8.5 pipe operator
+                start = ts.offset();
+                break;
             } else if (balance == 1 && token.id() == PHPTokenId.PHP_STRING) {
                 // probably there is a function call insede the expression
                 start = ts.offset();
@@ -621,7 +640,7 @@ public final class LexUtilities {
 
         if (!ts.movePrevious()) {
             // we are at the first php line
-            LexUtilities.findNext(ts, Arrays.asList(
+            LexUtilities.findNext(ts, List.of(
                     PHPTokenId.WHITESPACE,
                     PHPTokenId.PHPDOC_COMMENT, PHPTokenId.PHPDOC_COMMENT_END, PHPTokenId.PHPDOC_COMMENT_START,
                     PHPTokenId.PHP_COMMENT, PHPTokenId.PHP_COMMENT_END, PHPTokenId.PHP_COMMENT_START,

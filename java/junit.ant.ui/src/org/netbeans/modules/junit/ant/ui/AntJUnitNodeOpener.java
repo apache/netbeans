@@ -59,7 +59,7 @@ public final class AntJUnitNodeOpener extends NodeOpener {
 
     public void openTestsuite(TestsuiteNode node) {
         TestSuite suite = node.getSuite();
-        if ((suite != null) && (suite instanceof JUnitTestSuite)){
+        if (suite instanceof JUnitTestSuite) {
             final FileObject fo = ((JUnitTestSuite)suite).getSuiteFO();
             if (fo != null){
                 final long[] line = new long[]{0};
@@ -75,7 +75,7 @@ public final class AntJUnitNodeOpener extends NodeOpener {
                                     for (Tree tree : typeDecls) {
                                         Element element = trees.getElement(trees.getPath(compilationUnitTree, tree));
                                         if (element != null && element.getKind() == ElementKind.CLASS && element.getSimpleName().contentEquals(fo.getName())){
-                                            long pos = trees.getSourcePositions().getStartPosition(compilationUnitTree, tree);
+                                            long pos = trees.getSourcePositions().getStartPosition(tree);
                                             line[0] = compilationUnitTree.getLineMap().getLineNumber(pos);
                                             break;
                                         }
@@ -116,7 +116,7 @@ public final class AntJUnitNodeOpener extends NodeOpener {
                                         for(Element child: methodElements){
                                             String name = node.getTestcase().getName(); // package.name.method.name
                                             if (child.getSimpleName().contentEquals(name.substring(name.lastIndexOf(".") + 1))) {
-                                                long pos = trees.getSourcePositions().getStartPosition(compilationUnitTree, trees.getTree(child));
+                                                long pos = trees.getSourcePositions().getStartPosition(trees.getTree(child));
                                                 line[0] = compilationUnitTree.getLineMap().getLineNumber(pos);
                                                 break;
                                             }

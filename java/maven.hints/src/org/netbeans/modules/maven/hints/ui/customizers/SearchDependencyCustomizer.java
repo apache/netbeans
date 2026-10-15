@@ -65,7 +65,6 @@ public class SearchDependencyCustomizer extends javax.swing.JPanel {
 
         buttonGroup1.add(jrOptionDialog);
         jrOptionDialog.setText(org.openide.util.NbBundle.getMessage(SearchDependencyCustomizer.class, "LBL_Option_Dialog")); // NOI18N
-        jrOptionDialog.setOpaque(false);
         jrOptionDialog.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jrOptionDialogActionPerformed(evt);
@@ -74,7 +73,6 @@ public class SearchDependencyCustomizer extends javax.swing.JPanel {
 
         buttonGroup1.add(jrOptionInplace);
         jrOptionInplace.setText(org.openide.util.NbBundle.getMessage(SearchDependencyCustomizer.class, "LBL_Option_InPlace")); // NOI18N
-        jrOptionInplace.setOpaque(false);
         jrOptionInplace.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jrOptionInplaceActionPerformed(evt);
@@ -88,13 +86,12 @@ public class SearchDependencyCustomizer extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblHeader, javax.swing.GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE)
+                    .addComponent(lblHeader)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(10, 10, 10)
-                        .addComponent(jrOptionInplace, javax.swing.GroupLayout.DEFAULT_SIZE, 422, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jrOptionDialog, javax.swing.GroupLayout.DEFAULT_SIZE, 422, Short.MAX_VALUE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jrOptionInplace, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jrOptionDialog, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -106,7 +103,7 @@ public class SearchDependencyCustomizer extends javax.swing.JPanel {
                 .addComponent(jrOptionDialog)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jrOptionInplace)
-                .addContainerGap(219, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

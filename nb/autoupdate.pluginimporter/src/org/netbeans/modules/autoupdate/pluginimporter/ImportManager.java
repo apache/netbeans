@@ -92,7 +92,7 @@ public class ImportManager extends java.awt.Panel {
 
     private void initialize() {
         toInstall = new ArrayList<UpdateElement> (importer.getPluginsAvailableToInstall ());
-        Collections.sort (toInstall, new Comparator<UpdateElement> () {
+        toInstall.sort (new Comparator<UpdateElement> () {
             @Override
             public int compare (UpdateElement o1, UpdateElement o2) {
                 return o1.getDisplayName ().compareTo (o2.getDisplayName ());
@@ -101,7 +101,7 @@ public class ImportManager extends java.awt.Panel {
         checkedToInstall = new ArrayList<Boolean> (Collections.nCopies (importer.getPluginsAvailableToInstall ().size (), Boolean.TRUE));
 
         toImport = new ArrayList<UpdateElement> (importer.getPluginsToImport ());
-        Collections.sort (toImport, new Comparator<UpdateElement> () {
+        toImport.sort (new Comparator<UpdateElement> () {
             @Override
             public int compare (UpdateElement o1, UpdateElement o2) {
                 return o1.getDisplayName ().compareTo (o2.getDisplayName ());
@@ -237,7 +237,7 @@ public class ImportManager extends java.awt.Panel {
                 }
             }
             if (reallyToImport.size() > 0) {
-                final ProgressHandle handle = ProgressHandleFactory.createHandle(NbBundle.getMessage(ImportManager.class, ("ImportManager.Progress.Name")));
+                final ProgressHandle handle = ProgressHandle.createHandle(NbBundle.getMessage(ImportManager.class, ("ImportManager.Progress.Name")));
                 final JComponent progressComp = ProgressHandleFactory.createProgressComponent(handle);
                 final JLabel detailLabel = new JLabel(NbBundle.getMessage(ImportManager.class, "ImportManager.Progress.Label"));
                 detailLabel.setHorizontalAlignment(SwingConstants.LEFT);

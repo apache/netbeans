@@ -47,7 +47,7 @@ public final class SetupDirNodeFactory implements NodeFactory {
     }
 
     public NodeList createNodes(Project p) {
-        WebProject project = (WebProject) p.getLookup().lookup(WebProject.class);
+        WebProject project = p.getLookup().lookup(WebProject.class);
         assert project != null;
         return new SetupDirNodeList(project);
     }
@@ -61,7 +61,7 @@ public final class SetupDirNodeFactory implements NodeFactory {
         SetupDirNodeList(WebProject proj) {
             project = proj;
             project.getProjectDirectory().addFileChangeListener(this);
-            WebLogicalViewProvider logView = (WebLogicalViewProvider) project.getLookup().lookup(WebLogicalViewProvider.class);
+            WebLogicalViewProvider logView = project.getLookup().lookup(WebLogicalViewProvider.class);
             assert logView != null;
         }
         

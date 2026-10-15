@@ -25,7 +25,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.Collection;
 import java.util.Iterator;
 import javax.swing.AbstractButton;
@@ -73,9 +72,8 @@ public class FontAndColorsPanel extends JPanel implements ActionListener {
         tpCustomizers.getAccessibleContext ().setAccessibleDescription (loc ("AD_Categories"));
         
         loc(lProfile, "CTL_Color_Profile_Name");
-        cbProfile.addItemListener (new ItemListener () {
-            public void itemStateChanged (ItemEvent evt) {
-                if (!listen) return;
+        cbProfile.addItemListener ((ItemEvent evt) -> {
+            if (listen) {
                 setCurrentProfile ((String) cbProfile.getSelectedItem ());
             }
         });
@@ -121,8 +119,7 @@ public class FontAndColorsPanel extends JPanel implements ActionListener {
     private void initComponents() {
 
         lProfile = new javax.swing.JLabel();
-        cbProfile = new javax.swing.JComboBox<String>
-        ();
+        cbProfile = new javax.swing.JComboBox<>();
         tpCustomizers = new javax.swing.JTabbedPane();
         bDuplicate = new javax.swing.JButton();
         bDelete = new javax.swing.JButton();
@@ -133,24 +130,21 @@ public class FontAndColorsPanel extends JPanel implements ActionListener {
         bDuplicate.setText("Duplicate...");
 
         bDelete.setText("Delete");
-        bDelete.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bDeleteActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(lProfile)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbProfile, 0, 195, Short.MAX_VALUE)
+                .addComponent(cbProfile, 0, 239, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bDuplicate)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(bDelete))
+                .addComponent(bDelete)
+                .addContainerGap())
             .addComponent(tpCustomizers, javax.swing.GroupLayout.DEFAULT_SIZE, 502, Short.MAX_VALUE)
         );
 
@@ -159,19 +153,16 @@ public class FontAndColorsPanel extends JPanel implements ActionListener {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lProfile)
                     .addComponent(bDelete)
                     .addComponent(bDuplicate)
                     .addComponent(cbProfile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tpCustomizers, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE))
+                .addComponent(tpCustomizers, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void bDeleteActionPerformed (java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bDeleteActionPerformed
-// TODO add your handling code here:
-    }//GEN-LAST:event_bDeleteActionPerformed
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -271,6 +262,7 @@ public class FontAndColorsPanel extends JPanel implements ActionListener {
         return false;
     }
    
+    @Override
     public void actionPerformed (ActionEvent e) {
         if (!listen) return;
         if (e.getSource () == bDuplicate) {
@@ -278,11 +270,11 @@ public class FontAndColorsPanel extends JPanel implements ActionListener {
                 loc ("CTL_Create_New_Profile_Message"),                // NOI18N
                 loc ("CTL_Create_New_Profile_Title")                   // NOI18N
             );
-            il.setInputText (currentProfile);
+            il.setInputText(currentProfile + "_copy");  // NOI18N
             DialogDisplayer.getDefault ().notify (il);
             if (il.getValue () == NotifyDescriptor.OK_OPTION) {
-                String newScheme = il.getInputText ();                
-                for (int i = 0; i < cbProfile.getItemCount(); i++)                 
+                String newScheme = il.getInputText();
+                for (int i = 0; i < cbProfile.getItemCount(); i++) {
                     if (newScheme.equals (cbProfile.getItemAt(i))) {
                         Message md = new Message (
                             loc ("CTL_Duplicate_Profile_Name"),        // NOI18N
@@ -291,15 +283,14 @@ public class FontAndColorsPanel extends JPanel implements ActionListener {
                         DialogDisplayer.getDefault ().notify (md);
                         return;
                     }
-                setCurrentProfile (newScheme);
+                }     
+                setCurrentProfile(newScheme);
                 listen = false;
-                cbProfile.addItem (il.getInputText ());
-                cbProfile.setSelectedItem (il.getInputText ());
+                cbProfile.addItem(newScheme);
+                cbProfile.setSelectedItem(newScheme);
                 listen = true;
             }
-            return;
-        }
-        if (e.getSource () == bDelete) {
+        } else if (e.getSource () == bDelete) {
             deleteCurrentProfile ();
         }
     }

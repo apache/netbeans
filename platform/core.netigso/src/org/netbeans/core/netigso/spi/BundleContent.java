@@ -24,7 +24,7 @@ import java.io.IOException;
 /** Interface to represent anyone capable of providing real content from
  * a bundle.
  *
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  * @since 1.3
  */
 public interface BundleContent {

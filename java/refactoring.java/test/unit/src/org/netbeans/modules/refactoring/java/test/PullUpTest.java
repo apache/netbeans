@@ -1198,11 +1198,11 @@ public class PullUpTest extends RefactoringTestBase {
 
     public void testPullUpLocalyReferenced() throws Exception {
         writeFilesAndWaitForScan(src,
-                new File("pullup/A.java", "package pullup; public class A extends B { private void foo() { } private method() { foo() } }"),
+                new File("pullup/A.java", "package pullup; public class A extends B { private void foo() { } private void method() { foo() } }"),
                 new File("pullup/B.java", "package pullup; public class B { }"));
         performPullUp(src.getFileObject("pullup/A.java"), 1, Boolean.FALSE);
         verifyContent(src,
-                new File("pullup/A.java", "package pullup; public class A extends B {private method() { foo() } }"),
+                new File("pullup/A.java", "package pullup; public class A extends B {private void method() { foo() } }"),
                 new File("pullup/B.java", "package pullup; public class B { protected void foo() { } }"));
     }
 
@@ -1321,7 +1321,7 @@ public class PullUpTest extends RefactoringTestBase {
                             selectedMembers.add(memberInfo);
                         }
                     }
-                    members = selectedMembers.toArray(new MemberInfo[selectedMembers.size()]);
+                    members = selectedMembers.toArray(new MemberInfo[0]);
                 } else {
                     members = new MemberInfo[1];
                     Tree member = classTree.getMembers().get(position);

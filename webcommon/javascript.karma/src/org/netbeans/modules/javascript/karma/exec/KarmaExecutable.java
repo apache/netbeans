@@ -382,11 +382,6 @@ public class KarmaExecutable {
         }
 
         @Override
-        public void outputLineSelected(OutputEvent ev) {
-            // noop
-        }
-
-        @Override
         public void outputLineAction(OutputEvent ev) {
             RequestProcessor.getDefault().post(new Runnable() {
                 @Override
@@ -394,11 +389,6 @@ public class KarmaExecutable {
                     FileUtils.openFile(new File(file), line);
                 }
             });
-        }
-
-        @Override
-        public void outputLineCleared(OutputEvent ev) {
-            // noop
         }
 
     }

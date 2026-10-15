@@ -208,7 +208,7 @@ public final class LookupMergerSupport {
                     result.addAll(Arrays.asList(r.getRoots()));
                 }
                 
-                return result.toArray(new FileObject[result.size()]);
+                return result.toArray(new FileObject[0]);
             }
 
             public void addChangeListener(ChangeListener l) {

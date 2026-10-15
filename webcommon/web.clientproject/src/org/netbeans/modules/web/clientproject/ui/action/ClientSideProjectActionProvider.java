@@ -120,7 +120,8 @@ public class ClientSideProjectActionProvider implements ActionProvider {
             // debug can be supported only by browser or platform command (but see #addDebugCommands())
             return false;
         }
-        return getCommand(commandId).isActionEnabled(lookup);
+        Command cmd = commands.get(commandId);
+        return cmd != null && cmd.isActionEnabled(lookup);
     }
 
     @Override

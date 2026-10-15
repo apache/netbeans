@@ -21,6 +21,8 @@ package org.netbeans.modules.settings;
 
 import java.beans.*;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,9 +40,9 @@ import org.openide.util.Exceptions;
  */
 final class SaveSupport {
     /** property means setting is changed and should be changed */
-    public final static String PROP_SAVE = "savecookie"; //NOI18N
+    public static final String PROP_SAVE = "savecookie"; //NOI18N
     /** property means setting file content is changed */
-    public final static String PROP_FILE_CHANGED = "fileChanged"; //NOI18N
+    public static final String PROP_FILE_CHANGED = "fileChanged"; //NOI18N
     /** data object name cached in the attribute to prevent instance creation when
      * its node is displayed.
      * @see org.openide.loaders.InstanceDataObject#EA_NAME
@@ -95,7 +97,7 @@ final class SaveSupport {
                     return convertor;
                 }
                 Object attrb = newProviderFO.getAttribute(Env.EA_CONVERTOR);
-                if (attrb == null || !(attrb instanceof Convertor)) {
+                if (!(attrb instanceof Convertor)) {
                     throw new IOException("cannot create convertor: " + attrb + ", provider: " + newProviderFO); //NOI18N
                 } else {
                     convertor = (Convertor) attrb;
@@ -114,7 +116,7 @@ final class SaveSupport {
         FileObject foEntity = Env.findEntityRegistration(fo);
         if (foEntity == null) foEntity = fo;
         Object publicId = foEntity.getAttribute(Env.EA_PUBLICID);
-        if (publicId == null || !(publicId instanceof String)) {
+        if (!(publicId instanceof String)) {
             throw new IOException("missing or invalid attribute: " + //NOI18N
                 Env.EA_PUBLICID + ", provider: " + foEntity); //NOI18N
         }
@@ -164,7 +166,7 @@ final class SaveSupport {
     }
     
     /** Notifies all registered listeners about the event.
-     * @param event The event to be fired
+     * @param name the programmatic name of the property change event to be fired
      * @see #PROP_FILE_CHANGED
      * @see #PROP_SAVE
      */
@@ -230,9 +232,7 @@ final class SaveSupport {
             if (conv == null) return ;
             java.io.ByteArrayOutputStream b = new java.io.ByteArrayOutputStream(1024);
             java.io.Writer w = ContextProvider.createWriterContextProvider(
-                new java.io.OutputStreamWriter(b, "UTF-8"), // NOI18N
-                SaveSupport.this.file
-            );
+                    new OutputStreamWriter(b, StandardCharsets.UTF_8), SaveSupport.this.file);
             isChanged = false;
             try {
                 conv.write(w, inst);

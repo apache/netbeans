@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.libs.git.jgit.commands;
 
 import java.io.File;
@@ -38,63 +37,64 @@ import org.netbeans.libs.git.progress.ProgressMonitor;
  * @author ondra
  */
 public class RemotesTest extends AbstractGitTestCase {
+
     private Repository repository;
     private File workDir;
-    
-    public RemotesTest (String name) throws IOException {
+
+    public RemotesTest(String name) throws IOException {
         super(name);
     }
-    
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         workDir = getWorkingDirectory();
         repository = getRepository(getLocalGitRepository());
     }
-    
-    public void testRemoveRemote () throws Exception {
+
+    public void testRemoveRemote() throws Exception {
         File otherWT = new File(workDir.getParentFile(), "repo2");
         GitClient client = getClient(otherWT);
         client.init(NULL_PROGRESS_MONITOR);
         File f = new File(otherWT, "f");
         write(f, "init");
-        client.add(new File[] { f }, NULL_PROGRESS_MONITOR);
-        client.commit(new File[] { f }, "init commit", null, null, NULL_PROGRESS_MONITOR);
-        
+        client.add(new File[]{f}, NULL_PROGRESS_MONITOR);
+        client.commit(new File[]{f}, "init commit", null, null, NULL_PROGRESS_MONITOR);
+
         RemoteConfig cfg = new RemoteConfig(repository.getConfig(), "origin");
         cfg.addURI(new URIish(otherWT.toURI().toURL().toString()));
         cfg.addFetchRefSpec(new RefSpec("+refs/heads/*:refs/remotes/origin/*"));
         cfg.update(repository.getConfig());
         repository.getConfig().save();
-        
+
         client = getClient(workDir);
         client.fetch("origin", NULL_PROGRESS_MONITOR);
-        client.createBranch("master", "origin/master", NULL_PROGRESS_MONITOR);
-        client.createBranch("nova", "origin/master", NULL_PROGRESS_MONITOR);
-        
+        client.createBranch(getDefaultBranch(), "origin/" + getDefaultBranch(), NULL_PROGRESS_MONITOR);
+        client.createBranch("nova", "origin/" + getDefaultBranch(), NULL_PROGRESS_MONITOR);
+
         StoredConfig config = repository.getConfig();
         assertEquals("+refs/heads/*:refs/remotes/origin/*", config.getString("remote", "origin", "fetch"));
-        assertEquals("origin", config.getString("branch", "master", "remote"));
-        assertEquals("refs/heads/master", config.getString("branch", "master", "merge"));
+        assertEquals("origin", config.getString("branch", getDefaultBranch(), "remote"));
+        assertEquals("refs/heads/" + getDefaultBranch(), config.getString("branch", getDefaultBranch(), "merge"));
         assertEquals("origin", config.getString("branch", "nova", "remote"));
-        assertEquals("refs/heads/master", config.getString("branch", "nova", "merge"));
-        
+        assertEquals("refs/heads/" + getDefaultBranch(), config.getString("branch", "nova", "merge"));
+
         // now try to remove the remote
         client.removeRemote("origin", NULL_PROGRESS_MONITOR);
         config = repository.getConfig();
         config.load();
         // is everything deleted?
         assertEquals(0, config.getSubsections("remote").size());
-        assertNull(config.getString("branch", "master", "remote"));
-        assertNull(config.getString("branch", "master", "merge"));
+        assertNull(config.getString("branch", getDefaultBranch(), "remote"));
+        assertNull(config.getString("branch", getDefaultBranch(), "merge"));
         assertNull(config.getString("branch", "nova", "remote"));
         assertNull(config.getString("branch", "nova", "merge"));
     }
-    
-    public void testAddRemote () throws Exception {
+
+    public void testAddRemote() throws Exception {
         StoredConfig config = repository.getConfig();
         assertEquals(0, config.getSubsections("remote").size());
-        
+
         GitClient client = getClient(workDir);
         GitRemoteConfig remoteConfig = new GitRemoteConfig("origin",
                 Arrays.asList(new File(workDir.getParentFile(), "repo2").toURI().toString()),
@@ -102,7 +102,7 @@ public class RemotesTest extends AbstractGitTestCase {
                 Arrays.asList("+refs/heads/*:refs/remotes/origin/*"),
                 Arrays.asList("refs/remotes/origin/*:+refs/heads/*"));
         client.setRemote(remoteConfig, NULL_PROGRESS_MONITOR);
-        
+
         config.load();
         RemoteConfig cfg = new RemoteConfig(config, "origin");
         assertEquals(Arrays.asList(new URIish(new File(workDir.getParentFile(), "repo2").toURI().toString())), cfg.getURIs());
@@ -110,8 +110,8 @@ public class RemotesTest extends AbstractGitTestCase {
         assertEquals(Arrays.asList(new RefSpec("+refs/heads/*:refs/remotes/origin/*")), cfg.getFetchRefSpecs());
         assertEquals(Arrays.asList(new RefSpec("refs/remotes/origin/*:+refs/heads/*")), cfg.getPushRefSpecs());
     }
-    
-    public void testUpdateRemote () throws Exception {
+
+    public void testUpdateRemote() throws Exception {
         StoredConfig config = repository.getConfig();
         RemoteConfig cfg = new RemoteConfig(config, "origin");
         cfg.addURI(new URIish("blablabla"));
@@ -119,8 +119,8 @@ public class RemotesTest extends AbstractGitTestCase {
         cfg.update(config);
         config.save();
         config.load();
-        assertEquals(1, config.getSubsections("remote").size());        
-        
+        assertEquals(1, config.getSubsections("remote").size());
+
         GitClient client = getClient(workDir);
         GitRemoteConfig remoteConfig = new GitRemoteConfig("origin",
                 Arrays.asList(new File(workDir.getParentFile(), "repo2").toURI().toString()),
@@ -128,7 +128,7 @@ public class RemotesTest extends AbstractGitTestCase {
                 Arrays.asList("+refs/heads/*:refs/remotes/origin/*"),
                 Arrays.asList("refs/remotes/origin/*:+refs/heads/*"));
         client.setRemote(remoteConfig, NULL_PROGRESS_MONITOR);
-        
+
         config.load();
         cfg = new RemoteConfig(config, "origin");
         assertEquals(Arrays.asList(new URIish(new File(workDir.getParentFile(), "repo2").toURI().toString())), cfg.getURIs());
@@ -136,8 +136,8 @@ public class RemotesTest extends AbstractGitTestCase {
         assertEquals(Arrays.asList(new RefSpec("+refs/heads/*:refs/remotes/origin/*")), cfg.getFetchRefSpecs());
         assertEquals(Arrays.asList(new RefSpec("refs/remotes/origin/*:+refs/heads/*")), cfg.getPushRefSpecs());
     }
-    
-    public void testUpdateRemoteRollback () throws Exception {
+
+    public void testUpdateRemoteRollback() throws Exception {
         StoredConfig config = repository.getConfig();
         RemoteConfig cfg = new RemoteConfig(config, "origin");
         cfg.addURI(new URIish("blablabla"));
@@ -145,8 +145,8 @@ public class RemotesTest extends AbstractGitTestCase {
         cfg.update(config);
         config.save();
         config.load();
-        assertEquals(1, config.getSubsections("remote").size());        
-        
+        assertEquals(1, config.getSubsections("remote").size());
+
         GitClient client = getClient(workDir);
         GitRemoteConfig remoteConfig = new GitRemoteConfig("origin",
                 Arrays.asList(new File(workDir.getParentFile(), "repo2").toURI().toString()),
@@ -157,7 +157,7 @@ public class RemotesTest extends AbstractGitTestCase {
         try {
             client.setRemote(remoteConfig, NULL_PROGRESS_MONITOR);
         } catch (GitException ex) {
-            
+
         }
         cfg = new RemoteConfig(config, "origin");
         assertEquals(Arrays.asList(new URIish("blablabla")), cfg.getURIs());

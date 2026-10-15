@@ -17,7 +17,7 @@
  * under the License.
  */
 
-/**
+/*
  * RequestAttributesIn.java
  *
  * Matches the DTD element RequestAttributesIn
@@ -29,23 +29,30 @@
  */
 
 package org.netbeans.modules.web.monitor.data;
-import org.w3c.dom.*;
-import org.netbeans.modules.schema2beans.*;
-import java.beans.*;
-import java.util.*;
+
+import java.beans.PropertyChangeListener;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import org.netbeans.modules.schema2beans.AttrProp;
+import org.netbeans.modules.schema2beans.BaseBean;
+import org.netbeans.modules.schema2beans.BeanComparator;
+import org.netbeans.modules.schema2beans.BeanProp;
+import org.netbeans.modules.schema2beans.Common;
+import org.netbeans.modules.schema2beans.Version;
 
 public class RequestAttributesIn extends BaseBean {
 
-    static Vector comparators = new Vector();
+    static Vector<BeanComparator> comparators = new Vector<>();
 
-    static public final String PARAM = "Param"; // NOI18N
+    public static final String PARAM = "Param"; // NOI18N
 
     public RequestAttributesIn() {
 	this(Common.USE_DEFAULT_VALUES);
     }
 
     public RequestAttributesIn(int options) {
-	super(RequestAttributesIn.comparators, new org.netbeans.modules.schema2beans.Version(1, 0, 6));
+	super(RequestAttributesIn.comparators, new Version(1, 0, 6));
 	// Properties (see root bean comments for the bean graph)
 	this.createProperty("Param", PARAM,  // NOI18N
 			    Common.TYPE_0_N | Common.TYPE_BEAN | Common.TYPE_KEY, 
@@ -123,12 +130,12 @@ public class RequestAttributesIn extends BaseBean {
     }
 
     //
-    static public void addComparator(BeanComparator c) {
+    public static void addComparator(BeanComparator c) {
 	RequestAttributesIn.comparators.add(c);
     }
 
     //
-    static public void removeComparator(BeanComparator c) {
+    public static void removeComparator(BeanComparator c) {
 	RequestAttributesIn.comparators.remove(c);
     }
     //

@@ -29,7 +29,7 @@ import org.openide.filesystems.FileObject;
  * @author Jaroslav Bachorik
  */
 public interface AbstractJavaProfilerSource {
-    final public static AbstractJavaProfilerSource NULL = new AbstractJavaProfilerSource() {
+    public static final AbstractJavaProfilerSource NULL = new AbstractJavaProfilerSource() {
 
         @Override
         public boolean isTest(FileObject fo) {

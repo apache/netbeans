@@ -24,6 +24,7 @@ package org.netbeans.modules.payara.tooling.utils;
  * </ul>
  * @author Tomas Kraus
  */
+@Deprecated
 public final class EnumUtils {
     
     /**

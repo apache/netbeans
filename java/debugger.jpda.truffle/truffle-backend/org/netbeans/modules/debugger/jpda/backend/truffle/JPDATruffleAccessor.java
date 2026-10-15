@@ -26,17 +26,23 @@ import com.oracle.truffle.api.debug.DebugValue;
 import com.oracle.truffle.api.debug.Debugger;
 import com.oracle.truffle.api.debug.DebuggerSession;
 import com.oracle.truffle.api.debug.SuspendedEvent;
-//import com.oracle.truffle.api.vm.PolyglotEngine;
+import com.oracle.truffle.api.nodes.LanguageInfo;
+import com.oracle.truffle.api.source.SourceSection;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.graalvm.polyglot.Engine;
 
 /**
@@ -68,6 +74,13 @@ public class JPDATruffleAccessor extends Object {
     /** A field to test for whether the access loop is sleeping and can be interrupted. */
     static boolean accessLoopSleeping = false;
     private static boolean stepIntoPrepared;
+    /** A cache of thread-local variables which prevents them from GC. */
+    private static final ThreadLocal<Set<Object>> threadVariablesCache = new ThreadLocal<Set<Object>>() {
+        @Override
+        protected Set<Object> initialValue() {
+            return new HashSet<>();
+        }
+    };
 
     /** A step command:
      * 0 no step (continue)
@@ -77,7 +90,10 @@ public class JPDATruffleAccessor extends Object {
      */
     //private static int stepCmd = 0;
 
-    public JPDATruffleAccessor() {}
+    public JPDATruffleAccessor() {
+        // JDI needs to know about String class in this class loader.
+        new String("Initialize String class");
+    }
     
     static Thread startAccessLoop() {
         if (!accessLoopRunning) {
@@ -111,7 +127,7 @@ public class JPDATruffleAccessor extends Object {
         }
     }
     
-    static JPDATruffleDebugManager setUpDebugManagerFor(/*Engine*/Object engineObj, boolean doStepInto) {
+    static JPDATruffleDebugManager setUpDebugManagerFor(/*Engine*/Object engineObj, boolean includeInternal, boolean doStepInto) {
         trace("setUpDebugManagerFor("+engineObj+", "+doStepInto+")");
         Engine engine = (Engine) engineObj;
         Debugger debugger;
@@ -126,22 +142,38 @@ public class JPDATruffleAccessor extends Object {
                 return null;
             }
         }
-        JPDATruffleDebugManager tdm = new JPDATruffleDebugManager(debugger, doStepInto);
+        JPDATruffleDebugManager tdm = new JPDATruffleDebugManager(debugger, includeInternal, doStepInto);
         synchronized (debugManagers) {
             debugManagers.put(debugger, tdm);
         }
         return tdm;
     }
     
+    static void setIncludeInternal(boolean includeInternal) {
+        synchronized (debugManagers) {
+            for (JPDATruffleDebugManager tdm : debugManagers.values()) {
+                DebuggerSession debuggerSession = tdm.getDebuggerSession();
+                if (debuggerSession != null) {
+                    debuggerSession.setSteppingFilter(JPDATruffleDebugManager.createSteppingFilter(includeInternal));
+                }
+            }
+        }
+    }
+
     static int executionHalted(JPDATruffleDebugManager tdm,
                                SourcePosition position,
                                boolean haltedBefore,
                                DebugValue returnValue,
                                FrameInfo frameInfo,
+                               boolean supportsJavaFrames,
                                Breakpoint[] breakpointsHit,
                                Throwable[] breakpointConditionExceptions,
                                int stepCmd) {
         // Called when the execution is halted. Have a breakpoint here.
+        Set<Object> initialVars = threadVariablesCache.get();
+        assert initialVars != null;
+        // Clear again after execution is resumed.
+        threadVariablesCache.remove();
         return stepCmd;
     }
     
@@ -176,11 +208,31 @@ public class JPDATruffleAccessor extends Object {
     }
     
     /**
+     * Tries to suspend immediately at the current location of the current execution thread.
+     * When called from a suspension in a Java code, it reveals the guest code execution.
+     *
+     * @return the halted info, the array corresponds to the arguments of
+     * {@link #executionHalted(JPDATruffleDebugManager, SourcePosition, boolean, DebugValue, FrameInfo, boolean, Breakpoint[], Throwable[], int)},
+     * or <code>null</code>, when the suspend wasn't successful.
+     */
+    static Object[] suspendHere() {
+        synchronized (debugManagers) {
+            for (JPDATruffleDebugManager tdm : debugManagers.values()) {
+                Object[] haltedInfo = tdm.suspendHere();
+                if (haltedInfo != null) {
+                    return haltedInfo;
+                }
+            }
+        }
+        return null;
+    }
+    
+    /**
      * @param frames The array of stack frame infos
      * @return An array of two elements: a String of frame information and
      * an array of code contents.
      */
-    static Object[] getFramesInfo(DebugStackFrame[] frames, boolean includeInternal) {
+    static Object[] getFramesInfo(DebugStackFrame[] frames, boolean includeInternal, boolean supportsJavaFrames) {
         trace("getFramesInfo({0})",includeInternal);
         int n = frames.length;
         StringBuilder frameInfos = new StringBuilder();
@@ -194,13 +246,20 @@ public class JPDATruffleAccessor extends Object {
             if (!includeInternal && isInternal) {
                 continue;
             }
+            boolean isHost = supportsJavaFrames && FrameInfo.isHost(sf);
             String sfName = sf.getName();
             if (sfName == null) {
                 sfName = "";
             }
             frameInfos.append(sfName);
             frameInfos.append('\n');
-            frameInfos.append(DebuggerVisualizer.getSourceLocation(sf.getSourceSection()));
+            frameInfos.append(isHost);
+            frameInfos.append('\n');
+            LanguageInfo sfLang = sf.getLanguage();
+            String sfLangId = (sfLang != null) ? sfLang.getId() + " " + sfLang.getName() : "";
+            frameInfos.append(sfLangId);
+            frameInfos.append('\n');
+            frameInfos.append(DebuggerVisualizer.getSourceLocation(sf, isHost));
             frameInfos.append('\n');
             /*if (fi.getCallNode() == null) {
                 /* frames with null call nodes are filtered out by JPDATruffleDebugManager.FrameInfo
@@ -210,22 +269,22 @@ public class JPDATruffleAccessor extends Object {
                 System.err.println("frameInfos = "+frameInfos);
                 *//*
             }*/
-            SourcePosition position = JPDATruffleDebugManager.getPosition(sf.getSourceSection());
+            SourcePosition position;
+            if (isHost) {
+                StackTraceElement ste = FrameInfo.getHostTraceElement(sf);
+                position = new SourcePosition(ste);
+            } else {
+                position = new SourcePosition(sf.getSourceSection(), sf.getLanguage());
+            }
             frameInfos.append(createPositionIdentificationString(position));
             if (includeInternal) {
                 frameInfos.append('\n');
                 frameInfos.append(isInternal);
             }
             
-            frameInfos.append("\n\n");
+            frameInfos.append("\n\t\n");
             
             codes[j] = position.code;
-            /*
-             TODO Find "this"
-            Frame f = fi.getFrame(FrameInstance.FrameAccess.READ_ONLY, false);
-            if (f instanceof VirtualFrame) {
-                thiss[i] = JSFrameUtil.getThisObj((VirtualFrame) f);
-            }*/
             j++;
         }
         if (j < n) {
@@ -233,7 +292,10 @@ public class JPDATruffleAccessor extends Object {
             thiss = Arrays.copyOf(thiss, j);
         }
         boolean areSkippedInternalFrames = j < n;
-        return new Object[] { frameInfos.toString(), codes, thiss, areSkippedInternalFrames };
+        Object[] info = new Object[] { frameInfos.toString(), codes, thiss, areSkippedInternalFrames };
+        Set<Object> varCache = threadVariablesCache.get();
+        varCache.add(info);
+        return info;
     }
     
     private static String createPositionIdentificationString(SourcePosition position) {
@@ -244,17 +306,23 @@ public class JPDATruffleAccessor extends Object {
         str.append('\n');
         str.append(position.path);
         str.append('\n');
-        str.append(position.uri.toString());
+        str.append(position.hostClassName);
         str.append('\n');
-        str.append(position.line);
+        str.append(position.hostMethodName);
+        str.append('\n');
+        str.append(Objects.toString(position.uri));
+        str.append('\n');
+        str.append(position.mimeType);
+        str.append('\n');
+        str.append(position.sourceSection);
         return str.toString();
     }
-
+/*
     static Object[] getTruffleAST(int depth) {
         TruffleAST ast = TruffleAST.get(depth);
         return new Object[] { ast.getNodes(), ast.getRawArguments(), ast.getRawSlots() };
     }
-
+*/
     // Unwind the current thread to given depth
     static boolean setUnwind(int depth) {
         SuspendedEvent evt = getCurrentSuspendedEvent();
@@ -275,130 +343,64 @@ public class JPDATruffleAccessor extends Object {
     }
     
     // An array of scopes and their variables:
-    // <scope name>, <is functional>, <num args>, <num vars>, [(num args)+(num vars) variables]
-    // Variable: 11 elements: <name>, <type>, <readable>, <writable>, <internal>, <String value>,
-    //                        <var source>, <VS code>, <type source>, <TS code>, <DebugValue>
-    // Parent scopes: <scope name>, <is functional>, <has args>, <has vars>, <DebugScope>
+    // <scope name>, <has receiver>, <num vars (including receiver, if any)>, [receiver + variables]
+    // See addValueElement() for the variable format
     static Object[] getVariables(DebugStackFrame sf) {
         List<Object> elements = new ArrayList<>();
         try {
-            DebugScope scope = sf.getScope();
-            while (scope != null) {
-                Iterable<DebugValue> argsIt = scope.getArguments();
-                Iterator<DebugValue> args;
-                if (argsIt != null) {
-                    args = argsIt.iterator();
-                } else {
-                    args = null;
+            DebugScope receiverScope  = null;
+            for (DebugScope scope = sf.getScope(); scope != null; scope = scope.getParent()) {
+                DebugValue receiver = scope.getReceiver();
+                boolean hasReceiver = receiver != null;
+                List<DebugValue> variables = new ArrayList<>();
+                if (hasReceiver) {
+                    variables.add(receiver);
+                    if (receiverScope == null) {
+                        receiverScope = scope;
+                    }
                 }
                 Iterable<DebugValue> varsIt = scope.getDeclaredValues();
                 Iterator<DebugValue> vars = varsIt.iterator();
-                if ((args == null || !args.hasNext()) && !vars.hasNext()) {
-                    // An empty scope, skip it
-                    scope = scope.getParent();
+                if (!vars.hasNext()) {
                     continue;
                 }
-                elements.add(scope.getName());
-                elements.add(scope.isFunctionScope());
-                List<DebugValue> arguments = null;
-                if (args != null && args.hasNext()) {
-                    arguments = new ArrayList<>();
-                    while (args.hasNext()) {
-                        arguments.add(args.next());
-                    }
-                    elements.add(arguments.size());
-                } else {
-                    elements.add(0);
-                }
-                List<DebugValue> variables = new ArrayList<>();
                 while (vars.hasNext()) {
                     variables.add(vars.next());
                 }
-                elements.add(variables.size());
-                if (arguments != null) {
-                    for (DebugValue v : arguments) {
-                        addValueElement(v, elements);
-                    }
+                if (variables.isEmpty()) {
+                    continue;
                 }
+                elements.add(scope.getName());
+                elements.add(hasReceiver);
+                elements.add(variables.size());
                 for (DebugValue v : variables) {
                     addValueElement(v, elements);
                 }
-                // We've filled the first scope in.
-                break;
             }
-            
-            if (scope != null) {
-                while ((scope = scope.getParent()) != null) {
-                    elements.add(scope.getName());
-                    elements.add(scope.isFunctionScope());
-                    Iterable<DebugValue> args = scope.getArguments();
-                    boolean hasArgs = (args != null && args.iterator().hasNext());
-                    elements.add(hasArgs);
-                    boolean hasVars = scope.getDeclaredValues().iterator().hasNext();
-                    elements.add(hasVars);
-                    elements.add(scope);
-                }
+            if (elements.isEmpty() && receiverScope != null) {
+                // No variables, provide the receiver, at least:
+                elements.add(receiverScope.getName());
+                elements.add(true);
+                elements.add(1);
+                addValueElement(receiverScope.getReceiver(), elements);
             }
         } catch (ThreadDeath td) {
             throw td;
         } catch (Throwable t) {
             LangErrors.exception("An error when accessing scopes", t);
         }
-        return elements.toArray();
+        Object[] variables = elements.toArray();
+        Set<Object> varCache = threadVariablesCache.get();
+        varCache.add(variables);
+        return variables;
     }
 
-    // An array of scope's arguments and variables:
-    // <num args>, <num vars>, [(num args)+(num vars) variables]
-    // Variable: 11 elements: <name>, <type>, <readable>, <writable>, <internal>, <String value>,
-    //                        <var source>, <VS code>, <type source>, <TS code>, <DebugValue>
-    static Object[] getScopeVariables(DebugScope scope) {
-        List<Object> elements = new ArrayList<>();
-        try {
-            Iterable<DebugValue> argsIt = scope.getArguments();
-            Iterator<DebugValue> args;
-            if (argsIt != null) {
-                args = argsIt.iterator();
-            } else {
-                args = null;
-            }
-            Iterable<DebugValue> varsIt = scope.getDeclaredValues();
-            Iterator<DebugValue> vars = varsIt.iterator();
-            List<DebugValue> arguments = null;
-            if (args != null && args.hasNext()) {
-                arguments = new ArrayList<>();
-                while (args.hasNext()) {
-                    arguments.add(args.next());
-                }
-                elements.add(arguments.size());
-            } else {
-                elements.add(0);
-            }
-            List<DebugValue> variables = new ArrayList<>();
-            while (vars.hasNext()) {
-                variables.add(vars.next());
-            }
-            elements.add(variables.size());
-            if (arguments != null) {
-                for (DebugValue v : arguments) {
-                    addValueElement(v, elements);
-                }
-            }
-            for (DebugValue v : variables) {
-                addValueElement(v, elements);
-            }
-        } catch (ThreadDeath td) {
-            throw td;
-        } catch (Throwable t) {
-            LangErrors.exception("An error when accessing scope "+scope, t);
-        }
-        return elements.toArray();
-    }
-
-    // Store 11 elements: <name>, <type>, <readable>, <writable>, <internal>, <String value>,
+    // Store 12 elements: <name>, <language>, <type>, <readable>, <writable>, <internal>, <String value>,
     //                    <var source>, <VS code>, <type source>, <TS code>, <DebugValue>
     static void addValueElement(DebugValue value, List<Object> elements) {
         GuestObject tobj = new GuestObject(value);
         elements.add(tobj.name);
+        elements.add(tobj.language);
         elements.add(tobj.type);
         elements.add(tobj.readable);
         elements.add(tobj.writable);
@@ -425,6 +427,11 @@ public class JPDATruffleAccessor extends Object {
         // A breakpoint is submitted on this method.
         // When accessLoopThread is interrupted, this breakpoint is hit
         // and methods can be executed via JPDA debugger.
+    }
+    
+    static void breakpointResolvedAccess(Breakpoint breakpoint, int startLine, int startColumn) {
+        // A Java breakpoint is submitted on this method.
+        // When a Truffle breakpoint gets resolved, this method is called.
     }
     
     static Breakpoint[] setLineBreakpoint(String uriStr, int line,
@@ -487,15 +494,32 @@ public class JPDATruffleAccessor extends Object {
         if (ignoreCount != 0) {
             bb.ignoreCount(ignoreCount);
         }
+        AtomicBoolean canNotifyResolved = new AtomicBoolean(false);
         if (oneShot) {
             bb.oneShot();
+        } else {
+            bb.resolveListener(new Breakpoint.ResolveListener() {
+                @Override
+                public void breakpointResolved(Breakpoint breakpoint, SourceSection section) {
+                    trace("JPDATruffleAccessor breakpointResolved({0}, {1})", breakpoint, section);
+                    // Notify breakpoint resolution after we actually install it.
+                    // Resolution that is performed synchronously with the breakpoint installation
+                    // would block doSetLineBreakpoint() method invocation on breakpointResolvedAccess breakpoint
+                    if (canNotifyResolved.get()) {
+                        breakpointResolvedAccess(breakpoint, section.getStartLine(), section.getStartColumn());
+                    }
+                }
+            });
         }
         Breakpoint lb = bb.build();
         if (condition != null) {
             lb.setCondition(condition);
         }
         trace("JPDATruffleAccessor.setLineBreakpoint({0}, {1}, {2}): lb = {3}", debuggerSession, uri, line, lb);
-        return debuggerSession.install(lb);
+        Breakpoint breakpoint =  debuggerSession.install(lb);
+        // We might return a resolved breakpoint already, or notify breakpointResolvedAccess later on
+        canNotifyResolved.set(true);
+        return breakpoint;
     }
     
     static void removeBreakpoint(Object br) {
@@ -504,7 +528,9 @@ public class JPDATruffleAccessor extends Object {
     
     static Object evaluate(DebugStackFrame sf, String expression) {
         DebugValue value = sf.eval(expression);
-        return new GuestObject(value);
+        Object result = new GuestObject(value);
+        threadVariablesCache.get().add(result);
+        return result;
     }
     
     /** Get the suspended event on current thread, if any. */

@@ -311,7 +311,7 @@ public class CommitPanel extends javax.swing.JPanel {
         }
         authors.remove(user);
         authors.add(0, user);
-        model = new DefaultComboBoxModel(authors.toArray(new String[authors.size()]));
+        model = new DefaultComboBoxModel(authors.toArray(new String[0]));
         return model;
     }
 

@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.prefs.Preferences;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
@@ -36,6 +37,7 @@ import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
+import org.openide.util.NbPreferences;
 
 /**
  * This file is originally from Retouche, the Java Support 
@@ -118,7 +120,7 @@ public final class FiltersManager {
         private FilterChangeListener clientL;
 
         /** lock for map of filter states */
-        private Object STATES_LOCK = new Object();
+        private final Object STATES_LOCK = new Object();
         /** copy of filter states for accessing outside AWT */
         private Map<String,Boolean> filterStates;
 
@@ -228,19 +230,23 @@ public final class FiltersManager {
                 filterStates = fStates;
             }
         }
-        
-        private JToggleButton createToggle (Map<String,Boolean> fStates, int index) {
-            boolean isSelected = filtersDesc.isSelected(index);
+
+        private Preferences getPreferences() {
+            return NbPreferences.forModule(FiltersManager.class);
+        }
+
+        private JToggleButton createToggle(Map<String, Boolean> fStates, int index) {
+            boolean isSelected = getPreferences().getBoolean(filtersDesc.getName(index), filtersDesc.isSelected(index));
             Icon icon = filtersDesc.getSelectedIcon(index);
             // ensure small size, just for the icon
             JToggleButton result = new JToggleButton(icon, isSelected);
             Dimension size = new Dimension(icon.getIconWidth() + 6, icon.getIconHeight() + 4);
             result.setPreferredSize(size);
-            result.setMargin(new Insets(2,3,2,3));
+            result.setMargin(new Insets(2, 3, 2, 3));
             result.setToolTipText(filtersDesc.getTooltip(index));
-            
+
             fStates.put(filtersDesc.getName(index), Boolean.valueOf(isSelected));
-            
+
             return result;
         }
 
@@ -260,18 +266,20 @@ public final class FiltersManager {
         }
 
         /** Reactions to toggle button click,  */
+        @Override
         public void actionPerformed(ActionEvent e) {
             // copy changed state first
             JToggleButton toggle = (JToggleButton)e.getSource();
             int index = toggles.indexOf(e.getSource());
             synchronized (STATES_LOCK) {
-                filterStates.put(filtersDesc.getName(index),
-                                Boolean.valueOf(toggle.isSelected()));
+                filterStates.put(filtersDesc.getName(index), toggle.isSelected());
+                // remember filter settings
+                getPreferences().putBoolean(filtersDesc.getName(index), toggle.isSelected());
             }
             // notify
             fireChange();
         }
-        
+
         private void fireChange () {
             FilterChangeListener lCopy;
             synchronized (L_LOCK) {
@@ -285,7 +293,5 @@ public final class FiltersManager {
             // notify listener
             lCopy.filterStateChanged(new ChangeEvent(FiltersManager.this));
         }
-    
     } // end of FiltersComponent
-    
 }

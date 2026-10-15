@@ -257,12 +257,16 @@ class LogFormatter extends XMLFormatter{
         sb.append("<record>\n");// NOI18N
         
         sb.append("  <date>");// NOI18N
-        appendISO8601(sb, record.getMillis());
+        sb.append(record.getInstant().toString());
         sb.append("</date>\n");// NOI18N
         
         sb.append("  <millis>");// NOI18N
         sb.append(record.getMillis());
         sb.append("</millis>\n");// NOI18N
+
+        sb.append("  <nanos>");// NOI18N
+        sb.append(record.getInstant().getNano() % 1_000_000);
+        sb.append("</nanos>\n");// NOI18N
         
         sb.append("  <sequence>");// NOI18N
         sb.append(record.getSequenceNumber());

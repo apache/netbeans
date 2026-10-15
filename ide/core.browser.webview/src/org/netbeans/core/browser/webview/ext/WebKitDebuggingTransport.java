@@ -19,11 +19,14 @@
 package org.netbeans.core.browser.webview.ext;
 
 import com.sun.javafx.scene.web.Debugger;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.scene.web.WebEngine;
 import javafx.util.Callback;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -36,6 +39,8 @@ import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
 
 public class WebKitDebuggingTransport implements TransportImplementationWithURLToLoad {
+    private static final Logger LOGGER = Logger.getLogger(WebKitDebuggingTransport.class.getName());
+    private static final RequestProcessor RP = new RequestProcessor("JavaFX debugging callback");
 
     private WebBrowserImpl browserImpl;
     private Debugger debugger;
@@ -43,10 +48,6 @@ public class WebKitDebuggingTransport implements TransportImplementationWithURLT
     private ResponseCallback callback;
     private volatile String urlToLoad; // The url to be loaded to the browser
     
-    private static RequestProcessor RP = new RequestProcessor("JavaFX debugging callback");
-    
-    private static final Logger LOGGER = Logger.getLogger(WebKitDebuggingTransport.class.getName());
-
     public WebKitDebuggingTransport(WebBrowserImpl browserImpl) {
         this.browserImpl = browserImpl;
     }
@@ -54,7 +55,7 @@ public class WebKitDebuggingTransport implements TransportImplementationWithURLT
     @Override
     @SuppressWarnings("deprecation")
     public boolean attach() {
-        this.debugger = browserImpl.getEngine().impl_getDebugger();
+        this.debugger = getDebugger();
         this.fxCallback = new FXCallback(callback);
         Platform.runLater(new Runnable() {
             @Override
@@ -64,6 +65,31 @@ public class WebKitDebuggingTransport implements TransportImplementationWithURLT
             }
         });
         return true;
+    }
+
+    private Debugger getDebugger() {
+        Method getDebuggerImpl = null;
+        try {
+            getDebuggerImpl = WebEngine.class.getDeclaredMethod("impl_getDebugger");
+        } catch (NoSuchMethodException | SecurityException ex) {
+            LOGGER.log(Level.FINE, "Method impl_getDebugger not found on javafx.scene.web.WebEngine", ex);
+        }
+        try {
+            getDebuggerImpl = WebEngine.class.getDeclaredMethod("getDebugger");
+            getDebuggerImpl.setAccessible(true);
+        } catch (NoSuchMethodException | SecurityException ex) {
+            LOGGER.log(Level.FINE, "Method getDebugger not found on javafx.scene.web.WebEngine", ex);
+        }
+
+        if (getDebuggerImpl == null) {
+            throw new UnsupportedOperationException("Failed to fetch debugger from WebEngine (unsupported JavaFX version?)");
+        }
+
+        try {
+            return Debugger.class.cast(getDebuggerImpl.invoke(browserImpl.getEngine()));
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw new UnsupportedOperationException("Failed to invoke " + getDebuggerImpl.getName(), ex);
+        }
     }
 
     @Override

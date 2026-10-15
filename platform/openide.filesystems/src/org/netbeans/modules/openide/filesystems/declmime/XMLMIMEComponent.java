@@ -207,8 +207,9 @@ final class XMLMIMEComponent extends DefaultParser {
         LocalSniffingParser() {}
         
         private WeakReference<SniffingParser> wref = null;
-        
-        protected WeakReference<SniffingParser> initialValue() {            
+
+        @Override
+        protected WeakReference<SniffingParser> initialValue() {
             SniffingParser parser = new SniffingParser();
             wref = new WeakReference<SniffingParser>(parser);
             return wref;
@@ -224,7 +225,8 @@ final class XMLMIMEComponent extends DefaultParser {
             }
             return cached;            
         }
-        
+
+        @Override
         public void set(WeakReference<SniffingParser> data) {
             // we are read only!
         }

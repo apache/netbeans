@@ -133,7 +133,7 @@ public class PropertySheetTest extends NbTestCase {
             // Wait for the reinitialization
             for (int i = 0; i < 100; i++) {
                 if (te.getAsText().equals(initEditorValue)) {
-                    //LOG.info(i + " value not updated ");;
+                    //LOG.info(i + " value not updated ");
                     Thread.sleep(50);
                 } else {
                     LOG.info("value was updated");
@@ -257,15 +257,18 @@ public class PropertySheetTest extends NbTestCase {
         }
         
         // Set that this Editor doesn't support custom Editor
+        @Override
         public boolean supportsCustomEditor() {
             return false;
         }
-        
+
+        @Override
         public void addPropertyChangeListener(PropertyChangeListener l) {
             LOG.info("Property change listener added to property editor " + System.identityHashCode(this) + " - " + l);
             super.addPropertyChangeListener(l);
         }
-        
+
+        @Override
         public void removePropertyChangeListener(PropertyChangeListener l) {
             LOG.info("Property change listener removed from property editor " + System.identityHashCode(this) + " - " + l);
             super.removePropertyChangeListener(l);
@@ -274,11 +277,13 @@ public class PropertySheetTest extends NbTestCase {
         
         
         // Set the Property value threw the Editor
+        @Override
         public void setValue(Object newValue) {
             LOG.info("TEditor.setValue: " + newValue);
             super.setValue(newValue);
         }
-        
+
+        @Override
         public void firePropertyChange() {
             LOG.info("TEditor.firePropertyChange");
             super.firePropertyChange();

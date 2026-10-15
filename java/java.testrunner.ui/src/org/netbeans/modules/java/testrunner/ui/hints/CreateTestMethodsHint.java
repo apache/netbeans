@@ -64,7 +64,7 @@ public class CreateTestMethodsHint {
 
         CompilationInfo info = context.getInfo();
         SourcePositions sourcePositions = info.getTrees().getSourcePositions();
-        int startPos = (int) sourcePositions.getStartPosition(tp.getCompilationUnit(), method);
+        int startPos = (int) sourcePositions.getStartPosition(method);
         int caret = context.getCaretLocation();
         String code = context.getInfo().getText();
 	if (startPos < 0 || caret < 0 || caret < startPos || caret >= code.length()) {
@@ -104,7 +104,7 @@ public class CreateTestMethodsHint {
                     }
                 }
                 validCombinations.clear();
-                return ErrorDescriptionFactory.forTree(context, context.getPath(), Bundle.ERR_CreateTestMethodsHint(), fixes.toArray(new Fix[fixes.size()]));
+                return ErrorDescriptionFactory.forTree(context, context.getPath(), Bundle.ERR_CreateTestMethodsHint(), fixes.toArray(new Fix[0]));
             }
         }
         validCombinations.clear();

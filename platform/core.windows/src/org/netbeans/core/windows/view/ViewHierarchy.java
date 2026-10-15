@@ -145,14 +145,6 @@ final class ViewHierarchy {
         updateAccessors(modeStructureAccessor);
         //(re)create gridsplit model
         currentSplitRoot = updateViewForAccessor(modeStructureAccessor.getSplitRootAccessor());
-//        System.out.println("updateViewHierarchy... elem=" + elem);
-//        if (maximizedModeView == null) {
-////            System.out.println("updateViewHierarchy...splitoroot=" + elem);
-//            setSplitRootIntoDesktop(elem);
-//        } else {
-////            System.out.println("updateViewHierarchy...mazimized=" + maximizedModeView);
-//            setMaximizedViewIntoDesktop(maximizedModeView);
-//        }
         if( null == currentSplitRoot && shouldUseFakeSplitRoot() ) {
             currentSplitRoot = getFakeSplitRoot();
         }
@@ -461,8 +453,9 @@ final class ViewHierarchy {
         Object accessor = view2accessor.remove(modeView);
         accessor2view.remove(accessor);
 
-        if(separateModeViews.keySet().contains(modeView)) {
-            separateModeViews.keySet().remove(modeView);
+        Set<ModeView> modeViews = separateModeViews.keySet();
+        if(modeViews.contains(modeView)) {
+            modeViews.remove(modeView);
             modeView.getComponent().setVisible(false);
             return;
         }
@@ -998,8 +991,8 @@ final class ViewHierarchy {
 
     private String dumpAccessors() {
         StringBuffer sb = new StringBuffer();
-        for(ElementAccessor accessor: accessor2view.keySet()) {
-            sb.append("accessor="+accessor + "\tview="+accessor2view.get(accessor) + "\n"); // NOI18N
+        for (Map.Entry<ElementAccessor, ViewElement> entry : accessor2view.entrySet()) {
+            sb.append("accessor="+entry.getKey() + "\tview="+entry.getValue() + "\n"); // NOI18N
         }
         
         return sb.toString();

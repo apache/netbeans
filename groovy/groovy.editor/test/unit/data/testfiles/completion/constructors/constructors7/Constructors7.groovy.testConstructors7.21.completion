@@ -1,0 +1,33 @@
+Code completion result for source line:
+String s = new String|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTRUCTO String()                                   null
+CONSTRUCTO String(AbstractStringBuilder,              null
+CONSTRUCTO String(Charset, byte[], int, i             null
+CONSTRUCTO String(String)                             null
+CONSTRUCTO String(StringBuffer)                       null
+CONSTRUCTO String(StringBuilder)                      null
+CONSTRUCTO String(byte[])                             null
+CONSTRUCTO String(byte[], Charset)                    null
+CONSTRUCTO String(byte[], String)                     null
+CONSTRUCTO String(byte[], byte)                       null
+CONSTRUCTO String(byte[], int)                        null
+CONSTRUCTO String(byte[], int, int)                   null
+CONSTRUCTO String(byte[], int, int, Chars             null
+CONSTRUCTO String(byte[], int, int, Strin             null
+CONSTRUCTO String(byte[], int, int, int)              null
+CONSTRUCTO String(char[])                             null
+CONSTRUCTO String(char[], int, int)                   null
+CONSTRUCTO String(char[], int, int, Void)             null
+CONSTRUCTO String(int[], int, int)                    null
+------------------------------------
+CLASS      StringBuffer                               null
+CLASS      StringBufferInputStream                    null
+CLASS      StringBuilder                              null
+CLASS      StringIndexOutOfBoundsExceptio             null
+CLASS      StringJoiner                               null
+CLASS      StringReader                               null
+CLASS      StringTemplate                             null
+CLASS      StringTokenizer                            null
+CLASS      StringWriter                               null
+CLASS      StringWriterIOException                    null

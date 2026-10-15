@@ -21,10 +21,8 @@ package org.netbeans.lib.profiler.heap;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.MappedByteBuffer;
+import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,7 +46,7 @@ class NumberList {
     private final Map/*offset,block*/ blockCache;
     private final Set dirtyBlocks;
     private long blocks;
-    private MappedByteBuffer buf;
+    private ByteBuffer buf;
     private long mappedSize;
     private CacheDirectory cacheDirectory;
     
@@ -58,7 +56,7 @@ class NumberList {
     
     NumberList(int elSize, CacheDirectory cacheDir) throws IOException {
         dataFile = cacheDir.createTempFile("NBProfiler", ".ref"); // NOI18N
-        data = new RandomAccessFile(dataFile, "rw"); // NOI18N
+        data = dataFile.newRandomAccessFile("rw"); // NOI18N
         numberSize = elSize;
         blockCache = new BlockLRUCache();
         dirtyBlocks = new HashSet(100000);
@@ -150,7 +148,7 @@ class NumberList {
             }
             offset = getOffsetToNextBlock(block);
             if (offset == 0L) {
-                System.out.println("Error - number not found at end");
+                Systems.debug("Error - number not found at end");
                 return;
             }
         }
@@ -176,7 +174,7 @@ class NumberList {
                 if (el == 0L) {     // end of the block, move to next one
                     break;
                 }
-                numbers.add(new Long(el));
+                numbers.add(el);
             }
             long nextBlock = getOffsetToNextBlock(block);
             if (nextBlock == 0L) {
@@ -190,9 +188,9 @@ class NumberList {
         if (buf == null) {
             try {
                 mappedSize = Math.min(blockSize*blocks, Integer.MAX_VALUE-blockSize+1);
-                buf = data.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, mappedSize);
+                buf = data.mmap(FileChannel.MapMode.READ_WRITE, mappedSize, false);
             } catch (IOException ex) {
-                ex.printStackTrace();
+                Systems.printStackTrace(ex);
             }
         }
     }
@@ -203,7 +201,7 @@ class NumberList {
             blockCache.clear();
             mmapData();
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Systems.printStackTrace(ex);
         }
     }
     
@@ -256,7 +254,7 @@ class NumberList {
                 buf.put(el);
             }            
         } else {
-            Long offsetObj = new Long(blockOffset);
+            Long offsetObj = blockOffset;
             int offset = slot*numberSize;
             for (int i=numberSize-1;i>=0;i--) {
                 byte el = (byte)(element >> (i*8));
@@ -277,7 +275,7 @@ class NumberList {
             buf.get(block);
             return block;
         } else {
-            Long offsetObj = new Long(offset);
+            Long offsetObj = offset;
 
             block = (byte[]) blockCache.get(offsetObj);
             if (block == null) {
@@ -292,7 +290,7 @@ class NumberList {
 
     private long addBlock() throws IOException {
         long offset=blocks*blockSize;
-        blockCache.put(new Long(offset),new byte[blockSize]);
+        blockCache.put(offset, new byte[blockSize]);
         blocks++;
         return offset;
     }
@@ -340,7 +338,7 @@ class NumberList {
         
         cacheDirectory = cacheDir;
         dataFile = cacheDirectory.getCacheFile(dis.readUTF());
-        data = new RandomAccessFile(dataFile, "rw"); // NOI18N
+        data = dataFile.newRandomAccessFile("rw"); // NOI18N
         numberSize = dis.readInt();
         blocks = dis.readLong();
         mmaped = dis.readBoolean();
@@ -375,7 +373,7 @@ class NumberList {
                 try {
                     nextNumber();
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    Systems.printStackTrace(ex);
                     nextNumber = 0;
                 }
                 return num;

@@ -1,0 +1,16 @@
+    final function finalImplicitPublicMethodError(): void;
+                   ------------------------------
+HINT:Interface method "finalImplicitPublicMethodError" can not be declared final
+FIX:Remove modifier: final
+    final static function finalImplicitPublicStaticMethodError(): void;
+                          ------------------------------------
+HINT:Interface method "finalImplicitPublicStaticMethodError" can not be declared final
+FIX:Remove modifier: final
+    final public function finalPublicMethodError(): void;
+                          ----------------------
+HINT:Interface method "finalPublicMethodError" can not be declared final
+FIX:Remove modifier: final
+    final public static function finalPublicStaticMethodError(): void;
+                                 ----------------------------
+HINT:Interface method "finalPublicStaticMethodError" can not be declared final
+FIX:Remove modifier: final

@@ -38,12 +38,11 @@ public class VariablesModel implements TreeModel, NodeModel, TableModel {
         "org/netbeans/modules/debugger/resources/localsView/LocalVariable";
     
     private AntDebugger             debugger;
-    private Vector                  listeners = new Vector ();
+    private Vector<ModelListener>   listeners = new Vector<>();
     
     
     public VariablesModel (ContextProvider contextProvider) {
-        debugger = (AntDebugger) contextProvider.lookupFirst 
-            (null, AntDebugger.class);
+        debugger = contextProvider.lookupFirst(null, AntDebugger.class);
         debugger.setVariablesModel(this);
     }
     
@@ -265,11 +264,9 @@ public class VariablesModel implements TreeModel, NodeModel, TableModel {
     // other mothods ...........................................................
 
     void fireChanges () {
-        Vector v = (Vector) listeners.clone ();
+        Vector<ModelListener> v = new Vector<>(listeners);
         int i, k = v.size ();
         for (i = 0; i < k; i++)
-            ((ModelListener) v.get (i)).modelChanged (
-                new ModelEvent.TreeChanged (this)
-            );
+            v.get(i).modelChanged(new ModelEvent.TreeChanged(this));
     }
 }

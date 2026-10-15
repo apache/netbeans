@@ -21,19 +21,24 @@ package org.netbeans.modules.ide.ergonomics.ant;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Spliterator;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.function.Consumer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -166,8 +171,8 @@ implements FileNameMapper, URIResolver, EntityResolver {
         String sep = "\n    ";
         ByteArrayOutputStream uberLayer = new ByteArrayOutputStream();
         try {
-            uberLayer.write("<?xml version='1.0' encoding='UTF-8'?>\n".getBytes("UTF-8"));
-            uberLayer.write("<filesystem>\n".getBytes("UTF-8"));
+            uberLayer.write("<?xml version='1.0' encoding='UTF-8'?>\n".getBytes(StandardCharsets.UTF_8));
+            uberLayer.write("<filesystem>\n".getBytes(StandardCharsets.UTF_8));
         } catch (IOException iOException) {
             throw new BuildException(iOException);
         }
@@ -233,7 +238,7 @@ implements FileNameMapper, URIResolver, EntityResolver {
         byte[] uberArr = null;
         DuplKeys duplKeys = null;
         try {
-            uberLayer.write("</filesystem>\n".getBytes("UTF-8"));
+            uberLayer.write("</filesystem>\n".getBytes(StandardCharsets.UTF_8));
             uberText = uberLayer.toString("UTF-8");
             uberArr = uberLayer.toByteArray();
             log("uberLayer for " + clusterName + "\n" + uberText, Project.MSG_VERBOSE);
@@ -333,12 +338,8 @@ implements FileNameMapper, URIResolver, EntityResolver {
             te.setProject(getProject());
             te.addText("\n\n\ncnbs=\\" + modules + "\n\n");
             te.setFiltering(false);
-            try {
-                final String antProjects = new String(bundleHeader.toByteArray(), "UTF-8");
-                te.addText(antProjects + "\n\n");
-            } catch (UnsupportedEncodingException ex) {
-                throw new BuildException(ex);
-            }
+            String antProjects = new String(bundleHeader.toByteArray(), StandardCharsets.UTF_8);
+            te.addText(antProjects + "\n\n");
             concat.addFooter(te);
             concat.execute();
         }
@@ -527,10 +528,43 @@ implements FileNameMapper, URIResolver, EntityResolver {
         }
     }
 
-    private static final class ResArray extends ArrayList<Resource>
-    implements ResourceCollection {
+    private static final class ResArray implements ResourceCollection {
+        private final List<Resource> delegate = new ArrayList<>();
+
         public boolean isFilesystemOnly() {
             return false;
+        }
+
+        @Override
+        public int size() {
+            return delegate.size();
+        }
+
+        public Stream<? extends Resource> stream() {
+            return delegate.stream();
+        }
+
+        public boolean isEmpty() {
+            return delegate.isEmpty();
+        }
+
+        @Override
+        public Iterator<Resource> iterator() {
+            return delegate.iterator();
+        }
+
+        @Override
+        public void forEach(Consumer<? super Resource> action) {
+            delegate.forEach(action);
+        }
+
+        @Override
+        public Spliterator<Resource> spliterator() {
+            return delegate.spliterator();
+        }
+
+        public boolean add(Resource r) {
+            return delegate.add(r);
         }
     }
 

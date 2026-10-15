@@ -115,7 +115,7 @@ public class CodeTemplateSettingsImplTest extends NbTestCase {
         
         assertNotNull("Can't load the map", loadedMap);
         assertEquals("Wrong number of code templates", 1, loadedMap.size());
-        checkCodeTemplate(loadedMap, abbrev, desc, text, uuid, contexts.toArray(new String [contexts.size()]));
+        checkCodeTemplate(loadedMap, abbrev, desc, text, uuid, contexts.toArray(new String [0]));
     }
 
     public void testEndOfLines() throws IOException {
@@ -143,7 +143,7 @@ public class CodeTemplateSettingsImplTest extends NbTestCase {
         
         assertNotNull("Can't load the map", loadedMap);
         assertEquals("Wrong number of code templates", 1, loadedMap.size());
-        checkCodeTemplate(loadedMap, abbrev, desc, text, uuid, contexts.toArray(new String [contexts.size()]));
+        checkCodeTemplate(loadedMap, abbrev, desc, text, uuid, contexts.toArray(new String [0]));
     }
 
     public void testRemoveAll() throws IOException {

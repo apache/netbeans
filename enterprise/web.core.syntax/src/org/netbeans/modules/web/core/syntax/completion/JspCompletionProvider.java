@@ -137,7 +137,7 @@ public class JspCompletionProvider implements CompletionProvider {
         }
     }
 
-    public static abstract class AbstractQuery extends AsyncCompletionQuery {
+    public abstract static class AbstractQuery extends AsyncCompletionQuery {
 
         @Override
         protected void preQueryUpdate(JTextComponent component) {

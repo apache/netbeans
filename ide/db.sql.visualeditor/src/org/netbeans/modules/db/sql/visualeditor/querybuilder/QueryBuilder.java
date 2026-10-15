@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.util.logging.Level;
+import java.awt.Image;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.modules.db.sql.visualeditor.QueryEditorUILogger;
 
@@ -77,6 +78,7 @@ import org.netbeans.modules.db.sql.visualeditor.Log;
 
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.api.db.sql.support.SQLIdentifiers;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Exceptions;
 
 /**
@@ -201,10 +203,9 @@ public class QueryBuilder extends TopComponent
 
         setLayout(new java.awt.BorderLayout());
 
-        ImageIcon imgIcon =
-                new ImageIcon(getClass().getResource("/org/netbeans/modules/db/sql/visualeditor/resources/query-editor-tab.png")); // NOI18N
-        if (imgIcon != null)
-            setIcon(imgIcon.getImage());
+        Image icon = ImageUtilities.loadImage("org/netbeans/modules/db/sql/visualeditor/resources/query-editor-tab.png"); // NOI18N
+        if (icon != null)
+            setIcon(icon);
 
         _queryBuilderPane = new QueryBuilderPane(this);
 
@@ -229,10 +230,7 @@ public class QueryBuilder extends TopComponent
     }
 
 
-    /////////////////////////////////////////////////////////////////////////
     // Delete support
-    /////////////////////////////////////////////////////////////////////////
-
     /** delete action performer */
     private final transient DeleteActionPerformer deleteActionPerformer = new DeleteActionPerformer();
 
@@ -510,25 +508,6 @@ public class QueryBuilder extends TopComponent
     boolean checkTableColumnName( Column col ) throws SQLException {
 	return qbMetaData.checkTableColumnName( col );
     }
-	
-
-    /****
-     * Check the database connection.
-     * If no connection, ask to retry.
-     * if user doesn't want to retry,
-     * then disable the query editor
-     */
-//     public boolean checkDatabaseAndDisable(String query) {
-//         if ( query == null )
-// 	    query = _queryBuilderPane.getQueryBuilderSqlTextArea().getText() ;
-//         if ( checkDatabaseConnection() == false ) {
-// 	    Log.getLogger().finest("checkDatabaseConnection returns false ... \n " ); // NOI18N
-//             // If we don't have a valid connection, disable all visual editing.
-//             disableVisualEditing(query);
-//             return false;
-//         }
-//         return true ;
-//     }
 
     /**
      * Parse the query and regenerate all the panes
@@ -682,9 +661,7 @@ public class QueryBuilder extends TopComponent
     
     
 
-    /***************************************************************************
-     * Code for checking validity of queries
-     **************************************************************************/
+    /*  Code for checking validity of queries */
 
     /**
      * Check the various parts of the query for valid table/column names
@@ -758,15 +735,15 @@ public class QueryBuilder extends TopComponent
         
         // we could reuse this to find the tablename if the user
         // only specifies "select 'column_name' from 'table_name'"
-        List fromTables;
+        List<JoinTable> fromTables;
         // from
         if ( _queryModel.getFrom() != null ) {
 
             fromTables = _queryModel.getFrom().getTableList();
             for ( int i = 0; i < fromTables.size(); i++ ) {
 
-                String fromTableName = ( (JoinTable) fromTables.get(i) ).getFullTableName();
-                String fromTableSpec = ( (JoinTable) fromTables.get(i) ).getTableSpec();
+                String fromTableName = fromTables.get(i).getFullTableName();
+                String fromTableSpec = fromTables.get(i).getTableSpec();
                 String checkedFullTableName = checkFullTableName( fromTableName ) ;
 
                 if (DEBUG)
@@ -789,10 +766,10 @@ public class QueryBuilder extends TopComponent
                 }
 
                 // now check the columns in the condition if any.
-                List fromColumns = new ArrayList();
-                ( (JoinTable) fromTables.get(i) ).getReferencedColumns(fromColumns);
+                List<Column> fromColumns = new ArrayList<>();
+                fromTables.get(i).getReferencedColumns(fromColumns);
                 for ( int j = 0; j < fromColumns.size(); j++ ) {
-                    Column fromColumn = (Column) fromColumns.get(j);
+                    Column fromColumn = fromColumns.get(j);
                     if (! checkTableColumnName( fromColumn)) {
                         showTableColumnNameError(  fromColumn.getColumnName() );
                         return false;
@@ -810,7 +787,7 @@ public class QueryBuilder extends TopComponent
         if (DEBUG)
             System.out.println("checkSelect called. _queryModel.getSelect() = " + _queryModel.getSelect() ); // NOI18N
         if ( _queryModel.getSelect() != null ) {
-            ArrayList selectColumns = new ArrayList();
+            List<Column> selectColumns = new ArrayList<>();
             _queryModel.getSelect().getReferencedColumns(selectColumns);
             if ( ! checkColumns( selectColumns ) )
                 return false;
@@ -825,7 +802,7 @@ public class QueryBuilder extends TopComponent
         if (DEBUG)
             System.out.println("checkWhere called... " ); // NOI18N
         if ( _queryModel.getWhere() != null ) {
-            ArrayList whereColumns = new ArrayList();
+            List<Column> whereColumns = new ArrayList<>();
             _queryModel.getWhere().getReferencedColumns(whereColumns);
             if ( ! checkColumns( whereColumns ) ) 
                 return false;
@@ -840,7 +817,7 @@ public class QueryBuilder extends TopComponent
         if (DEBUG)
             System.out.println("checkGroupBy called... " ); // NOI18N
         if ( _queryModel.getGroupBy() != null ) {
-            ArrayList groupByColumns = new ArrayList();
+            List<Column> groupByColumns = new ArrayList<>();
             _queryModel.getGroupBy().getReferencedColumns(groupByColumns);
             if ( ! checkColumns( groupByColumns ) ) return false;
         }
@@ -854,7 +831,7 @@ public class QueryBuilder extends TopComponent
         if (DEBUG)
             System.out.println("checkHaving called... " ); // NOI18N
         if ( _queryModel.getHaving() != null ) {
-            ArrayList havingColumns = new ArrayList();
+            List<Column> havingColumns = new ArrayList<>();
             _queryModel.getHaving().getReferencedColumns(havingColumns);
             if ( ! checkColumns( havingColumns ) ) return false;
         }
@@ -869,10 +846,10 @@ public class QueryBuilder extends TopComponent
             System.out.println("checkOrderBy called... " ); // NOI18N
         OrderBy orderBy = _queryModel.getOrderBy();
         if ( orderBy != null ) {
-            ArrayList orderByColumns = new ArrayList();
+            List<Column> orderByColumns = new ArrayList<>();
             for ( int i = 0; i < orderBy.getSortSpecificationCount(); i++ ) {
                 Column sortColumn = orderBy.getSortSpecification(i).getColumn();
-                orderByColumns.add( sortColumn);
+                orderByColumns.add(sortColumn);
             }
             if ( ! checkColumns( orderByColumns ) ) return false;
         }
@@ -889,10 +866,10 @@ public class QueryBuilder extends TopComponent
     //    case 3 : <alias_table_name>.<column_name>
     //    case 4 : <column_name>
     //
-    private boolean checkColumns( ArrayList columns )  throws SQLException {
+    private boolean checkColumns(List<Column> columns)  throws SQLException {
 	Log.getLogger().entering("QueryBuilder", "checkColumns"); // NOI18N
         for ( int i = 0; i < columns.size(); i++ ) {
-            Column column = (Column) columns.get(i);
+            Column column = columns.get(i);
             String columnTableSpec = column.getTableSpec();
             String columnFullTableName = column.getFullTableName();
 
@@ -904,12 +881,12 @@ public class QueryBuilder extends TopComponent
             {
                 // Check every table in the From list, to see if any have
                 // this column
-                List fromTables = _queryModel.getFrom().getTableList();
+                List<JoinTable> fromTables = _queryModel.getFrom().getTableList();
                 boolean found=false;
                 for ( int j = 0; j < fromTables.size(); j++ ) {
-                    String fromTableName = ( (JoinTable) fromTables.get(j) ).getFullTableName();
+                    String fromTableName = fromTables.get(j).getFullTableName();
                     // this could be an alias
-                    String fromTableSpec = ( (JoinTable) fromTables.get(j) ).getTableSpec();
+                    String fromTableSpec = fromTables.get(j).getTableSpec();
 
                     if (DEBUG)
                         System.out.println(
@@ -1053,7 +1030,7 @@ public class QueryBuilder extends TopComponent
 
     // Wrappers for schema methods that are used by other classes in the query builder
 
-    List getColumnNames(String fullTableName) throws SQLException {
+    List<String> getColumnNames(String fullTableName) throws SQLException {
 	return qbMetaData.getColumnNames( fullTableName );
     }
 
@@ -1141,13 +1118,13 @@ public class QueryBuilder extends TopComponent
         {
             if ( getParseErrorMessage() == null && _queryModel.isParameterized()) {
 
-                ArrayList  list = new ArrayList();
+                List<String>  list = new ArrayList<>();
                 _queryModel.getParameterizedPredicates(list);
                 String[] parameters = new String[list.size()];
                 String[] values = new String[list.size()];
 
                 for (int i = 0; i < parameters.length; i++) {
-                    parameters[i] = new String((String) list.get(i));
+                    parameters[i] = new String(list.get(i));
                 }
                 ParameterizedQueryDialog pqDlg =
 		    new ParameterizedQueryDialog( parameters, true);
@@ -1182,10 +1159,8 @@ public class QueryBuilder extends TopComponent
             }
             else if (paramCount != 0) {
                 // we have a query which can not be parsed.
-                ArrayList  list = new ArrayList(paramCount);
                 if (DEBUG) {
                     System.out.println(" param count = " + paramCount);
-                    System.out.println(" list size  = " + list.size());
                 }
                 String[] parameters = new String[paramCount];
                 String[] values = new String[paramCount];
@@ -1195,7 +1170,7 @@ public class QueryBuilder extends TopComponent
                 }
     
                 for (int i = 0; i < paramCount; i++) {
-                    parameters[i] = new String( "Parameter " + new Integer(i).toString());
+                    parameters[i] = new String( "Parameter " + Integer.valueOf(i).toString());
                 }
                 if (DEBUG) {
                     for (int i = 0; i < parameters.length; i++) {
@@ -1327,9 +1302,7 @@ public class QueryBuilder extends TopComponent
 //     }
 
 
-    /***************************************************************************
-     * Accessors/Mutators
-     **************************************************************************/
+    /* Accessors/Mutators */
 
     /**
      * Return the current query model
@@ -1496,7 +1469,7 @@ public class QueryBuilder extends TopComponent
         lastQuery = null;
     }
 
-    /*****
+    /*
      * listener for changes in the sqlStatement - either the
      * command changed or the connection changed (e.g., datasource changed).
      */
@@ -1531,11 +1504,11 @@ public class QueryBuilder extends TopComponent
 //        }
 //    } ;
 
-    /***
+    /*
     private final JButton retryButton = new JButton(NbBundle.getMessage(QueryBuilder.class, "RETRY_AND_CONTINUE")) ;
     private final JButton cancelButton = new JButton(NbBundle.getMessage(QueryBuilder.class, "CANCEL_AND_CONTINUE")) ;
     **/
-    /******
+    /*
      * show a dialog with the a message saying the database connection is hosed.
      * It has a Retry and Cancel button.
      * returns true if the Retry is the closing action.

@@ -51,7 +51,7 @@ public class AddCaretAction extends AbstractEditorAction {
     protected void actionPerformed(ActionEvent evt, final JTextComponent target) {
         if (target != null) {
             Caret caret = target.getCaret();
-            if (caret != null && caret instanceof EditorCaret) {
+            if (caret instanceof EditorCaret) {
                 final EditorCaret editorCaret = (EditorCaret) caret;
                 final BaseDocument doc = (BaseDocument) target.getDocument();
                 final boolean upAction = EditorActionNames.addCaretUp.equals(actionName());

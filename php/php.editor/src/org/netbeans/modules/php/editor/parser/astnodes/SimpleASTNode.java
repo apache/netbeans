@@ -27,10 +27,10 @@ import java.util.List;
  * @author petr
  */
 public class SimpleASTNode  {
-    final private int startOffset;
-    final private int endOffset;
-    final private String kind;
-    final private ArrayList<SimpleASTNode> children;
+    private final int startOffset;
+    private final int endOffset;
+    private final String kind;
+    private final ArrayList<SimpleASTNode> children;
 
     public SimpleASTNode (int start, int end, String kind){
         this.startOffset = start;

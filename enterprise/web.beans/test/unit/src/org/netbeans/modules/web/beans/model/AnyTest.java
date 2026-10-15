@@ -46,7 +46,7 @@ import org.netbeans.modules.web.beans.impl.model.results.ResultImpl;
 public class AnyTest extends CommonTestCase {
 
     public AnyTest( String testName ) {
-        super(testName);
+        super(testName, false);
     }
     
     public void testSingleAny() throws IOException, InterruptedException{

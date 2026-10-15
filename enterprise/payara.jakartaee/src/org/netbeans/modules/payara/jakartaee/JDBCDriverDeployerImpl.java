@@ -38,9 +38,9 @@ import org.openide.util.RequestProcessor;
 
 public class JDBCDriverDeployerImpl implements JDBCDriverDeployer {
 
-    final private File driverLoc;
-    final private PayaraModule commonSupport;
-    final private boolean isLocal;
+    private final File driverLoc;
+    private final PayaraModule commonSupport;
+    private final boolean isLocal;
     private Hk2DeploymentManager dm;
 
     public JDBCDriverDeployerImpl(Hk2DeploymentManager dm, OptionalDeploymentManagerFactory odmf) {

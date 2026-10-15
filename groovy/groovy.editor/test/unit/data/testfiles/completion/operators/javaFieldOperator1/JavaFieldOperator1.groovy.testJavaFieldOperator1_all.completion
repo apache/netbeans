@@ -3,4 +3,4 @@ new Foo().@|
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 FIELD      class                           [PUBLIC]   Class
-FIELD      test                                       int
+FIELD      test                            [PRIVATE]  int

@@ -23,9 +23,7 @@
 package org.netbeans.modules.spring.webmvc;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ComboBoxModel;
@@ -50,7 +48,7 @@ public class SpringConfigPanelVisual extends javax.swing.JPanel {
     private static final Logger LOG = Logger.getLogger(SpringConfigPanelVisual.class.getName());
     private static final long serialVersionUID = 1L;
     private boolean libsInitialized = false;
-    private List<SpringLibrary> springLibs = new ArrayList<>();
+    private final List<SpringLibrary> springLibs = new ArrayList<>();
     private SpringLibrary springLibrary;
     private final SpringWebModuleExtender extender;
     private final ChangeSupport changeSupport = new ChangeSupport(this);
@@ -290,17 +288,14 @@ public class SpringConfigPanelVisual extends javax.swing.JPanel {
                         springLibs.add(new SpringLibrary(library));
                     }
                 }
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        cbSpringVersion.setModel(new DefaultComboBoxModel(items.toArray(new String[items.size()])));
-                        int selectedIndex = cbSpringVersion.getSelectedIndex();
-                        if (selectedIndex < springLibs.size()) {
-                            springLibrary = springLibs.get(selectedIndex);
-                            libsInitialized = true;
-                            repaint();
-                            fireChange();
-                        }
+                SwingUtilities.invokeLater(() -> {
+                    cbSpringVersion.setModel(new DefaultComboBoxModel(items.toArray(new String[0])));
+                    int selectedIndex = cbSpringVersion.getSelectedIndex();
+                    if (selectedIndex < springLibs.size()) {
+                        springLibrary = springLibs.get(selectedIndex);
+                        libsInitialized = true;
+                        repaint();
+                        fireChange();
                     }
                 });
                 LOG.log(Level.FINEST, "Time spent in {0} initLibraries = {1} ms",

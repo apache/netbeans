@@ -63,7 +63,7 @@ public final class CookieSet extends Object implements Lookup.Provider {
     }
     
     /** Factory method to create new, general purpose cookie set. 
-     * The <q>general purpose</q> means that it is possible to store
+     * The <em>general purpose</em> means that it is possible to store
      * any object, into the cookie set and then obtain it using {@link #getLookup}
      * and queries on the returned {@link Lookup}. The before object can
      * be passed in if one wants to do a lazy initialization of the {@link CookieSet}
@@ -240,7 +240,7 @@ public final class CookieSet extends Object implements Lookup.Provider {
      */
     static Object entryAllClassesMode() {
         Object prev = QUERY_MODE.get();
-        QUERY_MODE.set(new HashSet());
+        QUERY_MODE.set(new HashSet<Object>());
 
         return prev;
     }
@@ -496,7 +496,7 @@ public final class CookieSet extends Object implements Lookup.Provider {
         }
     }
     
-    /** Assignes a trigger that gets called everytime given class is about
+    /* Assignes a trigger that gets called everytime given class is about
      * to be queried. Can be used only for cookie set created with
      * {@link CookieSet#create(true)} and for classes that are not 
      * subclasses of Node.Cookie.

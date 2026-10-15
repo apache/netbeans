@@ -24,87 +24,125 @@
 Apache NetBeans is an open source development environment, tooling platform, and application framework.
 
 ### Build status
-   * TravisCI:
-     * [![Build Status](https://travis-ci.org/apache/netbeans.svg?branch=master)](https://travis-ci.org/apache/netbeans)
-   * Apache Jenkins: 
-     * Linux: [![Build Status](https://builds.apache.org/view/M-R/view/NetBeans/job/netbeans-linux/badge/icon)](https://builds.apache.org/view/M-R/view/NetBeans/job/netbeans-linux/)
-     * Windows: [![Build Status](https://builds.apache.org/view/M-R/view/NetBeans/job/netbeans-windows/badge/icon)](https://builds.apache.org/view/M-R/view/NetBeans/job/netbeans-windows/)
+   * GitHub actions
+     * [![Build Status](https://github.com/apache/netbeans/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/apache/netbeans/actions/workflows/main.yml)
+     * [![Profiler Lib Native Binaries](https://github.com/apache/netbeans/actions/workflows/native-binary-build-lib.profiler.yml/badge.svg?branch=master)](https://github.com/apache/netbeans/actions/workflows/native-binary-build-lib.profiler.yml)
+     * [![NetBeans Native Execution Libraries](https://github.com/apache/netbeans/actions/workflows/native-binary-build-dlight.nativeexecution.yml/badge.svg?branch=master)](https://github.com/apache/netbeans/actions/workflows/native-binary-build-dlight.nativeexecution.yml)
+   * Apache Jenkins:
+     * Linux: [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/)
+     * Windows: [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows) 
+   * License Status ( Apache Rat and ant verify-libs-and-licenses )
+     * [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-license/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-license/)
 
 ### Requirements
 
   * Git
-  * Ant 1.9.9 or above
-  * JDK 8 or 11 (to build NetBeans)
-  * JDK 9 or above (to run NetBeans)
-  * MinGW (optional), to build Windows Launchers
+  * Ant
+  * JDK 21 or above (to build and run NetBeans)
 
 #### Notes:
 
-* NetBeans also runs with JDK 8, although then it will not include tools for the JDK 9 Shell.
 * NetBeans license violation checks are managed via the [rat-exclusions.txt](https://github.com/apache/netbeans/blob/master/nbbuild/rat-exclusions.txt) file.
 * Set JAVA_HOME and ANT_HOME appropriately or leave them undefined.
 
 ### Building NetBeans
 
-Build with the default config (See the [cluster.config](https://github.com/apache/netbeans/blob/ab66c7fdfdcbf0bde67b96ddb075c83451cdd1a6/nbbuild/cluster.properties#L19) property.)
+Build the default `release` config (See the [cluster.config](https://github.com/apache/netbeans/blob/ab66c7fdfdcbf0bde67b96ddb075c83451cdd1a6/nbbuild/cluster.properties#L19) property.)
 ```
-$ ant
+$ ant build
 ```
-Build the basic project (mainly, JavaSE features):
+Build the basic project (mainly Java features):
 ```
-$ ant -Dcluster.config=basic
+$ ant -Dcluster.config=basic build
 ```
-Build the full project (including Groovy, PHP, JavaEE/JakartaEE, and JavaScript features):
+Build the full project (may include clusters which are not be in the release):
 ```
-$ ant -Dcluster.config=full
+$ ant -Dcluster.config=full build
 ```
 Build the NetBeans Platform:
 ```
-$ ant -Dcluster.config=platform
+$ ant -Dcluster.config=platform build
+```
+Cleanup:
+```
+$ git clean -Xdf
 ```
 
-**Note:** You can also use `php`, `enterprise`, etc. See the [cluster.properties](https://github.com/apache/netbeans/blob/master/nbbuild/cluster.properties) file.
+#### Notes:
+* You can also use `php`, `enterprise`, etc. See the [cluster.properties](https://github.com/apache/netbeans/blob/master/nbbuild/cluster.properties) file.
+* Once built, you can simply open individual modules of interest with NetBeans and run/rebuild/debug them like any other project
+* The `nbbuild` directory should contain the portable NetBeans zip
 
-#### Building Windows Launchers
-Windows launchers can be build using [MinGW](http://www.mingw.org/) both on Windows and Linux.
+#### Generating Javadoc
 
-**Note:** In Windows [MSYS](http://www.mingw.org/wiki/MSYS/) must be installed.
-
-
-As of [NETBEANS-1145](https://issues.apache.org/jira/browse/NETBEANS-1145), the Windows Launchers can be built adding ```do.build.windows.launchers=true``` property to the build process.
+Build javadoc:
 ```
-$ ant -Ddo.build.windows.launchers=true
+$ ant javadoc
 ```
 
-##### Software Requirement to Build Windows Launchers on Ubuntu (16.04+):
-```
-sudo apt install make mingw-w64
-```
+#### Notes:
+
+* Run `javadoc-nb` task in Netbeans to run the javadoc build and display it in a web browser.
 
 ### Running NetBeans
 
-Run the build:
+Quick test run:
 ```
 $ ant tryme
 ```
+or run the portable zip distribution:
+1) extract the zip found in `nbbuild` to a directory other than `nbbuild`
+2) run the `netbeans` launcher found in `netbeans/bin`, optionally specifying a custom userdir
 
-**Note:** Look in nbbuild/netbeans for the NetBeans installation created by the build process.
+example:
+```
+$ netbeans --userdir /tmp/nbtestdir1
+```
+
+### Some useful Launcher Options
+
+```
+  --jdkhome <path>      path to JDK used as runtime (and default JDK for projects)
+  --userdir <path>      use specified directory to store user settings
+  --cachedir <path>     use specified directory to store user cache, must be different from userdir
+  --fontsize <size>     set the base font size of the user interface, in points
+  -J<jvm_option>        pass <jvm_option> to JVM
+  --help                list more options
+```
 
 ### Get In Touch
 
-[Subscribe](mailto:users-subscribe@netbeans.apache.org) or [mail](mailto:users@netbeans.apache.org) the [users@netbeans.apache.org](mailto:users@netbeans.apache.org) list - Ask questions, find answers, and also help other users.
-
-[Subscribe](mailto:dev-subscribe@netbeans.apache.org) or [mail](mailto:dev@netbeans.apache.org) the [dev@netbeans.apache.org](mailto:dev@netbeans.apache.org) list - Join development discussions, propose new ideas and connect with contributors.
+ * [Subscribe](mailto:users-subscribe@netbeans.apache.org) or [mail](mailto:users@netbeans.apache.org) the [users@netbeans.apache.org](mailto:users@netbeans.apache.org) list - Ask questions, find answers, and also help other users.
+ * [Subscribe](mailto:dev-subscribe@netbeans.apache.org) or [mail](mailto:dev@netbeans.apache.org) the [dev@netbeans.apache.org](mailto:dev@netbeans.apache.org) list - Join development discussions, propose new ideas and connect with contributors.
 
 ### Download
 
-Developer builds can be downloaded: https://builds.apache.org/job/netbeans-linux.
-
-Convenience binary of released source artifacts: https://netbeans.apache.org/download/index.html.
+ * [Developer builds](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/lastSuccessfulBuild/artifact/nbbuild/) on Jenkins (NetBeans-dev-xxx.zip).
+ * [Latest release](https://netbeans.apache.org/download) (convenience binary of released source artifacts).
 
 ### Reporting Bugs
 
-Bugs should be reported to https://issues.apache.org/jira/projects/NETBEANS/issues/
+ * [How to report bugs](https://netbeans.apache.org/participate/report-issue)
+
+### Log, Config and Cache Locations
+
+ * start config (JVM settings, default JDK, userdir, cachedir location and more):  
+   `netbeans/etc/netbeans.conf`
+ * user settings storage (preferences, installed plugins, logs):  
+   system dependent, see `Help -> About` for concrete location
+ * cache files (maven index, search index etc):  
+   system dependent, see `Help -> About` for concrete location
+ * default log location (tip: can be inspected via `View -> IDE Log`):  
+   `$DEFAULT_USERDIR_ROOT/var/log/messages.log`
+
+**Note:** removing/changing the user settings directory will reset NetBeans to first launch defaults
+
+### Other Repositories
+
+ * [NetBeans website repos](https://github.com/apache/netbeans-antora?tab=readme-ov-file#basic-structure)
+ * [NBPackage](https://github.com/apache/netbeans-nbpackage)
+ * [NetBeans maven utilities](https://github.com/apache/netbeans-mavenutils-nbm-maven-plugin)
+ * [NetBeans maven archetypes](https://github.com/apache/netbeans-mavenutils-archetypes)
 
 ### Full History
 
@@ -123,8 +161,8 @@ This gives you just few log entries including the initial checkin and
 change of the file headers to Apache. But then the magic comes:
 
 ```bash
-$ git remote add emilian https://github.com/emilianbold/netbeans-releases.git
-$ git fetch emilian # this takes a while, the history is huge!
+$ git remote add archive https://github.com/codelerity/netbeans-releases.git
+$ git fetch archive # this takes a while, the history is huge!
 $ git replace 6daa72c98 32042637 # the 1st donation
 $ git replace 6035076ee 32042637 # the 2nd donation
 ```
@@ -136,6 +174,6 @@ $ git log platform/uihandler/arch.xml
 $ git blame platform/uihandler/arch.xml
 ```
 
-Many thanks to Emilian Bold who converted the ancient history to his
-[Git repository](https://github.com/emilianbold/netbeans-releases)
-and made the magic possible!
+You can browse the archived repo [here](https://github.com/codelerity/netbeans-releases).
+
+Many thanks to Emilian Bold who created the original archive repository.

@@ -36,7 +36,6 @@ import com.sun.source.util.TreePath;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -50,18 +49,15 @@ import javax.swing.SwingUtilities;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.GeneratorUtilities;
-import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.java.source.JavaSource.Phase;
-import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.modules.analysis.api.CodeAnalysis;
 import org.netbeans.modules.analysis.spi.Analyzer.WarningDescription;
 import org.netbeans.modules.java.hints.providers.spi.HintMetadata;
 import org.netbeans.modules.java.hints.providers.spi.HintMetadata.Options;
 import org.netbeans.modules.java.hints.spiimpl.Hacks.InspectAndTransformOpener;
+import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
 import org.netbeans.modules.java.hints.spiimpl.SPIAccessor;
 import org.netbeans.modules.java.hints.spiimpl.SyntheticFix;
 import org.netbeans.modules.java.hints.spiimpl.options.HintsSettings;
@@ -70,6 +66,7 @@ import org.netbeans.spi.editor.hints.EnhancedFix;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.editor.hints.LazyFixList;
+import org.netbeans.spi.editor.hints.settings.FileHintPreferences;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
@@ -86,10 +83,6 @@ public class ErrorDescriptionFactory {
     private ErrorDescriptionFactory() {
     }
 
-//    public static ErrorDescription forTree(HintContext context, String text, Fix... fixes) {
-//        return forTree(context, context.getContext(), text, fixes);
-//    }
-
     public static ErrorDescription forTree(HintContext context, TreePath tree, String text, Fix... fixes) {
         return forTree(context, tree.getLeaf(), text, fixes);
     }
@@ -100,8 +93,8 @@ public class ErrorDescriptionFactory {
         int javacEnd;
         
         if (context.getHintMetadata().kind == Hint.Kind.INSPECTION) {
-            start = (int) context.getInfo().getTrees().getSourcePositions().getStartPosition(context.getInfo().getCompilationUnit(), tree);
-            javacEnd = (int) context.getInfo().getTrees().getSourcePositions().getEndPosition(context.getInfo().getCompilationUnit(), tree);
+            start = (int) context.getInfo().getTrees().getSourcePositions().getStartPosition(tree);
+            javacEnd = (int) context.getInfo().getTrees().getSourcePositions().getEndPosition(tree);
             end = Math.min(javacEnd, findLineEnd(context.getInfo(), start));
         } else {
             start = javacEnd = end = context.getCaretLocation();
@@ -126,7 +119,7 @@ public class ErrorDescriptionFactory {
      * and the {@link ErrorDescription} is created to be consistent with {@link ErrorDescription}s created
      * by the other factory methods in this class.
      * 
-     * @param context from which the {@link Severity} and other properties are inferred.
+     * @param context from which the {@link org.netbeans.spi.editor.hints.Severity} and other properties are inferred.
      * @param start start of the warning
      * @param end end of the warning
      * @param text the warning text
@@ -169,46 +162,49 @@ public class ErrorDescriptionFactory {
     }
 
     private static int[] computeNameSpan(Tree tree, HintContext context) {
+        CompilationInfo info = context.getInfo();
         switch (tree.getKind()) {
-            case LABELED_STATEMENT:
-                return context.getInfo().getTreeUtilities().findNameSpan((LabeledStatementTree) tree);
-            case METHOD:
-                return context.getInfo().getTreeUtilities().findNameSpan((MethodTree) tree);
-            case ANNOTATION_TYPE:
-            case CLASS:
-            case ENUM:
-            case INTERFACE:
-                return context.getInfo().getTreeUtilities().findNameSpan((ClassTree) tree);
-            case VARIABLE:
-                return context.getInfo().getTreeUtilities().findNameSpan((VariableTree) tree);
-            case MEMBER_SELECT:
+            case LABELED_STATEMENT -> {
+                return info.getTreeUtilities().findNameSpan((LabeledStatementTree) tree);
+            }
+            case METHOD -> {
+                return info.getTreeUtilities().findNameSpan((MethodTree) tree);
+            }
+            case ANNOTATION_TYPE, CLASS, ENUM, RECORD, INTERFACE -> {
+                return info.getTreeUtilities().findNameSpan((ClassTree) tree);
+            }
+            case VARIABLE -> {
+                return info.getTreeUtilities().findNameSpan((VariableTree) tree);
+            }
+            case MEMBER_SELECT -> {
                 //XXX:
                 MemberSelectTree mst = (MemberSelectTree) tree;
-                int[] span = context.getInfo().getTreeUtilities().findNameSpan(mst);
+                int[] span = info.getTreeUtilities().findNameSpan(mst);
 
                 if (span == null) {
-                    int end = (int) context.getInfo().getTrees().getSourcePositions().getEndPosition(context.getInfo().getCompilationUnit(), tree);
+                    int end = (int) info.getTrees().getSourcePositions().getEndPosition(tree);
                     span = new int[] {end - mst.getIdentifier().length(), end};
                 }
                 return span;
-            case METHOD_INVOCATION:
+            }
+            case METHOD_INVOCATION -> {
                 return computeNameSpan(((MethodInvocationTree) tree).getMethodSelect(), context);
-            case BLOCK:
-                Collection<? extends TreePath> prefix = context.getMultiVariables().get("$$1$");
-                
-                if (prefix != null) {
-                    BlockTree bt = (BlockTree) tree;
-                    
-                    if (bt.getStatements().size() > prefix.size()) {
-                        return computeNameSpan(bt.getStatements().get(prefix.size()), context);
+            }
+            default -> {
+                if (tree.getKind() == Kind.BLOCK) {
+                    Collection<? extends TreePath> prefix = context.getMultiVariables().get("$$1$");
+                    if (prefix != null) {
+                        BlockTree bt = (BlockTree) tree;
+                        if (bt.getStatements().size() > prefix.size()) {
+                            return computeNameSpan(bt.getStatements().get(prefix.size()), context);
+                        }
                     }
                 }
-            default:
-                int start = (int) context.getInfo().getTrees().getSourcePositions().getStartPosition(context.getInfo().getCompilationUnit(), tree);
-                if (    StatementTree.class.isAssignableFrom(tree.getKind().asInterface())
-                    && tree.getKind() != Kind.EXPRESSION_STATEMENT
-                    && tree.getKind() != Kind.BLOCK) {
-                    TokenSequence<?> ts = context.getInfo().getTokenHierarchy().tokenSequence();
+                int start = (int) info.getTrees().getSourcePositions().getStartPosition(tree);
+                if (StatementTree.class.isAssignableFrom(tree.getKind().asInterface())
+                        && tree.getKind() != Kind.EXPRESSION_STATEMENT
+                        && tree.getKind() != Kind.BLOCK) {
+                    TokenSequence<?> ts = info.getTokenHierarchy().tokenSequence();
                     ts.move(start);
                     if (ts.moveNext()) {
                         return new int[] {ts.offset(), ts.offset() + ts.token().length()};
@@ -216,9 +212,11 @@ public class ErrorDescriptionFactory {
                 }
                 return new int[] {
                     start,
-                    Math.min((int) context.getInfo().getTrees().getSourcePositions().getEndPosition(context.getInfo().getCompilationUnit(), tree),
-                             findLineEnd(context.getInfo(), start)),
+                    Math.min((int) info.getTrees().getSourcePositions().getEndPosition(tree),
+                             findLineEnd(info, start)),
                 };
+            }
+
         }
     }
 
@@ -233,23 +231,22 @@ public class ErrorDescriptionFactory {
     }
 
     static List<Fix> resolveDefaultFixes(HintContext ctx, Fix... provided) {
-        List<Fix> auxiliaryFixes = new LinkedList<Fix>();
+        List<Fix> auxiliaryFixes = new LinkedList<>();
         HintMetadata hm = SPIAccessor.getINSTANCE().getHintMetadata(ctx);
 
         if (hm != null) {
-            Set<String> suppressWarningsKeys = new LinkedHashSet<String>();
+            Set<String> suppressWarningsKeys = new LinkedHashSet<>();
 
             for (String key : hm.suppressWarnings) {
-                if (key == null || key.length() == 0) {
+                if (key == null || key.isEmpty()) {
                     break;
                 }
 
                 suppressWarningsKeys.add(key);
             }
 
-
-            auxiliaryFixes.add(new DisableConfigure(hm, true, SPIAccessor.getINSTANCE().getHintSettings(ctx)));
-            auxiliaryFixes.add(new DisableConfigure(hm, false, null));
+            auxiliaryFixes.add(new DisableConfigure(ctx.getInfo().getFileObject(), hm, true, SPIAccessor.getINSTANCE().getHintSettings(ctx)));
+            auxiliaryFixes.add(new DisableConfigure(ctx.getInfo().getFileObject(), hm, false, null));
 
             if (hm.kind == Hint.Kind.INSPECTION && !hm.options.contains(Options.NO_BATCH)) {
                 auxiliaryFixes.add(new InspectFix(hm, false));
@@ -259,10 +256,10 @@ public class ErrorDescriptionFactory {
             }
             
             if (!suppressWarningsKeys.isEmpty()) {
-                auxiliaryFixes.addAll(createSuppressWarnings(ctx.getInfo(), ctx.getPath(), suppressWarningsKeys.toArray(new String[0])));
+                auxiliaryFixes.addAll(createSuppressWarnings(ctx.getInfo(), ctx.getPath(), suppressWarningsKeys.toArray(String[]::new)));
             }
 
-            List<Fix> result = new LinkedList<Fix>();
+            List<Fix> result = new LinkedList<>();
 
             for (Fix f : provided != null ? provided : new Fix[0]) {
                 if (f == null) continue;
@@ -271,7 +268,7 @@ public class ErrorDescriptionFactory {
             }
 
             if (result.isEmpty()) {
-                result.add(org.netbeans.spi.editor.hints.ErrorDescriptionFactory.attachSubfixes(new TopLevelConfigureFix(hm), auxiliaryFixes));
+                result.add(org.netbeans.spi.editor.hints.ErrorDescriptionFactory.attachSubfixes(new TopLevelConfigureFix(ctx.getInfo().getFileObject(), hm), auxiliaryFixes));
             }
 
             return result;
@@ -281,11 +278,13 @@ public class ErrorDescriptionFactory {
     }
 
     private static class DisableConfigure implements Fix, SyntheticFix {
+        private final @NonNull FileObject file;
         private final @NonNull HintMetadata metadata;
         private final boolean disable;
         private final HintsSettings hintsSettings;
 
-        DisableConfigure(@NonNull HintMetadata metadata, boolean disable, HintsSettings hintsSettings) {
+        DisableConfigure(@NonNull FileObject file, @NonNull HintMetadata metadata, boolean disable, HintsSettings hintsSettings) {
+            this.file = file;
             this.metadata = metadata;
             this.disable = disable;
             this.hintsSettings = hintsSettings;
@@ -294,18 +293,10 @@ public class ErrorDescriptionFactory {
         @Override
         public String getText() {
             String displayName = metadata.displayName;
-            String key;
-            switch (metadata.kind) {
-                case INSPECTION:
-                    key = disable ? "FIX_DisableHint" : "FIX_ConfigureHint";
-                    break;
-                case ACTION:
-                    key = disable ? "FIX_DisableSuggestion" : "FIX_ConfigureSuggestion";
-                    break;
-                default:
-                    throw new IllegalStateException();
-            }
-
+            String key = switch (metadata.kind) {
+                case INSPECTION -> disable ? "FIX_DisableHint" : "FIX_ConfigureHint";
+                case ACTION -> disable ? "FIX_DisableSuggestion" : "FIX_ConfigureSuggestion";
+            };
             return NbBundle.getMessage(ErrorDescriptionFactory.class, key, displayName);
         }
 
@@ -315,7 +306,7 @@ public class ErrorDescriptionFactory {
                 hintsSettings.setEnabled(metadata, false);
                 //XXX: re-run hints task
             } else {
-                OptionsDisplayer.getDefault().open("Editor/Hints/text/x-java/" + metadata.id);
+                FileHintPreferences.openFilePreferences(file, "text/x-java", metadata.id);
             }
 
             return null;
@@ -352,8 +343,8 @@ public class ErrorDescriptionFactory {
 
     private static final class TopLevelConfigureFix extends DisableConfigure implements EnhancedFix {
 
-        public TopLevelConfigureFix(@NonNull HintMetadata metadata) {
-            super(metadata, false, null);
+        public TopLevelConfigureFix(@NonNull FileObject file, @NonNull HintMetadata metadata) {
+            super(file, metadata, false, null);
         }
 
         @Override
@@ -363,14 +354,7 @@ public class ErrorDescriptionFactory {
         
     }
 
-    private static class InspectFix implements Fix, SyntheticFix {
-        private final @NonNull HintMetadata metadata;
-        private final boolean transform;
-
-        InspectFix(@NonNull HintMetadata metadata, boolean transform) {
-            this.metadata = metadata;
-            this.transform = transform;
-        }
+    private record InspectFix(@NonNull HintMetadata metadata, boolean transform) implements Fix, SyntheticFix {
 
         @Override
         @Messages({
@@ -383,52 +367,22 @@ public class ErrorDescriptionFactory {
 
         @Override
         public ChangeInfo implement() throws Exception {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    if (transform) {
-                        final InspectAndTransformOpener o = Lookup.getDefault().lookup(InspectAndTransformOpener.class);
-
-                        if (o != null) {
-                            o.openIAT(metadata);
-                        } else {
-                            //warn
-                        }
+            SwingUtilities.invokeLater(() -> {
+                if (transform) {
+                    final InspectAndTransformOpener o = Lookup.getDefault().lookup(InspectAndTransformOpener.class);
+                    
+                    if (o != null) {
+                        o.openIAT(metadata);
                     } else {
-                        CodeAnalysis.open(WarningDescription.create("text/x-java:" + metadata.id, null, null, null));
+                        //warn
                     }
+                } else {
+                    CodeAnalysis.open(WarningDescription.create("text/x-java:" + metadata.id, null, null, null));
                 }
             });
             
             return null;
         }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == null) {
-                return false;
-            }
-            if (this.getClass() != obj.getClass()) {
-                return false;
-            }
-            final InspectFix other = (InspectFix) obj;
-            if (this.metadata != other.metadata && (this.metadata == null || !this.metadata.equals(other.metadata))) {
-                return false;
-            }
-            if (this.transform != other.transform) {
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        public int hashCode() {
-            int hash = 7;
-            hash = 43 * hash + (this.metadata != null ? this.metadata.hashCode() : 0);
-            hash = 43 * hash + (this.transform ? 1 : 0);
-            return hash;
-        }
-
 
     }
     
@@ -460,7 +414,13 @@ public class ErrorDescriptionFactory {
         }
 
         if (treePath.getLeaf().getKind() != Kind.COMPILATION_UNIT) {
-            return new FixImpl(TreePathHandle.create(treePath, compilationInfo), compilationInfo.getFileObject(), keys);
+            class SyntheticJavaFixImpl extends JavaFixImpl implements SyntheticFix {
+                public SyntheticJavaFixImpl(JavaFix jf) {
+                    super(jf);
+                }
+            }
+            FixImpl javaFix = new FixImpl(TreePathHandle.create(treePath, compilationInfo), compilationInfo.getFileObject(), keys);
+            return new SyntheticJavaFixImpl(javaFix);
         } else {
             return null;
         }
@@ -486,12 +446,7 @@ public class ErrorDescriptionFactory {
         }
 
         Fix f = createSuppressWarningsFix(compilationInfo, treePath, keys);
-
-        if (f != null) {
-            return Collections.<Fix>singletonList(f);
-        } else {
-            return Collections.emptyList();
-        }
+        return f != null ? List.of(f) : List.of();
     }
 
     private static boolean isSuppressWarningsSupported(CompilationInfo info) {
@@ -504,18 +459,20 @@ public class ErrorDescriptionFactory {
 
     private static final Set<Kind> DECLARATION = EnumSet.of(Kind.ANNOTATION_TYPE, Kind.CLASS, Kind.ENUM, Kind.INTERFACE, Kind.METHOD, Kind.VARIABLE);
 
-    private static final class FixImpl implements Fix, SyntheticFix {
+    private static final class FixImpl extends JavaFix {
 
-        private String keys[];
-        private TreePathHandle handle;
-        private FileObject file;
+        private final String keys[];
+        private final TreePathHandle handle;
+        private final FileObject file;
 
         public FixImpl(TreePathHandle handle, FileObject file, String... keys) {
+            super(handle);
             this.keys = keys;
             this.handle = handle;
             this.file = file;
         }
 
+        @Override
         public String getText() {
             StringBuilder keyNames = new StringBuilder();
             for (int i = 0; i < keys.length; i++) {
@@ -529,86 +486,73 @@ public class ErrorDescriptionFactory {
             return NbBundle.getMessage(ErrorDescriptionFactory.class, "LBL_FIX_Suppress_Waning",  keyNames.toString() );  // NOI18N
         }
 
-        public ChangeInfo implement() throws IOException {
-            JavaSource js = JavaSource.forFileObject(file);
+        @Override
+        public void performRewrite(TransformationContext ctx) throws IOException {
+            WorkingCopy copy = ctx.getWorkingCopy();
+            TreePath path = ctx.getPath();
 
-            js.runModificationTask(new Task<WorkingCopy>() {
-                public void run(WorkingCopy copy) throws IOException {
-                    copy.toPhase(Phase.RESOLVED); //XXX: performance
-                    TreePath path = handle.resolve(copy);
+            while (path != null && path.getLeaf().getKind() != Kind.COMPILATION_UNIT && !DECLARATION.contains(path.getLeaf().getKind())) {
+                path = path.getParentPath();
+            }
 
-                    while (path != null && path.getLeaf().getKind() != Kind.COMPILATION_UNIT && !DECLARATION.contains(path.getLeaf().getKind())) {
-                        path = path.getParentPath();
-                    }
+            if (path == null || path.getLeaf().getKind() == Kind.COMPILATION_UNIT) {
+                return ;
+            }
 
-                    if (path == null || path.getLeaf().getKind() == Kind.COMPILATION_UNIT) {
-                        return ;
-                    }
+            Tree top = path.getLeaf();
+            TreePath lambdaPath = null;
 
-                    Tree top = path.getLeaf();
-                    ModifiersTree modifiers = null;
-                    TreePath lambdaPath = null;
-                    
-                    switch (top.getKind()) {
-                        case ANNOTATION_TYPE:
-                        case CLASS:
-                        case ENUM:
-                        case INTERFACE:
-                            modifiers = ((ClassTree) top).getModifiers();
-                            break;
-                        case METHOD:
-                            modifiers = ((MethodTree) top).getModifiers();
-                            break;
-                        case VARIABLE: {
-                                if (path.getParentPath() != null && 
-                                    path.getParentPath().getLeaf().getKind() == Tree.Kind.LAMBDA_EXPRESSION) {
-                                    // check if the variable is an implict parameter. If so, it must be turned into explicit
-                                    TreePath typePath = TreePath.getPath(path.getParentPath(), ((VariableTree)top).getType());
-                                    if (copy.getTreeUtilities().isSynthetic(typePath)) {
-                                        lambdaPath = path.getParentPath();
-                                    }
-                                }
-                                modifiers = ((VariableTree) top).getModifiers();
-                            }
-                            break;
-                        default: assert false : "Unhandled Tree.Kind";  // NOI18N
-                    }
-
-                    if (modifiers == null) {
-                        return ;
-                    }
-
-                    TypeElement el = copy.getElements().getTypeElement("java.lang.SuppressWarnings");  // NOI18N
-
-                    if (el == null) {
-                        return ;
-                    }
-
-                    LiteralTree[] keyLiterals = new LiteralTree[keys.length];
-
-                    for (int i = 0; i < keys.length; i++) {
-                        keyLiterals[i] = copy.getTreeMaker().
-                                Literal(keys[i]);
-                    }
-
-                    if (lambdaPath != null) {
-                        LambdaExpressionTree let = (LambdaExpressionTree)lambdaPath.getLeaf();
-                        for (VariableTree var : let.getParameters()) {
-                            TreePath typePath = TreePath.getPath(lambdaPath, var.getType());
-                            if (copy.getTreeUtilities().isSynthetic(typePath)) {
-                                Tree imported = copy.getTreeMaker().Type(copy.getTrees().getTypeMirror(typePath));
-                                copy.rewrite(var.getType(), imported);
-                            }
+            ModifiersTree modifiers = switch (top.getKind()) {
+                case ANNOTATION_TYPE, CLASS, ENUM, INTERFACE -> ((ClassTree) top).getModifiers();
+                case METHOD -> ((MethodTree) top).getModifiers();
+                case VARIABLE -> {
+                    TreePath parent = path.getParentPath();
+                    if (parent != null && parent.getLeaf().getKind() == Tree.Kind.LAMBDA_EXPRESSION) {
+                        // check if the variable is an implict parameter. If so, it must be turned into explicit
+                        TreePath typePath = TreePath.getPath(parent, ((VariableTree)top).getType());
+                        if (copy.getTreeUtilities().isSynthetic(typePath)) {
+                            lambdaPath = parent;
                         }
                     }
-                    
-                    ModifiersTree nueMods = GeneratorUtilities.get(copy).appendToAnnotationValue(modifiers, el, "value", keyLiterals);
-
-                    copy.rewrite(modifiers, nueMods);
+                    yield ((VariableTree) top).getModifiers();
                 }
-            }).commit();
+                default -> {
+                    assert false : "Unhandled Tree.Kind";  // NOI18N
+                    yield null;
+                }
+            };
 
-            return null;
+            if (modifiers == null) {
+                return ;
+            }
+
+            TypeElement el = copy.getElements().getTypeElement("java.lang.SuppressWarnings");  // NOI18N
+
+            if (el == null) {
+                return ;
+            }
+
+            LiteralTree[] keyLiterals = new LiteralTree[keys.length];
+
+            for (int i = 0; i < keys.length; i++) {
+                keyLiterals[i] = copy.getTreeMaker().
+                        Literal(keys[i]);
+            }
+
+            if (lambdaPath != null) {
+                LambdaExpressionTree let = (LambdaExpressionTree)lambdaPath.getLeaf();
+                for (VariableTree var : let.getParameters()) {
+                    TreePath typePath = TreePath.getPath(lambdaPath, var.getType());
+                    if (copy.getTreeUtilities().isSynthetic(typePath)) {
+                        Tree imported = copy.getTreeMaker().Type(copy.getTrees().getTypeMirror(typePath));
+                        copy.rewrite(var.getType(), imported);
+                    }
+                }
+            }
+
+            ModifiersTree nueMods = GeneratorUtilities.get(copy).appendToAnnotationValue(modifiers, el, "value", keyLiterals);
+
+            copy.rewrite(modifiers, nueMods);
         }
 
         @Override
@@ -640,5 +584,5 @@ public class ErrorDescriptionFactory {
             hash = 79 * hash + (this.file != null ? this.file.hashCode() : 0);
             return hash;
         }
+        }
     }
-}

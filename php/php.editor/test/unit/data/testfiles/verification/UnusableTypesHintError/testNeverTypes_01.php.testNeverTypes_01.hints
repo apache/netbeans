@@ -1,0 +1,13 @@
+    private never $never; // incorrect field type
+            -----
+HINT:"never" cannot be used as a property type.
+    public function incorrectParameterType(never $param): never { // incorrect param type
+                                           -----
+HINT:"never" cannot be used as a parameter type.
+$af = fn(): never => 1; // incorrect return type
+            -----
+HINT:"never" cannot be used as an arrow function return type.
+function test(): mixed|never { // incorrect return type
+                       -----
+HINT:"mixed" cannot be used as a union type.
+HINT:"never" cannot be used as a union type.

@@ -21,6 +21,7 @@ package org.netbeans.modules.php.project.ui.actions.tests;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +54,14 @@ import org.openide.util.RequestProcessor;
 public class GoToTest implements TestLocator {
     private static final Logger LOGGER = Logger.getLogger(GoToTest.class.getName());
     private static final RequestProcessor RP = new RequestProcessor(GoToTest.class.getName(), 2);
+
+    private static class FileObjectComparator implements Comparator<FileObject> {
+        @Override
+        public int compare(FileObject fo1, FileObject fo2) {
+            return fo1.getPath().compareTo(fo2.getPath());
+        }
+    }
+    static final Comparator<FileObject> FILE_OBJECT_COMAPARTOR = new FileObjectComparator();
 
     public GoToTest() {
     }
@@ -174,6 +183,7 @@ public class GoToTest implements TestLocator {
         for (Locations.Offset location : phpFiles.values()) {
             files.add(location.getFile());
         }
+        files.sort(FILE_OBJECT_COMAPARTOR);
         final List<FileObject> sourceRootsCopy = new CopyOnWriteArrayList<>(sourceRoots);
         final List<FileObject> filesCopy = new CopyOnWriteArrayList<>(files);
         FileObject selected = Mutex.EVENT.readAccess(new Mutex.Action<FileObject>() {

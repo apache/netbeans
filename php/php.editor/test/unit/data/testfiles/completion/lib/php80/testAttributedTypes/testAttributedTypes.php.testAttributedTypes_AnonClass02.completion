@@ -1,0 +1,4 @@
+Code completion result for source line:
+$annon = new #[Attr1(in|t: 500, string: "anon")] class() {};
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PARAMETER  int:                                       Parameter Name

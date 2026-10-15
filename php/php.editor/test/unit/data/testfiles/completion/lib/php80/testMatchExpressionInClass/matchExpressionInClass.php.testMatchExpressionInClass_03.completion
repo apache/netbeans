@@ -1,0 +1,10 @@
+Code completion result for source line:
+MatchExpression::|START => self::$start,
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     default()                       [STATIC]   MatchExpression
+VARIABLE   ? $start                        [PRIVATE,  MatchExpression
+CONSTANT   START "start"                   [PUBLIC]   MatchExpression
+CONSTANT   STOP "stop"                     [PUBLIC]   MatchExpression
+CONSTANT   SUSPEND "suspend"               [PUBLIC]   MatchExpression
+CONSTANT   class \MatchExpression          [PUBLIC]   Magic Constant
+CONSTANT   match "match"                   [PRIVATE]  MatchExpression

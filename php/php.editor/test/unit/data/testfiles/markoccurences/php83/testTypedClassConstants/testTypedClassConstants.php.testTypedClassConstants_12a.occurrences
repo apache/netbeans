@@ -1,0 +1,2 @@
+    public const string |>MARK_OCCURRENCES:STR^ING<| = 'a';
+var_dump(ClassTest::|>MARK_OCCURRENCES:STRING<|);

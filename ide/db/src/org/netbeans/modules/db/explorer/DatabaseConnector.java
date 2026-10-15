@@ -207,15 +207,15 @@ public class DatabaseConnector {
 
                     try {
                         //hack because of MSSQL ODBC problems - see DriverSpecification.getRow() for more info - shouln't be thrown
-                        col.setColumnType(Integer.parseInt(rset.get(new Integer(5))));
-                        col.setColumnSize(Integer.parseInt(rset.get(new Integer(7))));
+                        col.setColumnType(Integer.parseInt(rset.get(Integer.valueOf(5))));
+                        col.setColumnSize(Integer.parseInt(rset.get(Integer.valueOf(7))));
                     } catch (NumberFormatException exc) {
                         col.setColumnType(0);
                         col.setColumnSize(0);
                     }
 
-                    col.setNullAllowed((rset.get(new Integer(18))).toUpperCase().equals("YES")); //NOI18N
-                    col.setDefaultValue(rset.get(new Integer(13)));
+                    col.setNullAllowed((rset.get(Integer.valueOf(18))).equalsIgnoreCase("YES")); //NOI18N
+                    col.setDefaultValue(rset.get(Integer.valueOf(13)));
                     rset.clear();
                 } else {
                     Logger.getLogger(DatabaseConnector.class.getName()).log(Level.INFO, "Empty ResultSet for {0}.{1} in catalog {2}",

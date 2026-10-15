@@ -21,4 +21,15 @@
 -->
 <project basedir="." default="build" name="java/spi.debugger.jpda.ui">
     <import file="../../nbbuild/templates/projectized.xml"/>
+
+    <target name="build-init" depends="projectized.build-init">
+        <mkdir dir="${jpda.classes.dir}"/>
+        <copy todir="${jpda.classes.dir}">
+            <resources>
+                <javaresource name="com/sun/jdi/StackFrame.class"/>
+                <javaresource name="com/sun/jdi/ObjectReference.class"/>
+                <javaresource name="com/sun/jdi/Value.class"/>
+            </resources>
+        </copy>
+    </target>
 </project>

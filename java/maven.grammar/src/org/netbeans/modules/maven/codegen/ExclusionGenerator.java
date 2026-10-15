@@ -90,9 +90,9 @@ public class ExclusionGenerator extends AbstractGenerator<POMModel> {
                                 // now check the active profiles for the dependency..
                                 List<String> profileNames = new ArrayList<String>();
                                 NbMavenProject project = prj.getLookup().lookup(NbMavenProject.class);
-                                Iterator it = project.getMavenProject().getActiveProfiles().iterator();
+                                Iterator<org.apache.maven.model.Profile> it = project.getMavenProject().getActiveProfiles().iterator();
                                 while (it.hasNext()) {
-                                    org.apache.maven.model.Profile prof = (org.apache.maven.model.Profile) it.next();
+                                    org.apache.maven.model.Profile prof = it.next();
                                     profileNames.add(prof.getId());
                                 }
                                 for (String profileId : profileNames) {

@@ -61,7 +61,7 @@ public class HudsonManagerImplTest {
                         delay();
                         HudsonManagerImpl.getDefault().addInstance(
                                 HudsonInstanceImpl.createHudsonInstance(
-                                        "TestHudsonInstance" + i,
+                                        "TestJenkinsInstance" + i,
                                         "http://testHudsonInstance" + i + "/",
                                         "0"));
                     } catch (Throwable e) {
@@ -71,7 +71,7 @@ public class HudsonManagerImplTest {
                     }
                 }
             }
-        }, "AddHudsonInstances");
+        }, "AddJenkinsInstances");
         addInstancesThread.start();
 
         for (int i = 0; i < 10; i++) {

@@ -1,0 +1,5 @@
+class |>MARK_OCCURRENCES:StaticVariable<| {}
+static $staticVariable = new |>MARK_OCCURRENCES:StaticVaria^ble<|;
+static $staticVariable = new |>MARK_OCCURRENCES:StaticVariable<|();
+static $staticVariable = new |>MARK_OCCURRENCES:StaticVariable<|(1);
+static $staticVariable = new |>MARK_OCCURRENCES:StaticVariable<|(x: 1);

@@ -266,7 +266,7 @@ public class PHPCodeCompletionTest extends PHPCodeCompletionTestBase {
                 "while (1) $this->factory()->^", false);
     }
 
-    ///
+
     public void test147575_8() throws Exception {
         checkCompletion("testfiles/completion/lib/_base/issue147575.php",
                 "if(1) $this->^", false);
@@ -307,7 +307,7 @@ public class PHPCodeCompletionTest extends PHPCodeCompletionTestBase {
                 "while(1) $this->factory()->^", false);
     }
 
-    ///
+
     public void test7i147575() throws Exception {
         checkCompletion("testfiles/completion/lib/_base/issue147575.php",
                 "if(1)$this->^", false);
@@ -867,6 +867,21 @@ public class PHPCodeCompletionTest extends PHPCodeCompletionTestBase {
 
     public void testIssue202281() throws Exception {
         checkCompletion("testfiles/completion/lib/_base/issue202281.php", "function^Name($myInt);", false);
+    }
+
+    public void testUseKeywordInClass() throws Exception {
+        checkCompletion("testfiles/completion/lib/_base/useKeywordInClass.php", "u^se", false);
+    }
+
+    public void testUseKeywordInTrait() throws Exception {
+        checkCompletion("testfiles/completion/lib/_base/useKeywordInTrait.php", "u^se", false);
+    }
+
+    public void testUseKeywordInEnum() throws Exception {
+        checkCompletion("testfiles/completion/lib/_base/useKeywordInEnum.php", "u^se", false);
+    }
+    public void testUseKeywordInInterface() throws Exception {
+        checkCompletion("testfiles/completion/lib/_base/useKeywordInInterface.php", "u^se", false);
     }
 
     @Override

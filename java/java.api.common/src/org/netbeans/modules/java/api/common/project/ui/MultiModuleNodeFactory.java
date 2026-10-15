@@ -707,14 +707,14 @@ public final class MultiModuleNodeFactory implements NodeFactory {
                         allLocs.add(loc);
                     }
                 }
-                Collections.sort(srcLocs, pathComparator);
+                srcLocs.sort(pathComparator);
                 for (FileObject loc : tmp.findAllResources(moduleName)) {
                     if (!allLocs.contains(loc) && loc.isFolder()) {
                         testLocs.add(loc);
                         allLocs.add(loc);
                     }
                 }
-                Collections.sort(testLocs, pathComparator);
+                testLocs.sort(pathComparator);
                 srcLocs.addAll(testLocs);
                 res = srcLocs;
                 synchronized (this) {
@@ -1094,7 +1094,7 @@ public final class MultiModuleNodeFactory implements NodeFactory {
             }
         }
 
-        private final static class Key {
+        private static final class Key {
             private final boolean sources;
             private final boolean tests;
             private final boolean generated;

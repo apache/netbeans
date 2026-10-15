@@ -19,7 +19,7 @@
 
 package org.netbeans.modules.maven;
 
-import java.util.Collections;
+import java.util.Set;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.junit.NbTestCase;
@@ -41,49 +41,57 @@ public class SubprojectProviderImplTest extends NbTestCase {
     }
 
     public void testProjectModules() throws Exception {
-        TestFileUtils.writeFile(d, "pom.xml",
-                "<project xmlns='http://maven.apache.org/POM/4.0.0'>" +
-                "<modelVersion>4.0.0</modelVersion>" +
-                "<groupId>grp</groupId>" +
-                "<artifactId>p1</artifactId>" +
-                "<version>0</version>" +
-                "<packaging>pom</packaging>" +
-                "<modules>" +
-                "<module>sub</module>" +
-                "</modules>" +
-                "</project>");
-        TestFileUtils.writeFile(d, "sub/pom.xml",
-                "<project xmlns='http://maven.apache.org/POM/4.0.0'>" +
-                "<modelVersion>4.0.0</modelVersion>" +
-                "<groupId>grp</groupId>" +
-                "<artifactId>p2</artifactId>" +
-                "<version>0</version>" +
-                "</project>");
+        TestFileUtils.writeFile(d, "pom.xml", 
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>p1</artifactId>
+                    <version>0</version>
+                    <packaging>pom</packaging>
+                    <modules>
+                        <module>sub</module>
+                    </modules>
+                </project>
+                """);
+        TestFileUtils.writeFile(d, "sub/pom.xml", 
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>p2</artifactId>
+                    <version>0</version>
+                </project>
+                """);
         Project p1 = ProjectManager.getDefault().findProject(d);
         Project p2 = ProjectManager.getDefault().findProject(d.getFileObject("sub"));
-        assertEquals(Collections.singleton(p2), p1.getLookup().lookup(SubprojectProvider.class).getSubprojects());
+        assertEquals(Set.of(p2), p1.getLookup().lookup(SubprojectProvider.class).getSubprojects());
     }
 
     public void testNonDirUsedAsModule() throws Exception { // #199502
-        TestFileUtils.writeFile(d, "pom.xml",
-                "<project xmlns='http://maven.apache.org/POM/4.0.0'>" +
-                "<modelVersion>4.0.0</modelVersion>" +
-                "<groupId>grp</groupId>" +
-                "<artifactId>p1</artifactId>" +
-                "<version>0</version>" +
-                "<packaging>pom</packaging>" +
-                "<modules>" +
-                "<module>sub/pom.xml</module>" +
-                "</modules>" +
-                "</project>");
-        TestFileUtils.writeFile(d, "sub/pom.xml",
-                "<project xmlns='http://maven.apache.org/POM/4.0.0'>" +
-                "<modelVersion>4.0.0</modelVersion>" +
-                "<groupId>grp</groupId>" +
-                "<artifactId>p2</artifactId>" +
-                "</project>");
+        TestFileUtils.writeFile(d, "pom.xml", 
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>p1</artifactId>
+                    <version>0</version>
+                    <packaging>pom</packaging>
+                    <modules>
+                        <module>sub/pom.xml</module>
+                    </modules>
+                </project>
+                """);
+        TestFileUtils.writeFile(d, "sub/pom.xml", 
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>p2</artifactId>
+                </project>
+                """);
         Project p1 = ProjectManager.getDefault().findProject(d);
-        assertEquals(Collections.emptySet(), p1.getLookup().lookup(SubprojectProvider.class).getSubprojects());
+        assertEquals(Set.of(), p1.getLookup().lookup(SubprojectProvider.class).getSubprojects());
     }
 
 }

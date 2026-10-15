@@ -43,7 +43,7 @@ final class ExcludingLookup extends org.openide.util.Lookup {
     
     /**
      * Creates new Result object with supplied instances parameter.
-     * @param instances to be used to return from the lookup
+     * @param classes to be used to return from the lookup
      */
     ExcludingLookup(Lookup delegate, Class[] classes) {
         this.delegate = delegate;
@@ -375,7 +375,7 @@ BIG:
                     arr = new LookupListener[] { (LookupListener) listeners };
                 } else {
                     ArrayList<?> l = (ArrayList<?>) listeners;
-                    arr = l.toArray(new LookupListener[l.size()]);
+                    arr = l.toArray(new LookupListener[0]);
                 }
             }
 

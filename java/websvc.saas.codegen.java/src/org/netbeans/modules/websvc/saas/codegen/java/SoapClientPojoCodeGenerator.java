@@ -140,7 +140,7 @@ public class SoapClientPojoCodeGenerator extends SaasClientCodeGenerator {
 
         finishProgressReporting();
 
-        return new HashSet<FileObject>(Collections.EMPTY_LIST);
+        return new HashSet<FileObject>(Collections.<FileObject>emptyList());
     }
 
     /**
@@ -525,7 +525,7 @@ public class SoapClientPojoCodeGenerator extends SaasClientCodeGenerator {
         }
         if ("java.lang.String".equals(type)) {
             //NOI18N
-            if (defaultVal != null && defaultVal instanceof String) {
+            if (defaultVal instanceof String) {
                 return "\"" + (String) defaultVal + "\";";
             }
             return "\"\";"; //NOI18N

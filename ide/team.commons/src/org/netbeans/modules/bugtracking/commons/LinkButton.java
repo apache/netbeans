@@ -29,9 +29,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
-import java.awt.RenderingHints;
 import java.awt.Stroke;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -43,7 +41,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
-import java.util.Map;
 import java.util.logging.Level;
 import javax.swing.Action;
 import javax.swing.Icon;
@@ -51,6 +48,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import org.openide.awt.GraphicsUtils;
 
 /**
  *
@@ -119,10 +117,10 @@ public class LinkButton extends JButton implements MouseListener, FocusListener 
     }
     
     public void setColors(Color linkColor, Color linkInFocusColor, Color mouseOverLinkColor, Color visitedLinkColor) {
-        this.linkInFocusColor = linkInFocusColor;
-        this.linkColor = linkColor;
-        this.mouseOverLinkColor = mouseOverLinkColor;
-        this.visitedLinkColor = visitedLinkColor;
+        LinkButton.linkInFocusColor = linkInFocusColor;
+        LinkButton.linkColor = linkColor;
+        LinkButton.mouseOverLinkColor = mouseOverLinkColor;
+        LinkButton.visitedLinkColor   = visitedLinkColor;
     }
 
     private void init() {
@@ -182,7 +180,8 @@ public class LinkButton extends JButton implements MouseListener, FocusListener 
     
     @Override
     protected void paintComponent(Graphics g) {
-        Graphics2D g2 = prepareGraphics( g );
+        Graphics2D g2 = (Graphics2D) g;
+        GraphicsUtils.configureDefaultRenderingHints(g2);
         super.paintComponent(g2);
 
         Dimension size = getSize();
@@ -229,17 +228,6 @@ public class LinkButton extends JButton implements MouseListener, FocusListener 
     
     protected boolean isVisited() {
         return false;
-    }
-
-    private static Graphics2D prepareGraphics(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
-        Map rhints = (Map)(Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints")); //NOI18N
-        if( rhints == null && Boolean.getBoolean("swing.aatext") ) { //NOI18N
-             g2.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
-        } else if( rhints != null ) {
-            g2.addRenderingHints( rhints );
-        }
-        return g2;
     }
 
     private static Font getButtonFont() {

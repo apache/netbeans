@@ -324,7 +324,7 @@ public class DocumentTesting {
         }
     }
 
-    final static class InsertOp extends RandomTestContainer.Op {
+    static final class InsertOp extends RandomTestContainer.Op {
 
         public InsertOp(String name) {
             super(name);
@@ -355,7 +355,7 @@ public class DocumentTesting {
 
     }
 
-        final static class RemoveOp extends RandomTestContainer.Op {
+        static final class RemoveOp extends RandomTestContainer.Op {
 
             public RemoveOp(String name) {
                 super(name);
@@ -387,7 +387,7 @@ public class DocumentTesting {
 
         }
 
-    final static class UndoRedo extends RandomTestContainer.Op {
+    static final class UndoRedo extends RandomTestContainer.Op {
 
         UndoRedo(String name) {
             super(name);

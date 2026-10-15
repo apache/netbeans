@@ -52,7 +52,7 @@ public class BinaryForSourceQueryTest extends NbTestCase {
     
     @Override
     protected void setUp () throws IOException {
-        MockServices.setServices(new Class[] {CPProvider.class, SFBQImpl.class});
+        MockServices.setServices(new Class<?>[] {CPProvider.class, SFBQImpl.class});
         this.clearWorkDir();
         File wd = this.getWorkDir();
         FileObject root = FileUtil.toFileObject(wd);

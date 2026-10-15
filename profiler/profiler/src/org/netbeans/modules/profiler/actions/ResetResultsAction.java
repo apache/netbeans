@@ -75,8 +75,8 @@ public final class ResetResultsAction extends CallableSystemAction {
         }
     }
     
-    final private static class Singleton {
-        final private static ResetResultsAction INSTANCE = new ResetResultsAction();
+    private static final class Singleton {
+        private static final ResetResultsAction INSTANCE = new ResetResultsAction();
     }
     
     private ResetResultsAction() {

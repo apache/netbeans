@@ -42,17 +42,13 @@ public class SystemOptionsParser  {
     public static DefaultResult parse(FileObject settingsFo, boolean types) throws IOException, ClassNotFoundException {
         SettingsRecognizer instance = getRecognizer(settingsFo);
         
-        SystemOptionsParser rImpl = null;
-        InputStream is = instance.getSerializedInstance();
-        try {
+        try (InputStream is = instance.getSerializedInstance()) {
             SerParser sp = new SerParser(is);
             SerParser.Stream s = sp.parse();
-            rImpl = new SystemOptionsParser(instance.instanceName(), types);
+            SystemOptionsParser rImpl = new SystemOptionsParser(instance.instanceName(), types);
             DefaultResult ret = (DefaultResult)rImpl.processContent(s.contents.iterator(), false);
             ret.setModuleName(instance.getCodeNameBase().replace('.','/'));
             return ret;
-        } finally {
-            is.close();
         }
     }
     

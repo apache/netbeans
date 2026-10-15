@@ -51,7 +51,6 @@ import org.apache.tools.ant.module.bridge.AntBridge;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.options.java.api.JavaOptions;
 import org.openide.ErrorManager;
 import org.openide.LifecycleManager;
@@ -65,6 +64,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Cancellable;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
@@ -204,7 +204,7 @@ public final class TargetExecutor implements Runnable {
         @Override
         public Object getValue(String key) {
             if (key.equals(Action.SMALL_ICON)) {
-                return new ImageIcon(TargetExecutor.class.getResource("/org/apache/tools/ant/module/resources/stop.png"));
+                return ImageUtilities.loadImageIcon("org/apache/tools/ant/module/resources/stop.png", false);
             } else if (key.equals(Action.SHORT_DESCRIPTION)) {
                 return NbBundle.getMessage(TargetExecutor.class, "TargetExecutor.StopAction.stop");
             } else {
@@ -260,9 +260,9 @@ public final class TargetExecutor implements Runnable {
         public Object getValue(String key) {
             if (key.equals(Action.SMALL_ICON)) {
                 if (withModifications) {
-                    return new ImageIcon(TargetExecutor.class.getResource("/org/apache/tools/ant/module/resources/rerun-mod.png"));
+                    return ImageUtilities.loadImageIcon("org/apache/tools/ant/module/resources/rerun-mod.png", false);
                 } else {
-                    return new ImageIcon(TargetExecutor.class.getResource("/org/apache/tools/ant/module/resources/rerun.png"));
+                    return ImageUtilities.loadImageIcon("org/apache/tools/ant/module/resources/rerun.png", false);
                 }
             } else if (key.equals(Action.SHORT_DESCRIPTION)) {
                 if (withModifications) {
@@ -289,7 +289,7 @@ public final class TargetExecutor implements Runnable {
                     }
                 } else {
                     TargetExecutor exec = new TargetExecutor(pcookie,
-                            targetNames != null ? targetNames.toArray(new String[targetNames.size()]) : null);
+                            targetNames != null ? targetNames.toArray(new String[0]) : null);
                     //exec.setVerbosity(verbosity);
                     exec.setProperties(properties);
                     exec.setConcealedProperties(concealedProperties);
@@ -333,7 +333,7 @@ public final class TargetExecutor implements Runnable {
         @Override
         public Object getValue(String key) {
             if (key.equals(Action.SMALL_ICON)) {
-                return new ImageIcon(TargetExecutor.class.getResource("/org/apache/tools/ant/module/resources/options.png"));
+                return ImageUtilities.loadImageIcon("org/apache/tools/ant/module/resources/options.png", false);
             } else if (key.equals(Action.SHORT_DESCRIPTION)) {
                 return NbBundle.getMessage(TargetExecutor.class, "TargetExecutor.OptionsAction");
             } else {
@@ -454,7 +454,7 @@ public final class TargetExecutor implements Runnable {
     /** Call execute(), not this method directly!
      */
     @SuppressWarnings("NestedSynchronizedStatement")
-    synchronized public @Override void run () {
+    public synchronized @Override void run () {
         final LastTargetExecuted[] thisExec = new LastTargetExecuted[1];
         final StopAction sa = stopActions.get(io);
         assert sa != null;
@@ -500,7 +500,7 @@ public final class TargetExecutor implements Runnable {
         // #139185: do not record verbosity level; always pick it up from Ant Settings.
         thisExec[0] = LastTargetExecuted.record(
                 buildFile, /*verbosity,*/
-                targetNames != null ? targetNames.toArray(new String[targetNames.size()]) : null,
+                targetNames != null ? targetNames.toArray(new String[0]) : null,
                 properties,
                 concealedProperties,
                 suggestedDisplayName != null ? suggestedDisplayName : getProcessDisplayName(pcookie, targetNames),
@@ -555,7 +555,7 @@ public final class TargetExecutor implements Runnable {
         }
         
 	    // #58513, #87801: register a progress handle for the task too.
-        final ProgressHandle handle = ProgressHandleFactory.createHandle(displayName, new Cancellable() {
+        final ProgressHandle handle = ProgressHandle.createHandle(displayName, new Cancellable() {
             public boolean cancel() {
                 sa.actionPerformed(null);
                 return true;

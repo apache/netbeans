@@ -465,7 +465,7 @@ final class XmlOutputParser extends DefaultHandler {
             List<String> stList = new ArrayList<>(Arrays.asList(trouble.getStackTrace()));
             if (!line.startsWith(stList.get(stList.size()-1))){
                 stList.add(line);
-                tr.setStackTrace(stList.toArray(new String[stList.size()]));
+                tr.setStackTrace(stList.toArray(new String[0]));
             }
         }
     }
@@ -477,7 +477,7 @@ final class XmlOutputParser extends DefaultHandler {
             line = line.substring(0, logPos);
         }
 
-        Matcher matcher = regexp.getComparisonPattern().matcher(line.replaceAll("\n", "")); // NOI18N
+        Matcher matcher = regexp.getComparisonPattern().matcher(line.replace("\n", "")); // NOI18N
         if (matcher.matches()){
             String startExpected = "expected:<"; // NOI18N
             String startActual = "> but was:<"; // NOI18N

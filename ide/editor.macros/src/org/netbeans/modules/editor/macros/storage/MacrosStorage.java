@@ -118,7 +118,7 @@ public final class MacrosStorage implements StorageDescription<String, MacroDesc
             
     private static final String MIME_TYPE = "text/x-nbeditor-macrosettings"; //NOI18N
     
-    private static abstract class MacrosReader extends StorageReader<String, MacroDescription> {
+    private abstract static class MacrosReader extends StorageReader<String, MacroDescription> {
         protected MacrosReader(FileObject f, String mimePath) {
             super(f, mimePath);
         }

@@ -1,0 +1,5 @@
+class |>MARK_OCCURRENCES:Constant<| {}
+const CONSTANT = new |>MARK_OCCURRENCES:C^onstant<|;
+const CONSTANT = new |>MARK_OCCURRENCES:Constant<|();
+const CONSTANT = new |>MARK_OCCURRENCES:Constant<|("test", "constant");
+const CONSTANT = new |>MARK_OCCURRENCES:Constant<|(test: "test", constant: "constant");

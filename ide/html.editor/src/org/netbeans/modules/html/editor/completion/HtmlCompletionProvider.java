@@ -30,6 +30,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.completion.Completion;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.html.lexer.HTMLTokenId;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
@@ -215,7 +216,7 @@ public class HtmlCompletionProvider implements CompletionProvider {
                         return;
                     }
                         try {
-                            int rowEnd = Utilities.getRowEnd((BaseDocument)doc, caretOffset);
+                            int rowEnd = LineDocumentUtils.getLineEndOffset((BaseDocument)doc, caretOffset);
                             final String documentText = doc.getText(result.getAnchor(), rowEnd - result.getAnchor());
 
                             // Go through result items and select completionItem 
@@ -249,7 +250,7 @@ public class HtmlCompletionProvider implements CompletionProvider {
         }
     }
 
-    private static abstract class AbstractQuery extends AsyncCompletionQuery {
+    private abstract static class AbstractQuery extends AsyncCompletionQuery {
 
         protected final boolean triggeredByAutocompletion;
 
@@ -386,7 +387,10 @@ public class HtmlCompletionProvider implements CompletionProvider {
                             } else {
                                 ts.move(dotPos - 1);
                                 if (ts.moveNext() || ts.movePrevious()) {
-                                    if (ts.token().id() == HTMLTokenId.TAG_CLOSE_SYMBOL && !CharSequenceUtilities.equals("/>", ts.token().text())) {
+                                    if (!CharSequenceUtilities.equals("/>", ts.token().text()) &&
+                                        null == LexerUtils.followsToken(ts, HTMLTokenId.TAG_CLOSE, true, false,
+                                            HTMLTokenId.WS,
+                                            HTMLTokenId.TAG_CLOSE_SYMBOL)) {
                                         ret[0] = true;
                                     }
                                 }

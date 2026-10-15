@@ -29,6 +29,19 @@
         <file>libsrc/org/netbeans/updater/resources/frame48.gif</file>
         <file>libsrc/org/netbeans/updater/resources/frame.gif</file>
         <file>libsrc/org/netbeans/updater/resources/frame32.gif</file>
+        <file>test/unit/data/nbm-source/org-yourorghere-executable-permissions/Info/executables.list</file>
+        <file>test/unit/data/nbm-source/org-yourorghere-depending_on_new_one_engine/netbeans/modules/org-yourorghere-depending_on_new_one_engine.jardir/META-INF/MANIFEST.MF</file>
+        <file>test/unit/data/nbm-source/org-yourorghere-engine/netbeans/modules/org-yourorghere-engine.jardir/META-INF/MANIFEST.MF</file>
+        <file>test/unit/data/nbm-source/org-yourorghere-depending/netbeans/modules/org-yourorghere-depending.jardir/META-INF/MANIFEST.MF</file>
+        <file>test/unit/data/nbm-source/org-yourorghere-fragment/netbeans/modules/org-yourorghere-fragment.jardir/META-INF/MANIFEST.MF</file>
+        <file>test/unit/data/nbm-source/com-example-testmodule-cluster/netbeans/modules/com-example-testmodule-cluster.jardir/META-INF/MANIFEST.MF</file>
+        <file>test/unit/data/nbm-source/org-yourorghere-refresh_providers_test/netbeans/modules/org-yourorghere-refresh_providers_test.jardir/META-INF/MANIFEST.MF</file>
+        <file>test/unit/data/nbm-source/org-yourorghere-engine-1-2/netbeans/modules/org-yourorghere-engine.jardir/META-INF/MANIFEST.MF</file>
+        <file>test/unit/data/nbm-source/org-yourorghere-independent-1-1/netbeans/modules/org-yourorghere-independent.jardir/META-INF/MANIFEST.MF</file>
+        <file>test/unit/data/nbm-source/org-yourorghere-engine-1-1/netbeans/modules/org-yourorghere-engine.jardir/META-INF/MANIFEST.MF</file>
+        <file>test/unit/data/nbm-source/org-yourorghere-executable-permissions/netbeans/modules/org-yourorghere-executable-permissions.jardir/META-INF/MANIFEST.MF</file>
+        <file>test/unit/data/nbm-source/org-yourorghere-brokendepending/netbeans/modules/org-yourorghere-brokendepending.jardir/META-INF/MANIFEST.MF</file>
+        <file>test/unit/data/nbm-source/org-yourorghere-independent/netbeans/modules/org-yourorghere-independent.jardir/META-INF/MANIFEST.MF</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>

@@ -102,12 +102,7 @@ public final class Actions extends Object {
         @Override
         protected void performAction(final Node[] activatedNodes) {
             final Tab proj = Tab.findDefault();
-            Tab.RP.post(new Runnable() {
-                @Override
-                public void run() {
-                    proj.doSelectNode(activatedNodes[0].getCookie(DataObject.class));
-                }
-            });
+            Tab.RP.post(() -> proj.doSelectNode(activatedNodes[0].getCookie(DataObject.class)));
         }
 
         @Override
@@ -153,6 +148,7 @@ public final class Actions extends Object {
         /** generated Serialized Version UID */
         //  static final long serialVersionUID = -5280204757097896304L;
         
+        private static final String HELP_ID = Remove.class.getName();
         private static final Remove REMOVE = new Remove ();
         
         public static Action getDefault () {
@@ -165,8 +161,8 @@ public final class Actions extends Object {
         public boolean enable (Node[] arr) {
             if ((arr == null) || (arr.length == 0)) return false;
 
-            for (int i = 0; i < arr.length; i++) {
-                DataObject shad = arr[i].getCookie(DataObject.class);
+            for (Node arr1 : arr) {
+                DataObject shad = arr1.getCookie(DataObject.class);
                 //Disable when node is not shadow in Favorites folder.
                 if (shad == null || shad.getFolder() != FavoritesNode.getFolder()) {
                     return false;
@@ -190,7 +186,7 @@ public final class Actions extends Object {
         */
         @Override
         public HelpCtx getHelpCtx() {
-            return new HelpCtx(Remove.class);
+            return new HelpCtx(Remove.HELP_ID);
         }
 
         /**
@@ -200,9 +196,8 @@ public final class Actions extends Object {
         */
         @Override
         protected void performAction (Node[] arr) {
-            for (int i = 0; i < arr.length; i++) {
-                DataObject shad = arr[i].getCookie(DataObject.class);
-
+            for (Node arr1 : arr) {
+                DataObject shad = arr1.getCookie(DataObject.class);
                 if (shad != null && shad.getFolder() == FavoritesNode.getFolder()) {
                     try {
                         shad.delete();
@@ -230,6 +225,7 @@ public final class Actions extends Object {
         static final long serialVersionUID =-6471281373153172312L;
         /** generated Serialized Version UID */
         //  static final long serialVersionUID = -5280204757097896304L;
+        private static final String HELP_ID = Add.class.getName();
         private static final Add ADD = new Add ();
         
         public static ContextAwareAction getDefault() {
@@ -249,8 +245,8 @@ public final class Actions extends Object {
                 
             
 
-            for (int i = 0; i < arr.length; i++) {
-                DataObject dataObject = arr[i].getCookie(DataObject.class);
+            for (Node arr1 : arr) {
+                DataObject dataObject = arr1.getCookie(DataObject.class);
                 if (! isAllowed(dataObject))
                     return false;
             }
@@ -272,7 +268,7 @@ public final class Actions extends Object {
         */
         @Override
         public HelpCtx getHelpCtx() {
-            return new HelpCtx(Add.class);
+            return new HelpCtx(Add.HELP_ID);
         }
 
         /**
@@ -290,19 +286,14 @@ public final class Actions extends Object {
                     if (fo == null || !VisibilityQuery.getDefault().isVisible(fo)) return;
                     toShadows = Collections.singletonList(DataObject.find(fo));
                 } else {
-                    toShadows = new ArrayList<DataObject>();
+                    toShadows = new ArrayList<>();
                     for (Node node : activatedNodes) {
                         DataObject obj = node.getCookie(DataObject.class);
                         if (obj != null)
                             toShadows.add(obj);
                     }
                 }
-                Tab.RP.post(new Runnable () {
-                    @Override
-                    public void run() {
-                        addToFavorites(toShadows);
-                    }
-                });
+                Tab.RP.post(() -> addToFavorites(toShadows));
             } catch (DataObjectNotFoundException e) {
                 LOG.log(Level.INFO, null, e);
             }
@@ -358,31 +349,25 @@ public final class Actions extends Object {
             projectsTab.requestActive();
             //Try to locate newly added node and select it
             if (createdDO != null) {
-                Tab.RP.post(new Runnable() {
-                    @Override
-                    public void run () {
-                        Node [] nodes = projectsTab.getExplorerManager().getRootContext().getChildren().getNodes(true);
-                        final Node [] toSelect = new Node[1];
-                        boolean setSelected = false;
-                        for (int i = 0; i < nodes.length; i++) {
-                            if (createdDO.getName().equals(nodes[i].getName())) {
-                                toSelect[0] = nodes[i];
-                                setSelected = true;
-                                break;
+                Tab.RP.post(() -> {
+                    Node [] nodes = projectsTab.getExplorerManager().getRootContext().getChildren().getNodes(true);
+                    final Node [] toSelect = new Node[1];
+                    boolean setSelected = false;
+                    for (Node node : nodes) {
+                        if (createdDO.getName().equals(node.getName())) {
+                            toSelect[0] = node;
+                            setSelected = true;
+                            break;
+                        }
+                    }
+                    if (setSelected) {
+                        SwingUtilities.invokeLater(() -> {
+                            try {
+                                projectsTab.getExplorerManager().setExploredContextAndSelection(toSelect[0],toSelect);
+                            } catch (PropertyVetoException ex) {
+                                //Nothing to do
                             }
-                        }
-                        if (setSelected) {
-                            SwingUtilities.invokeLater(new Runnable () {
-                                @Override
-                                public void run() {
-                                    try {
-                                        projectsTab.getExplorerManager().setExploredContextAndSelection(toSelect[0],toSelect);
-                                    } catch (PropertyVetoException ex) {
-                                        //Nothing to do
-                                    }
-                                }
-                            });
-                        }
+                        });
                     }
                 });
             }
@@ -417,9 +402,9 @@ public final class Actions extends Object {
             FileObject fo = dobj.getPrimaryFile();
             if (fo != null) {
                 DataObject [] arr = f.getChildren();
-                for (int i = 0; i < arr.length; i++) {
-                    if (arr[i] instanceof DataShadow) {
-                        DataShadow obj = (DataShadow) arr[i];
+                for (DataObject arr1 : arr) {
+                    if (arr1 instanceof DataShadow) {
+                        DataShadow obj = (DataShadow) arr1;
                         if (fo.equals(obj.getOriginal().getPrimaryFile())) {
                             return obj;
                         }
@@ -429,22 +414,24 @@ public final class Actions extends Object {
             return null;
         }
 
+        // what order is this? requires comment
         public static void reorderAfterAddition(final DataFolder favourities, final DataObject[] children, final List<? extends DataObject> listAdd) {
-            List<DataObject> listDest = new ArrayList<DataObject>();
+            List<DataObject> listDest = new ArrayList<>();
             if (listAdd.size() > 0) {
                 //Insert new nodes just before last (root) node
                 DataObject root = null;
                 //Find root
-                for (int i = 0; i < children.length; i++) {
-                    FileObject fo = children[i].getPrimaryFile();
+                for (DataObject child : children) {
+                    FileObject fo = child.getPrimaryFile();
                     if ("Favorites/Root.instance".equals(fo.getPath())) { //NOI18N
-                        root = children[i];
+                        root = child;
+                        break;
                     }
                 }
                 if (root != null) {
-                    for (int i = 0; i < children.length; i++) {
-                        if (!root.equals(children[i])) {
-                            listDest.add(children[i]);
+                    for (DataObject child : children) {
+                        if (!root.equals(child)) {
+                            listDest.add(child);
                         }
                     }
                     listDest.addAll(listAdd);
@@ -454,7 +441,7 @@ public final class Actions extends Object {
                     listDest.addAll(listAdd);
                 }
                 //Set desired order
-                DataObject [] newOrder = listDest.toArray(new DataObject[listDest.size()]);
+                DataObject [] newOrder = listDest.toArray(new DataObject[0]);
                 try {
                     favourities.setOrder(newOrder);
                 } catch (IOException ex) {
@@ -472,16 +459,11 @@ public final class Actions extends Object {
             assert !EventQueue.isDispatchThread();
             final DataFolder f = FavoritesNode.getFolder();
             final DataObject[] arr = f.getChildren();
-            final List<DataObject> listAdd = new ArrayList<DataObject>();
+            final List<DataObject> listAdd = new ArrayList<>();
             final DataObject toSelect = createShadows(f, toShadows, listAdd);
             //This is done to set desired order of nodes in view
             reorderAfterAddition(f, arr, listAdd);
-            EventQueue.invokeLater(new Runnable () {
-                @Override
-                public void run () {
-                    selectAfterAddition(toSelect);
-                }
-            });
+            EventQueue.invokeLater(() -> selectAfterAddition(toSelect));
         }
 
         static boolean isAllowed(DataObject dataObject) {

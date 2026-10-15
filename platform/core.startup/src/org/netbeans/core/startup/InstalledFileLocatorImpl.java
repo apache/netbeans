@@ -62,7 +62,7 @@ public final class InstalledFileLocatorImpl extends InstalledFileLocator {
     private final File[] dirs;
     public InstalledFileLocatorImpl() {
         List<File> _dirs = computeDirs();
-        dirs = _dirs.toArray(new File[_dirs.size()]);
+        dirs = _dirs.toArray(new File[0]);
     }
     
     private static void addDir(List<File> _dirs, String d) {

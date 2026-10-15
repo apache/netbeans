@@ -83,7 +83,21 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
-        <change>
+         <change>
+            <summary>Adding Color definitions in Color Schema XML-s</summary>
+            <version major="1" minor="59"/>
+            <date day="24" month="11" year="2019"/>
+            <author login="lkishalmi"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes" deprecation="no" deletion="no" modification="no" />
+            <description>
+            <p>
+                Adding new element &lt;colordef name="" color="" /&gt; to fontcolors XML schema, which makes possible custom string to color mapping. It
+                allows to define a color palette, then lookup colors from that palette, making porting color schemas easier.
+            </p>
+            </description>
+            <issue number="NETBEANS-3440"/>
+        </change>
+       <change>
             <summary>Module split</summary>
             <version major="1" minor="49"/>
             <date day="6" month="3" year="2015"/>
@@ -214,7 +228,7 @@ is the proper place.
             <description>
             <p>
                 The phase 1 of the editor settings enhancements, please see
-                <a href="http://www.netbeans.org/issues/show_bug.cgi?id=90403">issue 90403</a>
+                <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=90403">issue 90403</a>
                 for details. Briefly, the changes involve introducing a special
                 folder for each setting type, profiles are always stored in their
                 own folder, modules are allowed to register multiple settings files,
@@ -292,7 +306,6 @@ is the proper place.
 -->
     <head>
       <title>Change History for the Editor Settings Storage API</title>
-      <link rel="stylesheet" href="prose.css" type="text/css"/>
     </head>
     <body>
 

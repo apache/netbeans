@@ -43,7 +43,7 @@ public final class PersistenceLocation {
      *         a persistence location or the location does not exist.
      */
     public static FileObject getLocation(Project project) {
-        PersistenceLocationProvider provider = (PersistenceLocationProvider)project.getLookup().lookup(PersistenceLocationProvider.class);
+        PersistenceLocationProvider provider = project.getLookup().lookup(PersistenceLocationProvider.class);
         if (provider != null) {
             return provider.getLocation();
         }
@@ -61,7 +61,7 @@ public final class PersistenceLocation {
      * @since 1.37
      */
     public static FileObject getLocation(Project project, FileObject fo) {
-        PersistenceLocationProvider provider = (PersistenceLocationProvider)project.getLookup().lookup(PersistenceLocationProvider.class);
+        PersistenceLocationProvider provider = project.getLookup().lookup(PersistenceLocationProvider.class);
         if (provider != null) {
             return provider.getLocation(fo);
         }
@@ -80,7 +80,7 @@ public final class PersistenceLocation {
      *         PersistenceLocationProvider in its lookup.
      */
     public static FileObject createLocation(Project project) throws IOException {
-        PersistenceLocationProvider provider = (PersistenceLocationProvider)project.getLookup().lookup(PersistenceLocationProvider.class);
+        PersistenceLocationProvider provider = project.getLookup().lookup(PersistenceLocationProvider.class);
         if (provider != null) {
             return provider.createLocation();
         }
@@ -101,7 +101,7 @@ public final class PersistenceLocation {
      * @since 1.37
      */
     public static FileObject createLocation(Project project, FileObject fo) throws IOException {
-        PersistenceLocationProvider provider = (PersistenceLocationProvider)project.getLookup().lookup(PersistenceLocationProvider.class);
+        PersistenceLocationProvider provider = project.getLookup().lookup(PersistenceLocationProvider.class);
         if (provider != null) {
             return provider.createLocation(fo);
         }

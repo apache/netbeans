@@ -43,8 +43,8 @@ public class ViewDependency {
         this.view = view;
         dmd = cp.getDatabaseMetaData();
 
-        tables = new LinkedList();
-        columns = new LinkedList();
+        tables = new LinkedList<>();
+        columns = new LinkedList<>();
     }
 
     public LinkedList getTables() {

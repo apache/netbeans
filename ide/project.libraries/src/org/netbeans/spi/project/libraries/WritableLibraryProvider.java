@@ -24,7 +24,7 @@ import java.io.IOException;
 
 /**
  * LibraryProvider supporting modifications.
- * @param L the {@link LibraryImplementation} type
+ * @param <L> the {@link LibraryImplementation} type
  * @author Tomas Zezula
  * @since 1.48
  */

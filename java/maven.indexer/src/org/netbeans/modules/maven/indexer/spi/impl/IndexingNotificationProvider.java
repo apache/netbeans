@@ -18,10 +18,13 @@
  */
 package org.netbeans.modules.maven.indexer.spi.impl;
 
+import org.netbeans.modules.maven.indexer.api.RepositoryInfo;
+
 /**
  * used internally.
  * @author Tomas Stupka
  */
 public interface IndexingNotificationProvider {
     public void notifyError(String message);
+    public void requestPermissionsFor(RepositoryInfo repo);
 }

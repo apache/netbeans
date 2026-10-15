@@ -73,15 +73,13 @@ public class NodePropertySupport extends PropertySupport {
             result = (PropertyEditor) potentialEditor;
         } else if (potentialEditor instanceof Class) {
             try {
-                potentialEditor = ((Class) potentialEditor).newInstance();
+                potentialEditor = ((Class) potentialEditor).getDeclaredConstructor().newInstance();
                 if (!(potentialEditor instanceof PropertyEditor)) {
                     throw new IllegalArgumentException(
                             "Editor class does not derive from property editor"); //NOI18N
 }
                 return (PropertyEditor) potentialEditor;
-            } catch (InstantiationException ex) {
-                throw new RuntimeException(ex);
-            } catch (IllegalAccessException ex) {
+            } catch (ReflectiveOperationException ex) {
                 throw new RuntimeException(ex);
             }
         }

@@ -193,7 +193,7 @@ public class CordovaTemplate implements SiteTemplateImplementation {
         }
 
         private CordovaPanel panel;
-        private transient final ChangeSupport changeSupport = new ChangeSupport(this);
+        private final transient ChangeSupport changeSupport = new ChangeSupport(this);
 
         @Override
         public void addChangeListener(ChangeListener listener) {

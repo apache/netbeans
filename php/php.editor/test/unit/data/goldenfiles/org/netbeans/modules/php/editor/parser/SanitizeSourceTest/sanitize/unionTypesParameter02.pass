@@ -1,0 +1,33 @@
+<Program start='0' end='868'>
+    <Comments>
+        <Comment start='7' end='814' commentType='multiLine'/>
+    </Comments>
+    <Statements>
+        <FunctionDeclaration start='816' end='867' isReference='false'>
+            <Identifier start='825' end='836' name='union_types'/>
+            <FormalParameters>
+                <FormalParameter start='837' end='851' isMandatory='true' isVariadic='false'>
+                    <ParametrType>
+                        <UnionType start='837' end='844'>
+                            <NamespaceName start='837' end='840' isCurrent='false' isGlobal='false'>
+                                <Identifier start='837' end='840' name='Foo'/>
+                            </NamespaceName>
+                            <NamespaceName start='841' end='844' isCurrent='false' isGlobal='false'>
+                                <Identifier start='841' end='844' name='Bar'/>
+                            </NamespaceName>
+                        </UnionType>
+                    </ParametrType>
+                    <ParametrName>
+                        <Variable start='845' end='851' isDollared='true'>
+                            <Identifier start='846' end='851' name='param'/>
+                        </Variable>
+                    </ParametrName>
+                    <DefaultValue>
+                    </DefaultValue>
+                </FormalParameter>
+            </FormalParameters>
+            <Block start='859' end='867' isCurly='true'>
+            </Block>
+        </FunctionDeclaration>
+    </Statements>
+</Program>

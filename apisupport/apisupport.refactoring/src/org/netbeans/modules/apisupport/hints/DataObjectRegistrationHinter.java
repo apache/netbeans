@@ -74,7 +74,7 @@ public class DataObjectRegistrationHinter implements Hinter {
             if (file.getPath().contains(FACTORIES_FOLDER)) { // its a factory
                 processFactories(ctx, file);
             }
-            ///// Actions
+            // Actions
             if (file.getPath().endsWith(ACTIONS_FOLDER)) {
                 processActions(ctx, file);
             }
@@ -167,7 +167,7 @@ public class DataObjectRegistrationHinter implements Hinter {
 
                     }
                     if (!fixes.isEmpty()) {
-                        ctx.addHint(Severity.WARNING, ctx.standardAnnotationDescription(), fixes.toArray(new Fix[fixes.size()]));
+                        ctx.addHint(Severity.WARNING, ctx.standardAnnotationDescription(), fixes.toArray(new Fix[0]));
                     }
                 }
 

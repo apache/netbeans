@@ -20,7 +20,6 @@
 package org.netbeans.modules.maven.grammar;
 
 import java.io.IOException;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.annotations.common.StaticResource;
@@ -42,7 +41,6 @@ import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.filesystems.MIMEResolver;
 import org.openide.loaders.DataObjectExistsException;
 import org.openide.loaders.MultiDataObject;
 import org.openide.loaders.MultiFileLoader;
@@ -59,11 +57,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 @Messages("CTL_SourceTabCaption=&Source")
-@MIMEResolver.Registration(
-    displayName="#POMResolver",
-    position=309,
-    resource="POMResolver.xml"
-)
 public class POMDataObject extends MultiDataObject {
 
     public static final String SETTINGS_MIME_TYPE = "text/x-maven-settings+xml";
@@ -192,7 +185,7 @@ public class POMDataObject extends MultiDataObject {
             if (primaryFile.getNameExt().equals("pom.xml")) { // NOI18N
                 try {
                     //TODO faster and less memory intensive to have just FileObject().asText()-> regexp?
-                    Element artifactId = XMLUtil.findElement(XMLUtil.parse(new InputSource(primaryFile.toURL().toString()), false, false, XMLUtil.defaultErrorHandler(), null).getDocumentElement(), "artifactId", null); // NOI18N
+                    Element artifactId = XMLUtil.findElement(XMLUtil.parse(new InputSource(primaryFile.toURL().toString()), false, false, true, XMLUtil.defaultErrorHandler(), null).getDocumentElement(), "artifactId", null); // NOI18N
                     if (artifactId != null) {
                         String text = XMLUtil.findText(artifactId);
                         if (text != null) {

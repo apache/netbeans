@@ -20,14 +20,12 @@
 package org.netbeans.spi.java.project.support;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -101,8 +99,10 @@ public class JavadocAndSourceRootDetectionTest extends NbTestCase {
         final Set<String> expected = new TreeSet<>();
         expected.add(TestFileUtils.writeFile(root, "lib1/dist/javadoc1/package-list", "some content").getParent().getPath());
         expected.add(TestFileUtils.writeFile(root, "lib2/dist/javadoc2/package-list", "some content").getParent().getPath());
-        expected.add(TestFileUtils.writeFile(root, "lib2/dist/javadoc3/package-list", "some content").getParent().getPath());
-        expected.add(TestFileUtils.writeFile(root, "other/lib/dist/javadoc4/package-list", "some content").getParent().getPath());
+        expected.add(TestFileUtils.writeFile(root, "lib3/dist/javadoc3/package-list", "some content").getParent().getPath());
+        expected.add(TestFileUtils.writeFile(root, "lib4/dist/javadoc4/element-list", "some content").getParent().getPath());
+        expected.add(TestFileUtils.writeFile(root, "other/lib1/dist/javadoc5/package-list", "some content").getParent().getPath());
+        expected.add(TestFileUtils.writeFile(root, "other/lib2/dist/javadoc6/element-list", "some content").getParent().getPath());
         final Collection< ? extends FileObject> javadocRoots = JavadocAndSourceRootDetection.findJavadocRoots(root, null);
         final Set<String> result = new TreeSet<>();
         for (FileObject jr : javadocRoots) {
@@ -133,8 +133,8 @@ public class JavadocAndSourceRootDetectionTest extends NbTestCase {
         TestFileUtils.writeFile(root2,"org/me/Test2.java","package org.me; class Test2{}");
         TestFileUtils.writeFile(root3,"org/me/Test3.java","package org.me; class Test3{}");
         TestFileUtils.writeFile(root4,"org/me/Test4.java","package org.me; class Test4{}");
-        final List<FileObject> result = new ArrayList(JavadocAndSourceRootDetection.findSourceRoots(wd, null));
-        final List<FileObject> expected = new ArrayList(Arrays.asList(
+        final List<FileObject> result = new ArrayList<>(JavadocAndSourceRootDetection.findSourceRoots(wd, null));
+        final List<FileObject> expected = new ArrayList<>(Arrays.asList(
                 root1,
                 root2,
                 root3,
@@ -144,8 +144,8 @@ public class JavadocAndSourceRootDetectionTest extends NbTestCase {
                 return o1.getNameExt().compareToIgnoreCase(o2.getNameExt());
             }
         };
-        Collections.sort(expected,c);
-        Collections.sort(result,c);
+        expected.sort(c);
+        result.sort(c);
         assertEquals (expected.toString(), result.toString());
     }
     

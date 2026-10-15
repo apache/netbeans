@@ -34,7 +34,6 @@ import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.source.parsing.FileObjects;
-import org.netbeans.modules.java.source.ui.JavaTypeProvider;
 import org.netbeans.modules.java.source.usages.IndexUtil;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.spi.java.classpath.ClassPathFactory;
@@ -230,7 +229,7 @@ public class JavaTypeProviderTest extends NbTestCase {
 
         assertEquals(expectedResults.length, results.size());
         //sort to make the result test run reproducable
-        Collections.sort(results, new Comparator<TypeDescriptor>() {
+        results.sort(new Comparator<TypeDescriptor>() {
             @Override
             public int compare(TypeDescriptor o1, TypeDescriptor o2) {
                 int compareValue = o1.getSimpleName().compareToIgnoreCase(o2.getSimpleName());

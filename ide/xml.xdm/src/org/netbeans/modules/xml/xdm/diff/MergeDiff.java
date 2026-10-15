@@ -296,7 +296,7 @@ public class MergeDiff {
         for ( int i=0; i < nm2.getLength(); i++ ) {
             Attribute newAttr = (Attribute) nm2.item(i);
             assert newAttr.getName() != null;
-            nodeToPosition.put( newAttr.getName(), new Integer( i ) );
+            nodeToPosition.put( newAttr.getName(), Integer.valueOf( i ) );
         }
         
         // to ensure accurate order, do delete or modify first, spare adds to the end
@@ -370,9 +370,6 @@ public class MergeDiff {
         return ancestors.isEmpty() ? null : ancestors.get(0);
     }
     
-    ////////////////////////////////////////////////////////////////////////////////
     // Member variables
-    ////////////////////////////////////////////////////////////////////////////////
-    
     private XDMModel model;
 }

@@ -23,7 +23,6 @@ import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -31,10 +30,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 import org.netbeans.api.autoupdate.*;
 import org.netbeans.api.autoupdate.InstallSupport.Installer;
 import org.netbeans.api.autoupdate.InstallSupport.Validator;
@@ -71,8 +69,8 @@ public class ModuleOptions extends OptionProcessor {
     private Option updateAll;
     private Option both;
     private Option extraUC;
-    
-    private Collection<UpdateUnitProvider> ownUUP = new HashSet<UpdateUnitProvider> ();
+    private Option directDisable;
+    private final Collection<UpdateUnitProvider> ownUUP = new HashSet<> ();
     
     /** Creates a new instance of ModuleOptions */
     public ModuleOptions() {
@@ -106,8 +104,10 @@ public class ModuleOptions extends OptionProcessor {
             Option.withoutArgument(Option.NO_SHORT_NAME, "update-all"), b, "MSG_UpdateAll"); // NOI18N
         extraUC = Option.shortDescription(
             Option.requiredArgument(Option.NO_SHORT_NAME, "extra-uc"), b, "MSG_ExtraUC"); // NOI18N
+        directDisable = Option.shortDescription(
+            Option.additionalArguments(Option.NO_SHORT_NAME, "direct-disable"), b, "MSG_DirectDisableModule"); // NOI18N
         
-        Option oper = OptionGroups.someOf(refresh, list, install, disable, enable, update, updateAll, extraUC);
+        Option oper = OptionGroups.someOf(refresh, list, install, disable, enable, update, updateAll, extraUC, directDisable);
         Option modules = Option.withoutArgument(Option.NO_SHORT_NAME, "modules");
         both = OptionGroups.allOf(modules, oper);
         return both;
@@ -117,11 +117,14 @@ public class ModuleOptions extends OptionProcessor {
     public Set<Option> getOptions() {
         return Collections.singleton(init());
     }
-    
+    @NbBundle.Messages({
+        "# {0} - update center name", 
+        "MSG_RefreshingUpdateCenter=Refreshing {0}"
+    })
     private void refresh(Env env) throws CommandException {
         for (UpdateUnitProvider p : UpdateUnitProviderFactory.getDefault().getUpdateUnitProviders(true)) {
             try {
-                env.getOutputStream().println("Refreshing " + p.getDisplayName());
+                env.getOutputStream().println(MSG_RefreshingUpdateCenter(p.getDisplayName()));
                 p.refresh(null, true);
             } catch (IOException ex) {
                 throw (CommandException)new CommandException(31, ex.getMessage()).initCause(ex);
@@ -134,7 +137,7 @@ public class ModuleOptions extends OptionProcessor {
         "MSG_ListHeader_Version=Version",
         "MSG_ListHeader_State=State"
     })
-    private void listAllModules(PrintStream out) {
+    private void listAllModules(PrintStream out) throws IOException {
         List<UpdateUnit> modules = UpdateManager.getDefault().getUpdateUnits();
         
         PrintTable table = new PrintTable(
@@ -144,7 +147,9 @@ public class ModuleOptions extends OptionProcessor {
         for (UpdateUnit uu : modules) {
             table.addRow(Status.toArray(uu));
         }
-        table.write(out);
+        StringBuilder sb = new StringBuilder();
+        table.write(sb);
+        out.print(sb.toString());
         out.flush();
     }
 
@@ -156,35 +161,34 @@ public class ModuleOptions extends OptionProcessor {
     @Override
     protected void process(Env env, Map<Option, String[]> optionValues) throws CommandException {
         try {
-            if (optionValues.containsKey(extraUC)) {
-                extraUC(env, optionValues.get(extraUC));
-            }
-            if (optionValues.containsKey(refresh)) {
-                refresh(env);
-            }
-
-            if (optionValues.containsKey(list)) {
-                listAllModules(env.getOutputStream());
-            }
-
-            if (optionValues.containsKey(install)) {
-                install(env, optionValues.get(install));
-            }
-
             try {
+                if (optionValues.containsKey(extraUC)) {
+                    extraUC(env, optionValues.get(extraUC));
+                }
+                if (optionValues.containsKey(refresh)) {
+                    refresh(env);
+                }
+
+                if (optionValues.containsKey(list)) {
+                    listAllModules(env.getOutputStream());
+                }
+
+                if (optionValues.containsKey(install)) {
+                    install(env, optionValues.get(install));
+                }
 
                 if (optionValues.containsKey(disable)) {
-                    changeModuleState(optionValues.get(disable), false);
+                    changeModuleState(env, optionValues.get(disable), false, false);
                 }
 
                 if (optionValues.containsKey(enable)) {
-                    changeModuleState(optionValues.get(enable), true);
+                    changeModuleState(env, optionValues.get(enable), true, false);
                 }
-            } catch (InterruptedException ex) {
-                throw initCause(new CommandException(4), ex);
-            } catch (IOException ex) {
-                throw initCause(new CommandException(4), ex);
-            } catch (OperationException ex) {
+
+                if (optionValues.containsKey(directDisable)) {
+                    changeModuleState(env, optionValues.get(directDisable), false, true);
+                }
+            } catch (InterruptedException | IOException | OperationException ex) {
                 throw initCause(new CommandException(4), ex);
             }
 
@@ -202,29 +206,43 @@ public class ModuleOptions extends OptionProcessor {
         
     }
 
-    private void changeModuleState(String[] cnbs, boolean enable) throws IOException, CommandException, InterruptedException, OperationException {
-        for (String cnb : cnbs) {
-            int slash = cnb.indexOf('/');
-            if (slash >= 0) {
-                cnb = cnb.substring(0, slash);
-            }
-        }
-        
-        Set<String> all = new HashSet<String>(Arrays.asList(cnbs));
+    @NbBundle.Messages({
+        "# {0} - name of the module",
+        "MSG_FoundButNotInstalled=Found {0}, but not installed",
+        "# {0} - requested patterns",
+        "MSG_CannotFindAnyPattern=Cannot find any module matching {0}\n"
+    })
+    private void changeModuleState(Env env, String[] cnbs, boolean enable, boolean direct) throws IOException, CommandException, InterruptedException, OperationException {
+        CodeNameMatcher cnm = CodeNameMatcher.create(env, cnbs);
 
         List<UpdateUnit> units = UpdateManager.getDefault().getUpdateUnits();
-        OperationContainer<OperationSupport> operate = enable ? OperationContainer.createForEnable() : OperationContainer.createForDisable();
+        OperationContainer<OperationSupport> operate = 
+                enable ? OperationContainer.createForEnable()  :
+                    (direct ? OperationContainer.createForDirectDisable() : OperationContainer.createForDisable());
+        StringBuilder sb = new StringBuilder();
+        boolean found = false;
         for (UpdateUnit updateUnit : units) {
-            if (all.contains(updateUnit.getCodeName())) {
-                if (enable) {
-                    operate.add(updateUnit, updateUnit.getInstalled());
+            final String codeName = updateUnit.getCodeName();
+            if (cnm.matches(codeName)) {
+                final UpdateElement elem = updateUnit.getInstalled();
+                if (elem != null) {
+                    found = true;
+                    if (elem.isEnabled() != enable) {
+                        operate.add(updateUnit, elem);
+                    }
                 } else {
-                    operate.add(updateUnit, updateUnit.getInstalled());
+                    sb.append("\n").append(MSG_FoundButNotInstalled(codeName));
                 }
             }
         }
+        if (!found) {
+            sb.insert(0, MSG_CannotFindAnyPattern(cnm));
+            throw new CommandException(55, sb.toString());
+        }
         OperationSupport support = operate.getSupport();
-        support.doOperation(null);
+        if (support != null) {
+            support.doOperation(null);
+        }
     }
 
     @NbBundle.Messages({
@@ -242,7 +260,7 @@ public class ModuleOptions extends OptionProcessor {
         if (! initialized()) {
             refresh(env);
         }
-        Pattern[] pats = findMatcher(env, pattern);
+        CodeNameMatcher cnm = CodeNameMatcher.create(env, pattern);
         
         List<UpdateUnit> units = UpdateManager.getDefault().getUpdateUnits(UpdateManager.TYPE.MODULE);
         final Collection <String> firstClass = getFirstClassModules();
@@ -265,12 +283,12 @@ public class ModuleOptions extends OptionProcessor {
                     Bundle.MSG_Update(uu.getCodeName(), uu.getInstalled().getSpecificationVersion(), ue.getSpecificationVersion()
                 ));
                 if (operate.canBeAdded(uu, ue)) {
-                    LOG.fine("  ... update " + uu.getInstalled() + " -> " + ue);
+                    LOG.log(Level.FINE, "  ... update {0} -> {1}", new Object[]{uu.getInstalled(), ue});
                     firstClassHasUpdates = true;
                     OperationInfo<InstallSupport> info = operate.add(ue);
                     if (info != null) {
                         Set<UpdateElement> requiredElements = info.getRequiredElements();
-                        LOG.fine("      ... add required elements: " + requiredElements);
+                        LOG.log(Level.FINE, "      ... add required elements: {0}", requiredElements);
                         operate.add(requiredElements);
                     }
                 }
@@ -285,7 +303,7 @@ public class ModuleOptions extends OptionProcessor {
                 if (updates.isEmpty()) {
                     continue;
                 }
-                if (pattern.length > 0 && !matches(uu.getCodeName(), pats)) {
+                if (pattern.length > 0 && !cnm.matches(uu.getCodeName())) {
                     continue;
                 }
                 final UpdateElement ue = updates.get(0);
@@ -293,11 +311,11 @@ public class ModuleOptions extends OptionProcessor {
                     Bundle.MSG_Update(uu.getCodeName(), uu.getInstalled().getSpecificationVersion(), ue.getSpecificationVersion()
                 ));
                 if (operate.canBeAdded(uu, ue)) {
-                    LOG.fine("  ... update " + uu.getInstalled() + " -> " + ue);
+                    LOG.log(Level.FINE, "  ... update {0} -> {1}", new Object[]{uu.getInstalled(), ue});
                     OperationInfo<InstallSupport> info = operate.add(ue);
                     if (info != null) {
                         Set<UpdateElement> requiredElements = info.getRequiredElements();
-                        LOG.fine("      ... add required elements: " + requiredElements);
+                        LOG.log(Level.FINE, "      ... add required elements: {0}", requiredElements);
                         operate.add(requiredElements);
                     }
                 }
@@ -305,7 +323,7 @@ public class ModuleOptions extends OptionProcessor {
         }
         final InstallSupport support = operate.getSupport();
         if (support == null) {
-            env.getOutputStream().println(pats == null || pats.length == 0 ? Bundle.MSG_UpdateNotFound() : Bundle.MSG_UpdateNoMatchPattern(Arrays.asList(pats)));
+            env.getOutputStream().println(cnm.isEmpty() ? Bundle.MSG_UpdateNotFound() : Bundle.MSG_UpdateNoMatchPattern(cnm));
             env.getOutputStream().println("updates=0"); // NOI18N
             return;
         }
@@ -334,54 +352,32 @@ public class ModuleOptions extends OptionProcessor {
     }
 
     @NbBundle.Messages({
-        "# {0} - regexp",
-        "MSG_CantCompileRegex=Cannot understand regular expession ''{0}''"
-    })
-    private static Pattern[] findMatcher(Env env, String[] pattern) {
-        Pattern[] arr = new Pattern[pattern.length];
-        for (int i = 0; i < arr.length; i++) {
-            try {
-                arr[i] = Pattern.compile(pattern[i]);
-            } catch (PatternSyntaxException e) {
-                env.getErrorStream().println(Bundle.MSG_CantCompileRegex(pattern[i]));
-            }
-        }
-        return arr;
-    }
-
-    private static boolean matches(String txt, Pattern[] pats) {
-        for (Pattern p : pats) {
-            if (p == null) {
-                continue;
-            }
-            if (p.matcher(txt).matches()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @NbBundle.Messages({
         "# {0} - module name",
         "# {1} - module version",
         "MSG_Installing=Installing {0}@{1}",
-        "# {0} - paterns",
-        "MSG_InstallNoMatch=Cannot install. No match for {0}."
+        "# {0} - module name",
+        "MSG_AlreadyPresent=Module {0} is already installed.",
     })
     private void install(final Env env, String... pattern) throws CommandException {
         if (! initialized()) {
             refresh(env);
         }
 
-        Pattern[] pats = findMatcher(env, pattern);
+        CodeNameMatcher cnm = CodeNameMatcher.create(env, pattern);
 
         List<UpdateUnit> units = UpdateManager.getDefault().getUpdateUnits();
         OperationContainer<InstallSupport> operate = OperationContainer.createForInstall();
+        boolean found = false;
+        StringBuilder sb = new StringBuilder();
+        
+        
         for (UpdateUnit uu : units) {
-            if (uu.getInstalled() != null) {
+            if (!cnm.matches(uu.getCodeName())) {
                 continue;
             }
-            if (!matches(uu.getCodeName(), pats)) {
+            found = true;
+            if (uu.getInstalled() != null) {
+                sb.append(MSG_AlreadyPresent(uu.getCodeName())).append("\n");
                 continue;
             }
             if (uu.getAvailableUpdates().isEmpty()) {
@@ -394,7 +390,11 @@ public class ModuleOptions extends OptionProcessor {
         }
         final InstallSupport support = operate.getSupport();
         if (support == null) {
-            env.getOutputStream().println(Bundle.MSG_InstallNoMatch(Arrays.asList(pats)));
+            if (!found) {
+                sb.insert(0, MSG_CannotFindAnyPattern(cnm));
+                throw new CommandException(55, sb.toString());
+            }
+            env.getOutputStream().print(sb.toString());
             return;
         }
         try {
@@ -437,7 +437,7 @@ public class ModuleOptions extends OptionProcessor {
         "MSG_NoURL=None extra Update Center (URL) specified."
     })
     private void extraUC(Env env, String... urls) throws CommandException {
-        List<URL> url2UC = new ArrayList<URL> (urls.length);
+        List<URL> url2UC = new ArrayList<> (urls.length);
         for (String spec : urls) {
             try {
                 url2UC.add(new URL(spec));
@@ -462,7 +462,7 @@ public class ModuleOptions extends OptionProcessor {
     private Collection<String> getFirstClassModules() {
         Preferences p = NbPreferences.root().node("/org/netbeans/modules/autoupdate"); // NOI18N
         String names = p.get(PLUGIN_MANAGER_FIRST_CLASS_MODULES, "");
-        Set<String> res = new HashSet<String> ();
+        Set<String> res = new HashSet<> ();
         StringTokenizer en = new StringTokenizer (names, ","); // NOI18N
         while (en.hasMoreTokens ()) {
             res.add (en.nextToken ().trim ());
@@ -482,14 +482,22 @@ public class ModuleOptions extends OptionProcessor {
         public CLIProgressUIWorker(Env env) {
             this.env = env;
         }
+
         @Override
         public void processProgressEvent(ProgressEvent event) {
-            env.getOutputStream().println(event.getMessage());
+            printEvent(event);
         }
+
         @Override
         public void processSelectedProgressEvent(ProgressEvent event) {
-            env.getOutputStream().println(event.getMessage());
+            printEvent(event);
+        }
+
+        private void printEvent(ProgressEvent event) {
+            final String msg = event.getMessage();
+            if (msg != null && msg.length() > 0) {
+                env.getOutputStream().println(msg);
+            }
         }
     }
-    
 }

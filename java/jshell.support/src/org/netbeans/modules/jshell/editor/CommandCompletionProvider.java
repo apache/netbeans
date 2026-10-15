@@ -337,7 +337,7 @@ public class CommandCompletionProvider implements CompletionProvider{
                             n = f.getLookup().lookup(Node.class);
                         }
                         if (n != null) {
-                            return new ImageIcon(n.getIcon(BeanInfo.ICON_COLOR_16x16));
+                            return ImageUtilities.icon2ImageIcon(ImageUtilities.image2Icon(n.getIcon(BeanInfo.ICON_COLOR_16x16)));
                         }
                     }
                 }
@@ -360,7 +360,7 @@ public class CommandCompletionProvider implements CompletionProvider{
         public void query(CompletionResultSet resultSet) {
             String cmd = "/" + command + " ";
             String doc = shellTool.commandDocumentation(cmd, cmd.length(), false);
-////COMMENTED BY MERGE
+//COMMENTED BY MERGE
 //=======
 //            String doc = session.getJShellTool().commandDocumentation(cmd, cmd.length(), false);
 //>>>>>>> merge rev

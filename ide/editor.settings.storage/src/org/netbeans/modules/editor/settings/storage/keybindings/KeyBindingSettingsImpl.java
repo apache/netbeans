@@ -69,14 +69,14 @@ public final class KeyBindingSettingsImpl extends KeyBindingSettingsFactory {
         
         if (result == null) {
             result = new KeyBindingSettingsImpl(mimePath);
-            INSTANCES.put(mimePath, new WeakReference<KeyBindingSettingsImpl>(result));
+            INSTANCES.put(mimePath, new WeakReference<>(result));
         }
         
         return result;
     }
     
-    private MimePath mimePath;
-    private PropertyChangeSupport   pcs;
+    private final MimePath mimePath;
+    private final PropertyChangeSupport   pcs;
     private KeyBindingSettingsImpl baseKBS;
     private Listener                listener;
     
@@ -127,6 +127,7 @@ public final class KeyBindingSettingsImpl extends KeyBindingSettingsFactory {
      *
      * @return List of {@link MultiKeyBinding}
      */
+    @Override
     public List<MultiKeyBinding> getKeyBindings() {
         return getKeyBindings(EditorSettingsImpl.getInstance().getCurrentKeyMapProfile());
     }
@@ -136,9 +137,10 @@ public final class KeyBindingSettingsImpl extends KeyBindingSettingsFactory {
      *
      * @return List of {@link MultiKeyBinding}
      */
+    @Override
     public List<MultiKeyBinding> getKeyBindings(String profile) {
 	profile = getInternalKeymapProfile(profile);
-        return Collections.unmodifiableList(new ArrayList<MultiKeyBinding>(getShortcuts(profile, false).values()));
+        return Collections.unmodifiableList(new ArrayList<>(getShortcuts(profile, false).values()));
     }
 
     private Map<Collection<KeyStroke>, MultiKeyBinding> getShortcuts(String profile, boolean defaults) {
@@ -157,9 +159,10 @@ public final class KeyBindingSettingsImpl extends KeyBindingSettingsFactory {
      *
      * @return List of {@link MultiKeyBinding}
      */
+    @Override
     public List<MultiKeyBinding> getKeyBindingDefaults(String profile) {
 	profile = getInternalKeymapProfile(profile);
-        return Collections.unmodifiableList(new ArrayList<MultiKeyBinding>(getShortcuts(profile, true).values()));
+        return Collections.unmodifiableList(new ArrayList<>(getShortcuts(profile, true).values()));
     }
     
     /**
@@ -168,6 +171,7 @@ public final class KeyBindingSettingsImpl extends KeyBindingSettingsFactory {
      *
      * @return List of {@link MultiKeyBinding}
      */
+    @Override
     public void setKeyBindings (
         String profile, 
         List<MultiKeyBinding> keyBindings
@@ -180,7 +184,7 @@ public final class KeyBindingSettingsImpl extends KeyBindingSettingsFactory {
             if (keyBindings == null) {
                 ess.delete(mimePath, profile, false);
             } else {
-                Map<Collection<KeyStroke>, MultiKeyBinding> shortcuts = new HashMap<Collection<KeyStroke>, MultiKeyBinding>();
+                Map<Collection<KeyStroke>, MultiKeyBinding> shortcuts = new HashMap<>();
                 for(MultiKeyBinding mkb : keyBindings) {
                     shortcuts.put(mkb.getKeyStrokeList(), mkb);
                 }
@@ -201,6 +205,7 @@ public final class KeyBindingSettingsImpl extends KeyBindingSettingsFactory {
      *
      * @param l a PropertyChangeListener to be registerred
      */
+    @Override
     public void addPropertyChangeListener (PropertyChangeListener l) {
         pcs.addPropertyChangeListener (l);
     }
@@ -210,6 +215,7 @@ public final class KeyBindingSettingsImpl extends KeyBindingSettingsFactory {
      *
      * @param l a PropertyChangeListener to be unregisterred
      */
+    @Override
     public void removePropertyChangeListener (PropertyChangeListener l) {
         pcs.removePropertyChangeListener (l);
     }    
@@ -250,7 +256,7 @@ public final class KeyBindingSettingsImpl extends KeyBindingSettingsFactory {
         // 1) get real profile
 	String profile = getInternalKeymapProfile(EditorSettingsImpl.getInstance().getCurrentKeyMapProfile());
         
-        Map<Collection<KeyStroke>, MultiKeyBinding> allShortcuts = new HashMap<Collection<KeyStroke>, MultiKeyBinding>();
+        Map<Collection<KeyStroke>, MultiKeyBinding> allShortcuts = new HashMap<>();
 
         // Add base shortcuts
         if (baseKBS != null) {
@@ -263,7 +269,7 @@ public final class KeyBindingSettingsImpl extends KeyBindingSettingsFactory {
         allShortcuts.putAll(localShortcuts);
         
         // Prepare the result
-        List<MultiKeyBinding> result = new ArrayList<MultiKeyBinding>(allShortcuts.values());
+        List<MultiKeyBinding> result = new ArrayList<>(allShortcuts.values());
         
         return new Immutable(result);
     }
@@ -313,6 +319,7 @@ public final class KeyBindingSettingsImpl extends KeyBindingSettingsFactory {
             );
         }
         
+        @Override
         public void propertyChange (PropertyChangeEvent evt) {
             KeyBindingSettingsImpl r = getSettings ();
             if (r == null) return;
@@ -320,18 +327,20 @@ public final class KeyBindingSettingsImpl extends KeyBindingSettingsFactory {
             r.pcs.firePropertyChange (null, null, null);
         }
 
+        @Override
         public void run() {
             removeListeners();
         }
     }
     
     /* package */ static final class Immutable extends KeyBindingSettings {
-        private List<MultiKeyBinding> keyBindings;
+        private final List<MultiKeyBinding> keyBindings;
         
         public Immutable(List<MultiKeyBinding> keyBindings) {
             this.keyBindings = keyBindings;
         }
         
+        @Override
         public List<MultiKeyBinding> getKeyBindings() {
             return Collections.unmodifiableList(keyBindings);
         }

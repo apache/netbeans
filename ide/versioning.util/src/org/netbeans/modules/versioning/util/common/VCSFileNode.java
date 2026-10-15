@@ -97,7 +97,7 @@ public abstract class VCSFileNode<I extends VCSFileInformation> {
         if (fo != null) {
             list.add(fo);
         }
-        return list.toArray(new Object[list.size()]);
+        return list.toArray(new Object[0]);
     }
     
     public String getRelativePath() {        

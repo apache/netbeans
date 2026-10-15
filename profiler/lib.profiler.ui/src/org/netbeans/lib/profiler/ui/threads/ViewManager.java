@@ -75,7 +75,7 @@ public class ViewManager extends ProfilerTableContainer.ColumnChangeAdapter {
         
         updateTimeMarks(true);
         
-        rowViews = new HashMap();
+        rowViews = new HashMap<>();
     }
     
     
@@ -328,14 +328,14 @@ public class ViewManager extends ProfilerTableContainer.ColumnChangeAdapter {
             int maxIndex = getMaxIndex();
             int newIndex = i == Integer.MIN_VALUE ? maxIndex : i;
             Position position = getIndexPosition(newIndex);
-            while (newIndex > 0 && Position.RIGHT.equals(position))
+            while (newIndex > 0 && Position.RIGHT == position)
                 position = getIndexPosition(--newIndex);
             
             // All indexes on right
-            if (Position.RIGHT.equals(position)) return Integer.MAX_VALUE;
+            if (Position.RIGHT == position) return Integer.MAX_VALUE;
             
             // All indexes on left
-            if (Position.LEFT.equals(position) && newIndex == maxIndex &&
+            if (Position.LEFT == position && newIndex == maxIndex &&
                 getMaxPosition() - offset < 0) return Integer.MIN_VALUE;
             
             // Last visible index
@@ -349,15 +349,15 @@ public class ViewManager extends ProfilerTableContainer.ColumnChangeAdapter {
             int maxIndex = getMaxIndex();
             int newIndex = i == Integer.MAX_VALUE ? 0 : i;
             Position position = getIndexPosition(newIndex);
-            while (newIndex < maxIndex && !Position.RIGHT.equals(position))
+            while (newIndex < maxIndex && Position.RIGHT != position)
                 position = getIndexPosition(++newIndex);
             
             // First invisible inedx or all indexes on right
-            if (Position.RIGHT.equals(position))
+            if (Position.RIGHT == position)
                 return newIndex == 0 ? Integer.MAX_VALUE : newIndex - 1;
             
             // All indexes on left
-            if (Position.LEFT.equals(position) && newIndex == maxIndex &&
+            if (Position.LEFT == position && newIndex == maxIndex &&
                 getMaxPosition() - offset < 0) return Integer.MIN_VALUE;
             
             // Last visible index

@@ -93,7 +93,8 @@ public class CPWhereUsedQueryPlugin implements RefactoringPlugin {
             elements.add(refactoring, WhereUsedElement.create(re.getFile(), re.getName(), re.getRange(), ElementKind.VARIABLE));
         }
     }
-    
+
+    @SuppressWarnings("fallthrough") 
     public static Collection<RefactoringElement> findVariables(RefactoringElementContext context) throws IOException, ParseException {
         Collection<RefactoringElement> elements = new ArrayList<>();
         String varName = context.getElementName();

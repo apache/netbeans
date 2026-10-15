@@ -22,9 +22,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.csl.api.ColoringAttributes;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -36,11 +38,6 @@ import org.netbeans.modules.parsing.spi.SchedulerEvent;
 import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.api.NameKind;
 import org.netbeans.modules.php.editor.api.QualifiedName;
-import org.netbeans.modules.php.editor.api.elements.ElementFilter;
-import org.netbeans.modules.php.editor.api.elements.FieldElement;
-import org.netbeans.modules.php.editor.api.elements.FunctionElement;
-import org.netbeans.modules.php.editor.api.elements.MethodElement;
-import org.netbeans.modules.php.editor.api.elements.TypeConstantElement;
 import org.netbeans.modules.php.editor.api.elements.TypeElement;
 import org.netbeans.modules.php.editor.model.Model;
 import org.netbeans.modules.php.editor.model.VariableScope;
@@ -50,12 +47,15 @@ import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration.Modifier;
+import org.netbeans.modules.php.editor.parser.astnodes.CaseDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.EnumDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionName;
 import org.netbeans.modules.php.editor.parser.astnodes.GroupUseStatementPart;
@@ -63,6 +63,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
 import org.netbeans.modules.php.editor.parser.astnodes.InterfaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
+import org.netbeans.modules.php.editor.parser.astnodes.NamedArgument;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocTypeNode;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPVarComment;
@@ -114,6 +115,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
     public static final EnumSet<ColoringAttributes> ANNOTATION_TYPE_SET = EnumSet.of(ColoringAttributes.ANNOTATION_TYPE);
     public static final EnumSet<ColoringAttributes> METHOD_INVOCATION_SET = EnumSet.of(ColoringAttributes.CUSTOM1);
     public static final EnumSet<ColoringAttributes> STATIC_METHOD_INVOCATION_SET = EnumSet.of(ColoringAttributes.STATIC, ColoringAttributes.CUSTOM1);
+    public static final EnumSet<ColoringAttributes> PARAMETER_NAME_SET = EnumSet.of(ColoringAttributes.CUSTOM2);
     private static final Logger LOGGER = Logger.getLogger(SemanticAnalysis.class.getName());
     private static boolean isLogged = false;
     private volatile boolean cancelled;
@@ -135,7 +137,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
 
     @Override
     public Map<OffsetRange, Set<ColoringAttributes>> getHighlights() {
-        return semanticHighlights;
+        return semanticHighlights != null ? Collections.unmodifiableMap(semanticHighlights) : Collections.emptyMap();
     }
 
     @Override
@@ -148,7 +150,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
         checkIfResolveDeprecatedElements = true;
         if (isResolveDeprecatedElements()) {
             if (!isLogged()) {
-                LOGGER.info("Resolving of deprecated elements in Semantic analysis - IDE will be possibly slow!");
+                LOGGER.info("Resolving of deprecated elements in Semantic analysis - IDE will be possibly slow!"); // NOI18N
                 setIsLogged(true);
             }
         }
@@ -164,9 +166,9 @@ public class SemanticAnalysis extends SemanticAnalyzer {
         PHPParseResult result = (PHPParseResult) r;
         Map<OffsetRange, Set<ColoringAttributes>> highlights = new HashMap<>(100);
         if (result.getProgram() != null) {
-            SemanticHighlightVisitor semanticHighlightVisitor = new SemanticHighlightVisitor(highlights, result.getSnapshot(), result.getModel());
+            SemanticHighlightVisitor semanticHighlightVisitor = new SemanticHighlightVisitor(highlights, result.getSnapshot(), result.getModel(), result.getProgram());
             result.getProgram().accept(semanticHighlightVisitor);
-            if (highlights.size() > 0) {
+            if (!highlights.isEmpty()) {
                 semanticHighlights = highlights;
             } else {
                 semanticHighlights = null;
@@ -213,94 +215,85 @@ public class SemanticAnalysis extends SemanticAnalyzer {
         }
 
         Map<OffsetRange, Set<ColoringAttributes>> highlights;
+        // for unsed private constant: name, identifier
+        private final Map<UnusedIdentifier, ASTNodeColoring> privateUnusedConstants;
         // for unused private fields: name, varible
         // if isused, then it's deleted from the list and marked as the field
         private final Map<UnusedIdentifier, ASTNodeColoring> privateFieldsUnused;
         // for unsed private method: name, identifier
         private final Map<UnusedIdentifier, ASTNodeColoring> privateUnusedMethods;
         // this is holder of blocks, which has to be scanned for usages in the class.
-        private List<Block> needToScan = new ArrayList<>();
-
+        private final Map<TypeInfo, List<Block>> needToScan = new HashMap<>();
         private final Snapshot snapshot;
-
         private final Model model;
-
-        private Set<TypeElement> deprecatedTypes;
-
-        private Set<MethodElement> deprecatedMethods;
-
-        private Set<FieldElement> deprecatedFields;
-
-        private Set<TypeConstantElement> deprecatedConstants;
-
-        private Set<FunctionElement> deprecatedFunctions;
-
+        private final Program program;
+        private Set<QualifiedName> deprecatedTypes;
         // last visited type declaration
         private TypeInfo typeInfo;
 
-
-        public SemanticHighlightVisitor(Map<OffsetRange, Set<ColoringAttributes>> highlights, Snapshot snapshot, Model model) {
+        public SemanticHighlightVisitor(Map<OffsetRange, Set<ColoringAttributes>> highlights, Snapshot snapshot, Model model, Program program) {
             this.highlights = highlights;
+            privateUnusedConstants = new HashMap<>();
             privateFieldsUnused = new HashMap<>();
             privateUnusedMethods = new HashMap<>();
             this.snapshot = snapshot;
             this.model = model;
+            this.program = program;
         }
 
-        private Set<TypeElement> getDeprecatedTypes() {
+        private Set<QualifiedName> getDeprecatedTypes() {
             if (isCancelled()) {
-                return Collections.EMPTY_SET;
+                return Collections.emptySet();
             }
             if (deprecatedTypes == null) {
-                deprecatedTypes = ElementFilter.forDeprecated(true).filter(model.getIndexScope().getIndex().getTypes(NameKind.empty()));
+                deprecatedTypes = getDeprecatedFQTypeNames();
             }
-            return deprecatedTypes;
+            return Collections.unmodifiableSet(deprecatedTypes);
         }
 
-        private Set<MethodElement> getDeprecatedMethods() {
+        private Set<QualifiedName> getDeprecatedFQTypeNames() {
             if (isCancelled()) {
-                return Collections.EMPTY_SET;
+                return Collections.emptySet();
             }
-            if (deprecatedMethods == null) {
-                deprecatedMethods = ElementFilter.forDeprecated(true).filter(model.getIndexScope().getIndex().getMethods(NameKind.empty()));
+            Set<QualifiedName> names = new HashSet<>();
+            Set<TypeElement> types = model.getIndexScope().getIndex().getTypes(NameKind.empty());
+            for (TypeElement type : types) {
+                if (type.isDeprecated()) {
+                    names.add(type.getFullyQualifiedName());
+                }
             }
-            return deprecatedMethods;
+            return names;
         }
 
-        private Set<FunctionElement> getDeprecatedFunctions() {
-            if (isCancelled()) {
-                return Collections.EMPTY_SET;
+        private boolean isDeprecatedDeclaration(ASTNode node) {
+            boolean isDeprecated = false;
+            if (!isCancelled() && isResolveDeprecatedElements()) {
+                long startTime = 0;
+                if (LOGGER.isLoggable(Level.FINE)) {
+                    startTime = System.currentTimeMillis();
+                }
+                isDeprecated = VariousUtils.isDeprecated(model.getFileScope(), program, node);
+                if (LOGGER.isLoggable(Level.FINE)) {
+                    long time = System.currentTimeMillis() - startTime;
+                    LOGGER.fine(String.format("isDeprecatedDeclaration() took %d ms", time)); // NOI18N
+                }
             }
-            if (deprecatedFunctions == null) {
-                deprecatedFunctions = ElementFilter.forDeprecated(true).filter(model.getIndexScope().getIndex().getFunctions(NameKind.empty()));
-            }
-            return deprecatedFunctions;
-        }
-
-        private Set<FieldElement> getDeprecatedFields() {
-            if (isCancelled()) {
-                return Collections.EMPTY_SET;
-            }
-            if (deprecatedFields == null) {
-                deprecatedFields = ElementFilter.forDeprecated(true).filter(model.getIndexScope().getIndex().getFields(NameKind.empty()));
-            }
-            return deprecatedFields;
-        }
-
-        private Set<TypeConstantElement> getDeprecatedConstants() {
-            if (isCancelled()) {
-                return Collections.EMPTY_SET;
-            }
-            if (deprecatedConstants == null) {
-                deprecatedConstants = ElementFilter.forDeprecated(true).filter(model.getIndexScope().getIndex().getTypeConstants(NameKind.empty()));
-            }
-            return deprecatedConstants;
+            return isDeprecated;
         }
 
         private void addColoringForNode(ASTNode node, Set<ColoringAttributes> coloring) {
             int start = snapshot.getOriginalOffset(node.getStartOffset());
             if (start > -1) {
                 int end = start + node.getEndOffset() - node.getStartOffset();
+                assert coloring != null : snapshot.getText().toString();
+                highlights.put(new OffsetRange(start, end), coloring);
+            }
+        }
+
+        private void addColoringForNamedArgument(NamedArgument node, Set<ColoringAttributes> coloring) {
+            int start = snapshot.getOriginalOffset(node.getStartOffset());
+            if (start > -1) {
+                int end = start + node.getExpression().getStartOffset() - node.getStartOffset();
                 assert coloring != null : snapshot.getText().toString();
                 highlights.put(new OffsetRange(start, end), coloring);
             }
@@ -321,6 +314,16 @@ public class SemanticAnalysis extends SemanticAnalyzer {
                     } else {
                         addColoringForNode(item.identifier, UNUSED_FIELD_SET);
                     }
+                }
+            }
+        }
+
+        private void addColoringForUnusedPrivateConstants() {
+            for (ASTNodeColoring item : privateUnusedConstants.values()) {
+                if (item.coloring.contains(ColoringAttributes.DEPRECATED)) {
+                    addColoringForNode(item.identifier, DEPRECATED_UNUSED_STATIC_FIELD_SET);
+                } else {
+                    addColoringForNode(item.identifier, UNUSED_STATIC_FIELD_SET);
                 }
             }
         }
@@ -365,49 +368,35 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             addToPath(cldec);
             typeInfo = new TypeDeclarationTypeInfo(cldec);
             scan(cldec.getSuperClass());
-            scan(cldec.getInterfaes());
+            scan(cldec.getInterfaces());
             Identifier name = cldec.getName();
-            addColoringForNode(name, createTypeNameColoring(name));
-            needToScan = new ArrayList<>();
+            addColoringForNode(name, createTypeNameColoring(cldec));
+            needToScan.put(typeInfo, new ArrayList<>());
             if (cldec.getBody() != null) {
                 cldec.getBody().accept(this);
+                // GH-8244 scan attributes after constant declarations are scanned
+                scan(cldec.getAttributes());
 
                 // find all usages in the method bodies
-                while (!needToScan.isEmpty()) {
-                    Block block = needToScan.remove(0);
-                    block.accept(this);
-                }
+                scanMethodBodies();
+                addColoringForUnusedPrivateConstants();
                 addColoringForUnusedPrivateFields();
             }
+            needToScan.remove(typeInfo);
             removeFromPath();
         }
 
-        private Set<ColoringAttributes> createTypeNameColoring(Identifier typeName) {
+        private Set<ColoringAttributes> createTypeNameColoring(TypeDeclaration typeDeclaration) {
             if (isCancelled()) {
-                return Collections.EMPTY_SET;
+                return Collections.emptySet();
             }
             Set<ColoringAttributes> result;
-            if (isDeprecatedTypeDeclaration(typeName)) {
+            if (isDeprecatedDeclaration(typeDeclaration)) {
                 result = DEPRECATED_CLASS_SET;
             } else {
                 result = ColoringAttributes.CLASS_SET;
             }
             return result;
-        }
-
-        private boolean isDeprecatedTypeDeclaration(Identifier typeName) {
-            boolean isDeprecated = false;
-            if (!isCancelled() && isResolveDeprecatedElements()) {
-                VariableScope variableScope = model.getVariableScope(typeName.getStartOffset());
-                QualifiedName fullyQualifiedName = VariousUtils.getFullyQualifiedName(QualifiedName.create(typeName), typeName.getStartOffset(), variableScope);
-                for (TypeElement typeElement : getDeprecatedTypes()) {
-                    if (typeElement.getFullyQualifiedName().equals(fullyQualifiedName)) {
-                        isDeprecated = true;
-                        break;
-                    }
-                }
-            }
-            return isDeprecated;
         }
 
         @Override
@@ -416,23 +405,10 @@ public class SemanticAnalysis extends SemanticAnalyzer {
                 return;
             }
             Identifier functionName = node.getFunctionName();
-            if (isDeprecatedFunctionDeclaration(functionName)) {
+            if (isDeprecatedDeclaration(node)) {
                 addColoringForNode(functionName, DEPRECATED_SET);
             }
             super.visit(node);
-        }
-
-        private boolean isDeprecatedFunctionDeclaration(Identifier functionName) {
-            boolean isDeprecated = false;
-            if (!isCancelled() && isResolveDeprecatedElements()) {
-                for (FunctionElement functionElement : getDeprecatedFunctions()) {
-                    if (functionElement.getName().equals(functionName.getName())) {
-                        isDeprecated = true;
-                        break;
-                    }
-                }
-            }
-            return isDeprecated;
         }
 
         @Override
@@ -440,6 +416,19 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             if (isCancelled()) {
                 return;
             }
+            if (CodeUtils.isConstructor(md)) {
+                // [NETBEANS-4443] PHP 8.0 Constructor Property Promotion
+                for (FormalParameter formalParameter : md.getFunction().getFormalParameters()) {
+                    if (isCancelled()) {
+                        return;
+                    }
+                    FieldsDeclaration fieldsDeclaration = FieldsDeclaration.create(formalParameter);
+                    if (fieldsDeclaration != null) {
+                        scan(fieldsDeclaration);
+                    }
+                }
+            }
+            scan(md.getAttributes());
             scan(md.getFunction().getFormalParameters());
             boolean isPrivate = Modifier.isPrivate(md.getModifier());
             Identifier identifier = md.getFunction().getFunctionName();
@@ -460,40 +449,22 @@ public class SemanticAnalysis extends SemanticAnalyzer {
                 // don't scan the body now. It should be scanned after all declarations
                 // are known
                 Block body = md.getFunction().getBody();
-                if (body != null) {
-                    needToScan.add(body);
+                if (body != null && needToScan.get(typeInfo) != null) {
+                    needToScan.get(typeInfo).add(body);
                 }
             }
         }
 
         private Set<ColoringAttributes> createMethodDeclarationColoring(MethodDeclaration methodDeclaration) {
             if (isCancelled()) {
-                return Collections.EMPTY_SET;
+                return Collections.emptySet();
             }
-            boolean isDeprecated = isDeprecatedMethodDeclaration(methodDeclaration.getFunction().getFunctionName());
+            boolean isDeprecated = isDeprecatedDeclaration(methodDeclaration);
             Set<ColoringAttributes> coloring = isDeprecated ? DEPRECATED_METHOD_SET : ColoringAttributes.METHOD_SET;
             if (Modifier.isStatic(methodDeclaration.getModifier())) {
                 coloring = isDeprecated ? DEPRECATED_STATIC_METHOD_SET : STATIC_METHOD_SET;
             }
             return coloring;
-        }
-
-        private boolean isDeprecatedMethodDeclaration(Identifier methodName) {
-            boolean isDeprecated = false;
-            if (!isCancelled() && isResolveDeprecatedElements()) {
-                VariableScope variableScope = model.getVariableScope(methodName.getStartOffset());
-                QualifiedName typeFullyQualifiedName = VariousUtils.getFullyQualifiedName(
-                        QualifiedName.create(typeInfo.getName()),
-                        methodName.getStartOffset(),
-                        variableScope);
-                for (MethodElement methodElement : getDeprecatedMethods()) {
-                    if (methodElement.getName().equals(methodName.getName()) && methodElement.getType().getFullyQualifiedName().equals(typeFullyQualifiedName)) {
-                        isDeprecated = true;
-                        break;
-                    }
-                }
-            }
-            return isDeprecated;
         }
 
         @Override
@@ -536,22 +507,29 @@ public class SemanticAnalysis extends SemanticAnalyzer {
                 return;
             }
             if (node.isAnonymous()) {
+                // NETBEANS-5719 scan ctor params before ClassInstanceCreationTypeInfo is created
+                // to avoid recognizing $this as an instance of an anonymous class
+                scan(node.ctorParams());
                 addToPath(node);
+                // GH-5551 keep original type info to scan parent blocks
+                TypeInfo originalTypeInfo = typeInfo;
                 typeInfo = new ClassInstanceCreationTypeInfo(node);
                 scan(node.getSuperClass());
                 scan(node.getInterfaces());
-                needToScan = new ArrayList<>();
+                needToScan.put(typeInfo, new ArrayList<>());
                 Block body = node.getBody();
                 if (body != null) {
                     body.accept(this);
+                    // GH-8244 scan attributes after constant declarations are scanned
+                    scan(node.getAttributes());
 
                     // find all usages in the method bodies
-                    while (!needToScan.isEmpty()) {
-                        Block block = needToScan.remove(0);
-                        block.accept(this);
-                    }
+                    scanMethodBodies();
+                    addColoringForUnusedPrivateConstants();
                     addColoringForUnusedPrivateFields();
                 }
+                needToScan.remove(typeInfo);
+                typeInfo = originalTypeInfo;
                 removeFromPath();
             } else {
                 super.visit(node);
@@ -565,7 +543,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             }
             typeInfo = new TypeDeclarationTypeInfo(node);
             Identifier name = node.getName();
-            addColoringForNode(name, createTypeNameColoring(name));
+            addColoringForNode(name, createTypeNameColoring(node));
             super.visit(node);
         }
 
@@ -574,17 +552,41 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             if (isCancelled()) {
                 return;
             }
+            addToPath(node);
+            scan(node.getAttributes());
             typeInfo = new TypeDeclarationTypeInfo(node);
             Identifier name = node.getName();
-            addColoringForNode(name, createTypeNameColoring(name));
-            needToScan = new ArrayList<>();
+            addColoringForNode(name, createTypeNameColoring(node));
+            needToScan.put(typeInfo, new ArrayList<>());
             if (node.getBody() != null) {
                 node.getBody().accept(this);
-                for (Block block : needToScan) {
-                    block.accept(this);
-                }
+                scanMethodBodies();
                 addColoringForUnusedPrivateFields();
             }
+            needToScan.remove(typeInfo);
+            removeFromPath();
+        }
+
+        @Override
+        public void visit(EnumDeclaration node) {
+            if (isCancelled()) {
+                return;
+            }
+            addToPath(node);
+            scan(node.getInterfaces());
+            typeInfo = new TypeDeclarationTypeInfo(node);
+            Identifier name = node.getName();
+            addColoringForNode(name, createTypeNameColoring(node));
+            needToScan.put(typeInfo, new ArrayList<>());
+            if (node.getBody() != null) {
+                node.getBody().accept(this);
+                // GH-8244 scan attributes after constant declarations are scanned
+                scan(node.getAttributes());
+                scanMethodBodies();
+                addColoringForUnusedPrivateConstants();
+            }
+            needToScan.remove(typeInfo);
+            removeFromPath();
         }
 
         @Override
@@ -597,7 +599,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             Variable[] variables = node.getVariableNames();
             for (int i = 0; i < variables.length; i++) {
                 Variable variable = variables[i];
-                Set<ColoringAttributes> coloring = createFieldDeclarationColoring(variable, isStatic);
+                Set<ColoringAttributes> coloring = createFieldDeclarationColoring(node, isStatic);
                 // in case of trait, just ignore it because it may be used in other classes
                 if (!isPrivate
                         || typeInfo.isTrait()) {
@@ -612,35 +614,16 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             super.visit(node);
         }
 
-        private Set<ColoringAttributes> createFieldDeclarationColoring(Variable variable, boolean isStatic) {
+        private Set<ColoringAttributes> createFieldDeclarationColoring(FieldsDeclaration fieldsDeclaration, boolean isStatic) {
             if (isCancelled()) {
-                return Collections.EMPTY_SET;
+                return Collections.emptySet();
             }
-            boolean isDeprecated = isDeprecatedFieldDeclaration(variable);
+            boolean isDeprecated = isDeprecatedDeclaration(fieldsDeclaration);
             Set<ColoringAttributes> coloring = isDeprecated ? DEPRECATED_FIELD_SET : ColoringAttributes.FIELD_SET;
             if (isStatic) {
                 coloring = isDeprecated ? DEPRECATED_STATIC_FIELD_SET : ColoringAttributes.STATIC_FIELD_SET;
             }
             return coloring;
-        }
-
-        private boolean isDeprecatedFieldDeclaration(Variable variable) {
-            boolean isDeprecated = false;
-            if (!isCancelled() && isResolveDeprecatedElements()) {
-                String variableName = CodeUtils.extractVariableName(variable);
-                VariableScope variableScope = model.getVariableScope(variable.getStartOffset());
-                QualifiedName typeFullyQualifiedName = VariousUtils.getFullyQualifiedName(
-                        QualifiedName.create(typeInfo.getName()),
-                        variable.getStartOffset(),
-                        variableScope);
-                for (FieldElement fieldElement : getDeprecatedFields()) {
-                    if (fieldElement.getName().equals(variableName) && fieldElement.getType().getFullyQualifiedName().equals(typeFullyQualifiedName)) {
-                        isDeprecated = true;
-                        break;
-                    }
-                }
-            }
-            return isDeprecated;
         }
 
         @Override
@@ -726,41 +709,57 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             if (path != null && path.size() > 1) {
                 parentNode = path.get(1);
             }
-            if (parentNode instanceof ClassDeclaration || parentNode instanceof InterfaceDeclaration
-                    || parentNode instanceof TraitDeclaration) {
+            if (CodeUtils.isTypeDeclaration(parentNode)) {
+                boolean isPrivate = Modifier.isPrivate(node.getModifier());
                 List<Identifier> names = node.getNames();
-                if (!names.isEmpty()) {
-                    for (Identifier identifier : names) {
-                        addColoringForNode(identifier, createConstantDeclarationColoring(identifier));
+                for (Identifier identifier : names) {
+                    Set<ColoringAttributes> coloring = createConstantDeclarationColoring(node);
+                    if (!isPrivate || parentNode instanceof TraitDeclaration) {
+                        addColoringForNode(identifier, coloring);
+                    } else {
+                        // NOTE: private constants, methods, and fields may be used in traits
+                        // currently, we don't check traits (if there is no performance problem, should check them if possible)
+                        // an enum is handled as a "final" class in PHP
+                        // so, virtually, "protected" is "private"
+                        // however, as written above, it may be used in traits
+                        // don't add protected items of Enum to unused items
+                        privateUnusedConstants.put(new UnusedIdentifier(identifier.getName(), typeInfo), new ASTNodeColoring(identifier, coloring));
                     }
                 }
             }
             super.visit(node);
         }
 
-        private Set<ColoringAttributes> createConstantDeclarationColoring(Identifier constantName) {
+        @Override
+        public void visit(CaseDeclaration node) {
             if (isCancelled()) {
-                return Collections.EMPTY_SET;
+                return;
             }
-            return isDeprecatedConstantDeclaration(constantName) ? DEPRECATED_STATIC_FIELD_SET : ColoringAttributes.STATIC_FIELD_SET;
+            ASTNode parentNode = null;
+            List<ASTNode> path = getPath();
+            if (path != null && path.size() > 1) {
+                parentNode = path.get(1);
+            }
+            if (parentNode instanceof EnumDeclaration) {
+                Identifier identifier = node.getName();
+                Set<ColoringAttributes> coloring = createEnumCaseDeclarationColoring(node);
+                addColoringForNode(identifier, coloring);
+            }
+            super.visit(node);
         }
 
-        private boolean isDeprecatedConstantDeclaration(Identifier constantName) {
-            boolean isDeprecated = false;
-            if (!isCancelled() && isResolveDeprecatedElements()) {
-                VariableScope variableScope = model.getVariableScope(constantName.getStartOffset());
-                QualifiedName typeFullyQualifiedName = VariousUtils.getFullyQualifiedName(
-                        QualifiedName.create(typeInfo.getName()),
-                        constantName.getStartOffset(),
-                        variableScope);
-                for (TypeConstantElement constantElement : getDeprecatedConstants()) {
-                    if (constantElement.getName().equals(constantName.getName()) && constantElement.getType().getFullyQualifiedName().equals(typeFullyQualifiedName)) {
-                        isDeprecated = true;
-                        break;
-                    }
-                }
+        private Set<ColoringAttributes> createConstantDeclarationColoring(ConstantDeclaration constant) {
+            if (isCancelled()) {
+                return Collections.emptySet();
             }
-            return isDeprecated;
+            return isDeprecatedDeclaration(constant) ? DEPRECATED_STATIC_FIELD_SET : ColoringAttributes.STATIC_FIELD_SET;
+        }
+
+        private Set<ColoringAttributes> createEnumCaseDeclarationColoring(CaseDeclaration caseDeclaration) {
+            if (isCancelled()) {
+                return Collections.emptySet();
+            }
+            return isDeprecatedDeclaration(caseDeclaration) ? DEPRECATED_STATIC_FIELD_SET : ColoringAttributes.STATIC_FIELD_SET;
         }
 
         @Override
@@ -768,9 +767,15 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             if (isCancelled()) {
                 return;
             }
-            Identifier constant = node.getConstantName();
-            if (constant != null) {
-                addColoringForNode(constant, ColoringAttributes.STATIC_FIELD_SET);
+            if (!node.isDynamicName()) {
+                Identifier constant = node.getConstantName();
+                if (constant != null) {
+                    ASTNodeColoring item = privateUnusedConstants.remove(new UnusedIdentifier(constant.getName(), typeInfo));
+                    if (item != null) {
+                        addColoringForNode(item.identifier, item.coloring);
+                    }
+                    addColoringForNode(constant, ColoringAttributes.STATIC_FIELD_SET);
+                }
             }
             super.visit(node);
         }
@@ -808,12 +813,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             if (!isCancelled() && isResolveDeprecatedElements()) {
                 VariableScope variableScope = model.getVariableScope(offset);
                 QualifiedName fullyQualifiedName = VariousUtils.getFullyQualifiedName(qualifiedName, offset, variableScope);
-                for (TypeElement typeElement : getDeprecatedTypes()) {
-                    if (typeElement.getFullyQualifiedName().equals(fullyQualifiedName)) {
-                        isDeprecated = true;
-                        break;
-                    }
-                }
+                isDeprecated = getDeprecatedTypes().contains(fullyQualifiedName);
             }
             return isDeprecated;
         }
@@ -842,6 +842,28 @@ public class SemanticAnalysis extends SemanticAnalyzer {
                     assert false : "Unexpected class type: " + useStatementPart.getClass().getName(); // NOI18N
                 }
             }
+        }
+
+        @Override
+        public void visit(NamedArgument node) {
+            if (isCancelled()) {
+                return;
+            }
+            addColoringForNamedArgument(node, PARAMETER_NAME_SET);
+            super.visit(node);
+        }
+
+        /**
+         * Find all usages in the method bodies.
+         */
+        private void scanMethodBodies() {
+            if (needToScan.get(typeInfo) == null) {
+                return;
+            }
+            for (Block block : needToScan.get(typeInfo)) {
+                block.accept(this);
+            }
+            needToScan.get(typeInfo).clear();
         }
 
         private class FieldAccessVisitor extends DefaultVisitor {

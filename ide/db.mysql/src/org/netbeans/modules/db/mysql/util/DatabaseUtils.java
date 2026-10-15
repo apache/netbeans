@@ -129,7 +129,7 @@ public class DatabaseUtils {
         try {
             ClassLoader driverLoader = new DriverClassLoader(jdbcDriver);
             driver = (Driver)Class.forName(jdbcDriver.getClassName(), 
-                        true, driverLoader).newInstance();
+                    true, driverLoader).getDeclaredConstructor().newInstance();
         } catch ( Exception e ) {
             DatabaseException dbe = new DatabaseException(
                     Utils.getMessage(
@@ -331,7 +331,7 @@ public class DatabaseUtils {
     }
 
     public static boolean isCommunicationsException(DatabaseException dbe) {
-        if (dbe.getCause() == null || !(dbe.getCause() instanceof SQLException)) {
+        if (!(dbe.getCause() instanceof SQLException)) {
             return false;
         }
 

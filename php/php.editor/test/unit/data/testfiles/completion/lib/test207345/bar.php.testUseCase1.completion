@@ -4,5 +4,4 @@ parent::|
 ------------------------------------
 METHOD     __construct()                   [PUBLIC]   \Testing\Ns\Blah
 METHOD     baz($param)                     [PUBLIC]   \Testing\Ns\Blah
-VARIABLE   ? field                         [PUBLIC]   \Testing\Ns\Blah
 CONSTANT   class \Testing\Ns\Blah          [PUBLIC]   Magic Constant

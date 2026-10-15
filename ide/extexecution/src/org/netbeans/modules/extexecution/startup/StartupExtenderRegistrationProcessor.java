@@ -44,6 +44,8 @@ public class StartupExtenderRegistrationProcessor extends LayerGeneratingProcess
     public static final String DELEGATE_ATTRIBUTE = "delegate"; // NOI18N
 
     public static final String START_MODE_ATTRIBUTE = "startMode"; // NOI18N
+    
+    public static final String QUOTED_ATTRIBUTE = "argumentsQuoted"; // NOI18N
 
     @Override
     protected boolean handleProcess(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) throws LayerGenerationException {
@@ -68,8 +70,9 @@ public class StartupExtenderRegistrationProcessor extends LayerGeneratingProcess
             File f = layer(element).instanceFile(PATH, null)
                     .instanceAttribute(DELEGATE_ATTRIBUTE, StartupExtenderImplementation.class, annotation, null)
                     .stringvalue(START_MODE_ATTRIBUTE, builder.toString())
+                    .boolvalue(QUOTED_ATTRIBUTE, annotation.argumentsQuoted())
                     .bundlevalue("displayName", element.getAnnotation(StartupExtenderImplementation.Registration.class).displayName()) // NOI18N
-                    .methodvalue("instanceCreate", "org.netbeans.spi.extexecution.startup.StartupExtender", "createProxy") // NOI18N
+                    .methodvalue("instanceCreate", "org.netbeans.spi.extexecution.startup.StartupExtender", "createProxy2") // NOI18N
                     .position(element.getAnnotation(StartupExtenderImplementation.Registration.class).position()); // NOI18N
             f.write();
         }

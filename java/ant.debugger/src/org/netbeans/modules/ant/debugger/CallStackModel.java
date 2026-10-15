@@ -46,7 +46,7 @@ NodeActionsProvider, TableModel {
         "org/netbeans/modules/debugger/resources/callStackView/CurrentFrame";
     
     private AntDebugger debugger;
-    private Vector listeners = new Vector ();
+    private Vector<ModelListener> listeners = new Vector<>();
     
     
     public CallStackModel (ContextProvider contextProvider) {
@@ -356,11 +356,9 @@ NodeActionsProvider, TableModel {
     // other mothods ...........................................................
 
     void fireChanges () {
-        Vector v = (Vector) listeners.clone ();
+        Vector<ModelListener> v = new Vector<>(listeners);
         int i, k = v.size ();
         for (i = 0; i < k; i++)
-            ((ModelListener) v.get (i)).modelChanged (
-                new ModelEvent.TreeChanged (this)
-            );
+            v.get (i).modelChanged(new ModelEvent.TreeChanged(this));
     }
 }

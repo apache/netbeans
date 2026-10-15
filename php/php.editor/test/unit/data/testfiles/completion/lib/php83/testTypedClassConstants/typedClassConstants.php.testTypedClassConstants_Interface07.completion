@@ -1,0 +1,19 @@
+Code completion result for source line:
+public const A|B UNION = |A; // interface
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      A                               [PUBLIC]   typedClassConstants.php
+CLASS      B                               [PUBLIC]   typedClassConstants.php
+CLASS      C                               [PUBLIC]   typedClassConstants.php
+CLASS      TestClass                       [PUBLIC]   typedClassConstants.php
+CLASS      TestEnum                        [PUBLIC]   typedClassConstants.php
+CLASS      TestInterface                   [PUBLIC]   typedClassConstants.php
+CONSTANT   DNF ?                           [PUBLIC]   TestInterface
+CONSTANT   INTERSECTION ?                  [PUBLIC]   TestInterface
+CONSTANT   NULLABLE null                   [PUBLIC]   TestInterface
+CONSTANT   NULLABLE2 1                     [PUBLIC]   TestInterface
+CONSTANT   UNION ?                         [PUBLIC]   TestInterface
+CONSTANT   WITHOUT_TYPE 1                  [PUBLIC]   TestInterface
+KEYWORD    parent::                                   null
+KEYWORD    self::                                     null
+------------------------------------
+KEYWORD    array                                      null

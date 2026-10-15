@@ -25,17 +25,11 @@ package org.netbeans.modules.payara.tooling.server.parser;
  */
 public abstract class AbstractReader extends TreeParser.NodeListener {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Tree parser element path. */
     final String path;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of Java EE platform check configuration
      * XML element reader.
@@ -55,10 +49,7 @@ public abstract class AbstractReader extends TreeParser.NodeListener {
         path = sb.toString();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get current element tree parser path.
      * <p/>

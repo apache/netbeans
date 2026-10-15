@@ -1,0 +1,252 @@
+    final string $final = "final";
+                  -----
+HINT:Field "$final" cannot be declared final
+FIX:Remove modifier: final
+    final static string $finalStatic = "final static";
+                         -----------
+HINT:Field "$finalStatic" cannot be declared final
+FIX:Remove modifier: final
+    static final string $staticFinal = "final static";
+                         -----------
+HINT:Field "$staticFinal" cannot be declared final
+FIX:Remove modifier: final
+    final abstract string $finalAbstract = "final static"; // final error PHP Fatal error:  Only hooked properties may be declared abstract
+                           -------------
+HINT:Field "$finalAbstract" cannot be declared abstract
+FIX:Remove modifier: abstract
+    abstract final string $abstractFinal = "final static"; // final error
+                           -------------
+HINT:Field "$abstractFinal" cannot be declared abstract
+FIX:Remove modifier: abstract
+    final readonly string $finalReadonly;
+                           -------------
+HINT:Field "$finalReadonly" cannot be declared final
+FIX:Remove modifier: final
+    readonly final string $readonlyFinal;
+                           -------------
+HINT:Field "$readonlyFinal" cannot be declared final
+FIX:Remove modifier: final
+    readonly final $readonlyFinal2; // final error
+                    --------------
+HINT:Field "$readonlyFinal2" cannot be declared final
+FIX:Remove modifier: final
+    final public $finalPublic = "final visibility";
+                  -----------
+HINT:Field "$finalPublic" cannot be declared final
+FIX:Remove modifier: final
+    final public string $finalPublic2 = "final visibility";
+                         ------------
+HINT:Field "$finalPublic2" cannot be declared final
+FIX:Remove modifier: final
+    public final string $publicFinal = "final visibility";
+                         -----------
+HINT:Field "$publicFinal" cannot be declared final
+FIX:Remove modifier: final
+    final private string $finalPrivate = "final visibility"; // final error
+                          ------------
+HINT:Field "$finalPrivate" cannot be declared final
+FIX:Remove modifier: final
+    private final string $privateFinal = "final visibility"; // final error
+                          ------------
+HINT:Field "$privateFinal" cannot be declared final
+FIX:Remove modifier: final
+    final protected string $finalProtected = "final visibility";
+                            --------------
+HINT:Field "$finalProtected" cannot be declared final
+FIX:Remove modifier: final
+    protected final string $protectedFinal = "final visibility";
+                            --------------
+HINT:Field "$protectedFinal" cannot be declared final
+FIX:Remove modifier: final
+    final public(set) string $finalPublicSet = "final set visibility";
+                              --------------
+HINT:Field "$finalPublicSet" cannot be declared final
+FIX:Remove modifier: final
+    public(set) final string $finalPublicSet2 = "final set visibility";
+                              ---------------
+HINT:Field "$finalPublicSet2" cannot be declared final
+FIX:Remove modifier: final
+    final public(set) $finalPublicSet3 = "final set visibility"; // final error PHP Fatal error:  Property with asymmetric visibility FinalFieldsClass::$finalPublicSet3 must have type
+                       ---------------
+HINT:Field "$finalPublicSet3" cannot be declared final
+FIX:Remove modifier: final
+    final private(set) string $finalPrivateSet = "final set visibility";
+                               ---------------
+HINT:Field "$finalPrivateSet" cannot be declared final
+FIX:Remove modifier: final
+    private(set) final string $finalPrivateSet2 = "final set visibility";
+                               ----------------
+HINT:Field "$finalPrivateSet2" cannot be declared final
+FIX:Remove modifier: final
+    final protected(set) string $finalProtectedSet = "final set visibility";
+                                 -----------------
+HINT:Field "$finalProtectedSet" cannot be declared final
+FIX:Remove modifier: final
+    protected(set) final string $finalProtectedSet2 = "final set visibility";
+                                 ------------------
+HINT:Field "$finalProtectedSet2" cannot be declared final
+FIX:Remove modifier: final
+    final static readonly $finalStaticReadonly1; // final error
+                           --------------------
+HINT:Field "$finalStaticReadonly1" cannot be declared final
+FIX:Remove modifier: final
+    final static readonly string $finalStaticReadonly2; // final error
+                                  --------------------
+HINT:Field "$finalStaticReadonly2" cannot be declared final
+FIX:Remove modifier: final
+    final abstract static $finalAbstractStatic1; // final error
+                           --------------------
+HINT:Field "$finalAbstractStatic1" cannot be declared abstract
+FIX:Remove modifier: abstract
+    final abstract static int $finalAbstractStatic2; // final error
+                               --------------------
+HINT:Field "$finalAbstractStatic2" cannot be declared abstract
+FIX:Remove modifier: abstract
+    final static public $finalStaticPublic1;
+                         ------------------
+HINT:Field "$finalStaticPublic1" cannot be declared final
+FIX:Remove modifier: final
+    final static public string $finalStaticPublic2;
+                                ------------------
+HINT:Field "$finalStaticPublic2" cannot be declared final
+FIX:Remove modifier: final
+    final static public(set) $finalStaticPublicSet1; // final error
+                              ---------------------
+HINT:Field "$finalStaticPublicSet1" cannot be declared final
+FIX:Remove modifier: final
+    final static public(set) string $finalStaticPublicSet2; // final error
+                                     ---------------------
+HINT:Field "$finalStaticPublicSet2" cannot be declared final
+FIX:Remove modifier: final
+    final abstract readonly $finalAbstractReadonly1; // error
+                             ----------------------
+HINT:Field "$finalAbstractReadonly1" cannot be declared abstract
+FIX:Remove modifier: abstract
+    final abstract readonly int $finalAbstractReadonly2; // error
+                                 ----------------------
+HINT:Field "$finalAbstractReadonly2" cannot be declared abstract
+FIX:Remove modifier: abstract
+    final public public(set) $finalPublicPublicSet; // final error: must have type
+                              --------------------
+HINT:Field "$finalPublicPublicSet" cannot be declared final
+FIX:Remove modifier: final
+    final public public(set) string|int $finalPublicPublicSet1;
+                                         ---------------------
+HINT:Field "$finalPublicPublicSet1" cannot be declared final
+FIX:Remove modifier: final
+    final public public(set) $finalPublicPublicSet2; // final error
+                              ---------------------
+HINT:Field "$finalPublicPublicSet2" cannot be declared final
+FIX:Remove modifier: final
+    final public private(set) string|int $finalPublicPrivateSet1;
+                                          ----------------------
+HINT:Field "$finalPublicPrivateSet1" cannot be declared final
+FIX:Remove modifier: final
+    final public protected(set) string|int $finalPublicProtectedSet1;
+                                            ------------------------
+HINT:Field "$finalPublicProtectedSet1" cannot be declared final
+FIX:Remove modifier: final
+    final private public(set) string|int $finalPrivatePublicSet1; // final error PHP Fatal error:  Property cannot be both final and private
+                                          ----------------------
+HINT:Field "$finalPrivatePublicSet1" cannot be declared final
+FIX:Remove modifier: final
+    final private private(set) string|int $finalPrivatePrivateSet1; // final error
+                                           -----------------------
+HINT:Field "$finalPrivatePrivateSet1" cannot be declared final
+FIX:Remove modifier: final
+    final private protected(set) string|int $finalPrivateProtectedSet1; // final error
+                                             -------------------------
+HINT:Field "$finalPrivateProtectedSet1" cannot be declared final
+FIX:Remove modifier: final
+    final protected public(set) string|int $finalProtectedPublicSet1; // final error
+                                            ------------------------
+HINT:Field "$finalProtectedPublicSet1" cannot be declared final
+FIX:Remove modifier: final
+    final protected private(set) string|int $finalProtectedPrivateSet1 = "test";
+                                             -------------------------
+HINT:Field "$finalProtectedPrivateSet1" cannot be declared final
+FIX:Remove modifier: final
+    final protected protected(set) string|int $finalProtectedProtectedSet1;
+                                               ---------------------------
+HINT:Field "$finalProtectedProtectedSet1" cannot be declared final
+FIX:Remove modifier: final
+    final public(set) public string|int $finalPublicSetPublic1;
+                                         ---------------------
+HINT:Field "$finalPublicSetPublic1" cannot be declared final
+FIX:Remove modifier: final
+    final public(set) public $finalPublicSetPublic2; // final error
+                              ---------------------
+HINT:Field "$finalPublicSetPublic2" cannot be declared final
+FIX:Remove modifier: final
+    final public(set) private string|int $finalPublicSetPrivate1; // final error
+                                          ----------------------
+HINT:Field "$finalPublicSetPrivate1" cannot be declared final
+FIX:Remove modifier: final
+    final public(set) protected string|int $finalPublicSetProtected1; // final error
+                                            ------------------------
+HINT:Field "$finalPublicSetProtected1" cannot be declared final
+FIX:Remove modifier: final
+    final private(set) public string|int $finalPrivateSetPublic1;
+                                          ----------------------
+HINT:Field "$finalPrivateSetPublic1" cannot be declared final
+FIX:Remove modifier: final
+    final private(set) private string|int $finalPrivateSetPrivate1; // final error
+                                           -----------------------
+HINT:Field "$finalPrivateSetPrivate1" cannot be declared final
+FIX:Remove modifier: final
+    final private(set) protected string|int $finalPrivateSetProtected1;
+                                             -------------------------
+HINT:Field "$finalPrivateSetProtected1" cannot be declared final
+FIX:Remove modifier: final
+    final protected(set) public string|int $finalProtectedSetPublic1;
+                                            ------------------------
+HINT:Field "$finalProtectedSetPublic1" cannot be declared final
+FIX:Remove modifier: final
+    final protected(set) private string|int $finalProtectedSetPrivate1; // final error
+                                             -------------------------
+HINT:Field "$finalProtectedSetPrivate1" cannot be declared final
+FIX:Remove modifier: final
+    final protected(set) protected string|int $finalProtectedSetProtected1 = 1;
+                                               ---------------------------
+HINT:Field "$finalProtectedSetProtected1" cannot be declared final
+FIX:Remove modifier: final
+    final public public(set) readonly $finalPublicPublicSetReadonlyError; // final error
+                                       ---------------------------------
+HINT:Field "$finalPublicPublicSetReadonlyError" cannot be declared final
+FIX:Remove modifier: final
+    final public public(set) readonly string|int $finalPublicPublicSetReadonly;
+                                                  ----------------------------
+HINT:Field "$finalPublicPublicSetReadonly" cannot be declared final
+FIX:Remove modifier: final
+    final public protected(set) readonly string|int $finalPublicProtectedSetReadonly;
+                                                     -------------------------------
+HINT:Field "$finalPublicProtectedSetReadonly" cannot be declared final
+FIX:Remove modifier: final
+    final public private(set) readonly string|int $finalPublicPrivateSetReadonly;
+                                                   -----------------------------
+HINT:Field "$finalPublicPrivateSetReadonly" cannot be declared final
+FIX:Remove modifier: final
+    final protected public(set) readonly string|int $finalProtectedPublicSetReadonly; // final error
+                                                     -------------------------------
+HINT:Field "$finalProtectedPublicSetReadonly" cannot be declared final
+FIX:Remove modifier: final
+    final protected protected(set) readonly string|int $finalProtectedProtectedSetReadonly;
+                                                        ----------------------------------
+HINT:Field "$finalProtectedProtectedSetReadonly" cannot be declared final
+FIX:Remove modifier: final
+    final protected private(set) readonly string|int $finalProtectedPrivateSetReadonly;
+                                                      --------------------------------
+HINT:Field "$finalProtectedPrivateSetReadonly" cannot be declared final
+FIX:Remove modifier: final
+    final private public(set) readonly string|int $finalPrivatePublicSetReadonly; // final error
+                                                   -----------------------------
+HINT:Field "$finalPrivatePublicSetReadonly" cannot be declared final
+FIX:Remove modifier: final
+    final private protected(set) readonly string|int $finalPrivateProtectedSetReadonly; // final error
+                                                      --------------------------------
+HINT:Field "$finalPrivateProtectedSetReadonly" cannot be declared final
+FIX:Remove modifier: final
+    final private private(set) readonly string|int $finalPrivatePrivateSetReadonly; // final error
+                                                    ------------------------------
+HINT:Field "$finalPrivatePrivateSetReadonly" cannot be declared final
+FIX:Remove modifier: final

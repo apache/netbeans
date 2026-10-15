@@ -1,0 +1,4 @@
+            private int $|>MARK_OCCURRENCES:fie^ld1<|,
+            echo $|>MARK_OCCURRENCES:field1<|;
+            $this->|>MARK_OCCURRENCES:field1<|;
+            var_dump($this->|>MARK_OCCURRENCES:field1<|);

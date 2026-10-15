@@ -409,7 +409,12 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <public-packages/>
+            <friend-packages>
+                <friend>org.netbeans.modules.payara.jakartaee</friend>
+                <package>org.netbeans.modules.glassfish.javaee</package>
+                <package>org.netbeans.modules.glassfish.javaee.db</package>
+                <package>org.netbeans.modules.glassfish.javaee.ui</package>
+            </friend-packages>
         </data>
     </configuration>
 </project>

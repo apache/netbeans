@@ -39,7 +39,7 @@ import org.netbeans.jemmy.operators.JFrameOperator;
 public class FormEditorOperatorTest extends JellyTestCase {
 
     private static final String SAMPLE_FRAME = "JFrameSample.java";
-    public final static String[] tests = new String[]{
+    public static final String[] tests = new String[]{
         "testOpen",
         "testSourceButton",
         "testEditor",

@@ -208,7 +208,7 @@ public class JspRunToCursorActionProvider extends ActionsProviderSupport {
             if (e == null)
                 return;
             if (e.getPropertyName () == JPDADebugger.PROP_STATE) {
-                int state = ((Integer) e.getNewValue ()).intValue ();
+                int state = ((Integer) e.getNewValue ());
                 if (state == JPDADebugger.STATE_DISCONNECTED || state == JPDADebugger.STATE_STOPPED)
                     removeBreakpoint ();
                 return;

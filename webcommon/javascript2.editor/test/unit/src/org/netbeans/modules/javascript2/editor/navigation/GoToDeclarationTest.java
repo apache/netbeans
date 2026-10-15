@@ -137,5 +137,8 @@ public class GoToDeclarationTest extends JsTestBase {
     public void testImportedFile_03() throws Exception {
         checkDeclaration("testfiles/ecmascript6/importExport/importFindDeclaration01.js", "import { text as text3 } from \"l^ib/export02\";", "export02.js", 0);
     }
-    
+
+    public void testIssueGH5184_01() throws Exception {
+        checkDeclaration("testfiles/markoccurences/issueGH5184_01.js", "export {te^st2};", "class ^test2 {");
+    }
 }

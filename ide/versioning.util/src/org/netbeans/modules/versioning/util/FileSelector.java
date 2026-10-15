@@ -133,7 +133,7 @@ public class FileSelector extends javax.swing.JPanel implements ListSelectionLis
 
     public boolean show(File[] files) {
         Arrays.sort(files);
-        DefaultListModel m = new DefaultListModel();
+        DefaultListModel<File> m = new DefaultListModel<>();
         for (File file : files) {
             m.addElement(file);
         }

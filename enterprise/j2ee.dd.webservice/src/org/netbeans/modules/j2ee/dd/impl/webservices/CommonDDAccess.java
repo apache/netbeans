@@ -17,11 +17,6 @@
  * under the License.
  */
 
-/**
- * Methods for accessing schema2beans objects in a bean-independent way.
- *
- * @author  Milan Kuchtiak
- */
 package org.netbeans.modules.j2ee.dd.impl.webservices;
 
 import java.lang.reflect.*;
@@ -58,7 +53,7 @@ public class CommonDDAccess {
 				PACKAGE_PREFIX
 				+ version + DOT
 				+ beanName);
-	    return (BaseBean) beanClass.newInstance();
+	    return (BaseBean) beanClass.getDeclaredConstructor().newInstance();
 
 	} catch (Exception e) {
             if (e instanceof ClassNotFoundException) 

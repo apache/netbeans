@@ -302,7 +302,7 @@ public class ContextTreeViewModelTest extends NbTestCase {
 
 
         private TreeNode keep;
-        private List all = new ArrayList();
+        private List<TreeNode> all = new ArrayList<>();
 
         public Listener(TreeNode keep) {
             this.keep = keep;

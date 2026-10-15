@@ -37,6 +37,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -83,7 +84,9 @@ import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.api.ProgressEvent;
 import org.netbeans.modules.refactoring.api.ProgressListener;
 import org.netbeans.modules.refactoring.api.RefactoringSession;
+
 import static org.netbeans.modules.refactoring.java.ui.ContextAnalyzer.SHOW;
+
 import org.netbeans.modules.refactoring.java.ui.InstantRefactoringUI;
 import org.netbeans.modules.refactoring.java.ui.SyncDocumentRegion;
 import org.netbeans.modules.refactoring.java.ui.UIUtilities;
@@ -102,7 +105,6 @@ import org.openide.text.CloneableEditorSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
-import org.openide.util.WeakSet;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.TopComponent;
 
@@ -114,7 +116,7 @@ import org.openide.windows.TopComponent;
 public final class InstantRefactoringPerformer implements DocumentListener, KeyListener, ProgressListener, PropertyChangeListener {
     
     private static final Logger LOG = Logger.getLogger(InstantRefactoringPerformer.class.getName());
-    private static final Set<InstantRefactoringPerformer> registry = Collections.synchronizedSet(new WeakSet<InstantRefactoringPerformer>());
+    private static final Set<InstantRefactoringPerformer> registry = Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
     private CompletionLayout compl;
 
     private SyncDocumentRegion region;
@@ -633,7 +635,7 @@ public final class InstantRefactoringPerformer implements DocumentListener, KeyL
                     stop(event);
                 }
 
-                progressBar = ProgressBar.create(progressHandle = ProgressHandleFactory.createHandle("")); //NOI18N
+                progressBar = ProgressBar.create(progressHandle = ProgressHandle.createHandle("")); //NOI18N
                 if (event.getCount() == -1) {
                     isIndeterminate = true;
                     progressHandle.start();

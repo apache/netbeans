@@ -20,6 +20,7 @@
 package org.netbeans.core.windows.services;
 
 import java.awt.Dialog;
+import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
 import java.awt.Window;
 import java.util.Arrays;
@@ -31,7 +32,6 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.openide.DialogDescriptor;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.junit.RandomlyFails;
 import org.openide.NotifyDescriptor;
 import org.openide.util.HelpCtx;
 
@@ -40,6 +40,8 @@ import org.openide.util.HelpCtx;
  * @author Jiri Rechtacek
  */
 public class NbPresenterTest extends NbTestCase {
+    private static final String TITLE = "My dialog";
+    private static final DialogDescriptor DESCRIPTOR = new DialogDescriptor(new JLabel ("Something interesting"), TITLE);
 
     public static Test suite() {
         return GraphicsEnvironment.isHeadless() ? new TestSuite() : new TestSuite(NbPresenterTest.class);
@@ -49,8 +51,20 @@ public class NbPresenterTest extends NbTestCase {
         super (testName);
     }
 
+    @Override
     protected boolean runInEQ () {
         return true;
+    }
+
+    public void testOwnerIsWindow() {
+        Frame owner = new Frame();
+        NbPresenter p = new NbPresenter(DESCRIPTOR, owner, true);
+        assertSame(owner, p.getOwner());
+    }
+
+    public void testTitleIsFromDescriptor() {
+        NbPresenter p = new NbPresenter(DESCRIPTOR, (Frame) null, true);
+        assertEquals(TITLE, p.getTitle());
     }
 
     public void testDialogsOptionsOnDefaultSystem () {
@@ -70,7 +84,7 @@ public class NbPresenterTest extends NbTestCase {
         JButton rescue = new JButton ("Rescue");
         JButton cancel = new JButton ("Cancel");
         JButton [] options = new JButton [] {erase, rescue, cancel};
-        DialogDescriptor dd = new DialogDescriptor (new JLabel ("Something interesting"), "My dialog", modal,
+        DialogDescriptor dd = new DialogDescriptor (new JLabel ("Something interesting"), TITLE, modal,
                 // options
                 options,
                 rescue,
@@ -123,7 +137,7 @@ public class NbPresenterTest extends NbTestCase {
         JButton rescue = new JButton ("Rescue");
         JButton cancel = new JButton ("Cancel");
         JButton [] options = new JButton [] {erase, rescue, cancel};
-        DialogDescriptor dd = new DialogDescriptor (new JLabel ("Something interesting"), "My dialog", false,
+        DialogDescriptor dd = new DialogDescriptor (new JLabel ("Something interesting"), TITLE, false,
                 // options
                 options,
                 rescue,

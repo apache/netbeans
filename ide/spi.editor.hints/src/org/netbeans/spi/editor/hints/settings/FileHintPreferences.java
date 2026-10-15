@@ -24,6 +24,7 @@ import java.util.prefs.Preferences;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.modules.editor.hints.settings.friend.FileHintPreferencesProvider;
+import org.netbeans.modules.editor.hints.settings.friend.OpenGlobalPreferences;
 import org.openide.filesystems.FileObject;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Lookup;
@@ -62,6 +63,30 @@ public class FileHintPreferences {
         throw new IllegalStateException("Must have some working GlobalHintPreferencesProvider!");
     }
     
+    /**Open hint settings for the specific file and hint. Will open either the
+     * global or project-specific settings.
+     *
+     * @param file file for which the settings should be opened
+     * @param preferencesMimeType mime type for which the settings should be opened
+     * @param hintId hint id that should be opened
+     * @since 1.57
+     */
+    public static void openFilePreferences(FileObject file, String preferencesMimeType, String hintId) {
+        for (FileHintPreferencesProvider p : Lookup.getDefault().lookupAll(FileHintPreferencesProvider.class)) {
+            if (p.openFilePreferences(file, preferencesMimeType, hintId)) {
+                return ;
+            }
+        }
+
+        for (OpenGlobalPreferences p : Lookup.getDefault().lookupAll(OpenGlobalPreferences.class)) {
+            if (p.openFilePreferences(preferencesMimeType, hintId)) {
+                return ;
+            }
+        }
+
+        throw new IllegalStateException("Must have some working GlobalHintPreferencesProvider!");
+    }
+
     private static final ChangeSupport cs = new ChangeSupport(FileHintPreferences.class);
     
     /**Register listener to be notified about any change in the hints settings.

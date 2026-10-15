@@ -337,7 +337,7 @@ public class TreeElement extends TreeParentNode implements Document.Child, Docum
      * @throws ReadOnlyException
      */
     public final TreeAttribute addAttribute (String name, String value) throws ReadOnlyException, InvalidArgumentException {
-//// Will be uncommented after NB 3.3.1 (http://www.netbeans.org/issues/show_bug.cgi?id=17699)
+// Will be uncommented after NB 3.3.1 (http://www.netbeans.org/issues/show_bug.cgi?id=17699)
 //         TreeAttribute attr = getAttribute (name);
 //         if ( attr != null ) {
 //             throw new InvalidArgumentException
@@ -359,7 +359,7 @@ public class TreeElement extends TreeParentNode implements Document.Child, Docum
     public final void addAttribute (TreeAttribute newAttr) throws ReadOnlyException, InvalidArgumentException {
         String qName = newAttr.getQName ();
 
-//// Will be uncommented after NB 3.3.1 (http://www.netbeans.org/issues/show_bug.cgi?id=17699)
+// Will be uncommented after NB 3.3.1 (http://www.netbeans.org/issues/show_bug.cgi?id=17699)
 //         TreeAttribute attr = getAttribute (qName);
 //         if ( attr != null ) {
 //             throw new InvalidArgumentException

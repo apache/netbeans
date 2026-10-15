@@ -328,8 +328,8 @@ public class ExtDocModelTest extends JsDocumentationTestBase {
     }
 
     private static void assertElementsEquality(List<ExtDocElement> expectedTags, List<? extends ExtDocElement> elements) {
-        Collections.sort(expectedTags, elementComparator);
-        Collections.sort(elements, elementComparator);
+        expectedTags.sort(elementComparator);
+        elements.sort(elementComparator);
 
         assertEquals(expectedTags.size(), elements.size());
 

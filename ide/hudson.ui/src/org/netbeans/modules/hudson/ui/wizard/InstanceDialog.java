@@ -67,15 +67,15 @@ public class InstanceDialog extends DialogDescriptor {
     public HudsonInstance show() {
         dialog = DialogDisplayer.getDefault().createDialog(this);
         dialog.setVisible(true);
-        LOG.log(Level.FINE, "Added Hudson instance: {0}", created);
+        LOG.log(Level.FINE, "Added Jenkins instance: {0}", created);
         return created;
     }
 
     @NbBundle.Messages({
         "# UI logging of adding new server",
-        "UI_HUDSON_SERVER_REGISTERED=Hudson server registered",
+        "UI_HUDSON_SERVER_REGISTERED=Jenkins server registered",
         "# Usage Logging",
-        "USG_HUDSON_SERVER_REGISTERED=Hudson server registered"
+        "USG_HUDSON_SERVER_REGISTERED=Jenkins server registered"
     })
     private void tryToAdd() {
         addButton.setEnabled(false);

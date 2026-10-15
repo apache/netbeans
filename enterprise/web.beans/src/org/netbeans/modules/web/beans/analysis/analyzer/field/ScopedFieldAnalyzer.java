@@ -33,6 +33,9 @@ import org.netbeans.modules.web.beans.analysis.analyzer.ModelAnalyzer.Result;
 import org.netbeans.modules.web.beans.api.model.WebBeansModel;
 import org.openide.util.NbBundle;
 
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.PRODUCES_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.PRODUCES_FQN_JAKARTA;
+
 
 /**
  * @author ads
@@ -47,8 +50,7 @@ public class ScopedFieldAnalyzer extends AbstractScopedAnalyzer implements
             TypeElement parent, WebBeansModel model,
             AtomicBoolean cancel, Result result )
     {
-        if ( AnnotationUtil.hasAnnotation(element, AnnotationUtil.PRODUCES_FQN, 
-                model.getCompilationController()))
+        if (AnnotationUtil.hasAnnotation(element, model, PRODUCES_FQN_JAKARTA, PRODUCES_FQN))
         {
             result.requireCdiEnabled(element, model);
             analyzeScope(element, model, cancel , result );
@@ -62,7 +64,8 @@ public class ScopedFieldAnalyzer extends AbstractScopedAnalyzer implements
     protected void checkScope( TypeElement scopeElement, Element element,
             WebBeansModel model, AtomicBoolean cancel, Result result  )
     {
-        if ( scopeElement.getQualifiedName().contentEquals( AnnotationUtil.DEPENDENT)){
+        if ( scopeElement.getQualifiedName().contentEquals( AnnotationUtil.DEPENDENT)
+                || scopeElement.getQualifiedName().contentEquals( AnnotationUtil.DEPENDENT_JAKARTA)){
             return;
         }
         if ( cancel.get() ){

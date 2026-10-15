@@ -12,6 +12,7 @@
         ScopeEntry#getClassName() - scope simple name (type: String)
         ScopeEntry#getImportEntry() - import entry for the scope (type: String)
         ScopeEntry#getParameters() - annotation parameters (type: String)
+    jakartaJsfPackages - true if jakarta JSF is used, false if not (type: Boolean)
 
   This template is accessible via top level menu Tools->Templates and can
   be found in category JavaServer Faces->JSF Managed Bean.
@@ -26,6 +27,26 @@
 package ${package};
 
 </#if>
+<#if jakartaJsfPackages?? && jakartaJsfPackages==true>
+<#if cdiEnabled?? && cdiEnabled>
+    <#if classAnnotation??>
+import jakarta.inject.Named;
+    </#if>
+    <#if scope??>
+import ${scope.getImportEntry()};
+    </#if>
+    <#if passivationCapable??>
+import java.io.Serializable;
+	</#if>
+<#else>
+    <#if classAnnotation??>
+import jakarta.faces.bean.ManagedBean;
+    </#if>
+    <#if scope??>
+import ${scope.getImportEntry()};
+    </#if>
+</#if>
+<#else>
 <#if cdiEnabled?? && cdiEnabled>
     <#if classAnnotation??>
 import javax.inject.Named;
@@ -43,6 +64,7 @@ import javax.faces.bean.ManagedBean;
     <#if scope??>
 import ${scope.getImportEntry()};
     </#if>
+</#if>
 </#if>
 
 /**

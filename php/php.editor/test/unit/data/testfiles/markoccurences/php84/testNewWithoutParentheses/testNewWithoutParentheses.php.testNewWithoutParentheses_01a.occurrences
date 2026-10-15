@@ -1,0 +1,3 @@
+    public const string |>MARK_OCCURRENCES:PUBLIC_TEST_^CONST<| = "public test const";
+        $example = new Example()->test::|>MARK_OCCURRENCES:PUBLIC_TEST_CONST<|;
+new Example()->test::|>MARK_OCCURRENCES:PUBLIC_TEST_CONST<|; // test

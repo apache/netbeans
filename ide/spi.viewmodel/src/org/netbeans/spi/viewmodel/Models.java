@@ -883,7 +883,7 @@ public final class Models {
      * 
      * @author   Jan Jancura
      */
-    private final static class CompoundTreeModel implements ReorderableTreeModel, ModelListener {
+    private static final class CompoundTreeModel implements ReorderableTreeModel, ModelListener {
 
 
         private ReorderableTreeModel model;
@@ -1083,7 +1083,7 @@ public final class Models {
      * 
      * @author   Jan Jancura
      */
-    private final static class CompoundNodeModel implements SuperNodeModel,
+    private static final class CompoundNodeModel implements SuperNodeModel,
                                                             ModelListener {
 
 
@@ -1395,7 +1395,7 @@ public final class Models {
      * 
      * @author   Jan Jancura
      */
-    private final static class CompoundTableModel implements TableHTMLModel, ModelListener {
+    private static final class CompoundTableModel implements TableHTMLModel, ModelListener {
 
 
         private TableHTMLModel model;
@@ -1587,7 +1587,7 @@ public final class Models {
      * Creates {@link org.netbeans.spi.viewmodel.TableRendererModel} for given TableRendererModel and
      * {@link org.netbeans.spi.viewmodel.TableRendererModelFilter}.
      */
-    private final static class CompoundTableRendererModel implements TableRendererModel, ModelListener {
+    private static final class CompoundTableRendererModel implements TableRendererModel, ModelListener {
 
 
         private TableRendererModel model;
@@ -1706,7 +1706,7 @@ public final class Models {
      *
      * @author   Jan Jancura
      */
-    private final static class DelegatingTreeModel implements ReorderableTreeModel {
+    private static final class DelegatingTreeModel implements ReorderableTreeModel {
 
         private TreeModel[] models;
         private HashMap<String, TreeModel> classNameToModel = new HashMap<String, TreeModel>();
@@ -1980,7 +1980,7 @@ public final class Models {
         }
     }
     
-    private final static class CompoundTablePropertyEditorsModel implements TablePropertyEditorsModel {
+    private static final class CompoundTablePropertyEditorsModel implements TablePropertyEditorsModel {
         
         private TablePropertyEditorsModel model;
         private TablePropertyEditorsModelFilter filter;
@@ -2021,7 +2021,7 @@ public final class Models {
      * 
      * @author   Jan Jancura
      */
-    private final static class CompoundNodeActionsProvider 
+    private static final class CompoundNodeActionsProvider 
     implements NodeActionsProvider {
 
 
@@ -2088,7 +2088,7 @@ public final class Models {
         }
     }
     
-    private final static class CompoundTreeExpansionModel implements TreeExpansionModel, ModelListener {
+    private static final class CompoundTreeExpansionModel implements TreeExpansionModel, ModelListener {
         
         private TreeExpansionModel expansionModel;
         private TreeExpansionModelFilter expansionFilter;
@@ -2171,7 +2171,7 @@ public final class Models {
         
     }
 
-    private final static class  CompoundAsynchronousModel implements AsynchronousModel {
+    private static final class  CompoundAsynchronousModel implements AsynchronousModel {
         private AsynchronousModel asynchModel;
         private AsynchronousModelFilter asynchModelFilter;
 
@@ -2194,7 +2194,7 @@ public final class Models {
      *
      * @author   Jan Jancura
      */
-    private final static class DelegatingTableModel implements TableModel, TableHTMLModel {
+    private static final class DelegatingTableModel implements TableModel, TableHTMLModel {
 
         private TableModel[] models;
         private HashMap<String, TableModel> classNameToModel = new HashMap<String, TableModel>();
@@ -2497,7 +2497,7 @@ public final class Models {
      * from given list of TableRendererModel. DelegatingTableRendererModel asks all underlaying
      * models for each concrete parameter, and returns first returned value.
      */
-    private final static class DelegatingTableRendererModel implements TableRendererModel {
+    private static final class DelegatingTableRendererModel implements TableRendererModel {
 
         private TableRendererModel[] models;
         private HashMap<String, TableRendererModel> classNameToModel = new HashMap<String, TableRendererModel>();
@@ -2689,7 +2689,7 @@ public final class Models {
 
     }
     
-    private final static class DelegatingTablePropertyEditorsModel implements TablePropertyEditorsModel {
+    private static final class DelegatingTablePropertyEditorsModel implements TablePropertyEditorsModel {
         
         private TablePropertyEditorsModel[] models;
         private HashMap<String, TablePropertyEditorsModel> classNameToModel = new HashMap<String, TablePropertyEditorsModel>();
@@ -2769,7 +2769,7 @@ public final class Models {
      *
      * @author   Jan Jancura
      */
-    private final static class DelegatingTreeExpansionModel implements TreeExpansionModel {
+    private static final class DelegatingTreeExpansionModel implements TreeExpansionModel {
 
         private TreeExpansionModel[] models;
         private HashMap<String, TreeExpansionModel> classNameToModel = new HashMap<String, TreeExpansionModel>();
@@ -4146,7 +4146,7 @@ public final class Models {
      * Tree expansion control.
      * @since 1.15
      */
-    public static abstract class TreeFeatures {
+    public abstract static class TreeFeatures {
         
         /**
          * Returns <code>true</code> if given node is expanded.
@@ -4306,9 +4306,7 @@ public final class Models {
             this.tableRendererModel = tableRendererModel;
             this.tablePropertyEditorsModel = tablePropertyEditorsModel;
             this.nodeActionsProvider = nodeActionsProvider;
-            this.columnModels = columnModels.toArray (
-                new ColumnModel [columnModels.size ()]
-            );
+            this.columnModels = columnModels.toArray(new ColumnModel[0]);
             this.asynchModel = asynchModel;
             this.propertiesHelpID = propertiesHelpID;
         }
@@ -4525,7 +4523,6 @@ public final class Models {
          *
          * @throws  UnknownTypeException if this NodeActionsProvider implementation 
          *          is not able to resolve actions for given node type
-         * @return  display name for given node
          */
         @Override
         public void performDefaultAction (Object node) throws UnknownTypeException {

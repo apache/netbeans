@@ -42,6 +42,7 @@ import org.netbeans.modules.editor.indent.api.Reformat;
  * @deprecated Use Editor Code Templates API instead. This class is no longer
  *   functional.
  */
+@Deprecated
 public class Abbrev implements /* SettingsChangeListener,*/ PropertyChangeListener {
     
     /**

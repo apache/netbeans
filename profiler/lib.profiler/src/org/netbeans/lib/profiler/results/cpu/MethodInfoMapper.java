@@ -21,7 +21,7 @@ package org.netbeans.lib.profiler.results.cpu;
 import java.util.logging.Logger;
 
 public abstract class MethodInfoMapper {
-    final static protected Logger LOGGER = Logger.getLogger(MethodInfoMapper.class.getName());
+    protected static final Logger LOGGER = Logger.getLogger(MethodInfoMapper.class.getName());
     
     public static final MethodInfoMapper DEFAULT = new MethodInfoMapper() {
 

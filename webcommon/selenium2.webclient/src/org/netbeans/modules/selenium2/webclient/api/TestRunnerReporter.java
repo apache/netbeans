@@ -221,7 +221,7 @@ public final class TestRunnerReporter {
     
     private void handleTrouble() {
         if (trouble != null) {
-            trouble.setStackTrace(stackTrace.toArray(new String[stackTrace.size()]));
+            trouble.setStackTrace(stackTrace.toArray(new String[0]));
             addTestCase(testcase, Status.FAILED, duration, trouble);
             stackTrace.clear();
             trouble = null;
@@ -229,7 +229,7 @@ public final class TestRunnerReporter {
     }
     
     static String removeEscapeCharachters(String line) {
-        return line.replace("[?25l", "").replace("[2K", "").replaceAll("\u001B", "").replaceAll("\\[[;\\d]*m", "").trim();
+        return line.replace("[?25l", "").replace("[2K", "").replace("\u001B", "").replaceAll("\\[[;\\d]*m", "").trim();
     }
 
     private Manager getManager() {

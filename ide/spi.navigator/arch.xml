@@ -182,7 +182,7 @@
         for java sources. Infrastructure will automatically load and show
         your NavigatorPanel impl in UI, when <b>currently activated Node
         is backed by primary FileObject whose 
-        <a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html#getMIMEType--">FileObject.getMimeType()</a>
+        <a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html#getMIMEType()">FileObject.getMimeType()</a>
         equals to content type specified in your registering annotation</b> (see more options below).</p>
    </usecase> 
 
@@ -218,13 +218,13 @@
             <li>Alter your <a href="@org-openide-windows@/org/openide/windows/TopComponent.html">TopComponent</a>
              to contain your NavigatorLookupHint implementation (AmazingTypeLookupHint in this case)
             in its lookup, returned from 
-            <a href="@org-openide-windows@/org/openide/windows/TopComponent.html#getLookup--">TopComponent.getLookup()</a>
+            <a href="@org-openide-windows@/org/openide/windows/TopComponent.html#getLookup()">TopComponent.getLookup()</a>
              method.<p></p></li>
              
              <li>
              Another option you have is to alter lookup of your <code>Node</code> subclass 
              instead of directly altering lookup of your <code>TopComponent</code>.
-             See <a href="@org-openide-nodes@/org/openide/nodes/Node.html#getLookup--">Node.getLookup()</a> method.
+             See <a href="@org-openide-nodes@/org/openide/nodes/Node.html#getLookup()">Node.getLookup()</a> method.
              Then Navigator will show your desired content whenever your <code>Node</code>
              subclass will be active in the system.<br></br>             
              However, keep in mind that this option is less preferred, because it
@@ -265,7 +265,7 @@
                 See <a href="@org-openide-util@/org/openide/util/doc-files/api.html#instances">Instantiation rules</a>.<p></p>
             </li>
             
-            <li>Call <a href="@TOP@/org/netbeans/spi/navigator/NavigatorHandler.html#activatePanel-org.netbeans.spi.navigator.NavigatorPanel-">
+            <li>Call <a href="@TOP@/org/netbeans/spi/navigator/NavigatorHandler.html#activatePanel(org.netbeans.spi.navigator.NavigatorPanel)">
                 NavigatorHandler.activatePanel(NavigatorPanel panel)</a><p></p>.
             </li>
              
@@ -276,8 +276,8 @@
    <usecase id="activatedNode" name="Setting activated node of Navigator window" >
         <p>Sometimes clients need to alter activated Nodes of Navigator window,
             to better represent Navigator area content within the whole application.
-            See <a href="@org-openide-windows@/org/openide/windows/TopComponent.html#getActivatedNodes--">TopComponent.getActivatedNodes()</a>
-            and <a href="@org-openide-windows@/org/openide/windows/TopComponent.Registry.html#getActivatedNodes--">TopComponent.Registry.html#getActivatedNodes()</a>
+            See <a href="@org-openide-windows@/org/openide/windows/TopComponent.html#getActivatedNodes()">TopComponent.getActivatedNodes()</a>
+            and <a href="@org-openide-windows@/org/openide/windows/TopComponent.Registry.html#getActivatedNodes()">TopComponent.Registry.html#getActivatedNodes()</a>
             to find out what activated nodes of TopComponent and whole system mean.
         </p>
         <b>Use Case Example:</b>
@@ -346,7 +346,7 @@
         <ul>
             <li>Implement your navigation view as <a href="@TOP@/org/netbeans/spi/navigator/NavigatorPanelWithUndo.html">NavigatorPanelWithUndo</a>,
                 which is <code>NavigatorPanel</code> interface with extra method 
-                <a href="@TOP@/org/netbeans/spi/navigator/NavigatorPanelWithUndo.html#getUndoRedo--">getUndoRedo()</a>.
+                <a href="@TOP@/org/netbeans/spi/navigator/NavigatorPanelWithUndo.html#getUndoRedo()">getUndoRedo()</a>.
                 <p></p>
             </li>
             
@@ -354,7 +354,7 @@
                 <code>UndoRedo</code> support returned from <code>NavigatorPanelWithUndo.getUndoRedo()</code>
                 is propagated to the Navigator TopComponent and returned as its
                 <code>UndoRedo</code> support. For details see 
-                <a href="@org-openide-windows@/org/openide/windows/TopComponent.html#getUndoRedo--">TopComponent.getUndoRedo()</a>
+                <a href="@org-openide-windows@/org/openide/windows/TopComponent.html#getUndoRedo()">TopComponent.getUndoRedo()</a>
                 and <a href="@org-openide-awt@/org/openide/awt/UndoRedo.html">UndoRedo interface</a>.
                 <p></p>
             </li>
@@ -396,7 +396,7 @@
              <p></p>
         </li>
          <li>Put implementation instance into your TopComponent's subclass lookup,
-             see <a href="@org-openide-windows@/org/openide/windows/TopComponent.html#getLookup--">TopComponent.getLookup()</a>
+             see <a href="@org-openide-windows@/org/openide/windows/TopComponent.html#getLookup()">TopComponent.getLookup()</a>
              for details.
              <p></p>
          </li>
@@ -429,13 +429,13 @@
             </li>
             
             <li>Return lookup created using 
-                <a href="@org-openide-explorer@/org/openide/explorer/ExplorerUtils.html#createLookup-org.openide.explorer.ExplorerManager-javax.swing.ActionMap-">
+                <a href="@org-openide-explorer@/org/openide/explorer/ExplorerUtils.html#createLookup(org.openide.explorer.ExplorerManager,javax.swing.ActionMap)">
                 ExplorerUtils.createLookup(ExplorerManager, ActionMap)</a> 
                 from <code>getLookup()</code> method of <code>NavigatorPanel</code>.
                 <p></p>
             </li>
             
-            <li>Use <a href="@org-openide-explorer@/org/openide/explorer/ExplorerUtils.html#activateActions-org.openide.explorer.ExplorerManager-boolean-">
+            <li>Use <a href="@org-openide-explorer@/org/openide/explorer/ExplorerUtils.html#activateActions(org.openide.explorer.ExplorerManager,boolean)">
                 ExplorerUtils.activateActions(ExplorerManager, boolean)</a> for actions activation and
                 deactivation in <code>panelActivated</code> and <code>panelDeactivated</code>.
                 <p></p>

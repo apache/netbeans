@@ -1,0 +1,10 @@
+<?php
+
+class Issue270368Class01 {
+
+    private ?string $test;
+
+    function __construct(?string $test) {
+        $this->test = $test;
+    }
+}

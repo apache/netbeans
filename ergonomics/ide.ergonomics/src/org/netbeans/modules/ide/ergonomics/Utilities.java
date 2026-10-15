@@ -22,7 +22,6 @@ package org.netbeans.modules.ide.ergonomics;
 import java.awt.Dialog;
 import java.awt.GraphicsEnvironment;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -54,32 +53,22 @@ public class Utilities {
         final CountDownLatch called = new CountDownLatch(1);
         final boolean[] result = new boolean[] { false };
         final DialogDescriptor[] descriptor = new DialogDescriptor[1];
-        final Callable<JComponent> call = new Callable<JComponent>() {
-            @Override
-            public JComponent call() throws Exception {
-                result[0] = true;
-                called.countDown();
-                descriptor[0].setValue(DialogDescriptor.CLOSED_OPTION);
-                return new JPanel();
-            }
+        final Callable<JComponent> call = () -> {
+            result[0] = true;
+            called.countDown();
+            descriptor[0].setValue(DialogDescriptor.CLOSED_OPTION);
+            return new JPanel();
         };
-        final ConfigurationPanel[] arr = new ConfigurationPanel[1];
-        descriptor[0] = Mutex.EVENT.readAccess(new Mutex.Action<DialogDescriptor>() {
-            @Override
-            public DialogDescriptor run() {
-                arr[0] = new ConfigurationPanel(featureName, call, featureInfo);
-                return new DialogDescriptor(arr[0], notFoundMessage);
-            }
+        descriptor[0] = Mutex.EVENT.readAccess(() -> {
+            ConfigurationPanel panel = new ConfigurationPanel(featureName, call, featureInfo);
+            return new DialogDescriptor(panel, notFoundMessage);
         });
         descriptor[0].setOptions(new Object[] { DialogDescriptor.CANCEL_OPTION });
         if (!GraphicsEnvironment.isHeadless()) {
-            final Dialog d = DialogDisplayer.getDefault().createDialog(descriptor[0]);
-            descriptor[0].addPropertyChangeListener(new PropertyChangeListener() {
-                @Override
-                public void propertyChange(PropertyChangeEvent arg0) {
-                    d.setVisible(false);
-                    d.dispose();
-                }
+            Dialog d = DialogDisplayer.getDefault().createDialog(descriptor[0]);
+            descriptor[0].addPropertyChangeListener((PropertyChangeEvent e) -> {
+                d.setVisible(false);
+                d.dispose();
             });
             d.setVisible(true);
         } else {

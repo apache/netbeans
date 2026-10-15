@@ -18,18 +18,19 @@
  */
 package org.netbeans.modules.db.sql.visualeditor.querymodel;
 
-/**
- * Represents a SQL WHERE clause
- * Example Form: WHERE ((a.x = b.y) AND (c.w = d.v))
- */
-// ToDo: Decide whether a null WHERE clause is better represented as a null
-// ptr, or a Where with null condition.
-
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Collection;
 
 import org.netbeans.api.db.sql.support.SQLIdentifiers;
 
+// ToDo: Decide whether a null WHERE clause is better represented as a null
+// ptr, or a Where with null condition.
+
+/**
+ * Represents a SQL WHERE clause
+ * Example Form: WHERE ((a.x = b.y) AND (c.w = d.v))
+ */
 public class WhereNode implements Where {
 
     // Fields
@@ -82,10 +83,10 @@ public class WhereNode implements Where {
                 _cond = null;
         }
         else {
-            ArrayList column = new ArrayList();
+            List<Column> column = new ArrayList<>();
             _cond.getReferencedColumns(column);
             for (int i = 0; i < column.size(); i++) {
-                Column col = (Column)column.get(i);
+                Column col = column.get(i);
                 if (col.matches(tableSpec)) {
                     _cond = null;
                 }

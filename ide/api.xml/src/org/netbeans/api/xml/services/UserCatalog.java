@@ -51,7 +51,7 @@ public abstract class UserCatalog {
      * @return UserCatalog registered in default Lookup or <code>null</code>.
      */
     public static UserCatalog getDefault() {
-        return (UserCatalog) Lookup.getDefault().lookup(UserCatalog.class);
+        return Lookup.getDefault().lookup(UserCatalog.class);
     }
     
     /**

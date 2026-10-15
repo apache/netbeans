@@ -188,7 +188,7 @@ public final class AttributesUtilities {
         }
 
         public synchronized boolean containsAttributes(AttributeSet attributes) {
-            for(Enumeration names = attributes.getAttributeNames(); names.hasMoreElements(); ) {
+            for(Enumeration<?> names = attributes.getAttributeNames(); names.hasMoreElements(); ) {
                 Object name = names.nextElement();
                 Object value = attributes.getAttribute(name);
 
@@ -327,7 +327,7 @@ public final class AttributesUtilities {
         private final AttributeSet[] delegates;
         
         public BigComposite(List<AttributeSet> delegates) {
-            this.delegates = delegates.toArray(new AttributeSet[delegates.size()]);
+            this.delegates = delegates.toArray(new AttributeSet[0]);
         }
 
         public Collection<? extends AttributeSet> getDelegates() {

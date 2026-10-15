@@ -488,7 +488,7 @@ public class LocalePanel extends JPanel {
     private javax.swing.JLabel variantLabel;
     // End of variables declaration//GEN-END:variables
 
-    private static abstract class NbBasicComboBoxRenderer extends BasicComboBoxRenderer.UIResource {
+    private abstract static class NbBasicComboBoxRenderer extends BasicComboBoxRenderer.UIResource {
         
         public Component getListCellRendererComponent(JList list, Object value,
                 int index, boolean isSelected, boolean cellHasFocus) {

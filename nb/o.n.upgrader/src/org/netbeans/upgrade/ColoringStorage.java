@@ -58,13 +58,15 @@ class ColoringStorage {
     }    
 
     private static class ColoringsReader extends XMLStorage.Handler {
-        private Map<String, SimpleAttributeSet> colorings = new HashMap<String, SimpleAttributeSet> ();
+        private final Map<String, SimpleAttributeSet> colorings = new HashMap<> ();
         private SimpleAttributeSet last;
         
+        @Override
         Object getResult () {
             return colorings;
         }
         
+        @Override
         public void startElement (
             String uri, 
             String localName,
@@ -153,6 +155,7 @@ class ColoringStorage {
             }
         }
         
+        @Override
         public InputSource resolveEntity (String pubid, String sysid) {
             return new InputSource (
 		new java.io.ByteArrayInputStream (new byte [0])
@@ -264,7 +267,7 @@ class ColoringStorage {
         String[] mimeTypes, 
         String profile
     ) {
-        StringBuffer sb = new StringBuffer ();
+        StringBuilder sb = new StringBuilder ();
         sb.append ("Editors");
         int i, k = mimeTypes.length;
         for (i = 0; i < k; i++)

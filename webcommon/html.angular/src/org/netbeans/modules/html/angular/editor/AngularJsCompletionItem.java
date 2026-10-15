@@ -34,7 +34,7 @@ import org.openide.util.ImageUtilities;
  */
 public class AngularJsCompletionItem implements CompletionProposal {
 
-    private final static String ANGULAR_NAME = "Angular Js";
+    private static final String ANGULAR_NAME = "Angular Js";
     private static ImageIcon angularIcon = null;
 
     private final int anchorOffset;
@@ -78,7 +78,7 @@ public class AngularJsCompletionItem implements CompletionProposal {
     @Override
     public ImageIcon getIcon() {
         if (angularIcon == null) {
-            angularIcon = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/html/angular/resources/AngularJS_icon_16.png")); //NOI18N
+            angularIcon = ImageUtilities.loadImageIcon("org/netbeans/modules/html/angular/resources/AngularJS_icon_16.png", false); //NOI18N
         }
         return angularIcon;
     }

@@ -29,42 +29,46 @@ import org.openide.util.HelpCtx;
 
 public class HelpCtxHintTest {
 
-    @Test public void literalString() throws Exception {
+    @Test 
+    public void literalString() throws Exception {
         HintTest.create().classpath(cp()).
                 input("package test;\n" +
                        "class Test {\n" +
-                       "    Object _ = new org.openide.util.HelpCtx(\"some.id\");\n" +
+                       "    Object o = new org.openide.util.HelpCtx(\"some.id\");\n" +
                        "}\n").
                 run(HelpCtxHint.class).
                 assertWarnings();
     }
 
-    @Test public void constantString() throws Exception {
+    @Test
+    public void constantString() throws Exception {
         HintTest.create().classpath(cp()).
                 input("package test;\n" +
                        "class Test {\n" +
-                       "    Object _ = new org.openide.util.HelpCtx(\"some.\" + \"id\");\n" +
+                       "    Object o = new org.openide.util.HelpCtx(\"some.\" + \"id\");\n" +
                        "}\n").
                 run(HelpCtxHint.class).
                 assertWarnings();
     }
 
     @Ignore // XXX need #209759 to implement check for constants
-    @Test public void computedString() throws Exception {
+    @Test 
+    public void computedString() throws Exception {
         HintTest.create().classpath(cp()).
                 input("package test;\n" +
                        "class Test {\n" +
-                       "    Object _ = new org.openide.util.HelpCtx(toString());\n" +
+                       "    Object o = new org.openide.util.HelpCtx(toString());\n" +
                        "}\n").
                 run(HelpCtxHint.class).
                 assertWarnings("2:15-2:55:verifier:nonconstant help ID");
     }
 
-    @Test public void simpleClass() throws Exception {
+    @Test 
+    public void simpleClass() throws Exception {
         HintTest.create().classpath(cp()).
                 input("package test;\n" +
                        "class Test {\n" +
-                       "    Object _ = new org.openide.util.HelpCtx(Test.class);\n" +
+                       "    Object o = new org.openide.util.HelpCtx(Test.class);\n" +
                        "}\n").
                 run(HelpCtxHint.class).
                 findWarning("2:15-2:55:verifier:" + HelpCtx_onClass_warning()).
@@ -72,15 +76,16 @@ public class HelpCtxHintTest {
                 assertCompilable().
                 assertOutput("package test;\n" +
                        "class Test {\n" +
-                       "    Object _ = new org.openide.util.HelpCtx(\"test.Test\");\n" +
+                       "    Object o = new org.openide.util.HelpCtx(\"test.Test\");\n" +
                        "}\n");
     }
 
-    @Test public void className() throws Exception {
+    @Test 
+    public void className() throws Exception {
         HintTest.create().classpath(cp()).
                 input("package test;\n" +
                        "class Test {\n" +
-                       "    Object _ = new org.openide.util.HelpCtx(Test.class.getName());\n" +
+                       "    Object o = new org.openide.util.HelpCtx(Test.class.getName());\n" +
                        "}\n").
                 run(HelpCtxHint.class).
                 findWarning("2:15-2:65:verifier:" + HelpCtx_onClassName_warning()).
@@ -88,16 +93,17 @@ public class HelpCtxHintTest {
                 assertCompilable().
                 assertOutput("package test;\n" +
                        "class Test {\n" +
-                       "    Object _ = new org.openide.util.HelpCtx(\"test.Test\");\n" +
+                       "    Object o = new org.openide.util.HelpCtx(\"test.Test\");\n" +
                        "}\n");
     }
 
-    @Test public void nestedClass() throws Exception {
+    @Test 
+    public void nestedClass() throws Exception {
         HintTest.create().classpath(cp()).
                 input("package test;\n" +
                        "class Test {\n" +
                        "    class Nested {\n" +
-                       "        Object _ = new org.openide.util.HelpCtx(Nested.class);\n" +
+                       "        Object o = new org.openide.util.HelpCtx(Nested.class);\n" +
                        "    }\n" +
                        "}\n").
                 run(HelpCtxHint.class).
@@ -107,17 +113,18 @@ public class HelpCtxHintTest {
                 assertOutput("package test;\n" +
                        "class Test {\n" +
                        "    class Nested {\n" +
-                       "        Object _ = new org.openide.util.HelpCtx(\"test.Test$Nested\");\n" +
+                       "        Object o = new org.openide.util.HelpCtx(\"test.Test$Nested\");\n" +
                        "    }\n" +
                        "}\n");
     }
 
-    @Test public void nestedClassName() throws Exception {
+    @Test 
+    public void nestedClassName() throws Exception {
         HintTest.create().classpath(cp()).
                 input("package test;\n" +
                        "class Test {\n" +
                        "    class Nested {\n" +
-                       "        Object _ = new org.openide.util.HelpCtx(Nested.class.getName());\n" +
+                       "        Object o = new org.openide.util.HelpCtx(Nested.class.getName());\n" +
                        "    }\n" +
                        "}\n").
                 run(HelpCtxHint.class).
@@ -127,7 +134,7 @@ public class HelpCtxHintTest {
                 assertOutput("package test;\n" +
                        "class Test {\n" +
                        "    class Nested {\n" +
-                       "        Object _ = new org.openide.util.HelpCtx(\"test.Test$Nested\");\n" +
+                       "        Object o = new org.openide.util.HelpCtx(\"test.Test$Nested\");\n" +
                        "    }\n" +
                        "}\n");
     }

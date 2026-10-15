@@ -29,6 +29,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.refactoring.api.AbstractRefactoring;
 import org.netbeans.modules.refactoring.api.WhereUsedQuery;
+import org.netbeans.modules.refactoring.api.RenameRefactoring;
 import org.netbeans.modules.refactoring.spi.RefactoringPlugin;
 import org.netbeans.modules.refactoring.spi.RefactoringPluginFactory;
 import org.openide.filesystems.FileObject;
@@ -39,8 +40,21 @@ import org.openide.util.lookup.ServiceProvider;
 public class MavenRefactoringPluginFactory implements RefactoringPluginFactory {
 
     private static final Logger LOG = Logger.getLogger(MavenRefactoringPluginFactory.class.getName());
+    public static final String RUN_MAIN_CLASS = "exec.mainClass";
 
     @Override public RefactoringPlugin createInstance(AbstractRefactoring refactoring) {
+        if (refactoring instanceof RenameRefactoring) {
+            TreePathHandle handle = refactoring.getRefactoringSource().lookup(TreePathHandle.class);
+            if (handle != null && handle.getKind() == Tree.Kind.CLASS) {
+                FileObject fo = handle.getFileObject();
+                Project p = FileOwnerQuery.getOwner(fo);
+                if (p != null && p.getLookup().lookup(NbMavenProject.class) != null) {
+                    LOG.log(Level.FINE, "Renaming {0} field in a project pom.xml", RUN_MAIN_CLASS);
+                    return new MavenRefactoringPlugin((RenameRefactoring) refactoring, handle);
+                }
+                return null;
+            }
+        } 
         if (!(refactoring instanceof WhereUsedQuery)) {
             return null;
         }

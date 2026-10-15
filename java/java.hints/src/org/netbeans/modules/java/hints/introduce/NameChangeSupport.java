@@ -20,20 +20,16 @@ package org.netbeans.modules.java.hints.introduce;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.lang.reflect.InvocationTargetException;
-import javax.lang.model.element.Element;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.TreePathHandle;
-import org.openide.NotificationLineSupport;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
@@ -56,13 +52,32 @@ class NameChangeSupport extends FocusAdapter implements DocumentListener, Runnab
     private Modifier minAccess;
     private boolean valid;
     private String validateName;
-    
+
     public NameChangeSupport(JTextField control) {
+        this(control, false);
+    }
+
+    public NameChangeSupport(JTextField control, boolean initAsValid) {
         this.control = control;
+        this.valid = initAsValid;
         control.getDocument().addDocumentListener(this);
         control.addFocusListener(this);
+        // ensure validation finishes before ENTER closes the window while current state is valid
+        control.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (valid && e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    try {
+                        validateTask.waitFinished(1000);
+                    } catch (InterruptedException ignore) {}
+                    if (!valid) {
+                        e.consume();
+                    }
+                }
+            }
+        });
     }
-    
+
     public synchronized void setChangeListener(ChangeListener l) {
         assert listener == null;
         this.listener = l;
@@ -117,8 +132,10 @@ class NameChangeSupport extends FocusAdapter implements DocumentListener, Runnab
     public void run() {
         TreePathHandle t;
         MemberValidator v;
+        String name;
         synchronized (this) {
-            if (validateName == null) {
+            name = this.validateName;
+            if (name == null) {
                 return;
             }
             if (validator == null) {
@@ -131,10 +148,10 @@ class NameChangeSupport extends FocusAdapter implements DocumentListener, Runnab
         Modifier mod = null;
         final ChangeListener l;
         
-        if (validateName.isEmpty()) {
+        if (name.isEmpty()) {
             notifyNameError(Bundle.ERR_NameIsEmpty());
             nv = false;
-        } else if (!Utilities.isJavaIdentifier(validateName)) {
+        } else if (!Utilities.isJavaIdentifier(name)) {
             notifyNameError(Bundle.ERR_NameIsNotValid());
             nv = false;
         } else {

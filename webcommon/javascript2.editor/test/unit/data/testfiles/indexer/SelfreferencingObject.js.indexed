@@ -1,0 +1,45 @@
+
+
+Document 0
+Searchable Keys:
+  bn : a
+  bni : a
+  fqn : a.aO
+  offset : 849
+
+Not Searchable Keys:
+  assign : 
+  flag : 2097218
+
+
+Document 1
+Searchable Keys:
+  bn : a
+  bni : a
+  fqn : aO
+  offset : 823
+
+Not Searchable Keys:
+  assign : 
+  flag : 2097218
+
+
+Document 2
+Searchable Keys:
+  bn : height
+  bni : height
+  fqn : a.heightO
+  offset : 833
+
+Not Searchable Keys:
+  assign : Number:-1:1|
+  flag : 578
+
+
+Document 3
+Searchable Keys:
+  usage : a:a#P
+  usage : a:height#P:a#P
+  usage : height
+
+Not Searchable Keys:

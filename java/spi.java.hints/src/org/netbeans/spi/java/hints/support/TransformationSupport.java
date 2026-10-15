@@ -54,14 +54,14 @@ import org.openide.util.Exceptions;
 
 /**
  * Static utility classes for processing jackpot patterns.
- * <a href="https://bitbucket.org/jlahoda/jackpot30/wiki/RulesLanguage">Rules Language</a>
+ * <a href="https://github.com/apache/netbeans-jackpot30/tree/master/cmdline">Rules Language</a>
  * @author Jan Becicka
  * @since 1.1
  */
 public final class TransformationSupport {
 
-    private String jackpotPattern;
-    private Transformer transformer;
+    private final String jackpotPattern;
+    private final Transformer transformer;
     private AtomicBoolean cancel = new AtomicBoolean();
 
     private TransformationSupport(String jackpotPattern, Transformer transformer) {
@@ -130,7 +130,7 @@ public final class TransformationSupport {
 
     /**
      * Transformer callback which is called for each occurrence during processing 
-     * of {@link #performTransformation(java.lang.String, org.netbeans.spi.java.hints.support.JackpotSupport.Transformer, java.util.concurrent.atomic.AtomicBoolean)    
+     * of {@link #performTransformation(java.lang.String, org.netbeans.spi.java.hints.support.JackpotSupport.Transformer, java.util.concurrent.atomic.AtomicBoolean) }
      */
     public interface Transformer {
 
@@ -154,18 +154,18 @@ public final class TransformationSupport {
     private static void performTransformation(WorkingCopy workingCopy, TreePath on, String jackpotPattern, AtomicBoolean cancel) {
         Iterable<? extends HintDescription> hints = PatternConvertor.create(jackpotPattern);
         HintsInvoker inv = new HintsInvoker(HintsSettings.getSettingsFor(workingCopy.getFileObject()), cancel);
-        Map<HintDescription, List<ErrorDescription>> computeHints = inv.computeHints(workingCopy, on, false, hints, new ArrayList<MessageImpl>());
+        Map<HintDescription, List<ErrorDescription>> computeHints = inv.computeHints(workingCopy, on, false, hints, new ArrayList<>());
         
         if (computeHints == null || cancel.get()) return ;
         
-        List<ErrorDescription> errs = new ArrayList<ErrorDescription>();
+        List<ErrorDescription> errs = new ArrayList<>();
         for (Entry<HintDescription, List<ErrorDescription>> entry: computeHints.entrySet()) {
             errs.addAll(entry.getValue());
         }
-        List<MessageImpl> problems = new LinkedList<MessageImpl>();
+        List<MessageImpl> problems = new LinkedList<>();
 
         try {
-            if (BatchUtilities.applyFixes(workingCopy, Collections.<Project, Set<String>>emptyMap(), errs, null, new ArrayList<RefactoringElementImplementation>(), problems)) {
+            if (BatchUtilities.applyFixes(workingCopy, Collections.<Project, Set<String>>emptyMap(), errs, null, new ArrayList<>(), problems)) {
                 throw new IllegalStateException();
             }
         } catch (IllegalStateException ex) {
@@ -186,7 +186,7 @@ public final class TransformationSupport {
      * @return
      */
     private static  Collection<? extends ModificationResult> performTransformation(String jackpotPattern, AtomicBoolean cancel) {
-        Collection<MessageImpl> problems = new LinkedList<MessageImpl>();
+        Collection<MessageImpl> problems = new LinkedList<>();
         BatchResult batchResult = BatchSearch.findOccurrences(PatternConvertor.create(jackpotPattern), Scopes.allOpenedProjectsScope());
         return BatchUtilities.applyFixes(batchResult, new ProgressHandleWrapper(1, 1), cancel, problems);
     }
@@ -198,15 +198,17 @@ public final class TransformationSupport {
      * @return collection of ModificationResults.
      */
     private static Collection<? extends ModificationResult> performTransformation(final String inputJackpotPattern, final Transformer transformer, AtomicBoolean cancel) {
-        List<HintDescription> descriptions = new ArrayList<HintDescription>();
+        List<HintDescription> descriptions = new ArrayList<>();
 
         for (HintDescription hd : PatternConvertor.create(inputJackpotPattern)) {
             final String triggerPattern = ((Trigger.PatternDescription) hd.getTrigger()).getPattern();
-            descriptions.add(HintDescriptionFactory.create().setTrigger(hd.getTrigger()).
-                    setTriggerOptions(hd.getTrigger().getOptions()).
-                setWorker(new HintDescription.Worker() {
-                @Override public Collection<? extends ErrorDescription> createErrors(HintContext ctx) {
-                    final Map<String, TypeMirrorHandle<?>> constraintsHandles = new HashMap<String, TypeMirrorHandle<?>>();
+            descriptions.add(
+                HintDescriptionFactory.create()
+                        .setTrigger(hd.getTrigger())
+                        .setTriggerOptions(hd.getTrigger()
+                        .getOptions())
+                        .setWorker((HintContext ctx) -> {
+                    final Map<String, TypeMirrorHandle<?>> constraintsHandles = new HashMap<>();
 
                     for (Map.Entry<String, TypeMirror> c : ctx.getConstraints().entrySet()) {
                         constraintsHandles.put(c.getKey(), TypeMirrorHandle.create(c.getValue()));
@@ -218,7 +220,7 @@ public final class TransformationSupport {
                         }
                         @Override protected void performRewrite(JavaFix.TransformationContext ctx) {
                             WorkingCopy wc = ctx.getWorkingCopy();
-                            Map<String, TypeMirror> constraints = new HashMap<String, TypeMirror>();
+                            Map<String, TypeMirror> constraints = new HashMap<>();
 
                             for (Map.Entry<String, TypeMirrorHandle<?>> c : constraintsHandles.entrySet()) {
                                 constraints.put(c.getKey(), c.getValue().resolve(wc));
@@ -233,14 +235,14 @@ public final class TransformationSupport {
                         }
                     }.toEditorFix();
                     
-                    return Collections.singletonList(ErrorDescriptionFactory.createErrorDescription(Severity.WARNING, "", Collections.singletonList(fix), ctx.getInfo().getFileObject(), 0, 0));
-                }
-            }).produce());
+                    return List.of(ErrorDescriptionFactory.createErrorDescription(Severity.WARNING, "", List.of(fix), ctx.getInfo().getFileObject(), 0, 0));
+                }).produce()
+            );
 
         }
         
         BatchSearch.BatchResult batchResult = BatchSearch.findOccurrences(descriptions, Scopes.allOpenedProjectsScope());
-        return BatchUtilities.applyFixes(batchResult, new ProgressHandleWrapper(1, 1), cancel, new ArrayList<MessageImpl>());
+        return BatchUtilities.applyFixes(batchResult, new ProgressHandleWrapper(1, 1), cancel, new ArrayList<>());
     }
     
     /**
@@ -251,16 +253,12 @@ public final class TransformationSupport {
      * @return
      */
     private static Collection<? extends ModificationResult> performTransformation(String inputJackpotPattern, final String transformationJackpotPattern, AtomicBoolean cancel) {
-        return performTransformation(inputJackpotPattern, new Transformer() {
-
-            @Override
-            public void transform(WorkingCopy copy, Occurrence occurrence) {
-                try {
-                    Fix toFix = TransformationSupport.rewriteFix(copy, "whatever", occurrence.getOccurrenceRoot(), transformationJackpotPattern, occurrence.getVariables(), occurrence.getMultiVariables(), occurrence.getVariables2Names(), Collections.<String, TypeMirror>emptyMap(), Collections.<String, String>emptyMap());
-                    TransformationSupport.process(((JavaFixImpl) toFix).jf, copy, false, null, new ArrayList<RefactoringElementImplementation>());
-                } catch (Exception ex) {
-                    Exceptions.printStackTrace(ex);
-                }
+        return performTransformation(inputJackpotPattern, (WorkingCopy copy, Occurrence occurrence) -> {
+            try {
+                Fix toFix = TransformationSupport.rewriteFix(copy, "whatever", occurrence.getOccurrenceRoot(), transformationJackpotPattern, occurrence.getVariables(), occurrence.getMultiVariables(), occurrence.getVariables2Names(), Collections.<String, TypeMirror>emptyMap(), Collections.<String, String>emptyMap());
+                TransformationSupport.process(((JavaFixImpl) toFix).jf, copy, false, null, new ArrayList<>());
+            } catch (Exception ex) {
+                Exceptions.printStackTrace(ex);
             }
         }, cancel);
     }

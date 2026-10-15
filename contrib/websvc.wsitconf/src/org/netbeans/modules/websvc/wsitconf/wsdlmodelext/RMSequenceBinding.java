@@ -45,11 +45,11 @@ public enum RMSequenceBinding {
         }
     };
     
-    public final static RMSequenceBinding getDefault() {
+    public static final RMSequenceBinding getDefault() {
         return SECURED_TOKEN;
     }
 
-    public final static RMSequenceBinding getValue(ConfigVersion cfgVersion, Binding b) {
+    public static final RMSequenceBinding getValue(ConfigVersion cfgVersion, Binding b) {
         if (!ConfigVersion.CONFIG_1_0.equals(cfgVersion)) {
             if (RMModelHelper.getInstance(cfgVersion).isSequenceBinding(b, SECURED_TRANSPORT)) {
                 return SECURED_TRANSPORT;

@@ -60,6 +60,7 @@ public class LifecycleTest extends NbTestCase {
 
     private IOContainer container;
     private NbIO io;
+    private NbIOProvider ioProvider;
     JFrame jf = null;
 
     OutputTab tab = null;
@@ -75,7 +76,8 @@ public class LifecycleTest extends NbTestCase {
                 jf.getContentPane().add(getIOWindow(), BorderLayout.CENTER);
                 jf.setBounds(20, 20, 700, 300);
                 jf.setVisible(true);
-                io = (NbIO) new NbIOProvider().getIO("Test", false);
+                ioProvider = new NbIOProvider();
+                io = (NbIO) ioProvider.getIO("Test", false);
                 io.select();
                 tab = (OutputTab) container.getSelected();
                 pane = (OutputPane) tab.getOutputPane();
@@ -99,6 +101,7 @@ public class LifecycleTest extends NbTestCase {
         }
         io.closeInputOutput();
         io = null;
+        ioProvider = null;
         container = null;
         sleep();
     }
@@ -222,6 +225,45 @@ public class LifecycleTest extends NbTestCase {
         writer.println ("world");
         sleep();
         writer.reset();
+        sleep();
+
+        assertTrue ("Same writer object should be used after a reset", io.writer() == writer);
+        assertTrue ("Same err object should be used after a reset", io.writer().err() == err);
+        assertTrue ("Different output should be used afer a reset", out != io.writer().out());
+
+        assertNull ("Old document's Lines object not disposed - that means neither was its writer", doc.getLines());
+
+        Exception e = null;
+        try {
+            out.getStorage();
+        } catch (Exception exc) {
+            e = exc;
+        }
+        assertNotNull ("OutWriter should have thrown an exception on trying to " +
+            "fetch its storage after it was disposed.  It appears it wasn't disposed.", e);
+    }
+
+    /**
+     * org.netbeans.api.io.InputOutput uses InputOutput.reset(),
+     * NOT writer.reset().[NETBEANS-4203]
+     * <p>
+     * Identical to testReset, expcept use ioProvider.resetIO(io) not writer.reset()
+     * </p>
+     * @throws Exception 
+     */
+    public void testNbIOReset() throws Exception {
+        System.out.println("testNbIOReset");
+        ErrWriter err = io.writer().getErr();
+        OutWriter out = io.writer().out();
+        NbWriter writer = io.writer();
+
+        OutputDocument doc = (OutputDocument) pane.getDocument();
+        assertNotNull ("Document should not be null", doc);
+
+        err.println ("hello");
+        writer.println ("world");
+        sleep();
+        ioProvider.resetIO(io);
         sleep();
 
         assertTrue ("Same writer object should be used after a reset", io.writer() == writer);
@@ -490,25 +532,14 @@ public class LifecycleTest extends NbTestCase {
         IOContainer container = IOContainer.getDefault();
         JComponent comp = null;
         try {
-            try {
-                Field f = container.getClass().getDeclaredField("provider");
-                f.setAccessible(true);
-                IOContainer.Provider prov = (IOContainer.Provider) f.get(container);
-                Method m = prov.getClass().getDeclaredMethod("impl", new Class[0]);
-                m.setAccessible(true);
-                comp = (JComponent) m.invoke(prov);
-            } catch (InvocationTargetException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (NoSuchMethodException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (IllegalArgumentException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (IllegalAccessException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        } catch (NoSuchFieldException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (SecurityException ex) {
+            Field f = container.getClass().getDeclaredField("provider");
+            f.setAccessible(true);
+            IOContainer.Provider prov = (IOContainer.Provider) f.get(container);
+            Method m = prov.getClass().getDeclaredMethod("impl", new Class<?>[0]);
+            m.setAccessible(true);
+            comp = (JComponent) m.invoke(prov);
+        } catch (InvocationTargetException | NoSuchMethodException | IllegalArgumentException
+                | IllegalAccessException | NoSuchFieldException | SecurityException ex) {
             Exceptions.printStackTrace(ex);
         }
         return comp;

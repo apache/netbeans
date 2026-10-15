@@ -24,6 +24,7 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.RandomlyFails;
 import org.openide.util.ChangeSupport;
 
+// copy of openide.util
 public class MockChangeListenerTest extends NbTestCase {
 
     public MockChangeListenerTest(String n) {

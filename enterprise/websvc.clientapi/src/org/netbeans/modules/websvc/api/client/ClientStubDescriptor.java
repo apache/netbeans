@@ -27,8 +27,8 @@ package org.netbeans.modules.websvc.api.client;
  */
 public class ClientStubDescriptor {
 
-    /** Client types.  Not to be intermixed with service types.
-     */
+    // Client types.  Not to be intermixed with service types.
+
     /** Key to represent jsr-109 static stub clients
      *
      *  Note: This string may be embedded in build-impl.xsl for the projects

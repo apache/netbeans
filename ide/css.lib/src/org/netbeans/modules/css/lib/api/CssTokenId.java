@@ -104,6 +104,7 @@ public enum CssTokenId implements TokenId {
     TIME(Css3Lexer.TIME, NUMBERS),
     FREQ(Css3Lexer.FREQ, NUMBERS),
     HEXCHAR(Css3Lexer.HEXCHAR, NUMBERS),
+    HEXCHAR_WILDCARD(Css3Lexer.HEXCHAR_WILDCARD, NUMBERS),
     NONASCII(Css3Lexer.NONASCII, OTHERS),
     UNICODE(Css3Lexer.UNICODE, OTHERS),
     ESCAPE(Css3Lexer.ESCAPE, OTHERS),
@@ -111,6 +112,7 @@ public enum CssTokenId implements TokenId {
     NMCHAR(Css3Lexer.NMCHAR, OTHERS),
     NAME(Css3Lexer.NAME, OTHERS),
     URL(Css3Lexer.URL, URIS),
+    URANGE(Css3Lexer.URANGE, NUMBERS),
     A(Css3Lexer.A, OTHERS),
     B(Css3Lexer.B, OTHERS),
     C(Css3Lexer.C, OTHERS),
@@ -245,8 +247,16 @@ public enum CssTokenId implements TokenId {
 
     AT_SIGN(Css3Lexer.AT_SIGN, AT_RULE_SYMBOL),
 
-    SASS_AT_ROOT(Css3Lexer.SASS_AT_ROOT, AT_RULE_SYMBOL)
+    SASS_AT_ROOT(Css3Lexer.SASS_AT_ROOT, AT_RULE_SYMBOL),
 
+    SASS_USE(Css3Lexer.SASS_USE, AT_RULE_SYMBOL),
+    SASS_FORWARD(Css3Lexer.SASS_FORWARD, AT_RULE_SYMBOL),
+
+    LAYER_SYM(Css3Lexer.LAYER_SYM, AT_RULE_SYMBOL),
+
+    CONTAINER_SYM(Css3Lexer.CONTAINER_SYM, AT_RULE_SYMBOL),
+
+    KEYFRAMES_SYM(Css3Lexer.KEYFRAMES_SYM, AT_RULE_SYMBOL),
     ;
 
     private static final Map<Integer, CssTokenId> codesMap = new HashMap<>();

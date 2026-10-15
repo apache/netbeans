@@ -28,9 +28,6 @@ import javax.swing.text.StyledDocument;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.modules.csl.api.HintFix;
 import org.netbeans.modules.editor.NbEditorDocument;
-import org.netbeans.modules.html.editor.api.Utils;
-import org.netbeans.modules.html.editor.api.gsf.HtmlParserResult;
-import org.netbeans.modules.html.editor.lib.api.SyntaxAnalyzerResult;
 import org.netbeans.modules.parsing.api.Embedding;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
@@ -39,6 +36,7 @@ import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
+import org.netbeans.modules.web.common.api.WebPageMetadata;
 import org.netbeans.spi.lexer.MutableTextInput;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
@@ -54,7 +52,7 @@ import org.openide.util.RequestProcessor;
  */
 public final class ErrorCheckingSupport {
 
-    private static RequestProcessor RP = new RequestProcessor(ErrorCheckingSupport.class);
+    private static final RequestProcessor RP = new RequestProcessor(ErrorCheckingSupport.class);
 
     private static final String DISABLE_ERROR_CHECKS_KEY = ErrorCheckingSupport.class.getName() + ".disableErrorChecking"; //NOI18N
 
@@ -86,42 +84,40 @@ public final class ErrorCheckingSupport {
         }
     }
 
-    public static String getMimeType(Parser.Result result) {
-        SyntaxAnalyzerResult syntax = getSyntaxAnalyzerResult(result);
-        if (syntax != null) {
-            return Utils.getWebPageMimeType(syntax);
+    public static String getMimeType(Parser.Result info) {
+        String mime = getWebPageMetadataMime(info);
+        if (mime != null) {
+            return mime;
         }
-        FileObject fo = result.getSnapshot().getSource().getFileObject();
+        FileObject fo = info.getSnapshot().getSource().getFileObject();
         if (fo != null) {
             return fo.getMIMEType();
         } else {
             // no fileobject?
-            return result.getSnapshot().getMimeType();
+            return info.getSnapshot().getMimeType();
         }
     }
-
-    private static SyntaxAnalyzerResult getSyntaxAnalyzerResult(Parser.Result result) {
-        if (result instanceof HtmlParserResult) {
-            SyntaxAnalyzerResult saresult = ((HtmlParserResult) result).getSyntaxAnalyzerResult();
-            return saresult;
+    
+    private static String getWebPageMetadataMime(Parser.Result info) {
+        String mime = WebPageMetadata.getContentMimeType(info, false);
+        if (mime != null) {
+            return mime;
         }
-
-        Snapshot snapshot = result.getSnapshot();
+        Snapshot snapshot = info.getSnapshot();
         // safeguard
         if (!containsHtml(snapshot)) {
             return null;
         }
 
-        final AtomicReference<SyntaxAnalyzerResult> res = new AtomicReference<SyntaxAnalyzerResult>();
+        final AtomicReference<String> res = new AtomicReference<>();
         try {
             ParserManager.parse(Collections.singletonList(snapshot.getSource()), new UserTask() {
 
                 @Override
                 public void run(ResultIterator resultIterator) throws Exception {
-                    Parser.Result r = resultIterator.getParserResult();
-                    if (r instanceof HtmlParserResult) {
-                        SyntaxAnalyzerResult saresult = ((HtmlParserResult) r).getSyntaxAnalyzerResult();
-                        res.set(saresult);
+                    String mime2 = WebPageMetadata.getContentMimeType(info, false);
+                    if (mime2 != null) {
+                        res.set(mime2);
                         return;
                     }
                     for (Embedding e : resultIterator.getEmbeddings()) {
@@ -158,59 +154,42 @@ public final class ErrorCheckingSupport {
     }
 
     private static void reindexFile(final FileObject fo) {
-        RP.post(new Runnable() {
-            @Override
-            public void run() {
-                //refresh Action Items for this file
-                IndexingManager.getDefault().refreshIndexAndWait(fo.getParent().toURL(),
-                        Collections.singleton(fo.toURL()), true, false);
-            }
+        RP.post(() -> {
+            //refresh Action Items for this file
+            IndexingManager.getDefault().refreshIndexAndWait(fo.getParent().toURL(),
+                    Collections.singleton(fo.toURL()), true, false);
         });
     }
 
     private static void reindexActionItems() {
-        RP.post(new Runnable() {
-            @Override
-            public void run() {
-                //refresh all Action Items
-                IndexingManager.getDefault().refreshAllIndices("TLIndexer"); //NOI18N
-            }
+        RP.post(() -> {
+            //refresh all Action Items
+            IndexingManager.getDefault().refreshAllIndices("TLIndexer"); //NOI18N
         });
-
     }
 
     private static void refreshDocument(final FileObject fo) throws IOException {
-        RP.post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    DataObject dobj = DataObject.find(fo);
-                    EditorCookie editorCookie = dobj.getLookup().lookup(EditorCookie.class);
-                    StyledDocument document = editorCookie.openDocument();
-                    forceReparse(document);
-                } catch (IOException  ex) {
-                    Exceptions.printStackTrace(ex);
-                }
+        RP.post(() -> {
+            try {
+                DataObject dobj = DataObject.find(fo);
+                EditorCookie editorCookie = dobj.getLookup().lookup(EditorCookie.class);
+                StyledDocument document = editorCookie.openDocument();
+                forceReparse(document);
+            } catch (IOException  ex) {
+                Exceptions.printStackTrace(ex);
             }
         });
-
     }
 
     private static void forceReparse(final Document doc) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                NbEditorDocument nbdoc = (NbEditorDocument) doc;
-                nbdoc.runAtomic(new Runnable() {
-                    @Override
-                    public void run() {
-                        MutableTextInput mti = (MutableTextInput) doc.getProperty(MutableTextInput.class);
-                        if (mti != null) {
-                            mti.tokenHierarchyControl().rebuild();
-                        }
-                    }
-                });
-            }
+        SwingUtilities.invokeLater(() -> {
+            NbEditorDocument nbdoc = (NbEditorDocument) doc;
+            nbdoc.runAtomic(() -> {
+                MutableTextInput mti = (MutableTextInput) doc.getProperty(MutableTextInput.class);
+                if (mti != null) {
+                    mti.tokenHierarchyControl().rebuild();
+                }
+            });
         });
     }
 

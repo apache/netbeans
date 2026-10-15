@@ -1,0 +1,7 @@
+class |>MARK_OCCURRENCES:Ma^tchExpression<|
+            |>MARK_OCCURRENCES:MatchExpression<|::START => self::$start,
+            |>MARK_OCCURRENCES:MatchExpression<|::SUSPEND => $this->suspend,
+            |>MARK_OCCURRENCES:MatchExpression<|::STOP => $this->stopState(),
+            default =>  |>MARK_OCCURRENCES:MatchExpression<|::default() . |>MARK_OCCURRENCES:MatchExpression<|::match . $this->match(),
+$instance = new |>MARK_OCCURRENCES:MatchExpression<|();
+    default => |>MARK_OCCURRENCES:MatchExpression<|::default(),

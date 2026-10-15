@@ -9,7 +9,6 @@ class Test {
             echo "false";
         }
     }
-
 }
 
 ?>

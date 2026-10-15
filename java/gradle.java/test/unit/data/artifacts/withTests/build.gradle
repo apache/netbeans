@@ -1,0 +1,23 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+application {
+    mainClass = 'test.App'
+}
+
+run {
+    jvmArgs '-Dtest.foo=bar', '-Dtest.bar=foo'
+}
+
+task testJar(type: Jar) {
+    archiveClassifier = 'tests'
+    from sourceSets.test.output
+}
+
+task testSourcesJar(type: Jar, dependsOn: classes) {
+    archiveClassifier = 'test-sources'
+    from sourceSets.test.allSource
+}
+
+test.dependsOn testJar
+build.dependsOn testSourcesJar

@@ -29,11 +29,15 @@ public class Scalar extends Expression {
 
     public enum Type {
         INT, // 'int'
+        /**
+         * @deprecated will be removed in the future, to follow PHP type system,
+         * use {@link Type#FLOAT} instead
+         */        
         REAL, // 'real'
         STRING, // 'string'
         UNKNOWN, // unknown scalar in quote expression
-        SYSTEM // system scalars (__CLASS__ / ...)
-
+        SYSTEM, // system scalars (__CLASS__ / ...)
+        FLOAT // 'float'
     }
     // 'int'
     //public static final int TYPE_INT = 0;

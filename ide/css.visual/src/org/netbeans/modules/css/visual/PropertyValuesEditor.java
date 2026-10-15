@@ -187,8 +187,7 @@ public class PropertyValuesEditor extends PropertyEditorSupport implements ExPro
                                 Collection<String> hashColorCodes = new TreeSet<>();
                                 CssIndex index = CssIndex.create(project);
                                 Map<FileObject, Collection<String>> result = index.findAll(RefactoringElementType.COLOR);
-                                for (FileObject f : result.keySet()) {
-                                    Collection<String> colors = result.get(f);
+                                for (Collection<String> colors : result.values()) {
 //                                boolean usedInCurrentFile = f.equals(file);
                                     for (String color : colors) {
                                         hashColorCodes.add(color);
@@ -279,7 +278,7 @@ public class PropertyValuesEditor extends PropertyEditorSupport implements ExPro
     
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "; property: " + pmodel != null ? pmodel.getName() : "?"; //NOI18N
+        return getClass().getSimpleName() + "; property: " + (pmodel != null ? pmodel.getName() : "?"); //NOI18N
     }
 
     @Override

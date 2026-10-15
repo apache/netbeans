@@ -103,7 +103,7 @@ public abstract class PersistenceManager {
             String pmClassName = iter.next();
             try {
                 PersistenceManager manager = (PersistenceManager)
-                    classLoader.loadClass(pmClassName).newInstance();
+                        classLoader.loadClass(pmClassName).getDeclaredConstructor().newInstance();
                 getManagersList().add(manager);
             }
             catch (Exception ex1) {

@@ -53,6 +53,8 @@ import org.openide.filesystems.URLMapper;
 import org.openide.util.BaseUtilities;
 
 import static junit.framework.TestCase.assertFalse;
+import org.netbeans.api.java.classpath.JavaClassPathConstants;
+import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.openide.filesystems.MultiFileSystem;
 import org.openide.filesystems.Repository;
 
@@ -120,6 +122,19 @@ public class BootClassPathUtil {
         } else {
             return getBootClassPath();
         }
+    }
+
+    public static ClassPathProvider getBootClassPathProvider() {
+        return new ClassPathProvider() {
+            @Override
+            public ClassPath findClassPath(FileObject file, String type) {
+                switch (type) {
+                    case ClassPath.BOOT: return BootClassPathUtil.getBootClassPath();
+                    case JavaClassPathConstants.MODULE_BOOT_PATH: return BootClassPathUtil.getModuleBootPath();
+                }
+                return null;
+            }
+        };
     }
 
     private static final String PROTOCOL = "nbjrt"; //NOI18N

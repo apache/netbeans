@@ -263,7 +263,7 @@ public class RepositoryForBinaryQueryImpl extends AbstractMavenForBinaryQueryImp
                                     //we have classifier here..
                                     String end = jarFile.getName().substring((start + "-").length());
                                     if (end.indexOf('.') > -1) {
-                                        classifier = end.substring(end.indexOf('.'));
+                                        classifier = end.substring(0, end.indexOf('.'));
                                     }
                                 }
                                 File javadoc = new File(parent, start + (classifier != null ? ("-" + ("tests".equals(classifier) ? "test" : classifier)) : "") + "-javadoc.jar"); //NOI18N
@@ -290,12 +290,13 @@ public class RepositoryForBinaryQueryImpl extends AbstractMavenForBinaryQueryImp
         private static final String ATTR_PATH = "lastRootCheckPath"; //NOI18N
         private static final String ATTR_STAMP = "lastRootCheckStamp"; //NOI18N
         private final File sourceJarFile;
+        private final File fallbackSourceJarFile;
         private final ChangeSupport support;
         private final ChangeListener mfoListener;
         private final PropertyChangeListener projectListener;
         private final FileChangeListener sourceJarChangeListener;
         private final RequestProcessor.Task checkChangesTask;
-        private final static int CHECK_CHANGES_DELAY = 50;
+        private static final int CHECK_CHANGES_DELAY = 50;
         private final String groupId;
         private final String artifactId;
         private final String version;
@@ -365,7 +366,17 @@ public class RepositoryForBinaryQueryImpl extends AbstractMavenForBinaryQueryImp
 
             if (sourceJarFile != null) {
                 FileUtil.addFileChangeListener(FileUtil.weakFileChangeListener(sourceJarChangeListener, null));
+                if (classifier != null) {
+                    // fall back to regular sources if attached sources for classifier are missing
+                    String regularSources = artifactId + "-" + version + "-sources.jar"; //NOI18N
+                    if (!sourceJarFile.getName().equals(regularSources)) {
+                        fallbackSourceJarFile = new File(sourceJarFile.getParentFile(), regularSources);
+                        // already listening for changes through the file change listener above
+                        return;
+                    }
+                }
             }            
+            fallbackSourceJarFile = null;
         }
 
         private void checkChanges(boolean fireChanges) {
@@ -448,7 +459,9 @@ public class RepositoryForBinaryQueryImpl extends AbstractMavenForBinaryQueryImp
                     // the only way to let user decide would be some sort of stamp file inside maven local repository.
                     if (sourceJarFile != null && sourceJarFile.exists()) {
                         add(fos, getSourceJarRoot(sourceJarFile));
-                    } 
+                    } else if (fallbackSourceJarFile != null && fallbackSourceJarFile.exists()) {
+                        add(fos, getSourceJarRoot(fallbackSourceJarFile));
+                    }
                     add(fos, getShadedJarSources());
                     toRet = fos.toArray(new FileObject[0]);
                 }
@@ -635,6 +648,7 @@ public class RepositoryForBinaryQueryImpl extends AbstractMavenForBinaryQueryImp
 
     private static class JavadocResult implements JavadocForBinaryQuery.Result {
         private final File javadocJarFile;
+        private final File fallbackJavadocJarFile;
         private final String groupId;
         private final String artifactId;
         private final String version;
@@ -689,7 +703,17 @@ public class RepositoryForBinaryQueryImpl extends AbstractMavenForBinaryQueryImp
                     WeakListeners.create(ChangeListener.class, mfoListener, MavenFileOwnerQueryImpl.getInstance()));
             if (javadocJarFile != null) {
                 FileUtil.addFileChangeListener(javadocJarChangeListener, javadocJarFile);
+                if (classifier != null) {
+                    // listen for regular javadoc because attached javadoc for classifier might be missing
+                    String regularJavadoc = artifactId + "-" + version + "-javadoc.jar"; //NOI18N
+                    if (!javadocJarFile.getName().equals(regularJavadoc)) {
+                        fallbackJavadocJarFile = new File(javadocJarFile.getParentFile(), regularJavadoc);
+                        FileUtil.addFileChangeListener(javadocJarChangeListener, fallbackJavadocJarFile);
+                        return;
+                    }
+                }
             }
+            fallbackJavadocJarFile = null;
         }
 
         @Override
@@ -713,6 +737,8 @@ public class RepositoryForBinaryQueryImpl extends AbstractMavenForBinaryQueryImp
                     toRet = accum.toArray(new URL[0]);
                 } else if (javadocJarFile != null && javadocJarFile.exists()) {
                     toRet = getJavadocJarRoot(javadocJarFile);
+                } else if (fallbackJavadocJarFile != null && fallbackJavadocJarFile.exists()) {
+                    toRet = getJavadocJarRoot(fallbackJavadocJarFile);
                 } else {
                     toRet = checkShadedMultiJars();
                 }

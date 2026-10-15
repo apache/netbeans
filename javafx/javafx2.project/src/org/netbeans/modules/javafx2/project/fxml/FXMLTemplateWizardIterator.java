@@ -576,7 +576,7 @@ public class FXMLTemplateWizardIterator implements WizardDescriptor.Instantiatin
             int i = 2;
             while (newFolder.exists() && (i < 100)) {
                 newFolder = createFileObject(containingDir, MessageFormat.format(
-                        win ? newFolderNextStringWin : newFolderNextString, new Object[]{new Integer(i)}));
+                        win ? newFolderNextStringWin : newFolderNextString, new Object[]{i}));
                 i++;
             }
 

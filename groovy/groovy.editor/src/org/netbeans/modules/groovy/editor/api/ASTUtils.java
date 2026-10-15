@@ -31,6 +31,7 @@ import org.codehaus.groovy.ast.stmt.ExpressionStatement;
 import org.codehaus.groovy.ast.stmt.ForStatement;
 import org.codehaus.groovy.ast.stmt.Statement;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.lexer.TokenUtilities;
@@ -162,7 +163,7 @@ public class ASTUtils {
                 }
 
                 try {
-                    start = Utilities.getFirstNonWhiteFwd(doc, start);
+                    start = LineDocumentUtils.getNextNonWhitespace(doc, start);
                 } catch (BadLocationException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -275,7 +276,7 @@ public class ASTUtils {
 
                     if (fieldName.length() > 0 && !field.isStatic() && (field.getModifiers() & Opcodes.ACC_PRIVATE) != 0) {
 
-                        fieldName = Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1, fieldName.length());
+                        fieldName = Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
                         if (!field.isFinal()) {
                             possibleMethods.add("set" + fieldName); // NOI18N
                         }
@@ -300,7 +301,7 @@ public class ASTUtils {
                 // how to get only methods from source?
                 // for now, just check line number, if < 0 it is not from source
                 // Second part of condition is for generated accessors
-                if ((!method.isSynthetic() && method.getCode() != null)
+                if ((!method.isSynthetic() && (method.isAbstract() || method.getCode() != null))
                         || (method.isSynthetic() && possibleMethods.contains(method.getName()))) {
                     children.add(method);
                 }
@@ -343,7 +344,7 @@ public class ASTUtils {
         assert lineNumber > 0 : "Line number must be at least 1 and was: " + lineNumber;
         assert columnNumber > 0 : "Column number must be at least 1 ans was: " + columnNumber;
 
-        int offset = Utilities.getRowStartFromLineOffset(doc, lineNumber - 1);
+        int offset = LineDocumentUtils.getLineStartFromIndex(doc, lineNumber - 1);
         offset += (columnNumber - 1);
 
         // some sanity checks
@@ -352,6 +353,46 @@ public class ASTUtils {
         }
 
         return offset;
+    }
+    
+    /**
+     * Returns a simple name for a class. The result is not defined for local and
+     * anonymous classes and for closures.
+     * @param node the class
+     * @return class' simple name
+     */
+    public static String getSimpleName(ClassNode node) {
+        if (node == null) {
+            return null;
+        }
+        if (node.getOuterClass() == null) {
+            return node.getNameWithoutPackage();
+        } else {
+            String s = node.getName().substring(node.getOuterClass().getName().length());
+            if (s.startsWith("$")) {
+                return s.substring(1);
+            } else {
+                return s;
+            }
+        }
+    }
+
+    /**
+     * Returns class' parent's name. For toplevel classes, returns the package name.
+     * For inner classes, it returns the outer class' name. The result is undefined for
+     * local, anonymous classes or closures.
+     * @param node the class node.
+     * @return parent name.
+     */
+    public static String getClassParentName(ClassNode node) {
+        if (node == null) {
+            return null;
+        }
+        if (node.getOuterClass() == null) {
+            return node.getPackageName();
+        } else {
+            return node.getOuterClass().getName();
+        }
     }
 
     public static ASTNode getForeignNode(final IndexedElement o) {
@@ -488,7 +529,7 @@ public class ASTUtils {
     }
 
     public static ClassNode getOwningClass(AstPath path) {
-        Iterator<ASTNode> it = path.rootToLeaf();
+        Iterator<ASTNode> it = path.leafToRoot();
         while (it.hasNext()) {
             ASTNode node = it.next();
             if (node instanceof ClassNode) {

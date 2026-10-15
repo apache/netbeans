@@ -264,7 +264,7 @@ public final class QuerySupport {
     /**
      * Create a new query to find out specification source level of Java source files.
      * @param evaluator {@link PropertyEvaluator} used for obtaining needed properties.
-     * @return a {@link SourceLevelQueryImplementation} to find out specification source level of Java source files.
+     * @return a {@link org.netbeans.spi.java.queries.SourceLevelQueryImplementation} to find out specification source level of Java source files.
      * @deprecated Use {@link QuerySupport#createSourceLevelQuery(org.netbeans.spi.project.support.ant.PropertyEvaluator)}
      */
     @Deprecated
@@ -486,7 +486,7 @@ public final class QuerySupport {
     }
     
     /**
-     * Shortcut version of {@link #createBinaryForSourceQueryImplementation(org.netbeans.modules.java.api.common.SourceRoots, org.netbeans.modules.java.api.common.SourceRoots, org.netbeans.spi.project.support.ant.AntProjectHelper, org.netbeans.spi.project.support.ant.PropertyEvaluator, java.lang.String, java.lang.String) }
+     * Shortcut version of {@link #createBinaryForSourceQueryImplementation(org.netbeans.modules.java.api.common.SourceRoots, org.netbeans.modules.java.api.common.SourceRoots, org.netbeans.spi.project.support.ant.AntProjectHelper, org.netbeans.spi.project.support.ant.PropertyEvaluator, java.lang.String[], java.lang.String[]) }
      * which assumes that build classes folder is stored in property <code>build.classes.dir</code> and
      * built test classes folder is stored in property <code>build.test.classes.dir</code>.
      *
@@ -494,8 +494,6 @@ public final class QuerySupport {
      * @param test project test roots
      * @param helper AntProjectHelper
      * @param eval PropertyEvaluator
-     * @param sourceProps array of properties pointing to source folders
-     * @param testProps array of properties pointing to test folders
      * @return BinaryForSourceQueryImplementation
      * @since org.netbeans.modules.java.api.common/1 1.5
      */
@@ -547,12 +545,12 @@ public final class QuerySupport {
      * @param helper project's AntProjectHelper
      * @param evaluator project's evaluator
      * @param annotationProcessingEnabledProperty property whose value says whether the annotation processing is enabled for the given project at all
-     *                                                    (will be returned from {@link Result#annotationProcessingEnabled()})
+     *                                                    (will be returned from {@link org.netbeans.api.java.queries.AnnotationProcessingQuery.Result#annotationProcessingEnabled()})
      * @param annotationProcessingEnabledInEditorProperty property whose value says whether the annotation processing should be enabled
-     *                                                    in the editor (will be returned from {@link Result#annotationProcessingEnabled())}
-     * @param runAllAnnotationProcessorsProperty when true, {@link Result#annotationProcessorsToRun()} will return null
-     * @param annotationProcessorsProperty should contain comma separated list of annotation processors to run (will be returned from  {@link Result#annotationProcessorsToRun()})
-     * @param sourceOutputProperty directory to which the annotation processors generate source files (will be returned from  {@link Result#sourceOutputProperty()})
+     *                                                    in the editor (will be returned from {@link org.netbeans.api.java.queries.AnnotationProcessingQuery.Result#annotationProcessingEnabled()})
+     * @param runAllAnnotationProcessorsProperty when true, {@link org.netbeans.api.java.queries.AnnotationProcessingQuery.Result#annotationProcessorsToRun()} will return null
+     * @param annotationProcessorsProperty should contain comma separated list of annotation processors to run (will be returned from  {@link org.netbeans.api.java.queries.AnnotationProcessingQuery.Result#annotationProcessorsToRun()})
+     * @param sourceOutputProperty directory to which the annotation processors generate source files (will be returned from  {@link org.netbeans.api.java.queries.AnnotationProcessingQuery.Result#sourceOutputDirectory()})
      * @param processorOptionsProperty options passed to the annotation processors (-Akey=value)
      * @return a {@link AnnotationProcessingQueryImplementation} to provide annotation processing configuration data for this project.
      * @since org.netbeans.modules.java.api.common/0 1.14
@@ -572,12 +570,12 @@ public final class QuerySupport {
 
     /**
      * Returns {@link Sources} implementation designed for projects that supports adding
-     * or removing of the source roots. The returned instance also implements {@link SourceGroupModifierImplementation}
+     * or removing of the source roots. The returned instance also implements {@link org.netbeans.spi.project.SourceGroupModifierImplementation}
      * @param project the {@link Project} for which the {@link Sources} should be created
      * @param helper the {@link AntProjectHelper} of the project, used only to resolve files
      * @param evaluator the {@link PropertyEvaluator} to evaluate the properties
      * @param roots the array of {@link Roots} providing the roots of given type
-     * @return the {@link Sources} instance implementing also the {@link SourceGroupModifierImplementation} interface
+     * @return the {@link Sources} instance implementing also the {@link org.netbeans.spi.project.SourceGroupModifierImplementation} interface
      * @since 1.21
      */
     public static Sources createSources(@NonNull final Project project,

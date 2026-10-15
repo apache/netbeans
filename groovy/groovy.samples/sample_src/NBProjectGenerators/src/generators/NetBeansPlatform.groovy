@@ -100,8 +100,7 @@ disabled.modules=\
     org.netbeans.upgrader,\
     org.openide.compat,\
     org.openide.execution,\
-    org.openide.options,\
-    org.openide.util.enumerations
+    org.openide.options
 enabled.clusters=\
     nb,\
     platform

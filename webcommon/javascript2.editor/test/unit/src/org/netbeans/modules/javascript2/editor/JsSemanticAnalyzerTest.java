@@ -18,6 +18,11 @@
  */
 package org.netbeans.modules.javascript2.editor;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import org.netbeans.spi.queries.FileEncodingQueryImplementation;
+import org.openide.filesystems.FileObject;
+
 /**
  *
  * @author Petr Pisl
@@ -26,6 +31,18 @@ public class JsSemanticAnalyzerTest extends JsTestBase {
 
     public JsSemanticAnalyzerTest(String testName) {
         super(testName);
+    }
+
+    @Override
+    protected Object[] createExtraMockLookupContent() {
+        return new Object[]{
+            new FileEncodingQueryImplementation() {
+                @Override
+                public Charset getEncoding(FileObject file) {
+                    return StandardCharsets.UTF_8;
+                }
+            }
+        };
     }
     
     public void testAsyncFunction01() throws Exception {
@@ -54,6 +71,10 @@ public class JsSemanticAnalyzerTest extends JsTestBase {
 
     public void testAsyncFunction07() throws Exception {
         checkSemantic("testfiles/parser/asyncFunctions/asyncFunctions7.js");
+    }
+
+    public void testTopLevelAwait() throws Exception {
+        checkSemantic("testfiles/parser/topLevelAwait.js");
     }
 
     public void testObjectAsParam() throws Exception {
@@ -662,5 +683,9 @@ public class JsSemanticAnalyzerTest extends JsTestBase {
     
     public void testIssue231627() throws Exception {
         checkSemantic("testfiles/markoccurences/issue231627.js");
+    }
+
+    public void testAwait() throws Exception {
+        checkSemantic("testfiles/coloring/await.js");
     }
 }

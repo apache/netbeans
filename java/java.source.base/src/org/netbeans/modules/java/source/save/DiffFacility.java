@@ -138,8 +138,8 @@ class DiffFacility {
         }
         List<Line> list1 = getLines(text1);
         List<Line> list2 = getLines(text2);
-        Line[] lines1 = list1.toArray(new Line[list1.size()]);
-        Line[] lines2 = list2.toArray(new Line[list2.size()]);
+        Line[] lines1 = list1.toArray(new Line[0]);
+        Line[] lines2 = list2.toArray(new Line[0]);
         
         List<Difference> diffs = new ComputeDiff<Line>(lines1, lines2, computeLineSections(lines1, lines2, offset)).diff();
         for (Difference diff : diffs) {
@@ -271,8 +271,8 @@ class DiffFacility {
                 removeSameTrailingLineComments(list1, list2);
             }
         }
-        Line[] lines1 = list1.toArray(new Line[list1.size()]);
-        Line[] lines2 = list2.toArray(new Line[list2.size()]);
+        Line[] lines1 = list1.toArray(new Line[0]);
+        Line[] lines2 = list2.toArray(new Line[0]);
         List<Difference> diffs = new ComputeDiff<Line>(lines1, lines2, null).diff();
         for (Difference diff : diffs) {
             int delStart = diff.getDeletedStart();

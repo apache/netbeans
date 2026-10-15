@@ -122,6 +122,14 @@
         
     </folder>
 
+    <folder name="Dashboard">
+        <folder name="Widgets">
+            <file name="RecentProjectsWidget.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.project.ui.RecentProjectsWidget"/>
+            </file>
+        </folder>
+    </folder>
+
     <folder name="QuickSearch">
         <folder name="Projects">
             <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.project.ui.quicksearch.Bundle"/>

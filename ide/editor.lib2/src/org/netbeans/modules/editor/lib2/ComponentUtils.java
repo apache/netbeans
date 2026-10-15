@@ -113,10 +113,10 @@ public final class ComponentUtils {
 //        } catch (Exception e) {
 //            LOG.log(Level.WARNING, e.getMessage(), e);
 //        }
-////        StatusBar sb = getEditorUI(c).getStatusBar();
-////        if (sb != null) {
-////            sb.setText(StatusBar.CELL_MAIN, text, extraColoring);
-////        }
+// //        StatusBar sb = getEditorUI(c).getStatusBar();
+// //        if (sb != null) {
+// //            sb.setText(StatusBar.CELL_MAIN, text, extraColoring);
+// //        }
 //    }
 
     public static void setStatusBoldText(JTextComponent c, String text) {

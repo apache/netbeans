@@ -20,6 +20,9 @@
 package org.netbeans.spi.java.project.support.ui;
 
 import java.awt.Dialog;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -714,6 +717,203 @@ public class PackageViewTest extends NbTestCase {
         assertNodes (rn2.getChildren(), new String[] {defaultPackageName}, true);
         defPkgFileRoot1.delete();
         for (Node n : rn2.getChildren().getNodes(true)[0].getChildren().getNodes(true)) {
+            DataObject dobj = n.getLookup().lookup(DataObject.class);
+            if (dobj != null) {
+                dobj.delete();
+            }
+        }
+    }
+
+    @RandomlyFails
+    public void testCopyPasteJavaFileFromClipboard() throws Exception {
+
+        //Setup sourcegroups
+        FileObject root1 = root.createFolder("paste-src");
+        SourceGroup group = new SimpleSourceGroup(root1);
+        Node rn = PackageView.createPackageView(group);
+        Node[] nodes = rn.getChildren().getNodes(true);
+
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        StringSelection selection = new StringSelection("import java.util.*;"
+                + "class C{}"
+                + "public class PC{}"
+                + "interface I{}"
+                + "enum En{}"
+        );
+        clipboard.setContents(selection, selection);
+
+        Transferable transferable = clipboard.getContents(selection);
+        if (nodes.length > 0) {
+            PasteType[] pts = nodes[0].getPasteTypes(transferable);
+            pts[0].paste();
+            FileObject[] files = nodes[0].getLookup().lookup(DataObject.class).getPrimaryFile().getChildren();
+            assertEquals("File count", 1, files.length);
+            assertEquals("File name", "PC.java", files[0].getName() + "." + files[0].getExt());
+            assertEquals("File contents","import java.util.*;"
+                    + "class C{}"
+                    + "public class PC{}"
+                    + "interface I{}"
+                    + "enum En{}",
+                     files[0].asText());
+        }
+
+         for (Node n : nodes[0].getChildren().getNodes(true)) {
+            DataObject dobj = n.getLookup().lookup(DataObject.class);
+            if (dobj != null) {
+                dobj.delete();
+            }
+        }
+
+    }
+    
+     @RandomlyFails
+    public void testCopyPasteJavaFileFromClipboard_createJavaFileForEnum() throws Exception {
+
+        //Setup sourcegroups
+        FileObject root1 = root.createFolder("paste-src");
+        SourceGroup group = new SimpleSourceGroup(root1);
+        Node rn = PackageView.createPackageView(group);
+        Node[] nodes = rn.getChildren().getNodes(true);
+
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        StringSelection selection = new StringSelection("import java.util.*;"
+                + "class C{}"
+                + "class PC{}"
+                + "interface I{}"
+                + "public enum En{}"
+        );
+        clipboard.setContents(selection, selection);
+
+        Transferable transferable = clipboard.getContents(selection);
+        if (nodes.length > 0) {
+            PasteType[] pts = nodes[0].getPasteTypes(transferable);
+            pts[0].paste();
+            FileObject[] files = nodes[0].getLookup().lookup(DataObject.class).getPrimaryFile().getChildren();
+            assertEquals("File count", 1, files.length);
+            assertEquals("File name", "En.java", files[0].getName() + "." + files[0].getExt());
+            assertEquals("File contents","import java.util.*;"
+                    + "class C{}"
+                    + "class PC{}"
+                    + "interface I{}"
+                    + "public enum En{}",
+                     files[0].asText());
+        }
+
+         for (Node n : nodes[0].getChildren().getNodes(true)) {
+            DataObject dobj = n.getLookup().lookup(DataObject.class);
+            if (dobj != null) {
+                dobj.delete();
+            }
+        }
+
+    }
+    
+     @RandomlyFails
+    public void testCopyPasteJavaFileFromClipboard_createJavaFileForInterface() throws Exception {
+
+        //Setup sourcegroups
+        FileObject root1 = root.createFolder("paste-src");
+        SourceGroup group = new SimpleSourceGroup(root1);
+        Node rn = PackageView.createPackageView(group);
+        Node[] nodes = rn.getChildren().getNodes(true);
+
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        StringSelection selection = new StringSelection("import java.util.*;"
+                + "class C{}"
+                + "class PC{}"
+                + "public interface I{}"
+                + "enum En{}"
+        );
+        clipboard.setContents(selection, selection);
+
+        Transferable transferable = clipboard.getContents(selection);
+        if (nodes.length > 0) {
+            PasteType[] pts = nodes[0].getPasteTypes(transferable);
+            pts[0].paste();
+            FileObject[] files = nodes[0].getLookup().lookup(DataObject.class).getPrimaryFile().getChildren();
+            assertEquals("File count", 1, files.length);
+            assertEquals("File name", "I.java", files[0].getName() + "." + files[0].getExt());
+            assertEquals("File contents","import java.util.*;"
+                    + "class C{}"
+                    + "class PC{}"
+                    + "public interface I{}"
+                    + "enum En{}",
+                     files[0].asText());
+        }
+
+         for (Node n : nodes[0].getChildren().getNodes(true)) {
+            DataObject dobj = n.getLookup().lookup(DataObject.class);
+            if (dobj != null) {
+                dobj.delete();
+            }
+        }
+
+    }
+
+    @RandomlyFails
+    public void testCopyPasteJavaFileFromClipboard_removeExistingPackageName() throws Exception {
+
+        //Setup sourcegroups
+        FileObject root1 = root.createFolder("paste-src-rm-package");
+        SourceGroup group = new SimpleSourceGroup(root1);
+        Node rn = PackageView.createPackageView(group);
+        Node[] nodes = rn.getChildren().getNodes(true);
+
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        StringSelection selection = new StringSelection("package copy.paste     ."
+                + "java"
+                + ";"
+                + "import java.util.*;"
+                + "public class PC{}"
+        );
+        clipboard.setContents(selection, selection);
+
+        Transferable transferable = clipboard.getContents(selection);
+        if (nodes.length > 0) {
+            PasteType[] pts = nodes[0].getPasteTypes(transferable);
+            pts[0].paste();
+            FileObject[] files = nodes[0].getLookup().lookup(DataObject.class).getPrimaryFile().getChildren();
+            assertEquals("File count", 1, files.length);
+            assertEquals("File name", "PC.java", files[0].getName() + "." + files[0].getExt());
+            assertEquals("File contents","import java.util.*;"
+                    + "public class PC{}",
+                     files[0].asText());
+        }
+
+         for (Node n : nodes[0].getChildren().getNodes(true)) {
+            DataObject dobj = n.getLookup().lookup(DataObject.class);
+            if (dobj != null) {
+                dobj.delete();
+            }
+        }
+
+    }
+
+    @RandomlyFails
+    public void testCopyPasteJavaFileFromClipboard_CompilationErrorInCode() throws Exception {
+
+        //Setup sourcegroups
+        FileObject root1 = root.createFolder("paste-src-error");
+        SourceGroup group = new SimpleSourceGroup(root1);
+        Node rn = PackageView.createPackageView(group);
+        Node[] nodes = rn.getChildren().getNodes(true);
+
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        StringSelection selection = new StringSelection("Not a valid java file content. class Hello java my.sh. this test case is used for testing copy and paste from clipboard");
+        clipboard.setContents(selection, selection);
+
+        Transferable transferable = clipboard.getContents(selection);
+        if (nodes.length > 0) {
+            PasteType[] pts = nodes[0].getPasteTypes(transferable);
+            pts[0].paste();
+            FileObject[] files = nodes[0].getLookup().lookup(DataObject.class).getPrimaryFile().getChildren();
+            assertEquals("File count", 1, files.length);
+            assertEquals("File name", "Hello.java", files[0].getName() + "." + files[0].getExt());
+            assertEquals("Not a valid java file content. class Hello java my.sh. this test case is used for testing copy and paste from clipboard",
+                     files[0].asText());
+        }
+
+         for (Node n : nodes[0].getChildren().getNodes(true)) {
             DataObject dobj = n.getLookup().lookup(DataObject.class);
             if (dobj != null) {
                 dobj.delete();

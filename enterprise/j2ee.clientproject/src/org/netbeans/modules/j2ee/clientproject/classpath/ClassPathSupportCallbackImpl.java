@@ -43,7 +43,7 @@ import org.w3c.dom.NodeList;
  */
 public class ClassPathSupportCallbackImpl implements ClassPathSupport.Callback {
      
-    public final static String ELEMENT_INCLUDED_LIBRARIES = "included-library"; // NOI18N
+    public static final String ELEMENT_INCLUDED_LIBRARIES = "included-library"; // NOI18N
     public static final String INCLUDE_IN_DEPLOYMENT = "includeInDeployment";
     
 //    private static final String ATTR_FILES = "files"; //NOI18N

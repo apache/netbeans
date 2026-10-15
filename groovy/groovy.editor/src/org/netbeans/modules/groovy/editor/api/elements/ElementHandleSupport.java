@@ -21,6 +21,7 @@ package org.netbeans.modules.groovy.editor.api.elements;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import org.codehaus.groovy.ast.ASTNode;
 import org.netbeans.modules.csl.api.ElementHandle;
@@ -260,6 +261,41 @@ public class ElementHandleSupport {
             return OffsetRange.NONE;
         }
 
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 79 * hash + Objects.hashCode(this.className);
+            hash = 79 * hash + Objects.hashCode(this.elementName);
+            hash = 79 * hash + Objects.hashCode(this.kind);
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final SimpleElementHandle other = (SimpleElementHandle) obj;
+            if (!Objects.equals(this.className, other.className)) {
+                return false;
+            }
+            if (!Objects.equals(this.elementName, other.elementName)) {
+                return false;
+            }
+            if (this.kind != other.kind) {
+                return false;
+            }
+            if (!Objects.equals(this.modifiers, other.modifiers)) {
+                return false;
+            }
+            return true;
+        }
 
     }
 

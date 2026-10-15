@@ -348,8 +348,12 @@ class FilesystemInterceptor extends VCSInterceptor {
             FileUtils.copyFile(from, to);
         }
 
-        if (root == null || cache.getStatus(to).containsStatus(Status.NOTVERSIONED_EXCLUDED)) {
-            // target lies under ignored folder, do not add it
+        if (root == null
+                // target lies under ignored folder, do not add it
+                || cache.getStatus(to).containsStatus(Status.NOTVERSIONED_EXCLUDED)
+                // user choose that new files shall be excluded from commit by
+                // default, so follow that decision
+                || GitModuleConfig.getDefault().getExludeNewFiles()) {
             return;
         }
         GitClient client = null;
@@ -864,7 +868,7 @@ class FilesystemInterceptor extends VCSInterceptor {
                     repositories = new HashSet<>(refreshedRepositories);
                     refreshedRepositories.clear();
                 }
-                GitUtils.headChanged(repositories.toArray(new File[repositories.size()]));
+                GitUtils.headChanged(repositories.toArray(new File[0]));
             }
         });
         private final GitRepositories gitRepositories = GitRepositories.getInstance();

@@ -36,7 +36,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.prefs.Preferences;
 import javax.lang.model.element.Modifier;
-import static junit.framework.Assert.assertEquals;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CodeStyle;
@@ -201,8 +200,8 @@ public class WrappingTest extends GeneratorTestMDRCompat {
                 src.runModificationTask(task).commit();
                 String res = TestUtilities.copyFileToString(testFile);
                 String formattedRes = Reformatter.reformat(res.replaceAll("[\\s]+", " "), CodeStyle.getDefault(FileUtil.toFileObject(testFile)));
-                System.err.println(res);
-                System.err.println(formattedRes);
+                //System.err.println(res);
+                //System.err.println(formattedRes);
                 assertEquals("margin=" + m, formattedRes, res);
             }
         } finally {

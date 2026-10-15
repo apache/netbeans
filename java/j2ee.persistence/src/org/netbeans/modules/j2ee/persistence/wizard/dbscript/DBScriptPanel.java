@@ -55,7 +55,7 @@ import org.openide.util.NbBundle;
  */
 public class DBScriptPanel extends javax.swing.JPanel {
     
-    private final static Logger LOGGER = Logger.getLogger(DBScriptPanel.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DBScriptPanel.class.getName());
     private static final String EXTENSION = "sql";//NOI18N
     private final ChangeSupport changeSupport = new ChangeSupport(this);
     private JTextComponent packageComboBoxEditor;
@@ -357,7 +357,6 @@ public class DBScriptPanel extends javax.swing.JPanel {
         @Override
         public void readSettings(Object settings) {
             wizardDescriptor = (WizardDescriptor) settings;
-//////            
             if (!componentInitialized) {
                 componentInitialized = true;
                 
@@ -377,7 +376,7 @@ public class DBScriptPanel extends javax.swing.JPanel {
             }
             
             String packageName = getComponent().getPackageName();
-            if (packageName.trim().equals("")) { // NOI18N
+            if (packageName.trim().isEmpty()) { // NOI18N
                 setErrorMessage(NbBundle.getMessage(DBScriptPanel.class, "ERR_JavaTargetChooser_CantUseDefaultPackage"));
                 return false;
             }

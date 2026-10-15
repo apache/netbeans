@@ -76,6 +76,7 @@ public final class CodeStyle {
      * @deprecated Please use {@link #getDefault(javax.swing.text.Document)}
      *   or {@link #getDefault(org.openide.filesystems.FileObject)} respectively.
      */
+    @Deprecated
     public static CodeStyle getDefault(Project project) {
         return getDefault(project.getProjectDirectory());
     }
@@ -91,7 +92,7 @@ public final class CodeStyle {
      *
      * @since 0.39
      */
-    public synchronized static CodeStyle getDefault(FileObject file) {
+    public static synchronized CodeStyle getDefault(FileObject file) {
         Preferences prefs = CodeStylePreferences.get(file, JavacParser.MIME_TYPE).getPreferences();
         return FmtOptions.codeStyleProducer.create(prefs);
     }
@@ -107,7 +108,7 @@ public final class CodeStyle {
      * 
      * @since 0.39
      */
-    public synchronized static CodeStyle getDefault(Document doc) {
+    public static synchronized CodeStyle getDefault(Document doc) {
         Preferences prefs = CodeStylePreferences.get(doc, JavacParser.MIME_TYPE).getPreferences();
         return FmtOptions.codeStyleProducer.create(prefs);
     }
@@ -257,7 +258,7 @@ public final class CodeStyle {
      * Determines whether the dependencies between members must be used when sorting.
      * It returns true only if some sorting option is available (default: off) and the dependency
      * inspection is enabled (default: true).
-     * <p/>
+     * <p>
      * Changing member order without looking for dependencies may result in incorrect code. A field
      * must be declared textually first, and only then it can be referenced by simple name from field
      * initializers and class/instance initializers - see defect #249199.
@@ -944,6 +945,13 @@ public final class CodeStyle {
         return preferences.getBoolean(spaceWithinLambdaParens, getDefaultAsBoolean(spaceWithinLambdaParens));
     }
 
+    /**
+     * @since 2.45
+     */
+    public boolean parensAroundSingularLambdaParam() {
+        return preferences.getBoolean(parensAroundSingularLambdaParam, getDefaultAsBoolean(parensAroundSingularLambdaParam));
+    }
+
     public boolean spaceWithinMethodCallParens() {
         return preferences.getBoolean(spaceWithinMethodCallParens, getDefaultAsBoolean(spaceWithinMethodCallParens));
     }
@@ -1335,6 +1343,7 @@ public final class CodeStyle {
                 case CLASS:
                 case ENUM:
                 case INTERFACE:
+                case RECORD:
                     kind = ElementKind.CLASS;
                     modifiers = ((ClassTree)tree).getModifiers().getFlags();
                     break;

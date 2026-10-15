@@ -85,6 +85,7 @@ public abstract class Notifier<KEY> {
     }
     
     static {
+        @SuppressWarnings("unused")
         NotifierAccessor impl = new NotifierAccessor() {
             @Override
             protected <KEY> KEY addWatch(Notifier<KEY> n, String path) throws IOException {

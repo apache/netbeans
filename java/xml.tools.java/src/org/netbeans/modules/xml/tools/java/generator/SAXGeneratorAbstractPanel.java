@@ -61,7 +61,7 @@ public abstract class SAXGeneratorAbstractPanel extends JPanel implements Custom
         private Object bean;
         private Integer index;
         
-        private Vector listeners = new Vector(); 
+        private Vector<ChangeListener> listeners = new Vector<>(); 
         private final ChangeEvent EVENT = new ChangeEvent(this);
         private boolean valid = true;
         
@@ -86,13 +86,11 @@ public abstract class SAXGeneratorAbstractPanel extends JPanel implements Custom
                     // object properly, client need to call setIndex and setBean
                     if (bean == null) throw new IllegalStateException();
                     if (index == null) throw new IllegalStateException();
-                    peer = (SAXGeneratorAbstractPanel) peerClass.newInstance();
+                    peer = (SAXGeneratorAbstractPanel) peerClass.getDeclaredConstructor().newInstance();
                     peer.step = this;
                     peer.setObject(bean);
                     peer.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, index);  // NOI18N
-                } catch (InstantiationException ex) {
-                    throw new IllegalStateException();
-                } catch (IllegalAccessException ex) {
+                } catch (ReflectiveOperationException ex) {
                     throw new IllegalStateException();
                 }
             }
@@ -104,7 +102,7 @@ public abstract class SAXGeneratorAbstractPanel extends JPanel implements Custom
         }
         
         void setIndex(int index) {
-            this.index = new Integer(index);
+            this.index = index;
         }
         
         public void readSettings(java.lang.Object p1) {
@@ -138,9 +136,9 @@ public abstract class SAXGeneratorAbstractPanel extends JPanel implements Custom
             this.valid = valid;
 
             synchronized (listeners) {
-                Iterator it = listeners.iterator();
+                Iterator<ChangeListener> it = listeners.iterator();
                 while (it.hasNext()) {
-                    ChangeListener next = (ChangeListener) it.next();
+                    ChangeListener next = it.next();
                     next.stateChanged(EVENT);
                 }
             }

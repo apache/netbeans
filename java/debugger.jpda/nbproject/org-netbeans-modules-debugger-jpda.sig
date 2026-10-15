@@ -1,14 +1,16 @@
 #Signature file v4.1
-#Version 1.113.0
+#Version 1.143.0
 
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotation(com.sun.source.tree.AnnotationTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnyPattern(com.sun.source.tree.AnyPatternTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitArrayAccess(com.sun.source.tree.ArrayAccessTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitArrayType(com.sun.source.tree.ArrayTypeTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAssert(com.sun.source.tree.AssertTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAssignment(com.sun.source.tree.AssignmentTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitBinary(com.sun.source.tree.BinaryTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitBindingPattern(com.sun.source.tree.BindingPatternTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitBlock(com.sun.source.tree.BlockTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitBreak(com.sun.source.tree.BreakTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitCase(com.sun.source.tree.CaseTree,{com.sun.source.tree.TreeVisitor%1})
@@ -17,7 +19,10 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitClass(com.sun.sour
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitCompilationUnit(com.sun.source.tree.CompilationUnitTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitCompoundAssignment(com.sun.source.tree.CompoundAssignmentTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitConditionalExpression(com.sun.source.tree.ConditionalExpressionTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitConstantCaseLabel(com.sun.source.tree.ConstantCaseLabelTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitContinue(com.sun.source.tree.ContinueTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitDeconstructionPattern(com.sun.source.tree.DeconstructionPatternTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitDefaultCaseLabel(com.sun.source.tree.DefaultCaseLabelTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitDoWhileLoop(com.sun.source.tree.DoWhileLoopTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitEmptyStatement(com.sun.source.tree.EmptyStatementTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitEnhancedForLoop(com.sun.source.tree.EnhancedForLoopTree,{com.sun.source.tree.TreeVisitor%1})
@@ -46,13 +51,13 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitOther(com.sun.sour
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitPackage(com.sun.source.tree.PackageTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitParameterizedType(com.sun.source.tree.ParameterizedTypeTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitParenthesized(com.sun.source.tree.ParenthesizedTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitPatternCaseLabel(com.sun.source.tree.PatternCaseLabelTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitPrimitiveType(com.sun.source.tree.PrimitiveTypeTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitProvides(com.sun.source.tree.ProvidesTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitRequires(com.sun.source.tree.RequiresTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitReturn(com.sun.source.tree.ReturnTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitSwitch(com.sun.source.tree.SwitchTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitSwitchExpression(com.sun.source.tree.SwitchExpressionTree,{com.sun.source.tree.TreeVisitor%1})
- anno 0 java.lang.Deprecated()
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitSynchronized(com.sun.source.tree.SynchronizedTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitThrow(com.sun.source.tree.ThrowTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitTry(com.sun.source.tree.TryTree,{com.sun.source.tree.TreeVisitor%1})
@@ -61,11 +66,11 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitTypeParameter(com.
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitUnary(com.sun.source.tree.UnaryTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitUnionType(com.sun.source.tree.UnionTypeTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitUses(com.sun.source.tree.UsesTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitVarType(com.sun.source.tree.VarTypeTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitVariable(com.sun.source.tree.VariableTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitWhileLoop(com.sun.source.tree.WhileLoopTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitWildcard(com.sun.source.tree.WildcardTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitYield(com.sun.source.tree.YieldTree,{com.sun.source.tree.TreeVisitor%1})
- anno 0 java.lang.Deprecated()
 
 CLSS public com.sun.source.util.TreePathScanner<%0 extends java.lang.Object, %1 extends java.lang.Object>
 cons public init()
@@ -83,11 +88,13 @@ meth public {com.sun.source.util.TreeScanner%0} scan(com.sun.source.tree.Tree,{c
 meth public {com.sun.source.util.TreeScanner%0} scan(java.lang.Iterable<? extends com.sun.source.tree.Tree>,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitAnnotation(com.sun.source.tree.AnnotationTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitAnyPattern(com.sun.source.tree.AnyPatternTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitArrayAccess(com.sun.source.tree.ArrayAccessTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitArrayType(com.sun.source.tree.ArrayTypeTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitAssert(com.sun.source.tree.AssertTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitAssignment(com.sun.source.tree.AssignmentTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitBinary(com.sun.source.tree.BinaryTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitBindingPattern(com.sun.source.tree.BindingPatternTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitBlock(com.sun.source.tree.BlockTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitBreak(com.sun.source.tree.BreakTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitCase(com.sun.source.tree.CaseTree,{com.sun.source.util.TreeScanner%1})
@@ -96,7 +103,10 @@ meth public {com.sun.source.util.TreeScanner%0} visitClass(com.sun.source.tree.C
 meth public {com.sun.source.util.TreeScanner%0} visitCompilationUnit(com.sun.source.tree.CompilationUnitTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitCompoundAssignment(com.sun.source.tree.CompoundAssignmentTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitConditionalExpression(com.sun.source.tree.ConditionalExpressionTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitConstantCaseLabel(com.sun.source.tree.ConstantCaseLabelTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitContinue(com.sun.source.tree.ContinueTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitDeconstructionPattern(com.sun.source.tree.DeconstructionPatternTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitDefaultCaseLabel(com.sun.source.tree.DefaultCaseLabelTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitDoWhileLoop(com.sun.source.tree.DoWhileLoopTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitEmptyStatement(com.sun.source.tree.EmptyStatementTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitEnhancedForLoop(com.sun.source.tree.EnhancedForLoopTree,{com.sun.source.util.TreeScanner%1})
@@ -125,13 +135,13 @@ meth public {com.sun.source.util.TreeScanner%0} visitOther(com.sun.source.tree.T
 meth public {com.sun.source.util.TreeScanner%0} visitPackage(com.sun.source.tree.PackageTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitParameterizedType(com.sun.source.tree.ParameterizedTypeTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitParenthesized(com.sun.source.tree.ParenthesizedTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitPatternCaseLabel(com.sun.source.tree.PatternCaseLabelTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitPrimitiveType(com.sun.source.tree.PrimitiveTypeTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitProvides(com.sun.source.tree.ProvidesTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitRequires(com.sun.source.tree.RequiresTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitReturn(com.sun.source.tree.ReturnTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitSwitch(com.sun.source.tree.SwitchTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitSwitchExpression(com.sun.source.tree.SwitchExpressionTree,{com.sun.source.util.TreeScanner%1})
- anno 0 java.lang.Deprecated()
 meth public {com.sun.source.util.TreeScanner%0} visitSynchronized(com.sun.source.tree.SynchronizedTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitThrow(com.sun.source.tree.ThrowTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitTry(com.sun.source.tree.TryTree,{com.sun.source.util.TreeScanner%1})
@@ -140,11 +150,11 @@ meth public {com.sun.source.util.TreeScanner%0} visitTypeParameter(com.sun.sourc
 meth public {com.sun.source.util.TreeScanner%0} visitUnary(com.sun.source.tree.UnaryTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitUnionType(com.sun.source.tree.UnionTypeTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitUses(com.sun.source.tree.UsesTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitVarType(com.sun.source.tree.VarTypeTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitVariable(com.sun.source.tree.VariableTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitWhileLoop(com.sun.source.tree.WhileLoopTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitWildcard(com.sun.source.tree.WildcardTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitYield(com.sun.source.tree.YieldTree,{com.sun.source.util.TreeScanner%1})
- anno 0 java.lang.Deprecated()
 supr java.lang.Object
 
 CLSS public abstract interface java.beans.Customizer
@@ -173,20 +183,24 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="18")
 meth public final boolean equals(java.lang.Object)
 meth public final int compareTo({java.lang.Enum%0})
 meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
+hfds hash,name,ordinal
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -212,6 +226,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -256,7 +271,7 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
+hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,depth,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
 hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
@@ -285,6 +300,9 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
 
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
+
 CLSS public abstract java.util.AbstractMap<%0 extends java.lang.Object, %1 extends java.lang.Object>
 cons protected init()
 innr public static SimpleEntry
@@ -308,9 +326,11 @@ meth public {java.util.AbstractMap%1} put({java.util.AbstractMap%0},{java.util.A
 meth public {java.util.AbstractMap%1} remove(java.lang.Object)
 supr java.lang.Object
 hfds keySet,values
+hcls ViewCollection
 
 CLSS public abstract interface java.util.Collection<%0 extends java.lang.Object>
 intf java.lang.Iterable<{java.util.Collection%0}>
+meth public <%0 extends java.lang.Object> {%%0}[] toArray(java.util.function.IntFunction<{%%0}[]>)
 meth public abstract <%0 extends java.lang.Object> {%%0}[] toArray({%%0}[])
 meth public abstract boolean add({java.util.Collection%0})
 meth public abstract boolean addAll(java.util.Collection<? extends {java.util.Collection%0}>)
@@ -335,6 +355,8 @@ CLSS public abstract interface java.util.EventListener
 
 CLSS public abstract interface java.util.Map<%0 extends java.lang.Object, %1 extends java.lang.Object>
 innr public abstract interface static Entry
+meth public !varargs static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> ofEntries(java.util.Map$Entry<? extends {%%0},? extends {%%1}>[])
+ anno 0 java.lang.SafeVarargs()
 meth public abstract boolean containsKey(java.lang.Object)
 meth public abstract boolean containsValue(java.lang.Object)
 meth public abstract boolean equals(java.lang.Object)
@@ -351,6 +373,19 @@ meth public abstract {java.util.Map%1} put({java.util.Map%0},{java.util.Map%1})
 meth public abstract {java.util.Map%1} remove(java.lang.Object)
 meth public boolean remove(java.lang.Object,java.lang.Object)
 meth public boolean replace({java.util.Map%0},{java.util.Map%1},{java.util.Map%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map$Entry<{%%0},{%%1}> entry({%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> copyOf(java.util.Map<? extends {%%0},? extends {%%1}>)
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of()
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
 meth public void forEach(java.util.function.BiConsumer<? super {java.util.Map%0},? super {java.util.Map%1}>)
 meth public void replaceAll(java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
 meth public {java.util.Map%1} compute({java.util.Map%0},java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
@@ -363,6 +398,8 @@ meth public {java.util.Map%1} replace({java.util.Map%0},{java.util.Map%1})
 
 CLSS public abstract interface java.util.Set<%0 extends java.lang.Object>
 intf java.util.Collection<{java.util.Set%0}>
+meth public !varargs static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0}[])
+ anno 0 java.lang.SafeVarargs()
 meth public abstract <%0 extends java.lang.Object> {%%0}[] toArray({%%0}[])
 meth public abstract boolean add({java.util.Set%0})
 meth public abstract boolean addAll(java.util.Collection<? extends {java.util.Set%0}>)
@@ -379,6 +416,18 @@ meth public abstract java.lang.Object[] toArray()
 meth public abstract java.util.Iterator<{java.util.Set%0}> iterator()
 meth public abstract void clear()
 meth public java.util.Spliterator<{java.util.Set%0}> spliterator()
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> copyOf(java.util.Collection<? extends {%%0}>)
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of()
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
 
 CLSS public abstract interface javax.security.auth.Refreshable
 meth public abstract boolean isCurrent()
@@ -572,6 +621,7 @@ meth public boolean getBreakpointsActive()
 meth public java.util.List<org.netbeans.api.debugger.jpda.JPDAClassType> getAllClasses()
 meth public java.util.List<org.netbeans.api.debugger.jpda.JPDAClassType> getClassesByName(java.lang.String)
 meth public long[] getInstanceCounts(java.util.List<org.netbeans.api.debugger.jpda.JPDAClassType>)
+meth public org.netbeans.api.debugger.Session getSession()
 meth public org.netbeans.api.debugger.jpda.JPDAStep createJPDAStep(int,int)
 meth public org.netbeans.api.debugger.jpda.ThreadsCollector getThreadsCollector()
 meth public org.netbeans.api.debugger.jpda.Variable createMirrorVar(java.lang.Object) throws java.io.InvalidObjectException
@@ -597,10 +647,13 @@ fld public final static int STEP_OUT = 3
 fld public final static int STEP_OVER = 2
 fld public final static java.lang.String PROP_STATE_EXEC = "exec"
 meth protected void firePropertyChange(java.lang.String,java.lang.Object,java.lang.Object)
+meth public !varargs void addSteppingFilters(java.lang.String[])
 meth public abstract void addStep(org.netbeans.api.debugger.jpda.JPDAThread)
 meth public boolean getHidden()
+meth public boolean isStepThroughFilters()
 meth public int getDepth()
 meth public int getSize()
+meth public java.lang.String[] getSteppingFilters()
 meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void addPropertyChangeListener(java.lang.String,java.beans.PropertyChangeListener)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
@@ -608,8 +661,9 @@ meth public void removePropertyChangeListener(java.lang.String,java.beans.Proper
 meth public void setDepth(int)
 meth public void setHidden(boolean)
 meth public void setSize(int)
+meth public void setStepThroughFilters(boolean)
 supr java.lang.Object
-hfds depth,hidden,pcs,size
+hfds classFilters,depth,hidden,pcs,size,stepThroughFilters
 
 CLSS public abstract interface org.netbeans.api.debugger.jpda.JPDAThread
 fld public final static int STATE_MONITOR = 3
@@ -728,6 +782,7 @@ meth public abstract void breakpointReached(org.netbeans.api.debugger.jpda.event
 
 CLSS public org.netbeans.api.java.source.support.ErrorAwareTreePathScanner<%0 extends java.lang.Object, %1 extends java.lang.Object>
 cons public init()
+meth public {org.netbeans.api.java.source.support.ErrorAwareTreePathScanner%0} visitCase(com.sun.source.tree.CaseTree,{org.netbeans.api.java.source.support.ErrorAwareTreePathScanner%1})
 meth public {org.netbeans.api.java.source.support.ErrorAwareTreePathScanner%0} visitErroneous(com.sun.source.tree.ErroneousTree,{org.netbeans.api.java.source.support.ErrorAwareTreePathScanner%1})
 supr com.sun.source.util.TreePathScanner<{org.netbeans.api.java.source.support.ErrorAwareTreePathScanner%0},{org.netbeans.api.java.source.support.ErrorAwareTreePathScanner%1}>
 
@@ -834,7 +889,7 @@ meth public static void logCallEnd(java.lang.String,java.lang.String,java.lang.O
 meth public static void logCallStart(java.lang.String,java.lang.String,java.lang.String,java.lang.Object[])
 meth public static void report(com.sun.jdi.InternalException)
 supr java.lang.Object
-hfds callStartTime,logger
+hfds LOGGER,LOGLEVEL,callStartTime
 
 CLSS public org.netbeans.modules.debugger.jpda.JPDADebuggerImpl
 cons public init(org.netbeans.spi.debugger.ContextProvider)
@@ -939,7 +994,7 @@ meth public void setSuspend(int)
 meth public void suspend()
 meth public void waitRunning() throws org.netbeans.api.debugger.jpda.DebuggerStartException
 supr org.netbeans.api.debugger.jpda.JPDADebugger
-hfds COMPUTING_INTERFACES,LOCK2,SINGLE_THREAD_STEPPING,allInterfacesMap,altCSF,attachingCookie,breakpointsActive,canBeModified,canBeModifiedLock,compoundSmartSteppingListener,currentCallStackFrame,currentSuspendedNoFireThread,currentThread,currentThreadAndFrameLock,deadlockDetector,doContinue,engineContext,expressionPool,finishing,interestedThreadGroups,io,javaEngineProvider,jsr45EngineProviders,jvmVersionPattern,languages,lastStratumn,localsTranslation,logger,lookupProvider,lvGenericSignatureMethod,markedObjectLabels,markedObjects,methodCallsUnsupportedExc,operator,pcs,preferredTopFrame,ptd,singleThreadStepResumeDecision,smartSteppingFilter,starting,state,stateLock,stepInterruptByBptResumeDecision,suspend,tcGenericSignatureMethod,threadsCache,threadsCollector,threadsCollectorLock,threadsTranslation,throwable,virtualMachine,virtualMachineLock,vmSuspended
+hfds COMPUTING_INTERFACES,LOCK2,RP_THROUGHPUT,SINGLE_THREAD_STEPPING,allInterfacesMap,altCSF,attachingCookie,breakpointsActive,canBeModified,canBeModifiedLock,compoundSmartSteppingListener,currentCallStackFrame,currentSuspendedNoFireThread,currentThread,currentThreadAndFrameLock,deadlockDetector,doContinue,engineContext,expressionPool,finishing,interestedThreadGroups,io,javaEngineProvider,jsr45EngineProviders,languages,localsTranslation,logger,lookupProvider,markedObjectLabels,markedObjects,methodCallsUnsupportedExc,operator,pcs,preferredTopFrame,ptd,rpCreateThreads,singleThreadStepResumeDecision,smartSteppingFilter,starting,state,stateLock,stepInterruptByBptResumeDecision,stringLengthMethod,stringMethodsLock,stringSubstringMethod,suspend,threadsCache,threadsCollector,threadsCollectorLock,threadsTranslation,throwable,virtualMachine,virtualMachineLock,vmSuspended
 hcls DebuggerReentrantReadWriteLock,PeriodicThreadsDump
 
 CLSS public org.netbeans.modules.debugger.jpda.JPDAStepImpl
@@ -955,7 +1010,7 @@ meth public void removed(com.sun.jdi.request.EventRequest)
 meth public void setIgnoreStepFilters(boolean)
 meth public void setStopHereCheck(org.netbeans.modules.debugger.jpda.JPDAStepImpl$StopHereCheck)
 supr org.netbeans.api.debugger.jpda.JPDAStep
-hfds INIT,boundaryStepRequest,compoundSmartSteppingListener,currentExpInterval,currentOperations,ignoreStepFilters,isInBoxingUnboxingLocation,lastMethodExitBreakpointListener,lastOperation,logger,operationBreakpoints,p,requestsToCancel,session,smartSteppingFilter,stepPatternDepth,steppingFromCompoundFilteredLocation,steppingFromFilteredLocation,stopHereCheck,wasInBoxingUnboxingLocation
+hfds INIT,boundaryStepRequest,currentExpInterval,currentOperations,ignoreStepFilters,isInBoxingUnboxingLocation,lastMethodExitBreakpointListener,lastOperation,logger,operationBreakpoints,p,requestsToCancel,session,smartSteppingFilter,stepPatternDepth,steppingFromCompoundFilteredLocation,steppingFromFilteredLocation,stopHereCheck,wasInBoxingUnboxingLocation
 hcls StepPatternDepth
 
 CLSS public final static org.netbeans.modules.debugger.jpda.JPDAStepImpl$MethodExitBreakpointListener
@@ -1188,7 +1243,18 @@ meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void removeExclusionPatterns(java.util.Set<java.lang.String>)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 supr java.lang.Object
-hfds classFiltersProperties,end,exact,exclusionPatternsListener,filter,options,pcs,start
+hfds classFiltersProperties,exclusionPatternsListener,filter,options,pcs
+
+CLSS public final org.netbeans.modules.debugger.jpda.actions.SmartSteppingFilterWrapper
+cons public init(org.netbeans.api.debugger.jpda.SmartSteppingFilter)
+intf org.netbeans.api.debugger.jpda.SmartSteppingFilter
+meth public java.lang.String[] getExclusionPatterns()
+meth public void addExclusionPatterns(java.util.Set<java.lang.String>)
+meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
+meth public void removeExclusionPatterns(java.util.Set<java.lang.String>)
+meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
+supr java.lang.Object
+hfds addedPatterns,delegate,removedPatterns
 
 CLSS public org.netbeans.modules.debugger.jpda.actions.StartActionProvider
 cons public init(org.netbeans.spi.debugger.ContextProvider)
@@ -1209,13 +1275,14 @@ intf org.netbeans.modules.debugger.jpda.util.Executor
 meth protected void checkEnabled(int)
 meth public boolean exec(com.sun.jdi.event.Event)
 meth public java.util.Set getActions()
+meth public static boolean stopInClass(java.lang.String,org.netbeans.api.debugger.jpda.SmartSteppingFilter)
 meth public static int setLastOperation(com.sun.jdi.ThreadReference,org.netbeans.modules.debugger.jpda.JPDADebuggerImpl,org.netbeans.api.debugger.jpda.Variable) throws org.netbeans.modules.debugger.jpda.jdi.VMDisconnectedExceptionWrapper
 meth public void doAction(java.lang.Object)
 meth public void postAction(java.lang.Object,java.lang.Runnable)
 meth public void removed(com.sun.jdi.request.EventRequest)
 meth public void runAction(java.lang.Object)
 supr org.netbeans.modules.debugger.jpda.actions.JPDADebuggerActionProvider
-hfds OPERATION_TIMEOUT,className,compoundSmartSteppingListener,depth,lastMethodExitBreakpointListener,logger,loggerStep,lookupProvider,methodName,operationsRP,p,smartSteppingFilterImpl,smartSteppingStepOut,stepIntoActionProvider,steppingFromCompoundFilteredLocation,steppingFromFilteredLocation,syntheticStep
+hfds OPERATION_TIMEOUT,className,compoundSmartSteppingListener,depth,lastMethodExitBreakpointListener,logger,loggerStep,lookupProvider,methodName,operationsRP,p,smartSteppingFilter,smartSteppingStepOut,stepIntoActionProvider,steppingFromCompoundFilteredLocation,steppingFromFilteredLocation,syntheticStep
 
 CLSS public org.netbeans.modules.debugger.jpda.actions.StepIntoActionProvider
 cons public init(org.netbeans.spi.debugger.ContextProvider)
@@ -1239,7 +1306,7 @@ meth public void removed(com.sun.jdi.request.EventRequest)
 meth public void runAction()
 meth public void runAction(boolean)
 supr java.lang.Object
-hfds compoundSmartSteppingListener,contextProvider,debugger,depth,logger,p,position,smartLogger,smartSteppingFilter,smartSteppingStepOut,stepActionProvider,stepIntoRequest,steppingFromCompoundFilteredLocation,steppingFromFilteredLocation
+hfds compoundSmartSteppingListener,contextProvider,debugger,depth,didStepThrough,logger,p,position,smartLogger,smartSteppingFilter,smartSteppingStepOut,stepActionProvider,stepIntoRequest,steppingFromCompoundFilteredLocation,steppingFromFilteredLocation
 
 CLSS public org.netbeans.modules.debugger.jpda.actions.StepIntoNextMethodActionProvider
 cons public init(org.netbeans.spi.debugger.ContextProvider)
@@ -1437,7 +1504,7 @@ meth public boolean exec(com.sun.jdi.event.Event)
 meth public boolean processCondition(com.sun.jdi.event.Event)
 meth public void propertyChange(java.beans.PropertyChangeEvent)
 supr org.netbeans.modules.debugger.jpda.breakpoints.ClassBasedBreakpoint
-hfds breakpointLineNumber,lineLock,lineNumber,lineNumberForUpdate,logger,reader
+hfds breakpointLineNumber,lambdaIndex,lineLock,lineNumber,lineNumberForUpdate,logger,reader
 
 CLSS public org.netbeans.modules.debugger.jpda.breakpoints.MethodBreakpointImpl
 meth protected boolean isEnabled()
@@ -1447,7 +1514,7 @@ meth protected void setRequests()
 meth public boolean exec(com.sun.jdi.event.Event)
 meth public boolean processCondition(com.sun.jdi.event.Event)
 supr org.netbeans.modules.debugger.jpda.breakpoints.ClassBasedBreakpoint
-hfds LOG,breakpoint,returnValueByEvent
+hfds CONSTRUCTOR,LOG,breakpoint,returnValueByEvent
 
 CLSS public org.netbeans.modules.debugger.jpda.breakpoints.PersistenceManager
 cons public init()
@@ -1619,6 +1686,7 @@ hcls ArtificialMirror,BooleanVal,Break,ByteVal,CharVal,CommandMirror,Continue,Do
 
 CLSS public org.netbeans.modules.debugger.jpda.expr.InvocationExceptionTranslated
 cons public init(com.sun.jdi.InvocationException,org.netbeans.modules.debugger.jpda.JPDADebuggerImpl)
+cons public init(org.netbeans.api.debugger.jpda.ObjectVariable,org.netbeans.modules.debugger.jpda.JPDADebuggerImpl)
 meth public java.lang.StackTraceElement[] getStackTrace()
 meth public java.lang.String getLocalizedMessage()
 meth public java.lang.String getMessage()
@@ -1628,6 +1696,7 @@ meth public java.lang.Throwable getCause()
 meth public org.netbeans.modules.debugger.jpda.expr.InvocationExceptionTranslated preload(org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl)
 meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
+meth public void resetInvocationMessage()
 meth public void setPreferredThread(org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl)
 supr java.lang.Exception
 hfds cause,createdAt,debugger,exeption,invocationMessage,localizedMessage,logger,message,preferredThread,stackTrace
@@ -2625,9 +2694,10 @@ meth public org.netbeans.api.debugger.jpda.JPDAClassType getClassType()
 meth public org.netbeans.api.debugger.jpda.Variable clone()
 meth public void setFromMirrorObject(java.lang.Object) throws java.io.InvalidObjectException
 meth public void setObject(java.lang.Object)
+meth public void setSilentChange(boolean)
 meth public void setValue(java.lang.String) throws org.netbeans.api.debugger.jpda.InvalidExpressionException
 supr java.lang.Object
-hfds cloneNumber,debugger,id,listeners,value
+hfds cloneNumber,debugger,id,listeners,silent,value
 
 CLSS public org.netbeans.modules.debugger.jpda.models.ArgumentObjectVariable
 cons public init(org.netbeans.modules.debugger.jpda.JPDADebuggerImpl,com.sun.jdi.ObjectReference,java.lang.String,java.lang.String)
@@ -2927,6 +2997,7 @@ supr org.netbeans.modules.debugger.jpda.models.AbstractObjectVariable
 hfds logger,value,valueLock,valueRetrieved,valueSet
 
 CLSS public final org.netbeans.modules.debugger.jpda.models.ObjectTranslation
+meth public <%0 extends java.lang.Object> java.util.List<? extends {%%0}> getTranslated(java.util.function.Function<java.lang.Object,{%%0}>)
 meth public java.lang.Object translate(com.sun.jdi.Mirror)
 meth public java.lang.Object translate(com.sun.jdi.Mirror,java.lang.Object)
 meth public java.lang.Object translateExisting(com.sun.jdi.Mirror)
@@ -2937,6 +3008,7 @@ meth public static org.netbeans.modules.debugger.jpda.models.ObjectTranslation c
 meth public void remove(com.sun.jdi.Mirror)
 supr java.lang.Object
 hfds LOCALS_ID,THREAD_ID,cache,debugger,threadCache,translationID
+hcls TranslationFuture
 
 CLSS public org.netbeans.modules.debugger.jpda.models.ReturnVariableImpl
 cons public init(org.netbeans.modules.debugger.jpda.JPDADebuggerImpl,com.sun.jdi.Value,java.lang.String,java.lang.String)
@@ -2949,19 +3021,18 @@ hfds methodName
 
 CLSS public final org.netbeans.modules.debugger.jpda.models.ShortenedStrings
 innr public static StringInfo
-meth public static org.netbeans.modules.debugger.jpda.models.ShortenedStrings$StringInfo getShortenedInfo(java.lang.String)
 supr java.lang.Object
-hfds infoStrings,retrievingStrings,stringsCache
-hcls StringValueInfo
+hfds isLittleEndianCache,retrievingStrings,stringCache
+hcls InternalStringEncoding
 
 CLSS public static org.netbeans.modules.debugger.jpda.models.ShortenedStrings$StringInfo
  outer org.netbeans.modules.debugger.jpda.models.ShortenedStrings
 meth public int getLength()
-meth public int getShortLength()
 meth public java.io.Reader getContent()
 meth public java.lang.String getFullString()
+meth public java.lang.String getShortenedString()
 supr java.lang.Object
-hfds chars,length,shortLength,sr
+hfds backingEncoding,chars,isLittleEndian,length,shortenedString,sr
 
 CLSS public org.netbeans.modules.debugger.jpda.models.ThreadsCache
 cons public init(org.netbeans.modules.debugger.jpda.JPDADebuggerImpl)
@@ -3003,26 +3074,28 @@ meth public abstract void removed(com.sun.jdi.request.EventRequest)
 
 CLSS public org.netbeans.modules.debugger.jpda.util.JPDAUtils
 cons public init()
-fld public final static boolean IS_JDK_180_40
+fld public final static boolean IS_JDK_180_40 = true
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="")
 meth public final static com.sun.jdi.ReferenceType getPreferredReferenceType(java.util.List<com.sun.jdi.ReferenceType>,java.util.logging.Logger) throws org.netbeans.modules.debugger.jpda.jdi.VMDisconnectedExceptionWrapper
 meth public static void printFeatures(java.util.logging.Logger,com.sun.jdi.VirtualMachine)
 supr java.lang.Object
-hfds JAVA_VERSION
 
 CLSS public org.netbeans.modules.debugger.jpda.util.Operator
 cons public init(com.sun.jdi.VirtualMachine,org.netbeans.modules.debugger.jpda.JPDADebuggerImpl,org.netbeans.modules.debugger.jpda.util.Executor,java.lang.Runnable,java.util.concurrent.locks.ReadWriteLock)
 fld public final static java.lang.String SILENT_EVENT_PROPERTY = "silent"
 meth public static com.sun.jdi.ThreadReference getEventThread(com.sun.jdi.event.Event) throws org.netbeans.modules.debugger.jpda.jdi.InternalExceptionWrapper,org.netbeans.modules.debugger.jpda.jdi.VMDisconnectedExceptionWrapper
 meth public static void dumpThreadsStatus(com.sun.jdi.VirtualMachine,java.util.logging.Level)
+meth public void addEventInterceptor(java.util.function.Function<com.sun.jdi.event.EventSet,java.lang.Boolean>)
 meth public void notifyMethodInvokeDone(com.sun.jdi.ThreadReference)
 meth public void notifyMethodInvoking(com.sun.jdi.ThreadReference)
 meth public void register(com.sun.jdi.request.EventRequest,org.netbeans.modules.debugger.jpda.util.Executor) throws org.netbeans.modules.debugger.jpda.jdi.InternalExceptionWrapper,org.netbeans.modules.debugger.jpda.jdi.VMDisconnectedExceptionWrapper
+meth public void removeEventInterceptor(java.util.function.Function<com.sun.jdi.event.EventSet,java.lang.Boolean>)
 meth public void start()
 meth public void stop()
 meth public void unregister(com.sun.jdi.request.EventRequest) throws org.netbeans.modules.debugger.jpda.jdi.InternalExceptionWrapper,org.netbeans.modules.debugger.jpda.jdi.VMDisconnectedExceptionWrapper
 meth public void waitForParallelEventsToProcess() throws java.lang.InterruptedException
 supr java.lang.Object
-hfds canInterrupt,debugger,eventHandler,eventHandlers,haveParallelEventsToProcess,logger,loopControl,methodInvokingThreads,parallelEvents,stop,thread,threadsResumedForEvents
+hfds canInterrupt,debugger,eventHandler,eventHandlers,eventsInterceptors,haveParallelEventsToProcess,logger,loopControl,methodInvokingThreads,parallelEvents,stop,thread,threadsResumedForEvents
 hcls HandlerTask,LoopControl,SuspendControllersSupport,SuspendCount
 
 CLSS public final org.netbeans.modules.debugger.jpda.util.WeakCacheMap<%0 extends java.lang.Object, %1 extends org.netbeans.modules.debugger.jpda.util.WeakCacheMap$KeyedValue<{org.netbeans.modules.debugger.jpda.util.WeakCacheMap%0}>>

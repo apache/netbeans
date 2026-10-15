@@ -33,7 +33,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.modules.j2ee.dd.api.webservices.Webservices;
 import org.netbeans.modules.payara.eecommon.api.Utils;
 import org.netbeans.modules.payara.eecommon.api.XmlFileCreator;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.tooling.utils.OsUtils;
 import org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException;
 import org.netbeans.modules.j2ee.deployment.common.api.Datasource;
@@ -62,6 +62,7 @@ import org.netbeans.modules.j2ee.sun.dd.api.ejb.EnterpriseBeans;
 import org.netbeans.modules.j2ee.sun.dd.api.ejb.MdbConnectionFactory;
 import org.netbeans.modules.j2ee.sun.dd.api.ejb.SunEjbJar;
 import org.netbeans.modules.j2ee.sun.dd.api.web.SunWebApp;
+import org.netbeans.modules.payara.tooling.data.PayaraVersion;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
@@ -82,10 +83,7 @@ public abstract class PayaraConfiguration implements
         MessageDestinationConfiguration,
         DatasourceConfiguration {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Payara Java EE common module Logger. */
     private static final Logger LOGGER = Logger.getLogger("payara-eecommon");
 
@@ -101,10 +99,7 @@ public abstract class PayaraConfiguration implements
         "sun-resources" + RESOURCE_FILES_SUFFIX
     };
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Create resource file path fragment for given Java EE module.
      * <i>Internal helper method.</i>
@@ -125,21 +120,21 @@ public abstract class PayaraConfiguration implements
      * Get existing {@code RESOURCE_FILES} array indexes for provided Payara
      * server version.
      * <br/>
-     * <i>Internal {@link #getExistingResourceFile(J2eeModule, PayaraVersion)
+     * <i>Internal {@link #getExistingResourceFile(J2eeModule, PayaraPlatformVersionAPI)
      * helper method.</i>
      * <p/>
-     * @param version Payara server version.
+     * @param version Payara server platformVersion.
      * @return An array of {@code RESOURCE_FILES} array indexes pointing
      *         to resource files to search for.
      */
     private static int[] versionToResourceFilesIndexes(
-            final PayaraVersion version) {
-        // All files for unknown version.
+            final PayaraPlatformVersionAPI version) {
+        // All files for unknown platformVersion.
         if (version == null) {
             return new int[]{0,1};
         }
         // glassfish-resources.xml for v4
-        if (PayaraVersion.ge(version, PayaraVersion.PF_4_1_144)) {
+        if (version.getMajor() >= 4) {
             return new int[]{0};
         } else {
             // sun-resources.xml for older
@@ -151,21 +146,32 @@ public abstract class PayaraConfiguration implements
      * Get new {@code RESOURCE_FILES} array index for provided Payara
      * server version.
      * <p/>
-     * @param version Payara server version.
+     * @param version Payara server platformVersion.
      * @return An {@code RESOURCE_FILES} array index pointing
      *         to resource file to be created.
      */
     private static int versionToNewResourceFilesIndex(
-            final PayaraVersion version) {
+            final PayaraPlatformVersionAPI version) {
         // glassfish-resources.xml is returned for versions 3.1 and higher
-        // or as default for unknown version.
-        if (version == null
-                || PayaraVersion.ge(version, PayaraVersion.PF_4_1_144)) {
+        // or as default for unknown platformVersion.
+        if (version == null || version.getMajor() >= 4) {
             return 0;
         } else {
-        // sun-resources.xml is returned for old versions
+            // sun-resources.xml is returned for old versions
             return 1;
         }
+    }
+
+    @Deprecated
+    public static final Pair<File, Boolean> getExistingResourceFile(
+            final J2eeModule module, final PayaraVersion version) {
+        return getExistingResourceFile(module, (PayaraPlatformVersionAPI) version);
+    }
+
+    @Deprecated
+    public static final Pair<File, Boolean> getNewResourceFile(
+            final J2eeModule module, final PayaraVersion version) {
+        return getNewResourceFile(module, (PayaraPlatformVersionAPI) version);
     }
 
     /**
@@ -187,13 +193,13 @@ public abstract class PayaraConfiguration implements
      * </ul>
      * 
      * @param module  Java EE module (project).
-     * @param version Resources file names depend on Payara server version.
+     * @param version Resources file names depend on Payara Platform Version.
      * @return Existing Payara resources file together with boolean flag
      *         indicating whether this is application scoped resource or
      *         {@code null} when no resources file was found.
      */
     public static final Pair<File, Boolean> getExistingResourceFile(
-            final J2eeModule module, final PayaraVersion version) {
+            final J2eeModule module, final PayaraPlatformVersionAPI version) {
         // RESOURCE_FILES indexes to search for.
         final int[] indexes = versionToResourceFilesIndexes(version);
         for (int index : indexes) {
@@ -222,53 +228,67 @@ public abstract class PayaraConfiguration implements
      * Get new Payara resources file name for creation.
      * <p/>
      * @param module  Java EE module (project).
-     * @param version Resources file names depend on Payara server version.
+     * @param version Resources file names depend on Payara Platform Version.
      * @return Payara resources file to be created.
      */
     public static final Pair<File, Boolean> getNewResourceFile(
-            final J2eeModule module, final PayaraVersion version) {
+            final J2eeModule module, final PayaraPlatformVersionAPI version) {
         final int index = versionToNewResourceFilesIndex(version);
-        if (PayaraVersion.lt(version, PayaraVersion.PF_4_1_144)) {
+        if (!version.isMinimumSupportedVersion()) {
             return Pair.of(new File(module.getResourceDirectory(), RESOURCE_FILES[index]), false);
         }
         final String name = resourceFilePath(module, RESOURCE_FILES[index]);
         return Pair.of(module.getDeploymentConfigurationFile(name), true);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     protected final J2eeModule module;
     protected final J2eeModuleHelper moduleHelper;
     protected final File primaryDD;
     protected final File secondaryDD;
     protected DescriptorListener descriptorListener;
     /** Payara server version. */
+    @Deprecated
     protected PayaraVersion version;
+    /** Payara Platform Version. */
+    private PayaraPlatformVersionAPI platformVersion;
     private ASDDVersion appServerVersion;
     private ASDDVersion minASVersion;
     private ASDDVersion maxASVersion;
     private boolean deferredAppServerChange;
     private final String defaultcr;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
+    @Deprecated
+    protected PayaraConfiguration(
+            final J2eeModule module, final PayaraVersion version
+    ) throws ConfigurationException {
+        this(module, (PayaraPlatformVersionAPI) version);
+    }
+
+    @Deprecated
+    @SuppressWarnings("LeakingThisInConstructor")
+    protected PayaraConfiguration(
+            final J2eeModule module,
+            final J2eeModuleHelper moduleHelper,
+            final PayaraVersion version
+    ) throws ConfigurationException {
+        this(module, moduleHelper, (PayaraPlatformVersionAPI)version);
+    }
 
     /**
      * Creates an instance of Java EE server configuration API support.
      * {@link J2eeModuleHelper} instance is added depending on Java EE module type.
      * <p/>
      * @param module  Java EE module (project).
-     * @param version Payara server version.
+     * @param platformVersion Payara Platform Version.
      * @throws ConfigurationException when there is a problem with Java EE server
      *         configuration initialization.
      */
     protected PayaraConfiguration(
-            final J2eeModule module, final PayaraVersion version
+            final J2eeModule module, final PayaraPlatformVersionAPI platformVersion
     ) throws ConfigurationException {
-        this(module, J2eeModuleHelper.getSunDDModuleHelper(module.getType()), version);
+        this(module, J2eeModuleHelper.getSunDDModuleHelper(module.getType()), platformVersion);
     }
 
     /**
@@ -277,18 +297,18 @@ public abstract class PayaraConfiguration implements
      * <p/>
      * @param module       Java EE module (project).
      * @param moduleHelper Already existing {@link J2eeModuleHelper} instance.
-     * @param version      Payara server version.
+     * @param platformVersion      Payara Platform Version.
      * @throws ConfigurationException when there is a problem with Java EE server
      *         configuration initialization.
      */
     @SuppressWarnings("LeakingThisInConstructor")
     protected PayaraConfiguration(
             final J2eeModule module, final J2eeModuleHelper moduleHelper,
-            final PayaraVersion version
+            final PayaraPlatformVersionAPI platformVersion
     ) throws ConfigurationException {
         this.module = module;
         this.moduleHelper = moduleHelper;
-        this.version = version;
+        this.platformVersion = platformVersion;
         if(moduleHelper != null) {
             this.primaryDD = moduleHelper.getPrimaryDDFile(module);
             this.secondaryDD = moduleHelper.getSecondaryDDFile(module);
@@ -350,10 +370,7 @@ public abstract class PayaraConfiguration implements
         throw new UnsupportedOperationException("JSR-88 configuration not supported.");
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     public void dispose() {
         if(descriptorListener != null) {
             descriptorListener.removeListeners();
@@ -373,7 +390,7 @@ public abstract class PayaraConfiguration implements
     }
 
     // ------------------------------------------------------------------------
-    // Appserver version support
+    // Appserver platformVersion support
     // ------------------------------------------------------------------------
     private ASDDVersion computeMinASVersion(String j2eeModuleVersion) {
         return moduleHelper.getMinASVersion(
@@ -404,12 +421,16 @@ public abstract class PayaraConfiguration implements
         return maxASVersion;
     }
 
+    protected PayaraPlatformVersionAPI getPlatformVersion() {
+        return platformVersion;
+    }
+
     /** Get the AppServer version to be used for saving deployment descriptors.
      *  Note that this is different than the version of the connected target
      *  application server (which can be queried by the appropriate method on
      *  SunONEDeploymentConfiguration.)
      *
-     * @return ASDDVersion enum for the appserver version
+     * @return ASDDVersion enum for the appserver platformVersion
      */
     public ASDDVersion getAppServerVersion() {
         return appServerVersion;
@@ -420,7 +441,7 @@ public abstract class PayaraConfiguration implements
      *  equal to "maxASVersion", as specified by the configuration, otherwise an
      *  IllegalArgumentException will be thrown.
      *
-     * @param asVersion enum for the appserver version (cannot be null)
+     * @param asVersion enum for the appserver platformVersion (cannot be null)
      */
     public void setAppServerVersion(ASDDVersion asVersion) {
         if (asVersion.compareTo(getMinASVersion()) < 0) {
@@ -453,7 +474,7 @@ public abstract class PayaraConfiguration implements
      *  no range validation.  What recourse to take if the version found is actually
      *  outside the "valid range" is as yet an unsupported scenario.
      *
-     * @param asVersion enum for the appserver version.
+     * @param asVersion enum for the appserver platformVersion.
      */
     void internalSetAppServerVersion(ASDDVersion asVersion) {
         if (!asVersion.equals(appServerVersion)) {
@@ -462,7 +483,7 @@ public abstract class PayaraConfiguration implements
         }
     }
 
-    // !PW FIXME replace these with more stable version of equivalent functionality
+    // !PW FIXME replace these with more stable platformVersion of equivalent functionality
     // once Vince or j2eeserver crew can implement a good api for this.
     // this code will NOT work for remote servers.
     private static String [] serverIds = {
@@ -562,7 +583,7 @@ public abstract class PayaraConfiguration implements
         return J2EEBaseVersion.getVersion(module.getType(), module.getModuleVersion());
     }
 
-    final public org.netbeans.modules.j2ee.dd.api.common.RootInterface getStandardRootDD() {
+    public final org.netbeans.modules.j2ee.dd.api.common.RootInterface getStandardRootDD() {
         org.netbeans.modules.j2ee.dd.api.common.RootInterface stdRootDD = null;
         J2eeModuleHelper j2eeModuleHelper = J2eeModuleHelper.getSunDDModuleHelper(module.getType());
         if(j2eeModuleHelper != null) {
@@ -571,7 +592,7 @@ public abstract class PayaraConfiguration implements
         return stdRootDD;
     }
 
-    final public Webservices getWebServicesRootDD() {
+    public final Webservices getWebServicesRootDD() {
         Webservices wsRootDD = null;
         J2eeModuleHelper j2eeModuleHelper = J2eeModuleHelper.getSunDDModuleHelper(module.getType());
         if(j2eeModuleHelper != null) {
@@ -588,8 +609,8 @@ public abstract class PayaraConfiguration implements
      *  this method will fail for that project type.  This method is used for:
      *
      *  * Getting the server instance id => install location for determining
-     *    server version.
-     *  * Getting the deployment manager => accessing the ResourceConfigurator
+    server platformVersion.
+  * Getting the deployment manager => accessing the ResourceConfigurator
      *    and CMP Mapper (V2 only).
      *
      */

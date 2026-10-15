@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * Supplementary information about particular input
  * that may be used to influence the lexer's operation.
- * <br/>
+ * <br>
  * For example there may be a version of the language
  * to be used when lexing the input. The following code
  * will interpret the "assert" as an identifier:
@@ -39,7 +39,7 @@ import java.util.Map;
  * The properties are attached to a concrete language path only
  * or they may be applied globally to all of the occurrences
  * of the given path as a sub-path of the target path.
- * <br/>
+ * <br>
  * See the "global" argument of
  * {@link #setValue(Language,Object,Object,boolean)}.
  * </p>
@@ -62,10 +62,10 @@ public final class InputAttributes {
 
     /**
      * Get value for the given key for the particular language path.
-     * <br/>
+     * <br>
      * If (for the given key) there was an explicit value set
      * directly for the given language path then it will be returned.
-     * <br/>
+     * <br>
      * If not and there was a global value set for one of the sub-paths
      * (from the largest to the smallest) then it will be returned.
      *
@@ -117,7 +117,7 @@ public final class InputAttributes {
      * @param global if set to true then the value will be used not only for the given
      *  language path but also as a default value (if the value is not overwritten explicitly)
      *  for all the cases where the given path is embedded into the target language path.
-     *  <br/>
+     *  <br>
      *  The following code
      *  <pre>
      *  attrs.setValue(LanguagePath.get(JavaTokenId.language()),

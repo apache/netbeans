@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.59
+#Version 1.89
 
 CLSS public abstract interface java.io.Serializable
 
@@ -8,8 +8,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -18,10 +20,10 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -30,12 +32,12 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -67,8 +69,9 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public final org.netbeans.api.autoupdate.InstallSupport
 innr public final static Installer
@@ -81,7 +84,7 @@ meth public boolean isTrusted(org.netbeans.api.autoupdate.InstallSupport$Install
 meth public java.lang.String getCertificate(org.netbeans.api.autoupdate.InstallSupport$Installer,org.netbeans.api.autoupdate.UpdateElement)
 meth public org.netbeans.api.autoupdate.InstallSupport$Installer doValidate(org.netbeans.api.autoupdate.InstallSupport$Validator,org.netbeans.api.progress.ProgressHandle) throws org.netbeans.api.autoupdate.OperationException
 meth public org.netbeans.api.autoupdate.InstallSupport$Validator doDownload(org.netbeans.api.progress.ProgressHandle,boolean) throws org.netbeans.api.autoupdate.OperationException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.netbeans.api.autoupdate.InstallSupport$Validator doDownload(org.netbeans.api.progress.ProgressHandle,java.lang.Boolean,boolean) throws org.netbeans.api.autoupdate.OperationException
 meth public org.netbeans.api.autoupdate.OperationContainer<org.netbeans.api.autoupdate.InstallSupport> getContainer()
 meth public org.netbeans.api.autoupdate.OperationSupport$Restarter doInstall(org.netbeans.api.autoupdate.InstallSupport$Installer,org.netbeans.api.progress.ProgressHandle) throws org.netbeans.api.autoupdate.OperationException
@@ -104,6 +107,7 @@ innr public final static OperationInfo
 meth public boolean canBeAdded(org.netbeans.api.autoupdate.UpdateUnit,org.netbeans.api.autoupdate.UpdateElement)
 meth public boolean contains(org.netbeans.api.autoupdate.UpdateElement)
 meth public boolean remove(org.netbeans.api.autoupdate.UpdateElement)
+meth public final void setUnpack200(java.io.File)
 meth public java.lang.String toString()
 meth public java.util.List<org.netbeans.api.autoupdate.OperationContainer$OperationInfo<{org.netbeans.api.autoupdate.OperationContainer%0}>> listAll()
 meth public java.util.List<org.netbeans.api.autoupdate.OperationContainer$OperationInfo<{org.netbeans.api.autoupdate.OperationContainer%0}>> listInvalid()
@@ -157,6 +161,7 @@ CLSS public final static !enum org.netbeans.api.autoupdate.OperationException$ER
 fld public final static org.netbeans.api.autoupdate.OperationException$ERROR_TYPE ENABLE
 fld public final static org.netbeans.api.autoupdate.OperationException$ERROR_TYPE INSTALL
 fld public final static org.netbeans.api.autoupdate.OperationException$ERROR_TYPE INSTALLER
+fld public final static org.netbeans.api.autoupdate.OperationException$ERROR_TYPE MISSING_UNPACK200
 fld public final static org.netbeans.api.autoupdate.OperationException$ERROR_TYPE MODIFIED
 fld public final static org.netbeans.api.autoupdate.OperationException$ERROR_TYPE PROXY
 fld public final static org.netbeans.api.autoupdate.OperationException$ERROR_TYPE UNINSTALL
@@ -177,6 +182,20 @@ hfds container
 CLSS public final static org.netbeans.api.autoupdate.OperationSupport$Restarter
  outer org.netbeans.api.autoupdate.OperationSupport
 supr java.lang.Object
+
+CLSS public final org.netbeans.api.autoupdate.PluginInstaller
+cons public init()
+meth public !varargs java.lang.Object install(java.lang.String,java.lang.String,org.openide.util.Lookup,java.lang.Object[])
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+ anno 4 org.netbeans.api.annotations.common.NonNull()
+meth public !varargs java.lang.Object install(java.util.Set<java.lang.String>,java.lang.String,org.openide.util.Lookup,java.lang.Object[]) throws org.netbeans.api.autoupdate.OperationException,org.openide.util.UserCancelException
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public java.lang.Object install(java.lang.String)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public static org.netbeans.api.autoupdate.PluginInstaller getDefault()
+supr java.lang.Object
+hfds INSTANCE,LOG
 
 CLSS public final org.netbeans.api.autoupdate.UpdateElement
 meth public boolean equals(java.lang.Object)
@@ -200,7 +219,7 @@ meth public java.lang.String getSpecificationVersion()
 meth public java.lang.String toString()
 meth public org.netbeans.api.autoupdate.UpdateUnit getUpdateUnit()
 meth public org.netbeans.api.autoupdate.UpdateUnitProvider$CATEGORY getSourceCategory()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 hfds impl
 
@@ -244,6 +263,7 @@ CLSS public final org.netbeans.api.autoupdate.UpdateUnitProvider
 innr public final static !enum CATEGORY
 meth public !varargs java.util.List<org.netbeans.api.autoupdate.UpdateUnit> getUpdateUnits(org.netbeans.api.autoupdate.UpdateManager$TYPE[])
 meth public boolean isEnabled()
+meth public boolean isTrusted()
 meth public boolean refresh(org.netbeans.api.progress.ProgressHandle,boolean) throws java.io.IOException
 meth public java.awt.Image getSourceIcon()
 meth public java.lang.String getContentDescription()
@@ -255,10 +275,11 @@ meth public java.lang.String toString()
 meth public java.net.URL getProviderURL()
 meth public java.util.List<org.netbeans.api.autoupdate.UpdateUnit> getUpdateUnits()
 meth public org.netbeans.api.autoupdate.UpdateUnitProvider$CATEGORY getCategory()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setDisplayName(java.lang.String)
 meth public void setEnable(boolean)
 meth public void setProviderURL(java.net.URL)
+meth public void setTrusted(boolean)
 supr java.lang.Object
 hfds impl
 
@@ -296,7 +317,24 @@ CLSS public abstract interface org.netbeans.spi.autoupdate.CustomUninstaller
 meth public abstract boolean uninstall(java.lang.String,java.lang.String,org.netbeans.api.progress.ProgressHandle) throws org.netbeans.api.autoupdate.OperationException
 
 CLSS public abstract interface org.netbeans.spi.autoupdate.KeyStoreProvider
+innr public final static !enum TrustLevel
 meth public abstract java.security.KeyStore getKeyStore()
+meth public org.netbeans.spi.autoupdate.KeyStoreProvider$TrustLevel getTrustLevel()
+
+CLSS public final static !enum org.netbeans.spi.autoupdate.KeyStoreProvider$TrustLevel
+ outer org.netbeans.spi.autoupdate.KeyStoreProvider
+fld public final static org.netbeans.spi.autoupdate.KeyStoreProvider$TrustLevel TRUST
+fld public final static org.netbeans.spi.autoupdate.KeyStoreProvider$TrustLevel TRUST_CA
+fld public final static org.netbeans.spi.autoupdate.KeyStoreProvider$TrustLevel VALIDATE
+fld public final static org.netbeans.spi.autoupdate.KeyStoreProvider$TrustLevel VALIDATE_CA
+meth public static org.netbeans.spi.autoupdate.KeyStoreProvider$TrustLevel valueOf(java.lang.String)
+meth public static org.netbeans.spi.autoupdate.KeyStoreProvider$TrustLevel[] values()
+supr java.lang.Enum<org.netbeans.spi.autoupdate.KeyStoreProvider$TrustLevel>
+
+CLSS public abstract interface org.netbeans.spi.autoupdate.PluginInstallerImplementation
+meth public abstract !varargs java.lang.Object install(java.util.Set<java.lang.String>,java.lang.String,org.openide.util.Lookup,java.lang.Object[]) throws org.netbeans.api.autoupdate.OperationException,org.openide.util.UserCancelException
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 4 org.netbeans.api.annotations.common.NonNull()
 
 CLSS public final org.netbeans.spi.autoupdate.UpdateItem
 meth public static org.netbeans.spi.autoupdate.UpdateItem createFeature(java.lang.String,java.lang.String,java.util.Set<java.lang.String>,java.lang.String,java.lang.String,java.lang.String)

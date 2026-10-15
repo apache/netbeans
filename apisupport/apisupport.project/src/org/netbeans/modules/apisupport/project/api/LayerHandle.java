@@ -213,16 +213,9 @@ public final class LayerHandle {
 
     public static FileObject createLayer(FileObject projectDir, String layerPath) throws IOException {
         FileObject layerFO = createFileObject(projectDir, layerPath);
-        InputStream is = LayerHandle.class.getResourceAsStream("/org/netbeans/modules/apisupport/project/ui/resources/layer_template.xml"); // NOI18N
-        try {
-            OutputStream os = layerFO.getOutputStream();
-            try {
-                FileUtil.copy(is, os);
-            } finally {
-                os.close();
-            }
-        } finally {
-            is.close();
+        try (InputStream is = LayerHandle.class.getResourceAsStream("/org/netbeans/modules/apisupport/project/ui/resources/layer_template.xml"); // NOI18N
+             OutputStream os = layerFO.getOutputStream()) {
+            is.transferTo(os);
         }
         return layerFO;
     }
@@ -263,7 +256,7 @@ public final class LayerHandle {
                     Logger.getLogger(DualLayers.class.getName()).log(Level.INFO, "could not load " + generated, x);
                 }
             }
-            setDelegates(layers.toArray(new FileSystem[layers.size()]));
+            setDelegates(layers.toArray(new FileSystem[0]));
         }
         public @Override void fileDataCreated(FileEvent fe) {
             configure();

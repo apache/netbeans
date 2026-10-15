@@ -586,7 +586,7 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
             for (Tree member:newInnerClass.getMembers()) {
                 if (member.getKind() == Tree.Kind.METHOD) {
                     MethodTree m = (MethodTree) member;
-                    if (m.getReturnType()==null) {
+                    if (m.getName().contentEquals("<init>") || m.getReturnType() == null) {
                         VariableTree parameter = make.Variable(make.Modifiers(EnumSet.of(Modifier.FINAL)), refactoring.getReferenceName(), make.Type(outerType), null);
                         MethodTree newConstructor = hasVarArgs(m) ?
                             make.insertMethodParameter(m, m.getParameters().size() - 1, parameter) : 
@@ -594,7 +594,8 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
                         
                         AssignmentTree assign = make.Assignment(make.Identifier("this."+referenceName), make.Identifier(referenceName)); // NOI18N
                         BlockTree block = make.insertBlockStatement(newConstructor.getBody(), 1, make.ExpressionStatement(assign));
-                        Set<Modifier> modifiers = new HashSet(newConstructor.getModifiers().getFlags());
+                        Set<Modifier> modifiers = EnumSet.noneOf(Modifier.class);
+                        modifiers.addAll(newConstructor.getModifiers().getFlags());
                         modifiers.remove(Modifier.PRIVATE);
                         newConstructor = make.Constructor(
                                 make.Modifiers(modifiers,newConstructor.getModifiers().getAnnotations()),

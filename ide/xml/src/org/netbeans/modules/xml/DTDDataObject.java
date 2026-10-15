@@ -59,7 +59,7 @@ public final class DTDDataObject extends MultiDataObject implements XMLDataObjec
     private static final long serialVersionUID = 2890472952957502631L;
 
     /** Synchronization implementation delegate. */
-    private Reference<XMLSyncSupport> refSync;
+    private Reference<Synchronizator> refSync;
     
     /** Cookie Manager */
     private final DataObjectCookieManager cookieManager;
@@ -110,7 +110,7 @@ public final class DTDDataObject extends MultiDataObject implements XMLDataObjec
     protected Node createNodeDelegate () {
         if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("--> DTDDataObject.createNodeDelegate: this = " + this);
 
-        DataNodeCreator dataNodeCreator = (DataNodeCreator) Lookup.getDefault().lookup (DataNodeCreator.class);
+        DataNodeCreator dataNodeCreator = Lookup.getDefault().lookup (DataNodeCreator.class);
         DataNode dataNode = null;
 
         if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("-*- DTDD   O     .createNodeDelegate: dataNodeCreator = " + dataNodeCreator);
@@ -143,7 +143,7 @@ public final class DTDDataObject extends MultiDataObject implements XMLDataObjec
             return sync;
         }
         sync = new DTDSyncSupport(this);       
-        refSync = new WeakReference(sync);
+        refSync = new WeakReference<>(sync);
         return sync;
     }
 

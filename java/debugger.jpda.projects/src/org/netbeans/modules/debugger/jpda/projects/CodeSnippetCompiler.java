@@ -65,7 +65,8 @@ class CodeSnippetCompiler {
                 return null;
             }
             for (Diagnostic<? extends JavaFileObject> diag : diagnostics.getDiagnostics()) {
-                if (Diagnostic.Kind.ERROR.equals(diag.getKind()) &&
+                if (Diagnostic.Kind.ERROR == diag.getKind() &&
+                    diag.getSource() != null &&
                     diag.getSource().isNameCompatible(className, JavaFileObject.Kind.CLASS)) {
                     
                     throw new InvalidExpressionException(diag.getMessage(null));

@@ -46,7 +46,7 @@ public class GLFFilesCustomEditor extends javax.swing.JPanel {
         initComponents ();
         List<String> mimeTypes = getSupportedMimeTypes ();
         Collections.sort (mimeTypes);
-        DefaultListModel model = new DefaultListModel ();
+        DefaultListModel<String> model = new DefaultListModel<>();
         Iterator<String> it = mimeTypes.iterator ();
         while (it.hasNext ()) {
             String name = (String) it.next ();

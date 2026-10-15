@@ -17,7 +17,7 @@
  * under the License.
  */
 
-/**
+/*
  * ContextDisplay.java
  *
  *
@@ -37,7 +37,7 @@ import java.util.*;
 
 public class ContextDisplay extends DataDisplay {
 
-    private final static boolean debug = false;
+    private static final boolean debug = false;
 
     DisplayTable contextTable;
 

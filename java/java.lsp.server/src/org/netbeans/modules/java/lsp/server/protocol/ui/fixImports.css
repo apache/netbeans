@@ -1,0 +1,209 @@
+/*
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+*/
+
+html, body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    overflow-x: scroll;
+}
+input[type="text"], select {
+    width: 100%;
+    font-family: var(--vscode-editor-font-family) !important;
+    border: var(--vscode-input-border);
+    margin-right: 6px !important;
+    background: var(--vscode-input-background);
+    color: var(--vscode-input-foreground);
+    box-sizing: border-box;
+}
+input:focus, select:focus {
+    outline-color: var(--vscode-focusBorder);
+}
+input[type="text"] {
+    padding: 5px 4px !important;
+}
+input[type="checkbox"] {
+    width: 1.2em;
+    min-width: 1.2em;
+    height: 1.2em;
+    min-height: 1.2em;
+    cursor: pointer;
+    filter: opacity(80%);
+}
+input[type="checkbox"]:disabled {
+    filter: brightness(90%);
+}
+input[type="checkbox"]:checked {
+    filter: opacity(100%);
+}
+select {
+    padding: 4px !important;
+}
+button {
+    cursor: pointer;
+}
+label {
+    display: block;
+    margin-bottom: 5px;
+    user-select: none;
+}
+.vscode-font {
+    font-family: var(--vscode-font-family);
+    font-size: var(--vscode-font-size);
+    text-decoration: none;
+}
+.vscode-editor-font {
+    font-family: var(--vscode-editor-font-family) !important;
+    /*font-size: var(--vscode-editor-font-size);*/
+}
+.button-text {
+    margin-left: 5px;
+    vertical-align: text-top;
+}
+.regular-button {
+    border: none;
+    padding: 4px 10px 4px 10px;
+    margin: 5px;
+    color: var(--vscode-button-foreground);
+    background-color: var(--vscode-button-background);
+}
+.regular-button:hover, .regular-button:focus {
+    background: var(--vscode-button-hoverBackground);
+}
+.regular-button:focus {
+    outline: 1px solid var(--vscode-button-hoverBackground);
+    outline-offset: 2px;
+}
+.silent-button {
+    border: none;
+    padding: 4px 10px 4px 10px;
+    margin: 5px;
+    color: var(--vscode-input-foreground);
+    background-color: var(--vscode-list-hoverBackground);
+}
+.silent-button:hover {
+    color: var(--vscode-button-foreground);
+    background-color: var(--vscode-button-hoverBackground);
+}
+.silent-button:focus {
+    color: var(--vscode-button-foreground);
+    background-color: var(--vscode-button-hoverBackground);
+    outline: 1px solid var(--vscode-button-hoverBackground);
+    outline-offset: 2px;
+}
+.action-button {
+    border: none;
+    padding: 4px 10px 4px 10px;
+    margin: 2px;
+    color: var(--vscode-input-foreground);
+    background-color: var(--vscode-list-hoverBackground);
+}
+
+.action-button:hover {
+    color: var(--vscode-button-foreground);
+    background-color: var(--vscode-button-hoverBackground);
+}
+
+.action-button:focus, .action-button:hover:focus {
+    color: var(--vscode-button-foreground);
+    background-color: var(--vscode-button-hoverBackground);
+    outline: 1px solid var(--vscode-button-hoverBackground);
+    outline-offset: 2px;
+}
+.checkbox-label {
+    align-self: center;
+    display: initial;
+    cursor: pointer;
+    margin: 0px;
+    margin-left: 3px;
+}
+.params-caption {
+    margin-bottom: 8px;
+}
+.filler {
+    width: 53px;
+}
+.preview-panel {
+    margin: 0px;
+    padding: 10px;
+    font-family: var(--vscode-editor-font-family) !important;
+    background-color: var(--vscode-sideBar-background);
+    cursor: default;
+}
+.section {
+    padding: 20px 20px 0px;
+}
+.section1 {
+    padding: 0px 10px;
+}
+.section2 {
+    padding: 0px 10px;
+	margin-top: -6px;
+}
+.section3 {
+    padding: 0px 20px 0px;
+}
+.section-newline {
+    padding: 0px 20px 0px;
+}
+.section-nested {
+    padding: 5px 40px;
+}
+.vdivider {
+    margin-bottom: 20px;
+}
+.vdivider2 {
+    margin-bottom: 6px;
+}
+.hdivider {
+    margin-left: 6px;
+}
+.row {
+    padding: 3px 10px;
+}
+.row:hover {
+    background-color: var(--vscode-list-hoverBackground);
+}
+.row:focus-within {
+    background-color: var(--vscode-tab-unfocusedInactiveModifiedBorder);
+}
+.flex {
+    display: flex;
+}
+.flex-grow {
+    flex-grow: 1;
+    display: block;
+}
+.flex-equal {
+    flex: 1 1 0;
+    display: block;
+}
+.flex-vscrollable {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.align-right {
+    margin-left: auto;
+}

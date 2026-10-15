@@ -53,6 +53,7 @@ public class DataObjectExistsException extends java.io.IOException {
     }
 
     /** Performance trick */
+    @Override
     public /*final*/ Throwable fillInStackTrace() {
         return this;
     }

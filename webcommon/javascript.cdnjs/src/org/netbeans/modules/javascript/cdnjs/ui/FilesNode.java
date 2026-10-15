@@ -101,7 +101,7 @@ public class FilesNode extends AbstractNode {
 
         @Override
         protected Node[] createNodes(String key) {
-            boolean install = (installedFiles == null) || installedFiles.contains(key);
+            boolean install = (installedFiles != null) && installedFiles.contains(key);
             return new Node[] {new FileNode(key, install)};
         }
     }

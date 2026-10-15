@@ -501,12 +501,12 @@ public abstract class AbstractCodeGeneratorClass {
 
     JavaWriter jw;
 
-    private Map mutableTypes = new HashMap();
-    private Map needToCallClone = new HashMap();
+    private Map<String, Boolean> mutableTypes = new HashMap<>();
+    private Map<String, Boolean> needToCallClone = new HashMap<>();
 
     protected boolean isMutableType(Property prop) {
         String type = prop.getType();
-        Boolean mutable = (Boolean) mutableTypes.get(type);
+        Boolean mutable = mutableTypes.get(type);
         if (mutable == null) {
             if (prop.isBean)
                 mutable = Boolean.TRUE;
@@ -516,12 +516,12 @@ public abstract class AbstractCodeGeneratorClass {
                 mutable = Boolean.TRUE;
             mutableTypes.put(type, mutable);
         }
-        return mutable.booleanValue();
+        return mutable;
     }
 
     protected boolean isCloneCallNeededOnType(Property prop) {
         String type = prop.getType();
-        Boolean callClone = (Boolean) needToCallClone.get(type);
+        Boolean callClone = needToCallClone.get(type);
         if (callClone == null) {
             if (prop.isBean || !isMutableType(prop))
                 callClone = Boolean.FALSE;
@@ -529,7 +529,7 @@ public abstract class AbstractCodeGeneratorClass {
                 callClone = JavaUtil.isCloneable(type) ? Boolean.TRUE : Boolean.FALSE;
             needToCallClone.put(type, callClone);
         }
-        return callClone.booleanValue();
+        return callClone;
     }
 
     protected boolean genCopyWillCopy(Property a) {
@@ -620,20 +620,20 @@ public abstract class AbstractCodeGeneratorClass {
     //	parts of the class start at one tabulation
     //
     
-    static protected final int	   	PUBLIC 		= 0;
-    static protected final int		PRIVATE 	= 1;
-    static protected final int		VOID 		= 2;
-    static protected final int		CLASS 		= 3;
-    static protected final int		IMPORT 		= 4;
-    static protected final int		PACKAGE    	= 5;
-    static protected final int		STRING 		= 6;
-    static protected final int		BOOLEAN		= 7;
-    static protected final int		STATIC		= 8;
-    static protected final int		FINAL		= 9;
-    static protected final int		INT			= 10;
-    static protected final int		PROTECTED	= 11;
+    protected static final int	   	PUBLIC 		= 0;
+    protected static final int		PRIVATE 	= 1;
+    protected static final int		VOID 		= 2;
+    protected static final int		CLASS 		= 3;
+    protected static final int		IMPORT 		= 4;
+    protected static final int		PACKAGE    	= 5;
+    protected static final int		STRING 		= 6;
+    protected static final int		BOOLEAN		= 7;
+    protected static final int		STATIC		= 8;
+    protected static final int		FINAL		= 9;
+    protected static final int		INT			= 10;
+    protected static final int		PROTECTED	= 11;
     
-    static protected final String arrKeywords[] = {
+    protected static final String arrKeywords[] = {
         "public",
         "private",
         "void",

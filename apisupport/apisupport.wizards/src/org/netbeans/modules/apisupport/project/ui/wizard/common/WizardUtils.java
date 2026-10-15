@@ -151,7 +151,7 @@ public class WizardUtils {
             }
             result.add(keyStroke);
         }
-        return result.toArray(new KeyStroke[result.size()]);
+        return result.toArray(new KeyStroke[0]);
     }
 
     public static String keyStrokesToString(final KeyStroke[] keyStrokes) {
@@ -333,7 +333,7 @@ public class WizardUtils {
      */
     public static ComboBoxModel createLayerPresenterComboModel(
             final Project project, final String sfsRoot, final Map<String,Object> excludeAttrs) {
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        DefaultComboBoxModel<LayerItemPresenter> model = new DefaultComboBoxModel<>();
         try {
             FileSystem sfs = project.getLookup().lookup(NbModuleProvider.class).getEffectiveSystemFilesystem();
             FileObject root = sfs.getRoot().getFileObject(sfsRoot);

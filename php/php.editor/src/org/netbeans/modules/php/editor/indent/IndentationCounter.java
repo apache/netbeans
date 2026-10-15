@@ -20,7 +20,12 @@ package org.netbeans.modules.php.editor.indent;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import javax.swing.text.BadLocationException;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenId;
@@ -29,8 +34,10 @@ import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.editor.indent.spi.Context;
+import static org.netbeans.modules.php.editor.CodeUtils.PIPE_OPERATOR;
 import org.netbeans.modules.php.editor.lexer.LexUtilities;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
+import org.netbeans.modules.php.editor.lexer.utils.LexerUtils;
 import org.openide.util.Exceptions;
 
 /**
@@ -39,10 +46,45 @@ import org.openide.util.Exceptions;
  * @author Ondrej Brejla <obrejla@netbeans.org>
  */
 public class IndentationCounter {
-    private static final Collection<PHPTokenId> CONTROL_STATEMENT_TOKENS = Arrays.asList(
+
+    private static final Collection<PHPTokenId> CONTROL_STATEMENT_TOKENS = Set.of(
             PHPTokenId.PHP_DO, PHPTokenId.PHP_WHILE, PHPTokenId.PHP_FOR,
             PHPTokenId.PHP_FOREACH, PHPTokenId.PHP_IF, PHPTokenId.PHP_ELSE);
-    private Collection<ScopeDelimiter> scopeDelimiters;
+    private static final Collection<PHPTokenId> NOT_PROPERTY_HOOK_SCOPE_TOKENS = Set.of(
+            PHPTokenId.PHP_SEMICOLON,
+            PHPTokenId.PHP_FUNCTION,
+            PHPTokenId.PHP_DO,
+            PHPTokenId.PHP_WHILE,
+            PHPTokenId.PHP_IF,
+            PHPTokenId.PHP_ELSE,
+            PHPTokenId.PHP_ELSEIF,
+            PHPTokenId.PHP_FOR,
+            PHPTokenId.PHP_FOREACH,
+            PHPTokenId.PHP_FINALLY,
+            PHPTokenId.PHP_TRY,
+            PHPTokenId.PHP_CATCH,
+            PHPTokenId.PHP_MATCH
+    );
+    private static final Collection<PHPTokenId> NOT_IF_SCOPE_TOKENS = Set.of(
+            PHPTokenId.PHP_SEMICOLON,
+            PHPTokenId.PHP_FUNCTION,
+            PHPTokenId.PHP_DO,
+            PHPTokenId.PHP_WHILE,
+            PHPTokenId.PHP_FOR,
+            PHPTokenId.PHP_FOREACH,
+            PHPTokenId.PHP_FINALLY,
+            PHPTokenId.PHP_TRY,
+            PHPTokenId.PHP_CATCH,
+            PHPTokenId.PHP_MATCH,
+            PHPTokenId.PHP_PUBLIC,
+            PHPTokenId.PHP_PROTECTED,
+            PHPTokenId.PHP_PRIVATE,
+            PHPTokenId.PHP_PUBLIC_SET,
+            PHPTokenId.PHP_PROTECTED_SET,
+            PHPTokenId.PHP_PRIVATE_SET
+    );
+
+    private final Map<PHPTokenId, ScopeDelimiter> scopeDelimiters;
     private final BaseDocument doc;
     private final int indentSize;
     private final int continuationSize;
@@ -54,20 +96,21 @@ public class IndentationCounter {
         continuationSize = CodeStyle.get(doc).getContinuationIndentSize();
         itemsArrayDeclararionSize = CodeStyle.get(doc).getItemsInArrayDeclarationIndentSize();
         int initialIndentSize = CodeStyle.get(doc).getInitialIndent();
-        scopeDelimiters = Arrays.asList(
-                new ScopeDelimiter(PHPTokenId.PHP_SEMICOLON, 0),
-                new ScopeDelimiter(PHPTokenId.PHP_OPENTAG, initialIndentSize),
-                new ScopeDelimiter(PHPTokenId.PHP_CURLY_CLOSE, 0),
-                new ScopeDelimiter(PHPTokenId.PHP_CURLY_OPEN, indentSize),
-                new ScopeDelimiter(PHPTokenId.PHP_CASE, indentSize),
-                new ScopeDelimiter(PHPTokenId.PHP_IF, indentSize),
-                new ScopeDelimiter(PHPTokenId.PHP_ELSE, indentSize),
-                new ScopeDelimiter(PHPTokenId.PHP_ELSEIF, indentSize),
-                new ScopeDelimiter(PHPTokenId.PHP_WHILE, indentSize),
-                new ScopeDelimiter(PHPTokenId.PHP_DO, indentSize),
-                new ScopeDelimiter(PHPTokenId.PHP_FOR, indentSize),
-                new ScopeDelimiter(PHPTokenId.PHP_FOREACH, indentSize),
-                new ScopeDelimiter(PHPTokenId.PHP_DEFAULT, indentSize));
+        Map<PHPTokenId, ScopeDelimiter> delimiters = new HashMap<>();
+        delimiters.put(PHPTokenId.PHP_SEMICOLON, new ScopeDelimiter(PHPTokenId.PHP_SEMICOLON, 0));
+        delimiters.put(PHPTokenId.PHP_OPENTAG, new ScopeDelimiter(PHPTokenId.PHP_OPENTAG, initialIndentSize));
+        delimiters.put(PHPTokenId.PHP_CURLY_CLOSE, new ScopeDelimiter(PHPTokenId.PHP_CURLY_CLOSE, 0));
+        delimiters.put(PHPTokenId.PHP_CURLY_OPEN, new ScopeDelimiter(PHPTokenId.PHP_CURLY_OPEN, indentSize));
+        delimiters.put(PHPTokenId.PHP_CASE, new ScopeDelimiter(PHPTokenId.PHP_CASE, indentSize));
+        delimiters.put(PHPTokenId.PHP_IF, new ScopeDelimiter(PHPTokenId.PHP_IF, indentSize));
+        delimiters.put(PHPTokenId.PHP_ELSE, new ScopeDelimiter(PHPTokenId.PHP_ELSE, indentSize));
+        delimiters.put(PHPTokenId.PHP_ELSEIF, new ScopeDelimiter(PHPTokenId.PHP_ELSEIF, indentSize));
+        delimiters.put(PHPTokenId.PHP_WHILE, new ScopeDelimiter(PHPTokenId.PHP_WHILE, indentSize));
+        delimiters.put(PHPTokenId.PHP_DO, new ScopeDelimiter(PHPTokenId.PHP_DO, indentSize));
+        delimiters.put(PHPTokenId.PHP_FOR, new ScopeDelimiter(PHPTokenId.PHP_FOR, indentSize));
+        delimiters.put(PHPTokenId.PHP_FOREACH, new ScopeDelimiter(PHPTokenId.PHP_FOREACH, indentSize));
+        delimiters.put(PHPTokenId.PHP_DEFAULT, new ScopeDelimiter(PHPTokenId.PHP_DEFAULT, indentSize));
+        scopeDelimiters = Map.copyOf(delimiters);
     }
 
     public Indentation count(int caretOffset) {
@@ -86,7 +129,7 @@ public class IndentationCounter {
         try {
             boolean insideString = false;
             TokenSequence<? extends PHPTokenId> ts = LexUtilities.getPHPTokenSequence(doc, caretOffset);
-            int caretLineStart = LineDocumentUtils.getLineStart(doc, LineDocumentUtils.getLineStart(doc, caretOffset) - 1);
+            int caretLineStart = LineDocumentUtils.getLineStartOffset(doc, LineDocumentUtils.getLineStartOffset(doc, caretOffset) - 1);
             if (ts != null) {
                 ts.move(caretOffset);
                 ts.moveNext();
@@ -105,6 +148,15 @@ public class IndentationCounter {
                     }
                     return result;
                 }
+
+                if (isAttributeCloseBracket(ts)) {
+                    // e.g.
+                    // #[A(1, "param")]
+                    //                 ^ Enter here
+                    int attributeIndent = Utilities.getRowIndent(doc, caretLineStart);
+                    return new IndentationImpl(attributeIndent < 0 ? 0 : attributeIndent);
+                }
+
                 if (ts.token().id() == PHPTokenId.WHITESPACE && ts.moveNext()) {
                     movePrevious = true;
                 }
@@ -114,7 +166,7 @@ public class IndentationCounter {
                     newIndent = Utilities.getRowIndent(doc, caretLineStart);
                     if (newIndent < 0) {
                         int caretStart = caretOffset - 1;
-                        int caretLineEnd = LineDocumentUtils.getLineEnd(doc, LineDocumentUtils.getLineEnd(doc, caretOffset) - 1);
+                        int caretLineEnd = LineDocumentUtils.getLineEndOffset(doc, LineDocumentUtils.getLineEndOffset(doc, caretOffset) - 1);
                         int curlyOffset = ts.offset() - 1;
                         if (caretLineEnd == caretStart) {
                             newIndent = caretStart - caretLineStart;
@@ -168,7 +220,7 @@ public class IndentationCounter {
                 }
                 if ((ts.token().id() == PHPTokenId.PHP_ENCAPSED_AND_WHITESPACE || ts.token().id() == PHPTokenId.PHP_CONSTANT_ENCAPSED_STRING) && caretOffset > ts.offset()) {
 
-                    int stringLineStart = LineDocumentUtils.getLineStart(doc, ts.offset());
+                    int stringLineStart = LineDocumentUtils.getLineStartOffset(doc, ts.offset());
 
                     if (stringLineStart >= caretLineStart) {
                         // string starts on the same line:
@@ -187,7 +239,7 @@ public class IndentationCounter {
                 int squaredBalance = 0;
                 PHPTokenId previousTokenId = ts.token().id();
                 while (!insideString && ts.movePrevious()) {
-                    Token token = ts.token();
+                    Token<? extends PHPTokenId> token = ts.token();
                     ScopeDelimiter delimiter = getScopeDelimiter(token);
                     int anchor = ts.offset();
                     int shiftAtAncor = 0;
@@ -197,7 +249,7 @@ public class IndentationCounter {
                             int casePosition = breakProceededByCase(ts); // is after break in case statement?
                             if (casePosition > -1) {
                                 newIndent = Utilities.getRowIndent(doc, anchor);
-                                if (LineDocumentUtils.getLineStart(doc, casePosition) != caretLineStart) {
+                                if (LineDocumentUtils.getLineStartOffset(doc, casePosition) != caretLineStart) {
                                     // check that case is not on the same line, where enter was pressed
                                     newIndent -= indentSize;
                                 }
@@ -214,8 +266,8 @@ public class IndentationCounter {
                                 newIndent = Utilities.getRowIndent(doc, anchor) + delimiter.indentDelta + shiftAtAncor;
                             }
                             break;
-                        } else if (delimiter.tokenId == PHPTokenId.PHP_CURLY_OPEN && ts.movePrevious()) {
-                            int startExpression = LexUtilities.findStartTokenOfExpression(ts);
+                        } else if (delimiter.tokenId == PHPTokenId.PHP_CURLY_OPEN) {
+                            int startExpression = findStartTokenOfExpressionForCurlyOpen(ts);
                             newIndent = Utilities.getRowIndent(doc, startExpression) + indentSize;
                             break;
                         }
@@ -225,7 +277,8 @@ public class IndentationCounter {
                         break;
                     } else {
                         if (ts.token().id() == PHPTokenId.PHP_TOKEN
-                                || (ts.token().id() == PHPTokenId.PHP_OPERATOR && TokenUtilities.textEquals("=", ts.token().text()))) { // NOI18N
+                                || ts.token().id() == PHPTokenId.PHP_ATTRIBUTE
+                                || LexerUtils.isEqual(ts.token())) {
                             char ch = ts.token().text().charAt(0);
                             boolean continualIndent = false;
                             boolean indent = false;
@@ -267,6 +320,12 @@ public class IndentationCounter {
                                 default:
                                     //no-op
                             }
+                            if (ts.token().id() == PHPTokenId.PHP_ATTRIBUTE) { // #[
+                                if (squaredBalance == 0) {
+                                    indent = true;
+                                }
+                                squaredBalance--;
+                            }
                             if (continualIndent || indent) {
                                 ts.move(caretOffset);
                                 ts.movePrevious();
@@ -278,6 +337,11 @@ public class IndentationCounter {
                                             newIndent = Utilities.getRowIndent(doc, offsetArrayDeclaration) + itemsArrayDeclararionSize;
                                         } else if (inGroupUse(startExpression, ts)) {
                                             newIndent = Utilities.getRowIndent(doc, startExpression);
+                                        } else if (isInMatchExpression(startExpression, ts)
+                                                && isFirstCommaAfterDoubleArrow(startExpression, caretOffset, ts)) {
+                                            newIndent = Utilities.getRowIndent(doc, startExpression);
+                                        } else if (isInAttributeExpression(caretOffset, ts)) {
+                                            newIndent = Utilities.getRowIndent(doc, startExpression) + indentSize;
                                         } else {
                                             newIndent = Utilities.getRowIndent(doc, startExpression) + continuationSize;
                                         }
@@ -289,7 +353,9 @@ public class IndentationCounter {
                                 break;
                             }
                         } else if ((previousTokenId == PHPTokenId.PHP_OBJECT_OPERATOR
+                                || previousTokenId == PHPTokenId.PHP_NULLSAFE_OBJECT_OPERATOR
                                 || ts.token().id() == PHPTokenId.PHP_OBJECT_OPERATOR
+                                || ts.token().id() == PHPTokenId.PHP_NULLSAFE_OBJECT_OPERATOR
                                 || ts.token().id() == PHPTokenId.PHP_PAAMAYIM_NEKUDOTAYIM) && bracketBalance <= 0) {
                             int startExpression = LexUtilities.findStartTokenOfExpression(ts);
                             if (startExpression != -1) {
@@ -315,6 +381,13 @@ public class IndentationCounter {
                                 newIndent = Utilities.getRowIndent(doc, startExpression) + continuationSize;
                                 break;
                             }
+                        } else if (ts.token().id() == PHPTokenId.PHP_OPERATOR && TokenUtilities.textEquals(PIPE_OPERATOR, ts.token().text())) { // NOI18N
+                            //PHP 8.5 align pipe operator chain expressions
+                            int startExpression = LexUtilities.findStartTokenOfExpression(ts);
+                            if (startExpression != -1) {
+                                newIndent = Utilities.getRowIndent(doc, startExpression);
+                                break;
+                            }
                         }
                     }
                     previousTokenId = ts.token().id();
@@ -330,6 +403,28 @@ public class IndentationCounter {
         return new IndentationImpl(newIndent);
     }
 
+    private int findStartTokenOfExpressionForCurlyOpen(TokenSequence<? extends PHPTokenId> ts) {
+        int startExpression = -1;
+        if (isInMatchExpression(ts.offset(), ts)) {
+            startExpression = findMatchExpressionStart(ts);
+        } else if (isInIf(ts.offset(), ts)) {
+            startExpression = findIfStart(ts);
+        } else if (isInPropertyHook(ts.offset(), ts)) {
+            startExpression = findPropertyHookStart(ts);
+        } else if (isInHookedProperty(ts.offset(), ts)) {
+            startExpression = findHookedPropertyStart(ts);
+        } else if (isInFunction(ts.offset(), ts)) {
+            startExpression = findFunctionStart(ts);
+        } else if (isInAnonClass(ts.offset(), ts)) {
+            startExpression = findAnonClassStart(ts);
+        }
+        if (startExpression == -1) {
+            ts.movePrevious();
+            startExpression = LexUtilities.findStartTokenOfExpression(ts);
+        }
+        return startExpression;
+    }
+
     private static boolean isInTernaryOperatorStatement(TokenSequence<? extends PHPTokenId> ts) {
         boolean result = false;
         int originalOffset = ts.offset();
@@ -343,16 +438,29 @@ public class IndentationCounter {
         return result;
     }
 
-    private CodeB4BreakData processCodeBeforeBreak(TokenSequence ts, boolean indentComment) {
+    private CodeB4BreakData processCodeBeforeBreak(TokenSequence<? extends PHPTokenId> ts, boolean indentComment) {
         CodeB4BreakData retunValue = new CodeB4BreakData();
         int origOffset = ts.offset();
-        Token token = ts.token();
+        Token<? extends PHPTokenId> token = ts.token();
 
         if (token.id() == PHPTokenId.PHP_SEMICOLON && ts.movePrevious()) {
             retunValue.expressionStartOffset = LexUtilities.findStartTokenOfExpression(ts);
+            boolean hasColon = false;
             ts.move(retunValue.expressionStartOffset);
             ts.moveNext();
-            retunValue.indentDelta = ts.token().id() == PHPTokenId.PHP_CASE || ts.token().id() == PHPTokenId.PHP_DEFAULT
+            // case ENUM_CASE;
+            // case Expression:
+            if (ts.token().id() == PHPTokenId.PHP_CASE) {
+                while (ts.moveNext() && ts.offset() < origOffset) {
+                    if (LexerUtils.isColon(ts.token())) {
+                        hasColon = true;
+                        break;
+                    }
+                }
+                ts.move(retunValue.expressionStartOffset);
+                ts.moveNext();
+            }
+            retunValue.indentDelta = (ts.token().id() == PHPTokenId.PHP_CASE && hasColon) || ts.token().id() == PHPTokenId.PHP_DEFAULT
                     ? indentSize : 0;
             retunValue.processedByControlStmt = false;
             ts.move(origOffset);
@@ -382,11 +490,7 @@ public class IndentationCounter {
 
         if (token.id() == PHPTokenId.PHP_OPENTAG && ts.moveNext()) {
             // we are at the begining of the php blog
-            LexUtilities.findNext(ts, Arrays.asList(
-                    PHPTokenId.WHITESPACE,
-                    PHPTokenId.PHPDOC_COMMENT, PHPTokenId.PHPDOC_COMMENT_END, PHPTokenId.PHPDOC_COMMENT_START,
-                    PHPTokenId.PHP_COMMENT, PHPTokenId.PHP_COMMENT_END, PHPTokenId.PHP_COMMENT_START,
-                    PHPTokenId.PHP_LINE_COMMENT));
+            LexUtilities.findNext(ts, LexerUtils.getWSCommentTokens());
             retunValue.expressionStartOffset = ts.offset();
             retunValue.indentDelta = 0;
         }
@@ -402,30 +506,23 @@ public class IndentationCounter {
      * @param ts
      * @return
      */
-    private static int offsetArrayDeclaration(int startExpression, TokenSequence ts) {
+    private static int offsetArrayDeclaration(int startExpression, TokenSequence<? extends PHPTokenId> ts) {
         int result = -1;
         int origOffset = ts.offset();
-        Token token;
+        Token<? extends PHPTokenId> token;
         int balance = 0;
         int squaredBalance = 0;
         do {
             token = ts.token();
             if (token.id() == PHPTokenId.PHP_TOKEN) {
                 switch (token.text().charAt(0)) {
-                    case ')':
-                        balance--;
-                        break;
-                    case '(':
-                        balance++;
-                        break;
-                    case ']':
-                        squaredBalance--;
-                        break;
-                    case '[':
-                        squaredBalance++;
-                        break;
-                    default:
+                    case ')' -> balance--;
+                    case '(' -> balance++;
+                    case ']' -> squaredBalance--;
+                    case '[' -> squaredBalance++;
+                    default -> {
                         //no-op
+                    }
                 }
             }
         } while (ts.offset() > startExpression
@@ -442,7 +539,7 @@ public class IndentationCounter {
         return result;
     }
 
-    private boolean inGroupUse(int startExpression, TokenSequence ts) {
+    private boolean inGroupUse(int startExpression, TokenSequence<? extends PHPTokenId> ts) {
         boolean result = false;
         int origOffset = ts.offset();
         ts.move(startExpression);
@@ -480,6 +577,352 @@ public class IndentationCounter {
         return result;
     }
 
+    private boolean isInMatchExpression(int startExpression, TokenSequence<? extends PHPTokenId> ts) {
+        boolean result = false;
+        int originalOffset = ts.offset();
+        ts.move(startExpression);
+        if (ts.moveNext() && ts.movePrevious()) {
+            while (ts.movePrevious()) {
+                TokenId tokenId = ts.token().id();
+                if (tokenId == PHPTokenId.PHP_SEMICOLON) {
+                    break;
+                }
+                if (tokenId == PHPTokenId.PHP_MATCH) {
+                    result = true;
+                    break;
+                }
+            }
+        }
+        ts.move(originalOffset);
+        ts.moveNext();
+        return result;
+    }
+
+    private boolean isInAttributeExpression(int caretOffset, TokenSequence<? extends PHPTokenId> ts) {
+        boolean result = false;
+        int originalOffset = ts.offset();
+        ts.move(caretOffset);
+        if (ts.moveNext()) {
+            if (ts.token().id() == PHPTokenId.PHP_ATTRIBUTE
+                    && ts.offset() + ts.token().length() <= caretOffset) {
+                result = true;
+            }
+        }
+        // check brakets balance for param list
+        // e.g.
+        // function foo(#[A(1)] $a, #[A(2)] $b, #[A(3)] $c) {}
+        //                                          ^ Enter here
+        // #[A("foo")]
+        // function foo(#[A(1)] $a, #[A(2)] $b, #[A(3)] $c) {}
+        //                         ^ Enter here
+        int bracketBalance = 0;
+        int parenBlance = 0;
+        while (!result && ts.movePrevious()) {
+            TokenId tokenId = ts.token().id();
+            if (LexerUtils.isCloseBracket(ts.token())) {
+                bracketBalance--;
+            } else if (LexerUtils.isOpenBracket(ts.token())) {
+                bracketBalance++;
+            } else if (LexerUtils.isCloseParen(ts.token())) {
+                parenBlance--;
+            } else if (LexerUtils.isOpenParen(ts.token())) {
+                parenBlance++;
+            }
+            if (tokenId == PHPTokenId.PHP_SEMICOLON
+                    || tokenId == PHPTokenId.PHP_CURLY_CLOSE) {
+                break;
+            }
+            if (tokenId == PHPTokenId.PHP_ATTRIBUTE) {
+                bracketBalance++;
+                if (bracketBalance != 0 && parenBlance == 0) {
+                    result = true;
+                }
+                break;
+            }
+        }
+        ts.move(originalOffset);
+        ts.moveNext();
+        return result;
+    }
+
+    private boolean isInAnonClass(int startExpression, TokenSequence<? extends PHPTokenId> ts) {
+        boolean result = false;
+        int parenBalance = 0;
+        int curlyBalance = 0;
+        int originalOffset = ts.offset();
+        ts.move(startExpression);
+        while (ts.movePrevious()) {
+            Token<? extends PHPTokenId> token = ts.token();
+            TokenId tokenId = token.id();
+            if (tokenId == PHPTokenId.PHP_SEMICOLON
+                    || (parenBalance == 0 && curlyBalance == 1 && tokenId == PHPTokenId.PHP_CURLY_CLOSE)) {
+                break;
+            } else if (tokenId == PHPTokenId.PHP_STRING) {
+                if (parenBalance == 0) {
+                    // e.g. class ClassName {
+                    break;
+                }
+            } else if (LexerUtils.hasCurlyOpen(token)) {
+                curlyBalance++;
+            } else if (tokenId == PHPTokenId.PHP_CURLY_CLOSE) {
+                curlyBalance--;
+            } else if (LexerUtils.isOpenParen(ts.token())) {
+                parenBalance++;
+            } else if (LexerUtils.isCloseParen(ts.token())) {
+                parenBalance--;
+            } else if (parenBalance == 0 && curlyBalance == 0 && tokenId == PHPTokenId.PHP_CLASS) {
+                result = true;
+                break;
+            }
+        }
+        ts.move(originalOffset);
+        ts.moveNext();
+        return result;
+    }
+
+    private int findAnonClassStart(TokenSequence<? extends PHPTokenId> ts) {
+        return findStart(ts, List.of(PHPTokenId.PHP_CLASS));
+    }
+
+    private boolean isInFunction(int startExpression, TokenSequence<? extends PHPTokenId> ts) {
+        boolean result = false;
+        int parenBalance = 0;
+        int curlyBalance = 0;
+        int originalOffset = ts.offset();
+        ts.move(startExpression);
+        while (ts.movePrevious()) {
+            Token<? extends PHPTokenId> token = ts.token();
+            TokenId tokenId = token.id();
+            if (tokenId == PHPTokenId.PHP_SEMICOLON
+                    || (parenBalance == 0 && curlyBalance == 1 && tokenId == PHPTokenId.PHP_CURLY_CLOSE)) {
+                break;
+            } else if (LexerUtils.hasCurlyOpen(token)) {
+                curlyBalance++;
+            } else if (tokenId == PHPTokenId.PHP_CURLY_CLOSE) {
+                curlyBalance--;
+            } else if (LexerUtils.isOpenParen(ts.token())) {
+                parenBalance++;
+            } else if (LexerUtils.isCloseParen(ts.token())) {
+                parenBalance--;
+            } else if (parenBalance == 0 && curlyBalance == 0 && tokenId == PHPTokenId.PHP_FUNCTION) {
+                result = true;
+                break;
+            }
+        }
+        ts.move(originalOffset);
+        ts.moveNext();
+        return result;
+    }
+
+    private int findFunctionStart(TokenSequence<? extends PHPTokenId> ts) {
+        return findStart(ts, List.of(PHPTokenId.PHP_FUNCTION));
+    }
+
+    private boolean isInPropertyHook(int startExpression, TokenSequence<? extends PHPTokenId> ts) {
+        boolean result = false;
+        int parenBalance = 0;
+        int curlyBalance = 0;
+        int originalOffset = ts.offset();
+        ts.move(startExpression);
+        while (ts.movePrevious()) {
+            Token<? extends PHPTokenId> token = ts.token();
+            PHPTokenId tokenId = token.id();
+            if ((curlyBalance == 0 && NOT_PROPERTY_HOOK_SCOPE_TOKENS.contains(tokenId))
+                    || (parenBalance == 0 && curlyBalance == 1 && tokenId == PHPTokenId.PHP_CURLY_CLOSE)) {
+                break;
+            } else if (LexerUtils.hasCurlyOpen(token)) {
+                curlyBalance++;
+            } else if (tokenId == PHPTokenId.PHP_CURLY_CLOSE) {
+                curlyBalance--;
+            } else if (LexerUtils.isOpenParen(ts.token())) {
+                parenBalance++;
+            } else if (LexerUtils.isCloseParen(ts.token())) {
+                parenBalance--;
+            } else if (curlyBalance == 1
+                    && LexerUtils.isGetOrSetVisibilityToken(token)) {
+                result = true;
+                break;
+            }
+        }
+        ts.move(originalOffset);
+        ts.moveNext();
+        return result;
+    }
+
+    private int findPropertyHookStart(TokenSequence<? extends PHPTokenId> ts) {
+        int parenBalance = 0;
+        int originalOffset = ts.offset();
+        int start = -1;
+        while (ts.movePrevious()) {
+            Token<? extends PHPTokenId> token = ts.token();
+            PHPTokenId tokenId = token.id();
+            if (tokenId == PHPTokenId.PHP_SEMICOLON
+                    || (parenBalance == 0 && tokenId == PHPTokenId.PHP_CURLY_CLOSE)) {
+                break;
+            } else if (LexerUtils.isOpenParen(ts.token())) {
+                parenBalance++;
+            } else if (LexerUtils.isCloseParen(ts.token())) {
+                parenBalance--;
+            } else if (LexerUtils.isGetOrSetVisibilityToken(token)) {
+                break;
+            } else if (parenBalance == 0 && tokenId == PHPTokenId.PHP_STRING) {
+                start = ts.offset();
+                break;
+            }
+        }
+        ts.move(originalOffset);
+        ts.moveNext();
+        assert start != -1;
+        return start;
+    }
+
+    private boolean isInHookedProperty(int startExpression, TokenSequence<? extends PHPTokenId> ts) {
+        boolean result = false;
+        int parenBalance = 0;
+        int curlyBalance = 0;
+        int originalOffset = ts.offset();
+        ts.move(startExpression);
+        while (ts.movePrevious()) {
+            Token<? extends PHPTokenId> token = ts.token();
+            PHPTokenId tokenId = token.id();
+            if (tokenId == PHPTokenId.PHP_SEMICOLON
+                    || tokenId == PHPTokenId.PHP_FUNCTION
+                    || tokenId == PHPTokenId.PHP_STATIC
+                    || (parenBalance == 0 && tokenId == PHPTokenId.PHP_CURLY_CLOSE)) {
+                break;
+            } else if (LexerUtils.hasCurlyOpen(token)) {
+                curlyBalance++;
+            } else if (tokenId == PHPTokenId.PHP_CURLY_CLOSE) {
+                curlyBalance--;
+            } else if (LexerUtils.isOpenParen(ts.token())) {
+                parenBalance++;
+            } else if (LexerUtils.isCloseParen(ts.token())) {
+                parenBalance--;
+            } else if (curlyBalance == 0 && LexerUtils.isGetOrSetVisibilityToken(token)) {
+                result = true;
+                break;
+            }
+        }
+        ts.move(originalOffset);
+        ts.moveNext();
+        return result;
+    }
+
+    private int findHookedPropertyStart(TokenSequence<? extends PHPTokenId> ts) {
+        return findStart(ts, LexerUtils.getAllVisibilityTokens());
+    }
+
+    private boolean isInIf(int startExpression, TokenSequence<? extends PHPTokenId> ts) {
+        boolean result = false;
+        int parenBalance = 0;
+        int curlyBalance = 0;
+        int originalOffset = ts.offset();
+        ts.move(startExpression);
+        while (ts.movePrevious()) {
+            PHPTokenId tokenId = ts.token().id();
+            if ((curlyBalance == 0 && NOT_IF_SCOPE_TOKENS.contains(tokenId))
+                    || (parenBalance == 0 && tokenId == PHPTokenId.PHP_CURLY_CLOSE)) {
+                break;
+            } else if (LexerUtils.hasCurlyOpen(ts.token())) {
+                curlyBalance++;
+            } else if (tokenId == PHPTokenId.PHP_CURLY_CLOSE) {
+                curlyBalance--;
+            } else if (LexerUtils.isOpenParen(ts.token())) {
+                parenBalance++;
+            } else if (LexerUtils.isCloseParen(ts.token())) {
+                parenBalance--;
+            } else if (parenBalance == 0 && curlyBalance == 0
+                    && (tokenId == PHPTokenId.PHP_IF || tokenId == PHPTokenId.PHP_ELSEIF || tokenId == PHPTokenId.PHP_ELSE)) {
+                result = true;
+                break;
+            }
+        }
+        ts.move(originalOffset);
+        ts.moveNext();
+        return result;
+    }
+
+    private int findIfStart(TokenSequence<? extends PHPTokenId> ts) {
+        return findStart(ts, List.of(PHPTokenId.PHP_IF, PHPTokenId.PHP_ELSEIF, PHPTokenId.PHP_ELSE));
+    }
+
+    private int findMatchExpressionStart(TokenSequence<? extends PHPTokenId> ts) {
+        return findStart(ts, List.of(PHPTokenId.PHP_MATCH));
+    }
+
+    private int findStart(TokenSequence<? extends PHPTokenId> ts, List<PHPTokenId> lookFor) {
+        int originalOffset = ts.offset();
+        Token<? extends PHPTokenId> token = LexUtilities.findPreviousToken(ts, lookFor);
+        assert token != null;
+        int start = ts.offset();
+        ts.move(originalOffset);
+        ts.moveNext();
+        return start;
+    }
+
+    private boolean isFirstCommaAfterDoubleArrow(int startExpression, int caretOffset, TokenSequence<? extends PHPTokenId> ts) {
+        boolean result = false;
+        int originalOffset = ts.offset();
+        ts.move(caretOffset);
+        int parenBalance = 0; // ()
+        int bracketBalance = 0; // []
+        int curlyBalance = 0; // {}
+        int commaCount = 0;
+        if (ts.moveNext() && ts.movePrevious()) {
+            for (;;) {
+                if (ts.offset() < startExpression) {
+                    break;
+                }
+                TokenId tokenId = ts.token().id();
+                if (tokenId == PHPTokenId.PHP_SEMICOLON) {
+                    break;
+                }
+                if (tokenId == PHPTokenId.PHP_TOKEN) {
+                    char c = ts.token().text().charAt(0);
+                    switch (c) {
+                        case '(':
+                            parenBalance++;
+                            break;
+                        case ')':
+                            parenBalance--;
+                            break;
+                        case '[':
+                            bracketBalance++;
+                            break;
+                        case ']':
+                            bracketBalance--;
+                            break;
+                        case ',':
+                            if (parenBalance == 0
+                                    && bracketBalance == 0
+                                    && curlyBalance == 0) {
+                                commaCount++;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                } else if (tokenId == PHPTokenId.PHP_CURLY_OPEN) {
+                    curlyBalance++;
+                } else if (tokenId == PHPTokenId.PHP_CURLY_CLOSE) {
+                    curlyBalance--;
+                } else if (LexerUtils.isDoubleArrow(ts.token())) {
+                    result = parenBalance == 0
+                            && bracketBalance == 0
+                            && curlyBalance == 0
+                            && commaCount == 1;
+                    break;
+                }
+                if (!ts.movePrevious()) {
+                    break;
+                }
+            }
+        }
+        ts.move(originalOffset);
+        ts.moveNext();
+        return result;
+    }
+
     /**
      *
      * @param ts
@@ -510,7 +953,7 @@ public class IndentationCounter {
         return retunValue;
     }
 
-    private boolean semicolonProceededByBreak(TokenSequence ts) {
+    private boolean semicolonProceededByBreak(TokenSequence<? extends PHPTokenId> ts) {
         boolean retunValue = false;
 
         if (ts.token().id() == PHPTokenId.PHP_BREAK) {
@@ -535,16 +978,60 @@ public class IndentationCounter {
         return retunValue;
     }
 
-    private ScopeDelimiter getScopeDelimiter(Token token) {
-        // TODO: more efficient impl
-        for (ScopeDelimiter scopeDelimiter : scopeDelimiters) {
-            if (scopeDelimiter.matches(token)) {
-                return scopeDelimiter;
-            }
-        }
-        return null;
+    @CheckForNull
+    private ScopeDelimiter getScopeDelimiter(Token<? extends PHPTokenId> token) {
+        return token != null ? scopeDelimiters.get(token.id()) : null;
     }
 
+    /**
+     * Check whether the token on the caret is an attribute close bracket for
+     * class, method/function, or feilds.
+     *
+     * @param ts the token sequence
+     * @return {@code true} if the token is an attribute close bracket,
+     * otherwise {@code false}
+     */
+    private boolean isAttributeCloseBracket(TokenSequence<? extends PHPTokenId> ts) {
+        int originalOffset = ts.offset();
+        boolean result = false;
+        Token<? extends PHPTokenId> findPrevious = LexUtilities.findPrevious(ts, Arrays.asList(PHPTokenId.WHITESPACE));
+        if (findPrevious != null && LexerUtils.isCloseBracket(findPrevious)) {
+            int balance = -1;
+            while (ts.movePrevious()) {
+                if (LexerUtils.isOpenBracket(ts.token())) {
+                    balance++;
+                } else if (LexerUtils.isCloseBracket(ts.token())) {
+                    balance--;
+                } else if (ts.token().id() == PHPTokenId.PHP_ATTRIBUTE) {
+                    balance++;
+                    if (balance == 0) {
+                        result = true;
+                    }
+                    break;
+                }
+                if (balance == 0) {
+                    break;
+                }
+            }
+        }
+        if (result) {
+            // check for non-whitespace tokens before an attribute of parameters, anonymous function/class
+            // not `ts.offset() - 1` but `ts.offset()` to avoid getting the start position of the previous line
+            int lineStart = LineDocumentUtils.getLineStart(doc, LineDocumentUtils.getLineStart(doc, ts.offset()));
+            while (ts.movePrevious() && ts.offset() >= lineStart) {
+                if (ts.token().id() != PHPTokenId.WHITESPACE) {
+                    result = false;
+                    break;
+                }
+            }
+        }
+
+        ts.move(originalOffset);
+        ts.moveNext();
+        return result;
+    }
+
+    //~ Inner classes
     private static class CodeB4BreakData {
         int expressionStartOffset;
         boolean processedByControlStmt;
@@ -566,7 +1053,7 @@ public class IndentationCounter {
             this.indentDelta = indentDelta;
         }
 
-        public boolean matches(Token token) {
+        public boolean matches(Token<? extends PHPTokenId> token) {
             if (tokenId != token.id()) {
                 return false;
             }
@@ -613,18 +1100,12 @@ public class IndentationCounter {
         @Override
         public void modify(final Context context) {
             assert  context != null;
-            context.document().render(new Runnable() {
-
-                @Override
-                public void run() {
-                    modifyUnderWriteLock(context);
-                }
-            });
+            context.document().render(() -> modifyUnderWriteLock(context));
         }
 
         private void modifyUnderWriteLock(Context context) {
             try {
-                context.modifyIndent(LineDocumentUtils.getLineStart((BaseDocument) context.document(), context.caretOffset()), indentation);
+                context.modifyIndent(LineDocumentUtils.getLineStartOffset((BaseDocument) context.document(), context.caretOffset()), indentation);
             } catch (BadLocationException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -633,4 +1114,3 @@ public class IndentationCounter {
     }
 
 }
-

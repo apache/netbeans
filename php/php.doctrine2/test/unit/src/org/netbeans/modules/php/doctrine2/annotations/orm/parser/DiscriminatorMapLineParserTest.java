@@ -170,4 +170,19 @@ public class DiscriminatorMapLineParserTest extends NbTestCase {
         assertEquals("Employee", type3);
     }
 
+    public void testValidUseCase_09() throws Exception {
+        AnnotationParsedLine parsedLine = parser.parse("\\Foo\\Bar\\discriminatormap({\"person\" = Person::class, \"employee\" = \"Employee::class\"})  \t");
+        assertEquals("DiscriminatorMap", parsedLine.getName());
+        assertEquals("({\"person\" = Person::class, \"employee\" = \"Employee::class\"})", parsedLine.getDescription());
+        Map<OffsetRange, String> types = parsedLine.getTypes();
+        assertNotNull(types);
+        assertEquals(3, types.size());
+        String type1 = types.get(new OffsetRange(0, 25));
+        assertEquals("\\Foo\\Bar\\discriminatormap", type1);
+        String type2 = types.get(new OffsetRange(38, 44));
+        assertEquals("Person", type2);
+        String type3 = types.get(new OffsetRange(67, 75));
+        assertEquals("Employee", type3);
+    }
+
 }

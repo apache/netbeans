@@ -49,6 +49,7 @@ public abstract class PositionRefresherHelper<V extends DocumentVersion> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected @CheckForNull V getUpToDateDocumentVersion(Context context, Document doc) {
         V oldVersion = (V) doc.getProperty(documentKey);
 

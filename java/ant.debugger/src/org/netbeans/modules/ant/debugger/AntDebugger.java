@@ -52,7 +52,6 @@ import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.text.Annotatable;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.TaskListener;
@@ -80,7 +79,7 @@ public class AntDebugger extends ActionsProviderSupport {
     private boolean                     actionRunning = false;
     private IOManager                   ioManager;
     private Object                      currentLine;
-    private LinkedList                  callStackList = new LinkedList();
+    private LinkedList                  callStackList = new LinkedList<>();
     private File                        currentFile;
     private String                      currentTargetName;
     private String                      currentTaskName;
@@ -106,7 +105,7 @@ public class AntDebugger extends ActionsProviderSupport {
             (null, DebuggerEngineProvider.class);
                 
         // init actions
-        for (Iterator it = actions.iterator(); it.hasNext(); ) {
+        for (Iterator<Object> it = actions.iterator(); it.hasNext(); ) {
             setEnabled (it.next(), true);
         }
                 
@@ -129,8 +128,8 @@ public class AntDebugger extends ActionsProviderSupport {
     
     // ActionsProvider .........................................................
     
-    private static final Set actions = new HashSet ();
-    private static final Set actionsToDisable = new HashSet ();
+    private static final Set<Object> actions = new HashSet<>();
+    private static final Set<Object> actionsToDisable = new HashSet<>();
     static {
         actions.add (ActionsManager.ACTION_KILL);
         actions.add (ActionsManager.ACTION_CONTINUE);
@@ -306,9 +305,8 @@ public class AntDebugger extends ActionsProviderSupport {
         updateUI();
         currentFile = event.getScriptLocation();
         // update variable values
-        Set properties = event.getPropertyNames ();
-        variables = (String[]) properties.toArray 
-            (new String [properties.size ()]);
+        Set<String> properties = event.getPropertyNames();
+        variables = properties.toArray(new String[0]);
         fireVariables ();
         fireWatches ();
         fireBreakpoints ();
@@ -397,7 +395,7 @@ public class AntDebugger extends ActionsProviderSupport {
         //updateTargetsByName(event.getScriptLocation());
         TargetLister.Target target = findTarget(targetName, event.getScriptLocation());
         
-        List originatingTargets = null;
+        List<TargetOriginating> originatingTargets = null;
         if (callStackList.size() > 0) {
             Object topFrame = callStackList.get(0);
             if (topFrame instanceof Task) {
@@ -419,7 +417,7 @@ public class AntDebugger extends ActionsProviderSupport {
                     callStackList.removeFirst();
                     originatingIndex--;
                 } else {
-                    List path = findPath (event.getScriptLocation(), start, targetName);
+                    List<TargetOriginating> path = findPath (event.getScriptLocation(), start, targetName);
                     if (path != null) {
                         callStackList.removeFirst();
                         originatingTargets = path;
@@ -434,7 +432,7 @@ public class AntDebugger extends ActionsProviderSupport {
                 if (start.equals(targetName)) {
                     continue;
                 }
-                List path = findPath (event.getScriptLocation(), start, targetName);
+                List<TargetOriginating> path = findPath (event.getScriptLocation(), start, targetName);
                 if (path != null) {
                     originatingTargets = path;
                     break;
@@ -600,7 +598,7 @@ public class AntDebugger extends ActionsProviderSupport {
         for (j = 0; j < jj; j++) {
             Object value = getVariableValue (ws [j].getExpression ());
             if (value == null) {
-                value = new Integer (0);
+                value = 0;
             }
             if ( watches.containsKey (ws [j].getExpression ()) &&
                  !watches.get (ws [j].getExpression ()).equals (value)
@@ -827,7 +825,7 @@ public class AntDebugger extends ActionsProviderSupport {
         return callStack;
     }
     
-    private LinkedList findPath (
+    private LinkedList<TargetOriginating> findPath (
         File file,
         String start,
         String end
@@ -837,7 +835,7 @@ public class AntDebugger extends ActionsProviderSupport {
             return null; // A non-existing target referenced
         }
         if (start.equals (end)) {
-            LinkedList ll = new LinkedList ();
+            LinkedList<TargetOriginating> ll = new LinkedList<>();
             ll.addFirst (new TargetOriginating(null, t));
             return ll;
         }
@@ -845,7 +843,7 @@ public class AntDebugger extends ActionsProviderSupport {
         StringTokenizer st = new StringTokenizer (depends, ",");
         while (st.hasMoreTokens ()) {
             String newStart = st.nextToken ().trim();
-            LinkedList ll = findPath (
+            LinkedList<TargetOriginating> ll = findPath (
                 file,
                 newStart,
                 end
@@ -853,7 +851,7 @@ public class AntDebugger extends ActionsProviderSupport {
             if (ll == null) {
                 continue;
             }
-            TargetOriginating to = (TargetOriginating) ll.getLast();
+            TargetOriginating to = ll.getLast();
             if (to.getOriginatingTarget() == null) {
                 to.setOriginatingTarget(t);
             } else {
@@ -869,16 +867,16 @@ public class AntDebugger extends ActionsProviderSupport {
     /**
      * File as a script location is a key. Values are maps of name to Target.
      */
-    private Map nameToTargetByFiles = new HashMap();
+    private Map<File, Map<String, TargetLister.Target>> nameToTargetByFiles = new HashMap<>();
     /**
      * File as a script location is a key, values are project names.
      */
-    private Map projectNamesByFiles = new HashMap();
+    private Map<File, String> projectNamesByFiles = new HashMap<>();
     
     private synchronized TargetLister.Target findTarget(String name, File file) {
-        Map nameToTarget = (Map) nameToTargetByFiles.get(file);
+        Map<String, TargetLister.Target> nameToTarget = nameToTargetByFiles.get(file);
         if (nameToTarget == null) {
-            nameToTarget = new HashMap ();
+            nameToTarget = new HashMap<>();
             FileObject fo = FileUtil.toFileObject(file);
             DataObject dob;
             try {
@@ -894,10 +892,10 @@ public class AntDebugger extends ActionsProviderSupport {
                     projectNamesByFiles.put(file, projName);
                 }
                 try {
-                    Set targets = TargetLister.getTargets (ant);
-                    Iterator it = targets.iterator ();
+                    Set<TargetLister.Target> targets = TargetLister.getTargets(ant);
+                    Iterator<TargetLister.Target> it = targets.iterator ();
                     while (it.hasNext ()) {
-                        TargetLister.Target t = (TargetLister.Target) it.next ();
+                        TargetLister.Target t = it.next();
                         nameToTarget.put (t.getName (), t);
                     }
                 } catch (IOException ioex) {
@@ -908,12 +906,12 @@ public class AntDebugger extends ActionsProviderSupport {
             }
             nameToTargetByFiles.put(file, nameToTarget);
         }
-        TargetLister.Target target = (TargetLister.Target) nameToTarget.get(name);
+        TargetLister.Target target = nameToTarget.get(name);
         if (target == null) {
-            String projName = (String) projectNamesByFiles.get(file);
+            String projName = projectNamesByFiles.get(file);
             if (name.startsWith(projName+".")) {
                 name = name.substring(projName.length() + 1);
-                target = (TargetLister.Target) nameToTarget.get(name);
+                target = nameToTarget.get(name);
             }
         }
         return target;

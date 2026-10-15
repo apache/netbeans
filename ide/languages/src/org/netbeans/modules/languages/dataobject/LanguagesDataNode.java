@@ -93,7 +93,7 @@ public class LanguagesDataNode extends DataNode {
                 ErrorManager.getDefault ().notify (ex);
             }
             if (!actions.isEmpty ())
-                mimeTypeToActions.put (mimeType, actions.toArray (new Action [actions.size ()]));
+                mimeTypeToActions.put (mimeType, actions.toArray (new Action [0]));
             else
                 mimeTypeToActions.put (mimeType, super.getActions (context));
         }

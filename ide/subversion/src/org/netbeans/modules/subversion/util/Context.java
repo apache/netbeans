@@ -124,11 +124,11 @@ public class Context implements Serializable {
      * @return files to operate on
      */ 
     public File [] getFiles() {
-        return filteredFiles.toArray(new File[filteredFiles.size()]);
+        return filteredFiles.toArray(new File[0]);
     }
 
     public File[] getRootFiles() {
-        return rootFiles.toArray(new File[rootFiles.size()]);
+        return rootFiles.toArray(new File[0]);
     }
     
     public boolean contains(File file) {

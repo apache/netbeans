@@ -22,11 +22,14 @@ package org.netbeans.modules.java.hints;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
+
 import java.util.EnumSet;
 import java.util.Set;
+
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
+
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.spi.editor.hints.ErrorDescription;
@@ -47,7 +50,9 @@ public class LoggerNotStaticFinal {
 
     @TriggerPatterns({
         @TriggerPattern(value="$mods$ java.util.logging.Logger $LOG;"), //NOI18N
-        @TriggerPattern(value="$mods$ java.util.logging.Logger $LOG = $init;") //NOI18N
+        @TriggerPattern(value="$mods$ java.util.logging.Logger $LOG = $init;"), //NOI18N
+        @TriggerPattern(value="$mods$ java.lang.System.Logger $LOG;"), //NOI18N
+        @TriggerPattern(value="$mods$ java.lang.System.Logger $LOG = $init;") //NOI18N
     })
     public static ErrorDescription checkLoggerDeclaration(HintContext ctx) {
         Element e = ctx.getInfo().getTrees().getElement(ctx.getPath());
@@ -86,11 +91,8 @@ public class LoggerNotStaticFinal {
             TreePath tp = ctx.getPath();
             VariableTree vt = (VariableTree) tp.getLeaf();
             ModifiersTree mt = vt.getModifiers();
-            Set<Modifier> modifiers = EnumSet.noneOf(Modifier.class);
-
+            Set<Modifier> modifiers = EnumSet.of(Modifier.FINAL, Modifier.STATIC);
             modifiers.addAll(mt.getFlags());
-            modifiers.add(Modifier.FINAL);
-            modifiers.add(Modifier.STATIC);
 
             ModifiersTree newMod = wc.getTreeMaker().Modifiers(modifiers, mt.getAnnotations());
 

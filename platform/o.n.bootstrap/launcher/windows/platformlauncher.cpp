@@ -24,6 +24,8 @@
 #include "platformlauncher.h"
 #include "argnames.h"
 
+volatile extern int exitStatus;
+
 using namespace std;
 
 const char *PlatformLauncher::HELP_MSG =
@@ -482,6 +484,15 @@ bool PlatformLauncher::shouldAutoUpdate(bool firstStart, const char *basePath) {
         }
 
         path = basePath;
+        path += "\\update\\deactivate\\to_enable.txt";
+        hFind = FindFirstFile(path.c_str(), &fd);
+        if (hFind != INVALID_HANDLE_VALUE) {
+            logMsg("to_enable.txt found: %s", path.c_str());
+            FindClose(hFind);
+            return true;
+        }
+
+        path = basePath;
         path += "\\update\\deactivate\\to_uninstall.txt";
         hFind = FindFirstFile(path.c_str(), &fd);
         if (hFind != INVALID_HANDLE_VALUE) {
@@ -566,6 +577,7 @@ void PlatformLauncher::prepareOptions() {
     
     option = OPT_KEEP_WORKING_SET_ON_MINIMIZE;
     javaOptions.push_back(option);
+
 }
 
 string & PlatformLauncher::constructClassPath(bool runUpdater) {
@@ -662,6 +674,10 @@ bool PlatformLauncher::restartRequested() {
 
 void PlatformLauncher::onExit() {
     logMsg("onExit()");
+    if (exitStatus == -252) {
+        logMsg("Exiting from CLI client, will not restart.");
+        return;
+    }
     
     if (exiting) {
         logMsg("Already exiting, no need to schedule restart");
@@ -714,7 +730,8 @@ void PlatformLauncher::onExit() {
         STARTUPINFO si = {0};
         PROCESS_INFORMATION pi = {0};
         si.cb = sizeof(STARTUPINFO);
-        if (!CreateProcess(NULL, cmdLineStr, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
+
+        if (!CreateProcess(NULL, cmdLineStr, NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi)) {
             logErr(true, true, "Failed to create process.");
             return;
         }

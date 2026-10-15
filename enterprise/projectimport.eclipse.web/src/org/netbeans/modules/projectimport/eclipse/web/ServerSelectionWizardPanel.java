@@ -88,8 +88,8 @@ public class ServerSelectionWizardPanel implements WizardDescriptor.Panel<Wizard
     private void fireChange() {
         if (changeListeners != null) {
             ChangeEvent e = new ChangeEvent(this);
-            for (Iterator i = changeListeners.iterator(); i.hasNext(); ) {
-                ((ChangeListener) i.next()).stateChanged(e);
+            for (Iterator<ChangeListener> i = changeListeners.iterator(); i.hasNext(); ) {
+                i.next().stateChanged(e);
             }
         }
     }

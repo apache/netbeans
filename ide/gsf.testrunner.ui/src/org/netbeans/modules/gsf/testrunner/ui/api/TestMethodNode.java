@@ -210,7 +210,7 @@ public class TestMethodNode extends AbstractNode {
 		});
 	    }
 	}
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
     
     @Override
@@ -250,7 +250,7 @@ public class TestMethodNode extends AbstractNode {
     
     private static final class DisplayNameMapper {
         
-        private final static Logger LOG = Logger.getLogger(TestMethodNode.class.getName());
+        private static final Logger LOG = Logger.getLogger(TestMethodNode.class.getName());
 
         @NbBundle.Messages({
             "MSG_TestMethodPassed_HTML_cause=passed",

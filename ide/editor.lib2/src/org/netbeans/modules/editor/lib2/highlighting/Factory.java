@@ -97,7 +97,7 @@ public class Factory implements HighlightsLayerFactory {
             new CaretOverwriteModeHighlighting(context.getComponent()))
         );
 
-        return layers.toArray(new HighlightsLayer [layers.size()]);
+        return layers.toArray(new HighlightsLayer[0]);
     }
     
 }

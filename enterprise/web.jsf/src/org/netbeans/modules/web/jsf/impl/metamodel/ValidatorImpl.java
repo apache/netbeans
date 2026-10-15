@@ -65,7 +65,12 @@ class ValidatorImpl extends FacesValidatorImpl implements Validator, Refreshable
             getHelper().getAnnotationsByType(getHelper().getCompilationController()
                     .getElements().getAllAnnotationMirrors( type));
         AnnotationMirror annotationMirror = types.get(
-                "javax.faces.validator.FacesValidator");        // NOI18N
+                "jakarta.faces.validator.FacesValidator");        // NOI18N
+        if (annotationMirror == null) {
+            annotationMirror = types.get(
+                    "javax.faces.validator.FacesValidator");        // NOI18N
+
+        }
         if (annotationMirror == null) {
             return false;
         }

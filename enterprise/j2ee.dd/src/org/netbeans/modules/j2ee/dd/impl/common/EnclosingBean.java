@@ -17,13 +17,6 @@
  * under the License.
  */
 
-/**
- * Superclass for most s2b beans that provides useful methods for creating and finding beans
- * in bean graph.
- *
- * @author  Milan Kuchtiak
- */
-
 package org.netbeans.modules.j2ee.dd.impl.common;
 
 import java.io.OutputStream;
@@ -36,6 +29,13 @@ import org.netbeans.modules.j2ee.dd.api.common.FindCapability;
 import org.netbeans.modules.j2ee.dd.api.common.RootInterface;
 import org.openide.filesystems.FileLock;
 
+
+/**
+ * Superclass for most s2b beans that provides useful methods for creating and finding beans
+ * in bean graph.
+ *
+ * @author  Milan Kuchtiak
+ */
 public abstract class EnclosingBean extends BaseBean implements CommonDDBean, CreateCapability, FindCapability {
     
     private Object original = this;
@@ -79,16 +79,9 @@ public abstract class EnclosingBean extends BaseBean implements CommonDDBean, Cr
      */
     public void write(org.openide.filesystems.FileObject fo) throws java.io.IOException {
         // TODO: need to be implemented with Dialog opened when the file object is locked
-        FileLock lock = fo.lock();
-        try {
-            OutputStream os = fo.getOutputStream(lock);
-            try {
-                write(os);
-            } finally {
-                os.close();
-            }
-        } finally {
-            lock.releaseLock();
+        try (FileLock lock = fo.lock();
+                OutputStream os = fo.getOutputStream(lock)) {
+            write(os);
         }
     }
     
@@ -97,12 +90,12 @@ public abstract class EnclosingBean extends BaseBean implements CommonDDBean, Cr
             Object keyValue = null;
             if (propertyNames!=null)
                 for (int i=0;i<propertyNames.length;i++) {
-                if (keyProperty.equals(propertyNames[i])) {
-                    keyValue=propertyValues[i];
-                    break;
+                    if (keyProperty.equals(propertyNames[i])) {
+                        keyValue=propertyValues[i];
+                        break;
+                    }
                 }
-                }
-            if (keyValue!=null && keyValue instanceof String) {
+            if (keyValue instanceof String) {
                 if (findBeanByName(beanName, keyProperty,(String)keyValue)!=null) {
                     throw new NameAlreadyUsedException(beanName,  keyProperty, (String)keyValue);
                 }

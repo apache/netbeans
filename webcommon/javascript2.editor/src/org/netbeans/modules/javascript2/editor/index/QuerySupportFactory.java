@@ -38,7 +38,7 @@ public class QuerySupportFactory implements org.netbeans.modules.javascript2.mod
         try {
             return QuerySupport.forRoots(JsIndexer.Factory.NAME,
                     JsIndexer.Factory.VERSION,
-                    roots.toArray(new FileObject[roots.size()]));
+                    roots.toArray(new FileObject[0]));
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }

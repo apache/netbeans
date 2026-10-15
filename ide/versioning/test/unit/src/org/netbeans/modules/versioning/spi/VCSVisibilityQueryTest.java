@@ -27,7 +27,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.event.ChangeListener;
-import junit.framework.Assert;
 import org.netbeans.api.queries.VisibilityQuery;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.versioning.spi.testvcs.TestVCS;
@@ -98,9 +97,9 @@ public class VCSVisibilityQueryTest extends NbTestCase {
         VisibilityQuery.getDefault().addChangeListener(list = new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent ce) {
-                Assert.assertTrue(ce instanceof VisibilityQueryChangeEvent);
+                assertTrue(ce instanceof VisibilityQueryChangeEvent);
                 FileObject[] fos = ((VisibilityQueryChangeEvent)ce).getFileObjects();
-                Assert.assertEquals(2, fos.length);
+                assertEquals(2, fos.length);
                 received.add(fos[0].getName());
                 received.add(fos[1].getName());
             }

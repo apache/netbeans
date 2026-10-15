@@ -174,6 +174,7 @@ public class FileEditor extends PropertyEditorSupport implements ExPropertyEdito
     /** Returns human readable form of the edited value.
      * @return string reprezentation
      */
+    @Override
     public String getAsText() {
         File file = (File)getValue();
         if (file == null) {
@@ -190,6 +191,7 @@ public class FileEditor extends PropertyEditorSupport implements ExPropertyEdito
      * @param str string reprezentation of the file (used as a parameter for File).
      * @throws IllegalArgumentException If the given string cannot be parsed
      */
+    @Override
     public void setAsText(String str) throws IllegalArgumentException {
         if (str == null) {
             throw new IllegalArgumentException("null"); // NOI18N
@@ -206,6 +208,7 @@ public class FileEditor extends PropertyEditorSupport implements ExPropertyEdito
     /** Custon editor.
      * @return Returns custom editor component.
      */
+    @Override
     public Component getCustomEditor() {
         if (!editable) {
             String info = "";
@@ -265,6 +268,7 @@ public class FileEditor extends PropertyEditorSupport implements ExPropertyEdito
     /** Implements PropertyEditor method.
      * @return Returns true.
      */
+    @Override
     public boolean supportsCustomEditor() {
         return true;
     }
@@ -272,6 +276,7 @@ public class FileEditor extends PropertyEditorSupport implements ExPropertyEdito
     /** Should create a string insertable to the newly generated source code.
      * @return initialization string
      */
+    @Override
     public String getJavaInitializationString() {
         File value = (File) getValue ();
         if (value == null) {

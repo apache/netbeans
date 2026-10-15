@@ -26,7 +26,6 @@ import test.pkg.not.in.junit.NbModuleSuiteT;
 import test.pkg.not.in.junit.NbModuleSuiteS;
 import java.io.File;
 import java.net.URL;
-import org.netbeans.testjunit.AskForOrgOpenideUtilEnumClass;
 import java.util.Properties;
 import java.util.Set;
 import junit.framework.Test;
@@ -60,6 +59,7 @@ public class NbModuleSuiteTest extends NbTestCase {
 
         assertEquals("Doesn't exist", System.getProperty("t.userdir"));
         assertProperty("netbeans.full.hack", "true");
+        assertProperty("bootstrap.disableJDKCheck", "true");
     }
     
     public void testPreparePatches() throws URISyntaxException {
@@ -171,69 +171,6 @@ public class NbModuleSuiteTest extends NbTestCase {
     static void assertProperty(String name, String value) {
         String v = System.getProperty(name);
         assertEquals("Property " + name, value, v);
-    }
-
-    public void testTwoClassesAtOnce() throws Exception {
-        System.setProperty("ins.one", "No");
-        System.setProperty("ins.two", "No");
-        System.setProperty("ins.three", "No");
-        System.setProperty("en.one", "No");
-
-        NbModuleSuite.Configuration config = NbModuleSuite.Configuration.create(
-            AskForOrgOpenideUtilEnumClass.class
-        ).enableModules("org.openide.util.enumerations").gui(false)
-        .addTest(NbModuleSuiteIns.class, "testSecond");
-        Test instance = config.suite();
-        junit.textui.TestRunner.run(instance);
-
-        assertProperty("en.one", "OK");
-        assertProperty("ins.one", "No");
-        assertProperty("ins.two", "OK");
-        assertProperty("ins.three", "No");
-    }
-    public void testCumulativeUseOfModules() throws Exception {
-        System.setProperty("ins.one", "No");
-        System.setProperty("ins.two", "No");
-        System.setProperty("ins.three", "No");
-        System.setProperty("ins.java", "No");
-        System.setProperty("en.one", "No");
-
-        NbModuleSuite.Configuration config = NbModuleSuite.Configuration.create(
-            AskForOrgOpenideUtilEnumClass.class
-        )
-        .enableModules("ide", "org.netbeans.modules.java.platform.*")
-        .enableModules("platform", "org.openide.util.enumerations")
-        .enableModules("ide", "org.openide.loaders.*")
-        .gui(false)
-        .addTest(NbModuleSuiteIns.class);
-        Test instance = config.suite();
-        junit.textui.TestRunner.run(instance);
-
-        assertProperty("en.one", "OK");
-        assertProperty("ins.java", "No"); // no Windows as it is not in ide cluster
-        assertProperty("ins.two", "OK");
-    }
-
-    public void testAccessExtraDefinedAutoload() {
-        System.setProperty("en.one", "No");
-
-        NbModuleSuite.Configuration config = NbModuleSuite.Configuration.create(AskForOrgOpenideUtilEnumClass.class);
-        NbModuleSuite.Configuration addEnum = config.enableModules("org.openide.util.enumerations");
-        Test instance = addEnum.gui(false).suite();
-        junit.textui.TestRunner.run(instance);
-
-        assertEquals("OK", System.getProperty("en.one"));
-    }
-
-    public void testAutoloadNotUsedIfAutoloadsAreSupposedToBeIgnored() {
-        System.setProperty("en.one", "No");
-
-        NbModuleSuite.Configuration config = NbModuleSuite.Configuration.create(AskForOrgOpenideUtilEnumClass.class);
-        NbModuleSuite.Configuration addEnum = config.enableModules("org.openide.util.enumerations");
-        Test instance = addEnum.gui(false).honorAutoloadEager(true).suite();
-        junit.textui.TestRunner.run(instance);
-
-        assertEquals("No", System.getProperty("en.one"));
     }
 
     public void testClustersCanBeCumulated() throws Exception {

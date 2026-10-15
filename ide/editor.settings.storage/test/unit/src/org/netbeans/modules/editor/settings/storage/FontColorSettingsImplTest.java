@@ -80,6 +80,19 @@ public class FontColorSettingsImplTest extends NbTestCase {
         checkSingleAttribute(mimePath, "test-inheritance-coloring-Y", StyleConstants.Background, 0xBB0000);
     }
 
+    public void testDefaults2() {
+        MimePath mimePath = MimePath.parse("text/x-type-B6");
+
+        checkSingleAttribute(mimePath, "test-inheritance-coloring-1", StyleConstants.Background, 0xAA0000);
+        checkSingleAttribute(mimePath, "test-inheritance-coloring-2", StyleConstants.Background, 0xAA0000);
+
+        checkSingleAttribute(mimePath, "test-inheritance-coloring-A", StyleConstants.Background, 0xABCDEF);
+        checkSingleAttribute(mimePath, "test-inheritance-coloring-B", StyleConstants.Background, 0xABCDEF);
+
+        checkSingleAttribute(mimePath, "test-inheritance-coloring-X", StyleConstants.Background, 0xBB0000);
+        checkSingleAttribute(mimePath, "test-inheritance-coloring-Y", StyleConstants.Background, 0xBB0000);
+    }
+
     public void testAllLanguagesTheCrapWay() {
         Collection<AttributeSet> colorings = EditorSettings.getDefault().getFontColorSettings(new String[0]).getAllFontColors(EditorSettingsImpl.DEFAULT_PROFILE);
         assertNotNull("Can't get colorings for all languages", colorings);

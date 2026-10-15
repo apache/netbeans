@@ -21,6 +21,7 @@ package org.netbeans.modules.autoupdate.services;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import org.netbeans.api.autoupdate.UpdateUnit;
 import org.netbeans.junit.RandomlyFails;
@@ -69,7 +70,7 @@ public class InstallDisabledModuleTest extends OperationsTestImpl {
                 "   <param name='specversion'>1.0</param>\n" +
                 "</module>\n" +
                 "\n";
-        os.write(cfg.getBytes("UTF-8"));
+        os.write(cfg.getBytes(StandardCharsets.UTF_8));
         os.close();
         LOG.info("Config file created");
 

@@ -1,0 +1,6 @@
+Code completion result for source line:
+#[Attr|1(int: CONST_ATTRIBUTES_TEST1, bool: Attr2::CONST_ATTR2)]
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTRUCTO Attr1                           [PUBLIC]   Attributes\Test1
+CONSTRUCTO Attr1(int $int, bool $bool)     [PUBLIC]   Attributes\Test1
+PACKAGE    Attributes                      [PUBLIC]   null

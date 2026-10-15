@@ -21,13 +21,18 @@ package org.netbeans.modules.extbrowser.chrome;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.netbeans.modules.extbrowser.ExtBrowserImpl;
 import org.netbeans.modules.extbrowser.PrivateBrowserFamilyId;
 import org.netbeans.modules.extbrowser.plugins.*;
@@ -53,6 +58,8 @@ import org.openide.util.lookup.ProxyLookup;
  * done in Chrome's Developer Tools.
  */
 public class ChromeBrowserImpl extends HtmlBrowser.Impl implements EnhancedBrowser {
+
+    private static final Logger LOG = Logger.getLogger(ChromeBrowserImpl.class.getName());
 
     /** Lookup of this {@code HtmlBrowser.Impl}.  */
     private Lookup lookup;
@@ -133,7 +140,7 @@ public class ChromeBrowserImpl extends HtmlBrowser.Impl implements EnhancedBrows
             lookups.add(Lookups.fixed(transport,
                     Factory.createWebKitDebugging(transport)));
         }
-        return new ProxyLookup(lookups.toArray(new Lookup[lookups.size()]));
+        return new ProxyLookup(lookups.toArray(new Lookup[0]));
     }
     
     /** Dummy implementations */
@@ -295,16 +302,20 @@ public class ChromeBrowserImpl extends HtmlBrowser.Impl implements EnhancedBrows
         }
         this.url = url;
     }
-    
+
     private URL createBlankHTMLPage() {
         try {
-            File f = File.createTempFile("blank", ".html");
-            FileWriter fw = new FileWriter(f);
-            fw.write("<html :netbeans_temporary=\"true\"></html>");
-            fw.close();
-            return f.toURI().toURL();
+            Path tempPath = Files.createTempFile("blank", ".html");
+            try(OutputStream os = Files.newOutputStream(tempPath);
+                OutputStreamWriter osw = new OutputStreamWriter(os, StandardCharsets.UTF_8)) {
+                osw.write("<html :netbeans_temporary=\"true\"></html>");
+            }
+            // The call to toRealPath ensures, that symlinks are resolved. It
+            // was observed, that chrome on macOS reports the file url with
+            // symlinks resolved, so align with that.
+            return tempPath.toRealPath().toUri().toURL();
         } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
+            LOG.log(Level.INFO, "Failed to create blank page for chrome", ex);
         }
         return null;
     }

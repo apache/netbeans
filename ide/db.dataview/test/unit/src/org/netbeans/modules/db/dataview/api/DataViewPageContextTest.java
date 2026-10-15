@@ -18,8 +18,6 @@
  */
 package org.netbeans.modules.db.dataview.api;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 import org.netbeans.junit.NbTestCase;
 
 /**

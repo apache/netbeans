@@ -19,7 +19,7 @@
 
 package org.netbeans.modules.groovy.editor.completion;
 
-import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import org.codehaus.groovy.ast.ModuleNode;
 import org.codehaus.groovy.ast.Variable;
@@ -36,7 +36,7 @@ import org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext;
 public class LocalVarCompletion extends BaseCompletion {
 
     @Override
-    public boolean complete(List<CompletionProposal> proposals, CompletionContext request, int anchor) {
+    public boolean complete(Map<Object, CompletionProposal> proposals, CompletionContext request, int anchor) {
         LOG.log(Level.FINEST, "-> completeLocalVars"); // NOI18N
 
         if (!(request.location == CaretLocation.INSIDE_CLOSURE || request.location == CaretLocation.INSIDE_METHOD)
@@ -73,10 +73,10 @@ public class LocalVarCompletion extends BaseCompletion {
             LOG.log(Level.FINEST, "Node found: {0}", varName); // NOI18N
 
             if (varPrefix.length() < 1) {
-                proposals.add(new CompletionItem.LocalVarItem(node, anchor + anchorShift));
+                proposals.put("local:" + varName, new CompletionItem.LocalVarItem(node, anchor + anchorShift));
                 updated = true;
             } else if (!varName.equals(varPrefix) && varName.startsWith(varPrefix)) {
-                proposals.add(new CompletionItem.LocalVarItem(node, anchor + anchorShift));
+                proposals.put("local:" + varName, new CompletionItem.LocalVarItem(node, anchor + anchorShift));
                 updated = true;
             }
         }

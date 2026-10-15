@@ -66,7 +66,7 @@ public abstract class XmlMultiViewDataObject extends MultiDataObject implements 
     private final DataCache dataCache = new DataCache();
     private EncodingHelper encodingHelper = new EncodingHelper();
     private transient long timeStamp = 0;
-    private transient WeakReference lockReference;
+    private transient WeakReference<FileLock> lockReference;
     
     
     private MultiViewElement activeMVElement;
@@ -202,7 +202,7 @@ public abstract class XmlMultiViewDataObject extends MultiDataObject implements 
     public boolean canClose() {
         final CloneableTopComponent topComponent = ((CloneableTopComponent) getEditorSupport().getMVTC());
         if (topComponent != null){
-            Enumeration enumeration = topComponent.getReference().getComponents();
+            Enumeration<CloneableTopComponent> enumeration = topComponent.getReference().getComponents();
             if (enumeration.hasMoreElements()) {
                 enumeration.nextElement();
                 if (enumeration.hasMoreElements()) {
@@ -434,9 +434,9 @@ public abstract class XmlMultiViewDataObject extends MultiDataObject implements 
             if (setData(s)) {
                 if (!modified) {
                     saveData(lock);
-                    firePropertyChange(PROPERTY_DATA_UPDATED, new Long(oldTimeStamp), new Long(timeStamp));
+                    firePropertyChange(PROPERTY_DATA_UPDATED, oldTimeStamp, timeStamp);
                 } else {
-                    firePropertyChange(PROPERTY_DATA_MODIFIED, new Long(oldTimeStamp), new Long(timeStamp));
+                    firePropertyChange(PROPERTY_DATA_MODIFIED, oldTimeStamp, timeStamp);
                 }
             } 
         }
@@ -497,14 +497,14 @@ public abstract class XmlMultiViewDataObject extends MultiDataObject implements 
                     throw new FileAlreadyLockedException("File is already locked by [" + current + "]."); // NO18N
                 }
                 FileLock l = new FileLock();
-                lockReference = new WeakReference(l);
+                lockReference = new WeakReference<>(l);
                 return l;
             }
         }
         
         private synchronized FileLock getLock() {
             // How this week reference can be useful ?
-            FileLock l = lockReference == null ? null : (FileLock) lockReference.get();
+            FileLock l = lockReference == null ? null : lockReference.get();
             if (l != null && !l.isValid()) {
                 l = null;
             }

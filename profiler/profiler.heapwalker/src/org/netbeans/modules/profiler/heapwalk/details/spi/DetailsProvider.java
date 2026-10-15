@@ -55,7 +55,7 @@ public abstract class DetailsProvider {
     }
     
     
-    public static abstract class Basic extends DetailsProvider {
+    public abstract static class Basic extends DetailsProvider {
         
         private final String[] supportedClasses;
         
@@ -76,7 +76,7 @@ public abstract class DetailsProvider {
     }
     
     
-    public static abstract class View extends JPanel {
+    public abstract static class View extends JPanel {
         
         private RequestProcessor.Task workerTask;
         private Instance instance;

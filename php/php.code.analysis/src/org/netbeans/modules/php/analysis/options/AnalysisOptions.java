@@ -25,6 +25,7 @@ import org.netbeans.modules.php.analysis.commands.CodeSniffer;
 import org.netbeans.modules.php.analysis.commands.CodingStandardsFixer;
 import org.netbeans.modules.php.analysis.commands.MessDetector;
 import org.netbeans.modules.php.analysis.commands.PHPStan;
+import org.netbeans.modules.php.analysis.commands.Psalm;
 import org.netbeans.modules.php.analysis.util.AnalysisUtils;
 import org.netbeans.modules.php.api.util.FileUtils;
 import org.openide.util.NbPreferences;
@@ -43,6 +44,8 @@ public final class AnalysisOptions {
     // mess detector
     private static final String MESS_DETECTOR_PATH = "messDetector.path"; // NOI18N
     private static final String MESS_DETECTOR_RULE_SETS = "messDetector.ruleSets"; // NOI18N
+    private static final String MESS_DETECTOR_RULE_SET_FILE = "messDetector.ruleSetFile"; // NOI18N
+    private static final String MESS_DETECTOR_OPTIONS = "messDetector.options"; // NOI18N
     // coding standards fixer
     private static final String CODING_STANDARDS_FIXER_VERSION = "codingStandardsFixer.version"; // NOI18N
     private static final String CODING_STANDARDS_FIXER_PATH = "codingStandardsFixer.path"; // NOI18N
@@ -55,12 +58,20 @@ public final class AnalysisOptions {
     private static final String PHPSTAN_CONFIGURATION = "phpstan.configuration"; // NOI18N
     private static final String PHPSTAN_MEMORY_LIMIT = "phpstan.memory.limit"; // NOI18N
     public static final int PHPSTAN_MIN_LEVEL = Integer.getInteger("nb.phpstan.min.level", 0); // NOI18N
-    public static final int PHPSTAN_MAX_LEVEL = Integer.getInteger("nb.phpstan.max.level", 7); // NOI18N
+    public static final int PHPSTAN_MAX_LEVEL = Integer.getInteger("nb.phpstan.max.level", 10); // NOI18N
+    // Psalm - PHP Static Analysis Tool
+    private static final String PSALM_PATH = "psalm.path"; // NOI18N
+    private static final String PSALM_LEVEL = "psalm.level"; // NOI18N
+    private static final String PSALM_CONFIGURATION = "psalm.configuration"; // NOI18N
+    private static final String PSALM_MEMORY_LIMIT = "psalm.memory.limit"; // NOI18N
+    public static final int PSALM_MIN_LEVEL = Integer.getInteger("nb.psalm.min.level", 1); // NOI18N
+    public static final int PSALM_MAX_LEVEL = Integer.getInteger("nb.psalm.max.level", 8); // NOI18N
 
     private volatile boolean codeSnifferSearched = false;
     private volatile boolean messDetectorSearched = false;
     private volatile boolean codingStandardsFixerSearched = false;
     private volatile boolean phpstanSearched = false;
+    private volatile boolean psalmSearched = false;
 
     private AnalysisOptions() {
     }
@@ -130,6 +141,24 @@ public final class AnalysisOptions {
 
     public void setMessDetectorRuleSets(List<String> ruleSets) {
         getPreferences().put(MESS_DETECTOR_RULE_SETS, AnalysisUtils.serialize(ruleSets));
+    }
+
+    @CheckForNull
+    public String getMessDetectorRuleSetFilePath() {
+        return getPreferences().get(MESS_DETECTOR_RULE_SET_FILE, null);
+    }
+
+    public void setMessDetectorRuleSetFilePath(String ruleSetFilePath) {
+        getPreferences().put(MESS_DETECTOR_RULE_SET_FILE, ruleSetFilePath);
+    }
+
+    @CheckForNull
+    public String getMessDetectorOptions() {
+        return getPreferences().get(MESS_DETECTOR_OPTIONS, null);
+    }
+
+    public void setMessDetectorOptions(String options) {
+        getPreferences().put(MESS_DETECTOR_OPTIONS, options);
     }
 
     // coding standards fixer
@@ -252,6 +281,61 @@ public final class AnalysisOptions {
 
     private Preferences getPreferences() {
         return NbPreferences.forModule(AnalysisOptions.class).node(PREFERENCES_PATH);
+    }
+
+    // psalm
+    @CheckForNull
+    public String getPsalmPath() {
+        String psalmPath = getPreferences().get(PSALM_PATH, null);
+        if (psalmPath == null && !psalmSearched) {
+            psalmSearched = true;
+            List<String> scripts = FileUtils.findFileOnUsersPath(Psalm.NAME, Psalm.LONG_NAME);
+            if (!scripts.isEmpty()) {
+                psalmPath = scripts.get(0);
+                setMessDetectorPath(psalmPath);
+            }
+        }
+        return psalmPath;
+    }
+
+    public void setPsalmPath(String path) {
+        getPreferences().put(PSALM_PATH, path);
+    }
+
+    public String getPsalmLevel() {
+        String level = getPreferences().get(PSALM_LEVEL, String.valueOf(PSALM_MIN_LEVEL));
+        return getValidPsalmLevel(level);
+    }
+
+    public void setPsalmLevel(String level) {
+        getPreferences().put(PSALM_LEVEL, getValidPsalmLevel(level));
+    }
+
+    public static String getValidPsalmLevel(String level) {
+        String psalmLevel;
+        try {
+            psalmLevel = String.valueOf(AnalysisUtils.getValidInt(PSALM_MIN_LEVEL, PSALM_MAX_LEVEL, Integer.valueOf(level)));
+        } catch (NumberFormatException e) {
+            psalmLevel = level;
+        }
+        return psalmLevel;
+    }
+
+    @CheckForNull
+    public String getPsalmConfigurationPath() {
+        return getPreferences().get(PSALM_CONFIGURATION, null);
+    }
+
+    public void setPsalmConfigurationPath(String configuration) {
+        getPreferences().put(PSALM_CONFIGURATION, configuration);
+    }
+
+    public String getPsalmMemoryLimit() {
+        return getPreferences().get(PSALM_MEMORY_LIMIT, ""); // NOI18N
+    }
+
+    public void setPsalmMemoryLimit(String memoryLimit) {
+        getPreferences().put(PSALM_MEMORY_LIMIT, memoryLimit);
     }
 
 }

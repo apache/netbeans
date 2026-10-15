@@ -77,12 +77,11 @@ public final class NodeJsPreferencesValidator {
         return this;
     }
 
-    public NodeJsPreferencesValidator validateCustomizer(boolean enabled, boolean defaultNode, String node, String nodeSources, int debugPort) {
+    public NodeJsPreferencesValidator validateCustomizer(boolean enabled, boolean defaultNode, String node, String nodeSources) {
         if (!enabled) {
             return this;
         }
         validateNode(defaultNode, node, nodeSources);
-        validateDebugPort(debugPort);
         return this;
     }
 

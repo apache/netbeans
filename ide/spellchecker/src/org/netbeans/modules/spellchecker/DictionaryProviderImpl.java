@@ -25,6 +25,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -117,7 +118,7 @@ public class DictionaryProviderImpl implements DictionaryProvider {
 
         hardcoded.removeAll(maskedHardcoded);
         hardcoded.addAll(user);
-        return hardcoded.toArray(new Locale[hardcoded.size()]);
+        return hardcoded.toArray(new Locale[0]);
     }
     
     private synchronized Dictionary createDictionary(Locale locale) {
@@ -162,7 +163,7 @@ public class DictionaryProviderImpl implements DictionaryProvider {
             file = InstalledFileLocator.getDefault().locate("modules/dict/dictionary" + currentSuffix + ".description", cnb, false);
 
             if (file != null && InstalledFileLocator.getDefault().locate("modules/dict/dictionary" + currentSuffix + ".description_hidden", null, false) == null) {
-                BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+                BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
 
                 try {
                     String line;

@@ -48,6 +48,7 @@ public class J2eeModuleFactory {
      * @return J2eeModule API instance.
      * @deprecated use {@link #createJ2eeApplication(org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeApplicationImplementation2)}
      */
+    @Deprecated
     public static J2eeModule createJ2eeModule(J2eeModuleImplementation impl) {
         if (impl == null) {
             throw new NullPointerException();
@@ -77,6 +78,7 @@ public class J2eeModuleFactory {
      * @return J2eJ2eeApplicationI instance.
      * @deprecated use {@link #createJ2eeApplication(org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeApplicationImplementation2)}
      */
+    @Deprecated
     public static J2eeApplication createJ2eeApplication(J2eeApplicationImplementation impl) {
         if (impl == null) {
             throw new NullPointerException();

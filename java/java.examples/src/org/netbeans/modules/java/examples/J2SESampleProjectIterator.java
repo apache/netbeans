@@ -20,6 +20,7 @@
 package org.netbeans.modules.java.examples;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.swing.JComponent;
@@ -77,7 +78,7 @@ public class J2SESampleProjectIterator implements WizardDescriptor.AsynchronousI
         }
         String name = displayName;
         if (name != null) {
-            name = name.replaceAll(" ", ""); //NOI18N
+            name = name.replace(" ", ""); //NOI18N
         }
         templateWizard.putProperty (WizardProperties.NAME, name);        
         basicPanel = new PanelConfigureProject(displayName);
@@ -99,7 +100,7 @@ public class J2SESampleProjectIterator implements WizardDescriptor.AsynchronousI
         FileObject prjLoc = J2SESampleProjectGenerator.createProjectFromTemplate(
                               templateFO, projectLocation, name);
 
-        java.util.Set set = new java.util.HashSet();
+        Set<DataObject> set = new HashSet<>();
         set.add(DataObject.find(prjLoc));
 
         // open file from the project specified in the "defaultFileToOpen" attribute
@@ -142,7 +143,7 @@ public class J2SESampleProjectIterator implements WizardDescriptor.AsynchronousI
             NbBundle.getMessage(PanelConfigureProject.class, "LBL_NWP1_ProjectTitleName"), // NOI18N
         };
         component.putClientProperty (WizardDescriptor.PROP_CONTENT_DATA, list); // NOI18N
-        component.putClientProperty (WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer (currentIndex)); // NOI18N
+        component.putClientProperty (WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, currentIndex); // NOI18N
     }
     
 }

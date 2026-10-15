@@ -37,7 +37,7 @@ public interface PaintersModel {
     public void removePaintersListener(PaintersListener listener);
 
 
-    public static abstract class Abstract implements PaintersModel {
+    public abstract static class Abstract implements PaintersModel {
 
         private List<PaintersListener> listeners;
 
@@ -76,7 +76,7 @@ public interface PaintersModel {
 
 
         public Default() {
-            painters = new HashMap();
+            painters = new HashMap<>();
         }
 
         public Default(ChartItem[] items, ItemPainter[] painters) {

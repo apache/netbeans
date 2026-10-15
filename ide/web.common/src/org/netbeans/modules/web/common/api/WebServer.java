@@ -339,7 +339,7 @@ public final class WebServer {
                         try {
                             out.writeBytes("HTTP/1.1 200 OK\nContent-Length: "+fo.getSize()+"\n" //NOI18N
                                     + "Content-Type: "+mime+"\n\n"); //NOI18N
-                            FileUtil.copy(fis, out);
+                            fis.transferTo(out);
                         } catch (SocketException se) {
                             // browser refused to accept data or closed the connection;
                             // not much we can do about this

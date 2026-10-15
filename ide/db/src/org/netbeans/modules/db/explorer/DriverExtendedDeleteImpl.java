@@ -108,7 +108,7 @@ public class DriverExtendedDeleteImpl {
             title = NbBundle.getMessage (DriverExtendedDeleteImpl.class, "MSG_ConfirmDeleteDriverTitle"); // NOI18N
         } else {
             String format = NbBundle.getMessage (DriverExtendedDeleteImpl.class, "MSG_ConfirmDeleteDrivers"); // NOI18N
-            message = MessageFormat.format(format, new Object[] { new Integer(jdbcDrivers.length) });
+            message = MessageFormat.format(format, new Object[] { Integer.valueOf(jdbcDrivers.length) });
             title = NbBundle.getMessage (DriverExtendedDeleteImpl.class, "MSG_ConfirmDeleteDriversTitle"); // NOI18N
         }
         return DialogDisplayer.getDefault().notify(new NotifyDescriptor.Confirmation(message, title, NotifyDescriptor.YES_NO_OPTION)) == NotifyDescriptor.YES_OPTION;

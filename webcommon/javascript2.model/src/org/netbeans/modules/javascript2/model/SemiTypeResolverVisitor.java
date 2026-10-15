@@ -63,7 +63,7 @@ import org.netbeans.modules.javascript2.types.api.TypeUsage;
 public class SemiTypeResolverVisitor extends PathNodeVisitor {
 
     private static final Logger LOGGER = Logger.getLogger(SemiTypeResolverVisitor.class.getName());
-    
+
     public static final String ST_START_DELIMITER = "@"; //NOI18N
     public static final String ST_THIS = "@this;"; //NOI18N
     public static final String ST_VAR = "@var;"; //NOI18N
@@ -74,37 +74,37 @@ public class SemiTypeResolverVisitor extends PathNodeVisitor {
     public static final String ST_ARR = "@arr;"; //NOI18N
     public static final String ST_ANONYM = "@anonym;"; //NOI18N
     public static final String ST_WITH = "@with;"; //NOI18N
-            
+
     private static final TypeUsage BOOLEAN_TYPE = new TypeUsage(Type.BOOLEAN, -1, true);
     private static final TypeUsage STRING_TYPE = new TypeUsage(Type.STRING, -1, true);
     private static final TypeUsage NUMBER_TYPE = new TypeUsage(Type.NUMBER, -1, true);
     private static final TypeUsage ARRAY_TYPE = new TypeUsage(Type.ARRAY, -1, true);
     private static final TypeUsage REGEXP_TYPE = new TypeUsage(Type.REGEXP, -1, true);
     private static final TypeUsage UNDEFINED_TYPE = new TypeUsage(Type.UNDEFINED, -1, true);
-    
+
     private Map<String, TypeUsage> result;
-    
+
     private List<String> exp;
-    
+
     private int typeOffset;
 
     private final FinderOffsetTypeVisitor offsetVisitor;
     private ModelBuilder builder;
-    
+
     public SemiTypeResolverVisitor() {
         offsetVisitor = new FinderOffsetTypeVisitor();
     }
 
     public Set<TypeUsage> getSemiTypes(Node expression, ModelBuilder builder) {
         this.builder = builder;
-        exp = new ArrayList<String>();
-        result = new HashMap<String, TypeUsage>();
+        exp = new ArrayList<>();
+        result = new HashMap<>();
         reset();
         expression.accept(this);
         add(exp, typeOffset == -1 ? offsetVisitor.findOffset(expression) : typeOffset, false);
-        return new HashSet<TypeUsage>(result.values());
+        return new HashSet<>(result.values());
     }
-    
+
     private void reset() {
         exp.clear();
         typeOffset = -1;
@@ -112,7 +112,7 @@ public class SemiTypeResolverVisitor extends PathNodeVisitor {
     }
 
     private void add(List<String> exp, int offset, boolean resolved) {
-        if (/*visitedIndexNode ||*/ exp.isEmpty() 
+        if (/*visitedIndexNode ||*/ exp.isEmpty()
                 || (exp.size() == 1 && exp.get(0).startsWith(ST_START_DELIMITER) && !exp.get(0).startsWith(ST_ANONYM)
                 && !ST_THIS.equals(exp.get(0)))) {
             return;
@@ -221,7 +221,7 @@ public class SemiTypeResolverVisitor extends PathNodeVisitor {
         }
     }
 
-    
+
     @Override
     public Node leaveUnaryNode(UnaryNode uNode) {
         if (Token.descType(uNode.getToken()) == TokenType.NEW) {
@@ -230,7 +230,7 @@ public class SemiTypeResolverVisitor extends PathNodeVisitor {
                 exp.remove(size - 2);
             }
             typeOffset = uNode.getExpression().getStart();
-            if (exp.size() > 0) {
+            if (!exp.isEmpty()) {
                 exp.add(exp.size() - 1, ST_NEW);
             } else {
                 exp.add(ST_NEW);
@@ -272,7 +272,7 @@ public class SemiTypeResolverVisitor extends PathNodeVisitor {
         } else if (value instanceof Lexer.RegexToken) {
             type = REGEXP_TYPE;
         }
-        
+
         if (type != null) {
             if (getPath().size() > 1 && getPreviousFromPath(2) instanceof CallNode) {
                 exp.add(type.getType());
@@ -415,7 +415,7 @@ public class SemiTypeResolverVisitor extends PathNodeVisitor {
         }
         return bResult;
     }
-    
+
     private boolean isResultNumber(BinaryNode binaryNode) {
         boolean bResult = false;
         TokenType tokenType = binaryNode.tokenType();
@@ -425,7 +425,7 @@ public class SemiTypeResolverVisitor extends PathNodeVisitor {
                 && ((lhs instanceof LiteralNode && ((LiteralNode) lhs).isNumeric())
                 || (rhs instanceof LiteralNode && ((LiteralNode) rhs).isNumeric()))) {
             bResult = true;
-        } else if (tokenType == TokenType.DIV || tokenType == TokenType.MUL 
+        } else if (tokenType == TokenType.DIV || tokenType == TokenType.MUL
                 || tokenType == TokenType.SUB ){
             bResult = true;
         } else {
@@ -437,12 +437,12 @@ public class SemiTypeResolverVisitor extends PathNodeVisitor {
         }
         return bResult;
     }
-    
+
     private static class SimpleNameResolver extends PathNodeVisitor {
-        private List<String> exp = new ArrayList<String>();
+        private List<String> exp = new ArrayList<>();
         private int typeOffset = -1;
         private ModelBuilder builder;
-        
+
         public String getFQN(Node expression, ModelBuilder builder) {
             exp.clear();
             this.builder = builder;
@@ -472,8 +472,8 @@ public class SemiTypeResolverVisitor extends PathNodeVisitor {
             exp.add(accessNode.getProperty());
             return false;
         }
-        
-        
+
+
         @Override
         public boolean enterCallNode(CallNode callNode) {
             callNode.getFunction().accept(this);
@@ -490,15 +490,15 @@ public class SemiTypeResolverVisitor extends PathNodeVisitor {
             return false;
         }
 
-        
+
         @Override
         public boolean enterIndexNode(IndexNode indexNode) {
             indexNode.getBase().accept(this);
             return false;
         }
-        
-        
-        
+
+
+
         @Override
         public boolean enterIdentNode(IdentNode identNode) {
             exp.add(identNode.getName());
@@ -515,7 +515,7 @@ public class SemiTypeResolverVisitor extends PathNodeVisitor {
 //            return null;
 //        }
     }
-    
+
     private static class FinderOffsetTypeVisitor extends NodeVisitor {
         private int typeOffset = -1;
 
@@ -526,8 +526,8 @@ public class SemiTypeResolverVisitor extends PathNodeVisitor {
         int findOffset (Node expression) {
             expression.accept(this);
             return typeOffset;
-        } 
-        
+        }
+
         @Override
         public boolean enterIdentNode(IdentNode identNode) {
             typeOffset = identNode.getStart();
@@ -537,7 +537,7 @@ public class SemiTypeResolverVisitor extends PathNodeVisitor {
         @Override
         public boolean enterAccessNode(AccessNode accessNode) {
             typeOffset = accessNode.getStart();
-            return false; 
+            return false;
         }
     }
 }

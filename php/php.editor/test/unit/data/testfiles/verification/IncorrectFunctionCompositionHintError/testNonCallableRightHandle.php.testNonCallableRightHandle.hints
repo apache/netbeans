@@ -1,0 +1,2 @@
+'ExampleInfix' |> (strtoupper(...) | strtolower(...));                  -----------------------------------
+HINT:Pipe operator right-handle requires to be a callable

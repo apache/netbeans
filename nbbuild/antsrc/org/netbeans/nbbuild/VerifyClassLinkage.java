@@ -26,6 +26,7 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -197,7 +198,7 @@ public class VerifyClassLinkage extends Task {
                 if (cp != null) {
                     String[] uris = cp.trim().split("[, ]+");
                     for (int i = 0; i < uris.length; i++) {
-                        String path = uris[i];
+                        String path = URLDecoder.decode(uris[i], "UTF-8");
                         File otherJar = null;
                         if (path.equals("${java.home}/lib/ext/jfxrt.jar")) { 
                             String jhm = System.getProperty("java.home");

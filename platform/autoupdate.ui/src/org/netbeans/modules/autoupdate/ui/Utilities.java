@@ -24,6 +24,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.Collator;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -31,6 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import java.util.stream.Stream;
 import javax.swing.*;
 import org.netbeans.api.autoupdate.*;
 import org.netbeans.api.progress.ProgressHandle;
@@ -394,7 +396,7 @@ public class Utilities {
     }
     
     private static boolean tryRefreshProviders (Collection<UpdateUnitProvider> providers, PluginManagerUI manager, boolean force) {
-        ProgressHandle handle = ProgressHandleFactory.createHandle (NbBundle.getMessage(SettingsTableModel.class,  ("Utilities_CheckingForUpdates")));
+        ProgressHandle handle = ProgressHandle.createHandle (NbBundle.getMessage(SettingsTableModel.class,  ("Utilities_CheckingForUpdates")));
         JComponent progressComp = ProgressHandleFactory.createProgressComponent (handle);
         JLabel detailLabel = ProgressHandleFactory.createDetailLabelComponent (handle);
         detailLabel.setHorizontalAlignment (SwingConstants.LEFT);
@@ -455,7 +457,7 @@ public class Utilities {
         startAsWorkerThread(new Runnable() {
             @Override
             public void run() {
-                final ProgressHandle handle = ProgressHandleFactory.createHandle(progressDisplayName); // NOI18N                
+                final ProgressHandle handle = ProgressHandle.createHandle(progressDisplayName); // NOI18N                
                 JComponent progressComp = ProgressHandleFactory.createProgressComponent(handle);
                 JLabel detailLabel = ProgressHandleFactory.createDetailLabelComponent(handle);
                 
@@ -786,8 +788,8 @@ public class Utilities {
         if (!cacheDir.exists()) {
             return false;
         }
-        try {
-            return Files.list(cacheDir.toPath()).anyMatch((p) -> 
+        try (Stream<Path> list = Files.list(cacheDir.toPath())) {
+            return list.anyMatch((p) ->
                     p.getName(p.getNameCount() - 1).toString().endsWith("-update-provider")
             );
         } catch (IOException ex) {

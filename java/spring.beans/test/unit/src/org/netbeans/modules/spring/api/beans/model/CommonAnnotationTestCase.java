@@ -41,6 +41,7 @@ import org.netbeans.modules.j2ee.metadata.model.support.JavaSourceTestCase;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.modules.project.uiapi.OpenProjectsTrampoline;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.openide.explorer.ExplorerManager;
 import org.openide.filesystems.FileObject;
 import org.openide.util.test.MockLookup;
 
@@ -174,6 +175,16 @@ public class CommonAnnotationTestCase extends JavaSourceTestCase {
 
         @Override
         public void removeProjectGroupChangeListenerAPI(ProjectGroupChangeListener listener) {
+        }
+
+        @Override
+        public ExplorerManager createLogicalView() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public ExplorerManager createPhysicalView() {
+            throw new UnsupportedOperationException();
         }
 
     }

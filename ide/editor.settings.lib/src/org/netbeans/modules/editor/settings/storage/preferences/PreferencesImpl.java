@@ -323,7 +323,7 @@ public final class PreferencesImpl extends AbstractPreferences implements Prefer
             keys = getLocal().keySet();
         }
 
-        return keys.toArray(new String [keys.size()]);
+        return keys.toArray(new String [0]);
     }
 
     protected @Override void syncSpi() throws BackingStoreException {

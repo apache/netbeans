@@ -167,7 +167,7 @@ public class Util {
                 result.add(sourceGroup);
             }
         }
-        return result.toArray(new SourceGroup[result.size()]);
+        return result.toArray(new SourceGroup[0]);
     }
 
     private static Set<SourceGroup> getTestSourceGroups(Project project, SourceGroup[] sourceGroups) {

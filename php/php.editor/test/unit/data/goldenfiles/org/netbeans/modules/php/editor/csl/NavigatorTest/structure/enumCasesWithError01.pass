@@ -1,0 +1,4 @@
+|-EnumCaseInt [819, 955] : ESCAPED{EnumCaseInt}<font color="#999999">(ESCAPED{int})</font>
+|--CASE_A [847, 853] : ESCAPED{CASE_A}ESCAPED{ }<font color="#999999">ESCAPED{100}</font>
+|--CASE_B [870, 876] : ESCAPED{CASE_B}ESCAPED{ }<font color="#999999">ESCAPED{1}</font>
+|--CASE_C [891, 897] : ESCAPED{CASE_C}

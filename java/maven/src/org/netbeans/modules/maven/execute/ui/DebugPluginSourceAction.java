@@ -64,7 +64,7 @@ public class DebugPluginSourceAction extends AbstractAction {
     @NbBundle.Messages(value = "TIT_DEBUG_Plugin=Debugging Plugin Mojo")
     public void actionPerformed(ActionEvent e) {
         final AtomicBoolean cancel = new AtomicBoolean();
-        org.netbeans.api.progress.ProgressUtils.runOffEventDispatchThread(new Runnable() {
+        org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
             @Override
             public void run() {
                 doLoad(cancel);

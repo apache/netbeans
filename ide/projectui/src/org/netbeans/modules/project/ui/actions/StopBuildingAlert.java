@@ -48,7 +48,7 @@ final class StopBuildingAlert extends JPanel {
     
     static List<BuildExecutionSupport.Item> selectProcessToKill(List<BuildExecutionSupport.Item> toStop) {
         // Add all threads, sorted by display name.
-        DefaultListModel model = new DefaultListModel();
+        DefaultListModel<BuildExecutionSupport.Item> model = new DefaultListModel<>();
         StopBuildingAlert alert = new StopBuildingAlert();
         final JList list = alert.buildsList;
         Comparator<BuildExecutionSupport.Item> comp = new Comparator<BuildExecutionSupport.Item>() {

@@ -59,7 +59,7 @@ import org.netbeans.spi.editor.hints.ErrorDescription;
  */
 public class WebBeansAnalysisTask extends AbstractAnalysisTask {
     
-    private final static Logger LOG = Logger.getLogger( 
+    private static final Logger LOG = Logger.getLogger( 
             WebBeansAnalysisTask.class.getName());
     
     public WebBeansAnalysisTask( CdiEditorAwareJavaSourceTaskFactory factory ){

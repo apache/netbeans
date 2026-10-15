@@ -64,7 +64,7 @@ public class JavacFlowListener {
         }
         else {
             try {
-                return this.flowCompleted.contains(fo.getURL().toURI());
+                return this.flowCompleted.contains(fo.toURL().toURI());
             } catch (Exception e) {
                 return false;
             }

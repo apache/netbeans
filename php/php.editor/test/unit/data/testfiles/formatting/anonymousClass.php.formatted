@@ -24,7 +24,6 @@ class MyClass extends BaseClass {
             }
         };
     }
-
 }
 
 $anonClass = new class {

@@ -37,12 +37,12 @@ public class TraceLogger extends Object {
 
     static DDLogFlags flags = new DDLogFlags();
 
-    static public void put(int type, int service, int group, int level,
+    public static void put(int type, int service, int group, int level,
 			   int msg) {
 	put(type, service, group, level, msg, null);
     }
 
-    static public void put(int type, int service, int group, int level,
+    public static void put(int type, int service, int group, int level,
 			   int msg, Object obj) {
 
 	String strService = "DD ";	// NOI18N

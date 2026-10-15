@@ -107,28 +107,28 @@ public abstract class FolderInstance extends Task implements InstanceCookie { //
     protected DataFolder folder;
     
     /** container to work with */
-    private DataObject.Container container;
+    private final DataObject.Container container;
 
     /** map of primary file to their cookies (FileObject, HoldInstance) */
-    private HashMap<FileObject, HoldInstance> map = new HashMap<FileObject, HoldInstance> (17);
+    private final HashMap<FileObject, HoldInstance> map = new HashMap<>(17);
 
     /** Array of tasks that we have to check before we are ok. These are the tasks
      *  associated with children of the current folder.
      */
-    private Task[] waitFor;
+    private volatile Task[] waitFor;
 
     /** object for this cookie. Either the right instance of object or
     * an instance of IOException or ClassNotFoundException. By default 
     * it is assigned to some private object in this class to signal that
     * it is uninitialized.
     */
-    private Object object = CURRENT;
+    private volatile Object object = CURRENT;
 
     /** Listener and runner  for this object */
-    private Listener listener;
+    private final Listener listener;
     
     /** error manager for this instance */
-    private Logger err;
+    private final Logger err;
 
     /** Task that computes the children list of the folder */
     private Task recognizingTask;
@@ -136,7 +136,7 @@ public abstract class FolderInstance extends Task implements InstanceCookie { //
     /** A task that gets objects from InstanceCookie's and calls createInstance.
      *  Started immediately after the <code>recognizingTask</code> is finished.
      */
-    private Task creationTask;
+    private volatile Task creationTask;
     /** Sequence number for creationTask */
     private volatile int creationSequence;
     /** shall instances be precreated before postCreationTask is called? */
@@ -899,7 +899,7 @@ public abstract class FolderInstance extends Task implements InstanceCookie { //
                 out.add (t);
             }
         }
-        waitFor = out.toArray (new Task[out.size ()]);
+        waitFor = out.toArray (new Task[0]);
     }
     
     /* ----------------------------------------------------------------------------- */

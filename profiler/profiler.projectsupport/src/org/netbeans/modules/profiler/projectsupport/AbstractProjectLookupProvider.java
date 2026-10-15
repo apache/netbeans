@@ -50,7 +50,7 @@ public abstract class AbstractProjectLookupProvider implements LookupProvider {
                 }
 
                 public List<FileObject> getDataFiles() {
-                    return Collections.EMPTY_LIST;
+                    return Collections.<FileObject>emptyList();
                 }
             };
     }
@@ -58,7 +58,7 @@ public abstract class AbstractProjectLookupProvider implements LookupProvider {
     protected abstract List getAdditionalLookups(Project project);
     
     public Lookup createAdditionalLookup(Lookup baseContext) {
-        List lookUps = new ArrayList();
+        List<DataFilesProviderImplementation> lookUps = new ArrayList<>();
         Project project = baseContext.lookup(Project.class);
         lookUps.add(getDataFilesProviderImplementation(project));
         lookUps.addAll(getAdditionalLookups(project));

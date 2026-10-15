@@ -25,27 +25,27 @@ import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Locale;
+import java.util.stream.Collectors;
 import javax.swing.Icon;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import org.netbeans.core.actions.HTMLViewAction;
-import static org.netbeans.core.ui.Bundle.*;
 import org.openide.awt.CheckForUpdatesProvider;
 import org.openide.awt.HtmlBrowser;
 import org.openide.awt.HtmlBrowser.URLDisplayer;
+import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.Places;
@@ -55,9 +55,11 @@ import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 
+import static org.netbeans.core.ui.Bundle.*;
+
 public class ProductInformationPanel extends JPanel implements HyperlinkListener {
 
-    URL url = null;
+    URL url;
     Icon about;
     
     private static final String CHECK_FOR_UPDATES_ACTION = "check-for-updates";
@@ -76,7 +78,7 @@ public class ProductInformationPanel extends JPanel implements HyperlinkListener
         "# {8} - updates",
         "# {9} - font size",
         "# {10} - Java runtime",
-        "LBL_description=<div style=\"font-size: {9}pt; font-family: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif;\">"
+        "LBL_description=<div style=\"white-space: nowrap; font-size: {9}pt; font-family: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif;\">"
             + "<p style=\"margin: 0\"><b>Product Version:</b> {0}</p>\n "
             + "{8}"
             + "<p style=\"margin: 0\"><b>Java:</b> {1}; {2}</p>\n "
@@ -96,29 +98,22 @@ public class ProductInformationPanel extends JPanel implements HyperlinkListener
         imageLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         description.setText(LBL_description(getProductVersionValue(), getJavaValue(), getVMValue(), getOperatingSystemValue(), getEncodingValue(), getSystemLocaleValue(), getUserDirValue(), Places.getCacheDirectory().getAbsolutePath(), "", FONT_SIZE, getJavaRuntime()));
         description.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        description.putClientProperty( JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
-        RequestProcessor.getDefault().post(new Runnable() {
-
-            @Override
-            public void run() {
-                final String updates = getUpdates();
-                SwingUtilities.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        description.setText(LBL_description(getProductVersionValue(), getJavaValue(), getVMValue(), getOperatingSystemValue(), getEncodingValue(), getSystemLocaleValue(), getUserDirValue(), Places.getCacheDirectory().getAbsolutePath(), updates, FONT_SIZE, getJavaRuntime()));
-                        description.setCursor(null);
-                        description.revalidate();
-                        description.setCaretPosition(0);
-                    }
-                });
-            }
+        description.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
+        RequestProcessor.getDefault().post(() -> {
+            final String updates = getUpdates();
+            SwingUtilities.invokeLater(() -> {
+                description.setText(LBL_description(getProductVersionValue(), getJavaValue(), getVMValue(), getOperatingSystemValue(), getEncodingValue(), getSystemLocaleValue(), getUserDirValue(), Places.getCacheDirectory().getAbsolutePath(), updates, FONT_SIZE, getJavaRuntime()));
+                descriptionScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS); // will need a scrollbar now
+                description.setCursor(null);
+                description.revalidate();
+                description.setCaretPosition(0);
+            });
         });
         description.setCaretPosition(0); // so that text is not scrolled down
         description.addHyperlinkListener(this);
         copyright.addHyperlinkListener(this);
         copyright.setBackground(getBackground());
-        copyright.putClientProperty( JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
+        copyright.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
 
         // Use image2Icon to preserve the underlying HiDPI-aware Icon instance.
         about = ImageUtilities.image2Icon(org.netbeans.core.startup.Splash.loadContent(true));
@@ -136,24 +131,20 @@ public class ProductInformationPanel extends JPanel implements HyperlinkListener
             }
         });
         
-        description.addHyperlinkListener(new HyperlinkListener() {
-
-            @Override
-            public void hyperlinkUpdate(HyperlinkEvent e) {
-                if(HyperlinkEvent.EventType.ENTERED == e.getEventType()) {
-                    if (CHECK_FOR_UPDATES_ACTION.equals(e.getDescription())) {
-                        description.setToolTipText(check_for_updates());
-                    } else if (e.getURL() != null) {
-                        description.setToolTipText(e.getURL().toExternalForm());
-                    }
-                } else if (HyperlinkEvent.EventType.EXITED == e.getEventType()) {
-                    description.setToolTipText(null);
-                } else if (HyperlinkEvent.EventType.ACTIVATED.equals(e.getEventType())) {
-                    if (CHECK_FOR_UPDATES_ACTION.equals(e.getDescription())) {
-                        checkForUpdates();
-                    } else {
-                        URLDisplayer.getDefault().showURL(e.getURL());
-                    }
+        description.addHyperlinkListener((HyperlinkEvent e) -> {
+            if(HyperlinkEvent.EventType.ENTERED == e.getEventType()) {
+                if (CHECK_FOR_UPDATES_ACTION.equals(e.getDescription())) {
+                    description.setToolTipText(check_for_updates());
+                } else if (e.getURL() != null) {
+                    description.setToolTipText(e.getURL().toExternalForm());
+                }
+            } else if (HyperlinkEvent.EventType.EXITED == e.getEventType()) {
+                description.setToolTipText(null);
+            } else if (HyperlinkEvent.EventType.ACTIVATED.equals(e.getEventType())) {
+                if (CHECK_FOR_UPDATES_ACTION.equals(e.getDescription())) {
+                    checkForUpdates();
+                } else {
+                    URLDisplayer.getDefault().showURL(e.getURL());
                 }
             }
         });
@@ -163,47 +154,52 @@ public class ProductInformationPanel extends JPanel implements HyperlinkListener
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jPanel1 = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
-        jScrollPane3 = new javax.swing.JScrollPane();
+        javax.swing.JPanel buttonPanel = new javax.swing.JPanel();
+        javax.swing.JButton closeButton = new javax.swing.JButton();
+        javax.swing.JScrollPane copyrightScrollPane = new javax.swing.JScrollPane();
         copyright = new javax.swing.JTextPane();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        descriptionScrollPane = new javax.swing.JScrollPane();
         description = new javax.swing.JTextPane();
-        imagePanel = new javax.swing.JPanel();
+        javax.swing.JPanel imagePanel = new javax.swing.JPanel();
         imageLabel = new javax.swing.JLabel();
 
-        jPanel1.setLayout(new java.awt.GridBagLayout());
+        buttonPanel.setLayout(new java.awt.GridBagLayout());
 
-        jButton2.setMnemonic(NbBundle.getMessage(ProductInformationPanel.class, "MNE_Close").charAt(0));
-        jButton2.setText(NbBundle.getMessage(ProductInformationPanel.class, "LBL_Close")); // NOI18N
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        closeButton.setMnemonic(NbBundle.getMessage(ProductInformationPanel.class, "MNE_Close").charAt(0));
+        closeButton.setText(NbBundle.getMessage(ProductInformationPanel.class, "LBL_Close")); // NOI18N
+        closeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                closeButtonActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        jPanel1.add(jButton2, gridBagConstraints);
+        buttonPanel.add(closeButton, gridBagConstraints);
 
-        jScrollPane3.setBorder(null);
+        copyrightScrollPane.setBorder(null);
 
-        copyright.setBorder(null);
-        copyright.setContentType("text/html");
         copyright.setEditable(false);
+        copyright.setBorder(null);
+        copyright.setContentType("text/html"); // NOI18N
         copyright.setText(getCopyrightText());
+        copyright.setMinimumSize(new java.awt.Dimension(50, 0));
         copyright.setCaretPosition(0); // so that text is not scrolled down
         copyright.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 copyrightMouseClicked(evt);
             }
         });
-        jScrollPane3.setViewportView(copyright);
+        copyrightScrollPane.setViewportView(copyright);
 
-        description.setContentType("text/html");
+        descriptionScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        descriptionScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
         description.setEditable(false);
+        description.setContentType("text/html"); // NOI18N
         description.setText("<div style=\"font-size: 12pt; font-family: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif;\">\n    <b>Product Version:</b> {0}<br> <b>Java:</b> {1}; {2}<br> <b>System:</b> {3}; {4}; {5}<br><b>Userdir:</b> {6}</div>");
-        jScrollPane2.setViewportView(description);
+        descriptionScrollPane.setViewportView(description);
 
         imagePanel.setLayout(new java.awt.BorderLayout());
 
@@ -218,22 +214,22 @@ public class ProductInformationPanel extends JPanel implements HyperlinkListener
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(imagePanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE))
+                    .addComponent(descriptionScrollPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+                    .addComponent(copyrightScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+                    .addComponent(buttonPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(imagePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
+                .addComponent(imagePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
                 .addGap(14, 14, 14)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
+                .addComponent(copyrightScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
+                .addComponent(descriptionScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(buttonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -242,19 +238,15 @@ private void copyrightMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
     showUrl();
 }//GEN-LAST:event_copyrightMouseClicked
 
-private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
     closeDialog();    
-}//GEN-LAST:event_jButton2ActionPerformed
+}//GEN-LAST:event_closeButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextPane copyright;
     private javax.swing.JTextPane description;
+    private javax.swing.JScrollPane descriptionScrollPane;
     private javax.swing.JLabel imageLabel;
-    private javax.swing.JPanel imagePanel;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     // End of variables declaration//GEN-END:variables
     
     private void closeDialog() {
@@ -265,9 +257,8 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
 
     private void showUrl() {
         if (url != null) {
-            org.openide.awt.StatusDisplayer.getDefault().setStatusText(
-                NbBundle.getBundle(HTMLViewAction.class).getString("CTL_OpeningBrowser"));
-                HtmlBrowser.URLDisplayer.getDefault().showURL(url);
+            StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(HTMLViewAction.class, "CTL_OpeningBrowser"));
+            HtmlBrowser.URLDisplayer.getDefault().showURL(url);
         }
     }
     
@@ -309,6 +300,7 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         return System.getProperty("file.encoding", "unknown");
     }
 
+    @Override
     public void hyperlinkUpdate(HyperlinkEvent event) {
         if(HyperlinkEvent.EventType.ENTERED == event.getEventType()) {
             url = event.getURL();
@@ -317,7 +309,7 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         }
     }
      
-    private static String getCopyrightText () {
+    private static String getCopyrightText() {
         
         String copyrighttext = NbBundle.getMessage(ProductInformationPanel.class, "LBL_Copyright", FONT_SIZE); // NOI18N
         
@@ -331,9 +323,7 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 for (int i = 0; i < foArray.length; i++) {
                     curLicense = loadLicenseText(foArray[i]);
                     if (curLicense != null) {
-                        sw.write("<br>" + MessageFormat.format( // NOI18N
-                            NbBundle.getBundle(ProductInformationPanel.class).getString("LBL_AddOnCopyright"), // NOI18N
-                            new Object[] { curLicense, FONT_SIZE }));
+                        sw.write("<br>" + NbBundle.getMessage(ProductInformationPanel.class, "LBL_AddOnCopyright", curLicense, FONT_SIZE)); // NOI18N
                         isSomeLicense = true;
                     }
                 }
@@ -352,30 +342,13 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
      * @return String containing text from the file, or null if file can't be found
      * or some kind of I/O error appeared.
      */
-    private static String loadLicenseText (FileObject fo) {
-        
-        InputStream is = null;
-        try {
-            is = fo.getInputStream();
-        } catch (FileNotFoundException ex) {
-            // license file not found
-            return null;
-        }
-
-        BufferedReader in = new BufferedReader(new InputStreamReader(is));
-        StringWriter result = new StringWriter();
-        int curChar;
-        try {
-            // reading content of license file
-            while ((curChar = in.read()) != -1) {
-                result.write(curChar);
-            }
+    private static String loadLicenseText(FileObject fo) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(fo.getInputStream()))) {
+            return reader.lines().collect(Collectors.joining("\n")); // NOI18N
         } catch (IOException ex) {
-            // don't return anything if any problem during read
+            // don't return anything if any problem during read, e.g license file not found
             return null;
         }
-
-        return result.toString();
     }
     
     private static String getUpdates() {
@@ -404,7 +377,7 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     private static int getFontSize() {
         Integer customFontSize = (Integer)UIManager.get("customFontSize"); // NOI18N
         if (customFontSize != null) {
-            return customFontSize.intValue();
+            return customFontSize;
         }
         return 12;
     }

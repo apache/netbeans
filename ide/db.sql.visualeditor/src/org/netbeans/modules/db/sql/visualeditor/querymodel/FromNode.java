@@ -33,7 +33,7 @@ public class FromNode implements From {
 
     // A vector of generalized Table objects (JoinTables)
 
-    ArrayList _tableList;
+    List<JoinTable> _tableList;
 
 
     // Constructors
@@ -41,7 +41,7 @@ public class FromNode implements From {
     public FromNode() {
     }
 
-    public FromNode(ArrayList tableList) {
+    public FromNode(List tableList) {
         _tableList = tableList;
     }
 
@@ -86,8 +86,9 @@ public class FromNode implements From {
 
     // Return the Table objects in the table list
 
-    ArrayList getTables() {
-        ArrayList tableRefs = new ArrayList();
+    List<Table> getTables() {
+        List<Table> tableRefs = new ArrayList<>();
+
         for (int i=0; i<_tableList.size(); i++)
             tableRefs.add(((JoinTableNode)_tableList.get(i)).getTable());
         return tableRefs;
@@ -113,7 +114,7 @@ public class FromNode implements From {
     }
 
     public JoinTable findJoinTable(String table1, String column1, String table2, String column2) {
-        ArrayList tableList = _tableList;
+        List<JoinTable> tableList = _tableList;
         for (int i=0; i<tableList.size(); i++) {
             JoinTableNode jt = (JoinTableNode) tableList.get(i);
             Expression cond = jt.getExpression();
@@ -142,7 +143,7 @@ public class FromNode implements From {
 
     public String getFullTableName(String corrName) {
         for (int i=0; i<_tableList.size(); i++) {
-            JoinTable jt = (JoinTable) _tableList.get(i);
+            JoinTable jt = _tableList.get(i);
             String cn=jt.getTableSpec();
             if ((cn!=null) && (cn.equals(corrName)))
                 return jt.getFullTableName();
@@ -152,7 +153,7 @@ public class FromNode implements From {
 
     public String getTableSpec(String fullTableName) {
         for (int i=0; i<_tableList.size(); i++) {
-            JoinTable jt = (JoinTable) _tableList.get(i);
+            JoinTable jt = _tableList.get(i);
             String cn=jt.getFullTableName();
             if ((cn!=null) && (cn.equals(fullTableName)))
                 return jt.getTableSpec();

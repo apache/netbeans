@@ -268,7 +268,7 @@ class ProtractorRunner {
         List<File> siteRoots = getRoots(project, WebClientProjectConstants.SOURCES_TYPE_HTML5_SITE_ROOT);
         List<File> testRoots = getRoots(project, WebClientProjectConstants.SOURCES_TYPE_HTML5_TEST);
         List<String> localPaths = new ArrayList<>(sourceRoots.size());
-        List<String> localPathsExclusionFilter = Collections.EMPTY_LIST;
+        List<String> localPathsExclusionFilter = Collections.emptyList();
         for (File src : sourceRoots) {
             localPaths.add(src.getAbsolutePath());
             for (File site : siteRoots) {
@@ -288,7 +288,7 @@ class ProtractorRunner {
                 }
             }
         }
-        return new Connector.Properties(host, port, localPaths, Collections.EMPTY_LIST, localPathsExclusionFilter);
+        return new Connector.Properties(host, port, localPaths, Collections.<String>emptyList(), localPathsExclusionFilter);
     }
     
     private static List<File> getRoots(Project project, String type) {
@@ -355,7 +355,7 @@ class ProtractorRunner {
             }
             String output2display = testRunnerReporter.processLine(line);
             if(output2display == null) {
-                return Collections.EMPTY_LIST;
+                return Collections.<ConvertedLine>emptyList();
             }
             TestRunnerReporter.CallStackCallback callStackCallback = new TestRunnerReporter.CallStackCallback(runInfo.getProject());
             Pair<File, int[]> parsedLocation = callStackCallback.parseLocation(line, false);
@@ -378,11 +378,6 @@ class ProtractorRunner {
         }
 
         @Override
-        public void outputLineSelected(OutputEvent ev) {
-            // noop
-        }
-
-        @Override
         public void outputLineAction(OutputEvent ev) {
             RequestProcessor.getDefault().post(new Runnable() {
                 @Override
@@ -390,11 +385,6 @@ class ProtractorRunner {
                     Utils.openFile(file, line, column);
                 }
             });
-        }
-
-        @Override
-        public void outputLineCleared(OutputEvent ev) {
-            // noop
         }
     }
     

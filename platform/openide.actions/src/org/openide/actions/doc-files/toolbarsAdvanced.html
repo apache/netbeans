@@ -21,7 +21,6 @@
 <html>
 <head>
 <title>Actions API - Advanced Toolbar Configuration</title>
-<link rel="stylesheet" href="../../../../prose.css" type="text/css">
 </head>
 <body>
 <h1>Actions API - Advanced Toolbar Configuration</h1>
@@ -34,10 +33,9 @@ sorts of instances:
 <li>An action implementing
 <a href="@org-openide-util-ui@/org/openide/util/actions/Presenter.Toolbar.html"><code>Presenter.Toolbar</code></a>
 
-<li>Any
-<a href="@JDK@/java/awt/Component.html"><code>Component</code></a>.
+<li>Any {@link java.awt.Component Component}.
 Usually this will just be a
-<a href="@JDK@/javax/swing/JToolBar.Separator.html"><code>JToolBar.Separator</code></a>,
+{@link javax.swing.JToolBar.Separator JToolBar.Separator},
 since special widgets such as combo boxes and so on are better
 given as the toolbar presenter of an action.
 </ol>
@@ -46,7 +44,7 @@ given as the toolbar presenter of an action.
 of
 <a href="@org-openide-loaders@/org/openide/awt/Toolbar.html"><code>Toolbar</code></a>,
 which is a subclass of
-<a href="@JDK@/javax/swing/JToolBar.html"><code>JToolBar</code></a>
+{@link javax.swing.JToolBar JToolBar}
 that is able to compose itself from the contents of a folder.
 If you want to replace the whole toolbar with a special
 component, you may do so. You need only provide an instance of some
@@ -58,7 +56,7 @@ rather than a subfolder.
 folder-scanning mechanism or whether custom written, are available
 using
 
-<a href="@org-openide-loaders@/org/openide/awt/ToolbarPool.html#getToolbars--"><code>ToolbarPool.getToolbars()</code></a>.
+<a href="@org-openide-loaders@/org/openide/awt/ToolbarPool.html#getToolbars()"><code>ToolbarPool.getToolbars()</code></a>.
 
 However, at any given time not all of these are visible. All of this 
 information is controlled by a
@@ -67,7 +65,7 @@ information is controlled by a
 
 object. All available configurations are listed in
 
-<a href="@org-openide-loaders@/org/openide/awt/ToolbarPool.html#getConfigurations--"><code>ToolbarPool.getConfigurations()</code></a>,
+<a href="@org-openide-loaders@/org/openide/awt/ToolbarPool.html#getConfigurations()"><code>ToolbarPool.getConfigurations()</code></a>,
 
 and <code>ToolbarPool</code> also permits the current configuration
 to be retrieved and set.  Please note that even though there are two

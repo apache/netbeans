@@ -222,7 +222,7 @@ public class LogicalViewProviderImpl implements LogicalViewProvider  {
             refresh(false);
         }
 
-        private static abstract class Key {
+        private abstract static class Key {
             public final SourceGroup group;
 
             public Key(SourceGroup group) {

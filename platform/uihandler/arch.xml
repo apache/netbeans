@@ -90,8 +90,8 @@
                 <api name="UI_LOGGER_NAME" group="logger" category="devel" type="export">
                     The info about various UI events in the system is collected thru
                     listening on 
-                    <a href="@JDK@/java/util/logging/LogRecord.html">log records</a> send to
-                    <a href="@JDK@/java/util/logging/Logger.html">
+                    <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogRecord.html">log records</a> send to
+                    <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html">
                         Logger.getLogger(UI_LOGGER_NAME_VALUE)
                     </a>, where UI_LOGGER_NAME_VALUE is a value of UI_LOGGER_NAME
                     resource bundle key, defining the name of the UI usage logger.
@@ -103,8 +103,8 @@
                 <api name="METRICS_LOGGER_NAME" group="logger" category="devel" type="export">
                     The info about various UI events in the system is collected thru
                     listening on 
-                    <a href="@JDK@/java/util/logging/LogRecord.html">log records</a> send to
-                    <a href="@JDK@/java/util/logging/Logger.html">
+                    <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogRecord.html">log records</a> send to
+                    <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html">
                         Logger.getLogger(METRICS_LOGGER_NAME_VALUE)
                     </a>, where METRICS_LOGGER_NAME_VALUE is a value of
                     METRICS_LOGGER_NAME resource bundle key, defining the name
@@ -180,7 +180,7 @@
             
             <p>
                 To feed own data about special UI gestures one can just create own
-                <a href="@JDK@/java/util/logging/Logger.html">
+                <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html">
                     Logger.getLogger(UI_LOGGER_NAME_VALUE+".ownname")
                 </a> and send own log records to it.
                 UI_LOGGER_NAME_VALUE is a value of UI_LOGGER_NAME
@@ -189,23 +189,23 @@
                 <a href="@org-openide-util@/org/openide/util/doc-files/logging.html">
                     structured logging 
                 </a> document, e.g. the 
-                <a href="@JDK@/java/util/logging/LogRecord.html">LogRecord</a>
+                <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogRecord.html">LogRecord</a>
                 shall have associated 
-                <a href="@JDK@/java/util/ResourceBundle.html">ResourceBundle</a>
+                <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/util/ResourceBundle.html">ResourceBundle</a>
                 and the record's <code>getMessage</code> shall point to a key
                 in that bundle.
                 
                 <api name="ICON_BASE" group="property" type="export" category="devel">
                     there is an extension to the regular formatting done by
-                    the <a href="@JDK@/java/util/logging/Formatter.html">logging
+                    the <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Formatter.html">logging
                     formatter</a> that, in order to achieve nicer appearance to
                     the user, allows each record to be associated with an icon. 
                     Just define <code>MSG_KEY_ICON_BASE</code> in the bundle associated
                     with the
-                    <a href="@JDK@/java/util/logging/LogRecord.html">LogRecord</a>
+                    <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogRecord.html">LogRecord</a>
                     (where the MSG_KEY is the string returned by <code>record.getMessage()</code>)
                     and the value is then going to be used for the 
-                    <a href="@org-openide-nodes@/org/openide/nodes/AbstractNode.html#setIconBaseWithExtension-java.lang.String-">
+                    <a href="@org-openide-nodes@/org/openide/nodes/AbstractNode.html#setIconBaseWithExtension(java.lang.String)">
                         Node
                     </a> representing the UI gesture.
                 </api>
@@ -588,7 +588,7 @@
             Modules may use functionality of this module either by depending on its presence
             and registering <a href="@TOP@/org/netbeans/modules/uihandler/api/Deactivated.html">callback interfaces</a> 
             provided by its API. Or the modules do not need to depend on this module at all,
-            and just generate <a href="@JDK@/java/util/logging/LogRecord.html">log records</a>
+            and just generate <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogRecord.html">log records</a>
             to the <code>UI_LOGGER_NAME_VALUE+".someloggername"</code> logger. These records are 
             then going to be consumed by this module, if enabled.
         </p>
@@ -820,13 +820,13 @@
                 Four common parameters are added always before sending logger info and two error 
                 parameters are added only if an exception rised.
                 
-                <ul title="common parameters">
+                <ul id="common_parameters">
                     <li>Operating system name, version and architecture</li>
                     <li>Virtual machine name and version</li>
                     <li>Application version and build number</li>
                     <li>User name</li>
                 </ul>
-                <ul title="error parameters">
+                <ul id="error_parameters">
                     <li>Error summary</li>
                     <li>User's comment to an error situation</li>
                 </ul>

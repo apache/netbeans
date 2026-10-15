@@ -195,7 +195,7 @@ public class PalettePanel extends JPanel implements Scrollable {
             if( descriptor.match( searchString ) )
                 newDescriptors.add(descriptor);
         }
-        return newDescriptors.toArray(new CategoryDescriptor[newDescriptors.size()]);
+        return newDescriptors.toArray(new CategoryDescriptor[0]);
     }
 
     private String getSearchString() {
@@ -210,7 +210,7 @@ public class PalettePanel extends JPanel implements Scrollable {
                 tmp.add( cats[i] );
             }
         }
-        return tmp.toArray( new Category[tmp.size()] );
+        return tmp.toArray(new Category[0]);
     }
 
     void computeHeights( Category openedCategory ) {

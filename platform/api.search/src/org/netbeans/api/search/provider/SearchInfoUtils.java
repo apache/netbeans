@@ -260,7 +260,7 @@ public final class SearchInfoUtils {
      * Create list of default search filters.
      */
     private static List<SearchFilter> createDefaultFilterList() {
-        List<SearchFilter> l = new ArrayList<SearchFilter>(2);
+        List<SearchFilter> l = new ArrayList<>(2);
         l.add(SearchInfoUtils.VISIBILITY_FILTER);
         l.add(SearchInfoUtils.SHARABILITY_FILTER);
         return Collections.unmodifiableList(l);

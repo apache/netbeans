@@ -146,8 +146,8 @@ public class SendJMSMessageCodeGenerator implements CodeGenerator {
                         @Override
                         public void propertyChange(PropertyChangeEvent evt) {
                             Object newvalue = evt.getNewValue();
-                            if ((newvalue != null) && (newvalue instanceof Boolean)) {
-                                boolean isValid = ((Boolean) newvalue).booleanValue();
+                            if (newvalue instanceof Boolean) {
+                                boolean isValid = ((Boolean) newvalue);
                                 dialogDescriptor.setValid(isValid);
                                 if (isValid) {
                                     if (sendJmsMessagePanel.getWarningMessage() == null) {

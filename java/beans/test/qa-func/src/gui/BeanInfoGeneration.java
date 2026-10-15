@@ -566,7 +566,7 @@ public class BeanInfoGeneration extends JellyTestCase {
         //new EventTool().waitNoEvent(750);
 //IT ISN'T POSSIBLE TO READ AND WRITE AGAIN THE SAME VALUE//        new TextFieldProperty(propertySheetTabOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_displayName")).setValue(new TextFieldProperty(propertySheetTabOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_displayName")).getValue());
         //new EventTool().waitNoEvent(750);
-////        new TextFieldProperty(propertySheetTabOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_shortDescription")).setValue(new TextFieldProperty(propertySheetTabOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_shortDescription")).getValue());
+// //        new TextFieldProperty(propertySheetTabOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_shortDescription")).setValue(new TextFieldProperty(propertySheetTabOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_shortDescription")).getValue());
         //new EventTool().waitNoEvent(750);
         new Property(propertySheetOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_customizer")).getValue();
         new EventTool().waitNoEvent(400);
@@ -584,7 +584,7 @@ public class BeanInfoGeneration extends JellyTestCase {
         //new EventTool().waitNoEvent(750);
         new Property(propertySheetOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_preferred")).setValue(new Property(propertySheetOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_preferred")).getValue());
         //new EventTool().waitNoEvent(750);
-////        new TextFieldProperty(propertySheetTabOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_shortDescription")).setValue(new TextFieldProperty(propertySheetTabOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_shortDescription")).getValue());
+// //        new TextFieldProperty(propertySheetTabOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_shortDescription")).setValue(new TextFieldProperty(propertySheetTabOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_shortDescription")).getValue());
         //new EventTool().waitNoEvent(750);
         new Property(propertySheetOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_included")).setValue(new Property(propertySheetOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_included")).getValue());
         //new EventTool().waitNoEvent(750);
@@ -595,7 +595,7 @@ public class BeanInfoGeneration extends JellyTestCase {
         //new EventTool().waitNoEvent(750);
         new Property(propertySheetOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_mode")).setValue(new Property(propertySheetOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_mode")).getValue());
         //new EventTool().waitNoEvent(750);
-////        new TextFieldProperty(propertySheetTabOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_propertyEditorClass")).setValue(new TextFieldProperty(propertySheetTabOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_propertyEditorClass")).getValue());
+// //        new TextFieldProperty(propertySheetTabOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_propertyEditorClass")).setValue(new TextFieldProperty(propertySheetTabOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_propertyEditorClass")).getValue());
         //new EventTool().waitNoEvent(750);
         new Property(propertySheetOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_niGetter")).setValue(new Property(propertySheetOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_niGetter")).getValue());
         //new EventTool().waitNoEvent(750);
@@ -614,9 +614,9 @@ public class BeanInfoGeneration extends JellyTestCase {
         //new EventTool().waitNoEvent(750);
         new Property(propertySheetOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_preferred")).setValue(new Property(propertySheetOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_preferred")).getValue());
         //new EventTool().waitNoEvent(750);
-////        new TextFieldProperty(propertySheetTabOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_displayName")).setValue(new TextFieldProperty(propertySheetTabOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_displayName")).getValue());
+// //        new TextFieldProperty(propertySheetTabOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_displayName")).setValue(new TextFieldProperty(propertySheetTabOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_displayName")).getValue());
         //new EventTool().waitNoEvent(750);
-////        new TextFieldProperty(propertySheetTabOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_shortDescription")).setValue(new TextFieldProperty(propertySheetTabOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_shortDescription")).getValue());
+// //        new TextFieldProperty(propertySheetTabOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_shortDescription")).setValue(new TextFieldProperty(propertySheetTabOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_shortDescription")).getValue());
         //new EventTool().waitNoEvent(750);
         new Property(propertySheetOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_included")).setValue(new Property(propertySheetOperator, Bundle.getString("org.netbeans.modules.beans.beaninfo.Bundle", "PROP_Bi_included")).getValue());
         //new EventTool().waitNoEvent(750);

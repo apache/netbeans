@@ -32,6 +32,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Lookup;
 import org.openide.util.MapFormat;
 import org.openide.util.Parameters;
 
@@ -46,7 +47,7 @@ import org.openide.util.Parameters;
  * <p>
  * The file build request will be forwarded to {@link CreateFromTemplateHandler}s; if none
  * {@link CreateFromTemplateHandler#accept}s the request, the default procedure takes place,
- * depending on the {@link #defaultMode} setting (default: {@link Mode#COPY}).
+ * depending on the {@code #defaultMode} setting (default: {@link Mode#COPY}).
  * <p>
  * There are several values predefined:<ul>
  * <li>name - the created filename without extension
@@ -60,6 +61,31 @@ import org.openide.util.Parameters;
  * @author sdedic
  */
 public final class FileBuilder {
+    /**
+     * A specific {@link CreateFromTemplateHandler} to be used with this particular template.
+     * If present on a template, will be used as a default. Still can be overriden by a lookup-registered
+     * registered {@link CreateFromTemplateHandler}.
+     * @since 1.23
+     */
+    public static final String ATTR_TEMPLATE_HANDLER = "template.createTemplateHandler"; // NOI18N
+
+    /**
+     * A flag used by the default template processing to create files from template structures in <b>existing</b> folders
+     * rather than create unique folder names. By default, folders in template will create unique folders on the disk,
+     * if the same-named folder already exists. The attribute, if defined, should have a boolean value true/false.
+     * @since 1.23
+     */
+    public static final String ATTR_TEMPLATE_MERGE_FOLDERS = "template.mergeFolders"; // NOI18N
+    
+    /**
+     * Marks file(s) in the template, that should be opened in the editor. If the template file attribute
+     * is set to {@link Boolean#TRUE}, the template handler should the file created from the file template from
+     * the {@link #build} method. Note the attribute serves as a hint, so the Handler may choose to ignore
+     * the instruction.
+     * @since 1.23
+     */
+    public static final String ATTR_TEMPLATE_OPEN_FILE = "template.openFile"; // NOI18N
+    
     /**
      * Determines the default procedure for copying the template in {@link #createFromTemplate}.
      */
@@ -108,6 +134,20 @@ public final class FileBuilder {
      */
     public FileBuilder(@NonNull FileObject template, @NonNull FileObject target) {
         descriptor = new CreateDescriptor(template, target);
+    }
+
+    /**
+     * Use specific Lookup for creation. This allows to pass in additional
+     * parameters or services. A GUI-aware caller may, for example, add
+     * a ProgressHandle or a project ActionProgress interface to the lookup,
+     * in a hope that template handler will use service to report progress.
+     * @param contextLookup the Lookup passed to template creation subprocesses
+     * @return this FileBuilder instance.
+     * @since 1.23
+     */
+    public FileBuilder useLookup(Lookup contextLookup) {
+        descriptor.setLookup(contextLookup);
+        return this;
     }
     
     /**
@@ -298,7 +338,7 @@ public final class FileBuilder {
         
         switch (defaultMode) {
             case FORMAT:
-                MapFormat mf = new MapFormat(new HashMap());
+                MapFormat mf = new MapFormat(new HashMap<>());
                 mf.setExactMatch(false);
                 mf.setLeftBrace("__");
                 mf.setRightBrace("__");

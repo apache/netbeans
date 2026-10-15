@@ -31,7 +31,7 @@ import org.openide.filesystems.FileSystem;
 public interface HudsonJob extends Comparable<HudsonJob> {
 
     /**
-     * Describes state of the Hudson Job.
+     * Describes state of the Jenkins Job.
      * See {@code hudson.model.BallColor}.
      */
     public enum Color {
@@ -100,14 +100,14 @@ public interface HudsonJob extends Comparable<HudsonJob> {
     public String getDisplayName();
     
     /**
-     * Name of the Hudson Job
+     * Name of the Jenkins Job
      *
      * @return job's name
      */
     public String getName();
     
     /**
-     * URL of the Hudson Job
+     * URL of the Jenkins Job
      *
      * @return job url
      */

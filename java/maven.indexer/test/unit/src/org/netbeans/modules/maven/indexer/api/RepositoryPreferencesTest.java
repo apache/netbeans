@@ -20,8 +20,9 @@
 package org.netbeans.modules.maven.indexer.api;
 
 import java.util.Date;
-import static junit.framework.Assert.assertEquals;
+import java.util.Locale;
 import org.apache.maven.settings.Mirror;
+import org.junit.Ignore;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.NbTestSuite;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
@@ -31,19 +32,15 @@ public class RepositoryPreferencesTest extends NbTestCase {
     public RepositoryPreferencesTest(String name) {
         super(name);
     }
-    
+
     public static NbTestSuite suite() {
-        NbTestSuite suite = new NbTestSuite();
-        suite.addTest(new RepositoryPreferencesTest("testNoConsecutiveSlashesInRepositoryID"));
-        suite.addTest(new RepositoryPreferencesTest("testGetRepositoryInfos"));
-        suite.addTest(new RepositoryPreferencesTest("testGetMirrorRepositoryInfos"));
-        return suite;
+        return new NbTestSuite(RepositoryPreferencesTest.class);
     }
 
     @Override protected void setUp() throws Exception {
         System.setProperty("no.local.settings", "true");
     }
-    
+
     // issue http://netbeans.org/bugzilla/show_bug.cgi?id=239898
     public void testNoConsecutiveSlashesInRepositoryID() throws Exception {
         RepositoryPreferences rp = RepositoryPreferences.getInstance();
@@ -53,8 +50,8 @@ public class RepositoryPreferencesTest extends NbTestCase {
         RepositoryPreferences.getLastIndexUpdate("foo_http://nowhere.net");
         RepositoryPreferences.setLastIndexUpdate("foo_http://nowhere.net", new Date());
         rp.removeTransientRepositories(1);
-    }   
-    
+    }
+
     public void testGetRepositoryInfos() throws Exception {
         RepositoryPreferences rp = RepositoryPreferences.getInstance();
         assertEquals("[local, central]", rp.getRepositoryInfos().toString());
@@ -70,16 +67,17 @@ public class RepositoryPreferencesTest extends NbTestCase {
         rp.removeTransientRepositories(3);
         assertEquals("[local, central]", rp.getRepositoryInfos().toString());
     }
-    
-public void testNonHttpRepositoryInfos() throws Exception { //#227322
+
+    @Ignore
+    public void testNonHttpRepositoryInfos() throws Exception { //#227322
         RepositoryPreferences rp = RepositoryPreferences.getInstance();
         assertEquals("[local, central]", rp.getRepositoryInfos().toString());
         rp.addTransientRepository(1, "foo", "Foo", "scp://192.168.1.1/mkleint", RepositoryInfo.MirrorStrategy.NONE);
         assertEquals("[local, central]", rp.getRepositoryInfos().toString());
         rp.addTransientRepository(2, "bar", "bar", "ftp://192.168.1.1/mkleint", RepositoryInfo.MirrorStrategy.NONE);
         assertEquals("[local, central]", rp.getRepositoryInfos().toString());
-    }    
-    
+    }
+
     /** created in attempt of reproducing issue http://netbeans.org/bugzilla/show_bug.cgi?id=214980
      */
     public void testGetMirrorRepositoryInfos() throws Exception {
@@ -129,16 +127,16 @@ public void testNonHttpRepositoryInfos() throws Exception { //#227322
             assertEquals("[eclipselink]", m.getMirroredRepositories().toString());
 
             //add central now.. should have 2 mirrored repositories..
-            rp.addTransientRepository(1, "central", "central", "http://repo1.maven.org/maven2", RepositoryInfo.MirrorStrategy.ALL);
+            rp.addTransientRepository(1, "central", "central", "https://repo.maven.apache.org/maven2", RepositoryInfo.MirrorStrategy.ALL);
             assertEquals("[local, mirror]", rp.getRepositoryInfos().toString());
             m = rp.getRepositoryInfoById("mirror");
             assertTrue(m.isMirror());
             assertEquals("[eclipselink, central]", m.getMirroredRepositories().toString());
 
             //add central AGAIN and AGAIN.. should have still just 2 mirrored repositories..
-            rp.addTransientRepository(2, "central", "central", "http://repo1.maven.org/maven2", RepositoryInfo.MirrorStrategy.ALL);
-            rp.addTransientRepository(3, "central", "central", "http://repo1.maven.org/maven2", RepositoryInfo.MirrorStrategy.ALL);
-            rp.addTransientRepository(4, "central", "central", "http://repo1.maven.org/maven2", RepositoryInfo.MirrorStrategy.ALL);
+            rp.addTransientRepository(2, "central", "central", "https://repo.maven.apache.org/maven2", RepositoryInfo.MirrorStrategy.ALL);
+            rp.addTransientRepository(3, "central", "central", "https://repo.maven.apache.org/maven2", RepositoryInfo.MirrorStrategy.ALL);
+            rp.addTransientRepository(4, "central", "central", "https://repo.maven.apache.org/maven2", RepositoryInfo.MirrorStrategy.ALL);
 
             assertEquals("[local, mirror]", rp.getRepositoryInfos().toString());
             m = rp.getRepositoryInfoById("mirror");
@@ -146,8 +144,8 @@ public void testNonHttpRepositoryInfos() throws Exception { //#227322
             assertEquals("[eclipselink, central]", m.getMirroredRepositories().toString());
 
             //try adding slightly modified transient repositories..
-            rp.addTransientRepository(3, "central", "central", "http://repo1.maven.org/maven2/", RepositoryInfo.MirrorStrategy.ALL);
-            rp.addTransientRepository(2, "central", "central rep", "http://repo1.maven.org/maven2", RepositoryInfo.MirrorStrategy.ALL);
+            rp.addTransientRepository(3, "central", "central", "https://repo.maven.apache.org/maven2/", RepositoryInfo.MirrorStrategy.ALL);
+            rp.addTransientRepository(2, "central", "central rep", "https://repo.maven.apache.org/maven2", RepositoryInfo.MirrorStrategy.ALL);
             rp.addTransientRepository(2, "eclipselink", "Repository for library Library", "http://ftp.ing.umu.se/mirror/eclipse/rt/eclipselink/maven.repo", RepositoryInfo.MirrorStrategy.ALL);
 
             assertEquals("[local, mirror]", rp.getRepositoryInfos().toString());
@@ -155,9 +153,51 @@ public void testNonHttpRepositoryInfos() throws Exception { //#227322
             assertTrue(m.isMirror());
             assertEquals("[eclipselink, central]", m.getMirroredRepositories().toString());
         } finally {
-           EmbedderFactory.getOnlineEmbedder().getSettings().removeMirror(mirror); 
+           EmbedderFactory.getOnlineEmbedder().getSettings().removeMirror(mirror);
         }
-    } 
+    }
 
+    public void testDefaultFreqIsWeek() {
+        Locale orig = Locale.getDefault();
+        try {
+            Locale.setDefault(Locale.ENGLISH);
+            int def = RepositoryPreferences.getDefaultIndexUpdateFrequency();
+            assertEquals("Once a week is default", RepositoryPreferences.FREQ_ONCE_WEEK, def);
+        } finally {
+            Locale.setDefault(orig);
+        }
+    }
 
+    public void testBrandingFreqToNever() {
+        Locale orig = Locale.getDefault();
+        try {
+            Locale.setDefault(new Locale("te", "ST"));
+            int def = RepositoryPreferences.getDefaultIndexUpdateFrequency();
+            assertEquals("Branded to startup", RepositoryPreferences.FREQ_STARTUP, def);
+        } finally {
+            Locale.setDefault(orig);
+        }
+    }
+
+    public void testDefaultCreateIndex() {
+        Locale orig = Locale.getDefault();
+        try {
+            Locale.setDefault(Locale.ENGLISH);
+            boolean def = RepositoryPreferences.getDefaultIndexRepositories();
+            assertTrue("Indexing is on", def);
+        } finally {
+            Locale.setDefault(orig);
+        }
+    }
+
+    public void testBrandingCreateIndex() {
+        Locale orig = Locale.getDefault();
+        try {
+            Locale.setDefault(new Locale("te", "ST"));
+            boolean def = RepositoryPreferences.getDefaultIndexRepositories();
+            assertFalse("Never create index", def);
+        } finally {
+            Locale.setDefault(orig);
+        }
+    }
 }

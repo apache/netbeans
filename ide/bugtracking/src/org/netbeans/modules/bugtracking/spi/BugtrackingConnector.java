@@ -58,9 +58,9 @@ public interface BugtrackingConnector {
      * 
      * <p>
      * The to be returned {@link Repository} instance can be obtained via 
-     * <br/>
+     * <br>
      * {@link BugtrackingSupport#createRepository(java.lang.Object, org.netbeans.modules.bugtracking.spi.IssueStatusProvider, org.netbeans.modules.bugtracking.spi.IssueScheduleProvider, org.netbeans.modules.bugtracking.spi.IssuePriorityProvider, org.netbeans.modules.bugtracking.spi.IssueFinder) }
-     * <br/>
+     * <br>
      * in which scope the implementation particular repository representation is 
      * coupled with provider implementations giving access to the plugin internal data. 
      * </p>
@@ -84,9 +84,9 @@ public interface BugtrackingConnector {
      * 
      * <p>
      * The to be returned {@link Repository} instance can be obtained via 
-     * <br/>
+     * <br>
      * {@link BugtrackingSupport#createRepository(java.lang.Object, org.netbeans.modules.bugtracking.spi.IssueStatusProvider, org.netbeans.modules.bugtracking.spi.IssueScheduleProvider, org.netbeans.modules.bugtracking.spi.IssuePriorityProvider, org.netbeans.modules.bugtracking.spi.IssueFinder) }
-     * <br/>
+     * <br>
      * in which scope the implementation particular repository representation is 
      * coupled with provider implementations giving access to the plugin internal data. 
      * </p>

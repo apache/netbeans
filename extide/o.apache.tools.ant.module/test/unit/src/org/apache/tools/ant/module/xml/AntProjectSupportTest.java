@@ -22,6 +22,7 @@ package org.apache.tools.ant.module.xml;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import org.apache.tools.ant.module.api.AntProjectCookie;
 import org.apache.tools.ant.module.loader.AntProjectDataObject;
@@ -76,7 +77,7 @@ public class AntProjectSupportTest extends NbTestCase {
             public void run() throws IOException {
                 OutputStream os = fo.getOutputStream();
                 try {
-                    os.write("<project default='x'><target name='x'/></project>".getBytes("UTF-8"));
+                    os.write("<project default='x'><target name='x'/></project>".getBytes(StandardCharsets.UTF_8));
                 } finally {
                     os.close();
                 }

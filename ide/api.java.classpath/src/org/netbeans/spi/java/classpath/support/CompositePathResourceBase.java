@@ -58,7 +58,7 @@ public abstract class CompositePathResourceBase implements PathResourceImplement
                     for (PathResourceImplementation pri : resources) {
                         result.addAll (Arrays.asList(pri.getRoots()));
                     }
-                    this.roots = result.toArray (new URL [result.size()]);
+                    this.roots = result.toArray (new URL [0]);
                 }
             }
         }
@@ -80,7 +80,7 @@ public abstract class CompositePathResourceBase implements PathResourceImplement
      * The listener is notified when the roots of the PathResource are changed.
      * @param listener
      */
-    public synchronized final void addPropertyChangeListener(PropertyChangeListener listener) {
+    public final synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
         if (this.pListeners == null)
             this.pListeners = new ArrayList<PropertyChangeListener> ();
         this.pListeners.add (listener);
@@ -90,7 +90,7 @@ public abstract class CompositePathResourceBase implements PathResourceImplement
      * Removes PropertyChangeListener
      * @param listener
      */
-    public synchronized final void removePropertyChangeListener(PropertyChangeListener listener) {
+    public final synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
         if (this.pListeners == null)
             return;
         this.pListeners.remove (listener);
@@ -107,7 +107,7 @@ public abstract class CompositePathResourceBase implements PathResourceImplement
         synchronized (this) {
             if (this.pListeners == null)
                 return;
-            _listeners = this.pListeners.toArray(new PropertyChangeListener[this.pListeners.size()]);
+            _listeners = this.pListeners.toArray(new PropertyChangeListener[0]);
         }
         PropertyChangeEvent event = new PropertyChangeEvent (this, propName, oldValue, newValue);
         for (PropertyChangeListener l : _listeners) {

@@ -186,15 +186,15 @@ public class WebProjectOperations implements DeleteOperationImplementation, Copy
 		AntProjectHelper helper = project.getAntProjectHelper();
 		EditableProperties projectProps = helper.getProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH);
 
-		String warName = (String) projectProps.get(WebProjectProperties.WAR_NAME);
-		String warEarName = (String) projectProps.get(WebProjectProperties.WAR_EAR_NAME);
+		String warName = projectProps.get(WebProjectProperties.WAR_NAME);
+		String warEarName = projectProps.get(WebProjectProperties.WAR_EAR_NAME);
 		String oldName = warName.substring(0, warName.length() - 4);
 		if (warName.endsWith(".war") && oldName.equals(oldProjectName)) //NOI18N
 		    projectProps.put(WebProjectProperties.WAR_NAME, PropertyUtils.getUsablePropertyName(newName) + ".war"); //NOI18N
 		if (warEarName.endsWith(".war") && oldName.equals(oldProjectName)) //NOI18N
 		    projectProps.put(WebProjectProperties.WAR_EAR_NAME, PropertyUtils.getUsablePropertyName(newName) + ".war"); //NOI18N
                 
-                ProjectWebModule wm = (ProjectWebModule) project.getLookup ().lookup(ProjectWebModule.class);
+                ProjectWebModule wm = project.getLookup().lookup(ProjectWebModule.class);
                 if (wm != null) //should not be null
                     wm.setContextPath("/" + newName);
                 
@@ -228,15 +228,15 @@ public class WebProjectOperations implements DeleteOperationImplementation, Copy
 		EditableProperties projectProps = helper.getProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH);
 		EditableProperties privateProps = helper.getProperties(AntProjectHelper.PRIVATE_PROPERTIES_PATH);
 
-		String warName = (String) projectProps.get(WebProjectProperties.WAR_NAME);
-		String warEarName = (String) projectProps.get(WebProjectProperties.WAR_EAR_NAME);
+		String warName = projectProps.get(WebProjectProperties.WAR_NAME);
+		String warEarName = projectProps.get(WebProjectProperties.WAR_EAR_NAME);
 		String oldName = warName.substring(0, warName.length() - 4);
 		if (warName.endsWith(".war") && oldName.equals(oldProjectName)) //NOI18N
 		    projectProps.put(WebProjectProperties.WAR_NAME, PropertyUtils.getUsablePropertyName(newName) + ".war"); //NOI18N
 		if (warEarName != null && warEarName.endsWith(".war") && oldName.equals(oldProjectName)) //NOI18N
 		    projectProps.put(WebProjectProperties.WAR_EAR_NAME, PropertyUtils.getUsablePropertyName(newName) + ".war"); //NOI18N
 
-		ProjectWebModule wm = (ProjectWebModule) project.getLookup().lookup(ProjectWebModule.class);
+		ProjectWebModule wm = project.getLookup().lookup(ProjectWebModule.class);
 		String serverId = privateProps.getProperty(WebProjectProperties.J2EE_SERVER_INSTANCE);
 		String oldCP = wm.getContextPath(serverId);
 		if (oldCP != null && oldName.equals(oldCP.substring(1)))

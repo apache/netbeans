@@ -222,7 +222,7 @@ final class ProxyNode extends AbstractNode {
                 resultSheets.add(res);
             }
 
-            return resultSheets.toArray(new Sheet.Set[resultSheets.size()]);
+            return resultSheets.toArray(new Sheet.Set[0]);
         }
 
         return new Sheet.Set[0];

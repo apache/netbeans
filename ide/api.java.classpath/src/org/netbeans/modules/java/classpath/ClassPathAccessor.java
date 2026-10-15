@@ -33,7 +33,7 @@ public abstract class ClassPathAccessor {
     public static synchronized ClassPathAccessor getDefault() {
         ClassPathAccessor instance = DEFAULT;
         if (instance == null) {
-            Class c = ClassPath.class;
+            Class<?> c = ClassPath.class;
             try {
                 Class.forName(c.getName(), true, c.getClassLoader());
                 instance = DEFAULT;

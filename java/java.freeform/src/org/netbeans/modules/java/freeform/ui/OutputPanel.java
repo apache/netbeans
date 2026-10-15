@@ -41,7 +41,7 @@ import org.openide.util.NbBundle;
  */
 public class OutputPanel extends javax.swing.JPanel implements HelpCtx.Provider {
 
-    private DefaultListModel listModel;
+    private DefaultListModel<String> listModel;
     private File lastChosenFile = null;
     private boolean isSeparateClasspath = true;
     private List<ProjectModel.CompilationUnitKey> compUnitsKeys;
@@ -51,7 +51,7 @@ public class OutputPanel extends javax.swing.JPanel implements HelpCtx.Provider 
     public OutputPanel() {
         initComponents();
         jTextArea1.setBackground(getBackground());
-        listModel = new DefaultListModel();
+        listModel = new DefaultListModel<>();
         output.setModel(listModel);
         // XXX: for now only single selection
         output.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -350,7 +350,6 @@ public class OutputPanel extends javax.swing.JPanel implements HelpCtx.Provider 
 
     private void javadocBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_javadocBrowseActionPerformed
         JFileChooser chooser = new JFileChooser();
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
         chooser.setFileSelectionMode (JFileChooser.FILES_AND_DIRECTORIES);
         chooser.setMultiSelectionEnabled(false);
         if (lastChosenFile != null) {
@@ -529,7 +528,6 @@ public class OutputPanel extends javax.swing.JPanel implements HelpCtx.Provider 
 
     private void addOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addOutputActionPerformed
         JFileChooser chooser = new JFileChooser();
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
         chooser.setFileSelectionMode (JFileChooser.FILES_AND_DIRECTORIES);
         chooser.setMultiSelectionEnabled(true);
         if (lastChosenFile != null) {

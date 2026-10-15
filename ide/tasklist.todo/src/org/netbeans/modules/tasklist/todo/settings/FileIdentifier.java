@@ -75,7 +75,7 @@ public abstract class FileIdentifier implements Comparable<FileIdentifier>{
            return false;
         }
         FileIdentifier other = (FileIdentifier) obj;
-        if (!this.getType().equals(other.getType())) {
+        if (this.getType() != other.getType()) {
             return false;
         }
         return this.getId().equalsIgnoreCase(other.getId());

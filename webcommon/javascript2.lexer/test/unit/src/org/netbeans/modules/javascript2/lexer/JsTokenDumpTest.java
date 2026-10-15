@@ -92,4 +92,25 @@ public class JsTokenDumpTest extends NbTestCase {
         LexerTestUtilities.checkTokenDump(this, "testfiles/issue262621.js",
                 JsTokenId.javascriptLanguage());
     }
+
+    public void testPrivateMembers() throws Exception {
+        LexerTestUtilities.checkTokenDump(this, "testfiles/privateClassMembers.js",
+                JsTokenId.javascriptLanguage());
+    }
+
+    public void testOperators() throws Exception {
+        LexerTestUtilities.checkTokenDump(this, "testfiles/operators.js",
+                JsTokenId.javascriptLanguage());
+    }
+
+    public void testNumbers() throws Exception {
+        LexerTestUtilities.checkTokenDump(this, "testfiles/numbers.js",
+                JsTokenId.javascriptLanguage());
+    }
+
+    @SuppressWarnings("unchecked")
+    public void testMetaProperties() throws Exception {
+        LexerTestUtilities.checkTokenDump(this, "testfiles/metaproperties.js",
+                JsTokenId.javascriptLanguage());
+    }
 }

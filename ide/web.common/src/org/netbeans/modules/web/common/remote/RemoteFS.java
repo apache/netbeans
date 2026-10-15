@@ -274,7 +274,7 @@ public class RemoteFS extends AbstractFileSystem {
             if (fo != null) {
                 return fo.getAttributes();
             } else {
-                return Collections.enumeration(Collections.EMPTY_LIST);
+                return Collections.enumeration(Collections.emptyList());
             }
         }
 

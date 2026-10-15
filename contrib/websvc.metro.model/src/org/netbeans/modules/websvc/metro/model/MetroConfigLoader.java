@@ -56,8 +56,8 @@ import org.openide.util.Exceptions;
  */
 public class MetroConfigLoader {
 
-    public final static String CFG_FILE_NAME="metro.xml";
-    public final static String DEFAULT_TUBELINE_NAME="default";
+    public static final String CFG_FILE_NAME="metro.xml";
+    public static final String DEFAULT_TUBELINE_NAME="default";
 
     private JAXBContext jaxbContext = null;
     private ObjectFactory objFactory = null;

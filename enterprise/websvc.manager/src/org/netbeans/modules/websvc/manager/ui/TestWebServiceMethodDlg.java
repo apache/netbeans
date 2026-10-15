@@ -35,6 +35,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.*;
+import java.nio.file.Files;
 import java.util.*;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -151,7 +152,7 @@ public class TestWebServiceMethodDlg extends JPanel implements ActionListener, M
                     }
                 }
 
-                URL[] urls = (URL[]) urlList.toArray(new URL[0]);
+                URL[] urls = urlList.toArray(new URL[0]);
                 /**
                  * Delegate to the module's classloader since core/startup/NbInstaller
                  * overrides the JAX-WS 2.0 jars present in JDK 6
@@ -171,7 +172,7 @@ public class TestWebServiceMethodDlg extends JPanel implements ActionListener, M
 
     private File createTempCopy(File src) {
         try {
-            java.io.File tempFile = java.io.File.createTempFile("proxyjar", "jar");
+            java.io.File tempFile = Files.createTempFile("proxyjar", "jar").toFile();
             java.nio.channels.FileChannel inChannel = new java.io.FileInputStream(src).getChannel();
             java.nio.channels.FileChannel outChannel = new java.io.FileOutputStream(tempFile).getChannel();
             inChannel.transferTo(0, inChannel.size(), outChannel);
@@ -402,7 +403,7 @@ public class TestWebServiceMethodDlg extends JPanel implements ActionListener, M
         }
     }
 
-    private void doMethodFinished(Object inReturnedObject,LinkedList inParamList) {
+    private void doMethodFinished(Object inReturnedObject, List inParamList) {
         dialog.setCursor(normalCursor);
 
         showResults(inReturnedObject);
@@ -677,7 +678,7 @@ public class TestWebServiceMethodDlg extends JPanel implements ActionListener, M
         private final LinkedList paramList;
         private final JavaMethod javaMethod;
         private final URLClassLoader urlClassLoader;
-        private final List listeners = new ArrayList();
+        private final List<MethodTaskListener> listeners = new ArrayList<>();
         private boolean cancelled=false;
 
 
@@ -696,9 +697,9 @@ public class TestWebServiceMethodDlg extends JPanel implements ActionListener, M
         }
 
         private void notifyListeners(Object returnedObject) {
-            Iterator listenerIterator = listeners.iterator();
+            Iterator<MethodTaskListener> listenerIterator = listeners.iterator();
             while(listenerIterator.hasNext()) {
-                MethodTaskListener currentListener = (MethodTaskListener)listenerIterator.next();
+                MethodTaskListener currentListener = listenerIterator.next();
                 currentListener.methodFinished(returnedObject, paramList);
             }
         }

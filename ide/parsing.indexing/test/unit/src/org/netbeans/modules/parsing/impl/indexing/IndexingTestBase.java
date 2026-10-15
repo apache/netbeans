@@ -59,7 +59,7 @@ public class IndexingTestBase extends NbTestCase {
         if (services2 != null) {
             classes.addAll(Arrays.asList(services2));
         }
-        MockServices.setServices(classes.toArray(new Class[classes.size()]));
+        MockServices.setServices(classes.toArray(new Class[0]));
             MockMimeLookup.setInstances(
             MimePath.EMPTY,
             new DocumentFactory() {

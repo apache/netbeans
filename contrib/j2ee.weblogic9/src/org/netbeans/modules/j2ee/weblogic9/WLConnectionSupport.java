@@ -175,7 +175,7 @@ public final class WLConnectionSupport {
 
     }
     
-    public static abstract class JMXRuntimeAction<T> implements JMXAction<T> {
+    public abstract static class JMXRuntimeAction<T> implements JMXAction<T> {
 
         public abstract T call(MBeanServerConnection connection, ObjectName service) throws Exception;
 
@@ -192,7 +192,7 @@ public final class WLConnectionSupport {
         }
     }
     
-    public static abstract class JMXEditAction<T> implements JMXAction<T> {
+    public abstract static class JMXEditAction<T> implements JMXAction<T> {
 
         public abstract T call(MBeanServerConnection connection, ObjectName service) throws Exception;
 

@@ -20,6 +20,7 @@ package org.netbeans.modules.java.hints.declarative.idebinding;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import org.netbeans.api.java.source.TestUtilities;
@@ -52,7 +53,7 @@ public class HintsTaskTest extends TestBase {
         TokenHierarchy<?> h = TokenHierarchy.create(code, DeclarativeHintTokenId.language());
         DeclarativeHintsParser.Result res = new DeclarativeHintsParser().parse(hint, code, h.tokenSequence(DeclarativeHintTokenId.language()));
         List<ErrorDescription> errorInstances = HintsTask.computeErrors(res, code, hint);
-        List<String> errors = new ArrayList<String>();
+        List<String> errors = new ArrayList<>();
         
         for (ErrorDescription ed : errorInstances) {
             errors.add(ed.toString());
@@ -72,13 +73,13 @@ public class HintsTaskTest extends TestBase {
         TokenHierarchy<?> h = TokenHierarchy.create(code, DeclarativeHintTokenId.language());
         DeclarativeHintsParser.Result res = new DeclarativeHintsParser().parse(hint, code, h.tokenSequence(DeclarativeHintTokenId.language()));
         List<ErrorDescription> errorInstances = HintsTask.computeErrors(res, code, hint);
-        List<String> errors = new ArrayList<String>();
+        List<String> errors = new ArrayList<>();
         
         for (ErrorDescription ed : errorInstances) {
             errors.add(ed.toString());
         }
         
-        assertEquals(Arrays.asList(), errors);
+        assertEquals(Collections.emptyList(), errors);
     }
     
     public void test206116NoWarningAboutRemovingNonExpressions() throws Exception {
@@ -92,13 +93,13 @@ public class HintsTaskTest extends TestBase {
         TokenHierarchy<?> h = TokenHierarchy.create(code, DeclarativeHintTokenId.language());
         DeclarativeHintsParser.Result res = new DeclarativeHintsParser().parse(hint, code, h.tokenSequence(DeclarativeHintTokenId.language()));
         List<ErrorDescription> errorInstances = HintsTask.computeErrors(res, code, hint);
-        List<String> errors = new ArrayList<String>();
+        List<String> errors = new ArrayList<>();
         
         for (ErrorDescription ed : errorInstances) {
             errors.add(ed.toString());
         }
         
-        assertEquals(Arrays.asList(), errors);
+        assertEquals(Collections.emptyList(), errors);
     }
     
     public void test206116NoWarningAboutRemovingUnattributable() throws Exception {
@@ -112,15 +113,35 @@ public class HintsTaskTest extends TestBase {
         TokenHierarchy<?> h = TokenHierarchy.create(code, DeclarativeHintTokenId.language());
         DeclarativeHintsParser.Result res = new DeclarativeHintsParser().parse(hint, code, h.tokenSequence(DeclarativeHintTokenId.language()));
         List<ErrorDescription> errorInstances = HintsTask.computeErrors(res, code, hint);
-        List<String> errors = new ArrayList<String>();
+        List<String> errors = new ArrayList<>();
         
         for (ErrorDescription ed : errorInstances) {
             errors.add(ed.toString());
         }
         
-        assertFalse(new HashSet<String>(errors).contains("ERR_RemoveExpression"));
+        assertFalse(new HashSet<>(errors).contains("ERR_RemoveExpression"));
     }
-    
+
+    public void testTypeConditions() throws Exception {
+        prepareTest("test/Test.java", "");
+
+        FileObject hint = sourceRoot.createData("test.hint");
+        String code = "$1.length() :: $1 instanceof java.lang.String;;";
+
+        TestUtilities.copyStringToFile(hint, code);
+
+        TokenHierarchy<?> h = TokenHierarchy.create(code, DeclarativeHintTokenId.language());
+        DeclarativeHintsParser.Result res = new DeclarativeHintsParser().parse(hint, code, h.tokenSequence(DeclarativeHintTokenId.language()));
+        List<ErrorDescription> errorInstances = HintsTask.computeErrors(res, code, hint);
+        List<String> errors = new ArrayList<>();
+
+        for (ErrorDescription ed : errorInstances) {
+            errors.add(ed.toString());
+        }
+
+        assertEquals(Collections.emptyList(), errors);
+    }
+
     static {
         NbBundle.setBranding("test");
     }

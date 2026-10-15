@@ -20,7 +20,6 @@ package org.netbeans.modules.db.dataview.meta;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -141,9 +140,8 @@ public final class DBTable extends DBObject<DBModel> {
     }
 
     public List<DBColumn> getColumnList() {
-        List<DBColumn> list = new ArrayList<>();
-        list.addAll(columns.values());
-        Collections.sort(list, new ColumnOrderComparator());
+        List<DBColumn> list = new ArrayList<>(columns.values());
+        list.sort(new ColumnOrderComparator());
         return list;
     }
 

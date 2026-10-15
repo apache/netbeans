@@ -53,7 +53,7 @@ public class LogUtils {
             String line = Bundle.MSG_LogUtils_updateBranch_actions("{0}", "{1}");
             int historyPos = line.indexOf("{0}");
             int diffPos = line.indexOf("{1}");
-            List<String> segments = new ArrayList<String>();
+            List<String> segments = new ArrayList<>();
             OutputListener list1, list2;
             if (historyPos < diffPos) {
                 segments.add(line.substring(0, historyPos));
@@ -91,20 +91,12 @@ public class LogUtils {
             this.from = from.length() > 7 ? from.substring(0, 7) : from;
             this.to = to.length() > 7 ? to.substring(0, 7) : to;
         }
-        
-        @Override
-        public void outputLineSelected (OutputEvent ev) {
-        }
 
         @Override
         public void outputLineAction (OutputEvent ev) {
             SearchHistoryAction.openSearch(repository, repository, repository.getName(), from, to);
         }
 
-        @Override
-        public void outputLineCleared (OutputEvent ev) {
-        }
-        
     }
     
     @NbBundle.Messages({
@@ -125,20 +117,12 @@ public class LogUtils {
             this.from = from.length() > 7 ? from.substring(0, 7) : from;
             this.to = to.length() > 7 ? to.substring(0, 7) : to;
         }
-        
-        @Override
-        public void outputLineSelected (OutputEvent ev) {
-        }
 
         @Override
         public void outputLineAction (OutputEvent ev) {
             SystemAction.get(DiffAction.class).diff(GitUtils.getContextForFile(repository),
                     new Revision(from, Bundle.MSG_LogUtils_updateBranch_actions_diff_previous(branchName, from)),
                     new Revision(to, Bundle.MSG_LogUtils_updateBranch_actions_diff_previous(branchName, to)));
-        }
-
-        @Override
-        public void outputLineCleared (OutputEvent ev) {
         }
         
     }

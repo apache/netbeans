@@ -41,7 +41,7 @@ public interface AxisMarksComputer {
     public Iterator<AxisMark> marksIterator(int start, int end);
 
 
-    public static abstract class Abstract implements AxisMarksComputer {
+    public abstract static class Abstract implements AxisMarksComputer {
 
         protected final ChartContext context;
 
@@ -75,7 +75,7 @@ public interface AxisMarksComputer {
     }
 
 
-    public static abstract class AbstractIterator implements Iterator<AxisMark> {
+    public abstract static class AbstractIterator implements Iterator<AxisMark> {
         public void remove() {
             throw new UnsupportedOperationException(
                       "AxisMarksComputer does not support remove()"); // NOI18N

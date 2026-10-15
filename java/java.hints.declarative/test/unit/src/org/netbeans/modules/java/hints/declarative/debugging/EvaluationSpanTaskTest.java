@@ -29,7 +29,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.text.Document;
 import org.netbeans.api.java.lexer.JavaTokenId;
-import static org.junit.Assert.*;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
@@ -114,8 +113,8 @@ public class EvaluationSpanTaskTest extends NbTestCase {
         Matcher m = SPLIT.matcher(hintSpec);
         int lastStart = 0;
         int[] span = new int[] {-1, -1};
-        List<int[]> passedGolden = new LinkedList<int[]>();
-        List<int[]> failedGolden = new LinkedList<int[]>();
+        List<int[]> passedGolden = new LinkedList<>();
+        List<int[]> failedGolden = new LinkedList<>();
 
         while (m.find()) {
             sb.append(hintSpec.substring(lastStart, m.start()));
@@ -134,7 +133,7 @@ public class EvaluationSpanTaskTest extends NbTestCase {
             lastStart = m.end();
         }
 
-        sb.append(hintSpec.substring(lastStart, hintSpec.length()));
+        sb.append(hintSpec.substring(lastStart));
 
         String[] codeSplit = code.split("\\|");
         
@@ -142,8 +141,8 @@ public class EvaluationSpanTaskTest extends NbTestCase {
         
         Collection<? extends HintWrapper> w = HintWrapper.parse(info.getFileObject(), sb.toString());
 
-        List<int[]> passedActual = new LinkedList<int[]>();
-        List<int[]> failedActual = new LinkedList<int[]>();
+        List<int[]> passedActual = new LinkedList<>();
+        List<int[]> failedActual = new LinkedList<>();
 
         EvaluationSpanTask.computeHighlights(info,
                                              codeSplit[0].length(),

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #6d6d6d;
+      }
+
+      .st1 {
+        fill: #416ad5;
+      }
+
+      .st2 {
+        fill: #8d8d8d;
+      }
+
+      .st3 {
+        fill: #ececec;
+      }
+    </style>
+  </defs>
+  <g>
+    <polygon class="st3" points="1.5 14.5 1.5 .5 10.193 .5 13.5 3.807 13.5 14.5 1.5 14.5"/>
+    <path class="st0" d="M9.986,1l3.014,3.014v9.986H2V1h7.986M10.4,0H1v15h13V3.6l-3.6-3.6h0Z"/>
+  </g>
+  <polygon class="st2" points="13 5 13 4 10 4 10 1 9 1 9 5 13 5"/>
+  <g>
+    <polygon class="st1" points="5.491 7.348 2.804 4.489 5.5 1.793 6.207 2.5 4.196 4.511 6.22 6.663 5.491 7.348"/>
+    <polygon class="st1" points="8.513 13.277 7.806 12.57 9.816 10.56 7.793 8.408 8.521 7.723 11.209 10.581 8.513 13.277"/>
+    <circle class="st1" cx="7.5" cy="6.5" r=".55"/>
+    <circle class="st1" cx="9.506" cy="6.556" r=".55"/>
+    <circle class="st1" cx="6.5" cy="11.5" r=".55"/>
+    <circle class="st1" cx="4.5" cy="11.5" r=".55"/>
+    <rect class="st1" x="7" y="2" width="1" height="3"/>
+  </g>
+</svg>

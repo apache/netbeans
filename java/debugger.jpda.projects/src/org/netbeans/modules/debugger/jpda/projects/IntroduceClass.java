@@ -76,9 +76,9 @@ class IntroduceClass {
             }
             method = parentPath;
         }
-        CompilationUnitTree compilationUnit = info.getCompilationUnit();
+        CompilationUnitTree compilationUnit = treePath.getCompilationUnit();
         SourcePositions sourcePositions = info.getTrees().getSourcePositions();
-        long endPosition = sourcePositions.getEndPosition(compilationUnit, method.getLeaf());
+        long endPosition = sourcePositions.getEndPosition(method.getLeaf());
         if (TreeUtilities.CLASS_TREE_KINDS.contains(method.getLeaf().getKind())) {
             // We're in a class, generate before it's end:
             this.classGeneratePosition = endPosition - 1;
@@ -98,11 +98,11 @@ class IntroduceClass {
                 Element lastStatementElement;
                 if (lastStatement != null && (lastStatementElement = getElement(info, new TreePath(treePath, lastStatement))) != null) {
                     type = lastStatementElement.asType();
-                    if (TypeKind.EXECUTABLE.equals(type.getKind())) {
+                    if (TypeKind.EXECUTABLE == type.getKind()) {
                         ExecutableType eType = (ExecutableType) type;
                         type = eType.getReturnType();
                         // Check that it ends with a semicolon:
-                        long lsEnd = sourcePositions.getEndPosition(compilationUnit, lastStatement);
+                        long lsEnd = sourcePositions.getEndPosition(lastStatement);
                         if (lsEnd < 0) {
                             lsEnd = this.snippetCode.length() - 1;
                         } else {
@@ -116,16 +116,18 @@ class IntroduceClass {
                     }
                 }
             }
-            if (type != null && !TypeKind.VOID.equals(type.getKind())) {
+            if (type != null && TypeKind.VOID != type.getKind()) {
                 returnType = type.toString();
                 // Prepend a return statement:
-                long lsBegin = sourcePositions.getStartPosition(compilationUnit, lastStatement);
+                long lsBegin = sourcePositions.getStartPosition(lastStatement);
                 // Make it relative to the beginning of the code snippet:
                 lsBegin -= codeOffset;
-                this.snippetCode = new StringBuilder(this.snippetCode)
-                        .insert((int) lsBegin, "return ")
-                        .append(';')
-                        .toString();
+                StringBuilder code = new StringBuilder(this.snippetCode)
+                        .insert((int) lsBegin, "return ");
+                if (!this.snippetCode.trim().endsWith(";")) {
+                    code.append(';');
+                }
+                this.snippetCode = code.toString();
             }
             if (returnType == null) {
                 returnType = info.getTypes().getNoType(TypeKind.VOID).toString();
@@ -233,10 +235,10 @@ class IntroduceClass {
                 break;
             default:
                 Tree first = firstLeaf.getLeaf();
-                if (Tree.Kind.EXPRESSION_STATEMENT.equals(first.getKind())) {
+                if (Tree.Kind.EXPRESSION_STATEMENT == first.getKind()) {
                     statements = Collections.singletonList((StatementTree) firstLeaf.getLeaf());
                 } else {
-                    statements = Collections.EMPTY_LIST;
+                    statements = Collections.emptyList();
                 }
         }
         int s = statements.size();

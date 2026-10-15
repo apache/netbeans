@@ -51,6 +51,9 @@ public abstract class EditorApiPackageAccessor {
     
     /** Register text component to registry. */
     public abstract void register(JTextComponent c);
+
+    /**Forcibly release from the registry - useful for tests.*/
+    public abstract void forceRelease(JTextComponent c);
     
     public abstract void setIgnoredAncestorClass(Class ignoredAncestorClass);
     

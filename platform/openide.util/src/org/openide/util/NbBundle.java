@@ -21,6 +21,7 @@ package org.openide.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -28,6 +29,14 @@ import java.lang.annotation.Target;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.CoderResult;
+import java.nio.charset.CodingErrorAction;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -68,7 +77,10 @@ public class NbBundle extends Object {
 
     private static final boolean USE_DEBUG_LOADER = Boolean.getBoolean("org.openide.util.NbBundle.DEBUG"); // NOI18N
     private static String brandingToken = null;
-
+    
+    private static final UtfThenIsoCharset utfThenIsoCharset = new UtfThenIsoCharset(false);
+    private static final UtfThenIsoCharset utfThenIsoCharsetOnlyUTF8 = new UtfThenIsoCharset(true);    
+    
     /**
      * Cache of URLs for localized files.
      * Keeps only weak references to the class loaders.
@@ -126,8 +138,8 @@ public class NbBundle extends Object {
     * @return URL of matching localized file
     * @throws MissingResourceException if not found
      * @deprecated Use the <code>nbresloc</code> URL protocol instead. This method does a poor
-     *             job of handling resources such as <samp>/some.dir/res.txt</samp> or
-     *             <samp>/some/res.txt.sample</samp>.
+     *             job of handling resources such as <code>/some.dir/res.txt</code> or
+     *             <code>/some/res.txt.sample</code>.
     */
     @Deprecated
     public static synchronized URL getLocalizedFile(String baseName, String ext)
@@ -143,8 +155,8 @@ public class NbBundle extends Object {
     * @return URL of matching localized file
     * @throws MissingResourceException if not found
      * @deprecated Use the <code>nbresloc</code> URL protocol instead. This method does a poor
-     *             job of handling resources such as <samp>/some.dir/res.txt</samp> or
-     *             <samp>/some/res.txt.sample</samp>.
+     *             job of handling resources such as <code>/some.dir/res.txt</code> or
+     *             <code>/some/res.txt.sample</code>.
     */
     @Deprecated
     public static synchronized URL getLocalizedFile(String baseName, String ext, Locale locale)
@@ -161,8 +173,8 @@ public class NbBundle extends Object {
     * @return URL of matching localized file
     * @throws MissingResourceException if not found
      * @deprecated Use the <code>nbresloc</code> URL protocol instead. This method does a poor
-     *             job of handling resources such as <samp>/some.dir/res.txt</samp> or
-     *             <samp>/some/res.txt.sample</samp>.
+     *             job of handling resources such as <code>/some.dir/res.txt</code> or
+     *             <code>/some/res.txt.sample</code>.
     */
     @Deprecated
     public static synchronized URL getLocalizedFile(String baseName, String ext, Locale locale, ClassLoader loader)
@@ -258,16 +270,16 @@ public class NbBundle extends Object {
      * Find a localized and/or branded value for a given key and locale.
     * Scans through a map to find
     * the most localized match possible. For example:
-    * <p><code><PRE>
+    * <p><code>
     *   findLocalizedValue (hashTable, "keyName", new Locale ("cs_CZ"))
-    * </PRE></code>
+    * </code>
     * <p>This would return the first non-<code>null</code> value obtained from the following tests:
     * <UL>
     * <LI> <CODE>hashTable.get ("keyName_cs_CZ")</CODE>
     * <LI> <CODE>hashTable.get ("keyName_cs")</CODE>
     * <LI> <CODE>hashTable.get ("keyName")</CODE>
     * </UL>
-    *
+    * @param <T> type of returned object
     * @param table mapping from localized strings to objects
     * @param key the key to look for
     * @param locale the locale to use
@@ -296,7 +308,7 @@ public class NbBundle extends Object {
 
     /**
      * Find a localized and/or branded value for a given key in the default system locale.
-    *
+    * @param <T> type of returned object
     * @param table mapping from localized strings to objects
     * @param key the key to look for
     * @return the localized object or <code>null</code> if no key matches
@@ -440,8 +452,8 @@ public class NbBundle extends Object {
      * Get a resource bundle by name.
      * Like {@link ResourceBundle#getBundle(String,Locale,ClassLoader)} but faster,
      * and also understands branding.
-     * First looks for <samp>.properties</samp>-based bundles, then <samp>.class</samp>-based.
-     * @param name the base name of the bundle, e.g. <samp>org.netbeans.modules.foo.Bundle</samp>
+     * First looks for <code>.properties</code>-based bundles, then <code>.class</code>-based.
+     * @param name the base name of the bundle, e.g. <code>org.netbeans.modules.foo.Bundle</code>
      * @param locale the locale to use
      * @param loader a class loader to search in
      * @return a resource bundle (locale- and branding-merged), or null if not found
@@ -508,7 +520,7 @@ public class NbBundle extends Object {
 
     /**
      * Load a resource bundle (without caching).
-     * @param name the base name of the bundle, e.g. <samp>org.netbeans.modules.foo.Bundle</samp>
+     * @param name the base name of the bundle, e.g. <code>org.netbeans.modules.foo.Bundle</code>
      * @param locale the locale to use
      * @param loader a class loader to search in
      * @return a resource bundle (locale- and branding-merged), or null if not found
@@ -538,8 +550,16 @@ public class NbBundle extends Object {
                         (loader != null ? loader.getResourceAsStream(res) : ClassLoader.getSystemResourceAsStream(res)) :
                             u.openStream();
 
+                    // #NETBEANS-5181
+                    String encoding = System.getProperty("java.util.PropertyResourceBundle.encoding");
+                    UtfThenIsoCharset charset = "UTF-8".equals(encoding) ? utfThenIsoCharsetOnlyUTF8 : utfThenIsoCharset;
+                    InputStreamReader reader = new InputStreamReader(is,
+                            "ISO-8859-1".equals(encoding)
+                            ? StandardCharsets.ISO_8859_1.newDecoder()
+                            : charset.newDecoder());
+
                     try {
-                        p.load(is);
+                        p.load(reader);
                     } finally {
                         is.close();
                     }
@@ -561,11 +581,11 @@ public class NbBundle extends Object {
 
     /**
      * Load a class-based resource bundle.
-     * @param name the base name of the bundle, e.g. <samp>org.netbeans.modules.foo.Bundle</samp>
-     * @param sname the name with slashes, e.g. <samp>org/netbeans/modules/foo/Bundle</samp>
+     * @param name the base name of the bundle, e.g. <code>org.netbeans.modules.foo.Bundle</code>
+     * @param sname the name with slashes, e.g. <code>org/netbeans/modules/foo/Bundle</code>
      * @param locale the locale to use
      * @param suffixes a list of suffixes to apply to the bundle name, in <em>increasing</em> order of specificity
-     * @param loader a class loader to search in
+     * @param l a class loader to search in
      * @return a resource bundle (merged according to the suffixes), or null if not found
      */
     private static ResourceBundle loadBundleClass(
@@ -582,7 +602,7 @@ public class NbBundle extends Object {
         for (String suffix : suffixes) {
             try {
                 Class<? extends ResourceBundle> c = Class.forName(name + suffix, true, l).asSubclass(ResourceBundle.class);
-                ResourceBundle b = c.newInstance();
+                ResourceBundle b = c.getDeclaredConstructor().newInstance();
 
                 if (master == null) {
                     master = b;
@@ -728,10 +748,10 @@ public class NbBundle extends Object {
      * For example, when {@link #getBranding} returns <code>branding</code>
      * and the default locale is German, you might get a sequence such as:
      * <ol>
-     * <li><samp>"_branding_de"</samp>
-     * <li><samp>"_branding"</samp>
-     * <li><samp>"_de"</samp>
-     * <li><samp>""</samp>
+     * <li><code>"_branding_de"</code></li>
+     * <li><code>"_branding"</code></li>
+     * <li><code>"_de"</code></li>
+     * <li><code>""</code></li>
      * </ol>
      * @return a read-only iterator of type <code>String</code>
      * @since 1.1.5
@@ -808,6 +828,7 @@ public class NbBundle extends Object {
          * Values containing <code>{0}</code> etc. are assumed to be message formats and so may need escapes for metacharacters such as {@code '}.
          * A line may also be a comment if it starts with {@code #}, which may be useful for translators;
          * it is recommended to use the format {@code # {0} - summary of param}.
+         * @return list of key/value
          */
         String[] value();
     }
@@ -856,7 +877,7 @@ public class NbBundle extends Object {
     }
 
     /**
-     * A resource bundle based on <samp>.properties</samp> files (or any map).
+     * A resource bundle based on <code>.properties</code> files (or any map).
      */
     private static final class PBundle extends ResourceBundle {
         private final Map<String,String> m;
@@ -1458,4 +1479,86 @@ public class NbBundle extends Object {
 
         }
     }
+    
+    
+    /**
+     * Local charset to decode using UTF-8 by default, but automatically switching to ISO-8859-1 if UTF-8 decoding fails.
+     * 
+     */
+    private static class UtfThenIsoCharset extends Charset {
+
+        private final boolean onlyUTF8;
+
+        /**
+         *
+         * @param acceptOnlyUTF8 If true there is no automatic switch to ISO-8859-1 if UTF-8 decoding fails.
+         */
+        public UtfThenIsoCharset(boolean acceptOnlyUTF8) {
+            super(UtfThenIsoCharset.class.getCanonicalName(), null);
+            this.onlyUTF8 = acceptOnlyUTF8;
+        }
+
+        @Override
+        public boolean contains(Charset arg0) {
+            return this.equals(arg0);
+        }
+
+        @Override
+        public CharsetDecoder newDecoder() {
+            return new UtfThenIsoDecoder(this, 1.0f, 1.0f);
+        }
+
+        @Override
+        public CharsetEncoder newEncoder() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+         private final class UtfThenIsoDecoder extends CharsetDecoder {
+
+            private CharsetDecoder decoderUTF;
+            private CharsetDecoder decoderISO;  // Not null means we switched to ISO
+
+            protected UtfThenIsoDecoder(Charset cs, float averageCharsPerByte, float maxCharsPerByte) {
+                super(cs, averageCharsPerByte, maxCharsPerByte);
+
+                decoderUTF = StandardCharsets.UTF_8.newDecoder()
+                        .onMalformedInput(CodingErrorAction.REPORT) // We want to be informed of this error
+                        .onUnmappableCharacter(CodingErrorAction.REPORT);  // We want to be informed of this error                
+            }
+
+            @Override
+            protected CoderResult decodeLoop(ByteBuffer in, CharBuffer out) {
+
+                if (decoderISO != null) {
+                    // No turning back once we've switched to ISO
+                    return decoderISO.decode(in, out, false);
+                }
+
+                // To rewind if need to retry with ISO decoding
+                in.mark();
+                out.mark();
+
+                
+                // UTF decoding
+                CoderResult cr = decoderUTF.decode(in, out, false);
+                if (cr.isUnderflow() || cr.isOverflow()) {
+                    // Normal results
+                    return cr;
+                }
+
+                // If we're here there was a malformed-input or unmappable-character error with the UTF decoding
+                if (UtfThenIsoCharset.this.onlyUTF8) {
+                    // But can't switch to ISO
+                    return cr;
+                }
+
+                // Switch to ISO
+                in.reset();
+                out.reset();
+                decoderISO = StandardCharsets.ISO_8859_1.newDecoder();
+                return decoderISO.decode(in, out, false);
+            }
+        }
+    }
+    
 }

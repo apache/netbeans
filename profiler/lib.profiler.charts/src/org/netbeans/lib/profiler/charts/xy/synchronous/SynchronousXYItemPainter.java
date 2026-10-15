@@ -323,10 +323,10 @@ public class SynchronousXYItemPainter extends XYItemPainter.Abstract {
 //        if (type == TYPE_RELATIVE) {
 //        g.setColor(Color.RED);
 //        Rectangle bbox = new Rectangle(dirtyArea);
-////        bbox.width -= 1;
-////        bbox.height -= 1;
+// //        bbox.width -= 1;
+// //        bbox.height -= 1;
 //            g.draw(bbox);
-////            System.err.println(">>> Here");
+// //            System.err.println(">>> Here");
 //        }
 
 //        if (type == TYPE_RELATIVE_BOUNDED) {

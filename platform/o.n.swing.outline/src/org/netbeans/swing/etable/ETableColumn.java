@@ -25,7 +25,6 @@ import java.awt.Point;
 import java.util.Comparator;
 import java.util.Properties;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
@@ -528,39 +527,4 @@ public class ETableColumn extends TableColumn implements Comparable<ETableColumn
             return obj1.toString().compareTo(obj2.toString());
         }
     }
-    
-    /**
-     * Utility method merging 2 icons.
-     */
-    private static Icon mergeIcons(Icon icon1, Icon icon2, int x, int y, Component c) {
-        int w = 0, h = 0;
-        if (icon1 != null) {
-            w = icon1.getIconWidth();
-            h = icon1.getIconHeight();
-        }
-        if (icon2 != null) {
-            w = icon2.getIconWidth()  + x > w ? icon2.getIconWidth()   + x : w;
-            h = icon2.getIconHeight() + y > h ? icon2.getIconHeight()  + y : h;
-        }
-        if (w < 1) w = 16;
-        if (h < 1) h = 16;
-        
-        java.awt.image.ColorModel model = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment ().
-                                          getDefaultScreenDevice ().getDefaultConfiguration ().
-                                          getColorModel (java.awt.Transparency.BITMASK);
-        java.awt.image.BufferedImage buffImage = new java.awt.image.BufferedImage (model,
-             model.createCompatibleWritableRaster (w, h), model.isAlphaPremultiplied (), null);
-        
-        java.awt.Graphics g = buffImage.createGraphics ();
-        if (icon1 != null) {
-            icon1.paintIcon(c, g, 0, 0);
-        }
-        if (icon2 != null) {
-            icon2.paintIcon(c, g, x, y);
-        }
-        g.dispose();
-        
-        return new ImageIcon(buffImage);
-    }
-
 }

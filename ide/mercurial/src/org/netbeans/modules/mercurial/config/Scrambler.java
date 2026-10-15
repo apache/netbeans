@@ -20,7 +20,7 @@
 package org.netbeans.modules.mercurial.config;
 
 import java.io.IOException;
-import org.netbeans.modules.proxy.Base64Encoder;
+import java.util.Base64;
 
 /**
  * Scrambles text (the password) using the standard scheme described in the
@@ -304,6 +304,6 @@ public class Scrambler {
     }     
     
     private byte[] decode(String str) {        
-            return Base64Encoder.decode(str);
+        return Base64.getMimeDecoder().decode(str);
     }
 }

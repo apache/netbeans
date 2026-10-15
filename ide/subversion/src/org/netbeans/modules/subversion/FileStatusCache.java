@@ -180,7 +180,8 @@ public class FileStatusCache {
                 } while (fileToRefresh != null);
                 if (logEnabled) {
                     LOG.log(Level.FINE, "refreshTask lasted {0} ms for {1} files, {2} files refreshed so far", new Object[] { //NOI18N
-                        new Long(System.currentTimeMillis() - startTime), new Long(files), new Long(refreshedFilesCount)});
+                        Long.valueOf(System.currentTimeMillis() - startTime), Long.valueOf(files), Long.valueOf(refreshedFilesCount)}
+                    );
                 }
             }
         });
@@ -219,7 +220,7 @@ public class FileStatusCache {
     public boolean containsFiles(Set<File> rootFiles, int includeStatus, boolean addExcluded) {
         long ts = System.currentTimeMillis();
         try {
-            File[] roots = rootFiles.toArray(new File[rootFiles.size()]);
+            File[] roots = rootFiles.toArray(new File[0]);
             return containsFiles(roots, includeStatus, addExcluded);
         } finally {
             if(LOG.isLoggable(Level.FINE)) {
@@ -280,7 +281,7 @@ public class FileStatusCache {
      */
     public File [] listFiles(File dir) {
         Set<File> files = getScannedFiles(dir).keySet();
-        return files.toArray(new File[files.size()]);
+        return files.toArray(new File[0]);
     }
 
     /**
@@ -312,7 +313,7 @@ public class FileStatusCache {
             // check also the root files for status and add them eventualy
             set.addAll(listFilesIntern(roots, includeStatus, false));
 
-            return set.toArray(new File[set.size()]);
+            return set.toArray(new File[0]);
         } finally {
             if(LOG.isLoggable(Level.FINE)) {
                 LOG.log(Level.FINE, " listFiles(File[], int, boolean) took {0}", (System.currentTimeMillis() - ts));
@@ -351,7 +352,7 @@ public class FileStatusCache {
                     }
                 }
             }
-            return set.toArray(new File[set.size()]);
+            return set.toArray(new File[0]);
         } finally {
             if(LOG.isLoggable(Level.FINE)) {
                 LOG.log(Level.FINE, " listFiles(Context, int) took {0}", (System.currentTimeMillis() - ts));
@@ -424,7 +425,7 @@ public class FileStatusCache {
      * @param files files to be refreshed
      */
     public void refreshAsync(List<File> files) {
-        refreshAsync(false, files.toArray(new File[files.size()]));
+        refreshAsync(false, files.toArray(new File[0]));
     }
     
     /**
@@ -1502,7 +1503,7 @@ public class FileStatusCache {
                         }
                     }
                     if (!VERSIONING_ASYNC_ANNOTATOR) {
-                        Subversion.getInstance().refreshAnnotations(filesToRefresh.toArray(new File[filesToRefresh.size()]));
+                        Subversion.getInstance().refreshAnnotations(filesToRefresh.toArray(new File[0]));
                     }
                     synchronized (fileLabels) {
                         if (fileLabels.size() > 50) {

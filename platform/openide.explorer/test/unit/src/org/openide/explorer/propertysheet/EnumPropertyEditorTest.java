@@ -78,7 +78,7 @@ public class EnumPropertyEditorTest extends NbTestCase {
         CHOCOLATE, VANILLA, STRAWBERRY
     }
 
-    private static class EProp extends PropertySupport.ReadWrite {
+    private static class EProp extends PropertySupport.ReadWrite<E> {
 
         private E e = E.VANILLA;
 
@@ -86,12 +86,12 @@ public class EnumPropertyEditorTest extends NbTestCase {
             super("eval", E.class, "E Val", "E value");
         }
 
-        public Object getValue() throws IllegalAccessException, InvocationTargetException {
+        public E getValue() throws IllegalAccessException, InvocationTargetException {
             return e;
         }
 
-        public void setValue(Object val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-            e = (E) val;
+        public void setValue(E val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+            e = val;
         }
 
     }

@@ -19,6 +19,8 @@
 
 package org.netbeans.core.network.utils;
 
+import java.net.DatagramSocket;
+import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
@@ -45,7 +47,6 @@ import org.openide.util.RequestProcessor;
 /**
  * Methods for determining the local host's own address. The methods provide
  * two benefits over the core JDK classes.:
- * <p>
  * <ul>
  *    <li><i>Caching</i>. Results from the methods are cached and can therefore
  *       be returned without blocking. An application should call 
@@ -78,19 +79,38 @@ import org.openide.util.RequestProcessor;
  */
 public class LocalAddressUtils {
     private static final Logger LOG = Logger.getLogger(LocalAddressUtils.class.getName());
-    private static final RequestProcessor RP = new RequestProcessor("LocalNetworkAddressFinder", 3);
+    private static final RequestProcessor RP = new RequestProcessor("LocalNetworkAddressFinder", 4);
+    
+    // Create some static InetAddress'es. This is done in a somewhat convoluted
+    // way, but one which guarantees that no DNS lookup will be performed.
     
     private static final byte[] LOOPBACK_IPV4_RAW = new byte[]{0x7f,0x00,0x00,0x01};
     private static final byte[] LOOPBACK_IPV6_RAW = new byte[]{
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01};
-    private static InetAddress LOOPBACK_IPV4;
-    private static InetAddress LOOPBACK_IPV6;
+    
+    
+    // 8.8.8.8  -- which incidentially is Google's DNS server, but we don't ever connect
+    private static final byte[] SOMEADDR_IPV4_RAW = new byte[]{0x08, 0x08, 0x08, 0x08};
+
+    // 2001:4860:4860::8888  -- which incidentially is Google's DNS server, but we don't ever connect
+    private static final byte[] SOMEADDR_IPV6_RAW = new byte[]{
+        0x20, 0x01, 0x48, 0x60, 0x48, 0x60, 0x00, 0x00, 
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (byte)0x88, (byte)0x88};
+    
+    private static final InetAddress LOOPBACK_IPV4;
+    private static final InetAddress LOOPBACK_IPV6;
+    private static final InetAddress SOMEADDR_IPV4;
+    private static final InetAddress SOMEADDR_IPV6;
+    
     static {
         try {
             LOOPBACK_IPV4 = InetAddress.getByAddress("local-ipv4-dummy", LOOPBACK_IPV4_RAW);
             LOOPBACK_IPV6 = InetAddress.getByAddress("local-ipv6-dummy", LOOPBACK_IPV6_RAW);
+            SOMEADDR_IPV4 = InetAddress.getByAddress("some-ipv4-dummy", SOMEADDR_IPV4_RAW);
+            SOMEADDR_IPV6 = InetAddress.getByAddress("some-ipv6-dummy", SOMEADDR_IPV6_RAW);
         } catch (UnknownHostException ex) {
+            throw new RuntimeException(ex);
         }
     }
             
@@ -99,34 +119,53 @@ public class LocalAddressUtils {
     private static Future<InetAddress> fut1;
     private static Future<InetAddress[]> fut2;
     private static Future<List<InetAddress>> fut3;
+    private static Future<List<InetAddress>> fut4;
 
-    private static final Callable<InetAddress> C1 = new Callable(){
-        @Override
-        public InetAddress call() throws UnknownHostException  {
-            return InetAddress.getLocalHost();
+    private static final Callable<InetAddress> C1 = () -> InetAddress.getLocalHost();
+    private static final Callable<InetAddress[]> C2 = () -> {
+        try {
+            String hostname = HostnameUtils.getNetworkHostname();
+            return InetAddress.getAllByName(hostname);
+        } catch (NativeException ex) {
+            throw new UnknownHostException(ex.getMessage() + ", error code : " + ex.getErrorCode());
         }
     };
-    private static final Callable<InetAddress[]> C2 = new Callable(){
-        @Override
-        public InetAddress[] call() throws UnknownHostException  {
-            try {
-                String hostname = HostnameUtils.getNetworkHostname();
-                return InetAddress.getAllByName(hostname);
-            } catch (NativeException ex) {
-                throw new UnknownHostException(ex.getMessage() + ", error code : " + ex.getErrorCode());
+    private static final Callable<List<InetAddress>> C3 = () -> getLocalNetworkInterfaceAddr();
+
+    private static final Callable<List<InetAddress>> C4 = () -> {
+        // See https://stackoverflow.com/a/38342964
+        // Note that no actual connection is ever made below. (UDP is connection-less!)
+        // We just need the Sockets API to populate the local address
+        // of the socket. We do this by pretending that we want to send
+        // some UDP packages, but we never actually do so.
+
+        List<InetAddress> list = new ArrayList<>(2);
+
+        // IPv4 attempt
+        try (final DatagramSocket socket = new DatagramSocket()) {
+            socket.connect(SOMEADDR_IPV4, 10002);   // doesn¨t need to be reachable .. and port it irrelevant
+            InetAddress addr = socket.getLocalAddress();
+            if ((addr instanceof Inet4Address) && (!addr.isAnyLocalAddress() && (!addr.isLoopbackAddress()))) {
+                list.add(addr);
             }
+        } catch (SecurityException | SocketException ex) {
         }
-    };
-    private static final Callable<List<InetAddress>> C3 = new Callable(){
-        @Override
-        public List<InetAddress> call() {
-            return getLocalNetworkInterfaceAddr();
+        // IPv6 attempt
+        try (final DatagramSocket socket = new DatagramSocket()) {
+            socket.connect(SOMEADDR_IPV6, 10002);   // doesn¨t need to be reachable .. and port it irrelevant
+            InetAddress addr = socket.getLocalAddress();
+            if ((addr instanceof Inet6Address) && (!addr.isAnyLocalAddress() && (!addr.isLoopbackAddress()))) {
+                list.add(addr);
+            }
+        } catch (SecurityException | SocketException ex) {
         }
+
+        return list;
     };
+    
     static {
         refreshNetworkInfo(false);
     }
-    
     
     private LocalAddressUtils() {
     }
@@ -141,7 +180,7 @@ public class LocalAddressUtils {
      */
     public static void warmUp() {
         // Does nothing. The refreshNetworkInfo task will be fired when the class
-        // is loaded by the classloaded.
+        // is loaded by the classloader.
     }
     
     /**
@@ -158,11 +197,13 @@ public class LocalAddressUtils {
             fut1 = RP.submit(C1);
             fut2 = RP.submit(C2);
             fut3 = RP.submit(C3);
+            fut4 = RP.submit(C4);
             if (await) {
                 try {
                     fut1.get();
                     fut2.get();
                     fut3.get();
+                    fut4.get();
                 } catch (InterruptedException | ExecutionException ex) {
                 }
             }
@@ -208,13 +249,13 @@ public class LocalAddressUtils {
      * Returns the addresses of the local host.
      * 
      * <p>This is achieved by retrieving the
-     * {@link org.netbeans.network.hname.HostnameUtils#getNetworkHostname() name-of-the-host} 
+     * {@link HostnameUtils#getNetworkHostname() name-of-the-host} 
      * from the system, then resolving that name into a list of {@code InetAddress}es. 
      * 
      * <p>This method returns a cached result and is therefore likely not to
      * block unless this is the first time this class is being referenced.
      * 
-     * @see org.netbeans.network.hname.HostnameUtils#getNetworkHostname()
+     * @see HostnameUtils#getNetworkHostname()
      * @see InetAddress#getAllByName(java.lang.String) 
      * @param ipTypePref filter
      * @return
@@ -226,7 +267,14 @@ public class LocalAddressUtils {
                 refreshNetworkInfo(false);
             }
             try {
-                return fut2.get();
+                InetAddress[] arr = fut2.get();
+                if (arr == null || arr.length == 0) {
+                    return new InetAddress[0];
+                } else {
+                    List<InetAddress> list = Arrays.asList(arr);
+                    List<InetAddress> filteredList = IpAddressUtilsFilter.filterInetAddresses(list, ipTypePref);
+                    return filteredList.toArray(new InetAddress[0]);
+                }
             } catch (ExecutionException ex) {
                 if (ex.getCause() instanceof UnknownHostException) {
                     throw (UnknownHostException) ex.getCause();
@@ -286,6 +334,45 @@ public class LocalAddressUtils {
     }    
     
     /**
+     * Returns the address of the local host, found by using UDP method.
+     * 
+     * <p>
+     * This method works by creating a 'connected' UDP socket. Upon the connect
+     * operation, the Berkeley sockets API will populate the local endpoint
+     * (own host) according to the host's routing information. Hence we can
+     * use this for finding the IP of the local host. Note, that there is 
+     * never any actual UDP connection created. We only use the socket to see how
+     * its metadata has been populated.
+     * 
+     * <p>
+     * This method is known not to work on Mac OSX. It will most likely
+     * return an empty list if on Mac OSX.
+     * 
+     * <p>
+     * This method returns a cached result and is therefore likely not to block
+     * unless this is the first time this class is being referenced.
+     * 
+     * 
+     * @param ipTypePref IP protocol filter
+     * @see #getMostLikelyLocalInetAddresses(IpAddressUtils.IpTypePreference) 
+     * @return list of IP addresses, either of length 1 or length 0, never null.
+     */
+    public static @NonNull List<InetAddress> getDatagramLocalInetAddress(IpTypePreference ipTypePref) {
+        synchronized (LOCK) {
+            if (fut4 == null) {
+                refreshNetworkInfo(false);
+            }
+            try {
+                return IpAddressUtilsFilter.filterInetAddresses(fut4.get(), ipTypePref);
+            } catch (ExecutionException ex) {
+                throw new RuntimeException(ex.getCause());
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
+    
+    /**
      * Returns the host's IP addresses. Or rather the IP addresses most likely
      * to be the ones the host is known by. This method is much more likely
      * to return a correct result than the JDKs {@link InetAddress#getLocalHost()},
@@ -319,6 +406,11 @@ public class LocalAddressUtils {
      * </li>
      * 
      * <li>
+     * Use the result from {@link #getDatagramLocalInetAddress(IpAddressUtils.IpTypePreference) getDatagramLocalInetAddress() } if it matches the 
+     * {@code ipTypePref} filter.
+     * </li>
+     * 
+     * <li>
      * Finally, if everything else fails, return the result of 
      * {@link #getLoopbackAddress(IpAddressUtils.IpTypePreference) 
      * getLoopbackAddress()}.
@@ -336,44 +428,55 @@ public class LocalAddressUtils {
      */
     public static @NonNull InetAddress[] getMostLikelyLocalInetAddresses(IpAddressUtils.IpTypePreference ipTypePref) {
         List<InetAddress> filteredList = getPrioritizedLocalHostAddresses(ipTypePref);
+        IpAddressUtils.removeLoopback(filteredList);
+        
         try {
-            List<InetAddress> localHostAddresses = Arrays.asList(getLocalHostAddresses(ipTypePref));
+            List<InetAddress> localHostAddresses = new ArrayList<>(Arrays.asList(getLocalHostAddresses(ipTypePref)));
+            IpAddressUtils.removeLoopback(localHostAddresses);
             
-            if (localHostAddresses != null && !localHostAddresses.isEmpty()) {
+            if (!localHostAddresses.isEmpty()) {
                 List<InetAddress> tmpList = new ArrayList<>(5);
                 for (InetAddress addr : filteredList) {
                     if (localHostAddresses.contains(addr)) {
                         tmpList.add(addr);
                     }
                 }
-
+                
                 // #1 
                 if (!tmpList.isEmpty()) {
-                    return tmpList.toArray(new InetAddress[tmpList.size()]);
+                    return tmpList.toArray(new InetAddress[0]);
                 }
 
                 // #2
-                return localHostAddresses.toArray(new InetAddress[localHostAddresses.size()]);
+                if (!localHostAddresses.isEmpty()) {
+                    return localHostAddresses.toArray(new InetAddress[0]);
+                }
             }
         } catch (UnknownHostException ex) {
         }
          
         // #3
         if (!filteredList.isEmpty()) {
-            return filteredList.toArray(new InetAddress[filteredList.size()]);
+            return filteredList.toArray(new InetAddress[0]);
         }
             
             
         // #4
         try {
             InetAddress addr = IpAddressUtilsFilter.pickInetAddress(Collections.singletonList(getLocalHost()), ipTypePref);
-            if (addr != null) {
+            if (addr != null && (!addr.isAnyLocalAddress()) && (!addr.isLoopbackAddress())) {
                 return new InetAddress[]{addr};
             }
         } catch (UnknownHostException ex) {
         }
         
-        // #5 - last resort
+        // #5 - nearly last resort
+        List<InetAddress> datagramLocalInetAddress = getDatagramLocalInetAddress(ipTypePref);
+        if (datagramLocalInetAddress != null && (!datagramLocalInetAddress.isEmpty())) {
+            return datagramLocalInetAddress.toArray(new InetAddress[0]);
+        }
+        
+        // #6 - last resort
         return new InetAddress[]{getLoopbackAddress(ipTypePref)};        
     }
     
@@ -487,7 +590,7 @@ public class LocalAddressUtils {
         List<InetAddress> list = new ArrayList<>(mapWithScores.keySet());
         
         // Sort descending according to the scores 
-        Collections.sort( list, new Comparator<InetAddress>(){
+        list.sort(new Comparator<InetAddress>(){
             @Override
             public int compare(InetAddress o1, InetAddress o2) {
                 return mapWithScores.get(o2).compareTo(mapWithScores.get(o1));

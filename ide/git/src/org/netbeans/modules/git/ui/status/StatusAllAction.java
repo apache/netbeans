@@ -55,7 +55,7 @@ public class StatusAllAction extends GitAction {
     protected final void performContextAction (Node[] nodes) {
         VCSContext context = getCurrentContext(nodes);
         Set<File> roots = GitUtils.getRepositoryRoots(context);
-        SystemAction.get(StatusAction.class).performContextAction(GitUtils.getContextForFiles(roots.toArray(new File[roots.size()])));
+        SystemAction.get(StatusAction.class).performContextAction(GitUtils.getContextForFiles(roots.toArray(new File[0])));
     }
 
 }

@@ -38,6 +38,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 
 import org.netbeans.api.languages.ASTItem;
 import org.netbeans.api.languages.ASTNode;
@@ -120,7 +121,7 @@ public class MarkOccurrencesSupport implements CaretListener {
                             continue;
                         }
                         highlights.add (h);
-                        int lineNumber = Utilities.getLineOffset(doc, i.getOffset());
+                        int lineNumber = LineDocumentUtils.getLineIndex(doc, i.getOffset());
                         if (!lines.contains(lineNumber)) {
                             LanguagesAnnotation la = new LanguagesAnnotation (
                                 "Usage",

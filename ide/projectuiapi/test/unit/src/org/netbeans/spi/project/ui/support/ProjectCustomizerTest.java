@@ -119,7 +119,7 @@ public class ProjectCustomizerTest extends NbTestCase {
         assertEquals("Four", subcategories[0].getDisplayName());
         assertEquals("four", dcp.create(subcategories[0]).getName());
     }
-    private static abstract class TestCCP implements CompositeCategoryProvider {
+    private abstract static class TestCCP implements CompositeCategoryProvider {
         final String name;
         TestCCP(String name) {
             this.name = name;
@@ -179,4 +179,13 @@ public class ProjectCustomizerTest extends NbTestCase {
         }
     }
     
+    public void testEncodingModel() {
+        // Issue 7507 - just test the CBM is created without throwing NPE.
+        javax.swing.ComboBoxModel model1 = ProjectCustomizer.encodingModel("UTF-8");
+        assertNotNull(model1);
+        javax.swing.ComboBoxModel model2 = ProjectCustomizer.encodingModel("non-existent");
+        assertNotNull(model2);
+        javax.swing.ComboBoxModel model3 = ProjectCustomizer.encodingModel(null);
+        assertNotNull(model3);
+    }
 }

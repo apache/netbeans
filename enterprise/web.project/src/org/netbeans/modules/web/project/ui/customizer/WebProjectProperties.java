@@ -70,7 +70,7 @@ import org.netbeans.modules.j2ee.deployment.devmodules.api.Deployment;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.InstanceRemovedException;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule;
 import org.netbeans.api.j2ee.core.Profile;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.modules.javaee.project.api.ant.ui.customizer.LicensePanelSupport;
 import org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider;
 import org.netbeans.modules.java.api.common.SourceRoots;
@@ -102,17 +102,17 @@ import org.openide.util.Task;
 
 /** Helper class. Defines constants for properties. Knows the proper
  *  place where to store the properties.
- * 
+ *
  * @author Petr Hrebejk, Radko Najman
  */
-final public class WebProjectProperties {
-    
+public final class WebProjectProperties {
+
     // Special properties of the project
     public static final String WEB_PROJECT_NAME = "web.project.name"; //NOI18N
     public static final String JAVA_PLATFORM = "platform.active"; //NOI18N
     public static final String J2EE_PLATFORM = "j2ee.platform"; //NOI18N
-    
-    // Properties stored in the PROJECT.PROPERTIES    
+
+    // Properties stored in the PROJECT.PROPERTIES
     /** root of external web module sources (full path), ".." if the sources are within project folder */
     public static final String SOURCE_ROOT = "source.root"; //NOI18N
     public static final String SOURCE_ENCODING="source.encoding"; // NOI18N
@@ -163,7 +163,7 @@ final public class WebProjectProperties {
 
     public static final String BUILD_TEST_RESULTS_DIR = "build.test.results.dir"; // NOI18N
     public static final String DEBUG_TEST_CLASSPATH = "debug.test.classpath"; // NOI18N
-    
+
     public static final String JAVADOC_PRIVATE="javadoc.private"; //NOI18N
     public static final String JAVADOC_NO_TREE="javadoc.notree"; //NOI18N
     public static final String JAVADOC_USE="javadoc.use"; //NOI18N
@@ -177,19 +177,19 @@ final public class WebProjectProperties {
     public static final String JAVADOC_ADDITIONALPARAM="javadoc.additionalparam"; // NOI18N
 
     public static final String COMPILE_JSPS = "compile.jsps"; //NOI18N
-    
+
     public static final String TAG_WEB_MODULE_LIBRARIES = "web-module-libraries"; // NOI18N
     public static final String TAG_WEB_MODULE__ADDITIONAL_LIBRARIES = "web-module-additional-libraries"; //NOI18N
-    
+
     // Properties stored in the PRIVATE.PROPERTIES
     public static final String APPLICATION_ARGS = "application.args"; // NOI18N
     public static final String JAVADOC_PREVIEW="javadoc.preview"; // NOI18N
 
     public static final String WS_DEBUG_CLASSPATHS = "ws.debug.classpaths";     //NOI18N
     public static final String WS_WEB_DOCBASE_DIRS = "ws.web.docbase.dirs"; //NOI18N
-    
+
     public static final String DEPLOY_ANT_PROPS_FILE = "deploy.ant.properties.file"; //NOI18N
-    
+
     public static final String ANT_DEPLOY_BUILD_SCRIPT = "nbproject/ant-deploy.xml"; // NOI18N
     public static final String SELECTED_BROWSER = "selected.browser"; //NOI18N
 
@@ -203,12 +203,12 @@ final public class WebProjectProperties {
 
     //list of frameworks to add to the application
     private List newExtenders;
-    
+
     //list of changed frameworks
     private List<WebModuleExtender> existingExtenders;
 
     // MODELS FOR VISUAL CONTROLS
-    
+
     // CustomizerSources
     DefaultTableModel SOURCE_ROOTS_MODEL;
     DefaultTableModel TEST_ROOTS_MODEL;
@@ -230,7 +230,7 @@ final public class WebProjectProperties {
     DefaultListModel JAVAC_PROCESSORPATH_MODEL;
 
     // CustomizerCompile
-    ButtonModel JAVAC_DEPRECATION_MODEL; 
+    ButtonModel JAVAC_DEPRECATION_MODEL;
     ButtonModel JAVAC_DEBUG_MODEL;
     ButtonModel NO_DEPENDENCIES_MODEL;
     Document JAVAC_COMPILER_ARG_MODEL;
@@ -240,9 +240,9 @@ final public class WebProjectProperties {
     DefaultListModel ANNOTATION_PROCESSORS_MODEL;
     JToggleButton.ToggleButtonModel COMPILE_ON_SAVE_MODEL;
     JToggleButton.ToggleButtonModel COPY_STATIC_RESOURCE_ON_SAVE_MODEL;
-    
+
     // CustomizerWar
-    Document WAR_NAME_MODEL; 
+    Document WAR_NAME_MODEL;
     Document BUILD_CLASSES_EXCLUDES_MODEL;
     ButtonModel WAR_COMPRESS_MODEL;
     WarIncludesTableModel WAR_CONTENT_ADDITIONAL_MODEL;
@@ -251,13 +251,13 @@ final public class WebProjectProperties {
     ButtonModel JAVADOC_PRIVATE_MODEL;
     ButtonModel JAVADOC_NO_TREE_MODEL;
     ButtonModel JAVADOC_USE_MODEL;
-    ButtonModel JAVADOC_NO_NAVBAR_MODEL; 
-    ButtonModel JAVADOC_NO_INDEX_MODEL; 
-    ButtonModel JAVADOC_SPLIT_INDEX_MODEL; 
-    ButtonModel JAVADOC_AUTHOR_MODEL; 
+    ButtonModel JAVADOC_NO_NAVBAR_MODEL;
+    ButtonModel JAVADOC_NO_INDEX_MODEL;
+    ButtonModel JAVADOC_SPLIT_INDEX_MODEL;
+    ButtonModel JAVADOC_AUTHOR_MODEL;
     ButtonModel JAVADOC_VERSION_MODEL;
     Document JAVADOC_WINDOW_TITLE_MODEL;
-    ButtonModel JAVADOC_PREVIEW_MODEL; 
+    ButtonModel JAVADOC_PREVIEW_MODEL;
     Document JAVADOC_ADDITIONALPARAM_MODEL;
 
     // CustomizerRun
@@ -265,14 +265,14 @@ final public class WebProjectProperties {
     Document CONTEXT_PATH_MODEL;
     Document LAUNCH_URL_RELATIVE_MODEL;
     ButtonModel DISPLAY_BROWSER_MODEL;
-    JToggleButton.ToggleButtonModel DEPLOY_ON_SAVE_MODEL; 
-    ComboBoxModel J2EE_SERVER_INSTANCE_MODEL; 
+    JToggleButton.ToggleButtonModel DEPLOY_ON_SAVE_MODEL;
+    ComboBoxModel J2EE_SERVER_INSTANCE_MODEL;
     BrowserUISupport.BrowserComboBoxModel BROWSERS_MODEL;
     Document RUNMAIN_JVM_MODEL;
-    
+
     //customizer license headers
     LicensePanelSupport LICENSE_SUPPORT;
-    
+
     // for ui logging added frameworks
     private List<String> addedFrameworkNames;
     private List<WebFrameworkProvider> currentFrameworks;
@@ -283,22 +283,22 @@ final public class WebProjectProperties {
     private UpdateHelper updateHelper;
     private PropertyEvaluator evaluator;
 
-    private StoreGroup privateGroup; 
+    private StoreGroup privateGroup;
     private StoreGroup projectGroup;
-    
+
     private Map<String,String> additionalProperties;
 
     private static boolean needsUpdate = false;
-    
+
     private static String serverId;
     private static String cp;
 
     public static final String JAVA_SOURCE_BASED= "java.source.based";
 
     private String includes, excludes;
-    
+
     private static String logServInstID = null;
-    
+
     Task loadingFrameworksTask = null;
 
     //Hotfix of the issue #70058 (copied from J2seProjectProperties)
@@ -306,46 +306,46 @@ final public class WebProjectProperties {
     private static final Integer BOOLEAN_KIND_TF = 0;
     private static final Integer BOOLEAN_KIND_YN = 1;
     private static final Integer BOOLEAN_KIND_ED = 2;
-    
+
     private final List<ActionListener> optionListeners = new CopyOnWriteArrayList<ActionListener>();
 
     WebProjectProperties(WebProject project, UpdateHelper updateHelper, PropertyEvaluator evaluator, ReferenceHelper refHelper) {
         this.project = project;
         this.updateHelper = updateHelper;
-        
+
         //this is called from updatehelper when user confirms the project update
         project.getUpdateImplementation().setProjectUpdateListener(new UpdateProjectImpl.ProjectUpdateListener() {
             public void projectUpdated() {
                 needsUpdate = true;
             }
         });
-        
+
         this.evaluator = evaluator;
         this.refHelper = refHelper;
-        
-        this.cs = new ClassPathSupport( evaluator, refHelper, 
-                updateHelper.getAntProjectHelper(), updateHelper, 
+
+        this.cs = new ClassPathSupport( evaluator, refHelper,
+                updateHelper.getAntProjectHelper(), updateHelper,
                 new ClassPathSupportCallbackImpl(updateHelper.getAntProjectHelper()));
-                
+
         privateGroup = new StoreGroup();
         projectGroup = new StoreGroup();
-        
+
         additionalProperties = new HashMap<String,String>();
 
-        init(); // Load known properties        
+        init(); // Load known properties
     }
-    
+
     WebProject getProject() {
         return project;
     }
 
-    /** Initializes the visual models 
+    /** Initializes the visual models
      */
     private void init() {
-        
+
         CLASS_PATH_LIST_RENDERER = ClassPathListCellRenderer.createClassPathListRenderer(evaluator, project.getProjectDirectory());
         CLASS_PATH_TABLE_ITEM_RENDERER = ClassPathListCellRenderer.createClassPathTableRenderer(evaluator, project.getProjectDirectory());
-        
+
         // CustomizerSources
         SOURCE_ROOTS_MODEL = SourceRootsUi.createModel( project.getSourceRoots() );
         TEST_ROOTS_MODEL = SourceRootsUi.createModel( project.getTestSourceRoots() );
@@ -361,38 +361,56 @@ final public class WebProjectProperties {
         WEBINF_DIR_MODEL = projectGroup.createStringDocument( evaluator, WEBINF_DIR );
 
         // CustomizerLibraries
-        EditableProperties projectProperties = updateHelper.getProperties( AntProjectHelper.PROJECT_PROPERTIES_PATH );                
+        EditableProperties projectProperties = updateHelper.getProperties( AntProjectHelper.PROJECT_PROPERTIES_PATH );
         EditableProperties privateProperties = updateHelper.getProperties( AntProjectHelper.PRIVATE_PROPERTIES_PATH );
 
-        JAVAC_CLASSPATH_MODEL = ClassPathTableModel.createTableModel( cs.itemsIterator( (String)projectProperties.get( ProjectProperties.JAVAC_CLASSPATH ), ClassPathSupportCallbackImpl.TAG_WEB_MODULE_LIBRARIES) );
+        JAVAC_CLASSPATH_MODEL = ClassPathTableModel.createTableModel( cs.itemsIterator(projectProperties.get( ProjectProperties.JAVAC_CLASSPATH ), ClassPathSupportCallbackImpl.TAG_WEB_MODULE_LIBRARIES) );
         String processorPath = projectProperties.get(ProjectProperties.JAVAC_PROCESSORPATH);
         processorPath = processorPath == null ? "${javac.classpath}" : processorPath;
         JAVAC_PROCESSORPATH_MODEL = ClassPathUiSupport.createListModel(cs.itemsIterator(processorPath));
-        JAVAC_TEST_CLASSPATH_MODEL = ClassPathUiSupport.createListModel( cs.itemsIterator( (String)projectProperties.get( ProjectProperties.JAVAC_TEST_CLASSPATH ), null ) );
-        RUN_TEST_CLASSPATH_MODEL = ClassPathUiSupport.createListModel( cs.itemsIterator( (String)projectProperties.get( ProjectProperties.RUN_TEST_CLASSPATH ), null ) );
-        ENDORSED_CLASSPATH_MODEL = ClassPathUiSupport.createListModel( cs.itemsIterator( (String)projectProperties.get( ProjectProperties.ENDORSED_CLASSPATH ), null ) );
+        JAVAC_TEST_CLASSPATH_MODEL = ClassPathUiSupport.createListModel( cs.itemsIterator(projectProperties.get( ProjectProperties.JAVAC_TEST_CLASSPATH ), null ) );
+        RUN_TEST_CLASSPATH_MODEL = ClassPathUiSupport.createListModel( cs.itemsIterator(projectProperties.get( ProjectProperties.RUN_TEST_CLASSPATH ), null ) );
+        ENDORSED_CLASSPATH_MODEL = ClassPathUiSupport.createListModel( cs.itemsIterator(projectProperties.get( ProjectProperties.ENDORSED_CLASSPATH ), null ) );
         PLATFORM_MODEL = PlatformUiSupport.createPlatformComboBoxModel (evaluator.getProperty(JAVA_PLATFORM));
         PLATFORM_LIST_RENDERER = PlatformUiSupport.createPlatformListCellRenderer();
         SpecificationVersion minimalSourceLevel = null;
         Profile profile = Profile.fromPropertiesString(evaluator.getProperty(J2EE_PLATFORM));
-        if (Profile.JAVA_EE_6_FULL.equals(profile)) {
-            minimalSourceLevel = new SpecificationVersion("1.6");
-        } else if (Profile.JAVA_EE_5.equals(profile)) {
-            minimalSourceLevel = new SpecificationVersion("1.5");
-        } else if (Profile.JAVA_EE_7_FULL.equals(profile)) {
-            minimalSourceLevel = new SpecificationVersion("1.7");
-        } else if (Profile.JAVA_EE_8_FULL.equals(profile)) {
-            minimalSourceLevel = new SpecificationVersion("1.8");
+        if (profile != null) {
+            switch (profile) {
+                case JAKARTA_EE_11_FULL:
+                    minimalSourceLevel = new SpecificationVersion("17");
+                    break;
+                case JAKARTA_EE_10_FULL:
+                case JAKARTA_EE_9_1_FULL:
+                    minimalSourceLevel = new SpecificationVersion("11");
+                    break;
+                case JAKARTA_EE_9_FULL:
+                case JAKARTA_EE_8_FULL:
+                case JAVA_EE_8_FULL:
+                    minimalSourceLevel = new SpecificationVersion("1.8");
+                    break;
+                case JAVA_EE_7_FULL:
+                    minimalSourceLevel = new SpecificationVersion("1.7");
+                    break;
+                case JAVA_EE_6_FULL:
+                    minimalSourceLevel = new SpecificationVersion("1.6");
+                    break;
+                case JAVA_EE_5:
+                    minimalSourceLevel = new SpecificationVersion("1.5");
+                    break;
+                default:
+                    break;
+            }
         }
         JAVAC_SOURCE_MODEL = PlatformUiSupport.createSourceLevelComboBoxModel (PLATFORM_MODEL, evaluator.getProperty(JAVAC_SOURCE), evaluator.getProperty(JAVAC_TARGET), minimalSourceLevel);
         JAVAC_SOURCE_RENDERER = PlatformUiSupport.createSourceLevelListCellRenderer ();
-        SHARED_LIBRARIES_MODEL = new PlainDocument(); 
+        SHARED_LIBRARIES_MODEL = new PlainDocument();
         try {
             SHARED_LIBRARIES_MODEL.insertString(0, project.getAntProjectHelper().getLibrariesLocation(), null);
         } catch (BadLocationException ex) {
             Exceptions.printStackTrace(ex);
         }
-        
+
         // CustomizerCompile
         JAVAC_DEPRECATION_MODEL = projectGroup.createToggleButtonModel( evaluator, JAVAC_DEPRECATION );
         JAVAC_DEBUG_MODEL = privateGroup.createToggleButtonModel( evaluator, JAVAC_DEBUG );
@@ -406,26 +424,26 @@ final public class WebProjectProperties {
                 (annotationProcessors.length() > 0 ? Arrays.asList(annotationProcessors.split(",")) : Collections.emptyList()).iterator()); //NOI18N
         JAVAC_COMPILER_ARG_MODEL = projectGroup.createStringDocument( evaluator, JAVAC_COMPILER_ARG );
         COMPILE_JSP_MODEL = projectGroup.createToggleButtonModel( evaluator, COMPILE_JSPS );
-        
+
         // CustomizerWar
         WAR_NAME_MODEL = projectGroup.createStringDocument( evaluator, WAR_NAME );
         BUILD_CLASSES_EXCLUDES_MODEL = projectGroup.createStringDocument( evaluator, BUILD_CLASSES_EXCLUDES );
         WAR_COMPRESS_MODEL = projectGroup.createToggleButtonModel( evaluator, WAR_COMPRESS );
-        WAR_CONTENT_ADDITIONAL_MODEL = WarIncludesTableModel.createTableModel( cs.itemsIterator( (String)projectProperties.get( WAR_CONTENT_ADDITIONAL ), ClassPathSupportCallbackImpl.TAG_WEB_MODULE__ADDITIONAL_LIBRARIES));
+        WAR_CONTENT_ADDITIONAL_MODEL = WarIncludesTableModel.createTableModel( cs.itemsIterator(projectProperties.get( WAR_CONTENT_ADDITIONAL ), ClassPathSupportCallbackImpl.TAG_WEB_MODULE__ADDITIONAL_LIBRARIES));
 
         // CustomizerJavadoc
         JAVADOC_PRIVATE_MODEL = projectGroup.createToggleButtonModel( evaluator, JAVADOC_PRIVATE );
         JAVADOC_NO_TREE_MODEL = projectGroup.createInverseToggleButtonModel( evaluator, JAVADOC_NO_TREE );
         JAVADOC_USE_MODEL = projectGroup.createToggleButtonModel( evaluator, JAVADOC_USE );
         JAVADOC_NO_NAVBAR_MODEL = projectGroup.createInverseToggleButtonModel( evaluator, JAVADOC_NO_NAVBAR );
-        JAVADOC_NO_INDEX_MODEL = projectGroup.createInverseToggleButtonModel( evaluator, JAVADOC_NO_INDEX ); 
+        JAVADOC_NO_INDEX_MODEL = projectGroup.createInverseToggleButtonModel( evaluator, JAVADOC_NO_INDEX );
         JAVADOC_SPLIT_INDEX_MODEL = projectGroup.createToggleButtonModel( evaluator, JAVADOC_SPLIT_INDEX );
         JAVADOC_AUTHOR_MODEL = projectGroup.createToggleButtonModel( evaluator, JAVADOC_AUTHOR );
         JAVADOC_VERSION_MODEL = projectGroup.createToggleButtonModel( evaluator, JAVADOC_VERSION );
         JAVADOC_WINDOW_TITLE_MODEL = projectGroup.createStringDocument( evaluator, JAVADOC_WINDOW_TITLE );
         JAVADOC_PREVIEW_MODEL = privateGroup.createToggleButtonModel( evaluator, JAVADOC_PREVIEW );
         JAVADOC_ADDITIONALPARAM_MODEL = projectGroup.createStringDocument( evaluator, JAVADOC_ADDITIONALPARAM );
-        
+
         // CustomizerRun
         J2EE_PLATFORM_MODEL = projectGroup.createStringDocument(evaluator, J2EE_PLATFORM);
         LAUNCH_URL_RELATIVE_MODEL = projectGroup.createStringDocument(evaluator, LAUNCH_URL_RELATIVE);
@@ -458,7 +476,7 @@ final public class WebProjectProperties {
                 }
             }
         });
-        
+
         J2EE_SERVER_INSTANCE_MODEL = J2eePlatformUiSupport.createPlatformComboBoxModel(
                 privateProperties.getProperty( J2EE_SERVER_INSTANCE ),
                 Profile.fromPropertiesString(projectProperties.getProperty(J2EE_PLATFORM)),
@@ -467,7 +485,7 @@ final public class WebProjectProperties {
         try {
             CONTEXT_PATH_MODEL = new PlainDocument();
             CONTEXT_PATH_MODEL.remove(0, CONTEXT_PATH_MODEL.getLength());
-            ProjectWebModule wm = (ProjectWebModule) project.getLookup().lookup(ProjectWebModule.class);
+            ProjectWebModule wm = project.getLookup().lookup(ProjectWebModule.class);
             String contextPath = wm.getContextPath();
             if (contextPath != null) {
                 CONTEXT_PATH_MODEL.insertString(0, contextPath, null);
@@ -517,7 +535,7 @@ final public class WebProjectProperties {
         try {
             saveLibrariesLocation();
             LICENSE_SUPPORT.saveLicenseFile();
-            // Store properties 
+            // Store properties
             ProjectManager.mutex().writeAccess(new Mutex.ExceptionAction<Void>() {
                 public Void run() throws IOException {
                     storeProperties();
@@ -535,7 +553,7 @@ final public class WebProjectProperties {
             if (COMPILE_JSP_MODEL.isSelected()) {
                 WebProject.makeSureProjectHasJspCompilationLibraries(refHelper);
             }
-            
+
             Profile j2eeProfile = project.getAPIWebModule().getJ2eeProfile();
             FileObject webInf = project.getAPIWebModule().getWebInf();
             FileObject ddFo = project.getAPIWebModule().getDeploymentDescriptor();
@@ -551,7 +569,7 @@ final public class WebProjectProperties {
                 Utils.logUI(NbBundle.getBundle(WebProjectProperties.class),"UI_WEB_PROJECT_FRAMEWORK_ADDED", // NOI18N
                         addedFrameworkNames.toArray());
             }
-            
+
             // usage logging of target server and currently active frameworks
             String serverName = ""; // NOI18N
             try {
@@ -562,7 +580,7 @@ final public class WebProjectProperties {
             catch(InstanceRemovedException ier) {
                 // ignore
             }
-            
+
             if (loadingFrameworksTask != null && loadingFrameworksTask.isFinished()) {
                 StringBuffer sb = new StringBuffer(50);
                 if (currentFrameworks != null && currentFrameworks.size() > 0) {
@@ -583,7 +601,7 @@ final public class WebProjectProperties {
                 }
                 Utils.logUsage(WebProjectProperties.class, "USG_PROJECT_CONFIG_WEB", new Object[] { serverName, sb }); // NOI18N
             }
-            
+
             //prevent deadlock reported in the issue #54643
             //cp and serverId values are read in setNewContextPathValue() method which is called from storeProperties() before this code
             //it is easier to preset them instead of reading them here again
@@ -593,19 +611,19 @@ final public class WebProjectProperties {
                 if (!cp.equals(oldCP))
                     wm.setContextPath(serverId, cp);
             }
-            
+
             //Delete COS mark
             if (!COMPILE_ON_SAVE_MODEL.isSelected()) {
                 DeployOnSaveUtils.performCleanup(project, evaluator, updateHelper, "build.classes.dir", false); // NOI18N
             }
-        } 
+        }
         catch (MutexException e) {
             Exceptions.printStackTrace((IOException) e.getException());
         }
         catch ( IOException ex ) {
             Exceptions.printStackTrace(ex);
         }
-        
+
     }
 
     private boolean shouldCreateWebXml() {
@@ -647,13 +665,13 @@ final public class WebProjectProperties {
             Exceptions.printStackTrace(x);
         }
     }
-    
+
     private void storeProperties() throws IOException {
         // Store special properties
-        
-        // Modify the project dependencies properly        
+
+        // Modify the project dependencies properly
         destroyRemovedDependencies();
-       
+
         // Store source roots
         storeRoots( project.getSourceRoots(), SOURCE_ROOTS_MODEL );
         storeRoots( project.getTestSourceRoots(), TEST_ROOTS_MODEL );
@@ -672,28 +690,28 @@ final public class WebProjectProperties {
                     if(propertyName != null) {
                         String libname = propertyName.substring("${libs.".length());
                         if(libname.indexOf(".classpath}") != -1) libname = libname.substring(0, libname.indexOf(".classpath}"));
-                                
+
                         if("servlet24".equals(libname) || "jsp20".equals(libname)) { //NOI18N
                             cpItemsToRemove.add(cpti);
                         }
                     }
                 }
-            } 
-            
+            }
+
             //remove selected libraries
             Iterator<ClassPathSupport.Item> remove = cpItemsToRemove.iterator();
             while(remove.hasNext()) {
                 ClassPathSupport.Item cpti = remove.next();
                 cptm.getDefaultListModel().removeElement(cpti);
             }
-            
+
             //commented out, one more check follows
             //needsUpdate = false;
         }
-        
+
         // Encode all paths (this may change the project properties)
         List<ClassPathSupport.Item> javaClasspathList = ClassPathUiSupport.getList(JAVAC_CLASSPATH_MODEL.getDefaultListModel());
-        String[] javac_cp = cs.encodeToStrings(javaClasspathList, ClassPathSupportCallbackImpl.TAG_WEB_MODULE_LIBRARIES  );        
+        String[] javac_cp = cs.encodeToStrings(javaClasspathList, ClassPathSupportCallbackImpl.TAG_WEB_MODULE_LIBRARIES  );
         String[] javac_test_cp = cs.encodeToStrings( ClassPathUiSupport.getList( JAVAC_TEST_CLASSPATH_MODEL ), null );
         String[] run_test_cp = cs.encodeToStrings( ClassPathUiSupport.getList( RUN_TEST_CLASSPATH_MODEL ), null );
         String[] war_includes = cs.encodeToStrings( ClassPathUiSupport.getList( WAR_CONTENT_ADDITIONAL_MODEL.getDefaultListModel() ), ClassPathSupportCallbackImpl.TAG_WEB_MODULE__ADDITIONAL_LIBRARIES  );
@@ -701,16 +719,16 @@ final public class WebProjectProperties {
         String[] javac_pp = cs.encodeToStrings( ClassPathUiSupport.getList( JAVAC_PROCESSORPATH_MODEL ) );
 
         // Store standard properties
-        EditableProperties projectProperties = updateHelper.getProperties( AntProjectHelper.PROJECT_PROPERTIES_PATH );        
+        EditableProperties projectProperties = updateHelper.getProperties( AntProjectHelper.PROJECT_PROPERTIES_PATH );
         EditableProperties privateProperties = updateHelper.getProperties( AntProjectHelper.PRIVATE_PROPERTIES_PATH );
-        
+
         // Assure inegrity which can't shound not be assured in UI
         if ( !JAVADOC_NO_INDEX_MODEL.isSelected() ) {
             JAVADOC_SPLIT_INDEX_MODEL.setSelected( false ); // Can't split non existing index
         }
-                                
+
         // Standard store of the properties
-        projectGroup.store( projectProperties );        
+        projectGroup.store( projectProperties );
         privateGroup.store( privateProperties );
 
         LICENSE_SUPPORT.updateProperties(projectProperties);
@@ -731,19 +749,19 @@ final public class WebProjectProperties {
             projectProperties.setProperty(DEBUG_TEST_CLASSPATH, new String[] {
                 "${run.test.classpath}", // NOI18N
             });
-            
+
             needsUpdate = false;
         }
-        
+
         // Save all paths
         projectProperties.setProperty( ProjectProperties.JAVAC_CLASSPATH, javac_cp );
         projectProperties.setProperty( ProjectProperties.JAVAC_PROCESSORPATH, javac_pp );
         projectProperties.setProperty( ProjectProperties.JAVAC_TEST_CLASSPATH, javac_test_cp );
         projectProperties.setProperty( ProjectProperties.RUN_TEST_CLASSPATH, run_test_cp );
         projectProperties.setProperty( ProjectProperties.ENDORSED_CLASSPATH, endorsed_cp );
-        
+
         projectProperties.setProperty( WAR_CONTENT_ADDITIONAL, war_includes );
-        
+
         //Handle platform selection and javac.source javac.target properties
         PlatformUiSupport.storePlatform (projectProperties, updateHelper, WebProjectType.PROJECT_CONFIGURATION_NAMESPACE, PLATFORM_MODEL.getSelectedItem(), JAVAC_SOURCE_MODEL.getSelectedItem());
 
@@ -781,7 +799,7 @@ final public class WebProjectProperties {
 
         projectProperties.put(ProjectProperties.INCLUDES, includes);
         projectProperties.put(ProjectProperties.EXCLUDES, excludes);
-        
+
         StringBuilder sb = new StringBuilder();
         for (Enumeration elements = ANNOTATION_PROCESSORS_MODEL.elements(); elements.hasMoreElements();) {
             sb.append(elements.nextElement());
@@ -799,7 +817,7 @@ final public class WebProjectProperties {
         // Store the property changes into the project
         updateHelper.putProperties( AntProjectHelper.PROJECT_PROPERTIES_PATH, projectProperties );
         updateHelper.putProperties( AntProjectHelper.PRIVATE_PROPERTIES_PATH, privateProperties );
-        
+
         // compile on save listeners
         if (DEPLOY_ON_SAVE_MODEL.isEnabled() && DEPLOY_ON_SAVE_MODEL.isSelected()) {
             LOGGER.log(Level.FINE, "Starting listening on cos for {0}", project.getWebModule());
@@ -808,7 +826,7 @@ final public class WebProjectProperties {
             LOGGER.log(Level.FINE, "Stopping listening on cos for {0}", project.getWebModule());
             Deployment.getDefault().disableCompileOnSaveSupport(project.getWebModule());
         }
-        
+
         String value = (String)additionalProperties.get(SOURCE_ENCODING);
         if (value != null) {
             try {
@@ -833,21 +851,21 @@ final public class WebProjectProperties {
         }
 	return true;
     }
-    
+
     /** XXX to be deleted when introduced in AntPropertyHeleper API
-     */    
+     */
     static boolean isAntProperty (String string) {
         return string != null && string.startsWith( "${" ) && string.endsWith( "}" ); //NOI18N
     }
-        
-    /** Finds out what are new and removed project dependencies and 
+
+    /** Finds out what are new and removed project dependencies and
      * applyes the info to the project
      */
     private void destroyRemovedDependencies() {
-            
+
         // Create a set of old and new artifacts.
         Set<ClassPathSupport.Item> oldArtifacts = new HashSet<ClassPathSupport.Item>();
-        EditableProperties projectProperties = updateHelper.getProperties( AntProjectHelper.PROJECT_PROPERTIES_PATH );        
+        EditableProperties projectProperties = updateHelper.getProperties( AntProjectHelper.PROJECT_PROPERTIES_PATH );
         oldArtifacts.addAll( cs.itemsList( (String)projectProperties.get( ProjectProperties.JAVAC_CLASSPATH ), ClassPathSupportCallbackImpl.TAG_WEB_MODULE_LIBRARIES ) );
         oldArtifacts.addAll( cs.itemsList( projectProperties.get( ProjectProperties.JAVAC_PROCESSORPATH ) ) );
         oldArtifacts.addAll( cs.itemsList( (String)projectProperties.get( ProjectProperties.JAVAC_TEST_CLASSPATH ), null ) );
@@ -860,13 +878,13 @@ final public class WebProjectProperties {
         newArtifacts.addAll( ClassPathUiSupport.getList( JAVAC_TEST_CLASSPATH_MODEL ) );
         newArtifacts.addAll( ClassPathUiSupport.getList( RUN_TEST_CLASSPATH_MODEL ) );
         newArtifacts.addAll( ClassPathUiSupport.getList( WAR_CONTENT_ADDITIONAL_MODEL.getDefaultListModel() ) );
-                
+
         // Create set of removed artifacts and remove them
         Set<ClassPathSupport.Item> removed = new HashSet<ClassPathSupport.Item>( oldArtifacts );
         removed.removeAll( newArtifacts );
         Set<ClassPathSupport.Item> added = new HashSet<ClassPathSupport.Item>(newArtifacts);
         added.removeAll(oldArtifacts);
-        
+
         // 1. first remove all project references. The method will modify
         // project property files, so it must be done separately
         for( ClassPathSupport.Item item : removed) {
@@ -878,11 +896,11 @@ final public class WebProjectProperties {
                 }
             }
         }
-        
+
         // 2. now read project.properties and modify rest
         EditableProperties ep = updateHelper.getProperties( AntProjectHelper.PROJECT_PROPERTIES_PATH );
         boolean changed = false;
-        
+
         for( ClassPathSupport.Item item : removed) {
             if (item.getType() == ClassPathSupport.Item.TYPE_LIBRARY) {
                 // remove helper property pointing to library jar if there is any
@@ -896,7 +914,7 @@ final public class WebProjectProperties {
             updateHelper.putProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH, ep);
         }
     }
-            
+
     private void storeRoots( SourceRoots roots, DefaultTableModel tableModel ) throws MalformedURLException {
         Vector data = tableModel.getDataVector();
         URL[] rootURLs = new URL[data.size()];
@@ -945,17 +963,17 @@ final public class WebProjectProperties {
             Exceptions.printStackTrace(ex);
         }
     }
-    
+
     /* This is used by CustomizerWSServiceHost */
     void putAdditionalProperty(String propertyName, String propertyValue) {
         additionalProperties.put(propertyName, propertyValue);
     }
-    
+
     private static void setNewContextPathValue(String contextPath, Project project, EditableProperties projectProps, EditableProperties privateProps) {
         if (contextPath == null)
             return;
 
-        cp = contextPath;    
+        cp = contextPath;
         serverId = privateProps.getProperty(J2EE_SERVER_INSTANCE);
     }
 
@@ -976,7 +994,7 @@ final public class WebProjectProperties {
     public ClassPathTableModel getJavaClassPathModel() {
         return JAVAC_CLASSPATH_MODEL;
     }
-    
+
     public void setNewExtenders(List extenders) {
         newExtenders = extenders;
     }
@@ -984,11 +1002,11 @@ final public class WebProjectProperties {
     public void setExistingExtenders(List<WebModuleExtender> extenders) {
         existingExtenders = extenders;
     }
-    
+
     public void setNewFrameworksNames(List<String> names) {
         addedFrameworkNames = names;
     }
-    
+
     void loadIncludesExcludes(IncludeExcludeVisualizer v) {
         Set<File> roots = new HashSet<File>();
         for (DefaultTableModel model : new DefaultTableModel[] {SOURCE_ROOTS_MODEL, TEST_ROOTS_MODEL}) {
@@ -1008,7 +1026,7 @@ final public class WebProjectProperties {
         } catch (BadLocationException ex) {
             Exceptions.printStackTrace(ex);
         }
-        v.setRoots(roots.toArray(new File[roots.size()]));
+        v.setRoots(roots.toArray(new File[0]));
         v.setIncludePattern(includes);
         v.setExcludePattern(excludes);
     }
@@ -1044,7 +1062,7 @@ final public class WebProjectProperties {
                 @Override
                 public void run() {
                     // it mostly results into lenghty opperation, show progress dialog
-                    ProgressUtils.showProgressDialogAndRun(new Runnable() {
+                    BaseProgressUtils.showProgressDialogAndRun(new Runnable() {
                         @Override
                         public void run() {
                             // include newly added extenders into webmodule
@@ -1089,7 +1107,7 @@ final public class WebProjectProperties {
                         Exceptions.printStackTrace(ex);
                     } catch (TimeoutException ex) {
                         // End of the 300ms period, continue in processing but display progress dialog
-                        ProgressUtils.showProgressDialogAndRun(new Runnable() {
+                        BaseProgressUtils.showProgressDialogAndRun(new Runnable() {
                             @Override
                             public void run() {
                                 try {
@@ -1135,7 +1153,7 @@ final public class WebProjectProperties {
         public void unregisterJ2eePlatformListener(J2eePlatform platform) {
             project.unregisterJ2eePlatformListener(platform);
         }
-        
+
     }
 
 }

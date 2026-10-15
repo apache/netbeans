@@ -53,7 +53,7 @@ final class Memory {
     public static final Object NULL = new Object();
 
     /** Keep reference to last isPrepared result. */
-    public static final ThreadLocal prepared = new ThreadLocal();
+    public static final ThreadLocal<Entry> prepared = new ThreadLocal<>();
 
     private final Statistics statistics;
 
@@ -105,7 +105,7 @@ final class Memory {
         }
         putLive(key, attributes);
         minimalMap.put(key, attributes);
-        Entry entry = (Entry) prepared.get();
+        Entry entry = prepared.get();
         if (entry != null) {
             if (key.equals(entry.key) && name.equals(entry.name)) {
                 if (value != null) {
@@ -167,7 +167,7 @@ final class Memory {
         }
 
         // have not been promised by existsEntry but eliminated by GC?
-        Entry entry = (Entry) prepared.get();
+        Entry entry = prepared.get();
         if (entry != null) {
             if (key.equals(entry.key) && name.equals(entry.name)) {
                 prepared.set(null);  // here ends our promised contract
@@ -190,9 +190,9 @@ final class Memory {
         }
 
         // keep promised value in tread local to survive paralell GC
-        boolean isPrepared = attributes != null && attributes.keySet().contains(name);
+        boolean isPrepared = attributes != null && attributes.containsKey(name);
         if (isPrepared) {
-            Entry entry = (Entry) prepared.get();
+            Entry entry = prepared.get();
             if (entry == null) {
                 entry = new Entry();
             }
@@ -229,7 +229,7 @@ final class Memory {
     }
 
     /** Limited size LRU map implementation. */
-    private final static class LRU extends LinkedHashMap {
+    private static final class LRU extends LinkedHashMap {
 
         private final int maxSize;
 

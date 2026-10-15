@@ -61,7 +61,7 @@ public final class XSLDataObject extends MultiDataObject implements XMLDataObjec
     public static final String MIME_TYPE = "application/xslt+xml"; // NOI18N    
     private static final String XSL_ICON_BASE =
         "org/netbeans/modules/xsl/resources/xslObject"; // NOI18N    
-    private transient final DataObjectCookieManager cookieManager;
+    private final transient DataObjectCookieManager cookieManager;
     private transient Synchronizator synchronizator;    
     
     public XSLDataObject(final FileObject obj, final UniFileLoader loader) throws DataObjectExistsException {

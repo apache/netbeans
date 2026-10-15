@@ -40,11 +40,15 @@ import org.netbeans.api.java.source.Comment;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.ElementUtilities;
 import org.netbeans.api.java.source.GeneratorUtilities;
+import org.netbeans.api.java.source.SourceUtils;
+import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.java.RefactoringUtils;
 import org.netbeans.modules.refactoring.java.api.MemberInfo;
 import org.netbeans.modules.refactoring.java.spi.RefactoringVisitor;
 import static org.netbeans.modules.refactoring.java.plugins.Bundle.*;
+import org.netbeans.modules.refactoring.java.spi.ToPhaseException;
+import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 
 /**
@@ -54,6 +58,7 @@ import org.openide.util.NbBundle;
  */
 public class PushDownTransformer extends RefactoringVisitor {
 
+    private final FileObject originFile;
     private final MemberInfo<ElementHandle<? extends Element>>[] members;
     private Problem problem;
     private boolean inSuperClass;
@@ -62,9 +67,16 @@ public class PushDownTransformer extends RefactoringVisitor {
         return problem;
     }
 
-    public PushDownTransformer(MemberInfo<ElementHandle<? extends Element>> members[]) {
+    public PushDownTransformer(FileObject originFile, MemberInfo<ElementHandle<? extends Element>> members[]) {
+        this.originFile = originFile;
         this.members = members;
         this.translateQueue = new LinkedList<>();
+    }
+
+    @Override
+    public void setWorkingCopy(WorkingCopy workingCopy) throws ToPhaseException {
+        SourceUtils.forceSource(workingCopy, originFile);
+        super.setWorkingCopy(workingCopy); //To change body of generated methods, choose Tools | Templates.
     }
 
     private final Deque<Map<Tree, Tree>> translateQueue;
@@ -241,11 +253,11 @@ public class PushDownTransformer extends RefactoringVisitor {
                 }
                 TreePath path = workingCopy.getTrees().getPath(member);
                 Tree memberTree = path.getLeaf();
+                memberTree = genUtils.importComments(memberTree, path.getCompilationUnit());
                 List<Comment> comments = workingCopy.getTreeUtilities().getComments(memberTree, true);
                 if(comments.isEmpty()) {
                     comments = workingCopy.getTreeUtilities().getComments(memberTree, false);
                 }
-                memberTree = genUtils.importComments(memberTree, path.getCompilationUnit());
                 memberTree = genUtils.importFQNs(memberTree);
                 if (members[i].isMakeAbstract() && memberTree.getKind() == Tree.Kind.METHOD && member.getModifiers().contains((Modifier.PRIVATE))) {
                     MethodTree oldOne = (MethodTree) memberTree;
@@ -303,7 +315,8 @@ public class PushDownTransformer extends RefactoringVisitor {
             njuClass = make.Class(RefactoringUtils.makeAbstract(make,
                     njuClass.getModifiers()), njuClass.getSimpleName(),
                     njuClass.getTypeParameters(), njuClass.getExtendsClause(),
-                    njuClass.getImplementsClause(), njuClass.getMembers());
+                    njuClass.getImplementsClause(), njuClass.getPermitsClause(),
+                    njuClass.getMembers());
         }
 
         return njuClass;
@@ -335,15 +348,16 @@ public class PushDownTransformer extends RefactoringVisitor {
                             
                             if (!classIsAbstract) {
                                 classIsAbstract = true;
-                                Set<Modifier> mod = new HashSet<>(njuClass.getModifiers().getFlags());
-                                mod.add(Modifier.ABSTRACT);
+                                Set<Modifier> mod = EnumSet.of(Modifier.ABSTRACT);
+                                mod.addAll(njuClass.getModifiers().getFlags());
                                 ModifiersTree modifiers = make.Modifiers(mod);
                                 translateQueue.getLast().put(njuClass.getModifiers(), modifiers);
                             }
                             
                             MethodTree method = (MethodTree) t;
-                            Set<Modifier> mod = new HashSet<>(method.getModifiers().getFlags());
-                            mod.add(Modifier.ABSTRACT);
+                            Set<Modifier> mod = EnumSet.of(Modifier.ABSTRACT);
+                            mod.addAll(method.getModifiers().getFlags());
+
                             if(mod.contains(Modifier.PRIVATE)) {
                                 mod.remove(Modifier.PRIVATE);
                                 mod.add(Modifier.PROTECTED);

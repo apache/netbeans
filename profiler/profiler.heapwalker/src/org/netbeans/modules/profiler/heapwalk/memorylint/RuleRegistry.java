@@ -22,8 +22,6 @@ package org.netbeans.modules.profiler.heapwalk.memorylint;
 import org.openide.util.Lookup;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -31,26 +29,16 @@ import java.util.List;
  * @author nenik
  */
 final class RuleRegistry {
-    //~ Constructors -------------------------------------------------------------------------------------------------------------
 
-    private RuleRegistry() {
-    }
-
-    //~ Methods ------------------------------------------------------------------------------------------------------------------
+    private RuleRegistry() {}
 
     public static Collection<Rule> getRegisteredRules() {
         List<Rule> al = instantiateRules();
-        Collections.sort(al,
-                         new Comparator<Rule>() {
-                public int compare(Rule o1, Rule o2) {
-                    return o1.getDisplayName().compareTo(o2.getDisplayName());
-                }
-            });
-
+        al.sort((Rule o1, Rule o2) -> o1.getDisplayName().compareTo(o2.getDisplayName()));
         return al;
     }
 
     private static List<Rule> instantiateRules() {
-        return new ArrayList<Rule>(Lookup.getDefault().lookupAll(Rule.class));
+        return new ArrayList<>(Lookup.getDefault().lookupAll(Rule.class));
     }
 }

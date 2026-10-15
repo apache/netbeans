@@ -16,14 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.groovy.editor.api.parser;
 
 import groovy.lang.GroovyClassLoader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.security.CodeSource;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -31,14 +35,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
+import org.codehaus.groovy.ast.ASTNode;
+import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.CompileUnit;
 import org.codehaus.groovy.ast.ModuleNode;
-import org.codehaus.groovy.classgen.GeneratorContext;
 import org.codehaus.groovy.control.CompilationFailedException;
-import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.ErrorCollector;
 import org.codehaus.groovy.control.Phases;
@@ -47,6 +52,9 @@ import org.codehaus.groovy.control.messages.Message;
 import org.codehaus.groovy.control.messages.SimpleMessage;
 import org.codehaus.groovy.control.messages.SyntaxErrorMessage;
 import org.codehaus.groovy.syntax.SyntaxException;
+import org.codehaus.groovy.transform.StaticTypesTransformation;
+import org.codehaus.groovy.transform.stc.StaticTypeCheckingVisitor;
+import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.lexer.Token;
@@ -63,6 +71,11 @@ import org.netbeans.modules.groovy.editor.compiler.error.GroovyError;
 import org.netbeans.modules.groovy.editor.utils.GroovyUtils;
 import org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId;
 import org.netbeans.modules.groovy.editor.api.lexer.LexUtilities;
+import org.netbeans.modules.groovy.editor.compiler.ClassNodeCache.ParsingClassLoader;
+import org.netbeans.modules.groovy.editor.compiler.ParsingCompilerCustomizer;
+import org.netbeans.modules.groovy.editor.compiler.PerfData;
+import org.netbeans.modules.groovy.editor.compiler.PerfStatCompilationUnit;
+import org.netbeans.modules.groovy.editor.compiler.SimpleTransformationCustomizer;
 import org.netbeans.modules.groovy.editor.compiler.error.CompilerErrorResolver;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Task;
@@ -71,13 +84,23 @@ import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.SourceModificationEvent;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 
 /**
+ * Groovy Parser interface. This class should not be probably public. Do not use
+ * it outside the module.
  *
  * @author Martin Adamek
  */
 public class GroovyParser extends Parser {
+
+    /**
+     * If set, enables reporting of static type checking in editor. As there are a lot of false positives,
+     * this feature remains 'developer only' at the moment, so false reports can be seen & mitigated easily.
+     */
+    private static final boolean STATIC_ERRORS = Boolean.getBoolean(GroovyParser.class.getName() + ".staticCompileErrors");
 
     private static final Logger LOG = Logger.getLogger(GroovyParser.class.getName());
 
@@ -120,27 +143,59 @@ public class GroovyParser extends Parser {
         assert lastResult != null : "getResult() called prior parse()"; //NOI18N
         return lastResult;
     }
+    
+    static Map<Integer, Long>    phaseCounters = new HashMap<>();
 
     @Override
     public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) throws ParseException {
         cancelled.set(false);
+        
+        if (!GroovyUtils.isIndexingEnabled()) {
+            if (GroovyUtils.isIndexingTask(task)) {
+                lastResult = createParseResult(snapshot, null, null);
+                return;
+            }
+        }
 
         Context context = new Context(snapshot, event);
+        context.setIndexingTask(task);
         final Set<Error> errors = new HashSet<Error>();
         context.errorHandler = new ParseErrorHandler() {
 
             @Override
             public void error(Error error) {
-                errors.add(error);
+                if (!errors.contains(error)) {
+                    errors.add(error);
+                }
             }
         };
-        lastResult = parseBuffer(context, Sanitize.NONE);
+        long t1 = System.currentTimeMillis();
+        try {
+            lastResult = parseBuffer(context, Sanitize.NONE);        
+        } catch (Throwable t) {
+            LOG.log(Level.SEVERE, "Error during parsing: ", t);
+        }
+        
+        long t2 = System.currentTimeMillis();
+        context.perfData.addPerfCounter("Total parsing time", t2 - t1);
+        context.perfData.dumpStatsAndMerge();
+
         if (lastResult != null) {
             lastResult.setErrors(errors);
         } else {
             // FIXME just temporary
             lastResult = createParseResult(snapshot, null, null);
         }
+    }
+
+    /**
+     * Post-configures the parser result with CompilationUnit, so that API clients
+     * may resolve ClassNodes.
+     */
+    GroovyParserResult createParseResult0(Snapshot snapshot, org.codehaus.groovy.control.CompilationUnit cu, ModuleNode rootNode, ErrorCollector errorCollector) {
+        GroovyParserResult gpr = createParseResult(snapshot, rootNode, errorCollector);
+        gpr.setUnit(cu);
+        return gpr;
     }
 
     protected GroovyParserResult createParseResult(Snapshot snapshot, ModuleNode rootNode, ErrorCollector errorCollector) {
@@ -161,7 +216,9 @@ public class GroovyParser extends Parser {
         int offset = context.caretOffset;
 
         // Let caretOffset represent the offset of the portion of the buffer we'll be operating on
-        if ((sanitizing == Sanitize.ERROR_DOT) || (sanitizing == Sanitize.ERROR_LINE)) {
+        if (sanitizing == Sanitize.ERROR_DOT) {
+            offset = context.errorOffset + 1;
+        } else if (sanitizing == Sanitize.ERROR_LINE || sanitizing == Sanitize.PRIOR_ERROR_LINE) {
             offset = context.errorOffset;
         }
 
@@ -206,7 +263,7 @@ public class GroovyParser extends Parser {
                                 sb.append(doc.substring(0, removeStart));
                                 sb.append(' ');
                                 if (removeEnd < doc.length()) {
-                                    sb.append(doc.substring(removeEnd, doc.length()));
+                                    sb.append(doc.substring(removeEnd));
                                 }
                                 assert sb.length() == doc.length();
                                 context.sanitizedRange = new OffsetRange(removeStart, removeEnd);
@@ -229,7 +286,7 @@ public class GroovyParser extends Parser {
                             sb.append("//");
                             int rest = lineStart + 2;
                             if (rest < doc.length()) {
-                                sb.append(doc.substring(rest, doc.length()));
+                                sb.append(doc.substring(rest));
                             }
                         } else {
                             // A line with just one character - can't replace with a comment
@@ -238,7 +295,7 @@ public class GroovyParser extends Parser {
                             sb.append(" ");
                             int rest = lineStart + 1;
                             if (rest < doc.length()) {
-                                sb.append(doc.substring(rest, doc.length()));
+                                sb.append(doc.substring(rest));
                             }
 
                         }
@@ -249,6 +306,41 @@ public class GroovyParser extends Parser {
                         context.sanitizedSource = sb.toString();
                         context.sanitizedContents = doc.substring(lineStart, lineEnd);
                         return true;
+                    }
+                } else if  (sanitizing == Sanitize.PRIOR_ERROR_LINE) {
+                    int errRowStart = GroovyUtils.getRowStart(doc, offset);
+                    if (errRowStart > 0) {
+                        int lineEnd = GroovyUtils.getRowLastNonWhite(doc, errRowStart - 1);
+                        if (lineEnd != -1) {
+                            lineEnd++; // lineEnd is exclusive, not inclusive
+                            StringBuilder sb = new StringBuilder(doc.length());
+                            int lineStart = GroovyUtils.getRowStart(doc, errRowStart - 1);
+                            if (lineEnd >= lineStart+2) {
+                                sb.append(doc.substring(0, lineStart));
+                                sb.append("//");
+                                int rest = lineStart + 2;
+                                if (rest < doc.length()) {
+                                    sb.append(doc.substring(rest));
+                                }
+                            } else {
+                                // A line with just one character - can't replace with a comment
+                                // Just replace the char with a space
+                                sb.append(doc.substring(0, lineStart));
+                                sb.append(" ");
+                                int rest = lineStart + 1;
+                                if (rest < doc.length()) {
+                                    sb.append(doc.substring(rest));
+                                }
+
+                            }
+
+                            assert sb.length() == doc.length();
+
+                            context.sanitizedRange = new OffsetRange(lineStart, lineEnd);
+                            context.sanitizedSource = sb.toString();
+                            context.sanitizedContents = doc.substring(lineStart, lineEnd);
+                            return true;
+                        }
                     }
                 } else {
                     assert sanitizing == Sanitize.ERROR_DOT || sanitizing == Sanitize.EDITED_DOT;
@@ -309,7 +401,7 @@ public class GroovyParser extends Parser {
                         }
 
                         if (removeEnd < doc.length()) {
-                            sb.append(doc.substring(removeEnd, doc.length()));
+                            sb.append(doc.substring(removeEnd));
                         }
                         assert sb.length() == doc.length();
 
@@ -365,9 +457,16 @@ public class GroovyParser extends Parser {
         // Fall through to try the next trick
         case ERROR_LINE:
 
-            // Messing with the error line didn't work - we could try "around" the error line
-            // but I'm not attempting that now.
-            // Finally try removing the whole line around the user editing position
+            // We've tried removing error line - now try removing line prior the the error position
+            if (context.errorOffset != -1) {
+                return parseBuffer(context, Sanitize.PRIOR_ERROR_LINE);
+            }
+
+        // Fall through to try the next trick
+        case PRIOR_ERROR_LINE:
+
+            // Messing with the error line and the line prior didn't work -
+            // finally try removing the whole line around the user editing position
             // (which could be far from where the error is showing up - but if you're typing
             // say a new "def" statement in a class, this will show up as an error on a mismatched
             // "end" statement rather than here
@@ -384,6 +483,81 @@ public class GroovyParser extends Parser {
         default:
             // We're out of tricks - just return the failed parse result
             return createParseResult(context.snapshot, null, null);
+        }
+    }
+
+    private static CompilerConfiguration makeConfiguration(
+            CompilerConfiguration configuration, Context context, boolean isIndexing) {
+        Map<String, Boolean> opts = configuration.getOptimizationOptions();
+        opts.put("classLoaderResolving", Boolean.FALSE);
+
+        for (ParsingCompilerCustomizer pcc : context.compilerCustomizers) {
+            configuration = pcc.configureParsingCompiler(context.customizerCtx, configuration);
+        }
+        return configuration;
+    }
+
+    /**
+     * Provides special processing: injects {@link StaticTypeCheckingVisitor} in {@link Phases.INSTRUCTION_SELECTION}
+     * compilation phase. Also overrides ErrorCollector implementation with {@link NbGroovyErrorCollector}.
+     */
+    static class CU extends PerfStatCompilationUnit {
+        /**
+         * Disable type attribution for indexing now.
+         */
+        final boolean indexing;
+        
+        StaticTypesTransformation typesXform = new StaticTypesTransformation() {
+            @Override
+            protected StaticTypeCheckingVisitor newVisitor(SourceUnit unit, ClassNode node) {
+                return new NbGroovyErrorCollector.NbStaticTypeCheckingVisitor(unit, node, (NbGroovyErrorCollector)errorCollector);
+            }
+        };
+
+        public CU(boolean indexing, GroovyParser parser, CompilerConfiguration configuration, CodeSource security, GroovyClassLoader loader, 
+                GroovyClassLoader transformationLoader, ClasspathInfo cpInfo, ClassNodeCache classNodeCache, boolean isIndexing, Snapshot snap, PerfData perfData) {
+            super(perfData, parser, configuration, security, loader, transformationLoader, cpInfo, classNodeCache, isIndexing, snap);
+            this.indexing = indexing;
+            this.errorCollector = new NbGroovyErrorCollector(configuration);
+        }
+        
+        boolean inited;
+        
+        public void addPhaseOperation(final ISourceUnitOperation op, final int phase) {
+            if (!inited) {
+                ((ClassNodeCache.TransformationClassLoader)getTransformLoader()).setUnit(this);
+                inited = true;
+            }
+            super.addPhaseOperation(op, phase);
+        }
+        
+        /**
+         * Inject static compilation transformation; apply them in the
+         *
+         * @param phase
+         * @throws CompilationFailedException
+         */
+        @Override
+        public void gotoPhase(int phase) throws CompilationFailedException {
+            super.gotoPhase(phase);
+            if (phase > Phases.CONVERSION) {
+                ((NbGroovyErrorCollector)errorCollector).setDisableErrors(true);
+            }
+            if (phase != Phases.INSTRUCTION_SELECTION) {
+                return;
+            }
+            if (indexing) {
+                return;
+            }
+            typesXform.setCompilationUnit(this);
+            ClassNode annoClass = getClassNodeResolver().resolveName("groovy.transform.TypeChecked", this).getClassNode(); // NOI18N
+            runSourceVisitor("Parsing - static type analysis", (su) -> {    // NOI18N
+                for (ClassNode cn : su.getAST().getClasses()) {
+                    AnnotationNode fakeTypeChecked = new AnnotationNode(annoClass);
+                    cn.addAnnotation(fakeTypeChecked);
+                    typesXform.visit(new ASTNode[]{fakeTypeChecked, cn}, su);
+                }
+            });
         }
     }
 
@@ -415,33 +589,70 @@ public class GroovyParser extends Parser {
         }
 
         String fileName = "";
-        if (context.snapshot.getSource().getFileObject() != null) {
-            fileName = context.snapshot.getSource().getFileObject().getNameExt();
+        String path = "";
+        FileObject file = context.snapshot.getSource().getFileObject();
+        if (file != null) {
+            fileName = file.getNameExt();
+            path = file.getPath();
         }
 
         FileObject fo = context.snapshot.getSource().getFileObject();
         ClassPath bootPath = fo == null ? ClassPath.EMPTY : ClassPath.getClassPath(fo, ClassPath.BOOT);
         ClassPath compilePath = fo == null ? ClassPath.EMPTY : ClassPath.getClassPath(fo, ClassPath.COMPILE);
         ClassPath sourcePath = fo == null ? ClassPath.EMPTY : ClassPath.getClassPath(fo, ClassPath.SOURCE);
-        ClassPath transformPath = ClassPathSupport.createProxyClassPath(bootPath, compilePath);
-        ClassPath cp = ClassPathSupport.createProxyClassPath(transformPath, sourcePath);
-
+        
+        if (bootPath == null) {
+            bootPath = ClassPath.EMPTY;
+        }
+        if (compilePath == null) {
+            compilePath = ClassPath.EMPTY;
+        }
+        
         CompilerConfiguration configuration = new CompilerConfiguration();
         final ClassNodeCache classNodeCache = ClassNodeCache.get();
-        final GroovyClassLoader classLoader = classNodeCache.createResolveLoader(cp, configuration);
-        final GroovyClassLoader transformationLoader = classNodeCache.createTransformationLoader(transformPath, configuration);
+        classNodeCache.setPerfData(context.perfData);
         ClasspathInfo cpInfo = ClasspathInfo.create(
                 // we should try to load everything by javac instead of classloader,
                 // but for now it is faster to use javac only for sources - not true
-
                 // null happens in GSP
-                bootPath == null ? ClassPath.EMPTY : bootPath,
-                compilePath == null ? ClassPath.EMPTY : compilePath,
+                bootPath,
+                compilePath,
                 sourcePath);        
-        CompilationUnit compilationUnit = new CompilationUnit(this, configuration,
-                null, classLoader, transformationLoader, cpInfo, classNodeCache);
+        ClassPath cachedCompile = CompilationUnit.pryOutCachedClassPath(cpInfo, ClasspathInfo.PathKind.COMPILE);
+        ClassPath transformPath = ClassPathSupport.createProxyClassPath(bootPath, cachedCompile);
+        ClassPath cp = ClassPathSupport.createProxyClassPath(transformPath, sourcePath);
+        final ParsingClassLoader classLoader = classNodeCache.createResolveLoader(cp, configuration);
+        final GroovyClassLoader transformationLoader = classNodeCache.createTransformationLoader(
+                transformPath, configuration, file, bootPath, cachedCompile);
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            FileObject[] roots = cp.getRoots();
+            FileObject[] roots2 = new FileObject[roots.length];
+
+            for (int i = 0; i < roots.length; i++) {
+                if (FileUtil.isArchiveArtifact(roots[i])) {
+                    roots2[i] = FileUtil.getArchiveFile(roots[i]);
+                } else {
+                    roots2[i] = roots[i];
+                }
+            }
+            LOG.log(Level.FINEST, "Using compile path: {0}", 
+                    String.join("\n", Arrays.asList(roots2).stream().map(f -> "\t" + f.getPath()).collect(Collectors.toList()))
+            );
+        }
+
+        boolean indexing = GroovyUtils.isIndexingTask(context.parserTask);
+        configuration = makeConfiguration(configuration, context, indexing);
+        CU compilationUnit = new CU(indexing, this, configuration,
+                null, classLoader, transformationLoader, cpInfo, classNodeCache,
+                indexing, context.snapshot, context.perfData);
+        classLoader.setUnit(compilationUnit);
         InputStream inputStream = new ByteArrayInputStream(source.getBytes());
         compilationUnit.addSource(fileName, inputStream);
+        
+        for (ParsingCompilerCustomizer pcc : context.compilerCustomizers) {
+            pcc.decorateCompilation(context.customizerCtx, compilationUnit);
+        }
 
         if (isCancelled()) {
             return null;
@@ -452,10 +663,22 @@ public class GroovyParser extends Parser {
             PARSING_COUNT.incrementAndGet();
             start = System.currentTimeMillis();
         }
-
+        NbGroovyErrorCollector coll = (NbGroovyErrorCollector)compilationUnit.getErrorCollector();
         try {
             try {
-                compilationUnit.compile(Phases.CLASS_GENERATION);
+                PerfData.withPerfData(context.perfData, () -> {
+                    compilationUnit.compile(Phases.CLASS_GENERATION);
+                    return null;
+                });
+                coll.setDisableErrors(false);
+                // PENDING: there are too many spurious errors from static type analysis (now). Let's make the errors
+                // a dev-only feature fow now.
+                if (STATIC_ERRORS) {
+                    // enable static errors, they were separated aside, so that later compilation phases can run
+                    coll.setShowAllErrors(true);
+                    // and let the Collector to fail...
+                    coll.failIfErrors();
+                }
             } catch (CancellationException ex) {
                 // cancelled probably
                 if (isCancelled()) {
@@ -469,10 +692,11 @@ public class GroovyParser extends Parser {
             String localizedMessage = e.getLocalizedMessage();
 
             ErrorCollector errorCollector = compilationUnit.getErrorCollector();
+            List<? extends Message> filtered = errorCollector.getErrors();
             if (errorCollector.hasErrors()) {
-                Message message = errorCollector.getLastError();
+                Message message = filtered.get(filtered.size() - 1);
                 if (message instanceof SyntaxErrorMessage) {
-                    SyntaxException se = ((SyntaxErrorMessage)message).getCause();
+                    SyntaxException se = ((SyntaxErrorMessage) message).getCause();
 
                     // if you have a single line starting with: "$
                     // SyntaxException.getStartLine() returns 0 instead of 1
@@ -516,8 +740,8 @@ public class GroovyParser extends Parser {
                     localizedMessage = se.getLocalizedMessage();
                 }
             } else {
-                if (LOG.isLoggable(Level.FINE)) {
-                    if (e instanceof CancellationException) {
+                if (e instanceof CancellationException) {
+                    if (LOG.isLoggable(Level.FINE)) {
                         LOG.log(Level.FINE, null, e);
                     }
                 }
@@ -569,11 +793,11 @@ public class GroovyParser extends Parser {
         }
 
         handleErrorCollector(compilationUnit.getErrorCollector(), context, module, ignoreErrors, sanitizing);
-
+        
         if (module != null) {
             context.sanitized = sanitizing;
             // FIXME parsing API
-            GroovyParserResult r = createParseResult(context.snapshot, module, compilationUnit.getErrorCollector());
+            GroovyParserResult r = createParseResult0(context.snapshot, compilationUnit, module, compilationUnit.getErrorCollector());
             r.setSanitized(context.sanitized, context.sanitizedRange, context.sanitizedContents);
             return r;
         } else {
@@ -686,7 +910,7 @@ public class GroovyParser extends Parser {
                             notifyError(context, null, Severity.ERROR, ex.getMessage(), null, startOffset, endOffset, sanitizing);
                         }
                     } else if (object instanceof SimpleMessage) {
-                        String message = ((SimpleMessage)object).getMessage();
+                        String message = ((SimpleMessage) object).getMessage();
                         notifyError(context, null, Severity.ERROR, message, null, -1, sanitizing);
                     } else {
                         notifyError(context, null, Severity.ERROR, "Error", null, -1, sanitizing);
@@ -709,6 +933,8 @@ public class GroovyParser extends Parser {
         ERROR_DOT,
         /** Try to cut out the error line */
         ERROR_LINE,
+        /** Try to cut out line prior the error line */
+        PRIOR_ERROR_LINE,
         /** Try to cut out the current edited line, if known */
         EDITED_LINE,
         /** Attempt to add an "end" to the end of the buffer to make it compile */
@@ -721,7 +947,8 @@ public class GroovyParser extends Parser {
         private final Snapshot snapshot;
         private final SourceModificationEvent event;
         private final BaseDocument document;
-
+        private Task parserTask;
+        
         private ParseErrorHandler errorHandler;
         private int errorOffset;
         private String source;
@@ -730,6 +957,9 @@ public class GroovyParser extends Parser {
         private String sanitizedContents;
         private int caretOffset;
         private Sanitize sanitized = Sanitize.NONE;
+        final List<ParsingCompilerCustomizer> compilerCustomizers;
+        final ParsingCompilerCustomizer.Context customizerCtx;
+        final PerfData perfData = new PerfData();
 
         public Context(Snapshot snapshot, SourceModificationEvent event) {
             this.snapshot = snapshot;
@@ -738,6 +968,23 @@ public class GroovyParser extends Parser {
             this.caretOffset = GsfUtilities.getLastKnownCaretOffset(snapshot, event);
             // FIXME parsing API
             this.document = LexUtilities.getDocument(snapshot.getSource(), true);
+
+
+            Lookup mlkp = MimeLookup.getLookup(snapshot.getMimePath());
+            List<ParsingCompilerCustomizer> cc = new ArrayList<>(mlkp.lookupAll(ParsingCompilerCustomizer.class));
+            compilerCustomizers = cc;
+            if (!cc.isEmpty()) {
+                customizerCtx = new ParsingCompilerCustomizer.Context(snapshot, parserTask);
+            } else {
+                customizerCtx = null;
+            }
+        }
+        
+        void setIndexingTask(Task t) {
+            this.parserTask = t;
+            if (customizerCtx != null) {
+                customizerCtx.setConsumerTask(t);
+            }
         }
 
         @Override
@@ -766,5 +1013,10 @@ public class GroovyParser extends Parser {
 
         void error(Error error);
 
+    }
+    
+    // to be used form layers.
+    static ParsingCompilerCustomizer customizeTransformsFromLayer(Map<String, Object> attributes) {
+        return SimpleTransformationCustomizer.fromLayer(attributes);
     }
 }

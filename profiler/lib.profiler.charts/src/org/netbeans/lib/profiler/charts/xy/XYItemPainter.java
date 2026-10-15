@@ -39,7 +39,7 @@ public interface XYItemPainter extends ItemPainter {
     public double getItemValueScale(XYItem item, ChartContext context);
 
 
-    public static abstract class Abstract implements XYItemPainter {
+    public abstract static class Abstract implements XYItemPainter {
 
         public double getItemView(double dataY, XYItem item, ChartContext context) {
             return context.getViewY(dataY);

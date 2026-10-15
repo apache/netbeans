@@ -117,12 +117,11 @@
         </question>
 -->
  <answer id="arch-usecases">
-  <p>
    <usecase id="user-sampling" name="User controlled sampling" >
        There needs to be a simple API for someone who wants to create simple user 
        action which starts and stops self-sampling and presents user with sampled
        results.
-       <p></p>
+       <br/>
        The correct way to achieve this is to call 
         <code><a href="@TOP@/org/netbeans/modules/sampler/Sampler.html">Sampler</a>.createManualSampler</code>,
         followed by
@@ -133,14 +132,13 @@
    <usecase id="code-sampling" name="Sampling of the slow operation" >
        Second major use-case of the Sampling API is sampling of the slow operation.
        
-       <p></p>
+       <br/>
        The correct way to achieve this is to call 
         <code><a href="@TOP@/org/netbeans/modules/sampler/Sampler.html">Sampler</a>.createSampler()</code>,
         followed by
         <code><a href="@TOP@/org/netbeans/modules/sampler/Sampler.html">Sampler</a>.start()</code> and
         <code><a href="@TOP@/org/netbeans/modules/sampler/Sampler.html">Sampler</a>.stopAndWriteTo(DataOutputStream dos)</code>.
    </usecase>
-  </p>
  </answer>
 
 

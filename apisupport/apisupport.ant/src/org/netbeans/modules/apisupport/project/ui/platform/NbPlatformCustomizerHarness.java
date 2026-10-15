@@ -194,6 +194,7 @@ public class NbPlatformCustomizerHarness extends JPanel {
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
         JFileChooser jfc = new JFileChooser() {
             // Trick stolen from ProjectChooserAccessory.ProjectFileChooser:
+            @Override
             public void approveSelection() {
                 File dir = FileUtil.normalizeFile(getSelectedFile());
                 if (NbPlatform.isHarness(dir)) {
@@ -203,7 +204,6 @@ public class NbPlatformCustomizerHarness extends JPanel {
                 }
             }
         };
-        FileUtil.preventFileChooserSymlinkTraversal(jfc, null);
         jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         jfc.setSelectedFile(plaf.getHarnessLocation());
         if (jfc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {

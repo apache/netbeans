@@ -1,0 +1,8 @@
+enum TestEnum implements TestEnumInterface {
+     --------
+HINT:\TestEnum is not abstract and does not override abstract method  testEnum() in \TestEnumInterface
+FIX:Implement All Abstract Methods
+enum TestEnumWithTrait {
+     -----------------
+HINT:\TestEnumWithTrait is not abstract and does not override abstract method  testTrait() in \TestEnumTrait
+FIX:Implement All Abstract Methods

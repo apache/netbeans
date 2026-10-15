@@ -54,7 +54,7 @@ public abstract class MultiFileSystemCompat extends FileSystem {
             }
         }
 
-        return al.toArray(new SystemAction[al.size()]);
+        return al.toArray(new SystemAction[0]);
     }
 
     public SystemAction[] getActions(final Set<FileObject> foSet) {
@@ -77,7 +77,7 @@ public abstract class MultiFileSystemCompat extends FileSystem {
             }
         }
 
-        return al.toArray(new SystemAction[al.size()]);
+        return al.toArray(new SystemAction[0]);
     }
     
     static FileSystemCompat compat(FileSystem fs) {

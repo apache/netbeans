@@ -67,7 +67,7 @@ public class ClasspathPanel extends javax.swing.JPanel implements HelpCtx.Provid
 
     private static final Logger LOG = Logger.getLogger(ClasspathPanel.class.getName());
 
-    private DefaultListModel listModel;
+    private DefaultListModel<String> listModel;
     private File lastChosenFile = null;
     private boolean isSeparateClasspath = true;
     private List<ProjectModel.CompilationUnitKey> compUnitsKeys;
@@ -101,7 +101,7 @@ public class ClasspathPanel extends javax.swing.JPanel implements HelpCtx.Provid
         initComponents();
         jTextArea1.setBackground(getBackground());
         jTextArea1.setDisabledTextColor(jLabel2.getForeground());
-        listModel = new DefaultListModel();
+        listModel = new DefaultListModel<>();
         classpath.setModel(listModel);
     }
 
@@ -118,7 +118,7 @@ public class ClasspathPanel extends javax.swing.JPanel implements HelpCtx.Provid
             }
         });
         platforms.addAll(Arrays.asList(JavaPlatformManager.getDefault().getInstalledPlatforms()));
-        javaPlatform.setModel(new DefaultComboBoxModel(platforms.toArray(new JavaPlatform[platforms.size()])));
+        javaPlatform.setModel(new DefaultComboBoxModel(platforms.toArray(new JavaPlatform[0])));
         JavaPlatform pf = jdkConf.getSelectedPlatform();
         if (pf == null) {
             pf = JavaPlatformManager.getDefault().getDefaultPlatform();
@@ -499,9 +499,9 @@ public class ClasspathPanel extends javax.swing.JPanel implements HelpCtx.Provid
         }
         for (int i = 0; i < indices.length; i++) {
             int index = indices[i];
-            Object o = listModel.remove(index);
+            String s = listModel.remove(index);
             index++;
-            listModel.add(index, o);
+            listModel.add(index, s);
             indices[i] = index;
         }
         classpath.setSelectedIndices(indices);
@@ -516,9 +516,9 @@ public class ClasspathPanel extends javax.swing.JPanel implements HelpCtx.Provid
         }
         for (int i = 0; i < indices.length; i++) {
             int index = indices[i];
-            Object o = listModel.remove(index);
+            String s = listModel.remove(index);
             index--;
-            listModel.add(index, o);
+            listModel.add(index, s);
             indices[i] = index;
         }
         classpath.setSelectedIndices(indices);
@@ -710,10 +710,7 @@ public class ClasspathPanel extends javax.swing.JPanel implements HelpCtx.Provid
     }//GEN-LAST:event_removeClasspathActionPerformed
 
     private void addClasspathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addClasspathActionPerformed
-        FileChooser chooser;
-        chooser = new FileChooser(model.getBaseFolder(), null);
-
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
+        FileChooser chooser = new FileChooser(model.getBaseFolder(), null);
         chooser.setFileSelectionMode (JFileChooser.FILES_AND_DIRECTORIES);
         chooser.setMultiSelectionEnabled(true);
         chooser.setDialogTitle(NbBundle.getMessage(ClasspathPanel.class, "LBL_Browse_Classpath"));

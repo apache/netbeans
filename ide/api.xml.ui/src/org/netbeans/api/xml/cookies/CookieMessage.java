@@ -132,7 +132,7 @@ public final class CookieMessage {
      * @param  klass Requested detail subclass.
      * @return Instance of requested structured detail or <code>null</code>.
      */
-    public Object getDetail(Class klass) {
+    public <T> T getDetail(Class<T> klass) {
         return details.lookup(klass);
     }
 

@@ -21,15 +21,18 @@ package org.netbeans.modules.java.source.save;
 
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.Trees;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.Position;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedMap;
 import javax.swing.text.Document;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CodeStyle;
@@ -56,6 +59,7 @@ public class DiffContext {
     public final PositionConverter positionConverter;
     public final FileObject file;
     public final Set<Tree> syntheticTrees;
+    public final Map<CompilationUnitTree, Set<Tree>> cut2ContainedTrees = new HashMap<>();
     
     public final JCCompilationUnit mainUnit;
     public final String mainCode;
@@ -63,6 +67,7 @@ public class DiffContext {
     public final int textLength;
     
     public final BlockSequences blockSequences;
+    public final Map<JCTree, Integer> syntheticEndPositions = new HashMap<>();
     
     /**
      * Special flag; when creating new CUs from template, always include their initial comments
@@ -136,4 +141,31 @@ public class DiffContext {
         return CodeStyle.getDefault((Document)null);
     }
 
+    public int getEndPosition(JCCompilationUnit unit, JCTree t) {
+        int endPos = TreeInfo.getEndPos(t);
+
+        if (endPos == Position.NOPOS && unit == origUnit) {
+            endPos = syntheticEndPositions.getOrDefault(t, Position.NOPOS);
+        }
+
+        return endPos;
+    }
+
+    public boolean isPartOfCompilationUnit(CompilationUnitTree cut, Tree tree2Test) {
+        return cut2ContainedTrees.computeIfAbsent(cut, c -> {
+            Set<Tree> containedTree = new HashSet<>();
+
+            new TreePathScanner<>() {
+                @Override
+                public Object scan(Tree tree, Object p) {
+                    if (tree != null) {
+                        containedTree.add(tree);
+                    }
+                    return super.scan(tree, p);
+                }
+            }.scan(c, null);
+
+            return containedTree;
+        }).contains(tree2Test);
+    }
 }

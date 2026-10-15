@@ -27,6 +27,7 @@ import java.io.OutputStream;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -53,12 +54,6 @@ import java.util.regex.Pattern;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
 import javax.tools.Diagnostic;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNotSame;
-import static junit.framework.Assert.assertTrue;
-
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.lexer.JavaTokenId;
@@ -116,6 +111,12 @@ import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Copy/pasted and refactored HintTestBase written by Honza Lahoda.
@@ -472,7 +473,7 @@ public class HintTestBase {
             result.addAll(e.getValue());
         }
 
-        Collections.sort(result, ERRORS_COMPARATOR);
+        result.sort(ERRORS_COMPARATOR);
         
         Reference<CompilationInfo> infoRef = new WeakReference<CompilationInfo>(info);
         Reference<CompilationUnitTree> cut = new WeakReference<CompilationUnitTree>(info.getCompilationUnit());
@@ -1309,7 +1310,7 @@ public class HintTestBase {
 
     private static FileObject copyStringToFile (FileObject f, String content) throws Exception {
         OutputStream os = f.getOutputStream();
-        os.write(content.getBytes("UTF-8"));
+        os.write(content.getBytes(StandardCharsets.UTF_8));
         os.close ();
 
         return f;

@@ -27,10 +27,12 @@ public class HttpServerSettingsTest extends BasicTestForImport {
         super(testName, "org-netbeans-modules-httpserver-HttpServerSettings.settings");
     }
 
+    @Override
     public void testPreferencesNodePath() throws Exception {
         assertPreferencesNodePath("/org/netbeans/modules/httpserver");
     }
     
+    @Override
     public void testPropertyNames() throws Exception {
         assertPropertyNames(new String[] {
         "host", "showGrantAccess", "grantedAddresses", "port"

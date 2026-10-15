@@ -248,9 +248,8 @@ class TagUIManager extends XmlOptionPanelManager {
                 "A11Y_AddToTLD_mnem").charAt(0));
         myTldCheckBox.setText(NbBundle.getMessage(TagTargetPanelProvider.class, 
                 "OPT_addTagFileToTLD"));
-        
+
         GridBagConstraints gridBagConstraints = new GridBagConstraints();
-        gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 4;

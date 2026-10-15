@@ -179,7 +179,7 @@ public final class GlobalJavadocForBinaryImpl implements JavadocForBinaryQueryIm
         }
         return new JavadocForBinaryQuery.Result() {
             public @Override URL[] getRoots() {
-                return candidates.toArray(new URL[candidates.size()]);
+                return candidates.toArray(new URL[0]);
             }
             public @Override void addChangeListener(ChangeListener l) {}
             public @Override void removeChangeListener(ChangeListener l) {}

@@ -67,7 +67,7 @@ public class JSNI2JavaScriptBody {
     }
 
     private static Token<JavaTokenId> findBlockToken(CompilationInfo info, TreePath path, HintContext ctx) {
-        int end = (int) info.getTrees().getSourcePositions().getEndPosition(path.getCompilationUnit(), path.getLeaf());
+        int end = (int) info.getTrees().getSourcePositions().getEndPosition(path.getLeaf());
         TokenSequence<JavaTokenId> ts = info.getTokenHierarchy().tokenSequence(JavaTokenId.language());
 
         if (ts == null) return null;

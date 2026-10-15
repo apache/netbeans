@@ -1,0 +1,178 @@
+int a
+public native int hashCode()
+public static final int Integer.BYTES
+public static final int Integer.MAX_VALUE
+public static final int Integer.MIN_VALUE
+public static final int Integer.SIZE
+public static int Integer.bitCount(int arg0)
+public static int Integer.compare(int arg0, int arg1)
+public static int Integer.compareUnsigned(int arg0, int arg1)
+public static int Integer.compress(int arg0, int arg1)
+public static Integer Integer.decode(String arg0)
+public static int Integer.divideUnsigned(int arg0, int arg1)
+public static int Integer.expand(int arg0, int arg1)
+public static Integer Integer.getInteger(String arg0)
+public static Integer Integer.getInteger(String arg0, Integer arg1)
+public static Integer Integer.getInteger(String arg0, int arg1)
+public static int Integer.hashCode(int arg0)
+public static int Integer.highestOneBit(int arg0)
+public static int Integer.lowestOneBit(int arg0)
+public static int Integer.max(int arg0, int arg1)
+public static int Integer.min(int arg0, int arg1)
+public static int Integer.numberOfLeadingZeros(int arg0)
+public static int Integer.numberOfTrailingZeros(int arg0)
+public static int Integer.parseInt(String arg0)
+public static int Integer.parseInt(String arg0, int arg1)
+public static int Integer.parseInt(CharSequence arg0, int arg1, int arg2, int arg3)
+public static int Integer.parseUnsignedInt(String arg0)
+public static int Integer.parseUnsignedInt(String arg0, int arg1)
+public static int Integer.parseUnsignedInt(CharSequence arg0, int arg1, int arg2, int arg3)
+public static int Integer.remainderUnsigned(int arg0, int arg1)
+public static int Integer.reverse(int arg0)
+public static int Integer.reverseBytes(int arg0)
+public static int Integer.rotateLeft(int arg0, int arg1)
+public static int Integer.rotateRight(int arg0, int arg1)
+public static int Integer.signum(int arg0)
+public static int Integer.sum(int arg0, int arg1)
+public static Integer Integer.valueOf(String arg0)
+public static Integer Integer.valueOf(int arg0)
+public static T Enum.valueOf(Class<T> arg0, String arg1)
+public static Integer Integer.valueOf(String arg0, int arg1)
+public String field
+protected native Object clone()
+public boolean equals(Object arg0)
+protected void finalize()
+public final native Class<?> getClass()
+public final native void notify()
+public final native void notifyAll()
+public void op(int a)
+public String toString()
+public final void wait()
+public final void wait(long arg0)
+public final void wait(long arg0, int arg1)
+boolean
+byte
+char
+double
+false
+float
+int
+long
+new
+null
+short
+super
+this
+true
+AbstractMethodError
+Appendable
+ArithmeticException
+ArrayIndexOutOfBoundsException
+ArrayStoreException
+AssertionError
+AutoCloseable
+Boolean
+BootstrapMethodError
+Byte
+CharSequence
+Character
+Class
+ClassCastException
+ClassCircularityError
+ClassFormatError
+ClassLoader
+ClassNotFoundException
+ClassValue
+CloneNotSupportedException
+Cloneable
+Comparable
+Compiler
+Deprecated
+Double
+Enum
+EnumConstantNotPresentException
+Error
+Exception
+ExceptionInInitializerError
+Float
+FunctionalInterface
+IllegalAccessError
+IllegalAccessException
+IllegalArgumentException
+IllegalCallerException
+IllegalMonitorStateException
+IllegalStateException
+IllegalThreadStateException
+IncompatibleClassChangeError
+IndexOutOfBoundsException
+InheritableThreadLocal
+InstantiationError
+InstantiationException
+Integer
+InternalError
+InterruptedException
+Iterable
+LayerInstantiationException
+LinkageError
+Long
+MatchException
+Math
+Module
+ModuleLayer
+NegativeArraySizeException
+NoClassDefFoundError
+NoSuchFieldError
+NoSuchFieldException
+NoSuchMethodError
+NoSuchMethodException
+NullPointerException
+Number
+NumberFormatException
+Object
+OutOfMemoryError
+Override
+Package
+Process
+ProcessBuilder
+ProcessHandle
+Readable
+Record
+ReflectiveOperationException
+Runnable
+Runtime
+RuntimeException
+RuntimePermission
+SafeVarargs
+SecurityException
+SecurityManager
+Short
+StackOverflowError
+StackTraceElement
+StackWalker
+StrictMath
+String
+StringBuffer
+StringBuilder
+StringIndexOutOfBoundsException
+SuppressWarnings
+System
+Test
+Thread
+ThreadDeath
+ThreadGroup
+ThreadLocal
+Throwable
+TypeNotPresentException
+UnknownError
+UnsatisfiedLinkError
+UnsupportedClassVersionError
+UnsupportedOperationException
+VerifyError
+VirtualMachineError
+Void
+WrongThreadException
+com
+java
+javax
+org
+sun

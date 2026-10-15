@@ -58,7 +58,7 @@ public class XMLReporter implements Reporter {
         Map methods = getSubMap( classes, className );
         Map args = getSubMap( methods, methodName );
         List samples = getSubList( args, argument2String(argument) );
-        samples.add( new Float( value ) );
+        samples.add(value);
     }
 
     public void flush() {

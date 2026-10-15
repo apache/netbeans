@@ -101,7 +101,7 @@ public final class ModuleRoots extends SourceRoots {
     public URL[] getRootURLs(final boolean removeInvalidRoots) {
         synchronized (this) {
             if (sourceRootURLs != null) {
-                return sourceRootURLs.toArray(new URL[sourceRootURLs.size()]);
+                return sourceRootURLs.toArray(new URL[0]);
             }
         }
         return ProjectManager.mutex().readAccess(() -> {
@@ -133,7 +133,7 @@ public final class ModuleRoots extends SourceRoots {
                     }
                     sourceRootURLs = Collections.unmodifiableList(result);
                 }
-                return sourceRootURLs.toArray(new URL[sourceRootURLs.size()]);
+                return sourceRootURLs.toArray(new URL[0]);
             }
         });
     }

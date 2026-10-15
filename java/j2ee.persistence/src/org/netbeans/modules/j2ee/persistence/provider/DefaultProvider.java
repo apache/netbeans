@@ -32,22 +32,27 @@ import org.openide.util.NbBundle;
 public class DefaultProvider extends Provider{
 
     protected DefaultProvider(String version){
-        super("javax.persistence.EntityManager", version);
+        super( (Float.parseFloat(version) < 3.0) 
+                ? "javax.persistence.EntityManager"
+                : "jakarta.persistence.EntityManager", version);
     }
     
     protected DefaultProvider(){
         super("javax.persistence.EntityManager");
     }
     
+    @Override
     public String getDisplayName() {
         return NbBundle.getMessage(DefaultProvider.class, "LBL_DEFAULT_PROVIDER"); //NOI18N
     }
     
+    @Override
     public Map getUnresolvedVendorSpecificProperties() {
-        return Collections.EMPTY_MAP;
+        return Collections.emptyMap();
     }
     
+    @Override
     public Map getDefaultVendorSpecificProperties() {
-        return Collections.EMPTY_MAP;
+        return Collections.emptyMap();
     }
 }

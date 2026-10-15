@@ -31,7 +31,7 @@ import org.netbeans.modules.parsing.spi.TaskIndexingMode;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Parameters;
 
-/**A {@link JavaSourceTaskFactorySupport} that registers tasks to all files that are
+/**A {@link JavaSourceTaskFactory} that registers tasks to all files that are
  * opened in the editor and are visible.
  *
  * @author Jan Lahoda
@@ -86,7 +86,7 @@ public abstract class EditorAwareJavaSourceTaskFactory extends JavaSourceTaskFac
         this.supportedMimeTypes = supportedMimeTypes.length > 0 ? supportedMimeTypes.clone() : null;
     }
     
-    /**@inheritDoc*/
+    /**[@inheritDoc}*/
     public List<FileObject> getFileObjects() {
         List<FileObject> files = OpenedEditors.filterSupportedMIMETypes(OpenedEditors.getDefault().getVisibleEditorsFiles(), supportedMimeTypes);
 

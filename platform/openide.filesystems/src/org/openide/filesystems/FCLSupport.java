@@ -41,7 +41,7 @@ class FCLSupport {
     /* Add new listener to this object.
     * @param l the listener
     */
-    synchronized final void addFileChangeListener(FileChangeListener fcl) {
+    final synchronized void addFileChangeListener(FileChangeListener fcl) {
         if (listeners == null) {
             listeners = new ListenerList<FileChangeListener>();
         }
@@ -52,7 +52,7 @@ class FCLSupport {
     /* Remove listener from this object.
     * @param l the listener
     */
-    synchronized final void removeFileChangeListener(FileChangeListener fcl) {
+    final synchronized void removeFileChangeListener(FileChangeListener fcl) {
         if (listeners != null) {
             listeners.remove(fcl);
         }
@@ -89,14 +89,14 @@ class FCLSupport {
 
     /** @return true if there is a listener
     */
-    synchronized final boolean hasListeners() {
+    final synchronized boolean hasListeners() {
         return listeners != null && listeners.hasListeners();
     }
     
     /**
      * Wrapper for a file change event and a listener (or a list of listeners).
      */
-    private static abstract class DispatchEventWrapper {
+    private abstract static class DispatchEventWrapper {
 
         final FileEvent fe;
         final Op operation;

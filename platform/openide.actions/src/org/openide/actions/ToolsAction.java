@@ -18,6 +18,7 @@
  */
 package org.openide.actions;
 
+import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -295,7 +296,7 @@ public class ToolsAction extends SystemAction implements ContextAwareAction, Pre
             // generate directly list of menu items
             List<JMenuItem> l = generate(toolsAction, true);
             timestamp = gl().getTimestamp();
-            return l.toArray(new JMenuItem[l.size()]);
+            return l.toArray(new JMenuItem[0]);
         }
         
         
@@ -362,7 +363,7 @@ public class ToolsAction extends SystemAction implements ContextAwareAction, Pre
 
                     removeAll();
 
-                    Iterator it = generate(toolsAction, false).iterator();
+                    Iterator<JMenuItem> it = generate(toolsAction, false).iterator();
 
                     while (it.hasNext()) {
                         java.awt.Component item = (java.awt.Component) it.next();

@@ -29,6 +29,7 @@ import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.source.util.Trees;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 import javax.lang.model.element.Element;
@@ -92,10 +93,12 @@ public class AddPropertyCodeGenerator implements CodeGenerator {
         this.vcsName = vcsName;
     }
 
+    @Override
     public String getDisplayName() {
         return NbBundle.getMessage(AddPropertyCodeGenerator.class, "DN_AddProperty");
     }
 
+    @Override
     public void invoke() {
         Object o = component.getDocument().getProperty(Document.StreamDescriptionProperty);
 
@@ -172,10 +175,10 @@ public class AddPropertyCodeGenerator implements CodeGenerator {
                             Element element;
                             if(tree.getKind() == Tree.Kind.VARIABLE && (element = trees.getElement(treePath)) != null &&
                                    element.getKind() == ElementKind.ENUM_CONSTANT) {
-                                int endPosition = (int) trees.getSourcePositions().getEndPosition(cut, tree);
+                                int endPosition = (int) trees.getSourcePositions().getEndPosition(tree);
                                 enumconstantEnd = Math.max(enumconstantEnd, endPosition);
                             } else if(otherStart == -1) {
-                                otherStart = (int) trees.getSourcePositions().getStartPosition(cut, tree);
+                                otherStart = (int) trees.getSourcePositions().getStartPosition(tree);
                             }
                         }
                         
@@ -184,7 +187,7 @@ public class AddPropertyCodeGenerator implements CodeGenerator {
                         }
                         
                         if(otherStart == -1) {
-                            otherStart = (int) trees.getSourcePositions().getEndPosition(cut, clazz);
+                            otherStart = (int) trees.getSourcePositions().getEndPosition(clazz);
                         }
                         
                         int semicolon = scanForSemicolon(doc, offset, enumconstantEnd, otherStart);
@@ -199,14 +202,14 @@ public class AddPropertyCodeGenerator implements CodeGenerator {
                                 offset[0] = semicolon + 1;
                             } else if(path.getLeaf().getKind() != Tree.Kind.ENUM) {
                                 Tree current = path.getLeaf();
-                                offset[0] = (int) trees.getSourcePositions().getEndPosition(cut, current);
+                                offset[0] = (int) trees.getSourcePositions().getEndPosition(current);
                             }
                         }
                         return;
                     }
                     
                     Tree current = path.getLeaf();
-                    offset[0] = (int) trees.getSourcePositions().getEndPosition(cut, current);
+                    offset[0] = (int) trees.getSourcePositions().getEndPosition(current);
                 }
             }, true);
         } catch (IOException ex) {
@@ -216,6 +219,7 @@ public class AddPropertyCodeGenerator implements CodeGenerator {
             r.lock();
             try {
                 NbDocument.runAtomicAsUser((StyledDocument) doc, new Runnable() {
+                    @Override
                     public void run() {
                         try {
                             GuardedSectionManager manager = GuardedSectionManager.getInstance((StyledDocument) doc);
@@ -256,6 +260,7 @@ public class AddPropertyCodeGenerator implements CodeGenerator {
                 // code insertion to document passed
                 try {
                     JavaSource.forFileObject(file).runModificationTask(new Task<WorkingCopy>() {
+                        @Override
                         public void run(WorkingCopy workingCopy) throws Exception {
                             workingCopy.toPhase(Phase.RESOLVED);
 
@@ -315,8 +320,8 @@ public class AddPropertyCodeGenerator implements CodeGenerator {
 
         @Override
         public Void visitMemberSelect(MemberSelectTree node, Void p) {
-            int s = (int) wc.getTrees().getSourcePositions().getStartPosition(wc.getCompilationUnit(), node);
-            int e = (int) wc.getTrees().getSourcePositions().getEndPosition(wc.getCompilationUnit(), node);
+            int s = (int) wc.getTrees().getSourcePositions().getStartPosition(node);
+            int e = (int) wc.getTrees().getSourcePositions().getEndPosition(node);
 
             if (s >= start && e <= end) {
                 Element el = wc.getTrees().getElement(getCurrentPath());
@@ -337,8 +342,8 @@ public class AddPropertyCodeGenerator implements CodeGenerator {
             List<Tree> members = new LinkedList<Tree>();
             ClassTree classTree = node;
             for (Tree member : node.getMembers()) {
-                int s = (int) sourcePositions.getStartPosition(wc.getCompilationUnit(), member);
-                int e = (int) sourcePositions.getEndPosition(wc.getCompilationUnit(), member);
+                int s = (int) sourcePositions.getStartPosition(member);
+                int e = (int) sourcePositions.getEndPosition(member);
                 if (s >= start && e <= end) {
                     classTree = make.removeClassMember(classTree, member);
                     members.add(member);
@@ -352,11 +357,17 @@ public class AddPropertyCodeGenerator implements CodeGenerator {
 
     public static final class Factory implements CodeGenerator.Factory {
 
+        private static final EnumSet<Tree.Kind> TREE_KINDS = EnumSet.copyOf(TreeUtilities.CLASS_TREE_KINDS);
+        static {
+            TREE_KINDS.remove(Tree.Kind.RECORD); // no fields in records
+        }
+
+        @Override
         public List<? extends CodeGenerator> create(Lookup context) {
             JTextComponent component = context.lookup(JTextComponent.class);
             CompilationController cc = context.lookup(CompilationController.class);
             TreePath path = context.lookup(TreePath.class);
-            while (path != null && !TreeUtilities.CLASS_TREE_KINDS.contains(path.getLeaf().getKind())) {
+            while (path != null && !TREE_KINDS.contains(path.getLeaf().getKind())) {
                 path = path.getParentPath();
             }
 

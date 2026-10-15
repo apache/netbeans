@@ -33,33 +33,33 @@ import static org.netbeans.core.network.proxy.gnome.GnomeNetworkProxy.executeCom
  */
 public class GsettingsNetworkProxy {
     
-    private final static Logger LOGGER = Logger.getLogger(GsettingsNetworkProxy.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(GsettingsNetworkProxy.class.getName());
     
-    private final static String EMPTY_STRING = ""; //NOI18N
-    private final static String SPACE = " "; //NOI18N
-    private final static String DOT = "."; //NOI18N
-    private final static String COLON = ","; //NOI18N
-    private final static String SINGLE_QUOTE = "'"; //NOI18N
-    private final static String SQ_BRACKET_LEFT = "["; //NOI18N
-    private final static String SQ_BRACKET_RIGHT = "]"; //NOI18N
+    private static final String EMPTY_STRING = ""; //NOI18N
+    private static final String SPACE = " "; //NOI18N
+    private static final String DOT = "."; //NOI18N
+    private static final String COLON = ","; //NOI18N
+    private static final String SINGLE_QUOTE = "'"; //NOI18N
+    private static final String SQ_BRACKET_LEFT = "["; //NOI18N
+    private static final String SQ_BRACKET_RIGHT = "]"; //NOI18N
     
-    protected final static String GSETTINGS_PATH = "/usr/bin/gsettings"; //NOI18N
-    private final static String GSETTINGS_ARGUMENT_LIST_RECURSIVELY = " list-recursively "; //NOI18N
-    private final static String GSETTINGS_PROXY_SCHEMA = "org.gnome.system.proxy"; //NOI18N
+    protected static final String GSETTINGS_PATH = "/usr/bin/gsettings"; //NOI18N
+    private static final String GSETTINGS_ARGUMENT_LIST_RECURSIVELY = " list-recursively "; //NOI18N
+    private static final String GSETTINGS_PROXY_SCHEMA = "org.gnome.system.proxy"; //NOI18N
     
-    private final static String GSETTINGS_KEY_MODE = "org.gnome.system.proxy.mode"; //NOI18N
-    private final static String GSETTINGS_KEY_PAC_URL = "org.gnome.system.proxy.autoconfig-url"; //NOI18N
-    private final static String GSETTINGS_KEY_HTTP_ALL = "org.gnome.system.proxy.http.use-same-proxy"; //NOI18N
-    private final static String GSETTINGS_KEY_HTTP_HOST = "org.gnome.system.proxy.http.host"; //NOI18N
-    private final static String GSETTINGS_KEY_HTTP_PORT = "org.gnome.system.proxy.http.port"; //NOI18N
-    private final static String GSETTINGS_KEY_HTTPS_HOST = "org.gnome.system.proxy.https.host"; //NOI18N
-    private final static String GSETTINGS_KEY_HTTPS_PORT = "org.gnome.system.proxy.https.port"; //NOI18N
-    private final static String GSETTINGS_KEY_SOCKS_HOST = "org.gnome.system.proxy.socks.host"; //NOI18N
-    private final static String GSETTINGS_KEY_SOCKS_PORT = "org.gnome.system.proxy.socks.port"; //NOI18N
-    private final static String GSETTINGS_KEY_IGNORE_HOSTS = "org.gnome.system.proxy.ignore-hosts"; //NOI18N       
-    private final static String GSETTINGS_VALUE_NONE = "none"; //NOI18N
-    private final static String GSETTINGS_VALUE_AUTO = "auto"; //NOI18N
-    private final static String GSETTINGS_VALUE_MANUAL = "manual"; //NOI18N
+    private static final String GSETTINGS_KEY_MODE = "org.gnome.system.proxy.mode"; //NOI18N
+    private static final String GSETTINGS_KEY_PAC_URL = "org.gnome.system.proxy.autoconfig-url"; //NOI18N
+    private static final String GSETTINGS_KEY_HTTP_ALL = "org.gnome.system.proxy.http.use-same-proxy"; //NOI18N
+    private static final String GSETTINGS_KEY_HTTP_HOST = "org.gnome.system.proxy.http.host"; //NOI18N
+    private static final String GSETTINGS_KEY_HTTP_PORT = "org.gnome.system.proxy.http.port"; //NOI18N
+    private static final String GSETTINGS_KEY_HTTPS_HOST = "org.gnome.system.proxy.https.host"; //NOI18N
+    private static final String GSETTINGS_KEY_HTTPS_PORT = "org.gnome.system.proxy.https.port"; //NOI18N
+    private static final String GSETTINGS_KEY_SOCKS_HOST = "org.gnome.system.proxy.socks.host"; //NOI18N
+    private static final String GSETTINGS_KEY_SOCKS_PORT = "org.gnome.system.proxy.socks.port"; //NOI18N
+    private static final String GSETTINGS_KEY_IGNORE_HOSTS = "org.gnome.system.proxy.ignore-hosts"; //NOI18N       
+    private static final String GSETTINGS_VALUE_NONE = "none"; //NOI18N
+    private static final String GSETTINGS_VALUE_AUTO = "auto"; //NOI18N
+    private static final String GSETTINGS_VALUE_MANUAL = "manual"; //NOI18N
 
     /**
      * Returns network proxy settings - retrieved via GSettings (preferred).

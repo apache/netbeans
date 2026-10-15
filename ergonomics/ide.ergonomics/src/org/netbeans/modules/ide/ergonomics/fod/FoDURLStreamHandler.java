@@ -26,6 +26,7 @@ import java.io.SequenceInputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
+import java.nio.charset.StandardCharsets;
 import org.openide.util.NbBundle;
 import org.openide.util.URLStreamHandlerRegistration;
 
@@ -50,9 +51,9 @@ public class FoDURLStreamHandler extends URLStreamHandler {
             if (len == -1) {
                 throw new IOException();
             }
-            String head = new String(arr, 0, len, "UTF-8"); // NOI18N
+            String head = new String(arr, 0, len, StandardCharsets.UTF_8);
             String newHead = head.replaceFirst("<[bB][oO][dD][yY]>", NbBundle.getMessage(FoDURLStreamHandler.class, "MSG_NotEnabled")); // NOI18N
-            ByteArrayInputStream headIS = new ByteArrayInputStream(newHead.getBytes("UTF-8")); // NOI18N
+            ByteArrayInputStream headIS = new ByteArrayInputStream(newHead.getBytes(StandardCharsets.UTF_8));
 
             final SequenceInputStream seq = new SequenceInputStream(headIS, is);
 

@@ -66,6 +66,8 @@ public class ModelHandle2 {
     private final POMModel model;
     private final List<ModelOperation<POMModel>> pomOperations = new ArrayList<ModelOperation<POMModel>>();
     private final Map<String, ActionToGoalMapping> mappings;
+    private final List<String> allActions;
+    
     private List<Configuration> configurations;
     private boolean modConfig = false;
     private Configuration active;
@@ -87,8 +89,9 @@ public class ModelHandle2 {
                                         Map<String, ActionToGoalMapping> mapp, 
                                         List<Configuration> configs,
                                         Configuration active,
+                                        List<String> allActions,
                                         MavenProjectPropsImpl auxProps) {
-            return new ModelHandle2(model, proj, mapp, configs, active, auxProps);
+            return new ModelHandle2(model, proj, mapp, configs, active, allActions, auxProps);
         }
         
          public void assign() {
@@ -96,6 +99,11 @@ public class ModelHandle2 {
                  CustomizerProviderImpl.ACCESSOR2 = this;
              }
          }
+
+        @Override
+        public List<String> getAllActions(ModelHandle2 handle) {
+            return handle.getAllActions();
+        }
 
         @Override
         public TreeMap<String, String> getModifiedAuxProps(ModelHandle2 handle, boolean shared) {
@@ -111,18 +119,16 @@ public class ModelHandle2 {
         public boolean isModified(ModelHandle2 handle, ActionToGoalMapping mapp) {
             return handle.modifiedMappings.contains(mapp);
         }
-
-    
     }    
 
-    private ModelHandle2(POMModel model, MavenProject proj, Map<String, ActionToGoalMapping> mapp, List<Configuration> configs, Configuration active, MavenProjectPropsImpl auxProps) {
+    private ModelHandle2(POMModel model, MavenProject proj, Map<String, ActionToGoalMapping> mapp, List<Configuration> configs, Configuration active, List<String> allActions, MavenProjectPropsImpl auxProps) {
         project = proj;
         this.mappings = mapp;
         configurations = configs;
         this.active = active;
         auxiliaryProps = auxProps;
         this.model = model;
-        
+        this.allActions = allActions;
     }
     
     /**
@@ -268,6 +274,13 @@ public class ModelHandle2 {
     public static Configuration createProfileConfiguration(String id) {
         return ModelHandle.createProfileConfiguration(id);
     }
+
+    public static Configuration createProvidedConfiguration(String id) {
+        ModelHandle.Configuration conf = new ModelHandle.Configuration();
+        conf.setId(id);
+        conf.setDefault(true);
+        return conf;
+    }
     
     public static Configuration createDefaultConfiguration() {
         return ModelHandle.createDefaultConfiguration();
@@ -351,6 +364,10 @@ public class ModelHandle2 {
         CustomizerProviderImpl.writeNbActionsModel(project, mapping, M2Configuration.getFileNameExt(cfg.getId()));
     }    
     
+    List<String> getAllActions() {
+        return allActions;
+    }
+    
     
 /**
      * a javabean wrapper for configurations within the project customizer
@@ -358,6 +375,7 @@ public class ModelHandle2 {
      */
     public static class Configuration {
         private String id;
+        private String displayName;
         private boolean profileBased = false;
         private boolean defaul = false;
 
@@ -372,8 +390,31 @@ public class ModelHandle2 {
             return M2Configuration.getFileNameExt(id);
         }
 
+        /**
+         * Identifies the default configuration.
+         * @return true for just the default configuration
+         * @since 2.148
+         */
         public boolean isDefault() {
+            return defaul && M2Configuration.DEFAULT.equals(id);
+        }
+
+        /**
+         * True, if the configuration was provided but not default or profile.
+         * @return true for provided configuration
+         * @since 2.148
+         */
+        public boolean isProvided() {
             return defaul;
+        }
+        
+        /**
+         * Sets the display name of this configuration.
+         * @param dn 
+         * @since 2.148
+         */
+        public void setDisplayName(String dn) {
+            this.displayName = dn;
         }
 
         public void setDefault(boolean def) {
@@ -400,20 +441,25 @@ public class ModelHandle2 {
         @Messages({
             "DefaultConfig=<default config>",
             "# {0} - config ID", "ProfileConfig={0} (Profile)",
+            "# {0} - config ID", "ProvidedConfig={0} (provided)",
             "# {0} - config ID", "# {1} - list of profiles", "CustomConfig1={0} (Profiles: {1})",
             "# {0} - config ID", "CustomConfig2={0}"
         })
         public String getDisplayName() {
+            String n = displayName == null ? id : displayName;
             if (isDefault()) {
                 return DefaultConfig();
             }
             if (isProfileBased()) {
-                return ProfileConfig(id);
+                return ProfileConfig(n);
+            }
+            if (isProvided()) {
+                return ProvidedConfig(n);
             }
             if (getActivatedProfiles() != null && getActivatedProfiles().size() > 0) {
-                return CustomConfig1(id, Arrays.toString(getActivatedProfiles().toArray()));
+                return CustomConfig1(n, Arrays.toString(getActivatedProfiles().toArray()));
             }
-            return CustomConfig2(id);
+            return CustomConfig2(n);
         }
 
         public String getId() {
@@ -444,7 +490,6 @@ public class ModelHandle2 {
         public String toString() {
             return getDisplayName();
         }
-        
         
     }    
     

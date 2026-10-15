@@ -78,7 +78,7 @@ import com.sun.source.util.SourcePositions;
 
 /**
  * @author ads
- * 
+ *
  */
 public class WebSocketMethodsTask implements CancellableTask<CompilationInfo> {
 
@@ -102,7 +102,7 @@ public class WebSocketMethodsTask implements CancellableTask<CompilationInfo> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.netbeans.api.java.source.CancellableTask#cancel()
      */
     @Override
@@ -124,10 +124,7 @@ public class WebSocketMethodsTask implements CancellableTask<CompilationInfo> {
             return false;
         }
         Profile profile = webModule.getJ2eeProfile();
-        if (!Profile.JAVA_EE_7_WEB.equals(profile)
-                && !Profile.JAVA_EE_7_FULL.equals(profile)
-                && !Profile.JAVA_EE_8_WEB.equals(profile)
-                && !Profile.JAVA_EE_8_FULL.equals(profile)) {
+        if (profile != null && profile.isAtMost(Profile.JAVA_EE_6_FULL)) {
             return false;
         }
         return true;
@@ -180,10 +177,8 @@ public class WebSocketMethodsTask implements CancellableTask<CompilationInfo> {
     private List<Integer> getElementPosition(CompilationInfo info, Tree tree) {
         SourcePositions srcPos = info.getTrees().getSourcePositions();
 
-        int startOffset = (int) srcPos.getStartPosition(
-                info.getCompilationUnit(), tree);
-        int endOffset = (int) srcPos.getEndPosition(info.getCompilationUnit(),
-                tree);
+        int startOffset = (int) srcPos.getStartPosition(tree);
+        int endOffset = (int) srcPos.getEndPosition(tree);
 
         Tree startTree = null;
 
@@ -197,8 +192,7 @@ public class WebSocketMethodsTask implements CancellableTask<CompilationInfo> {
         }
 
         if (startTree != null) {
-            int searchStart = (int) srcPos.getEndPosition(
-                    info.getCompilationUnit(), startTree);
+            int searchStart = (int) srcPos.getEndPosition(startTree);
 
             TokenSequence<?> tokenSequence = info.getTreeUtilities().tokensFor(
                     tree);

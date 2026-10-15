@@ -119,15 +119,15 @@ public abstract class LiveMemoryView extends JPanel {
 //            // class names in VM format
 //            final GenericFilter ifilter = client.getSettings().getInstrumentationFilter();
 //            // --- TODO: rewrite down to all usages
-////            String[] _ifilter = ifilter == null ? null : ifilter.getUserFilterStrings();
-////            final Collection<String> _filter = _ifilter == null ? Collections.EMPTY_LIST :
-////                                               Arrays.asList(_ifilter);
+// //            String[] _ifilter = ifilter == null ? null : ifilter.getUserFilterStrings();
+// //            final Collection<String> _filter = _ifilter == null ? Collections.EMPTY_LIST :
+// //                                               Arrays.asList(_ifilter);
 //            // ---
-////            final Collection<String> _filter = Arrays.asList(ifilter.getValues()); // Actually wrong, cuts trailing *
+// //            final Collection<String> _filter = Arrays.asList(ifilter.getValues()); // Actually wrong, cuts trailing *
 //            
 //            
-////            if (_ifilter != null) for (String s : _ifilter)
-////                    _filter.add(StringUtils.userFormClassName(s));
+// //            if (_ifilter != null) for (String s : _ifilter)
+// //                    _filter.add(StringUtils.userFormClassName(s));
 //
 //            SwingUtilities.invokeLater(new Runnable() {
 //                public void run() {

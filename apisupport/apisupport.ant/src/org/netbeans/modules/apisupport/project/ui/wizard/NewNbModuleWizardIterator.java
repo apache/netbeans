@@ -259,7 +259,7 @@ public class NewNbModuleWizardIterator implements WizardDescriptor.AsynchronousI
             if (c instanceof JComponent) { // assume Swing components
                 JComponent jc = (JComponent) c;
                 // step number
-                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(i)); // NOI18N
+                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i); // NOI18N
                 // names of currently used steps
                 jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps); // NOI18N
                 

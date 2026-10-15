@@ -78,9 +78,13 @@ public class PlatformClassPathProvider implements ClassPathProvider {
             ClassPath libraryPath = jp.getStandardLibraries();
             ClassPath sourcePath = jp.getSourceFolders();
             FileObject root = null;
+            boolean jdk9 = JAVA_9.compareTo(jp.getSpecification().getVersion()) <= 0;
             if (ClassPath.SOURCE.equals(type) && sourcePath != null &&
                 (root = sourcePath.findOwnerRoot(fo))!=null) {
                 this.setLastUsedPlatform (root,jp);
+                if (jdk9) {
+                    return ClassPathSupport.createClassPath(root);
+                }
                 return sourcePath;
             } else if (ClassPath.BOOT.equals(type) &&
                     (root = getArtefactOwner(fo, bootClassPath, libraryPath, sourcePath)) != null ) {
@@ -96,7 +100,7 @@ public class PlatformClassPathProvider implements ClassPathProvider {
                     return this.getEmptyClassPath ();
                 }
             } else if (JavaClassPathConstants.MODULE_BOOT_PATH.equals(type)  &&
-                    JAVA_9.compareTo(jp.getSpecification().getVersion()) <= 0 &&
+                    jdk9 &&
                     (root = getArtefactOwner(fo, bootClassPath, libraryPath, sourcePath)) != null) {
                 this.setLastUsedPlatform (root,jp);
                 return bootClassPath;

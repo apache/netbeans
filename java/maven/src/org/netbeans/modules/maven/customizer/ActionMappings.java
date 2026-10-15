@@ -19,6 +19,8 @@
 
 package org.netbeans.modules.maven.customizer;
 
+import java.awt.Color;
+import org.netbeans.modules.maven.runjar.PropertySplitter;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -41,7 +43,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
@@ -61,7 +62,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import org.codehaus.plexus.util.StringUtils;
-import org.jdom.Verifier;
+import org.jdom2.Verifier;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
@@ -74,7 +75,6 @@ import org.netbeans.modules.maven.api.Constants;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.api.ProjectProfileHandler;
 import org.netbeans.modules.maven.api.customizer.ModelHandle2;
-import static org.netbeans.modules.maven.customizer.Bundle.*;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.netbeans.modules.maven.execute.ActionToGoalUtils;
 import org.netbeans.modules.maven.execute.DefaultReplaceTokenProvider;
@@ -89,6 +89,7 @@ import org.openide.NotifyDescriptor;
 import org.openide.awt.Mnemonics;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.text.CloneableEditorSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
@@ -96,6 +97,8 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
+
+import static org.netbeans.modules.maven.customizer.Bundle.*;
 
 /**
  *
@@ -107,7 +110,7 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
     private static final RequestProcessor RP = new RequestProcessor(ActionMappings.class);
     private NbMavenProjectImpl project;
     private ModelHandle2 handle;
-    private final HashMap<String, String> titles = new HashMap<String, String>();
+    private final HashMap<String, String> titles = new HashMap<>();
     
     private final GoalsListener goalsListener;
     private final TextValueCompleter goalcompleter;
@@ -155,7 +158,6 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         txtPackagings.addFocusListener(focus);
         goalcompleter = new TextValueCompleter(Collections.<String>emptyList(), txtGoals, " "); //NOI18N
         profilecompleter = new TextValueCompleter(Collections.<String>emptyList(), txtProfiles, " "); //NOI18N
-
         if( "Aqua".equals(UIManager.getLookAndFeel().getID()) ) { //NOI18N
             this.lblHint.setOpaque(true);
             jScrollPane2.setBorder(null);
@@ -181,7 +183,7 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         handle = hand;
         txtPackagings.setVisible(false);
         lblPackagings.setVisible(false);
-        jButton1.setVisible(false);
+        btnShowInToolbar.setVisible(false);
         titles.put(ActionProvider.COMMAND_BUILD, NbBundle.getMessage(ActionMappings.class, "COM_Build_project"));
         titles.put(ActionProvider.COMMAND_CLEAN, NbBundle.getMessage(ActionMappings.class, "COM_Clean_project"));
         titles.put(ActionProvider.COMMAND_COMPILE_SINGLE, NbBundle.getMessage(ActionMappings.class, "COM_Compile_file"));
@@ -208,7 +210,7 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         comConfiguration.setEditable(false);
         comConfiguration.setRenderer(new DefaultListCellRenderer() {
             @Override
-            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 Component com = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (com instanceof JLabel) {
                     if (value == ActionMappings.this.handle.getActiveConfiguration()) {
@@ -222,12 +224,10 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         
         loadMappings();
         clearFields();
-        comboListener = new ActionListener() {
-            @Override public void actionPerformed(ActionEvent e) {
-                clearFields();
-                loadMappings();
-                addListeners();
-            }
+        comboListener = (ActionEvent e) -> {
+            clearFields();
+            loadMappings();
+            addListeners();
         };
     }
     
@@ -269,7 +269,7 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         addListeners();
         RP.post(new Runnable() {
             @Override public void run() {
-                final Set<String> strs = new HashSet<String>();
+                final Set<String> strs = new HashSet<>();
                 final GoalsProvider provider = Lookup.getDefault().lookup(GoalsProvider.class);
                 if (provider != null) {
                     strs.addAll(provider.getAvailableGoals());
@@ -288,12 +288,10 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
                 }
                 final List<String> profiles = allProfiles;
 
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override public void run() {
-                        goalcompleter.setValueList(strs, false); //do not bother about partial results, too many intermediate apis..
-                        if (profiles != null) {
-                            profilecompleter.setValueList(profiles, false);
-                        }
+                SwingUtilities.invokeLater(() -> {
+                    goalcompleter.setValueList(strs, false); //do not bother about partial results, too many intermediate apis..
+                    if (profiles != null) {
+                        profilecompleter.setValueList(profiles, false);
                     }
                 });
             }
@@ -310,9 +308,9 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         java.awt.GridBagConstraints gridBagConstraints;
 
         lblConfiguration = new javax.swing.JLabel();
-        comConfiguration = new javax.swing.JComboBox();
+        comConfiguration = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
-        lstMappings = new javax.swing.JList();
+        lstMappings = new javax.swing.JList<>();
         btnAdd = new javax.swing.JButton();
         btnRemove = new javax.swing.JButton();
         lblGoals = new javax.swing.JLabel();
@@ -330,7 +328,8 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         epProperties = new javax.swing.JEditorPane();
         lblPackagings = new javax.swing.JLabel();
         txtPackagings = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        btnShowInToolbar = new javax.swing.JButton();
+        btnCopy = new javax.swing.JButton();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -348,6 +347,7 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth = 4;
         gridBagConstraints.gridheight = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipadx = 427;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 18, 0, 12);
@@ -357,11 +357,7 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         jScrollPane1.setMinimumSize(new java.awt.Dimension(243, 130));
         jScrollPane1.setPreferredSize(new java.awt.Dimension(243, 130));
 
-        lstMappings.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                lstMappingsValueChanged(evt);
-            }
-        });
+        lstMappings.addListSelectionListener(this::lstMappingsValueChanged);
         jScrollPane1.setViewportView(lstMappings);
         lstMappings.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(ActionMappings.class, "ActionMappings.lstMappings.AccessibleContext.accessibleDescription")); // NOI18N
 
@@ -380,11 +376,7 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         add(jScrollPane1, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(btnAdd, org.openide.util.NbBundle.getMessage(ActionMappings.class, "ActionMappings.btnAdd.text")); // NOI18N
-        btnAdd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddActionPerformed(evt);
-            }
-        });
+        btnAdd.addActionListener(this::btnAddActionPerformed);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 10;
         gridBagConstraints.gridy = 2;
@@ -397,14 +389,10 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         btnAdd.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(ActionMappings.class, "ActionMappings.btnAdd.AccessibleContext.accessibleDescription")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(btnRemove, org.openide.util.NbBundle.getMessage(ActionMappings.class, "ActionMappings.btnRemove.text")); // NOI18N
-        btnRemove.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRemoveActionPerformed(evt);
-            }
-        });
+        btnRemove.addActionListener(this::btnRemoveActionPerformed);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 10;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipadx = 14;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
@@ -426,6 +414,7 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         gridBagConstraints.gridy = 7;
         gridBagConstraints.gridwidth = 4;
         gridBagConstraints.gridheight = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipadx = 455;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(18, 18, 0, 12);
@@ -446,6 +435,7 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         gridBagConstraints.gridy = 9;
         gridBagConstraints.gridwidth = 4;
         gridBagConstraints.gridheight = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipadx = 455;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(6, 18, 0, 12);
@@ -492,19 +482,13 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         gridBagConstraints.gridwidth = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 436;
-        gridBagConstraints.ipady = 117;
+        gridBagConstraints.ipady = 120;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 18, 0, 12);
         add(jScrollPane2, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(btnAddProps, org.openide.util.NbBundle.getMessage(ActionMappings.class, "ActionMappings.btnAddProps.text")); // NOI18N
-        btnAddProps.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddPropsActionPerformed(evt);
-            }
-        });
+        btnAddProps.addActionListener(this::btnAddPropsActionPerformed);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 14;
@@ -525,7 +509,7 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         add(cbBuildWithDeps, gridBagConstraints);
         cbBuildWithDeps.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(ActionMappings.class, "ActionMappings.cbBuildWithDeps.AccessibleContext.accessibleDescription")); // NOI18N
 
-        epProperties.setContentType("text/x-properties"); // NOI18N
+        epProperties.setEditorKit(CloneableEditorSupport.getEditorKit("text/x-properties"));
         jScrollPane5.setViewportView(epProperties);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -557,46 +541,87 @@ public class ActionMappings extends javax.swing.JPanel implements HelpCtx.Provid
         gridBagConstraints.gridy = 11;
         gridBagConstraints.gridwidth = 4;
         gridBagConstraints.gridheight = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipadx = 455;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(6, 18, 0, 12);
         add(txtPackagings, gridBagConstraints);
 
-        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(ActionMappings.class, "ActionMappings.jButton1.text")); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
+        org.openide.awt.Mnemonics.setLocalizedText(btnShowInToolbar, org.openide.util.NbBundle.getMessage(ActionMappings.class, "ActionMappings.btnShowInToolbar.text")); // NOI18N
+        btnShowInToolbar.addActionListener(this::btnShowInToolbarActionPerformed);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 10;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(6, 6, 0, 12);
-        add(jButton1, gridBagConstraints);
-    }// </editor-fold>//GEN-END:initComponents
-    
-//GEN-FIRST:event_btnAddActionPerformed
-private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADEREND:event_btnAddActionPerformed
-    NotifyDescriptor.InputLine nd = new NonEmptyInputLine(org.openide.util.NbBundle.getMessage(ActionMappings.class, "TIT_Add_action"), org.openide.util.NbBundle.getMessage(ActionMappings.class, "LBL_AddAction"));
-    Object ret = DialogDisplayer.getDefault().notify(nd);
-    if (ret == NotifyDescriptor.OK_OPTION) {
-        NetbeansActionMapping nam = new NetbeansActionMapping();
-        nam.setDisplayName(nd.getInputText());
-        nam.setActionName(CUSTOM_ACTION_PREFIX + nd.getInputText()); 
-        getActionMappings().addAction(nam);
-        if (handle != null) {
-            handle.markAsModified(getActionMappings());
-        }
-        MappingWrapper wr = new MappingWrapper(nam);
-        wr.setUserDefined(true);
-        ((DefaultListModel)lstMappings.getModel()).addElement(wr);
-        lstMappings.setSelectedIndex(lstMappings.getModel().getSize() - 1);
-        lstMappings.ensureIndexIsVisible(lstMappings.getModel().getSize() - 1);
-    }
-}//GEN-LAST:event_btnAddActionPerformed
+        add(btnShowInToolbar, gridBagConstraints);
 
+        org.openide.awt.Mnemonics.setLocalizedText(btnCopy, org.openide.util.NbBundle.getMessage(ActionMappings.class, "ActionMappings.btnCopy.text")); // NOI18N
+        btnCopy.addActionListener(this::btnCopyActionPerformed);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 10;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 15;
+        gridBagConstraints.insets = new java.awt.Insets(6, 6, 0, 12);
+        add(btnCopy, gridBagConstraints);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        addAction(false);
+    }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCopyActionPerformed
+        addAction(true);
+    }//GEN-LAST:event_btnCopyActionPerformed
+
+    private void addAction(boolean copyFromSelected) {
+        MappingWrapper selected = lstMappings.getSelectedValue();
+        NotifyDescriptor.InputLine nd = new NonEmptyInputLine(
+                NbBundle.getMessage(ActionMappings.class, "TIT_Add_action"), // NOI18N
+                NbBundle.getMessage(ActionMappings.class, "LBL_AddAction"), // NOI18N
+                copyFromSelected && selected != null ? selected.toString() + "_copy" : "" // NOI18N
+        );
+        if (NotifyDescriptor.OK_OPTION.equals(DialogDisplayer.getDefault().notify(nd))) {
+            NetbeansActionMapping nam = new NetbeansActionMapping();
+            nam.setDisplayName(nd.getInputText());
+            nam.setActionName(CUSTOM_ACTION_PREFIX + nd.getInputText()); 
+            if (copyFromSelected && selected != null) {
+                NetbeansActionMapping other = selected.getMapping();
+                if (other.getActivatedProfiles() != null) {
+                    nam.setActivatedProfiles(new ArrayList<>(other.getActivatedProfiles()));
+                }
+                if (other.getGoals() != null) {
+                    nam.setGoals(new ArrayList<>(other.getGoals()));
+                }
+                if (other.getOptions() != null) {
+                    nam.setOptions(new LinkedHashMap<>(other.getOptions()));
+                }
+                if (other.getPackagings() != null) {
+                    nam.setPackagings(new ArrayList<>(other.getPackagings()));
+                }
+                if (other.getProperties() != null) {
+                    nam.setProperties(new LinkedHashMap<>(other.getProperties()));
+                }
+                nam.setBasedir(other.getBasedir());
+                nam.setModelEncoding(other.getModelEncoding());
+                nam.setPreAction(other.getPreAction());
+                nam.setReactor(other.getReactor());
+                nam.setRecursive(other.isRecursive());
+            }    
+            getActionMappings().addAction(nam);
+            if (handle != null) {
+                handle.markAsModified(getActionMappings());
+            }
+            MappingWrapper wr = new MappingWrapper(nam);
+            wr.setUserDefined(true);
+            ((DefaultListModel<MappingWrapper>)lstMappings.getModel()).addElement(wr);
+            lstMappings.setSelectedIndex(lstMappings.getModel().getSize() - 1);
+            lstMappings.ensureIndexIsVisible(lstMappings.getModel().getSize() - 1);
+        }
+    }
+    
     private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveActionPerformed
         Object obj = lstMappings.getSelectedValue();//GEN-HEADEREND:event_btnRemoveActionPerformed
         if (obj == null) {
@@ -640,16 +665,36 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         }
     }//GEN-LAST:event_btnRemoveActionPerformed
     
-    private void lstMappingsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstMappingsValueChanged
-        Object obj = lstMappings.getSelectedValue();//GEN-HEADEREND:event_lstMappingsValueChanged
-        if (obj == null) {
-            clearFields();
-        } else {
-            MappingWrapper wr = (MappingWrapper)obj;
-            NetbeansActionMapping mapp = wr.getMapping();
+    private void updateEnabledControls(MappingWrapper wr) {
+        boolean notEmpty = wr != null;
+        if (notEmpty) {
+            lblGoals.setEnabled(true);
+            lblHint.setEnabled(true);
+            lblPackagings.setEnabled(true);
+            lblProfiles.setEnabled(true);
+            lblProperties.setEnabled(true);
+            
             txtGoals.setEnabled(true);
             epProperties.setEnabled(true);
             txtProfiles.setEnabled(true);
+            cbRecursively.setEnabled(true);
+            cbBuildWithDeps.setEnabled(true);
+            btnAddProps.setEnabled(true);
+            btnRemove.setEnabled(true);
+            if (isGlobal()) {
+                txtPackagings.setEnabled(true);
+            }            
+        } else {
+            clearFields();
+            btnRemove.setEnabled(false);
+        }
+    }
+    
+    private void lstMappingsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstMappingsValueChanged
+        MappingWrapper wr = lstMappings.getSelectedValue();
+        updateEnabledControls(wr);
+        if (wr != null) {
+            NetbeansActionMapping mapp = wr.getMapping();
             
             txtGoals.getDocument().removeDocumentListener(goalsListener);
             txtProfiles.getDocument().removeDocumentListener(profilesListener);
@@ -658,7 +703,6 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
             cbBuildWithDeps.removeActionListener(depsListener);
             
             if (isGlobal()) {
-                txtPackagings.setEnabled(true);
                 txtPackagings.getDocument().removeDocumentListener(packagingsListener);
                 txtPackagings.setText(createSpaceSeparatedList(mapp != null ? mapp.getPackagings() : Collections.<String>emptyList()));
                 txtPackagings.getDocument().addDocumentListener(packagingsListener);
@@ -696,7 +740,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         showAddPropertyPopupMenu(btnAddProps, epProperties, txtGoals, project);
     }//GEN-LAST:event_btnAddPropsActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnShowInToolbarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShowInToolbarActionPerformed
         Object obj = lstMappings.getSelectedValue(); 
         if (obj != null) {
             MappingWrapper wr = (MappingWrapper)obj;
@@ -710,26 +754,25 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                 pnl.add(new JLabel(LBL_SetIcon()));
                 List<String> allIcons = RunCustomMavenAction.createAllActionIcons();
                 for (int i = 0; i < lstMappings.getModel().getSize(); i++) {
-                    MappingWrapper wr0 = (MappingWrapper) lstMappings.getModel().getElementAt(i);
+                    MappingWrapper wr0 = lstMappings.getModel().getElementAt(i);
                     if (wr0.getToolbarIconPath() != null) {
                         allIcons.remove(wr0.getToolbarIconPath());
                     }
                 }
 
-                DefaultComboBoxModel<String> cbModel = new DefaultComboBoxModel<String>(allIcons.toArray(new String[0]));
+                DefaultComboBoxModel<String> cbModel = new DefaultComboBoxModel<>(allIcons.toArray(String[]::new));
                 boolean hasAvailable;
                 if (cbModel.getSize() != 0) {
                     hasAvailable = true;
-                    JComboBox<String> cb = new JComboBox<String>();
+                    JComboBox<String> cb = new JComboBox<>();
                     cb.setModel(cbModel);
                     pnl.add(cb);
                     cb.setRenderer(new DefaultListCellRenderer() {
 
                         @Override
-                        public Component getListCellRendererComponent(JList arg0, Object arg1, int arg2, boolean arg3, boolean arg4) {
+                        public Component getListCellRendererComponent(JList<?> arg0, Object arg1, int arg2, boolean arg3, boolean arg4) {
                             Component sup = super.getListCellRendererComponent(arg0, arg1, arg2, arg3, arg4);
-                            if (sup instanceof JLabel && arg1 != null) {
-                                JLabel lbl = (JLabel) sup;
+                            if (sup instanceof JLabel lbl && arg1 != null) {
                                 lbl.setIcon(ImageUtilities.loadImageIcon((String) arg1, false));
                                 lbl.setText("");
                             }
@@ -752,7 +795,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                 }
             }
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnShowInToolbarActionPerformed
     
     @Messages({"LBL_SetIcon=Set Icon:",
                "LBL_No_More_Icons=<No more slots available>",
@@ -760,8 +803,8 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                "TIT_SetIcon=Set Toolbar Action Icon"
     })
     private void loadMappings() {
-        DefaultListModel model = new DefaultListModel();
-
+        DefaultListModel<MappingWrapper> model = new DefaultListModel<>();
+        fixedActions = new HashSet<>();
         if (handle != null) {
             boolean isWar = NbMavenProject.TYPE_WAR.equalsIgnoreCase(project.getProjectWatcher().getPackagingType());
             addSingleAction(ActionProvider.COMMAND_BUILD, model);
@@ -789,6 +832,10 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                 addSingleAction(ActionProvider.COMMAND_PROFILE_SINGLE + ".deploy", model); //NOI18N
             }
             addSingleAction("javadoc", model); //NOI18N
+            
+            for (String a : CustomizerProviderImpl.ACCESSOR2.getAllActions(handle)) {
+                addSingleAction(a, model, true); //NOI18N
+            }
         }
         for (NetbeansActionMapping elem : getActionMappings().getActions()) {
             if (elem.getActionName().startsWith(CUSTOM_ACTION_PREFIX)) {
@@ -800,7 +847,13 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         lstMappings.setModel(model);
     }
     
-    private void addSingleAction(String action, DefaultListModel model) {
+    private Set<String> fixedActions = new HashSet<>();
+    
+    private void addSingleAction(String action, DefaultListModel<MappingWrapper> model) {
+        addSingleAction(action, model, false);
+    }
+    
+    private void addSingleAction(String action, DefaultListModel<MappingWrapper> model, boolean ignoreIfNotExist) {
         NetbeansActionMapping mapp = null;
         for (NetbeansActionMapping elem : getActionMappings().getActions()) {
             if (action.equals(elem.getActionName())) {
@@ -810,17 +863,24 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         }
         boolean userDefined = true;
         if (mapp == null) {
+            if (fixedActions.contains(action)) {
+                return;
+            }
             mapp = ActionToGoalUtils.getDefaultMapping(action, project);
             userDefined = false;
         }
         MappingWrapper wr;
         if (mapp == null) {
+            if (ignoreIfNotExist) {
+                return;
+            }
             wr = new MappingWrapper(action);
         } else {
             wr = new MappingWrapper(mapp);
         }
         wr.setUserDefined(userDefined);
         model.addElement(wr);
+        fixedActions.add(action);
     }
     
     private String createSpaceSeparatedList(List<String> list) {
@@ -866,12 +926,19 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         txtPackagings.setEnabled(false);
         updateColor(null);
         cbRecursively.setEnabled(false);
+        cbBuildWithDeps.setEnabled(false);
         btnAddProps.setEnabled(false);
         if (handle == null) { //only global settings
-            jButton1.setEnabled(false);
-            jButton1.setIcon(null);
-            jButton1.setText(BTN_ShowToolbar());
+            btnShowInToolbar.setEnabled(false);
+            btnShowInToolbar.setIcon(null);
+            btnShowInToolbar.setText(BTN_ShowToolbar());
         }
+        
+        lblGoals.setEnabled(false);
+        lblHint.setEnabled(false);
+        lblPackagings.setEnabled(false);
+        lblProfiles.setEnabled(false);
+        lblProperties.setEnabled(false);
     }
     
     private void updateColor(MappingWrapper wr) {
@@ -904,16 +971,16 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
     }
     
     
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnAddProps;
+    private javax.swing.JButton btnCopy;
     private javax.swing.JButton btnRemove;
+    private javax.swing.JButton btnShowInToolbar;
     private javax.swing.JCheckBox cbBuildWithDeps;
     private javax.swing.JCheckBox cbRecursively;
-    private javax.swing.JComboBox comConfiguration;
+    private javax.swing.JComboBox<ModelHandle2.Configuration> comConfiguration;
     private javax.swing.JEditorPane epProperties;
-    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane5;
@@ -924,7 +991,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
     private javax.swing.JLabel lblPackagings;
     private javax.swing.JLabel lblProfiles;
     private javax.swing.JLabel lblProperties;
-    private javax.swing.JList lstMappings;
+    private javax.swing.JList<MappingWrapper> lstMappings;
     private javax.swing.JTextField txtGoals;
     private javax.swing.JTextField txtPackagings;
     private javax.swing.JTextField txtProfiles;
@@ -940,7 +1007,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
     public static Map<String, String> convertStringToActionProperties(String text) {
         PropertySplitter split = new PropertySplitter(text);
         String tok = split.nextPair();
-        Map<String,String> props = new LinkedHashMap<String,String>();
+        Map<String,String> props = new LinkedHashMap<>();
         while (tok != null) {
             String[] prp = StringUtils.split(tok, "=", 2); //NOI18N
             if (prp.length >= 1 ) {
@@ -955,7 +1022,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                 if (key.endsWith("=")) {
                     key = key.substring(0, key.length() - 1);
                 }
-                if (key.trim().length() > 0 && Verifier.checkElementName(key.trim()) == null) {
+                if (!key.isBlank() && Verifier.checkElementName(key.trim()) == null) {
                     props.put(key.trim(), prp.length > 1 ? prp[1] : "");
                 }
             }
@@ -977,20 +1044,20 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
     })
     private void updateToolbarButton(MappingWrapper wr) {
         //TODO exclude run/debug and any default mappings.
-        jButton1.setEnabled(true);
+        btnShowInToolbar.setEnabled(true);
         if (wr.getToolbarIconPath() != null) {
             //TODO set title?? show icon?
-            jButton1.setIcon(ImageUtilities.loadImageIcon(wr.getToolbarIconPath(), false));
-            jButton1.setText(BTN_HideToolbar());
+            btnShowInToolbar.setIcon(ImageUtilities.loadImageIcon(wr.getToolbarIconPath(), false));
+            btnShowInToolbar.setText(BTN_HideToolbar());
         } else {
-            jButton1.setIcon(null);
-            jButton1.setText(BTN_ShowToolbar());
+            btnShowInToolbar.setIcon(null);
+            btnShowInToolbar.setText(BTN_ShowToolbar());
         }
     }
 
     public void applyToolbarChanges() {
         for (int i = 0; i < lstMappings.getModel().getSize(); i++) {
-            MappingWrapper wr = (MappingWrapper) lstMappings.getModel().getElementAt(i);
+            MappingWrapper wr = lstMappings.getModel().getElementAt(i);
             if (wr.hasToolbarPathChanged()) {
                 if (wr.getOrigToolbarIconPath() != null) {
                     try {
@@ -1009,25 +1076,28 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                 }
             }
         }
-                
-                
     }
-    
+
+    @NbBundle.Messages({
+        "# {0} - disabled action name",
+        "FMT_DisabledAction={0} - disabled"
+    })
     private static class Renderer extends DefaultListCellRenderer {
-        
     
         @Override
-        public Component getListCellRendererComponent(JList list, Object value,
+        public Component getListCellRendererComponent(JList<?> list, Object value,
                                                       int arg2, boolean arg3,
                                                       boolean arg4) {
             Component supers = super.getListCellRendererComponent(list, value, arg2, arg3, arg4);
-            if (supers instanceof JLabel && value instanceof MappingWrapper) {
-                MappingWrapper wr = (MappingWrapper)value;
-                JLabel lbl = (JLabel)supers;
+            if (supers instanceof JLabel lbl && value instanceof MappingWrapper wr) {
                 if (wr.isUserDefined()) {
                     lbl.setFont(lbl.getFont().deriveFont(Font.BOLD));
                 } else {
                     lbl.setFont(lbl.getFont().deriveFont(Font.PLAIN));
+                }
+                if (ActionToGoalUtils.isDisabledMapping(wr.getMapping())) {
+                    lbl.setForeground(Color.lightGray);
+                    lbl.setText(Bundle.FMT_DisabledAction(lbl.getText()));
                 }
             }
             return supers;
@@ -1105,7 +1175,6 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
             return toolbarIconPath;
         }
         
-        
     }
     
     private abstract class TextFieldListener implements DocumentListener {
@@ -1122,7 +1191,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         }
         
         protected MappingWrapper doUpdate() {
-            MappingWrapper map = (MappingWrapper)lstMappings.getSelectedValue();
+            MappingWrapper map = lstMappings.getSelectedValue();
             if (map != null) {
                 if (!map.isUserDefined()) {
                     NetbeansActionMapping mapping = map.getMapping();
@@ -1148,10 +1217,11 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         protected MappingWrapper doUpdate() {
             MappingWrapper wr = super.doUpdate();
             if (wr != null) {
+                boolean wasEnabled = ActionToGoalUtils.isDisabledMapping(wr.getMapping());
                 String text = txtGoals.getText();
                 StringTokenizer tok = new StringTokenizer(text, " "); //NOI18N
                 NetbeansActionMapping mapp = wr.getMapping();
-                List<String> goals = new ArrayList<String>();
+                List<String> goals = new ArrayList<>();
                 while (tok.hasMoreTokens()) {
                     String token = tok.nextToken();
                     goals.add(token);
@@ -1159,6 +1229,9 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                 mapp.setGoals(goals);
                 if (handle != null) {
                     handle.markAsModified(getActionMappings());
+                }
+                if (ActionToGoalUtils.isDisabledMapping(wr.getMapping()) != wasEnabled) {
+                    lstMappings.repaint();
                 }
             }
             return wr;
@@ -1173,7 +1246,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                 String text = txtProfiles.getText();
                 StringTokenizer tok = new StringTokenizer(text, " ,"); //NOI18N
                 NetbeansActionMapping mapp = wr.getMapping();
-                List<String> profs = new ArrayList<String>();
+                List<String> profs = new ArrayList<>();
                 while (tok.hasMoreTokens()) {
                     String token = tok.nextToken();
                     profs.add(token);
@@ -1187,7 +1260,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         }
     }
     
-        private class PackagingsListener extends TextFieldListener {
+    private class PackagingsListener extends TextFieldListener {
         @Override
         protected MappingWrapper doUpdate() {
             MappingWrapper wr = super.doUpdate();
@@ -1195,7 +1268,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                 String text = txtPackagings.getText().trim();
                 StringTokenizer tok = new StringTokenizer(text, " ,"); //NOI18N
                 NetbeansActionMapping mapp = wr.getMapping();
-                List<String> packs = new ArrayList<String>();
+                List<String> packs = new ArrayList<>();
                 while (tok.hasMoreTokens()) {
                     String token = tok.nextToken();
                     packs.add(token.trim());
@@ -1219,12 +1292,11 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
             }
             return wr;
         }
-        
     }
     
     private class RecursiveListener implements ActionListener {
         @Override public void actionPerformed(ActionEvent e) {
-            MappingWrapper map = (MappingWrapper)lstMappings.getSelectedValue();
+            MappingWrapper map = lstMappings.getSelectedValue();
             if (map != null) {
                 if (!map.isUserDefined()) {
                     NetbeansActionMapping mapping = map.getMapping();
@@ -1243,7 +1315,6 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                 }
             }
         }
-        
     }
 
     private class DepsListener implements ActionListener {
@@ -1251,7 +1322,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         @Override
         @Messages("HINT_Build_WithDependencies=<html><h2>Please note:</h2>Build with Dependencies delegates to the action of the same name and performs it before the current action is performed.<p> The Build with Dependencies action relies on Maven's --project-list and --also-make switches to perform its duties.")
         public void actionPerformed(ActionEvent e) {
-            MappingWrapper map = (MappingWrapper)lstMappings.getSelectedValue();
+            MappingWrapper map = lstMappings.getSelectedValue();
             if (map != null) {
                 if (!map.isUserDefined()) {
                     NetbeansActionMapping mapping = map.getMapping();
@@ -1283,14 +1354,13 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                 }
             }
         }
-
     }
     
     private void setupConfigurations() {
         if (handle != null) {
             lblConfiguration.setVisible(true);
             comConfiguration.setVisible(true);
-            DefaultComboBoxModel comModel = new DefaultComboBoxModel();
+            DefaultComboBoxModel<ModelHandle2.Configuration> comModel = new DefaultComboBoxModel<>();
             for (ModelHandle2.Configuration conf : handle.getConfigurations()) {
                 comModel.addElement(conf);
             }
@@ -1299,7 +1369,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         } else {
             lblConfiguration.setVisible(false);
             comConfiguration.setVisible(false);
-            DefaultComboBoxModel comModel = new DefaultComboBoxModel();
+            DefaultComboBoxModel<ModelHandle2.Configuration> comModel = new DefaultComboBoxModel<>();
             comConfiguration.setModel(comModel);
         }
     }
@@ -1360,7 +1430,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
                     if (expr != null) {
                         String props = area.getText();
                         String sep = "\n";//NOI18N
-                        if (props.endsWith("\n") || props.trim().length() == 0) {//NOI18N
+                        if (props.endsWith("\n") || props.isBlank()) {//NOI18N
                             sep = "";//NOI18N
                         }
                         props = props + sep + expr + "="; //NOI18N
@@ -1386,7 +1456,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         @Override public void actionPerformed(ActionEvent e) {
             String props = area.getText();
             String sep = "\n";//NOI18N
-            if (props.endsWith("\n") || props.trim().length() == 0) {//NOI18N
+            if (props.endsWith("\n") || props.isBlank()) {//NOI18N
                 sep = "";//NOI18N
             }
             props = props + sep + "Env.FOO=bar"; //NOI18N
@@ -1420,7 +1490,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         boolean hasAny = false;
         for (JavaPlatform platform : JavaPlatformManager.getDefault().getInstalledPlatforms()) {
             hasAny = true;
-            if (platform.getInstallFolders().size() > 0) {
+            if (!platform.getInstallFolders().isEmpty()) {
                 menu.add(new JdkAction(area, platform.getDisplayName(), platform.getInstallFolders().iterator().next()));
             }
         }
@@ -1443,7 +1513,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         @Override public void actionPerformed(ActionEvent e) {
             String props = area.getText();
             String sep = "\n";//NOI18N
-            if (props.endsWith("\n") || props.trim().length() == 0) {//NOI18N
+            if (props.endsWith("\n") || props.isBlank()) {//NOI18N
                 sep = "";//NOI18N
             }
             String val = "Env.JAVA_HOME=" + value;
@@ -1529,7 +1599,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
             }
         } else {
             String sep = "\n";//NOI18N
-            if (props.endsWith("\n") || props.trim().length() == 0) {//NOI18N
+            if (props.endsWith("\n") || props.isBlank()) {//NOI18N
                 sep = "";//NOI18N
             }
             props = props + sep + replace; //NOI18N
@@ -1546,9 +1616,10 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
     private static class NonEmptyInputLine extends NotifyDescriptor.InputLine implements DocumentListener {
 
         @SuppressWarnings("LeakingThisInConstructor")
-        NonEmptyInputLine(String text, String title) {
-            super(text, title);
+        NonEmptyInputLine(String label, String title, String defaultText) {
+            super(label, title);
             textField.getDocument().addDocumentListener(this);
+            textField.setText(defaultText);
             checkValid();
         }
 
@@ -1565,7 +1636,7 @@ private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-HEADER
         }
 
         private void checkValid () {
-            setValid(textField.getText() != null && textField.getText().trim().length() > 0);
+            setValid(textField.getText() != null && !textField.getText().isBlank());
         }
 
     }

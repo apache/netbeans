@@ -26,6 +26,7 @@ import java.net.MalformedURLException;
 import org.netbeans.modules.websvc.saas.model.WsdlSaas;
 import org.netbeans.modules.websvc.saas.model.WsdlSaasMethod;
 import org.netbeans.modules.websvc.saas.spi.ConsumerFlavorProvider;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Exceptions;
 import org.openide.util.datatransfer.ExTransferable;
 
@@ -92,7 +93,7 @@ public class SoapClientFlavorProvider implements ConsumerFlavorProvider {
             //attempt to recover
             File f = new File(wsdlURL);
             try{
-                url = f.getCanonicalFile().toURI().normalize().toURL();
+                url = BaseUtilities.normalizeURI(f.getCanonicalFile().toURI()).toURL();
             } catch (IOException exc) {
                 Exceptions.printStackTrace(exc);
             }

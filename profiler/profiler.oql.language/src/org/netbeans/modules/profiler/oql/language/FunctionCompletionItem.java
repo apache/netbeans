@@ -36,12 +36,12 @@ import org.netbeans.spi.editor.completion.support.CompletionUtilities;
  * @author Jaroslav Bachorik
  */
 public class FunctionCompletionItem implements CompletionItem {
-    final private String text;
-    final private String sortPrefix;
-    final private int correction;
-    final private int carretOffset;
+    private final String text;
+    private final String sortPrefix;
+    private final int correction;
+    private final int carretOffset;
 
-    final private static Color fieldColor = Color.BLACK;
+    private static final Color fieldColor = Color.BLACK;
 
     public FunctionCompletionItem(String sortPrefix, String text, int carretOffset) {
         this(sortPrefix, text, carretOffset, 0);

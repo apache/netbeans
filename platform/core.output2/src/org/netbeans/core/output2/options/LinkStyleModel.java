@@ -32,7 +32,7 @@ import org.openide.util.NbBundle;
     "LBL_Underline=Underline", //NOI18N
     "LBL_None=None" //NOI18N
 })
-public class LinkStyleModel implements ComboBoxModel {
+public class LinkStyleModel implements ComboBoxModel<Object> {
 
     private class LinkStyleItem {
 

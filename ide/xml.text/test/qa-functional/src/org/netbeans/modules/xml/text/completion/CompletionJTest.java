@@ -191,7 +191,7 @@ public class CompletionJTest extends JXTest {
      * @param suf sufix
      * @param index index of inserting item, -1 => 
      */
-    final protected void insertTag(String pref, String suf, int index) {
+    protected final void insertTag(String pref, String suf, int index) {
         insert(pref);
         if (index < 0) {
             showCompl(NO_WAIT);

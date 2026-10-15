@@ -425,7 +425,7 @@ public class ProfilerTreeTable extends ProfilerTable {
 //        tree.updateUI();
 //    }
     
-    public static abstract class NodeExpansionEvaluator {
+    public abstract static class NodeExpansionEvaluator {
         
         public abstract Boolean hasBeenExpanded(TreePath path);
         
@@ -652,9 +652,9 @@ public class ProfilerTreeTable extends ProfilerTable {
             
             SortKey sortKey = sortKeys.get(0);
             SortOrder sortOrder = sortKey.getSortOrder();
-            if (SortOrder.UNSORTED.equals(sortOrder)) return null;
+            if (SortOrder.UNSORTED == sortOrder) return null;
             
-            final boolean ascending = SortOrder.ASCENDING.equals(sortOrder);
+            final boolean ascending = SortOrder.ASCENDING == sortOrder;
             final int sortColumn = sortKey.getColumn();
             
             Class columnClass = model.getColumnClass(sortColumn);
@@ -710,9 +710,9 @@ public class ProfilerTreeTable extends ProfilerTable {
 //                            return ((Comparable)o1).compareTo(o2);
 //                        }
 //                    } : getComparator(sortColumn));
-////            Class columnClass = model.getColumnClass(sortColumn);
-////            boolean sortingStrings = JTree.class.equals(columnClass) || String.class.equals(columnClass);
-////            final Comparator comparator = sortingStrings ? null : getComparator(sortColumn);
+// //            Class columnClass = model.getColumnClass(sortColumn);
+// //            boolean sortingStrings = JTree.class.equals(columnClass) || String.class.equals(columnClass);
+// //            final Comparator comparator = sortingStrings ? null : getComparator(sortColumn);
 //            
 //            return new Comparator() {
 //                public int compare(Object o1, Object o2) {
@@ -1491,7 +1491,7 @@ public class ProfilerTreeTable extends ProfilerTable {
         
         public void setSelectionPaths(TreePath[] paths) {
             if (changingModel && paths != null) {
-                List<TreePath> similarPaths = new ArrayList();
+                List<TreePath> similarPaths = new ArrayList<>();
                 for (int i = 0; i < paths.length; i++) {
                     TreePath similarPath = getSimilarPath(paths[i]);
                     if (similarPath != null) similarPaths.add(similarPath);

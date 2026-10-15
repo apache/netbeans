@@ -23,6 +23,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Image;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JScrollPane;
@@ -72,8 +73,14 @@ public class GtkLFCustoms extends LFCustoms {
         if (borderColor == null) {
             borderColor = new Color(144,150,162);
         }
+
+        /* This icon pair exists in both PNG and SVG versions; the SVG version will be substituted
+        automatically if ImageUtilities and the SVG Loader implementation module is available. */
+        Image explorerFolderIcon       = UIUtils.loadImage("org/netbeans/swing/plaf/resources/hidpi-folder-closed.png");
+        Image explorerFolderOpenedIcon = UIUtils.loadImage("org/netbeans/swing/plaf/resources/hidpi-folder-open.png");
         
         Object[] result = {
+            EDITOR_PREFERRED_COLOR_PROFILE, "NetBeans", //NOI18N
             PROPSHEET_SELECTION_BACKGROUND, selBg,
             PROPSHEET_SELECTION_FOREGROUND, selFg,
             PROPSHEET_SELECTED_SET_BACKGROUND, selBg,
@@ -114,6 +121,10 @@ public class GtkLFCustoms extends LFCustoms {
             SLIDING_BUTTON_UI, "org.netbeans.swing.tabcontrol.plaf.GtkSlidingButtonUI", //NOI18N
 
             DESKTOP_BACKGROUND, ThemeValue.functioning() ? new ThemeValue (Region.BUTTON, ThemeValue.LIGHT, Color.GRAY) : (Object) Color.GRAY,
+
+            EXPLORER_FOLDER_ICON ,explorerFolderIcon,
+            EXPLORER_FOLDER_OPENED_ICON, explorerFolderOpenedIcon,
+
             EXPLORER_MINISTATUSBAR_BORDER, BorderFactory.createEmptyBorder(),
 
             //TOOLBAR_UI, "org.netbeans.swing.plaf.gtk.GtkToolbarUI", //NOI18N
@@ -125,6 +136,11 @@ public class GtkLFCustoms extends LFCustoms {
             "NbSlideBar.GroupSeparator.Gap.Before", 7,
             "NbSlideBar.GroupSeparator.Gap.After", 2,
             "NbSlideBar.RestoreButton.Gap", 5,
+            
+            // Options Panel
+            OPTIONS_USE_UI_DEFAULT_COLORS, true,
+            OPTIONS_CATEGORIES_SEPARATOR_COLOR, UIManager.getColor("Separator.foreground"),
+            OPTIONS_CATEGORIES_BUTTON_USE_NIMBUS, true,
         };
 
         //#108517 - turn off ctrl+page_up and ctrl+page_down mapping
@@ -134,6 +150,11 @@ public class GtkLFCustoms extends LFCustoms {
     @Override
     public Object[] createLookAndFeelCustomizationKeysAndValues() {
         if (ThemeValue.functioning()) {
+            // Better than nothing detection of GTK dark themes
+            ThemeValue textText = new ThemeValue (Region.PANEL, ColorType.TEXT_FOREGROUND, Color.BLACK);
+            ThemeValue text = new ThemeValue (Region.PANEL, ColorType.TEXT_BACKGROUND, Color.GRAY);
+            Boolean dark = UIUtils.isBrighter(textText.getColor(), text.getColor());
+            
             return new Object[] {
                 //XXX once the JDK team has integrated support for standard
                 //UIManager keys into 1.5 (not there as of b47), these can 
@@ -143,12 +164,16 @@ public class GtkLFCustoms extends LFCustoms {
                 "controlShadow", new ThemeValue (Region.PANEL, ThemeValue.DARK, Color.DARK_GRAY), //NOI18N
                 "controlDkShadow", new ThemeValue (Region.PANEL, ThemeValue.BLACK, Color.BLACK), //NOI18N
                 "controlLtHighlight", new ThemeValue (Region.PANEL, ThemeValue.WHITE, Color.WHITE), //NOI18N
-                "textText", new ThemeValue (Region.PANEL, ColorType.TEXT_FOREGROUND, Color.BLACK), //NOI18N
-                "text", new ThemeValue (Region.PANEL, ColorType.TEXT_BACKGROUND, Color.GRAY), //NOI18N
+                "textText", textText, //NOI18N
+                "text", text, //NOI18N
+                
+                
+                "nb.dark.theme", dark, //NOI18N
+                "nb.wizard.hideimage", dark, //NOI18N
                 
                 "tab_unsel_fill", control, //NOI18N
                  
-                "SplitPane.dividerSize", new Integer (2),  //NOI18N
+                "SplitPane.dividerSize", 2,  //NOI18N
                 
                 SYSTEMFONT, controlFont, //NOI18N
                 USERFONT, controlFont, //NOI18N
@@ -182,6 +207,7 @@ public class GtkLFCustoms extends LFCustoms {
                 // special tree icons - only for property sheet
                 "Tree.gtk_expandedIcon", new GTKExpandedIcon(),
                 "Tree.gtk_collapsedIcon", new GTKCollapsedIcon(),
+                "Slider.paintValue", false
             };
         } else {
             Object[] result = new Object[] {
@@ -189,13 +215,14 @@ public class GtkLFCustoms extends LFCustoms {
                 // special tree icons - only for property sheet
                 "Tree.gtk_expandedIcon", new GTKExpandedIcon(),
                 "Tree.gtk_collapsedIcon", new GTKCollapsedIcon(),
+                "Slider.paintValue", false
             };
             return result;
         }
     }
     
     /** Temporary workaround for GTK L&F */
-    private static abstract class GTKIcon implements Icon {
+    private abstract static class GTKIcon implements Icon {
         private static final int SIZE = 11;
         @Override
         public int getIconWidth() {

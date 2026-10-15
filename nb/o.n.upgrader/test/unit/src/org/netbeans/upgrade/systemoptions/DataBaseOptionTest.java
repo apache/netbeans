@@ -27,10 +27,12 @@ public class DataBaseOptionTest extends BasicTestForImport {
         super(testName, "org-netbeans-modules-db-explorer-DatabaseOption.settings");
     }
 
+    @Override
     public void testPreferencesNodePath() throws Exception {
         assertPreferencesNodePath("/org/netbeans/modules/db");
     }
         
+    @Override
     public void testPropertyNames() throws Exception {
         assertPropertyNames(new String[] {
         "autoConn", "debugMode"

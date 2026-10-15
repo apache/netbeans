@@ -44,7 +44,7 @@ public final class InstructionsConverter {
     public static final Integer PRIVATE_PACKAGE = 2;
 
     public static Map<Integer, String> computeExportInstructions (Map<String, Boolean> items, Project project) {
-        Map<Integer, String> instructionsMap = new HashMap<Integer, String>(2);
+        Map<Integer, String> instructionsMap = new HashMap<>(2);
         StringBuilder exportIns = new StringBuilder();
         boolean isFirst = true;
         for (Entry<String, Boolean> entry : items.entrySet()) {
@@ -78,7 +78,7 @@ public final class InstructionsConverter {
     }
 
     public static SortedMap<String, Boolean> computeExportList (Map<Integer, String> exportInstructions, Project project) {
-        SortedMap<String, Boolean> pkgMap = new TreeMap<String, Boolean>();
+        SortedMap<String, Boolean> pkgMap = new TreeMap<>();
         SortedSet<String> pkgNames = FileUtilities.getPackageNames(project);
         for (String name : pkgNames) {
             pkgMap.put(name, Boolean.FALSE);

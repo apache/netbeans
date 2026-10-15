@@ -33,7 +33,7 @@ import org.openide.util.NbBundle.Messages;
  */
 public abstract class CheckBoxUpdater implements ItemListener, AncestorListener {
 
-    private JCheckBox component;
+    private final JCheckBox component;
     private boolean inherited = false;
 
     @SuppressWarnings("LeakingThisInConstructor")
@@ -86,7 +86,7 @@ public abstract class CheckBoxUpdater implements ItemListener, AncestorListener 
 
     private void setCheckBoxValue(Boolean value, boolean defValue, JCheckBox component) {
         if (value != null) {
-            component.setSelected(value.booleanValue());
+            component.setSelected(value);
             component.setToolTipText(null);
             inherited = false;
             component.setFont(component.getFont().deriveFont(Font.BOLD));

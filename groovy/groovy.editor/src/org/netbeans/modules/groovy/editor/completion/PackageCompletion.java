@@ -20,7 +20,7 @@
 package org.netbeans.modules.groovy.editor.completion;
 
 import java.util.EnumSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import org.netbeans.api.java.source.ClassIndex;
@@ -38,7 +38,7 @@ import org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext;
 public class PackageCompletion extends BaseCompletion {
 
     @Override
-    public boolean complete(List<CompletionProposal> proposals, CompletionContext request, int anchor) {
+    public boolean complete(Map<Object, CompletionProposal> proposals, CompletionContext request, int anchor) {
         LOG.log(Level.FINEST, "-> completePackages"); // NOI18N
 
         // this can happen for ?. or similar constructs
@@ -77,7 +77,7 @@ public class PackageCompletion extends BaseCompletion {
                 if (request.isBehindImportStatement()) {
                     item.setSmart(true);
                 }
-                proposals.add(item);
+                proposals.put("pack:" + singlePackage, item);
             }
         }
 

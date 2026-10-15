@@ -25,9 +25,15 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import javax.swing.text.Position;
 import javax.swing.text.StyledDocument;
+import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.editor.document.AtomicLockDocument;
+import org.netbeans.api.editor.document.LineDocument;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
+import org.netbeans.modules.csl.core.ApiAccessor;
 import org.netbeans.modules.editor.indent.api.Reformat;
 import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
@@ -45,13 +51,26 @@ import org.openide.util.Exceptions;
  */
 public class EditList {
     private static final Logger LOG = Logger.getLogger(EditList.class.getName());
+
+    static {
+        ApiAccessor.setInstance(new ApiAccessor() {
+            public List<EditList.Edit> getEdits(@NonNull EditList editList) {
+                return Collections.unmodifiableList(editList.edits);
+            }
+        });
+    }
     
-    private BaseDocument doc;
+    private Document doc;
     private List<Edit> edits;
     private boolean formatAll;
-    private List<DelegatedPosition> positions = new ArrayList<DelegatedPosition>();;
+    private List<DelegatedPosition> positions = new ArrayList<DelegatedPosition>();
     
     public EditList(BaseDocument doc) {
+        this.doc = doc;
+        edits = new ArrayList<Edit>();
+    }
+  
+    public EditList(Document doc) {
         this.doc = doc;
         edits = new ArrayList<Edit>();
     }
@@ -82,7 +101,16 @@ public class EditList {
         return this;
     }
     
+    /**
+     * @deprecated use {@link #applyTo}.
+     * @param otherDoc 
+     */
+    @Deprecated
     public void applyToDocument(BaseDocument otherDoc/*, boolean narrow*/) {
+        applyTo(otherDoc);
+    }
+    
+    public void applyTo(Document otherDoc/*, boolean narrow*/) {
         EditList newList = new EditList(otherDoc);
         newList.formatAll = formatAll;
         /*
@@ -126,13 +154,15 @@ public class EditList {
         final Reformat r = Reformat.get(doc);
         r.lock();
         try {
-            doc.runAtomic(() -> {
+            LineDocument ld = LineDocumentUtils.asRequired(doc, LineDocument.class);
+            AtomicLockDocument ald = LineDocumentUtils.asRequired(doc, AtomicLockDocument.class);
+            ald.runAtomic(() -> {
                 for (Edit edit : edits) {
                     final Edit fEdit = edit;
                     final int [] fEnd = new int [] { -1 };
                     try {
                         if (lastPos[0] == null) {
-                            lastPos[0] = doc.createPosition(edits.get(0).offset, Position.Bias.Forward);
+                            lastPos[0] = ld.createPosition(edits.get(0).offset, Position.Bias.Forward);
                         }
 
                         if (fEdit.removeLen > 0) {
@@ -160,7 +190,7 @@ public class EditList {
                                 DelegatedPosition pos = positions.get(i);
                                 int positionOffset = pos.originalOffset;
                                 if (fEdit.getOffset() <= positionOffset && fEnd[0] >= positionOffset) {
-                                    pos.delegate = doc.createPosition(positionOffset, pos.bias); // Position of the comment
+                                    pos.delegate = ld.createPosition(positionOffset, pos.bias); // Position of the comment
                                 }
                             }
                         }
@@ -222,12 +252,34 @@ public class EditList {
         return new OffsetRange(minOffset, maxOffset);
     }
     
+    /**
+     * @deprecated Use {@link #firstLine(javax.swing.text.Document)}
+     * @param doc
+     * @return 
+     */
+    @Deprecated
     public int firstLine(BaseDocument doc) {
-        OffsetRange range = getRange();
-        
-        return NbDocument.findLineNumber((StyledDocument)doc, range.getStart());
+        return firstEditLine(doc);
     }
     
+    /**
+     * Computes line number (0-based) of the edit start.
+     * @param doc
+     * @return 
+     */
+    public int firstEditLine(Document doc) {
+        OffsetRange range = getRange();
+        if (doc instanceof StyledDocument) {
+            return NbDocument.findLineNumber((StyledDocument)doc, range.getStart());
+        }
+        LineDocument ld = LineDocumentUtils.asRequired(doc, LineDocument.class);
+        try {
+            return LineDocumentUtils.getLineIndex(ld, range.getStart());
+        } catch (BadLocationException ex) {
+            return 0;
+        }
+    }
+
     /**
      * A class which records a set of edits to a document, and then can apply these edits.
      * The edit regions are sorted in reverse order and applied from back to front such that
@@ -235,7 +287,7 @@ public class EditList {
      * 
      * @author Tor Norbye
      */
-    private static class Edit implements Comparable<Edit> {
+    public static final class Edit implements Comparable<Edit> {
 
         int offset;
         int removeLen;

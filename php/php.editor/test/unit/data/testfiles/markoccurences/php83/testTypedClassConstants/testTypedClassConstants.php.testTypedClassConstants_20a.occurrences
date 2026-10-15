@@ -1,0 +1,2 @@
+    public const string|array |>MARK_OCCURRENCES:UNI^ON2<| = 'a' . InterfaceTest::STRING;
+var_dump(ClassTest::|>MARK_OCCURRENCES:UNION2<|);

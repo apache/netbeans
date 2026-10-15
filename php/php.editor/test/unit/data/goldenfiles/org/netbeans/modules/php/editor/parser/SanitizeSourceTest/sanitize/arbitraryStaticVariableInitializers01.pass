@@ -1,0 +1,87 @@
+<Program start='0' end='960'>
+    <Comments>
+        <Comment start='6' end='813' commentType='multiLine'/>
+    </Comments>
+    <Statements>
+        <ClassDeclaration start='814' end='959' modifier='NONE'>
+            <ClassName>
+                <Identifier start='820' end='827' name='Example'/>
+            </ClassName>
+            <SuperClassName>
+            </SuperClassName>
+            <Interfaces>
+            </Interfaces>
+            <Block start='828' end='959' isCurly='true'>
+                <MethodDeclaration start='834' end='957' modifiers='public'>
+                    <FunctionDeclaration start='841' end='957' isReference='false'>
+                        <Identifier start='850' end='853' name='run'/>
+                        <FormalParameters>
+                            <FormalParameter start='854' end='865' isMandatory='true' isVariadic='false'>
+                                <ParametrType>
+                                    <NamespaceName start='854' end='857' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='854' end='857' name='int'/>
+                                    </NamespaceName>
+                                </ParametrType>
+                                <ParametrName>
+                                    <Variable start='858' end='865' isDollared='true'>
+                                        <Identifier start='859' end='865' name='param1'/>
+                                    </Variable>
+                                </ParametrName>
+                                <DefaultValue>
+                                </DefaultValue>
+                            </FormalParameter>
+                        </FormalParameters>
+                        <NamespaceName start='869' end='873' isCurrent='false' isGlobal='false'>
+                            <Identifier start='869' end='873' name='void'/>
+                        </NamespaceName>
+                        <Block start='874' end='957' isCurly='true'>
+                            <ExpressionStatement start='884' end='910'>
+                                <Assignment start='884' end='909' operator='EQUAL'>
+                                    <Variable start='884' end='892' isDollared='true'>
+                                        <Identifier start='885' end='892' name='example'/>
+                                    </Variable>
+                                    <ClassInstanceCreation start='895' end='909' anonymous='true'>
+                                        <Parameters>
+                                        </Parameters>
+                                        <Superclass>
+                                        </Superclass>
+                                        <Interfaces>
+                                        </Interfaces>
+                                        <Block start='907' end='909' isCurly='true'>
+                                        </Block>
+                                    </ClassInstanceCreation>
+                                </Assignment>
+                            </ExpressionStatement>
+                            <ExpressionStatement start='919' end='951'>
+                                <Quote start='919' end='950' type='QUOTE'>
+                                    <Expressions>
+                                        <Scalar start='920' end='928' type='STRING' value='&apos;single '/>
+                                        <ReflectionVariable start='928' end='948'>
+                                            <MethodInvocation start='930' end='947' isNullsafe='false'>
+                                                <Variable start='930' end='938' isDollared='true'>
+                                                    <Identifier start='931' end='938' name='complex'/>
+                                                </Variable>
+                                                <Method>
+                                                    <FunctionInvocation start='940' end='947'>
+                                                        <FucntionName start='940' end='945'>
+                                                            <Variable start='940' end='945' isDollared='false'>
+                                                                <Identifier start='940' end='945' name='quote'/>
+                                                            </Variable>
+                                                        </FucntionName>
+                                                        <Parameters>
+                                                        </Parameters>
+                                                    </FunctionInvocation>
+                                                </Method>
+                                            </MethodInvocation>
+                                        </ReflectionVariable>
+                                        <Scalar start='948' end='949' type='STRING' value='&apos;'/>
+                                    </Expressions>
+                                </Quote>
+                            </ExpressionStatement>
+                        </Block>
+                    </FunctionDeclaration>
+                </MethodDeclaration>
+            </Block>
+        </ClassDeclaration>
+    </Statements>
+</Program>

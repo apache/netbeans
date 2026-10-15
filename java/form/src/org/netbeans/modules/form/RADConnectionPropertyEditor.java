@@ -280,11 +280,11 @@ public class RADConnectionPropertyEditor
     // implementation class for FormDesignValue
 
     public static class RADConnectionDesignValue implements FormDesignValue { //, java.io.Serializable {
-        public final static int TYPE_PROPERTY = 0;
-        public final static int TYPE_METHOD = 1;
-        public final static int TYPE_CODE = 2;
-        public final static int TYPE_VALUE = 3;
-        public final static int TYPE_BEAN = 4;
+        public static final int TYPE_PROPERTY = 0;
+        public static final int TYPE_METHOD = 1;
+        public static final int TYPE_CODE = 2;
+        public static final int TYPE_VALUE = 3;
+        public static final int TYPE_BEAN = 4;
 
         /** Determines the type of connection design value */
         int type;
@@ -300,8 +300,8 @@ public class RADConnectionPropertyEditor
         String value = null;                        // used if type = TYPE_VALUE
         String requiredTypeName = null;             // used if type = TYPE_VALUE
 
-        transient private boolean needsInit = false; // used for deserialization init if type = TYPE_PROPERTY or TYPE_METHOD or TYPE_BEAN
-        transient private FormModel formModel;  // used for deserialization init if type = TYPE_PROPERTY or TYPE_METHOD or TYPE_BEAN
+        private transient boolean needsInit = false; // used for deserialization init if type = TYPE_PROPERTY or TYPE_METHOD or TYPE_BEAN
+        private transient FormModel formModel;  // used for deserialization init if type = TYPE_PROPERTY or TYPE_METHOD or TYPE_BEAN
 
         static final long serialVersionUID =147134837271021412L;
         RADConnectionDesignValue(RADComponent comp) {

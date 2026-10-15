@@ -39,8 +39,8 @@ import org.openide.util.RequestProcessor;
 public final class AttachAction extends AbstractAction {
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 
-    final private static class Singleton {
-        final private static AttachAction INSTANCE = new AttachAction();
+    private static final class Singleton {
+        private static final AttachAction INSTANCE = new AttachAction();
     }
     
     private AttachAction() {

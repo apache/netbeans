@@ -21,7 +21,6 @@ package org.netbeans.modules.glassfish.tooling.utils;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.*;
 import java.util.ArrayList;
@@ -46,10 +45,7 @@ import org.netbeans.modules.glassfish.tooling.logging.Logger;
  */
 public class ServerUtils {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner Classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////   
-
     /**
      * Filtering the set of directories with GlassFish server home subdirectory
      * shown to the user in file filter.
@@ -98,7 +94,6 @@ public class ServerUtils {
             pattern = Pattern.compile(namePattern);
         }
 
-        @Override
         /**
          * Test whether or not the specified pathname is valid GlassFish server.
          * <p/>
@@ -106,16 +101,14 @@ public class ServerUtils {
          * @return Returns <code>true</code> when given <code>File</code>
          *         should be included or <code>false</code> otherwise.
          */
+        @Override
         public boolean accept(final File file) {
             return pattern.matcher(file.getName()).matches();
         }
 
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(ServerUtils.class);
 
@@ -206,7 +199,7 @@ public class ServerUtils {
     public static final String GF_JAVAHELP_JAR = "javahelp.jar";
 
     /** GlassFish Version class name (including package). */
-    private static String VERSION_CLASS = "com.sun.appserv.server.util.Version";
+    private static final String VERSION_CLASS = "com.sun.appserv.server.util.Version";
 
     /** GlassFish VerifierMain class name (including package). */
     public static String VERIFIER_MAIN_CLASS
@@ -216,8 +209,8 @@ public class ServerUtils {
      *  full version string. */
     private static String FULL_VERSION_PATTERN = "[0-9]+(\\.[0-9]+){1,3}";
 
-    /** GlassFish full version string getter method name. */
-    private static String FULL_VERSION_METHOD = "getFullVersion";
+    /** GlassFish version string getter method name. */
+    private static final String VERSION_METHOD = "getVersionNumber";
 
     /** GlassFish Basic Authorization user and password separator. */
     private static String AUTH_BASIC_FIELD_SEPARATPR = ":";
@@ -265,10 +258,7 @@ public class ServerUtils {
             = Pattern.compile(MANIFEST_COMPONENT_COMP_REGEX,
             Pattern.CASE_INSENSITIVE);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Search for <code>.jar</code> file matching given pattern
      * in <code>&lt;serverHome&gt;/modules</code> directory tree.
@@ -566,37 +556,36 @@ public class ServerUtils {
                 ClassLoader cl = new URLClassLoader(new URL[] {commonUtilJar.
                             toURI().toURL()});
                 Class c = cl.loadClass(VERSION_CLASS);
-                // Try to get version from com.sun.appserv.server.util.Version.
-                try {
-                    Method mGetFullVersion = c.getMethod(FULL_VERSION_METHOD);
-                    System.getProperties().put(GF_HOME_PROPERTY, serverHome);
-                    String fullVersionString
-                            = (String)mGetFullVersion.invoke(c);
-                    System.getProperties().remove(GF_HOME_PROPERTY);
-                    String versionString
-                            = getVersionString(fullVersionString);
+                
+                // Use Manifest Bundle-Version.
+                try (JarFile jar = new JarFile(commonUtilJar)) {
+                    Manifest manifest = jar.getManifest();
+                    String versionString = getVersionString(manifest
+                            .getMainAttributes().getValue(BUNDLE_VERSION));
                     if (versionString != null) {
                         version = GlassFishVersion.toValue(versionString);
                     }
-                } catch (IllegalAccessException | IllegalArgumentException
-                        | InvocationTargetException | NoSuchMethodException
-                        | SecurityException | NoClassDefFoundError ex) {
-                    Logger.log(Level.WARNING, "Cannot retrieve Glassfish version: "
-                            + commonUtilJar.getAbsolutePath() + ": ", ex);
+                } catch (IOException ioe) {
+                    Logger.log(Level.WARNING, "Cannot retrieve Glassfish version from Manifest: "
+                        + commonUtilJar.getAbsolutePath() + ": ", ioe);
                 }
-                // Use Manifest Bundle-Version as fallback option.
+                
                 if (version == null) {
+                    // Try to get version from com.sun.appserv.server.util.Version as fallback option.
                     try {
-                        JarFile jar = new JarFile(commonUtilJar);
-                        Manifest manifest = jar.getManifest();
-                        String versionString = getVersionString(manifest
-                                .getMainAttributes().getValue(BUNDLE_VERSION));
+                        Method mGetFullVersion = c.getMethod(VERSION_METHOD);
+                        System.getProperties().put(GF_HOME_PROPERTY, serverHome);
+                        String fullVersionString = (String)mGetFullVersion.invoke(c);
+                        System.getProperties().remove(GF_HOME_PROPERTY);
+                        String versionString
+                                = getVersionString(fullVersionString);
                         if (versionString != null) {
                             version = GlassFishVersion.toValue(versionString);
                         }
-                    } catch (IOException ioe) {
-                        Logger.log(Level.WARNING, "Cannot retrieve Glassfish version: "
-                            + commonUtilJar.getAbsolutePath() + ": ", ioe);
+                    } catch (ReflectiveOperationException | IllegalArgumentException | SecurityException | NoClassDefFoundError ex) {
+                        Logger.log(Level.WARNING, "Cannot retrieve Glassfish version from: "
+                                + commonUtilJar.getAbsolutePath() + ". "
+                                + "Using Manifest Bundle-Version as fallback option:", ex);
                     }
                 }
             } catch (MalformedURLException | ClassNotFoundException ex) {

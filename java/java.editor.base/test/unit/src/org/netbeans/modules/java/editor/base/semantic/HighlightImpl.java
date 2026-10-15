@@ -123,11 +123,13 @@ public final class HighlightImpl {
         ColoringAttributes.DEPRECATED,
         
         ColoringAttributes.FIELD,
+        ColoringAttributes.RECORD_COMPONENT,
         ColoringAttributes.LOCAL_VARIABLE,
         ColoringAttributes.PARAMETER,
         ColoringAttributes.METHOD,
         ColoringAttributes.CONSTRUCTOR,
         ColoringAttributes.CLASS,
+        ColoringAttributes.RECORD,
         ColoringAttributes.INTERFACE,
         ColoringAttributes.ANNOTATION_TYPE,
         ColoringAttributes.ENUM,

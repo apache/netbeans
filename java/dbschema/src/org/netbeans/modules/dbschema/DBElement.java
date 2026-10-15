@@ -203,7 +203,7 @@ public abstract class DBElement implements Comparable, DBElementProperties {
     /** Default implementation of the Impl interface.
      * It just holds the property values.
      */
-    static abstract class Memory implements DBElement.Impl {
+    abstract static class Memory implements DBElement.Impl {
         /** the element for this implementation */
         protected DBElement _element;
 

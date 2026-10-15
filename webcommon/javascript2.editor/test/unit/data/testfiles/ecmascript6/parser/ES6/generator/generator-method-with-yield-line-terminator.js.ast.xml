@@ -1,0 +1,67 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='30'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='29'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='29'>
+      <ObjectNode start='1' end='28'>
+        <!-- ObjectNode Elements -->
+        <PropertyNode name='foo' start='4' end='26'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='4' end='7'>
+            <name>foo</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <FunctionNode name='foo' kind='GENERATOR' start='4' end='26'>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='10' end='24'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+              <ExpressionStatement start='15' end='20'>
+                <UnaryNode type='YIELD' start='15' end='20'>
+                  <!-- UnaryNode Expression -->
+                  <UnaryNode type='VOID' start='15' end='20'>
+                    <!-- UnaryNode Expression -->
+                    <NumberLiteralNode value='0' start='15' end='20'/>
+                  </UnaryNode>
+                </UnaryNode>
+              </ExpressionStatement>
+              <ExpressionStatement start='23' end='24'>
+                <NumberLiteralNode value='3' start='23' end='24'/>
+              </ExpressionStatement>
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+      </ObjectNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

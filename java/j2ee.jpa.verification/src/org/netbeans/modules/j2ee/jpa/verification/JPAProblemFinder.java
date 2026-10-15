@@ -58,9 +58,9 @@ public abstract class JPAProblemFinder {
     private JPAProblemContext context = null;
     private List<ErrorDescription> problemsFound = new ArrayList<ErrorDescription>();
     
-    public final static Logger LOG = Logger.getLogger(JPAProblemFinder.class.getName());
-    private final static String PERSISTENCE_SCOPES_LISTENER = "jpa.verification.scopes_listener"; //NOI18N
-    private final static Object singleInstanceLock = new Object();
+    public static final Logger LOG = Logger.getLogger(JPAProblemFinder.class.getName());
+    private static final String PERSISTENCE_SCOPES_LISTENER = "jpa.verification.scopes_listener"; //NOI18N
+    private static final Object singleInstanceLock = new Object();
     private static JPAProblemFinder runningInstance = null;
     private static boolean usgLogged;
     

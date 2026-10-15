@@ -49,12 +49,12 @@ import org.netbeans.modules.web.beans.api.model.WebBeansModel;
 public abstract class AbstractDecoratorAnalyzer<T> {
 
     protected void analyzeDecoratedBeans( DependencyInjectionResult res,
-            VariableElement element, T t, TypeElement decorator , 
+            VariableElement element, T t, TypeElement decorator ,
             WebBeansModel model, Result result )
     {
         Set<TypeElement> decoratedBeans = null;
         if ( res instanceof DependencyInjectionResult.ApplicableResult ){
-            DependencyInjectionResult.ApplicableResult appResult = 
+            DependencyInjectionResult.ApplicableResult appResult =
                 (DependencyInjectionResult.ApplicableResult) res;
             decoratedBeans = appResult.getTypeElements();
         }
@@ -79,17 +79,17 @@ public abstract class AbstractDecoratorAnalyzer<T> {
             return;
         }
         /*
-         *  The rule : "If a decorator matches a managed bean with a non-static, 
+         *  The rule : "If a decorator matches a managed bean with a non-static,
          *  non-private, final method, the decorator shouldn't also implement that method."
-         *  is actually nonsense. 
-         *  Each Java class has final wait(). Decorator is also java class 
-         *  so it also has a method wait() . So it always implements 
+         *  is actually nonsense.
+         *  Each Java class has final wait(). Decorator is also java class
+         *  so it also has a method wait() . So it always implements
          *  non-static, non-private final method.
-         *  I believe one need to care about ONLY methods in decorated types : 
+         *  I believe one need to care about ONLY methods in decorated types :
          *  all methods that are defined in interfaces ( decorated types )
          *  and which are implemented in the decorator and decorated bean.
-         *  
-         *  Here is implementation of this requirement. 
+         *
+         *  Here is implementation of this requirement.
          */
         Collection<TypeMirror> decoratedTypes = DelegateFieldAnalizer
                 .getDecoratedTypes(decorator, model.getCompilationController());
@@ -129,12 +129,14 @@ public abstract class AbstractDecoratorAnalyzer<T> {
             }
         }
     }
-    
+
     protected boolean checkBuiltInBeans( VariableElement element,
             TypeMirror elementType, WebBeansModel model, AtomicBoolean cancel )
     {
-        TypeElement context = model.getCompilationController().getElements().
-            getTypeElement(AnnotationUtil.CONTEXT);
+        TypeElement context = model.getCompilationController().getElements().getTypeElement(AnnotationUtil.CONTEXT_JAKARTA);
+        if(context == null) {
+            context = model.getCompilationController().getElements().getTypeElement(AnnotationUtil.CONTEXT);
+        }
         if ( context != null && context.equals(model.getCompilationController().
                 getTypes().asElement(elementType)))
         {
@@ -146,12 +148,12 @@ public abstract class AbstractDecoratorAnalyzer<T> {
         if ( cancel.get()){
             return true;
         }
-        
+
         Element varElement = model.getCompilationController().getTypes().
             asElement(elementType);
         if ( varElement instanceof TypeElement ){
-            if ( !((TypeElement)varElement).getQualifiedName().contentEquals( 
-                    AnnotationUtil.CONVERSATION))
+            if (!(((TypeElement) varElement).getQualifiedName().contentEquals(AnnotationUtil.CONVERSATION)
+                    || ((TypeElement) varElement).getQualifiedName().contentEquals(AnnotationUtil.CONVERSATION_JAKARTA)))
             {
                 return false;
             }
@@ -159,7 +161,7 @@ public abstract class AbstractDecoratorAnalyzer<T> {
         else {
             return false;
         }
-        
+
         if ( model.hasImplicitDefaultQualifier( element ) ){
             return true;
         }
@@ -168,20 +170,22 @@ public abstract class AbstractDecoratorAnalyzer<T> {
         Map<String, ? extends AnnotationMirror> qualifiersFqns = helper.
             getAnnotationsByType(qualifiers);
         boolean hasOnlyDefault = false;
-        if ( qualifiersFqns.keySet().contains(AnnotationUtil.DEFAULT_FQN)){
+        if (qualifiersFqns.containsKey(AnnotationUtil.DEFAULT_FQN) || qualifiersFqns.containsKey(AnnotationUtil.DEFAULT_FQN_JAKARTA)) {
             HashSet<String> fqns = new HashSet<String>(qualifiersFqns.keySet());
             fqns.remove( AnnotationUtil.NAMED );
+            fqns.remove( AnnotationUtil.NAMED_JAKARTA );
             fqns.remove( AnnotationUtil.ANY );
+            fqns.remove( AnnotationUtil.ANY_JAKARTA );
             hasOnlyDefault = fqns.size() == 1;
         }
         return hasOnlyDefault;
     }
-    
+
     protected abstract void addMethodError( VariableElement element, T t,
             TypeElement decorated, Element decoratedMethod,
             WebBeansModel model, Result result );
 
-    protected abstract void addClassError( VariableElement element , T t, 
+    protected abstract void addClassError( VariableElement element , T t,
             TypeElement decoratedBean, WebBeansModel model, Result result );
-    
+
 }

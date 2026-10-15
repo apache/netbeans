@@ -28,18 +28,19 @@ import org.netbeans.modules.j2ee.dd.impl.webservices.WebServicesProxy;
 import org.netbeans.modules.schema2beans.Common;
 import org.openide.filesystems.*;
 import org.xml.sax.*;
+import java.util.HashMap;
 import java.util.Map;
 import org.w3c.dom.Document;
 
 public final class DDProvider {
     
     private static final DDProvider ddProvider = new DDProvider();
-    private Map ddMap;
+    private Map<FileObject, WebServicesProxy> ddMap;
     
     /** Creates a new instance of WebSvcModule */
     private DDProvider() {
         //ddMap=new java.util.WeakHashMap(5);
-        ddMap = new java.util.HashMap(5);
+        ddMap = new HashMap<>(5);
     }
     
     /**
@@ -140,7 +141,7 @@ public final class DDProvider {
     }
 
     private WebServicesProxy getFromCache (FileObject fo) {
-         return (WebServicesProxy) ddMap.get(fo);
+         return ddMap.get(fo);
     }
     
     /**
@@ -161,6 +162,7 @@ public final class DDProvider {
     /**  Convenient method for getting the BaseBean object from CommonDDBean object
      * @deprecated DO NOT USE - TEMPORARY WORKAROUND !!!!
      */
+    @Deprecated
     public org.netbeans.modules.schema2beans.BaseBean getBaseBean(org.netbeans.modules.j2ee.dd.api.common.CommonDDBean bean) {
         if (bean instanceof org.netbeans.modules.schema2beans.BaseBean) return (org.netbeans.modules.schema2beans.BaseBean)bean;
         else if (bean instanceof WebServicesProxy) return (org.netbeans.modules.schema2beans.BaseBean) ((WebServicesProxy)bean).getOriginal();

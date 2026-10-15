@@ -50,7 +50,7 @@ public class TableWidget extends Widget{
     private static final Color BORDER_COLOR =  new Color(169, 197, 235);
     private static final Color SELECTED_BORDER_COLOR = new Color(255,153,0);
     private TableModel model;
-    private final static int COLUMN_WIDTH = 100;
+    private static final int COLUMN_WIDTH = 100;
     
     /**
      * Creates a table widget for a tablemodel.
@@ -169,7 +169,7 @@ public class TableWidget extends Widget{
                     scene.removeObject(userObject);
                     widgets = new ArrayList<Widget>(widgets);
                     widgets.add(this);
-                    scene.addObject(userObject, widgets.toArray(new Widget[widgets.size()]));
+                    scene.addObject(userObject, widgets.toArray(new Widget[0]));
                 }
             }
         }
@@ -185,7 +185,7 @@ public class TableWidget extends Widget{
                         widgets = new ArrayList<Widget>(widgets);
                         widgets.remove(this);
                         scene.removeObject(userObject);
-                        scene.addObject(userObject, widgets.toArray(new Widget[widgets.size()]));
+                        scene.addObject(userObject, widgets.toArray(new Widget[0]));
                     }
                 }
             }

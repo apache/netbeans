@@ -35,7 +35,7 @@ import java.util.logging.Logger;
 
 
 /** Useful utility and methods to work with exceptions as
- * described in detail in the  <a href="@TOP@/org/openide/util/doc-files/logging.html">NetBeans logging guide</a>.
+ * described in detail in the  <a href="@org-openide-util@/org/openide/util/doc-files/logging.html">NetBeans logging guide</a>.
  * Allows to annotate exceptions with messages, extract such messages
  * and provides a common utility method to report an exception.
  * 
@@ -51,7 +51,7 @@ public final class Exceptions extends Object {
 
     /** Attaches additional message to given exception. This message will
      * be visible when one does <code>e.printStackTrace()</code>.
-     *
+     * @param <E> type of excetion
      * @param e exception to annotate
      * @param msg the message to add to the exception
      * @return the exception <code>e</code>
@@ -65,7 +65,7 @@ public final class Exceptions extends Object {
 
     /** Attaches additional localized message to given exception. This message 
      * can be extracted later by using {@link #findLocalizedMessage}.
-     *
+     * @param <E> type of excetion
      * @param e exception to annotate
      * @param localizedMessage the localized message to add to the exception
      * @return the exception <code>e</code>
@@ -97,9 +97,10 @@ public final class Exceptions extends Object {
      * then used as a level for reported {@link LogRecord}. This allows
      * those who report exceptions to annotate them as unimportant,
      * expected.
-     * 
+     * @param <E> type of excetion
      * @param e exception to assign severity to
      * @param severity the severity
+     * @return the exception <code>e</code>
      * @since 8.8
      */
     public static <E extends Throwable> E attachSeverity(E e, Level severity) {
@@ -306,7 +307,7 @@ public final class Exceptions extends Object {
 
                 for (LogRecord log : r) {
                     if (log.getMessage() != null) {
-                        a.append(log.getMessage()).append("\n");;
+                        a.append(log.getMessage()).append("\n");
                     }
                     if (log.getThrown() != null) {
                         StringWriter w = new StringWriter();

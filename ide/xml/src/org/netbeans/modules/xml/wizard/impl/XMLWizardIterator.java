@@ -152,7 +152,7 @@ public class XMLWizardIterator implements TemplateWizard.Iterator {
         }
         model = new DocumentModel(targetFolderURL);
         Object prop = templateWizard.getProperty (WizardDescriptor.PROP_CONTENT_DATA); // NOI18N
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[])prop;
         }
     }
@@ -227,7 +227,7 @@ public class XMLWizardIterator implements TemplateWizard.Iterator {
         if (panel.getComponent() instanceof JComponent) {
             ((JComponent)panel.getComponent()).putClientProperty(
                 WizardDescriptor.PROP_CONTENT_SELECTED_INDEX,                             // NOI18N
-                new Integer(current)
+                Integer.valueOf(current)
             );        
         }
         return panel;
@@ -533,8 +533,9 @@ public class XMLWizardIterator implements TemplateWizard.Iterator {
             return;
         }
         StringBuffer sb = new StringBuffer();
-        for (String ns : nsAttrs.keySet()) {
-            String nsPrefix = nsAttrs.get(ns);
+        for (Map.Entry<String, String> entry : nsAttrs.entrySet()) {
+            String ns = entry.getKey();
+            String nsPrefix = entry.getValue();
             if ((nsPrefix != null) && (nsPrefix.trim().length() > 0)) {
                 String xmlnsString = "xmlns:" + nsPrefix + "='" + ns + "'";
                 if (xmlBuffer.indexOf(xmlnsString) == -1) {

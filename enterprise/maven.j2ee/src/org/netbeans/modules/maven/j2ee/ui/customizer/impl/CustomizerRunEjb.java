@@ -38,7 +38,8 @@ public class CustomizerRunEjb extends BaseRunCustomizer {
 
         module = EjbJar.getEjbJar(project.getProjectDirectory());
         if (module != null) {
-            txtJ2EEVersion.setText(module.getJ2eeProfile().getDisplayName());
+            String profile = module.getJ2eeProfile().getDisplayName();
+            txtJ2EEVersion.setText(profile);
         }
 
         initDeployOnSave(jCheckBoxDeployOnSave, dosDescription);

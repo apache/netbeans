@@ -35,16 +35,11 @@ import org.testng.annotations.Test;
  */
 public class CommandHttpLifeCycleTest extends CommandHttpTest {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     private static final String CLUSTER_NAME = "ToolingCluster";
     private static final String INSTANCE_NAME = "ToolingInstance";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Test methods                                                           //
-    ////////////////////////////////////////////////////////////////////////////
 /*
  * TODO: Not yes implemented:
  * http://localhost:4848/__asadmin/list-nodes
@@ -110,7 +105,10 @@ public class CommandHttpLifeCycleTest extends CommandHttpTest {
     @Test(groups = {"http-commands"}, dependsOnMethods = {"testCreateClusterInstance"})
     public void testDeployWebApplication() {
         PayaraServer server = payaraServer();
-        Command command = new CommandDeploy("Test", CLUSTER_NAME, new File("target/test/simpleWeb.war"), "simpleWeb", null, null);
+        Command command = new CommandDeploy(
+                "Test", CLUSTER_NAME, new File("target/test/simpleWeb.war"),
+                "simpleWeb", null, null, false
+        );
         ResultString result = null;
         String value = null;
         try {

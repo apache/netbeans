@@ -29,8 +29,8 @@ import java.lang.reflect.Method;
 /** Support for indexed properties.
 *
 * @author Jan Jancura
- * @param T type of the whole property
- * @param E type of one element
+ * @param <T> type of the whole property
+ * @param <E> type of one element
 */
 public class IndexedPropertySupport<T,E> extends Node.IndexedProperty<T,E> {
     /** Instance of the bean. */
@@ -188,6 +188,6 @@ public class IndexedPropertySupport<T,E> extends Node.IndexedProperty<T,E> {
         }
 
         Object validInstance = Beans.getInstanceOf(instance, indexedSetter.getDeclaringClass());
-        indexedSetter.invoke(validInstance, new Object[] { new Integer(index), val });
+        indexedSetter.invoke(validInstance, new Object[] { index, val });
     }
 }

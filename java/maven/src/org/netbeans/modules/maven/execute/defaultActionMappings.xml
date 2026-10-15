@@ -79,12 +79,29 @@
         </goals>
     </action>
     <action>
+        <actionName>test.parallel</actionName>
+        <packagings>
+            <packaging>*</packaging>
+        </packagings>
+        <options>
+            <threads>0.5C</threads>
+            <projects>${projects}</projects>
+            <also-make></also-make>
+        </options>
+        <goals>
+            <goal>test</goal>
+        </goals>
+        <properties>
+            <parallel>classes</parallel>
+        </properties>
+    </action>
+    <action>
         <actionName>test.single</actionName>
         <packagings>
             <packaging>*</packaging>
         </packagings>
         <goals>
-            <goal>test-compile</goal>
+            <goal>process-test-classes</goal>
             <goal>surefire:test</goal>
         </goals>
         <properties>
@@ -98,11 +115,13 @@
             <packaging>*</packaging>
         </packagings>
         <goals>
-            <goal>integration-test</goal>
+            <goal>pre-integration-test</goal>
+            <goal>failsafe:integration-test</goal>
         </goals>
         <properties>
             <test>DummyToSkipUnitTests</test>
             <failIfNoTests>false</failIfNoTests>
+            <surefire.failIfNoSpecifiedTests>false</surefire.failIfNoSpecifiedTests>
             <it.test>${packageClassName}</it.test>
         </properties>
     </action>
@@ -114,10 +133,13 @@
         </packagings>
         <goals>
             <goal>process-classes</goal>
-            <goal>org.codehaus.mojo:exec-maven-plugin:1.5.0:exec</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.6.3:exec</goal>
         </goals>
         <properties>
-            <exec.args>-classpath %classpath ${packageClassName}</exec.args>
+            <exec.vmArgs></exec.vmArgs>
+            <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+            <exec.appArgs></exec.appArgs>
+            <exec.mainClass>${packageClassName}</exec.mainClass>
             <exec.executable>java</exec.executable>
         </properties>
     </action>
@@ -128,10 +150,13 @@
         </packagings>
         <goals>
             <goal>process-classes</goal>
-            <goal>org.codehaus.mojo:exec-maven-plugin:1.5.0:exec</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.6.3:exec</goal>
         </goals>
         <properties>
-            <exec.args>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath ${packageClassName}</exec.args>
+            <exec.vmArgs>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</exec.vmArgs>
+            <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+            <exec.appArgs></exec.appArgs>
+            <exec.mainClass>${packageClassName}</exec.mainClass>
             <exec.executable>java</exec.executable>
             <jpda.listen>true</jpda.listen>
         </properties>
@@ -143,11 +168,13 @@
         </packagings>
         <goals>
             <goal>process-classes</goal>
-            <goal>org.codehaus.mojo:exec-maven-plugin:1.5.0:exec</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.6.3:exec</goal>
         </goals>
         <properties>
-            <exec.args>-classpath %classpath ${packageClassName}</exec.args>
+            <exec.vmArgs></exec.vmArgs>
+            <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
             <exec.executable>java</exec.executable>
+            <exec.mainClass>${packageClassName}</exec.mainClass>
             <exec.classpathScope>${classPathScope}</exec.classpathScope>
         </properties>
     </action>
@@ -158,12 +185,14 @@
             <packaging>*</packaging>
         </packagings>
         <goals>
-            <goal>process-classes</goal>
-            <goal>org.codehaus.mojo:exec-maven-plugin:1.5.0:exec</goal>
+            <goal>process-test-classes</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.6.3:exec</goal>
         </goals>
         <properties>
-            <exec.args>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath ${packageClassName}</exec.args>
+            <exec.vmArgs>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</exec.vmArgs>
+            <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
             <exec.executable>java</exec.executable>
+            <exec.mainClass>${packageClassName}</exec.mainClass>
             <exec.classpathScope>${classPathScope}</exec.classpathScope>
             <jpda.listen>true</jpda.listen>
         </properties>
@@ -175,7 +204,7 @@
             <packaging>*</packaging>
         </packagings>
         <goals>
-            <goal>test-compile</goal>
+            <goal>process-test-classes</goal>
             <goal>surefire:test</goal>
         </goals>
         <properties>
@@ -192,11 +221,13 @@
             <packaging>*</packaging>
         </packagings>
         <goals>
-            <goal>integration-test</goal>
+            <goal>pre-integration-test</goal>
+            <goal>failsafe:integration-test</goal>
         </goals>
         <properties>
             <test>DummyToSkipUnitTests</test>
             <failIfNoTests>false</failIfNoTests>
+            <surefire.failIfNoSpecifiedTests>false</surefire.failIfNoSpecifiedTests>
             <it.test>${packageClassName}</it.test>
             <forkMode>once</forkMode>
             <maven.failsafe.debug>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</maven.failsafe.debug>
@@ -224,10 +255,12 @@
         </packagings>
         <goals>
             <goal>process-classes</goal>
-            <goal>org.codehaus.mojo:exec-maven-plugin:1.5.0:exec</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.6.3:exec</goal>
         </goals>
         <properties>
-            <exec.args>-classpath %classpath ${packageClassName}</exec.args>
+            <exec.vmArgs></exec.vmArgs>
+            <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+            <exec.mainClass>${packageClassName}</exec.mainClass>
             <exec.executable>java</exec.executable>
         </properties>
     </action>
@@ -239,10 +272,12 @@
         </packagings>
         <goals>
             <goal>process-classes</goal>
-            <goal>org.codehaus.mojo:exec-maven-plugin:1.5.0:exec</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.6.3:exec</goal>
         </goals>
         <properties>
-            <exec.args>-classpath %classpath ${packageClassName}</exec.args>
+            <exec.vmArgs></exec.vmArgs>
+            <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+            <exec.mainClass>${packageClassName}</exec.mainClass>
             <exec.executable>java</exec.executable>
             <exec.classpathScope>${classPathScope}</exec.classpathScope>
         </properties>
@@ -254,14 +289,15 @@
             <packaging>*</packaging>
         </packagings>
         <goals>
-            <goal>test-compile</goal>
+            <goal>process-test-classes</goal>
             <goal>surefire:test</goal>
         </goals>
         <properties>
             <test>${packageClassName}</test>
             <forkMode>once</forkMode>
-            <maven.surefire.debug>${exec.args}</maven.surefire.debug>
-            <!-- need to declare exec.args property to engage the StartupExtender infrastructure -->
+            <maven.surefire.debug>${exec.vmArgs}</maven.surefire.debug>
+            <!-- need to declare exec.args or exec.vmArgs property to engage the StartupExtender infrastructure -->
+            <exec.vmArgs/>
             <exec.args/>
         </properties>
     </action>

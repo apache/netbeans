@@ -53,9 +53,6 @@ public final class EjbJarVersion extends J2EEBaseVersion {
         "3.1", 3100,	// NOI18N
         "6.0", 6000    // NOI18N
         );
-    /** -----------------------------------------------------------------------
-     *  Implementation
-     */
 
     /** Creates a new instance of EjbJarVersion 
      */

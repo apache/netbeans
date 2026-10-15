@@ -21,6 +21,7 @@ package org.netbeans.modules.php.project.ui;
 import java.util.HashMap;
 import java.util.Map;
 import org.netbeans.junit.NbTestCase;
+import org.openide.filesystems.FileUtil;
 
 /**
  * @author Tomas Mysik
@@ -76,8 +77,8 @@ public class UtilsTest extends NbTestCase {
         correctDirs.put("/tmp/PHPProject", "/PHPProject");
         correctDirs.put("C:\\test", "D:\\test");
         final Map<String, String> incorrectDirs = new HashMap<>();
-        incorrectDirs.put("/tmp/PHPProject", "/tmp/PHPProject/copy");
-        incorrectDirs.put("/tmp/PHPProject/web", "/tmp/PHPProject");
+        incorrectDirs.put(FileUtil.normalizePath("/tmp/PHPProject"), FileUtil.normalizePath("/tmp/PHPProject/copy"));
+        incorrectDirs.put(FileUtil.normalizePath("/tmp/PHPProject/web"),FileUtil.normalizePath("/tmp/PHPProject"));
 
         for (Map.Entry<String, String> entry : correctDirs.entrySet()) {
             String sources = entry.getKey();

@@ -82,7 +82,7 @@ public class MoreAction extends NodeAction implements Presenter.Popup {
         Lookup l = Utilities.actionsGlobalContext();
         Collection<? extends MatchingObject> matchingObjects
                 = l.lookupAll(MatchingObject.class);
-        LinkedHashSet<Action> commonActions = new LinkedHashSet<Action>();
+        LinkedHashSet<Action> commonActions = new LinkedHashSet<>();
         boolean first = true;
         for (MatchingObject mo : matchingObjects) {
             DataObject dob = mo.getDataObject();
@@ -106,9 +106,9 @@ public class MoreAction extends NodeAction implements Presenter.Popup {
      */
     private JMenuItem actionsToMenu(Set<Action> actions, Lookup lookup) {
         // keeps actions for which was menu item created already (do not add them twice)
-        Set<Action> counted = new HashSet<Action>();
+        Set<Action> counted = new HashSet<>();
         // components to be added (separators are null)
-        List<Component> components = new ArrayList<Component>();
+        List<Component> components = new ArrayList<>();
 
         for (Action action : actions) {
             if (action != null && counted.add(action)) {

@@ -55,7 +55,7 @@ public abstract class CompletionResultItem implements CompletionItem {
         ICON_ELEMENT    = "element.png",     //NOI18N
         ICON_ATTRIBUTE  = "attribute.png",   //NOI18N
         ICON_VALUE      = "value.png",       //NOI18N
-        ICON_LOCATION   = "/org/netbeans/modules/xml/schema/completion/resources/"; //NOI18N
+        ICON_LOCATION   = "org/netbeans/modules/xml/schema/completion/resources/"; //NOI18N
 
     protected boolean shift = false;
     protected String typedChars;
@@ -334,9 +334,7 @@ public abstract class CompletionResultItem implements CompletionItem {
         return text;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////
-    ///////////////////methods from CompletionItem interface////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////
+    //methods from CompletionItem interface
     @Override
     public CompletionTask createDocumentationTask() {
         return new AsyncCompletionTask(new DocumentationQuery(this));

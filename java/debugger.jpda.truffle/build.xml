@@ -23,7 +23,13 @@
     <import file="../../nbbuild/templates/projectized.xml"/>
 
     <target name="build-init" depends="projectized.build-init">
-        <property name="truffle-backend.cp" value="${module.classpath}:${truffle-backend.cp.extra}"/>
+        <property name="truffle-backend.cp" value="${module.classpath}"/>
+        <mkdir dir="${jpda.classes.dir}"/>
+        <copy todir="${jpda.classes.dir}">
+            <resources>
+                <javaresource name="com/sun/jdi/StringReference.class"/>
+            </resources>
+        </copy>
     </target>
 
     <target name="compile-truffle-backend" depends="init">

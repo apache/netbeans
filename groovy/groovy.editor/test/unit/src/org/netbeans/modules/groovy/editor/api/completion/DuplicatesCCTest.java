@@ -24,9 +24,6 @@ package org.netbeans.modules.groovy.editor.api.completion;
  * @author Petr Hejl
  */
 import java.util.Map;
-import org.netbeans.modules.groovy.editor.test.GroovyTestBase;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
@@ -36,13 +33,17 @@ import org.openide.filesystems.FileUtil;
  *
  * @author schmidtm
  */
-public class DuplicatesCCTest extends GroovyTestBase {
+public class DuplicatesCCTest extends GroovyCCTestBase {
 
     String TEST_BASE = "testfiles/completion/duplicates/";
 
     public DuplicatesCCTest(String testName) {
         super(testName);
-        Logger.getLogger(CompletionHandler.class.getName()).setLevel(Level.FINEST);
+    }
+
+    @Override
+    protected String getTestType() {
+        return ".";
     }
 
     protected @Override Map<String, ClassPath> createClassPathsForTest() {

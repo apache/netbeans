@@ -232,12 +232,12 @@ public class AnnotationProcessors {
             }
 
             abstractProcessor = info.getElements().getTypeElement(ABSTRACT_PROCESSOR_TYPE);
-            if (!Utilities.isValidElement(e)) {
+            if (!Utilities.isValidElement(abstractProcessor)) {
                 return false;
             }
             abstractProcessorType = abstractProcessor.asType();
             baseProcessor = info.getElements().getTypeElement(PROCESSOR_TYPE);
-            if (!Utilities.isValidElement(e)) {
+            if (!Utilities.isValidElement(baseProcessor)) {
                 return false;
             }
             baseProcessorType = baseProcessor.asType();
@@ -361,7 +361,7 @@ public class AnnotationProcessors {
                     )
                 ), false);
             MethodTree overrideMethod = make.Method(
-                    make.Modifiers(Collections.singleton(Modifier.PUBLIC), 
+                    make.Modifiers(Collections.singleton(Modifier.PUBLIC),
                             // @Override is since 1.5 as well as AnnotationProcessors.
                             // we always implement in subclass; so @Override is desired.
                             Collections.singletonList(
@@ -382,14 +382,8 @@ public class AnnotationProcessors {
                     List<? extends AnnotationTree> annos = new ArrayList<>(nct.getModifiers().getAnnotations());
                     if (annos.remove(tp.getLeaf())) {
                         make.asRemoved(tp.getLeaf());
-                        nct = make.Class(
-                                make.Modifiers(nct.getModifiers(), annos), 
-                                nct.getSimpleName().toString(), 
-                                nct.getTypeParameters(), 
-                                nct.getExtendsClause(), 
-                                nct.getImplementsClause(), 
-                                nct.getMembers()
-                        );
+                        wc.rewrite(nct.getModifiers(),
+                                   make.Modifiers(nct.getModifiers(), annos));
                     }
                 }
             }

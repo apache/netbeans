@@ -461,7 +461,7 @@ public final class EngineOptionsPanel extends ProfilerOptionsPanel {
 
 //        JLabel trackEveryLabel1 = new JLabel();
 //        Mnemonics.setLocalizedText(trackEveryLabel1, Bundle.MemorySettingsBasicPanel_TrackEveryLabelText());
-////        trackEveryLabel1.setToolTipText(Bundle.StpTrackEveryTooltip());
+// //        trackEveryLabel1.setToolTipText(Bundle.StpTrackEveryTooltip());
 //        c = new GridBagConstraints();
 //        c.gridx = 0;
 //        c.gridy = y;
@@ -473,7 +473,7 @@ public final class EngineOptionsPanel extends ProfilerOptionsPanel {
 //
 //        trackEverySpinner = new JExtendedSpinner(new SpinnerNumberModel(10, 1, 65535, 1));
 //        trackEveryLabel1.setLabelFor(trackEverySpinner);
-////        trackEverySpinner.setToolTipText(Bundle.StpTrackEveryTooltip());
+// //        trackEverySpinner.setToolTipText(Bundle.StpTrackEveryTooltip());
 //        c = new GridBagConstraints();
 //        c.gridx = 1;
 //        c.gridy = y;
@@ -484,7 +484,7 @@ public final class EngineOptionsPanel extends ProfilerOptionsPanel {
 //        add(trackEverySpinner, c);
 //
 //        JLabel trackEveryLabel2 = new JLabel(Bundle.MemorySettingsBasicPanel_AllocLabelText());
-////        trackEveryLabel2.setToolTipText(Bundle.StpTrackEveryTooltip());
+// //        trackEveryLabel2.setToolTipText(Bundle.StpTrackEveryTooltip());
 //        c = new GridBagConstraints();
 //        c.gridx = 2;
 //        c.gridy = y++;

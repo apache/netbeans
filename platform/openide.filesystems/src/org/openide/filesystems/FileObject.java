@@ -30,7 +30,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -39,6 +38,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Enumerations;
 import org.openide.util.NbBundle;
 import org.openide.util.Lookup;
@@ -114,7 +114,8 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
 
     /** Copies this file. This allows the filesystem to perform any additional
     * operation associated with the copy. But the default implementation is simple
-    * copy of the file and its attributes
+    * copy of the file and its attributes  Since version 9.32, the file POSIX
+    * permissions are copied as well.
     *
     * @param target target folder to move this file to
     * @param name new basename of file
@@ -167,14 +168,14 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
     }
 
     /**
-     * Gets a textual represtentation of this <code>FileObject</code>.
+     * Gets a textual representation of this <code>FileObject</code>.
      * The precise format is not defined. In particular it is probably
      * <em>not</em> a resource path.
      * For that purpose use {@link #getPath} directly.
      * <p>Typically it is useful for debugging purposes. Example of correct usage:
      * <pre>
-     * <font class="type">FileObject</font> <font class="variable-name">fo</font> = getSomeFileObject();
-     * ErrorManager.getDefault().log(<font class="string">"Got a change from "</font> + fo);
+     * <span class="type">FileObject</span> <span class="variable-name">fo</span> = getSomeFileObject();
+     * ErrorManager.getDefault().log(<span class="string">"Got a change from "</span> + fo);
      * </pre>
      * @return some representation of this file object
      */
@@ -197,7 +198,7 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
      * <p>Subclasses are strongly encouraged to override this method.
      * <p>Never use this to get a display name for the file! Use {@link FileUtil#getFileDisplayName}.
      * <p>Do not use this method to find a file path on disk! Use {@link FileUtil#toFile}.
-     * @return the path, for example <samp>path/from/root.ext</samp>
+     * @return the path, for example <code>path/from/root.ext</code>
      * @see FileSystem#findResource
      * @since 3.7
      */
@@ -210,8 +211,8 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
     /** Get fully-qualified filename. Does so by walking through all folders
     * to the root of the filesystem. Separates files with provided <code>separatorChar</code>.
     * The extension, if present, is separated from the basename with <code>extSepChar</code>.
-    * <p><strong>Note:</strong> <samp>fo.getPath()</samp> will have the
-    * same effect as using this method with <samp>/</samp> and <samp>.</samp> (the standard
+    * <p><strong>Note:</strong> <code>fo.getPath()</code> will have the
+    * same effect as using this method with <code>/</code> and <code>.</code> (the standard
     * path and extension delimiters).
     * @param separatorChar char to separate folders and files
     * @param extSepChar char to separate extension
@@ -444,13 +445,12 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
     * @param attrName name of the attribute
     * @return appropriate (serializable) value or <CODE>null</CODE> if the attribute is unset (or could not be properly restored for some reason)
     */
-    abstract public Object getAttribute(String attrName);
+    public abstract Object getAttribute(String attrName);
 
     /** Set the file attribute with the specified name. The actual meaning of 
      * this method is implementation dependent. It is generally expected that
      * the attribute will later be available from {@link #getAttribute(java.lang.String)}
      * method.
-     * <p>
      * <div class="nonnormative">
      *   Many <a href="@TOP@/org/openide/filesystems/FileSystem.html">FileSystem</a>
      *   implementations (since version 7.43) 
@@ -458,8 +458,8 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
      *   <code>setAttribute</code> method. One can use 
      *   prefix <code>methodvalue:</code> or <code>newvalue:</code>
      *   to store references to 
-     *   <a href="@JDK@/java/lang/reflect/Method.html">Method</a> or
-     *   <a href="@JDK@/java/lang/Class.html">Class</a> respectively. 
+     *   <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/reflect/Method.html">Method</a> or
+     *   <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/Class.html">Class</a> respectively. 
      *   The meaning is then similar to {@link XMLFileSystem} attributes
      *  <code>methodvalue</code> and <code>newvalue</code>.
      * </div>
@@ -467,13 +467,13 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
     * @param value new value or <code>null</code> to clear the attribute. Must be serializable, although particular filesystems may or may not use serialization to store attribute values.
     * @exception IOException if the attribute cannot be set. If serialization is used to store it, this may in fact be a subclass such as {@link java.io.NotSerializableException}.
     */
-    abstract public void setAttribute(String attrName, Object value)
+    public abstract void setAttribute(String attrName, Object value)
     throws IOException;
 
     /** Get all file attribute names for this file.
     * @return enumeration of keys (as strings)
     */
-    abstract public Enumeration<String> getAttributes();
+    public abstract Enumeration<String> getAttributes();
 
     /** Test whether this file has the specified extension.
     * @param ext the extension the file should have
@@ -777,13 +777,27 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
     public abstract OutputStream getOutputStream(FileLock lock)
     throws IOException;
 
-    /** Get output stream.
+    /** Get output stream. This method does its best even
+     * when this file object is {@linkplain #isValid() invalid} - since
+     * version 9.23 it tries to recreate the parent hierarchy
+     * and really open the stream.
+     *
      * @return output stream to overwrite the contents of this file
-     * @throws IOException if an error occurs (the file is invalid, etc.)
+     * @throws IOException if an error occurs
      * @throws FileAlreadyLockedException if the file is already locked
      * @since 6.6
      */
     public final OutputStream getOutputStream() throws FileAlreadyLockedException, IOException  {
+        if (!isValid()) {
+            final FileObject recreate = FileUtil.createData(getFileSystem().getRoot(), getPath());
+            if (recreate != null) {
+                return recreate.getOutputStreamImpl();
+            }
+        }
+        return getOutputStreamImpl();
+    }
+
+    private OutputStream getOutputStreamImpl() throws IOException {
         final FileLock lock = lock();
         final OutputStream os;
         try {
@@ -942,6 +956,23 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
     * @exception IllegalArgumentException if <code>this</code> is not a folder
     */
     public FileObject getFileObject(String relativePath) {
+        return getFileObject(relativePath, true);
+    }
+
+    /** Retrieve file or folder relative to a current folder, with a given relative path.
+    * <em>Note</em> that neither file nor folder is created on disk. This method isn't final since revision 1.93.
+    * Since 7.45 common implementations of this method
+    * accept also ".." which is interpreted as a reference to parent.
+    *
+    * @param relativePath is just basename of the file or (since 4.16) the relative path delimited by '/'
+    * @param onlyExisting if <code>false</code> then a non-<code>null</code> (but {@link #isValid() invalid}
+    *   file object is returned even if it doesn't exist
+    * @return the object representing requested file or <CODE>null</CODE> (when <code>onlyExisting</code> is true)
+    *   if the file or folder does not exist
+    * @exception IllegalArgumentException if <code>this</code> is not a folder
+    * @since 9.23
+    */
+    public FileObject getFileObject(String relativePath, boolean onlyExisting) {
         if (relativePath.startsWith("/") && !relativePath.startsWith("//")) {
             relativePath = relativePath.substring(1);
         }
@@ -959,7 +990,15 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
                 myObj = myObj.getParent();
             } else {
                 if (!nameExt.equals(".")) {
-                    myObj = myObj.getFileObject(nameExt, null);
+                    FileObject nextObj = myObj.getFileObject(nameExt, null);
+                    if (nextObj == null && !onlyExisting) {
+                        try {
+                            nextObj = new VirtualFileObject(myObj.getFileSystem(), myObj, nameExt, st.hasMoreTokens());
+                        } catch (FileStateInvalidException ex) {
+                            throw new IllegalStateException(ex);
+                        }
+                    }
+                    myObj = nextObj;
                 }
             }
         }
@@ -1021,7 +1060,7 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
      * events. Preferably it delivers them asynchronously. The assumption
      * is that the file will be (at least partially) written before
      * the listeners start to process the first event. The safety is additionally
-     * ensured by <q>mutual exclusion</q> between output and input streams 
+     * ensured by <em>mutual exclusion</em> between output and input streams 
      * for the same file (any call to {@link #getInputStream()} will be blocked
      * for at least two seconds if there is existing open output stream). 
      * If you finish writing the content of your file in those two seconds,
@@ -1082,7 +1121,7 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
      * <ul>
      * <li>If no exception is thrown, proceed with the operation.
      * <li>If a UserQuestionException is thrown,
-     * call {@link UserQuestionException#confirmed} on it
+     * call <a href="@org-openide-util-ui@/org/openide/util/UserQuestionException.html#confirmed()" >UserQuestionException#confirmed</a> on it
      * (asynchronously - do not block any important threads). If <code>true</code>,
      * proceed with the operation. If <code>false</code>, exit.
      * If an <code>IOException</code> is thrown, notify it and exit.
@@ -1092,7 +1131,6 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
      * </ul>
      * In either case, exit.
      * </ol>
-     * <p>
      *
      * @return <CODE>true</CODE> if file is read-only
      * @deprecated Please use the {@link #canWrite}.
@@ -1158,7 +1196,7 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
      * Note that while content can be reset, it may not be possible to reset attributes.
      * <p>Implementors: for historical reasons this method checks {@link #getAttribute}
      * for a special attribute named {@code removeWritables} which must be of type
-     * {@link Callable Callable<Void>}. If present, the file is considered modified.
+     * {@link Callable Callable&lt;Void&gt;}. If present, the file is considered modified.
      * @since 7.55
      */
     public final void revert() throws IOException {
@@ -1213,6 +1251,10 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
      * @since 7.57
     */
     public final URL toURL() {
+        return computeURL();
+    }
+
+    URL computeURL() {
         return URLMapper.findURL(this, URLMapper.INTERNAL);
     }
 
@@ -1226,7 +1268,7 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
         try {
             URI uri = toURL().toURI();
             assert uri.isAbsolute() : uri;
-            assert uri.equals(uri.normalize()) : uri + " == " + uri.normalize() + " from " + this;
+            assert uri.equals(BaseUtilities.normalizeURI(uri)) : uri + " == " + BaseUtilities.normalizeURI(uri) + " from " + this;
             return uri;
         } catch (URISyntaxException x) {
             throw new IllegalStateException(x);
@@ -1325,8 +1367,8 @@ public abstract class FileObject extends Object implements Serializable, Lookup.
     private static class ED extends FileSystem.EventDispatcher {
         private FCLSupport.Op op;
         private Enumeration<FileChangeListener> en;
-        final private List<FileChangeListener> fsList;
-        final private List<FileChangeListener> repList;
+        private final List<FileChangeListener> fsList;
+        private final List<FileChangeListener> repList;
         
         
         private FileEvent fe;

@@ -37,8 +37,8 @@ import org.openide.util.EditableProperties;
 public class ClientProjectEnhancedBrowserImpl implements ClientProjectEnhancedBrowserImplementation {
 
     
-    final private ClientSideProject project;
-    final private WebBrowser browser;
+    private final ClientSideProject project;
+    private final WebBrowser browser;
     private BrowserSupport browserSupport;
     private ProjectConfigurationCustomizerImpl cust = null;
 

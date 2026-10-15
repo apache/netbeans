@@ -380,7 +380,7 @@ public class IconEditor extends PropertyEditorSupport
                 }
             }
         }
-        String[] fileNames = namesSet.toArray(new String[namesSet.size()]);
+        String[] fileNames = namesSet.toArray(new String[0]);
         Arrays.sort(fileNames);
         String[] namesWithNone = new String[fileNames.length + 1];
         namesWithNone[0] = noneText;
@@ -434,13 +434,13 @@ public class IconEditor extends PropertyEditorSupport
         if (fo != null) {
             try {
                 try {
-                    Image image = ImageIO.read(fo.getURL());
+                    Image image = ImageIO.read(fo.toURL());
                     if (image != null) { // issue 157546
                         return new NbImageIcon(TYPE_CLASSPATH, resName, new ImageIcon(image));
                     }
                 } catch (IllegalArgumentException iaex) { // Issue 178906
                     Logger.getLogger(IconEditor.class.getName()).log(Level.INFO, null, iaex);
-                    return new NbImageIcon(TYPE_CLASSPATH, resName, new ImageIcon(fo.getURL()));
+                    return new NbImageIcon(TYPE_CLASSPATH, resName, new ImageIcon(fo.toURL()));
                 }
             } catch (IOException ex) { // should not happen
                 Logger.getLogger(IconEditor.class.getName()).log(Level.WARNING, null, ex);

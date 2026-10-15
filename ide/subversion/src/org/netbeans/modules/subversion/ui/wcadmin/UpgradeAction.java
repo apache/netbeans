@@ -43,6 +43,7 @@ import org.openide.awt.StatusDisplayer;
 import org.openide.nodes.Node;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
+import org.openide.util.Utilities;
 import org.tigris.subversion.svnclientadapter.SVNClientException;
 
 /**
@@ -184,7 +185,7 @@ public class UpgradeAction extends ContextAction {
     }
 
     private boolean forceUpgrade (String path) {
-        return JOptionPane.showConfirmDialog(null, NbBundle.getMessage(UpgradeAction.class, "MSG_Upgrade_forceUpgrade", path), //NOI18N
+        return JOptionPane.showConfirmDialog(Utilities.findDialogParent(), NbBundle.getMessage(UpgradeAction.class, "MSG_Upgrade_forceUpgrade", path), //NOI18N
                 NbBundle.getMessage(UpgradeAction.class, "LBL_Upgrade_title", path), //NOI18N
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION;
     }

@@ -21,7 +21,7 @@ package org.netbeans.modules.php.editor.elements;
 
 import java.util.Collection;
 import java.util.EnumSet;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,6 +29,7 @@ import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.api.QualifiedName;
 import org.netbeans.modules.php.editor.api.elements.TypeResolver;
 import org.netbeans.modules.php.editor.elements.PhpElementImpl.Separator;
+import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.model.impl.VariousUtils;
 import org.openide.util.Pair;
 
@@ -43,10 +44,11 @@ public final class TypeResolverImpl implements TypeResolver {
     private final boolean isNullableType;
 
     public static Set<TypeResolver> parseTypes(final String typeSignature) {
-        Set<TypeResolver> retval = new HashSet<>();
+        // use LinkedHashSet to keep the type order
+        // avoid being changed type order(e.g. int|float|Foo|Bar) when an override method is generated
+        Set<TypeResolver> retval = new LinkedHashSet<>();
         if (typeSignature != null && typeSignature.length() > 0) {
-            final String regexp = String.format("\\%s", Separator.PIPE.toString()); //NOI18N
-            for (String type : typeSignature.split(regexp)) {
+            for (String type : Type.splitTypes(typeSignature)) {
                 String typeName = type;
                 boolean isNullableType = CodeUtils.isNullableType(typeName);
                 if (isNullableType) {
@@ -71,7 +73,7 @@ public final class TypeResolverImpl implements TypeResolver {
     }
 
     public static Set<TypeResolver> forNames(final Collection<Pair<QualifiedName, Boolean>> names) {
-        Set<TypeResolver> retval = new HashSet<>();
+        Set<TypeResolver> retval = new LinkedHashSet<>();
         for (Pair<QualifiedName, Boolean> name : names) {
             QualifiedName qualifiedName = name.first();
             final String typeName = qualifiedName.toString();

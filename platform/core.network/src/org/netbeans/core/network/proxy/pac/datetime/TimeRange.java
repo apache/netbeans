@@ -38,7 +38,7 @@ import java.util.Calendar;
  */
 class TimeRange {
 
-    private final static int UNDEFINED = -1;
+    private static final int UNDEFINED = -1;
     private final int hourMin;
     private final int hourMax;
     private final int minuteMin;

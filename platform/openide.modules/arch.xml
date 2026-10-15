@@ -418,7 +418,7 @@ from the module system.
 Suppresses checks to ensure that module section classes are actually loaded
 from the module itself.
 </api>
-<api type="import" group="systemproperty" name="netbeans.full.hack" category="friend" url="http://wiki.netbeans.org/DevFaqNetBeansFullHack">
+<api type="import" group="systemproperty" name="netbeans.full.hack" category="friend" url="https://netbeans.apache.org/wiki/DevFaqNetBeansFullHack">
 Avoids using GUI when user-visible error conditions occur.
 </api>
 <api type="import" group="systemproperty" name="netbeans.mainclass" category="friend">
@@ -460,7 +460,7 @@ Prints messages when resources or classes are loaded from JARs.
         Of course components present in modules are initially loaded using
         reflection. Otherwise there is little semantic use of it (transparent
         optimizations only). One exception: pending a solution to <a
-        href="http://www.netbeans.org/issues/show_bug.cgi?id=29382">#29382</a>,
+        href="https://bz.apache.org/netbeans/show_bug.cgi?id=29382">#29382</a>,
         one portion of the Filesystems API is accessed via reflection when
         merging XML layers from modules.
     </answer>

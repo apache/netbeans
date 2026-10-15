@@ -37,6 +37,7 @@ import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.indexing.TransactionContext;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.JavacParser;
@@ -230,6 +231,63 @@ public class SourceAnalyzerTest extends NbTestCase {
         }
     }
 
+    public void testPermittedSubclasses() throws Exception {
+        final FileObject javaFile = FileUtil.toFileObject(TestFileUtils.writeFile(
+             new File(FileUtil.toFile(src),"Test.java"),        //NOI18N
+             "public class Test permits Foo {   \n" +           //NOI18N
+             "    public static void main(String[] args) {\n" + //NOI18N
+             "    }\n" +                                        //NOI18N
+             "}\n" +                                            //NOI18N
+             "class Foo extends Test {\n" +                     //NOI18N
+             "}"));                                             //NOI18N
+
+        final DiagnosticListener<JavaFileObject> diag = new DiagnosticListener<JavaFileObject>() {
+
+            private final Queue<Diagnostic<? extends JavaFileObject>> problems = new ArrayDeque<Diagnostic<? extends JavaFileObject>>();
+
+            @Override
+            public void report(Diagnostic<? extends JavaFileObject> diagnostic) {
+                problems.offer(diagnostic);
+            }
+        };
+        SLQ slq = Lookup.getDefault().lookup(SLQ.class);
+        String prevSourceLevel = slq.setSourceLevel("17");
+        TransactionContext.beginStandardTransaction(src.toURL(), true, ()->false, true);
+        try {
+            final ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().create(
+                src,
+                null,
+                true,
+                true,
+                false,
+                true);
+            final JavaFileObject jfo = FileObjects.sourceFileObject(javaFile, src);
+            final JavacTaskImpl jt = JavacParser.createJavacTask(
+                cpInfo,
+                diag,
+                SourceLevelQuery.getSourceLevel(src),  //NOI18N
+                SourceLevelQuery.Profile.DEFAULT,
+                null, null, null, null, Arrays.asList(jfo));
+            final Iterable<? extends CompilationUnitTree> trees = jt.parse();
+            jt.enter();
+            jt.analyze();
+            final SourceAnalyzerFactory.SimpleAnalyzer sa = SourceAnalyzerFactory.createSimpleAnalyzer();
+            List<Pair<Pair<BinaryName, String>, Object[]>> data = sa.analyseUnit(trees.iterator().next(), jt);
+            assertEquals(2, data.size());
+            Pair<Pair<BinaryName, java.lang.String>, java.lang.Object[]> testRecord =
+                    data.stream()
+                        .filter(p -> p.first().first().getBinaryName().equals("Test"))
+                        .findAny()
+                        .orElseThrow();
+            assertTrue(((Collection)testRecord.second()[0]).contains(
+                DocumentUtil.encodeUsage("Foo", EnumSet.<ClassIndexImpl.UsageType>of(   //NOI18N
+                    ClassIndexImpl.UsageType.TYPE_REFERENCE))));
+        } finally {
+            TransactionContext.get().rollBack();
+            slq.setSourceLevel(prevSourceLevel);
+        }
+    }
+
 
     public static final class CPP implements ClassPathProvider {
 
@@ -245,7 +303,7 @@ public class SourceAnalyzerTest extends NbTestCase {
                     case ClassPath.COMPILE:
                         return ClassPath.EMPTY;
                     case ClassPath.BOOT:
-                        return ClassPathSupport.createClassPath(System.getProperty("sun.boot.class.path")); //NOI18N
+                        return BootClassPathUtil.getBootClassPath();
                 }
             }
             return null;
@@ -254,7 +312,7 @@ public class SourceAnalyzerTest extends NbTestCase {
 
     public static final class SLQ implements SourceLevelQueryImplementation2 {
 
-        private static final Result2 R = new Result2() {
+        private final Result2 R = new Result2() {
 
             @Override
             public SourceLevelQuery.Profile getProfile() {
@@ -262,7 +320,7 @@ public class SourceAnalyzerTest extends NbTestCase {
             }
             @Override
             public String getSourceLevel() {
-                return "1.8";   //NOI18N
+                return sourceLevel;   //NOI18N
             }
             @Override
             public void addChangeListener(ChangeListener listener) {
@@ -273,6 +331,7 @@ public class SourceAnalyzerTest extends NbTestCase {
         };
 
         private volatile FileObject root;
+        private volatile String sourceLevel = "1.8";
 
         @Override
         public Result getSourceLevel(FileObject javaFile) {
@@ -283,7 +342,12 @@ public class SourceAnalyzerTest extends NbTestCase {
             return null;
         }
 
+        public String setSourceLevel(String newSourceLevel) {
+            String prev = sourceLevel;
 
+            sourceLevel = newSourceLevel;
+            return prev;
+        }
 
     }
 }

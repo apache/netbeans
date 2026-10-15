@@ -25,6 +25,7 @@ import org.netbeans.modules.versioning.util.common.VCSCommitOptions;
 import org.netbeans.modules.versioning.util.common.VCSCommitTable;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -169,7 +170,7 @@ public class CommitAction extends SingleRepositoryAction {
                 GitRepositoryState.CHERRY_PICKING, GitRepositoryState.CHERRY_PICKING_RESOLVED).contains(state)) {
             File f = new File(GitUtils.getGitFolderForRoot(repository), "MERGE_MSG"); //NOI18N
             try {
-                message = new String(FileUtils.getFileContentsAsByteArray(f), "UTF-8"); //NOI18N
+                message = new String(FileUtils.getFileContentsAsByteArray(f), StandardCharsets.UTF_8);
             } catch (IOException ex) {
                 LOG.log(Level.FINE, null, ex);
             }
@@ -217,10 +218,10 @@ public class CommitAction extends SingleRepositoryAction {
                     outputInRed(NbBundle.getMessage(CommitAction.class, "MSG_COMMIT_TITLE_SEP")); // NOI18N
 
                     if(addCandidates.size() > 0) {
-                        client.add(addCandidates.toArray(new File[addCandidates.size()]), getProgressMonitor());
+                        client.add(addCandidates.toArray(new File[0]), getProgressMonitor());
                     }
                     if(deleteCandidates.size() > 0) {
-                        client.remove(deleteCandidates.toArray(new File[deleteCandidates.size()]), false, getProgressMonitor());
+                        client.remove(deleteCandidates.toArray(new File[0]), false, getProgressMonitor());
                     }
 
                     if(GitModuleConfig.getDefault().getSignOff() && commiter != null) {
@@ -253,7 +254,7 @@ public class CommitAction extends SingleRepositoryAction {
                     Git.getInstance().getFileStatusCache().refreshAllRoots(commitCandidates);
                     outputInRed(NbBundle.getMessage(CommitAction.class, "MSG_COMMIT_DONE")); // NOI18N
                     output(""); // NOI18N
-                    Git.getInstance().getHistoryProvider().fireHistoryChange(commitCandidates.toArray(new File[commitCandidates.size()]));
+                    Git.getInstance().getHistoryProvider().fireHistoryChange(commitCandidates.toArray(new File[0]));
                 }
             } catch (GitException ex) {
                 LOG.log(Level.WARNING, null, ex);
@@ -300,7 +301,7 @@ public class CommitAction extends SingleRepositoryAction {
             if(hooks.isEmpty()) {
                 return message;
             }
-            File[] hookFiles = commitCandidates.toArray(new File[commitCandidates.size()]);
+            File[] hookFiles = commitCandidates.toArray(new File[0]);
             for (GitHook hook : hooks) {
                 try {
                     GitHookContext context = new GitHookContext(hookFiles, message, new GitHookContext.LogEntry[] {});
@@ -322,7 +323,7 @@ public class CommitAction extends SingleRepositoryAction {
             if(hooks.isEmpty()) {
                 return;
             }
-            File[] hookFiles = commitCandidates.toArray(new File[commitCandidates.size()]);
+            File[] hookFiles = commitCandidates.toArray(new File[0]);
             LogEntry logEntry = new LogEntry(info.getFullMessage(),
                     info.getAuthor().toString(),
                     info.getRevision(),
@@ -341,7 +342,7 @@ public class CommitAction extends SingleRepositoryAction {
                 }
                 GitRevisionInfo info = getClient().commit(
                         state == GitRepositoryState.MERGING_RESOLVED || state == GitRepositoryState.CHERRY_PICKING_RESOLVED
-                                ? new File[0] : commitCandidates.toArray(new File[commitCandidates.size()]),
+                                ? new File[0] : commitCandidates.toArray(new File[0]),
                         message, author, commiter, amend, getProgressMonitor());
                 printInfo(info);
                 return info;
@@ -376,7 +377,7 @@ public class CommitAction extends SingleRepositoryAction {
         Git.getInstance().getRequestProcessor().post(new Runnable() {
             @Override
             public void run() {
-                FileUtil.refreshFor(filesToRefresh.toArray(new File[filesToRefresh.size()]));
+                FileUtil.refreshFor(filesToRefresh.toArray(new File[0]));
             }
         }, 100);
     }
@@ -487,7 +488,7 @@ public class CommitAction extends SingleRepositoryAction {
                         
                     });
                 }
-                SystemAction.get(CommitAction.class).performAction(nodes.toArray(new Node[nodes.size()]));
+                SystemAction.get(CommitAction.class).performAction(nodes.toArray(new Node[0]));
             }
         }
         

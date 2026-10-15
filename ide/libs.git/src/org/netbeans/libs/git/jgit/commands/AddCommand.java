@@ -110,7 +110,7 @@ public class AddCommand extends GitCommand {
                         if (f != null) { // the file exists
                             File file = new File(repository.getWorkTree().getAbsolutePath() + File.separator + path);
                             DirCacheEntry entry = new DirCacheEntry(path);
-                            entry.setLastModified(f.getEntryLastModified());
+                            entry.setLastModified(f.getEntryLastModifiedInstant());
                             int fm = f.getEntryFileMode().getBits();
                             long sz = f.getEntryLength();
                             Path p = null;
@@ -129,7 +129,7 @@ public class AddCommand extends GitCommand {
                                 entry.setLength(0);
                                 BasicFileAttributes attrs = Files.readAttributes(p, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
                                 if (attrs != null) {
-                                    entry.setLastModified(attrs.lastModifiedTime().toMillis());
+                                    entry.setLastModified(attrs.lastModifiedTime().toInstant());
                                 }
                                 entry.setObjectId(inserter.insert(Constants.OBJ_BLOB, Constants.encode(link.toString())));
                             } else if ((f.getEntryFileMode().getBits() & FileMode.TYPE_TREE) == FileMode.TYPE_TREE) {
@@ -153,7 +153,7 @@ public class AddCommand extends GitCommand {
                                 }
                             }
                             ObjectId oldId = treeWalk.getObjectId(0);
-                            if (ObjectId.equals(oldId, ObjectId.zeroId()) || !ObjectId.equals(oldId, entry.getObjectId())) {
+                            if (ObjectId.isEqual(oldId, ObjectId.zeroId()) || !ObjectId.isEqual(oldId, entry.getObjectId())) {
                                 listener.notifyFile(file, path);
                             }
                             builder.add(entry);

@@ -108,7 +108,7 @@ public class PropertiesAction extends NodeAction {
 
         private Node[] nodes() {
             Collection<? extends Node> c = lookup.lookupAll(Node.class);
-            return c.toArray(new Node[c.size()]);
+            return c.toArray(new Node[0]);
         }
 
         /** Overrides superclass method, adds delegate description. */

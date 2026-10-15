@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -113,16 +114,14 @@ public class XMLStorage {
         if (fo == null) throw new NullPointerException ();
         if (content == null) throw new NullPointerException ();
         requestProcessor.post (new Runnable () {
+            @Override
             public void run () {
                 try {
                     FileLock lock = fo.lock ();
                     try {
                         OutputStream os = fo.getOutputStream (lock);
-                        Writer writer = new OutputStreamWriter (os, "UTF-8"); // NOI18N
-                        try {
+                        try (Writer writer = new OutputStreamWriter (os, StandardCharsets.UTF_8)) {
                             writer.write (content);
-                        } finally {
-                            writer.close ();
                         } 
                     } finally {
                         lock.releaseLock ();

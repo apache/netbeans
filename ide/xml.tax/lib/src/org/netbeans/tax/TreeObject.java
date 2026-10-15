@@ -51,7 +51,7 @@ public abstract class TreeObject implements TreeEventModel {
     private boolean readOnly;
     
     /** */
-    transient private TreeEventChangeSupport eventChangeSupport;
+    private transient TreeEventChangeSupport eventChangeSupport;
     
     
     //
@@ -102,11 +102,11 @@ public abstract class TreeObject implements TreeEventModel {
     
     /**
      */
-    abstract public boolean isInContext ();
+    public abstract boolean isInContext ();
     
     /**
      */
-    abstract public void removeFromContext () throws ReadOnlyException;
+    public abstract void removeFromContext () throws ReadOnlyException;
     
     
     //

@@ -30,6 +30,29 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
   <changes>
+      <change id="lookup-handler-interpolation">
+          <api name="templates"/>
+          <summary>Support to pass additional services or information, layer can declare handlers. Defaut processing handles folders. Interpolates
+            variables in filenames.</summary>
+          <version major="1" minor="23"/>
+          <date year="2021" month="10" day="22"/>
+          <compatibility addition="yes" binary="compatible" source="compatible"/>
+          <description>
+                <p>
+                    Allows the template API caller to communicate additional details or services
+                    to template handlers and decorators.
+                </p>
+                <p>
+                    Allows to specify a handler for a template, as a counterpart to WizardIterator.
+                </p>
+                <p>
+                    Default processing can now handle folders, will copy them recursively. Interpolates variable references
+                    in filenames.
+                </p>
+          </description>
+          <class package="org.netbeans.api.templates" name="CreateFromTemplateDecorator"/>
+          <class package="org.netbeans.api.templates" name="FileBuilder"/>
+      </change>
       <change id="decorators">
           <api name="templates"/>
           <summary>Support for decorating the creation process</summary>
@@ -56,7 +79,7 @@
           <description>
               One can now create project wizards that create new projects
               from Maven archetypes. See the
-              <a href="@TOP@overview-summary.html#html-and-maven">how-to</a>
+              <a href="@TOP@index.html#html-and-maven">how-to</a>
               for more details.
           </description>
           <class package="org.netbeans.api.templates" name="TemplateRegistration"/>
@@ -107,7 +130,7 @@
           <compatibility addition="yes" deletion="no" binary="compatible"
                          source="compatible" deprecation="yes"/>
           <description>
-              One can use <a href="@TOP@/overview-summary.html#javaTargetChooser">targetChooser:java</a>
+              One can use <a href="@TOP@/index.html#javaTargetChooser">targetChooser:java</a>
               to request Java-like target chooser showing java packages.
           </description>
           <issue number="249891"/>
@@ -122,7 +145,7 @@
                          source="compatible" deprecation="yes"/>
           <description>
               One new attribute
-              <a href="@org-netbeans-api-templates@/org/netbeans/api/templates/TemplateRegistration.html#page--">
+              <a href="@org-netbeans-api-templates@/org/netbeans/api/templates/TemplateRegistration.html#page()">
 page()</a>
               to allow usage of HTML based UI driven by Java or JavaScript.
           </description>
@@ -181,11 +204,10 @@ page()</a>
 -->
     <head>
       <title>Change History for the Templates API</title>
-      <link rel="stylesheet" href="prose.css" type="text/css"/>
     </head>
     <body>
 
-<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+<p class="overviewlink"><a href="index.html">Overview</a></p>
 
 <h1>Introduction</h1>
 

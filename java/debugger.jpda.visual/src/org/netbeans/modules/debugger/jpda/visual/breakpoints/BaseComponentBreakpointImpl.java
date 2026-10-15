@@ -38,7 +38,7 @@ import org.netbeans.modules.debugger.jpda.visual.JavaComponentInfo;
  *
  * @author jbachorik
  */
-abstract public class BaseComponentBreakpointImpl extends ComponentBreakpointImpl implements PropertyChangeListener {
+public abstract class BaseComponentBreakpointImpl extends ComponentBreakpointImpl implements PropertyChangeListener {
     protected ComponentBreakpoint cb;
     protected JPDADebugger debugger;
 
@@ -49,9 +49,9 @@ abstract public class BaseComponentBreakpointImpl extends ComponentBreakpointImp
         cb.addPropertyChangeListener(this);
     }
     
-    abstract protected void initServiceBreakpoints();
+    protected abstract void initServiceBreakpoints();
     
-    final protected void addMethodBreakpoint(MethodBreakpoint mb, ObjectVariable variableComponent) {
+    protected final void addMethodBreakpoint(MethodBreakpoint mb, ObjectVariable variableComponent) {
         mb.setHidden(true);
         mb.setInstanceFilters(debugger, new ObjectVariable[] { variableComponent });
         mb.addJPDABreakpointListener(new JPDABreakpointListener() {
@@ -64,7 +64,7 @@ abstract public class BaseComponentBreakpointImpl extends ComponentBreakpointImp
         serviceBreakpoints.add(mb);
     }
     
-    final protected void navigateToCustomCode(final JPDAThread thread) {
+    protected final void navigateToCustomCode(final JPDAThread thread) {
         CallStackFrame callStackFrame = null;
         try {
             CallStackFrame[] callStack = thread.getCallStack();

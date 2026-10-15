@@ -35,7 +35,8 @@ import org.netbeans.modules.web.beans.impl.model.AbstractObjectProvider.Refresha
  */
 class InterceptorObject extends PersistentObject implements Refreshable {
     
-    static final String INTERCEPTOR = "javax.interceptor.Interceptor";  // NOI18N
+    private static final String INTERCEPTOR = "javax.interceptor.Interceptor";  // NOI18N
+    private static final String INTERCEPTOR_JAKARTA = "jakarta.interceptor.Interceptor";  // NOI18N
 
     InterceptorObject( AnnotationModelHelper helper,
             TypeElement typeElement )
@@ -55,7 +56,7 @@ class InterceptorObject extends PersistentObject implements Refreshable {
                 getAllAnnotationMirrors(type);
         Map<String, ? extends AnnotationMirror> annotationsByType = 
                 getHelper().getAnnotationsByType( allAnnotationMirrors );
-        return annotationsByType.get( INTERCEPTOR ) != null ;
+        return annotationsByType.get(INTERCEPTOR_JAKARTA) != null || annotationsByType.get(INTERCEPTOR) != null;
     }
 
 }

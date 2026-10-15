@@ -107,7 +107,6 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.ui.ProjectProblems;
 import org.netbeans.modules.javaee.project.api.PersistenceProviderSupplierImpl;
 import org.netbeans.modules.javaee.project.api.ant.AntProjectConstants;
-import org.netbeans.modules.j2ee.common.ProjectUtil;
 import org.netbeans.modules.j2ee.common.ServerUtil;
 import org.netbeans.modules.javaee.project.api.WhiteListUpdater;
 import org.netbeans.modules.javaee.project.spi.JavaEEProjectSettingsImplementation;
@@ -302,11 +301,12 @@ public class EjbJarProject implements Project, FileChangeListener {
         deployOnSaveSupport = new DeployOnSaveSupportProxy();
         ProjectManager.mutex().postWriteRequest(
              new Runnable () {
+                 @Override
                  public void run() {
                      try {
                          updateProjectXML ();
                      } catch (IOException ioe) {
-                         Logger.getLogger("global").log(Level.INFO, null, ioe);
+                         LOGGER.log(Level.INFO, null, ioe);
                      }
                  }
              }
@@ -321,6 +321,7 @@ public class EjbJarProject implements Project, FileChangeListener {
     
     private ClassPathModifier.Callback createClassPathModifierCallback() {
         return new ClassPathModifier.Callback() {
+            @Override
             public String getClassPathProperty(SourceGroup sg, String type) {
                 assert sg != null : "SourceGroup cannot be null";  //NOI18N
                 assert type != null : "Type cannot be null";  //NOI18N
@@ -331,6 +332,7 @@ public class EjbJarProject implements Project, FileChangeListener {
                 return classPathProperty[0];
             }
 
+            @Override
             public String getElementName(String classpathProperty) {
                 if (ProjectProperties.JAVAC_CLASSPATH.equals(classpathProperty)) {
                     return ClassPathSupportCallbackImpl.ELEMENT_INCLUDED_LIBRARIES;
@@ -343,6 +345,7 @@ public class EjbJarProject implements Project, FileChangeListener {
     public synchronized ClassPathUiSupport.Callback getClassPathUiSupportCallback() {
         if (classPathUiSupportCallback == null) {
             classPathUiSupportCallback = new ClassPathUiSupport.Callback() {
+                @Override
                 public void initItem(ClassPathSupport.Item item) {
                     if (item.getType() != ClassPathSupport.Item.TYPE_LIBRARY || !item.getLibrary().getType().equals(J2eePlatform.LIBRARY_TYPE)) {
                         item.setAdditionalProperty(ClassPathSupportCallbackImpl.INCLUDE_IN_DEPLOYMENT, "true");
@@ -358,6 +361,7 @@ public class EjbJarProject implements Project, FileChangeListener {
      * Returns the project directory
      * @return the directory the project is located in
      */
+    @Override
     public FileObject getProjectDirectory() {
         return helper.getProjectDirectory();
     }
@@ -383,6 +387,7 @@ public class EjbJarProject implements Project, FileChangeListener {
         return updateHelper;
     }
 
+    @Override
     public Lookup getLookup() {
         return lookup;
     }
@@ -496,9 +501,7 @@ public class EjbJarProject implements Project, FileChangeListener {
         }
         return this.testRoots;
     }
-
-    
-    
+        
     WebServicesSupport getAPIWebServicesSupport() {
         return apiWebServicesSupport;
     }
@@ -546,6 +549,7 @@ public class EjbJarProject implements Project, FileChangeListener {
         }
         brokenAlertShown = true;
         SwingUtilities.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 try {
                     Object ok = NbBundle.getMessage(BrokenReferencesAlertPanel.class,"MSG_Broken_References_OK");
@@ -579,6 +583,7 @@ public class EjbJarProject implements Project, FileChangeListener {
     /** Store configured project name. */
     public void setName(final String name) {
         ProjectManager.mutex().writeAccess(new Runnable() {
+            @Override
             public void run() {
                 Element data = helper.getPrimaryConfigurationData(true);
                 // XXX replace by XMLUtil when that has findElement, findText, etc.
@@ -621,26 +626,32 @@ public class EjbJarProject implements Project, FileChangeListener {
         }
     }
 
+    @Override
     public void fileAttributeChanged (org.openide.filesystems.FileAttributeEvent fe) {
     }    
     
+    @Override
     public void fileChanged (org.openide.filesystems.FileEvent fe) {
     }
     
+    @Override
     public void fileDataCreated (org.openide.filesystems.FileEvent fe) {
         FileObject fo = fe.getFile ();
         checkLibraryFolder (fo);
     }
     
+    @Override
     public void fileDeleted (org.openide.filesystems.FileEvent fe) {
     }
     
     public void registerJ2eePlatformListener(final J2eePlatform platform) {
         // listen to classpath changes
         j2eePlatformListener = new PropertyChangeListener() {
+            @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getPropertyName().equals(J2eePlatform.PROP_CLASSPATH)) {
                     ProjectManager.mutex().writeAccess(new Runnable() {
+                        @Override
                         public void run() {
                             EditableProperties ep = helper.getProperties(
                                     AntProjectHelper.PRIVATE_PROPERTIES_PATH);
@@ -670,9 +681,11 @@ public class EjbJarProject implements Project, FileChangeListener {
         }
     }
         
+    @Override
     public void fileFolderCreated (FileEvent fe) {
     }
     
+    @Override
     public void fileRenamed (FileRenameEvent fe) {
         FileObject fo = fe.getFile ();
         checkLibraryFolder (fo);
@@ -685,7 +698,7 @@ public class EjbJarProject implements Project, FileChangeListener {
         
         if (fo.getParent ().equals (libFolder)) {
             try {
-                classPathModifier.addRoots(new URL[] {FileUtil.getArchiveRoot(fo.getURL())}, ProjectProperties.JAVAC_CLASSPATH);
+                classPathModifier.addRoots(new URL[] {FileUtil.getArchiveRoot(fo.toURL())}, ProjectProperties.JAVAC_CLASSPATH);
             }
             catch (IOException e) {
                 Exceptions.printStackTrace(e);
@@ -708,7 +721,7 @@ public class EjbJarProject implements Project, FileChangeListener {
                 GeneratedFilesHelper.BUILD_IMPL_XML_PATH,
                 EjbJarProject.class.getResource("resources/build-impl.xsl"));
             final Boolean projectPropertiesSave = EjbJarProject.this.projectPropertiesSave.get();
-            if ((projectPropertiesSave.booleanValue() && (state & GeneratedFilesHelper.FLAG_MODIFIED) == GeneratedFilesHelper.FLAG_MODIFIED) ||
+            if ((projectPropertiesSave && (state & GeneratedFilesHelper.FLAG_MODIFIED) == GeneratedFilesHelper.FLAG_MODIFIED) ||
                 state == (GeneratedFilesHelper.FLAG_UNKNOWN | GeneratedFilesHelper.FLAG_MODIFIED | 
                     GeneratedFilesHelper.FLAG_OLD_PROJECT_XML | GeneratedFilesHelper.FLAG_OLD_STYLESHEET)) {  //missing genfiles.properties
                 try {
@@ -739,6 +752,7 @@ public class EjbJarProject implements Project, FileChangeListener {
         
         ProjectOpenedHookImpl() {}
         
+        @Override
         protected void projectOpened() {
             evaluator().addPropertyChangeListener(EjbJarProject.this.ejbModule);
 
@@ -777,7 +791,7 @@ public class EjbJarProject implements Project, FileChangeListener {
                             libs.add(FileUtil.getArchiveRoot(children[i].toURL()));
                         }
                     }
-                    classPathModifier.addRoots(libs.toArray(new URL[libs.size()]), ProjectProperties.JAVAC_CLASSPATH);
+                    classPathModifier.addRoots(libs.toArray(new URL[0]), ProjectProperties.JAVAC_CLASSPATH);
                     libFolder.addFileChangeListener (EjbJarProject.this);
                 }
                 
@@ -840,7 +854,7 @@ public class EjbJarProject implements Project, FileChangeListener {
                 Profile profile = EjbJarProject.this.getEjbModule().getJ2eeProfile();
                 Utils.logUsage(EjbJarProject.class, "USG_PROJECT_OPEN_EJB", new Object[] { serverName, profile }); // NOI18N
             } catch (IOException e) {
-                Logger.getLogger("global").log(Level.INFO, null, e);
+                LOGGER.log(Level.INFO, null, e);
             }
             
             // register project's classpaths to GlobalPathRegistry;
@@ -855,8 +869,10 @@ public class EjbJarProject implements Project, FileChangeListener {
 
             try {
                 getProjectDirectory().getFileSystem().runAtomicAction(new AtomicAction() {
+                    @Override
                     public void run() throws IOException {
                         ProjectManager.mutex().writeAccess(new Runnable() {
+                            @Override
                             public void run() {
                                 updateProject();
                             }
@@ -864,7 +880,7 @@ public class EjbJarProject implements Project, FileChangeListener {
                     }
                 });
             } catch (IOException e) {
-                Logger.getLogger("global").log(Level.INFO, null, e);
+                LOGGER.log(Level.INFO, null, e);
             }
             
             String compileOnSave = getProperty(AntProjectHelper.PROJECT_PROPERTIES_PATH, EjbJarProjectProperties.J2EE_COMPILE_ON_SAVE);
@@ -970,6 +986,7 @@ public class EjbJarProject implements Project, FileChangeListener {
             }
         }
         
+        @Override
         protected void projectClosed() {
             evaluator().removePropertyChangeListener(EjbJarProject.this.ejbModule);
 
@@ -1014,6 +1031,7 @@ public class EjbJarProject implements Project, FileChangeListener {
      */
     private final class AntArtifactProviderImpl implements AntArtifactProvider {
         
+        @Override
         public AntArtifact[] getBuildArtifacts() {
             return new AntArtifact[] {
                 helper.createSimpleAntArtifact(JavaProjectConstants.ARTIFACT_TYPE_JAR, "dist.jar", helper.getStandardPropertyEvaluator(), "dist", "clean"), // NOI18N
@@ -1025,16 +1043,19 @@ public class EjbJarProject implements Project, FileChangeListener {
 
     private class DeployOnSaveSupportProxy implements DeployOnSaveSupport {
 
+        @Override
         public synchronized void addArtifactListener(ArtifactListener listener) {
             css.addArtifactListener(listener);
             artifactSupport.addArtifactListener(listener);
         }
 
+        @Override
         public synchronized void removeArtifactListener(ArtifactListener listener) {
             css.removeArtifactListener(listener);
             artifactSupport.removeArtifactListener(listener);
         }
 
+        @Override
         public boolean containsIdeArtifacts() {
             return DeployOnSaveUtils.containsIdeArtifacts(eval, updateHelper, "build.classes.dir");
         }
@@ -1117,6 +1138,7 @@ public class EjbJarProject implements Project, FileChangeListener {
             EjbJarProject.this.evaluator().removePropertyChangeListener(this);
         }
 
+        @Override
         public void propertyChange(PropertyChangeEvent evt) {
             if (EjbJarProjectProperties.META_INF.equals(evt.getPropertyName())
                     || EjbJarProjectProperties.J2EE_COMPILE_ON_SAVE.equals(evt.getPropertyName())
@@ -1501,11 +1523,11 @@ public class EjbJarProject implements Project, FileChangeListener {
     };
 
     private final class RecommendedTemplatesImpl implements RecommendedTemplates, PrivilegedTemplates {
-        transient private boolean isEE5 = false;
-        transient private boolean isEE6Plus = false;//if project support ee6 full version or above
-        transient private boolean checked = false;
-        transient private boolean isArchive = false;
-        transient private UpdateHelper helper = null;
+        private transient boolean isEE5 = false;
+        private transient boolean isEE6Plus = false;//if project support ee6 full version or above
+        private transient boolean checked = false;
+        private transient boolean isArchive = false;
+        private transient UpdateHelper helper = null;
 
         RecommendedTemplatesImpl(UpdateHelper helper) {
             this.helper = helper;
@@ -1541,14 +1563,14 @@ public class EjbJarProject implements Project, FileChangeListener {
             } else {
                 privileged.addAll(Arrays.asList(PRIVILEGED_NAMES));
             } 
-            return privileged.toArray(new String[privileged.size()]);
+            return privileged.toArray(new String[0]);
         }
         
-        private void checkEnvironment(){
-            if (!checked){
+        private void checkEnvironment() {
+            if (!checked) {
                 Profile version=Profile.fromPropertiesString(evaluator().getProperty(EjbJarProjectProperties.J2EE_PLATFORM));
                 isEE5 = Profile.JAVA_EE_5==version;
-                isEE6Plus = Profile.JAVA_EE_6_FULL==version || Profile.JAVA_EE_7_FULL==version;
+                isEE6Plus = version.isAtLeast(Profile.JAVA_EE_6_WEB);
                 final Object srcType = helper.getAntProjectHelper().
                         getStandardPropertyEvaluator().getProperty(EjbJarProjectProperties.JAVA_SOURCE_BASED);
                 if ("false".equals(srcType)) {
@@ -1570,22 +1592,27 @@ public class EjbJarProject implements Project, FileChangeListener {
             this.apiModule = apiModule;
         }
 
+        @Override
         public FileObject getDeploymentDescriptor() {
             return apiModule.getDeploymentDescriptor();
         }
 
+        @Override
         public String getJ2eePlatformVersion() {
             return apiModule.getJ2eePlatformVersion();
         }
 
+        @Override
         public FileObject[] getJavaSources() {
             return apiModule.getJavaSources();
         }
 
+        @Override
         public FileObject getMetaInf() {
             return apiModule.getMetaInf();
         }
 
+        @Override
         public MetadataModel<EjbJarMetadata> getMetadataModel() {
             return apiModule.getMetadataModel();
         }
@@ -1599,22 +1626,27 @@ public class EjbJarProject implements Project, FileChangeListener {
             this.provider = provider;
         }
 
+        @Override
         public FileObject getDeploymentDescriptor() {
             return provider.getDeploymentDescriptor();
         }
 
+        @Override
         public Profile getJ2eeProfile() {
             return provider.getJ2eeProfile();
         }
 
+        @Override
         public FileObject[] getJavaSources() {
             return provider.getJavaSources();
         }
 
+        @Override
         public FileObject getMetaInf() {
             return provider.getMetaInf();
         }
 
+        @Override
         public MetadataModel<EjbJarMetadata> getMetadataModel() {
             return provider.getMetadataModel();
         }
@@ -1623,6 +1655,7 @@ public class EjbJarProject implements Project, FileChangeListener {
 
     private class EjbExtenderImplementation implements AntBuildExtenderImplementation {
         //add targets here as required by the external plugins..
+        @Override
         public List<String> getExtensibleTargets() {
             String[] targets = new String[] {
                 "-do-init", "-init-check", "-post-clean", "jar", "-pre-pre-compile","-do-compile","-do-compile-single", "-pre-dist" //NOI18N
@@ -1630,6 +1663,7 @@ public class EjbJarProject implements Project, FileChangeListener {
             return Arrays.asList(targets);
         }
 
+        @Override
         public Project getOwningProject() {
             return EjbJarProject.this;
         }

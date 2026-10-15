@@ -162,7 +162,7 @@ public class AddMethodToInterfaceTemplateTest extends GeneratorTestBase {
 
         };
             
-        FileObject folderFO = URLMapper.findFileObject(getWorkDir().toURL());
+        FileObject folderFO = URLMapper.findFileObject(getWorkDir().toURI().toURL());
         assertTrue(folderFO != null);
         // create new file
         FileObject tempFO = FileUtil.getConfigFile("Templates/Classes/Interface.java"); // NOI18N
@@ -172,13 +172,13 @@ public class AddMethodToInterfaceTemplateTest extends GeneratorTestBase {
         // add type params
         JavaSource secondSrc = JavaSource.forFileObject(newIfcDO.getPrimaryFile());
         String res = TestUtilities.copyFileToString(FileUtil.toFile(newIfcDO.getPrimaryFile()));
-        System.err.println(res);
+        //System.err.println(res);
         secondSrc.runModificationTask(task).commit();
         res = TestUtilities.copyFileToString(FileUtil.toFile(newIfcDO.getPrimaryFile()));
-        System.err.println(res);
+        //System.err.println(res);
         result.commit();
         res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
     }
     
     String getGoldenPckg() {

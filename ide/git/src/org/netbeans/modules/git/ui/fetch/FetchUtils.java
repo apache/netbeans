@@ -209,7 +209,7 @@ public final class FetchUtils {
             }
         }
         try {
-            new BranchSynchronizer().syncBranches(repository, branchNames.toArray(new String[branchNames.size()]), progress, supp.getLogger());
+            new BranchSynchronizer().syncBranches(repository, branchNames.toArray(new String[0]), progress, supp.getLogger());
         } catch (GitException ex) {
             Logger.getLogger(FetchUtils.class.getName()).log(Level.INFO, null, ex);
         }

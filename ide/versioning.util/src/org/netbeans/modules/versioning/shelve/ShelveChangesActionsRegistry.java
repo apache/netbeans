@@ -57,7 +57,7 @@ public final class ShelveChangesActionsRegistry {
         }
     }
     
-    public static abstract class ShelveChangesActionProvider {
+    public abstract static class ShelveChangesActionProvider {
         
         public abstract Action getAction ();
         

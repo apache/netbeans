@@ -32,6 +32,7 @@ import java.beans.FeatureDescriptor;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
+import org.openide.util.ImageUtilities;
 
 
 /** An implementation of SheetCellRenderer that wraps custom InplaceEditors
@@ -123,7 +124,7 @@ final class SheetCellRenderer implements TableCellRenderer {
                 if (o instanceof Icon) {
                     lbl.setIcon((Icon) o);
                 } else if (o instanceof Image) {
-                    lbl.setIcon(new ImageIcon((Image) o));
+                    lbl.setIcon(ImageUtilities.image2Icon((Image) o));
                 } else {
                     lbl.setIcon(null);
                 }

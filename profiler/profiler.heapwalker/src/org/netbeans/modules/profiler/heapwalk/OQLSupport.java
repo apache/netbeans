@@ -166,7 +166,7 @@ public final class OQLSupport {
     }
 
 
-    public static abstract class OQLNode<T extends Object> extends DefaultMutableTreeNode {
+    public abstract static class OQLNode<T extends Object> extends DefaultMutableTreeNode {
 
         public OQLNode(T userObject) { super(userObject); }
 
@@ -186,7 +186,7 @@ public final class OQLSupport {
 
     }
 
-    private static abstract class SpecialNode extends OQLNode<Object> {
+    private abstract static class SpecialNode extends OQLNode<Object> {
 
         public SpecialNode() { super(null); }
 

@@ -1,0 +1,1211 @@
+<testresult testFile='enumerations_01.php'>
+    <scanner>
+        <token id='T_ENUM' start='815' end='819'>
+            <text>enum</text>
+        </token>
+        <token id='T_STRING' start='820' end='826'>
+            <text>Simple</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='827' end='828'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='828' end='829'>
+            <text>}</text>
+        </token>
+        <token id='T_ENUM' start='831' end='835'>
+            <text>enum</text>
+        </token>
+        <token id='T_STRING' start='836' end='843'>
+            <text>Simple1</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='844' end='845'>
+            <text>{</text>
+        </token>
+        <token id='T_CASE' start='850' end='854'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='855' end='856'>
+            <text>A</text>
+        </token>
+        <token id='T_SEMICOLON' start='856' end='857'>
+            <text>;</text>
+        </token>
+        <token id='T_CASE' start='862' end='866'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='867' end='868'>
+            <text>B</text>
+        </token>
+        <token id='T_SEMICOLON' start='868' end='869'>
+            <text>;</text>
+        </token>
+        <token id='T_CASE' start='874' end='878'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='879' end='880'>
+            <text>C</text>
+        </token>
+        <token id='T_SEMICOLON' start='880' end='881'>
+            <text>;</text>
+        </token>
+        <token id='T_CASE' start='886' end='890'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='891' end='892'>
+            <text>D</text>
+        </token>
+        <token id='T_SEMICOLON' start='892' end='893'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='894' end='895'>
+            <text>}</text>
+        </token>
+        <token id='T_ENUM' start='897' end='901'>
+            <text>enum</text>
+        </token>
+        <token id='T_STRING' start='902' end='915'>
+            <text>BackedCaseInt</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='915' end='916'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='917' end='920'>
+            <text>int</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='921' end='922'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='922' end='923'>
+            <text>}</text>
+        </token>
+        <token id='T_ENUM' start='925' end='929'>
+            <text>enum</text>
+        </token>
+        <token id='T_STRING' start='930' end='944'>
+            <text>BackedCaseInt1</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='944' end='945'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='946' end='949'>
+            <text>int</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='950' end='951'>
+            <text>{</text>
+        </token>
+        <token id='T_CASE' start='956' end='960'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='961' end='962'>
+            <text>A</text>
+        </token>
+        <token id='T_EQUAL' start='963' end='964'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='965' end='966'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='966' end='967'>
+            <text>;</text>
+        </token>
+        <token id='T_CASE' start='972' end='976'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='977' end='978'>
+            <text>B</text>
+        </token>
+        <token id='T_EQUAL' start='979' end='980'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='981' end='982'>
+            <text>2</text>
+        </token>
+        <token id='T_SEMICOLON' start='982' end='983'>
+            <text>;</text>
+        </token>
+        <token id='T_CASE' start='988' end='992'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='993' end='994'>
+            <text>C</text>
+        </token>
+        <token id='T_EQUAL' start='995' end='996'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='997' end='998'>
+            <text>3</text>
+        </token>
+        <token id='T_SEMICOLON' start='998' end='999'>
+            <text>;</text>
+        </token>
+        <token id='T_CASE' start='1004' end='1008'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='1009' end='1010'>
+            <text>D</text>
+        </token>
+        <token id='T_EQUAL' start='1011' end='1012'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1013' end='1014'>
+            <text>4</text>
+        </token>
+        <token id='T_SEMICOLON' start='1014' end='1015'>
+            <text>;</text>
+        </token>
+        <token id='T_CASE' start='1020' end='1024'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='1025' end='1026'>
+            <text>E</text>
+        </token>
+        <token id='T_EQUAL' start='1027' end='1028'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1029' end='1030'>
+            <text>1</text>
+        </token>
+        <token id='T_SL' start='1031' end='1033'>
+            <text>&lt;&lt;</text>
+        </token>
+        <token id='T_LNUMBER' start='1034' end='1035'>
+            <text>3</text>
+        </token>
+        <token id='T_SEMICOLON' start='1035' end='1036'>
+            <text>;</text>
+        </token>
+        <token id='T_CASE' start='1041' end='1045'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='1046' end='1047'>
+            <text>F</text>
+        </token>
+        <token id='T_EQUAL' start='1048' end='1049'>
+            <text>=</text>
+        </token>
+        <token id='T_MINUS' start='1050' end='1051'>
+            <text>-</text>
+        </token>
+        <token id='T_LNUMBER' start='1051' end='1052'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='1052' end='1053'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1054' end='1055'>
+            <text>}</text>
+        </token>
+        <token id='T_ENUM' start='1057' end='1061'>
+            <text>enum</text>
+        </token>
+        <token id='T_STRING' start='1062' end='1078'>
+            <text>BackedCaseString</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1078' end='1079'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1080' end='1086'>
+            <text>string</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1087' end='1088'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1088' end='1089'>
+            <text>}</text>
+        </token>
+        <token id='T_ENUM' start='1091' end='1095'>
+            <text>enum</text>
+        </token>
+        <token id='T_STRING' start='1096' end='1113'>
+            <text>BackedCaseString1</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1113' end='1114'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1115' end='1121'>
+            <text>string</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1122' end='1123'>
+            <text>{</text>
+        </token>
+        <token id='T_CASE' start='1128' end='1132'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='1133' end='1134'>
+            <text>A</text>
+        </token>
+        <token id='T_EQUAL' start='1135' end='1136'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1137' end='1140'>
+            <text>"A"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1140' end='1141'>
+            <text>;</text>
+        </token>
+        <token id='T_CASE' start='1146' end='1150'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='1151' end='1152'>
+            <text>B</text>
+        </token>
+        <token id='T_EQUAL' start='1153' end='1154'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1155' end='1158'>
+            <text>"B"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1158' end='1159'>
+            <text>;</text>
+        </token>
+        <token id='T_CASE' start='1164' end='1168'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='1169' end='1170'>
+            <text>C</text>
+        </token>
+        <token id='T_EQUAL' start='1171' end='1172'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1173' end='1176'>
+            <text>"C"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1176' end='1177'>
+            <text>;</text>
+        </token>
+        <token id='T_CASE' start='1182' end='1186'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='1187' end='1188'>
+            <text>D</text>
+        </token>
+        <token id='T_EQUAL' start='1189' end='1190'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1191' end='1194'>
+            <text>"D"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1194' end='1195'>
+            <text>;</text>
+        </token>
+        <token id='T_CASE' start='1200' end='1204'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='1205' end='1206'>
+            <text>E</text>
+        </token>
+        <token id='T_EQUAL' start='1207' end='1208'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1209' end='1212'>
+            <text>"E"</text>
+        </token>
+        <token id='T_NEKUDA' start='1213' end='1214'>
+            <text>.</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1215' end='1218'>
+            <text>"E"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1218' end='1219'>
+            <text>;</text>
+        </token>
+        <token id='T_CASE' start='1224' end='1228'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='1229' end='1230'>
+            <text>F</text>
+        </token>
+        <token id='T_EQUAL' start='1231' end='1232'>
+            <text>=</text>
+        </token>
+        <token id='T_START_HEREDOC' start='1233' end='1238'>
+            <text>&lt;&lt;&lt;F\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='1238' end='1269'>
+            <text>    Test\n    Test\n    Test\n    </text>
+        </token>
+        <token id='T_END_HEREDOC' start='1269' end='1270'>
+            <text>F</text>
+        </token>
+        <token id='T_SEMICOLON' start='1270' end='1271'>
+            <text>;</text>
+        </token>
+        <token id='T_CASE' start='1276' end='1280'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='1281' end='1282'>
+            <text>G</text>
+        </token>
+        <token id='T_EQUAL' start='1283' end='1284'>
+            <text>=</text>
+        </token>
+        <token id='T_START_NOWDOC' start='1285' end='1292'>
+            <text>&lt;&lt;&lt;&apos;G&apos;\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='1292' end='1319'>
+            <text>    Test\n    Test\n    Test\n</text>
+        </token>
+        <token id='T_END_NOWDOC' start='1319' end='1324'>
+            <text>    G</text>
+        </token>
+        <token id='T_SEMICOLON' start='1324' end='1325'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1326' end='1327'>
+            <text>}</text>
+        </token>
+        <token id='T_ENUM' start='1329' end='1333'>
+            <text>enum</text>
+        </token>
+        <token id='T_STRING' start='1334' end='1338'>
+            <text>Impl</text>
+        </token>
+        <token id='T_IMPLEMENTS' start='1339' end='1349'>
+            <text>implements</text>
+        </token>
+        <token id='T_STRING' start='1350' end='1356'>
+            <text>Iface1</text>
+        </token>
+        <token id='T_COMMA' start='1356' end='1357'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='1358' end='1364'>
+            <text>Iface2</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1365' end='1366'>
+            <text>{</text>
+        </token>
+        <token id='T_CASE' start='1371' end='1375'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='1376' end='1377'>
+            <text>A</text>
+        </token>
+        <token id='T_SEMICOLON' start='1377' end='1378'>
+            <text>;</text>
+        </token>
+        <token id='T_CASE' start='1383' end='1387'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='1388' end='1389'>
+            <text>B</text>
+        </token>
+        <token id='T_SEMICOLON' start='1389' end='1390'>
+            <text>;</text>
+        </token>
+        <token id='T_CASE' start='1395' end='1399'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='1400' end='1401'>
+            <text>C</text>
+        </token>
+        <token id='T_SEMICOLON' start='1401' end='1402'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1408' end='1414'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1415' end='1423'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1424' end='1434'>
+            <text>implMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1434' end='1435'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1435' end='1439'>
+            <text>Test</text>
+        </token>
+        <token id='T_VARIABLE' start='1440' end='1445'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1445' end='1446'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1446' end='1447'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1448' end='1452'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1453' end='1454'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1459' end='1460'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1461' end='1462'>
+            <text>}</text>
+        </token>
+        <token id='T_ATTRIBUTE' start='1464' end='1466'>
+            <text>#[</text>
+        </token>
+        <token id='T_STRING' start='1466' end='1468'>
+            <text>A1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1468' end='1469'>
+            <text>]</text>
+        </token>
+        <token id='T_ENUM' start='1470' end='1474'>
+            <text>enum</text>
+        </token>
+        <token id='T_STRING' start='1475' end='1485'>
+            <text>Attributes</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1485' end='1486'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1487' end='1490'>
+            <text>int</text>
+        </token>
+        <token id='T_IMPLEMENTS' start='1491' end='1501'>
+            <text>implements</text>
+        </token>
+        <token id='T_STRING' start='1502' end='1507'>
+            <text>Iface</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1508' end='1509'>
+            <text>{</text>
+        </token>
+        <token id='T_ATTRIBUTE' start='1514' end='1516'>
+            <text>#[</text>
+        </token>
+        <token id='T_STRING' start='1516' end='1518'>
+            <text>A1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1518' end='1519'>
+            <text>]</text>
+        </token>
+        <token id='T_CASE' start='1524' end='1528'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='1529' end='1530'>
+            <text>A</text>
+        </token>
+        <token id='T_EQUAL' start='1531' end='1532'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1533' end='1534'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='1534' end='1535'>
+            <text>;</text>
+        </token>
+        <token id='T_ATTRIBUTE' start='1540' end='1542'>
+            <text>#[</text>
+        </token>
+        <token id='T_STRING' start='1542' end='1544'>
+            <text>A1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1544' end='1545'>
+            <text>]</text>
+        </token>
+        <token id='T_CASE' start='1550' end='1554'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='1555' end='1556'>
+            <text>B</text>
+        </token>
+        <token id='T_EQUAL' start='1557' end='1558'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1559' end='1560'>
+            <text>2</text>
+        </token>
+        <token id='T_SEMICOLON' start='1560' end='1561'>
+            <text>;</text>
+        </token>
+        <token id='T_ATTRIBUTE' start='1567' end='1569'>
+            <text>#[</text>
+        </token>
+        <token id='T_STRING' start='1569' end='1571'>
+            <text>A1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1571' end='1572'>
+            <text>]</text>
+        </token>
+        <token id='T_CONST' start='1577' end='1582'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1583' end='1592'>
+            <text>CONSTANT1</text>
+        </token>
+        <token id='T_EQUAL' start='1593' end='1594'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1595' end='1605'>
+            <text>"constant"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1605' end='1606'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1611' end='1616'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1617' end='1626'>
+            <text>CONSTANT2</text>
+        </token>
+        <token id='T_EQUAL' start='1627' end='1628'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1629' end='1633'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1633' end='1635'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1635' end='1636'>
+            <text>A</text>
+        </token>
+        <token id='T_SEMICOLON' start='1636' end='1637'>
+            <text>;</text>
+        </token>
+        <token id='T_ATTRIBUTE' start='1643' end='1645'>
+            <text>#[</text>
+        </token>
+        <token id='T_STRING' start='1645' end='1647'>
+            <text>A1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1647' end='1648'>
+            <text>]</text>
+        </token>
+        <token id='T_PUBLIC' start='1653' end='1659'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1660' end='1668'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1669' end='1679'>
+            <text>implMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1679' end='1680'>
+            <text>(</text>
+        </token>
+        <token id='T_ATTRIBUTE' start='1680' end='1682'>
+            <text>#[</text>
+        </token>
+        <token id='T_STRING' start='1682' end='1684'>
+            <text>A1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1684' end='1685'>
+            <text>]</text>
+        </token>
+        <token id='T_STRING' start='1686' end='1690'>
+            <text>Test</text>
+        </token>
+        <token id='T_VARIABLE' start='1691' end='1696'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1696' end='1697'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1697' end='1698'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1699' end='1703'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1704' end='1705'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1710' end='1711'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1712' end='1713'>
+            <text>}</text>
+        </token>
+        <token id='T_TRAIT' start='1715' end='1720'>
+            <text>trait</text>
+        </token>
+        <token id='T_STRING' start='1721' end='1730'>
+            <text>TestTrait</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1731' end='1732'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='1737' end='1743'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1744' end='1750'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1751' end='1759'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1760' end='1764'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1764' end='1765'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1765' end='1766'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1766' end='1767'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1768' end='1772'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1773' end='1774'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1779' end='1780'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1781' end='1782'>
+            <text>}</text>
+        </token>
+        <token id='T_ENUM' start='1784' end='1788'>
+            <text>enum</text>
+        </token>
+        <token id='T_STRING' start='1789' end='1798'>
+            <text>WithTrait</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1799' end='1800'>
+            <text>{</text>
+        </token>
+        <token id='T_USE' start='1805' end='1808'>
+            <text>use</text>
+        </token>
+        <token id='T_STRING' start='1809' end='1818'>
+            <text>TestTrait</text>
+        </token>
+        <token id='T_SEMICOLON' start='1818' end='1819'>
+            <text>;</text>
+        </token>
+        <token id='T_CASE' start='1825' end='1829'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='1830' end='1831'>
+            <text>A</text>
+        </token>
+        <token id='T_SEMICOLON' start='1831' end='1832'>
+            <text>;</text>
+        </token>
+        <token id='T_CASE' start='1837' end='1841'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='1842' end='1843'>
+            <text>B</text>
+        </token>
+        <token id='T_SEMICOLON' start='1843' end='1844'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1850' end='1856'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1857' end='1863'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1864' end='1872'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1873' end='1885'>
+            <text>staticMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1885' end='1886'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1886' end='1887'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1887' end='1888'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1889' end='1893'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1894' end='1895'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1900' end='1901'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1902' end='1903'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='1904' end='1904'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1904'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <EnumDeclaration start='815' end='829'>
+                <EnumName>
+                    <Identifier start='820' end='826' name='Simple'/>
+                </EnumName>
+                <BackingType>
+                </BackingType>
+                <Interfaces>
+                </Interfaces>
+                <Block start='827' end='829' isCurly='true'>
+                </Block>
+            </EnumDeclaration>
+            <EnumDeclaration start='831' end='895'>
+                <EnumName>
+                    <Identifier start='836' end='843' name='Simple1'/>
+                </EnumName>
+                <BackingType>
+                </BackingType>
+                <Interfaces>
+                </Interfaces>
+                <Block start='844' end='895' isCurly='true'>
+                    <CaseDeclaration start='850' end='857'>
+                        <CaseName>
+                            <Identifier start='855' end='856' name='A'/>
+                        </CaseName>
+                    </CaseDeclaration>
+                    <CaseDeclaration start='862' end='869'>
+                        <CaseName>
+                            <Identifier start='867' end='868' name='B'/>
+                        </CaseName>
+                    </CaseDeclaration>
+                    <CaseDeclaration start='874' end='881'>
+                        <CaseName>
+                            <Identifier start='879' end='880' name='C'/>
+                        </CaseName>
+                    </CaseDeclaration>
+                    <CaseDeclaration start='886' end='893'>
+                        <CaseName>
+                            <Identifier start='891' end='892' name='D'/>
+                        </CaseName>
+                    </CaseDeclaration>
+                </Block>
+            </EnumDeclaration>
+            <EnumDeclaration start='897' end='923'>
+                <EnumName>
+                    <Identifier start='902' end='915' name='BackedCaseInt'/>
+                </EnumName>
+                <BackingType>
+                    <NamespaceName start='917' end='920' isCurrent='false' isGlobal='false'>
+                        <Identifier start='917' end='920' name='int'/>
+                    </NamespaceName>
+                </BackingType>
+                <Interfaces>
+                </Interfaces>
+                <Block start='921' end='923' isCurly='true'>
+                </Block>
+            </EnumDeclaration>
+            <EnumDeclaration start='925' end='1055'>
+                <EnumName>
+                    <Identifier start='930' end='944' name='BackedCaseInt1'/>
+                </EnumName>
+                <BackingType>
+                    <NamespaceName start='946' end='949' isCurrent='false' isGlobal='false'>
+                        <Identifier start='946' end='949' name='int'/>
+                    </NamespaceName>
+                </BackingType>
+                <Interfaces>
+                </Interfaces>
+                <Block start='950' end='1055' isCurly='true'>
+                    <CaseDeclaration start='956' end='967'>
+                        <CaseName>
+                            <Identifier start='961' end='962' name='A'/>
+                        </CaseName>
+                        <Scalar start='965' end='966' type='INT' value='1'/>
+                    </CaseDeclaration>
+                    <CaseDeclaration start='972' end='983'>
+                        <CaseName>
+                            <Identifier start='977' end='978' name='B'/>
+                        </CaseName>
+                        <Scalar start='981' end='982' type='INT' value='2'/>
+                    </CaseDeclaration>
+                    <CaseDeclaration start='988' end='999'>
+                        <CaseName>
+                            <Identifier start='993' end='994' name='C'/>
+                        </CaseName>
+                        <Scalar start='997' end='998' type='INT' value='3'/>
+                    </CaseDeclaration>
+                    <CaseDeclaration start='1004' end='1015'>
+                        <CaseName>
+                            <Identifier start='1009' end='1010' name='D'/>
+                        </CaseName>
+                        <Scalar start='1013' end='1014' type='INT' value='4'/>
+                    </CaseDeclaration>
+                    <CaseDeclaration start='1020' end='1036'>
+                        <CaseName>
+                            <Identifier start='1025' end='1026' name='E'/>
+                        </CaseName>
+                        <InfixExpression start='1029' end='1035' operator='SL'>
+                            <Scalar start='1029' end='1030' type='INT' value='1'/>
+                            <Scalar start='1034' end='1035' type='INT' value='3'/>
+                        </InfixExpression>
+                    </CaseDeclaration>
+                    <CaseDeclaration start='1041' end='1053'>
+                        <CaseName>
+                            <Identifier start='1046' end='1047' name='F'/>
+                        </CaseName>
+                        <UnaryOperation start='1050' end='1052' operator='MINUS'>
+                            <Scalar start='1051' end='1052' type='INT' value='1'/>
+                        </UnaryOperation>
+                    </CaseDeclaration>
+                </Block>
+            </EnumDeclaration>
+            <EnumDeclaration start='1057' end='1089'>
+                <EnumName>
+                    <Identifier start='1062' end='1078' name='BackedCaseString'/>
+                </EnumName>
+                <BackingType>
+                    <NamespaceName start='1080' end='1086' isCurrent='false' isGlobal='false'>
+                        <Identifier start='1080' end='1086' name='string'/>
+                    </NamespaceName>
+                </BackingType>
+                <Interfaces>
+                </Interfaces>
+                <Block start='1087' end='1089' isCurly='true'>
+                </Block>
+            </EnumDeclaration>
+            <EnumDeclaration start='1091' end='1327'>
+                <EnumName>
+                    <Identifier start='1096' end='1113' name='BackedCaseString1'/>
+                </EnumName>
+                <BackingType>
+                    <NamespaceName start='1115' end='1121' isCurrent='false' isGlobal='false'>
+                        <Identifier start='1115' end='1121' name='string'/>
+                    </NamespaceName>
+                </BackingType>
+                <Interfaces>
+                </Interfaces>
+                <Block start='1122' end='1327' isCurly='true'>
+                    <CaseDeclaration start='1128' end='1141'>
+                        <CaseName>
+                            <Identifier start='1133' end='1134' name='A'/>
+                        </CaseName>
+                        <Scalar start='1137' end='1140' type='STRING' value='"A"'/>
+                    </CaseDeclaration>
+                    <CaseDeclaration start='1146' end='1159'>
+                        <CaseName>
+                            <Identifier start='1151' end='1152' name='B'/>
+                        </CaseName>
+                        <Scalar start='1155' end='1158' type='STRING' value='"B"'/>
+                    </CaseDeclaration>
+                    <CaseDeclaration start='1164' end='1177'>
+                        <CaseName>
+                            <Identifier start='1169' end='1170' name='C'/>
+                        </CaseName>
+                        <Scalar start='1173' end='1176' type='STRING' value='"C"'/>
+                    </CaseDeclaration>
+                    <CaseDeclaration start='1182' end='1195'>
+                        <CaseName>
+                            <Identifier start='1187' end='1188' name='D'/>
+                        </CaseName>
+                        <Scalar start='1191' end='1194' type='STRING' value='"D"'/>
+                    </CaseDeclaration>
+                    <CaseDeclaration start='1200' end='1219'>
+                        <CaseName>
+                            <Identifier start='1205' end='1206' name='E'/>
+                        </CaseName>
+                        <InfixExpression start='1209' end='1218' operator='CONCAT'>
+                            <Scalar start='1209' end='1212' type='STRING' value='"E"'/>
+                            <Scalar start='1215' end='1218' type='STRING' value='"E"'/>
+                        </InfixExpression>
+                    </CaseDeclaration>
+                    <CaseDeclaration start='1224' end='1271'>
+                        <CaseName>
+                            <Identifier start='1229' end='1230' name='F'/>
+                        </CaseName>
+                        <Quote start='1233' end='1270' type='HEREDOC'>
+                            <Expressions>
+                                <Scalar start='1238' end='1269' type='STRING' value='    Test\n    Test\n    Test\n    '/>
+                            </Expressions>
+                        </Quote>
+                    </CaseDeclaration>
+                    <CaseDeclaration start='1276' end='1325'>
+                        <CaseName>
+                            <Identifier start='1281' end='1282' name='G'/>
+                        </CaseName>
+                        <Scalar start='1285' end='1324' type='STRING' value='    Test\n    Test\n    Test\n'/>
+                    </CaseDeclaration>
+                </Block>
+            </EnumDeclaration>
+            <EnumDeclaration start='1329' end='1462'>
+                <EnumName>
+                    <Identifier start='1334' end='1338' name='Impl'/>
+                </EnumName>
+                <BackingType>
+                </BackingType>
+                <Interfaces>
+                    <NamespaceName start='1350' end='1356' isCurrent='false' isGlobal='false'>
+                        <Identifier start='1350' end='1356' name='Iface1'/>
+                    </NamespaceName>
+                    <NamespaceName start='1358' end='1364' isCurrent='false' isGlobal='false'>
+                        <Identifier start='1358' end='1364' name='Iface2'/>
+                    </NamespaceName>
+                </Interfaces>
+                <Block start='1365' end='1462' isCurly='true'>
+                    <CaseDeclaration start='1371' end='1378'>
+                        <CaseName>
+                            <Identifier start='1376' end='1377' name='A'/>
+                        </CaseName>
+                    </CaseDeclaration>
+                    <CaseDeclaration start='1383' end='1390'>
+                        <CaseName>
+                            <Identifier start='1388' end='1389' name='B'/>
+                        </CaseName>
+                    </CaseDeclaration>
+                    <CaseDeclaration start='1395' end='1402'>
+                        <CaseName>
+                            <Identifier start='1400' end='1401' name='C'/>
+                        </CaseName>
+                    </CaseDeclaration>
+                    <MethodDeclaration start='1408' end='1460' modifiers='public'>
+                        <FunctionDeclaration start='1415' end='1460' isReference='false'>
+                            <Identifier start='1424' end='1434' name='implMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='1435' end='1445' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1435' end='1439' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1435' end='1439' name='Test'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1440' end='1445' isDollared='true'>
+                                            <Identifier start='1441' end='1445' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='1448' end='1452' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1448' end='1452' name='void'/>
+                            </NamespaceName>
+                            <Block start='1453' end='1460' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </EnumDeclaration>
+            <EnumDeclaration start='1464' end='1713'>
+                <Attributes>
+                    <Attribute start='1464' end='1469'>
+                        <AttributeDeclarations>
+                            <AttributeDeclaration start='1466' end='1468'>
+                                <AttributeName>
+                                    <NamespaceName start='1466' end='1468' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1466' end='1468' name='A1'/>
+                                    </NamespaceName>
+                                </AttributeName>
+                            </AttributeDeclaration>
+                        </AttributeDeclarations>
+                    </Attribute>
+                </Attributes>
+                <EnumName>
+                    <Identifier start='1475' end='1485' name='Attributes'/>
+                </EnumName>
+                <BackingType>
+                    <NamespaceName start='1487' end='1490' isCurrent='false' isGlobal='false'>
+                        <Identifier start='1487' end='1490' name='int'/>
+                    </NamespaceName>
+                </BackingType>
+                <Interfaces>
+                    <NamespaceName start='1502' end='1507' isCurrent='false' isGlobal='false'>
+                        <Identifier start='1502' end='1507' name='Iface'/>
+                    </NamespaceName>
+                </Interfaces>
+                <Block start='1508' end='1713' isCurly='true'>
+                    <CaseDeclaration start='1514' end='1535'>
+                        <Attributes>
+                            <Attribute start='1514' end='1519'>
+                                <AttributeDeclarations>
+                                    <AttributeDeclaration start='1516' end='1518'>
+                                        <AttributeName>
+                                            <NamespaceName start='1516' end='1518' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1516' end='1518' name='A1'/>
+                                            </NamespaceName>
+                                        </AttributeName>
+                                    </AttributeDeclaration>
+                                </AttributeDeclarations>
+                            </Attribute>
+                        </Attributes>
+                        <CaseName>
+                            <Identifier start='1529' end='1530' name='A'/>
+                        </CaseName>
+                        <Scalar start='1533' end='1534' type='INT' value='1'/>
+                    </CaseDeclaration>
+                    <CaseDeclaration start='1540' end='1561'>
+                        <Attributes>
+                            <Attribute start='1540' end='1545'>
+                                <AttributeDeclarations>
+                                    <AttributeDeclaration start='1542' end='1544'>
+                                        <AttributeName>
+                                            <NamespaceName start='1542' end='1544' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1542' end='1544' name='A1'/>
+                                            </NamespaceName>
+                                        </AttributeName>
+                                    </AttributeDeclaration>
+                                </AttributeDeclarations>
+                            </Attribute>
+                        </Attributes>
+                        <CaseName>
+                            <Identifier start='1555' end='1556' name='B'/>
+                        </CaseName>
+                        <Scalar start='1559' end='1560' type='INT' value='2'/>
+                    </CaseDeclaration>
+                    <ClassConstantDeclaration start='1567' end='1606' modifier='public'>
+                        <Attributes>
+                            <Attribute start='1567' end='1572'>
+                                <AttributeDeclarations>
+                                    <AttributeDeclaration start='1569' end='1571'>
+                                        <AttributeName>
+                                            <NamespaceName start='1569' end='1571' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1569' end='1571' name='A1'/>
+                                            </NamespaceName>
+                                        </AttributeName>
+                                    </AttributeDeclaration>
+                                </AttributeDeclarations>
+                            </Attribute>
+                        </Attributes>
+                        <Names>
+                            <Identifier start='1583' end='1592' name='CONSTANT1'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1595' end='1605' type='STRING' value='"constant"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1611' end='1637' modifier='public'>
+                        <Names>
+                            <Identifier start='1617' end='1626' name='CONSTANT2'/>
+                        </Names>
+                        <Initializers>
+                            <StaticConstantAccess start='1629' end='1636' isDynamicName='false'>
+                                <NamespaceName start='1629' end='1633' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1629' end='1633' name='self'/>
+                                </NamespaceName>
+                                <Constant>
+                                    <Identifier start='1635' end='1636' name='A'/>
+                                </Constant>
+                                <Member>
+                                    <Identifier start='1635' end='1636' name='A'/>
+                                </Member>
+                            </StaticConstantAccess>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <MethodDeclaration start='1643' end='1711' modifiers='public'>
+                        <Attributes>
+                            <Attribute start='1643' end='1648'>
+                                <AttributeDeclarations>
+                                    <AttributeDeclaration start='1645' end='1647'>
+                                        <AttributeName>
+                                            <NamespaceName start='1645' end='1647' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1645' end='1647' name='A1'/>
+                                            </NamespaceName>
+                                        </AttributeName>
+                                    </AttributeDeclaration>
+                                </AttributeDeclarations>
+                            </Attribute>
+                        </Attributes>
+                        <FunctionDeclaration start='1660' end='1711' isReference='false'>
+                            <Identifier start='1669' end='1679' name='implMethod'/>
+                            <FormalParameters>
+                                <FormalParameter start='1680' end='1696' isMandatory='true' isVariadic='false'>
+                                    <Attributes>
+                                        <Attribute start='1680' end='1685'>
+                                            <AttributeDeclarations>
+                                                <AttributeDeclaration start='1682' end='1684'>
+                                                    <AttributeName>
+                                                        <NamespaceName start='1682' end='1684' isCurrent='false' isGlobal='false'>
+                                                            <Identifier start='1682' end='1684' name='A1'/>
+                                                        </NamespaceName>
+                                                    </AttributeName>
+                                                </AttributeDeclaration>
+                                            </AttributeDeclarations>
+                                        </Attribute>
+                                    </Attributes>
+                                    <ParametrType>
+                                        <NamespaceName start='1686' end='1690' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1686' end='1690' name='Test'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1691' end='1696' isDollared='true'>
+                                            <Identifier start='1692' end='1696' name='test'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='1699' end='1703' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1699' end='1703' name='void'/>
+                            </NamespaceName>
+                            <Block start='1704' end='1711' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </EnumDeclaration>
+            <TraitDeclaration start='1715' end='1782'>
+                <TraitName>
+                    <Identifier start='1721' end='1730' name='TestTrait'/>
+                </TraitName>
+                <Block start='1731' end='1782' isCurly='true'>
+                    <MethodDeclaration start='1737' end='1780' modifiers='public static'>
+                        <FunctionDeclaration start='1751' end='1780' isReference='false'>
+                            <Identifier start='1760' end='1764' name='test'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <NamespaceName start='1768' end='1772' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1768' end='1772' name='void'/>
+                            </NamespaceName>
+                            <Block start='1773' end='1780' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </TraitDeclaration>
+            <EnumDeclaration start='1784' end='1903'>
+                <EnumName>
+                    <Identifier start='1789' end='1798' name='WithTrait'/>
+                </EnumName>
+                <BackingType>
+                </BackingType>
+                <Interfaces>
+                </Interfaces>
+                <Block start='1799' end='1903' isCurly='true'>
+                    <UseTraitStatement start='1805' end='1819'>
+                        <Parts>
+                            <UseTraitStatementPart start='1809' end='1818'>
+                                <Name>
+                                    <NamespaceName start='1809' end='1818' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1809' end='1818' name='TestTrait'/>
+                                    </NamespaceName>
+                                </Name>
+                            </UseTraitStatementPart>
+                        </Parts>
+                        <Body>
+                        </Body>
+                    </UseTraitStatement>
+                    <CaseDeclaration start='1825' end='1832'>
+                        <CaseName>
+                            <Identifier start='1830' end='1831' name='A'/>
+                        </CaseName>
+                    </CaseDeclaration>
+                    <CaseDeclaration start='1837' end='1844'>
+                        <CaseName>
+                            <Identifier start='1842' end='1843' name='B'/>
+                        </CaseName>
+                    </CaseDeclaration>
+                    <MethodDeclaration start='1850' end='1901' modifiers='public static'>
+                        <FunctionDeclaration start='1864' end='1901' isReference='false'>
+                            <Identifier start='1873' end='1885' name='staticMethod'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <NamespaceName start='1889' end='1893' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1889' end='1893' name='void'/>
+                            </NamespaceName>
+                            <Block start='1894' end='1901' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </EnumDeclaration>
+        </Statements>
+    </Program>
+</testresult>

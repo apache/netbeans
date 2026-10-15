@@ -168,7 +168,7 @@ public abstract class MockServicesTest extends TestCase {
         }
     }
     
-    public static abstract class MockChoice6 implements Choice {}
+    public abstract static class MockChoice6 implements Choice {}
 
     /**
      * Check that service registrations are available from all threads,

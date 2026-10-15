@@ -33,6 +33,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -41,7 +42,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.modules.Places;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
@@ -77,7 +77,7 @@ public class RequireJsDataProvider {
     /**
      * Translating names from documentation to the real option names
      */
-    private final static HashMap<String, String> TRANSLATE_NAME = new HashMap();
+    private static final HashMap<String, String> TRANSLATE_NAME = new HashMap<>();
 
     static {
         TRANSLATE_NAME.put("moduleconfig", "config");//NOI18N
@@ -151,7 +151,7 @@ public class RequireJsDataProvider {
     private void startLoading() {
         LOG.fine("start loading doc"); //NOI18N
 
-        progress = ProgressHandleFactory.createHandle(Bundle.doc_building());
+        progress = ProgressHandle.createHandle(Bundle.doc_building());
         progress.start(1);
 
     }
@@ -232,8 +232,8 @@ public class RequireJsDataProvider {
         synchronized (cacheFile) {
             String tmpFileName = cacheFile.getAbsolutePath() + ".tmp";
             File tmpFile = new File(tmpFileName);
-            try (Writer writer = new OutputStreamWriter(new FileOutputStream(tmpFile), "UTF-8")) { // NOI18N
-                loadURL(url, writer, Charset.forName("UTF-8")); //NOI18N
+            try (Writer writer = new OutputStreamWriter(new FileOutputStream(tmpFile), StandardCharsets.UTF_8)) {
+                loadURL(url, writer, StandardCharsets.UTF_8);
                 writer.close();
                 boolean success = tmpFile.renameTo(cacheFile);
                 if (!success) {
@@ -269,7 +269,7 @@ public class RequireJsDataProvider {
     }
 
     private String getFileContent(File file) throws IOException {
-        Reader r = new InputStreamReader(new FileInputStream(file), "UTF-8"); // NOI18N
+        Reader r = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
         StringBuilder sb = new StringBuilder();
         try {
             char[] buf = new char[2048];

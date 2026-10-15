@@ -73,7 +73,7 @@ public final class WebLogicDDWizardIterator implements WizardDescriptor.Instanti
                 if (c instanceof JComponent) { // assume Swing components
                     JComponent jc = (JComponent) c;
                     // Sets step number of a component
-                    jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, Integer.valueOf(i)); // NOI18N
+                    jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i); // NOI18N
                     // Sets steps names for a panel
                     jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps); // NOI18N
                     // Turn on subtitle creation on each step
@@ -90,7 +90,7 @@ public final class WebLogicDDWizardIterator implements WizardDescriptor.Instanti
     
     @Override
     public Set instantiate() throws IOException {
-        Set result = Collections.EMPTY_SET;
+        Set<FileObject> result = Collections.emptySet();
         WebLogicDDWizardPanel wizardPanel = (WebLogicDDWizardPanel) panels[0];
         
         File configDir = wizardPanel.getSelectedLocation();
@@ -223,7 +223,7 @@ public final class WebLogicDDWizardIterator implements WizardDescriptor.Instanti
     private String[] createSteps() {
         String[] beforeSteps = null;
         Object prop = wizard.getProperty(WizardDescriptor.PROP_CONTENT_DATA); // NOI18N
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[]) prop;
         }
         

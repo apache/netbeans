@@ -118,12 +118,7 @@ public abstract class BasicAbstractResultsPanel
         if (details && btnExpand.isVisible() && !btnExpand.isEnabled()) {
             btnExpand.setEnabled(resultModel.size() > 0);
         }
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                updateShiftButtons();
-            }
-        });
+        EventQueue.invokeLater(this::updateShiftButtons);
         resultsOutlineSupport.update();
     }
 
@@ -137,12 +132,7 @@ public abstract class BasicAbstractResultsPanel
                 "TEXT_BUTTON_TREE_VIEW"));                              //NOI18N
         btnTreeView.setSelected(
                 MODE_TREE.equals(memory.getResultsViewMode()));
-        btnTreeView.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                toggleView(!btnTreeView.isSelected());
-            }
-        });
+        btnTreeView.addActionListener((ActionEvent e) -> toggleView(!btnTreeView.isSelected()));
         btnFlatView = new JToggleButton();
         btnFlatView.setEnabled(true);
         btnFlatView.setIcon(ImageUtilities.loadImageIcon(FLAT_VIEW_ICON,
@@ -150,12 +140,7 @@ public abstract class BasicAbstractResultsPanel
         btnFlatView.setToolTipText(UiUtils.getText(
                 "TEXT_BUTTON_FLAT_VIEW"));                              //NOI18N
         btnFlatView.setSelected(!btnTreeView.isSelected());
-        btnFlatView.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                toggleView(btnFlatView.isSelected());
-            }
-        });
+        btnFlatView.addActionListener((ActionEvent e) -> toggleView(btnFlatView.isSelected()));
         addButton(btnTreeView);
         addButton(btnFlatView);
         if (!details) {
@@ -165,24 +150,14 @@ public abstract class BasicAbstractResultsPanel
             return;
         }
         btnExpand.setSelected(true);
-        btnExpand.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                toggleExpandNodeChildren(btnExpand.isSelected());
-            }
-        });
+        btnExpand.addActionListener((ActionEvent e) -> toggleExpandNodeChildren(btnExpand.isSelected()));
         showDetailsButton = new JButton();
         showDetailsButton.setEnabled(false);
         showDetailsButton.setIcon(ImageUtilities.loadImageIcon(
                 SHOW_DETAILS_ICON, true));
         showDetailsButton.setToolTipText(UiUtils.getText(
                 "TEXT_BUTTON_FILL"));                                   //NOI18N
-        showDetailsButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                fillOutput();
-            }
-        });
+        showDetailsButton.addActionListener((ActionEvent e) -> fillOutput());
         showDetailsButton.getAccessibleContext().setAccessibleDescription(
                 NbBundle.getMessage(ResultView.class,
                 "ACS_TEXT_BUTTON_FILL"));                               //NOI18N
@@ -265,6 +240,7 @@ public abstract class BasicAbstractResultsPanel
         afterMatchingNodeAdded();
     }
 
+    @Override
     public final OutlineView getOutlineView() {
         return resultsOutlineSupport.getOutlineView();
     }
@@ -278,8 +254,8 @@ public abstract class BasicAbstractResultsPanel
                     NbBundle.getMessage(
                     ResultView.class,
                     "TEXT_MSG_FOUND_X_NODES_LIMIT", //NOI18N
-                    Integer.valueOf(resultSize),
-                    Integer.valueOf(resultModel.getTotalDetailsCount()))
+                    resultSize,
+                    resultModel.getTotalDetailsCount())
                     + ' ' + resultModel.getLimitDisplayName());         //NOI18N
             return;
         }
@@ -301,9 +277,9 @@ public abstract class BasicAbstractResultsPanel
                 bundleKey = "TEXT_MSG_FOUND_X_NODES";                   //NOI18N
                 args = new Object[1];
             }
-            args[0] = new Integer(resultModel.size());
+            args[0] = resultModel.size();
             if (args.length > 1) {
-                args[1] = new Integer(resultModel.getTotalDetailsCount());
+                args[1] = resultModel.getTotalDetailsCount();
             }
             if (args.length > 2) {
                 BasicSearchCriteria bsc = composition.getBasicSearchCriteria();
@@ -348,15 +324,12 @@ public abstract class BasicAbstractResultsPanel
                 if (btnExpand != null) {
                     for (final Node n : ev.getDelta()) {
                         if (btnExpand.isSelected()) {
-                            EventQueue.invokeLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    enableExpandListener(false);
-                                    try {
-                                        toggleExpand(n, true);
-                                    } finally {
-                                        enableExpandListener(true);
-                                    }
+                            EventQueue.invokeLater(() -> {
+                                enableExpandListener(false);
+                                try {
+                                    toggleExpand(n, true);
+                                } finally {
+                                    enableExpandListener(true);
                                 }
                             });
                         }

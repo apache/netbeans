@@ -652,7 +652,7 @@
  <answer id="exec-property">
   <api category="devel" group="logger" name="org.netbeans.ui.editor.completion" type="export">
     Since version 1.8 the completion cooperates with <!-- XXX link to @org-netbeans-modules-uihandler@/overview-summary.html not OK from a stable API -->UI Gestures Collector
-    by sending following messages to the <code>org.netbeans.ui.editor.completion</code> <a href="@JDK@/java/util/logging/Logger.html">logger</a>:
+    by sending following messages to the <code>org.netbeans.ui.editor.completion</code> <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html">logger</a>:
     <ul>
         <li><b>COMPL_INVOCATION</b> - message about a code completion being invoked. Arguments:
             <ul>
@@ -697,7 +697,7 @@
     </ul>
   </api>
   <api category="private" group="systemproperty" name="org.netbeans.modules.editor.completion.slowness.report" type="export"
-  url="http://wiki.netbeans.org/FitnessViaPostMortem">
+  url="https://netbeans.apache.org/wiki/FitnessViaPostMortem">
       You can suppress automatic reporting of slow code completion computation
       by increasing value of <code>-J-Dorg.netbeans.modules.editor.completion.slowness.report</code>
       property to more than 2000 ms (the default value).

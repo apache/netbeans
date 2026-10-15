@@ -22,7 +22,6 @@ package org.netbeans.modules.db.mysql.nodes;
 import java.awt.Image;
 import org.netbeans.modules.db.mysql.*;
 import org.netbeans.modules.db.mysql.actions.DisconnectServerAction;
-import org.netbeans.modules.db.mysql.nodes.DatabaseNode;
 import org.netbeans.modules.db.mysql.actions.PropertiesAction;
 import org.netbeans.modules.db.mysql.actions.StopAction;
 import org.netbeans.modules.db.mysql.actions.StartAction;
@@ -33,7 +32,6 @@ import org.netbeans.modules.db.mysql.actions.AdministerAction;
 import org.netbeans.modules.db.mysql.DatabaseServer;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import javax.swing.Action;
@@ -189,7 +187,7 @@ public class ServerNode extends AbstractNode implements ChangeListener, Comparab
                 return true;
             }
 
-            Collections.sort(fresh, COMPARATOR);
+            fresh.sort(COMPARATOR);
 
             toPopulate.addAll(fresh);
             

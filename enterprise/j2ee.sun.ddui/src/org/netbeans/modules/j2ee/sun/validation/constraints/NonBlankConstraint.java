@@ -22,7 +22,6 @@ package org.netbeans.modules.j2ee.sun.validation.constraints;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.netbeans.modules.j2ee.sun.validation.constraints.ConstraintFailure;
 import org.netbeans.modules.j2ee.sun.validation.util.BundleReader;
 
 /**

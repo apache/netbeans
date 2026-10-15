@@ -19,8 +19,8 @@
 package org.netbeans.modules.glassfish.tooling.server.config;
 
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import org.netbeans.modules.glassfish.tooling.data.GlassFishServer;
 import org.netbeans.modules.glassfish.tooling.data.GlassFishVersion;
 
@@ -40,11 +40,8 @@ import org.netbeans.modules.glassfish.tooling.data.GlassFishVersion;
  * @author Tomas Kraus
  */
 public class ConfigBuilderProvider {
-    
-    ////////////////////////////////////////////////////////////////////////////
-    // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
 
+    // Class attributes                                                       //
     /** Library builder default configuration file. */
     private static final URL CONFIG_V3
             = ConfigBuilderProvider.class.getResource("GlassFishV3.xml");
@@ -63,29 +60,240 @@ public class ConfigBuilderProvider {
     private static final Config.Next CONFIG_V5
             = new Config.Next(GlassFishVersion.GF_5,
             ConfigBuilderProvider.class.getResource("GlassFishV5.xml"));
-    
+
     /** Library builder configuration since GlassFish 5.0.1. */
     private static final Config.Next CONFIG_V5_0_1
             = new Config.Next(GlassFishVersion.GF_5_0_1,
             ConfigBuilderProvider.class.getResource("GlassFishV5.xml"));
-    
+
     /** Library builder configuration since GlassFish 5.1. */
     private static final Config.Next CONFIG_V5_1
             = new Config.Next(GlassFishVersion.GF_5_1_0,
-            ConfigBuilderProvider.class.getResource("GlassFishV5_1.xml"));
+            ConfigBuilderProvider.class.getResource("GlassFishV5_1_0.xml"));
+
+    /** Library builder configuration since GlassFish 6.0. */
+    private static final Config.Next CONFIG_V6
+            = new Config.Next(GlassFishVersion.GF_6,
+            ConfigBuilderProvider.class.getResource("GlassFishV6.xml"));
+
+    /** Library builder configuration since GlassFish 6.1.0. */
+    private static final Config.Next CONFIG_V6_1_0
+            = new Config.Next(GlassFishVersion.GF_6_1_0,
+                    ConfigBuilderProvider.class.getResource("GlassFishV6_1_0.xml"));
+
+    /** Library builder configuration since GlassFish 6.2.0. */
+    private static final Config.Next CONFIG_V6_2_0
+            = new Config.Next(GlassFishVersion.GF_6_2_0,
+                    ConfigBuilderProvider.class.getResource("GlassFishV6_2_0.xml"));
+    
+    /** Library builder configuration since GlassFish 6.2.1. */
+    private static final Config.Next CONFIG_V6_2_1
+            = new Config.Next(GlassFishVersion.GF_6_2_1,
+                    ConfigBuilderProvider.class.getResource("GlassFishV6_2_1.xml"));
+    
+    /** Library builder configuration since GlassFish 6.2.2. */
+    private static final Config.Next CONFIG_V6_2_2
+            = new Config.Next(GlassFishVersion.GF_6_2_2,
+                    ConfigBuilderProvider.class.getResource("GlassFishV6_2_2.xml"));
+    
+    /** Library builder configuration since GlassFish 6.2.3. */
+    private static final Config.Next CONFIG_V6_2_3
+            = new Config.Next(GlassFishVersion.GF_6_2_3,
+                    ConfigBuilderProvider.class.getResource("GlassFishV6_2_3.xml"));
+    
+    /** Library builder configuration since GlassFish 6.2.4. */
+    private static final Config.Next CONFIG_V6_2_4
+            = new Config.Next(GlassFishVersion.GF_6_2_4,
+                    ConfigBuilderProvider.class.getResource("GlassFishV6_2_4.xml"));
+    
+    /** Library builder configuration since GlassFish 6.2.5. */
+    private static final Config.Next CONFIG_V6_2_5
+            = new Config.Next(GlassFishVersion.GF_6_2_5,
+                    ConfigBuilderProvider.class.getResource("GlassFishV6_2_4.xml"));
+    
+    /** Library builder configuration since GlassFish 7.0.0. */
+    private static final Config.Next CONFIG_V7_0_0
+            = new Config.Next(GlassFishVersion.GF_7_0_0,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_0.xml"));
+    
+    /** Library builder configuration since GlassFish 7.0.1. */
+    private static final Config.Next CONFIG_V7_0_1
+            = new Config.Next(GlassFishVersion.GF_7_0_1,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_1.xml"));
+    
+    /** Library builder configuration since GlassFish 7.0.2. */
+    private static final Config.Next CONFIG_V7_0_2
+            = new Config.Next(GlassFishVersion.GF_7_0_2,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_1.xml"));
+
+    /** Library builder configuration since GlassFish 7.0.3. */
+    private static final Config.Next CONFIG_V7_0_3
+            = new Config.Next(GlassFishVersion.GF_7_0_3,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_1.xml"));
+
+    /** Library builder configuration since GlassFish 7.0.4. */
+    private static final Config.Next CONFIG_V7_0_4
+            = new Config.Next(GlassFishVersion.GF_7_0_4,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_1.xml"));
+
+    /** Library builder configuration since GlassFish 7.0.5. */
+    private static final Config.Next CONFIG_V7_0_5
+            = new Config.Next(GlassFishVersion.GF_7_0_5,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_1.xml"));
+
+    /** Library builder configuration since GlassFish 7.0.6. */
+    private static final Config.Next CONFIG_V7_0_6
+            = new Config.Next(GlassFishVersion.GF_7_0_6,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_1.xml"));
+    
+    /** Library builder configuration since GlassFish 7.0.7. */
+    private static final Config.Next CONFIG_V7_0_7
+            = new Config.Next(GlassFishVersion.GF_7_0_7,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_1.xml"));
+    
+    /** Library builder configuration since GlassFish 7.0.8. */
+    private static final Config.Next CONFIG_V7_0_8
+            = new Config.Next(GlassFishVersion.GF_7_0_8,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_1.xml"));
+    
+    /** Library builder configuration since GlassFish 7.0.9. */
+    private static final Config.Next CONFIG_V7_0_9
+            = new Config.Next(GlassFishVersion.GF_7_0_9,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_9.xml"));
+    
+    /** Library builder configuration since GlassFish 7.0.10. */
+    private static final Config.Next CONFIG_V7_0_10
+            = new Config.Next(GlassFishVersion.GF_7_0_10,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_9.xml"));
+    
+    /** Library builder configuration since GlassFish 7.0.11. */
+    private static final Config.Next CONFIG_V7_0_11
+            = new Config.Next(GlassFishVersion.GF_7_0_11,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_9.xml"));
+
+    /** Library builder configuration since GlassFish 7.0.12. */
+    private static final Config.Next CONFIG_V7_0_12
+            = new Config.Next(GlassFishVersion.GF_7_0_12,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_9.xml"));
+
+    /** Library builder configuration since GlassFish 7.0.13. */
+    private static final Config.Next CONFIG_V7_0_13
+            = new Config.Next(GlassFishVersion.GF_7_0_13,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_9.xml"));
+
+    /** Library builder configuration since GlassFish 7.0.14. */
+    private static final Config.Next CONFIG_V7_0_14
+            = new Config.Next(GlassFishVersion.GF_7_0_14,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_9.xml"));
+
+    /** Library builder configuration since GlassFish 7.0.15. */
+    private static final Config.Next CONFIG_V7_0_15
+            = new Config.Next(GlassFishVersion.GF_7_0_15,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_9.xml"));
+
+    /** Library builder configuration since GlassFish 7.0.16. */
+    private static final Config.Next CONFIG_V7_0_16
+            = new Config.Next(GlassFishVersion.GF_7_0_16,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_9.xml"));
+
+    /** Library builder configuration since GlassFish 7.0.17. */
+    private static final Config.Next CONFIG_V7_0_17
+            = new Config.Next(GlassFishVersion.GF_7_0_17,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_17.xml"));
+
+    /** Library builder configuration since GlassFish 7.0.18. */
+    private static final Config.Next CONFIG_V7_0_18
+            = new Config.Next(GlassFishVersion.GF_7_0_18,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_17.xml"));
+
+    /** Library builder configuration since GlassFish 7.0.19. */
+    private static final Config.Next CONFIG_V7_0_19
+            = new Config.Next(GlassFishVersion.GF_7_0_19,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_17.xml"));
+
+    /** Library builder configuration since GlassFish 7.0.20. */
+    private static final Config.Next CONFIG_V7_0_20
+            = new Config.Next(GlassFishVersion.GF_7_0_20,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_17.xml"));
+
+    /** Library builder configuration since GlassFish 7.0.21. */
+    private static final Config.Next CONFIG_V7_0_21
+            = new Config.Next(GlassFishVersion.GF_7_0_21,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_17.xml"));
+
+    /** Library builder configuration since GlassFish 7.0.22. */
+    private static final Config.Next CONFIG_V7_0_22
+            = new Config.Next(GlassFishVersion.GF_7_0_22,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_17.xml"));
+
+    /** Library builder configuration since GlassFish 7.0.23. */
+    private static final Config.Next CONFIG_V7_0_23
+            = new Config.Next(GlassFishVersion.GF_7_0_23,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_17.xml"));
+
+    /** Library builder configuration since GlassFish 7.0.24. */
+    private static final Config.Next CONFIG_V7_0_24
+            = new Config.Next(GlassFishVersion.GF_7_0_24,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_24.xml"));
+    
+    /** Library builder configuration since GlassFish 7.0.25. */
+    private static final Config.Next CONFIG_V7_0_25
+            = new Config.Next(GlassFishVersion.GF_7_0_25,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_0_24.xml"));
+    
+    /** Library builder configuration since GlassFish 7.1.0. */
+    private static final Config.Next CONFIG_V7_1_0
+            = new Config.Next(GlassFishVersion.GF_7_1_0,
+                    ConfigBuilderProvider.class.getResource("GlassFishV7_1_0.xml"));
+
+    /** Library builder configuration since GlassFish 8.0.0. */
+    private static final Config.Next CONFIG_V8_0_0
+            = new Config.Next(GlassFishVersion.GF_8_0_0,
+                    ConfigBuilderProvider.class.getResource("GlassFishV8_0_0.xml"));
+
+    /** Library builder configuration since GlassFish 8.0.1. */
+    private static final Config.Next CONFIG_V8_0_1
+            = new Config.Next(GlassFishVersion.GF_8_0_1,
+                    ConfigBuilderProvider.class.getResource("GlassFishV8_0_0.xml"));
+
+    /** Library builder configuration since GlassFish 8.0.2. */
+    private static final Config.Next CONFIG_V8_0_2
+            = new Config.Next(GlassFishVersion.GF_8_0_2,
+                    ConfigBuilderProvider.class.getResource("GlassFishV8_0_0.xml"));
+
+    /** Library builder configuration since GlassFish 8.0.3. */
+    private static final Config.Next CONFIG_V8_0_3
+            = new Config.Next(GlassFishVersion.GF_8_0_3,
+                    ConfigBuilderProvider.class.getResource("GlassFishV8_0_0.xml"));
+
+    /** Library builder configuration since GlassFish 8.0.4. */
+    private static final Config.Next CONFIG_V8_0_4
+            = new Config.Next(GlassFishVersion.GF_8_0_4,
+                    ConfigBuilderProvider.class.getResource("GlassFishV8_0_0.xml"));
 
     /** Library builder configuration for GlassFish cloud. */
     private static final Config config
-            = new Config(CONFIG_V3, CONFIG_V4, CONFIG_V4_1, CONFIG_V5, CONFIG_V5_0_1, CONFIG_V5_1);
+            = new Config(CONFIG_V3, CONFIG_V4, CONFIG_V4_1, CONFIG_V5, 
+                         CONFIG_V5_0_1, CONFIG_V5_1, CONFIG_V6, CONFIG_V6_1_0,
+                         CONFIG_V6_2_0, CONFIG_V6_2_1, CONFIG_V6_2_2, 
+                         CONFIG_V6_2_3, CONFIG_V6_2_4, CONFIG_V6_2_5,
+                         CONFIG_V7_0_0, CONFIG_V7_0_1, CONFIG_V7_0_2,
+                         CONFIG_V7_0_3, CONFIG_V7_0_4, CONFIG_V7_0_5,
+                         CONFIG_V7_0_6, CONFIG_V7_0_7, CONFIG_V7_0_8,
+                         CONFIG_V7_0_9, CONFIG_V7_0_10, CONFIG_V7_0_11,
+                         CONFIG_V7_0_12, CONFIG_V7_0_13, CONFIG_V7_0_14,
+                         CONFIG_V7_0_15, CONFIG_V7_0_16, CONFIG_V7_0_17,
+                         CONFIG_V7_0_18, CONFIG_V7_0_19, CONFIG_V7_0_20,
+                         CONFIG_V7_0_21, CONFIG_V7_0_22, CONFIG_V7_0_23,
+                         CONFIG_V7_0_24, CONFIG_V7_0_25, CONFIG_V7_1_0,
+                         CONFIG_V8_0_0, CONFIG_V8_0_1, CONFIG_V8_0_2,
+                         CONFIG_V8_0_3, CONFIG_V8_0_4);
 
     /** Builders array for each server instance. */
-    private static final Map<GlassFishServer, ConfigBuilder> builders
-            = new HashMap<>();
+    private static final ConcurrentMap<GlassFishServer, ConfigBuilder> builders
+            = new ConcurrentHashMap<>(64);
 
-    ////////////////////////////////////////////////////////////////////////////
-    // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
+    // Static methods
     /**
      * Get library builder configuration for given GlassFish server version.
      * <p/>
@@ -111,19 +319,11 @@ public class ConfigBuilderProvider {
             throw new ServerConfigException(
                     "GlassFish server entity shall not be null");
         }
-        ConfigBuilder builder;
-        synchronized (builders) {
-            builder = builders.get(server);
-            if (builder != null) {
-                return builder;
-            }
-            String serverHome = server.getServerHome();
-            builder = new ConfigBuilder(config, serverHome, serverHome, serverHome);
-            builders.put(server, builder);
-        }
-        return builder;
+        String serverHome = server.getServerHome();
+        return builders.computeIfAbsent(server, key -> 
+                new ConfigBuilder(config, serverHome, serverHome, serverHome));
     }
-
+    
 
     /**
      * Remove configuration builder instance for given GlassFish server entity
@@ -139,9 +339,7 @@ public class ConfigBuilderProvider {
             throw new ServerConfigException(
                     "GlassFish server entity shall not be null");
         }
-        synchronized (builders) {
-            builders.remove(server);
-        }
+        builders.remove(server);
     }
 
 }

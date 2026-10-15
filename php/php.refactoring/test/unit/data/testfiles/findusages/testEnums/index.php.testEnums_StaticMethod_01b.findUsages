@@ -1,0 +1,14 @@
+Display text: self::<b>publicStaticMethod</b>();
+File name: index.php
+Name: publicStaticMethod
+Position: BEGIN: 990 END: 1008
+
+Display text: static::<b>publicStaticMethod</b>();
+File name: index.php
+Name: publicStaticMethod
+Position: BEGIN: 1028 END: 1046
+
+Display text: public static function <b>publicStaticMethod</b>(): string { // EnumA
+File name: index.php
+Name: publicStaticMethod
+Position: BEGIN: 1143 END: 1161

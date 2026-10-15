@@ -117,7 +117,7 @@ public final class VCSContext {
      * @return VCSContext containing nodes and corresponding files they represent
      */
     // XXX any chance to replace with lookup? 
-    public synchronized static VCSContext forNodes(Node[] nodes) {
+    public static synchronized VCSContext forNodes(Node[] nodes) {
         if (Arrays.equals(contextNodesCached.get(), nodes)) {
             VCSContext ctx = contextCached.get();
             if (ctx != null) return ctx;
@@ -237,7 +237,7 @@ public final class VCSContext {
      * returns both of them and getRootFiles returns only the folder /var. 
      * This method is suitable for versioning systems that DO manage folders, such as Clearcase. 
      * 
-     * @return Set<VCSFileProxy> set of Files this context represents
+     * @return Set&lt;VCSFileProxy&gt; set of Files this context represents
      * @see #getRootFiles() 
      */ 
     public Set<VCSFileProxy> getFiles() {
@@ -251,7 +251,7 @@ public final class VCSContext {
      * returns both of them and getRootFiles returns only the folder /var. 
      * This method is suitable for versioning systems that do not manage folders, such as CVS. 
      * 
-     * @return Set<VCSFileProxy> set of Files this context represents
+     * @return Set&lt;VCSFileProxy&gt; set of Files this context represents
      * @see #getFiles() 
      */ 
     public Set<VCSFileProxy> getRootFiles() {
@@ -264,7 +264,7 @@ public final class VCSContext {
      * run on a project that contains a subproject should not touch any files in the subproject. Therefore the VCSContext for
      * the action would contain one root file (the project's root) and one exclusion (subproject root).
      * 
-     * @return Set<VCSFileProxy> set of files and folders that are not part of (are excluded from) this context. 
+     * @return Set&lt;VCSFileProxy&gt; set of files and folders that are not part of (are excluded from) this context. 
      * All their descendants are excluded too.
      */ 
     public Set<VCSFileProxy> getExclusions() {

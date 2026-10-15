@@ -39,7 +39,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.netbeans.modules.mercurial.util.HgCommand;
 import org.openide.util.NbBundle;
-import org.netbeans.modules.mercurial.kenai.HgKenaiAccessor;
 import org.netbeans.modules.mercurial.ui.log.HgLogMessage.HgRevision;
 import org.netbeans.modules.mercurial.ui.repository.HgURL;
 import org.netbeans.modules.mercurial.ui.shelve.ShelveChangesAction;
@@ -198,7 +197,6 @@ public class Mercurial {
         Runnable init = new Runnable() {
             @Override
             public void run() {
-                HgKenaiAccessor.getInstance().registerVCSNoficationListener();
                 synchronized(Mercurial.this) {
                     checkVersionIntern();
                 }
@@ -581,7 +579,7 @@ public class Mercurial {
     }
     
    private File getKnownParent(File file) {
-        File[] roots = knownRoots.toArray(new File[knownRoots.size()]);
+        File[] roots = knownRoots.toArray(new File[0]);
         File knownParent = null;
         for (File r : roots) {
             if(!VersioningSupport.isExcluded(file) && Utils.isAncestorOrEqual(r, file) && (knownParent == null || Utils.isAncestorOrEqual(knownParent, r))) {
@@ -609,7 +607,7 @@ public class Mercurial {
         if (!openFiles.isEmpty()) {
             support.firePropertyChange(PROP_HEAD_CHANGED, null, openFiles);
             if (historyProvider != null) {
-                historyProvider.fireHistoryChange(openFiles.toArray(new File[openFiles.size()]));
+                historyProvider.fireHistoryChange(openFiles.toArray(new File[0]));
             }
         }
     }

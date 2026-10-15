@@ -58,24 +58,29 @@ public class ResultsOutlineCellRenderer extends DefaultOutlineCellRenderer {
             Property<?> property = (Property<?>) value;
             try {
                 String valueString = getDisplayValue(property);
-                if (property.getName().equals("path")) { //NOI18N
-                    renderer = super.getTableCellRendererComponent(table,
-                            computeFitText(table, row, column, valueString),
-                            isSelected, hasFocus, row, column);
-                    setToolTip(renderer, property);
-                } else if (property.getName().equals("size")) {         //NOI18N
-                    renderer = super.getTableCellRendererComponent(table,
-                            formatFileSize((Long) property.getValue()),
-                            isSelected, hasFocus, row, column);
-                    setToolTip(renderer, property);
-                } else if (property.getName().equals("lastModified")) { //NOI18N
-                    renderer = super.getTableCellRendererComponent(table,
-                            formatDate((Date) property.getValue()),
-                            isSelected, hasFocus, row, column);
-                    setToolTip(renderer, property);
-                } else {
-                    renderer = super.getTableCellRendererComponent(table,
+                switch (property.getName()) {
+                    case "path": //NOI18N
+                        renderer = super.getTableCellRendererComponent(table,
+                                computeFitText(table, row, column, valueString),
+                                isSelected, hasFocus, row, column);
+                        setToolTip(renderer, property);
+                        break;
+                    case "size": //NOI18N
+                        renderer = super.getTableCellRendererComponent(table,
+                                formatFileSize((Long) property.getValue()),
+                                isSelected, hasFocus, row, column);
+                        setToolTip(renderer, property);
+                        break;
+                    case "lastModified": //NOI18N
+                        renderer = super.getTableCellRendererComponent(table,
+                                formatDate((Date) property.getValue()),
+                                isSelected, hasFocus, row, column);
+                        setToolTip(renderer, property);
+                        break;
+                    default:
+                        renderer = super.getTableCellRendererComponent(table,
                             valueString, isSelected, hasFocus, row, column);
+                        break;
                 }
             } catch (Exception e) {
                 LOG.log(Level.WARNING, null, e);
@@ -89,7 +94,6 @@ public class ResultsOutlineCellRenderer extends DefaultOutlineCellRenderer {
             ((JLabel) renderer).setHorizontalAlignment(SwingConstants.RIGHT);
             ((JLabel) renderer).setHorizontalTextPosition(SwingConstants.RIGHT);
         }
-        renderer.setForeground(Color.BLACK);
         return renderer;
     }
 
@@ -119,7 +123,7 @@ public class ResultsOutlineCellRenderer extends DefaultOutlineCellRenderer {
         }
 
         for (int i = 1; i <= text.length() - 1; i++) {
-            String part = text.substring(text.length() - i, text.length());
+            String part = text.substring(text.length() - i);
             int swidth = fm.stringWidth(part);
             if (swidth >= desired) {
                 return part.length() > 0 ? prefix + part + " " : text;  //NOI18N

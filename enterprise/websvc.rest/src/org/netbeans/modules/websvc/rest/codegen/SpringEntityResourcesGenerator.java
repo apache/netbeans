@@ -110,8 +110,8 @@ public class SpringEntityResourcesGenerator extends EntityResourcesGenerator {
                 ClassTree classTree = (ClassTree)tree.getTypeDecls().get(0);
                 ClassTree newTree = JavaSourceHelper.addField(workingCopy, classTree, 
                         new Modifier[]{Modifier.PROTECTED},
-                        annotations , values , "entityManager", 
-                        Constants.ENTITY_MANAGER_TYPE);  //NOI18N
+                        annotations , values , "entityManager",
+                        isJakartaNamespace() ? Constants.ENTITY_MANAGER_TYPE_JAKARTA : Constants.ENTITY_MANAGER_TYPE);  //NOI18N
                 workingCopy.rewrite(classTree, newTree);
             }
         };
@@ -167,7 +167,7 @@ public class SpringEntityResourcesGenerator extends EntityResourcesGenerator {
     {
         ModifiersTree tree = super.addRestMethodAnnotations(genUtils, maker, 
                 option, modifiers);
-        if ( option.getRestMethod().getMethod() != null ){
+        if ( option.getRestMethod().getMethod(true) != null ){
             tree = maker.addModifiersAnnotation(tree, genUtils.createAnnotation(
                     SpringConstants.TRANSACTIONAL));
         }
@@ -182,8 +182,13 @@ public class SpringEntityResourcesGenerator extends EntityResourcesGenerator {
         List<String> original = super.getResourceImports(entityFqn);
         List<String> result = new ArrayList<String>( original.size() +1 );
         result.addAll( original );
-        result.add("javax.persistence.Query");                  // NOI18N
-        result.add(Constants.PERSISTENCE_CONTEXT);
+        if(isJakartaNamespace()) {
+            result.add("javax.persistence.Query");                  // NOI18N
+            result.add(Constants.PERSISTENCE_CONTEXT_JAKARTA);
+        } else {
+            result.add("javax.persistence.Query");                  // NOI18N
+            result.add(Constants.PERSISTENCE_CONTEXT);
+        }
         return result;
     }
     
@@ -305,7 +310,7 @@ public class SpringEntityResourcesGenerator extends EntityResourcesGenerator {
         }
 
         @Override
-        public String getMethod() {
+        public String getMethod(Boolean jakartaVariant) {
             return null;
         }
     }

@@ -38,20 +38,14 @@ import org.netbeans.modules.glassfish.tooling.utils.ServerUtils;
 @RunnerRestClass
 public class CommandVersion extends Command {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(CommandVersion.class);
 
     /** Command string for version command. */
     private static final String COMMAND = "version";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Retrieve version from server.
      * <p/>
@@ -126,10 +120,7 @@ public class CommandVersion extends Command {
         return verifyResult;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of GlassFish server version command entity.
      */

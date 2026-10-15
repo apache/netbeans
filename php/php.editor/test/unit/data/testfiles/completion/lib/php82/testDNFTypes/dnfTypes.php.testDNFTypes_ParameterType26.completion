@@ -1,0 +1,9 @@
+Code completion result for source line:
+$closure2->publicYMethod()->|publicXField; // ClassX|(ClassY&ClassX)
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicStaticXMethod()           [STATIC]   ClassX
+METHOD     publicStaticYMethod()           [STATIC]   ClassY
+METHOD     publicXMethod()                 [PUBLIC]   ClassX
+METHOD     publicYMethod()                 [PUBLIC]   ClassY
+VARIABLE   (ClassY&ClassZ)|ClassX publicX  [PUBLIC]   ClassX
+VARIABLE   (ClassY&ClassZ)|ClassX publicY  [PUBLIC]   ClassY

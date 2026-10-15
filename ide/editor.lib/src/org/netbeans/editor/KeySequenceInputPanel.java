@@ -41,7 +41,7 @@ import org.openide.util.NbBundle;
 
 public class KeySequenceInputPanel extends javax.swing.JPanel {
 
-    public final static String PROP_KEYSEQUENCE = "keySequence"; // NOI18N
+    public static final String PROP_KEYSEQUENCE = "keySequence"; // NOI18N
     private Vector strokes = new Vector();
     private StringBuffer text = new StringBuffer();
     private final ResourceBundle bundle = NbBundle.getBundle(BaseKit.class);

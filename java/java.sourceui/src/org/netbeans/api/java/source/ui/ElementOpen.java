@@ -23,6 +23,7 @@ import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,13 +39,16 @@ import org.netbeans.api.editor.fold.FoldHierarchy;
 import org.netbeans.api.editor.fold.FoldUtilities;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.platform.JavaPlatform;
+import org.netbeans.api.java.queries.SourceJavadocAttacher;
 import org.netbeans.api.java.source.*;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.modules.java.BinaryElementOpen;
+import org.netbeans.modules.java.classfile.CodeGenerator;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
 import org.netbeans.modules.java.source.parsing.ClassParser;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.ui.ElementOpenAccessor;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.awt.StatusDisplayer;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
@@ -64,10 +68,10 @@ public final class ElementOpen {
 
     private ElementOpen() {
     }
-    
+
     /**
      * Opens {@link Element} corresponding to the given {@link ElementHandle}.
-     * 
+     *
      * @param cpInfo ClasspathInfo which should be used for the search
      * @param el     declaration to open
      * @return true  if and only if the declaration was correctly opened,
@@ -75,12 +79,26 @@ public final class ElementOpen {
      * @since 1.5
      */
     public static boolean open(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el) {
+        return open(cpInfo, el, new String[0]);
+    }
+
+    /**
+     * Opens {@link Element} corresponding to the given {@link ElementHandle}.
+     *
+     * @param cpInfo ClasspathInfo which should be used for the search
+     * @param el     declaration to open
+     * @param names  suggested names for the file to search for
+     * @return true  if and only if the declaration was correctly opened,
+     *                false otherwise
+     * @since 1.67
+     */
+    public static boolean open(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, String... names) {
         final AtomicBoolean cancel = new AtomicBoolean();
         if (SwingUtilities.isEventDispatchThread() && !JavaSourceAccessor.holdsParserLock()) {
             final Object[] openInfo = new Object[3];
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     public void run() {
-                        Object[] info = getOpenInfo(cpInfo, el, cancel);
+                        Object[] info = getOpenInfo(cpInfo, el, names, cancel);
                         if (info != null) {
                             openInfo[0] = info[0];
                             openInfo[1] = info[1];
@@ -95,16 +113,16 @@ public final class ElementOpen {
                 return false;
             }
             if (openInfo[0] instanceof FileObject) {
-                return doOpen((FileObject)openInfo[0], (int)openInfo[1], (int)openInfo[2]);                
+                return doOpen((FileObject)openInfo[0], (int)openInfo[1], (int)openInfo[2]);
             }
             return binaryOpen(cpInfo, el, cancel);
         } else {
-            return open(cpInfo, el, cancel);
+            return open(cpInfo, el, names, cancel);
         }
     }
-    
-    private static boolean open(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, AtomicBoolean cancel) {
-        Object[] openInfo = getOpenInfo(cpInfo, el, cancel);
+
+    private static boolean open(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, String[] names, AtomicBoolean cancel) {
+        Object[] openInfo = getOpenInfo(cpInfo, el, names, cancel);
         if (cancel.get()) return false;
         if (openInfo != null) {
             assert openInfo[0] instanceof FileObject;
@@ -112,19 +130,19 @@ public final class ElementOpen {
         }
         return binaryOpen(cpInfo, el, cancel);
     }
-    
+
     private static boolean binaryOpen(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, AtomicBoolean cancel) {
         BinaryElementOpen beo = Lookup.getDefault().lookup(BinaryElementOpen.class);
         if (beo != null) {
             return beo.open(cpInfo, el, cancel);
         } else {
             return false;
-        }        
+        }
     }
-    
+
     /**
      * Opens given {@link Element}.
-     * 
+     *
      * @param cpInfo ClasspathInfo which should be used for the search
      * @param el    declaration to open
      * @return true if and only if the declaration was correctly opened,
@@ -133,10 +151,10 @@ public final class ElementOpen {
     public static boolean open(final ClasspathInfo cpInfo, final Element el) {
         return open(cpInfo, ElementHandle.create(el));
     }
-    
+
     /**
      * Opens given {@link Element}.
-     * 
+     *
      * @param toSearch fileobject whose {@link ClasspathInfo} will be used
      * @param toOpen   {@link ElementHandle} of the element which should be opened.
      * @return true if and only if the declaration was correctly opened,
@@ -148,7 +166,7 @@ public final class ElementOpen {
         final AtomicBoolean cancel = new AtomicBoolean();
         if (SwingUtilities.isEventDispatchThread() && !JavaSourceAccessor.holdsParserLock()) {
             final Object[] openInfo = new Object[3];
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     public void run() {
                         Object[] info = !isClassFile(toSearch) ? getOpenInfo (toSearch, toOpen, cancel) : null;
                         if (info != null) {
@@ -172,7 +190,7 @@ public final class ElementOpen {
             return open(toSearch, toOpen, cancel);
         }
     }
-    
+
     private static boolean open(
             @NonNull final FileObject toSearch,
             @NonNull final ElementHandle<? extends Element> toOpen,
@@ -190,7 +208,7 @@ public final class ElementOpen {
         }
         return binaryOpen(toSearch, toOpen, cancel);
     }
-    
+
     private static boolean binaryOpen(
             @NonNull final FileObject toSearch,
             @NonNull final ElementHandle<? extends Element> toOpen,
@@ -229,7 +247,7 @@ public final class ElementOpen {
         final AtomicBoolean cancel = new AtomicBoolean();
         if (SwingUtilities.isEventDispatchThread() && !JavaSourceAccessor.holdsParserLock()) {
             final boolean[] result = new boolean[1];
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     public void run() {
                         result[0] = open(toSearch, toOpen, cancel);
                     }
@@ -263,8 +281,8 @@ public final class ElementOpen {
                         final TreePath tp = toOpen.resolve(cc);
                         if (tp != null) {
                             final SourcePositions sourcePos = cc.getTrees().getSourcePositions();
-                            pos[0] = sourcePos.getStartPosition(cc.getCompilationUnit(), tp.getLeaf());
-                            pos[1] = sourcePos.getEndPosition(cc.getCompilationUnit(), tp.getLeaf());
+                            pos[0] = sourcePos.getStartPosition(tp.getLeaf());
+                            pos[1] = sourcePos.getEndPosition(tp.getLeaf());
                         }
                     }
                 }, true);
@@ -276,14 +294,154 @@ public final class ElementOpen {
         }
     }
 
+    /**
+     * Gets location of the {@link Element} corresponding to the given {@link ElementHandle}.
+     *
+     * @param cpInfo ClasspathInfo which should be used for the search
+     * @param el ElementHandle to search
+     * @param resourceName optional resource name to search
+     * @return location of the given element
+     *
+     * @since 1.58
+     */
+    public static CompletableFuture<Location> getLocation(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, String resourceName) {
+      return getLocation(cpInfo, el, resourceName, new String[0]);
+    }
+
+    /**
+     * Gets location of the {@link Element} corresponding to the given {@link ElementHandle}.
+     *
+     * @param cpInfo ClasspathInfo which should be used for the search
+     * @param el ElementHandle to search
+     * @param resourceName optional resource name to search
+     * @param names suggested names of the source file to seek for
+     * @return location of the given element
+     *
+     * @since 1.67
+     */
+    public static CompletableFuture<Location> getLocation(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, String resourceName, String... names) {
+        final CompletableFuture<Object[]> future = getFutureOpenInfo(cpInfo, el, resourceName, new AtomicBoolean(), true, names);
+        return future.thenApply(openInfo -> {
+            if (openInfo != null && openInfo[0] != null) {
+                FileObject file = (FileObject) openInfo[0];
+                int start = (int) openInfo[3];
+                if (start < 0) {
+                    start = Math.max(0, (int) openInfo[1]);
+                }
+                int end = (int) openInfo[4];
+                if (end < 0) {
+                    end = Math.max(0, (int) openInfo[2]);
+                }
+                return new Location(file, start, end);
+            }
+            return null;
+        });
+    }
+
+    /**
+     * Represents the location of an element. It is a range inside of a file object.
+     */
+    public static final class Location {
+
+        private final FileObject fileObject;
+        private final int startOffset;
+        private final int endOffset;
+
+        private Location(FileObject fileObject, int startOffset, int endOffset) {
+            this.fileObject = fileObject;
+            this.startOffset = startOffset;
+            this.endOffset = endOffset;
+        }
+
+        /**
+         * The location's file object.
+         *
+         * @return file object
+         */
+        public FileObject getFileObject() {
+            return fileObject;
+        }
+
+        /**
+         * The location's start offset.
+         *
+         * @return offset
+         */
+        public int getStartOffset() {
+            return startOffset;
+        }
+
+        /**
+         * The location's end offset.
+         *
+         * @return offset
+         */
+        public int getEndOffset() {
+            return endOffset;
+        }
+    }
     // Private methods ---------------------------------------------------------
 
     private static boolean isClassFile(@NonNull final FileObject file) {
         return FileObjects.CLASS.equals(file.getExt()) || ClassParser.MIME_TYPE.equals(file.getMIMEType(ClassParser.MIME_TYPE));
     }
 
-    private static Object[] getOpenInfo(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, AtomicBoolean cancel) {
-        FileObject fo = SourceUtils.getFile(el, cpInfo);
+    static CompletableFuture<Object[]> getFutureOpenInfo(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, String resourceName, AtomicBoolean cancel, boolean acquire, String... names) {
+        Object[] openInfo = getOpenInfo(cpInfo, el, names, cancel);
+        if (openInfo != null) {
+            return CompletableFuture.completedFuture(openInfo);
+        }
+        // try to attach sources
+        if (resourceName != null && acquire) {
+            final ClassPath cp = ClassPathSupport.createProxyClassPath(
+                cpInfo.getClassPath(ClasspathInfo.PathKind.BOOT),
+                cpInfo.getClassPath(ClasspathInfo.PathKind.COMPILE),
+                cpInfo.getClassPath(ClasspathInfo.PathKind.SOURCE));
+            final FileObject resource = cp.findResource(resourceName);
+            if (resource != null) {
+                final FileObject root = cp.findOwnerRoot(resource);
+                if (root != null) {
+                    final CompletableFuture<Object[]> future = new CompletableFuture<>();
+                    try {
+                        SourceJavadocAttacher.attachSources(root.toURL(), new SourceJavadocAttacher.AttachmentListener() {
+                            @Override
+                            public void attachmentSucceeded() {
+                                try {
+                                    Object[] openInfo = getOpenInfo(cpInfo, el, null, cancel);
+                                    if (openInfo != null && (int) openInfo[1] != (-1) && (int) openInfo[2] != (-1) && openInfo[5] != null) {
+                                        future.complete(openInfo);
+                                    } else {
+                                        attachmentFailed();
+                                    }
+                                } catch (Throwable t) {
+                                    future.completeExceptionally(t);
+                                }
+                            }
+
+                            @Override
+                            public void attachmentFailed() {
+                                try {
+                                    FileObject generated = CodeGenerator.generateCode(cpInfo, el, new boolean[1]);
+                                    future.complete(generated != null ? getOpenInfo(generated, el, cancel) : null);
+                                } catch (Throwable t) {
+                                    future.completeExceptionally(t);
+                                }
+                            }
+                        });
+                    } catch (Throwable t) {
+                        future.completeExceptionally(t);
+                    }
+                    return future;
+                }
+            }
+        }
+        // try to generate source from class file
+        FileObject generated = CodeGenerator.generateCode(cpInfo, el, new boolean[1]);
+        return CompletableFuture.completedFuture(generated != null ? getOpenInfo(generated, el, cancel) : null);
+    }
+
+    static Object[] getOpenInfo(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, String[] names, AtomicBoolean cancel) {
+        FileObject fo = SourceUtils.getFile(el, cpInfo, names);
         if (fo != null && fo.isFolder()) {
             fo = fo.getFileObject("package-info.java"); // NOI18N
         }
@@ -292,11 +450,13 @@ public final class ElementOpen {
 
     private static Object[] getOpenInfo(final FileObject fo, final ElementHandle<? extends Element> handle, AtomicBoolean cancel) {
         assert fo != null;
-        
+
         try {
-            int[] offset = getOffset(fo, handle, cancel);
-            return new Object[] {fo, offset[0], offset[1]};
-        } catch (IOException e) {
+            Object[] result = new Object[7];
+            result[0] = fo;
+            getOffset(fo, handle, result, cancel);
+            return result;
+        } catch (Exception e) {
             Exceptions.printStackTrace(e);
             return null;
         }
@@ -307,7 +467,7 @@ public final class ElementOpen {
     private static boolean doOpen(FileObject fo, final int offsetA, final int offsetB) {
         if (offsetA == -1) {
             StatusDisplayer.getDefault().setStatusText(
-                    NbBundle.getMessage(ElementOpen.class, "WARN_ElementNotFound"), 
+                    NbBundle.getMessage(ElementOpen.class, "WARN_ElementNotFound"),
                     StatusDisplayer.IMPORTANCE_ANNOTATION);
         }
         boolean success = UiUtils.open(fo, offsetA);
@@ -343,9 +503,12 @@ public final class ElementOpen {
     private static final int AWT_TIMEOUT = 1000;
     private static final int NON_AWT_TIMEOUT = 2000;
 
-    private static int[] getOffset(final FileObject fo, final ElementHandle<? extends Element> handle, final AtomicBoolean cancel) throws IOException {
-        final int[]  result = new int[] {-1, -1};
-        
+    private static void getOffset(final FileObject fo, final ElementHandle<? extends Element> handle, final Object[] result, final AtomicBoolean cancel) throws IOException {
+        result[1] = -1;
+        result[2] = -1;
+        result[3] = -1;
+        result[4] = -1;
+
         final JavaSource js = JavaSource.forFileObject(fo);
         if (js != null) {
             final Task<CompilationController> t = new Task<CompilationController>() {
@@ -358,6 +521,7 @@ public final class ElementOpen {
                     } catch (IOException ioe) {
                         Exceptions.printStackTrace(ioe);
                     }
+                    result[5] = info.getCompilationUnit().getLineMap();
                     Element el = handle.resolve(info);
                     if (el == null) {
                         if (!SourceUtils.isScanInProgress()) {
@@ -369,63 +533,97 @@ public final class ElementOpen {
                         }
                         return;
                     }
-                    
+
                     if (el.getKind() == ElementKind.PACKAGE) {
                         // FindDeclarationVisitor does not work since there is no visitPackage.
                         // Imprecise but should usually work:
                         Matcher m = Pattern.compile("(?m)^package (.+);$").matcher(fo.asText(/*FileEncodingQuery.getEncoding(fo).name()*/)); // NOI18N
                         if (m.find()) {
-                            result[0] = m.start();
+                            result[1] = m.start();
                         }
                         return;
                     }
 
-                    FindDeclarationVisitor v = new FindDeclarationVisitor(el, info);
+                    result[6] = TreePathHandle.create(el, info);
 
+                    FindDeclarationVisitor v = new FindDeclarationVisitor(el, info);
                     CompilationUnitTree cu = info.getCompilationUnit();
 
                     v.scan(cu, null);
                     Tree elTree = v.declTree;
 
+                    if (elTree == null) {
+                        elTree = info.getTrees().getTree(el);
+                    }
+
                     if (elTree != null) {
-                        result[0] = (int)info.getTrees().getSourcePositions().getStartPosition(cu, elTree);
-                        result[1] = (int)info.getTrees().getSourcePositions().getEndPosition(cu, elTree);
+                        fillInTreePositions(info, elTree, result);
                     }
                 }
             };
 
             js.runUserActionTask(t, true);
         }
-        return result;
     }
-    
+
+    static void fillInTreePositions(CompilationInfo info, Tree forTree, Object[] target) {
+        CompilationUnitTree cu = info.getCompilationUnit();
+        target[1] = (int)info.getTrees().getSourcePositions().getStartPosition(forTree);
+        target[2] = (int)info.getTrees().getSourcePositions().getEndPosition(forTree);
+        int[] span = null;
+        switch(forTree.getKind()) {
+            case CLASS:
+                if ((int) target[1] >= 0 && (int) target[2] == -1) {
+                    // Compact Source file (JEP 512)  issue implicit class end position not found in code 
+                    // see JDK-8364015
+                    target[2] = (int) info.getTrees().getSourcePositions().getEndPosition(cu);
+                }
+            case INTERFACE:
+            case ENUM:
+            case ANNOTATION_TYPE:
+            case RECORD:
+                span = info.getTreeUtilities().findNameSpan((ClassTree)forTree);
+                break;
+            case METHOD:
+                span = info.getTreeUtilities().findNameSpan((MethodTree)forTree);
+                break;
+            case VARIABLE:
+                span = info.getTreeUtilities().findNameSpan((VariableTree)forTree);
+                break;
+        }
+        if (span != null) {
+            target[3] = span[0];
+            target[4] = span[1];
+        }
+    }
+
     // Private innerclasses ----------------------------------------------------
-    
+
     private static class FindDeclarationVisitor extends ErrorAwareTreePathScanner<Void, Void> {
-        
+
         private Element element;
         private Tree declTree;
         private CompilationInfo info;
-        
+
         public FindDeclarationVisitor(Element element, CompilationInfo info) {
             this.element = element;
             this.info = info;
         }
-        
+
 	@Override
         public Void visitClass(ClassTree tree, Void d) {
             handleDeclaration();
             super.visitClass(tree, d);
             return null;
         }
-        
+
 	@Override
         public Void visitMethod(MethodTree tree, Void d) {
             handleDeclaration();
             super.visitMethod(tree, d);
             return null;
         }
-        
+
 	@Override
         public Void visitVariable(VariableTree tree, Void d) {
             handleDeclaration();
@@ -439,22 +637,32 @@ public final class ElementOpen {
             super.visitModule(node, p);
             return null;
         }
-    
+
         public void handleDeclaration() {
             Element found = info.getTrees().getElement(getCurrentPath());
-            
+
             if ( element.equals( found ) ) {
                 declTree = getCurrentPath().getLeaf();
             }
         }
-    
+
     }
 
     static {
         ElementOpenAccessor.setInstance(new ElementOpenAccessor() {
             @Override
             public Object[] getOpenInfo(ClasspathInfo cpInfo, ElementHandle<? extends Element> el, AtomicBoolean cancel) {
-                return ElementOpen.getOpenInfo(cpInfo, el, cancel);
+                return ElementOpen.getOpenInfo(cpInfo, el, null, cancel);
+            }
+
+            @Override
+            public void fillInTreePositions(CompilationInfo info, Tree forTree, Object[] target) {
+                ElementOpen.fillInTreePositions(info, forTree, target);
+            }
+
+            @Override
+            public CompletableFuture<Object[]> getOpenInfoFuture(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, String nameOpt, AtomicBoolean cancel, boolean acquire) {
+                return ElementOpen.getFutureOpenInfo(cpInfo, el, nameOpt, cancel, acquire);
             }
         });
     }

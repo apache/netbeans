@@ -52,7 +52,7 @@ public class OptionsInitializer implements Initializer {
             return allFilters;
         }
         if (CLASS_FILTERS_ENABLED.equals(propertyName)) {
-            Set<String> enabled = new HashSet();
+            Set<String> enabled = new HashSet<>();
             fillClassFilters(enabled, true);
             return enabled;
         }

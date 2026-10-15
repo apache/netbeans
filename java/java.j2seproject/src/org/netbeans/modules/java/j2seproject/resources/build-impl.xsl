@@ -132,8 +132,8 @@ is divided into following sections:
                 <property file="${{user.properties.file}}"/>
                 <xsl:comment> The two properties below are usually overridden </xsl:comment>
                 <xsl:comment> by the active platform. Just a fallback. </xsl:comment>
-                <property name="default.javac.source" value="1.6"/>
-                <property name="default.javac.target" value="1.6"/>
+                <property name="default.javac.source" value="1.8"/>
+                <property name="default.javac.target" value="1.8"/>
             </target>
             
             <target name="-init-project">
@@ -1148,8 +1148,8 @@ is divided into following sections:
                         </union>
                         <taskdef name="testng" classname="org.testng.TestNGAntTask" classpath="${{run.test.classpath}}"/>
                         <testng>
-                            <xsl:attribute name="listeners">org.testng.reporters.VerboseReporter</xsl:attribute>
                             <xsl:attribute name="mode">${testng.mode}</xsl:attribute>
+                            <xsl:attribute name="verbose">5</xsl:attribute>
                             <xsl:attribute name="classfilesetref">test.set</xsl:attribute>
                             <xsl:attribute name="workingDir">${work.dir}</xsl:attribute> <!-- #47474: match <java> --> 
                             <xsl:attribute name="failureProperty">tests.failed</xsl:attribute>
@@ -1369,7 +1369,7 @@ is divided into following sections:
                                 <jvmarg value="-ea"/>
                                 <arg line="${{testng.debug.mode}}"/>
                                 <arg line="-d ${{build.test.results.dir}}"/>
-                                <arg line="-listener org.testng.reporters.VerboseReporter"/>
+                                <arg line="-verbose 5"/>
                                 <arg line="${{testng.cmd.args}}"/>
                             </customizeDebuggee>
                         </j2seproject3:debug>
@@ -3021,6 +3021,7 @@ is divided into following sections:
             <target name="debug-test-method">
                 <xsl:attribute name="depends">init,compile-test-single,-init-test-run-module-properties,-debug-start-debugger-test,-debug-start-debuggee-test-method</xsl:attribute>
             </target>
+            <target name="debug-single-method" depends="debug-test-method" />
             
             <target name="-do-debug-fix-test">
                 <xsl:attribute name="if">netbeans.home</xsl:attribute>

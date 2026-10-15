@@ -1,0 +1,4 @@
+Code completion result for source line:
+$example->|test(); // test5
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     test()                          [PUBLIC]   Example

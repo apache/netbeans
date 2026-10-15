@@ -74,7 +74,7 @@ public final class J2eeArchetypeFactory {
         // Such situation might happened if user wants to create project with server that
         // doesn't support any of EE version we supported in NetBeans (e.g. Tomcat 5.5)
         if (profile == null) {
-            profile = Profile.J2EE_14;
+            profile = Profile.JAKARTA_EE_8_FULL;
         }
         return getProvider(projectType).getArchetypeFor(profile);
     }
@@ -90,7 +90,12 @@ public final class J2eeArchetypeFactory {
     private static class AppClientArchetypes extends BaseJ2eeArchetypeProvider {
         @Override
         protected void setUpProjectArchetypes() {
-            addJavaEE8Archetype(Profile.JAVA_EE_8_FULL,"io.github.juneau001", "1.3", "webapp-javaee8"); //NOI18N
+            addJakartaEEArchetype(Profile.JAKARTA_EE_11_FULL,"mvn.archetypeGroupId.JakartaEE11_0","mvn.archetypeVersion.JakartaEE11_0","mvn.archetypeArtifactId.JakartaEE11_0");
+            addJakartaEEArchetype(Profile.JAKARTA_EE_10_FULL,"mvn.archetypeGroupId.JakartaEE10_0","mvn.archetypeVersion.JakartaEE10_0","mvn.archetypeArtifactId.JakartaEE10_0");
+            addJakartaEEArchetype(Profile.JAKARTA_EE_9_1_FULL,"mvn.archetypeGroupId.JakartaEE9_1","mvn.archetypeVersion.JakartaEE9_1","mvn.archetypeArtifactId.JakartaEE9_1");
+            addJakartaEEArchetype(Profile.JAKARTA_EE_9_FULL,"mvn.archetypeGroupId.JakartaEE9","mvn.archetypeVersion.JakartaEE9","mvn.archetypeArtifactId.JakartaEE9");
+            addJakartaEEArchetype(Profile.JAKARTA_EE_8_FULL,"mvn.archetypeGroupId.JakartaEE8","mvn.archetypeVersion.JakartaEE8","mvn.archetypeArtifactId.JakartaEE8");
+            addJavaEE8Archetype(Profile.JAVA_EE_8_FULL,"mvn.archetypeGroupId.JavaEE8", "mvn.archetypeVersion.JavaEE8", "mvn.archetypeArtifactId.JavaEE8"); //NOI18N
             addMojoArchetype(Profile.JAVA_EE_7_FULL, "1.1", "appclient-javaee7"); //NOI18N
             addMojoArchetype(Profile.JAVA_EE_6_FULL, "1.0", "appclient-javaee6"); //NOI18N
         //    addMojoArchetype(Profile.JAVA_EE_5, "1.0", "appclient-jee5"); //NOI18N
@@ -101,7 +106,12 @@ public final class J2eeArchetypeFactory {
     private static class EaArchetypes extends BaseJ2eeArchetypeProvider {
         @Override
         protected void setUpProjectArchetypes() {
-            addJavaEE8Archetype(Profile.JAVA_EE_8_FULL,"io.github.juneau001", "1.3", "webapp-javaee8"); //NOI18N
+            addJakartaEEArchetype(Profile.JAKARTA_EE_11_FULL,"mvn.archetypeGroupId.JakartaEE11_0","mvn.archetypeVersion.JakartaEE11_0","mvn.archetypeArtifactId.JakartaEE11_0");
+            addJakartaEEArchetype(Profile.JAKARTA_EE_10_FULL,"mvn.archetypeGroupId.JakartaEE10_0","mvn.archetypeVersion.JakartaEE10_0","mvn.archetypeArtifactId.JakartaEE10_0");
+            addJakartaEEArchetype(Profile.JAKARTA_EE_9_1_FULL,"mvn.archetypeGroupId.JakartaEE9_1","mvn.archetypeVersion.JakartaEE9_1","mvn.archetypeArtifactId.JakartaEE9_1");
+            addJakartaEEArchetype(Profile.JAKARTA_EE_9_FULL,"mvn.archetypeGroupId.JakartaEE9","mvn.archetypeVersion.JakartaEE9","mvn.archetypeArtifactId.JakartaEE9");
+            addJakartaEEArchetype(Profile.JAKARTA_EE_8_FULL,"mvn.archetypeGroupId.JakartaEE8","mvn.archetypeVersion.JakartaEE8","mvn.archetypeArtifactId.JakartaEE8");
+            addJavaEE8Archetype(Profile.JAVA_EE_8_FULL,"mvn.archetypeGroupId.JavaEE8", "mvn.archetypeVersion.JavaEE8", "mvn.archetypeArtifactId.JavaEE8"); //NOI18N
             addMojoArchetype(Profile.JAVA_EE_7_FULL, "1.1", "pom-root"); //NOI18N
             addMojoArchetype(Profile.JAVA_EE_6_FULL, "1.1", "pom-root"); //NOI18N
         }
@@ -110,7 +120,12 @@ public final class J2eeArchetypeFactory {
     private static class EarArchetypes extends BaseJ2eeArchetypeProvider {
         @Override
         protected void setUpProjectArchetypes() {
-            addJavaEE8Archetype(Profile.JAVA_EE_8_FULL,"io.github.juneau001", "1.3", "webapp-javaee8"); //NOI18N
+            addJakartaEEArchetype(Profile.JAKARTA_EE_11_FULL,"mvn.archetypeGroupId.JakartaEE11_0","mvn.archetypeVersion.JakartaEE11_0","mvn.archetypeArtifactId.JakartaEE11_0");
+            addJakartaEEArchetype(Profile.JAKARTA_EE_10_FULL,"mvn.archetypeGroupId.JakartaEE10_0","mvn.archetypeVersion.JakartaEE10_0","mvn.archetypeArtifactId.JakartaEE10_0");
+            addJakartaEEArchetype(Profile.JAKARTA_EE_9_1_FULL,"mvn.archetypeGroupId.JakartaEE9_1","mvn.archetypeVersion.JakartaEE9_1","mvn.archetypeArtifactId.JakartaEE9_1");
+            addJakartaEEArchetype(Profile.JAKARTA_EE_9_FULL,"mvn.archetypeGroupId.JakartaEE9","mvn.archetypeVersion.JakartaEE9","mvn.archetypeArtifactId.JakartaEE9");
+            addJakartaEEArchetype(Profile.JAKARTA_EE_8_FULL,"mvn.archetypeGroupId.JakartaEE8","mvn.archetypeVersion.JakartaEE8","mvn.archetypeArtifactId.JakartaEE8");
+            addJavaEE8Archetype(Profile.JAVA_EE_8_FULL,"mvn.archetypeGroupId.JavaEE8", "mvn.archetypeVersion.JavaEE8", "mvn.archetypeArtifactId.JavaEE8"); //NOI18N
             addMojoArchetype(Profile.JAVA_EE_7_FULL, "1.0", "ear-javaee7"); //NOI18N
             addMojoArchetype(Profile.JAVA_EE_6_FULL, "1.5", "ear-javaee6"); //NOI18N
             addMojoArchetype(Profile.JAVA_EE_5, "1.4", "ear-jee5"); //NOI18N
@@ -121,7 +136,12 @@ public final class J2eeArchetypeFactory {
     private static class EjbArchetypes extends BaseJ2eeArchetypeProvider {
         @Override
         protected void setUpProjectArchetypes() {
-            addJavaEE8Archetype(Profile.JAVA_EE_8_FULL,"io.github.juneau001", "1.3", "webapp-javaee8"); //NOI18N
+            addJakartaEEArchetype(Profile.JAKARTA_EE_11_FULL,"mvn.archetypeGroupId.JakartaEE11_0","mvn.archetypeVersion.JakartaEE11_0","mvn.archetypeArtifactId.JakartaEE11_0");
+            addJakartaEEArchetype(Profile.JAKARTA_EE_10_FULL,"mvn.archetypeGroupId.JakartaEE10_0","mvn.archetypeVersion.JakartaEE10_0","mvn.archetypeArtifactId.JakartaEE10_0");
+            addJakartaEEArchetype(Profile.JAKARTA_EE_9_1_FULL,"mvn.archetypeGroupId.JakartaEE9_1","mvn.archetypeVersion.JakartaEE9_1","mvn.archetypeArtifactId.JakartaEE9_1");
+            addJakartaEEArchetype(Profile.JAKARTA_EE_9_FULL,"mvn.archetypeGroupId.JakartaEE9","mvn.archetypeVersion.JakartaEE9","mvn.archetypeArtifactId.JakartaEE9");
+            addJakartaEEArchetype(Profile.JAKARTA_EE_8_FULL,"mvn.archetypeGroupId.JakartaEE8","mvn.archetypeVersion.JakartaEE8","mvn.archetypeArtifactId.JakartaEE8");
+            addJavaEE8Archetype(Profile.JAVA_EE_8_FULL,"mvn.archetypeGroupId.JavaEE8", "mvn.archetypeVersion.JavaEE8", "mvn.archetypeArtifactId.JavaEE8"); //NOI18N
             addMojoArchetype(Profile.JAVA_EE_7_FULL, "1.1", "ejb-javaee7"); //NOI18N
             addMojoArchetype(Profile.JAVA_EE_6_FULL, "1.5", "ejb-javaee6"); //NOI18N
             addMojoArchetype(Profile.JAVA_EE_5, "1.3", "ejb-jee5"); //NOI18N
@@ -132,17 +152,27 @@ public final class J2eeArchetypeFactory {
     private static class WebArchetypes extends BaseJ2eeArchetypeProvider {
         @Override
         protected void setUpProjectArchetypes() {
-            addJavaEE8Archetype(Profile.JAVA_EE_8_WEB,"io.github.juneau001", "1.3", "webapp-javaee8"); //NOI18N
+            addJakartaEEArchetype(Profile.JAKARTA_EE_11_WEB,"mvn.archetypeGroupId.JakartaEE11_0","mvn.archetypeVersion.JakartaEE11_0","mvn.archetypeArtifactId.JakartaEE11_0");
+            addJakartaEEArchetype(Profile.JAKARTA_EE_10_WEB,"mvn.archetypeGroupId.JakartaEE10_0","mvn.archetypeVersion.JakartaEE10_0","mvn.archetypeArtifactId.JakartaEE10_0");
+            addJakartaEEArchetype(Profile.JAKARTA_EE_9_1_WEB,"mvn.archetypeGroupId.JakartaEE9_1","mvn.archetypeVersion.JakartaEE9_1","mvn.archetypeArtifactId.JakartaEE9_1");
+            addJakartaEEArchetype(Profile.JAKARTA_EE_9_WEB,"mvn.archetypeGroupId.JakartaEE9","mvn.archetypeVersion.JakartaEE9","mvn.archetypeArtifactId.JakartaEE9");
+            addJakartaEEArchetype(Profile.JAKARTA_EE_8_WEB,"mvn.archetypeGroupId.JakartaEE8","mvn.archetypeVersion.JakartaEE8","mvn.archetypeArtifactId.JakartaEE8");
+            addJavaEE8Archetype(Profile.JAVA_EE_8_WEB,"mvn.archetypeGroupId.JavaEE8", "mvn.archetypeVersion.JavaEE8", "mvn.archetypeArtifactId.JavaEE8"); //NOI18N
             addMojoArchetype(Profile.JAVA_EE_7_WEB, "1.1", "webapp-javaee7"); //NOI18N
             addMojoArchetype(Profile.JAVA_EE_6_WEB, "1.5", "webapp-javaee6"); //NOI18N
-          //  addMojoArchetype(Profile.JAVA_EE_5, "1.3", "webapp-jee5"); //NOI18N
-          //  addMojoArchetype(Profile.J2EE_14, "1.3", "webapp-j2ee14"); //NOI18N
+            addMojoArchetype(Profile.JAVA_EE_5, "1.3", "webapp-jee5"); //NOI18N
+            addMojoArchetype(Profile.J2EE_14, "1.3", "webapp-j2ee14"); //NOI18N
 
             // This need to be here! It isn't one of an options when creating Web projects, but when creating Java EE projects
             // using Java EE 6 Full profile, then the same profile applies to Ejb, Web and Parent project creation - In that case
             // application is looking for Java EE 6 Full archetype to create the Web project with it, so we need to have it here
             // or otherwise Java EE project would not be created properly
-            addJavaEE8Archetype(Profile.JAVA_EE_8_FULL,"io.github.juneau001", "1.3", "webapp-javaee8"); //NOI18N
+            addJakartaEEArchetype(Profile.JAKARTA_EE_11_FULL,"mvn.archetypeGroupId.JakartaEE11_0","mvn.archetypeVersion.JakartaEE11_0","mvn.archetypeArtifactId.JakartaEE11_0");
+            addJakartaEEArchetype(Profile.JAKARTA_EE_10_FULL,"mvn.archetypeGroupId.JakartaEE10_0","mvn.archetypeVersion.JakartaEE10_0","mvn.archetypeArtifactId.JakartaEE10_0");
+            addJakartaEEArchetype(Profile.JAKARTA_EE_9_1_FULL,"mvn.archetypeGroupId.JakartaEE9_1","mvn.archetypeVersion.JakartaEE9_1","mvn.archetypeArtifactId.JakartaEE9_1");
+            addJakartaEEArchetype(Profile.JAKARTA_EE_9_FULL,"mvn.archetypeGroupId.JakartaEE9","mvn.archetypeVersion.JakartaEE9","mvn.archetypeArtifactId.JakartaEE9");
+            addJakartaEEArchetype(Profile.JAKARTA_EE_8_FULL,"mvn.archetypeGroupId.JakartaEE8","mvn.archetypeVersion.JakartaEE8","mvn.archetypeArtifactId.JakartaEE8");
+            addJavaEE8Archetype(Profile.JAVA_EE_8_FULL,"mvn.archetypeGroupId.JavaEE8", "mvn.archetypeVersion.JavaEE8", "mvn.archetypeArtifactId.JavaEE8"); //NOI18N
             addMojoArchetype(Profile.JAVA_EE_7_FULL, "1.1", "webapp-javaee7"); //NOI18N
             addMojoArchetype(Profile.JAVA_EE_6_FULL, "1.5", "webapp-javaee6"); //NOI18N
         }

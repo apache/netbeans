@@ -145,7 +145,7 @@ public class GenericResourceBean {
     }
 
     public void setMethodTypes(HttpMethodType[] types) {
-        methodTypes = new HashSet(Arrays.asList(types));
+        methodTypes = new HashSet<>(Arrays.asList(types));
     }
     
     private String[] uriParams = null;
@@ -175,7 +175,7 @@ public class GenericResourceBean {
             }
         }
         
-        return res.toArray(new String[res.size()]);
+        return res.toArray(new String[0]);
     }
 
     public String getQualifiedClassName() {

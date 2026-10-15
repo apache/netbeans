@@ -1,0 +1,13 @@
+Code completion result for source line:
+b.command("good").i|nheritIO().command()
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     identity(Closure)                          Object
+METHOD     inheritIO()                     [PUBLIC]   ProcessBuilder
+METHOD     inject(Closure)                            Object
+METHOD     inject(Object, Closure)                    Object
+METHOD     inspect()                                  String
+METHOD     invokeMethod(String, Object)               Object
+METHOD     is(Object)                                 boolean
+METHOD     isCase(Object)                             boolean
+METHOD     iterator()                                 Iterator

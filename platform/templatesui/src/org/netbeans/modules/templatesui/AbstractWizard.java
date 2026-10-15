@@ -121,7 +121,7 @@ implements WizardDescriptor.InstantiatingIterator<WizardDescriptor> {
             name(tw.getTargetName()).
             withParameters(params).build();
                     
-            Set<DataObject> objs = new LinkedHashSet(result.size() * 2);
+            Set<DataObject> objs = new LinkedHashSet<>(result.size() * 2);
             for (FileObject fileObject : result) {
                 objs.add(DataObject.find(fileObject));
             }
@@ -421,7 +421,7 @@ implements WizardDescriptor.InstantiatingIterator<WizardDescriptor> {
             EventQueue.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    p.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, names.toArray(new String[names.size()]));
+                    p.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, names.toArray(new String[0]));
                 }
             });
             fireChange();
@@ -476,7 +476,7 @@ implements WizardDescriptor.InstantiatingIterator<WizardDescriptor> {
     }
 
     @JavaScriptBody(args = "code", body = "return 0 || eval(code);")
-    native static Object eval(String code);
+    static native Object eval(String code);
     
     @JavaScriptBody(args = { "arr" }, body = 
         "for (var i = 0; i < arr.length; i++) {\n" +

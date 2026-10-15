@@ -32,6 +32,7 @@ import org.netbeans.modules.xml.jaxb.spi.SchemaCompiler;
 import org.netbeans.modules.xml.jaxb.spi.JAXBWizModuleConstants;
 import org.netbeans.modules.xml.jaxb.util.ProjectHelper;
 import org.netbeans.spi.project.ui.templates.support.Templates;
+import org.openide.NotifyDescriptor;
 import org.openide.WizardDescriptor;
 import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
@@ -109,7 +110,7 @@ public class JAXBWizardIterator implements TemplateWizard.Iterator  {
         
         Object prop = wiz.getProperty(WizardDescriptor.PROP_CONTENT_DATA); //NOI18N
         String[] beforeSteps = null;
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[]) prop;
         }
         String[] steps = createSteps(beforeSteps, panels);
@@ -120,8 +121,7 @@ public class JAXBWizardIterator implements TemplateWizard.Iterator  {
             if (c instanceof JComponent) { // assume Swing components
                 JComponent jc = (JComponent) c;
                 // Step #.
-                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, //NOI18N
-                                                    new Integer(i)); 
+                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i); //NOI18N
                 // Step name (actually the whole list for reference).
                 jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps); //NOI18N
             }
@@ -138,6 +138,7 @@ public class JAXBWizardIterator implements TemplateWizard.Iterator  {
 
     // TemplateWizard specific - Start
     public Set<DataObject> instantiate(TemplateWizard wiz) throws IOException {
+        wiz.setMessage(null);
         FileObject template = Templates.getTemplate( wiz );
         DataObject dTemplate = DataObject.find( template );  
         
@@ -149,14 +150,20 @@ public class JAXBWizardIterator implements TemplateWizard.Iterator  {
                 String msg = NbBundle.getMessage(JAXBWizardIterator.class,
                         "MSG_ErrorReadingSchema");//NOI18N
                 wiz.putProperty(JAXBWizModuleConstants.WIZ_ERROR_MSG, msg);
+                wiz.setMessage(msg);
+                wiz.setMessageType(NotifyDescriptor.ERROR_MESSAGE);
+                wiz.setValid(false);
                 project.getProjectDirectory().getFileSystem().refresh(true);
-                throw new IOException(msg);
+                throw new IOException(msg, ex);
             }
             schemaCompiler.compileSchema(wiz);
         } else {
             String msg = NbBundle.getMessage(JAXBWizardIterator.class,
                     "MSG_NoSchemaCompiler");//NOI18N
             wiz.putProperty(JAXBWizModuleConstants.WIZ_ERROR_MSG, msg);
+            wiz.setMessage(msg);
+            wiz.setMessageType(NotifyDescriptor.ERROR_MESSAGE);
+            wiz.setValid(false);
             project.getProjectDirectory().getFileSystem().refresh(true);
             throw new IOException(msg);
         }
@@ -193,7 +200,7 @@ public class JAXBWizardIterator implements TemplateWizard.Iterator  {
 
         Object prop = wiz.getProperty(WizardDescriptor.PROP_CONTENT_DATA); // NOI18N
         String[] beforeSteps = null;
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[]) prop;
         }
         String[] steps = createSteps(beforeSteps, panels);
@@ -207,8 +214,7 @@ public class JAXBWizardIterator implements TemplateWizard.Iterator  {
             if (c instanceof JComponent) { // assume Swing components
                 JComponent jc = (JComponent) c;
                 // Step #.
-                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, //NOI18N
-                        new Integer(i)); 
+                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i); //NOI18N
                 // Step name (actually the whole list for reference).
                 jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps); //NOI18N
             }

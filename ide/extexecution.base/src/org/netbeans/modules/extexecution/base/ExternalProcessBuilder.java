@@ -256,7 +256,7 @@ public final class ExternalProcessBuilder implements Callable<Process> {
         List<String> args = buildArguments();
         commandList.addAll(args);
 
-        java.lang.ProcessBuilder pb = new java.lang.ProcessBuilder(commandList.toArray(new String[commandList.size()]));
+        java.lang.ProcessBuilder pb = new java.lang.ProcessBuilder(commandList.toArray(new String[0]));
         if (workingDirectory != null) {
             pb.directory(workingDirectory);
         }

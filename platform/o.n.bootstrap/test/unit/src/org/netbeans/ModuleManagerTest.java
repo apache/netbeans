@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
@@ -48,7 +49,12 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
+import java.util.logging.Handler;
 import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertNotEquals;
+import static org.netbeans.SetupHid.createTestJAR;
 import org.netbeans.junit.RandomlyFails;
 import org.openide.modules.Dependency;
 import org.openide.modules.ModuleInfo;
@@ -88,11 +94,27 @@ public class ModuleManagerTest extends SetupHid {
     public ModuleManagerTest(String name) {
         super(name);
     }
+    
+    private LogHandler logHandler = new LogHandler();
 
     @Override
     protected Level logLevel() {
         return Level.FINE;
     }
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp(); 
+        Util.err.addHandler(logHandler);
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        Util.err.removeHandler(logHandler);
+        super.tearDown();
+    }
+    
+    
     
     /** Load simple-module and depends-on-simple-module.
      * Make sure they can be installed and in a sane order.
@@ -147,7 +169,7 @@ public class ModuleManagerTest extends SetupHid {
             ), installer.args);
             Class<?> somethingelse = Class.forName("org.bar.SomethingElse", true, m2.getClassLoader());
             Method somemethod = somethingelse.getMethod("message");
-            assertEquals("hello", somemethod.invoke(somethingelse.newInstance()));
+            assertEquals("hello", somemethod.invoke(somethingelse.getDeclaredConstructor().newInstance()));
             installer.clear();
             List<Module> toDisable = mgr.simulateDisable(Collections.singleton(m1));
             assertEquals("correct result of simulateDisable", Arrays.asList(m2, m1), toDisable);
@@ -206,7 +228,7 @@ public class ModuleManagerTest extends SetupHid {
             }
             assertEquals(Collections.EMPTY_SET, m1.getProblems());
             assertEquals(Collections.EMPTY_SET, m2.getProblems());
-            List toEnable = mgr.simulateEnable(Collections.singleton(m2));
+            List<Module> toEnable = mgr.simulateEnable(Collections.singleton(m2));
             assertEquals("correct result of simulateEnable", Arrays.asList(m1, m2), toEnable);
             mgr.enable(Collections.singleton(m2));
             assertEquals(Arrays.asList(
@@ -221,7 +243,7 @@ public class ModuleManagerTest extends SetupHid {
             ), installer.args);
             Class<?> somethingelse = Class.forName("org.bar.SomethingElse", true, m2.getClassLoader());
             Method somemethod = somethingelse.getMethod("message");
-            assertEquals("hello", somemethod.invoke(somethingelse.newInstance()));
+            assertEquals("hello", somemethod.invoke(somethingelse.getDeclaredConstructor().newInstance()));
             // Now try turning off m2 and make sure m1 goes away as well.
             assertEquals("correct result of simulateDisable", Arrays.asList(m2, m1), mgr.simulateDisable(Collections.singleton(m2)));
             installer.clear();
@@ -257,9 +279,16 @@ public class ModuleManagerTest extends SetupHid {
             } catch (IllegalArgumentException iae) {
                 // Good. m2 should not have been passed to it.
             }
+            try {
+                mgr.enable(new HashSet<>(Arrays.asList(m1, m2)));
+                fail("Should not permit you enablem of an eager module");
+            } catch (IllegalModuleException iae) {
+                // Good. m2 should not have been passed to it.
+                assertNotEquals(iae.getMessage(), iae.getLocalizedMessage());
+            }
             assertEquals(Collections.EMPTY_SET, m1.getProblems());
             assertEquals(Collections.EMPTY_SET, m2.getProblems());
-            List toEnable = mgr.simulateEnable(Collections.singleton(m1));
+            List<Module> toEnable = mgr.simulateEnable(Collections.singleton(m1));
             assertEquals("correct result of simulateEnable", Arrays.asList(m1, m2), toEnable);
             mgr.enable(Collections.singleton(m1));
             assertEquals(Arrays.asList(
@@ -274,7 +303,7 @@ public class ModuleManagerTest extends SetupHid {
             ), installer.args);
             Class<?> somethingelse = Class.forName("org.bar.SomethingElse", true, m2.getClassLoader());
             Method somemethod = somethingelse.getMethod("message");
-            assertEquals("hello", somemethod.invoke(somethingelse.newInstance()));
+            assertEquals("hello", somemethod.invoke(somethingelse.getDeclaredConstructor().newInstance()));
             // Now try turning off m1 and make sure m2 goes away quietly.
             assertEquals("correct result of simulateDisable", Arrays.asList(m2, m1), mgr.simulateDisable(Collections.singleton(m1)));
             installer.clear();
@@ -304,7 +333,7 @@ public class ModuleManagerTest extends SetupHid {
             Module m1 = mgr.create(new File(jars, "simple-module.jar"), null, false, true, false);
             Module m2 = mgr.create(new File(jars, "depends-on-simple-module.jar"), null, false, false, false);
             Module m3 = mgr.create(new File(jars, "dep-on-dep-on-simple.jar"), null, false, false, true);
-            List toEnable = mgr.simulateEnable(Collections.singleton(m2));
+            List<Module> toEnable = mgr.simulateEnable(Collections.singleton(m2));
             assertEquals("correct result of simulateEnable", Arrays.asList(m1, m2, m3), toEnable);
             mgr.enable(Collections.singleton(m2));
             assertEquals(Arrays.asList(
@@ -321,7 +350,7 @@ public class ModuleManagerTest extends SetupHid {
             ), installer.args);
             Class<?> somethingelseagain = Class.forName("org.baz.SomethingElseAgain", true, m3.getClassLoader());
             Method somemethod = somethingelseagain.getMethod("doit");
-            assertEquals("hello", somemethod.invoke(somethingelseagain.newInstance()));
+            assertEquals("hello", somemethod.invoke(somethingelseagain.getDeclaredConstructor().newInstance()));
             assertEquals("correct result of simulateDisable", Arrays.asList(m3, m2, m1), mgr.simulateDisable(Collections.singleton(m2)));
             installer.clear();
             mgr.disable(Collections.singleton(m2));
@@ -360,13 +389,13 @@ public class ModuleManagerTest extends SetupHid {
             assertTrue(m1.isEnabled());
             assertFalse(m2.isEnabled());
             assertTrue(m3.isEnabled());
-            List toEnable = mgr.simulateEnable(Collections.singleton(m2));
+            List<Module> toEnable = mgr.simulateEnable(Collections.singleton(m2));
             assertEquals("correct result of simulateEnable", Collections.singletonList(m2), toEnable);
             mgr.enable(Collections.singleton(m2));
             assertTrue(m1.isEnabled());
             assertTrue(m2.isEnabled());
             assertTrue(m3.isEnabled());
-            List toDisable = mgr.simulateDisable(Collections.singleton(m2));
+            List<Module> toDisable = mgr.simulateDisable(Collections.singleton(m2));
             assertEquals("correct result of simulateDisable", Collections.singletonList(m2), toDisable);
             mgr.disable(Collections.singleton(m2));
             assertTrue(m1.isEnabled());
@@ -629,8 +658,8 @@ public class ModuleManagerTest extends SetupHid {
             // Make sure that classloading is OK:
             Module m = mgr.create(new File(jars, "depends-on-lib-undecl.jar"), null, false, false, false);
             mgr.enable(m);
-            Class c = m.getClassLoader().loadClass("org.dol.User");
-            Object o = c.newInstance();
+            Class<?> c = m.getClassLoader().loadClass("org.dol.User");
+            Object o = c.getDeclaredConstructor().newInstance();
             Field f = c.getField("val");
             assertEquals(42, f.getInt(o));
             mgr.disable(m);
@@ -862,9 +891,9 @@ public class ModuleManagerTest extends SetupHid {
         try {
             Module m = mgr.create(new File(jars, "patchable.jar"), null, false, false, false);
             mgr.enable(m);
-            Class c = m.getClassLoader().loadClass("pkg.subpkg.A");
+            Class<?> c = m.getClassLoader().loadClass("pkg.subpkg.A");
             Field f = c.getField("val");
-            Object o = c.newInstance();
+            Object o = c.getDeclaredConstructor().newInstance();
             assertEquals(25, f.getInt(o));
         } finally {
             mgr.mutexPrivileged().exitWriteAccess();
@@ -913,7 +942,7 @@ public class ModuleManagerTest extends SetupHid {
                 m2,
                 Arrays.asList(m1, m2)
             ), installer.args);
-            Class testclazz = Class.forName("org.prov_foo.Clazz", true, m1.getClassLoader());
+            Class<?> testclazz = Class.forName("org.prov_foo.Clazz", true, m1.getClassLoader());
             try {
                 Class.forName("org.prov_foo.Clazz", true, m2.getClassLoader());
                 fail("Should not be able to access classes due to prov-req deps only");
@@ -1161,7 +1190,7 @@ public class ModuleManagerTest extends SetupHid {
                 m1,
                 Arrays.asList(m2, m1)
             ), installer.args);
-            Class testclazz = Class.forName("org.prov_foo.Clazz", true, m1.getClassLoader());
+            Class<?> testclazz = Class.forName("org.prov_foo.Clazz", true, m1.getClassLoader());
             try {
                 Class.forName("org.prov_foo.Clazz", true, m2.getClassLoader());
                 fail("Should not be able to access classes due to prov-req deps only");
@@ -1227,7 +1256,7 @@ public class ModuleManagerTest extends SetupHid {
             // m3 is eager module, which depends on m2
             Module m3 = mgr.create(new File(jars, "dep-on-needs_foo-simple.jar"), null, false, false, true);
             
-            mgr.enable(Collections.EMPTY_SET);
+            mgr.enable(Collections.emptySet());
             // since m1 is disabled, eager module m3 should be still disabled
             assertFalse("Incorrectly enabled m1",m1.isEnabled());
             assertFalse("Incorrectly enabled m2",m2.isEnabled());
@@ -1326,7 +1355,7 @@ public class ModuleManagerTest extends SetupHid {
                 m1,
                 Arrays.asList(m2, m1)
             ), installer.args);
-            Class testclazz = Class.forName("org.prov_foo.Clazz", true, m1.getClassLoader());
+            Class<?> testclazz = Class.forName("org.prov_foo.Clazz", true, m1.getClassLoader());
             try {
                 Class.forName("org.prov_foo.Clazz", true, m2.getClassLoader());
                 fail("Should not be able to access classes due to prov-req deps only");
@@ -1475,7 +1504,7 @@ public class ModuleManagerTest extends SetupHid {
                 m3 = mgr.create(copyJar(m2.getJarFile(), manifest), null, false, true, false);
             }
             
-            Set allThreeModules = new HashSet<Module>(Arrays.asList(m1, m3, m2));
+            Set<Module> allThreeModules = new HashSet<>(Arrays.asList(m1, m3, m2));
             
             toEnable = mgr.simulateEnable(new HashSet<Module>(m2List));
             assertEquals("all 3 need to be enabled", allThreeModules, new HashSet<Module>(toEnable));
@@ -1855,7 +1884,7 @@ public class ModuleManagerTest extends SetupHid {
         try {
             Module m = mgr.create(jar, null, false, false, false);
             mgr.enable(m);
-            Class c = m.getClassLoader().loadClass("org.foo.Something");
+            Class<?> c = m.getClassLoader().loadClass("org.foo.Something");
             URL u = m.getClassLoader().getResource("org/foo/Something.class");
             URLConnection uc = u.openConnection();
             assertNotNull("connetion", uc);
@@ -1864,9 +1893,9 @@ public class ModuleManagerTest extends SetupHid {
             mgr.disable(m);
             mgr.delete(m);
 
-            WeakReference<Class> refC = new WeakReference<Class>(c);
-            WeakReference<URL> refU = new WeakReference<URL>(u);
-            WeakReference<URLConnection> refUC = new WeakReference<URLConnection>(uc);
+            WeakReference<Class<?>> refC = new WeakReference<>(c);
+            WeakReference<URL> refU = new WeakReference<>(u);
+            WeakReference<URLConnection> refUC = new WeakReference<>(uc);
 
             c = null;
             u = null;
@@ -2038,8 +2067,8 @@ public class ModuleManagerTest extends SetupHid {
             Module m2 = mgr.create(new File(jars, "uses-api-simple-dep.jar"), null, false, false, false);
             mgr.enable(m1);
             mgr.enable(m2);
-            m2.getClassLoader().loadClass("usesapi.UsesPublicClass").newInstance();
-            m2.getClassLoader().loadClass("usesapi.UsesImplClass").newInstance();
+            m2.getClassLoader().loadClass("usesapi.UsesPublicClass").getDeclaredConstructor().newInstance();
+            m2.getClassLoader().loadClass("usesapi.UsesImplClass").getDeclaredConstructor().newInstance();
             mgr.disable(m2);
             mgr.disable(m1);
             mgr.delete(m2);
@@ -2049,13 +2078,17 @@ public class ModuleManagerTest extends SetupHid {
             mgr.enable(m1);
             mgr.enable(m2);
             try {
-                m2.getClassLoader().loadClass("usesapi.UsesPublicClass").newInstance();
+                m2.getClassLoader().loadClass("usesapi.UsesPublicClass").getDeclaredConstructor().newInstance();
                 fail();
-            } catch (NoClassDefFoundError e) {}
+            } catch (InvocationTargetException e) {
+                assertTrue(e.getCause() instanceof NoClassDefFoundError);
+            }
             try {
-                m2.getClassLoader().loadClass("usesapi.UsesImplClass").newInstance();
+                m2.getClassLoader().loadClass("usesapi.UsesImplClass").getDeclaredConstructor().newInstance();
                 fail();
-            } catch (NoClassDefFoundError e) {}
+            } catch (InvocationTargetException e) {
+                assertTrue(e.getCause() instanceof NoClassDefFoundError);
+            }
             assertNotNull(mgr.getClassLoader().getResource("usesapi/UsesImplClass.class"));
             assertNotNull(mgr.getClassLoader().getResource("org/netbeans/api/foo/PublicClass.class"));
             assertNotNull(mgr.getClassLoader().getResource("org/netbeans/modules/foo/ImplClass.class"));
@@ -2068,13 +2101,17 @@ public class ModuleManagerTest extends SetupHid {
             mgr.enable(m1);
             mgr.enable(m2);
             try {
-                m2.getClassLoader().loadClass("usesapi.UsesPublicClass").newInstance();
+                m2.getClassLoader().loadClass("usesapi.UsesPublicClass").getDeclaredConstructor().newInstance();
                 fail();
-            } catch (NoClassDefFoundError e) {}
+            } catch (InvocationTargetException e) {
+                assertTrue(e.getCause() instanceof NoClassDefFoundError);
+            }
             try {
-                m2.getClassLoader().loadClass("usesapi.UsesImplClass").newInstance();
+                m2.getClassLoader().loadClass("usesapi.UsesImplClass").getDeclaredConstructor().newInstance();
                 fail();
-            } catch (NoClassDefFoundError e) {}
+            } catch (InvocationTargetException e) {
+                assertTrue(e.getCause() instanceof NoClassDefFoundError);
+            }
             mgr.disable(m2);
             mgr.disable(m1);
             mgr.delete(m2);
@@ -2083,8 +2120,8 @@ public class ModuleManagerTest extends SetupHid {
             m2 = mgr.create(new File(jars, "uses-api-impl-dep.jar"), null, false, false, false);
             mgr.enable(m1);
             mgr.enable(m2);
-            m2.getClassLoader().loadClass("usesapi.UsesPublicClass").newInstance();
-            m2.getClassLoader().loadClass("usesapi.UsesImplClass").newInstance();
+            m2.getClassLoader().loadClass("usesapi.UsesPublicClass").getDeclaredConstructor().newInstance();
+            m2.getClassLoader().loadClass("usesapi.UsesImplClass").getDeclaredConstructor().newInstance();
             mgr.disable(m2);
             mgr.disable(m1);
             mgr.delete(m2);
@@ -2095,11 +2132,13 @@ public class ModuleManagerTest extends SetupHid {
             mgr.enable(m1);
             assertEquals("uses-api-simple-dep.jar can be enabled", Collections.EMPTY_SET, m2.getProblems());
             mgr.enable(m2);
-            m2.getClassLoader().loadClass("usesapi.UsesPublicClass").newInstance();
+            m2.getClassLoader().loadClass("usesapi.UsesPublicClass").getDeclaredConstructor().newInstance();
             try {
-                m2.getClassLoader().loadClass("usesapi.UsesImplClass").newInstance();
+                m2.getClassLoader().loadClass("usesapi.UsesImplClass").getDeclaredConstructor().newInstance();
                 fail();
-            } catch (NoClassDefFoundError e) {}
+            } catch (InvocationTargetException e) {
+                assertTrue(e.getCause() instanceof NoClassDefFoundError);
+            }
             mgr.disable(m2);
             mgr.disable(m1);
             mgr.delete(m2);
@@ -2108,11 +2147,13 @@ public class ModuleManagerTest extends SetupHid {
             m2 = mgr.create(new File(jars, "uses-api-spec-dep.jar"), null, false, false, false);
             mgr.enable(m1);
             mgr.enable(m2);
-            m2.getClassLoader().loadClass("usesapi.UsesPublicClass").newInstance();
+            m2.getClassLoader().loadClass("usesapi.UsesPublicClass").getDeclaredConstructor().newInstance();
             try {
-                m2.getClassLoader().loadClass("usesapi.UsesImplClass").newInstance();
+                m2.getClassLoader().loadClass("usesapi.UsesImplClass").getDeclaredConstructor().newInstance();
                 fail();
-            } catch (NoClassDefFoundError e) {}
+            } catch (InvocationTargetException e) {
+                assertTrue(e.getCause() instanceof NoClassDefFoundError);
+            }
             mgr.disable(m2);
             mgr.disable(m1);
             mgr.delete(m2);
@@ -2121,8 +2162,8 @@ public class ModuleManagerTest extends SetupHid {
             m2 = mgr.create(new File(jars, "uses-api-impl-dep.jar"), null, false, false, false);
             mgr.enable(m1);
             mgr.enable(m2);
-            m2.getClassLoader().loadClass("usesapi.UsesPublicClass").newInstance();
-            m2.getClassLoader().loadClass("usesapi.UsesImplClass").newInstance();
+            m2.getClassLoader().loadClass("usesapi.UsesPublicClass").getDeclaredConstructor().newInstance();
+            m2.getClassLoader().loadClass("usesapi.UsesImplClass").getDeclaredConstructor().newInstance();
             mgr.disable(m2);
             mgr.disable(m1);
             mgr.delete(m2);
@@ -2154,15 +2195,17 @@ public class ModuleManagerTest extends SetupHid {
             assertEquals("uses-and-exports-api.jar had no problems", Collections.EMPTY_SET, m2.getProblems());
             assertEquals("uses-api-transitively.jar had no problems", Collections.EMPTY_SET, m3.getProblems());
             assertEquals("uses-api-directly.jar had no problems", Collections.EMPTY_SET, m4.getProblems());
-            mgr.enable(new HashSet<Module>(Arrays.asList(m1, m2, m3, m4)));
-            m4.getClassLoader().loadClass("usesapitrans.UsesDirectAPI").newInstance();
-            m4.getClassLoader().loadClass("usesapitrans.UsesIndirectAPI").newInstance();
-            m3.getClassLoader().loadClass("usesapitrans.UsesDirectAPI").newInstance();
+            mgr.enable(new HashSet<>(Arrays.asList(m1, m2, m3, m4)));
+            m4.getClassLoader().loadClass("usesapitrans.UsesDirectAPI").getDeclaredConstructor().newInstance();
+            m4.getClassLoader().loadClass("usesapitrans.UsesIndirectAPI").getDeclaredConstructor().newInstance();
+            m3.getClassLoader().loadClass("usesapitrans.UsesDirectAPI").getDeclaredConstructor().newInstance();
             try {
-                m3.getClassLoader().loadClass("usesapitrans.UsesIndirectAPI").newInstance();
+                m3.getClassLoader().loadClass("usesapitrans.UsesIndirectAPI").getDeclaredConstructor().newInstance();
                 fail("Should not be able to use a transitive API class with no direct dependency");
-            } catch (NoClassDefFoundError e) {}
-            mgr.disable(new HashSet<Module>(Arrays.asList(m1, m2, m3, m4)));
+            } catch (InvocationTargetException e) {
+                assertTrue(e.getCause() instanceof NoClassDefFoundError);
+            }
+            mgr.disable(new HashSet<>(Arrays.asList(m1, m2, m3, m4)));
             mgr.delete(m4);
             mgr.delete(m3);
             mgr.delete(m2);
@@ -2187,34 +2230,34 @@ public class ModuleManagerTest extends SetupHid {
             assertEquals("uses-api-directly.jar had no problems", Collections.EMPTY_SET, m4.getProblems());
             assertEquals("uses-api-impl-dep-for-friends.jar had no problems", Collections.EMPTY_SET, m5.getProblems());
             mgr.enable(new HashSet<Module>(Arrays.asList(m1, m2, m3, m4, m5)));
-            m2.getClassLoader().loadClass("usesapi.UsesPublicClass").newInstance();
+            m2.getClassLoader().loadClass("usesapi.UsesPublicClass").getDeclaredConstructor().newInstance();
             try {
-                m2.getClassLoader().loadClass("usesapi.UsesImplClass").newInstance();
+                m2.getClassLoader().loadClass("usesapi.UsesImplClass").getDeclaredConstructor().newInstance();
                 fail ("Even friends modules cannot access implementation classes");
-            } catch (NoClassDefFoundError ex) {
-                // ok
+            } catch (InvocationTargetException ex) {
+                assertTrue(ex.getCause() instanceof NoClassDefFoundError);
             }
 
             try {
-                m4.getClassLoader().loadClass("usesapi.UsesPublicClass").newInstance();
+                m4.getClassLoader().loadClass("usesapi.UsesPublicClass").getDeclaredConstructor().newInstance();
                 fail ("m4 is not friend and should not be allowed to load the class");
-            } catch (NoClassDefFoundError ex) {
-                // ok
+            } catch (InvocationTargetException ex) {
+                assertTrue(ex.getCause() instanceof NoClassDefFoundError);
             }
             try {
-                m4.getClassLoader().loadClass("usesapi.UsesImplClass").newInstance();
+                m4.getClassLoader().loadClass("usesapi.UsesImplClass").getDeclaredConstructor().newInstance();
                 fail ("m4 is not friend and should not be allowed to load the implementation either");
-            } catch (NoClassDefFoundError ex) {
-                // ok
+            } catch (InvocationTargetException ex) {
+                assertTrue(ex.getCause() instanceof NoClassDefFoundError);
             }
             try {
-                m5.getClassLoader().loadClass("usesapi.UsesPublicClass").newInstance();
-            } catch (NoClassDefFoundError e) {
+                m5.getClassLoader().loadClass("usesapi.UsesPublicClass").getDeclaredConstructor().newInstance();
+            } catch (ReflectiveOperationException e) {
                 fail("m5 has an implementation dependency and has not been allowed to load the public class");
             }
             try {
-                m5.getClassLoader().loadClass("usesapi.UsesImplClass").newInstance();
-            } catch (NoClassDefFoundError e) {
+                m5.getClassLoader().loadClass("usesapi.UsesImplClass").getDeclaredConstructor().newInstance();
+            } catch (ReflectiveOperationException e) {
                 fail("m5 has an implementation dependency and has not been allowed to load the imlpementation class");
             }
 
@@ -2238,31 +2281,31 @@ public class ModuleManagerTest extends SetupHid {
             Module m1 = mgr.create(new File(jars, "simple-module.jar"), null, false, false, false);
             Module m2 = mgr.create(new File(jars, "depends-on-simple-module.jar"), null, false, false, false);
             Module m3 = mgr.create(new File(jars, "dep-on-dep-on-simple.jar"), null, false, false, false);
-            Set<Module> m1m2 = new HashSet<Module>(Arrays.asList(m1, m2));
-            Set<Module> m2m3 = new HashSet<Module>(Arrays.asList(m2, m3));
-            assertEquals(Collections.EMPTY_SET, mgr.getModuleInterdependencies(m1, false, false));
-            assertEquals(Collections.EMPTY_SET, mgr.getModuleInterdependencies(m1, false, true));
-            assertEquals(Collections.singleton(m2), mgr.getModuleInterdependencies(m1, true, false));
-            assertEquals(m2m3, mgr.getModuleInterdependencies(m1, true, true));
-            assertEquals(Collections.singleton(m1), mgr.getModuleInterdependencies(m2, false, false));
-            assertEquals(Collections.singleton(m1), mgr.getModuleInterdependencies(m2, false, true));
-            assertEquals(Collections.singleton(m3), mgr.getModuleInterdependencies(m2, true, false));
-            assertEquals(Collections.singleton(m3), mgr.getModuleInterdependencies(m2, true, true));
-            assertEquals(Collections.singleton(m2), mgr.getModuleInterdependencies(m3, false, false));
-            assertEquals(m1m2, mgr.getModuleInterdependencies(m3, false, true));
-            assertEquals(Collections.EMPTY_SET, mgr.getModuleInterdependencies(m3, true, false));
-            assertEquals(Collections.EMPTY_SET, mgr.getModuleInterdependencies(m3, true, true));
+            Set<Module> m1m2 = new HashSet<>(Arrays.asList(m1, m2));
+            Set<Module> m2m3 = new HashSet<>(Arrays.asList(m2, m3));
+            assertEquals(Collections.EMPTY_SET, mgr.getModuleInterdependencies(m1, false, false, true));
+            assertEquals(Collections.EMPTY_SET, mgr.getModuleInterdependencies(m1, false, true, true));
+            assertEquals(Collections.singleton(m2), mgr.getModuleInterdependencies(m1, true, false, true));
+            assertEquals(m2m3, mgr.getModuleInterdependencies(m1, true, true, true));
+            assertEquals(Collections.singleton(m1), mgr.getModuleInterdependencies(m2, false, false, true));
+            assertEquals(Collections.singleton(m1), mgr.getModuleInterdependencies(m2, false, true, true));
+            assertEquals(Collections.singleton(m3), mgr.getModuleInterdependencies(m2, true, false, true));
+            assertEquals(Collections.singleton(m3), mgr.getModuleInterdependencies(m2, true, true, true));
+            assertEquals(Collections.singleton(m2), mgr.getModuleInterdependencies(m3, false, false, true));
+            assertEquals(m1m2, mgr.getModuleInterdependencies(m3, false, true, true));
+            assertEquals(Collections.EMPTY_SET, mgr.getModuleInterdependencies(m3, true, false, true));
+            assertEquals(Collections.EMPTY_SET, mgr.getModuleInterdependencies(m3, true, true, true));
             m1 = mgr.create(new File(jars, "prov-foo.jar"), null, false, false, false);
             m2 = mgr.create(new File(jars, "prov-foo-bar.jar"), null, false, false, false);
             m3 = mgr.create(new File(jars, "req-foo.jar"), null, false, false, false);
             Module m4 = mgr.create(new File(jars, "prov-baz.jar"), null, false, false, false);
             Module m5 = mgr.create(new File(jars, "req-foo-baz.jar"), null, false, false, false);
-            m1m2 = new HashSet<Module>(Arrays.asList(m1, m2));
-            assertEquals(m1m2, mgr.getModuleInterdependencies(m3, false, true));
-            Set<Module> m1m2m4 = new HashSet<Module>(Arrays.asList(m1, m2, m4));
-            assertEquals(m1m2m4, mgr.getModuleInterdependencies(m5, false, true));
-            Set<Module> m3m5 = new HashSet<Module>(Arrays.asList(m3, m5));
-            assertEquals(m3m5, mgr.getModuleInterdependencies(m1, true, true));
+            m1m2 = new HashSet<>(Arrays.asList(m1, m2));
+            assertEquals(m1m2, mgr.getModuleInterdependencies(m3, false, true, true));
+            Set<Module> m1m2m4 = new HashSet<>(Arrays.asList(m1, m2, m4));
+            assertEquals(m1m2m4, mgr.getModuleInterdependencies(m5, false, true, true));
+            Set<Module> m3m5 = new HashSet<>(Arrays.asList(m3, m5));
+            assertEquals(m3m5, mgr.getModuleInterdependencies(m1, true, true, true));
             // XXX could do more...
         } finally {
             mgr.mutexPrivileged().exitWriteAccess();
@@ -2295,20 +2338,20 @@ public class ModuleManagerTest extends SetupHid {
             Module m1 = mgr.create(f1, null, false, false, false);
             Module m2 = mgr.create(f2, null, false, false, false);
             Module m3 = mgr.create(f3, null, false, false, false);
-            Set<Module> m1m2 = new HashSet<Module>(Arrays.asList(m1, m2));
-            Set<Module> m2m3 = new HashSet<Module>(Arrays.asList(m2, m3));
-            assertEquals(Collections.EMPTY_SET, mgr.getModuleInterdependencies(m1, false, false));
-            assertEquals(Collections.EMPTY_SET, mgr.getModuleInterdependencies(m1, false, true));
-            assertEquals(Collections.singleton(m2), mgr.getModuleInterdependencies(m1, true, false));
-            assertEquals(m2m3, mgr.getModuleInterdependencies(m1, true, true));
-            assertEquals(Collections.singleton(m1), mgr.getModuleInterdependencies(m2, false, false));
-            assertEquals(Collections.singleton(m1), mgr.getModuleInterdependencies(m2, false, true));
-            assertEquals(Collections.singleton(m3), mgr.getModuleInterdependencies(m2, true, false));
-            assertEquals(Collections.singleton(m3), mgr.getModuleInterdependencies(m2, true, true));
-            assertEquals(Collections.singleton(m2), mgr.getModuleInterdependencies(m3, false, false));
-            assertEquals(m1m2, mgr.getModuleInterdependencies(m3, false, true));
-            assertEquals(Collections.EMPTY_SET, mgr.getModuleInterdependencies(m3, true, false));
-            assertEquals(Collections.EMPTY_SET, mgr.getModuleInterdependencies(m3, true, true));
+            Set<Module> m1m2 = new HashSet<>(Arrays.asList(m1, m2));
+            Set<Module> m2m3 = new HashSet<>(Arrays.asList(m2, m3));
+            assertEquals(Collections.EMPTY_SET, mgr.getModuleInterdependencies(m1, false, false, true));
+            assertEquals(Collections.EMPTY_SET, mgr.getModuleInterdependencies(m1, false, true, true));
+            assertEquals(Collections.singleton(m2), mgr.getModuleInterdependencies(m1, true, false, true));
+            assertEquals(m2m3, mgr.getModuleInterdependencies(m1, true, true, true));
+            assertEquals(Collections.singleton(m1), mgr.getModuleInterdependencies(m2, false, false, true));
+            assertEquals(Collections.singleton(m1), mgr.getModuleInterdependencies(m2, false, true, true));
+            assertEquals(Collections.singleton(m3), mgr.getModuleInterdependencies(m2, true, false, true));
+            assertEquals(Collections.singleton(m3), mgr.getModuleInterdependencies(m2, true, true, true));
+            assertEquals(Collections.singleton(m2), mgr.getModuleInterdependencies(m3, false, false, true));
+            assertEquals(m1m2, mgr.getModuleInterdependencies(m3, false, true, true));
+            assertEquals(Collections.EMPTY_SET, mgr.getModuleInterdependencies(m3, true, false, true));
+            assertEquals(Collections.EMPTY_SET, mgr.getModuleInterdependencies(m3, true, true, true));
         } finally {
             mgr.mutexPrivileged().exitWriteAccess();
         }
@@ -2342,20 +2385,20 @@ public class ModuleManagerTest extends SetupHid {
             Module m1 = mgr.create(f1, null, false, false, false);
             Module m2 = mgr.create(f2, null, false, false, false);
             Module m3 = mgr.create(f3, null, false, false, false);
-            Set<Module> m1m2 = new HashSet<Module>(Arrays.asList(m1, m2));
-            Set<Module> m2m3 = new HashSet<Module>(Arrays.asList(m2, m3));
-            assertEquals(Collections.EMPTY_SET, mgr.getModuleInterdependencies(m1, false, false));
-            assertEquals(Collections.EMPTY_SET, mgr.getModuleInterdependencies(m1, false, true));
-            assertEquals(Collections.singleton(m2), mgr.getModuleInterdependencies(m1, true, false));
-            assertEquals(m2m3, mgr.getModuleInterdependencies(m1, true, true));
-            assertEquals(Collections.singleton(m1), mgr.getModuleInterdependencies(m2, false, false));
-            assertEquals(Collections.singleton(m1), mgr.getModuleInterdependencies(m2, false, true));
-            assertEquals(Collections.singleton(m3), mgr.getModuleInterdependencies(m2, true, false));
-            assertEquals(Collections.singleton(m3), mgr.getModuleInterdependencies(m2, true, true));
-            assertEquals(Collections.singleton(m2), mgr.getModuleInterdependencies(m3, false, false));
-            assertEquals(m1m2, mgr.getModuleInterdependencies(m3, false, true));
-            assertEquals(Collections.EMPTY_SET, mgr.getModuleInterdependencies(m3, true, false));
-            assertEquals(Collections.EMPTY_SET, mgr.getModuleInterdependencies(m3, true, true));
+            Set<Module> m1m2 = new HashSet<>(Arrays.asList(m1, m2));
+            Set<Module> m2m3 = new HashSet<>(Arrays.asList(m2, m3));
+            assertEquals(Collections.EMPTY_SET, mgr.getModuleInterdependencies(m1, false, false, true));
+            assertEquals(Collections.EMPTY_SET, mgr.getModuleInterdependencies(m1, false, true, true));
+            assertEquals(Collections.singleton(m2), mgr.getModuleInterdependencies(m1, true, false, true));
+            assertEquals(m2m3, mgr.getModuleInterdependencies(m1, true, true, true));
+            assertEquals(Collections.singleton(m1), mgr.getModuleInterdependencies(m2, false, false, true));
+            assertEquals(Collections.singleton(m1), mgr.getModuleInterdependencies(m2, false, true, true));
+            assertEquals(Collections.singleton(m3), mgr.getModuleInterdependencies(m2, true, false, true));
+            assertEquals(Collections.singleton(m3), mgr.getModuleInterdependencies(m2, true, true, true));
+            assertEquals(Collections.singleton(m2), mgr.getModuleInterdependencies(m3, false, false, true));
+            assertEquals(m1m2, mgr.getModuleInterdependencies(m3, false, true, true));
+            assertEquals(Collections.EMPTY_SET, mgr.getModuleInterdependencies(m3, true, false, true));
+            assertEquals(Collections.EMPTY_SET, mgr.getModuleInterdependencies(m3, true, true, true));
         } finally {
             mgr.mutexPrivileged().exitWriteAccess();
         }
@@ -2378,18 +2421,18 @@ public class ModuleManagerTest extends SetupHid {
             jar = new File(dir, "client.jar");
             TestFileUtils.writeZipFile(jar, "META-INF/MANIFEST.MF:OpenIDE-Module: client\nOpenIDE-Module-Module-Dependencies: api\n\n");
             Module client = mgr.create(jar, null, false, false, false);
-            assertEquals(Collections.singleton(api), mgr.getModuleInterdependencies(impl, false, false));
-            assertEquals(Collections.singleton(api), mgr.getModuleInterdependencies(impl, false, true));
-            assertEquals(Collections.singleton(api), mgr.getModuleInterdependencies(impl, true, false));
-            assertEquals(new HashSet<Module>(Arrays.asList(api, client)), mgr.getModuleInterdependencies(impl, true, true));
-            assertEquals(Collections.singleton(api), mgr.getModuleInterdependencies(client, false, false));
-            assertEquals(new HashSet<Module>(Arrays.asList(api, impl)), mgr.getModuleInterdependencies(client, false, true));
-            assertEquals(Collections.emptySet(), mgr.getModuleInterdependencies(client, true, false));
-            assertEquals(Collections.emptySet(), mgr.getModuleInterdependencies(client, true, true));
-            assertEquals(Collections.singleton(impl), mgr.getModuleInterdependencies(api, false, false));
-            assertEquals(Collections.singleton(impl), mgr.getModuleInterdependencies(api, false, true));
-            assertEquals(new HashSet<Module>(Arrays.asList(impl, client)), mgr.getModuleInterdependencies(api, true, false));
-            assertEquals(new HashSet<Module>(Arrays.asList(impl, client)), mgr.getModuleInterdependencies(api, true, true));
+            assertEquals(Collections.singleton(api), mgr.getModuleInterdependencies(impl, false, false, true));
+            assertEquals(Collections.singleton(api), mgr.getModuleInterdependencies(impl, false, true, true));
+            assertEquals(Collections.singleton(api), mgr.getModuleInterdependencies(impl, true, false, true));
+            assertEquals(new HashSet<Module>(Arrays.asList(api, client)), mgr.getModuleInterdependencies(impl, true, true, true));
+            assertEquals(Collections.singleton(api), mgr.getModuleInterdependencies(client, false, false, true));
+            assertEquals(new HashSet<Module>(Arrays.asList(api, impl)), mgr.getModuleInterdependencies(client, false, true, true));
+            assertEquals(Collections.emptySet(), mgr.getModuleInterdependencies(client, true, false, true));
+            assertEquals(Collections.emptySet(), mgr.getModuleInterdependencies(client, true, true, true));
+            assertEquals(Collections.singleton(impl), mgr.getModuleInterdependencies(api, false, false, true));
+            assertEquals(Collections.singleton(impl), mgr.getModuleInterdependencies(api, false, true, true));
+            assertEquals(new HashSet<Module>(Arrays.asList(impl, client)), mgr.getModuleInterdependencies(api, true, false, true));
+            assertEquals(new HashSet<Module>(Arrays.asList(impl, client)), mgr.getModuleInterdependencies(api, true, true, true));
         } finally {
             mgr.mutexPrivileged().exitWriteAccess();
         }
@@ -2408,15 +2451,15 @@ public class ModuleManagerTest extends SetupHid {
             jar = new File(dir, "b.jar");
             TestFileUtils.writeZipFile(jar, "META-INF/MANIFEST.MF:OpenIDE-Module: b\nOpenIDE-Module-Needs: T2\nOpenIDE-Module-Provides: T1\n\n");
             Module b = mgr.create(jar, null, false, false, false);
-            assertEquals(Collections.singleton(a), mgr.getModuleInterdependencies(b, false, false));
-            assertEquals(Collections.singleton(a), mgr.getModuleInterdependencies(b, false, true));
-            assertEquals(Collections.singleton(a), mgr.getModuleInterdependencies(b, true, false));
-            assertEquals(Collections.singleton(a), mgr.getModuleInterdependencies(b, true, true));
-            assertEquals(Collections.singleton(b), mgr.getModuleInterdependencies(a, false, false));
-            assertEquals(Collections.singleton(b), mgr.getModuleInterdependencies(a, false, true));
-            assertEquals(Collections.singleton(b), mgr.getModuleInterdependencies(a, true, false));
-            assertEquals(Collections.singleton(b), mgr.getModuleInterdependencies(a, true, true));
-            Set<Module> both = new HashSet<Module>(Arrays.asList(a, b));
+            assertEquals(Collections.singleton(a), mgr.getModuleInterdependencies(b, false, false, true));
+            assertEquals(Collections.singleton(a), mgr.getModuleInterdependencies(b, false, true, true));
+            assertEquals(Collections.singleton(a), mgr.getModuleInterdependencies(b, true, false, true));
+            assertEquals(Collections.singleton(a), mgr.getModuleInterdependencies(b, true, true, true));
+            assertEquals(Collections.singleton(b), mgr.getModuleInterdependencies(a, false, false, true));
+            assertEquals(Collections.singleton(b), mgr.getModuleInterdependencies(a, false, true, true));
+            assertEquals(Collections.singleton(b), mgr.getModuleInterdependencies(a, true, false, true));
+            assertEquals(Collections.singleton(b), mgr.getModuleInterdependencies(a, true, true, true));
+            Set<Module> both = new HashSet<>(Arrays.asList(a, b));
             assertEquals(both, new HashSet<Module>(mgr.simulateEnable(Collections.singleton(a))));
             assertEquals(both, new HashSet<Module>(mgr.simulateEnable(Collections.singleton(b))));
             mgr.enable(both);
@@ -2432,15 +2475,15 @@ public class ModuleManagerTest extends SetupHid {
             jar = new File(dir, "b.jar");
             TestFileUtils.writeZipFile(jar, "META-INF/MANIFEST.MF:OpenIDE-Module: b\nOpenIDE-Module-Needs: T2\nOpenIDE-Module-Provides: T1\n\n");
             b = mgr.create(jar, null, false, false, false);
-            assertEquals(Collections.singleton(a), mgr.getModuleInterdependencies(b, false, false));
-            assertEquals(Collections.singleton(a), mgr.getModuleInterdependencies(b, false, true));
-            assertEquals(Collections.singleton(a), mgr.getModuleInterdependencies(b, true, false));
-            assertEquals(Collections.singleton(a), mgr.getModuleInterdependencies(b, true, true));
-            assertEquals(Collections.singleton(b), mgr.getModuleInterdependencies(a, false, false));
-            assertEquals(Collections.singleton(b), mgr.getModuleInterdependencies(a, false, true));
-            assertEquals(Collections.singleton(b), mgr.getModuleInterdependencies(a, true, false));
-            assertEquals(Collections.singleton(b), mgr.getModuleInterdependencies(a, true, true));
-            both = new HashSet<Module>(Arrays.asList(a, b));
+            assertEquals(Collections.singleton(a), mgr.getModuleInterdependencies(b, false, false, true));
+            assertEquals(Collections.singleton(a), mgr.getModuleInterdependencies(b, false, true, true));
+            assertEquals(Collections.singleton(a), mgr.getModuleInterdependencies(b, true, false, true));
+            assertEquals(Collections.singleton(a), mgr.getModuleInterdependencies(b, true, true, true));
+            assertEquals(Collections.singleton(b), mgr.getModuleInterdependencies(a, false, false, true));
+            assertEquals(Collections.singleton(b), mgr.getModuleInterdependencies(a, false, true, true));
+            assertEquals(Collections.singleton(b), mgr.getModuleInterdependencies(a, true, false, true));
+            assertEquals(Collections.singleton(b), mgr.getModuleInterdependencies(a, true, true, true));
+            both = new HashSet<>(Arrays.asList(a, b));
             assertEquals(both, new HashSet<Module>(mgr.simulateEnable(Collections.singleton(a))));
             assertEquals(both, new HashSet<Module>(mgr.simulateEnable(Collections.singleton(b))));
             mgr.enable(both);
@@ -2694,9 +2737,9 @@ public class ModuleManagerTest extends SetupHid {
             mgr.enable(mod1);
             Module mod2 = mgr.create(mod2JAR, null, false, false, false);
             mgr.enable(mod2);
-            Class c1 = mod1.getClassLoader().loadClass("pkg.C1");
-            Class c2 = mod1.getClassLoader().loadClass("pkg.C2");
-            Class c3 = mod2.getClassLoader().loadClass("pkg.C3");
+            Class<?> c1 = mod1.getClassLoader().loadClass("pkg.C1");
+            Class<?> c2 = mod1.getClassLoader().loadClass("pkg.C2");
+            Class<?> c3 = mod2.getClassLoader().loadClass("pkg.C3");
             assertTrue(mod1.owns(c1));
             assertTrue(mod1.owns(c2));
             assertFalse(mod1.owns(c3));
@@ -2721,10 +2764,10 @@ public class ModuleManagerTest extends SetupHid {
             assertEquals(l, mod1.getClassLoader());
             Module mod2 = mgr.createFixed(loadManifest(mod2JAR), null, l);
             mgr.enable(mod2);
-            Class c1 = l.loadClass("pkg.C1");
+            Class<?> c1 = l.loadClass("pkg.C1");
             assertEquals(l, c1.getClassLoader());
-            Class c2 = l.loadClass("pkg.C2");
-            Class c3 = l.loadClass("pkg.C3");
+            Class<?> c2 = l.loadClass("pkg.C2");
+            Class<?> c3 = l.loadClass("pkg.C3");
             assertTrue(mod1.owns(c1));
             assertTrue(mod1.owns(c2));
             assertFalse(mod1.owns(c3));
@@ -2797,6 +2840,8 @@ public class ModuleManagerTest extends SetupHid {
 
         assertTrue("Host must be enabled", mgr.getEnabledModules().contains(host));
         assertTrue("Fragment must not be enabled", !mgr.getEnabledModules().contains(fragment));
+        
+        assertTrue(logHandler.warnings.isEmpty());
     }
     
     public void testEnableFragmentBeforeItsHost() throws Exception {
@@ -2804,14 +2849,21 @@ public class ModuleManagerTest extends SetupHid {
         MockEvents ev = new MockEvents();
         ModuleManager mgr = new ModuleManager(installer, ev);
         mgr.mutexPrivileged().enterWriteAccess();
+        
+        createTestJAR(data, jars, "fragment-module-reg", "fragment-module");
 
         // m1 autoload, m2 normal, m3 eager
         Module m1 = mgr.create(new File(jars, "host-module.jar"), null, false, false, false);
-        Module m2 = mgr.create(new File(jars, "fragment-module.jar"), null, false, false, false);
-        List toEnable = mgr.simulateEnable(Collections.singleton(m2));
+        Module m2 = mgr.create(new File(jars, "fragment-module-reg.jar"), null, false, false, false);
+        Module m3 = mgr.create(new File(jars, "fragment-module.jar"), null, false, false, true);
+        List<Module> toEnable = mgr.simulateEnable(Collections.singleton(m2));
         
         assertTrue("Host will be enabled", toEnable.contains(m1));
         assertTrue("Known fragment must be merged in", toEnable.contains(m2));
+        assertTrue("Eager fragment must be merged in", toEnable.contains(m3));
+        
+        // cannot explicitly enable eager module:
+        toEnable.remove(m3);
         mgr.enable(new HashSet<>(toEnable));
     }
     
@@ -2824,7 +2876,7 @@ public class ModuleManagerTest extends SetupHid {
         // m1 autoload, m2 normal, m3 eager
         Module m1 = mgr.create(new File(jars, "host-module.jar"), null, false, false, false);
         Module m2 = mgr.create(new File(jars, "fragment-module.jar"), null, false, false, false);
-        List toEnable = mgr.simulateEnable(Collections.singleton(m2));
+        List<Module> toEnable = mgr.simulateEnable(Collections.singleton(m2));
         
         assertTrue("Host will be enabled", toEnable.contains(m1));
         assertTrue("Known fragment must be merged in", toEnable.contains(m2));
@@ -2842,14 +2894,269 @@ public class ModuleManagerTest extends SetupHid {
         mgr.enable(m1);
 
         Module m2 = mgr.create(new File(jars, "fragment-module.jar"), null, false, false, false);
+
         try {
-            mgr.simulateEnable(Collections.singleton(m2));
+            mgr.enable(Collections.singleton(m2));
             fail("Enabling fragment must fail if host is already live");
         } catch (IllegalStateException ex) {
             // ok
         }
     }
 
+    public void testAutoloadHostWithFragmentsDoesNotRun() throws Exception {
+        MockModuleInstaller installer = new MockModuleInstaller();
+        MockEvents ev = new MockEvents();
+        ModuleManager mgr = new ModuleManager(installer, ev);
+        mgr.mutexPrivileged().enterWriteAccess();
+
+        createTestJAR(data, jars, "client-module", null);
+
+        Module host = mgr.create(new File(jars, "host-module.jar"), null, false, true, false);
+        Module fragment = mgr.create(new File(jars, "fragment-module.jar"), null, false, true, false);
+        
+        Module client = mgr.create(new File(jars, "client-module.jar"), null, false, false, false);
+        
+        mgr.enable(client);
+
+        assertFalse("Host can't enable always", mgr.getEnabledModules().contains(host));
+        assertFalse("Fragment must not be enabled", mgr.getEnabledModules().contains(fragment));
+    }
+    
+    
+    public void testAutoloadFragmentEnablesHostAndPeers() throws Exception {
+        ModsCreator c = new ModsCreator();
+        createTestJAR(data, jars, "client-module-depend-frag", "client-module");
+        c.loadModules();
+        
+        Module client = c.mgr.create(new File(jars, "client-module-depend-frag.jar"), null, false, false, false);
+        c.mgr.enable(client);
+
+        c.checkHostAndOtherFragmentsLoaded(c.fragmentAutoload);
+    }
+    
+    public void testAutoloadHostEnablesEagerFragments() throws Exception {
+        ModsCreator c = new ModsCreator();
+        createTestJAR(data, jars, "client-module-depend-host", "client-module");
+        c.loadModules();
+        
+        Module client = c.mgr.create(new File(jars, "client-module-depend-host.jar"), null, false, false, false);
+        c.mgr.enable(client);
+
+        c.checkHostAndOtherFragmentsLoaded();
+    }
+    
+    public void testBrokenAutoloadFragmentDepend() throws Exception {
+        MockModuleInstaller installer = new MockModuleInstaller();
+        MockEvents ev = new MockEvents();
+        ModuleManager mgr = new ModuleManager(installer, ev);
+        mgr.mutexPrivileged().enterWriteAccess();
+
+        createTestJAR(data, jars, "client-module-depend-broken", "client-module");
+        createTestJAR(data, jars, "fragment-module-missing-token", null);
+
+        Module host = mgr.create(new File(jars, "host-module.jar"), null, false, false, false);
+        Module fragment = mgr.create(new File(jars, "fragment-module-missing-token.jar"), null, false, false, true);
+        Module client = mgr.create(new File(jars, "client-module-depend-broken.jar"), null, false, false, false);
+        
+        try {
+            mgr.enable(client);
+        } catch (IllegalModuleException ex) {
+            assertTrue(ex.getMessage().contains("org.foo.client"));
+        }
+        
+        assertFalse(mgr.getEnabledModules().contains(host));
+        assertFalse(mgr.getEnabledModules().contains(fragment));
+        assertFalse(mgr.getEnabledModules().contains(client));
+    }
+
+    public void testBrokenAutoloadFragmentNeeds() throws Exception {
+        MockModuleInstaller installer = new MockModuleInstaller();
+        MockEvents ev = new MockEvents();
+        ModuleManager mgr = new ModuleManager(installer, ev);
+        mgr.mutexPrivileged().enterWriteAccess();
+
+        createTestJAR(data, jars, "client-module-needs-broken", "client-module");
+        createTestJAR(data, jars, "fragment-module-missing-token", null);
+
+        Module host = mgr.create(new File(jars, "host-module.jar"), null, false, false, false);
+        Module fragment = mgr.create(new File(jars, "fragment-module-missing-token.jar"), null, false, false, true);
+        Module client = mgr.create(new File(jars, "client-module-needs-broken.jar"), null, false, false, false);
+        
+        try {
+            mgr.enable(client);
+        } catch (IllegalModuleException ex) {
+            assertTrue(ex.getMessage().contains("org.foo.client"));
+        }
+        
+        assertFalse(mgr.getEnabledModules().contains(host));
+        assertFalse(mgr.getEnabledModules().contains(fragment));
+        assertFalse(mgr.getEnabledModules().contains(client));
+    }
+    
+    /**
+     * Tests the situation with JavaFX support:
+     * - client depends on core module
+     * - core module NEEDS or REQUIRES a platform module
+     * - platform modules are AUTOLOADS and are fragments
+     * - noone depends on platform modules directly
+     * - each platform module REQUIRES a token
+     * - one token is provided
+     * Under normal circumstances, the autoload fragments would not load since noone depends
+     * on them. But they are providers, and SOME provider is needed. Hence the matching one(s)
+     * will load.
+     * 
+     * @throws Exception 
+     */
+    public void testPickFromAutoloadFragmentsByToken() throws Exception {
+        MockModuleInstaller installer = new MockModuleInstaller();
+        installer.provides.put("org.foo.javafx", new String[] { "org.openide.modules.os.Linux", "org.openide.modules.os.Unix" });
+        MockEvents ev = new MockEvents();
+        ModuleManager mgr = new ModuleManager(installer, ev);
+        mgr.mutexPrivileged().enterWriteAccess();
+
+        createTestJAR(data, jars, "foo-javafx-core", "javafx-core");
+        createTestJAR(data, jars, "foo-javafx-linux", "javafx-linux");
+        createTestJAR(data, jars, "foo-javafx-windows", "javafx-windows");
+        createTestJAR(data, jars, "foo-javafx-client", "client-module");
+        createTestJAR(data, jars, "foo-javafx-linux-eager", "javafx-linux-eager");
+
+        Module host = mgr.create(new File(jars, "foo-javafx-core.jar"), null, false, true, false);
+        Module linuxFrag = mgr.create(new File(jars, "foo-javafx-linux.jar"), null, false, true, false);
+        Module linuxEager = mgr.create(new File(jars, "foo-javafx-linux-eager.jar"), null, false, false, true);
+        Module winFrag = mgr.create(new File(jars, "foo-javafx-windows.jar"), null, false, true, false);
+        Module client = mgr.create(new File(jars, "foo-javafx-client.jar"), null, false, false, false);
+        
+        mgr.enable(client);
+        
+        assertTrue(mgr.getEnabledModules().contains(host));
+        assertTrue(mgr.getEnabledModules().contains(linuxFrag));
+        assertTrue(mgr.getEnabledModules().contains(linuxEager));
+        
+        assertFalse(mgr.getEnabledModules().contains(winFrag));
+        assertTrue(mgr.getEnabledModules().contains(client));
+        
+        assertNotNull(client.getClassLoader().getResource("org/foo/javafx/Bundle.properties"));
+        assertNotNull(client.getClassLoader().getResource("org/foo/javafx/Linux.properties"));
+        assertNull(client.getClassLoader().getResource("org/foo/javafx/Windows.properties"));
+        assertNotNull(client.getClassLoader().getResource("org/foo/javafx/Eager.properties"));
+    }
+    
+    /**
+     * Checks that dependencies introduced by the fragment are injected into the 
+     * host module.
+     * @throws Exception 
+     */
+    public void testFragmentDependenciesInjectedIntoMain() throws Exception {
+        MockModuleInstaller installer = new MockModuleInstaller();
+        installer.provides.put("org.foo.javafx", new String[] { "org.openide.modules.os.Windows" });
+        MockEvents ev = new MockEvents();
+        ModuleManager mgr = new ModuleManager(installer, ev);
+        mgr.mutexPrivileged().enterWriteAccess();
+
+        createTestJAR(data, jars, "foo-javafx-core", "javafx-core");
+        createTestJAR(data, jars, "foo-javafx-linux", "javafx-linux");
+        createTestJAR(data, jars, "foo-javafx-windows", "javafx-windows");
+        createTestJAR(data, jars, "foo-javafx-client", "client-module");
+        createTestJAR(data, jars, "foo-javafx-linux-eager", "javafx-linux-eager");
+        createTestJAR(data, jars, "agent", "agent");
+
+        Module host = mgr.create(new File(jars, "foo-javafx-core.jar"), null, false, true, false);
+        Module linuxFrag = mgr.create(new File(jars, "foo-javafx-linux.jar"), null, false, true, false);
+        Module linuxEager = mgr.create(new File(jars, "foo-javafx-linux-eager.jar"), null, false, false, true);
+        Module winFrag = mgr.create(new File(jars, "foo-javafx-windows.jar"), null, false, true, false);
+        Module client = mgr.create(new File(jars, "foo-javafx-client.jar"), null, false, false, false);
+        Module agent = mgr.create(new File(jars, "agent.jar"), null, false, true, false);
+        
+        mgr.enable(client);
+        
+        assertTrue(mgr.getEnabledModules().contains(host));
+        assertFalse(mgr.getEnabledModules().contains(linuxFrag));
+        assertFalse(mgr.getEnabledModules().contains(linuxEager));
+        assertTrue(mgr.getEnabledModules().contains(winFrag));
+        assertTrue(mgr.getEnabledModules().contains(client));
+        
+        assertNotNull(host.getClassLoader().getResource("org/agent/HelloWorld.class"));
+        assertNull(client.getClassLoader().getResource("org/agent/HelloWorld.class"));
+    }
+
+    private class LogHandler extends Handler {
+        private List<LogRecord> warnings = new ArrayList<>();
+        @Override
+        public void publish(LogRecord record) {
+            if (record.getLevel().intValue() >= Level.WARNING.intValue()) {
+                warnings.add(record);
+            }
+        }
+
+        @Override
+        public void flush() {
+        }
+
+        @Override
+        public void close() throws SecurityException {
+        }
+    }
+    
+    private class ModsCreator {
+        private final ModuleManager mgr;
+        
+        private Module host;
+        private Module fragmentService;
+        private Module fragmentBroken;
+        private Module fragmentAutoload;
+        private Module fragmentRegular;
+        
+        private List<Module> liveFragments = new ArrayList<>();
+
+        public ModsCreator() {
+            MockModuleInstaller installer = new MockModuleInstaller();
+            MockEvents ev = new MockEvents();
+            mgr = new ModuleManager(installer, ev);
+            mgr.mutexPrivileged().enterWriteAccess();
+        }
+        
+        void loadModules() throws Exception {
+            
+            createTestJAR(data, jars, "fragment-module-reg", "fragment-module");
+            createTestJAR(data, jars, "fragment-module-auto", "fragment-module");
+            createTestJAR(data, jars, "fragment-module-missing-token", "fragment-module");
+
+            if (host == null) {
+                host = mgr.create(new File(jars, "host-module.jar"), null, false, true, false);
+            }
+            if (fragmentService == null) {
+                fragmentService = mgr.create(new File(jars, "fragment-module.jar"), null, false, false, true);
+            }
+            if (fragmentRegular == null) {
+                fragmentRegular = mgr.create(new File(jars, "fragment-module-reg.jar"), null, false, false, false);
+            }
+            if (fragmentAutoload == null) {
+                fragmentAutoload = mgr.create(new File(jars, "fragment-module-auto.jar"), null, false, true, false);
+            }
+            if (fragmentBroken == null) {
+                fragmentBroken = mgr.create(new File(jars, "fragment-module-missing-token.jar"), null, false, true, false);
+            }
+            liveFragments.add(fragmentService);
+            liveFragments.add(fragmentRegular);
+            liveFragments.add(fragmentAutoload);
+        }
+        
+        void checkHostAndOtherFragmentsLoaded(Module... pickedDeps) {
+            assertTrue("Fragment host must enable", mgr.getEnabledModules().contains(host));
+            assertTrue("Eager fragment must load with host", mgr.getEnabledModules().contains(fragmentService));
+            Set<Module> picked = new HashSet<>(pickedDeps == null ? Collections.emptyList() : Arrays.asList(pickedDeps));
+            for (Module m : liveFragments) {
+                if (picked.contains(m)) {
+                    assertTrue("Peer fragment must be loaded: " + m.getCodeNameBase(), mgr.getEnabledModules().contains(m));
+                } else if (m != fragmentService) {
+                    assertFalse("Fragment must not activate: " + m.getCodeNameBase(), mgr.getEnabledModules().contains(m));
+                }
+            }            
+            // the fragment with unsatisfied "needs" is not reported, as it is autoload being triggered by host module.
+            assertTrue(logHandler.warnings.isEmpty());
+        }
+    }
+    
     private File copyJar(File file, String manifest) throws IOException {
         File ret = File.createTempFile(file.getName(), "2ndcopy", file.getParentFile());
         JarFile jar = new JarFile(file);
@@ -2889,4 +3196,4 @@ public class ModuleManagerTest extends SetupHid {
         assertTrue(token + " is not among the list of provides of module " + m + " which is " + arr, ok);
         return arr;
     }
-}
+    }

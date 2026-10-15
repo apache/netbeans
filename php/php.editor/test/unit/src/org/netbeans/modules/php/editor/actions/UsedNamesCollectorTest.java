@@ -76,8 +76,76 @@ public class UsedNamesCollectorTest extends PHPTestBase {
         performTest("useCase_08", "class Class^Name {");
     }
 
+    public void testUseCase_09() throws Exception {
+        performTest("useCase_09", "class Class^Name {");
+    }
+
+    public void testUseCase_10() throws Exception {
+        performTest("useCase_10", "class Class^Name {");
+    }
+
+    public void testUseCase_11() throws Exception {
+        performTest("useCase_11", "class Class^Name {");
+    }
+
+    public void testUseCase_12() throws Exception {
+        performTest("useCase_12", "class Class^Name {");
+    }
+
     public void testIssue209755() throws Exception {
         performTest("issue209755", "class Class^Name {");
+    }
+
+    public void testNB4978_01() throws Exception {
+        performTest("nb4978_01", "// test^");
+    }
+
+    public void testNB4978_02() throws Exception {
+        performTest("nb4978_02", "// test^");
+    }
+
+    public void testNB4978_03() throws Exception {
+        performTest("nb4978_03", "// test^");
+    }
+
+    public void testNB4978_04() throws Exception {
+        performTest("nb4978_04", "// test^");
+    }
+
+    public void testNB4978_05() throws Exception {
+        performTest("nb4978_05", "public funct^ion test(?Foo $foo): ?Foo");
+    }
+
+    public void testNB4978_06() throws Exception {
+        performTest("nb4978_06", "public funct^ion test(?Foo $foo): ?Foo");
+    }
+
+    public void testNB4978_07() throws Exception {
+        performTest("nb4978_07", "// test^");
+    }
+
+    public void testNB4978_08() throws Exception {
+        performTest("nb4978_08", "// test^");
+    }
+
+    public void testGH6075_01() throws Exception {
+        performTest("gh6075_01", "function test(): void ^{");
+    }
+
+    public void testGH6075_02() throws Exception {
+        performTest("gh6075_02", "function test(): void ^{");
+    }
+
+    public void testGH6162_01() throws Exception {
+        performTest("gh6162_01", "class Test ^{}");
+    }
+
+    public void testGH7123_01() throws Exception {
+        performTest("gh7123_01", "class GH7123_01^{}");
+    }
+
+    public void testGH7123_02() throws Exception {
+        performTest("gh7123_02", "class GH7123_02^{");
     }
 
     protected void performTest(String fileName, String caretLine) throws Exception {

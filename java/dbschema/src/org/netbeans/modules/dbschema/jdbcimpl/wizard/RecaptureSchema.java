@@ -62,7 +62,7 @@ public class RecaptureSchema {
     }
     
     public void start() throws ClassNotFoundException, SQLException {
-        final DBschemaDataObject dobj = (DBschemaDataObject)dbSchemaNode.getCookie(DBschemaDataObject.class);
+        final DBschemaDataObject dobj = dbSchemaNode.getCookie(DBschemaDataObject.class);
         final SchemaElement elem = dobj.getSchema();
         //elem.
         //ConnectionProvider cp = new ConnectionProvider(elem.getDriver(), elem.getUrl(), elem.getUsername(), null);
@@ -70,11 +70,7 @@ public class RecaptureSchema {
             System.out.println("[dbschema] url='" + elem.getUrl() + "'");
         }
         final FileObject fo1 = dobj.getPrimaryFile();
-        try {
-            SchemaElement.removeFromCache(elem.getName().getFullName() + "#" + fo1.getURL().toString()); //NOI18N
-        } catch (FileStateInvalidException ex) {
-            Logger.getLogger("global").log(Level.INFO, null, ex);
-        } 
+        SchemaElement.removeFromCache(elem.getName().getFullName() + "#" + fo1.toURL().toString()); //NOI18N
         
         TableElement tableAndViewElements[] = elem.getTables();
         // now break down to tables and views

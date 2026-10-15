@@ -15,4 +15,5 @@
 # specific language governing permissions and limitations
 # under the License.
 
-D868F438F27DA38B3CCD253BCB859F06C1A1FE2C org.apache.tomcat:servlet-api:6.0.13
+90654F3E78EEA2876014468ED777CAF51F1F3B81 org.apache.tomcat:servlet-api:6.0.53
+2CD2ABB6768D760F3CD79ECF90DFF09D84F32B12 org.apache.tomcat:tomcat-servlet-api:11.0.7

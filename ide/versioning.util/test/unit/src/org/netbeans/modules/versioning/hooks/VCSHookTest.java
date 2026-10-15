@@ -55,7 +55,7 @@ public class VCSHookTest extends NbTestCase {
         
         Collection<TestVCSHook> c = VCSHooks.getInstance().getHooks(TestVCSHook.class);
 
-        TestVCSHook[] hooks = c.toArray(new TestVCSHook[c.size()]);
+        TestVCSHook[] hooks = c.toArray(new TestVCSHook[0]);
         assertEquals(2, hooks.length);
 
         boolean a = false;
@@ -68,11 +68,11 @@ public class VCSHookTest extends NbTestCase {
         assertTrue(b);
     }
 
-    public static abstract class TestVCSHook<TestVCSHookContext> extends VCSHook {
+    public abstract static class TestVCSHook<TestVCSHookContext> extends VCSHook {
 
     }
 
-    public static abstract class TestVCSHookContext extends VCSHookContext {
+    public abstract static class TestVCSHookContext extends VCSHookContext {
         public TestVCSHookContext(File[] files) {
             super(files);
         }

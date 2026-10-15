@@ -69,11 +69,11 @@ class StackFrameSegment extends TagBounds {
         long[] offset;
         
         initIdToFrame();
-        initialOffset = (Long) idToFrame.get(new Long(stackFrameID/FRAME_DIV));
+        initialOffset = (Long) idToFrame.get(stackFrameID/FRAME_DIV);
         if (initialOffset == null) {
-            initialOffset = new Long(startOffset);
+            initialOffset = startOffset;
         }
-        offset = new long[] { initialOffset.longValue() };
+        offset = new long[] {initialOffset};
         while (offset[0] < endOffset) {
             long start = offset[0];
             long frameID = readStackFrameTag(offset);
@@ -107,14 +107,14 @@ class StackFrameSegment extends TagBounds {
             while (offset[0] < endOffset) {
                 long start = offset[0];
                 long frameID = readStackFrameTag(offset);
-                Long frameIDMask = new Long(frameID/FRAME_DIV);
+                Long frameIDMask = frameID / FRAME_DIV;
                 Long minOffset = (Long) idToFrame.get(frameIDMask);
                 
                 if (minOffset == null || minOffset > start) {
-                    idToFrame.put(frameIDMask, new Long(start));
+                    idToFrame.put(frameIDMask, start);
                 }
             }
-//            System.out.println("idToFrame size:"+idToFrame.size());
+//            Systems.debug("idToFrame size:"+idToFrame.size());
         }
     }
     

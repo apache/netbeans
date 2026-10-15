@@ -19,28 +19,36 @@
 
 package org.netbeans.modules.groovy.editor.completion.inference;
 
+import groovy.lang.Range;
+import java.util.Iterator;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.FieldNode;
+import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.Parameter;
 import org.codehaus.groovy.ast.Variable;
 import org.codehaus.groovy.ast.expr.BinaryExpression;
 import org.codehaus.groovy.ast.expr.ConstantExpression;
 import org.codehaus.groovy.ast.expr.ConstructorCallExpression;
 import org.codehaus.groovy.ast.expr.DeclarationExpression;
-import org.codehaus.groovy.ast.expr.EmptyExpression;
 import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.ast.expr.ListExpression;
+import org.codehaus.groovy.ast.expr.MapExpression;
 import org.codehaus.groovy.ast.expr.MethodCallExpression;
+import org.codehaus.groovy.ast.expr.RangeExpression;
 import org.codehaus.groovy.ast.expr.StaticMethodCallExpression;
 import org.codehaus.groovy.ast.expr.VariableExpression;
+import org.codehaus.groovy.ast.stmt.BlockStatement;
+import org.codehaus.groovy.ast.stmt.Statement;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.syntax.Types;
+import org.codehaus.groovy.transform.stc.StaticTypesMarker;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.groovy.editor.api.ASTUtils;
 import org.netbeans.modules.groovy.editor.api.AstPath;
 import org.netbeans.modules.groovy.editor.occurrences.TypeVisitor;
+import org.netbeans.modules.groovy.editor.utils.GroovyUtils;
 
 /**
  *
@@ -90,17 +98,9 @@ public class TypeInferenceVisitor extends TypeVisitor {
     public void visitField(FieldNode node) {
         if (sameVariableName(leaf, node)) {
             if (node.hasInitialExpression()){
-                Expression expression = node.getInitialExpression();
-                if (expression instanceof ConstantExpression
-                        && !expression.getText().equals("null")) { // NOI18N
-                    guessedType = ((ConstantExpression) expression).getType();
-                } else if (expression instanceof ConstructorCallExpression) {
-                    guessedType = ((ConstructorCallExpression) expression).getType();
-                } else if (expression instanceof MethodCallExpression) {
-                    int newOffset = ASTUtils.getOffset(doc, expression.getLineNumber(), expression.getColumnNumber());
-                    AstPath newPath = new AstPath(path.root(), newOffset, doc);
-                    guessedType = MethodInference.findCallerType(expression, newPath, doc, newOffset);
-                }
+                guessedType = deriveExpressonType(node.getInitialExpression());
+            } else if (node.getType() != null) {
+                    guessedType = node.getType();
             }
         }
     }
@@ -109,50 +109,86 @@ public class TypeInferenceVisitor extends TypeVisitor {
     @Override
     public void visitDeclarationExpression(DeclarationExpression expression) {
         if (sameVariableName(leaf, expression.getLeftExpression())) {
-            Expression rightExpression = expression.getRightExpression();
-            if (rightExpression instanceof ConstantExpression
-                    && !rightExpression.getText().equals("null")) { // NOI18N
-                guessedType = ((ConstantExpression) rightExpression).getType();
-            } else if (rightExpression instanceof ConstructorCallExpression) {
-                guessedType = ((ConstructorCallExpression) rightExpression).getType();
-            } else if (rightExpression instanceof MethodCallExpression) {
-                guessedType = MethodInference.findCallerType(rightExpression, path, doc, cursorOffset);
-            } else if (rightExpression instanceof StaticMethodCallExpression) {
-                guessedType = MethodInference.findCallerType(rightExpression, path, doc, cursorOffset);
-            } else if (rightExpression instanceof ListExpression) {
-                guessedType = ((ListExpression) rightExpression).getType();
+            ClassNode fromExpression = deriveExpressonType(expression.getRightExpression());
+            if (fromExpression != null) {
+                guessedType = fromExpression;
             }
+        }
+    }
+    
+    private ASTNode leafStatement;
+
+    /**
+     * After each statement certify that the leaf / completion point was not 
+     * passed.
+     */
+    @Override
+    protected void visitStatement(Statement statement) {
+        super.visitStatement(statement);
+        if (statement == leafStatement) {
+            leafReached = true;
         }
     }
 
     @Override
+    public void visitBlockStatement(BlockStatement statement) {
+        ASTNode prev = null;
+        for (Iterator<ASTNode> it = path.iterator(); it.hasNext(); ) {
+            ASTNode n = it.next();
+            if (n == statement) {
+                leafStatement = prev;
+                break;
+            }
+            prev = n;
+        }
+        super.visitBlockStatement(statement);
+    }
+    
+    @Override
     public void visitVariableExpression(VariableExpression expression) {
-            if (expression.isSuperExpression()) {
-                guessedType = expression.getType().getSuperClass();
-            }
-            if (null != expression.getAccessedVariable()) {
-                Variable accessedVariable = expression.getAccessedVariable();
+        boolean guessed = true;
+        if (leaf instanceof VariableExpression && !sameVariableName(leaf, expression)) {
+            return;
+        }
+        if (expression.isSuperExpression()) {
+            guessedType = expression.getType().getSuperClass();
+        }
+        if (null != expression.getAccessedVariable()) {
+            Variable accessedVariable = expression.getAccessedVariable();
 
-                if (accessedVariable.hasInitialExpression()) {
-                    Expression initialExpression = expression.getAccessedVariable().getInitialExpression();
-                    if (initialExpression instanceof ConstantExpression
-                            && !initialExpression.getText().equals("null")) { // NOI18N
-                        guessedType = ((ConstantExpression) initialExpression).getType();
-                    } else if (initialExpression instanceof ConstructorCallExpression) {
-                        guessedType = ClassHelper.make(((ConstructorCallExpression) initialExpression).getType().getName());
-                    } else if (initialExpression instanceof MethodCallExpression) {
-                        int newOffset = ASTUtils.getOffset(doc, initialExpression.getLineNumber(), initialExpression.getColumnNumber());
-                        AstPath newPath = new AstPath(path.root(), newOffset, doc);
-                        guessedType = MethodInference.findCallerType(initialExpression, newPath, doc, newOffset);
-                    }
-                } else if (accessedVariable instanceof Parameter) {
-                    Parameter param = (Parameter) accessedVariable;
-                    guessedType = param.getType();
+            if (accessedVariable.hasInitialExpression()) {
+                Expression initialExpression = expression.getAccessedVariable().getInitialExpression();
+                if (initialExpression instanceof ConstantExpression
+                        && !initialExpression.getText().equals("null")) { // NOI18N
+                    guessedType = ((ConstantExpression) initialExpression).getType();
+                } else if (initialExpression instanceof ConstructorCallExpression) {
+                    guessedType = ClassHelper.make(((ConstructorCallExpression) initialExpression).getType().getName());
+                } else if (initialExpression instanceof MethodCallExpression) {
+                    int newOffset = ASTUtils.getOffset(doc, initialExpression.getLineNumber(), initialExpression.getColumnNumber());
+                    AstPath newPath = new AstPath(path.root(), newOffset, doc);
+                    guessedType = MethodInference.findCallerType(initialExpression, newPath, doc, newOffset);
+                } else if (initialExpression instanceof ListExpression) {
+                    guessedType = ((ListExpression) initialExpression).getType();
+                } else if (initialExpression instanceof MapExpression) {
+                    guessedType = ((MapExpression) initialExpression).getType();
+                } else if (initialExpression instanceof RangeExpression) {
+                    // this should work, but the type is Object - nut sure why
+                    // guessedType = ((RangeExpression)initialExpression).getType();
+                    guessedType = ClassHelper.makeWithoutCaching(Range.class, true);                
+                } else {
+                    guessed = false;
                 }
-            } else if (!expression.getType().getName().equals("java.lang.Object")) {
-                guessedType = expression.getType();
-
+            } else if (accessedVariable instanceof Parameter) {
+                Parameter param = (Parameter) accessedVariable;
+                guessedType = param.getType();
+            } else {
+                guessed = false;
             }
+        } 
+        if (!guessed && !expression.getType().getName().equals("java.lang.Object")) {
+            guessedType = expression.getType();
+
+        }
         super.visitVariableExpression(expression);
     }
 
@@ -173,6 +209,11 @@ public class TypeInferenceVisitor extends TypeVisitor {
                         guessedType = MethodInference.findCallerType(rightExpression, path, doc, cursorOffset);
                     } else if (rightExpression instanceof StaticMethodCallExpression) {
                         guessedType = MethodInference.findCallerType(rightExpression, path, doc, cursorOffset);
+                    } else {
+                        ClassNode cn = expression.getRightExpression().getType();
+                        if (!cn.equals("java.lang.Object")) {
+                            guessedType = cn;
+                        }
                     }
                 }
             }
@@ -192,6 +233,40 @@ public class TypeInferenceVisitor extends TypeVisitor {
     private static boolean sameVariableName(ASTNode node1, FieldNode node2) {
         return node1 instanceof VariableExpression
                 && ((VariableExpression) node1).getName().equals(node2.getName());
+    }
+
+    private ClassNode deriveExpressonType(Expression expression) {
+        ClassNode derivedExpressionType = GroovyUtils.findInferredType(expression);
+        if (derivedExpressionType != null) {
+            return derivedExpressionType;
+        }
+        if (expression instanceof ConstantExpression
+                && !expression.getText().equals("null")) { // NOI18N
+            derivedExpressionType = ((ConstantExpression) expression).getType();
+        } else if (expression instanceof ConstructorCallExpression) {
+            derivedExpressionType = ((ConstructorCallExpression) expression).getType();
+        } else if (expression instanceof MethodCallExpression) {
+            Object o = expression.getNodeMetaData(StaticTypesMarker.DIRECT_METHOD_CALL_TARGET);
+            if (o instanceof MethodNode) {
+                MethodNode mn = (MethodNode)o;
+                return mn.getReturnType();
+            }
+
+            int newOffset = ASTUtils.getOffset(doc, expression.getLineNumber(), expression.getColumnNumber());
+            AstPath newPath = new AstPath(path.root(), newOffset, doc);
+            derivedExpressionType = MethodInference.findCallerType(expression, newPath, doc, newOffset);
+        } else if (expression instanceof StaticMethodCallExpression) {
+            derivedExpressionType = MethodInference.findCallerType(expression, path, doc, cursorOffset);
+        } else if (expression instanceof ListExpression) {
+            derivedExpressionType = ((ListExpression) expression).getType();
+        } else if (expression instanceof MapExpression) {
+            derivedExpressionType = ((MapExpression) expression).getType();
+        } else if (expression instanceof RangeExpression) {
+            // this should work, but the type is Object - nut sure why
+            // guessedType = ((RangeExpression)initialExpression).getType();
+            derivedExpressionType = ClassHelper.makeWithoutCaching(Range.class, true);                
+        } 
+        return derivedExpressionType;
     }
 
 }

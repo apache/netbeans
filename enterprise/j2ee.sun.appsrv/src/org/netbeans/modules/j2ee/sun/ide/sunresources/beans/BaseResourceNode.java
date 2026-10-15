@@ -53,8 +53,8 @@ public abstract class BaseResourceNode extends DataNode implements java.beans.Pr
         return (SunResourceDataObject)getDataObject();
     }
     
-    abstract public Resources getBeanGraph();
+    public abstract Resources getBeanGraph();
     
-    abstract public void propertyChange(java.beans.PropertyChangeEvent evt);
+    public abstract void propertyChange(java.beans.PropertyChangeEvent evt);
     
 }

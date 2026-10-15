@@ -42,11 +42,11 @@ import org.openide.util.NbBundle;
 class MappingPanel extends JPanel implements ActionListener,
         TableModelListener, ListSelectionListener {
 
-    private final static String ADD = "add";
-    private final static String EDIT = "edit";
-    private final static String REMOVE = "remove";
-    private final static String UP = "up";
-    private final static String DOWN = "down";
+    private static final String ADD = "add";
+    private static final String EDIT = "edit";
+    private static final String REMOVE = "remove";
+    private static final String UP = "up";
+    private static final String DOWN = "down";
 
     // UI Variables
     private JLabel jLtableheader;

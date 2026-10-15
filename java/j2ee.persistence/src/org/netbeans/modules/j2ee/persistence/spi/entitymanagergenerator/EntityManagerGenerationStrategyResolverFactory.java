@@ -22,7 +22,6 @@ package org.netbeans.modules.j2ee.persistence.spi.entitymanagergenerator;
 import java.io.IOException;
 import javax.lang.model.element.TypeElement;
 import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.javaee.injection.api.InjectionTargetQuery;
@@ -80,7 +79,7 @@ public final class EntityManagerGenerationStrategyResolverFactory {
             String transactionType = persistenceUnit.getTransactionType();
             boolean isInjectionTarget = isInjectionTarget(target);
             boolean isJTA = (transactionType == null || transactionType.equals("JTA")); // JTA is default value for transaction type in non-J2SE projects
-            boolean isContainerManaged = (jtaDataSource != null && !jtaDataSource.equals("")) && isJTA; //NO18N
+            boolean isContainerManaged = (jtaDataSource != null && !jtaDataSource.isEmpty()) && isJTA; //NO18N
 
             ContainerClassPathModifier modifier = project.getLookup().lookup(ContainerClassPathModifier.class);
             if (modifier != null) {
@@ -117,13 +116,10 @@ public final class EntityManagerGenerationStrategyResolverFactory {
                 return false;
             }
             try {
-                source.runModificationTask(new Task<WorkingCopy>() {
-                    @Override
-                    public void run(WorkingCopy parameter) throws Exception {
-                        parameter.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                        TypeElement typeElement = SourceUtils.getPublicTopLevelElement(parameter);
-                        result[0] = InjectionTargetQuery.isInjectionTarget(parameter, typeElement);
-                    }
+                source.runModificationTask( (WorkingCopy parameter) -> {
+                    parameter.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                    TypeElement typeElement = SourceUtils.getPublicTopLevelElement(parameter);
+                    result[0] = InjectionTargetQuery.isInjectionTarget(parameter, typeElement);
                 });
             } catch (IOException ioe) {
                 Exceptions.printStackTrace(ioe);

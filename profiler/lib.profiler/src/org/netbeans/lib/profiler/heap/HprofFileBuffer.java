@@ -20,9 +20,7 @@
 package org.netbeans.lib.profiler.heap;
 
 import java.io.EOFException;
-import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 
 
 /**
@@ -49,7 +47,7 @@ class HprofFileBuffer extends HprofByteBuffer {
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 
     HprofFileBuffer(File dumpFile) throws IOException {
-        fis = new RandomAccessFile(dumpFile, "r");
+        fis = dumpFile.newRandomAccessFile("r");
         length = fis.length();
         bufferStartOffset = Long.MAX_VALUE;
         readHeader();
@@ -116,7 +114,7 @@ class HprofFileBuffer extends HprofByteBuffer {
                 fis.seek(position);
                 fis.readFully(chars);
             } catch (IOException ex) {
-                ex.printStackTrace();
+                Systems.printStackTrace(ex);
             }
         }
     }
@@ -150,11 +148,11 @@ class HprofFileBuffer extends HprofByteBuffer {
             fis.seek(newBufferStart);
             fis.readFully(dumpBuffer);
 
-            //System.out.println("Reading at "+newBufferStart+" size "+dumpBuffer.length+" thread "+Thread.currentThread().getName());
+            //Systems.debug("Reading at "+newBufferStart+" size "+dumpBuffer.length+" thread "+Thread.currentThread().getName());
         } catch (EOFException ex) {
             // ignore
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Systems.printStackTrace(ex);
         }
 
         bufferStartOffset = newBufferStart;

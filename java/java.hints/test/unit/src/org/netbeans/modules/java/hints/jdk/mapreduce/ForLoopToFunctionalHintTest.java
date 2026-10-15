@@ -56,7 +56,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("12:8-12:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("12:8-12:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package testdemo;\n"
                 + "\n"
@@ -70,7 +70,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "    }\n"
                 + "\n"
                 + "    public void test(List<Integer> ls) {        \n"
-                + "        ls.forEach((l) -> { \n"
+                + "        ls.forEach(l -> { \n"
                 + "            System.out.println(l);\n"
                 + "        });\n"
                 + "        \n"
@@ -126,7 +126,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("12:8-12:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("12:8-12:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package testdemo;\n"
                 + "\n"
@@ -140,7 +140,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "    }\n"
                 + "\n"
                 + "    public void test(List<Integer> ls) {        \n"
-                + "        ls.stream().map((l) -> l.toString()).forEachOrdered((s) -> {\n"
+                + "        ls.stream().map(l -> l.toString()).forEachOrdered(s -> {\n"
                 + "            System.out.println(s);\n"
                 + "        });\n"
                 + "            \n"
@@ -180,7 +180,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("22:8-22:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("22:8-22:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("/*\n"
                 + " * To change this template, choose Tools | Templates\n"
@@ -204,7 +204,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "        // TODO code application logic here\n"
                 + "        List<Integer> ints=new ArrayList<>();\n"
                 + "        double len=0.;        \n"
-                + "        len = ints.stream().map((_item) -> 1.0).reduce(len, (accumulator, _item) -> accumulator + 1);\n"
+                + "        len = ints.stream().map(_item -> 1.0).reduce(len, (accumulator, _item) -> accumulator + 1);\n"
                 + "            \n"
                 + "    }    \n"
                 + "}");
@@ -237,7 +237,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("12:8-12:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("12:8-12:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package testdemo;\n"
                 + "\n"
@@ -251,7 +251,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "    }\n"
                 + "\n"
                 + "    public void test(List<Integer> ls) {        \n"
-                + "        ls.stream().filter((l) -> (l!=null)).map((l) -> l.toString()).forEachOrdered((s) -> {\n"
+                + "        ls.stream().filter(l -> (l!=null)).map(l -> l.toString()).forEachOrdered(s -> {\n"
                 + "            System.out.println(s);\n"
                 + "        });\n"
                 + "            \n"
@@ -288,7 +288,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("12:8-12:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("12:8-12:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package testdemo;\n"
                 + "\n"
@@ -302,7 +302,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "    }\n"
                 + "\n"
                 + "    public void test(List<Integer> ls) {        \n"
-                + "        ls.stream().map((a) -> new Integer(a.intValue())).filter((l) -> (l!=null)).map((l) -> l.toString()).forEachOrdered((s) -> {\n"
+                + "        ls.stream().map(a -> new Integer(a.intValue())).filter(l -> (l!=null)).map(l -> l.toString()).forEachOrdered(s -> {\n"
                 + "            System.out.println(s);\n"
                 + "        });\n"
                 + "            \n"
@@ -341,7 +341,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("12:8-12:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("12:8-12:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package testdemo;\n"
                 + "\n"
@@ -355,11 +355,11 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "    }\n"
                 + "\n"
                 + "    public void test(List<Integer> ls) {        \n"
-                + "        ls.stream().map((a) -> new Integer(a.intValue())).filter((l) -> (l!=null)).map((l) -> l.toString()).map((s) -> {\n"
+                + "        ls.stream().map(a -> new Integer(a.intValue())).filter(l -> (l!=null)).map(l -> l.toString()).map(s -> {\n"
                 + "            if(s!=null)\n"
                 + "                System.out.println(s);\n"
                 + "            return s;\n"
-                + "        }).forEachOrdered((_item) -> {\n"
+                + "        }).forEachOrdered(_item -> {\n"
                 + "            System.out.println(\"cucu\");\n"
                 + "        });\n"
                 + "            \n"
@@ -398,7 +398,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("12:8-12:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("12:8-12:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package testdemo;\n"
                 + "\n"
@@ -412,7 +412,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "    }\n"
                 + "\n"
                 + "    public void test(List<Integer> ls) {\n"
-                + "        ls.stream().filter((l) -> !(l == null)).map((l) -> l.toString()).filter((s) -> (s != null)).forEachOrdered((s) -> {\n"
+                + "        ls.stream().filter(l -> !(l == null)).map(l -> l.toString()).filter(s -> (s != null)).forEachOrdered(s -> {\n"
                 + "            System.out.println(s);\n"
                 + "        });\n"
                 + "\n"
@@ -455,7 +455,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("12:8-12:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("12:8-12:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package testdemo;\n"
                 + "\n"
@@ -469,7 +469,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "    }\n"
                 + "\n"
                 + "    public Boolean test(List<Integer> ls) {\n"
-                + "        if (ls.stream().map((l) -> l.toString()).map((s) -> foo(s)).anyMatch((o) -> (o==null))) {\n"
+                + "        if (ls.stream().map(l -> l.toString()).map(s -> foo(s)).anyMatch(o -> (o==null))) {\n"
                 + "            return true;\n"
                 + "        }\n"
                 + "        \n"
@@ -519,7 +519,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("12:8-12:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("12:8-12:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package testdemo;\n"
                 + "\n"
@@ -533,7 +533,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "    }\n"
                 + "\n"
                 + "    public Boolean test(List<Integer> ls) {\n"
-                + "        if (!ls.stream().map((l) -> l.toString()).map((s) -> foo(s)).noneMatch((o) -> (o==null))) {\n"
+                + "        if (!ls.stream().map(l -> l.toString()).map(s -> foo(s)).noneMatch(o -> (o==null))) {\n"
                 + "            return false;\n"
                 + "        }\n"
                 + "        \n"
@@ -583,7 +583,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("14:8-14:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("14:8-14:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package testdemo;\n"
                 + "\n"
@@ -599,10 +599,10 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "   \n"
                 + "    public Boolean test(List<Integer> ls) throws Exception {\n"
                 + "        Integer i=0;        \n"
-                + "        ls.stream().map((_item) -> {         \n"
+                + "        ls.stream().map(_item -> {         \n"
                 + "            System.out.println();\n"
                 + "            return _item;\n"
-                + "        }).forEachOrdered((_item) -> {\n"
+                + "        }).forEachOrdered(_item -> {\n"
                 + "            System.out.println(\"\");\n"
                 + "        });\n"
                 + "        System.out.println(i);\n"
@@ -658,7 +658,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("12:8-12:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("12:8-12:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package testdemo;\n"
                 + "\n"
@@ -672,7 +672,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "    }\n"
                 + "\n"
                 + "    public Boolean test(List<Integer> ls) {\n"
-                + "        ls.stream().map((a) -> new Integer(a.intValue())).map((l) -> {\n"
+                + "        ls.stream().map(a -> new Integer(a.intValue())).map(l -> {\n"
                 + "            if(l==null)\n"
                 + "            {\n"
                 + "                String s=l.toString();\n"
@@ -683,7 +683,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "                System.out.println(\"cucu\");\n"
                 + "            }   \n"
                 + "            return l;\n"
-                + "        }).forEachOrdered((_item) -> {\n"
+                + "        }).forEachOrdered(_item -> {\n"
                 + "            System.out.println();\n"
                 + "        });\n"
                 + "        \n"
@@ -725,7 +725,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("14:8-14:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("14:8-14:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package testdemo;\n"
                 + "\n"
@@ -741,7 +741,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "   \n"
                 + "    public Boolean test(List<Integer> ls) {\n"
                 + "        Integer i=0;\n"
-                + "        i = ls.stream().map((_item) -> 1).reduce(i, Integer::sum);\n"
+                + "        i = ls.stream().map(_item -> 1).reduce(i, Integer::sum);\n"
                 + "        System.out.println(i);\n"
                 + "        return true;\n"
                 + "\n"
@@ -787,7 +787,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("14:8-14:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("14:8-14:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package testdemo;\n"
                 + "\n"
@@ -803,10 +803,10 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "   \n"
                 + "    public Boolean test(List<Integer> ls) {\n"
                 + "        Integer i=0;\n"
-                + "        i = ls.stream().filter((l) -> (l!=null)).map((l) -> {\n"
+                + "        i = ls.stream().filter(l -> (l!=null)).map(l -> {\n"
                 + "            foo(l);\n"
                 + "            return l;\n"
-                + "        }).map((_item) -> 1).reduce(i, Integer::sum);\n"
+                + "        }).map(_item -> 1).reduce(i, Integer::sum);\n"
                 + "        System.out.println(i);\n"
                 + "        return true;\n"
                 + "\n"
@@ -859,7 +859,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("14:8-14:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("14:8-14:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package testdemo;\n"
                 + "\n"
@@ -875,15 +875,15 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "   \n"
                 + "    public Boolean test(List<Integer> ls) {\n"
                 + "        Integer i=0;\n"
-                + "        i = ls.stream().map((l) -> {        \n"
+                + "        i = ls.stream().map(l -> {        \n"
                 + "            String s =l.toString();\n"
                 + "            System.out.println(s);\n"
                 + "            foo(l);\n"
                 + "            return l;\n"
-                + "        }).filter((l) -> (l!=null)).map((l) -> {\n"
+                + "        }).filter(l -> (l!=null)).map(l -> {\n"
                 + "            foo(l);\n"
                 + "            return l;\n"
-                + "        }).map((_item) -> 1).reduce(i, (accumulator, _item) -> accumulator - 1);\n"
+                + "        }).map(_item -> 1).reduce(i, (accumulator, _item) -> accumulator - 1);\n"
                 + "        System.out.println(i);\n"
                 + "        return true;\n"
                 + "\n"
@@ -928,7 +928,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("17:8-17:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("17:8-17:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package javatargettempapp;\n"
                 + "\n"
@@ -947,7 +947,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "    public static void main( String[] args) {\n"
                 + "        List<Integer> ls = new ArrayList<>();\n"
                 + "        int i =0;\n"
-                + "        i = ls.stream().map((_item) -> 1).reduce(i, Integer::sum);\n"
+                + "        i = ls.stream().map(_item -> 1).reduce(i, Integer::sum);\n"
                 + "\n"
                 + "    }\n"
                 + "\n"
@@ -990,7 +990,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("17:8-17:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("17:8-17:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package javatargettempapp;\n"
                 + "\n"
@@ -1009,7 +1009,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "    public static void main( String[] args) {\n"
                 + "        List<Integer> ls = new ArrayList<>();\n"
                 + "        int i =0;\n"
-                + "        i = ls.stream().map((l) -> foo(l)).reduce(i, Integer::sum);\n"
+                + "        i = ls.stream().map(l -> foo(l)).reduce(i, Integer::sum);\n"
                 + "\n"
                 + "    }\n"
                 + "\n"
@@ -1052,7 +1052,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("17:8-17:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("17:8-17:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("package javatargettempapp;\n"
                 + "\n"
@@ -1071,7 +1071,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "    public static void main( String[] args) {\n"
                 + "        List<Integer> ls = new ArrayList<>();\n"
                 + "        String i =\"\";\n"
-                + "        i = ls.stream().map((l) -> foo(l)).reduce(i, String::concat);\n"
+                + "        i = ls.stream().map(l -> foo(l)).reduce(i, String::concat);\n"
                 + "\n"
                 + "    }\n"
                 + "\n"
@@ -1124,7 +1124,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("23:8-23:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("23:8-23:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("/*\n"
                 + " * To change this template, choose Tools | Templates\n"
@@ -1149,7 +1149,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "        List<String> strs = new ArrayList<String>();\n"
                 + "        int i = 0;\n"
                 + "        int j = 0;\n"
-                + "        strs.forEach((str) -> {            \n"
+                + "        strs.forEach(str -> {            \n"
                 + "            int len1=str.length();\n"
                 + "            int len2 = str.length();\n"
                 + "            if (len1%2==0) {\n"
@@ -1202,7 +1202,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("23:8-23:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("23:8-23:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("/*\n"
                 + " * To change this template, choose Tools | Templates\n"
@@ -1227,7 +1227,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "        List<String> strs = new ArrayList<String>();\n"
                 + "        int i = 0;\n"
                 + "        int j = 0;\n"
-                + "        strs.stream().map((_item) -> \"foo\").map((s) -> s.toString()).forEachOrdered((s) -> {\n"
+                + "        strs.stream().map(_item -> \"foo\").map(s -> s.toString()).forEachOrdered(s -> {\n"
                 + "            System.out.println(s);\n"
                 + "        });\n"
                 + "        return false;\n"
@@ -1274,7 +1274,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("23:8-23:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("23:8-23:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("/*\n"
                 + " * To change this template, choose Tools | Templates\n"
@@ -1299,7 +1299,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "        List<String> strs = new ArrayList<String>();\n"
                 + "        int i = 0;\n"
                 + "        int j = 0;\n"
-                + "        strs.stream().map((_item) -> \"foo\").map((s) -> s.toString()).forEachOrdered((_item) -> {\n"
+                + "        strs.stream().map(_item -> \"foo\").map(s -> s.toString()).forEachOrdered(_item -> {\n"
                 + "            System.out.println();\n"
                 + "        });\n"
                 + "        return false;\n"
@@ -1341,7 +1341,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .findWarning("23:8-23:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint())
+                .findWarning("23:8-23:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint())
                 .applyFix()
                 .assertOutput("/*\n"
                 + " * To change this template, choose Tools | Templates\n"
@@ -1366,7 +1366,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "        List<String> strs = new ArrayList<String>();\n"
                 + "        int i = 0;\n"
                 + "        int j = 0;\n"
-                + "        i = strs.stream().map((_item) -> 1).reduce(i, (accumulator, _item) -> accumulator - _item);\n"
+                + "        i = strs.stream().map(_item -> 1).reduce(i, (accumulator, _item) -> accumulator - _item);\n"
                 + "        return false;\n"
                 + "        \n"
                 + "    }\n"
@@ -1406,7 +1406,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .assertNotContainsWarnings("23:8-23:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint());
+                .assertNotContainsWarnings(Bundle.ERR_ForLoopToFunctionalHint());
     }
 
     public void testNoHintDueToNEF() throws Exception {
@@ -1651,7 +1651,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .assertWarnings("15:8-15:11:verifier:" + Bundle.ERR_ForLoopToFunctionalHint());
+                .assertWarnings("15:8-15:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint());
     }
 
     public void testNoHintDueToMethodThrowingException() throws Exception {
@@ -1789,7 +1789,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .assertNotContainsWarnings("23:8-23:11:verifier:Can use functional operation");
+                .assertNotContainsWarnings("Can use functional operation");
 
     }
 
@@ -1832,7 +1832,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .assertNotContainsWarnings("23:8-23:11:verifier:Can use functional operation");
+                .assertNotContainsWarnings("Can use functional operation");
 
     }
 
@@ -1873,7 +1873,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .assertNotContainsWarnings("23:8-23:11:verifier:Can use functional operation");
+                .assertNotContainsWarnings("Can use functional operation");
 
     }
     

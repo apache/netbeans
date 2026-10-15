@@ -1,0 +1,168 @@
+    const callable TEST1 = T::TEST;
+          --------
+HINT:"callable" cannot be used as a property type.
+    const void TEST2 = T::TEST;
+          ----
+HINT:"void" cannot be used as a property type.
+    const never TEST3 = T::TEST;
+          -----
+HINT:"never" cannot be used as a property type.
+    const int|callable callable = T::TEST;
+              --------
+HINT:"callable" cannot be used as a property type.
+    const bool|false boolFalse = T::TEST;
+               -----
+HINT:Type "false" is duplicated.
+    const true|bool trueBool = T::TEST;
+               ----
+HINT:Type "bool" is duplicated.
+    const bool|bool duplicatedBool = T::TEST;
+               ----
+HINT:Type "bool" is duplicated.
+    const true|false bothTrueAndFalse = T::TEST;
+               -----
+HINT:Contains both "true" and "false", "bool" should be used.
+HINT:Contains both "true" and "false", "bool" should be used.
+    const int|false|true bothTrueAndFalse2 = T::TEST;
+                    ----
+HINT:Contains both "true" and "false", "bool" should be used.
+HINT:Contains both "true" and "false", "bool" should be used.
+    const int|INT duplicatedInt = T::TEST;
+              ---
+HINT:Type "INT" is duplicated.
+    const iterable|array iterable1 = T::TEST;
+          --------------
+HINT:Redundant combination: "iterable|array" contains both "iterable" and "array".
+    const iterable|Traversable iterable2 = T::TEST;
+          --------------------
+HINT:Redundant combination: "iterable|Traversable" contains both "iterable" and "Traversable".
+    const iterable|array|Traversable iterable3 = T::TEST;
+          --------------------------
+HINT:Redundant combination: "iterable|array|Traversable" contains both "iterable" and "Traversable".
+HINT:Redundant combination: "iterable|array|Traversable" contains both "iterable" and "array".
+    public const callable TEST1 = T::TEST;
+                 --------
+HINT:"callable" cannot be used as a property type.
+    public const void TEST2 = T::TEST;
+                 ----
+HINT:"void" cannot be used as a property type.
+    public const never TEST3 = T::TEST;
+                 -----
+HINT:"never" cannot be used as a property type.
+    public const int|callable callable = T::TEST;
+                     --------
+HINT:"callable" cannot be used as a property type.
+    public const bool|false boolFalse = T::TEST;
+                      -----
+HINT:Type "false" is duplicated.
+    public const true|bool trueBool = T::TEST;
+                      ----
+HINT:Type "bool" is duplicated.
+    public const bool|bool duplicatedBool = T::TEST;
+                      ----
+HINT:Type "bool" is duplicated.
+    public const true|false bothTrueAndFalse = T::TEST;
+                      -----
+HINT:Contains both "true" and "false", "bool" should be used.
+HINT:Contains both "true" and "false", "bool" should be used.
+    public const int|false|true bothTrueAndFalse2 = T::TEST;
+                           ----
+HINT:Contains both "true" and "false", "bool" should be used.
+HINT:Contains both "true" and "false", "bool" should be used.
+    public const int|INT duplicatedInt = T::TEST;
+                     ---
+HINT:Type "INT" is duplicated.
+    public const iterable|array iterable1 = T::TEST;
+                 --------------
+HINT:Redundant combination: "iterable|array" contains both "iterable" and "array".
+    public const iterable|Traversable iterable2 = T::TEST;
+                 --------------------
+HINT:Redundant combination: "iterable|Traversable" contains both "iterable" and "Traversable".
+    public const iterable|array|Traversable iterable3 = T::TEST;
+                 --------------------------
+HINT:Redundant combination: "iterable|array|Traversable" contains both "iterable" and "Traversable".
+HINT:Redundant combination: "iterable|array|Traversable" contains both "iterable" and "array".
+    private const callable TEST1 = T::TEST;
+                  --------
+HINT:"callable" cannot be used as a property type.
+    private const void TEST2 = T::TEST;
+                  ----
+HINT:"void" cannot be used as a property type.
+    private const never TEST3 = T::TEST;
+                  -----
+HINT:"never" cannot be used as a property type.
+    private const int|callable callable = T::TEST;
+                      --------
+HINT:"callable" cannot be used as a property type.
+    private const bool|false boolFalse = T::TEST;
+                       -----
+HINT:Type "false" is duplicated.
+    private const true|bool trueBool = T::TEST;
+                       ----
+HINT:Type "bool" is duplicated.
+    private const bool|bool duplicatedBool = T::TEST;
+                       ----
+HINT:Type "bool" is duplicated.
+    private const true|false bothTrueAndFalse = T::TEST;
+                       -----
+HINT:Contains both "true" and "false", "bool" should be used.
+HINT:Contains both "true" and "false", "bool" should be used.
+    private const int|false|true bothTrueAndFalse2 = T::TEST;
+                            ----
+HINT:Contains both "true" and "false", "bool" should be used.
+HINT:Contains both "true" and "false", "bool" should be used.
+    private const int|INT duplicatedInt = T::TEST;
+                      ---
+HINT:Type "INT" is duplicated.
+    private const iterable|array iterable1 = T::TEST;
+                  --------------
+HINT:Redundant combination: "iterable|array" contains both "iterable" and "array".
+    private const iterable|Traversable iterable2 = T::TEST;
+                  --------------------
+HINT:Redundant combination: "iterable|Traversable" contains both "iterable" and "Traversable".
+    private const iterable|array|Traversable iterable3 = T::TEST;
+                  --------------------------
+HINT:Redundant combination: "iterable|array|Traversable" contains both "iterable" and "Traversable".
+HINT:Redundant combination: "iterable|array|Traversable" contains both "iterable" and "array".
+    protected const callable TEST1 = T::TEST;
+                    --------
+HINT:"callable" cannot be used as a property type.
+    protected const void TEST2 = T::TEST;
+                    ----
+HINT:"void" cannot be used as a property type.
+    protected const never TEST3 = T::TEST;
+                    -----
+HINT:"never" cannot be used as a property type.
+    protected const int|callable callable = T::TEST;
+                        --------
+HINT:"callable" cannot be used as a property type.
+    protected const bool|false boolFalse = T::TEST;
+                         -----
+HINT:Type "false" is duplicated.
+    protected const true|bool trueBool = T::TEST;
+                         ----
+HINT:Type "bool" is duplicated.
+    protected const bool|bool duplicatedBool = T::TEST;
+                         ----
+HINT:Type "bool" is duplicated.
+    protected const true|false bothTrueAndFalse = T::TEST;
+                         -----
+HINT:Contains both "true" and "false", "bool" should be used.
+HINT:Contains both "true" and "false", "bool" should be used.
+    protected const int|false|true bothTrueAndFalse2 = T::TEST;
+                              ----
+HINT:Contains both "true" and "false", "bool" should be used.
+HINT:Contains both "true" and "false", "bool" should be used.
+    protected const int|INT duplicatedInt = T::TEST;
+                        ---
+HINT:Type "INT" is duplicated.
+    protected const iterable|array iterable1 = T::TEST;
+                    --------------
+HINT:Redundant combination: "iterable|array" contains both "iterable" and "array".
+    protected const iterable|Traversable iterable2 = T::TEST;
+                    --------------------
+HINT:Redundant combination: "iterable|Traversable" contains both "iterable" and "Traversable".
+    protected const iterable|array|Traversable iterable3 = T::TEST;
+                    --------------------------
+HINT:Redundant combination: "iterable|array|Traversable" contains both "iterable" and "Traversable".
+HINT:Redundant combination: "iterable|array|Traversable" contains both "iterable" and "array".

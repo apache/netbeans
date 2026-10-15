@@ -67,7 +67,7 @@ public class NbModuleSuiteTurnClassPathModulesTest extends NbTestCase {
             urls.add(jar.toURI().toURL());
         }
         System.setProperty("java.class.path", jcp.toString());
-        NbModuleSuite.S.turnClassPathModules(ud, new URLClassLoader(urls.toArray(new URL[urls.size()]), ClassLoader.getSystemClassLoader().getParent()));
+        NbModuleSuite.S.turnClassPathModules(ud, new URLClassLoader(urls.toArray(new URL[0]), ClassLoader.getSystemClassLoader().getParent()));
         File configModules = new File(ud, "config/Modules");
         assertEquals("[maven-lib-wrapper.xml, plain-module.xml]", new TreeSet<String>(Arrays.asList(configModules.list())).toString());
         assertEquals(plainModule, jarForConfig(new File(configModules, "plain-module.xml")));

@@ -26,8 +26,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
 import java.text.MessageFormat;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
 import org.netbeans.api.autoupdate.UpdateUnitProvider;
 import org.netbeans.api.autoupdate.UpdateUnitProviderFactory;
 import org.netbeans.junit.NbTestCase;

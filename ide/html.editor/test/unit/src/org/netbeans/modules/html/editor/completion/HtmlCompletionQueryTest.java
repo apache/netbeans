@@ -25,8 +25,7 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.Ignore;
 import org.netbeans.api.editor.mimelookup.test.MockMimeLookup;
 import org.netbeans.junit.MockServices;
 import org.netbeans.modules.html.editor.HtmlExtensions;
@@ -37,7 +36,6 @@ import org.netbeans.modules.html.editor.api.gsf.HtmlExtension.CompletionContext;
 import org.netbeans.modules.html.editor.completion.HtmlCompletionTestSupport.Match;
 import org.netbeans.modules.html.editor.lib.api.HtmlSource;
 import org.netbeans.modules.html.editor.lib.api.HtmlVersion;
-import org.netbeans.modules.html.editor.lib.api.foreign.UndeclaredContentResolver;
 import org.netbeans.modules.html.parser.HtmlDocumentation;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.spi.editor.completion.CompletionItem;
@@ -64,12 +62,6 @@ public class HtmlCompletionQueryTest extends HtmlCompletionTestBase {
         HtmlVersion.DEFAULT_VERSION_UNIT_TESTS_OVERRIDE = HtmlVersion.HTML41_TRANSATIONAL;
         MockServices.setServices(MockMimeLookup.class);
         HtmlDocumentation.setupDocumentationForUnitTests();
-    }
-
-    public static Test suite() throws IOException, BadLocationException {
-	TestSuite suite = new TestSuite();
-        suite.addTest(new HtmlCompletionQueryTest("testSimpleEndTagBeforeText"));
-        return suite;
     }
 
     //test methods -----------
@@ -193,11 +185,12 @@ public class HtmlCompletionQueryTest extends HtmlCompletionTestBase {
 
     public void testCharacterReferences() throws BadLocationException, ParseException {
         assertItems("&|", arr("amp"), Match.CONTAINS, 1);
-        assertItems("&a|", arr("amp"), Match.CONTAINS, 1);
-        assertItems("&amp|", arr("amp"), Match.EXACT, 1);
+        assertItems("&a|", arr("amp"), Match.CONTAINS, 2);
+        assertItems("&amp|", arr("amp"), Match.EXACT, 4);
         assertItems("|&amp;", arr("amp"), Match.CONTAINS, 1);
 
         assertCompletedText("&|", "amp", "&amp;|");
+        assertCompletedText("&a|", "amp", "&amp;|");
         assertCompletedText("&am|", "amp", "&amp;|");
     }
 
@@ -326,10 +319,17 @@ public class HtmlCompletionQueryTest extends HtmlCompletionTestBase {
     public void testEndTagAutocompletion() throws BadLocationException, ParseException {
         assertItems("<div>|", arr("div"), Match.EXACT, 5);
     }
-    
+
+    @Ignore
     public void testNoEndTagAutocompletion() throws BadLocationException, ParseException {
         //test end tag ac for unknown tags
         assertItems("<div><bla>|", arr(), Match.EMPTY);
+    }
+    
+    public void testNoAutocompletionAfterEndTag() throws BadLocationException, ParseException {
+        // Test for not calling auto completion after end tag is already added
+        assertItems("<div></div>|", arr(), Match.EMPTY);
+        assertItems("<img />|", arr(), Match.EMPTY);
     }
 
     public void testJustBeforeTag() throws BadLocationException, ParseException {

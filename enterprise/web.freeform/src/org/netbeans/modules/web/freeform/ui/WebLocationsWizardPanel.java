@@ -149,7 +149,7 @@ public class WebLocationsWizardPanel implements WizardDescriptor.Panel {
     }
 
     private String guessJavaRoot (FileObject dir) {
-        Enumeration ch = dir.getChildren (true);
+        Enumeration<? extends FileObject> ch = dir.getChildren (true);
         try {
             while (ch.hasMoreElements ()) {
                 FileObject f = (FileObject) ch.nextElement ();

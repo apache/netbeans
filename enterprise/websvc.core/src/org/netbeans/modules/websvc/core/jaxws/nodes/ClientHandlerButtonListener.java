@@ -37,7 +37,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URI;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
@@ -55,7 +55,6 @@ import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
@@ -135,7 +134,7 @@ public class ClientHandlerButtonListener implements ActionListener {
         if (!panel.isChanged()) {
             return;
         }
-        ProgressHandle handle = ProgressHandleFactory.createHandle(NbBundle.getMessage(ClientHandlerButtonListener.class, "MSG_ConfigureHandler")); //NOI18N
+        ProgressHandle handle = ProgressHandle.createHandle(NbBundle.getMessage(ClientHandlerButtonListener.class, "MSG_ConfigureHandler")); //NOI18N
         handle.start();
         handle.switchToIndeterminate();
         FileObject srcRoot = (FileObject) node.getLookup().lookup(FileObject.class);
@@ -168,7 +167,7 @@ public class ClientHandlerButtonListener implements ActionListener {
                         FileLock lock = bindingHandlerFO.lock();
                         try {
                             os = bindingHandlerFO.getOutputStream(lock);
-                            osw = new OutputStreamWriter(os, Charset.forName("UTF-8"));// NOI18N
+                            osw = new OutputStreamWriter(os, StandardCharsets.UTF_8);
                             bw = new BufferedWriter(osw);
                             bw.write(bindingsContent);
                         } finally {
@@ -200,7 +199,7 @@ public class ClientHandlerButtonListener implements ActionListener {
                 FileObject localWsdlFile =
                         support.getLocalWsdlFolderForClient(client.getName(), false).getFileObject(client.getLocalWsdlFile());
                 File f = FileUtil.toFile(bindingHandlerFO);
-                String relativePath = Utilities.relativize(f.toURI(), new URI(localWsdlFile.getURL().toExternalForm()));
+                String relativePath = Utilities.relativize(f.toURI(), new URI(localWsdlFile.toURL().toExternalForm()));
                 GlobalBindings gb = bindingsModel.getGlobalBindings();
                 try {
                     bindingsModel.startTransaction();
@@ -441,7 +440,7 @@ public class ClientHandlerButtonListener implements ActionListener {
         StringBuilder sb = new StringBuilder();
         try {
             String lineSep = System.getProperty("line.separator");      //NOI18N
-            isr = new InputStreamReader(is, Charset.forName("UTF-8"));  //NOI18N
+            isr = new InputStreamReader(is, StandardCharsets.UTF_8);
             br = new BufferedReader(isr);
 
             String line = br.readLine();

@@ -27,6 +27,7 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Properties;
@@ -36,7 +37,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.lexer.TokenHierarchy;
+import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.project.libraries.Library;
 import org.netbeans.api.project.libraries.LibraryManager;
 import org.netbeans.api.queries.FileEncodingQuery;
@@ -47,6 +51,7 @@ import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
+import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -56,139 +61,162 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=ClassPathProvider.class, position=9999)
 public class ClassPathProviderImpl implements ClassPathProvider {
 
+    private static final RequestProcessor WORKER = new RequestProcessor(ClassPathProviderImpl.class.getName(), 1, false, false);
+
     @Override
     public ClassPath findClassPath(FileObject file, String type) {
-        FileObject search = file.getParent();
-        FileObject testProperties = null;
+        TestRootDescription rootDesc = TestRootDescription.findRootDescriptionFor(file);
 
-        while (search != null) {
-            if (testProperties == null) {
-                testProperties =  BuildUtils.getFileObject(search, "TEST.properties");
-            }
-
-            FileObject testRoot = BuildUtils.getFileObject(search, "TEST.ROOT");
-
-            if (testRoot != null) {
-                boolean javac = (Utilities.isLangtoolsRepository(search.getParent()) || search.getNameExt().equals("langtools")) &&
-                                ShortcutUtils.getDefault().shouldUseCustomTest("langtools", FileUtil.getRelativePath(search.getParent(), file));
-                FileObject keyRoot = javac ? search.getNameExt().equals("langtools") ? Utilities.getLangtoolsKeyRoot(search.getParent().getParent()) : Utilities.getLangtoolsKeyRoot(search.getParent()) : null;
-                //XXX: hack to make things work for langtools:
-                switch (type) {
-                    case ClassPath.COMPILE:
-                        if (javac) {
-                            ClassPath langtoolsCP = ClassPath.getClassPath(keyRoot, ClassPath.COMPILE);
-                            Library testngLib = LibraryManager.getDefault().getLibrary("testng");
-
-                            if (testngLib != null) {
-                                return ClassPathSupport.createProxyClassPath(ClassPathSupport.createClassPath(testngLib.getContent("classpath").toArray(new URL[0])),
-                                                                             langtoolsCP);
-                            }
-
-                            if (langtoolsCP == null)
-                                return ClassPath.EMPTY;
-                            else
-                                return langtoolsCP;
-                        }
-                        else return null;
-                    case ClassPath.BOOT:
-                        if (javac) {
-                            try {
-                                ClassPath langtoolsBCP = ClassPath.getClassPath(keyRoot, ClassPath.BOOT);
-                                List<URL> roots = new ArrayList<>();
-                                for (String rootPaths : new String[] {"build/classes/",
-                                                                      "build/java.compiler/classes/",
-                                                                      "build/jdk.compiler/classes/",
-                                                                      "build/jdk.javadoc/classes/",
-                                                                      "build/jdk.dev/classes/"}) {
-                                    roots.add(search.getParent().toURI().resolve(rootPaths).toURL());
-                                }
-                                return ClassPathSupport.createProxyClassPath(ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()])), langtoolsBCP);
-                            } catch (MalformedURLException ex) {
-                                Exceptions.printStackTrace(ex);
-                            }
-                        }
-                        return null;
-                    case ClassPath.SOURCE:
-                        break;
-                    default:
-                        return null;
-                }
-
-                Set<FileObject> roots = new LinkedHashSet<>();
-
-                if (testProperties != null) {
-                    roots.add(testProperties.getParent());
-
-                    try (InputStream in = testProperties.getInputStream()) {
-                        Properties p = new Properties();
-                        p.load(in);
-                        String libDirsText = p.getProperty("lib.dirs");
-                        FileObject libDirsRoot = libDirsText != null ? resolve(testProperties, search, libDirsText) : null;
-
-                        if (libDirsRoot != null) roots.add(libDirsRoot);
-                    } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                } else {
-                    if (file.isFolder()) return null;
-                    
-                    roots.add(file.getParent());
-                    try (Reader r = new InputStreamReader(file.getInputStream(), FileEncodingQuery.getEncoding(file))) {
-                        StringBuilder content = new StringBuilder();
-                        int read;
-                        
-                        while ((read = r.read()) != (-1)) {
-                            content.append((char) read);
-                        }
-                        
-                        Pattern library = Pattern.compile("@library (.*)\n");
-                        Matcher m = library.matcher(content.toString());
-
-                        if (m.find()) {
-                            List<FileObject> libDirs = new ArrayList<>();
-                            try (InputStream in = testRoot.getInputStream()) {
-                                Properties p = new Properties();
-                                p.load(in);
-                                String externalLibRoots = p.getProperty("external.lib.roots");
-                                if (externalLibRoots != null) {
-                                    for (String extLib : externalLibRoots.split("\\s+")) {
-                                        FileObject libDir = BuildUtils.getFileObject(search, extLib);
-
-                                        if (libDir != null) {
-                                            libDirs.add(libDir);
-                                        }
-                                    }
-                                }
-                            }
-                            libDirs.add(search);
-                            String libraryPaths = m.group(1).trim();
-                            for (String libraryPath : libraryPaths.split(" ")) {
-                                for (FileObject libDir : libDirs) {
-                                    FileObject libFO = resolve(file, libDir, libraryPath);
-
-                                    if (libFO != null) {
-                                        roots.add(libFO);
-                                    }
-                                }
-                            }
-                        }
-                    } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                }
-
-                //XXX:
-                for (FileObject root : roots) {
-                    initializeUsagesQuery(root);
-                }
-
-                return ClassPathSupport.createClassPath(roots.toArray(new FileObject[0]));
-            }
-
-            search = search.getParent();
+        if (rootDesc == null) {
+            return null;
         }
-        
-        return null;
+
+        FileObject testProperties = rootDesc.testProperties;
+        FileObject testRoot = rootDesc.testRoot;
+        FileObject testRootFile = rootDesc.testRootFile;
+
+        boolean javac = (Utilities.isLangtoolsRepository(testRoot.getParent()) || testRoot.getNameExt().equals("langtools")) &&
+                        ShortcutUtils.getDefault().shouldUseCustomTest("langtools", FileUtil.getRelativePath(testRoot.getParent(), file));
+        FileObject keyRoot = javac ? testRoot.getNameExt().equals("langtools") ? Utilities.getLangtoolsKeyRoot(testRoot.getParent().getParent()) : Utilities.getLangtoolsKeyRoot(testRoot.getParent()) : null;
+        //XXX: hack to make things work for langtools:
+        switch (type) {
+            case ClassPath.COMPILE:
+                if (javac) {
+                    ClassPath langtoolsCP = ClassPath.getClassPath(keyRoot, ClassPath.COMPILE);
+                    Library testngLib = LibraryManager.getDefault().getLibrary("testng");
+                    Library junit5Lib = LibraryManager.getDefault().getLibrary("junit_5");
+
+                    if (testngLib != null || junit5Lib != null) {
+                        List<ClassPath> parts = new ArrayList<>();
+
+                        if (testngLib != null) {
+                            parts.add(ClassPathSupport.createClassPath(testngLib.getContent("classpath").toArray(new URL[0])));
+                        }
+                        if (junit5Lib != null) {
+                            parts.add(ClassPathSupport.createClassPath(junit5Lib.getContent("classpath").toArray(new URL[0])));
+                        }
+
+                        parts.add(langtoolsCP);
+
+                        return ClassPathSupport.createProxyClassPath(parts.toArray(new ClassPath[0]));
+                    }
+
+                    if (langtoolsCP == null)
+                        return ClassPath.EMPTY;
+                    else
+                        return langtoolsCP;
+                }
+                else return null;
+            case ClassPath.BOOT:
+                if (javac) {
+                    try {
+                        ClassPath langtoolsBCP = ClassPath.getClassPath(keyRoot, ClassPath.BOOT);
+                        List<URL> roots = new ArrayList<>();
+                        for (String rootPaths : new String[] {"build/classes/",
+                                                              "build/java.compiler/classes/",
+                                                              "build/jdk.compiler/classes/",
+                                                              "build/jdk.javadoc/classes/",
+                                                              "build/jdk.dev/classes/"}) {
+                            roots.add(testRoot.getParent().toURI().resolve(rootPaths).toURL());
+                        }
+                        return ClassPathSupport.createProxyClassPath(ClassPathSupport.createClassPath(roots.toArray(new URL[0])), langtoolsBCP);
+                    } catch (MalformedURLException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+                return null;
+            case ClassPath.SOURCE:
+                break;
+            default:
+                return null;
+        }
+
+        Set<FileObject> roots = new LinkedHashSet<>();
+
+        if (testProperties != null) {
+            roots.add(testProperties.getParent());
+
+            try (InputStream in = testProperties.getInputStream()) {
+                Properties p = new Properties();
+                p.load(in);
+                String libDirsText = p.getProperty("lib.dirs");
+                FileObject libDirsRoot = libDirsText != null ? resolve(testProperties, testRoot, libDirsText) : null;
+
+                if (libDirsRoot != null) roots.add(libDirsRoot);
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        } else {
+            if (file.isFolder()) return null;
+
+           String content = getFileContent(file);
+
+            try {
+                Pattern library = Pattern.compile("@library (.*)\n");
+                Matcher m = library.matcher(content.toString());
+
+                if (m.find()) {
+                    List<FileObject> libDirs = new ArrayList<>();
+                    Properties p = new Properties();
+                    if (testRootFile != null) {
+                        try (InputStream in = testRootFile.getInputStream()) {
+                            p.load(in);
+                        }
+                    }
+                    String externalLibRoots = p.getProperty("external.lib.roots");
+                    if (externalLibRoots != null) {
+                        for (String extLib : externalLibRoots.split("\\s+")) {
+                            FileObject libDir = BuildUtils.getFileObject(testRoot, extLib);
+
+                            if (libDir != null) {
+                                libDirs.add(libDir);
+                            }
+                        }
+                    }
+                    libDirs.add(testRoot);
+                    String libraryPaths = m.group(1).trim();
+                    for (String libraryPath : libraryPaths.split(" ")) {
+                        for (FileObject libDir : libDirs) {
+                            FileObject libFO = resolve(file, libDir, libraryPath);
+
+                            if (libFO != null) {
+                                roots.add(libFO);
+                            }
+                        }
+                    }
+                }
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+
+            String pckge = "";
+
+            pckge = packageClause(content);
+
+            FileObject packageDir = file.getParent();
+
+            if (!pckge.isEmpty()) {
+                for (String s : pckge.split("\\.")) {
+                    packageDir = packageDir.getParent();
+                }
+
+                String realPackage = FileUtil.getRelativePath(packageDir, file.getParent()).replace('/', '.');
+
+                if (!pckge.equals(realPackage) ||
+                    (!FileUtil.isParentOf(rootDesc.testRoot, packageDir) && !rootDesc.testRoot.equals(packageDir))) {
+                    packageDir = file.getParent();
+                }
+            }
+
+            roots.add(packageDir);
+        }
+
+        //XXX:
+        for (FileObject root : roots) {
+            initializeUsagesQuery(root);
+        }
+
+        return ClassPathSupport.createClassPath(roots.toArray(new FileObject[0]));
     }
 
     private FileObject resolve(FileObject file, FileObject root, String spec) {
@@ -199,9 +227,60 @@ public class ClassPathProviderImpl implements ClassPathProvider {
         }
     }
 
+    private String getFileContent(FileObject file) {
+        try (Reader r = new InputStreamReader(file.getInputStream(), FileEncodingQuery.getEncoding(file))) {
+            StringBuilder contentBuilder = new StringBuilder();
+            int read;
+
+            while ((read = r.read()) != (-1)) {
+                contentBuilder.append((char) read);
+            }
+
+            return contentBuilder.toString();
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+            return "";
+        }
+    }
+
+    private String packageClause(String fileContent) {
+        TokenSequence<JavaTokenId> ts =
+                TokenHierarchy.create(fileContent, JavaTokenId.language())
+                              .tokenSequence(JavaTokenId.language());
+        while (ts.moveNext()) {
+            if (ts.token().id() == JavaTokenId.PACKAGE) {
+                StringBuilder pckge = new StringBuilder();
+
+                while (ts.moveNext()) {
+                    switch (ts.token().id()) {
+                        case IDENTIFIER, DOT -> pckge.append(ts.token().text());
+                        case BLOCK_COMMENT, JAVADOC_COMMENT, WHITESPACE,
+                             JAVADOC_COMMENT_LINE_RUN, LINE_COMMENT -> {}
+                        default -> {return pckge.toString();}
+                    }
+                }
+            }
+        }
+
+        return "";
+    }
+
     private void initializeUsagesQuery(FileObject root) {
         try {
             ClassLoader cl = JavaSource.class.getClassLoader();
+
+            Class<?> repositoryUpdaterClass = Class.forName("org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater", false, cl);
+            Field workerField = repositoryUpdaterClass.getDeclaredField("WORKER");
+
+            workerField.setAccessible(true);
+
+            RequestProcessor repositoryUpdaterWorker = (RequestProcessor) workerField.get(null);
+
+            if (repositoryUpdaterWorker.isRequestProcessorThread()) {
+                WORKER.post(() -> initializeUsagesQuery(root));
+                return ;
+            }
+
             Class<?> transactionContextClass = Class.forName("org.netbeans.modules.java.source.indexing.TransactionContext", false, cl);
             Class<?> serviceClass = Class.forName("org.netbeans.modules.java.source.indexing.TransactionContext$Service", false, cl);
             Method beginTrans = transactionContextClass.getDeclaredMethod("beginTrans");

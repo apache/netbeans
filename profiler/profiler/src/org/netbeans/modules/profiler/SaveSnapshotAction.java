@@ -51,7 +51,7 @@ class SaveSnapshotAction extends AbstractAction {
 
     public void actionPerformed(ActionEvent e) {
         new NBSwingWorker() {
-            final private ProgressHandle ph = ProgressHandle.createHandle(Bundle.MSG_SavingSnapshot());
+            private final ProgressHandle ph = ProgressHandle.createHandle(Bundle.MSG_SavingSnapshot());
             @Override
             protected void doInBackground() {
                 ph.setInitialDelay(500);

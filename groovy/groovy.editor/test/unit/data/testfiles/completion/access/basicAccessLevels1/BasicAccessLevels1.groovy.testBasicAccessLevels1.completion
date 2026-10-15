@@ -20,8 +20,8 @@ METHOD     every(Closure)                             boolean
 METHOD     finalize()                      [PROTECTE  void
 METHOD     find()                                     Object
 METHOD     find(Closure)                              Object
-METHOD     findAll()                                  Collection
-METHOD     findAll(Closure)                           Collection
+METHOD     findAll()                                  List
+METHOD     findAll(Closure)                           List
 METHOD     findIndexOf(Closure)                       int
 METHOD     findIndexOf(int, Closure)                  int
 METHOD     findIndexValues(Closure)                   List
@@ -32,7 +32,7 @@ METHOD     findResult(Closure)                        Object
 METHOD     findResult(Object, Closure)                Object
 METHOD     getAt(String)                              Object
 METHOD     getClass()                      [PUBLIC]   Class<?>
-METHOD     getMetaClass()                             MetaClass
+METHOD     getMetaClass()                  [PUBLIC]   MetaClass
 METHOD     getMetaPropertyValues()                    List
 METHOD     getProperties()                            Map
 METHOD     getProperty(String)             [PUBLIC]   Object
@@ -65,13 +65,14 @@ METHOD     println(PrintWriter)                       void
 METHOD     putAt(String, Object)                      void
 METHOD     respondsTo(String)                         List
 METHOD     respondsTo(String, Object)                 List
-METHOD     setMetaClass(MetaClass)                    void
+METHOD     setMetaClass(MetaClass)         [PUBLIC]   void
 METHOD     setProperty(String, Object)     [PUBLIC]   void
 METHOD     sleep(long)                                void
 METHOD     sleep(long, Closure)                       void
 METHOD     split(Closure)                             Collection
 METHOD     sprintf(String, Object)                    String
 METHOD     sprintf(String, Object)                    String
+METHOD     stream()                                   Stream
 METHOD     tap(Closure)                               Object
 METHOD     test()                          [PUBLIC]   Object
 METHOD     toString()                      [PUBLIC]   String

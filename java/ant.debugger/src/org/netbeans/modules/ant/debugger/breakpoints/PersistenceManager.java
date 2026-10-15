@@ -20,6 +20,7 @@
 package org.netbeans.modules.ant.debugger.breakpoints;
 
 import java.beans.PropertyChangeEvent;
+import java.util.List;
 import java.util.ArrayList;
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerEngine;
@@ -134,13 +135,13 @@ public class PersistenceManager implements LazyDebuggerManagerListener {
         Breakpoint[] bs = DebuggerManager.getDebuggerManager ().
             getBreakpoints ();
         int i, k = bs.length;
-        ArrayList bb = new ArrayList ();
+        List<Breakpoint> bb = new ArrayList<>();
         for (i = 0; i < k; i++)
             // Don't store hidden breakpoints
             if (bs[i] instanceof AntBreakpoint)
                 bb.add (bs [i]);
         bs = new Breakpoint [bb.size ()];
-        return (Breakpoint[]) bb.toArray (bs);
+        return bb.toArray(bs);
     }
 }
 

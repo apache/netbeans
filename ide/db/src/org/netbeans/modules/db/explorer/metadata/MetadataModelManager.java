@@ -47,7 +47,7 @@ public class MetadataModelManager {
     // XXX test against memory leak.
     // XXX test if DatabaseConnection can be GC'd.
 
-    private final static WeakHashMap<DatabaseConnection, MetadataModel> conn2Model = new WeakHashMap<DatabaseConnection, MetadataModel>();
+    private static final WeakHashMap<DatabaseConnection, MetadataModel> conn2Model = new WeakHashMap<DatabaseConnection, MetadataModel>();
 
 
     private MetadataModelManager() {}
@@ -83,7 +83,7 @@ public class MetadataModelManager {
         return conn;
     }
 
-    private final static class Listener implements DbMetaDataListener {
+    private static final class Listener implements DbMetaDataListener {
 
         // Remove when issue 141698 is fixed.
         private static Listener create() {

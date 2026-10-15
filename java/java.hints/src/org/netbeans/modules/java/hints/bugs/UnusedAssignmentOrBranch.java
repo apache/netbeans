@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Set;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -133,25 +134,44 @@ public class UnusedAssignmentOrBranch {
         @TriggerPattern("$mods$ $type $var = $value;")
     })
     public static ErrorDescription unusedAssignment(final HintContext ctx) {
+        final CompilationInfo info = ctx.getInfo();
+        Element var = info.getTrees().getElement(ctx.getVariables().get("$var"));
+
+        if (var == null || !LOCAL_VARIABLES.contains(var.getKind()) ||
+            isImplicitParamOfRecordCanonicalConstructor(info, var)) {
+            return null;
+        }
+
         final String unusedAssignmentLabel = NbBundle.getMessage(UnusedAssignmentOrBranch.class, "LBL_UNUSED_ASSIGNMENT_LABEL");
         Pair<Set<Tree>, Set<Element>> computedAssignments = computeUsedAssignments(ctx);
         
         if (ctx.isCanceled() || computedAssignments == null) return null;
 
-        final CompilationInfo info = ctx.getInfo();
         final Set<Tree> usedAssignments = computedAssignments.first();
         final Set<Element> usedVariables = computedAssignments.second();
-        Element var = info.getTrees().getElement(ctx.getVariables().get("$var"));
         TreePath valuePath = ctx.getVariables().get("$value");
         Tree value = (valuePath == null ? ctx.getPath() : valuePath).getLeaf();
 
-        if (var != null && LOCAL_VARIABLES.contains(var.getKind()) && !usedAssignments.contains(value) && usedVariables.contains(var)) {
+        if (!usedAssignments.contains(value) && usedVariables.contains(var)) {
             return ErrorDescriptionFactory.forTree(ctx, value, unusedAssignmentLabel);
         }
 
         return null;
     }
-    
+
+    private static boolean isImplicitParamOfRecordCanonicalConstructor(CompilationInfo info, Element el) {
+        Element enclosingElement = el.getEnclosingElement();
+
+        if (enclosingElement.getKind() != ElementKind.CONSTRUCTOR) {
+            return false;
+        }
+
+        ExecutableElement constr = (ExecutableElement) enclosingElement;
+
+        return info.getElements().isCompactConstructor(constr) &&
+               constr.getParameters().contains(el);
+    }
+
     private static boolean mayHaveSideEffects(HintContext ctx, TreePath path) {
         SideEffectVisitor visitor = new SideEffectVisitor(ctx).stopOnUnknownMethods(true);
         Tree culprit = null;

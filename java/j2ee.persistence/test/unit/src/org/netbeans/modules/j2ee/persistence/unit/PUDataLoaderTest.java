@@ -45,6 +45,7 @@ public class PUDataLoaderTest extends PUDataObjectTestBase {
         super(testName);
     }
     
+    @Override
     public void setUp() throws Exception {
         clearWorkDir();
         super.setUp();

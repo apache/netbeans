@@ -21,7 +21,6 @@ package org.netbeans.modules.nativeexecution.api.execution;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -86,7 +85,7 @@ public final class IOTabsController {
             }
             TabsGroup result = new TabsGroup(groupName, idx);
             groups.add(result);
-            Collections.sort(groups, comparator);
+            groups.sort(comparator);
             return result;
         }
     }

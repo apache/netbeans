@@ -31,6 +31,8 @@ import org.netbeans.modules.php.editor.api.PhpModifiers;
 import org.netbeans.modules.php.editor.api.elements.FieldElement;
 import org.netbeans.modules.php.editor.api.elements.MethodElement;
 import org.netbeans.modules.php.editor.api.elements.PhpElement;
+import org.netbeans.modules.php.editor.api.elements.TypeConstantElement;
+import org.netbeans.modules.php.editor.api.elements.TypeElement;
 import org.netbeans.modules.php.editor.model.Model;
 import org.netbeans.modules.php.editor.model.Occurence;
 import org.netbeans.modules.php.editor.model.Occurence.Accuracy;
@@ -74,12 +76,20 @@ public class InstantRenamerImpl implements InstantRenamer {
                     } else if (decl instanceof MethodElement) {
                         MethodElement meth = (MethodElement) decl;
                         PhpModifiers phpModifiers = meth.getPhpModifiers();
-                        if (phpModifiers.isPrivate()) {
+                        if (phpModifiers.isPrivate() && !meth.getType().isTrait()) {
+                            // NETBEANS-6087 private methods of trait are used in classes
                             return checkAll(caretOccurence);
                         }
                     } else if (decl instanceof FieldElement) {
                         FieldElement fld = (FieldElement) decl;
                         PhpModifiers phpModifiers = fld.getPhpModifiers();
+                        if (phpModifiers.isPrivate() && !fld.getType().isTrait()) {
+                            // NETBEANS-6087 private field of trait are used in classes
+                            return checkAll(caretOccurence);
+                        }
+                    } else if (decl instanceof TypeConstantElement) {
+                        TypeConstantElement cnst = (TypeConstantElement) decl;
+                        PhpModifiers phpModifiers = cnst.getPhpModifiers();
                         if (phpModifiers.isPrivate()) {
                             return checkAll(caretOccurence);
                         }

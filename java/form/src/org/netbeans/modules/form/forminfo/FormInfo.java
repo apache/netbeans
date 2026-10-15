@@ -31,11 +31,11 @@ import org.openide.nodes.Node;
  *
  * @deprecated
  */
-
+@Deprecated
 public abstract class FormInfo
 {
     /** Constant for empty list of properties */
-    public final static Node.Property[] NO_PROPERTIES = new Node.Property[0];
+    public static final Node.Property[] NO_PROPERTIES = new Node.Property[0];
 
     /** Used to create the design-time instance of the form object, which is used
      * only for displaing properties and events of the form.  I.e. it is not

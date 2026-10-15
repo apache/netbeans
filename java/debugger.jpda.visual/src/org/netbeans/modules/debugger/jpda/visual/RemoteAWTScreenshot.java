@@ -246,7 +246,7 @@ public class RemoteAWTScreenshot {
                     try {
                         if (FAST_SNAPSHOT_RETRIEVAL) {
                             final Method getGUISnapshots = ClassTypeWrapper.concreteMethodByName(serviceClass, "getGUISnapshots", "()[Lorg/netbeans/modules/debugger/jpda/visual/remote/RemoteAWTService$Snapshot;");
-                            ArrayReference snapshotsArray = (ArrayReference) ClassTypeWrapper.invokeMethod(serviceClass, tawt, getGUISnapshots, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                            ArrayReference snapshotsArray = (ArrayReference) ClassTypeWrapper.invokeMethod(serviceClass, tawt, getGUISnapshots, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                             List<Value> snapshots = ArrayReferenceWrapper.getValues(snapshotsArray);
                             for (Value snapshot : snapshots) {
                                 ObjectReference snapshotObj = (ObjectReference) snapshot;
@@ -288,7 +288,7 @@ public class RemoteAWTScreenshot {
                             String msg = NbBundle.getMessage(RemoteAWTScreenshot.class, "MSG_ScreenshotNotTaken_MissingMethod", "java.awt.Window.getWindows()");
                             throw new RetrievalException(msg);
                         }
-                        ArrayReference windowsArray = (ArrayReference) ((ClassType) windowClass).invokeMethod(tawt, getWindows, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                        ArrayReference windowsArray = (ArrayReference) ((ClassType) windowClass).invokeMethod(tawt, getWindows, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                         List<Value> windows = windowsArray.getValues();
                         logger.fine("Have "+windows.size()+" window(s).");
 
@@ -345,19 +345,19 @@ public class RemoteAWTScreenshot {
                             ObjectReference window = (ObjectReference) windowValue;
                             //dumpHierarchy(window);
 
-                            BooleanValue visible = (BooleanValue) window.invokeMethod(tawt, isVisible, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                            BooleanValue visible = (BooleanValue) window.invokeMethod(tawt, isVisible, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                             if (!visible.value()) {
                                 // Ignore windows that are not visible.
                                 // TODO: mark them as not visible.
                                 //continue;
                             }
-                            Object owner = window.invokeMethod(tawt, getOwner, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                            Object owner = window.invokeMethod(tawt, getOwner, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                             if (owner != null) {
                                 // An owned window
                                 //continue;
                             }
 
-                            ObjectReference sizeDimension = (ObjectReference) window.invokeMethod(tawt, getSize, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                            ObjectReference sizeDimension = (ObjectReference) window.invokeMethod(tawt, getSize, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                             Field field = dimensionClass.fieldByName("width");
                             IntegerValue widthValue = (IntegerValue) sizeDimension.getValue(field);
                             int width = widthValue.value();
@@ -368,7 +368,7 @@ public class RemoteAWTScreenshot {
 
                             List<? extends Value> args = Arrays.asList(widthValue, heightValue, vm.mirrorOf(BufferedImage.TYPE_INT_ARGB));
                             ObjectReference bufferedImage = bufferedImageClass.newInstance(tawt, bufferedImageConstructor, args, ObjectReference.INVOKE_SINGLE_THREADED);
-                            ObjectReference graphics = (ObjectReference) bufferedImage.invokeMethod(tawt, createGraphics, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                            ObjectReference graphics = (ObjectReference) bufferedImage.invokeMethod(tawt, createGraphics, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
 
 
                             Method paint = windowClass.concreteMethodByName("paint", "(Ljava/awt/Graphics;)V");
@@ -377,13 +377,13 @@ public class RemoteAWTScreenshot {
                             /*
                             // getPeer() - java.awt.peer.ComponentPeer, ComponentPeer.paint()
                             Method getPeer = windowClass.concreteMethodByName("getPeer", "()Ljava/awt/peer/ComponentPeer;");
-                            ObjectReference peer = (ObjectReference) window.invokeMethod(tawt, getPeer, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                            ObjectReference peer = (ObjectReference) window.invokeMethod(tawt, getPeer, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                             Method paint = ((ClassType) peer.referenceType()).concreteMethodByName("paint", "(Ljava/awt/Graphics;)V");
                             peer.invokeMethod(tawt, paint, Arrays.asList(graphics), ObjectReference.INVOKE_SINGLE_THREADED);
                             - paints nothing! */
 
                             Method getData = bufferedImageClass.concreteMethodByName("getData", "()Ljava/awt/image/Raster;");
-                            ObjectReference raster = (ObjectReference) bufferedImage.invokeMethod(tawt, getData, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                            ObjectReference raster = (ObjectReference) bufferedImage.invokeMethod(tawt, getData, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
 
                             Method getDataElements = ((ClassType) raster.referenceType()).concreteMethodByName("getDataElements", "(IIIILjava/lang/Object;)Ljava/lang/Object;");
                             IntegerValue zero = vm.mirrorOf(0);
@@ -400,14 +400,14 @@ public class RemoteAWTScreenshot {
 
                             String title = null;
                             if (frameClass != null && EvaluatorVisitor.instanceOf(window.referenceType(), frameClass)) {
-                                Value v = window.invokeMethod(tawt, getFrameTitle, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                                Value v = window.invokeMethod(tawt, getFrameTitle, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                                 if (v instanceof StringReference) {
                                     StringReference sr = (StringReference) v;
                                     title = sr.value();
                                 }
                             }
                             if (dialogClass != null && EvaluatorVisitor.instanceOf(window.referenceType(), dialogClass)) {
-                                Value v = window.invokeMethod(tawt, getDialogTitle, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                                Value v = window.invokeMethod(tawt, getDialogTitle, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                                 if (v instanceof StringReference) {
                                     StringReference sr = (StringReference) v;
                                     title = sr.value();
@@ -470,7 +470,7 @@ public class RemoteAWTScreenshot {
                                                   RetrievalException {
         
         ThreadReference tawt = t.getThreadReference();
-        ObjectReference rectangle = (ObjectReference) component.invokeMethod(tawt, getBounds, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+        ObjectReference rectangle = (ObjectReference) component.invokeMethod(tawt, getBounds, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
         ClassType rectangleClass;
         try {
             rectangleClass = RemoteServices.getClass(vm, "java.awt.Rectangle");
@@ -500,7 +500,7 @@ public class RemoteAWTScreenshot {
             ci.setWindowBounds(new Rectangle(shiftx, shifty, r.width, r.height));
         }
         Method getName = componentClass.concreteMethodByName("getName", "()Ljava/lang/String;");
-        StringReference name = (StringReference) component.invokeMethod(tawt, getName, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+        StringReference name = (StringReference) component.invokeMethod(tawt, getName, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
         if (name != null) {
             ci.setName(name.value());
         }
@@ -536,7 +536,7 @@ public class RemoteAWTScreenshot {
 //        });
         
         if (isInstanceOfClass((ClassType) component.referenceType(), containerClass)) {
-            ArrayReference componentsArray = (ArrayReference) component.invokeMethod(tawt, getComponents, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+            ArrayReference componentsArray = (ArrayReference) component.invokeMethod(tawt, getComponents, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
             List<Value> components = componentsArray.getValues();
             logger.log(Level.FINE, "Have {0} component(s).", components.size());
             if (components.size() > 0) {
@@ -564,7 +564,7 @@ public class RemoteAWTScreenshot {
             logger.severe("No getComponents() method!");
             return new AWTComponentInfo[] {};
         }
-        ArrayReference componentsArray = (ArrayReference) window.invokeMethod(tawt, getComponents, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+        ArrayReference componentsArray = (ArrayReference) window.invokeMethod(tawt, getComponents, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
         List<Value> components = componentsArray.getValues();
         logger.severe("Have "+components.size()+" component(s).");
         
@@ -573,7 +573,7 @@ public class RemoteAWTScreenshot {
         for(Value cv : components) {
             cis[i] = new AWTComponentInfo();
             ObjectReference c = (ObjectReference) cv;
-            ObjectReference rectangle = (ObjectReference) c.invokeMethod(tawt, getBounds, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+            ObjectReference rectangle = (ObjectReference) c.invokeMethod(tawt, getBounds, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
             ClassType rectangleClass = getClass(vm, "java.awt.Rectangle");
             Field fx = rectangleClass.fieldByName("x");
             Field fy = rectangleClass.fieldByName("y");

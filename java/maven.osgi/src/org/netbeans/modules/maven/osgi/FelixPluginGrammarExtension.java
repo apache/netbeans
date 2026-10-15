@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
-import org.jdom.Element;
+import org.jdom2.Element;
 import org.netbeans.modules.maven.grammar.spi.AbstractSchemaBasedGrammar;
 import org.netbeans.modules.maven.grammar.spi.GrammarExtensionProvider;
 import org.netbeans.modules.xml.api.model.GrammarResult;
@@ -51,18 +51,18 @@ public class FelixPluginGrammarExtension implements GrammarExtensionProvider {
             };
 
     @Override
-    @NonNull 
+    @NonNull
     public List<GrammarResult> getDynamicCompletion(String path, HintContext hintCtx, Element parent) {
         //TODO also plugin/executions/execution/configuration should apply
         if (path.endsWith("plugins/plugin/configuration") && isFelixPlugin(hintCtx.getParentNode())) { //NOI18N
-            List<GrammarResult> result = new ArrayList<GrammarResult>();
+            List<GrammarResult> result = new ArrayList<>();
             result.add(new AbstractSchemaBasedGrammar.MyTextElement(OSGiConstants.PARAM_INSTRUCTIONS, hintCtx.getCurrentPrefix()));
             return result;
         }
 
         if (path.endsWith("plugins/plugin/configuration/" + OSGiConstants.PARAM_INSTRUCTIONS) &&
                 isFelixPlugin(hintCtx.getParentNode().getParentNode())) { //NOI18N
-            List<GrammarResult> result = new ArrayList<GrammarResult>();
+            List<GrammarResult> result = new ArrayList<>();
             for (String curInst : txtInstructions) {
                 result.add(new AbstractSchemaBasedGrammar.MyTextElement(curInst, hintCtx.getCurrentPrefix()));
             }
@@ -89,7 +89,7 @@ public class FelixPluginGrammarExtension implements GrammarExtensionProvider {
             Node curNode = pluginChildren.item(i);
             if ("groupId".equals(curNode.getNodeName())) {
                 NodeList children = curNode.getChildNodes();
-                if (children.getLength() > 0 && 
+                if (children.getLength() > 0 &&
                         OSGiConstants.GROUPID_FELIX.equals(children.item(0).getNodeValue())) {
                     felixGroupId = true;
                 } else {
@@ -98,7 +98,7 @@ public class FelixPluginGrammarExtension implements GrammarExtensionProvider {
             }
             if ("artifactId".equals(curNode.getNodeName())) {
                 NodeList children = curNode.getChildNodes();
-                if (children.getLength() > 0 && 
+                if (children.getLength() > 0 &&
                         OSGiConstants.ARTIFACTID_BUNDLE_PLUGIN.equals(children.item(0).getNodeValue())) {
                     felixArtifactId = true;
                 } else {

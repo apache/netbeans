@@ -116,7 +116,8 @@ public class ErrorManagerCyclicDepTest extends NbTestCase {
                 }
             }
         }
-        
+
+        @Override
         public void log(LogRecord record) {
             init();
 

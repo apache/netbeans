@@ -52,7 +52,14 @@ public class StandardPropertiesHelpResolverTest extends NbTestCase {
     }
     
     public void testPropertiesWithExceptionInAnchorName() {
+        // Was fixed in recent releases, no this test just checks, that the
+        // documentation file/resolving does not regress
+        //
+        // Both line-break and transform were affected, but are not anymore
+        // (offending properties are listed in
+        // StandardPropertiesHelpResolver#propertyNamesTranslationTable
         assertPropertyHelpSnipped("line-break");
+        assertPropertyHelpSnipped("transform");
     }
     
     public void testRubyProperties() {
@@ -73,7 +80,8 @@ public class StandardPropertiesHelpResolverTest extends NbTestCase {
                 if(module instanceof BrowserSupportModule) {
                     continue;
                 }
-                if("http://www.w3.org/TR/CSS2".equals(module.getSpecificationURL())) {
+                if("http://www.w3.org/TR/CSS2".equals(module.getSpecificationURL())
+                        || "other".equals(module.getName())) {
                     continue;
                 }
                 assertPropertyHelp(prop.getName());
@@ -83,7 +91,7 @@ public class StandardPropertiesHelpResolverTest extends NbTestCase {
     
     private String assertPropertyHelpSnipped(String propertyName) {
         String content = assertPropertyHelp(propertyName);
-        assertTrue(content.startsWith("<h"));
+        assertTrue(content.startsWith("<base"));
         return content;
     }
     

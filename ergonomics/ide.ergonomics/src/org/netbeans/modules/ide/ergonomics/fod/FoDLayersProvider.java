@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.ide.ergonomics.fod;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
@@ -26,6 +28,7 @@ import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.support.ant.AntBasedProjectType;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.Repository;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
@@ -43,7 +46,7 @@ import org.openide.util.lookup.ServiceProviders;
 })
 public final class FoDLayersProvider extends Repository.LayerProvider
 implements LookupListener, Runnable {
-    final static Logger LOG = Logger.getLogger (FoDLayersProvider.class.getPackage().getName());
+    static final Logger LOG = Logger.getLogger (FoDLayersProvider.class.getPackage().getName());
     private RequestProcessor.Task refresh = FeatureManager.getInstance().create(this, true);
     private Lookup.Result<ProjectFactory> factories;
     private Lookup.Result<?> ants;
@@ -82,15 +85,25 @@ implements LookupListener, Runnable {
     }
 
     public FeatureInfo whichProvides(FileObject template) {
-        Set<URL> layers = new HashSet<URL>();
+        Set<URI> layers = new HashSet<>();
         Object obj = template.getAttribute("layers");
-        if (obj instanceof URL[]) {
-            layers.addAll(Arrays.asList((URL[])obj));
+        if (obj instanceof URL[] urlArray) {
+            for(URL url: urlArray) {
+                try {
+                    layers.add(url.toURI());
+                } catch (URISyntaxException | NullPointerException ex) {
+                    LOG.log(Level.WARNING, "Failed to convert URL to URI: {0}", url);
+                }
+            }
         }
         
         for (FeatureInfo info : FeatureManager.features()) {
-            if (layers.contains(info.getLayerURL())) {
-                return info;
+            try {
+                if (layers.contains(info.getLayerURL().toURI())) {
+                    return info;
+                }
+            } catch (URISyntaxException | NullPointerException ex) {
+                LOG.log(Level.WARNING, "Failed to convert URL to URI: {0}", info.getLayerURL());
             }
         }
         return null;

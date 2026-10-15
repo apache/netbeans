@@ -29,7 +29,6 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import static junit.framework.Assert.assertTrue;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.RandomlyFails;
 import org.netbeans.libs.git.GitBranch;
@@ -456,7 +455,7 @@ public class ExternalChangesTest extends AbstractGitTestCase {
     }
 
     private void waitForInitialScan() throws Exception {
-        StatusRefreshLogHandler handler = new StatusRefreshLogHandler(getWorkDir());
+        StatusRefreshLogHandler handler = new StatusRefreshLogHandler(testBase);
         Git.STATUS_LOG.addHandler(handler);
         handler.setFilesToRefresh(Collections.singleton(repositoryLocation));
         Git.getInstance().getVCSInterceptor().pingRepositoryRootFor(repositoryLocation);

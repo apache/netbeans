@@ -220,4 +220,105 @@ public class GenerateJavadocFixTest extends NbTestCase {
                 "    UNOR}\n");
     }
 
+    public void testMarkdown1() throws Exception {
+        HintTest.create()
+                .input("""
+                       package test;
+                       import java.io.IOException;
+                       /// Test
+                       public class Test {
+                           public int map(int p1, int p2) throws IOException {
+                               return -1;
+                           }
+                       }
+                       """)
+                .preference(AVAILABILITY_KEY + true, true)
+                .preference(SCOPE_KEY, "private")
+                .run(JavadocHint.class)
+                .assertWarnings("4:15-4:18:hint:Missing javadoc.")
+                .findWarning("4:15-4:18:hint:Missing javadoc.")
+                .applyFix()
+                .assertCompilable()
+                .assertOutput("""
+                              package test;
+                              import java.io.IOException;
+                              /// Test
+                              public class Test {
+
+                                  ///
+                                  /// @param p1
+                                  /// @param p2
+                                  /// @return
+                                  /// @throws IOException
+                                  public int map(int p1, int p2) throws IOException {
+                                      return -1;
+                                  }
+                              }
+                              """);
+    }
+
+    public void testMarkdown2() throws Exception {
+        HintTest.create()
+                .input("""
+                       package test;
+                       import java.io.IOException;
+                       /// Test
+                       public class Test {
+
+                           ///
+                           /// @param p1
+                           /// @param p2
+                           /// @return
+                           /// @throws IOException
+                           public int map(int p1, int p2) throws IOException {
+                               return -1;
+                           }
+                       }
+                       """)
+                .preference(AVAILABILITY_KEY + true, true)
+                .preference(SCOPE_KEY, "private")
+                .run(JavadocHint.class)
+                .assertWarnings();
+    }
+
+    public void testMarkdown3() throws Exception {
+        HintTest.create()
+                .input("""
+                       package test;
+                       import java.io.IOException;
+                       /** Not markdown */
+                       public class Test {
+                           public int map(int p1, int p2) throws IOException {
+                               return -1;
+                           }
+                           ///markdown
+                           public void test() {}
+                       }
+                       """)
+                .preference(AVAILABILITY_KEY + true, true)
+                .preference(SCOPE_KEY, "private")
+                .run(JavadocHint.class)
+                .assertWarnings("4:15-4:18:hint:Missing javadoc.")
+                .findWarning("4:15-4:18:hint:Missing javadoc.")
+                .applyFix()
+                .assertCompilable()
+                .assertOutput("""
+                              package test;
+                              import java.io.IOException;
+                              /** Not markdown */
+                              public class Test {
+
+                                  ///
+                                  /// @param p1
+                                  /// @param p2
+                                  /// @return
+                                  /// @throws IOException
+                                  public int map(int p1, int p2) throws IOException {
+                                      return -1;
+                                  }
+                                  ///markdown
+                                  public void test() {}
+                              }
+                              """);
+    }
 }

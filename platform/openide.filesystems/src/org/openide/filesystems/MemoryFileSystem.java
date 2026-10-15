@@ -144,9 +144,9 @@ final class MemoryFileSystem extends AbstractFileSystem implements AbstractFileS
 	FileObject fo = null;
         
         if (x != null) {
-            Reference ref = findReference(n);
+            Reference<? extends FileObject> ref = findReference(n);
             if (ref != null) {
-                fo = (FileObject)ref.get();
+                fo = ref.get();
                 retval = (fo != null) ? fo.isValid() : true;
             }   
         }
@@ -270,6 +270,7 @@ final class MemoryFileSystem extends AbstractFileSystem implements AbstractFileS
     public OutputStream outputStream(final String name)
     throws java.io.IOException {
         class Out extends ByteArrayOutputStream {
+            @Override
             public void close() throws IOException {
                 super.close();
 
@@ -343,7 +344,8 @@ final class MemoryFileSystem extends AbstractFileSystem implements AbstractFileS
 		return retval;
 	    }
 
-	    public MemoryFileSystem.Entry put(String key, MemoryFileSystem.Entry value) {
+        @Override
+        public MemoryFileSystem.Entry put(String key, MemoryFileSystem.Entry value) {
 		MemoryFileSystem.Entry retval = super.put(key, value);
 		logMessage("called: PUT" + " key: "+key  + " value: "+value+ " result: " + retval);//NOI18N		
 		return retval;            

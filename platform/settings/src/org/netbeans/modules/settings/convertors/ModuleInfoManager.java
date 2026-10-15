@@ -32,7 +32,7 @@ import org.openide.util.LookupEvent;
  * @author  Jan Pokorsky
  */
 final class ModuleInfoManager {
-    private final static ModuleInfoManager mim = new ModuleInfoManager();;
+    private static final ModuleInfoManager mim = new ModuleInfoManager();
 
     /** all modules <code bas name, ModuleInfo> */
     private HashMap<String, ModuleInfo> modules = null;
@@ -44,7 +44,7 @@ final class ModuleInfoManager {
     private ModuleInfoManager() {
     }
     
-    public final static ModuleInfoManager getDefault() {
+    public static final ModuleInfoManager getDefault() {
         return mim;
     }
     

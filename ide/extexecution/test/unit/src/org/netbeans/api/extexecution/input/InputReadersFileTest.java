@@ -23,6 +23,7 @@ import org.netbeans.api.extexecution.input.InputReader;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.api.extexecution.input.InputReaders.FileInput;
@@ -37,7 +38,7 @@ public class InputReadersFileTest extends NbTestCase {
 
     private static final char[] TEST_CHARS_ROTATE = "jihgfedcba".toCharArray();
 
-    private static final Charset TEST_CHARSET = Charset.forName("UTF-8");
+    private static final Charset TEST_CHARSET = StandardCharsets.UTF_8;
 
     private static final int MAX_RETRIES = TEST_CHARS.length * 2;
 

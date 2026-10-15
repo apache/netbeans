@@ -39,6 +39,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Caret;
 import junit.framework.Test;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.Utilities;
 import org.netbeans.jellytools.JellyTestCase;
 import org.netbeans.jellytools.modules.j2ee.J2eeTestCase;
@@ -100,12 +101,12 @@ public class CompletionTest extends J2eeTestCase {
     private static final boolean GENERATE_GOLDEN_FILES = false;//generate golden files, or test
     private static final int COMPLETION_PREFIX_LENGHT = 40;
     private static boolean projectsOpened = false;//open test projects
-    protected final static List XML_EXTS = Arrays.asList(new String[]{"html", "tld", "xhtml"});
-    protected final static List JSP_EXTS = Arrays.asList(new String[]{"jsp", "tag", "jspf", "tagf", "jspx", "tagx"});
+    protected static final List XML_EXTS = Arrays.asList(new String[]{"html", "tld", "xhtml"});
+    protected static final List JSP_EXTS = Arrays.asList(new String[]{"jsp", "tag", "jspf", "tagf", "jspx", "tagx"});
     protected static List ignored_tests = Arrays.asList(new String[]{"testJS.js", "testJS2.js", "testInjection.xhtml", "testInjection.jsp", "testHTML.jsp",
     "testScriptletsImplicitObjects.jsp", "testExpression.jsp", "testJSPDocumentHTML.jspx", "testHTML.tag", "testScriptletsJavaIssue.tag"});
-    protected final static List JS_EXTS = Arrays.asList(new String[]{"js"/*,"java"*/});
-    public final static Logger LOG = Logger.getLogger(CompletionTest.class.getName());
+    protected static final List JS_EXTS = Arrays.asList(new String[]{"js"/*,"java"*/});
+    public static final Logger LOG = Logger.getLogger(CompletionTest.class.getName());
     protected FileObject testFileObj;
     public static boolean isJDK8 = System.getProperty("java.version").startsWith("1.8");
 
@@ -404,8 +405,8 @@ public class CompletionTest extends J2eeTestCase {
                 }
             }
             waitTypingFinished(doc);
-            int rowStart = Utilities.getRowStart(doc, step.getOffset() + 1);
-            int rowEnd = Utilities.getRowEnd(doc, step.getOffset() + 1);
+            int rowStart = LineDocumentUtils.getLineStartOffset(doc, step.getOffset() + 1);
+            int rowEnd = LineDocumentUtils.getLineEndOffset(doc, step.getOffset() + 1);
             String fullResult = doc.getText(new int[]{rowStart, rowEnd});
             String result = fullResult.trim();
             int removed_whitespaces = fullResult.length() - result.length();

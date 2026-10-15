@@ -59,6 +59,24 @@
                 </folder>
             </folder>
             
+            <folder name="x-type-B6">
+                <folder name="NetBeans">
+                    <folder name="Defaults">
+                        <file name="coloring.xml" url="fonts-and-colors-6.xml"/>
+                    </folder>
+                </folder>
+
+                <folder name="text">
+                    <folder name="x-type-A">
+                        <folder name="NetBeans">
+                            <folder name="Defaults">
+                                <file name="coloring.xml" url="fonts-and-colors-5.xml"/>
+                            </folder>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
+
             <folder name="x-orig">
                 <file name="marker.instance">
                     <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.settings.storage.SettingsProviderTest.createMarker" />

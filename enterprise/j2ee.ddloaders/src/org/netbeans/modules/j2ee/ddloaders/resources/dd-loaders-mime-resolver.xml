@@ -67,6 +67,46 @@
     </file>
     <file>
         <ext name="xml"/>
+        <resolver mime="text/x-dd-servlet4.0">
+            <xml-rule>
+            	<element name="web-app" ns="http://xmlns.jcp.org/xml/ns/javaee">
+                    <attr name="version" text="4.0"/>
+                </element>
+            </xml-rule>
+        </resolver>
+    </file>
+    <file>
+        <ext name="xml"/>
+        <resolver mime="text/x-dd-servlet5.0">
+            <xml-rule>
+            	<element name="web-app" ns="https://jakarta.ee/xml/ns/jakartaee">
+                    <attr name="version" text="5.0"/>
+                </element>
+            </xml-rule>
+        </resolver>
+    </file>
+    <file>
+        <ext name="xml"/>
+        <resolver mime="text/x-dd-servlet6.0">
+            <xml-rule>
+            	<element name="web-app" ns="https://jakarta.ee/xml/ns/jakartaee">
+                    <attr name="version" text="6.0"/>
+                </element>
+            </xml-rule>
+        </resolver>
+    </file>
+    <file>
+        <ext name="xml"/>
+        <resolver mime="text/x-dd-servlet6.1">
+            <xml-rule>
+            	<element name="web-app" ns="https://jakarta.ee/xml/ns/jakartaee">
+                    <attr name="version" text="6.1"/>
+                </element>
+            </xml-rule>
+        </resolver>
+    </file>
+    <file>
+        <ext name="xml"/>
         <resolver mime="text/x-dd-servlet-fragment3.0">
             <xml-rule>
             	<element name="web-fragment" ns="http://java.sun.com/xml/ns/javaee">
@@ -81,6 +121,46 @@
             <xml-rule>
             	<element name="web-fragment" ns="http://xmlns.jcp.org/xml/ns/javaee">
                     <attr name="version" text="3.1"/>
+                </element>
+            </xml-rule>
+        </resolver>
+    </file>
+    <file>
+        <ext name="xml"/>
+        <resolver mime="text/x-dd-servlet-fragment4.0">
+            <xml-rule>
+            	<element name="web-fragment" ns="http://xmlns.jcp.org/xml/ns/javaee">
+                    <attr name="version" text="4.0"/>
+                </element>
+            </xml-rule>
+        </resolver>
+    </file>
+    <file>
+        <ext name="xml"/>
+        <resolver mime="text/x-dd-servlet-fragment5.0">
+            <xml-rule>
+            	<element name="web-fragment" ns="https://jakarta.ee/xml/ns/jakartaee">
+                    <attr name="version" text="5.0"/>
+                </element>
+            </xml-rule>
+        </resolver>
+    </file>
+    <file>
+        <ext name="xml"/>
+        <resolver mime="text/x-dd-servlet-fragment6.0">
+            <xml-rule>
+            	<element name="web-fragment" ns="https://jakarta.ee/xml/ns/jakartaee">
+                    <attr name="version" text="6.0"/>
+                </element>
+            </xml-rule>
+        </resolver>
+    </file>
+    <file>
+        <ext name="xml"/>
+        <resolver mime="text/x-dd-servlet-fragment6.1">
+            <xml-rule>
+            	<element name="web-fragment" ns="https://jakarta.ee/xml/ns/jakartaee">
+                    <attr name="version" text="6.1"/>
                 </element>
             </xml-rule>
         </resolver>
@@ -135,6 +215,16 @@
     </file>
     <file>
         <ext name="xml"/>
+        <resolver mime="text/x-dd-ejbjar4.0">
+            <xml-rule>
+            	<element name="ejb-jar" ns="https://jakarta.ee/xml/ns/jakartaee">
+                    <attr name="version" text="4.0"/>
+                </element>
+            </xml-rule>
+        </resolver>
+    </file>
+    <file>
+        <ext name="xml"/>
         <resolver mime="text/x-dd-client1.3">
             <xml-rule>
                 <doctype public-id="-//Sun Microsystems, Inc.//DTD J2EE Application Client 1.3//EN"/>
@@ -183,6 +273,46 @@
     </file>
     <file>
         <ext name="xml"/>
+        <resolver mime="text/x-dd-client8.0">
+            <xml-rule>
+                <element name="application-client" ns="http://xmlns.jcp.org/xml/ns/javaee">
+                    <attr name="version" text="8"/>
+                </element>
+            </xml-rule>
+        </resolver>
+    </file>
+    <file>
+        <ext name="xml"/>
+        <resolver mime="text/x-dd-client9.0">
+            <xml-rule>
+                <element name="application-client" ns="https://jakarta.ee/xml/ns/jakartaee">
+                    <attr name="version" text="9"/>
+                </element>
+            </xml-rule>
+        </resolver>
+    </file>
+    <file>
+        <ext name="xml"/>
+        <resolver mime="text/x-dd-client10.0">
+            <xml-rule>
+                <element name="application-client" ns="https://jakarta.ee/xml/ns/jakartaee">
+                    <attr name="version" text="10"/>
+                </element>
+            </xml-rule>
+        </resolver>
+    </file>
+    <file>
+        <ext name="xml"/>
+        <resolver mime="text/x-dd-client11.0">
+            <xml-rule>
+                <element name="application-client" ns="https://jakarta.ee/xml/ns/jakartaee">
+                    <attr name="version" text="11"/>
+                </element>
+            </xml-rule>
+        </resolver>
+    </file>
+    <file>
+        <ext name="xml"/>
         <resolver mime="text/x-dd-application1.4">
             <xml-rule>
                 <element name="application" ns="http://java.sun.com/xml/ns/j2ee">
@@ -217,6 +347,46 @@
             <xml-rule>
                 <element name="application" ns="http://xmlns.jcp.org/xml/ns/javaee">
                     <attr name="version" text="7"/>
+                </element>
+            </xml-rule>
+        </resolver>
+    </file>
+    <file>
+        <ext name="xml"/>
+        <resolver mime="text/x-dd-application8.0">
+            <xml-rule>
+                <element name="application" ns="http://xmlns.jcp.org/xml/ns/javaee">
+                    <attr name="version" text="8"/>
+                </element>
+            </xml-rule>
+        </resolver>
+    </file>
+    <file>
+        <ext name="xml"/>
+        <resolver mime="text/x-dd-application9.0">
+            <xml-rule>
+                <element name="application" ns="https://jakarta.ee/xml/ns/jakartaee">
+                    <attr name="version" text="9"/>
+                </element>
+            </xml-rule>
+        </resolver>
+    </file>
+    <file>
+        <ext name="xml"/>
+        <resolver mime="text/x-dd-application10.0">
+            <xml-rule>
+                <element name="application" ns="https://jakarta.ee/xml/ns/jakartaee">
+                    <attr name="version" text="10"/>
+                </element>
+            </xml-rule>
+        </resolver>
+    </file>
+    <file>
+        <ext name="xml"/>
+        <resolver mime="text/x-dd-application11.0">
+            <xml-rule>
+                <element name="application" ns="https://jakarta.ee/xml/ns/jakartaee">
+                    <attr name="version" text="11"/>
                 </element>
             </xml-rule>
         </resolver>

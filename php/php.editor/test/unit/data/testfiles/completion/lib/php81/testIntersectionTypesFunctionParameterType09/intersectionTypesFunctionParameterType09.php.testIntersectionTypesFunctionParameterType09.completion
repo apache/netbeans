@@ -1,0 +1,5 @@
+Code completion result for source line:
+function intersection_types(IntersectionTypes1&IntersectionTypes2 $param, IntersectionTypes1&IntersectionTypes2&\Test\Inter|) {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      IntersectionTypes1              [PUBLIC]   Test
+CLASS      IntersectionTypes2              [PUBLIC]   Test

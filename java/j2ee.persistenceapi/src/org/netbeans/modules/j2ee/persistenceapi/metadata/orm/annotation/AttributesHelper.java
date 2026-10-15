@@ -58,11 +58,11 @@ public final class AttributesHelper {
         for (Element element : typeElement.getEnclosedElements()) {
             ElementKind elementKind = element.getKind();
             if (fieldAccess) {
-                if (ElementKind.FIELD.equals(elementKind)) {
+                if (ElementKind.FIELD == elementKind) {
                     handleProperty(element);
                 }
             } else {
-                if (ElementKind.METHOD.equals(elementKind)) {
+                if (ElementKind.METHOD == elementKind) {
                     handleProperty(element);
                 }
             }
@@ -74,7 +74,7 @@ public final class AttributesHelper {
             return;
         }
         String propertyName = element.getSimpleName().toString();
-        if (ElementKind.METHOD.equals(element.getKind())) {
+        if (ElementKind.METHOD == element.getKind()) {
             propertyName = EntityMappingsUtilities.getterNameToPropertyName(propertyName);
             if (propertyName == null) {
                 return;

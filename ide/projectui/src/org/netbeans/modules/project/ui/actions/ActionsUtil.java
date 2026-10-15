@@ -78,7 +78,7 @@ class ActionsUtil {
             }
         }
         
-        Project[] projectsArray = result.toArray(new Project[result.size()]);
+        Project[] projectsArray = result.toArray(new Project[0]);
         return projectsArray;
     }
     
@@ -117,7 +117,7 @@ class ActionsUtil {
                 result.add( p );
             }
         }
-        Project[] projectsArray = result.toArray(new Project[result.size()]);
+        Project[] projectsArray = result.toArray(new Project[0]);
         return projectsArray;
     }
     

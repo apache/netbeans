@@ -24,6 +24,7 @@ import java.util.List;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.openide.DialogDescriptor;
+import org.openide.text.CloneableEditorSupport;
 
 /**
  *
@@ -137,7 +138,7 @@ public class NewConfigurationPanel extends javax.swing.JPanel implements Documen
         lblProperties.setLabelFor(epProperties);
         org.openide.awt.Mnemonics.setLocalizedText(lblProperties, org.openide.util.NbBundle.getMessage(NewConfigurationPanel.class, "NewConfigurationPanel.lblProperties.text")); // NOI18N
 
-        epProperties.setContentType("text/x-properties"); // NOI18N
+        epProperties.setEditorKit(CloneableEditorSupport.getEditorKit("text/x-properties"));
         jScrollPane1.setViewportView(epProperties);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

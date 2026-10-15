@@ -29,6 +29,7 @@ import org.netbeans.api.editor.EditorActionRegistration;
 import org.netbeans.api.editor.caret.CaretInfo;
 import org.netbeans.api.editor.caret.CaretMoveContext;
 import org.netbeans.api.editor.caret.EditorCaret;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseCaret;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.BaseKit;
@@ -45,7 +46,7 @@ public class CamelCaseActions {
     /* package */ static final String deleteNextCamelCasePosition = "delete-next-camel-case-position"; //NOI18N
     static final String SYSTEM_ACTION_CLASS_NAME_PROPERTY = "systemActionClassName";
 
-    public static abstract class CamelCaseAction extends AbstractEditorAction {
+    public abstract static class CamelCaseAction extends AbstractEditorAction {
 
         public CamelCaseAction(Map<String, ?> attrs) {
             super(attrs);
@@ -90,11 +91,11 @@ public class CamelCaseActions {
                                                     int wsPos;
                                                     if (r == null) {
                                                         if (isForward()) {
-                                                            int eolPos = Utilities.getRowEnd(doc, dotPos);
+                                                            int eolPos = LineDocumentUtils.getLineEndOffset(doc, dotPos);
                                                             wsPos = Utilities.getNextWord(target, dotPos);
                                                             wsPos = (dotPos == eolPos) ? wsPos : Math.min(eolPos, wsPos);
                                                         } else {
-                                                            int bolPos = Utilities.getRowStart(doc, dotPos);
+                                                            int bolPos = LineDocumentUtils.getLineStartOffset(doc, dotPos);
                                                             wsPos = Utilities.getPreviousWord(target, dotPos);
                                                             wsPos = (dotPos == bolPos) ? wsPos : Math.max(bolPos, wsPos);
                                                         }
@@ -145,11 +146,11 @@ public class CamelCaseActions {
                                         int wsPos;
                                         if (r == null) {
                                             if (isForward()) {
-                                                int eolPos = Utilities.getRowEnd(doc, dotPos);
+                                                int eolPos = LineDocumentUtils.getLineEndOffset(doc, dotPos);
                                                 wsPos = Utilities.getNextWord(target, dotPos);
                                                 wsPos = (dotPos == eolPos) ? wsPos : Math.min(eolPos, wsPos);
                                             } else {
-                                                int bolPos = Utilities.getRowStart(doc, dotPos);
+                                                int bolPos = LineDocumentUtils.getLineStartOffset(doc, dotPos);
                                                 wsPos = Utilities.getPreviousWord(target, dotPos);
                                                 wsPos = (dotPos == bolPos) ? wsPos : Math.max(bolPos, wsPos);
                                             }

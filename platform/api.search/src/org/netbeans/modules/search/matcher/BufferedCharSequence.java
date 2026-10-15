@@ -528,7 +528,7 @@ public class BufferedCharSequence implements CharSequence {
          * @return The number of bytes read, possibly zero, or -1 if 
          * the end-of-stream is reached
          *
-         * @throws ProcessException If some other I/O error occurs
+         * @throws SourceIOException If some other I/O error occurs
          */
         private int read() {
             try {
@@ -559,7 +559,7 @@ public class BufferedCharSequence implements CharSequence {
             try {
                 istream = fo.getInputStream();
                 try {
-                    bstream = new BufferedInputStream(istream, bufferSize);
+                    bstream = new BufferedInputStream(istream, Math.max(1, bufferSize));
                 } catch (Throwable t) {
                     if (istream != null) {
                         istream.close();

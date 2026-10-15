@@ -19,6 +19,7 @@
 package org.netbeans.modules.tomcat5;
 
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.tomcat5.deploy.TomcatManager;
 
 /**
  *
@@ -33,4 +34,27 @@ public class TomcatFactoryTest extends NbTestCase {
     public void testOldCreate50MethodForAutoupdateModule() {
         assertNotNull(TomcatFactory.create50());
     }
+    
+    public void testTomEEtype() {
+
+        TomcatManager.TomEEType type = TomcatManager.TomEEType.TOMEE_WEBPROFILE;
+        String file = "activemq-protobuf-1.1.jar";
+        
+        if (TomcatFactory.TOMEE_PLUME_JAR_PATTERN.matcher(file).matches()) {
+            type = TomcatManager.TomEEType.TOMEE_PLUME;
+        } else if (TomcatFactory.TOMEE_PLUS_JAR_PATTERN.matcher(file).matches()) {
+            type = TomcatManager.TomEEType.TOMEE_PLUS;
+        } else if (TomcatFactory.TOMEE_MICROPROFILE_JAR_PATTERN.matcher(file).matches()) {
+            type = TomcatManager.TomEEType.TOMEE_MICROPROFILE;
+        } else if (TomcatFactory.TOMEE_WEBPROFILE_JAR_PATTERN.matcher(file).matches()) {
+            type = TomcatManager.TomEEType.TOMEE_WEBPROFILE;
+        } else if (TomcatFactory.TOMEE_JAXRS_JAR_PATTERN.matcher(file).matches()) {
+            type = TomcatManager.TomEEType.TOMEE_JAXRS;
+        }
+        
+        assertEquals(TomcatManager.TomEEType.TOMEE_PLUS, type);
+        assertNotSame(TomcatManager.TomEEType.TOMEE_MICROPROFILE, type);
+        
+    }
+    
 }

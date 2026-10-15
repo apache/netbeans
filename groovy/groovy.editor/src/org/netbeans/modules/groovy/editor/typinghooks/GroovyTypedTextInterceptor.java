@@ -24,6 +24,7 @@ import java.util.Set;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
 import javax.swing.text.JTextComponent;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.lexer.Token;
@@ -180,7 +181,7 @@ public class GroovyTypedTextInterceptor implements TypedTextInterceptor {
                 TokenId id = token.id();
 
                 if (id == GroovyTokenId.LINE_COMMENT) {
-                    // Did you just type "//" - make sure this didn't turn into ///
+                    // Did you just type "//" - make sure this didn't turn into "///"
                     // where typing the first "/" inserted "//" and the second "/" appended
                     // another "/" to make "///"
                     if (dotPos == ts.offset()+1 && dotPos+1 < doc.getLength() && doc.getText(dotPos+1,1).charAt(0) == '/') {
@@ -314,7 +315,7 @@ public class GroovyTypedTextInterceptor implements TypedTextInterceptor {
             Token<GroovyTokenId> token = ts.token();
 
             if ((token.id() == id)) {
-                final int rowFirstNonWhite = Utilities.getRowFirstNonWhite(doc, offset);
+                final int rowFirstNonWhite = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
                 // Ensure that this token is at the beginning of the line
                 if (ts.offset() > rowFirstNonWhite) {
                     return;
@@ -395,7 +396,7 @@ public class GroovyTypedTextInterceptor implements TypedTextInterceptor {
             previousToken = ts.token();
         }
 
-        int lastNonWhite = Utilities.getRowLastNonWhite(doc, dotPos);
+        int lastNonWhite = LineDocumentUtils.getLineLastNonWhitespace(doc, dotPos);
 
         // eol - true if the caret is at the end of line (ignoring whitespaces)
         boolean eol = lastNonWhite < dotPos;
@@ -521,13 +522,13 @@ public class GroovyTypedTextInterceptor implements TypedTextInterceptor {
             return true;
         } else {
             // test that we are in front of ) , " or ' ... etc.
-            int eol = Utilities.getRowEnd(doc, dotPos);
+            int eol = LineDocumentUtils.getLineEndOffset(doc, dotPos);
 
             if ((dotPos == eol) || (eol == -1)) {
                 return false;
             }
 
-            int firstNonWhiteFwd = Utilities.getFirstNonWhiteFwd(doc, dotPos, eol);
+            int firstNonWhiteFwd = LineDocumentUtils.getNextNonWhitespace(doc, dotPos, eol);
 
             if (firstNonWhiteFwd == -1) {
                 return false;

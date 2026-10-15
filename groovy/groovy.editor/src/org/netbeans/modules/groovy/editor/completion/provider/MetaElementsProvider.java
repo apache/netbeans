@@ -27,12 +27,13 @@ import groovy.lang.MetaProperty;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import org.codehaus.groovy.reflection.CachedClass;
-import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.modules.groovy.editor.api.completion.CompletionItem.MetaMethodItem;
 import org.netbeans.modules.groovy.editor.api.completion.FieldSignature;
 import org.netbeans.modules.groovy.editor.api.completion.MethodSignature;
 import org.netbeans.modules.groovy.editor.api.completion.util.CompletionContext;
+import org.netbeans.modules.groovy.editor.completion.AccessLevel;
 import org.netbeans.modules.groovy.editor.java.Utilities;
 import org.netbeans.modules.groovy.editor.spi.completion.CompletionProvider;
 import org.openide.util.lookup.ServiceProvider;
@@ -61,7 +62,8 @@ public final class MetaElementsProvider implements CompletionProvider {
             if (metaClz != null) {
                 for (MetaMethod method : metaClz.getMetaMethods()) {
                     if (!method.isStatic()) {
-                        populateProposal(clz, method, context.getPrefix(), context.getAnchor(), result, context.isNameOnly());
+                        populateProposal(clz, method, context.getPrefix(), context.getAnchor(), result, context.isNameOnly(), 
+                                context.access);
                     }
                 }
             }
@@ -81,7 +83,8 @@ public final class MetaElementsProvider implements CompletionProvider {
             if (metaClz != null) {
                 for (MetaMethod method : metaClz.getMetaMethods()) {
                     if (method.isStatic()) {
-                        populateProposal(clz, method, context.getPrefix(), context.getAnchor(), result, context.isNameOnly());
+                        populateProposal(clz, method, context.getPrefix(), context.getAnchor(), result, context.isNameOnly(),
+                                context.access);
                     }
                 }
             }
@@ -102,6 +105,9 @@ public final class MetaElementsProvider implements CompletionProvider {
                 
                 for (Object field : metaClass.getProperties()) {
                     MetaProperty prop = (MetaProperty) field;
+                    if (!accept(context.access, Utilities.modelModifiersToGsf(Utilities.reflectionModifiersToModel(prop.getModifiers())))) {
+                        continue;
+                    }
                     if (prop.getName().startsWith(context.getPrefix())) {
                         result.put(new FieldSignature(prop.getName()), new CompletionItem.FieldItem(
                                 prop.getType().getSimpleName(),
@@ -144,8 +150,11 @@ public final class MetaElementsProvider implements CompletionProvider {
     }
 
     private void populateProposal(Class clz, MetaMethod method, String prefix, int anchor,
-            Map<MethodSignature, CompletionItem> methodList, boolean nameOnly) {
+            Map<MethodSignature, CompletionItem> methodList, boolean nameOnly, Set<AccessLevel> levels) {
 
+        if (!accept(levels, Utilities.modelModifiersToGsf(Utilities.reflectionModifiersToModel(method.getModifiers())))) {
+            return;
+        }
         if (method.getName().startsWith(prefix)) {
             addOrReplaceItem(methodList, new CompletionItem.MetaMethodItem(clz, method, anchor, true, nameOnly));
         }
@@ -261,5 +270,21 @@ public final class MetaElementsProvider implements CompletionProvider {
         
         return currentMethod.getDeclaringClass().isAssignableFrom(methodToStore.getDeclaringClass().getTheClass());
 
+    }
+
+    private boolean accept(Set<AccessLevel> levels, Set<org.netbeans.modules.csl.api.Modifier> mods) {
+        if (levels == null) {
+            return false;
+        }
+        if (mods == null) {
+            mods = Collections.emptySet();
+        }
+        for (AccessLevel accessLevel : levels) {
+            if (accessLevel.accept(mods)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

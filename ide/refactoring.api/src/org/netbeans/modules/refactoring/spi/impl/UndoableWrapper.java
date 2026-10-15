@@ -47,7 +47,7 @@ import org.openide.util.Exceptions;
 public class UndoableWrapper implements UndoableEditWrapper {
 
     private AtomicBoolean active = new AtomicBoolean();
-    private Map<BaseDocument, UndoableEditDelegate> docToFirst = new HashMap();
+    private Map<BaseDocument, UndoableEditDelegate> docToFirst = new HashMap<>();
     private RefactoringSession session;
 
     public UndoableWrapper() {
@@ -60,9 +60,9 @@ public class UndoableWrapper implements UndoableEditWrapper {
             return ed;
         final Object stream = doc.getProperty(BaseDocument.StreamDescriptionProperty);
         DataObject dob = null;
-        if(stream != null && stream instanceof DataObject) {
+        if(stream instanceof DataObject) {
             dob = (DataObject) stream;
-        } else if(stream != null && stream instanceof FileObject) {
+        } else if(stream instanceof FileObject) {
             FileObject fileObject = (FileObject) stream;
             try {
                 dob = DataObject.find(fileObject);

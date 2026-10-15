@@ -51,10 +51,7 @@ import org.testng.annotations.Parameters;
  */
 public abstract class CommandHttpTest extends CommandTest {
     
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(CommandHttpTest.class);
 
@@ -74,10 +71,7 @@ public abstract class CommandHttpTest extends CommandTest {
     /** GlassFish test server stderr lines stored in linked list. */
     protected static volatile StreamLinesList gfStdErr = null;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get GlassFish test server properties.
      * <p>

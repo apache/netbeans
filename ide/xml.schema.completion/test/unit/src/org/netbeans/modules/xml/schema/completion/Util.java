@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.editor.BaseDocument;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -47,7 +48,7 @@ public class Util {
     public static BaseDocument getResourceAsDocument(String path) throws Exception {
         InputStream in = Util.class.getResourceAsStream(path);
         BaseDocument sd = new BaseDocument(true, "text/xml"); //NOI18N
-        BufferedReader br = new BufferedReader(new InputStreamReader(in,"UTF-8"));
+        BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
         StringBuffer sbuf = new StringBuffer();
         try {
             String line = null;

@@ -30,7 +30,7 @@ import org.netbeans.editor.TokenID;
 * 
 * @author Petr Pisl
 */
-
+@Deprecated
 public class ELSyntax extends Syntax {
 
     /* Internal states used internally by analyzer. There

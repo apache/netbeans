@@ -75,7 +75,7 @@ public class InstallerPanel extends JPanel implements HelpCtx.Provider {
         new BooleanPropUpdater(PROP_LINUX, true, linuxCheckBox);
         new BooleanPropUpdater(PROP_MAC, true, macCheckBox);
         new StringPropUpdater(PROP_LICENSE, licenseField, licenseLabel);
-        new BooleanPropUpdater(PROP_PACK200, true, pack200CheckBox);
+        new BooleanPropUpdater(PROP_PACK200, false, pack200CheckBox);
     }
 
     @SuppressWarnings("unchecked")
@@ -94,6 +94,7 @@ public class InstallerPanel extends JPanel implements HelpCtx.Provider {
         pack200CheckBox = new javax.swing.JCheckBox();
         jSeparator2 = new javax.swing.JSeparator();
         pack200Info = new javax.swing.JLabel();
+        javax.swing.JLabel deprecatedLabel = new javax.swing.JLabel();
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(InstallerPanel.class, "InstallerPanel.Platforms.Label")); // NOI18N
 
@@ -121,14 +122,25 @@ public class InstallerPanel extends JPanel implements HelpCtx.Provider {
         pack200Info.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         pack200Info.setFocusable(false);
 
+        org.openide.awt.Mnemonics.setLocalizedText(deprecatedLabel, org.openide.util.NbBundle.getMessage(InstallerPanel.class, "InstallerPanel.deprecatedLabel.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addComponent(pack200Info, javax.swing.GroupLayout.DEFAULT_SIZE, 527, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(deprecatedLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 780, Short.MAX_VALUE)
+                    .addComponent(jSeparator1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -137,30 +149,25 @@ public class InstallerPanel extends JPanel implements HelpCtx.Provider {
                             .addComponent(linuxCheckBox)
                             .addComponent(macCheckBox)
                             .addComponent(solarisCheckBox))
-                        .addGap(53, 509, Short.MAX_VALUE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(licenseLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(licenseField)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(licenseButton)
-                        .addContainerGap())))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(pack200CheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 772, Short.MAX_VALUE)
                         .addContainerGap())
-                    .addComponent(jSeparator2, javax.swing.GroupLayout.DEFAULT_SIZE, 780, Short.MAX_VALUE)))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addComponent(pack200Info, javax.swing.GroupLayout.DEFAULT_SIZE, 749, Short.MAX_VALUE)
-                .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(pack200CheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addComponent(jSeparator2)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(deprecatedLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(windowsCheckBox)
                     .addComponent(jLabel2))
@@ -182,7 +189,7 @@ public class InstallerPanel extends JPanel implements HelpCtx.Provider {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(pack200CheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pack200Info, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
+                .addComponent(pack200Info)
                 .addGap(99, 99, 99))
         );
 

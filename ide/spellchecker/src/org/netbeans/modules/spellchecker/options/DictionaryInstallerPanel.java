@@ -27,6 +27,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Set;
@@ -175,7 +176,7 @@ public class DictionaryInstallerPanel extends javax.swing.JPanel {
 
     private void bBrowseActionPerformed (java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBrowseActionPerformed
         JFileChooser filechooser = new JFileChooser (tDictionary.getText ());
-        int ret = filechooser.showOpenDialog (null);
+        int ret = filechooser.showOpenDialog (org.openide.util.Utilities.findDialogParent());
         if (ret == JFileChooser.APPROVE_OPTION)
             tDictionary.setText (filechooser.getSelectedFile ().getAbsolutePath ());
     }//GEN-LAST:event_bBrowseActionPerformed
@@ -204,7 +205,7 @@ public class DictionaryInstallerPanel extends javax.swing.JPanel {
     public final void initValues () {
         tDictionary.setText (System.getProperty ("user.home")); // NOI18N
         Set<String> set = Charset.availableCharsets ().keySet ();
-        cEncoding.setModel(new javax.swing.DefaultComboBoxModel(set.toArray (new String[set.size ()])));
+        cEncoding.setModel(new javax.swing.DefaultComboBoxModel(set.toArray (new String[0])));
         cEncoding.setSelectedItem ("ISO-8859-1"); // NOI18N
         tLocale.setText (""); // NOI18N
 //        rAllUsers.setEnabled (availHomedir);
@@ -296,7 +297,7 @@ public class DictionaryInstallerPanel extends javax.swing.JPanel {
 
             //TODO: if the dictionary already exists, provide user with a warning.
             input = new InputStreamReader (new FileInputStream (description.dictionaryFile), description.fileEncoding);
-            output = new OutputStreamWriter (new FileOutputStream (file), "UTF-8"); // NOI18N
+            output = new OutputStreamWriter (new FileOutputStream (file), StandardCharsets.UTF_8);
             char[] buffer = new char[BUFFER_LENGTH];
             int len = BUFFER_LENGTH;
             do {

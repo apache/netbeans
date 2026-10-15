@@ -41,13 +41,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.text.MessageFormat;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
@@ -84,7 +82,7 @@ public class ProjectUtilities {
     }
 
     public static Project[] getOpenedProjects() {
-        Set<Project> projects = new HashSet();
+        Set<Project> projects = new HashSet<>();
         for (Project project : OpenProjects.getDefault().getOpenProjects()) // #256930
             if (!project.getClass().getName().equals("org.netbeans.modules.project.ui.LazyProject")) // NOI18N
                 projects.add(project);
@@ -188,14 +186,7 @@ public class ProjectUtilities {
             }
         }
 
-        try {
-            return new String(data, "UTF-8" //NOI18N
-                    ); // According to Issue 65557, build.xml uses UTF-8, not default encoding!
-        } catch (UnsupportedEncodingException ex) {
-            ErrorManager.getDefault().notify(ErrorManager.ERROR, ex);
-
-            return null;
-        }
+        return new String(data, StandardCharsets.UTF_8); // According to Issue 65557, build.xml uses UTF-8, not default encoding!
     }
 
 //    public static java.util.List<SimpleFilter> getProjectDefaultInstrFilters(Project project) {

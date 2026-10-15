@@ -24,10 +24,15 @@
     <import file="../../nbbuild/templates/projectized.xml"/>
     <property name="test.unit.data.dir" value="test/unit/data"/>
     <property name="build.test.unit.data.dir" value="build/test/unit/data"/>
+    <target name="do-qa-functional-test-build" depends="projectized.do-qa-functional-test-build">
+        <zip destfile="${build.test.qa-functional.dir}/data/files/pp.zip">
+            <zipfileset dir="${build.test.qa-functional.dir}/data/files" includes="pp.TIFF"/>
+        </zip>
+    </target>
     <target name="test-build-datajar">
         <antcall target="projectized-common.test-preinit"/>
         <mkdir dir="${build.test.unit.data.dir}/SvnWcParser"/>
-        <unzip src="${test.unit.data.dir}/SvnWcParserData.zip"
+        <unzip src="${test.unit.data.dir}/svn_workingcopy_sample_data.zip"
                dest="${build.test.unit.data.dir}/SvnWcParser"/>
         <zip destfile="${test.qa-functional.out.folder}/data.zip" basedir="${test.qa-functional.data.dir}"/>
     </target>

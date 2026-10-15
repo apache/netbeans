@@ -27,8 +27,8 @@ import org.openide.util.NbBundle;
  * @author mkuchtiak
  */
 public class RefreshDialog extends org.openide.DialogDescriptor {
-    public static final Integer OPTION_FIX=new Integer(0);
-    public static final Integer OPTION_REFRESH=new Integer(1);
+    public static final Integer OPTION_FIX=Integer.valueOf(0);
+    public static final Integer OPTION_REFRESH=Integer.valueOf(1);
 
     private static final String[] OPTIONS = new String[] {
         NbBundle.getMessage(RefreshDialog.class,"OPT_FixNow"),

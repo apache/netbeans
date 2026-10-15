@@ -30,8 +30,8 @@ import org.openide.util.Lookup;
  * 
  * @author Jaroslav Bachorik
  */
-final public class JavaProfilerSource extends ProfilerSource {
-    final private AbstractJavaProfilerSource impl;
+public final class JavaProfilerSource extends ProfilerSource {
+    private final AbstractJavaProfilerSource impl;
     
     /**
      * Factory method for obtaining a {@linkplain JavaProfilerSource} from a file or NULL

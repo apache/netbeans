@@ -25,6 +25,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
@@ -85,7 +86,7 @@ public class JavaTypeProvider implements TypeProvider {
     //@NotThreadSafe //Confinement within a thread
     private Map<URI,CacheItem> rootCache;
 
-    private volatile boolean isCanceled = false;
+    private final AtomicBoolean canceled = new AtomicBoolean();
     private ClasspathInfo cpInfo;
 
     private final TypeElementFinder.Customizer customizer;
@@ -103,14 +104,14 @@ public class JavaTypeProvider implements TypeProvider {
 
     @Override
     public void cleanup() {
-        isCanceled = false;
+        canceled.set(false);
         DataCache.clear();
         setRootCache(null);
     }
 
     @Override
     public void cancel() {
-        isCanceled = true;
+        canceled.set(true);
     }
 
     public JavaTypeProvider() {
@@ -124,10 +125,43 @@ public class JavaTypeProvider implements TypeProvider {
 
     @Override
     public void computeTypeNames(Context context, final Result res) {
-        isCanceled = false;
+        canceled.set(false);
         String originalText = context.getText();
         SearchType searchType = context.getSearchType();
+        doComputeTypeNames(searchType, originalText, new ResultHandler<JavaTypeDescription>() {
+            @Override
+            public void setMessage(String msg) {
+                res.setMessage(msg);
+            }
 
+            @Override
+            public void setHighlightText(String text) {
+                res.setHighlightText(text);
+            }
+
+            @Override
+            public void pendingResult() {
+                res.pendingResult();
+            }
+
+            @Override
+            public void runRoot(FileObject root, ResultHandler.Exec exec) throws IOException, InterruptedException {
+                exec.run();
+            }
+
+            @Override
+            public JavaTypeDescription create(CacheItem cacheItem, ElementHandle<TypeElement> handle, String simpleName, String relativePath) {
+                return new JavaTypeDescription(cacheItem, handle, simpleName, relativePath);
+            }
+
+            @Override
+            public void addResult(List<? extends JavaTypeDescription> types) {
+                res.addResult(types);
+            }
+        }, canceled);
+    }
+
+    public <T> void doComputeTypeNames(SearchType searchType, String originalText, ResultHandler<T> handler, AtomicBoolean canceled) {
         final DataCache dataCache = DataCache.forText(originalText, searchType);
         assert dataCache != null;
         final CacheItem.DataCacheCallback callBack = new CacheItem.DataCacheCallback() {
@@ -152,7 +186,8 @@ public class JavaTypeProvider implements TypeProvider {
         default: throw new RuntimeException("Unexpected search type: " + searchType);
         }
 
-        if (getRootCache() == null) {
+        Map<URI, CacheItem> rootCache = getRootCache();
+        if (rootCache == null) {
             Map<URI,CacheItem> sources = null;
 
             if (cpInfo == null) {
@@ -166,11 +201,11 @@ public class JavaTypeProvider implements TypeProvider {
                         Collections.<String>emptySet());
 
                 for(FileObject root : srcRoots) {
-                    if ( isCanceled ) {
+                    if (canceled.get()) {
                         return;
                     }
                     final URL rootUrl = root.toURL();
-                    if ( isCanceled ) {
+                    if (canceled.get()) {
                         return;
                     } else {
                         try {
@@ -189,7 +224,7 @@ public class JavaTypeProvider implements TypeProvider {
                         Arrays.asList(new String [] { ClassPath.COMPILE, ClassPath.BOOT}));
 
                 for(FileObject root : binRoots) {
-                    if ( isCanceled ) {
+                    if (canceled.get()) {
                         return;
                     }
                     URL rootUrl = root.toURL();
@@ -199,7 +234,7 @@ public class JavaTypeProvider implements TypeProvider {
                             continue;
                         }
                     }
-                    if ( isCanceled ) {
+                    if (canceled.get()) {
                         return;
                     }
                     else {
@@ -222,7 +257,7 @@ public class JavaTypeProvider implements TypeProvider {
                 // bootPath
                 final String[] cpType = new String[1];
                 for (ClassPath.Entry entry : bootRoots) {
-                    if ( isCanceled ) {
+                    if (canceled.get()) {
                         return;
                     }
                     cpType[0] = ClassPath.BOOT;
@@ -237,7 +272,7 @@ public class JavaTypeProvider implements TypeProvider {
 
                 // classPath
                 for (ClassPath.Entry entry : compileRoots) {
-                    if ( isCanceled ) {
+                    if (canceled.get()) {
                         return;
                     }
                     cpType[0] = ClassPath.COMPILE;
@@ -252,7 +287,7 @@ public class JavaTypeProvider implements TypeProvider {
 
                 // sourcePath
                 for (ClassPath.Entry entry : sourceRoots) {
-                    if ( isCanceled ) {
+                    if (canceled.get()) {
                         return;
                     }
                     try {
@@ -263,7 +298,7 @@ public class JavaTypeProvider implements TypeProvider {
                 }
             }
 
-            if ( !isCanceled ) {
+            if (!canceled.get()) {
 //                cache = sources;
                 if (LOGGER.isLoggable(LEVEL)) {
                     LOGGER.log(LEVEL, "Querying following roots:"); //NOI18N
@@ -282,7 +317,7 @@ public class JavaTypeProvider implements TypeProvider {
 
         final Map<URI,CacheItem> c = getRootCache();
         if (c == null) return;
-        final ArrayList<JavaTypeDescription> types = new ArrayList<>(c.size() * 20);
+        final ArrayList<T> types = new ArrayList<>(c.size() * 20);
 
         // is scan in progress? If so, provide a message to user.
         final boolean scanInProgress = SourceUtils.isScanInProgress();
@@ -290,9 +325,9 @@ public class JavaTypeProvider implements TypeProvider {
             // ui message
             final String warningKind = NbBundle.getMessage(JavaTypeProvider.class, "LBL_TypeKind");
             final String message = NbBundle.getMessage(JavaTypeProvider.class, "LBL_ScanInProgress_warning", warningKind);
-            res.setMessage(message);
+            handler.setMessage(message);
         } else {
-            res.setMessage(null);
+            handler.setMessage(null);
         }
         int lastIndexOfDot = originalText.lastIndexOf("."); //NOI18N
         boolean isFullyQualifiedName = -1 != lastIndexOfDot;
@@ -301,12 +336,12 @@ public class JavaTypeProvider implements TypeProvider {
         if (isFullyQualifiedName) {
             packageName = createPackageRegExp(originalText.substring(0, lastIndexOfDot));
             typeName = originalText.substring(lastIndexOfDot + 1);
-            res.setHighlightText(typeName);
+            handler.setHighlightText(typeName);
         } else {
             packageName = null;
             typeName = originalText;
         }
-        final String textForQuery = getTextForQuery(typeName, nameKind, context.getSearchType());
+        final String textForQuery = getTextForQuery(typeName, nameKind, searchType);
 
         LOGGER.log(Level.FINE, "Text For Query ''{0}''.", originalText);
         if (customizer != null) {
@@ -323,9 +358,8 @@ public class JavaTypeProvider implements TypeProvider {
                 }
                 for (ElementHandle<TypeElement> name : names) {
                     ci.initIndex();
-                    JavaTypeDescription td = new JavaTypeDescription(ci, name);
-                    types.add(td);
-                    if (isCanceled) {
+                    types.add(handler.create(ci, name, null, null));
+                    if (canceled.get()) {
                         return;
                     }
                 }
@@ -333,7 +367,7 @@ public class JavaTypeProvider implements TypeProvider {
         } else {
             final Collection<CacheItem> nonCached = new ArrayDeque<>(c.size());
             for (CacheItem ci : c.values()) {
-                Collection<? extends JavaTypeDescription> cacheLine = dataCache.get(ci);
+                Collection<? extends T> cacheLine = dataCache.get(ci);
                 if (cacheLine != null) {
                     types.addAll(cacheLine);
                 } else {
@@ -347,16 +381,16 @@ public class JavaTypeProvider implements TypeProvider {
                         @Override
                         public Void run() throws IOException, InterruptedException {
                             for (final CacheItem ci : nonCached) {
-                                if (isCanceled) {
+                                if (canceled.get()) {
                                     return null;
                                 }
                                 try {
-                                    final Collection<JavaTypeDescription> ct = new ArrayList<>();
+                                    final Collection<T> ct = new ArrayList<>();
                                     boolean exists = false;
                                     //WB(dataCache[ci], ACTIVE)
                                     dataCache.put(ci, ACTIVE);
                                     try {
-                                        exists = ci.collectDeclaredTypes(packageName, textForQuery,nameKind, ct);
+                                        exists = ci.collectDeclaredTypes(packageName, textForQuery, nameKind, handler, ct);
                                         if (exists) {
                                             types.addAll(ct);
                                         }
@@ -366,7 +400,7 @@ public class JavaTypeProvider implements TypeProvider {
                                             dataCache.compareAndSet(
                                                 ci,
                                                 ACTIVE,
-                                                ct.isEmpty() ? Collections.<JavaTypeDescription>emptySet() : ct);
+                                                ct.isEmpty() ? Collections.<T>emptySet() : ct);
                                         } else {
                                             //WB(dataCache[ci], NULL)
                                             dataCache.put(ci, null);
@@ -387,17 +421,34 @@ public class JavaTypeProvider implements TypeProvider {
                     throw new AssertionError(ex);
                 }
             }
-            if ( isCanceled ) {
+            if (canceled.get()) {
                 return;
             }
             if (scanInProgress) {
-                res.pendingResult();
+                handler.pendingResult();
             }
         }
-        if ( !isCanceled ) {
+        if (!canceled.get()) {
             // Sorting is now done on the Go To Tpe dialog side
             // Collections.sort(types);
-            res.addResult(types);
+            handler.addResult(types);
+        }
+    }
+
+    public static void doComputeTypes(SearchType searchType, String originalText, ResultHandler handler, AtomicBoolean canceled) {
+        new JavaTypeProvider().doComputeTypeNames(searchType, originalText, handler, canceled);
+    }
+
+    public interface ResultHandler<T> {
+        public void setMessage(String msg);
+        public void setHighlightText(String text);
+        public void pendingResult();
+        public void runRoot(FileObject root, Exec exec) throws IOException, InterruptedException;
+        public T create(@NonNull final JavaTypeProvider.CacheItem cacheItem, @NonNull final ElementHandle<TypeElement> handle,
+                @NullAllowed final String simpleName, @NullAllowed final String relativePath);
+        public void addResult(List<? extends T> types);
+        public interface Exec {
+            public void run() throws IOException, InterruptedException;
         }
     }
 
@@ -544,7 +595,7 @@ public class JavaTypeProvider implements TypeProvider {
     }
 
     //@NotTreadSafe
-    static final class CacheItem implements ClassIndexImplListener {
+    public static final class CacheItem implements ClassIndexImplListener {
 
         private final URI rootURI;
         private final boolean isBinary;
@@ -647,11 +698,12 @@ public class JavaTypeProvider implements TypeProvider {
             return true;
         }
 
-        public  boolean collectDeclaredTypes(
+        public <T> boolean collectDeclaredTypes(
             @NullAllowed final Pattern packageName,
             @NonNull final String typeName,
             @NonNull NameKind kind,
-            @NonNull Collection<? super JavaTypeDescription> collector) throws IOException, InterruptedException {
+            @NonNull ResultHandler<T> resultHandler,
+            @NonNull Collection<? super T> collector) throws IOException, InterruptedException {
             if (!initIndex()) {
                 return false;
             }
@@ -662,20 +714,23 @@ public class JavaTypeProvider implements TypeProvider {
                 final Set<String> allPackages = new HashSet<>();
                 index.getPackageNames("", false, allPackages);  //NOI18N
                 final Set<? extends String> packages = filterPackages(packageName, allPackages);
-                searchScope = ClassIndex.createPackageSearchScope(baseSearchScope, packages.toArray(new String[packages.size()]));
+                searchScope = ClassIndex.createPackageSearchScope(baseSearchScope, packages.toArray(new String[0]));
                 kind = translateSearchType(typeName, kind);
             } else {
                 //simple name
                 searchScope = baseSearchScope;
             }
+            NameKind finalKind = kind;
             try {
-                index.getDeclaredElements(
-                    typeName,
-                    kind,
-                    Collections.unmodifiableSet(Collections.<SearchScopeType>singleton(searchScope)),
-                    DocumentUtil.declaredTypesFieldSelector(true, true),
-                    new JavaTypeDescriptionConvertor(this),
-                    collector);
+                resultHandler.runRoot(getRoot(), () -> {
+                    index.getDeclaredElements(
+                        typeName,
+                        finalKind,
+                        Collections.unmodifiableSet(Collections.<SearchScopeType>singleton(searchScope)),
+                        DocumentUtil.declaredTypesFieldSelector(true, true),
+                        new JavaConvertor(this, resultHandler),
+                        collector);
+                });
             } catch (Index.IndexClosedException ice) {
                 //Closed after put into rootCache, ignore
             }
@@ -765,20 +820,22 @@ public class JavaTypeProvider implements TypeProvider {
             void handleDataCacheChange(@NonNull final CacheItem ci);
         }
 
-        private static class JavaTypeDescriptionConvertor implements Convertor<Document, JavaTypeDescription> {
+        private static class JavaConvertor<T> implements Convertor<Document, T> {
 
             private static final Pattern ANONYMOUS = Pattern.compile(".*\\$\\d+(\\$.+)?");   //NOI18N
             private static final Convertor<Document,ElementHandle<TypeElement>> HANDLE_CONVERTOR = DocumentUtil.typeElementConvertor();
             private static final Convertor<Document,String> SOURCE_CONVERTOR = DocumentUtil.sourceNameConvertor();
 
             private final CacheItem ci;
+            private final ResultHandler<T> handler;
 
-            JavaTypeDescriptionConvertor(@NonNull final CacheItem ci) {
+            JavaConvertor(@NonNull final CacheItem ci, @NonNull ResultHandler<T> handler) {
                 this.ci = ci;
+                this.handler = handler;
             }
 
             @Override
-            public JavaTypeDescription convert(Document p) {
+            public T convert(Document p) {
                 final String binName = DocumentUtil.getSimpleBinaryName(p);
                 //The regexp still needed for class files older than 1.5 which has no enclosingMethod attr
                 if (binName == null || ANONYMOUS.matcher(binName).matches() || DocumentUtil.isLocal(p)) {
@@ -786,7 +843,7 @@ public class JavaTypeProvider implements TypeProvider {
                 }
                 final ElementHandle<TypeElement> eh = HANDLE_CONVERTOR.convert(p);
                 final String sourceName = SOURCE_CONVERTOR.convert(p);
-                return eh == null ? null : new JavaTypeDescription(
+                return eh == null ? null : handler.create(
                         ci,
                         eh,
                         DocumentUtil.getSimpleName(p),
@@ -798,7 +855,7 @@ public class JavaTypeProvider implements TypeProvider {
     }
 
     //@ThreadSafe
-    private static final class DataCache {
+    private static final class DataCache<T> {
 
         //@GuardedBy("DataCache.class")
         private static String forText;
@@ -807,26 +864,26 @@ public class JavaTypeProvider implements TypeProvider {
             new EnumMap<>(SearchType.class);
 
         //@GuardedBy("this")
-        private final Map<CacheItem,Collection<? extends JavaTypeDescription>> dataCache = new HashMap<>();
+        private final Map<CacheItem,Collection<? extends T>> dataCache = new HashMap<>();
 
 
         private DataCache() {}
 
         @CheckForNull
-        synchronized Collection<? extends JavaTypeDescription> get(@NonNull final CacheItem item) {
+        synchronized Collection<? extends T> get(@NonNull final CacheItem item) {
             return dataCache.get(item);
         }
 
         synchronized void put (
             @NonNull final CacheItem item,
-            @NullAllowed final Collection<? extends JavaTypeDescription> data) {
+            @NullAllowed final Collection<? extends T> data) {
             dataCache.put(item, data);
         }
 
         synchronized boolean compareAndSet(
             @NonNull final CacheItem item,
-            @NullAllowed final Collection<? extends JavaTypeDescription> expected,
-            @NullAllowed final Collection<? extends JavaTypeDescription> update) {
+            @NullAllowed final Collection<? extends T> expected,
+            @NullAllowed final Collection<? extends T> update) {
             if (dataCache.get(item) == expected) {
                 dataCache.put(item,update);
                 return true;

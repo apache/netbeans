@@ -63,8 +63,6 @@ public class PhingExecutable {
     @org.netbeans.api.annotations.common.SuppressWarnings(value = "MS_MUTABLE_ARRAY", justification = "No need to worry, noone will change it") // NOI18N
     public static final String[] PHING_NAMES;
 
-    private static final String LOGGER_PARAM = "-logger"; // NOI18N
-    private static final String LOGGER_COLOR_VALUE = "phing.listener.AnsiColorLogger"; // NOI18N
     private static final String LIST_PARAM = "-list"; // NOI18N
     private static final String QUIET_PARAM = "-quiet"; // NOI18N
 
@@ -163,10 +161,7 @@ public class PhingExecutable {
     }
 
     private List<String> getRunParams(String[] args) {
-        List<String> params = new ArrayList<>(args.length + 2);
-        params.add(LOGGER_PARAM);
-        params.add(LOGGER_COLOR_VALUE);
-        params.addAll(Arrays.asList(args));
+        List<String> params = new ArrayList<>(Arrays.asList(args));
         return params;
     }
 

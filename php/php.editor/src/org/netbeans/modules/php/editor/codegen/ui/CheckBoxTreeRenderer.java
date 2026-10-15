@@ -20,13 +20,13 @@ package org.netbeans.modules.php.editor.codegen.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTree;
 import javax.swing.tree.TreeCellRenderer;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -59,7 +59,7 @@ public class CheckBoxTreeRenderer extends JPanel implements TreeCellRenderer {
         if (value instanceof CheckNode) {
             CheckNode n = (CheckNode) value;
             check.setSelected(n.isSelected());
-            label.setIcon(new ImageIcon(n.getIcon())); // XXX Ask description directly
+            label.setIcon(ImageUtilities.image2Icon(n.getIcon())); // XXX Ask description directly
         }
         if (isSelected) {
             label.setForeground(LIST_FOR_COLORS.getSelectionForeground());

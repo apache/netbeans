@@ -31,10 +31,7 @@ import org.netbeans.modules.glassfish.tooling.server.config.ModuleType;
  */
 public class GlassFishJavaEEConfig {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Supported module types. */
     private final Set<ModuleType> modules;
 
@@ -44,10 +41,7 @@ public class GlassFishJavaEEConfig {
     /** Highest JavaEE specification version implemented. */
     private final String version;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of avaEE configuration entity using JavaEE set
      * for GlassFish features configuration as source of instance content.
@@ -64,10 +58,7 @@ public class GlassFishJavaEEConfig {
         javaEEconfig.reset();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get highest JavaEE specification version implemented.
      * <p/>

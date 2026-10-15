@@ -1,0 +1,28 @@
+    readonly function readonlyEnumMethod(): void {}
+                      ------------------
+HINT:Method "readonlyEnumMethod" cannot be declared readonly
+FIX:Remove modifier: readonly
+    public(set) function publicSetEnumMethod(): void {}
+                         -------------------
+HINT:Method "publicSetEnumMethod" cannot be declared public(set)
+FIX:Remove modifier: public(set)
+    private(set) function privateSetEnumMethod(): void {}
+                          --------------------
+HINT:Method "privateSetEnumMethod" cannot be declared private(set)
+FIX:Remove modifier: private(set)
+    protected(set) function protectedSetEnumMethod(): void {}
+                            ----------------------
+HINT:Method "protectedSetEnumMethod" cannot be declared protected(set)
+FIX:Remove modifier: protected(set)
+    public public(set) function publicPublicSetEnumMethod(): void {}
+                                -------------------------
+HINT:Method "publicPublicSetEnumMethod" cannot be declared public(set)
+FIX:Remove modifier: public(set)
+    public private(set) function publicPrivateSetEnumMethod(): void {}
+                                 --------------------------
+HINT:Method "publicPrivateSetEnumMethod" cannot be declared private(set)
+FIX:Remove modifier: private(set)
+    public protected(set) function publicProtectedSetEnumMethod(): void {}
+                                   ----------------------------
+HINT:Method "publicProtectedSetEnumMethod" cannot be declared protected(set)
+FIX:Remove modifier: protected(set)

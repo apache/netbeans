@@ -29,13 +29,13 @@ import java.io.InputStream;
 import java.io.NotSerializableException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -72,7 +72,6 @@ import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Enumerations;
-import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
 
@@ -162,7 +161,7 @@ public final class WritableXMLFileSystem extends AbstractFileSystem
         if (doc == null) {
             return null;
         }
-        Iterator it;
+        Iterator<?> it;
         it = doc.getChildNodes().iterator();
         while (it.hasNext()) {
             Object next = it.next();
@@ -195,9 +194,9 @@ public final class WritableXMLFileSystem extends AbstractFileSystem
                 remainder = name.substring(idx + 1);
             }
             TreeElement subel = null;
-            Iterator it = el.getChildNodes(TreeElement.class).iterator();
+            Iterator<TreeElement> it = el.getChildNodes(TreeElement.class).iterator();
             while (it.hasNext()) {
-                TreeElement e = (TreeElement) it.next();
+                TreeElement e = it.next();
                 if (e.getLocalName().equals("file") || // NOI18N
                         e.getLocalName().equals("folder")) { // NOI18N
                     TreeAttribute nameAttr = e.getAttribute("name"); // NOI18N
@@ -233,9 +232,9 @@ public final class WritableXMLFileSystem extends AbstractFileSystem
         }
         ArrayList<String> kids = new ArrayList<String>();
         Set<String> allNames = new HashSet<String>();
-        Iterator it = el.getChildNodes(TreeElement.class).iterator();
+        Iterator<TreeElement> it = el.getChildNodes(TreeElement.class).iterator();
         while (it.hasNext()) {
-            TreeElement sub = (TreeElement) it.next();
+            TreeElement sub = it.next();
             if (sub.getLocalName().equals("file") || // NOI18N
                     sub.getLocalName().equals("folder")) { // NOI18N
                 TreeAttribute childName = sub.getAttribute("name"); // NOI18N
@@ -262,7 +261,7 @@ public final class WritableXMLFileSystem extends AbstractFileSystem
             }
         }
         //System.err.println("children <" + f + ">: " + kids);
-        return kids.toArray(new String[kids.size()]);
+        return kids.toArray(new String[0]);
     }
     
     /** retrieve byte contents of a named resource */
@@ -296,7 +295,7 @@ public final class WritableXMLFileSystem extends AbstractFileSystem
             }
         } else {
             StringBuffer buf = new StringBuffer();
-            Iterator it = el.getChildNodes().iterator();
+            Iterator<?> it = el.getChildNodes().iterator();
             while (it.hasNext()) {
                 Object o = it.next();
                 if (o instanceof TreeCDATASection) {
@@ -305,12 +304,8 @@ public final class WritableXMLFileSystem extends AbstractFileSystem
                     buf.append(((TreeText) o).getData().trim());
                 }
             }
-            try {
-                // This encoding is intentional...
-                return buf.toString().getBytes("UTF-8"); // NOI18N
-            } catch (UnsupportedEncodingException uee) {
-                throw new FileNotFoundException(uee.getMessage());
-            }
+            // This encoding is intentional...
+            return buf.toString().getBytes(StandardCharsets.UTF_8);
         }
     }
     
@@ -560,9 +555,9 @@ public final class WritableXMLFileSystem extends AbstractFileSystem
             return Enumerations.empty();
         }
         java.util.List<String> l = new ArrayList<String>(10);
-        Iterator it = el.getChildNodes(TreeElement.class).iterator();
+        Iterator<TreeElement> it = el.getChildNodes(TreeElement.class).iterator();
         while (it.hasNext()) {
-            TreeElement sub = (TreeElement) it.next();
+            TreeElement sub = it.next();
             if (sub.getLocalName().equals("attr")) { // NOI18N
                 TreeAttribute nameAttr = sub.getAttribute("name"); // NOI18N
                 if (nameAttr == null) {
@@ -836,9 +831,9 @@ public final class WritableXMLFileSystem extends AbstractFileSystem
         }
         // Find any existing <attr>.
         TreeChild existingAttr = null;
-        Iterator it = el.getChildNodes(TreeElement.class).iterator();
+        Iterator<TreeElement> it = el.getChildNodes(TreeElement.class).iterator();
         while (it.hasNext()) {
-            TreeElement sub = (TreeElement) it.next();
+            TreeElement sub = it.next();
             if (sub.getLocalName().equals("attr")) { // NOI18N
                 TreeAttribute attr = sub.getAttribute("name"); // NOI18N
                 if (attr == null) {
@@ -1150,9 +1145,9 @@ public final class WritableXMLFileSystem extends AbstractFileSystem
         TreeElement childe = (TreeElement) child;
         if (childe.getQName().equals("file") || childe.getQName().equals("folder")) { // NOI18N
             String name = childe.getAttribute("name").getValue(); // NOI18N
-            Iterator it = parent.getChildNodes(TreeElement.class).iterator();
+            Iterator<TreeElement> it = parent.getChildNodes(TreeElement.class).iterator();
             while (it.hasNext()) {
-                TreeElement kid = (TreeElement) it.next();
+                TreeElement kid = it.next();
                 if (kid.getQName().equals("file") || kid.getQName().equals("folder")) { // NOI18N
                     TreeAttribute attr = kid.getAttribute("name"); // NOI18N
                     if (attr != null) { // #66816 - layer might be malformed
@@ -1166,9 +1161,9 @@ public final class WritableXMLFileSystem extends AbstractFileSystem
             return null;
         } else if (childe.getQName().equals("attr")) { // NOI18N
             String name = childe.getAttribute("name").getValue(); // NOI18N
-                Iterator it = parent.getChildNodes(TreeElement.class).iterator();
+                Iterator<TreeElement> it = parent.getChildNodes(TreeElement.class).iterator();
                 while (it.hasNext()) {
-                    TreeElement kid = (TreeElement) it.next();
+                    TreeElement kid = it.next();
                     if (kid.getQName().equals("file") || kid.getQName().equals("folder")) { // NOI18N
                         return kid;
                     } else if (kid.getQName().equals("attr")) { // NOI18N
@@ -1337,7 +1332,7 @@ public final class WritableXMLFileSystem extends AbstractFileSystem
         TreeElement parent = (TreeElement) child.getParentNode();
         TreeObjectList list = parent.getChildNodes();
         boolean kill = true;
-        Iterator it = list.iterator();
+        Iterator<?> it = list.iterator();
         while (it.hasNext()) {
             Object o = it.next();
             if (o == child) {

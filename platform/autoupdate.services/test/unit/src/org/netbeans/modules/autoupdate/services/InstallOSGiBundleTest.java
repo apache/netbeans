@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
@@ -85,7 +86,7 @@ public class InstallOSGiBundleTest extends NbTestCase {
             catalogFile = File.createTempFile("catalog-", ".xml", tmpDirectory);
             catalogURL = Utilities.toURI(catalogFile).toURL();
         }
-        PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(catalogFile), "UTF-8"));
+        PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(catalogFile), StandardCharsets.UTF_8));
         pw.write(res);
         pw.close();
     }

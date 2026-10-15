@@ -46,7 +46,7 @@ import org.openide.filesystems.XMLFileSystem;
 import org.openide.util.NbBundle;
 
 /** Interface for a manager which can handle XML layer caching.
- * @see "#20168"
+ * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=20168">20168</a>
  * @author Jesse Glick
  */
 public abstract class LayerCacheManager implements LayerFactory {
@@ -152,7 +152,7 @@ public abstract class LayerCacheManager implements LayerFactory {
                         err.log(Level.WARNING, null, ioe);
                         XMLFileSystem fallback = new XMLFileSystem();
                         try {
-                            fallback.setXmlUrls(urls.toArray(new URL[urls.size()]));
+                            fallback.setXmlUrls(urls.toArray(new URL[0]));
                         } catch (PropertyVetoException ex) {
                             err.log(Level.WARNING, null, ex);
                         }
@@ -195,7 +195,7 @@ public abstract class LayerCacheManager implements LayerFactory {
      * Should only be called when the cache directory is prepared.
      * The filesystem's contents should be modified.
      * The filesystem must have been originally produced by
-     * {@link #createEmptyFileSystem} or {@link #createLoadedFileSystem}.
+     * {@link #createEmptyFileSystem}.
      * Not called if the manager does not support loading;
      * otherwise must be overridden.
      */
@@ -204,7 +204,6 @@ public abstract class LayerCacheManager implements LayerFactory {
     /**
      * Save a new cache to disk, load it, and return that filesystem.
      * @param urls list of type URL; earlier layers can override later layers
-     * @return a new filesystem with the specified contents
      * Not called if the manager supports loading;
      * otherwise must be overridden.
      */
@@ -234,7 +233,7 @@ public abstract class LayerCacheManager implements LayerFactory {
             }
             try {
                 XMLFileSystem fs = (XMLFileSystem)previous;
-                fs.setXmlUrls(urls.toArray(new URL[urls.size()]));
+                fs.setXmlUrls(urls.toArray(new URL[0]));
                 return fs;
             } catch (PropertyVetoException pve) {
                 throw (IOException) new IOException(pve.toString()).initCause(pve);

@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.foo.client
+OpenIDE-Module-Name: Client that does not need anything
+OpenIDE-Module-Public-Packages: -
+

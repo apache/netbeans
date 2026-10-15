@@ -87,6 +87,7 @@ import org.openide.util.NbBundle;
 public class OverviewController extends AbstractController {
 
     public static final String SHOW_SYSPROPS_URL = "file:/sysprops"; // NOI18N
+    public static final String SHOW_NEXT_SEGMENT_URL = "file:/next"; // NOI18N
     public static final String SHOW_THREADS_URL = "file:/threads"; // NOI18N
     private static final String OPEN_THREADS_URL = "file:/stackframe/";     // NOI18N
     private static final String CLASS_URL_PREFIX = "file://class/"; // NOI18N
@@ -137,21 +138,11 @@ public class OverviewController extends AbstractController {
         Heap heap = heapFragmentWalker.getHeapFragment();
         HeapSummary hsummary = heap.getSummary();
         long finalizers = computeFinalizers(heap);
-        int nclassloaders = 0;
-        JavaClass cl = heap.getJavaClassByName("java.lang.ClassLoader"); // NOI18N
         NumberFormat numberFormat = (NumberFormat)NumberFormat.getInstance().clone();
         numberFormat.setMaximumFractionDigits(1);
         
         oome = getOOMEThread(heap);
-        if (cl != null) {
-            nclassloaders = cl.getInstancesCount();
-            
-            Collection<JavaClass> jcs = cl.getSubClasses();
-            
-            for (JavaClass jc : jcs) {
-                nclassloaders += jc.getInstancesCount();
-            }
-        }
+        int nclassloaders = heapFragmentWalker.countClassLoaders();
         
         String filename = LINE_PREFIX
                 + Bundle.OverviewController_FileItemString(
@@ -188,6 +179,9 @@ public class OverviewController extends AbstractController {
                           Bundle.OverviewController_NotAvailableMsg()
                 );
 
+        String segmentInfo = LINE_PREFIX + "<b>Segment:</b> " + heapFragmentWalker.getHeapSegment() +  " try " // NOI18N
+                + "<a href='" + SHOW_NEXT_SEGMENT_URL + "'>next</a>...<br>&nbsp;";
+
         String oomeString = "";
         if (oome != null) {
             Instance thread = oome.getInstance();
@@ -200,9 +194,10 @@ public class OverviewController extends AbstractController {
         String memoryRes = Icons.getResource(ProfilerIcons.HEAP_DUMP);
         return "<b><img border='0' align='bottom' src='nbresloc:/" + memoryRes + "'>&nbsp;&nbsp;" // NOI18N
                 + Bundle.OverviewController_SummaryString() + "</b><br><hr>" + dateTaken + "<br>" + filename + "<br>" + filesize + "<br><br>" + liveBytes // NOI18N
-                + "<br>" + liveClasses + "<br>" + liveInstances + "<br>" + classloaders + "<br>" + gcroots + "<br>" + finalizersInfo + oomeString; // NOI18N
+                + "<br>" + liveClasses + "<br>" + liveInstances + "<br>" + classloaders + "<br>" + gcroots + "<br>" + finalizersInfo + oomeString // NOI18N
+                + "<br>" + segmentInfo; // NOI18N
     }
-    
+
     public String computeEnvironment() {
         String sysinfoRes = Icons.getResource(HeapWalkerIcons.SYSTEM_INFO);
         String header =  "<b><img border='0' align='bottom' src='nbresloc:/" + sysinfoRes + "'>&nbsp;&nbsp;" // NOI18N
@@ -469,7 +464,7 @@ public class OverviewController extends AbstractController {
                         // sw.append("&nbsp;&nbsp;<span style=\"color: #0033CC\">"); // NOI18N
                         sb.append("&nbsp;&nbsp;<a name=").append(threadInstance.getInstanceId()).append("></a><b ").append(style).append(">");   // NOI18N
                         // -------------------------------------------------------------------
-                        sb.append("\"").append(htmlize(threadName)).append("\"").append(daemon.booleanValue() ? " daemon" : "").append(" prio=").append(priority);   // NOI18N
+                        sb.append("\"").append(htmlize(threadName)).append("\"").append(Boolean.TRUE.equals(daemon) ? " daemon" : "").append(" prio=").append(priority);   // NOI18N
                         if (threadId != null) {
                             sb.append(" tid=").append(threadId);    // NOI18N
                         }
@@ -541,7 +536,7 @@ public class OverviewController extends AbstractController {
 
 
     private Map<ThreadObjectGCRoot,Map<Integer,List<JavaFrameGCRoot>>> computeJavaFrameMap(Collection<GCRoot> roots) {
-        Map<ThreadObjectGCRoot,Map<Integer,List<JavaFrameGCRoot>>> javaFrameMap = new HashMap();
+        Map<ThreadObjectGCRoot,Map<Integer,List<JavaFrameGCRoot>>> javaFrameMap = new HashMap<>();
         
         for (GCRoot root : roots) {
             if (GCRoot.JAVA_FRAME.equals(root.getKind())) {
@@ -552,7 +547,7 @@ public class OverviewController extends AbstractController {
                 List<JavaFrameGCRoot> locals;
                 
                 if (stackMap == null) {
-                    stackMap = new HashMap();
+                    stackMap = new HashMap<>();
                     javaFrameMap.put(threadObj,stackMap);
                 }
                 locals = stackMap.get(frameNo);
@@ -648,10 +643,17 @@ public class OverviewController extends AbstractController {
      * in the hotspot implementation. Its value is set according to
      * the JVM TI specification GetThreadState function.
      */
-    private final static int JVMTI_THREAD_STATE_ALIVE = 0x0001;
-    private final static int JVMTI_THREAD_STATE_TERMINATED = 0x0002;
-    private final static int JVMTI_THREAD_STATE_RUNNABLE = 0x0004;
-    private final static int JVMTI_THREAD_STATE_BLOCKED_ON_MONITOR_ENTER = 0x0400;
-    private final static int JVMTI_THREAD_STATE_WAITING_INDEFINITELY = 0x0010;
-    private final static int JVMTI_THREAD_STATE_WAITING_WITH_TIMEOUT = 0x0020;
+    private static final int JVMTI_THREAD_STATE_ALIVE = 0x0001;
+    private static final int JVMTI_THREAD_STATE_TERMINATED = 0x0002;
+    private static final int JVMTI_THREAD_STATE_RUNNABLE = 0x0004;
+    private static final int JVMTI_THREAD_STATE_BLOCKED_ON_MONITOR_ENTER = 0x0400;
+    private static final int JVMTI_THREAD_STATE_WAITING_INDEFINITELY = 0x0010;
+    private static final int JVMTI_THREAD_STATE_WAITING_WITH_TIMEOUT = 0x0020;
+
+    public void showNextSegment() {
+        HeapWalkerManager.getDefault().openHeapWalker(
+            heapFragmentWalker.getHeapDumpFile(),
+            heapFragmentWalker.getHeapSegment() + 1
+        );
+    }
 }

@@ -47,7 +47,7 @@ public class DataViewDBTable {
         for (DBTable tbl : tables.toArray(dbTables)) {
             cols.addAll(tbl.getColumnList());
         }
-        Collections.sort(cols, new ColumnOrderComparator());
+        cols.sort(new ColumnOrderComparator());
         columns = Collections.unmodifiableList(cols);
     }
 

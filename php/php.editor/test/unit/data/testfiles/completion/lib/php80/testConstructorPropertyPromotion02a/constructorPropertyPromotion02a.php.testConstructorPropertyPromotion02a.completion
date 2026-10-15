@@ -1,0 +1,8 @@
+Code completion result for source line:
+public function __construct(pr|) {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    private                                    null
+KEYWORD    private(set)                               null
+KEYWORD    protected                                  null
+KEYWORD    protected(set)                             null

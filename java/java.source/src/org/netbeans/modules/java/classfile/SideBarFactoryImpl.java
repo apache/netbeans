@@ -24,9 +24,7 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.editor.SideBarFactory;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileStateInvalidException;
 import org.openide.loaders.DataObject;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -50,18 +48,25 @@ public class SideBarFactoryImpl implements SideBarFactory {
 
         Object classFileRoot;
         Object binaryName;
+        Object sourceFile;
         if (originFile != null) {
             classFileRoot = originFile.getAttribute(CodeGenerator.CLASSFILE_ROOT);
             binaryName = originFile.getAttribute(CodeGenerator.CLASSFILE_BINNAME);
+            sourceFile = originFile.getAttribute(CodeGenerator.CLASSFILE_SOURCEFILE);
+            if (sourceFile == null) {
+                sourceFile = originFile.getNameExt();
+            }
         } else {
-            classFileRoot = binaryName = null;
+            classFileRoot = binaryName = sourceFile = null;
         }
 
-        if (classFileRoot instanceof URL && binaryName instanceof String) {
+        if (classFileRoot instanceof URL && binaryName instanceof String && sourceFile instanceof String) {
             return new AttachSourcePanel(
                 (URL) classFileRoot,
                 originFile.toURL(),
-                (String) binaryName);
+                (String) binaryName,
+                (String) sourceFile
+            );
         }
         return null;
     }

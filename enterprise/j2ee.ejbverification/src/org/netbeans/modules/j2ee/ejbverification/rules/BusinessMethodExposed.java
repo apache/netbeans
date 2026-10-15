@@ -84,13 +84,16 @@ public class BusinessMethodExposed {
                 int intfCount = ctx.getEjbData().getBusinessLocal().length + ctx.getEjbData().getBusinessRemote().length;
                 localInterfaces  = new ArrayList<TypeElement>(resolveClasses(hintContext.getInfo(), ctx.getEjbData().getBusinessLocal()));
                 remoteInterfaces = new ArrayList<TypeElement>(resolveClasses(hintContext.getInfo(), ctx.getEjbData().getBusinessRemote()));
-                if (intfCount == 0 || JavaUtils.hasAnnotation(ctx.getClazz(), EJBAPIAnnotations.LOCAL_BEAN)) {
+                if (intfCount == 0
+                        || JavaUtils.hasAnnotation(ctx.getClazz(), EJBAPIAnnotations.LOCAL_BEAN)
+                        || JavaUtils.hasAnnotation(ctx.getClazz(), EJBAPIAnnotations.LOCAL_BEAN_JAKARTA)) {
                     return null;
                 }
             }
             // if an EJB is annotated with "@javax.jws.WebService"
             // then no business interface is needed, see issue #147512
-            if (JavaUtils.hasAnnotation(ctx.getClazz(), EJBAPIAnnotations.WEB_SERVICE)) {
+            if (JavaUtils.hasAnnotation(ctx.getClazz(), EJBAPIAnnotations.WEB_SERVICE)
+                    || JavaUtils.hasAnnotation(ctx.getClazz(), EJBAPIAnnotations.WEB_SERVICE_JAKARTA)) {
                 return null;
             }
 

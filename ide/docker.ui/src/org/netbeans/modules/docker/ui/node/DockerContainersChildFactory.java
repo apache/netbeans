@@ -34,7 +34,6 @@ import org.netbeans.modules.docker.api.DockerContainer;
 import org.netbeans.modules.docker.api.DockerInstance;
 import org.netbeans.modules.docker.api.DockerEvent;
 import org.netbeans.modules.docker.api.DockerAction;
-import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
 import org.openide.util.RequestProcessor;
 
@@ -101,7 +100,7 @@ public class DockerContainersChildFactory extends NodeClosingFactory<StatefulDoc
     protected boolean createKeys(List<StatefulDockerContainer> toPopulate) {
         DockerAction facade = new DockerAction(instance);
         List<DockerContainer> containers = new ArrayList<>(facade.getContainers());
-        Collections.sort(containers, COMPARATOR);
+        containers.sort(COMPARATOR);
         synchronized (cache) {
             List<StatefulDockerContainer> fresh = new ArrayList<>(containers.size());
             for (DockerContainer c : containers) {

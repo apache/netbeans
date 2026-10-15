@@ -19,12 +19,8 @@
 package org.netbeans.modules.java.editor.overridden;
 
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,14 +36,12 @@ import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
-import org.netbeans.api.java.source.ui.ElementOpen;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.AnnotationDesc;
 import org.netbeans.editor.Annotations;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.ImplementationProvider;
 import org.netbeans.editor.JumpList;
-import org.netbeans.editor.Utilities;
-import org.openide.ErrorManager;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.util.NbBundle;
@@ -57,6 +51,8 @@ import org.openide.util.NbBundle;
  * @author Jan Lahoda
  */
 public final class IsOverriddenAnnotationAction extends AbstractAction {
+
+    public static final Logger LOG = Logger.getLogger(IsOverriddenAnnotationAction.class.getName());
 
     public IsOverriddenAnnotationAction() {
         putValue(NAME, NbBundle.getMessage(IsOverriddenAnnotationAction.class,
@@ -70,6 +66,7 @@ public final class IsOverriddenAnnotationAction extends AbstractAction {
         setEnabled(true);
     }
     
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (!invokeDefaultAction((JTextComponent) e.getSource())) {
             Action actions[] = ImplementationProvider.getDefault().getGlyphGutterActions((JTextComponent) e.getSource());
@@ -79,8 +76,9 @@ public final class IsOverriddenAnnotationAction extends AbstractAction {
             
             int nextAction = 0;
             
-            while (nextAction < actions.length && actions[nextAction] != this)
+            while (nextAction < actions.length && actions[nextAction] != this) {
                 nextAction++;
+            }
             
             nextAction++;
             
@@ -108,17 +106,14 @@ public final class IsOverriddenAnnotationAction extends AbstractAction {
         FileObject file = getFile(component);
         
         if (file == null) {
-            if (ErrorManager.getDefault().isLoggable(ErrorManager.WARNING)) {
-                ErrorManager.getDefault().log(ErrorManager.WARNING, "component=" + component + " does not have a file specified in the document."); //NOI18N
-            }
+            LOG.log(Level.WARNING, "component={0} does not have a file specified in the document.", component); //NOI18N
             return null;
         }
         
         AnnotationsHolder ah = AnnotationsHolder.get(file);
 
         if (ah == null) {
-            Logger.getLogger(IsOverriddenAnnotationAction.class.getName()).log(Level.INFO, "component=" + component + " does not have attached a IsOverriddenAnnotationHandler"); //NOI18N
-
+            LOG.log(Level.INFO, "component={0} does not have attached a IsOverriddenAnnotationHandler", component); //NOI18N
             return null;
         }
 
@@ -136,21 +131,18 @@ public final class IsOverriddenAnnotationAction extends AbstractAction {
         FileObject file = getFile(component);
 
         if (file == null) {
-            if (ErrorManager.getDefault().isLoggable(ErrorManager.WARNING)) {
-                ErrorManager.getDefault().log(ErrorManager.WARNING, "component=" + component + " does not have a file specified in the document."); //NOI18N
-            }
+            LOG.log(Level.WARNING, "component={0} does not have a file specified in the document.", component); //NOI18N
             return null;
         }
 
         AnnotationsHolder ah = AnnotationsHolder.get(file);
 
         if (ah == null) {
-            Logger.getLogger(IsOverriddenAnnotationAction.class.getName()).log(Level.INFO, "component=" + component + " does not have attached a IsOverriddenAnnotationHandler"); //NOI18N
-
+            LOG.log(Level.INFO, "component={0} does not have attached a IsOverriddenAnnotationHandler", component); //NOI18N
             return null;
         }
 
-        List<IsOverriddenAnnotation> annotations = new LinkedList<IsOverriddenAnnotation>();
+        List<IsOverriddenAnnotation> annotations = new LinkedList<>();
 
         for(IsOverriddenAnnotation a : ah.getAnnotations()) {
             if (a.getPosition().getOffset() == offset) {
@@ -164,47 +156,45 @@ public final class IsOverriddenAnnotationAction extends AbstractAction {
     boolean invokeDefaultAction(final JTextComponent comp) {
         final Document doc = comp.getDocument();
         
-        if (doc instanceof BaseDocument) {
+        if (doc instanceof BaseDocument baseDocument) {
             final int currentPosition = comp.getCaretPosition();
-            final Annotations annotations = ((BaseDocument) doc).getAnnotations();
-            final Map<String, List<ElementDescription>> caption2Descriptions = new LinkedHashMap<String, List<ElementDescription>>();
+            final Annotations annotations = baseDocument.getAnnotations();
+            final Map<String, List<ElementDescription>> caption2Descriptions = new LinkedHashMap<>();
             final Point[] p = new Point[1];
             
-            doc.render(new Runnable() {
-                public void run() {
-                    try {
-                        int line = Utilities.getLineOffset((BaseDocument) doc, currentPosition);
-                        int startOffset = Utilities.getRowStartFromLineOffset((BaseDocument) doc, line);
-                        p[0] = comp.modelToView(startOffset).getLocation();
-                        AnnotationDesc desc = annotations.getActiveAnnotation(line);
-
-                        if (desc == null) {
-                            return ;
-                        }
-                        
-                        Collection<IsOverriddenAnnotation> annots;
-
-                        if (COMBINED_TYPES.contains(desc.getAnnotationType())) {
-                            annots = findAnnotations(comp, startOffset);
-                        } else {
-                            annots = Collections.singletonList(findAnnotation(comp, desc, startOffset));
-                        }
-
-                        for (IsOverriddenAnnotation a : annots) {
-                            if (a != null) {
-                                caption2Descriptions.put(computeCaption(a.getType(), a.getShortDescription()), a.getDeclarations());
-                            }
-                        }
-                    }  catch (BadLocationException ex) {
-                        ErrorManager.getDefault().notify(ex);
+            doc.render(() -> {
+                try {
+                    int line = LineDocumentUtils.getLineIndex(baseDocument, currentPosition);
+                    int startOffset = LineDocumentUtils.getLineStartFromIndex(baseDocument, line);
+                    p[0] = comp.modelToView(startOffset).getLocation();
+                    AnnotationDesc desc = annotations.getActiveAnnotation(line);
+                    
+                    if (desc == null) {
+                        return ;
                     }
+                    
+                    Collection<IsOverriddenAnnotation> annots;
+                    
+                    if (COMBINED_TYPES.contains(desc.getAnnotationType())) {
+                        annots = findAnnotations(comp, startOffset);
+                    } else {
+                        annots = List.of(findAnnotation(comp, desc, startOffset));
+                    }
+                    
+                    for (IsOverriddenAnnotation a : annots) {
+                        if (a != null) {
+                            caption2Descriptions.put(computeCaption(a.getType(), a.getShortDescription()), a.getDeclarations());
+                        }
+                    }
+                } catch (BadLocationException ex) {
+                    LOG.log(Level.WARNING, "bad location", ex); //NOI18N
                 }
             });
             
             if (caption2Descriptions.isEmpty())
                 return false;
             
-            JumpList.checkAddEntry(comp, currentPosition);
+            JumpList.addEntry(comp, currentPosition);
 
             mouseClicked(caption2Descriptions, comp, p[0]);
             
@@ -218,7 +208,6 @@ public final class IsOverriddenAnnotationAction extends AbstractAction {
         if (caption2Descriptions.size() == 1 && caption2Descriptions.values().iterator().next().size() == 1) {
             ElementDescription desc = caption2Descriptions.values().iterator().next().get(0);
             desc.open();
-
             return ;
         }
         
@@ -227,7 +216,7 @@ public final class IsOverriddenAnnotationAction extends AbstractAction {
         SwingUtilities.convertPointToScreen(position, c);
 
         StringBuilder caption = new StringBuilder();
-        List<ElementDescription> descriptions = new LinkedList<ElementDescription>();
+        List<ElementDescription> descriptions = new LinkedList<>();
         boolean first = true;
 
         for (Entry<String, List<ElementDescription>> e : caption2Descriptions.entrySet()) {
@@ -243,27 +232,17 @@ public final class IsOverriddenAnnotationAction extends AbstractAction {
     }
 
     static String computeCaption(AnnotationType type, String shortDescription) throws MissingResourceException, IllegalStateException {
-        String caption;
-        switch (type) {
-            case IMPLEMENTS:
-                caption = NbBundle.getMessage(IsOverriddenAnnotation.class, "CAP_Implements");
-                break;
-            case OVERRIDES:
-                caption = NbBundle.getMessage(IsOverriddenAnnotation.class, "CAP_Overrides");
-                break;
-            case HAS_IMPLEMENTATION:
-            case IS_OVERRIDDEN:
-                caption = shortDescription;
-                break;
-            default:
-                throw new IllegalStateException("Currently not implemented: " + type); //NOI18N
-        }
-        return caption;
+        return switch (type) {
+            case IMPLEMENTS -> NbBundle.getMessage(IsOverriddenAnnotation.class, "CAP_Implements");
+            case OVERRIDES -> NbBundle.getMessage(IsOverriddenAnnotation.class, "CAP_Overrides");
+            case HAS_IMPLEMENTATION, IS_OVERRIDDEN -> shortDescription;
+            default -> throw new IllegalStateException("Currently not implemented: " + type); //NOI18N
+        };
     }
 
-    private static final Set<String> COMBINED_TYPES = new HashSet<String>(Arrays.asList(
+    private static final Set<String> COMBINED_TYPES = Set.of(
             "org-netbeans-modules-editor-annotations-implements-has-implementations-combined",
             "org-netbeans-modules-editor-annotations-implements-is-overridden-combined",
             "org-netbeans-modules-editor-annotations-override-is-overridden-combined"
-    ));
+    );
 }

@@ -234,9 +234,7 @@ public class RulesManager implements FileChangeListener {
                 Object nonGuiObject = fo.getAttribute(NON_GUI);
                 boolean toGui = true;
                 
-                if ( nonGuiObject != null &&
-                     nonGuiObject instanceof Boolean &&
-                     ((Boolean)nonGuiObject).booleanValue() ) {
+                if ( nonGuiObject instanceof Boolean && ((Boolean)nonGuiObject).booleanValue() ) {
                     toGui = false;
                 }
 

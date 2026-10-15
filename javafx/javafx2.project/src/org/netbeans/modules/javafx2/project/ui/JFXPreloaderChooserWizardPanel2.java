@@ -89,8 +89,7 @@ public class JFXPreloaderChooserWizardPanel2 implements WizardDescriptor.Panel<J
 
                 // wizard API: set the caption and index of this panel
                 projectChooser.setName(NbBundle.getMessage (JFXPreloaderChooserWizardPanel2.class, "CTL_SelectProject_Caption")); // NOI18N
-                projectChooser.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, // NOI18N
-                                                 new Integer(1));
+                projectChooser.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 1);
 
                 if (lastProjectDirectoryUsed != null)
                     projectChooser.setCurrentDirectory(new File(lastProjectDirectoryUsed));
@@ -118,8 +117,7 @@ public class JFXPreloaderChooserWizardPanel2 implements WizardDescriptor.Panel<J
 
                 // wizard API: set the caption and index of this panel
                 jarFileChooser.setName(NbBundle.getMessage (JFXPreloaderChooserWizardPanel2.class, "CTL_SelectJAR_Caption")); // NOI18N
-                jarFileChooser.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, // NOI18N
-                                              new Integer(1));
+                jarFileChooser.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 1);
 
                 jarFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
                 jarFileChooser.setAcceptAllFileFilterUsed(true);
@@ -142,10 +140,10 @@ public class JFXPreloaderChooserWizardPanel2 implements WizardDescriptor.Panel<J
 //                    @Override
 //                    public void actionPerformed(ActionEvent ev) {
 //                        wizard.update();
-////                        if (JFileChooser.APPROVE_SELECTION.equals(ev.getActionCommand()))
-////                            wizard.update(); //.stepToNext();
-////                        else if (JFileChooser.CANCEL_SELECTION.equals(ev.getActionCommand()))
-////                            jarFileChooser.getTopLevelAncestor().setVisible(false);
+// //                        if (JFileChooser.APPROVE_SELECTION.equals(ev.getActionCommand()))
+// //                            wizard.update(); //.stepToNext();
+// //                        else if (JFileChooser.CANCEL_SELECTION.equals(ev.getActionCommand()))
+// //                            jarFileChooser.getTopLevelAncestor().setVisible(false);
 //                    };
 //                });
 

@@ -66,10 +66,10 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="cpTree" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="mpTree" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="cpTree" alignment="0" max="32767" attributes="0"/>
+                  <Component id="mpTree" alignment="0" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="cpAddButton" alignment="1" min="-2" max="-2" attributes="0"/>
                   <Component id="mpAddButton" alignment="1" min="-2" max="-2" attributes="0"/>

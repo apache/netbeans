@@ -151,18 +151,12 @@ public final class TextDetail implements Selectable {
         final EditorCookie edCookie = dobj.getLookup().lookup(EditorCookie.class);
         if (edCookie != null) {
             Task prepareTask = edCookie.prepareDocument();             //#227989
-            prepareTask.addTaskListener(new TaskListener() {
-                @Override
-                public void taskFinished(Task task) {
-                    EventQueue.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            edCookie.open();
-                            showLine(how);
-                            highlightDetail(edCookie);
-                        }
-                    });
-                }
+            prepareTask.addTaskListener((Task task) -> {
+                EventQueue.invokeLater(() -> {
+                    edCookie.open();
+                    showLine(how);
+                    highlightDetail(edCookie);
+                });
             });
         } else {
             showLine(how);
@@ -195,18 +189,15 @@ public final class TextDetail implements Selectable {
             if (panes != null && panes.length > 0) {
                 // Necessary since above lineObj.show leads to invoke
                 // later as well.
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            Caret caret = panes[0].getCaret(); // #23626
-                            caret.moveDot(caret.getDot() + markLength);
-                        } catch (Exception e) { // #217038
-                            StatusDisplayer.getDefault().setStatusText(
-                                    Bundle.MSG_CannotShowTextDetai());
-                            LOG.log(Level.FINE,
-                                    Bundle.MSG_CannotShowTextDetai(), e);
-                        }
+                SwingUtilities.invokeLater(() -> {
+                    try {
+                        Caret caret = panes[0].getCaret(); // #23626
+                        caret.moveDot(caret.getDot() + markLength);
+                    } catch (Exception e) { // #217038
+                        StatusDisplayer.getDefault().setStatusText(
+                                Bundle.MSG_CannotShowTextDetai());
+                        LOG.log(Level.FINE,
+                                Bundle.MSG_CannotShowTextDetai(), e);
                     }
                 });
             }
@@ -350,7 +341,7 @@ public final class TextDetail implements Selectable {
 
     public void addSurroundingLine(int number, String text) {
         if (surroundingLines == null) {
-            surroundingLines = new ArrayList<SurroundingLine>(5);
+            surroundingLines = new ArrayList<>(5);
         }
         surroundingLines.add(new SurroundingLine(number, text));
     }
@@ -436,12 +427,7 @@ public final class TextDetail implements Selectable {
             this.dobj = dataObject;
             this.lineObj = null;
             if (showAfterDataObjectUpdated) {
-                EventQueue.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        showDetail(TextDetail.DH_GOTO);
-                    }
-                });
+                EventQueue.invokeLater(() -> showDetail(TextDetail.DH_GOTO));
                 showAfterDataObjectUpdated = false;
             }
         } else {
@@ -490,19 +476,11 @@ public final class TextDetail implements Selectable {
             // get the Line object. Later - if the user jumps to the document,
             // changes it and saves - the Line objects are not created for the
             // original set of lines.
-            RP.post(new Runnable() { // run in background - see bug #225632
-                @Override
-                public void run() {
-                    DetailNode.this.txtDetail.prepareLine();
-                }
-            });
-            txtDetail.addChangeListener(new ChangeListener() {
-                @Override
-                public void stateChanged(ChangeEvent e) {
-                    fireIconChange();
-                    ResultsOutlineSupport.toggleParentSelected(
-                            DetailNode.this.getParentNode());
-                }
+            RP.post(DetailNode.this.txtDetail::prepareLine); // run in background - see bug #225632
+            txtDetail.addChangeListener((ChangeEvent e) -> {
+                fireIconChange();
+                ResultsOutlineSupport.toggleParentSelected(
+                        DetailNode.this.getParentNode());
             });
             setIconBaseWithExtension(ICON);
         }
@@ -696,8 +674,8 @@ public final class TextDetail implements Selectable {
          * text.
          * @param matchEnd Line index after the last character of the matched
          * text.
-         * @param lineLength Lenght of the line.
-         * @param detailLength Lengt of matched part.
+         * @param lineLength Length of the line.
+         * @param matchedLength Length of matched part.
          */
         private void appendMarkedTextMatch(StringBuilder text, int matchStart,
                 int matchEnd, int lineLength, int matchedLength)

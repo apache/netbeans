@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,10 +38,7 @@ import org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform;
  */
 public class JavaUtils {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Java executables directory underJava home. */
     private static final String  JAVA_BIN_DIR = "bin";
 
@@ -66,7 +64,7 @@ public class JavaUtils {
     public static final String JAVA_HOME_ENV = "JAVA_HOME";
 
     /** UTF-8 {@link Charset}. */
-    public static final Charset UTF_8 = Charset.forName("UTF-8");
+    public static final Charset UTF_8 = StandardCharsets.UTF_8;
     /**
      * Java VM version output regular expression pattern.
      * <p/>
@@ -84,10 +82,7 @@ public class JavaUtils {
      *  version output. */
     private static final int VM_MIN_VERSION_TOKENS = 2;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static classes                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Java VM version storage class.
      * <p/>
@@ -96,10 +91,7 @@ public class JavaUtils {
      */
     public static class JavaVersion {
 
-        ////////////////////////////////////////////////////////////////////////
         // Instance attributes                                                //
-        ////////////////////////////////////////////////////////////////////////
-
         /** Major version number. */
         final int major;
 
@@ -112,10 +104,7 @@ public class JavaUtils {
         /** Patch update number. */
         final int patch;
 
-        ////////////////////////////////////////////////////////////////////////
         // Constructors                                                       //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Constructs an instance of Java VM version number.
          * <p/>
@@ -128,10 +117,7 @@ public class JavaUtils {
             this.patch = patch;
         }
 
-        ////////////////////////////////////////////////////////////////////////
         // Methods                                                            //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Compares this <code>JavaVersion</code> object against another one.
          * <p/>
@@ -190,10 +176,7 @@ public class JavaUtils {
 
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     // TODO: This test should be rewritten to use probe class to retrieve
     //       system properties from JRE.
     /**

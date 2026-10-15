@@ -193,7 +193,7 @@ public abstract class AttrSet implements AttributeSet, Iterable<Object> {
      * @param valueType class that values should be of (used for debugging purposes only
      *  and may be null).
      */
-    private static synchronized void registerSharedKey(Object key, Class valueType) {
+    private static synchronized void registerSharedKey(Object key, Class<?> valueType) {
         if (!sharedKeys.containsKey(key)) {
             KeyWrapper keyWrapper = new KeyWrapper(key, valueType);
             sharedKeys.put(key, keyWrapper);
@@ -311,10 +311,10 @@ public abstract class AttrSet implements AttributeSet, Iterable<Object> {
     final AttrSet cachedOverride(Object override) {
         AttrSet attrSet;
         if (overrideCache == null) {
-            overrideCache = new WeakHashMap<AttrSet,WeakReference<AttrSet>>(4);
+            overrideCache = new WeakHashMap<>(4);
             attrSet = null;
         } else {
-            WeakReference<AttrSet> ref = (WeakReference<AttrSet>) ((Map<?,?>)overrideCache).get(override);
+            WeakReference<AttrSet> ref = overrideCache.get(override);
             attrSet = (ref != null) ? ref.get() : null;
         }
         overrideGets++;
@@ -906,13 +906,13 @@ public abstract class AttrSet implements AttributeSet, Iterable<Object> {
         
         final Object key;
 
-        final Class valueType;
+        final Class<?> valueType;
         
         final int order; // used for ordering pairs in sharedPairs array
 
         final int keyHashCode;
 
-        KeyWrapper(Object key, Class valueType) {
+        KeyWrapper(Object key, Class<?> valueType) {
             this.key = key;
             this.valueType = valueType;
             this.order = orderCounter++;

@@ -69,7 +69,7 @@ import org.openide.util.Parameters;
  *   insertion stage immediately before the text is inserted into a document. At this
  *   time the document is already write locked, but the interceptors are not expected
  *   to modify its content directly. Instead they can change the text that will be
- *   inserted by calling {@link MutableContext#setText(java.lang.String, int)} method.
+ *   inserted by calling {@link MutableContext#setText(java.lang.String, int, int, int...)} method.
  *   The text insertion is strictly controlled by the infrastructure and has to obey some
  *   additional rules (eg. correctly replacing selected text, handling insert vs override
  *   modes of the caret, etc). The first interceptor that modifies the insertion text
@@ -154,7 +154,7 @@ public interface TypedBreakInterceptor {
      * by the infrastructure.
      *
      * @param context The context object providing information necessary for processing
-     *   the event. The {@link Context#getText()} method will return text that was
+     *   the event. The {@code Context.getText()} method will return text that was
      *   inserted into the document at the end of the text-insertion stage.
      * 
      * @throws BadLocationException Since the document is not locked prior calling this

@@ -25,7 +25,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -64,7 +63,6 @@ import org.netbeans.spi.viewmodel.TreeModel;
 import org.netbeans.spi.viewmodel.UnknownTypeException;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
 
@@ -293,8 +291,9 @@ public class DebuggingTreeModel extends CachedChildrenTreeModel {
     }
 
     private Object[] getTopLevelThreadsAndGroups() {
-        List result = new LinkedList();
-        Set groups = new HashSet();
+        List<Object> result = new LinkedList<>();
+        Set<JPDADVThreadGroup> groups = new HashSet<>();
+
         for (JPDAThread thread : debugger.getThreadsCollector().getAllThreads()) {
             JPDAThreadGroup group = thread.getParentThreadGroup();
             if (group == null) {
@@ -494,7 +493,7 @@ public class DebuggingTreeModel extends CachedChildrenTreeModel {
             } else {
                 return ;
             }
-            List nodes = new ArrayList();
+            List<Object> nodes = new ArrayList<>();
             DebuggingTreeModel tm = getModel();
             if (tg == null || !showThreadGroups) {
                 nodes.add(ROOT);
@@ -512,7 +511,7 @@ public class DebuggingTreeModel extends CachedChildrenTreeModel {
                     task = createTask();
                 }
                 if (nodesToRefresh == null) {
-                    nodesToRefresh = new LinkedHashSet<Object>();
+                    nodesToRefresh = new LinkedHashSet<>();
                 }
                 nodesToRefresh.addAll(nodes);
                 task.schedule(100);

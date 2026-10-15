@@ -176,7 +176,7 @@ public abstract class SyncSupport {
             
             // look for comodifications
 
-            Vector modified = new Vector();
+            Vector<Representation> modified = new Vector<>();
             for (int i=0; i<all.length; i++) {
                 if (all[i].represents(type)) {
                     master = all[i];
@@ -190,7 +190,7 @@ public abstract class SyncSupport {
             }
             
             if (modified.size() > 1) {
-                master = selectMasterRepresentation((Representation[])modified.toArray(new Representation[0]));
+                master = selectMasterRepresentation(modified.toArray(new Representation[0]));
             }
 
             if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("\t" + System.identityHashCode(this) + " master: " + master); // NOI18N

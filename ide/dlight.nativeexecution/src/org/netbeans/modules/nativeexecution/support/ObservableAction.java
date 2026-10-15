@@ -87,7 +87,7 @@ public abstract class ObservableAction<T>
      * @see #invoke()
      * @see #actionPerformed(java.awt.event.ActionEvent)
      */
-    abstract protected T performAction();
+    protected abstract T performAction();
 
     /**
      * Invoked when an action occurs. <p>
@@ -147,7 +147,7 @@ public abstract class ObservableAction<T>
         List<ObservableActionListener<T>> ll =
                 new ArrayList<>(listeners);
 
-        for (ObservableActionListener l : ll) {
+        for (ObservableActionListener<T> l : ll) {
             l.actionStarted(this);
         }
     }

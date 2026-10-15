@@ -1,0 +1,5 @@
+Code completion result for source line:
+new.targ|et;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     target(): undefined             [PUBLIC]   metaproperties.js

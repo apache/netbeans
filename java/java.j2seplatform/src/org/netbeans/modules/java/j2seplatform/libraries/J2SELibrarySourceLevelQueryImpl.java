@@ -88,7 +88,7 @@ public class J2SELibrarySourceLevelQueryImpl implements SourceLevelQueryImplemen
                 if (sourceRoots.isEmpty()) {
                     continue;
                 }
-                ClassPath cp = ClassPathSupport.createClassPath(sourceRoots.toArray(new URL[sourceRoots.size()]));
+                ClassPath cp = ClassPathSupport.createClassPath(sourceRoots.toArray(new URL[0]));
                 FileObject root = cp.findOwnerRoot(javaFile);
                 if (root != null) {
                     setLastUsedRoot(root, lib);
@@ -137,9 +137,9 @@ public class J2SELibrarySourceLevelQueryImpl implements SourceLevelQueryImplemen
         }
     }
     
-    private FileObject getClassFile (List cpRoots) {
-        for (Iterator it = cpRoots.iterator(); it.hasNext();) {
-            FileObject root = URLMapper.findFileObject((URL)it.next());
+    private FileObject getClassFile (List<URL> cpRoots) {
+        for (Iterator<URL> it = cpRoots.iterator(); it.hasNext();) {
+            FileObject root = URLMapper.findFileObject(it.next());
             if (root == null) {
                 continue;
             }

@@ -119,7 +119,7 @@ public class ParameterInfo {
         }
     
         if (type == Character.class) {
-            return Character.valueOf('\0');
+            return '\0';
         }
         
         return null;

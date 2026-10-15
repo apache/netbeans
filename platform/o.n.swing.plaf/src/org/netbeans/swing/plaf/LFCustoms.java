@@ -22,7 +22,6 @@ package org.netbeans.swing.plaf;
 import java.awt.Color;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
-import javax.swing.plaf.ColorUIResource;
 import javax.swing.text.AttributeSet;
 
 /** Look and feel customizations interface.
@@ -46,7 +45,7 @@ import javax.swing.text.AttributeSet;
  * &quot;Nb.[return value of the custom look and feel's getID() method]LFCustoms&quot;.
  * <p>
  * Given that all this class does is return some keys and values, in the future it may be replaced by an
- * XML file similar to <a href="ui.netbeans.org/project/ui/docs/ui/themes/themes.html">theme files</a>.
+ * XML file similar to <a href="https://netbeans.apache.org/projects/ui/themes/themes">theme files</a>.
  * <p>
  * This class defines a number of relatively self-explanatory UIManager keys for things used in various parts
  * of NetBeans.
@@ -59,9 +58,13 @@ public abstract class LFCustoms {
     private Object[] guaranteedKeysAndValues = null;
     protected static final String WORKPLACE_FILL = "nb_workplace_fill"; //NOI18N
 
-    /** convert color
+    /**
+     * convert color
+     *
      * @since 1.27
-     *  @return hexadecimal value */
+     * @param color as integer value
+     * @return hexadecimal value
+     */
     public static String getHexString(int color) {
             String result = Integer.toHexString(color).toUpperCase();
             if (result.length() == 1) {
@@ -79,9 +82,9 @@ public abstract class LFCustoms {
     public static String getTextFgColorHTML() {
         synchronized(LFCustoms.class) {
             if (textFgColorHTML.isEmpty()) {
-                    Object o = UIManager.getLookAndFeel().getDefaults().get("windowText");
+                    Object o = UIManager.getLookAndFeelDefaults().get("windowText");
                     if( null == o )
-                        o = UIManager.getLookAndFeel().getDefaults().get("Tree.foreground");
+                        o = UIManager.getLookAndFeelDefaults().get("Tree.foreground");
                     if (o instanceof Color) {
                             Color resource = (Color)o;
                             textFgColorHTML = "<font color=#" + getHexString(resource.getRed()) + getHexString(resource.getGreen()) + getHexString(resource.getBlue())+">";
@@ -103,9 +106,9 @@ public abstract class LFCustoms {
     public static Color getTextFgColor() {
         synchronized(LFCustoms.class) {
             if (textFgColor == null) {
-                Object o = UIManager.getLookAndFeel().getDefaults().get("windowText");
+                Object o = UIManager.getLookAndFeelDefaults().get("windowText");
                 if( null == o )
-                    o = UIManager.getLookAndFeel().getDefaults().get("Tree.foreground");
+                    o = UIManager.getLookAndFeelDefaults().get("Tree.foreground");
                 if (o instanceof Color) {
                     textFgColor = (Color) o;
                 } else {
@@ -138,6 +141,7 @@ public abstract class LFCustoms {
 
     /** convert color to brighter one if window foreground text color is bright color
      * or convert color to darker one if window foreground text color is dark color
+     * @param color to shift
      * @return converted color
      * @since 1.27
      */
@@ -151,6 +155,7 @@ public abstract class LFCustoms {
 
     /** get foreground text color from AttributeSet
      *  or get window foreground text color if AttributeSet doesn't define foreground text color
+     * @param a attributeset to get color from
      * @return  foreground text color
      * @since 1.27
      */
@@ -239,7 +244,7 @@ public abstract class LFCustoms {
     /**
      * LFCustoms implementations which use UIBootstrapValue.Lazy should return
      * any keys that it will install here, so they can be merged into the list
-     * of things to clear on L&F change.
+     * of things to clear on L&amp;F change.
      *
      * @return an array of objects or null.
      */
@@ -312,11 +317,15 @@ public abstract class LFCustoms {
     //custom fonts based on this value
     protected static final String DEFAULT_FONT_SIZE = "nbDefaultFontSize"; //NOI18N
 
+    //Color Profile
+    protected static final String EDITOR_PREFERRED_COLOR_PROFILE = "nb.preferred.color.profile"; //NOI18N
+
     //Editor
     protected static final String EDITOR_STATUS_LEFT_BORDER = "Nb.Editor.Status.leftBorder"; //NOI18N
     protected static final String EDITOR_STATUS_INNER_BORDER = "Nb.Editor.Status.innerBorder"; //NOI18N
     protected static final String EDITOR_STATUS_RIGHT_BORDER = "Nb.Editor.Status.rightBorder"; //NOI18N
     protected static final String EDITOR_STATUS_ONLYONEBORDER = "Nb.Editor.Status.onlyOneBorder"; //NOI18N
+    protected static final String EDITOR_TABSCOMPONENT_BORDER = "Nb.Editor.TabsComponent.border"; //NOI18N
     protected static final String EDITOR_TOOLBAR_BORDER = "Nb.Editor.Toolbar.border"; //NOI18N
     protected static final String EDITOR_ERRORSTRIPE_SCROLLBAR_INSETS = "Nb.Editor.ErrorStripe.ScrollBar.Insets"; //NOI18N
 
@@ -420,4 +429,18 @@ public abstract class LFCustoms {
     public static final String PROGRESS_CANCEL_BUTTON_ICON = "nb.progress.cancel.icon";
     public static final String PROGRESS_CANCEL_BUTTON_ROLLOVER_ICON = "nb.progress.cancel.icon.mouseover";
     public static final String PROGRESS_CANCEL_BUTTON_PRESSED_ICON = "nb.progress.cancel.icon.pressed";
+
+    /**
+     * Keys used by the options dialog module.
+     */
+    public static final String OPTIONS_USE_UI_DEFAULT_COLORS = "nb.options.useUIDefaultsColors";
+    public static final String OPTIONS_CATEGORIES_SEPARATOR_COLOR = "nb.options.categories.separatorColor";
+    public static final String OPTIONS_CATEGORIES_BUTTON_USE_NIMBUS = "nb.options.categories.button.useNimbusCategoryButton";
+
+    /**
+     * FileChooser
+     */
+    public static final String FILECHOOSER_SHORTCUTS_FILESFUNCTION = "FileChooser.shortcuts.filesFunction";
+    public static final String FILECHOOSER_SHORTCUTS_PANEL_FACTORY = "FileChooser.shortcuts.panel.factory";
+    public static final String FILECHOOSER_FAVORITES_ENABLED = "FileChooser.favorites.enabled";
 }

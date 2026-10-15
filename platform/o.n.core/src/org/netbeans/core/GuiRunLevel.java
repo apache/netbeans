@@ -163,7 +163,7 @@ public class GuiRunLevel implements RunLevel {
     private static void maybeDie(Object o) {
         // finish starting
         if (System.getProperty("netbeans.kill") != null) {
-            org.netbeans.TopSecurityManager.exit(5);
+            org.netbeans.NbExit.exit(5);
         }
 
         // close IDE

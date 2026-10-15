@@ -28,11 +28,13 @@ import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.WeakHashMap;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -64,7 +66,6 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 import org.openide.util.actions.Presenter;
 
 /**
@@ -73,7 +74,7 @@ import org.openide.util.actions.Presenter;
  */
 public class DebugMainProjectAction implements Action, Presenter.Toolbar, PopupMenuListener {
 
-    private static WeakSet<AttachHistorySupport> ahs = null;
+    private static Set<AttachHistorySupport> ahs = null;
     
     private final Action delegate;
     private final DebugHistorySupport debugHistorySupport;
@@ -175,7 +176,7 @@ public class DebugMainProjectAction implements Action, Presenter.Toolbar, PopupM
 
     private static synchronized void addAttachHistorySupport(AttachHistorySupport support) {
         if (ahs == null) {
-            ahs = new WeakSet<AttachHistorySupport>();
+            ahs = Collections.newSetFromMap(new WeakHashMap<>());
         }
         ahs.add(support);
     }

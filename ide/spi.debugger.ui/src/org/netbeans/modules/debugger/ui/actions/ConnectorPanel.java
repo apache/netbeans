@@ -26,10 +26,7 @@ import java.awt.Insets;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 
 import java.util.List;
@@ -100,7 +97,7 @@ public class ConnectorPanel extends JPanel implements ActionListener, HelpCtx.Pr
                 Properties.getDefault ().getProperties ("debugger").getString ("last_attach_type", null);
         int defaultIndex = 0;
         int i, k = attachTypes.size ();
-        Collections.sort(attachTypes, new Comparator<AttachType>() {
+        attachTypes.sort(new Comparator<AttachType>() {
             @Override
             public int compare(AttachType at1, AttachType at2) {
                 if (FIRST_ATTACH_TYPE.equals(at1.getClass().getName())) {

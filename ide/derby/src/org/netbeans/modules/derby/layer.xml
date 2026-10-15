@@ -38,6 +38,10 @@
                 <attr name="instanceCreate" methodvalue="org.netbeans.modules.derby.RegisterDerby.getDefault"/>
                 <attr name="instanceOf" stringvalue="org.netbeans.spi.db.explorer.DatabaseRuntime"/>
             </file>
+            <file name="DerbyRuntimeModular.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.derby.RegisterDerby.getModular"/>
+                <attr name="instanceOf" stringvalue="org.netbeans.spi.db.explorer.DatabaseRuntime"/>
+            </file>
         </folder>
     </folder>
 </filesystem>

@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.source.parsing;
 
+import com.sun.tools.javac.api.ClientCodeWrapper;
 import java.io.IOException;
 import javax.tools.ForwardingJavaFileObject;
 import org.netbeans.api.annotations.common.NonNull;
@@ -26,6 +27,7 @@ import org.netbeans.api.annotations.common.NonNull;
  *
  * @author Dusan Balek
  */
+@ClientCodeWrapper.Trusted
 public class ForwardingPrefetchableJavaFileObject extends ForwardingJavaFileObject<PrefetchableJavaFileObject> implements PrefetchableJavaFileObject {
 
     public ForwardingPrefetchableJavaFileObject(@NonNull final PrefetchableJavaFileObject delegate) {

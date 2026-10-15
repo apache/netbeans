@@ -1,0 +1,14 @@
+enum |>MARK_OCCURRENCES:Simple<| {
+        |>MARK_OCCURRENCES:Simple<|::CASE2;
+        |>MARK_OCCURRENCES:Simple<|::CONSTANT1;
+        |>MARK_OCCURRENCES:Simple<|::publicStaticMethod();
+        |>MARK_OCCURRENCES:Simple<|::CASE1->publicMethod();
+        |>MARK_OCCURRENCES:Si^mple<|::CASE1::publicStaticMethod();
+use Enum1\|>MARK_OCCURRENCES:Simple<|;
+|>MARK_OCCURRENCES:Simple<|::CASE1::CONSTANT1;
+|>MARK_OCCURRENCES:Simple<|::CASE1::CASE2;
+|>MARK_OCCURRENCES:Simple<|::CASE2->publicMethod();
+|>MARK_OCCURRENCES:Simple<|::CASE2::publicStaticMethod();
+|>MARK_OCCURRENCES:Simple<|::publicStaticMethod(); // 2
+|>MARK_OCCURRENCES:Simple<|::staticTest();
+$i = |>MARK_OCCURRENCES:Simple<|::CASE2;

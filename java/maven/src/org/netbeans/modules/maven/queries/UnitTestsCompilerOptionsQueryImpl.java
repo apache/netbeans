@@ -18,13 +18,9 @@
  */
 package org.netbeans.modules.maven.queries;
 
-import com.sun.source.tree.CompilationUnitTree;
-import com.sun.source.tree.ModuleTree;
-import com.sun.source.tree.Tree;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -33,15 +29,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.apache.maven.project.MavenProject;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.queries.SourceLevelQuery;
-import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import static org.netbeans.modules.maven.classpath.ClassPathProviderImpl.MODULE_INFO_JAVA;
@@ -64,7 +61,6 @@ import org.openide.util.WeakListeners;
  * @see org.netbeans.modules.java.api.common.queries.UnitTestsCompilerOptionsQueryImpl
  */
 public final class UnitTestsCompilerOptionsQueryImpl implements CompilerOptionsQueryImplementation {
-    private static final Logger LOG = Logger.getLogger(UnitTestsCompilerOptionsQueryImpl.class.getName());
     private static final SpecificationVersion JDK9 = new SpecificationVersion("9"); //NOI18N
 
     private final AtomicReference<ResultImpl> result;
@@ -152,7 +148,7 @@ public final class UnitTestsCompilerOptionsQueryImpl implements CompilerOptionsQ
                                 testModuleInfo == null ?
                                     TestMode.INLINED:
                                     TestMode.MODULE;
-                        args = mode.createArguments(srcModuleInfo, testModuleInfo);
+                        args = mode.createArguments(proj, srcModuleInfo, testModuleInfo);
                         synchronized (this) {
                             if (cache == null) {
                                 cache = args;
@@ -282,32 +278,7 @@ public final class UnitTestsCompilerOptionsQueryImpl implements CompilerOptionsQ
         
         @CheckForNull
         private static String getModuleName(@NonNull final FileObject moduleInfo) {
-            try {
-                final String[] res = new String[1];
-                final JavaSource src = JavaSource.forFileObject(moduleInfo);
-                if (src != null) {
-                    src.runUserActionTask((cc) -> {
-                        cc.toPhase(JavaSource.Phase.PARSED);
-                        final CompilationUnitTree cu = cc.getCompilationUnit();
-                        for (Tree decl : cu.getTypeDecls()) {
-                            if (decl.getKind().name().equals("MODULE")) {
-                                res[0] = ((ModuleTree)decl).getName().toString();
-                                break;
-                            }
-                        }
-                    }, true);
-                }
-                return res[0];
-            } catch (IOException ioe) {
-                LOG.log(
-                        Level.WARNING,
-                        "Cannot read module declaration in: {0} due to: {1}",   //NOI18N
-                        new Object[]{
-                            FileUtil.getFileDisplayName(moduleInfo),
-                            ioe.getMessage()
-                        });
-                return null;
-            }
+            return SourceUtils.parseModuleName(moduleInfo);
         }
     
         private static enum TestMode {
@@ -316,7 +287,7 @@ public final class UnitTestsCompilerOptionsQueryImpl implements CompilerOptionsQ
              */
             LEGACY {
                 @Override
-                List<String> createArguments(
+                List<String> createArguments(NbMavenProjectImpl project,
                         @NullAllowed final FileObject srcModuleInfo,
                         @NullAllowed final FileObject testModuleInfo) {
                     return Collections.emptyList();
@@ -327,7 +298,7 @@ public final class UnitTestsCompilerOptionsQueryImpl implements CompilerOptionsQ
              */
             UNNAMED {
                 @Override
-                List<String> createArguments(
+                List<String> createArguments(NbMavenProjectImpl project,
                         @NullAllowed final FileObject srcModuleInfo,
                         @NullAllowed final FileObject testModuleInfo) {
                     return Collections.emptyList();
@@ -338,7 +309,7 @@ public final class UnitTestsCompilerOptionsQueryImpl implements CompilerOptionsQ
              */
             INLINED {
                 @Override
-                List<String> createArguments(
+                List<String> createArguments(NbMavenProjectImpl project,
                         @NullAllowed final FileObject srcModuleInfo,
                         @NullAllowed final FileObject testModuleInfo) {
                     final String moduleName = getModuleName(srcModuleInfo);
@@ -357,22 +328,35 @@ public final class UnitTestsCompilerOptionsQueryImpl implements CompilerOptionsQ
              */
             MODULE {
                 @Override
-                List<String> createArguments(
+                List<String> createArguments(NbMavenProjectImpl project,
                         @NullAllowed final FileObject srcModuleInfo,
                         @NullAllowed final FileObject testModuleInfo) {
-                    final String moduleName = getModuleName(testModuleInfo);
-                    if (moduleName == null) {
+                    final String testModuleName = getModuleName(testModuleInfo);
+                    if (testModuleName == null) {
                         return Collections.emptyList();
+                    }
+                    final String srcModuleName = getModuleName(srcModuleInfo);
+                    if (srcModuleName == null) {
+                        return Collections.emptyList();
+                    }
+                    if (testModuleName != null && srcModuleName != null && testModuleName.equals(srcModuleName)) {
+                        String paths =
+                            Stream.concat(Arrays.stream(project.getSourceRoots(false)),
+                                          Arrays.stream(project.getGeneratedSourceRoots(false)))
+                                  .filter(u -> "file".equals(u.getScheme()))
+                                  .map(u -> u.getPath())
+                                  .collect(Collectors.joining(System.getProperty("path.separator")));
+                        return Collections.unmodifiableList(Arrays.asList("--patch-module", srcModuleName + "=" + paths));
                     }
                     final List<String> result = Arrays.asList(
                         "--add-reads",                                  //NOI18N
-                        String.format("%s=ALL-UNNAMED", moduleName));   //NOI18N
+                        String.format("%s=ALL-UNNAMED", testModuleName));   //NOI18N
                     return Collections.unmodifiableList(result);
                 }
             };
 
             @NonNull
-            abstract List<String> createArguments(
+            abstract List<String> createArguments(NbMavenProjectImpl project,
                     @NullAllowed final FileObject srcModuleInfo,
                     @NullAllowed final FileObject testModuleInfo);
         }

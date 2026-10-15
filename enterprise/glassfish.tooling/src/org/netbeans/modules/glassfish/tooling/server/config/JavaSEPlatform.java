@@ -22,16 +22,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * JavaSE platforms supported by Glassfish.
+ * JavaSE platforms supported by GlassFish.
  * <p/>
  * @author Tomas Kraus, Peter Benedikovic
  */
 public enum JavaSEPlatform {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Enum values                                                            //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** JavaSE 1.1. */
     v1_1,
     /** JavaSE 1.2. */
@@ -44,46 +41,51 @@ public enum JavaSEPlatform {
     v1_5,
     /** JavaSE 1.6. */
     v1_6,
-    /** JavaEE 1.7. */
+    /** JavaSE 1.7. */
     v1_7,
-    /** JavaEE 1.8. */
-    v1_8;
+    /** JavaSE 1.8. */
+    v1_8,
+    /** JavaSE 11. */
+    v11,
+    /** JavaSE 12. */
+    v12,
+    /** JavaSE 13. */
+    v13,
+    /** JavaSE 14. */
+    v14,
+    /** JavaSE 15. */
+    v15,
+    /** JavaSE 16. */
+    v16,
+    /** JavaSE 17. */
+    v17,
+    /** JavaSE 18. */
+    v18,
+    /** JavaSE 19. */
+    v19,
+    /** JavaSE 20. */
+    v20,
+    /** JavaSE 21. */
+    v21,
+    /** JavaSE 22. */
+    v22,
+    /** JavaSE 23. */
+    v23,
+    /** JavaSE 24. */
+    v24,
+    /** JavaSE 25. */
+    v25,
+    /** JavaSE 26. */
+    v26;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish JavaEE platform enumeration length. */
     public static final int length = JavaSEPlatform.values().length;
-    
+
     /** JavaEE platform version elements separator character. */
     public static final char SEPARATOR = '.';
 
-    /**  A <code>String</code> representation of v1_1 value. */
-    static final String V1_1_STR = "1.1";
-
-    /**  A <code>String</code> representation of v1_2 value. */
-    static final String V1_2_STR = "1.2";
-
-    /**  A <code>String</code> representation of v1_3 value. */
-    static final String V1_3_STR = "1.3";
-
-    /**  A <code>String</code> representation of v1_4 value. */
-    static final String V1_4_STR = "1.4";
-
-    /**  A <code>String</code> representation of v1_5 value. */
-    static final String V1_5_STR = "1.5";
-
-    /**  A <code>String</code> representation of v1_6 value. */
-    static final String V1_6_STR = "1.6";
-
-    /**  A <code>String</code> representation of v1_7 value. */
-    static final String V1_7_STR = "1.7";
-
-    /**  A <code>String</code> representation of v1_8 value. */
-    static final String V1_8_STR = "1.8";
-
-    /** 
+    /**
      * Stored <code>String</code> values for backward <code>String</code>
      * conversion.
      */
@@ -97,10 +99,7 @@ public enum JavaSEPlatform {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Returns a <code>JavaSEPlatform</code> with a value represented by the
      * specified <code>String</code>. The <code>JavaSEPlatform</code> returned
@@ -122,10 +121,7 @@ public enum JavaSEPlatform {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Convert JavaEE platform version value to <code>String</code>.
      * <p/>
@@ -133,19 +129,7 @@ public enum JavaSEPlatform {
      */
     @Override
     public String toString() {
-        switch (this) {
-            case v1_1:     return V1_1_STR;
-            case v1_2:     return V1_2_STR;
-            case v1_3:     return V1_3_STR;
-            case v1_4:     return V1_4_STR;
-            case v1_5:     return V1_5_STR;
-            case v1_6:     return V1_6_STR;
-            case v1_7:     return V1_7_STR;
-            case v1_8:     return V1_8_STR;
-            // This is unrecheable. Being here means this class does not handle
-            // all possible values correctly.
-            default:   throw new ServerConfigException(
-                        ServerConfigException.INVALID_SE_PLATFORM_VERSION);
-        }
+        String n = name();
+        return n.startsWith("v1_") ? "1." + n.substring(3) : n.substring(1);
     }
 }

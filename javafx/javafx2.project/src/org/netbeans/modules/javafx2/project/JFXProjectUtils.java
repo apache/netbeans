@@ -31,6 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
+
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.xml.parsers.DocumentBuilder;
@@ -41,6 +42,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -61,6 +63,8 @@ import org.netbeans.modules.java.j2seproject.api.J2SEPropertyEvaluator;
 import org.netbeans.modules.javafx2.platform.api.JavaFXPlatformUtils;
 import org.netbeans.modules.javafx2.platform.api.JavaFxRuntimeInclusion;
 import org.netbeans.modules.javafx2.project.JavaFXProjectWizardIterator.WizardType;
+import org.netbeans.modules.javafx2.project.fxml.SourceGroupSupport;
+import org.netbeans.modules.javafx2.project.fxml.SourceGroupSupport.SourceGroupProxy;
 import org.netbeans.modules.javafx2.project.ui.JSEApplicationClassChooser;
 import org.netbeans.spi.project.ProjectIconAnnotator;
 import org.netbeans.spi.project.support.ant.AntProjectHelper;
@@ -896,7 +900,7 @@ public final class JFXProjectUtils {
         }
         Document xmlDoc = null;
         try {
-            xmlDoc = XMLUtil.parse(new InputSource(buildXmlFO.toURL().toExternalForm()), false, true, null, null);
+            xmlDoc = XMLUtil.parse(new InputSource(buildXmlFO.toURL().toExternalForm()), false, true, true, null, null);
         } catch (SAXException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -1646,8 +1650,9 @@ public final class JFXProjectUtils {
     public static Map<String,String> copyMap(Map<String,String> map2Copy) {
         Map<String,String> newMap = new HashMap<String,String>();
         if(map2Copy != null) {
-            for(String key : map2Copy.keySet()) {
-                String value = map2Copy.get(key);
+            for(Map.Entry<String, String> entry : map2Copy.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue();
                 newMap.put(key, value);
             }
         }
@@ -1775,6 +1780,18 @@ public final class JFXProjectUtils {
                 throw (IOException) mux.getException();
             }
         }
+    }
+
+    private static final String MODULE_INFO = "module-info.java"; // NOI18N
+
+    // as in org.netbeans.modules.maven.api.ModuleInfoUtils.hasModuleInfoInSource;
+    public static boolean hasModuleInfo(SourceGroupSupport support) {
+        for (SourceGroupProxy sourceGroup : support.getSourceGroups()) {
+            if(sourceGroup.getRootFolder().getFileObject(MODULE_INFO) != null) {
+                return true;
+            }
+        }
+        return false;
     }
     
 }

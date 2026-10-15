@@ -106,6 +106,7 @@ public enum HTMLTokenId implements TokenId {
 
     private final String primaryCategory;
     private static final String JAVASCRIPT_MIMETYPE = "text/javascript";//NOI18N
+    private static final String SCRIPT_TYPE_MODULE = "module"; //NOI18N
     private static final String BABEL_MIMETYPE = "text/babel"; //NOI18N
     private static final String STYLE_MIMETYPE = "text/css";//NOI18N
     /**
@@ -207,14 +208,20 @@ public enum HTMLTokenId implements TokenId {
                     break;
 
                 case VALUE_CSS:
-                    mimeType = STYLE_MIMETYPE;
+                    //the VALUE_CSS_TOKEN_TYPE_PROPERTY property is null for the contents
+                    //of style attributes and tags. These should be treated as embedded
+                    //CSS and passed to the CSS lexer, while class and id attributes
+                    //are treated as normal constructs
+                    if ((String) token.getProperty(HTMLTokenId.VALUE_CSS_TOKEN_TYPE_PROPERTY) == null) {
+                        mimeType = STYLE_MIMETYPE;
 
-                    ptype = token.partType();
-                    startSkipLen = ptype == PartType.COMPLETE || ptype == PartType.START ? 1 : 0;
-                    endSkipLen = ptype == PartType.COMPLETE || ptype == PartType.END ? 1 : 0;
-                    //do not join css code sections in attribute value between each other, only token parts inside one value
-                    joinSections = !(ptype == PartType.END || ptype == PartType.COMPLETE);
-                    break;
+                        ptype = token.partType();
+                        startSkipLen = ptype == PartType.COMPLETE || ptype == PartType.START ? 1 : 0;
+                        endSkipLen = ptype == PartType.COMPLETE || ptype == PartType.END ? 1 : 0;
+                        //do not join css code sections in attribute value between each other, only token parts inside one value
+                        joinSections = !(ptype == PartType.END || ptype == PartType.COMPLETE);
+                        break;
+                    }
 
                 case VALUE:
                     //HtmlLexerPlugin can inject a custom embdedding to html tag attributes,
@@ -230,7 +237,15 @@ public enum HTMLTokenId implements TokenId {
 
                 case SCRIPT:
                     String scriptType = (String)token.getProperty(SCRIPT_TYPE_TOKEN_PROPERTY);
-                    mimeType = scriptType != null ? scriptType : JAVASCRIPT_MIMETYPE;
+                    if (scriptType != null) {
+                        if (SCRIPT_TYPE_MODULE.equals(scriptType)) {
+                            mimeType = JAVASCRIPT_MIMETYPE;
+                        } else {
+                            mimeType = scriptType;
+                        }
+                    } else {
+                        mimeType = JAVASCRIPT_MIMETYPE;
+                    }
                     // translate text/babel mimetype to the text/javascript
                     mimeType = BABEL_MIMETYPE.equals(mimeType) ? JAVASCRIPT_MIMETYPE : mimeType;
                     break;

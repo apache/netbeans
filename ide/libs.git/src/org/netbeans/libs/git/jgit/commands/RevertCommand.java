@@ -104,7 +104,7 @@ public class RevertCommand extends GitCommand {
                     ? "Revert \"" + revertedCommit.getShortMessage() + "\"" + "\n\n" + "This reverts commit " + revertedCommit.getId().getName() + "." //NOI18N
                     : message;
             if (merger.merge(headCommit, srcParent)) {
-                if (AnyObjectId.equals(headCommit.getTree().getId(), merger.getResultTreeId())) {
+                if (AnyObjectId.isEqual(headCommit.getTree().getId(), merger.getResultTreeId())) {
                     result = NO_CHANGE_INSTANCE;
                 } else {
                     DirCacheCheckout dco = new DirCacheCheckout(repository, headCommit.getTree(), dc = repository.lockDirCache(), merger.getResultTreeId());
@@ -123,7 +123,7 @@ public class RevertCommand extends GitCommand {
                             merger.getMergeResults() == null ? null : getFiles(repository.getWorkTree(), merger.getMergeResults().keySet()),
                             getFiles(repository.getWorkTree(), merger.getFailingPaths().keySet()));
                 } else {
-                    String mergeMessageWithConflicts = new MergeMessageFormatter().formatWithConflicts(commitMessage, merger.getUnmergedPaths());
+                    String mergeMessageWithConflicts = new MergeMessageFormatter().formatWithConflicts(commitMessage, merger.getUnmergedPaths(), '#');
                     repository.writeMergeCommitMsg(mergeMessageWithConflicts);
                     result = getClassFactory().createRevertResult(GitRevertResult.Status.CONFLICTING, null, 
                             merger.getMergeResults() == null ? null : getFiles(repository.getWorkTree(), merger.getMergeResults().keySet()),

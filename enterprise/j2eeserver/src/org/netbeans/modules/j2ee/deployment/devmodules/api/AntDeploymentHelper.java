@@ -26,8 +26,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.modules.j2ee.deployment.impl.ServerInstance;
 import org.netbeans.modules.j2ee.deployment.impl.ServerRegistry;
 import org.netbeans.modules.j2ee.deployment.plugins.spi.AntDeploymentProvider;
@@ -146,7 +148,7 @@ public final class AntDeploymentHelper {
                     try
                     {
                         OutputStream fileOS = fo.getOutputStream(lock);
-                        writer = new OutputStreamWriter(fileOS, "UTF-8"); // NOI18N
+                        writer = new OutputStreamWriter(fileOS, StandardCharsets.UTF_8);
                         String outString = os.toString("UTF-8"); // NOI18N
                         writer.write(outString, 0, outString.length());
                     }
@@ -194,8 +196,8 @@ public final class AntDeploymentHelper {
             throws IOException {
         boolean retVal = false;
 
-        BufferedReader reader1 = new BufferedReader(new java.io.InputStreamReader(stream1, "UTF-8")); // NOI18N
-        BufferedReader reader2 = new BufferedReader(new java.io.InputStreamReader(stream2, "UTF-8")); // NOI18N
+        BufferedReader reader1 = new BufferedReader(new InputStreamReader(stream1, StandardCharsets.UTF_8));
+        BufferedReader reader2 = new BufferedReader(new InputStreamReader(stream2, StandardCharsets.UTF_8));
 
         for (;;) {
             String line1 = reader1.readLine();

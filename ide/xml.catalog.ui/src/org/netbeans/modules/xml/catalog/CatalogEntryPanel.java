@@ -93,6 +93,7 @@ public class CatalogEntryPanel extends javax.swing.JPanel {
         titleLabel = new javax.swing.JLabel();
         descLabel = new javax.swing.JLabel();
 
+        setToolTipText("");
         setLayout(new java.awt.GridBagLayout());
 
         buttonGroup1.add(publicRB);
@@ -172,8 +173,8 @@ public class CatalogEntryPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(20, 5, 5, 0);
         add(uriLabel, gridBagConstraints);
 
-        uriTF.setColumns(35);
         uriTF.setEditable(false);
+        uriTF.setColumns(35);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
@@ -208,7 +209,10 @@ public class CatalogEntryPanel extends javax.swing.JPanel {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 6;
         gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(20, 5, 5, 5);
         add(descLabel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents

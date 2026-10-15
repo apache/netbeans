@@ -218,8 +218,7 @@ public final class HighlightsViewFactory extends EditorViewFactory implements Hi
                     }
                             
                 }
-                boolean inlineHints = documentView().op.isInlineHintsEnable();
-                AttributeSet attrs = hList.cutSameFont(defaultFont, limitOffset, wsEndOffset, docText, inlineHints);
+                AttributeSet attrs = hList.cutSameFont(defaultFont, limitOffset, wsEndOffset, docText);
                 int length = hList.startOffset() - startOffset;
                 EditorView view = wrapWithPrependedText(new HighlightsView(length, attrs), attrs);
                 EditorView origViewUnwrapped = origView instanceof PrependedTextView ? ((PrependedTextView) origView).getDelegate() : origView;
@@ -255,9 +254,7 @@ public final class HighlightsViewFactory extends EditorViewFactory implements Hi
     }
 
     private @NonNull EditorView wrapWithPrependedText(@NonNull EditorView origView, @NullAllowed AttributeSet attrs) {
-        boolean inlineHints = documentView().op.isInlineHintsEnable();
-
-        if (attrs != null && inlineHints && attrs.getAttribute(ViewUtils.KEY_VIRTUAL_TEXT_PREPEND) instanceof String) {
+        if (attrs != null && attrs.getAttribute(ViewUtils.KEY_VIRTUAL_TEXT_PREPEND) instanceof String) {
             return new PrependedTextView(documentView().op, attrs, origView);
         }
 

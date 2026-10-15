@@ -85,7 +85,7 @@ public class CustomizerProviderImpl implements CustomizerProvider2, ProjectShara
             return;
         }
         else {
-            EjbJarProjectProperties uiProperties = new EjbJarProjectProperties( (EjbJarProject)project, updateHelper, evaluator, refHelper );        
+            EjbJarProjectProperties uiProperties = new EjbJarProjectProperties(project, updateHelper, evaluator, refHelper);        
             Lookup context = Lookups.fixed(new Object[] {
                 project,
                 uiProperties,

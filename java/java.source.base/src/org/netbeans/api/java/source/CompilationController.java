@@ -21,12 +21,15 @@ package org.netbeans.api.java.source;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullUnknown;
 import org.netbeans.modules.java.source.parsing.CompilationInfoImpl;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.java.source.parsing.JavacParserResult;
 import org.netbeans.modules.parsing.spi.Parser;
+import org.openide.filesystems.FileObject;
 import org.openide.util.Parameters;
 
 /** Class for explicit invocation of compilation phases on a java source.
@@ -39,7 +42,8 @@ import org.openide.util.Parameters;
  */
 public class CompilationController extends CompilationInfo {
     
-    
+    private final List<FileObject> forcedSources = new ArrayList<>();
+
     CompilationController(final CompilationInfoImpl impl) {        
         super(impl);
 
@@ -47,7 +51,7 @@ public class CompilationController extends CompilationInfo {
 
     /**
      * Returns an instance of the {@link CompilationController} for
-     * given {@link Parser.Result} if it is a result
+     * given {@link org.netbeans.modules.parsing.spi.Parser.Result} if it is a result
      * of a java parser.
      * @param result for which the {@link CompilationController} should be
      * returned.
@@ -70,10 +74,12 @@ public class CompilationController extends CompilationInfo {
     /** Moves the state to required phase. If given state was already reached 
      * the state is not changed. The method will throw exception if a state is 
      * illegal required. Acceptable parameters for thid method are <BR>
-     * <LI>{@link org.netbeans.api.java.source.JavaSource.Phase.PARSED}
-     * <LI>{@link org.netbeans.api.java.source.JavaSource.Phase.ELEMENTS_RESOLVED}
-     * <LI>{@link org.netbeans.api.java.source.JavaSource.Phase.RESOLVED}
-     * <LI>{@link org.netbeans.api.java.source.JavaSource.Phase.UP_TO_DATE}   
+     * <UL>
+     * <LI>{@link org.netbeans.api.java.source.JavaSource.Phase#PARSED}
+     * <LI>{@link org.netbeans.api.java.source.JavaSource.Phase#ELEMENTS_RESOLVED}
+     * <LI>{@link org.netbeans.api.java.source.JavaSource.Phase#RESOLVED}
+     * <LI>{@link org.netbeans.api.java.source.JavaSource.Phase#UP_TO_DATE}   
+     * </UL>
      * @param phase The required phase
      * @return the reached state
      * @throws IllegalArgumentException in case that given state can not be 
@@ -81,9 +87,9 @@ public class CompilationController extends CompilationInfo {
      * @throws IOException when the file cannot be red
      */    
     public @NonNull JavaSource.Phase toPhase(@NonNull JavaSource.Phase phase ) throws IOException {
-        return impl.toPhase (phase);
+        return impl.toPhase (phase, forcedSources);
     }
-    
+
     /**
      * Marks this {@link CompilationInfo} as invalid, may be used to
      * verify confinement.
@@ -97,4 +103,9 @@ public class CompilationController extends CompilationInfo {
             parser.resultFinished (false);
         }
     }
+
+    void addForceSource(FileObject file) {
+        forcedSources.add(file);
+    }
+
 }

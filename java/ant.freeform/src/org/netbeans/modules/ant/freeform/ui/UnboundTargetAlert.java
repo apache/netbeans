@@ -95,7 +95,7 @@ public final class UnboundTargetAlert extends JPanel {
         if (script != null) {
             try {
                 List<String> targets = AntScriptUtils.getCallableTargetNames(script);
-                selectCombo.setModel(new DefaultComboBoxModel(targets.toArray(new String[targets.size()])));
+                selectCombo.setModel(new DefaultComboBoxModel(targets.toArray(new String[0])));
                 selectCombo.setSelectedItem("");
             } catch (IOException x) {/* ignore */}
         }

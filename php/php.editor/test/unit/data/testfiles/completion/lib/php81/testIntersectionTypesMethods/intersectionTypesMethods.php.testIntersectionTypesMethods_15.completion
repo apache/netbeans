@@ -1,0 +1,5 @@
+Code completion result for source line:
+public function childClassMethod(TestClass&\Test1\Intersection1 $object, TestClass&\Test1\In|tersection1 $object2): TestClass&\Test1\Intersection1 {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Intersection1                   [PUBLIC]   Test1
+CLASS      Intersection2                   [PUBLIC]   Test1

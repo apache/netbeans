@@ -58,9 +58,9 @@ public class PersistenceObjectRegistry
     }
 
     public static Object createInstance(String classname, FileObject form)
-        throws InstantiationException, IllegalAccessException, ClassNotFoundException
+        throws ReflectiveOperationException
     {
-        return loadClass(classname, form).newInstance();
+        return loadClass(classname, form).getDeclaredConstructor().newInstance();
     }
 
     public static Class loadClass(String name, FileObject form)

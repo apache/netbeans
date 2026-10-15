@@ -24,6 +24,7 @@ import java.beans.PropertyVetoException;
 import java.io.*;
 import java.lang.ref.*;
 import java.lang.reflect.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.*;
 import org.openide.ServiceType;
@@ -49,14 +50,14 @@ import org.openide.util.lookup.*;
 * <p>Use {@link #create} and {@link #remove} to make the objects.
 * Better yet, use an XML filesystem to install them declaratively.
 * <p>
-* Instance data object by default recognizes all files with <tt>.instance</tt>
+* Instance data object by default recognizes all files with <code>.instance</code>
 * suffix. Such file can have associated optional file attributes:
 * <dl>
-* <!--  <dt><tt>instanceClass</tt> <dd><code>String</code> identifing class of created instance
+* <!--  <dt><code>instanceClass</tt> <dd><code>String</code> identifing class of created instance
 *   (otherwise class name is derived from file name). -->
-*   <dt><tt>instanceCreate</tt> <dd>instantionalized <code>Object</code> (e.g. created by
-*     <tt>methodvalue</tt> at XML filesystem)
-*   <dt><tt>instanceOf</tt> <dd><code>String</code> that is tokenized at ':', ',', ';' and
+*   <dt><code>instanceCreate</code> <dd>instantionalized <code>Object</code> (e.g. created by
+*     <code>methodvalue</code> at XML filesystem)
+*   <dt><code>instanceOf</code> <dd><code>String</code> that is tokenized at ':', ',', ';' and
 *   whitespace boundaries. Resulting tokens represent class names that created
 *   instance is <code>instanceof</code>. Utilizing it may improve performance.
 * </dl>
@@ -670,8 +671,8 @@ public class InstanceDataObject extends MultiDataObject implements InstanceCooki
         }
     }
 
-    private Lookup.Result cookieResult = null;
-    private Lookup.Result nodeResult = null;
+    private Lookup.Result<Node.Cookie> cookieResult = null;
+    private Lookup.Result<InstanceCookie> nodeResult = null;
     private Lookup cookiesLkp = null;
     private LookupListener cookiesLsnr = null;
     private LookupListener nodeLsnr = null;
@@ -855,7 +856,7 @@ public class InstanceDataObject extends MultiDataObject implements InstanceCooki
         return superName;
     }
 
-    private static final Set<FileObject> warnedAboutBrackets = new WeakSet<FileObject>();
+    private static final Set<FileObject> warnedAboutBrackets = Collections.newSetFromMap(new WeakHashMap<>());
     /** Make sure people stop using this syntax eventually.
      * It is better to use the file attribute, not least because some VMs
      * do not much like [] in file names (OpenVMS had problems at one point, e.g.).
@@ -945,7 +946,7 @@ public class InstanceDataObject extends MultiDataObject implements InstanceCooki
 
     // XXX #27494 Please changes to this field apply also into
     // core/naming/src/org/netbeans/core/naming/Utils class.
-    private final static int MAX_FILENAME_LENGTH = 50;
+    private static final int MAX_FILENAME_LENGTH = 50;
 
     // XXX #27494 Please changes to this method apply also into
     // core/naming/src/org/netbeans/core/naming/Utils class.
@@ -1036,11 +1037,11 @@ public class InstanceDataObject extends MultiDataObject implements InstanceCooki
         return super.handleCreateFromTemplate(df, name);
     }
 
-    /* Copy a service sanely. For settings and serializable beans, special
+    /** Copy a service sanely. For settings and serializable beans, special
      * methods are used to write out the resulting files, and the name to
      * use is taken from the *display name* of the current file, as this is
      * what the user is accustomed to seeing (for ServiceType's especially).
-     * @see <a href="http://www.netbeans.org/issues/show_bug.cgi?id=16278">Issue #16278</a>
+     * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=16278">Issue #16278</a>
      */
     @Override
     protected DataObject handleCopy(DataFolder df) throws IOException {
@@ -1543,7 +1544,7 @@ public class InstanceDataObject extends MultiDataObject implements InstanceCooki
         private InstanceDataObject result = null;
         private boolean create;
 
-        private final static Creator me = new Creator ();
+        private static final Creator me = new Creator ();
 
 
         private Creator() {
@@ -1609,7 +1610,7 @@ public class InstanceDataObject extends MultiDataObject implements InstanceCooki
             throw new IOException("missing attribute settings.convertor"); // NOI18N
         }
         ByteArrayOutputStream b = new ByteArrayOutputStream(1024);
-        Writer w = new OutputStreamWriter(b, "UTF-8"); // NOI18N
+        Writer w = new OutputStreamWriter(b, StandardCharsets.UTF_8);
         convertorWriteMethod(convertor, new WriterProvider(w, ctx), inst);
         w.close();
         return b;
@@ -1638,7 +1639,7 @@ public class InstanceDataObject extends MultiDataObject implements InstanceCooki
     }
 
     /** path where to find convertor/provider definition */
-    private final static String EA_PROVIDER_PATH = "settings.providerPath"; // NOI18N
+    private static final String EA_PROVIDER_PATH = "settings.providerPath"; // NOI18N
     private static final String EA_SUBCLASSES = "settings.subclasses"; // NOI18N
 
     /** look up appropriate convertor according to obj */

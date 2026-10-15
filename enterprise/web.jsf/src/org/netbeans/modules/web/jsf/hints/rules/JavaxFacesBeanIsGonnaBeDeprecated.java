@@ -38,11 +38,12 @@ import javax.lang.model.element.TypeElement;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeMaker;
+import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.j2ee.core.api.support.java.GenerationUtils;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
 import org.netbeans.modules.web.jsf.hints.JsfHintsContext;
 import org.netbeans.modules.web.jsf.hints.JsfHintsUtils;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.editor.hints.Severity;
@@ -91,7 +92,7 @@ public class JavaxFacesBeanIsGonnaBeDeprecated {
         List<ErrorDescription> problems = new ArrayList<>();
         final JsfHintsContext ctx = JsfHintsUtils.getOrCacheContext(hintContext);
 
-        if (ctx.getJsfVersion() == null || !ctx.getJsfVersion().isAtLeast(JSFVersion.JSF_2_2)) {
+        if (ctx.getJsfVersion() == null || !ctx.getJsfVersion().isAtLeast(JsfVersion.JSF_2_2)) {
             return problems;
         }
 
@@ -119,22 +120,22 @@ public class JavaxFacesBeanIsGonnaBeDeprecated {
         String annotationType = am.getAnnotationType().toString();
         if (DEPRECATED_TO_FIX.containsKey(annotationType)) {
             TreePath path = info.getTrees().getPath(typeElement, am);
-            fixes.add(new ChangeClassFix(info, path, typeElement, am, annotationType, DEPRECATED_TO_FIX.get(annotationType)).toEditorFix());
+            fixes.add(new ChangeClassFix(info, path, typeElement, MANAGED_BEAN.equals(annotationType), annotationType, DEPRECATED_TO_FIX.get(annotationType)).toEditorFix());
         }
         return fixes;
     }
 
     private static final class ChangeClassFix extends JavaFix {
 
-        private final TypeElement element;
-        private final AnnotationMirror annotation;
+        private final TreePathHandle element;
+        private final boolean managedBean;
         private final String deprecatedClass;
         private final String replacingClass;
 
-        public ChangeClassFix(CompilationInfo info, TreePath path, TypeElement element, AnnotationMirror annotation, String deprecatedClass, String replacingClass) {
+        public ChangeClassFix(CompilationInfo info, TreePath path, TypeElement element, boolean managedBean, String deprecatedClass, String replacingClass) {
             super(info, path);
-            this.element = element;
-            this.annotation = annotation;
+            this.element = TreePathHandle.create(element, info);
+            this.managedBean = managedBean;
             this.deprecatedClass = deprecatedClass;
             this.replacingClass = replacingClass;
         }
@@ -152,11 +153,12 @@ public class JavaxFacesBeanIsGonnaBeDeprecated {
             WorkingCopy wc = ctx.getWorkingCopy();
             wc.toPhase(JavaSource.Phase.RESOLVED);
             TreeMaker make = wc.getTreeMaker();
+            TreePath elementPath = element.resolve(wc);
 
             // rewrite annotations in case of ManagedBean
-            if (MANAGED_BEAN.equals(annotation.getAnnotationType().toString())) {
-                ModifiersTree modifiers = ((ClassTree) wc.getTrees().getTree(element)).getModifiers();
-                AnnotationTree annotationTree = (AnnotationTree) wc.getTrees().getTree(element, annotation);
+            if (managedBean && elementPath != null) {
+                ModifiersTree modifiers = ((ClassTree) elementPath.getLeaf()).getModifiers();
+                AnnotationTree annotationTree = (AnnotationTree) ctx.getPath().getLeaf();
                 List<ExpressionTree> arguments = new ArrayList<>();
                 for (ExpressionTree expressionTree : annotationTree.getArguments()) {
                     if (expressionTree.getKind() == Tree.Kind.ASSIGNMENT) {
@@ -168,7 +170,7 @@ public class JavaxFacesBeanIsGonnaBeDeprecated {
                         }
                     }
                 }
-                ModifiersTree newModifiersTree = make.removeModifiersAnnotation(modifiers, (AnnotationTree) wc.getTrees().getTree(element, annotation));
+                ModifiersTree newModifiersTree = make.removeModifiersAnnotation(modifiers, annotationTree);
                 AnnotationTree newTree = GenerationUtils.newInstance(wc).createAnnotation(replacingClass, arguments);
                 newModifiersTree = make.addModifiersAnnotation(newModifiersTree, newTree);
                 wc.rewrite(modifiers, newModifiersTree);

@@ -756,8 +756,8 @@ public class AbstractLookup extends Lookup implements Serializable {
         /** Collects all affected results R that were modified in the
          * given transaction.
          *
-         * @param modified place to add results R to
          * @param transaction the transaction indentification
+         * @param modifiedResults place to add results R to
          */
         public void endTransaction(Transaction transaction, Set<R> modifiedResults);
 
@@ -808,7 +808,7 @@ public class AbstractLookup extends Lookup implements Serializable {
     /** Extension to the default lookup item that offers additional information
      * for the data structures use in AbstractLookup
      */
-    public static abstract class Pair<T> extends Lookup.Item<T> implements Serializable {
+    public abstract static class Pair<T> extends Lookup.Item<T> implements Serializable {
         private static final long serialVersionUID = 1L;
 
         /** possition of this item in the lookup, manipulated in addPair, removePair, setPairs methods */
@@ -841,6 +841,9 @@ public class AbstractLookup extends Lookup implements Serializable {
         * <p>Typically this will produce the same result as
         * {@code c.isAssignableFrom(}{@link #getType() getType}{@code ())}
         * but may avoid loading the concrete type's class in doing so.
+        * 
+        * @param c class to check against
+        * @return true if this item can produce object of class c
         */
         protected abstract boolean instanceOf(Class<?> c);
 
@@ -939,7 +942,7 @@ public class AbstractLookup extends Lookup implements Serializable {
                 return;
             }
 
-            setReferences(2, c.toArray(new Pair[c.size()]));
+            setReferences(2, c.toArray(new Pair[0]));
         }
         
         private void setReferences(int index, Object value) {
@@ -997,7 +1000,7 @@ public class AbstractLookup extends Lookup implements Serializable {
                     arr = new LookupListener[] { (LookupListener) listeners };
                 } else {
                     ArrayList<?> l = (ArrayList<?>) listeners;
-                    arr = l.toArray(new LookupListener[l.size()]);
+                    arr = l.toArray(new LookupListener[0]);
                 }
             }
 
@@ -1305,7 +1308,7 @@ public class AbstractLookup extends Lookup implements Serializable {
 
     /** Just a holder for index & modified values.
      */
-    final static class Info extends Object {
+    static final class Info extends Object {
         public int index;
         public Object transaction;
 

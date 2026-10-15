@@ -23,8 +23,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.modules.extexecution.startup.StartupExtenderRegistrationOptions;
 import org.netbeans.modules.extexecution.startup.StartupExtenderRegistrationProcessor;
 import org.netbeans.spi.extexecution.startup.StartupExtenderImplementation;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Parameters;
@@ -45,10 +47,13 @@ public final class StartupExtender {
     private final String description;
 
     private final List<String> arguments;
+    
+    private final List<String> rawArguments;
 
-    private StartupExtender(String description, List<String> arguments) {
+    private StartupExtender(String description, List<String> arguments, List<String> rawArguments) {
         this.description = description;
         this.arguments = arguments;
+        this.rawArguments = rawArguments;
     }
 
     /**
@@ -81,8 +86,30 @@ public final class StartupExtender {
 
         List<StartupExtender> res = new ArrayList<StartupExtender>();
         for (Lookup.Item<StartupExtenderImplementation> item : lkp.lookupResult(StartupExtenderImplementation.class).allItems()) {
-            StartupExtender extender = new StartupExtender(item.getDisplayName(),
-                                       item.getInstance().getArguments(context, mode));
+            StartupExtenderImplementation impl = item.getInstance();
+            List<String> args = impl.getArguments(context, mode);
+            List<String> rawArgs;
+            
+            if (!(impl instanceof StartupExtenderRegistrationOptions) ||
+                ((StartupExtenderRegistrationOptions)impl).argumentsQuoted()) {
+                rawArgs = new ArrayList<>(args.size());
+                for (String s : args) {
+                    String[] parsed = BaseUtilities.parseParameters(s);
+                    rawArgs.add(String.join(" ", parsed));
+                }
+            } else {
+                rawArgs = args;
+                List<String> quotedArgs = new ArrayList<>();
+                for (String s : args) {
+                    if (s.isEmpty()) {
+                        quotedArgs.add(s);
+                    } else {
+                        quotedArgs.add(BaseUtilities.escapeParameters(new String[] { s }));
+                    }
+                }
+                args = quotedArgs;
+            }
+            StartupExtender extender = new StartupExtender(item.getDisplayName(), args, rawArgs);
             LOG.log(Level.FINE, " {0} => {1}", new Object[] {extender.description, extender.getArguments()});
             res.add(extender);
         }
@@ -107,6 +134,19 @@ public final class StartupExtender {
     @NonNull
     public List<String> getArguments() {
         return arguments;
+    }
+    
+    /**
+     * List of arguments. Items of the list are literal values that should
+     * be used by the process, without escaping. They can contain spaces, and any
+     * quote, doublequote or backslashes in their literal meaning. It is up to the
+     * caller to appropriately quote or escape the values.
+     * 
+     * @return list of arguments.
+     * @since 1.62
+     */
+    public List<String> getRawArguments() {
+        return rawArguments;
     }
 
     /**

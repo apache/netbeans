@@ -63,7 +63,7 @@ public final class SettingsProvider implements MimeDataProvider {
 
     private static final Logger LOG = Logger.getLogger(SettingsProvider.class.getName());
     
-    private final Map<MimePath, WeakReference<Lookup>> cache = new WeakHashMap<MimePath, WeakReference<Lookup>>();
+    private final Map<MimePath, WeakReference<Lookup>> cache = new WeakHashMap<>();
     
     public SettingsProvider () {
     }
@@ -74,6 +74,7 @@ public final class SettingsProvider implements MimeDataProvider {
      * 
      * @return Lookup or null, if there are no lookup-able objects for mime or global level.
      */
+    @Override
     public Lookup getLookup(MimePath mimePath) {
         if (mimePath.size() > 0 && mimePath.getMimeType(0).contains(EditorSettingsImpl.TEXT_BASE_MIME_TYPE)) {
             if (LOG.isLoggable(Level.INFO)) {
@@ -112,7 +113,7 @@ public final class SettingsProvider implements MimeDataProvider {
                     lookup = new MyLookup(mimePath, null);
                 }
                 
-                cache.put(mimePath, new WeakReference<Lookup>(lookup));
+                cache.put(mimePath, new WeakReference<>(lookup));
             }
             
             return lookup;
@@ -140,34 +141,29 @@ public final class SettingsProvider implements MimeDataProvider {
         // PropertyChangeListener implementation
         // -------------------------------------------------------------------
         
+        @Override
         public void propertyChange(PropertyChangeEvent evt) {
             synchronized (this) {
                 boolean fcsChanged = false;
                 boolean kbsChanged = false;
-
-//                if (mimePath.getPath().contains("xml")) {
-//                    System.out.println("@@@ propertyChange: mimePath = " + mimePath.getPath() + " profile = " + fcsProfile + " property = " + evt.getPropertyName() + " oldValue = " + (evt.getOldValue() instanceof MimePath ? ((MimePath) evt.getOldValue()).getPath() : evt.getOldValue()) + " newValue = " + evt.getNewValue());
-//                }
                 
                 // Determine what has changed
+                String prop = evt.getPropertyName();
                 if (this.kbsi == evt.getSource()) {
                     kbsChanged = true;
-                    
-                } else if (evt.getPropertyName() == null) {
+                } else if (prop == null) {
                     // reset all
                     if (!specialFcsProfile) {
                         String currentProfile = EditorSettings.getDefault().getCurrentFontColorProfile();
                         fcsProfile = FontColorSettingsImpl.get(mimePath).getInternalFontColorProfile(currentProfile);
                     }
                     fcsChanged = true;
-                    
-                } else if (evt.getPropertyName().equals(EditorSettingsImpl.PROP_HIGHLIGHT_COLORINGS)) {
+                } else if (prop.equals(EditorSettingsImpl.PROP_HIGHLIGHT_COLORINGS) || prop.equals(EditorSettingsImpl.PROP_ANNOTATION_COLORINGS)) {
                     String changedProfile = (String) evt.getNewValue();
                     if (changedProfile.equals(fcsProfile)) {
                         fcsChanged = true;
                     }
-                    
-                } else if (evt.getPropertyName().equals(EditorSettingsImpl.PROP_TOKEN_COLORINGS)) {
+                } else if (prop.equals(EditorSettingsImpl.PROP_TOKEN_COLORINGS)) {
                     String changedProfile = (String) evt.getNewValue();
                     if (changedProfile.equals(fcsProfile)) {
                         MimePath changedMimePath = (MimePath) evt.getOldValue();
@@ -175,8 +171,7 @@ public final class SettingsProvider implements MimeDataProvider {
                             fcsChanged = true;
                         }
                     }
-                    
-                } else if (evt.getPropertyName().equals(EditorSettingsImpl.PROP_CURRENT_FONT_COLOR_PROFILE)) {
+                } else if (prop.equals(EditorSettingsImpl.PROP_CURRENT_FONT_COLOR_PROFILE)) {
                     if (!specialFcsProfile) {
                         String newProfile = (String) evt.getNewValue();
                         fcsProfile = FontColorSettingsImpl.get(mimePath).getInternalFontColorProfile(newProfile);
@@ -193,6 +188,7 @@ public final class SettingsProvider implements MimeDataProvider {
         // PreferenceChangeListener implementation
         // -------------------------------------------------------------------
         
+        @Override
         public void preferenceChange(PreferenceChangeEvent evt) {
             String settingName = evt == null ? null : evt.getKey();
             if (settingName == null || settingName.equals(CompositeFCS.TEXT_ANTIALIASING_PROP)) { //NOI18N
@@ -262,7 +258,7 @@ public final class SettingsProvider implements MimeDataProvider {
             }
 
             if (updateContents) {
-                List<Object> list = new ArrayList<Object>();
+                List<Object> list = new ArrayList<>();
                 if (fontColorSettings != null) {
                     list.add(fontColorSettings);
                 }

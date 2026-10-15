@@ -26,13 +26,9 @@ import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.TagAttributeInfo;
-import javax.servlet.jsp.tagext.TagData;
-import javax.servlet.jsp.tagext.TagInfo;
-import javax.servlet.jsp.tagext.VariableInfo;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.editor.NbEditorUtilities;
@@ -43,34 +39,36 @@ import org.netbeans.modules.web.jsps.parserapi.Node.IncludeDirective;
 import org.netbeans.modules.web.jsps.parserapi.PageInfo;
 import org.openide.filesystems.FileObject;
 import org.netbeans.modules.web.jsps.parserapi.Node.Visitor;
+import org.netbeans.modules.web.jsps.parserapi.TagAttributeInfo;
+import org.netbeans.modules.web.jsps.parserapi.TagInfo;
+import org.netbeans.modules.web.jsps.parserapi.VariableInfo;
 import org.openide.cookies.EditorCookie;
 import org.openide.loaders.DataObject;
-import org.openide.util.Exceptions;
 
 /**
  *
  * @author Tomasz.Slota@Sun.COM
  */
 public abstract class JSPProcessor {
+    protected static final Logger logger = Logger.getLogger(JSPProcessor.class.getName());
+    //static cache of FileObject---ParserData
+    private static final WeakHashMap<FileObject, ParserData> PARSER_DATA_CACHE = new WeakHashMap<>();
 
     protected Document doc;
     protected FileObject fobj;
-    protected static final Logger logger = Logger.getLogger(JSPProcessor.class.getName());
-    protected boolean processCalled = false;
     protected boolean processingSuccessful = true;
 
-    //static cache of FileObject---ParserData
-    private static final WeakHashMap<FileObject, ParserData> PARSER_DATA_CACHE = new WeakHashMap<FileObject, ParserData>();
-
+    private boolean processCalled = false;
+    private boolean jakartaVariant = false;
     private ParserData parserData;
 
     private static class ParserData {
-        private JspParserAPI.ParseResult parserResult;
-        private JspColoringData coloringData;
+        private final JspParserAPI.ParseResult parserResult;
+        private final JspColoringData coloringData;
 
         public ParserData(JspParserAPI.ParseResult parserResult, JspColoringData coloringData) {
             assert parserResult != null;
-            
+
             this.parserResult = parserResult;
             this.coloringData = coloringData;
         }
@@ -86,7 +84,7 @@ public abstract class JSPProcessor {
 
     private ParserData getParserData() {
         assert parserData != null; //never allow to return null
-        
+
         return parserData;
     }
 
@@ -109,7 +107,10 @@ public abstract class JSPProcessor {
             if (beanData != null) {
                 for (PageInfo.BeanData bean : beanData) {
                     if (!localBeans.contains(bean.getId())) {
-                        beanDeclarationsBuff.append(bean.getClassName() + " " + bean.getId() + ";\n"); //NOI18N
+                        beanDeclarationsBuff.append(bean.getClassName());
+                        beanDeclarationsBuff.append(" "); //NOI18N
+                        beanDeclarationsBuff.append(bean.getId());
+                        beanDeclarationsBuff.append(";\n"); //NOI18N
                     }
                 }
             }
@@ -118,7 +119,10 @@ public abstract class JSPProcessor {
                 for (TagAttributeInfo info : pageInfo.getTagInfo().getAttributes()) {
                     if (info.getTypeName() != null) { // will be null e.g. for fragment attrs
                         if (!localBeans.contains(info.getName())) {
-                            beanDeclarationsBuff.append(info.getTypeName() + " " + info.getName() + ";\n"); //NOI18N
+                            beanDeclarationsBuff.append(info.getTypeName());
+                            beanDeclarationsBuff.append(" "); //NOI18N
+                            beanDeclarationsBuff.append(info.getName());
+                            beanDeclarationsBuff.append(";\n"); //NOI18N
                         }
                     }
                 }
@@ -130,7 +134,6 @@ public abstract class JSPProcessor {
 
         if (coloringData != null && coloringData.getPrefixMapper() != null) {
             Collection<String> prefixes = coloringData.getPrefixMapper().keySet();
-            TagData fooArg = new TagData((Object[][]) null);
 
             for (String prefix : prefixes) {
                 List<TagInfo> tags = syntaxSupport.getAllTags(prefix, false); //do not require fresh data - #146762
@@ -140,15 +143,12 @@ public abstract class JSPProcessor {
                     if (tag == null) {
                         continue;
                     }
-                    VariableInfo vars[] = tag.getVariableInfo(fooArg);
 
-                    if (vars != null) {
-                        for (VariableInfo var : vars) {
-                            // Create Variable Definitions
-                            if (var != null && var.getVarName() != null && var.getClassName() != null && var.getDeclare()) {
-                                String varDeclaration = var.getClassName() + " " + var.getVarName() + ";\n";
-                                beanDeclarationsBuff.append(varDeclaration);
-                            }
+                    for (VariableInfo var : tag.getRuntimeVariables()) {
+                        // Create Variable Definitions
+                        if (var != null && var.getVarName() != null && var.getClassName() != null && var.isDeclare()) {
+                            String varDeclaration = var.getClassName() + " " + var.getVarName() + ";\n";
+                            beanDeclarationsBuff.append(varDeclaration);
                         }
                     }
                 }
@@ -193,7 +193,7 @@ public abstract class JSPProcessor {
             return;
         }
 
-        final Collection<String> processedFiles = new TreeSet<String>(processedIncludes());
+        final Collection<String> processedFiles = new TreeSet<>(processedIncludes());
         processedFiles.add(fobj.getPath());
 
         if (pageInfo.getIncludePrelude() != null) {
@@ -206,7 +206,7 @@ public abstract class JSPProcessor {
             Visitor visitor = new Visitor() {
 
                 @Override
-                public void visit(IncludeDirective includeDirective) throws JspException {
+                public void visit(IncludeDirective includeDirective) {
                     String fileName = includeDirective.getAttributeValue("file");
                     if (path == null || path.equals(fileName)) {
                         processIncludedFile(fileName, processedFiles);
@@ -214,14 +214,10 @@ public abstract class JSPProcessor {
                 }
             };
 
-            try {
-                JspParserAPI.ParseResult parseResult = getParserData().getParserResult();
+            JspParserAPI.ParseResult parseResult = getParserData().getParserResult();
 
-                if (parseResult != null && parseResult.getNodes() != null) {
-                    parseResult.getNodes().visit(visitor);
-                }
-            } catch (JspException ex) {
-                Exceptions.printStackTrace(ex);
+            if (parseResult != null && parseResult.getNodes() != null) {
+                parseResult.getNodes().visit(visitor);
             }
         }
     }
@@ -247,16 +243,14 @@ public abstract class JSPProcessor {
                         processIncludedFile(includedJSPFileProcessor);
                     }
                 }
-            } catch (IOException e) {
-                logger.log(Level.WARNING, e.getMessage(), e);
-            } catch (BadLocationException e) {
+            } catch (IOException | BadLocationException e) {
                 logger.log(Level.WARNING, e.getMessage(), e);
             }
         }
     }
 
     public static boolean ignoreLockFromUnitTest = false;
-    
+
     public synchronized void process() throws BadLocationException {
         processCalled = true;
 
@@ -267,6 +261,9 @@ public abstract class JSPProcessor {
             processingSuccessful = false;
             return;
         }
+
+        ClassPath cp = ClassPath.getClassPath(fobj, ClassPath.COMPILE);
+        jakartaVariant = cp != null && cp.findResource("jakarta/servlet/http/HttpServlet.class") != null;
 
         //workaround for issue #120195 - Deadlock in jspparser while reformatting JSP
         //
@@ -317,15 +314,12 @@ public abstract class JSPProcessor {
 
         }
 
-        final AtomicReference<BadLocationException> ble = new AtomicReference<BadLocationException>();
-        doc.render(new Runnable() {
-
-            public void run() {
-                try {
-                    renderProcess();
-                } catch (BadLocationException ex) {
-                    ble.set(ex);
-                }
+        final AtomicReference<BadLocationException> ble = new AtomicReference<>();
+        doc.render(() -> {
+            try {
+                renderProcess();
+            } catch (BadLocationException ex) {
+                ble.set(ex);
             }
         });
         if (ble.get() != null) {
@@ -334,7 +328,7 @@ public abstract class JSPProcessor {
     }
 
     protected abstract void processIncludedFile(IncludedJSPFileProcessor includedJSPFileProcessor);
-    
+
     protected abstract void renderProcess() throws BadLocationException;
 
     /**
@@ -354,7 +348,9 @@ public abstract class JSPProcessor {
             // (JSP doesn't belong to a project)
             for (String pckg : imports) {
                 if (!localImports.contains(pckg)) {
-                    importsBuff.append("import " + pckg + ";\n"); //NOI18N
+                    importsBuff.append("import "); //NOI18N
+                    importsBuff.append(pckg);
+                    importsBuff.append(";\n"); //NOI18N
                 }
             }
         }
@@ -366,10 +362,20 @@ public abstract class JSPProcessor {
         PageInfo pi = getPageInfo();
         if (pi == null) {
             //we need at least some basic imports
-            return new String[]{"javax.servlet.*", "javax.servlet.http.*", "javax.servlet.jsp.*"};
+            if(jakartaVariant) {
+                return new String[]{"jakarta.servlet.*", "jakarta.servlet.http.*", "jakarta.servlet.jsp.*"};
+            } else {
+                return new String[]{"javax.servlet.*", "javax.servlet.http.*", "javax.servlet.jsp.*"};
+            }
         }
         List<String> imports = pi.getImports();
-        return imports == null ? null : imports.toArray(new String[imports.size()]);
+        if(imports == null) {
+            return null;
+        }
+        return imports
+                .stream()
+                .map(i -> jakartaVariant ? i.replaceFirst("^javax\\.", "jakarta.") : i)
+                .toArray(i -> new String[i]);
     }
 
     protected abstract Collection<String> processedIncludes();

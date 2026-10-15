@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -440,8 +441,7 @@ public class AutoupdateInfoParser extends DefaultHandler {
             writer.close();
             String xml = writer.toString();
             
-            InputStream inputStream = new ByteArrayInputStream(xml.getBytes("UTF-8"));  
-            
+            InputStream inputStream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));  
             
             return inputStream;
         } catch (IOException ex) {
@@ -535,7 +535,7 @@ public class AutoupdateInfoParser extends DefaultHandler {
                 if (b.length() > 0) {
                     b.append(", ");
                 }
-                b.append(requiredBundleName); // dep CNB
+                b.append(requiredBundleName.replace('-', '_')); // dep CNB
                 while (m2.find()) {
                     if (!m2.group(1).equals("bundle-version")) {
                         continue;

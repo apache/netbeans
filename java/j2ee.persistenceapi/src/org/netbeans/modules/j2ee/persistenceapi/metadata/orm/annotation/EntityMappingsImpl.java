@@ -289,7 +289,7 @@ public class EntityMappingsImpl implements EntityMappings {
 
     public MappedSuperclass[] getMappedSuperclass() {
         Collection<MappedSuperclassImpl> mappedSuperclasses = mappedSuperclassManager.getObjects();
-        return mappedSuperclasses.toArray(new MappedSuperclass[mappedSuperclasses.size()]);
+        return mappedSuperclasses.toArray(new MappedSuperclass[0]);
     }
 
     public int addMappedSuperclass(MappedSuperclass value) {
@@ -322,7 +322,7 @@ public class EntityMappingsImpl implements EntityMappings {
 
     public Entity[] getEntity() {
         Collection<EntityImpl> entities = entityManager.getObjects();
-        return entities.toArray(new Entity[entities.size()]);
+        return entities.toArray(new Entity[0]);
     }
 
     public int addEntity(Entity value) {
@@ -355,7 +355,7 @@ public class EntityMappingsImpl implements EntityMappings {
 
     public Embeddable[] getEmbeddable() {
         Collection<EmbeddableImpl> embeddables = embeddableManager.getObjects();
-        return embeddables.toArray(new Embeddable[embeddables.size()]);
+        return embeddables.toArray(new Embeddable[0]);
     }
 
     public int addEmbeddable(Embeddable value) {
@@ -379,11 +379,19 @@ public class EntityMappingsImpl implements EntityMappings {
                     result.add(new EntityImpl(helper, EntityMappingsImpl.this, type));
                 }
             });
+            helper.getAnnotationScanner().findAnnotations("jakarta.persistence.Entity", AnnotationScanner.TYPE_KINDS, new AnnotationHandler() { // NOI18N
+                public void handleAnnotation(TypeElement type, Element element, AnnotationMirror annotation) {
+                    result.add(new EntityImpl(helper, EntityMappingsImpl.this, type));
+                }
+            });
             return result;
         }
 
         public List<EntityImpl> createObjects(TypeElement type) {
             if (helper.hasAnnotation(type.getAnnotationMirrors(), "javax.persistence.Entity")) { // NOI18N
+                return Collections.singletonList(new EntityImpl(helper, EntityMappingsImpl.this, type));
+            }
+            if (helper.hasAnnotation(type.getAnnotationMirrors(), "jakarta.persistence.Entity")) { // NOI18N
                 return Collections.singletonList(new EntityImpl(helper, EntityMappingsImpl.this, type));
             }
             return Collections.emptyList();
@@ -404,6 +412,11 @@ public class EntityMappingsImpl implements EntityMappings {
 
         public List<EmbeddableImpl> createInitialObjects() throws InterruptedException {
             final List<EmbeddableImpl> result = new ArrayList<EmbeddableImpl>();
+            helper.getAnnotationScanner().findAnnotations("jakarta.persistence.Embeddable", AnnotationScanner.TYPE_KINDS, new AnnotationHandler() { // NOI18N
+                public void handleAnnotation(TypeElement type, Element element, AnnotationMirror annotation) {
+                    result.add(new EmbeddableImpl(helper, EntityMappingsImpl.this, type));
+                }
+            });
             helper.getAnnotationScanner().findAnnotations("javax.persistence.Embeddable", AnnotationScanner.TYPE_KINDS, new AnnotationHandler() { // NOI18N
                 public void handleAnnotation(TypeElement type, Element element, AnnotationMirror annotation) {
                     result.add(new EmbeddableImpl(helper, EntityMappingsImpl.this, type));
@@ -413,6 +426,9 @@ public class EntityMappingsImpl implements EntityMappings {
         }
 
         public List<EmbeddableImpl> createObjects(TypeElement type) {
+            if (helper.hasAnnotation(type.getAnnotationMirrors(), "jakarta.persistence.Embeddable")) { // NOI18N
+                return Collections.singletonList(new EmbeddableImpl(helper, EntityMappingsImpl.this, type));
+            }
             if (helper.hasAnnotation(type.getAnnotationMirrors(), "javax.persistence.Embeddable")) { // NOI18N
                 return Collections.singletonList(new EmbeddableImpl(helper, EntityMappingsImpl.this, type));
             }
@@ -434,6 +450,11 @@ public class EntityMappingsImpl implements EntityMappings {
 
         public List<MappedSuperclassImpl> createInitialObjects() throws InterruptedException {
             final List<MappedSuperclassImpl> result = new ArrayList<MappedSuperclassImpl>();
+            helper.getAnnotationScanner().findAnnotations("jakarta.persistence.MappedSuperclass", AnnotationScanner.TYPE_KINDS, new AnnotationHandler() { // NOI18N
+                public void handleAnnotation(TypeElement type, Element element, AnnotationMirror annotation) {
+                    result.add(new MappedSuperclassImpl(helper, EntityMappingsImpl.this, type));
+                }
+            });
             helper.getAnnotationScanner().findAnnotations("javax.persistence.MappedSuperclass", AnnotationScanner.TYPE_KINDS, new AnnotationHandler() { // NOI18N
                 public void handleAnnotation(TypeElement type, Element element, AnnotationMirror annotation) {
                     result.add(new MappedSuperclassImpl(helper, EntityMappingsImpl.this, type));
@@ -443,6 +464,9 @@ public class EntityMappingsImpl implements EntityMappings {
         }
 
         public List<MappedSuperclassImpl> createObjects(TypeElement type) {
+            if (helper.hasAnnotation(type.getAnnotationMirrors(), "jakarta.persistence.MappedSuperclass")) { // NOI18N
+                return Collections.singletonList(new MappedSuperclassImpl(helper, EntityMappingsImpl.this, type));
+            }
             if (helper.hasAnnotation(type.getAnnotationMirrors(), "javax.persistence.MappedSuperclass")) { // NOI18N
                 return Collections.singletonList(new MappedSuperclassImpl(helper, EntityMappingsImpl.this, type));
             }

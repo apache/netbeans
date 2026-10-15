@@ -29,7 +29,7 @@ import org.openide.util.NbPreferences;
 
 /**
  * Shareable search history. Known implementations are explorer search
- * dialog and editor find&replace dialog.
+ * dialog and editor find&amp;replace dialog.
  *
  * Typical use case:
  * Editor registers a listener to listen on lastSelected SearchPattern. If user
@@ -67,14 +67,14 @@ public final class SearchHistory {
      *  @deprecated just changes in history
      */
     @Deprecated
-    public final static String LAST_SELECTED = "last-selected"; //NOI18N
+    public static final String LAST_SELECTED = "last-selected"; //NOI18N
     
     /** Property name for adding pattern that was not in history
      *  Firing:
      *  oldValue - null
      *  newValue - added pattern
      */
-    public final static String ADD_TO_HISTORY = "add-to-history"; //NOI18N
+    public static final String ADD_TO_HISTORY = "add-to-history"; //NOI18N
 
     /** Preferences node for storing history info */
     private static Preferences prefs;
@@ -89,7 +89,7 @@ public final class SearchHistory {
     }
 
     /** @return singleton instance of SearchHistory */
-    public synchronized static SearchHistory getDefault(){
+    public static synchronized SearchHistory getDefault(){
         if (INSTANCE == null) {
             INSTANCE = new SearchHistory();
         }

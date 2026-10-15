@@ -123,7 +123,7 @@ class MyFontMetrics {
 
     public MyFontMetrics(Component component, Font font) {
         fm = component.getFontMetrics(font);
-        width = fm.charWidth('a');
+        width = fm.charWidth('m');
         height = fm.getHeight();
         ascent = fm.getAscent();
         leading = fm.getLeading();
@@ -178,19 +178,21 @@ class MyFontMetrics {
                 cell_width = 1;
 
             } else {
-                // round up pixel width to multiple of cell size
+                // round pixel width to multiple of cell size
                 // then distill into a width in terms of cells.
                 int mod = pixel_width % width;
                 int rounded_width = pixel_width;
-                if (mod != 0) {
+                if (mod > (width / 2)) {
                     rounded_width = pixel_width + (width - mod);
+                } else {
+                    rounded_width = pixel_width - mod;
                 }
                 cell_width = rounded_width / width;
                 if (cell_width == 0) {
                     cell_width = 1;
+                } else if (cell_width > 1) {
+                    cwidth_cache.setMultiCell(true);
                 }
-
-                cwidth_cache.setMultiCell(true);
             }
 
             cwidth_cache.cache[c] = (byte) cell_width;

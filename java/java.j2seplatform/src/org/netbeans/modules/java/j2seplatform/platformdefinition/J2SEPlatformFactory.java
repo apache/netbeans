@@ -69,8 +69,15 @@ public class J2SEPlatformFactory implements JavaPlatformFactory {
         if (!plat.isValid()) {
             throw new IOException("Invalid J2SE platform in " + installFolder); // NOI18N
         }
-        if (name == null) {
-            name = createPlatformDisplayName(plat);
+        if (name != null) {
+            installFolder.setAttribute(NewJ2SEPlatform.DISPLAY_NAME_FILE_ATTR, name);
+        } else {
+            Object attr = installFolder.getAttribute(NewJ2SEPlatform.DISPLAY_NAME_FILE_ATTR);
+            if (attr instanceof String) {
+                name = (String) attr;
+            } else {
+                name = createPlatformDisplayName(plat);
+            }
         }
         final String antName = createPlatformAntName(name);
         plat.setDisplayName(name);

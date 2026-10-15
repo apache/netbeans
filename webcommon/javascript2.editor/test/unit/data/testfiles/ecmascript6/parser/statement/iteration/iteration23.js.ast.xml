@@ -1,0 +1,93 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='36'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='36'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <BlockStatement start='0' end='36'>
+      <Block start='0' end='36'>
+        <isSynthetic/>
+        <!-- Block Statements -->
+        <VarNode name='a' start='9' end='29'>
+          <hasInit/>
+          <isAssignment/>
+          <!-- VarNode Assignment Dest -->
+          <IdentNode start='9' end='10'>
+            <name>a</name>
+            <isDeclaredHere/>
+            <isInitializedHere/>
+          </IdentNode>
+          <!-- VarNode Init -->
+          <BinaryNode type='ASSIGN' start='13' end='28'>
+            <isAssignment/>
+            <!-- BinaryNode lhs -->
+            <IdentNode start='13' end='14'>
+              <name>b</name>
+            </IdentNode>
+            <!-- BinaryNode rhs -->
+            <BinaryNode type='ASSIGN' start='17' end='28'>
+              <isAssignment/>
+              <!-- BinaryNode lhs -->
+              <IdentNode start='17' end='18'>
+                <name>c</name>
+              </IdentNode>
+              <!-- BinaryNode rhs -->
+              <BinaryNode type='IN' start='22' end='28'>
+                <!-- BinaryNode lhs -->
+                <IdentNode start='22' end='23'>
+                  <name>d</name>
+                </IdentNode>
+                <!-- BinaryNode rhs -->
+                <IdentNode start='27' end='28'>
+                  <name>e</name>
+                </IdentNode>
+              </BinaryNode>
+            </BinaryNode>
+          </BinaryNode>
+        </VarNode>
+        <ForNode start='0' end='36'>
+          <isForIn/>
+          <IdentNode start='9' end='10'>
+            <name>a</name>
+          </IdentNode>
+          <JoinPredecessorExpression start='0' end='0'>
+          </JoinPredecessorExpression>
+          <JoinPredecessorExpression start='33' end='34'>
+            <IdentNode start='33' end='34'>
+              <name>z</name>
+            </IdentNode>
+          </JoinPredecessorExpression>
+          <Block start='35' end='36'>
+            <isSynthetic/>
+            <!-- Block Statements -->
+            <EmptyNode start='35' end='36'>
+            </EmptyNode>
+          </Block>
+        </ForNode>
+      </Block>
+    </BlockStatement>
+  </Block>
+</FunctionNode>

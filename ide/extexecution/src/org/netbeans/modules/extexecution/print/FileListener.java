@@ -18,11 +18,7 @@
  */
 package org.netbeans.modules.extexecution.print;
 
-import java.awt.Desktop;
 import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.extexecution.print.LineConvertors.FileLocator;
 import org.netbeans.spi.extexecution.open.FileOpenHandler;
@@ -65,10 +61,7 @@ public class FileListener implements OutputListener {
         this.handler = handler;
     }
 
-    public void outputLineSelected(OutputEvent ev) {
-
-    }
-
+    @Override
     public void outputLineAction(OutputEvent ev) {
         // Find file such and such and warp to it
         FileObject fo = findFile(file);
@@ -76,9 +69,6 @@ public class FileListener implements OutputListener {
         if (fo != null) {
             handler.open(fo, lineno);
         }
-    }
-
-    public void outputLineCleared(OutputEvent ev) {
     }
 
     private FileObject findFile(final String path) {

@@ -26,21 +26,6 @@
     <target name="build-init" depends="projectized.build-init">
         <mkdir dir="build/testfiles" />
         <unzip src="external/testfiles-jsdoc-1.zip" dest="build/testfiles"/>
-        <unzip src="external/js.foundation-parser-1.0.zip" dest="test/unit/data/testfiles/ecmascript6"/>
-        <unzip src="external/javascript2.editor-requirejs-2.1.14-resources.zip" dest="."/>
-        <unzip src="external/javascript2.editor-jquery-1.6-resources.zip" dest="."/>
     </target>
-    <!-- Generated JavaScript files for core libraries, used by code completion
-        etc. See the JsStubsGenerator project (in main/misc repository) for details. -->
-    <target name="-bundle-corestubs">
-        <copy file="external/js-corestubs-5.1.zip" tofile="${cluster}/jsstubs/corestubs.zip"/>
-    </target>
-    <target name="-bundle-reststubs">
-        <copy file="external/js-reststubs-3.zip" tofile="${cluster}/jsstubs/reststubs.zip"/>
-    </target>
-    <target name="-bundle-domstubs">
-        <copy file="external/js-domstubs-DOM3.zip" tofile="${cluster}/jsstubs/domstubs.zip"/>
-    </target>
-    <target name="release" depends="projectized.release,-bundle-corestubs,-bundle-domstubs,-bundle-reststubs"/>
 </project>
 

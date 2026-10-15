@@ -50,7 +50,6 @@ import org.netbeans.installer.wizard.components.WizardPanel.WizardPanelUi;
 import org.netbeans.installer.wizard.containers.SwingContainer;
 
 public class NbJUnitLicensePanel extends WizardPanel {
-    /////////////////////////////////////////////////////////////////////////////////
     // Instance
 
     public NbJUnitLicensePanel() {
@@ -97,7 +96,6 @@ public class NbJUnitLicensePanel extends WizardPanel {
         return wizardUi;
     }
     
-    /////////////////////////////////////////////////////////////////////////////////
     // Inner Classes
     public static class LicensesPanelUi extends WizardPanelUi {
         protected NbJUnitLicensePanel component;
@@ -144,7 +142,7 @@ public class NbJUnitLicensePanel extends WizardPanel {
             return acceptRButton;
         }
         
-        // protected ////////////////////////////////////////////////////////////////
+        // protected
         @Override
         protected void initialize() {
             acceptRButton.setText(
@@ -215,7 +213,7 @@ public class NbJUnitLicensePanel extends WizardPanel {
             }
         }
         
-        // private //////////////////////////////////////////////////////////////////
+        // private
         private void initComponents() {
             List <Product> products = Registry.getInstance().getProductsToInstall();
             for (Product p : products) {
@@ -224,17 +222,17 @@ public class NbJUnitLicensePanel extends WizardPanel {
                }
             }
 
-            // licensePane //////////////////////////////////////////////////////////
+            // licensePane
             licensePane = new NbiTextPane();
             licensePane.setOpaque(true);
             licensePane.setBackground(Color.WHITE);
             licensePane.setBorder(new EmptyBorder(new Insets(5, 5, 5, 5)));
             licensePane.setFocusable(true);
 
-            //descriptionPane ///////////////////
+            //descriptionPane
             descriptionPane = new NbiTextPane();
 
-            // licenseScrollPane ////////////////////////////////////////////////////
+            // licenseScrollPane
             licenseScrollPane = new NbiScrollPane(licensePane);
 
             ActionListener rbuttonListener = new ActionListener() {
@@ -247,14 +245,14 @@ public class NbJUnitLicensePanel extends WizardPanel {
                     }
                 }
             };
-            // acceptRButton ///////////////////////////////////////////////////////
+            // acceptRButton
             acceptRButton = new NbiRadioButton();
             acceptRButton.setSelected(false);
             acceptRButton.setFocusable(true);
             acceptRButton.setActionCommand("accept");
             acceptRButton.addActionListener(rbuttonListener);
 
-            // denyRButton ///////////////////////////////////////////////////////
+            // denyRButton
             denyRButton = new NbiRadioButton();
             denyRButton.setSelected(false);
             denyRButton.setActionCommand("deny");
@@ -265,7 +263,7 @@ public class NbJUnitLicensePanel extends WizardPanel {
             rbuttonGroup.add(denyRButton);
 
 
-            // this /////////////////////////////////////////////////////////////////
+            // this
             add(licenseScrollPane, new GridBagConstraints(
                     0, 0,                             // x, y
                     1, 1,                             // width, height
@@ -318,7 +316,6 @@ public class NbJUnitLicensePanel extends WizardPanel {
         }
     }
     
-    /////////////////////////////////////////////////////////////////////////////////
     // Constants
     public static final String ACCEPT_RBUTTON_TEXT_PROPERTY =
             "accept.rbutton.text"; // NOI18N

@@ -111,6 +111,7 @@ public final class CodeCompletionOptionsPanelController extends OptionsPanelCont
                 prefs.remove(SimpleValueNames.COMPLETION_AUTO_POPUP);
                 prefs.remove(SimpleValueNames.JAVADOC_AUTO_POPUP);
                 prefs.remove(SimpleValueNames.JAVADOC_POPUP_NEXT_TO_CC);
+                prefs.remove(SimpleValueNames.COMPLETION_PARAMETER_TOOLTIP);
                 prefs.remove(SimpleValueNames.SHOW_DEPRECATED_MEMBERS);
                 prefs.remove(SimpleValueNames.COMPLETION_INSTANT_SUBSTITUTION);
                 prefs.remove(SimpleValueNames.COMPLETION_CASE_SENSITIVE);
@@ -254,8 +255,9 @@ public final class CodeCompletionOptionsPanelController extends OptionsPanelCont
         }
 
         public void applyChanges() {
-            for(String mimeType : mimeTypePreferences.keySet()) {
-                ProxyPreferences pp = mimeTypePreferences.get(mimeType);
+            for(Map.Entry<String, ProxyPreferences> entry : mimeTypePreferences.entrySet()) {
+                String mimeType = entry.getKey();
+                ProxyPreferences pp = entry.getValue();
                 pp.silence();
                 try {
                     LOG.fine("    flushing pp for '" + mimeType + "'"); //NOI18N
@@ -268,8 +270,9 @@ public final class CodeCompletionOptionsPanelController extends OptionsPanelCont
 
         public void destroy() {
             // destroy all proxy preferences
-            for(String mimeType : mimeTypePreferences.keySet()) {
-                ProxyPreferences pp = mimeTypePreferences.get(mimeType);
+            for(Map.Entry<String, ProxyPreferences> entry : mimeTypePreferences.entrySet()) {
+                String mimeType = entry.getKey();
+                ProxyPreferences pp = entry.getValue();
                 pp.removeNodeChangeListener(weakNodeL);
                 pp.removePreferenceChangeListener(weakPrefL);
                 pp.destroy();

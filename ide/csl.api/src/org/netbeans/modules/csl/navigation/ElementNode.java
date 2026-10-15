@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import javax.swing.Action;
 import javax.swing.Icon;
@@ -242,6 +243,19 @@ public class ElementNode extends AbstractNode {
             Node[] children = ch.getNodes();
             for (int i = 0; i < children.length; i++) {
                 ElementNode c = (ElementNode) children[i];
+                // The promise of the API is broken at several places in the
+                // codebase and thus this needs to be guarded. The assert is in
+                // place to find the violating places.
+                assert c.getDescription().getElementHandle() != null;
+                @SuppressWarnings("null")
+                FileObject childFileObject = c.getDescription().getElementHandle() != null
+                        ? c.getDescription().getElementHandle().getFileObject()
+                        : null;
+                if (! Objects.equals(this.getFileObject(), childFileObject)) {
+                    // e.g. inherited items may be in another file
+                    // in such a case, incorrect item is highlighted on the navigator window if the FileObjects are not checked
+                    continue;
+                }
                 long start = c.getDescription().getPosition();
                 if (start <= offset) {
                     long end = c.getDescription().getEndPosition();

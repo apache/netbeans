@@ -130,7 +130,7 @@ public class FieldTest1 extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testFieldName.pass");
     }
     

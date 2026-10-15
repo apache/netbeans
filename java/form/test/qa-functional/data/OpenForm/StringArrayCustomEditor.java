@@ -41,7 +41,7 @@ public class StringArrayCustomEditor extends javax.swing.JPanel {
     private Vector itemsVector;
     private StringArrayCustomizable editor;
 
-    private final static int DEFAULT_WIDTH = 400;
+    private static final int DEFAULT_WIDTH = 400;
 
     static final long serialVersionUID =-4347656479280614636L;
 

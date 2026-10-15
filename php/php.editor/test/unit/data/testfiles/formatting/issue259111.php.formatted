@@ -1,22 +1,22 @@
 <?php
 
-$func1 = function() {
+$func1 = function () {
     echo "anonymous function1" . PHP_EOL;
 };
 ($func1)();
 
-$func2 = function() {
-    return function() {
+$func2 = function () {
+    return function () {
         echo "anonymous function2" . PHP_EOL;
     };
 };
 (($func2)())();
 
-(function() {
+(function () {
     echo "anonymous function3" . PHP_EOL;
 })();
 
-(function($param1, $param2) {
+(function ($param1, $param2) {
     echo "anonymous function4" . PHP_EOL;
 })("param1", "param2");
 
@@ -25,7 +25,6 @@ class Bar {
     public function __invoke() {
         echo "class __invoke" . PHP_EOL;
     }
-
 }
 
 (new Bar())();
@@ -52,7 +51,6 @@ class ArrayCall {
     public static function test() {
         echo "array call" . PHP_EOL;
     }
-
 }
 
 $array = new ArrayCall();
@@ -77,5 +75,4 @@ class Foo {
     public function doSomething() {
         ($this->callable)();
     }
-
 }

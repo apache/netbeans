@@ -26,6 +26,8 @@
             <code-name-base>org.netbeans.api.annotations.common</code-name-base>
             <module-dependencies/>
             <public-packages>
+                <package>javax.annotation</package>
+                <package>javax.annotation.meta</package>
                 <package>org.netbeans.api.annotations.common</package>
             </public-packages>
         </data>

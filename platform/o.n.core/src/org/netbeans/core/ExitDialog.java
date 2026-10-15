@@ -53,7 +53,7 @@ import org.openide.util.NbBundle;
  */
 
 public class ExitDialog extends JPanel implements java.awt.event.ActionListener {
-    private final static boolean isAqua = "Aqua".equals(UIManager.getLookAndFeel().getID());
+    private static final boolean isAqua = "Aqua".equals(UIManager.getLookAndFeel().getID());
 
     private static Object[] exitOptions;
 
@@ -64,7 +64,7 @@ public class ExitDialog extends JPanel implements java.awt.event.ActionListener 
     private static boolean result = false;
 
     JList list;
-    DefaultListModel listModel;
+    DefaultListModel<Savable> listModel;
 
     static final long serialVersionUID = 6039058107124767512L;
 
@@ -72,7 +72,7 @@ public class ExitDialog extends JPanel implements java.awt.event.ActionListener 
     public ExitDialog () {
         setLayout (new java.awt.BorderLayout ());
 
-        listModel = new DefaultListModel();
+        listModel = new DefaultListModel<>();
         for (Savable obj : Savable.REGISTRY.lookupAll(Savable.class)) {
             listModel.addElement(obj);
         }

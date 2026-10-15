@@ -19,7 +19,7 @@
 
 package org.netbeans.lib.profiler.heap;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -55,7 +55,7 @@ class StringSegment extends TagBounds {
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
     String getStringByID(long stringID) {
-        Long stringIDObj = new Long(stringID);
+        Long stringIDObj = stringID;
         String string = (String) stringCache.get(stringIDObj);
         if (string == null) {
             string = createStringByID(stringID);
@@ -79,15 +79,7 @@ class StringSegment extends TagBounds {
         byte[] chars = new byte[len - dumpBuffer.getIDSize()];
         dumpBuffer.get(start + UTF8CharsOffset, chars);
 
-        String s = "Error"; // NOI18N
-
-        try {
-            s = new String(chars, "UTF-8"); // NOI18N
-        } catch (UnsupportedEncodingException ex) {
-            ex.printStackTrace();
-        }
-
-        return s;
+        return new String(chars, StandardCharsets.UTF_8);
     }
 
     private synchronized long getStringOffsetByID(long stringID) {

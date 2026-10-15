@@ -1,0 +1,15 @@
+Code completion result for source line:
+#[Attr1(|)]
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Attr1                           [PUBLIC]   testAttributedClass03.php
+CLASS      Attr2                           [PUBLIC]   testAttributedClass03.php
+CLASS      AttributedClass                 [PUBLIC]   testAttributedClass03.php
+CONSTANT   CONST_DEFINE "define"           [PUBLIC]   testAttributedClass03.php
+CONSTANT   CONST_GLOBAL "const"            [PUBLIC]   testAttributedClass03.php
+KEYWORD    parent::                                   null
+KEYWORD    self::                                     null
+PARAMETER  int:                                       Parameter Name
+PARAMETER  string:                                    Parameter Name
+------------------------------------
+KEYWORD    array                                      null
+KEYWORD    new                                        null

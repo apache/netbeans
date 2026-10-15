@@ -319,7 +319,7 @@ public final class DatabaseConnection {
      * Returns the {@link java.sql.Connection} instance which encapsulates 
      * the physical connection to the database if this database connection
      * is connected. Note that "connected" here means "connected using the
-     * Database Explorer". Unless <code>test</code is set to <code>true</code>,
+     * Database Explorer". Unless <code>test</code> is set to <code>true</code>,
      * there is no check if {@link java.sql.Connection#close}
      * has been called on the returned connection. However,
      * clients should not call <code>Connection.close()</code> on the returned

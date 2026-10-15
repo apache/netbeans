@@ -24,6 +24,8 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
@@ -32,14 +34,14 @@ import org.openide.util.NbBundle;
 
 
 /**
- * Notifies about exceptions throw in debugged JVM.
+ * Notifies about exceptions thrown in debugged JVM.
  *
  * <br><br>
  * <b>How to use it:</b>
  * <pre style="background-color: rgb(255, 255, 153);">
  *    DebuggerManager.addBreakpoint (ExceptionBreakpoint.create (
  *        "java.lang.NullPointerException",
- *        ExceptionBreakpoint.TYPE_EXCEPTION_UNCATCHED
+ *        ExceptionBreakpoint.TYPE_EXCEPTION_UNCAUGHT
  *    ));</pre>
  * This breakpoint stops when NullPointerException is throw and uncatched.
  *
@@ -58,17 +60,39 @@ public class ExceptionBreakpoint extends JPDABreakpoint {
     /** Property name constant. */
     public static final String          PROP_CONDITION = "condition"; // NOI18N
 
-    /** Catch type constant. <i>[sic]</i> "caught" */
+    /** Catch type constant. <i>[sic]</i> "caught"
+     * @deprecated Use {@link #TYPE_EXCEPTION_CAUGHT} */
+    @Deprecated
     public static final int             TYPE_EXCEPTION_CATCHED = 1;
-    /** Catch type constant. <i>[sic]</i> "uncaught" */
+    /** Catch type constant. <i>[sic]</i> "uncaught"
+     * @deprecated Use {@link #TYPE_EXCEPTION_UNCAUGHT} */
+    @Deprecated
     public static final int             TYPE_EXCEPTION_UNCATCHED = 2;
-    /** Catch type constant. <i>[sic]</i> "caught/uncaught" */
+    /** Catch type constant. <i>[sic]</i> "caught/uncaught"
+     * @deprecated Use {@link #TYPE_EXCEPTION_CAUGHT_UNCAUGHT} */
+    @Deprecated
     public static final int             TYPE_EXCEPTION_CATCHED_UNCATCHED = 3;
+
+    /**
+     * Catch type constant that matches those exceptions that are caught by the user code.
+     * @since 3.18
+     */
+    public static final int             TYPE_EXCEPTION_CAUGHT = 1;
+    /**
+     * Catch type constant that matches those exceptions that are not caught by the user code and run through.
+     * @since 3.18
+     */
+    public static final int             TYPE_EXCEPTION_UNCAUGHT = 2;
+    /**
+     * Catch type constant that matches all exceptions regardless of where and if they are caught.
+     * @since 3.18
+     */
+    public static final int             TYPE_EXCEPTION_CAUGHT_UNCAUGHT = 3;
 
     private String                      exceptionClassName = "";
     private String[]                    classFilters = new String [0];
     private String[]                    classExclusionFilters = new String [0];
-    private int                         catchType = TYPE_EXCEPTION_UNCATCHED;
+    private int                         catchType = TYPE_EXCEPTION_UNCAUGHT;
     private String                      condition = ""; // NOI18N
 
     
@@ -79,8 +103,8 @@ public class ExceptionBreakpoint extends JPDABreakpoint {
      * Creates a new breakpoint for given parameters.
      *
      * @param exceptionClassName class name filter
-     * @param catchType one of constants: TYPE_EXCEPTION_CATCHED, 
-     *   TYPE_EXCEPTION_UNCATCHED, TYPE_EXCEPTION_CATCHED_UNCATCHED
+     * @param catchType one of constants: {@link #TYPE_EXCEPTION_CAUGHT},
+     *   {@link #TYPE_EXCEPTION_UNCAUGHT}, {@link #TYPE_EXCEPTION_CAUGHT_UNCAUGHT}.
      * @return a new breakpoint for given parameters
      */
     public static ExceptionBreakpoint create (
@@ -111,9 +135,7 @@ public class ExceptionBreakpoint extends JPDABreakpoint {
         if (cn != null) {
             cn = cn.trim();
         }
-        if ( (cn == exceptionClassName) ||
-             ((cn != null) && (exceptionClassName != null) && exceptionClassName.equals (cn))
-        ) return;
+        if (Objects.equals(cn, exceptionClassName)) return;
         Object old = exceptionClassName;
         exceptionClassName = cn;
         firePropertyChange (PROP_EXCEPTION_CLASS_NAME, old, exceptionClassName);
@@ -200,7 +222,7 @@ public class ExceptionBreakpoint extends JPDABreakpoint {
      */
     public void setCatchType (int catchType) {
         if (catchType == this.catchType) return;
-        if ( (catchType & (TYPE_EXCEPTION_CATCHED | TYPE_EXCEPTION_UNCATCHED)) == 0
+        if ( (catchType & (TYPE_EXCEPTION_CAUGHT | TYPE_EXCEPTION_UNCAUGHT)) == 0
            ) throw new IllegalArgumentException  ();
         int old = this.catchType;
         this.catchType = catchType;

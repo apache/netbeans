@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.debugger.jpda.truffle.source;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
@@ -48,12 +49,20 @@ final class SourceFilesCache {
     }
     
     public URL getSourceFile(String name, long hash, URI uri, String content) throws IOException {
-        String path = Long.toHexString(hash) + '/' + name;
+        String justName = name;
+        int i = justName.lastIndexOf(File.separatorChar);
+        if (i >= 0) {
+            justName = justName.substring(i + 1);
+            if (justName.isEmpty()) {
+                justName = name.replace(File.separatorChar, '_');
+            }
+        }
+        String path = Long.toHexString(hash) + '/' + justName;
         FileObject fo = fs.findResource(path);
         if (fo == null) {
             fo = fs.createFile(path, content);
             if (fo == null) {
-                throw new IllegalArgumentException("Not able to create file with name '"+name+"'. Path = "+path);
+                throw new IllegalArgumentException("Not able to create file with name '"+justName+"'. Path = "+path);
             }
             fo.setAttribute(Source.ATTR_URI, uri);
         }

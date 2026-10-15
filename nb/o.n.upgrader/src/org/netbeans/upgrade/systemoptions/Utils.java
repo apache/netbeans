@@ -42,7 +42,6 @@ final class Utils {
             if (l.size() == 1) {
                 Object o = l.get(0);
                 if (o instanceof NameValue) {
-                    Object key = null;
                     stringvalue = ((NameValue) o).value.toString();
                 }
             }
@@ -53,7 +52,7 @@ final class Utils {
             stringvalue = value.toString();
             
         } else if (value instanceof SerParser.ArrayWrapper && "[Ljava.lang.String;".equals(((SerParser.ArrayWrapper)value).classdesc.name)) {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             List es = ((SerParser.ArrayWrapper)value).values;
             for (Iterator it = es.iterator(); it.hasNext();) {
                 sb.append((String)it.next());
@@ -63,7 +62,7 @@ final class Utils {
             }
             stringvalue = sb.toString();            
         } else if (value instanceof SerParser.ArrayWrapper && "[[Ljava.lang.String;".equals(((SerParser.ArrayWrapper)value).classdesc.name)) {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             List awl = ((SerParser.ArrayWrapper)value).values;
             for (Iterator it = awl.iterator(); it.hasNext();) {
                 SerParser.ArrayWrapper aw = (SerParser.ArrayWrapper)it.next();
@@ -80,7 +79,7 @@ final class Utils {
     }
     
     static String getClassNameFromObject(final Object value) {
-        String clsName = null;
+        String clsName;
         if (value instanceof ObjectWrapper) {
             clsName = prettify(((ObjectWrapper) value).classdesc.name);
         }  else if (value instanceof ArrayWrapper) {

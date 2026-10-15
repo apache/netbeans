@@ -726,7 +726,7 @@ public final class NbLoaderPool extends DataLoaderPool implements PropertyChange
                     List<DataLoader> ldrs = new ArrayList<DataLoader>(loaders);
                     // Since unit tests frequently add a bare DataLoader to default lookup:
                     ldrs.addAll(Lookup.getDefault().lookupAll(DataLoader.class));
-                    loadersArray = ldrs.toArray(new DataLoader[ldrs.size()]);
+                    loadersArray = ldrs.toArray(new DataLoader[0]);
                 }
                 arr = loadersArray;
             }

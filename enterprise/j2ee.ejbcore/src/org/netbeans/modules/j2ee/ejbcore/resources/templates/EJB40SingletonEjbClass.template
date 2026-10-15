@@ -1,0 +1,39 @@
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+<#if package?? && package != "">
+package ${package};
+</#if>
+
+<#if timerExist>
+import java.util.Date;
+import jakarta.ejb.Schedule;
+</#if>
+import jakarta.ejb.Singleton;
+<#if annotationLocalBean??>
+import jakarta.ejb.LocalBean;
+</#if>
+
+/**
+ *
+ * @author ${user}
+ */
+@Singleton
+<#if annotationLocalBean??>
+@LocalBean
+</#if>
+public class ${name} <#if interfaces??>implements ${interfaces} </#if>{
+<#if timerExist>
+    @Schedule(${timerString})
+    <#if exposeTimer>@Override</#if>
+    public void myTimer() {
+        System.out.println("Timer event: " + new Date());
+    }
+</#if>
+
+    // Add business logic below. (Right-click in editor and choose
+    // "Insert Code > Add Business Method")
+
+}

@@ -49,10 +49,8 @@ public final class NBLog extends Log {
 
     private NBLog(
             final Context context,
-            final PrintWriter errWriter,
-            final PrintWriter warnWriter,
-            final PrintWriter noticeWriter) {
-        super(context, errWriter, warnWriter, noticeWriter);
+            final PrintWriter output) {
+        super(context, output);
     }
 
     public static NBLog instance(Context context) {
@@ -72,9 +70,19 @@ public final class NBLog extends Log {
             public Log make(Context c) {
                 return new NBLog(
                     c,
-                    errWriter,
-                    warnWriter,
-                    noticeWriter);
+                    errWriter);
+            }
+        });
+    }
+
+    public static void preRegister(Context context,
+                                   final PrintWriter output) {
+        context.put(logKey, new Context.Factory<Log>() {
+            @Override
+            public Log make(Context c) {
+                return new NBLog(
+                    c,
+                    output);
             }
         });
     }

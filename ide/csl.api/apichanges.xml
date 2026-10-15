@@ -25,6 +25,65 @@
 <apidef name="csl.api">Common Scripting Language API</apidef>
 </apidefs>
 <changes>
+    <change id="OccurrencesFinder.KeepMarks">
+        <api name="csl.api"/>
+        <summary>Enable controlling highlighting of occurrences</summary>
+        <version major="2" minor="88"/>
+        <date day="17" month="9" year="2025"/>
+        <author login="matthiasblaesing"/>
+        <compatibility addition="yes" deletion="no" modification="no" binary="compatible" source="compatible" deprecation="no"/>
+        <description>
+            <p>
+                Add two accessors <code>isMarkOccurrencesEnabled</code> and
+                <code>isKeepMarks</code> to <code>OccurrencesFinder</code>. The
+                intention is, that implementors of <code>OccurrencesFinder</code>
+                can indicate, whether highlighting of occurrenes is enabled and
+                if highlights should be retained, after the caret is moved off
+                the highlighted item.
+            </p>
+        </description>
+        <class package="org.netbeans.modules.csl.api" name="OccurrencesFinder"/>
+    </change>
+    <change id="StructureItem.InheritedItem">
+        <api name="csl.api"/>
+        <summary>Adding a new StructureItem.InheritedItem interface</summary>
+        <version major="2" minor="72"/>
+        <date day="31" month="10" year="2021"/>
+        <author login="junichi11"/>
+        <compatibility addition="yes" deletion="no" modification="no" binary="compatible" source="compatible" deprecation="no"/>
+        <description>
+            <p>
+                Adding <code>StructureItem.InheritedItem</code> interface which allows defining whether the StructrureItem is an inherited item.
+                Adding also <code>StructrureItem.isInherited</code> static method.
+            </p>
+        </description>
+        <class package="org.netbeans.modules.csl.api" name="StructureItem"/>
+    </change>
+    <change id="ExtraMockServices">
+        <summary>Allow subclasses to inject instances to MockLookup</summary>
+        <version major="2" minor="65"/>
+        <date day="30" month="9" year="2020"/>
+        <author login="sdedic"/>
+        <compatibility addition="yes"/>
+        <description>
+            Subclasses of <code>o.n.m.csl.api.test.TestBase</code> may subclass <code>createExtraMockLookupContent</code> to
+            add extra services into the <code>MockLookup</code> during test setup.
+        </description>
+        <class package="org.netbeans.modules.csl.api.test" name="TestBase" link="no"/>
+    </change>
+    <change id="Remove-BaseDocument">
+        <summary>BaseDocument references reduced</summary>
+        <version major="2" minor="65"/>
+        <date day="30" month="9" year="2020"/>
+        <author login="sdedic"/>
+        <compatibility addition="yes" deprecation="yes"/>
+        <description>
+            Decprecated API dependency on BaseDocument that introduces (unnecessary) dependency on <code>editor.lib</code> module
+            in clients.
+        </description>
+        <class package="org.netbeans.modules.csl.api" name="EditList"/>
+        <class package="org.netbeans.modules.csl.spi" name="GsfUtilities"/>
+    </change>
     <change id="TypesSplit">
         <summary>Separate common non UI classes</summary>
         <version major="2" minor="54"/>
@@ -255,7 +314,6 @@
 <htmlcontents>
 <head>
     <title>Change History for the Common Scripting Language API</title>
-    <link rel="stylesheet" href="prose.css" type="text/css"/>
 </head>
 <body>
     <standard-changelists module-code-name="org.netbeans.modules.csl.api"/>

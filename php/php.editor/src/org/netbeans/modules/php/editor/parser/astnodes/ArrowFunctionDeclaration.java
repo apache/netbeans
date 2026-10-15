@@ -38,6 +38,7 @@ import org.netbeans.api.annotations.common.NullAllowed;
  * fn&($x) => $x; // reference
  * fn($x, ...$y) => $y; // variadics
  * static fn() => isset($this); // static
+ * #[A(1)] fn () => 1; // attributed [NETBEANS-4443] PHP 8.0
  *
  * fn() => yield 100; // this works
  * </pre>
@@ -46,7 +47,7 @@ import org.netbeans.api.annotations.common.NullAllowed;
  *
  * @see https://wiki.php.net/rfc/arrow_functions_v2
  */
-public class ArrowFunctionDeclaration extends Expression {
+public class ArrowFunctionDeclaration extends Expression implements Attributed {
 
     private final boolean isReference;
     private final boolean isStatic;
@@ -54,17 +55,38 @@ public class ArrowFunctionDeclaration extends Expression {
     @NullAllowed
     private final Expression returnType;
     private final Expression expression;
+    private final List<Attribute> attributes = new ArrayList<>();
 
     public ArrowFunctionDeclaration(int start, int end, List formalParameters, Expression returnType, Expression expression, boolean isReference, boolean isStatic) {
+        this(start, end, formalParameters, returnType, expression, isReference, isStatic, Collections.emptyList());
+    }
+
+    private ArrowFunctionDeclaration(int start, int end, List<FormalParameter> formalParameters, Expression returnType, Expression expression, boolean isReference, boolean isStatic, List<Attribute> attributes) {
         super(start, end);
         if (formalParameters == null) {
             throw new IllegalArgumentException();
         }
+        this.attributes.addAll(attributes);
         this.isReference = isReference;
         this.isStatic = isStatic;
         this.formalParameters.addAll(formalParameters);
         this.returnType = returnType;
         this.expression = expression;
+    }
+
+    public static ArrowFunctionDeclaration create(ArrowFunctionDeclaration declaration, List<Attribute> attributes) {
+        assert attributes != null;
+        int start = attributes.isEmpty() ? declaration.getStartOffset() : attributes.get(0).getStartOffset();
+        return new ArrowFunctionDeclaration(
+                start,
+                declaration.getEndOffset(),
+                declaration.getFormalParameters(),
+                declaration.getReturnType(),
+                declaration.getExpression(),
+                declaration.isReference(),
+                declaration.isStatic(),
+                attributes
+        );
     }
 
     /**
@@ -114,6 +136,23 @@ public class ArrowFunctionDeclaration extends Expression {
         return isStatic;
     }
 
+    /**
+     * Get the attributes of this.
+     *
+     * e.g. {@code $fn = #[A(1)] fn () => 1;}
+     *
+     * @return the attributes
+     */
+    @Override
+    public List<Attribute> getAttributes() {
+        return Collections.unmodifiableList(attributes);
+    }
+
+    @Override
+    public boolean isAttributed() {
+        return !attributes.isEmpty();
+    }
+
     @Override
     public void accept(Visitor visitor) {
         visitor.visit(this);
@@ -121,9 +160,12 @@ public class ArrowFunctionDeclaration extends Expression {
 
     @Override
     public String toString() {
+        StringBuilder sbAttributes = new StringBuilder();
+        getAttributes().forEach(attribute -> sbAttributes.append(attribute).append(" ")); // NOI18N
         StringBuilder sbParams = new StringBuilder();
         getFormalParameters().forEach((param) -> sbParams.append(param).append(",")); // NOI18N
-        return (isStatic() ? "static " : " ") // NOI18N
+        return sbAttributes.toString()
+                + (isStatic() ? "static " : " ") // NOI18N
                 + "fn" + (isReference() ? " & " : "") + "(" + sbParams.toString() + ")" // NOI18N
                 + (getReturnType() != null ? ": " + getReturnType() : "") // NOI18N
                 + " => " // NOI18N

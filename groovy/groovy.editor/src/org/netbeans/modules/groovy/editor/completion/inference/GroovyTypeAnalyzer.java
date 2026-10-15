@@ -20,16 +20,15 @@
 package org.netbeans.modules.groovy.editor.completion.inference;
 
 import java.util.Collections;
-import java.util.ListIterator;
 import java.util.Set;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.ModuleNode;
-import org.codehaus.groovy.ast.expr.ClosureExpression;
 import org.codehaus.groovy.ast.expr.MethodCallExpression;
 import org.codehaus.groovy.ast.expr.VariableExpression;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.groovy.editor.api.AstPath;
+import org.netbeans.modules.groovy.editor.utils.GroovyUtils;
 
 /**
  *
@@ -42,9 +41,13 @@ public class GroovyTypeAnalyzer {
     public GroovyTypeAnalyzer(BaseDocument document) {
         this.document = document;
     }
-
-    public Set<ClassNode> getTypes(AstPath path, int astOffset) {
+    
+   public Set<ClassNode> getTypes(AstPath path, int astOffset) {
         ASTNode caller = path.leaf();
+        ClassNode inferred = GroovyUtils.findInferredType(caller);
+        if (inferred != null) {
+            return Collections.singleton(inferred);
+        }
         if (caller instanceof VariableExpression) {
             ModuleNode moduleNode = (ModuleNode) path.root();
             TypeInferenceVisitor typeVisitor = new TypeInferenceVisitor(moduleNode.getContext(), path, document, astOffset);

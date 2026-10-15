@@ -19,7 +19,6 @@
 
 package org.netbeans.beaninfo.editors;
 
-import java.beans.*;
 
 /**
  * Editor for property of type java.lang.Character
@@ -29,12 +28,8 @@ import java.beans.*;
 public class CharacterEditor extends WrappersEditor {
 
     public CharacterEditor() {
-        super(java.lang.Character.TYPE);
+        super(Character.TYPE);
     }
-
-
-    //----------------------------------------------------------------------
-
 
     /**
      * This method is intended for use when generating Java code to set
@@ -47,11 +42,12 @@ public class CharacterEditor extends WrappersEditor {
      * @return A fragment of Java code representing an initializer for the
      *   	current value.
      */
+    @Override
     public String getJavaInitializationString() {
-        if ( ((Character)getValue()).charValue() == '\'' )
-            return "new java.lang.Character('\\'')";                 // NOI18N
+        if ((Character)getValue() == '\'')
+            return "Character.valueOf('\\'')";                 // NOI18N
         else
-            return "new java.lang.Character('" + getAsText() + "')"; // NOI18N
+            return "Character.valueOf('" + getAsText() + "')"; // NOI18N
     }
 
 }

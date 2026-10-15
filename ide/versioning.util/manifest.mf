@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-OpenIDE-Module: org.netbeans.modules.versioning.util
+OpenIDE-Module: org.netbeans.modules.versioning.util/2
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/versioning/util/Bundle.properties
 OpenIDE-Module-Layer: org/netbeans/modules/versioning/util/resources/layer.xml
 OpenIDE-Module-Recommends: org.netbeans.modules.versioning.indexingbridge

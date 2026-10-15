@@ -28,9 +28,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import junit.framework.AssertionFailedError;
@@ -913,13 +911,9 @@ public class ProvidedExtensionsTest extends NbTestCase {
                     if (from.isDirectory()) {
                         from.renameTo(to);
                     } else {
-                        InputStream inputStream = new FileInputStream(from);
-                        OutputStream outputStream = new FileOutputStream(to);
-                        try {
-                            FileUtil.copy(inputStream, outputStream);
-                        } finally {
-                            if (inputStream != null) inputStream.close();
-                            if (outputStream != null) outputStream.close();
+                        try (InputStream is = new FileInputStream(from);
+                             OutputStream os = new FileOutputStream(to)) {
+                            is.transferTo(os);
                         }
                         to.setLastModified(from.lastModified());
                         assertTrue(from.delete());
@@ -949,13 +943,9 @@ public class ProvidedExtensionsTest extends NbTestCase {
                     assertFalse(to.exists());
                     
                     assertFalse(from.equals(to));
-                    InputStream inputStream = new FileInputStream(from);
-                    OutputStream outputStream = new FileOutputStream(to);
-                    try {
-                        FileUtil.copy(inputStream, outputStream);
-                    } finally {
-                        if (inputStream != null) inputStream.close();
-                        if (outputStream != null) outputStream.close();
+                    try (InputStream is = new FileInputStream(from);
+                         OutputStream os = new FileOutputStream(to)) {
+                        is.transferTo(os);
                     }
                     assertTrue(from.exists());
                     assertTrue(to.exists());

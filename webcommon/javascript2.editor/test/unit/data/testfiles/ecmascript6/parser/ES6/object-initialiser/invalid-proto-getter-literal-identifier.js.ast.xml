@@ -1,0 +1,73 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='59'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='58'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='58'>
+      <ObjectNode start='1' end='57'>
+        <!-- ObjectNode Elements -->
+        <PropertyNode name='__proto' start='3' end='18'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='7' end='14'>
+            <name>__proto</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Getter -->
+          <FunctionNode name='get __proto' kind='GETTER' start='3' end='18'>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='16' end='17'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+            </Block>
+          </FunctionNode>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <PropertyNode name='__proto__' start='21' end='37'>
+          <!-- PropertyNode Key -->
+          <StringLiteralNode value='__proto__' start='21' end='30'/>
+          <!-- PropertyNode Value -->
+          <NullLiteralNode start='33' end='37'/>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+        <PropertyNode name='__proto__' start='39' end='54'>
+          <!-- PropertyNode Key -->
+          <IdentNode start='39' end='48'>
+            <name>__proto__</name>
+            <isPropertyName/>
+            <isProtoPropertyName/>
+          </IdentNode>
+          <!-- PropertyNode Value -->
+          <NullLiteralNode start='50' end='54'/>
+          <!-- PropertyNode Decorators -->
+        </PropertyNode>
+      </ObjectNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

@@ -134,7 +134,6 @@ public class VariablePanel extends javax.swing.JPanel implements DocumentListene
 private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
     JFileChooser chooser = new JFileChooser();
     chooser.setFileHidingEnabled(false);
-    FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
     chooser.setFileSelectionMode (JFileChooser.DIRECTORIES_ONLY);
     chooser.setMultiSelectionEnabled(false);
     chooser.setDialogTitle(NbBundle.getBundle(VariablePanel.class).getString("MSG_Choose_Folder"));

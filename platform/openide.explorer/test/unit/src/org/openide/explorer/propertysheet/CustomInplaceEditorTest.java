@@ -132,11 +132,13 @@ public class CustomInplaceEditorTest extends NbTestCase {
             this.env = env;
             env.registerInplaceEditorFactory(this);
         }
-        
+
+        @Override
         public boolean supportsCustomEditor() {
             return false;
         }
-        
+
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
         }

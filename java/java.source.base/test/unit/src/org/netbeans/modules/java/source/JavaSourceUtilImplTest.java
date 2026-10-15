@@ -28,9 +28,11 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.swing.event.ChangeListener;
+import javax.tools.Diagnostic.Kind;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
 import org.junit.Before;
@@ -38,6 +40,9 @@ import org.junit.Test;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.queries.AnnotationProcessingQuery;
+import org.netbeans.modules.java.preprocessorbridge.spi.JavaSourceUtilImpl.ModuleInfoHandle;
+import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.SourceUtilsTestUtil2;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.classfile.ClassFile;
@@ -63,6 +68,11 @@ public class JavaSourceUtilImplTest extends NbTestCase {
     private FileObject cache;
     private FileObject cacheSrc;
     private FileObject ap;
+    private final String MODULE_INFO_SOURCE=
+            """
+            module org.nb {
+            }
+            """;
     
     public JavaSourceUtilImplTest(String name) {
         super(name);
@@ -73,6 +83,7 @@ public class JavaSourceUtilImplTest extends NbTestCase {
     @Override
     public void setUp() throws Exception {
         clearWorkDir();
+        SourceUtilsTestUtil2.disableMultiFileSourceRoots();
         wd = FileUtil.toFileObject(FileUtil.normalizeFile(getWorkDir()));
         root = FileUtil.createFolder(wd, "src");    //NOI18N
         java = createFile(root, "org/nb/A.java","package nb;\n class A {}");    //NOI18N
@@ -86,7 +97,7 @@ public class JavaSourceUtilImplTest extends NbTestCase {
         MockLookup.setInstances(new SourceLevelQueryImplementation() {
             @Override
             public String getSourceLevel(FileObject javaFile) {
-                return "1.8";
+                return "11";
             }
         });
         assertNotNull(root);
@@ -162,7 +173,7 @@ public class JavaSourceUtilImplTest extends NbTestCase {
         }, new SourceLevelQueryImplementation() {
             @Override
             public String getSourceLevel(FileObject javaFile) {
-                return "1.8";
+                return "11";
             }
         });
 
@@ -178,7 +189,7 @@ public class JavaSourceUtilImplTest extends NbTestCase {
                         "import javax.lang.model.element.TypeElement;\n" +
                         "import javax.lang.model.SourceVersion;\n" +
                         "\n" +
-                        "@SupportedAnnotationTypes(\"*\") @SupportedSourceVersion(SourceVersion.RELEASE_8)\n" +
+                        "@SupportedAnnotationTypes(\"*\") @SupportedSourceVersion(SourceVersion.RELEASE_11)\n" +
                         "public class AP extends AbstractProcessor {\n" +
                         "    int round;\n" +
                         "    @Override\n" +
@@ -223,6 +234,28 @@ public class JavaSourceUtilImplTest extends NbTestCase {
                 methods);
     }
 
+    @Test
+    public void testGenerateWrongContent() throws Exception {
+        MockLookup.setInstances(new SourceLevelQueryImplementation() {
+            @Override
+            public String getSourceLevel(FileObject javaFile) {
+                return "11";
+            }
+        });
+        assertNotNull(root);
+        assertNotNull(java);
+        int[] errorCount = new int[1];
+        DiagnosticListener<JavaFileObject> errors = d -> {
+            if (d.getKind() == Kind.ERROR) {
+                errorCount[0]++;
+            }
+        };
+        final Map<String, byte[]> res = new JavaSourceUtilImpl().generate(root, java, "package nb;\n class A { void foo(){ Unknown unknown;}}", errors);   //NOI18N
+        assertNotNull(res);
+        assertEquals(0, res.size());
+        assertEquals(1, errorCount[0]);
+    }
+
     private static FileObject createFile(
             final FileObject root,
             final String path,
@@ -249,7 +282,15 @@ public class JavaSourceUtilImplTest extends NbTestCase {
         }
         System.out.printf("Dumped into: %s%n", FileUtil.getFileDisplayName(wd));
     }
-
+    @Test
+    public void testGetModuleInfoHandle() throws Exception {
+        JavaSourceUtilImpl impl = new JavaSourceUtilImpl();
+        FileObject ff = createFile(root,"module-info.java", MODULE_INFO_SOURCE);
+        JavaSource src = Objects.requireNonNull(JavaSource.forFileObject(ff));
+        ModuleInfoHandle mih = Objects.requireNonNull(impl.getModuleInfoHandle(src));
+        String moduleName = mih.parseModuleName();
+        assertEquals("org.nb", moduleName);
+    }
     static {
         System.setProperty("SourcePath.no.source.filter", "true");
     }

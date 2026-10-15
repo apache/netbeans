@@ -22,7 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.payara.common.PayaraLogger;
 import org.netbeans.modules.payara.common.PayaraInstance;
@@ -37,20 +37,14 @@ import org.openide.util.NbBundle;
  */
 public class ServerUtils {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = PayaraLogger.get(ServerUtils.class);
     /** Domains folder prefix. */
     private static final String DOMAINS_FOLDER_PREFIX = "GF_";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get the file attribute with the specified name as {@see String}.
      * <p/>
@@ -154,13 +148,13 @@ public class ServerUtils {
      * @return Domains folder.
      */
     public static String getDomainsFolder(@NonNull PayaraInstance instance) {
-        PayaraVersion version = instance.getVersion();
+        PayaraPlatformVersionAPI version = instance.getPlatformVersion();
         if (version == null) {
             throw new IllegalStateException(NbBundle.getMessage(PayaraInstance.class,
                     "PayaraInstance.getDomainsFolder.versionIsNull",
                     instance.getDisplayName()));
         }
-        boolean useBuild = version.getBuild() > 0;
+        boolean useBuild = version.getBuild() != null && !version.getBuild().isEmpty();
         boolean useUpdate = useBuild || version.getUpdate() > 0;
         // Allocate 2 characters per version number part and 1 character
         // per separator.
@@ -168,14 +162,14 @@ public class ServerUtils {
                 + (useUpdate ? (useBuild ? 6 : 3) : 0));
         sb.append(DOMAINS_FOLDER_PREFIX);
         sb.append(Short.toString(version.getMajor()));
-        sb.append(PayaraVersion.SEPARATOR);
+        sb.append(PayaraPlatformVersionAPI.SEPARATOR);
         sb.append(Short.toString(version.getMinor()));
         if (useUpdate) {
-            sb.append(PayaraVersion.SEPARATOR);
+            sb.append(PayaraPlatformVersionAPI.SEPARATOR);
             sb.append(Short.toString(version.getUpdate()));
             if (useBuild) {
-                sb.append(PayaraVersion.SEPARATOR);
-                sb.append(Short.toString(version.getBuild()));
+                sb.append(PayaraPlatformVersionAPI.SEPARATOR);
+                sb.append(version.getBuild());
             }
         }
         return sb.toString();

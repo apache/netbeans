@@ -271,7 +271,7 @@ public class MoveMembersPanel extends javax.swing.JPanel implements CustomRefact
                 SourceGroup g = (SourceGroup) rootComboBox.getSelectedItem();
                 String packageName = packageComboBox.getSelectedItem().toString();
                 if (g != null && packageName != null) {
-                    String pathname = packageName.replaceAll("\\.", "/"); // NOI18N
+                    String pathname = packageName.replace(".", "/"); // NOI18N
                     FileObject fo = g.getRootFolder().getFileObject(pathname);
                     ClassPath bootCp = ClassPath.getClassPath(fo, ClassPath.BOOT);
                     ClassPath compileCp = ClassPath.getClassPath(fo, ClassPath.COMPILE);
@@ -312,6 +312,7 @@ public class MoveMembersPanel extends javax.swing.JPanel implements CustomRefact
 
                                 @Override
                                 public void run(CompilationController parameter) throws Exception {
+                                    parameter.toPhase(JavaSource.Phase.RESOLVED);
                                     for (ElementHandle<TypeElement> elementHandle : result) {
                                         TypeElement element = elementHandle.resolve(parameter);
                                         if (element != null) {
@@ -330,7 +331,7 @@ public class MoveMembersPanel extends javax.swing.JPanel implements CustomRefact
                         } catch (IOException ex) {
                             Exceptions.printStackTrace(ex);
                         }
-                        Collections.sort(items, new Comparator() {
+                        items.sort(new Comparator() {
                             private Comparator COLLATOR = Collator.getInstance();
 
                             @Override
@@ -349,7 +350,7 @@ public class MoveMembersPanel extends javax.swing.JPanel implements CustomRefact
                                 return COLLATOR.compare(p1.getDisplayName(), p2.getDisplayName());
                             }
                         });
-                        model = new DefaultComboBoxModel(items.toArray(new ClassItem[items.size()]));
+                        model = new DefaultComboBoxModel(items.toArray(new ClassItem[0]));
                     } else {
                         model = new DefaultComboBoxModel();
                     }
@@ -414,7 +415,7 @@ public class MoveMembersPanel extends javax.swing.JPanel implements CustomRefact
             }
             result.add(description);
         }
-        Collections.sort(result, isNaturalSort() ? Description.POSITION_COMPARATOR : Description.ALPHA_COMPARATOR);
+        result.sort(isNaturalSort() ? Description.POSITION_COMPARATOR : Description.ALPHA_COMPARATOR);
         if(warn) {
             if(this.label == null && outlineView1.isValid()) {
                 final JLayeredPane layeredPaneAbove = JLayeredPane.getLayeredPaneAbove(outlineView1);
@@ -454,7 +455,7 @@ public class MoveMembersPanel extends javax.swing.JPanel implements CustomRefact
                     @Override
                     public void componentHidden(ComponentEvent e) {}
                 });
-                layeredPaneAbove.add(label, new Integer(JLayeredPane.POPUP_LAYER - 1));
+                layeredPaneAbove.add(label, (JLayeredPane.POPUP_LAYER - 1));
             }
         } else {
             JLayeredPane layeredPaneAbove = JLayeredPane.getLayeredPaneAbove(outlineView1);
@@ -900,8 +901,8 @@ public class MoveMembersPanel extends javax.swing.JPanel implements CustomRefact
     public List<? extends TreePathHandle> getHandles() {
         List<TreePathHandle> result = new LinkedList<TreePathHandle>();
         ElementNode rootNode = getRootNode();
-        if(rootNode != null && rootNode.getDescritption() != null) {
-            for (Description description : rootNode.getDescritption().getSubs()) {
+        if(rootNode != null && rootNode.getDescription() != null) {
+            for (Description description : rootNode.getDescription().getSubs()) {
                 if (description.getSelected() == Boolean.TRUE) {
                     result.add(TreePathHandle.from(description.getElementHandle(), description.getCpInfo()));
                 }
@@ -1036,6 +1037,7 @@ public class MoveMembersPanel extends javax.swing.JPanel implements CustomRefact
             switch (e.getKind()) {
                 case CLASS:
                 case INTERFACE:
+                case RECORD:
                 case ENUM:
                 case ANNOTATION_TYPE:
                     if(parent == null) {
@@ -1113,7 +1115,7 @@ public class MoveMembersPanel extends javax.swing.JPanel implements CustomRefact
         public Void visitClass(ClassTree node, Map<Element, Long> p) {
             Element e = this.trees.getElement(this.getCurrentPath());
             if (e != null) {
-                long pos = this.sourcePositions.getStartPosition(cu, node);
+                long pos = this.sourcePositions.getStartPosition(node);
                 p.put(e, pos);
             }
             return super.visitClass(node, p);
@@ -1123,7 +1125,7 @@ public class MoveMembersPanel extends javax.swing.JPanel implements CustomRefact
         public Void visitMethod(MethodTree node, Map<Element, Long> p) {
             Element e = this.trees.getElement(this.getCurrentPath());
             if (e != null) {
-                long pos = this.sourcePositions.getStartPosition(cu, node);
+                long pos = this.sourcePositions.getStartPosition(node);
                 p.put(e, pos);
             }
             return null;
@@ -1133,7 +1135,7 @@ public class MoveMembersPanel extends javax.swing.JPanel implements CustomRefact
         public Void visitVariable(VariableTree node, Map<Element, Long> p) {
             Element e = this.trees.getElement(this.getCurrentPath());
             if (e != null) {
-                long pos = this.sourcePositions.getStartPosition(cu, node);
+                long pos = this.sourcePositions.getStartPosition(node);
                 p.put(e, pos);
             }
             return null;

@@ -44,7 +44,7 @@ import org.openide.xml.XMLUtil;
  */
 public class ClassPathSupportCallbackImpl implements ClassPathSupport.Callback {
     
-    public final static String ELEMENT_INCLUDED_LIBRARIES = "included-library"; // NOI18N
+    public static final String ELEMENT_INCLUDED_LIBRARIES = "included-library"; // NOI18N
     
     private static String[] ejbjarElemOrder = new String[] { "name", "minimum-ant-version", "explicit-platform", "use-manifest", "included-library", "web-services", "source-roots", "test-roots" }; //NOI18N
     

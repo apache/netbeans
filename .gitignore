@@ -1,9 +1,7 @@
 /*/build/
-/*/nbproject/private/
-/*/*/nbproject/private/
+**/nbproject/private/
 /*/*/build/
 /*/*/dist/
-/*/*/*/nbproject/private/
 /*/*/*/build/
 /*/*/*/dist/
 /*/external/*.zip
@@ -32,9 +30,10 @@
 /nbbuild/user.build.properties
 /nbbuild/gitinfo.properties
 /nbbuild/netbeansrelease.properties
+/nbbuild/netbeansrelease.json
 /nbi/engine/native/*/*/dist/
 /nb-javac/
-/java.source.nbjavac/test/test-nb-javac/nbproject/private/
+/java/java.lsp.server/vscode/.vscode-test/
 /harness/apisupport.harness/windows-launcher-src/*.exe
 /harness/apisupport.harness/windows-launcher-src/*.res
 /ide/versioning/test/qa-functional/data/tck.properties
@@ -47,13 +46,13 @@
 # Various files that may be generated if the launcher projects are opened in NetBeans 8.2.
 /harness/apisupport.harness/windows-launcher-src/nbproject/Makefile-*.mk
 /harness/apisupport.harness/windows-launcher-src/nbproject/Package-*.bash
-/harness/apisupport.harness/windows-launcher-src/nbproject/private/
 /nb/ide.launcher/windows/nbproject/Makefile-*.mk
 /nb/ide.launcher/windows/nbproject/Package-*.bash
-/nb/ide.launcher/windows/nbproject/private/
 /platform/o.n.bootstrap/launcher/windows/nbproject/Makefile-*.mk
 /platform/o.n.bootstrap/launcher/windows/nbproject/Package-*.bash
-/platform/o.n.bootstrap/launcher/windows/nbproject/private/
+/enterprise/web.jspparser/test/unit/data/emptyWebProject/lib/*.jar
+/enterprise/web.jspparser/test/unit/data/project2/lib/*.jar
+/enterprise/web.jspparser/test/unit/data/project2_jakarta/lib/*.jar
 
 # Database logs
 derby.log
@@ -71,16 +70,14 @@ derby.log
 /ide/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/SQLParserTokenManager.java
 /ide/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/Token.java
 /ide/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/TokenMgrError.java
-/debugger.jpda.ui/test/qa-functional/data/debugTestProject/nbproject/private/
-/debugger.jpda.ui/test/qa-functional/data/debugTestProjectAnt/nbproject/private/
 /profiler/lib.profiler/release/lib/
 /websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/jaxb/
 /websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/oauth/
 /websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/wadl/
-/xml/test/qa-functional/data/DTDActionsTestProject/nbproject/private/
-/xml/test/qa-functional/data/ActionsTestProject/nbproject/private/
-/xml/test/qa-functional/data/CoreTemplatesTestProject/nbproject/private/
-/javafx2.samples/FXML-LoginDemo/nbproject/private/
+
+# OS generated files - test related #
+#####################################
+/platform/o.n.bootstrap/test/unit/data/jars
 
 # Snapcraft Generated files #
 #######################
@@ -97,6 +94,33 @@ derby.log
 
 # Gradle Support Generated files #
 ##################################
-/groovy/gradle/netbeans-gradle-tooling/.gradle/
-/groovy/gradle/netbeans-gradle-tooling/gradle/wrapper/gradle-wrapper.jar
-/groovy/gradle/release/modules/gradle/daemon-loader/.gradle/
+/extide/gradle/netbeans-gradle-tooling/.gradle/
+/extide/gradle/netbeans-gradle-tooling/gradle/wrapper/gradle-wrapper.jar
+/extide/gradle/netbeans-gradle-tooling/bin/
+/extide/gradle/release/modules/gradle/daemon-loader/.gradle/
+/nbbuild/misc/prepare-bundles/target/
+
+# Gradle Unittest Data
+/extide/gradle/test/unit/data/**/build/
+/extide/gradle/test/unit/data/**/.gradle/
+/java/gradle.java/test/unit/data/**/build/
+/java/gradle.java/test/unit/data/**/.gradle/
+/enterprise/micronaut/test/unit/data/**/build/
+/enterprise/micronaut/test/unit/data/**/.gradle/
+
+# ANTLR v4 Grammar
+##################################
+/java/languages.antlr/external/*.g4
+/java/languages.antlr/external/LexerAdaptor.java
+
+/ide/go.lang/src/org/antlr/parser/golang/Go*.java
+/ide/languages.hcl/src/org/netbeans/modules/languages/hcl/grammar/*.java
+/java/languages.antlr/src/org/antlr/parser/*/ANTLR*.java
+
+/webcommon/javascript2.json/src/org/netbeans/modules/javascript2/json/parser/Json*.java
+
+# idea
+.idea
+
+#ant generated file
+.ant-targets-build.xml

@@ -213,9 +213,9 @@ class AssignComments extends ErrorAwareTreeScanner<Void, Void> {
                 if (annTs == null || annTs.isEmpty()) {
                     return pos;
                 }
-                int modPos = ((JCTree)annTs.get(0)).pos;
+                int modPos = ((JCTree)annTs.getFirst()).pos;
                 if (modPos < pos) {
-                    child = annTs.get(0);
+                    child = annTs.getFirst();
                 } else {
                     child = null;
                 }
@@ -310,7 +310,7 @@ class AssignComments extends ErrorAwareTreeScanner<Void, Void> {
                 ClassTree clazz = (ClassTree)tree;
                 int cnt = clazz.getMembers().size();
                 if (cnt == 1) {
-                    Tree mt = clazz.getMembers().get(0);
+                    Tree mt = clazz.getMembers().getFirst();
                     if (mt.getKind() == Tree.Kind.METHOD && info.getTreeUtilities().isSynthetic(new TreePath(new TreePath(unit), mt))) {
                         cnt--;
                     }
@@ -337,7 +337,7 @@ class AssignComments extends ErrorAwareTreeScanner<Void, Void> {
     }
 
     private void lookForInline(TokenSequence<JavaTokenId> seq, Tree tree) {
-        seq.move((int) positions.getEndPosition(unit, tree));
+        seq.move((int) positions.getEndPosition(tree));
         CommentsCollection result = new CommentsCollection();
         while (seq.moveNext()) {
             if (seq.token().id() == JavaTokenId.WHITESPACE) {
@@ -403,7 +403,7 @@ class AssignComments extends ErrorAwareTreeScanner<Void, Void> {
     }
     
     private int countIndent(TokenSequence<JavaTokenId> seq, Tree tree) {
-        int st = (int)positions.getStartPosition(unit, tree);
+        int st = (int)positions.getStartPosition(tree);
         int save = seq.offset();
         int nl = -1;
         seq.move(st);
@@ -428,13 +428,13 @@ class AssignComments extends ErrorAwareTreeScanner<Void, Void> {
     }
     
     private boolean alreadySeenJavadoc(Token<JavaTokenId> token, TokenSequence<JavaTokenId> seq) {
-        return (token.id() == JavaTokenId.JAVADOC_COMMENT) &&
+        return (token.id() == JavaTokenId.JAVADOC_COMMENT || token.id() == JavaTokenId.JAVADOC_COMMENT_LINE_RUN) &&
                (mixedJDocTokenIndexes.contains(seq.index()));
     }
     
     private void lookForTrailing(TokenSequence<JavaTokenId> seq, Tree tree) {
         //TODO: [RKo] This does not work correctly... need improvemetns.
-        seq.move((int) positions.getEndPosition(unit, tree));
+        seq.move((int) positions.getEndPosition(tree));
         List<TrailingCommentsDataHolder> comments = new LinkedList<TrailingCommentsDataHolder>();
         int maxLines = 0;
         int newlines = 0;
@@ -484,11 +484,11 @@ class AssignComments extends ErrorAwareTreeScanner<Void, Void> {
                 // not be eaten although separated by many lines:
                 assign = true;
                 
-                if (index >= 0 && maxLines < Integer.MAX_VALUE && seq.token().length() > 0 && h.comment.id() == JavaTokenId.JAVADOC_COMMENT) {
+                if (index >= 0 && maxLines < Integer.MAX_VALUE && seq.token().length() > 0 && (h.comment.id() == JavaTokenId.JAVADOC_COMMENT || h.comment.id() == JavaTokenId.JAVADOC_COMMENT_LINE_RUN)) {
                     TreePath tp = info.getTreeUtilities().pathFor(seq.offset() + 1);
                     // traverse up to last parent that claims the position
                     while (tp.getParentPath() != null && 
-                           positions.getStartPosition(info.getCompilationUnit(), tp.getParentPath().getLeaf()) == seq.offset()) {
+                           positions.getStartPosition(tp.getParentPath().getLeaf()) == seq.offset()) {
                         tp = tp.getParentPath();
                     }
                     if (tp != null && JAVADOC_KINDS.contains(tp.getLeaf().getKind())) {
@@ -535,7 +535,7 @@ class AssignComments extends ErrorAwareTreeScanner<Void, Void> {
                 tokenIndexAlreadyAdded = idx;
             }
         } else {
-            int end = (int) positions.getEndPosition(unit, tree);
+            int end = (int) positions.getEndPosition(tree);
             seq.move(end); seq.moveNext();
         }
     }
@@ -598,7 +598,7 @@ class AssignComments extends ErrorAwareTreeScanner<Void, Void> {
             CommentsCollection result = new CommentsCollection();
             while (seq.moveNext() && seq.offset() < reset) {
                 JavaTokenId id = seq.token().id();
-                if (id == JavaTokenId.JAVADOC_COMMENT) {
+                if (id == JavaTokenId.JAVADOC_COMMENT || id == JavaTokenId.JAVADOC_COMMENT_LINE_RUN) {
                     mixedJDocTokenIndexes.add(seq.index());
                     start = Math.min(seq.offset(), start);
                     end = Math.max(seq.offset() + seq.token().length(), end);
@@ -624,7 +624,7 @@ class AssignComments extends ErrorAwareTreeScanner<Void, Void> {
      * @return position where to start 
      */
     private int findInterestingStart(JCTree tree) {
-        int pos = (int) positions.getStartPosition(unit, tree);
+        int pos = (int) positions.getStartPosition(tree);
         if (pos <= 0) return 0;
         seq.move(pos);
         boolean previousSucceeded;
@@ -635,6 +635,7 @@ class AssignComments extends ErrorAwareTreeScanner<Void, Void> {
                 case WHITESPACE:
                 case LINE_COMMENT:
                 case JAVADOC_COMMENT:
+                case JAVADOC_COMMENT_LINE_RUN:
                 case BLOCK_COMMENT:
                     continue;
                 case LBRACE:
@@ -677,7 +678,7 @@ class AssignComments extends ErrorAwareTreeScanner<Void, Void> {
 
     private Comment.Style getStyle(JavaTokenId id) {
         switch (id) {
-            case JAVADOC_COMMENT:
+            case JAVADOC_COMMENT, JAVADOC_COMMENT_LINE_RUN:
                 return Comment.Style.JAVADOC;
             case LINE_COMMENT:
                 return Comment.Style.LINE;
@@ -726,7 +727,7 @@ class AssignComments extends ErrorAwareTreeScanner<Void, Void> {
             if (ts.index() < tokenIndexAlreadyAdded) continue;
             t = ts.token();
             if (isComment(t.id())) {
-                if (t.id() == JavaTokenId.JAVADOC_COMMENT &&
+                if ((t.id() == JavaTokenId.JAVADOC_COMMENT || t.id() == JavaTokenId.JAVADOC_COMMENT_LINE_RUN) &&
                     mixedJDocTokenIndexes.contains(ts.index())) {
                     // skip javadocs already added
                     continue;
@@ -761,6 +762,7 @@ class AssignComments extends ErrorAwareTreeScanner<Void, Void> {
             case LINE_COMMENT:
             case BLOCK_COMMENT:
             case JAVADOC_COMMENT:
+            case JAVADOC_COMMENT_LINE_RUN:
                 return true;
             default:
                 return false;

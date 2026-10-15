@@ -81,49 +81,51 @@ public class ProjectOpenedHookImplTest extends NbTestCase {
     public void testGeneratedSources() throws Exception { // #187595
         FileObject p = d.createFolder("p");
         TestFileUtils.writeFile(p,
-                "pom.xml",
-                "<project xmlns='http://maven.apache.org/POM/4.0.0'>" +
-                "<modelVersion>4.0.0</modelVersion>" +
-                "<groupId>grp</groupId>" +
-                "<artifactId>art</artifactId>" +
-                "<packaging>jar</packaging>" +
-                "<version>0</version>" +
-                "<build>" +
-                "<plugins>" +
-                "<plugin>" +
-                "<groupId>org.codehaus.mojo</groupId>" +
-                "<artifactId>build-helper-maven-plugin</artifactId>" +
-                "<version>1.2</version>" +
-                "<executions>" +
-                "<execution>" +
-                "<id>add-src</id>" +
-                "<phase>generate-sources</phase>" +
-                "<goals>" +
-                "<goal>add-source</goal>" +
-                "</goals>" +
-                "<configuration>" +
-                "<sources>" +
-                "<source>../src</source>" +
-                "</sources>" +
-                "</configuration>" +
-                "</execution>" +
-                "<execution>" +
-                "<id>add-test-src</id>" +
-                "<phase>generate-test-sources</phase>" +
-                "<goals>" +
-                "<goal>add-test-source</goal>" +
-                "</goals>" +
-                "<configuration>" +
-                "<sources>" +
-                "<source>../tsrc</source>" +
-                "</sources>" +
-                "</configuration>" +
-                "</execution>" +
-                "</executions>" +
-                "</plugin>" +
-                "</plugins>" +
-                "</build>" +
-                "</project>");
+                "pom.xml", 
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>art</artifactId>
+                    <packaging>jar</packaging>
+                    <version>0</version>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.codehaus.mojo</groupId>
+                                <artifactId>build-helper-maven-plugin</artifactId>
+                                <version>1.2</version>
+                                <executions>
+                                    <execution>
+                                        <id>add-src</id>
+                                        <phase>generate-sources</phase>
+                                        <goals>
+                                            <goal>add-source</goal>
+                                        </goals>
+                                        <configuration>
+                                            <sources>
+                                                <source>../src</source>
+                                            </sources>
+                                        </configuration>
+                                    </execution>
+                                    <execution>
+                                        <id>add-test-src</id>
+                                        <phase>generate-test-sources</phase>
+                                        <goals>
+                                            <goal>add-test-source</goal>
+                                        </goals>
+                                        <configuration>
+                                            <sources>
+                                                <source>../tsrc</source>
+                                            </sources>
+                                        </configuration>
+                                    </execution>
+                                </executions>
+                            </plugin>
+                        </plugins>
+                    </build>
+                </project>
+                """);
         FileObject src = d.createFolder("src");
         FileObject tsrc = d.createFolder("tsrc");
         Project prj = ProjectManager.getDefault().findProject(p);
@@ -138,17 +140,52 @@ public class ProjectOpenedHookImplTest extends NbTestCase {
     }
 
     public void testRegistrationOfSubmodules() throws Exception { // #200445
-        TestFileUtils.writeFile(d, "pom.xml", "<project xmlns='http://maven.apache.org/POM/4.0.0'><modelVersion>4.0.0</modelVersion>" +
-                "<groupId>g</groupId><artifactId>p</artifactId><version>0</version>" +
-                "<packaging>pom</packaging><profiles><profile><id>special</id><modules><module>p2</module></modules></profile></profiles>" +
-                "</project>");
-        TestFileUtils.writeFile(d, "p2/pom.xml", "<project xmlns='http://maven.apache.org/POM/4.0.0'><modelVersion>4.0.0</modelVersion>" +
-                "<parent><groupId>g</groupId><artifactId>p</artifactId><version>0</version></parent><artifactId>p2</artifactId>" +
-                "<packaging>pom</packaging><modules><module>m</module></modules>" +
-                "</project>");
-        TestFileUtils.writeFile(d, "p2/m/pom.xml", "<project xmlns='http://maven.apache.org/POM/4.0.0'><modelVersion>4.0.0</modelVersion>" +
-                "<groupId>g</groupId><properties><my.name>m</my.name></properties><artifactId>${my.name}</artifactId><version>0</version>" +
-                "</project>");
+        TestFileUtils.writeFile(d, "pom.xml", 
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>g</groupId>
+                    <artifactId>p</artifactId>
+                    <version>0</version>
+                    <packaging>pom</packaging>
+                    <profiles>
+                        <profile>
+                            <id>special</id>
+                            <modules>
+                                <module>p2</module>
+                            </modules>
+                        </profile>
+                    </profiles>
+                </project>
+                """);
+        TestFileUtils.writeFile(d, "p2/pom.xml", 
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <parent>
+                        <groupId>g</groupId>
+                        <artifactId>p</artifactId>
+                        <version>0</version>
+                    </parent>
+                    <artifactId>p2</artifactId>
+                    <packaging>pom</packaging>
+                    <modules>
+                        <module>m</module>
+                    </modules>
+                </project>
+                """);
+        TestFileUtils.writeFile(d, "p2/m/pom.xml", 
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>g</groupId>
+                    <properties>
+                        <my.name>m</my.name>
+                    </properties>
+                    <artifactId>${my.name}</artifactId>
+                    <version>0</version>
+                </project>
+                """);
         Project p = ProjectManager.getDefault().findProject(d);
         ProjectOpenedHookImpl pohi = new ProjectOpenedHookImpl((NbMavenProjectImpl) p);
         pohi.projectOpened();

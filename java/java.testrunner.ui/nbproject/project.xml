@@ -87,6 +87,14 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.java.source</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>0.175</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.java.source.base</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -100,6 +108,15 @@
                     <compile-dependency/>
                     <run-dependency>
                         <specification-version>1.13</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.parsing.api</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>9.18</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -179,11 +196,14 @@
             </module-dependencies>
             <friend-packages>
                 <friend>org.netbeans.modules.gradle.test</friend>
+                <friend>org.netbeans.modules.java.lsp.server</friend>
+                <friend>org.netbeans.modules.java.openjdk.project</friend>
                 <friend>org.netbeans.modules.junit.ant.ui</friend>
                 <friend>org.netbeans.modules.junit.ui</friend>
                 <friend>org.netbeans.modules.maven.junit.ui</friend>
                 <friend>org.netbeans.modules.testng.ui</friend>
                 <package>org.netbeans.modules.java.testrunner.ui.api</package>
+                <package>org.netbeans.modules.java.testrunner.ui.spi</package>
             </friend-packages>
         </data>
     </configuration>

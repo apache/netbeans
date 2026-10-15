@@ -33,8 +33,6 @@ import org.netbeans.modules.versioning.util.VCSBugtrackingAccessor;
 /**
  * Only for team needs
  * 
- * XXX lets do that directly from kenai (after a clone) via the bugtracking bridge
- * 
  * @author Tomas Stupka
  */
 @org.openide.util.lookup.ServiceProvider(service=org.netbeans.modules.versioning.util.VCSBugtrackingAccessor.class)

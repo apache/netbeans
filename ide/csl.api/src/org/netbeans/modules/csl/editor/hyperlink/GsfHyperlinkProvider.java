@@ -20,10 +20,13 @@ package org.netbeans.modules.csl.editor.hyperlink;
 
 import java.util.EnumSet;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import javax.swing.text.Document;
+import org.netbeans.api.lsp.HyperlinkLocation;
 
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProviderExt;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;
+import org.netbeans.spi.lsp.HyperlinkLocationProvider;
 
 
 /**
@@ -58,5 +61,13 @@ public final class GsfHyperlinkProvider implements HyperlinkProviderExt {
 
     public String getTooltipText(Document doc, int offset, HyperlinkType type) {
         return GoToSupport.getGoToElementTooltip(doc, offset);
+    }
+
+    public static class LocationProvider implements HyperlinkLocationProvider {
+
+        @Override
+        public CompletableFuture<HyperlinkLocation> getHyperlinkLocation(Document doc, int offset) {
+            return GoToSupport.getGoToLocation(doc, offset);
+        }
     }
 }

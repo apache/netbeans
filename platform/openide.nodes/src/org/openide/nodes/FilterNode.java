@@ -26,7 +26,6 @@ import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
-import org.openide.util.WeakSet;
 import org.openide.util.actions.SystemAction;
 import org.openide.util.datatransfer.NewType;
 import org.openide.util.datatransfer.PasteType;
@@ -287,7 +286,7 @@ public class FilterNode extends Node {
     * node a distinctive display name and tooltip, and performing some special
     * action upon deletion, you may do so without risk of affecting the original
     * node as follows:
-    * <br><code><pre>
+    * <br><pre>{@code
     * public MyNode extends FilterNode {
     *   public MyNode (Node orig) {
     *     super (orig, new MyChildren (orig));
@@ -304,7 +303,7 @@ public class FilterNode extends Node {
     *     super.destroy (); // calls Node.destroy(), not orig.destroy()
     *   }
     * }
-    * </pre></code>
+    * }</pre>
     * <br>You may still manually delegate where desired using {@link #getOriginal}.
     * Other methods abstract in <code>Node</code> may simply be overridden without
     * any special handling.
@@ -2073,7 +2072,7 @@ public class FilterNode extends Node {
                     this.delegate = l;
 
                     if (results != null) {
-                        toCheck = new ArrayList<ProxyResult>(results).iterator();
+                        toCheck = new ArrayList<>(results).iterator();
                     }
                 }
             }
@@ -2098,7 +2097,7 @@ public class FilterNode extends Node {
 
             synchronized (this) {
                 if (results == null) {
-                    results = new WeakSet<ProxyResult>();
+                    results = Collections.newSetFromMap(new WeakHashMap<>());
                 }
 
                 results.add(p);

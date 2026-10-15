@@ -81,6 +81,9 @@ public class LogCommand extends GitCommand {
     private final boolean fetchBranchInfo;
     private static final Logger LOG = Logger.getLogger(LogCommand.class.getName());
 
+    /// see RevWalk.newFlag(); note: don't trust the doc! check RevWalk.RESERVED_FLAGS
+    static final int MAX_REVWALK_FLAGS = 23;
+
     public LogCommand (Repository repository, GitClassFactory gitFactory, SearchCriteria criteria,
             boolean fetchBranchInfo, ProgressMonitor monitor, RevisionInfoListener listener) {
         super(repository, gitFactory, monitor);
@@ -165,7 +168,7 @@ public class LogCommand extends GitCommand {
                         fullWalk.parseCommit(commit), branches, repository)
                     );
                     if (commit.getParentCount() == 0) {
-                        Ref replace = repository.getAllRefs().get("refs/replace/" + commit.getId().getName());
+                        Ref replace = repository.exactRef("refs/replace/" + commit.getId().getName());
                         if (replace != null) {
                             final RevCommit newCommit = Utils.findCommit(repository, replace.getTarget().getName());
                             if (newCommit != null) {
@@ -210,8 +213,8 @@ public class LogCommand extends GitCommand {
                     }
                 } else {
                     usedFlags.add(flagId);
-                    if (i < 25) {
-                        i = i + 1;
+                    if (i <= MAX_REVWALK_FLAGS - 1) { // leave one spare flag for the run method
+                        i++;
                         RevFlag flag = walk.newFlag(flagId);
                         List<GitBranch> branches = new ArrayList<>(allBranches.size());
                         branches.add(e.getValue());
@@ -253,7 +256,7 @@ public class LogCommand extends GitCommand {
     }
 
     public GitRevisionInfo[] getRevisions () {
-        return revisions.toArray(new GitRevisionInfo[revisions.size()]);
+        return revisions.toArray(new GitRevisionInfo[0]);
     }
 
     private void addRevision (GitRevisionInfo info) {
@@ -310,11 +313,11 @@ public class LogCommand extends GitCommand {
         Date from  = criteria.getFrom();
         Date to  = criteria.getTo();
         if (from != null && to != null) {
-            filter = AndRevFilter.create(filter, CommitTimeRevFilter.between(from, to));
+            filter = AndRevFilter.create(filter, CommitTimeRevFilter.between(from.toInstant(), to.toInstant()));
         } else if (from != null) {
-            filter = AndRevFilter.create(filter, CommitTimeRevFilter.after(from));
+            filter = AndRevFilter.create(filter, CommitTimeRevFilter.after(from.toInstant()));
         } else if (to != null) {
-            filter = AndRevFilter.create(filter, CommitTimeRevFilter.before(to));
+            filter = AndRevFilter.create(filter, CommitTimeRevFilter.before(to.toInstant()));
         }
         // this must be at the end, limit filter must apply as the last
         if (criteria.getLimit() != -1) {

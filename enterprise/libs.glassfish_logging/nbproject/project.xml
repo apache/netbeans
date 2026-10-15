@@ -28,7 +28,6 @@
             <friend-packages>
                 <friend>org.netbeans.modules.visualweb.j2ee14classloaderprovider</friend>
                 <friend>org.netbeans.modules.visualweb.j2ee15classloaderprovider</friend>
-                <friend>org.netbeans.modules.web.jsf12ri</friend>
                 <friend>org.netbeans.modules.web.jspparser</friend>
                 <package>com.sun.org.apache.commons.logging</package>
                 <package>com.sun.org.apache.commons.logging.impl</package>

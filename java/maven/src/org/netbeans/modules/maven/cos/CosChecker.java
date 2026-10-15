@@ -18,8 +18,6 @@
  */
 package org.netbeans.modules.maven.cos;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -32,8 +30,6 @@ import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.util.cli.CommandLineUtils;
-import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.project.runner.JavaRunner;
@@ -41,32 +37,26 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.modules.java.api.common.project.BaseActionProvider;
 import org.netbeans.modules.maven.ActionProviderImpl;
 import org.netbeans.modules.maven.api.Constants;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.api.PluginPropertyUtils;
 import org.netbeans.modules.maven.api.classpath.DependencyProjectsProvider;
-import org.netbeans.modules.maven.api.customizer.ModelHandle2;
 import org.netbeans.modules.maven.api.execute.*;
 import org.netbeans.modules.maven.configurations.M2ConfigProvider;
 import org.netbeans.modules.maven.configurations.M2Configuration;
-import static org.netbeans.modules.maven.cos.Bundle.*;
-import org.netbeans.modules.maven.customizer.CustomizerProviderImpl;
 import org.netbeans.modules.maven.execute.BeanRunConfig;
+import org.netbeans.modules.maven.runjar.MavenExecuteUtils;
 import org.netbeans.modules.maven.spi.cos.CompileOnSaveSkipper;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
-import org.openide.awt.Notification;
-import org.openide.awt.NotificationDisplayer;
-import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.InstalledFileLocator;
-import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
-import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
 
@@ -77,7 +67,6 @@ import org.openide.util.Utilities;
 @ProjectServiceProvider(service={PrerequisitesChecker.class, LateBoundPrerequisitesChecker.class}, projectType="org-netbeans-modules-maven")
 public class CosChecker implements PrerequisitesChecker, LateBoundPrerequisitesChecker {
 
-    static final String NB_COS = ".netbeans_automatic_build"; //NOI18N
     private static final Logger LOG = Logger.getLogger(CosChecker.class.getName());
     static final RequestProcessor RP = new RequestProcessor(CosChecker.class);
     // a maven property name denoting that the old, javarunner based execution is to be used.    
@@ -274,8 +263,6 @@ public class CosChecker implements PrerequisitesChecker, LateBoundPrerequisitesC
                 } else {
                     LOG.log(Level.INFO, "could not strip phase goals from RunConfig subclass {0}", config.getClass().getName());
                 }
-        } else {
-            warnNoTestCoS(config);
         }
     }
 
@@ -355,7 +342,7 @@ public class CosChecker implements PrerequisitesChecker, LateBoundPrerequisitesC
         }
         File fl = new File(path);
         fl = FileUtil.normalizeFile(fl);
-        return  new File(fl, NB_COS);
+        return new File(fl, BaseActionProvider.AUTOMATIC_BUILD_TAG);
     }
 
     /**
@@ -436,33 +423,7 @@ public class CosChecker implements PrerequisitesChecker, LateBoundPrerequisitesC
 
 
     static List<String> extractDebugJVMOptions(String argLine) throws Exception {
-        String[] split = CommandLineUtils.translateCommandline(argLine);
-        List<String> toRet = new ArrayList<String>();
-        for (String arg : split) {
-            if ("-Xdebug".equals(arg)) { //NOI18N
-                continue;
-            }
-            if ("-Djava.compiler=none".equals(arg)) { //NOI18N
-                continue;
-            }
-            if ("-Xnoagent".equals(arg)) { //NOI18N
-                continue;
-            }
-            if (arg.startsWith("-Xrunjdwp")) { //NOI18N
-                continue;
-            }
-            if (arg.equals("-agentlib:jdwp")) { //NOI18N
-                continue;
-            }
-            if (arg.startsWith("-agentlib:jdwp=")) { //NOI18N
-                continue;
-            }
-            if (arg.trim().length() == 0) {
-                continue;
-            }
-            toRet.add(arg);
-        }
-        return toRet;
+        return MavenExecuteUtils.extractDebugJVMOptions(argLine);
     }
     
     static void touchProject(Project project) {
@@ -486,91 +447,6 @@ public class CosChecker implements PrerequisitesChecker, LateBoundPrerequisitesC
                 deleteCoSTimeStamp(mvn, true);
             }
         }
-    }
-
-    @StaticResource private static final String SUGGESTION = "org/netbeans/modules/maven/resources/suggestion.png";
-    private static boolean warnedNoCoS;
-    @Messages({
-        "CosChecker.no_test_cos.title=Not using Compile on Save",
-        "CosChecker.no_test_cos.details=Compile on Save mode can speed up single test execution for many projects."
-    })
-    static void warnNoTestCoS(RunConfig config) {
-        if (warnedNoCoS) {
-            return;
-        }
-        final Project project = config.getProject();
-        if (project == null) {
-            return;
-        }
-        final Notification n = NotificationDisplayer.getDefault().notify(CosChecker_no_test_cos_title(), ImageUtilities.loadImageIcon(SUGGESTION, true), CosChecker_no_test_cos_details(), new ActionListener() {
-            @Override public void actionPerformed(ActionEvent e) {
-                showCompilePanel(project);
-            }
-        }, NotificationDisplayer.Priority.LOW);
-        RequestProcessor.getDefault().post(new Runnable() {
-            @Override public void run() {
-                n.clear();
-            }
-        }, 15 * 1000);
-        warnedNoCoS = true;
-    }
-    
-//    private static boolean warnedCoS;
-//    @Messages({
-//        "CosChecker.test_cos.title=Using Compile on Save (CoS)",
-//        "CosChecker.test_cos.details=CoS mode is not executing tests through Maven. Disable if causing problems."
-//    })
-//    private static void warnTestCoS(RunConfig config) {
-//        if (warnedCoS) {
-//            return;
-//        }
-//        final Project project = config.getProject();
-//        if (project == null) {
-//            return;
-//        }
-//        final Notification n = NotificationDisplayer.getDefault().notify(CosChecker_test_cos_title(), ImageUtilities.loadImageIcon(SUGGESTION, true), CosChecker_test_cos_details(), new ActionListener() {
-//            @Override public void actionPerformed(ActionEvent e) {
-//                showCompilePanel(project);
-//            }
-//
-//        }, NotificationDisplayer.Priority.LOW);
-//        RequestProcessor.getDefault().post(new Runnable() {
-//            @Override public void run() {
-//                n.clear();
-//            }
-//        }, 15 * 1000);
-//        warnedCoS = true;
-//    }
-    
-    private static void showCompilePanel(Project project) {
-        CustomizerProviderImpl prv = project.getLookup().lookup(CustomizerProviderImpl.class);
-        if (prv != null) {
-            prv.showCustomizer(ModelHandle2.PANEL_COMPILE);
-        }
-    }
-
-    //this method has a problem of timing. There is the executor's task running in some other thread and
-    // and we try to write to it. In reality for short lived executions it either prints first or never at all.
-    // I suppose that for long running tasks we cannot guarantee the position at which the warning appears.
-    static void warnCoSInOutput(final ExecutorTask tsk, final RunConfig config) throws IOException {
-//        if (IOColorPrint.isSupported(tsk.getInputOutput())) {
-//            IOColorPrint.print(tsk.getInputOutput(), "NetBeans: Compile on Save Execution is not done through Maven.", null, false, Color.GRAY);
-//            IOColorPrint.print(tsk.getInputOutput(), "Disable if it's causing problems.\n", new OutputListener() {
-//
-//                @Override
-//                public void outputLineSelected(OutputEvent ev) {
-//                }
-//                
-//                @Override
-//                public void outputLineAction(OutputEvent ev) {
-//                    showCompilePanel(config.getProject());
-//                }
-//
-//                @Override
-//                public void outputLineCleared(OutputEvent ev) {
-//                }
-//            }, false, Color.BLUE.darker());
-//        }
     }
 
     private void injectDependencyProjects(BeanRunConfig brc, boolean test, ExecutionContext con) {

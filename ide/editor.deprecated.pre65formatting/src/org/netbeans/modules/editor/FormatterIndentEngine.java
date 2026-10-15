@@ -38,7 +38,7 @@ import org.openide.util.NbBundle;
  * @deprecated Please use Editor Indentation API instead, for details see
  *   <a href="@org-netbeans-modules-editor-indent@/overview-summary.html">Editor Indentation</a>.
  */
-
+@Deprecated
 public abstract class FormatterIndentEngine extends IndentEngine {
 
     public static final String EXPAND_TABS_PROP = "expandTabs"; //NOI18N
@@ -92,6 +92,7 @@ public abstract class FormatterIndentEngine extends IndentEngine {
      * @deprecated use {@link #setValue(java.lang.String, java.lang.Object, java.lang.String)} instead 
      * with properly specified propertyName
      */
+    @Deprecated
     public void setValue(String settingName, Object newValue) {
         setValue(settingName, newValue, null);
     }
@@ -162,11 +163,11 @@ public abstract class FormatterIndentEngine extends IndentEngine {
         getFormatter().setSpacesPerTab(spacesPerTab);
         if (old != spacesPerTab) {
             setValue(SimpleValueNames.SPACES_PER_TAB,
-                new Integer(spacesPerTab), SPACES_PER_TAB_PROP);
+                Integer.valueOf(spacesPerTab), SPACES_PER_TAB_PROP);
             
             firePropertyChange(SPACES_PER_TAB_PROP,
-                new Integer(old),
-                new Integer(spacesPerTab)
+                Integer.valueOf(old),
+                Integer.valueOf(spacesPerTab)
             );
         }
     }

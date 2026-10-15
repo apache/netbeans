@@ -49,8 +49,8 @@ abstract class ContentModel {
 
     private static ContentModel parseContentModel(PushbackStringTokenizer tokens) {
 
-        ContentModel model = null;;
-        List models = new ArrayList(7);
+        ContentModel model = null;
+        List<ContentModel> models = new ArrayList<>(7);
         char type = 'E';
         char ch;            
         String next;
@@ -102,9 +102,9 @@ abstract class ContentModel {
         // create models
 
         if (type == '|') {
-            model = new Choice((ContentModel[])models.toArray(new ContentModel[0]));
+            model = new Choice(models.toArray(new ContentModel[0]));
         } else if (type == ',') {
-            model = new Sequence((ContentModel[])models.toArray(new ContentModel[0]));
+            model = new Sequence(models.toArray(new ContentModel[0]));
         } else {
             // note model contains last Element
         }
@@ -133,7 +133,7 @@ abstract class ContentModel {
             if(models.size() == 1) {
                 //there is just one model inside (the mentioned case)
                 //so we can return it
-                return (ContentModel)models.get(0);
+                return models.get(0);
             }
         }
 
@@ -551,10 +551,10 @@ abstract class ContentModel {
     private static class Food {
 
         // stack emulator
-        private final List list = new LinkedList();
+        private final List<String> list = new LinkedList<>();
         
         // source of lazy stack initilization
-        private final Enumeration en;
+        private final Enumeration<String> en;
         
         // current stack position
         private int current;
@@ -586,7 +586,7 @@ abstract class ContentModel {
             if (hasNext() == false) {
                 throw new IllegalStateException();
             } else {
-                String next  = (String) list.get(current);
+                String next  = list.get(current);
                 current++;
                 return next;
             }
@@ -598,7 +598,7 @@ abstract class ContentModel {
         public boolean hasNext() {
             if (list.size() > current) return true;
             if (en.hasMoreElements()) {
-                String next = (String) en.nextElement();
+                String next = en.nextElement();
                 return list.add(next);                
             } else {
                 return false;

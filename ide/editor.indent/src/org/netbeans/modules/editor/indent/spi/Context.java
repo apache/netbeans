@@ -34,7 +34,7 @@ import org.openide.util.Lookup;
 
 /**
  * Context information for both indentation and reformatting.
- * <br/>
+ * <br>
  * A common class allows to conveniently share code between indentation and reformatting.
  * {@link #isIndent()} allows to check whether the actual processing
  * is indentation or reformatting.
@@ -79,7 +79,7 @@ public final class Context {
     
     /**
      * Get mimePath of this context as string.
-     * <br/>
+     * <br>
      * The indent or reformat task should only care about indentation
      * of the code that belongs to this mime path.
      * 
@@ -91,7 +91,7 @@ public final class Context {
 
     /**
      * Starting offset of the area to be reformatted or reindented.
-     * <br/>
+     * <br>
      * The value gets updated accordingly when the reformatter performs modifications
      * in the affected area.
      */
@@ -102,7 +102,7 @@ public final class Context {
 
     /**
      * Starting offset of the area to be reformatted or reindented.
-     * <br/>
+     * <br>
      * The value gets updated accordingly when the reformatter performs modifications
      * in the affected area.
      */
@@ -214,10 +214,10 @@ public final class Context {
     /**
      * Return offset of the caret passed to the indentation
      * infrastructure.
-     * <br/>
+     * <br>
      * Since it's maintained as a swing position the offset will increase
      * by subsequent modifications by the underlying indent task(s).
-     * <br/>
+     * <br>
      * If a particular task wishes to modify the offset explicitly
      * it can do so by {@link #setCaretOffset(int)}.
      * 
@@ -230,7 +230,7 @@ public final class Context {
     /**
      * Override the offset at which the caret should be placed after the indentation
      * is finished.
-     * <br/>
+     * <br>
      *  This is only relevant for indentation not for reformatting.
      *
      * @param offset new offset where the caret should be placed.
@@ -245,7 +245,7 @@ public final class Context {
     /**
      * Get list of regions for the given mime-path
      * where the indent or reformat task should operate.
-     * <br/>
+     * <br>
      * The region boundaries are held as positions so they should update
      * by subsequent inserts/removals.
      * 
@@ -259,7 +259,7 @@ public final class Context {
      * Check whether the actual processing
      * is indentation or reformatting.
      * 
-     * <br/>
+     * <br>
      * Indent tasks may be used for reformatting in case a reformat task
      * is not available (for the given mimepath) but the indent task is available.
      * 

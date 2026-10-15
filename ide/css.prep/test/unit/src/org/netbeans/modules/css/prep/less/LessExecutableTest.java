@@ -19,8 +19,6 @@
 
 package org.netbeans.modules.css.prep.less;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.css.prep.util.VersionOutputProcessorFactory;
 

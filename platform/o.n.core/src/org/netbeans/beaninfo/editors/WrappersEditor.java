@@ -19,7 +19,9 @@
 
 package org.netbeans.beaninfo.editors;
 
-import java.beans.*;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyEditor;
+import java.beans.PropertyEditorManager;
 import java.text.MessageFormat;
 import org.netbeans.core.UIExceptions;
 import org.openide.explorer.propertysheet.ExPropertyEditor;
@@ -41,31 +43,39 @@ public abstract class WrappersEditor implements ExPropertyEditor {
         pe = PropertyEditorManager.findEditor(type);
     }
     
+    @Override
     public void setValue(Object newValue) throws IllegalArgumentException {
         pe.setValue(newValue);
     }
     
+    @Override
     public Object getValue() {
 	return pe.getValue();
     }        
     
+    @Override
     public boolean isPaintable() {
 	return pe.isPaintable();
     }
 
+    @Override
     public void paintValue(java.awt.Graphics gfx, java.awt.Rectangle box) {
         pe.paintValue(gfx, box);
     }        
     
+    @Override
     public String getAsText () {
         if ( pe.getValue() == null )
             return "null";              // NOI18N
         return pe.getAsText();
     }
 
+    @Override
     public void setAsText(String text) throws IllegalArgumentException {
-        if ( "null".equals( text ) )    // NOI18N
+        if ( "null".equals( text ) ) {    // NOI18N
+            pe.setValue(null);
             return;
+        }
         try {
             pe.setAsText(text);
         } catch (Exception e) {
@@ -83,26 +93,32 @@ public abstract class WrappersEditor implements ExPropertyEditor {
         }
     }
     
+    @Override
     public String[] getTags() {
 	return pe.getTags();
     }
     
+    @Override
     public java.awt.Component getCustomEditor() {
 	return pe.getCustomEditor();
     }
 
+    @Override
     public boolean supportsCustomEditor() {
 	return pe.supportsCustomEditor();
     }
   
+    @Override
     public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
         pe.addPropertyChangeListener(listener);
     }
 
+    @Override
     public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
         pe.removePropertyChangeListener(listener);
     }    
     
+    @Override
     public void attachEnv(PropertyEnv env) {
         //Delegate if the primitive editor is an ExPropertyEditor -
         //boolean and int editors will be

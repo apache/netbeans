@@ -55,7 +55,9 @@ import com.sun.source.util.TreePath;
 
 import org.netbeans.api.editor.EditorActionNames;
 import org.netbeans.api.editor.EditorActionRegistration;
+import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.AttributesUtilities;
+import org.netbeans.api.editor.settings.FontColorSettings;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.Comment;
 import org.netbeans.api.java.source.CompilationController;
@@ -69,7 +71,7 @@ import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.editor.BaseAction;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.editor.java.JavaKit;
@@ -77,7 +79,11 @@ import org.netbeans.modules.editor.java.Utilities;
 import org.netbeans.modules.java.editor.overridden.PopupUtil;
 import org.netbeans.spi.editor.highlighting.support.OffsetsBag;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
+import org.openide.util.LookupEvent;
+import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
+import org.openide.util.WeakListeners;
 
 /**
  * Remove the enclosing parts of a nested statement.
@@ -89,7 +95,38 @@ import org.openide.util.NbBundle;
                           menuPath = "Source",
                           menuPosition = 2280,
                           menuText = "#" + EditorActionNames.removeSurroundingCode + "_menu_text")
-public class RemoveSurroundingCodeAction extends BaseAction {
+public class RemoveSurroundingCodeAction extends BaseAction implements LookupListener {
+
+    private static final String DELETE_HIGHLIGHT_FCS_NAME = "remove-surround-code-delete"; //NOI18N
+    private static final String REMAIN_HIGHLIGHT_FCS_NAME = "remove-surround-code-remain"; //NOI18N
+    private static AttributeSet DELETE_HIGHLIGHT;
+    private static AttributeSet REMAIN_HIGHLIGHT;
+    private Lookup.Result<FontColorSettings> result;
+
+    public RemoveSurroundingCodeAction(){
+        // retrieve colors from fonts color settings
+        Lookup lookup = MimeLookup.getLookup(JavaKit.JAVA_MIME_TYPE);
+        result = lookup.lookupResult(FontColorSettings.class);
+        result.addLookupListener(WeakListeners.create(LookupListener.class, this, result));
+        resultChanged(null); // initial retrieval
+    }
+
+    @Override
+    public void resultChanged(LookupEvent ev) {
+        FontColorSettings fcs = result.allInstances().iterator().next();
+        synchronized(this) {
+            if (fcs!=null) {
+                DELETE_HIGHLIGHT = fcs.getFontColors(DELETE_HIGHLIGHT_FCS_NAME);
+                REMAIN_HIGHLIGHT = fcs.getFontColors(REMAIN_HIGHLIGHT_FCS_NAME);
+            }
+            if (DELETE_HIGHLIGHT == null) {
+                DELETE_HIGHLIGHT = AttributesUtilities.createImmutable(StyleConstants.Background, new Color(245, 245, 245), StyleConstants.Foreground, new Color(180, 180, 180));
+            }
+            if (REMAIN_HIGHLIGHT == null) {
+                REMAIN_HIGHLIGHT = AttributesUtilities.createImmutable(StyleConstants.Background, new Color(210, 240, 210));
+            }
+        }
+    }
 
     @Override
     public void actionPerformed(final ActionEvent evt, final JTextComponent component) {
@@ -101,7 +138,7 @@ public class RemoveSurroundingCodeAction extends BaseAction {
         final JavaSource js = JavaSource.forDocument(doc);
         if (js != null) {
             final AtomicBoolean cancel = new AtomicBoolean();
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -208,12 +245,9 @@ public class RemoveSurroundingCodeAction extends BaseAction {
             return false;
         }
         SourcePositions sp = controller.getTrees().getSourcePositions();
-        int end = (int) sp.getEndPosition(controller.getCompilationUnit(), ifTree.getThenStatement());
+        int end = (int) sp.getEndPosition(ifTree.getThenStatement());
         return end > 0 && caretPosition > end;
     }
-
-    private static final AttributeSet DELETE_HIGHLIGHT = AttributesUtilities.createImmutable(StyleConstants.Background, new Color(245, 245, 245), StyleConstants.Foreground, new Color(180, 180, 180));
-    private static final AttributeSet REMAIN_HIGHLIGHT = AttributesUtilities.createImmutable(StyleConstants.Background, new Color(210, 240, 210));
 
     private static class TreeDeleter implements CodeDeleter {
 
@@ -385,7 +419,7 @@ public class RemoveSurroundingCodeAction extends BaseAction {
         private OffsetsBag createOffsetsBag(JTextComponent component, TreeUtilities tu, SourcePositions sp, TreePath path) throws BadLocationException {
             Document doc = component.getDocument();
             OffsetsBag offsetsBag = new OffsetsBag(doc, true);
-            int start = (int) sp.getStartPosition(path.getCompilationUnit(), path.getLeaf());
+            int start = (int) sp.getStartPosition(path.getLeaf());
             if (start >= 0) {
                 List<int[]> positions = new ArrayList<>();
                 Tree tree = path.getLeaf();
@@ -395,8 +429,8 @@ public class RemoveSurroundingCodeAction extends BaseAction {
                         if (unwrap) {
                             positions.add(getBounds(tu, sp, path.getCompilationUnit(), it.getThenStatement()));
                         } else {
-                            start = (int) sp.getEndPosition(path.getCompilationUnit(), it.getThenStatement());
-                            int end = (int) sp.getStartPosition(path.getCompilationUnit(), it.getElseStatement());
+                            start = (int) sp.getEndPosition(it.getThenStatement());
+                            int end = (int) sp.getStartPosition(it.getElseStatement());
                             int off = doc.getText(start, end - start).indexOf("else"); //NOI18N
                             if (off > 0) {
                                 start += off;
@@ -456,7 +490,7 @@ public class RemoveSurroundingCodeAction extends BaseAction {
                         start = bounds[1];
                     }
                 }
-                int end = (int) sp.getEndPosition(path.getCompilationUnit(), path.getLeaf());
+                int end = (int) sp.getEndPosition(path.getLeaf());
                 if (end > start) {
                     offsetsBag.addHighlight(start, end, DELETE_HIGHLIGHT);
                 }
@@ -493,12 +527,12 @@ public class RemoveSurroundingCodeAction extends BaseAction {
         
         private int getStart(TreeUtilities tu, SourcePositions sp, CompilationUnitTree cut, Tree tree) {
             List<Comment> comments = tu.getComments(tree, true);
-            return comments.isEmpty() ? (int) sp.getStartPosition(cut, tree) : comments.get(0).pos();
+            return comments.isEmpty() ? (int) sp.getStartPosition(tree) : comments.get(0).pos();
         }
 
         private int getEnd(TreeUtilities tu, SourcePositions sp, CompilationUnitTree cut, Tree tree) {
             List<Comment> comments = tu.getComments(tree, false);
-            return comments.isEmpty() ? (int) sp.getEndPosition(cut, tree) : comments.get(comments.size() - 1).endPos();
+            return comments.isEmpty() ? (int) sp.getEndPosition(tree) : comments.get(comments.size() - 1).endPos();
         }
     }
     

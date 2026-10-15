@@ -30,7 +30,7 @@ import org.openide.util.Exceptions;
 
 public class ConnPoolBeanBeanInfo extends SimpleBeanInfo {
     
-    static private String getLabel(String key){
+    private static String getLabel(String key){
         return NbBundle.getMessage(ConnPoolBean.class, key);
     }
 

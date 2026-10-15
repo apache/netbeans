@@ -676,8 +676,8 @@ public class WSITModelSupport {
         save(model);
     }
 
-    public synchronized static void save(WSDLModel model) {
-        Set<FileObject> traversedModels = new HashSet();
+    public static synchronized void save(WSDLModel model) {
+        Set<FileObject> traversedModels = new HashSet<>();
         save(model, traversedModels);
     }
     
@@ -788,7 +788,7 @@ public class WSITModelSupport {
         
         // STS
         boolean sts = ProprietarySecurityPolicyModelHelper.isSTSEnabled(b);
-        List<ServiceProviderElement> sProviderElems = new ArrayList();
+        List<ServiceProviderElement> sProviderElems = new ArrayList<>();
         String issuer = null;
         String contract = null;
         String lifetime = null;

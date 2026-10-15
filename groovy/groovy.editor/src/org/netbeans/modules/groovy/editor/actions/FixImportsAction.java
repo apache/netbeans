@@ -24,6 +24,7 @@ import java.util.*;
 import javax.swing.text.JTextComponent;
 import org.codehaus.groovy.ast.ModuleNode;
 import org.codehaus.groovy.control.ErrorCollector;
+import org.codehaus.groovy.control.messages.Message;
 import org.codehaus.groovy.control.messages.SyntaxErrorMessage;
 import org.codehaus.groovy.syntax.SyntaxException;
 import org.netbeans.api.editor.EditorActionRegistration;
@@ -103,7 +104,7 @@ public class FixImportsAction extends BaseAction {
                 if (errorCollector == null) {
                     return;
                 }
-                List errors = errorCollector.getErrors();
+                List<? extends Message> errors = errorCollector.getErrors();
                 if (errors == null) {
                     return;
                 }
@@ -112,8 +113,8 @@ public class FixImportsAction extends BaseAction {
             }
         }
 
-        private void collectMissingImports(List errors) {
-            for (Object error : errors) {
+        private void collectMissingImports(List<? extends Message> errors) {
+            for (Message error : errors) {
                 if (error instanceof SyntaxErrorMessage) {
                     SyntaxException se = ((SyntaxErrorMessage) error).getCause();
 

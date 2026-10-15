@@ -29,7 +29,7 @@ import java.util.List;
 public class JPQLResult {
     private List results = new ArrayList();
     private int updateOrDeleteResult;
-    private List<Throwable> exceptions = new ArrayList<Throwable>();
+    private List<Throwable> exceptions = new ArrayList<>();
     private String sqlQuery;
     private String queryProblems;
 

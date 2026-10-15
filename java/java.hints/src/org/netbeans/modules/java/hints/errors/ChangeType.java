@@ -21,19 +21,17 @@ package org.netbeans.modules.java.hints.errors;
 
 import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.Scope;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.ArrayType;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.ErrorType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -108,7 +106,13 @@ public final class ChangeType implements ErrorRule<Void> {
             // Is this a VARIABLE tree
             if (scope.getKind() == Kind.VARIABLE) {
                 if (((VariableTree) scope).getInitializer() != null) {
-                    resolved = info.getTrees().getTypeMirror(new TreePath(path, ((VariableTree) scope).getInitializer()));
+                    ExpressionTree init = ((VariableTree) scope).getInitializer();
+                    int start = (int) info.getTrees().getSourcePositions().getStartPosition(init);
+                    int end = (int) info.getTrees().getSourcePositions().getEndPosition(init);
+                    String initCode = info.getText().substring(start, end);
+                    ExpressionTree newInit = info.getTreeUtilities().parseVariableInitializer(initCode, new SourcePositions[1]);
+                    Scope resolutionScope = info.getTrees().getScope(path);
+                    resolved = info.getTreeUtilities().attributeTree(newInit, resolutionScope);
                 }
 
                 expected = info.getTrees().getTypeMirror(path);
@@ -164,11 +168,11 @@ public final class ChangeType implements ErrorRule<Void> {
                     return null;
                 }
                 //anonymous class?
-                expressionType[0] = org.netbeans.modules.java.hints.errors.Utilities.convertIfAnonymous(expressionType[0]);
+                expressionType[0] = org.netbeans.modules.java.hints.errors.Utilities.convertIfAnonymous(expressionType[0], true);
 
-                result.add(new ChangeTypeFix(info.getJavaSource(),
+                result.add(new ChangeTypeFix(info, treePath,
                         ((VariableTree) leaf[0]).getName().toString(), 
-                        Utilities.getTypeName(info, expressionType[0], false).toString(), offset));
+                        Utilities.getTypeName(info, expressionType[0], false).toString(), offset).toEditorFix());
             }
         }
         

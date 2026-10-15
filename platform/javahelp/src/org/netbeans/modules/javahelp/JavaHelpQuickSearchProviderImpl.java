@@ -55,7 +55,7 @@ public class JavaHelpQuickSearchProviderImpl implements SearchProvider {
         return new Runnable() {
             public void run() {
                 Help h = (Help)Lookup.getDefault().lookup(Help.class);
-                if (h != null && h instanceof JavaHelp ) {
+                if (h instanceof JavaHelp) {
                     JavaHelp jh = (JavaHelp)h;
                     jh.showHelp(url);
                 } else {

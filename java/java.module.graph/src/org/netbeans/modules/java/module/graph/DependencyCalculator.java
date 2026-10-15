@@ -18,7 +18,7 @@
  */
 package org.netbeans.modules.java.module.graph;
 
-import com.sun.source.tree.Tree;
+import com.sun.source.tree.ModuleTree;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,13 +31,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.lang.model.element.ModuleElement;
-import javax.tools.JavaFileObject;
 import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.JavaSource;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
 import org.openide.util.Parameters;
 
@@ -81,9 +78,9 @@ final class DependencyCalculator {
                 try {
                     js.runUserActionTask((cc)-> {
                         cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                        final List<? extends Tree> decls = cc.getCompilationUnit().getTypeDecls();
-                        final ModuleElement me =  !decls.isEmpty() && decls.get(0).getKind() == Tree.Kind.MODULE ?
-                                (ModuleElement) cc.getTrees().getElement(TreePath.getPath(cc.getCompilationUnit(), decls.get(0))) :
+                        final ModuleTree moduleTree = cc.getCompilationUnit().getModule();
+                        final ModuleElement me = moduleTree != null ?
+                                (ModuleElement) cc.getTrees().getElement(TreePath.getPath(cc.getCompilationUnit(), moduleTree)) :
                                 null;
                         if (me != null) {
                             final Map<String, ModuleNode> mods = new LinkedHashMap<>();

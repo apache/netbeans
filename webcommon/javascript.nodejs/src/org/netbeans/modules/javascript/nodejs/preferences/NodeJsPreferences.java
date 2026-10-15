@@ -45,6 +45,7 @@ public final class NodeJsPreferences {
     public static final String SYNC_ENABLED = "sync.enabled"; // NOI18N
     public static final String ASK_RUN_CONFIGURATION = "ask.run.enabled"; // NOI18N
     public static final String ASK_SYNC_ENABLED = "ask.sync.enabled"; // NOI18N
+    public static final String DEBUG_PROTOCOL = "debug.protocol"; // NOI18N
 
     private final Project project;
 
@@ -179,6 +180,19 @@ public final class NodeJsPreferences {
             getPrivatePreferences().putBoolean(ASK_SYNC_ENABLED, false);
         }
         return ask;
+    }
+
+    @CheckForNull
+    public String getDebugProtocol() {
+        return getPrivatePreferences().get(DEBUG_PROTOCOL, null);
+    }
+
+    public void setDebugProtocol(@NullAllowed String debugProtocol) {
+        if (debugProtocol == null) {
+            getPrivatePreferences().remove(DEBUG_PROTOCOL);
+        } else {
+            getPrivatePreferences().put(DEBUG_PROTOCOL, debugProtocol);
+        }
     }
 
     private synchronized Preferences getPrivatePreferences() {

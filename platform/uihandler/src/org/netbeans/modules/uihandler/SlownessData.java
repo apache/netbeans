@@ -56,7 +56,7 @@ class SlownessData {
 
     public LogRecord getLogRec(){
         LogRecord rec = new LogRecord(Level.CONFIG, SLOWNESS_DATA);
-        rec.setParameters(new Object[]{new Long(time), latestActionName, slownessType});
+        rec.setParameters(new Object[]{time, latestActionName, slownessType});
         return rec;
     }
 

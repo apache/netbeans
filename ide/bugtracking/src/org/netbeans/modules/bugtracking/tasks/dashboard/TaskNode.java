@@ -187,19 +187,19 @@ public class TaskNode extends TaskContainerNode implements Comparable<TaskNode>,
             actions.addAll(Actions.getTaskPopupActions(taskNodes));
             actions.add(null);
         }
-        List<Action> submitablePopupActions = Actions.getSubmitablePopupActions(selectedNodes.toArray(new TreeListNode[selectedNodes.size()]));
+        List<Action> submitablePopupActions = Actions.getSubmitablePopupActions(selectedNodes.toArray(new TreeListNode[0]));
         if (!submitablePopupActions.isEmpty()) {
             actions.addAll(submitablePopupActions);
             actions.add(null);
         }
-        List<Action> defaultActions = Actions.getDefaultActions(selectedNodes.toArray(new TreeListNode[selectedNodes.size()]));
+        List<Action> defaultActions = Actions.getDefaultActions(selectedNodes.toArray(new TreeListNode[0]));
         if (containsNewTask) {
             for (Action action : defaultActions) {
                 action.setEnabled(false);
             }
         }
         actions.addAll(defaultActions);
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     public IssueImpl getTask() {

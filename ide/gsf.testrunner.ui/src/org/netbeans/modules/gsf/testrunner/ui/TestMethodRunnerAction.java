@@ -20,7 +20,6 @@ package org.netbeans.modules.gsf.testrunner.ui;
 
 import java.util.Collection;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodRunnerProvider;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.openide.awt.ActionID;
@@ -86,7 +85,7 @@ public class TestMethodRunnerAction extends NodeAction {
                 }
             }
         });
-        final ProgressHandle ph = ProgressHandleFactory.createHandle(Bundle.Search_For_Provider(), runMethodTask);
+        final ProgressHandle ph = ProgressHandle.createHandle(Bundle.Search_For_Provider(), runMethodTask);
         runMethodTask.addTaskListener(new TaskListener() {
             @Override
             public void taskFinished(org.openide.util.Task task) {

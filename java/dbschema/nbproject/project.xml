@@ -223,6 +223,7 @@
                 <friend>org.netbeans.modules.j2ee.persistence</friend>
                 <friend>org.netbeans.modules.j2ee.sun.appsrv</friend>
                 <friend>org.netbeans.modules.j2ee.sun.ddui</friend>
+                <friend>io.github.jeddict.reveng</friend>
                 <package>org.netbeans.modules.dbschema</package>
                 <package>org.netbeans.modules.dbschema.jdbcimpl</package>
                 <package>org.netbeans.modules.dbschema.jdbcimpl.wizard</package>

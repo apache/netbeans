@@ -57,8 +57,8 @@ public interface WsCompileClientEditorSupport {
     public final class ServiceSettings {
         private String name;
         private ClientStubDescriptor stubType;
-        private List/*String*/ availableFeatures;
-        private List/*String*/ importantFeatures;
+        private List<String> availableFeatures;
+        private List<String> importantFeatures;
         private String currentFeatures;
         private String newFeatures;
         private boolean[] options;
@@ -96,11 +96,11 @@ public interface WsCompileClientEditorSupport {
             return newFeatures;
         }
         
-        public List/*String*/ getAvailableFeatures() {
+        public List<String> getAvailableFeatures() {
             return availableFeatures;
         }
         
-        public List/*String*/ getImportantFeatures() {
+        public List<String> getImportantFeatures() {
             return importantFeatures;
         }
         

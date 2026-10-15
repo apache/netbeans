@@ -79,6 +79,10 @@ public class MethodRedeclarationHintError extends HintErrorRule {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
+            checkTypeScopes(ModelUtils.getDeclaredEnums(fileScope));
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
             checkDeclaredFunctions(ModelUtils.getDeclaredFunctions(fileScope));
         }
     }

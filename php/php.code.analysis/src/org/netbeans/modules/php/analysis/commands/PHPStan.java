@@ -34,7 +34,7 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.php.analysis.PHPStanParams;
 import org.netbeans.modules.php.analysis.options.AnalysisOptions;
-import org.netbeans.modules.php.analysis.parsers.PHPStanReportParser;
+import org.netbeans.modules.php.analysis.parsers.CheckStyleReportParser;
 import org.netbeans.modules.php.analysis.results.Result;
 import org.netbeans.modules.php.analysis.ui.options.AnalysisOptionsPanelController;
 import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
@@ -75,6 +75,11 @@ public final class PHPStan {
             ERROR_FORMAT_PARAM
     );
 
+     // configuration files
+    public static final String CONFIG_FILE_NAME = "phpstan.neon";  // NOI18N
+    public static final String DIST_CONFIG_FILE_NAME = "phpstan.neon.dist";  // NOI18N
+    public static final String ALTERNATIVE_DIST_CONFIG_FILE_NAME = "phpstan.dist.neon";  // NOI18N
+
     private final String phpStanPath;
     private int analyzeGroupCounter = 1;
 
@@ -83,7 +88,10 @@ public final class PHPStan {
     }
 
     public static PHPStan getDefault() throws InvalidPhpExecutableException {
-        String phpStanPath = AnalysisOptions.getInstance().getPHPStanPath();
+        return getCustom(AnalysisOptions.getInstance().getPHPStanPath());
+    }
+
+    public static PHPStan getCustom(String phpStanPath) throws InvalidPhpExecutableException {
         String error = validate(phpStanPath);
         if (error != null) {
             throw new InvalidPhpExecutableException(error);
@@ -92,8 +100,8 @@ public final class PHPStan {
     }
 
     @NbBundle.Messages("PHPStan.script.label=PHPStan")
-    public static String validate(String codeSnifferPath) {
-        return PhpExecutableValidator.validateCommand(codeSnifferPath, Bundle.PHPStan_script_label());
+    public static String validate(String phpStanPath) {
+        return PhpExecutableValidator.validateCommand(phpStanPath, Bundle.PHPStan_script_label());
     }
 
     public void startAnalyzeGroup() {
@@ -116,7 +124,7 @@ public final class PHPStan {
                 return null;
             }
 
-            return PHPStanReportParser.parse(XML_LOG, file, workDir);
+            return CheckStyleReportParser.parse(XML_LOG, file, workDir);
         } catch (CancellationException ex) {
             // cancelled
             return Collections.emptyList();

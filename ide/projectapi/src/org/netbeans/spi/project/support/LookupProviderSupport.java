@@ -148,7 +148,7 @@ public final class LookupProviderSupport {
             synchronized (this) {
                 if (currentDelegates == null) {
                     Collection<? extends Sources> instances = delegates.allInstances();
-                    currentDelegates = instances.toArray(new Sources[instances.size()]);
+                    currentDelegates = instances.toArray(new Sources[0]);
                     for (Sources ns : currentDelegates) {
                         ns.addChangeListener(this);
                     }
@@ -168,7 +168,7 @@ public final class LookupProviderSupport {
                     }
                 }
             }
-            return result.toArray(new SourceGroup[result.size()]);
+            return result.toArray(new SourceGroup[0]);
         }
 
         @Override public synchronized void addChangeListener(ChangeListener listener) {
@@ -228,7 +228,7 @@ public final class LookupProviderSupport {
                 for (ActionProvider ap : lkpResult.allInstances()) {
                     actionNames.addAll(Arrays.asList(ap.getSupportedActions()));
                 }
-                result = actionNames.toArray(new String[actionNames.size()]);
+                result = actionNames.toArray(new String[0]);
                 actionNamesCache = result;
             }
             assert result != null;

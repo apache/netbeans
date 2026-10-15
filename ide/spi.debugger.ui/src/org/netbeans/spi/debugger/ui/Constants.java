@@ -55,7 +55,8 @@ public interface Constants {
      * @see org.netbeans.spi.viewmodel.ColumnModel#getPreviuosColumnID
      * @see org.netbeans.spi.viewmodel.ColumnModel#getNextColumnID
      */
-    public static final String BREAKPOINT_ENABLED_COLUMN_ID = 
+    @Deprecated
+    public static final String BREAKPOINT_ENABLED_COLUMN_ID =
         "BreakpointEnabled";
 
     /**
@@ -148,4 +149,16 @@ public interface Constants {
      * @see org.netbeans.spi.viewmodel.ColumnModel#getNextColumnID
      */
     public static final String SESSION_LANGUAGE_COLUMN_ID = "SessionLanguage";
+
+    /**Should the inline values be visible - preferences key.
+     *
+     * @since 2.88
+     */
+    public static final String KEY_INLINE_VALUES = "enable.inline.values";
+
+    /**Should the inline values be visible - default value.
+     *
+     * @since 2.88
+     */
+    public static final boolean DEF_INLINE_VALUES = true;
 }

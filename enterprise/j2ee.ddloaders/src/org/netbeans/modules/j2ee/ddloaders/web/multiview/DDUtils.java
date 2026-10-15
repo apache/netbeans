@@ -176,7 +176,7 @@ public final class DDUtils {
                 maps.add(fm);
             }
         }
-        return (FilterMapping[]) maps.toArray(new FilterMapping[maps.size()]);
+        return (FilterMapping[]) maps.toArray(new FilterMapping[0]);
     }
     
     private static List<ServletMapping> getServletMappingList(WebApp webApp, Servlet servlet) {
@@ -364,7 +364,7 @@ public final class DDUtils {
         for (int i=0;i<oldMaps.length;i++) {
             if (filterName.equals(oldMaps[i].getFilterName())) {
                 webApp.removeFilterMapping(oldMaps[i]);
-                deletedRows.push(new Integer(i));
+                deletedRows.push(i);
             }
         }
         return deletedRows;

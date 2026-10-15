@@ -34,6 +34,8 @@ import java.lang.management.RuntimeMXBean;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -65,7 +67,6 @@ import javax.swing.event.HyperlinkListener;
 import javax.xml.parsers.ParserConfigurationException;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.lib.uihandler.LogRecords;
 import org.netbeans.lib.uihandler.PasswdEncryption;
 import org.netbeans.modules.exceptions.ExceptionsSettings;
@@ -736,7 +737,7 @@ public class Installer extends ModuleInstall implements Runnable {
     private static String reportFileContent(File f) {
         BufferedReader br = null;
         try {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF-8"));
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(f), StandardCharsets.UTF_8));
             StringWriter sw = new StringWriter();
             String line;
             while ((line = br.readLine()) != null) {
@@ -1180,7 +1181,7 @@ public class Installer extends ModuleInstall implements Runnable {
         ProgressHandle h = null;
         //Do not show progress UI for metrics upload
         if (dataType != DataType.DATA_METRICS) {
-            h = ProgressHandleFactory.createHandle(NbBundle.getMessage(Installer.class, "MSG_UploadProgressHandle"));
+            h = ProgressHandle.createHandle(NbBundle.getMessage(Installer.class, "MSG_UploadProgressHandle"));
         }
         try {
             return uLogs(h, postURL, id, attrs, recs, dataType, isErrorReport, slownData, isOOM, isAfterRestart);
@@ -1419,7 +1420,7 @@ public class Installer extends ModuleInstall implements Runnable {
                 return new URL(m.group(1));
             } else {
                 assert redir != null;
-                File f = File.createTempFile("uipage", "html");
+                File f = Files.createTempFile("uipage", "html").toFile();
                 f.deleteOnExit();
                 try (FileWriter w = new FileWriter(f)) {
                     w.write(redir.toString());
@@ -1661,7 +1662,7 @@ public class Installer extends ModuleInstall implements Runnable {
         return enc;
     }
 
-    private static abstract class Submit implements ActionListener, Runnable {
+    private abstract static class Submit implements ActionListener, Runnable {
 
         private enum DialogState {
 
@@ -1682,7 +1683,7 @@ public class Installer extends ModuleInstall implements Runnable {
         protected String errorURL = null;
         protected String errorMessage = null;
         protected DataType dataType = DataType.DATA_UIGESTURE;
-        final protected List<LogRecord> recs;
+        protected final List<LogRecord> recs;
         protected boolean isOOM = false;
         protected boolean isAfterRestart = false;
         protected ExceptionsSettings settings;
@@ -1763,7 +1764,7 @@ public class Installer extends ModuleInstall implements Runnable {
 
             synchronized (this) {
                 RP_UI.post(this);
-                while (dialogState.equals(DialogState.NON_CREATED)) {
+                while (dialogState == DialogState.NON_CREATED) {
                     try {
                         wait();
                     } catch (InterruptedException ex) {
@@ -1772,7 +1773,7 @@ public class Installer extends ModuleInstall implements Runnable {
                 }
                 notifyAll();
             }
-            if (dialogState.equals(DialogState.FAILED)){
+            if (dialogState == DialogState.FAILED) {
                 return;
             }
 
@@ -1792,7 +1793,7 @@ public class Installer extends ModuleInstall implements Runnable {
                     URLConnection conn = url.openConnection();
                     conn.setRequestProperty("User-Agent", "NetBeans");
                     conn.setConnectTimeout(5000);
-                    tmp = File.createTempFile("uigesture", ".html");
+                    tmp = Files.createTempFile("uigesture", ".html").toFile();
                     tmp.deleteOnExit();
                     try (FileOutputStream os = new FileOutputStream(tmp)) {
                         Map<String, String> replacements = new HashMap<>();
@@ -1882,7 +1883,7 @@ public class Installer extends ModuleInstall implements Runnable {
                 assignInternalURL(url);
                 refresh = false;
                 synchronized (this) {
-                    while (dialogState.equals(DialogState.CREATED) && !refresh) {
+                    while (dialogState == DialogState.CREATED && !refresh) {
                         try {
                             wait();
                         } catch (InterruptedException ex) {
@@ -1899,7 +1900,7 @@ public class Installer extends ModuleInstall implements Runnable {
             LOG.log(Level.FINE, "doShow, dialogCreated, exiting");
         }
 
-        protected synchronized final void doCloseDialog() {
+        protected final synchronized void doCloseDialog() {
             dialogState = DialogState.NON_CREATED;
             closeDialog();
             notifyAll();
@@ -2439,7 +2440,7 @@ public class Installer extends ModuleInstall implements Runnable {
                 int offset = builder.length();
                 n.setValue("offset", offset); // NOI18N
                 LogRecords.write(os, r);
-                builder.append(os.toString("UTF-8"));
+                builder.append(os.toString("UTF-8")); // NOI18N
             } catch (IOException ex) {
                 Installer.LOG.log(Level.WARNING, null, ex);
             }
@@ -2537,7 +2538,7 @@ public class Installer extends ModuleInstall implements Runnable {
         private void showProfilerSnapshot(ActionEvent e){
              File tempFile = null;
              try { 
-                 tempFile = File.createTempFile("selfsampler", ".npss"); // NOI18N
+                 tempFile = Files.createTempFile("selfsampler", ".npss").toFile(); // NOI18N
                  tempFile = FileUtil.normalizeFile(tempFile);
                  try (OutputStream os = new FileOutputStream(tempFile)) {
                      os.write(slownData.getNpsContent());
@@ -2678,7 +2679,7 @@ public class Installer extends ModuleInstall implements Runnable {
                 String rptr = null;
                 if (obj instanceof AbstractButton ) {
                     abut = (AbstractButton) obj;
-                    if(abut.getText().toLowerCase().equals("send")){
+                    if(abut.getText().equalsIgnoreCase("send")){
                         // disable sen button initialy, report panel can later enable it
                         abut.setEnabled(false);
                         abut.setToolTipText(NbBundle.getMessage(Installer.class, "ReportPanel.sendButton.tooltip"));//NOI18N

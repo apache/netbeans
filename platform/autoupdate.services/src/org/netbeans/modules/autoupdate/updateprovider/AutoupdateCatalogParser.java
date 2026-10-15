@@ -34,7 +34,6 @@ import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import org.netbeans.Module;
 import org.netbeans.modules.autoupdate.services.Trampoline;
 import org.netbeans.modules.autoupdate.services.UpdateLicenseImpl;
 import org.netbeans.modules.autoupdate.services.Utilities;
@@ -52,6 +51,7 @@ public class AutoupdateCatalogParser extends DefaultHandler {
     private final AutoupdateCatalogProvider provider;
     private final EntityResolver entityResolver;
     private final URI baseUri;
+    private final List<MessageDigestValue> messageDigestsBuffer = new ArrayList<>();
     
     private AutoupdateCatalogParser (Map<String, UpdateItem> items, AutoupdateCatalogProvider provider, URI base) {
         this.items = items;
@@ -111,7 +111,7 @@ public class AutoupdateCatalogParser extends DefaultHandler {
     
     private static enum ELEMENTS {
         module_updates, module_group, notification, content_description, module, description,
-        module_notification, external_package, manifest, l10n, license
+        module_notification, external_package, manifest, l10n, license, message_digest
     }
     
     private static final String MODULE_UPDATES_ATTR_TIMESTAMP = "timestamp"; // NOI18N
@@ -149,12 +149,15 @@ public class AutoupdateCatalogParser extends DefaultHandler {
     private static final String L10N_ATTR_MODULE_MAJOR_VERSION = "module_major_version"; // NOI18N
     private static final String L10N_ATTR_LOCALIZED_MODULE_NAME = "OpenIDE-Module-Name"; // NOI18N
     private static final String L10N_ATTR_LOCALIZED_MODULE_DESCRIPTION = "OpenIDE-Module-Long-Description"; // NOI18N
-    
+
+    private static final String MESSAGE_DIGEST_ATTR_ALGORITHM = "algorithm"; // NOI18N
+    private static final String MESSAGE_DIGEST_ATTR_VALUE = "value"; // NOI18N
+
     private static String GZIP_EXTENSION = ".gz"; // NOI18N
     private static String XML_EXTENSION = ".xml"; // NOI18N
     private static String GZIP_MIME_TYPE = "application/x-gzip"; // NOI18N
     
-    public synchronized static Map<String, UpdateItem> getUpdateItems (URL url, AutoupdateCatalogProvider provider) throws IOException {
+    public static synchronized Map<String, UpdateItem> getUpdateItems (URL url, AutoupdateCatalogProvider provider) throws IOException {
         Map<String, UpdateItem> items = new HashMap<String, UpdateItem> ();
         URI base;
         try {
@@ -359,6 +362,8 @@ public class AutoupdateCatalogParser extends DefaultHandler {
                 
                 currentLicense.pop ();
                 break;
+            case message_digest:
+                break;
             default:
                 ERR.warning ("Unknown element " + qName);
         }
@@ -425,7 +430,7 @@ public class AutoupdateCatalogParser extends DefaultHandler {
                 // put license impl to map for future refilling
                 UpdateItemImpl impl = Trampoline.SPI.impl (m);
                 String licName = impl.getUpdateLicenseImpl ().getName ();
-                if (this.name2license.keySet ().contains (licName)) {
+                if (this.name2license.containsKey(licName)) {
                     impl.setUpdateLicenseImpl (this.name2license.get (licName));
                 } else {
                     this.name2license.put (impl.getUpdateLicenseImpl ().getName (), impl.getUpdateLicenseImpl ());
@@ -453,6 +458,16 @@ public class AutoupdateCatalogParser extends DefaultHandler {
                 Map <String, String> map = new HashMap<String,String> ();
                 map.put(attributes.getValue (LICENSE_ATTR_NAME), attributes.getValue (LICENSE_ATTR_URL));
                 currentLicense.push (map);
+                break;
+            case message_digest:
+                ModuleDescriptor desc2 = currentModule.peek ();
+                // At this point the manifest element must have been seen
+                UpdateItem ui = items.get (desc2.getId ());
+                UpdateItemImpl uiImpl = Trampoline.SPI.impl (ui);
+                uiImpl.getMessageDigests().add(new MessageDigestValue(
+                    attributes.getValue(MESSAGE_DIGEST_ATTR_ALGORITHM),
+                    attributes.getValue(MESSAGE_DIGEST_ATTR_VALUE)
+                ));
                 break;
             default:
                 ERR.warning ("Unknown element " + qName);
@@ -511,6 +526,8 @@ public class AutoupdateCatalogParser extends DefaultHandler {
         private String catalogDate;
         
         private String fragmentHost;
+
+        private List<MessageDigestValue> hashes;
         
         private static ModuleDescriptor md = null;
         
@@ -608,7 +625,7 @@ public class AutoupdateCatalogParser extends DefaultHandler {
             return res;
         }
         
-        private void cleanUp (){
+        public void cleanUp (){
             this.specVersion = null;
             this.mf = null;
             this.notification = null;

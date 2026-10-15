@@ -36,6 +36,7 @@ class MetalScrollPaneBorder extends AbstractBorder {
 
     private static final Insets insets = new Insets(1, 1, 2, 2);
 
+    @Override
     public void paintBorder(Component c, Graphics g, int x, int y,
     int w, int h) {
         g.translate(x, y);
@@ -51,6 +52,7 @@ class MetalScrollPaneBorder extends AbstractBorder {
         g.translate(-x, -y);
     }
 
+    @Override
     public Insets getBorderInsets(Component c) {
         return insets;
     }

@@ -89,12 +89,8 @@ public final class CloseButtonFactory{
         return isWindowsLaF() && (isWindowsVista() || isWindows7()) && isWindowsXPLaF();
     }
 
-    private static boolean isWindows8LaF() {
-        return isWindowsLaF() && isWindows8() && isWindowsXPLaF();
-    }
-    
-    private static boolean isWindows10LaF() {
-        return isWindowsLaF() && isWindows10() && isWindowsXPLaF();
+    private static boolean isWindows8OrAboveLaF() {
+        return isWindowsLaF() && (isWindows8() || isWindows10() || isWindows11()) && isWindowsXPLaF();
     }
 
     private static boolean isWindowsVista() {
@@ -102,11 +98,16 @@ public final class CloseButtonFactory{
         return osName.indexOf("Vista") >= 0
             || (osName.equals( "Windows NT (unknown)" ) && "6.0".equals( System.getProperty("os.version") ));
     }
-    
+
     private static boolean isWindows10() {
         String osName = System.getProperty ("os.name");
         return osName.indexOf("Windows 10") >= 0
             || (osName.equals( "Windows NT (unknown)" ) && "10.0".equals( System.getProperty("os.version") ));
+    }
+
+    private static boolean isWindows11() {
+        String osName = System.getProperty ("os.name");
+        return osName.indexOf("Windows 11") >= 0;
     }
 
     private static boolean isWindows8() {
@@ -142,13 +143,16 @@ public final class CloseButtonFactory{
 
     private static Icon getCloseTabImage() {
         if( null == closeTabImage ) {
+            closeTabImage = UIManager.getIcon("nb.close.tab.icon.enabled.icon"); //NOI18N
+        }
+        if( null == closeTabImage ) {
             String path = UIManager.getString("nb.close.tab.icon.enabled.name" ); //NOI18N
             if( null != path ) {
                 closeTabImage = ImageUtilities.loadImageIcon(path, true); // NOI18N
             }
         }
         if( null == closeTabImage ) {
-            if( isWindows8LaF() || isWindows10LaF() ) {
+            if( isWindows8OrAboveLaF() ) {
                 closeTabImage = Windows8VectorCloseButton.DEFAULT;
             } else if( isWindowsVistaLaF() ) {
                 closeTabImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/vista_close_enabled.png", true); // NOI18N
@@ -169,13 +173,16 @@ public final class CloseButtonFactory{
 
     private static Icon getCloseTabPressedImage() {
         if( null == closeTabPressedImage ) {
+            closeTabPressedImage = UIManager.getIcon("nb.close.tab.icon.pressed.icon"); //NOI18N
+        }
+        if( null == closeTabPressedImage ) {
             String path = UIManager.getString("nb.close.tab.icon.pressed.name" ); //NOI18N
             if( null != path ) {
                 closeTabPressedImage = ImageUtilities.loadImageIcon(path, true); // NOI18N
             }
         }
         if( null == closeTabPressedImage ) {
-            if( isWindows8LaF() || isWindows10LaF() ) {
+            if( isWindows8OrAboveLaF() ) {
                 closeTabPressedImage = Windows8VectorCloseButton.PRESSED;
             } else if( isWindowsVistaLaF() ) {
                 closeTabPressedImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/vista_close_pressed.png", true); // NOI18N
@@ -196,13 +203,16 @@ public final class CloseButtonFactory{
 
     private static Icon getCloseTabRolloverImage() {
         if( null == closeTabMouseOverImage ) {
+            closeTabMouseOverImage = UIManager.getIcon("nb.close.tab.icon.rollover.icon"); //NOI18N
+        }
+        if( null == closeTabMouseOverImage ) {
             String path = UIManager.getString("nb.close.tab.icon.rollover.name" ); //NOI18N
             if( null != path ) {
                 closeTabMouseOverImage = ImageUtilities.loadImageIcon(path, true); // NOI18N
             }
         }
         if( null == closeTabMouseOverImage ) {
-            if( isWindows8LaF() || isWindows10LaF() ) {
+            if( isWindows8OrAboveLaF() ) {
                 closeTabMouseOverImage = Windows8VectorCloseButton.PRESSED;
             } else if( isWindowsVistaLaF() ) {
                 closeTabMouseOverImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/vista_close_rollover.png", true); // NOI18N
@@ -224,13 +234,16 @@ public final class CloseButtonFactory{
 
     private static Icon getBigCloseTabImage() {
         if( null == bigCloseTabImage ) {
+            bigCloseTabImage = UIManager.getIcon("nb.bigclose.tab.icon.enabled.icon"); //NOI18N
+        }
+        if( null == bigCloseTabImage ) {
             String path = UIManager.getString("nb.bigclose.tab.icon.enabled.name" ); //NOI18N
             if( null != path ) {
                 bigCloseTabImage = ImageUtilities.loadImageIcon(path, true); // NOI18N
             }
         }
         if( null == bigCloseTabImage ) {
-            if( isWindows8LaF() || isWindows10LaF() ) {
+            if( isWindows8OrAboveLaF() ) {
                 bigCloseTabImage = Windows8VectorCloseButton.DEFAULT;
             } else if( isWindowsVistaLaF() ) {
                 bigCloseTabImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/vista_bigclose_enabled.png", true); // NOI18N
@@ -251,13 +264,16 @@ public final class CloseButtonFactory{
 
     private static  Icon getBigCloseTabPressedImage() {
         if( null == bigCloseTabPressedImage ) {
+            bigCloseTabPressedImage = UIManager.getIcon("nb.bigclose.tab.icon.pressed.icon"); //NOI18N
+        }
+        if( null == bigCloseTabPressedImage ) {
             String path = UIManager.getString("nb.bigclose.tab.icon.pressed.name" ); //NOI18N
             if( null != path ) {
                 bigCloseTabPressedImage = ImageUtilities.loadImageIcon(path, true); // NOI18N
             }
         }
         if( null == bigCloseTabPressedImage ) {
-            if( isWindows8LaF() || isWindows10LaF() ) {
+            if( isWindows8OrAboveLaF() ) {
                 bigCloseTabPressedImage = Windows8VectorCloseButton.PRESSED;
             } else if( isWindowsVistaLaF() ) {
                 bigCloseTabPressedImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/vista_bigclose_pressed.png", true); // NOI18N
@@ -278,13 +294,16 @@ public final class CloseButtonFactory{
 
     private static Icon getBigCloseTabRolloverImage() {
         if( null == bigCloseTabMouseOverImage ) {
+            bigCloseTabMouseOverImage = UIManager.getIcon("nb.bigclose.tab.icon.rollover.icon"); //NOI18N
+        }
+        if( null == bigCloseTabMouseOverImage ) {
             String path = UIManager.getString("nb.bigclose.tab.icon.rollover.name" ); //NOI18N
             if( null != path ) {
                 bigCloseTabMouseOverImage = ImageUtilities.loadImageIcon(path, true); // NOI18N
             }
         }
         if( null == bigCloseTabMouseOverImage ) {
-            if( isWindows8LaF() || isWindows10LaF() ) {
+            if( isWindows8OrAboveLaF() ) {
                 bigCloseTabMouseOverImage = Windows8VectorCloseButton.PRESSED;
             } else if( isWindowsVistaLaF() ) {
                 bigCloseTabMouseOverImage = ImageUtilities.loadImageIcon("org/openide/awt/resources/vista_bigclose_rollover.png", true); // NOI18N

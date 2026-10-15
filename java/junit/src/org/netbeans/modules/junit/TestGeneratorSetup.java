@@ -49,13 +49,13 @@ public final class TestGeneratorSetup implements TestabilityJudge {
     /* the class is final only for performance reasons */
     
     /* attributes - private */
-    static private final String JUNIT_SUPER_CLASS_NAME                = "TestCase";
-    static private final String JUNIT_FRAMEWORK_PACKAGE_NAME    = "junit.framework";
+    private static final String JUNIT_SUPER_CLASS_NAME                = "TestCase";
+    private static final String JUNIT_FRAMEWORK_PACKAGE_NAME    = "junit.framework";
     
-    static private final String METHOD_NAME_SETUP = "setUp";            //NOI18N
-    static private final String METHOD_NAME_TEARDOWN = "tearDown";      //NOI18N
-    static private final String CLASS_COMMENT_LINE1 = "TestCreator.javaClass.addTestsHereComment.l1";
-    static private final String CLASS_COMMENT_LINE2 = "TestCreator.javaClass.addTestsHereComment.l2";
+    private static final String METHOD_NAME_SETUP = "setUp";            //NOI18N
+    private static final String METHOD_NAME_TEARDOWN = "tearDown";      //NOI18N
+    private static final String CLASS_COMMENT_LINE1 = "TestCreator.javaClass.addTestsHereComment.l1";
+    private static final String CLASS_COMMENT_LINE2 = "TestCreator.javaClass.addTestsHereComment.l2";
     
     /** should test classes be skipped during generation of tests? */
     private boolean skipTestClasses = true;

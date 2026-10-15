@@ -53,7 +53,8 @@ import org.openide.util.Utilities;
  */
 public class RenameRefactoringPlugin extends JavaRefactoringPlugin {
     
-    private Set<ElementHandle<ExecutableElement>> allMethods = new HashSet<ElementHandle<ExecutableElement>>();
+    private Set<ElementHandle<ExecutableElement>> allMethods = new HashSet<>();
+    private Set<TreePathHandle> recordLinkedDeclarations = new HashSet<>();
     private boolean doCheckName = true;
     private Integer overriddenByMethodsCount = null;
     private Integer overridesMethodsCount = null;
@@ -91,9 +92,7 @@ public class RenameRefactoringPlugin extends JavaRefactoringPlugin {
                         }
                     }
                 }, false);
-            } catch (IllegalArgumentException ex) {
-                ex.printStackTrace();
-            } catch (IOException ex) {
+            } catch (IllegalArgumentException | IOException ex) {
                 ex.printStackTrace();
             }
         }
@@ -366,23 +365,8 @@ public class RenameRefactoringPlugin extends JavaRefactoringPlugin {
         if (treePathHandle == null && docTreePathHandle == null) {
             return null;
         }
-        switch (p) {
-            case PRECHECK:
-            case FASTCHECKPARAMETERS:
-                return JavaSource.forFileObject(docTreePathHandle != null? docTreePathHandle.getTreePathHandle().getFileObject()
-                                                                         : treePathHandle.getFileObject());
-            case PREPARE:
-            case CHECKPARAMETERS:
-                if(treePathHandle != null && treePathHandle.getKind() == Tree.Kind.LABELED_STATEMENT) {
-                    return JavaSource.forFileObject(treePathHandle.getFileObject());
-                }
-                ClasspathInfo cpInfo = getClasspathInfo(refactoring);
-                JavaSource source = JavaSource.create(cpInfo, docTreePathHandle != null? docTreePathHandle.getTreePathHandle().getFileObject()
-                                                                         : treePathHandle.getFileObject());
-                return source;
-                
-        }
-        throw new IllegalStateException();
+        return JavaSource.forFileObject(docTreePathHandle != null? docTreePathHandle.getTreePathHandle().getFileObject()
+                                                                 : treePathHandle.getFileObject());
     }
 
     @Override
@@ -407,51 +391,51 @@ public class RenameRefactoringPlugin extends JavaRefactoringPlugin {
                 JavaSource source = getJavaSource(Phase.PREPARE);
                 
                 try {
-                    source.runUserActionTask(new CancellableTask<CompilationController>() {
-                        
-                        @Override
-                        public void cancel() {
-                            throw new UnsupportedOperationException("Not supported yet."); // NOI18N
-                        }
-                        
+                    source.runUserActionTask(new Task<CompilationController>() {
                         @Override
                         public void run(CompilationController info) throws Exception {
-                            final ClassIndex idx = info.getClasspathInfo().getClassIndex();
+                            final ClassIndex idx = getClasspathInfo(refactoring).getClassIndex();
                             info.toPhase(JavaSource.Phase.RESOLVED);
                             Element el = docTreePathHandle != null? ((DocTrees)info.getTrees()).getElement(docTreePathHandle.resolve(info))
                                                        : treePathHandle.resolveElement(info);
                             ElementKind kind = el.getKind();
                             ElementHandle<TypeElement> enclosingType;
-                            if (el instanceof TypeElement) {
+                            if (kind.isClass() || kind.isInterface()) {
                                 enclosingType = ElementHandle.create((TypeElement)el);
                             } else {
                                 enclosingType = ElementHandle.create(info.getElementUtilities().enclosingTypeElement(el));
                             }
                             set.add(SourceUtils.getFile(el, info.getClasspathInfo()));
-                            if (el.getModifiers().contains(Modifier.PRIVATE)) {
-                                if (kind == ElementKind.METHOD) {
-                                    //add all references of overriding methods
-                                    allMethods.add(ElementHandle.create((ExecutableElement)el));
+                            for (Element linked : info.getElementUtilities().getLinkedRecordElements(el)) {
+                                ElementKind linkedKind = linked.getKind();
+                                if (!el.equals(linked)) {
+                                    recordLinkedDeclarations.add(TreePathHandle.create(linked, info));
                                 }
-                            } else {
-                                if (kind.isField()) {
-                                    set.addAll(idx.getResources(enclosingType, EnumSet.of(ClassIndex.SearchKind.FIELD_REFERENCES), EnumSet.of(ClassIndex.SearchScope.SOURCE)));
-                                } else if (el instanceof TypeElement) {
-                                    set.addAll(idx.getResources(enclosingType, EnumSet.of(ClassIndex.SearchKind.TYPE_REFERENCES, ClassIndex.SearchKind.IMPLEMENTORS),EnumSet.of(ClassIndex.SearchScope.SOURCE)));
-                                } else if (kind == ElementKind.METHOD) {
-                                    //add all references of overriding methods
-                                    allMethods.add(ElementHandle.create((ExecutableElement)el));
-                                    for (ExecutableElement e:JavaRefactoringUtils.getOverridingMethods((ExecutableElement)el, info, cancelRequested)) {
-                                        addMethods(e, set, info, idx);
+                                if (linked.getModifiers().contains(Modifier.PRIVATE)) {
+                                    if (linkedKind == ElementKind.METHOD) {
+                                        //add all references of overriding methods
+                                        allMethods.add(ElementHandle.create((ExecutableElement)linked));
                                     }
-                                    //add all references of overriden methods
-                                    for (ExecutableElement ov: JavaRefactoringUtils.getOverriddenMethods((ExecutableElement)el, info)) {
-                                        addMethods(ov, set, info, idx);
-                                        for (ExecutableElement e:JavaRefactoringUtils.getOverridingMethods( ov,info, cancelRequested)) {
+                                } else {
+                                    if (linkedKind.isField()) {
+                                        set.addAll(idx.getResources(enclosingType, EnumSet.of(ClassIndex.SearchKind.FIELD_REFERENCES), EnumSet.of(ClassIndex.SearchScope.SOURCE)));
+                                    } else if (linked instanceof TypeElement) {
+                                        set.addAll(idx.getResources(enclosingType, EnumSet.of(ClassIndex.SearchKind.TYPE_REFERENCES, ClassIndex.SearchKind.IMPLEMENTORS),EnumSet.of(ClassIndex.SearchScope.SOURCE)));
+                                    } else if (linkedKind == ElementKind.METHOD) {
+                                        //add all references of overriding methods
+                                        allMethods.add(ElementHandle.create((ExecutableElement)linked));
+                                        for (ExecutableElement e:JavaRefactoringUtils.getOverridingMethods((ExecutableElement)linked, info, cancelRequested)) {
                                             addMethods(e, set, info, idx);
                                         }
+                                        //add all references of overriden methods
+                                        for (ExecutableElement ov: JavaRefactoringUtils.getOverriddenMethods((ExecutableElement)linked, info)) {
+                                            addMethods(ov, set, info, idx);
+                                            for (ExecutableElement e:JavaRefactoringUtils.getOverridingMethods( ov,info, cancelRequested)) {
+                                                addMethods(e, set, info, idx);
+                                            }
+                                        }
+                                        set.addAll(idx.getResources(enclosingType, EnumSet.of(ClassIndex.SearchKind.METHOD_REFERENCES),EnumSet.of(ClassIndex.SearchScope.SOURCE))); //?????
                                     }
-                                    set.addAll(idx.getResources(enclosingType, EnumSet.of(ClassIndex.SearchKind.METHOD_REFERENCES),EnumSet.of(ClassIndex.SearchScope.SOURCE))); //?????
                                 }
                             }
                         }
@@ -603,6 +587,7 @@ public class RenameRefactoringPlugin extends JavaRefactoringPlugin {
                     break;
                 case CLASS:
                 case INTERFACE:
+                case RECORD:
                 case ANNOTATION_TYPE:
                 case ENUM:
                     //TODO: any prechecks for JavaClass?
@@ -622,8 +607,8 @@ public class RenameRefactoringPlugin extends JavaRefactoringPlugin {
         }
         Set<FileObject> a = getRelevantFiles();
         fireProgressListenerStart(AbstractRefactoring.PREPARE, a.size());
-        TransformTask transform = new TransformTask(new RenameTransformer(treePathHandle, docTreePathHandle, refactoring, allMethods, refactoring.isSearchInComments()), treePathHandle != null && treePathHandle.getKind() == Tree.Kind.LABELED_STATEMENT ? null : treePathHandle);
-        Problem problem = createAndAddElements(a, transform, elements, refactoring,getClasspathInfo(refactoring));
+        TransformTask transform = new TransformTask(new RenameTransformer(treePathHandle, docTreePathHandle, refactoring, allMethods, recordLinkedDeclarations, refactoring.isSearchInComments()), treePathHandle != null && treePathHandle.getKind() == Tree.Kind.LABELED_STATEMENT ? null : treePathHandle);
+        Problem problem = createAndAddElements(a, transform, elements, refactoring);
         fireProgressListenerStop();
         return problem;
     }
@@ -631,9 +616,7 @@ public class RenameRefactoringPlugin extends JavaRefactoringPlugin {
     private Problem willOverride(ExecutableElement method, String name, Problem problem, CompilationInfo info) {
         boolean isStatic = method.getModifiers().contains(Modifier.STATIC);
         TypeElement jc = (TypeElement) method.getEnclosingElement();
-        LinkedList supertypes = new LinkedList();
         
-        ElementUtilities ut = info.getElementUtilities();
         Elements elements = info.getElements();
         ExecutableElement m = null;
         

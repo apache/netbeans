@@ -91,7 +91,7 @@ public abstract class AbstractCheckoutAction extends SingleRepositoryAction {
                 }
                 
                 Collection<File> seenRoots = Git.getInstance().getSeenRoots(repository);
-                final Set<String> seenPaths = new HashSet<String>(GitUtils.getRelativePaths(repository, seenRoots.toArray(new File[seenRoots.size()])));
+                final Set<String> seenPaths = new HashSet<String>(GitUtils.getRelativePaths(repository, seenRoots.toArray(new File[0])));
                 try {
                     final GitClient client = getClient();
                     revision = revisionToCheckout;
@@ -99,8 +99,7 @@ public abstract class AbstractCheckoutAction extends SingleRepositoryAction {
                         revision = newBranchName;
                         LOG.log(Level.FINE, "Creating branch: {0}:{1}", new Object[] { revision, revisionToCheckout }); //NOI18N
                         GitBranch branch = client.createBranch(revision, revisionToCheckout, getProgressMonitor());
-                        log(revisionToCheckout, branch);
-
+                        logBranchCreation(revisionToCheckout, branch);
                     }
                     client.addNotificationListener(new FileListener() {
                         @Override
@@ -170,9 +169,13 @@ public abstract class AbstractCheckoutAction extends SingleRepositoryAction {
                 return b != null && b.getName() != GitBranch.NO_BRANCH;
             }
 
-            private void log (String revision, GitBranch branch) {
+            private void logBranchCreation (String revision, GitBranch branch) {
                 OutputLogger logger = getLogger();
-                logger.outputLine(NbBundle.getMessage(CheckoutRevisionAction.class, "MSG_CheckoutRevisionAction.branchCreated", new Object[] { branch.getName(), revision, branch.getId() })); //NOI18N
+                if (branch != null) {
+                    logger.outputLine(NbBundle.getMessage(CheckoutRevisionAction.class, "MSG_CheckoutRevisionAction.branchCreated", new Object[] { branch.getName(), revision, branch.getId() })); //NOI18N
+                } else {
+                    logger.outputLine(NbBundle.getMessage(CheckoutRevisionAction.class, "MSG_CheckoutRevisionAction.noBranchCreated", new Object[] { revision })); //NOI18N
+                }
             }
 
             private boolean resolveConflicts (File[] conflicts, boolean mergeAllowed) throws GitException {
@@ -220,7 +223,7 @@ public abstract class AbstractCheckoutAction extends SingleRepositoryAction {
                 for (String path : conflicts) {
                     files.add(new File(repository, path));
                 }
-                return files.toArray(new File[files.size()]);
+                return files.toArray(new File[0]);
             }
         };
         supp.start(Git.getInstance().getRequestProcessor(repository), repository, progressLabel);

@@ -175,14 +175,11 @@ public final class PrintDetailsTask implements Runnable {
         try {
             final Method method = SearchDisplayer.class
                     .getDeclaredMethod(methodName, new Class<?>[0]);
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        method.invoke(displayer, (Object[]) null);
-                    } catch (Exception ex) {
-                        ErrorManager.getDefault().notify(ex);
-                    }
+            Runnable runnable = () -> {
+                try {
+                    method.invoke(displayer, (Object[]) null);
+                } catch (Exception ex) {
+                    ErrorManager.getDefault().notify(ex);
                 }
             };
             if (EventQueue.isDispatchThread()) {

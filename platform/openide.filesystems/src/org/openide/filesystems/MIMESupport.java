@@ -196,7 +196,7 @@ final class MIMESupport extends Object {
 
             List<MIMEResolver> all = new ArrayList<MIMEResolver>(declarativeResolvers());
             all.addAll(result.allInstances());
-            MIMEResolver[] toRet = all.toArray(new MIMEResolver[all.size()]);
+            MIMEResolver[] toRet = all.toArray(new MIMEResolver[0]);
 
             ERR.fine("Resolvers computed"); // NOI18N
 
@@ -254,8 +254,8 @@ final class MIMESupport extends Object {
                         try {
                             // For now, just assume it has the right DTD. Could check this if desired.
                             declmimes.add(MIMEResolverImpl.forDescriptor(f)); // NOI18N
-                        } catch (IOException ex) {
-                            Exceptions.printStackTrace(ex);
+                        } catch (IOException | IllegalArgumentException ex) {
+                            ERR.log(Level.INFO, "Failed to parse declarative MIMEResolver: " + f, ex);
                         }
                     }
                 }
@@ -287,7 +287,7 @@ final class MIMESupport extends Object {
                 resolvedMimeType = resolveMIME(withinMIMETypes);
                 if (resolvedMimeType == null) {
                     // fallback for xml files to be recognized e.g. in platform without any MIME resolver registered
-                    if (getExt().toLowerCase().equals("xml")) {  //NOI18N
+                    if (getExt().equalsIgnoreCase("xml")) {  //NOI18N
                         resolvedMimeType = "text/xml"; // NOI18N
                     } else {
                         // general fallback

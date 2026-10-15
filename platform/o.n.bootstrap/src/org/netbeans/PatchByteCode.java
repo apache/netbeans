@@ -22,9 +22,9 @@ package org.netbeans;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,12 +51,8 @@ public final class PatchByteCode {
     private static final String PREFIX_EXTEND = "extend."; // NOI18N
     
     static {
-        try {
-            RUNTIME_INVISIBLE_ANNOTATIONS = "RuntimeInvisibleAnnotations".getBytes("UTF-8"); // NOI18N
-            PATCHED_PUBLIC = DESC_PATCHED_PUBLIC_ANNOTATION.getBytes("UTF-8"); // NOI18N
-        } catch (UnsupportedEncodingException x) {
-            throw new ExceptionInInitializerError(x);
-        }
+        RUNTIME_INVISIBLE_ANNOTATIONS = "RuntimeInvisibleAnnotations".getBytes(StandardCharsets.UTF_8); // NOI18N
+        PATCHED_PUBLIC = DESC_PATCHED_PUBLIC_ANNOTATION.getBytes(StandardCharsets.UTF_8);
     }
     
     /**
@@ -86,8 +82,9 @@ public final class PatchByteCode {
     private void load(URL stream) throws IOException {
         try (InputStream istm = stream.openStream()) {
             Properties props = new Properties();
-            props.load(new InputStreamReader(istm, "UTF-8")); // NOI18N
+            props.load(new InputStreamReader(istm, StandardCharsets.UTF_8));
             
+            @SuppressWarnings("unchecked")
             Enumeration<String> en = (Enumeration<String>)props.propertyNames();
             
             while (en.hasMoreElements()) {
@@ -166,7 +163,7 @@ public final class PatchByteCode {
     }
     /**
      * Patches a class if it is needed.
-     * @param arr the bytecode
+     * @param data the bytecode
      * @return the enhanced bytecode
      */
     public static byte[] patch(byte[] data) {

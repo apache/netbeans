@@ -28,6 +28,7 @@ import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
+import com.sun.source.tree.CaseTree.CaseKind;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
@@ -59,6 +60,7 @@ import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.ThrowTree;
@@ -72,6 +74,7 @@ import com.sun.source.tree.UnionTypeTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
+import com.sun.source.tree.YieldTree;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.ArrayList;
@@ -101,7 +104,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.CompilationInfo.CacheClearPolicy;
-import org.netbeans.api.java.source.support.CancellableTreePathScanner;
+import org.netbeans.api.java.source.support.CancellableTreeScanner;
 import org.netbeans.modules.java.hints.errors.Utilities;
 import org.netbeans.spi.java.hints.HintContext;
 
@@ -110,6 +113,26 @@ import org.netbeans.spi.java.hints.HintContext;
  * @author lahvac
  */
 public class Flow {
+
+    public static final Set<ElementKind> LOCAL_VARIABLES =
+            Set.of(ElementKind.BINDING_VARIABLE,
+                   ElementKind.EXCEPTION_PARAMETER,
+                   ElementKind.LOCAL_VARIABLE,
+                   ElementKind.PARAMETER,
+                   ElementKind.RESOURCE_VARIABLE
+            );
+    private static final Set<ElementKind> IMPLICITLY_INITIALIZED_VARIABLES =
+            Set.of(ElementKind.BINDING_VARIABLE,
+                   ElementKind.EXCEPTION_PARAMETER,
+                   ElementKind.PARAMETER
+            );
+    private static final Set<ElementKind> SUPPORTED_VARIABLES;
+
+    static {
+        SUPPORTED_VARIABLES = EnumSet.noneOf(ElementKind.class);
+        SUPPORTED_VARIABLES.addAll(LOCAL_VARIABLES);
+        SUPPORTED_VARIABLES.add(ElementKind.FIELD);
+    }
 
     public static FlowResult assignmentsForUse(CompilationInfo info, AtomicBoolean cancel) {
         return assignmentsForUse(info, new AtomicBooleanCancel(cancel));
@@ -353,7 +376,7 @@ public class Flow {
      * that are qualified to belong to other scopes are ignored at the moment.
      * 
      */
-    private static final class VisitorImpl extends CancellableTreePathScanner<Boolean, ConstructorData> {
+    private static final class VisitorImpl extends CancellableTreeScanner<Boolean, ConstructorData> {
         
         private final CompilationInfo info;
         private final TypeElement undefinedSymbolScope;
@@ -379,7 +402,6 @@ public class Flow {
         private Map<Tree, Collection<Map<Element, State>>> resumeBefore = new IdentityHashMap<Tree, Collection<Map<Element, State>>>();
         private Map<Tree, Collection<Map<Element, State>>> resumeAfter = new IdentityHashMap<Tree, Collection<Map<Element, State>>>();
         private Map<TypeMirror, Map<Element, State>> resumeOnExceptionHandler = new IdentityHashMap<TypeMirror, Map<Element, State>>();
-        private boolean inParameters;
         private Tree nearestMethod;
         private Set<Element> currentMethodVariables = Collections.newSetFromMap(new IdentityHashMap<Element, Boolean>());
         private final Set<Tree> deadBranches = new HashSet<Tree>();
@@ -444,11 +466,39 @@ public class Flow {
             return cancel.isCanceled();
         }
 
+        private TreePath currentPath;
+
+        public TreePath getCurrentPath() {
+            return currentPath;
+        }
+
+        public Boolean scan(TreePath path, ConstructorData p) {
+            TreePath oldPath = currentPath;
+            try {
+                currentPath = path;
+                return super.scan(path.getLeaf(), p);
+            } finally {
+                currentPath = oldPath;
+            }
+        }
+
         @Override
         public Boolean scan(Tree tree, ConstructorData p) {
             resume(tree, resumeBefore);
             
-            Boolean result = super.scan(tree, p);
+            Boolean result;
+
+            if (tree != null) {
+                TreePath oldPath = currentPath;
+                try {
+                    currentPath = new TreePath(currentPath, tree);
+                    result = super.scan(tree, p);
+                } finally {
+                    currentPath = oldPath;
+                }
+            } else {
+                result = null;
+            }
 
             resume(tree, resumeAfter);
             
@@ -614,17 +664,32 @@ public class Flow {
             Element e = info.getTrees().getElement(getCurrentPath());
             
             if (e != null && SUPPORTED_VARIABLES.contains(e.getKind())) {
-                // note: if the variable does not have an initializer and is not a parameter (inParameters = true),
+                // note: if the variable does not have an initializer and is not an implicitly initialized variable,
                 // the State will receive null as an assignment to indicate an uninitializer
+                boolean implicitlyInitialized = IMPLICITLY_INITIALIZED_VARIABLES.contains(e.getKind());
                 TreePath tp = 
                             node.getInitializer() != null ? 
                                     new TreePath(getCurrentPath(), node.getInitializer()) : 
-                                    inParameters ? getCurrentPath() : null;
+                                    implicitlyInitialized ? getCurrentPath() : null;
                 recordVariableState(e, tp);
                 currentMethodVariables.add((Element) e);
-                TreePath pp = getCurrentPath().getParentPath();
-                if (pp != null) {
-                    addScopedVariable(pp.getLeaf(), e);
+                TreePath scopePath;
+                if (e.getKind() == ElementKind.BINDING_VARIABLE) {
+                    //a wider scope does not matter too much:
+                    scopePath = getCurrentPath().getParentPath();
+                    SCOPE_SEARCH: while (scopePath != null) {
+                        switch (scopePath.getLeaf().getKind()) {
+                            case VARIABLE, BLOCK: break SCOPE_SEARCH;
+                            default:
+                                scopePath = scopePath.getParentPath();
+                                continue SCOPE_SEARCH;
+                        }
+                    }
+                } else {
+                    scopePath = getCurrentPath().getParentPath();
+                }
+                if (scopePath != null) {
+                    addScopedVariable(scopePath.getLeaf(), e);
                 }
             }
             
@@ -890,15 +955,7 @@ public class Flow {
                 scan(node.getModifiers(), null);
                 scan(node.getReturnType(), null);
                 scan(node.getTypeParameters(), null);
-
-                inParameters = true;
-
-                try {
-                    scan(node.getParameters(), null);
-                } finally {
-                    inParameters = false;
-                }
-
+                scan(node.getParameters(), null);
                 scan(node.getThrows(), null);
                 
                 List<Tree> additionalTrees = p != null ? p.initializers : Collections.<Tree>emptyList();
@@ -960,7 +1017,7 @@ public class Flow {
         }
         
         private boolean isConstructor(TreePath what) {
-            return what.getLeaf().getKind() == Kind.METHOD && ((MethodTree) what.getLeaf()).getReturnType() == null; //TODO: not really a proper way to detect constructors
+            return what.getLeaf().getKind() == Kind.METHOD && ((MethodTree) what.getLeaf()).getName().contentEquals("<init>"); //TODO: not really a proper way to detect constructors
         }
 
         @Override
@@ -1156,9 +1213,7 @@ public class Flow {
 
             if (pendingFinally.isEmpty()) {
                 //performance: limit amount of held variables and their mapping:
-                for ( Element ve : currentMethodVariables) {
-                    variable2State.remove(ve);
-                }
+                variable2State.keySet().removeAll(currentMethodVariables);
             }
             
             resumeAfter(nearestMethod, variable2State);
@@ -1172,15 +1227,41 @@ public class Flow {
 
             Tree target = info.getTreeUtilities().getBreakContinueTargetTree(getCurrentPath());
             
-            resumeAfter(target, variable2State);
+            breakTo(target);
 
-            variable2State = new HashMap< Element, State>();
-            
             return null;
         }
 
+        @Override
+        public Boolean visitYield(YieldTree node, ConstructorData p) {
+            scan(node.getValue(), p);
+
+            Tree target = info.getTreeUtilities().getBreakContinueTargetTree(getCurrentPath());
+            
+            breakTo(target);
+
+            return null;
+        }
+
+        private void breakTo(Tree target) {
+            resumeAfter(target, variable2State);
+
+            variable2State = new HashMap<>();
+        }
+
         public Boolean visitSwitch(SwitchTree node, ConstructorData p) {
-            scan(node.getExpression(), null);
+            generalizedSwitch(node, node.getExpression(), node.getCases());
+            return null;
+        }
+
+        @Override
+        public Boolean visitSwitchExpression(SwitchExpressionTree node, ConstructorData p) {
+            generalizedSwitch(node, node.getExpression(), node.getCases());
+            return null; //never a constant expression
+        }
+
+        private void generalizedSwitch(Tree switchTree, ExpressionTree expression, List<? extends CaseTree> cases) {
+            scan(expression, null);
 
             Map< Element, State> origVariable2State = new HashMap< Element, State>(variable2State);
 
@@ -1188,7 +1269,7 @@ public class Flow {
 
             boolean exhaustive = false;
 
-            for (CaseTree ct : node.getCases()) {
+            for (CaseTree ct : cases) {
                 variable2State = mergeOr(variable2State, origVariable2State);
 
                 if (ct.getExpression() == null) {
@@ -1196,13 +1277,15 @@ public class Flow {
                 }
 
                 scan(ct, null);
+
+                if (ct.getCaseKind() == CaseKind.RULE) {
+                    breakTo(switchTree);
+                }
             }
 
             if (!exhaustive) {
                 variable2State = mergeOr(variable2State, origVariable2State);
             }
-            
-            return null;
         }
 
         public Boolean visitEnhancedForLoop(EnhancedForLoopTree node, ConstructorData p) {
@@ -1336,13 +1419,8 @@ public class Flow {
             }
             
             try {
-                inParameters = true;
+                scan(node.getParameters(), null);
 
-                try {
-                    scan(node.getParameters(), null);
-                } finally {
-                    inParameters = false;
-                }
                 b = scan(node.getBody(), p);
             
                 Set<Element> assigned = new HashSet<Element>();
@@ -1666,9 +1744,7 @@ public class Flow {
         }
 
         public Boolean visitCatch(CatchTree node, ConstructorData p) {
-            inParameters = true;
             scan(node.getParameter(), p);
-            inParameters = false;
             scan(node.getBlock(), p);
             return null;
         }
@@ -1752,9 +1828,6 @@ public class Flow {
             }
         }
     }
-    
-    private static final Set<ElementKind> SUPPORTED_VARIABLES = EnumSet.of(ElementKind.EXCEPTION_PARAMETER, ElementKind.LOCAL_VARIABLE, ElementKind.PARAMETER, ElementKind.FIELD);
-    private static final Set<ElementKind> LOCAL_VARIABLES = EnumSet.of(ElementKind.EXCEPTION_PARAMETER, ElementKind.LOCAL_VARIABLE, ElementKind.PARAMETER);
     
     static class State {
         private final Set<TreePath> assignments;

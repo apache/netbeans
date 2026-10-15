@@ -54,7 +54,7 @@ import org.tigris.subversion.svnclientadapter.SVNUrl;
  */
 public class LockAction extends ContextAction {
     
-    private final static Logger LOG = Logger.getLogger(LockAction.class.getName());
+    private static final Logger LOG = Logger.getLogger(LockAction.class.getName());
     
     @Override
     protected int getDirectoryEnabledStatus () {
@@ -108,7 +108,7 @@ public class LockAction extends ContextAction {
         final LockParams lock = new LockParams(cache.containsFiles(new HashSet<File>(unlocked), FileInformation.STATUS_LOCKED_REMOTELY, true));
         if (lock.show()) {
             final SVNUrl url;
-            final File[] files = unlocked.toArray(new File[unlocked.size()]);
+            final File[] files = unlocked.toArray(new File[0]);
             try {
                 url = SvnUtils.getRepositoryRootUrl(files[0]);
             } catch (SVNClientException ex) {
@@ -166,7 +166,7 @@ public class LockAction extends ContextAction {
 
                 private Collection<File> lockedByOther (SvnClient client, Set<File> lockedFiles) throws SVNClientException {
                     List<File> lockedByOtherFiles = new LinkedList<File>();
-                    ISVNStatus[] statuses = client.getStatus(lockedFiles.toArray(new File[lockedFiles.size()]));
+                    ISVNStatus[] statuses = client.getStatus(lockedFiles.toArray(new File[0]));
                     for (ISVNStatus status : statuses) {
                         if (status.getLockOwner() == null) {
                             // not locked in this WC

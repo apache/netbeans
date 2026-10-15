@@ -20,9 +20,7 @@ package org.netbeans.core.multitabs.project;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.WeakHashMap;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.project.FileOwnerQuery;
@@ -46,12 +44,11 @@ import org.openide.windows.TopComponent;
 @ServiceProvider(service = ProjectSupport.class)
 public class ProjectSupportImpl extends ProjectSupport {
 
-    private static final Map<FileObject, Project> file2project = new WeakHashMap<FileObject, Project>(50);
+    private static final Map<FileObject, Project> file2project = new WeakHashMap<>(50);
     private static final RequestProcessor RP = new RequestProcessor("TabProjectBridge"); //NOI18N
-    private static final Set<FileObject> currentQueries = new HashSet<FileObject>(20);
     private static final ChangeSupport changeSupport = new ChangeSupport(RP);
     private static PropertyChangeListener projectsListener;
-    
+
     public ProjectSupportImpl() {
     }
 
@@ -65,12 +62,7 @@ public class ProjectSupportImpl extends ProjectSupport {
         synchronized( changeSupport ) {
             changeSupport.addChangeListener(l);
             if( null == projectsListener ) {
-                projectsListener = new PropertyChangeListener() {
-                    @Override
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        changeSupport.fireChange();
-                    }
-                };
+                projectsListener = (PropertyChangeEvent evt) -> changeSupport.fireChange();
                 OpenProjects.getDefault().addPropertyChangeListener( projectsListener );
             }
         }
@@ -102,40 +94,25 @@ public class ProjectSupportImpl extends ProjectSupport {
     @Override
     public ProjectProxy getProjectForTab( final TabData tab ) {
         Project p = null;
-        synchronized( file2project ) {
-            if( null != tab && tab.getComponent() instanceof TopComponent ) {
-                TopComponent tc = ( TopComponent ) tab.getComponent();
-                DataObject dob = tc.getLookup().lookup( DataObject.class );
-                if( null != dob ) {
-                    final FileObject fo = dob.getPrimaryFile();
-                    if( null != fo ) {
+        if( null != tab && tab.getComponent() instanceof TopComponent ) {
+            TopComponent tc = ( TopComponent ) tab.getComponent();
+            DataObject dob = tc.getLookup().lookup( DataObject.class );
+            if( null != dob ) {
+                final FileObject fo = dob.getPrimaryFile();
+                if( null != fo ) {
+                    synchronized( file2project ) {
                         p = file2project.get(fo);
                         if( null == p ) {
-                            if( currentQueries.contains(fo) ) {
-                                //there already is a file owner query for this file
-                                return null;
-                            } else {
-                                currentQueries.add(fo);
-                                RP.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Project p = FileOwnerQuery.getOwner( fo );
-                                        if( null != p ) {
-                                            synchronized( file2project ) {
-                                                file2project.put( fo, p );
-                                                currentQueries.remove(fo);
-                                                changeSupport.fireChange();
-                                            }
-                                        }
-                                    }
-                                });
+                            p = FileOwnerQuery.getOwner( fo );
+                            if (null != p) {
+                                file2project.put(fo, p);
                             }
                         }
                     }
                 }
             }
-            return null == p ? null : createProxy( p );
         }
+        return null == p ? null : createProxy( p );
     }
 
     private static ProjectProxy createProxy( Project p ) {

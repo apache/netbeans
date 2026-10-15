@@ -176,9 +176,9 @@ public abstract class MainMenuTestCase extends PermUITestCase {
      * @return Operator.
      */
     protected JMenuBarOperator pushMainMenuItem(String mainMenuItem) {
-        ///open menu to let it create sucesfully
+        //open menu to let it create sucesfully
         JMenuBarOperator mainmenuOp = MainWindowOperator.getDefault().menuBar();
-        ///use string comparator with exact matching
+        //use string comparator with exact matching
         mainmenuOp.pushMenu(mainMenuItem, new DefaultStringComparator(true, false));
 
         return mainmenuOp;

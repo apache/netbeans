@@ -71,7 +71,7 @@ public class CodeEvaluatorUI extends TopComponent implements HelpCtx.Provider,
     private static final String ID = "evaluatorPane"; //NOI18N
     private static final String PROP_RESULT_CHANGED = "resultChanged"; // NOI18N
 
-    final private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private static WeakReference<CodeEvaluatorUI> instanceRef;
 
     private JEditorPane codePane;
@@ -79,7 +79,7 @@ public class CodeEvaluatorUI extends TopComponent implements HelpCtx.Provider,
     // Solves the problem with calling getText() in non-AWT thread.
     private volatile String codeText = "";
     //private History history;
-    private Reference<EvaluatorService> debuggerRef = new WeakReference(null);
+    private Reference<EvaluatorService> debuggerRef = new WeakReference<>(null);
     private final DbgManagerListener dbgManagerListener;
     //private TopComponent resultView;
     private final JButton dropDownButton;

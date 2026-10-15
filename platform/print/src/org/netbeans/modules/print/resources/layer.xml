@@ -42,14 +42,6 @@
         </folder>
     </folder>
 
-    <folder name="Keymaps">
-        <folder name="NetBeans">
-            <file name="DOS-P.shadow"> <!-- Ctrl+Alt+Shift+P -->
-                <attr name="originalFile" stringvalue="Actions/File/org-netbeans-modules-print-action-PrintAction.instance"/>
-            </file>
-        </folder>
-    </folder>
-
     <folder name="Shortcuts">
         <file name="DOS-P.shadow"> <!-- Ctrl+Alt+Shift+P -->
             <attr name="originalFile" stringvalue="Actions/File/org-netbeans-modules-print-action-PrintAction.instance"/>

@@ -51,23 +51,8 @@
         <token id='T_NEKUDOTAIM' start='75' end='76'>
             <text>:</text>
         </token>
-        <token id='T_NS_SEPARATOR' start='77' end='78'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='78' end='80'>
-            <text>My</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='80' end='81'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='81' end='85'>
-            <text>Firm</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='85' end='86'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='86' end='93'>
-            <text>MyClass</text>
+        <token id='T_NAME_FULLY_QUALIFIED' start='77' end='93'>
+            <text>\My\Firm\MyClass</text>
         </token>
         <token id='T_CURLY_OPEN' start='94' end='95'>
             <text>{</text>

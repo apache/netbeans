@@ -68,7 +68,7 @@ public class NetigsoUsesSwingTest extends SetupHid {
                 m1 = mgr.create(simpleModule, null, false, false, false);
                 mgr.enable(Collections.<Module>singleton(m1));
                 Class<?> c = m1.getClassLoader().loadClass("org.barwing.Main");
-                Runnable r = (Runnable)c.newInstance();
+                Runnable r = (Runnable)c.getDeclaredConstructor().newInstance();
                 r.run();
             } finally {
                 mgr.mutexPrivileged().exitWriteAccess();

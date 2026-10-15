@@ -27,6 +27,7 @@ import groovyjarjarantlr.TokenStreamException;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.codehaus.groovy.antlr.parser.GroovyRecognizer;
@@ -233,7 +234,7 @@ public final class GroovyLexer implements Lexer<GroovyTokenId> {
         public void setState(State d) {
             if (d != null) {
                 stringCtorState = d.stringCtorState;
-                parenLevelStack = new ArrayList(d.parenLevelStack);
+                parenLevelStack = new ArrayList<>(d.parenLevelStack);
             }
         }
     }
@@ -246,11 +247,11 @@ public final class GroovyLexer implements Lexer<GroovyTokenId> {
     private static class State {
 
         private final int stringCtorState;
-        private final ArrayList parenLevelStack;
+        private final List parenLevelStack;
 
         public State(int stringCtorState, ArrayList parenLevelStack) {
             this.stringCtorState = stringCtorState;
-            this.parenLevelStack = new ArrayList(parenLevelStack);
+            this.parenLevelStack = new ArrayList<>(parenLevelStack);
         }
 
         @Override

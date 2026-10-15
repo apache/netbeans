@@ -149,8 +149,9 @@ class FoldingTaskListModel extends TaskListModel {
         if( tasks.isEmpty() )
             return;
         Map<FoldingGroup,List<Task>> grouppedTasksMap = divideByGroup( tasks );
-        for( FoldingGroup fg : grouppedTasksMap.keySet() ) {
-            List<Task> tasksInGroup = grouppedTasksMap.get( fg );
+        for( Map.Entry<FoldingGroup, List<Task>> entry : grouppedTasksMap.entrySet() ) {
+            FoldingGroup fg = entry.getKey( );
+            List<Task> tasksInGroup = entry.getValue();
             fg.add( tasksInGroup );
         }
         sortTaskList();
@@ -161,8 +162,9 @@ class FoldingTaskListModel extends TaskListModel {
         if( tasks.isEmpty() )
             return;
         Map<FoldingGroup,List<Task>> grouppedTasksMap = divideByGroup( tasks );
-        for( FoldingGroup fg : grouppedTasksMap.keySet() ) {
-            List<Task> tasksInGroup = grouppedTasksMap.get( fg );
+        for( Map.Entry<FoldingGroup, List<Task>> entry : grouppedTasksMap.entrySet() ) {
+            FoldingGroup fg = entry.getKey( );
+            List<Task> tasksInGroup = entry.getValue();
             fg.remove( tasksInGroup );
         }
     }

@@ -1,0 +1,5 @@
+        $example = new Example()->|>MARK_OCCURRENCES:pu^blicMethod<|();
+        $example = new Example()->returnThis()->|>MARK_OCCURRENCES:publicMethod<|();
+    public function |>MARK_OCCURRENCES:publicMethod<|(): string {
+new Example()->|>MARK_OCCURRENCES:publicMethod<|(); // test
+new Example()->returnThis()->|>MARK_OCCURRENCES:publicMethod<|(); // test

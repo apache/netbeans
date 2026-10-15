@@ -62,7 +62,7 @@ public class SizeEqualsZero {
             constraints = @ConstraintVariableType(type = "java.util.Map", variable = "$subj")),
     })
     public static ErrorDescription sizeEqualsZero(HintContext ctx) {
-        return sizeEqualsZeroHint(ctx, false);
+        return sizeEqualsZeroHint(ctx, "SizeEqualsZero", "$subj.isEmpty()"); // NOI18N
     }
 
     @TriggerPatterns({
@@ -79,10 +79,27 @@ public class SizeEqualsZero {
         if (!ctx.getPreferences().getBoolean(CHECK_NOT_EQUALS, CHECK_NOT_EQUALS_DEFAULT)) {
             return null;
         }
-        return sizeEqualsZeroHint(ctx, true);
+        return sizeEqualsZeroHint(ctx, "SizeEqualsZeroNeg", "!$subj.isEmpty()"); // NOI18N
     }
 
-    public static ErrorDescription sizeEqualsZeroHint(HintContext ctx, boolean not) {
+    @TriggerPatterns({
+        @TriggerPattern(value="$subj.size() > 0", 
+            constraints = @ConstraintVariableType(type = "java.util.Collection", variable = "$subj")),
+        @TriggerPattern(value="$subj.size() > 0", 
+            constraints = @ConstraintVariableType(type = "java.util.Map", variable = "$subj")),
+        @TriggerPattern(value="0 < $subj.size()",
+            constraints = @ConstraintVariableType(type = "java.util.Collection", variable = "$subj")),
+        @TriggerPattern(value="0 < $subj.size()",
+            constraints = @ConstraintVariableType(type = "java.util.Map", variable = "$subj")),
+    })
+    public static ErrorDescription sizeGreaterZero(HintContext ctx) {
+        if (!ctx.getPreferences().getBoolean(CHECK_NOT_EQUALS, CHECK_NOT_EQUALS_DEFAULT)) {
+            return null;
+        }
+        return sizeEqualsZeroHint(ctx, "SizeGreaterZeroNeg", "!$subj.isEmpty()"); // NOI18N
+    }
+
+    public static ErrorDescription sizeEqualsZeroHint(HintContext ctx, String keyPostfix, String to) {
         TreePath subj = ctx.getVariables().get("$subj");
         if (subj == null) {
             // assume implicit this
@@ -122,11 +139,13 @@ public class SizeEqualsZero {
                 return null;
             }
         }
-
-        String fixDisplayName = NbBundle.getMessage(SizeEqualsZero.class, not ? "FIX_UseIsEmptyNeg" : "FIX_UseIsEmpty");
-        Fix f = JavaFixUtilities.rewriteFix(ctx, fixDisplayName, ctx.getPath(), not ? "!$subj.isEmpty()" : "$subj.isEmpty()");
-        String displayName = NbBundle.getMessage(SizeEqualsZero.class, not ? "ERR_SizeEqualsZeroNeg" : "ERR_SizeEqualsZero");
-        return ErrorDescriptionFactory.forTree(ctx, ctx.getPath(), displayName, f);
+        
+        String subjName = subj.getLeaf().toString();
+        String fixDisplayName = NbBundle.getMessage(SizeEqualsZero.class, "FIX_" + keyPostfix, subjName); // NOI18N
+        String errDisplayName = NbBundle.getMessage(SizeEqualsZero.class, "ERR_" + keyPostfix, subjName); // NOI18N
+        
+        Fix fix = JavaFixUtilities.rewriteFix(ctx, fixDisplayName, ctx.getPath(), to);
+        return ErrorDescriptionFactory.forTree(ctx, ctx.getPath(), errDisplayName, fix);
     }
 
 }

@@ -1,0 +1,4 @@
+Code completion result for source line:
+$phpdoc2::PUBLIC_Y_|CONSTANT; // (ClassX&ClassY&ClassZ)|null|(ClassX&ClassZ)
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   PUBLIC_Y_CONSTANT "public cons  [PUBLIC]   ClassY

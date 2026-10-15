@@ -1,0 +1,167 @@
+<?php
+// Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.
+
+namespace DeprecatedTest1;
+
+use Deprecated;
+
+#[Deprecated]
+function |>DEPRECATED:deprecated<|(): void {
+}
+
+#[Attr1, Attr2()]
+#[Deprecated]
+function |>DEPRECATED:deprecated02<|(): void {
+}
+
+#[Attr1, Attr2()]
+#[Deprecated]
+#[Attr3]
+function |>DEPRECATED:deprecated03<|(): void {
+}
+
+#[Attr1, Attr2()]
+function deprecated04(): void {
+}
+
+/**
+ * @deprecated since 2.0
+ * @return void
+ */
+#[Deprecated]
+function |>DEPRECATED:deprecatedWithPhpDoc01<|(): void {
+}
+
+/**
+ * @deprecated since 2.0
+ * @return void
+ */
+#[Attr]
+function |>DEPRECATED:deprecatedWithPhpDoc02<|(): void {
+}
+
+#[Deprecated("2.0.0", "use newFunction() instead")]
+function |>DEPRECATED:deprecatedWithParam01<|(): void {
+}
+
+#[Deprecated(|>CUSTOM2:since: <|"2.0.0", |>CUSTOM2:message: <|"use newFunction() instead")]
+function |>DEPRECATED:deprecatedWithParam02<|(): void {
+}
+
+#[\Deprecated]
+function |>DEPRECATED:deprecatedFQN<|(): void {
+}
+
+#[\Attr1, \Attr2()]
+#[\Deprecated]
+function |>DEPRECATED:deprecatedFQN02<|(): void {
+}
+
+#[\Attr1, \Attr2()]
+#[\Deprecated]
+#[\Attr3]
+function |>DEPRECATED:deprecatedFQN03<|(): void {
+}
+
+#[\Attr1, \Attr2()]
+function deprecatedFQN04(): void {
+}
+
+/**
+ * @deprecated since 2.0
+ * @return void
+ */
+#[\Deprecated]
+function |>DEPRECATED:deprecatedFQNWithPhpDoc01<|(): void {
+}
+
+/**
+ * @deprecated since 2.0
+ * @return void
+ */
+#[\Attr]
+function |>DEPRECATED:deprecatedFQNWithPhpDoc02<|(): void {
+}
+
+#[\Deprecated("2.0.0", "use newFunction() instead")]
+function |>DEPRECATED:deprecatedFQNWithParam01<|(): void {
+}
+
+#[\Deprecated(|>CUSTOM2:since: <|"2.0.0", |>CUSTOM2:message: <|"use newFunction() instead")]
+function |>DEPRECATED:deprecatedFQNWithParam02<|(): void {
+}
+
+namespace DeprecatedTest2;
+
+use Deprecated;
+
+#[Deprecated]
+function |>DEPRECATED:deprecated<|(): void {
+}
+
+/**
+ * @deprecated since 2.0
+ * @return void
+ */
+#[Deprecated]
+function |>DEPRECATED:deprecatedWithPhpDoc01<|(): void {
+}
+
+/**
+ * @deprecated since 2.0
+ * @return void
+ */
+#[Attr]
+function |>DEPRECATED:deprecatedWithPhpDoc02<|(): void {
+}
+
+#[Deprecated("2.0.0", "use newFunction() instead")]
+function |>DEPRECATED:deprecatedWithParam01<|(): void {
+}
+
+#[Deprecated(|>CUSTOM2:since: <|"2.0.0", |>CUSTOM2:message: <|"use newFunction() instead")]
+function |>DEPRECATED:deprecatedWithParam02<|(): void {
+}
+
+#[\Deprecated]
+function |>DEPRECATED:deprecatedFQN<|(): void {
+}
+
+#[\Attr1, \Attr2()]
+#[\Deprecated]
+function |>DEPRECATED:deprecatedFQN02<|(): void {
+}
+
+#[\Attr1, \Attr2()]
+#[\Deprecated]
+#[\Attr3]
+function |>DEPRECATED:deprecatedFQN03<|(): void {
+}
+
+#[\Attr1, \Attr2()]
+function deprecatedFQN04(): void {
+}
+
+/**
+ * @deprecated since 2.0
+ * @return void
+ */
+#[\Deprecated]
+function |>DEPRECATED:deprecatedFQNWithPhpDoc01<|(): void {
+}
+
+/**
+ * @deprecated since 2.0
+ * @return void
+ */
+#[\Attr]
+function |>DEPRECATED:deprecatedFQNWithPhpDoc02<|(): void {
+}
+
+#[\Deprecated("2.0.0", "use newFunction() instead")]
+function |>DEPRECATED:deprecatedFQNWithParam01<|(): void {
+}
+
+#[\Deprecated(|>CUSTOM2:since: <|"2.0.0", |>CUSTOM2:message: <|"use newFunction() instead")]
+function |>DEPRECATED:deprecatedFQNWithParam02<|(): void {
+}

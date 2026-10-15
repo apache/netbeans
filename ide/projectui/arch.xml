@@ -19,8 +19,8 @@
     under the License.
 
 -->
-<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
-  <!ENTITY api-questions SYSTEM "../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
+<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
+  <!ENTITY api-questions SYSTEM "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
 ]>
 
 <api-answers
@@ -115,7 +115,7 @@
   <p>
    Needed for working with projects in the IDE.
   </p>
-  <api name="RecentProjects" group="java" type="export" category="friend" url="http://www.netbeans.org/issues/show_bug.cgi?id=57073" >
+  <api name="RecentProjects" group="java" type="export" category="friend" url="https://bz.apache.org/netbeans/show_bug.cgi?id=57073" >
     <p>
      API can be used to get list of information about recently opened projects 
      in IDE. API provides project display name, icon and URL of project folder 
@@ -139,7 +139,7 @@
  <answer id="arch-what">
   <p>
    General user interface implementation for the project system. <a
-   href="http://projects.netbeans.org/buildsys/build-sys-ui-spec.html">UI
+   href="https://netbeans.apache.org/projects/buildsys/build-sys-ui-spec">UI
    Specification</a>
   </p>
  </answer>
@@ -387,7 +387,7 @@
         </question>
 -->
  <answer id="deploy-packages">
-  <api name="RecentProjects" group="java" type="export" category="friend" url="http://www.netbeans.org/issues/show_bug.cgi?id=57073" >
+  <api name="RecentProjects" group="java" type="export" category="friend" url="https://bz.apache.org/netbeans/show_bug.cgi?id=57073" >
     <p>
      There is package org.netbeans.modules.project.ui.api which is public and exposed
      as friend API.
@@ -483,6 +483,45 @@
     of <code>NewProjectWizard</code>. If properties are empty (as default) then 
     category/project are selected by UI spec.
   </p>
+  <p>
+      By default this module also opens all projects that were opened before
+      shutting down. This behavior can however be disabled in application using
+      this module: <api name="org.netbeans.modules.project.ui.LOAD_PROJECTS_ON_START" group="branding" type="export" category="stable">
+        To disable loading of previously opened projects on startup
+          set <code>LOAD_PROJECTS_ON_START=false</code> in
+          <code>org/netbeans/modules/project/ui/Bundle.properties</code>
+          branding file in your application.
+      </api>
+  </p>
+  <p>
+      There is a support for indenting nested projects since
+      <a href="https://github.com/apache/netbeans/pull/9627">PR-9627</a> which can be controlled by these <code>UIManager</code>
+      properties:
+  </p>
+  <ul>
+      <li>
+          <api group="javax.swing.UIManager" name="nb.project.indentation.prefix" type="export" category="private">
+              The string use at the begining of the indentation.
+              Only active when there is some indentation with <code>nb.project.indentation.repeat</code> text.
+          </api>
+      </li>
+      <li>
+          <api group="javax.swing.UIManager" name="nb.project.indentation.repeat" type="export" category="private">
+              The string use for one level of indentation. The value can be set to <code>""</code> to
+              disable indentation altogether.
+          </api>
+      </li>
+      <li>
+          <api group="javax.swing.UIManager" name="nb.project.indentation.postfix" type="export" category="private">
+              The string use at the end of the indentation.
+              Only active when there is some indentation with <code>nb.project.indentation.repeat</code> text.
+          </api>
+      </li>
+      <li>
+          <api group="javax.swing.UIManager" name="controlShadow" type="import" category="private">
+              The color (as defined and used elsewhere) is also used when rendering the indentation in HTML.</api>
+      </li>
+  </ul>
  </answer>
 
 
@@ -593,11 +632,11 @@
       <api name="org.netbeans.ui.actions.UI_ACTION_BUTTON_PRESS" category="friend" group="logger" type="export">
       There is a special support for notifying when an action wrapped by
       <code>LookupSensitiveAction</code> is 
-      invoked and how. The support is using <a href="@JDK@/java/util/logging/Logger.html">
+      invoked and how. The support is using <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html">
       Logger.getLogger("org.netbeans.ui.actions")
-      </a> and sents a <a href="@JDK@/java/util/logging/LogRecord.html">LogRecord</a>
+      </a> and sents a <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogRecord.html">LogRecord</a>
       with message <code>UI_ACTION_BUTTON_PRESS</code>, 
-      <code>FINER</code> <a href="@JDK@/java/util/logging/LogRecord.html">level</a>
+      <code>FINER</code> <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogRecord.html">level</a>
       and paramerters:
       <ul>
           <li>{<b>0</b>} instance of the button</li>

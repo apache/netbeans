@@ -36,4 +36,66 @@ public class JavaCompletionItemPerformTest extends CompletionTestBase {
     public void testAnnotation() throws Exception {
         performTest("Annotation", 27, "Se", "Set", "testAnnotation.pass2");
     }
+
+    public void testCast1() throws Exception {
+        performTest("Empty", 0,
+                    "package test;\n" +
+                    "public class Test {\n" +
+                    "    private t(Object o) {\n" +
+                    "        if (o instanceof String) {\n" +
+                    "            o.len",
+                    "length",
+                    "testCast1.pass");
+    }
+
+    public void testCast2() throws Exception {
+        performTest("Empty", 0,
+                    "package test;\n" +
+                    "public class Test {\n" +
+                    "    private t(Number n) {\n" +
+                    "        if (n instanceof Integer) {\n" +
+                    "            n.in",
+                    "intValue",
+                    "testCast2.pass");
+    }
+
+    public void testCast3() throws Exception {
+        //calling an overridden method
+        performTest("Empty", 0,
+                    "package test;\n" +
+                    "public class Test {\n" +
+                    "    public interface Base {\n" +
+                    "         public void test() { }\n" +
+                    "    }\n" +
+                    "    public interface Int extends Base {\n" +
+                    "    }\n" +
+                    "    public static class Impl implements Int {\n" +
+                    "         public void test() { }\n" +
+                    "    }\n" +
+                    "    private t(Int b) {\n" +
+                    "        if (b instanceof Impl) {\n" +
+                    "            b.tes",
+                    "test",
+                    "testCast3.pass");
+    }
+
+    public void testCast4() throws Exception {
+        //calling an overridden method
+        performTest("Empty", 0,
+                    "package test;\n" +
+                    "public class Test {\n" +
+                    "    public interface Base {\n" +
+                    "         public void test() { }\n" +
+                    "    }\n" +
+                    "    public interface Int extends Base {\n" +
+                    "    }\n" +
+                    "    public static class Impl implements Int {\n" +
+                    "         public void test() { }\n" +
+                    "    }\n" +
+                    "    private t(Base b) {\n" +
+                    "        if (b instanceof Impl) {\n" +
+                    "            b.tes",
+                    "test",
+                    "testCast4.pass");
+    }
 }

@@ -1,0 +1,3 @@
+OpenIDE-Module: org.netbeans.modules.lexer.antlr4
+OpenIDE-Module-Implementation-Version: 1
+OpenIDE-Module-Localizing-Bundle: org/netbeans/spi/lexer/antlr4/Bundle.properties

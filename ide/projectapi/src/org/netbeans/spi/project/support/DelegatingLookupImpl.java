@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
@@ -47,7 +48,8 @@ class DelegatingLookupImpl extends ProxyLookup implements LookupListener, Change
 
     private final Lookup baseLookup;
     private final String pathDescriptor;
-    private final UnmergedLookup unmergedLookup = new UnmergedLookup();
+    private final Controller unmergedController;
+    private final ProxyLookup unmergedLookup;
     private final Map<LookupMerger<?>,Object> mergerResults = new HashMap<LookupMerger<?>,Object>();
     private final Lookup.Result<LookupProvider> providerResult;
     private final LookupListener providerListener;
@@ -63,6 +65,8 @@ class DelegatingLookupImpl extends ProxyLookup implements LookupListener, Change
     @SuppressWarnings("LeakingThisInConstructor")
     DelegatingLookupImpl(Lookup base, Lookup providerLookup, String pathDescriptor) {
         assert base != null;
+        this.unmergedController = new ProxyLookup.Controller();
+        this.unmergedLookup = new ProxyLookup(this.unmergedController);
         baseLookup = base;
         this.pathDescriptor = pathDescriptor;
         providerResult = providerLookup.lookupResult(LookupProvider.class);
@@ -96,6 +100,24 @@ class DelegatingLookupImpl extends ProxyLookup implements LookupListener, Change
     }
 
     private void doDelegate() {
+        class NotifyLater implements Executor {
+            List<Runnable> pending = new ArrayList<>();
+
+            @Override
+            public void execute(Runnable command) {
+                pending.add(command);
+            }
+
+            public void notifyCollectedEvents() {
+                List<Runnable> tmp = pending;
+                pending = null;
+                for (Runnable r : tmp) {
+                    r.run();
+                }
+            }
+        }
+        NotifyLater notifyLater = new NotifyLater();
+
         synchronized (results) {
             for (Lookup.Result<?> r : results) {
                 r.removeLookupListener(this);
@@ -125,7 +147,7 @@ class DelegatingLookupImpl extends ProxyLookup implements LookupListener, Change
             old = new ArrayList<LookupProvider>(providers);
             currentLookups = newLookups;
             newLookups.add(baseLookup);
-            unmergedLookup._setLookups(newLookups.toArray(new Lookup[newLookups.size()]));
+            unmergedController.setLookups(notifyLater, newLookups.toArray(new Lookup[0]));
             List<Class<?>> filteredClasses = new ArrayList<Class<?>>();
             List<Object> mergedInstances = new ArrayList<Object>();
             LookupListener l = listenerRef != null ? listenerRef.get() : null;
@@ -163,16 +185,15 @@ class DelegatingLookupImpl extends ProxyLookup implements LookupListener, Change
                 result.addLookupListener(this);
                 results.add(result);
             }
-            Lookup filtered = Lookups.exclude(unmergedLookup, filteredClasses.toArray(new Class<?>[filteredClasses.size()]));
-            Lookup fixed = Lookups.fixed(mergedInstances.toArray(new Object[mergedInstances.size()]));
-            setLookups(fixed, filtered);
+            Lookup filtered = Lookups.exclude(unmergedLookup, filteredClasses.toArray(new Class<?>[0]));
+            Lookup fixed = Lookups.fixed(mergedInstances.toArray(new Object[0]));
+            setLookups(notifyLater, fixed, filtered);
         }
+        notifyLater.notifyCollectedEvents();
     }
 
-    private static class UnmergedLookup extends ProxyLookup {
-        void _setLookups(Lookup... lookups) {
-            setLookups(lookups);
-        }
+    final boolean holdsLock() {
+        return Thread.holdsLock(results);
     }
 
     //just for assertion evaluation.

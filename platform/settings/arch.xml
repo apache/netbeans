@@ -424,7 +424,7 @@ If new persistent instances of setting was created, then infrastructure must be 
 on changes and ensure , that all changes will be stored. Then from <code>InstanceDataObject</code>
 is used  <code>Lookup</code> to find <code>InstanceCookie</code>. Then method <code>setInstance</code>
 is invoked on instance of <code>InstanceCookie</code>. This binds instance of setting to setting infrastructure.
-Which <code>Lookup</code> and then also which <code>InstanceCookie</code> is used depends again on cofiguration.
+Which <code>Lookup</code> and then also which <code>InstanceCookie</code> is used depends again on configuration.
 <a href="@org-netbeans-modules-settings@/org/netbeans/spi/settings/package-summary.html">description of  configuration</a>.
 </li>
 <li>

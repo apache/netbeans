@@ -1,0 +1,5 @@
+Code completion result for source line:
+public function returnType(): neve|r { // trait
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    never                                      null

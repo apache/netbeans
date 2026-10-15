@@ -117,17 +117,15 @@ public class RemoveWritablesModifiedTest extends NbTestCase {
         // XXX use TestFileUtils.writeZipFile
         File jarFile = new File( getWorkDir(), "mymodule.jar" );
         
-        JarOutputStream os = new JarOutputStream(new FileOutputStream(jarFile), new Manifest(
-            new ByteArrayInputStream(manifest.getBytes())
-        ));
-        JarEntry entry = new JarEntry("foo/mf-layer.xml");
-        os.putNextEntry( entry );
-        
-        File l3 = new File(new File(new File(getDataDir(), "layers"), "data"), "layer3.xml");
-        InputStream is = new FileInputStream(l3);
-        FileUtil.copy( is, os );
-        is.close();
-        os.close();
+        try (JarOutputStream os = new JarOutputStream(new FileOutputStream(jarFile), new Manifest(new ByteArrayInputStream(manifest.getBytes())))) {
+            JarEntry entry = new JarEntry("foo/mf-layer.xml");
+            os.putNextEntry(entry);
+
+            File l3 = new File(new File(new File(getDataDir(), "layers"), "data"), "layer3.xml");
+            try (InputStream is = new FileInputStream(l3)) {
+                is.transferTo(os);
+            }
+        }
         
         return jarFile;
     }

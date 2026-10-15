@@ -209,19 +209,19 @@ public class J2eeTestCase extends JellyTestCase {
             LOG.info("adding server tests");
             return addTest(conf, clazz, testNames);
         } else {
-            if (server.equals(GLASSFISH) || server.equals(ANY)) {
+            if (server == GLASSFISH || server == ANY) {
                 registerGlassFish();
                 if (isRegistered(GLASSFISH)) {
                     return addTest(conf, clazz, testNames);
                 }
             }
-            if (server.equals(TOMCAT) || server.equals(ANY)) {
+            if (server == TOMCAT || server == ANY) {
                 registerTomcat();
                 if (isRegistered(TOMCAT)) {
                     return addTest(conf, clazz, testNames);
                 }
             }
-            if (server.equals(JBOSS) || server.equals(ANY)) {
+            if (server == JBOSS || server == ANY) {
                 registerJBoss();
                 if (isRegistered(JBOSS)) {
                     return addTest(conf, clazz, testNames);
@@ -254,7 +254,7 @@ public class J2eeTestCase extends JellyTestCase {
         if (!addServerTestsCalled) {
             throw new IllegalStateException("Cannot call isRegistered here. It is allowed only in suite method after addServerTests is called.");
         }
-        if (server.equals(ANY)) {
+        if (server == ANY) {
             return !alreadyRegistered.isEmpty();
         } else {
             return alreadyRegistered.contains(server);
@@ -277,7 +277,7 @@ public class J2eeTestCase extends JellyTestCase {
                 return J2eeServerNode.invoke("Tomcat");
             case ANY:
                 for (Server serv : Server.values()) {
-                    if (serv.equals(ANY)) {
+                    if (serv == ANY) {
                         continue;
                     }
                     try {
@@ -497,7 +497,7 @@ public class J2eeTestCase extends JellyTestCase {
         for(File file : getJars(server)) {
             urls.add(file.toURI().toURL());
         }        
-        URLClassLoader loader = new URLClassLoader(urls.toArray(new URL[urls.size()]));
+        URLClassLoader loader = new URLClassLoader(urls.toArray(new URL[0]));
         return loader;
     }
     
@@ -628,6 +628,6 @@ public class J2eeTestCase extends JellyTestCase {
             //Fix for issue #57304
             l.add(Character.toString(dosHack));
         }
-        return l.toArray(new String[l.size()]);
+        return l.toArray(new String[0]);
     }
 }

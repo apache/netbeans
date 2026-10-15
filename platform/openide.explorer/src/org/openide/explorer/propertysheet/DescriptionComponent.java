@@ -33,7 +33,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.accessibility.AccessibleRole;
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JComponent.AccessibleJComponent;
@@ -114,7 +113,7 @@ class DescriptionComponent extends JComponent implements ActionListener, MouseLi
             } else {
                 Image help = ImageUtilities.loadImage("org/openide/resources/propertysheet/propertySheetHelp.png", true); //NOI18N
 
-                btn = new JButton(new ImageIcon(help));
+                btn = new JButton(ImageUtilities.image2Icon(help));
                 btn.addActionListener(this);
 
                 toolbar = new JToolBar ();

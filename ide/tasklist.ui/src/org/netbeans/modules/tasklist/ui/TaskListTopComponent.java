@@ -42,7 +42,6 @@ import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.tasklist.filter.FilterRepository;
 import org.netbeans.modules.tasklist.impl.ScannerList;
 import org.netbeans.modules.tasklist.impl.ScanningScopeList;
@@ -496,7 +495,7 @@ final class TaskListTopComponent extends TopComponent {
         statusSeparator.setVisible( !useFoldingModel );
     }
     
-    static private Logger getLogger() {
+    private static Logger getLogger() {
         return Logger.getLogger( TaskListTopComponent.class.getName() );
     }
 
@@ -508,7 +507,7 @@ final class TaskListTopComponent extends TopComponent {
                 synchronized( TaskListTopComponent.this ) {
                     if( ((Boolean)e.getNewValue()).booleanValue() ) {
                         if( null == progress ) {
-                            progress = ProgressHandleFactory.createHandle(
+                            progress = ProgressHandle.createHandle(
                                     NbBundle.getMessage( TaskListTopComponent.class, "LBL_ScanProgress" ), //NOI18N
                                     new Cancellable() { //NOI18N
                                         @Override
@@ -530,7 +529,7 @@ final class TaskListTopComponent extends TopComponent {
         };
     }
     
-    final static class ResolvableHelper implements Serializable {
+    static final class ResolvableHelper implements Serializable {
         private static final long serialVersionUID = 1L;
         public Object readResolve() {
             return TaskListTopComponent.getDefault();

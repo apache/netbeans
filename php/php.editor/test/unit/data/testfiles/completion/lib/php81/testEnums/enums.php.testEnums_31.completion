@@ -1,0 +1,7 @@
+Code completion result for source line:
+$i->public|EnumMethod();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicEnumMethod()              [PUBLIC]   \Enum1\Simple
+METHOD     publicStaticEnumMethod()        [STATIC]   \Enum1\Simple
+METHOD     publicStaticTraitMethod()       [STATIC]   \Enum1\TestTrait
+METHOD     publicTraitMethod()             [PUBLIC]   \Enum1\TestTrait

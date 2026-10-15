@@ -32,7 +32,6 @@ import java.util.prefs.Preferences;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.quicksearch.CategoryResult;
 import org.netbeans.modules.quicksearch.CommandEvaluator;
 import org.netbeans.modules.quicksearch.ProviderModel.Category;
@@ -51,7 +50,7 @@ import org.openide.util.Task;
  * Recent Searches items storage and its persistance
  *
  * @author Jan Becicka
- * @authoe Max Sauer
+ * @author Max Sauer
  */
 public class RecentSearches {
     
@@ -209,7 +208,7 @@ public class RecentSearches {
             "MSG_RecentResultNotFound=Recent Quick Search Item was not found."})
         private void findAndRunAction() {
             final AtomicBoolean cancelled = new AtomicBoolean(false);
-            ProgressHandle handle = ProgressHandleFactory.createHandle(
+            ProgressHandle handle = ProgressHandle.createHandle(
                     Bundle.LBL_SearchingRecentResult(), new Cancellable() {
                 @Override
                 public boolean cancel() {
@@ -305,6 +304,6 @@ public class RecentSearches {
      * results.
      */
     private String translateHTMLEntities(String s) {
-        return s.replaceAll("\\&amp;", "&");                            //NOI18N
+        return s.replace("&amp;", "&");                            //NOI18N
     }
 }

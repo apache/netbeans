@@ -84,7 +84,7 @@ public final class SeleniumRerunHandler implements RerunHandler {
             }
         }
         if (!tests2run.isEmpty()) {
-            runTests(tests2run.toArray(new FileObject[tests2run.size()]));
+            runTests(tests2run.toArray(new FileObject[0]));
         }
         setEnabled(true);
     }

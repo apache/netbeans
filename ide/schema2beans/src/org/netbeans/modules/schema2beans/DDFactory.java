@@ -102,7 +102,7 @@ public class DDFactory extends Object {
 	    "CantGetConstructor_msg"), me);
 	}
 	
-	Object[] p = new Object[] {doc, new Integer(Common.NO_DEFAULT_VALUES)};
+	Object[] p = new Object[] {doc, Integer.valueOf(Common.NO_DEFAULT_VALUES)};
 	
 	try {
 	    beanNode = (BaseBean)c.newInstance(p);
@@ -134,7 +134,7 @@ public class DDFactory extends Object {
      *	in order to instantiate the schema2beans graph. This should be the
      *	class name of the root of the schema2beans generated classes.
      */
-    static public void register(String name, String className)
+    public static void register(String name, String className)
 	throws ClassNotFoundException {
 	Class c = null;
 	try {
@@ -156,7 +156,7 @@ public class DDFactory extends Object {
      *	@param clazz class to use in order to instantiate the schema2beans graph. 
      *	This should be the class of the root of the schema2beans generated classes.
      */
-    static public void register(String name, Class clazz) {
+    public static void register(String name, Class clazz) {
 	synchronized (beanClassMap) {
 	    beanClassMap.put(name, clazz);
 	}
@@ -195,7 +195,7 @@ public class DDFactory extends Object {
     /**
      *	Dump the whole content of a DOM tree as a String
      */
-    static public String XmlToString(Node n) {
+    public static String XmlToString(Node n) {
 	return XmlToString(n, 9999, null);
     }
     
@@ -203,7 +203,7 @@ public class DDFactory extends Object {
      *	Dump the content of a DOM tree as a String. This methods only 
      *	recurses for the specified depth.
      */
-    static public String XmlToString(Node n, int depth) {
+    public static String XmlToString(Node n, int depth) {
 	return XmlToString(n, depth, null);
     }
     
@@ -213,7 +213,7 @@ public class DDFactory extends Object {
      *	recurses for the specified depth and only prints elements that
      *	match the filter.
      */
-    static public String XmlToString(Node n, int depth, String filter) {
+    public static String XmlToString(Node n, int depth, String filter) {
 	StringBuffer str = new StringBuffer();
 	nodeToString("", str, n, depth, filter, true);	// NOI18N
 	return str.toString();

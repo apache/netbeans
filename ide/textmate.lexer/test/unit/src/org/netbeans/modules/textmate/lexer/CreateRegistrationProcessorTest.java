@@ -24,6 +24,7 @@ import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.textmate.lexer.api.GrammarInjectionRegistration;
 import org.netbeans.modules.textmate.lexer.api.GrammarRegistration;
@@ -65,7 +66,7 @@ public class CreateRegistrationProcessorTest extends NbTestCase {
             AnnotationProcessorTestUtils.runJavac(getWorkDir(), null, outDir, null, System.err)
             );
         
-        try (Reader r = new InputStreamReader(new FileInputStream(new File(new File(outDir, "META-INF"), "generated-layer.xml")), "UTF-8")) {
+        try (Reader r = new InputStreamReader(new FileInputStream(new File(new File(outDir, "META-INF"), "generated-layer.xml")), StandardCharsets.UTF_8)) {
             StringBuilder content = new StringBuilder();
             int read;
             
@@ -73,9 +74,7 @@ public class CreateRegistrationProcessorTest extends NbTestCase {
                 content.append((char) read);
             }
 
-            assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                         "<!DOCTYPE filesystem PUBLIC \"-//NetBeans//DTD Filesystem 1.2//EN\"\n" +
-                         "                            \"http://www.netbeans.org/dtds/filesystem-1_2.dtd\">\n" +
+            assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE filesystem PUBLIC \"-//NetBeans//DTD Filesystem 1.2//EN\" \"http://www.netbeans.org/dtds/filesystem-1_2.dtd\">\n" +
                          "<filesystem>\n" +
                          "    <folder name=\"Editors\">\n" +
                          "        <folder name=\"text\">\n" +
@@ -113,7 +112,7 @@ public class CreateRegistrationProcessorTest extends NbTestCase {
             AnnotationProcessorTestUtils.runJavac(getWorkDir(), null, outDir, null, System.err)
             );
 
-        try (Reader r = new InputStreamReader(new FileInputStream(new File(new File(outDir, "META-INF"), "generated-layer.xml")), "UTF-8")) {
+        try (Reader r = new InputStreamReader(new FileInputStream(new File(new File(outDir, "META-INF"), "generated-layer.xml")), StandardCharsets.UTF_8)) {
             StringBuilder content = new StringBuilder();
             int read;
 
@@ -121,9 +120,7 @@ public class CreateRegistrationProcessorTest extends NbTestCase {
                 content.append((char) read);
             }
 
-            assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                         "<!DOCTYPE filesystem PUBLIC \"-//NetBeans//DTD Filesystem 1.2//EN\"\n" +
-                         "                            \"http://www.netbeans.org/dtds/filesystem-1_2.dtd\">\n" +
+            assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE filesystem PUBLIC \"-//NetBeans//DTD Filesystem 1.2//EN\" \"http://www.netbeans.org/dtds/filesystem-1_2.dtd\">\n" +
                          "<filesystem>\n" +
                          "    <folder name=\"Editors\">\n" +
                          "        <file name=\"injection-grammar.json\" url=\"nbresloc:/injection-grammar.json\">\n" +

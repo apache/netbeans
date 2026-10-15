@@ -19,7 +19,6 @@
 package org.netbeans.modules.payara.common.ui;
 
 import java.awt.event.ActionEvent;
-import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.Iterator;
@@ -29,19 +28,13 @@ import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.PlatformsCustomizer;
 import org.netbeans.modules.payara.common.PayaraInstance;
 import org.netbeans.modules.payara.common.utils.JavaUtils;
-import org.netbeans.modules.payara.spi.RegisteredDerbyServer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 import org.netbeans.modules.payara.spi.PayaraModule;
 
 public class VmCustomizer extends javax.swing.JPanel {
-
-    ////////////////////////////////////////////////////////////////////////////
-    // Inner classes methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
 
     /**
      * Action to invoke Java SE platforms customizer.
@@ -148,9 +141,9 @@ public class VmCustomizer extends javax.swing.JPanel {
      */
     private void setAddressValue(String number) {
         try {
-        addressValue.setValue(new Integer(number));
+            addressValue.setValue(Integer.valueOf(number));
         } catch (NumberFormatException nfe) {
-            addressValue.setValue(new Integer(0));
+            addressValue.setValue(0);
         }
     }
 
@@ -164,7 +157,7 @@ public class VmCustomizer extends javax.swing.JPanel {
      * <code>addressValue</code> field.
      */
     private void setAddressValue(Integer number) {
-        addressValue.setValue(number != null ? number : new Integer(0));
+        addressValue.setValue(number != null ? number : Integer.valueOf(0));
     }
 
     private void persistFields() {
@@ -180,18 +173,6 @@ public class VmCustomizer extends javax.swing.JPanel {
             }
         }
         instance.setJavaHome(selectedJavaHome);
-        if (selectedJavaHome != null) {
-            RegisteredDerbyServer db = Lookup.getDefault().lookup(RegisteredDerbyServer.class);
-            if (null != db) {
-                File f = new File(selectedJavaHome);
-                if (f.exists() && f.canRead() && f.isDirectory()) {
-                    File dbdir = new File(f, "db"); // NOI18N
-                    if (dbdir.exists() && dbdir.isDirectory() && dbdir.canRead()) {
-                        db.initialize(dbdir.getAbsolutePath());
-                    }
-                }
-            }
-        }
         instance.putProperty(PayaraModule.USE_SHARED_MEM_ATTR,
                 Boolean.toString(useSharedMemRB.isSelected()));
         instance.putProperty(PayaraModule.USE_IDE_PROXY_FLAG,
@@ -395,10 +376,10 @@ public class VmCustomizer extends javax.swing.JPanel {
             } catch (IOException ioe) {
                 // I will ignore this nor now.
             }
-            setAddressValue(new Integer(debugPort));
+            setAddressValue(debugPort);
         } else {
             // clear the field and disable it
-            setAddressValue(new Integer(0));
+            setAddressValue(0);
             addressValue.setEnabled(false);
         }
     }//GEN-LAST:event_toggleAddressUsage

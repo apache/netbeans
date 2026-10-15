@@ -1,0 +1,11 @@
+class |>MARK_OCCURRENCES:Example<| {
+use Attributes\|>MARK_OCCURRENCES:Exa^mple<|;
+    #[AttributeClass2(2, "class const", new |>MARK_OCCURRENCES:Example<|())]
+    #[AttributeClass1(4, "class static field"), AttributeClass2(4, "class static field", new \Attributes\|>MARK_OCCURRENCES:Example<|)] // group
+    public static function staticInterfaceMethod(#[AttributeClass2(4, "interface static method param" . |>MARK_OCCURRENCES:Example<|::CONST_EXAMPLE)] $param1): int|string;
+#[\Attributes\AttributeClass2(1, "enum", new |>MARK_OCCURRENCES:Example<|)]
+    AttributeClass3(int: CONST_1, string: "function" . |>MARK_OCCURRENCES:Example<|::class)
+function func2(#[AttributeClass2(1 + \Attributes\CONST_1 + 1, |>MARK_OCCURRENCES:Example<|::CONST_EXAMPLE . "function param")] int|string $param): void {}
+$labmda2 = #[AttributeClass2(2, "closure")] #[AttributeClass3(2, "closurr")] function(#[AttributeClass2(int: 2 * \Attributes\CONST_1, string: "closure param" . |>MARK_OCCURRENCES:Example<|::CONST_EXAMPLE)] $test): void {};
+$arrow2 = #[AttributeClass1(2, "arrow"), AttributeClass2(2, "arrow")] fn(#[AttributeClass1(\Attributes\CONST_1 / 5, "arrow param" . |>MARK_OCCURRENCES:Example<|::class)] $test): int|string => 100;
+$arrow3 = #[AttributeClass1(3, string: |>MARK_OCCURRENCES:Example<|::CONST_EXAMPLE . "arrow")] static fn(): int|string => 100;

@@ -1,0 +1,9 @@
+.t.e.s.t. SimpleMustache
+TEXT            "k: ", la=2, st=0
+MUSTACHE_DELIMITER  "{{", st=13
+MUSTACHE        "a", la=1, st=0
+----- EOF -----
+
+<Unnamed test>
+----- EOF -----
+

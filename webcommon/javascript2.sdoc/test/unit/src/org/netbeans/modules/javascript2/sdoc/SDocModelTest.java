@@ -333,8 +333,8 @@ public class SDocModelTest extends JsDocumentationTestBase {
     }
 
     private static void assertElementsEquality(List<SDocElement> expectedTags, List<? extends SDocElement> elements) {
-        Collections.sort(expectedTags, elementComparator);
-        Collections.sort(elements, elementComparator);
+        expectedTags.sort(elementComparator);
+        elements.sort(elementComparator);
 
         assertEquals(expectedTags.size(), elements.size());
 

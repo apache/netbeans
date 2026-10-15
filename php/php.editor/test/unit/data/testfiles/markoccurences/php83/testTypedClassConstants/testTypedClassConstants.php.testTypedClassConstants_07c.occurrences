@@ -1,0 +1,3 @@
+    public const |>MARK_OCCURRENCES:WITHOUT_TYPE<| = 1;
+    public const mixed MIXED = 1 + self::|>MARK_OCCURRENCES:WITHOUT_TYPE<|;
+var_dump(ClassTest::|>MARK_OCCURRENCES:WITH^OUT_TYPE<|);

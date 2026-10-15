@@ -111,7 +111,8 @@ public abstract class FileReferenceCompletion<T> implements ValueCompletion<T> {
                         || fileNamePart.equals(".") // ../.| case
                         || fileNamePart.equals("..")) //../..| case
                         ) { // NOI18N
-                    result.add(createGoUpItem(anchor, Color.BLUE, PACKAGE_ICON)); // NOI18N
+                    // Should match color in o.n.m.html.editor.api.completion.HtmlCompletionItem.createFileCompletionItem()
+                    result.add(createGoUpItem(anchor, new Color(224, 160, 65), PACKAGE_ICON));
                 }
             }
         } catch (FileStateInvalidException | IllegalArgumentException ex) {
@@ -237,7 +238,8 @@ public abstract class FileReferenceCompletion<T> implements ValueCompletion<T> {
             return PACKAGE_ICON;
         } else {
             try {
-                return new ImageIcon(DataObject.find(fo).getNodeDelegate().getIcon(java.beans.BeanInfo.ICON_COLOR_16x16));
+                return ImageUtilities.icon2ImageIcon(ImageUtilities.image2Icon(
+                    DataObject.find(fo).getNodeDelegate().getIcon(java.beans.BeanInfo.ICON_COLOR_16x16)));
             } catch (DataObjectNotFoundException e) {
                 Logger.getLogger(FileReferenceCompletion.class.getName()).log(Level.INFO, "Cannot find icon for " + fo.getNameExt(), e);
             }

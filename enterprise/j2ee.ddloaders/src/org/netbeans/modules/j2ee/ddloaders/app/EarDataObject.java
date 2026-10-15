@@ -81,7 +81,7 @@ public class EarDataObject extends DD2beansDataObject
     implements DDChangeListener, ApplicationProxy.OutputProvider, FileChangeListener, ChangeListener {
     private Application ejbJar;
     private FileObject srcRoots[];
-    private final static RequestProcessor RP2 = new RequestProcessor();   // NOI18N
+    private static final RequestProcessor RP2 = new RequestProcessor();   // NOI18N
 
     private static final long serialVersionUID = 8857563089355069362L;
     
@@ -92,7 +92,7 @@ public class EarDataObject extends DD2beansDataObject
     private boolean unparsable=true;
     
     /** List of updates to ejbs that should be processed */
-    private Vector updates;
+    private Vector<DDChangeEvent> updates;
     
     private RequestProcessor.Task updateTask;
 
@@ -142,7 +142,7 @@ public class EarDataObject extends DD2beansDataObject
     }
 
     private void refreshSourceFolders () {
-        ArrayList srcRootList = new ArrayList ();
+        List<FileObject> srcRootList = new ArrayList<>();
         
         Project project = FileOwnerQuery.getOwner (getPrimaryFile ());
         if (project != null) {
@@ -168,7 +168,7 @@ public class EarDataObject extends DD2beansDataObject
                 }
             }
         }
-        srcRoots = (FileObject []) srcRootList.toArray (new FileObject [srcRootList.size ()]);
+        srcRoots = srcRootList.toArray(new FileObject[0]);
     }
     
     private String getPackageName (FileObject clazz) {
@@ -235,27 +235,24 @@ public class EarDataObject extends DD2beansDataObject
      * @return String for node delegate
     */
     public String getStringForInvalidDocument(SAXParseError error) {
-        return NbBundle.getMessage (EarDataObject.class, "TXT_errorOnLine", new Integer(error.getErrorLine()));
+        return NbBundle.getMessage (EarDataObject.class, "TXT_errorOnLine", error.getErrorLine());
     }
                     
     /** Create document from the Node. This method is called after Node (Node properties)is changed.
      * The document is generated from data modul (isDocumentGenerable=true) 
     */
+    @Override
     protected String generateDocument() {
         //System.out.println("Generating document - generate....");
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try {
+        String document = null;
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             ejbJar.write(out);
-            out.close();
-            return out.toString("UTF8"); //NOI18N
+            document = out.toString("UTF8"); //NOI18N
         }
-        catch (IOException e) {
-            Logger.getLogger("global").log(Level.INFO, null, e);
+        catch (IOException | IllegalStateException e) {
+            Logger.getGlobal().log(Level.INFO, null, e);
         }
-        catch (IllegalStateException e){
-            Logger.getLogger("global").log(Level.INFO, null, e);
-	}
-	return out.toString ();
+        return document;
     }
         
     /** Update document in text editor. This method is called after Node (Node properties)is changed.
@@ -353,7 +350,7 @@ public class EarDataObject extends DD2beansDataObject
     public void deploymentChange (DDChangeEvent evt) {
         synchronized (this) {
             if (updates == null) {
-                updates = new Vector ();
+                updates = new Vector<>();
             }
             updates.addElement (evt);
         }
@@ -454,9 +451,9 @@ public class EarDataObject extends DD2beansDataObject
                         }
                     }
                     else if (options[1].equals (e.getSource ())) {
-                        Enumeration en = connectionPanel.listModel.elements ();
+                        Enumeration<DDChangeEvent> en = connectionPanel.listModel.elements ();
                         while (en.hasMoreElements ()) {
-                            processDDChangeEvent ((DDChangeEvent)en.nextElement ());
+                            processDDChangeEvent(en.nextElement());
                         }
                         confirmChangesDialog[0].setVisible (false);
                         connectionPanel.setChanges (null);
@@ -487,7 +484,7 @@ public class EarDataObject extends DD2beansDataObject
             return;
        
         if (evt.getType () != DDChangeEvent.EJB_ADDED) {
-            updateDD(evt.getOldValue(), (String)evt.getNewValue (), evt.getType());
+            updateDD(evt.getOldValue(), evt.getNewValue (), evt.getType());
         }
     }
 
@@ -498,12 +495,12 @@ public class EarDataObject extends DD2beansDataObject
 
     private RequestProcessor.Task elementTask;
     private List deletedEjbNames;
-    private List newFileNames;
+    private List<String> newFileNames;
     
     private void elementCreated(final String elementName) {
         synchronized (this) {
             if (newFileNames==null) {
-                newFileNames=new ArrayList();
+                newFileNames=new ArrayList<>();
             }
             newFileNames.add(elementName);
         }
@@ -519,7 +516,7 @@ public class EarDataObject extends DD2beansDataObject
                             if (index>0) deletedName = deletedServletName.substring(index+1);
                             boolean found = false;
                             for (int j=0;j<newFileNames.size();j++) {
-                                String newFileName = (String)newFileNames.get(j);
+                                String newFileName = newFileNames.get(j);
                                 String newName = newFileName;
                                 int ind = newFileName.lastIndexOf("."); //NOI18N
                                 if (ind>0) newName = newFileName.substring(ind+1);

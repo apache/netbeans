@@ -90,7 +90,7 @@ class NearestGCRoot {
         if (gcRootsComputed) {
             return;
         }
-        HeapProgress.progressStart();
+        Progress.Handle handle = Progress.COMPUTE_GC_ROOTS.start();
         if (!initHotSpotReference()) {
             if (!initSVMReference()) {
                 throw new IllegalArgumentException("reference field not found"); // NOI18N
@@ -106,17 +106,17 @@ class NearestGCRoot {
 
             do {
                 switchBuffers();
-                computeOneLevel(processedClasses);
+                computeOneLevel(processedClasses, handle);
             } while (hasMoreLevels());
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Systems.printStackTrace(ex);
         }
 
         deleteBuffers();
         heap.idToOffsetMap.flush();
         gcRootsComputed = true;
         heap.writeToFile();
-        HeapProgress.progressFinish();
+        handle.close();
     }
 
     private boolean initHotSpotReference() {
@@ -148,7 +148,7 @@ class NearestGCRoot {
         return false;
     }
 
-    private void computeOneLevel(Set processedClasses) throws IOException {
+    private void computeOneLevel(Set processedClasses, Progress.Handle handle) throws IOException {
         int idSize = heap.dumpBuffer.getIDSize();
         for (;;) {
             Instance instance;
@@ -160,7 +160,7 @@ class NearestGCRoot {
             if (instanceOffset == 0L) { // end of level
                 break;
             }
-            HeapProgress.progress(processedInstances++,allInstances);
+            handle.progress(processedInstances++,allInstances);
             instance = heap.getInstanceByOffset(new long[] {instanceOffset});
             if (instance instanceof ObjectArrayInstance) {
                 ObjectArrayDump array = (ObjectArrayDump) instance;
@@ -190,7 +190,7 @@ class NearestGCRoot {
                 fieldValues = instance.getFieldValues();
             } else {
                 if (instance == null) {
-                    System.err.println("HeapWalker Warning - null instance for " + heap.dumpBuffer.getID(instanceOffset + 1)); // NOI18N
+                    Systems.debug("HeapWalker Warning - null instance for " + heap.dumpBuffer.getID(instanceOffset + 1)); // NOI18N
                     continue;
                 }
                 throw new IllegalArgumentException("Illegal type " + instance.getClass()); // NOI18N
@@ -371,10 +371,10 @@ class NearestGCRoot {
 
     LongBuffer getLeaves() {
         computeGCRoots();
-//System.out.println("Multi par.  "+multiParentsCount);
-//System.out.println("Leaves      "+leavesCount);
-//System.out.println("Tree obj.   "+heap.idToOffsetMap.treeObj);
-//System.out.println("First level "+firstLevel);
+//Systems.debug("Multi par.  "+multiParentsCount);
+//Systems.debug("Leaves      "+leavesCount);
+//Systems.debug("Tree obj.   "+heap.idToOffsetMap.treeObj);
+//Systems.debug("First level "+firstLevel);
         return leaves;
     }
     

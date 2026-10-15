@@ -27,40 +27,61 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.XMLConstants;
+
 import org.netbeans.util.Util;
-import org.openide.filesystems.FileUtil;
 import org.openide.util.EditableProperties;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /** Does copy of files according to include/exclude patterns.
  *
  * @author Jiri Skrivanek
  */
-final class CopyFiles extends Object {
+final class CopyFiles {
 
     private File sourceRoot;
     private File targetRoot;
     private EditableProperties currentProperties;
-    private Set<String> includePatterns = new HashSet<String>();
-    private Set<String> excludePatterns = new HashSet<String>();
-    private HashMap<String, String> translatePatterns = new HashMap<String, String>(); // <originalPath, newPath>
+    private Set<String> includePatterns = new HashSet<>();
+    private Set<String> excludePatterns = new HashSet<>();
+    private HashMap<String, String> translatePatterns = new HashMap<>(); // <originalPath, newPath>
     private static final Logger LOGGER = Logger.getLogger(CopyFiles.class.getName());
+    private static final String ATTRIBUTES_XML_PATH = "var/attributes.xml"; //NOI18N
 
     private CopyFiles(File source, File target, File patternsFile) {
         this.sourceRoot = source;
         this.targetRoot = target;
         try {
-            InputStream is = new FileInputStream(patternsFile);
-            Reader reader = new InputStreamReader(is, "utf-8"); // NOI18N
-            readPatterns(reader);
-            reader.close();
+            try (Reader reader = new InputStreamReader(new FileInputStream(patternsFile), UTF_8))  {// NOI18N
+                readPatterns(reader);
+            }
         } catch (IOException ex) {
             // set these to null to stop further copying (see copyDeep method)
             sourceRoot = null;
@@ -69,7 +90,6 @@ final class CopyFiles extends Object {
             // show error message and continue
             JDialog dialog = Util.createJOptionDialog(new JOptionPane(ex, JOptionPane.ERROR_MESSAGE), "Import settings will not proceed");
             dialog.setVisible(true);
-            return;
         }
     }
 
@@ -114,20 +134,7 @@ final class CopyFiles extends Object {
      */
     private static void copyFile(File sourceFile, File targetFile) throws IOException {
         ensureParent(targetFile);
-        InputStream ins = null;
-        OutputStream out = null;
-        try {
-            ins = new FileInputStream(sourceFile);
-            out = new FileOutputStream(targetFile);
-            FileUtil.copy(ins, out);
-        } finally {
-            if (ins != null) {
-                ins.close();
-            }
-            if (out != null) {
-                out.close();
-            }
-        }
+        Files.copy(sourceFile.toPath(), targetFile.toPath());
     }
 
     /** Copy given file to target root dir if matches include/exclude patterns.
@@ -136,11 +143,19 @@ final class CopyFiles extends Object {
      * @throws java.io.IOException if copying fails
      */
     private void copyFile(File sourceFile) throws IOException {
+
+        // invalid code point check JDK-8075156
+        if (sourceFile.getName().endsWith(".properties")
+                && new String(Files.readAllBytes(sourceFile.toPath()), UTF_8).indexOf('\u0000') != -1) {
+            LOGGER.log(Level.WARNING, "{0} contains invalid code points -> skipping", sourceFile);  //NOI18N
+            return;
+        }
+
         String relativePath = getRelativePath(sourceRoot, sourceFile);
         currentProperties = null;
         boolean includeFile = false;
-        Set<String> includeKeys = new HashSet<String>();
-        Set<String> excludeKeys = new HashSet<String>();
+        Set<String> includeKeys = new HashSet<>();
+        Set<String> excludeKeys = new HashSet<>();
         for (String pattern : includePatterns) {
             if (pattern.contains("#")) {  //NOI18N
                 includeKeys.addAll(matchingKeys(relativePath, pattern));
@@ -184,8 +199,13 @@ final class CopyFiles extends Object {
         File targetFile = new File(targetRoot, relativePath);
         LOGGER.log(Level.FINE, "Path: {0}", relativePath);  //NOI18N
         if (includeKeys.isEmpty() && excludeKeys.isEmpty()) {
-            // copy entire file
-            copyFile(sourceFile, targetFile);
+            if (ATTRIBUTES_XML_PATH.equals(relativePath)) {
+                // filter var/attributes.xml to keep only AuxilaryConfiguration
+                copyFilteredAttributesXml(sourceFile, targetFile);
+            } else {
+                // copy entire file
+                copyFile(sourceFile, targetFile);
+            }
         } else {
             if (!includeKeys.isEmpty()) {
                 currentProperties.keySet().retainAll(includeKeys);
@@ -193,15 +213,9 @@ final class CopyFiles extends Object {
             currentProperties.keySet().removeAll(excludeKeys);
             // copy just selected keys
             LOGGER.log(Level.FINE, "  Only keys: {0}", currentProperties.keySet());
-            OutputStream out = null;
-            try {
-                ensureParent(targetFile);
-                out = new FileOutputStream(targetFile);
+            ensureParent(targetFile);
+            try (OutputStream out = new FileOutputStream(targetFile)) {
                 currentProperties.store(out);
-            } finally {
-                if (out != null) {
-                    out.close();
-                }
             }
         }
     }
@@ -213,7 +227,7 @@ final class CopyFiles extends Object {
      * @throws IOException if properties cannot be loaded
      */
     private Set<String> matchingKeys(String relativePath, String propertiesPattern) throws IOException {
-        Set<String> matchingKeys = new HashSet<String>();
+        Set<String> matchingKeys = new HashSet<>();
         String[] patterns = propertiesPattern.split("#", 2);
         String filePattern = patterns[0];
         String keyPattern = patterns[1];
@@ -237,16 +251,87 @@ final class CopyFiles extends Object {
      */
     private EditableProperties getProperties(String relativePath) throws IOException {
         EditableProperties properties = new EditableProperties(false);
-        InputStream in = null;
-        try {
-            in = new FileInputStream(new File(sourceRoot, relativePath));
+        try (InputStream in = new FileInputStream(new File(sourceRoot, relativePath))) {
             properties.load(in);
-        } finally {
-            if (in != null) {
-                in.close();
-            }
         }
         return properties;
+    }
+
+    /**
+     * Copies var/attributes.xml, filtering to keep only fileobject entries that
+     * contain an Auxil[i]aryConfiguration attribute.
+     *
+     * @param sourceFile source attributes.xml
+     * @param targetFile target attributes.xml
+     * @throws IOException if parsing or writing fails
+     */
+    private static void copyFilteredAttributesXml(File sourceFile, File targetFile) throws IOException {
+        try {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            dbf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false); //NOI18N
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            Document doc = db.parse(sourceFile);
+            Element root = doc.getDocumentElement();
+            NodeList children = root.getChildNodes();
+
+            // Collect fileobject nodes to remove (can't modify NodeList while iterating)
+            List<Node> toRemove = new ArrayList<>();
+            for (int i = 0; i < children.getLength(); i++) {
+                if (children.item(i) instanceof Element el
+                        && "fileobject".equals(el.getTagName()) //NOI18N
+                        && !hasAuxiliaryConfiguration(el)) {
+                    toRemove.add(el);
+                }
+            }
+
+            for (Node node : toRemove) {
+                root.removeChild(node);
+            }
+
+            // Only write if there are remaining entries
+            if (root.getElementsByTagName("fileobject").getLength() == 0) {  //NOI18N
+                LOGGER.log(Level.FINE, "No Auxil[i]aryConfiguration entries found in {0}, skipping", sourceFile); //NOI18N
+                return;
+            }
+
+            TransformerFactory tf = TransformerFactory.newInstance();
+            tf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            Transformer transformer = tf.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");  //NOI18N
+            transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC,
+                    "-//NetBeans//DTD DefaultAttributes 1.0//EN"); //NOI18N
+            transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM,
+                    "http://www.netbeans.org/dtds/attributes-1_0.dtd"); //NOI18N
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8"); //NOI18N
+            ensureParent(targetFile);
+            try (OutputStream out = new FileOutputStream(targetFile)) {
+                transformer.transform(new DOMSource(doc), new StreamResult(out));
+            }
+            LOGGER.log(Level.FINE, "Filtered attributes.xml copied to {0}", targetFile);  //NOI18N
+        } catch (ParserConfigurationException | SAXException | TransformerException ex) {
+            throw new IOException("Failed to filter attributes.xml: " + ex.getMessage(), ex);  //NOI18N
+        }
+    }
+
+    /**
+     * Checks whether a fileobject element contains an Auxil[i]aryConfiguration
+     * attribute.
+     *
+     * @param fileObject the fileobject element to check
+     * @return true if the element has a Auxil[i]aryConfiguration attribute
+     */
+    private static boolean hasAuxiliaryConfiguration(Element fileObject) {
+        NodeList attrs = fileObject.getElementsByTagName("attr");  //NOI18N
+        for (int i = 0; i < attrs.getLength(); i++) {
+            Element attr = (Element) attrs.item(i);
+            String name = attr.getAttribute("name");
+            if (name != null && (name.contains("AuxilaryConfiguration") //NOI18N
+                    || name.contains("AuxiliaryConfiguration"))) { //NOI18N
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Creates parent of given file, if doesn't exist. */
@@ -269,7 +354,7 @@ final class CopyFiles extends Object {
             if (line == null) {
                 break;
             }
-            line = line.trim();
+            line = line.strip();
             if (line.length() == 0 || line.startsWith("#")) {  //NOI18N
                 continue;
             }
@@ -318,7 +403,7 @@ final class CopyFiles extends Object {
      * @return set of single patterns containing just one # (e.g. [filePattern1#keyPattern1, filePattern2#keyPattern2, filePattern3])
      */
     private static Set<String> parsePattern(String pattern) {
-        Set<String> patterns = new HashSet<String>();
+        Set<String> patterns = new HashSet<>();
         if (pattern.contains("#")) {  //NOI18N
             StringBuilder partPattern = new StringBuilder();
             ParserState state = ParserState.START;

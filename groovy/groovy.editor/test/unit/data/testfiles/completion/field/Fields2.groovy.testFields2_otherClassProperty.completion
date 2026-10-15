@@ -1,0 +1,5 @@
+Code completion result for source line:
+new Helper().builderProperty.inher|itIO()
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     inheritIO()                     [PUBLIC]   ProcessBuilder

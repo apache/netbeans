@@ -22,8 +22,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.List;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.php.composer.output.model.SearchResult;
 
@@ -107,8 +105,17 @@ public class CliParserTest extends NbTestCase {
         assertEquals("Sends your logs to: files, sockets, inboxes, databases and various web services", result.getDescription());
     }
 
-    public void testParseSearchEmptyDescription() {
+    public void testParseSearchEmptyDescriptionLegacy() {
         String chunk = "monolog/monolog:";
+        List<SearchResult> results = cliParser.parseSearch(chunk);
+        assertEquals(1, results.size());
+        SearchResult result = results.get(0);
+        assertEquals("monolog/monolog", result.getName());
+        assertEquals("", result.getDescription());
+    }
+
+    public void testParseSearchEmptyDescription() {
+        String chunk = "monolog/monolog";
         List<SearchResult> results = cliParser.parseSearch(chunk);
         assertEquals(1, results.size());
         SearchResult result = results.get(0);

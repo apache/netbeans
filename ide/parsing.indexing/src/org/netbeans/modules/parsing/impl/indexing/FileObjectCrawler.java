@@ -20,10 +20,7 @@
 package org.netbeans.modules.parsing.impl.indexing;
 
 import org.netbeans.modules.parsing.spi.indexing.SuspendStatus;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Comparator;
@@ -54,12 +51,13 @@ final class FileObjectCrawler extends Crawler {
 
     private static final char SEPARATOR = '/';  //NOI18N
     private static final Logger LOG = Logger.getLogger(FileObjectCrawler.class.getName());
-    /*test*/ static Map<Pair<FileObject,FileObject>,Boolean> mockLinkTypes;
+    @SuppressWarnings("PackageVisibleField") /*test*/
+    static Map<Pair<FileObject,FileObject>,Boolean> mockLinkTypes;
 
     private final FileObject root;
     private final ClassPath.Entry entry;
     private final FileObject[] files;
-    
+
 
     FileObjectCrawler(
             @NonNull final FileObject root,
@@ -87,6 +85,7 @@ final class FileObjectCrawler extends Crawler {
     }
 
     @Override
+    @SuppressWarnings("fallthrough")
     protected boolean collectResources(Collection<Indexable> resources, Collection<Indexable> allResources) {
         boolean finished = true;
         final long tm1 = System.currentTimeMillis();
@@ -170,12 +169,13 @@ NEXT_FILE:      for(FileObject f : files) {
                     }
                     cluster.add(f);
                 }
-                for(FileObject parent : clusters.keySet()) {
-                    Set<FileObject> cluster = clusters.get(parent);
+                for(Map.Entry<FileObject, Set<FileObject>> clusterEntry : clusters.entrySet()) {
+                    FileObject parent = clusterEntry.getKey();
+                    Set<FileObject> cluster = clusterEntry.getValue();
                     StringBuilder relativePath = relPaths.get(parent);
                     if (relativePath != null) {
                         finished = collect(
-                                cluster.toArray(new FileObject[cluster.size()]),
+                                cluster.toArray(new FileObject[0]),
                                 root,
                                 resources,
                                 allResources,
@@ -272,7 +272,7 @@ NEXT_FILE:      for(FileObject f : files) {
             if (isCancelled()) {
                 return false;
             }
-            if (!fo.isValid() || !isVisible(fo)) {
+            if (!fo.isValid() || !canBeIndexed(fo)) {
                 continue;
             }
 
@@ -329,14 +329,15 @@ NEXT_FILE:      for(FileObject f : files) {
         }
     }
 
-    private boolean isVisible (final @NonNull FileObject fo) {
+    private boolean canBeIndexed (final @NonNull FileObject fo) {
         try {
-            return VisibilityQuery.getDefault().isVisible(fo);
+            return VisibilityQuery.getDefault().isVisible(fo)
+                    && (! IndexabilityQuery.getInstance().preventIndexing(fo));
         } finally {
             setListenOnVisibility(true);
         }
     }
-    
+
     //Todo: Not exaclty correct. The correct implementation should find if whole root content
     //is covered by files. But correct implementation will be very very slow and probably no one
     //calls it with such params.
@@ -375,7 +376,7 @@ NEXT_FILE:      for(FileObject f : files) {
                 if (file.getNameExt().equals(pathElement.getNameExt())) {
                     try {
                         if (mockLinkTypes != null ?
-                            mockLinkTypes.get(Pair.<FileObject,FileObject>of(pathElement, file)) :
+                            mockLinkTypes.get(Pair.of(pathElement, file)) :
                             isSameFile(file, pathElement)) {
                             hasLink = true;
                             break;
@@ -437,28 +438,29 @@ NEXT_FILE:      for(FileObject f : files) {
             return PathRelation.EQUAL;
         }
     }
-    
+
     private static final class Stats {
         public int filesCount;
         public long linkCheckTime;
         public int linkCount;
-        public Map<String, Integer> extensions = new HashMap<String, Integer>();
-        public Map<String, Integer> mimeTypes = new HashMap<String, Integer>();
+        public Map<String, Integer> extensions = new HashMap<>();
+        public Map<String, Integer> mimeTypes = new HashMap<>();
         public static void inc(Map<String, Integer> m, String k) {
             Integer i = m.get(k);
             if (i == null) {
                 m.put(k, 1);
             } else {
-                m.put(k, i.intValue() + 1);
+                m.put(k, i + 1);
             }
         }
         public static void logHistogram(Level level, Map<String, Integer> data) {
-            Map<Integer, Set<String>> sortedMap = new TreeMap<Integer, Set<String>>(REVERSE);
-            for(String item : data.keySet()) {
-                Integer freq = data.get(item);
+            Map<Integer, Set<String>> sortedMap = new TreeMap<>(REVERSE);
+            for(Map.Entry<String, Integer> entry : data.entrySet()) {
+                String item = entry.getKey();
+                Integer freq = entry.getValue();
                 Set<String> items = sortedMap.get(freq);
                 if (items == null) {
-                    items = new TreeSet<String>();
+                    items = new TreeSet<>();
                     sortedMap.put(freq, items);
                 }
                 items.add(item);
@@ -469,11 +471,7 @@ NEXT_FILE:      for(FileObject f : files) {
                 }
             }
         }
-        private static final Comparator<Integer> REVERSE = new Comparator<Integer>() {
-            public int compare(Integer o1, Integer o2) {
-                return -1 * o1.compareTo(o2);
-            }
-        };
+        private static final Comparator<Integer> REVERSE = (Integer o1, Integer o2) -> -1 * o1.compareTo(o2);
     } // End of Stats class
 
     private enum PathRelation {

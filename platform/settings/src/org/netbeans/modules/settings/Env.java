@@ -39,36 +39,36 @@ public final class Env implements Environment.Provider {
      * <code>&lt;attr name="settings.convertor" methodvalue="org.netbeans.modules.settings.XMLPropertiesConvertor.create"/>
      * </code>
      */
-    public final static String EA_CONVERTOR = "settings.convertor"; //NOI18N
+    public static final String EA_CONVERTOR = "settings.convertor"; //NOI18N
     /** file attribute containing path to the provider. Used by
      * InstanceDataObject.create or upgrade algorithm. Usage 
      * <code>&lt;attr name="settings.providerPath" stringvalue="xml/lookups/NetBeans/DTD_XML_Properties_1_0.instance"/>
      * </code>
      */
-    public final static String EA_PROVIDER_PATH = "settings.providerPath"; // NOI18N
+    public static final String EA_PROVIDER_PATH = "settings.providerPath"; // NOI18N
     /** file attribute containing PUBLIC attribute of xml header. Usage
      * <code>&lt;attr name="hint.originalPublicID" stringvalue="-//NetBeans//DTD XML Properties 1.0//EN"/>
      * </code>
      */
-    public final static String EA_PUBLICID = "hint.originalPublicID"; // NOI18N
+    public static final String EA_PUBLICID = "hint.originalPublicID"; // NOI18N
     /** file attribute containnig class name of the setting object. Usage
      * <code>&lt;attr name="settings.instanceClass" stringvalue="org.netbeans.modules.foo.Foo"/>
      * </code>
      */
-    public final static String EA_INSTANCE_CLASS_NAME = "settings.instanceClass"; //NOI18N
+    public static final String EA_INSTANCE_CLASS_NAME = "settings.instanceClass"; //NOI18N
     /** file attribute containnig class name and subclass names of the setting object. Use the
      * attribute for performance reasons. Usage
      * <code>&lt;attr name="settings.instanceOf" stringvalue="org.netbeans.modules.foo.Foo[, ...]"/>
      * </code>
      */
-    public final static String EA_INSTANCE_OF = "settings.instanceOf"; //NOI18N
+    public static final String EA_INSTANCE_OF = "settings.instanceOf"; //NOI18N
     /** file attribute containnig the setting object. Usage
      * <code>&lt;attr name="settings.instanceCreate" newvalue="org.netbeans.modules.foo.Foo"/>
      * </code> or
      * <code>&lt;attr name="settings.instanceCreate" methodvalue="org.netbeans.modules.foo.Foo.create"/>
      * </code>
      */
-    public final static String EA_INSTANCE_CREATE = "settings.instanceCreate"; //NOI18N
+    public static final String EA_INSTANCE_CREATE = "settings.instanceCreate"; //NOI18N
     /** file attribute determining whether the registration works also for subclasses of the registering
      * class. Use of this attribute is optional. The default is false, the value must be boolean, example:
      * <code>&lt;attr name="settings.subclasses" boolvalue="true"/&gt;</code>
@@ -106,7 +106,7 @@ public final class Env implements Environment.Provider {
      * @return set of items
      */
     public static java.util.Set<String> parseAttribute(Object attr) {
-        if (attr != null && attr instanceof String) {
+        if (attr instanceof String) {
             java.util.StringTokenizer s = 
                 new java.util.StringTokenizer((String) attr, ","); //NOI18N
             java.util.Set<String> set = new java.util.HashSet<String>(10);
@@ -166,7 +166,7 @@ public final class Env implements Environment.Provider {
             filename = filename.substring(0, i);
         }
         String resource = xmlEntitiesPrefix +
-            filename.substring(xmlLookupsPrefix.length(), filename.length());
+            filename.substring(xmlLookupsPrefix.length());
         
         return FileUtil.getConfigFile(resource);
     }

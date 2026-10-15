@@ -27,6 +27,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileObject;
+import org.openide.util.Lookup;
 
 /**
  * Context provider for maven executors and checkers. Never to be implemented by
@@ -79,6 +80,28 @@ public interface RunConfig {
     String getActionName();
     
     /**
+     * Options/switches passed to maven.
+     * @return a read-only copy of the current maven options
+     * @since 2.167
+     */
+    @NonNull Map<? extends String,? extends String> getOptions();
+    
+    /**
+     * Sets option that will be passed to maven.
+     * @param key a key that represents option/switch name
+     * @param value a value of the option/switch
+     * @since 2.167
+     */
+    void setOption(@NonNull String key, @NullAllowed String value);
+
+    /** 
+     * Adds options/switches that will be passed to maven.
+     * @param options options/switches that will be added
+     * @since 2.167
+     */
+    void addOptions(@NonNull Map<String, String> options);
+    
+    /**
      * Properties to be used in execution.
      * @return a read-only copy of the current properties (possibly inherited from the parent)
      */
@@ -111,6 +134,16 @@ public interface RunConfig {
     boolean isInteractive();
 
     FileObject getSelectedFileObject();
+
+    /**
+     * Provides access to possible additional parameters from the action invoker. Must
+     * not return {@code null}, use {@link Lookup#EMPTY} for empty instance.
+     * @return action context Lookup
+     * @since 2.144
+     */
+    default Lookup getActionContext() { 
+        return Lookup.EMPTY;
+    }
 
     public enum ReactorStyle {
         NONE,

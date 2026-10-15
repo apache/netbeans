@@ -37,9 +37,9 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service=OQLEditorImpl.class)
 public class OQLEditor extends OQLEditorImpl{
-    final static private class TokenChangeListener implements TokenHierarchyListener {
+    private static final class TokenChangeListener implements TokenHierarchyListener {
         volatile boolean validFlag;
-        final private Document document;
+        private final Document document;
         public TokenChangeListener(Document document) {
             this.document = document;
         }
@@ -71,7 +71,7 @@ public class OQLEditor extends OQLEditorImpl{
         return editorPane;
     }
 
-    synchronized public JEditorPane getEditorPane() {
+    public synchronized JEditorPane getEditorPane() {
         return createEditor();
     }
 }

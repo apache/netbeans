@@ -33,7 +33,7 @@
 
   <target name="compile">
     <mkdir dir="build/classes"/>
-    <javac srcdir="src" destdir="build/classes" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}" target="1.6" source="1.6" >
+    <javac srcdir="src" destdir="build/classes" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}" release="8" >
 	  <classpath>
                 <!-- cmdline Ant -->
                 <pathelement location="${ant.core.lib}"/>

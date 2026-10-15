@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
@@ -40,7 +41,7 @@ public class LineReaderTest extends NbTestCase {
     public void testLineReader() throws IOException {
 
         FileSystem fs = FileUtil.createMemoryFileSystem();
-        Charset chs = Charset.forName("UTF-8");
+        Charset chs = StandardCharsets.UTF_8;
         OutputStream os = fs.getRoot().createAndOpen("find.txt");
         try {
             OutputStreamWriter osw = new OutputStreamWriter(os, chs.newEncoder());

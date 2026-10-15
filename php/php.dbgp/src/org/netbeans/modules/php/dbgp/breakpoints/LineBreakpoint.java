@@ -104,7 +104,7 @@ public class LineBreakpoint extends AbstractBreakpoint {
                 DataObject dataObject = DataEditorSupport.findDataObject(myLine);
                 EditorCookie editorCookie = (EditorCookie) dataObject.getLookup().lookup(EditorCookie.class);
                 final StyledDocument styledDocument = editorCookie.getDocument();
-                if (styledDocument != null && styledDocument instanceof BaseDocument) {
+                if (styledDocument instanceof BaseDocument) {
                     try {
                         final BaseDocument baseDocument = (BaseDocument) styledDocument;
                         Source source = Source.create(baseDocument);
@@ -113,10 +113,10 @@ public class LineBreakpoint extends AbstractBreakpoint {
                             @Override
                             public void run(ResultIterator resultIterator) throws Exception {
                                 Parser.Result parserResult = resultIterator.getParserResult();
-                                if (parserResult != null && parserResult instanceof PHPParseResult) {
+                                if (parserResult instanceof PHPParseResult) {
                                     PHPParseResult phpParserResult = (PHPParseResult) parserResult;
                                     int rowStart = LineDocumentUtils.getLineStartFromIndex(baseDocument, myLine.getLineNumber());
-                                    int contentStart = Utilities.getRowFirstNonWhite(baseDocument, rowStart);
+                                    int contentStart = LineDocumentUtils.getLineFirstNonWhitespace(baseDocument, rowStart);
                                     int contentEnd = LineDocumentUtils.getLineLastNonWhitespace(baseDocument, rowStart) + 1;
                                     StatementVisitor statementVisitor = new StatementVisitor(contentStart, contentEnd);
                                     statementVisitor.scan(phpParserResult.getProgram().getStatements());
@@ -174,11 +174,11 @@ public class LineBreakpoint extends AbstractBreakpoint {
         return myFileUrl;
     }
 
-    public synchronized final String getCondition() {
+    public final synchronized String getCondition() {
         return condition;
     }
 
-    public synchronized final void setCondition(String condition) {
+    public final synchronized void setCondition(String condition) {
         String oldCondition = this.condition;
         if ((condition != null && condition.equals(oldCondition))
                 || (condition == null && oldCondition == null)) {
@@ -188,7 +188,7 @@ public class LineBreakpoint extends AbstractBreakpoint {
         firePropertyChange(PROP_CONDITION, oldCondition, condition);
     }
 
-    public synchronized final boolean isConditional() {
+    public final synchronized boolean isConditional() {
         return condition != null && !condition.isEmpty();
     }
 

@@ -3,12 +3,9 @@ var issue220088 = new S|ynergy();
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 CONSTRUCTO Set(): Set                      [PUBLIC]   JS Platform
+CONSTRUCTO SharedArrayBuffer(byteLength:   [PUBLIC]   JS Platform
 CONSTRUCTO String(): String                [PUBLIC]   JS Platform
 CONSTRUCTO Symbol(): Symbol                [PUBLIC]   JS Platform
 CONSTRUCTO Synergy(): Synergy              [PUBLIC]   issue220088.js
-CONSTRUCTO SyntaxError(): Error            [PUBLIC]   JS Platform
-CLASS      Screen                          [PUBLIC]   JS Platform
-CLASS      Storage                         [PUBLIC]   JS Platform
-CLASS      StyleSheet                      [PUBLIC]   JS Platform
-CLASS      StyleSheetList                  [PUBLIC]   JS Platform
+CONSTRUCTO SyntaxError(): SyntaxError      [PUBLIC]   JS Platform
 METHOD     SpecPoolCtrl($scope, $rootScop  [PUBLIC]   issue223681.js

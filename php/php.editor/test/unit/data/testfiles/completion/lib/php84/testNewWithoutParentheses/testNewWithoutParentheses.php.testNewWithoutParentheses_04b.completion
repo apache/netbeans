@@ -1,0 +1,4 @@
+Code completion result for source line:
+$example = new Example()::IMPLICIT_P|UBLIC_CONST;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   IMPLICIT_PUBLIC_CONST "implici  [PUBLIC]   Example

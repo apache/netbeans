@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.hints.threading;
 
+import org.junit.Assume;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.hints.test.api.HintTest;
 
@@ -216,6 +217,7 @@ public class TinyTest extends NbTestCase {
     }
 
     public void testThreadSuspend() throws Exception {
+        Assume.assumeTrue(Runtime.version().feature() <= 22);
         HintTest
                 .create()
                 .input("package test;\n" +

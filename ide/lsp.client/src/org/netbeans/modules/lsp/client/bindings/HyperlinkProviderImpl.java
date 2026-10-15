@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,25 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.netbeans.modules.lsp.client.bindings;
 
-import java.net.MalformedURLException;
-import java.net.URI;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.eclipse.lsp4j.DefinitionParams;
 import org.eclipse.lsp4j.Location;
-import org.eclipse.lsp4j.LocationLink;
-import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
-import org.eclipse.lsp4j.TextDocumentPositionParams;
-import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
+import org.netbeans.api.lexer.TokenHierarchy;
+import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProviderExt;
@@ -42,19 +38,14 @@ import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.modules.lsp.client.Utils;
-import org.openide.cookies.LineCookie;
+import org.netbeans.modules.textmate.lexer.TextmateTokenId;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.URLMapper;
-import org.openide.text.Line;
-import org.openide.text.Line.ShowOpenType;
-import org.openide.text.Line.ShowVisibilityType;
-import org.openide.util.Exceptions;
 
 /**
  *
  * @author lahvac
  */
-@MimeRegistration(mimeType="", service=HyperlinkProviderExt.class)
+@MimeRegistration(mimeType="", service=HyperlinkProviderExt.class, position = 1600)
 public class HyperlinkProviderImpl implements HyperlinkProviderExt {
 
     @Override
@@ -74,11 +65,27 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
             return null;
         }
 
+        BaseDocument document = (BaseDocument) doc;
+        document.readLock();
         try {
             //XXX: not really using the server, are we?
-            return Utilities.getIdentifierBlock((BaseDocument) doc, offset);
+            int[] ident = Utilities.getIdentifierBlock(document, offset);
+            if (ident == null) {
+                return null;
+            }
+            TokenSequence<?> ts = TokenHierarchy.get(doc).tokenSequence();
+            if (ts == null) {
+                return ident;
+            }
+            ts.move(offset);
+            if (ts.moveNext() && ts.token().id() == TextmateTokenId.TEXTMATE) {
+                return new int[]{ts.offset(), ts.offset() + ts.token().length()};
+            }
+            return ident;
         } catch (BadLocationException ex) {
             return null;
+        } finally {
+            document.readUnlock();
         }
     }
 
@@ -89,63 +96,35 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
             //TODO: beep
             return ;
         }
-        LSPBindings server = LSPBindings.getBindings(file);
-        if (server == null) {
-            return ;
-        }
         String uri = Utils.toURI(file);
-        try {
-            TextDocumentPositionParams params;
-            params = new TextDocumentPositionParams(new TextDocumentIdentifier(uri),
-                                                    Utils.createPosition(doc, offset));
-            //TODO: Location or Location[]
-            CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> def = server.getTextDocumentService().definition(params);
-            def.handleAsync((locations, exception) -> {
-                if (exception != null) {
-                    exception.printStackTrace();
-                }
-                if (locations == null) {
-                    return null;
-                }
-                String targetUri;
-                Range targetRange;
-                if (locations.isLeft() && locations.getLeft().size() == 1) { //TODO: what to do when there are multiple locations?
-                    targetUri = locations.getLeft().get(0).getUri();
-                    targetRange = locations.getLeft().get(0).getRange();
-                } else if (locations.isRight() && locations.getRight().size() == 1) { //TODO: what to do when there are multiple locations?
-                    targetUri = locations.getRight().get(0).getTargetUri();
-                    targetRange = locations.getRight().get(0).getTargetRange();
-                } else {
-                    return null;
-                }
-                try {
-                    URI target = URI.create(targetUri);
-                    FileObject targetFile = URLMapper.findFileObject(target.toURL());
+        List<Location> foundLocations = new ArrayList<>();
+        Utils.handleBindings(LSPBindings.getBindings(file),
+                             capa -> Utils.isEnabled(capa.getDefinitionProvider()),
+                             () -> new DefinitionParams(new TextDocumentIdentifier(uri),
+                                                        Utils.createPosition(doc, offset)),
 
-                    if (targetFile != null) {
-                        LineCookie lc = targetFile.getLookup().lookup(LineCookie.class);
-
-                        //TODO: expecting lc != null!
-
-                        Line line = lc.getLineSet().getCurrent(targetRange.getStart().getLine());
-
-                        SwingUtilities.invokeLater(() ->
-                            line.show(ShowOpenType.OPEN, ShowVisibilityType.FOCUS, targetRange.getStart().getCharacter())
-                        );
-                    } else {
-                        //TODO: beep
-                    }
-                } catch (MalformedURLException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-                return null;
-            }).get();
-        } catch (BadLocationException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (InterruptedException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (ExecutionException ex) {
-            Exceptions.printStackTrace(ex);
+                             (server, params) -> server.getTextDocumentService().definition(params),
+                             (server, locations) -> {
+                                 if (locations == null) {
+                                     return ;
+                                 } else if (locations.isLeft()) {
+                                     foundLocations.addAll(locations.getLeft());
+                                 } else if (locations.isRight()) {
+                                     locations.getRight()
+                                              .stream()
+                                              .map(ll -> new Location(ll.getTargetUri(), ll.getTargetRange()))
+                                              .forEach(foundLocations::add);
+                                 }
+                             });
+        if (foundLocations.isEmpty()) {
+            //TODO: beep?
+        } else if (foundLocations.size() == 1) {
+            Location location = foundLocations.get(0);
+            Utils.open(location.getUri(), location.getRange());
+        } else {
+            //TODO: show a popup
+            Location location = foundLocations.get(0);
+            Utils.open(location.getUri(), location.getRange());
         }
     }
 

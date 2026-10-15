@@ -43,7 +43,7 @@ import org.netbeans.modules.web.beans.api.model.WebBeansModel;
 public class DelegateAssignabilityTest extends CommonTestCase {
 
     public DelegateAssignabilityTest( String testName ) {
-        super(testName);
+        super(testName, false);
     }
     
     public void testSimple() throws IOException, InterruptedException {

@@ -34,6 +34,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.EmptyStatement;
+import org.netbeans.modules.php.editor.parser.astnodes.EnumDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
@@ -131,7 +132,7 @@ public abstract class PSR1Hint extends HintRule {
 
     public static class MethodDeclarationHint extends PSR1Hint {
         private static final String HINT_ID = "PSR1.Hint.Method"; //NOI18N
-        private static final String MAGIC_METHODS = "__(construct|destruct|call|callStatic|get|set|isset|unset|sleep|wakeup|toString|invoke|set_state|clone)"; //NOI18N
+        private static final String MAGIC_METHODS = "__(construct|destruct|call|callStatic|get|set|isset|unset|sleep|wakeup|toString|invoke|set_state|clone|debugInfo|serialize|unserialize)"; //NOI18N
         private static final Pattern METHOD_PATTERN = Pattern.compile("([a-z]|" + MAGIC_METHODS + ")[a-zA-Z0-9]*"); //NOI18N
 
         @Override
@@ -233,6 +234,14 @@ public abstract class PSR1Hint extends HintRule {
 
             @Override
             public void visit(TraitDeclaration node) {
+                if (CancelSupport.getDefault().isCancelled()) {
+                    return;
+                }
+                processTypeDeclaration(node);
+            }
+
+            @Override
+            public void visit(EnumDeclaration node) {
                 if (CancelSupport.getDefault().isCancelled()) {
                     return;
                 }

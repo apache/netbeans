@@ -108,7 +108,7 @@ public final class Version {
      * @param fragmentList list of fragments that represent the version.
      */
     private Version(List<Fragment> fragmentList) {
-        fragments = fragmentList.toArray(new Fragment[fragmentList.size()]);
+        fragments = fragmentList.toArray(new Fragment[0]);
     }
 
     /**

@@ -30,10 +30,7 @@ import org.netbeans.modules.glassfish.tooling.GlassFishIdeException;
  */
 public class DataException extends GlassFishIdeException {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Exception message for invalid GlassFish administration interface
      *  type. */
     static final String INVALID_ADMIN_INTERFACE =
@@ -72,10 +69,7 @@ public class DataException extends GlassFishIdeException {
     /**  Exception for GlassFish URL null value. */
     static final String SERVER_URL_NULL = "GlassFish URL is null";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of <code>DataException</code> without
      * detail message.

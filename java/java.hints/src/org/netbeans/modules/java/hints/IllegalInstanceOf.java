@@ -98,8 +98,8 @@ public class IllegalInstanceOf extends AbstractHint {
             if (!info.getTypes().isSubtype(right.asType(), loadedVerify.asType()))
                 return null;
             
-            int start = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), iot);
-            int end   = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), iot);
+            int start = (int) info.getTrees().getSourcePositions().getStartPosition(iot);
+            int end   = (int) info.getTrees().getSourcePositions().getEndPosition(iot);
             return Collections.<ErrorDescription>singletonList(
                        ErrorDescriptionFactory.createErrorDescription(getSeverity().toEditorSeverity(),
                                                                       NbBundle.getMessage(IllegalInstanceOf.class, "MSG_IllegalInstanceOf"),

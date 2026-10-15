@@ -55,7 +55,7 @@ public final class NbProxySelector extends ProxySelector {
         original = ProxySelector.getDefault();
         LOG.log(Level.FINE, "java.net.useSystemProxies has been set to {0}", useSystemProxies());
         if (original == null || original.getClass().getName().equals(DEFAULT_PROXY_SELECTOR_CLASS_NAME)) {
-            NetworkProxyReloader.reloadNetworkProxy();
+            RP.post(() -> NetworkProxyReloader.reloadNetworkProxy());
         }
         ProxySettings.addPreferenceChangeListener(new ProxySettingsListener());
         copySettingsToSystem();
@@ -67,12 +67,12 @@ public final class NbProxySelector extends ProxySelector {
         int proxyType = ProxySettings.getProxyType ();
         switch (proxyType) {
             case ProxySettings.DIRECT_CONNECTION:
-                res = Collections.singletonList (Proxy.NO_PROXY);
+                res.add(Proxy.NO_PROXY);
                 break;
             case ProxySettings.AUTO_DETECT_PROXY:
                 if (useSystemProxies ()) {
                     if (original != null) {
-                        res = original.select(uri);                   
+                        res.addAll(original.select(uri));
                     }
                 } else {                    
                     String protocol = uri.getScheme ();
@@ -145,7 +145,7 @@ public final class NbProxySelector extends ProxySelector {
             case ProxySettings.AUTO_DETECT_PAC:
                 if (useSystemProxies ()) {
                     if (original != null) {
-                        res = original.select(uri);                   
+                        res.addAll(original.select(uri));
                     }
                 } else {
                     ProxyAutoConfig pac = ProxyAutoConfig.get(getPacFile());

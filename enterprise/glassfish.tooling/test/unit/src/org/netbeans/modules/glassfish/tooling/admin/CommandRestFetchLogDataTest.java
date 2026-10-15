@@ -33,10 +33,7 @@ import org.testng.annotations.Test;
  */
 public class CommandRestFetchLogDataTest extends CommandRestTest {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Test methods                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Test GlasFissh view-log administration HTTP command execution.
      */

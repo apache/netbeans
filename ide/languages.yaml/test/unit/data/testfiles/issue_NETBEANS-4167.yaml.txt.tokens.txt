@@ -1,0 +1,7 @@
+.t.e.s.t. SimpleCurly
+TEXT            "n: {", la=1, st=0
+----- EOF -----
+
+<Unnamed test>
+----- EOF -----
+

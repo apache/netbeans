@@ -24,6 +24,8 @@ import org.openide.filesystems.FileUtil;
 
 public abstract class GotoDeclarationTestBase extends PHPNavTestBase {
 
+    protected static final String BASE_TEST_FOLDER_PATH = "testfiles/gotodeclaration/";
+
     public GotoDeclarationTestBase(String testName) {
         super(testName);
     }
@@ -38,12 +40,20 @@ public abstract class GotoDeclarationTestBase extends PHPNavTestBase {
         return new FileObject[]{FileUtil.toFileObject(new File(getDataDir(), getTestFolderPath()))};
     }
 
+    protected String getBaseTestFolderPath() {
+        return BASE_TEST_FOLDER_PATH;
+    }
+
     protected String getTestFolderPath() {
-        return "testfiles/gotodeclaration/" + getTestName();
+        return getBaseTestFolderPath() + getTestName();
     }
 
     protected String getTestPath() {
         return getTestFolderPath() + "/" + getTestName() + ".php";
+    }
+
+    protected void checkDeclaration(String caretLine, String declarationLine) throws Exception {
+        checkDeclaration(getTestPath(), caretLine, declarationLine);
     }
 
     protected String getTestName() {

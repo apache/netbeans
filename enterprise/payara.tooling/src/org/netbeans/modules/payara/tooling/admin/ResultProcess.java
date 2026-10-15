@@ -28,17 +28,11 @@ package org.netbeans.modules.payara.tooling.admin;
  */
 public class ResultProcess extends Result<ValueProcess> {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Value returned by admin command execution. */
     ValueProcess value;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara admin command result for
      * <code>ValueProcess</code> result value.
@@ -47,10 +41,7 @@ public class ResultProcess extends Result<ValueProcess> {
         super();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get value returned by admin command execution.
      * <p/>

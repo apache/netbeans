@@ -607,12 +607,12 @@ public class DefaultMutexImplementation implements MutexImplementation {
                 }
 
                 // holds postedMode lock here
-                List runnables = info.dequeue(postedMode);
+                List<Runnable> runnables = info.dequeue(postedMode);
                 final int size = runnables.size();
 
                 for (int i = 0; i < size; i++) {
                     try {
-                        Runnable r = (Runnable) runnables.get(i);
+                        Runnable r = runnables.get(i);
 
                         r.run();
                     }
@@ -1091,17 +1091,16 @@ public class DefaultMutexImplementation implements MutexImplementation {
         /** Adds the Runnable into the queue of waiting requests */
         public void enqueue(int mode, Runnable run) {
             if (queues[mode] == null) {
-                queues[mode] = new ArrayList<Runnable>(13);
+                queues[mode] = new ArrayList<>(13);
             }
 
             queues[mode].add(run);
         }
 
         /** @return a List of enqueued Runnables - may be null */
-        public List dequeue(int mode) {
-            List ret = queues[mode];
+        public List<Runnable> dequeue(int mode) {
+            List<Runnable> ret = queues[mode];
             queues[mode] = null;
-
             return ret;
         }
 
@@ -1286,5 +1285,3 @@ public class DefaultMutexImplementation implements MutexImplementation {
         return registeredThreads;
     }
 }
-
-    

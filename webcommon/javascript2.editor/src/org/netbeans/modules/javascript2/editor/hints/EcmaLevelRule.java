@@ -23,7 +23,10 @@ import java.util.Collections;
 import javax.swing.SwingUtilities;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
+import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.modules.editor.NbEditorDocument;
+import org.netbeans.modules.javascript2.editor.JsPreferences;
+import org.netbeans.modules.javascript2.editor.JsVersion;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.spi.lexer.MutableTextInput;
 import org.openide.cookies.EditorCookie;
@@ -45,49 +48,41 @@ public abstract class EcmaLevelRule extends JsAstRule {
         refreshDocument(fo);
     }
 
+    static boolean ecmaEditionProjectBelow(JsHintsProvider.JsRuleContext context, JsVersion targetVersion) {
+        return JsPreferences.isPreECMAVersion(FileOwnerQuery.getOwner(context.getJsParserResult().getSnapshot().getSource().getFileObject()), targetVersion);
+    }
+
     private static void reindexFile(final FileObject fo) {
-        RP.post(new Runnable() {
-            @Override
-            public void run() {
-                //refresh Action Items for this file
-                IndexingManager.getDefault().refreshIndexAndWait(fo.getParent().toURL(),
-                        Collections.singleton(fo.toURL()), true, false);
-            }
+        RP.post(() -> {
+            //refresh Action Items for this file
+            IndexingManager.getDefault().refreshIndexAndWait(fo.getParent().toURL(),
+                    Collections.singleton(fo.toURL()), true, false);
         });
     }
 
     private static void refreshDocument(final FileObject fo) throws IOException {
-        RP.post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    DataObject dobj = DataObject.find(fo);
-                    EditorCookie editorCookie = dobj.getLookup().lookup(EditorCookie.class);
-                    StyledDocument document = editorCookie.openDocument();
-                    forceReparse(document);
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
+        RP.post(() -> {
+            try {
+                DataObject dobj = DataObject.find(fo);
+                EditorCookie editorCookie = dobj.getLookup().lookup(EditorCookie.class);
+                StyledDocument document = editorCookie.openDocument();
+                forceReparse(document);
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
             }
         });
 
     }
 
     private static void forceReparse(final Document doc) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                NbEditorDocument nbdoc = (NbEditorDocument) doc;
-                nbdoc.runAtomic(new Runnable() {
-                    @Override
-                    public void run() {
-                        MutableTextInput mti = (MutableTextInput) doc.getProperty(MutableTextInput.class);
-                        if (mti != null) {
-                            mti.tokenHierarchyControl().rebuild();
-                        }
-                    }
-                });
-            }
+        SwingUtilities.invokeLater(() -> {
+            NbEditorDocument nbdoc = (NbEditorDocument) doc;
+            nbdoc.runAtomic(() -> {
+                MutableTextInput mti = (MutableTextInput) doc.getProperty(MutableTextInput.class);
+                if (mti != null) {
+                    mti.tokenHierarchyControl().rebuild();
+                }
+            });
         });
     }
 }

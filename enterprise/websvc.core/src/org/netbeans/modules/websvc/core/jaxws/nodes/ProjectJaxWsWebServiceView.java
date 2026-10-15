@@ -98,7 +98,7 @@ final class ProjectJaxWsWebServiceView extends AbstractProjectWebServiceViewImpl
                 }
             }
         }
-        return nodes.toArray(new Node[nodes.size()]);
+        return nodes.toArray(new Node[0]);
     }
 
     private Node[] createClientNodes() {
@@ -109,7 +109,7 @@ final class ProjectJaxWsWebServiceView extends AbstractProjectWebServiceViewImpl
                 nodes.add(new JaxWsClientNode(jaxWsModel, client, getProject().getProjectDirectory()));
             }
         }
-        return nodes.toArray(new Node[nodes.size()]);
+        return nodes.toArray(new Node[0]);
     }
 
     public boolean isViewEmpty(ProjectWebServiceView.ViewType viewType) {

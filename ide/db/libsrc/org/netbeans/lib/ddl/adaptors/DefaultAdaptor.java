@@ -285,7 +285,7 @@ public class DefaultAdaptor implements DatabaseMetaDataAdaptor, Serializable {
     {
         Integer newValue, oldValue = (Integer)properties.get(key);
         if (value != NOT_SET) {
-            newValue = new Integer(value);
+            newValue = Integer.valueOf(value);
             properties.put(key, newValue);
         } else {
             newValue = null;
@@ -561,8 +561,8 @@ public class DefaultAdaptor implements DatabaseMetaDataAdaptor, Serializable {
     {
         Integer driverMajorVersion = (Integer)properties.get(PROP_DRIVER_MAJOR_VERSION);
         if (driverMajorVersion == null) {
-            if (dmd != null) driverMajorVersion = new Integer(dmd.getDriverMajorVersion());
-            else driverMajorVersion = new Integer(NOT_SET);
+            if (dmd != null) driverMajorVersion = Integer.valueOf(dmd.getDriverMajorVersion());
+            else driverMajorVersion = Integer.valueOf(NOT_SET);
             properties.put(PROP_DRIVER_MAJOR_VERSION, driverMajorVersion);
         }
 
@@ -582,8 +582,8 @@ public class DefaultAdaptor implements DatabaseMetaDataAdaptor, Serializable {
     {
         Integer driverMinorVersion = (Integer)properties.get(PROP_DRIVER_MINOR_VERSION);
         if (driverMinorVersion == null) {
-            if (dmd != null) driverMinorVersion = new Integer(dmd.getDriverMinorVersion());
-            else driverMinorVersion = new Integer(NOT_SET);
+            if (dmd != null) driverMinorVersion = Integer.valueOf(dmd.getDriverMinorVersion());
+            else driverMinorVersion = Integer.valueOf(NOT_SET);
             properties.put(PROP_DRIVER_MINOR_VERSION, driverMinorVersion);
         }
 
@@ -2529,7 +2529,7 @@ public class DefaultAdaptor implements DatabaseMetaDataAdaptor, Serializable {
     {
         Integer binaryLiteral = (Integer)properties.get(PROP_MAX_BINARY_LITERAL_LENGTH);
         if (binaryLiteral == null && dmd != null) {
-            binaryLiteral = new Integer(dmd.getMaxBinaryLiteralLength());
+            binaryLiteral = Integer.valueOf(dmd.getMaxBinaryLiteralLength());
             properties.put(PROP_MAX_BINARY_LITERAL_LENGTH, binaryLiteral);
         }
 
@@ -2551,7 +2551,7 @@ public class DefaultAdaptor implements DatabaseMetaDataAdaptor, Serializable {
     {
         Integer maxCharLiteral = (Integer)properties.get(PROP_MAX_CHAR_LITERAL_LENGTH);
         if (maxCharLiteral == null && dmd != null) {
-            maxCharLiteral = new Integer(dmd.getMaxCharLiteralLength());
+            maxCharLiteral = Integer.valueOf(dmd.getMaxCharLiteralLength());
             properties.put(PROP_MAX_CHAR_LITERAL_LENGTH, maxCharLiteral);
         }
 
@@ -2573,7 +2573,7 @@ public class DefaultAdaptor implements DatabaseMetaDataAdaptor, Serializable {
     {
         Integer maxColumnName = (Integer)properties.get(PROP_MAX_COLUMN_NAME_LENGTH);
         if (maxColumnName == null && dmd != null) {
-            maxColumnName = new Integer(dmd.getMaxColumnNameLength());
+            maxColumnName = Integer.valueOf(dmd.getMaxColumnNameLength());
             properties.put(PROP_MAX_COLUMN_NAME_LENGTH, maxColumnName);
         }
 
@@ -2595,7 +2595,7 @@ public class DefaultAdaptor implements DatabaseMetaDataAdaptor, Serializable {
     {
         Integer maxColumnGroup = (Integer)properties.get(PROP_MAX_COLUMNS_IN_GROUPBY);
         if (maxColumnGroup == null && dmd != null) {
-            maxColumnGroup = new Integer(dmd.getMaxColumnsInGroupBy());
+            maxColumnGroup = Integer.valueOf(dmd.getMaxColumnsInGroupBy());
             properties.put(PROP_MAX_COLUMNS_IN_GROUPBY, maxColumnGroup);
         }
 
@@ -2617,7 +2617,7 @@ public class DefaultAdaptor implements DatabaseMetaDataAdaptor, Serializable {
     {
         Integer maxColumnIndex = (Integer)properties.get(PROP_MAX_COLUMNS_IN_INDEX);
         if (maxColumnIndex == null && dmd != null) {
-            maxColumnIndex = new Integer(dmd.getMaxColumnsInIndex());
+            maxColumnIndex = Integer.valueOf(dmd.getMaxColumnsInIndex());
             properties.put(PROP_MAX_COLUMNS_IN_INDEX, maxColumnIndex);
         }
 
@@ -2639,7 +2639,7 @@ public class DefaultAdaptor implements DatabaseMetaDataAdaptor, Serializable {
     {
         Integer maxColumnOrderBy = (Integer)properties.get(PROP_MAX_COLUMNS_IN_ORDERBY);
         if (maxColumnOrderBy == null && dmd != null) {
-            maxColumnOrderBy = new Integer(dmd.getMaxColumnsInOrderBy());
+            maxColumnOrderBy = Integer.valueOf(dmd.getMaxColumnsInOrderBy());
             properties.put(PROP_MAX_COLUMNS_IN_ORDERBY, maxColumnOrderBy);
         }
 
@@ -2661,7 +2661,7 @@ public class DefaultAdaptor implements DatabaseMetaDataAdaptor, Serializable {
     {
         Integer maxColumnSelect = (Integer)properties.get(PROP_MAX_COLUMNS_IN_SELECT);
         if (maxColumnSelect == null && dmd != null) {
-            maxColumnSelect = new Integer(dmd.getMaxColumnsInSelect());
+            maxColumnSelect = Integer.valueOf(dmd.getMaxColumnsInSelect());
             properties.put(PROP_MAX_COLUMNS_IN_SELECT, maxColumnSelect);
         }
 
@@ -2683,7 +2683,7 @@ public class DefaultAdaptor implements DatabaseMetaDataAdaptor, Serializable {
     {
         Integer maxColumnTable = (Integer)properties.get(PROP_MAX_COLUMNS_IN_TABLE);
         if (maxColumnTable == null && dmd != null) {
-            maxColumnTable = new Integer(dmd.getMaxColumnsInTable());
+            maxColumnTable = Integer.valueOf(dmd.getMaxColumnsInTable());
             properties.put(PROP_MAX_COLUMNS_IN_TABLE, maxColumnTable);
         }
 
@@ -2705,7 +2705,7 @@ public class DefaultAdaptor implements DatabaseMetaDataAdaptor, Serializable {
     {
         Integer maxConnections = (Integer)properties.get(PROP_MAX_CONNECTIONS);
         if (maxConnections == null && dmd != null) {
-            maxConnections = new Integer(dmd.getMaxConnections());
+            maxConnections = Integer.valueOf(dmd.getMaxConnections());
             properties.put(PROP_MAX_CONNECTIONS, maxConnections);
         }
 
@@ -2727,7 +2727,7 @@ public class DefaultAdaptor implements DatabaseMetaDataAdaptor, Serializable {
     {
         Integer maxCursorName = (Integer)properties.get(PROP_MAX_CURSORNAME_LENGTH);
         if (maxCursorName == null && dmd != null) {
-            maxCursorName = new Integer(dmd.getMaxCursorNameLength());
+            maxCursorName = Integer.valueOf(dmd.getMaxCursorNameLength());
             properties.put(PROP_MAX_CURSORNAME_LENGTH, maxCursorName);
         }
 
@@ -2749,7 +2749,7 @@ public class DefaultAdaptor implements DatabaseMetaDataAdaptor, Serializable {
     {
         Integer maxIndex = (Integer)properties.get(PROP_MAX_INDEX_LENGTH);
         if (maxIndex == null && dmd != null) {
-            maxIndex = new Integer(dmd.getMaxIndexLength());
+            maxIndex = Integer.valueOf(dmd.getMaxIndexLength());
             properties.put(PROP_MAX_INDEX_LENGTH, maxIndex);
         }
 
@@ -2771,7 +2771,7 @@ public class DefaultAdaptor implements DatabaseMetaDataAdaptor, Serializable {
     {
         Integer maxSchemaName = (Integer)properties.get(PROP_MAX_SCHEMA_NAME);
         if (maxSchemaName == null && dmd != null) {
-            maxSchemaName = new Integer(dmd.getMaxSchemaNameLength());
+            maxSchemaName = Integer.valueOf(dmd.getMaxSchemaNameLength());
             properties.put(PROP_MAX_SCHEMA_NAME, maxSchemaName);
         }
 
@@ -2793,7 +2793,7 @@ public class DefaultAdaptor implements DatabaseMetaDataAdaptor, Serializable {
     {
         Integer maxProcName = (Integer)properties.get(PROP_MAX_PROCEDURE_NAME);
         if (maxProcName == null && dmd != null) {
-            maxProcName = new Integer(dmd.getMaxProcedureNameLength());
+            maxProcName = Integer.valueOf(dmd.getMaxProcedureNameLength());
             properties.put(PROP_MAX_PROCEDURE_NAME, maxProcName);
         }
 
@@ -2815,7 +2815,7 @@ public class DefaultAdaptor implements DatabaseMetaDataAdaptor, Serializable {
     {
         Integer maxCatalogName = (Integer)properties.get(PROP_MAX_CATALOG_NAME);
         if (maxCatalogName == null && dmd != null) {
-            maxCatalogName = new Integer(dmd.getMaxProcedureNameLength());
+            maxCatalogName = Integer.valueOf(dmd.getMaxProcedureNameLength());
             properties.put(PROP_MAX_CATALOG_NAME, maxCatalogName);
         }
 
@@ -2837,7 +2837,7 @@ public class DefaultAdaptor implements DatabaseMetaDataAdaptor, Serializable {
     {
         Integer maxRowSize = (Integer)properties.get(PROP_MAX_ROW_SIZE);
         if (maxRowSize == null && dmd != null) {
-            maxRowSize = new Integer(dmd.getMaxProcedureNameLength());
+            maxRowSize = Integer.valueOf(dmd.getMaxProcedureNameLength());
             properties.put(PROP_MAX_ROW_SIZE, maxRowSize);
         }
 
@@ -2887,7 +2887,7 @@ public class DefaultAdaptor implements DatabaseMetaDataAdaptor, Serializable {
     {
         Integer maxStatement = (Integer)properties.get(PROP_MAX_STATEMENT_LENGTH);
         if (maxStatement == null && dmd != null) {
-            maxStatement = new Integer(dmd.getMaxStatementLength());
+            maxStatement = Integer.valueOf(dmd.getMaxStatementLength());
             properties.put(PROP_MAX_STATEMENT_LENGTH, maxStatement);
         }
 
@@ -2910,7 +2910,7 @@ public class DefaultAdaptor implements DatabaseMetaDataAdaptor, Serializable {
     {
         Integer maxStatements = (Integer)properties.get(PROP_MAX_STATEMENTS);
         if (maxStatements == null && dmd != null) {
-            maxStatements = new Integer(dmd.getMaxStatementLength());
+            maxStatements = Integer.valueOf(dmd.getMaxStatementLength());
             properties.put(PROP_MAX_STATEMENTS, maxStatements);
         }
 
@@ -2932,7 +2932,7 @@ public class DefaultAdaptor implements DatabaseMetaDataAdaptor, Serializable {
     {
         Integer maxTable = (Integer)properties.get(PROP_MAX_TABLENAME_LENGTH);
         if (maxTable == null && dmd != null) {
-            maxTable = new Integer(dmd.getMaxStatementLength());
+            maxTable = Integer.valueOf(dmd.getMaxStatementLength());
             properties.put(PROP_MAX_TABLENAME_LENGTH, maxTable);
         }
 
@@ -2954,7 +2954,7 @@ public class DefaultAdaptor implements DatabaseMetaDataAdaptor, Serializable {
     {
         Integer maxTable = (Integer)properties.get(PROP_MAX_TABLES_IN_SELECT);
         if (maxTable == null && dmd != null) {
-            maxTable = new Integer(dmd.getMaxStatementLength());
+            maxTable = Integer.valueOf(dmd.getMaxStatementLength());
             properties.put(PROP_MAX_TABLES_IN_SELECT, maxTable);
         }
 
@@ -2976,7 +2976,7 @@ public class DefaultAdaptor implements DatabaseMetaDataAdaptor, Serializable {
     {
         Integer maxUserName = (Integer)properties.get(PROP_MAX_USERNAME);
         if (maxUserName == null && dmd != null) {
-            maxUserName = new Integer(dmd.getMaxUserNameLength());
+            maxUserName = Integer.valueOf(dmd.getMaxUserNameLength());
             properties.put(PROP_MAX_USERNAME, maxUserName);
         }
 
@@ -2999,7 +2999,7 @@ public class DefaultAdaptor implements DatabaseMetaDataAdaptor, Serializable {
     {
         Integer maxTransaction = (Integer)properties.get(PROP_DEFAULT_ISOLATION);
         if (maxTransaction == null && dmd != null) {
-            maxTransaction = new Integer(dmd.getDefaultTransactionIsolation());
+            maxTransaction = Integer.valueOf(dmd.getDefaultTransactionIsolation());
             properties.put(PROP_DEFAULT_ISOLATION, maxTransaction);
         }
 

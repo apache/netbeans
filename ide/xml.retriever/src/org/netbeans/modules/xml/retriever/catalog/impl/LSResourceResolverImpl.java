@@ -28,9 +28,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.netbeans.modules.xml.retriever.catalog.CatalogWriteModelFactory;
+import org.netbeans.modules.xml.retriever.impl.Util;
 import org.netbeans.modules.xml.xam.locator.CatalogModelException;
 import org.netbeans.modules.xml.xam.locator.CatalogModel;
 import org.netbeans.modules.xml.xam.ModelSource;
@@ -110,8 +110,7 @@ public class LSResourceResolverImpl implements LSResourceResolver {
         //create LSInput object
         DOMImplementation domImpl = null;
         try {
-            
-            domImpl =  DocumentBuilderFactory.newInstance().newDocumentBuilder().getDOMImplementation();
+            domImpl =  Util.createEntityIgnoringDBF().newDocumentBuilder().getDOMImplementation();
         } catch (ParserConfigurationException ex) {
             return null;
         }

@@ -109,7 +109,7 @@ public final class ClientSideProjectConvertor implements ProjectConvertor {
             if (name instanceof String) {
                 return (String) name;
             }
-        } catch (ParseException | IOException ex) {
+        } catch (ParseException | IOException | ClassCastException ex) {
             LOGGER.log(Level.FINE, jsonFile.getPath(), ex);
         }
         return null;

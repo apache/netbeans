@@ -139,7 +139,7 @@ implements LookupListener {
                 layerUrls = collectLayers(ModuleInfo.class.getClassLoader());
                 if (!layerUrls.isEmpty()) {
                     XMLFileSystem xmlfs = new XMLFileSystem();
-                    xmlfs.setXmlUrls(layerUrls.toArray(new URL[layerUrls.size()]));
+                    xmlfs.setXmlUrls(layerUrls.toArray(new URL[0]));
                     l.add(xmlfs);
                 }
                 err.log(Level.FINE, "Loading classpath layers: {0}", layerUrls);
@@ -154,7 +154,7 @@ implements LookupListener {
                 }
             }
         }
-        return l.toArray(new FileSystem[l.size()]);
+        return l.toArray(new FileSystem[0]);
     }
 
     /** Get all layers.

@@ -184,8 +184,9 @@ public class AngularJsDeclarationFinder implements DeclarationFinder {
         
         if (!files.isEmpty()) {
             DeclarationLocation dl = null;
-            for (String shortPathName : files.keySet()) {
-                FileObject fileObject = files.get(shortPathName);
+            for (Map.Entry<String, FileObject> entry : files.entrySet()) {
+                String shortPathName = entry.getKey();
+                FileObject fileObject = entry.getValue();
                 DeclarationLocation dloc = new DeclarationLocation(fileObject, 0);
                 if (dl == null) {
                     dl = dloc;

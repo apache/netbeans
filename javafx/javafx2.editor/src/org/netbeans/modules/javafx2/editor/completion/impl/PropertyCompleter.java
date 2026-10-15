@@ -152,7 +152,7 @@ public class PropertyCompleter extends InstanceCompleter {
         if (namePrefix.startsWith("<")) {
             namePrefix = namePrefix.substring(1);
         }
-        for (PropertyValue pv : (Collection<PropertyValue>)instance.getProperties()) {
+        for (PropertyValue pv : instance.getProperties()) {
             existingPropNames.add(pv.getPropertyName());
         }
     }

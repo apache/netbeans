@@ -198,6 +198,6 @@ public class ResetWindowsAction implements ActionListener {
                 editors.add( tc );
             }
         }
-        return editors.toArray( new TopComponent[editors.size()] );
+        return editors.toArray(new TopComponent[0] );
     }
 }

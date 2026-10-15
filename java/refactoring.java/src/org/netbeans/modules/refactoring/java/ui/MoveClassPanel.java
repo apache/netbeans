@@ -63,6 +63,7 @@ import org.openide.explorer.view.NodeRenderer;
 import org.openide.filesystems.FileObject;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 
@@ -468,7 +469,7 @@ private void bypassRefactoringCheckBoxItemStateChanged(java.awt.event.ItemEvent 
                 SourceGroup g = (SourceGroup) rootComboBox.getSelectedItem();
                 String packageName = packageComboBox.getSelectedItem().toString();
                 if (packageComboBox.getSelectedIndex() > -1 && g != null && packageName != null) {
-                    String pathname = packageName.replaceAll("\\.", "/"); // NOI18N
+                    String pathname = packageName.replace(".", "/"); // NOI18N
                     FileObject fo = g.getRootFolder().getFileObject(pathname);
                     ClassPath bootCp = ClassPath.getClassPath(fo, ClassPath.BOOT);
                     if(bootCp == null) {
@@ -515,6 +516,7 @@ private void bypassRefactoringCheckBoxItemStateChanged(java.awt.event.ItemEvent 
 
                                 @Override
                                 public void run(CompilationController parameter) throws Exception {
+                                    parameter.toPhase(JavaSource.Phase.RESOLVED);
                                     for (ElementHandle<TypeElement> elementHandle : result) {
                                         TypeElement element = elementHandle.resolve(parameter);
                                         if (element != null) {
@@ -533,7 +535,7 @@ private void bypassRefactoringCheckBoxItemStateChanged(java.awt.event.ItemEvent 
                         } catch (IOException ex) {
                             Exceptions.printStackTrace(ex);
                         }
-                        Collections.sort(items, new Comparator() {
+                        items.sort(new Comparator() {
                             private Comparator COLLATOR = Collator.getInstance();
 
                             @Override
@@ -552,7 +554,7 @@ private void bypassRefactoringCheckBoxItemStateChanged(java.awt.event.ItemEvent 
                                 return COLLATOR.compare(p1.getDisplayName(), p2.getDisplayName());
                             }
                         });
-                        model = new DefaultComboBoxModel(items.toArray(new ClassItem[items.size()]));
+                        model = new DefaultComboBoxModel(items.toArray(new ClassItem[0]));
                     } else {
                         model = new DefaultComboBoxModel();
                     }
@@ -627,7 +629,7 @@ private void bypassRefactoringCheckBoxItemStateChanged(java.awt.event.ItemEvent 
 
     public TreePathHandle getTargetClass() {
         final Object selectedItem = typeCombobox.getSelectedItem();
-        if(typeCheckBox.isSelected() && selectedItem != null && selectedItem instanceof ClassItem) {
+        if(typeCheckBox.isSelected() && selectedItem instanceof ClassItem) {
             return ((ClassItem)selectedItem).getHandle();
         }
         return null;
@@ -738,7 +740,7 @@ private void bypassRefactoringCheckBoxItemStateChanged(java.awt.event.ItemEvent 
             } else if (value instanceof Node) {
                 Node node = (Node) value;
                 setText(node.getHtmlDisplayName());
-                setIcon(new ImageIcon(node.getIcon(BeanInfo.ICON_COLOR_16x16)));
+                setIcon(ImageUtilities.image2Icon(node.getIcon(BeanInfo.ICON_COLOR_16x16)));
             } else {
                 // #49954: render a specially inserted class somehow.
                 String item = (String) value;

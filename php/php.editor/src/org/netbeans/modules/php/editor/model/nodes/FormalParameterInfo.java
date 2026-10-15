@@ -29,9 +29,12 @@ import org.netbeans.modules.php.editor.api.elements.ParameterElement;
 import org.netbeans.modules.php.editor.elements.ParameterElementImpl;
 import org.netbeans.modules.php.editor.elements.TypeResolverImpl;
 import org.netbeans.modules.php.editor.model.impl.Type;
+import org.netbeans.modules.php.editor.model.impl.VariousUtils;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
+import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
 import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
+import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 import org.openide.util.Pair;
 
 /**
@@ -41,7 +44,7 @@ import org.openide.util.Pair;
 public final class FormalParameterInfo extends ASTNodeInfo<FormalParameter> {
     private final ParameterElement parameter;
 
-    private FormalParameterInfo(FormalParameter node, Map<String, List<Pair<QualifiedName, Boolean>>> paramDocTypes) {
+    private FormalParameterInfo(FormalParameter node, Map<String, Pair<String, List<Pair<QualifiedName, Boolean>>>> paramDocTypes) {
         super(node);
         FormalParameter formalParameter = getOriginalNode();
         String name = getName();
@@ -49,16 +52,26 @@ public final class FormalParameterInfo extends ASTNodeInfo<FormalParameter> {
         Expression parameterType = formalParameter.getParameterType();
         final boolean isRawType = parameterType != null;
         final boolean isNullableType = parameterType instanceof NullableType;
+        final boolean isUnionType = parameterType instanceof UnionType;
+        final boolean isIntersectionType = parameterType instanceof IntersectionType;
         QualifiedName parameterTypeName = QualifiedName.create(parameterType);
         List<Pair<QualifiedName, Boolean>> types;
+        final String declaredType = isRawType ? CodeUtils.extractQualifiedName(parameterType) : null;
+        final String phpDocType = (!paramDocTypes.isEmpty() && paramDocTypes.get(name) != null)
+                ? paramDocTypes.get(name).first()
+                : null;
         if (isRawType && parameterTypeName != null) {
             if (!Type.isPrimitive(parameterTypeName.toString()) || paramDocTypes.isEmpty()) {
                 types = Collections.singletonList(Pair.of(parameterTypeName, isNullableType));
             } else {
-                types = paramDocTypes.get(name);
+                types = getParamDocTypes(paramDocTypes, name);
             }
+        } else if (isUnionType) {
+            types = VariousUtils.getParamTypesFromUnionTypes((UnionType) parameterType);
+        } else if (isIntersectionType) {
+            types = VariousUtils.getParamTypesFromIntersectionTypes((IntersectionType) parameterType);
         } else {
-            types = paramDocTypes.get(name);
+            types = getParamDocTypes(paramDocTypes, name);
         }
         if (types == null) {
             types = Collections.emptyList();
@@ -67,17 +80,26 @@ public final class FormalParameterInfo extends ASTNodeInfo<FormalParameter> {
                 name,
                 defVal,
                 getRange().getStart(),
+                declaredType,
+                phpDocType,
                 TypeResolverImpl.forNames(types),
                 formalParameter.isMandatory(),
                 isRawType,
                 formalParameter.isReference(),
-                formalParameter.isVariadic());
+                formalParameter.isVariadic(),
+                formalParameter.isUnionType(),
+                formalParameter.getModifier(),
+                formalParameter.isIntersectionType()
+        );
     }
 
-    public static FormalParameterInfo create(FormalParameter node, Map<String, List<Pair<QualifiedName, Boolean>>> paramDocTypes) {
+    private List<Pair<QualifiedName, Boolean>> getParamDocTypes(Map<String, Pair<String, List<Pair<QualifiedName, Boolean>>>> paramDocTypes, String name) {
+        return paramDocTypes.get(name) != null ? paramDocTypes.get(name).second() : Collections.emptyList();
+    }
+
+    public static FormalParameterInfo create(FormalParameter node, Map<String, Pair<String, List<Pair<QualifiedName, Boolean>>>> paramDocTypes) {
         return new FormalParameterInfo(node, paramDocTypes);
     }
-
 
     @Override
     public Kind getKind() {

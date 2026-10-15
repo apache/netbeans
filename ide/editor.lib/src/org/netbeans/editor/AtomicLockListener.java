@@ -60,7 +60,7 @@ import java.util.EventListener;
  *    }
  *
  *  }
- *  <PRE>
+ *  </PRE>
  * @deprecated use {@link org.netbeans.api.editor.document.AtomicLockListener}
  */
 @Deprecated

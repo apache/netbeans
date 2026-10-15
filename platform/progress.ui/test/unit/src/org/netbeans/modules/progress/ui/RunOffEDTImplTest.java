@@ -47,7 +47,6 @@ import org.openide.windows.Mode;
 import org.openide.windows.TopComponent;
 import org.openide.windows.TopComponentGroup;
 import org.openide.windows.WindowManager;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.progress.ProgressRunnable;
 import org.netbeans.api.progress.ProgressUtils;
 import org.netbeans.junit.MockServices;
@@ -141,7 +140,7 @@ public class RunOffEDTImplTest extends NbTestCase {
             }
         }
         R r = new R();
-        Future<String> f = ProgressUtils.showProgressDialogAndRunLater(r, ProgressHandleFactory.createHandle("Something"), true);
+        Future<String> f = ProgressUtils.showProgressDialogAndRunLater(r, ProgressHandle.createHandle("Something"), true);
         assertNotNull (f);
         assertEquals ("Done", f.get());
         countDown.await();

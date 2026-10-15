@@ -21,8 +21,10 @@ package org.netbeans.modules.java.hints;
 
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+
 import java.util.LinkedList;
 import java.util.List;
+
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
@@ -31,6 +33,7 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
+
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
 import org.netbeans.spi.java.hints.Hint;
@@ -58,23 +61,39 @@ public final class MultipleLoggers {
             return null;
         }
 
+        // Check for JUL in namespace.
         TypeElement loggerTypeElement = ctx.getInfo().getElements().getTypeElement("java.util.logging.Logger"); // NOI18N
-        if (loggerTypeElement == null) {
-            return null;
-        }
-        TypeMirror loggerTypeElementAsType = loggerTypeElement.asType();
-        if (loggerTypeElementAsType == null || loggerTypeElementAsType.getKind() != TypeKind.DECLARED) {
-            return null;
+        TypeMirror loggerTypeElementAsType = null;
+        if (loggerTypeElement != null) {
+            loggerTypeElementAsType = loggerTypeElement.asType();
+            if (loggerTypeElementAsType != null && loggerTypeElementAsType.getKind() != TypeKind.DECLARED) {
+                loggerTypeElementAsType = null;
+            }
         }
 
-        List<VariableElement> loggerFields = new LinkedList<VariableElement>();
+        // Check for System.Logger in namespace.
+        TypeElement sysLoggerTypeElement = ctx.getInfo().getElements().getTypeElement("java.lang.System.Logger"); // NOI18N
+        TypeMirror sysLoggerTypeElementAsType = null;
+        if (sysLoggerTypeElement != null) {
+            sysLoggerTypeElementAsType = sysLoggerTypeElement.asType();
+            if (sysLoggerTypeElementAsType != null && sysLoggerTypeElementAsType.getKind() != TypeKind.DECLARED) {
+                sysLoggerTypeElementAsType = null;
+            }
+        }
+
+        // Get out if no known loggers in namespace.
+        if (loggerTypeElementAsType == null && sysLoggerTypeElementAsType == null)
+            return null;
+
+        List<VariableElement> loggerFields = new LinkedList<>();
         List<VariableElement> fields = ElementFilter.fieldsIn(cls.getEnclosedElements());
         for(VariableElement f : fields) {
             if (f.getKind() != ElementKind.FIELD) {
                 continue;
             }
 
-            if (f.asType().equals(loggerTypeElementAsType)) {
+            if (f.asType().equals(loggerTypeElementAsType)
+                    || f.asType().equals(sysLoggerTypeElementAsType)) {
                 loggerFields.add(f);
             }
         }

@@ -31,9 +31,9 @@ import org.netbeans.modules.javascript2.types.api.TypeUsage;
  * @author Petr Hejl
  */
 public class JsArrayReference extends JsObjectReference implements JsArray {
-    
+
     private final JsArray original;
-    
+
     public JsArrayReference(JsObject parent, Identifier declarationName,
             JsArray original, boolean isDeclared, Set<Modifier> modifiers) {
         super(parent, declarationName, original, isDeclared, modifiers);

@@ -1,0 +1,5 @@
+Code completion result for source line:
+public function interfaceMethod(\Test1\Intersection1&TestClass $object, TestClass&\Test1\Intersection1 $param, ): TestClass&\Test1\Intersec|tion1;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Intersection1                   [PUBLIC]   Test1
+CLASS      Intersection2                   [PUBLIC]   Test1

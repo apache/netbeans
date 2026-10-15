@@ -48,10 +48,12 @@ class OutputPane extends AbstractOutputPane {
         findOutputTab().documentChanged(this);
     }
 
+    @Override
     protected void caretPosChanged(int pos) {
         findOutputTab().caretPosChanged(pos);
     }
 
+    @Override
     protected void lineClicked(int line, int pos) {
         if ((getDocument() instanceof OutputDocument)) {
             findOutputTab().lineClicked(line, pos);
@@ -64,6 +66,7 @@ class OutputPane extends AbstractOutputPane {
         findOutputTab().enterPressed(caret.getMark(), caret.getDot());
     }
 
+    @Override
     protected void postPopupMenu(Point p, Component src) {
         if (src.isShowing()) {
             findOutputTab().postPopupMenu(p, src);
@@ -116,6 +119,7 @@ class OutputPane extends AbstractOutputPane {
     }
     
     
+    @Override
     public void setWrapped (boolean val) {
         if (val != isWrapped() || !(getEditorKit() instanceof OutputEditorKit)) {
             NbPreferences.forModule(OutputPane.class).putBoolean("wrap", val); //NOI18N
@@ -138,6 +142,7 @@ class OutputPane extends AbstractOutputPane {
             //been fully readjusted to its new dimensions, scroll bounds, etc.
             SwingUtilities.invokeLater (new Runnable() {
                 private boolean first = true;
+                @Override
                 public void run() {
                     if (first) {
                         first = false;
@@ -160,6 +165,7 @@ class OutputPane extends AbstractOutputPane {
         }
     }
     
+    @Override
     public boolean isWrapped() {
         if (getEditorKit() instanceof OutputEditorKit) {
             return getEditorKit() instanceof OutputEditorKit 
@@ -169,6 +175,7 @@ class OutputPane extends AbstractOutputPane {
         }
     }
 
+    @Override
     protected JEditorPane createTextView() {
         JEditorPane result = new JEditorPane();
         if ("Aqua".equals(UIManager.getLookAndFeel().getID())) {
@@ -187,6 +194,7 @@ class OutputPane extends AbstractOutputPane {
         result.setInputMap(JEditorPane.WHEN_FOCUSED, myMap);
         
         Action act = new AbstractAction() {
+            @Override
             public void actionPerformed(ActionEvent arg0) {
                 OutputDocument od =(OutputDocument)((JEditorPane)arg0.getSource()).getDocument();
                 findOutputTab().inputSent(od.sendLine());
@@ -195,6 +203,7 @@ class OutputPane extends AbstractOutputPane {
         result.getActionMap().put("SENDLINE", act);
         
         act = new AbstractAction() {
+            @Override
             public void actionPerformed(ActionEvent arg0) {
                 OutputDocument od =(OutputDocument)((JEditorPane)arg0.getSource()).getDocument();
                 findOutputTab().inputSent(od.sendLine());

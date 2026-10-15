@@ -360,7 +360,7 @@ public final class ProxyHighlightsContainer extends AbstractHighlightsContainer 
             }
 
             if (!list.isEmpty()) {
-                return AttributesUtilities.createComposite(list.toArray(new AttributeSet[list.size()]));
+                return AttributesUtilities.createComposite(list.toArray(new AttributeSet[0]));
             } else {
                 return null;
             }

@@ -201,3 +201,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
+********************************************************************************
+Apache NetBeans repository includes a number of source files that are not
+covered by the Apache license. These files are refered to by licenseinfo.xml
+files which hold the license information.
+********************************************************************************

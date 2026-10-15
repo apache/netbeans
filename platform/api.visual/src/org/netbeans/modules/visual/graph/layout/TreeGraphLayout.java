@@ -250,7 +250,7 @@ public final class TreeGraphLayout<N,E> extends GraphLayout<N,E> {
 
             /**
              * Setter of the most right coordinate of this {@link LeftRight}.
-             * @param left the most right coordinate to set.
+             * @param right the most right coordinate to set.
              * @since 2.25
              */
             public void setRight(int right) {
@@ -344,9 +344,9 @@ public final class TreeGraphLayout<N,E> extends GraphLayout<N,E> {
 
             for (int i = 0; i < children.size(); i++) {
                 if (i == 0) {
-                    leftright = children.get(i).layout(x, (int) (y + map.get(lvl - 1) + verticalGap), map, lvl);
+                    leftright = children.get(i).layout(x, (y + map.get(lvl - 1) + verticalGap), map, lvl);
                 } else {
-                    List<LeftRight> secound = children.get(i).layout(x, (int) (y + map.get(lvl - 1) + verticalGap), map, lvl);
+                    List<LeftRight> secound = children.get(i).layout(x, (y + map.get(lvl - 1) + verticalGap), map, lvl);
 
                     int leftlength = leftright.size();
                     int rightlength = secound.size();

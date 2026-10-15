@@ -20,7 +20,7 @@ package org.netbeans.modules.gsf.codecoverage.api;
 
 /**
  * Information about the type of coverage for a given line.
- * 
+ *
  * @author Tor Norbye
  */
 public enum CoverageType {
@@ -33,22 +33,22 @@ public enum CoverageType {
      */
     NOT_COVERED("Not Covered"),
     /**
-     * The line may have been touched, not sure. Typically, comments and whitespace
-     * between executed statements fall into this category.
+     * The line may have been touched, not sure. Typically, comments and whitespace between executed
+     * statements fall into this category.
      */
     INFERRED("Inferred"),
     /**
-     * Parts of the line were touched, and other parts were not. This happens
-     * for example when you have conditional statements or multiple statements
-     * on the line and not all parts were executed.
+     * Parts of the line were touched, and other parts were not. This happens for example when you
+     * have conditional statements or multiple statements on the line and not all parts were
+     * executed.
      */
     PARTIAL("Partial"),
     /**
      * We have no information about this line
      */
     UNKNOWN("Unknown");
-    
-    private String desc;
+
+    private final String desc;
 
     private CoverageType(String desc) {
         this.desc = desc;

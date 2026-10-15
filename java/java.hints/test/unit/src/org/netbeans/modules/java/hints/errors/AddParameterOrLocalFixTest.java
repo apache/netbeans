@@ -25,6 +25,7 @@ import java.util.prefs.Preferences;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.errors.ErrorFixesFakeHint.FixKind;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsTestBase;
+import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
 import org.netbeans.spi.editor.hints.Fix;
 
 /**
@@ -126,9 +127,10 @@ public class AddParameterOrLocalFixTest extends ErrorHintsTestBase {
                 "package test;\n" +
                 "public class Test {\n" +
                 "     public void test() {\n" +
-                "         for (|ttt : java.util.Collections.emptyList()) {}\n" +
+                "         for (ttt : java.util.Collections.emptyList()) {}\n" +
                 "     }\n" +
                 "}\n",
+                -1,
                 "AddParameterOrLocalFix:ttt:java.lang.Object:LOCAL_VARIABLE",
                 ("package test;\n" +
                 "public class Test {\n" +
@@ -144,9 +146,10 @@ public class AddParameterOrLocalFixTest extends ErrorHintsTestBase {
                 "public class Test {\n" +
                 "     public void test() {\n" +
                 "         java.util.List<? extends Number> l = null;\n" +
-                "         for (|ttt : l) {}\n" +
+                "         for (ttt : l) {}\n" +
                 "     }\n" +
                 "}\n",
+                -1,
                 "AddParameterOrLocalFix:ttt:java.lang.Number:LOCAL_VARIABLE",
                 ("package test;\n" +
                 "public class Test {\n" +
@@ -163,9 +166,10 @@ public class AddParameterOrLocalFixTest extends ErrorHintsTestBase {
                 "public class Test {\n" +
                 "     public void test() {\n" +
                 "         String[] a = null;\n" +
-                "         for (|ttt : a) {}\n" +
+                "         for (ttt : a) {}\n" +
                 "     }\n" +
                 "}\n",
+                -1,
                 "AddParameterOrLocalFix:ttt:java.lang.String:LOCAL_VARIABLE",
                 ("package test;\n" +
                 "public class Test {\n" +
@@ -182,9 +186,10 @@ public class AddParameterOrLocalFixTest extends ErrorHintsTestBase {
                 "public class Test {\n" +
                 "     public void test() {\n" +
                 "         int[] a = null;\n" +
-                "         for (|ttt : a) {}\n" +
+                "         for (ttt : a) {}\n" +
                 "     }\n" +
                 "}\n",
+                -1,
                 "AddParameterOrLocalFix:ttt:int:LOCAL_VARIABLE",
                 ("package test;\n" +
                 "public class Test {\n" +
@@ -200,13 +205,14 @@ public class AddParameterOrLocalFixTest extends ErrorHintsTestBase {
                 "package test;\n" +
                 "public class Test {\n" +
                 "     public void test() {\n" +
-                "         for (|date : someMethod()) {\n" +
+                "         for (date : someMethod()) {\n" +
                 "         }\n" +
                 "     }\n" +
                 "     private Iterable<java.util.Date> someMethod() {\n" +
                 "         return null;\n" +
                 "     }\n" +
                 "}\n",
+                -1,
                 "AddParameterOrLocalFix:date:java.util.Date:LOCAL_VARIABLE",
                 ("package test;\n" +
                 "import java.util.Date;\n" +
@@ -434,11 +440,10 @@ public class AddParameterOrLocalFixTest extends ErrorHintsTestBase {
                 "import java.io.*;\n" +
                 "public class Test {\n" +
                 "    private void t(File f) {\n" +
-                "        try (in = new FileInputStream(f)) {\n" +
+                "        try (|in = new FileInputStream(f)) {\n" +
                 "        }\n" +
                 "    }\n" +
                 "}\n",
-                -1,
                 "AddParameterOrLocalFix:in:java.io.FileInputStream:RESOURCE_VARIABLE",
                 ("package test;\n" +
                  "import java.io.*;\n" +
@@ -456,12 +461,305 @@ public class AddParameterOrLocalFixTest extends ErrorHintsTestBase {
                 "import java.io.*;\n" +
                 "public class Test {\n" +
                 "    private void t(File f) {\n" +
-                "        try (in = new FileInputStream(f)) {\n" +
+                "        try (|in = new FileInputStream(f)) {\n" +
                 "        }\n" +
                 "    }\n" +
                 "}\n",
-                -1,
                 "AddParameterOrLocalFix:in:java.io.FileInputStream:RESOURCE_VARIABLE");
+    }
+
+    public void testLocalInLambdaInField() throws Exception {
+        performFixTest("test/Test.java",
+                """
+                package test;
+                public class Test {
+                    Runnable r = () -> {
+                        i|i = 0;
+                    };
+                }
+                """,
+                "AddParameterOrLocalFix:ii:int:LOCAL_VARIABLE",
+                """
+                package test;
+                public class Test {
+                    Runnable r = () -> {
+                        int ii = 0;
+                    };
+                }
+                """.replaceAll("[ \t\n]+", " "));
+    }
+
+    public void testForLoopInit1() throws Exception {
+        performFixTest("test/Test.java",
+                """
+                package test;
+                import java.util.*;
+                public class Test {
+                    private void t(Set<String> s) {
+                        for (|it = s.iterator(); ;) {
+                        }
+                    }
+                }
+                """,
+                "AddParameterOrLocalFix:it:java.util.Iterator<java.lang.String>:OTHER",
+                """
+                package test;
+                import java.util.*;
+                public class Test {
+                    private void t(Set<String> s) {
+                        for (Iterator<String> it = s.iterator(); ;) {
+                        }
+                    }
+                }
+                """.replaceAll("[ \t\n]+", " "));
+    }
+
+    public void testForLoopInit2() throws Exception {
+        performFixTest("test/Test.java",
+                """
+                package test;
+                import java.util.*;
+                public class Test {
+                    private void t(Set<String> s) {
+                        for (|it = s.iterator()) {
+                        }
+                    }
+                }
+                """,
+                "AddParameterOrLocalFix:it:java.util.Iterator<java.lang.String>:OTHER",
+                """
+                package test;
+                import java.util.*;
+                public class Test {
+                    private void t(Set<String> s) {
+                        for (Iterator<String> it = s.iterator()) {
+                        }
+                    }
+                }
+                """.replaceAll("[ \t\n]+", " "));
+    }
+
+    public void testForLoopInit3() throws Exception {
+        performFixTest("test/Test.java",
+                """
+                package test;
+                import java.util.*;
+                public class Test {
+                    private void t(Set<String> s) {
+                        for (|it = s.iterator())
+                    }
+                }
+                """,
+                "AddParameterOrLocalFix:it:java.util.Iterator<java.lang.String>:OTHER",
+                """
+                package test;
+                import java.util.*;
+                public class Test {
+                    private void t(Set<String> s) {
+                        for (Iterator<String> it = s.iterator())
+                    }
+                }
+                """.replaceAll("[ \t\n]+", " "));
+    }
+
+    public void testTargetTypeFromYield() throws Exception {
+        performFixTest("test/Test.java",
+                """
+                package test;
+                public class Test {
+                    private String t(int i) {
+                        return switch (i) {
+                            default -> { yield |newVar; }
+                        };
+                    }
+                }
+                """,
+                "AddParameterOrLocalFix:newVar:java.lang.String:LOCAL_VARIABLE",
+                """
+                package test;
+                public class Test {
+                    private String t(int i) {
+                        return switch (i) {
+                            default -> { String newVar; yield newVar; }
+                        };
+                    }
+                }
+                """.replaceAll("[ \t\n]+", " "));
+    }
+
+    public void testTargetTypeFromCase() throws Exception {
+        performFixTest("test/Test.java",
+                """
+                package test;
+                public class Test {
+                    private String t(int i) {
+                        return switch (i) {
+                            default -> |newVar;
+                        };
+                    }
+                }
+                """,
+                "AddParameterOrLocalFix:newVar:java.lang.String:LOCAL_VARIABLE",
+                """
+                package test;
+                public class Test {
+                    private String t(int i) {
+                        String newVar;
+                        return switch (i) {
+                            default -> newVar;
+                        };
+                    }
+                }
+                """.replaceAll("[ \t\n]+", " "));
+    }
+
+    public void testLambdaReturnType1() throws Exception {
+        performFixTest("test/Test.java",
+                """
+                package test;
+                import java.util.*;
+                import java.util.function.*;
+                public class Test {
+                    private Function<String,  List<Number>> t() {
+                        return x -> |newVar;
+                    }
+                }
+                """,
+                "AddParameterOrLocalFix:newVar:java.util.List<java.lang.Number>:LOCAL_VARIABLE",
+                """
+                package test;
+                import java.util.*;
+                import java.util.function.*;
+                public class Test {
+                    private Function<String,  List<Number>> t() {
+                        List<Number> newVar;
+                        return x -> newVar;
+                    }
+                }
+                """.replaceAll("[ \t\n]+", " "));
+    }
+
+    public void testLambdaReturnType3() throws Exception {
+        performFixTest("test/Test.java",
+                """
+                package test;
+                import java.util.*;
+                import java.util.function.*;
+                public class Test {
+                    private void t() {
+                        tt(x -> |newVar);
+                    }
+                    private void tt(Function<String,  List<Number>> p) {}
+                }
+                """,
+                "AddParameterOrLocalFix:newVar:java.util.List<java.lang.Number>:PARAMETER",
+                """
+                package test;
+                import java.util.*;
+                import java.util.function.*;
+                public class Test {
+                    private void t(List<Number> newVar) {
+                        tt(x -> newVar);
+                    }
+                    private void tt(Function<String,  List<Number>> p) {}
+                }
+                """.replaceAll("[ \t\n]+", " "));
+    }
+
+    public void testLocalClass1() throws Exception {
+        sourceLevel = "17";
+        performAnalysisTest("test/Test.java",
+                """
+                package test;
+                public class Test {
+                    private void t() {
+                        record R(int i) {}
+                        r|r = new R(0);
+                    }
+                }
+                """,
+                "AddParameterOrLocalFix:rr:java.lang.Record:PARAMETER",
+                "AddParameterOrLocalFix:rr:R:LOCAL_VARIABLE");
+    }
+
+    public void testLocalClass2() throws Exception {
+        sourceLevel = "17";
+        performFixTest("test/Test.java",
+                """
+                package test;
+                public class Test {
+                    private void t() {
+                        record R(int i) {}
+                        r|r = new R(0);
+                    }
+                }
+                """,
+                "AddParameterOrLocalFix:rr:R:LOCAL_VARIABLE",
+                """
+                package test;
+                public class Test {
+                    private void t() {
+                        record R(int i) {}
+                        R rr = new R(0);
+                    }
+                }
+                """.replaceAll("[ \t\n]+", " "));
+                
+    }
+
+    public void testTWRLocalClass() throws Exception {
+        sourceLevel = "17";
+        performFixTest("test/Test.java",
+                """
+                package test;
+                public class Test {
+                    private void t() {
+                        class Impl implements AutoCloseable {
+                            public void close() {}
+                        }
+                        try (|impl = new Impl()) {
+                        }
+                    }
+                }
+                """,
+                "AddParameterOrLocalFix:impl:Impl:RESOURCE_VARIABLE",
+                """
+                package test;
+                public class Test {
+                    private void t() {
+                        class Impl implements AutoCloseable {
+                            public void close() {}
+                        }
+                        try (Impl impl = new Impl()) {
+                        }
+                    }
+                }
+                """.replaceAll("[ \t\n]+", " "));
+    }
+
+    public void testLocalClassForInit() throws Exception {
+        sourceLevel = "17";
+        performFixTest("test/Test.java",
+                """
+                package test;
+                public class Test {
+                    private void t() {
+                        record R(int i) {}
+                        for (r|r = new R(0); ;) {}
+                    }
+                }
+                """,
+                "AddParameterOrLocalFix:rr:R:OTHER",
+                """
+                package test;
+                public class Test {
+                    private void t() {
+                        record R(int i) {}
+                        for (R rr = new R(0); ;) {}
+                    }
+                }
+                """.replaceAll("[ \t\n]+", " "));
+                
     }
 
     @Override
@@ -470,7 +768,7 @@ public class AddParameterOrLocalFixTest extends ErrorHintsTestBase {
         List<Fix> result=  new LinkedList<Fix>();
 
         for (Fix f : fixes) {
-            if (f instanceof AddParameterOrLocalFix) {
+            if (f instanceof JavaFixImpl && ((JavaFixImpl) f).jf instanceof AddParameterOrLocalFix) {
                 result.add(f);
             }
         }
@@ -480,6 +778,6 @@ public class AddParameterOrLocalFixTest extends ErrorHintsTestBase {
 
     @Override
     protected String toDebugString(CompilationInfo info, Fix f) {
-        return ((AddParameterOrLocalFix) f).toDebugString(info);
+        return ((AddParameterOrLocalFix) ((JavaFixImpl) f).jf).toDebugString(info);
     }
 }

@@ -824,7 +824,7 @@
                 </Assignment>
             </ExpressionStatement>
             <ExpressionStatement start='557' end='595'>
-                <MethodInvocation start='557' end='594'>
+                <MethodInvocation start='557' end='594' isNullsafe='false'>
                     <Variable start='557' end='561' isDollared='true'>
                         <Identifier start='558' end='561' name='foo'/>
                     </Variable>

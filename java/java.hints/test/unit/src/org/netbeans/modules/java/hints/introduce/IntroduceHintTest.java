@@ -100,6 +100,8 @@ public class IntroduceHintTest extends NbTestCase {
         super.tearDown();
         LifecycleManager.getDefault().saveAll();
         codeStylePrefs = null;
+        info = null;
+        doc = null;
     }
 
     public void testCorrectSelection1() throws Exception {
@@ -361,7 +363,7 @@ public class IntroduceHintTest extends NbTestCase {
                        new DialogDisplayerImpl("name", true, false, true),
                        4, 0);
     }
-    
+
     //note the comment assignment done for this test in prepareTest
     public void testCommentVariable() throws Exception {
         performFixTest("package test;\n" +
@@ -392,6 +394,7 @@ public class IntroduceHintTest extends NbTestCase {
 //                       new DialogDisplayerImpl("name", true, null, true),
 //                       2, 0);
 //    }
+
     public void testSimple4() throws Exception {
         performSimpleSelectionVerificationTest("package test; import java.util.ArrayList; public class Test {public void test() {Object o = new ArrayList<String>();}}", 141 - 49, 164 - 49, true);
     }
@@ -652,7 +655,7 @@ public class IntroduceHintTest extends NbTestCase {
                 .<Modifier>of(Modifier.PRIVATE), false, true),
                        5, 2);
     }
-    
+
     public void testFix21() throws Exception {
         performFixTest("package test; import java.util.List; public class Test {public void test1() {List<? extends CharSequence> l = |test()|;} public List<? extends CharSequence> test() {return null;}}",
                        "package test; import java.util.List; public class Test { private List<? extends CharSequence> name; public void test1() {name = test(); List<? extends CharSequence> l = name;} public List<? extends CharSequence> test() {return null;}}",
@@ -1160,6 +1163,7 @@ public class IntroduceHintTest extends NbTestCase {
 //                                IntroduceKind.CREATE_METHOD,
 //                                "");
 //    }
+
     public void testIntroduceMethodFromExpression1() throws Exception {
         performFixTest("package test;\n" +
                        "public class Test {\n" +
@@ -1216,6 +1220,7 @@ public class IntroduceHintTest extends NbTestCase {
 //                       "package test; import java.io.IOException; public class Test { public static void test(int a) throws Exception { name(a); } private static void name(int a) throws IOException { if (a == 1) { throw new java.io.IOException(\"\"); } if (a == 2) { throw new java.io.FileNotFoundException(\"\"); } } }",
 //                       new DialogDisplayerImpl3("name", EnumSet.of(Modifier.PRIVATE), true));
 //    }
+
     public void testIntroduceMethodArray162163() throws Exception {
         performFixTest("package test;\n" +
                        "public class Test {\n" +
@@ -1410,7 +1415,7 @@ public class IntroduceHintTest extends NbTestCase {
                        new DialogDisplayerImpl3("name", EnumSet.of(Modifier.PRIVATE), true, true),
                        1, 0);
     }
-    
+
     public void testIntroduceMethodFromSingleStatement153399a() throws Exception {
         performFixTest("package test;\n" +
                        "public class Test {\n" +
@@ -1811,7 +1816,7 @@ public class IntroduceHintTest extends NbTestCase {
                 .<Modifier>of(Modifier.PRIVATE), false, true),
                        5, 2);
     }
-    
+
     public void testIntroduceConstantFix203621() throws Exception {
         performFixTest("package test; public class Test {\n" +
                        "    public void test() {\n" +
@@ -1841,7 +1846,7 @@ public class IntroduceHintTest extends NbTestCase {
                 .of(Modifier.PRIVATE), true),
                        1, 0);
     }
-    
+
     public void testIntroduceMethod228913() throws Exception {
         sourceLevel = "1.8";
         performFixTest("package test;\n" +
@@ -1882,7 +1887,7 @@ public class IntroduceHintTest extends NbTestCase {
                 .of(Modifier.PRIVATE), true),
                        1, 0);
     }
-    
+
     public void testMethodUnprefixedParam() throws Exception {
         performFixTest("package test;\n" +
                        "public class Test {\n" +
@@ -1908,7 +1913,7 @@ public class IntroduceHintTest extends NbTestCase {
                 .of(Modifier.PRIVATE), true),
                        1, 0);
     }
-    
+
     public void testMethodParamWithLetterPrefix() throws Exception {
         codeStylePrefs.put(FmtOptions.parameterNamePrefix, "p");
         performFixTest("package test;\n" +
@@ -1971,6 +1976,7 @@ public class IntroduceHintTest extends NbTestCase {
                 .of(Modifier.PRIVATE), true),
                        1, 0);
     }
+
     public void test224512() throws Exception {
         performFixTest("package test;\n" +
                        "class Test {\n" +
@@ -2163,7 +2169,7 @@ public class IntroduceHintTest extends NbTestCase {
                        new DialogDisplayerImpl2(null, IntroduceFieldPanel.INIT_FIELD, true, EnumSet.<Modifier>of(Modifier.PRIVATE), false, true),
                        5, 2);
     }
-    
+
     public void testConstantFix208072a() throws Exception {
         Preferences prefs = CodeStylePreferences.get((FileObject) null, JavacParser.MIME_TYPE).getPreferences();
         prefs.put("classMemberInsertionPoint", "LAST_IN_CATEGORY");
@@ -2183,7 +2189,7 @@ public class IntroduceHintTest extends NbTestCase {
                        new DialogDisplayerImpl("ZZ", true, true, true, EnumSet.of(Modifier.PRIVATE)),
                        1, 0);
     }
-    
+
     public void testConstantFix208072b() throws Exception {
         Preferences prefs = CodeStylePreferences.get((FileObject) null, JavacParser.MIME_TYPE).getPreferences();
         prefs.put("classMembersOrder", "STATIC_INIT;STATIC METHOD;INSTANCE_INIT;CONSTRUCTOR;METHOD;STATIC CLASS;CLASS;STATIC FIELD;FIELD");
@@ -2210,7 +2216,7 @@ public class IntroduceHintTest extends NbTestCase {
                        new DialogDisplayerImpl("ZZ", true, true, true, EnumSet.of(Modifier.PRIVATE)),
                        5, 1);
     }
-    
+
     public void testConstantFix208072c() throws Exception {
         Preferences prefs = CodeStylePreferences.get((FileObject) null, JavacParser.MIME_TYPE).getPreferences();
         prefs.put("classMembersOrder", "STATIC_INIT;STATIC METHOD;INSTANCE_INIT;CONSTRUCTOR;METHOD;STATIC CLASS;CLASS;STATIC FIELD;FIELD");
@@ -2237,7 +2243,7 @@ public class IntroduceHintTest extends NbTestCase {
                        new DialogDisplayerImpl("ZZ", true, true, true, EnumSet.of(Modifier.PRIVATE)),
                        5, 1);
     }
-    
+
     public void testConstantFix219771a() throws Exception {
         performFixTest("package test;\n" +
                        "public class Test {\n" +
@@ -2257,7 +2263,7 @@ public class IntroduceHintTest extends NbTestCase {
                        new DialogDisplayerImpl("C0", true, true, true, EnumSet.of(Modifier.PUBLIC)),
                        5, 1);
     }
-    
+
     public void testConstantFix219771b() throws Exception {
         performFixTest("package test;\n" +
                        "public class Test {\n" +
@@ -2277,7 +2283,7 @@ public class IntroduceHintTest extends NbTestCase {
                        new DialogDisplayerImpl2("C0", IntroduceFieldPanel.INIT_FIELD, true, EnumSet.of(Modifier.PUBLIC), true, true),
                        4, 1);
     }
-    
+
     public void testConstantFix219771c() throws Exception {
         Preferences prefs = CodeStylePreferences.get((FileObject) null, JavacParser.MIME_TYPE).getPreferences();
         prefs.put("classMembersOrder", "STATIC_INIT;FIELD;STATIC METHOD;INSTANCE_INIT;CONSTRUCTOR;METHOD;STATIC CLASS;CLASS;STATIC FIELD");
@@ -2315,7 +2321,7 @@ public class IntroduceHintTest extends NbTestCase {
                         "  }\n" +
                         "}", false);
     }
-    
+
     public void testConstantFix236187Static() throws Exception {
         performFixTest("package test;\n" +
                         "public class Test {\n" +
@@ -2339,7 +2345,7 @@ public class IntroduceHintTest extends NbTestCase {
                        new DialogDisplayerImpl2("ZZ", IntroduceFieldPanel.INIT_FIELD, true, EnumSet.<Modifier>of(Modifier.PRIVATE), true, true),
                        5, 1);
     }
-    
+
     public void testFieldFix208072d() throws Exception {
         Preferences prefs = CodeStylePreferences.get((FileObject) null, JavacParser.MIME_TYPE).getPreferences();
         prefs.put("classMembersOrder", "STATIC_INIT;STATIC METHOD;INSTANCE_INIT;CONSTRUCTOR;METHOD;STATIC CLASS;CLASS;STATIC FIELD;FIELD");
@@ -2370,7 +2376,7 @@ public class IntroduceHintTest extends NbTestCase {
     public void testWhitespace216402() throws Exception {
         performSimpleSelectionVerificationTest("package test; public class Test {public void test() {int y = 3; y =|  2   |; }}", true);
     }
-    
+
     public void testVariableNullTypeVariable221440() throws Exception {
         performFixTest("package test;\n" +
                        "public class Test {\n" +
@@ -2388,7 +2394,7 @@ public class IntroduceHintTest extends NbTestCase {
                        new DialogDisplayerImpl("name", true, false, true),
                        5, 0);
     }
-    
+
     public void testVariableNullTypeConstant221440() throws Exception {
         performFixTest("package test;\n" +
                        "public class Test {\n" +
@@ -2406,7 +2412,7 @@ public class IntroduceHintTest extends NbTestCase {
                        new DialogDisplayerImpl("name", true, null, true),
                        5, 1);
     }
-    
+
     public void testVariableNullTypeField221440() throws Exception {
         performFixTest("package test;\n" +
                        "public class Test {\n" +
@@ -2424,7 +2430,7 @@ public class IntroduceHintTest extends NbTestCase {
                        new DialogDisplayerImpl2("name", IntroduceFieldPanel.INIT_FIELD, true, null, true, true),
                        5, 2);
     }
-    
+
     public void testVariableNullTypeMethod221440() throws Exception {
         performFixTest("package test;\n" +
                        "public class Test {\n" +
@@ -2444,7 +2450,7 @@ public class IntroduceHintTest extends NbTestCase {
                        new DialogDisplayerImpl3("name", null, true),
                        5, 3);
     }
-    
+
     public void test213023() throws Exception {
         performFixTest("package test;\n" +
                        "public class Test {\n" +
@@ -2462,7 +2468,7 @@ public class IntroduceHintTest extends NbTestCase {
                        new DialogDisplayerImpl3("name", null, true),
                        1, 0);
     }
-    
+
     public void testNullIntroduceMethod231050a() throws Exception {
         performFixTest("package test;\n" +
                        "public class Test {\n" +
@@ -2484,7 +2490,7 @@ public class IntroduceHintTest extends NbTestCase {
                        new DialogDisplayerImpl3("name", null, true),
                        5, 3);
     }
-    
+
     public void testNullIntroduceMethod231050b() throws Exception {
         performFixTest("package test;\n" +
                        "public class Test {\n" +
@@ -2506,7 +2512,7 @@ public class IntroduceHintTest extends NbTestCase {
                        new DialogDisplayerImpl3("name", null, true),
                        5, 3);
     }
-    
+
     public void testIntroduceMethodLastStatement224168a() throws Exception {
         performFixTest("package test;\n" +
                        "public class Test {\n" +
@@ -2530,7 +2536,7 @@ public class IntroduceHintTest extends NbTestCase {
                        new DialogDisplayerImpl3("name", null, true),
                        1, 0);
     }
-    
+
     public void testIntroduceMethodLastStatement224168b() throws Exception {
         performFixTest("package test;\n" +
                        "public class Test {\n" +
@@ -2558,7 +2564,7 @@ public class IntroduceHintTest extends NbTestCase {
                        new DialogDisplayerImpl3("name", null, true),
                        1, 0);
     }
-    
+
     public void testIntroduceMethodLastStatement224168c() throws Exception {
         performFixTest("package test;\n" +
                        "public class Test {\n" +
@@ -2591,7 +2597,7 @@ public class IntroduceHintTest extends NbTestCase {
                        new DialogDisplayerImpl3("name", null, true),
                        1, 0);
     }
-    
+
     public void testIntroduceMethodReturn233433() throws Exception {
         performFixTest("package test;\n" +
                        "public class Test {\n" +
@@ -2612,6 +2618,87 @@ public class IntroduceHintTest extends NbTestCase {
                        1, 0);
     }
     
+    public void testLocalType1() throws Exception {
+        sourceLevel = "17";
+        performCheckFixesTest(
+                """
+                package test;
+                public class Test {
+                    public static void test() {
+                        record R(int i) {}
+                        |new R(0)|;
+                    }
+                }
+                """,
+                "[IntroduceFix:r:1:CREATE_VARIABLE]",
+                "[IntroduceField:r:1:true:false:[3, 3]]");
+    }
+
+    public void testLocalType2() throws Exception {
+        sourceLevel = "17";
+        performCheckFixesTest(
+                """
+                package test;
+                public class Test {
+                    public static void test() {
+                        record R(int i) {}
+                        R r = |new R(0)|;
+                    }
+                }
+                """,
+                "[IntroduceFix:r1:1:CREATE_VARIABLE]",
+                "[IntroduceField:r:1:true:false:[3, 3]]");
+    }
+
+    public void testIntroduceVariableLocalType() throws Exception {
+        sourceLevel = "17";
+        performFixTest("""
+                       package test;
+                       public class Test {
+                           public static void test() {
+                               record R(int i) {}
+                               |new R(0)|;
+                           }
+                       }
+                       """,
+                       """
+                       package test;
+                       public class Test {
+                           public static void test() {
+                               record R(int i) {}
+                               R name = new R(0);
+                           }
+                       }
+                       """.replaceAll("[ \t\n]+", " "),
+                       new DialogDisplayerImpl("name", false, false, true),
+                       2, 0);
+    }
+
+    public void testIntroduceFieldLocalType() throws Exception {
+        sourceLevel = "17";
+        performFixTest("""
+                       package test;
+                       public class Test {
+                           public static void test() {
+                               record R(int i) {}
+                               |new R(0)|;
+                           }
+                       }
+                       """,
+                       """
+                       package test;
+                       public class Test {
+                           private static Record name;
+                           public static void test() {
+                               record R(int i) {}
+                               name = new R(0);
+                           }
+                       }
+                       """.replaceAll("[ \t\n]+", " "),
+                       new DialogDisplayerImpl("name", false, false, true),
+                       2, 1);
+    }
+
     protected void prepareTest(String code) throws Exception {
         clearWorkDir();
 

@@ -151,7 +151,7 @@ public class OutputTabTest extends NbTestCase {
     public void testOptionsListener() throws InvocationTargetException,
             InterruptedException {
 
-        final NbIO nbio = (NbIO) io;
+        final NbIO nbio = io;
         nbio.closeInputOutput();
         EventQueue.invokeAndWait(new Runnable() {
             @Override

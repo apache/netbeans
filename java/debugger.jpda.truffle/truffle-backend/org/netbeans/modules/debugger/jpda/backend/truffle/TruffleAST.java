@@ -22,16 +22,15 @@ package org.netbeans.modules.debugger.jpda.backend.truffle;
 import com.oracle.truffle.api.CallTarget;
 import com.oracle.truffle.api.RootCallTarget;
 import com.oracle.truffle.api.Truffle;
-import com.oracle.truffle.api.frame.Frame;
 import com.oracle.truffle.api.frame.FrameInstance;
 import com.oracle.truffle.api.frame.FrameInstanceVisitor;
-import com.oracle.truffle.api.frame.FrameSlot;
+import com.oracle.truffle.api.instrumentation.InstrumentableNode;
 import com.oracle.truffle.api.instrumentation.StandardTags;
+import com.oracle.truffle.api.instrumentation.Tag;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.NodeUtil;
 import com.oracle.truffle.api.nodes.RootNode;
 import com.oracle.truffle.api.source.SourceSection;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -72,7 +71,7 @@ public class TruffleAST {
     public Object[] getRawArguments() {
         return frameInstance.getFrame(FrameInstance.FrameAccess.MATERIALIZE).getArguments();
     }
-
+/* TODO: deprecations removed since 22.0
     public Object[] getRawSlots() {
         Frame frame = frameInstance.getFrame(FrameInstance.FrameAccess.MATERIALIZE);
         List<? extends FrameSlot> slots = frame.getFrameDescriptor().getSlots();
@@ -85,7 +84,7 @@ public class TruffleAST {
         }
         return slotInfo;
     }
-
+*/
     /**
      * Get the nodes hierarchy. Every node is described by:
      * <ul>
@@ -132,23 +131,19 @@ public class TruffleAST {
         }
         // TAGS:
         try {
-            java.lang.reflect.Method isTaggedWithMethod = Node.class.getDeclaredMethod("isTaggedWith", Class.class);
-            isTaggedWithMethod.setAccessible(true);
             StringBuilder tags = new StringBuilder();
-            if ((Boolean) isTaggedWithMethod.invoke(node, StandardTags.RootTag.class)) {
-                tags.append("Root");
-            }
-            if ((Boolean) isTaggedWithMethod.invoke(node, StandardTags.CallTag.class)) {
-                if (tags.length() > 0) {
-                    tags.append(' ');
+            if (node instanceof InstrumentableNode) {
+                InstrumentableNode inode = (InstrumentableNode) node;
+                for (Class<?> tag : StandardTags.class.getDeclaredClasses()) {
+                    if (Tag.class.isAssignableFrom(tag)) {
+                        if (inode.hasTag(tag.asSubclass(Tag.class))) {
+                            if (tags.length() > 0) {
+                                tags.append(',');
+                            }
+                            tags.append(tag.getSimpleName());
+                        }
+                    }
                 }
-                tags.append("Call");
-            }
-            if ((Boolean) isTaggedWithMethod.invoke(node, StandardTags.StatementTag.class)) {
-                if (tags.length() > 0) {
-                    tags.append(' ');
-                }
-                tags.append("Statement");
             }
             nodes.append(tags);
         } catch (Throwable t) {

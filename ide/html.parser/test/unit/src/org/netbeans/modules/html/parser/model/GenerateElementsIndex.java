@@ -739,14 +739,14 @@ public class GenerateElementsIndex extends NbTestCase {
         writeEnumCollection(fasecs, "FormAssociatedElementsCategory", out);
     }
 
-    private void writeEnumCollection(Collection<? extends Enum> enumCollection, String enumName, Writer out) throws IOException {
+    private void writeEnumCollection(Collection<? extends Enum<?>> enumCollection, String enumName, Writer out) throws IOException {
         if (enumCollection.isEmpty()) {
             out.write("EnumSet.noneOf(");
             out.write(enumName);
             out.write(".class), ");
         } else {
             out.write("EnumSet.of(");
-            for (Iterator<? extends Enum> i = enumCollection.iterator(); i.hasNext();) {
+            for (Iterator<? extends Enum<?>> i = enumCollection.iterator(); i.hasNext();) {
                 Enum ct = i.next();
                 out.write(enumName);
                 out.write(".");

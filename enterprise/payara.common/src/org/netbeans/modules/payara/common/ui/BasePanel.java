@@ -146,7 +146,7 @@ public abstract class BasePanel extends JPanel {
         public void run() {
             // build the allowed values
             String allowedRegEx = jcb.getActionCommand();
-            DefaultComboBoxModel dcbm = new DefaultComboBoxModel();
+            DefaultComboBoxModel<String> dcbm = new DefaultComboBoxModel<>();
             Pattern p = Pattern.compile(allowedRegEx);
             Set<String> keys = data.keySet();
             //String pushPrefix = null;
@@ -230,7 +230,7 @@ public abstract class BasePanel extends JPanel {
                 }
             }
             if (l.size() > 0) {
-                table.setModel(new AttributedPropertyTableModel(l.toArray(new String[l.size()][]), specComp, pushPrefix));
+                table.setModel(new AttributedPropertyTableModel(l.toArray(new String[0][]), specComp, pushPrefix));
             } else {
                 // this data is from a post beta build...
                 pattern = Pattern.compile(".*\\." + name + "\\." + specComp[0] + "\\..*");
@@ -251,15 +251,15 @@ public abstract class BasePanel extends JPanel {
                     }
                 }
                 if (l.size() > 0) {
-                    table.setModel(new NameValueTableModel(l.toArray(new String[l.size()][]), specComp, pushPrefix));
+                    table.setModel(new NameValueTableModel(l.toArray(new String[0][]), specComp, pushPrefix));
                 }
             }
         }
     }
 
-    static abstract class DataTableModel extends AbstractTableModel {
+    abstract static class DataTableModel extends AbstractTableModel {
 
-        abstract public Map<String, String> getData();
+        public abstract Map<String, String> getData();
 
         private String[][] rowData;
         private String pushPrefix;

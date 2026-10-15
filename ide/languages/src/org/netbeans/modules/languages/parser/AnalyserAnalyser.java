@@ -45,23 +45,23 @@ public class AnalyserAnalyser {
             System.out.println ("Rules:");
         else 
             writer.println ("Rules:");
-        List<String> l = new ArrayList<String> ();
-        Map<String,List> m = new HashMap<String,List> ();
-        Map<String,List> mm = new HashMap<String,List> ();
+        List<String> l = new ArrayList<> ();
+        Map<String, List<Rule>> m = new HashMap<> ();
+        Map<String, List<Integer>> mm = new HashMap<> ();
         int i = 0;
         Iterator<Rule> it = rules.iterator ();
         while (it.hasNext ()) {
             Rule r = it.next ();
-            if (!m.containsKey (r.getNT ()))
+            if (!m.containsKey (r.getNT()))
                 l.add (r.getNT ());
-            List ll = m.get (r.getNT ());
+            List<Rule> ll = m.get(r.getNT());
             if (ll == null) {
-                ll = new ArrayList ();
-                m.put (r.getNT (), ll);
-                mm.put (r.getNT (), new ArrayList ());
+                ll = new ArrayList<>();
+                m.put(r.getNT(), ll);
+                mm.put(r.getNT(), new ArrayList<>());
             }
-            ll.add (r);
-            mm.get (r.getNT ()).add (new Integer (i++));
+            ll.add(r);
+            mm.get(r.getNT ()).add (i++);
         }
         Collections.sort (l);
         Iterator<String> it2 = l.iterator ();
@@ -70,11 +70,12 @@ public class AnalyserAnalyser {
             List ll = m.get (nt);
             Iterator it3 = ll.iterator ();
             Iterator it4 = mm.get (nt).iterator ();
-            while (it3.hasNext ())
+            while (it3.hasNext ()) {
                 if (writer == null)
                     System.out.println ("  " + it3.next () + " (" + it4.next () + ")");
                 else
                     writer.println ("  " + it3.next () + " (" + it4.next () + ")");
+            }
         }
         if (writer == null)
             System.out.println ("");

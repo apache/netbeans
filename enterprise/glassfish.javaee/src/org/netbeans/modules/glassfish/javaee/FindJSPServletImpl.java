@@ -36,9 +36,9 @@ import org.netbeans.modules.j2ee.deployment.plugins.spi.FindJSPServlet;
 
 class FindJSPServletImpl implements FindJSPServlet {
     
-    final private String domainDir;
-    final private String domain;
-    final private GlassfishModule commonSupport;
+    private final String domainDir;
+    private final String domain;
+    private final GlassfishModule commonSupport;
 
     public FindJSPServletImpl(Hk2DeploymentManager dm, Hk2OptionalFactory aThis) {
         commonSupport = dm.getCommonServerSupport();

@@ -18,11 +18,7 @@
  */
 package org.netbeans.modules.html.editor.spi.embedding;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.html.lexer.HTMLTokenId;
 import org.netbeans.api.lexer.TokenSequence;
@@ -31,14 +27,8 @@ import org.netbeans.modules.csl.api.test.CslTestBase;
 import org.netbeans.modules.html.editor.api.gsf.HtmlParserResult;
 import org.netbeans.modules.html.editor.embedding.JsEmbeddingProviderTest;
 import org.netbeans.modules.parsing.api.Embedding;
-import org.netbeans.modules.parsing.api.ParserManager;
-import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Snapshot;
-import org.netbeans.modules.parsing.api.Source;
-import org.netbeans.modules.parsing.api.UserTask;
-import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.web.common.api.LexerUtils;
-import org.netbeans.modules.web.common.api.WebUtils;
 
 /**
  *
@@ -69,7 +59,8 @@ public class JsEmbeddingProviderPluginTest extends CslTestBase {
         public static boolean started, ended, processed;
         
         @Override
-        public boolean startProcessing(HtmlParserResult parserResult, Snapshot snapshot, TokenSequence<HTMLTokenId> ts, List<Embedding> embeddings) {            assertNotNull(snapshot);
+        public boolean startProcessing(HtmlParserResult parserResult, Snapshot snapshot, TokenSequence<HTMLTokenId> ts, List<Embedding> embeddings) {
+            assertNotNull(snapshot);
             assertNotNull(parserResult);
             assertNotNull(ts);
             assertNotNull(embeddings);

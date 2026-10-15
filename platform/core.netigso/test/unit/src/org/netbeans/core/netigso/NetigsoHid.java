@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.jar.JarEntry;
@@ -31,7 +32,6 @@ import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import org.netbeans.SetupHid;
-import org.openide.filesystems.FileUtil;
 
 /**
  * Basic infrastructure for testing OSGi functionality.
@@ -72,24 +72,22 @@ public class NetigsoHid extends SetupHid {
         while (f.exists()) {
             f = new File(f.getParentFile(), f.getName() + i++);
         }
-        Manifest mf = new Manifest(new ByteArrayInputStream(manifest.getBytes("utf-8")));
+        Manifest mf = new Manifest(new ByteArrayInputStream(manifest.getBytes(StandardCharsets.UTF_8)));
         mf.getMainAttributes().putValue("Manifest-Version", "1.0");
-        JarOutputStream os = new JarOutputStream(new FileOutputStream(f), mf);
-        JarFile jf = new JarFile(orig);
-        Enumeration<JarEntry> en = jf.entries();
-        InputStream is;
-        while (en.hasMoreElements()) {
-            JarEntry e = en.nextElement();
-            if (e.getName().equals("META-INF/MANIFEST.MF")) {
-                continue;
+        try (JarOutputStream os = new JarOutputStream(new FileOutputStream(f), mf); JarFile jf = new JarFile(orig)) {
+            Enumeration<JarEntry> en = jf.entries();
+            while (en.hasMoreElements()) {
+                JarEntry e = en.nextElement();
+                if (e.getName().equals("META-INF/MANIFEST.MF")) {
+                    continue;
+                }
+                os.putNextEntry(e);
+                try (InputStream is = jf.getInputStream(e)) {
+                    is.transferTo(os);
+                }
+                os.closeEntry();
             }
-            os.putNextEntry(e);
-            is = jf.getInputStream(e);
-            FileUtil.copy(is, os);
-            is.close();
-            os.closeEntry();
         }
-        os.close();
 
         return f;
     }

@@ -124,7 +124,7 @@ final class ModeStructureAccessorImpl implements ModeStructureAccessor {
 
     /** Superclass for accessor of model element.
      * There are three types, split, mode, and editor (represents editor area) type. */
-    static abstract class ElementAccessorImpl implements ElementAccessor {
+    abstract static class ElementAccessorImpl implements ElementAccessor {
         // PENDING revise
         /** Corresponding object in model (SplitNode or ModeNode for separate mode). */
         private final ModelElement originator;

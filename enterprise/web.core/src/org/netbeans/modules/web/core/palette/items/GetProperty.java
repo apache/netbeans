@@ -42,13 +42,13 @@ public class GetProperty implements ActiveEditorDrop {
         "session",
         "application",
         "out",
-        "config", 
-        "page", 
-        "exception" 
+        "config",
+        "page",
+        "exception"
     };
     public static final int BEAN_DEFAULT = 0;
     public static final String[] implicitTypes = new String[] { // NOI18N
-        "javax.servlet.http.HttpServletRequest", 
+        "javax.servlet.http.HttpServletRequest",
         "javax.servlet.http.HttpServletResponse",
         "javax.servlet.jsp.PageContext",
         "javax.servlet.http.HttpSession",
@@ -56,20 +56,32 @@ public class GetProperty implements ActiveEditorDrop {
         "javax.servlet.jsp.JspWriter",
         "javax.servlet.ServletConfig",
         "java.lang.Object",
-        "java.lang.Throwable" 
+        "java.lang.Throwable"
     };
-    protected List<BeanDescr> allBeans = new ArrayList<BeanDescr>();
+    public static final String[] implicitTypesJakarta = new String[] { // NOI18N
+        "jakarta.servlet.http.HttpServletRequest",
+        "jakarta.servlet.http.HttpServletResponse",
+        "jakarta.servlet.jsp.PageContext",
+        "jakarta.servlet.http.HttpSession",
+        "jakarta.servlet.ServletContext",
+        "jakarta.servlet.jsp.JspWriter",
+        "jakarta.servlet.ServletConfig",
+        "java.lang.Object",
+        "java.lang.Throwable"
+    };
+    protected List<BeanDescr> allBeans = new ArrayList<>();
     private int beanIndex = BEAN_DEFAULT;
     private String bean = "";
     private String property = "";
-    
+
     public GetProperty() {
     }
 
+    @Override
     public boolean handleTransfer(JTextComponent targetComponent) {
         allBeans = initAllBeans(targetComponent);
         GetPropertyCustomizer c = new GetPropertyCustomizer(this, targetComponent);
-        
+
         boolean accept = c.showDialog();
         if (accept) {
             String body = createBody();
@@ -79,21 +91,20 @@ public class GetProperty implements ActiveEditorDrop {
                 accept = false;
             }
         }
-        
+
         return accept;
     }
 
     private String createBody() {
-        String strBean = " name=\"\""; // NOI18N
-        if (beanIndex == -1)
+        String strBean; // NOI18N
+        if (beanIndex == -1) {
             strBean = " name=\"" + bean + "\""; // NOI18N
-        else 
+        } else {
             strBean = " name=\"" + allBeans.get(beanIndex).getId() + "\""; // NOI18N
-        
+        }
+
         String strProperty = " property=\"" + property + "\""; // NOI18N
-        
-        String gp = "<jsp:getProperty" + strBean + strProperty + " />"; // NOI18N
-        return gp;
+        return "<jsp:getProperty" + strBean + strProperty + " />"; // NOI18N
     }
 
     public int getBeanIndex() {
@@ -121,10 +132,17 @@ public class GetProperty implements ActiveEditorDrop {
     }
 
     protected List<BeanDescr> initAllBeans(JTextComponent targetComponent) {
-       ArrayList<BeanDescr> res = new ArrayList<BeanDescr>();
+        String[] types;
+        if(JspPaletteUtilities.isJakartaVariant(targetComponent)) {
+            types = implicitTypesJakarta;
+        } else {
+            types = implicitTypes;
+        }
+
+        ArrayList<BeanDescr> res = new ArrayList<>();
         for (int i = 0; i < implicitBeans.length; i++) {
             String id = implicitBeans[i];
-            String fqcn = implicitTypes[i];
+            String fqcn = types[i];
             res.add(new BeanDescr(id, fqcn));
         }
         PageInfo.BeanData[] bd = JspPaletteUtilities.getAllBeans(targetComponent);
@@ -136,7 +154,7 @@ public class GetProperty implements ActiveEditorDrop {
 
         return res;
     }
-      
+
     class BeanDescr {
         private String id;
         private String fqcn;
@@ -166,9 +184,9 @@ public class GetProperty implements ActiveEditorDrop {
         public String toString() {
             return id;
         }
-        
+
     }
-    
+
     public List<BeanDescr> getAllBeans(){
         return allBeans;
     }

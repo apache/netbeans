@@ -22,35 +22,43 @@ package org.netbeans.modules.maven.options;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.maven.execution.MavenExecutionRequest;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.netbeans.api.annotations.common.CheckForNull;
-import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
+import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
-import org.openide.util.WeakSet;
+import org.openide.util.Utilities;
 
 /**
  * a netbeans settings for global options that cannot be put into the settings file.
  * @author mkleint
  */
 public final class MavenSettings  {
+    private static final String PREFERENCES_PATH = "org/netbeans/modules/maven"; // NOI18N
     //same prop constant in Embedderfactory.java    
     private static final String PROP_DEFAULT_OPTIONS = "defaultOptions"; // NOI18N
     private static final String PROP_SOURCE_DOWNLOAD = "sourceDownload"; //NOI18N
@@ -67,11 +75,9 @@ public final class MavenSettings  {
     private static final String PROP_COLLAPSE_FOLDS = "collapseSuccessFolds";
     private static final String PROP_OUTPUT_TAB_CONFIG = "showConfigInOutputTab";
     private static final String PROP_OUTPUT_TAB_NAME = "showOutputTabAs";
-    private static final String PROP_EXPERIMENTAL_USE_BEST_MAVEN = "useBestMaven";
-    private static final String PROP_EXPERIMENTAL_USE_ALTERNATE_LOCATION = "useBestMavenAltLocation";
-    private static final String PROP_EXPERIMENTAL_ALTERNATE_LOCATION = "bestMavenAltLocation";
     private static final String PROP_VM_OPTIONS_WRAP = "vmOptionsWrap";
     private static final String PROP_DEFAULT_JDK = "defaultJdk";
+    private static final String PROP_PREFER_WRAPPER = "preferWrapper"; //NOI18N
 
     //these are from former versions (6.5) and are here only for conversion
     private static final String PROP_DEBUG = "showDebug"; // NOI18N
@@ -80,10 +86,30 @@ public final class MavenSettings  {
     private static final String PROP_PLUGIN_POLICY = "pluginUpdatePolicy"; //NOI18N
     private static final String PROP_FAILURE_BEHAVIOUR = "failureBehaviour"; //NOI18N
     private static final String PROP_USE_REGISTRY = "usePluginRegistry"; //NOI18N
+    public static final String PROP_NETWORK_PROXY = "networkProxy";
       
+    private static final Pattern MAVEN_CORE_JAR_PATTERN = Pattern.compile("maven-core-(\\d+\\.\\d+\\.\\d+)\\.jar");  // NOI18N
+
     private static final MavenSettings INSTANCE = new MavenSettings();
     
-    private final Set<PropertyChangeListener> listeners = new WeakSet<>();
+    private final Set<PropertyChangeListener> listeners = Collections.newSetFromMap(new WeakHashMap<>());
+    
+    /**
+     * Specifies how should be proxies handled by default, if no setting is given.
+     */
+    private static final String SYSPROP_DEFAULT_PROXY_BEHAVIOUR = "netbeans.networkProxy";
+    
+    private static final NetworkProxySettings DEFAULT_PROXY_BEHAVIOUR;
+    
+    static {
+        NetworkProxySettings def;
+        try {
+            def = NetworkProxySettings.valueOf(System.getProperty(SYSPROP_DEFAULT_PROXY_BEHAVIOUR, NetworkProxySettings.ASK.name()).toUpperCase());
+        } catch (IllegalArgumentException e) {
+            def = NetworkProxySettings.ASK;
+        }
+        DEFAULT_PROXY_BEHAVIOUR = def;
+    }
 
     public static MavenSettings getDefault() {
         return INSTANCE;
@@ -135,6 +161,10 @@ public final class MavenSettings  {
     private Preferences getPreferences() {
         return NbPreferences.forModule(MavenSettings.class);
     }
+
+    private Preferences getSharedPreferences() {
+        return NbPreferences.root().node(PREFERENCES_PATH);
+    }
     
     private String putProperty(String key, String value) {
         String retval = getProperty(key);
@@ -151,10 +181,15 @@ public final class MavenSettings  {
     }    
     
     private MavenSettings() {
+        getSharedPreferences().addPreferenceChangeListener(evt -> {
+            if (EmbedderFactory.PROP_USER_SETTINGS_XML.equals(evt.getKey())) {
+                firePropertyChange(evt.getKey(), null, evt.getNewValue());
+            }
+        });
         //import from older versions
         String defOpts = getPreferences().get(PROP_DEFAULT_OPTIONS, null);
         if (defOpts == null) {
-            defOpts = "";
+            defOpts = getDefaultOptions();
             //only when not already set by user or by previous import
             String debug = getPreferences().get(PROP_DEBUG, null);
             if (debug != null) {
@@ -218,7 +253,7 @@ public final class MavenSettings  {
     }
 
     public String getDefaultOptions() {
-        return getPreferences().get(PROP_DEFAULT_OPTIONS, ""); //NOI18N
+        return getPreferences().get(PROP_DEFAULT_OPTIONS, "--no-transfer-progress"); //NOI18N
     }
 
     public void setDefaultOptions(String options) {
@@ -230,6 +265,15 @@ public final class MavenSettings  {
         }        
     }
     
+    public String getUserSettingsXml() {
+        return EmbedderFactory.getUserSettingsXmlFile().getAbsolutePath();
+    }
+
+    public void setUserSettingsXml(String path) {
+        File file = (path == null || path.trim().isEmpty()) ? null : new File(path.trim());
+        EmbedderFactory.setUserSettingsXmlFile(file);
+    }
+
     public boolean isVMOptionsWrap() {
         return getPreferences().getBoolean(PROP_VM_OPTIONS_WRAP, true);
     }
@@ -244,12 +288,16 @@ public final class MavenSettings  {
 
     public void setDefaultJdk(String jdk) {
         getPreferences().put(PROP_DEFAULT_JDK, jdk);
+        firePropertyChange(PROP_DEFAULT_JDK, null, jdk);
+    }
+
+    private void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
         PropertyChangeListener[] arr;
         synchronized (listeners) {
             arr = listeners.toArray(new PropertyChangeListener[0]);
         }
         for (PropertyChangeListener l : arr) {
-            l.propertyChange(new PropertyChangeEvent(this, PROP_DEFAULT_JDK, null, jdk));
+            l.propertyChange(new PropertyChangeEvent(this, propertyName, oldValue, newValue));
         }
     }
 
@@ -284,9 +332,18 @@ public final class MavenSettings  {
     public void setShowLoggingLevel(boolean show) {
         getPreferences().putBoolean(PROP_SHOW_LOGGING_LEVEL, show);
     }
-    
+
+    @NbBundle.Messages({
+        "#reuse output: true, false, never",
+        "#NOI18N",
+        "DEFAULT_REUSE_OUTPUT=true"
+    })
     public boolean isReuseOutputTabs() {
-        return getPreferences().getBoolean(PROP_REUSE_OUTPUT, true);
+        String def = Bundle.DEFAULT_REUSE_OUTPUT();
+        if ("never".equals(def)) { // NOI18N
+            return false;
+        }
+        return getPreferences().getBoolean(PROP_REUSE_OUTPUT, "true".equals(def)); // NOI18N
     }
 
     public void setReuseOutputTabs(boolean reuse) {
@@ -312,33 +369,64 @@ public final class MavenSettings  {
     public String getProjectNodeNamePattern() {
         return getPreferences().get(PROP_PROJECTNODE_NAME_PATTERN, null); //NOI18N
     }
+    
+    public boolean isPreferMavenWrapper() {
+        return getPreferences().getBoolean(PROP_PREFER_WRAPPER, true);
+    }
+    
+    public void setPreferMavenWrapper(boolean preferWrapper) {
+        getPreferences().putBoolean(PROP_PREFER_WRAPPER, preferWrapper);
+    }
 
+    /**
+     * Deprecated for removal - use mvnw instead.
+     * Returns false.
+     */
+    @Deprecated/*(forRemoval = true)*/
     public boolean isUseBestMaven() {
-        return getPreferences().getBoolean(PROP_EXPERIMENTAL_USE_BEST_MAVEN, false);
+        return false;
     }
     
+    /**
+     * Deprecated for removal - use mvnw instead.
+     * No-op.
+     */
+    @Deprecated/*(forRemoval = true)*/
     public void setUseBestMaven(boolean bestMaven) {
-        getPreferences().putBoolean(PROP_EXPERIMENTAL_USE_BEST_MAVEN, bestMaven);
     }
     
+    /**
+     * Deprecated for removal - use mvnw instead.
+     * Returns false.
+     */
+    @Deprecated/*(forRemoval = true)*/
     public boolean isUseBestMavenAltLocation() {
-        return getPreferences().getBoolean(PROP_EXPERIMENTAL_USE_ALTERNATE_LOCATION, false);
+        return false;
     }
     
+    /**
+     * Deprecated for removal - use mvnw instead.
+     * No-op.
+     */
+    @Deprecated/*(forRemoval = true)*/
     public void setUseBestMavenAltLocation(boolean bestMavenAltLocation) {
-        getPreferences().putBoolean(PROP_EXPERIMENTAL_USE_ALTERNATE_LOCATION, bestMavenAltLocation);
     }
     
+    /**
+     * Deprecated for removal - use mvnw instead.
+     * No-op.
+     */
+    @Deprecated/*(forRemoval = true)*/
     public void setBestMavenAltLocation(String location) {
-        if (null == location) {
-            getPreferences().remove(PROP_EXPERIMENTAL_ALTERNATE_LOCATION);
-        } else {
-            putProperty(PROP_EXPERIMENTAL_ALTERNATE_LOCATION, location);
-        }
     }
 
+    /**
+     * Deprecated for removal - use mvnw instead.
+     * Returns null.
+     */
+    @Deprecated/*(forRemoval = true)*/
     public String getBestMavenAltLocation() {
-        return getPreferences().get(PROP_EXPERIMENTAL_ALTERNATE_LOCATION, null); //NOI18N
+        return null;
     }
     
 
@@ -448,37 +536,56 @@ public final class MavenSettings  {
     }
     
     public static @CheckForNull String getCommandLineMavenVersion(File mavenHome) {
-        File[] jars = new File(mavenHome, "lib").listFiles(new FilenameFilter() { // NOI18N
-            public @Override boolean accept(File dir, String name) {
-                return name.endsWith(".jar"); // NOI18N
+        Path lib = Paths.get(mavenHome.getPath(), "lib");        // mvn layout  // NOI18N
+        if (!Files.exists(lib)) {
+            lib = Paths.get(mavenHome.getPath(), "mvn", "lib");  // mvnd layout // NOI18N
+            if (!Files.exists(lib)) {
+                return null;
             }
-        });
-        if (jars == null) {
-            return null;
         }
-        for (File jar : jars) {
-            try {
-                // Prefer to use this rather than raw ZipFile since URLMapper since ArchiveURLMapper will cache JARs:
-                FileObject entry = URLMapper.findFileObject(new URL(FileUtil.urlForArchiveOrDir(jar), "META-INF/maven/org.apache.maven/maven-core/pom.properties")); // NOI18N
-                if (entry != null) {
-                    InputStream is = entry.getInputStream();
-                    try {
-                        Properties properties = new Properties();
-                        properties.load(is);
-                        return properties.getProperty("version"); // NOI18N
-                    } finally {
-                        is.close();
+
+        // try to resolve maven version by checking maven-core jar name
+        try (Stream<String> mavenCoreVersions = Files.list(lib)
+                .map(file -> file.getFileName().toString())
+                .filter(file -> file.startsWith("maven-core")) // NOI18N
+                .map(file -> MAVEN_CORE_JAR_PATTERN.matcher(file))
+                .filter(matcher -> matcher.matches())
+                .map(matcher -> matcher.group(1))) {
+            Optional<String> mavenCoreVersion = mavenCoreVersions.findFirst();
+            if (mavenCoreVersion.isPresent()) {
+                return mavenCoreVersion.get();
+            }
+        } catch (IOException ignored) {}
+
+        // try to resolve maven version by parsing pom.properties
+        try {
+            try (Stream<Path> jars = Files.list(lib).filter(file -> file.toString().endsWith(".jar"))) {  // NOI18N
+                for (Path jar : jars.collect(Collectors.toList())) {
+                    // Prefer to use this rather than raw ZipFile since URLMapper since ArchiveURLMapper will cache JARs:
+                    FileObject entry = URLMapper.findFileObject(
+                            new URL(FileUtil.urlForArchiveOrDir(jar.toFile()), "META-INF/maven/org.apache.maven/maven-core/pom.properties")); // NOI18N
+                    if (entry != null) {
+                        try (InputStream is = entry.getInputStream()) {
+                            Properties properties = new Properties();
+                            properties.load(is);
+                            return properties.getProperty("version"); // NOI18N
+                        }
                     }
                 }
-            } catch (IOException x) {
-                // ignore for now
             }
-        }
+        } catch (IOException ignored) {}
+
         return null;
     }
 
+    public static boolean isMavenDaemon(Path mavenHome) {
+        String mvndExecutableName = Utilities.isWindows() ? "mvnd.exe" : "mvnd";
+
+        return Files.exists(mavenHome.resolve("bin").resolve(mvndExecutableName));
+    }
+
     private static List<String> searchMavenRuntimes(String[] paths, boolean stopOnFirstValid) {
-        List<String> runtimes = new ArrayList<String>();
+        List<String> runtimes = new ArrayList<>();
         for (String path : paths) {
             File file = new File(path);
             path = FileUtil.normalizeFile(file).getAbsolutePath();
@@ -501,18 +608,18 @@ public final class MavenSettings  {
 	 * <ul>
 	 * <li>MAVEN_HOME</li>
 	 * <li>M2_HOME</li>
-	 * <li>PATH</li></ul>
-	 * </p>
+	 * <li>PATH</li>
+	 * </ul>
 	 * <p>Only the first appereance will be appended.</p>
 	 *
-	 * @returns the default external Maven runtime on the path.
+	 * @return the default external Maven runtime on the path.
 	 */
     public static String getDefaultExternalMavenRuntime() {
         String paths = System.getenv("PATH"); // NOI18N
         String mavenHome = System.getenv("MAVEN_HOME"); // NOI18N
         String m2Home = System.getenv("M2_HOME"); // NOI18N
 
-        List<String> mavenEnvDirs = new ArrayList<String>();
+        List<String> mavenEnvDirs = new ArrayList<>();
         if (mavenHome != null) {
             mavenEnvDirs.add(mavenHome);
         }
@@ -539,7 +646,7 @@ public final class MavenSettings  {
     }
     
     public List<String> getUserDefinedMavenRuntimes() {
-        List<String> runtimes = new ArrayList<String>();
+        List<String> runtimes = new ArrayList<>();
 
         String defaultRuntimePath = getDefaultExternalMavenRuntime();
         String runtimesPref = getPreferences().get(PROP_MAVEN_RUNTIMES, null);
@@ -569,4 +676,16 @@ public final class MavenSettings  {
         }
     }
     
+    public NetworkProxySettings getNetworkProxy() {
+        String s = getPreferences().get(PROP_NETWORK_PROXY, DEFAULT_PROXY_BEHAVIOUR.name());
+        try {
+            return NetworkProxySettings.valueOf(s);
+        } catch (IllegalArgumentException ex) {
+            return DEFAULT_PROXY_BEHAVIOUR;
+        }
+    }
+    
+    public void setNetworkProxy(NetworkProxySettings s) {
+        getPreferences().put(PROP_NETWORK_PROXY, s.name());
+    }
 }

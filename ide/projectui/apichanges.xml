@@ -30,6 +30,20 @@
     </apidefs>
 
     <changes>
+        <change id="LOAD_PROJECTS_ON_START">
+            <api name="recent"/>
+            <summary>Disable loading of projects on startup</summary>
+            <version major="1" minor="69"/>
+            <date year="2020" month="9" day="30"/>
+            <author login="jtulach"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    A branding API to disable loading of previously opened
+                    projects - <a href="architecture-summary.html#group-branding">LOAD_PROJECTS_ON_START</a>.
+                </p>
+            </description>
+        </change>
         <change id="SelectAndExpandProjectAPI">
             <api name="recent"/>
             <summary>Added <code>ProjectActionUtils</code></summary>
@@ -160,7 +174,6 @@
         <!-- Generated from apichanges.xml -->
         <head>
             <title>Change History for the Project UI</title>
-            <link rel="stylesheet" href="prose.css" type="text/css"/>
         </head>
         <body>
 

@@ -40,7 +40,7 @@ public class AgentTest extends SetupHid {
         Module m = mgr.create(jar, null, false, false, false);
         try {
             mgr.enable(m);
-            Callable<?> c = (Callable<?>) m.getClassLoader().loadClass("org.agent.HelloWorld").newInstance();
+            Callable<?> c = (Callable<?>) m.getClassLoader().loadClass("org.agent.HelloWorld").getDeclaredConstructor().newInstance();
             assertEquals("Bytecode has been patched", "Ahoj World!", c.call());
         } finally {
             mgr.disable(m);

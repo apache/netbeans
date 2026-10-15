@@ -355,17 +355,14 @@ public class PlatformsCustomizer extends javax.swing.JPanel implements PropertyC
                         dlg.setVisible(true);
                         if (wiz.getValue() == WizardDescriptor.FINISH_OPTION) {
                             self.getChildren().refreshPlatforms();
-                            Set result = wiz.getInstantiatedObjects();
-                            self.expandPlatforms (result.isEmpty() ? null : (JavaPlatform)result.iterator().next());
+                            Set<JavaPlatform> result = wiz.getInstantiatedObjects();
+                            self.expandPlatforms (result.isEmpty() ? null : result.iterator().next());
                         }
                     } finally {
                         dlg.dispose();
                     }
                 } catch (DataObjectNotFoundException dfne) {
                     Exceptions.printStackTrace(dfne);
-                }
-                catch (IOException ioe) {
-                    Exceptions.printStackTrace(ioe);
                 }
             }
         });
@@ -555,7 +552,7 @@ public class PlatformsCustomizer extends javax.swing.JPanel implements PropertyC
             if (changed) {
                 //SortedSet can't be used, there can be platforms with the same
                 //display name
-                Collections.sort(platforms, new PlatformNodeComparator());
+                platforms.sort(new PlatformNodeComparator());
                 changed = false;
             }
             return Collections.unmodifiableList (this.platforms);

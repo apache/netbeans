@@ -18,20 +18,16 @@
  */
 package org.netbeans.lib.nbjavac.services;
 
-import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
-import com.sun.tools.javac.tree.JCTree.JCExpression;
-import com.sun.tools.javac.tree.JCTree.JCModifiers;
-import com.sun.tools.javac.tree.JCTree.JCTypeParameter;
+import com.sun.tools.javac.tree.JCTree.JCPackageDecl;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.List;
-import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
+import java.util.function.Consumer;
 
 /**
  *
@@ -50,6 +46,7 @@ public class NBTreeMaker extends TreeMaker {
     private final Names names;
     private final Types types;
     private final Symtab syms;
+    private       Consumer<JCPackageDecl> packageCreatedCallback;
 
     protected NBTreeMaker(Context context) {
         super(context);
@@ -71,29 +68,20 @@ public class NBTreeMaker extends TreeMaker {
     }
 
     @Override
-    public JCClassDecl ClassDef(JCModifiers mods, Name name, List<JCTypeParameter> typarams, JCExpression extending, List<JCExpression> implementing, List<JCTree> defs) {
-        try {
-            IndexedClassDecl result = new IndexedClassDecl(mods, name, typarams, extending, implementing, defs, null);
+    public JCPackageDecl PackageDecl(List<JCTree.JCAnnotation> annotations, JCTree.JCExpression pid) {
+        JCPackageDecl pack = super.PackageDecl(annotations, pid);
 
-            result.pos = pos;
-
-            return result;
-        } catch (NoSuchMethodError err) {
-            return super.ClassDef(mods, name, typarams, extending, implementing, defs);
+        if (packageCreatedCallback != null) {
+            packageCreatedCallback.accept(pack);
         }
+
+        return pack;
     }
 
-    public static class IndexedClassDecl extends JCClassDecl {
-        public int index;
-        protected IndexedClassDecl(JCModifiers mods,
-                                   Name name,
-                                   List<JCTypeParameter> typarams,
-                                   JCExpression extending,
-                                   List<JCExpression> implementing,
-                                   List<JCTree> defs,
-                                   ClassSymbol sym) {
-            super(mods, name, typarams, extending, implementing, defs, sym);
-            this.index = -1;
-        }
+    public Consumer<JCPackageDecl> setPackageCreatedCallback(Consumer<JCPackageDecl> callback) {
+        Consumer<JCPackageDecl> prev = packageCreatedCallback;
+
+        packageCreatedCallback = callback;
+        return prev;
     }
 }

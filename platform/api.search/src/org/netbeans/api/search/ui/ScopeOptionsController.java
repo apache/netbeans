@@ -178,31 +178,15 @@ public final class ScopeOptionsController extends ComponentController<JPanel> {
     }
 
     private void initInteraction() {
-        btnTestFileNamePattern.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                openPathPatternSandbox();
-            }
-        });
-        btnEditIgnoreList.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                IgnoreListPanel.openDialog(btnEditIgnoreList);
-            }
-        });
+        btnTestFileNamePattern.addActionListener((ActionEvent e) -> openPathPatternSandbox());
+        btnEditIgnoreList.addActionListener((ActionEvent e) -> IgnoreListPanel.openDialog(btnEditIgnoreList));
         if (!replacing) {
             chkArchives.addItemListener(checkBoxListener);
             chkGenerated.addItemListener(checkBoxListener);
         }
         chkUseIgnoreList.addItemListener(checkBoxListener);
         if (fileNameComboBox != null) {
-            chkFileNameRegex.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    fileNameComboBox.setRegularExpression(
-                            chkFileNameRegex.isSelected());
-                }
-            });
+            chkFileNameRegex.addActionListener((ActionEvent e) -> fileNameComboBox.setRegularExpression(chkFileNameRegex.isSelected()));
         } else {
             chkFileNameRegex.addItemListener(checkBoxListener);
         }

@@ -138,7 +138,7 @@ public class IndexNode extends BaseNode {
         try {
             Specification spec = connector.getDatabaseSpecification();
             DDLHelper.deleteIndex(spec, schemaName, tablename, getName());
-            setValue(BaseFilterNode.REFRESH_ANCESTOR_DISTANCE, new Integer(2));
+            setValue(BaseFilterNode.REFRESH_ANCESTOR_DISTANCE, Integer.valueOf(2));
         } catch (DDLException e) {
             Logger.getLogger(IndexNode.class.getName()).log(Level.INFO, e + " while deleting index " + getName());
             DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(e.getMessage(), NotifyDescriptor.ERROR_MESSAGE));

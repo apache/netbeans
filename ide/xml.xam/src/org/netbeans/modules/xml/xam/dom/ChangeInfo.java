@@ -79,7 +79,7 @@ public class ChangeInfo {
             return rootToParent;
         }
         public List<Element> getParentToRootPath() {
-            ArrayList<Element> ret = new ArrayList(rootToParent);
+            ArrayList<Element> ret = new ArrayList<>(rootToParent);
             Collections.reverse(ret);
             return ret;
         }

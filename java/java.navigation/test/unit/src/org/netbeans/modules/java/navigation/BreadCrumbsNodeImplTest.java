@@ -20,11 +20,11 @@ package org.netbeans.modules.java.navigation;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import static org.junit.Assert.*;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
@@ -34,7 +34,6 @@ import org.netbeans.modules.editor.breadcrumbs.spi.BreadcrumbsElement;
 import org.netbeans.spi.queries.FileEncodingQueryImplementation;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.nodes.Node;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -52,51 +51,51 @@ public class BreadCrumbsNodeImplTest extends NbTestCase {
     }
     
     public void testIfElse1() throws Exception {
-        performBreadcrumbsSelectionTest("package test; public class Test { t(int i) { if (i == 1) ; else { int i|i = 0; } }", "test.Test>>>>t>>>>if <font color=#707070>(i == 1)</font> else>>>>ii>>>>");
+        performBreadcrumbsSelectionTest("package test; public class Test { void t(int i) { if (i == 1) ; else { int i|i = 0; } }", "test.Test>>>>t>>>>if <font color=#707070>(i == 1)</font> else>>>>ii>>>>");
     }
     
     public void testIfElse2() throws Exception {
-        performBreadcrumbsSelectionTest("package test; public class Test { t(int i) { if (i == 1) ; else { | } }", "test.Test>>>>t>>>>if <font color=#707070>(i == 1)</font> else>>>>");
+        performBreadcrumbsSelectionTest("package test; public class Test { void t(int i) { if (i == 1) ; else { | } }", "test.Test>>>>t>>>>if <font color=#707070>(i == 1)</font> else>>>>");
     }
     
     public void testIfElse3() throws Exception {
-        performBreadcrumbsSelectionTest("package test; public class Test { t(int i) { if (i == 1) ; |else { } }", "test.Test>>>>t>>>>if <font color=#707070>(i == 1)</font> else>>>>");
+        performBreadcrumbsSelectionTest("package test; public class Test { void t(int i) { if (i == 1) ; |else { } }", "test.Test>>>>t>>>>if <font color=#707070>(i == 1)</font> else>>>>");
     }
     
     public void testIfElse4() throws Exception {
-        performBreadcrumbsSelectionTest("package test; public class Test { t(int i) { if (i == 1) ; | else { } }", "test.Test>>>>t>>>>if <font color=#707070>(i == 1)</font>>>>>");
+        performBreadcrumbsSelectionTest("package test; public class Test { void t(int i) { if (i == 1) ; | else { } }", "test.Test>>>>t>>>>if <font color=#707070>(i == 1)</font>>>>>");
     }
     
     public void testIfElse5() throws Exception {
-        performBreadcrumbsSelectionTest("package test; public class Test { t(int i) { if (i == 1) ; e|lse if (i == 2) ; else if (i == 3) ; }", "test.Test>>>>t>>>>if <font color=#707070>(i == 1)</font> else>>>>");
+        performBreadcrumbsSelectionTest("package test; public class Test { void t(int i) { if (i == 1) ; e|lse if (i == 2) ; else if (i == 3) ; }", "test.Test>>>>t>>>>if <font color=#707070>(i == 1)</font> else>>>>");
     }
     
     public void testIfCascade1() throws Exception {
-        performBreadcrumbsSelectionTest("package test; public class Test { t(int i) { if (i == 1) ; else if (i == 2) ; else if (i =|= 3) ; }", "test.Test>>>>t>>>>if <font color=#707070>(i == 1)</font> else if <font color=#707070>(i == 2)</font> else if <font color=#707070>(i == 3)</font>>>>>");
+        performBreadcrumbsSelectionTest("package test; public class Test { void t(int i) { if (i == 1) ; else if (i == 2) ; else if (i =|= 3) ; }", "test.Test>>>>t>>>>if <font color=#707070>(i == 1)</font> else if <font color=#707070>(i == 2)</font> else if <font color=#707070>(i == 3)</font>>>>>");
     }
     
     public void testInfiniteForLoop() throws Exception {
-        performBreadcrumbsSelectionTest("package test; public class Test { t() { for (;;) { | } }", "test.Test>>>>t>>>>for <font color=#707070>(; ; )</font>>>>>");
+        performBreadcrumbsSelectionTest("package test; public class Test { void t() { for (;;) { | } }", "test.Test>>>>t>>>>for <font color=#707070>(; ; )</font>>>>>");
     }
     
     public void testFor231278a() throws Exception {
-        performBreadcrumbsSelectionTest("package test; public class Test { t() { for (int i = 0, j = 1; i< 10 && j < 10; i++, j++) { | } }", "test.Test>>>>t>>>>for <font color=#707070>(int i = 0, j = 1; i &lt; 10 &amp;&amp; j &lt; 10; i++, j++)</font>>>>>");
+        performBreadcrumbsSelectionTest("package test; public class Test { void t() { for (int i = 0, j = 1; i< 10 && j < 10; i++, j++) { | } }", "test.Test>>>>t>>>>for <font color=#707070>(int i = 0, j = 1; i &lt; 10 &amp;&amp; j &lt; 10; i++, j++)</font>>>>>");
     }
     
     public void testFor231278b() throws Exception {
-        performBreadcrumbsSelectionTest("package test; public class Test { t() { for (int i = 0, j; i< 10; i++) { | } }", "test.Test>>>>t>>>>for <font color=#707070>(int i = 0, j; i &lt; 10; i++)</font>>>>>");
+        performBreadcrumbsSelectionTest("package test; public class Test { void t() { for (int i = 0, j; i< 10; i++) { | } }", "test.Test>>>>t>>>>for <font color=#707070>(int i = 0, j; i &lt; 10; i++)</font>>>>>");
     }
     
     public void testFor231278c() throws Exception {
-        performBreadcrumbsSelectionTest("package test; public class Test { t() { int i,j; for (i = 0, j = 1; i < 10; i++) { | } }", "test.Test>>>>t>>>>for <font color=#707070>(i = 0, j = 1; i &lt; 10; i++)</font>>>>>");
+        performBreadcrumbsSelectionTest("package test; public class Test { void t() { int i,j; for (i = 0, j = 1; i < 10; i++) { | } }", "test.Test>>>>t>>>>for <font color=#707070>(i = 0, j = 1; i &lt; 10; i++)</font>>>>>");
     }
     
     public void XtestArray231278() throws Exception {
-        performBreadcrumbsSelectionTest("package test; public class Test { t() { for (Object object : new String[]{\"\"}) { | } }", "test.Test>>>>t>>>>for <font color=#707070>(Object object : new String[]{&quot;&quot;})</font>>>>>");
+        performBreadcrumbsSelectionTest("package test; public class Test { void t() { for (Object object : new String[]{\"\"}) { | } }", "test.Test>>>>t>>>>for <font color=#707070>(Object object : new String[]{&quot;&quot;})</font>>>>>");
     }
     
     public void test226618() throws Exception {
-        performBreadcrumbsSelectionTest("package test; public class Test { t(String str) { if (str.equals(\"čcč|\")) { | } }", "test.Test>>>>t>>>>if <font color=#707070>(str.equals(&quot;čcč&quot;))</font>>>>>");
+        performBreadcrumbsSelectionTest("package test; public class Test { void t(String str) { if (str.equals(\"čcč|\")) { | } }", "test.Test>>>>t>>>>if <font color=#707070>(str.equals(&quot;čcč&quot;))</font>>>>>");
     }
     
     private void performBreadcrumbsSelectionTest(String code, String golden) throws Exception {
@@ -171,7 +170,7 @@ public class BreadCrumbsNodeImplTest extends NbTestCase {
     @ServiceProvider(service=FileEncodingQueryImplementation.class)
     public static final class FEQImpl extends FileEncodingQueryImplementation {
         @Override public Charset getEncoding(FileObject file) {
-            return Charset.forName("UTF-8");
+            return StandardCharsets.UTF_8;
         }
     }
 }

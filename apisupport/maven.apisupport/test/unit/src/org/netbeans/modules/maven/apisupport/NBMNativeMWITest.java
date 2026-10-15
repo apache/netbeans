@@ -21,6 +21,7 @@ package org.netbeans.modules.maven.apisupport;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
@@ -29,10 +30,15 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.junit.Test;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.maven.api.archetype.ProjectInfo;
+import org.netbeans.modules.maven.indexer.api.RepositoryInfo;
+import org.netbeans.modules.maven.indexer.spi.impl.IndexingNotificationProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.lookup.ServiceProvider;
 
 public class NBMNativeMWITest extends NbTestCase {
+
+    private static final String EXPECTED_JAVAC_PLUGIN_VERSION = "3.15.0";
 
     private FileObject wd;
 
@@ -58,9 +64,9 @@ public class NBMNativeMWITest extends NbTestCase {
         Model model = reader.read(new FileReader(FileUtil.toFile(builtpom)));
 
         assertEquals("nbm-maven-plugin", model.getBuild().getPlugins().get(0).getArtifactId());
-        assertEquals(MavenNbModuleImpl.LATEST_NBM_PLUGIN_VERSION, model.getBuild().getPlugins().get(0).getVersion());
+        assertEquals(MavenNbModuleImpl.getLatestNbmPluginVersion(), model.getBuild().getPlugins().get(0).getVersion());
         assertEquals("maven-compiler-plugin", model.getBuild().getPlugins().get(1).getArtifactId());
-        assertEquals("3.8.1", model.getBuild().getPlugins().get(1).getVersion());
+        assertEquals(EXPECTED_JAVAC_PLUGIN_VERSION, model.getBuild().getPlugins().get(1).getVersion());
         assertEquals(0, model.getRepositories().size());
     }
 
@@ -76,9 +82,9 @@ public class NBMNativeMWITest extends NbTestCase {
         MavenXpp3Reader reader = new MavenXpp3Reader();
         Model model = reader.read(new FileReader(FileUtil.toFile(builtpom)));
         assertEquals("nbm-maven-plugin", model.getBuild().getPlugins().get(0).getArtifactId());
-        assertEquals(MavenNbModuleImpl.LATEST_NBM_PLUGIN_VERSION, model.getBuild().getPlugins().get(0).getVersion());
+        assertEquals(MavenNbModuleImpl.getLatestNbmPluginVersion(), model.getBuild().getPlugins().get(0).getVersion());
         assertEquals("maven-compiler-plugin", model.getBuild().getPlugins().get(1).getArtifactId());
-        assertEquals("3.8.1", model.getBuild().getPlugins().get(1).getVersion());
+        assertEquals(EXPECTED_JAVAC_PLUGIN_VERSION, model.getBuild().getPlugins().get(1).getVersion());
         assertEquals(1, model.getRepositories().size());
     }
 
@@ -103,9 +109,9 @@ public class NBMNativeMWITest extends NbTestCase {
         Model model = reader.read(new FileReader(FileUtil.toFile(builtpom)));
 
         assertEquals("nbm-maven-plugin", model.getBuild().getPlugins().get(0).getArtifactId());
-        assertEquals(MavenNbModuleImpl.LATEST_NBM_PLUGIN_VERSION, model.getBuild().getPlugins().get(0).getVersion());
+        assertEquals(MavenNbModuleImpl.getLatestNbmPluginVersion(), model.getBuild().getPlugins().get(0).getVersion());
         assertEquals("maven-compiler-plugin", model.getBuild().getPlugins().get(1).getArtifactId());
-        assertEquals("3.8.1", model.getBuild().getPlugins().get(1).getVersion());
+        assertEquals(EXPECTED_JAVAC_PLUGIN_VERSION, model.getBuild().getPlugins().get(1).getVersion());
         assertEquals(0, model.getRepositories().size());
     }
 
@@ -129,9 +135,9 @@ public class NBMNativeMWITest extends NbTestCase {
         Model model = reader.read(new FileReader(FileUtil.toFile(builtpom)));
 
         assertEquals("nbm-maven-plugin", model.getBuild().getPlugins().get(0).getArtifactId());
-        assertEquals(MavenNbModuleImpl.LATEST_NBM_PLUGIN_VERSION, model.getBuild().getPlugins().get(0).getVersion());
+        assertEquals(MavenNbModuleImpl.getLatestNbmPluginVersion(), model.getBuild().getPlugins().get(0).getVersion());
         assertEquals("maven-compiler-plugin", model.getBuild().getPlugins().get(1).getArtifactId());
-        assertEquals("3.8.1", model.getBuild().getPlugins().get(1).getVersion());
+        assertEquals(EXPECTED_JAVAC_PLUGIN_VERSION, model.getBuild().getPlugins().get(1).getVersion());
         assertEquals(1, model.getRepositories().size());
     }
 
@@ -142,7 +148,7 @@ public class NBMNativeMWITest extends NbTestCase {
         FileObject createDatap = wd.createFolder("testp");
         FileObject parentpomFile = createDatap.createData("pom", "xml");
         try (OutputStream os = parentpomFile.getOutputStream()) {
-            os.write(POMCOMPILER.getBytes("UTF-8"));
+            os.write(POMCOMPILER.getBytes(StandardCharsets.UTF_8));
         }
         MavenXpp3Reader reader = new MavenXpp3Reader();
         Model model = reader.read(new FileReader(FileUtil.toFile(parentpomFile)));
@@ -157,7 +163,7 @@ public class NBMNativeMWITest extends NbTestCase {
         Model modeloutput = readeroutput.read(new FileReader(FileUtil.toFile(builtpom)));
 
         assertEquals("nbm-maven-plugin", modeloutput.getBuild().getPlugins().get(0).getArtifactId());
-        assertEquals(MavenNbModuleImpl.LATEST_NBM_PLUGIN_VERSION, modeloutput.getBuild().getPlugins().get(0).getVersion());
+        assertEquals(MavenNbModuleImpl.getLatestNbmPluginVersion(), modeloutput.getBuild().getPlugins().get(0).getVersion());
         assertEquals("maven-compiler-plugin", modeloutput.getBuild().getPlugins().get(1).getArtifactId());
         assertEquals(null, modeloutput.getBuild().getPlugins().get(1).getVersion());
         assertEquals(0, model.getRepositories().size());
@@ -170,7 +176,7 @@ public class NBMNativeMWITest extends NbTestCase {
         FileObject createDatap = wd.createFolder("testp");
         FileObject parentpomFile = createDatap.createData("pom", "xml");
         try (OutputStream os = parentpomFile.getOutputStream()) {
-            os.write(POMJAR.getBytes("UTF-8"));
+            os.write(POMJAR.getBytes(StandardCharsets.UTF_8));
         }
         MavenXpp3Reader reader = new MavenXpp3Reader();
         Model model = reader.read(new FileReader(FileUtil.toFile(parentpomFile)));
@@ -184,39 +190,54 @@ public class NBMNativeMWITest extends NbTestCase {
         Model modeloutput = readeroutput.read(new FileReader(FileUtil.toFile(builtpom)));
 
         assertEquals("nbm-maven-plugin", modeloutput.getBuild().getPlugins().get(0).getArtifactId());
-        assertEquals(MavenNbModuleImpl.LATEST_NBM_PLUGIN_VERSION, modeloutput.getBuild().getPlugins().get(0).getVersion());
+        assertEquals(MavenNbModuleImpl.getLatestNbmPluginVersion(), modeloutput.getBuild().getPlugins().get(0).getVersion());
         assertEquals("maven-compiler-plugin", modeloutput.getBuild().getPlugins().get(1).getArtifactId());
-        assertEquals("3.8.1", modeloutput.getBuild().getPlugins().get(1).getVersion());
+        assertEquals(EXPECTED_JAVAC_PLUGIN_VERSION, modeloutput.getBuild().getPlugins().get(1).getVersion());
         assertEquals(0, model.getRepositories().size());
     }
 
-    private String POMCOMPILER
-            = "<project>\n"
-            + "<modelVersion>4.0.0</modelVersion>"
-            + "<build>"
-            + "<pluginManagement>"
-            + "<plugins>"
-            + "<plugin>"
-            + "<groupId>org.apache.maven.plugins</groupId>"
-            + "<artifactId>maven-compiler-plugin</artifactId>"
-            + "<version>3.3.1.1</version>"
-            + "</plugin></plugins>"
-            + "</pluginManagement>"
-            + "</build>"
-            + "</project>";
+    private final String POMCOMPILER = """
+            <project>
+                <modelVersion>4.0.0</modelVersion>
+                <build>
+                    <pluginManagement>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.3.1.1</version>
+                            </plugin>
+                        </plugins>
+                    </pluginManagement>
+                </build>
+            </project>
+            """;
 
-    private String POMJAR
-            = "<project>\n"
-            + "<modelVersion>4.0.0</modelVersion>"
-            + "<build>"
-            + "<pluginManagement>"
-            + "<plugins>"
-            + "<plugin>"
-            + "<groupId>org.apache.maven.plugins</groupId>"
-            + "<artifactId>maven-jar-plugin</artifactId>"
-            + "<version>2.1.0</version>"
-            + "</plugin></plugins>"
-            + "</pluginManagement>"
-            + "</build>"
-            + "</project>";
+    private final String POMJAR = """
+            <project>
+                <modelVersion>4.0.0</modelVersion>
+                <build>
+                    <pluginManagement>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-jar-plugin</artifactId>
+                                <version>2.1.0</version>
+                            </plugin>
+                        </plugins>
+                    </pluginManagement>
+                </build>
+            </project>
+            """;
+
+    @ServiceProvider(service=IndexingNotificationProvider.class, position=1)
+    public static class NoOpNotificationProvider implements IndexingNotificationProvider {
+        @Override
+        public void notifyError(String message) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void requestPermissionsFor(RepositoryInfo repo) {}
+    }
 }

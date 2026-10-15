@@ -36,7 +36,7 @@ import org.netbeans.modules.parsing.api.Snapshot;
 @FunctionInterceptor.Registration(priority = 51)
 public class JQueryExtendInterceptor implements FunctionInterceptor {
 
-    private final static Pattern PATTERN = Pattern.compile("(\\$|jQuery)\\.extend");  //NOI18N
+    private static final Pattern PATTERN = Pattern.compile("(\\$|jQuery)\\.extend");  //NOI18N
 
     @Override
     public Pattern getNamePattern() {

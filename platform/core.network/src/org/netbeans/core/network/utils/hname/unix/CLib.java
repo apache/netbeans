@@ -26,7 +26,7 @@ import com.sun.jna.Native;
  */
 interface CLib extends Library {
 
-    CLib INSTANCE = (CLib) Native.load("c", CLib.class);
+    CLib INSTANCE = Native.load("c", CLib.class);
 
     public int gethostname(byte[] hostname, int bufferSize);
 }

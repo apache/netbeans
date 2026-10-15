@@ -158,7 +158,7 @@ public class RunnableMethod extends Benchmark {
                 mtd.invoke( obj, args );
             } catch( Throwable t ) {
                 t.printStackTrace();
-                junit.framework.Assert.fail( "Exception: " + t.getMessage() );
+                org.junit.Assert.fail( "Exception: " + t.getMessage() );
             }
         }
     }

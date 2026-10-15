@@ -159,7 +159,7 @@ public class ReorderTest extends TestCase {
                 }
         checkChildren(copies, "CompanyLogo1, CompanyLogo2, Office2, Office1, Office3");
 			// Cannot remove children until after they are copied.
-			for (Component child : children.toArray(new Component[children.size()])) {
+			for (Component child : children.toArray(new Component[0])) {
 				model.removeChildComponent(child);
 			}
 			assertEquals("number of childs",0, parent.getChildren().size());
@@ -212,7 +212,7 @@ public class ReorderTest extends TestCase {
 			if(child instanceof Element)
 				System.out.print(((Element)child).getAttribute("name")+", ");
 			else if(child instanceof Text)
-				System.out.print("["+((Text)child).getTokens().get(0).getValue().replaceAll("\n", "~")+"]");
+				System.out.print("["+((Text)child).getTokens().get(0).getValue().replace("\n", "~")+"]");
 		}
 		System.out.println();
         }

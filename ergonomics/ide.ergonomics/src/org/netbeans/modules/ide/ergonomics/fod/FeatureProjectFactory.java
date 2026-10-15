@@ -25,8 +25,9 @@ import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -38,12 +39,13 @@ import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.xml.parsers.DocumentBuilder;
 import org.netbeans.api.autoupdate.UpdateElement;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectManager;
+import org.netbeans.api.project.SourceGroup;
+import org.netbeans.api.project.Sources;
 import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.SubprojectProvider;
@@ -63,16 +65,19 @@ import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 import org.openide.util.lookup.ServiceProvider;
 import org.w3c.dom.Document;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.spi.project.support.GenericSources;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
+import org.openide.awt.Notification;
+import org.openide.awt.NotificationDisplayer;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataFolder;
-import org.openide.modules.SpecificationVersion;
 import org.openide.nodes.FilterNode;
+import org.openide.util.ChangeSupport;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor.Task;
+import org.openide.xml.XMLUtil;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
@@ -87,15 +92,15 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
     public FeatureProjectFactory() {
         OpenProjects.getDefault().addPropertyChangeListener(this);
     }
-    
+
     static Icon loadIcon() {
         return ImageUtilities.loadImageIcon(
             "org/netbeans/modules/ide/ergonomics/fod/project.png" // NOI18N
             , false
         );
     }
-    
-    final static class Data {
+
+    static final class Data {
         private final boolean deepCheck;
         private final FileObject dir;
         private Map<String,String> data;
@@ -117,20 +122,15 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
             }
             File f = FileUtil.toFile(fo);
             try {
-                DocumentBuilder b = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-                if (f != null) {
-                    doc = b.parse(f);
-                } else {
-                    InputStream is = fo.getInputStream();
-                    doc = b.parse(is);
+                InputStream is = f != null ? new FileInputStream(f) : fo.getInputStream();
+                try (is) {
+                    doc = XMLUtil.parse(new InputSource(is), false, false, true, null, null);
                 }
                 if (doms == null) {
                     doms = new HashMap<String,Document>();
                 }
                 doms.put(relative, doc);
                 return doc;
-            } catch (ParserConfigurationException parserConfigurationException) {
-                LOG.log(Level.WARNING, "Cannot configure XML parser", parserConfigurationException); // NOI18N
             } catch (SAXException sAXException) {
                 LOG.log(Level.INFO, "XML broken in " + f, sAXException); // NOI18N
             } catch (Exception any) {
@@ -148,7 +148,35 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
                 pos += 3;
             }
 
-            return d != null && d.getFileObject(relative) != null;
+            if (d == null) {
+                return false;
+            }
+
+            relative = relative.substring(pos);
+
+            if (relative.contains("*")) {
+                for (String segment : relative.split("/")) {
+                    FOUND: if (segment.contains("*")) {
+                        assert segment.endsWith("*");
+                        String prefix = segment.substring(0, segment.length() - 1);
+                        for (FileObject ch : d.getChildren()) {
+                            if (ch.getNameExt().startsWith(prefix)) {
+                                d = ch;
+                                break FOUND;
+                            }
+                        }
+                        return false;
+                    } else {
+                        d = d.getFileObject(segment);
+                    }
+                    if (d == null) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            return d.getFileObject(relative) != null;
         }
 
         final boolean isDeepCheck() {
@@ -178,7 +206,7 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
                 is = prj.getInputStream();
                 len = is.read(arr);
                 if (len >= 0) {
-                    content = new String(arr, 0, len, "UTF-8");
+                    content = new String(arr, 0, len, StandardCharsets.UTF_8);
                 }
             } catch (IOException ex) {
                 LOG.log(Level.FINEST, "exception while reading " + prj, ex); // NOI18N
@@ -223,7 +251,7 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
 
     public Project loadProject(FileObject projectDirectory, ProjectState state) throws IOException {
         Data d = new Data(projectDirectory, true);
-        
+
         FeatureInfo lead = null;
         List<FeatureInfo> additional = new ArrayList<FeatureInfo>();
         int notEnabled = 0;
@@ -321,7 +349,7 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
         }
     }
 
-    private static final class FeatureNonProject 
+    private static final class FeatureNonProject
     implements Project, ChangeListener {
         private final FeatureDelegate delegate;
         private final FeatureInfo info;
@@ -343,7 +371,7 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
             this.weakL = WeakListeners.change(this, FeatureManager.getInstance());
             FeatureManager.getInstance().addChangeListener(weakL);
         }
-        
+
         public FileObject getProjectDirectory() {
             return delegate.dir;
         }
@@ -391,7 +419,7 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
                 }
             }
         }
-        
+
         private final class FeatureOpenHook extends ProjectOpenedHook
         implements Runnable, ProgressMonitor {
             /**
@@ -399,7 +427,7 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
              * should be cleared after that.
              */
             private FindComponentModules finder;
-            
+
             @Override
             protected void projectOpened() {
                 if (state == null) {
@@ -455,8 +483,8 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
                                 sb.append(s.displayName());
                             }
                         }
-                        error = NbBundle.getMessage(FeatureProjectFactory.class, 
-                                "MSG_BrokenAction_FeatureIncomplete", 
+                        error = NbBundle.getMessage(FeatureProjectFactory.class,
+                                "MSG_BrokenAction_FeatureIncomplete",
                                 findModules.getIncompleteFeatures().iterator().next(),
                                 sb.toString());
                         return;
@@ -497,21 +525,26 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
             }
         } // end of FeatureOpenHook
     } // end of FeatureNonProject
-    private static final class FeatureDelegate 
-    implements Lookup.Provider, ProjectInformation, LogicalViewProvider {
+
+    static final class FeatureDelegate
+    implements Lookup.Provider, ProjectInformation, LogicalViewProvider, Sources {
         private final FileObject dir;
         private final PropertyChangeSupport support;
+        private final ChangeSupport sourcesListener = new ChangeSupport(this);
         Lookup delegate;
         private final InstanceContent ic = new InstanceContent();
         private final Lookup hooks = new AbstractLookup(ic);
         private final FeatureNonProject.FeatureOpenHook hook;
         private List<RootNode> lvs;
+        private final Sources genericSources;
+        private Notification openingPrj;
 
 
-        public FeatureDelegate(FileObject dir, FeatureNonProject feature) {
+        FeatureDelegate(FileObject dir, FeatureNonProject feature) {
             this.dir = dir;
             this.hook = feature.new FeatureOpenHook();
             ic.add(UILookupMergerSupport.createProjectOpenHookMerger(hook));
+            this.genericSources = GenericSources.genericOnly(feature);
             this.delegate = new ProxyLookup(
                 Lookups.fixed(feature, this),
                 LookupProviderSupport.createCompositeLookup(
@@ -521,6 +554,7 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
             this.support = new PropertyChangeSupport(this);
         }
 
+        @Override
         public Lookup getLookup() {
             return delegate;
         }
@@ -558,10 +592,12 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
             return delegate.lookup(Project.class);
         }
 
+        @Override
         public void addPropertyChangeListener(PropertyChangeListener listener) {
             support.addPropertyChangeListener(listener);
         }
 
+        @Override
         public void removePropertyChangeListener(PropertyChangeListener listener) {
             support.removePropertyChangeListener(listener);
         }
@@ -590,8 +626,10 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
                 }
             }
             support.firePropertyChange(null, null, null);
+            sourcesListener.fireChange();
         }
 
+        @Override
         public Node createLogicalView() {
             LogicalViewProvider lvp = delegate.lookup(LogicalViewProvider.class);
             if (lvp != null && lvp != this) {
@@ -612,6 +650,42 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
                 return lvp.findPath(root, target);
             }
             return null;
+        }
+
+        @NbBundle.Messages({
+            "MSG_OnMissingSourceGroup=Project initialization requested",
+            "# {0} - name of the project",
+            "MSG_FullyInitializeProject=Should the {0} project be initialized fully?",
+        })
+        @Override
+        public SourceGroup[] getSourceGroups(String type) {
+            var src = delegate.lookup(Sources.class);
+            if (src != null && src != this) {
+                return src.getSourceGroups(type);
+            }
+            if (!Sources.TYPE_GENERIC.equals(type)) {
+                Project prj = getLookup().lookup(Project.class);
+                if (prj != null && openingPrj == null) {
+                    openingPrj = NotificationDisplayer.getDefault().notify(
+                        Bundle.MSG_OnMissingSourceGroup(), loadIcon(),
+                        Bundle.MSG_FullyInitializeProject(getDisplayName()),
+                        (ev) -> {
+                            OpenProjects.getDefault().open(new Project[] { prj }, false);
+                        }
+                    );
+                }
+            }
+            return genericSources.getSourceGroups(type);
+        }
+
+        @Override
+        public void addChangeListener(ChangeListener listener) {
+            sourcesListener.addChangeListener(listener);
+        }
+
+        @Override
+        public void removeChangeListener(ChangeListener listener) {
+            sourcesListener.removeChangeListener(listener);
         }
     }
 

@@ -20,6 +20,7 @@
 package org.netbeans.modules.payara.spi;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 import javax.swing.event.ChangeListener;
@@ -46,6 +47,10 @@ public interface PayaraModule {
     public static final String DISPLAY_NAME_ATTR = "displayName"; // NOI18N
     public static final String USERNAME_ATTR = "username"; // NOI18N
     public static final String PASSWORD_ATTR = "password"; // NOI18N
+    public static final String WSL_ATTR = "wsl"; // NOI18N
+    public static final String DOCKER_ATTR = "docker"; // NOI18N
+    public static final String HOST_PATH_ATTR = "hostPath"; // NOI18N
+    public static final String CONTAINER_PATH_ATTR = "containerPath"; // NOI18N
     public static final String ADMINPORT_ATTR = "adminPort"; // NOI18N
     public static final String TARGET_ATTR = "target";
     public static final String HTTPPORT_ATTR = "httpportnumber"; // NOI18N
@@ -58,7 +63,6 @@ public interface PayaraModule {
     public static final String JAVA_PLATFORM_ATTR = "java.platform";
     public static final String HTTP_MONITOR_FLAG = "httpMonitorOn";
     public static final String DRIVER_DEPLOY_FLAG = "driverDeployOn";
-    public static final String START_DERBY_FLAG = "derbyStartOn";
     public static final String USE_IDE_PROXY_FLAG = "useIDEProxyOn";
     public static final String LOOPBACK_FLAG = "loopbackOn";
     public static final String HTTPHOST_ATTR = "httphostname";  // NOI18N -- necessary for cluster and instance support
@@ -85,6 +89,7 @@ public interface PayaraModule {
     public static final String JDBC = "JDBC"; // NOI18N
     public static final String JDBC_RESOURCE = "jdbc-resource"; // NOI18N
     public static final String JDBC_CONNECTION_POOL = "jdbc-connection-pool"; // NOI18N
+    public static final String HOT_DEPLOY = "hotDeploy";
     public static final String SESSION_PRESERVATION_FLAG = "preserveSessionsOn";
 
     public static final String CONNECTORS = "CONNECTORS"; // NOI18N
@@ -251,35 +256,40 @@ public interface PayaraModule {
             File application, String name, String contextRoot, Map<String,String> properties);
 
     /**
-     * Redeploy the named application onto the server.  The application must
-     * have previously been directory deployed.  If not, use deploy().
-     * 
-     * @param stateListener listener to listen message describing the redeploy 
-     *   process as it progresses.  Can be null.
+     * Redeploy the named application onto the server.The application must have
+     * previously been directory deployed.If not, use deploy().
+     *
+     * @param stateListener listener to listen message describing the redeploy
+     * process as it progresses. Can be null.
      * @param name name this application is deployed under.
-     * 
+     * @param resourcesChanged
+     * @param sniffers the list of containers e.g  which requires restart
+     *
      * @return Future instance that finishes when the redeploy command has been
-     *   completed.
+     * completed.
      */
     public Future<ResultString> redeploy(final TaskStateListener stateListener, 
-            final String name, final boolean resourcesChanged);
+            final String name, final boolean resourcesChanged, boolean metadataChanged, List<String> sourcesChanged);
        
     /**
      * Redeploy the named application onto the server with a new context root
-     * value.  The application must have previously been directory deployed.
-     * If not, use deploy().
+     * value.The application must have previously been directory deployed.If not, use deploy().
      * 
      * @param stateListener listener to listen message describing the redeploy 
      *   process as it progresses.  Can be null.
      * @param name name this application is deployed under.
      * @param contextRoot to use for this application on deploy (can be null to
      *   reuse existing contextRoot.)
+     * @param resourcesChanged Is application resource file modified.
+     * @param metadataChanged Is application metadata files modified.
+     * @param sourcesChanged the list of source file modified.
      * 
      * @return Future instance that finishes when the redeploy command has been
      *   completed.
      */
     public Future<ResultString> redeploy(final TaskStateListener stateListener, 
-            final String name, final String contextRoot, final boolean resourcesChanged);
+            final String name, final String contextRoot,
+            final boolean resourcesChanged, boolean metadataChanged, List<String> sourcesChanged);
     
     /**
      * Undeploy the named application.

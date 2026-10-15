@@ -20,7 +20,6 @@
 package org.netbeans.api.debugger.jpda;
 
 import com.sun.jdi.AbsentInformationException;
-import java.beans.PropertyChangeListener;
 import java.util.List;
 import org.netbeans.spi.debugger.jpda.EditorContext.Operation;
 
@@ -94,7 +93,7 @@ public interface CallStackFrame {
      *
      * @param struts a language name or null for default language
      * @return name of file this stack frame is stopped in
-     * @throws NoInformationException if information about source is not 
+     * @throws AbsentInformationException if information about source is not 
      *   included in class file
      */
     public abstract String getSourceName (String struts) 

@@ -1,0 +1,14 @@
+Display text: case <b>A</b> = 'A';
+File name: index.php
+Name: A
+Position: BEGIN: 1388 END: 1389
+
+Display text: EnumB::<b>A</b>->publicMethod();
+File name: index.php
+Name: A
+Position: BEGIN: 1624 END: 1625
+
+Display text: EnumB::<b>A</b>::publicStaticMethod();
+File name: index.php
+Name: A
+Position: BEGIN: 1650 END: 1651

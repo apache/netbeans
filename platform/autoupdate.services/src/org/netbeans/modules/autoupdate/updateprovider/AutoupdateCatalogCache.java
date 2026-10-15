@@ -26,10 +26,10 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.autoupdate.services.AutoupdateSettings;
-import org.openide.filesystems.FileUtil;
 import org.openide.modules.Places;
 import org.openide.util.Utilities;
 
@@ -211,12 +211,12 @@ public final class AutoupdateCatalogCache {
         while (prefix.length () < 3) {
             prefix += cache.getName();
         }
-        final File temp = File.createTempFile (prefix, null, cache.getParentFile ()); //NOI18N
+        final File temp = Files.createTempFile(cache.getParentFile ().toPath(), prefix, null).toFile (); //NOI18N
         temp.deleteOnExit();        
 
         DownloadListener nwl = new DownloadListener(sourceUrl, temp, allowZeroSize);
         
-        NetworkAccess.Task task = NetworkAccess.createNetworkAcessTask (sourceUrl, AutoupdateSettings.getOpenConnectionTimeout (), nwl);
+        NetworkAccess.Task task = NetworkAccess.createNetworkAccessTask (sourceUrl, AutoupdateSettings.getOpenConnectionTimeout (), nwl, true);
         task.waitFinished ();
         nwl.notifyException ();
         synchronized(getLock(cache)) {
@@ -258,12 +258,8 @@ public final class AutoupdateCatalogCache {
         if (!temp.renameTo(cache)) {
             err.log(Level.INFO, "Cannot rename temp {0} to cache {1}", new Object[]{temp, cache});
             err.log(Level.INFO, "Trying to copy {0} to cache {1}", new Object[] {temp, cache});
-            try {
-                FileOutputStream os = new FileOutputStream(cache);
-                FileInputStream is = new FileInputStream(temp);
-                FileUtil.copy(is, os);
-                os.close();
-                is.close();
+            try (FileInputStream is = new FileInputStream(temp); FileOutputStream os = new FileOutputStream(cache)) {
+                is.transferTo(os);
                 temp.delete();
             } catch (IOException ex) {
                 err.log(Level.INFO, "Cannot even copy: {0}", ex.getMessage());

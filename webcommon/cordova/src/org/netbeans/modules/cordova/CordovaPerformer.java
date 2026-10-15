@@ -249,7 +249,7 @@ public class CordovaPerformer implements BuildPerformer {
                                         project, 
                                         Lookups.fixed(
                                             mapper, 
-                                            ImageUtilities.loadImage("org/netbeans/modules/cordova/platforms/ios/ios" + (String) (device.isEmulator()?"simulator16.png":"device16.png")), 
+                                            ImageUtilities.loadImage("org/netbeans/modules/cordova/platforms/ios/ios" + (device.isEmulator()?"simulator16.png":"device16.png")), 
                                             getConfig(project).getId()), 
                                         false);
                             }
@@ -458,7 +458,7 @@ public class CordovaPerformer implements BuildPerformer {
             FileObject config = project.getProjectDirectory().getFileObject(configPath);
             SourceConfig conf = new SourceConfig(FileUtil.toFile(config));
             if (fresh) {
-                final String appName = ProjectUtils.getInformation(project).getDisplayName().replaceAll(" ", "_").replaceAll("-", "_").replaceAll("\\.","_"); // NOI18N
+                final String appName = ProjectUtils.getInformation(project).getDisplayName().replace(" ", "_").replace("-", "_").replaceAll("\\.","_"); // NOI18N
                 conf.setId(DEFAULT_ID_PREFIX + "." + appName); // NOI18N
                 conf.setName(appName);
                 conf.setDescription(DEFAULT_DESCRIPTION);

@@ -21,7 +21,6 @@ package org.netbeans.modules.payara.common.ui;
 import java.awt.Component;
 import java.util.Arrays;
 import java.util.List;
-import org.netbeans.modules.payara.common.ui.BasePanel;
 
 public class ConnectionPoolAdvancedAttributesCustomizer extends BasePanel {
 

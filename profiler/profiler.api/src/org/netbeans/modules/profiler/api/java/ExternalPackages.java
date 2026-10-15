@@ -30,7 +30,7 @@ import org.openide.filesystems.FileUtil;
  *
  * @author Jaroslv Bachorik
  */
-final public class ExternalPackages {
+public final class ExternalPackages {
     private static final Comparator<FileObject> pathComparator = new Comparator<FileObject>() {
         @Override
         public int compare(FileObject o1, FileObject o2) {
@@ -52,7 +52,7 @@ final public class ExternalPackages {
 
         @Override
         public Collection<SourceClassInfo> getClasses() {
-            Set<FileObject> clzs = new TreeSet(pathComparator);
+            Set<FileObject> clzs = new TreeSet<>(pathComparator);
             Enumeration<? extends FileObject> e = pkg.getData(false);
             while (e.hasMoreElements()) {
                 FileObject clz = e.nextElement();
@@ -93,7 +93,7 @@ final public class ExternalPackages {
 
         @Override
         public Collection<SourcePackageInfo> getSubpackages() {
-            Set<FileObject> pkgs = new TreeSet(pathComparator);
+            Set<FileObject> pkgs = new TreeSet<>(pathComparator);
             Enumeration<? extends FileObject> e = pkg.getFolders(false);
             while (e.hasMoreElements()) {
                 pkgs.add(e.nextElement());
@@ -323,7 +323,7 @@ final public class ExternalPackages {
             }
             
             if (rec) {
-                Queue<SourcePackageInfo> _packages = new ArrayDeque(pkgis);
+                Queue<SourcePackageInfo> _packages = new ArrayDeque<>(pkgis);
                 pkgis.clear();
                 while (!_packages.isEmpty()) {
                     FilePackageInfo pkg = (FilePackageInfo)_packages.poll();

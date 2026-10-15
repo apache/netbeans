@@ -257,7 +257,7 @@ public final class MissingDatabaseConnectionWarning extends JPanel {
                 if (!jButtonAddConnection.isEnabled()) {
                     jButtonAddConnection.setEnabled(true);
                 }
-                Iterator it = datasources.iterator();
+                Iterator<Datasource> it = datasources.iterator();
                 int i = 0;
                 while (it.hasNext()) {
                     if (index >= 0 && index <= datasources.size()) {

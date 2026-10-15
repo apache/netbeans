@@ -27,11 +27,11 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
-import javax.servlet.jsp.tagext.TagLibraryInfo;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.modules.editor.indent.api.Indent;
 import org.netbeans.api.java.source.CompilationController;
@@ -42,6 +42,7 @@ import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.web.core.api.JspContextInfo;
 import org.netbeans.modules.web.jsps.parserapi.JspParserAPI;
 import org.netbeans.modules.web.jsps.parserapi.PageInfo;
+import org.netbeans.modules.web.jsps.parserapi.TagLibraryInfo;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
@@ -57,14 +58,14 @@ public final class JspPaletteUtilities {
     private static final String JSTL_URI = "http://java.sun.com/jsp/jstl/core";  //NOI18N
     private static final String SQL_PREFIX = "sql";  //NOI18N
     private static final String SQL_URI = "http://java.sun.com/jsp/jstl/sql";  //NOI18N
-    
+
     public static void insert(String s, JTextComponent target) throws BadLocationException {
         insert(s, target, true);
     }
 
     public static void insert(String s, JTextComponent target, boolean reformat) throws BadLocationException {
         Document _doc = target.getDocument();
-        if (_doc == null || !(_doc instanceof BaseDocument)) {
+        if (!(_doc instanceof BaseDocument)) {
             return;
         }
 
@@ -142,6 +143,15 @@ public final class JspPaletteUtilities {
         return null;
     }
 
+    public static boolean isJakartaVariant(JTextComponent target) {
+        FileObject fobj = getFileObject(target);
+        if(fobj != null) {
+            ClassPath cp = ClassPath.getClassPath(fobj, ClassPath.COMPILE);
+            return cp != null && cp.findResource("jakarta/servlet/http/HttpServletRequest.class") != null;
+        }
+        return false;
+    }
+
     public static boolean idExists(String id, PageInfo.BeanData[] beanData) {
         boolean res = false;
         if (id != null && beanData != null) {
@@ -159,11 +169,8 @@ public final class JspPaletteUtilities {
     public static boolean typeExists(JTextComponent target, final String fqcn) {
         final boolean[] result = {false};
         if (fqcn != null) {
-            runUserActionTask(target, new Task<CompilationController>() {
-
-                public void run(CompilationController parameter) throws Exception {
-                    result[0] = parameter.getElements().getTypeElement(fqcn) != null;
-                }
+            runUserActionTask(target, (CompilationController parameter) -> {
+                result[0] = parameter.getElements().getTypeElement(fqcn) != null;
             });
         }
         return result[0];
@@ -184,10 +191,11 @@ public final class JspPaletteUtilities {
     }
 
     public static List<String> getTypeProperties(JTextComponent target, final String fqcn, final String[] prefix) {
-        final List<String> result = new ArrayList<String>();
+        final List<String> result = new ArrayList<>();
         if (prefix != null) {
             runUserActionTask(target, new Task<CompilationController>() {
 
+                @Override
                 public void run(CompilationController parameter) throws Exception {
                     TypeElement te = parameter.getElements().getTypeElement(fqcn);
                     if (te != null) {
@@ -235,14 +243,14 @@ public final class JspPaletteUtilities {
         }
         return result;
     }
-    
+
     /**************************************************************************/
     public static String getTagLibPrefix(JTextComponent target, String tagLibUri) {
         FileObject fobj = getFileObject(target);
         if (fobj != null) {
             JspParserAPI.ParseResult result = JspContextInfo.getContextInfo(fobj).getCachedParseResult(fobj, false, true);
             if (result != null && result.getPageInfo() != null) {
-                 for (TagLibraryInfo tli : result.getPageInfo().getTaglibs()) {
+                 for (TagLibraryInfo tli : result.getPageInfo().getTagLibraries().values()) {
                      if (tagLibUri.equals(tli.getURI()))
                          return tli.getPrefixString();
                  }
@@ -250,7 +258,7 @@ public final class JspPaletteUtilities {
         }
         return null;
     }
-    
+
     /**************************************************************************/
     public static String findJstlPrefix(JTextComponent target) {
         String res = getTagLibPrefix(target, JSTL_URI);
@@ -270,35 +278,32 @@ public final class JspPaletteUtilities {
     /**************************************************************************/
     private static void insertTagLibRef(JTextComponent target, String prefix, String uri) {
         Document doc = target.getDocument();
-        if (doc != null && doc instanceof BaseDocument) {
+        if (doc instanceof BaseDocument) {
             BaseDocument baseDoc = (BaseDocument)doc;
-            baseDoc.atomicLock();
-            try {
-                int pos = 0;  // FIXME: compute better where to insert tag lib definition?
-                String definition = "<%@taglib prefix=\""+prefix+"\" uri=\""+uri+"\"%>\n";  //NOI18N
-                
-                //test for .jspx. FIXME: find better way to detect xml syntax?.
-                FileObject fobj = getFileObject(target);
-                if (fobj != null && "jspx".equals(fobj.getExt())) {
-                    int baseDocLength = baseDoc.getLength();
-                    String text = baseDoc.getText(0, baseDocLength);
-                    String jspRootBegin = "<jsp:root "; //NOI18N
-                    int jspRootIndex = text.indexOf(jspRootBegin);
-                    if (jspRootIndex != -1) {
-                        pos = jspRootIndex + jspRootBegin.length();
-                        definition = "xmlns:" + prefix + "=\"" + uri + "\" ";  //NOI18N
-                    }
-                }
+            baseDoc.runAtomic(() -> {
+                try {
+                    int pos = 0;  // FIXME: compute better where to insert tag lib definition?
+                    String definition = "<%@taglib prefix=\"" + prefix + "\" uri=\"" + uri + "\"%>\n";  //NOI18N
 
-                doc.insertString(pos, definition, null);
-            }
-            catch (BadLocationException e) {
-                Exceptions.printStackTrace(e);
-            }
-            finally {
-                baseDoc.atomicUnlock();
-            }
+                    //test for .jspx. FIXME: find better way to detect xml syntax?.
+                    FileObject fobj = getFileObject(target);
+                    if (fobj != null && "jspx".equals(fobj.getExt())) {
+                        int baseDocLength = baseDoc.getLength();
+                        String text = baseDoc.getText(0, baseDocLength);
+                        String jspRootBegin = "<jsp:root "; //NOI18N
+                        int jspRootIndex = text.indexOf(jspRootBegin);
+                        if (jspRootIndex != -1) {
+                            pos = jspRootIndex + jspRootBegin.length();
+                            definition = "xmlns:" + prefix + "=\"" + uri + "\" ";  //NOI18N
+                        }
+                    }
+
+                    doc.insertString(pos, definition, null);
+                } catch (BadLocationException e) {
+                    Exceptions.printStackTrace(e);
+                }
+            });
         }
     }
-    
+
 }

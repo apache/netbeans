@@ -60,7 +60,7 @@ import org.openide.util.HelpCtx;
 //@ActionRegistration(displayName="#LBL_GetCmdLineArgumentsAction")
 //@ActionReference(path="Menu/Profile/Advanced", position=200)
 public final class GetCmdLineArgumentsAction extends ProfilingAwareAction {
-    final private static int[] enabledStates = new int[]{Profiler.PROFILING_RUNNING};
+    private static final int[] enabledStates = new int[]{Profiler.PROFILING_RUNNING};
     
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 

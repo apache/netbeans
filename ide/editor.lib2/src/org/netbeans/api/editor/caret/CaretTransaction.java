@@ -176,7 +176,7 @@ final class CaretTransaction {
             if (dotChanged || markChanged) {
                 editorCaret.ensureValidInfo(caretItem);
                 if (expandFoldPositions == null) {
-                    expandFoldPositions = new ArrayList(2);
+                    expandFoldPositions = new ArrayList<>(2);
                 }
                 if (dotChanged) {
                     caretItem.setDotPos(dotPos);

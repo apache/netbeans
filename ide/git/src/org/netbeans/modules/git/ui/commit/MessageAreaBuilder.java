@@ -40,10 +40,9 @@ public class MessageAreaBuilder {
             messageTextArea.setFont(f);
         }
         messageTextArea.setColumns(60); //this determines the preferred width of the whole dialog
-        messageTextArea.setLineWrap(true);
+        messageTextArea.setLineWrap(false);
         messageTextArea.setRows(4);
         messageTextArea.setTabSize(4);
-        messageTextArea.setWrapStyleWord(true);
         messageTextArea.setMinimumSize(new Dimension(100, 18));
         if (accessibleName != null) {
             messageTextArea.getAccessibleContext().setAccessibleName(accessibleName);

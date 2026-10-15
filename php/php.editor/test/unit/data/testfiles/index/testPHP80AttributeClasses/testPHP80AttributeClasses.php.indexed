@@ -1,0 +1,107 @@
+
+
+Document 0
+Searchable Keys:
+  attribute.clz : attr1;Attr1;997;;Attributes\Test1;;1;;0;<TESTURL>/testPHP80AttributeClasses.php;;1;
+  clz : attr1;Attr1;997;;Attributes\Test1;;1;;0;<TESTURL>/testPHP80AttributeClasses.php;;1;
+  clz.const : const_attr1;CONST_ATTR1;1026;"test";0;<TESTURL>/testPHP80AttributeClasses.php;1;;
+  method : __construct;__construct;1072;$int:int:1::1:0:0:0:0:0:int:,$string:string:1::1:0:0:0:0:0:string:;;1;0;<TESTURL>/testPHP80AttributeClasses.php;0;0;;
+  top : attr1
+
+Not Searchable Keys:
+  constructor : $string:string:1::1:0:0:0:0:0:string:;;1;0;<TESTURL>/testPHP80AttributeClasses.php;0;0;;Attributes\Test1;,attr1;Attr1;1072;$int:int:1::1:0:0:0:0:0:int:
+
+
+Document 1
+Searchable Keys:
+  attribute.clz : attr3;Attr3;1282;;Attributes\Test1;;1;;0;<TESTURL>/testPHP80AttributeClasses.php;;1;
+  clz : attr3;Attr3;1282;;Attributes\Test1;;1;;0;<TESTURL>/testPHP80AttributeClasses.php;;1;
+  method : __construct;__construct;1314;$string:string:1::1:0:0:0:0:0:string:,$bool:bool:1:true:0:0:0:0:0:0:bool:;;1;0;<TESTURL>/testPHP80AttributeClasses.php;0;0;;
+  top : attr3
+
+Not Searchable Keys:
+  constructor : $bool:bool:1:true:0:0:0:0:0:0:bool:;;1;0;<TESTURL>/testPHP80AttributeClasses.php;0;0;;Attributes\Test1;,attr3;Attr3;1314;$string:string:1::1:0:0:0:0:0:string:
+
+
+Document 2
+Searchable Keys:
+  clz : attr2;Attr2;1156;;Attributes\Test1;;1;;0;<TESTURL>/testPHP80AttributeClasses.php;;0;
+  method : __construct;__construct;1188;$string:string:1::1:0:0:0:0:0:string:,$bool:bool:1:true:0:0:0:0:0:0:bool:;;1;0;<TESTURL>/testPHP80AttributeClasses.php;0;0;;
+  top : attr2
+
+Not Searchable Keys:
+  constructor : $bool:bool:1:true:0:0:0:0:0:0:bool:;;1;0;<TESTURL>/testPHP80AttributeClasses.php;0;0;;Attributes\Test1;,attr2;Attr2;1188;$string:string:1::1:0:0:0:0:0:string:
+
+
+Document 3
+Searchable Keys:
+  clz : attributedclass;AttributedClass;1566;;Attributes\Test2;;1;;0;<TESTURL>/testPHP80AttributeClasses.php;;0;
+  top : attributedclass
+
+Not Searchable Keys:
+
+
+Document 4
+Searchable Keys:
+  const : const_attributes_test1;CONST_ATTRIBUTES_TEST1;940;Attributes\Test1;1;0;<TESTURL>/testPHP80AttributeClasses.php;
+  const : const_define;CONST_DEFINE;872;;"define";0;<TESTURL>/testPHP80AttributeClasses.php;
+  const : const_global;CONST_GLOBAL;836;;"const";0;<TESTURL>/testPHP80AttributeClasses.php;
+  ns : ;;;0;<TESTURL>/testPHP80AttributeClasses.php;
+  ns : test1;Test1;Attributes;0;<TESTURL>/testPHP80AttributeClasses.php;
+  ns : test2;Test2;Attributes;0;<TESTURL>/testPHP80AttributeClasses.php;
+  top : 
+  top : attributes\test1
+  top : attributes\test2
+  top : const_attributes_test1
+  top : const_define
+  top : const_global
+
+Not Searchable Keys:
+
+
+Document 5
+Searchable Keys:
+  identifier_used : __construct;
+  identifier_used : __construct;
+  identifier_used : __construct;
+  identifier_used : attr1;
+  identifier_used : attr1;
+  identifier_used : attr1;
+  identifier_used : attr1;
+  identifier_used : attr2;
+  identifier_used : attr3;
+  identifier_used : attribute;
+  identifier_used : attribute;
+  identifier_used : attribute;
+  identifier_used : attributedclass;
+  identifier_used : attributes;
+  identifier_used : attributes;
+  identifier_used : attributes;
+  identifier_used : attributes;
+  identifier_used : bool;
+  identifier_used : bool;
+  identifier_used : bool;
+  identifier_used : bool;
+  identifier_used : const_attr1;
+  identifier_used : const_attr1;
+  identifier_used : const_attributes_test1;
+  identifier_used : const_attributes_test1;
+  identifier_used : const_attributes_test1;
+  identifier_used : const_global;
+  identifier_used : define;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : string;
+  identifier_used : string;
+  identifier_used : string;
+  identifier_used : string;
+  identifier_used : string;
+  identifier_used : string;
+  identifier_used : test1;
+  identifier_used : test1;
+  identifier_used : test1;
+  identifier_used : test2;
+  identifier_used : true;
+  identifier_used : true;
+
+Not Searchable Keys:

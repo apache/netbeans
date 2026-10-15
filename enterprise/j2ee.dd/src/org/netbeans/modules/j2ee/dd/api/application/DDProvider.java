@@ -56,7 +56,7 @@ public final class DDProvider {
     private static final String APP_13_DOCTYPE = "-//Sun Microsystems, Inc.//DTD J2EE Application 1.3//EN"; //NOI18N
     private static final DDProvider ddProvider = new DDProvider();
     
-    private final Map ddMap;
+    private final Map<FileObject, ApplicationProxy> ddMap;
 
     private static final Logger LOGGER = Logger.getLogger(DDProvider.class.getName());
 
@@ -64,7 +64,7 @@ public final class DDProvider {
     
     private DDProvider() {
         //ddMap=new java.util.WeakHashMap(5);
-        ddMap = new HashMap(5);
+        ddMap = new HashMap<>(5);
     }
     
     /**
@@ -85,6 +85,7 @@ public final class DDProvider {
      * 
      * @param fo FileObject representing the application.xml file
      * @return Application object - root of the deployment descriptor bean graph
+     * @throws IOException
      */
     public synchronized Application getDDRoot(FileObject fo) throws IOException {
         if (fo == null) {
@@ -179,13 +180,14 @@ public final class DDProvider {
      * for writing the changes.
      * @param fo FileObject representing the application.xml file
      * @return Application object - root of the deployment descriptor bean graph
+     * @throws IOException
      */
     public Application getDDRootCopy(FileObject fo) throws IOException {
         return (Application)getDDRoot(fo).clone();
     }
 
     private ApplicationProxy getFromCache (FileObject fo) {
-        return (ApplicationProxy) ddMap.get(fo);
+        return ddMap.get(fo);
     }
     
     /**
@@ -193,6 +195,8 @@ public final class DDProvider {
      *
      * @param is source representing the application.xml file
      * @return Application object - root of the deployment descriptor bean graph
+     * @throws IOException
+     * @throws SAXException
      */    
     public Application getDDRoot(InputSource is) throws IOException, SAXException {
         DDParse parse = parseDD(is);
@@ -205,6 +209,8 @@ public final class DDProvider {
     // PENDING j2eeserver needs BaseBean - this is a temporary workaround to avoid dependency of web project on DD impl
     /** 
      * Convenient method for getting the BaseBean object from CommonDDBean object.
+     * @param bean
+     * @return 
      */
     public BaseBean getBaseBean(CommonDDBean bean) {
         if (bean instanceof BaseBean) {
@@ -225,19 +231,27 @@ public final class DDProvider {
         }
     }
     
-    private static Application createApplication(DDParse parse) {        
-          Application jar = null;
-          String version = parse.getVersion();
-          if (Application.VERSION_1_4.equals(version)) {
-              return new org.netbeans.modules.j2ee.dd.impl.application.model_1_4.Application(parse.getDocument(),  Common.USE_DEFAULT_VALUES);
-          } else if (Application.VERSION_5.equals(version)) {
-              return new org.netbeans.modules.j2ee.dd.impl.application.model_5.Application(parse.getDocument(),  Common.USE_DEFAULT_VALUES);
-          } else if (Application.VERSION_6.equals(version)) {
-              return new org.netbeans.modules.j2ee.dd.impl.application.model_6.Application(parse.getDocument(),  Common.USE_DEFAULT_VALUES);
-          } else if (Application.VERSION_7.equals(version)) {
-              return new org.netbeans.modules.j2ee.dd.impl.application.model_7.Application(parse.getDocument(),  Common.USE_DEFAULT_VALUES);
-          }
-          return jar;
+    private static Application createApplication(DDParse parse) {
+        Application jar = null;
+        String version = parse.getVersion();
+        if (Application.VERSION_1_4.equals(version)) {
+            return new org.netbeans.modules.j2ee.dd.impl.application.model_1_4.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
+        } else if (Application.VERSION_5.equals(version)) {
+            return new org.netbeans.modules.j2ee.dd.impl.application.model_5.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
+        } else if (Application.VERSION_6.equals(version)) {
+            return new org.netbeans.modules.j2ee.dd.impl.application.model_6.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
+        } else if (Application.VERSION_7.equals(version)) {
+            return new org.netbeans.modules.j2ee.dd.impl.application.model_7.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
+        } else if (Application.VERSION_8.equals(version)) {
+            return new org.netbeans.modules.j2ee.dd.impl.application.model_8.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
+        } else if (Application.VERSION_9.equals(version)) {
+            return new org.netbeans.modules.j2ee.dd.impl.application.model_9.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
+        } else if (Application.VERSION_10.equals(version)) {
+            return new org.netbeans.modules.j2ee.dd.impl.application.model_10.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
+        } else if (Application.VERSION_11.equals(version)) {
+            return new org.netbeans.modules.j2ee.dd.impl.application.model_11.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
+        }
+        return jar;
     }
     
     private static class DDResolver implements EntityResolver {
@@ -248,6 +262,7 @@ public final class DDProvider {
             }
             return resolver;
         }        
+        @Override
         public InputSource resolveEntity (String publicId, String systemId) {
             if ("http://java.sun.com/xml/ns/j2ee/application_1_4.xsd".equals(systemId)) {
                 return new InputSource("nbres:/org/netbeans/modules/j2ee/dd/impl/resources/application_1_4.xsd"); //NOI18N
@@ -257,6 +272,14 @@ public final class DDProvider {
                 return new InputSource("nbres:/org/netbeans/modules/javaee/dd/impl/resources/application_6.xsd"); //NOI18N
             } else if ("http://xmlns.jcp.org/xml/ns/javaee/application_7.xsd".equals(systemId)) {
                 return new InputSource("nbres:/org/netbeans/modules/javaee/dd/impl/resources/application_7.xsd"); //NOI18N
+            } else if ("http://xmlns.jcp.org/xml/ns/javaee/application_8.xsd".equals(systemId)) {
+                return new InputSource("nbres:/org/netbeans/modules/javaee/dd/impl/resources/application_8.xsd"); //NOI18N
+            } else if ("https://jakarta.ee/xml/ns/jakartaee/application_9.xsd".equals(systemId)) {
+                return new InputSource("nbres:/org/netbeans/modules/javaee/dd/impl/resources/application_9.xsd"); //NOI18N
+            } else if ("https://jakarta.ee/xml/ns/jakartaee/application_10.xsd".equals(systemId)) {
+                return new InputSource("nbres:/org/netbeans/modules/javaee/dd/impl/resources/application_10.xsd"); //NOI18N
+            } else if ("https://jakarta.ee/xml/ns/jakartaee/application_11.xsd".equals(systemId)) {
+                return new InputSource("nbres:/org/netbeans/modules/javaee/dd/impl/resources/application_11.xsd"); //NOI18N
             } else {
                 // use the default behaviour
                 return null;
@@ -268,6 +291,7 @@ public final class DDProvider {
         private int errorType=-1;
         SAXParseException error;
 
+        @Override
         public void warning(SAXParseException sAXParseException) throws SAXException {
             if (errorType<0) {
                 errorType=0;
@@ -275,6 +299,7 @@ public final class DDProvider {
             }
             //throw sAXParseException;
         }
+        @Override
         public void error(SAXParseException sAXParseException) throws SAXException {
             if (errorType<1) {
                 errorType=1;
@@ -282,6 +307,7 @@ public final class DDProvider {
             }
             //throw sAXParseException;
         }        
+        @Override
         public void fatalError(SAXParseException sAXParseException) throws SAXException {
             errorType=2;
             throw sAXParseException;
@@ -303,11 +329,8 @@ public final class DDProvider {
     
     private DDParse parseDD (FileObject fo) 
     throws SAXException, IOException {
-        InputStream inputStream = fo.getInputStream();
-        try {
+        try (InputStream inputStream = fo.getInputStream()) {
             return parseDD(inputStream);
-        } finally {
-            inputStream.close();
         }
     }
     
@@ -373,12 +396,22 @@ public final class DDProvider {
                     Node vNode = attrs.getNamedItem("version");//NOI18N
                     if(vNode != null) {
                         String versionValue = vNode.getNodeValue();
-                        if (Application.VERSION_1_4.equals(versionValue)) {
-                            version = Application.VERSION_1_4;
-                        } else if (Application.VERSION_5.equals(versionValue)) {
-                            version = Application.VERSION_5;
+                        if (Application.VERSION_11.equals(versionValue)) {
+                            version = Application.VERSION_11;
+                        } else if (Application.VERSION_10.equals(versionValue)) {
+                            version = Application.VERSION_10;
+                        } else if (Application.VERSION_9.equals(versionValue)) {
+                            version = Application.VERSION_9;
+                        } else if (Application.VERSION_8.equals(versionValue)) {
+                            version = Application.VERSION_8;
+                        } else if (Application.VERSION_7.equals(versionValue)) {
+                            version = Application.VERSION_7;
                         } else if (Application.VERSION_6.equals(versionValue)) {
                             version = Application.VERSION_6;
+                        } else if (Application.VERSION_5.equals(versionValue)) {
+                            version = Application.VERSION_5;
+                        } else if (Application.VERSION_1_4.equals(versionValue)) {
+                            version = Application.VERSION_1_4;
                         } else {
                             version = Application.VERSION_7; //default
                         }

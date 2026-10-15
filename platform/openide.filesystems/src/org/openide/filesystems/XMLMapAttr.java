@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.AbstractMap;
@@ -109,11 +108,11 @@ import org.openide.util.io.NbObjectInputStream;
  */
 @SuppressWarnings("unchecked")
 final class XMLMapAttr implements Map {
-    Map/*<String,Attr>*/ map;
+    Map<String, Attr> map;
 
     /** Creates new XMLMapAttr and delegetaor is instanced */
     public XMLMapAttr() {
-        this.map = new HashMap(5);
+        this.map = new HashMap<>(5);
     }
 
     static Attr createAttributeAndDecode(String key, String value) {
@@ -199,18 +198,18 @@ final class XMLMapAttr implements Map {
         attrName = (String) keyValuePair[0];
 
         synchronized (this) {
-            attr = (Attr) map.get(attrName);
+            attr = map.get(attrName);
         }
 
         Object retVal = null;
         if (attr == null && origAttrName.startsWith("class:")) { // NOI18N
             synchronized (this) {
-                attr = (Attr) map.get(origAttrName.substring(6));
+                attr = map.get(origAttrName.substring(6));
             }
             retVal = attr != null ? attr.getType(params) : null;
         } else if (attr == null && origAttrName.startsWith("raw:")) { // NOI18N
             synchronized (this) {
-                attr = (Attr) map.get(origAttrName.substring(4));
+                attr = map.get(origAttrName.substring(4));
             }
             if (attr != null && attr.keyIndex == 9) {
                 return attr.methodValue(attr.value, params).getMethod();
@@ -255,18 +254,18 @@ final class XMLMapAttr implements Map {
     }
 
     synchronized Object put(final Object p1, final Object p2, boolean decode) {
-        if ((p1 == null) || !(p1 instanceof String)) {
+        if (!(p1 instanceof String)) {
             return null;
         }
 
         Object[] keyValuePair = ModifiedAttribute.translateInto((String) p1, p2);
         String key = (String) keyValuePair[0];
         Object value = keyValuePair[1];
-        Object toStore;
+        Attr toStore;
         if (value == null) {
             toStore = null;
         } else if (value instanceof Attr) {
-            toStore = value;
+            toStore = (Attr)value;
         } else if (value instanceof Method && key.startsWith("methodvalue:")) { // NOI18N
             Method m = (Method)value;
             key = key.substring("methodvalue:".length()); // NOI18N
@@ -343,7 +342,7 @@ final class XMLMapAttr implements Map {
 
         while (entryIter.hasNext()) {
             String attrName = (String) entryIter.next();
-            Attr attr = (Attr) map.get(attrName);
+            Attr attr = map.get(attrName);
 
             if (attr != null) {
                 attr.transformMe();
@@ -442,7 +441,7 @@ final class XMLMapAttr implements Map {
      * attribute a returns it as Object. Each Attr contains pair key and value. Key is type. Value is real value (in textual form) of this type.
      * Detailed describtion is in <A HREF="XMLMapAttr.html">XMLMapAttr<A>
      */
-    final static class Attr extends java.lang.Object {
+    static final class Attr extends java.lang.Object {
         // static final long serialVersionUID = -62733358015297232L;
         private static final String[] ALLOWED_ATTR_KEYS = {
             "bytevalue", "shortvalue", "intvalue", "longvalue", "floatvalue", "doublevalue", "boolvalue", "charvalue",
@@ -712,7 +711,7 @@ final class XMLMapAttr implements Map {
         }
 
         final String getKeyForPrint() {
-            if ((obj != null) && obj instanceof ModifiedAttribute) {
+            if (obj instanceof ModifiedAttribute) {
                 Attr modifAttr = (Attr) ((ModifiedAttribute) obj).getValue();
                 int keyIdx = Attr.isValid("SERIALVALUE"); //NOI18N
 
@@ -729,7 +728,7 @@ final class XMLMapAttr implements Map {
         }
 
         final String getAttrNameForPrint(String attrName) {
-            if ((obj != null) && obj instanceof ModifiedAttribute) {
+            if (obj instanceof ModifiedAttribute) {
                 Object[] retVal = ModifiedAttribute.revert(attrName, obj);
 
                 return encode((String) retVal[0]);
@@ -918,24 +917,24 @@ final class XMLMapAttr implements Map {
                 try {
                     switch (index) {
                     case 0:
-                        return new Byte(value);
+                        return Byte.valueOf(value);
                     case 1:
-                        return new Short(value);
+                        return Short.valueOf(value);
                     case 2:
-                        return new Integer(value); //(objI);
+                        return Integer.valueOf(value); //(objI);
                     case 3:
-                        return new Long(value);
+                        return Long.valueOf(value);
                     case 4:
-                        return new Float(value);
+                        return Float.valueOf(value);
                     case 5:
-                        return new Double(value);
+                        return Double.valueOf(value);
                     case 6:
                         return Boolean.valueOf(value);
                     case 7:
                         if (value.trim().length() != 1) {
                             break;
                         }
-                        return new Character(value.charAt(0));
+                        return value.charAt(0);
                     case 8:
                         return value;
                     case 9:
@@ -1035,7 +1034,7 @@ final class XMLMapAttr implements Map {
         }
 
         static final Map wrapToMap(FileObject fo) {
-            return fo == null ? Collections.EMPTY_MAP : new FileMap(fo);
+            return fo == null ? Collections.emptyMap() : new FileMap(fo);
         }
 
         /**
@@ -1060,7 +1059,7 @@ final class XMLMapAttr implements Map {
          * Checks if key is valid
          * @return Index to array of allowed keys or -1 which means error.
          */
-        final static int isValid(String key) {
+        static final int isValid(String key) {
             int index = -1;
             int i;
             String[] strArray = getAttrTypes();
@@ -1108,7 +1107,7 @@ final class XMLMapAttr implements Map {
     static class ModifiedAttribute implements java.io.Serializable {
         /** generated Serialized Version UID */
         static final long serialVersionUID = 84214031923497718L;
-        private final static String[] fragments = new String[] { "transient:" }; //NOI18N
+        private static final String[] fragments = new String[] { "transient:" }; //NOI18N
         private int modifier = 0;
         private Object origAttrValue = null;
 
@@ -1156,7 +1155,7 @@ final class XMLMapAttr implements Map {
          * This method is opposite to method translateInto
          */
         static Object[] revert(String attrName, Object value) {
-            if (!(value instanceof ModifiedAttribute) || (value == null)) {
+            if (!(value instanceof ModifiedAttribute)) {
                 return new Object[] { attrName, value };
             }
 
@@ -1294,6 +1293,7 @@ final class XMLMapAttr implements Map {
                     return new FOEntry(fo, s);
                 }
 
+                @Override
                 public void remove() {
                     throw new UnsupportedOperationException();
                 }

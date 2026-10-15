@@ -21,9 +21,9 @@ package org.netbeans.modules.html.editor;
 import java.util.Collection;
 import java.util.Collections;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
-import org.netbeans.modules.html.editor.api.Utils;
 import org.netbeans.modules.html.editor.api.gsf.HtmlExtension;
 import org.netbeans.modules.html.editor.api.gsf.HtmlParserResult;
+import org.netbeans.modules.web.common.api.WebPageMetadata;
 import org.openide.util.Lookup;
 
 /**
@@ -50,7 +50,7 @@ public class HtmlExtensions {
      * @return 
      */
     public static boolean isApplicationPiece(HtmlParserResult result) {
-        String mimeType = Utils.getWebPageMimeType(result.getSyntaxAnalyzerResult());
+        String mimeType = WebPageMetadata.getContentMimeType(result, true);
         for(HtmlExtension ex : getRegisteredExtensions(mimeType)) {
             if(ex.isApplicationPiece(result)) {
                 return true;

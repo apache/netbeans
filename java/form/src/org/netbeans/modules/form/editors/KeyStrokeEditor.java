@@ -60,23 +60,23 @@ public class KeyStrokeEditor extends PropertyEditorSupport
         StringBuilder modsText = new StringBuilder();
 
         if (0 !=(mods
-                 &(InputEvent.ALT_MASK | InputEvent.SHIFT_MASK | InputEvent.CTRL_MASK | InputEvent.META_MASK))) {
-            if (0 !=(mods & InputEvent.ALT_MASK))
-                modsText.append("java.awt.event.InputEvent.ALT_MASK"); // NOI18N
-            if (0 !=(mods & InputEvent.SHIFT_MASK)) {
+                 &(InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK | InputEvent.META_DOWN_MASK))) {
+            if (0 !=(mods & InputEvent.ALT_DOWN_MASK))
+                modsText.append("java.awt.event.InputEvent.ALT_DOWN_MASK"); // NOI18N
+            if (0 !=(mods & InputEvent.SHIFT_DOWN_MASK)) {
                 if (modsText.length() > 0)
                     modsText.append(" | "); // NOI18N
-                modsText.append("java.awt.event.InputEvent.SHIFT_MASK"); // NOI18N
+                modsText.append("java.awt.event.InputEvent.SHIFT_DOWN_MASK"); // NOI18N
             }
-            if (0 !=(mods & InputEvent.CTRL_MASK)) {
+            if (0 !=(mods & InputEvent.CTRL_DOWN_MASK)) {
                 if (modsText.length() > 0)
                     modsText.append(" | "); // NOI18N
-                modsText.append("java.awt.event.InputEvent.CTRL_MASK"); // NOI18N
+                modsText.append("java.awt.event.InputEvent.CTRL_DOWN_MASK"); // NOI18N
             }
-            if (0 !=(mods & InputEvent.META_MASK)) {
+            if (0 !=(mods & InputEvent.META_DOWN_MASK)) {
                 if (modsText.length() > 0)
                     modsText.append(" | "); // NOI18N
-                modsText.append("java.awt.event.InputEvent.META_MASK"); // NOI18N
+                modsText.append("java.awt.event.InputEvent.META_DOWN_MASK"); // NOI18N
             }
         }
         else
@@ -143,13 +143,13 @@ public class KeyStrokeEditor extends PropertyEditorSupport
 
         while (st.hasMoreTokens() &&(token = st.nextToken()) != null) {
             if (alt.equalsIgnoreCase(token)) {
-                mods |= InputEvent.ALT_MASK;
+                mods |= InputEvent.ALT_DOWN_MASK;
             } else if (shift.equalsIgnoreCase(token)) {
-                mods |= InputEvent.SHIFT_MASK;
+                mods |= InputEvent.SHIFT_DOWN_MASK;
             } else if (ctrl.equalsIgnoreCase(token)) {
-                mods |= InputEvent.CTRL_MASK;
+                mods |= InputEvent.CTRL_DOWN_MASK;
             } else if (meta.equalsIgnoreCase(token)) {
-                mods |= InputEvent.META_MASK;
+                mods |= InputEvent.META_DOWN_MASK;
             } else {
                 String keycodeName = "VK_" + token.toUpperCase(); // NOI18N
                 try {
@@ -175,8 +175,8 @@ public class KeyStrokeEditor extends PropertyEditorSupport
 
         StringBuilder buf = new StringBuilder();
         int mods = key.getModifiers();
-        int modMasks[] = { InputEvent.SHIFT_MASK, InputEvent.CTRL_MASK,
-                           InputEvent.ALT_MASK, InputEvent.META_MASK };
+        int modMasks[] = { InputEvent.SHIFT_DOWN_MASK, InputEvent.CTRL_DOWN_MASK,
+                           InputEvent.ALT_DOWN_MASK, InputEvent.META_DOWN_MASK };
         String modMaskStrings[] = { shift, ctrl, alt, meta};
 
         for (int i = 0; i < modMasks.length; i++) {
@@ -408,10 +408,10 @@ public class KeyStrokeEditor extends PropertyEditorSupport
         }
 
         private void setKeyStroke(KeyStroke key) {
-            _ctrl.setSelected(0 !=(InputEvent.CTRL_MASK & key.getModifiers()));
-            _alt.setSelected(0 !=(InputEvent.ALT_MASK & key.getModifiers()));
-            _shift.setSelected(0 !=(InputEvent.SHIFT_MASK & key.getModifiers()));
-            _meta.setSelected(0 !=(InputEvent.META_MASK & key.getModifiers()));
+            _ctrl.setSelected(0 !=(InputEvent.CTRL_DOWN_MASK & key.getModifiers()));
+            _alt.setSelected(0 !=(InputEvent.ALT_DOWN_MASK & key.getModifiers()));
+            _shift.setSelected(0 !=(InputEvent.SHIFT_DOWN_MASK & key.getModifiers()));
+            _meta.setSelected(0 !=(InputEvent.META_DOWN_MASK & key.getModifiers()));
 
             int keycode = key.getKeyCode();
             String keyName = getVirtualkeyName(keycode);
@@ -434,13 +434,13 @@ public class KeyStrokeEditor extends PropertyEditorSupport
                 int keycode = f.getInt(KeyEvent.class);
                 int mods = 0;
                 if (_ctrl.isSelected())
-                    mods |= InputEvent.CTRL_MASK;
+                    mods |= InputEvent.CTRL_DOWN_MASK;
                 if (_shift.isSelected())
-                    mods |= InputEvent.SHIFT_MASK;
+                    mods |= InputEvent.SHIFT_DOWN_MASK;
                 if (_alt.isSelected())
-                    mods |= InputEvent.ALT_MASK;
+                    mods |= InputEvent.ALT_DOWN_MASK;
                 if (_meta.isSelected())
-                    mods |= InputEvent.META_MASK;
+                    mods |= InputEvent.META_DOWN_MASK;
 
                 setValue(KeyStroke.getKeyStroke(keycode, mods));
                 _keyGrabber.setText(getAsText());

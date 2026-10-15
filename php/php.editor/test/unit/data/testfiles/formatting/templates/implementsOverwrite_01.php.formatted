@@ -19,7 +19,6 @@ class Test implements InterfaceName {
     public function getName() {
         
     }
-
 }
 
 function functionName($param) {

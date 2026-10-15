@@ -197,7 +197,7 @@ public class DDTreeWalker {
     }
     
     private void walkElement(Element element, Vector<ModElement> elements){
-        ModElement [] elementsList = elements.toArray(new ModElement [elements.size()]);
+        ModElement [] elementsList = elements.toArray(new ModElement [0]);
         for(int i=0; i<elementsList.length; i++){
             ModElement eachElement = elementsList[i];
             if ((element != null) && element.getTagName().equals(eachElement.getName())) {

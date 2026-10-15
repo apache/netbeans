@@ -30,40 +30,24 @@ import org.netbeans.html.context.spi.Contexts.Id;
  * {@link net.java.html.json.Model HTML for Java} integration). The essential
  * aspect is to create an HTML page and reference its location via {@link #url() } attribute.
  * The page may contain any JavaScript, but as we are Java developers, it is 
- * preferrable to rather use <a href="http://bits.netbeans.org">HTML for Java API</a>.
+ * preferrable to rather use <a href="https://bits.netbeans.org/html+java/dev">HTML for Java API</a>.
  * In such case the associated static method (which is annotated by this annotation) will be
  * called once the HTML page is loaded. One is expected to instantiate class generated 
  * by the {@link net.java.html.json.Model} annotation and call <code>applyBindings()</code>
- * on it. Here is an example: <pre>
- *{@link net.java.html.json.Model @Model}(className="UI", properties={
- *  {@link net.java.html.json.Property @Property}(name = "text", type = {@link String}.<b>class</b>)
- *})
- *<b>public final class</b> UICntrl {
- *  {@link org.openide.awt.ActionID @ActionID}(
- *     category = "Tools",
- *     id = "my.sample.HtmlHelloWorld"
- *  )
- *  {@link org.openide.awt.ActionReferences @ActionReferences}({
- *    {@link org.openide.awt.ActionReference @ActionReference}(path = "Menu/Tools"),
- *    {@link org.openide.awt.ActionReference @ActionReference}(path = "Toolbars/File"),
- *  })
- *  {@link org.openide.util.NbBundle.Messages @NbBundle.Messages}("CTL_OpenHtmlHelloWorld=Open HTML Hello World!")
- *  {@link OpenHTMLRegistration @OpenHTMLRegistration}(
- *    url = "ui.html",
- *    displayName = "#CTL_OpenHtmlHelloWorld"
- *  )
- *  <b>public static</b> UI onPageLoad() {
- *    <b>return new</b> UI("Hello World!").applyBindings();
- *  }
- *}
- * </pre>
- * The above would display a new action in Toolbar and in Menu that would, upon invocation,
+ * on it. Here is an example: 
+ * <p>
+ * {@snippet file="org/netbeans/api/htmlui/UICntrl.java" region="controller"}
+
+* The above would display a new action in Toolbar and in Menu that would, upon invocation,
  * open up a new component displaying the 
  * <code>ui.html</code> page. The page can use 
- * <a target="_blank" href="http://knockoutjs.com">Knockout.js</a> bindings like 
- * <code>&lt;input data-bind="value: text"&gt;&lt;/input&gt;</code> to reference 
+ * <a target="_blank" href="https://knockoutjs.com">Knockout.js</a> bindings like 
+ * <code>&lt;input data-bind="textInput: text"&gt;&lt;/input&gt;</code> to reference 
  * properties defined by the {@link net.java.html.json.Model} annotation in the generated class
- * <code>UI</code>.
+ * <code>UI</code>:
+ *
+ * {@snippet file="org/netbeans/api/htmlui/dialog.html"}
+ * 
  * <p>
  * In addition to the above, there is a special support for influencing {@link org.openide.util.Utilities#actionsGlobalContext() 
  * action context} and thus turning on and off various actions shown in menu and toolbar. Just
@@ -71,7 +55,7 @@ import org.netbeans.html.context.spi.Contexts.Id;
  * and put into it fully qualified names of classes you want to expose in the context. 
  * Those classes should be public and have public constructor that takes instance of the model
  * class returned from the annotated method (e.g. <code>UI</code> in the above example). The 
- * system will instantiate them appropriatelly and will make sure they are available in the action
+ * system will instantiate them appropriately and will make sure they are available in the action
  * context. If the interface also implements {@link Closeable}, its close method is invoked once
  * the instance is removed from the context to handle clean up.
  *

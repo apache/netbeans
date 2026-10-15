@@ -51,7 +51,7 @@ public class EvaluationResultsModel extends VariablesModel {
     private static final String ICON_EVAL_RESULT =
         "org/netbeans/modules/debugger/resources/evaluator/evaluator_result_16.png"; // NOI18N
 
-    private final static RequestProcessor RP = new RequestProcessor(EvaluationResultsModel.class);
+    private static final RequestProcessor RP = new RequestProcessor(EvaluationResultsModel.class);
     private final CodeEvaluator.Result result;
     private EvaluatorListener evalListener = new EvaluatorListener();
     
@@ -77,7 +77,7 @@ public class EvaluationResultsModel extends VariablesModel {
     @Override
     public Object[] getChildren(Object parent, int from, int to) throws UnknownTypeException {
         if (parent instanceof HistoryNode) {
-            List l = ((HistoryNode) parent).getItems();
+            List<?> l = ((HistoryNode) parent).getItems();
             for (Object o : l) {
                 if (!(o instanceof DefaultHistoryItem)) {
                     return new Object[]{};
@@ -143,16 +143,12 @@ public class EvaluationResultsModel extends VariablesModel {
         if (node == result.getResult()) {
             String str = result.getExpression();
             if (str != null) {
-                StringBuffer buf = new StringBuffer();
-                buf.append("<html>");
-                str = str.replaceAll ("&", "&amp;");
-                str = str.replaceAll ("<", "&lt;");
-                str = str.replaceAll (">", "&gt;");
-                str = str.replaceAll ("\n", "<br/>");
-                str = str.replaceAll ("\r", "");
-                buf.append(str);
-                buf.append("</html>");
-                return buf.toString();
+                str = str.replace ("&", "&amp;")
+                         .replace ("<", "&lt;")
+                         .replace (">", "&gt;")
+                         .replace ("\n", "<br/>")
+                         .replace ("\r", "");
+                return "<html>"+str+"</html>";
             }
         }
         if (node instanceof DefaultHistoryItem) {

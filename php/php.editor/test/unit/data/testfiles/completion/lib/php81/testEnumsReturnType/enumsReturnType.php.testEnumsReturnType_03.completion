@@ -1,0 +1,25 @@
+Code completion result for source line:
+public function publicMethod1(): |Enum1 {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    EnumTestNamespace               [PUBLIC]   null
+CLASS      Enum1                           [PUBLIC]   EnumTestNamespace
+CLASS      Enum2                           [PUBLIC]   EnumTestNamespace
+CLASS      EnumTest                        [PUBLIC]   EnumTestNamespace
+------------------------------------
+KEYWORD    array                                      null
+KEYWORD    bool                                       null
+KEYWORD    callable                                   null
+KEYWORD    false                                      null
+KEYWORD    float                                      null
+KEYWORD    int                                        null
+KEYWORD    iterable                                   null
+KEYWORD    mixed                                      null
+KEYWORD    never                                      null
+KEYWORD    null                                       null
+KEYWORD    object                                     null
+KEYWORD    parent                                     null
+KEYWORD    self                                       null
+KEYWORD    static                                     null
+KEYWORD    string                                     null
+KEYWORD    true                                       null
+KEYWORD    void                                       null

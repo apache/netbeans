@@ -20,6 +20,8 @@ package org.netbeans.modules.debugger.ui;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
@@ -86,8 +88,10 @@ public class DebuggerManagerListener extends DebuggerManagerAdapter {
 
     @Override
     public void engineAdded (DebuggerEngine engine) {
-        openEngineComponents(engine);
-        setupToolbar(engine);
+        if (!GraphicsEnvironment.isHeadless()) {
+            openEngineComponents(engine);
+            setupToolbar(engine);
+        }
     }
 
     private void openEngineComponents (final DebuggerEngine engine) {
@@ -305,7 +309,7 @@ public class DebuggerManagerListener extends DebuggerManagerAdapter {
                     }
                 }
             }
-            if (a != null && a instanceof DebuggerAction) {
+            if (a instanceof DebuggerAction) {
                 return (DebuggerAction) a;
             }
         }
@@ -328,7 +332,7 @@ public class DebuggerManagerListener extends DebuggerManagerAdapter {
             @Override
             public void run() {
                 List<? extends ActionsProvider> actionsProviderList = engine.lookup(null, ActionsProvider.class);
-                final Set engineActions = new HashSet();
+                final Set<?> engineActions = new HashSet<>();
                 for (ActionsProvider ap : actionsProviderList) {
                     engineActions.addAll(ap.getActions());
                 }
@@ -391,6 +395,9 @@ public class DebuggerManagerListener extends DebuggerManagerAdapter {
 
     @Override
     public void engineRemoved (final DebuggerEngine engine) {
+        if (GraphicsEnvironment.isHeadless()) {
+            return ;
+        }
         DebuggerModule dm = DebuggerModule.findObject(DebuggerModule.class);
         if (dm != null && dm.isClosing()) {
             // Do not interfere with closeDebuggerUI()
@@ -450,7 +457,7 @@ public class DebuggerManagerListener extends DebuggerManagerAdapter {
                         }
                     }
                 }
-                final List<ComponentInfo> windowsToClose = new ArrayList<ComponentInfo>(openedWindows);
+                final List<ComponentInfo> windowsToClose = new ArrayList<>(openedWindows);
                 //windowsToClose.removeAll(retainOpened);
                 try {
                     SwingUtilities.invokeLater(new Runnable() {
@@ -475,15 +482,16 @@ public class DebuggerManagerListener extends DebuggerManagerAdapter {
                                     }
                                 }
                             }
-                            List<ComponentInfo> windowsToCloseCopy = (ArrayList<ComponentInfo>) ((ArrayList) windowsToClose).clone();
+                            List<ComponentInfo> windowsToCloseCopy = new ArrayList<>(windowsToClose);
                             for (ComponentInfo ci : windowsToCloseCopy) {
                                 Component c = ci.getComponent();
                                 if (retainOpenedComponents.contains(c)) {
                                     windowsToClose.remove(ci);
                                 }
                             }
-                            for (EngineComponentsProvider ecp : openedWindowsByProvider.keySet()) {
-                                List<? extends ComponentInfo> cis = openedWindowsByProvider.get(ecp);
+                            for (Map.Entry<EngineComponentsProvider, List<? extends ComponentInfo>> entry : openedWindowsByProvider.entrySet()) {
+                                EngineComponentsProvider ecp = entry.getKey();
+                                List<? extends ComponentInfo> cis = entry.getValue();
                                 List<ComponentInfo> closing = new ArrayList<ComponentInfo>(cis);
                                 closing.retainAll(windowsToClose);
                                 ecp.willCloseNotify(closing);
@@ -672,8 +680,8 @@ public class DebuggerManagerListener extends DebuggerManagerAdapter {
             final List<Component> initiallyOpened;
             final Set<Component> initiallyOpenedMinimized;
             if (componentsInitiallyOpened.isEmpty()) {
-                initiallyOpened = Collections.EMPTY_LIST;
-                initiallyOpenedMinimized = Collections.EMPTY_SET;
+                initiallyOpened = Collections.emptyList();
+                initiallyOpenedMinimized = Collections.emptySet();
             } else {
                 initiallyOpened = new ArrayList<Component>();
                 initiallyOpenedMinimized = new HashSet<>();

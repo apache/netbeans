@@ -126,7 +126,7 @@ public class FileSizeThreshholdExceptionTest extends NbTestCase {
     
     public void testThreshholdDefaultValue() throws Exception {
         System.getProperties().remove(BIG_FILE_PROP);
-        doTestThreshholdValue(1);
+        doTestThreshholdValue(5);
     }
     
     public void testThreshholdNotDefaultValue() throws Exception {

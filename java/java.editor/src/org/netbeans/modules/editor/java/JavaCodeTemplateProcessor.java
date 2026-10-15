@@ -36,7 +36,7 @@ import javax.swing.text.JTextComponent;
 import org.netbeans.api.java.source.*;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import org.netbeans.api.java.source.ui.ElementHeaders;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.lib.editor.codetemplates.spi.*;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.java.preprocessorbridge.api.JavaSourceUtil;
@@ -70,6 +70,7 @@ public class JavaCodeTemplateProcessor implements CodeTemplateProcessor {
     public static final String CURRENT_CLASS_FULLY_QUALIFIED_NAME = "currClassFQName"; //NOI18N
     public static final String CURRENT_PACKAGE_NAME = "currPackageName"; //NOI18N
     public static final String CURRENT_METHOD_NAME = "currMethodName"; //NOI18N
+    public static final String STATIC_IMPORT = "staticImport"; //NOI18N
 
     private static final String TRUE = "true"; //NOI18N
     private static final String NULL = "null"; //NOI18N
@@ -122,7 +123,8 @@ public class JavaCodeTemplateProcessor implements CodeTemplateProcessor {
                         || CURRENT_PACKAGE_NAME.equals(hint)
                         || CURRENT_METHOD_NAME.equals(hint)
                         || ITERABLE_ELEMENT_TYPE.equals(hint)
-                        || UNCAUGHT_EXCEPTION_TYPE.equals(hint)) {
+                        || UNCAUGHT_EXCEPTION_TYPE.equals(hint)
+                        || STATIC_IMPORT.equals(hint)) {
                     needsParsing = true;
                 }
             }
@@ -281,8 +283,8 @@ public class JavaCodeTemplateProcessor implements CodeTemplateProcessor {
                                     }
                                 };
                                 for (StatementTree st : ((BlockTree)tree).getStatements()) {
-                                    if (sp.getStartPosition(cInfo.getCompilationUnit(), st) >= component.getSelectionStart()) {
-                                        if (sp.getEndPosition(cInfo.getCompilationUnit(), st) <= component.getSelectionEnd()) {
+                                    if (sp.getStartPosition(st) >= component.getSelectionStart()) {
+                                        if (sp.getEndPosition(st) <= component.getSelectionEnd()) {
                                             if (st.getKind() == Tree.Kind.VARIABLE) {
                                                 Element e = trees.getElement(new TreePath(treePath, st));
                                                 if (e != null && e.getKind() == ElementKind.LOCAL_VARIABLE) {
@@ -298,8 +300,8 @@ public class JavaCodeTemplateProcessor implements CodeTemplateProcessor {
                                 Collection<VariableTree> vals = vars.values();
                                 for (VariableTree var : varList) {
                                     if (!vals.contains(var)) {
-                                        int start = (int) sp.getStartPosition(cInfo.getCompilationUnit(), var) - caretOffset;
-                                        int end = (int) sp.getEndPosition(cInfo.getCompilationUnit(), var.getType()) - caretOffset;
+                                        int start = (int) sp.getStartPosition(var) - caretOffset;
+                                        int end = (int) sp.getEndPosition(var.getType()) - caretOffset;
                                         selectionText.delete(start, end);
                                     }
                                 }
@@ -357,6 +359,7 @@ public class JavaCodeTemplateProcessor implements CodeTemplateProcessor {
                                     switch (usedElement.getKind()) {
                                         case CLASS:
                                         case INTERFACE:
+                                        case RECORD:
                                         case ENUM:
                                         case ANNOTATION_TYPE:
                                             toRemove.remove(((TypeElement)usedElement).getQualifiedName().toString());
@@ -539,9 +542,45 @@ public class JavaCodeTemplateProcessor implements CodeTemplateProcessor {
                         return value;
                     }
                 }
+            } else if (STATIC_IMPORT.equals(entry.getKey())) {
+                String qualifiedIdentifier = (String) entry.getValue();
+                param2hints.put(param, STATIC_IMPORT);
+                if (!qualifiedIdentifier.contains(".")) { //NOI18N
+                    return qualifiedIdentifier;
+                }
+                staticImport(qualifiedIdentifier);
+                return qualifiedIdentifier.substring(qualifiedIdentifier.lastIndexOf('.') + 1);
             }
         }
         return name;
+    }
+    
+    private void staticImport(String qualifiedIdentifier) {
+        JTextComponent component = request.getComponent();
+        Document document = component.getDocument();
+        JavaSource javaSource = JavaSource.forDocument(document);
+        if (javaSource != null) {
+            try {
+                javaSource.runModificationTask(copy  -> {
+                    JavaSource.Phase phase = copy.toPhase(JavaSource.Phase.RESOLVED);
+                    if (phase.compareTo(JavaSource.Phase.RESOLVED) == 0) {
+                        TreeMaker make = copy.getTreeMaker();
+                        CompilationUnitTree compilationUnit = copy.getCompilationUnit();
+                        List<? extends ImportTree> imports = compilationUnit.getImports();
+                        for (ImportTree importTree : imports) {
+                            if (importTree.getQualifiedIdentifier().toString().equals(qualifiedIdentifier)) {
+                                return;
+                            }
+                        }
+                        CompilationUnitTree newCompilationUnit = make.addCompUnitImport(
+                                compilationUnit, make.Import(make.Identifier(qualifiedIdentifier), true));
+                        copy.rewrite(compilationUnit, newCompilationUnit);
+                    }
+                }).commit();
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
     }
     
     private VariableElement instanceOf(String typeName, String name) {
@@ -1064,7 +1103,7 @@ public class JavaCodeTemplateProcessor implements CodeTemplateProcessor {
             final FileObject fo = NbEditorUtilities.getFileObject(doc);
             if (fo != null) {
                 final AtomicBoolean cancel = new AtomicBoolean();
-                ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     @Override
                     public void run() {
                         try {

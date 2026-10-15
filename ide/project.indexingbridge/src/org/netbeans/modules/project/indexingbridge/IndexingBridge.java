@@ -40,7 +40,7 @@ public abstract class IndexingBridge {
      * to wait for not yet processed indexing tasks.
      * @since 1.5
      */
-    public static abstract class Ordering extends IndexingBridge {
+    public abstract static class Ordering extends IndexingBridge {
         /**
          * Waits until the non processes indexing tasks are done.
          * @throws InterruptedException when the waiting thread is interrupted.

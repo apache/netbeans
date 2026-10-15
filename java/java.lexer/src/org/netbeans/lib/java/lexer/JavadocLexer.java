@@ -194,6 +194,20 @@ public class JavadocLexer implements Lexer<JavadocTokenId> {
                     leftbr = false;
                     newline = false;
                     break;
+                case '/':
+                    //TODO: check comment type?
+                    if (newline) {
+                        if (input.read() == '/') {
+                            if (input.read() == '/') {
+                                break;
+                            } else {
+                                input.backup(1);
+                            }
+                        } else {
+                            input.backup(1);
+                        }
+                        newline = false; //for fall-through:
+                    }
                 case '*':
                     if (newline) {
                         break;

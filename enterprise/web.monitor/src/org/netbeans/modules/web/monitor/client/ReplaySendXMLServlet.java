@@ -19,17 +19,17 @@
 
 package org.netbeans.modules.web.monitor.client;
 
-import java.io.*;
-import java.text.*;
-import java.util.Enumeration;
-import java.util.StringTokenizer;
-import javax.servlet.*;
-import javax.servlet.http.*;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import org.netbeans.modules.web.monitor.data.MonitorData;
-
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileLock;
 
 /*
  * Send the xml file for a transaction back to the replay filter/interceptor.
@@ -41,7 +41,7 @@ public class ReplaySendXMLServlet extends HttpServlet {
     private static FileObject currDir = null;
     private static FileObject saveDir = null;
     private static FileObject replayDir = null;
-    private final static boolean debug = false;
+    private static final boolean debug = false;
      
 
     //

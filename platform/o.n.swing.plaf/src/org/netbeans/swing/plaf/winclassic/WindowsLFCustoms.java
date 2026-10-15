@@ -63,6 +63,7 @@ public final class WindowsLFCustoms extends LFCustoms {
     public Object[] createApplicationSpecificKeysAndValues () {
         Object propertySheetColorings = new WinClassicPropertySheetColorings();
         Object[] result = {
+            EDITOR_PREFERRED_COLOR_PROFILE, "NetBeans", //NOI18N
             DESKTOP_BORDER, new EmptyBorder(4, 2, 1, 2),
             SCROLLPANE_BORDER, UIManager.get("ScrollPane.border"),
             EXPLORER_STATUS_BORDER, new StatusLineBorder(StatusLineBorder.TOP),

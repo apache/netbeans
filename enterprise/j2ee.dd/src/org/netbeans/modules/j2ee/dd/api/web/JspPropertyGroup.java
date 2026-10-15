@@ -22,7 +22,7 @@ import org.netbeans.modules.j2ee.dd.api.common.*;
 /**
  * Generated interface for JspPropertyGroup element.
  *
- *<p><b><font color="red"><em>Important note: Do not provide an implementation of this interface unless you are a DD API provider!</em></font></b>
+ *<p><b><span style="color:red"><em>Important note: Do not provide an implementation of this interface unless you are a DD API provider!</em></span></b>
  *</p>
  */
 public interface JspPropertyGroup extends CommonDDBean, ComponentInterface {
@@ -37,7 +37,6 @@ public interface JspPropertyGroup extends CommonDDBean, ComponentInterface {
          */
 	public java.lang.String getUrlPattern(int index);
         /** Setter for url-pattern property.
-         * @param index position in the array of url-patterns
          * @param value array of url-pattern properties
          */
 	public void setUrlPattern(java.lang.String[] value);
@@ -102,7 +101,6 @@ public interface JspPropertyGroup extends CommonDDBean, ComponentInterface {
          */
 	public java.lang.String getIncludePrelude(int index);
         /** Setter for include-prelude property.
-         * @param index position in the array of include-preludes
          * @param value array of include-prelude properties
          */
 	public void setIncludePrelude(java.lang.String[] value);
@@ -135,7 +133,6 @@ public interface JspPropertyGroup extends CommonDDBean, ComponentInterface {
          */
 	public java.lang.String getIncludeCoda(int index);
         /** Setter for include-coda property.
-         * @param index position in the array of include-codas
          * @param value array of include-coda properties
          */
 	public void setIncludeCoda(java.lang.String[] value);

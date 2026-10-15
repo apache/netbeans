@@ -26,7 +26,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.ItemSelectable;
-import java.awt.SystemColor;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -35,9 +35,11 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -166,13 +168,10 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
     private void setContextAwareOptions(boolean searchAndReplace) {
         if (!searchAndReplace) {
             updateSearchInGeneratedForActiveTopComponent();
-            topComponentRegistryListener = new PropertyChangeListener() {
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    if (evt.getPropertyName().equals(
-                            TopComponent.Registry.PROP_ACTIVATED)) {
-                        updateSearchInGeneratedForActiveTopComponent();
-                    }
+            topComponentRegistryListener = (PropertyChangeEvent evt) -> {
+                if (evt.getPropertyName().equals(
+                        TopComponent.Registry.PROP_ACTIVATED)) {
+                    updateSearchInGeneratedForActiveTopComponent();
                 }
             };
             TopComponent.getRegistry().addPropertyChangeListener(
@@ -214,7 +213,9 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
     private void initComponents(final boolean searchAndReplace) {
 
         lblTextToFind = new JLabel();
-        cboxTextToFind = ComponentUtils.adjustComboForSearchPattern(new JComboBox<String>());
+        JComboBox<String> box = new JComboBox<>();
+        box.setEditor(new MultiLineComboBoxEditor(box));
+        cboxTextToFind = ComponentUtils.adjustComboForSearchPattern(box);
         lblTextToFind.setLabelFor(cboxTextToFind.getComponent());
         btnTestTextToFind = new JButton();
         lblTextToFindHint = new JLabel();
@@ -223,7 +224,8 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
 
         if (searchAndReplace) {
             lblReplacement = new JLabel();
-            cboxReplacement = new JComboBox<ReplaceModelItem>();
+            cboxReplacement = new JComboBox<>();
+            cboxReplacement.setEditor(new MultiLineComboBoxEditor(cboxReplacement));
             cboxReplacement.setEditable(true);
             cboxReplacement.setRenderer(new ShorteningCellRenderer());
             lblReplacement.setLabelFor(cboxReplacement);
@@ -232,7 +234,7 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
         }
 
         lblScope = new JLabel();
-        cboxScope = ComponentUtils.adjustComboForScope(new JComboBox<Object>(),
+        cboxScope = ComponentUtils.adjustComboForScope(new JComboBox<>(),
                 preferredSearchScopeType, extraSearchScopes);
         lblScope.setLabelFor(cboxScope.getComponent());
 
@@ -272,22 +274,20 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
     protected void initFormPanel(boolean searchAndReplace) {
 
         formPanel = new SearchFormPanel();
-        formPanel.addRow(lblTextToFind, cboxTextToFind.getComponent());
+        formPanel.addRow(lblTextToFind, cboxTextToFind.getComponent(), true);
         JPanel hintAndButtonPanel = initHintAndButtonPanel();
         formPanel.addRow(new JLabel(), hintAndButtonPanel);
         initContainingTextOptionsRow(searchAndReplace);
         if (searchAndReplace) {
-            formPanel.addRow(lblReplacement, cboxReplacement);
+            formPanel.addRow(lblReplacement, cboxReplacement, true);
         }
         formPanel.addSeparator();
         formPanel.addRow(lblScope, cboxScope.getComponent());
         initScopeOptionsRow(searchAndReplace);
         formPanel.addSeparator();
-        formPanel.addRow(lblFileNamePattern,
-                cboxFileNamePattern.getComponent());
+        formPanel.addRow(lblFileNamePattern, cboxFileNamePattern.getComponent());
         formPanel.addRow(new JLabel(), lblFileNameHint);
-        formPanel.addRow(new JLabel(),
-                scopeSettingsPanel.getFileNameComponent());
+        formPanel.addRow(new JLabel(), scopeSettingsPanel.getFileNameComponent());
         formPanel.addEmptyLine();
     }
 
@@ -411,11 +411,7 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
         cboxTextToFind.bindMatchTypeComboBox(textToFindType);
         cboxTextToFind.bind(Option.MATCH_CASE, chkCaseSensitive);
         cboxTextToFind.bind(Option.WHOLE_WORDS, chkWholeWords);
-        textToFindType.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            }
+        textToFindType.addActionListener((ActionEvent e) -> {
         });
 
         boolean regexp = textToFindType.isRegexp();
@@ -427,53 +423,35 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
         }
         searchCriteria.setUsabilityChangeListener(this);
 
-        scopeSettingsPanel.addChangeListener(new ChangeListener() {
-
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                searchCriteria.setSearchInArchives(
-                        scopeSettingsPanel.isSearchInArchives());
-                searchCriteria.setSearchInGenerated(
-                        scopeSettingsPanel.isSearchInGenerated());
-                searchCriteria.setUseIgnoreList(
-                        scopeSettingsPanel.isUseIgnoreList());
-            }
+        scopeSettingsPanel.addChangeListener((ChangeEvent e) -> {
+            searchCriteria.setSearchInArchives(
+                    scopeSettingsPanel.isSearchInArchives());
+            searchCriteria.setSearchInGenerated(
+                    scopeSettingsPanel.isSearchInGenerated());
+            searchCriteria.setUseIgnoreList(
+                    scopeSettingsPanel.isUseIgnoreList());
         });
 
-        cboxFileNamePattern.addChangeListener(new ChangeListener() {
-
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                searchCriteria.setFileNamePattern(
-                        cboxFileNamePattern.getFileNamePattern());
-                searchCriteria.setFileNameRegexp(
-                        cboxFileNamePattern.isRegularExpression());
-                updateFileNamePatternInfo();
-            }
+        cboxFileNamePattern.addChangeListener((ChangeEvent e) -> {
+            searchCriteria.setFileNamePattern(
+                    cboxFileNamePattern.getFileNamePattern());
+            searchCriteria.setFileNameRegexp(
+                    cboxFileNamePattern.isRegularExpression());
+            updateFileNamePatternInfo();
         });
 
-        cboxTextToFind.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                SearchPattern sp = cboxTextToFind.getSearchPattern();
-                searchCriteria.setTextPattern(sp.getSearchExpression());
-                searchCriteria.setMatchType(sp.getMatchType());
-                searchCriteria.setWholeWords(sp.isWholeWords());
-                searchCriteria.setCaseSensitive(sp.isMatchCase());
-            }
+        cboxTextToFind.addChangeListener((ChangeEvent e) -> {
+            SearchPattern sp = cboxTextToFind.getSearchPattern();
+            searchCriteria.setTextPattern(sp.getSearchExpression());
+            searchCriteria.setMatchType(sp.getMatchType());
+            searchCriteria.setWholeWords(sp.isWholeWords());
+            searchCriteria.setCaseSensitive(sp.isMatchCase());
         });
         initButtonInteraction();
     }
 
     private void initButtonInteraction() {
-       
-        btnTestTextToFind.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                openTextPatternSandbox();
-            }
-        });
+        btnTestTextToFind.addActionListener((ActionEvent e) -> openTextPatternSandbox());
     }
 
     private void openTextPatternSandbox() {
@@ -500,14 +478,14 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
      */
     private void initHistory() {
 
-        List<ReplaceModelItem> entries = new ArrayList<ReplaceModelItem>(10);
+        List<ReplaceModelItem> entries = new ArrayList<>(10);
         if (cboxReplacement != null) {
             for (ReplacePattern replacePattern
                     : SearchHistory.getDefault().getReplacePatterns()) {
                 entries.add(0, new ReplaceModelItem(replacePattern));
             }
             if (!entries.isEmpty()) {
-                cboxReplacement.setModel(new ListComboBoxModel<ReplaceModelItem>(entries, true));
+                cboxReplacement.setModel(new ListComboBoxModel<>(entries, true));
             }
         }
     }
@@ -840,7 +818,6 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
      */
     private final class SearchFormPanel extends JPanel {
 
-        private FormLayoutHelper flh;
         private int row = 0;
 
         public SearchFormPanel() {
@@ -850,7 +827,10 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
         }
 
         public void addRow(JComponent label, JComponent component) {
+            addRow(label, component, false);
+        }
 
+        public void addRow(JComponent label, JComponent component, boolean fillVertical) {
             GridBagConstraints c = new GridBagConstraints();
             c.gridx = 0;
             c.anchor = GridBagConstraints.NORTHWEST;
@@ -862,7 +842,13 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
 
             c.gridx = 1;
             c.weightx = 1;
-            c.fill = GridBagConstraints.HORIZONTAL;
+            if (fillVertical) {
+                c.weighty = 1;
+                c.fill = GridBagConstraints.BOTH;
+            } else {
+                c.weighty = 0;
+                c.fill = GridBagConstraints.HORIZONTAL;
+            }
             add(component, c);
 
             row++;
@@ -877,7 +863,6 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
             c.insets = new Insets(5, 5, 5, 5);
             c.fill = GridBagConstraints.HORIZONTAL;
             JSeparator separator = new JSeparator(JSeparator.HORIZONTAL);
-            separator.setForeground(SystemColor.controlShadow);
             add(separator, c);
             row++;
         }
@@ -888,7 +873,7 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
             c.gridy = row;
             c.gridwidth = 2;
             c.fill = GridBagConstraints.HORIZONTAL;
-            c.weighty = 1;
+            c.weighty = 0;
             c.weightx = 0.1;
             JLabel emptyLabel = new JLabel();
             emptyLabel.setPreferredSize(new Dimension(0, 0));
@@ -1100,5 +1085,60 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
             Logger.getLogger(BasicSearchForm.class.getName())
                     .log(Level.INFO, msg);
         }
+    }
+
+    static final class MultiLineComboBoxEditor implements ComboBoxEditor {
+
+        private final JTextArea area = new JTextArea();
+
+        public MultiLineComboBoxEditor(JComboBox<?> reference) {
+            area.setWrapStyleWord(false);
+            area.setLineWrap(false);
+
+            Border border = ((JComponent)reference.getEditor().getEditorComponent()).getBorder();
+            
+            if (border != null) {
+                area.setBorder(border);
+            }
+
+            // retain standard focus traversal behavior
+            area.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERS‌​AL_KEYS, null);
+            area.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERS‌​AL_KEYS, null);
+
+            // dispatch enter to parent; set line breaks on shift+enter
+            area.getInputMap().put(KeyStroke.getKeyStroke("shift ENTER"), "insert-break");
+            area.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "text-submit");
+        }
+
+        @Override
+        public void setItem(Object item) {
+            String text = Objects.toString(item, "");
+            if (!text.equals(area.getText())) { // see BasicComboBoxEditor.setItem(item) or JDK-4530952
+                area.setText(text);
+            }
+        }
+
+        @Override
+        public Object getItem() {
+            return area.getText();
+        }
+
+        @Override
+        public Component getEditorComponent() {
+            return area;
+        }
+
+        @Override
+        public void selectAll() {
+            area.selectAll();
+            area.requestFocus();
+        }
+
+        @Override
+        public void addActionListener(ActionListener l) { }
+
+        @Override
+        public void removeActionListener(ActionListener l) { }
+
     }
 }

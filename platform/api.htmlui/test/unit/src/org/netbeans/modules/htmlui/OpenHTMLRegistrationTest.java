@@ -66,7 +66,7 @@ public class OpenHTMLRegistrationTest {
             }
         }
 
-        Pages.R r = new Pages.R(new FOMap());
+        Pages.OpenHtmlAction r = new Pages.OpenHtmlAction(new FOMap());
         Object[] arr = r.getTechIds();
         assertEquals(arr.length, 3, "Three different ids");
         assertEquals(arr[0], "uno");

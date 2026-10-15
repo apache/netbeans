@@ -20,7 +20,7 @@ package tests;
 
 import java.io.*;
 import java.net.URL;
-import junit.framework.*;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.junit.*;
 
 import org.netbeans.modules.schema2beans.*;
@@ -34,7 +34,7 @@ public class MainTest extends NbTestCase {
         super(testName);
     }
 
-/////  Disabled as schema/DTD/XML was not donated
+//  Disabled as schema/DTD/XML was not donated
 //    public void testPurchaseOrder() throws IOException, Schema2BeansException, InterruptedException {
 //        generalTest("TestPurchaseOrder", true, true, true);
 //    }
@@ -114,7 +114,7 @@ public class MainTest extends NbTestCase {
         generalTest("TestEmpty");
     }
 
-/////  Disabled as schema/DTD/XML was not donated
+//  Disabled as schema/DTD/XML was not donated
 //    public void testNamespace() throws IOException, Schema2BeansException, InterruptedException {
 //        GenBeans.Config config = new GenBeans.Config();
 //        config.setOutputType(GenBeans.Config.OUTPUT_JAVABEANS);
@@ -149,7 +149,7 @@ public class MainTest extends NbTestCase {
         generalTest("TestExtension2", true, config);
     }
 
-/////  Disabled as schema/DTD/XML was not donated
+//  Disabled as schema/DTD/XML was not donated
 //    public void testWebApp() throws IOException, Schema2BeansException, InterruptedException {
 //        GenBeans.Config config = new GenBeans.Config();
 //        config.setOutputType(GenBeans.Config.OUTPUT_JAVABEANS);
@@ -159,7 +159,7 @@ public class MainTest extends NbTestCase {
 //        generalTest("TestWebApp", true, config);
 //    }
 
-/////  Disabled as schema/DTD/XML was not donated
+//  Disabled as schema/DTD/XML was not donated
 //    public void testWebAppDelegator() throws IOException, Schema2BeansException, InterruptedException {
 //        GenBeans.Config config = new GenBeans.Config();
 //        config.buyPremium();
@@ -168,7 +168,7 @@ public class MainTest extends NbTestCase {
 //        generalTest("TestWebAppDelegator", true, config);
 //    }
 
-/////  Disabled as schema/DTD/XML was not donated
+//  Disabled as schema/DTD/XML was not donated
 //    public void testWebAppDelegatorBaseBean() throws IOException, Schema2BeansException, InterruptedException {
 //        GenBeans.Config config = new GenBeans.Config();
 //        config.buyPremium();
@@ -177,7 +177,7 @@ public class MainTest extends NbTestCase {
 //        generalTest("TestWebAppDelegatorBaseBean", true, config);
 //    }
 
-/////  Disabled as schema/DTD/XML was not donated
+//  Disabled as schema/DTD/XML was not donated
 //    public void testFinalWebApp() throws IOException, Schema2BeansException, InterruptedException {
 //        GenBeans.Config config = new GenBeans.Config();
 //        config.setOutputType(GenBeans.Config.OUTPUT_JAVABEANS);
@@ -220,7 +220,7 @@ public class MainTest extends NbTestCase {
         generalTest("TestGroupUnbounded", true, config);
     }
 
-/////  Disabled as schema/DTD/XML was not donated
+// ///  Disabled as schema/DTD/XML was not donated
 //    public void testApplication1_4() throws IOException, Schema2BeansException, InterruptedException {
 //        generalTest("TestApplication1_4", true, true, true);
 //    }
@@ -248,7 +248,7 @@ public class MainTest extends NbTestCase {
         generalTest("TestMergeExtendBaseBean", false, config);
     }
 
-/////  Disabled as schema/DTD/XML was not donated
+// ///  Disabled as schema/DTD/XML was not donated
 //    public void testBeanWrapper() throws IOException, Schema2BeansException, InterruptedException {
 //        String testName = "TestBeanWrapper";
 //        try {
@@ -419,7 +419,7 @@ public class MainTest extends NbTestCase {
     private int runCommand(String cmd) throws java.io.IOException, java.lang.InterruptedException {
         System.out.println(cmd);
         Process proc = Runtime.getRuntime().exec(cmd);
-        Writer out = new BufferedWriter(new OutputStreamWriter(getRef(), "UTF-8"));
+        Writer out = new BufferedWriter(new OutputStreamWriter(getRef(), StandardCharsets.UTF_8));
         Thread outThread = new Thread(new InputMonitor("out: ", proc.getInputStream(), out));
         outThread.start();
         Thread errThread = new Thread(new InputMonitor("err: ", proc.getErrorStream(), out));
@@ -480,6 +480,7 @@ public class MainTest extends NbTestCase {
     //protected File dataDir;
     protected String theClassPath = "";
     
+    @Override
     protected void setUp() {
         // when running this code inside IDE, getResource method returns URL in NBFS
         // format, so we need to convert it to filename
@@ -516,6 +517,7 @@ public class MainTest extends NbTestCase {
         }
     }
     
+    @Override
     protected void tearDown() {
         compareReferenceFiles();
     }
@@ -523,6 +525,7 @@ public class MainTest extends NbTestCase {
     // XXX: temporarily overriding compareReferenceFiles() to dump differences as
     // I do not know what problem there is on javaee continual tester as there is
     // no access to diff files
+    @Override
     public void compareReferenceFiles(String testFilename, String goldenFilename, String diffFilename) {
         try {
             File goldenFile = getGoldenFile(goldenFilename);
@@ -534,10 +537,10 @@ public class MainTest extends NbTestCase {
                 message += "; check "+diffFile;
             }
             try {
-            assertFile(message, testFile, goldenFile, diffFile);
+                assertFile(message, testFile, goldenFile, diffFile);
             } catch (AssertionFileFailedError e) {
                 BufferedReader diffFileReader = new BufferedReader(new FileReader(diffFile));
-                StringBuffer diff = new StringBuffer();
+                StringBuilder diff = new StringBuilder();
                 try {
                     String ss = diffFileReader.readLine();
                     while (ss != null) {
@@ -557,20 +560,20 @@ public class MainTest extends NbTestCase {
 
 
     public void ref(File f) throws IOException {
-        Reader r = new FileReader(f);
-        char buf[] = new char[1024];
-        StringBuffer s = new StringBuffer();
-        int len;
-        while ((len = r.read(buf, 0, 1024)) > 0) {
-            s.append(buf, 0, len);
+        try (Reader r = new FileReader(f)) {
+            char buf[] = new char[1024];
+            StringBuilder s = new StringBuilder();
+            int len;
+            while ((len = r.read(buf, 0, 1024)) > 0) {
+                s.append(buf, 0, len);
+            }
+            ref(s.toString());
         }
-        r.close();
-        ref(s.toString());
     }
     
     private String getJdkHome(){
-        if (Utilities.isMac())
-            return System.getProperty("java.home") + File.separator + "bin" + File.separator;
+        if (Utilities.isMac() || System.getProperty("java.version").startsWith("1.") == false)
+            return System.getProperty("java.home") + File.separator + "bin" + File.separator;  // mac or JDK 9+
         else
             return System.getProperty("java.home") + File.separator + ".." + File.separator + "bin" + File.separator;
 

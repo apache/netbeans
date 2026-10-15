@@ -60,9 +60,9 @@ public class DebuggerAntLogger extends AntLogger {
     
     
     static DebuggerAntLogger getDefault () {
-        Iterator it = Lookup.getDefault ().lookupAll (AntLogger.class).iterator ();
+        Iterator<? extends AntLogger> it = Lookup.getDefault().lookupAll(AntLogger.class).iterator();
         while (it.hasNext ()) {
-            AntLogger al = (AntLogger) it.next ();
+            AntLogger al = it.next();
             if (al instanceof DebuggerAntLogger) {
                 return (DebuggerAntLogger) al;
             }
@@ -279,30 +279,30 @@ public class DebuggerAntLogger extends AntLogger {
     }
     
     /** AntSession => AntDebugger */
-    private Map runningDebuggers = new HashMap ();
+    private Map<AntSession, AntDebugger> runningDebuggers  = new HashMap<>();
     /** AntDebugger => AntSession */
-    private Map runningDebuggers2 = new HashMap ();
-    private Set filesToDebug = new HashSet ();
+    private Map<AntDebugger, AntSession> runningDebuggers2 = new HashMap<>();
+    private Set<File> filesToDebug = new HashSet<>();
     /** File => WeakReference -> ExecutorTask */
-    private Map fileExecutors = new HashMap();
+    private Map<File, WeakReference<ExecutorTask>> fileExecutors = new HashMap<>();
     
     void debugFile (File f) {
         filesToDebug.add (f);
     }
     
     void fileExecutor(File f, ExecutorTask execTask) {
-        fileExecutors.put(f, new WeakReference(execTask));
+        fileExecutors.put(f, new WeakReference<>(execTask));
     }
     
     private void finishDebugging (
         AntDebugger debugger
     ) {
-        AntSession session = (AntSession) runningDebuggers2.remove (debugger);
+        AntSession session = runningDebuggers2.remove (debugger);
         runningDebuggers.remove (session);
     }
     
     private AntDebugger getDebugger (AntSession s, AntEvent antEvent) {
-        AntDebugger d = (AntDebugger) runningDebuggers.get (s);
+        AntDebugger d = runningDebuggers.get(s);
         if (d != null) return d;
         
         if (!filesToDebug.contains (s.getOriginatingScript ())) 

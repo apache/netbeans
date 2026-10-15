@@ -229,7 +229,7 @@ public class PullUpPanel extends JPanel implements CustomRefactoringPanel {
             }
         }
         // return the array of selected members
-        return (MemberInfo[]) list.toArray(new MemberInfo[list.size()]);
+        return (MemberInfo[]) list.toArray(new MemberInfo[0]);
     }
     
     // --- GENERATED CODE ------------------------------------------------------

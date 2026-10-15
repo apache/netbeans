@@ -39,7 +39,7 @@ public class TestEntryTest extends TestBase {
         assertNotNull("TestEntry for aisupport/project tests",entry);
         assertNotNull("Nbroot wasn't found.", entry.getNBRoot());
         URL srcDir = entry.getSrcDir();
-        assertEquals(Utilities.toURI(new File(nbRootFile(),"apisupport.project/test/unit/src")).toURL(),srcDir);
+        assertEquals(Utilities.toURI(new File(nbRootFile(), "apisupport/apisupport.project/test/unit/src")).toURL(), srcDir);
     }
     
     public void testGetSourcesFromExternalModule() throws IOException {

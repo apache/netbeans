@@ -22,7 +22,6 @@ package org.netbeans.modules.maven.output;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.api.ModelUtils;
 import org.netbeans.modules.maven.api.output.OutputProcessor;
 import org.netbeans.modules.maven.api.output.OutputVisitor;
@@ -51,7 +50,7 @@ public class DependencyAnalyzeOutputProcessor implements OutputProcessor {
     DependencyAnalyzeOutputProcessor(Project project) {
         started = false;
         start = Pattern.compile(".*Used undeclared dependencies.*", Pattern.DOTALL); //NOI18N
-        dependency = Pattern.compile("\\s*(?:\\[WARNING\\])?\\s*(.*):(.*):(.*):(.*):(.*)", Pattern.DOTALL); //NOI18N
+        dependency = Pattern.compile("\\s*(?:\\[WARNING|WARN\\])?\\s*(.*):(.*):(.*):(.*):(.*)", Pattern.DOTALL); //NOI18N
         this.project = project;
     }
 
@@ -118,9 +117,6 @@ public class DependencyAnalyzeOutputProcessor implements OutputProcessor {
             scope = sc;
             project = prj;
         }
-        @Override
-        public void outputLineSelected(OutputEvent arg0) {
-        }
         
         @Messages({"# {0} - groupId:artifactId", "MSG_Dependency=Dependency {0} added to project''s POM."})
         @Override
@@ -129,10 +125,6 @@ public class DependencyAnalyzeOutputProcessor implements OutputProcessor {
                     group, artifact, version, type, scope, null,false);
             NotifyDescriptor nd = new NotifyDescriptor.Message(MSG_Dependency(group + ":" + artifact));
             DialogDisplayer.getDefault().notify(nd);
-        }
-        
-        @Override
-        public void outputLineCleared(OutputEvent arg0) {
         }
     }
 }

@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.EnumSet;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -53,10 +54,10 @@ import org.openide.filesystems.FileObject;
 public final class CmFieldGenerator extends AbstractMethodGenerator {
 
     // available for tests
-    static final Set<Modifier> PUBLIC_ABSTRACT = new HashSet<Modifier>(Arrays.asList(new Modifier[] {
+    static final Set<Modifier> PUBLIC_ABSTRACT = EnumSet.of(
         Modifier.PUBLIC,
         Modifier.ABSTRACT
-    }));
+    );
 
     private CmFieldGenerator(String ejbClass, FileObject ejbClassFileObject) {
         super(ejbClass, ejbClassFileObject);

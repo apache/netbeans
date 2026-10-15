@@ -59,7 +59,7 @@ public class PHPDocTag extends ASTNode {
         @Override
         public Map<OffsetRange, String> getTypes() {
             //types of these annotations are parsed by an editor parser itself
-            return Collections.EMPTY_MAP;
+            return Collections.<OffsetRange, String>emptyMap();
         }
 
         @Override
@@ -70,8 +70,8 @@ public class PHPDocTag extends ASTNode {
 
     }
 
-    final private AnnotationParsedLine type;
-    final private String value;
+    private final AnnotationParsedLine type;
+    private final String value;
 
     public PHPDocTag(int start, int end, AnnotationParsedLine kind, String value) {
         super(start, end);

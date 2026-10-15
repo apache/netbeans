@@ -193,7 +193,7 @@ public class DataFolder extends MultiDataObject implements DataObject.Container 
     * @param mode an constant from {@link DataFolder.SortMode}
     * @exception IOException if the mode cannot be set
     */
-    public synchronized final void setSortMode (SortMode mode) throws IOException {
+    public final synchronized void setSortMode (SortMode mode) throws IOException {
         SortMode old = getOrder ().getSortMode ();
         getOrder ().setSortMode (mode);
         firePropertyChange (PROP_SORT_MODE, old, getOrder ().getSortMode ());
@@ -220,7 +220,7 @@ public class DataFolder extends MultiDataObject implements DataObject.Container 
     * @exception IOException if the order cannot be set
     *
     */
-    public synchronized final void setOrder (DataObject[] arr) throws IOException {
+    public final synchronized void setOrder (DataObject[] arr) throws IOException {
         getOrder ().setOrder (arr);
         firePropertyChange (PROP_ORDER, null, null);
     }
@@ -380,8 +380,8 @@ public class DataFolder extends MultiDataObject implements DataObject.Container 
 
         }
     }
-    private final static class ClonedFilterHandle implements Node.Handle {
-        private final static long serialVersionUID = 24234097765186L;
+    private static final class ClonedFilterHandle implements Node.Handle {
+        private static final long serialVersionUID = 24234097765186L;
         private DataObject folder;
         private DataFilter filter;
         public ClonedFilterHandle (DataFolder folder, DataFilter filter) {
@@ -832,19 +832,23 @@ public class DataFolder extends MultiDataObject implements DataObject.Container 
     protected DataObject handleCreateFromTemplate (
         DataFolder f, String name
     ) throws IOException {
-        DataFolder newFolder = (DataFolder)super.handleCreateFromTemplate (f, name);
-        Enumeration<DataObject> en = children ();
+        int[] fileBuilderUsed = { 0 };
+        final DataObject newObj = super.handleCreateFromTemplate (f, name, fileBuilderUsed);
+        if (fileBuilderUsed[0] == 0 && newObj instanceof DataFolder) {
+            DataFolder newFolder = (DataFolder) newObj;
+            Enumeration<DataObject> en = children ();
 
-        while (en.hasMoreElements ()) {
-            try {
-                DataObject obj = en.nextElement ();
-                obj.createFromTemplate (newFolder);
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
+            Map<String, Object> params = CreateAction.getCallParameters(null);
+            while (en.hasMoreElements ()) {
+                try {
+                    DataObject obj = en.nextElement ();
+                    obj.createFromTemplate (newFolder, null, params);
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             }
         }
-
-        return newFolder;
+        return newObj;
     }
 
     /** Creates shadow for this object in specified folder (overridable in subclasses).
@@ -1397,7 +1401,7 @@ public class DataFolder extends MultiDataObject implements DataObject.Container 
                     return;
                 }
                 ExTransferable.Multi multi = new ExTransferable.Multi(
-                        transferables.toArray(new Transferable[transferables.size()]) );
+                        transferables.toArray(new Transferable[0]) );
                 super.createPasteTypes (multi, s);
                 if (getPrimaryFile().canWrite()) {
                     dataTransferSupport.createPasteTypes (multi, s);

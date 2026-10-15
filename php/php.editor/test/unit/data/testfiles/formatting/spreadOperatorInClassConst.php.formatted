@@ -41,13 +41,11 @@ class UnpackClass {
         "4",
         self::CONSTANT1
     ];
-
 }
 
 class UnpackChildClass extends UnpackClass {
 
     public const CHILD_CONSTANT = ["0", ...parent::CONSTANT,];
-
 }
 
 namespace Bar;
@@ -68,5 +66,4 @@ class BarUnpackClass {
         4,
     ];
     private const CONST4 = [...F_CONST];
-
 }

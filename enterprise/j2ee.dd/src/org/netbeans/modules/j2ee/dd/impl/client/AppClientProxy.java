@@ -18,25 +18,29 @@
  */
 
 package org.netbeans.modules.j2ee.dd.impl.client;
-
-/**
- *
- * @author  Nitya Doraisamy
- */
+import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
 import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.netbeans.modules.j2ee.dd.api.client.AppClient;
 import org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException;
 import org.openide.filesystems.FileAlreadyLockedException;
 import org.openide.filesystems.FileObject;
 
+
+/**
+ *
+ * @author  Nitya Doraisamy
+ */
 public class AppClientProxy implements AppClient {
     
     private AppClient app;
     private String version;
-    private java.util.List listeners;
+    private List<PropertyChangeListener> listeners;
     public boolean writing=false;
     private OutputProvider outputProvider;
     private org.xml.sax.SAXParseException error;
@@ -51,14 +55,13 @@ public class AppClientProxy implements AppClient {
     public AppClientProxy(AppClient app, String version) {
         this.app = app;
         this.version = version;
-        listeners = new java.util.ArrayList();
+        listeners = new ArrayList<>();
     }
     
     public void setOriginal(AppClient app) {
         if (this.app != app) {
-            for (Iterator i = listeners.iterator(); i.hasNext();) {
-                java.beans.PropertyChangeListener pcl =
-                        (java.beans.PropertyChangeListener) i.next();
+            for (Iterator<PropertyChangeListener> i = listeners.iterator(); i.hasNext();) {
+                PropertyChangeListener pcl = i.next();
                 if (this.app != null) this.app.removePropertyChangeListener(pcl);
                 if (app != null) app.addPropertyChangeListener(pcl);
                 
@@ -80,8 +83,8 @@ public class AppClientProxy implements AppClient {
             java.beans.PropertyChangeEvent evt =
                     new java.beans.PropertyChangeEvent(this, PROPERTY_VERSION, version, value);
             version=value;
-            for (Iterator i = listeners.iterator(); i.hasNext();) {
-                ((java.beans.PropertyChangeListener) i.next()).propertyChange(evt);
+            for (Iterator<PropertyChangeListener> i = listeners.iterator(); i.hasNext();) {
+                i.next().propertyChange(evt);
             }
         }
     }
@@ -183,10 +186,10 @@ public class AppClientProxy implements AppClient {
     public void setStatus(int value) {
         if (ddStatus!=value) {
             java.beans.PropertyChangeEvent evt =
-                    new java.beans.PropertyChangeEvent(this, PROPERTY_STATUS, new Integer(ddStatus), new Integer(value));
+                    new java.beans.PropertyChangeEvent(this, PROPERTY_STATUS, ddStatus, value);
             ddStatus=value;
-            for (Iterator i = listeners.iterator(); i.hasNext();) {
-                ((java.beans.PropertyChangeListener) i.next()).propertyChange(evt);
+            for (Iterator<PropertyChangeListener> i = listeners.iterator(); i.hasNext();) {
+                i.next().propertyChange(evt);
             }
         }
     }
@@ -354,23 +357,14 @@ public class AppClientProxy implements AppClient {
     
     public void write(FileObject fo) throws java.io.IOException {
         if (app != null) {
-            try {
-                org.openide.filesystems.FileLock lock = fo.lock();
-                try {
-                    java.io.OutputStream os = fo.getOutputStream(lock);
-                    try {
-                        writing=true;
-                        write(os);
-                    } finally {
-                        os.close();
-                    }
-                } finally {
-                    lock.releaseLock();
-                }
+            try (org.openide.filesystems.FileLock lock = fo.lock();
+                    java.io.OutputStream os = fo.getOutputStream(lock)) {
+                writing=true;
+                write(os);
             } catch (FileAlreadyLockedException ex) {
                 // trying to use OutputProvider for writing changes
                 org.openide.loaders.DataObject dobj = org.openide.loaders.DataObject.find(fo);
-                if (dobj!=null && dobj instanceof AppClientProxy.OutputProvider)
+                if (dobj instanceof OutputProvider)
                     ((AppClientProxy.OutputProvider)dobj).write(this);
                 else throw ex;
             }

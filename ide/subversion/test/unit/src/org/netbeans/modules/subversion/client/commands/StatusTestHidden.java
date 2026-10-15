@@ -21,6 +21,7 @@ package org.netbeans.modules.subversion.client.commands;
 
 import org.netbeans.modules.subversion.client.AbstractCommandTestCase;
 import java.io.File;
+import java.nio.file.Files;
 import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -95,7 +96,7 @@ public class StatusTestHidden extends AbstractCommandTestCase {
         
         File notmanagedfolder = createFolder("notmanagedfolder");
         File notmanagedfile = createFile(notmanagedfolder, "notmanagedfile");
-        File unversioned = File.createTempFile("unversioned", null);        // XXX extra test in unversioned WC
+        File unversioned = Files.createTempFile("unversioned", null).toFile();        // XXX extra test in unversioned WC
         File added = createFile("added");
         add(added);
         remove(deleted);
@@ -185,7 +186,7 @@ public class StatusTestHidden extends AbstractCommandTestCase {
         
         File notmanagedfolder = createFolder("notmanagedfolder");
         File notmanagedfile = createFile(notmanagedfolder, "notmanagedfile");
-        File unversioned = File.createTempFile("unversioned", null);        // XXX extra test in unversioned WC
+        File unversioned = Files.createTempFile("unversioned", null).toFile();        // XXX extra test in unversioned WC
         File added = createFile("added");
         add(added);
         remove(deleted);
@@ -352,7 +353,7 @@ public class StatusTestHidden extends AbstractCommandTestCase {
                 throw e;
             }
         }
-        setProperty(externals, "svn:externals", "e1/e2\t" + repo2Url.appendPath("e1").appendPath("e2").toString().replaceAll(" ", "%20"));
+        setProperty(externals, "svn:externals", "e1/e2\t" + repo2Url.appendPath("e1").appendPath("e2").toString().replace(" ", "%20"));
         
         commit(externals);
         update(externals);        

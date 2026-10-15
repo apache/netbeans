@@ -1,0 +1,5 @@
+Code completion result for source line:
+b.command(Arrays.asList("good", "bad")).inh|eritIO().command()
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     inheritIO()                     [PUBLIC]   ProcessBuilder

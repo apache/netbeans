@@ -1,0 +1,1346 @@
+<testresult testFile='treatNamespacedNamesAsSingleToken_02b.php'>
+    <scanner>
+        <token id='T_NAMESPACE' start='817' end='826'>
+            <text>namespace</text>
+        </token>
+        <token id='T_NAME_QUALIFIED' start='827' end='839'>
+            <text>test\require</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='840' end='841'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='841' end='842'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='844' end='853'>
+            <text>namespace</text>
+        </token>
+        <token id='T_STRING' start='854' end='860'>
+            <text>parent</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='861' end='862'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='862' end='863'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='864' end='873'>
+            <text>namespace</text>
+        </token>
+        <token id='T_STRING' start='874' end='878'>
+            <text>self</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='879' end='880'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='880' end='881'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='882' end='891'>
+            <text>namespace</text>
+        </token>
+        <token id='T_STATIC' start='892' end='898'>
+            <text>static</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='899' end='900'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='900' end='901'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='902' end='911'>
+            <text>namespace</text>
+        </token>
+        <token id='T_ABSTRACT' start='912' end='920'>
+            <text>abstract</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='921' end='922'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='922' end='923'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='924' end='933'>
+            <text>namespace</text>
+        </token>
+        <token id='T_FINAL' start='934' end='939'>
+            <text>final</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='940' end='941'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='941' end='942'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='943' end='952'>
+            <text>namespace</text>
+        </token>
+        <token id='T_PRIVATE' start='953' end='960'>
+            <text>private</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='961' end='962'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='962' end='963'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='964' end='973'>
+            <text>namespace</text>
+        </token>
+        <token id='T_PROTECTED' start='974' end='983'>
+            <text>protected</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='984' end='985'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='985' end='986'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='987' end='996'>
+            <text>namespace</text>
+        </token>
+        <token id='T_PUBLIC' start='997' end='1003'>
+            <text>public</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1004' end='1005'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1005' end='1006'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1007' end='1016'>
+            <text>namespace</text>
+        </token>
+        <token id='T_READONLY' start='1017' end='1025'>
+            <text>readOnly</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1026' end='1027'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1027' end='1028'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1029' end='1038'>
+            <text>namespace</text>
+        </token>
+        <token id='T_CLASS' start='1039' end='1044'>
+            <text>class</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1045' end='1046'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1046' end='1047'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1048' end='1057'>
+            <text>namespace</text>
+        </token>
+        <token id='T_DEFINE' start='1058' end='1064'>
+            <text>define</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1065' end='1066'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1066' end='1067'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1068' end='1077'>
+            <text>namespace</text>
+        </token>
+        <token id='T_INCLUDE' start='1078' end='1085'>
+            <text>include</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1086' end='1087'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1087' end='1088'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1089' end='1098'>
+            <text>namespace</text>
+        </token>
+        <token id='T_INCLUDE_ONCE' start='1099' end='1111'>
+            <text>include_once</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1112' end='1113'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1113' end='1114'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1115' end='1124'>
+            <text>namespace</text>
+        </token>
+        <token id='T_EVAL' start='1125' end='1129'>
+            <text>eval</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1130' end='1131'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1131' end='1132'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1133' end='1142'>
+            <text>namespace</text>
+        </token>
+        <token id='T_REQUIRE' start='1143' end='1150'>
+            <text>require</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1151' end='1152'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1152' end='1153'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1154' end='1163'>
+            <text>namespace</text>
+        </token>
+        <token id='T_REQUIRE_ONCE' start='1164' end='1176'>
+            <text>require_once</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1177' end='1178'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1178' end='1179'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1180' end='1189'>
+            <text>namespace</text>
+        </token>
+        <token id='T_LOGICAL_OR' start='1190' end='1192'>
+            <text>or</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1193' end='1194'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1194' end='1195'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1196' end='1205'>
+            <text>namespace</text>
+        </token>
+        <token id='T_LOGICAL_XOR' start='1206' end='1209'>
+            <text>xor</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1210' end='1211'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1211' end='1212'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1213' end='1222'>
+            <text>namespace</text>
+        </token>
+        <token id='T_LOGICAL_AND' start='1223' end='1226'>
+            <text>and</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1227' end='1228'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1228' end='1229'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1230' end='1239'>
+            <text>namespace</text>
+        </token>
+        <token id='T_INSTANCEOF' start='1240' end='1250'>
+            <text>instanceof</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1251' end='1252'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1252' end='1253'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1254' end='1263'>
+            <text>namespace</text>
+        </token>
+        <token id='T_NEW' start='1264' end='1267'>
+            <text>new</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1268' end='1269'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1269' end='1270'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1271' end='1280'>
+            <text>namespace</text>
+        </token>
+        <token id='T_CLONE' start='1281' end='1286'>
+            <text>clone</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1287' end='1288'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1288' end='1289'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1290' end='1299'>
+            <text>namespace</text>
+        </token>
+        <token id='T_EXIT' start='1300' end='1304'>
+            <text>exit</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1305' end='1306'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1306' end='1307'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1308' end='1317'>
+            <text>namespace</text>
+        </token>
+        <token id='T_IF' start='1318' end='1320'>
+            <text>if</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1321' end='1322'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1322' end='1323'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1324' end='1333'>
+            <text>namespace</text>
+        </token>
+        <token id='T_ELSEIF' start='1334' end='1340'>
+            <text>elseif</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1341' end='1342'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1342' end='1343'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1344' end='1353'>
+            <text>namespace</text>
+        </token>
+        <token id='T_ELSE' start='1354' end='1358'>
+            <text>else</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1359' end='1360'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1360' end='1361'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1362' end='1371'>
+            <text>namespace</text>
+        </token>
+        <token id='T_ENDIF' start='1372' end='1377'>
+            <text>endif</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1378' end='1379'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1379' end='1380'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1381' end='1390'>
+            <text>namespace</text>
+        </token>
+        <token id='T_ECHO' start='1391' end='1395'>
+            <text>echo</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1396' end='1397'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1397' end='1398'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1399' end='1408'>
+            <text>namespace</text>
+        </token>
+        <token id='T_DO' start='1409' end='1411'>
+            <text>do</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1412' end='1413'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1413' end='1414'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1415' end='1424'>
+            <text>namespace</text>
+        </token>
+        <token id='T_WHILE' start='1425' end='1430'>
+            <text>while</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1431' end='1432'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1432' end='1433'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1434' end='1443'>
+            <text>namespace</text>
+        </token>
+        <token id='T_ENDWHILEnejdu.' start='1444' end='1452'>
+            <text>endwhile</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1453' end='1454'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1454' end='1455'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1456' end='1465'>
+            <text>namespace</text>
+        </token>
+        <token id='T_FOR' start='1466' end='1469'>
+            <text>for</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1470' end='1471'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1471' end='1472'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1473' end='1482'>
+            <text>namespace</text>
+        </token>
+        <token id='T_ENDFOR' start='1483' end='1489'>
+            <text>endfor</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1490' end='1491'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1491' end='1492'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1493' end='1502'>
+            <text>namespace</text>
+        </token>
+        <token id='T_FOREACH' start='1503' end='1510'>
+            <text>foreach</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1511' end='1512'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1512' end='1513'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1514' end='1523'>
+            <text>namespace</text>
+        </token>
+        <token id='T_ENDFOREACH' start='1524' end='1534'>
+            <text>endforeach</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1535' end='1536'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1536' end='1537'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1538' end='1547'>
+            <text>namespace</text>
+        </token>
+        <token id='T_DECLARE' start='1548' end='1555'>
+            <text>declare</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1556' end='1557'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1557' end='1558'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1559' end='1568'>
+            <text>namespace</text>
+        </token>
+        <token id='T_AS' start='1569' end='1571'>
+            <text>as</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1572' end='1573'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1573' end='1574'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1575' end='1584'>
+            <text>namespace</text>
+        </token>
+        <token id='T_TRY' start='1585' end='1588'>
+            <text>try</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1589' end='1590'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1590' end='1591'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1592' end='1601'>
+            <text>namespace</text>
+        </token>
+        <token id='T_CATCH' start='1602' end='1607'>
+            <text>catch</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1608' end='1609'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1609' end='1610'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1611' end='1620'>
+            <text>namespace</text>
+        </token>
+        <token id='T_FINALLY' start='1621' end='1628'>
+            <text>finally</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1629' end='1630'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1630' end='1631'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1632' end='1641'>
+            <text>namespace</text>
+        </token>
+        <token id='T_THROW' start='1642' end='1647'>
+            <text>throw</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1648' end='1649'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1649' end='1650'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1651' end='1660'>
+            <text>namespace</text>
+        </token>
+        <token id='T_USE' start='1661' end='1664'>
+            <text>use</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1665' end='1666'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1666' end='1667'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1668' end='1677'>
+            <text>namespace</text>
+        </token>
+        <token id='T_INSTEADOF' start='1678' end='1687'>
+            <text>insteadof</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1688' end='1689'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1689' end='1690'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1691' end='1700'>
+            <text>namespace</text>
+        </token>
+        <token id='T_GLOBAL' start='1701' end='1707'>
+            <text>global</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1708' end='1709'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1709' end='1710'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1711' end='1720'>
+            <text>namespace</text>
+        </token>
+        <token id='T_VAR' start='1721' end='1724'>
+            <text>var</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1725' end='1726'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1726' end='1727'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1728' end='1737'>
+            <text>namespace</text>
+        </token>
+        <token id='T_UNSET' start='1738' end='1743'>
+            <text>unset</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1744' end='1745'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1745' end='1746'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1747' end='1756'>
+            <text>namespace</text>
+        </token>
+        <token id='T_ISSET' start='1757' end='1762'>
+            <text>isset</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1763' end='1764'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1764' end='1765'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1766' end='1775'>
+            <text>namespace</text>
+        </token>
+        <token id='T_EMPTY' start='1776' end='1781'>
+            <text>empty</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1782' end='1783'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1783' end='1784'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1785' end='1794'>
+            <text>namespace</text>
+        </token>
+        <token id='T_CONTINUE' start='1795' end='1803'>
+            <text>continue</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1804' end='1805'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1805' end='1806'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1807' end='1816'>
+            <text>namespace</text>
+        </token>
+        <token id='T_GOTO' start='1817' end='1821'>
+            <text>goto</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1822' end='1823'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1823' end='1824'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1825' end='1834'>
+            <text>namespace</text>
+        </token>
+        <token id='T_FN' start='1835' end='1837'>
+            <text>fn</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1838' end='1839'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1839' end='1840'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1841' end='1850'>
+            <text>namespace</text>
+        </token>
+        <token id='T_CONST' start='1851' end='1856'>
+            <text>const</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1857' end='1858'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1858' end='1859'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1860' end='1869'>
+            <text>namespace</text>
+        </token>
+        <token id='T_RETURN' start='1870' end='1876'>
+            <text>return</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1877' end='1878'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1878' end='1879'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1880' end='1889'>
+            <text>namespace</text>
+        </token>
+        <token id='T_PRINT' start='1890' end='1895'>
+            <text>print</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1896' end='1897'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1897' end='1898'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1899' end='1908'>
+            <text>namespace</text>
+        </token>
+        <token id='T_YIELD' start='1909' end='1914'>
+            <text>yield</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1915' end='1916'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1916' end='1917'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1918' end='1927'>
+            <text>namespace</text>
+        </token>
+        <token id='T_LIST' start='1928' end='1932'>
+            <text>list</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1933' end='1934'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1934' end='1935'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1936' end='1945'>
+            <text>namespace</text>
+        </token>
+        <token id='T_MATCH' start='1946' end='1951'>
+            <text>match</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1952' end='1953'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1953' end='1954'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1955' end='1964'>
+            <text>namespace</text>
+        </token>
+        <token id='T_SWITCH' start='1965' end='1971'>
+            <text>switch</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1972' end='1973'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1973' end='1974'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1975' end='1984'>
+            <text>namespace</text>
+        </token>
+        <token id='T_ENDSWITCH' start='1985' end='1994'>
+            <text>endswitch</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1995' end='1996'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1996' end='1997'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1998' end='2007'>
+            <text>namespace</text>
+        </token>
+        <token id='T_CASE' start='2008' end='2012'>
+            <text>case</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2013' end='2014'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2014' end='2015'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='2016' end='2025'>
+            <text>namespace</text>
+        </token>
+        <token id='T_DEFAULT' start='2026' end='2033'>
+            <text>default</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2034' end='2035'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2035' end='2036'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='2037' end='2046'>
+            <text>namespace</text>
+        </token>
+        <token id='T_BREAK' start='2047' end='2052'>
+            <text>break</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2053' end='2054'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2054' end='2055'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='2056' end='2065'>
+            <text>namespace</text>
+        </token>
+        <token id='T_ARRAY' start='2066' end='2071'>
+            <text>array</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2072' end='2073'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2073' end='2074'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='2075' end='2084'>
+            <text>namespace</text>
+        </token>
+        <token id='T_CALLABLE' start='2085' end='2093'>
+            <text>callable</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2094' end='2095'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2095' end='2096'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='2097' end='2106'>
+            <text>namespace</text>
+        </token>
+        <token id='T_EXTENDS' start='2107' end='2114'>
+            <text>extends</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2115' end='2116'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2116' end='2117'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='2118' end='2127'>
+            <text>namespace</text>
+        </token>
+        <token id='T_IMPLEMENTS' start='2128' end='2138'>
+            <text>implements</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2139' end='2140'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2140' end='2141'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='2142' end='2151'>
+            <text>namespace</text>
+        </token>
+        <token id='T_TRAIT' start='2152' end='2157'>
+            <text>trait</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2158' end='2159'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2159' end='2160'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='2161' end='2170'>
+            <text>namespace</text>
+        </token>
+        <token id='T_INTERFACE' start='2171' end='2180'>
+            <text>interface</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2181' end='2182'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2182' end='2183'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='2184' end='2193'>
+            <text>namespace</text>
+        </token>
+        <token id='T_STRING' start='2194' end='2198'>
+            <text>enum</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2199' end='2200'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2200' end='2201'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='2202' end='2202'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='2202'>
+        <Comments>
+            <Comment start='6' end='815' commentType='multiLine'/>
+            <Comment start='6' end='815' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <NamespaceDeclaration start='817' end='842' isBracketed='true'>
+                <NamespaceName start='827' end='839' isCurrent='false' isGlobal='false'>
+                    <Identifier start='827' end='831' name='test'/>
+                    <Identifier start='832' end='839' name='require'/>
+                </NamespaceName>
+                <Block start='840' end='842' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='844' end='863' isBracketed='true'>
+                <NamespaceName start='854' end='860' isCurrent='false' isGlobal='false'>
+                    <Identifier start='854' end='860' name='parent'/>
+                </NamespaceName>
+                <Block start='861' end='863' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='864' end='881' isBracketed='true'>
+                <NamespaceName start='874' end='878' isCurrent='false' isGlobal='false'>
+                    <Identifier start='874' end='878' name='self'/>
+                </NamespaceName>
+                <Block start='879' end='881' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='882' end='901' isBracketed='true'>
+                <NamespaceName start='892' end='898' isCurrent='false' isGlobal='false'>
+                    <Identifier start='892' end='898' name='static'/>
+                </NamespaceName>
+                <Block start='899' end='901' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='902' end='923' isBracketed='true'>
+                <NamespaceName start='912' end='920' isCurrent='false' isGlobal='false'>
+                    <Identifier start='912' end='920' name='abstract'/>
+                </NamespaceName>
+                <Block start='921' end='923' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='924' end='942' isBracketed='true'>
+                <NamespaceName start='934' end='939' isCurrent='false' isGlobal='false'>
+                    <Identifier start='934' end='939' name='final'/>
+                </NamespaceName>
+                <Block start='940' end='942' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='943' end='963' isBracketed='true'>
+                <NamespaceName start='953' end='960' isCurrent='false' isGlobal='false'>
+                    <Identifier start='953' end='960' name='private'/>
+                </NamespaceName>
+                <Block start='961' end='963' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='964' end='986' isBracketed='true'>
+                <NamespaceName start='974' end='983' isCurrent='false' isGlobal='false'>
+                    <Identifier start='974' end='983' name='protected'/>
+                </NamespaceName>
+                <Block start='984' end='986' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='987' end='1006' isBracketed='true'>
+                <NamespaceName start='997' end='1003' isCurrent='false' isGlobal='false'>
+                    <Identifier start='997' end='1003' name='public'/>
+                </NamespaceName>
+                <Block start='1004' end='1006' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1007' end='1028' isBracketed='true'>
+                <NamespaceName start='1017' end='1025' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1017' end='1025' name='readOnly'/>
+                </NamespaceName>
+                <Block start='1026' end='1028' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1029' end='1047' isBracketed='true'>
+                <NamespaceName start='1039' end='1044' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1039' end='1044' name='class'/>
+                </NamespaceName>
+                <Block start='1045' end='1047' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1048' end='1067' isBracketed='true'>
+                <NamespaceName start='1058' end='1064' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1058' end='1064' name='define'/>
+                </NamespaceName>
+                <Block start='1065' end='1067' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1068' end='1088' isBracketed='true'>
+                <NamespaceName start='1078' end='1085' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1078' end='1085' name='include'/>
+                </NamespaceName>
+                <Block start='1086' end='1088' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1089' end='1114' isBracketed='true'>
+                <NamespaceName start='1099' end='1111' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1099' end='1111' name='include_once'/>
+                </NamespaceName>
+                <Block start='1112' end='1114' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1115' end='1132' isBracketed='true'>
+                <NamespaceName start='1125' end='1129' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1125' end='1129' name='eval'/>
+                </NamespaceName>
+                <Block start='1130' end='1132' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1133' end='1153' isBracketed='true'>
+                <NamespaceName start='1143' end='1150' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1143' end='1150' name='require'/>
+                </NamespaceName>
+                <Block start='1151' end='1153' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1154' end='1179' isBracketed='true'>
+                <NamespaceName start='1164' end='1176' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1164' end='1176' name='require_once'/>
+                </NamespaceName>
+                <Block start='1177' end='1179' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1180' end='1195' isBracketed='true'>
+                <NamespaceName start='1190' end='1192' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1190' end='1192' name='or'/>
+                </NamespaceName>
+                <Block start='1193' end='1195' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1196' end='1212' isBracketed='true'>
+                <NamespaceName start='1206' end='1209' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1206' end='1209' name='xor'/>
+                </NamespaceName>
+                <Block start='1210' end='1212' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1213' end='1229' isBracketed='true'>
+                <NamespaceName start='1223' end='1226' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1223' end='1226' name='and'/>
+                </NamespaceName>
+                <Block start='1227' end='1229' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1230' end='1253' isBracketed='true'>
+                <NamespaceName start='1240' end='1250' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1240' end='1250' name='instanceof'/>
+                </NamespaceName>
+                <Block start='1251' end='1253' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1254' end='1270' isBracketed='true'>
+                <NamespaceName start='1264' end='1267' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1264' end='1267' name='new'/>
+                </NamespaceName>
+                <Block start='1268' end='1270' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1271' end='1289' isBracketed='true'>
+                <NamespaceName start='1281' end='1286' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1281' end='1286' name='clone'/>
+                </NamespaceName>
+                <Block start='1287' end='1289' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1290' end='1307' isBracketed='true'>
+                <NamespaceName start='1300' end='1304' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1300' end='1304' name='exit'/>
+                </NamespaceName>
+                <Block start='1305' end='1307' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1308' end='1323' isBracketed='true'>
+                <NamespaceName start='1318' end='1320' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1318' end='1320' name='if'/>
+                </NamespaceName>
+                <Block start='1321' end='1323' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1324' end='1343' isBracketed='true'>
+                <NamespaceName start='1334' end='1340' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1334' end='1340' name='elseif'/>
+                </NamespaceName>
+                <Block start='1341' end='1343' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1344' end='1361' isBracketed='true'>
+                <NamespaceName start='1354' end='1358' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1354' end='1358' name='else'/>
+                </NamespaceName>
+                <Block start='1359' end='1361' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1362' end='1380' isBracketed='true'>
+                <NamespaceName start='1372' end='1377' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1372' end='1377' name='endif'/>
+                </NamespaceName>
+                <Block start='1378' end='1380' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1381' end='1398' isBracketed='true'>
+                <NamespaceName start='1391' end='1395' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1391' end='1395' name='echo'/>
+                </NamespaceName>
+                <Block start='1396' end='1398' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1399' end='1414' isBracketed='true'>
+                <NamespaceName start='1409' end='1411' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1409' end='1411' name='do'/>
+                </NamespaceName>
+                <Block start='1412' end='1414' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1415' end='1433' isBracketed='true'>
+                <NamespaceName start='1425' end='1430' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1425' end='1430' name='while'/>
+                </NamespaceName>
+                <Block start='1431' end='1433' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1434' end='1455' isBracketed='true'>
+                <NamespaceName start='1444' end='1452' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1444' end='1452' name='endwhile'/>
+                </NamespaceName>
+                <Block start='1453' end='1455' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1456' end='1472' isBracketed='true'>
+                <NamespaceName start='1466' end='1469' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1466' end='1469' name='for'/>
+                </NamespaceName>
+                <Block start='1470' end='1472' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1473' end='1492' isBracketed='true'>
+                <NamespaceName start='1483' end='1489' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1483' end='1489' name='endfor'/>
+                </NamespaceName>
+                <Block start='1490' end='1492' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1493' end='1513' isBracketed='true'>
+                <NamespaceName start='1503' end='1510' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1503' end='1510' name='foreach'/>
+                </NamespaceName>
+                <Block start='1511' end='1513' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1514' end='1537' isBracketed='true'>
+                <NamespaceName start='1524' end='1534' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1524' end='1534' name='endforeach'/>
+                </NamespaceName>
+                <Block start='1535' end='1537' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1538' end='1558' isBracketed='true'>
+                <NamespaceName start='1548' end='1555' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1548' end='1555' name='declare'/>
+                </NamespaceName>
+                <Block start='1556' end='1558' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1559' end='1574' isBracketed='true'>
+                <NamespaceName start='1569' end='1571' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1569' end='1571' name='as'/>
+                </NamespaceName>
+                <Block start='1572' end='1574' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1575' end='1591' isBracketed='true'>
+                <NamespaceName start='1585' end='1588' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1585' end='1588' name='try'/>
+                </NamespaceName>
+                <Block start='1589' end='1591' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1592' end='1610' isBracketed='true'>
+                <NamespaceName start='1602' end='1607' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1602' end='1607' name='catch'/>
+                </NamespaceName>
+                <Block start='1608' end='1610' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1611' end='1631' isBracketed='true'>
+                <NamespaceName start='1621' end='1628' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1621' end='1628' name='finally'/>
+                </NamespaceName>
+                <Block start='1629' end='1631' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1632' end='1650' isBracketed='true'>
+                <NamespaceName start='1642' end='1647' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1642' end='1647' name='throw'/>
+                </NamespaceName>
+                <Block start='1648' end='1650' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1651' end='1667' isBracketed='true'>
+                <NamespaceName start='1661' end='1664' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1661' end='1664' name='use'/>
+                </NamespaceName>
+                <Block start='1665' end='1667' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1668' end='1690' isBracketed='true'>
+                <NamespaceName start='1678' end='1687' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1678' end='1687' name='insteadof'/>
+                </NamespaceName>
+                <Block start='1688' end='1690' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1691' end='1710' isBracketed='true'>
+                <NamespaceName start='1701' end='1707' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1701' end='1707' name='global'/>
+                </NamespaceName>
+                <Block start='1708' end='1710' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1711' end='1727' isBracketed='true'>
+                <NamespaceName start='1721' end='1724' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1721' end='1724' name='var'/>
+                </NamespaceName>
+                <Block start='1725' end='1727' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1728' end='1746' isBracketed='true'>
+                <NamespaceName start='1738' end='1743' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1738' end='1743' name='unset'/>
+                </NamespaceName>
+                <Block start='1744' end='1746' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1747' end='1765' isBracketed='true'>
+                <NamespaceName start='1757' end='1762' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1757' end='1762' name='isset'/>
+                </NamespaceName>
+                <Block start='1763' end='1765' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1766' end='1784' isBracketed='true'>
+                <NamespaceName start='1776' end='1781' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1776' end='1781' name='empty'/>
+                </NamespaceName>
+                <Block start='1782' end='1784' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1785' end='1806' isBracketed='true'>
+                <NamespaceName start='1795' end='1803' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1795' end='1803' name='continue'/>
+                </NamespaceName>
+                <Block start='1804' end='1806' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1807' end='1824' isBracketed='true'>
+                <NamespaceName start='1817' end='1821' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1817' end='1821' name='goto'/>
+                </NamespaceName>
+                <Block start='1822' end='1824' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1825' end='1840' isBracketed='true'>
+                <NamespaceName start='1835' end='1837' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1835' end='1837' name='fn'/>
+                </NamespaceName>
+                <Block start='1838' end='1840' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1841' end='1859' isBracketed='true'>
+                <NamespaceName start='1851' end='1856' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1851' end='1856' name='const'/>
+                </NamespaceName>
+                <Block start='1857' end='1859' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1860' end='1879' isBracketed='true'>
+                <NamespaceName start='1870' end='1876' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1870' end='1876' name='return'/>
+                </NamespaceName>
+                <Block start='1877' end='1879' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1880' end='1898' isBracketed='true'>
+                <NamespaceName start='1890' end='1895' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1890' end='1895' name='print'/>
+                </NamespaceName>
+                <Block start='1896' end='1898' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1899' end='1917' isBracketed='true'>
+                <NamespaceName start='1909' end='1914' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1909' end='1914' name='yield'/>
+                </NamespaceName>
+                <Block start='1915' end='1917' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1918' end='1935' isBracketed='true'>
+                <NamespaceName start='1928' end='1932' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1928' end='1932' name='list'/>
+                </NamespaceName>
+                <Block start='1933' end='1935' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1936' end='1954' isBracketed='true'>
+                <NamespaceName start='1946' end='1951' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1946' end='1951' name='match'/>
+                </NamespaceName>
+                <Block start='1952' end='1954' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1955' end='1974' isBracketed='true'>
+                <NamespaceName start='1965' end='1971' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1965' end='1971' name='switch'/>
+                </NamespaceName>
+                <Block start='1972' end='1974' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1975' end='1997' isBracketed='true'>
+                <NamespaceName start='1985' end='1994' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1985' end='1994' name='endswitch'/>
+                </NamespaceName>
+                <Block start='1995' end='1997' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1998' end='2015' isBracketed='true'>
+                <NamespaceName start='2008' end='2012' isCurrent='false' isGlobal='false'>
+                    <Identifier start='2008' end='2012' name='case'/>
+                </NamespaceName>
+                <Block start='2013' end='2015' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='2016' end='2036' isBracketed='true'>
+                <NamespaceName start='2026' end='2033' isCurrent='false' isGlobal='false'>
+                    <Identifier start='2026' end='2033' name='default'/>
+                </NamespaceName>
+                <Block start='2034' end='2036' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='2037' end='2055' isBracketed='true'>
+                <NamespaceName start='2047' end='2052' isCurrent='false' isGlobal='false'>
+                    <Identifier start='2047' end='2052' name='break'/>
+                </NamespaceName>
+                <Block start='2053' end='2055' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='2056' end='2074' isBracketed='true'>
+                <NamespaceName start='2066' end='2071' isCurrent='false' isGlobal='false'>
+                    <Identifier start='2066' end='2071' name='array'/>
+                </NamespaceName>
+                <Block start='2072' end='2074' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='2075' end='2096' isBracketed='true'>
+                <NamespaceName start='2085' end='2093' isCurrent='false' isGlobal='false'>
+                    <Identifier start='2085' end='2093' name='callable'/>
+                </NamespaceName>
+                <Block start='2094' end='2096' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='2097' end='2117' isBracketed='true'>
+                <NamespaceName start='2107' end='2114' isCurrent='false' isGlobal='false'>
+                    <Identifier start='2107' end='2114' name='extends'/>
+                </NamespaceName>
+                <Block start='2115' end='2117' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='2118' end='2141' isBracketed='true'>
+                <NamespaceName start='2128' end='2138' isCurrent='false' isGlobal='false'>
+                    <Identifier start='2128' end='2138' name='implements'/>
+                </NamespaceName>
+                <Block start='2139' end='2141' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='2142' end='2160' isBracketed='true'>
+                <NamespaceName start='2152' end='2157' isCurrent='false' isGlobal='false'>
+                    <Identifier start='2152' end='2157' name='trait'/>
+                </NamespaceName>
+                <Block start='2158' end='2160' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='2161' end='2183' isBracketed='true'>
+                <NamespaceName start='2171' end='2180' isCurrent='false' isGlobal='false'>
+                    <Identifier start='2171' end='2180' name='interface'/>
+                </NamespaceName>
+                <Block start='2181' end='2183' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='2184' end='2201' isBracketed='true'>
+                <NamespaceName start='2194' end='2198' isCurrent='false' isGlobal='false'>
+                    <Identifier start='2194' end='2198' name='enum'/>
+                </NamespaceName>
+                <Block start='2199' end='2201' isCurly='true'>
+                </Block>
+            </NamespaceDeclaration>
+        </Statements>
+    </Program>
+</testresult>

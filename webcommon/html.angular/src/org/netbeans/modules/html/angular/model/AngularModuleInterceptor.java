@@ -49,8 +49,8 @@ import org.openide.filesystems.FileObject;
 public class AngularModuleInterceptor implements FunctionInterceptor{
 
     //private static Pattern PATTERN = Pattern.compile("angular\\.module(\\..*)*\\.controller");
-    private final static Pattern PATTERN = Pattern.compile("(.)*\\.controller");
-    private final static List<String> KNOWN_TYPES = Arrays.asList(
+    private static final Pattern PATTERN = Pattern.compile("(.)*\\.controller");
+    private static final List<String> KNOWN_TYPES = Arrays.asList(
             TypeUsage.ARRAY, TypeUsage.BOOLEAN, TypeUsage.FUNCTION, TypeUsage.NULL,
             TypeUsage.NUMBER, TypeUsage.OBJECT, TypeUsage.REGEXP, TypeUsage.STRING,
             TypeUsage.UNDEFINED, TypeUsage.UNRESOLVED);
@@ -116,14 +116,14 @@ public class AngularModuleInterceptor implements FunctionInterceptor{
                     functionName = fArgumentValue.isEmpty() ? null : fArgumentValue.get(0);
                     if (functionName != null) {
                         JsObject funcObj = globalObject.getProperty(functionName);
-                        JsFunction func = funcObj != null && (funcObj instanceof JsFunction) ? (JsFunction) funcObj : null;
+                        JsFunction func = funcObj instanceof JsFunction ? (JsFunction) funcObj : null;
                         if (func == null) {
                             // try to find it enclosed in IIFE
                             JsObject argumentObject = ModelUtils.findJsObject(globalObject, fArgument.getOffset());
-                            if (argumentObject != null && argumentObject instanceof JsFunction) {
+                            if (argumentObject instanceof JsFunction) {
                                 JsFunction iife = (JsFunction) argumentObject;
                                 funcObj = iife.getProperty(functionName);
-                                func = funcObj != null && (funcObj instanceof JsFunction) ? (JsFunction) iife.getProperty(functionName) : null;
+                                func = funcObj instanceof JsFunction ? (JsFunction) iife.getProperty(functionName) : null;
                             }
                         }
                         if (func != null && !func.isAnonymous()) {
@@ -170,7 +170,7 @@ public class AngularModuleInterceptor implements FunctionInterceptor{
                     controllerDecl = functProp;
                 }
             }
-            if (controllerDecl != null && controllerDecl instanceof JsFunction && controllerDecl.isDeclared()) {
+            if (controllerDecl instanceof JsFunction && controllerDecl.isDeclared()) {
                 fqnOfController = controllerDecl.getFullyQualifiedName();
                 FileObject fo = globalObject.getFileObject();
                 if (fo != null) {
@@ -183,7 +183,7 @@ public class AngularModuleInterceptor implements FunctionInterceptor{
         } else if (controllerName == null && controllersMap != null) {
             // we need to find an anonymous object, which contains the controller map
             JsObject controllerDecl = ModelUtils.findJsObject(globalObject, functionOffset);
-            if (controllerDecl != null && controllerDecl instanceof JsObject && controllerDecl.isDeclared()) {
+            if (controllerDecl instanceof JsObject && controllerDecl.isDeclared()) {
                 FileObject fo = globalObject.getFileObject();
                 for (Map.Entry<String, Integer> controller : controllersMap.entrySet()) {
                     fqnOfController = controllerDecl.getFullyQualifiedName() + "." + controller.getKey(); //NOI18N
@@ -207,7 +207,7 @@ public class AngularModuleInterceptor implements FunctionInterceptor{
      */
     private void indexComponents(Snapshot snapshot, FileObject fo, JsObject controllerDecl) {
         JsObject routerConfig = controllerDecl.getProperty(ROUTECONFIG_PROP);
-        if (routerConfig != null && routerConfig instanceof JsArray) {
+        if (routerConfig instanceof JsArray) {
             Collection<? extends TypeUsage> assignments = routerConfig.getAssignments();
             if (assignments.size() == 1 && assignments.iterator().next().getType().equals(TypeUsage.ARRAY)) {
                 int routerConfigOffset = routerConfig.getOffset();

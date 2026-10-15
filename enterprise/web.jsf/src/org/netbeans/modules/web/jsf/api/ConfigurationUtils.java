@@ -21,8 +21,9 @@ package org.netbeans.modules.web.jsf.api;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.WeakHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 import java.lang.ref.WeakReference;
 import org.netbeans.modules.j2ee.dd.api.web.DDProvider;
 import org.netbeans.modules.j2ee.dd.api.web.Servlet;
@@ -100,11 +101,16 @@ public class ConfigurationUtils {
         }
         try {
             WebApp webApp = DDProvider.getDefault().getDDRoot(deploymentDescriptor);
-            
             // Try to find according the servlet class name. The javax.faces.webapp.FacesServlet is final, so
             // it can not be extended.
-            return (Servlet) webApp
+            if (WebApp.VERSION_6_1.equals(webApp.getVersion()) || WebApp.VERSION_6_0.equals(webApp.getVersion()) || 
+                    WebApp.VERSION_5_0.equals(webApp.getVersion())) {
+                return (Servlet) webApp
+                    .findBeanByName("Servlet", "ServletClass", "jakarta.faces.webapp.FacesServlet"); //NOI18N;
+            } else {
+                return (Servlet) webApp
                     .findBeanByName("Servlet", "ServletClass", "javax.faces.webapp.FacesServlet"); //NOI18N;
+            }
         } catch (java.io.IOException e) {
             return null;
         }
@@ -151,7 +157,7 @@ public class ConfigurationUtils {
             if (documentBase == null) {
                 return new FileObject [0];
             }
-            ArrayList files = new ArrayList();
+            List<FileObject> files = new ArrayList<>();
             FileObject file;
             for (int i = 0; i < sFiles.length; i++){
                 file = documentBase.getFileObject(sFiles[i]);
@@ -159,7 +165,7 @@ public class ConfigurationUtils {
                     files.add(file);
                 }
             }
-            return (FileObject[])files.toArray(new FileObject[files.size()]);
+            return files.toArray(new FileObject[0]);
         }
         return new FileObject [0];
     }

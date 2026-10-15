@@ -51,7 +51,7 @@ public class Scopes {
 
         @Override
         public Collection<? extends Folder> getTodo() {
-            Set<Folder> todo = new HashSet<Folder>();
+            Set<Folder> todo = new HashSet<>();
 
             for (ClassPath source : GlobalPathRegistry.getDefault().getPaths(ClassPath.SOURCE)) {
                 todo.addAll(Arrays.asList(Folder.convert(source.getRoots())));
@@ -95,14 +95,9 @@ public class Scopes {
     }
 
     public static MapIndices getDefaultIndicesMapper() {
-        return new MapIndices() {
-            @Override
-            public IndexEnquirer findIndex(FileObject root, ProgressHandleWrapper progress, boolean recursive) {
-                IndexEnquirer e = findIndexEnquirer(root, progress, recursive);
-
-                if (e != null) return e;
-                else return new BatchSearch.FileSystemBasedIndexEnquirer(root, recursive);
-            }
+        return (FileObject root, ProgressHandleWrapper progress, boolean recursive) -> {
+            IndexEnquirer e = findIndexEnquirer(root, progress, recursive);
+            return e != null ? e : new BatchSearch.FileSystemBasedIndexEnquirer(root, recursive);
         };
     }
     

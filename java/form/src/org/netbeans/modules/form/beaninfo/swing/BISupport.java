@@ -153,7 +153,7 @@ abstract class BISupport extends SimpleBeanInfo {
             }
 
             if (value != -1)
-                setValue(new Integer(value));
+                setValue(value);
         }
 
         @Override

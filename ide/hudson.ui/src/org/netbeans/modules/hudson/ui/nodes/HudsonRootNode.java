@@ -37,12 +37,12 @@ import org.openide.util.NbBundle.Messages;
 
 @ServicesTabNodeRegistration(name=HudsonRootNode.HUDSON_NODE_NAME, displayName="#LBL_HudsonNode", shortDescription="#TIP_HudsonNode", iconResource=HudsonRootNode.ICON_BASE, position=488)
 @Messages({
-    "LBL_HudsonNode=Hudson Builders",
-    "TIP_HudsonNode=Hudson continuous integration servers, including Jenkins."
+    "LBL_HudsonNode=Jenkins Builders",
+    "TIP_HudsonNode=Jenkins continuous integration servers, including Jenkins."
 })
 public class HudsonRootNode extends AbstractNode {
 
-    public static final String HUDSON_NODE_NAME = "hudson"; // NOI18N
+    public static final String HUDSON_NODE_NAME = "jenkins"; // NOI18N
     static final String ICON_BASE = "org/netbeans/modules/hudson/ui/resources/hudson.png"; // NOI18N
     
 
@@ -62,7 +62,7 @@ public class HudsonRootNode extends AbstractNode {
             actions.add(new AddTestInstanceAction());
         }
          */
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
     
     private static class RootNodeChildren extends ChildFactory<HudsonInstance> implements HudsonChangeListener {

@@ -68,13 +68,13 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = Selenium2SupportImpl.class)
 public class Selenium2MavenSupportImpl extends Selenium2SupportImpl {
 
-    private final static String JUNIT_GROUP_ID = "junit";      //NOI18N
-    private final static String JUNIT_ARTIFACT_ID = "junit";      //NOI18N
-    private final static String SELENIUM_GROUP_ID = "org.seleniumhq.selenium";      //NOI18N
-    private final static String SELENIUM_ARTIFACT_ID = "selenium-java";   //NOI18N
-    private final static String SELENIUM_REMOTE_DRIVER_ARTIFACT_ID = "selenium-remote-driver";   //NOI18N
-    private final static String OPERA_GROUP_ID = "com.opera";      //NOI18N
-    private final static String OPERA_ARTIFACT_ID = "operadriver";   //NOI18N
+    private static final String JUNIT_GROUP_ID = "junit";      //NOI18N
+    private static final String JUNIT_ARTIFACT_ID = "junit";      //NOI18N
+    private static final String SELENIUM_GROUP_ID = "org.seleniumhq.selenium";      //NOI18N
+    private static final String SELENIUM_ARTIFACT_ID = "selenium-java";   //NOI18N
+    private static final String SELENIUM_REMOTE_DRIVER_ARTIFACT_ID = "selenium-remote-driver";   //NOI18N
+    private static final String OPERA_GROUP_ID = "com.opera";      //NOI18N
+    private static final String OPERA_ARTIFACT_ID = "operadriver";   //NOI18N
 
     @Override
     public boolean isSupportActive(Project p) {
@@ -187,7 +187,6 @@ public class Selenium2MavenSupportImpl extends Selenium2SupportImpl {
 
     @Override
     public List<Object> getTestSourceRoots(Collection<SourceGroup> createdSourceRoots, FileObject refFileObject) {
-        configureProject(refFileObject);
         return Arrays.asList(Utils.getTestSourceRoots(createdSourceRoots, refFileObject));
     }
 

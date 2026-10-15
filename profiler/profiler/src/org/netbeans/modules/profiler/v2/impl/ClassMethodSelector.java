@@ -372,7 +372,7 @@ public final class ClassMethodSelector {
     }
     
     
-    private static abstract class FileSelector extends JPanel {
+    private abstract static class FileSelector extends JPanel {
         
         abstract void fileSelected();
         
@@ -406,7 +406,7 @@ public final class ClassMethodSelector {
         }
         
         private static Collection<FileObject> getFiles(SessionStorage _storage) {
-            List<FileObject> files = new ArrayList();
+            List<FileObject> files = new ArrayList<>();
             String _files = _storage.readFlag("CMS.files", ""); // NOI18N
 
             if (!_files.isEmpty()) for (String file : _files.split("#")) { // NOI18N
@@ -555,7 +555,7 @@ public final class ClassMethodSelector {
         
     }
     
-    private static abstract class ProjectSelector extends JPanel {
+    private abstract static class ProjectSelector extends JPanel {
         
         abstract void projectSelected();
         
@@ -652,7 +652,7 @@ public final class ClassMethodSelector {
         
     }
     
-    private static abstract class PackageSelector extends JPanel {
+    private abstract static class PackageSelector extends JPanel {
         
         abstract void packageSelected();
         
@@ -710,7 +710,7 @@ public final class ClassMethodSelector {
         }
         
         private static Collection<SourcePackageInfo> getProjectPackages(Lookup.Provider project, boolean sources, boolean dependencies) {
-            Set<SourcePackageInfo> packages = new HashSet();
+            Set<SourcePackageInfo> packages = new HashSet<>();
             if (sources) packages.addAll(ProfilerTypeUtils.getPackages(false, SourcePackageInfo.Scope.SOURCE, project));
             if (dependencies) packages.addAll(ProfilerTypeUtils.getPackages(false, SourcePackageInfo.Scope.DEPENDENCIES, project));
 
@@ -726,7 +726,7 @@ public final class ClassMethodSelector {
         }
         
         private static Collection<SourcePackageInfo> getFilePackages(FileObject file) {
-            Set<SourcePackageInfo> packages = new HashSet(ExternalPackages.forPath(file, true));
+            Set<SourcePackageInfo> packages = new HashSet<>(ExternalPackages.forPath(file, true));
 
             Set<SourcePackageInfo> sortedPackages = new TreeSet<SourcePackageInfo>(
                 new Comparator<SourcePackageInfo>() {
@@ -840,7 +840,7 @@ public final class ClassMethodSelector {
         
     }
     
-    private static abstract class ClassSelector extends JPanel {
+    private abstract static class ClassSelector extends JPanel {
         
         abstract void classSelected();
         
@@ -883,7 +883,7 @@ public final class ClassMethodSelector {
             Collection<SourceClassInfo> classes = pkg.getClasses();
 
             if (inner) {
-                Set<SourceClassInfo> _classes = new HashSet();
+                Set<SourceClassInfo> _classes = new HashSet<>();
                 while (!classes.isEmpty()) {
                     SourceClassInfo cls = classes.iterator().next();
                     classes.remove(cls);
@@ -1006,7 +1006,7 @@ public final class ClassMethodSelector {
         
     }
     
-    private static abstract class MethodSelector extends JPanel {
+    private abstract static class MethodSelector extends JPanel {
         
         abstract void methodSelected();
         
@@ -1057,7 +1057,7 @@ public final class ClassMethodSelector {
                 }
             );
 
-            Set<SourceMethodInfo> methods = new HashSet(cls.getConstructors());
+            Set<SourceMethodInfo> methods = new HashSet<>(cls.getConstructors());
             methods.addAll(cls.getMethods(inherited));
             for (SourceMethodInfo method : methods) {
                 int modifiers = method.getModifiers();
@@ -1197,7 +1197,7 @@ public final class ClassMethodSelector {
     }
     
     
-    private static abstract class FilteredListModel<E> implements ListModel<E> {
+    private abstract static class FilteredListModel<E> implements ListModel<E> {
         
         private final Collection<ListDataListener> listeners;
         
@@ -1212,9 +1212,9 @@ public final class ClassMethodSelector {
         public FilteredListModel(ListModel data) {
             this.data = data;
             
-            listeners = new HashSet();
+            listeners = new HashSet<>();
             
-            indices = new ArrayList();
+            indices = new ArrayList<>();
             doFilter();
             
             this.data.addListDataListener(new ListDataListener() {

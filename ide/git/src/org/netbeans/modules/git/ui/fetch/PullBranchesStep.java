@@ -206,7 +206,7 @@ public class PullBranchesStep extends AbstractWizardPanel implements WizardDescr
         mergingBranch = null;
         List<BranchMapping> candidates = new ArrayList<BranchMapping>(branches.getSelectedBranches().size());
         for (BranchMapping mapping : branches.getSelectedBranches()) {
-            if (!mapping.isDeletion()) {
+            if (!mapping.isDestructive()) {
                 candidates.add(mapping);
             }
         }

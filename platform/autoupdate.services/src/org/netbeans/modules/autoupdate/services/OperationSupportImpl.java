@@ -37,7 +37,6 @@ import org.netbeans.api.autoupdate.InstallSupport.Validator;
 import org.netbeans.api.autoupdate.OperationContainer.OperationInfo;
 import org.netbeans.api.autoupdate.OperationSupport.Restarter;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.spi.autoupdate.CustomInstaller;
 import org.netbeans.spi.autoupdate.CustomUninstaller;
 import org.openide.LifecycleManager;
@@ -96,6 +95,8 @@ public abstract class OperationSupportImpl {
     }
     
     private static class ForEnable extends OperationSupportImpl {
+        private Collection<File> controlFileForEnable = null;
+        private Collection<UpdateElement> affectedModules = null;
         @Override 
         public synchronized Boolean doOperation(ProgressHandle progress,
                 OperationContainer<?> container) throws OperationException {
@@ -129,21 +130,26 @@ public abstract class OperationSupportImpl {
                 assert mm != null;
                 
                 needsRestart = mm.hasToEnableCompatModules(modules);
-                
-                final ModuleManager fmm = mm;
-                try {
-                    fmm.mutex ().writeAccess (new ExceptionAction<Boolean> () {
-                        @Override
-                        public Boolean run () throws Exception {
-                            return enable(fmm, modules);
+
+                if (!needsRestart) {
+                    final ModuleManager fmm = mm;
+                    try {
+                        fmm.mutex ().writeAccess (new ExceptionAction<Boolean> () {
+                            @Override
+                            public Boolean run () throws Exception {
+                                return enable(fmm, modules);
+                            }
+                        });
+                    } catch (MutexException ex) {
+                        Exception x = ex.getException ();
+                        assert x instanceof OperationException : x + " is instanceof OperationException";
+                        if (x instanceof OperationException) {
+                            throw (OperationException) x;
                         }
-                    });
-                } catch (MutexException ex) {
-                    Exception x = ex.getException ();
-                    assert x instanceof OperationException : x + " is instanceof OperationException";
-                    if (x instanceof OperationException) {
-                        throw (OperationException) x;
                     }
+                } else {
+                    ModuleEnableDisableDeleteHelper helper = new ModuleEnableDisableDeleteHelper ();
+                    controlFileForEnable = helper.findControlFiles(moduleInfos, progress);
                 }
             } finally {
                 if (progress != null) {
@@ -156,7 +162,12 @@ public abstract class OperationSupportImpl {
         
         @Override
         public void doCancel () throws OperationException {
-            assert false : "Not supported yet";
+            if (controlFileForEnable != null) {
+                controlFileForEnable = null;
+            }
+            if (affectedModules != null) {
+                affectedModules = null;
+            }
         }
         
         private static boolean enable(ModuleManager mm, Set<Module> toRun) throws OperationException {
@@ -174,13 +185,36 @@ public abstract class OperationSupportImpl {
 
         @Override
         public void doRestart (Restarter restarter, ProgressHandle progress) throws OperationException {
-            LifecycleManager.getDefault().markForRestart();
-            LifecycleManager.getDefault().exit();
+            if (controlFileForEnable != null) {
+                // write files marked to enable into a temp file
+                // Updater will handle it
+                Utilities.writeFileMarkedForEnable(controlFileForEnable);
+
+                // restart IDE
+                Utilities.deleteAllDoLater ();
+                LifecycleManager.getDefault ().exit ();
+                // if exit&restart fails => use restart later as fallback
+                doRestartLater (restarter);
+            } else {
+                LifecycleManager.getDefault().markForRestart();
+                LifecycleManager.getDefault().exit();
+            }
         }
 
         @Override
         public void doRestartLater (Restarter restarter) {
-            LifecycleManager.getDefault().markForRestart();
+            if (controlFileForEnable != null) {
+                // write files marked to enable into a temp file
+                // Updater will handle it
+                Utilities.writeFileMarkedForEnable(controlFileForEnable);
+
+                // schedule module for restart
+                for (UpdateElement el : affectedModules) {
+                    UpdateUnitFactory.getDefault().scheduleForRestart (el);
+                }
+            } else {
+                LifecycleManager.getDefault().markForRestart();
+            }
         }        
     }
     
@@ -215,8 +249,8 @@ public abstract class OperationSupportImpl {
                     }
                 }
                 assert mm != null;
-                ModuleDeleterImpl deleter = new ModuleDeleterImpl ();
-                controlFileForDisable = deleter.markForDisable (modules, progress);
+                ModuleEnableDisableDeleteHelper deleter = new ModuleEnableDisableDeleteHelper ();
+                controlFileForDisable = deleter.findControlFiles(modules, progress);
             } finally {
                 if (progress != null) {
                     progress.finish();
@@ -355,7 +389,7 @@ public abstract class OperationSupportImpl {
                 if (progress != null) {
                     progress.start();
                 }
-                ModuleDeleterImpl deleter = new ModuleDeleterImpl();
+                ModuleEnableDisableDeleteHelper deleter = new ModuleEnableDisableDeleteHelper();
                 
                 List<? extends OperationInfo> infos = container.listAll ();
                 Set<ModuleInfo> moduleInfos = new HashSet<ModuleInfo> ();
@@ -447,7 +481,7 @@ public abstract class OperationSupportImpl {
                 if (progress != null) {
                     progress.start();
                 }
-                ModuleDeleterImpl deleter = new ModuleDeleterImpl();
+                ModuleEnableDisableDeleteHelper deleter = new ModuleEnableDisableDeleteHelper();
                 
                 List<? extends OperationInfo> infos = container.listAll ();
                 Set<ModuleInfo> moduleInfos = new HashSet<ModuleInfo> ();
@@ -531,10 +565,10 @@ public abstract class OperationSupportImpl {
             }
             assert containerForUpdate.listInvalid().isEmpty();
             
-            Validator v = containerForUpdate.getSupport().doDownload(ProgressHandleFactory.createHandle(OperationSupportImpl.class.getName()), null, false);
-            Installer i = containerForUpdate.getSupport().doValidate(v, ProgressHandleFactory.createHandle(OperationSupportImpl.class.getName()));
+            Validator v = containerForUpdate.getSupport().doDownload(ProgressHandle.createHandle(OperationSupportImpl.class.getName()), null, false);
+            Installer i = containerForUpdate.getSupport().doValidate(v, ProgressHandle.createHandle(OperationSupportImpl.class.getName()));
             InstallSupportImpl installSupportImpl = Trampoline.API.impl(containerForUpdate.getSupport());
-            Boolean needRestart = installSupportImpl.doInstall(i, ProgressHandleFactory.createHandle(OperationSupportImpl.class.getName()), true);
+            Boolean needRestart = installSupportImpl.doInstall(i, ProgressHandle.createHandle(OperationSupportImpl.class.getName()), true);
             return needRestart;
         }
         @Override
@@ -583,7 +617,7 @@ public abstract class OperationSupportImpl {
                     }
                     CustomInstaller installer = impl.getInstallInfo ().getCustomInstaller ();
                     assert installer != null : "CustomInstaller must found for " + impl.getUpdateElement ();
-                    ProgressHandle handle = ProgressHandleFactory.createHandle("Installing " + impl.getDisplayName());
+                    ProgressHandle handle = ProgressHandle.createHandle("Installing " + impl.getDisplayName());
                     //handle.start();
                     success = installer.install (impl.getCodeName (),
                             impl.getSpecificationVersion () == null ? null : impl.getSpecificationVersion ().toString (),
@@ -660,7 +694,7 @@ public abstract class OperationSupportImpl {
                     progress.progress(NbBundle.getMessage(OperationSupportImpl.class, "OperationSupportImpl_Custom_Uninstall", impl.getDisplayName()), ++index);
                     CustomUninstaller uninstaller = impl.getNativeItem ().getUpdateItemDeploymentImpl ().getCustomUninstaller ();
                     assert uninstaller != null : "CustomInstaller must found for " + impl.getUpdateElement ();
-                    ProgressHandle handle = ProgressHandleFactory.createHandle("Installing " + impl.getDisplayName());
+                    ProgressHandle handle = ProgressHandle.createHandle("Installing " + impl.getDisplayName());
                     success = uninstaller.uninstall (impl.getCodeName (),
                             impl.getSpecificationVersion () == null ? null : impl.getSpecificationVersion ().toString (),
                             handle);

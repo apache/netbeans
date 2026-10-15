@@ -133,7 +133,7 @@ public final class BinaryForSourceQuery {
      * of this class.
      * @since 1.58
      */
-    public static abstract class Result2 implements Result {
+    public abstract static class Result2 implements Result {
         Result2() {
         }
 
@@ -175,7 +175,7 @@ public final class BinaryForSourceQuery {
                         }
                 }
             }
-            return result.toArray(new URL[result.size()]);
+            return result.toArray(new URL[0]);
         }
 
         @Override
@@ -232,11 +232,11 @@ public final class BinaryForSourceQuery {
     static final class QueriesAccessorImpl extends QueriesAccessor {
         QueriesAccessorImpl() {
         }
-        private final Map<Object, Result2Impl> cache = new WeakHashMap<>();
+        private final Map<Object, Result2Impl<?>> cache = new WeakHashMap<>();
 
         @Override
         public synchronized <T> Result2 create(BinaryForSourceQueryImplementation2<T> impl, T value) {
-            Result2Impl result = cache.get(value);
+            Result2Impl<?> result = cache.get(value);
             if (result == null) {
                 result = new Result2Impl<>(impl, value);
                 cache.put(value, result);

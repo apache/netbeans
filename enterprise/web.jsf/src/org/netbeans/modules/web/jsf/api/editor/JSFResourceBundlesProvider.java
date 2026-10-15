@@ -22,17 +22,18 @@ package org.netbeans.modules.web.jsf.api.editor;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.modules.j2ee.core.api.support.SourceGroups;
 import org.netbeans.modules.j2ee.metadata.model.api.MetadataModel;
-import org.netbeans.modules.j2ee.metadata.model.api.MetadataModelAction;
-import org.netbeans.modules.j2ee.metadata.model.api.MetadataModelException;
 import org.netbeans.modules.web.el.spi.ResourceBundle;
 import org.netbeans.modules.web.jsf.JSFUtils;
 import org.netbeans.modules.web.jsf.api.facesmodel.Application;
@@ -53,70 +54,71 @@ public class JSFResourceBundlesProvider {
             return Collections.emptyList();
         }
         try {
-            return model.runReadAction(new MetadataModelAction<JsfModel, List<ResourceBundle>>() {
+            return model.runReadAction(metadata -> {
+                List<Application> applications = metadata.getElements(Application.class);
 
-                @Override
-                public List<ResourceBundle> run(JsfModel metadata) throws Exception {
-                    List<Application> applications = metadata.getElements(Application.class);
-                    List<ResourceBundle> result = new ArrayList<>();
-                    for (Application application : applications) {
-                        for (org.netbeans.modules.web.jsf.api.facesmodel.ResourceBundle bundle : application.getResourceBundles()) {
-                            if (bundle.getBaseName() == null) {
-                                continue;
-                            }
-                            List<FileObject> files = new ArrayList<>();
-                            // java source source groups
-                            for (SourceGroup sourceGroup : SourceGroups.getJavaSourceGroups(project)) {
-                                FileObject bundleFile = getBundleFileInSourceGroup(sourceGroup, bundle);
-                                if (bundleFile != null) {
-                                    files.add(bundleFile);
-                                }
-                            }
-                            // resource source groups
-                            for (SourceGroup sourceGroup : ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_RESOURCES)) {
-                                FileObject bundleFile = getBundleFileInSourceGroup(sourceGroup, bundle);
-                                if (bundleFile != null) {
-                                    files.add(bundleFile);
-                                }
-                            }
-
-                            result.add(new ResourceBundle(bundle.getBaseName(), bundle.getVar(), files));
-                        }
-                    }
-                    return result;
+                if (applications.isEmpty()) {
+                    return Collections.emptyList();
                 }
+
+                List<SourceGroup> allSourceGroups = new ArrayList<>();
+                Collections.addAll(allSourceGroups, SourceGroups.getJavaSourceGroups(project));
+                Collections.addAll(allSourceGroups, ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_RESOURCES));
+
+                ClassPath compileClassPath = null;
+                if (!allSourceGroups.isEmpty()) {
+                    compileClassPath = ClassPath.getClassPath(allSourceGroups.get(0).getRootFolder(), ClassPath.COMPILE);
+                }
+
+                List<ResourceBundle> result = new ArrayList<>();
+                for (Application application : applications) {
+                    for (org.netbeans.modules.web.jsf.api.facesmodel.ResourceBundle bundle : application.getResourceBundles()) {
+                        String baseName = bundle.getBaseName();
+                        if (baseName == null) {
+                            continue;
+                        }
+                        Set<FileObject> fileSet = new LinkedHashSet<>();
+                        int lastDelim = baseName.lastIndexOf("."); 
+                        String bundleSimpleName = (lastDelim <= 0) ? baseName : baseName.substring(lastDelim + 1);
+                        String packagePath = (lastDelim <= 0) ? "" : baseName.replace(".", "/").substring(0, lastDelim);
+
+                        for (SourceGroup sourceGroup : allSourceGroups) {
+                            FileObject root = sourceGroup.getRootFolder();
+                            FileObject folder = (lastDelim <= 0) ? root : root.getFileObject(packagePath);
+                            addBundleFilesInFolder(fileSet, folder, bundleSimpleName);
+                        }
+
+                        if (fileSet.isEmpty() && compileClassPath != null) {
+                            addBundleFilesInCompileClasspath(fileSet, compileClassPath, bundleSimpleName, packagePath);
+                        }
+
+                        result.add(new ResourceBundle(bundle.getBaseName(), bundle.getVar(), new ArrayList<>(fileSet)));
+                    }
+                }
+                return result;
             });
-        } catch (MetadataModelException ex) {
-            LOGGER.log(Level.INFO, "Failed to read resource bundles for " + project, ex);
         } catch (IOException | IllegalStateException ex) {
             LOGGER.log(Level.INFO, "Failed to read resource bundles for " + project, ex);
         }
         return Collections.emptyList();
     }
 
-    private static FileObject getBundleFileInSourceGroup(SourceGroup sourceGroup, org.netbeans.modules.web.jsf.api.facesmodel.ResourceBundle bundle) {
-        int lastDelim = bundle.getBaseName().lastIndexOf("/"); //NOI18N
-        if (lastDelim <= 0) {
-            // in root folder or default package
-            String bundleName = bundle.getBaseName().substring(1);
-            return getBundleInFolder(sourceGroup.getRootFolder(), bundleName);
-        } else {
-            // in the subfolder or non-default package
-            String bundleName = bundle.getBaseName().substring(lastDelim + 1);
-            String parentFolder = bundle.getBaseName().replace(".", "/").substring(0, lastDelim); //NOI18N
-            return getBundleInFolder(sourceGroup.getRootFolder().getFileObject(parentFolder), bundleName);
-        }
-    }
-
-    private static FileObject getBundleInFolder(FileObject folder, String bundleName) {
+    private static void addBundleFilesInFolder(Set<FileObject> files, FileObject folder, String bundleName) {
         if (folder != null && folder.isValid() && folder.isFolder()) {
             for (FileObject fo : folder.getChildren()) {
-                if (fo.getName().startsWith(bundleName) && "properties".equals(fo.getExt())) { //NOI18N
-                    return fo;
+                if ("properties".equals(fo.getExt())
+                        && (fo.getName().equals(bundleName) || fo.getName().startsWith(bundleName + "_"))) {
+                    files.add(fo);
                 }
             }
         }
-        return null;
+    }
+
+    private static void addBundleFilesInCompileClasspath(Set<FileObject> files, ClassPath cp, String bundleName, String packagePath) {
+        List<FileObject> folders = cp.findAllResources(packagePath);
+        for (FileObject folder : folders) {
+            addBundleFilesInFolder(files, folder, bundleName);
+        }
     }
 
 }

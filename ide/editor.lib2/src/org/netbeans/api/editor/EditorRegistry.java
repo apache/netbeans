@@ -210,7 +210,7 @@ public final class EditorRegistry {
     
     /**
      * Find a component that uses the given document.
-     * <br/>
+     * <br>
      * Scan the component registry starting from the most recently focused text component
      * and test if {@link JTextComponent#getDocument()} returns the document passed
      * as parameter to this method and if so return the component.
@@ -344,7 +344,7 @@ public final class EditorRegistry {
         fireEvents(events);
     }
 
-    private synchronized static void _focusGained(JTextComponent c, Component origFocused, List<PropertyChangeEvent> events) {
+    private static synchronized void _focusGained(JTextComponent c, Component origFocused, List<PropertyChangeEvent> events) {
         Item item = item(c);
         assert (item != null) : "Not registered!"; // NOI18N
 
@@ -747,7 +747,7 @@ public final class EditorRegistry {
             if (!item.ignoreAncestorChange) {
                 // Only start timer when ancestor changes are not ignored.
                 // Use weak ref to component since if the timer would not fire the component would not get released
-                final Reference<JComponent> componentRef = new WeakReference(component);
+                final Reference<JComponent> componentRef = new WeakReference<>(component);
                 item.runningTimer = new Timer(BEFORE_REMOVE_DELAY,
                     new ActionListener() {
                         public @Override void actionPerformed(ActionEvent e) {
@@ -778,6 +778,11 @@ public final class EditorRegistry {
         @Override
         public void register(JTextComponent c) {
             EditorRegistry.register(c);
+        }
+
+        @Override
+        public void forceRelease(JTextComponent c) {
+            EditorRegistry.releasedByCloneableEditor(c);
         }
 
         @Override

@@ -146,18 +146,9 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <friend-packages>
-                <friend>org.netbeans.modules.bugzilla</friend>
-                <friend>org.netbeans.modules.jira</friend>
-                <friend>org.netbeans.modules.odcs.tasks</friend>
-                <friend>org.netbeans.modules.localtasks</friend>
-                <friend>com.oracle.netbeans.bugdb</friend>
-                <!-- https://github.com/junichi11/netbeans-github-issues-plugin -->
-                <friend>com.junichi11.netbeans.github.issues</friend>
-                <!-- https://github.com/junichi11/netbeans-backlog-plugin -->
-                <friend>com.junichi11.netbeans.backlog.plugin</friend>                
+            <public-packages>
                 <package>org.netbeans.modules.bugtracking.issuetable</package>
-            </friend-packages>
+            </public-packages>
         </data>
     </configuration>
 </project>

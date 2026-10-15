@@ -69,7 +69,7 @@ class AllLibrariesCustomizer extends JPanel implements HelpCtx.Provider {
             }
             items.add(LibrariesSupport.convertURIToFilePath(URI.create(man.getLocation().toExternalForm())));
         }
-        libraryManagerComboBox.setModel(new DefaultComboBoxModel(items.toArray(new String[items.size()])));
+        libraryManagerComboBox.setModel(new DefaultComboBoxModel(items.toArray(new String[0])));
     }
     
     /** This method is called from within the constructor to

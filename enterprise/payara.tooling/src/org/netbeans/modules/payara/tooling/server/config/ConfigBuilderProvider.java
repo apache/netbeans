@@ -21,8 +21,9 @@ package org.netbeans.modules.payara.tooling.server.config;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
+import org.netbeans.modules.payara.tooling.data.PayaraVersion;
 
 /**
  * Configuration builder provider.
@@ -41,49 +42,55 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
  */
 public class ConfigBuilderProvider {
     
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-    
-    /** Library builder default configuration file. */
-    private static final URL CONFIG_V3
-            = ConfigBuilderProvider.class.getResource("PayaraV3.xml");
-
     /** Library builder configuration since Payara 4.1. */
-    private static final Config.Next CONFIG_V4_1
-            = new Config.Next(PayaraVersion.PF_4_1_144,
+    private static final Config.Next CONFIG_V4
+            = new Config.Next((short)4,
             ConfigBuilderProvider.class.getResource("PayaraV4.xml"));
 
-    /** Library builder configuration since Payara 5.181 */
-    private static final Config.Next CONFIG_V5_181
-            = new Config.Next(PayaraVersion.PF_5_181,
+    /** Library builder configuration since Payara 5.x */
+    private static final Config.Next CONFIG_V5
+            = new Config.Next((short)5,
             ConfigBuilderProvider.class.getResource("PayaraV5.xml"));
-
-    /** Library builder configuration since Payara 5.192 */
-    private static final Config.Next CONFIG_V5_192
-            = new Config.Next(PayaraVersion.PF_5_192,
-            ConfigBuilderProvider.class.getResource("PayaraV5_192.xml"));
+    
+    /** Library builder configuration since Payara 6.x */
+    private static final Config.Next CONFIG_V6
+            = new Config.Next((short)6,
+            ConfigBuilderProvider.class.getResource("PayaraV6.xml"));
+    
+    /** Library builder configuration since Payara 7.x */
+    private static final Config.Next CONFIG_V7
+            = new Config.Next((short)7,
+            ConfigBuilderProvider.class.getResource("PayaraV7.xml"));
 
     /** Library builder configuration for Payara. */
     private static final Config config
-            = new Config(CONFIG_V3, CONFIG_V4_1, CONFIG_V5_181, CONFIG_V5_192);
+            = new Config(CONFIG_V4, CONFIG_V5, CONFIG_V6, CONFIG_V7);
 
     /** Builders array for each server instance. */
     private static final Map<PayaraServer, ConfigBuilder> builders
             = new HashMap<>();
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get library builder configuration for given Payara server version.
      * <p/>
      * @param version Payara server version.
      * @return Library builder configuration for given Payara server version.
      */
+    @Deprecated
     public static URL getBuilderConfig(final PayaraVersion version) {
         return config.configFiles[config.index[version.ordinal()]];
+    }
+
+    /**
+     * Get library builder configuration for given Payara Platform version.
+     * <p/>
+     * @param version Payara Platform version.
+     * @return Library builder configuration for given Payara Platform version.
+     */
+    public static URL getPlatformBuilderConfig(final PayaraPlatformVersionAPI version) {
+        return config.libraryConfigFiles.get(version.getMajor());
     }
 
     /**

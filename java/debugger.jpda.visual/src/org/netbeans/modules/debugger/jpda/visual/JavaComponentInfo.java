@@ -82,7 +82,7 @@ import org.openide.util.RequestProcessor;
  *
  * @author Jaroslav Bachorik
  */
-abstract public class JavaComponentInfo implements ComponentInfo {
+public abstract class JavaComponentInfo implements ComponentInfo {
 
     private static final JavaComponentInfo[] NO_SUBCOMPONENTS = new JavaComponentInfo[]{};
     private static final int MAX_TEXT_LENGTH = 80;
@@ -119,7 +119,7 @@ abstract public class JavaComponentInfo implements ComponentInfo {
         this.uid = component.uniqueID();
     }
     
-    final protected void init() throws RetrievalException {
+    protected final void init() throws RetrievalException {
         retrieve();
         addProperties();
         if (!RemoteAWTScreenshot.FAST_FIELDS_SEARCH) {
@@ -127,13 +127,13 @@ abstract public class JavaComponentInfo implements ComponentInfo {
         }
     }
     
-    abstract protected void retrieve() throws RetrievalException;
+    protected abstract void retrieve() throws RetrievalException;
     
-    final public JPDAThreadImpl getThread() {
+    public final JPDAThreadImpl getThread() {
         return thread;
     }
 
-    final public ObjectReference getComponent() {
+    public final ObjectReference getComponent() {
         return component;
     }
     
@@ -142,11 +142,11 @@ abstract public class JavaComponentInfo implements ComponentInfo {
         return VisualDebuggerListener.getStackOf(thread.getDebugger(), component);
     }
     
-    final public String getName() {
+    public final String getName() {
         return name;
     }
 
-    final public String getTypeName() {
+    public final String getTypeName() {
         int d = type.lastIndexOf('.');
         String typeName;
         if (d > 0) {
@@ -157,7 +157,7 @@ abstract public class JavaComponentInfo implements ComponentInfo {
         return typeName;
     }
 
-    final public void setComponentText(String componentText) {
+    public final void setComponentText(String componentText) {
         if (componentText.length() > MAX_TEXT_LENGTH) {
             this.componentText = componentText.substring(0, MAX_TEXT_LENGTH) + "...";
         } else {
@@ -197,15 +197,15 @@ abstract public class JavaComponentInfo implements ComponentInfo {
         return (fieldInfo != null) ? fieldInfo.getName() + " " : "";
     }
 
-    final public String getType() {
+    public final String getType() {
         return type;
     }
 
-    final public FieldInfo getField() {
+    public final FieldInfo getField() {
         return fieldInfo;
     }
 
-    final public boolean isCustomType() {
+    public final boolean isCustomType() {
         return isCustomType(type);
     }
     
@@ -217,12 +217,12 @@ abstract public class JavaComponentInfo implements ComponentInfo {
     }
 
     @Override
-    final public Rectangle getBounds() {
+    public final Rectangle getBounds() {
         return bounds;
     }
 
     @Override
-    final public Rectangle getWindowBounds() {
+    public final Rectangle getWindowBounds() {
         if (windowBounds == null) {
             return bounds;
         } else {
@@ -230,21 +230,21 @@ abstract public class JavaComponentInfo implements ComponentInfo {
         }
     }
 
-    final public void addPropertySet(PropertySet ps) {
+    public final void addPropertySet(PropertySet ps) {
         propertySets.add(ps);
     }
 
     @Override
-    final public PropertySet[] getPropertySets() {
+    public final PropertySet[] getPropertySets() {
         return propertySets.toArray(new PropertySet[]{});
     }
 
-    final protected void setSubComponents(JavaComponentInfo[] subComponents) {
+    protected final void setSubComponents(JavaComponentInfo[] subComponents) {
         this.subComponents = subComponents;
     }
 
     @Override
-    final public JavaComponentInfo[] getSubComponents() {
+    public final JavaComponentInfo[] getSubComponents() {
         if (subComponents == null) {
             return NO_SUBCOMPONENTS;
         } else {
@@ -253,44 +253,44 @@ abstract public class JavaComponentInfo implements ComponentInfo {
     }
 
     @Override
-    final public void addPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
+    public final void addPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
         pchs.addPropertyChangeListener(propertyChangeListener);
     }
 
     @Override
-    final public void removePropertyChangeListener(PropertyChangeListener propertyChangeListener) {
+    public final void removePropertyChangeListener(PropertyChangeListener propertyChangeListener) {
         pchs.removePropertyChangeListener(propertyChangeListener);
     }
 
-    final protected void firePropertyChange(String name, Object o, Object n) {
+    protected final void firePropertyChange(String name, Object o, Object n) {
         pchs.firePropertyChange(name, o, n);
     }
 
-    final public void setFieldInfo(FieldInfo fieldInfo) {
+    public final void setFieldInfo(FieldInfo fieldInfo) {
         this.fieldInfo = fieldInfo;
     }
     
-    final public void setBounds(Rectangle r) {
+    public final void setBounds(Rectangle r) {
         this.bounds = r;
     }
     
     
-    final public void setWindowBounds(Rectangle rectangle) {
+    public final void setWindowBounds(Rectangle rectangle) {
         this.windowBounds = rectangle;
     }
     
     
-    final public void setName(String value) {
+    public final void setName(String value) {
         this.name = value;
     }
     
     
-    final public void setComponent(ObjectReference component) {
+    public final void setComponent(ObjectReference component) {
         this.component = component;
     }
     
     
-    final public void setType(String name) {
+    public final void setType(String name) {
         this.type = name;
     }
     
@@ -352,7 +352,7 @@ abstract public class JavaComponentInfo implements ComponentInfo {
             //Method getTextMethod = methodsByName.get("getText");    // NOI18N
             if (getTextMethod != null) {
                 try {
-                    Value theText = ObjectReferenceWrapper.invokeMethod(component, getThread().getThreadReference(), getTextMethod, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                    Value theText = ObjectReferenceWrapper.invokeMethod(component, getThread().getThreadReference(), getTextMethod, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                     if (theText instanceof StringReference) {
                         setComponentText(StringReferenceWrapper.value((StringReference) theText));
                     }
@@ -583,7 +583,7 @@ abstract public class JavaComponentInfo implements ComponentInfo {
             Lock l = t.accessLock.writeLock();
             l.lock();
             try {
-                Value v = ObjectReferenceWrapper.invokeMethod(component, tawt, getter, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                Value v = ObjectReferenceWrapper.invokeMethod(component, tawt, getter, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                 if (v != null) {
                     typePtr[0] = ValueWrapper.type(v);
                 }
@@ -596,7 +596,7 @@ abstract public class JavaComponentInfo implements ComponentInfo {
                     Type t = ValueWrapper.type(v);
                     if (t instanceof ClassType) {
                         Method toStringMethod = ClassTypeWrapper.concreteMethodByName((ClassType) t, "toString", "()Ljava/lang/String;");
-                        v = ObjectReferenceWrapper.invokeMethod((ObjectReference) v, tawt, toStringMethod, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                        v = ObjectReferenceWrapper.invokeMethod((ObjectReference) v, tawt, toStringMethod, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                         if (v instanceof StringReference) {
                             return StringReferenceWrapper.value((StringReference) v);
                         }

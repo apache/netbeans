@@ -20,9 +20,9 @@ package org.netbeans.modules.java.hints.introduce;
 
 import com.sun.source.tree.Scope;
 import com.sun.source.util.TreePath;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -41,9 +41,13 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.ElementUtilities.ElementAcceptor;
 import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TypeMirrorHandle;
+import org.netbeans.modules.parsing.api.ParserManager;
+import org.netbeans.modules.parsing.api.ResultIterator;
+import org.netbeans.modules.parsing.api.Source;
+import org.netbeans.modules.parsing.api.UserTask;
+import org.netbeans.modules.parsing.spi.ParseException;
 
 /**
  * Validates that method is not in conflict with other one, or that it does not shadow
@@ -54,12 +58,12 @@ import org.netbeans.api.java.source.TypeMirrorHandle;
 final class MethodValidator implements MemberValidator {
     private TreePathHandle          target;
     private String                              name;
-    private final JavaSource  theSource;
+    private final Source  theSource;
     private final List<TreePathHandle> parameters;
     private final TypeMirrorHandle     returnType;
     private MemberSearchResult result;
     
-    public MethodValidator(JavaSource theSource, List<TreePathHandle> parameters, TypeMirrorHandle returnType) {
+    public MethodValidator(Source theSource, List<TreePathHandle> parameters, TypeMirrorHandle returnType) {
         this.theSource = theSource;
         this.parameters = parameters;
         this.returnType = returnType;
@@ -74,8 +78,8 @@ final class MethodValidator implements MemberValidator {
         if (!(type.equals(target) && n.equals(name))) {
             SearchWorker wrk = new SearchWorker(type, n);
             try {
-                theSource.runUserActionTask(wrk, true);
-            } catch (IOException ex) {
+                ParserManager.parse(Collections.singleton(theSource), wrk);
+            } catch (ParseException ex) {
             }
             this.result = wrk.result;
             this.name = n;
@@ -83,7 +87,7 @@ final class MethodValidator implements MemberValidator {
         return result;
     }
     
-    private class SearchWorker implements Task<CompilationController>, ElementAcceptor {
+    private class SearchWorker extends UserTask implements ElementAcceptor {
         private final TreePathHandle  targetHandle;
         private final String name;
         private MemberSearchResult result;
@@ -102,7 +106,8 @@ final class MethodValidator implements MemberValidator {
         }
         
         @Override
-        public void run(CompilationController parameter) throws Exception {
+        public void run(ResultIterator resultIterator) throws Exception {
+            CompilationController parameter = CompilationController.get(resultIterator.getParserResult());
             parameter.toPhase(JavaSource.Phase.RESOLVED);
             this.cinfo = parameter;
             TreePath targetPath = targetHandle.resolve(cinfo);

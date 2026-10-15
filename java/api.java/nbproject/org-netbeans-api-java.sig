@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.71
+#Version 1.100
 
 CLSS public abstract interface java.io.Serializable
 
@@ -9,13 +9,17 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -24,15 +28,16 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -69,6 +74,9 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
 
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
+
 CLSS public abstract interface java.util.EventListener
 
 CLSS public java.util.EventObject
@@ -78,13 +86,12 @@ intf java.io.Serializable
 meth public java.lang.Object getSource()
 meth public java.lang.String toString()
 supr java.lang.Object
-hfds serialVersionUID
 
 CLSS public final org.netbeans.api.java.classpath.ClassPath
 fld public final static java.lang.String BOOT = "classpath/boot"
 fld public final static java.lang.String COMPILE = "classpath/compile"
 fld public final static java.lang.String DEBUG = "classpath/debug"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String EXECUTE = "classpath/execute"
 fld public final static java.lang.String PROP_ENTRIES = "entries"
 fld public final static java.lang.String PROP_FLAGS = "flags"
@@ -365,11 +372,20 @@ innr public abstract interface static AttachmentListener
 meth public static void attachJavadoc(java.net.URL,org.netbeans.api.java.queries.SourceJavadocAttacher$AttachmentListener)
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NullAllowed()
+meth public static void attachJavadoc(java.net.URL,org.openide.util.Lookup,org.netbeans.api.java.queries.SourceJavadocAttacher$AttachmentListener)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+ anno 3 org.netbeans.api.annotations.common.NullAllowed()
 meth public static void attachSources(java.net.URL,org.netbeans.api.java.queries.SourceJavadocAttacher$AttachmentListener)
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NullAllowed()
+meth public static void attachSources(java.net.URL,org.openide.util.Lookup,org.netbeans.api.java.queries.SourceJavadocAttacher$AttachmentListener)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+ anno 3 org.netbeans.api.annotations.common.NullAllowed()
 supr java.lang.Object
 hfds LOG
+hcls AttacherExecution
 
 CLSS public abstract interface static org.netbeans.api.java.queries.SourceJavadocAttacher$AttachmentListener
  outer org.netbeans.api.java.queries.SourceJavadocAttacher
@@ -423,7 +439,9 @@ hfds cs,delegate,spiListener
 
 CLSS public org.netbeans.api.java.queries.UnitTestForSourceQuery
 meth public static java.net.URL findSource(org.openide.filesystems.FileObject)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.net.URL findUnitTest(org.openide.filesystems.FileObject)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.net.URL[] findSources(org.openide.filesystems.FileObject)
 meth public static java.net.URL[] findUnitTests(org.openide.filesystems.FileObject)
 supr java.lang.Object
@@ -570,6 +588,9 @@ CLSS public abstract static org.netbeans.spi.java.queries.CompilerOptionsQueryIm
 cons public init()
 meth protected final java.util.List<java.lang.String> parseLine(java.lang.String)
  anno 1 org.netbeans.api.annotations.common.NonNull()
+meth protected final java.util.List<java.lang.String> parseLine(java.lang.String,java.net.URI)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NullAllowed()
 meth public abstract java.util.List<? extends java.lang.String> getArguments()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public abstract void addChangeListener(javax.swing.event.ChangeListener)
@@ -577,6 +598,7 @@ meth public abstract void addChangeListener(javax.swing.event.ChangeListener)
 meth public abstract void removeChangeListener(javax.swing.event.ChangeListener)
  anno 1 org.netbeans.api.annotations.common.NonNull()
 supr java.lang.Object
+hfds LOG
 
 CLSS public abstract interface org.netbeans.spi.java.queries.JavadocForBinaryQueryImplementation
 meth public abstract org.netbeans.api.java.queries.JavadocForBinaryQuery$Result findJavadoc(java.net.URL)
@@ -600,6 +622,7 @@ meth public abstract boolean preferSources()
 
 CLSS public abstract interface org.netbeans.spi.java.queries.SourceJavadocAttacherImplementation
 innr public abstract interface static Definer
+innr public abstract interface static Definer2
 meth public abstract boolean attachJavadoc(java.net.URL,org.netbeans.api.java.queries.SourceJavadocAttacher$AttachmentListener) throws java.io.IOException
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NonNull()
@@ -622,8 +645,14 @@ meth public abstract java.util.List<? extends java.net.URL> getSources(java.net.
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NonNull()
 
+CLSS public abstract interface static org.netbeans.spi.java.queries.SourceJavadocAttacherImplementation$Definer2
+ outer org.netbeans.spi.java.queries.SourceJavadocAttacherImplementation
+intf org.netbeans.spi.java.queries.SourceJavadocAttacherImplementation$Definer
+meth public abstract boolean accepts(java.net.URL)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+
 CLSS public abstract interface org.netbeans.spi.java.queries.SourceLevelQueryImplementation
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.lang.String getSourceLevel(org.openide.filesystems.FileObject)
 
 CLSS public abstract interface org.netbeans.spi.java.queries.SourceLevelQueryImplementation2
@@ -647,6 +676,7 @@ meth public abstract org.netbeans.api.java.queries.SourceLevelQuery$Profile getP
  anno 0 org.netbeans.api.annotations.common.NonNull()
 
 CLSS public abstract interface org.netbeans.spi.java.queries.UnitTestForSourceQueryImplementation
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.net.URL findSource(org.openide.filesystems.FileObject)
 meth public abstract java.net.URL findUnitTest(org.openide.filesystems.FileObject)
 

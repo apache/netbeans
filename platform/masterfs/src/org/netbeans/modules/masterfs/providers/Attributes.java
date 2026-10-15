@@ -50,7 +50,7 @@ public class Attributes extends DefaultAttributes {
     private static DefaultAttributes sharedUserAttributes;
 
     private final String attributePrefix;
-    private AbstractFileSystem.List list;
+    private final AbstractFileSystem.List list;
     private static final boolean BACKWARD_COMPATIBILITY = false;
     private static File rootForAttributes;
 
@@ -205,9 +205,7 @@ public class Attributes extends DefaultAttributes {
                 ExLocalFileSystem exLFs = null;
                 try {
                     exLFs = ExLocalFileSystem.getInstance(getRootForAttributes());                    
-                } catch (PropertyVetoException e) {
-                    Exceptions.printStackTrace(e);
-                } catch (IOException e) {
+                } catch (PropertyVetoException | IOException e) {
                     Exceptions.printStackTrace(e);
                 }
                 sharedUserAttributes = exLFs.getAttributes();

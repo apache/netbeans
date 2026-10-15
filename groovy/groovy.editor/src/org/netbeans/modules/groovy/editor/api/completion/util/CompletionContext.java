@@ -36,6 +36,8 @@ import org.codehaus.groovy.ast.expr.ListExpression;
 import org.codehaus.groovy.ast.expr.NamedArgumentListExpression;
 import org.codehaus.groovy.ast.expr.RangeExpression;
 import org.codehaus.groovy.ast.expr.VariableExpression;
+import org.codehaus.groovy.ast.stmt.BlockStatement;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
@@ -46,8 +48,10 @@ import org.netbeans.modules.groovy.editor.api.AstPath;
 import org.netbeans.modules.groovy.editor.api.completion.CaretLocation;
 import org.netbeans.modules.groovy.editor.completion.inference.GroovyTypeAnalyzer;
 import org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId;
+
 import static org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId.LITERAL_new;
 import static org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId.LPAREN;
+
 import org.netbeans.modules.groovy.editor.api.lexer.LexUtilities;
 import org.netbeans.modules.groovy.editor.completion.AccessLevel;
 import org.openide.filesystems.FileObject;
@@ -70,15 +74,17 @@ public final class CompletionContext {
     public final int lexOffset;
     public final int astOffset;
     public final BaseDocument doc;
+    private boolean staticMembers;
     
     public boolean scriptMode;
     public CaretLocation location;
     public CompletionSurrounding context;
     public AstPath path;
+    public ClassNode rawDseclaringClass;
     public ClassNode declaringClass;
     public DotCompletionContext dotContext;
     public Set<AccessLevel> access;
-
+    private int addSortOverride;
 
     public CompletionContext(
             ParserResult parseResult,
@@ -107,15 +113,53 @@ public final class CompletionContext {
         this.dotContext = getDotCompletionContext();
         this.nameOnly = dotContext != null && dotContext.isMethodsOnly();
 
-        this.declaringClass = getBeforeDotDeclaringClass();
+        ClassNode dc = getBeforeDotDeclaringClass();
+        this.rawDseclaringClass = dc;
+        this.declaringClass = dc == null ? null : dc.redirect();
+    }
+
+    /**
+     * @return true, if just static members or meta-members should be considered.
+     * @since 1.80
+     */
+    public boolean isStaticMembers() {
+        return staticMembers;
+    }
+
+    /**
+     * If nonzero, the provider should adjust CompletionItems priority by this amount
+     * to sort the items lower/higher than usual.
+     * @return adjustment for sort priority.
+     * @since 1.80
+     */
+    public int getAddSortOverride() {
+        return addSortOverride;
+    }
+    
+    /**
+     * Set an offset to the default sort priority for the provided items.
+     * The provider should increase / decrease sort priority of the items
+     * @param addSortOverride the delta.
+     * @since 1.80
+     */
+    public void setAddSortOverride(int addSortOverride) {
+        this.addSortOverride = addSortOverride;
     }
     
     // TODO: Move this to the constructor and change ContextHelper.getSurroundingClassNode()
     // to prevent NPE caused by leaking this in constructor
     public void init() {
+        setDeclaringClass(rawDseclaringClass, this.staticMembers);
+    }
+
+    public void setDeclaringClass(ClassNode declaringClass, boolean staticMembers) {
+        this.rawDseclaringClass = declaringClass;
         if (declaringClass != null) {
+            this.declaringClass = declaringClass.redirect();
             this.access = AccessLevel.create(ContextHelper.getSurroundingClassNode(this), declaringClass);
+            this.staticMembers = staticMembers;
         } else {
+            this.declaringClass = null;
             this.access = null;
         }
     }
@@ -183,6 +227,10 @@ public final class CompletionContext {
     }
 
     private AstPath getPath(ParserResult parseResult, BaseDocument doc, int astOffset) {
+        return getPath(parseResult, doc, astOffset, false);
+    }
+    
+    private AstPath getPath(ParserResult parseResult, BaseDocument doc, int astOffset, boolean outermost) {
         ASTNode root = ASTUtils.getRoot(parseResult);
 
         // in some cases we can not repair the code, therefore root == null
@@ -190,7 +238,7 @@ public final class CompletionContext {
         if (root == null) {
             return null;
         }
-        return new AstPath(root, astOffset, doc);
+        return new AstPath(root, astOffset, doc, outermost);
     }
     
     /**
@@ -240,6 +288,9 @@ public final class CompletionContext {
 
             if (t.id() == GroovyTokenId.LITERAL_package) {
                 return CaretLocation.ABOVE_PACKAGE;
+            } else if (t.id() == GroovyTokenId.LITERAL_class || t.id() == GroovyTokenId.LITERAL_def
+                    || t.id() == GroovyTokenId.LPAREN || t.id() == GroovyTokenId.LBRACE) {
+                break;
             }
         }
 
@@ -247,17 +298,61 @@ public final class CompletionContext {
         // now were heading to the beginning to the document ...
 
         boolean classDefBeforePosition = false;
-
+        boolean openBraceBeforePosition = false;
+        // is there package statement?
+        boolean afterPackagePosition = false;
+        boolean canBeImport = true;
+        
         ts.move(position);
 
         while (ts.isValid() && ts.movePrevious() && ts.offset() >= 0) {
             Token<GroovyTokenId> t = ts.token();
-            if (t.id() == GroovyTokenId.LITERAL_class || t.id() == GroovyTokenId.LITERAL_interface || t.id() == GroovyTokenId.LITERAL_trait) {
+            if (t.id() == GroovyTokenId.LBRACE) {
+                openBraceBeforePosition = true;
+                canBeImport = false;
+            } else if (t.id() == GroovyTokenId.LITERAL_class || t.id() == GroovyTokenId.LITERAL_interface || t.id() == GroovyTokenId.LITERAL_trait) {
                 classDefBeforePosition = true;
                 break;
+            } else if (t.id() == GroovyTokenId.LITERAL_package) {
+                afterPackagePosition = true;
+                break;
+            } else if (canBeImport && t.id() == GroovyTokenId.LITERAL_import) {
+                return CaretLocation.INSIDE_IMPORT;
+            }
+            
+            if (canBeImport && !(t.id() == GroovyTokenId.DOT || t.id() == GroovyTokenId.IDENTIFIER
+                    || t.id() == GroovyTokenId.WHITESPACE || t.id() == GroovyTokenId.LITERAL_static)) {
+                canBeImport = false;
             }
         }
 
+        if (afterPackagePosition) {
+            // are we in the package statement?
+            ts.move(position);  // back on the caret position
+            boolean isPackageStatement = true;
+            boolean blockComment = false;
+            int countOfWhitespaces = 0;
+            while (ts.isValid() && ts.movePrevious() && ts.offset() >= 0 && isPackageStatement) {
+                Token<GroovyTokenId> t = ts.token();
+                if (t.id() == GroovyTokenId.LITERAL_package) {
+                    break;
+                } else if (t.id() == GroovyTokenId.WHITESPACE) {
+                    countOfWhitespaces++;
+                } else if (t.id() == GroovyTokenId.BLOCK_COMMENT) {
+                    // cases: 
+                    //      package /* comment */ org.apache.something
+                    //      package /* comment */org.apache.something
+                    //      package/* comment */org.apache.something
+                    blockComment = true;
+                } else {
+                    isPackageStatement = (t.id() == GroovyTokenId.DOT || t.id() == GroovyTokenId.IDENTIFIER);
+                }
+            }
+            if (isPackageStatement && (countOfWhitespaces == 1 || (blockComment && countOfWhitespaces < 3))) {
+                // we are just behind the package keyword
+                return CaretLocation.INSIDE_PACKAGE;
+            }
+        } 
 
         boolean classDefAfterPosition = false;
 
@@ -271,7 +366,7 @@ public final class CompletionContext {
             }
         }
 
-        if (path != null) {
+         if (path != null) {
             ASTNode node = path.root();
             if (node instanceof ModuleNode) {
                 ModuleNode module = (ModuleNode) node;
@@ -296,6 +391,10 @@ public final class CompletionContext {
                     }
                 }
             }
+        }
+
+        if (classDefBeforePosition && !openBraceBeforePosition) {
+            return null;
         }
 
         if (!scriptMode && !classDefBeforePosition && classDefAfterPosition) {
@@ -346,6 +445,8 @@ public final class CompletionContext {
 
          */
 
+        boolean insideBlock = false;  // we need to distinquish, whether are we inside 
+                                      // a method or in method declaration part
         for (Iterator<ASTNode> it = path.iterator(); it.hasNext();) {
             ASTNode current = it.next();
             if (current instanceof ClosureExpression) {
@@ -356,7 +457,11 @@ public final class CompletionContext {
                     return CaretLocation.INSIDE_CLOSURE;
                 }
             } else if (current instanceof MethodNode) {
-                return CaretLocation.INSIDE_METHOD;
+                if (insideBlock) {
+                    return CaretLocation.INSIDE_METHOD;
+                }
+            } else if (current instanceof BlockStatement) {
+                insideBlock = true;
             } else if (current instanceof ClassNode) {
                 return CaretLocation.INSIDE_CLASS;
             } else if (current instanceof ModuleNode) {
@@ -623,8 +728,8 @@ public final class CompletionContext {
         }
 
         int lexOffset = ts.offset();
-        int astOffset = ASTUtils.getAstOffset(parserResult, lexOffset);
-        AstPath realPath = getPath(parserResult, doc, astOffset);
+        int astOffset = ASTUtils.getAstOffset(parserResult, lexOffset) + ts.token().length() - 1;
+        AstPath realPath = getPath(parserResult, doc, astOffset, true);
 
         return new DotCompletionContext(lexOffset, astOffset, realPath, fieldsOnly, methodsOnly);
     }
@@ -665,7 +770,7 @@ public final class CompletionContext {
      * @return a valid ASTNode or null
      */
     private ClassNode getBeforeDotDeclaringClass() {
-        if (declaringClass != null && declaringClass instanceof ClassNode) {
+        if (declaringClass instanceof ClassNode) {
             return declaringClass;
         }
         
@@ -689,9 +794,13 @@ public final class CompletionContext {
         DotCompletionContext dotCompletionContext = getDotCompletionContext();
 
         // FIXME static/script context...
-        if (!isBehindDot() && context.before1 == null
+        if (!isBehindDot() && (context.before1 == null || location == CaretLocation.INSIDE_METHOD)
                 && (location == CaretLocation.INSIDE_CLOSURE || location == CaretLocation.INSIDE_METHOD)) {
-            declaringClass = ContextHelper.getSurroundingClassNode(this);
+            ASTNode an = ContextHelper.getSurroundingClassMember(this);
+            boolean st = 
+                    ((an instanceof FieldNode) && ((FieldNode)an).isStatic()) ||
+                    ((an instanceof MethodNode) && ((MethodNode)an).isStatic());
+            setDeclaringClass(ContextHelper.getSurroundingClassNode(this), st);
             return declaringClass;
         }
 
@@ -700,8 +809,6 @@ public final class CompletionContext {
             return null;
         }
 
-        ClassNode declClass = null;
-
         // experimental type inference
         GroovyTypeAnalyzer typeAnalyzer = new GroovyTypeAnalyzer(doc);
         Set<ClassNode> infered = typeAnalyzer.getTypes(dotCompletionContext.getAstPath(),
@@ -709,28 +816,23 @@ public final class CompletionContext {
         // FIXME multiple types
         // FIXME is there any test (?)
         if (!infered.isEmpty()) {
-            return infered.iterator().next();
-        }
-
-        // type inferred
-        if (declClass != null) {
-            declaringClass = declClass;
-            return declaringClass;
+            setDeclaringClass(infered.iterator().next(), false);
+            return rawDseclaringClass;
         }
 
         if (dotCompletionContext.getAstPath().leaf() instanceof VariableExpression) {
             VariableExpression variable = (VariableExpression) dotCompletionContext.getAstPath().leaf();
             if ("this".equals(variable.getName())) { // NOI18N
-                declaringClass = ContextHelper.getSurroundingClassNode(this);
-                return declaringClass;
+                setDeclaringClass(ContextHelper.getSurroundingClassNode(this), false);
+                return rawDseclaringClass;
             }
             if ("super".equals(variable.getName())) { // NOI18N
                 ClassNode thisClass = ContextHelper.getSurroundingClassNode(this);
-                declaringClass = thisClass.getSuperClass();
+                setDeclaringClass(declaringClass, false);
                 if (declaringClass == null) {
                     return new ClassNode("java.lang.Object", ClassNode.ACC_PUBLIC, null);
                 }
-                return declaringClass;
+                return rawDseclaringClass;
             }
         }
 
@@ -754,10 +856,10 @@ public final class CompletionContext {
                     constantExpression.setType(new ClassNode(constantExpression.getValue().getClass()));
                 }
             }
-            declaringClass = expression.getType();
+            setDeclaringClass(expression.getType(), false);
         }
 
-        return declaringClass;
+        return rawDseclaringClass;
     }
     
     /**
@@ -806,8 +908,8 @@ public final class CompletionContext {
         int nonWhite = 0;
 
         try {
-            rowStart = Utilities.getRowStart(doc, lexOffset);
-            nonWhite = Utilities.getFirstNonWhiteFwd(doc, rowStart);
+            rowStart = LineDocumentUtils.getLineStartOffset(doc, lexOffset);
+            nonWhite = LineDocumentUtils.getNextNonWhitespace(doc, rowStart);
 
         } catch (BadLocationException ex) {
         }

@@ -1,0 +1,1169 @@
+<testresult testFile='readonlyProperties_01.php'>
+    <scanner>
+        <token id='T_CLASS' start='815' end='820'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='821' end='839'>
+            <text>ReadonlyProperties</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='840' end='841'>
+            <text>{</text>
+        </token>
+        <token id='T_READONLY' start='874' end='882'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='883' end='886'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='887' end='910'>
+            <text>$implicitPublicReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='910' end='911'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='916' end='922'>
+            <text>public</text>
+        </token>
+        <token id='T_READONLY' start='923' end='931'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='932' end='935'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='936' end='951'>
+            <text>$publicReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='951' end='952'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='957' end='964'>
+            <text>private</text>
+        </token>
+        <token id='T_READONLY' start='965' end='973'>
+            <text>readonly</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='974' end='975'>
+            <text>?</text>
+        </token>
+        <token id='T_STRING' start='975' end='981'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='982' end='998'>
+            <text>$privateReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='998' end='999'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED' start='1004' end='1013'>
+            <text>protected</text>
+        </token>
+        <token id='T_READONLY' start='1014' end='1022'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='1023' end='1029'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='1029' end='1030'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1030' end='1033'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1034' end='1052'>
+            <text>$protectedReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='1052' end='1053'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='1059' end='1067'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PUBLIC' start='1068' end='1074'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='1075' end='1081'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1082' end='1097'>
+            <text>$readonlyPublic</text>
+        </token>
+        <token id='T_SEMICOLON' start='1097' end='1098'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='1103' end='1111'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PRIVATE' start='1112' end='1119'>
+            <text>private</text>
+        </token>
+        <token id='T_STRING' start='1120' end='1126'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1127' end='1143'>
+            <text>$readonlyPrivate</text>
+        </token>
+        <token id='T_SEMICOLON' start='1143' end='1144'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='1149' end='1157'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PROTECTED' start='1158' end='1167'>
+            <text>protected</text>
+        </token>
+        <token id='T_STRING' start='1168' end='1174'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1175' end='1193'>
+            <text>$readonlyProtected</text>
+        </token>
+        <token id='T_SEMICOLON' start='1193' end='1194'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1236' end='1242'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1243' end='1251'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1252' end='1263'>
+            <text>__construct</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1263' end='1264'>
+            <text>(</text>
+        </token>
+        <token id='T_READONLY' start='1273' end='1281'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='1282' end='1285'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1286' end='1317'>
+            <text>$promotedImplicitPublicReadonly</text>
+        </token>
+        <token id='T_EQUAL' start='1318' end='1319'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1320' end='1321'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='1321' end='1322'>
+            <text>,</text>
+        </token>
+        <token id='T_PUBLIC' start='1331' end='1337'>
+            <text>public</text>
+        </token>
+        <token id='T_READONLY' start='1338' end='1346'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='1347' end='1350'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1351' end='1374'>
+            <text>$promotedPublicReadonly</text>
+        </token>
+        <token id='T_EQUAL' start='1375' end='1376'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1377' end='1378'>
+            <text>0</text>
+        </token>
+        <token id='T_COMMA' start='1378' end='1379'>
+            <text>,</text>
+        </token>
+        <token id='T_PRIVATE' start='1388' end='1395'>
+            <text>private</text>
+        </token>
+        <token id='T_READONLY' start='1396' end='1404'>
+            <text>readonly</text>
+        </token>
+        <token id='T_ARRAY' start='1405' end='1410'>
+            <text>array</text>
+        </token>
+        <token id='T_VARIABLE' start='1411' end='1435'>
+            <text>$promotedPrivateReadonly</text>
+        </token>
+        <token id='T_EQUAL' start='1436' end='1437'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1438' end='1439'>
+            <text>[</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1439' end='1440'>
+            <text>]</text>
+        </token>
+        <token id='T_COMMA' start='1440' end='1441'>
+            <text>,</text>
+        </token>
+        <token id='T_PROTECTED' start='1450' end='1459'>
+            <text>protected</text>
+        </token>
+        <token id='T_READONLY' start='1460' end='1468'>
+            <text>readonly</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='1469' end='1470'>
+            <text>?</text>
+        </token>
+        <token id='T_STRING' start='1470' end='1476'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1477' end='1503'>
+            <text>$promotedProtectedReadonly</text>
+        </token>
+        <token id='T_EQUAL' start='1504' end='1505'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1506' end='1512'>
+            <text>"test"</text>
+        </token>
+        <token id='T_COMMA' start='1512' end='1513'>
+            <text>,</text>
+        </token>
+        <token id='T_READONLY' start='1522' end='1530'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PUBLIC' start='1531' end='1537'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='1538' end='1541'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1542' end='1565'>
+            <text>$promotedReadonlyPublic</text>
+        </token>
+        <token id='T_EQUAL' start='1566' end='1567'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1568' end='1569'>
+            <text>0</text>
+        </token>
+        <token id='T_COMMA' start='1569' end='1570'>
+            <text>,</text>
+        </token>
+        <token id='T_READONLY' start='1579' end='1587'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PRIVATE' start='1588' end='1595'>
+            <text>private</text>
+        </token>
+        <token id='T_ARRAY' start='1596' end='1601'>
+            <text>array</text>
+        </token>
+        <token id='T_VARIABLE' start='1602' end='1626'>
+            <text>$promotedReadonlyPrivate</text>
+        </token>
+        <token id='T_EQUAL' start='1627' end='1628'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1629' end='1630'>
+            <text>[</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1630' end='1631'>
+            <text>]</text>
+        </token>
+        <token id='T_COMMA' start='1631' end='1632'>
+            <text>,</text>
+        </token>
+        <token id='T_READONLY' start='1641' end='1649'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PROTECTED' start='1650' end='1659'>
+            <text>protected</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='1660' end='1661'>
+            <text>?</text>
+        </token>
+        <token id='T_STRING' start='1661' end='1667'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1668' end='1694'>
+            <text>$promotedReadonlyProtected</text>
+        </token>
+        <token id='T_EQUAL' start='1695' end='1696'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1697' end='1703'>
+            <text>"test"</text>
+        </token>
+        <token id='T_COMMA' start='1703' end='1704'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1709' end='1710'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1711' end='1712'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1712' end='1713'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1719' end='1725'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1726' end='1734'>
+            <text>function</text>
+        </token>
+        <token id='T_READONLY' start='1735' end='1743'>
+            <text>readonly</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1743' end='1744'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1744' end='1745'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1746' end='1747'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1748' end='1752'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1753' end='1754'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1759' end='1760'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1761' end='1762'>
+            <text>}</text>
+        </token>
+        <token id='T_TRAIT' start='1764' end='1769'>
+            <text>trait</text>
+        </token>
+        <token id='T_STRING' start='1770' end='1793'>
+            <text>ReadonlyPropertiesTrait</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1794' end='1795'>
+            <text>{</text>
+        </token>
+        <token id='T_READONLY' start='1828' end='1836'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='1837' end='1840'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1841' end='1864'>
+            <text>$implicitPublicReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='1864' end='1865'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1870' end='1876'>
+            <text>public</text>
+        </token>
+        <token id='T_READONLY' start='1877' end='1885'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='1886' end='1889'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1890' end='1905'>
+            <text>$publicReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='1905' end='1906'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='1911' end='1918'>
+            <text>private</text>
+        </token>
+        <token id='T_READONLY' start='1919' end='1927'>
+            <text>readonly</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='1928' end='1929'>
+            <text>?</text>
+        </token>
+        <token id='T_STRING' start='1929' end='1935'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1936' end='1952'>
+            <text>$privateReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='1952' end='1953'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED' start='1958' end='1967'>
+            <text>protected</text>
+        </token>
+        <token id='T_READONLY' start='1968' end='1976'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='1977' end='1983'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='1983' end='1984'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1984' end='1987'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1988' end='2006'>
+            <text>$protectedReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='2006' end='2007'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='2013' end='2021'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PUBLIC' start='2022' end='2028'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='2029' end='2035'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='2036' end='2051'>
+            <text>$readonlyPublic</text>
+        </token>
+        <token id='T_SEMICOLON' start='2051' end='2052'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='2057' end='2065'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PRIVATE' start='2066' end='2073'>
+            <text>private</text>
+        </token>
+        <token id='T_STRING' start='2074' end='2080'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='2081' end='2097'>
+            <text>$readonlyPrivate</text>
+        </token>
+        <token id='T_SEMICOLON' start='2097' end='2098'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='2103' end='2111'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PROTECTED' start='2112' end='2121'>
+            <text>protected</text>
+        </token>
+        <token id='T_STRING' start='2122' end='2128'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='2129' end='2147'>
+            <text>$readonlyProtected</text>
+        </token>
+        <token id='T_SEMICOLON' start='2147' end='2148'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='2190' end='2196'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='2197' end='2205'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='2206' end='2217'>
+            <text>__construct</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2217' end='2218'>
+            <text>(</text>
+        </token>
+        <token id='T_READONLY' start='2227' end='2235'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='2236' end='2239'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2240' end='2271'>
+            <text>$promotedImplicitPublicReadonly</text>
+        </token>
+        <token id='T_EQUAL' start='2272' end='2273'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='2274' end='2275'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='2275' end='2276'>
+            <text>,</text>
+        </token>
+        <token id='T_PUBLIC' start='2285' end='2291'>
+            <text>public</text>
+        </token>
+        <token id='T_READONLY' start='2292' end='2300'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='2301' end='2304'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2305' end='2328'>
+            <text>$promotedPublicReadonly</text>
+        </token>
+        <token id='T_EQUAL' start='2329' end='2330'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='2331' end='2332'>
+            <text>0</text>
+        </token>
+        <token id='T_COMMA' start='2332' end='2333'>
+            <text>,</text>
+        </token>
+        <token id='T_PRIVATE' start='2342' end='2349'>
+            <text>private</text>
+        </token>
+        <token id='T_READONLY' start='2350' end='2358'>
+            <text>readonly</text>
+        </token>
+        <token id='T_ARRAY' start='2359' end='2364'>
+            <text>array</text>
+        </token>
+        <token id='T_VARIABLE' start='2365' end='2389'>
+            <text>$promotedPrivateReadonly</text>
+        </token>
+        <token id='T_EQUAL' start='2390' end='2391'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='2392' end='2393'>
+            <text>[</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='2393' end='2394'>
+            <text>]</text>
+        </token>
+        <token id='T_COMMA' start='2394' end='2395'>
+            <text>,</text>
+        </token>
+        <token id='T_PROTECTED' start='2404' end='2413'>
+            <text>protected</text>
+        </token>
+        <token id='T_READONLY' start='2414' end='2422'>
+            <text>readonly</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='2423' end='2424'>
+            <text>?</text>
+        </token>
+        <token id='T_STRING' start='2424' end='2430'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='2431' end='2457'>
+            <text>$promotedProtectedReadonly</text>
+        </token>
+        <token id='T_EQUAL' start='2458' end='2459'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='2460' end='2466'>
+            <text>"test"</text>
+        </token>
+        <token id='T_COMMA' start='2466' end='2467'>
+            <text>,</text>
+        </token>
+        <token id='T_READONLY' start='2476' end='2484'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PUBLIC' start='2485' end='2491'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='2492' end='2495'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2496' end='2519'>
+            <text>$promotedReadonlyPublic</text>
+        </token>
+        <token id='T_EQUAL' start='2520' end='2521'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='2522' end='2523'>
+            <text>0</text>
+        </token>
+        <token id='T_COMMA' start='2523' end='2524'>
+            <text>,</text>
+        </token>
+        <token id='T_READONLY' start='2533' end='2541'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PRIVATE' start='2542' end='2549'>
+            <text>private</text>
+        </token>
+        <token id='T_ARRAY' start='2550' end='2555'>
+            <text>array</text>
+        </token>
+        <token id='T_VARIABLE' start='2556' end='2580'>
+            <text>$promotedReadonlyPrivate</text>
+        </token>
+        <token id='T_EQUAL' start='2581' end='2582'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='2583' end='2584'>
+            <text>[</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='2584' end='2585'>
+            <text>]</text>
+        </token>
+        <token id='T_COMMA' start='2585' end='2586'>
+            <text>,</text>
+        </token>
+        <token id='T_READONLY' start='2595' end='2603'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PROTECTED' start='2604' end='2613'>
+            <text>protected</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='2614' end='2615'>
+            <text>?</text>
+        </token>
+        <token id='T_STRING' start='2615' end='2621'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='2622' end='2648'>
+            <text>$promotedReadonlyProtected</text>
+        </token>
+        <token id='T_EQUAL' start='2649' end='2650'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='2651' end='2657'>
+            <text>"test"</text>
+        </token>
+        <token id='T_COMMA' start='2657' end='2658'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2663' end='2664'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2665' end='2666'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2666' end='2667'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2673' end='2679'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='2680' end='2688'>
+            <text>function</text>
+        </token>
+        <token id='T_READONLY' start='2689' end='2697'>
+            <text>readonly</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2697' end='2698'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2698' end='2699'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='2699' end='2700'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='2701' end='2705'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2706' end='2707'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2712' end='2713'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2714' end='2715'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='2716' end='2716'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='2716'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='847' end='870' commentType='singleLine'/>
+            <Comment start='1200' end='1232' commentType='singleLine'/>
+            <Comment start='1801' end='1824' commentType='singleLine'/>
+            <Comment start='2154' end='2186' commentType='singleLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='847' end='870' commentType='singleLine'/>
+            <Comment start='1200' end='1232' commentType='singleLine'/>
+            <Comment start='1801' end='1824' commentType='singleLine'/>
+            <Comment start='2154' end='2186' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='815' end='1762' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='821' end='839' name='ReadonlyProperties'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='840' end='1762' isCurly='true'>
+                    <FieldsDeclaration start='874' end='911' modifier='public readonly'>
+                        <FieldType>
+                            <NamespaceName start='883' end='886' isCurrent='false' isGlobal='false'>
+                                <Identifier start='883' end='886' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='887' end='910' isDollared='true'>
+                                <Identifier start='888' end='910' name='implicitPublicReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='916' end='952' modifier='public readonly'>
+                        <FieldType>
+                            <NamespaceName start='932' end='935' isCurrent='false' isGlobal='false'>
+                                <Identifier start='932' end='935' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='936' end='951' isDollared='true'>
+                                <Identifier start='937' end='951' name='publicReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='957' end='999' modifier='private readonly'>
+                        <FieldType>
+                            <NullableType start='974' end='981'>
+                                <NamespaceName start='975' end='981' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='975' end='981' name='string'/>
+                                </NamespaceName>
+                            </NullableType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='982' end='998' isDollared='true'>
+                                <Identifier start='983' end='998' name='privateReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1004' end='1053' modifier='protected readonly'>
+                        <FieldType>
+                            <UnionType start='1023' end='1033'>
+                                <NamespaceName start='1023' end='1029' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1023' end='1029' name='string'/>
+                                </NamespaceName>
+                                <NamespaceName start='1030' end='1033' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1030' end='1033' name='int'/>
+                                </NamespaceName>
+                            </UnionType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1034' end='1052' isDollared='true'>
+                                <Identifier start='1035' end='1052' name='protectedReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1059' end='1098' modifier='public readonly'>
+                        <FieldType>
+                            <NamespaceName start='1075' end='1081' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1075' end='1081' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1082' end='1097' isDollared='true'>
+                                <Identifier start='1083' end='1097' name='readonlyPublic'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1103' end='1144' modifier='private readonly'>
+                        <FieldType>
+                            <NamespaceName start='1120' end='1126' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1120' end='1126' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1127' end='1143' isDollared='true'>
+                                <Identifier start='1128' end='1143' name='readonlyPrivate'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1149' end='1194' modifier='protected readonly'>
+                        <FieldType>
+                            <NamespaceName start='1168' end='1174' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1168' end='1174' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1175' end='1193' isDollared='true'>
+                                <Identifier start='1176' end='1193' name='readonlyProtected'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <MethodDeclaration start='1236' end='1713' modifiers='public'>
+                        <FunctionDeclaration start='1243' end='1713' isReference='false'>
+                            <Identifier start='1252' end='1263' name='__construct'/>
+                            <FormalParameters>
+                                <FormalParameter start='1273' end='1321' modifier='public readonly' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1282' end='1285' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1282' end='1285' name='int'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1286' end='1317' isDollared='true'>
+                                            <Identifier start='1287' end='1317' name='promotedImplicitPublicReadonly'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <Scalar start='1320' end='1321' type='INT' value='1'/>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='1331' end='1378' modifier='public readonly' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1347' end='1350' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1347' end='1350' name='int'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1351' end='1374' isDollared='true'>
+                                            <Identifier start='1352' end='1374' name='promotedPublicReadonly'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <Scalar start='1377' end='1378' type='INT' value='0'/>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='1388' end='1440' modifier='private readonly' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1405' end='1410' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1405' end='1410' name='array'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1411' end='1435' isDollared='true'>
+                                            <Identifier start='1412' end='1435' name='promotedPrivateReadonly'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <ArrayCreation start='1438' end='1440' type='NEW'>
+                                        </ArrayCreation>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='1450' end='1512' modifier='protected readonly' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NullableType start='1469' end='1476'>
+                                            <NamespaceName start='1470' end='1476' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1470' end='1476' name='string'/>
+                                            </NamespaceName>
+                                        </NullableType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1477' end='1503' isDollared='true'>
+                                            <Identifier start='1478' end='1503' name='promotedProtectedReadonly'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <Scalar start='1506' end='1512' type='STRING' value='"test"'/>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='1522' end='1569' modifier='public readonly' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1538' end='1541' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1538' end='1541' name='int'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1542' end='1565' isDollared='true'>
+                                            <Identifier start='1543' end='1565' name='promotedReadonlyPublic'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <Scalar start='1568' end='1569' type='INT' value='0'/>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='1579' end='1631' modifier='private readonly' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1596' end='1601' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1596' end='1601' name='array'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1602' end='1626' isDollared='true'>
+                                            <Identifier start='1603' end='1626' name='promotedReadonlyPrivate'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <ArrayCreation start='1629' end='1631' type='NEW'>
+                                        </ArrayCreation>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='1641' end='1703' modifier='protected readonly' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NullableType start='1660' end='1667'>
+                                            <NamespaceName start='1661' end='1667' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1661' end='1667' name='string'/>
+                                            </NamespaceName>
+                                        </NullableType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1668' end='1694' isDollared='true'>
+                                            <Identifier start='1669' end='1694' name='promotedReadonlyProtected'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <Scalar start='1697' end='1703' type='STRING' value='"test"'/>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <Block start='1711' end='1713' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1719' end='1760' modifiers='public'>
+                        <FunctionDeclaration start='1726' end='1760' isReference='false'>
+                            <Identifier start='1735' end='1743' name='readonly'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <NamespaceName start='1748' end='1752' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1748' end='1752' name='void'/>
+                            </NamespaceName>
+                            <Block start='1753' end='1760' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <TraitDeclaration start='1764' end='2715'>
+                <TraitName>
+                    <Identifier start='1770' end='1793' name='ReadonlyPropertiesTrait'/>
+                </TraitName>
+                <Block start='1794' end='2715' isCurly='true'>
+                    <FieldsDeclaration start='1828' end='1865' modifier='public readonly'>
+                        <FieldType>
+                            <NamespaceName start='1837' end='1840' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1837' end='1840' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1841' end='1864' isDollared='true'>
+                                <Identifier start='1842' end='1864' name='implicitPublicReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1870' end='1906' modifier='public readonly'>
+                        <FieldType>
+                            <NamespaceName start='1886' end='1889' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1886' end='1889' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1890' end='1905' isDollared='true'>
+                                <Identifier start='1891' end='1905' name='publicReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1911' end='1953' modifier='private readonly'>
+                        <FieldType>
+                            <NullableType start='1928' end='1935'>
+                                <NamespaceName start='1929' end='1935' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1929' end='1935' name='string'/>
+                                </NamespaceName>
+                            </NullableType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1936' end='1952' isDollared='true'>
+                                <Identifier start='1937' end='1952' name='privateReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1958' end='2007' modifier='protected readonly'>
+                        <FieldType>
+                            <UnionType start='1977' end='1987'>
+                                <NamespaceName start='1977' end='1983' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1977' end='1983' name='string'/>
+                                </NamespaceName>
+                                <NamespaceName start='1984' end='1987' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1984' end='1987' name='int'/>
+                                </NamespaceName>
+                            </UnionType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1988' end='2006' isDollared='true'>
+                                <Identifier start='1989' end='2006' name='protectedReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2013' end='2052' modifier='public readonly'>
+                        <FieldType>
+                            <NamespaceName start='2029' end='2035' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2029' end='2035' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2036' end='2051' isDollared='true'>
+                                <Identifier start='2037' end='2051' name='readonlyPublic'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2057' end='2098' modifier='private readonly'>
+                        <FieldType>
+                            <NamespaceName start='2074' end='2080' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2074' end='2080' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2081' end='2097' isDollared='true'>
+                                <Identifier start='2082' end='2097' name='readonlyPrivate'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2103' end='2148' modifier='protected readonly'>
+                        <FieldType>
+                            <NamespaceName start='2122' end='2128' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2122' end='2128' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2129' end='2147' isDollared='true'>
+                                <Identifier start='2130' end='2147' name='readonlyProtected'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <MethodDeclaration start='2190' end='2667' modifiers='public'>
+                        <FunctionDeclaration start='2197' end='2667' isReference='false'>
+                            <Identifier start='2206' end='2217' name='__construct'/>
+                            <FormalParameters>
+                                <FormalParameter start='2227' end='2275' modifier='public readonly' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='2236' end='2239' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='2236' end='2239' name='int'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='2240' end='2271' isDollared='true'>
+                                            <Identifier start='2241' end='2271' name='promotedImplicitPublicReadonly'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <Scalar start='2274' end='2275' type='INT' value='1'/>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='2285' end='2332' modifier='public readonly' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='2301' end='2304' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='2301' end='2304' name='int'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='2305' end='2328' isDollared='true'>
+                                            <Identifier start='2306' end='2328' name='promotedPublicReadonly'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <Scalar start='2331' end='2332' type='INT' value='0'/>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='2342' end='2394' modifier='private readonly' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='2359' end='2364' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='2359' end='2364' name='array'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='2365' end='2389' isDollared='true'>
+                                            <Identifier start='2366' end='2389' name='promotedPrivateReadonly'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <ArrayCreation start='2392' end='2394' type='NEW'>
+                                        </ArrayCreation>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='2404' end='2466' modifier='protected readonly' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NullableType start='2423' end='2430'>
+                                            <NamespaceName start='2424' end='2430' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='2424' end='2430' name='string'/>
+                                            </NamespaceName>
+                                        </NullableType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='2431' end='2457' isDollared='true'>
+                                            <Identifier start='2432' end='2457' name='promotedProtectedReadonly'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <Scalar start='2460' end='2466' type='STRING' value='"test"'/>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='2476' end='2523' modifier='public readonly' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='2492' end='2495' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='2492' end='2495' name='int'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='2496' end='2519' isDollared='true'>
+                                            <Identifier start='2497' end='2519' name='promotedReadonlyPublic'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <Scalar start='2522' end='2523' type='INT' value='0'/>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='2533' end='2585' modifier='private readonly' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='2550' end='2555' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='2550' end='2555' name='array'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='2556' end='2580' isDollared='true'>
+                                            <Identifier start='2557' end='2580' name='promotedReadonlyPrivate'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <ArrayCreation start='2583' end='2585' type='NEW'>
+                                        </ArrayCreation>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='2595' end='2657' modifier='protected readonly' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NullableType start='2614' end='2621'>
+                                            <NamespaceName start='2615' end='2621' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='2615' end='2621' name='string'/>
+                                            </NamespaceName>
+                                        </NullableType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='2622' end='2648' isDollared='true'>
+                                            <Identifier start='2623' end='2648' name='promotedReadonlyProtected'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <Scalar start='2651' end='2657' type='STRING' value='"test"'/>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <Block start='2665' end='2667' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='2673' end='2713' modifiers='public'>
+                        <FunctionDeclaration start='2680' end='2713' isReference='false'>
+                            <Identifier start='2689' end='2697' name='readonly'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <NamespaceName start='2701' end='2705' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2701' end='2705' name='void'/>
+                            </NamespaceName>
+                            <Block start='2706' end='2713' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </TraitDeclaration>
+        </Statements>
+    </Program>
+</testresult>

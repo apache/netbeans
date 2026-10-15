@@ -132,7 +132,7 @@ public class PacUtilsTest {
     
     private InetAddress[] getInetAddressListArr(String[] ipAddresses) {
         List<InetAddress> list = getInetAddressList(ipAddresses);
-        return list.toArray(new InetAddress[list.size()]);
+        return list.toArray(new InetAddress[0]);
     }
     
     private List<InetAddress> getInetAddressList(String[] ipAddresses) {

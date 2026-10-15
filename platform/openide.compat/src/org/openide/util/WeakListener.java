@@ -44,13 +44,13 @@ import javax.swing.event.*;
 @Deprecated
 public abstract class WeakListener implements java.util.EventListener {
     /** weak reference to listener */
-    private Reference ref;
+    private Reference<EventListener> ref;
 
     /** class of the listener */
     Class listenerClass;
 
     /** weak reference to source */
-    private Reference source;
+    private Reference<Object> source;
 
     /**
      * @param listenerClass class/interface of the listener
@@ -88,7 +88,7 @@ public abstract class WeakListener implements java.util.EventListener {
         if (source == null) {
             this.source = null;
         } else {
-            this.source = new WeakReference(source);
+            this.source = new WeakReference<Object>(source);
         }
     }
 
@@ -103,14 +103,14 @@ public abstract class WeakListener implements java.util.EventListener {
     * @return null if there is no listener because it has been finalized
     */
     protected final java.util.EventListener get(java.util.EventObject ev) {
-        Object l = ref.get(); // get the consumer
+        EventListener l = ref.get(); // get the consumer
 
         // if the event consumer is gone, unregister us from the event producer
         if (l == null) {
             removeListener((ev == null) ? null : ev.getSource());
         }
 
-        return (EventListener) l;
+        return l;
     }
 
     /** Tries to find a remove method and invoke it.
@@ -776,6 +776,7 @@ public abstract class WeakListener implements java.util.EventListener {
         * @return name of method of the source object that should be used
         *   to remove the listener from listening on source of events
         */
+        @Override
         protected String removeMethodName() {
             return "removeNodeListener"; // NOI18N
         }
@@ -901,6 +902,7 @@ public abstract class WeakListener implements java.util.EventListener {
 
         /** To string prints class.
         */
+        @Override
         public String toString() {
             return super.toString() + "[" + listenerClass + "]"; // NOI18N
         }
@@ -911,6 +913,7 @@ public abstract class WeakListener implements java.util.EventListener {
             return (proxy == obj) || (this == obj);
         }
 
+        @Override
         Object getImplementator() {
             return proxy;
         }
@@ -918,14 +921,14 @@ public abstract class WeakListener implements java.util.EventListener {
 
     /** Reference that also holds ref to WeakListener.
     */
-    private static final class ListenerReference extends WeakReference implements Runnable {
+    private static final class ListenerReference<T> extends WeakReference<T> implements Runnable {
         private static Class lastClass;
         private static String lastMethodName;
         private static Method lastRemove;
         private static Object LOCK = new Object();
         final WeakListener weakListener;
 
-        public ListenerReference(Object ref, WeakListener weakListener) {
+        public ListenerReference(T ref, WeakListener weakListener) {
             super(ref, Utilities.activeReferenceQueue());
             this.weakListener = weakListener;
         }

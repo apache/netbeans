@@ -34,10 +34,7 @@ import org.netbeans.modules.glassfish.tooling.data.GlassFishStatusTask;
  */
 public class MonitoringInitStateListener extends WakeUpStateListener {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of state check results notification.
      */
@@ -45,10 +42,7 @@ public class MonitoringInitStateListener extends WakeUpStateListener {
         super();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Callback to notify about current server status after every check
      * when enabled.

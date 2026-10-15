@@ -584,7 +584,7 @@ Please note, SimpleDiff is rather trivial implementation of diff command, so it 
               <a href="@TOP@/org/netbeans/junit/NbModuleSuite.html">NbModuleSuite</a>
               can now be influenced by system property <code>branding.token</code>.
               If it is provided (by Ant harness for example), it is used
-              to call <a href="@org-openide-util@/org/openide/util/NbBundle.html#setBranding-java.lang.String-">
+              to call <a href="@org-openide-util@/org/openide/util/NbBundle.html#setBranding(java.lang.String)">
               NbBundle.setBranding</a>.
           </api>
       </li>

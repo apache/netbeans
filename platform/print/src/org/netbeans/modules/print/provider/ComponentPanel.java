@@ -21,7 +21,6 @@ package org.netbeans.modules.print.provider;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -29,7 +28,6 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import org.netbeans.api.print.PrintManager;
-import static org.netbeans.modules.print.util.UI.*;
 
 /**
  * @author Vladimir Yaroslavskiy
@@ -107,7 +105,7 @@ final class ComponentPanel extends JPanel {
     }
 
     private List<JComponent> sort(List<JComponent> components) {
-        Collections.sort(components, new Comparator<JComponent>() {
+        components.sort(new Comparator<JComponent>() {
 
             public int compare(JComponent component1, JComponent component2) {
                 int order1 = getInteger(component1).intValue();

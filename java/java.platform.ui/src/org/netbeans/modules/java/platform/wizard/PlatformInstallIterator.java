@@ -89,7 +89,7 @@ public class PlatformInstallIterator implements WizardDescriptor.InstantiatingIt
         } else {
             c.add(bundle.getString("TITLE_PlatformLocationUnknown")); // NOI18N
         }
-        String[] names = c.toArray(new String[c.size()]);
+        String[] names = c.toArray(new String[0]);
         for (JComponent comp : where) {
             comp.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA,names); // NOI18N
         }
@@ -188,8 +188,7 @@ public class PlatformInstallIterator implements WizardDescriptor.InstantiatingIt
         updatePanelsList(new JComponent[]{((JComponent)current().getComponent())}, this.typeIterator);
         this.wizard.setTitle(NbBundle.getMessage(PlatformInstallIterator.class,"TXT_AddPlatformTitle"));
         panelNumber = 0;
-        wizard.putProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, // NOI18N
-            new Integer(panelNumber));
+        wizard.putProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, panelNumber);
     }
     
     public java.util.Set instantiate() throws IOException {
@@ -224,8 +223,7 @@ public class PlatformInstallIterator implements WizardDescriptor.InstantiatingIt
             typeIterator.nextPanel();
         }
         panelNumber++;
-        wizard.putProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, // NOI18N
-            new Integer(panelNumber));
+        wizard.putProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, panelNumber);
     }
     
     public void previousPanel() {
@@ -246,8 +244,7 @@ public class PlatformInstallIterator implements WizardDescriptor.InstantiatingIt
             }                
         } 
         panelNumber--;
-        wizard.putProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, // NOI18N
-            new Integer(panelNumber));
+        wizard.putProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, panelNumber);
     }
     
     public void removeChangeListener(ChangeListener l) {
@@ -302,7 +299,7 @@ public class PlatformInstallIterator implements WizardDescriptor.InstantiatingIt
             }, null);
         }
         typeIterator = it;
-        wizard.putProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(panelNumber)); // NOI18N
+        wizard.putProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, panelNumber);
     }                
                 
 }

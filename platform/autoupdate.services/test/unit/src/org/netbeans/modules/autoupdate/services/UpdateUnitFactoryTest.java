@@ -148,8 +148,9 @@ public class UpdateUnitFactoryTest extends NbTestCase {
         Map<String, UpdateUnit> updatedImpls = UpdateUnitFactory.getDefault ().appendUpdateItems (
                 installedImpls, p);
         boolean isInstalledAndHasUpdates = false;
-        for (String id : updatedImpls.keySet ()) {
-            UpdateUnit impl = updatedImpls.get (id);
+        for (Map.Entry<String, UpdateUnit> entry : updatedImpls.entrySet ()) {
+            String id = entry.getKey ();
+            UpdateUnit impl = entry.getValue();
             UpdateElement installed = impl.getInstalled ();
             List<UpdateElement> updates = impl.getAvailableUpdates ();
             isInstalledAndHasUpdates = isInstalledAndHasUpdates || installed != null && updates != null && ! updates.isEmpty ();

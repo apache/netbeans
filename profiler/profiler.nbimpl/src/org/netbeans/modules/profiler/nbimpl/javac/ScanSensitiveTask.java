@@ -27,7 +27,7 @@ import org.netbeans.api.java.source.Task;
  * 
  * @author Jaroslav Bachorik <jaroslav.bachorik@oracle.com>
  */
-abstract public class ScanSensitiveTask<P> implements Task<P> {
+public abstract class ScanSensitiveTask<P> implements Task<P> {
     private boolean uptodate;
     
     /**
@@ -58,7 +58,7 @@ abstract public class ScanSensitiveTask<P> implements Task<P> {
      * Indicates the requirements regarding the up-to-dateness of the accessed data
      * @return <b>TRUE</b> if the task needs up-to-date data (eg. needs to wait for the scanning to finish); <b>FALSE</b> otherwise
      */
-    final public boolean requiresUpToDate() {
+    public final boolean requiresUpToDate() {
         return this.uptodate;
     }
 }

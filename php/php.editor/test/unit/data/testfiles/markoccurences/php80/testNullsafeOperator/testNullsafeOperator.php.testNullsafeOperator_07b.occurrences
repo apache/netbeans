@@ -1,0 +1,2 @@
+    public static function |>MARK_OCCURRENCES:test<|(): string {
+$country = $session?->user::|>MARK_OCCURRENCES:te^st<|();

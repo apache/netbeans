@@ -47,8 +47,9 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.netbeans.api.editor.document.AtomicLockDocument;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.settings.SimpleValueNames;
-import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.editor.indent.api.Reformat;
 import org.netbeans.modules.options.editor.spi.PreferencesCustomizer;
 import org.netbeans.modules.options.editor.spi.PreviewProvider;
@@ -412,7 +413,7 @@ public class FmtOptions {
             { startUseWithNamespaceSeparator, FALSE}
         };
 
-        defaults = new HashMap<String,String>();
+        defaults = new HashMap<>();
 
         for (java.lang.String[] strings : defaultValues) {
             defaults.put(strings[0], strings[1]);
@@ -450,7 +451,7 @@ public class FmtOptions {
 //        private boolean loaded = false;
         private final String id;
         protected final JPanel panel;
-        private final List<JComponent> components = new LinkedList<JComponent>();
+        private final List<JComponent> components = new LinkedList<>();
         private JEditorPane previewPane;
 
         protected final Defaults.Provider provider;
@@ -563,19 +564,16 @@ public class FmtOptions {
             pane.setIgnoreRepaint(true);
 
             final Document doc = pane.getDocument();
-            if (doc instanceof BaseDocument) {
+            final AtomicLockDocument ald = LineDocumentUtils.as(doc, AtomicLockDocument.class);
+            if (ald != null) {
                 final Reformat reformat = Reformat.get(doc);
                 reformat.lock();
                 try {
-                    ((BaseDocument) doc).runAtomic(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            try {
-                                reformat.reformat(0, doc.getLength());
-                            } catch (BadLocationException ble) {
-                                LOGGER.log(Level.WARNING, null, ble);
-                            }
+                    ald.runAtomic(() -> {
+                        try {
+                            reformat.reformat(0, doc.getLength());
+                        } catch (BadLocationException ble) {
+                            LOGGER.log(Level.WARNING, null, ble);
                         }
                     });
                 } finally {
@@ -636,8 +634,8 @@ public class FmtOptions {
             @Override
             public PreferencesCustomizer create(Preferences preferences) {
                 try {
-                    return new CategorySupport(mimeType, provider, preferences, id, panelClass.newInstance(), previewText, forcedOptions);
-                } catch (Exception e) {
+                    return new CategorySupport(mimeType, provider, preferences, id, panelClass.getDeclaredConstructor().newInstance(), previewText, forcedOptions);
+                } catch (RuntimeException | ReflectiveOperationException e) {
                     LOGGER.log(Level.WARNING, "Exception during creating formatter customiezer", e);
                     return null;
                 }
@@ -829,7 +827,7 @@ public class FmtOptions {
 
     public static class PreviewPreferences extends AbstractPreferences {
 
-        private Map<String,Object> map = new HashMap<String, Object>();
+        private final Map<String,Object> map = new HashMap<>();
 
         public PreviewPreferences() {
             super(null, ""); // NOI18N
@@ -920,11 +918,11 @@ public class FmtOptions {
 
         @Override
         protected String[] keysSpi() throws BackingStoreException {
-            Set<String> keys = new HashSet<String>();
+            Set<String> keys = new HashSet<>();
             for(Preferences p : delegates) {
                 keys.addAll(Arrays.asList(p.keys()));
             }
-            return keys.toArray(new String[ keys.size() ]);
+            return keys.toArray(new String[0]);
         }
 
         @Override

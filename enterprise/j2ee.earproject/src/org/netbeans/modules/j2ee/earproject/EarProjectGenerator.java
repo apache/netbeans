@@ -72,6 +72,7 @@ import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileSystem.AtomicAction;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.SpecificationVersion;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Exceptions;
 import org.openide.util.Mutex;
 import org.openide.util.MutexException;
@@ -86,8 +87,6 @@ import org.w3c.dom.Element;
  * @author vince kraemer
  */
 public final class EarProjectGenerator {
-
-    private static final Logger LOGGER = Logger.getLogger(EarProjectGenerator.class.getName());
 
     private static final String DEFAULT_DOC_BASE_FOLDER = "src/conf"; //NOI18N
     private static final String DEFAULT_BUILD_DIR = "build"; //NOI18N
@@ -111,8 +110,7 @@ public final class EarProjectGenerator {
         this.j2eeProfile = j2eeProfile;
         this.serverInstanceID = serverInstanceID;
         // #181215: JDK 6 should be the default source/binary format for Java EE 6 projects
-        if (sourceLevel != null && (sourceLevel.equals("1.7")))
-            sourceLevel = "1.6";
+        // #181215: Not neccessary anymore because NetBeans should run on minimum JDK 8
         this.sourceLevel = sourceLevel;
         this.librariesDefinition = librariesDefinition;
     }
@@ -135,6 +133,7 @@ public final class EarProjectGenerator {
         // create project in one FS atomic action:
         FileSystem fs = projectDir.getFileSystem();
         fs.runAtomicAction(new FileSystem.AtomicAction() {
+            @Override
             public void run() throws IOException {
                 AntProjectHelper helper = earGen.doCreateProject();
                 h[0] = helper;
@@ -155,6 +154,7 @@ public final class EarProjectGenerator {
         // create project in one FS atomic action:
         FileSystem fs = projectDir.getFileSystem();
         fs.runAtomicAction(new FileSystem.AtomicAction() {
+            @Override
             public void run() throws IOException {
                 AntProjectHelper helper = earGen.doImportProject(sDir, userModules, platformName);
                 h[0] = helper;
@@ -174,6 +174,7 @@ public final class EarProjectGenerator {
         final ReferenceHelper refHelper = p.getReferenceHelper();
         try {
             ProjectManager.mutex().writeAccess(new Mutex.ExceptionAction<Void>() {
+                @Override
                 public Void run() throws Exception {
                     EditableProperties ep = h.getProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH);
                     ep.put(EarProjectProperties.SOURCE_ROOT, "."); //NOI18N
@@ -243,14 +244,10 @@ public final class EarProjectGenerator {
                 FileObject fileBeingCopied = null;
                 if (null != appXml) {
                     // make a backup copy of the application.xml and its siblings
-                    Enumeration filesToBackup =
-                            appXml.getParent().getChildren(false);
-                    while (null != filesToBackup &&
-                            filesToBackup.hasMoreElements()) {
-                        fileBeingCopied =
-                                (FileObject) filesToBackup.nextElement();
-                        if (fileBeingCopied.isData() &&
-                                fileBeingCopied.canRead()) {
+                    Enumeration<? extends FileObject> filesToBackup = appXml.getParent().getChildren(false);
+                    while (null != filesToBackup && filesToBackup.hasMoreElements()) {
+                        fileBeingCopied = (FileObject) filesToBackup.nextElement();
+                        if (fileBeingCopied.isData() && fileBeingCopied.canRead()) {
                             try {
                                 FileUtil.copyFile(fileBeingCopied,
                                         appXml.getParent(),
@@ -280,7 +277,7 @@ public final class EarProjectGenerator {
                     }
                 }
             } catch (IOException ioe) {
-                Logger.getLogger("global").log(Level.INFO, ioe.getLocalizedMessage());
+                Logger.getLogger(EarProjectGenerator.class.getName()).log(Level.INFO, ioe.getLocalizedMessage());
             }
         
             setupDD(j2eeProfile, docBase, earProject);
@@ -324,7 +321,7 @@ public final class EarProjectGenerator {
                     assert false : "Unknown module type: " + type;
             }
         }
-        Project[] webAndCarsArray = webAndCars.toArray(new Project[webAndCars.size()]);
+        Project[] webAndCarsArray = webAndCars.toArray(new Project[0]);
         for (Project ejb : ejbs) {
             addEJBToClassPaths(ejb, webAndCarsArray); // #74123
         }
@@ -351,7 +348,7 @@ public final class EarProjectGenerator {
                     SourceGroup sgs[] = ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
                     if (sgs.length > 0) {
                         ProjectClassPathModifier.addAntArtifacts(new AntArtifact[]{artifact},
-                            new URI[]{locations[0].normalize()}, sgs[0].getRootFolder(), JavaClassPathConstants.COMPILE_ONLY);
+                            new URI[]{BaseUtilities.normalizeURI(locations[0])}, sgs[0].getRootFolder(), JavaClassPathConstants.COMPILE_ONLY);
                     }
                 }
             }
@@ -497,7 +494,7 @@ public final class EarProjectGenerator {
     private AntProjectHelper setupProject() throws IOException {
 
         EarProjectUtil.logUI(NbBundle.getBundle(EarProjectGenerator.class), "UI_EAR_PROJECT_CREATE_SHARABILITY", // NOI18N
-                new Object[]{Boolean.valueOf(librariesDefinition != null), Boolean.FALSE});
+                new Object[]{(librariesDefinition != null), Boolean.FALSE});
 
         AntProjectHelper h = ProjectGenerator.createProject(prjDirFO, EarProjectType.TYPE, librariesDefinition);
         EarProject p = (EarProject)ProjectManager.getDefault().findProject(prjDirFO);
@@ -543,8 +540,7 @@ public final class EarProjectGenerator {
             srcLevel = v.toString();
             // #89131: these levels are not actually distinct from 1.5.
             // #181215: JDK 6 should be the default source/binary format for Java EE 6 projects
-            if (srcLevel.equals("1.7"))
-                srcLevel = "1.6";
+            // #181215: Not neccessary anymore because NetBeans should run on minimum JDK 8
         }
         ep.setProperty(EarProjectProperties.JAVAC_SOURCE, srcLevel); //NOI18N
         ep.setProperty(EarProjectProperties.JAVAC_DEBUG, "true"); // NOI18N
@@ -600,16 +596,17 @@ public final class EarProjectGenerator {
         }
         try {
             projectDir.getFileSystem().runAtomicAction(new AtomicAction() {
+                @Override
                 public void run() throws IOException {
                     ProjectManager.mutex().writeAccess(new Runnable() {
+                        @Override
                         public void run() {
                             try {
                                 EditableProperties ep = helper.getProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH);
                                 // #89131: these levels are not actually distinct from 1.5.
                                 String srcLevel = sourceLevel;
                                 // #181215: JDK 6 should be the default source/binary format for Java EE 6 projects
-                                if (sourceLevel.equals("1.7"))
-                                    srcLevel = "1.6";
+                                // #181215: Not neccessary anymore because NetBeans should run on minimum JDK 8
                                 ep.setProperty(EarProjectProperties.JAVAC_SOURCE, srcLevel);
                                 ep.setProperty(EarProjectProperties.JAVAC_TARGET, srcLevel);
                                 helper.putProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH, ep);

@@ -106,7 +106,7 @@ public class SignJarsTask extends Task {
     
     public void execute() throws BuildException {
         
-        Map<Set<String>,List<File>> signersMap = new HashMap(); // Set<signerName> -> List<jarPath>
+        Map<Set<String>,List<File>> signersMap = new HashMap<>(); // Set<signerName> -> List<jarPath>
         List<File> files2sign = new ArrayList<File>();
         List<File> alreadySigned = new ArrayList<File>();
         

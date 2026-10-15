@@ -417,11 +417,11 @@ public final class SQLExecuteHelper {
             return true;
         }
         
-        private final static String SQL99_STRING_QUOTE = "'";
-        private final static String SQL99_IDENTIFIER_QUOTE = "\"";
-        private final static String MYSQL_QUOTE = "`";
-        private final static String MSSQL_END_QUOTE = "]";
-        private final static String MSSQL_BEGIN_QUOTE = "[";
+        private static final String SQL99_STRING_QUOTE = "'";
+        private static final String SQL99_IDENTIFIER_QUOTE = "\"";
+        private static final String MYSQL_QUOTE = "`";
+        private static final String MSSQL_END_QUOTE = "]";
+        private static final String MSSQL_BEGIN_QUOTE = "[";
         
         /**
          * Consume a delimiter statement.
@@ -578,7 +578,7 @@ public final class SQLExecuteHelper {
                 return false;
             }
             
-            if ( substr.toUpperCase().equals(token.toUpperCase())) { // NOI18N
+            if ( substr.equalsIgnoreCase(token)) { // NOI18N
                 return true;
             }
             
@@ -620,11 +620,11 @@ public final class SQLExecuteHelper {
      */
     static class Compatibility {
 
-        public final static Compatibility COMPAT_GENERIC = new Compatibility(false, false);
+        public static final Compatibility COMPAT_GENERIC = new Compatibility(false, false);
 
-        public final static Compatibility COMPAT_MYSQL = new Compatibility(true, false);
+        public static final Compatibility COMPAT_MYSQL = new Compatibility(true, false);
 
-        public final static Compatibility COMPAT_POSTGERSQL = new Compatibility(false, true);
+        public static final Compatibility COMPAT_POSTGERSQL = new Compatibility(false, true);
         
         /**
          * Mysql supports "#" ('hash'-Char) as line comment in addition to

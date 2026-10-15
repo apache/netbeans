@@ -760,7 +760,7 @@ class SftpSupport {
                 LOG.log(Level.FINE, "{0} finished in {1} attempt(s)", new Object[]{getTraceName(), attempt});
             }
 
-            return result == null ? new StatInfo[0] : result.toArray(new StatInfo[result.size()]);
+            return result == null ? new StatInfo[0] : result.toArray(new StatInfo[0]);
         }
 
         @Override

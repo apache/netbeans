@@ -58,16 +58,12 @@ public class SchemaElementUtil {
             synchronized (SchemaElement.schemaCache) {
                 String tempURL = ""; //NOI18N
                 if (schemaFO != null)
-                    try {
-                        tempURL = schemaFO.getURL().toString();
-                    } catch (Exception exc) {
-                        Logger.getLogger("global").log(Level.INFO, null, exc);
-                    }
+                    tempURL = schemaFO.toURL().toString();
                 
                 if (schemaFO == null)
-                    se = (SchemaElement) SchemaElement.schemaCache.get(name);
+                    se = SchemaElement.schemaCache.get(name);
                 else
-                    se = (SchemaElement) SchemaElement.schemaCache.get(name + "#" + tempURL); //NOI18N
+                    se = SchemaElement.schemaCache.get(name + "#" + tempURL); //NOI18N
                 if (se != null)
                     return se;
 

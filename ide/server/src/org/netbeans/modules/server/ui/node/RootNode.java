@@ -23,7 +23,6 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.List;
@@ -251,7 +250,7 @@ public final class RootNode extends AbstractNode {
                 }
             }
 
-            Collections.sort(fresh, COMPARATOR);
+            fresh.sort(COMPARATOR);
 
             toPopulate.addAll(fresh);
             return true;

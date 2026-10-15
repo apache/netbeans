@@ -57,6 +57,22 @@
                     <attr name="instanceOf" stringvalue="javax.swing.text.EditorKit,org.netbeans.modules.properties.syntax.PropertiesKit"/>
                     <attr name="beaninfo" boolvalue="false"/>
                 </file>
+
+                <folder name="Toolbars">
+                    <folder name="Default">
+                        <!-- Comment-Entries added based on LanguageRegistrationProcessor#registerCommentUncommentToolbarButtons -->
+                        <file name="Separator-before-comment.instance">
+                            <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                            <attr intvalue="30000" name="position"/>
+                        </file>
+                        <file name="comment">
+                            <attr intvalue="30100" name="position"/>
+                        </file>
+                        <file name="uncomment">
+                            <attr intvalue="30200" name="position"/>
+                        </file>
+                    </folder>
+                </folder>
             </folder>
         </folder>
     </folder>

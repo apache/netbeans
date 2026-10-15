@@ -34,6 +34,9 @@ public class GroovyIndexerTest extends GroovyTestBase {
 
     @Override
     public String prettyPrintValue(String key, String value) {
+        if (GroovyIndexer.CLASS_OFFSET.equals(key) && value.length() > 0 && value.charAt(0) == '[') {
+            value = value.replace(',', ':');
+        }
         return value;
     }
 

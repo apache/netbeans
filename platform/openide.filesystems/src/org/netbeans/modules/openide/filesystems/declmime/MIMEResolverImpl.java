@@ -219,8 +219,9 @@ public final class MIMEResolverImpl {
             @Override
             public void run() {
                 Document document = XMLUtil.createDocument("MIME-resolver", null, "-//NetBeans//DTD MIME Resolver 1.1//EN", "http://www.netbeans.org/dtds/mime-resolver-1_1.dtd");  //NOI18N
-                for (String mimeType : mimeToExtensions.keySet()) {
-                    Set<String> extensions = mimeToExtensions.get(mimeType);
+                for (Map.Entry<String, Set<String>> entry : mimeToExtensions.entrySet()) {
+                    String mimeType = entry.getKey();
+                    Set<String> extensions = entry.getValue();
                     if (!extensions.isEmpty()) {
                         Element fileElement = document.createElement("file");  //NOI18N
                         for (String extension : mimeToExtensions.get(mimeType)) {

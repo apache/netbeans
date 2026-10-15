@@ -1,0 +1,5 @@
+Code completion result for source line:
+import.meta.ur|l;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+FIELD      url: null|String                [PUBLIC]   <font color=#999999>metaproperties.js</font>

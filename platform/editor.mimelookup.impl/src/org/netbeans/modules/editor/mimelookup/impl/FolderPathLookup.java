@@ -79,7 +79,7 @@ public final class FolderPathLookup extends AbstractLookup {
      * when asked for both empty and non-empty mime-types).
      * This is crucial for some of the MimeLookup clients.
      */
-    private static final Map<FileObject,InstanceItem> fo2item = new HashMap(128);
+    private static final Map<FileObject,InstanceItem> fo2item = new HashMap<>(128);
     
     static InstanceItem getInstanceItem(FileObject fo, InstanceItem ignoreItem) {
         FileObject real = fo;
@@ -222,7 +222,7 @@ public final class FolderPathLookup extends AbstractLookup {
         if (v != null) {
             return v.allInstances();
         }
-        final Lookup.Result<CustomInstanceFactory> fr[] = new Lookup.Result[1];
+        final Lookup.Result<CustomInstanceFactory>[] fr = new Lookup.Result[1];
         // ensure the system - global Lookup is used
         Lookups.executeWith(null, new Runnable() {
             public void run() {
@@ -236,7 +236,7 @@ public final class FolderPathLookup extends AbstractLookup {
             IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         T r = null;
         for (CustomInstanceFactory fif : getInstanceFactories()) {
-            r = (T)fif.createInstance(type);
+            r = fif.createInstance(type);
             if (r != null) {
                 break;
             }

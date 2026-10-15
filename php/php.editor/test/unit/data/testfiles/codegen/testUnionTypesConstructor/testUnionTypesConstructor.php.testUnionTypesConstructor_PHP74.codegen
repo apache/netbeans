@@ -1,0 +1,9 @@
+public function __construct(int|float $number, int|null $nullableInt, Foo|Bar|Baz $fooBarBaz, iterable|false $iterableFalse, array|null $staticNullableArray, string|bool|null $staticNullableStringBool, \Test\Foo|\Test\Bar $staticFooBar) {
+$$this->number = $number;
+$$this->nullableInt = $nullableInt;
+$$this->fooBarBaz = $fooBarBaz;
+$$this->iterableFalse = $iterableFalse;
+self::staticNullableArray = $staticNullableArray;
+self::staticNullableStringBool = $staticNullableStringBool;
+self::staticFooBar = $staticFooBar;${cursor}
+}

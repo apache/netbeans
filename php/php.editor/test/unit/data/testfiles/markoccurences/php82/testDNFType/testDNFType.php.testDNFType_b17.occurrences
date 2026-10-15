@@ -1,0 +1,38 @@
+    public (Foo&|>MARK_OCCURRENCES:Bar<|)|Foo $fieldFoo;
+    public static (Foo&|>MARK_OCCURRENCES:Bar<|)||>MARK_OCCURRENCES:Bar<| $staticFieldFoo;
+    public function methodFoo(): (Foo&|>MARK_OCCURRENCES:Bar<|)|(|>MARK_OCCURRENCES:Bar<|&Baz) {}
+    public static function staticMethodFoo(Foo||>MARK_OCCURRENCES:Bar<| $param): void {}
+class |>MARK_OCCURRENCES:Bar<| {
+    public (Foo&|>MARK_OCCURRENCES:Bar<|)|(Baz&Foo) $fieldBar;
+    public static (Foo&|>MARK_OCCURRENCES:Bar<|)||>MARK_OCCURRENCES:Bar<| $staticFieldBar;
+    public function methodBar(): (Foo&|>MARK_OCCURRENCES:Bar<|)|Baz {}
+    public static function staticMethodBar(Foo||>MARK_OCCURRENCES:Bar<| $param): void {}
+    public (Foo&|>MARK_OCCURRENCES:Bar<|)|(Baz&Foo) $fieldBaz;
+    public static (Foo&|>MARK_OCCURRENCES:Bar<|)||>MARK_OCCURRENCES:Bar<| $staticFieldBaz;
+    public function methodBaz(): Foo|(|>MARK_OCCURRENCES:Bar<|&Baz) {}
+    public static function staticMethodBaz(Foo&|>MARK_OCCURRENCES:Ba^r<| $param): void {}
+function paramType((Foo&|>MARK_OCCURRENCES:Bar<|)|Baz $param1, Baz|(Foo&|>MARK_OCCURRENCES:Bar<|) $param2, (Foo&|>MARK_OCCURRENCES:Bar<|)|(|>MARK_OCCURRENCES:Bar<|&Baz) $param3): void {
+function returnType1(): (Foo&|>MARK_OCCURRENCES:Bar<|)|Baz {}
+function returnType2(): Baz|(Foo&|>MARK_OCCURRENCES:Bar<|) {}
+function returnType3(): Baz|(Foo&|>MARK_OCCURRENCES:Bar<|)|Foo {}
+function returnType4(): (Foo&|>MARK_OCCURRENCES:Bar<|)|(Foo&Baz) {}
+ * @method (Foo&|>MARK_OCCURRENCES:Bar<|)|(|>MARK_OCCURRENCES:Bar<|&Baz) methodTag((Foo&|>MARK_OCCURRENCES:Bar<|)||>MARK_OCCURRENCES:Bar<| $param1, Foo|(|>MARK_OCCURRENCES:Bar<|&Baz) $param2) Description
+ * @method static (Foo&|>MARK_OCCURRENCES:Bar<|)|Baz staticMethodTag(|>MARK_OCCURRENCES:Bar<||(Foo&|>MARK_OCCURRENCES:Bar<|) $param1, (Foo&|>MARK_OCCURRENCES:Bar<|)|(|>MARK_OCCURRENCES:Bar<|&Baz) $param2) Description
+ * @property Foo|(|>MARK_OCCURRENCES:Bar<|&Baz) $propertyTag Description
+    private (Foo&|>MARK_OCCURRENCES:Bar<|)|Baz $fieldClass; // class
+    private static |>MARK_OCCURRENCES:Bar<||(|>MARK_OCCURRENCES:Bar<|&Baz) $staticFieldClass; // class
+    public function paramType((Foo&Baz)|(Foo&|>MARK_OCCURRENCES:Bar<|)|Baz $test): void { // class
+    public function returnType(): (Foo&|>MARK_OCCURRENCES:Bar<|)|Baz { // class
+    private (Foo&|>MARK_OCCURRENCES:Bar<|)|Baz $test; // trait
+    public function paramType((Foo&|>MARK_OCCURRENCES:Bar<|)|(|>MARK_OCCURRENCES:Bar<|&Baz) $test1, Foo|(Foo&|>MARK_OCCURRENCES:Bar<|) $test2): void { // trait
+    public function returnType(): Foo|(Foo&|>MARK_OCCURRENCES:Bar<|) { // trait
+    public function paramType(Foo|(Foo&|>MARK_OCCURRENCES:Bar<|)|null $test);
+    public function returnType(): (Foo&|>MARK_OCCURRENCES:Bar<|)|(|>MARK_OCCURRENCES:Bar<|&Baz);
+$closure = function(Foo|(Foo&|>MARK_OCCURRENCES:Bar<|)|(|>MARK_OCCURRENCES:Bar<|&Baz) $test1, $test2): void {};
+$closure = function(int $test): (Foo&|>MARK_OCCURRENCES:Bar<|)|null {};
+$arrow = fn(Foo||>MARK_OCCURRENCES:Bar<||(Foo&|>MARK_OCCURRENCES:Bar<|) $test) => $test;
+$arrow = fn((Foo&|>MARK_OCCURRENCES:Bar<|)|null $test): Foo|(Foo&|>MARK_OCCURRENCES:Bar<|) => $test;
+/** @var (Foo&|>MARK_OCCURRENCES:Bar<|)|Foo|(|>MARK_OCCURRENCES:Bar<|&Baz&Foo) $vardoc1 */
+/* @var $vardoc2 (Foo&|>MARK_OCCURRENCES:Bar<|)|Baz */
+/** @var |>MARK_OCCURRENCES:Bar<||Baz|Foo $unionType */
+/** @var |>MARK_OCCURRENCES:Bar<|&Baz&Foo $intersectionType */

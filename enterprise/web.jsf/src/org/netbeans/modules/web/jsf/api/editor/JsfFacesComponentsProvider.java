@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -85,7 +86,7 @@ public class JsfFacesComponentsProvider {
                             // @FacesComponent to be used as a tag in the facelet can be defined by annotation only for now.
                             if (component instanceof ComponentImpl) {
                                 ComponentImpl facesComponent = (ComponentImpl) component;
-                                includeComponentIntoLibraries(libraries, (ComponentImpl) facesComponent);
+                                includeComponentIntoLibraries(libraries, facesComponent);
                             }
                         }
                         return libraries.values();
@@ -168,8 +169,8 @@ public class JsfFacesComponentsProvider {
         }
 
         @Override
-        public String getLegacyNamespace() {
-            return null;
+        public Set<String> getValidNamespaces() {
+            return Collections.emptySortedSet();
         }
     }
 

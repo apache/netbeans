@@ -36,7 +36,6 @@ import java.net.URI;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
@@ -68,7 +67,7 @@ import org.openide.util.NbBundle;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressRunnable;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.modules.java.j2seplatform.platformdefinition.jrtfs.NBJRTUtil;
 import org.netbeans.spi.java.classpath.PathResourceImplementation;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -77,9 +76,6 @@ import org.openide.DialogDisplayer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.loaders.DataFolder;
-import org.openide.modules.SpecificationVersion;
-import org.openide.nodes.AbstractNode;
-import org.openide.nodes.Children;
 import org.openide.util.Cancellable;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
@@ -566,7 +562,7 @@ public class J2SEPlatformCustomizer extends JTabbedPane {
         }
 
         private void removePath (int[] indices) {
-            java.util.List data = getData();
+            List<URL> data = getData();
             for (int i=indices.length-1; i>=0; i--) {
                 data.remove(indices[i]);
             }
@@ -575,7 +571,7 @@ public class J2SEPlatformCustomizer extends JTabbedPane {
         }
 
         private void moveUpPath (int[] indices) {
-            java.util.List<URL> data = getData ();
+            List<URL> data = getData ();
             for (int i=0; i<indices.length; i++) {
                 URL p2 = data.get (indices[i]);
                 URL p1 = data.set (indices[i]-1,p2);
@@ -586,7 +582,7 @@ public class J2SEPlatformCustomizer extends JTabbedPane {
         }
 
         private void moveDownPath (int[] indices) {
-            java.util.List<URL> data = getData ();
+            List<URL> data = getData ();
             for (int i=indices.length-1; i>=0; i--) {
                 URL p1 = data.get (indices[i]);
                 URL p2 = data.set (indices[i]+1,p1);
@@ -690,7 +686,7 @@ public class J2SEPlatformCustomizer extends JTabbedPane {
                             }
                         }
                         final ProgressRunnable<Void> task = new Task();
-                        ProgressUtils.showProgressDialogAndRun(task, Bundle.TXT_JavadocSearch(file.getAbsolutePath()), false);
+                        BaseProgressUtils.showProgressDialogAndRun(task, Bundle.TXT_JavadocSearch(file.getAbsolutePath()), false);
                     }
                     if (!result.isEmpty()) {
                         return result.stream()

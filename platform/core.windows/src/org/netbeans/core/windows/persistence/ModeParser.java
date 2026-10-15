@@ -34,6 +34,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import java.awt.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Logger;
@@ -79,7 +80,7 @@ class ModeParser {
     private InternalConfig internalConfig;
     
     /** Map of TCRefParser instances. Used for fast access. */
-    private Map<String, TCRefParser> tcRefParserMap = new HashMap<String, TCRefParser>(19);
+    private Map<String, TCRefParser> tcRefParserMap = new HashMap<>(19);
     
     /** map of names of tcRefs to their index or null */
     private Map<String,Integer> tcRefOrder;
@@ -302,14 +303,12 @@ class ModeParser {
                 }
             }
             //Append remaining instances if any
-            for (String s: localMap.keySet()) {
-                TCRefParser tcRefParser = localMap.get(s);
+            for (TCRefParser tcRefParser: localMap.values()) {
                 localList.add(tcRefParser);
             }
         } else {
             //if (DEBUG) Debug.log(ModeParser.class, "-- -- NO ORDER, USING PARTIAL ORDERING");
-            for (String s: localMap.keySet()) {
-                TCRefParser tcRefParser = localMap.get(s);
+            for (TCRefParser tcRefParser: localMap.values()) {
                 localList.add(tcRefParser);
             }
             
@@ -393,7 +392,7 @@ class ModeParser {
         }
         
         mc.tcRefConfigs = 
-            tcRefCfgList.toArray(new TCRefConfig[tcRefCfgList.size()]);
+            tcRefCfgList.toArray(new TCRefConfig[0]);
         
         PersistenceManager pm = PersistenceManager.getDefault();
         for (int i = 0; i < mc.tcRefConfigs.length; i++) {
@@ -455,14 +454,14 @@ class ModeParser {
             //if (DEBUG) Debug.log(ModeParser.class, "-- -- tcRefCfg[" + i + "]: " + mc.tcRefConfigs[i].tc_id);
             tcRefConfigMap.put(mc.tcRefConfigs[i].tc_id, mc.tcRefConfigs[i]);
         }
-        TCRefParser tcRefParser;
+
         List<String> toDelete = new ArrayList<String>(10);
-        for (String s: tcRefParserMap.keySet()) {
-            tcRefParser = tcRefParserMap.get(s);
+        for (TCRefParser tcRefParser : tcRefParserMap.values()) {
             if (!tcRefConfigMap.containsKey(tcRefParser.getName())) {
                 toDelete.add(tcRefParser.getName());
             }
         }
+
         for (int i = 0; i < toDelete.size(); i++) {
             //if (DEBUG) Debug.log(ModeParser.class, " ** REMOVE FROM MAP tcRefParser: " + toDelete.get(i));
             tcRefParserMap.remove(toDelete.get(i));
@@ -475,7 +474,7 @@ class ModeParser {
         for (int i = 0; i < mc.tcRefConfigs.length; i++) {
             //if (DEBUG) Debug.log(ModeParser.class, "-- -- tcRefCfg[" + i + "]: " + mc.tcRefConfigs[i].tc_id);
             if (!tcRefParserMap.containsKey(mc.tcRefConfigs[i].tc_id)) {
-                tcRefParser = new TCRefParser(mc.tcRefConfigs[i].tc_id);
+                TCRefParser tcRefParser = new TCRefParser(mc.tcRefConfigs[i].tc_id);
                 //if (DEBUG) Debug.log(ModeParser.class, " ** CREATE tcRefParser:" + tcRefParser.getName());
                 tcRefParserMap.put(mc.tcRefConfigs[i].tc_id, tcRefParser);
             }
@@ -491,7 +490,7 @@ class ModeParser {
         //if (DEBUG) Debug.log(ModeParser.class, "writeTCRefs" + " localFolder:" + localFolder);
         
         for (Iterator<String> it = tcRefParserMap.keySet().iterator(); it.hasNext(); ) {
-            tcRefParser = tcRefParserMap.get(it.next());
+            TCRefParser tcRefParser = tcRefParserMap.get(it.next());
             tcRefParser.setLocalParentFolder(localFolder);
             tcRefParser.setInLocalFolder(true);
             tcRefParser.save((TCRefConfig) tcRefConfigMap.get(tcRefParser.getName()));
@@ -515,13 +514,10 @@ class ModeParser {
         }
     }
     
-    //////////////////////////////////////////////////////////////////
     // BEGIN Code to keep order of TopComponents in Mode.
     //
     // It is taken from FolderOrder and FolderList where it is used
     // to keep order of DataObjects.
-    //////////////////////////////////////////////////////////////////
-    
     /** Reads the order of tcRefs from disk.
      */
     private void readOrder () {
@@ -635,10 +631,7 @@ class ModeParser {
         }
         return tcs;
     }
-    //////////////////////////////////////////////////////////////////
     // END Code to keep order of TopComponents in Mode.
-    //////////////////////////////////////////////////////////////////
-    
     /** Removes TCRefParser from ModeParser and cleans wstcref file from local folder.
      * @param tcRefName unique name of tcRef
      */
@@ -731,7 +724,7 @@ class ModeParser {
 
             // Update order
             List<TCRefParser> localList = new ArrayList<TCRefParser>(10);
-            Map<String,TCRefParser> localMap = (Map) ((HashMap) tcRefParserMap).clone();
+            Map<String, TCRefParser> localMap = new HashMap<>(tcRefParserMap);
 
             if( null == tcRefOrder ) {
                 //#232307
@@ -1021,7 +1014,7 @@ class ModeParser {
             }
             
             modeConfig.constraints =
-                itemList.toArray(new SplitConstraint[itemList.size()]);
+                itemList.toArray(new SplitConstraint[0]);
             
             modeCfg = modeConfig;
             internalCfg = internalConfig;
@@ -1029,7 +1022,8 @@ class ModeParser {
             modeConfig = null;
             internalConfig = null;
         }
-        
+
+        @Override
         public void startElement (String nameSpace, String name, String qname, Attributes attrs) throws SAXException {
             if ("mode".equals(qname)) { // NOI18N
                 handleMode(attrs);
@@ -1070,7 +1064,8 @@ class ModeParser {
                 //Parse version < 2.0
             }
         }
-        
+
+        @Override
         public void error(SAXParseException ex) throws SAXException  {
             throw ex;
         }
@@ -1505,7 +1500,7 @@ class ModeParser {
                 try {
                     lock = cfgFOOutput.lock();
                     os = cfgFOOutput.getOutputStream(lock);
-                    osw = new OutputStreamWriter(os, "UTF-8"); // NOI18N
+                    osw = new OutputStreamWriter(os, StandardCharsets.UTF_8);
                     osw.write(buff.toString());
                     /*log("-- DUMP Mode:");
                     log(buff.toString());*/

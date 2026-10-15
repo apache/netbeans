@@ -1,0 +1,30 @@
+|-TypedFields [821, 1760] : ESCAPED{TypedFields}
+|--$typedField [875, 885] : DEPRECATED{ESCAPED{$typedField}}<font color="#999999">:ESCAPED{int}</font>
+|--$multiField1 [927, 938] : DEPRECATED{ESCAPED{$multiField1}}<font color="#999999">:ESCAPED{int}</font>
+|--$multiField2 [941, 952] : DEPRECATED{ESCAPED{$multiField2}}<font color="#999999">:ESCAPED{int}</font>
+|--$nullableTypeField [998, 1015] : DEPRECATED{ESCAPED{$nullableTypeField}}<font color="#999999">:ESCAPED{?}ESCAPED{string}</font>
+|--$unionTypeField [1084, 1098] : DEPRECATED{ESCAPED{$unionTypeField}}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{TypedFields}</font>
+|--$intersectionTypeField [1156, 1177] : DEPRECATED{ESCAPED{$intersectionTypeField}}<font color="#999999">:ESCAPED{Foo}ESCAPED{&}ESCAPED{Bar}</font>
+|--$dnfTypeField [1241, 1253] : DEPRECATED{ESCAPED{$dnfTypeField}}<font color="#999999">:ESCAPED{(}ESCAPED{Foo}ESCAPED{&}ESCAPED{Bar}ESCAPED{)}ESCAPED{|}ESCAPED{Baz}</font>
+|--$typedStaticField [1302, 1318] : DEPRECATED{ESCAPED{$typedStaticField}}<font color="#999999">:ESCAPED{int}</font>
+|--$multiStaticField1 [1367, 1384] : DEPRECATED{ESCAPED{$multiStaticField1}}<font color="#999999">:ESCAPED{int}</font>
+|--$multiStaticField2 [1387, 1404] : DEPRECATED{ESCAPED{$multiStaticField2}}<font color="#999999">:ESCAPED{int}</font>
+|--$nullableTypeStaticField [1457, 1480] : DEPRECATED{ESCAPED{$nullableTypeStaticField}}<font color="#999999">:ESCAPED{?}ESCAPED{string}</font>
+|--$unionTypeStaticField [1556, 1576] : DEPRECATED{ESCAPED{$unionTypeStaticField}}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{TypedFields}</font>
+|--$intersectionTypeStaticField [1641, 1668] : DEPRECATED{ESCAPED{$intersectionTypeStaticField}}<font color="#999999">:ESCAPED{Foo}ESCAPED{&}ESCAPED{Bar}</font>
+|--$dnfTypeStaticField [1739, 1757] : DEPRECATED{ESCAPED{$dnfTypeStaticField}}<font color="#999999">:ESCAPED{(}ESCAPED{Foo}ESCAPED{&}ESCAPED{Bar}ESCAPED{)}ESCAPED{|}ESCAPED{Baz}</font>
+|-TypedFieldsTrait [1768, 2712] : ESCAPED{TypedFieldsTrait}
+|--$typedField [1827, 1837] : DEPRECATED{ESCAPED{$typedField}}<font color="#999999">:ESCAPED{int}</font>
+|--$multiField1 [1879, 1890] : DEPRECATED{ESCAPED{$multiField1}}<font color="#999999">:ESCAPED{int}</font>
+|--$multiField2 [1893, 1904] : DEPRECATED{ESCAPED{$multiField2}}<font color="#999999">:ESCAPED{int}</font>
+|--$nullableTypeField [1950, 1967] : DEPRECATED{ESCAPED{$nullableTypeField}}<font color="#999999">:ESCAPED{?}ESCAPED{string}</font>
+|--$unionTypeField [2036, 2050] : DEPRECATED{ESCAPED{$unionTypeField}}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{TypedFields}</font>
+|--$intersectionTypeField [2108, 2129] : DEPRECATED{ESCAPED{$intersectionTypeField}}<font color="#999999">:ESCAPED{Foo}ESCAPED{&}ESCAPED{Bar}</font>
+|--$dnfTypeField [2193, 2205] : DEPRECATED{ESCAPED{$dnfTypeField}}<font color="#999999">:ESCAPED{(}ESCAPED{Foo}ESCAPED{&}ESCAPED{Bar}ESCAPED{)}ESCAPED{|}ESCAPED{Baz}</font>
+|--$typedStaticField [2254, 2270] : DEPRECATED{ESCAPED{$typedStaticField}}<font color="#999999">:ESCAPED{int}</font>
+|--$multiStaticField1 [2319, 2336] : DEPRECATED{ESCAPED{$multiStaticField1}}<font color="#999999">:ESCAPED{int}</font>
+|--$multiStaticField2 [2339, 2356] : DEPRECATED{ESCAPED{$multiStaticField2}}<font color="#999999">:ESCAPED{int}</font>
+|--$nullableTypeStaticField [2409, 2432] : DEPRECATED{ESCAPED{$nullableTypeStaticField}}<font color="#999999">:ESCAPED{?}ESCAPED{string}</font>
+|--$unionTypeStaticField [2508, 2528] : DEPRECATED{ESCAPED{$unionTypeStaticField}}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{TypedFields}</font>
+|--$intersectionTypeStaticField [2593, 2620] : DEPRECATED{ESCAPED{$intersectionTypeStaticField}}<font color="#999999">:ESCAPED{Foo}ESCAPED{&}ESCAPED{Bar}</font>
+|--$dnfTypeStaticField [2691, 2709] : DEPRECATED{ESCAPED{$dnfTypeStaticField}}<font color="#999999">:ESCAPED{(}ESCAPED{Foo}ESCAPED{&}ESCAPED{Bar}ESCAPED{)}ESCAPED{|}ESCAPED{Baz}</font>

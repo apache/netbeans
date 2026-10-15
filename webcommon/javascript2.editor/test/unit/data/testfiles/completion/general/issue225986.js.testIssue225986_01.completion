@@ -3,4 +3,4 @@ su|m(10, 20);
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 METHOD     sum(a: Number, b: Number): Num  [PUBLIC]   issue225986.js
-KEYWORD    super                                      ECMAScript 6
+KEYWORD    super                                      ECMAScript 6 - 2015

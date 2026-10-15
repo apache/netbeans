@@ -171,7 +171,7 @@ class EntrySupportDefault extends EntrySupport {
             Info info = findInfo(entry);
             l.addAll(info.nodes(false));
         }
-        Node[] arr = l.toArray(new Node[l.size()]);
+        Node[] arr = l.toArray(new Node[0]);
         // initialize parent nodes
         for (int i = 0; i < arr.length; i++) {
             Node n = arr[i];
@@ -510,7 +510,7 @@ class EntrySupportDefault extends EntrySupport {
         // JST: If you get IllegalArgumentException in following code
         // then it can be cause by wrong synchronization between
         // equals and hashCode methods. First of all check them!
-        int[] perm = NodeOp.computePermutation(oldNodes.toArray(new Node[oldNodes.size()]), permArray);
+        int[] perm = NodeOp.computePermutation(oldNodes.toArray(new Node[0]), permArray);
         if (perm != null) {
             // apply the permutation
             clearNodes();
@@ -539,16 +539,16 @@ class EntrySupportDefault extends EntrySupport {
             LOGGER.finer("Current     : " + Arrays.asList(current));
         }
         // during a deserialization it may have parent == null
-        Node[] arr = nodes.toArray(new Node[nodes.size()]);
+        Node[] arr = nodes.toArray(new Node[0]);
         if (children.parent != null) {
             // fire change of nodes
             if (children.getEntrySupport() == this) {
                 children.parent.fireSubNodesChange(false, arr, current);
             }
             // fire change of parent
-            Iterator it = nodes.iterator();
+            Iterator<Node> it = nodes.iterator();
             while (it.hasNext()) {
-                Node n = (Node) it.next();
+                Node n = it.next();
                 n.deassignFrom(children);
                 n.fireParentNodeChange(children.parent, null);
             }
@@ -573,7 +573,7 @@ class EntrySupportDefault extends EntrySupport {
             n.assignTo(children, -1);
             n.fireParentNodeChange(null, children.parent);
         }
-        Node[] arr = nodes.toArray(new Node[nodes.size()]);
+        Node[] arr = nodes.toArray(new Node[0]);
         Node n = children.parent;
         if (n != null && children.getEntrySupport() == this) {
             n.fireSubNodesChange(true, arr, null);
@@ -735,7 +735,7 @@ class EntrySupportDefault extends EntrySupport {
 
     /** Finalized.
      */
-    final void finalizedChildrenArray(Reference caller) {
+    final void finalizedChildrenArray(Reference<ChildrenArray> caller) {
         assert caller.get() == null : "Should be null";
         // usually in removeNotify setKeys is called => better require write access
         try {

@@ -21,6 +21,7 @@ package org.netbeans.modules.java.api.common.queries;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.junit.NbTestCase;
@@ -70,7 +71,7 @@ public class FileEncodingQueryImplTest extends NbTestCase {
     }
 
     public void testFileEncodingQuery() throws Exception {
-        final Charset UTF_8 = Charset.forName("UTF-8");
+        final Charset UTF_8 = StandardCharsets.UTF_8;
         final Charset ISO_8859_2 = Charset.forName("ISO-8859-2");
         
         FileObject dummy = projdir.createData("Dummy.java");

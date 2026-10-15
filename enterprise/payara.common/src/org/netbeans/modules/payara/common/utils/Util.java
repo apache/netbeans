@@ -277,7 +277,7 @@ public final class Util {
 
     }
 
-    static public String computeTarget(Map<String, String> ip) {
+    public static String computeTarget(Map<String, String> ip) {
         String retVal = null;
         String url = ip.get(PayaraModule.URL_ATTR);
         if (null != url) {
@@ -292,7 +292,7 @@ public final class Util {
         return retVal;
     }
     
-    static public boolean isDefaultOrServerTarget(Map<String, String> ip) {
+    public static boolean isDefaultOrServerTarget(Map<String, String> ip) {
         String target = Util.computeTarget(ip);
         return null == target || "server".equals(target);
     }

@@ -115,7 +115,6 @@
         </question>
 -->
  <answer id="arch-usecases">
-  <p>
       <usecase name="redunderline" id="1">
           Assume that you have a module using e.g. Parsing API to parse the source
           files and wants to mark the errors in the editor to be shown as red
@@ -162,7 +161,6 @@ for (&lt;all places where the warning should be displayed&gt;) {
 HintsController.setErrors(doc, "mywarnings", warnings);
 </pre>
       </usecase>
-  </p>
  </answer>
 
 

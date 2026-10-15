@@ -1,0 +1,56 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src http: 'unsafe-inline' 'unsafe-eval'">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="FixImports.css">
+    <title>Fix Imports...</title>
+</head>
+
+<body>
+    <div class="section">
+        <label>Missing Imports:</label>
+        <div class="flex">
+            <label class="flex-grow params-caption">Name:</label>
+            <label class="flex-grow params-caption">Candidates:</label>
+            <span class="filler"></span>
+        </div>
+    </div>
+    <div class="flex-vscrollable section2" data-bind="foreach: imports">
+        <div class="flex row">
+            <div class="flex-equal">
+            <label data-bind="text: simpleName" class="flex-grow"></label>
+            </div>
+           <div class="flex-equal hdivider">
+            <select data-bind="options: candidatesFQN, value: selectedCandidateFQN"></select>
+           </div>
+        </div>
+    </div>
+    <div>
+        <button id="accept" hidden class="regular-button vscode-font align-right">Add Imports</button>
+        <button id="reject" hidden class="regular-button vscode-font">Cancel</button>
+    </div>
+</body>
+</html>

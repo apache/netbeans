@@ -196,8 +196,8 @@ public final class TransformHistory implements Serializable {
         /** Max length of history. */
         public static final int MAX = 5;
         
-        transient private List inputList;
-        transient private Map inputOutputMap;
+        private transient List inputList;
+        private transient Map inputOutputMap;
         /** Serializable mirror of inputList and inputOutputMap fields. */
         private Object[] inputOutputArray;
 

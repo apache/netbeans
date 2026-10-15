@@ -1,1 +1,3 @@
-5:8-5:14:error:compiler message file broken:key=compiler.err.cant.resolve.location.args arguments=method, create, , , class, javahints.TestShortErrors5, {6}, {7}
+5:8-5:14:error:cannot find symbol
+  symbol:method create()
+  location:class TestShortErrors5

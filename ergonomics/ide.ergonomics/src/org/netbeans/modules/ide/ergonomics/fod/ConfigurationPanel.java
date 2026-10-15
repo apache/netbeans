@@ -24,12 +24,18 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import static java.util.Objects.nonNull;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
@@ -42,14 +48,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingUtilities;
-import org.netbeans.api.autoupdate.InstallSupport;
-import org.netbeans.api.autoupdate.OperationContainer;
 import org.netbeans.api.autoupdate.UpdateElement;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
-import org.netbeans.modules.autoupdate.ui.api.PluginManager;
 import org.openide.awt.Mnemonics;
-import org.openide.modules.SpecificationVersion;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor.Task;
@@ -65,11 +67,13 @@ import org.openide.util.Lookup;
  * @author Tomas Mysik
  * @author Pavel Flaska
  */
-public class ConfigurationPanel extends JPanel implements Runnable {
+public class ConfigurationPanel extends JPanel {
 
     private static final long serialVersionUID = 27938464212508L;
+    
+    private static final Logger LOG = Logger.getLogger(ConfigurationPanel.class.getName());
 
-    final DownloadProgressMonitor progressMonitor = new DownloadProgressMonitor();
+    private final ActivationProgressMonitor progressMonitor = new ActivationProgressMonitor();
     private FeatureInfo featureInfo;
     private Callable<JComponent> callable;
     private Collection<UpdateElement> featureInstall;
@@ -84,6 +88,10 @@ public class ConfigurationPanel extends JPanel implements Runnable {
     public ConfigurationPanel(final Callable<JComponent> callable) {
         assert EventQueue.isDispatchThread();
         initComponents();
+        infoLabel.setVisible(false);
+        downloadLabel.setVisible(false);
+        activateButton.setVisible(false);
+        downloadButton.setVisible(false);
         this.featureInfo = null;
         this.callable = callable;
 
@@ -93,7 +101,7 @@ public class ConfigurationPanel extends JPanel implements Runnable {
     public void setInfo(FeatureInfo info, String displayName, Collection<UpdateElement> toInstall,
             Collection<FeatureInfo.ExtraModuleInfo> missingModules,
             Map<FeatureInfo.ExtraModuleInfo, FeatureInfo> extrasMap, boolean required) {
-        this.extrasFilter = new HashSet<FeatureInfo.ExtraModuleInfo>();
+        this.extrasFilter = new HashSet<>();
         this.featureInfo = info;
         this.featureInstall = toInstall;
         boolean activateNow = toInstall.isEmpty() && missingModules.isEmpty();
@@ -118,7 +126,7 @@ public class ConfigurationPanel extends JPanel implements Runnable {
             
             if (extraModule.isRequiredFor(jdk)) {
                 jCheckBox.setSelected(true);
-                jCheckBox.setEnabled(false);
+//                jCheckBox.setEnabled(false);
                 extrasFilter.add(extraModule);
             }
             jCheckBox.addActionListener(e -> {
@@ -135,6 +143,7 @@ public class ConfigurationPanel extends JPanel implements Runnable {
             downloadLabel.setVisible(false);
             activateButton.setVisible(false);
             downloadButton.setVisible(false);
+            progressPanel.removeAll();
             activateButtonActionPerformed(null);
         } else {
             FeatureManager.logUI("ERGO_QUESTION", featureInfo.clusterName, displayName);
@@ -142,29 +151,18 @@ public class ConfigurationPanel extends JPanel implements Runnable {
             downloadLabel.setVisible(true);
             activateButton.setVisible(true);
             downloadButton.setVisible(true);
-            StringBuilder sbDownload = new StringBuilder();
-
+            progressPanel.removeAll();
+            
             // collect descriptions from features contributing installed extras
-            for (FeatureInfo fi : extrasMap.values()) {
-                String s = required
-                        ? fi.getExtraModulesRequiredText()
-                        : fi.getExtraModulesRecommendedText();
-                if (s != null) {
-                    if (sbDownload.length() > 0) {
-                        sbDownload.append("\n");
-                    }
-                    sbDownload.append(s);
-                }
-            }
+            List<String> downloadStringList = collectExtraModulesTextsFromFeatures(extrasMap.values(), required);
+            String lblDownloadMsg = generateDownloadMessageFromExtraModulesTexts(downloadStringList);
+            
             if (required) {
                 activateButton.setEnabled(false);
             } else {
                 activateButton.setEnabled(true);
             }
 
-            String lblDownloadMsg = sbDownload.toString();
-
-            String list = "";
             if (!missingModules.isEmpty()) {
                 StringBuilder sb = new StringBuilder();
                 for (FeatureInfo.ExtraModuleInfo s : missingModules) {
@@ -173,7 +171,7 @@ public class ConfigurationPanel extends JPanel implements Runnable {
                     }
                     sb.append(s.displayName());
                 }
-                list = sb.toString();
+                String list = sb.toString();
                 if (required) {
                     lblDownloadMsg = NbBundle.getMessage(ConfigurationPanel.class, "MSG_MissingRequiredModules", displayName, list);
                     activateButton.setEnabled(false);
@@ -194,6 +192,40 @@ public class ConfigurationPanel extends JPanel implements Runnable {
             org.openide.awt.Mnemonics.setLocalizedText(downloadButton, btnDownloadMsg);
         }
     }
+    
+    /**
+     * Collect extra modules texts
+     */
+    protected List<String> collectExtraModulesTextsFromFeatures(Collection<FeatureInfo> features, boolean required) {
+        List<String> descriptionsList = new ArrayList<>();
+        for (FeatureInfo fi : features) {
+            String s = required ? fi.getExtraModulesRequiredText(): fi.getExtraModulesRecommendedText();
+            if (nonNull(s) && !descriptionsList.contains(s)) {
+                descriptionsList.add(s);
+            }
+        }
+        return descriptionsList;
+    } 
+    
+    /**
+     * Generate download message from extra modules texts
+     * @param extraModulesTexts
+     * @return String Text to set in download label
+     */
+    protected String generateDownloadMessageFromExtraModulesTexts(List<String> extraModulesTexts) {
+        StringBuilder sbDownload = new StringBuilder();
+        if (!extraModulesTexts.isEmpty()) {
+            sbDownload.append("<html><body>");
+            for (int i = 0; i < extraModulesTexts.size(); i++) {
+                sbDownload.append(extraModulesTexts.get(i));
+                if (extraModulesTexts.size() > 1 && i < extraModulesTexts.size() - 1) {
+                    sbDownload.append("<br>");
+                }
+            }
+            sbDownload.append("</body></html>");
+        }
+        return sbDownload.toString();
+    }
 
     @Override
     public void removeNotify() {
@@ -202,12 +234,18 @@ public class ConfigurationPanel extends JPanel implements Runnable {
     }
 
     public void setUpdateErrors(Collection<IOException> errors) {
-        if (errors.isEmpty()) {
+        Collection<IOException> exceptions = new ArrayList<>(errors);
+        exceptions.removeIf(e -> 
+            // user might be offline, ignore, exception is already logged in FindComponentModules#findComponentModules
+            // regular cluster activation does not require downloads anyway
+            e instanceof UnknownHostException || e.getCause() instanceof UnknownHostException
+        );
+        if (exceptions.isEmpty()) {
             return;
         }
         StringBuilder sb = new StringBuilder();
         sb.append("<html>"); // NOI18N
-        for (IOException ex : errors) {
+        for (IOException ex : exceptions) {
             sb.append("<br/>"); // NOI18N
             sb.append(ex.getLocalizedMessage());
         }
@@ -226,6 +264,9 @@ public class ConfigurationPanel extends JPanel implements Runnable {
     void setError(String msg) {
         assert SwingUtilities.isEventDispatchThread();
         errorLabel.setText(msg);
+        if (msg != null && !msg.trim().isEmpty()) {
+            errorLabel.setFocusable(true);
+        }
     }
 
     /**
@@ -245,6 +286,8 @@ public class ConfigurationPanel extends JPanel implements Runnable {
         downloadButton = new JButton();
         selectionsPanel = new JPanel();
 
+        errorLabel.setFocusable(false);
+
         Mnemonics.setLocalizedText(infoLabel, "dummy"); // NOI18N
 
         Mnemonics.setLocalizedText(activateButton, "dummy"); // NOI18N
@@ -254,6 +297,7 @@ public class ConfigurationPanel extends JPanel implements Runnable {
             }
         });
 
+        progressPanel.setMinimumSize(new Dimension(0, 35));
         progressPanel.setLayout(new BoxLayout(progressPanel, BoxLayout.PAGE_AXIS));
 
         Mnemonics.setLocalizedText(downloadLabel, NbBundle.getMessage(ConfigurationPanel.class, "ConfigurationPanel.downloadLabel.text")); // NOI18N
@@ -301,64 +345,68 @@ public class ConfigurationPanel extends JPanel implements Runnable {
                     .addComponent(activateButton)
                     .addComponent(downloadButton))
                 .addGap(19, 19, 19)
-                .addComponent(progressPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(progressPanel, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    public void run() {
-        ModulesInstaller.installModules(progressMonitor, featureInfo, featureInstall, extrasFilter);
-    }
 
     private void activateButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_activateButtonActionPerformed
         FeatureManager.logUI("ERGO_DOWNLOAD");
         activateButton.setEnabled(false);
         downloadButton.setEnabled(false);
-        Task task = FeatureManager.getInstance().create(this);
-        task.addTaskListener(new TaskListener() {
-
-            public void taskFinished(org.openide.util.Task task) {
-                if (!progressMonitor.error) {
-                    SwingUtilities.invokeLater(new Runnable() {
-                        private String msg;
-
-                        public void run() {
-                            ConfigurationPanel.this.removeAll();
-                            ConfigurationPanel.this.setLayout(new BorderLayout());
-                            try {
-                                ConfigurationPanel.this.add(callable.call(), BorderLayout.CENTER);
-                            } catch (Exception ex) {
-                                // TODO: add warning panel
-                                Exceptions.printStackTrace(ex);
-                            }
-                            ConfigurationPanel.this.invalidate();
-                            ConfigurationPanel.this.revalidate();
-                            ConfigurationPanel.this.repaint();
-                            if (featureInfo != null && featureInfo.isPresent()) {
-                                msg = NbBundle.getMessage(ConfigurationPanel.class, "MSG_EnableFailed");
-                            } else {
-                                msg = NbBundle.getMessage(ConfigurationPanel.class, "MSG_DownloadFailed");
-                            }
-                            setError(msg);
-                            activateButton.setEnabled(true);
-                            progressPanel.removeAll();
-                            progressPanel.revalidate();
-                            progressPanel.repaint();
-                        }
-                    });
-                }
-            }
+        selectionsPanel.setEnabled(false);
+        Task task = FeatureManager.getInstance().create(() -> {
+            ModulesInstaller.activateModules(false, progressMonitor, featureInfo, featureInstall, extrasFilter);
         });
+        task.addTaskListener(onActivationFinished());
         task.schedule(0);
     }//GEN-LAST:event_activateButtonActionPerformed
 
     private void downloadButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_downloadButtonActionPerformed
-        OperationContainer<InstallSupport> op = OperationContainer.createForInstall();
-        op.add(featureInstall);
-        if (PluginManager.openInstallWizard(op)) {
-            activateButtonActionPerformed(null);
-        }
+        FeatureManager.logUI("ERGO_DOWNLOAD");
+        activateButton.setEnabled(false);
+        downloadButton.setEnabled(false);
+        selectionsPanel.setEnabled(false);
+        Task task = FeatureManager.getInstance().create(() -> {
+            ModulesInstaller.activateModules(true, progressMonitor, featureInfo, Collections.emptyList(), extrasFilter);
+        });
+        task.addTaskListener(onActivationFinished());
+        task.schedule(0);
     }//GEN-LAST:event_downloadButtonActionPerformed
+
+    private TaskListener onActivationFinished() {
+        return (task) -> {
+            if (progressMonitor.error) {
+                return;
+            }
+            SwingUtilities.invokeLater(() -> {
+                ConfigurationPanel.this.removeAll();
+                ConfigurationPanel.this.setLayout(new BorderLayout());
+                try {
+                    ConfigurationPanel.this.add(callable.call(), BorderLayout.CENTER);
+                } catch (Exception ex) {
+                    Exceptions.attachSeverity(ex, Level.INFO);
+                    Exceptions.printStackTrace(ex);
+                }
+                ConfigurationPanel.this.invalidate();
+                ConfigurationPanel.this.revalidate();
+                ConfigurationPanel.this.repaint();
+                if (featureInfo != null && !featureInfo.isEnabled()) {
+                    String msg;
+                    if (featureInfo.isPresent()) {
+                        msg = NbBundle.getMessage(ConfigurationPanel.class, "MSG_EnableFailed");
+                    } else {
+                        msg = NbBundle.getMessage(ConfigurationPanel.class, "MSG_DownloadFailed");
+                    }
+                    progressMonitor.onError(msg);
+                    return;
+                }
+                activateButton.setEnabled(true);
+                progressPanel.removeAll();
+                progressPanel.revalidate();
+                progressPanel.repaint();
+            });
+        };
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JButton activateButton;
@@ -370,22 +418,30 @@ public class ConfigurationPanel extends JPanel implements Runnable {
     private JPanel selectionsPanel;
     // End of variables declaration//GEN-END:variables
 
-    private final class DownloadProgressMonitor implements ProgressMonitor {
+    public void onPrepare(ProgressHandle progressHandle) {
+        progressMonitor.updateProgress(progressHandle);
+    }
+    
+    private final class ActivationProgressMonitor implements ProgressMonitor {
 
-        private boolean error = false;
+        boolean error = false;
 
+        @Override
         public void onDownload(ProgressHandle progressHandle) {
             updateProgress(progressHandle);
         }
 
+        @Override
         public void onValidate(ProgressHandle progressHandle) {
             updateProgress(progressHandle);
         }
 
+        @Override
         public void onInstall(ProgressHandle progressHandle) {
             updateProgress(progressHandle);
         }
 
+        @Override
         public void onEnable(ProgressHandle progressHandle) {
             updateProgress(progressHandle);
         }
@@ -393,28 +449,24 @@ public class ConfigurationPanel extends JPanel implements Runnable {
         private void updateProgress(final ProgressHandle progressHandle) {
             final JLabel tmpMainLabel = ProgressHandleFactory.createMainLabelComponent(progressHandle);
             final JComponent tmpProgressPanel = ProgressHandleFactory.createProgressComponent(progressHandle);
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    progressPanel.removeAll();
-                    progressPanel.add(tmpMainLabel);
-                    progressPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-                    progressPanel.add(tmpProgressPanel);
-                    progressPanel.revalidate();
-                    progressPanel.repaint();
-                }
+            SwingUtilities.invokeLater(() -> {
+                progressPanel.removeAll();
+                progressPanel.add(tmpMainLabel);
+                progressPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+                progressPanel.add(tmpProgressPanel);
+                progressPanel.revalidate();
+                progressPanel.repaint();
             });
         }
 
+        @Override
         public void onError(final String message) {
             error = true;
-            SwingUtilities.invokeLater(new Runnable() {
-
-                public void run() {
-                    // TODO: mark as html
-                    setError("<html>" + message + "</html>"); // NOI18N
-                    progressPanel.removeAll();
-                    progressPanel.add(errorLabel);
-                }
+            SwingUtilities.invokeLater(() -> {
+                setError("<html>" + message + "</html>"); // NOI18N
+                progressPanel.removeAll();
+                progressPanel.add(errorLabel);
+                downloadButton.setEnabled(true);
             });
         }
     }

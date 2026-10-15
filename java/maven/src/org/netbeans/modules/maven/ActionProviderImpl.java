@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -35,6 +34,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JSeparator;
 import javax.swing.SwingUtilities;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.versioning.ComparableVersion;
@@ -45,7 +45,6 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.ui.OpenProjects;
-import static org.netbeans.modules.maven.Bundle.*;
 import org.netbeans.modules.maven.api.Constants;
 import org.netbeans.modules.maven.api.ModelUtils;
 import org.netbeans.modules.maven.api.ModuleInfoUtils;
@@ -55,6 +54,7 @@ import org.netbeans.modules.maven.api.customizer.ModelHandle2;
 import org.netbeans.modules.maven.api.execute.RunConfig;
 import org.netbeans.modules.maven.api.execute.RunUtils;
 import org.netbeans.modules.maven.configurations.M2ConfigProvider;
+import org.netbeans.modules.maven.configurations.M2Configuration;
 import org.netbeans.modules.maven.customizer.ActionMappings;
 import org.netbeans.modules.maven.customizer.WarnPanel;
 import org.netbeans.modules.maven.execute.ActionToGoalUtils;
@@ -70,14 +70,17 @@ import org.netbeans.modules.maven.model.pom.DependencyManagement;
 import org.netbeans.modules.maven.model.pom.POMModel;
 import org.netbeans.modules.maven.operations.Operations;
 import org.netbeans.modules.maven.options.MavenSettings;
+import org.netbeans.modules.maven.options.SettingsPanel;
 import org.netbeans.modules.maven.spi.actions.AbstractMavenActionsProvider;
 import org.netbeans.modules.maven.spi.actions.ActionConvertor;
 import org.netbeans.modules.maven.spi.actions.MavenActionsProvider;
 import org.netbeans.modules.maven.spi.actions.ReplaceTokenProvider;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.ProjectConfiguration;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.SingleMethod;
+import org.netbeans.spi.project.ui.CustomizerProvider2;
 import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
 import org.netbeans.spi.project.ui.support.ProjectSensitiveActions;
 import org.openide.DialogDescriptor;
@@ -98,10 +101,11 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.util.NbPreferences;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Task;
-import org.openide.util.TaskListener;
 import org.openide.util.actions.Presenter;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
+
+import static org.netbeans.modules.maven.Bundle.*;
 
 /**
  *
@@ -128,6 +132,7 @@ public class ActionProviderImpl implements ActionProvider {
         "javadoc", //NOI18N
         COMMAND_TEST,
         COMMAND_TEST_SINGLE,
+        COMMAND_TEST_PARALLEL,
         SingleMethod.COMMAND_RUN_SINGLE_METHOD,
         SingleMethod.COMMAND_DEBUG_SINGLE_METHOD,
             
@@ -145,7 +150,10 @@ public class ActionProviderImpl implements ActionProvider {
         COMMAND_DELETE,
         COMMAND_RENAME,
         COMMAND_MOVE,
-        COMMAND_COPY
+        COMMAND_COPY,
+        
+        // infrastructure
+        COMMAND_PRIME
     };
     
     private static final RequestProcessor RP = new RequestProcessor(ActionProviderImpl.class.getName(), 3);
@@ -154,18 +162,43 @@ public class ActionProviderImpl implements ActionProvider {
     public ActionProviderImpl(Project proj) {
         this.proj = proj;
     }
+    
+    protected M2Configuration usedConfiguration(boolean useActive, Lookup ctx) {
+        ProjectConfiguration selected = ctx.lookup(ProjectConfiguration.class);
+        M2ConfigProvider configs = proj.getLookup().lookup(M2ConfigProvider.class);
+        ProjectConfiguration toFind;
+        
+        if (selected == null) {
+            if (useActive) {
+                selected = configs.getActiveConfiguration();
+                if (selected == null) {
+                    return null;
+                }
+                toFind = selected;
+            } else {
+                return null;
+            }
+        } else {
+            toFind = selected;
+        }
+        // documentation says the configuration may not be != and should be compared by equals.
+        return configs.getConfigurations().stream().filter(c -> toFind.equals(c)).findFirst().orElse(null);
+    }
 
     @Override
     public String[] getSupportedActions() {
-        Set<String> supp = new HashSet<String>();
-        supp.addAll( Arrays.asList( supported));
+        Set<String> supp = new HashSet<>();
+        supp.addAll( Arrays.asList(supported));
+        
+        M2ConfigProvider configs = proj.getLookup().lookup(M2ConfigProvider.class);
+        configs.getConfigurations().forEach(c -> supp.addAll(c.getSupportedDefaultActions()));
         for (MavenActionsProvider add : ActionToGoalUtils.actionProviders(proj)) {
             Set<String> added = add.getSupportedDefaultActions();
             if (added != null) {
                 supp.addAll( added);
             }
         }
-        return supp.toArray(new String[0]);
+        return supp.toArray(String[]::new);
     }
 
     private boolean usingSurefire28() {
@@ -193,7 +226,11 @@ public class ActionProviderImpl implements ActionProvider {
     private boolean usingJUnit5() {
         return proj.getLookup().lookup(NbMavenProject.class).getMavenProject().getArtifacts()
                 .stream()
-                .anyMatch((a) -> ("org.junit.jupiter".equals(a.getGroupId()) && "junit-jupiter-engine".equals(a.getArtifactId())));
+                .anyMatch((a) -> (
+                        "org.junit.jupiter".equals(a.getGroupId()) && "junit-jupiter-engine".equals(a.getArtifactId()) ||
+                        "org.junit.jupiter".equals(a.getGroupId()) && "junit-jupiter-api".equals(a.getArtifactId()) ||
+                        "org.junit.platform".equals(a.getGroupId()) && "junit-platform-engine".equals(a.getArtifactId()))
+                );
     }
 
     private boolean usingTestNG() {
@@ -211,6 +248,8 @@ public class ActionProviderImpl implements ActionProvider {
     
     //TODO these effectively need updating once in a while
     private static final String SUREFIRE_VERSION_SAFE = "2.15"; //2.16 is broken
+    // surefire 2.22 is needed for JUnit 5
+    private static final String SUREFIRE_VERSION_SAFE_5 = "2.22.0";
     private static final String JUNIT_VERSION_SAFE = "4.11";
 
     @Override public void invokeAction(final String action, final Lookup lookup) {
@@ -239,13 +278,10 @@ public class ActionProviderImpl implements ActionProvider {
             Operations.renameProject(proj.getLookup().lookup(NbMavenProjectImpl.class));
             return;
         }
-
+        
         if (SwingUtilities.isEventDispatchThread()) {
-            RP.post(new Runnable() {
-                @Override
-                public void run() {
-                    invokeAction(action, lookup, false);
-                }
+            RP.post(() -> {
+                invokeAction(action, lookup, false);
             });
             return;
         }
@@ -261,10 +297,21 @@ public class ActionProviderImpl implements ActionProvider {
         if (convertedAction == null) {
             convertedAction = action;
         }
-
-        Lookup enhanced = new ProxyLookup(lookup, Lookups.fixed(replacements(proj, convertedAction, lookup)));
         
-        RunConfig rc = ActionToGoalUtils.createRunConfig(convertedAction, proj.getLookup().lookup(NbMavenProjectImpl.class), enhanced);
+        for (InternalActionDelegate del : proj.getLookup().lookupAll(InternalActionDelegate.class)) {
+            ActionProvider ap = del.getActionProvider();
+            if (Arrays.asList(ap.getSupportedActions()).contains(action)) {
+                LOG.log(Level.FINE, "Runnign action {0} through provider {1}", new Object[] {
+                    action, ap
+                });
+                ap.invokeAction(action, lookup);
+                return;
+            }
+        }
+        Lookup enhanced = new ProxyLookup(lookup, Lookups.fixed(replacements(proj, convertedAction, lookup)));
+
+        RunConfig rc = ActionToGoalUtils.createRunConfig(convertedAction, proj.getLookup().lookup(NbMavenProjectImpl.class), 
+                usedConfiguration(true, lookup), enhanced);
         if (rc == null) {
             Logger.getLogger(ActionProviderImpl.class.getName()).log(Level.INFO, "No handling for action: {0}. Ignoring.", action); //NOI18N
 
@@ -273,10 +320,8 @@ public class ActionProviderImpl implements ActionProvider {
             final ActionProgress listener = ActionProgress.start(lookup);
             final ExecutorTask task = RunUtils.run(rc);
             if (task != null) {
-                task.addTaskListener(new TaskListener() {
-                    @Override public void taskFinished(Task t) {
-                        listener.finished(task.result() == 0);
-                    }
+                task.addTaskListener((Task t) -> {
+                    listener.finished(task.result() == 0);
                 });
             } else {
                 listener.finished(false);
@@ -288,14 +333,17 @@ public class ActionProviderImpl implements ActionProvider {
 
     @Messages({
         "run_single_method_disabled=Surefire 2.8+ with JUnit 4.8+ or TestNG needed to run a single test method.",
+        "run_single_method_disabled5=Surefire 2.22.0 is required to run a single test method with JUnit5.",
         "TIT_RequiresUpdateOfPOM=Feature requires update of POM",
-        "TXT_Run_Single_method=<html>Executing single test method requires Surefire 2.8+ and JUnit in version 4.8 and bigger. <br/><br/>Update your pom.xml?</html>"
+        "TXT_Run_Single_method=<html>Executing single test method requires Surefire 2.8+ and JUnit in version 4.8 and bigger. <br/><br/>Update your pom.xml?</html>",
+        "TXT_Run_Single_method5=<html>Executing single test method with JUnit 5 requires Surefire 2.22.0. <br/><br/>Update your pom.xml?</html>"
     })    
     private boolean checkSurefire(final String action) {
         if (action.equals(SingleMethod.COMMAND_RUN_SINGLE_METHOD) || action.equals(SingleMethod.COMMAND_DEBUG_SINGLE_METHOD)) {
             if (!runSingleMethodEnabled()) {
+                boolean ju5 = usingJUnit5();
                 if (NbPreferences.forModule(ActionProviderImpl.class).getBoolean(SHOW_SUREFIRE_WARNING, true)) {
-                    WarnPanel pnl = new WarnPanel(TXT_Run_Single_method());
+                    WarnPanel pnl = new WarnPanel(ju5 ? TXT_Run_Single_method5() : TXT_Run_Single_method());
                     Object o = DialogDisplayer.getDefault().notify(new NotifyDescriptor.Confirmation(pnl, TIT_RequiresUpdateOfPOM(), NotifyDescriptor.YES_NO_OPTION));
                     if (pnl.disabledWarning()) {
                         NbPreferences.forModule(ActionProviderImpl.class).putBoolean(SHOW_SUREFIRE_WARNING, false);
@@ -304,9 +352,22 @@ public class ActionProviderImpl implements ActionProvider {
                         RequestProcessor.getDefault().post(new Runnable() {
                             @Override
                             public void run() {
+                                String surefireVersion = null;
+                                String junitVersion = null;
+                                
+                                if (ju5 && !usingSurefire2_22()) {
+                                    surefireVersion = SUREFIRE_VERSION_SAFE_5;
+                                } else if (!usingSurefire28()) {
+                                    surefireVersion = SUREFIRE_VERSION_SAFE;
+                                }
+                                if (!ju5) {
+                                    junitVersion = usingJUnit4() || usingTestNG() ? null : JUNIT_VERSION_SAFE;
+                                }
+                                
                                 Utilities.performPOMModelOperations(
                                         proj.getProjectDirectory().getFileObject("pom.xml"),
-                                        Collections.singletonList(new UpdateSurefireOperation(usingSurefire28() ? null : SUREFIRE_VERSION_SAFE, usingJUnit4() || usingTestNG() ? null : JUNIT_VERSION_SAFE)));
+                                        List.of(new UpdateSurefireOperation(surefireVersion, junitVersion))
+                                );
                                 //this appears to run too fast, before the resolved model is updated.
 //                                SwingUtilities.invokeLater(new Runnable() {
 //                                    @Override
@@ -319,7 +380,8 @@ public class ActionProviderImpl implements ActionProvider {
                         return false;
                     }
                 }
-                StatusDisplayer.getDefault().setStatusText(run_single_method_disabled());
+                StatusDisplayer.getDefault().setStatusText(
+                        ju5 ? run_single_method_disabled5() : run_single_method_disabled());
                 return false;
             }
         }
@@ -336,7 +398,8 @@ public class ActionProviderImpl implements ActionProvider {
             action.equals(ActionProvider.COMMAND_PROFILE) ||
             action.equals(ActionProvider.COMMAND_REBUILD) ||
             action.equals(ActionProvider.COMMAND_RUN) ||
-            action.equals(ActionProvider.COMMAND_TEST)) 
+            action.equals(ActionProvider.COMMAND_TEST) ||
+            action.equals(ActionProvider.COMMAND_TEST_PARALLEL)) 
         {
             if (!ModuleInfoUtils.checkModuleInfoAndCompilerFit(proj)) {
                 if (NbPreferences.forModule(ActionProviderImpl.class).getBoolean(SHOW_COMPILER_TOO_OLD_WARNING, true)) {
@@ -350,7 +413,7 @@ public class ActionProviderImpl implements ActionProvider {
                         RequestProcessor.getDefault().post(() -> {
                             Utilities.performPOMModelOperations(
                                     proj.getProjectDirectory().getFileObject("pom.xml"),
-                                    Collections.singletonList(new UpdateCompilerOperation()));                            
+                                    List.of(new UpdateCompilerOperation()));                            
                         });
                         return false; // false means do not continue
                     }
@@ -361,7 +424,7 @@ public class ActionProviderImpl implements ActionProvider {
     }
     
     public static Map<String,String> replacements(Project proj, String action, Lookup lookup) {
-        Map<String,String> replacements = new HashMap<String,String>();
+        Map<String,String> replacements = new HashMap<>();
         for (ReplaceTokenProvider prov : proj.getLookup().lookupAll(ReplaceTokenProvider.class)) {
             replacements.putAll(prov.createReplacements(action, lookup));
         }
@@ -374,6 +437,7 @@ public class ActionProviderImpl implements ActionProvider {
         "# {0} - artifactId", "TXT_ApplyCodeChanges=Apply Code Changes ({0})",
         "# {0} - artifactId", "TXT_Profile=Profile ({0})",
         "# {0} - artifactId", "TXT_Test=Test ({0})",
+        "# {0} - artifactId", "TXT_Test_Parallel=Test In Parallel ({0})",
         "# {0} - artifactId", "TXT_Build=Build ({0})",
         "# {0} - action name", "# {1} - project name", "TXT_CustomNamed={0} ({1})"
     })
@@ -399,6 +463,8 @@ public class ActionProviderImpl implements ActionProvider {
             title = TXT_Profile(prjLabel);
         } else if (ActionProvider.COMMAND_TEST.equals(action)) {
             title = TXT_Test(prjLabel);
+        } else if (ActionProvider.COMMAND_TEST_PARALLEL.equals(action)) {
+            title = TXT_Test_Parallel(prjLabel);
         } else if (action.startsWith(ActionProvider.COMMAND_RUN_SINGLE)) {
             title = TXT_Run(dobjName);
         } else if (action.startsWith(ActionProvider.COMMAND_DEBUG_SINGLE) || ActionProvider.COMMAND_DEBUG_TEST_SINGLE.equals(action)) {
@@ -447,14 +513,22 @@ public class ActionProviderImpl implements ActionProvider {
         if (convertedAction == null) {
             convertedAction = action;
         }
-        return ActionToGoalUtils.isActionEnable(convertedAction, proj.getLookup().lookup(NbMavenProjectImpl.class), lookup);
+        
+        for (InternalActionDelegate ap : proj.getLookup().lookupAll(InternalActionDelegate.class)) {
+            if (ap.getActionProvider().isActionEnabled(action, lookup)) {
+                return true;
+            }
+        }
+
+        return ActionToGoalUtils.isActionEnable(convertedAction, proj.getLookup().lookup(NbMavenProjectImpl.class), 
+                usedConfiguration(false, lookup), lookup);
     }
 
     public static Action createCustomMavenAction(String name, NetbeansActionMapping mapping, boolean showUI, Lookup context, Project project) {
         return new CustomAction(name, mapping, showUI, context, project);
     }
 
-    private final static class CustomAction extends AbstractAction {
+    private static final class CustomAction extends AbstractAction {
 
         private final NetbeansActionMapping mapping;
         private final boolean showUI;
@@ -479,13 +553,10 @@ public class ActionProviderImpl implements ActionProvider {
 
             if (!showUI) {
                 final M2ConfigProvider conf = proj.getLookup().lookup(M2ConfigProvider.class);
-                RP.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        ModelRunConfig rc = createCustomRunConfig(conf);
-                        setupTaskName("custom", rc, context);
-                        RunUtils.run(rc);
-                    }
+                RP.post(() -> {
+                    ModelRunConfig rc = createCustomRunConfig(conf);
+                    setupTaskName("custom", rc, context);
+                    RunUtils.run(rc);
                 });
                 return;
             }
@@ -499,44 +570,39 @@ public class ActionProviderImpl implements ActionProvider {
             Object retValue = DialogDisplayer.getDefault().notify(dd);
             if (retValue == DialogDescriptor.OK_OPTION) {
                 pnl.applyValues(mapping);
+                maps.getActions().remove(mapping); // deduplicate
                 if (maps.getActions().size() > 10) {
                     maps.getActions().remove(0);
                 }
                 maps.getActions().add(mapping);
                 final String remembered = pnl.isRememberedAs();
-                final Boolean offline = Boolean.valueOf(pnl.isOffline());
+                final Boolean offline = pnl.isOffline();
                 final boolean debug = pnl.isShowDebug();
                 final boolean recursive = pnl.isRecursive();
                 final boolean updateSnapshots = pnl.isUpdateSnapshots();
-                RP.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        M2ConfigProvider conf = proj.getLookup().lookup(M2ConfigProvider.class);
-                        ActionToGoalUtils.writeMappingsToFileAttributes(proj.getProjectDirectory(), maps);
-                        if (remembered != null) {
-                            try {
-
-                                String tit = "CUSTOM-" + remembered; //NOI18N
-                                mapping.setActionName(tit);
-                                mapping.setDisplayName(remembered);
-                                //TODO shall we write to configuration based files or not?
-                                ModelHandle2.putMapping(mapping, proj, conf.getDefaultConfig());
-                            } catch (IOException ex) {
-                                LOG.log(Level.INFO, "Cannot write custom action mapping", ex);
-                            }
+                RP.post(() -> {
+                    M2ConfigProvider conf = proj.getLookup().lookup(M2ConfigProvider.class);
+                    ActionToGoalUtils.writeMappingsToFileAttributes(proj.getProjectDirectory(), maps);
+                    if (remembered != null) {
+                        try {
+                            String tit = "CUSTOM-" + remembered; //NOI18N
+                            mapping.setActionName(tit);
+                            mapping.setDisplayName(remembered);
+                            //TODO shall we write to configuration based files or not?
+                            ModelHandle2.putMapping(mapping, proj, conf.getDefaultConfig());
+                        } catch (IOException ex) {
+                            LOG.log(Level.INFO, "Cannot write custom action mapping", ex);
                         }
-                        ModelRunConfig rc = createCustomRunConfig(conf);
-                        rc.setOffline(offline);
-                        rc.setShowDebug(debug);
-                        rc.setRecursive(recursive);
-                        rc.setUpdateSnapshots(updateSnapshots);
-
-                        setupTaskName("custom", rc, Lookup.EMPTY); //NOI18N
-                        RunUtils.run(rc);
                     }
+                    ModelRunConfig rc = createCustomRunConfig(conf);
+                    rc.setOffline(offline);
+                    rc.setShowDebug(debug);
+                    rc.setRecursive(recursive);
+                    rc.setUpdateSnapshots(updateSnapshots);
                     
+                    setupTaskName("custom", rc, Lookup.EMPTY); //NOI18N
+                    RunUtils.run(rc);
                 });
-                
 
             }
         }
@@ -545,20 +611,52 @@ public class ActionProviderImpl implements ActionProvider {
             ModelRunConfig rc = new ModelRunConfig(proj, mapping, mapping.getActionName(), null, Lookup.EMPTY, false);
 
             //#171086 also inject profiles from currently selected configuratiin
-            List<String> acts = new ArrayList<String>();
+            List<String> acts = new ArrayList<>();
             acts.addAll(rc.getActivatedProfiles());
             acts.addAll(conf.getActiveConfiguration().getActivatedProfiles());
             rc.setActivatedProfiles(acts);
-            Map<String, String> props = new HashMap<String, String>(rc.getProperties());
+            Map<String, String> props = new HashMap<>(rc.getProperties());
+            Map<String, String> options = new HashMap<>(rc.getOptions());
             props.putAll(conf.getActiveConfiguration().getProperties());
             rc.addProperties(props);
+            rc.addOptions(options);
             rc.setTaskDisplayName(TXT_Build(proj.getLookup().lookup(NbMavenProject.class).getMavenProject().getArtifactId()));
             return rc;
         }
     }
 
+    @Messages("LBL_Edit_project_goals=Edit Project Goals...")
+    private final static class EditProjectGoalsAction extends AbstractAction {
+
+        private final Project project;
+
+        private EditProjectGoalsAction(Project project) {
+            putValue(Action.NAME, LBL_Edit_project_goals());
+            this.project = project;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            CustomizerProvider2 provider = project.getLookup().lookup(CustomizerProvider2.class);
+            provider.showCustomizer(ModelHandle2.PANEL_MAPPING, null);
+        }
+    }
+
+    @Messages("LBL_Edit_global_goals=Edit Global Goals...")
+    private final static class EditGlobalGoalsAction extends AbstractAction {
+
+        private EditGlobalGoalsAction() {
+            putValue(Action.NAME, LBL_Edit_global_goals());
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            SettingsPanel.showGlobalMavenGoalCustomizer();
+        }
+    }
+
     // XXX should this be an API somewhere?
-    private static abstract class ConditionallyShownAction extends AbstractAction implements ContextAwareAction {
+    private abstract static class ConditionallyShownAction extends AbstractAction implements ContextAwareAction {
         protected boolean triggeredOnFile = false;
         protected boolean triggeredOnPom = false;
         
@@ -674,47 +772,50 @@ public class ActionProviderImpl implements ActionProvider {
         
         @Messages({
             "LBL_Loading=Loading...",
-            "LBL_Custom_run_goals=Goals..."
+            "LBL_Custom_run_goals=Other Goals..."
         })
         @Override public JMenuItem getPopupPresenter() {
 
-            final JMenu menu = new JMenu(onFile ? LBL_Custom_Run_File() : LBL_Custom_Run());
-            final JMenuItem loading = new JMenuItem(LBL_Loading());
+            JMenu menu = new JMenu(onFile ? LBL_Custom_Run_File() : LBL_Custom_Run());
+            JMenuItem loading = new JMenuItem(LBL_Loading());
 
             menu.add(loading);
             /*using lazy construction strategy*/
-            RP.post(new Runnable() {
-
-                @Override
-                public void run() {
-                    NetbeansActionMapping[] maps;
-                    if (onFile && !onPom) {
-                      maps = ActionToGoalUtils.getActiveCustomMappingsForFile(proj.getLookup().lookup(NbMavenProjectImpl.class));
-                    } else {
-                      maps = ActionToGoalUtils.getActiveCustomMappings(proj.getLookup().lookup(NbMavenProjectImpl.class));
-                    }
-                    final List<Action> acts = new ArrayList<Action>();
-                    for (NetbeansActionMapping mapp : maps) {
-                        Action act = createCustomMavenAction(mapp.getActionName(), mapp, false, lookup, proj);
-                        act.putValue(NAME, mapp.getDisplayName() == null ? mapp.getActionName() : mapp.getDisplayName());
-                        acts.add(act);
-                    }
-                    acts.add(createCustomMavenAction(LBL_Custom_run_goals(), new NetbeansActionMapping(), true, lookup, proj));
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            boolean selected = menu.isSelected();
-                            menu.remove(loading);
-                            for (Action a : acts) {
-                                menu.add(new JMenuItem(a));
-                            }
-                            menu.getPopupMenu().pack();
-                            menu.repaint();
-                            menu.updateUI();
-                            menu.setSelected(selected);
-                        }
-                    });
+            RP.post(() -> {
+                NetbeansActionMapping[] maps;
+                if (onFile && !onPom) {
+                    maps = ActionToGoalUtils.getActiveCustomMappingsForFile(proj.getLookup().lookup(NbMavenProjectImpl.class));
+                } else {
+                    maps = ActionToGoalUtils.getActiveCustomMappings(proj.getLookup().lookup(NbMavenProjectImpl.class));
                 }
+                List<Action> acts = new ArrayList<>();
+                for (NetbeansActionMapping mapp : maps) {
+                    Action act = createCustomMavenAction(mapp.getActionName(), mapp, false, lookup, proj);
+                    act.putValue(NAME, mapp.getDisplayName() == null ? mapp.getActionName() : mapp.getDisplayName());
+                    acts.add(act);
+                }
+                acts.add(createCustomMavenAction(LBL_Custom_run_goals(), new NetbeansActionMapping(), true, lookup, proj));
+                acts.add(new EditProjectGoalsAction(proj));
+                acts.add(new EditGlobalGoalsAction());
+                SwingUtilities.invokeLater(() -> {
+                    boolean selected = menu.isSelected();
+                    menu.remove(loading);
+                    for (Action a : acts) {
+                        menu.add(new JMenuItem(a));
+                    }
+                    // before edit actions
+                    if (menu.getItemCount() > 3) {
+                        menu.add(new JSeparator(), menu.getItemCount() - 3);
+                    }
+                    // between run and edit actions
+                    if (menu.getItemCount() > 2) {
+                        menu.add(new JSeparator(), menu.getItemCount() - 2);
+                    }
+                    menu.getPopupMenu().pack();
+                    menu.repaint();
+                    menu.updateUI();
+                    menu.setSelected(selected);
+                });
             }, 100);
             return menu;
         }
@@ -743,15 +844,11 @@ public class ActionProviderImpl implements ActionProvider {
             putValue(Action.NAME, ACT_CloseRequired());
         }
         public @Override void actionPerformed(ActionEvent e) {
-            RP.post(new Runnable() {
-                @Override
-                public void run() {
-                    Set<Project> res = ProjectUtils.getContainedProjects(project, true);
-                    Project[] arr = res.toArray(new Project[res.size()]);
-                    OpenProjects.getDefault().close(arr);
-                }
+            RP.post(() -> {
+                Set<Project> res = ProjectUtils.getContainedProjects(project, true);
+                Project[] arr = res.toArray(Project[]::new);
+                OpenProjects.getDefault().close(arr);
             });
-            
         }
     }
 
@@ -772,8 +869,6 @@ public class ActionProviderImpl implements ActionProvider {
             this.newJUnit = newJUnit;
         }
 
-        
-        
         @Override
         public void performOperation(POMModel model) {
             org.netbeans.modules.maven.model.pom.Project prj = model.getProject();
@@ -829,5 +924,4 @@ public class ActionProviderImpl implements ActionProvider {
             ModelUtils.openAtPlugin(model, Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER);
         }
     }
-    
 }

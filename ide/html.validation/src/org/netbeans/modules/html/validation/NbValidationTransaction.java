@@ -24,6 +24,7 @@ import com.thaiopensource.validate.*;
 import com.thaiopensource.validate.prop.rng.RngProperty;
 import com.thaiopensource.xml.sax.XMLReaderCreator;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -50,7 +51,6 @@ import nu.validator.xml.*;
 import nu.validator.xml.dataattributes.DataAttributeDroppingSchemaWrapper;
 import nu.validator.xml.langattributes.XmlLangAttributeDroppingSchemaWrapper;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.html.editor.lib.api.HtmlVersion;
 import org.netbeans.modules.html.editor.lib.api.ProblemDescription;
 import org.openide.util.NbBundle;
@@ -148,7 +148,7 @@ public class NbValidationTransaction extends ValidationTransaction {
             return;
         }
 
-        ProgressHandle progress = ProgressHandleFactory.createHandle(NbBundle.getMessage(NbValidationTransaction.class, "MSG_InitHTMLValidation")); //NOI18N
+        ProgressHandle progress = ProgressHandle.createHandle(NbBundle.getMessage(NbValidationTransaction.class, "MSG_InitHTMLValidation")); //NOI18N
 
         progress.start();
         progress.switchToIndeterminate();
@@ -158,7 +158,7 @@ public class NbValidationTransaction extends ValidationTransaction {
         try {
             LOGGER.fine("Starting initialization.");
 
-            BufferedReader r = new BufferedReader(new InputStreamReader(LocalCacheEntityResolver.getPresetsAsStream(), "UTF-8"));
+            BufferedReader r = new BufferedReader(new InputStreamReader(LocalCacheEntityResolver.getPresetsAsStream(), StandardCharsets.UTF_8));
             String line;
             List<String> doctypes = new LinkedList<String>();
             List<String> namespaces = new LinkedList<String>();
@@ -406,7 +406,7 @@ public class NbValidationTransaction extends ValidationTransaction {
 
         int lineOffset = 0;
 
-        errorHandler = new MessageEmitterAdapter(sourceCode,
+        errorHandler = new MessageEmitterAdapter(null, sourceCode,
                 showSource, null,  lineOffset, false,
                 new NbMessageEmitter(problemsHandler, linesMapper, true));
 
@@ -429,9 +429,7 @@ public class NbValidationTransaction extends ValidationTransaction {
         } else {
             switch (version) {
                 case HTML41_STRICT:
-                    return ParserMode.HTML401_STRICT;
                 case HTML41_TRANSATIONAL:
-                    return ParserMode.HTML401_TRANSITIONAL;
                 case HTML41_FRAMESET:
                     return ParserMode.AUTO; //???
                 case HTML5:
@@ -585,7 +583,7 @@ public class NbValidationTransaction extends ValidationTransaction {
                     e,
                     INTERNAL_ERROR_MSG_SEE_LOG);
         } finally {
-            errorHandler.end(successMessage(), failureMessage());
+            errorHandler.end(successMessage(), failureMessage(), null);
         }
     }
 
@@ -697,10 +695,7 @@ public class NbValidationTransaction extends ValidationTransaction {
             IncorrectSchemaException, SAXNotRecognizedException,
             SAXNotSupportedException, ParserConfigurationException {
         switch (parser) {
-            case HTML_AUTO:
             case HTML:
-            case HTML401_STRICT:
-            case HTML401_TRANSITIONAL:
                 if (isHtmlUnsafePreset()) {
                     String message = "The chosen preset schema is not appropriate for HTML.";
                     SAXException se = new SAXException(message);
@@ -719,14 +714,6 @@ public class NbValidationTransaction extends ValidationTransaction {
                     case HTML:
                         doctypeExpectation = DoctypeExpectation.HTML;
                         schemaId = HTML5_SCHEMA;
-                        break;
-                    case HTML401_STRICT:
-                        doctypeExpectation = DoctypeExpectation.HTML401_STRICT;
-                        schemaId = XHTML1STRICT_SCHEMA;
-                        break;
-                    case HTML401_TRANSITIONAL:
-                        doctypeExpectation = DoctypeExpectation.HTML401_TRANSITIONAL;
-                        schemaId = XHTML1TRANSITIONAL_SCHEMA;
                         break;
                     default:
                         doctypeExpectation = DoctypeExpectation.AUTO;
@@ -849,8 +836,7 @@ public class NbValidationTransaction extends ValidationTransaction {
         sourceReader.addCharacterHandler(sourceCode);
         reader = new IdFilter(xmlParser.getXMLReader());
         if (lexicalHandler != null) {
-            xmlParser.setProperty("http://xml.org/sax/properties/lexical-handler",
-                    (LexicalHandler) lexicalHandler);
+            xmlParser.setProperty("http://xml.org/sax/properties/lexical-handler", lexicalHandler);
         }
 
         reader.setFeature("http://xml.org/sax/features/string-interning", true);

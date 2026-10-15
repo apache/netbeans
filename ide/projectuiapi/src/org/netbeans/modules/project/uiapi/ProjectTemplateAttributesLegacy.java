@@ -42,7 +42,7 @@ public final class ProjectTemplateAttributesLegacy implements CreateFromTemplate
     public Map<String, ?> attributesFor(DataObject template, DataFolder target, String name) {
         FileObject targetF = target.getPrimaryFile();
         Project prj = FileOwnerQuery.getOwner(targetF);
-        Map<String, Object> all = new HashMap();
+        Map<String, Object> all = new HashMap<>();
         if (prj != null) {
             // call old providers
             Collection<? extends CreateFromTemplateAttributesProvider> oldProvs = prj.getLookup().lookupAll(CreateFromTemplateAttributesProvider.class);

@@ -19,10 +19,11 @@
 
 package org.netbeans.lib.profiler.heap;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.ResourceBundle;
+import static org.netbeans.lib.profiler.heap.Systems.DEBUG;
 
 
 /**
@@ -40,7 +41,6 @@ abstract class HprofByteBuffer {
     static final int JAVA_PROFILE_1_0_2 = 2;
     static final int JAVA_PROFILE_1_0_3 = 3;
     static final int MINIMAL_SIZE = 30;
-    static final boolean DEBUG = false;
 
     //~ Instance fields ----------------------------------------------------------------------------------------------------------
 
@@ -76,6 +76,10 @@ abstract class HprofByteBuffer {
 
             throw ex;
         }
+    }
+
+    static HprofByteBuffer createHprofByteBuffer(ByteBuffer bb) throws IOException {
+        return new HprofMappedByteBuffer(bb);
     }
 
     abstract char getChar(long index);
@@ -130,7 +134,7 @@ abstract class HprofByteBuffer {
         String magic = readStringNull(offset, MINIMAL_SIZE);
 
         if (DEBUG) {
-            System.out.println("Magic " + magic); // NOI18N
+            Systems.debug("Magic " + magic); // NOI18N
         }
 
         if (magic1.equals(magic)) {
@@ -141,7 +145,7 @@ abstract class HprofByteBuffer {
             version = JAVA_PROFILE_1_0_3;
         } else {
             if (DEBUG) {
-                System.out.println("Invalid version"); // NOI18N
+                Systems.debug("Invalid version"); // NOI18N
             }
 
             String errText = ResourceBundle.getBundle("org/netbeans/lib/profiler/heap/Bundle")
@@ -155,11 +159,11 @@ abstract class HprofByteBuffer {
         offset[0] += 8;
 
         if (DEBUG) {
-            System.out.println("ID " + idSize); // NOI18N
+            Systems.debug("ID " + idSize); // NOI18N
         }
 
         if (DEBUG) {
-            System.out.println("Date " + new Date(time).toString()); // NOI18N
+            Systems.debug("Date " + new Date(time).toString()); // NOI18N
         }
 
         headerSize = offset[0];

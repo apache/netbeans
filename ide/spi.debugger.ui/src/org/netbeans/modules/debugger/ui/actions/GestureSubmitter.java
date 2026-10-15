@@ -40,7 +40,7 @@ class GestureSubmitter {
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
     static void logDebugProject(Project project) {
-        List params = new ArrayList();
+        List<String> params = new ArrayList<>();
         if (project != null) {
             params.add(0, project.getClass().getName());
         }
@@ -48,18 +48,18 @@ class GestureSubmitter {
     }
 
     static void logAttach(String attachTypeName) {
-        List params = new ArrayList();
+        List<String> params = new ArrayList<>();
         params.add(attachTypeName);
         log("USG_DEBUG_ATTACH", params); // NOI18N
     }
 
-    private static void log(String type, List<Object> params) {
+    private static void log(String type, List<String> params) {
         LogRecord record = new LogRecord(Level.INFO, type);
         record.setResourceBundle(NbBundle.getBundle(GestureSubmitter.class));
         record.setResourceBundleName(GestureSubmitter.class.getPackage().getName() + ".Bundle"); // NOI18N
         record.setLoggerName(USG_LOGGER.getName());
 
-        record.setParameters(params.toArray(new Object[params.size()]));
+        record.setParameters(params.toArray(new Object[0]));
 
         USG_LOGGER.log(record);
     }

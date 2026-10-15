@@ -92,13 +92,15 @@ public class SearchComboBoxEditor implements ComboBoxEditor {
             } else {
                 scrollPane.setBorder(new EmptyBorder(borderInsets));
             }
+        } else {
+            scrollPane.setBorder(BorderFactory.createEmptyBorder());
         }
         scrollPane.setFont(referenceTextField.getFont());
         scrollPane.setBackground(referenceTextField.getBackground());
         int preferredHeight = referenceTextField.getPreferredSize().height;
         Dimension spDim = scrollPane.getPreferredSize();
         spDim.height = preferredHeight + getLFHeightAdjustment();
-        if (!isCurrentLF("Aqua")) {  //NOI18N 
+        if (!isCurrentLF("Aqua")) {  //NOI18N
             spDim.height += margin.bottom + margin.top; //borderInsets.top + borderInsets.bottom;
         }
         scrollPane.setPreferredSize(spDim);
@@ -119,6 +121,24 @@ public class SearchComboBoxEditor implements ComboBoxEditor {
                     Document newDoc = (Document) evt.getNewValue();
                     if (newDoc != null) {
                         DocumentUtilities.addDocumentListener(newDoc, manageViewListener, DocumentListenerPriority.AFTER_CARET_UPDATE);
+                    }
+                }
+                // NETBEANS-4444
+                // selection is not removed when text is input via IME
+                // so, just remove it when the caret is changed
+                if ("caret".equals(evt.getPropertyName())) { // NOI18N
+                    if (evt.getOldValue() instanceof Caret
+                            && evt.getNewValue() instanceof Caret) { // NETBEANS-4620 check new value is not null but Caret
+                        Caret oldCaret = (Caret) evt.getOldValue();
+                        int dotPosition = oldCaret.getDot();
+                        int markPosition = oldCaret.getMark();
+                        if (dotPosition != markPosition) {
+                            try {
+                                editorPane.getDocument().remove(Math.min(markPosition, dotPosition), Math.abs(markPosition - dotPosition));
+                            } catch (BadLocationException ex) {
+                                LOG.log(Level.WARNING, "Invalid removal offset: {0}", ex.offsetRequested()); // NOI18N
+                            }
+                        }
                     }
                 }
             }
@@ -156,14 +176,14 @@ public class SearchComboBoxEditor implements ComboBoxEditor {
                     @Override
                     public void insertString(DocumentFilter.FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
                         if (string != null) {
-                            fb.insertString(offset, string.replaceAll("\\t", "").replaceAll("\\n", ""), attr); //NOI18N
+                            fb.insertString(offset, string.replace("\t", "").replace("\n", ""), attr); //NOI18N
                         }
                     }
 
                     @Override
                     public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String string, AttributeSet attr) throws BadLocationException {
                         if (string != null) {
-                            fb.replace(offset, length, string.replaceAll("\\t", "").replaceAll("\\n", ""), attr); //NOI18N
+                            fb.replace(offset, length, string.replace("\t", "").replace("\n", ""), attr); //NOI18N
                         }
                     }
                 });

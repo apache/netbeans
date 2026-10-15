@@ -29,6 +29,7 @@ import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Source;
 import com.sun.tools.javac.model.JavacElements;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -98,7 +99,7 @@ public class CompilationInfo {
 
     /**
      * Returns an instance of the {@link CompilationInfo} for
-     * given {@link Parser.Result} if it is a result
+     * given {@link org.netbeans.modules.parsing.spi.Parser.Result} if it is a result
      * of a java parser.
      * @param result for which the {@link CompilationInfo} should be
      * returned.
@@ -108,12 +109,9 @@ public class CompilationInfo {
      */
     public static @NullUnknown CompilationInfo get (@NonNull final Parser.Result result) {
         Parameters.notNull("result", result);   //NOI18N
-        CompilationInfo info = null;
-        if (result instanceof JavacParserResult) {
-            final JavacParserResult javacResult = (JavacParserResult)result;            
-            info = javacResult.get(CompilationInfo.class);            
-        }
-        return info;
+        return result instanceof JavacParserResult jpr
+                ? jpr.get(CompilationInfo.class)
+                : null;
     }
              
     // API of the class --------------------------------------------------------
@@ -206,9 +204,9 @@ public class CompilationInfo {
     
     /**
      * Returns all top level elements defined in file for which the {@link CompilationInfo}
-     * was created. The {@link CompilationInfo} has to be in phase {@link JavaSource#Phase#ELEMENTS_RESOLVED}.
+     * was created. The {@link CompilationInfo} has to be in phase {@link JavaSource.Phase#ELEMENTS_RESOLVED}.
      * @return list of top level elements, it may return null when this {@link CompilationInfo} is not
-     * in phase {@link JavaSource#Phase#ELEMENTS_RESOLVED} or higher.
+     * in phase {@link JavaSource.Phase#ELEMENTS_RESOLVED} or higher.
      * @throws IllegalStateException is thrown when the {@link JavaSource} was created with no files
      * @since 0.14
      */
@@ -217,7 +215,7 @@ public class CompilationInfo {
         if (this.impl.getFileObject() == null) {
             throw new IllegalStateException ();
         }
-        final List<TypeElement> result = new ArrayList<TypeElement>();
+        final List<TypeElement> result = new ArrayList<>();
         if (this.impl.isClassFile()) {
             final JavacElements elements = (JavacElements) getElements();
             assert elements != null;
@@ -315,6 +313,7 @@ public class CompilationInfo {
      * the compatibility bridge, when the CompilationInfo was created by the parsing api
      * it returns null. Use {@link CompilationInfo#getSnapshot()} instead.
      */
+    @Deprecated
     public @NullUnknown JavaSource getJavaSource() {
         checkConfinement();
         return javaSource;
@@ -362,8 +361,8 @@ public class CompilationInfo {
             
     /**
      * Returns {@link Document} of this {@link CompilationInfoImpl}
-     * @return Document or null when the {@link DataObject} doesn't
-     * exist or has no {@link EditorCookie}.
+     * @return Document or null when the <a href="@org-openide-loaders@/org/openide/loaders/DataObject.html">DataObject</a> doesn't
+     * exist or has no <a href="@org-openide-text@/org/openide/cookies/EditorCookie.html">EditorCookie</a>.
      * @throws java.io.IOException
      */
     public @CheckForNull Document getDocument() throws IOException { //XXX cleanup: IOException is no longer required? Used by PositionEstimator, DiffFacility
@@ -430,7 +429,7 @@ public class CompilationInfo {
         return impl.getCachedValue(key);
     }
 
-    /**Put a value into a cache under the given key. The {@link #clearPolicy} parameter specifies the latest time the
+    /**Put a value into a cache under the given key. The {@code clearPolicy} parameter specifies the latest time the
      * references to the key and value should be cleared. The infrastructure is free to clear the references at any earlier time.
      * The clients should not depend on this cache for correctness, only to improve performance.
      *
@@ -474,6 +473,26 @@ public class CompilationInfo {
         }
     }
 
+    /**Return the {@code ModuleElement} this compilation info belongs to.
+     *
+     * @return the {@code ModuleElement} this compilation info belongs to. may
+     *         return {@code null} when this {@link CompilationInfo} is not
+     *         in phase {@link JavaSource.Phase#ELEMENTS_RESOLVED} or higher.
+     * @throws IllegalStateException is thrown when the {@link JavaSource} was created with no files
+     */
+    ModuleElement getModule() {
+        //preconditions checked by getTopLevelElements or getCompilationUnit:
+        if (this.impl.isClassFile()) {
+            List<? extends TypeElement> topElement = getTopLevelElements();
+            return !topElement.isEmpty() ? getElements().getModuleOf(topElement.getFirst())
+                                         : null;
+        } else {
+            CompilationUnitTree cu = getCompilationUnit();
+
+            return cu != null ? ((JCCompilationUnit) cu).modle : null;
+        }
+    }
+
     /**Constants to specify when a valued cached by {@link #putCachedValue(java.lang.Object, java.lang.Object, org.netbeans.api.java.source.CompilationInfo.CacheClearPolicy)}
      * should be evicted from the cache.
      *
@@ -493,6 +512,10 @@ public class CompilationInfo {
             @Override
             public JavacTask getJavacTask(CompilationInfo info) {
                 return info.impl.getJavacTask();
+            }
+            @Override
+            public CompilationInfoImpl getCompilationInfoImpl(CompilationInfo info) {
+                return info.impl;
             }
         });
     }

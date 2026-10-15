@@ -21,7 +21,6 @@ package org.netbeans.modules.javascript2.editor.formatter;
 import com.oracle.js.parser.ir.FunctionNode;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
@@ -32,12 +31,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.editor.BaseDocument;
-import org.netbeans.editor.Utilities;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.editor.indent.api.IndentUtils;
 import org.netbeans.modules.editor.indent.spi.Context;
@@ -57,18 +56,14 @@ public final class FormatContext {
 
     private static final Pattern SAFE_DELETE_PATTERN = Pattern.compile("\\s*"); // NOI18N
 
-    private static final Comparator<Region> REGION_COMPARATOR = new Comparator<Region>() {
-
-        @Override
-        public int compare(Region o1, Region o2) {
-            if (o1.getOriginalStart() < o2.getOriginalStart()) {
-                return -1;
-            }
-            if (o1.getOriginalStart() > o2.getOriginalStart()) {
-                return 1;
-            }
-            return 0;
+    private static final Comparator<Region> REGION_COMPARATOR = (Region o1, Region o2) -> {
+        if (o1.getOriginalStart() < o2.getOriginalStart()) {
+            return -1;
         }
+        if (o1.getOriginalStart() > o2.getOriginalStart()) {
+            return 1;
+        }
+        return 0;
     };
 
     private final Context context;
@@ -94,7 +89,7 @@ public final class FormatContext {
     private final Stack<JsxBlock> jsxIndents = new Stack<>();
 
     private final Map<FormatToken, JsxBlock> jsxIndentsMap = new HashMap<>();
-    
+
     private final Deque<JsxElement> jsxPath = new ArrayDeque<>();
 
     private LineWrap lastLineWrap;
@@ -122,11 +117,11 @@ public final class FormatContext {
         this.initialStart = context.startOffset();
         this.initialEnd = context.endOffset();
 
-        regions = new ArrayList<Region>(context.indentRegions().size());
+        regions = new ArrayList<>(context.indentRegions().size());
         for (Context.Region region : context.indentRegions()) {
             regions.add(new Region(region));
         }
-        Collections.sort(regions, REGION_COMPARATOR);
+        regions.sort(REGION_COMPARATOR);
 
         dumpRegions();
 
@@ -248,7 +243,7 @@ public final class FormatContext {
     public boolean isInsideJsx() {
         return !jsxIndents.isEmpty();
     }
-    
+
     public void updateJsxPath(char first, Character second) {
         assert isInsideJsx();
         switch (first) {
@@ -377,8 +372,11 @@ public final class FormatContext {
 
         for (Region region : regions) {
             try {
-                LOGGER.log(Level.FINE, region.getOriginalStart() + ":" + region.getOriginalEnd()
-                        + ":" + getDocument().getText(region.getOriginalStart(), region.getOriginalEnd() - region.getOriginalStart()));
+                LOGGER.log(Level.FINE, "{0}:{1}:{2}", new Object[]{
+                    region.getOriginalStart(),
+                    region.getOriginalEnd(),
+                    getDocument().getText(region.getOriginalStart(), region.getOriginalEnd() - region.getOriginalStart())
+                });
             } catch (BadLocationException ex) {
                 LOGGER.log(Level.FINE, null, ex);
             }
@@ -539,8 +537,12 @@ public final class FormatContext {
         return embedded && root == null;
     }
 
-    public BaseDocument getDocument() {
-        return (BaseDocument) context.document();
+    public Document getDocument() {
+        return context.document();
+    }
+
+    private LineDocument getLineDocument() {
+        return LineDocumentUtils.as(context.document(), LineDocument.class);
     }
 
     public Snapshot getSnapshot() {
@@ -566,7 +568,7 @@ public final class FormatContext {
         }
 
         try {
-            int diff = setLineIndentation(getDocument(),
+            int diff = setLineIndentation(getLineDocument(),
                     offset + realOffsetDiff, indentationSize, codeStyle);
             setOffsetDiff(offsetDiff + diff);
         } catch (BadLocationException ex) {
@@ -584,7 +586,7 @@ public final class FormatContext {
             return;
         }
 
-        BaseDocument doc = getDocument();
+        Document doc = getDocument();
         try {
             doc.insertString(offset + realOffsetDiff, newString, null);
             setOffsetDiff(offsetDiff + newString.length());
@@ -612,7 +614,7 @@ public final class FormatContext {
             return;
         }
 
-        BaseDocument doc = getDocument();
+        Document doc = getDocument();
         try {
             String oldText = doc.getText(offset + offsetDiff, length);
             if (newString.equals(oldText)) {
@@ -641,7 +643,7 @@ public final class FormatContext {
             return;
         }
 
-        BaseDocument doc = getDocument();
+        Document doc = getDocument();
         try {
             if(doc.getText(offset + offsetDiff, length).contains("\n")) {
                 LOGGER.log(Level.WARNING, "Tried to remove EOL");
@@ -659,7 +661,10 @@ public final class FormatContext {
     }
 
     private Integer getSuggestedIndentation(int offset) {
-        BaseDocument doc = getDocument();
+        LineDocument doc = getLineDocument();
+        if (doc == null) {
+            return null;
+        }
         Map<Integer, Integer> suggestedLineIndents = (Map<Integer, Integer>) doc.getProperty("AbstractIndenter.lineIndents");
         if (suggestedLineIndents != null) {
             try {
@@ -688,9 +693,12 @@ public final class FormatContext {
     }
 
     // XXX copied from GsfUtilities
-    private static int setLineIndentation(BaseDocument doc, int lineOffset,
+    private static int setLineIndentation(LineDocument doc, int lineOffset,
             int newIndent, CodeStyle.Holder codeStyle) throws BadLocationException {
-        int lineStartOffset = Utilities.getRowStart(doc, lineOffset);
+        if (doc == null) {
+            return 0;
+        }
+        int lineStartOffset = LineDocumentUtils.getLineStart(doc, lineOffset);
 
         // Determine old indent first together with oldIndentEndOffset
         int indent = 0;
@@ -808,16 +816,16 @@ public final class FormatContext {
     }
 
     public static class JsxElement {
-        
+
         public enum Type {
 
             TAG,
-            
+
             ATTRIBUTE
         }
-        
+
         private final Type type;
-        
+
         private final Character closingChar;
 
         public JsxElement(Type type, Character closingChar) {
@@ -832,7 +840,7 @@ public final class FormatContext {
 
         public Character getClosingChar() {
             return closingChar;
-        }        
+        }
     }
 
     private static class JsxBlock {

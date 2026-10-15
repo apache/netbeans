@@ -26,7 +26,7 @@ final class ThreadInfos {
 
     ThreadInfo[] threadInfos;
     int threadInfosLastIdx;
-    ThreadInfo unknowThread = new ThreadInfo(-1, "Unknown", "N/A");     // NOI18N
+    ThreadInfo unknownThread = new ThreadInfo(-1, "Unknown", "N/A");     // NOI18N
 
     ThreadInfos() {
         reset();
@@ -63,7 +63,7 @@ final class ThreadInfos {
     }
 
     ThreadInfo getThreadInfo(int threadId) {
-        if (threadId == -1) return unknowThread;
+        if (threadId == -1) return unknownThread;
         if (!isEmpty()) {
             return threadInfos[threadId];
         }

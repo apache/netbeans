@@ -3,4 +3,4 @@ NetBeans.stuff.e|
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 CLASS      engineer                        [PUBLIC]   defineMethod.js
-METHOD     entries(obj): undefined         [PUBLIC,   JS Platform
+METHOD     entries(o): undefined           [PUBLIC,   JS Platform

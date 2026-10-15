@@ -346,7 +346,7 @@ public class AnnotateAction extends ContextAction {
             
             lines.add(anLine);
         }
-        return lines.toArray(new AnnotateLine[lines.size()]);
+        return lines.toArray(new AnnotateLine[0]);
     }
 
     /**

@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CoderMalfunctionError;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -49,13 +50,13 @@ public class SingleLineStreamMatcher extends AbstractMatcher {
 
     private static final int limit = Constants.DETAILS_COUNT_LIMIT;
     private volatile boolean terminated = false;
-    private SearchPattern searchPattern;
-    private Pattern pattern;
+    private final SearchPattern searchPattern;
+    private final Pattern pattern;
     private int count = 0;
 
     public SingleLineStreamMatcher(SearchPattern searchPattern) {
         this.searchPattern = searchPattern;
-        pattern = TextRegexpUtil.makeTextPattern(searchPattern);
+        this.pattern = TextRegexpUtil.makeTextPattern(searchPattern);
     }
 
     @Override
@@ -72,7 +73,7 @@ public class SingleLineStreamMatcher extends AbstractMatcher {
             } else {
                 return new Def(file, charset, textDetails);
             }
-        } catch (CharacterCodingException e) {
+        } catch (CharacterCodingException | CoderMalfunctionError e) {
             handleDecodingError(listener, file, decoder, e);
             return null;
         } catch (Exception e) {
@@ -95,8 +96,7 @@ public class SingleLineStreamMatcher extends AbstractMatcher {
         FinishingTextDetailList finishList = new FinishingTextDetailList(3);
 
         boolean canRun = true;
-        final InputStream stream = fo.getInputStream();
-        try {
+        try (final InputStream stream = fo.getInputStream()) {
             LineReader nelr = new LineReader(decoder, stream);
             try {
                 LineReader.LineInfo line;
@@ -105,7 +105,7 @@ public class SingleLineStreamMatcher extends AbstractMatcher {
                     Matcher m = pattern.matcher(line.getString());
                     while (m.find() && canRun) {
                         if (dets == null) {
-                            dets = new LinkedList<TextDetail>();
+                            dets = new LinkedList<>();
                             dataObject = DataObject.find(fo);
                         }
                         TextDetail det = MatcherUtils.createTextDetail(false, m,
@@ -131,8 +131,6 @@ public class SingleLineStreamMatcher extends AbstractMatcher {
             } finally {
                 nelr.close();
             }
-        } finally {
-            stream.close();
         }
         return dets;
     }

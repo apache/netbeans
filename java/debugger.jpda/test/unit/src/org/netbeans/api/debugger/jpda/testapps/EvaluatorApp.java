@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Vector;
 
 /**
@@ -42,6 +43,9 @@ import java.util.Vector;
  * both after the invocation of the expression and invocation of the method.
  * 
  * @author Martin Entlicher
+ *
+ * WARNING: Do not change any of the primitive auto-boxing. It could potentially
+ * break the tests. We expressly want it done as part of testing.
  */
 public class EvaluatorApp extends BaseClass {
 
@@ -724,15 +728,15 @@ public class EvaluatorApp extends BaseClass {
     }
     
     public static boolean testOp36c() {
-        return (Runtime.getRuntime() instanceof java.lang.Iterable);
+        return (System.getProperties() instanceof java.lang.AutoCloseable);
     }
     
     public static boolean testOp36d() {
-        return (Runtime.getRuntime() instanceof Runtime);
+        return (System.getProperties() instanceof Properties);
     }
     
     public static boolean testOp36e() {
-        return (Runtime.getRuntime() instanceof Object);
+        return (System.getProperties() instanceof Object);
     }
     
     public static int testOp37a() {
@@ -987,7 +991,7 @@ public class EvaluatorApp extends BaseClass {
     // Constructors
     
     public static boolean testConstructor1() {
-        return new Boolean(true).booleanValue();
+        return true;
     }
 
     public static int testConstructor2() {

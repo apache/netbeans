@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.php.editor.typinghooks;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -66,18 +67,22 @@ import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.GlobalStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
+import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
+import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
 import org.netbeans.modules.php.editor.parser.astnodes.Reference;
 import org.netbeans.modules.php.editor.parser.astnodes.ReturnStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.Scalar;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticStatement;
-import org.netbeans.modules.php.editor.parser.astnodes.ThrowStatement;
+import org.netbeans.modules.php.editor.parser.astnodes.ThrowExpression;
+import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
 import org.netbeans.modules.php.editor.parser.astnodes.Variadic;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.util.Exceptions;
+import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 
 /**
@@ -87,7 +92,7 @@ import org.openide.util.RequestProcessor;
 public final class PhpCommentGenerator {
 
     static final RequestProcessor RP = new RequestProcessor("Generating Bracket Completer", 1); //NOI18N
-    static final String TYPE_PLACEHOLDER = "type";
+    static final String TYPE_PLACEHOLDER = "type"; // NOI18N
 
     private PhpCommentGenerator() {
     }
@@ -118,7 +123,7 @@ public final class PhpCommentGenerator {
 
     private static void addVariables(BaseDocument doc, StringBuilder toAdd, String text, int indent, List<Pair<String, String>> vars) {
         for (Pair<String, String> p : vars) {
-            generateDocEntry(doc, toAdd, text, indent, p.getA(), p.getB());
+            generateDocEntry(doc, toAdd, text, indent, p.first(), p.second());
         }
     }
 
@@ -151,14 +156,13 @@ public final class PhpCommentGenerator {
         if (StringUtils.isEmpty(returnTypes)) {
             return ""; //NOI18N
         }
-        final String typeSeparator = "|"; //NOI18N
         StringBuilder sb = new StringBuilder(returnTypes.length());
         boolean first = true;
-        for (String typeName : returnTypes.split("\\" + typeSeparator)) { //NOI18N
+        for (String typeName : returnTypes.split("\\" + Type.SEPARATOR)) { //NOI18N
             if (first) {
                 first = false;
             } else {
-                sb.append(typeSeparator);
+                sb.append(Type.SEPARATOR);
             }
             if (typeName.equals("\\this")) { //NOI18N
                 sb.append("$this"); //NOI18N
@@ -181,10 +185,31 @@ public final class PhpCommentGenerator {
 
     private static void generateFieldDoc(BaseDocument doc, int offset, int indent, ParserResult info, FieldsDeclaration decl) throws BadLocationException {
         StringBuilder toAdd = new StringBuilder();
+        Expression fieldType = decl.getFieldType();
+        String type = null;
+        if (fieldType != null) {
+            type = getDeclaredTypes(fieldType);
+        }
+        generateDocEntry(doc, toAdd, "@var", indent, null, type);
 
-        generateDocEntry(doc, toAdd, "@var", indent, null, null);
+        doc.insertString(offset, toAdd.toString(), null);
+    }
 
-        doc.insertString(offset - 1, toAdd.toString(), null);
+    private static String getDeclaredTypes(Expression declaredType) {
+        String typeName;
+        if (declaredType instanceof UnionType) {
+            typeName = VariousUtils.getUnionType((UnionType) declaredType);
+        } else if (declaredType instanceof IntersectionType) {
+            typeName = VariousUtils.getIntersectionType((IntersectionType) declaredType);
+        } else {
+            QualifiedName name = QualifiedName.create(declaredType);
+            assert name != null : declaredType;
+            typeName = name.toString();
+        }
+        if (declaredType instanceof NullableType) {
+            typeName = typeName + Type.SEPARATOR + Type.NULL;
+        }
+        return typeName;
     }
 
     private static class ScannerImpl extends DefaultVisitor {
@@ -221,6 +246,12 @@ public final class PhpCommentGenerator {
         }
 
         public String getReturnType() {
+            // if type is already declared, just use it
+            if (decl.getReturnType() != null) {
+                Expression returnType = decl.getReturnType();
+                return getDeclaredTypes(returnType);
+            }
+
             StringBuilder type = new StringBuilder();
             if (hasReturn) {
                 Collection<? extends String> typeNames = fnc.getReturnTypeNames();
@@ -232,11 +263,12 @@ public final class PhpCommentGenerator {
                         break;
                     }
                     resolvedItem = resolveProperType(item);
-                    type = type.toString().isEmpty() ? type.append(resolvedItem) : type.append("|").append(resolvedItem); //NOI18N
+                    type = type.toString().isEmpty() ? type.append(resolvedItem) : type.append(Type.SEPARATOR).append(resolvedItem);
                 }
             }
             return type.toString();
         }
+
 
         @Override
         public void scan(ASTNode node) {
@@ -263,13 +295,21 @@ public final class PhpCommentGenerator {
                 name = ((Identifier) var.getName()).getName();
             }
             if (name != null) {
-                for (VariableName variable : ElementFilter.forName(NameKind.exact(name)).filter(declaredVariables)) {
-                    final Collection<? extends String> typeNames = variable.getTypeNames(variable.getNameRange().getEnd());
-                    String type = typeNames.isEmpty() ? null : typeNames.iterator().next();
-                    if (VariousUtils.isSemiType(type)) {
-                        type = null;
+                Expression parameterType = p.getParameterType();
+                if (parameterType != null) {
+                    // if type is already declared, just use it
+                    params.add(Pair.of("$" + name, getDeclaredTypes(parameterType))); // NOI18N
+                } else {
+                    for (VariableName variable : ElementFilter.forName(NameKind.exact(name)).filter(declaredVariables)) {
+                        final Collection<? extends String> typeNames = variable.getTypeNames(variable.getNameRange().getEnd());
+                        final List<String> resolvedTypeNames = new ArrayList<>();
+                        typeNames.forEach(typeName -> resolvedTypeNames.add(resolveProperType(typeName)));
+                        String type = typeNames.isEmpty() ? null : Type.asUnionType(resolvedTypeNames);
+                        if (VariousUtils.isSemiType(type)) {
+                            type = null;
+                        }
+                        params.add(Pair.of(variable.getName(), type));
                     }
-                    params.add(new Pair<>(variable.getName(), resolveProperType(type)));
                 }
             }
             super.visit(p);
@@ -297,7 +337,7 @@ public final class PhpCommentGenerator {
                 }
             }
             if (isNullableType) {
-                return typeName + "|null"; // NOI18N
+                return typeName + Type.SEPARATOR + Type.NULL;
             }
             return typeName;
         }
@@ -313,7 +353,7 @@ public final class PhpCommentGenerator {
                         if (VariousUtils.isSemiType(type)) {
                             type = null;
                         }
-                        globals.add(new Pair<>(variable.getName(), resolveProperType(type)));
+                        globals.add(Pair.of(variable.getName(), resolveProperType(type)));
                     }
                 }
             }
@@ -342,7 +382,7 @@ public final class PhpCommentGenerator {
                         if (VariousUtils.isSemiType(type)) {
                             type = null;
                         }
-                        staticvars.add(new Pair<>(variable.getName(), resolveProperType(type)));
+                        staticvars.add(Pair.of(variable.getName(), resolveProperType(type)));
                     }
                 }
             }
@@ -351,18 +391,18 @@ public final class PhpCommentGenerator {
         }
 
         @Override
-        public void visit(ThrowStatement node) {
-            String type = getTypeFromThrowStatement(node);
+        public void visit(ThrowExpression node) {
+            String type = getTypeFromThrowExpression(node);
             if (!usedThrows.contains(type)) {
                 usedThrows.add(type);
-                throwsExceptions.add(new Pair<String, String>(null, resolveProperType(type)));
+                throwsExceptions.add(Pair.of(null, resolveProperType(type)));
             }
             super.visit(node);
         }
 
-        private String getTypeFromThrowStatement(ThrowStatement throwStatement) {
+        private String getTypeFromThrowExpression(ThrowExpression throwExpression) {
             String type = null;
-            Expression expression = throwStatement.getExpression();
+            Expression expression = throwExpression.getExpression();
             if (expression instanceof ClassInstanceCreation) {
                 ClassInstanceCreation classInstanceCreation = (ClassInstanceCreation) expression;
                 Expression name = classInstanceCreation.getClassName().getName();
@@ -502,6 +542,7 @@ public final class PhpCommentGenerator {
                                                             type = Type.INTEGER;
                                                             break;
                                                         case REAL:
+                                                        case FLOAT:
                                                             type = Type.FLOAT;
                                                             break;
                                                         case STRING:
@@ -527,25 +568,6 @@ public final class PhpCommentGenerator {
             } catch (ParseException ex) {
                 Exceptions.printStackTrace(ex);
             }
-        }
-
-    }
-
-    private static final class Pair<A, B> {
-        private final A a;
-        private final B b;
-
-        public Pair(A a, B b) {
-            this.a = a;
-            this.b = b;
-        }
-
-        public A getA() {
-            return a;
-        }
-
-        public B getB() {
-            return b;
         }
 
     }

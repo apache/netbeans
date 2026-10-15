@@ -111,7 +111,7 @@ public class EntriesCache {
         DATE_ATTRIBUTES.add("text-time");
     }
 
-    private final static int MAX_SIZE;
+    private static final int MAX_SIZE;
 
     static {
         int ms;
@@ -398,7 +398,7 @@ public class EntriesCache {
             conflicts = cdp.getConflicts();
             cachedConflicts.put(conflictsDescription, conflicts);
         }
-        return conflicts.toArray(new ParserConflictDescriptor[conflicts.size()]);
+        return conflicts.toArray(new ParserConflictDescriptor[0]);
     }
 
     private class XmlEntriesHandler extends DefaultHandler {

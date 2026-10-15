@@ -38,7 +38,7 @@ import org.openide.filesystems.URLMapper;
  * @version 1.1
  */
 public class CommonTestUtil {
-    static private final String JAVA_SOURCES_SUFFIX = "java"; //NOI18N
+    private static final String JAVA_SOURCES_SUFFIX = "java"; //NOI18N
 
     /**
      */
@@ -127,11 +127,10 @@ public class CommonTestUtil {
         for (int i = 0; i < rootURLs.length; i++) {
             if ((sourceRoots[i] = URLMapper.findFileObject(rootURLs[i]))
                     == null) {
-                ErrorManager.getDefault().notify(
+                ErrorManager.getDefault().log(
                         ErrorManager.INFORMATIONAL,
-                        new IllegalStateException(
                            "No FileObject found for the following URL: "//NOI18N
-                           + rootURLs[i]));
+                           + rootURLs[i]);
                 someSkipped = true;
                 continue;
             }

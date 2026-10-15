@@ -172,7 +172,7 @@ public final class SnapshotsWindowUI extends ProfilerTopComponent {
     private ChangeListener openProjectsListener;
     
     private FileObject currentFolder;
-    private final List<Snapshot> snapshots = new ArrayList();
+    private final List<Snapshot> snapshots = new ArrayList<>();
     
     private Action openA;
     private Action exportA;
@@ -228,7 +228,7 @@ public final class SnapshotsWindowUI extends ProfilerTopComponent {
         SnapshotsWindowHelper.PROCESSOR.post(new Runnable() {
             public void run() {
                 ResultsManager rm = ResultsManager.getDefault();
-                final List<Snapshot> _snapshots = new ArrayList();
+                final List<Snapshot> _snapshots = new ArrayList<>();
                 for (FileObject fo : rm.listSavedSnapshots(project, null))
                     _snapshots.add(new Snapshot(fo) {
                         boolean alternativeSorting() {
@@ -662,7 +662,7 @@ public final class SnapshotsWindowUI extends ProfilerTopComponent {
     
     // --- Snapshot wrapper  ---------------------------------------------------
     
-    private static abstract class Snapshot implements Comparable {
+    private abstract static class Snapshot implements Comparable {
         
         private final FileObject fo;
         private String displayName;
@@ -721,8 +721,8 @@ public final class SnapshotsWindowUI extends ProfilerTopComponent {
                 isHeapDump = true;
 //            } else if (fo.getExt().equalsIgnoreCase(ResultsManager.THREADDUMP_EXTENSION)) {
 //                // Thread Dump
-////                this.icon = Icons.getIcon(ProfilerIcons.HEAP_DUMP);
-////                this.icon =  ProfilerIcons.SNAPSHOT_THREADS;
+// //                this.icon = Icons.getIcon(ProfilerIcons.HEAP_DUMP);
+// //                this.icon =  ProfilerIcons.SNAPSHOT_THREADS;
 //                this.snapshotType = 4;
 //                this.displayName = ResultsManager.getDefault().getHeapDumpDisplayName(fo.getName());
 //                this.isHeapDump = false;

@@ -23,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Level;
@@ -99,7 +100,7 @@ public final class Files {
         InputStream stream = Files.class.getResourceAsStream(resourceName);
         String content = null;
         if (stream != null) {
-            BufferedReader br = new BufferedReader(new InputStreamReader(stream, Charset.forName("UTF-8"))); // NOI18N
+            BufferedReader br = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
             try {
                 StringBuilder sb = new StringBuilder(stream.available());
                 String line;

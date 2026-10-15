@@ -28,8 +28,8 @@ import java.awt.dnd.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.util.List;
-import java.util.Map;
 import org.netbeans.modules.visual.laf.DefaultLookFeel;
+import org.openide.awt.GraphicsUtils;
 import org.openide.util.NbBundle;
 
 /**
@@ -101,12 +101,7 @@ final class SceneComponent extends JComponent implements Accessible, MouseListen
 //        System.out.println ("CLIP: " + g.getClipBounds ());
 //        long s = System.currentTimeMillis ();
         Graphics2D gr = (Graphics2D) g;
-
-        Object props = Toolkit.getDefaultToolkit ().getDesktopProperty ("awt.font.desktophints"); // NOI18N
-        if (props instanceof Map)
-            gr.addRenderingHints ((Map) props);
-        gr.setRenderingHint (RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        gr.setRenderingHint (RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        GraphicsUtils.configureDefaultRenderingHints(gr);
         scene.setGraphics (gr);
 
         AffineTransform previousTransform = gr.getTransform ();
@@ -296,7 +291,7 @@ final class SceneComponent extends JComponent implements Accessible, MouseListen
             WidgetAction.State state;
 
             List<Widget> children = widget.getChildren ();
-            Widget[] childrenArray = children.toArray (new Widget[children.size ()]);
+            Widget[] childrenArray = children.toArray (new Widget[0]);
 
             for (int i = childrenArray.length - 1; i >= 0; i --) {
                 Widget child = childrenArray[i];
@@ -358,7 +353,7 @@ final class SceneComponent extends JComponent implements Accessible, MouseListen
         WidgetAction.State state;
 
         List<Widget> children = widget.getChildren ();
-        Widget[] childrenArray = children.toArray (new Widget[children.size ()]);
+        Widget[] childrenArray = children.toArray (new Widget[0]);
 
         for (int i = childrenArray.length - 1; i >= 0; i --) {
             Widget child = childrenArray[i];
@@ -658,10 +653,12 @@ final class SceneComponent extends JComponent implements Accessible, MouseListen
 
     private class AccessibleSceneComponent extends AccessibleJComponent {
 
+        @Override
         public int getAccessibleChildrenCount () {
             return 1;
         }
 
+        @Override
         public Accessible getAccessibleChild (int i) {
             return i == 0 ? scene : null;
         }

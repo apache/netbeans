@@ -161,4 +161,17 @@ public class OneToManyLineParserTest extends NbTestCase {
         assertEquals("Phonenumber", type2);
     }
 
+    public void testValidUseCase_09() throws Exception {
+        AnnotationParsedLine parsedLine = parser.parse("\\Foo\\Bar\\onetomany(targetEntity=\\Foo\\Bar\\Phonenumber::class, mappedBy=\"user\", cascade={\"persist\", \"remove\", \"merge\"}, orphanRemoval=true)  \t");
+        assertEquals("OneToMany", parsedLine.getName());
+        assertEquals("(targetEntity=\\Foo\\Bar\\Phonenumber::class, mappedBy=\"user\", cascade={\"persist\", \"remove\", \"merge\"}, orphanRemoval=true)", parsedLine.getDescription());
+        Map<OffsetRange, String> types = parsedLine.getTypes();
+        assertNotNull(types);
+        assertEquals(2, types.size());
+        String type1 = types.get(new OffsetRange(0, 18));
+        assertEquals("\\Foo\\Bar\\onetomany", type1);
+        String type2 = types.get(new OffsetRange(32, 52));
+        assertEquals("\\Foo\\Bar\\Phonenumber", type2);
+    }
+
 }

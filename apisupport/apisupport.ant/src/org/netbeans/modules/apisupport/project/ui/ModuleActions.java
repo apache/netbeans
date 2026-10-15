@@ -149,7 +149,7 @@ public final class ModuleActions implements ActionProvider, ExecProject {
         supportedActionsSet.add(ActionProvider.COMMAND_MOVE);
         supportedActionsSet.add(ActionProvider.COMMAND_COPY);
         supportedActionsSet.add(ActionProvider.COMMAND_DELETE);
-        supportedActions = supportedActionsSet.toArray(new String[supportedActionsSet.size()]);
+        supportedActions = supportedActionsSet.toArray(new String[0]);
     }
     
     public String[] getSupportedActions() {
@@ -362,7 +362,7 @@ public final class ModuleActions implements ActionProvider, ExecProject {
                 if (testFOs.isEmpty()) {
                     return null;
                 }
-                return new TestSources(testFOs.toArray(new FileObject[testFOs.size()]), testType, testSrcDir, null);
+                return new TestSources(testFOs.toArray(new FileObject[0]), testType, testSrcDir, null);
             }
         }
     }
@@ -407,7 +407,7 @@ public final class ModuleActions implements ActionProvider, ExecProject {
                 }
             }
         }
-        return testFiles.isEmpty() ? null : new TestSources(testFiles.toArray(new FileObject[testFiles.size()]), testType, testRoot, null);
+        return testFiles.isEmpty() ? null : new TestSources(testFiles.toArray(new FileObject[0]), testType, testRoot, null);
     }
     
     @Messages("MSG_no_source=No source to operate on.")
@@ -441,11 +441,7 @@ public final class ModuleActions implements ActionProvider, ExecProject {
                     doRun();
                 } finally {
                     if (task != null) {
-                        task.addTaskListener(new TaskListener() {
-                            @Override public void taskFinished(Task _) {
-                                listener.finished(task.result() == 0);
-                            }
-                        });
+                        task.addTaskListener((Task t) -> listener.finished(task.result() == 0));
                     } else {
                         listener.finished(false);
                     }

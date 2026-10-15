@@ -29,7 +29,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.netbeans.api.actions.Savable;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.search.provider.SearchListener;
 import org.netbeans.modules.search.ui.FileObjectPropertySet;
 import org.netbeans.modules.search.ui.UiUtils;
@@ -39,7 +38,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
-import org.openide.util.Cancellable;
 import org.openide.util.NbBundle;
 
 /**
@@ -82,17 +80,13 @@ class GraphicalSearchListener extends SearchListener {
     }
 
     public void searchStarted() {
-
-        progressHandle = ProgressHandleFactory.createHandle(
-                NbBundle.getMessage(ResultView.class,
-                "TEXT_SEARCHING___"), new Cancellable() {               //NOI18N
-
-            @Override
-            public boolean cancel() {
-                searchComposition.terminate();
-                return true;
-            }
-        });
+        progressHandle = ProgressHandle.createHandle(
+                NbBundle.getMessage(ResultView.class, "TEXT_SEARCHING___"), //NOI18N
+                () -> {
+                    searchComposition.terminate();
+                    return true;
+                },
+                null);
         progressHandle.start();
         resultViewPanel.searchStarted();
         searchComposition.getSearchResultsDisplayer().searchStarted();
@@ -249,7 +243,7 @@ class GraphicalSearchListener extends SearchListener {
 
     private class EventChildren extends Children.Keys<EventNode> {
 
-        private List<EventNode> events = new ArrayList<EventNode>();
+        private List<EventNode> events = new ArrayList<>();
         EventType worstType = EventType.INFO;
 
         public synchronized void addEvent(EventNode event) {

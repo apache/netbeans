@@ -49,6 +49,8 @@ public class ProxySettings {
     public static final String USE_PROXY_ALL_PROTOCOLS = "useProxyAllProtocols";    // NOI18N
     public static final String DIRECT = "DIRECT";   // NOI18N
     public static final String PAC = "PAC";     // NOI18N
+    public static final String PAC_SCRIPT_TIMEOUT = "pacScriptTimeout"; // NOI18N
+    public static final int DEFAULT_TIMEOUT = 10000;
     
     public static final String SYSTEM_PROXY_HTTP_HOST = "systemProxyHttpHost";      // NOI18N
     public static final String SYSTEM_PROXY_HTTP_PORT = "systemProxyHttpPort";      // NOI18N
@@ -62,7 +64,7 @@ public class ProxySettings {
     // Only for testing purpose (Test connection in General options panel)
     public static final String TEST_SYSTEM_PROXY_HTTP_HOST = "testSystemProxyHttpHost"; // NOI18N
     public static final String TEST_SYSTEM_PROXY_HTTP_PORT = "testSystemProxyHttpPort"; // NOI18N
-    public static final String HTTP_CONNECTION_TEST_URL = "http://netbeans.org";        // NOI18N
+    public static final String HTTP_CONNECTION_TEST_URL = "https://netbeans.apache.org";// NOI18N
     
     private static String presetNonProxyHosts;
 
@@ -141,6 +143,10 @@ public class ProxySettings {
         return type;
     }
     
+    public static int getPacScriptTimeout() {
+        return getPreferences ()
+                .getInt(PAC_SCRIPT_TIMEOUT, DEFAULT_TIMEOUT);
+    }
     
     public static String getSystemHttpHost() {
         return getPreferences().get(SYSTEM_PROXY_HTTP_HOST, "");
@@ -253,8 +259,8 @@ public class ProxySettings {
     }
 
     private static String getModifiedNonProxyHosts (String systemPreset) {
-        String fromSystem = systemPreset.replaceAll (";", "|").replaceAll (",", "|"); //NOI18N
-        String fromUser = getPresetNonProxyHosts () == null ? "" : getPresetNonProxyHosts ().replaceAll (";", "|").replaceAll (",", "|"); //NOI18N
+        String fromSystem = systemPreset.replace (";", "|").replace (",", "|"); //NOI18N
+        String fromUser = getPresetNonProxyHosts () == null ? "" : getPresetNonProxyHosts ().replace (";", "|").replace (",", "|"); //NOI18N
         if (Utilities.isWindows ()) {
             fromSystem = addReguralToNonProxyHosts (fromSystem);
         }

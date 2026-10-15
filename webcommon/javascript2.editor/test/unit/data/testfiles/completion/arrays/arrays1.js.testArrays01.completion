@@ -3,60 +3,68 @@ arr01.|pop();
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 CLASS      prototype                       [PUBLIC]   JS Platform
-METHOD     apply(thisArg: Object): Array   [PUBLIC]   JS Platform
-METHOD     assign(target: Object): Object  [PUBLIC,   JS Platform
-METHOD     call(thisArg: Object): String   [PUBLIC]   JS Platform
-METHOD     concat(value1): Array           [PUBLIC]   JS Platform
-METHOD     copyWithin(target: String): un  [PUBLIC]   JS Platform
-METHOD     create(proto: Object): Object   [PUBLIC,   JS Platform
-METHOD     defineProperties(obj: Object,   [PUBLIC,   JS Platform
-METHOD     defineProperty(obj: Object, pr  [PUBLIC,   JS Platform
-METHOD     entries(): Array                [PUBLIC]   JS Platform
-METHOD     every(callback: Function): Boo  [PUBLIC]   JS Platform
-METHOD     fill(value: Array): undefined   [PUBLIC]   JS Platform
-METHOD     filter(callback: Function): Ar  [PUBLIC]   JS Platform
-METHOD     find(callback: Function): Obje  [PUBLIC]   JS Platform
-METHOD     findIndex(callback: Function):  [PUBLIC]   JS Platform
-METHOD     forEach(callback: Function): u  [PUBLIC]   JS Platform
-METHOD     freeze(obj: Object): Object     [PUBLIC,   JS Platform
-METHOD     from(arrayLike: Object): Array  [PUBLIC,   JS Platform
-METHOD     getOwnPropertyDescriptor(obj:   [PUBLIC,   JS Platform
-METHOD     getOwnPropertyDescriptors(obj:  [PUBLIC,   JS Platform
-METHOD     getOwnPropertyNames(obj: Objec  [PUBLIC,   JS Platform
-METHOD     getOwnPropertySymbols(obj: Obj  [PUBLIC,   JS Platform
-METHOD     getPrototypeOf(obj: Object): O  [PUBLIC,   JS Platform
-METHOD     hasOwnProperty(prop: String):   [PUBLIC]   JS Platform
-METHOD     includes(searchElement: String  [PUBLIC]   JS Platform
-METHOD     indexOf(searchElement: Array):  [PUBLIC]   JS Platform
-METHOD     is(value1: String, value2: Str  [PUBLIC,   JS Platform
-METHOD     isArray(obj: Object): Boolean   [PUBLIC,   JS Platform
-METHOD     isExtensible(obj: Object): Boo  [PUBLIC,   JS Platform
-METHOD     isFrozen(obj: Object): Boolean  [PUBLIC,   JS Platform
-METHOD     isPrototypeOf(obj): Boolean     [PUBLIC]   JS Platform
-METHOD     isSealed(obj: Object): Boolean  [PUBLIC,   JS Platform
+METHOD     apply(thisArg: Object): Object  [PUBLIC]   JS Platform
+METHOD     assign(target: Object, sources  [PUBLIC,   JS Platform
+METHOD     at(index: Number): Object|unde  [PUBLIC]   JS Platform
+METHOD     bind(thisArg: Object, argArray  [PUBLIC]   JS Platform
+METHOD     call(thisArg: Object, argArray  [PUBLIC]   JS Platform
+METHOD     concat(items: ConcatArray|Obje  [PUBLIC]   JS Platform
+METHOD     copyWithin(target: Number, sta  [PUBLIC]   JS Platform
+METHOD     create(o: null|Object, propert  [PUBLIC,   JS Platform
+METHOD     defineProperties(o: Object, pr  [PUBLIC,   JS Platform
+METHOD     defineProperty(o: Object, p: N  [PUBLIC,   JS Platform
+METHOD     entries(): IterableIterator     [PUBLIC]   JS Platform
+METHOD     every(predicate: Function): Bo  [PUBLIC]   JS Platform
+METHOD     fill(value: Object): Array      [PUBLIC]   JS Platform
+METHOD     filter(predicate: Function): T  [PUBLIC]   JS Platform
+METHOD     find(predicate: Function): Obj  [PUBLIC]   JS Platform
+METHOD     findIndex(predicate: Function)  [PUBLIC]   JS Platform
+METHOD     flat(): FlatArray[]             [PUBLIC]   JS Platform
+METHOD     flatMap(callback: Function): U  [PUBLIC]   JS Platform
+METHOD     forEach(callbackfn: Function):  [PUBLIC]   JS Platform
+METHOD     freeze(o: Object): Object       [PUBLIC,   JS Platform
+METHOD     from(iterable: Iterable|ArrayL  [PUBLIC,   JS Platform
+METHOD     fromEntries(entries: Iterable)  [PUBLIC,   JS Platform
+METHOD     getOwnPropertyDescriptor(o: Ob  [PUBLIC,   JS Platform
+METHOD     getOwnPropertyDescriptors(o: O  [PUBLIC,   JS Platform
+METHOD     getOwnPropertyNames(o: Object)  [PUBLIC,   JS Platform
+METHOD     getOwnPropertySymbols(o: Objec  [PUBLIC,   JS Platform
+METHOD     getPrototypeOf(o: Object): Obj  [PUBLIC,   JS Platform
+METHOD     hasOwn(o: Object, v: Number|Sy  [PUBLIC,   JS Platform
+METHOD     hasOwnProperty(v: Number|Symbo  [PUBLIC]   JS Platform
+METHOD     includes(searchElement: Object  [PUBLIC]   JS Platform
+METHOD     indexOf(searchElement: Object)  [PUBLIC]   JS Platform
+METHOD     is(value1: Object, value2: Obj  [PUBLIC,   JS Platform
+METHOD     isArray(arg: Object): Boolean   [PUBLIC,   JS Platform
+METHOD     isExtensible(o: Object): Boole  [PUBLIC,   JS Platform
+METHOD     isFrozen(o: Object): Boolean    [PUBLIC,   JS Platform
+METHOD     isPrototypeOf(v: Object): Bool  [PUBLIC]   JS Platform
+METHOD     isSealed(o: Object): Boolean    [PUBLIC,   JS Platform
 METHOD     join(): String                  [PUBLIC]   JS Platform
-METHOD     keys(): Array                   [PUBLIC]   JS Platform
+METHOD     keys(): IterableIterator        [PUBLIC]   JS Platform
 METHOD     lastIndexOf(searchElement: Obj  [PUBLIC]   JS Platform
-METHOD     map(callback: Function): Array  [PUBLIC]   JS Platform
-METHOD     of(element0): Array             [PUBLIC,   JS Platform
-METHOD     pop(): Object                   [PUBLIC]   JS Platform
-METHOD     preventExtensions(obj: Object)  [PUBLIC,   JS Platform
-METHOD     propertyIsEnumerable(prop: Str  [PUBLIC]   JS Platform
-METHOD     push(element1): Number          [PUBLIC]   JS Platform
-METHOD     reduce(callback: Function): Ob  [PUBLIC]   JS Platform
-METHOD     reduceRight(callback: Function  [PUBLIC]   JS Platform
-METHOD     reverse(): Array                [PUBLIC]   JS Platform
-METHOD     seal(obj: Object): Object       [PUBLIC,   JS Platform
-METHOD     shift(): Object                 [PUBLIC]   JS Platform
-METHOD     slice(): Array                  [PUBLIC]   JS Platform
-METHOD     some(callback: Function): Bool  [PUBLIC]   JS Platform
+METHOD     map(callbackfn: Function): U[]  [PUBLIC]   JS Platform
+METHOD     of(items: T[]): T[]             [PUBLIC,   JS Platform
+METHOD     pop(): Object|undefined         [PUBLIC]   JS Platform
+METHOD     preventExtensions(o: Object):   [PUBLIC,   JS Platform
+METHOD     propertyIsEnumerable(v: Number  [PUBLIC]   JS Platform
+METHOD     push(items: T[]): Number        [PUBLIC]   JS Platform
+METHOD     reduce(callbackfn: Function, i  [PUBLIC]   JS Platform
+METHOD     reduceRight(callbackfn: Functi  [PUBLIC]   JS Platform
+METHOD     reverse(): T[]                  [PUBLIC]   JS Platform
+METHOD     seal(o: Object): Object         [PUBLIC,   JS Platform
+METHOD     setPrototypeOf(o: Object, prot  [PUBLIC,   JS Platform
+METHOD     shift(): Object|undefined       [PUBLIC]   JS Platform
+METHOD     slice(): T[]                    [PUBLIC]   JS Platform
+METHOD     some(predicate: Function): Boo  [PUBLIC]   JS Platform
 METHOD     sort(): Array                   [PUBLIC]   JS Platform
 METHOD     splice(start: Number, deleteCo  [PUBLIC]   JS Platform
 METHOD     toLocaleString(): String        [PUBLIC]   JS Platform
 METHOD     toString(): String              [PUBLIC]   JS Platform
-METHOD     unshift(): Number               [PUBLIC]   JS Platform
+METHOD     unshift(items: T[]): Number     [PUBLIC]   JS Platform
 METHOD     valueOf(): Object               [PUBLIC]   JS Platform
-METHOD     values(): Array                 [PUBLIC]   JS Platform
-FIELD      constructor: Function           [PUBLIC]   JS Platform
+METHOD     values(): IterableIterator      [PUBLIC]   JS Platform
+FIELD      caller: Function                [PUBLIC]   JS Platform
 FIELD      length: Number                  [PUBLIC]   JS Platform
-FIELD      name: String                    [PUBLIC,   JS Platform
+FIELD      name: String                    [PUBLIC]   JS Platform
+VARIABLE   arguments: Object               [PUBLIC]   JS Platform

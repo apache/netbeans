@@ -98,6 +98,7 @@ public final class FastTypeProvider implements TypeProvider {
     }
 
     @Override
+    @SuppressWarnings("fallthrough")
     public void computeTypeNames(Context context, Result result) {
         StringBuilder pattern = new StringBuilder();
         boolean sensitive = true;
@@ -201,7 +202,7 @@ public final class FastTypeProvider implements TypeProvider {
 
             if (pkgName != null && !"".equals(pkgName)) {
                 StringBuilder sb = new StringBuilder();
-                s = sb.append(pkgName).append('.').append(simpleName).toString().replaceAll("\\.", "/"); // NOI18N
+                s = sb.append(pkgName).append('.').append(simpleName).toString().replace(".", "/"); // NOI18N
             }
             return root.getFileObject(s + JAVA_EXTENSION);
         }

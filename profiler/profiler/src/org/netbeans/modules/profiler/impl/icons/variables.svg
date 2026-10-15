@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        opacity: .5;
+      }
+
+      .st0, .st1 {
+        fill: #dde5ef;
+      }
+
+      .st2 {
+        opacity: .33;
+      }
+
+      .st3 {
+        opacity: .1;
+      }
+
+      .st4 {
+        opacity: .14;
+      }
+
+      .st5 {
+        fill: #a7cdea;
+      }
+    </style>
+  </defs>
+  <g>
+    <polygon class="st1" points="1 15 12.5 15 15 12.531 15 3 3.5 3 1 6 1 15"/>
+    <g class="st2">
+      <path d="M14,4v8.113l-1.911,1.887H2v-7.638l1.968-2.362h10.032M15,3H3.5l-2.5,3v9h11.5l2.5-2.469V3h0Z"/>
+    </g>
+  </g>
+  <polyline class="st1" points="2 14 4 12 4 4"/>
+  <polygon class="st3" points="14 11.75 4.25 11.75 4.25 4 3.75 4 3.75 11.896 1.823 13.823 2.177 14.177 4.104 12.25 14 12.25 14 11.75"/>
+  <line class="st1" x1="12.5" y1="14.125" x2="12.5" y2="6.249"/>
+  <g>
+    <rect class="st5" x="3" width="9" height="9"/>
+    <g class="st2">
+      <path d="M11,1v7h-7V1h7M12,0H3v9h9V0h0Z"/>
+    </g>
+  </g>
+  <rect class="st0" x="2" y="6" width="10" height="8"/>
+  <polygon class="st4" points="14.429 4.133 13.571 3.618 12.217 5.875 2 5.875 2 6.875 12 6.875 12 14 13 14 13 6.514 14.429 4.133"/>
+</svg>

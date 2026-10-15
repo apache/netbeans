@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.xml.namespace.QName;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.model.ModelOperation;
 import org.netbeans.modules.maven.model.Utilities;
@@ -53,12 +54,14 @@ import org.openide.util.Exceptions;
  * @author mkuchtiak
  */
 public class MavenSchemaCompiler implements SchemaCompiler {
-    private static final String JAVA_SE_CONFIG_DIR = "resources/jaxb"; //NOI18N
-    private static final String JAXB_PLUGIN_GROUP_ID = "org.jvnet.jaxb2.maven2"; //NOI18N
-    private static final String JAXB_PLUGIN_ARTIFACT_ID = "maven-jaxb2-plugin"; //NOI18N
+    private static final String JAXB_PLUGIN_GROUP_ID = "org.jvnet.jaxb"; //NOI18N
+    private static final String JAXB_PLUGIN_ARTIFACT_ID = "jaxb-maven-plugin"; //NOI18N
+    private static final String JAXB_PLUGIN_VERSION_JAVAX = "2.0.9"; //NOI18N
+    private static final String JAXB_PLUGIN_VERSION_JAKARTA = "4.0.0"; //NOI18N
     private static final String JAXB_GENERATE_PREFIX = "jaxb-generate-"; //NOI18N
 
-    private Project project;
+    private final Project project;
+
     MavenSchemaCompiler(Project project) {
         this.project = project;
     }
@@ -66,6 +69,17 @@ public class MavenSchemaCompiler implements SchemaCompiler {
     @Override
     public void compileSchema(final WizardDescriptor wiz) {
         final String schemaName = (String) wiz.getProperty(JAXBWizModuleConstants.SCHEMA_NAME);
+
+        String catalogFilePrep = (String) wiz.getProperty(
+                    JAXBWizModuleConstants.CATALOG_FILE);
+        if (catalogFilePrep != null && catalogFilePrep.trim().isEmpty()) {
+            catalogFilePrep = null;
+        }
+        String catalogFile = catalogFilePrep;
+
+        List<String> bindingFileList = (List<String>) wiz.getProperty(
+                    JAXBWizModuleConstants.JAXB_BINDING_FILES);
+
         ModelOperation<POMModel> operation = new ModelOperation<POMModel>() {
             @Override
             public void performOperation(POMModel model) {
@@ -75,7 +89,7 @@ public class MavenSchemaCompiler implements SchemaCompiler {
                 if (packageName != null && packageName.trim().length() == 0) {
                     packageName = null;
                 }
-                addJaxb2Execution(plugin, schemaName, packageName);
+                addJaxb2Execution(plugin, schemaName, packageName, catalogFile, bindingFileList);
             }
         };
         Utilities.performPOMModelOperations(project.getProjectDirectory().getFileObject("pom.xml"),
@@ -90,12 +104,6 @@ public class MavenSchemaCompiler implements SchemaCompiler {
         if (xsdFileList != null) {
             String schemaName = (String) wiz.getProperty(JAXBWizModuleConstants.SCHEMA_NAME);
 
-            /*List<String> bindingFileList = (List<String>) wiz.getProperty(
-                    JAXBWizModuleConstants.JAXB_BINDING_FILES);
-
-            String catlogFile = (String) wiz.getProperty(
-                    JAXBWizModuleConstants.CATALOG_FILE);*/
-
             boolean srcLocTypeUrl = JAXBWizModuleConstants.SRC_LOC_TYPE_URL.equals(
                     (String) wiz.getProperty(
                     JAXBWizModuleConstants.SOURCE_LOCATION_TYPE));
@@ -107,7 +115,7 @@ public class MavenSchemaCompiler implements SchemaCompiler {
                     String url = xsdFileList.get(i);
                     URL schemaURL = new URL(url);
                     try {
-                        FileObject newFileFO = retrieveResource(
+                        retrieveResource(
                                getSchemaFolder(schemaName),
                                schemaURL.toURI());
                     } catch (URISyntaxException ex) {
@@ -121,7 +129,7 @@ public class MavenSchemaCompiler implements SchemaCompiler {
                 for (int i = 0; i < xsdFileList.size(); i++) {
                     File srcFile = Relative2AbsolutePath(projDir,
                                 xsdFileList.get(i));
-                    FileObject newFileFO = retrieveResource(
+                    retrieveResource(
                            getSchemaFolder(schemaName),
                            srcFile.toURI());
                 }
@@ -198,27 +206,34 @@ public class MavenSchemaCompiler implements SchemaCompiler {
             //TODO CHECK THE ACTUAL PARAMETER VALUES..
             return plugin;
         }
+
+        ClassPath cp = ClassPath.getClassPath(project.getProjectDirectory().getFileObject("src/main/java"), ClassPath.COMPILE);
+
+        boolean javaxXmlBindingPresent = cp.findResource("javax/xml/bind/JAXBContext.class") != null; //NOI18N
+        boolean jakartaXmlBindingPresent = cp.findResource("jakarta/xml/bind/JAXBContext.class") != null; //NOI18N
+        boolean jakartaNamespace = jakartaXmlBindingPresent || (! javaxXmlBindingPresent);
+
         plugin = model.getFactory().createPlugin();
         plugin.setGroupId(JAXB_PLUGIN_GROUP_ID);
         plugin.setArtifactId(JAXB_PLUGIN_ARTIFACT_ID);
-        plugin.setVersion("0.12.0"); //NOI18N
+        if(jakartaNamespace) {
+            plugin.setVersion(JAXB_PLUGIN_VERSION_JAKARTA);
+        } else {
+            plugin.setVersion(JAXB_PLUGIN_VERSION_JAVAX);
+        }
         bld.addPlugin(plugin);
 
         // setup global configuration
         Configuration config = plugin.getConfiguration();
         if (config == null) {
             config = model.getFactory().createConfiguration();
-            config.setSimpleParameter("catalog", "src/main/resources/jaxb/catalog.xml"); //NOI18N
-            config.setSimpleParameter("catalogResolver", "org.jvnet.jaxb2.maven2.resolver.tools.ClasspathCatalogResolver"); //NOI18N
-            config.setSimpleParameter("forceRegenerate", "true"); //NOI18N
-            config.setSimpleParameter("generateDirectory", "${project.build.directory}/generated-sources/xjc"); //NOI18N
             config.setSimpleParameter("verbose", "true"); //NOI18N
             plugin.setConfiguration(config);
         }
         return plugin;
     }
 
-   public static void addJaxb2Execution(Plugin plugin, String id, String packageName) {
+    public static void addJaxb2Execution(Plugin plugin, String id, String packageName, String catalogFile, List<String> bindingFiles) {
         POMModel model = plugin.getModel();
         assert model.isIntransaction();
 
@@ -232,26 +247,63 @@ public class MavenSchemaCompiler implements SchemaCompiler {
         Configuration config = model.getFactory().createConfiguration();
         exec.setConfiguration(config);
 
-        QName qname = POMQName.createQName("schemaIncludes", model.getPOMQNames().isNSAware()); //NOI18N
-        POMExtensibilityElement schemaIncludes = model.getFactory().createPOMExtensibilityElement(qname);
+        POMExtensibilityElement schemaIncludes = createPOMExtensibilityElement("schemaIncludes", model);  //NOI18N
         config.addExtensibilityElement(schemaIncludes);
 
-        qname = POMQName.createQName("include", model.getPOMQNames().isNSAware()); //NOI18N
-        POMExtensibilityElement include = model.getFactory().createPOMExtensibilityElement(qname);
+        POMExtensibilityElement include = createPOMExtensibilityElement("include", model); //NOI18N
         include.setElementText("jaxb/"+id+"/*.xsd"); //NOI18N
         schemaIncludes.addExtensibilityElement(include);
 
-        qname = POMQName.createQName("episodeFile", model.getPOMQNames().isNSAware()); //NOI18N
-        POMExtensibilityElement episodeFile = model.getFactory().createPOMExtensibilityElement(qname);
-        episodeFile.setElementText("${project.build.directory}/generated-sources/xjc/META-INF/jaxb-"+id+".episode"); //NOI18N
+        POMExtensibilityElement episodeFile = createPOMExtensibilityElement("episodeFile", model); //NOI18N
+        episodeFile.setElementText("${project.build.directory}/generated-sources/xjc-" + id + "/META-INF/jaxb-" + id + ".episode"); //NOI18N
         config.addExtensibilityElement(episodeFile);
 
+        if (catalogFile != null) {
+            POMExtensibilityElement catalog = createPOMExtensibilityElement("catalog", model); //NOI18N
+            catalog.setElementText(catalogFile); //NOI18N
+            config.addExtensibilityElement(catalog);
+        }
+
+        if (bindingFiles != null && !bindingFiles.isEmpty()) {
+            POMExtensibilityElement bindings = createPOMExtensibilityElement("bindings", model); //NOI18N
+            config.addExtensibilityElement(bindings);
+
+            for (String bindingFile : bindingFiles) {
+                File bindingFileObject = new File(bindingFile);
+
+                POMExtensibilityElement binding = createPOMExtensibilityElement("binding", model); //NOI18N
+                bindings.addExtensibilityElement(binding);
+
+                POMExtensibilityElement fileset = createPOMExtensibilityElement("fileset", model); //NOI18N
+                binding.addExtensibilityElement(fileset);
+
+                POMExtensibilityElement directory = createPOMExtensibilityElement("directory", model); //NOI18N
+                fileset.addExtensibilityElement(directory);
+                directory.setElementText(bindingFileObject.getParent());
+
+                POMExtensibilityElement includes = createPOMExtensibilityElement("includes", model); //NOI18N
+                fileset.addExtensibilityElement(includes);
+
+                POMExtensibilityElement include2 = createPOMExtensibilityElement("include", model); //NOI18N
+                includes.addExtensibilityElement(include2);
+                include2.setElementText(bindingFileObject.getName());
+            }
+        }
+
+        POMExtensibilityElement outputDirectory = createPOMExtensibilityElement("generateDirectory", model); //NOI18N
+        outputDirectory.setElementText("${project.build.directory}/generated-sources/xjc-" + id); //NOI18N
+        config.addExtensibilityElement(outputDirectory);
+
         if (packageName != null) {
-            qname = POMQName.createQName("generatePackage", model.getPOMQNames().isNSAware()); //NOI18N
-            POMExtensibilityElement generatePackage = model.getFactory().createPOMExtensibilityElement(qname);
+            POMExtensibilityElement generatePackage = createPOMExtensibilityElement("generatePackage", model); //NOI18N
             generatePackage.setElementText(packageName); //NOI18N
             config.addExtensibilityElement(generatePackage);
         }
+    }
+
+    private static POMExtensibilityElement createPOMExtensibilityElement(String name, POMModel model) {
+        QName qname = POMQName.createQName(name, model.getPOMQNames().isNSAware());
+        return model.getFactory().createPOMExtensibilityElement(qname);
     }
 
     private static String getUniqueId(Plugin plugin, String id) {

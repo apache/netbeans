@@ -74,8 +74,7 @@ public class DataObjectSearchGroup extends SearchGroup {
      * @throws RuntimeException annotated at USER level by reason (on low memory condition)
      */
     public void doSearch() {
-        Node[] nodes = normalizeNodes(
-                searchRoots.toArray(new Node[searchRoots.size()]));
+        Node[] nodes = normalizeNodes(searchRoots.toArray(new Node[0]));
 
         lowMemoryWarning = false;
         lowMemoryWarningCount = 0;
@@ -347,7 +346,7 @@ public class DataObjectSearchGroup extends SearchGroup {
                 result.add(node);
             }
         }
-        return result.toArray(new Node[result.size()]);
+        return result.toArray(new Node[0]);
     }
 
 }

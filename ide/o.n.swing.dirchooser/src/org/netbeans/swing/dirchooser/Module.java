@@ -23,7 +23,6 @@
 package org.netbeans.swing.dirchooser;
 
 import java.awt.EventQueue;
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
@@ -57,11 +56,7 @@ public class Module extends ModuleInstall {
             @Override
             public void afterLoad (WindowSystemEvent event) {
                 WindowManager.getDefault().removeWindowSystemListener(this);
-                EventQueue.invokeLater(new Runnable() {
-                    public @Override void run() {
-                        install();
-                    }
-                });
+                EventQueue.invokeLater(Module::install);
             }
             @Override
             public void beforeSave (WindowSystemEvent event) {
@@ -73,11 +68,7 @@ public class Module extends ModuleInstall {
     }
 
     @Override public void uninstalled() {
-        EventQueue.invokeLater(new Runnable() {
-            public @Override void run() {
-                uninstall();
-            }
-        });
+        EventQueue.invokeLater(Module::uninstall);
     }
         
     private static void install() {
@@ -96,15 +87,12 @@ public class Module extends ModuleInstall {
             uid.put(val, impl);
         }
         // #61147: prevent NB from switching to a different UI later (under GTK):
-        uid.addPropertyChangeListener(pcl = new PropertyChangeListener() {
-            public @Override void propertyChange(PropertyChangeEvent evt) {
-                String name = evt.getPropertyName();
-                Object className = uid.get(KEY);
-                if ((name.equals(KEY) || name.equals("UIDefaults")) && !val.equals(className)
-                        && !isQuickFileChooser(className)) {
-                    originalImpl = (Class<?>) uid.getUIClass(KEY);
-                    uid.put(KEY, val);
-                }
+        uid.addPropertyChangeListener(pcl = (evt) -> {
+            String name = evt.getPropertyName();
+            Object className = uid.get(KEY);
+            if ((name.equals(KEY) || name.equals("UIDefaults")) && !val.equals(className) && !isQuickFileChooser(className)) {
+                originalImpl = (Class<?>) uid.getUIClass(KEY);
+                uid.put(KEY, val);
             }
         });
     }

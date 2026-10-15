@@ -723,10 +723,10 @@ public final class MarkVector {
 //    private Object[] toObjects() {
 //        return new Object[] {
 //            markArray.clone(),
-//            new Integer(gapStart),
-//            new Integer(gapLength),
-//            new Integer(offsetGapStart),
-//            new Integer(offsetGapLength)
+//            Integer.valueOf(gapStart),
+//            Integer.valueOf(gapLength),
+//            Integer.valueOf(offsetGapStart),
+//            Integer.valueOf(offsetGapLength)
 //        };
 //    }
 

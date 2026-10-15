@@ -37,20 +37,22 @@ public class IndexElementImpl extends DBMemberElementImpl implements IndexElemen
     }
 
     public IndexElementImpl(TableElementImpl tei, String name, boolean unique) {
-		super(name);
-		columns = new DBElementsCollection(tei, new ColumnElement[0]);
+        super(name);
+        columns = new DBElementsCollection(tei, new ColumnElement[0]);
+
+        // NOTE - After doing research, not sure this comment still applys? Remove it?
+        // workaround for bug #4396371
+        // http://andorra.eng:8080/cgi-bin/ws.exe/bugtraq/bug.hts?where=bugid_value%3D4396371
+        String hc = String.valueOf(columns.hashCode());
         
-        //workaround for bug #4396371
-        //http://andorra.eng:8080/cgi-bin/ws.exe/bugtraq/bug.hts?where=bugid_value%3D4396371
-        Object hc = String.valueOf(columns.hashCode());
         while (DBElementsCollection.instances.contains(hc)) {
-    		columns = new DBElementsCollection(tei, new ColumnElement[0]);
+            columns = new DBElementsCollection(tei, new ColumnElement[0]);
             hc = String.valueOf(columns.hashCode());
         }
         DBElementsCollection.instances.add(hc);
 
-		this.tei = tei;
-		_unique = unique;
+        this.tei = tei;
+        _unique = unique;
     }
   
     /** Get the unique flag of the index.
@@ -82,7 +84,7 @@ public class IndexElementImpl extends DBMemberElementImpl implements IndexElemen
      */
     public ColumnElement[] getColumns() {
         DBElement[] dbe = columns.getElements();
-        return (ColumnElement[]) Arrays.asList(dbe).toArray(new ColumnElement[dbe.length]);
+        return Arrays.asList(dbe).toArray(new ColumnElement[dbe.length]);
     }
   
     /** Find a column by name.
@@ -94,7 +96,7 @@ public class IndexElementImpl extends DBMemberElementImpl implements IndexElemen
     }
   
     protected void initColumns(LinkedList idxs) {
-        LinkedList columnsList = new LinkedList();
+        List<String> columnsList = new LinkedList<>();
         String name, info;
         int start, end;
         

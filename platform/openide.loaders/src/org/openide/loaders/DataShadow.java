@@ -27,6 +27,7 @@ import java.io.*;
 import java.lang.ref.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.logging.Level;
@@ -337,7 +338,7 @@ public class DataShadow extends MultiDataObject implements DataObject.Container 
      */
     private static void writeShadowFile(FileObject fo, URL url) throws IOException {
         FileLock lock = fo.lock();
-        Writer os = new OutputStreamWriter(fo.getOutputStream(lock), "UTF-8");
+        Writer os = new OutputStreamWriter(fo.getOutputStream(lock), StandardCharsets.UTF_8);
         try {
             os.write(url.toExternalForm()); // NOI18N
         } finally {
@@ -485,7 +486,7 @@ public class DataShadow extends MultiDataObject implements DataObject.Container 
             try {
                 return MUTEX.readAccess(new Mutex.ExceptionAction<String[]>() {
                     public String[] run() throws IOException {
-                        BufferedReader ois = new BufferedReader(new InputStreamReader(f.getInputStream(), "UTF-8")); // NOI18N
+                        BufferedReader ois = new BufferedReader(new InputStreamReader(f.getInputStream(), StandardCharsets.UTF_8));
                         try {
                             String s = ois.readLine();
                             String fs = ois.readLine();
@@ -673,7 +674,7 @@ public class DataShadow extends MultiDataObject implements DataObject.Container 
         // update nodes
         ShadowNode n [] = null;
         synchronized (nodes) {
-            n = nodes.toArray(new ShadowNode[nodes.size()]);
+            n = nodes.toArray(new ShadowNode[0]);
         }
         
         try {
@@ -1204,7 +1205,7 @@ public class DataShadow extends MultiDataObject implements DataObject.Container 
             }
             
             if (o instanceof DSWeakReference) {
-                DSWeakReference him = (DSWeakReference) o;
+                DSWeakReference<?> him = (DSWeakReference<?>) o;
                 return mine.equals(him.get());
             }
             

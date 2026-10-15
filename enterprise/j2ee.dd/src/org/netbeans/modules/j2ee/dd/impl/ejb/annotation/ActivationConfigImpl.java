@@ -52,7 +52,7 @@ public class ActivationConfigImpl implements ActivationConfig {
 
     @Override
     public ActivationConfigProperty[] getActivationConfigProperty() {
-        return properties.toArray(new ActivationConfigProperty[properties.size()]);
+        return properties.toArray(new ActivationConfigProperty[0]);
     }
 
     @Override

@@ -22,7 +22,7 @@ package org.netbeans.swing.popupswitcher;
 import javax.swing.Icon;
 
 /**
- * Represents one item in <code>SwitcherTable</class>.
+ * Represents one item in <code>SwitcherTable</code>.
  *
  * @see SwitcherTable
  *
@@ -100,7 +100,7 @@ public class SwitcherTableItem implements Comparable {
     
     /**
      * Return item's description - the text which can be used for arbitrary
-     * purpose. E.g. </code>KeyboardPopupSwitcher</code> uses it for statusbar
+     * purpose. E.g. <code>KeyboardPopupSwitcher</code> uses it for statusbar
      * text.
      */
     public String getDescription() {

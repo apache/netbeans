@@ -918,7 +918,7 @@ public abstract class DocumentLine extends Line {
     * ways to obtain a line set for documents following
     * NetBeans conventions.
     */
-    public static abstract class Set extends Line.Set {
+    public abstract static class Set extends Line.Set {
         /** listener on document changes, accessed from LazyLines */
         final LineListener listener;
 
@@ -1066,7 +1066,8 @@ public abstract class DocumentLine extends Line {
          * of all obtain documentrenderer, then ask for any other locks like
          * Line.Set.lines.
          *
-         * @param line line we want to register
+         * @param lineIndex line index
+         * @param lineCreator line we want to register
          * @return the line or some line that already was registered
          */
         private Line safelyFindOrCreateLine(final int lineIndex, final LineVector.LineCreator lineCreator) {

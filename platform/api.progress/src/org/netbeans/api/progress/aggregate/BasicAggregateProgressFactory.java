@@ -19,6 +19,7 @@
 
 package org.netbeans.api.progress.aggregate;
 
+import javax.swing.Action;
 import org.netbeans.api.progress.ProgressHandle;
 import org.openide.util.Cancellable;
 
@@ -37,8 +38,6 @@ public class BasicAggregateProgressFactory {
      * @param allowToCancel either null, if the task cannot be cancelled or 
      *          an instance of {@link org.openide.util.Cancellable} that will be called when user 
      *          triggers cancel of the task.
-     * @param linkOutput an <code>Action</code> instance that links the running task in the progress bar
-     *                   to an output of the task. The action is assumed to open the apropriate component with the task's output.
      * @param displayName to be shown in the progress UI
      * @return an instance of <code>ProgressHandle</code>, initialized but not started.
      *
@@ -51,6 +50,42 @@ public class BasicAggregateProgressFactory {
     
     public static ProgressContributor createProgressContributor(String trackingId) {
         return new ProgressContributor(trackingId);
+    }
+    
+    /**
+     * Create an aggregating progress ui handle for a long lasting task.
+     * @param contributors the initial set of progress indication contributors that are aggregated in the UI.
+     * @param allowToCancel either null, if the task cannot be cancelled or 
+     *          an instance of {@link org.openide.util.Cancellable} that will be called when user 
+     *          triggers cancel of the task.
+     * @param linkOutput an <code>Action</code> instance that links the running task in the progress bar
+     *                   to an output of the task. The action is assumed to open the apropriate component with the task's output.
+     * @param displayName to be shown in the progress UI
+     * @return an instance of <code>ProgressHandle</code>, initialized but not started.
+     * @since 1.59
+     */
+    public static AggregateProgressHandle createSystemHandle(String displayName, ProgressContributor[] contributors, 
+                                                       Cancellable allowToCancel, Action linkOutput) {
+        return doCreateHandle(displayName, contributors, allowToCancel, true,
+                ProgressHandle.createSystemHandle(displayName, allowToCancel, linkOutput));
+    }  
+    
+    /**
+     * Create an aggregating progress ui handle for a long lasting task.
+     * @param contributors the initial set of progress indication contributors that are aggregated in the UI.
+     * @param allowToCancel either null, if the task cannot be cancelled or 
+     *          an instance of {@link org.openide.util.Cancellable} that will be called when user 
+     *          triggers cancel of the task.
+     * @param linkOutput an <code>Action</code> instance that links the running task in the progress bar
+     *                   to an output of the task. The action is assumed to open the apropriate component with the task's output.
+     * @param displayName to be shown in the progress UI
+     * @return an instance of <code>ProgressHandle</code>, initialized but not started.
+     * @since 1.59
+     */
+    public static AggregateProgressHandle createHandle(String displayName, ProgressContributor[] contributors, 
+                                                       Cancellable allowToCancel, Action linkOutput) {
+        return doCreateHandle(displayName, contributors, allowToCancel, false,
+                ProgressHandle.createHandle(displayName, allowToCancel, linkOutput));
     }
     
     protected static AggregateProgressHandle doCreateHandle(String displayName, ProgressContributor[] contributors, 

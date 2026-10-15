@@ -60,7 +60,7 @@ public class ParsingTestBase extends NbTestCase {
         if (services != null) {
             classes.addAll(Arrays.asList(services));
         }
-        MockServices.setServices(classes.toArray(new Class[classes.size()]));
+        MockServices.setServices(classes.toArray(new Class[0]));
 //        MockLookup.setLookup(
 //                Lookups.metaInfServices(getClass().getClassLoader()),
 //                createTestServices());

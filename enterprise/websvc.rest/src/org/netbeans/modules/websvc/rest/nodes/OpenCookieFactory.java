@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.SwingUtilities;
 
 import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.websvc.rest.support.JavaSourceHelper;
 import org.netbeans.modules.websvc.rest.support.SourceGroupSupport;
@@ -68,7 +68,7 @@ public class OpenCookieFactory {
         public void open() {
             if ( SwingUtilities.isEventDispatchThread()){
                 final AtomicBoolean cancel = new AtomicBoolean();
-                ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     @Override
                     public void run() {
                         doOpen();
@@ -98,13 +98,11 @@ public class OpenCookieFactory {
                             
                             @Override
                             public void run() {
-                                OpenCookie oc = (OpenCookie) dataObj.getCookie(
-                                        OpenCookie.class);
+                                OpenCookie oc = dataObj.getCookie(OpenCookie.class);
                                 if (oc != null) {
                                     oc.open();
                                 }
-                                LineCookie lc = (LineCookie) dataObj.getCookie(
-                                        LineCookie.class);
+                                LineCookie lc = dataObj.getCookie(LineCookie.class);
                                 if (lc != null) {
                                     Line line = lc.getLineSet().getOriginal(
                                             (int) position[0]);

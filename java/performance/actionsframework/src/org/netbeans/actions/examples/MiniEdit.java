@@ -25,7 +25,6 @@
 package org.netbeans.actions.examples;
 
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.FlowLayout;
 import java.awt.KeyboardFocusManager;
@@ -39,15 +38,12 @@ import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
-import javax.swing.BorderFactory;
-import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
@@ -57,20 +53,14 @@ import javax.swing.JToolBar;
 import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.UndoableEditListener;
-import javax.swing.text.Document;
-import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.undo.UndoManager;
 import org.netbeans.actions.api.ContextProvider;
 import org.netbeans.actions.api.Engine;
-import org.netbeans.actions.spi.ProxyContextProvider;
 import org.netbeans.actions.simple.SimpleEngine;
-import org.netbeans.actions.spi.ContextProviderSupport;
 import org.openide.util.Utilities;
-import org.openide.util.enum.AlterEnumeration;
-import org.openide.util.enum.ArrayEnumeration;
+import org.openide.util.Enumerations;
 
 /**
  *
@@ -523,28 +513,22 @@ public class MiniEdit extends javax.swing.JFrame implements ContextProvider, Foc
     }
     
     private Enumeration getSelectedFilesEnumeration() {
-        TreePath paths[] = fileTree.getSelectionPaths();
+        class ToFile implements Enumerations.Processor<Object, File> {
+            public File process(Object obj, Collection<Object> ignore) {
+                TreePath path = (TreePath)obj;
+                File f = (File)path.getLastPathComponent();
+                return f;
+            }
+        }
+
+        TreePath[] paths = fileTree.getSelectionPaths();
         if (paths != null) {
-            Enumeration files = new PathFileEnumeration (
-                new ArrayEnumeration(fileTree.getSelectionPaths()));
-            return files;
+            return Enumerations.convert(Enumerations.array(paths), new ToFile());
         } else {
-            return new ArrayEnumeration(new TreePath[0]);
+            return Enumerations.empty();
         }
     }
-    
-    private class PathFileEnumeration extends AlterEnumeration {
-        public PathFileEnumeration (Enumeration en) {
-            super (en);
-        }
-        
-        protected Object alter(Object o) {
-            TreePath path = (TreePath) o;
-            File f = (File) path.getLastPathComponent();
-            return f;
-        }
-    }
-    
+            
     private String clipboard = null;
     public void cut() {
         if (doCopy()) {
@@ -655,7 +639,7 @@ public class MiniEdit extends javax.swing.JFrame implements ContextProvider, Foc
                     File f = (File) en.nextElement();
                     fileSelected |= !f.isDirectory();
                     dirSelected |= f.isDirectory();
-                    allFilesOpen &= openDocs.keySet().contains(f);
+                    allFilesOpen &= openDocs.containsKey(f);
                 }
                 if (fileSelected) {
                     result.put("fileSelected", Boolean.TRUE);

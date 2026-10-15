@@ -314,7 +314,9 @@ public class CallStackFrameImpl implements CallStackFrame {
             } else {
                 // Check Nashorn:
                 String sourcePath = getSourcePath(null);
-                if (sourcePath.startsWith("jdk/nashorn/internal/scripts/") ||       // NOI18N
+                if (sourcePath.startsWith("org/openjdk/nashorn/internal/scripts/") ||       // NOI18N
+                    sourcePath.startsWith("org\\openjdk\\nashorn\\internal\\scripts\\") ||   // NOI18N
+                    sourcePath.startsWith("jdk/nashorn/internal/scripts/") ||       // NOI18N
                     sourcePath.startsWith("jdk\\nashorn\\internal\\scripts\\")) {   // NOI18N
                     s = "JS";                                                   // NOI18N
                     as = Collections.singletonList(s);
@@ -905,9 +907,9 @@ public class CallStackFrameImpl implements CallStackFrame {
             StackFrame frame = getStackFrame();
             debugger.popFrames(StackFrameWrapper.thread(frame), frame);
         } catch (InternalExceptionWrapper ex) {
-            // Ignored
+            throw new InvalidStackFrameException(ex.getLocalizedMessage());
         } catch (VMDisconnectedExceptionWrapper ex) {
-            // Ignored
+            throw new InvalidStackFrameException(ex.getLocalizedMessage());
         } catch (InvalidStackFrameExceptionWrapper ex) {
             throw ex.getCause();
         }
@@ -1012,7 +1014,7 @@ public class CallStackFrameImpl implements CallStackFrame {
         return Collections.unmodifiableList(frameMonitors);
     }
     
-    private final static class EqualsInfo {
+    private static final class EqualsInfo {
         
         private JPDAThread thread;
         private int depth;

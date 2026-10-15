@@ -255,7 +255,7 @@
     <folder name="Templates">
         <folder name="ClientSide">
             <!-- position copied from web.clientproject -->
-            <attr name="position" intvalue="610"/>
+            <attr name="position" intvalue="1610"/>
         </folder>
     </folder>
     <folder name="OptionsExport">

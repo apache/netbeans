@@ -18,7 +18,7 @@
  */
 package org.netbeans.modules.parsing.lucene;
 
-import org.apache.lucene.index.Term;
+import org.apache.lucene.util.BytesRef;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.parsing.lucene.support.Index;
 import org.netbeans.modules.parsing.lucene.support.IndexManager;
@@ -59,7 +59,7 @@ public abstract class SupportAccessor {
     @NonNull
     public abstract Index.WithTermFrequencies.TermFreq setTermFreq(
             @NonNull Index.WithTermFrequencies.TermFreq into,
-            @NonNull Term term,
+            @NonNull BytesRef term,
             int freq);
     
 }

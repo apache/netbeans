@@ -93,7 +93,7 @@ public final class JavadocForBinaryImpl implements JavadocForBinaryQueryImplemen
                     }
                 }
             }
-            return new R(candidates.toArray(new URL[candidates.size()]));
+            return new R(candidates.toArray(new URL[0]));
         } catch (MalformedURLException e) {
             throw new AssertionError(e);
         }

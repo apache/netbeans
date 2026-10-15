@@ -110,6 +110,7 @@ public abstract class EntityMember {
      * @return The nicer name
      * @deprecated it was a fix for bad name, use makeRelationshipFieldName with collection type parameter to generate proper name initially
      */
+    @Deprecated
     public static String fixRelationshipFieldName(String orgName, CollectionType colType) {
         String newName = orgName;
         if (orgName.endsWith("Collection")) { // NOI18N

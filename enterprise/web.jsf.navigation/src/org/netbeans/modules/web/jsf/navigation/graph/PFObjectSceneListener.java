@@ -69,7 +69,7 @@ public class PFObjectSceneListener implements ObjectSceneListener {
         if (selected.isEmpty()) {
             scene.getPageFlowView().setDefaultActivatedNode();
         } else {
-            scene.getPageFlowView().setActivatedNodes(selected.toArray(new Node[selected.size()]));
+            scene.getPageFlowView().setActivatedNodes(selected.toArray(new Node[0]));
         }
     }
 

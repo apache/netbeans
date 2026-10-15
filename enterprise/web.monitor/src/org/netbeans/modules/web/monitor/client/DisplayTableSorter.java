@@ -72,7 +72,7 @@ public class DisplayTableSorter extends AbstractTableModel implements
 	}
 
 	resetIndices();
-	sort((int[])index.clone(), index, 0, index.length);
+	sort(index.clone(), index, 0, index.length);
 	 
 	if(debug) {
 	    StringBuffer buf = 
@@ -119,7 +119,6 @@ public class DisplayTableSorter extends AbstractTableModel implements
 
     public int compare(int row1, int row2) {
 
-	 
 	String str1 = (String)model.getValueAt(row1, 0);
 	String str2 = (String)model.getValueAt(row2, 0);
 

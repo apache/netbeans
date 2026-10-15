@@ -44,33 +44,27 @@ import org.netbeans.api.java.source.support.CancellableTreePathScanner;
 class IsOverriddenVisitor extends CancellableTreePathScanner<Void, Tree> {
 
     private static final Logger LOG = Logger.getLogger(IsOverriddenVisitor.class.getName());
-    private CompilationInfo info;
+    private final CompilationInfo info;
     
     Map<ElementHandle<TypeElement>, List<ElementHandle<ExecutableElement>>> type2Declaration;
     Map<ElementHandle<ExecutableElement>, MethodTree> declaration2Tree;
     Map<ElementHandle<TypeElement>, ClassTree> declaration2Class;
     
-    private Map<TypeElement, ElementHandle<TypeElement>> type2Handle;
+    private final Map<TypeElement, ElementHandle<TypeElement>> type2Handle;
     
     IsOverriddenVisitor(CompilationInfo info, AtomicBoolean cancel) {
         super(cancel);
         this.info = info;
         
-        type2Declaration = new HashMap<ElementHandle<TypeElement>, List<ElementHandle<ExecutableElement>>>();
-        declaration2Tree = new HashMap<ElementHandle<ExecutableElement>, MethodTree>();
-        declaration2Class = new HashMap<ElementHandle<TypeElement>, ClassTree>();
+        type2Declaration = new HashMap<>();
+        declaration2Tree = new HashMap<>();
+        declaration2Class = new HashMap<>();
         
-        type2Handle = new HashMap<TypeElement, ElementHandle<TypeElement>>();
+        type2Handle = new HashMap<>();
     }
     
     private ElementHandle<TypeElement> getHandle(TypeElement type) {
-        ElementHandle<TypeElement> result = type2Handle.get(type);
-        
-        if (result == null) {
-            type2Handle.put(type, result = ElementHandle.create(type));
-        }
-        
-        return result;
+        return type2Handle.computeIfAbsent(type, k -> ElementHandle.create(type));
     }
     
     @Override
@@ -81,12 +75,7 @@ class IsOverriddenVisitor extends CancellableTreePathScanner<Void, Tree> {
             if (el != null && el.getKind()  == ElementKind.METHOD) {
                 if (!el.getModifiers().contains(Modifier.PRIVATE) && !el.getModifiers().contains(Modifier.STATIC)) {
                     ExecutableElement overridee = (ExecutableElement) el;
-                    List<ElementHandle<ExecutableElement>> methods = type2Declaration.get(currentClass);
-                    
-                    if (methods == null) {
-                        type2Declaration.put(currentClass, methods = new ArrayList<ElementHandle<ExecutableElement>>());
-                    }
-
+                    List<ElementHandle<ExecutableElement>> methods = type2Declaration.computeIfAbsent(currentClass, k -> new ArrayList<>());
                     try {
                         ElementHandle<ExecutableElement> methodHandle = ElementHandle.create(overridee);
                         methods.add(methodHandle);

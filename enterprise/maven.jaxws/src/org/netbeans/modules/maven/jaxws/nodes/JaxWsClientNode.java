@@ -257,7 +257,7 @@ public class JaxWsClientNode extends AbstractNode implements OpenCookie, Refresh
             null,
             SystemAction.get(PropertiesAction.class)));
         addFromLayers(actions, "WebServices/Clients/Actions");
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
     
     private void addFromLayers(ArrayList<Action> actions, String path) {
@@ -394,22 +394,18 @@ public class JaxWsClientNode extends AbstractNode implements OpenCookie, Refresh
     
     WsdlModeler getWsdlModeler() {
         if (getLocalWsdl()!=null) {
-            try {
-                WsdlModeler modeler = WsdlModelerFactory.getDefault().getWsdlModeler(wsdlFileObject.getURL());
-                if (modeler!=null) {
-//                    String packageName = client.getPackageName();
-//                    if (packageName!=null && client.isPackageNameForceReplace()) {
-//                        // set the package name for the modeler
-//                        modeler.setPackageName(packageName);
-//                    } else {
-//                        modeler.setPackageName(null);
-//                    }
-                    modeler.setCatalog(jaxWsSupport.getCatalog());
-//                    setBindings(modeler);
-                    return modeler;
-                }
-            } catch (FileStateInvalidException ex) {
-                ErrorManager.getDefault().log(ex.getLocalizedMessage());
+            WsdlModeler modeler = WsdlModelerFactory.getDefault().getWsdlModeler(wsdlFileObject.toURL());
+            if (modeler!=null) {
+//              String packageName = client.getPackageName();
+//              if (packageName!=null && client.isPackageNameForceReplace()) {
+//                  // set the package name for the modeler
+//                  modeler.setPackageName(packageName);
+//              } else {
+//                  modeler.setPackageName(null);
+//              }
+                modeler.setCatalog(jaxWsSupport.getCatalog());
+//              setBindings(modeler);
+                return modeler;
             }
         } else {
             ErrorManager.getDefault().log(ErrorManager.ERROR, NbBundle.getMessage(JaxWsNode.class,"ERR_missingLocalWsdl"));

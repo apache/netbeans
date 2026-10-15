@@ -133,8 +133,8 @@ public class AssignResultToVariable extends AbstractHint {
                 exprTree = tree;
             } 
 
-            long start = info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), exprTree);
-            long end   = info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), exprTree);
+            long start = info.getTrees().getSourcePositions().getStartPosition(exprTree);
+            long end   = info.getTrees().getSourcePositions().getEndPosition(exprTree);
 
             if (verifyOffset) {
                 if (start == (-1) || end == (-1) || offset < start || offset > end)
@@ -142,8 +142,8 @@ public class AssignResultToVariable extends AbstractHint {
                 if (kind == Kind.NEW_CLASS) {
                     NewClassTree nct = (NewClassTree) exprTree;
                     if (nct.getClassBody() != null) {
-                        long bodyStart = info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), nct.getClassBody());
-                        long bodyEnd = info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), nct.getClassBody());
+                        long bodyStart = info.getTrees().getSourcePositions().getStartPosition(nct.getClassBody());
+                        long bodyEnd = info.getTrees().getSourcePositions().getEndPosition(nct.getClassBody());
                         
                         if (bodyStart != (-1) && bodyEnd != (-1) && offset > bodyStart && offset <= bodyEnd)
                             return null;
@@ -226,7 +226,7 @@ public class AssignResultToVariable extends AbstractHint {
         CompilationUnitTree cut = info.getCompilationUnit();
         
         for (StatementTree t : block.getStatements()) {
-            long pos = start ? sp.getStartPosition(info.getCompilationUnit(), t) : sp.getEndPosition( cut, t);
+            long pos = start ? sp.getStartPosition(t) : sp.getEndPosition(t);
 
             if (offset == pos) {
                 return t;
@@ -240,13 +240,13 @@ public class AssignResultToVariable extends AbstractHint {
         for (StatementTree t : block.getStatements()) {
             if (t.getKind() != Kind.EXPRESSION_STATEMENT) continue;
 
-            long statementStart = info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), t);
+            long statementStart = info.getTrees().getSourcePositions().getStartPosition(t);
 
             if (offset < statementStart) return null;
 
             ExpressionStatementTree est = (ExpressionStatementTree) t;
-            long statementEnd = info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), t);
-            long expressionEnd = info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), est.getExpression());
+            long statementEnd = info.getTrees().getSourcePositions().getEndPosition(t);
+            long expressionEnd = info.getTrees().getSourcePositions().getEndPosition(est.getExpression());
 
             if (expressionEnd <= offset && offset < statementEnd) {
                 return t;

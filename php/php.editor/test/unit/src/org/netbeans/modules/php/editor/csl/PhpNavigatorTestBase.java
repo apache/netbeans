@@ -34,6 +34,8 @@ import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.ParserTestBase;
 import org.netbeans.modules.php.editor.parser.TestHtmlFormatter;
+import org.netbeans.modules.php.project.api.PhpSourcePath;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -45,6 +47,18 @@ public abstract class PhpNavigatorTestBase extends ParserTestBase {
     public PhpNavigatorTestBase(String testName) {
         super(testName);
     }
+
+    private static final Comparator<StructureItem> STRUCTURE_ITEM_COMPARATOR = (StructureItem o1, StructureItem o2) -> {
+        String path1 = o1.getElementHandle().getFileObject().getPath();
+        String path2 = o2.getElementHandle().getFileObject().getPath();
+        int result = path1.compareToIgnoreCase(path2);
+        if (result == 0) {
+            long position1 = o1.getPosition();
+            long position2 = o2.getPosition();
+            result = Long.compare(position1, position2);
+        }
+        return result;
+    };
 
     @Override
     protected String getTestResult(String filename) throws Exception {
@@ -64,7 +78,7 @@ public abstract class PhpNavigatorTestBase extends ParserTestBase {
         UserTask task = new UserTask() {
             @Override
             public void run(ResultIterator resultIterator) throws Exception {
-                PHPParseResult info = (PHPParseResult)resultIterator.getParserResult();
+                PHPParseResult info = (PHPParseResult) resultIterator.getParserResult();
                 if (info != null) {
                     result.addAll(instance.scan(info));
                 }
@@ -81,18 +95,10 @@ public abstract class PhpNavigatorTestBase extends ParserTestBase {
             }
         }
 
-        Comparator<StructureItem> comparator = new Comparator<StructureItem>() {
-            @Override
-            public int compare(StructureItem o1, StructureItem o2) {
-                long position1 = o1.getPosition();
-                long position2 = o2.getPosition();
-                return (int) (position1 - position2);
-            }
-        };
-        Collections.sort(result,comparator);
+        result.sort(STRUCTURE_ITEM_COMPARATOR);
 
         for (StructureItem structureItem : result) {
-            Collections.sort(structureItem.getNestedItems(),comparator);
+            structureItem.getNestedItems().sort(STRUCTURE_ITEM_COMPARATOR);
             sb.append(printStructureItem(structureItem, 0));
             sb.append("\n");
         }
@@ -102,27 +108,55 @@ public abstract class PhpNavigatorTestBase extends ParserTestBase {
     private String printStructureItem(StructureItem structureItem, int indent) {
         StringBuilder sb = new StringBuilder();
         sb.append(indent(indent));
+        if (structureItem instanceof StructureItem.InheritedItem inheritedItem) {
+            if (inheritedItem.isInherited()) {
+                sb.append("(Inherited) ");
+            }
+        }
         sb.append(structureItem.getName());
         sb.append(" [");
         sb.append(structureItem.getPosition());
         sb.append(", ");
         sb.append(structureItem.getEndPosition());
         sb.append("] : ");
-        HtmlFormatter formatter = new TestHtmlFormatter() ;
+        HtmlFormatter formatter = new TestHtmlFormatter();
         sb.append(structureItem.getHtml(formatter));
-        for (StructureItem item : structureItem.getNestedItems()) {
+        List<? extends StructureItem> nestedItems = new ArrayList<>(structureItem.getNestedItems());
+        nestedItems.sort(STRUCTURE_ITEM_COMPARATOR);
+        for (StructureItem item : nestedItems) {
             sb.append("\n");
-            sb.append(printStructureItem(item, indent+1));
+            sb.append(printStructureItem(item, indent + 1));
         }
         return sb.toString();
     }
 
     private String indent(int indent) {
         String text = "|-";
-        for (int i = 0; i < indent; i++  ) {
-            text = text + "-";
+        for (int i = 0; i < indent; i++) {
+            text += "-";
         }
         return text;
     }
 
+    @Override
+    protected Map<String, ClassPath> createClassPathsForTest() {
+        FileObject[] srcFolders = createSourceClassPathsForTest();
+        return srcFolders != null ? Collections.singletonMap(
+            PhpSourcePath.SOURCE_CP,
+            ClassPathSupport.createClassPath(srcFolders)
+        ) : null;
+    }
+
+    protected FileObject[] createSourceClassPathsForTest() {
+        return null;
+    }
+
+    protected String getTestName() {
+        String name = getName();
+        int indexOf = name.indexOf("_");
+        if (indexOf != -1) {
+            name = name.substring(0, indexOf);
+        }
+        return name;
+    }
 }

@@ -186,7 +186,7 @@ public class JavaI18nFinder implements I18nFinder {
         }
 
         return !list.isEmpty()
-               ? list.toArray(new HardCodedString[list.size()])
+               ? list.toArray(new HardCodedString[0])
                : null;
     }
 

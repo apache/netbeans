@@ -244,10 +244,10 @@ public class RenameTestClassRefactoringPlugin extends JavaRefactoringPlugin {
 		JavaSource.forFileObject(location.getFileObject()).runUserActionTask(new Task<CompilationController>() {
 		    @Override
 		    public void run(CompilationController javac) throws Exception {
+			javac.toPhase(JavaSource.Phase.RESOLVED);
 			final Element methodElement = treePathHandle.resolveElement(javac);
 			String methodName = methodElement.getSimpleName().toString();
 			String testMethodName = RefactoringUtils.getTestMethodName(methodName);
-			javac.toPhase(JavaSource.Phase.RESOLVED);
 			CompilationUnitTree cut = javac.getCompilationUnit();
 			Tree classTree = cut.getTypeDecls().get(0);
 			List<? extends Tree> members = ((ClassTree) classTree).getMembers();

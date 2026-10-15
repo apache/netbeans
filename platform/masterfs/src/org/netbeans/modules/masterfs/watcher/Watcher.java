@@ -20,10 +20,10 @@
 package org.netbeans.modules.masterfs.watcher;
 
 import org.netbeans.modules.masterfs.providers.Notifier;
-import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.ReferenceQueue;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +40,6 @@ import org.netbeans.modules.masterfs.providers.BaseAnnotationProvider;
 import org.openide.util.Lookup;
 import org.openide.util.Lookup.Item;
 import org.openide.util.RequestProcessor;
-import org.openide.util.WeakSet;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.util.lookup.ServiceProviders;
 
@@ -54,7 +53,7 @@ import org.openide.util.lookup.ServiceProviders;
 })
 public final class Watcher extends BaseAnnotationProvider {
     static final Logger LOG = Logger.getLogger(Watcher.class.getName());
-    private static final Map<FileObject,int[]> MODIFIED = new WeakHashMap<FileObject, int[]>();
+    private static final Map<FileObject,int[]> MODIFIED = new WeakHashMap<>();
     private final Ext<?> ext;
     
     public Watcher() {
@@ -139,16 +138,14 @@ public final class Watcher extends BaseAnnotationProvider {
         if (isEnabled()) {
             try {
                 ext().shutdown();
-            } catch (IOException ex) {
-                LOG.log(Level.INFO, "Error on shutdown", ex);
-            } catch (InterruptedException ex) {
+            } catch (IOException | InterruptedException ex) {
                 LOG.log(Level.INFO, "Error on shutdown", ex);
             }
         }
     }
  
     private <KEY> Ext<KEY> make(Notifier<KEY> impl) {
-        return impl == null ? null : new Ext<KEY>(impl);
+        return impl == null ? null : new Ext<>(impl);
     }
 
     final void clearQueue() throws IOException {
@@ -156,10 +153,10 @@ public final class Watcher extends BaseAnnotationProvider {
     }
 
     private class Ext<KEY> extends ProvidedExtensions implements Runnable {
-        private final ReferenceQueue<FileObject> REF = new ReferenceQueue<FileObject>();
+        private final ReferenceQueue<FileObject> REF = new ReferenceQueue<>();
         private final Notifier<KEY> impl;
         private final Object LOCK = new Object();
-        private final Set<NotifierKeyRef> references = new HashSet<NotifierKeyRef>();
+        private final Set<NotifierKeyRef<KEY>> references = new HashSet<>();
         private final Thread watcher;
         private volatile boolean shutdown;
         private int loggedRegisterExceptions = 0;
@@ -199,7 +196,7 @@ public final class Watcher extends BaseAnnotationProvider {
                 LOG.log(Level.INFO, "Exception while clearing the queue", ex);
             }
             synchronized (LOCK) {
-                NotifierKeyRef<KEY> kr = new NotifierKeyRef<KEY>(fo, null, null, impl);
+                NotifierKeyRef<KEY> kr = new NotifierKeyRef<>(fo, null, null, impl);
                 return getReferences().contains(kr);
             }
         }
@@ -213,11 +210,8 @@ public final class Watcher extends BaseAnnotationProvider {
             } catch (IOException ex) {
                 LOG.log(Level.INFO, "Exception while clearing the queue", ex);
             }
-            FileChangedManager.waitNowAndRun(new Runnable() {
-                @Override
-                public void run() {
-                    registerSynchronized(fo);
-                }
+            FileChangedManager.waitNowAndRun(() -> {
+                registerSynchronized(fo);
             });
         }
 
@@ -228,13 +222,13 @@ public final class Watcher extends BaseAnnotationProvider {
          */
         private void registerSynchronized(FileObject fo) {
             synchronized (LOCK) {
-                NotifierKeyRef<KEY> kr = new NotifierKeyRef<KEY>(fo, null, null, impl);
+                NotifierKeyRef<KEY> kr = new NotifierKeyRef<>(fo, null, null, impl);
                 if (getReferences().contains(kr)) {
                     return;
                 }
 
                 try {
-                    getReferences().add(new NotifierKeyRef<KEY>(fo, NotifierAccessor.getDefault().addWatch(impl, fo.getPath()), REF, impl));
+                    getReferences().add(new NotifierKeyRef<>(fo, NotifierAccessor.getDefault().addWatch(impl, fo.getPath()), REF, impl));
                 } catch (IOException ex) {
                     Level l = getLogLevelForRegisterException(fo);
                     // XXX: handle resource overflow gracefully
@@ -271,7 +265,7 @@ public final class Watcher extends BaseAnnotationProvider {
         final void unregister(FileObject fo) {
             assert !fo.isValid() || fo.isFolder() : "If valid, it should be a folder: " + fo + " clazz: " + fo.getClass();
             synchronized (LOCK) {
-                final NotifierKeyRef[] equalOne = new NotifierKeyRef[1];
+                final NotifierKeyRef<KEY>[] equalOne = new NotifierKeyRef[1];
                 NotifierKeyRef<KEY> kr = new NotifierKeyRef<KEY>(fo, null, null, impl) {
                     @Override
                     public boolean equals(Object obj) {
@@ -304,7 +298,7 @@ public final class Watcher extends BaseAnnotationProvider {
         
         final void clearQueue() throws IOException {
             for (;;) {
-                NotifierKeyRef kr = (NotifierKeyRef)REF.poll();
+                NotifierKeyRef<?> kr = (NotifierKeyRef)REF.poll();
                 if (kr == null) {
                     break;
                 }
@@ -322,9 +316,9 @@ public final class Watcher extends BaseAnnotationProvider {
                     String path = NotifierAccessor.getDefault().nextEvent(impl);
                     LOG.log(Level.FINEST, "nextEvent: {0}", path); 
                     if (path == null) { // all dirty
-                        Set<FileObject> set = new HashSet<FileObject>();
+                        Set<FileObject> set = new HashSet<>();
                         synchronized (LOCK) {
-                            for (NotifierKeyRef kr : getReferences()) {
+                            for (NotifierKeyRef<?> kr : getReferences()) {
                                 final FileObject ref = kr.get();
                                 if (ref != null) {
                                     set.add(ref);
@@ -349,8 +343,6 @@ public final class Watcher extends BaseAnnotationProvider {
                             }
                         }
                     }
-                } catch (ThreadDeath td) {
-                    throw td;
                 } catch (InterruptedException ie) {
                     if (!shutdown) {
                         LOG.log(Level.INFO, "Interrupted", ie);
@@ -368,7 +360,7 @@ public final class Watcher extends BaseAnnotationProvider {
             watcher.join(1000);
         }
 
-        private Set<NotifierKeyRef> getReferences() {
+        private Set<NotifierKeyRef<KEY>> getReferences() {
             assert Thread.holdsLock(LOCK);
             return references;
         }
@@ -426,7 +418,7 @@ public final class Watcher extends BaseAnnotationProvider {
         synchronized(lock) {
             if (pending == null) {
                 refreshTask.schedule(1500);
-                pending = new WeakSet<FileObject>();
+                pending = Collections.newSetFromMap(new WeakHashMap<>());
             }
             pending.add(fo);
         }
@@ -439,7 +431,7 @@ public final class Watcher extends BaseAnnotationProvider {
         synchronized(lock) {
             if (pending == null) {
                 refreshTask.schedule(1500);
-                pending = new WeakSet<FileObject>();
+                pending = Collections.newSetFromMap(new WeakHashMap<>());
             }
             pending.addAll(fos);
         }
@@ -453,7 +445,7 @@ public final class Watcher extends BaseAnnotationProvider {
     private static Notifier<?> getNotifierForPlatform() {
         for (Item<Notifier> item : Lookup.getDefault().lookupResult(Notifier.class).allItems()) {
             try {
-                final Notifier notifier = item.getInstance();
+                final Notifier<?> notifier = item.getInstance();
                 if (notifier != null) {
                     NotifierAccessor.getDefault().start(notifier);
                     return notifier;

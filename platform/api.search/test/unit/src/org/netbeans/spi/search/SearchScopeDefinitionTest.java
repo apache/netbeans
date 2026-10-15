@@ -18,11 +18,10 @@
  */
 package org.netbeans.spi.search;
 
-import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.netbeans.api.search.provider.SearchInfo;
 import org.openide.util.Exceptions;
@@ -56,46 +55,35 @@ public class SearchScopeDefinitionTest {
         // notified.
         for (int i = 0; i < 10; i++) {
             final int j = i;
-            mssd.addChangeListener(new ChangeListener() {
-
-                @Override
-                public void stateChanged(ChangeEvent e) {
-                    if (j == 0) {
-                        // allow the new listener to be added
-                        semaphoreAddExtraListener.release();
-                    } else if (j == 1) {
-                        try {
-                            // wait until the new listener added
-                            semaphoreContinueIterating.acquire();
-                        } catch (InterruptedException ex) {
-                            Exceptions.printStackTrace(ex);
-                        }
+            mssd.addChangeListener((ChangeEvent e) -> {
+                if (j == 0) {
+                    // allow the new listener to be added
+                    semaphoreAddExtraListener.release();
+                } else if (j == 1) {
+                    try {
+                        // wait until the new listener added
+                        semaphoreContinueIterating.acquire();
+                    } catch (InterruptedException ex) {
+                        Exceptions.printStackTrace(ex);
                     }
-                    notified[0]++;
                 }
+                notified[0]++;
             });
         }
 
         // Thead that adds a new listener while the listener list is being
         // iterated over.
-        Thread t1 = new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    // wait until listeners are iterated
-                    semaphoreAddExtraListener.acquire();
-                } catch (InterruptedException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-                mssd.addChangeListener(new ChangeListener() {
-                    @Override
-                    public void stateChanged(ChangeEvent e) {
-                    }
-                });
-                // the iteration can continue
-                semaphoreContinueIterating.release();
+        Thread t1 = new Thread(() -> {
+            try {
+                // wait until listeners are iterated
+                semaphoreAddExtraListener.acquire();
+            } catch (InterruptedException ex) {
+                Exceptions.printStackTrace(ex);
             }
+            mssd.addChangeListener((ChangeEvent e) -> {
+            });
+            // the iteration can continue
+            semaphoreContinueIterating.release();
         });
 
         t1.start();

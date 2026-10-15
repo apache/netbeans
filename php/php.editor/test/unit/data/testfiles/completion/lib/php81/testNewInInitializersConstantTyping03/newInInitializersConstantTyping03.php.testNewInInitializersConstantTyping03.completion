@@ -1,0 +1,4 @@
+Code completion result for source line:
+const CONSTANT = new Consta|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTRUCTO Constant()                      [PUBLIC]   Constant

@@ -356,7 +356,7 @@ public final class ResultModel {
     /**
      * Returns number of detail nodes available to the given found object.
      *
-     * @param  foundObject  object matching the search criteria
+     * @param  matchingObject a reference the search criteria
      * @return  number of detail items (represented by individual nodes)
      *          available for the given object (usually {@code DataObject})
      */

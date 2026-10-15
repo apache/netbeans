@@ -1,0 +1,9 @@
+Display text: use Example as <b>ExampleAlias</b>;
+File name: index.php
+Name: ExampleAlias
+Position: BEGIN: 831 END: 843
+
+Display text: $alias = new <b>ExampleAlias</b>();
+File name: index.php
+Name: ExampleAlias
+Position: BEGIN: 931 END: 943

@@ -29,6 +29,7 @@ import java.text.MessageFormat;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -91,6 +92,8 @@ public class TemplateWizard extends WizardDescriptor {
     private DataFolder targetDataFolder;
     /** This is true if we have already set a value to the title format */
     private boolean titleFormatSet = false;
+    /** for deferred directory/DataFolder creation */
+    private Supplier<DataFolder> targetDataFolderCreator;
 
     /** listens on property (steps, index) changes and updates steps pane */
     private PropertyChangeListener pcl;
@@ -243,6 +246,10 @@ public class TemplateWizard extends WizardDescriptor {
      */
     public DataFolder getTargetFolder () throws IOException {
         LOG.log(Level.FINE, "targetFolder={0} for {1}", new Object[] {targetDataFolder, this});
+        if (targetDataFolder == null && targetDataFolderCreator != null) {
+            targetDataFolder = targetDataFolderCreator.get();
+            LOG.log(Level.FINE, "lazy targetFolder={0} for {1}", new Object[] {targetDataFolder, this});
+        }
         if (targetDataFolder == null) {
             throw new IOException(NbBundle.getMessage(TemplateWizard.class, "ERR_NoFilesystem"));
         }
@@ -269,7 +276,22 @@ public class TemplateWizard extends WizardDescriptor {
         if (LOG.isLoggable(Level.FINE)) {
             LOG.log(Level.FINE, "set targetFolder=" + f + " for " + this, new Throwable());
         }
+        if(f == null) {
+            targetDataFolderCreator = null;
+        }
         targetDataFolder = f;
+    }
+
+    /** Use this method for deferred creation of target folder
+     * until and <em>if</em> it is needed.
+     * 
+     * @since 7.76
+     * 
+     * @param folderCreator function which, when called, produces TargetFolder
+     */
+    public void setTargetFolderLazy(Supplier<DataFolder> folderCreator) {
+        // Fix for [NETBEANS-3918] needs dererred creation feature
+        targetDataFolderCreator = folderCreator;
     }
 
     /** Getter for the name of the target template.
@@ -744,8 +766,7 @@ public class TemplateWizard extends WizardDescriptor {
         lastComp.addPropertyChangeListener(propL());
         
         // compoun steps pane info
-        putProperty(PROP_CONTENT_SELECTED_INDEX,
-            new Integer(getContentSelectedIndex()));
+        putProperty(PROP_CONTENT_SELECTED_INDEX, getContentSelectedIndex());
         if (getContentData() != null) {
             putProperty(PROP_CONTENT_DATA, getContentData());
         }
@@ -808,8 +829,7 @@ public class TemplateWizard extends WizardDescriptor {
             pcl = new PropertyChangeListener() {
                 public void propertyChange(PropertyChangeEvent ev) {
                     if (PROP_CONTENT_SELECTED_INDEX.equals(ev.getPropertyName())) {
-                        putProperty(PROP_CONTENT_SELECTED_INDEX,
-                            new Integer(getContentSelectedIndex()));
+                        putProperty(PROP_CONTENT_SELECTED_INDEX, getContentSelectedIndex());
                     } else { 
                         if ((PROP_CONTENT_DATA.equals(ev.getPropertyName())) && (getContentData() != null)) {
                             putProperty(PROP_CONTENT_DATA, getContentData());
@@ -850,7 +870,7 @@ public class TemplateWizard extends WizardDescriptor {
             throws IOException;
         
         /** Initializes the iterator after it is constructed.
-         * The iterator can for example obtain the {@link #targetChooser target chooser}
+         * The iterator can for example obtain the {@link #targetChooser() target chooser}
          * from the wizard if it does not wish to provide its own.
          * @param wiz template wizard that wishes to use the iterator
          */

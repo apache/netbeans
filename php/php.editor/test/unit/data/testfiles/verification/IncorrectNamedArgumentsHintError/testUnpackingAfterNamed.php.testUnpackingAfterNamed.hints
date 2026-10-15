@@ -1,0 +1,30 @@
+    ...[], // NG
+    -----
+HINT:Can't use argument unpacking(...) after named argument(name: arg).
+test(name: "arg", ...$unpacking); // NG
+                  -------------
+HINT:Can't use argument unpacking(...) after named argument(name: arg).
+        ...[2], // NG
+        ------
+HINT:Can't use argument unpacking(...) after named argument(name: arg).
+        ...[1] // NG
+        ------
+HINT:Can't use argument unpacking(...) after named argument(name: arg).
+        ...[2], // NG
+        ------
+HINT:Can't use argument unpacking(...) after named argument(name: arg).
+        ...[1] // NG
+        ------
+HINT:Can't use argument unpacking(...) after named argument(name: arg).
+            ...[1, 2, 3], // NG
+            ------------
+HINT:Can't use argument unpacking(...) after named argument(name: arg).
+            ...[1, 2, 3], // NG
+            ------------
+HINT:Can't use argument unpacking(...) after named argument(name: arg).
+    ...['a', 'b'] // NG
+    -------------
+HINT:Can't use argument unpacking(...) after named argument(name: arg).
+    ...['a', 'b'], // NG
+    -------------
+HINT:Can't use argument unpacking(...) after named argument(name: arg).

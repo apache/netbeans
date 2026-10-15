@@ -27,20 +27,14 @@ package org.netbeans.modules.payara.tooling.admin;
  */
 public abstract class Command {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Server command represented by this object. */
     protected String command;
 
     /** Indicate whether we shall retry command execution. */
     protected boolean retry = false;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara server administration command entity
      * with specified server command.
@@ -51,10 +45,7 @@ public abstract class Command {
         this.command = command;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Returns server command represented by this object.  Set in constructor.
      * e.g. "deploy", "list-applications", etc.

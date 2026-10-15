@@ -37,7 +37,7 @@ public class ListValuePicker extends javax.swing.JPanel {
         for (String s : knownValues) {
             lv.add(new ListValue(s, s));
         }
-        return getValues(title, label, message, valuesString, lv.toArray(new ListValue[lv.size()]));
+        return getValues(title, label, message, valuesString, lv.toArray(new ListValue[0]));
     }
     
     public static String getValues(String title, String label, String message, String valuesString, ListValue[] knownValues) {
@@ -69,7 +69,7 @@ public class ListValuePicker extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(valuesLabel, label); 
         
         valuesList.setCellRenderer(new ListValueRenderer());
-        DefaultListModel model = new DefaultListModel();
+        DefaultListModel<ListValue> model = new DefaultListModel<>();
         for (ListValue lvalue : knownValues) {
             model.addElement(lvalue);
         }

@@ -1,0 +1,83 @@
+Code completion result for source line:
+var x=Math.|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      prototype                       [PUBLIC]   JS Platform
+METHOD     abs(x: Number): Number          [PUBLIC,   JS Platform
+METHOD     acos(x: Number): Number         [PUBLIC,   JS Platform
+METHOD     acosh(x: Number): Number        [PUBLIC,   JS Platform
+METHOD     apply(thisArg: Object): Object  [PUBLIC]   JS Platform
+METHOD     asin(x: Number): Number         [PUBLIC,   JS Platform
+METHOD     asinh(x: Number): Number        [PUBLIC,   JS Platform
+METHOD     assign(target: Object, sources  [PUBLIC,   JS Platform
+METHOD     atan(x: Number): Number         [PUBLIC,   JS Platform
+METHOD     atan2(y: Number, x: Number): N  [PUBLIC,   JS Platform
+METHOD     atanh(x: Number): Number        [PUBLIC,   JS Platform
+METHOD     bind(thisArg: Object, argArray  [PUBLIC]   JS Platform
+METHOD     call(thisArg: Object, argArray  [PUBLIC]   JS Platform
+METHOD     cbrt(x: Number): Number         [PUBLIC,   JS Platform
+METHOD     ceil(x: Number): Number         [PUBLIC,   JS Platform
+METHOD     clz32(x: Number): Number        [PUBLIC,   JS Platform
+METHOD     cos(x: Number): Number          [PUBLIC,   JS Platform
+METHOD     cosh(x: Number): Number         [PUBLIC,   JS Platform
+METHOD     create(o: null|Object, propert  [PUBLIC,   JS Platform
+METHOD     defineProperties(o: Object, pr  [PUBLIC,   JS Platform
+METHOD     defineProperty(o: Object, p: N  [PUBLIC,   JS Platform
+METHOD     entries(o: Object): Object      [PUBLIC,   JS Platform
+METHOD     exp(x: Number): Number          [PUBLIC,   JS Platform
+METHOD     expm1(x: Number): Number        [PUBLIC,   JS Platform
+METHOD     floor(x: Number): Number        [PUBLIC,   JS Platform
+METHOD     freeze(o: Object): Object       [PUBLIC,   JS Platform
+METHOD     fromEntries(entries: Iterable)  [PUBLIC,   JS Platform
+METHOD     fround(x: Number): Number       [PUBLIC,   JS Platform
+METHOD     getOwnPropertyDescriptor(o: Ob  [PUBLIC,   JS Platform
+METHOD     getOwnPropertyDescriptors(o: O  [PUBLIC,   JS Platform
+METHOD     getOwnPropertyNames(o: Object)  [PUBLIC,   JS Platform
+METHOD     getOwnPropertySymbols(o: Objec  [PUBLIC,   JS Platform
+METHOD     getPrototypeOf(o: Object): Obj  [PUBLIC,   JS Platform
+METHOD     hasOwn(o: Object, v: Number|Sy  [PUBLIC,   JS Platform
+METHOD     hasOwnProperty(v: Number|Symbo  [PUBLIC]   JS Platform
+METHOD     hypot(values: Number): Number   [PUBLIC,   JS Platform
+METHOD     imul(x: Number, y: Number): Nu  [PUBLIC,   JS Platform
+METHOD     is(value1: Object, value2: Obj  [PUBLIC,   JS Platform
+METHOD     isExtensible(o: Object): Boole  [PUBLIC,   JS Platform
+METHOD     isFrozen(o: Object): Boolean    [PUBLIC,   JS Platform
+METHOD     isPrototypeOf(v: Object): Bool  [PUBLIC]   JS Platform
+METHOD     isSealed(o: Object): Boolean    [PUBLIC,   JS Platform
+METHOD     keys(o: Object): String         [PUBLIC,   JS Platform
+METHOD     log(x: Number): Number          [PUBLIC,   JS Platform
+METHOD     log10(x: Number): Number        [PUBLIC,   JS Platform
+METHOD     log1p(x: Number): Number        [PUBLIC,   JS Platform
+METHOD     log2(x: Number): Number         [PUBLIC,   JS Platform
+METHOD     max(values: Number): Number     [PUBLIC,   JS Platform
+METHOD     min(values: Number): Number     [PUBLIC,   JS Platform
+METHOD     pow(x: Number, y: Number): Num  [PUBLIC,   JS Platform
+METHOD     preventExtensions(o: Object):   [PUBLIC,   JS Platform
+METHOD     propertyIsEnumerable(v: Number  [PUBLIC]   JS Platform
+METHOD     random(): Number                [PUBLIC,   JS Platform
+METHOD     round(x: Number): Number        [PUBLIC,   JS Platform
+METHOD     seal(o: Object): Object         [PUBLIC,   JS Platform
+METHOD     setPrototypeOf(o: Object, prot  [PUBLIC,   JS Platform
+METHOD     sign(x: Number): Number         [PUBLIC,   JS Platform
+METHOD     sin(x: Number): Number          [PUBLIC,   JS Platform
+METHOD     sinh(x: Number): Number         [PUBLIC,   JS Platform
+METHOD     sqrt(x: Number): Number         [PUBLIC,   JS Platform
+METHOD     tan(x: Number): Number          [PUBLIC,   JS Platform
+METHOD     tanh(x: Number): Number         [PUBLIC,   JS Platform
+METHOD     toLocaleString(): String        [PUBLIC]   JS Platform
+METHOD     toString(): String              [PUBLIC]   JS Platform
+METHOD     trunc(x: Number): Number        [PUBLIC,   JS Platform
+METHOD     valueOf(): Object               [PUBLIC]   JS Platform
+METHOD     values(o: Object): Object       [PUBLIC,   JS Platform
+FIELD      E: Number                       [PUBLIC,   JS Platform
+FIELD      LN10: Number                    [PUBLIC,   JS Platform
+FIELD      LN2: Number                     [PUBLIC,   JS Platform
+FIELD      LOG10E: Number                  [PUBLIC,   JS Platform
+FIELD      LOG2E: Number                   [PUBLIC,   JS Platform
+FIELD      PI: Number                      [PUBLIC,   JS Platform
+FIELD      SQRT1_2: Number                 [PUBLIC,   JS Platform
+FIELD      SQRT2: Number                   [PUBLIC,   JS Platform
+FIELD      caller: Function                [PUBLIC]   JS Platform
+FIELD      length: Number                  [PUBLIC]   JS Platform
+FIELD      name: String                    [PUBLIC]   JS Platform
+VARIABLE   arguments: Object               [PUBLIC]   JS Platform

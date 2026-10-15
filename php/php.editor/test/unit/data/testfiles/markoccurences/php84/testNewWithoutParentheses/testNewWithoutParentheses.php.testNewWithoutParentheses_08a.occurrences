@@ -1,0 +1,2 @@
+    protected const string |>MARK_OCCURRENCES:PROTECTED_CO^NST<| = "protected const";
+        $example = new Example()::|>MARK_OCCURRENCES:PROTECTED_CONST<|;

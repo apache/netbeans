@@ -1,0 +1,22 @@
+Code completion result for source line:
+$arrow = fn(Intersection1&Intersection2&\Test\Intersection3 $param1, Intersection1&Intersection2 $param): |\Test\Intersection1&\Test\Intersection2&Intersection3 {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    Test                            [PUBLIC]   null
+CLASS      Intersection1                   [PUBLIC]   Test
+CLASS      Intersection2                   [PUBLIC]   Test
+CLASS      Intersection3                   [PUBLIC]   Test
+------------------------------------
+KEYWORD    array                                      null
+KEYWORD    bool                                       null
+KEYWORD    callable                                   null
+KEYWORD    false                                      null
+KEYWORD    float                                      null
+KEYWORD    int                                        null
+KEYWORD    iterable                                   null
+KEYWORD    mixed                                      null
+KEYWORD    never                                      null
+KEYWORD    null                                       null
+KEYWORD    object                                     null
+KEYWORD    string                                     null
+KEYWORD    true                                       null
+KEYWORD    void                                       null

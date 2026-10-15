@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.57
+#Version 1.84
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -159,8 +159,6 @@ meth public java.awt.im.InputMethodRequests getInputMethodRequests()
 meth public java.awt.image.ColorModel getColorModel()
 meth public java.awt.image.VolatileImage createVolatileImage(int,int)
 meth public java.awt.image.VolatileImage createVolatileImage(int,int,java.awt.ImageCapabilities) throws java.awt.AWTException
-meth public java.awt.peer.ComponentPeer getPeer()
- anno 0 java.lang.Deprecated()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners(java.lang.String)
 meth public java.lang.String getName()
@@ -274,8 +272,6 @@ meth public void transferFocusUpCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.lang.Object
-hfds FOCUS_TRAVERSABLE_DEFAULT,FOCUS_TRAVERSABLE_SET,FOCUS_TRAVERSABLE_UNKNOWN,LOCK,acc,actionListenerK,adjustmentListenerK,appContext,autoFocusTransferOnDisposal,background,backgroundEraseDisabled,boundsOp,bufferStrategy,changeSupport,coalesceEventsParams,coalesceMap,coalescingEnabled,componentListener,componentListenerK,componentOrientation,componentSerializedDataVersion,compoundShape,containerListenerK,cursor,dropTarget,enabled,eventCache,eventLog,eventMask,focusListener,focusListenerK,focusLog,focusTraversalKeyPropertyNames,focusTraversalKeys,focusTraversalKeysEnabled,focusable,font,foreground,graphicsConfig,height,hierarchyBoundsListener,hierarchyBoundsListenerK,hierarchyListener,hierarchyListenerK,ignoreRepaint,incRate,inputMethodListener,inputMethodListenerK,isAddNotifyComplete,isFocusTraversableOverridden,isInc,isPacked,itemListenerK,keyListener,keyListenerK,locale,log,maxSize,maxSizeSet,minSize,minSizeSet,mixingCutoutRegion,mixingLog,mouseListener,mouseListenerK,mouseMotionListener,mouseMotionListenerK,mouseWheelListener,mouseWheelListenerK,name,nameExplicitlySet,newEventsOnly,objectLock,ownedWindowK,parent,peer,peerFont,popups,prefSize,prefSizeSet,requestFocusController,serialVersionUID,textListenerK,valid,visible,width,windowClosingException,windowFocusListenerK,windowListenerK,windowStateListenerK,x,y
-hcls AWTTreeLock,BltSubRegionBufferStrategy,DummyRequestFocusController,FlipSubRegionBufferStrategy,ProxyCapabilities,SingleBufferStrategy
 
 CLSS public java.awt.Container
 cons public init()
@@ -360,8 +356,6 @@ meth public void transferFocusDownCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.awt.Component
-hfds EMPTY_ARRAY,INCLUDE_SELF,SEARCH_HEAVYWEIGHTS,component,containerListener,containerSerializedDataVersion,descendUnconditionallyWhenValidating,descendantsCount,dispatcher,eventLog,focusCycleRoot,focusTraversalPolicy,focusTraversalPolicyProvider,isJavaAwtSmartInvalidate,layoutMgr,listeningBoundsChildren,listeningChildren,log,mixingLog,modalAppContext,modalComp,numOfHWComponents,numOfLWComponents,preserveBackgroundColor,printing,printingThreads,serialPersistentFields,serialVersionUID
-hcls DropTargetEventTargetFilter,EventTargetFilter,MouseEventTargetFilter,WakingRunnable
 
 CLSS public abstract interface java.awt.MenuContainer
 meth public abstract boolean postEvent(java.awt.Event)
@@ -400,7 +394,6 @@ meth public final java.lang.String name()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
@@ -577,8 +570,6 @@ meth public void unregisterKeyboardAction(javax.swing.KeyStroke)
 meth public void update(java.awt.Graphics)
 meth public void updateUI()
 supr java.awt.Container
-hfds ACTIONMAP_CREATED,ANCESTOR_INPUTMAP_CREATED,ANCESTOR_USING_BUFFER,AUTOSCROLLS_SET,COMPLETELY_OBSCURED,CREATED_DOUBLE_BUFFER,DEBUG_GRAPHICS_LOADED,FOCUS_INPUTMAP_CREATED,FOCUS_TRAVERSAL_KEYS_BACKWARD_SET,FOCUS_TRAVERSAL_KEYS_FORWARD_SET,INHERITS_POPUP_MENU,INPUT_VERIFIER_SOURCE_KEY,IS_DOUBLE_BUFFERED,IS_OPAQUE,IS_PAINTING_TILE,IS_PRINTING,IS_PRINTING_ALL,IS_REPAINTING,KEYBOARD_BINDINGS_KEY,KEY_EVENTS_ENABLED,NEXT_FOCUS,NOT_OBSCURED,OPAQUE_SET,PARTIALLY_OBSCURED,REQUEST_FOCUS_DISABLED,RESERVED_1,RESERVED_2,RESERVED_3,RESERVED_4,RESERVED_5,RESERVED_6,WHEN_IN_FOCUSED_WINDOW_BINDINGS,WIF_INPUTMAP_CREATED,WRITE_OBJ_COUNTER_FIRST,WRITE_OBJ_COUNTER_LAST,aaTextInfo,actionMap,alignmentX,alignmentY,ancestorInputMap,autoscrolls,border,clientProperties,componentObtainingGraphicsFrom,componentObtainingGraphicsFromLock,defaultLocale,flags,focusController,focusInputMap,inputVerifier,isAlignmentXSet,isAlignmentYSet,managingFocusBackwardTraversalKeys,managingFocusForwardTraversalKeys,paintingChild,popupMenu,readObjectCallbacks,revalidateRunnableScheduled,tempRectangles,uiClassID,verifyInputWhenFocusTarget,vetoableChangeSupport,windowInputMap
-hcls ActionStandin,IntVector,KeyboardState,ReadObjectCallback
 
 CLSS public javax.swing.JPanel
 cons public init()
@@ -594,7 +585,6 @@ meth public javax.swing.plaf.PanelUI getUI()
 meth public void setUI(javax.swing.plaf.PanelUI)
 meth public void updateUI()
 supr javax.swing.JComponent
-hfds uiClassID
 
 CLSS public abstract interface javax.swing.event.ChangeListener
 intf java.util.EventListener
@@ -666,7 +656,7 @@ supr java.lang.Object
 hfds key,value
 
 CLSS public final org.netbeans.modules.j2ee.ejbcore.api.codegeneration.SessionGenerator
-cons protected init(java.lang.String,org.openide.filesystems.FileObject,boolean,boolean,java.lang.String,boolean,boolean,boolean,org.netbeans.modules.j2ee.ejbcore.ejb.wizard.session.TimerOptions,boolean,boolean,boolean)
+cons protected init(java.lang.String,org.openide.filesystems.FileObject,boolean,boolean,java.lang.String,org.netbeans.api.j2ee.core.Profile,boolean,boolean,org.netbeans.modules.j2ee.ejbcore.ejb.wizard.session.TimerOptions,boolean,boolean,boolean)
 fld public final static java.lang.String ANNOTATION_LOCAL_BEAN = "javax.ejb.LocalBean"
 fld public final static java.lang.String EJB21_EJBCLASS = "Templates/J2EE/EJB21/SessionEjbClass.java"
 fld public final static java.lang.String EJB21_LOCAL = "Templates/J2EE/EJB21/SessionLocal.java"
@@ -678,15 +668,20 @@ fld public final static java.lang.String EJB30_REMOTE = "Templates/J2EE/EJB30/Se
 fld public final static java.lang.String EJB30_STATEFUL_EJBCLASS = "Templates/J2EE/EJB30/StatefulEjbClass.java"
 fld public final static java.lang.String EJB30_STATELESS_EJBCLASS = "Templates/J2EE/EJB30/StatelessEjbClass.java"
 fld public final static java.lang.String EJB31_SINGLETON_EJBCLASS = "Templates/J2EE/EJB31/SingletonEjbClass.java"
+fld public final static java.lang.String EJB40_LOCAL = "Templates/J2EE/EJB40/SessionLocal.java"
+fld public final static java.lang.String EJB40_REMOTE = "Templates/J2EE/EJB40/SessionRemote.java"
+fld public final static java.lang.String EJB40_SINGLETON_EJBCLASS = "Templates/J2EE/EJB40/SingletonEjbClass.java"
+fld public final static java.lang.String EJB40_STATEFUL_EJBCLASS = "Templates/J2EE/EJB40/StatefulEjbClass.java"
+fld public final static java.lang.String EJB40_STATELESS_EJBCLASS = "Templates/J2EE/EJB40/StatelessEjbClass.java"
 fld public final static java.lang.String TEMPLATE_PROPERTY_INTERFACES = "interfaces"
 fld public final static java.lang.String TEMPLATE_PROPERTY_LOCAL_BEAN = "annotationLocalBean"
 meth public org.openide.filesystems.FileObject generate() throws java.io.IOException
 meth public static java.lang.String getScheduleAnnotationValue(org.netbeans.modules.j2ee.ejbcore.ejb.wizard.session.TimerOptions,boolean)
-meth public static org.netbeans.modules.j2ee.ejbcore.api.codegeneration.SessionGenerator create(java.lang.String,org.openide.filesystems.FileObject,boolean,boolean,java.lang.String,boolean,boolean,boolean,org.netbeans.modules.j2ee.ejbcore.ejb.wizard.session.TimerOptions,boolean,boolean)
+meth public static org.netbeans.modules.j2ee.ejbcore.api.codegeneration.SessionGenerator create(java.lang.String,org.openide.filesystems.FileObject,boolean,boolean,java.lang.String,org.netbeans.api.j2ee.core.Profile,boolean,boolean,org.netbeans.modules.j2ee.ejbcore.ejb.wizard.session.TimerOptions,boolean,boolean)
 meth public static org.openide.filesystems.FileObject createRemoteInterfacePackage(org.netbeans.api.project.Project,java.lang.String,org.openide.filesystems.FileObject) throws java.io.IOException
 meth public void initRemoteInterfacePackage(org.netbeans.api.project.Project,java.lang.String,org.openide.filesystems.FileObject) throws java.io.IOException
 supr java.lang.Object
-hfds displayName,ejbClassName,ejbName,ejbNameOptions,hasLocal,hasRemote,isSimplified,isXmlBased,localHomeName,localName,packageName,packageNameWithDot,pkg,remoteHomeName,remoteName,remotePkg,sessionType,templateParameters
+hfds displayName,ejbClassName,ejbName,ejbNameOptions,enterpriseProfile,hasLocal,hasRemote,isXmlBased,localHomeName,localName,packageName,packageNameWithDot,pkg,remoteHomeName,remoteName,remotePkg,sessionType,templateParameters
 
 CLSS public abstract org.netbeans.modules.j2ee.ejbcore.api.methodcontroller.AbstractMethodController
 cons public init(java.lang.String,org.netbeans.modules.j2ee.metadata.model.api.MetadataModel<org.netbeans.modules.j2ee.dd.api.ejb.EjbJarMetadata>)
@@ -914,6 +909,7 @@ hfds CLASSNAME_LOCAL,CLASSNAME_REMOTE,changeSupport,createdFilesText,inProjectCo
 CLSS public final org.netbeans.modules.j2ee.ejbcore.ejb.wizard.jpa.dao.EjbFacadeWizardIterator
 cons public init()
 fld protected final static java.lang.String EJB_STATELESS = "javax.ejb.Stateless"
+fld protected final static java.lang.String EJB_STATELESS_JAKARTA = "jakarta.ejb.Stateless"
 intf org.openide.WizardDescriptor$ProgressInstantiatingIterator
 meth public boolean hasNext()
 meth public boolean hasPrevious()
@@ -931,7 +927,7 @@ meth public void previousPanel()
 meth public void removeChangeListener(javax.swing.event.ChangeListener)
 meth public void uninitialize(org.openide.WizardDescriptor)
 supr java.lang.Object
-hfds EJB30_STATELESS_EJBCLASS,EJB_LOCAL,EJB_REMOTE,FACADE_ABSTRACT,FACADE_LOCAL_SUFFIX,FACADE_REMOTE_SUFFIX,FACADE_SUFFIX,LOGGER,WIZARD_PANEL_CONTENT_DATA,entityNames,index,panels,project,steps,stepsStartPos,wizard
+hfds EJB30_STATELESS_EJBCLASS,EJB_LOCAL,EJB_LOCAL_JAKARTA,EJB_REMOTE,EJB_REMOTE_JAKARTA,FACADE_ABSTRACT,FACADE_LOCAL_SUFFIX,FACADE_REMOTE_SUFFIX,FACADE_SUFFIX,LOGGER,WIZARD_PANEL_CONTENT_DATA,entityNames,index,panels,project,steps,stepsStartPos,wizard
 
 CLSS public org.netbeans.modules.j2ee.ejbcore.ejb.wizard.jpa.dao.EjbFacadeWizardPanel2
 cons public init(org.netbeans.api.project.Project,org.openide.WizardDescriptor)
@@ -1032,7 +1028,10 @@ fld public final static java.lang.String PROP_TITLE = "title"
 fld public final static java.lang.String PROP_VALID = "valid"
 fld public final static java.lang.String PROP_VALUE = "value"
 fld public final static java.lang.String PROP_WARNING_NOTIFICATION = "warningNotification"
+innr public final static ComposedInput
 innr public final static Exception
+innr public final static PasswordLine
+innr public final static QuickPick
 innr public static Confirmation
 innr public static InputLine
 innr public static Message

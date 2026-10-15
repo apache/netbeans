@@ -28,7 +28,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.StringTokenizer;
 import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 import org.netbeans.jellytools.JellyTestCase;
 import org.netbeans.jellytools.MainWindowOperator;
 import org.netbeans.jellytools.NbDialogOperator;
@@ -48,7 +47,7 @@ public class VCSClassLoadingTest extends JellyTestCase {
     private static final String SEPARATOR = "|";
     private static final String FILE = "vcswhitelist_";
     private static final String TXT = ".txt";
-    private static final String ZIP = ".zip";
+    private static final String TXT_GZ = ".txt.gz";
     private static final String BIGLIST = "biglist";
     private static final String[] LIST = {HG.toLowerCase(),CVS.toLowerCase(),SVN.toLowerCase(),GIT.toLowerCase()};
     private static final String FS = File.separator;
@@ -190,39 +189,19 @@ public class VCSClassLoadingTest extends JellyTestCase {
         testWhitelist();
     }
     
+    @SuppressWarnings("NestedAssignment")
     private static void unzipBigList() {
-        try {
-            FileInputStream inputStream = new FileInputStream(PATH+BIGLIST+ZIP);
+        try (FileInputStream inputStream = new FileInputStream(PATH+BIGLIST+TXT_GZ);
             GZIPInputStream gzipInput = new GZIPInputStream(inputStream);
-            FileOutputStream outputStream = new FileOutputStream(PATH+BIGLIST+TXT);
+            FileOutputStream outputStream = new FileOutputStream(PATH+BIGLIST+TXT)) {
             int ch;
             while ((ch = gzipInput.read()) != -1) {
                 outputStream.write(ch);
             }
-            inputStream.close();
-            gzipInput.close(); 
-            outputStream.close();
         }
         catch (Exception err)
         {
-             System.out.println("An error occurred - while unzipping "+PATH+BIGLIST+ZIP+" :\n" + err.getMessage());
-        }
-    }
-    
-    private static void zipBigList(String pathToBigList) {
-        try {
-            FileOutputStream fileOutputStream = new FileOutputStream(PATH+BIGLIST+ZIP); 
-            GZIPOutputStream zipOutputStream = new GZIPOutputStream(fileOutputStream);
-            FileInputStream fileInputStream = new FileInputStream(PATH+BIGLIST+TXT);
-            int ch;
-            while ((ch = fileInputStream.read()) != -1) {
-                zipOutputStream.write(ch);
-            }
-            fileInputStream.close();
-            zipOutputStream.close();
-        }
-        catch (Exception err) {
-            System.out.println("An error occurred - while zipping "+PATH+BIGLIST+TXT+" :\n" + err.getMessage());
+             System.out.println("An error occurred - while unzipping "+PATH+BIGLIST+TXT_GZ+" :\n" + err.getMessage());
         }
     }
 }

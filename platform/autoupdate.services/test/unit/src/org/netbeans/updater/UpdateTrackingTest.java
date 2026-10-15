@@ -24,6 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.updater.UpdateTracking.Module;
@@ -61,7 +62,7 @@ public class UpdateTrackingTest extends NbTestCase {
 "</module>";
         
         FileOutputStream os = new FileOutputStream(ut);
-        os.write(s.getBytes("UTF-8"));
+        os.write(s.getBytes(StandardCharsets.UTF_8));
         os.close();
 
     }

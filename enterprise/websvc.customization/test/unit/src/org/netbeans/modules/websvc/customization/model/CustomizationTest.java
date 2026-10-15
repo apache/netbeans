@@ -70,7 +70,7 @@ import org.openide.util.lookup.Lookups;
  * @author Roderico Cruz
  */
 public class CustomizationTest extends TestCase {
-    private final static String TEST_WSDL = "resources/AddNumbers.wsdl";
+    private static final String TEST_WSDL = "resources/AddNumbers.wsdl";
     
     public CustomizationTest(String testName) {
         super(testName);

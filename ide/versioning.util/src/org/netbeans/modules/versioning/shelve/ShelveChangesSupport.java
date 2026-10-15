@@ -50,7 +50,7 @@ import org.openide.util.NbBundle;
 public abstract class ShelveChangesSupport {
 
     private String patchName;
-    private final static Pattern PATCH_NAME_PATTERN = Pattern.compile("^(.*)-(\\d+)$"); //NOI18N
+    private static final Pattern PATCH_NAME_PATTERN = Pattern.compile("^(.*)-(\\d+)$"); //NOI18N
 
     protected abstract void exportPatch (File toFile, File commonParent) throws IOException;
     

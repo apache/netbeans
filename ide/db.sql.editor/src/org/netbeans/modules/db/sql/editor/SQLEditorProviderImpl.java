@@ -23,6 +23,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,7 +67,7 @@ public class SQLEditorProviderImpl implements SQLEditorProvider {
         int i = 1;
         for (;;) {
             String nameFmt = NbBundle.getMessage(SQLEditorProviderImpl.class, "LBL_SQLCommandFileName");
-            String name = MessageFormat.format(nameFmt, new Object[] { new Integer(i) });
+            String name = MessageFormat.format(nameFmt, new Object[] { Integer.valueOf(i) });
             try {
                 sqlFo = tmpFo.createData(name);
             } catch (IOException e) {
@@ -81,7 +82,7 @@ public class SQLEditorProviderImpl implements SQLEditorProvider {
             try {
                 OutputStream stream = sqlFo.getOutputStream(lock);
                 try {
-                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(stream, "UTF-8")); // NOI18N
+                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(stream, StandardCharsets.UTF_8));
                     try {
                         writer.write(sql);
                     } finally {

@@ -29,6 +29,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
@@ -51,10 +52,14 @@ import org.netbeans.modules.java.api.common.project.ui.ProjectUISupport;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.api.customizer.ModelHandle2;
 import org.netbeans.modules.maven.classpath.MavenSourcesImpl;
+import org.netbeans.modules.maven.configurations.M2ConfigProvider;
+import org.netbeans.modules.maven.configurations.M2Configuration;
+import org.netbeans.modules.maven.runjar.MavenExecuteUtils;
 import org.netbeans.modules.maven.execute.model.ActionToGoalMapping;
 import org.netbeans.modules.maven.execute.model.NetbeansActionMapping;
 import org.netbeans.modules.maven.options.MavenSettings;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.ProjectConfiguration;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -72,12 +77,6 @@ import org.openide.util.NbBundle;
  */
 public class RunJarPanel extends javax.swing.JPanel implements HelpCtx.Provider {
     
-    private boolean isCurrentRun = true;
-    private boolean isCurrentDebug = true;
-    private boolean isCurrentProfile = true;
-    private static final String RUN_PARAMS = "exec.args"; //NOI18N
-    private static final String RUN_WORKDIR = "exec.workingdir"; //NOI18N
-    private static final String DEFAULT_DEBUG_PARAMS = "-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}"; //NOI18N
     private static final String PROFILE_CMD = "profile"; // NOI18N
     
     private ModelHandle2 handle;
@@ -89,7 +88,6 @@ public class RunJarPanel extends javax.swing.JPanel implements HelpCtx.Provider 
     private String oldParams;
     private String oldVMParams;
     private String oldWorkDir;
-    private String oldAllParams;
     private DocumentListener docListener;
     private ActionListener comboListener;
     private ProjectCustomizer.Category category;
@@ -135,7 +133,7 @@ public class RunJarPanel extends javax.swing.JPanel implements HelpCtx.Provider 
             roots.add(sourceGroup.getRootFolder());
         }
 
-        btnMainClass.addActionListener(new MainClassListener(roots.toArray(new FileObject[roots.size()]), txtMainClass));
+        btnMainClass.addActionListener(new MainClassListener(roots.toArray(new FileObject[0]), txtMainClass));
         docListener = new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent arg0) {
@@ -178,11 +176,25 @@ public class RunJarPanel extends javax.swing.JPanel implements HelpCtx.Provider 
         txtWorkDir.getDocument().removeDocumentListener(docListener);
     }
     
+    private MavenExecuteUtils.ExecutionEnvHelper execEnvHelper;
+    
+    private NetbeansActionMapping getMapping(String action, ProjectConfiguration c) {
+        NetbeansActionMapping r = null;
+        
+        if (c != null) {
+            r = ModelHandle2.getMapping(action, project, c);
+        } else {
+            r = ModelHandle2.getDefaultMapping(action, project);
+        }
+        return r;
+    }
+    
     @NbBundle.Messages({"MsgModifiedAction=One of Run/Debug/Profile Project actions has been modified and the Run panel cannot be safely edited"})
     private void initValues() {
         run = null;
         debug = null;
         profile = null;
+        ModelHandle2.Configuration sel = (ModelHandle2.Configuration) comConfiguration.getSelectedItem();
         ActionToGoalMapping mapp = handle.getActionMappings((ModelHandle2.Configuration) comConfiguration.getSelectedItem());
         @SuppressWarnings("unchecked")
         List<NetbeansActionMapping> lst = mapp.getActions();
@@ -197,47 +209,31 @@ public class RunJarPanel extends javax.swing.JPanel implements HelpCtx.Provider 
                 profile = m;
             }
         }
+        M2ConfigProvider prov = project.getLookup().lookup(M2ConfigProvider.class);
+        M2Configuration config = null;
+        if (prov != null) {
+            config = prov.getConfigurations().stream().filter(c -> c.getId().equals(sel.getId())).findAny().orElse(null);
+            if (M2Configuration.DEFAULT.equals(config.getId())) {
+                config = null;
+            }
+        }
         if (run == null) {
-            run = ModelHandle2.getDefaultMapping(ActionProvider.COMMAND_RUN, project);
+            run = getMapping(ActionProvider.COMMAND_RUN, config);
         }
         if (debug == null) {
-            debug = ModelHandle2.getDefaultMapping(ActionProvider.COMMAND_DEBUG, project);
+            debug = getMapping(ActionProvider.COMMAND_DEBUG, config);
         }
         if (profile == null) {
-            profile = ModelHandle2.getDefaultMapping(PROFILE_CMD, project);
+            profile = getMapping(PROFILE_CMD, config);
         }
-        isCurrentRun = checkNewMapping(run);
-        isCurrentDebug = checkNewMapping(debug);
-        isCurrentProfile = checkNewMapping(profile);
-        if (isCurrentDebug && isCurrentRun && isCurrentProfile ) {
-            oldWorkDir = run.getProperties().get(RUN_WORKDIR);
-            if (oldWorkDir == null) {
-                oldWorkDir = debug.getProperties().get(RUN_WORKDIR);
-            }
-            if (oldWorkDir == null && profile != null) {
-                oldWorkDir = profile.getProperties().get(RUN_WORKDIR);
-            }
-            String params = run.getProperties().get(RUN_PARAMS);
-            if (params == null) {
-                params = debug.getProperties().get(RUN_PARAMS);
-            }
-            if (params == null && profile != null) {
-                params = profile.getProperties().get(RUN_PARAMS);
-            }
-            if (params != null) {
-                oldAllParams = params;
-                oldVMParams = splitJVMParams(params, true);
-                if (oldVMParams != null && oldVMParams.contains("-classpath %classpath")) {
-                    oldVMParams = oldVMParams.replace("-classpath %classpath", "");
-                }
-                oldMainClass = splitMainClass(params);
-                if (oldMainClass != null && oldMainClass.equals("${packageClassName}")) {
-                    oldMainClass = "";
-                }
-                oldParams = splitParams(params);
-            } else {
-                oldAllParams = "";
-            }
+        execEnvHelper = MavenExecuteUtils.createExecutionEnvHelper(project, run, debug, profile, mapp);
+        execEnvHelper.loadFromProject();
+        if (execEnvHelper.isValid()) {
+            oldWorkDir = execEnvHelper.getWorkDir();
+            oldVMParams = execEnvHelper.getVmParams();
+            oldParams = execEnvHelper.getAppParams();
+            oldMainClass = execEnvHelper.getMainClass();
+            
             txtMainClass.setEnabled(true);
             txtArguments.setEnabled(true);
             txtVMOptions.setEnabled(true);
@@ -443,7 +439,6 @@ public class RunJarPanel extends javax.swing.JPanel implements HelpCtx.Provider 
 
     private void btnWorkDirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnWorkDirActionPerformed
         JFileChooser chooser = new JFileChooser();
-        chooser.setCurrentDirectory(null);
         chooser.setFileSelectionMode (JFileChooser.DIRECTORIES_ONLY);
         chooser.setMultiSelectionEnabled(false);
         
@@ -463,7 +458,7 @@ public class RunJarPanel extends javax.swing.JPanel implements HelpCtx.Provider 
         String origin = txtVMOptions.getText();
         try {
             String result = ProjectUISupport.showVMOptionCustomizer(SwingUtilities.getWindowAncestor(this), origin);
-            result = splitJVMParams(result, true);
+            result = MavenExecuteUtils.splitJVMParams(result, true);
             txtVMOptions.setText(result);
         } catch (Exception e) {
             Logger.getLogger(RunJarPanel.class.getName()).log(Level.WARNING, "Cannot parse vm options.", e); // NOI18N
@@ -480,161 +475,19 @@ public class RunJarPanel extends javax.swing.JPanel implements HelpCtx.Provider 
         String newMainClass = txtMainClass.getText().trim();
         String newParams = txtArguments.getText().trim();
         String newVMParams = txtVMOptions.getText().trim();
-        newVMParams = newVMParams.replace('\n', ' ');
         String newWorkDir = txtWorkDir.getText().trim();
-        ActionToGoalMapping a2gm = handle.getActionMappings((ModelHandle2.Configuration) comConfiguration.getSelectedItem());
-        if (isCurrentRun || isCurrentDebug || isCurrentProfile) {
-            String newAllParams = newVMParams + " -classpath %classpath "; //NOI18N
-            if (newMainClass.trim().length() > 0) {
-                newAllParams = newAllParams + newMainClass + " "; //NOI18N
-            } else {
-                newAllParams = newAllParams + "${packageClassName} "; //NOI18N
-            }
-            newAllParams = newAllParams + newParams;
-            newAllParams = newAllParams.trim();
-            if (isCurrentRun) {
-                boolean changed = false;
-                if (!oldAllParams.equals(newAllParams)) {
-                    run.addProperty(RUN_PARAMS, newAllParams);
-                    changed = true;
-                }
-                if (!oldWorkDir.equals(newWorkDir)) {
-                    run.addProperty(RUN_WORKDIR, newWorkDir);
-                    changed = true;
-                }
-                if (changed) {
-                    ModelHandle2.setUserActionMapping(run, a2gm);
-                    handle.markAsModified(a2gm);
-                }
-            }
-            if (isCurrentDebug) {
-                boolean changed = false;
-                if (!oldAllParams.equals(newAllParams)) {
-                    debug.addProperty(RUN_PARAMS, DEFAULT_DEBUG_PARAMS + " " + newAllParams);
-                    changed = true;
-                }
-                if (!oldWorkDir.equals(newWorkDir)) {
-                    debug.addProperty(RUN_WORKDIR, newWorkDir);
-                    changed = true;
-                }
-                if (changed) {
-                    ModelHandle2.setUserActionMapping(debug, a2gm);
-                    handle.markAsModified(a2gm);
-                }
-            }
-            if (isCurrentProfile) {
-                boolean changed = false;
-                if (!oldAllParams.equals(newAllParams)) {
-                    profile.addProperty(RUN_PARAMS, newAllParams);
-                    changed = true;
-                }
-                if (!oldWorkDir.equals(newWorkDir)) {
-                    profile.addProperty(RUN_WORKDIR, newWorkDir);
-                    changed = true;
-                }
-                if (changed) {
-                    ModelHandle2.setUserActionMapping(profile, a2gm);
-                    handle.markAsModified(a2gm);
-                }
-            }
+        
+        execEnvHelper.setMainClass(newMainClass);
+        execEnvHelper.setAppParams(newParams);
+        execEnvHelper.setWorkDir(newWorkDir);
+        execEnvHelper.setVmParams(newVMParams);
+        
+        execEnvHelper.applyToMappings();
+        if (execEnvHelper.isModified()) {
+            handle.markAsModified(execEnvHelper.getGoalMappings());
         }
     }
 
-    private boolean checkNewMapping(NetbeansActionMapping map) {
-        if (map == null || map.getGoals() == null) {
-            return false; //#164323
-        }
-        Iterator it = map.getGoals().iterator();
-        while (it.hasNext()) {
-            String goal = (String) it.next();
-            if (goal.matches("org\\.codehaus\\.mojo\\:exec-maven-plugin\\:(.)+\\:exec") //NOI18N
-                    || goal.indexOf("exec:exec") > -1) { //NOI18N
-                if (map.getProperties() != null && map.getProperties().containsKey("exec.args")) {
-                    String execArgs = map.getProperties().get("exec.args");
-                    if (execArgs.contains("-classpath")) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-    
-    /**
-     * used by quickrun configuration.
-     * @param argline
-     * @return
-     */
-    public static String[] splitAll(String argline) {
-        String jvm = splitJVMParams(argline);
-        String mainClazz = splitMainClass(argline);
-        String args = splitParams(argline);
-        if (jvm != null && jvm.contains("-classpath %classpath")) {
-            jvm = jvm.replace("-classpath %classpath", "");
-        }
-        if (mainClazz != null && mainClazz.equals("${packageClassName}")) {
-                    mainClazz = "";
-        }
-        return new String[] {
-            (jvm != null ? jvm : ""),
-            (mainClazz != null ? mainClazz : ""),
-            (args != null ? args : "")
-        };
-    }
-    
-    static String splitJVMParams(String line) {
-        return splitJVMParams(line, false);
-    }
-    
-    private static String splitJVMParams(String line, boolean newLines) {
-        PropertySplitter ps = new PropertySplitter(line);
-        ps.setSeparator(' '); //NOI18N
-        String s = ps.nextPair();
-        String jvms = ""; //NOI18N
-        while (s != null) {
-            if (s.startsWith("-") || /* #199411 */s.startsWith("\"-") || s.contains("%classpath")) { //NOI18N
-                if(s.contains("%classpath")) {
-                    jvms =  jvms + " " + s;
-                } else {
-                    jvms =  jvms + (jvms.isEmpty() ? "" : (newLines ? "\n" : " ")) + s;
-                }
-            } else if (s.equals("${packageClassName}") || s.matches("[\\w]+[\\.]{0,1}[\\w\\.]*")) { //NOI18N
-                break;
-            } else {
-                jvms =  jvms + " " + s;
-            }
-            s = ps.nextPair();
-        }
-        return jvms.trim();
-    }
-    
-    static String splitMainClass(String line) {
-        PropertySplitter ps = new PropertySplitter(line);
-        ps.setSeparator(' '); //NOI18N
-        String s = ps.nextPair();
-        while (s != null) {
-            if (s.startsWith("-") || s.contains("%classpath")) { //NOI18N
-                s = ps.nextPair();
-                continue;
-            } else if (s.equals("${packageClassName}") || s.matches("[\\w]+[\\.]{0,1}[\\w\\.]*")) { //NOI18N
-                return s;
-            } else {
-                Logger.getLogger(RunJarPanel.class.getName()).fine("failed splitting main class from=" + line); //NOI18N
-            }
-            s = ps.nextPair();
-        }
-        return ""; //NOI18N
-    }
-    
-    static String splitParams(String line) {
-        String main = splitMainClass(line);
-        int i = line.indexOf(main);
-        if (i > -1) {
-            return line.substring(i + main.length()).trim();
-        }
-        return ""; //NOI18N
-    }
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnMainClass;
     private javax.swing.JButton btnWorkDir;

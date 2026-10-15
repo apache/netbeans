@@ -113,7 +113,7 @@ public class SwingController extends Controller implements Executor, Runnable {
         return timer;
     }
     
-    //////// Begin backward compatibilty hack ////////
+    // Begin backward compatibilty hack
     
     static final Method compatInit;
     

@@ -535,7 +535,7 @@ public class ServiceModelTest extends NbTestCase {
      * @param f the file to be read
      * @return the contents of the file(s).
      */
-    public final static String copyFileToString(java.io.File f) throws IOException {
+    public static final String copyFileToString(java.io.File f) throws IOException {
         int s = (int) f.length();
         byte[] data = new byte[s];
         int len = new FileInputStream(f).read(data);
@@ -548,7 +548,7 @@ public class ServiceModelTest extends NbTestCase {
     private String getFormatedDocument(SOAPMessage message) {
         try {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            transformerFactory.setAttribute("indent-number", new Integer(4));
+            transformerFactory.setAttribute("indent-number", 4);
             Transformer transformer = transformerFactory.newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 

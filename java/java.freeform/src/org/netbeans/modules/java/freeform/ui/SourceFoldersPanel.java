@@ -28,7 +28,6 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -74,13 +73,20 @@ import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 
+import static java.util.Collections.unmodifiableList;
+import static java.util.Arrays.asList;
+
 /**
  * Wizard panel which lets user select source and test package roots and source level.
  * Also shows some other info.
  * @author  David Konecny
  */
 public class SourceFoldersPanel extends JPanel implements HelpCtx.Provider, ListSelectionListener {
-    
+    private static final String DEFAULT_SOURCE_LEVEL = "11"; // NOI18N
+    private static final List<String> JAVA_SOURCE_LEVEL = unmodifiableList(asList(
+        "1.3", "1.4", "1.5", "1.6", "1.7", "1.8",            // NOI18N
+        "9", "10", "11", "12", "13", "14", "15", "16", "17"  // NOI18N
+    ));
     private SourcesModel sourceFoldersModel;
     private SourcesModel testFoldersModel;
     private ChangeListener listener;
@@ -122,12 +128,9 @@ public class SourceFoldersPanel extends JPanel implements HelpCtx.Provider, List
     }
     
     private void initSourceLevel() {
-        sourceLevel.addItem(NbBundle.getMessage(SourceFoldersPanel.class, "LBL_SourceFoldersPanel_JDK13")); // NOI18N
-        sourceLevel.addItem(NbBundle.getMessage(SourceFoldersPanel.class, "LBL_SourceFoldersPanel_JDK14")); // NOI18N
-        sourceLevel.addItem(NbBundle.getMessage(SourceFoldersPanel.class, "LBL_SourceFoldersPanel_JDK15")); // NOI18N
-        sourceLevel.addItem(NbBundle.getMessage(SourceFoldersPanel.class, "LBL_SourceFoldersPanel_JDK16")); // NOI18N
-        sourceLevel.addItem(NbBundle.getMessage(SourceFoldersPanel.class, "LBL_SourceFoldersPanel_JDK17")); // NOI18N
-        sourceLevel.addItem(NbBundle.getMessage(SourceFoldersPanel.class, "LBL_SourceFoldersPanel_JDK18")); // NOI18N
+        for(String javaSourceLevel: JAVA_SOURCE_LEVEL) {
+            sourceLevel.addItem(javaSourceLevel);
+        }
     }
     
     private void updateButtons() {
@@ -152,40 +155,12 @@ public class SourceFoldersPanel extends JPanel implements HelpCtx.Provider, List
     }
     
     private void updateSourceLevelCombo(String sourceLevelValue) {
-        if (sourceLevelValue.equals("1.3")) { // NOI18N
-            sourceLevel.setSelectedIndex(0);
-        } else if (sourceLevelValue.equals("1.4")) { // NOI18N
-            sourceLevel.setSelectedIndex(1);
-        } else if (sourceLevelValue.equals("1.5")) { // NOI18N
-            sourceLevel.setSelectedIndex(2);
-        } else if (sourceLevelValue.equals("1.6")) { // NOI18N
-            sourceLevel.setSelectedIndex(3);
-        } else if (sourceLevelValue.equals("1.7")) { // NOI18N
-            sourceLevel.setSelectedIndex(4);
-        } else if (sourceLevelValue.equals("1.8")) { // NOI18N
-            sourceLevel.setSelectedIndex(5);
-        }else {
-            // user specified some other value in project.xml
-            sourceLevel.addItem(sourceLevelValue);
-            sourceLevel.setSelectedIndex(3);
-        }
+        sourceLevel.setSelectedItem(sourceLevelValue);
     }
     
     private void updateEncodingCombo() {
         String enc = model.getEncoding();
         encodingComboBox.setModel(ProjectCustomizer.encodingModel(enc));
-    }
-    
-    private String getSourceLevelValue(int index) {
-        switch (index) {
-            case 0: return "1.3"; // NOI18N
-            case 1: return "1.4"; // NOI18N
-            case 2: return "1.5"; // NOI18N
-            case 3: return "1.6"; // NOI18N
-            case 4: return "1.7"; // NOI18N
-            case 5: return "1.8"; // NOI18N
-            default: return null;
-        }
     }
     
     /** This method is called from within the constructor to
@@ -200,7 +175,7 @@ public class SourceFoldersPanel extends JPanel implements HelpCtx.Provider, List
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        sourceLevel = new javax.swing.JComboBox();
+        sourceLevel = new javax.swing.JComboBox<>();
         addFolder = new javax.swing.JButton();
         removeFolder = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -260,9 +235,15 @@ public class SourceFoldersPanel extends JPanel implements HelpCtx.Provider, List
         jLabel3.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(SourceFoldersPanel.class, "ACSD_SourceLevel_Label")); // NOI18N
         jLabel3.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(SourceFoldersPanel.class, "ACSD_SourceFoldersPanel_jLabel3")); // NOI18N
 
+        sourceLevel.setEditable(true);
         sourceLevel.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 sourceLevelItemStateChanged(evt);
+            }
+        });
+        sourceLevel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sourceLevelActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -490,8 +471,8 @@ public class SourceFoldersPanel extends JPanel implements HelpCtx.Provider, List
         gridBagConstraints.insets = new java.awt.Insets(8, 8, 8, 0);
         jPanel1.add(jLabel5, gridBagConstraints);
 
-        jTextArea1.setBackground(javax.swing.UIManager.getDefaults().getColor("Panel.background"));
         jTextArea1.setEditable(false);
+        jTextArea1.setBackground(javax.swing.UIManager.getDefaults().getColor("Panel.background"));
         jTextArea1.setLineWrap(true);
         jTextArea1.setText(org.openide.util.NbBundle.getMessage(SourceFoldersPanel.class, "Freeform_Warning_Message")); // NOI18N
         jTextArea1.setWrapStyleWord(true);
@@ -537,7 +518,7 @@ private void includesExcludesButtonActionPerformed(java.awt.event.ActionEvent ev
                 roots.add(f);
             }
         }
-        v.setRoots(roots.toArray(new File[roots.size()]));
+        v.setRoots(roots.toArray(new File[0]));
         DialogDescriptor dd = new DialogDescriptor(v.getVisualizerPanel(),
                 NbBundle.getMessage(SourceFoldersPanel.class, "SourceFoldersPanel.title.includeExclude"));
         dd.setOptionType(NotifyDescriptor.OK_CANCEL_OPTION);
@@ -634,13 +615,7 @@ private void includesExcludesButtonActionPerformed(java.awt.event.ActionEvent ev
     }//GEN-LAST:event_addTestFolderActionPerformed
 
     private void sourceLevelItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_sourceLevelItemStateChanged
-        if (sourceLevel.getSelectedIndex() != -1 && model != null) {
-            String sl = getSourceLevelValue(sourceLevel.getSelectedIndex());
-            if (sl == null) {
-                sl = (String)sourceLevel.getSelectedItem();
-            }
-            model.setSourceLevel(sl);
-        }
+        sourceLevelChanged();
     }//GEN-LAST:event_sourceLevelItemStateChanged
 
     private void removeFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeFolderActionPerformed
@@ -662,6 +637,22 @@ private void includesExcludesButtonActionPerformed(java.awt.event.ActionEvent ev
     private void addFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFolderActionPerformed
         doAddFolderActionPerformed(evt, false);
     }//GEN-LAST:event_addFolderActionPerformed
+
+    private void sourceLevelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sourceLevelActionPerformed
+        sourceLevelChanged();
+    }//GEN-LAST:event_sourceLevelActionPerformed
+
+    private void sourceLevelChanged() {
+        if (model != null) {
+            String value = (String) sourceLevel.getSelectedItem();
+            if (value.matches("\\d+(?:\\.\\d+)?")) {
+                model.setSourceLevel(value);
+            } else {
+                model.setSourceLevel(DEFAULT_SOURCE_LEVEL);
+                sourceLevel.setSelectedItem(DEFAULT_SOURCE_LEVEL);
+            }
+        }
+    }
 
     private void doAddFolderActionPerformed(java.awt.event.ActionEvent evt, boolean isTests) {                                          
         FileChooserBuilder builder = new FileChooserBuilder(SourceFoldersPanel.class).setDirectoriesOnly(true);
@@ -847,7 +838,7 @@ private void includesExcludesButtonActionPerformed(java.awt.event.ActionEvent ev
     private javax.swing.JButton removeFolder;
     private javax.swing.JButton removeTestFolder;
     private javax.swing.JTable sourceFolders;
-    private javax.swing.JComboBox sourceLevel;
+    private javax.swing.JComboBox<String> sourceLevel;
     private javax.swing.JTable testFolders;
     private javax.swing.JButton upFolder;
     private javax.swing.JButton upTestFolder;
@@ -901,8 +892,8 @@ private void includesExcludesButtonActionPerformed(java.awt.event.ActionEvent ev
         }
         if (notEmpty) {
             FolderComparator comparator = new FolderComparator();
-            Collections.sort(finalSourceFolders, comparator);
-            Collections.sort(finalTestFolders, comparator);
+            finalSourceFolders.sort(comparator);
+            finalTestFolders.sort(comparator);
             for (SourceFolder sf : finalSourceFolders) {
                 model.addSourceFolder(sf, false);
             }

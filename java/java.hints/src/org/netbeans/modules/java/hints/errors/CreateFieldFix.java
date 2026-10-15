@@ -41,7 +41,6 @@ import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsProvider;
 import org.netbeans.spi.editor.hints.ChangeInfo;
 import org.netbeans.spi.editor.hints.EnhancedFix;
-import org.netbeans.spi.editor.hints.Fix;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 
@@ -49,7 +48,7 @@ import org.openide.util.NbBundle;
  *
  * @author Jan Lahoda
  */
-public final class CreateFieldFix implements EnhancedFix {
+public final class CreateFieldFix extends ModificationResultBasedFix implements EnhancedFix {
     
     private FileObject targetFile;
     private ElementHandle<TypeElement> target;
@@ -75,15 +74,27 @@ public final class CreateFieldFix implements EnhancedFix {
         this.proposedType = proposedType == null ? null : TypeMirrorHandle.create(proposedType);
         this.remote = !org.openide.util.Utilities.compareObjects(info.getFileObject(), targetFile);
     }
-    
+
+    @Override
     public String getText() {
         return NbBundle.getMessage(CreateFieldFix.class, "LBL_FIX_Create_Field", name, inFQN);        
     }
-    
+
+    @Override
     public ChangeInfo implement() throws IOException {
+        ModificationResult diff = getModificationResult();
+        ChangeInfo ci = Utilities.commitAndComputeChangeInfo(targetFile, diff, null);
+        if (remote) {
+            return ci;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public ModificationResult getModificationResult() throws IOException {
         //use the original cp-info so it is "sure" that the proposedType can be resolved:
         JavaSource js = JavaSource.create(cpInfo, targetFile);
-        
         ModificationResult diff = js.runModificationTask(new Task<WorkingCopy>() {
             public void run(final WorkingCopy working) throws IOException {
                 working.toPhase(Phase.RESOLVED);
@@ -115,16 +126,9 @@ public final class CreateFieldFix implements EnhancedFix {
                 working.rewrite(targetTree, decl);
             }
         });
-        
-        ChangeInfo ci = Utilities.commitAndComputeChangeInfo(targetFile, diff, null);
-        
-        if (remote) {
-            return ci;
-        } else {
-            return null;
-        }
+        return diff;
     }
-    
+
     String toDebugString(CompilationInfo info) {
         return "CreateFieldFix:" + name + ":" + target.getQualifiedName() + ":" + proposedType.resolve(info).toString() + ":" + modifiers; // NOI18N
     }

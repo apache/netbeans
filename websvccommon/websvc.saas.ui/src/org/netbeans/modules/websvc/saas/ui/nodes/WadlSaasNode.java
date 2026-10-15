@@ -74,7 +74,7 @@ public class WadlSaasNode extends SaasNode {
         List<Action> actions = new ArrayList<Action>(Arrays.asList(super.getActions(context)));
         actions.add(SystemAction.get(ViewWadlAction.class));
 
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
 }

@@ -24,9 +24,7 @@ package org.netbeans.modules.groovy.editor.api.completion;
  * @author Petr Hejl
  */
 import java.util.Map;
-import org.netbeans.modules.groovy.editor.test.GroovyTestBase;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
@@ -36,13 +34,17 @@ import org.openide.filesystems.FileUtil;
  *
  * @author Petr Hejl
  */
-public class InferenceCCTest extends GroovyTestBase {
+public class InferenceCCTest extends GroovyCCTestBase {
 
     String TEST_BASE = "testfiles/completion/inference/";
 
     public InferenceCCTest(String testName) {
         super(testName);
-        Logger.getLogger(CompletionHandler.class.getName()).setLevel(Level.FINEST);
+    }
+
+    @Override
+    protected String getTestType() {
+        return ".";
     }
 
     // uncomment this to have logging from GroovyLexer
@@ -65,6 +67,6 @@ public class InferenceCCTest extends GroovyTestBase {
     }
 
     public void testInference2() throws Exception {
-        checkCompletion(TEST_BASE + "Inference1.groovy", "        set.t^", true);
+        checkCompletion(TEST_BASE + "Inference1.groovy", "        text.t^", true);
     }
 }

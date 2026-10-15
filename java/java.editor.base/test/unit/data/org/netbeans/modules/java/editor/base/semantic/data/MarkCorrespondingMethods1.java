@@ -96,7 +96,7 @@ public class MarkCorrespondingMethods1 extends AbstractList<String> implements C
 
     }
     
-    public static abstract class X implements CharSequence {
+    public abstract static class X implements CharSequence {
         public @Override int hashCode() {
             return 0;
         }

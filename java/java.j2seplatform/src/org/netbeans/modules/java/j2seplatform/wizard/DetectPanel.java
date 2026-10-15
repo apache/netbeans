@@ -46,7 +46,6 @@ import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
-import org.netbeans.modules.java.j2seplatform.platformdefinition.J2SEPlatformImpl;
 import org.netbeans.modules.java.j2seplatform.platformdefinition.PlatformConvertor;
 import org.netbeans.modules.java.j2seplatform.platformdefinition.Util;
 import org.netbeans.spi.java.classpath.PathResourceImplementation;
@@ -329,12 +328,16 @@ public class DetectPanel extends javax.swing.JPanel {
      * Updates name of the platform from NewJ2SEPlatform
      * threading: Has to be called in the EDT
      */
-    private void updatePlatformName(@NonNull final NewJ2SEPlatform platform) {
+    private void updatePlatformName(@NonNull final NewJ2SEPlatform platform, String name) {
         assert platform != null;
         assert SwingUtilities.isEventDispatchThread();
         final Map<String,String> m = platform.getSystemProperties();
         if ("".equals(jdkName.getText())) { //NOI18N
-            jdkName.setText(getInitialName (m));
+            if (name != null) {
+                jdkName.setText(name);
+            } else {
+                jdkName.setText(getInitialName (m));
+            }
             jdkName.selectAll();
         }
     }
@@ -352,7 +355,6 @@ public class DetectPanel extends javax.swing.JPanel {
     
     private String browse (String oldValue, String title) {
         JFileChooser chooser = new JFileChooser ();
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
         chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         if (Utilities.isMac()) {
             //New JDKs and JREs are bundled into package, allow JFileChooser to navigate in
@@ -473,7 +475,7 @@ public class DetectPanel extends javax.swing.JPanel {
             this.component.progressPanel.setVisible (true);
             this.component.progressLabel.setVisible (true);
             
-            this.progressHandle = ProgressHandleFactory.createHandle(NbBundle.getMessage(DetectPanel.class,"TXT_PlatfromDetectProgress"));
+            this.progressHandle = ProgressHandle.createHandle(NbBundle.getMessage(DetectPanel.class,"TXT_PlatfromDetectProgress"));
             this.component.progressPanel.removeAll();
             this.component.progressPanel.setLayout (new GridBagLayout ());
             GridBagConstraints c = new GridBagConstraints ();
@@ -572,10 +574,13 @@ public class DetectPanel extends javax.swing.JPanel {
                 platform.isValid() ?
                     (isSupported(platform.getSpecification().getVersion()) ? PlatformState.VALID : PlatformState.UNSUPPORTED):
                     PlatformState.INVALID);
+            Object attr = iterator.getInstallFolder()
+                    .getAttribute(NewJ2SEPlatform.DISPLAY_NAME_FILE_ATTR);
+            final String name = (attr instanceof String) ? (String) attr : null;
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run () {
-                    component.updatePlatformName(platform);
+                    component.updatePlatformName(platform, name);
                     component.setJavadoc(jdocStr);
                     component.setSources(srcStr);
                     assert progressHandle != null;

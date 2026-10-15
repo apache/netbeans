@@ -99,7 +99,7 @@ public class AntArtifactQuery {
                 l.add(aa);
             }
         }
-        return l.toArray(new AntArtifact[l.size()]);
+        return l.toArray(new AntArtifact[0]);
     }
     
 }

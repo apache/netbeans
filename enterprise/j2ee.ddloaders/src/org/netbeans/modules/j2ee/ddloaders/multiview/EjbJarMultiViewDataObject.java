@@ -107,8 +107,8 @@ public class EjbJarMultiViewDataObject extends DDMultiViewDataObject
     private boolean initialized = false;
 
     private PropertyChangeListener ejbJarChangeListener;
-    private Map entityHelperMap = new HashMap();
-    private Map sessionHelperMap = new HashMap();
+    private Map<Entity, EntityHelper> entityHelperMap    = new HashMap<>();
+    private Map<Session, SessionHelper> sessionHelperMap = new HashMap<>();
     
     private static final long serialVersionUID = 8857563089355069362L;
     
@@ -291,13 +291,13 @@ public class EjbJarMultiViewDataObject extends DDMultiViewDataObject
     }
     
     private RequestProcessor.Task elementTask;
-    private List deletedEjbNames;
-    private List newFileNames;
+    private List<String> deletedEjbNames;
+    private List<String> newFileNames;
     
     private void elementCreated(final String elementName) {
         synchronized (this) {
             if (newFileNames == null) {
-                newFileNames = new ArrayList();
+                newFileNames = new ArrayList<>();
             }
             newFileNames.add(elementName);
         }
@@ -307,7 +307,7 @@ public class EjbJarMultiViewDataObject extends DDMultiViewDataObject
                 public void run() {
                     if (deletedEjbNames != null) {
                         for (int i = 0; i < deletedEjbNames.size(); i++) {
-                            String deletedServletName = (String) deletedEjbNames.get(i);
+                            String deletedServletName = deletedEjbNames.get(i);
                             String deletedName = deletedServletName;
                             int index = deletedServletName.lastIndexOf("."); //NOI18N
                             if (index > 0) {
@@ -315,7 +315,7 @@ public class EjbJarMultiViewDataObject extends DDMultiViewDataObject
                             }
                             boolean found = false;
                             for (int j = 0; j < newFileNames.size(); j++) {
-                                String newFileName = (String) newFileNames.get(j);
+                                String newFileName = newFileNames.get(j);
                                 String newName = newFileName;
                                 int ind = newFileName.lastIndexOf("."); //NOI18N
                                 if (ind > 0) {
@@ -388,7 +388,7 @@ public class EjbJarMultiViewDataObject extends DDMultiViewDataObject
                     if (resourceName.equals(ejbs[i].getEjbClass())) {
                         synchronized (this) {
                             if (deletedEjbNames == null) {
-                                deletedEjbNames = new ArrayList();
+                                deletedEjbNames = new ArrayList<>();
                             }
                             deletedEjbNames.add(resourceName);
                         }
@@ -618,10 +618,7 @@ public class EjbJarMultiViewDataObject extends DDMultiViewDataObject
         }
         
         public void view() {
-            try {
-                HtmlBrowser.URLDisplayer.getDefault().showURL(primary.getFile().getURL());
-            } catch (FileStateInvalidException e) {
-            }
+            HtmlBrowser.URLDisplayer.getDefault().showURL(primary.getFile().toURL());
         }
     }
     
@@ -764,7 +761,7 @@ public class EjbJarMultiViewDataObject extends DDMultiViewDataObject
     }
     
     public EntityHelper getEntityHelper(Entity entity) {
-        EntityHelper entityHelper = (EntityHelper) entityHelperMap.get(entity);
+        EntityHelper entityHelper = entityHelperMap.get(entity);
         if (entityHelper == null) {
             entityHelper = new EntityHelper(this, entity);
             entityHelperMap.put(entity, entityHelper);
@@ -773,7 +770,7 @@ public class EjbJarMultiViewDataObject extends DDMultiViewDataObject
     }
     
     public SessionHelper getSessionHelper(Session session) {
-        SessionHelper sessionHelper = (SessionHelper) sessionHelperMap.get(session);
+        SessionHelper sessionHelper = sessionHelperMap.get(session);
         if (sessionHelper == null) {
             sessionHelper = new SessionHelper(this, session);
             sessionHelperMap.put(session, sessionHelper);

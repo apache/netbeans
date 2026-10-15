@@ -53,6 +53,14 @@ public class PHPArrayCodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion("testfiles/completion/lib/arrays/arrays.php", "$b[0]->^field;", false);
     }
 
+    public void testArrays_05() throws Exception {
+        checkCompletion("testfiles/completion/lib/arrays/arrays.php", "arrayFunctionTyped()[0]->^field;", false);
+    }
+
+    public void testArrays_06() throws Exception {
+        checkCompletion("testfiles/completion/lib/arrays/arrays.php", "$c[0]->^field;", false);
+    }
+
     @Override
     protected Map<String, ClassPath> createClassPathsForTest() {
         return Collections.singletonMap(

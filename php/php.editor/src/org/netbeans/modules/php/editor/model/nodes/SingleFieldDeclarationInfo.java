@@ -25,15 +25,19 @@ import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.php.editor.api.PhpModifiers;
 import org.netbeans.modules.php.editor.api.QualifiedName;
-import org.netbeans.modules.php.editor.parser.astnodes.Expression;
+import org.netbeans.modules.php.editor.model.impl.VariousUtils;
+import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.PropertyHookDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.SingleFieldDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.Statement;
 
 /**
  *
  * @author Radek Matous
  */
 public final class SingleFieldDeclarationInfo extends ASTNodeInfo<SingleFieldDeclaration> {
+
     private final FieldsDeclaration fieldsDeclaration;
 
     private SingleFieldDeclarationInfo(FieldsDeclaration fieldsDeclaration, SingleFieldDeclaration node) {
@@ -71,14 +75,7 @@ public final class SingleFieldDeclarationInfo extends ASTNodeInfo<SingleFieldDec
 
     @CheckForNull
     public String getFieldType() {
-        Expression fieldType = fieldsDeclaration.getFieldType();
-        if (fieldType != null) {
-            QualifiedName fieldTypeName = QualifiedName.create(fieldType);
-            if (fieldTypeName != null) {
-                return fieldTypeName.toString();
-            }
-        }
-        return null;
+        return VariousUtils.getDeclaredType(fieldsDeclaration.getFieldType());
     }
 
     @Override
@@ -86,4 +83,27 @@ public final class SingleFieldDeclarationInfo extends ASTNodeInfo<SingleFieldDec
         return QualifiedName.createUnqualifiedName(getName());
     }
 
+    @CheckForNull
+    public Block getBlock() {
+        return getOriginalNode().getPropertyHooks();
+    }
+
+    public boolean isHooked() {
+        return getOriginalNode().isHooked();
+    }
+
+    public List<PropertyHookDeclaration> getPropertyHooks() {
+        SingleFieldDeclaration originalNode = getOriginalNode();
+        Block propertyHookBlock = originalNode.getPropertyHooks();
+        if (propertyHookBlock == null) {
+            return List.of();
+        }
+        List<PropertyHookDeclaration> propertyHooks = new ArrayList<>();
+        for (Statement statement : propertyHookBlock.getStatements()) {
+            if (statement instanceof PropertyHookDeclaration propertyHook) {
+                propertyHooks.add(propertyHook);
+            }
+        }
+        return propertyHooks;
+    }
 }

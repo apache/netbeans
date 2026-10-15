@@ -25,6 +25,7 @@ import java.util.Locale;
  *
  */
 public class FeatureGetCommand extends DbgpCommand {
+
     public enum Feature {
         LANGUAGE_SUPPORTS_THREADS,
         LANGUAGE_NAME,
@@ -35,6 +36,7 @@ public class FeatureGetCommand extends DbgpCommand {
         DATA_ENCODING,
         BREAKPOINT_LANGUAGES,
         BREAKPOINT_TYPES,
+        BREAKPOINT_DETAILS,
         MULTIPLE_SESSIONS,
         MAX_CHILDREN,
         MAX_DATA,
@@ -42,6 +44,7 @@ public class FeatureGetCommand extends DbgpCommand {
         SUPPORTS_POSTMORTEM,
         SHOW_HIDDEN,
         NOTIFY_OK,
+        RESOLVED_BREAKPOINTS,
         /*
          * additional commands that could be supported
          */
@@ -84,6 +87,10 @@ public class FeatureGetCommand extends DbgpCommand {
 
     public void setFeature(String name) {
         myName = name;
+    }
+
+    public String getFeature() {
+        return myName;
     }
 
     @Override

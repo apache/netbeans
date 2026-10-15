@@ -82,7 +82,7 @@ public class EmbeddedHTMLTest extends GeneralJavaScript {
         checkCompletionItems(cjo, res);
         String[] res2 = {"foo"};
         checkCompletionDoesntContainItems(cjo, res2);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         endTest();
     }
@@ -108,7 +108,7 @@ public class EmbeddedHTMLTest extends GeneralJavaScript {
         String[] res = {"test", "value"};
         CompletionJListOperator cjo = completion.listItself;
         checkCompletionItems(cjo, res);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         endTest();
     }
@@ -129,7 +129,7 @@ public class EmbeddedHTMLTest extends GeneralJavaScript {
         String[] res = {"learn"};
         CompletionJListOperator cjo = completion.listItself;
         checkCompletionItems(cjo, res);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         endTest();
     }
@@ -148,7 +148,7 @@ public class EmbeddedHTMLTest extends GeneralJavaScript {
         String[] res = {"name", "myname"};
         CompletionJListOperator cjo = completion.listItself;
         checkCompletionItems(cjo, res);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         endTest();
     }
@@ -169,7 +169,7 @@ public class EmbeddedHTMLTest extends GeneralJavaScript {
         String[] res = {"firstChild", "removeChild"};
         CompletionJListOperator cjo = completion.listItself;
         checkCompletionItems(cjo, res);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         endTest();
     }
@@ -187,7 +187,7 @@ public class EmbeddedHTMLTest extends GeneralJavaScript {
         String[] res = {"value", "increment"};
         CompletionJListOperator cjo = completion.listItself;
         checkCompletionItems(cjo, res);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         endTest();
     }
@@ -208,7 +208,7 @@ public class EmbeddedHTMLTest extends GeneralJavaScript {
         String[] res = {"param1"};
         CompletionJListOperator cjo = completion.listItself;
         checkCompletionItems(cjo, res);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         type(eo, "param1; var pr = 1; this.start = function(){}; ");
         type(eo, " function secret(){};\n  ");
@@ -221,7 +221,7 @@ public class EmbeddedHTMLTest extends GeneralJavaScript {
         String[] res5 = {"name", "start", "pr", "param1", "secret"};
         cjo = completion.listItself;
         checkCompletionItems(cjo, res5);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         type(eo, "Foo.prototype.setName = function(n){ this.;}");
 
@@ -233,7 +233,7 @@ public class EmbeddedHTMLTest extends GeneralJavaScript {
         String[] res4 = {"name", "start"};
         cjo = completion.listItself;
         checkCompletionItems(cjo, res4);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
         type(eo, "name");
 
         eo.setCaretPosition("</script>", true);
@@ -247,7 +247,7 @@ public class EmbeddedHTMLTest extends GeneralJavaScript {
         String[] res6 = {"Foo"};
         cjo = completion.listItself;
         checkCompletionItems(cjo, res6);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         type(eo, "Foo(); o. ");
         eo.setCaretPosition("Foo(); o.", false);
@@ -258,12 +258,12 @@ public class EmbeddedHTMLTest extends GeneralJavaScript {
         String[] res2 = {"name", "start", "setName"};
         cjo = completion.listItself;
         checkCompletionItems(cjo, res2);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         // private variable & method
         String[] res3 = {"secret", "pr"};
         checkCompletionDoesntContainItems(cjo, res3);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         endTest();
     }
@@ -294,7 +294,7 @@ public class EmbeddedHTMLTest extends GeneralJavaScript {
         String[] res2 = {"cc", "dd"};
         CompletionJListOperator cjo = completion.listItself;
         checkCompletionItems(cjo, res2);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
 
         endTest();
     }

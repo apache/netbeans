@@ -7,7 +7,6 @@ class CL {
     public function __construct() {
         echo 'test';
     }
-
 }
 
 ?>

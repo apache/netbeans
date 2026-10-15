@@ -49,9 +49,8 @@ import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import junit.framework.*;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.document.FieldSelector;
-import org.apache.lucene.index.Term;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.util.BytesRef;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.java.lexer.JavaTokenId;
@@ -62,6 +61,7 @@ import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.NbTestSuite;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
 import org.netbeans.modules.java.source.classpath.CacheClassPath;
 import org.netbeans.modules.java.source.parsing.CompilationInfoImpl;
@@ -76,7 +76,6 @@ import org.netbeans.modules.parsing.lucene.IndexFactory;
 import org.netbeans.modules.parsing.lucene.support.Convertor;
 import org.netbeans.modules.parsing.lucene.support.Index;
 import org.netbeans.modules.parsing.lucene.support.IndexManagerTestUtilities;
-import org.netbeans.modules.parsing.lucene.support.StoppableConvertor;
 import org.netbeans.modules.parsing.spi.TaskIndexingMode;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -163,6 +162,7 @@ public class JavaSourceTest extends NbTestCase {
         suite.addTest(new JavaSourceTest("testDocumentChanges"));
         suite.addTest(new JavaSourceTest("testMultipleFiles"));
         suite.addTest(new JavaSourceTest("testMultipleFilesSameJavac"));
+        suite.addTest(new JavaSourceTest("testMultipleFilesWithErrors"));
         /*
         suite.addTest(new JavaSourceTest("testParsingDelay"));
 //        suite.addTest(new JavaSourceTest("testJavaSourceIsReclaimable"));     fails in trunk
@@ -1986,6 +1986,33 @@ public class JavaSourceTest extends NbTestCase {
             },true);
     }
 
+    public void testMultipleFilesWithErrors() throws Exception {
+        final FileObject testFile1 = createTestFile("Test1",
+                                                    "public class Test1 extends Test2 {\n" +
+                                                    "     public int inv(Unknown u) {\n" +
+                                                    "         return this.doesNotExist(u);\n" +
+                                                    "     }\n" +
+                                                    "}\n");
+        final FileObject testFile2 = createTestFile("Test2",
+                                                    "public class Test2 {\n" +
+                                                    "     public int inv(Unknown u) {\n" +
+                                                    "         return this.doesNotExist(u);\n" +
+                                                    "     }\n" +
+                                                    "}\n");
+        final JavaSource js = JavaSource.create(ClasspathInfo.create(testFile1), testFile1, testFile2);
+        assertNotNull(js);
+        js.runUserActionTask(new Task<CompilationController>() {
+            public void run (final CompilationController c) throws IOException, BadLocationException {
+                c.toPhase(JavaSource.Phase.RESOLVED);
+            }
+        }, true);
+        js.runModificationTask(new Task<WorkingCopy>() {
+            public void run (final WorkingCopy c) throws IOException, BadLocationException {
+                c.toPhase(JavaSource.Phase.RESOLVED);
+            }
+        });
+    }
+
     private static class FindMethodRegionsVisitor extends SimpleTreeVisitor<Void,Void> {
 
         final Document doc;
@@ -2024,8 +2051,8 @@ public class JavaSourceTest extends NbTestCase {
         @Override
         public Void visitMethod(MethodTree node, Void p) {
             assert cu != null;
-            int startPos = (int) pos.getStartPosition(cu, node.getBody());
-            int endPos = (int) pos.getEndPosition(cu, node.getBody());
+            int startPos = (int) pos.getStartPosition(node.getBody());
+            int endPos = (int) pos.getEndPosition(node.getBody());
             if (methodName.equals(node.getName().toString()) && startPos >=0) {
                 try {
                     result = Pair.<DocPositionRegion,MethodTree>of(new DocPositionRegion(doc,startPos,endPos),node);
@@ -2351,32 +2378,31 @@ public class JavaSourceTest extends NbTestCase {
         public <T> void query(
                 Collection<? super T> result,
                 Convertor<? super org.apache.lucene.document.Document, T> convertor,
-                FieldSelector selector,
-                AtomicBoolean cancel,
-                Query... queries) throws IOException, InterruptedException {
-            await(cancel);
-        }
-        
-        @Override
-        public <T> void queryTerms(
-                Collection<? super T> result,
-                Term start,
-                StoppableConvertor<Term, T> filter,
-                AtomicBoolean cancel) throws IOException, InterruptedException {
-            await (cancel);
-        }
-        
-        @Override
-        public <S, T> void queryDocTerms(
-                Map<? super T, Set<S>> result,
-                Convertor<? super org.apache.lucene.document.Document, T> convertor,
-                Convertor<? super Term, S> termConvertor,
-                FieldSelector selector,
+                Set<String> selector,
                 AtomicBoolean cancel,
                 Query... queries) throws IOException, InterruptedException {
             await(cancel);
         }
 
+        @Override
+        public <T> void queryTerms(
+                Collection<? super T> result,
+                String field, String start,
+                Convertor<BytesRef, T> filter,
+                AtomicBoolean cancel) throws IOException, InterruptedException {
+            await (cancel);
+        }
+
+        @Override
+        public <S, T> void queryDocTerms(
+                Map<? super T, Set<S>> result,
+                Convertor<? super org.apache.lucene.document.Document, T> convertor,
+                Convertor<? super BytesRef, S> termConvertor, Set<String> selector,
+                AtomicBoolean cancel,
+                Query... queries) throws IOException, InterruptedException {
+            await(cancel);
+        }
+        
         @Override
         public <S, T> void store(Collection<T> toAdd, Collection<S> toDelete, Convertor<? super T, ? extends org.apache.lucene.document.Document> docConvertor, Convertor<? super S, ? extends Query> queryConvertor, boolean optimize) throws IOException {
         }
@@ -2417,39 +2443,27 @@ public class JavaSourceTest extends NbTestCase {
 
     private FileObject createTestFile (String className) {
         try {
-            File workdir = this.getWorkDir();
-            File root = new File (workdir, "src");
-            root.mkdir();
-            File data = new File (root, className+".java");
-
-            PrintWriter out = new PrintWriter (new FileWriter (data));
-            try {
-                out.println(MessageFormat.format(TEST_FILE_CONTENT, new Object[] {className}));
-            } finally {
-                out.close ();
-            }
-            return FileUtil.toFileObject(data);
+            return createTestFile(className,
+                                  MessageFormat.format(TEST_FILE_CONTENT, new Object[] {className}) + System.getProperty("line.separator"));
         } catch (IOException ioe) {
             return null;
         }
     }
 
-    private ClassPath createBootPath () throws MalformedURLException {
-        String bootPath = System.getProperty ("sun.boot.class.path");
-        String[] paths = bootPath.split(File.pathSeparator);
-        List<URL>roots = new ArrayList<URL> (paths.length);
-        for (String path : paths) {
-            File f = new File (path);
-            if (!f.exists()) {
-                continue;
-            }
-            URL url = org.openide.util.Utilities.toURI(f).toURL();
-            if (FileUtil.isArchiveFile(url)) {
-                url = FileUtil.getArchiveRoot(url);
-            }
-            roots.add (url);
+    private FileObject createTestFile (String className, String content) throws IOException {
+        File workdir = this.getWorkDir();
+        File root = new File (workdir, "src");
+        root.mkdir();
+        File data = new File (root, className+".java");
+
+        try (Writer w = new FileWriter (data)) {
+            w.write(content);
         }
-        return ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
+        return FileUtil.toFileObject(data);
+    }
+
+    private ClassPath createBootPath () throws MalformedURLException {
+        return BootClassPathUtil.getBootClassPath();
     }
 
     private ClassPath createCompilePath () {

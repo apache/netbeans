@@ -30,9 +30,9 @@ import com.oracle.js.parser.ir.visitor.NodeVisitor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -56,42 +56,44 @@ class JsKeyStrokeHandler implements KeystrokeHandler {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean beforeCharInserted(Document doc, int caretOffset, JTextComponent target, char ch) throws BadLocationException {
         return false;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean afterCharInserted(Document doc, int caretOffset, JTextComponent target, char ch) throws BadLocationException {
         return false;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean charBackspaced(Document doc, int caretOffset, JTextComponent target, char ch) throws BadLocationException {
         return false;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public int beforeBreak(Document doc, int caretOffset, JTextComponent target) throws BadLocationException {
         return -1;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public OffsetRange findMatching(Document doc, int caretOffset) {
         return OffsetRange.NONE;
     }
 
     @Override
     public List<OffsetRange> findLogicalRanges(final ParserResult info, final int caretOffset) {
-        final Set<OffsetRange> ranges = new LinkedHashSet();
-        if (info instanceof JsParserResult) {
-            final JsParserResult jsParserResult = (JsParserResult) info;
+        final Set<OffsetRange> ranges = new LinkedHashSet<>();
+        if (info instanceof JsParserResult jsParserResult) {
             FunctionNode root = jsParserResult.getRoot();
             final TokenSequence<? extends JsTokenId> ts = LexUtilities.getJsTokenSequence(jsParserResult.getSnapshot(), caretOffset);
             if (root != null && ts != null) {
 
-                root.accept(new NodeVisitor(new LexicalContext()) {
-
-                    final HashSet<String> referencedFunction = new HashSet();
+                root.accept(new NodeVisitor<LexicalContext>(new LexicalContext()) {
 
                     private OffsetRange getOffsetRange(IdentNode node) {
                         // because the truffle parser doesn't set correctly the finish offset, when there are comments after the indent node
@@ -99,11 +101,11 @@ class JsKeyStrokeHandler implements KeystrokeHandler {
                     }
 
                     private OffsetRange getOffsetRange(Node node) {
-                        if (node instanceof FunctionNode) {
-                            return getOffsetRange((FunctionNode) node);
-                        }
-                        if (node instanceof IdentNode) {
-                            return getOffsetRange((IdentNode)node);
+                        Objects.requireNonNull(node);
+                        if (node instanceof FunctionNode functionNode) {
+                            return getOffsetRange(functionNode);
+                        } else if (node instanceof IdentNode identNode) {
+                            return getOffsetRange(identNode);
                         }
                         return new OffsetRange(node.getStart(), node.getFinish());
                     }
@@ -112,7 +114,7 @@ class JsKeyStrokeHandler implements KeystrokeHandler {
                         return new OffsetRange(com.oracle.js.parser.Token.descPosition(node.getFirstToken()),
                                 com.oracle.js.parser.Token.descPosition(node.getLastToken()) + com.oracle.js.parser.Token.descLength(node.getLastToken()));
                     }
-                    
+
                     @Override
                     protected boolean enterDefault(Node node) {
                         OffsetRange range = getOffsetRange(node);
@@ -134,7 +136,7 @@ class JsKeyStrokeHandler implements KeystrokeHandler {
                             processFunction(node);
                             return false;
                         }
-                                                
+
                         if (fnRange.getStart() <= caretOffset && caretOffset <= fnRange.getEnd()) {
                             ranges.add(new OffsetRange(fnRange.getStart(), fnRange.getEnd()));
                             int firstParamOffset = fnRange.getEnd();
@@ -185,7 +187,7 @@ class JsKeyStrokeHandler implements KeystrokeHandler {
                     }
 
                     @Override
-                    public boolean enterLiteralNode(LiteralNode node) {
+                    public boolean enterLiteralNode(LiteralNode<?> node) {
                         if (node.isString() && node.getStart() <= caretOffset && caretOffset <= node.getFinish()) {
                             // include the " or '
                             ranges.add(new OffsetRange(node.getStart() - 1, node.getFinish() + 1));
@@ -236,12 +238,13 @@ class JsKeyStrokeHandler implements KeystrokeHandler {
             }
         }
 
-        final ArrayList<OffsetRange> retval = new ArrayList(ranges);
+        final ArrayList<OffsetRange> retval = new ArrayList<>(ranges);
         Collections.reverse(retval);
         return retval;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public int getNextWordOffset(Document doc, int caretOffset, boolean reverse) {
         return -1;
     }

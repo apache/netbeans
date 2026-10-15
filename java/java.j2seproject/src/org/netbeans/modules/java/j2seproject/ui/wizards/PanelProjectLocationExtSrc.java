@@ -164,10 +164,10 @@ class PanelProjectLocationExtSrc extends SettingsPanel {
             File file;
             do {
                 index++;                            
-                projName = MessageFormat.format (formater, new Object[]{new Integer (index)});                
+                projName = MessageFormat.format (formater, index);                
                 file = new File (projLoc, projName);                
             } while (file.exists());                                
-            settings.putProperty (NewJ2SEProjectWizardIterator.PROP_NAME_INDEX, new Integer(index));                        
+            settings.putProperty (NewJ2SEProjectWizardIterator.PROP_NAME_INDEX, index);                        
             this.projectLocation.setText (projLoc.getAbsolutePath());        
             this.setCalculateProjectFolder(true);
         }
@@ -451,7 +451,6 @@ class PanelProjectLocationExtSrc extends SettingsPanel {
     private void browseProjectLocation(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseProjectLocation
         // TODO add your handling code here:
         JFileChooser chooser = new JFileChooser();
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
         chooser.setDialogTitle(NbBundle.getMessage(PanelSourceFolders.class,"LBL_NWP1_SelectProjectLocation"));
         chooser.setFileSelectionMode (JFileChooser.DIRECTORIES_ONLY);
         String path = this.projectLocation.getText();

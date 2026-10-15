@@ -35,18 +35,12 @@ import org.openide.util.NbBundle;
  */
 public class PayaraCredentials extends CommonPasswordPanel {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = PayaraLogger.get(PayaraCredentials.class);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Display Payara credentials panel to get Payara credentials.
      * <p/>
@@ -102,10 +96,7 @@ public class PayaraCredentials extends CommonPasswordPanel {
         return setCredentials(instance, message);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates new Payara credentials panel.
      * <p/>
@@ -122,10 +113,7 @@ public class PayaraCredentials extends CommonPasswordPanel {
         initFileds(true);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // GUI Getters and Setters                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get password value from form.
      * <p/>
@@ -144,10 +132,7 @@ public class PayaraCredentials extends CommonPasswordPanel {
         return userText.getText();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Clear form fields.
      */

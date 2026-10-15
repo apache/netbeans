@@ -1,0 +1,4 @@
+Name: testMethod
+public function testMethod(null|(\Test1\Foo&\Test1\Bar) $param1, (\Test1\Foo&\Test1\Bar)|\Test1\Baz $pram2, (\Test1\Foo&\Test1\Bar)|(\Test1\Bar&\Test1\Baz) $param3): (\Test1\Foo&\Test1\Bar)|\Test1\Bar|(\Test1\Bar&\Test1\Baz) {
+${cursor};
+}

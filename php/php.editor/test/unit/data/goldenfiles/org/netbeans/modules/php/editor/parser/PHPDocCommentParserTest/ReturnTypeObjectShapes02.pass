@@ -1,0 +1,9 @@
+<PHPDocBlock start='3' end='55'>
+    <Tags>
+        <PHPDocTypeTag start='3' end='58' kind='return'>
+            <Types>
+                <PHPDocTypeNode start='14' end='20' value='object' isArray='false'/>
+            </Types>
+        </PHPDocTypeTag>
+    </Tags>
+</PHPDocBlock>

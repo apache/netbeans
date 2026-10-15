@@ -93,11 +93,11 @@ public class RepositoryRevision {
     }
 
     Event[] getEvents() {
-        return events.toArray(new Event[events.size()]);
+        return events.toArray(new Event[0]);
     }
 
     Event[] getDummyEvents () {
-        return dummyEvents.toArray(new Event[dummyEvents.size()]);
+        return dummyEvents.toArray(new Event[0]);
     }
 
     public HgLogMessage getLog() {
@@ -200,7 +200,7 @@ public class RepositoryRevision {
                 }
             });
         }
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
     
     void backout () {
@@ -368,7 +368,7 @@ public class RepositoryRevision {
                     }
                 });
             }
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
         
         void viewFile (boolean showAnnotations) {
@@ -444,7 +444,7 @@ public class RepositoryRevision {
                         : new HistoryRegistry.DefaultChangePathCollector(repositoryRoot, getLogger(), getLog().getCSetShortID());
                 List<HgLogMessageChangedPath> pathList = HistoryRegistry.getInstance().initializeChangePaths(
                         repositoryRoot, coll, getLog(), false);
-                paths = pathList.toArray(new HgLogMessageChangedPath[pathList.size()]);
+                paths = pathList.toArray(new HgLogMessageChangedPath[0]);
             } else {
                 paths = getLog().getChangedPaths();
             }

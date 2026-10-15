@@ -82,7 +82,7 @@ public abstract class DataLoadersBridge {
     //---
     private static DataLoadersBridge instance = null;
 
-    public synchronized static DataLoadersBridge getDefault() {
+    public static synchronized DataLoadersBridge getDefault() {
         if (instance == null) {
             instance = Lookup.getDefault().lookup(DataLoadersBridge.class);
             //TODO: listen on the lookup ? Seems too much

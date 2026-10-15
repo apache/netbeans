@@ -60,6 +60,8 @@ import org.openide.util.NbBundle;
     "# {0} - The file not of java type.",
     "ERR_NotJava=Selected element is not defined in a java file. {0}",
     "ERR_CannotMovePublicIntoSamePackage=Cannot move public class to the same package.",
+    "# {0} - Class name.",
+    "ERR_CannotMoveIntoItself=Cannot move {0} into itself.",
     "ERR_NoTargetFound=Cannot find the target to move to.",
     "# {0} - Class name.",
     "ERR_ClassToMoveClashes=Class \"{0}\" already exists in the target package.",
@@ -323,6 +325,9 @@ public class MoveFileRefactoringPlugin extends JavaRefactoringPlugin {
                 ElementHandle elementHandle = target.getElementHandle();
                 assert elementHandle != null;
                 TypeElement targetType = (TypeElement) elementHandle.resolve(javac);
+                if (targetType == resolveElement) {
+                    return new Problem(true, ERR_CannotMoveIntoItself(resolveElement.getSimpleName()));
+                }
                 List<? extends Element> enclosedElements = targetType.getEnclosedElements();
                 for (Element element : enclosedElements) {
                     switch (element.getKind()) {
@@ -554,9 +559,9 @@ public class MoveFileRefactoringPlugin extends JavaRefactoringPlugin {
                     transformer = new MoveClassTransformer(sourceTph, targetUrl);
                 } else {
                     if(sourceTph != null) {
-                        transformer = new MoveClassTransformer(sourceTph, targetTph.getElementHandle());
+                        transformer = new MoveClassTransformer(sourceTph, targetTph.getElementHandle(), targetTph.getFileObject(), sourceTph.getFileObject());
                     } else {
-                        transformer = new MoveClassTransformer(classes.iterator().next(), targetTph.getElementHandle());
+                        transformer = new MoveClassTransformer(classes.iterator().next(), targetTph.getElementHandle(), null, null); //TODO: unclear - source?
                     }
                 }
             }
@@ -579,6 +584,7 @@ public class MoveFileRefactoringPlugin extends JavaRefactoringPlugin {
                 } else {
                     deleteFile = new DeleteFile(filesToMove.get(0), elements);
                 }
+                elements.addFileChange(refactoring, deleteFile);
                 elements.add(refactoring, deleteFile);
             }
             problem = moveClassTransformer.getProblem();

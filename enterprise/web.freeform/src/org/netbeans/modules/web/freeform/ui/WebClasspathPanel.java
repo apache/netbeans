@@ -46,7 +46,7 @@ import org.openide.util.NbBundle;
  */
 public class WebClasspathPanel extends javax.swing.JPanel implements HelpCtx.Provider {
 
-    private DefaultListModel listModel;
+    private DefaultListModel<String> listModel;
     /** Original project folder (not nbproject folder) */
     private File projectFolder = null;
     /** Freeform Project base folder */
@@ -263,9 +263,9 @@ public class WebClasspathPanel extends javax.swing.JPanel implements HelpCtx.Pro
         }
         for (int i = 0; i < indices.length; i++) {
             int index = indices[i];
-            Object o = listModel.remove(index);
+            String s = listModel.remove(index);
             index++;
-            listModel.add(index, o);
+            listModel.add(index, s);
             indices[i] = index;
         }
         classpath.setSelectedIndices(indices);
@@ -279,9 +279,9 @@ public class WebClasspathPanel extends javax.swing.JPanel implements HelpCtx.Pro
         }
         for (int i = 0; i < indices.length; i++) {
             int index = indices[i];
-            Object o = listModel.remove(index);
+            String s = listModel.remove(index);
             index--;
-            listModel.add(index, o);
+            listModel.add(index, s);
             indices[i] = index;
         }
         classpath.setSelectedIndices(indices);
@@ -305,20 +305,17 @@ public class WebClasspathPanel extends javax.swing.JPanel implements HelpCtx.Pro
 
     private void addClasspathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addClasspathActionPerformed
         FileChooser chooser = new FileChooser(this.projectFolder, null);
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
+        chooser.setCurrentDirectory(null);
         chooser.setFileSelectionMode (JFileChooser.FILES_AND_DIRECTORIES);
         chooser.setMultiSelectionEnabled(true);
         if (lastChosenFile != null) {
             chooser.setSelectedFile(lastChosenFile);
-        }
-        else {
-            if (projectFolder!= null) {
-                File files[] = projectFolder.listFiles();
-                if (files != null && files.length > 0) {
-                    chooser.setSelectedFile(files[0]);
-                } else {
-                    chooser.setSelectedFile(projectFolder);
-                }
+        } else if (projectFolder!= null) {
+            File[] files = projectFolder.listFiles();
+            if (files != null && files.length > 0) {
+                chooser.setSelectedFile(files[0]);
+            } else {
+                chooser.setSelectedFile(projectFolder);
             }
         }
         chooser.setDialogTitle(NbBundle.getMessage(WebClasspathPanel.class, "LBL_Browse_Classpath"));
@@ -356,7 +353,7 @@ public class WebClasspathPanel extends javax.swing.JPanel implements HelpCtx.Pro
     public String getClasspath(){
         StringBuffer sf = new StringBuffer();
         for (int i = 1; i < listModel.getSize(); i++){
-            String path = (String)listModel.get(i);
+            String path = listModel.get(i);
             sf.append(path);
             if (i < listModel.getSize()-1)
                 sf.append(File.pathSeparatorChar);
@@ -385,7 +382,7 @@ public class WebClasspathPanel extends javax.swing.JPanel implements HelpCtx.Pro
                 AuxiliaryConfiguration aux = Util.getAuxiliaryConfiguration(projectHelper);
                 List<WebProjectGenerator.WebModule> l = WebProjectGenerator.getWebmodules(projectHelper, aux);
                 if (l != null){
-                    WebProjectGenerator.WebModule wm = (WebProjectGenerator.WebModule)l.get(0);
+                    WebProjectGenerator.WebModule wm = l.get(0);
                     wm.classpath = getClasspath();
                     WebProjectGenerator.putWebModules(projectHelper, aux, l);
                 }

@@ -130,7 +130,7 @@ public class ColumnItem extends Hashtable {
                 if (!oldc.equals(value.getClass()))
                     if (oldc.equals(Integer.class))
                         if ("".equals((String) value))
-                            value = new Integer(0);
+                            value = Integer.valueOf(0);
                         else
                             value = Integer.valueOf((String) value);
             } catch (NumberFormatException e) {

@@ -33,17 +33,11 @@ import org.netbeans.modules.glassfish.tooling.utils.ServerUtils;
  */
 public class FetchLogLocal extends FetchLogPiped {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(FetchLogLocal.class);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of GlassFish local server log fetcher.
      * <p/>
@@ -81,10 +75,7 @@ public class FetchLogLocal extends FetchLogPiped {
         super(executor, server, skip);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Initializes active log file <code>InputStream</code>
      * as <code>FileInputStream</code> sending data from local server
@@ -123,10 +114,7 @@ public class FetchLogLocal extends FetchLogPiped {
         return log;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Runnable call() Method                                                  //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Remote server log lines reading task.
      * <p/>
@@ -168,7 +156,7 @@ public class FetchLogLocal extends FetchLogPiped {
                     while (inCount > 0) {
                         int count = fIn.read(buff);
                         LOGGER.log(Level.FINEST, METHOD, "read",
-                                new Object[]{new Integer(count)});
+                                new Object[]{count});
                         if (count > 0) {
                             out.write(buff, 0, count);
                         }

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #233c5b;
+      }
+
+      .st1 {
+        fill: url(#linear-gradient);
+      }
+
+      .st2 {
+        fill: #cd923f;
+      }
+
+      .st3 {
+        fill: #3c618f;
+      }
+
+      .st4 {
+        fill: #b16902;
+      }
+
+      .st5 {
+        fill: #a61b11;
+      }
+
+      .st6 {
+        fill: #ffca8a;
+        stroke: #b16902;
+      }
+
+      .st6, .st7 {
+        stroke-miterlimit: 10;
+      }
+
+      .st7 {
+        fill: #cdd6d7;
+        stroke: #a07745;
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="1" y1="8.5" x2="4" y2="8.5" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffdfaf"/>
+      <stop offset=".061" stop-color="#ffdcaa"/>
+      <stop offset=".349" stop-color="#ffd298"/>
+      <stop offset=".653" stop-color="#ffcb8d"/>
+      <stop offset="1" stop-color="#ffca8a"/>
+    </linearGradient>
+  </defs>
+  <rect class="st4" x="1" y="2" width="3" height="2"/>
+  <rect class="st4" x="6" y="2" width="2" height="2"/>
+  <rect class="st6" x=".5" y="3.5" width="15" height="10"/>
+  <circle class="st7" cx="10.5" cy="8.5" r="3"/>
+  <circle class="st0" cx="10.5" cy="8.5" r="1.5"/>
+  <rect class="st2" x="4" y="4" width="1" height="9"/>
+  <circle class="st3" cx="10.5" cy="9" r=".5"/>
+  <rect class="st1" x="1" y="4" width="3" height="9"/>
+  <rect class="st5" x="5" y="5" width="2" height="1" rx=".5" ry=".5"/>
+  <description>Apache NetBeans Logo
+  </description>
+</svg>

@@ -463,7 +463,7 @@ public class CodeCompletionPanel extends javax.swing.JPanel implements DocumentL
         String[] entries = text.split(","); // NOI18N
         for (String entry : entries) {
             // strip zero width spaces
-            entry = entry.replaceAll("\u200B", "");  // NOI18N
+            entry = entry.replace("\u200B", "");  // NOI18N
             entry = entry.trim();
             if (entry.length() != 0 && entry.matches(JAVA_FQN_REGEX)){
                 model.insertElementAt(entry, index);

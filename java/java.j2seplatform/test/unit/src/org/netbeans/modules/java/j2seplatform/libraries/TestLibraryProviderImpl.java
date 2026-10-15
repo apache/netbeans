@@ -23,10 +23,8 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import org.netbeans.spi.project.libraries.LibraryImplementation;
-import org.openide.util.Lookup;
 
 /**
  * Implementation of library provider for unit testing.
@@ -59,7 +57,7 @@ public class TestLibraryProviderImpl implements org.netbeans.spi.project.librari
     }
     
     public LibraryImplementation[] getLibraries() {
-        return libs.toArray(new LibraryImplementation[libs.size()]);
+        return libs.toArray(new LibraryImplementation[0]);
     }
     
     public void init() throws IOException {

@@ -1,0 +1,96 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!-- -//NetBeans//DTD Autoupdate Catalog 2.8//EN -->
+<!-- XML representation of Autoupdate Modules/Updates Catalog -->
+
+<!ELEMENT module_updates ((notification?, content_description?, (module_group|module)*, license*)|error)>
+<!ATTLIST module_updates timestamp CDATA #REQUIRED>
+
+<!ELEMENT module_group ((module_group|module)*)>
+<!ATTLIST module_group name CDATA #REQUIRED>
+
+<!ELEMENT notification (#PCDATA)>
+<!ATTLIST notification url CDATA #IMPLIED>
+
+<!ELEMENT content_description (#PCDATA)>
+<!ATTLIST content_description url CDATA #IMPLIED>
+
+<!ELEMENT module (description?, module_notification?, external_package*, (manifest | l10n), message_digest* )>
+<!ATTLIST module codenamebase CDATA #REQUIRED
+                 homepage     CDATA #IMPLIED
+                 distribution CDATA #REQUIRED
+                 license      CDATA #IMPLIED
+                 downloadsize CDATA #REQUIRED
+                 needsrestart (true|false) #IMPLIED
+                 moduleauthor CDATA #IMPLIED
+                 releasedate  CDATA #IMPLIED
+                 global       (true|false) #IMPLIED
+                 targetcluster CDATA #IMPLIED
+                 preferredupdate (true|false) #IMPLIED
+                 eager (true|false) #IMPLIED
+                 autoload (true|false) #IMPLIED>
+
+<!ELEMENT description (#PCDATA)>
+
+<!ELEMENT module_notification (#PCDATA)>
+
+<!ELEMENT external_package EMPTY>
+<!ATTLIST external_package
+                 name CDATA #REQUIRED
+                 target_name  CDATA #REQUIRED
+                 start_url    CDATA #REQUIRED
+                 description  CDATA #IMPLIED>
+
+<!ELEMENT manifest EMPTY>
+<!ATTLIST manifest OpenIDE-Module CDATA #REQUIRED
+                   OpenIDE-Module-Name CDATA #REQUIRED
+                   OpenIDE-Module-Specification-Version CDATA #REQUIRED
+                   OpenIDE-Module-Implementation-Version CDATA #IMPLIED
+                   OpenIDE-Module-Module-Dependencies CDATA #IMPLIED
+                   OpenIDE-Module-Package-Dependencies CDATA #IMPLIED
+                   OpenIDE-Module-Java-Dependencies CDATA #IMPLIED
+                   OpenIDE-Module-IDE-Dependencies CDATA #IMPLIED
+                   OpenIDE-Module-Short-Description CDATA #IMPLIED
+                   OpenIDE-Module-Long-Description CDATA #IMPLIED
+                   OpenIDE-Module-Display-Category CDATA #IMPLIED
+                   OpenIDE-Module-Provides CDATA #IMPLIED
+                   OpenIDE-Module-Requires CDATA #IMPLIED
+                   OpenIDE-Module-Recommends CDATA #IMPLIED
+                   OpenIDE-Module-Needs CDATA #IMPLIED
+                   AutoUpdate-Show-In-Client (true|false) #IMPLIED
+                   AutoUpdate-Essential-Module (true|false) #IMPLIED
+                   OpenIDE-Module-Fragment-Host CDATA #IMPLIED>
+
+<!ELEMENT l10n EMPTY>
+<!ATTLIST l10n   langcode             CDATA #IMPLIED
+                 brandingcode         CDATA #IMPLIED
+                 module_spec_version  CDATA #IMPLIED
+                 module_major_version CDATA #IMPLIED
+                 OpenIDE-Module-Name  CDATA #IMPLIED
+                 OpenIDE-Module-Long-Description CDATA #IMPLIED>
+
+<!ELEMENT license (#PCDATA)>
+<!ATTLIST license name CDATA #REQUIRED
+                  url  CDATA #IMPLIED>
+
+<!ELEMENT message_digest EMPTY>
+<!ATTLIST message_digest algorithm CDATA #REQUIRED
+                         value     CDATA #REQUIRED>

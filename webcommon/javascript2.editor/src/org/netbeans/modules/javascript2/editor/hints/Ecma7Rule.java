@@ -21,6 +21,7 @@ package org.netbeans.modules.javascript2.editor.hints;
 import com.oracle.js.parser.Token;
 import com.oracle.js.parser.TokenType;
 import com.oracle.js.parser.ir.BinaryNode;
+import com.oracle.js.parser.ir.ClassElement;
 import com.oracle.js.parser.ir.ClassNode;
 import com.oracle.js.parser.ir.ExportNode;
 import com.oracle.js.parser.ir.Expression;
@@ -34,30 +35,23 @@ import java.util.List;
 import java.util.Set;
 import javax.swing.text.BadLocationException;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.api.project.FileOwnerQuery;
-import org.netbeans.api.project.Project;
 import org.netbeans.modules.csl.api.Hint;
-import org.netbeans.modules.csl.api.HintFix;
 import org.netbeans.modules.csl.api.HintsProvider;
 import org.netbeans.modules.csl.api.OffsetRange;
-import org.netbeans.modules.javascript2.editor.JsPreferences;
-import org.netbeans.modules.javascript2.editor.JsVersion;
+
+import static org.netbeans.modules.javascript2.editor.JsVersion.ECMA7;
+
 import org.netbeans.modules.javascript2.lexer.api.JsTokenId;
 import org.netbeans.modules.javascript2.lexer.api.LexUtilities;
 import org.netbeans.modules.javascript2.model.api.ModelUtils;
 import org.netbeans.modules.javascript2.model.spi.PathNodeVisitor;
-import org.netbeans.modules.parsing.api.Snapshot;
-import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
-import org.openide.util.RequestProcessor;
 
 public class Ecma7Rule extends EcmaLevelRule {
 
-    private static RequestProcessor RP = new RequestProcessor(Ecma7Rule.class);
-
     @Override
     void computeHints(JsHintsProvider.JsRuleContext context, List<Hint> hints, int offset, HintsProvider.HintsManager manager) throws BadLocationException {
-        if (JsPreferences.isPreECMAScript7(FileOwnerQuery.getOwner(context.getJsParserResult().getSnapshot().getSource().getFileObject()))) {
+        if (ecmaEditionProjectBelow(context, ECMA7)) {
             Ecma7Visitor visitor = new Ecma7Visitor();
             visitor.process(context, hints);
         }
@@ -72,7 +66,7 @@ public class Ecma7Rule extends EcmaLevelRule {
         hints.add(new Hint(this, Bundle.Ecma7Desc(),
                 context.getJsParserResult().getSnapshot().getSource().getFileObject(),
                 range, Collections.singletonList(
-                        new SwitchToEcma7Fix(context.getJsParserResult().getSnapshot())), 600));
+                        new SwitchToEcmaXFix(context.getJsParserResult().getSnapshot(), ECMA7)), 600));
     }
 
     @Override
@@ -171,6 +165,22 @@ public class Ecma7Rule extends EcmaLevelRule {
         }
 
         @Override
+        public boolean enterClassElement(ClassElement classElement) {
+            for (Expression decorator : classElement.getDecorators()) {
+                addHint(context, hints, new OffsetRange(decorator.getStart(), decorator.getFinish()));
+            }
+            Expression key = classElement.getKey();
+            if (key.isTokenType(TokenType.SPREAD_OBJECT)) {
+                long token = key.getToken();
+                int position = Token.descPosition(token);
+                addHint(context, hints, new OffsetRange(position, position + Token.descLength(token)));
+                key.accept(this);
+                return false;
+            }
+            return super.enterClassElement(classElement);
+        }
+
+        @Override
         public boolean enterBinaryNode(BinaryNode binaryNode) {
             long token = binaryNode.getToken();
             TokenType type = Token.descType(token);
@@ -208,45 +218,6 @@ public class Ecma7Rule extends EcmaLevelRule {
                     }
                 }
             }
-        }
-    }
-
-    private static final class SwitchToEcma7Fix implements HintFix {
-
-        private final FileObject fo;
-
-        public SwitchToEcma7Fix(Snapshot snapshot) {
-            this.fo = snapshot.getSource().getFileObject();
-        }
-
-        @NbBundle.Messages("MSG_SwitchToEcma7=Switch project to ECMA7")
-        @Override
-        public String getDescription() {
-            return Bundle.MSG_SwitchToEcma7();
-        }
-
-        @Override
-        public void implement() throws Exception {
-            if (fo == null) {
-                return;
-            }
-
-            Project p = FileOwnerQuery.getOwner(fo);
-            if (p != null) {
-                JsPreferences.putECMAScriptVersion(p, JsVersion.ECMA7);
-            }
-
-            refresh(fo);
-        }
-
-        @Override
-        public boolean isSafe() {
-            return true;
-        }
-
-        @Override
-        public boolean isInteractive() {
-            return false;
         }
     }
 }

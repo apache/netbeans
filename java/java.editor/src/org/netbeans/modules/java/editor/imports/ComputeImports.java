@@ -37,7 +37,6 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -59,7 +58,6 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ExecutableType;
@@ -70,7 +68,6 @@ import javax.lang.model.util.Types;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
-import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -86,8 +83,6 @@ import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.support.CancellableTreePathScanner;
 import org.netbeans.modules.java.completion.Utilities;
 import org.netbeans.modules.java.editor.base.javadoc.JavadocImports;
-import org.netbeans.modules.parsing.api.ResultIterator;
-import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.Union2;
@@ -135,11 +130,6 @@ public final class ComputeImports {
      */
     Map<String, Set<String>> possibleMethodFQNs = new HashMap<>();
     
-    /**
-     * Index of possible elements of the same FQN. Computed for each round
-     * of Hint processing
-     */
-    Map<String, List<Element>> fqn2Methods = new HashMap<>();
     
     public synchronized void cancel() {
         cancelled = true;
@@ -320,7 +310,6 @@ public final class ComputeImports {
             // reset possible FQNs, since the set of acessible stuff may have changed -> 
             // collect again
             possibleMethodFQNs.clear();
-            fqn2Methods.clear();
             
             for (Hint hint: v.hints) {
                 wasChanged |= hint.filter(allInfo, this);
@@ -329,8 +318,9 @@ public final class ComputeImports {
         
         // post processing: if some method hint was involved for a SN, we must retain ONLY
         // such Elements, which correspond to at least 1 method reference in the text. 
-        for (String sn : possibleMethodFQNs.keySet()) {
-            Set<String> fqns = possibleMethodFQNs.get(sn);
+        for (Map.Entry<String, Set<String>> entry : possibleMethodFQNs.entrySet()) {
+            String sn = entry.getKey();
+            Set<String> fqns = entry.getValue();
             
             List<Element> cands = candidates.get(sn);
             List<Element> rawCands = notFilteredCandidates.get(sn);
@@ -367,12 +357,6 @@ public final class ComputeImports {
             return;
         }
         String fqn = info.getElementUtilities().getElementName(el, true).toString();
-        List<Element> els = fqn2Methods.get(fqn);
-        if (els == null) {
-            els = new ArrayList<>(2);
-            fqn2Methods.put(fqn, els);
-        }
-        els.add(el);
         String simpleName = ((ExecutableElement)el).getSimpleName().toString();
         Set<String> col = possibleMethodFQNs.get(simpleName);
         if (col == null) {
@@ -392,23 +376,7 @@ public final class ComputeImports {
         fqnSB.append(info.getElementUtilities().getElementName(element, true));
 
         if (element.getKind() == ElementKind.METHOD) {
-            String fqn = fqnSB.toString();
-            fqnSB.append('(');
-            // check if there are no overloads, otherwise append just ellipsis:
-            Collection<Element> col = fqn2Methods.get(fqn);
-            if (col == null || col.size() == 1) {
-                boolean first = true;
-                for (VariableElement var : ((ExecutableElement) element).getParameters()) {
-                    if (!first) {
-                        fqnSB.append(", ");
-                    }
-                    fqnSB.append(info.getTypeUtilities().getTypeName(info.getTypes().erasure(var.asType())));
-                    first = false;
-                }
-            } else {
-                fqnSB.append("..."); // NOI18N
-            }
-            fqnSB.append(')'); // NOI18N
+            fqnSB.append("(...)"); // NOI18N
         }
         
         return fqnSB.toString();
@@ -454,8 +422,9 @@ public final class ComputeImports {
         
         Set<TypeElement> validRights = new HashSet<TypeElement>();
         
-        for (TypeElement l : validPairs.keySet()) {
-            List<TypeElement> valid = validPairs.get(l);
+        for (Map.Entry<TypeElement, List<TypeElement>> entry : validPairs.entrySet()) {
+            TypeElement l = entry.getKey();
+            List<TypeElement> valid = entry.getValue();
             
             if (valid.isEmpty() && !leftReadOnly) {
                 //invalid left:
@@ -627,9 +596,20 @@ public final class ComputeImports {
                         }
                     }
 
-                    if (type != null && type.getKind() == TypeKind.PACKAGE) {
+                    if (type.getKind() == TypeKind.PACKAGE) {
+                        TreePath parent = getCurrentPath().getParentPath();
+                        Element fullPackage = el;
+                        while (parent != null) {
+                            Element parentElement = info.getTrees().getElement(parent);
+                            if (parentElement != null && parentElement.getKind() == ElementKind.PACKAGE) {
+                                fullPackage = parentElement;
+                                parent = parent.getParentPath();
+                            } else {
+                                break;
+                            }
+                        }
                         //does the package really exists?
-                        String s = ((PackageElement) el).getQualifiedName().toString();
+                        String s = ((PackageElement) fullPackage).getQualifiedName().toString();
                         Element thisPack = info.getTrees().getElement(new TreePath(info.getCompilationUnit()));
                         ModuleElement module = thisPack != null ? info.getElements().getModuleOf(thisPack) : null;
                         PackageElement pack = module != null ? info.getElements().getPackageElement(module, s) : info.getElements().getPackageElement(s);

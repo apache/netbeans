@@ -24,11 +24,17 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
+import java.util.concurrent.CompletableFuture;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.Name;
+import javax.lang.model.element.ElementKind;
+import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.java.queries.SourceJavadocAttacher;
 import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.api.java.source.ElementUtilities;
 import org.netbeans.api.java.source.TreeUtilities;
+import org.netbeans.api.lsp.StructureElement;
 import org.netbeans.modules.java.source.pretty.VeryPretty;
+import org.netbeans.modules.java.source.ui.LspElementUtils;
 import org.netbeans.modules.java.ui.ElementHeaderFormater;
 
 /**
@@ -190,6 +196,105 @@ public final class ElementHeaders {
 
    }
     
-    
+   /**
+    * Converts an javac {@link Element} into LSP {@link StructureElement}. This method does not
+    * work for binary elements, just for elements from the parsed source. To work with
+    * non-local elements, use {@link #resolveStructureElement}. If {@code childAcceptor}
+    * is not {@code null}, children are fetched recursively and filed into {@link StructureElement#getChildren()}; 
+    * the acceptor is applied to all levels. The method returns {@code null} if the passed CompilationInfo
+    * does not contain source information for the Element.
+    * 
+    * @param info compilation info
+    * @param el element to convert
+    * @param childAcceptor {@code null} to ignore children, non-null to filter.
+    * @return created item or {@code null}
+    * @since 1.63
+    */
+    @CheckForNull
+    public static StructureElement toStructureElement(CompilationInfo info, Element el, ElementUtilities.ElementAcceptor childAcceptor) {
+        return LspElementUtils.element2StructureElement(info, el, childAcceptor);
+    }
 
+    /**
+     * Converts a javac {@link Element} into LSP {@link StructureElement}. This method supports also elements that are not part of
+     * the "{@code info}" compilation. If `{@code resolveSources}' is true, it will try to acquire their relevant source, possibly using
+     * {@link SourceJavadocAttacher} API.
+     * As this process may take some time, the call may complete asynchronously when the element's source is acquired. {@code null}
+     * is returned for Elements outside that have no source associated when {@code resolveSources} is false.
+     * <p>
+     * Calling {@link CompletableFuture#cancel} on the returned value performs cancel on the possible long-running task(s) in a best-effort way: it is
+     * not guaranteed that the already started processes interrupts.
+     * @param info compilation
+     * @param el the element to convert
+     * @param resolveSources 
+     * @return completion handle for the StructureElement
+     * @since 1.63
+     */
+    public static CompletableFuture<StructureElement> resolveStructureElement(CompilationInfo info, Element el, boolean resolveSources) {
+        return LspElementUtils.createStructureElement(info, el, resolveSources);
+    }
+
+    /**
+     * Describes a javac {@link Element} as LSP {@link StructureElement}. Source file and position information may not be provided, but 
+     * the other fields of the {@link StructureElement} will be filled. If `allowBinaries' is true, the file member of the {@link StructureElement} may
+     * be filled with FileObject of binary that defines the {@link Element}; source FileObject is always preferred, if available.
+     * 
+     * @param info compilation
+     * @param el the element to convert
+     * @return created item
+     * @since 1.64
+     */
+    public static StructureElement convertElement(CompilationInfo info, Element el, ElementUtilities.ElementAcceptor childAcceptor, boolean allowBinary) {
+        return LspElementUtils.describeElement(info, el, childAcceptor, allowBinary);
+    }
+
+    /**
+     * Converts Javac {@link ElementKind} to a suitable LSP structure kind. Note
+     * that not all kinds are supported - such ElementKinds are converted to
+     *
+     * @param el
+     * @return LSP kind suitable for DocumentSymbol - like structures.
+     */
+    public static StructureElement.Kind javaKind2Structure(Element el) {
+        ElementKind kind = el.getKind();
+        switch (kind) {
+            case PACKAGE:
+                return StructureElement.Kind.Package;
+            case ENUM:
+                return StructureElement.Kind.Enum;
+            case CLASS:
+            case RECORD:
+                return StructureElement.Kind.Class;
+            case ANNOTATION_TYPE:
+                return StructureElement.Kind.Interface;
+            case INTERFACE:
+                return StructureElement.Kind.Interface;
+            case ENUM_CONSTANT:
+            case RECORD_COMPONENT:
+                return StructureElement.Kind.EnumMember;
+            case FIELD:
+                return StructureElement.Kind.Field; //TODO: constant
+            case PARAMETER:
+                return StructureElement.Kind.Variable;
+            case LOCAL_VARIABLE:
+                return StructureElement.Kind.Variable;
+            case EXCEPTION_PARAMETER:
+                return StructureElement.Kind.Variable;
+            case METHOD:
+                return StructureElement.Kind.Method;
+            case CONSTRUCTOR:
+                return StructureElement.Kind.Constructor;
+            case TYPE_PARAMETER:
+                return StructureElement.Kind.TypeParameter;
+            case RESOURCE_VARIABLE:
+                return StructureElement.Kind.Variable;
+            case MODULE:
+                return StructureElement.Kind.Module;
+            case STATIC_INIT:
+            case INSTANCE_INIT:
+            case OTHER:
+            default:
+                return StructureElement.Kind.File; //XXX: what here?
+        }
+    }
 }

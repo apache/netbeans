@@ -143,7 +143,7 @@ public class AttachDialog extends AttachWizard {
             RunningVM[] vms = JpsProxy.getRunningVMs();
             if (vms == null || vms.length == 0) return false; // no locally running processes for dynamic attach
             
-            List<RunningVM> targets = new ArrayList();
+            List<RunningVM> targets = new ArrayList<>();
             for (RunningVM vm : vms)
                 if (getProcessName(vm.getMainClass()).equals(name))
                     targets.add(vm); // all processes with the preferred process name ready for profiling
@@ -572,7 +572,6 @@ public class AttachDialog extends AttachWizard {
                                        null,
                                        new OsAction(IntegrationUtils.PLATFORM_MAC_OS),
                                        null,
-                                       new OsAction(IntegrationUtils.PLATFORM_SOLARIS_SPARC_OS),
                                        new OsAction(IntegrationUtils.PLATFORM_SOLARIS_SPARC64_OS),
                                        new OsAction(IntegrationUtils.PLATFORM_SOLARIS_INTEL_OS),
                                        new OsAction(IntegrationUtils.PLATFORM_SOLARIS_AMD64_OS));

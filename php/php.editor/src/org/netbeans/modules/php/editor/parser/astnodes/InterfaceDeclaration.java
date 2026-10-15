@@ -18,26 +18,47 @@
  */
 package org.netbeans.modules.php.editor.parser.astnodes;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
- * Represents an interface declaration
- * <pre>
- * <pre>e.g.<pre>
+ * Represents an interface declaration.
+ *
+ * <pre>e.g.
  * interface MyInterface { },
  * interface MyInterface extends Interface1, Interface2 {
  *	 const MY_CONSTANT = 3;
  *	 public function myFunction($a);
- * }
+ * },
+ * #[A(1)]
+ * interface MyInterface { } // [NETBEANS-4443] PHP 8.0
+ * </pre>
  */
 public class InterfaceDeclaration extends TypeDeclaration {
 
-    private InterfaceDeclaration(int start, int end, Identifier interfaceName, Expression[] interfaces, Block body) {
-        super(start, end, interfaceName, interfaces, body);
+    private InterfaceDeclaration(int start, int end, Identifier interfaceName, Expression[] interfaces, Block body, List<Attribute> attributes) {
+        super(start, end, interfaceName, interfaces, body, attributes);
+    }
+
+    private InterfaceDeclaration(int start, int end, Identifier interfaceName, List<Expression> interfaces, Block body, List<Attribute> attributes) {
+        this(start, end, interfaceName, interfaces.toArray(new Expression[0]), body, attributes);
     }
 
     public InterfaceDeclaration(int start, int end, Identifier interfaceName, List<Expression> interfaces, Block body) {
-        this(start, end, interfaceName, interfaces.toArray(new Expression[interfaces.size()]), body);
+        this(start, end, interfaceName, interfaces, body, Collections.emptyList());
+    }
+
+    public static InterfaceDeclaration create(InterfaceDeclaration declaration, List<Attribute> attributes) {
+        assert attributes != null;
+        int start = attributes.isEmpty() ? declaration.getStartOffset() : attributes.get(0).getStartOffset();
+        return new InterfaceDeclaration(
+                start,
+                declaration.getEndOffset(),
+                declaration.getName(),
+                declaration.getInterfaces(),
+                declaration.getBody(),
+                attributes
+        );
     }
 
     @Override

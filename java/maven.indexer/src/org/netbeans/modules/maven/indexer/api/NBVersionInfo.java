@@ -238,12 +238,12 @@ public final class NBVersionInfo implements Comparable<NBVersionInfo> {
     }
     
     private String extrakey(boolean repo) {
-        return "" + classifier + type + (repo ? repoId : "");
+        return classifier + type + (repo ? repoId : "");
     }
     
     public float getLuceneScore() {
         return luceneScore;
-}
+    }
 
     public void setLuceneScore(float luceneScore) {
         this.luceneScore = luceneScore;

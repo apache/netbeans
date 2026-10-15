@@ -190,7 +190,7 @@ public final class IntroduceLocalExtensionRefactoring extends AbstractRefactorin
      * Only create the extension class, or should all usages be replaced with
      * the new local extension.
      *
-     * @param replace true if usages need to use the new type.
+     * @return true if usages need to use the new type.
      */
     public boolean getReplace() {
         return replace;

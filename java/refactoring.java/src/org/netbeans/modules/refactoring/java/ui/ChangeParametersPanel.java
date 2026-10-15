@@ -193,8 +193,8 @@ public class ChangeParametersPanel extends JPanel implements CustomRefactoringPa
                             MethodTree methodTree = (MethodTree) refactoredObj.resolve(info).getLeaf();
                             final long methodStart = info.getTreeUtilities().findNameSpan(methodTree)[0];
                             Tree tree = methodTree.getReturnType();
-                            returnSpan[0] = tree == null ? methodStart -1 : info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
-                            returnSpan[1] = tree == null ? methodStart -1 : info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree);
+                            returnSpan[0] = tree == null ? methodStart -1 : info.getTrees().getSourcePositions().getStartPosition(tree);
+                            returnSpan[1] = tree == null ? methodStart -1 : info.getTrees().getSourcePositions().getEndPosition(tree);
 
                             DataObject dob = DataObject.find(fileObject);
                             ((JEditorPane)singleLineEditor[1]).getDocument().putProperty(
@@ -269,7 +269,7 @@ public class ChangeParametersPanel extends JPanel implements CustomRefactoringPa
     }
     
     protected Set<Modifier> getModifier() {
-        Set<Modifier> modifiers = new HashSet<Modifier>(1);
+        Set<Modifier> modifiers = EnumSet.noneOf(Modifier.class);
 //        modifiers.remove(Modifier.PRIVATE);
 //        modifiers.remove(Modifier.PUBLIC);
 //        modifiers.remove(Modifier.PROTECTED);
@@ -616,7 +616,7 @@ public class ChangeParametersPanel extends JPanel implements CustomRefactoringPa
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         acceptEditedValue(); 
         int rowCount = model.getRowCount();
-        model.addRow(new Object[] { "Object", paramname + rowCount, "null", new Integer(-1), Boolean.TRUE }); // NOI18N
+        model.addRow(new Object[] { "Object", paramname + rowCount, "null", -1, Boolean.TRUE }); // NOI18N
         paramTable.scrollRectToVisible(paramTable.getCellRect(rowCount, 0, false));
         paramTable.changeSelection(rowCount, 0, false, false);
         autoEdit(paramTable);
@@ -776,7 +776,7 @@ public class ChangeParametersPanel extends JPanel implements CustomRefactoringPa
             Boolean removable = !scan.hasRefernces();
             // Used to check if var was user in overridden/overriding methods
 //            if (model.getRowCount()<=originalIndex) {
-            newModel.add(new Object[]{typeRepresentation, par.toString(), "", new Integer(originalIndex), removable});
+            newModel.add(new Object[]{typeRepresentation, par.toString(), "", originalIndex, removable});
 //            } else {
 //                removable = Boolean.valueOf(model.isRemovable(originalIndex) && removable.booleanValue());
 //                ((Vector) model.getDataVector().get(originalIndex)).set(4, removable);
@@ -853,7 +853,7 @@ public class ChangeParametersPanel extends JPanel implements CustomRefactoringPa
         }
     }
 
-    private Set<Modifier> modifiers = new HashSet<Modifier>();
+    private Set<Modifier> modifiers = EnumSet.noneOf(Modifier.class);
     private List<String> typeParameters = new LinkedList<String>();
     private Modifier currentModifier = null;
     
@@ -956,9 +956,7 @@ public class ChangeParametersPanel extends JPanel implements CustomRefactoringPa
         }
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // INNER CLASSES
-    ////////////////////////////////////////////////////////////////////////////
     // this class is used for marking rows as read-only. If the user uses
     // standard DefaultTableModel, rows added through its methods is added
     // as a read-write. -- Use methods with Boolean paramater to add

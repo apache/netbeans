@@ -143,7 +143,7 @@ public class CompletionContext extends EditorFeatureContext {
                     //empty file
                     return getParseTreeRoot();
                 }
-                if(!CssTokenIdCategory.WHITESPACES.name().toLowerCase().equals(t.id().primaryCategory())) {
+                if(!CssTokenIdCategory.WHITESPACES.name().equalsIgnoreCase(t.id().primaryCategory())) {
                     return NodeUtil.findNonTokenNodeAtOffset(getParseTreeRoot(), ts.offset() + t.length());
                 } else {
                     if(!ts.movePrevious()) {
@@ -175,7 +175,7 @@ public class CompletionContext extends EditorFeatureContext {
                     //empty file
                     return null;
                 }
-                if(!CssTokenIdCategory.WHITESPACES.name().toLowerCase().equals(t.id().primaryCategory())) {
+                if(!CssTokenIdCategory.WHITESPACES.name().equalsIgnoreCase(t.id().primaryCategory())) {
                     return t.id();
                 } else {
                     if(!ts.movePrevious()) {

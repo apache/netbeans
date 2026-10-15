@@ -87,8 +87,8 @@ import org.openide.windows.WindowManager;
 })
 public final class HeapDumpAction extends ProfilingAwareAction {
     //~ Inner Classes ------------------------------------------------------------------------------------------------------------
-    final private static class Singleton {
-        final private static HeapDumpAction INSTANCE = new HeapDumpAction();
+    private static final class Singleton {
+        private static final HeapDumpAction INSTANCE = new HeapDumpAction();
     }
     
     private static class ChooseHeapdumpTargetPanel extends JPanel implements HelpCtx.Provider {

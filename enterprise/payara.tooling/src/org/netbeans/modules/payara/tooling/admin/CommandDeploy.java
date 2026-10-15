@@ -38,10 +38,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
 @RunnerRestClass(runner=RunnerRestDeploy.class)
 public class CommandDeploy extends CommandTargetName {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command string for deploy command. */
     private static final String COMMAND = "deploy";
 
@@ -49,10 +46,7 @@ public class CommandDeploy extends CommandTargetName {
     private static final String ERROR_MESSAGE
             = "Application deployment failed.";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Deploy task that deploys application on server.
      * <p/>
@@ -67,7 +61,7 @@ public class CommandDeploy extends CommandTargetName {
     public static ResultString deploy(PayaraServer server, File application,
             TaskStateListener listener) throws PayaraIdeException {
         Command command = new CommandDeploy(null, null, application,
-                null, null, null);
+                null, null, null, false);
         Future<ResultString> future =
                 ServerAdmin.<ResultString>exec(server, command, listener);
         try {
@@ -78,10 +72,7 @@ public class CommandDeploy extends CommandTargetName {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** File to deploy. */
     final File path;
 
@@ -97,10 +88,10 @@ public class CommandDeploy extends CommandTargetName {
     /** Is this deployment of a directory? */
     final boolean dirDeploy;
 
-    ////////////////////////////////////////////////////////////////////////////
-    // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
+    /** Hot Deploy. */
+    final boolean hotDeploy;
 
+    // Constructors                                                           //
     /**
      * Constructs an instance of Payara server deploy command entity.
      * <p/>
@@ -111,16 +102,19 @@ public class CommandDeploy extends CommandTargetName {
      * @param contextRoot Deployed application context root.
      * @param properties  Deployment properties.
      * @param libraries   Not used in actual deploy command.
+     * @param hotDeploy   Hot Deploy.
      */
     public CommandDeploy(final String name, final String target,
             final File path, final String contextRoot,
-            final Map<String,String> properties, final File[] libraries) {
+            final Map<String,String> properties, final File[] libraries,
+            final boolean hotDeploy) {
         super(COMMAND, name, target);
         this.path = path;
         this.contextRoot = contextRoot;
         this.properties = properties;
         this.libraries = libraries;
         this.dirDeploy = path.isDirectory();
+        this.hotDeploy = hotDeploy;
     }
 
 }

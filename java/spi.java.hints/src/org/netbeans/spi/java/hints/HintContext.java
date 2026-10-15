@@ -65,7 +65,7 @@ public class HintContext {
         this.metadata = metadata;
         this.path = path;
 
-        variables = new HashMap<String, TreePath>(variables);
+        variables = new HashMap<>(variables);
         variables.put("$_", path);
         
         this.variables = variables;
@@ -161,7 +161,7 @@ public class HintContext {
                 return new HintContext(info, settings, metadata, path, variables, multiVariables, variableNames, constraints, problems, bulkMode, cancel, caret);
             }
             @Override public HintContext createHintContext(CompilationInfo info, HintsSettings settings, HintMetadata metadata, TreePath path, Map<String, TreePath> variables, Map<String, Collection<? extends TreePath>> multiVariables, Map<String, String> variableNames) {
-                return new HintContext(info, settings, metadata, path, variables, multiVariables, variableNames, Collections.<String, TypeMirror>emptyMap(), new LinkedList<MessageImpl>(), false, new AtomicBoolean(), -1);
+                return new HintContext(info, settings, metadata, path, variables, multiVariables, variableNames, Collections.<String, TypeMirror>emptyMap(), new LinkedList<>(), false, new AtomicBoolean(), -1);
             }
             @Override public HintMetadata getHintMetadata(HintContext ctx) {
                 return ctx.getHintMetadata();

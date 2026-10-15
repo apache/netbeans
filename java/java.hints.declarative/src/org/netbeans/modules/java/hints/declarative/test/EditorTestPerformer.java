@@ -86,7 +86,7 @@ public class EditorTestPerformer extends ParserResultTask<TestResult>{
         StyledDocument sdoc = (StyledDocument) doc;
         
         try {
-            List<ErrorDescription> errors = new LinkedList<ErrorDescription>();
+            List<ErrorDescription> errors = new LinkedList<>();
             OffsetsBag bag = new OffsetsBag(doc);
             Map<TestCase, Collection<String>> testResults = TestPerformer.performTest(ruleFile, file, tests, cancel);
 
@@ -182,19 +182,19 @@ public class EditorTestPerformer extends ParserResultTask<TestResult>{
             this.text = text;
         }
 
+        @Override
         public String getText() {
             return "Put actual output into golden section";
         }
 
+        @Override
         public ChangeInfo implement() throws Exception {
-            NbDocument.runAtomic(doc, new Runnable() {
-                public void run() {
-                    try {
-                        doc.remove(start, end - start);
-                        doc.insertString(start, text, null);
-                    } catch (BadLocationException ex) {
-                        throw new IllegalStateException(ex);
-                    }
+            NbDocument.runAtomic(doc, () -> {
+                try {
+                    doc.remove(start, end - start);
+                    doc.insertString(start, text, null);
+                } catch (BadLocationException ex) {
+                    throw new IllegalStateException(ex);
                 }
             });
             

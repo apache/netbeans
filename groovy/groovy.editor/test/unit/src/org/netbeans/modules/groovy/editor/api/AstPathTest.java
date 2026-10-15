@@ -27,7 +27,10 @@ import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.ModuleNode;
 import org.codehaus.groovy.ast.expr.ConstantExpression;
+import org.codehaus.groovy.ast.expr.GStringExpression;
 import org.codehaus.groovy.ast.expr.MethodCallExpression;
+import org.codehaus.groovy.ast.expr.PropertyExpression;
+import org.codehaus.groovy.ast.expr.VariableExpression;
 import org.codehaus.groovy.ast.stmt.BlockStatement;
 import org.codehaus.groovy.ast.stmt.ExpressionStatement;
 import org.netbeans.editor.BaseDocument;
@@ -47,6 +50,12 @@ public class AstPathTest extends GroovyTestBase {
 
     public AstPathTest(String testName) {
         super(testName);
+    }
+
+    @Override
+    protected void setUp() throws Exception {
+        clearWorkDir();
+        super.setUp(); 
     }
 
     public void testMiniClass() throws Exception {
@@ -82,8 +91,137 @@ public class AstPathTest extends GroovyTestBase {
         assertEquals(ModuleNode.class, it.next().getClass());
         assertFalse(it.hasNext());
     }
+    
+    /**
+     * Check that normal AST path termiantes as the 'parentFile' constant.
+     */
+    public void testNormalOnFirstSymbol() throws Exception {
+        AstPath path = getPath(
+                "testfiles/ASTPath1.groovy", 
+                "someFile.parentFil^e.mkdirs()");
+        Iterator<ASTNode> it = path.iterator();
+        
+        assertEquals(ConstantExpression.class, it.next().getClass());
+    }
+
+    /**
+     * Check that dotted AST path termiantes as the PropertyExpression that points
+     * to the 'parentFile' property.
+     */
+    public void testDotOnFirstSymbol() throws Exception {
+        AstPath path = getPath(
+                "testfiles/ASTPath1.groovy", 
+                "someFile.parentFil^e.mkdirs()", true);
+        Iterator<ASTNode> it = path.iterator();
+        
+        assertEquals(PropertyExpression.class, it.next().getClass());
+        PropertyExpression pe = (PropertyExpression)path.leaf();
+        
+        assertEquals(ConstantExpression.class, pe.getProperty().getClass());
+        assertEquals(VariableExpression.class, pe.getObjectExpression().getClass());
+        
+        assertEquals("parentFile", ((ConstantExpression)pe.getProperty()).getValue());
+    }
+    
+    /**
+     * Normal AST path should terminate at the property name 'constant' 
+     */
+    public void testAfterSecondPropertyRef() throws Exception {
+        AstPath path = getPath(
+                "testfiles/ASTPath1.groovy", 
+                "someFile.absoluteFile.parentFil^e.mkdirs()");
+        Iterator<ASTNode> it = path.iterator();
+        
+        assertEquals(ConstantExpression.class, it.next().getClass());
+    }
+    
+    /**
+     * Dotted AST path should end at the PropertyExpression for parentFile.
+     */
+    public void testDotAfterSecondPropertyRef() throws Exception {
+        AstPath path = getPath(
+                "testfiles/ASTPath1.groovy", 
+                "someFile.absoluteFile.parentFil^e.mkdirs()", true);
+        Iterator<ASTNode> it = path.iterator();
+        
+        assertEquals(PropertyExpression.class, it.next().getClass());
+        PropertyExpression pe = (PropertyExpression)path.leaf();
+        
+        assertEquals(ConstantExpression.class, pe.getProperty().getClass());
+        assertEquals(PropertyExpression.class, pe.getObjectExpression().getClass());
+        
+        assertEquals("parentFile", ((ConstantExpression)pe.getProperty()).getValue());
+    }
+    
+    public void testFirstObjectMethod() throws Exception {
+        
+        AstPath path = getPath(
+                "testfiles/ASTPath1.groovy", 
+                "b.command(\"good\"^).inheritIO()");
+        ASTNode leaf = path.leaf();
+        assertEquals(MethodCallExpression.class, leaf.getClass());
+        MethodCallExpression me = (MethodCallExpression)leaf;
+        assertEquals(ConstantExpression.class, me.getMethod().getClass());
+        assertEquals("command", ((ConstantExpression)me.getMethod()).getValue());
+    }
+    
+    public void testDotFirstObjectMethod() throws Exception {
+        
+        AstPath path = getPath(
+                "testfiles/ASTPath1.groovy", 
+                "b.command(\"good\"^).inheritIO()", true);
+        ASTNode leaf = path.leaf();
+        assertEquals(MethodCallExpression.class, leaf.getClass());
+        MethodCallExpression me = (MethodCallExpression)leaf;
+        assertEquals(ConstantExpression.class, me.getMethod().getClass());
+        assertEquals("command", ((ConstantExpression)me.getMethod()).getValue());
+    }
+    
+    public void testSecondObjectMethod() throws Exception {
+        
+        AstPath path = getPath(
+                "testfiles/ASTPath1.groovy", 
+                "b.command(\"good\").inheritIO(^).command");
+        ASTNode leaf = path.leaf();
+        assertEquals(MethodCallExpression.class, leaf.getClass());
+        MethodCallExpression me = (MethodCallExpression)leaf;
+        assertEquals(ConstantExpression.class, me.getMethod().getClass());
+        assertEquals("inheritIO", ((ConstantExpression)me.getMethod()).getValue());
+    }
+
+    public void testDotSecondObjectMethod() throws Exception {
+        
+        AstPath path = getPath(
+                "testfiles/ASTPath1.groovy", 
+                "b.command(\"good\").inheritIO(^).command", true);
+        ASTNode leaf = path.leaf();
+        assertEquals(MethodCallExpression.class, leaf.getClass());
+        MethodCallExpression me = (MethodCallExpression)leaf;
+        assertEquals(ConstantExpression.class, me.getMethod().getClass());
+        assertEquals("inheritIO", ((ConstantExpression)me.getMethod()).getValue());
+    }
+    
+    public void testDotMethodCallWithoutParenthesis() throws Exception {
+        AstPath path = getPath(
+                "testfiles/ASTPath1.groovy", 
+                "aa.command \"bye^\".substring(1)", true);
+        ASTNode leaf = path.leaf();
+        assertEquals(ConstantExpression.class, leaf.getClass());
+    }
+
+    public void testDotMethodCallWithoutParenthesis2() throws Exception {
+        AstPath path = getPath(
+                "testfiles/ASTPath1.groovy", 
+                "aa.command \"hello $dolly !^\".substring(1)", true);
+        ASTNode leaf = path.leaf();
+        assertEquals(GStringExpression.class, leaf.getClass());
+    }
 
     private AstPath getPath(String relFilePath, final String caretLine) throws Exception {
+        return getPath(relFilePath, caretLine, false);
+    }
+
+    private AstPath getPath(String relFilePath, final String caretLine, boolean outer) throws Exception {
         FileObject f = getTestFile(relFilePath);
         Source source = Source.create(f);
 
@@ -103,7 +241,7 @@ public class AstPathTest extends GroovyTestBase {
                 int caretOffset = lineOffset + caretDelta;
 
                 ModuleNode moduleNode = result.getRootElement().getModuleNode();
-                ret[0] = new AstPath(moduleNode, caretOffset, (BaseDocument) result.getSnapshot().getSource().getDocument(true));
+                ret[0] = new AstPath(moduleNode, caretOffset, (BaseDocument) result.getSnapshot().getSource().getDocument(true), outer);
                 latch.countDown();
             }
         });

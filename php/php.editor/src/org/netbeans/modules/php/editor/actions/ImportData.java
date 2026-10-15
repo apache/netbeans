@@ -199,6 +199,14 @@ public class ImportData {
                 }
 
             },
+            ENUM {
+
+                @Override
+                public Icon getIcon() {
+                    return IconsUtils.getElementIcon(PhpElementKind.ENUM);
+                }
+
+            },
             ERROR {
 
                 @Override
@@ -235,6 +243,9 @@ public class ImportData {
                         break;
                     case TRAIT:
                         result = TRAIT;
+                        break;
+                    case ENUM:
+                        result = ENUM;
                         break;
                     default:
                         result = ERROR;

@@ -64,13 +64,13 @@ public class WorkspaceSwitchAction extends CallableSystemAction {
 
         final WindowManager pool = WindowManager.getDefault();
 
-        final Hashtable menu2Workspace = new Hashtable(10);
+        final Hashtable<ActionListener, Workspace> menu2Workspace = new Hashtable<>(10);
 
         // ^ maps listener on workspace
-        final Hashtable workspace2Menu = new Hashtable(10);
+        final Hashtable<Workspace, JRadioButtonMenuItem> workspace2Menu = new Hashtable<>(10);
 
         // ^ maps workspace to menuitem
-        final Hashtable workspace2Listener = new Hashtable(10);
+        final Hashtable<Workspace, ActionListener> workspace2Listener = new Hashtable<>(10);
 
         // ^ maps workspace to action listener
         final Workspace[] currentDeskRef = new Workspace[1];
@@ -84,7 +84,7 @@ public class WorkspaceSwitchAction extends CallableSystemAction {
         }
 
         // check on currently active workspace
-        JRadioButtonMenuItem curItem = (JRadioButtonMenuItem) workspace2Menu.get(currentDeskRef[0]);
+        JRadioButtonMenuItem curItem = workspace2Menu.get(currentDeskRef[0]);
 
         if (curItem != null) {
             curItem.setSelected(true);
@@ -173,8 +173,8 @@ public class WorkspaceSwitchAction extends CallableSystemAction {
                         for (int i = 0; i < newWorkspaces.length; i++) {
                           System.out.println ("New Value["+i+"]= "+newWorkspaces[i].getName());
                         }*/
-                        List newList = Arrays.asList(newWorkspaces);
-                        List oldList = Arrays.asList(oldWorkspaces);
+                        List<Workspace> newList = Arrays.asList(newWorkspaces);
+                        List<Workspace> oldList = Arrays.asList(oldWorkspaces);
 
                         // remove old
                         for (int i = 0; i < oldWorkspaces.length; i++) {

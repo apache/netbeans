@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +33,6 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.glassfish.spi.ExecSupport;
 import org.netbeans.modules.glassfish.spi.GlassfishModule;
 import org.netbeans.modules.glassfish.spi.ServerUtilities;
@@ -49,11 +49,11 @@ import org.openide.windows.InputOutput;
 public class CreateDomain extends Thread {
 
     static final String PORTBASE = "portbase"; // NOI18N
-    final private String uname;
-    final private String pword;
-    final private File platformLocation;
-    final private Map<String, String> map;
-    final private Map<String, String> ip;
+    private final String uname;
+    private final String pword;
+    private final File platformLocation;
+    private final Map<String, String> map;
+    private final Map<String, String> ip;
     private GlassfishInstanceProvider gip;
     private boolean register;
     private final String installRootKey;
@@ -73,7 +73,7 @@ public class CreateDomain extends Thread {
         computePorts(ip,map, useDefaultPorts);
     }
 
-    static private void computePorts(Map<String, String> ip, Map<String, String> createProps, boolean useDefaultPorts) {
+    private static void computePorts(Map<String, String> ip, Map<String, String> createProps, boolean useDefaultPorts) {
         int portBase = 8900;
         int kicker = ((new Date()).toString() + ip.get(GlassfishModule.DOMAINS_FOLDER_ATTR)+ip.get(GlassfishModule.DOMAIN_NAME_ATTR)).hashCode() % 40000;
         kicker = kicker < 0 ? -kicker : kicker;
@@ -157,7 +157,7 @@ public class CreateDomain extends Thread {
                 ExecSupport ee = new ExecSupport();
                 process = Runtime.getRuntime().exec(arrnd, null, irf);
                 pdcan = new PDCancel(process, domainDir + File.separator + domain);
-                ph = ProgressHandleFactory.createHandle(
+                ph = ProgressHandle.createHandle(
                         NbBundle.getMessage(this.getClass(), "LBL_Creating_personal_domain"), // NOI18N
                         pdcan);
                 ph.start();
@@ -229,8 +229,8 @@ public class CreateDomain extends Thread {
 
     static class PDCancel implements Cancellable {
 
-        final private Process p;
-        final private String dirname;
+        private final Process p;
+        private final String dirname;
         private boolean notFired = true;
 
         PDCancel(Process p, String newDirName) {
@@ -238,12 +238,12 @@ public class CreateDomain extends Thread {
             this.dirname = newDirName;
         }
 
-        synchronized public boolean isNotFired() {
+        public synchronized boolean isNotFired() {
             return notFired;
         }
 
         @Override
-        synchronized public boolean cancel() {
+        public synchronized boolean cancel() {
             notFired = false;
             p.destroy();
             File domainDir = new File(dirname);
@@ -272,7 +272,7 @@ public class CreateDomain extends Thread {
         PrintWriter p = null;
         File retVal = null;
         try {
-            retVal = File.createTempFile("admin", null);//NOI18N
+            retVal = Files.createTempFile("admin", null).toFile();//NOI18N
 
             retVal.deleteOnExit();
             output = new FileOutputStream(retVal);

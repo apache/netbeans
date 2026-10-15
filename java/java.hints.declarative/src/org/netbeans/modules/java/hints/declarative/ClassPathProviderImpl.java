@@ -31,6 +31,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=ClassPathProvider.class, position=50)
 public class ClassPathProviderImpl implements ClassPathProvider {
 
+    @Override
     public ClassPath findClassPath(FileObject file, String type) {
         if ("hint".equals(file.getExt())) {
             if (ClassPath.COMPILE.equals(type)) {

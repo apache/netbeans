@@ -91,7 +91,7 @@ public class AddComponents_SWING extends ExtJellyTestCase {
      */
     public void testAddAndCompile() {
         String categoryName = "Swing Controls";
-        ArrayList<String> code=new ArrayList();
+        ArrayList<String> code=new ArrayList<>();
         pto = new ProjectsTabOperator();
         ProjectRootNode prn = pto.getProjectRootNode(DATA_PROJECT_NAME);
         prn.select();

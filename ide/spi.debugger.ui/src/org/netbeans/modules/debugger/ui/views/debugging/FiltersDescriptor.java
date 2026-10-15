@@ -97,7 +97,7 @@ public final class FiltersDescriptor {
         filters = Collections.emptyList();
     }
 
-    public synchronized static FiltersDescriptor getInstance() {
+    public static synchronized FiltersDescriptor getInstance() {
         if (instance == null) {
             instance = new FiltersDescriptor();
             //instance = createDebuggingViewFilters();

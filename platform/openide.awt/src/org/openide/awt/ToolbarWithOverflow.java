@@ -28,8 +28,6 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
 import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Path2D;
@@ -57,9 +55,10 @@ public class ToolbarWithOverflow extends JToolBar {
     private JPopupMenu popup;
     private JToolBar overflowToolbar;
     private boolean displayOverflowOnHover = true;
-    private final String PROP_PREF_ICON_SIZE = "PreferredIconSize"; //NOI18N
-    private final String PROP_DRAGGER = "_toolbar_dragger_"; //NOI18N
-    private final String PROP_JDEV_DISABLE_OVERFLOW = "nb.toolbar.overflow.disable"; //NOI18N
+    private boolean updateOverflow = false;
+    private static final String PROP_PREF_ICON_SIZE = "PreferredIconSize"; //NOI18N
+    private static final String PROP_DRAGGER = "_toolbar_dragger_"; //NOI18N
+    private static final String PROP_JDEV_DISABLE_OVERFLOW = "nb.toolbar.overflow.disable"; //NOI18N
     private AWTEventListener awtEventListener;
     private ComponentAdapter componentAdapter;
     // keep track of the overflow popup that is showing, possibly from another overflow button, in order to hide it if necessary
@@ -122,18 +121,6 @@ public class ToolbarWithOverflow extends JToolBar {
         overflowToolbar.setBorder(BorderFactory.createLineBorder(UIManager.getColor("controlShadow"), 1));
     }
 
-    private ComponentListener getComponentListener() {
-        if (componentAdapter == null) {
-            componentAdapter = new ComponentAdapter() {
-                @Override
-                public void componentResized(ComponentEvent e) {
-                    maybeAddOverflow();
-                }
-            };
-        }
-        return componentAdapter;
-    }
-
     private AWTEventListener getAWTEventListener() {
         if (awtEventListener == null) {
             awtEventListener = new AWTEventListener() {
@@ -180,7 +167,6 @@ public class ToolbarWithOverflow extends JToolBar {
     public void addNotify() {
         super.addNotify();
         if (!Boolean.TRUE.equals(getClientProperty(PROP_JDEV_DISABLE_OVERFLOW))) {
-	    addComponentListener(getComponentListener());
 	    Toolkit.getDefaultToolkit().addAWTEventListener(getAWTEventListener(), AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
 	}
     }
@@ -198,12 +184,7 @@ public class ToolbarWithOverflow extends JToolBar {
 
     @Override
     public void updateUI() {
-	Mutex.EVENT.readAccess(new Runnable() {
-	    @Override
-	    public void run() {
-		superUpdateUI();
-	    }
-	});
+	Mutex.EVENT.readAccess(this::superUpdateUI);
     }
 
     final void superUpdateUI() {
@@ -266,32 +247,35 @@ public class ToolbarWithOverflow extends JToolBar {
         super.removeAll();
         overflowToolbar.removeAll();
     }
-    
+
     @Override
-    public void validate() {
-        if (!Boolean.TRUE.equals(getClientProperty(PROP_JDEV_DISABLE_OVERFLOW))) {
-            int visibleButtons = computeVisibleButtons();
-            if (visibleButtons == -1) {
-                handleOverflowRemoval();
-            } else {
-                handleOverflowAddittion(visibleButtons);
+    public void doLayout() {
+        if (updateOverflow) {
+            updateOverflow = false;
+            if (!Boolean.TRUE.equals(getClientProperty(PROP_JDEV_DISABLE_OVERFLOW))) {
+                int visibleButtons = computeVisibleButtons();
+                if (visibleButtons == -1) {
+                    handleOverflowRemoval();
+                } else {
+                    handleOverflowAddition(visibleButtons);
+                }
             }
         }
-        super.validate();
+        super.doLayout();
     }
-    
+
+    @Override
+    public void invalidate() {
+        updateOverflow = true;
+        super.invalidate();
+    }
+
     private void setupOverflowButton() {
         overflowButton = new JButton(getOrientation() == HORIZONTAL
-                ? ToolbarArrowIcon.INSTANCE_VERTICAL : ToolbarArrowIcon.INSTANCE_HORIZONTAL)
-        {
+                ? ToolbarArrowIcon.INSTANCE_VERTICAL : ToolbarArrowIcon.INSTANCE_HORIZONTAL) {
             @Override
             public void updateUI() {
-                Mutex.EVENT.readAccess(new Runnable() {
-                    @Override
-                    public void run() {
-                        superUpdateUI();
-                    }
-                });
+                Mutex.EVENT.readAccess(this::superUpdateUI);
             }
 
             private void superUpdateUI() {
@@ -333,14 +317,6 @@ public class ToolbarWithOverflow extends JToolBar {
         popup.setVisible(true);
     }
 
-    /**
-     * Determines if an overflow button should be added to or removed from the toolbar.
-     */
-    private void maybeAddOverflow() {
-        validate();
-        repaint();
-    }
-
     private int computeVisibleButtons() {
         if (isShowing()) {
             int w = getOrientation() == HORIZONTAL ? overflowButton.getIcon().getIconWidth() + 4 : getWidth() - getInsets().left - getInsets().right;
@@ -378,9 +354,7 @@ public class ToolbarWithOverflow extends JToolBar {
             // overflow button needed but would not have enough space, remove one more button
             visibleButtons--;
         }
-        if (visibleButtons == 0 && comps.length > 0
-                && comps[0] instanceof JComponent
-                && Boolean.TRUE.equals(((JComponent) comps[0]).getClientProperty(PROP_DRAGGER))) {
+        if (visibleButtons == 0 && comps.length > 0 && isDragger(comps[0])) {
             visibleButtons = 1; // always include the dragger if present
         }
         if (visibleButtons == showingButtons) {
@@ -388,8 +362,15 @@ public class ToolbarWithOverflow extends JToolBar {
         }
         return visibleButtons;
     }
+    
+    private static boolean isDragger(Component c) {
+        return c instanceof JComponent && Boolean.TRUE.equals(((JComponent) c).getClientProperty(PROP_DRAGGER));
+    }
 
-    private void handleOverflowAddittion(int visibleButtons) {
+    private void handleOverflowAddition(int visibleButtons) {
+        if (overflowToolbar.getComponentCount() > 0 && visibleButtons == getComponentCount() - 1) {
+            return;
+        }
         Component[] comps = getAllComponents();
         removeAll();
         overflowToolbar.setOrientation(getOrientation() == HORIZONTAL ? VERTICAL : HORIZONTAL);
@@ -410,15 +391,16 @@ public class ToolbarWithOverflow extends JToolBar {
     }
 
     private void handleOverflowRemoval() {
-        if (overflowToolbar.getComponents().length > 0) {
-            remove(overflowButton);
-            handleIconResize();
-            for (Component comp : overflowToolbar.getComponents()) {
-                add(comp);
-            }
-            overflowToolbar.removeAll();
-            popup.removeAll();
+        if (overflowToolbar.getComponentCount() == 0) {
+            return;
         }
+        remove(overflowButton);
+        handleIconResize();
+        for (Component comp : overflowToolbar.getComponents()) {
+            add(comp);
+        }
+        overflowToolbar.removeAll();
+        popup.removeAll();
     }
 
     private void handleIconResize() {
@@ -427,28 +409,28 @@ public class ToolbarWithOverflow extends JToolBar {
             if (smallToolbarIcons) {
                 ((JComponent) comp).putClientProperty(PROP_PREF_ICON_SIZE, null);
             } else {
-                ((JComponent) comp).putClientProperty(PROP_PREF_ICON_SIZE, Integer.valueOf(24));
+                ((JComponent) comp).putClientProperty(PROP_PREF_ICON_SIZE, 24);
             }
         }
     }
 
     private Component[] getAllComponents() {
-        Component[] toolbarComps;
-        Component[] overflowComps = overflowToolbar.getComponents();
-        if (overflowComps.length == 0) {
-            toolbarComps = getComponents();
+        if (overflowToolbar.getComponentCount() == 0) {
+            return getComponents();
         } else {
+            Component[] toolbarComps;
             if (getComponentCount() > 0) {
-                toolbarComps = new Component[getComponents().length - 1];
+                toolbarComps = new Component[getComponentCount() - 1];
                 System.arraycopy(getComponents(), 0, toolbarComps, 0, toolbarComps.length);
             } else {
                 toolbarComps = new Component[0];
             }
+            Component[] overflowComps = overflowToolbar.getComponents();
+            Component[] comps = new Component[toolbarComps.length + overflowComps.length];
+            System.arraycopy(toolbarComps, 0, comps, 0, toolbarComps.length);
+            System.arraycopy(overflowComps, 0, comps, toolbarComps.length, overflowComps.length);
+            return comps;
         }
-        Component[] comps = new Component[toolbarComps.length + overflowComps.length];
-        System.arraycopy(toolbarComps, 0, comps, 0, toolbarComps.length);
-        System.arraycopy(overflowComps, 0, comps, toolbarComps.length, overflowComps.length);
-        return comps;
     }
     
     private static class SafeToolBar extends JToolBar {
@@ -459,12 +441,7 @@ public class ToolbarWithOverflow extends JToolBar {
         
         @Override
         public void updateUI() {
-            Mutex.EVENT.readAccess(new Runnable() {
-                @Override
-                public void run() {
-                    superUpdateUI();
-                }
-            });
+            Mutex.EVENT.readAccess(this::superUpdateUI);
         }
 
         final void superUpdateUI() {
@@ -475,12 +452,7 @@ public class ToolbarWithOverflow extends JToolBar {
     private static class SafePopupMenu extends JPopupMenu {
         @Override
         public void updateUI() {
-            Mutex.EVENT.readAccess(new Runnable() {
-                @Override
-                public void run() {
-                    superUpdateUI();
-                }
-            });
+            Mutex.EVENT.readAccess(this::superUpdateUI);
         }
 
         final void superUpdateUI() {

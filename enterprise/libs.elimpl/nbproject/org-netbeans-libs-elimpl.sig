@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.25.0
+#Version 1.52.0
 
 CLSS public com.sun.el.ExpressionFactoryImpl
 cons public init()
@@ -975,7 +975,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -984,7 +983,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public java.lang.Object
 cons public init()
@@ -1021,22 +1019,32 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract javax.el.ELContext
 cons public init()
 meth public abstract javax.el.ELResolver getELResolver()
 meth public abstract javax.el.FunctionMapper getFunctionMapper()
 meth public abstract javax.el.VariableMapper getVariableMapper()
+meth public boolean isLambdaArgument(java.lang.String)
 meth public boolean isPropertyResolved()
+meth public java.lang.Object convertToType(java.lang.Object,java.lang.Class<?>)
 meth public java.lang.Object getContext(java.lang.Class)
+meth public java.lang.Object getLambdaArgument(java.lang.String)
+meth public java.util.List<javax.el.EvaluationListener> getEvaluationListeners()
 meth public java.util.Locale getLocale()
+meth public javax.el.ImportHandler getImportHandler()
+meth public void addEvaluationListener(javax.el.EvaluationListener)
+meth public void enterLambdaScope(java.util.Map<java.lang.String,java.lang.Object>)
+meth public void exitLambdaScope()
+meth public void notifyAfterEvaluation(java.lang.String)
+meth public void notifyBeforeEvaluation(java.lang.String)
+meth public void notifyPropertyResolved(java.lang.Object,java.lang.Object)
 meth public void putContext(java.lang.Class,java.lang.Object)
 meth public void setLocale(java.util.Locale)
 meth public void setPropertyResolved(boolean)
+meth public void setPropertyResolved(java.lang.Object,java.lang.Object)
 supr java.lang.Object
-hfds locale,map,resolved
+hfds importHandler,lambdaArgs,listeners,locale,map,resolved
 
 CLSS public abstract javax.el.Expression
 cons public init()
@@ -1046,6 +1054,7 @@ meth public abstract boolean isLiteralText()
 meth public abstract int hashCode()
 meth public abstract java.lang.String getExpressionString()
 supr java.lang.Object
+hfds serialVersionUID
 
 CLSS public abstract javax.el.ExpressionFactory
 cons public init()
@@ -1053,6 +1062,8 @@ meth public abstract java.lang.Object coerceToType(java.lang.Object,java.lang.Cl
 meth public abstract javax.el.MethodExpression createMethodExpression(javax.el.ELContext,java.lang.String,java.lang.Class<?>,java.lang.Class<?>[])
 meth public abstract javax.el.ValueExpression createValueExpression(java.lang.Object,java.lang.Class<?>)
 meth public abstract javax.el.ValueExpression createValueExpression(javax.el.ELContext,java.lang.String,java.lang.Class<?>)
+meth public java.util.Map<java.lang.String,java.lang.reflect.Method> getInitFunctionMap()
+meth public javax.el.ELResolver getStreamELResolver()
 meth public static javax.el.ExpressionFactory newInstance()
 meth public static javax.el.ExpressionFactory newInstance(java.util.Properties)
 supr java.lang.Object
@@ -1060,14 +1071,18 @@ supr java.lang.Object
 CLSS public abstract javax.el.FunctionMapper
 cons public init()
 meth public abstract java.lang.reflect.Method resolveFunction(java.lang.String,java.lang.String)
+meth public void mapFunction(java.lang.String,java.lang.String,java.lang.reflect.Method)
 supr java.lang.Object
 
 CLSS public abstract javax.el.MethodExpression
 cons public init()
 meth public abstract java.lang.Object invoke(javax.el.ELContext,java.lang.Object[])
 meth public abstract javax.el.MethodInfo getMethodInfo(javax.el.ELContext)
+meth public boolean isParametersProvided()
 meth public boolean isParmetersProvided()
+ anno 0 java.lang.Deprecated()
 supr javax.el.Expression
+hfds serialVersionUID
 
 CLSS public abstract javax.el.ValueExpression
 cons public init()
@@ -1078,6 +1093,7 @@ meth public abstract java.lang.Object getValue(javax.el.ELContext)
 meth public abstract void setValue(javax.el.ELContext,java.lang.Object)
 meth public javax.el.ValueReference getValueReference(javax.el.ELContext)
 supr javax.el.Expression
+hfds serialVersionUID
 
 CLSS public abstract javax.el.VariableMapper
 cons public init()

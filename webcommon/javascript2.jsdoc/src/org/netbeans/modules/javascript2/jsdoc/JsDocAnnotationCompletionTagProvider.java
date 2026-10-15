@@ -18,7 +18,8 @@
  */
 package org.netbeans.modules.javascript2.jsdoc;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.netbeans.modules.javascript2.doc.spi.AnnotationCompletionTag;
 import org.netbeans.modules.javascript2.doc.spi.AnnotationCompletionTagProvider;
@@ -36,13 +37,14 @@ import org.netbeans.modules.javascript2.jsdoc.model.JsDocElementType;
  */
 public class JsDocAnnotationCompletionTagProvider extends AnnotationCompletionTagProvider {
 
-    List<AnnotationCompletionTag> annotations = null;
+    private List<AnnotationCompletionTag> annotations;
 
     public JsDocAnnotationCompletionTagProvider(String name) {
         super(name);
     }
 
     @Override
+    @SuppressWarnings("ReturnOfCollectionOrArrayField") // List is build as unmodifiable List
     public synchronized List<AnnotationCompletionTag> getAnnotations() {
         if (annotations == null) {
             initAnnotations();
@@ -51,7 +53,7 @@ public class JsDocAnnotationCompletionTagProvider extends AnnotationCompletionTa
     }
 
     private void initAnnotations() {
-        annotations = new LinkedList<AnnotationCompletionTag>();
+        List<AnnotationCompletionTag> annotationsBuilder = new ArrayList<>(JsDocElementType.values().length);
         for (JsDocElementType type : JsDocElementType.values()) {
             if (type == JsDocElementType.UNKNOWN || type == JsDocElementType.CONTEXT_SENSITIVE) {
                 continue;
@@ -59,27 +61,28 @@ public class JsDocAnnotationCompletionTagProvider extends AnnotationCompletionTa
 
             switch (type.getCategory()) {
                 case ASSIGN:
-                    annotations.add(new AssingTag(type.toString()));
+                    annotationsBuilder.add(new AssingTag(type.toString()));
                     break;
                 case DECLARATION:
-                    annotations.add(new TypeSimpleTag(type.toString()));
+                    annotationsBuilder.add(new TypeSimpleTag(type.toString()));
                     break;
                 case DESCRIPTION:
-                    annotations.add(new DescriptionTag(type.toString()));
+                    annotationsBuilder.add(new DescriptionTag(type.toString()));
                     break;
                 case LINK:
-                    annotations.add(new LinkTag(type.toString()));
+                    annotationsBuilder.add(new LinkTag(type.toString()));
                     break;
                 case NAMED_PARAMETER:
-                    annotations.add(new TypeNamedTag(type.toString()));
+                    annotationsBuilder.add(new TypeNamedTag(type.toString()));
                     break;
                 case UNNAMED_PARAMETER:
-                    annotations.add(new TypeDescribedTag(type.toString()));
+                    annotationsBuilder.add(new TypeDescribedTag(type.toString()));
                     break;
                 default:
-                    annotations.add(new AnnotationCompletionTag(type.toString(), type.toString()));
+                    annotationsBuilder.add(new AnnotationCompletionTag(type.toString(), type.toString()));
                     break;
             }
         }
+        annotations = Collections.unmodifiableList(annotationsBuilder);
     }
 }

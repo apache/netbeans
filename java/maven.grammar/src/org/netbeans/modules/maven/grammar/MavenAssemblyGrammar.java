@@ -27,7 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.project.MavenProject;
-import org.jdom.Element;
+import org.jdom2.Element;
 import org.netbeans.modules.maven.grammar.spi.AbstractSchemaBasedGrammar;
 import org.netbeans.modules.xml.api.model.GrammarEnvironment;
 import org.netbeans.modules.xml.api.model.GrammarResult;
@@ -86,7 +86,7 @@ public class MavenAssemblyGrammar extends AbstractSchemaBasedGrammar {
                     scope = "runtime"; //NOI18N
                 }
                 scope = scope.trim();
-                Iterator it;
+                Iterator<Dependency> it;
                 if ("runtime".equals(scope)) { //NOI18N
                     it = project.getRuntimeDependencies().iterator();
                 } else if ("test".equals(scope)) { //NOI18N
@@ -98,7 +98,7 @@ public class MavenAssemblyGrammar extends AbstractSchemaBasedGrammar {
                     it = project.getRuntimeDependencies().iterator();
                 }
                 while (it.hasNext()) {
-                    Dependency elem = (Dependency) it.next();
+                    Dependency elem = it.next();
                     String str = elem.getGroupId() + ":" + elem.getArtifactId(); //NOI18N
                     if (str.startsWith(virtualTextCtx.getCurrentPrefix())) {
                         toRet.add(new MyTextElement(str, virtualTextCtx.getCurrentPrefix()));

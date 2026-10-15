@@ -32,13 +32,14 @@ import java.io.ObjectOutputStream;
 public class MainCallback {
     public static void main(String[] args) throws IOException {
         File userDir = new File(System.getProperty("netbeans.user"));
-        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(userDir, "args")));
-        oos.writeObject(args);
-        oos.close();
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(userDir, "args")))) {
+            oos.writeObject(args);
+        }
     }
 
     public static String[] getArgs(File userDir) throws IOException, ClassNotFoundException {
-        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(userDir, "args")));
-        return (String[])ois.readObject();
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(userDir, "args")))) {
+            return (String[])ois.readObject();
+        }
     }
 }

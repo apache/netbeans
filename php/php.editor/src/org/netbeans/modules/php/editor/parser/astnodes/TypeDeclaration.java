@@ -20,18 +20,24 @@ package org.netbeans.modules.php.editor.parser.astnodes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * Represents base class for class declaration and interface declaration
+ * Represents base class for class declaration and interface declaration.
  */
-public abstract class TypeDeclaration extends Statement {
+public abstract class TypeDeclaration extends Statement implements Attributed {
 
     private Identifier name;
-    private ArrayList<Expression> interfaces = new ArrayList<>();
+    private final ArrayList<Expression> interfaces = new ArrayList<>();
     private Block body;
+    private final List<Attribute> attributes;
 
     public TypeDeclaration(int start, int end, final Identifier name, final Expression[] interfaces, final Block body) {
+        this(start, end, name, interfaces, body, Collections.emptyList());
+    }
+
+    public TypeDeclaration(int start, int end, final Identifier name, final Expression[] interfaces, final Block body, List<Attribute> attributes) {
         super(start, end);
 
         if (name == null || body == null) {
@@ -44,10 +50,12 @@ public abstract class TypeDeclaration extends Statement {
         if (interfaces != null) {
             this.interfaces.addAll(Arrays.asList(interfaces));
         }
+        this.attributes = attributes;
     }
 
     /**
-     * The body component of this type declaration node
+     * The body component of this type declaration node.
+     *
      * @return body component of this type declaration node
      */
     public Block getBody() {
@@ -55,7 +63,8 @@ public abstract class TypeDeclaration extends Statement {
     }
 
     /**
-     * The name of the type declaration node
+     * The name of the type declaration node.
+     *
      * @return name of the type declaration node
      */
     public Identifier getName() {
@@ -63,19 +72,61 @@ public abstract class TypeDeclaration extends Statement {
     }
 
     /**
-     * List of interfaces that this type implements / extends
+     * List of interfaces that this type implements / extends.
+     *
+     * @return interfaces
+     * @deprecated instead, use {@link #getInterfaces()}
      */
+    @Deprecated
     public List<Expression> getInterfaes() {
-        return this.interfaces;
+        return getInterfaces();
+    }
+
+    /**
+     * List of interfaces that this type implements / extends.
+     *
+     * @return interfaces
+     * @since 2.34.0
+     */
+    public List<Expression> getInterfaces() {
+        return Collections.unmodifiableList(interfaces);
+    }
+
+    /**
+     * Get attributes(#[A('param')]).
+     *
+     * e.g.
+     * <pre>
+     * #[A1(1)]
+     * #[A2(2)]
+     * #[A3(3)]
+     * class Foo {}
+     *
+     * #[A1]
+     * interface MyInterface {}
+     * </pre>
+     *
+     * @return attributes
+     */
+    @Override
+    public List<Attribute> getAttributes() {
+        return Collections.unmodifiableList(attributes);
+    }
+
+    @Override
+    public boolean isAttributed() {
+        return !attributes.isEmpty();
     }
 
     @Override
     public String toString() {
+        StringBuilder sbAttributes = new StringBuilder();
+        getAttributes().forEach(attribute -> sbAttributes.append(attribute).append(" ")); // NOI18N
         StringBuilder sb = new StringBuilder();
-        for (Expression expression : getInterfaes()) {
+        for (Expression expression : getInterfaces()) {
             sb.append(expression).append(","); //NOI18N
         }
-        return getName() + (sb.length() > 0 ? " " + sb.toString() : " ") + getBody(); //NOI18N
+        return sbAttributes.toString() + getName() + (sb.length() > 0 ? " " + sb.toString() : " ") + getBody(); //NOI18N
     }
 
 }

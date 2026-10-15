@@ -67,7 +67,7 @@ import org.openide.util.NbBundle;
  *
  * @author Jan lahoda
  */
-public final class CreateMethodFix implements Fix {
+public final class CreateMethodFix extends ModificationResultBasedFix implements Fix {
     
     private FileObject targetFile;
     private ElementHandle<TypeElement> target;
@@ -134,7 +134,8 @@ public final class CreateMethodFix implements Fix {
         
         this.methodDisplayName = methodDisplayName.toString();
     }
-    
+
+    @Override
     public String getText() {
         if(target.getKind() == ElementKind.ANNOTATION_TYPE)
             return NbBundle.getMessage(CreateMethodFix.class, "LBL_FIX_Create_Annotation_Element", methodDisplayName, inFQN );
@@ -144,17 +145,25 @@ public final class CreateMethodFix implements Fix {
             return NbBundle.getMessage(CreateMethodFix.class, "LBL_FIX_Create_Constructor", methodDisplayName, inFQN );
         }
     }
+
+    // tag used for selection
+    final String methodBodyTag = "mbody"; //NOI18N
     
+    @Override
     public ChangeInfo implement() throws IOException {
+        ModificationResult diff = getModificationResult();
+        return Utilities.commitAndComputeChangeInfo(targetFile, diff, methodBodyTag);
+    }
+
+    @Override
+    public ModificationResult getModificationResult() throws IOException {
         //use the original cp-info so it is "sure" that the proposedType can be resolved:
         JavaSource js = JavaSource.create(cpInfo, targetFile);
         if (js == null) {
             return null;
         }
-        // tag used for selection
-        final String methodBodyTag = "mbody"; //NOI18N
         
-        ModificationResult diff = js.runModificationTask(new Task<WorkingCopy>() {
+        return js.runModificationTask(new Task<WorkingCopy>() {
             public void run(final WorkingCopy working) throws IOException {
                 working.toPhase(Phase.RESOLVED);
                 TypeElement targetType = target.resolve(working);
@@ -236,8 +245,6 @@ public final class CreateMethodFix implements Fix {
                 working.rewrite(targetTree.getLeaf(), decl);
             }
         });
-        
-        return Utilities.commitAndComputeChangeInfo(targetFile, diff, methodBodyTag);
     }
     
     private void addArguments(CompilationInfo info, StringBuilder value) {

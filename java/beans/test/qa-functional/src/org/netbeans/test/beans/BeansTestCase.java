@@ -118,7 +118,7 @@ public class BeansTestCase extends JellyTestCase {
                     path.add(0,actNode);
                     actNode = actNode.getParent();
                 }
-                TreeNode[] res = path.toArray(new TreeNode[path.size()]);                
+                TreeNode[] res = path.toArray(new TreeNode[0]);                
                 return new TreePath(res);
             }
             final Enumeration children = actNode.children();            

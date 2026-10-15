@@ -401,11 +401,11 @@ public class PathRegistryTest extends IndexingTestBase {
 
     public void testBinaryPath () throws Exception {
         Set<ClassPath> cps = GlobalPathRegistry.getDefault().getPaths(FOO_SOURCES);
-        GlobalPathRegistry.getDefault().unregister(FOO_SOURCES, cps.toArray(new ClassPath[cps.size()]));
+        GlobalPathRegistry.getDefault().unregister(FOO_SOURCES, cps.toArray(new ClassPath[0]));
         cps = GlobalPathRegistry.getDefault().getPaths(FOO_PLATFORM);
-        GlobalPathRegistry.getDefault().unregister(FOO_PLATFORM, cps.toArray(new ClassPath[cps.size()]));
+        GlobalPathRegistry.getDefault().unregister(FOO_PLATFORM, cps.toArray(new ClassPath[0]));
         cps = GlobalPathRegistry.getDefault().getPaths(FOO_BINARY);
-        GlobalPathRegistry.getDefault().unregister(FOO_BINARY, cps.toArray(new ClassPath[cps.size()]));
+        GlobalPathRegistry.getDefault().unregister(FOO_BINARY, cps.toArray(new ClassPath[0]));
         Collection<? extends URL> sources = PathRegistry.getDefault().getSources();
         Collection<? extends URL> binaryLibraries = PathRegistry.getDefault().getBinaryLibraries();
         assertEquals (0,sources.size());
@@ -603,8 +603,8 @@ public class PathRegistryTest extends IndexingTestBase {
 
     public static class SFBQImpl implements SourceForBinaryQueryImplementation {
 
-        final static Map<URL,FileObject> map = new HashMap<URL,FileObject> ();
-        final static Map<URL,Result> results = new HashMap<URL,Result> ();
+        static final Map<URL,FileObject> map = new HashMap<URL,FileObject> ();
+        static final Map<URL,Result> results = new HashMap<URL,Result> ();
 
         public SFBQImpl () {
 
@@ -681,7 +681,7 @@ public class PathRegistryTest extends IndexingTestBase {
             private void fireChange () {
                 ChangeListener[] _listeners;
                 synchronized (this) {
-                    _listeners = this.listeners.toArray(new ChangeListener[this.listeners.size()]);
+                    _listeners = this.listeners.toArray(new ChangeListener[0]);
                 }
                 ChangeEvent event = new ChangeEvent (this);
                 for (ChangeListener l : _listeners) {
@@ -694,7 +694,7 @@ public class PathRegistryTest extends IndexingTestBase {
 
     public static class DeadLockSFBQImpl implements SourceForBinaryQueryImplementation {
 
-        private final static Object lock = new String ("Lock");
+        private static final Object lock = new String ("Lock");
 
         public DeadLockSFBQImpl () {
         }

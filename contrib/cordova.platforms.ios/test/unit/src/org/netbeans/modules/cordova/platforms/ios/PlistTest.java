@@ -49,7 +49,7 @@ public class PlistTest {
 
 class Tabs {
 
-    private HashMap<String, TabDescriptor> map = new HashMap();
+    private HashMap<String, TabDescriptor> map = new HashMap<>();
 
     public void update(InputStream is) throws Exception {
         NSDictionary root = (NSDictionary) XMLPropertyListParser.parse(is);

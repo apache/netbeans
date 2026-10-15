@@ -58,10 +58,11 @@ public class CallStackActionsProvider implements NodeActionsProvider {
     
     private JPDADebugger    debugger;
     private ContextProvider lookupProvider;
-    private Action          POP_TO_HERE_ACTION;
-    private Action          MAKE_CURRENT_ACTION;
-    private Action          COPY_TO_CLBD_ACTION;
-    private Action          GO_TO_SOURCE_ACTION;
+    private final Action POP_TO_HERE_ACTION;
+    private final Action MAKE_CURRENT_ACTION;
+    private final Action COPY_TO_CLBD_ACTION;
+    private final Action GO_TO_SOURCE_ACTION;
+    private final Action ADD_BREAKPOINT_ACTION;
 
 
     public CallStackActionsProvider (ContextProvider lookupProvider) {
@@ -72,6 +73,7 @@ public class CallStackActionsProvider implements NodeActionsProvider {
         MAKE_CURRENT_ACTION = createMAKE_CURRENT_ACTION(requestProcessor);
         COPY_TO_CLBD_ACTION = createCOPY_TO_CLBD_ACTION(requestProcessor);
         GO_TO_SOURCE_ACTION = DebuggingActionsProvider.createGO_TO_SOURCE_ACTION(requestProcessor);
+        ADD_BREAKPOINT_ACTION = DebuggingActionsProvider.createBREAKPOINT(requestProcessor);
     }
     
 
@@ -133,12 +135,14 @@ public class CallStackActionsProvider implements NodeActionsProvider {
             return new Action [] {
                 MAKE_CURRENT_ACTION,
                 POP_TO_HERE_ACTION,
+                ADD_BREAKPOINT_ACTION,
                 GO_TO_SOURCE_ACTION,
                 COPY_TO_CLBD_ACTION
             };
         } else {
             return new Action [] {
                 MAKE_CURRENT_ACTION,
+                ADD_BREAKPOINT_ACTION,
                 GO_TO_SOURCE_ACTION,
                 COPY_TO_CLBD_ACTION
             };

@@ -24,12 +24,10 @@ package org.netbeans.modules.payara.tooling.data;
  * @author Tomas Kraus, Peter Benedikovic
  * @deprecated IDE context support was removed. DO NOT USE!
  */
+@Deprecated
 public class IdeContext {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs IDE context object and sets IDE accessors.
      * <p/>

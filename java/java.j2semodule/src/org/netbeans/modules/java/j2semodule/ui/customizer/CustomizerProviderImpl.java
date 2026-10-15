@@ -63,7 +63,7 @@ public class CustomizerProviderImpl implements CustomizerProvider3, ProjectShara
     private final ReferenceHelper refHelper;
     private final GeneratedFilesHelper genFileHelper;
 
-    private RequestProcessor rp = new RequestProcessor("customizer init",1);;
+    private RequestProcessor rp = new RequestProcessor("customizer init",1);
     
     private static final String CUSTOMIZER_FOLDER_PATH = "Projects/org-netbeans-modules-java-j2semodule/Customizer"; //NO18N
     

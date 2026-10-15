@@ -24,23 +24,23 @@ import org.openide.util.Parameters;
 
 /**
  * The FoldInfo encapsulates the information passed to the
- * {@link FoldOperation#addToHierarchy(org.netbeans.api.editor.fold.FoldType, int, int, org.netbeans.api.editor.fold.FoldTemplate, boolean, java.lang.Object, org.netbeans.spi.editor.fold.FoldHierarchyTransaction).
+ * {@link FoldOperation#addToHierarchy(FoldType, int, int, Boolean, FoldTemplate, String, Object, FoldHierarchyTransaction)}.
  * Set of FoldInfos can be then applied to the FoldHieararchy, creating new, and removing obsolete Folds, so that 
  * Folds which prevail remain in the hierarchy. The mandatory information is start and end of the fold, and the {@link FoldType}.
  * If necessary, a {@link FoldTemplate} attached to the FoldType can be overriden for the specific Fold instance. Note though, that
  * if the FoldTemplate instance changes with the next fold update, the Fold may fire change events.
- * <p/>
+ * <p>
  * Ultimately, it is possible to hand-override the Fold's description from the FoldTemplate provided value.
- * <p/>
+ * <p>
  * If the FoldInfo is used to update an existing Fold, the or the FoldTemplate's properties 
  * collapsed state are  updated to the existing Fold instance. Appropriate fold change event is fired. It is not possible
  * to change the type of the fold.
- * <p/>
+ * <p>
  * Initial folding state can be specified, for the case the fold will be created (it does not exist). If unspecified,
  * the infrastructure can assign an appropriate state based on e.g. user preferences. Collapsed state is never changed
  * for existing folds, even though FoldInfo specifies a value.
  * 
- * Use {@link FoldUtilities#update} to perform the process.
+ * Use {@link org.netbeans.api.editor.fold.FoldUtilities} to perform the process.
  * 
  * @author sdedic
  */
@@ -145,7 +145,7 @@ public final class FoldInfo {
     
     /**
      * Attaches custom extra info to the fold.
-     * The extra info will be available from {@link org.netbeans.api.editor.fold.Fold#getExtraInfo.
+     * The extra info will be available from {@code org.netbeans.api.editor.fold.Fold#getExtraInfo()}.
      * 
      * @param extraInfo custom data
      * @return this instance

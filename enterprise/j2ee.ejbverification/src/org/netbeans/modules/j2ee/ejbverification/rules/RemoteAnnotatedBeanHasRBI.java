@@ -61,7 +61,8 @@ public final class RemoteAnnotatedBeanHasRBI {
         final List<ErrorDescription> problems = new ArrayList<>();
         final EJBProblemContext ctx = HintsUtils.getOrCacheContext(hintContext);
         if (ctx != null && ctx.getEjb() instanceof Session) {
-            if (JavaUtils.hasAnnotation(ctx.getClazz(), EJBAPIAnnotations.REMOTE)) {
+            if (JavaUtils.hasAnnotation(ctx.getClazz(), EJBAPIAnnotations.REMOTE)
+                    || JavaUtils.hasAnnotation(ctx.getClazz(), EJBAPIAnnotations.REMOTE_JAKARTA)) {
                 if (ctx.getEjbData().getBusinessRemote().length == 0) {
                     ErrorDescription err = HintsUtils.createProblem(
                             ctx.getClazz(),

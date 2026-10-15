@@ -148,4 +148,80 @@ public class StringUtilsTest extends NbTestCase {
         }
     }
 
+    public void testTruncate() {
+        String string = "0123456789";
+        int length = string.length(); // 10
+
+        assertEquals(string, StringUtils.truncate(string, 0, 0, "..."));
+        assertEquals(string, StringUtils.truncate(string, 0, 2, "..."));
+
+        assertEquals("...", StringUtils.truncate(string, 0, 3, "..."));
+        assertEquals("...", StringUtils.truncate(string, 0, -7, "..."));
+
+        assertEquals("0...", StringUtils.truncate(string, 0, 4, "..."));
+        assertEquals("0...", StringUtils.truncate(string, 0, 4, null));
+        assertEquals("0...", StringUtils.truncate(string, 0, -6, "..."));
+        assertEquals("0...", StringUtils.truncate(string, 0, -6, null));
+
+        assertEquals("1...", StringUtils.truncate(string, 1, 4, "..."));
+        assertEquals("1...", StringUtils.truncate(string, -9, 4, "..."));
+        assertEquals("1...", StringUtils.truncate(string, 1, -5, "..."));
+        assertEquals("1...", StringUtils.truncate(string, -9, -5, "..."));
+
+        assertEquals("01234...", StringUtils.truncate(string, 0, 8, "..."));
+        assertEquals("01234...", StringUtils.truncate(string, 0, -2, "..."));
+
+        assertEquals("123456789", StringUtils.truncate(string, 1, 9, "..."));
+        assertEquals("123456789", StringUtils.truncate(string, -9, 9, "..."));
+
+        assertEquals("12345...", StringUtils.truncate(string, 1, 8, "..."));
+        assertEquals("12345...", StringUtils.truncate(string, -9, 8, "..."));
+        assertEquals("12345...", StringUtils.truncate(string, 1, -1, "..."));
+        assertEquals("12345...", StringUtils.truncate(string, -9, -1, "..."));
+
+        assertEquals(string, StringUtils.truncate(string, 0, length, "..."));
+        assertEquals(string, StringUtils.truncate(string, 0, length + 1, "..."));
+
+        assertEquals("123456789", StringUtils.truncate(string, 1, length + 1, "..."));
+        assertEquals("123456789", StringUtils.truncate(string, -9, length + 1, "..."));
+
+        assertEquals("9", StringUtils.truncate(string, 9, 3, "..."));
+        assertEquals("9", StringUtils.truncate(string, -1, 3, "..."));
+
+        assertEquals(string, StringUtils.truncate(string, -length - 1, 3, "..."));
+        assertEquals(string, StringUtils.truncate(string, 0, -length -1, "..."));
+
+        assertEquals("", StringUtils.truncate(string, 0, 0, ""));
+        assertEquals("012", StringUtils.truncate(string, 0, 3, ""));
+        assertEquals("012", StringUtils.truncate(string, 0, -7, ""));
+
+        assertEquals("23456", StringUtils.truncate(string, 2, 5, ""));
+        assertEquals("23456", StringUtils.truncate(string, -8, 5, ""));
+        assertEquals("23456", StringUtils.truncate(string, 2, -3, ""));
+        assertEquals("23456", StringUtils.truncate(string, -8, -3, ""));
+
+        assertEquals("012345678", StringUtils.truncate(string, 0, length - 1, ""));
+        assertEquals(string, StringUtils.truncate(string, 0, length, ""));
+        assertEquals(string, StringUtils.truncate(string, 0, length + 1, ""));
+
+        assertEquals("", StringUtils.truncate("", 0, 0, "..."));
+        assertEquals("", StringUtils.truncate("", 0, 3, "..."));
+        assertEquals("", StringUtils.truncate("", 0, 4, "..."));
+        assertEquals("", StringUtils.truncate("", 0, -1, "..."));
+        assertEquals("", StringUtils.truncate("", 1, 0, "..."));
+        assertEquals("", StringUtils.truncate("", 1, -1, "..."));
+        assertEquals("", StringUtils.truncate("", -1, 0, "..."));
+        assertEquals("", StringUtils.truncate("", -1, 1, "..."));
+        assertEquals("", StringUtils.truncate("", -1, -1, "..."));
+
+        assertEquals("", StringUtils.truncate("", 0, 0, ""));
+        assertEquals("", StringUtils.truncate("", 0, 3, ""));
+        assertEquals("", StringUtils.truncate("", 0, 4, ""));
+        assertEquals("", StringUtils.truncate("", 0, -1, ""));
+        assertEquals("", StringUtils.truncate("", 1, 0, ""));
+        assertEquals("", StringUtils.truncate("", 1, -1, ""));
+        assertEquals("", StringUtils.truncate("", -1, 0, ""));
+        assertEquals("", StringUtils.truncate("", -1, 1, ""));
+        assertEquals("", StringUtils.truncate("", -1, -1, ""));
+    }
 }

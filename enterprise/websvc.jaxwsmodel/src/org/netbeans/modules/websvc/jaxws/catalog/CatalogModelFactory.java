@@ -47,7 +47,7 @@ public class CatalogModelFactory extends AbstractModelFactory<CatalogModel> {
             "<catalog xmlns=\"urn:oasis:names:tc:entity:xmlns:xml:catalog\" prefer=\"system\"/>";
     
     public CatalogModel getModel(ModelSource source) {
-        Document doc = (Document) source.getLookup().lookup(Document.class);
+        Document doc = source.getLookup().lookup(Document.class);
         if( (doc != null) && doc.getLength() <= 5){
             //means the catalog file is empty now
             try {
@@ -58,7 +58,7 @@ public class CatalogModelFactory extends AbstractModelFactory<CatalogModel> {
             }
         }
         
-        CatalogModel cm =(CatalogModel) super.getModel(source);
+        CatalogModel cm = super.getModel(source);
         try {
             cm.sync();
         } catch (IOException ex) {

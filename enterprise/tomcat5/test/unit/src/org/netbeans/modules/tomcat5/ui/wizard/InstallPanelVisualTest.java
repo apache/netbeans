@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.tomcat5.ui.wizard;
 
-import org.netbeans.modules.tomcat5.ui.wizard.InstallPanelVisual;
 import java.io.File;
 import junit.textui.TestRunner;
 import org.netbeans.junit.NbTestCase;
@@ -45,6 +44,7 @@ public class InstallPanelVisualTest extends NbTestCase {
         return suite;
     }
     
+    @Override
     protected void setUp() throws Exception {
         super.setUp ();
         datadir = getDataDir();

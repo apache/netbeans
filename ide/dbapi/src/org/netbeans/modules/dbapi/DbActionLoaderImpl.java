@@ -47,8 +47,8 @@ public class DbActionLoaderImpl implements DbActionLoader {
         Collection providers = Lookups.forPath(ACTION_PROVIDER_PATH).
                 lookupAll(ActionProvider.class);
         
-        for (Iterator i = providers.iterator(); i.hasNext();) {
-            ActionProvider provider = (ActionProvider)i.next();
+        for (Iterator<ActionProvider> i = providers.iterator(); i.hasNext();) {
+            ActionProvider provider = i.next();
             List<Action> actionList = provider.getActions();
             if (actionList != null) {
                 actions.addAll(actionList);

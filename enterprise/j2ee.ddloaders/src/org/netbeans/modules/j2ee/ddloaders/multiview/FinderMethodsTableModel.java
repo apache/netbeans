@@ -56,7 +56,7 @@ public class FinderMethodsTableModel extends QueryMethodsTableModel {
             case 0:
                 return queryMethodHelper.getQueryMethod().getMethodName();
             case 1:
-                return new Boolean(queryMethodHelper.returnsCollection());
+                return queryMethodHelper.returnsCollection();
             case 2:
                 return queryMethodHelper.getResultInterface();
             case 3:

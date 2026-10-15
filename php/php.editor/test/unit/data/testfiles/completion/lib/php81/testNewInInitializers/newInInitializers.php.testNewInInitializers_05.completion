@@ -1,0 +1,12 @@
+Code completion result for source line:
+function func1($param = |new Func) {}
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Constant                        [PUBLIC]   newInInitializers.php
+CLASS      Foo                             [PUBLIC]   newInInitializers.php
+CLASS      Func                            [PUBLIC]   newInInitializers.php
+CLASS      StaticVariable                  [PUBLIC]   newInInitializers.php
+CLASS      Test                            [PUBLIC]   newInInitializers.php
+CONSTANT   CONSTANT ?                      [PUBLIC]   newInInitializers.php
+------------------------------------
+KEYWORD    array                                      null
+KEYWORD    new                                        null

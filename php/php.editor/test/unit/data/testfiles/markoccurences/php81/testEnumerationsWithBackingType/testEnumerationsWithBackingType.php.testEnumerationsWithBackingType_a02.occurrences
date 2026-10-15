@@ -1,0 +1,2 @@
+    case |>MARK_OCCURRENCES:CASE1<| = 1;
+            static::|>MARK_OCCURRENCES:CAS^E1<| => 'Case1',

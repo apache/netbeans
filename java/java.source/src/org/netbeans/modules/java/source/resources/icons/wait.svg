@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #7f6746;
+      }
+
+      .st1 {
+        fill: #dbc2a0;
+      }
+
+      .st2 {
+        fill: #d8b891;
+      }
+
+      .st3 {
+        fill: #e9f1ff;
+      }
+
+      .st4 {
+        fill: #d8a525;
+      }
+
+      .st5 {
+        fill: #556574;
+      }
+    </style>
+  </defs>
+  <g>
+    <path class="st3" d="M5.492,12.5c.02-1.017.259-3.444,2.028-4.579.143-.092.23-.25.23-.421s-.087-.329-.23-.421c-1.77-1.135-2.009-3.562-2.028-4.579h6.017c-.02,1.017-.259,3.444-2.028,4.579-.143.092-.23.25-.23.421s.087.329.23.421c1.77,1.135,2.009,3.562,2.028,4.579h-6.017Z"/>
+    <path class="st5" d="M10.983,3c-.087,1.074-.441,2.804-1.773,3.658-.287.184-.46.501-.46.842s.173.658.46.842c1.332.854,1.686,2.585,1.773,3.658h-4.967c.087-1.074.441-2.804,1.773-3.658.287-.184.46-.501.46-.842s-.173-.658-.46-.842c-1.332-.854-1.686-2.585-1.773-3.658h4.967M12,2h-7s-.296,3.868,2.25,5.5c-2.546,1.632-2.25,5.5-2.25,5.5h7s.296-3.868-2.25-5.5c2.546-1.632,2.25-5.5,2.25-5.5h0Z"/>
+  </g>
+  <g>
+    <rect class="st1" x="4.5" y="12.5" width="8" height="2"/>
+    <path class="st0" d="M12,13v1h-7v-1h7M13,12H4v3h9v-3h0Z"/>
+  </g>
+  <g>
+    <rect class="st2" x="4.5" y=".5" width="8" height="2"/>
+    <path class="st0" d="M12,1v1h-7v-1h7M13,0H4v3h9V0h0Z"/>
+  </g>
+  <path class="st4" d="M9,10c-.287-.184-.25-2.159-.25-2.5s.173-.658.46-.842c.786-.504,1.226-1.313,1.477-2.113-.671.291-1.41.455-2.188.455s-1.517-.164-2.188-.455c.251.799.691,1.609,1.477,2.113.287.184.46.501.46.842s.037,3.316-.25,3.5c-1.332.854-1.896-.074-1.983,1h4.967c-.087-1.073-.651-1.146-1.984-2Z"/>
+  <description>Apache NetBeans Logo
+  </description>
+</svg>

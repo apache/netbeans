@@ -21,6 +21,7 @@ package org.netbeans.modules.xml.multiview.ui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
 
 /**
  * TreePanelView.java
@@ -30,7 +31,7 @@ import java.awt.*;
  */
 public class TreePanelView extends PanelView {
 
-    java.util.HashMap map;
+    HashMap<String, TreePanel> map;
     JPanel cardPanel;
     CardLayout cardLayout;
     public TreePanelView() {
@@ -41,7 +42,7 @@ public class TreePanelView extends PanelView {
         setLayout(new BorderLayout());
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
-        map = new java.util.HashMap();
+        map = new HashMap<>();
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setViewportView(cardPanel);
         add (scrollPane, BorderLayout.CENTER);
@@ -56,7 +57,7 @@ public class TreePanelView extends PanelView {
     
     protected void showPanel(TreeNode node) {
         String panelId = node.getPanelId();
-        TreePanel treePanel = (TreePanel)map.get(panelId);
+        TreePanel treePanel = map.get(panelId);
         if (treePanel==null) {
             treePanel = node.getPanel();
             map.put(panelId,treePanel);

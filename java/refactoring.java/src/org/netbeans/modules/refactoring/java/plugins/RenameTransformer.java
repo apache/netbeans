@@ -59,6 +59,7 @@ import org.netbeans.modules.refactoring.java.spi.RefactoringVisitor;
 public class RenameTransformer extends RefactoringVisitor {
 
     private final Set<ElementHandle<ExecutableElement>> allMethods;
+    private final Set<TreePathHandle> recordLinkedDeclarations;
     private final TreePathHandle handle;
     private final DocTreePathHandle docHandle;
     private final String newName;
@@ -68,13 +69,14 @@ public class RenameTransformer extends RefactoringVisitor {
     private Map<ImportTree, ImportTree> imports;
     private List<ImportTree> newImports;
 
-    public RenameTransformer(TreePathHandle handle, DocTreePathHandle docHandle, RenameRefactoring refactoring, Set<ElementHandle<ExecutableElement>> am, boolean renameInComments) {
+    public RenameTransformer(TreePathHandle handle, DocTreePathHandle docHandle, RenameRefactoring refactoring, Set<ElementHandle<ExecutableElement>> am, Set<TreePathHandle> recordLinkedDeclarations, boolean renameInComments) {
         super(true);
         this.handle = handle;
         this.docHandle = docHandle;
         this.refactoring = refactoring;
         this.newName = refactoring.getNewName();
         this.allMethods = am;
+        this.recordLinkedDeclarations = recordLinkedDeclarations;
         this.renameInComments = renameInComments;
     }
 
@@ -197,6 +199,17 @@ public class RenameTransformer extends RefactoringVisitor {
         if (JavaPluginUtils.isSyntheticPath(workingCopy, path) || (handle != null && handle.getKind() == Tree.Kind.LABELED_STATEMENT)) {
             return;
         }
+        doRenameUsageIfMatch(getCurrentPath(), tree, elementToFind);
+        for (TreePathHandle h : recordLinkedDeclarations) {
+            Element linked = h.resolveElement(workingCopy);
+
+            if (linked != null) {
+                doRenameUsageIfMatch(getCurrentPath(), tree, linked);
+            }
+        }
+    }
+
+    private void doRenameUsageIfMatch(final TreePath path, Tree tree, Element elementToFind) {
         TreePath elementPath = path;
         Trees trees = workingCopy.getTrees();
         Element el = workingCopy.getTrees().getElement(elementPath);
@@ -254,17 +267,11 @@ public class RenameTransformer extends RefactoringVisitor {
             String useThis = null;
             String useSuper = null;
 
-            if (elementToFind!=null && elementToFind.getKind().isField()) {
+            if (elementToFind!=null && elementToFind.getKind().isField() && tree.getKind() == Tree.Kind.IDENTIFIER) {
                 Scope scope = workingCopy.getTrees().getScope(elementPath);
                 for (Element ele : scope.getLocalElements()) {
                     if ((ele.getKind() == ElementKind.LOCAL_VARIABLE || ele.getKind() == ElementKind.PARAMETER) 
                             && ele.getSimpleName().toString().equals(newName)) {
-                        if (tree.getKind() == Tree.Kind.MEMBER_SELECT) {
-                            String isThis = ((MemberSelectTree) tree).getExpression().toString();
-                            if (isThis.equals("this") || isThis.endsWith(".this")) { // NOI18N
-                                break;
-                            }
-                        }
                         if (elementToFind.getModifiers().contains(Modifier.STATIC)) {
                             useThis = elementToFind.getEnclosingElement().getSimpleName().toString() + ".";
                         } else {
@@ -279,7 +286,7 @@ public class RenameTransformer extends RefactoringVisitor {
                     }
                 }
             }
-            if (elementToFind!=null && elementToFind.getKind().isField() || elementToFind.getKind().equals(ElementKind.METHOD)) {
+            if (elementToFind!=null && elementToFind.getKind().isField() || elementToFind.getKind() == ElementKind.METHOD) {
                 Scope scope = workingCopy.getTrees().getScope(elementPath);
                 TypeElement enclosingTypeElement = scope.getEnclosingClass();
                 TypeMirror superclass = enclosingTypeElement==null ? null:enclosingTypeElement.getSuperclass();
@@ -307,7 +314,7 @@ public class RenameTransformer extends RefactoringVisitor {
                     } else if(elementToFind.getKind() == ElementKind.METHOD) {
                         ElementUtilities utils = workingCopy.getElementUtilities();
                         if(utils.alreadyDefinedIn((CharSequence) newName, (ExecutableType) elementToFind.asType(), (TypeElement) enclosingTypeElement)) {
-                            boolean isSuper = false;;
+                            boolean isSuper = false;
                             if (tree.getKind() == Tree.Kind.MEMBER_SELECT) {
                                 String superString = ((MemberSelectTree) tree).getExpression().toString();
                                 if (superString.equals("super") || superString.endsWith(".super")) { // NOI18N
@@ -397,14 +404,17 @@ public class RenameTransformer extends RefactoringVisitor {
         Element el = workingCopy.getTrees().getElement(currentPath);
         if (el != null && el.getEnclosedElements().contains(p)) {
             Trees trees = workingCopy.getTrees();
-            Scope scope = trees.getScope(trees.getPath(p));
-            shadowed = workingCopy.getElementUtilities().getLocalMembersAndVars(scope, new ElementUtilities.ElementAcceptor() {
+            TreePath pPath = trees.getPath(p);
+            if (pPath != null) { //may be null for synthetic record accessors
+                Scope scope = trees.getScope(pPath);
+                shadowed = workingCopy.getElementUtilities().getLocalMembersAndVars(scope, new ElementUtilities.ElementAcceptor() {
 
-                @Override
-                public boolean accept(Element element, TypeMirror type) {
-                    return !element.equals(p) && element.getKind().equals(p.getKind()) && element.getSimpleName().contentEquals(newName);
-                }
-            });
+                    @Override
+                    public boolean accept(Element element, TypeMirror type) {
+                        return !element.equals(p) && element.getKind() == p.getKind() && element.getSimpleName().contentEquals(newName);
+                    }
+                });
+            }
         }
         Tree value = super.visitClass(tree, p);
         shadowed = null;
@@ -427,6 +437,19 @@ public class RenameTransformer extends RefactoringVisitor {
         if (JavaPluginUtils.isSyntheticPath(workingCopy, path) || (handle != null && handle.getKind() == Tree.Kind.LABELED_STATEMENT)) {
             return;
         }
+
+        doRenameDeclIfMatch(path, tree, elementToFind);
+
+        for (TreePathHandle h : recordLinkedDeclarations) {
+            Element linked = h.resolveElement(workingCopy);
+
+            if (linked != null) {
+                doRenameDeclIfMatch(getCurrentPath(), tree, linked);
+            }
+        }
+    }
+
+    private void doRenameDeclIfMatch(TreePath path, Tree tree, Element elementToFind) {
         Element el = workingCopy.getTrees().getElement(path);
         if (el==null) {
             return;
@@ -537,7 +560,7 @@ public class RenameTransformer extends RefactoringVisitor {
 
         final String originalName = getOldSimpleName(parameter);
         final int methodStart = (int) workingCopy.getTrees().getSourcePositions()
-                .getStartPosition(workingCopy.getCompilationUnit(), method);
+                .getStartPosition(method);
         final TokenSequence<JavaTokenId> tokenSequence = workingCopy.getTokenHierarchy().tokenSequence(JavaTokenId.language());
 
         //renaming in comments before the method/constructor
@@ -553,7 +576,7 @@ public class RenameTransformer extends RefactoringVisitor {
 
         //renaming in comments within the method/constructor declaration and body
         final int methodEnd = (int) workingCopy.getTrees().getSourcePositions()
-                .getEndPosition(workingCopy.getCompilationUnit(), method);
+                .getEndPosition(method);
 
         tokenSequence.move(methodStart);
         while (tokenSequence.moveNext() && tokenSequence.offset() < methodEnd) {
@@ -612,6 +635,10 @@ public class RenameTransformer extends RefactoringVisitor {
                     return Boolean.TRUE;
                 }
                 return super.visitClass(node, p);
+            }
+            @Override
+            public Boolean reduce(Boolean r1, Boolean r2) {
+                return r1 != null ? r1 : r2;
             }
         };
         return Boolean.TRUE == duplicateIds.scan(workingCopy.getCompilationUnit(), newName);

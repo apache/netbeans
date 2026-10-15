@@ -45,7 +45,7 @@ public class GeneralGroovy extends JellyTestCase {
     static final String JAVA_CATEGORY_NAME = "Java";
     static final String GROOVY_CATEGORY_NAME = "Groovy";
     static final String JAVA_PROJECT_NAME = "Java Application";
-    static protected final int COMPLETION_LIST_THRESHOLD = 5000;
+    protected static final int COMPLETION_LIST_THRESHOLD = 5000;
     protected static final String GROOVY_EXTENSION = ".groovy";
     protected static final String SAMPLES = "Samples";
     protected static final String SAMPLES_CATEGORY = "Groovy";
@@ -149,7 +149,7 @@ public class GeneralGroovy extends JellyTestCase {
             int count = 0;
             while (!text.isEmpty() && count < 20) {
                 eo.pushKey(KeyEvent.VK_Z, KeyEvent.CTRL_MASK);
-                text = eo.getText(eo.getLineNumber() + iOffset).replace("\r\n", "").replace("\n", "");;
+                text = eo.getText(eo.getLineNumber() + iOffset).replace("\r\n", "").replace("\n", "");
                 log(">>" + text + "<<");
                 count++;
             }
@@ -350,7 +350,7 @@ public class GeneralGroovy extends JellyTestCase {
         opNewProjectWizard.next();
 
         JDialogOperator jdNew = new JDialogOperator("New");
-        JTextComponentOperator jtName = new JTextComponentOperator(jdNew, sampleName.replaceAll(" ", "").replaceAll("-", ""));
+        JTextComponentOperator jtName = new JTextComponentOperator(jdNew, sampleName.replace(" ", "").replace("-", ""));
         jtName.setText(projectName);
         opNewProjectWizard.finish();
         waitScanFinished();

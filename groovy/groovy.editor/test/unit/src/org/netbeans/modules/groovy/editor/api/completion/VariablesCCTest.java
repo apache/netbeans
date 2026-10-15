@@ -91,6 +91,30 @@ public class VariablesCCTest extends GroovyCCTestBase {
     public void testVariables2_5() throws Exception {
         checkCompletion(BASE + "Variables2.groovy", "            pa^", true);
     }
+    
+    public void testFields1_1() throws Exception {
+        checkCompletion(BASE + "Fields1.groovy", "        base.field^", true);
+    }
+    
+    public void testFields1_2() throws Exception {
+        checkCompletion(BASE + "Fields1.groovy", "        self.kolec^", true);
+    }
+    
+    public void testFields1_3() throws Exception {
+        checkCompletion(BASE + "Fields1.groovy", "text = \"${kolec^} and ${base.field} and ${self.field} and ${fiel}\"", true);
+    }
+    
+    public void testFields1_4() throws Exception {
+        checkCompletion(BASE + "Fields1.groovy", "text = \"${kolec} and ${base.field^} and ${self.field} and ${fiel}\"", true);
+    }
+    
+    public void testFields1_5() throws Exception {
+        checkCompletion(BASE + "Fields1.groovy", "text = \"${kolec} and ${base.field} and ${self.field^} and ${fiel}\"", true);
+    }
+    
+    public void testFields1_6() throws Exception {
+        checkCompletion(BASE + "Fields1.groovy", "text = \"${kolec} and ${base.field} and ${self.field} and ${fiel^}\"", true);
+    }
 
     /*
     public void testVariables3_1() throws Exception {

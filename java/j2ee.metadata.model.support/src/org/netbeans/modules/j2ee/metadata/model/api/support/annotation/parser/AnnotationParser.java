@@ -78,7 +78,7 @@ import org.openide.util.Parameters;
  */
 public final class AnnotationParser {
 
-    private final static Set<Class<?>> PRIMITIVE_WRAPPERS = new HashSet<Class<?>>();
+    private static final Set<Class<?>> PRIMITIVE_WRAPPERS = new HashSet<Class<?>>();
 
     private final Map<String, ValueProvider> providers = new HashMap<String, ValueProvider>();
     private final AnnotationHelper helper;
@@ -343,7 +343,7 @@ public final class AnnotationParser {
     /**
      * Simple <code>DefaultProvider</code> implementation.
      */
-    private final static class DefaultProviderImpl implements DefaultProvider {
+    private static final class DefaultProviderImpl implements DefaultProvider {
 
         private final Object defaultValue;
 
@@ -487,7 +487,7 @@ public final class AnnotationParser {
             Object value = elementValue.getValue();
             if (value instanceof TypeMirror) {
                 TypeMirror type = (TypeMirror)value;
-                if (TypeKind.DECLARED.equals(type.getKind())) {
+                if (TypeKind.DECLARED == type.getKind()) {
                     return ((TypeElement)(((DeclaredType)value).asElement())).getQualifiedName().toString();
                 }
             }
@@ -583,7 +583,7 @@ public final class AnnotationParser {
                     return false;
                 }
                 TypeMirror type = (TypeMirror)value;
-                if (!TypeKind.DECLARED.equals(type.getKind())) {
+                if (TypeKind.DECLARED != type.getKind()) {
                     return false;
                 }
             }

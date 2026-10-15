@@ -23,7 +23,6 @@ import java.io.*;
 import java.beans.*;
 import java.lang.reflect.*;
 import java.util.*;
-import java.text.*;
 import org.w3c.dom.*;
 
 /**
@@ -72,7 +71,7 @@ public class JavaBeansUtil {
     /**
      * The methods in this class will do proper XML indention for you.
      */
-    public static abstract class IndentingBeanWriter implements BeanWriter {
+    public abstract static class IndentingBeanWriter implements BeanWriter {
         protected String indentBy;
         protected String indent;
         protected int indentLevel = 0;
@@ -536,7 +535,7 @@ public class JavaBeansUtil {
      * contents.
      */
     public static void copyBean(Object src, Object dest) throws java.beans.IntrospectionException {
-        copyBean(src, dest, Collections.EMPTY_MAP);
+        copyBean(src, dest, Collections.emptyMap());
     }
     
     /**
@@ -695,7 +694,7 @@ public class JavaBeansUtil {
         if (typeName == "java.lang.Short" || typeName == "short")
             return Short.valueOf(value);
         if (typeName == "java.lang.Character" || typeName == "char")
-            return new Character(value.charAt(0));
+            return Character.valueOf(value.charAt(0));
         if (typeName == "java.net.URL") {
             try {
                 return new java.net.URL(value);
@@ -946,8 +945,6 @@ public class JavaBeansUtil {
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////
-
     /**
      * Create a bean with dummy values.
      * If a bean property write method fails or the constructor to the bean
@@ -1072,7 +1069,7 @@ public class JavaBeansUtil {
         else if (typeName == "java.lang.Short" || typeName == "short")
             return Short.valueOf("1");
         else if (typeName == "java.lang.Character" || typeName == "char")
-            return new Character('C');
+            return Character.valueOf('C');
         else if (typeName == "java.math.BigDecimal")
             return new java.math.BigDecimal("1.0");
         else if (typeName == "java.math.BigInteger")

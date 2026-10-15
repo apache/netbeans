@@ -20,14 +20,11 @@ package org.netbeans.modules.jumpto.common;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import javax.swing.ButtonModel;
@@ -50,7 +47,6 @@ import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.settings.FontColorSettings;
 import org.netbeans.modules.jumpto.EntityComparator;
 import org.netbeans.modules.jumpto.settings.GoToSettings;
-import org.openide.awt.HtmlRenderer;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Parameters;
 
@@ -72,11 +68,12 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
     }
 
     public static final class Builder<T> {
-        private final JList list;
+        private final JList<T> list;
         private final ButtonModel caseSensitive;
         private final Convertor<T> convertor;
         private String separatorPattern;
         private ButtonModel colorPrefered;
+        private ButtonModel searchFolders;
 
         private Builder(
             @NonNull final JList<T> list,
@@ -89,10 +86,11 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
 
         @NonNull
         public ItemRenderer<T> build() {
-            return new ItemRenderer(
+            return new ItemRenderer<T>(
                     list,
                     caseSensitive,
                     colorPrefered,
+                    searchFolders,
                     convertor,
                     separatorPattern);
         }
@@ -110,11 +108,17 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
         }
 
         @NonNull
+        public Builder setSearchFolders(@NullAllowed final ButtonModel searchFolders) {
+            this.searchFolders = searchFolders;
+            return this;
+        }
+
+        @NonNull
         public static <T> Builder<T> create(
             @NonNull final JList<T> list,
             @NonNull final ButtonModel caseSensitive,
             @NonNull final Convertor<T> convertor) {
-            return new Builder(list, caseSensitive, convertor);
+            return new Builder<T>(list, caseSensitive, convertor);
         }
     }
 
@@ -138,9 +142,10 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
     private final Color fgSelectionColor;
     private final Color bgColorGreener;
     private final Color bgColorDarkerGreener;
-    private final JList jList;
+    private final JList<T> jList;
     private final ButtonModel caseSensitive;
     private final ButtonModel colorPrefered;
+    private final ButtonModel searchFolders;
 
     private Class<T> clzCache;
 
@@ -148,6 +153,7 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
             @NonNull final JList<T> list,
             @NonNull final ButtonModel caseSensitive,
             @NullAllowed final ButtonModel colorPrefered,
+            @NullAllowed final ButtonModel searchFolders,
             @NonNull final Convertor<T> convertor,
             @NullAllowed final String separatorPattern) {
         Parameters.notNull("list", list);   //NOI18N
@@ -156,16 +162,16 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
         jList = list;
         this.caseSensitive = caseSensitive;
         this.colorPrefered = colorPrefered;
+        this.searchFolders = searchFolders;
         this.convertor = convertor;
         final GoToSettings hs = GoToSettings.getDefault();
         highlightMode = hs.getHighlightingMode();
         nameFormater = createNameFormatter(hs.getHighlightingType(), separatorPattern);
         this.jlName = new JLabel();
         resetNameLabel();
-        Container container = list.getParent();
-        if ( container instanceof JViewport ) {
-            ((JViewport)container).addChangeListener(this);
-            stateChanged(new ChangeEvent(container));
+        if (list.getParent() instanceof JViewport vp) {
+            vp.addChangeListener(this);
+            stateChanged(new ChangeEvent(vp));
         }
         rendererComponent = new MyPanel<>(convertor);
         rendererComponent.setLayout(new GridBagLayout());
@@ -241,7 +247,7 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
     @NonNull
     @Override
     public Component getListCellRendererComponent(
-            @NonNull final JList list,
+            @NonNull final JList<?> list,
             @NullAllowed final Object value,
             final int index,
             final boolean isSelected,
@@ -270,18 +276,25 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
             final T item = dynamic_cast(value);
             if (item != null) {
                 jlName.setIcon(convertor.getItemIcon(item));
-                final String formattedName;
+                jlName.setText(convertor.getName(item));
+                jlOwner.setText(convertor.getOwnerName(item));
                 if (shouldHighlight(isSelected)) {
-                    formattedName = highlight(
-                            convertor.getName(item),
+                    JLabel highlightedTarget;
+                    String textToFormat;
+                    if ((searchFolders != null)  && searchFolders.isSelected()) {
+                        highlightedTarget = jlOwner;
+                        textToFormat = convertor.getOwnerName(item);
+                    } else {
+                        highlightedTarget = jlName;
+                        textToFormat = convertor.getName(item);
+                    }
+                    String formattedName = highlight(
+                            textToFormat,
                             convertor.getHighlightText(item),
                             caseSensitive.isSelected(),
                             isSelected? fgSelectionColor : fgColor);
-                } else {
-                    formattedName = convertor.getName(item);
+                    highlightedTarget.setText(formattedName);
                 }
-                jlName.setText(formattedName);
-                jlOwner.setText(convertor.getOwnerName(item));
                 setProjectName(jlPrj, convertor.getProjectName(item));
                 jlPrj.setIcon(convertor.getProjectIcon(item));
                 if (!isSelected) {
@@ -343,8 +356,7 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
     }
 
     private boolean isMainProject(String projectName) {
-        return projectName != null && projectName.equals(mainProjectName) ?
-            true : false;
+        return projectName != null && projectName.equals(mainProjectName);
     }
 
     private static class MyPanel<T> extends JPanel {
@@ -385,16 +397,11 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
     }
     
     private boolean shouldHighlight(final boolean selectedItem) {
-        switch (highlightMode) {
-            case NONE:
-                return false;
-            case ACTIVE:
-                return selectedItem;
-            case ALL:
-                return true;
-            default:
-                throw new IllegalArgumentException(String.valueOf(selectedItem));
-        }
+        return switch (highlightMode) {
+            case NONE -> false;
+            case ACTIVE -> selectedItem;
+            case ALL -> true;
+        };
     }
     
     @NonNull
@@ -415,7 +422,7 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
     
     private static HighlightingNameFormatter createNameFormatter(
             @NonNull final GoToSettings.HighlightingType type,
-            @NonNull final String separatorPattern) {
+            @NullAllowed final String separatorPattern) {
         switch (type) {
             case BACKGROUND:
                 Color back = new Color(236,235,163);
@@ -424,13 +431,11 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
                 if (colors != null) {
                     final AttributeSet attrs = colors.getFontColors("mark-occurrences");  //NOI18N
                     if (attrs != null) {
-                        Object o = attrs.getAttribute(StyleConstants.Background);
-                        if (o instanceof Color) {
-                            back = (Color) o;
+                        if (attrs.getAttribute(StyleConstants.Background) instanceof Color bg) {
+                            back = bg;
                         }
-                        o = attrs.getAttribute(StyleConstants.Foreground);
-                        if (o instanceof Color) {
-                            front = (Color) o;
+                        if (attrs.getAttribute(StyleConstants.Foreground) instanceof Color fg) {
+                            front = fg;
                         }
                     }
                 }

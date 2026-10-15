@@ -73,7 +73,7 @@ public class StashListCommand extends GitCommand {
     }
 
     public GitRevisionInfo[] getRevisions () {
-        return revisions.toArray(new GitRevisionInfo[revisions.size()]);
+        return revisions.toArray(new GitRevisionInfo[0]);
     }
 
     private void addRevision (GitRevisionInfo info) {

@@ -66,7 +66,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 /**
- * Create a fresh EjbProject from scratch or by importing and exisitng ejb module
+ * Create a fresh EjbProject from scratch or by importing an existing ejb module
  * in one of the recognized directory structures.
  *
  * @author Pavel Buzek
@@ -94,6 +94,7 @@ public class EjbJarProjectGenerator {
      * @throws IOException in case something went wrong
      * @deprecated 
      */
+    @Deprecated
     public static AntProjectHelper createProject(File dir, final String name, 
             final String j2eeLevel, final String serverInstanceID) throws IOException {
 
@@ -123,6 +124,7 @@ public class EjbJarProjectGenerator {
         // create project in one FS atomic action:
         FileSystem fs = projectDir.getFileSystem();
         fs.runAtomicAction(new FileSystem.AtomicAction() {
+            @Override
             public void run() throws IOException {
                 AntProjectHelper helper = createProjectImpl(createData, projectDir);
                 h[0] = helper;
@@ -165,6 +167,7 @@ public class EjbJarProjectGenerator {
         final ReferenceHelper refHelper = p.getReferenceHelper();
         try {
             ProjectManager.mutex().writeAccess(new Mutex.ExceptionAction<Void>() {
+                @Override
                 public Void run() throws Exception {
                     copyRequiredLibraries(h, refHelper, createData);
                     return null;
@@ -174,16 +177,26 @@ public class EjbJarProjectGenerator {
             Exceptions.printStackTrace(ex.getException());
         }
         
-        // create ejb-jar.xml
+        // Create ejb-jar.xml just for J2EE (1.3 and 1.4)
         Profile profile = createData.getJavaEEProfile();
-        if (!Profile.JAVA_EE_5.equals(profile) && !Profile.JAVA_EE_6_FULL.equals(profile) && !Profile.JAVA_EE_6_WEB.equals(profile) &&
-                !Profile.JAVA_EE_7_FULL.equals(profile) && !Profile.JAVA_EE_7_WEB.equals(profile)) {
-            String resource = "org-netbeans-modules-j2ee-ejbjarproject/ejb-jar-2.1.xml";
+        boolean isJ2EE = false;
+
+        if(profile.equals(Profile.J2EE_14) || profile.equals(Profile.J2EE_13)) {
+            isJ2EE = true;
+        }
+        if(isJ2EE) {
+            String resource;
+            if(profile.equals(Profile.J2EE_14)) {
+                resource = "org-netbeans-modules-j2ee-ejbjarproject/ejb-jar-2.1.xml";
+            } else {
+                resource = "org-netbeans-modules-j2ee-ejbjarproject/ejb-jar-2.0.xml";
+            }
             FileObject ddFile = FileUtil.copyFile(FileUtil.getConfigFile(resource), confRoot, "ejb-jar"); //NOI18N
             EjbJar ejbJar = DDProvider.getDefault().getDDRoot(ddFile);
             ejbJar.setDisplayName(name);
             ejbJar.write(ddFile);
         }
+
         if (createData.isCDIEnabled()) {
             DDHelper.createBeansXml(profile, confRoot);
         }
@@ -271,6 +284,7 @@ public class EjbJarProjectGenerator {
         // create project in one FS atomic action:
         FileSystem fs = projectDir.getFileSystem();
         fs.runAtomicAction(new FileSystem.AtomicAction() {
+            @Override
             public void run() throws IOException {
                 AntProjectHelper helper = importProjectImpl(createData, projectDir);
                 h[0] = helper;
@@ -306,6 +320,7 @@ public class EjbJarProjectGenerator {
         final ReferenceHelper refHelper = p.getReferenceHelper();
         try {
             ProjectManager.mutex().writeAccess(new Mutex.ExceptionAction<Void>() {
+                @Override
                 public Void run() throws Exception {
                     Element data = h.getPrimaryConfigurationData(true);
                     Document doc = data.getOwnerDocument();
@@ -439,7 +454,7 @@ public class EjbJarProjectGenerator {
             Profile j2eeProfile, String serverInstanceID, String librariesDefinition, boolean skipTests) throws IOException {
 
         Utils.logUI(NbBundle.getBundle(EjbJarProjectGenerator.class), "UI_EJB_PROJECT_CREATE_SHARABILITY", // NOI18N
-                new Object[]{Boolean.valueOf(librariesDefinition != null), Boolean.FALSE});
+                new Object[]{(librariesDefinition != null), Boolean.FALSE});
 
         AntProjectHelper h = ProjectGenerator.createProject(dirFO, EjbJarProjectType.TYPE, librariesDefinition);
         final EjbJarProject prj = (EjbJarProject) ProjectManager.getDefault().findProject(h.getProjectDirectory());
@@ -489,9 +504,7 @@ public class EjbJarProjectGenerator {
         SpecificationVersion v = defaultPlatform.getSpecification().getVersion();
         String sourceLevel = v.toString();
         // #181215: JDK 6 should be the default source/binary format for Java EE 6 projects
-        if (sourceLevel.equals("1.7")) {
-            sourceLevel = "1.6";
-        }
+        // #181215: Not neccessary anymore because NetBeans should run on minimum JDK 8
         ep.setProperty(EjbJarProjectProperties.JAVAC_SOURCE, sourceLevel); //NOI18N
         ep.setProperty(EjbJarProjectProperties.JAVAC_TARGET, sourceLevel); //NOI18N
         
@@ -606,8 +619,10 @@ public class EjbJarProjectGenerator {
         // it is deadlock-prone
         try {
             projectDir.getFileSystem().runAtomicAction(new AtomicAction() {
+                @Override
                 public void run() throws IOException {
                     ProjectManager.mutex().writeAccess(new Runnable() {
+                        @Override
                         public void run() {
                             try {
                                 EjbJarProject project = (EjbJarProject)ProjectManager.getDefault().findProject(helper.getProjectDirectory());

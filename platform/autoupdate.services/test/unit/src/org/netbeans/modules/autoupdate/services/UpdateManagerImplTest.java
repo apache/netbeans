@@ -43,7 +43,7 @@ public class UpdateManagerImplTest extends DefaultTestCase {
     public void testNoMemoryLeak() throws Exception {
         List<UpdateUnit> units = UpdateManagerImpl.getInstance().getUpdateUnits();
         assertTrue(units.size() != 0);
-        Reference ref = UpdateManagerImpl.getInstance().getCacheReference();
+        Reference<?> ref = UpdateManagerImpl.getInstance().getCacheReference();
         assertNotNull(ref);
         assertNotNull(ref.get());
         

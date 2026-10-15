@@ -34,7 +34,6 @@ import org.openide.*;
 import org.openide.nodes.*;
 import org.openide.cookies.*;
 import org.openide.windows.*;
-import org.openide.util.WeakSet;
 
 
 import org.netbeans.api.xml.cookies.*;
@@ -53,6 +52,7 @@ import org.openide.text.Annotation;
  * @see     InputOutput
  * @deprecated XML tools actions API candidate
  */
+@Deprecated
 public final class InputOutputReporter implements CookieObserver {
 
     //0 extends message, 1 line number, 2 url of external entity
@@ -64,7 +64,7 @@ public final class InputOutputReporter implements CookieObserver {
 
     // remember all attached annotations
     private static final Set hyperlinks = 
-        Collections.synchronizedSet(new WeakSet()); // Set<Hyperlink>
+        Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap())); // Set<Hyperlink>
     
     /** 
      * Creates new InputOutputReporter regirecting ProcessorListener
@@ -198,7 +198,7 @@ public final class InputOutputReporter implements CookieObserver {
         if (line >= 0) { 
             Object[] args = new Object[] {
                                 message,
-                                new Integer(line),
+                                Integer.valueOf(line),
                                 ext
                             };
 

@@ -21,6 +21,7 @@ package org.netbeans.modules.java.editor.base.javadoc;
 
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.doctree.DocTree;
+import com.sun.source.doctree.ErroneousTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.DocTreePath;
@@ -50,7 +51,7 @@ import org.netbeans.api.lexer.TokenSequence;
  */
 public final class JavadocCompletionUtils {
     
-    static final Pattern JAVADOC_LINE_BREAK = Pattern.compile("\\n[ \\t]*\\**[ \\t]*\\z"); // NOI18N
+    static final Pattern JAVADOC_LINE_BREAK = Pattern.compile("(\\n[ \\t]*\\**[ \\t]*\\z)|(\\n[ \\t]*///[ \\t]*\\z)"); // NOI18N
     static final Pattern JAVADOC_WHITE_SPACE = Pattern.compile("[^ \\t]"); // NOI18N
     /**
      * javadoc parser considers whatever number of spaces or standalone newline
@@ -61,7 +62,7 @@ public final class JavadocCompletionUtils {
     static final Pattern JAVADOC_EMPTY = Pattern.compile("(\\s*\\**\\s*\n)*\\s*\\**\\s*\\**"); // NOI18N
     static final Pattern JAVADOC_FIRST_WHITE_SPACE = Pattern.compile("[ \\t]*\\**[ \\t]*"); // NOI18N
     private static Set<JavaTokenId> IGNORE_TOKES = EnumSet.of(
-            JavaTokenId.WHITESPACE, JavaTokenId.BLOCK_COMMENT, JavaTokenId.LINE_COMMENT);
+            JavaTokenId.WHITESPACE, JavaTokenId.BLOCK_COMMENT, JavaTokenId.LINE_COMMENT, JavaTokenId.JAVADOC_COMMENT_LINE_RUN);
     private static final Logger LOGGER = Logger.getLogger(JavadocCompletionUtils.class.getName());
     
     /**
@@ -169,6 +170,7 @@ public final class JavadocCompletionUtils {
      * @param e element for which the tokens are queried
      * @return javadoc token sequence or null.
      */
+    @SuppressWarnings("fallthrough")
     public static TokenSequence<JavadocTokenId> findJavadocTokenSequence(CompilationInfo javac, Tree tree, Element e) {
         if (e == null || javac.getElementUtilities().isSynthetic(e))
             return null;
@@ -178,7 +180,7 @@ public final class JavadocCompletionUtils {
         if (tree == null)
             return null;
 
-        int elementStartOffset = (int) javac.getTrees().getSourcePositions().getStartPosition(javac.getCompilationUnit(), tree);
+        int elementStartOffset = (int) javac.getTrees().getSourcePositions().getStartPosition(tree);
         TokenSequence<JavaTokenId> s = SourceUtils.getJavaTokenSequence(javac.getTokenHierarchy(), elementStartOffset);
         if (s == null) {
             return null;
@@ -194,6 +196,7 @@ public final class JavadocCompletionUtils {
                         break;
                     }
                 case JAVADOC_COMMENT:
+                case JAVADOC_COMMENT_LINE_RUN:
                     if (token.partType() == PartType.COMPLETE) {
                         return javac.getElements().getDocComment(e) == null
                                 ? null : s.embedded(JavadocTokenId.language());
@@ -244,36 +247,39 @@ public final class JavadocCompletionUtils {
     
     /**
      * Is javadoc line break?
-     * @param token token to test
+     * @param ts a token sequence positioned to the token to test
      * @return {@code true} in case the token is something like {@code "\n\t*"}
      */
-    public static boolean isLineBreak(Token<JavadocTokenId> token) {
-        return isLineBreak(token, token.length());
+    public static boolean isLineBreak(TokenSequence<JavadocTokenId> ts) {
+        return isLineBreak(ts, ts.token().length());
     }
     
     /**
      * Tests if the token part before {@code pos} is a javadoc line break.
-     * @param token a token to test
+     * @param ts a token sequence positioned to the token to test
      * @param pos position in the token
      * @return {@code true} in case the token is something like {@code "\n\t* |\n\t*"}
      */
-    public static boolean isLineBreak(Token<JavadocTokenId> token, int pos) {
+    public static boolean isLineBreak(TokenSequence<JavadocTokenId> ts, int pos) {
+        Token<JavadocTokenId> token = ts.token();
+
         if (token == null || token.id() != JavadocTokenId.OTHER_TEXT) {
-            return false;
+            return ts.isEmpty() || ts.index() == 0;
         }
         try {
             CharSequence text = token.text();
             if (pos < token.length())
                 text = text.subSequence(0, pos);
-            boolean result = pos > 0
+            boolean result = (pos > 0
                     && JAVADOC_LINE_BREAK.matcher(text).find()
-                    && (pos == token.length() || !isInsideIndent(token, pos));
+                    && (pos == token.length() || !isInsideIndent(token, pos))
+                    );
             return result;
         } catch (IndexOutOfBoundsException e) {
             throw (IndexOutOfBoundsException) new IndexOutOfBoundsException("pos: " + pos + ", token.length: " + token.length() + ", token text: " + token.text()).initCause(e);
         }
     }
-    
+
     public static boolean isWhiteSpace(CharSequence text) {
         return text != null && text.length() > 0 && !JAVADOC_WHITE_SPACE.matcher(text).find();
     }
@@ -335,14 +341,68 @@ public final class JavadocCompletionUtils {
     }
     
     private static final Set<DocTree.Kind> BLOCK_TAGS =
-            EnumSet.of(DocTree.Kind.AUTHOR, DocTree.Kind.DEPRECATED, DocTree.Kind.PARAM,
+            EnumSet.of(DocTree.Kind.AUTHOR, DocTree.Kind.DEPRECATED, DocTree.Kind.EXCEPTION,
+                       DocTree.Kind.HIDDEN,DocTree.Kind.PARAM, DocTree.Kind.PROVIDES,
                        DocTree.Kind.RETURN, DocTree.Kind.SEE, DocTree.Kind.SERIAL,
-                       DocTree.Kind.SERIAL_DATA, DocTree.Kind.SERIAL_FIELD, DocTree.Kind.SINCE,
-                       DocTree.Kind.THROWS, DocTree.Kind.UNKNOWN_BLOCK_TAG, DocTree.Kind.VERSION);
+                       DocTree.Kind.SERIAL_DATA, DocTree.Kind.SERIAL_FIELD,
+                       DocTree.Kind.SINCE, DocTree.Kind.THROWS, DocTree.Kind.USES, DocTree.Kind.VERSION,
+                       DocTree.Kind.UNKNOWN_BLOCK_TAG);
     public static boolean isBlockTag(DocTreePath tag) {
-        return BLOCK_TAGS.contains(tag.getLeaf().getKind());
+        return BLOCK_TAGS.contains(normalizedKind(tag.getLeaf()));
     }
-    
+
+    private static final Set<DocTree.Kind> INLINE_TAGS =
+            EnumSet.of(DocTree.Kind.CODE, DocTree.Kind.DOC_ROOT, DocTree.Kind.INDEX,
+                       DocTree.Kind.INHERIT_DOC, DocTree.Kind.LINK, DocTree.Kind.LINK_PLAIN,
+                       DocTree.Kind.LITERAL, DocTree.Kind.SNIPPET, DocTree.Kind.SUMMARY,
+                       DocTree.Kind.SYSTEM_PROPERTY, DocTree.Kind.VALUE, DocTree.Kind.UNKNOWN_INLINE_TAG);
+    public static boolean isInlineTag(DocTreePath tag) {
+        return INLINE_TAGS.contains(normalizedKind(tag.getLeaf()));
+    }
+
+    public static DocTree.Kind normalizedKind(DocTree tag) {
+        DocTree.Kind normalizedKind = tag.getKind();
+        if (normalizedKind == com.sun.source.doctree.DocTree.Kind.ERRONEOUS) {
+            String txt = ((ErroneousTree) tag).getBody().split("\\s")[0];
+            switch (txt) {
+                case "@author": normalizedKind = DocTree.Kind.AUTHOR; break;
+                case "@deprecated": normalizedKind = DocTree.Kind.DEPRECATED; break;
+                case "@exception": normalizedKind = DocTree.Kind.EXCEPTION; break;
+                case "@hidden": normalizedKind = DocTree.Kind.HIDDEN; break;
+                case "@param": normalizedKind = DocTree.Kind.PARAM; break;
+                case "@provides": normalizedKind = DocTree.Kind.PROVIDES; break;
+                case "@return": normalizedKind = DocTree.Kind.RETURN; break;
+                case "@see": normalizedKind = DocTree.Kind.SEE; break;
+                case "@serial": normalizedKind = DocTree.Kind.SERIAL; break;
+                case "@serialData": normalizedKind = DocTree.Kind.SERIAL_DATA; break;
+                case "@serialField": normalizedKind = DocTree.Kind.SERIAL_FIELD; break;
+                case "@since": normalizedKind = DocTree.Kind.SINCE; break;
+                case "@throws": normalizedKind = DocTree.Kind.THROWS; break;
+                case "@uses": normalizedKind = DocTree.Kind.USES; break;
+                case "@version": normalizedKind = DocTree.Kind.VERSION; break;
+                case "{@code": normalizedKind = DocTree.Kind.CODE; break;
+                case "{@docRoot": normalizedKind = DocTree.Kind.DOC_ROOT; break;
+                case "{@index": normalizedKind = DocTree.Kind.INDEX; break;
+                case "{@inheritDoc": normalizedKind = DocTree.Kind.INHERIT_DOC; break;
+                case "{@link": normalizedKind = DocTree.Kind.LINK; break;
+                case "{@linkplain": normalizedKind = DocTree.Kind.LINK; break;
+                case "{@literal": normalizedKind = DocTree.Kind.LITERAL; break;
+                case "{@snippet": normalizedKind = DocTree.Kind.SNIPPET; break;
+                case "{@summary": normalizedKind = DocTree.Kind.SUMMARY; break;
+                case "{@systemProperty": normalizedKind = DocTree.Kind.SYSTEM_PROPERTY; break;
+                case "{@value": normalizedKind = DocTree.Kind.VALUE; break;
+                default:
+                    if (txt.startsWith("@")) {
+                        normalizedKind = DocTree.Kind.UNKNOWN_BLOCK_TAG;
+                    } else if (txt.startsWith("{@")) {
+                        normalizedKind = DocTree.Kind.UNKNOWN_INLINE_TAG;
+                    }
+                    break;
+            }
+        }
+        return normalizedKind;
+    }
+
     public static CharSequence getCharSequence(Document doc) {
         CharSequence cs = (CharSequence) doc.getProperty(CharSequence.class);
         if (cs == null) {
@@ -381,7 +441,8 @@ public final class JavadocCompletionUtils {
             return false;
         }
         
-        if (ts.token().id() != JavaTokenId.JAVADOC_COMMENT) {
+        if (ts.token().id() != JavaTokenId.JAVADOC_COMMENT &&
+            ts.token().id() != JavaTokenId.JAVADOC_COMMENT_LINE_RUN) {
             return false;
         }
         
@@ -399,6 +460,11 @@ public final class JavadocCompletionUtils {
             CharSequence text = token.text();
             // check special case /**|*/
             return offset == 3 && "/***/".contentEquals(text); //NOI18N
+        }
+        if (token != null && token.id() == JavaTokenId.JAVADOC_COMMENT_LINE_RUN) {
+            CharSequence text = token.text();
+            // check special case ///|\n
+            return offset == 3 && "///\n".contentEquals(text); //NOI18N
         }
         return false;
     }

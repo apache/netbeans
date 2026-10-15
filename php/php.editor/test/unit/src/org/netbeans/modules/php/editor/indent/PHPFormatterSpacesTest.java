@@ -204,16 +204,27 @@ public class PHPFormatterSpacesTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/spaces/spaceBeforeAfterSemi04.php", options);
     }
 
-    public void xxxtestSpacesCheckAfterKeywords01() throws Exception {
+    public void testSpacesCheckAfterKeywords01() throws Exception {
         HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
         options.put(FmtOptions.SPACE_CHECK_AFTER_KEYWORDS, true);
         reformatFileContents("testfiles/formatting/spaces/spaceCheckAfterKeywords01.php", options);
     }
 
-    public void xxxtestSpacesCheckAfterKeywords02() throws Exception {
+    public void testSpacesCheckAfterKeywords02() throws Exception {
         HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
         options.put(FmtOptions.SPACE_CHECK_AFTER_KEYWORDS, true);
         reformatFileContents("testfiles/formatting/spaces/spaceCheckAfterKeywords02.php", options);
+    }
+
+    public void testSpacesBeforeAnonymousFunctionParen01() throws Exception {
+        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/spaces/spaceBeforeAnonymousFunction01.php", options);
+    }
+
+    public void testSpacesBeforeAnonymousFunctionParen02() throws Exception {
+        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_ANONYMOUS_FUNCTION_PAREN, false);
+        reformatFileContents("testfiles/formatting/spaces/spaceBeforeAnonymousFunction02.php", options);
     }
 
     public void testIssue210617() throws Exception {
@@ -223,6 +234,18 @@ public class PHPFormatterSpacesTest extends PHPFormatterTestBase {
         options.put(FmtOptions.EXPAND_TAB_TO_SPACES, false);
         options.put(FmtOptions.TAB_SIZE, 4);
         reformatFileContents("testfiles/formatting/alignment/issue210617.php", options);
+    }
+
+    public void testIssue210617_TabSize8() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.GROUP_ALIGNMENT_ARRAY_INIT, true);
+        options.put(FmtOptions.GROUP_ALIGNMENT_ASSIGNMENT, true);
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, false);
+        options.put(FmtOptions.TAB_SIZE, 8);
+        options.put(FmtOptions.INDENT_SIZE, 8);
+        options.put(FmtOptions.ITEMS_IN_ARRAY_DECLARATION_INDENT_SIZE, 8);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 8);
+        reformatFileContents("testfiles/formatting/alignment/issue210617.php", options, false, true);
     }
 
     public void testIssue181624_01() throws Exception {
@@ -782,28 +805,28 @@ public class PHPFormatterSpacesTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/spaces/spaceAroundTernaryOp08.php", options);
     }
 
-    public void testSpacesAroundTernaryOp09() throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
-        options.put(FmtOptions.SPACE_AROUND_TERNARY_OPS, false);
-        reformatFileContents("testfiles/formatting/spaces/spaceAroundTernaryOp09.php", options);
+    public void testSpacesAroundCoalescingOp01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_COALESCING_OPS, false);
+        reformatFileContents("testfiles/formatting/spaces/spaceAroundCoalescingOp01.php", options);
     }
 
-    public void testSpacesAroundTernaryOp10() throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
-        options.put(FmtOptions.SPACE_AROUND_TERNARY_OPS, true);
-        reformatFileContents("testfiles/formatting/spaces/spaceAroundTernaryOp10.php", options);
+    public void testSpacesAroundCoalescingOp02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_COALESCING_OPS, true);
+        reformatFileContents("testfiles/formatting/spaces/spaceAroundCoalescingOp02.php", options);
     }
 
-    public void testSpacesAroundTernaryOp11() throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
-        options.put(FmtOptions.SPACE_AROUND_TERNARY_OPS, true);
-        reformatFileContents("testfiles/formatting/spaces/spaceAroundTernaryOp11.php", options);
+    public void testSpacesAroundCoalescingOp03() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_COALESCING_OPS, true);
+        reformatFileContents("testfiles/formatting/spaces/spaceAroundCoalescingOp03.php", options);
     }
 
-    public void testSpacesAroundTernaryOp12() throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
-        options.put(FmtOptions.SPACE_AROUND_TERNARY_OPS, false);
-        reformatFileContents("testfiles/formatting/spaces/spaceAroundTernaryOp12.php", options);
+    public void testSpacesAroundCoalescingOp04() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_COALESCING_OPS, false);
+        reformatFileContents("testfiles/formatting/spaces/spaceAroundCoalescingOp04.php", options);
     }
 
     public void testSpacesAroundKeyValue01() throws Exception {
@@ -1012,6 +1035,18 @@ public class PHPFormatterSpacesTest extends PHPFormatterTestBase {
         HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
         options.put(FmtOptions.SPACE_AROUND_BINARY_OPS, false);
         reformatFileContents("testfiles/formatting/spaces/issue240274.php", options);
+    }
+
+    public void testGH4635_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_BINARY_OPS, true);
+        reformatFileContents("testfiles/formatting/spaces/gh4635_01.php", options);
+    }
+
+    public void testGH4635_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_BINARY_OPS, false);
+        reformatFileContents("testfiles/formatting/spaces/gh4635_02.php", options);
     }
 
     public void testSpacesAroundReturnType01() throws Exception {
@@ -1321,6 +1356,12 @@ public class PHPFormatterSpacesTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/spaces/spaceAroundMultiCatch10.php", options);
     }
 
+    // PHP 8.0
+    public void testSpacesAroundNonCapturingCatches01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/spaces/spaceAroundNonCapturingCatches01.php", options);
+    }
+
     public void testSpacesAroundDeclareEqual01a() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.SPACE_AROUND_DECLARE_EQUAL, true);
@@ -1456,4 +1497,319 @@ public class PHPFormatterSpacesTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/spaces/netbeans2149_04.php", options);
     }
 
+    // NETBEANS-4443 PHP 8.0
+    public void testSpacesBeforeMatchParen_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_MATCH_PAREN, true);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceBeforeMatchParen_01.php", options);
+    }
+
+    public void testSpacesBeforeMatchParen_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_MATCH_PAREN, false);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceBeforeMatchParen_02.php", options);
+    }
+
+    public void testSpacesWithinMatchParen_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_MATCH_PARENS, true);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceWithinMatchParen_01.php", options);
+    }
+
+    public void testSpacesWithinMatchParen_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_MATCH_PARENS, false);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceWithinMatchParen_02.php", options);
+    }
+
+    public void testSpacesBeforeMatchLeftBrace_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_MATCH_LEFT_BRACE, true);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceBeforeMatchLeftBrace_01.php", options);
+    }
+
+    public void testSpacesBeforeMatchLeftBrace_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_MATCH_LEFT_BRACE, false);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceBeforeMatchLeftBrace_02.php", options);
+    }
+
+    public void testSpacesAroundUnionTypeSeparator_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_UNION_TYPE_SEPARATOR, true);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceAroundUnionTypeSeparator_01a.php", options);
+    }
+
+    public void testSpacesAroundUnionTypeSeparator_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_UNION_TYPE_SEPARATOR, false);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceAroundUnionTypeSeparator_01b.php", options);
+    }
+
+    public void testSpacesAroundUnionTypeSeparator_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_UNION_TYPE_SEPARATOR, true);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceAroundUnionTypeSeparator_02a.php", options);
+    }
+
+    public void testSpacesAroundUnionTypeSeparator_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_UNION_TYPE_SEPARATOR, false);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceAroundUnionTypeSeparator_02b.php", options);
+    }
+
+    public void testSpacesAroundUnionTypeSeparator_03a() throws Exception {
+        // static return type
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_UNION_TYPE_SEPARATOR, true);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceAroundUnionTypeSeparator_03a.php", options);
+    }
+
+    public void testSpacesAroundUnionTypeSeparator_03b() throws Exception {
+        // static return type
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_UNION_TYPE_SEPARATOR, false);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceAroundUnionTypeSeparator_03b.php", options);
+    }
+
+    public void testSpacesAroundNullsafeOperator_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_NULLSAFE_OBJECT_OPS, true);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceAroundNullsafeOperator_01a.php", options);
+    }
+
+    public void testSpacesAroundNullsafeOperator_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_NULLSAFE_OBJECT_OPS, false);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceAroundNullsafeOperator_01b.php", options);
+    }
+
+    public void testSpacesBeforeAttributeDeclParens_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_ATTRIBUTE_DECL_PAREN, true);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceBeforeAttributeDeclParen_01a.php", options);
+    }
+
+    public void testSpacesBeforeAttributeDeclParens_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_ATTRIBUTE_DECL_PAREN, false);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceBeforeAttributeDeclParen_01b.php", options);
+    }
+
+    public void testSpacesBeforeAttributeDeclParens_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_ATTRIBUTE_DECL_PAREN, true);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceBeforeAttributeDeclParen_02a.php", options);
+    }
+
+    public void testSpacesBeforeAttributeDeclParens_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_ATTRIBUTE_DECL_PAREN, false);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceBeforeAttributeDeclParen_02b.php", options);
+    }
+
+    public void testSpacesWithinAttributeBrackets_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_ATTRIBUTE_BRACKETS, true);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceWithinAttributeBrackets_01a.php", options);
+    }
+
+    public void testSpacesWithinAttributeBrackets_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_ATTRIBUTE_BRACKETS, false);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceWithinAttributeBrackets_01b.php", options);
+    }
+
+    public void testSpacesWithinAttributeBrackets_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_ATTRIBUTE_BRACKETS, true);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceWithinAttributeBrackets_02a.php", options);
+    }
+
+    public void testSpacesWithinAttributeBrackets_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_ATTRIBUTE_BRACKETS, false);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceWithinAttributeBrackets_02b.php", options);
+    }
+
+    public void testSpacesWithinAttributeDeclParens_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_ATTRIBUTE_DECL_PARENS, true);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceWithinAttributeDeclParens_01a.php", options);
+    }
+
+    public void testSpacesWithinAttributeDeclParens_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_ATTRIBUTE_DECL_PARENS, false);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceWithinAttributeDeclParens_01b.php", options);
+    }
+
+    public void testSpacesWithinAttributeDeclParens_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_ATTRIBUTE_DECL_PARENS, true);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceWithinAttributeDeclParens_02a.php", options);
+    }
+
+    public void testSpacesWithinAttributeDeclParens_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_ATTRIBUTE_DECL_PARENS, false);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceWithinAttributeDeclParens_02b.php", options);
+    }
+
+    public void testSpacesAroundIntersectionTypeSeparator_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_INTERSECTION_TYPE_SEPARATOR, true);
+        reformatFileContents("testfiles/formatting/spaces/php81/spaceAroundPureIntersectionTypeSeparator_01a.php", options);
+    }
+
+    public void testSpacesAroundIntersectionTypeSeparator_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_INTERSECTION_TYPE_SEPARATOR, false);
+        reformatFileContents("testfiles/formatting/spaces/php81/spaceAroundPureIntersectionTypeSeparator_01b.php", options);
+    }
+
+
+    public void testSpacesAroundIntersectionTypeSeparator_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_INTERSECTION_TYPE_SEPARATOR, true);
+        reformatFileContents("testfiles/formatting/spaces/php81/spaceAroundPureIntersectionTypeSeparator_02a.php", options);
+    }
+
+    public void testSpacesAroundIntersectionTypeSeparator_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_INTERSECTION_TYPE_SEPARATOR, false);
+        reformatFileContents("testfiles/formatting/spaces/php81/spaceAroundPureIntersectionTypeSeparator_02b.php", options);
+    }
+
+    public void testSpacesBeforeEnumDecLeftBrace_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_CLASS_DECL_LEFT_BRACE, true);
+        reformatFileContents("testfiles/formatting/spaces/php81/spaceBeforeEnumDecLeftBrace_01a.php", options);
+    }
+
+    public void testSpacesBeforeEnumDecLeftBrace_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_CLASS_DECL_LEFT_BRACE, false);
+        reformatFileContents("testfiles/formatting/spaces/php81/spaceBeforeEnumDecLeftBrace_01b.php", options);
+    }
+
+    public void testSpacesWithinMethodCallParensWithFirstClassCallable_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_METHOD_CALL_PARENS, true);
+        reformatFileContents("testfiles/formatting/spaces/php81/spaceWithinMethodCallParensWithFirstClassCallable_01a.php", options);
+    }
+
+    public void testSpacesWithinMethodCallParensWithFirstClassCallable_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_METHOD_CALL_PARENS, false);
+        reformatFileContents("testfiles/formatting/spaces/php81/spaceWithinMethodCallParensWithFirstClassCallable_01b.php", options);
+    }
+
+    public void testSpacesWithinMethodCallParensWithFirstClassCallable_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_METHOD_CALL_PARENS, true);
+        reformatFileContents("testfiles/formatting/spaces/php81/spaceWithinMethodCallParensWithFirstClassCallable_02a.php", options);
+    }
+
+    public void testSpacesWithinMethodCallParensWithFirstClassCallable_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_METHOD_CALL_PARENS, false);
+        reformatFileContents("testfiles/formatting/spaces/php81/spaceWithinMethodCallParensWithFirstClassCallable_02b.php", options);
+    }
+
+    public void testGH5380_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_METHOD_CALL_PARENS, false);
+        reformatFileContents("testfiles/formatting/spaces/gh5380_01.php", options,  false, true);
+    }
+
+    public void testGH5380_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_METHOD_CALL_PARENS, true);
+        reformatFileContents("testfiles/formatting/spaces/gh5380_01.php", options,  false, true);
+    }
+
+    public void testGH5380_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_METHOD_CALL_PARENS, false);
+        reformatFileContents("testfiles/formatting/spaces/gh5380_02.php", options,  false, true);
+    }
+
+    public void testGH5380_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_METHOD_CALL_PARENS, true);
+        reformatFileContents("testfiles/formatting/spaces/gh5380_02.php", options,  false, true);
+    }
+
+    public void testSpaceWithinOtherParens_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_OTHER_PARENS, false);
+        reformatFileContents("testfiles/formatting/spaces/spaceWithinOtherParens_01.php", options,  false, true);
+    }
+
+    public void testSpaceWithinOtherParens_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_OTHER_PARENS, true);
+        reformatFileContents("testfiles/formatting/spaces/spaceWithinOtherParens_01.php", options,  false, true);
+    }
+
+    public void testSpaceWithinOtherParens_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_OTHER_PARENS, false);
+        reformatFileContents("testfiles/formatting/spaces/spaceWithinOtherParens_02.php", options,  false, true);
+    }
+
+    public void testSpaceWithinOtherParens_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_OTHER_PARENS, true);
+        reformatFileContents("testfiles/formatting/spaces/spaceWithinOtherParens_02.php", options,  false, true);
+    }
+
+    public void testNewWithoutParentheses_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_OTHER_PARENS, false);
+        reformatFileContents("testfiles/formatting/spaces/php84/newWithoutParentheses_01.php", options,  false, true);
+    }
+
+    public void testNewWithoutParentheses_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_OTHER_PARENS, true);
+        reformatFileContents("testfiles/formatting/spaces/php84/newWithoutParentheses_01.php", options,  false, true);
+    }
+
+    public void testNewWithoutParentheses_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_OTHER_PARENS, false);
+        reformatFileContents("testfiles/formatting/spaces/php84/newWithoutParentheses_02.php", options,  false, true);
+    }
+
+    public void testNewWithoutParentheses_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_OTHER_PARENS, true);
+        reformatFileContents("testfiles/formatting/spaces/php84/newWithoutParentheses_02.php", options,  false, true);
+    }
+
+    public void testFieldDeclarationLeftBrace_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_FIELD_DECL_LEFT_BRACE, false);
+        reformatFileContents("testfiles/formatting/spaces/php84/propertyHooks_01.php", options,  false, true);
+    }
+
+    public void testFieldDeclarationLeftBrace_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_FIELD_DECL_LEFT_BRACE, true);
+        reformatFileContents("testfiles/formatting/spaces/php84/propertyHooks_01.php", options,  false, true);
+    }
+
+    public void testPropertyHookLeftBrace_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_PROPERTY_HOOK_DECL_LEFT_BRACE, false);
+        reformatFileContents("testfiles/formatting/spaces/php84/propertyHooks_01.php", options,  false, true);
+    }
+
+    public void testPropertyHookLeftBrace_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_PROPERTY_HOOK_DECL_LEFT_BRACE, true);
+        reformatFileContents("testfiles/formatting/spaces/php84/propertyHooks_01.php", options,  false, true);
+    }
 }

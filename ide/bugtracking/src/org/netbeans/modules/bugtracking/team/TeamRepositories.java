@@ -75,7 +75,7 @@ public abstract class TeamRepositories implements PropertyChangeListener {
 
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
     
-    public synchronized static TeamRepositories getInstance() {
+    public static synchronized TeamRepositories getInstance() {
         if(instance == null) {
             instance = Lookup.getDefault().lookup(TeamRepositories.class);
             if (instance == null) {
@@ -363,7 +363,7 @@ public abstract class TeamRepositories implements PropertyChangeListener {
             for (TeamProject[] projectArray : projectArrays) {
                 for (TeamProject p : projectArray) {
                     String name = p.getName();
-                    if (!union.keySet().contains(name)) {
+                    if (!union.containsKey(name)) {
                         union.put(name, p);
                     }
                 }

@@ -1,0 +1,4 @@
+Code completion result for source line:
+static $staticVariable = new Stati|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTRUCTO StaticVariable()                [PUBLIC]   StaticVariable

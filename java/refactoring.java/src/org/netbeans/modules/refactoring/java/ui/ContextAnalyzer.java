@@ -111,7 +111,7 @@ public final class ContextAnalyzer {
                 @Override
                 protected RefactoringUI createRefactoringUI(Collection<TreePathHandle> handles) {
                     if (!created) {
-                        ui = factory.create(null, handles.toArray(new TreePathHandle[handles.size()]), null,  new NonRecursiveFolder[0]);
+                        ui = factory.create(null, handles.toArray(new TreePathHandle[0]), null,  new NonRecursiveFolder[0]);
                     }
                     return ui;
                 }
@@ -136,7 +136,7 @@ public final class ContextAnalyzer {
                         if(handles.isEmpty() && selectedElements.length > 0 && "package-info".equals(selectedElements[0].getName())) {
                             ui = factory.create(null, new TreePathHandle[]{}, selectedElements, new NonRecursiveFolder[0]);
                         } else {
-                            ui = factory.create(null, handles.toArray(new TreePathHandle[handles.size()]), selectedElements, pkg.toArray(new NonRecursiveFolder[pkg.size()]));
+                            ui = factory.create(null, handles.toArray(new TreePathHandle[0]), selectedElements, pkg.toArray(new NonRecursiveFolder[0]));
                         }
                     }
                     return ui;
@@ -183,7 +183,7 @@ public final class ContextAnalyzer {
         return !notOnlyFile;
     }
     
-    private static abstract class TreePathHandleTask implements Runnable, CancellableTask<CompilationController> {
+    private abstract static class TreePathHandleTask implements Runnable, CancellableTask<CompilationController> {
         private Collection<TreePathHandle> handles = new ArrayList<TreePathHandle>();
         private TreePathHandle current;
         private FileObject file;
@@ -277,7 +277,7 @@ public final class ContextAnalyzer {
         protected abstract RefactoringUI createRefactoringUI(Collection<TreePathHandle> handles);
     }    
     
-    private static abstract class TextComponentTask implements Runnable, CancellableTask<CompilationController> {
+    private abstract static class TextComponentTask implements Runnable, CancellableTask<CompilationController> {
         private JTextComponent textC;
         private int caret;
         private int start;
@@ -401,8 +401,8 @@ public final class ContextAnalyzer {
                 continue;
             }
 
-            long treeStart = ci.getTrees().getSourcePositions().getStartPosition(ci.getCompilationUnit(), leaf);
-            long treeEnd   = ci.getTrees().getSourcePositions().getEndPosition(ci.getCompilationUnit(), leaf);
+            long treeStart = ci.getTrees().getSourcePositions().getStartPosition(leaf);
+            long treeEnd   = ci.getTrees().getSourcePositions().getEndPosition(leaf);
 
             if (start != end) {
                 if (treeStart != start || treeEnd != end) {
@@ -480,7 +480,7 @@ public final class ContextAnalyzer {
         return false;
     }
     
-    private static abstract class NodeToElementTask implements Runnable, CancellableTask<CompilationController>  {
+    private abstract static class NodeToElementTask implements Runnable, CancellableTask<CompilationController>  {
         private Node node;
         private RefactoringUI ui;
         
@@ -526,7 +526,7 @@ public final class ContextAnalyzer {
         protected abstract RefactoringUI createRefactoringUI(TreePathHandle selectedElement, CompilationInfo info);
     }
     
-    private static abstract class NodeToFileObjectTask implements Runnable, CancellableTask<CompilationController> {
+    private abstract static class NodeToFileObjectTask implements Runnable, CancellableTask<CompilationController> {
         private Collection<? extends Node> nodes;
         public ArrayList<NonRecursiveFolder> pkg;
         Collection<TreePathHandle> handles = new ArrayList<TreePathHandle>();

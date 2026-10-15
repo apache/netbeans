@@ -359,7 +359,7 @@ public class BugtrackingOwnerSupport {
 
         final RepositorySelectorBuilder selectorBuilder = new RepositorySelectorBuilder();
         selectorBuilder.setDisplayFormForExistingRepositories(true);
-        selectorBuilder.setExistingRepositories(repos.toArray(new RepositoryImpl[repos.size()]));
+        selectorBuilder.setExistingRepositories(repos.toArray(new RepositoryImpl[0]));
         selectorBuilder.setBugtrackingConnectors(connectors);
         selectorBuilder.setPreselectedRepository(suggestedRepo);
         selectorBuilder.setLabelAboveComboBox();

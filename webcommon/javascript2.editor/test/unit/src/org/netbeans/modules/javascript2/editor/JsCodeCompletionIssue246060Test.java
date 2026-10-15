@@ -19,12 +19,14 @@
 package org.netbeans.modules.javascript2.editor;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.netbeans.api.java.classpath.ClassPath;
+
 import static org.netbeans.modules.javascript2.editor.JsTestBase.JS_SOURCE_ID;
+
 import org.netbeans.modules.javascript2.editor.classpath.ClasspathProviderImplAccessor;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
@@ -35,22 +37,23 @@ import org.openide.filesystems.FileUtil;
  * @author Petr Pisl
  */
 public class JsCodeCompletionIssue246060Test extends JsCodeCompletionBase {
-    
+
     public JsCodeCompletionIssue246060Test(String testName) {
         super(testName);
     }
-    
+
     public void testIssue246060_01() throws Exception {
         checkCompletion("testfiles/completion/issue246060/app.js", "e.^  //here", false);
     }
-    
+
     @Override
     protected Map<String, ClassPath> createClassPathsForTest() {
-        List<FileObject> cpRoots = new LinkedList<FileObject>(ClasspathProviderImplAccessor.getJsStubs());
+        List<FileObject> cpRoots = new ArrayList<>(2);
+        cpRoots.add(ClasspathProviderImplAccessor.getJsStubs().get(0)); // Only use core stubs in unittests
         cpRoots.add(FileUtil.toFileObject(new File(getDataDir(), "testfiles/completion/issue246060")));
         return Collections.singletonMap(
             JS_SOURCE_ID,
-            ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[cpRoots.size()]))
+            ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[0]))
         );
     }
 

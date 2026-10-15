@@ -150,7 +150,7 @@ class FontPanel extends JPanel {
     /**
      * Encapsulates the list of fonts the user can choose from.
      */
-    private final static class Fonts {
+    private static final class Fonts {
 	private final List<FontDescr> fonts = new ArrayList<>();
 
 	public Fonts() {
@@ -158,7 +158,7 @@ class FontPanel extends JPanel {
 	}
 
 	public FontDescr[] toArray() {
-	    return fonts.toArray(new FontDescr[fonts.size()]);
+	    return fonts.toArray(new FontDescr[0]);
 	}
 
 	public FontDescr descrByName(String fontName) {

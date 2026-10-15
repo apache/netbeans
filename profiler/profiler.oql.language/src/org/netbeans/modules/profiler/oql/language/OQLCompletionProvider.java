@@ -41,9 +41,9 @@ import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
  * @author Jaroslav Bachorik
  */
 public class OQLCompletionProvider implements CompletionProvider {
-    final private Set<String> keywords = new HashSet<String>();
-    final private Set<String> functions = new HashSet<String>();
-    final private Set<String> heapMethods = new HashSet<String>();
+    private final Set<String> keywords = new HashSet<String>();
+    private final Set<String> functions = new HashSet<String>();
+    private final Set<String> heapMethods = new HashSet<String>();
     
     public OQLCompletionProvider() {
         keywords.add("select"); // NOI18N
@@ -149,7 +149,7 @@ public class OQLCompletionProvider implements CompletionProvider {
                         int backout = 0;
                         if (ts.movePrevious()) backout++;
                         if (ts.movePrevious()) backout++; // check for "heap.somet[...]"
-                        isHeap = ts.token().text().toString().trim().toLowerCase().equals("heap"); // NOI18N
+                        isHeap = ts.token().text().toString().trim().equalsIgnoreCase("heap"); // NOI18N
                         // get to the current token
                         for(int i=backout;i>0;i--) {
                             ts.moveNext();
@@ -199,7 +199,7 @@ public class OQLCompletionProvider implements CompletionProvider {
                     }
                     case DOT: {
                         ts.movePrevious();
-                        if (ts.token().text().toString().trim().toLowerCase().equals("heap")) { // NOI18N
+                        if (ts.token().text().toString().trim().equalsIgnoreCase("heap")) { // NOI18N
                             ts.moveNext();
 
                             for(String method : heapMethods) {
@@ -237,9 +237,9 @@ public class OQLCompletionProvider implements CompletionProvider {
                         Set<String> pkgCompletions = new HashSet<String>();
                         Set<String> completions = new HashSet<String>();
 
-                        Iterator clzs = e.getHeap().getJavaClassesByRegExp(regex).iterator();
+                        Iterator<JavaClass> clzs = e.getHeap().getJavaClassesByRegExp(regex).iterator();
                         while(clzs.hasNext()) {
-                            String className = ((JavaClass)clzs.next()).getName();
+                            String className = clzs.next().getName();
                             String[] sig = splitClassName(className);
                             if (sig[1].startsWith(tokentext)) {
                                 completions.add("00 " + className); // NOI18N
@@ -250,7 +250,7 @@ public class OQLCompletionProvider implements CompletionProvider {
 
                         clzs = e.getHeap().getJavaClassesByRegExp(prefix).iterator();
                         while(clzs.hasNext()) {
-                            String className = ((JavaClass)clzs.next()).getName();
+                            String className = clzs.next().getName();
 
                             String[] sig = splitClassName(className);
 
@@ -270,7 +270,7 @@ public class OQLCompletionProvider implements CompletionProvider {
                         if (camel != null) {
                             clzs = e.getHeap().getJavaClassesByRegExp(camel).iterator();
                             while(clzs.hasNext()) {
-                                String className = ((JavaClass)clzs.next()).getName();
+                                String className = clzs.next().getName();
                                 completions.add("02 " + className); // NOI18N
                             }
                         }

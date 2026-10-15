@@ -102,7 +102,7 @@ public class WebServicesMetadataModelTest extends WebServicesTestCase {
                 assertEquals("hi",port2.getServiceImplBean().getServletLink());
                 
                 
-                return Integer.valueOf(metadata.getRoot().sizeWebserviceDescription());
+                return metadata.getRoot().sizeWebserviceDescription();
             }
         });
         

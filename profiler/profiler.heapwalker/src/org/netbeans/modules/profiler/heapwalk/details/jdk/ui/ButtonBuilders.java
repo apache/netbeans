@@ -106,7 +106,7 @@ final class ButtonBuilders {
         
     }
     
-    private static abstract class AbstractButtonBuilder<T extends AbstractButton> extends JComponentBuilder<T> {
+    private abstract static class AbstractButtonBuilder<T extends AbstractButton> extends JComponentBuilder<T> {
         
         private final DefaultButtonModelBuilder model;
         private final String text;

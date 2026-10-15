@@ -75,7 +75,7 @@ public class EditorFindSupportTest {
         t.start();
         Thread.sleep(2000);
         if (!finished[0]) {
-            t.stop();
+            t.interrupt();
         }
         assertTrue(finished[0]);
     }
@@ -109,7 +109,7 @@ public class EditorFindSupportTest {
         t.start();
         Thread.sleep(2000);
         if (!finished[0]) {
-            t.stop();
+            t.interrupt();
         }
         assertTrue(finished[0]);
     }
@@ -144,7 +144,7 @@ public class EditorFindSupportTest {
         t.start();
         Thread.sleep(2000);
         if (!finished[0]) {
-            t.stop();
+            t.interrupt();
         }
         assertTrue(finished[0]);
     }
@@ -178,7 +178,7 @@ public class EditorFindSupportTest {
         t.start();
         Thread.sleep(2000);
         if (!finished[0]) {
-            t.stop();
+            t.interrupt();
         }
         assertTrue(finished[0]);
     }
@@ -214,7 +214,7 @@ public class EditorFindSupportTest {
         t.start();
         Thread.sleep(2000);
         if (!finished[0]) {
-            t.stop();
+            t.interrupt();
         }
         assertTrue(finished[0]);
     }
@@ -250,7 +250,7 @@ public class EditorFindSupportTest {
         t.start();
         Thread.sleep(2000);
         if (!finished[0]) {
-            t.stop();
+            t.interrupt();
         }
         assertTrue(finished[0]);
     }
@@ -375,9 +375,9 @@ public class EditorFindSupportTest {
 //        ta.setCaretPosition(1);
 //        instance.replaceAllImpl(props, ta);
 //        assertEquals("0123456789 ahoj ahoj svete", ta.getText());
-////        ta.setCaretPosition(0);
-////        instance.replaceAllImpl(props, ta);
-////        assertEquals("0123456789 ahoj ahoj svete", ta.getText());
+// //        ta.setCaretPosition(0);
+// //        instance.replaceAllImpl(props, ta);
+// //        assertEquals("0123456789 ahoj ahoj svete", ta.getText());
 //    }
     /**
      * Test of replaceAll method, of class EditorFindSupport.

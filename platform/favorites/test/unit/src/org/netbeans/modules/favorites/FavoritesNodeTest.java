@@ -57,35 +57,23 @@ public class FavoritesNodeTest extends NbTestCase {
         ic.add(folder);
         final AbstractNode node = new AbstractNode(Children.LEAF, new AbstractLookup(ic));
         
-        Mutex.EVENT.readAccess(new Mutex.ExceptionAction<Void>() {
-            
-            @Override
-            public Void run () throws Exception {
-                final CountDownLatch l = new CountDownLatch(1);
-                FavoritesNode.RP.post(new Runnable() {
-                    @Override
-                    public void run () {
-                        try {
-                            l.await();
-                        } catch (InterruptedException ex) {
-                            Exceptions.printStackTrace(ex);
-                        }
-                    }
-                });
-                Node res = FavoritesNode.createFilterNode(node);
-                assertTrue("No children", res.isLeaf());
-                l.countDown();
-                final CountDownLatch l2 = new CountDownLatch(1);
-                FavoritesNode.RP.post(new Runnable() {
-                    @Override
-                    public void run () {
-                        l2.countDown();
-                    }
-                });
-                l2.await();
-                assertFalse("Now it has children", res.isLeaf());
-                return null;
-            }
+        Mutex.EVENT.readAccess((Mutex.ExceptionAction<Void>) () -> {
+            final CountDownLatch l = new CountDownLatch(1);
+            FavoritesNode.RP.post(() -> {
+                try {
+                    l.await();
+                } catch (InterruptedException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            });
+            Node res = FavoritesNode.createFilterNode(node);
+            assertTrue("No children", res.isLeaf());
+            l.countDown();
+            final CountDownLatch l2 = new CountDownLatch(1);
+            FavoritesNode.RP.post(l2::countDown);
+            l2.await();
+            assertFalse("Now it has children", res.isLeaf());
+            return null;
         });
     }
 }

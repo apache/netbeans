@@ -1,0 +1,15 @@
+[Overrides]
+[Constant]
+IMPLICIT_PUBLIC_PARENT_CONST : ChildClass (from ParentClass)
+PROTECTED_PARENT_CONST : ChildClass (from ParentClass)
+PUBLIC_PARENT_CONST : ChildClass (from ParentClass)
+[Field]
+$protectedParentClassField : ChildClass (from ParentClass)
+$protectedStaticParentClassField : ChildClass (from ParentClass)
+$publicParentClassField : ChildClass (from ParentClass)
+$publicStaticParentClassField : ChildClass (from ParentClass)
+[Method]
+protectedParentClassMethod : ChildClass (from ParentClass)
+protectedStaticParentClassMethod : ChildClass (from ParentClass)
+publicParentClassMethod : ChildClass (from ParentClass)
+publicStaticParentClassMethod : ChildClass (from ParentClass)

@@ -22,6 +22,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenId;
@@ -41,7 +42,7 @@ public class ApacheConfLexerUtils {
     public static String getFileContent(File file) throws Exception{
         StringBuilder sb = new StringBuilder();
         String lineSep = "\n";//NOI18N
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8")); //NOI18N
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
         String line = br.readLine();
         while (line != null) {
             sb.append(line);
@@ -54,9 +55,9 @@ public class ApacheConfLexerUtils {
 
     public static String replaceLinesAndTabs(String input) {
         String escapedString = input;
-        escapedString = escapedString.replaceAll("\n","\\\\n"); //NOI18N
-        escapedString = escapedString.replaceAll("\r","\\\\r"); //NOI18N
-        escapedString = escapedString.replaceAll("\t","\\\\t"); //NOI18N
+        escapedString = escapedString.replace("\n", "\\n"); //NOI18N
+        escapedString = escapedString.replace("\r", "\\r"); //NOI18N
+        escapedString = escapedString.replace("\t", "\\t"); //NOI18N
         return escapedString;
     }
 

@@ -121,12 +121,7 @@ public class SearchPanel extends JPanel implements FocusListener,
                     selectedPresenter = pp.getPresenter();
                 }
             }
-            tabbedPane.addChangeListener(new ChangeListener() {
-                @Override
-                public void stateChanged(ChangeEvent e) {
-                    tabChanged();
-                }
-            });
+            tabbedPane.addChangeListener((ChangeEvent e) -> tabChanged());
             add(tabbedPane);
         }
         if (selectedPresenter == null) {
@@ -199,7 +194,7 @@ public class SearchPanel extends JPanel implements FocusListener,
      */
     List<PresenterProxy> makePresenters(Presenter explicitPresenter) {
 
-        List<PresenterProxy> presenterList = new LinkedList<PresenterProxy>();
+        List<PresenterProxy> presenterList = new LinkedList<>();
         SearchProvider explicitProvider = explicitPresenter == null
                 ? null
                 : explicitPresenter.getSearchProvider();
@@ -381,13 +376,8 @@ public class SearchPanel extends JPanel implements FocusListener,
      * Add change listener to a presenter.
      */
     private void initChangeListener(final Presenter p) {
-        p.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                okButton.setEnabled(p.isUsable(
-                        dialogDescr.getNotificationLineSupport()));
-            }
-        });
+        p.addChangeListener((ChangeEvent e) -> okButton.setEnabled(
+                p.isUsable(dialogDescr.getNotificationLineSupport())));
     }
 
     private void updateUsability() {

@@ -33,7 +33,7 @@ import org.openide.util.MutexException;
 /**
  *
  */
-final public class UpgradableProject {
+public final class UpgradableProject {
 
     private Project project;
     private EclipseProjectReference reference;

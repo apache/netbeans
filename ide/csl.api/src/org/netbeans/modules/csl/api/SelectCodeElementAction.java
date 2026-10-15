@@ -31,7 +31,6 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 
 import org.netbeans.editor.BaseAction;
-import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.core.Language;
 import org.netbeans.modules.csl.core.LanguageRegistry;
 import org.netbeans.modules.csl.spi.ParserResult;
@@ -52,6 +51,7 @@ import org.openide.util.NbBundle;
  * @author Miloslav Metelka, Jan Pokorsky
  * @deprecated use {@link CslActions#createSelectCodeElementAction(java.lang.String, boolean)  } instead.
 */
+@Deprecated
 public final class SelectCodeElementAction extends BaseAction {
     public static final String selectNextElementAction = "select-element-next"; //NOI18N
     public static final String selectPreviousElementAction = "select-element-previous"; //NOI18N
@@ -184,8 +184,7 @@ public final class SelectCodeElementAction extends BaseAction {
         }
         
         private KeystrokeHandler getBracketCompletion(Document doc, int offset) {
-            BaseDocument baseDoc = (BaseDocument)doc;
-            List<Language> list = LanguageRegistry.getInstance().getEmbeddedLanguages(baseDoc, offset);
+            List<Language> list = LanguageRegistry.getInstance().getEmbeddedLanguages(doc, offset);
             for (Language l : list) {
                 if (l.getBracketCompletion() != null) {
                     return l.getBracketCompletion();

@@ -245,9 +245,9 @@ public class EarActionProvider implements ActionProvider {
             if (null != spp) {
                 StringBuilder edbd = new StringBuilder();
                 final Set s = spp.getSubprojects();
-                Iterator iter = s.iterator();
+                Iterator<Project> iter = s.iterator();
                 while (iter.hasNext()) {
-                    Project proj = (Project) iter.next();
+                    Project proj = iter.next();
                     WebModuleProvider wmp = proj.getLookup().lookup(WebModuleProvider.class);
                     if (null != wmp) {
                         WebModule wm = wmp.findWebModule(proj.getProjectDirectory());
@@ -278,9 +278,9 @@ public class EarActionProvider implements ActionProvider {
             if (null != spp) {
                 StringBuilder edbd = new StringBuilder();
                 final Set s = spp.getSubprojects();
-                Iterator iter = s.iterator();
+                Iterator<Project> iter = s.iterator();
                 while (iter.hasNext()) {
-                    Project proj = (Project) iter.next();
+                    Project proj = iter.next();
                     WebModuleProvider wmp = proj.getLookup().lookup(WebModuleProvider.class);
                     if (null != wmp) {
                         WebModule wm = wmp.findWebModule(proj.getProjectDirectory());

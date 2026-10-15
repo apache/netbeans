@@ -282,7 +282,7 @@ public final class DocBaseNodeFactory implements NodeFactory {
         }
     }
 
-    private static abstract class BaseNode extends FilterNode {
+    private abstract static class BaseNode extends FilterNode {
         private static Image WEB_PAGES_BADGE = ImageUtilities.loadImage( "org/netbeans/modules/web/project/ui/resources/webPagesBadge.gif" ); //NOI18N
         /**
          * The MIME type of Java files.

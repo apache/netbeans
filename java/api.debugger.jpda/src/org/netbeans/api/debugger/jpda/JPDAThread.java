@@ -21,10 +21,8 @@ package org.netbeans.api.debugger.jpda;
 
 import com.sun.jdi.AbsentInformationException;
 import com.sun.jdi.ThreadReference;
-import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
-import org.netbeans.spi.debugger.jpda.EditorContext;
 import org.netbeans.spi.debugger.jpda.EditorContext.Operation;
 
 
@@ -111,7 +109,7 @@ public interface JPDAThread {
     /**
      * Returns the operation that is being currently executed on this thread.
      * @return The current operation, or <CODE>null</CODE>.
-     * @see {@link CallStackFrame#getCurrentOperation}
+     * @see CallStackFrame#getCurrentOperation(String)
      */
     public abstract Operation getCurrentOperation();
     

@@ -36,11 +36,14 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.maven.model.InputLocation;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.fold.FoldHierarchy;
 import org.netbeans.modules.maven.api.ModelUtils;
 import org.netbeans.modules.maven.grammar.effpom.LocationAwareMavenXpp3Writer.Location;
-import org.netbeans.modules.maven.hyperlinks.HyperlinkProviderImpl;
+
 import static org.netbeans.modules.maven.grammar.effpom.Bundle.*;
+
+import org.openide.awt.GraphicsUtils;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -312,7 +315,7 @@ public final class AnnotationBar extends JComponent implements Accessible, Prope
         int line;
         int offset = caret.getDot();
         try {
-            line = Utilities.getLineOffset(doc, offset);
+            line = LineDocumentUtils.getLineIndex(doc, offset);
         } catch (BadLocationException ex) {
             LOG.log(Level.SEVERE, "Can not get line for caret at offset ", offset); // NOI18N
             return;
@@ -453,7 +456,7 @@ public final class AnnotationBar extends JComponent implements Accessible, Prope
             if (al != null) {
                 annotation = getDisplayName(al);  // NOI18N
             }
-        } 
+        }
 
         if (al != null && getDisplayName(al).equals(recentLocationName)) {
             g.setColor(selectedColor());
@@ -528,6 +531,8 @@ public final class AnnotationBar extends JComponent implements Accessible, Prope
      */
     @Override
     public void paintComponent(Graphics g) {
+        GraphicsUtils.configureDefaultRenderingHints(g);
+
         super.paintComponent(g);
 
         Rectangle clip = g.getClipBounds();
@@ -618,7 +623,7 @@ public final class AnnotationBar extends JComponent implements Accessible, Prope
                 JTextComponent component = editorUI.getComponent();
                 BaseTextUI textUI = (BaseTextUI)component.getUI();
                 int clickOffset = textUI.viewToModel(component, new Point(0, e.getY()));
-                line = Utilities.getLineOffset(doc, clickOffset);
+                line = LineDocumentUtils.getLineIndex(doc, clickOffset);
             }catch (BadLocationException ble){
             }
         }

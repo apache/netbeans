@@ -62,7 +62,7 @@ public class ProjectTemplatePanel implements WizardDescriptor.Panel<WizardDescri
         this.wizard = settings;
         panel.setWizardDescriptor(wizard);
         TemplateWizard wd = (TemplateWizard) settings;
-        wd.putProperty (WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer (0));
+        wd.putProperty (WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 0);
         wd.putProperty (WizardDescriptor.PROP_CONTENT_DATA, new String[] {
                 NbBundle.getBundle (ProjectTemplatePanel.class).getString ("LBL_TemplatesPanel_Name"), // NOI18N
                 NbBundle.getBundle (ProjectTemplatePanel.class).getString ("LBL_TemplatesPanel_Dots")}); // NOI18N

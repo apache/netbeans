@@ -40,7 +40,6 @@ import org.netbeans.modules.mercurial.ui.branch.HgBranch;
 import org.netbeans.modules.mercurial.ui.log.RepositoryRevision.Kind;
 import org.netbeans.modules.mercurial.util.HgCommand;
 import org.netbeans.modules.mercurial.util.HgUtils;
-import org.netbeans.modules.versioning.util.VCSKenaiAccessor;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 
@@ -178,14 +177,13 @@ class SearchExecutor extends HgProgressSupport {
     }
 
     private void checkFinished(final List<RepositoryRevision> results) {
-        final Map<String, VCSKenaiAccessor.KenaiUser> kenaiUserMap = SearchHistoryPanel.createKenaiUsersMap(results);
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 if(results.isEmpty()) {
-                    master.setResults(null, kenaiUserMap, -1);
+                    master.setResults(null, -1);
                 } else {
-                    master.setResults(results, kenaiUserMap, limitRevisions);
+                    master.setResults(results, limitRevisions);
                 }
 
             }

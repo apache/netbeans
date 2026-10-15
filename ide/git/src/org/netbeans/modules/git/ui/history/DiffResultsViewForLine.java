@@ -111,7 +111,6 @@ final class DiffResultsViewForLine extends DiffResultsView {
 
         @Override
         public void perform () {
-            showDiffError(NbBundle.getMessage(DiffResultsView.class, "MSG_DiffPanel_LoadingDiff")); //NOI18N
             final DiffStreamSource leftSource = new DiffStreamSource(file, file, revision, revision);
             final LocalFileDiffStreamSource rightSource = new LocalFileDiffStreamSource(file, true);
 

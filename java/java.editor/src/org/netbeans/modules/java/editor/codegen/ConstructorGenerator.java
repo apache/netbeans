@@ -83,7 +83,7 @@ public class ConstructorGenerator implements CodeGenerator {
                 return ret;
             }
             final TypeElement typeElement = (TypeElement)controller.getTrees().getElement(path);
-            if (typeElement == null || !typeElement.getKind().isClass() || NestingKind.ANONYMOUS.equals(typeElement.getNestingKind())) {
+            if (typeElement == null || !typeElement.getKind().isClass() || NestingKind.ANONYMOUS == typeElement.getNestingKind()) {
                 return ret;
             }
             final WorkingCopy wc = context.lookup(WorkingCopy.class);

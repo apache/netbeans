@@ -171,26 +171,20 @@ public class JPDAReload extends Task {
     }
     
     private String classToSourceURL (FileObject fo) {
-        try {
-            ClassPath cp = ClassPath.getClassPath (fo, ClassPath.EXECUTE);
-            FileObject root = cp.findOwnerRoot (fo);
-            String resourceName = cp.getResourceName (fo, '/', false);
-            if (resourceName == null) {
-                getProject().log("Can not find classpath resource for "+fo+", skipping...", Project.MSG_ERR);
-                return null;
-            }
-            int i = resourceName.indexOf ('$');
-            if (i > 0)
-                resourceName = resourceName.substring (0, i);
-            FileObject[] sRoots = SourceForBinaryQuery.findSourceRoots 
-                (root.getURL ()).getRoots ();
-            ClassPath sourcePath = ClassPathSupport.createClassPath (sRoots);
-            FileObject rfo = sourcePath.findResource (resourceName + ".java");
-            if (rfo == null) return null;
-            return rfo.getURL ().toExternalForm ();
-        } catch (FileStateInvalidException ex) {
-            ex.printStackTrace ();
+        ClassPath cp = ClassPath.getClassPath (fo, ClassPath.EXECUTE);
+        FileObject root = cp.findOwnerRoot (fo);
+        String resourceName = cp.getResourceName (fo, '/', false);
+        if (resourceName == null) {
+            getProject().log("Can not find classpath resource for "+fo+", skipping...", Project.MSG_ERR);
             return null;
         }
+        int i = resourceName.indexOf ('$');
+        if (i > 0)
+            resourceName = resourceName.substring (0, i);
+        FileObject[] sRoots = SourceForBinaryQuery.findSourceRoots(root.toURL()).getRoots ();
+        ClassPath sourcePath = ClassPathSupport.createClassPath (sRoots);
+        FileObject rfo = sourcePath.findResource (resourceName + ".java");
+        if (rfo == null) return null;
+        return rfo.toURL().toExternalForm();
     }
 }

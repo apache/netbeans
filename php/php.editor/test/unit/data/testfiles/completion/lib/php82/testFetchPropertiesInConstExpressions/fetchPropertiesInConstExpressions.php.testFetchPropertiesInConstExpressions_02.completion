@@ -1,0 +1,5 @@
+Code completion result for source line:
+const C2 = [self::Case?->val|ue => self::Case];
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+VARIABLE   string value                               \E

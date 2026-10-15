@@ -24,6 +24,7 @@ import java.util.Collections;
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 
+// copy of openide.util.ui
 public class MockPropertyChangeListenerTest extends TestCase {
 
     public MockPropertyChangeListenerTest(String n) {

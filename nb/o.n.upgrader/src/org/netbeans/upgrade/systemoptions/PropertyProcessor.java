@@ -26,7 +26,7 @@ import java.util.Map;
 abstract class PropertyProcessor  {
     private String className;
     private static Map<String, String> results;
-    private static Map<String, PropertyProcessor> clsname2Delegate = new HashMap<String, PropertyProcessor>();
+    private static Map<String, PropertyProcessor> clsname2Delegate = new HashMap<>();
     
     static {
         //To extend behaviour of this class then regisetr your own implementation
@@ -41,9 +41,7 @@ abstract class PropertyProcessor  {
         registerPropertyProcessor(new ColorProcessor(ColorProcessor.JAVA_AWT_COLOR));//FormLoaderSettings
         registerPropertyProcessor(new ColorProcessor(ColorProcessor.NETBEANS_COLOREDITOR_SUPERCOLOR));//FormLoaderSettings
         registerPropertyProcessor(new StringPropertyProcessor());//ProxySettings
-        registerPropertyProcessor(new HashSetProcessor(HashSetProcessor.CVS_PERSISTENT_HASHSET));//CvsSettings
         registerPropertyProcessor(new HashSetProcessor(HashSetProcessor.SVN_PERSISTENT_HASHSET));//SvnSettings
-        registerPropertyProcessor(new CvsSettingsProcessor());
         registerPropertyProcessor(new DocumentationSettingsProcessor());
     }           
 
@@ -55,14 +53,15 @@ abstract class PropertyProcessor  {
     }
     
     private static PropertyProcessor DEFAULT = new PropertyProcessor(false) {
+        @Override
         void processPropertyImpl(final String propertyName, final Object value) {
-            String stringvalue = null;
-            stringvalue = Utils.valueFromObjectWrapper(value);
+            String stringvalue = Utils.valueFromObjectWrapper(value);
             addProperty(propertyName, stringvalue);
         }
     };
     
     private static PropertyProcessor TYPES = new PropertyProcessor(true) {
+        @Override
         void processPropertyImpl(final String propertyName, final Object value) {
             addProperty(propertyName, Utils.getClassNameFromObject(value));
         }        
@@ -81,7 +80,7 @@ abstract class PropertyProcessor  {
     }
     
     static Map<String, String> processProperty(String propertyName, Object value, boolean types) {
-        results = new HashMap<String, String>();
+        results = new HashMap<>();
         PropertyProcessor p = (types) ? TYPES : findDelegate(value);
         if (p == null) {
             p = DEFAULT;

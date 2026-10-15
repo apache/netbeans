@@ -23,11 +23,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.project.classpath.ProjectClassPathModifier;
@@ -103,8 +101,7 @@ public class IdeJaxRsSupportImpl implements JaxRsStackSupportImplementation {
         String[] classPathTypes = new String[]{ ClassPath.COMPILE , ClassPath.EXECUTE };
         for (String type : classPathTypes) {
             try {
-                ProjectClassPathModifier.removeLibraries(libraries.toArray( 
-                        new Library[ libraries.size()]), sourceRoot, type);
+                ProjectClassPathModifier.removeLibraries(libraries.toArray(new Library[0]), sourceRoot, type);
             } 
             catch(UnsupportedOperationException ex) {
                 Logger.getLogger( IdeJaxRsSupportImpl.class.getName() ).log( 

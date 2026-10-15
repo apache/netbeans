@@ -44,7 +44,7 @@ public final class InlineRefactoring extends AbstractRefactoring {
 
     /**
      * Creates a new instance of InlineRefactoring.
-     * @param selectedElement, element to inline.
+     * @param selectedElement element to inline.
      */
     public InlineRefactoring(@NonNull TreePathHandle selectedElement, Type inlineType) {
         super(Lookups.fixed(selectedElement));

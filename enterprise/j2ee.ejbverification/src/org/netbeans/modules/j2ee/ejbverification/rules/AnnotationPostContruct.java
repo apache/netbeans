@@ -132,7 +132,8 @@ public final class AnnotationPostContruct {
         String paramType = parameter.asType().toString();
         TypeElement element = info.getElements().getTypeElement(paramType);
         if (element != null) { //NOI18N
-            if (JavaUtils.isTypeOf(info, element, "javax.interceptor.InvocationContext")) { //NOI18N
+            if (JavaUtils.isTypeOf(info, element, "javax.interceptor.InvocationContext")  //NOI18N
+                    || JavaUtils.isTypeOf(info, element, "jakarta.interceptor.InvocationContext")) { //NOI18N
                 return true;
             }
         }
@@ -158,7 +159,8 @@ public final class AnnotationPostContruct {
     private static boolean isEligibleMethod(ExecutableElement method) {
         boolean knownClasses = HintsUtils.isContainingKnownClasses(method);
         for (AnnotationMirror am : method.getAnnotationMirrors()) {
-            if (EJBAPIAnnotations.POST_CONSTRUCT.equals(am.getAnnotationType().asElement().toString())
+            if ((EJBAPIAnnotations.POST_CONSTRUCT.equals(am.getAnnotationType().asElement().toString())
+                    || EJBAPIAnnotations.POST_CONSTRUCT_JAKARTA.equals(am.getAnnotationType().asElement().toString()))
                     && knownClasses) {
                 return true;
             }

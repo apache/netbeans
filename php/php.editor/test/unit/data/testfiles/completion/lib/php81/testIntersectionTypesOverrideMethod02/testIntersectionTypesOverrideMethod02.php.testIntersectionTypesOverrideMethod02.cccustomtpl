@@ -1,0 +1,4 @@
+Name: testMethod
+public function testMethod(Foo&Bar $param): Foo&Bar {
+${cursor}parent::testMethod($param);
+}

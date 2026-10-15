@@ -40,9 +40,8 @@ public class UniqueVariableNameFinder {
     }
 
     public void addPattern(String pattern, int count) {
-        if(varDeclMap.containsKey(pattern))
-            varDeclMap.remove(pattern);
-        varDeclMap.put(pattern, new Integer(count));
+        varDeclMap.remove(pattern);
+        varDeclMap.put(pattern, Integer.valueOf(count));
     }
 
     public int getPatternCount(String pattern) {

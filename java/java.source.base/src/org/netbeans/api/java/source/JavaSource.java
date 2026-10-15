@@ -21,11 +21,9 @@ package org.netbeans.api.java.source;
 
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Symbol.CompletionFailure;
-import com.sun.tools.javac.util.Log;
 import java.io.IOException;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -174,7 +172,7 @@ public final class JavaSource {
      * and classpath represented by given {@link ClasspathInfo}.
      * @param cpInfo the classpaths to be used.
      * @param files for which the {@link JavaSource} should be created
-     * @return a new {@link JavaSource}
+     * @return a new {@link JavaSource} or {@code null} if the essential infrastructure is missing
      * @throws IllegalArgumentException if fileObject or cpInfo is null
      */
     public static @NullUnknown JavaSource create(final @NonNull ClasspathInfo cpInfo, final @NonNull Collection<? extends FileObject> files) throws IllegalArgumentException {
@@ -323,7 +321,7 @@ public final class JavaSource {
     }
 
     /**
-     * Returns a {@link JavaSource} instance associated to the given {@link javax.swing.Document},
+     * Returns a {@link JavaSource} instance associated to the given {@link Document},
      * it returns null if the {@link Document} is not
      * associated with data type providing the {@link JavaSource}.
      * @param doc {@link Document} for which the {@link JavaSource} should be found/created.
@@ -408,7 +406,7 @@ public final class JavaSource {
      * this task does not finish.<BR>
      * @see org.netbeans.api.java.source.CancellableTask for information about implementation requirements
      * @param task The task which.
-     * @param shared if true the java compiler may be reused by other {@link org.netbeans.api.java.source.CancellableTasks},
+     * @param shared if true the java compiler may be reused by other {@link org.netbeans.api.java.source.CancellableTask}s,
      * the value false may have negative impact on the IDE performance.
      * <div class="nonnormative">
      * <p>
@@ -500,8 +498,6 @@ public final class JavaSource {
                 assert cc != null;
                 cc.setJavaSource(this.js);
                 task.run (cc);
-                final JavacTaskImpl jt = cc.impl.getJavacTask();
-                Log.instance(jt.getContext()).nerrors = 0;
             }
             else {
                 Parser.Result result = findEmbeddedJava (resultIterator);
@@ -513,8 +509,6 @@ public final class JavaSource {
                 assert cc != null;
                 cc.setJavaSource(this.js);
                 task.run (cc);
-                final JavacTaskImpl jt = cc.impl.getJavacTask();
-                Log.instance(jt.getContext()).nerrors = 0;
             }
         }
 
@@ -593,11 +587,11 @@ public final class JavaSource {
      * the given task and returns, the task is performed when the background scan completes by
      * the thread doing the background scan.
      * @param task to be performed
-     * @param shared if true the java compiler may be reused by other {@link org.netbeans.api.java.source.CancellableTasks},
+     * @param shared if true the java compiler may be reused by other {@link org.netbeans.api.java.source.CancellableTask}s,
      * the value false may have negative impact on the IDE performance.
      * @return {@link Future} which can be used to find out the sate of the task {@link Future#isDone} or {@link Future#isCancelled}.
      * The caller may cancel the task using {@link Future#cancel} or wait until the task is performed {@link Future#get}.
-     * @throws IOException encapsulating the exception thrown by {@link CancellableTasks#run}
+     * @throws IOException encapsulating the exception thrown by {@link CancellableTask#run}
      * @since 0.12
      */
     public @NonNull Future<Void> runWhenScanFinished (final @NonNull Task<CompilationController> task, final boolean shared) throws IOException {
@@ -671,8 +665,6 @@ public final class JavaSource {
                     copy.toPhase(Phase.PARSED);
                 }
                 task.run(copy);
-                final JavacTaskImpl jt = copy.impl.getJavacTask();
-                Log.instance(jt.getContext()).nerrors = 0;
                 final List<ModificationResult.Difference> diffs = copy.getChanges(result.tag2Span);
                 if (diffs != null && diffs.size() > 0) {
                     final FileObject file = copy.getFileObject();

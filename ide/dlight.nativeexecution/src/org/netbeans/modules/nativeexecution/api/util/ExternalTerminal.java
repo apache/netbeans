@@ -39,7 +39,7 @@ import org.openide.util.Utilities;
  */
 public final class ExternalTerminal {
 
-    private final static ConcurrentHashMap<TermEnvPair, String> execCache =
+    private static final ConcurrentHashMap<TermEnvPair, String> execCache =
             new ConcurrentHashMap<>();
     private final TerminalProfile profile;
     private String title = null;
@@ -213,7 +213,7 @@ public final class ExternalTerminal {
     }
 
     /*package*/
-    final static class TermEnvPair {
+    static final class TermEnvPair {
 
         public final ExecutionEnvironment env;
         public final String termexec;

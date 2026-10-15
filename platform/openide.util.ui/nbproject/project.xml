@@ -69,6 +69,7 @@
             <public-packages>
                 <package>org.openide</package>
                 <package>org.openide.util</package>
+                <package>org.openide.util.spi</package>
                 <package>org.openide.util.actions</package>
                 <package>org.openide.util.datatransfer</package>
                 <package>org.openide.util.io</package>

@@ -33,7 +33,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.CharConversionException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,7 +50,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.RootPaneContainer;
 import javax.swing.SwingUtilities;
@@ -74,9 +72,6 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.windows.IOContainer;
 import org.openide.windows.OutputListener;
-import org.openide.windows.WindowManager;
-import org.openide.xml.XMLUtil;
-
 import static org.netbeans.core.output2.OutputTab.ACTION.*;
 import org.netbeans.core.output2.options.OutputOptions;
 import org.netbeans.core.output2.ui.OutputKeymapManager;
@@ -164,7 +159,7 @@ final class OutputTab extends AbstractOutputTab implements IOContainer.CallBacks
         Document old = getDocument();
         hasOutputListeners = false;
         super.setDocument(doc);
-        if (old != null && old instanceof OutputDocument) {
+        if (old instanceof OutputDocument) {
             ((OutputDocument) old).dispose();
         }
         applyOptions();
@@ -197,10 +192,12 @@ final class OutputTab extends AbstractOutputTab implements IOContainer.CallBacks
         return null;
     }
 
+    @Override
     protected AbstractOutputPane createOutputPane() {
         return new OutputPane(this);
     }
 
+    @Override
     public void inputSent(String txt) {
         if (Controller.LOG) Controller.log("Input sent on OutputTab: " + txt);
         getOutputPane().lockScroll();
@@ -212,6 +209,7 @@ final class OutputTab extends AbstractOutputTab implements IOContainer.CallBacks
         }
     }
 
+    @Override
     protected void inputEof() {
         if (Controller.LOG) Controller.log ("Input EOF");
         NbIO.IOReader in = io.in();
@@ -220,6 +218,7 @@ final class OutputTab extends AbstractOutputTab implements IOContainer.CallBacks
         }
     }
 
+    @Override
     public void hasSelectionChanged(boolean val) {
         if (isShowing() && actionsLoaded) {
             actions.get(ACTION.COPY).setEnabled(val);
@@ -246,7 +245,7 @@ final class OutputTab extends AbstractOutputTab implements IOContainer.CallBacks
             l.outputLineAction(oe);
             //Select the text on click if it is still visible
             if (getOutputPane().getLength() >= range[1]) { // #179768
-                getOutputPane().sendCaretToPos(range[0], range[1], true);
+                getOutputPane().sendCaretToPos(range[0], range[1], true, false);
             }
         }
     }
@@ -327,10 +326,12 @@ final class OutputTab extends AbstractOutputTab implements IOContainer.CallBacks
         }
     }
 
+    @Override
     public void activated() {
         updateActions();
     }
 
+    @Override
     public void closed() {
         io.setClosed(true);
         io.setStreamClosed(true);
@@ -351,9 +352,11 @@ final class OutputTab extends AbstractOutputTab implements IOContainer.CallBacks
         }
     }
 
+    @Override
     public void deactivated() {
     }
 
+    @Override
     public void selected() {
     }
 
@@ -642,7 +645,7 @@ final class OutputTab extends AbstractOutputTab implements IOContainer.CallBacks
             }
         }
 
-        List<TabAction> activeActions = new ArrayList<TabAction>(popupItems.length);
+        List<TabAction> activeActions = new ArrayList<>(popupItems.length);
         for (int i = 0; i < popupItems.length; i++) {
             if (popupItems[i] == null) {
                 popup.addSeparator();
@@ -756,18 +759,6 @@ final class OutputTab extends AbstractOutputTab implements IOContainer.CallBacks
         return origPane != null ? filtOut.getWriter() : outWriter;
     }
 
-    private void disableHtmlName() {
-        Controller.getDefault().removeFromUpdater(this);
-        String escaped;
-        try {
-            escaped = XMLUtil.toAttributeValue(io.getName() + " ");
-        } catch (CharConversionException e) {
-            escaped = io.getName() + " ";
-        }
-        //#88204 apostophes are escaped in xm but not html
-        io.getIOContainer().setTitle(this, escaped.replace("&apos;", "'"));
-    }
-
     private void initOptionsListener() {
         optionsListener = new PropertyChangeListener() {
             @Override
@@ -872,7 +863,7 @@ final class OutputTab extends AbstractOutputTab implements IOContainer.CallBacks
             EXPAND_TREE
     };
 
-    private final Map<ACTION, TabAction> actions = new EnumMap<ACTION, TabAction>(ACTION.class);;
+    private final Map<ACTION, TabAction> actions = new EnumMap<>(ACTION.class);
 
     private void createActions() {
         KeyStrokeUtils.refreshActionCache();
@@ -960,7 +951,7 @@ final class OutputTab extends AbstractOutputTab implements IOContainer.CallBacks
                     }
                     if (l.size() > 0) {
                         putValue(ACCELERATORS_KEY,
-                                l.toArray(new KeyStroke[l.size()]));
+                                l.toArray(new KeyStroke[0]));
                         putValue(ACCELERATOR_KEY, l.get(0));
                     }
                 }
@@ -1090,6 +1081,7 @@ final class OutputTab extends AbstractOutputTab implements IOContainer.CallBacks
             return super.isEnabled();
         }
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             if (getIO().isClosed()) {
                 // Cached action for an already closed tab.
@@ -1257,6 +1249,7 @@ final class OutputTab extends AbstractOutputTab implements IOContainer.CallBacks
             orig = original;
         }
 
+        @Override
         public Object getValue(String key) {
             if (Action.SMALL_ICON.equals(key)) {
                 return null;
@@ -1264,26 +1257,32 @@ final class OutputTab extends AbstractOutputTab implements IOContainer.CallBacks
             return orig.getValue(key);
         }
 
+        @Override
         public void putValue(String key, Object value) {
             orig.putValue(key, value);
         }
 
+        @Override
         public void setEnabled(boolean b) {
             orig.setEnabled(b);
         }
 
+        @Override
         public boolean isEnabled() {
             return orig.isEnabled();
         }
 
+        @Override
         public void addPropertyChangeListener(PropertyChangeListener listener) {
             orig.addPropertyChangeListener(listener);
         }
 
+        @Override
         public void removePropertyChangeListener(PropertyChangeListener listener) {
             orig.removePropertyChangeListener(listener);
         }
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             orig.actionPerformed(e);
         }
@@ -1303,6 +1302,7 @@ final class OutputTab extends AbstractOutputTab implements IOContainer.CallBacks
             handle = escHandle;
         }
 
+        @Override
         public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
             JPopupMenu popup = (JPopupMenu) e.getSource();
             popup.removeAll();
@@ -1320,10 +1320,12 @@ final class OutputTab extends AbstractOutputTab implements IOContainer.CallBacks
             }
         }
 
+        @Override
         public void popupMenuCanceled(PopupMenuEvent e) {
             popupMenuWillBecomeInvisible(e);
         }
 
+        @Override
         public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
             //do nothing
         }

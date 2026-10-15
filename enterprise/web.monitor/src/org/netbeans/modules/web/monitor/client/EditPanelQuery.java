@@ -17,7 +17,7 @@
  * under the License.
  */
 
-/**
+/*
  * EditPanelQuery.java
  *
  *
@@ -26,10 +26,6 @@
  * @author Ana von Klopp
  * @author Simran Gleason
  * @version
- */
-
-/**
- * Contains the Query sub-panel for the EditPanel
  */
 package org.netbeans.modules.web.monitor.client;
 
@@ -55,9 +51,13 @@ import org.openide.util.NbBundle;
 import org.netbeans.modules.web.monitor.data.*;
 import org.openide.awt.Mnemonics;
 
+
+/**
+ * Contains the Query sub-panel for the EditPanel
+ */
 class EditPanelQuery extends DataDisplay {
 
-    private final static boolean debug = false;
+    private static final boolean debug = false;
 
     private DisplayTable paramTable = null; 
     private MonitorData monitorData = null;

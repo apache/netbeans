@@ -243,7 +243,7 @@ class TagManager implements ListSelectionListener, DocumentListener, ActionListe
                             }
                         }
                         synchronized (LOCK) {
-                            tags = newTags.toArray(new HgTag[newTags.size()]);
+                            tags = newTags.toArray(new HgTag[0]);
                         }
                     } catch (HgException ex) {
                         HgUtils.notifyException(ex);

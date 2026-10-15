@@ -41,11 +41,8 @@ public final class ModelContainer {
             if (model == null || reload) {
                 model = ModelAccessor.getDefault().createModel(info);
                 if (LOGGER.isLoggable(Level.FINEST)) {
-                    model.writeModel(new Model.Printer() {
-                        @Override
-                        public void println(String str) {
-                            LOGGER.log(Level.FINEST, str);
-                        }
+                    model.writeModel((String str) -> {
+                        LOGGER.log(Level.FINEST, str);
                     });
                 }
             }

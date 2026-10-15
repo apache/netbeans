@@ -30,8 +30,8 @@ import org.openide.nodes.Node.Property;
  */
 public class FileObjectPropertySet extends Node.PropertySet {
 
-    private FileObject fileObject;
-    Property[] properties;
+    private final FileObject fileObject;
+    private final Property<?>[] properties;
 
     public FileObjectPropertySet(FileObject fileObject) {
         this.fileObject = fileObject;

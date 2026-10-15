@@ -99,7 +99,7 @@ public class StartProfiledServer extends Task implements Deployment.Logger {
             }
             try { 
                 Thread.sleep(1000);  // take a nap before next retry
-            } catch (Exception ex) {};
+            } catch (Exception ex) {}
         }
         throw new BuildException(NbBundle.getMessage(StartProfiledServer.class, "MSG_StartupFailed")); // NOI18N
     }

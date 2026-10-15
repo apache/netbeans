@@ -25,8 +25,8 @@ import org.openide.util.Lookup;
 
 public final class FileSearchSupport {
 
-    private final static java.util.logging.Logger log = Logger.getInstance();
-    private final static TasksCachedProcessor<FileSearchParams, String> processor =
+    private static final java.util.logging.Logger log = Logger.getInstance();
+    private static final TasksCachedProcessor<FileSearchParams, String> processor =
             new TasksCachedProcessor<>(
             new Searcher(), false);
 
@@ -35,7 +35,7 @@ public final class FileSearchSupport {
         return processor.compute(fileSearchParams);
     }
 
-    private final static class Searcher implements Computable<FileSearchParams, String> {
+    private static final class Searcher implements Computable<FileSearchParams, String> {
 
         public String compute(FileSearchParams fileSearchParams) throws InterruptedException {
             final Collection<? extends FileSearcher> searchers = Lookup.getDefault().lookupAll(FileSearcher.class);

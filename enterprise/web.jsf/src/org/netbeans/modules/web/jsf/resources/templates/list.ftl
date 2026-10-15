@@ -50,10 +50,17 @@
 </#if>
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#if nsLocation?starts_with("http://")>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="${nsLocation}/jsf/facelets"
       xmlns:h="${nsLocation}/jsf/html"
       xmlns:f="${nsLocation}/jsf/core">
+<#else>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="${nsLocation}.facelets"
+      xmlns:h="${nsLocation}.html"
+      xmlns:f="${nsLocation}.core">
+</#if>
 
     <ui:composition template="/template.xhtml">
         <ui:define name="title">

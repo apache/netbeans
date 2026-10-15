@@ -107,8 +107,7 @@ public final class CodeSnifferStandardsComboBoxModel extends AbstractListModel<S
     @CheckForNull
     public String getSelectedStandard() {
         if (selectedStandard == NO_STANDARDS_AVAILABLE
-                || selectedStandard == FETCHING_STANDARDS
-                || selectedStandard.isEmpty()) {
+                || selectedStandard == FETCHING_STANDARDS ) {
             return null;
         }
         return selectedStandard;

@@ -65,6 +65,11 @@ public interface SearchProvider {
      *  }
      * </pre>
      * 
+     * It may happen that the Provider searches for some considerable time, or searches
+     * a considerable number of items without any results. It may check use 
+     * {@link SearchResponse#isObsolete()} to determine if the search was cancelled 
+     * or obsoleted without adding any items.
+     * <p>
      * Threading: This method can be called outside EQ thread by infrastructure.
      * 
      * @param request Search request object that contains information what to

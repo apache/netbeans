@@ -36,6 +36,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=JavadocForBinaryQueryImplementation.class)
 public class JavadocForBinaryQueryImpl implements JavadocForBinaryQueryImplementation {
 
+    @Override
     public Result findJavadoc(URL binaryRoot) {
         if (javadocRoot != null && MethodInvocationContext.apiJarURL().equals(binaryRoot)) {
             return R;
@@ -57,12 +58,13 @@ public class JavadocForBinaryQueryImpl implements JavadocForBinaryQueryImplement
     }
 
     private static final Result R = new Result() {
+        @Override
         public URL[] getRoots() {
             return new URL[] {
                 javadocRoot
             };
         }
-        public void addChangeListener(ChangeListener l) {}
-        public void removeChangeListener(ChangeListener l) {}
+        @Override public void addChangeListener(ChangeListener l) {}
+        @Override public void removeChangeListener(ChangeListener l) {}
     };
 }

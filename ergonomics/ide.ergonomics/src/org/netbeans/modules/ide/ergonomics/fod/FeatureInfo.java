@@ -64,6 +64,9 @@ public final class FeatureInfo {
         this.clusterName = clusterName;
     }
     
+    public String getClusterName() {
+        return clusterName;
+    }
 
     public static FeatureInfo create(String clusterName, URL delegateLayer, URL bundle) throws IOException {
         Properties p = new Properties();
@@ -231,6 +234,10 @@ public final class FeatureInfo {
         return s;
     }
 
+    public final String getExtraProjectMarkerClass() {
+        return properties.getProperty("extra.project.marker.class");
+    }
+
     static final class ExtraModuleInfo {
         private final Pattern cnb;
         private final SpecificationVersion recMinJDK;
@@ -396,7 +403,7 @@ public final class FeatureInfo {
             }
         }
         xpaths.add(xpathList.substring(start, i));
-        return xpaths.toArray(new String[xpaths.size()]);
+        return xpaths.toArray(new String[0]);
     }
 
 }

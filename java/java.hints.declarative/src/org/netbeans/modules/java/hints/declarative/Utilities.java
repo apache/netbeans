@@ -22,6 +22,7 @@ package org.netbeans.modules.java.hints.declarative;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,16 +38,12 @@ import org.openide.filesystems.FileObject;
 public class Utilities {
 
     public static String readFile(FileObject file) {
-        StringBuilder sb = new StringBuilder();
 
-        Reader r = null;
+        try (Reader r = new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8)) {
 
-        try {
-            r = new InputStreamReader(file.getInputStream(), "UTF-8");
-
+            StringBuilder sb = new StringBuilder(1024);
             int read;
-
-            while ((read = r.read()) != (-1)) {
+            while ((read = r.read()) != -1) {
                 sb.append((char) read);
             }
 
@@ -54,19 +51,11 @@ public class Utilities {
         } catch (IOException ex) {
             Logger.getLogger(Utilities.class.getName()).log(Level.FINE, null, ex);
             return null;
-        } finally {
-            if (r != null) {
-                try {
-                    r.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(Utilities.class.getName()).log(Level.FINE, null, ex);
-                }
-            }
         }
     }
     
     public static Map<String, String> conditions2Constraints(List<Condition> conditions) {
-        Map<String, String> constraints = new HashMap<String, String>();
+        Map<String, String> constraints = new HashMap<>();
 
         for (Condition c : conditions) {
             if (!(c instanceof Instanceof) || c.not)

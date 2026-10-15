@@ -62,7 +62,7 @@ public final class PayaraInstanceProvider implements ServerInstanceProvider, Loo
 
     private static final String AUTOINSTANCECOPIED = "autoinstance-copied"; // NOI18N
 
-    private volatile static PayaraInstanceProvider payaraProvider;
+    private static volatile PayaraInstanceProvider payaraProvider;
 
     public static final String EE6_DEPLOYER_FRAGMENT = "deployer:pfv3ee6"; // NOI18N
     public static final String EE6WC_DEPLOYER_FRAGMENT = "deployer:pfv3ee6wc"; // NOI18N
@@ -111,13 +111,13 @@ public final class PayaraInstanceProvider implements ServerInstanceProvider, Loo
     
     private final ChangeSupport support = new ChangeSupport(this);
 
-    final private String[] instancesDirNames;
-    final private String displayName;
-    final private String[] uriFragments;
-    final private boolean needsJdk6;
-    final private List<String> noPasswordOptions;
-    final private CommandFactory cf;
-    final private Lookup.Result<RegisteredDDCatalog> lookupResult = Lookups.forPath(Util.PF_LOOKUP_PATH).lookupResult(RegisteredDDCatalog.class);
+    private final String[] instancesDirNames;
+    private final String displayName;
+    private final String[] uriFragments;
+    private final boolean needsJdk6;
+    private final List<String> noPasswordOptions;
+    private final CommandFactory cf;
+    private final Lookup.Result<RegisteredDDCatalog> lookupResult = Lookups.forPath(Util.PF_LOOKUP_PATH).lookupResult(RegisteredDDCatalog.class);
     
     @SuppressWarnings("LeakingThisInConstructor")
     private PayaraInstanceProvider(

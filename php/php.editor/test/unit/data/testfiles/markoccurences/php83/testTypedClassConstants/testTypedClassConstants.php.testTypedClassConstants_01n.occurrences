@@ -1,0 +1,17 @@
+class |>MARK_OCCURRENCES:A<| implements Stringable {
+class B extends |>MARK_OCCURRENCES:A<| {}
+class C extends |>MARK_OCCURRENCES:A<| {}
+    public const ?|>MARK_OCCURRENCES:A<| NULLABLE = null;
+    private const |>MARK_OCCURRENCES:A<||B UNION = A;
+    protected const |>MARK_OCCURRENCES:A<|&B INTERSECTION = B;
+    public const (|>MARK_OCCURRENCES:A<|&B)|C DNF = C;
+    public const |>MARK_OCCURRENCES:A<||B UNION = A; // interface
+    public const |>MARK_OCCURRENCES:A<|&B INTERSECTION = B; // interface
+    public const (|>MARK_OCCURRENCES:A<|&B)|C DNF = C; // interface
+    private const |>MARK_OCCURRENCES:A<||B UNION = A; // trait
+    protected const |>MARK_OCCURRENCES:A<|&B INTERSECTION = B; // trait
+    public const (|>MARK_OCCURRENCES:A<|&B)|C DNF = C; // trait
+    private const ^|>MARK_OCCURRENCES:A<||B UNION = A; // enum
+    protected const |>MARK_OCCURRENCES:A<|&B INTERSECTION = B; // enum
+    public const (|>MARK_OCCURRENCES:A<|&B)|(|>MARK_OCCURRENCES:A<|&C) DNF = C; // enum
+define("A", new |>MARK_OCCURRENCES:A<|());

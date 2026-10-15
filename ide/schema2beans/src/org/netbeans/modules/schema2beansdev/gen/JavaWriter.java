@@ -30,21 +30,21 @@ public class JavaWriter extends IndentingWriter {
     public int CONSTRUCTOR_SECTION = 2;
     public int BODY_SECTION = 3;
     public int TRAILER_SECTION = 4;
-    static final protected int defaultSectionCount = 5;
+    protected static final int defaultSectionCount = 5;
 
-    static public final int PUBLIC = 0x0;
-    static public final int PROTECTED = 0x1;
-    static public final int PACKAGE_LEVEL = 0x2;
-    static public final int PRIVATE = 0x3;
-    static public final int ACCESS_MASK = 0x3;
+    public static final int PUBLIC = 0x0;
+    public static final int PROTECTED = 0x1;
+    public static final int PACKAGE_LEVEL = 0x2;
+    public static final int PRIVATE = 0x3;
+    public static final int ACCESS_MASK = 0x3;
 
-    static public final int STATIC = 0x10;
-    static public final int FINAL = 0x20;
+    public static final int STATIC = 0x10;
+    public static final int FINAL = 0x20;
 
-    static public final int BEANINFO = 0x100;
-    static public final int IO = 0x200;
-    static public final int UNSUPPORTED = 0x400;
-    static public final int METHOD_SEMANTIC_MASK = 0xf00;
+    public static final int BEANINFO = 0x100;
+    public static final int IO = 0x200;
+    public static final int UNSUPPORTED = 0x400;
+    public static final int METHOD_SEMANTIC_MASK = 0xf00;
 
     protected boolean newlineBeforeCurlyBrace = false;
     public boolean storeMethods = true;
@@ -528,7 +528,7 @@ public class JavaWriter extends IndentingWriter {
         beginIf(predicate);
     }
 
-    public final static int rightMarginColumn = 76;
+    public static final int rightMarginColumn = 76;
     public void beginFor(String init, String predicate, String next) throws IOException {
         int indentLength;
         if ("\t".equals(indentString))

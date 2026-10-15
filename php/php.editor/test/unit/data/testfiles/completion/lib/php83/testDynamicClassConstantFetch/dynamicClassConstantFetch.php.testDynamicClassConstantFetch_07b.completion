@@ -1,0 +1,4 @@
+Code completion result for source line:
+case TEST3 = self::{sel|f::TES . self::T};
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+KEYWORD    self::                                     null

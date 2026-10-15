@@ -47,6 +47,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -66,12 +67,14 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.WildcardType;
 import javax.lang.model.util.ElementFilter;
+import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.api.java.source.ElementUtilities;
 import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.ModificationResult;
@@ -94,6 +97,7 @@ import org.openide.util.NbBundle;
 public class EqualsHashCodeGenerator implements CodeGenerator {
 
     private static final String ERROR = "<error>"; //NOI18N
+    private static final Set<ElementKind> TREE_KINDS = EnumSet.of(ElementKind.CLASS, ElementKind.RECORD);
 
     public static class Factory implements CodeGenerator.Factory {
         
@@ -125,7 +129,7 @@ public class EqualsHashCodeGenerator implements CodeGenerator {
         }
     }
 
-    final private JTextComponent component;
+    private final JTextComponent component;
     final ElementNode.Description description;
     final boolean generateEquals;
     final boolean generateHashCode;
@@ -151,7 +155,7 @@ public class EqualsHashCodeGenerator implements CodeGenerator {
     }
     
     static EqualsHashCodeGenerator createEqualsHashCodeGenerator(JTextComponent component, CompilationController cc, Element el) throws IOException {
-        if (el.getKind() != ElementKind.CLASS) {
+        if (!TREE_KINDS.contains(el.getKind())) {
             return null;
         }
         //#125114: ignore anonymous innerclasses:
@@ -202,12 +206,15 @@ public class EqualsHashCodeGenerator implements CodeGenerator {
                 return super.visitMemberSelect(sel, what);
             }
         }
+        Trees tree = cc.getTrees();
         for (ExecutableElement e : methods) {
             if (e == null) {
                 continue;
             }
-            Trees tree = cc.getTrees();
             TreePath path = tree.getPath(e);
+            if (path == null) {
+                continue;
+            }
             Used used = new Used();
             used.scan(path, field);
             if (used.found) {
@@ -231,7 +238,7 @@ public class EqualsHashCodeGenerator implements CodeGenerator {
         if (el == null) {
             return ret;
         }
-        if (type == null || type.getKind() != ElementKind.CLASS) {
+        if (type == null || !TREE_KINDS.contains(type.getKind())) {
             return ret;
         }
 
@@ -265,6 +272,8 @@ public class EqualsHashCodeGenerator implements CodeGenerator {
             return ret;
         }
         
+        Elements elements = compilationInfo.getElements();
+        ElementUtilities elementUtils = compilationInfo.getElementUtilities();
         TypeElement clazz = (TypeElement)type;
         for (Element ee : type.getEnclosedElements()) {
             if (stop != null && stop.isCanceled()) {
@@ -275,11 +284,11 @@ public class EqualsHashCodeGenerator implements CodeGenerator {
             }
             ExecutableElement method = (ExecutableElement)ee;
             
-            if (compilationInfo.getElements().overrides(method, hashCode, clazz)) {
+            if (!elementUtils.isSynthetic(method) && elements.overrides(method, hashCode, clazz)) {
                 ret[1] = method;
             }
             
-            if (compilationInfo.getElements().overrides(method, equals, clazz)) {
+            if (!elementUtils.isSynthetic(method) && elements.overrides(method, equals, clazz)) {
                 ret[0] = method;
             }
         }
@@ -393,8 +402,8 @@ public class EqualsHashCodeGenerator implements CodeGenerator {
 
         generateEqualsAndHashCode(wc, path, e, h, -1);
     }
-    
-    static void generateEqualsAndHashCode(WorkingCopy wc, TreePath path, Iterable<? extends VariableElement> equalsFields, Iterable<? extends VariableElement> hashCodeFields, int offset) {
+
+    public static void generateEqualsAndHashCode(WorkingCopy wc, TreePath path, Iterable<? extends VariableElement> equalsFields, Iterable<? extends VariableElement> hashCodeFields, int offset) {
         assert TreeUtilities.CLASS_TREE_KINDS.contains(path.getLeaf().getKind());
         TypeElement te = (TypeElement)wc.getTrees().getElement(path);
         if (te != null) {
@@ -409,9 +418,7 @@ public class EqualsHashCodeGenerator implements CodeGenerator {
                 if (!dt.getTypeArguments().isEmpty()) {
                     WildcardType wt = wc.getTypes().getWildcardType(null, null);
                     TypeMirror[] typeArgs = new TypeMirror[dt.getTypeArguments().size()];
-                    for (int i = 0; i < typeArgs.length; i++) {
-                        typeArgs[i] = wt;
-                    }
+                    Arrays.fill(typeArgs, wt);
                     dt = dt.getEnclosingType().getKind() == TypeKind.DECLARED
                             ? wc.getTypes().getDeclaredType((DeclaredType)dt.getEnclosingType(), te, typeArgs)
                             : wc.getTypes().getDeclaredType(te, typeArgs);
@@ -419,7 +426,7 @@ public class EqualsHashCodeGenerator implements CodeGenerator {
                 members.add(createEqualsMethod(wc, equalsFields, dt, scope));
             }
             wc.rewrite(nue, GeneratorUtils.insertClassMembers(wc, nue, members, offset));
-        }        
+        }
     }
 
     private static MethodTree createEqualsMethod(WorkingCopy wc, Iterable<? extends VariableElement> equalsFields, DeclaredType type, Scope scope) {
@@ -451,22 +458,46 @@ public class EqualsHashCodeGenerator implements CodeGenerator {
                 others.add(ve);
             }            
         }
-        for (VariableElement ve : primitives) {
+        boolean addReturnTrue = true;
+        for (Iterator<VariableElement> it = primitives.iterator(); it.hasNext();) {
+            VariableElement ve = it.next();
             TypeMirror tm = ve.asType();
-            ExpressionTree condition = prepareExpression(wc, EQUALS_PATTERNS, tm, ve, scope);
-            statements.add(make.If(condition, make.Return(make.Identifier("false")), null)); //NOI18N
+            if (!it.hasNext() && strings.isEmpty() && others.isEmpty()) {
+                ExpressionTree condition = prepareExpression(wc, EQUALS_PATTERNS, tm, ve, scope);
+                statements.add(make.Return(condition));
+                addReturnTrue = false;
+            } else {
+                ExpressionTree condition = prepareExpression(wc, NOT_EQUALS_PATTERNS, tm, ve, scope);
+                statements.add(make.If(condition, make.Return(make.Identifier("false")), null)); //NOI18N
+            }
         }
-        for (VariableElement ve : strings) {
+        for (Iterator<VariableElement> it = strings.iterator(); it.hasNext();) {
+            VariableElement ve = it.next();
             TypeMirror tm = ve.asType();
-            ExpressionTree condition = prepareExpression(wc, EQUALS_PATTERNS, tm, ve, scope);
-            statements.add(make.If(condition, make.Return(make.Identifier("false")), null)); //NOI18N
+            if (!it.hasNext() && others.isEmpty()) {
+                ExpressionTree condition = prepareExpression(wc, EQUALS_PATTERNS, tm, ve, scope);
+                statements.add(make.Return(condition));
+                addReturnTrue = false;
+            } else {
+                ExpressionTree condition = prepareExpression(wc, NOT_EQUALS_PATTERNS, tm, ve, scope);
+                statements.add(make.If(condition, make.Return(make.Identifier("false")), null)); //NOI18N
+            }
         }
-        for (VariableElement ve : others) {
+        for (Iterator<VariableElement> it = others.iterator(); it.hasNext();) {
+            VariableElement ve = it.next();
             TypeMirror tm = ve.asType();
-            ExpressionTree condition = prepareExpression(wc, EQUALS_PATTERNS, tm, ve, scope);
-            statements.add(make.If(condition, make.Return(make.Identifier("false")), null)); //NOI18N
+            if (!it.hasNext()) {
+                ExpressionTree condition = prepareExpression(wc, EQUALS_PATTERNS, tm, ve, scope);
+                statements.add(make.Return(condition));
+                addReturnTrue = false;
+            } else {
+                ExpressionTree condition = prepareExpression(wc, NOT_EQUALS_PATTERNS, tm, ve, scope);
+                statements.add(make.If(condition, make.Return(make.Identifier("false")), null)); //NOI18N
+            }
         }
-        statements.add(make.Return(make.Identifier("true")));
+        if (addReturnTrue) {
+            statements.add(make.Return(make.Identifier("true")));
+        }
         BlockTree body = make.Block(statements, false);
         ModifiersTree modifiers = prepareModifiers(wc, mods,make);
         
@@ -612,21 +643,34 @@ public class EqualsHashCodeGenerator implements CodeGenerator {
         OTHER;
     }
 
+    private static final Map<Acceptor, String> NOT_EQUALS_PATTERNS;
     private static final Map<Acceptor, String> EQUALS_PATTERNS;
     private static final Map<Acceptor, String> HASH_CODE_PATTERNS;
 
     static {
+        NOT_EQUALS_PATTERNS = new LinkedHashMap<>();
+
+        NOT_EQUALS_PATTERNS.put(new SimpleAcceptor(KindOfType.BOOLEAN, KindOfType.BYTE, KindOfType.SHORT, KindOfType.INT, KindOfType.LONG, KindOfType.CHAR), "this.{VAR} != other.{VAR}");
+        NOT_EQUALS_PATTERNS.put(new SimpleAcceptor(KindOfType.FLOAT), "java.lang.Float.floatToIntBits(this.{VAR}) != java.lang.Float.floatToIntBits(other.{VAR})");
+        NOT_EQUALS_PATTERNS.put(new SimpleAcceptor(KindOfType.DOUBLE), "java.lang.Double.doubleToLongBits(this.{VAR}) != java.lang.Double.doubleToLongBits(other.{VAR})");
+        NOT_EQUALS_PATTERNS.put(new SimpleAcceptor(KindOfType.ENUM), "this.{VAR} != other.{VAR}");
+        NOT_EQUALS_PATTERNS.put(new SimpleAcceptor(KindOfType.ARRAY_PRIMITIVE), "! java.util.Arrays.equals(this.{VAR}, other.{VAR}");
+        NOT_EQUALS_PATTERNS.put(new SimpleAcceptor(KindOfType.ARRAY), "! java.util.Arrays.deepEquals(this.{VAR}, other.{VAR}");
+        NOT_EQUALS_PATTERNS.put(new MethodExistsAcceptor("java.util.Objects", "equals", SourceVersion.RELEASE_7), "! java.util.Objects.equals(this.{VAR}, other.{VAR})");
+        NOT_EQUALS_PATTERNS.put(new SimpleAcceptor(KindOfType.STRING), "(this.{VAR} == null) ? (other.{VAR} != null) : !this.{VAR}.equals(other.{VAR})");
+        NOT_EQUALS_PATTERNS.put(new SimpleAcceptor(KindOfType.OTHER), "this.{VAR} != other.{VAR} && (this.{VAR} == null || !this.{VAR}.equals(other.{VAR}))");
+
         EQUALS_PATTERNS = new LinkedHashMap<>();
 
-        EQUALS_PATTERNS.put(new SimpleAcceptor(KindOfType.BOOLEAN, KindOfType.BYTE, KindOfType.SHORT, KindOfType.INT, KindOfType.LONG, KindOfType.CHAR), "this.{VAR} != other.{VAR}");
-        EQUALS_PATTERNS.put(new SimpleAcceptor(KindOfType.FLOAT), "java.lang.Float.floatToIntBits(this.{VAR}) != java.lang.Float.floatToIntBits(other.{VAR})");
-        EQUALS_PATTERNS.put(new SimpleAcceptor(KindOfType.DOUBLE), "java.lang.Double.doubleToLongBits(this.{VAR}) != java.lang.Double.doubleToLongBits(other.{VAR})");
-        EQUALS_PATTERNS.put(new SimpleAcceptor(KindOfType.ENUM), "this.{VAR} != other.{VAR}");
-        EQUALS_PATTERNS.put(new SimpleAcceptor(KindOfType.ARRAY_PRIMITIVE), "! java.util.Arrays.equals(this.{VAR}, other.{VAR}");
-        EQUALS_PATTERNS.put(new SimpleAcceptor(KindOfType.ARRAY), "! java.util.Arrays.deepEquals(this.{VAR}, other.{VAR}");
-        EQUALS_PATTERNS.put(new MethodExistsAcceptor("java.util.Objects", "equals", SourceVersion.RELEASE_7), "! java.util.Objects.equals(this.{VAR}, other.{VAR})");
-        EQUALS_PATTERNS.put(new SimpleAcceptor(KindOfType.STRING), "(this.{VAR} == null) ? (other.{VAR} != null) : !this.{VAR}.equals(other.{VAR})");
-        EQUALS_PATTERNS.put(new SimpleAcceptor(KindOfType.OTHER), "this.{VAR} != other.{VAR} && (this.{VAR} == null || !this.{VAR}.equals(other.{VAR}))");
+        EQUALS_PATTERNS.put(new SimpleAcceptor(KindOfType.BOOLEAN, KindOfType.BYTE, KindOfType.SHORT, KindOfType.INT, KindOfType.LONG, KindOfType.CHAR), "this.{VAR} == other.{VAR}");
+        EQUALS_PATTERNS.put(new SimpleAcceptor(KindOfType.FLOAT), "java.lang.Float.floatToIntBits(this.{VAR}) == java.lang.Float.floatToIntBits(other.{VAR})");
+        EQUALS_PATTERNS.put(new SimpleAcceptor(KindOfType.DOUBLE), "java.lang.Double.doubleToLongBits(this.{VAR}) == java.lang.Double.doubleToLongBits(other.{VAR})");
+        EQUALS_PATTERNS.put(new SimpleAcceptor(KindOfType.ENUM), "this.{VAR} == other.{VAR}");
+        EQUALS_PATTERNS.put(new SimpleAcceptor(KindOfType.ARRAY_PRIMITIVE), "java.util.Arrays.equals(this.{VAR}, other.{VAR}");
+        EQUALS_PATTERNS.put(new SimpleAcceptor(KindOfType.ARRAY), "java.util.Arrays.deepEquals(this.{VAR}, other.{VAR}");
+        EQUALS_PATTERNS.put(new MethodExistsAcceptor("java.util.Objects", "equals", SourceVersion.RELEASE_7), "java.util.Objects.equals(this.{VAR}, other.{VAR})");
+        EQUALS_PATTERNS.put(new SimpleAcceptor(KindOfType.STRING), "(this.{VAR} == null) ? (other.{VAR} == null) : this.{VAR}.equals(other.{VAR})");
+        EQUALS_PATTERNS.put(new SimpleAcceptor(KindOfType.OTHER), "this.{VAR} == other.{VAR} || (this.{VAR} != null && this.{VAR}.equals(other.{VAR}))");
 
         HASH_CODE_PATTERNS = new LinkedHashMap<>();
 

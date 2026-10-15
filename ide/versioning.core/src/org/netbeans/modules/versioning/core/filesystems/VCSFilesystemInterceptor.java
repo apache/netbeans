@@ -406,7 +406,7 @@ public final class VCSFilesystemInterceptor {
      * Stores files that are being created inside the IDE and the owner interceptor wants to handle the creation. Entries
      * are added in beforeCreate() and removed in fileDataCreated() or createFailure().
      */
-    private final static Map<FileEx, DelegatingInterceptor> filesBeingCreated = new HashMap<FileEx, DelegatingInterceptor>(10);
+    private static final Map<FileEx, DelegatingInterceptor> filesBeingCreated = new HashMap<FileEx, DelegatingInterceptor>(10);
     private static class FileEx {
         final VCSFileProxy parent;
         final String name;
@@ -421,7 +421,7 @@ public final class VCSFilesystemInterceptor {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (o == null || !(o instanceof FileEx)) return false;
+            if (!(o instanceof FileEx)) return false;
             FileEx fileEx = (FileEx) o;
             return isFolder == fileEx.isFolder && name.equals(fileEx.name) && parent.equals(fileEx.parent);
         }
@@ -488,7 +488,7 @@ public final class VCSFilesystemInterceptor {
         public void afterMove() {  }
     };
 
-    private final static VCSInterceptor nullInterceptor = new VCSInterceptor() {
+    private static final VCSInterceptor nullInterceptor = new VCSInterceptor() {
 
         @Override
         public boolean isMutable(VCSFileProxy file) {

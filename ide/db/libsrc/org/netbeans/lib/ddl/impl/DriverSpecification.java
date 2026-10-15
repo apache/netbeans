@@ -257,7 +257,7 @@ public class DriverSpecification {
                     // break;
                     throw exc;
                 }
-                rset.put(new Integer(i), value);
+                rset.put(Integer.valueOf(i), value);
             }
         } catch (SQLException exc) {
             rset = null;

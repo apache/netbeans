@@ -141,16 +141,14 @@ public class Method1Test extends GeneratorTestMDRCompat {
                 ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
                 MethodTree method = (MethodTree) clazz.getMembers().get(1);
                 ModifiersTree origMods = method.getModifiers();
-                Set<Modifier> njuMods = new HashSet<Modifier>();
-                njuMods.add(Modifier.PRIVATE);
-                njuMods.add(Modifier.STATIC);
+                Set<Modifier> njuMods = EnumSet.of(Modifier.PRIVATE, Modifier.STATIC);
                 workingCopy.rewrite(origMods, make.Modifiers(njuMods));
             }
             
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testMethodModifiers.pass");
     }
     
@@ -173,7 +171,7 @@ public class Method1Test extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testMethodName.pass");
     }
     
@@ -200,7 +198,7 @@ public class Method1Test extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testMethodParameters.pass");
     }
     
@@ -231,7 +229,7 @@ public class Method1Test extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testMethodParameterChange.pass");
     }
 
@@ -257,7 +255,7 @@ public class Method1Test extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testMethodThrows.pass");
     }
     
@@ -282,7 +280,7 @@ public class Method1Test extends GeneratorTestMDRCompat {
         };
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertFiles("testMethodReturnType.pass");
     }
     
@@ -744,7 +742,6 @@ public class Method1Test extends GeneratorTestMDRCompat {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     /**
      * @param args the command line arguments
      */

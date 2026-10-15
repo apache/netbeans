@@ -112,5 +112,10 @@ public class Mapping implements IMapping {
     public boolean isTransient() {
         return (attribute.getMappingType() == IMappingType.TRANSIENT);
     }
+
+    @Override
+    public boolean isEmbeddable() {
+        return (attribute.getMappingType() == IMappingType.EMBEDDED) || (attribute.getMappingType() == IMappingType.EMBEDDED_ID);
+    }
     
 }

@@ -50,6 +50,7 @@ public class BrandingSupportTest extends TestBase {
         super(testName);
     }
     
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         File suiteDir  = new File(getWorkDir(), "testSuite");
@@ -85,7 +86,7 @@ public class BrandingSupportTest extends TestBase {
     public void testBranding4() throws IOException {
         assertFalse(instance.getBrandingRoot().exists());
         implOfBundleKeyTest("org.netbeans.core.windows",
-                "org/netbeans/core/windows/view/ui/Bundle.properties", Collections.singleton("CTL_MainWindow_Title"), "NetBeans Platform {0}", instance.getBrandedBundleKeys());
+                "org/netbeans/core/windows/view/ui/Bundle.properties", Collections.singleton("CTL_MainWindow_Title"), "Apache NetBeans Platform {0}", instance.getBrandedBundleKeys());
     }
     
     public void testBrandingFile() throws IOException {
@@ -132,22 +133,10 @@ public class BrandingSupportTest extends TestBase {
     }
     
     private File createNewSource(final BrandingSupport.BrandedFile bFile) throws MalformedURLException, FileNotFoundException, IOException {
-        OutputStream os = null;
-        InputStream is = null;
-        File newSource = new File(getWorkDir(),"newSource.gif");
-        
-        try {
-            
-            os = new FileOutputStream(newSource);
-            is = bFile.getBrandingSource().openStream();
-            FileUtil.copy(is,os);
-        } finally  {
-            if (is != null) {
-                is.close();
-            }
-            if (os != null) {
-                os.close();
-            }
+        File newSource = new File(getWorkDir(), "newSource.gif");
+        try (InputStream is = bFile.getBrandingSource().openStream();
+             OutputStream os = new FileOutputStream(newSource);) {
+            is.transferTo(os);
         }
         return newSource;
     }

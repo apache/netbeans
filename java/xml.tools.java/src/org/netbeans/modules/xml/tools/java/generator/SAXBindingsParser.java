@@ -36,12 +36,12 @@ public class SAXBindingsParser extends org.xml.sax.helpers.DefaultHandler {
     
     private SAXBindingsHandler handler;
     
-    private java.util.Stack context;
+    private java.util.Stack<Object[]> context;
         
     public SAXBindingsParser(final SAXBindingsHandler handler) {
         this.handler = handler;
         buffer = new StringBuffer(111);
-        context = new java.util.Stack();
+        context = new java.util.Stack<>();
     }
     
     public void setDocumentLocator(Locator locator) {
@@ -85,7 +85,7 @@ public class SAXBindingsParser extends org.xml.sax.helpers.DefaultHandler {
     private void dispatch(final boolean fireOnlyIfMixed) throws SAXException {
         if (fireOnlyIfMixed && buffer.length() == 0) return; //skip it
         
-        Object[] ctx = (Object[]) context.peek();
+        Object[] ctx = context.peek();
         String here = (String) ctx[0];
         Attributes attrs = (Attributes) ctx[1];
         buffer.delete(0, buffer.length());

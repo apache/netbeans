@@ -1,0 +1,2 @@
+    public function |>MARK_OCCURRENCES:met^hod<|(): int {
+        static $example4 = $this->|>MARK_OCCURRENCES:method<|();

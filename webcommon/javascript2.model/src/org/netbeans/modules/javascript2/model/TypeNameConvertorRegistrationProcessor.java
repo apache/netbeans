@@ -41,7 +41,7 @@ public class TypeNameConvertorRegistrationProcessor extends LayerGeneratingProce
     public TypeNameConvertorRegistrationProcessor() {
         super();
     }
-    
+
     @Override
     protected boolean handleProcess(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) throws LayerGenerationException {
         for (Element element : roundEnv.getElementsAnnotatedWith(TypeNameConvertor.Registration.class)) {
@@ -52,5 +52,5 @@ public class TypeNameConvertorRegistrationProcessor extends LayerGeneratingProce
         }
         return true;
     }
-    
+
 }

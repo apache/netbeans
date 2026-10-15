@@ -26,10 +26,12 @@ import com.oracle.truffle.api.debug.SuspendAnchor;
 import com.oracle.truffle.api.debug.SuspendedCallback;
 import com.oracle.truffle.api.debug.SuspendedEvent;
 import com.oracle.truffle.api.debug.SuspensionFilter;
-import com.oracle.truffle.api.source.Source;
-import com.oracle.truffle.api.source.SourceSection;
+import com.oracle.truffle.api.nodes.Node;
+
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  *
@@ -40,17 +42,39 @@ class JPDATruffleDebugManager implements SuspendedCallback {
     private final Reference<Debugger> debugger;
     private final Reference<DebuggerSession> session;
     private final ThreadLocal<SuspendedEvent> suspendedEvents = new ThreadLocal<>();
+    private final ThreadLocal<Object[]> suspendHere = new ThreadLocal<>();
+    private final boolean supportsJavaFrames;
 
-    public JPDATruffleDebugManager(Debugger debugger, boolean doStepInto) {
+    public JPDATruffleDebugManager(Debugger debugger, boolean includeInternal, boolean doStepInto) {
         this.debugger = new WeakReference<>(debugger);
         DebuggerSession debuggerSession = debugger.startSession(this);
-        debuggerSession.setSteppingFilter(SuspensionFilter.newBuilder().ignoreLanguageContextInitialization(true).build());
+        debuggerSession.setSteppingFilter(createSteppingFilter(includeInternal));
+        supportsJavaFrames = supportsJavaFrames(debuggerSession);
         if (doStepInto) {
             debuggerSession.suspendNextExecution();
         }
         this.session = new WeakReference<>(debuggerSession);
     }
-    
+
+    private static boolean supportsJavaFrames(DebuggerSession debuggerSession) {
+        try {
+            Method setShowHostStackFramesMethod = DebuggerSession.class.getMethod("setShowHostStackFrames", Boolean.TYPE);
+            try {
+                setShowHostStackFramesMethod.invoke(debuggerSession, true);
+                return true;
+            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                LangErrors.exception("setShowHostStackFrames", ex);
+                return false;
+            }
+        } catch (NoSuchMethodException | SecurityException ex) {
+            return false;
+        }
+    }
+
+    static SuspensionFilter createSteppingFilter(boolean includeInternal) {
+        return SuspensionFilter.newBuilder().ignoreLanguageContextInitialization(true).includeInternal(includeInternal).build();
+    }
+
     Debugger getDebugger() {
         return debugger.get();
     }
@@ -63,18 +87,6 @@ class JPDATruffleDebugManager implements SuspendedCallback {
         return suspendedEvents.get();
     }
     
-    static SourcePosition getPosition(SourceSection sourceSection) {
-        int line = sourceSection.getStartLine();
-        Source source = sourceSection.getSource();
-        String name = source.getName();
-        String path = source.getPath();
-        if (path == null) {
-            path = name;
-        }
-        String code = source.getCharacters().toString();
-        return new SourcePosition(source, name, path, line, code);
-    }
-
     void dispose() {
         DebuggerSession ds = session.get();
         if (ds != null) {
@@ -108,6 +120,19 @@ class JPDATruffleDebugManager implements SuspendedCallback {
     @Override
     public void onSuspend(SuspendedEvent event) {
         JPDATruffleAccessor.trace("JPDATruffleDebugManager.onSuspend({0})", event);
+        if (suspendHere.get() != null) {
+            // A special 'suspendHere':
+            SourcePosition position = new SourcePosition(event.getSourceSection(), event.getTopStackFrame().getLanguage());
+            Object[] haltInfo = new Object[]{
+                this, position,
+                event.getSuspendAnchor() == SuspendAnchor.BEFORE,
+                event.getReturnValue(),
+                new FrameInfo(event.getTopStackFrame(), event.getStackFrames(), supportsJavaFrames),
+                supportsJavaFrames
+            };
+            suspendHere.set(haltInfo);
+            return ;
+        }
         Breakpoint[] breakpointsHit = new Breakpoint[event.getBreakpoints().size()];
         breakpointsHit = event.getBreakpoints().toArray(breakpointsHit);
         Throwable[] breakpointConditionExceptions = new Throwable[breakpointsHit.length];
@@ -116,12 +141,13 @@ class JPDATruffleDebugManager implements SuspendedCallback {
         }
         suspendedEvents.set(event);
         try {
-            SourcePosition position = getPosition(event.getSourceSection());
+            SourcePosition position = new SourcePosition(event.getSourceSection(), event.getTopStackFrame().getLanguage());
             int stepCmd = JPDATruffleAccessor.executionHalted(
                     this, position,
                     event.getSuspendAnchor() == SuspendAnchor.BEFORE,
                     event.getReturnValue(),
-                    new FrameInfo(event.getTopStackFrame(), event.getStackFrames()),
+                    new FrameInfo(event.getTopStackFrame(), event.getStackFrames(), supportsJavaFrames),
+                    supportsJavaFrames,
                     breakpointsHit,
                     breakpointConditionExceptions,
                     0);
@@ -141,6 +167,29 @@ class JPDATruffleDebugManager implements SuspendedCallback {
         } finally {
             suspendedEvents.remove();
         }
+    }
+
+    Object[] suspendHere() {
+        DebuggerSession debuggerSession = session.get();
+        if (debuggerSession == null) {
+            return null;
+        }
+        try {
+            Method suspendHereMethod = DebuggerSession.class.getMethod("suspendHere", Node.class);
+            try {
+                suspendHere.set(new Object[]{});
+                boolean success = (Boolean) suspendHereMethod.invoke(debuggerSession, new Object[]{null});
+                if (success) {
+                    return suspendHere.get();
+                }
+            } finally {
+                suspendHere.remove();
+            }
+        } catch (NoSuchMethodException ex) {
+        } catch (SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            LangErrors.exception("suspendHere", ex);
+        }
+        return null;
     }
     
 }

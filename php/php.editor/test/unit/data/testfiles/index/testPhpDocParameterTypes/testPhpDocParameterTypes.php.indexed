@@ -1,0 +1,41 @@
+
+
+Document 0
+Searchable Keys:
+  base : parametertype;parameterType;936;$param:void:0::1:0:0:0:0:0::(callable(Test\u002cbool)\u003aT)\u007c(callable(Test\u002cbool)\u003aT)\u007cTest<T>;void;;0;<TESTURL>/testPhpDocParameterTypes.php;0;0;void;
+  top : parametertype
+
+Not Searchable Keys:
+
+
+Document 1
+Searchable Keys:
+  clz : testclass;TestClass;975;;;;1;;0;<TESTURL>/testPhpDocParameterTypes.php;;0;
+  method : parametertype;parameterType;1219;$param1:int-mask-of:0::1:0:0:0:0:0::int-mask-of<self\u003a\u003aTest1\u007cself\u003a\u003aTest2\u007cself\u003a\u003aTest3>,$param2::0::1:0:0:0:0:0::(callable(Test\u002cbool)\u003aT)\u007c(callable(Test\u002cbool)\u003aT)\u007cTest<T>;(\Test&\Y)|\Z|\X;1;0;<TESTURL>/testPhpDocParameterTypes.php;1;0;(Test&Y)|Z|X;
+  top : testclass
+
+Not Searchable Keys:
+
+
+Document 2
+Searchable Keys:
+  identifier_used : int-mask-of;
+  identifier_used : param1;
+  identifier_used : param2;
+  identifier_used : param;
+  identifier_used : parametertype;
+  identifier_used : parametertype;
+  identifier_used : test;
+  identifier_used : test;
+  identifier_used : testclass;
+  identifier_used : void;
+  identifier_used : void;
+  identifier_used : void;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : z;
+  identifier_used : z;
+
+Not Searchable Keys:

@@ -78,7 +78,7 @@ public class JSThread implements DebuggingView.DVThread {
 
     @Override
     public List<DebuggingView.DVThread> getLockerThreads() {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     @Override

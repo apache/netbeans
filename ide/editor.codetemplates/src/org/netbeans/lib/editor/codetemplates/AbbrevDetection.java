@@ -508,7 +508,7 @@ public final class AbbrevDetection implements DocumentListener, PropertyChangeLi
         op.waitLoaded();
         CodeTemplate ct = op.findByAbbreviation(abbrev.toString());
         if (ct != null) {
-            if (accept(ct, CodeTemplateManagerOperation.getTemplateFilters(component, abbrevStartOffset))) {
+            if (accept(ct, CodeTemplateManagerOperation.getTemplateFilters(component.getDocument(), abbrevStartOffset, abbrevStartOffset))) {
                 Document doc = component.getDocument();
                 sendUndoableEdit(doc, CloneableEditorSupport.BEGIN_COMMIT_GROUP);
                 try {

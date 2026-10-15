@@ -294,7 +294,7 @@ public class RepositoryConnection {
 
     private static String ripUserFromHost (String hostname) {
         if (keepUserInHostname == null) {
-            keepUserInHostname = new Boolean("false".equals(System.getProperty("subversion.ripUserFromHostnames", "true"))); //NOI18N
+            keepUserInHostname = "false".equals(System.getProperty("subversion.ripUserFromHostnames", "true")); //NOI18N
         }
         return keepUserInHostname.booleanValue() ? hostname : SvnUtils.ripUserFromHost(hostname);
     }

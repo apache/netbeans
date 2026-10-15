@@ -177,7 +177,7 @@ public class SourceForBinaryQueryTest extends NbTestCase {
                 fired.set(true);
             }
         });
-        ((LeafSFBQImpl)DelegatingSFBImpl.impl).lastResult.fire();
+        LeafSFBQImpl.lastResult.fire();
         res.removeChangeListener(l);
         assertTrue(fired.get());
     }
@@ -191,7 +191,7 @@ public class SourceForBinaryQueryTest extends NbTestCase {
             lastResult = null;
             List<FileObject> data =  map.get(binaryRoot);
             if (data != null) {
-                return lastResult = new R2(data.toArray(new FileObject[data.size()]), prefSources(data));
+                return lastResult = new R2(data.toArray(new FileObject[0]), prefSources(data));
             }
             return null;
         }
@@ -217,14 +217,14 @@ public class SourceForBinaryQueryTest extends NbTestCase {
         
         
         public Result findSourceRoots2(URL binaryRoot) {
-            if (this.impl == null) {
+            if (DelegatingSFBImpl.impl == null) {
                 throw new IllegalStateException ();
             }
-            else if (this.impl instanceof SourceForBinaryQueryImplementation2) {
-                return ((SourceForBinaryQueryImplementation2)this.impl).findSourceRoots2(binaryRoot);
+            else if (DelegatingSFBImpl.impl instanceof SourceForBinaryQueryImplementation2) {
+                return ((SourceForBinaryQueryImplementation2)DelegatingSFBImpl.impl).findSourceRoots2(binaryRoot);
             }
             else {
-                final SourceForBinaryQuery.Result result = this.impl.findSourceRoots(binaryRoot);
+                final SourceForBinaryQuery.Result result = DelegatingSFBImpl.impl.findSourceRoots(binaryRoot);
                 return result == null ? null : asResult(result);
             }
         }
@@ -240,7 +240,7 @@ public class SourceForBinaryQueryTest extends NbTestCase {
         public Result findSourceRoots(URL binaryRoot) {
             List<FileObject> data =  map.get(binaryRoot);
             if (data != null) {
-                return new R(data.toArray(new FileObject[data.size()]));
+                return new R(data.toArray(new FileObject[0]));
             }
             return null;
         }

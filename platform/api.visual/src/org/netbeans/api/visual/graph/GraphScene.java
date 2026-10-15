@@ -360,7 +360,7 @@ public abstract class GraphScene<N, E> extends ObjectScene {
     /**
      * This class is a particular GraphScene where nodes and edges are represented with String class.
      */
-    public static abstract class StringGraph extends GraphScene<String, String> {
+    public abstract static class StringGraph extends GraphScene<String, String> {
         
     }
 

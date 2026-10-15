@@ -40,7 +40,7 @@ import org.openide.util.NbBundle;
 final class JavaGuardedReader {
 
     /** The prefix of all magic strings */
-    final static String MAGIC_PREFIX = "//GEN-"; // NOI18N
+    static final String MAGIC_PREFIX = "//GEN-"; // NOI18N
     
     Pattern magicsAsRE;
     
@@ -364,7 +364,7 @@ final class JavaGuardedReader {
     private static boolean getPresetValue(String key, boolean defaultValue) {
         try {
             String s = NbBundle.getMessage(JavaGuardedReader.class, key);
-            return "true".equals(s.toLowerCase()); // NOI18N
+            return "true".equalsIgnoreCase(s); // NOI18N
         } catch( MissingResourceException ex) { // ignore
         }
         return defaultValue;

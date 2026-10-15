@@ -63,30 +63,30 @@ import org.openide.util.Utilities;
  * @version 1.1
  */
 public class JUnitTestUtil extends CommonTestUtil {
-    static private final String JAVA_SOURCES_SUFFIX               = "java";
+    private static final String JAVA_SOURCES_SUFFIX               = "java";
     private static final String JAVA_MIME_TYPE = "text/x-java";         //NOI18N
 
-    static private String getTestClassSuffix() {
+    private static String getTestClassSuffix() {
         return JUnitSettings.TEST_CLASSNAME_SUFFIX;
     }
     
-    static private String getIntegrationTestSuffix() {
+    private static String getIntegrationTestSuffix() {
         return JUnitSettings.INTEGRATION_TEST_CLASSNAME_SUFFIX;
     }
     
-    static private String getTestClassPrefix() {
+    private static String getTestClassPrefix() {
         return JUnitSettings.TEST_CLASSNAME_PREFIX;
     }
     
-    static private String getTestSuiteSuffix() {
+    private static String getTestSuiteSuffix() {
         return JUnitSettings.SUITE_CLASSNAME_SUFFIX;
     }
     
-    static private String getTestSuitePrefix() {
+    private static String getTestSuitePrefix() {
         return JUnitSettings.SUITE_CLASSNAME_PREFIX;
     }
     
-    static private String getRootSuiteName() {
+    private static String getRootSuiteName() {
         return JUnitSettings.getDefault().getRootSuiteClassName();
     }
     
@@ -155,8 +155,8 @@ public class JUnitTestUtil extends CommonTestUtil {
     
     /**
      * Converts given package filename to test suite filename, e.g.
-     * &quot;<tt>org/netbeans/foo</tt>&quot; -&gt;
-     * &quot;<tt>org/netbeans/foo/{suite-prefix}Foo{suite-suffix}</tt>&quot;
+     * &quot;<code>org/netbeans/foo</code>&quot; -&gt;
+     * &quot;<code>org/netbeans/foo/{suite-prefix}Foo{suite-suffix}</code>&quot;
      * @param packageFileName package filename in form of "org/netbeans/foo"
      */
     public static String convertPackage2SuiteName(String packageFileName) {
@@ -172,8 +172,8 @@ public class JUnitTestUtil extends CommonTestUtil {
     
     /**
      * Converts given package filename to integration test suite filename, e.g.
-     * &quot;<tt>org/netbeans/foo</tt>&quot; -&gt;
-     * &quot;<tt>org/netbeans/foo/{suite-prefix}FooIT{suite-suffix}</tt>&quot;
+     * &quot;<code>org/netbeans/foo</code>&quot; -&gt;
+     * &quot;<code>org/netbeans/foo/{suite-prefix}FooIT{suite-suffix}</code>&quot;
      * @param packageFileName package filename in form of "org/netbeans/foo"
      */
     public static String convertPackage2ITSuiteName(String packageFileName) {
@@ -189,11 +189,11 @@ public class JUnitTestUtil extends CommonTestUtil {
     
     /**
      * Converts given class filename to test filename, e.g.
-     * &quot;<tt>org/netbeans/Foo</tt>&quot;
-     * -&gt; &quot;<tt>org/netbeans/{test-prefix}Foo{test-suffix}</tt>&quot;
+     * &quot;<code>org/netbeans/Foo</code>&quot;
+     * -&gt; &quot;<code>org/netbeans/{test-prefix}Foo{test-suffix}</code>&quot;
      *
      * @param  classFileName  class filename in form of
-     *                        &quot;<tt>org/netbeans/Foo</tt>&quot;,
+     *                        &quot;<code>org/netbeans/Foo</code>&quot;,
      *                        i.e. without extension, no inner class
      */
     public static String convertClass2TestName(String classFileName) {
@@ -240,15 +240,15 @@ public class JUnitTestUtil extends CommonTestUtil {
 //            return df.getPrimaryFile();
 //        }
 //        
-////XXX: retouche
-////        ClassElement ce = (ClassElement) node.getCookie(ClassElement.class);
-////        if (null != ce) {
-////            // find the parent DataObject, which node belongs to
-////            while (null != (node = node.getParentNode())) {
-////                if (null != (dO = (DataObject) node.getCookie(DataObject.class)))
-////                    return dO.getPrimaryFile();
-////            }
-////        }
+// //XXX: retouche
+// //        ClassElement ce = (ClassElement) node.getCookie(ClassElement.class);
+// //        if (null != ce) {
+// //            // find the parent DataObject, which node belongs to
+// //            while (null != (node = node.getParentNode())) {
+// //                if (null != (dO = (DataObject) node.getCookie(DataObject.class)))
+// //                    return dO.getPrimaryFile();
+// //            }
+// //        }
 //        return null;
 //    }
 
@@ -314,7 +314,6 @@ public class JUnitTestUtil extends CommonTestUtil {
      * Finds a main class.
      *
      * @param  compInfo  defines scope in which the class is to be found
-     * @param  className  name of the class to be found
      * @return  the found class; or <code>null</code> if the class was not
      *          found (e.g. because of a broken source file)
      */
@@ -337,7 +336,7 @@ public class JUnitTestUtil extends CommonTestUtil {
     /**
      * Converts filename to the fully qualified name of the main class
      * residing in the file.<br />
-     * For example: <tt>test/myapp/App.java</tt> --&gt; <tt>test.myapp.App</tt>
+     * For example: <code>test/myapp/App.java</code> --&gt; <code>test.myapp.App</code>
      *
      * @param  filename
      * @return  corresponding package name. Null if the input is not
@@ -356,7 +355,7 @@ public class JUnitTestUtil extends CommonTestUtil {
      * withing the specified folder (non-recursive).
      *
      * @param  packageFolder  folder to search
-     * @param  classPath  classpath to be used for the search
+     * @param  cpInfo  classpath to be used for the search
      * @return  list of full names of all primary Java classes
      *          within the specified package
      */
@@ -380,7 +379,7 @@ public class JUnitTestUtil extends CommonTestUtil {
 
         FileObject[] javaFilesArr = (javaFiles.size() == children.length)
                                     ? children
-                                    : javaFiles.toArray(new FileObject[javaFiles.size()]);
+                                    : javaFiles.toArray(new FileObject[0]);
         final JavaSource source = JavaSource.create(cpInfo, javaFilesArr);
         if (source == null) {
             ErrorManager.getDefault().log(
@@ -441,7 +440,7 @@ public class JUnitTestUtil extends CommonTestUtil {
 //        return cls.getInnerClass(name, false);
 //    }
 
-    static public String createNewName(int i, Set usedNames) {
+    public static String createNewName(int i, Set usedNames) {
         String ret;
         do {
             ret = "p" + i++;
@@ -822,9 +821,19 @@ public class JUnitTestUtil extends CommonTestUtil {
      *
      */
     public static JUnitPlugin getPluginForProject(final Project project) {
-        Object pluginObj = project.getLookup().lookup(JUnitPlugin.class);
-        return (pluginObj != null) ? (JUnitPlugin) pluginObj
-                                   : new DefaultPlugin();
+        return getPluginForProject(project, null);
+    }
+
+    /**
+     *
+     * @param project
+     * @param preferredVersion
+     * @return
+     * @since 2.82
+     */
+    public static JUnitPlugin getPluginForProject(Project project, JUnitVersion preferredVersion) {
+        JUnitPlugin pluginObj = project.getLookup().lookup(JUnitPlugin.class);
+        return pluginObj != null ? pluginObj : new DefaultPlugin(preferredVersion);
     }
     
     public static JUnitPlugin getITPluginForProject(final Project project) {

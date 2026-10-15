@@ -105,9 +105,9 @@ public class Utils {
 
     public static boolean areInSameJ2EEApp(Project p1, Project p2) {
         Set globalPath = GlobalPathRegistry.getDefault().getSourceRoots();
-        Iterator iter = globalPath.iterator();
+        Iterator<FileObject> iter = globalPath.iterator();
         while (iter.hasNext()) {
-            FileObject sourceRoot = (FileObject)iter.next();
+            FileObject sourceRoot = iter.next();
             Project project = FileOwnerQuery.getOwner(sourceRoot);
             if (project != null) {
                 Object j2eeAppProvider = project.getLookup().lookup(J2eeApplicationProvider.class);
@@ -118,7 +118,7 @@ public class Utils {
                         J2eeModuleProvider affectedPrjProvider1 = p1.getLookup().lookup(J2eeModuleProvider.class);
                         J2eeModuleProvider affectedPrjProvider2 = p2.getLookup().lookup(J2eeModuleProvider.class);
                         if (affectedPrjProvider1 != null && affectedPrjProvider2 != null) {
-                            List childModules = Arrays.asList(j2eeModules);
+                            List<J2eeModuleProvider> childModules = Arrays.asList(j2eeModules);
                             if (childModules.contains(affectedPrjProvider1) &&
                                 childModules.contains(affectedPrjProvider2)) {
                                 return true;
@@ -167,7 +167,7 @@ public class Utils {
                 filteredResults.add(allProjects[i]);
             }
         }
-        return filteredResults.toArray(new Project[filteredResults.size()]);
+        return filteredResults.toArray(new Project[0]);
     }
 
     /**

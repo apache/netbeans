@@ -39,21 +39,16 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include <stdint.h>
 
 #include "jni.h"
 #include "jvmti.h"
+#include "config.h"
 
 #include "org_netbeans_lib_profiler_server_system_Stacks.h"
 
 #include "common_functions.h"
 #include "Threads.h"
-
-#define NEEDS_CONVERSION (sizeof(jmethodID)!=sizeof(jint))
-#define NO_OF_BASE_BITS 2
-#define NO_OF_MASK_BITS (32-NO_OF_BASE_BITS)
-#define NO_OF_BASE_ADDRESS (1<<NO_OF_BASE_BITS)
-#define OFFSET_MASK ((1L<<NO_OF_MASK_BITS)-1)
-#define BASE_ADDRESS_MASK (~OFFSET_MASK)
 
 #define MAX_FRAMES 16384
 
@@ -63,48 +58,157 @@ static jvmtiFrameInfo *_stack_frames_buffer = NULL;
 static jint *_stack_id_buffer = NULL;
 static jclass threadType = NULL;
 static jclass intArrType = NULL;
-static long base_addresses[NO_OF_BASE_ADDRESS]={-1L,-1L,-1L,-1L};
 
-static jint convert_jmethodID_to_jint(jmethodID jmethod) {
-    if (NEEDS_CONVERSION) {
-        long base_address=(long)jmethod&BASE_ADDRESS_MASK;
-        unsigned int i;
+/**
+ * The Profiler tracks methods on the stack using an ID which is a Java int (jint).
+ * It uses this ID to ask our DLL for the method's name. The JVM tracks methods
+ * by their jmethodid which is the same size as a pointer.
+ *
+ * Conversion of jmethodids to jints:
+ * On a 32-bit JVM this is trivial since they are the same size,
+ * just a cast is needed.
+ * On 64-bit we keep an array of jmethodids seen so far and the integer ID is the
+ * index of the jmethodid in this array. Getting the jmethodid from the ID is an
+ * array lookup. Getting the ID of a jmethod ID would be a linear scan of the array
+ * but we use a hash-table to speed things up.
+ *
+ */
+#ifdef NEEDS_CONVERSION
+/* Hash table entry */
+struct entry
+{
+    jmethodID id;
+    jint key;
+};
+/* Array of IDs */
+static jmethodID *ids = NULL;
+static int ids_size;
+/* Hash table */
+struct entry *entries = NULL;
+static int entries_size;
+/* Current count of tracked IDs */
+static int id_count;
+/* Resize table when id_count exceeds this threshold.
+ * i.e. before the table is full.
+ */
+static int resize_threshold;
 
-        for (i=0;i<NO_OF_BASE_ADDRESS;i++) {
-            long ba = base_addresses[i];
+static uint32_t jmethodid_hashcode(jmethodID jmethod)
+{
+    // This is an unsigned version of Long#hashCode
+    uintptr_t ptr = (intptr_t)jmethod;
+    return (uint32_t)(ptr ^ (ptr >> 32));
+}
 
-            if (ba == -1L) {
-                base_addresses[i] = base_address;
-                //fprintf(stderr,"Profiler Agent: Registering new base %lx\n",base_address);
+/**
+ * Increase the size of the hash table.
+ * Copy the old entries across, rehashing everything according
+ * to the new size
+ */
+static void growTable()
+{
+    int newsize = (entries_size * 2) + 1;
+    // fprintf(stderr, "*** Now growing table from %d to %d\n", entries_size, newsize);
+    int i;
+    struct entry *newentries = calloc(newsize, sizeof(struct entry));
+    assert(newentries);
+    for (i = 0; i < entries_size; ++i)
+    {
+        if (entries[i].id)
+        {
+            uint32_t pos = jmethodid_hashcode(entries[i].id) % newsize;
+            while (newentries[pos].id)
+            {
+                pos = (pos + 1) % newsize;
             }
-            if (base_addresses[i]==base_address) {
-                jint offset = (long)jmethod&OFFSET_MASK;
-                offset |= i<<NO_OF_MASK_BITS;
-                //fprintf(stderr,"M %p -> %x\n",jmethod,offset);
-                return offset;
-            }
+            newentries[pos].id = entries[i].id;
+            newentries[pos].key = entries[i].key;
         }
-        fprintf(stderr,"Profiler Agent Warning: Cannot convert %p\n",jmethod);
-        return 0;
-    } else {
-        return (jint)jmethod;
+    }
+    entries_size = newsize;
+    resize_threshold = newsize * 3 / 4;
+    free(entries);
+    entries = newentries;
+}
+/**
+ * Create table with initial size
+ *
+ */
+static void createTable()
+{
+    assert(ids == NULL);
+    assert(entries == NULL);
+    // fprintf(stderr, "*** now setting up table\n");
+    ids_size = entries_size = 97;
+    id_count = 0;
+    resize_threshold = entries_size * 3 / 4;
+    ids = calloc(ids_size, sizeof(jmethodID));
+    entries = calloc(entries_size, sizeof(struct entry));
+}
+static jint convert_jmethodID_to_jint(jmethodID jmethod)
+{
+    if (entries == NULL)
+    {
+        createTable();
+        assert(entries);
+    }
+    int pos = jmethodid_hashcode(jmethod) % entries_size;
+    assert(pos >= 0 && pos < entries_size);
+    /* Starting from the position given by the hashcode, find
+         * the next free slot (id == 0).
+         */
+    while (entries[pos].id)
+    {
+        if (entries[pos].id == jmethod)
+        {
+            return entries[pos].key;
+        }
+        pos = (pos + 1) % entries_size;
+    }
+    if (id_count < resize_threshold)
+    {
+        /* Put into the hash table */
+        entries[pos].id = jmethod;
+        entries[pos].key = id_count;
+        // fprintf(stderr, "*** Now convert %p to %d\n", jmethod, id_count);
+        /* and put in the array */
+        if (id_count >= ids_size)
+        {
+            jmethodID *oldids = ids;
+            ids_size *= 2;
+            ids = calloc(ids_size, sizeof(jmethodID));
+            assert(ids);
+            memcpy(ids, oldids, id_count * sizeof(jmethodID));
+            free(oldids);
+        }
+        ids[id_count] = jmethod;
+        id_count++;
+        return entries[pos].key;
+    }
+    else
+    {
+        /* If the table is getting full, enlarge it and try again */
+        growTable();
+        return convert_jmethodID_to_jint(jmethod);
     }
 }
 
-static jmethodID convert_jint_to_jmethodID(jint method) {
-    if (NEEDS_CONVERSION) {
-        int offset = method&OFFSET_MASK;
-        int base_id = ((unsigned int)method)>>NO_OF_MASK_BITS;
-        jmethodID jmethod = (jmethodID)(base_addresses[base_id]|offset);
-
-        //fprintf(stderr,"X %x -> %p\n",method,jmethod);
-        //fflush(stderr);
-        return jmethod;
-    } else {
-        return (jmethodID)method;
-    }
+static jmethodID convert_jint_to_jmethodID(jint method)
+{
+    assert(ids);
+    // fprintf(stderr, "*** Now unconvert %d to %p\n", method, ids[method]);
+    return ids[method];
 }
-
+#else
+static jint convert_jmethodID_to_jint(jmethodID jmethod)
+{
+    return (jint)(intptr_t)jmethod;
+}
+static jmethodID convert_jint_to_jmethodID(jint method)
+{
+    return (jmethodID)(intptr_t)method;
+}
+#endif
 /*
  * Class:     org_netbeans_lib_profiler_server_system_Stacks
  * Method:    getCurrentJavaStackDepth
@@ -118,7 +222,6 @@ JNIEXPORT jint JNICALL Java_org_netbeans_lib_profiler_server_system_Stacks_getCu
     (*_jvmti)->GetFrameCount(_jvmti, jni_thread, &count);
     return count;
 }
-
 
 /*
  * Class:     org_netbeans_lib_profiler_server_system_Stacks
@@ -199,7 +302,7 @@ static void copy_into_data_array(char *s) {
         byteDataLen = newLen;
     }
 
-    strncpy((char*)(byteData + dataOfs), s, len);
+    memcpy((char *)(byteData + dataOfs), s, len);
     strOffsets[ofsIdx++] = dataOfs;
     dataOfs += len;
 }
@@ -278,9 +381,9 @@ JNIEXPORT jbyteArray JNICALL Java_org_netbeans_lib_profiler_server_system_Stacks
         }
 
         // fprintf (stderr, "Going to call IsMethodNative for methodId = %d, last res = %d, signature: %s\n", *(int*)methodID, res, genericSignature);
-        
+
         res = (*_jvmti)->IsMethodNative(_jvmti, methodID, &native);
-        
+
         if (res != JVMTI_ERROR_NONE) {
             fprintf(stderr, "Profiler Agent Warning: Couldn't obtain native flag for methodID = %p\n", methodID);
         }
@@ -344,7 +447,7 @@ JNIEXPORT void JNICALL Java_org_netbeans_lib_profiler_server_system_Stacks_getAl
     int ti;
     jvmtiError err;
 
-    err = (*_jvmti)->GetAllStackTraces(_jvmti, MAX_FRAMES, &stack_info, &thread_count); 
+    err = (*_jvmti)->GetAllStackTraces(_jvmti, MAX_FRAMES, &stack_info, &thread_count);
     if (err != JVMTI_ERROR_NONE) {
        return;
     }
@@ -361,9 +464,9 @@ JNIEXPORT void JNICALL Java_org_netbeans_lib_profiler_server_system_Stacks_getAl
     statesArr = (*env)->NewIntArray(env, thread_count);
     (*env)->SetObjectArrayElement(env, states, 0, statesArr);
     methodIdArrArr = (*env)->NewObjectArray(env, thread_count, intArrType, NULL);
-    (*env)->SetObjectArrayElement(env, frames, 0, methodIdArrArr);    
+    (*env)->SetObjectArrayElement(env, frames, 0, methodIdArrArr);
     state_buffer = calloc(thread_count, sizeof(jint));
-    
+
     for (ti = 0; ti < thread_count; ti++) {
        jvmtiStackInfo *infop = &stack_info[ti];
        jthread thread = infop->thread;
@@ -375,9 +478,9 @@ JNIEXPORT void JNICALL Java_org_netbeans_lib_profiler_server_system_Stacks_getAl
 
        (*env)->SetObjectArrayElement(env, jthreadArr, ti, thread);
        state_buffer[ti] = convert_JVMTI_thread_status_to_jfluid_status(state);
-       
+
        jmethodIdArr = (*env)->NewIntArray(env, infop->frame_count);
-       (*env)->SetObjectArrayElement(env, methodIdArrArr, ti, jmethodIdArr);    
+       (*env)->SetObjectArrayElement(env, methodIdArrArr, ti, jmethodIdArr);
        id_buffer = calloc(infop->frame_count, sizeof(jint));
        for (fi = 0; fi < infop->frame_count; fi++) {
           id_buffer[fi] = convert_jmethodID_to_jint(frames[fi].method);
@@ -386,7 +489,7 @@ JNIEXPORT void JNICALL Java_org_netbeans_lib_profiler_server_system_Stacks_getAl
        free(id_buffer);
     }
     (*env)->SetIntArrayRegion(env, statesArr, 0, thread_count, state_buffer);
-    
+
     /* this one Deallocate call frees all data allocated by GetAllStackTraces */
     err = (*_jvmti)->Deallocate(_jvmti, (unsigned char*)stack_info);
     assert(err == JVMTI_ERROR_NONE);

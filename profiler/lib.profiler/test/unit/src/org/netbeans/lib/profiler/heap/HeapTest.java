@@ -19,8 +19,6 @@
 package org.netbeans.lib.profiler.heap;
 
 import java.io.BufferedOutputStream;
-import java.util.Map;
-import java.util.Date;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -31,21 +29,26 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.Set;
 import java.util.TimeZone;
+import java.util.TreeSet;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 /**
@@ -53,18 +56,9 @@ import static org.junit.Assert.*;
  * @author Tomas Hurka
  */
 public class HeapTest {
-
-    private Heap heap;
+    Heap heap;
 
     public HeapTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
     }
 
     @Before
@@ -102,8 +96,13 @@ public class HeapTest {
      */
     @Test
     public void testGetGCRoots() {
-        Collection result = heap.getGCRoots();
-        assertEquals(429, result.size());
+        Collection<GCRoot> result = heap.getGCRoots();
+        Set<Instance> unique = new HashSet<>();
+        for (GCRoot r : result) {
+            unique.add(r.getInstance());
+        }
+        assertEquals("Unique root instances", 429, unique.size());
+        assertEquals("Roots with duplicted instances", 453, result.size());
     }
 
     /**
@@ -249,10 +248,12 @@ public class HeapTest {
         Collection classes = heap.getAllClasses();
         out.println("Classes size " + classes.size());
         out.println("System properties: ");
-        for (Object en : heap.getSystemProperties().entrySet()) {
-            Map.Entry entry = (Map.Entry) en;
-
-            out.println(entry.getKey() + " " + entry.getValue());
+        Properties properties = heap.getSystemProperties();
+        for (String key : new TreeSet<>(properties.stringPropertyNames())) {
+            String value = properties.getProperty(key)
+                    .replace("\r", "\\r")
+                    .replace("\n", "\\n");
+            out.println(key + (value.isEmpty() ? "" : " " + value));
         }
         for (Object c : classes) {
             JavaClass jc = (JavaClass) c;
@@ -332,13 +333,15 @@ public class HeapTest {
                 }
             }
         }
-        Collection roots = heap.getGCRoots();
+        Collection<GCRoot> roots = heap.getGCRoots();
         out.println("GC roots " + roots.size());
 
-        for (Object g : roots) {
-            GCRoot root = (GCRoot) g;
-            Instance i = root.getInstance();
-
+        Set<Instance> unique = new LinkedHashSet<>();
+        for (GCRoot r : roots) {
+            unique.add(r.getInstance());
+        }
+        for (Instance i : unique) {
+            GCRoot root = heap.getGCRoot(i);
             out.println("Root kind " + root.getKind() + " Class " + i.getJavaClass().getName() + "#" + i.getInstanceNumber());
         }
         out.close();
@@ -347,9 +350,9 @@ public class HeapTest {
     }
 
     private void compareTextFiles(File goledFile, File outFile) throws IOException {
-        InputStreamReader goldenIsr = new InputStreamReader(new FileInputStream(goledFile), "UTF-8");
+        InputStreamReader goldenIsr = new InputStreamReader(new FileInputStream(goledFile), StandardCharsets.UTF_8);
         LineNumberReader goldenReader = new LineNumberReader(goldenIsr);
-        InputStreamReader isr = new InputStreamReader(new FileInputStream(outFile), "UTF-8");
+        InputStreamReader isr = new InputStreamReader(new FileInputStream(outFile), StandardCharsets.UTF_8);
         LineNumberReader reader = new LineNumberReader(isr);
         String goldenLine = "";
         String line = "";

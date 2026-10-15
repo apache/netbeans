@@ -106,7 +106,7 @@ public class TestCaseContext {
     
     private String[] parseContent(File f) throws  Exception{
         BufferedReader br=new BufferedReader(new InputStreamReader(new FileInputStream(f.getAbsolutePath())));
-        List array=new ArrayList();
+        List<String> array=new ArrayList<>();
         String s=null;
         while((s=br.readLine())!=null){
           array.add(s);

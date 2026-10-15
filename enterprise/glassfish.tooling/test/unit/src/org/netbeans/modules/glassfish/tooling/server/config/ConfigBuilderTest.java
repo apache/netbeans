@@ -89,7 +89,7 @@ public class ConfigBuilderTest extends CommonTest {
                 GlassFishVersion.GF_4);
         assertNotNull(lib);
         try {
-            lb.getLibraries(GlassFishVersion.GF_3_1_2);
+            lb.getLibraries(GlassFishVersion.GF_4);
             fail("Library builder could not work for more than one GlassFish"
                     + " version with a single server instance.");
         } catch (ServerConfigException sce) {}

@@ -20,7 +20,6 @@
 package org.netbeans.modules.java.j2seproject.ui.customizer;
 
 import java.awt.event.ActionListener;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -51,7 +50,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.swing.ButtonModel;
 import javax.swing.ComboBoxModel;
-import javax.swing.DefaultButtonModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JToggleButton;
 import javax.swing.ListCellRenderer;
@@ -103,9 +101,9 @@ public class J2SEProjectProperties {
     
     //Hotfix of the issue #70058
     //Should be removed when the StoreGroup SPI will be extended to allow false default value in ToggleButtonModel
-    private static final Integer BOOLEAN_KIND_TF = new Integer( 0 );
-    private static final Integer BOOLEAN_KIND_YN = new Integer( 1 );
-    private static final Integer BOOLEAN_KIND_ED = new Integer( 2 );
+    private static final Integer BOOLEAN_KIND_TF = 0;
+    private static final Integer BOOLEAN_KIND_YN = 1;
+    private static final Integer BOOLEAN_KIND_ED = 2;
     private static final String COS_MARK = ".netbeans_automatic_build";     //NOI18N
     private static final Logger LOG = Logger.getLogger(J2SEProjectProperties.class.getName());
     private Integer javacDebugBooleanKind;
@@ -469,11 +467,8 @@ public class J2SEProjectProperties {
                 } else {
                     fo = FileUtil.toFileObject(file);
                 }
-                OutputStream out = fo.getOutputStream();
-                try {
-                    FileUtil.copy(new ByteArrayInputStream(CHANGED_LICENSE_PATH_CONTENT.getBytes()), out);
-                } finally {
-                    out.close();
+                try (OutputStream out = fo.getOutputStream()) {
+                    out.write(CHANGED_LICENSE_PATH_CONTENT.getBytes());
                 }
             }
             // Store properties
@@ -772,7 +767,7 @@ public class J2SEProjectProperties {
     }            
     
     private void storeRoots( SourceRoots roots, DefaultTableModel tableModel ) throws MalformedURLException {
-        Vector data = tableModel.getDataVector();
+        Vector<Vector> data = tableModel.getDataVector();
         URL[] rootURLs = new URL[data.size()];
         String []rootLabels = new String[data.size()];
         final LinkedList<URL> oldRootURLs = new LinkedList<URL>(Arrays.asList (roots.getRootURLs (false)));
@@ -780,13 +775,13 @@ public class J2SEProjectProperties {
         final LinkedList<String> oldRootProps = new LinkedList<String>(Arrays.asList (roots.getRootProperties()));
         boolean rootsAreSame = true;
         for (int i=0; i<data.size();i++) {
-            File f = (File) ((Vector)data.elementAt(i)).elementAt(0);
+            File f = (File)data.elementAt(i).elementAt(0);
             rootURLs[i] = Utilities.toURI(f).toURL();
             if (!rootURLs[i].toExternalForm().endsWith("/")) {  //NOI18N
                 rootURLs[i] = new URL(rootURLs[i]+"/");
             }
             validateURL(rootURLs[i],f);
-            rootLabels[i] = (String) ((Vector)data.elementAt(i)).elementAt(1);
+            rootLabels[i] = (String)data.elementAt(i).elementAt(1);
             rootsAreSame &= !oldRootURLs.isEmpty() &&
                             oldRootURLs.removeFirst().equals(rootURLs[i]) &&
                             roots.getRootDisplayName(oldRootLabels.removeFirst(), oldRootProps.removeFirst()).equals(rootLabels[i]);
@@ -1004,7 +999,7 @@ public class J2SEProjectProperties {
                 }
             }
         }
-        v.setRoots(roots.toArray(new File[roots.size()]));
+        v.setRoots(roots.toArray(new File[0]));
         v.setIncludePattern(includes);
         v.setExcludePattern(excludes);
     }

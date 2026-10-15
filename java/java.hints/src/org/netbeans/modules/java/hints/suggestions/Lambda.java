@@ -181,7 +181,7 @@ public class Lambda {
     @Messages({
         "DN_expression2Return=Convert Lambda Body to Use a Block",
         "DESC_expression2Return=Converts lambda bodies to use blocks rather than expressions",
-        "ERR_expression2Return=",
+        "ERR_expression2Return=Block as the lambda's body can be used",
         "FIX_expression2Return=Use block as the lambda's body"
     })
     @TriggerPattern("($args$) -> $lambdaExpression")
@@ -202,7 +202,7 @@ public class Lambda {
     @Messages({
         "DN_memberReference2Lambda=Convert Member Reference to Lambda Expression",
         "DESC_memberReference2Lambda=Converts member references to lambda expressions",
-        "ERR_memberReference2Lambda=",
+        "ERR_memberReference2Lambda=Lambda expression can be used",
         "FIX_memberReference2Lambda=Use lambda expression"
     })
     @TriggerTreeKind(Kind.MEMBER_REFERENCE)
@@ -219,7 +219,7 @@ public class Lambda {
     @Messages({
         "DN_addExplicitLambdaParameters=Convert Lambda to Use Explicit Parameter Types",
         "DESC_addExplicitLambdaParameters=Converts lambdas to use explicit parameter types",
-        "ERR_addExplicitLambdaParameters=",
+        "ERR_addExplicitLambdaParameters=Explicit parameter types can be used",
         "FIX_addExplicitLambdaParameters=Use explicit parameter types"
     })
     @TriggerTreeKind(Kind.LAMBDA_EXPRESSION)
@@ -402,6 +402,7 @@ public class Lambda {
                                               Collections.<TypeParameterTree>emptyList(),
                                               null,
                                               Collections.<Tree>emptyList(),
+                                              Collections.<Tree>emptyList(),
                                               Collections.singletonList(newMethod));
             ExpressionTree targetTypeTree;
             
@@ -452,6 +453,7 @@ public class Lambda {
                     case CLASS:
                     case ANNOTATION_TYPE:
                     case INTERFACE:
+                    case RECORD:
                         types.put(e.getSimpleName(), e);
                         break;
 
@@ -502,6 +504,7 @@ public class Lambda {
                                 case ANNOTATION_TYPE:
                                 case CLASS:
                                 case INTERFACE:
+                                case RECORD:
                                 case ENUM:
                                     rewrite = (other = types.get(e.getSimpleName())) != null;
                                     statRef = true;
@@ -648,13 +651,16 @@ public class Lambda {
 
         @Override
         protected void performRewrite(TransformationContext ctx) throws Exception {
+            WorkingCopy wc = ctx.getWorkingCopy();
+            TreeMaker make = wc.getTreeMaker();
             LambdaExpressionTree let = (LambdaExpressionTree) ctx.getPath().getLeaf();
 
             for (VariableTree var : let.getParameters()) {
-                TreePath typePath = TreePath.getPath(ctx.getPath(), var.getType());
-                if (ctx.getWorkingCopy().getTreeUtilities().isSynthetic(typePath)) {
-                    Tree imported = ctx.getWorkingCopy().getTreeMaker().Type(ctx.getWorkingCopy().getTrees().getTypeMirror(typePath));
-                    ctx.getWorkingCopy().rewrite(var.getType(), imported);
+                if (var.getType() == null || var.getType().getKind() == Kind.VAR_TYPE) {
+                    Tree newType = make.Type(wc.getTrees().getTypeMirror(new TreePath(ctx.getPath(), var)));
+                    VariableTree newVariable = Utilities.setVariableType(wc, var, newType);
+
+                    wc.rewrite(var, newVariable);
                 }
             }
         }
@@ -677,7 +683,10 @@ public class Lambda {
                 LambdaExpressionTree let = (LambdaExpressionTree) ctx.getPath().getLeaf();
                 TreeMaker make = ctx.getWorkingCopy().getTreeMaker();
                 let.getParameters().forEach((var) -> {
-                    ctx.getWorkingCopy().rewrite(var.getType(), make.Type("var")); // NOI18N
+                    Tree newType = make.Type("var"); //XXX: make.VarType()!
+                    VariableTree newVariable = Utilities.setVariableType(ctx.getWorkingCopy(), var, newType);
+
+                    ctx.getWorkingCopy().rewrite(var, newVariable); // NOI18N
                 });
             }
         }

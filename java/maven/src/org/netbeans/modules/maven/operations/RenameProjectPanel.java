@@ -27,9 +27,7 @@ import java.util.List;
 import javax.swing.JCheckBox;
 import javax.swing.SwingUtilities;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.project.ProjectBuildingException;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
@@ -265,7 +263,7 @@ public class RenameProjectPanel extends javax.swing.JPanel {
                 FileObject pomFO = project.getProjectDirectory().getFileObject("pom.xml"); //NOI18N
                 Utilities.performPOMModelOperations(pomFO, opers);
                 if (folder) {
-                    final ProgressHandle handle = ProgressHandleFactory.createHandle(RenameProject());
+                    final ProgressHandle handle = ProgressHandle.createHandle(RenameProject());
                     //#76559
                     handle.start(MAX_WORK);
                     try {

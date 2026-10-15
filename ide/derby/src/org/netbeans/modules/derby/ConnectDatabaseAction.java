@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.derby;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,6 +35,8 @@ import org.openide.nodes.Node;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 import org.openide.util.actions.NodeAction;
+
+import static java.util.Arrays.asList;
 
 /**
  * Connect to a database
@@ -77,12 +80,14 @@ public class ConnectDatabaseAction extends NodeAction {
         try {
             if ( conns.isEmpty() )
             {
-                JDBCDriver drivers[] = JDBCDriverManager.getDefault().getDrivers(DerbyOptions.DRIVER_CLASS_NET);
-                if (drivers.length == 0) {
+                List<JDBCDriver> drivers = new ArrayList<>();
+                drivers.addAll(asList(JDBCDriverManager.getDefault().getDrivers(DerbyOptions.DRIVER_CLASS_NET)));
+                drivers.addAll(asList(JDBCDriverManager.getDefault().getDrivers(DerbyOptions.DRIVER_CLASS_NET_MODULAR)));
+                if (drivers.isEmpty()) {
                     showDriverNotFoundDialog();
                     return;
                 }
-                final DatabaseConnection dbconn = DatabaseConnection.create(drivers[0], "jdbc:derby://localhost:" + // NOI18N
+                final DatabaseConnection dbconn = DatabaseConnection.create(drivers.get(0), "jdbc:derby://localhost:" + // NOI18N
                         RegisterDerby.getDefault().getPort() +
                         "/" + dbname, // NOI18N
                         DerbyDatabasesImpl.getDefault().getUser(dbname),

@@ -70,6 +70,15 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.javascript.nodejs</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>0-1</release-version>
+                        <specification-version>0.46</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.javascript2.debug</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -93,6 +102,14 @@
                     <compile-dependency/>
                     <run-dependency>
                         <specification-version>1.95</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.dialogs</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>7.62</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -138,7 +155,6 @@
                 </test-type>
             </test-dependencies>
             <friend-packages>
-                <friend>org.netbeans.modules.javascript.nodejs</friend>
                 <friend>org.netbeans.modules.selenium2.webclient.mocha</friend>
                 <friend>org.netbeans.modules.selenium2.webclient.protractor</friend>
                 <package>org.netbeans.modules.javascript.v8debug.api</package>

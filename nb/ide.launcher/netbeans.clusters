@@ -37,8 +37,10 @@ identity
 harness
 cnd
 cndext
+cpplite
 dlight
 groovy
 extra
 javacard
 javafx
+rust

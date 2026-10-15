@@ -262,6 +262,8 @@ public class NetbeansBuildActionXpp3Reader {
         while ( parser.nextTag() == XmlPullParser.START_TAG ) {
             if (parser.getName().equals("id")) {
                 p.setId(parser.nextText());
+            } else if (parser.getName().equals("displayName")) { // NOI18N
+                p.setDisplayName(parser.nextText());
             } else if (parser.getName().equals("actions")) {
                 while (parser.nextTag() == XmlPullParser.START_TAG && parser.getName().equals("action")) {
                     NetbeansActionMapping r = parseNetbeansActionMapping("actions", parser, strict);
@@ -398,6 +400,20 @@ public class NetbeansBuildActionXpp3Reader {
                     String key = parser.getName();
                     String value = parser.nextText().trim();
                     netbeansActionMapping.addProperty( key, value );
+                }
+            }
+            else if ( parser.getName().equals( "options" )  )
+            {
+                if ( parsed.contains( "options" ) )
+                {
+                    throw new XmlPullParserException( "Duplicated tag: '" + parser.getName() + "'", parser, null );
+                }
+                parsed.add( "options" );
+                while ( parser.nextTag() == XmlPullParser.START_TAG )
+                {
+                    String key = parser.getName();
+                    String value = parser.nextText().trim();
+                    netbeansActionMapping.addOption(key, value );
                 }
             }
             else if ( parser.getName().equals( "activatedProfiles" )  )

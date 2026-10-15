@@ -78,7 +78,7 @@ public class SourceRoots {
             }
         }
 
-        return result.toArray(new FileObject[result.size()]);
+        return result.toArray(new FileObject[0]);
     }
 
     public List<URL> getRootURLs() {

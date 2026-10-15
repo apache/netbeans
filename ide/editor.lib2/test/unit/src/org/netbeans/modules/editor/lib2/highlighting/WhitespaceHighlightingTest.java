@@ -26,9 +26,6 @@ import javax.swing.JEditorPane;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.Document;
 import javax.swing.text.StyleConstants;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
 import org.netbeans.api.editor.settings.AttributesUtilities;
 import org.netbeans.junit.Filter;
 import org.netbeans.junit.NbTestCase;
@@ -76,7 +73,7 @@ public class WhitespaceHighlightingTest extends NbTestCase {
             includeTests.add(new Filter.IncludeExclude(testName, ""));
         }
         Filter filter = new Filter();
-        filter.setIncludes(includeTests.toArray(new Filter.IncludeExclude[includeTests.size()]));
+        filter.setIncludes(includeTests.toArray(new Filter.IncludeExclude[0]));
         setFilter(filter);
     }
     

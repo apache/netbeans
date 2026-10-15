@@ -19,16 +19,18 @@
 
 package org.netbeans.modules.web.monitor.data;
 
-import org.w3c.dom.*;
-import org.netbeans.modules.schema2beans.*;
-import java.beans.*;
-import java.util.*;
+import java.util.Vector;
+import org.netbeans.modules.schema2beans.AttrProp;
+
+import org.netbeans.modules.schema2beans.BaseBean;
+import org.netbeans.modules.schema2beans.BeanComparator;
+import org.netbeans.modules.schema2beans.Common;
 
 public class Dispatches extends BaseBean {
 
-    static Vector comparators = new Vector();
+    static Vector<BeanComparator> comparators = new Vector<>();
 
-    static public final String DISPATCHDATA = "DispatchData"; // NOI18N
+    public static final String DISPATCHDATA = "DispatchData"; // NOI18N
 
     public Dispatches() {
 	this(Common.USE_DEFAULT_VALUES);
@@ -92,12 +94,12 @@ public class Dispatches extends BaseBean {
     }
 
     //
-    static public void addComparator(BeanComparator c) {
+    public static void addComparator(BeanComparator c) {
 	comparators.add(c);
     }
 
     //
-    static public void removeComparator(BeanComparator c) {
+    public static void removeComparator(BeanComparator c) {
 	comparators.remove(c);
     }
     // Dump the content of this bean returning it as a String

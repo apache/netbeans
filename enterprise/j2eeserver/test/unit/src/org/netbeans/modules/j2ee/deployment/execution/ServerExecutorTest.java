@@ -44,7 +44,7 @@ public class ServerExecutorTest extends NbTestCase {
     public void testNothing() {
     }
     
-    static private LocalFileSystem wfs;
+    private static LocalFileSystem wfs;
     static FileSystem getWorkFileSystem() {
         if (wfs != null)
             return wfs;

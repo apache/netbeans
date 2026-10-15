@@ -25,8 +25,8 @@ import javax.swing.AbstractAction;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
-import org.netbeans.api.progress.aggregate.AggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.AggregateProgressHandle;
+import org.netbeans.api.progress.aggregate.BasicAggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.ProgressContributor;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.api.NbMavenProject;
@@ -63,7 +63,7 @@ class GotoPluginSourceAction extends AbstractAction {
     @NbBundle.Messages(value = "TIT_GOTO_Plugin=Opening Plugin Mojo Sources")
     public void actionPerformed(ActionEvent e) {
         final AtomicBoolean cancel = new AtomicBoolean();
-        org.netbeans.api.progress.ProgressUtils.runOffEventDispatchThread(new Runnable() {
+        org.netbeans.api.progress.BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
             @Override
             public void run() {
                 doLoad(cancel);
@@ -77,13 +77,13 @@ class GotoPluginSourceAction extends AbstractAction {
         Project prj = config.getProject();
         if (prj != null) {
             //todo what about build without project.. it's just create archetype one though..
-            ProgressContributor contributor = AggregateProgressFactory.createProgressContributor("multi-1");
-            AggregateProgressHandle handle = AggregateProgressFactory.createHandle("Downloading plugin sources", new ProgressContributor[]{contributor}, ProgressTransferListener.cancellable(), null);
+            ProgressContributor contributor = BasicAggregateProgressFactory.createProgressContributor("multi-1");
+            AggregateProgressHandle handle = BasicAggregateProgressFactory.createHandle("Downloading plugin sources", new ProgressContributor[]{contributor}, ProgressTransferListener.cancellable(), null);
             handle.start();
             try {
                 ProgressTransferListener.setAggregateHandle(handle);
                 NbMavenProject pr = prj.getLookup().lookup(NbMavenProject.class);
-                onlineEmbedder.resolve(art, pr.getMavenProject().getPluginArtifactRepositories(), onlineEmbedder.getLocalRepository());
+                onlineEmbedder.resolveArtifact(art, pr.getMavenProject().getPluginArtifactRepositories(), onlineEmbedder.getLocalRepository());
                 if (art.getFile().exists() && !cancel.get()) {
                     Artifact sourceArt = DependencyNode.downloadJavadocSources(contributor, false, art, prj);
                     FileObject binaryRoot = FileUtil.toFileObject(art.getFile());

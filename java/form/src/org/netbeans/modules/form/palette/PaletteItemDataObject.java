@@ -22,6 +22,9 @@ package org.netbeans.modules.form.palette;
 import java.util.*;
 import java.io.*;
 import java.beans.*;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
@@ -168,7 +171,7 @@ public class PaletteItemDataObject extends MultiDataObject implements CookieSet.
             XMLReader reader = XMLUtil.createXMLReader();
             PaletteItemHandler handler = new PaletteItemHandler();
             reader.setContentHandler(handler);
-            InputSource input = new InputSource(getPrimaryFile().getURL().toExternalForm());
+            InputSource input = new InputSource(getPrimaryFile().toURL().toExternalForm());
             reader.parse(input);
             // TODO report errors, validate using DTD?
             
@@ -225,7 +228,7 @@ public class PaletteItemDataObject extends MultiDataObject implements CookieSet.
         FileLock lock = itemFile.lock();
         OutputStream os = itemFile.getOutputStream(lock);
         try {
-            os.write(buff.toString().getBytes("UTF-8")); // NOI18N
+            os.write(buff.toString().getBytes(StandardCharsets.UTF_8));
         }
         finally {
             os.close();
@@ -422,10 +425,9 @@ public class PaletteItemDataObject extends MultiDataObject implements CookieSet.
             {
                 if (icon32URL != null) { // explicit icon specified in file
                     try {
-                        return java.awt.Toolkit.getDefaultToolkit().getImage(
-                                                 new java.net.URL(icon32URL));
+                        return ImageUtilities.loadImage(new URI(icon32URL));
                     }
-                    catch (java.net.MalformedURLException ex) {} // ignore
+                    catch (URISyntaxException ex) {} // ignore
                 }
                 else if (getPrimaryFile().getAttribute("SystemFileSystem.icon32") != null) // NOI18N
                     return super.getIcon(type);
@@ -433,10 +435,9 @@ public class PaletteItemDataObject extends MultiDataObject implements CookieSet.
             else { // get small icon in other cases
                 if (icon16URL != null) { // explicit icon specified in file
                     try {
-                        return java.awt.Toolkit.getDefaultToolkit().getImage(
-                                                 new java.net.URL(icon16URL));
+                        return ImageUtilities.loadImage(new URI(icon16URL));
                     }
-                    catch (java.net.MalformedURLException ex) {} // ignore
+                    catch (URISyntaxException ex) {} // ignore
                 }
                 else if (getPrimaryFile().getAttribute("SystemFileSystem.icon") != null) // NOI18N
                     return super.getIcon(type);

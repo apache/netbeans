@@ -24,14 +24,13 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Enumeration;
-import java.util.StringTokenizer;
+import java.net.URLDecoder;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import javax.swing.SwingUtilities;
 
 import org.openide.filesystems.FileAlreadyLockedException;
@@ -48,8 +47,6 @@ public class PutTransaction extends HttpServlet {
 
     private static FileObject currDir = null;
     private static boolean debug = false;
-     
-    private ServletConfig servletConfig = null;
 
     public void doPost(HttpServletRequest req, HttpServletResponse res) 
 	throws ServletException, IOException {
@@ -69,7 +66,7 @@ public class PutTransaction extends HttpServlet {
 	// As soon as you get the parameters, you've gotten an input
 	// string for this. Don't do that. 
 
-	String id = req.getQueryString(); 
+	String id = URLDecoder.decode(req.getQueryString(), "UTF-8");
 	if(id == null || id.length() == 0) { 
 	    if(debug) log("Bad request, exiting..."); //NOI18N
 	    return; 
@@ -175,8 +172,6 @@ public class PutTransaction extends HttpServlet {
      *
      */
     public void init(ServletConfig servletConfig) { 
-
-	this.servletConfig = servletConfig;
 	if(debug) log("init");  //NOI18N
     }
     

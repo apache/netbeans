@@ -230,7 +230,7 @@ public final class FrameworkCommandChooser extends JPanel {
         params.addAll(getStoredParams(task));
         // FIXME from ruby
         //params.addAll(RakeParameters.getParameters(task, project));
-        taskParametersComboBox.setModel(new DefaultComboBoxModel<>(params.toArray(new String[params.size()])));
+        taskParametersComboBox.setModel(new DefaultComboBoxModel<>(params.toArray(new String[0])));
         preselectLastSelectedParam(task);
         taskParametersComboBoxEditor.getDocument().addDocumentListener(new DocumentListener() {
             @Override

@@ -143,7 +143,7 @@ public final class RemoteServices {
                     ClassType theClass = getClass(vm, Class.class.getName());
                     // Call some method that will prepare the class:
                     Method aMethod = ClassTypeWrapper.concreteMethodByName(theClass, "getConstructors", "()[Ljava/lang/reflect/Constructor;");
-                    ObjectReferenceWrapper.invokeMethod(theUploadedClass, tr, aMethod, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                    ObjectReferenceWrapper.invokeMethod(theUploadedClass, tr, aMethod, Collections.<Value>emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                 }
             }
         } finally {
@@ -167,12 +167,12 @@ public final class RemoteServices {
                                                                                                        ObjectCollectedExceptionWrapper {
         ReferenceType threadType = tr.referenceType();
         Method getContextCl = ClassTypeWrapper.concreteMethodByName((ClassType) threadType, "getContextClassLoader", "()Ljava/lang/ClassLoader;");
-        ObjectReference cl = (ObjectReference) ObjectReferenceWrapper.invokeMethod(tr, tr, getContextCl, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+        ObjectReference cl = (ObjectReference) ObjectReferenceWrapper.invokeMethod(tr, tr, getContextCl, Collections.<Value>emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
         ClassType classLoaderClass = null;
         if (cl == null) {
             classLoaderClass = getClass(vm, ClassLoader.class.getName());
             Method getSystemClassLoader = ClassTypeWrapper.concreteMethodByName(classLoaderClass, "getSystemClassLoader", "()Ljava/lang/ClassLoader;");
-            cl = (ObjectReference) ClassTypeWrapper.invokeMethod(classLoaderClass, tr, getSystemClassLoader, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+            cl = (ObjectReference) ClassTypeWrapper.invokeMethod(classLoaderClass, tr, getSystemClassLoader, Collections.<Value>emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
         }
         return cl;
     }

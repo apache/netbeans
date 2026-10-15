@@ -11,6 +11,7 @@ METHOD     eachMatch(String, Closure)                 String
 METHOD     eachWithIndex(Closure)                     Object
 METHOD     endsWith(String)                [PUBLIC]   boolean
 METHOD     endsWithAny(CharSequence[])                boolean
+METHOD     endsWithIgnoreCase(CharSequenc             boolean
 METHOD     equals(Object)                  [PUBLIC]   boolean
 METHOD     equalsIgnoreCase(String)        [PUBLIC]   boolean
 METHOD     every()                                    boolean

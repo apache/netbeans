@@ -32,8 +32,6 @@ import org.netbeans.modules.csl.api.HintFix;
 import org.netbeans.modules.csl.api.HintSeverity;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.support.CancelSupport;
-import org.netbeans.modules.php.editor.api.elements.ParameterElement;
-import org.netbeans.modules.php.editor.api.elements.ParameterElement.OutputType;
 import org.netbeans.modules.php.editor.lexer.LexUtilities;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
 import org.netbeans.modules.php.editor.model.nodes.FunctionDeclarationInfo;
@@ -150,12 +148,34 @@ public class WrongOrderOfArgsHint extends HintRule {
         @Override
         public void implement() throws Exception {
             EditList edits = new EditList(doc);
-            OffsetRange offsetRange = getOffsetRange();
-            StringBuilder sb = new StringBuilder();
-            for (ParameterElement param : functionDeclarationInfo.getParameters()) {
-                sb.append(param.asString(OutputType.COMPLETE_DECLARATION)).append(", "); //NOI18N
+            List<FormalParameter> originalParameters = node.getFormalParameters();
+            List<FormalParameter> rearrangedFormalParameters = functionDeclarationInfo.getOriginalNode().getFormalParameters();
+            // hooked property has a body, so move existing params
+            // instead of generating params from parameter elements
+            // (cannot generate the same parameters as original using them)
+            // e.g. CPP
+            // public __construct(
+            //     private int $int = 1 {
+            //         get {} set {}
+            //     },
+            //     int $param,
+            // )
+            List<String> paramStrings = new ArrayList<>(rearrangedFormalParameters.size());
+            for (FormalParameter rearrangedFormalParameter : rearrangedFormalParameters) {
+                OffsetRange offsetRange = new OffsetRange(rearrangedFormalParameter.getStartOffset(), rearrangedFormalParameter.getEndOffset());
+                String text = doc.getText(offsetRange.getStart(), offsetRange.getLength());
+                paramStrings.add(text);
             }
-            edits.replace(offsetRange.getStart(), offsetRange.getLength(), sb.toString().substring(0, sb.length() - 2), true, 0);
+            assert originalParameters.size() == rearrangedFormalParameters.size() : originalParameters.size() + " != " + rearrangedFormalParameters.size(); // NOI18N
+            // maybe, in the case of constructor property promotion
+            // parameters can be declared with multiple lines
+            // so, replace the rearranged parameters with positions of original parameters
+            // instead of replacing whole parameters as one line
+            for (int i = 0; i < originalParameters.size(); i++) {
+                FormalParameter originalParameter = originalParameters.get(i);
+                OffsetRange originalRange = new OffsetRange(originalParameter.getStartOffset(), originalParameter.getEndOffset());
+                edits.replace(originalRange.getStart(), originalRange.getLength(), paramStrings.get(i), false, 0);
+            }
             edits.apply();
         }
 
@@ -167,7 +187,7 @@ public class WrongOrderOfArgsHint extends HintRule {
                 ts.move(node.getStartOffset());
                 int braceMatch = 0;
                 while (ts.moveNext()) {
-                    Token t = ts.token();
+                    Token<PHPTokenId> t = ts.token();
                     if (t.id() == PHPTokenId.PHP_TOKEN) {
                         if (TokenUtilities.textEquals(t.text(), "(")) { // NOI18N
                             if (braceMatch == 0) {

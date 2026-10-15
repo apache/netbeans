@@ -42,7 +42,7 @@ public class Main extends Object {
     
     /** Fixes value of netbeans.user property.
      */
-    final static void fixNetBeansUser() {
+    static final void fixNetBeansUser() {
         String userDir = System.getProperty("netbeans.user"); // NOI18N
         if (userDir == null) {
             userDir = System.getProperty("jnlp.netbeans.user"); // NOI18N
@@ -68,7 +68,7 @@ public class Main extends Object {
      * permissions. The jars besides the one containing this class
      * don't have to be signed with this.
      */
-    final static void fixPolicy() {
+    static final void fixPolicy() {
         if (Boolean.getBoolean("netbeans.jnlp.fixPolicy")) { // NOI18N
             // Grant all the code all persmission
             Policy.setPolicy(new RuntimePolicy());

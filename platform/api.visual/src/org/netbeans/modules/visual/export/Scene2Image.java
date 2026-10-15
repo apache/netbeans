@@ -53,7 +53,7 @@ public class Scene2Image {
 
     private final File file;
     private final Scene scene;
-    private Set selectedObjects;
+    private Set<?> selectedObjects;
     private int imageHeight;
     private int imageWidth;
     private double scale;
@@ -230,12 +230,9 @@ public class Scene2Image {
     /**
      * Takes the Scene and writes an image file according to the constraints defined 
      * by the caller. This returns a BufferedImage of the Scene even if the file can 
-     * not be written. 
-     * @param scene The Scene to be exported as an image.
-     * @param file The file used to store the exported image. If null, then it is 
-     * assumed that the raw image is to be returned only and not written to a file.
-     * @param SceneExporter.ImageType The image type to be exported for the image map.
-     * @param SceneExporter.ZoomType Defines the strategy
+     * not be written.
+     * @param imageType The image type to be exported for the image map.
+     * @param zoomType Defines the strategy
      * by which to set the exporting scale factor. Note that certain parameters are
      * nullified by the choice of ZoomType. For instance, if ZoomType.CUSTOM_SIZE is
      * not chosen, then the width and height parameters are not used.
@@ -276,7 +273,7 @@ public class Scene2Image {
         int _imageWidth = sceneRec.width;
         int _imageHeight = sceneRec.height;
 
-        Set _selectedObjects = null;
+        Set<?> _selectedObjects = null;
 
         if (selectedOnly) {
             //in order to use getSelectedObject the scene must be an ObjectScene
@@ -353,8 +350,8 @@ public class Scene2Image {
             FileImageOutputStream fo = new FileImageOutputStream(file);
 
             if (imageType == ImageType.JPG) {
-                Iterator iter = ImageIO.getImageWritersByFormatName("jpg");
-                ImageWriter writer = (ImageWriter) iter.next();
+                Iterator<ImageWriter> iter = ImageIO.getImageWritersByFormatName("jpg");
+                ImageWriter writer = iter.next();
 
                 ImageWriteParam iwp = writer.getDefaultWriteParam();
                 iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);

@@ -118,7 +118,7 @@ public abstract class BeanInputDialog extends InputDialog {
 		int preferredWidth = parentPanel.getWidth()*3/4;
 		int noOfFields = getNOofFields();
 		if(-1 != noOfFields){
-            ///dialogPanel.setBorder(new EmptyBorder(new Insets(5, 5, 0, 5)));
+            //dialogPanel.setBorder(new EmptyBorder(new Insets(5, 5, 0, 5)));
             //dialogPanel.setPreferredSize(new Dimension(preferredWidth,
                 //(int)dialogPanel.getPreferredSize().getHeight()));
             Dimension dm =  getContentPane().getPreferredSize();

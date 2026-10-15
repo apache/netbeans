@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.36.0
+#Version 1.67.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -8,8 +8,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -18,15 +20,16 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -62,6 +65,9 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public abstract interface !annotation org.netbeans.spi.java.hints.BooleanOption
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=SOURCE)
@@ -193,7 +199,7 @@ meth protected abstract void performRewrite(org.netbeans.spi.java.hints.JavaFix$
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public final org.netbeans.spi.editor.hints.Fix toEditorFix()
 supr java.lang.Object
-hfds handle,options,sortText
+hfds handle,modResult2ChangeInfo,options,sortText
 
 CLSS public final static org.netbeans.spi.java.hints.JavaFix$TransformationContext
  outer org.netbeans.spi.java.hints.JavaFix
@@ -217,6 +223,7 @@ meth public static boolean isPrimary(com.sun.source.tree.Tree)
 meth public static boolean requiresParenthesis(com.sun.source.tree.Tree,com.sun.source.tree.Tree,com.sun.source.tree.Tree)
 meth public static org.netbeans.spi.editor.hints.Fix removeFromParent(org.netbeans.spi.java.hints.HintContext,java.lang.String,com.sun.source.util.TreePath)
 meth public static org.netbeans.spi.editor.hints.Fix rewriteFix(org.netbeans.spi.java.hints.HintContext,java.lang.String,com.sun.source.util.TreePath,java.lang.String)
+meth public static org.netbeans.spi.editor.hints.Fix safelyRemoveFromParent(org.netbeans.spi.java.hints.HintContext,java.lang.String,com.sun.source.util.TreePath)
 supr java.lang.Object
 hfds NUMBER_LITERAL_KINDS,OPERATOR_PRIORITIES,SPEC_VERSION
 hcls IK,JavaFixRealImpl,MoveFile,RemoveFromParent,ReplaceParameters
@@ -307,4 +314,12 @@ hfds cancel,jackpotPattern,transformer
 CLSS public abstract interface static org.netbeans.spi.java.hints.support.TransformationSupport$Transformer
  outer org.netbeans.spi.java.hints.support.TransformationSupport
 meth public abstract void transform(org.netbeans.api.java.source.WorkingCopy,org.netbeans.api.java.source.matching.Occurrence)
+
+CLSS public abstract interface org.netbeans.spi.java.hints.unused.UsedDetector
+innr public abstract interface static Factory
+meth public abstract boolean isUsed(javax.lang.model.element.Element,com.sun.source.util.TreePath)
+
+CLSS public abstract interface static org.netbeans.spi.java.hints.unused.UsedDetector$Factory
+ outer org.netbeans.spi.java.hints.unused.UsedDetector
+meth public abstract org.netbeans.spi.java.hints.unused.UsedDetector create(org.netbeans.api.java.source.CompilationInfo)
 

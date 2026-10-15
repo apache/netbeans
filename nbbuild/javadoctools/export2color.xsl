@@ -27,30 +27,30 @@
             <xsl:when test="descendant::api[@category='stable' and @group='java' and @type='export']"><![CDATA[
 stability.color=#ffffff
 stability.title=Stable
-stability.definition.url=http://wiki.netbeans.org/API_Stability#Stable
+stability.definition.url=https://netbeans.apache.org/wiki/API_Stability#stable
 ]]></xsl:when>
             <xsl:when test="descendant::api[@category='official' and @group='java' and @type='export']"><![CDATA[
 stability.color=#ffffff
 stability.title=Official
-stability.definition.url=http://wiki.netbeans.org/API_Stability#Official
+stability.definition.url=https://netbeans.apache.org/wiki/API_Stability#official
 ]]></xsl:when>
             <xsl:when test="descendant::api[@category='devel' and @group='java' and @type='export']"><![CDATA[
 stability.color=#ddcc80
 stability.image=resources/stability-devel.png
 stability.title=Under Development
-stability.definition.url=http://wiki.netbeans.org/API_Stability#Devel
+stability.definition.url=https://netbeans.apache.org/wiki/API_Stability#devel
 ]]></xsl:when>
             <xsl:when test="descendant::api[@category='deprecated' and @group='java' and @type='export']"><![CDATA[
 stability.color=#afafaf
 stability.image=resources/stability-deprecated.png
 stability.title=Deprecated
-stability.definition.url=http://wiki.netbeans.org/API_Stability#Deprecated
+stability.definition.url=https://netbeans.apache.org/wiki/API_Stability#deprecated
 ]]></xsl:when>
             <xsl:otherwise><![CDATA[
 stability.color=#e0a0a0
 stability.image=resources/stability-friend.png
 stability.title=Friend, Private or Third Party
-stability.definition.url=http://wiki.netbeans.org/API_Stability#Friend
+stability.definition.url=https://netbeans.apache.org/wiki/API_Stability#friend
 ]]></xsl:otherwise>
         </xsl:choose>
     </xsl:template>

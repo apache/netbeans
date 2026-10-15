@@ -24,16 +24,20 @@
 
 package org.netbeans.modules.j2ee.dd.impl.webservices;
 
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
+import org.netbeans.modules.j2ee.dd.api.webservices.Webservices;
+
+
 /**
  *
  * @author  Nitya Doraisamy
  */
-import org.netbeans.modules.j2ee.dd.api.webservices.Webservices;
-
 public class WebServicesProxy implements Webservices {
     private Webservices webSvc;
     private String version;
-    private java.util.List listeners;
+    private final List<PropertyChangeListener> listeners;
     private boolean writing = false;
     private org.xml.sax.SAXParseException error;
     private int ddStatus;
@@ -42,14 +46,13 @@ public class WebServicesProxy implements Webservices {
     public WebServicesProxy(Webservices webService, String version) {
         this.webSvc = webService;
         this.version = version;
-        listeners = new java.util.ArrayList();
+        listeners = new ArrayList<>();
     }
 
     public void setOriginal(Webservices webSvc) {
         if (this.webSvc != webSvc) {
             for (int i=0;i<listeners.size();i++) {
-                java.beans.PropertyChangeListener pcl = 
-                    (java.beans.PropertyChangeListener)listeners.get(i);
+                PropertyChangeListener pcl = listeners.get(i);
                 if (this.webSvc != null) this.webSvc.removePropertyChangeListener(pcl);
                 if (webSvc != null) webSvc.addPropertyChangeListener(pcl);
                 
@@ -69,7 +72,7 @@ public class WebServicesProxy implements Webservices {
                 new java.beans.PropertyChangeEvent(this, PROPERTY_VERSION, version, value);
             version = value;
             for (int i=0;i<listeners.size();i++) {
-                ((java.beans.PropertyChangeListener)listeners.get(i)).propertyChange(evt);
+                listeners.get(i).propertyChange(evt);
             }
         }
     }
@@ -93,7 +96,7 @@ public class WebServicesProxy implements Webservices {
                         ddStatus, value);
             ddStatus = value;
             for (int i=0;i<listeners.size();i++) {
-                ((java.beans.PropertyChangeListener)listeners.get(i)).propertyChange(evt);
+                listeners.get(i).propertyChange(evt);
             }
         }
     }
@@ -403,7 +406,7 @@ public class WebServicesProxy implements Webservices {
             } catch (org.openide.filesystems.FileAlreadyLockedException ex) {
                 // trying to use OutputProvider for writing changes
                 org.openide.loaders.DataObject dobj = org.openide.loaders.DataObject.find(fo);
-                if (dobj != null && dobj instanceof WebServicesProxy.OutputProvider)
+                if (dobj instanceof OutputProvider)
                     ((WebServicesProxy.OutputProvider)dobj).write(this);
                 else 
                     throw ex;

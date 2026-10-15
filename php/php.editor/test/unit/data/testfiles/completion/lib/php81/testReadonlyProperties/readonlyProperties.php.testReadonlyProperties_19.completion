@@ -1,0 +1,5 @@
+Code completion result for source line:
+readonly public int|st|ring $promotedReadonlyPublic = 0,
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    string                                     null

@@ -45,7 +45,6 @@ import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.java.source.Task;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
@@ -76,7 +75,7 @@ import org.openide.util.NbBundle;
  */
 public class EntityClassesPanel extends javax.swing.JPanel {
 
-    private final static Logger LOGGER = Logger.getLogger(EntityClassesPanel.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(EntityClassesPanel.class.getName());
 
     private final ChangeSupport changeSupport = new ChangeSupport(this);
 
@@ -92,7 +91,7 @@ public class EntityClassesPanel extends javax.swing.JPanel {
     private final JMenuItem allToRecreateItem;
 
 
-    private EntityClassesPanel(boolean puRequired, boolean JAXBRequired) {
+    private EntityClassesPanel(boolean puRequired, boolean JAXBRequired, boolean isJPA) {
         this.puRequired = puRequired;
 
         initComponents();
@@ -107,15 +106,12 @@ public class EntityClassesPanel extends javax.swing.JPanel {
         classNamesTable.getParent().setBackground(classNamesTable.getBackground());
         classNamesTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE); // NOI18N
         
-        mappedSuperclassCheckBox.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                if (mappedSuperclassCheckBox.isSelected()) {
-                    generateFinderMethodsCheckBox.setEnabled(false);
-                    generateFinderMethodsCheckBox.setSelected(false);
-                } else {
-                    generateFinderMethodsCheckBox.setEnabled(true);
-                }
+        mappedSuperclassCheckBox.addChangeListener( (ChangeEvent e) -> {
+            if (mappedSuperclassCheckBox.isSelected()) {
+                generateFinderMethodsCheckBox.setEnabled(false);
+                generateFinderMethodsCheckBox.setSelected(false);
+            } else {
+                generateFinderMethodsCheckBox.setEnabled(true);
             }
         });
 
@@ -138,6 +134,12 @@ public class EntityClassesPanel extends javax.swing.JPanel {
                 packageChanged();
             }
         });
+        if (!isJPA) {
+            createPUCheckbox.setVisible(false);
+            generateFinderMethodsCheckBox.setVisible(false);
+            generateJAXBCheckBox.setVisible(false);
+            mappedSuperclassCheckBox.setVisible(false);
+        }
     }
 
     public void addChangeListener(ChangeListener listener) {
@@ -150,6 +152,7 @@ public class EntityClassesPanel extends javax.swing.JPanel {
         }
         
         final String notNullAnnotation = "javax.validation.constraints.NotNull";    //NOI18N
+        final String notNullAnnotationJakarta = "jakarta.validation.constraints.NotNull";    //NOI18N
         Sources sources=ProjectUtils.getSources(project);
         SourceGroup groups[]=sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
         if(groups == null || groups.length<1){
@@ -161,7 +164,8 @@ public class EntityClassesPanel extends javax.swing.JPanel {
         if (compile == null) {
             return false;
         }
-        return compile.findResource(notNullAnnotation.replace('.', '/')+".class")!=null;//NOI18N
+        return compile.findResource(notNullAnnotation.replace('.', '/') + ".class") != null //NOI18N
+                || compile.findResource(notNullAnnotationJakarta.replace('.', '/') + ".class") != null; //NOI18N
     }
 
     public void initialize(PersistenceGenerator persistenceGen, Project project, FileObject targetFolder) {
@@ -202,16 +206,13 @@ public class EntityClassesPanel extends javax.swing.JPanel {
         ClasspathInfo classpathInfo = ClasspathInfo.create(fo);
         JavaSource javaSource = JavaSource.create(classpathInfo);
         try {
-            javaSource.runUserActionTask(new Task<CompilationController>() {
-
-                @Override
-                public void run(CompilationController controller) throws IOException {
-                    controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                    TypeElement jc = controller.getElements().getTypeElement("javax.xml.bind.annotation.XmlTransient"); //NOI18N
-                    if(jc == null){
-                        generateJAXBCheckBox.setSelected(false);
-                        generateJAXBCheckBox.setEnabled(false);
-                    }
+            javaSource.runUserActionTask( (CompilationController controller) -> {
+                controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                TypeElement jc = controller.getElements().getTypeElement("javax.xml.bind.annotation.XmlTransient"); //NOI18N
+                TypeElement jcJakarta = controller.getElements().getTypeElement("jakarta.xml.bind.annotation.XmlTransient"); //NOI18N
+                if (jc == null && jcJakarta == null) {
+                    generateJAXBCheckBox.setSelected(false);
+                    generateJAXBCheckBox.setEnabled(false);
                 }
             }, true);
         } catch (IOException ex) {
@@ -224,12 +225,7 @@ public class EntityClassesPanel extends javax.swing.JPanel {
         try {
             if (selectedTables == null) {
                 selectedTables = new SelectedTables(persistenceGen, tableClosure, getLocationValue(), getPackageName());
-                selectedTables.addChangeListener(new ChangeListener() {
-                    @Override
-                    public void stateChanged(ChangeEvent event) {
-                        changeSupport.fireChange();
-                    }
-                });
+                selectedTables.addChangeListener( (ChangeEvent event) -> changeSupport.fireChange() );
             } else {
                 selectedTables.setTableClosureAndTargetFolder(tableClosure, getLocationValue(), getPackageName());
             }
@@ -367,9 +363,14 @@ public class EntityClassesPanel extends javax.swing.JPanel {
         {
             for (Table table : selectedTables.getTables()) {
                 if(!selectedTables.getUpdateType(table).equals(UpdateType.NEW)){
-                    if(selectedTables.getUpdateType(table).equals(UpdateType.UPDATE))recreate=true;
-                    else update=true;
-                    if(update && recreate)break;
+                    if(selectedTables.getUpdateType(table).equals(UpdateType.UPDATE)) {
+                        recreate=true;
+                    } else {
+                        update=true;
+                    }
+                    if(update && recreate) {
+                        break;
+                    }
                 }
             }
         }
@@ -610,6 +611,7 @@ public class EntityClassesPanel extends javax.swing.JPanel {
         private boolean puRequired;
         private boolean JAXBRequired;
         private boolean isFinishable;
+        private boolean isJPA;
 
         private List<Provider> providers;
 
@@ -618,25 +620,31 @@ public class EntityClassesPanel extends javax.swing.JPanel {
         }
         
         public WizardPanel(boolean persistenceUnitRequired, boolean JAXBRequired,
-                boolean isFinishable )
+                boolean isFinishable ) {
+            this(persistenceUnitRequired, JAXBRequired, isFinishable, true);
+        }
+
+        WizardPanel(boolean persistenceUnitRequired, boolean JAXBRequired,
+                boolean isFinishable, boolean isJPA )
         {
             puRequired = persistenceUnitRequired;
             this.JAXBRequired = JAXBRequired;
             this.isFinishable = isFinishable;
+            this.isJPA = isJPA;
         }
 
         public WizardPanel(boolean persistenceUnitRequired, boolean JAXBRequired){
-            this( persistenceUnitRequired , JAXBRequired , true );
+            this( persistenceUnitRequired , JAXBRequired , true, true );
         }
 
         public WizardPanel(boolean persistenceUnitRequired){
-            this( persistenceUnitRequired , false , true );
+            this( persistenceUnitRequired , false , true, true );
         }
         
         @Override
         public EntityClassesPanel getComponent() {
             if (component == null) {
-                component = new EntityClassesPanel(puRequired, JAXBRequired);
+                component = new EntityClassesPanel(puRequired, JAXBRequired, isJPA);
                 component.addChangeListener(this);
             }
             return component;
@@ -698,7 +706,7 @@ public class EntityClassesPanel extends javax.swing.JPanel {
             }
 
             String packageName = getComponent().getPackageName();
-            if (packageName.trim().equals("")) { // NOI18N
+            if (packageName.trim().isEmpty()) {
                 setErrorMessage(NbBundle.getMessage(EntityClassesPanel.class, "ERR_JavaTargetChooser_CantUseDefaultPackage"));
                 return false;
             }
@@ -732,7 +740,7 @@ public class EntityClassesPanel extends javax.swing.JPanel {
                     if (providers == null) {
                         providers = PersistenceLibrarySupport.getProvidersFromLibraries();
                     }
-                    if (providers.size() == 0) {
+                    if (providers.isEmpty()) {
                         setErrorMessage(NbBundle.getMessage(EntityClassesPanel.class, "ERR_NoJavaPersistenceAPI")); // NOI18N
                         return false;
                     }

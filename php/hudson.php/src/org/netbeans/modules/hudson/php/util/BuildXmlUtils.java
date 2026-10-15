@@ -21,6 +21,7 @@ package org.netbeans.modules.hudson.php.util;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ import org.openide.filesystems.FileObject;
 
 public final class BuildXmlUtils {
 
-    static final Charset XML_CHARSET = Charset.forName("UTF-8"); // NOI18N
+    static final Charset XML_CHARSET = StandardCharsets.UTF_8;
 
     private static final String PROJECT_NAME_LINE = "<project name=\"%s\" default=\"build\">"; // NOI18N
     private static final String DIR_LINE = "${basedir}/%s"; // NOI18N

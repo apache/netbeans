@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -139,7 +140,7 @@ public class TabSwitchSpeedTest extends NbTestCase {
     final void activateComponent(TopComponent tc) {
         if (map == null) {
             try {
-                Object o = Class.forName("org.netbeans.performance.scalability.Calls").newInstance();
+                Object o = Class.forName("org.netbeans.performance.scalability.Calls").getDeclaredConstructor().newInstance();
                 @SuppressWarnings("unchecked")
                 Map<String,Object> m = (Map<String,Object>)o;
                 map = m;
@@ -252,7 +253,7 @@ public class TabSwitchSpeedTest extends NbTestCase {
 
     private static void writeModule(File file, String xml) throws IOException {
         FileOutputStream os = new FileOutputStream(file);
-        os.write(xml.getBytes("UTF-8"));
+        os.write(xml.getBytes(StandardCharsets.UTF_8));
         os.close();
     }
     private static String asString(InputStream is, boolean close) throws IOException {
@@ -264,7 +265,7 @@ public class TabSwitchSpeedTest extends NbTestCase {
         if (close) {
             is.close();
         }
-        return new String(arr, "UTF-8"); // NOI18N
+        return new String(arr, StandardCharsets.UTF_8);
     }
 }
 

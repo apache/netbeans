@@ -683,8 +683,7 @@ class JaxRsStackSupportImpl implements JaxRsStackSupportImplementation {
             classPathType = ClassPath.COMPILE;
         }
         try {
-            ProjectClassPathModifier.addRoots(urls.toArray( new URL[ urls.size()]), 
-                    sourceRoot, classPathType);
+            ProjectClassPathModifier.addRoots(urls.toArray(new URL[0]), sourceRoot, classPathType);
         } 
         catch(UnsupportedOperationException ex) {
             return false;
@@ -715,8 +714,7 @@ class JaxRsStackSupportImpl implements JaxRsStackSupportImplementation {
             String[] classPathTypes = new String[]{ ClassPath.COMPILE , ClassPath.EXECUTE };
             for (String type : classPathTypes) {
                 try {
-                    ProjectClassPathModifier.removeRoots(urls.toArray( 
-                        new URL[ urls.size()]), sourceRoot, type);
+                    ProjectClassPathModifier.removeRoots(urls.toArray(new URL[0]), sourceRoot, type);
                 }    
                 catch(UnsupportedOperationException ex) {
                     Logger.getLogger( JaxRsStackSupportImpl.class.getName() ).

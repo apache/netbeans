@@ -253,7 +253,7 @@ public final class RemoteConnections {
             }
             configs.add(cfg);
         }
-        Collections.sort(configs, ConfigManager.getConfigurationComparator());
+        configs.sort(ConfigManager.getConfigurationComparator());
         return configs;
     }
 
@@ -326,7 +326,7 @@ public final class RemoteConnections {
             for (RemoteConnectionProvider provider : getConnectionProviders()) {
                 properties.addAll(provider.getPropertyNames());
             }
-            return properties.toArray(new String[properties.size()]);
+            return properties.toArray(new String[0]);
         }
 
         // changes a map in config manager as well! it holds just a reference, not a copy

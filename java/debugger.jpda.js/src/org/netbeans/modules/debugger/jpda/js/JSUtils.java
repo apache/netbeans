@@ -27,7 +27,12 @@ public class JSUtils {
     public static final String JS_MIME_TYPE = "text/javascript";    // NOI18N
     public static final String JS_STRATUM = "JS";                   // NOI18N
     
-    public static final String NASHORN_SCRIPT = "jdk.nashorn.internal.scripts.Script$";     // NOI18N
+    // Script class for Nashorn built in JDK
+    public static final String NASHORN_SCRIPT_JDK = "jdk.nashorn.internal.scripts.Script$";     // NOI18N
+    // avoid API type removed warning, but do not use this constant, use explicitly _JDK or _EXT suffixes
+    public static final String NASHORN_SCRIPT = NASHORN_SCRIPT_JDK;
+    // Script class for external Nashorn
+    public static final String NASHORN_SCRIPT_EXT = "org.openjdk.nashorn.internal.scripts.Script$";     // NOI18N
     
     public static final String VAR_THIS = ":this";     // NOI18N
     public static final String VAR_SCOPE = ":scope";   // NOI18N

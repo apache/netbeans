@@ -33,7 +33,7 @@ public class PropertyValueResponse extends DbgpResponse {
     }
 
     public Property getProperty() {
-        Node node = getChild(getNode(), Property.PROPERTY);
+        Node node = getNode();
         if (node != null) {
             return new Property(node);
         }
@@ -42,13 +42,17 @@ public class PropertyValueResponse extends DbgpResponse {
 
     @Override
     public void process(DebugSession session, DbgpCommand command) {
+        if (!(command instanceof PropertyValueCommand)) {
+            return;
+        }
         DebugSession currentSession = SessionManager.getInstance().getSession(session.getSessionId());
         if (currentSession == session) {
             // perform update local view only if response appears in current session
             Property property = getProperty();
             if (property != null) {
-                session.getBridge().getVariablesModel().updateProperty(
-                        getProperty());
+                // response does not contain variable name so it is taken from command
+                property.setName(((PropertyValueCommand) command).getName());
+                session.getBridge().getVariablesModel().updateProperty(property);
             }
         }
     }

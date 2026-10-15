@@ -349,7 +349,7 @@ class ModelProperty extends Property {
                 //overrides getPropertyEditorClass()
                 try {
                     //System.err.println(getDisplayName() + "Returning editor class specified property editor - " + edClass);
-                    return (PropertyEditor) edClass.newInstance();
+                    return (PropertyEditor) edClass.getDeclaredConstructor().newInstance();
                 } catch (Exception e) {
                     //fall through
                 }

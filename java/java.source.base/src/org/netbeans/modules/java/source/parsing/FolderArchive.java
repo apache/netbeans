@@ -22,6 +22,7 @@ package org.netbeans.modules.java.source.parsing;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -34,7 +35,6 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.tools.JavaFileObject;
@@ -193,6 +193,18 @@ public class FolderArchive implements Archive {
         } catch (URISyntaxException e) {
             Exceptions.printStackTrace(e);
         }
+        return null;
+    }
+
+    @Override
+    public URI getDirectory(String dirName) throws IOException {
+        final String path = dirName.replace('/', File.separatorChar);        //NOI18N
+        File dir = new File (this.root, path);
+
+        if (dir.isDirectory()) {
+            return dir.toURI();
+        }
+
         return null;
     }
 

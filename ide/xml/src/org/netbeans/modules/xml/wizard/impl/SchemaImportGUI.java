@@ -259,7 +259,7 @@ private void primarySchemaCheckBoxActionPerformed(java.awt.event.ActionEvent evt
                  SchemaImportGUI.class,
                  "LBL_SchemaPanel_Category_By_File"));
 
-         FileObject[] roots = (FileObject[]) projectRoots.toArray(new FileObject[projectRoots.size()]);
+         FileObject[] roots = (FileObject[]) projectRoots.toArray(new FileObject[0]);
          // Construct the By Namespace node.
          Children nsChildren = new NamespaceChildren(roots, decorator);
          Node byNsNode = new FolderNode(nsChildren);

@@ -1,0 +1,2 @@
+OpenIDE-Module: org.eclipse.jgit.ssh.apache
+OpenIDE-Module-Specification-Version: 7.0.6.0

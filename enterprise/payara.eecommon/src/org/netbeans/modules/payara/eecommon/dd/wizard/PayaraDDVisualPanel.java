@@ -55,7 +55,7 @@ public final class PayaraDDVisualPanel extends JPanel {
         // figure out which ones exist already
         // 
         Lookup lookup = project.getLookup();
-        J2eeModuleProvider provider = (J2eeModuleProvider) lookup.lookup(J2eeModuleProvider.class);
+        J2eeModuleProvider provider = lookup.lookup(J2eeModuleProvider.class);
         J2eeModule j2eeModule = provider.getJ2eeModule();
         payaraDDFileName = getConfigFileName(j2eeModule,provider.getServerInstanceID());
 

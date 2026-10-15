@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import javax.swing.text.Document;
@@ -54,7 +55,6 @@ import org.netbeans.api.java.source.matching.Occurrence;
 import org.netbeans.api.java.source.matching.Pattern;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.modules.java.hints.introduce.IntroduceHint;
 import org.netbeans.modules.java.hints.introduce.IntroduceMethodFix;
 import org.netbeans.modules.java.hints.spiimpl.pm.BulkSearch;
 import org.netbeans.modules.java.hints.spiimpl.pm.BulkSearch.BulkPattern;
@@ -73,6 +73,7 @@ import org.openide.loaders.DataObject;
  *
  * @author Jan Lahoda
  */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class CopyFinderTest extends NbTestCase {
 
     public CopyFinderTest(String testName) {
@@ -1257,7 +1258,125 @@ public class CopyFinderTest extends NbTestCase {
                              false,
                              false);
     }
-    
+
+
+    public void testPatternMatchingInstanceOf() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17");
+        } catch (IllegalArgumentException ex) {
+            System.err.println("Skipping testPatternMatchingInstanceOf," +
+                               "as SourceVersion.RELEASE_17 is not available.");
+            return ;
+        }
+        sourceLevel = "17";
+        performVariablesTest("package test;\n" +
+                             "public class Test {\n" +
+                             "    boolean test(Object o) {\n" +
+                             "      return o instanceof String s;\n" +
+                             "    }\n" +
+                             "}\n",
+                             "$expr instanceof $type $name",
+                             new Pair[] {
+                                 new Pair<String, int[]>("$expr", new int[] {76, 77}),
+                                 new Pair<String, int[]>("$type", new int[] {89, 95}),
+                                 new Pair<String, int[]>("$name", new int[] {89, 97}),
+                             },
+                             new Pair[0],
+                             new Pair[] {
+                                 new Pair<String, String >("$name", "s"),
+                             },
+                             false,
+                             false);
+    }
+
+    public void testNotPatternMatchingInstanceOf() throws Exception {
+        performVariablesTest("package test;\n" +
+                             "public class Test {\n" +
+                             "    boolean test(Object o) {\n" +
+                             "      return o instanceof String;\n" +
+                             "    }\n" +
+                             "}\n",
+                             "$expr instanceof $type",
+                             new Pair[] {
+                                 new Pair<String, int[]>("$expr", new int[] {76, 77}),
+                                 new Pair<String, int[]>("$type", new int[] {89, 95})
+                             },
+                             new Pair[0],
+                             new Pair[0],
+                             false,
+                             false);
+    }
+
+    public void testInsidePatternMatchingInstanceOf() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17");
+        } catch (IllegalArgumentException ex) {
+            System.err.println("Skipping testPatternMatchingInstanceOf," +
+                               "as SourceVersion.RELEASE_17 is not available.");
+            return ;
+        }
+        sourceLevel = "17";
+        performVariablesTest("package test;\n" +
+                             "public class Test {\n" +
+                             "    boolean test(Object o) {\n" +
+                             "      return o.toString() instanceof String s;\n" +
+                             "    }\n" +
+                             "}\n",
+                             "$expr.toString()",
+                             new Pair[] {
+                                 new Pair<String, int[]>("$expr", new int[] {76, 77}),
+                             },
+                             new Pair[0],
+                             new Pair[0],
+                             false,
+                             false);
+    }
+
+    public void testTargetTyping1() throws Exception {
+        sourceLevel = "17";
+        performVariablesTest("""
+                             package test;
+                             public class Test {
+                                 boolean test() {
+                                     long l = "";
+                                 }
+                             }
+                             """,
+                             "long $var = $1{java.lang.String};",
+                             new Pair[] {
+                                 new Pair<String, int[]>("$1", new int[] {72, 74}),
+                                 new Pair<String, int[]>("$var", new int[] {63, 75}),
+                             },
+                             new Pair[0],
+                             new Pair[] {
+                                 new Pair<String, String>("$var", "l"),
+                             },
+                             false,
+                             false);
+    }
+
+    public void testTargetTyping2() throws Exception {
+        sourceLevel = "17";
+        performVariablesTest("""
+                             package test;
+                             public class Test {
+                                 boolean test() {
+                                     long l;
+                                     l = "";
+                                 }
+                             }
+                             """,
+                             "$0{long} = $1{java.lang.String};",
+                             new Pair[] {
+                                 new Pair<String, int[]>("$1", new int[] {83, 85}),
+                                 new Pair<String, int[]>("$0", new int[] {79, 80}),
+                             },
+                             new Pair[0],
+                             new Pair[0],
+                             false,
+                             false);
+    }
+
     public void testKeepImplicitThis() throws Exception {
         prepareTest("package test; public class Test { void t() { toString(); } }", -1);
 
@@ -1312,6 +1431,8 @@ public class CopyFinderTest extends NbTestCase {
 
         TestUtilities.copyStringToFile(data, code);
 
+        SourceUtilsTestUtil.setSourceLevel(data, sourceLevel);
+
         data.refresh();
 
         SourceUtilsTestUtil.prepareTest(sourceRoot, buildRoot, cache);
@@ -1363,6 +1484,7 @@ public class CopyFinderTest extends NbTestCase {
 
     protected CompilationInfo info;
     private Document doc;
+    private String sourceLevel;
 
     private void performTest(String code) throws Exception {
         performTest(code, true);
@@ -1408,8 +1530,8 @@ public class CopyFinderTest extends NbTestCase {
             Tree t = path.getLeaf();
             SourcePositions sp = info.getTrees().getSourcePositions();
 
-            if (   start == sp.getStartPosition(info.getCompilationUnit(), t)
-                && end   == sp.getEndPosition(info.getCompilationUnit(), t)) {
+            if (   start == sp.getStartPosition(t)
+                && end   == sp.getEndPosition(t)) {
                 break;
             }
 
@@ -1427,8 +1549,8 @@ public class CopyFinderTest extends NbTestCase {
             int   index = 0;
 
             for (TreePath tp : result) {
-                dupes[index++] = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tp.getLeaf());
-                dupes[index++] = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tp.getLeaf());
+                dupes[index++] = (int) info.getTrees().getSourcePositions().getStartPosition(tp.getLeaf());
+                dupes[index++] = (int) info.getTrees().getSourcePositions().getEndPosition(tp.getLeaf());
             }
 
             assertTrue("Was: " + Arrays.toString(dupes) + " should have been: " + Arrays.toString(duplicates), Arrays.equals(duplicates, dupes));
@@ -1486,8 +1608,8 @@ public class CopyFinderTest extends NbTestCase {
 
         for (Entry<String, TreePath> e : result.values().iterator().next().variables.entrySet()) {
             int[] span = new int[] {
-                (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), e.getValue().getLeaf()),
-                (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), e.getValue().getLeaf())
+                (int) info.getTrees().getSourcePositions().getStartPosition(e.getValue().getLeaf()),
+                (int) info.getTrees().getSourcePositions().getEndPosition(e.getValue().getLeaf())
             };
 
             actual.put(e.getKey(), span);
@@ -1504,8 +1626,9 @@ public class CopyFinderTest extends NbTestCase {
             }
             if (!actual.isEmpty()) {
                 Map<String, String> print = new HashMap<String, String>(actual.size());
-                for (String s : actual.keySet()) {
-                    int[] arr = actual.get(s);
+                for (Entry<String, int[]> entry : actual.entrySet()) {
+                    String s = entry.getKey();
+                    int[] arr = entry.getValue();
                     print.put(s, Arrays.toString(arr));
                 }
                 assertTrue("Extra duplicates found: " + print, actual.isEmpty());
@@ -1519,8 +1642,8 @@ public class CopyFinderTest extends NbTestCase {
             int i = 0;
 
             for (TreePath tp : e.getValue()) {
-                span[i++] = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tp.getLeaf());
-                span[i++] = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tp.getLeaf());
+                span[i++] = (int) info.getTrees().getSourcePositions().getStartPosition(tp.getLeaf());
+                span[i++] = (int) info.getTrees().getSourcePositions().getEndPosition(tp.getLeaf());
             }
 
             actualMulti.put(e.getKey(), span);
@@ -1537,8 +1660,9 @@ public class CopyFinderTest extends NbTestCase {
             }
             if (!actualMulti.isEmpty()) {
                 Map<String, String> print = new HashMap<String, String>(actualMulti.size());
-                for (String s : actualMulti.keySet()) {
-                    int[] arr = actualMulti.get(s);
+                for (Entry<String, int[]> entry : actualMulti.entrySet()) {
+                    String s = entry.getKey();
+                    int[] arr = entry.getValue();
                     print.put(s, Arrays.toString(arr));
                 }
                 assertTrue("Extra multi duplicates found: " + print, actualMulti.isEmpty());
@@ -1619,8 +1743,8 @@ public class CopyFinderTest extends NbTestCase {
         for (Entry<TreePath, VariableAssignments> e : result.entrySet()) {
             List<? extends StatementTree> parentStatements = CopyFinder.getStatements(e.getKey());
             int dupeStart = parentStatements.indexOf(e.getKey().getLeaf());
-            int startPos = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), parentStatements.get(dupeStart));
-            int endPos = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), parentStatements.get(dupeStart + searchFor.size() - 1));
+            int startPos = (int) info.getTrees().getSourcePositions().getStartPosition(parentStatements.get(dupeStart));
+            int endPos = (int) info.getTrees().getSourcePositions().getEndPosition(parentStatements.get(dupeStart + searchFor.size() - 1));
 
             realSpans.add(Arrays.asList(startPos, endPos));
         }
@@ -1641,8 +1765,8 @@ public class CopyFinderTest extends NbTestCase {
 
             BlockTree b = (BlockTree) gtp.getParentPath().getLeaf();
 
-            int startPos = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), b.getStatements().get(stmts[0]));
-            int endPos = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), b.getStatements().get(stmts[1]));
+            int startPos = (int) info.getTrees().getSourcePositions().getStartPosition(b.getStatements().get(stmts[0]));
+            int endPos = (int) info.getTrees().getSourcePositions().getEndPosition(b.getStatements().get(stmts[1]));
 
             goldenSpans.add(Arrays.asList(startPos, endPos));
         }

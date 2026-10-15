@@ -1,0 +1,2 @@
+    public const |>MARK_OCCURRENCES:TE^S<| = 'TES';
+    public const TEST3 = self::{self::|>MARK_OCCURRENCES:TES<| . self::T};

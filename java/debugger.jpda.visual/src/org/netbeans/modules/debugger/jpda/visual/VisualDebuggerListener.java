@@ -162,7 +162,7 @@ public class VisualDebuggerListener extends DebuggerManagerAdapter {
                             RemoteServiceInit initRet =
                                     initDebuggerRemoteService(event.getThread(),
                                                               RemoteServices.ServiceType.AWT);
-                            if (initRet.equals(RemoteServiceInit.FAIL_RETRY)) {
+                            if (initRet == RemoteServiceInit.FAIL_RETRY) {
                                 DebuggerManager.getDebuggerManager().addBreakpoint(mb[0]);
                                 inited[0].set(false);
                             }
@@ -183,7 +183,7 @@ public class VisualDebuggerListener extends DebuggerManagerAdapter {
                             RemoteServiceInit initRet =
                                     initDebuggerRemoteService(event.getThread(),
                                                               RemoteServices.ServiceType.FX);
-                            if (initRet.equals(RemoteServiceInit.FAIL_RETRY)) {
+                            if (initRet == RemoteServiceInit.FAIL_RETRY) {
                                 DebuggerManager.getDebuggerManager().addBreakpoint(mb[1]);
                                 inited[1].set(false);
                             }
@@ -279,7 +279,7 @@ public class VisualDebuggerListener extends DebuggerManagerAdapter {
             Method startMethod = ClassTypeWrapper.concreteMethodByName(serviceClass, "startAccessLoop", "()Z");
             try {
                 t.notifyMethodInvoking();
-                Value ret = ClassTypeWrapper.invokeMethod(serviceClass, tr, startMethod, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                Value ret = ClassTypeWrapper.invokeMethod(serviceClass, tr, startMethod, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                 if (ret instanceof PrimitiveValue) {
                     boolean success = PrimitiveValueWrapper.booleanValue((PrimitiveValue) ret);
                     RemoteServices.setAccessLoopStarted(t.getDebugger(), success);
@@ -292,7 +292,7 @@ public class VisualDebuggerListener extends DebuggerManagerAdapter {
                 if (trackComponentChanges && RemoteAWTScreenshot.FAST_SNAPSHOT_RETRIEVAL) {
                     Method startHierarchyListenerMethod = ClassTypeWrapper.concreteMethodByName(serviceClass, "startHierarchyListener", "()Ljava/lang/String;");
                     if (startHierarchyListenerMethod != null) {
-                        Value res = ClassTypeWrapper.invokeMethod(serviceClass, tr, startHierarchyListenerMethod, Collections.EMPTY_LIST, ObjectReference.INVOKE_SINGLE_THREADED);
+                        Value res = ClassTypeWrapper.invokeMethod(serviceClass, tr, startHierarchyListenerMethod, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
                         if (res instanceof StringReference) {
                             String reason = ((StringReference) res).value();
                             InputOutput io = t.getDebugger().getConsoleIO().getIO();
@@ -459,6 +459,10 @@ public class VisualDebuggerListener extends DebuggerManagerAdapter {
      */
     private static void setFxDebug(VirtualMachine vm, ThreadReference tr) {
         ClassType sysPropClass = getClass(vm, tr, "com.sun.javafx.runtime.SystemProperties");
+        if(sysPropClass == null) {
+            // openjfx doesn't have runtime.SystemProperties.isDebug
+            return;
+        }
         try {
             Field debugFld = ReferenceTypeWrapper.fieldByName(sysPropClass, "isDebug"); // NOI18N
             sysPropClass.setValue(debugFld, VirtualMachineWrapper.mirrorOf(vm, true));
@@ -474,7 +478,7 @@ public class VisualDebuggerListener extends DebuggerManagerAdapter {
         if (t instanceof ClassType) {
             return (ClassType)t;
         }
-        logger.log(Level.WARNING, "{0} is not a class but {1}", new Object[]{name, t}); // NOI18N
+        // logger.log(Level.WARNING, "{0} is not a class but {1}", new Object[]{name, t}); // NOI18N
         return null;
     }
     

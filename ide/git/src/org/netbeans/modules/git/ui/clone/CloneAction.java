@@ -71,6 +71,7 @@ import org.openide.util.Lookup;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor.Task;
+import org.openide.util.Utilities;
 
 /**
  *
@@ -249,7 +250,7 @@ public class CloneAction implements ActionListener, HelpCtx.Provider {
                                     }
                                     if (!isCanceled() && !toInit.isEmpty() && confirmSubmoduleInit(toInit)) {
                                         setDisplayName(Bundle.MSG_Clone_progress_initializingSubmodules(), 1);
-                                        client.initializeSubmodules(toInit.toArray(new File[toInit.size()]), getProgressMonitor());
+                                        client.initializeSubmodules(toInit.toArray(new File[0]), getProgressMonitor());
                                         setDisplayName(Bundle.MSG_Clone_progress_updatingSubmodules(), 1);
                                         for (File submoduleRoot : toInit) {
                                             if (isCanceled()) {
@@ -271,7 +272,7 @@ public class CloneAction implements ActionListener, HelpCtx.Provider {
                             }
 
                             private boolean confirmSubmoduleInit (List<File> subrepos) {
-                                return JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(null,
+                                return JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(Utilities.findDialogParent(),
                                         Bundle.MSG_Clone_confirmSubmoduleInit_text(),
                                         Bundle.LBL_Clone_confirmSubmoduleInit_title(),
                                         JOptionPane.YES_NO_OPTION,

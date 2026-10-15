@@ -41,8 +41,8 @@ public class GlobalProfilingPointsProcessor implements DataManagerListener {
 
     //~ Instance fields ----------------------------------------------------------------------------------------------------------
 
-    private List<TimedGlobalProfilingPoint> scheduledTimedPPs = new ArrayList();
-    private List<TriggeredGlobalProfilingPoint> scheduledTriggeredPPs = new ArrayList();
+    private List<TimedGlobalProfilingPoint> scheduledTimedPPs = new ArrayList<>();
+    private List<TriggeredGlobalProfilingPoint> scheduledTriggeredPPs = new ArrayList<>();
     private ProfilingSettings profilingSettings;
     private Lookup.Provider profiledProject;
     private GlobalProfilingPoint[] gpp;
@@ -155,7 +155,7 @@ public class GlobalProfilingPointsProcessor implements DataManagerListener {
         }
     }
 
-    //// - Core functionality ----------------------------------------------------
+    // - Core functionality ----------------------------------------------------
     private void processTimeEvent() {
         currentTime = System.currentTimeMillis();
         processTimedProfilingPoints();
@@ -171,7 +171,7 @@ public class GlobalProfilingPointsProcessor implements DataManagerListener {
             checkForStop();
 
             if (isRunning) {
-                List<TimedGlobalProfilingPoint> rescheduledTimedPPs = new ArrayList();
+                List<TimedGlobalProfilingPoint> rescheduledTimedPPs = new ArrayList<>();
 
                 for (TimedGlobalProfilingPoint tgpp : scheduledTimedPPs) {
                     if (timeConditionMet(tgpp.getCondition())) {
@@ -227,7 +227,7 @@ public class GlobalProfilingPointsProcessor implements DataManagerListener {
             checkForStop();
 
             if (isRunning) {
-                List<TriggeredGlobalProfilingPoint> rescheduledTriggeredPPs = new ArrayList();
+                List<TriggeredGlobalProfilingPoint> rescheduledTriggeredPPs = new ArrayList<>();
 
                 for (TriggeredGlobalProfilingPoint tgpp : scheduledTriggeredPPs) {
                     if (triggerConditionMet(tgpp.getCondition())) {
@@ -307,7 +307,7 @@ public class GlobalProfilingPointsProcessor implements DataManagerListener {
 
     // --- Private implementation ------------------------------------------------
 
-    //// - Lifecycle management --------------------------------------------------
+    // - Lifecycle management --------------------------------------------------
     private void start() {
         if ((profiledProject == null) || (gpp == null) || (gpp.length == 0) || !anyProfilingPointsScheduled()) {
             reset();

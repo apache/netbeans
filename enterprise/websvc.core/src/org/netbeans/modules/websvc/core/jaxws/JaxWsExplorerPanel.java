@@ -135,7 +135,7 @@ public class JaxWsExplorerPanel extends JPanel implements ExplorerManager.Provid
                     }
                     LogicalViewProvider logicalProvider = (LogicalViewProvider)prj.getLookup().lookup(LogicalViewProvider.class);
                     if (logicalProvider!=null) {
-                        children.add(serviceNodes.toArray(new Node[serviceNodes.size()]));
+                        children.add(serviceNodes.toArray(new Node[0]));
                         Node rootNode = logicalProvider.createLogicalView();
                         projectNodeList.add(new ProjectNode(children, rootNode));
                     }

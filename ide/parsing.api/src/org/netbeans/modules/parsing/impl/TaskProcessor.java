@@ -77,13 +77,13 @@ public class TaskProcessor {
     private static final int SLOW_CANCEL_LIMIT = 50;
 
     //Scheduled requests waiting for execution
-    private final static PriorityBlockingQueue<Request> requests = new PriorityBlockingQueue<> (10, new RequestPriorityComparator());
+    private static final PriorityBlockingQueue<Request> requests = new PriorityBlockingQueue<> (10, new RequestPriorityComparator());
     //Finished requests waiting on reschedule by some scheduler or parser
-    private final static Map<Source,Collection<Request>> finishedRequests = new WeakHashMap<>();
+    private static final Map<Source,Collection<Request>> finishedRequests = new WeakHashMap<>();
     //Tasks which are scheduled (not yet executed) but blocked by expected event (waiting for event)
-    private final static Map<Source,Collection<Request>> waitingRequests = new WeakHashMap<>();
+    private static final Map<Source,Collection<Request>> waitingRequests = new WeakHashMap<>();
     //Tasked which should be cleared from requests or finieshedRequests
-    private final static Collection<RemovedTask> toRemove = new LinkedList<> ();
+    private static final Collection<RemovedTask> toRemove = new LinkedList<> ();
 
     //Worker thread factory - single worker thread
     static final  RequestProcessor WORKER = new RequestProcessor(
@@ -93,7 +93,7 @@ public class TaskProcessor {
             false,
             false);
     //Currently running SchedulerTask
-    private final static CurrentRequestReference currentRequest = new CurrentRequestReference ();
+    private static final CurrentRequestReference currentRequest = new CurrentRequestReference ();
 
     //Internal lock used to synchronize parsing api iternal state (TaskProcessor, Source, SourceCache)
     private static class InternalLock {};
@@ -101,7 +101,7 @@ public class TaskProcessor {
 
 
     //Parser lock used to prevent other tasks to run in case when there is an active task
-    private final static ReentrantLock parserLock = new ReentrantLock (true);
+    private static final ReentrantLock parserLock = new ReentrantLock (true);
     private static int lockCount = 0;
 
     //Regexp of class names of tasks which shouldn't be scheduled - used for debugging & performance testing
@@ -355,7 +355,7 @@ public class TaskProcessor {
     
     //Changes handling
     
-    private final static AtomicReference<Request> rst = new AtomicReference<Request>();
+    private static final AtomicReference<Request> rst = new AtomicReference<Request>();
     
     //DO NOT CALL DIRECTLY - called by Source
     public static Request resetState (final Source source,

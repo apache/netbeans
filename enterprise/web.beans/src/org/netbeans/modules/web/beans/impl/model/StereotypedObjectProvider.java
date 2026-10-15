@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.web.beans.impl.model;
 
+import java.util.List;
 import javax.lang.model.element.TypeElement;
 
 import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.AnnotationModelHelper;
@@ -32,10 +33,10 @@ import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.Annotatio
 class StereotypedObjectProvider extends AbstractObjectProvider<StereotypedObject>
 {
     
-    StereotypedObjectProvider( String stereotypeAnnotation , 
+    StereotypedObjectProvider( String stereotypeAnnotation ,
             AnnotationModelHelper helper )
     {
-        super( stereotypeAnnotation, helper);
+        super(List.of(stereotypeAnnotation), helper);
     }
 
     /* (non-Javadoc)
@@ -43,7 +44,12 @@ class StereotypedObjectProvider extends AbstractObjectProvider<StereotypedObject
      */
     @Override
     protected StereotypedObject createTypeElement( TypeElement element ) {
-        return new StereotypedObject( getAnnotation(), getHelper() , element );
+        for(String annotation : getAnnotation()) {
+            if (getHelper().hasAnnotation(element.getAnnotationMirrors(), annotation))  {
+                return new StereotypedObject(annotation, getHelper(), element);
+            }
+        }
+        return null;
     }
 
 }

@@ -1,0 +1,4 @@
+Code completion result for source line:
+static $example10 = test(), $example11 = tes|t();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     test()                          [PUBLIC]   testArbitraryStaticVariableInitializers.php

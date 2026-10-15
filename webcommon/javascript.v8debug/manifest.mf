@@ -1,5 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.javascript.v8debug/1
+OpenIDE-Module-Layer: org/netbeans/modules/javascript/v8debug/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/javascript/v8debug/Bundle.properties
 OpenIDE-Module-Implementation-Version: 1
 AutoUpdate-Show-In-Client: false

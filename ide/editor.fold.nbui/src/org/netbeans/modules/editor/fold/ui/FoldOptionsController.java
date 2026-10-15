@@ -116,9 +116,8 @@ public class FoldOptionsController extends OptionsPanelController implements Pre
         changed = false;
     }
     
-    private Collection<String> updatedLangs = Collections.EMPTY_SET;
-    
-    private Collection<String> legacyLangs = Collections.EMPTY_SET;
+    private Collection<String> updatedLangs = Collections.emptySet();
+    private Collection<String> legacyLangs  = Collections.emptySet();
     
     private void initLanguages() {
         Set<String> mimeTypes = EditorSettings.getDefault().getAllMimeTypes();
@@ -152,8 +151,9 @@ public class FoldOptionsController extends OptionsPanelController implements Pre
             changed = false;
             copy = new HashMap<>(preferences);
         }
-        for (String s : copy.keySet()) {
-            MemoryPreferences p = copy.get(s);
+        for (Map.Entry<String, MemoryPreferences> entry : copy.entrySet()) {
+            String s = entry.getKey();
+            MemoryPreferences p = entry.getValue();
             try {
                 if (PREF_LOG.isLoggable(Level.FINE)) {
                     if ((p.getPreferences() instanceof OverridePreferences) &&

@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -29,7 +29,7 @@ provider and register it among the services in the default lookup. The editor/mi
 module will consult all registered <code>MimeDataProvider</code>s when creating
 a <code>Lookup</code> for a specific <code>MimePath</code>.
 
-<a name="defaultMimeDataProvider"/><h3>Default MimeDataProvider</h3>
+<h2 id="defaultMimeDataProvider">Default MimeDataProvider</h2>
 
 <p>The module itself provides a default implementation of the <code>MimeDataProvider</code>,
 which creates <code>Lookup</code>s from the data registered in a hierachical
@@ -95,7 +95,7 @@ hierarchy in this case uses the folders below:
     Editors/foldManager
 </pre>
 
-<h3>Compound MIME types</h3>
+<h2>Compound MIME types</h2>
 
 <p>The default <code>MimeDataProvider</code> supports compound mime types, which
 are the mime types that have two parts separated by a plus sign ('+'). The
@@ -122,7 +122,7 @@ mime path.
     Editors
 </pre>
 
-<h3>Ordering and hiding files</h3>
+<h2>Ordering and hiding files</h2>
 
 <p>When registering instances in the mime path folders it is possible to use
 <code>position</code> attributes to order the files the same way as you would do it in any other

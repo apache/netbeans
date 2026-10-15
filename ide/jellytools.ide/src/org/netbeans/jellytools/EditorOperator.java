@@ -24,6 +24,7 @@ import java.awt.event.KeyEvent;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Iterator;
 import javax.swing.JComponent;
 import javax.swing.JToolBar;
@@ -236,7 +237,6 @@ public class EditorOperator extends TopComponentOperator {
         return _lblStatusBar;
     }
 
-    /************** Get, select, delete, insert text ************************/
     /** Gets text from the currently opened Editor window.
      * @return a string representing whole content of the Editor window
      * (including new line characters)
@@ -264,7 +264,7 @@ public class EditorOperator extends TopComponentOperator {
     private Object getLine(int lineNumber) {
         Document doc = txtEditorPane().getDocument();
         DataObject od = (DataObject) doc.getProperty(Document.StreamDescriptionProperty);
-        Set set = ((LineCookie) od.getCookie(LineCookie.class)).getLineSet();
+        Set set = (od.getCookie(LineCookie.class)).getLineSet();
         try {
             return set.getCurrent(lineNumber - 1);
         } catch (IndexOutOfBoundsException e) {
@@ -429,7 +429,7 @@ public class EditorOperator extends TopComponentOperator {
         delete(getLineOffset(lineNumber) + column1 - 1, column2 - column1 + 1);
     }
 
-    /********************** Caret manipulation ************************/
+    /* ******************** Caret manipulation ************************/
     /** Returns current line number.
      * @return number of line where the caret stays (first line == 1)
      */
@@ -598,8 +598,8 @@ public class EditorOperator extends TopComponentOperator {
         setCaretPosition(text, 0, before);
     }
 
-    /**************************** Annotations ******************************/
-    /************** thanks to Jan Lahoda for valuable input  ***************/
+    /* ************************** Annotations ******************************/
+    /* ************ thanks to Jan Lahoda for valuable input  ***************/
     /** Gets an array of annotations attached to given line.
      * @param lineNumber number of line (beggining from 1)
      * @return an array of org.openide.text.Annotation instances
@@ -628,7 +628,7 @@ public class EditorOperator extends TopComponentOperator {
                 return result;
             }
         });
-        return result.toArray(new Annotation[result.size()]);
+        return result.toArray(new Annotation[0]);
     }
 
     /**Gets all annotations for current editor (Document).
@@ -649,7 +649,7 @@ public class EditorOperator extends TopComponentOperator {
                     Class annotationsClass = Class.forName("org.netbeans.editor.Annotations");
                     Field lineAnnotationsArrayField = annotationsClass.getDeclaredField("lineAnnotationsArray");
                     lineAnnotationsArrayField.setAccessible(true);
-                    ArrayList lineAnnotationsArray = (ArrayList) lineAnnotationsArrayField.get(getAnnotationsInstance());
+                    List lineAnnotationsArray = (List) lineAnnotationsArrayField.get(getAnnotationsInstance());
                     // loop through all lines
                     for (int i = 0; i < lineAnnotationsArray.size(); i++) {
                         result.addAll(getAnnotations(lineAnnotationsArray.get(i)));
@@ -660,7 +660,7 @@ public class EditorOperator extends TopComponentOperator {
                 return result;
             }
         });
-        return result.toArray(new Annotation[result.size()]);
+        return result.toArray(new Annotation[0]);
     }
 
     /** Returns instance of org.netbeans.editor.Annotations object for this
@@ -711,7 +711,7 @@ public class EditorOperator extends TopComponentOperator {
         return ((Annotation) annotation).getShortDescription();
     }
 
-    /***************** Methods for toolbar manipulation *******************/
+    /* *************** Methods for toolbar manipulation *******************/
     /** Return AbstractButtonOperator representing a toolbar button found by given
      * tooltip within the Source Editor.
      * @param buttonTooltip tooltip of toolbar button
@@ -752,7 +752,7 @@ public class EditorOperator extends TopComponentOperator {
         if (combo != null) {
             index++;
         }
-        return new AbstractButtonOperator(AbstractButtonOperator.waitAbstractButton((Container) toolbar,
+        return new AbstractButtonOperator(AbstractButtonOperator.waitAbstractButton(toolbar,
                 ComponentSearcher.getTrueChooser("AbstractButton"), index));
     }
 
@@ -780,8 +780,8 @@ public class EditorOperator extends TopComponentOperator {
         }
     }
 
-    /********************************** Code folding **************************/
-    /*************************** Thanks to Martin Roskanin ********************/
+    /* ******************************** Code folding **************************/
+    /* ************************* Thanks to Martin Roskanin ********************/
     /** Waits for code folding initialization. */
     public void waitFolding() {
         JTextComponent textComponent = (JTextComponent) txtEditorPane().getSource();
@@ -1000,7 +1000,7 @@ public class EditorOperator extends TopComponentOperator {
         return fold;
     }
 
-    /********************************** Miscellaneous **************************/
+    /* ******************************** Miscellaneous **************************/
     /** Waits for given modified state of edited source.
      * @param modified boolean true waits for file state change to modified, false for change to
      * unmodified (saved).

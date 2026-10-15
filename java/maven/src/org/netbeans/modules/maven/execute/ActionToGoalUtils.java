@@ -26,9 +26,11 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.apache.maven.model.Build;
 import org.netbeans.modules.maven.spi.actions.MavenActionsProvider;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
@@ -47,6 +49,7 @@ import org.netbeans.modules.maven.execute.model.io.xpp3.NetbeansBuildActionXpp3R
 import org.netbeans.modules.maven.execute.model.io.xpp3.NetbeansBuildActionXpp3Writer;
 import org.netbeans.modules.maven.spi.actions.AbstractMavenActionsProvider;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.ProjectConfiguration;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
@@ -75,7 +78,7 @@ public final class ActionToGoalUtils {
     }
 
 
-    public static abstract class ContextAccessor {
+    public abstract static class ContextAccessor {
 
         public abstract ExecutionContext createContext(InputOutput inputoutput, ProgressHandle handle);
     }
@@ -93,15 +96,20 @@ public final class ActionToGoalUtils {
      * @since 2.50
      */
     public static @NonNull List<? extends MavenActionsProvider> actionProviders(@NonNull Project project) {
-        List<MavenActionsProvider> providers = new ArrayList<MavenActionsProvider>();
+        List<MavenActionsProvider> providers = new ArrayList<>();
         providers.addAll(project.getLookup().lookupAll(MavenActionsProvider.class));        
         providers.addAll(Lookup.getDefault().lookupAll(MavenActionsProvider.class));
         return providers;
     }
 
     public static RunConfig createRunConfig(String action, NbMavenProjectImpl project, Lookup lookup) {
+        return createRunConfig(action, project, null, lookup);
+    }
+    
+    public static RunConfig createRunConfig(String action, NbMavenProjectImpl project, ProjectConfiguration c, Lookup lookup) {
         M2ConfigProvider configs = project.getLookup().lookup(M2ConfigProvider.class);
-        RunConfig rc = configs.getActiveConfiguration().createConfigForDefaultAction(action, project, lookup);
+        M2Configuration requested = (c instanceof M2Configuration) ? (M2Configuration)c : configs.getActiveConfiguration();
+        RunConfig rc = requested.createConfigForDefaultAction(action, project, lookup);
 
 // #241340 let's comment this out and see if it's actually used, it's a bit unsystemic (something gets executed that was never visible in UI)
 //        
@@ -132,25 +140,30 @@ public final class ActionToGoalUtils {
 //            }
 //        }
         if(rc==null){
-            for (MavenActionsProvider add : actionProviders(project)) {
-                        if (add.isActionEnable(action, project, lookup)) {
-                            rc = add.createConfigForDefaultAction(action, project, lookup);
-                            if (rc != null) {
-                                break;
+            M2Configuration save = configs.setLocalConfiguration(requested);
+            try {
+                for (MavenActionsProvider add : actionProviders(project)) {
+                            if (add.isActionEnable(action, project, lookup)) {
+                                rc = add.createConfigForDefaultAction(action, project, lookup);
+                                if (rc != null) {
+                                    break;
+                                }
                             }
-                        }
+                }
+            } finally {
+                configs.setLocalConfiguration(save);
             }
         }
         if (rc != null ) {
             if (rc instanceof ModelRunConfig && ((ModelRunConfig)rc).isFallback()) {
                 return rc;
             }
-            List<String> acts = new ArrayList<String>(); 
+            List<String> acts = new ArrayList<>(); 
             acts.addAll(rc.getActivatedProfiles());
-            acts.addAll(configs.getActiveConfiguration().getActivatedProfiles());
+            acts.addAll(requested.getActivatedProfiles());
             rc.setActivatedProfiles(acts);
-            Map<String, String> props = new HashMap<String, String>(rc.getProperties());
-            props.putAll(configs.getActiveConfiguration().getProperties());
+            Map<String, String> props = new HashMap<>(rc.getProperties());
+            props.putAll(requested.getProperties());
             rc.addProperties(props);
         }
         return rc;
@@ -171,17 +184,37 @@ public final class ActionToGoalUtils {
             return packaging;
         }
     }
+    
     public static boolean isActionEnable(String action, NbMavenProjectImpl project, Lookup lookup) {
-       
+        return isActionEnable(action, project, null, lookup);
+    }
+    
+    
+    /**
+     * Determines if the action mapping actually disables the action. Mapping that disables an action
+     * has no goal - cannot be executed by Maven anyway.
+     * 
+     * @param am the checked action mapping
+     * @return {@code true}, if the action is disabled.
+     * @since 2.149
+     */
+    public static boolean isDisabledMapping(NetbeansActionMapping am) {
+        return am == null || am.getGoals().isEmpty();
+    }
+
+    public static boolean isActionEnable(String action, NbMavenProjectImpl project, ProjectConfiguration c, Lookup lookup) {
         PackagingProvider packProv = new PackagingProvider(project);
         M2ConfigProvider configs = project.getLookup().lookup(M2ConfigProvider.class);
-        M2Configuration activeConfiguration = configs.getActiveConfiguration();        
-        if(isActionEnable(activeConfiguration, action, project, packProv, lookup)) {
-            return true;
+        M2Configuration active = configs.getActiveConfiguration();
+        M2Configuration useConfiguration = (c instanceof M2Configuration) ? (M2Configuration)c : active;        
+        NetbeansActionMapping m = findEnabledAction(useConfiguration, action, project, packProv, lookup);
+        if(m != null) {
+            return !isDisabledMapping(m);
         }
         //check fallback default config as well..
-        if(isActionEnable(configs.getDefaultConfig(), action, project, packProv, lookup)) {
-            return true;
+        m = findEnabledAction(configs.getDefaultConfig(), action, project, packProv, lookup);
+        if(m != null) {
+            return !isDisabledMapping(m);
         }
         if (ActionProvider.COMMAND_BUILD.equals(action) ||
                 ActionProvider.COMMAND_REBUILD.equals(action)) {
@@ -194,25 +227,34 @@ public final class ActionToGoalUtils {
             }
         }
         
-        for (MavenActionsProvider add : actionProviders(project)) {
-            if(isActionEnable(add, action, project, packProv, lookup)) {
-                return true;
+        // MavenActionsProvider can query back for the active configuration.
+        M2Configuration save = configs.setLocalConfiguration(useConfiguration);
+        try {
+            for (MavenActionsProvider add : actionProviders(project)) {
+                m = findEnabledAction(add, action, project, packProv, lookup);
+                if(m != null) {
+                    return !isDisabledMapping(m);
+                }
             }
+        } finally {
+            configs.setLocalConfiguration(save);
         }
         return false;
     }
 
-    private static boolean isActionEnable(MavenActionsProvider activeConfiguration, String action, NbMavenProjectImpl project, PackagingProvider packProv, Lookup lookup) {
+    private static NetbeansActionMapping findEnabledAction(MavenActionsProvider activeConfiguration, String action, NbMavenProjectImpl project, PackagingProvider packProv, Lookup lookup) {
+        NetbeansActionMapping mapping = activeConfiguration.getMappingForAction(action, project);
         if (activeConfiguration instanceof AbstractMavenActionsProvider) {
-            if (((AbstractMavenActionsProvider)activeConfiguration).isActionEnable(action, packProv.getPackaging())) {
-                return true;
+            boolean enabled = ((AbstractMavenActionsProvider)activeConfiguration).isActionEnable(action, packProv.getPackaging());
+            if (enabled) {
+                return mapping;
             }
         } else {
             if (activeConfiguration.isActionEnable(action, project, lookup)) {
-                return true;
+                return mapping;
             }
         }
-        return false;
+        return null;
     }
 
     public static NetbeansActionMapping getActiveMapping(String action, Project project, M2Configuration configuration) {
@@ -239,8 +281,8 @@ public final class ActionToGoalUtils {
     
     private static NetbeansActionMapping[] getActiveCustomMappingsImpl(NbMavenProjectImpl project, boolean forFiles) {
         M2ConfigProvider configs = project.getLookup().lookup(M2ConfigProvider.class);
-        List<NetbeansActionMapping> toRet = new ArrayList<NetbeansActionMapping>();
-        List<String> names = new ArrayList<String>();
+        List<NetbeansActionMapping> toRet = new ArrayList<>();
+        Set<String> names = new HashSet<>();
         // first add all project specific custom actions.
         for (NetbeansActionMapping map : configs.getActiveConfiguration().getCustomMappings()) {
             toRet.add(map);
@@ -279,7 +321,7 @@ public final class ActionToGoalUtils {
             }
             
         }
-        return toRet.toArray(new NetbeansActionMapping[toRet.size()]);
+        return toRet.toArray(NetbeansActionMapping[]::new);
     }
         
 
@@ -296,7 +338,7 @@ public final class ActionToGoalUtils {
 
     /**
      * read the action mappings from the fileobject attribute "customActionMappings"
-     * @parameter fo should be the project's root directory fileobject
+     * @param fo should be the project's root directory fileobject
      *
      */
     public static ActionToGoalMapping readMappingsFromFileAttributes(FileObject fo) {
@@ -306,9 +348,7 @@ public final class ActionToGoalUtils {
             NetbeansBuildActionXpp3Reader reader = new NetbeansBuildActionXpp3Reader();
             try {
                 mapp = reader.read(new StringReader(string));
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            } catch (XmlPullParserException ex) {
+            } catch (IOException | XmlPullParserException ex) {
                 ex.printStackTrace();
             }
         }
@@ -320,7 +360,7 @@ public final class ActionToGoalUtils {
 
     /**
      * writes the action mappings to the fileobject attribute "customActionMappings"
-     * @parameter fo should be the project's root directory fileobject
+     * @param fo should be the project's root directory fileobject
      *
      */
     public static void writeMappingsToFileAttributes(FileObject fo, ActionToGoalMapping mapp) {

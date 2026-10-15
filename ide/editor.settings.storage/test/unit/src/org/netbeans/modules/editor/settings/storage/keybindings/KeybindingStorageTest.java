@@ -142,8 +142,9 @@ public class KeybindingStorageTest extends NbTestCase {
     }
 
     private void checkMapConsistency(Map<Collection<KeyStroke>, MultiKeyBinding> keybindings) {
-        for(Collection<KeyStroke> keyStrokes : keybindings.keySet()) {
-            MultiKeyBinding mkb = keybindings.get(keyStrokes);
+        for(Map.Entry<Collection<KeyStroke>,MultiKeyBinding> entry : keybindings.entrySet()) {
+            Collection<KeyStroke> keyStrokes = entry.getKey();
+            MultiKeyBinding mkb = entry.getValue();
             assertEquals("Inconsistent keystrokes", keyStrokes, mkb.getKeyStrokeList());
         }
     }

@@ -60,12 +60,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import org.netbeans.core.windows.nativeaccess.NativeWindowSystem;
+import org.netbeans.core.windows.view.dnd.WindowDnDManager;
 import org.openide.awt.Toolbar;
 import org.openide.awt.ToolbarPool;
 import org.openide.filesystems.FileUtil;
@@ -170,7 +170,9 @@ final class DnDSupport implements DragSourceListener, DragGestureListener, DropT
             }
             sourceComponent.repaint();
             resetDropGesture();
-            if( e.getDropSuccess() == false && !isInToolbarPanel( e.getLocation() ) ) {
+            if( e.getDropSuccess() == false &&
+                    !isInToolbarPanel( WindowDnDManager.getLocationWorkaround(e) ) )
+            {
                 //TODO catch ESC key
                 removeButton( e.getDragSourceContext().getTransferable() );
             }
@@ -320,28 +322,29 @@ final class DnDSupport implements DragSourceListener, DragGestureListener, DropT
     }
 
     public void dragMouseMoved(DragSourceDragEvent e) {
+        Point location = WindowDnDManager.getLocationWorkaround(e);
         DragSourceContext context = e.getDragSourceContext();
         if( isButtonDrag ) {
             int action = e.getDropAction();
             if ((action & DnDConstants.ACTION_MOVE) != 0) {
                 context.setCursor( dragMoveCursor );
             } else {
-                if( isInToolbarPanel( e.getLocation() ) ) {
+                if( isInToolbarPanel( location ) ) {
                     context.setCursor( dragNoDropCursor );
                 } else {
                     context.setCursor( dragRemoveCursor );
                 }
             }
         } else if( isToolbarDrag && null != dragWindow ) {
-            Point p = new Point( e.getLocation() );
+            Point p = new Point( location );
             p.x -= startingPoint.x;
             p.y -= startingPoint.y;
             dragWindow.setLocation(p);
             context.setCursor( Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR) );
 
-            ToolbarRow row = config.getToolbarRowAt( e.getLocation() );
+            ToolbarRow row = config.getToolbarRowAt( location );
             if( null == row && (sourceRow.countVisibleToolbars() > 1 || !config.isLastRow(sourceRow)) ) {
-                row = config.maybeAddEmptyRow( e.getLocation() );
+                row = config.maybeAddEmptyRow( location );
             }
 
             ToolbarRow oldRow = currentRow;
@@ -351,7 +354,7 @@ final class DnDSupport implements DragSourceListener, DragGestureListener, DropT
                 config.repaint();
             }
             if( null != currentRow )
-                currentRow.showDropFeedback( sourceContainer, e.getLocation(), dragImage );
+                currentRow.showDropFeedback( sourceContainer, location, dragImage );
             if( !config.isLastRow(currentRow) )
                 config.maybeRemoveLastRow();
         }
@@ -504,7 +507,7 @@ final class DnDSupport implements DragSourceListener, DragGestureListener, DropT
             children.add( targetIndex, objToMove );
         }
 
-        backingFolder.setOrder( children.toArray( new DataObject[children.size()]) );
+        backingFolder.setOrder(children.toArray(new DataObject[0]) );
     }
 
     private DataObject getDataObjectUnderDropCursor( int dropIndex, boolean dropBefore ) {
@@ -576,7 +579,7 @@ final class DnDSupport implements DragSourceListener, DragGestureListener, DropT
             if( t.isDataFlavorSupported(buttonDataFlavor) ) {
                 o = t.getTransferData(buttonDataFlavor);
             }
-            if( null != o && o instanceof DataObject ) {
+            if(o instanceof DataObject) {
                 ((DataObject) o).delete();
                 sourceToolbar.repaint();
             }

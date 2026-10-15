@@ -153,10 +153,10 @@ public class CopyClassesUI implements RefactoringUI, RefactoringUIBypass {
         if (refactoring == null) {
             if (disable) {
                 refactoring = new CopyRefactoring(Lookups.fixed(javaObjects.toArray()));
-                refactoring.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(javaObjects.toArray(new FileObject[javaObjects.size()])));
+                refactoring.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(javaObjects.toArray(new FileObject[0])));
             } else {
                 refactoring = new CopyRefactoring(Lookups.fixed(resources.toArray()));
-                refactoring.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(resources.toArray(new FileObject[resources.size()])));
+                refactoring.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(resources.toArray(new FileObject[0])));
             }
         }
         return refactoring;

@@ -1,0 +1,6 @@
+$|>MARK_OCCURRENCES:variable<| = 'TEST';
+Test::{$|>MARK_OCCURRENCES:variable<|};
+$test::{$|>MARK_OCCURRENCES:variable<|};
+Test::{$|>MARK_OCCURRENCES:variable<| . $e};
+$test::{$|>MARK_OCCURRENCES:varia^ble<| . $e};
+Test::{Test::method()}::{test($|>MARK_OCCURRENCES:variable<|)};

@@ -22,6 +22,7 @@ package org.netbeans.modules.db.explorer.driver;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import org.netbeans.api.db.explorer.JDBCDriver;
 import org.netbeans.modules.db.test.DOMCompare;
@@ -155,7 +156,7 @@ public class JDBCDriverConvertorTest extends TestBase {
         FileObject fo = folder.createData(fileName);
         FileLock lock = fo.lock();
         try {
-            OutputStreamWriter writer = new OutputStreamWriter(fo.getOutputStream(lock), "UTF-8");
+            OutputStreamWriter writer = new OutputStreamWriter(fo.getOutputStream(lock), StandardCharsets.UTF_8);
             try {
                 writer.write("<?xml version='1.0' encoding='UTF-8'?>");
                 writer.write("<!DOCTYPE driver PUBLIC '-//NetBeans//DTD JDBC Driver " + publicIdVer + "//EN' 'http://www.netbeans.org/dtds/jdbc-driver-" + systemIdVer + ".dtd'>");

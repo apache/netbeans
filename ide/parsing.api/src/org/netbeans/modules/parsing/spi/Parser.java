@@ -83,7 +83,7 @@ public abstract class Parser {
     
     /**
      * Called by the infrastructure to stop the parser operation.
-     * @param reason of the cancel, see {@link Parser#CancelReason}
+     * @param reason of the cancel, see {@link Parser.CancelReason}
      * @param event an additional info if the reason is SOURCE_MODIFICATION_EVENT, otherwise null
      * @since 
      */
@@ -121,7 +121,7 @@ public abstract class Parser {
         
         /**
          * Creates a {@link Result} for given snapshot
-         * @param snapshot
+         * @param _snapshot
          */
         protected Result (
             final Snapshot      _snapshot
@@ -142,7 +142,19 @@ public abstract class Parser {
          * This method is called by Parsing API, when {@link Task} is finished.
          */
         protected abstract void invalidate ();
-        
+
+        /**
+         * Return {@code true} if the parser was able to process the file fully.
+         *
+         * Return {@code false}, if the parser had to stop the processing (e.g. for
+         * memory limit reasons), and the file should be processed again.
+         *
+         * @return whether file processing finished or not
+         * @since 9.20
+         */
+        protected boolean processingFinished() {
+            return true;
+        }
     }
     
     /**
@@ -183,7 +195,13 @@ public abstract class Parser {
             assert result != null;
             result.invalidate();
         }        
-        
+
+        @Override
+        public boolean processingFinished(Result result) {
+            assert result != null;
+            return result.processingFinished();
+        }
+
     }
 }
 

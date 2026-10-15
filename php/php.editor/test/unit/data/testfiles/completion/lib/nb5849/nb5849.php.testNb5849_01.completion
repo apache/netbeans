@@ -1,0 +1,7 @@
+Code completion result for source line:
+use tes|;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      Test1                           [PUBLIC]   NS1
+CLASS      Test2                           [PUBLIC]   NS1
+CLASS      Test3                           [PUBLIC]   NS2

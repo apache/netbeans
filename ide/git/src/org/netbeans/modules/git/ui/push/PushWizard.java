@@ -140,7 +140,7 @@ class PushWizard  implements ChangeListener {
                 if (c instanceof JComponent) { // assume Swing components
                     JComponent jc = (JComponent) c;
                     // Sets step number of a component
-                    jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(i)); // NOI18N
+                    jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, Integer.valueOf(i)); // NOI18N
                     // Sets steps names for a panel
                     jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps); // NOI18N
                     // Turn on subtitle creation on each step
@@ -169,7 +169,7 @@ class PushWizard  implements ChangeListener {
                 Collection<PushMapping> mappings = pushBranchesStep.getSelectedMappings();
                 Map<String, String> remoteBranches = new LinkedHashMap<String, String>(mappings.size());
                 for (PushMapping mapping : mappings) {
-                    if (!mapping.isDeletion() && mapping instanceof PushMapping.PushBranchMapping) {
+                    if ((!mapping.isDestructive() || mapping.getLocalName() != null) && mapping instanceof PushMapping.PushBranchMapping) {
                         PushBranchMapping pushMapping = (PushMapping.PushBranchMapping) mapping;
                         remoteBranches.put(pushMapping.getRemoteRepositoryBranchName(), pushMapping.getLocalRepositoryBranchHeadId());
                     }
